@@ -21,7 +21,7 @@ export function ExpandedReading({ title, children }: { title: string; children: 
         >
           ▶
         </span>
-        <span className="text-amber-600 dark:text-amber-400">Deep dive:</span> {title}
+        <span className="text-amber-600 dark:text-amber-400">Vertiefung:</span> {title}
       </button>
       {/* keep mounted when closed so widget state (sliders etc.) survives */}
       <div hidden={!open} className="border-t border-amber-200 px-4 py-3 dark:border-amber-800">
