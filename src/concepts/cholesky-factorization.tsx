@@ -81,7 +81,7 @@ registerConcept({
         </ConceptLink>
         : erst <M>{"\\bL\\by = \\bb"}</M>, dann{" "}
         <M>{"\\bL^T\\bx = \\by"}</M>. Genau so lassen sich die
-        Normalgleichungen{" "}
+        Normalengleichungen{" "}
         <M>{"\\bA^T\\bA\\,\\bx = \\bA^T\\bb"}</M> lösen — unter
         Wiederverwendung der Cholesky-Zerlegung (vgl. Heath Bsp. 2.21 und
         Bsp. 3.3).

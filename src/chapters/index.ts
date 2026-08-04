@@ -28,6 +28,12 @@ export interface ChapterEntry {
 
 export const chapters: ChapterEntry[] = [
   {
+    id: "07-kq",
+    title: "Kap. 7 · Kleinste Quadrate",
+    deck: "07-kq",
+    load: () => import("./07-kq"),
+  },
+  {
     id: "demo",
     title: "Makro- und Farb-Demo",
     deck: "07-kq",

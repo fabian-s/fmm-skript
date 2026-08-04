@@ -1,5 +1,5 @@
 /**
- * Konzept-Tooltip: Normalgleichungen (Stoff aus Heath §3.2).
+ * Konzept-Tooltip: Normalengleichungen (Stoff aus Heath §3.2).
  */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
@@ -106,7 +106,7 @@ function ProjectionWidget() {
 
 registerConcept({
   id: "normal-equations",
-  title: "Normalgleichungen",
+  title: "Normalengleichungen",
   body: (
     <>
       <p>
@@ -119,7 +119,7 @@ registerConcept({
         verschwinden. Wir berechnen{" "}
         <M>{"\\nabla \\phi(\\bx) = 2\\bA^{T}(\\bA\\bx - \\bb)"}</M>{" "}
         und setzen ihn auf Null; das liefert die{" "}
-        <em>Normalgleichungen</em> (engl. <em>normal equations</em>):
+        <em>Normalengleichungen</em> (engl. <em>normal equations</em>):
       </p>
       <MD>
         {"\\bA^{T} \\bA \\, \\bx = \\bA^{T} \\bb,"}
