@@ -11,3 +11,4 @@ export type { Vec2 } from "./widgets/TransformCanvas";
 export { Plot } from "./widgets/Plot";
 export type { Series } from "./widgets/Plot";
 export { LabeledPlot, LabeledTransformCanvas, niceTicks, sigmaMax, maxAbsCoord } from "./widgets/Axes";
+export { Proof, PStep } from "./Proof";
