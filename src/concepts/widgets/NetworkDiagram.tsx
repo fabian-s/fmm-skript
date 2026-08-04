@@ -49,13 +49,13 @@ export function NetworkDiagram() {
         )),
       )}
       <text x={xs[0]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
-        input
+        Eingabe
       </text>
       <text x={xs[1]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
-        hidden layer
+        verborgene Schicht
       </text>
       <text x={xs[2]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
-        output
+        Ausgabe
       </text>
     </svg>
   );

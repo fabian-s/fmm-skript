@@ -1,4 +1,4 @@
-import { M, MD, EnvBlock, Proof, PStep } from "../../lib";
+import { ConceptLink, M, MD, EnvBlock, Proof, PStep } from "../../lib";
 
 /**
  * Machbarkeits-Demo: Formeln 1:1 aus den Vorlesungsfolien (07-kq.Rmd),
@@ -12,12 +12,14 @@ export function SDemo() {
         Gegeben sei eine Matrix <M>{"\\bA \\in \\R^{m \\times n}"}</M> und ein Vektor{" "}
         <M>{"\\bb \\in \\R^m"}</M>. Das Kleinste-Quadrate-Problem sucht{" "}
         <M>{"\\wh{\\bx} = \\argmin_{\\bx} \\| \\bA\\bx - \\bb \\|_2^2"}</M>; seine Lösung
-        charakterisieren die <em>Normalengleichungen</em>
+        charakterisieren die{" "}
+        <ConceptLink id="normal-equations">Normalengleichungen</ConceptLink>
       </p>
       <MD>{"\\bA^\\top\\bA\\,\\bx = \\bA^\\top \\bb\\,."}</MD>
       <p>
         Die SVD <M>{"\\bA = \\bU\\bSigma\\bV^\\top"}</M> liefert die Pseudoinverse{" "}
-        <M>{"\\bA\\pinv"}</M> und die Konditionszahl <M>{"\\kappa(\\bA)"}</M>. Auch
+        <M>{"\\bA\\pinv"}</M> und die{" "}
+        <ConceptLink id="condition-number">Konditionszahl</ConceptLink> <M>{"\\kappa(\\bA)"}</M>. Auch
         Operatoren (<M>{"\\tr, \\spann, \\diag, \\sumin x_i"}</M>) und Logik
         (<M>{"\\bA \\text{ regulär} \\quimpl \\bA\\bx=\\bb \\text{ eindeutig lösbar}"}</M>)
         kommen direkt aus den Folienmakros.
