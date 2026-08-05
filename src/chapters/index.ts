@@ -28,6 +28,18 @@ export interface ChapterEntry {
 
 export const chapters: ChapterEntry[] = [
   {
+    id: "01-intro",
+    title: "Kap. 1 · Worum geht's?",
+    deck: "01-intro",
+    load: () => import("./01-intro"),
+  },
+  {
+    id: "02-algos",
+    title: "Kap. 2 · Algorithmen & Komplexität",
+    deck: "02-algos",
+    load: () => import("./02-algos"),
+  },
+  {
     id: "07-kq",
     title: "Kap. 7 · Kleinste Quadrate",
     deck: "07-kq",

@@ -102,6 +102,27 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   QR/Givens/Householder → §3.5, SVD/Pseudoinverse → §3.6, Vergleich →
   §3.7; MML §7.1 für den Gradientenblick).
 
+## KAPITEL 1 + 2 (Foliensätze 01-intro, 02-algos) — Bauauftrag 2026-08-05
+
+- Kapitel 1 (`src/chapters/01-intro/`, ein Abschnitt S11, Anker
+  `#sec-1.1`): SEHR KURZ und rein konzeptionell — Dozentenvorgabe.
+  Keine Organisation/Logistik/Klausurtermine aus den Folien übernehmen;
+  nur: worum geht es (Numerik für die Statistik), die drei Themenblöcke
+  des Kurses, warum Statistiker:innen das brauchen. Richtwert: eine
+  Bildschirmseite Prosa, höchstens 1 kleine Vertiefung, kein
+  Environments-Feuerwerk.
+- Kapitel 2 (`src/chapters/02-algos/`, S21–S25, Anker `#sec-2.1` …
+  `#sec-2.5`): volle Skript-Tiefe wie Kapitel 7. Labels „2.k.n".
+- Nummerierung/Regeln wie im Kapitel-7-Block (sinngemäß, Kapitelnummer
+  1 bzw. 2). Für Kapitel 2 existieren passende Tooltips bereits:
+  big-o-notation, machine-epsilon, rounding-error, cancellation,
+  floating-point, matrix-vector-product, … (`ls src/concepts/`).
+- Widget-Ideen Kapitel 2: Fibonacci-Stepper (naiv vs. iterativ,
+  Aufruf-Zähler), Wachstumsraten-Plot der Komplexitätsklassen
+  (log-Skala), Auslöschungs-Demo, Landau-„Wer dominiert wen"-Explorer.
+  Kein passendes Recycling aus den privaten Apps nötig — Prosa-Verbot
+  für private Apps gilt weiterhin.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
@@ -132,3 +153,16 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - ConceptLink-id "cancellation" existiert nicht — Auslöschung auf "rounding-error" verlinken (dessen Modul behandelt katastrophale Auslöschung); Bestand prüfen mit `ls src/concepts/`.
 - OBSOLET (Vorzeile): Konzept-Module `singular-value-decomposition`, `pseudoinverse`, `matrix-norm`, `cancellation`, `low-rank-approximation` existieren jetzt in src/concepts/ — Auslöschung darf direkt auf "cancellation" verlinken (z. B. S75 Bem. 7.5.9 umstellen).
 - Headless-MathJax-Check: `mathjax.init({loader:{load:["input/tex-full","output/svg"]},…})` aus node-main.js verwenden — das `globalThis.MathJax`-Config+require-Muster hängt (unsettled top-level await); Integrationslauf 2026-08-04: S75 Bem. 7.5.9 verlinkt jetzt direkt auf "cancellation".
+- Wachstums-Vergleichswidgets (S25): log10-Skala fahren — Landau-Vorhersagen als Series-FUNKTIONEN (Geraden im Semilog), exakte Zählungen als markers; lib-Plot überspringt NaN/non-finite, also f(x)=NaN für undefinierte Bereiche zurückgeben; Aufrufbäume als <pre> mit farbigen <span>s (Farbwerte der \cb*-Palette inline per style).
+- R-Chunk-Outputs nicht blind in Live-Widgets spiegeln: Rs mean() rechnet mit Nachkorrektur, die naive JS-Summe weicht ab (Varianz-Auslöschungs-Demo, c=1e9: R liefert 0, JS -128) — Widget zeigt seine eigenen IEEE-Werte, der Fließtext zitiert die R-Ausgabe; beide vorher nachrechnen (Rscript + node).
+- Es gibt KEIN \bf-Makro (TeX-Primitiv, fehlt bewusst in fmm-macros): Folien-Vektoren namens „f" im Skript umbenennen (z. B. \bz); Multiple-Choice-Selbsttest-Komponente (Optionen mit Feedback + aufklappbare Lösung) liegt wiederverwendbar in 02-algos/S23.tsx.
+- Quiz-Folien als aufklappbare Selbsttests: natives `<details>/<summary>` reicht (lazy MathJax typesetzt beim Aufklappen via IntersectionObserver) — Muster: SelfTest-Komponente in 02-algos/S24.tsx, für weitere Quiz-Folien wiederverwenden.
+- Quiz-/Selbsttest-Folien: aufklappbares `<details>/<summary>`-Muster als lokale `<Frage>`-Komponente in chapters/01-intro/S11.tsx — für weitere Selbsttests dieses Muster übernehmen (Frage sichtbar, „Lösung anzeigen" klappt auf).
+- Folien-Quizfolien als Selbsttest: das wahr/falsch-QuizWidget-Muster aus S71 (Statement + Buttons + Erklärung bei Antwort) 1:1 wiederverwenden — auch für Mehrfachauswahl-Folien (jede Option als eigene wahr/falsch-Aussage), so in 02-algos/S22 umgesetzt.
+- STYLE-Falle du/Sie: Widget-Captions, Quiz-Aufforderungen und Feedback-Texte rutschen leicht in die du-Form (Review 2.3 fand 8 Stellen) oder Sie-Form (S21Demos.tsx Z. 82) — auch dort wir-Form („Probieren wir aus", „Schieben wir n nach oben").
+- Feste Hex-Textfarben in Widget-Beschriftungen (Legenden/Tabellen) müssen auch im Dark-Mode lesbar sein: kein slate-700 #334155 auf Seitenhintergrund — neutral #64748b (slate-500) funktioniert auf weißem Canvas UND dunkler Seite (Review S24).
+- Folienfehler 01-intro: „Warum so viel Mathe" (Z. 84) hat n = 1.000 bei p = 10.000 (XᵀX wäre singulär, naive Formel unanwendbar) — Skript §1.1 nutzt n = 100.000; in Beispiel 1 (Z. 126/130) ist die Störung 0,005 %, nicht „0.01%" (0,0001/2,0001 ≈ 5·10⁻⁵).
+- Argument-Makros (\wt, \wh) IMMER mit Klammern schreiben (\wt{f}, nie \wt f) — der Bestand nutzt durchgehend \wt{f}; R-Code von Folien als <pre><code>-Block im S73-Stil zeigen, nicht nur paraphrasieren (Review 2.2).
+- Live-IEEE-Widgets neben R-zitierender Prosa brauchen einen expliziten Diskrepanz-Hinweis IM Widget (naive JS-Summe vs. R-mean-Nachkorrektur, z. B. k=9: -128 statt 0) — sonst widerspricht der Default-Zustand dem Beispiel im Text (Review 2.1).
+- Folien-R-Code auf KAPITEL-Ebene auf Abdeckung prüfen: der naive Rekursions-Code (02-algos „Komplexitätsanalyse 2") fehlte im ganzen Kapitel, weil S22 nur den iterativen zeigt — Review 2.5 hat ihn als <pre><code>-Block in S25 ergänzt; Vergleichstabelle 2.5.3 (T(n)=2F_{n+1}−1, Modellzeiten) per node nachgerechnet: alle Werte korrekt.
+- Anker-Audits: die Top-Level-Anker sec-K.n stehen NICHT in den Abschnittsdateien, sondern werden von App.tsx als id={`sec-${id}`} pro Registry-Section erzeugt — ein grep nur über src/chapters meldet sie fälschlich als fehlend (Integrationslauf Kap. 1+2: alle 688 Mathe-Literale headless fehlerfrei, Konzept-Abschluss vollständig, Build grün).
