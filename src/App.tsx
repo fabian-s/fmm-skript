@@ -27,6 +27,15 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry.id]);
 
+  // Fragment-Navigation: der Browser scrollt beim Laden zu #sec-…, bevor
+  // React die (lazy geladenen) Abschnitte eingefügt hat — nachholen.
+  useEffect(() => {
+    if (!mod) return;
+    const h = window.location.hash;
+    if (!h) return;
+    document.getElementById(decodeURIComponent(h.slice(1)))?.scrollIntoView();
+  }, [mod]);
+
   return (
     <TooltipProvider>
       <div className="mx-auto max-w-3xl px-4 py-10">
