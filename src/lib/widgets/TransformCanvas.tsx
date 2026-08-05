@@ -18,6 +18,7 @@ export function TransformCanvas({
   showUnitCircle = true,
   size = 340,
   worldHalf = 3.2,
+  annotate,
 }: {
   matrix: [[number, number], [number, number]];
   vectors?: Vec2[];
@@ -25,6 +26,8 @@ export function TransformCanvas({
   showUnitCircle?: boolean;
   size?: number;
   worldHalf?: number;
+  /** optional extra drawing pass (world→px via toPx) after vectors */
+  annotate?: (ctx: CanvasRenderingContext2D, toPx: (x: number, y: number) => [number, number]) => void;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -122,7 +125,8 @@ export function TransformCanvas({
       }
     };
     for (const { v, color = "#dc2626", label } of vectors) arrow(v[0], v[1], color, label);
-  }, [matrix, vectors, showGrid, showUnitCircle, size, worldHalf]);
+    annotate?.(ctx, toPx);
+  }, [matrix, vectors, showGrid, showUnitCircle, size, worldHalf, annotate]);
 
   return (
     <canvas

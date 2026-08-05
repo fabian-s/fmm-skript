@@ -1,7 +1,6 @@
 import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../../lib";
 import {
   FastRangdefektWidget,
-  FigKQGeometrie,
   KonditionsQuadrierungLab,
   WinkelWidget,
 } from "./widgets/S72Kondition";
@@ -206,7 +205,6 @@ export function S72() {
 
       <h4 className="mt-4 font-semibold">Geometrische Interpretation</h4>
 
-      <FigKQGeometrie />
 
       <p>
         Der Faktor{" "}
@@ -223,7 +221,8 @@ export function S72() {
         also ist der Faktor stets <M>{"\\ge 1"}</M> und damit{" "}
         <M>{"\\kappa \\ge \\corange{\\kappa_2(\\bA)}"}</M>. Bezeichnet{" "}
         <M>{"\\theta"}</M> den Winkel zwischen <M>{"\\bb"}</M> und{" "}
-        <M>{"\\col(\\bA)"}</M> (siehe Abbildung), dann ist{" "}
+        <M>{"\\col(\\bA)"}</M> (siehe die Abbildung in{" "}
+        <a className="underline" href="#sec-7.1-geometrie">Abschnitt 7.1</a>), dann ist{" "}
         <M>{"\\left\\|\\cgreen{\\proj_{\\col(\\bA)} \\bb}\\right\\| = \\cos(\\theta) \\left\\|\\bb\\right\\|"}</M>{" "}
         und damit
       </p>

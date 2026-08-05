@@ -835,7 +835,7 @@ export function S75() {
       </Proof>
 
       <p>
-        <M>{"\\bH"}</M> ist also nicht nur orthogonal, sondern sogar selbstinvers — eine
+        <M>{"\\bH"}</M> ist also orthogonal und selbstinvers — eine
         Spiegelung, zweimal ausgeführt, ist die Identität. Bleibt die Frage, <em>welchen</em>{" "}
         Spiegelvektor <M>{"\\bv"}</M> wir wählen müssen, damit <M>{"\\ba"}</M> auf{" "}
         <M>{"\\alpha\\,\\be_1"}</M> landet. Die Antwort kann man aus dem geometrischen Bild

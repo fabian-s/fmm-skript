@@ -6,6 +6,7 @@
  * (QuadraticFitWidget, OrthogonalityWidget — Labels deutsch).
  */
 import { useState } from "react";
+import { FigKQGeometrie } from "./widgets/S72Kondition";
 import {
   ConceptLink,
   EnvBlock,
@@ -643,6 +644,8 @@ export function S71() {
         <ConceptLink id="projection">orthogonale Projektion</ConceptLink> von <M>{"\\bb"}</M> auf{" "}
         <M>{"\\col(\\bA)"}</M>. Das folgende Resultat macht diese Anschauung präzise.
       </p>
+
+      <FigKQGeometrie />
 
       <EnvBlock kind="Satz" label="7.1.4 (KQ-Lösung als Projektion)">
         <p>

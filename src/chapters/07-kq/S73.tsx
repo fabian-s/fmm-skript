@@ -191,7 +191,8 @@ export function S73() {
         </PStep>
       </Proof>
       <p>
-        Symmetrisch positiv definit — das ist genau die Klasse von Matrizen, für die die{" "}
+        Symmetrisch positiv definit — kurz <em>SPD</em> (engl. <em>symmetric positive
+        definite</em>) — das ist genau die Klasse von Matrizen, für die die{" "}
         <ConceptLink id="cholesky-factorization">Cholesky-Zerlegung</ConceptLink>{" "}
         <M>{"\\bM = \\bL\\bL^\\top"}</M> mit einer unteren{" "}
         <ConceptLink id="triangular-matrix">Dreiecksmatrix</ConceptLink> <M>{"\\bL"}</M>{" "}
@@ -231,6 +232,12 @@ export function S73() {
           drei Punkte <M>{"(1, 2),\\ (2, 3),\\ (3, 5)"}</M>:
         </p>
         <MD>{"\\bA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\\\ 1 & 3 \\end{pmatrix}, \\qquad \\bb = \\begin{pmatrix} 2 \\\\ 3 \\\\ 5 \\end{pmatrix}."}</MD>
+        <p>
+          Dabei landen die <M>{"x"}</M>-Werte <M>{"1, 2, 3"}</M> der Datenpunkte in der{" "}
+          <em>zweiten</em> Spalte von <M>{"\\bA"}</M> (die Einser-Spalte davor gehört zum
+          Achsenabschnitt <M>{"\\beta_0"}</M>), und die <M>{"y"}</M>-Werte{" "}
+          <M>{"2, 3, 5"}</M> bilden den Vektor <M>{"\\bb"}</M>.
+        </p>
         <p>
           <strong>Schritt 1</strong> — <M>{"\\cbred{\\bM}"}</M> und <M>{"\\cbgreen{\\bc}"}</M>{" "}
           aufstellen:

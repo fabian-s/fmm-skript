@@ -23,7 +23,7 @@ function CondWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Slider
-        label="\u03B5"
+        label="ε"
         value={eps}
         onChange={setEps}
         min={0.02}

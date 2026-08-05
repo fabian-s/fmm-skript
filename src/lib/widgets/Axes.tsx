@@ -174,6 +174,7 @@ export function LabeledTransformCanvas({
   showUnitCircle,
   size = 340,
   worldHalf = 3.2,
+  annotate,
 }: {
   xLabel?: string;
   yLabel?: string;
@@ -184,6 +185,7 @@ export function LabeledTransformCanvas({
   showUnitCircle?: boolean;
   size?: number;
   worldHalf?: number;
+  annotate?: (ctx: CanvasRenderingContext2D, toPx: (x: number, y: number) => [number, number]) => void;
 }) {
   return (
     <LabeledFrame
@@ -198,6 +200,7 @@ export function LabeledTransformCanvas({
       <TransformCanvas
         matrix={matrix}
         vectors={vectors}
+        annotate={annotate}
         showGrid={showGrid}
         showUnitCircle={showUnitCircle}
         size={size}

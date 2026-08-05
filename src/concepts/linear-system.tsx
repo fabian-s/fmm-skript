@@ -1,32 +1,26 @@
-import { useState } from "react";
-import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
+import { ConceptLink, M, MD, Plot, registerConcept } from "../lib";
 
-function TwoLinesWidget() {
-  const [m, setM] = useState(0.5);
-  // line 1: x + y = 2  ->  y = 2 - x;  line 2: y = m x
-  const denom = 1 + m;
-  const hasSolution = Math.abs(denom) > 0.02;
-  const xs = 2 / denom;
+function ZweiGeradenFigur() {
+  // statische Abbildung ZUM SYSTEM AUS DEM TEXT: 2x + 3y = 5 und x - y = 1,
+  // also y = (5 - 2x)/3 bzw. y = x - 1; Schnittpunkt (8/5, 3/5).
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Steigung m" value={m} onChange={setM} min={-2} max={2} step={0.05} />
       <Plot
         series={[
-          { f: (x) => 2 - x, color: "#0284c7" },
-          { f: (x) => m * x, color: "#dc2626" },
+          { f: (x) => (5 - 2 * x) / 3, color: "#0284c7" },
+          { f: (x) => x - 1, color: "#dc2626" },
         ]}
-        xDomain={[-4, 4]}
-        yDomain={[-4, 4]}
+        xDomain={[-2, 4]}
+        yDomain={[-3, 3]}
         width={280}
         height={200}
-        markers={hasSolution ? [{ x: xs, y: m * xs, color: "#16a34a", label: "Lösung" }] : []}
+        markers={[{ x: 1.6, y: 0.6, color: "#16a34a", label: "Lösung" }]}
       />
       <p className="mt-1 text-xs">
-        Jede Gleichung ist eine Gerade; die Lösung des Systems{" "}
-        <M>{"x + y = 2,\\; y = m x"}</M> ist ihr Schnittpunkt.{" "}
-        {hasSolution
-          ? "Hier schneiden sich die Geraden in genau einem Punkt."
-          : "Bei m = −1 sind die Geraden parallel: Es gibt keine Lösung."}
+        Jede der beiden Gleichungen beschreibt eine Gerade:{" "}
+        <span style={{ color: "#0284c7" }}>2x + 3y = 5</span> und{" "}
+        <span style={{ color: "#dc2626" }}>x − y = 1</span>. Die Lösung des Systems ist ihr
+        Schnittpunkt <M>{"(x, y) = (8/5,\\, 3/5)"}</M>.
       </p>
     </div>
   );
@@ -60,7 +54,7 @@ registerConcept({
         entscheidet die Determinante von <M>{"\\bA"}</M>: genau eine Lösung,
         wenn sie ungleich null ist.
       </p>
-      <TwoLinesWidget />
+      <ZweiGeradenFigur />
     </>
   ),
 });

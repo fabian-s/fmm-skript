@@ -2,6 +2,7 @@
 
 Vorbild: das LinAlg-Skript von T. Nagler (fmm-lmu/literature/nagler-linalg-2026.pdf)
 — informelles, aber präzises Skript-Deutsch.
+**Vom Dozenten am Pilotkapitel 7 abgenommen (2026-08-05): Stil beibehalten.**
 
 ## Stimme
 
