@@ -40,6 +40,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./02-algos"),
   },
   {
+    id: "03-matrix-spur-norm",
+    title: "Kap. 3 · Spur & Matrixnormen",
+    deck: "03-matrix-spur-norm",
+    load: () => import("./03-matrix-spur-norm"),
+  },
+  {
     id: "07-kq",
     title: "Kap. 7 · Kleinste Quadrate",
     deck: "07-kq",

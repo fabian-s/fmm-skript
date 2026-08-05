@@ -123,6 +123,21 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Kein passendes Recycling aus den privaten Apps nötig — Prosa-Verbot
   für private Apps gilt weiterhin.
 
+## KAPITEL 3 (Foliensatz 03-matrix-spur-norm) — Bauauftrag 2026-08-05
+
+- `src/chapters/03-matrix-spur-norm/`, S31–S36, Anker `#sec-3.1` …
+  `#sec-3.6`; Labels „3.k.n". Regeln wie Kapitel-7-Block (sinngemäß).
+- Widget-Recycling: die private App
+  `/home/fabians/lehre/FMM/fmm-lmu/interactive/heath-ch2/` enthält zu
+  Vektor-/Matrixnormen erprobte Widgets (S23.tsx: Einheitskugel-Vergleich
+  der p-Normen; S233.tsx: Konditionszahl-Spielwiese mit Einheitskreis-
+  Ellipse). NUR CODE übernehmen, Labels deutsch, Prosa eigenständig
+  (App-Prosa ist buchadaptiert, Skript ist öffentlich).
+- Passende Tooltips existieren: euclidean-norm, norm, trace,
+  eigenvalue-eigenvector, singular-value-decomposition, spectral-radius,
+  cauchy-schwarz-inequality, … (`ls src/concepts/`).
+- Kapitel 3.6 (Zusammenfassung) schlank halten.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
@@ -166,3 +181,16 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Live-IEEE-Widgets neben R-zitierender Prosa brauchen einen expliziten Diskrepanz-Hinweis IM Widget (naive JS-Summe vs. R-mean-Nachkorrektur, z. B. k=9: -128 statt 0) — sonst widerspricht der Default-Zustand dem Beispiel im Text (Review 2.1).
 - Folien-R-Code auf KAPITEL-Ebene auf Abdeckung prüfen: der naive Rekursions-Code (02-algos „Komplexitätsanalyse 2") fehlte im ganzen Kapitel, weil S22 nur den iterativen zeigt — Review 2.5 hat ihn als <pre><code>-Block in S25 ergänzt; Vergleichstabelle 2.5.3 (T(n)=2F_{n+1}−1, Modellzeiten) per node nachgerechnet: alle Werte korrekt.
 - Anker-Audits: die Top-Level-Anker sec-K.n stehen NICHT in den Abschnittsdateien, sondern werden von App.tsx als id={`sec-${id}`} pro Registry-Section erzeugt — ein grep nur über src/chapters meldet sie fälschlich als fehlend (Integrationslauf Kap. 1+2: alle 688 Mathe-Literale headless fehlerfrei, Konzept-Abschluss vollständig, Build grün).
+- Folien-R-Chunks mit matrix(c(...)) prüfen: R füllt SPALTENWEISE — zeilenweise gemeinte Folien-Matrizen bauen stillschweigend Aᵀ (03-matrix-spur-norm „Visualisierung Operatornorm"; Singulärwerte zufällig identisch, gedrucktes A/AtA aber falsch) — Skript-Codeblöcke mit byrow=TRUE schreiben und Output per Rscript --vanilla verifizieren.
+- Folien 03 (Eigenschaften/Zusammenfassung): Maximumsnorm-Gegenbeispiel und Quiz-SOLUTIONs stehen nur in AUSKOMMENTIERTEN Folienblöcken — im Skript ausformulieren (nachgerechnet: A=Einsermatrix ⇒ ‖A²‖_M=2>1=‖A‖_M²; Zufallstest: alle anderen Kapitel-3-Normen submultiplikativ).
+- Deutsche Anführungszeichen „…" NICHT in JSX-String-Attributen (z. B. EnvBlock label="…") verwenden — das schließende Zeichen wird im Bestand als ASCII-Quote gesetzt und beendet dort das Attribut (Parse-Fehler); im JSX-Fließtext ist „…" dagegen fein, Attribut-Labels umformulieren.
+- Folienfehler 03 „Schattennormen": Def.-Satz verstümmelt („…mit AᵀA mit Eigenwerten…") und der ‖A‖F²=tr(AᵀA)-„Beweis" setzt die Behauptung in der ersten Gleichung voraus und schreibt tr(PᵀΛP) statt tr(PΛPᵀ) — Skript §3.4 (Satz 3.4.3) beweist elementweise + Spur-Zyklizität; Beispiel 3.4.6 rechnet A=(2 1; 0 1), dieselbe Matrix wie die §3.3-Operatornorm-Visualisierung (σ ≈ 2,288/0,874) — S33 kann darauf verweisen.
+- Foliensatz 03: die Frobenius-Norm ist bereits im Folien-Block „Die Spur einer Matrix" definiert und in Skript §3.1 (Def. 3.1.8, Satz 3.1.10 mit Spur-Darstellung) ausgearbeitet — §3.2 nicht neu definieren, sondern auf §3.1 verweisen.
+- Folienfehler 03-matrix-spur-norm (Z. 534, auskommentiert): das Gegenbeispiel zu tr(AB)≠tr(A)·tr(B) ist falsch (vergleicht I₂ mit tr(I₁)·tr(I₁)=1, wo Gleichheit sogar gälte) — Skript §3.6 nutzt A=B=I₂: tr(AB)=2, tr(A)·tr(B)=4; Scratchpad ist zwischen parallelen Agenten geteilt, Prüfskripte eindeutig benennen (check-math-s36.mjs).
+- Widget-Readouts nach dem Objekt benennen, aus dem sie gerechnet werden (S34: ‖Q_θA‖, nicht ‖A‖ — sonst zeigt die Invarianz-Demo scheinbar nur Konstanten); Satz-/Korollar-Nummern in Widget-Captions beim Review mitprüfen (S34-Caption zitierte „Satz 3.4.6" statt 3.4.7).
+- Folien-Ungenauigkeiten 03 „Eigenschaften der Spur" (Z. 82–87): Eigenschaft 1 heißt dort „Linear", ist aber nur die Additivität (Homogenität steht separat als 2), und das in Eigenschaft 4 benutzte P wird im Satzkopf nicht deklariert — Skript Satz 3.1.4 schreibt „Additiv" und ergänzt „invertierbares P ∈ R^{n×n}".
+- Review 3.6: Folien-Stichpunktlisten („Anwendungen", „Praktische Hinweise") zählen zur Vollständigkeit — Ähnlichkeitsinvarianz/char. Polynom fehlten in der Zusammenfassung; die Folien-Formulierung „Kondition = Verhältnis der extremen Eigen-/Singulärwerte" (Z. 500) nur mit Einschränkung übernehmen (Eigenwerte: symmetrischer Fall, Beträge).
+- Review 3.3: die Folien-Implikation „|λ(Q)|=1 ⇒ κ₂(Q)=1" (Orthogonalmatrizen, Z. 307-308) nicht wörtlich übernehmen (Eigenwertbeträge bestimmen κ₂ i. A. nicht) — Skript leitet κ₂(Q)=‖Q‖₂‖Q⁻¹‖₂=1 über die Orthogonalität von Q⁻¹=Qᵀ her; außerdem fehlt in der Folien-p-Norm-Definition (Z. 278) der Betrag (v_i^p statt |v_i|^p) — Skript setzt |v_i|^p.
+- Review 3.5: Kapitel 3 nutzt ‖·‖_∞ (Zeilensummen-Operatornorm) UND ‖·‖_M (elementweise Maximumsnorm) — in Äquivalenzketten explizit sagen, welche gemeint ist; Widget-Statustexte auf Grenzfälle prüfen: submultiplikative Normen erreichen Quotient ‖AB‖/(‖A‖‖B‖) = 1 exakt (A=B=I), also „höchstens 1" schreiben, nicht „unter 1".
+- Folienfehler 03 Z. 221: die Vertauschungsmatrix (0 1; 1 0) ist KEINE „Rotation um 90°", sondern eine Spiegelung an x₂=x₁ (det = −1; Rotation wäre (0 −1; 1 0)) — Skript §3.2 (Beispiel 3.2.6) sagt korrekt Spiegelung.
+- Integrationslauf Kap. 3 (2026-08-05) ohne Reparaturbedarf: tsc/Build grün, alle 2737 Mathe-Literale headless fehlerfrei, 118 verlinkte Konzept-ids vollständig (133 Module, keine Duplikate) — der Gesamt-Check liegt als check-math-final.mjs im Scratchpad und deckt chapters+concepts inkl. Template-Literale ab.
