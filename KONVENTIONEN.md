@@ -158,6 +158,34 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   taylor-series, gradient-descent, … (`ls src/concepts/` prüfen).
 - Kapitel 4.4 (Zusammenfassung) schlank halten.
 
+## KAPITEL 5 (Foliensatz 05-lgs) — Bauauftrag 2026-08-05
+
+- `src/chapters/05-lgs/`, S51–S55, Anker `#sec-5.1` … `#sec-5.5`;
+  Labels „5.k.n". Regeln wie Kapitel-7-Block (sinngemäß); h3-Konvention
+  „mt-6 text-lg font-semibold".
+- Farbcode-Vorgabe VOR dem Schreiben abstimmen: Der Kapitel-4-Lauf
+  brauchte einen Nachputz, weil drei Abschnitte drei verschiedene
+  Farben für denselben Begriff wählten. Für Kapitel 5: in
+  Eliminations-/Zerlegungsrechnungen Pivot rot (\cred), aktuelle
+  Zeile/Multiplikator blau (\cblue), Ergebnis-/L-Einträge grün
+  (\cgreen); κ/Verstärkung bleibt orange.
+- Querbezüge: Komplexität/O-Notation → Kapitel 2 (`?k=02-algos#sec-2.4`),
+  Konditionszahl κ(A) → `?k=03-matrix-spur-norm#sec-3.5` und
+  `?k=04-fehler#sec-4.2`, Stabilität/„schlecht konditionierte Schritte
+  früh" → `?k=04-fehler#sec-4.3`, Dreieckssysteme/QR/KQ →
+  `?k=07-kq` (dort Vorwärts-/Rückwärtseinsetzen im KQ-Kontext).
+  Quer-Kapitel-Links IMMER als `?k=<kapitel>#sec-…` (Lesson!).
+- Widget-Recycling: private App
+  `/home/fabians/lehre/FMM/fmm-lmu/interactive/heath-ch2/` behandelt
+  genau LGS/Elimination/LU/Cholesky (Heath Kap. 2) — Widget-CODE
+  (Eliminations-Stepper, Matrix-Renderer) darf recycelt werden, Labels
+  deutsch, Prosa/Captions eigenständig. Prosa-Verbot gilt weiterhin.
+- Passende Tooltips existieren: lu-decomposition,
+  cholesky-factorization, gaussian-elimination, triangular-matrix,
+  triangular-solve, positive-definite, symmetric-matrix, sparse-matrix,
+  permutation-matrix, covariance-matrix, … (`ls src/concepts/` prüfen).
+- Kapitel 5.5 (Zusammenfassung) schlank halten.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben

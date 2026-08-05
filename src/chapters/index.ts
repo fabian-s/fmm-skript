@@ -52,6 +52,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./04-fehler"),
   },
   {
+    id: "05-lgs",
+    title: "Kap. 5 · Lineare Gleichungssysteme",
+    deck: "05-lgs",
+    load: () => import("./05-lgs"),
+  },
+  {
     id: "07-kq",
     title: "Kap. 7 · Kleinste Quadrate",
     deck: "07-kq",
