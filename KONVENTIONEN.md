@@ -138,6 +138,26 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   cauchy-schwarz-inequality, … (`ls src/concepts/`).
 - Kapitel 3.6 (Zusammenfassung) schlank halten.
 
+## KAPITEL 4 (Foliensatz 04-fehler) — Bauauftrag 2026-08-05
+
+- `src/chapters/04-fehler/`, S41–S44, Anker `#sec-4.1` … `#sec-4.4`;
+  Labels „4.k.n". Regeln wie Kapitel-7-Block (sinngemäß).
+- Zwischenüberschriften einheitlich: h3 mit
+  className="mt-6 text-lg font-semibold" (Review-Befund Kapitel 3:
+  S32–S35 wichen ab — nicht wiederholen).
+- Querbezüge: Auslöschung/Varianz-Verschiebungsformel ist in Kapitel 2
+  (`#sec-2.1`, AusloeschungDemo in 02-algos/widgets/S21Demos.tsx) schon
+  ausführlich — im Varianz-Stabilitätsbeispiel VERLINKEN, nicht
+  duplizieren. Konditionszahl einer Matrix κ(A)=‖A‖‖A⁻¹‖ ist in
+  Kapitel 3 (`#sec-3.5`) eingeführt — darauf verweisen.
+- Widget-Recycling: private App
+  `/home/fabians/lehre/FMM/fmm-lmu/interactive/heath-ch2/` (Kondition/
+  Fehlerfortpflanzung) — NUR CODE, Labels deutsch, Prosa eigenständig.
+- Passende Tooltips existieren: condition-number, rounding-error,
+  cancellation, machine-epsilon, floating-point, norm, euclidean-norm,
+  taylor-series, gradient-descent, … (`ls src/concepts/` prüfen).
+- Kapitel 4.4 (Zusammenfassung) schlank halten.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben

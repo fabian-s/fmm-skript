@@ -46,6 +46,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./03-matrix-spur-norm"),
   },
   {
+    id: "04-fehler",
+    title: "Kap. 4 · Fehler, Kondition & Stabilität",
+    deck: "04-fehler",
+    load: () => import("./04-fehler"),
+  },
+  {
     id: "07-kq",
     title: "Kap. 7 · Kleinste Quadrate",
     deck: "07-kq",
