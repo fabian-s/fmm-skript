@@ -38,7 +38,7 @@ function LinearMapWidget() {
       <p className="mt-1 text-xs text-slate-300">
         Wie auch immer wir die vier Zahlen wählen: Das Gitter bleibt ein Gitter
         aus geraden, gleichmäßig verteilten Linien, und der Ursprung bewegt
-        sich nie — der Fingerabdruck einer linearen Abbildung.
+        sich nie: der Fingerabdruck einer linearen Abbildung.
       </p>
     </div>
   );
@@ -62,7 +62,7 @@ registerConcept({
       </MD>
       <p>
         Intuitiv: Verdoppeln wir die Ursache, verdoppelt sich die Wirkung, und
-        Wirkungen kombinierter Ursachen addieren sich einfach — keine
+        Wirkungen kombinierter Ursachen addieren sich einfach: keine
         Wechselwirkungen, keine Verschiebungen. Genau deshalb ist eine
         Gleichung <M>{"\\bL\\bu = \\boldsymbol{f}"}</M>, die Ursachen <M>{"\\bu"}</M>{" "}
         mit Wirkungen <M>{"\\boldsymbol{f}"}</M> verknüpft, so gut handhabbar. Sind Ein-
@@ -71,7 +71,7 @@ registerConcept({
         schreiben, und ihre Anwendung ist ein{" "}
         <ConceptLink id="matrix-vector-product">Matrix-Vektor-Produkt</ConceptLink>.
         Spielen wir mit der Abbildung unten: Sie kann die Ebene drehen,
-        strecken und scheren — aber niemals verbiegen.
+        strecken und scheren, aber niemals verbiegen.
       </p>
       <LinearMapWidget />
     </>

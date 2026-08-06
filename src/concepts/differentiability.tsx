@@ -26,7 +26,7 @@ const EXAMPLES = [
     f: (x: number) => Math.sin(x),
     df: (x: number) => Math.cos(x),
     yDomain: [-1.6, 1.6] as [number, number],
-    note: "jede Ableitung existiert und ist stetig — glatter geht es nicht",
+    note: "jede Ableitung existiert und ist stetig, glatter geht es nicht",
   },
 ];
 
@@ -79,20 +79,20 @@ registerConcept({
       <p>
         Eine Funktion ist an einer Stelle <em>differenzierbar</em>, wenn sie
         dort eine wohldefinierte{" "}
-        <ConceptLink id="derivative">Ableitung</ConceptLink> besitzt &mdash;
-        anschaulich: Die Kurve hat eine eindeutige{" "}
+        <ConceptLink id="derivative">Ableitung</ConceptLink> besitzt.
+        Anschaulich: Die Kurve hat eine eindeutige{" "}
         <ConceptLink id="tangent-line">Tangente</ConceptLink> und keinen Knick
         oder keine Ecke. Differenzierbarkeit ist eine stärkere Eigenschaft
         als <ConceptLink id="continuity">Stetigkeit</ConceptLink>: Jede
         differenzierbare Funktion ist stetig, aber <M>{"f(x) = |x|"}</M> ist
         überall stetig und trotzdem bei <M>{"x = 0"}</M> nicht
-        differenzierbar — dort hat ihr Graph eine Ecke.
+        differenzierbar: dort hat ihr Graph eine Ecke.
       </p>
       <p>
         Daraus entsteht eine Leiter von <em>Glattheitsklassen</em>:{" "}
         <M>{"C^0"}</M> heißt bloß stetig, <M>{"C^1"}</M> heißt, die erste
         Ableitung existiert und ist selbst stetig, <M>{"C^2"}</M> verlangt
-        dasselbe für die zweite Ableitung, und so weiter &mdash; jede Stufe
+        dasselbe für die zweite Ableitung, und so weiter; jede Stufe
         verbietet eine weitere Art von Rauheit. Wenn wir von einem
         Interpolanten einen bestimmten Glattheitsgrad verlangen, fordern wir
         genau die Zugehörigkeit zu einer dieser Klassen; kubische Splines

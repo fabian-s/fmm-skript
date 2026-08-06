@@ -3,7 +3,7 @@ import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 
 /**
  * Spielzeug-Zahlenstrahl für Gleitkommazahlen: alle darstellbaren Zahlen in
- * [1, 8] bei t Mantissenbits — der Abstand verdoppelt sich an jeder
+ * [1, 8] bei t Mantissenbits; der Abstand verdoppelt sich an jeder
  * Zweierpotenz.
  */
 function FloatGapWidget() {
@@ -67,9 +67,9 @@ function FloatGapWidget() {
         zwischen 1 und 8. Die Lücke direkt rechts von 1 ist{" "}
         <span className="font-mono">
           2<sup>&minus;{t}</sup> = {Math.pow(2, -t)}
-        </span>{" "}
-        — genau diese Lücke ist <M>{"\\varepsilon_{\\text{mach}}"}</M> — und
-        die Lücken verdoppeln sich an jeder Zweierpotenz, der <em>relative</em>{" "}
+        </span>
+        ; genau diese Lücke ist <M>{"\\varepsilon_{\\text{mach}}"}</M>. Die
+        Lücken verdoppeln sich an jeder Zweierpotenz, der <em>relative</em>{" "}
         Abstand bleibt also überall gleich.
       </p>
     </div>
@@ -84,7 +84,7 @@ registerConcept({
       <p>
         Computer speichern reelle Zahlen als{" "}
         <ConceptLink id="floating-point">Gleitkommazahlen</ConceptLink> mit
-        einer festen Anzahl signifikanter Stellen — zwischen zwei benachbarten
+        einer festen Anzahl signifikanter Stellen. Zwischen zwei benachbarten
         darstellbaren Zahlen klafft also immer eine Lücke. Die{" "}
         <em>Maschinengenauigkeit</em> (engl. <em>machine epsilon</em>){" "}
         <M>{"\\varepsilon_{\\text{mach}}"}</M> ist die Größe dieser Lücke
@@ -95,7 +95,7 @@ registerConcept({
       <p>
         also etwa 16 signifikante Dezimalstellen. Eine beliebige reelle Zahl{" "}
         <M>{"x"}</M> zu speichern heißt, sie auf den nächsten darstellbaren
-        Wert zu runden — das verursacht einen <em>relativen</em> Fehler von
+        Wert zu runden. Das verursacht einen <em>relativen</em> Fehler von
         höchstens etwa <M>{"\\varepsilon_{\\text{mach}}"}</M>, die
         grundlegende Auflösungsgrenze hinter jedem{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>.

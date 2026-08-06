@@ -32,7 +32,7 @@ function DetWidget() {
       />
       <p className="mt-1 text-xs opacity-80">
         {Math.abs(det) < 1e-9
-          ? "det = 0: das Gitter kollabiert auf eine Gerade — die Matrix ist singulär."
+          ? "det = 0: das Gitter kollabiert auf eine Gerade, die Matrix ist singulär."
           : "Die Fläche jeder Gitterzelle wird um den Faktor |det| skaliert; ein negatives det kehrt zusätzlich die Orientierung um."}
       </p>
     </div>
@@ -59,7 +59,7 @@ registerConcept({
         <ConceptLink id="linear-transformation">lineare Abbildung</ConceptLink>{" "}
         der Ebene auf, dann ist <M>{"|\\det(\\bA)|"}</M> der Faktor, um den
         sie Flächen skaliert (Volumina in 3D). Determinante null heißt: Die
-        Abbildung quetscht die Ebene auf eine Gerade — keine Fläche
+        Abbildung quetscht die Ebene auf eine Gerade; keine Fläche
         überlebt, und die Matrix ist <em>singulär</em>. Deshalb ist der Test{" "}
         <M>{"\\det(\\bA) \\neq 0"}</M> gleichwertig dazu, dass die Matrix
         eine <ConceptLink id="matrix-inverse">Inverse</ConceptLink> besitzt.

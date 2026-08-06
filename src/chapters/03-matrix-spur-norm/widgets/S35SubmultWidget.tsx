@@ -204,12 +204,12 @@ export function S35SubmultWidget() {
           >
             {holds
               ? "Submultiplikativität erfüllt: ‖AB‖ ≤ ‖A‖ · ‖B‖."
-              : "Verletzt: ‖AB‖ > ‖A‖ · ‖B‖ — diese Norm ist nicht submultiplikativ!"}
+              : "Verletzt: ‖AB‖ > ‖A‖ · ‖B‖, diese Norm ist nicht submultiplikativ!"}
           </p>
           <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             Probieren wir es aus: Für Spektral-, Spaltensummen-, Zeilensummen-,
             Frobenius- und Nuklearnorm bleibt der Quotient bei jeder Wahl von{" "}
-            <M>{"\\bA"}</M> und <M>{"\\bB"}</M> höchstens 1 — diese Normen sind
+            <M>{"\\bA"}</M> und <M>{"\\bB"}</M> höchstens 1; diese Normen sind
             submultiplikativ (Satz 3.5.5 bzw. die Bemerkung zu den
             Schatten-Normen). Nur die Maximumsnorm kann die
             Schranke reißen: Schon die Einsermatrix aus Beispiel 3.5.6 liefert

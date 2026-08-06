@@ -60,10 +60,10 @@ export function S32NormBallWidget() {
       <p className="mb-2">
         Der Regler bewegt den Exponenten <M>{"p"}</M> stufenlos: Die Einheitskugel{" "}
         <M>{"\\{\\bx \\in \\R^2 : \\|\\bx\\|_p = 1\\}"}</M> verformt sich dabei von der Raute (
-        <M>{"p = 1"}</M>) über den Kreis (<M>{"p = 2"}</M>) in Richtung Quadrat — das Kästchen
+        <M>{"p = 1"}</M>) über den Kreis (<M>{"p = 2"}</M>) in Richtung Quadrat; das Kästchen
         springt direkt zu <M>{"p = \\infty"}</M>. Die gestrichelte Kurve ist die Einheitskugel,
         skaliert mit dem Faktor <M>{"\\|\\bx\\|_p"}</M>: Sie läuft immer exakt durch die Spitze
-        des roten Vektors. Genau das bedeutet „die Norm ist der Aufblähfaktor der
+        des roten Vektors. Das ist gemeint, wenn wir sagen: „die Norm ist der Aufblähfaktor der
         Einheitskugel".
       </p>
       <Slider label="p" value={p} onChange={setP} min={0.5} max={6} step={0.05} />
@@ -160,7 +160,7 @@ export function S32NormBallWidget() {
           </p>
           {!inf && p < 1 && (
             <p className="mt-2 font-medium text-rose-600 dark:text-rose-400">
-              Vorsicht: Für <M>{"p < 1"}</M> beult sich die „Kugel" nach innen — sie ist nicht
+              Vorsicht: Für <M>{"p < 1"}</M> beult sich die „Kugel" nach innen. Sie ist nicht
               mehr konvex, und die Dreiecksungleichung geht verloren. Hier etwa{" "}
               <M>
                 {`\\left\\| \\be_1 + \\be_2 \\right\\|_{${de(p)}} = 2^{1/${de(p)}} = ${de(
@@ -174,7 +174,7 @@ export function S32NormBallWidget() {
           )}
           {(inf || p >= 1) && (
             <p className="mt-2 text-slate-500">
-              Für <M>{"p \\ge 1"}</M> ist die Kugel konvex — diese Konvexität ist genau das
+              Für <M>{"p \\ge 1"}</M> ist die Kugel konvex, und diese Konvexität ist das
               geometrische Gesicht der Dreiecksungleichung.
             </p>
           )}

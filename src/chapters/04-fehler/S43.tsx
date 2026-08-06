@@ -58,7 +58,7 @@ export function S43() {
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink> sagt uns, wie stark
         er den unvermeidbaren Inputfehler verstärkt. Jetzt nehmen wir uns den{" "}
         <M>{"\\cred{\\text{ersten Summanden}}"}</M> vor: den Fehler, den der Algorithmus{" "}
-        <em>selbst</em> hinzufügt — durch{" "}
+        <em>selbst</em> hinzufügt: durch{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> in jeder einzelnen{" "}
         <ConceptLink id="floating-point">Gleitkomma</ConceptLink>-Operation, durch
         abgebrochene Reihen, durch geschätzte Zwischengrößen. Dieser Anteil hängt nicht vom
@@ -74,14 +74,14 @@ export function S43() {
         </p>
       </EnvBlock>
       <p className={P}>
-        Die Definition ist bewusst informell — was „klein" heißt, hängt vom Kontext ab. Ein
+        Die Definition ist bewusst informell: Was „klein" heißt, hängt vom Kontext ab. Ein
         brauchbarer Maßstab ist die Kondition des Problems selbst: Inputfehler und Kondition
         erzwingen ohnehin einen gewissen Fehler im Ergebnis, und ein stabiler Algorithmus
         soll nicht wesentlich <em>mehr</em> Fehler produzieren als diesen unvermeidbaren
         Anteil. Wichtig ist die Arbeitsteilung der beiden Begriffe: Die{" "}
-        <em>Kondition</em> ist eine Eigenschaft des <em>Problems</em> — wir können sie nicht
-        wählen. Die <em>Stabilität</em> ist eine Eigenschaft des <em>Algorithmus</em> — und
-        den wählen wir sehr wohl. Genau deshalb lohnt sich dieser Abschnitt: Für dasselbe
+        <em>Kondition</em> ist eine Eigenschaft des <em>Problems</em>, die wir nicht wählen
+        können. Die <em>Stabilität</em> ist eine Eigenschaft des <em>Algorithmus</em>, und
+        den wählen wir sehr wohl. Deshalb lohnt sich dieser Abschnitt: Für dasselbe
         Problem können zwei mathematisch äquivalente Rechenwege dramatisch unterschiedlich
         stabil sein.
       </p>
@@ -110,11 +110,11 @@ export function S43() {
           <li>
             <em>Kleine Lernrate</em> (etwa <M>{"\\alpha = 0{,}001"}</M>): Jeder Schritt ist
             vorsichtig, die Schätz- und Rundungsfehler des Gradienten akkumulieren nur
-            langsam — das Verfahren konvergiert zuverlässig gegen ein Optimum.
+            langsam, und das Verfahren konvergiert zuverlässig gegen ein Optimum.
           </li>
           <li>
             <em>Zu große Lernrate</em> (etwa <M>{"\\alpha = 1"}</M>): Jeder Schritt
-            verstärkt die Fehler des geschätzten Gradienten — die Iterierten oszillieren
+            verstärkt die Fehler des geschätzten Gradienten: Die Iterierten oszillieren
             um das Optimum oder divergieren ganz.
           </li>
         </ul>
@@ -135,7 +135,7 @@ export function S43() {
         Kern dasselbe: Sie verhindern, dass sich kleine Fehler von Schritt zu Schritt
         aufschaukeln.
       </p>
-      <ExpandedReading title="Die Lernrate als Stabilitätsregler — SGD zum Ausprobieren">
+      <ExpandedReading title="Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren">
         <SgdLernratenDemo />
       </ExpandedReading>
 
@@ -144,7 +144,7 @@ export function S43() {
         Praktisch jeder Algorithmus ist eine Kette von Teilschritten. Was passiert mit den
         Fehlern der frühen Schritte, wenn spätere Schritte darauf aufbauen? Das folgende
         Resultat verknüpft die Stabilität eines zusammengesetzten Algorithmus mit der{" "}
-        <em>Kondition seiner Teilschritte</em> — es ist die wichtigste Erkenntnis dieses
+        <em>Kondition seiner Teilschritte</em>. Es ist die wichtigste Erkenntnis dieses
         Abschnitts. Wir betrachten dazu ein Problem, das als{" "}
         <ConceptLink id="function-composition">Verkettung</ConceptLink> zweier Teilprobleme
         geschrieben ist.
@@ -168,12 +168,12 @@ export function S43() {
       <p className={P}>
         Lesen wir die Schranke Term für Term: Der{" "}
         <M>{"\\cred{\\text{erste Summand}}"}</M> ist der algorithmische Fehler von{" "}
-        <M>{"\\wt{h}"}</M> allein — er misst, wie stabil der <em>zweite</em> Teilschritt
+        <M>{"\\wt{h}"}</M> allein und misst, wie stabil der <em>zweite</em> Teilschritt
         für sich genommen ist. Der <M>{"\\cblue{\\text{blaue Faktor}}"}</M> ist der relative
         Fehler, den der <em>erste</em> Teilschritt <M>{"\\wt{g}"}</M> produziert (der Input{" "}
         <M>{"\\bx"}</M> ist hier exakt, es handelt sich also um den algorithmischen Fehler
         von <M>{"\\wt{g}"}</M>). Und dieser Fehler wird multipliziert mit{" "}
-        <M>{"\\corange{\\kappa_{rel}(h, g(\\bx))}"}</M> — der Kondition des zweiten
+        <M>{"\\corange{\\kappa_{rel}(h, g(\\bx))}"}</M>, der Kondition des zweiten
         Teilproblems an der Übergabestelle: Aus Sicht von <M>{"h"}</M> ist das Ergebnis von{" "}
         <M>{"\\wt{g}"}</M> nichts anderes als ein fehlerbehafteter Input.
       </p>
@@ -197,7 +197,7 @@ export function S43() {
             <>
               Nulladdition: Wir ziehen <M>{"h(\\wt{g}(\\bx))"}</M> ab und addieren es sofort
               wieder. Dieser Term vergleicht das <em>exakte</em> <M>{"h"}</M> mit dem{" "}
-              <em>berechneten</em> <M>{"\\wt{h}"}</M> am <em>selben</em> (gestörten) Input —
+              <em>berechneten</em> <M>{"\\wt{h}"}</M> am <em>selben</em> (gestörten) Input;
               genau dadurch trennt sich der Fehler von <M>{"\\wt{h}"}</M> vom Fehler aus{" "}
               <M>{"\\wt{g}"}</M>
             </>
@@ -229,7 +229,7 @@ export function S43() {
               Erster Summand: nur Umbenennung <M>{"\\wt{\\by} = \\wt{g}(\\bx)"}</M>,{" "}
               <M>{"\\by = g(\\bx)"}</M>. Zweiter Summand: Definition der relativen
               Konditionszahl von <M>{"h"}</M> an der Stelle <M>{"\\by"}</M>, angewandt auf
-              den gestörten Input <M>{"\\wt{\\by}"}</M> — dabei ist{" "}
+              den gestörten Input <M>{"\\wt{\\by}"}</M>, dabei ist{" "}
               <M>{"\\wt{\\by} - \\by = \\wt{g}(\\bx) - g(\\bx)"}</M>
             </>
           }
@@ -247,7 +247,7 @@ export function S43() {
         <a className="underline" href="#sec-4.2">
           Abschnitt 4.2
         </a>
-        ), die letzte Abschätzung gilt also in diesem Sinne — als Näherung erster Ordnung
+        ), die letzte Abschätzung gilt also in diesem Sinne, als Näherung erster Ordnung
         für kleine Fehler in <M>{"\\wt{g}"}</M>. Für unsere Zwecke ist das genau die
         richtige Lesart: Wir wollen wissen, um welchen <em>Faktor</em> kleine Fehler
         verstärkt werden.
@@ -256,7 +256,7 @@ export function S43() {
         <p>
           Ein schlecht konditioniertes Teilproblem <M>{"h"}</M> (an der Stelle{" "}
           <M>{"\\by = g(\\bx)"}</M>) verstärkt alle Fehler, die <M>{"\\wt{g}"}</M> vorher
-          gemacht hat — ein <em>Indiz</em> für die Instabilität von <M>{"\\wt{f}"}</M>.
+          gemacht hat – ein <em>Indiz</em> für die Instabilität von <M>{"\\wt{f}"}</M>.
           Deshalb:{" "}
           <span className="font-semibold">
             Schlecht konditionierte Schritte so früh wie möglich ausführen!
@@ -274,7 +274,7 @@ export function S43() {
         <a className="underline" href="?k=02-algos#sec-2.1">
           Abschnitt 2.1
         </a>{" "}
-        schon kennen — dort haben wir <em>beobachtet</em>, dass die Verschiebungsformel für
+        schon kennen. Dort haben wir <em>beobachtet</em>, dass die Verschiebungsformel für
         die Varianz katastrophal versagen kann. Jetzt können wir <em>erklären</em>, warum,
         und zwar quantitativ.
       </p>
@@ -295,7 +295,7 @@ export function S43() {
         <p>
           Mathematisch sind beide identisch. Als Rechenvorschriften sind sie es nicht:{" "}
           <M>{"\\wt{f}_2"}</M> ist eine Verkettung <M>{"\\wt{f}_2 = \\wt{h} \\circ \\wt{g}"}</M>{" "}
-          im Sinne von Satz 4.3.3 — der erste Schritt <M>{"g"}</M> berechnet das Paar
+          im Sinne von Satz 4.3.3. Der erste Schritt <M>{"g"}</M> berechnet das Paar
         </p>
         <MD>
           {
@@ -327,7 +327,7 @@ export function S43() {
           why={
             <>
               <M>{"h"}</M> ist linear: Die Differenz zweier Funktionswerte ist{" "}
-              <M>{"h"}</M>, angewandt auf die Differenz der Inputs — geschrieben als
+              <M>{"h"}</M>, angewandt auf die Differenz der Inputs, geschrieben als
               Skalarprodukt mit dem Vektor <M>{"(1, -1)^\\top"}</M>
             </>
           }
@@ -344,7 +344,7 @@ export function S43() {
               <ConceptLink id="cauchy-schwarz-inequality">Cauchy-Schwarz-Ungleichung</ConceptLink>{" "}
               mit <M>{"\\left\\| (1, -1)^\\top \\right\\|_2 = \\sqrt{2}"}</M>; für
               Störungen proportional zu <M>{"(1, -1)^\\top"}</M> gilt Gleichheit, die
-              Schranke wird also angenommen — <M>{"\\sqrt{2}"}</M> ist die{" "}
+              Schranke wird also angenommen; <M>{"\\sqrt{2}"}</M> ist die{" "}
               <em>kleinste</em> solche Konstante und damit{" "}
               <M>{"\\kappa_{abs} = \\sqrt{2}"}</M>
             </>
@@ -381,12 +381,12 @@ export function S43() {
         Die Formel sagt präzise, wann es gefährlich wird: Sind <M>{"\\cred{a}"}</M> und{" "}
         <M>{"\\cblue{b}"}</M> <em>groß</em>, liegen aber <em>nah beieinander</em> (
         <M>{"\\cred{a} \\approx \\cblue{b}"}</M>), dann ist der Zähler riesig und der
-        Nenner winzig — <M>{"\\corange{\\kappa_{rel}}"}</M> explodiert, und der letzte
+        Nenner winzig: <M>{"\\corange{\\kappa_{rel}}"}</M> explodiert, und der letzte
         Schritt verstärkt <em>alle</em> vorangegangenen Fehler mit diesem Faktor. Genau das
         passiert bei der Varianz von Daten mit großem Mittelwert: Für{" "}
         <M>{"x_i = c + z_i"}</M> mit Verschiebung <M>{"c"}</M> und Varianz <M>{"1"}</M> ist{" "}
         <M>{"\\cred{a} \\approx c^2 + 1"}</M> und <M>{"\\cblue{b} \\approx c^2"}</M>,
-        während die Differenz — die Varianz — bei <M>{"1"}</M> bleibt. Damit wächst
+        während die Differenz (die Varianz) bei <M>{"1"}</M> bleibt. Damit wächst
       </p>
       <MD>
         {
@@ -398,15 +398,15 @@ export function S43() {
         <ConceptLink id="cancellation">katastrophale Auslöschung</ConceptLink> aus{" "}
         <a className="underline" href="?k=02-algos#sec-2.1">
           Abschnitt 2.1
-        </a>{" "}
-        — dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
+        </a>
+        . Dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
         die Formel kippt. Und die Merkregel 4.3.4 erklärt, warum <M>{"\\wt{f}_1"}</M>{" "}
         so viel besser dasteht: Auch <M>{"\\wt{f}_1"}</M> subtrahiert fast gleich große
         Zahlen (<M>{"x_i - \\bar{x}"}</M> mit <M>{"x_i \\approx \\bar{x} \\approx c"}</M>),
         aber dieser schlecht konditionierte Schritt kommt <em>zuerst</em> und arbeitet auf
         Zahlen der Größenordnung <M>{"c"}</M>. Bei <M>{"\\wt{f}_2"}</M> kommt die
         Subtraktion ganz am <em>Ende</em>, nach dem Quadrieren, auf Zahlen der
-        Größenordnung <M>{"c^2"}</M> — der Verstärkungsfaktor ist <M>{"\\sim c^2"}</M>{" "}
+        Größenordnung <M>{"c^2"}</M>. Der Verstärkungsfaktor ist <M>{"\\sim c^2"}</M>{" "}
         statt <M>{"\\sim c"}</M>, und er trifft alle vorher akkumulierten Rundungsfehler.
       </p>
       <EnvBlock kind="Beispiel" label="4.3.7 (Die Instabilität in R)">
@@ -423,7 +423,7 @@ mean(x^2) - mean(x)^2
 #> [1] 16384`}</code>
         </pre>
         <p>
-          Die zweistufige Rechnung <M>{"\\wt{f}_1"}</M> liefert <M>{"1{,}023"}</M> — eine
+          Die zweistufige Rechnung <M>{"\\wt{f}_1"}</M> liefert <M>{"1{,}023"}</M>, eine
           völlig plausible Stichprobenvarianz. Die Verschiebungsformel <M>{"\\wt{f}_2"}</M>{" "}
           liefert <M>{"16384"}</M>: um mehr als vier Größenordnungen daneben. Passt das zu
           unserer Analyse? Mit <M>{"c = 10^{10}"}</M> ist{" "}
@@ -434,15 +434,15 @@ mean(x^2) - mean(x)^2
             <M>{"\\eps \\approx 2{,}2 \\cdot 10^{-16}"}</M>
           </ConceptLink>
           , also erwarten wir relative Fehler im Ergebnis bis etwa{" "}
-          <M>{"\\corange{\\kappa_{rel}} \\cdot \\eps \\approx 4 \\cdot 10^{4}"}</M> —
-          beobachtet: <M>{"16384/1{,}02 \\approx 1{,}6 \\cdot 10^4"}</M>. Die
+          <M>{"\\corange{\\kappa_{rel}} \\cdot \\eps \\approx 4 \\cdot 10^{4}"}</M>.
+          Beobachtet: <M>{"16384/1{,}02 \\approx 1{,}6 \\cdot 10^4"}</M>. Die
           Größenordnung stimmt.
         </p>
         <p>
           Ein hübsches Detail: <M>{"16384 = 2^{14}"}</M> ist genau der Abstand zweier
           benachbarter Maschinenzahlen in der Größenordnung <M>{"10^{20}"}</M>. Was die
           Verschiebungsformel als „Varianz" ausgibt, ist hier also schlicht ein einzelner
-          Rundungsschritt der Zwischenergebnisse — mit den Daten hat diese Zahl nichts
+          Rundungsschritt der Zwischenergebnisse – mit den Daten hat diese Zahl nichts
           mehr zu tun.
         </p>
       </EnvBlock>
@@ -451,7 +451,7 @@ mean(x^2) - mean(x)^2
       </ExpandedReading>
 
       <h3 className={H3}>Selbsttest</h3>
-      <p className={P}>Prüfen wir das Verständnis — erst selbst überlegen, dann aufklappen.</p>
+      <p className={P}>Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.</p>
       <ol className="max-w-prose list-decimal space-y-3 pl-5">
         <Frage
           q={
@@ -464,7 +464,7 @@ mean(x^2) - mean(x)^2
         >
           <p>
             Nein. Satz 4.3.3 liefert nur eine <em>obere Schranke</em>: Die schlechte
-            Kondition von <M>{"h"}</M> verstärkt den Fehler von <M>{"\\wt{g}"}</M> — wenn{" "}
+            Kondition von <M>{"h"}</M> verstärkt den Fehler von <M>{"\\wt{g}"}</M>; wenn{" "}
             <M>{"\\wt{g}"}</M> aber (nahezu) exakt rechnet, bleibt der verstärkte Term
             trotzdem klein. Eine schlecht konditionierte Zwischenstelle ist deshalb ein{" "}
             <em>Indiz</em> für Instabilität, kein Beweis.
@@ -482,7 +482,7 @@ mean(x^2) - mean(x)^2
           <p>
             Wegen Position und Größenordnung des schlecht konditionierten Schritts. Bei{" "}
             <M>{"\\wt{f}_1"}</M> steht die Subtraktion ganz am <em>Anfang</em> und
-            verarbeitet Zahlen der Größenordnung <M>{"c"}</M> — die absoluten
+            verarbeitet Zahlen der Größenordnung <M>{"c"}</M>: Die absoluten
             Rundungsfehler sind <M>{"\\sim c \\cdot \\eps"}</M>, und alles Weitere
             (Quadrieren, Mitteln) ist gut konditioniert. Bei <M>{"\\wt{f}_2"}</M> steht
             sie ganz am <em>Ende</em>, nach dem Quadrieren, auf Zahlen der Größenordnung{" "}
@@ -496,7 +496,7 @@ mean(x^2) - mean(x)^2
             <>
               Beim Training eines neuronalen Netzes beginnt der Verlust nach wenigen
               Epochen zu oszillieren und wächst dann über alle Grenzen. Welche
-              Stellschraube prüfen wir zuerst — und warum?
+              Stellschraube prüfen wir zuerst, und warum?
             </>
           }
         >
@@ -505,7 +505,7 @@ mean(x^2) - mean(x)^2
             Signaturverhalten eines instabilen Iterationsverfahrens: Der
             Verstärkungsfaktor pro Schritt liegt über <M>{"1"}</M>, jeder Schritt bläht
             die Fehler des geschätzten Gradienten weiter auf. Eine kleinere Lernrate
-            (oder Gradient Clipping) drückt den Faktor wieder unter <M>{"1"}</M> — in der
+            (oder Gradient Clipping) drückt den Faktor wieder unter <M>{"1"}</M>. In der
             SGD-Demo oben lässt sich der Umschlag direkt beobachten.
           </p>
         </Frage>

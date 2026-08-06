@@ -30,7 +30,7 @@ registerConcept({
       <p>
         Ein Polynom ist eine{" "}
         <ConceptLink id="function">Funktion</ConceptLink>, die nur aus Potenzen
-        von <M>{"x"}</M> aufgebaut ist — jede mit einer festen Zahl (einem
+        von <M>{"x"}</M> aufgebaut ist, jede mit einer festen Zahl (einem
         Koeffizienten) multipliziert und dann aufsummiert:
       </p>
       <MD>{"p(x) = a_0 + a_1 x + a_2 x^2 + \\cdots + a_n x^n = \\sum_{i=0}^{n} a_i x^i,"}</MD>
@@ -44,9 +44,9 @@ registerConcept({
         und <M>{"p(1) = 3 - 1 + 2 = 4"}</M>. Polynome begegnen uns gleich
         doppelt: Die Ableitung der Potenzfunktion <M>{"f(x) = x^n"}</M> ist das
         Grundbeispiel der Differentialrechnung (vgl. MML §5.2), und
-        Taylor-Polynome <M>{"T_n"}</M> haben genau diese Form &mdash; mit
+        Taylor-Polynome <M>{"T_n"}</M> haben genau diese Form (mit
         Koeffizienten aus Ableitungen und{" "}
-        <ConceptLink id="factorial">Fakultäten</ConceptLink> &mdash; um
+        <ConceptLink id="factorial">Fakultäten</ConceptLink>), um
         komplizierte Funktionen anzunähern. Warum ausgerechnet Polynome? Weil
         sich Polynome allein durch Addieren und Multiplizieren auswerten
         lassen.

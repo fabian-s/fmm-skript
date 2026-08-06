@@ -23,7 +23,7 @@ registerConcept({
         Das Netz zu „trainieren“ heißt, alle Gewichte und Biases so
         einzustellen, dass eine{" "}
         <ConceptLink id="objective-function">Zielfunktion</ConceptLink>{" "}
-        (z.&nbsp;B. der mittlere Vorhersagefehler) möglichst klein wird — ein{" "}
+        (z.&nbsp;B. der mittlere Vorhersagefehler) möglichst klein wird, ein{" "}
         <ConceptLink id="optimization">Optimierungsproblem</ConceptLink>, das
         numerisch mit{" "}
         <ConceptLink id="gradient">Gradienten</ConceptLink> der Zielfunktion

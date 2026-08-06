@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Optimierung — Minimieren/Maximieren einer Zielfunktion. */
+/** Konzept-Tooltip: Optimierung: Minimieren/Maximieren einer Zielfunktion. */
 import { useState } from "react";
 import { ConceptLink, M, Plot, registerConcept, Slider } from "../lib";
 
@@ -13,7 +13,7 @@ function OptimizationWidget() {
         Schieben wir <M>{"\\theta"}</M> so, dass <M>{"L(\\theta)"}</M>{" "}
         möglichst klein wird. Aktueller Wert:{" "}
         <M>{`L(${theta.toFixed(2)}) = ${L(theta).toFixed(2)}`}</M>.
-        Vorsicht: die flache Falle bei <M>{"\\theta \\approx 1"}</M> — der
+        Vorsicht: die flache Falle bei <M>{"\\theta \\approx 1"}</M>; der
         beste Punkt liegt links.
       </div>
       <Plot
@@ -39,14 +39,14 @@ registerConcept({
         groß) wie möglich machen. Im maschinellen Lernen ist diese Funktion
         die <ConceptLink id="objective-function">Zielfunktion</ConceptLink>{" "}
         <M>{"L(\\btheta)"}</M>, und die Eingaben sind die Modellparameter{" "}
-        <M>{"\\btheta"}</M> — „ein Modell trainieren“ bedeutet also nichts
+        <M>{"\\btheta"}</M>. „Ein Modell trainieren“ bedeutet also nichts
         anderes, als{" "}
         <M>{"\\min_{\\btheta} L(\\btheta)"}</M> zu lösen. Alle Parameterwerte
         durchzuprobieren ist aussichtslos; praktische Algorithmen machen
         stattdessen wiederholt kleine Schritte bergab, und der{" "}
-        <ConceptLink id="gradient">Gradient</ConceptLink> — aufgebaut aus
-        Ableitungen — verrät ihnen, in welcher Richtung es bergab geht.
-        Genau deshalb spielt das Differenzieren hier eine so große Rolle.
+        <ConceptLink id="gradient">Gradient</ConceptLink> (aufgebaut aus
+        Ableitungen) verrät ihnen, in welcher Richtung es bergab geht.
+        Deshalb spielt das Differenzieren hier eine so große Rolle.
       </p>
       <OptimizationWidget />
     </>

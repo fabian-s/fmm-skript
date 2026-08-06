@@ -3,7 +3,7 @@ import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 
 /**
  * Contour plot of φ(x) = x₁² + 2x₂² with a movable point and its gradient
- * arrow — the arrow is perpendicular to the contour and points uphill.
+ * arrow; the arrow is perpendicular to the contour and points uphill.
  */
 function GradientWidget() {
   const [a, setA] = useState(0.9);
@@ -120,7 +120,7 @@ registerConcept({
         von <M>{"\\phi"}</M>, und seine Länge sagt, wie steil es dort bergauf
         geht. So wie <M>{"f'(x) = 0"}</M> am Boden eines eindimensionalen Tals
         gilt, kann ein glattes <M>{"\\phi"}</M> ein Minimum nur dort haben, wo{" "}
-        <M>{"\\nabla \\phi(\\bx) = \\bzero"}</M> ist — jede
+        <M>{"\\nabla \\phi(\\bx) = \\bzero"}</M> ist: jede
         Aufwärtsrichtung ist erloschen. Den Gradienten der Quadratsumme null
         zu setzen ist genau die Herleitung der Normalengleichungen.
       </p>

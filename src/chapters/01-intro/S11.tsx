@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { ConceptLink, EnvBlock, ExpandedReading, M, MD } from "../../lib";
 
 /**
- * Abschnitt 1.1 — Worum geht es in diesem Kurs?
+ * Abschnitt 1.1: Worum geht es in diesem Kurs?
  * Quelle: Folien 01-intro.Rmd (Motivation, Themen, Beispiele, Selbsttest).
  * Bewusst sehr kurz und rein konzeptionell (Dozentenvorgabe); keine
  * Organisation/Logistik. Prosa eigenständig aus den Folien formuliert.
@@ -112,12 +112,12 @@ export function S11() {
         Folien: 01-intro, „Motivation" bis „Selbsttest".
       </p>
       <p>
-        Statistik war einmal Papier-und-Bleistift-Arbeit an kleinen Tabellen. Heute ist sie —
-        genau wie das maschinelle Lernen — durch und durch <em>computational</em>: Jedes Modell,
+        Statistik war einmal Papier-und-Bleistift-Arbeit an kleinen Tabellen. Heute ist sie
+        (genau wie das maschinelle Lernen) durch und durch <em>computational</em>: Jedes Modell,
         das wir fitten, jede Prognose, die wir berechnen, entsteht durch einen Algorithmus auf
         einem Rechner. In diesem Kurs lernen wir die mathematischen Konzepte, mit denen wir
         solche Algorithmen entwickeln, verstehen und beurteilen können. Es geht also nicht um
-        neue Statistik, sondern um die Frage: <em>Wie rechnet man das eigentlich — schnell,
+        neue Statistik, sondern um die Frage: <em>Wie rechnet man das eigentlich – schnell,
         sparsam und zuverlässig?</em>
       </p>
 
@@ -132,19 +132,19 @@ export function S11() {
       <MD>{"\\min_{\\bbeta \\in \\R^p} \\left\\| \\bX\\bbeta - \\by \\right\\|_2^2"}</MD>
       <p>
         lösen. Die Theorie liefert die Formel{" "}
-        <M>{"\\wh{\\bbeta} = (\\bX^\\top\\bX)^{-1}\\bX^\\top\\by"}</M> — und wer sie wörtlich in
+        <M>{"\\wh{\\bbeta} = (\\bX^\\top\\bX)^{-1}\\bX^\\top\\by"}</M>. Wer sie wörtlich in
         den Rechner tippt, erlebt gleich drei Überraschungen. Erstens die <em>Kondition</em>: Die
         Matrix <M>{"\\bX^\\top\\bX"}</M> kann so empfindlich sein, dass winzige{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> das Ergebnis komplett
         verfälschen. Zweitens die <em>Komplexität</em>: Das{" "}
         <ConceptLink id="matrix-inverse">Invertieren</ConceptLink> kostet{" "}
-        <ConceptLink id="big-o-notation"><M>{"O(p^3)"}</M></ConceptLink> Rechenoperationen — für{" "}
+        <ConceptLink id="big-o-notation"><M>{"O(p^3)"}</M></ConceptLink> Rechenoperationen, für{" "}
         <M>{"p = 10\\,000"}</M> rund <M>{"10^{12}"}</M> Gleitkommaoperationen. Drittens der{" "}
         <em>Speicher</em>: <M>{"\\bX^\\top\\bX"}</M> ist eine{" "}
-        <M>{"p \\times p"}</M>-Matrix und belegt allein schon etwa 800 MB. Bessere Wege — die{" "}
+        <M>{"p \\times p"}</M>-Matrix und belegt allein schon etwa 800 MB. Bessere Wege (die{" "}
         <ConceptLink id="qr-factorization">QR-Zerlegung</ConceptLink>, die{" "}
         <ConceptLink id="singular-value-decomposition">Singulärwertzerlegung</ConceptLink>,
-        iterative Verfahren — sind genau der Stoff dieses Kurses.
+        iterative Verfahren) sind genau der Stoff dieses Kurses.
       </p>
       <p>
         Wie dramatisch das erste Problem werden kann, zeigt schon ein{" "}
@@ -160,13 +160,13 @@ export function S11() {
           <M>{"0{,}0001\\,x_2 = 0{,}0001"}</M>, also <M>{"x_2 = 1"}</M> und damit{" "}
           <M>{"x_1 = 1"}</M>: Die exakte Lösung ist{" "}
           <M>{"\\cblue{\\bx} = \\cblue{(1, 1)^\\top}"}</M>. Nun stören wir die rechte Seite
-          minimal — etwa so, wie es ein Rundungsfehler täte — im zweiten Eintrag:
+          minimal (etwa so, wie es ein Rundungsfehler täte) im zweiten Eintrag:
         </p>
         <MD>{"\\cred{\\wt{\\bb}} = \\begin{pmatrix} 2 \\\\ \\cred{2{,}0002} \\end{pmatrix} \\quimpl 0{,}0001\\,x_2 = \\cred{0{,}0002} \\quimpl \\cred{\\wt{\\bx}} = \\cred{\\begin{pmatrix} 0 \\\\ 2 \\end{pmatrix}}."}</MD>
         <p>
           Die winzige Störung wird bei der Division durch <M>{"0{,}0001"}</M> massiv verstärkt:
           Aus <M>{"\\cblue{x_2 = 1}"}</M> wird <M>{"\\cred{\\wt{x}_2 = 2}"}</M>, aus{" "}
-          <M>{"\\cblue{x_1 = 1}"}</M> wird <M>{"\\cred{\\wt{x}_1 = 0}"}</M> — ein Fehler von
+          <M>{"\\cblue{x_1 = 1}"}</M> wird <M>{"\\cred{\\wt{x}_1 = 0}"}</M> – ein Fehler von
           100 % in der Lösung, ausgelöst durch einen Datenfehler von 0,005 %. Solche Probleme
           heißen <em>schlecht konditioniert</em>; die{" "}
           <ConceptLink id="condition-number">Konditionszahl</ConceptLink> misst das präzise und
@@ -180,7 +180,7 @@ export function S11() {
         <em>Numerische Lineare Algebra</em>, klärt zunächst, was einen guten Algorithmus
         ausmacht (Kondition, Stabilität, Komplexität), und entwickelt dann Matrix-Zerlegungen,
         mit denen wir Gleichungssysteme und KQ-Probleme <M>{"\\bA\\bx \\approx \\bb"}</M>{" "}
-        zuverlässig lösen — statt naiv zu invertieren.
+        zuverlässig lösen, statt naiv zu invertieren.
       </p>
       <p>
         Der zweite Block, <em>Analysis und Optimierung</em>, verallgemeinert die{" "}
@@ -191,10 +191,10 @@ export function S11() {
         <M>{"L(\\bW) = \\tfrac{1}{2}\\left\\| \\bX\\bW - \\bY \\right\\|_F^2"}</M> nach einer
         ganzen Matrix <M>{"\\bW"}</M> ableiten. Naiv wären das so viele einzelne{" "}
         <ConceptLink id="partial-derivative">partielle Ableitungen</ConceptLink>, wie{" "}
-        <M>{"\\bW"}</M> Einträge hat — bei <M>{"1000 \\times 10"}</M> schon{" "}
+        <M>{"\\bW"}</M> Einträge hat, bei <M>{"1000 \\times 10"}</M> schon{" "}
         <M>{"10\\,000"}</M>; der
         Matrix-Kalkül liefert stattdessen eine einzige Zeile,{" "}
-        <M>{"\\partial L / \\partial \\bW = \\bX^\\top(\\bX\\bW - \\bY)"}</M> — und die ist auch
+        <M>{"\\partial L / \\partial \\bW = \\bX^\\top(\\bX\\bW - \\bY)"}</M>, und die ist auch
         noch effizient implementierbar. Darauf setzt die numerische Optimierung auf:{" "}
         <ConceptLink id="gradient-descent">Gradientenverfahren</ConceptLink> und ihre
         Verwandten finden Minima von Funktionen, die nicht{" "}
@@ -205,7 +205,7 @@ export function S11() {
         Der dritte Block, <em>Funktionsapproximation</em>, fragt: Wie ersetzen wir eine
         komplizierte Funktion durch eine einfache, mit der sich gut rechnen lässt? Das
         klassische Werkzeug ist die{" "}
-        <ConceptLink id="taylor-series">Taylor-Approximation</ConceptLink> — schon{" "}
+        <ConceptLink id="taylor-series">Taylor-Approximation</ConceptLink>: Schon{" "}
         <M>{"e^x \\approx 1 + x + \\tfrac{x^2}{2}"}</M> liefert bei <M>{"x = 0{,}5"}</M> den
         Wert <M>{"1{,}625"}</M> statt <M>{"e^{0{,}5} = 1{,}6487\\ldots"}</M>, ein relativer
         Fehler von unter 2 %. Später kommen flexiblere Bausteine wie Splines dazu, mit denen
@@ -225,11 +225,11 @@ export function S11() {
       <p>
         Drei Elemente helfen beim Lesen. <em>Erstens:</em> Gestrichelt unterstrichene Begriffe
         wie <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink> öffnen Tooltips,
-        die das nötige Vorwissen auffrischen — oft mit weiteren Links darin, sodass wir uns bei
+        die das nötige Vorwissen auffrischen, oft mit weiteren Links darin, sodass wir uns bei
         Bedarf bis zu den Grundlagen durchhangeln können. <em>Zweitens:</em> Ausklappbare
         „Vertiefung"-Boxen (wie die Landkarte oben) enthalten Exkurse und interaktive Widgets
         zum Selbst-Ausprobieren; für den roten Faden sind sie optional. <em>Drittens:</em>{" "}
-        Beweise sind als Stepper gebaut — wir decken sie Schritt für Schritt auf, und jeder
+        Beweise sind als Stepper gebaut: Wir decken sie Schritt für Schritt auf, und jeder
         Schritt trägt seine Begründung. Am Ende jedes Abschnitts verweist eine
         „Vertiefung:"-Zeile auf Literatur zum Weiterlesen.
       </p>
@@ -237,7 +237,7 @@ export function S11() {
       <h3 className="mt-6 text-lg font-semibold">Selbsttest: Reicht das Vorwissen?</h3>
       <p>
         Der Kurs setzt Lineare Algebra I, Analysis I und etwas R-Programmierung voraus. Die
-        folgenden Fragen sollten wir — zumindest nach kurzem Nachdenken — beantworten können.
+        folgenden Fragen sollten wir (zumindest nach kurzem Nachdenken) beantworten können.
         Wer hängt, klappt die Lösung auf und frischt das Thema per Tooltip auf; sehr zu
         empfehlen ist außerdem, die geometrische Intuition mit den Videos von{" "}
         <em>3blue1brown</em> („Essence of Linear Algebra") aufzubauen.
@@ -246,7 +246,7 @@ export function S11() {
       <ol className="max-w-prose list-decimal space-y-3 pl-5">
         <Frage q={<>Was ist der Rang einer Matrix? Wie berechnen wir ihn?</>}>
           Der <ConceptLink id="rank">Rang</ConceptLink> ist die Anzahl linear unabhängiger
-          Spalten (gleichwertig: Zeilen) — also die Dimension des{" "}
+          Spalten (gleichwertig: Zeilen), also die Dimension des{" "}
           <ConceptLink id="image">Bildes</ConceptLink> der zugehörigen Abbildung. Von Hand
           berechnen wir ihn z. B. per{" "}
           <ConceptLink id="gaussian-elimination">Gauß-Elimination</ConceptLink>: Rang = Anzahl
@@ -289,7 +289,7 @@ export function S11() {
         </Frage>
         <Frage q={<>Was ist die Ableitung <M>{"f'(x_0)"}</M> geometrisch?</>}>
           Die Steigung der <ConceptLink id="tangent-line">Tangente</ConceptLink> an den Graphen
-          von <M>{"f"}</M> im Punkt <M>{"x_0"}</M> — also die momentane Änderungsrate von{" "}
+          von <M>{"f"}</M> im Punkt <M>{"x_0"}</M>, also die momentane Änderungsrate von{" "}
           <M>{"f"}</M> an dieser Stelle (<ConceptLink id="derivative">Ableitung</ConceptLink>).
         </Frage>
         <Frage q={<>Was unterscheidet ein lokales von einem globalen Minimum?</>}>
@@ -298,7 +298,7 @@ export function S11() {
           <M>{"x_0"}</M>; ein globales Minimum für <em>alle</em> <M>{"x"}</M> im
           Definitionsbereich.{" "}
           <ConceptLink id="gradient-descent">Abstiegsverfahren</ConceptLink> finden im
-          Allgemeinen nur lokale Minima — ein zentrales Thema des Optimierungs-Blocks.
+          Allgemeinen nur lokale Minima – ein zentrales Thema des Optimierungs-Blocks.
         </Frage>
       </ol>
 

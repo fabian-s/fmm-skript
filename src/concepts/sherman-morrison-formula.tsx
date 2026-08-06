@@ -1,5 +1,5 @@
 /**
- * Konzept-Tooltip: Sherman-Morrison-Formel — die Inverse (oder Zerlegung)
+ * Konzept-Tooltip: Sherman-Morrison-Formel: die Inverse (oder Zerlegung)
  * von A + u v^T aus der Inversen von A in O(n^2) Arbeit. Kanonische id;
  * der Trick hinter Broydens billigen Jacobi-Updates (vgl. Heath §5.6.3).
  */
@@ -14,7 +14,7 @@ registerConcept({
         Angenommen, wir kennen die{" "}
         <ConceptLink id="matrix-inverse">Inverse</ConceptLink> von{" "}
         <M>{"\\bA"}</M> bereits, und dann ändert sich <M>{"\\bA"}</M> um einen
-        Rang-1-Anteil — ein{" "}
+        Rang-1-Anteil, ein{" "}
         <ConceptLink id="outer-product">äußeres Produkt</ConceptLink>{" "}
         <M>{"\\bu\\bv^T"}</M>. Die Inverse komplett neu zu berechnen würde{" "}
         <M>{"\\mathcal{O}(n^3)"}</M> Arbeit kosten, aber die
@@ -27,9 +27,9 @@ registerConcept({
         gültig, solange der skalare Nenner{" "}
         <M>{"1 + \\bv^T\\bA^{-1}\\bu"}</M> nicht Null ist. Alles auf der
         rechten Seite besteht aus Matrix-Vektor-Produkten; die Formel
-        anzuwenden — oder analog eine vorhandene{" "}
+        anzuwenden (oder analog eine vorhandene{" "}
         <ConceptLink id="lu-decomposition">Zerlegung</ConceptLink> zu
-        aktualisieren — kostet darum nur <M>{"\\mathcal{O}(n^2)"}</M>.
+        aktualisieren) kostet darum nur <M>{"\\mathcal{O}(n^2)"}</M>.
       </p>
       <p>
         Kleine Probe mit <M>{"\\bA = \\bI"}</M> (der{" "}

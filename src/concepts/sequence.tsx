@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Folge — eine geordnete unendliche Liste von Zahlen. */
+/** Konzept-Tooltip: Folge: eine geordnete unendliche Liste von Zahlen. */
 import { ConceptLink, M, MD, registerConcept } from "../lib";
 
 /** Punktplot von a_n = 1/n: ein Punkt pro Index, immer dichter an 0. */
@@ -61,7 +61,7 @@ registerConcept({
       <p>
         Folgen sind das Grundwerkzeug hinter der{" "}
         <ConceptLink id="convergence">Konvergenz</ConceptLink>: Viele Folgen
-        pendeln sich mit wachsendem <M>{"n"}</M> auf einen festen Wert ein —{" "}
+        pendeln sich mit wachsendem <M>{"n"}</M> auf einen festen Wert ein:{" "}
         <M>{"a_n = 1/n"}</M> strebt gegen <M>{"0"}</M>, wie die Punkte unten
         zeigen. Und summieren wir die Glieder einer Folge nacheinander auf,
         entsteht eine{" "}

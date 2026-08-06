@@ -2,6 +2,7 @@
 export { registerConcept, getConcept, allConceptIds } from "./registry";
 export type { ConceptDef, ConceptId } from "./types";
 export { TooltipProvider, ConceptLink } from "./tooltip/TooltipEngine";
+export type { TooltipLabels } from "./tooltip/TooltipEngine";
 export { ExpandedReading } from "./ExpandedReading";
 export { M, MD, Eq, EnvBlock } from "./Math";
 export { Slider } from "./widgets/Slider";

@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Satz von Taylor — lokale Polynom-Näherung mit kontrolliertem Restglied. */
+/** Konzept-Tooltip: Satz von Taylor: lokale Polynom-Näherung mit kontrolliertem Restglied. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -64,8 +64,8 @@ registerConcept({
         <M>{"t = 0"}</M> plus einem Restglied der Größenordnung{" "}
         <ConceptLink id="big-o-notation">
           <M>{"O(t^2)"}</M>
-        </ConceptLink>{" "}
-        &mdash; es schrumpft garantiert wie <M>{"t^2"}</M> und ist für
+        </ConceptLink>
+        : es schrumpft garantiert wie <M>{"t^2"}</M> und ist für
         kleines <M>{"t"}</M> gegenüber dem <M>{"t"}</M>-Term vernachlässigbar.
         Weitere Terme{" "}
         <M>{"\\tfrac{t^2}{2} x''(0), \\tfrac{t^3}{6} x'''(0), \\dots"}</M>{" "}

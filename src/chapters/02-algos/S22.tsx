@@ -3,13 +3,13 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD } from "../../lib";
 import { FibonacciStepper } from "./widgets/FibonacciStepper";
 
 /**
- * Abschnitt 2.2 — Algorithmen konkret: Fibonacci und Verwandte.
+ * Abschnitt 2.2, Algorithmen konkret: Fibonacci und Verwandte.
  * Quelle: Folien 02-algos.Rmd, Block „Beispiel: Fibonacci-Zahlen" bis
  * „Gute Algorithmen". Prosa eigenständig aus den Folien formuliert.
  */
 
 /* ------------------------------------------------------------------ */
-/* Selbsttest (Folie „Quiz": Der Algorithmus ist … — richtig: 1, 3)    */
+/* Selbsttest (Folie „Quiz": Der Algorithmus ist …; richtig: 1, 3)     */
 /* ------------------------------------------------------------------ */
 
 const QUIZ: { statement: ReactNode; wahr: boolean; expl: ReactNode }[] = [
@@ -40,7 +40,7 @@ const QUIZ: { statement: ReactNode; wahr: boolean; expl: ReactNode }[] = [
     wahr: false,
     expl: (
       <>
-        Approximativ hieße <M>{"f(n) \\approx \\wt{f}(n)"}</M> — der Algorithmus bricht etwa bei
+        Approximativ hieße <M>{"f(n) \\approx \\wt{f}(n)"}</M>: der Algorithmus bricht etwa bei
         einem Toleranzlevel ab, bevor die exakte Lösung erreicht ist. Hier gibt es nichts zu
         approximieren: Nach <M>{"n"}</M> Schritten steht das exakte Ergebnis fest.
       </>
@@ -55,7 +55,7 @@ const QUIZ: { statement: ReactNode; wahr: boolean; expl: ReactNode }[] = [
     wahr: true,
     expl: (
       <>
-        Dieselbe Vorschrift — „hänge die Summe der letzten beiden Elemente an" — wird für{" "}
+        Dieselbe Vorschrift („hänge die Summe der letzten beiden Elemente an") wird für{" "}
         <M>{"i = 2, \\dots, n-1"}</M> immer wieder ausgeführt. Genau das meint <em>iterativ</em>.
       </>
     ),
@@ -119,7 +119,7 @@ function QuizWidget() {
               >
                 {correct
                   ? "Richtig! "
-                  : `Leider nein — die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
+                  : `Leider nein, die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
                 <span className="text-slate-600 dark:text-slate-300">{q.expl}</span>
               </p>
             )}
@@ -145,7 +145,7 @@ export function S22() {
         abstrakt definiert: als Verkettung{" "}
         <M>{"\\wt{f} = \\wt{f}_s \\circ \\cdots \\circ \\wt{f}_1"}</M> elementarer Rechenschritte.
         Diese Definition bleibt blass, solange wir sie nicht einmal vollständig durchspielen.
-        Genau das tun wir jetzt — an einem Problem, das einfach genug ist, um jeden einzelnen
+        Das tun wir jetzt an einem Problem, das einfach genug ist, um jeden einzelnen
         Schritt hinzuschreiben, und trotzdem reich genug, um uns durch das ganze Kapitel zu
         begleiten: den Fibonacci-Zahlen. Danach ordnen wir das Beispiel in die Landschaft der
         Algorithmenarten ein, die uns in Statistik und Machine Learning begegnen, und überlegen,
@@ -166,7 +166,7 @@ export function S22() {
       <p>
         Jedes Folgenglied ist also die Summe seiner beiden Vorgänger; die Folge beginnt mit{" "}
         <M>{"0, 1, 1, 2, 3, 5, 8, 13, 21, \\dots"}</M> (Manche Bücher lassen die Folge bei{" "}
-        <M>{"1, 1"}</M> oder mit dem Index <M>{"0"}</M> beginnen — wir bleiben bei der Konvention
+        <M>{"1, 1"}</M> oder mit dem Index <M>{"0"}</M> beginnen; wir bleiben bei der Konvention
         der Folien.) Unser numerisches Problem lautet:{" "}
         <em>Berechne die ersten <M>{"n"}</M> Fibonacci-Zahlen.</em> In der Sprache von{" "}
         <a className="underline" href="#sec-2.1">Abschnitt 2.1</a>: Das Problem ist die Abbildung{" "}
@@ -205,7 +205,7 @@ export function S22() {
         </p>
         <MD>{"\\begin{aligned} \\wt{f}_1(6) &= 0 \\\\ \\wt{f}_2(0) &= (0, 1) \\\\ \\wt{f}_3(\\cgreen{0}, \\cblue{1}) &= (0, 1, \\corange{1}) \\\\ \\wt{f}_4(0, \\cgreen{1}, \\cblue{1}) &= (0, 1, 1, \\corange{2}) \\\\ \\wt{f}_5(0, 1, \\cgreen{1}, \\cblue{2}) &= (0, 1, 1, 2, \\corange{3}) \\\\ \\wt{f}_6(0, 1, 1, \\cgreen{2}, \\cblue{3}) &= (0, 1, 1, 2, 3, \\corange{5}) \\end{aligned}"}</MD>
         <p>
-          Ergebnis: <M>{"\\wt{f}(6) = (0, 1, 1, 2, 3, 5)"}</M> — vier Additionen (
+          Ergebnis: <M>{"\\wt{f}(6) = (0, 1, 1, 2, 3, 5)"}</M> – vier Additionen (
           <M>{"\\corange{1}, \\corange{2}, \\corange{3}, \\corange{5}"}</M>) für sechs Zahlen.
         </p>
       </EnvBlock>
@@ -215,7 +215,7 @@ export function S22() {
       </h3>
       <p>
         Der Algorithmus lässt sich fast wörtlich in Code übersetzen. Lege zuerst einen Vektor
-        der Länge <M>{"n"}</M> an, mit Nullen vorbelegt — damit ist <M>{"x_1 = 0"}</M> bereits
+        der Länge <M>{"n"}</M> an, mit Nullen vorbelegt; damit ist <M>{"x_1 = 0"}</M> bereits
         erledigt. Setze dann (falls <M>{"n > 1"}</M>) das zweite Element auf <M>{"1"}</M>.
         Durchlaufe schließlich <M>{"i = 2, \\dots, n-1"}</M> und setze in jedem Durchlauf{" "}
         <M>{"x_{i+1} = \\cblue{x_i} + \\cgreen{x_{i-1}}"}</M>. In R:
@@ -235,14 +235,14 @@ export function S22() {
         Dass hier <em>nichts doppelt</em> gerechnet wird, ist keine Selbstverständlichkeit. Die
         Definition 2.2.1 legt nämlich noch einen zweiten, verführerisch eleganten Weg nahe: Um{" "}
         <M>{"x_n"}</M> zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für{" "}
-        <M>{"x_{n-1}"}</M> und <M>{"x_{n-2}"}</M> auf — ohne Zwischenergebnisse zu speichern.
+        <M>{"x_{n-1}"}</M> und <M>{"x_{n-2}"}</M> auf, ohne Zwischenergebnisse zu speichern.
         Das liefert dieselben Zahlen, aber zu einem absurden Preis: Beide Teilaufrufe berechnen
         große Teile der Folge unabhängig voneinander noch einmal, und deren Teilaufrufe wieder.
         Das folgende Widget stellt beide Varianten nebeneinander; die genaue Analyse, <em>wie</em>{" "}
         schnell die naive Rekursion explodiert, folgt in{" "}
         <a className="underline" href="#sec-2.5">Abschnitt 2.5</a>.
       </p>
-      <ExpandedReading title="Fibonacci-Stepper — Iteration gegen naive Rekursion, mit Zählern">
+      <ExpandedReading title="Fibonacci-Stepper: Iteration gegen naive Rekursion, mit Zählern">
         <FibonacciStepper />
       </ExpandedReading>
 
@@ -251,7 +251,7 @@ export function S22() {
       </h3>
       <p>
         Ordnen wir Algorithmus 2.2.2 in die Arten aus{" "}
-        <a className="underline" href="#sec-2.1">Abschnitt 2.1</a> ein — für jede Aussage: wahr
+        <a className="underline" href="#sec-2.1">Abschnitt 2.1</a> ein. Für jede Aussage: wahr
         oder falsch?
       </p>
       <QuizWidget />
@@ -260,7 +260,7 @@ export function S22() {
         2.2.4 Algorithmenarten in ML und Statistik
       </h3>
       <p>
-        Der Fibonacci-Algorithmus ist also exakt <em>und</em> iterativ — die vier Arten schließen
+        Der Fibonacci-Algorithmus ist also exakt <em>und</em> iterativ. Die vier Arten schließen
         sich nicht gegenseitig aus. Wie verteilen sich die Algorithmen, mit denen wir in
         Statistik und Machine Learning tatsächlich arbeiten, auf diese Kategorien?
       </p>
@@ -271,14 +271,14 @@ export function S22() {
             <ConceptLink id="linear-system">linearer Gleichungssysteme</ConceptLink> per{" "}
             <ConceptLink id="gaussian-elimination">Gauß-Elimination</ConceptLink> (dazu später
             im Kurs viel mehr) oder die{" "}
-            <ConceptLink id="matrix-multiplication">Matrixmultiplikation</ConceptLink> — nach
+            <ConceptLink id="matrix-multiplication">Matrixmultiplikation</ConceptLink>: nach
             endlich vielen, vorab bekannten Schritten steht das exakte Ergebnis fest.
           </li>
           <li>
             <strong>Approximativ:</strong> Monte-Carlo-Integration, die Integrale durch
             Stichprobenmittel schätzt (ein Integral ist ein{" "}
             <ConceptLink id="expected-value">Erwartungswert</ConceptLink>, und den schätzen
-            Statistiker:innen mit Stichproben); das Training{" "}
+            Statistiker/innen mit Stichproben); das Training{" "}
             <ConceptLink id="neural-network">neuronaler Netze</ConceptLink>, das nur bis zu
             einem Toleranzlevel optimiert.
           </li>
@@ -287,7 +287,7 @@ export function S22() {
             <ConceptLink id="gradient-descent">Gradientenabstieg</ConceptLink> im Machine
             Learning und das{" "}
             <ConceptLink id="newtons-method">Newton-Verfahren</ConceptLink> zum
-            Nullstellenfinden — dieselbe Update-Vorschrift wird wiederholt, bis das Ergebnis gut
+            Nullstellenfinden: dieselbe Update-Vorschrift wird wiederholt, bis das Ergebnis gut
             genug ist.
           </li>
           <li>
@@ -310,16 +310,16 @@ export function S22() {
       <EnvBlock kind="Bemerkung" label="2.2.5 (Eine Analogie)">
         <p>
           Problem: <em>Koche Schweinsbraten wie bei Oma.</em> Dann entspricht der Algorithmus
-          dem Kochrezept — und der Computer dem Koch, der sich zwar an das Rezept hält, dabei
+          dem Kochrezept, und der Computer dem Koch, der sich zwar an das Rezept hält, dabei
           aber Fehler macht.
         </p>
       </EnvBlock>
       <p>
         Die Analogie trägt weiter, als sie zunächst wirkt. Erstens: Für dasselbe Gericht gibt es
-        viele Rezepte, und sie sind nicht gleich gut — genau wie unsere beiden
+        viele Rezepte, und sie sind nicht gleich gut, genau wie unsere beiden
         Fibonacci-Varianten dasselbe Problem lösen, aber zu drastisch verschiedenen Kosten.
         Zweitens: Ein gutes Rezept ist <em>robust</em> gegen die kleinen Ungenauigkeiten des
-        Kochs — ein gutes numerisches Verfahren verstärkt die unvermeidlichen{" "}
+        Kochs; ein gutes numerisches Verfahren verstärkt die unvermeidlichen{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> des Computers nicht
         unnötig. Zusammengefasst wollen wir Algorithmen, die
       </p>
@@ -332,14 +332,14 @@ export function S22() {
         Diese drei Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
         Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um
         solche Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst
-        einmal präzise messen — das ist das Thema des{" "}
+        einmal präzise messen. Das ist das Thema des{" "}
         <a className="underline" href="#sec-2.3">nächsten Abschnitts</a>. Wie wir „möglichst
         exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 3.
       </p>
 
       <p className="italic">
         Vertiefung: Heath §1.1 (Näherungen und Fehlerquellen im wissenschaftlichen Rechnen);
-        Cormen, Leiserson, Rivest &amp; Stein, <em>Introduction to Algorithms</em> — der
+        Cormen, Leiserson, Rivest &amp; Stein, <em>Introduction to Algorithms</em>, der
         Klassiker zu Entwurf und Analyse von Algorithmen.
       </p>
     </div>

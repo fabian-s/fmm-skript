@@ -58,7 +58,7 @@ registerConcept({
         Fassen wir <M>{"\\bA"}</M> als{" "}
         <ConceptLink id="linear-map">lineare Abbildung</ConceptLink> auf, die{" "}
         <M>{"\\bx"}</M> auf <M>{"\\bA\\bx"}</M> schickt, dann ist die Inverse
-        die Abbildung, die jede Ausgabe zu ihrer Eingabe zurückschickt — genau
+        die Abbildung, die jede Ausgabe zu ihrer Eingabe zurückschickt. Genau
         deshalb läuft das Lösen des{" "}
         <ConceptLink id="linear-system">linearen Gleichungssystems</ConceptLink>{" "}
         <M>{"\\bA\\bx = \\bb"}</M> auf{" "}

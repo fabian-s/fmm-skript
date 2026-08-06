@@ -28,7 +28,7 @@ function ExpansionWidget() {
       <Slider label="Exponent n" value={n} onChange={setN} min={1} max={7} step={1} />
       <MD>{expansion(n)}</MD>
       <p className="mt-1 text-xs text-slate-300">
-        Nur der zweite Term ist linear in h — nach Abziehen von xⁿ und Teilen
+        Nur der zweite Term ist linear in h; nach Abziehen von xⁿ und Teilen
         durch h überlebt er allein den Grenzübergang h → 0 und liefert die
         Ableitung n·xⁿ⁻¹.
       </p>
@@ -58,8 +58,8 @@ registerConcept({
         <M>{"\\binom{n}{i}"}</M> zählt dabei, wie viele der <M>{"2^n"}</M>{" "}
         rohen Produktterme zum Term <M>{"x^{n-i} h^i"}</M> zusammenfallen. Das
         Ergebnis ist ein{" "}
-        <ConceptLink id="polynomial">Polynom</ConceptLink> in <M>{"h"}</M> —
-        genau das nutzt die Rechnung aus (vgl. MML Gl. (5.5c)): das
+        <ConceptLink id="polynomial">Polynom</ConceptLink> in <M>{"h"}</M>.
+        Genau das nutzt die Rechnung aus (vgl. MML Gl. (5.5c)): das
         Ausmultiplizieren von <M>{"(x+h)^n"}</M> erlaubt, den
         Differenzenquotienten von <M>{"f(x) = x^n"}</M> Term für Term zu
         vereinfachen.

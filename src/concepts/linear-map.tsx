@@ -36,7 +36,7 @@ function LinearMapWidget() {
       />
       <div className="mt-1 text-xs">
         Gitterquadrate werden zu Parallelogrammen, der Ursprung bleibt fest,
-        und Geraden bleiben Geraden — die Erkennungszeichen einer linearen
+        und Geraden bleiben Geraden: die Erkennungszeichen einer linearen
         Abbildung.
       </div>
     </div>
@@ -64,10 +64,10 @@ registerConcept({
         <M>{"j"}</M>-ten Standardbasisvektors. Das ist der Trick hinter der
         Aufgabe, die Einheitsquadrat-zu-Parallelogramm-Transformation zu
         identifizieren (vgl. MML Abb. 5.5): Wir schauen, wo <M>{"(1,0)"}</M>{" "}
-        und <M>{"(0,1)"}</M> landen — diese beiden Bilder, als Spalten
+        und <M>{"(0,1)"}</M> landen. Diese beiden Bilder, als Spalten
         geschrieben, sind schon die ganze Abbildung. Linearität heißt außerdem:
         Der Ursprung bleibt liegen, und gleichmäßig verteilte Gitterlinien
-        bleiben gleichmäßig verteilt — kein Verbiegen, kein Verschieben.
+        bleiben gleichmäßig verteilt: kein Verbiegen, kein Verschieben.
       </p>
       <LinearMapWidget />
     </>

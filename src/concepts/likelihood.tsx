@@ -1,4 +1,4 @@
-/** Concept tooltip: Likelihood — wie wahrscheinlich sind die Daten unter den Parametern. */
+/** Concept tooltip: Likelihood (wie wahrscheinlich sind die Daten unter den Parametern). */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -23,7 +23,7 @@ function LikelihoodWidget() {
       <div className="mb-1 text-xs">
         Likelihood von <M>{"p"}</M> nach {h}-mal Kopf bei 10 Würfen (skaliert,
         sodass das Maximum 1 ist). Sie ist maximal bei{" "}
-        <M>{`\\hat{p} = ${pHat.toFixed(1)}`}</M> — dem
+        <M>{`\\hat{p} = ${pHat.toFixed(1)}`}</M>, dem
         Maximum-Likelihood-Schätzer.
       </div>
       <Plot
@@ -45,8 +45,8 @@ registerConcept({
     <>
       <p>
         Die Likelihood misst, wie wahrscheinlich die beobachteten Daten wären,
-        wenn die Parameter einen bestimmten Wert hätten. Die Daten stehen fest —
-        sie wurden ja gemessen — und wir lesen die Likelihood als{" "}
+        wenn die Parameter einen bestimmten Wert hätten. Die Daten stehen fest
+        (sie wurden ja gemessen), und wir lesen die Likelihood als{" "}
         <ConceptLink id="function">Funktion</ConceptLink> der Parameter{" "}
         <M>{"\\btheta"}</M>: Parameter, unter denen die Daten wahrscheinlich
         sind, bekommen eine hohe Likelihood. Beispiel: Eine Münze mit
@@ -59,7 +59,7 @@ registerConcept({
         und die ist am größten bei <M>{"p = 0.7"}</M>. Wählen wir die
         Parameter, die die Likelihood{" "}
         <ConceptLink id="optimization">maximieren</ConceptLink>, heißt das
-        Maximum-Likelihood-Schätzung — sie ist die{" "}
+        Maximum-Likelihood-Schätzung. Sie ist die{" "}
         <ConceptLink id="objective-function">Zielfunktion</ConceptLink> hinter
         vielen Standardverfahren, auch hinter der{" "}
         <ConceptLink id="linear-regression">linearen Regression</ConceptLink>{" "}

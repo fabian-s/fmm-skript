@@ -31,7 +31,7 @@ registerConcept({
     <>
       <p>
         Eine <em>Funktion</em> ist eine Vorschrift, die jeder zulässigen
-        Eingabe genau eine Ausgabe zuordnet — stellen wir sie uns als
+        Eingabe genau eine Ausgabe zuordnet. Stellen wir sie uns als
         verlässliche Maschine vor: gleiche Eingabe rein, gleiche Ausgabe raus,
         jedes Mal. Die Notation <M>{"f: \\R^D \\to \\R"}</M> sagt: Die Eingaben
         sind <ConceptLink id="vector">Vektoren</ConceptLink> <M>{"\\bx"}</M>{" "}

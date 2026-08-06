@@ -40,7 +40,7 @@ function BackSubWidget() {
       ))}
       {step === 3 && (
         <div className="mt-1 font-mono text-xs text-emerald-400">
-          x = (1, 2, 3) — von unten nach oben gelöst, eine Division pro
+          x = (1, 2, 3): von unten nach oben gelöst, eine Division pro
           Unbekannter.
         </div>
       )}
@@ -68,7 +68,7 @@ registerConcept({
       </p>
       <p>
         Die Kosten liegen bei nur etwa <M>{"n^2"}</M> Operationen für{" "}
-        <M>{"n"}</M> Unbekannte — eine Größenordnung billiger als die{" "}
+        <M>{"n"}</M> Unbekannte, eine Größenordnung billiger als die{" "}
         <M>{"\\sim n^3/3"}</M>, die das{" "}
         <ConceptLink id="gaussian-elimination">Gaußsche Eliminationsverfahren</ConceptLink>{" "}
         zum Faktorisieren einer vollen Matrix braucht. Dieses Ungleichgewicht

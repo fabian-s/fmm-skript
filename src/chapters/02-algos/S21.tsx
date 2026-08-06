@@ -23,7 +23,7 @@ const RTEST: { code: string; antwort: string; expl: ReactNode }[] = [
     expl: (
       <>
         Hier passiert nichts Böses: <M>{"1{,}0"}</M> ist als Maschinenzahl exakt
-        darstellbar, die Differenz ist exakt <M>{"0"}</M>. Entwarnung — aber nur hier.
+        darstellbar, die Differenz ist exakt <M>{"0"}</M>. Entwarnung – aber nur hier.
       </>
     ),
   },
@@ -57,7 +57,7 @@ const RTEST: { code: string; antwort: string; expl: ReactNode }[] = [
     antwort: "-262144",
     expl: (
       <>
-        Dieselben <M>{"10^5"}</M> Zahlen, nur in umgekehrter Reihenfolge summiert — und
+        Dieselben <M>{"10^5"}</M> Zahlen, nur in umgekehrter Reihenfolge summiert, und
         die beiden Summen unterscheiden sich um <M>{"262144 = 2^{18}"}</M>. Bei
         Zwischensummen der Größenordnung <M>{"10^{21}"}</M> liegen benachbarte
         Maschinenzahlen über <M>{"10^{5}"}</M> auseinander; welche Summanden dabei
@@ -109,11 +109,11 @@ export function S21() {
 
       <p className={P}>
         Mit diesem Kapitel beginnt die eigentliche Numerik. Statistische Methoden sind am
-        Ende immer Rechenvorschriften, die ein Computer ausführt — und Computer rechnen
+        Ende immer Rechenvorschriften, die ein Computer ausführt, und Computer rechnen
         anders als die Mathematik auf dem Papier. In diesem Kapitel klären wir zuerst,
         was ein <em>numerisches Problem</em> und was ein <em>Algorithmus</em> überhaupt
         ist. Dann sehen wir an konkreten Beispielen, warum es entscheidend darauf
-        ankommt, <em>wie</em> wir etwas berechnen — dieselbe Formel kann als
+        ankommt, <em>wie</em> wir etwas berechnen: dieselbe Formel kann als
         Rechenvorschrift brillant oder katastrophal sein. In den folgenden Abschnitten
         fragen wir dann, wie <em>teuer</em> ein Algorithmus ist, und entwickeln mit den
         Landau-Symbolen die Sprache, um Rechenaufwand zu vergleichen.
@@ -127,8 +127,8 @@ export function S21() {
         <ConceptLink id="convergence">Konvergenz</ConceptLink>; aus der linearen Algebra{" "}
         <ConceptLink id="matrix">Matrizen</ConceptLink> und ihre Grundoperationen,
         insbesondere <ConceptLink id="matrix-vector-product">Matrix-Vektor-</ConceptLink>{" "}
-        und <ConceptLink id="matrix-multiplication">Matrixmultiplikation</ConceptLink> —
-        und ein erstes Gespür dafür, wie viele Einzelrechnungen darin stecken.
+        und <ConceptLink id="matrix-multiplication">Matrixmultiplikation</ConceptLink>;
+        dazu ein erstes Gespür dafür, wie viele Einzelrechnungen darin stecken.
       </p>
 
       <h3 id="sec-2.1-numerische-probleme" className={H3}>
@@ -155,10 +155,10 @@ export function S21() {
       </EnvBlock>
       <p className={P}>
         Die Schreibweise ist bewusst abstrakt: <M>{"f"}</M> ist die mathematische
-        Abbildung von den Eingabedaten auf die exakte Lösung — beim Gleichungssystem{" "}
+        Abbildung von den Eingabedaten auf die exakte Lösung; beim Gleichungssystem{" "}
         <M>{"\\bA\\by = \\bb"}</M> etwa <M>{"f(\\bA, \\bb) = \\bA^{-1}\\bb"}</M>. Ob und
         wie wir <M>{"f(\\bx)"}</M> tatsächlich ausrechnen können, ist damit noch völlig
-        offen. Genau da beginnen die Schwierigkeiten.
+        offen. Und da beginnen die Schwierigkeiten.
       </p>
 
       <h3 className={H3}>Zwei grundsätzliche Schwierigkeiten</h3>
@@ -172,7 +172,7 @@ export function S21() {
             Computer können nur <em>endlich viele Zahlen mit endlich vielen Stellen</em>{" "}
             darstellen. Schon
             <MD>{"\\pi = 3{,}141592653589793238462643383279\\ldots"}</MD>
-            passt in keinen endlichen Speicher — gespeichert wird immer nur eine
+            passt in keinen endlichen Speicher. Gespeichert wird immer nur eine
             gerundete Näherung.
           </li>
           <li>
@@ -180,7 +180,7 @@ export function S21() {
             Schon die harmlose Exponentialfunktion ist über eine{" "}
             <ConceptLink id="infinite-series">unendliche Reihe</ConceptLink> definiert,
             <MD>{"e^x = \\sum_{n = 0}^\\infty \\frac{x^n}{n!},"}</MD>
-            und unendlich viele Summanden kann keine Maschine aufaddieren — jede
+            und unendlich viele Summanden kann keine Maschine aufaddieren. Jede
             Auswertung bricht irgendwo ab.
           </li>
         </ul>
@@ -188,7 +188,7 @@ export function S21() {
       <p className={P}>
         Deshalb ist es wichtig, <em>wie</em> wir Dinge berechnen. Wie schlimm kann es
         schon sein? Testen Sie Ihre Intuition an vier kurzen R-Ausdrücken von den
-        Folien — überlegen Sie sich jeweils zuerst selbst eine Vorhersage, bevor Sie
+        Folien. Überlegen Sie sich jeweils zuerst selbst eine Vorhersage, bevor Sie
         die Lösung aufklappen:
       </p>
       <RSelbsttest />
@@ -197,7 +197,7 @@ export function S21() {
         darstellen. Das führt zu <em>Rundungsfehlern</em> (
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>; ausführlich in
         Kapitel 3), und diese Fehler können sich <em>akkumulieren</em>. Der Fehler einer
-        einzelnen Operation ist meist vernachlässigbar klein — gefährlich wird die Summe
+        einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
         vieler kleiner Fehler. Und weil jede Operation frisch rundet, spielt sogar die{" "}
         <em>Reihenfolge</em> unserer Rechenschritte eine Rolle. Eine erste praktische
         Empfehlung, die wir gleich zweimal in Aktion sehen: besonders große und
@@ -236,13 +236,13 @@ export function S21() {
           Information über die Varianz steckt in den letzten drei Ziffern. Bei der
           Größenordnung <M>{"10^{18}"}</M> liegen benachbarte{" "}
           <ConceptLink id="floating-point">Gleitkommazahlen</ConceptLink> aber schon{" "}
-          <M>{"128"}</M> auseinander — feiner kann die Maschine dort nicht auflösen. In
+          <M>{"128"}</M> auseinander. Feiner kann die Maschine dort nicht auflösen. In
           R (Doppelpräzision) werden deshalb <em>beide</em> Terme auf dieselbe
           Maschinenzahl gerundet:
         </p>
         <MD>{"\\cred{1\\,000\\,000\\,020\\,000\\,000\\,128} - \\cblue{1\\,000\\,000\\,020\\,000\\,000\\,128} = 0."}</MD>
         <p>
-          Die berechnete „Varianz" ist <M>{"0"}</M> statt <M>{"22{,}5"}</M> — nicht
+          Die berechnete „Varianz" ist <M>{"0"}</M> statt <M>{"22{,}5"}</M> – nicht
           ungefähr falsch, sondern komplett informationsfrei. Die zweistufige Rechnung{" "}
           <M>{"\\frac{1}{n}\\sumin \\left(x_i - \\bar{x}\\right)^2"}</M> liefert dagegen
           exakt <M>{"22{,}5"}</M>, denn sie subtrahiert die großen Zahlen, <em>bevor</em>{" "}
@@ -274,7 +274,7 @@ export function S21() {
           Die erste Klammerung ist exakt: <M>{"\\cred{x} + \\cblue{y} = 0"}</M> löscht
           die riesigen Zahlen sauber aus, danach überlebt die <M>{"\\cgreen{1}"}</M>. In
           der zweiten Klammerung muss die Maschine{" "}
-          <M>{"\\cblue{-10^{30}} + \\cgreen{1}"}</M> als Gleitkommazahl speichern — aber
+          <M>{"\\cblue{-10^{30}} + \\cgreen{1}"}</M> als Gleitkommazahl speichern. Aber
           bei der Größenordnung <M>{"10^{30}"}</M> liegen benachbarte Maschinenzahlen
           etwa <M>{"10^{14}"}</M> auseinander. Die <M>{"\\cgreen{1}"}</M> ist viel
           kleiner als diese Auflösung, das Zwischenergebnis wird auf{" "}
@@ -283,7 +283,7 @@ export function S21() {
         </p>
         <p>
           <M>{"\\impl"}</M> Die Reihenfolge (Klammerung) einer Summe beeinflusst das
-          Ergebnis. Genau das haben wir oben im Selbsttest bei{" "}
+          Ergebnis. Das haben wir oben im Selbsttest bei{" "}
           <code>sum(x) - sum(rev(x))</code> beobachtet: vorwärts und rückwärts summiert
           ergeben dieselben <M>{"10^5"}</M> Zahlen verschiedene Summen.
         </p>
@@ -297,7 +297,7 @@ export function S21() {
       </h3>
       <p className={P}>
         Die Beispiele zeigen: Zum numerischen Problem <M>{"f"}</M> gehört immer noch
-        eine zweite Zutat — die konkrete Rechenvorschrift, mit der wir <M>{"f(\\bx)"}</M>{" "}
+        eine zweite Zutat, nämlich die konkrete Rechenvorschrift, mit der wir <M>{"f(\\bx)"}</M>{" "}
         zu berechnen versuchen. Für dieselbe Varianz gab es zwei Vorschriften mit
         drastisch verschiedenem Ausgang. Diese zweite Zutat bekommt jetzt einen Namen:
       </p>
@@ -312,11 +312,11 @@ export function S21() {
         Lesen wir die Definition genau. Ein Algorithmus ist eine{" "}
         <ConceptLink id="function-composition">Verkettung</ConceptLink>{" "}
         <M>{"\\wt{f}_s \\circ \\cdots \\circ \\wt{f}_1"}</M> endlich vieler elementarer
-        Rechenschritte <M>{"\\wt{f}_1, \\ldots, \\wt{f}_s"}</M> — erst wird{" "}
+        Rechenschritte <M>{"\\wt{f}_1, \\ldots, \\wt{f}_s"}</M>: erst wird{" "}
         <M>{"\\wt{f}_1"}</M> auf den Input angewandt, dann <M>{"\\wt{f}_2"}</M> auf
         dessen Ergebnis, und so weiter. Die Tilde ist Programm: <M>{"\\wt{f}"}</M> ist
         nicht dasselbe wie <M>{"f"}</M>, sondern nur ein Versuch, <M>{"f"}</M>{" "}
-        nachzubauen — die Definition verspricht vorsichtig nur eine „mögliche Lösung".
+        nachzubauen; die Definition verspricht vorsichtig nur eine „mögliche Lösung".
         Wie gut <M>{"\\wt{f}(\\bx)"}</M> die wahre Lösung <M>{"f(\\bx)"}</M> trifft, ist
         genau die Frage, die uns in Kapitel 3 beschäftigen wird. Zu einem Problem{" "}
         <M>{"f"}</M> gibt es dabei meist viele verschiedene Algorithmen, und sie
@@ -328,12 +328,12 @@ export function S21() {
             <em>exakt/direkt</em>: Es gilt <M>{"f(\\bx) = \\wt{f}(\\bx)"}</M> (bis auf
             Rundungsfehler). Beispiel: das{" "}
             <ConceptLink id="gaussian-elimination">Gauß-Verfahren</ConceptLink> für
-            lineare Gleichungssysteme — nach endlich vielen Schritten steht die exakte
+            lineare Gleichungssysteme: nach endlich vielen Schritten steht die exakte
             Lösung da, wäre da nicht die Gleitkommarundung.
           </li>
           <li>
             <em>approximativ</em>: Es gilt lediglich{" "}
-            <M>{"f(\\bx) \\approx \\wt{f}(\\bx)"}</M> — schon in exakter Arithmetik.
+            <M>{"f(\\bx) \\approx \\wt{f}(\\bx)"}</M>, und zwar schon in exakter Arithmetik.
             Beispiel: die nach endlich vielen Summanden abgebrochene Reihe für{" "}
             <M>{"e^x"}</M>.
           </li>
@@ -344,7 +344,7 @@ export function S21() {
             <ConceptLink id="gradient-descent">Gradientenverfahren</ConceptLink>.
           </li>
           <li>
-            <em>probabilistisch</em>: Das Verfahren beruht auf Zufall — es würfelt.
+            <em>probabilistisch</em>: Das Verfahren beruht auf Zufall, es würfelt.
             Beispiel: Monte-Carlo-Integration, die ein Integral durch den Mittelwert
             zufällig gezogener Funktionswerte schätzt.
           </li>
@@ -356,8 +356,8 @@ export function S21() {
         </p>
       </EnvBlock>
       <p className={P}>
-        Im nächsten Abschnitt sehen wir an einem klassischen Beispiel — den
-        Fibonacci-Zahlen —, dass zwei exakte Algorithmen für dasselbe Problem sich im
+        Im nächsten Abschnitt sehen wir an einem klassischen Beispiel (den
+        Fibonacci-Zahlen), dass zwei exakte Algorithmen für dasselbe Problem sich im
         Rechenaufwand so drastisch unterscheiden können, dass der eine praktisch
         unbrauchbar ist.
       </p>
@@ -365,7 +365,7 @@ export function S21() {
       <p className="my-3 max-w-prose italic">
         Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
         Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt
-        Heath §1.3 — und unser Kapitel 3.
+        Heath §1.3 sowie unser Kapitel 3.
       </p>
     </>
   );

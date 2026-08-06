@@ -123,7 +123,7 @@ export function S34SchattenWidget() {
         <M>{"\\bQ_\\theta\\bA"}</M>: eine Ellipse, deren Halbachsen genau die Singulärwerte{" "}
         <M>{"\\cred{\\sigma_1}"}</M> und <M>{"\\cblue{\\sigma_2}"}</M> sind. Ändern wir die
         Einträge von <M>{"\\bA"}</M>, ändern sich Ellipse und Normen. Drehen wir dagegen nur
-        mit <M>{"\\bQ_\\theta"}</M>, rotiert die Ellipse — alle Einträge der Matrix ändern
+        mit <M>{"\\bQ_\\theta"}</M>, rotiert die Ellipse: Alle Einträge der Matrix ändern
         sich, aber keine einzige Schattennorm.
       </p>
       <div className="flex flex-wrap items-start gap-5">
@@ -211,7 +211,7 @@ export function S34SchattenWidget() {
             )}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Probieren wir es aus: Schieben wir θ durch — die vier Matrixeinträge ändern sich
+            Probieren wir es aus: Schieben wir θ durch, dann ändern sich die vier Matrixeinträge
             laufend, die Singulärwerte und alle drei Schattennormen bleiben exakt gleich
             (Satz 3.4.7). Die grüne elementweise Summe stimmt dabei stets mit{" "}
             <M>{"\\left\\| \\bQ_\\theta\\bA \\right\\|_{S,2}"}</M> überein (Korollar 3.4.4).

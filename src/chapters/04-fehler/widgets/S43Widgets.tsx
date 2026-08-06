@@ -73,15 +73,15 @@ export function SgdLernratenDemo() {
   if (diverged || rho > 1) {
     status =
       "Divergent: Der Verstärkungsfaktor ist größer als 1, jeder Schritt vergrößert " +
-      "den Abstand zum Minimum — die Iterierten explodieren und verlassen den Plot.";
+      "den Abstand zum Minimum: Die Iterierten explodieren und verlassen den Plot.";
   } else if (grenzfall) {
     status =
       "Grenzfall: Der Verstärkungsfaktor ist exakt 1. Die Iterierten springen mit " +
-      "konstanter Amplitude um das Minimum hin und her — weder Konvergenz noch Divergenz.";
+      "konstanter Amplitude um das Minimum hin und her, weder Konvergenz noch Divergenz.";
   } else if (alpha > 0.5) {
     status =
       "Oszillierend, aber konvergent: Jeder Schritt springt über das Minimum hinweg, " +
-      "schrumpft den Abstand aber trotzdem — der Verstärkungsfaktor liegt unter 1.";
+      "schrumpft den Abstand aber trotzdem, denn der Verstärkungsfaktor liegt unter 1.";
   } else {
     status =
       "Monoton konvergent: Jeder Schritt schrumpft den Abstand zum Minimum um " +
@@ -206,7 +206,7 @@ export function SgdLernratenDemo() {
 
 /** Zahl deutsch formatiert, große/kleine Werte als Mantisse · 10^Exponent. */
 function SciNum({ v }: { v: number }) {
-  if (Number.isNaN(v)) return <span>—</span>;
+  if (Number.isNaN(v)) return <span>–</span>;
   if (!Number.isFinite(v)) return <span>∞</span>;
   if (v === 0) return <span>0</span>;
   const e = Math.floor(Math.log10(Math.abs(v)));
@@ -233,7 +233,7 @@ export function KappaRechner() {
   let diffNode: ReactNode;
   if (mode === "c") {
     // Idealisierte Werte für Daten x_i = c + z_i mit Var(z) = 1:
-    // a = c² + 1, b = c², also |a − b| = 1 — analytisch gesetzt, denn in
+    // a = c² + 1, b = c², also |a − b| = 1, analytisch gesetzt, denn in
     // Doubles wäre (c² + 1) − c² für großes c selbst schon ausgelöscht (= 0).
     const c2 = 10 ** (2 * k);
     kappa = Math.SQRT2 * Math.hypot(c2 + 1, c2);
@@ -255,7 +255,7 @@ export function KappaRechner() {
     kappa = !ok ? NaN : a === b ? Infinity : (Math.SQRT2 * Math.hypot(a, b)) / Math.abs(a - b);
     aNode = <SciNum v={a} />;
     bNode = <SciNum v={b} />;
-    diffNode = ok ? <SciNum v={Math.abs(a - b)} /> : <span>—</span>;
+    diffNode = ok ? <SciNum v={Math.abs(a - b)} /> : <span>–</span>;
   }
 
   const verlust = Math.log10(kappa); // ≈ verlorene Dezimalstellen
@@ -277,7 +277,7 @@ export function KappaRechner() {
     status = (
       <>
         <M>{"\\kappa_{rel} \\cdot \\eps \\gtrsim 1"}</M>: Von den rund 16 Dezimalstellen
-        doppelter Genauigkeit überlebt keine einzige — das Ergebnis des letzten Schritts ist
+        doppelter Genauigkeit überlebt keine einzige – das Ergebnis des letzten Schritts ist
         reiner Rundungsschutt.
       </>
     );
@@ -292,7 +292,7 @@ export function KappaRechner() {
     );
   } else {
     status =
-      "κ ist von der Größenordnung 1: Der letzte Schritt verstärkt Fehler kaum — die " +
+      "κ ist von der Größenordnung 1: Der letzte Schritt verstärkt Fehler kaum, die " +
       "Subtraktion ist hier gut konditioniert.";
   }
 
@@ -331,7 +331,7 @@ export function KappaRechner() {
             <M>{"1"}</M>. Idealisiert (über die Erwartungswerte) ist dann{" "}
             <M>{"\\cred{a} = c^2 + 1"}</M> und <M>{"\\cblue{b} = c^2"}</M>, die wahre
             Differenz also genau <M>{"1"}</M>. Die konkrete R-Stichprobe aus dem Beispiel
-            weicht davon leicht ab — an der Größenordnung von <M>{"\\kappa_{rel}"}</M>{" "}
+            weicht davon leicht ab, an der Größenordnung von <M>{"\\kappa_{rel}"}</M>{" "}
             ändert das nichts.
           </p>
         </>

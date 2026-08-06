@@ -70,7 +70,7 @@ registerConcept({
         <M>{"\\by = (3, 4)"}</M> den Wert{" "}
         <M>{"1 \\cdot 3 + 2 \\cdot 4 = 11"}</M>. Setzen wir{" "}
         <M>{"\\by = \\bx"}</M>, ergibt sich die Quadratsumme{" "}
-        <M>{"\\bx^T \\bx = \\sum_i x_i^2"}</M> &mdash; genau die quadrierte
+        <M>{"\\bx^T \\bx = \\sum_i x_i^2"}</M>, genau die quadrierte
         euklidische Länge. So hängt die 2-Norm über{" "}
         <M>{"\\|\\bx\\|_2^2 = \\bx^T \\bx"}</M> mit Quadratsummen zusammen.
         Geometrisch gilt{" "}

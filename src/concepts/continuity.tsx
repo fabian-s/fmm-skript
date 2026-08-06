@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Stetigkeit — keine Sprünge, Grenzwert gleich Funktionswert. */
+/** Konzept-Tooltip: Stetigkeit, keine Sprünge, Grenzwert gleich Funktionswert. */
 import { useState } from "react";
 import { M, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -45,7 +45,7 @@ registerConcept({
     <>
       <p>
         Eine Funktion ist <em>stetig</em> (continuous), wenn ihr Graph keine
-        Sprünge oder Löcher hat &mdash; salopp: wir können ihn zeichnen, ohne
+        Sprünge oder Löcher hat; salopp: wir können ihn zeichnen, ohne
         den Stift abzusetzen. Präzise: <M>{"f"}</M> ist stetig in einem Punkt{" "}
         <M>{"x = a"}</M>, wenn die Werte <M>{"f(x)"}</M> beliebig nahe an{" "}
         <M>{"f(a)"}</M> herankommen, sobald <M>{"x"}</M> nur nahe genug an{" "}
@@ -59,7 +59,7 @@ registerConcept({
         Warum das hier zählt: eine stetige Funktion trägt unendlich viel
         Information (einen Wert für jeden Punkt eines Intervalls), und doch
         will die Interpolation sie durch endlich viele Zahlen festnageln
-        (vgl. Heath §7.1) &mdash; Stetigkeit ist genau das, was diese Hoffnung
+        (vgl. Heath §7.1). Stetigkeit ist genau das, was diese Hoffnung
         vernünftig macht: benachbarte Eingaben haben benachbarte Ausgaben,
         also schränkt schon eine Tabelle von Stützwerten die Funktion
         dazwischen ein.

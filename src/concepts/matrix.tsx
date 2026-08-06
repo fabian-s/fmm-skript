@@ -7,7 +7,7 @@ registerConcept({
     <>
       <p>
         Eine Matrix ist eine rechteckige Tabelle von Zahlen mit <M>{"m"}</M>{" "}
-        Zeilen und <M>{"n"}</M> Spalten — wir nennen sie eine{" "}
+        Zeilen und <M>{"n"}</M> Spalten; wir nennen sie eine{" "}
         <M>{"m \\times n"}</M>-Matrix. Der Eintrag in Zeile <M>{"i"}</M> und
         Spalte <M>{"j"}</M> heißt <M>{"a_{ij}"}</M>; ein einzelnes Symbol wie{" "}
         <M>{"\\bA"}</M> packt also ein ganzes Zahlengitter in ein Objekt. Zum

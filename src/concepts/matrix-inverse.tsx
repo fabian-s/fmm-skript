@@ -34,7 +34,7 @@ function InverseWidget() {
           </div>
         ) : (
           <span className="text-xs text-red-400">
-            singulär — es gibt keine Inverse
+            singulär: es gibt keine Inverse
           </span>
         )}
       </div>
@@ -58,7 +58,7 @@ registerConcept({
         dieselbe Rolle wie <M>{"1/a"}</M> für eine gewöhnliche Zahl: Sie ist
         die Matrix <M>{"\\bA^{-1}"}</M>, deren{" "}
         <ConceptLink id="matrix-multiplication">Produkt</ConceptLink> mit{" "}
-        <M>{"\\bA"}</M> — in beliebiger Reihenfolge — die{" "}
+        <M>{"\\bA"}</M> (in beliebiger Reihenfolge) die{" "}
         <ConceptLink id="identity-matrix">Einheitsmatrix</ConceptLink> ergibt:
       </p>
       <MD>{"\\bA \\bA^{-1} = \\bA^{-1} \\bA = \\bI."}</MD>
@@ -67,7 +67,7 @@ registerConcept({
         lösen, isoliert die Multiplikation eines Systems{" "}
         <M>{"\\bA\\bx = \\bb"}</M> mit <M>{"\\bA^{-1}"}</M> die Unbekannte:{" "}
         <M>{"\\bx = \\bA^{-1}\\bb"}</M>. Und so wie <M>{"a = 0"}</M> keinen
-        Kehrwert hat, besitzt nicht jede Matrix eine Inverse — sie existiert
+        Kehrwert hat, besitzt nicht jede Matrix eine Inverse; sie existiert
         genau dann, wenn die{" "}
         <ConceptLink id="determinant">Determinante</ConceptLink> ungleich Null
         ist, die Matrix also <em>regulär</em> (nicht singulär) ist.

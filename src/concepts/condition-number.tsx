@@ -47,7 +47,7 @@ function CondWidget() {
         Der gestrichelte Einheitskreis wird von <M>{"\\bA"}</M> auf die
         durchgezogene Ellipse abgebildet. Für <M>{"\\eps \\to 0"}</M> werden
         die beiden Spalten gleich, die Ellipse kollabiert zu einer Nadel, und
-        cond(A) — das Verhältnis ihrer längsten zur kürzesten Achse —
+        cond(A), das Verhältnis ihrer längsten zur kürzesten Achse,
         explodiert.
       </p>
     </div>
@@ -90,8 +90,8 @@ registerConcept({
         <M>{"\\operatorname{cond}_2(\\bA) = \\sigma_{\\max} / \\sigma_{\\min}"}</M>{" "}
         ist das Verhältnis der stärksten zur schwächsten Streckung (der
         Singulärwerte). Eine Matrix mit{" "}
-        <M>{"\\operatorname{cond}(\\bA) = 1"}</M> — zum Beispiel eine{" "}
-        <ConceptLink id="orthogonal-matrix">orthogonale Matrix</ConceptLink> —
+        <M>{"\\operatorname{cond}(\\bA) = 1"}</M> (zum Beispiel eine{" "}
+        <ConceptLink id="orthogonal-matrix">orthogonale Matrix</ConceptLink>)
         behandelt jede Richtung gleich; eine fast singuläre Matrix quetscht
         irgendeine Richtung beinahe platt und hat eine riesige Konditionszahl.
       </p>

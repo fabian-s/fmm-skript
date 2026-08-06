@@ -76,7 +76,7 @@ function NormWidget() {
       </svg>
       <p className="mt-1 text-xs">
         ‖x‖ = {n.toFixed(2)}. Teilen wir durch die Norm, landet x auf dem
-        gestrichelten Einheitskreis (rot) — die Richtung bleibt dabei
+        gestrichelten Einheitskreis (rot); die Richtung bleibt dabei
         unverändert.
       </p>
     </div>
@@ -93,7 +93,7 @@ registerConcept({
         <ConceptLink id="vector">Vektors</ConceptLink>. Die
         Standard-Variante (die euklidische Norm) zieht die Wurzel aus dem{" "}
         <ConceptLink id="dot-product">Skalarprodukt</ConceptLink> des Vektors
-        mit sich selbst — Pythagoras, in beliebig vielen Dimensionen:
+        mit sich selbst, also Pythagoras in beliebig vielen Dimensionen:
       </p>
       <MD>
         {"\\|\\bx\\| = \\sqrt{\\bx^{\\top}\\bx} = \\sqrt{x_1^2 + \\cdots + x_n^2}, \\qquad \\left\\| \\begin{bmatrix} 3 \\\\ 4 \\end{bmatrix} \\right\\| = \\sqrt{9 + 16} = 5."}
@@ -105,7 +105,7 @@ registerConcept({
         sich nie (
         <M>{"\\|\\bx+\\by\\| \\leq \\|\\bx\\| + \\|\\by\\|"}</M>
         ). Teilen wir einen Vektor (ungleich Null) durch seine Norm,{" "}
-        <em>normieren</em> wir ihn auf Länge <M>{"1"}</M> — so lässt sich zum
+        <em>normieren</em> wir ihn auf Länge <M>{"1"}</M>. So lässt sich zum
         Beispiel der PageRank-Eigenvektor auf einen eindeutigen
         Repräsentanten mit <M>{"\\|\\bx^*\\| = 1"}</M> festlegen (vgl. MML
         §4.2).

@@ -20,9 +20,9 @@ registerConcept({
       </MD>
       <p>
         Gilt eine Aussage „für jeden Skalar <M>{"\\gamma"}</M>&ldquo;, dann
-        gilt sie, egal welche reelle Zahl wir einsetzen —{" "}
+        gilt sie, egal welche reelle Zahl wir einsetzen:{" "}
         <M>{"\\gamma = 2"}</M>, <M>{"\\gamma = -0{,}01"}</M>, jede der
-        unendlich vielen Möglichkeiten. Genau deshalb genügt ein einziger
+        unendlich vielen Möglichkeiten. Deshalb genügt ein einziger
         solcher freier Skalar, um unendlich viele Lösungen zu erzeugen.
       </p>
     </>

@@ -42,8 +42,8 @@ registerConcept({
     <>
       <p>
         Eine <em>Drehmatrix</em> (rotation matrix) dreht jeden Punkt der Ebene
-        um den Ursprung, und zwar um einen festen Winkel <M>{"\\theta"}</M> —
-        sie ist die <ConceptLink id="matrix">Matrix</ConceptLink> der{" "}
+        um den Ursprung, und zwar um einen festen Winkel <M>{"\\theta"}</M>.
+        Sie ist die <ConceptLink id="matrix">Matrix</ConceptLink> der{" "}
         <ConceptLink id="linear-transformation">linearen Abbildung</ConceptLink>{" "}
         „drehe um <M>{"\\theta"}</M>&ldquo;:
       </p>
@@ -55,7 +55,7 @@ registerConcept({
         <ConceptLink id="orthogonal-matrix">orthogonale Matrix</ConceptLink>{" "}
         (ihre Spalten sind zueinander senkrechte Einheitsvektoren), und ihre{" "}
         <ConceptLink id="determinant">Determinante</ConceptLink> ist{" "}
-        <M>{"+1"}</M> — Drehungen erhalten die Orientierung, anders als{" "}
+        <M>{"+1"}</M>: Drehungen erhalten die Orientierung, anders als{" "}
         <ConceptLink id="reflection">Spiegelungen</ConceptLink>, deren
         Determinante <M>{"-1"}</M> ist.
       </p>

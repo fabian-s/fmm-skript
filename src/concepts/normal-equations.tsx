@@ -96,8 +96,8 @@ function ProjectionWidget() {
         <M>{`\\|\\br\\|_2 = ${rNorm.toFixed(3)}`}</M>. Das Residuum ist genau
         dort am kürzesten, wo es senkrecht auf span&#123;<M>{"\\ba"}</M>&#125;
         steht, nämlich bei{" "}
-        <M>{`x = \\ba^{T}\\bb / \\ba^{T}\\ba = ${opt.toFixed(1)}`}</M>{" "}
-        — schieben wir den Regler dorthin, erscheint die grüne
+        <M>{`x = \\ba^{T}\\bb / \\ba^{T}\\ba = ${opt.toFixed(1)}`}</M>.{" "}
+        Schieben wir den Regler dorthin, erscheint die grüne
         Rechte-Winkel-Markierung.
       </p>
     </div>
@@ -114,7 +114,7 @@ registerConcept({
         <ConceptLink id="linear-least-squares">lineares Kleinste-Quadrate-Problem</ConceptLink>{" "}
         eigentlich konkret? Die quadrierte Residuenlänge{" "}
         <M>{"\\phi(\\bx) = \\| \\bb - \\bA\\bx \\|_2^2"}</M>{" "}
-        ist eine glatte Schüssel in <M>{"\\bx"}</M> — an ihrem Minimum muss
+        ist eine glatte Schüssel in <M>{"\\bx"}</M>, an ihrem Minimum muss
         also der <ConceptLink id="gradient">Gradient</ConceptLink>{" "}
         verschwinden. Wir berechnen{" "}
         <M>{"\\nabla \\phi(\\bx) = 2\\bA^{T}(\\bA\\bx - \\bb)"}</M>{" "}
@@ -130,7 +130,7 @@ registerConcept({
         Geometrie: Umgestellt zu{" "}
         <M>{"\\bA^{T}\\br = \\bzero"}</M> besagt das System, dass das Residuum{" "}
         <ConceptLink id="orthogonality">orthogonal</ConceptLink> („normal“) zu
-        jeder Spalte von <M>{"\\bA"}</M> stehen muss — das beste{" "}
+        jeder Spalte von <M>{"\\bA"}</M> stehen muss. Das beste{" "}
         <M>{"\\bA\\bx"}</M> ist der Fußpunkt des Lots von{" "}
         <M>{"\\bb"}</M> auf den <ConceptLink id="span">Spann</ConceptLink> der
         Spalten. Für das Beispiel einer Ausgleichsgeraden durch drei
@@ -147,7 +147,7 @@ registerConcept({
         <ConceptLink id="positive-definite">positiv definit</ConceptLink>,
         sobald die Spalten von <M>{"\\bA"}</M>{" "}
         <ConceptLink id="linear-independence">linear unabhängig</ConceptLink>{" "}
-        sind — die{" "}
+        sind; die{" "}
         <ConceptLink id="cholesky-factorization">Cholesky-Zerlegung</ConceptLink>{" "}
         löst das System dann effizient. Der Haken: Die{" "}
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink> von{" "}
@@ -155,7 +155,7 @@ registerConcept({
         <M>{"\\operatorname{cond}(\\bA)"}</M>. Das Aufstellen von{" "}
         <M>{"\\bA^{T}\\bA"}</M> kann{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> also
-        kräftig verstärken — eine{" "}
+        kräftig verstärken. Eine{" "}
         <ConceptLink id="qr-factorization">QR-Zerlegung</ConceptLink> von{" "}
         <M>{"\\bA"}</M> umgeht dieses Problem.
       </p>

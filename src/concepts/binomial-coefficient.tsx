@@ -20,7 +20,7 @@ function ChooseWidget() {
       <MD>{`\\binom{${n}}{${k}} = \\frac{${n}!}{${k}!\\,(${n - k})!} = ${choose(n, k)}`}</MD>
       <p className="mt-1 text-xs text-slate-300">
         {`Es gibt ${choose(n, k)} Möglichkeiten, ${k} Objekt${k === 1 ? "" : "e"} aus ${n} auszuwählen.`}
-        {kRaw > n ? " (i ist bei n gedeckelt — wir können nicht mehr auswählen, als da ist.)" : ""}
+        {kRaw > n ? " (i ist bei n gedeckelt: wir können nicht mehr auswählen, als da ist.)" : ""}
       </p>
     </div>
   );
@@ -47,7 +47,7 @@ registerConcept({
         ausmultiplizieren, zählt <M>{"\\binom{n}{i}"}</M>, wie viele der
         Produktterme genau <M>{"i"}</M> Faktoren <M>{"h"}</M> enthalten
         (vgl. MML Bsp. 5.2). Nützliche Spezialwerte:{" "}
-        <M>{"\\binom{n}{0} = 1"}</M> und <M>{"\\binom{n}{1} = n"}</M> &mdash;
+        <M>{"\\binom{n}{0} = 1"}</M> und <M>{"\\binom{n}{1} = n"}</M>;
         letzterer liefert den Koeffizienten <M>{"n"}</M>, der in der Ableitung{" "}
         <M>{"n x^{n-1}"}</M> übrig bleibt.
       </p>

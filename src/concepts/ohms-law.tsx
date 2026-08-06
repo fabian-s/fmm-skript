@@ -52,7 +52,7 @@ registerConcept({
         2.1): Laufen wir einmal um jede Masche eines Stromkreises herum,
         trägt jeder Widerstand einen Spannungsabfall der Form
         (Widerstand)&nbsp;&times;&nbsp;(Strom) bei. Jede Masche liefert also
-        eine lineare Gleichung in den unbekannten Strömen &mdash; und der
+        eine lineare Gleichung in den unbekannten Strömen, und der
         Stromkreis als Ganzes ein lineares Gleichungssystem.
       </p>
       <OhmWidget />

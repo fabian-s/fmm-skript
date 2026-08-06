@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { ConceptLink, EnvBlock, M, MD } from "../../lib";
 
 /**
- * Abschnitt 3.6 — Zusammenfassung.
+ * Abschnitt 3.6 – Zusammenfassung.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Zusammenfassung" (Quiz-Folien,
  * Kernkonzepte Spur/Normen, ML-Verbindung, Rechenaufwand). Prosa eigenständig
  * aus den Folien formuliert; bewusst schlank gehalten.
@@ -51,7 +51,7 @@ function WahrFalschQuiz({ items }: { items: QuizItem[] }) {
                     : "text-red-700 dark:text-red-400"
                 }`}
               >
-                {correct ? "Richtig! " : `Leider nein — die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
+                {correct ? "Richtig! " : `Leider nein, die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
                 <span className="text-slate-600 dark:text-slate-300">{q.expl}</span>
               </p>
             )}
@@ -96,7 +96,7 @@ const SPUR_QUIZ: QuizItem[] = [
     expl: (
       <>
         Das ist die zyklische Eigenschaft aus{" "}
-        <a className="underline" href="#sec-3.1">Abschnitt 3.1</a> — die wichtigste Rechenregel
+        <a className="underline" href="#sec-3.1">Abschnitt 3.1</a>, die wichtigste Rechenregel
         der Spur.
       </>
     ),
@@ -106,7 +106,7 @@ const SPUR_QUIZ: QuizItem[] = [
     wahr: false,
     expl: (
       <>
-        Transponieren spiegelt an der Diagonale und lässt die Diagonaleinträge unverändert — es
+        Transponieren spiegelt an der Diagonale und lässt die Diagonaleinträge unverändert; es
         gilt <M>{"\\tr(\\bA^\\top) = \\tr(\\bA)"}</M>, ohne Vorzeichenwechsel.
       </>
     ),
@@ -147,7 +147,7 @@ export function S36() {
       </p>
       <p>
         Fassen wir das Kapitel zusammen. Der rote Faden war die Frage, wie wir die „Größe" einer
-        Matrix messen — und zwar so, dass die Zahl etwas über die{" "}
+        Matrix messen, und zwar so, dass die Zahl etwas über die{" "}
         <ConceptLink id="linear-transformation">lineare Abbildung</ConceptLink>{" "}
         <M>{"\\bx \\mapsto \\bA\\bx"}</M> aussagt, nicht nur über die Einträge. Als Werkzeuge
         haben wir die Spur als skalare Invariante und drei Familien von Matrixnormen
@@ -192,8 +192,8 @@ export function S36() {
               <td className="py-1 pr-6">elementweise Normen</td>
               <td className="py-1 pr-6">
                 Vektornorm auf <M>{"\\vec(\\bA)"}</M>:{" "}
-                <M>{"\\left\\|\\bA\\right\\|_F, \\left\\|\\bA\\right\\|_S, \\left\\|\\bA\\right\\|_M"}</M>{" "}
-                — billig, aber blind für die Transformation
+                <M>{"\\left\\|\\bA\\right\\|_F, \\left\\|\\bA\\right\\|_S, \\left\\|\\bA\\right\\|_M"}</M>;{" "}
+                billig, aber blind für die Transformation
               </td>
               <td className="py-1">
                 <a className="underline" href="#sec-3.2">3.2</a>
@@ -247,8 +247,8 @@ export function S36() {
         Spektralnorm verbindet Operator- und Schatten-Welt: Sie ist die von der euklidischen
         Norm induzierte Operatornorm <em>und</em> die Schatten-Norm mit{" "}
         <M>{"p = \\infty"}</M>, berechenbar als{" "}
-        <M>{"\\left\\|\\bA\\right\\|_2 = \\sqrt{\\lambda_{\\max}\\left(\\bA^\\top\\bA\\right)}"}</M>{" "}
-        — der Anknüpfungspunkt zur{" "}
+        <M>{"\\left\\|\\bA\\right\\|_2 = \\sqrt{\\lambda_{\\max}\\left(\\bA^\\top\\bA\\right)}"}</M>,{" "}
+        der Anknüpfungspunkt zur{" "}
         <ConceptLink id="singular-value-decomposition">Singulärwertzerlegung</ConceptLink>,
         die uns später noch ausführlich beschäftigen wird.
       </p>
@@ -258,7 +258,7 @@ export function S36() {
         Für die Praxis ist entscheidend, wie teuer die einzelnen Normen sind. Spalten- und
         Zeilensummennorm sowie die Frobenius-Norm brauchen nur einen Durchlauf über alle
         Einträge. Spektral- und Nuklearnorm dagegen erfordern eine (partielle)
-        Spektralzerlegung bzw. SVD — für sehr große Matrizen weichen wir deshalb auf
+        Spektralzerlegung bzw. SVD; für sehr große Matrizen weichen wir deshalb auf
         approximative Verfahren aus.
       </p>
       <div className="max-w-prose overflow-x-auto">
@@ -302,7 +302,7 @@ export function S36() {
 
       <EnvBlock kind="Bemerkung" label="3.6.1 (Ausblick: Normen als Regularisierer)">
         <p>
-          Normen messen nicht nur Fehler — im maschinellen Lernen steuern sie als Strafterme,{" "}
+          Normen messen nicht nur Fehler: Im maschinellen Lernen steuern sie als Strafterme,{" "}
           <em>welche</em> Lösung ein Schätzproblem liefert. Drei prominente Beispiele, alle
           Varianten des <ConceptLink id="linear-least-squares">KQ-Problems</ConceptLink>:
         </p>
@@ -338,12 +338,12 @@ export function S36() {
           }
         >
           <p>
-            <strong>Spaltensummennorm:</strong> Die Beträge spaltenweise summieren — die{" "}
+            <strong>Spaltensummennorm:</strong> Die Beträge spaltenweise summieren; die{" "}
             <M>{"\\cred{\\text{erste Spalte}}"}</M> gewinnt:
           </p>
           <MD>{"\\left\\|\\bA\\right\\|_1 = \\max\\left\\{ \\cred{|1| + |3|},\\; |2| + |0| \\right\\} = \\max\\{\\cred{4}, 2\\} = 4."}</MD>
           <p>
-            <strong>Zeilensummennorm:</strong> Die Beträge zeilenweise summieren — hier liefern{" "}
+            <strong>Zeilensummennorm:</strong> Die Beträge zeilenweise summieren; hier liefern{" "}
             <M>{"\\cblue{\\text{beide Zeilen}}"}</M> denselben Wert:
           </p>
           <MD>{"\\left\\|\\bA\\right\\|_\\infty = \\max\\left\\{ \\cblue{|1| + |2|},\\; \\cblue{|3| + |0|} \\right\\} = \\max\\{\\cblue{3}, \\cblue{3}\\} = 3."}</MD>
@@ -356,8 +356,8 @@ export function S36() {
             <M>{"\\bA^\\top\\bA = \\begin{pmatrix} 10 & 2 \\\\ 2 & 4 \\end{pmatrix}"}</M>, also{" "}
             <M>{"\\tr\\left(\\bA^\\top\\bA\\right) = 10 + 4 = 14 = \\left\\|\\bA\\right\\|_F^2"}</M>.{" "}
             <M>{"\\checkmark"}</M> Zum Vergleich: Die Spektralnorm ist{" "}
-            <M>{"\\left\\|\\bA\\right\\|_2 = \\sqrt{\\lambda_{\\max}\\left(\\bA^\\top\\bA\\right)} = \\sqrt{7 + \\sqrt{13}} \\approx 3{,}26"}</M>{" "}
-            — wie es sein muss kleiner als die Frobenius-Norm.
+            <M>{"\\left\\|\\bA\\right\\|_2 = \\sqrt{\\lambda_{\\max}\\left(\\bA^\\top\\bA\\right)} = \\sqrt{7 + \\sqrt{13}} \\approx 3{,}26"}</M>,{" "}
+            wie es sein muss kleiner als die Frobenius-Norm.
           </p>
         </Frage>
       </div>
@@ -368,12 +368,12 @@ export function S36() {
         <em>Fehleranalyse</em> sind, mit der wir uns im nächsten Kapitel beschäftigen: Die{" "}
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink>{" "}
         <M>{"\\kappa(\\bA) = \\left\\|\\bA\\right\\| \\cdot \\left\\|\\bA^{-1}\\right\\|"}</M>{" "}
-        misst, wie stark eine Matrix relative Störungen der Eingabe verstärken kann — für die
+        misst, wie stark eine Matrix relative Störungen der Eingabe verstärken kann; für die
         Spektralnorm ist das gerade das Verhältnis von größtem zu kleinstem Singulärwert (bei
         symmetrischen Matrizen: der Beträge der Eigenwerte). Und wenn ein Algorithmus statt der exakten Lösung von{" "}
         <M>{"\\bA\\bx = \\bb"}</M> nur ein <M>{"\\wt{\\bx}"}</M> liefert, sagen uns Normen, für
         welches gestörte Problem <M>{"(\\bA + \\bDelta\\bA)\\,\\wt{\\bx} = \\bb"}</M> dieses{" "}
-        <M>{"\\wt{\\bx}"}</M> die exakte Lösung ist — die Größe{" "}
+        <M>{"\\wt{\\bx}"}</M> die exakte Lösung ist. Die Größe{" "}
         <M>{"\\left\\|\\bDelta\\bA\\right\\|_2 / \\left\\|\\bA\\right\\|_2"}</M> quantifiziert
         dann den Rückwärtsfehler. Submultiplikativität und Verträglichkeit aus{" "}
         <a className="underline" href="#sec-3.5">Abschnitt 3.5</a> sind genau die

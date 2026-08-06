@@ -37,7 +37,13 @@ export default function App() {
   }, [mod]);
 
   return (
-    <TooltipProvider>
+    <TooltipProvider
+      labels={{
+        pin: "anheften (Fenster bleibt offen, an der Titelleiste verschiebbar)",
+        close: "schließen",
+        pinned: "angeheftet – an der Titelleiste verschiebbar, schließen mit × oder Esc",
+      }}
+    >
       <div className="mx-auto max-w-3xl px-4 py-10">
         <header className="mb-10 border-b border-slate-300 pb-6 dark:border-slate-700">
           <p className="text-sm uppercase tracking-wide text-slate-500">
@@ -47,7 +53,7 @@ export default function App() {
             Fortgeschrittene mathematische Methoden in der Statistik
           </h1>
           <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
-            Interaktives Begleit-Skript zur Vorlesung — Arbeitsstand (Entwurf).
+            Interaktives Begleit-Skript zur Vorlesung, Arbeitsstand (Entwurf).
           </p>
           <nav className="mt-4 flex flex-wrap gap-2 text-sm">
             {chapters.map((c) => (
@@ -66,9 +72,11 @@ export default function App() {
           </nav>
           <p className="mt-3 rounded bg-sky-50 px-3 py-2 text-sm text-sky-900 dark:bg-sky-950/50 dark:text-sky-200">
             <strong>Bedienung:</strong> <span className="text-sky-600">gepunktet unterstrichene</span>{" "}
-            Begriffe erklären sich beim Überfahren mit der Maus (300&nbsp;ms). Nach einem Moment
-            rastet der Tooltip ein (📌) — dann sind auch Begriffe <em>im</em> Tooltip
-            überfahrbar (verschachtelte Tooltips). <kbd>Esc</kbd> schließt alles. Gelbe
+            Begriffe erklären sich beim Überfahren mit der Maus. Im Erklärfenster stehen wieder
+            solche Begriffe, man kann sich also weiterhangeln. Ein <em>Klick</em> auf den Begriff
+            (oder auf 📌 im Fenster) heftet das Fenster fest: es bleibt offen, lässt sich an der
+            Titelleiste verschieben und stört das Scrollen nicht. Geschlossen wird mit ×, mit{" "}
+            <kbd>Esc</kbd>, oder indem man daneben klickt. Gelbe
             &bdquo;Vertiefung&ldquo;-Boxen enthalten interaktive Widgets.
           </p>
         </header>

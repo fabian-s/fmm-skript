@@ -88,13 +88,13 @@ registerConcept({
         <M>{"|\\cos\\omega| \\leq 1"}</M> ist die Schranke automatisch erfüllt.
         Kurzer Check mit <M>{"\\bx = (1, 2)^\\top"}</M>,{" "}
         <M>{"\\by = (3, 4)^\\top"}</M>:{" "}
-        <M>{"|\\bx^\\top\\by| = 11 \\leq \\sqrt{5} \\cdot 5 \\approx 11.18"}</M>{" "}
-        — fast scharf, weil die beiden Vektoren in fast dieselbe Richtung
+        <M>{"|\\bx^\\top\\by| = 11 \\leq \\sqrt{5} \\cdot 5 \\approx 11.18"}</M>,{" "}
+        fast scharf, weil die beiden Vektoren in fast dieselbe Richtung
         zeigen. Dieselbe Ungleichung gilt für <em>jedes</em> Skalarprodukt und
-        die davon induzierte <ConceptLink id="norm">Norm</ConceptLink> — etwa
+        die davon induzierte <ConceptLink id="norm">Norm</ConceptLink>, etwa
         für Matrizen mit dem Spur-Skalarprodukt{" "}
-        <M>{"\\langle \\bA, \\bB \\rangle = \\operatorname{tr}(\\bA^\\top\\bB)"}</M>{" "}
-        — das ist die Version, die im Beweis von Eckart–Young benutzt wird
+        <M>{"\\langle \\bA, \\bB \\rangle = \\operatorname{tr}(\\bA^\\top\\bB)"}</M>.{" "}
+        Das ist die Version, die im Beweis von Eckart–Young benutzt wird
         (vgl. MML Ungl. (4.99)).
       </p>
       <AngleWidget />

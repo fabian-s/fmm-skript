@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Gradientenverfahren — iterative Abstiegsschritte auf einer Zielfunktion. */
+/** Konzept-Tooltip: Gradientenverfahren, iterative Abstiegsschritte auf einer Zielfunktion. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -70,8 +70,8 @@ registerConcept({
         <M>{"L(\\btheta)"}</M> zu minimieren, wenn wir die besten Parameter
         nicht direkt ausrechnen können. Das Rezept: Wir stehen am aktuellen
         Parameter-<ConceptLink id="vector">Vektor</ConceptLink>, berechnen den{" "}
-        <ConceptLink id="gradient">Gradienten</ConceptLink> von <M>{"L"}</M> —
-        die Richtung des steilsten <em>Anstiegs</em> — und machen einen kleinen
+        <ConceptLink id="gradient">Gradienten</ConceptLink> von <M>{"L"}</M>{" "}
+        (die Richtung des steilsten <em>Anstiegs</em>) und machen einen kleinen
         Schritt in die Gegenrichtung,
       </p>
       <MD>
@@ -81,7 +81,7 @@ registerConcept({
         wobei die Schrittweite <M>{"\\gamma > 0"}</M> (die „Lernrate“)
         steuert, wie weit jeder Schritt geht. Kleines Beispiel: Für{" "}
         <M>{"L(\\theta) = \\theta^2"}</M> lautet der Update-Schritt{" "}
-        <M>{"\\theta_{t+1} = \\theta_t - \\gamma \\cdot 2\\theta_t"}</M> — er
+        <M>{"\\theta_{t+1} = \\theta_t - \\gamma \\cdot 2\\theta_t"}</M>. Er
         wandert zum Minimum bei <M>{"0"}</M>, solange <M>{"\\gamma"}</M> nicht
         zu groß ist. Genau deshalb steckt Backpropagation (vgl. MML §5.6) so
         viel Aufwand in die Gradienten der Verlustfunktion eines{" "}

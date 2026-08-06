@@ -1,5 +1,5 @@
 /**
- * Konzept-Tooltip: Zwischenwertsatz — ein Vorzeichenwechsel einer stetigen
+ * Konzept-Tooltip: Zwischenwertsatz. Ein Vorzeichenwechsel einer stetigen
  * Funktion erzwingt eine Nullstelle.
  */
 import { useState } from "react";
@@ -41,7 +41,7 @@ function JumpBreaksIvtWidget() {
       <p className="mt-1 font-mono text-xs">
         {hasRoot
           ? `stetig genug: Nullstelle bei x = ${root.toFixed(3)}`
-          : "c > 0.5: der Graph SPRINGT über die Null — Vorzeichenwechsel, aber keine Nullstelle!"}
+          : "c > 0.5: der Graph SPRINGT über die Null: Vorzeichenwechsel, aber keine Nullstelle!"}
       </p>
     </div>
   );
@@ -56,7 +56,7 @@ registerConcept({
         Eine <ConceptLink id="continuity">stetige</ConceptLink> Funktion kann
         keine Werte überspringen: Ist <M>{"f"}</M> stetig auf{" "}
         <M>{"[a, b]"}</M>, dann nimmt sie auf dem Weg von <M>{"f(a)"}</M> nach{" "}
-        <M>{"f(b)"}</M> <em>jeden</em> Wert dazwischen an — das ist der{" "}
+        <M>{"f(b)"}</M> <em>jeden</em> Wert dazwischen an. Das ist der{" "}
         <em>Zwischenwertsatz</em> (intermediate value theorem). Der Fall, den
         die Nullstellensuche ständig benutzt, ist der Wert <M>{"0"}</M>: Wenn{" "}
         <M>{"f(a)"}</M> und <M>{"f(b)"}</M> entgegengesetzte Vorzeichen haben,
@@ -65,15 +65,15 @@ registerConcept({
       <p>
         Kleines Beispiel: <M>{"f(x) = x^2 - 2"}</M> hat{" "}
         <M>{"f(1) = -1 < 0"}</M> und <M>{"f(2) = 2 > 0"}</M>, also muss
-        zwischen 1 und 2 eine Nullstelle liegen — es ist{" "}
-        <M>{"\\sqrt{2} \\approx 1.414"}</M>. Genau deshalb macht ein
+        zwischen 1 und 2 eine Nullstelle liegen, nämlich{" "}
+        <M>{"\\sqrt{2} \\approx 1.414"}</M>. Deshalb macht ein
         Vorzeichenwechsel das Intervall <M>{"[a, b]"}</M> zu einem
         Einschlussintervall (bracket), das garantiert eine Lösung enthält, und
-        genau das ist das gesamte Korrektheitsargument hinter der Bisektion.
+        das ist das gesamte Korrektheitsargument hinter der Bisektion.
       </p>
       <p>
         Die Stetigkeit ist dabei wesentlich, keine Dekoration: Eine Funktion
-        mit Sprung kann das Vorzeichen wechseln, ohne je null zu sein —
+        mit Sprung kann das Vorzeichen wechseln, ohne je null zu sein;
         probieren wir es unten aus.
       </p>
       <JumpBreaksIvtWidget />

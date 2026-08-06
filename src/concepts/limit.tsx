@@ -22,7 +22,7 @@ function LimitWidget() {
         ]}
       />
       <p className="mt-1 text-xs text-slate-300">
-        g(h) = ((1+h)² − 1)/h ist bei h = 0 nicht definiert — schieben wir h
+        g(h) = ((1+h)² − 1)/h ist bei h = 0 nicht definiert. Schieben wir h
         aber gegen 0, nähert sich der Wert 2 an. Der Grenzwert für h → 0 ist
         also 2.
       </p>
@@ -40,7 +40,7 @@ registerConcept({
         fragt: Auf welchen Wert steuert <M>{"g(h)"}</M> zu, wenn wir{" "}
         <M>{"h"}</M> beliebig klein machen (ohne jemals genau 0 zu erreichen)?
         Entscheidend: <M>{"g"}</M> muss <em>an</em> der Stelle{" "}
-        <M>{"h = 0"}</M> gar nicht definiert sein — nur das Verhalten in der
+        <M>{"h = 0"}</M> gar nicht definiert sein; nur das Verhalten in der
         Nähe zählt. Genau das rettet den Differenzenquotienten (vgl. MML
         Definition 5.2): Direktes Einsetzen von <M>{"h = 0"}</M> ergäbe das
         sinnlose <M>{"0/0"}</M>, aber der Grenzwert der Werte für schrumpfendes{" "}

@@ -32,19 +32,19 @@ registerConcept({
       <p>
         <em>Dichteschätzung</em> (density estimation) bedeutet: Wir
         rekonstruieren die Wahrscheinlichkeitsdichte einer Zufallsgröße aus
-        einer Stichprobe <M>{"x_1, \\dots, x_N"}</M> beobachteter Werte —
-        gesucht ist eine{" "}
+        einer Stichprobe <M>{"x_1, \\dots, x_N"}</M> beobachteter Werte.
+        Gesucht ist eine{" "}
         <ConceptLink id="function">Funktion</ConceptLink> <M>{"p(x)"}</M>, die
         groß ist, wo sich Datenpunkte häufen, und klein, wo sie selten sind.
         Das Histogramm aus Statistik I ist die gröbste Variante; glatter wird
-        es, wenn wir eine parametrische Familie wählen — zum Beispiel ein{" "}
+        es, wenn wir eine parametrische Familie wählen (zum Beispiel ein{" "}
         <ConceptLink id="gaussian-mixture-model">
           Gaußsches Mischmodell
-        </ConceptLink>{" "}
-        — und deren Parameter so einstellen, dass die{" "}
+        </ConceptLink>
+        ) und deren Parameter so einstellen, dass die{" "}
         <ConceptLink id="likelihood">Likelihood</ConceptLink> der beobachteten
         Stichprobe maximal wird. Dieser Einstellschritt ist ein numerisches{" "}
-        <ConceptLink id="optimization">Optimierungsproblem</ConceptLink> — so
+        <ConceptLink id="optimization">Optimierungsproblem</ConceptLink>; so
         motiviert die Dichteschätzung die Differentialrechnung, die wir dafür
         brauchen.
       </p>

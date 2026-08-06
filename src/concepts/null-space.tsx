@@ -13,7 +13,7 @@ function NullSpaceWidget() {
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Slider label="Richtung von v (Grad)" value={deg} onChange={setDeg} min={0} max={360} step={1} />
       <div className="my-1 font-mono text-xs">
-        A v = ({Av[0].toFixed(2)}, {Av[1].toFixed(2)})ᵀ{nearNull ? " — v liegt (fast) im Nullraum!" : ""}
+        A v = ({Av[0].toFixed(2)}, {Av[1].toFixed(2)})ᵀ{nearNull ? ": v liegt (fast) im Nullraum!" : ""}
       </div>
       <LabeledTransformCanvas
         tickClass="text-slate-300"
@@ -49,7 +49,7 @@ registerConcept({
         oder <em>kernel</em>) einer{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink>{" "}
         <M>{"\\bA"}</M> ist die Menge aller Vektoren, die{" "}
-        <M>{"\\bA"}</M> auf den Nullvektor schickt — in{" "}
+        <M>{"\\bA"}</M> auf den Nullvektor schickt, in{" "}
         <ConceptLink id="set-builder-notation">Mengenschreibweise</ConceptLink>:
       </p>
       <MD>{"\\operatorname{null}(\\bA) = \\{\\, \\bz : \\bA\\bz = \\bzero \\,\\}."}</MD>

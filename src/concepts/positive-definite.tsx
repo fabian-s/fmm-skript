@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: positive Definitheit — quadratische Form auf dem Einheitskreis. */
+/** Konzept-Tooltip: positive Definitheit: quadratische Form auf dem Einheitskreis. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -36,7 +36,7 @@ function PositiveDefiniteWidget() {
       <p className="mt-1 text-xs text-slate-300">
         Jedes θ steht für eine Richtung x = (cos θ, sin θ); die Kurve zeigt die
         quadratische Form xᵀAx in dieser Richtung. Für |c| &lt; 2 bleibt die
-        Kurve strikt oberhalb der Nulllinie — A ist positiv definit. Schieben
+        Kurve strikt oberhalb der Nulllinie, A ist also positiv definit. Schieben
         wir |c| über 2, liefern manche Richtungen xᵀAx ≤ 0.
       </p>
     </div>
@@ -52,8 +52,8 @@ registerConcept({
         Eine{" "}
         <ConceptLink id="symmetric-matrix">symmetrische Matrix</ConceptLink>{" "}
         <M>{"\\bA"}</M> heißt <em>positiv definit</em> (positive definite),
-        wenn die Zahl <M>{"\\bx^T \\bA \\bx"}</M> — ihre{" "}
-        <em>quadratische Form</em> — für jeden Vektor{" "}
+        wenn die Zahl <M>{"\\bx^T \\bA \\bx"}</M> (ihre{" "}
+        <em>quadratische Form</em>) für jeden Vektor{" "}
         <M>{"\\bx \\neq \\bnull"}</M> strikt positiv ist:
       </p>
       <MD>
@@ -65,8 +65,8 @@ registerConcept({
         <M>{"a > 0"}</M>. Gleichwertig: Alle{" "}
         <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink> von{" "}
         <M>{"\\bA"}</M> sind positiv. Symmetrische positiv definite (SPD)
-        Matrizen sind die gutartigsten linearen Gleichungssysteme überhaupt —
-        sie lassen sich stabil und billig per{" "}
+        Matrizen sind die gutartigsten linearen Gleichungssysteme überhaupt.
+        Sie lassen sich stabil und billig per{" "}
         <ConceptLink id="cholesky-factorization">
           Cholesky-Zerlegung
         </ConceptLink>{" "}
@@ -74,7 +74,7 @@ registerConcept({
         <M>{"\\bA^T \\bA"}</M>: Wegen{" "}
         <M>{"\\bx^T \\bA^T \\bA \\bx = \\left\\| \\bA\\bx \\right\\|_2^2 \\geq 0"}</M>{" "}
         ist die quadratische Form eine quadrierte{" "}
-        <ConceptLink id="euclidean-norm">Länge</ConceptLink> — und sie ist
+        <ConceptLink id="euclidean-norm">Länge</ConceptLink>, und sie ist
         genau dann strikt positiv für alle <M>{"\\bx \\neq \\bnull"}</M>, wenn
         kein <M>{"\\bx \\neq \\bnull"}</M> die Gleichung{" "}
         <M>{"\\bA\\bx = \\bnull"}</M> erfüllt, d.h. wenn{" "}

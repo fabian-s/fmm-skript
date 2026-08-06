@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Rang — Anzahl wirklich verschiedener Richtungen. */
+/** Konzept-Tooltip: Rang: Anzahl wirklich verschiedener Richtungen. */
 import { useState } from "react";
 import { ConceptLink, M, MatrixInput, registerConcept } from "../lib";
 
@@ -42,7 +42,7 @@ registerConcept({
         <ConceptLink id="matrix">Matrix</ConceptLink> zählt, wie viele ihrer
         Zeilen (gleichwertig: Spalten){" "}
         <ConceptLink id="linear-independence">linear unabhängig</ConceptLink>{" "}
-        voneinander sind — bemerkenswerterweise liefern Zeilen-Zählung und
+        voneinander sind. Bemerkenswerterweise liefern Zeilen-Zählung und
         Spalten-Zählung immer dieselbe Zahl. Wir können den Rang lesen als
         „wie viele wirklich verschiedene Richtungen die Spalten beisteuern".
       </p>

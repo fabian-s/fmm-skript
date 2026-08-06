@@ -95,7 +95,7 @@ export function FehlerzerlegungExplorer() {
   if (N === 2 && k === 0) {
     status =
       "Das ist genau die Rechnung aus Beispiel 4.1.6: −11,586 + (−3,055) = −14,641. " +
-      "Der rote Algorithmusfehler dominiert deutlich — probieren wir aus, was mehr " +
+      "Der rote Algorithmusfehler dominiert deutlich. Probieren wir aus, was mehr " +
       "Taylor-Terme bzw. ein genauerer Input ändern.";
   } else if (Math.abs(algoF) > 2 * Math.abs(folgeF)) {
     status =
@@ -104,11 +104,11 @@ export function FehlerzerlegungExplorer() {
   } else if (Math.abs(folgeF) > 2 * Math.abs(algoF)) {
     status =
       "Zurzeit dominiert der orange Folgefehler: Der Algorithmus ist genau genug, " +
-      "jetzt begrenzt die Qualität des Inputs das Ergebnis — kein noch so großes N " +
+      "jetzt begrenzt die Qualität des Inputs das Ergebnis; kein noch so großes N " +
       "kann das reparieren, nur ein genaueres π̃.";
   } else {
     status =
-      "Beide Anteile sind ähnlich groß — hier lohnt es sich, an Algorithmus UND " +
+      "Beide Anteile sind ähnlich groß: Hier lohnt es sich, an Algorithmus UND " +
       "Input gleichzeitig zu arbeiten.";
   }
 
@@ -146,7 +146,7 @@ export function FehlerzerlegungExplorer() {
       <p className="text-xs" style={{ color: NEUTRAL }}>
         Probe: <span style={{ color: FMM.red }}>{fmtDE(algoF)}</span> +{" "}
         <span style={{ color: FMM.orange }}>{fmtDE(folgeF)}</span> ={" "}
-        <span style={{ color: FMM.purple }}>{fmtDE(algoF + folgeF)}</span> — die Zerlegung geht
+        <span style={{ color: FMM.purple }}>{fmtDE(algoF + folgeF)}</span>. Die Zerlegung geht
         (bis auf Rundung in der Anzeige) exakt auf.
       </p>
       <p className="mt-1 text-sm">{status}</p>

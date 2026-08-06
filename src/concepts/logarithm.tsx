@@ -1,4 +1,4 @@
-/** Concept-Tooltip: Logarithmus — Umkehrung des Potenzierens, Basen, Basiswechsel. */
+/** Concept-Tooltip: Logarithmus (Umkehrung des Potenzierens, Basen, Basiswechsel). */
 import { M, MD, Plot, registerConcept } from "../lib";
 
 function LogPlot() {
@@ -18,7 +18,7 @@ function LogPlot() {
       <p className="mt-1 text-xs text-slate-300">
         <span className="text-red-400">log₂ x</span>,{" "}
         <span className="text-sky-400">ln x</span>,{" "}
-        <span className="text-green-400">log₁₀ x</span> — alle drei schneiden
+        <span className="text-green-400">log₁₀ x</span>: alle drei schneiden
         die Null bei x = 1, alle wachsen unbeschränkt, aber immer langsamer,
         und jede ist ein konstantes Vielfaches der anderen.
       </p>
@@ -34,11 +34,11 @@ registerConcept({
       <p>
         Der Logarithmus macht das Potenzieren rückgängig:{" "}
         <M>{"\\log_b(x)"}</M> beantwortet die Frage „<M>{"b"}</M> hoch was
-        ergibt <M>{"x"}</M>?“ — also <M>{"\\log_2(8) = 3"}</M>, weil{" "}
+        ergibt <M>{"x"}</M>?“ Also <M>{"\\log_2(8) = 3"}</M>, weil{" "}
         <M>{"2^3 = 8"}</M>. Die gebräuchlichsten Basen sind <M>{"2"}</M>{" "}
         (Bits, Informationstheorie), <M>{"10"}</M> und die Eulersche Zahl{" "}
         <M>{"e \\approx 2{,}718"}</M>, deren Logarithmus wir <M>{"\\ln"}</M>{" "}
-        schreiben. Alle Logarithmen sind zueinander proportional — das sagt
+        schreiben. Alle Logarithmen sind zueinander proportional. Das sagt
         die Basiswechsel-Regel, mit der wir auch <M>{"\\log_2"}</M>{" "}
         differenzieren können:
       </p>
@@ -47,11 +47,11 @@ registerConcept({
       </MD>
       <p>
         Seine wichtigste algebraische Superkraft: er verwandelt Produkte in
-        Summen, <M>{"\\log(ab) = \\log(a) + \\log(b)"}</M> — der Grund, warum
+        Summen, <M>{"\\log(ab) = \\log(a) + \\log(b)"}</M> – der Grund, warum
         Log-Likelihoods und Entropien (etwa Ausdrücke der Form{" "}
         <M>{"x \\log_2 x"}</M>) so angenehm zu differenzieren sind. Vorsicht:{" "}
         <M>{"\\log_b(x)"}</M> ist nur für <M>{"x > 0"}</M> definiert, und er
-        wächst sehr langsam — eine Verdopplung von <M>{"x"}</M> erhöht{" "}
+        wächst sehr langsam: eine Verdopplung von <M>{"x"}</M> erhöht{" "}
         <M>{"\\log_2(x)"}</M> nur um eine Einheit.
       </p>
       <LogPlot />

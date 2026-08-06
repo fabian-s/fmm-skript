@@ -3,7 +3,7 @@
  * Grundlage: Folien 07-kq.Rmd, Auftakt (Vorkenntnisse) und Block
  * „Recap: Kleinste Quadrate" (Zeilen 1–154). Prosa eigenständig
  * ausformuliert; Widget-Code adaptiert aus interactive/heath-ch3
- * (QuadraticFitWidget, OrthogonalityWidget — Labels deutsch).
+ * (QuadraticFitWidget, OrthogonalityWidget, Labels deutsch).
  */
 import { useState } from "react";
 import { FigKQGeometrie } from "./widgets/S72Kondition";
@@ -206,8 +206,7 @@ function RegressionWidget() {
         ): <span className="font-mono font-semibold" style={{ color: FMM.orange }}>{ssr.toFixed(0)}</span>
         {showLS && (
           <>
-            {" "}
-            — KQ-Optimum:{" "}
+            ; KQ-Optimum:{" "}
             <span className="font-mono font-semibold" style={{ color: FMM.green }}>
               {REG_FIT.ssr.toFixed(0)}
             </span>{" "}
@@ -240,7 +239,7 @@ function RegressionWidget() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Widget 2: Projektion — senkrechtes Residuum in R²                   */
+/* Widget 2: Projektion, senkrechtes Residuum in R²                    */
 /* (Code adaptiert aus heath-ch3 OrthogonalityWidget)                  */
 /* ------------------------------------------------------------------ */
 
@@ -356,7 +355,7 @@ function ProjektionWidget() {
           <M>{"\\cpurp{\\br}"}</M> also senkrecht auf <M>{"\\col(\\bA)"}</M> (der Winkelmarker
           erscheint), <M>{"\\cblue{\\bA\\bx}"}</M> fällt auf die Projektion{" "}
           <M>{"\\cgreen{\\wh{\\bb}} = \\tfrac{1}{2}\\ba = (1{,}5,\\; 0{,}5)^\\top"}</M>, und{" "}
-          <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> ist so klein wie möglich — links und
+          <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> ist so klein wie möglich. Links und
           rechts davon kippt das Residuum aus der Senkrechten und wird wieder länger.
         </p>
       </div>
@@ -375,7 +374,7 @@ const QUIZ: { statement: React.ReactNode; wahr: boolean; expl: React.ReactNode }
     expl: (
       <>
         <M>{"\\bA\\bA\\pinv = \\bA(\\bA^\\top\\bA)^{-1}\\bA^\\top"}</M> ist die
-        Projektionsmatrix auf <M>{"\\col(\\bA)"}</M> — die Identität auf <M>{"\\R^m"}</M> ist das
+        Projektionsmatrix auf <M>{"\\col(\\bA)"}</M>; die Identität auf <M>{"\\R^m"}</M> ist das
         nur, wenn <M>{"\\col(\\bA) = \\R^m"}</M> gilt, also für invertierbares quadratisches{" "}
         <M>{"\\bA"}</M>. (Richtig ist dagegen stets <M>{"\\bA\\pinv\\bA = \\bI_n"}</M> bei vollem
         Spaltenrang.)
@@ -455,7 +454,7 @@ function QuizWidget() {
             </div>
             {answered && (
               <p className={`mt-2 text-sm ${correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}`}>
-                {correct ? "Richtig! " : `Leider nein — die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
+                {correct ? "Richtig! " : `Leider nein, die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
                 <span className="text-slate-600 dark:text-slate-300">{q.expl}</span>
               </p>
             )}
@@ -483,13 +482,13 @@ export function S71() {
       <p className={P}>
         In den bisherigen Kapiteln haben wir{" "}
         <ConceptLink id="linear-system">lineare Gleichungssysteme</ConceptLink>{" "}
-        <M>{"\\bA\\bx = \\bb"}</M> mit quadratischer Matrix gelöst — genauso viele Gleichungen wie
-        Unbekannte. In der Statistik ist die Lage fast immer anders: Wir haben{" "}
+        <M>{"\\bA\\bx = \\bb"}</M> mit quadratischer Matrix gelöst, also genauso viele Gleichungen
+        wie Unbekannte. In der Statistik ist die Lage fast immer anders: Wir haben{" "}
         <em>viel mehr</em> Beobachtungen als Modellparameter, und die Beobachtungen sind
         fehlerbehaftet. Ein Gleichungssystem mit mehr Gleichungen als Unbekannten
         (<em>überbestimmt</em>, engl. <em>overdetermined</em>) hat in aller Regel gar keine exakte
         Lösung. Was tun? Wir geben den Anspruch auf, alle Gleichungen exakt zu erfüllen, und
-        suchen stattdessen den Vektor, der sie <em>möglichst gut</em> erfüllt — gemessen an der{" "}
+        suchen stattdessen den Vektor, der sie <em>möglichst gut</em> erfüllt, gemessen an der{" "}
         <ConceptLink id="euclidean-norm">euklidischen Norm</ConceptLink> des Fehlers. Das ist die{" "}
         <em>Methode der Kleinsten Quadrate</em> (engl. <em>least squares</em>), das Arbeitspferd
         der gesamten Regressionsrechnung. Dieses Kapitel behandelt, wie man solche Probleme{" "}
@@ -529,7 +528,7 @@ export function S71() {
 
       <p className={P}>
         Da <M>{"t \\mapsto t^2"}</M> auf <M>{"[0, \\infty)"}</M> streng monoton wächst, können wir
-        genauso gut <M>{"\\left\\| \\bA\\bx - \\bb \\right\\|_2^2"}</M> minimieren — dieselben
+        genauso gut <M>{"\\left\\| \\bA\\bx - \\bb \\right\\|_2^2"}</M> minimieren – dieselben
         Minimalstellen, aber ohne Wurzel. Ausgeschrieben ist das eine Summe von Quadraten,
       </p>
       <MD>{"\\left\\| \\bA\\bx - \\bb \\right\\|_2^2 = \\sum_{i=1}^m \\left( (\\bA\\bx)_i - b_i \\right)^2,"}</MD>
@@ -539,7 +538,7 @@ export function S71() {
         <p>
           Hat das Gleichungssystem <M>{"\\bA\\bx = \\bb"}</M> eine exakte Lösung{" "}
           <M>{"\\bx^*"}</M>, dann gilt <M>{"\\left\\| \\bA\\bx^* - \\bb \\right\\|_2 = 0"}</M>,
-          und <M>{"\\bx^*"}</M> löst automatisch auch das KQ-Problem — das KQ-Problem
+          und <M>{"\\bx^*"}</M> löst automatisch auch das KQ-Problem. Das KQ-Problem
           verallgemeinert also das Lösen von Gleichungssystemen. Interessant ist es vor allem für
           „Gleichungssysteme" <M>{"\\bA\\bx \\approx \\bb"}</M>, die <em>keine</em> exakte Lösung
           besitzen: typischerweise überbestimmte Systeme mit <M>{"m > n"}</M>, bei denen{" "}
@@ -575,7 +574,7 @@ export function S71() {
         </MD>
         <p>
           Sobald <M>{"n > 2"}</M> Datenpunkte nicht alle exakt auf einer gemeinsamen Geraden
-          liegen — bei verrauschten Messungen praktisch immer —, liegt <M>{"\\bb"}</M> nicht im
+          liegen (bei verrauschten Messungen praktisch immer), liegt <M>{"\\bb"}</M> nicht im
           Spaltenraum von <M>{"\\cbred{\\bA}"}</M>: Kein Parameterpaar{" "}
           <M>{"(\\beta_0, \\beta_1)"}</M> erfüllt alle <M>{"n"}</M> Gleichungen zugleich. Die
           KQ-Lösung
@@ -586,7 +585,7 @@ export function S71() {
         <p>
           minimiert stattdessen die Summe der quadrierten Abweichungen{" "}
           <M>{"\\sumin \\left( y_i - \\beta_0 - \\beta_1 x_i \\right)^2 = \\left\\| \\cbred{\\bA}\\cblue{\\bbeta} - \\bb \\right\\|_2^2"}</M>{" "}
-          — das ist genau der Kleinste-Quadrate-Schätzer (OLS) aus der Einführungsvorlesung.
+          und ist damit der Kleinste-Quadrate-Schätzer (OLS) aus der Einführungsvorlesung.
           Woher die Lösungsformel kommt, klären die Sätze 7.1.5 und 7.1.7 unten.
         </p>
       </EnvBlock>
@@ -614,7 +613,7 @@ export function S71() {
             violette Strecke
           </span>{" "}
           zeigt ein Residuum <M>{"y_i - \\beta_0 - \\beta_1 x_i"}</M>. Probieren wir aus, wie
-          klein wir die Summe der Residuen<em>quadrate</em> mit den beiden Reglern bekommen — und
+          klein wir die Summe der Residuen<em>quadrate</em> mit den beiden Reglern bekommen, und
           vergleichen dann mit der KQ-Geraden. Besser als sie kann keine Wahl von{" "}
           <M>{"(\\beta_0, \\beta_1)"}</M> abschneiden, denn sie löst genau das
           Minimierungsproblem aus Definition 7.1.1.
@@ -623,7 +622,7 @@ export function S71() {
         <p className="my-2 text-sm">
           Auffällig ist auch, wie <em>empfindlich</em> das Kriterium auf große Residuen reagiert:
           Quadrieren bestraft einen doppelt so großen Fehler viermal so stark. Deshalb zieht die
-          KQ-Gerade spürbar zu Ausreißern hin — ein statistischer Preis für die schöne
+          KQ-Gerade spürbar zu Ausreißern hin – ein statistischer Preis für die schöne
           Geometrie und die effizienten Algorithmen, die wir in diesem Kapitel entwickeln.
         </p>
       </ExpandedReading>
@@ -724,12 +723,12 @@ export function S71() {
       <p className={P}>
         Der Beweis zeigt mehr als die Behauptung: Das optimale Residuum ist genau der Anteil{" "}
         <M>{"\\cpurp{\\br}"}</M> von <M>{"\\bb"}</M>, der <em>senkrecht</em> auf{" "}
-        <M>{"\\col(\\bA)"}</M> steht — der Teil der Daten, den das Modell prinzipiell nicht
+        <M>{"\\col(\\bA)"}</M> steht: der Teil der Daten, den das Modell prinzipiell nicht
         erklären kann. Vorsicht: Das Gleichungssystem{" "}
         <M>{"\\bA\\wh{\\bx} = \\cgreen{\\wh{\\bb}}"}</M> ist stets lösbar (denn{" "}
         <M>{"\\cgreen{\\wh{\\bb}} \\in \\col(\\bA)"}</M>), aber seine Lösung ist nur dann
         eindeutig, wenn die Spalten von <M>{"\\bA"}</M>{" "}
-        <ConceptLink id="linear-independence">linear unabhängig</ConceptLink> sind — dazu gleich
+        <ConceptLink id="linear-independence">linear unabhängig</ConceptLink> sind. Dazu gleich
         mehr.
       </p>
 
@@ -739,7 +738,7 @@ export function S71() {
           <M>{"\\cblue{\\bA\\bx}"}</M> den Spaltenraum entlang; daneben stehen{" "}
           <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> und der Winkel zwischen{" "}
           <M>{"\\ba"}</M> und <M>{"\\cpurp{\\br}"}</M>. Das Minimum liegt exakt dort, wo das
-          Residuum senkrecht steht — und der Kandidat dabei die grün markierte Projektion{" "}
+          Residuum senkrecht steht und der Kandidat dabei die grün markierte Projektion{" "}
           <M>{"\\cgreen{\\wh{\\bb}}"}</M> trifft.
         </p>
         <ProjektionWidget />
@@ -753,7 +752,7 @@ export function S71() {
         Satz 7.1.4 ist geometrisch erhellend, aber unpraktisch: Um{" "}
         <M>{"\\cgreen{\\wh{\\bb}}"}</M> auszurechnen, müssten wir die Projektion schon kennen.
         Die Orthogonalitätsbedingung lässt sich aber in ein Gleichungssystem übersetzen, das nur{" "}
-        <M>{"\\bA"}</M> und <M>{"\\bb"}</M> enthält — die aus der linearen Algebra bekannten{" "}
+        <M>{"\\bA"}</M> und <M>{"\\bb"}</M> enthält: die aus der linearen Algebra bekannten{" "}
         <ConceptLink id="normal-equations">Normalengleichungen</ConceptLink>.
       </p>
 
@@ -778,8 +777,8 @@ export function S71() {
         >
           <p>
             Nach Satz 7.1.4 löst <M>{"\\wh{\\bx}"}</M> das KQ-Problem genau dann, wenn{" "}
-            <M>{"\\bA\\wh{\\bx} = \\cgreen{\\wh{\\bb}}"}</M> — und das ist genau dann der Fall,
-            wenn das Residuum <em>nur</em> aus dem senkrechten Anteil besteht:
+            <M>{"\\bA\\wh{\\bx} = \\cgreen{\\wh{\\bb}}"}</M> gilt. Das wiederum ist genau dann der
+            Fall, wenn das Residuum <em>nur</em> aus dem senkrechten Anteil besteht:
           </p>
           <MD>
             {"\\bA\\wh{\\bx} = \\cgreen{\\wh{\\bb}} \\quequiv \\bb - \\bA\\wh{\\bx} = \\cpurp{\\br} \\perp \\col(\\bA)\\,."}
@@ -896,8 +895,8 @@ export function S71() {
         (eingeschränkt auf den Fall <M>{"\\rang(\\bA) = n"}</M>): Für quadratisches,
         invertierbares <M>{"\\bA"}</M> gilt <M>{"\\bA\\pinv = \\bA^{-1}"}</M>, und allgemein
         löst <M>{"\\bA\\pinv\\bb"}</M> das KQ-Problem. Wie man <M>{"\\wh{\\bx}"}</M>{" "}
-        <em>numerisch</em> am besten berechnet — über die Normalengleichungen sicher{" "}
-        <em>nicht</em> immer! — ist das Thema der Abschnitte{" "}
+        <em>numerisch</em> am besten berechnet (über die Normalengleichungen sicher{" "}
+        <em>nicht</em> immer!), ist das Thema der Abschnitte{" "}
         <a className="underline" href="#sec-7.3">
           7.3
         </a>{" "}
@@ -946,7 +945,7 @@ export function S71() {
           Tatsächlich gilt{" "}
           <M>{"\\cbred{\\bA}^\\top \\cpurp{\\br} = \\bnull"}</M>: Die Summe der Residuen ist{" "}
           <M>{"(25 - 50 + 25)/3 = 0"}</M>, und{" "}
-          <M>{"\\sumin x_i r_i = (50 \\cdot 25 - 75 \\cdot 50 + 100 \\cdot 25)/3 = 0"}</M> — das
+          <M>{"\\sumin x_i r_i = (50 \\cdot 25 - 75 \\cdot 50 + 100 \\cdot 25)/3 = 0"}</M>. Das
           Residuum steht senkrecht auf beiden Spalten, genau wie Satz 7.1.5 verspricht. Der
           minimale Zielfunktionswert ist{" "}
           <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2 = (625 + 2\\,500 + 625)/9 = 1\\,250/3 \\approx 416{,}7"}</M>

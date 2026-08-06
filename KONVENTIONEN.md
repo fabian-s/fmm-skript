@@ -252,3 +252,19 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Widget-Readout-Formatter: NaN (undefinierter Quotient, z. B. Verstärkung bei ε=0) von Infinity trennen — fmt(NaN) zeigte fälschlich ∞, und `x < s`-Statusverzweigungen kippen bei NaN in den falschen Zweig (mit !(x >= s) verzweigen); Slider-Bereiche so wählen, dass der gestörte Punkt im SVG-viewBox bleibt (Review 4.2: x max 2,8 statt 3 bei ε ≤ 0,55, Kurvenende 3,35).
 - Konzept-Modul `triangle-inequality` existiert jetzt (beide Formen: normal + umgekehrt, Sandwich-Widget |‖a‖−‖b‖| ≤ ‖a+b‖ ≤ ‖a‖+‖b‖) — S41-Links auflösbar; alle übrigen Kap.-4-Konzept-ids (norm, condition-number, matrix-norm, rounding-error, floating-point, cancellation, linear-system) hatten schon Module.
 - Kapitel werden EINZELN per ?k= geladen: Quer-Kapitel-Links als href="?k=<kapitel-id>#sec-K.n" schreiben (nackte #sec-Links anderer Kapitel sind tote Links; Integrationslauf Kap. 4 fixte 12 Stück in 04-fehler) — App.tsx scrollt jetzt nach dem Lazy-Load selbst zum Hash (useEffect auf mod), sodass Fragment-Deep-Links funktionieren.
+- Gedankenstrich-Budget aus STYLE.md ist HART und wird gemessen: höchstens
+  einer pro 300 Wörter, „ – " statt „—". Ungebremst schreiben Agenten einen
+  pro 70 Wörter; das war die erste Leserkritik von aussen (2026-08-06).
+- Erklärfenster (src/lib/tooltip): Hover öffnet eine sofort benutzbare
+  Vorschau, Klick (oder 📌) heftet sie fest — angeheftete Fenster sind
+  verschiebbar, überleben Scrollen und schliessen nur per ×/Esc/Klick daneben.
+  Kein Lock-Timer, kein Korridor mehr. src/lib ist für Kapitel-Agenten tabu.
+- Gendern: KEIN Gender-Doppelpunkt („Statistiker:innen"). Der kollidiert mit
+  der MDX-Direktiven-Syntax (`:name[...]`) und lässt den Build scheitern.
+  Dozenten-Entscheidung 2026-08-06: „Statistiker/innen" oder
+  „Statistiker*innen" verwenden, beides ist gleichwertig.
+- Quiz-Blöcke werden als MDX-Direktiven geschrieben (`::::quiz` /
+  `:::frage{wahr|falsch}`), nicht als JS-Array im MDX. Dozenten-Entscheidung
+  2026-08-06. Dafür gehört EINE generische <Quiz>/<Frage>-Komponente nach
+  src/lib/ — sie ersetzt die vier kopierten QuizWidget-Duplikate in den
+  Kapiteln.

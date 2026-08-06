@@ -60,8 +60,8 @@ registerConcept({
       <p>
         wobei <M>{"a"}</M> der <em>Realteil</em> und <M>{"b"}</M> der{" "}
         <em>Imaginärteil</em> ist. Wir können uns <M>{"z"}</M> als den Punkt{" "}
-        <M>{"(a, b)"}</M> in einer Ebene vorstellen — der{" "}
-        <em>komplexen Zahlenebene</em> — eine komplexe Zahl ist also im
+        <M>{"(a, b)"}</M> in einer Ebene vorstellen, der{" "}
+        <em>komplexen Zahlenebene</em>. Eine komplexe Zahl ist also im
         Wesentlichen ein 2D-<ConceptLink id="vector">Vektor</ConceptLink>, den
         wir zusätzlich multiplizieren können: zum Beispiel{" "}
         <M>{"(1 + 2i)(3 + i) = 3 + i + 6i + 2i^2 = 1 + 7i"}</M>. Ihre Länge ist
@@ -77,7 +77,7 @@ registerConcept({
         <ConceptLink id="polynomial-roots">Nullstellen</ConceptLink>, aber
         immer komplexe, und bei reellen Matrizen treten sie in konjugierten
         Paaren <M>{"a \\pm b i"}</M> auf. Komplexe Eigenwerte signalisieren
-        Drehung oder Schwingung — genau deshalb funktioniert der harmonische
+        Drehung oder Schwingung; genau deshalb funktioniert der harmonische
         Ansatz <M>{"e^{i\\omega t}"}</M> (vgl. Heath Bsp. 4.1).
       </p>
       <ComplexPlaneWidget />

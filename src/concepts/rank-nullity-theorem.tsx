@@ -44,7 +44,7 @@ function DimensionBudgetWidget() {
       <p className="mt-1 text-xs opacity-80">
         Ein festes Budget von <M>{"n = 4"}</M> Eingangsdimensionen für eine
         Abbildung <M>{"\\R^4 \\to \\R^m"}</M>: Was der Rang gewinnt, verliert
-        der Kern — die beiden summieren sich immer zu 4.
+        der Kern; die beiden summieren sich immer zu 4.
       </p>
     </div>
   );
@@ -74,7 +74,7 @@ registerConcept({
         (den <ConceptLink id="kernel">Kern</ConceptLink>), und jede nicht
         zusammengedrückte Dimension taucht im{" "}
         <ConceptLink id="image">Bild</ConceptLink> auf, dessen Dimension der{" "}
-        <ConceptLink id="rank">Rang</ConceptLink> ist — keine entsteht neu,
+        <ConceptLink id="rank">Rang</ConceptLink> ist. Keine entsteht neu,
         keine geht verloren. Kleines Beispiel:{" "}
         <M>{"\\bA = \\begin{pmatrix} 1 & 0 & 1 \\\\ 0 & 1 & 1 \\end{pmatrix}"}</M>{" "}
         hat Rang 2 (die ersten beiden Spalten sind unabhängig, die dritte ist
@@ -83,7 +83,7 @@ registerConcept({
         auf. Der Rangsatz treibt außerdem Beweise durch Abzählen an: Im
         Eckart-Young-Argument zur SVD (vgl. MML §4.5) zwingt er zwei{" "}
         <ConceptLink id="subspace">Untervektorräume</ConceptLink> dazu, sich
-        in einem Vektor ungleich null zu überlappen — allein die Dimensionen
+        in einem Vektor ungleich null zu überlappen: allein die Dimensionen
         schließen einen leeren Schnitt aus, und das liefert den Widerspruch.
       </p>
       <DimensionBudgetWidget />

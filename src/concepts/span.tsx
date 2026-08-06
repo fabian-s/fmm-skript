@@ -45,7 +45,7 @@ function SpanWidget() {
       />
       <p className="mt-1 text-xs text-slate-300">
         Mit v₁ allein kann der gelbe Vektor nur auf einer Geraden durch den
-        Ursprung entlanggleiten &mdash; diese Gerade ist span(v₁). Kommt v₂
+        Ursprung entlanggleiten; diese Gerade ist span(v₁). Kommt v₂
         dazu, erreichen die beiden Regler jeden Punkt der Ebene:
         span(v₁, v₂) ist ganz ℝ².
       </p>
@@ -61,7 +61,7 @@ registerConcept({
       <p>
         Die <em>lineare Hülle</em> (span) einer Sammlung von{" "}
         <ConceptLink id="vector">Vektoren</ConceptLink> ist die Menge{" "}
-        <em>alles dessen, was wir aus ihnen bauen können</em> &mdash; durch{" "}
+        <em>alles dessen, was wir aus ihnen bauen können</em>: durch{" "}
         <ConceptLink id="linear-combination">Linearkombinationen</ConceptLink>,
         also jedes mögliche Skalieren und Addieren. Für eine{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink> <M>{"\\bA"}</M> lässt

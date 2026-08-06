@@ -4,7 +4,7 @@ import { LabeledTransformCanvas } from "../lib";
 
 /**
  * Untervektorraum: Der Regler c zeigt, dass alle Vielfachen eines Vektors
- * eine Gerade durch den Ursprung nachzeichnen — einen 1-dimensionalen
+ * eine Gerade durch den Ursprung nachzeichnen, einen 1-dimensionalen
  * Untervektorraum der Ebene. Ein fester Punkt abseits dieser Geraden
  * illustriert „liegt nicht im Untervektorraum".
  */
@@ -37,7 +37,7 @@ function SubspaceWidget() {
       <p className="mt-1 text-xs text-slate-300">
         Jede Position, die der pinke Vektor erreichen kann, liegt auf einer
         Geraden durch den Ursprung: Diese Gerade ist ein Untervektorraum. Der
-        graue Vektor w liegt nicht darauf &mdash; kein noch so geschicktes
+        graue Vektor w liegt nicht darauf; kein noch so geschicktes
         Skalieren von v wird ihn je erreichen.
       </p>
     </div>
@@ -61,7 +61,7 @@ registerConcept({
       <p>
         In <M>{"\\R^3"}</M> sind die Untervektorräume genau: der Ursprung
         allein, Geraden durch den Ursprung, Ebenen durch den Ursprung und ganz{" "}
-        <M>{"\\R^3"}</M> &mdash; jeder mit seiner eigenen{" "}
+        <M>{"\\R^3"}</M>, jeder mit seiner eigenen{" "}
         <ConceptLink id="dimension">Dimension</ConceptLink>. Das für uns
         wichtigste Beispiel: Die{" "}
         <ConceptLink id="span">lineare Hülle</ConceptLink> der Spalten einer
@@ -70,7 +70,7 @@ registerConcept({
         <M>{"\\bA\\bx"}</M>, ist ein Untervektorraum. Die Methode der
         kleinsten Quadrate (vgl. Heath §3.1) sucht den Punkt dieses
         niedrigdimensionalen Untervektorraums, der einem Datenvektor{" "}
-        <M>{"\\bb"}</M> am nächsten liegt &mdash; der typischerweise
+        <M>{"\\bb"}</M> am nächsten liegt – der typischerweise
         außerhalb liegt.
       </p>
       <SubspaceWidget />

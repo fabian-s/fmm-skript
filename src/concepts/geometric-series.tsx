@@ -1,4 +1,4 @@
-/** Concept tooltip: geometric series — sum of powers of a fixed ratio r. */
+/** Concept tooltip: geometric series, the sum of powers of a fixed ratio r. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 
@@ -80,7 +80,7 @@ registerConcept({
         <M>{"\\pm 0.9"}</M> aus und beobachten, wie viel langsamer sich die
         Punkte einpendeln). Lesen wir <M>{"r"}</M> als Variable{" "}
         <M>{"x"}</M>, wird aus <M>{"\\sum_k x^k"}</M> die einfachste{" "}
-        <ConceptLink id="power-series">Potenzreihe</ConceptLink> — der
+        <ConceptLink id="power-series">Potenzreihe</ConceptLink>, der
         Prototyp dafür, wie sich Taylor-Reihen verhalten.
       </p>
       <GeometricSumWidget />

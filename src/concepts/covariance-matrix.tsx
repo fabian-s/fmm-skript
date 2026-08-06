@@ -63,7 +63,7 @@ registerConcept({
         <M>{"\\bSigma"}</M> die <M>{"n \\times n"}</M>{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink> mit Eintrag{" "}
         <M>{"\\operatorname{Cov}(x_i, x_j)"}</M> an Position{" "}
-        <M>{"(i, j)"}</M> — reine Buchhaltung für die Varianzen und
+        <M>{"(i, j)"}</M>. Reine Buchhaltung für die Varianzen und
         Kovarianzen aus Statistik I: Auf der Diagonalen stehen die Varianzen
         der einzelnen Koordinaten, und jeder Nebendiagonal-Eintrag hält fest,
         wie stark sich ein Koordinatenpaar gemeinsam bewegt. Ein winziges
@@ -87,7 +87,7 @@ registerConcept({
         <M>{"\\bSigma = \\bL\\bL^\\top"}</M>, schicken billiges unabhängiges
         standardnormalverteiltes Rauschen <M>{"\\bz"}</M> durch{" "}
         <M>{"\\bL"}</M>, und <M>{"\\bL\\bz"}</M> hat exakt die Kovarianz{" "}
-        <M>{"\\bSigma"}</M> — der Standardweg, um aus einer multivariaten
+        <M>{"\\bSigma"}</M> – der Standardweg, um aus einer multivariaten
         Normalverteilung zu ziehen.
       </p>
       <CovScatterWidget />

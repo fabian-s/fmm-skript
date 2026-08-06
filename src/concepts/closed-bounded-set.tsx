@@ -1,5 +1,5 @@
 /**
- * Konzept-Tooltip: abgeschlossene und beschränkte (kompakte) Menge — die
+ * Konzept-Tooltip: abgeschlossene und beschränkte (kompakte) Menge, die
  * Voraussetzung des Satzes vom Minimum und Maximum (Existenz globaler
  * Minima).
  */
@@ -62,7 +62,7 @@ function EndpointWidget() {
         ) : (
           <>
             <M>{"f(x) = x"}</M> auf <M>{"(0, 1]"}</M>: die Werte kommen der 0
-            beliebig nahe, aber kein Punkt der Menge erreicht sie — jeder
+            beliebig nahe, aber kein Punkt der Menge erreicht sie; jeder
             Kandidat <M>{"\\wh{x}"}</M> wird von <M>{"\\wh{x}/2"}</M>{" "}
             geschlagen. Es existiert kein Minimierer.
           </>
@@ -83,8 +83,8 @@ registerConcept({
         <M>{"S"}</M> passt in eine Kugel mit endlichem Radius,{" "}
         <M>{"\\|\\bx\\| \\le R"}</M> für alle <M>{"\\bx \\in S"}</M>, gemessen
         mit der{" "}
-        <ConceptLink id="euclidean-norm">euklidischen Norm</ConceptLink> —
-        keine Punkte entkommen ins Unendliche. <em>Abgeschlossen</em> (closed)
+        <ConceptLink id="euclidean-norm">euklidischen Norm</ConceptLink>.
+        Keine Punkte entkommen ins Unendliche. <em>Abgeschlossen</em> (closed)
         heißt: <M>{"S"}</M> enthält alle seine Randpunkte. Wann immer sich
         Punkte aus <M>{"S"}</M> auf einen Grenzwert zubewegen, gehört auch
         dieser Grenzwert zu <M>{"S"}</M>. Das Intervall <M>{"[0, 1]"}</M> ist
@@ -98,7 +98,7 @@ registerConcept({
         fundamentale Existenzgarantie (Satz vom Minimum und Maximum): eine{" "}
         <ConceptLink id="continuity">stetige</ConceptLink> Funktion auf einer
         nichtleeren abgeschlossenen und beschränkten Menge nimmt einen größten
-        und einen kleinsten Wert an — das globale Minimum existiert wirklich,
+        und einen kleinsten Wert an: das globale Minimum existiert wirklich,
         es wird nicht nur angenähert. Lassen wir eine der Bedingungen fallen,
         stirbt die Garantie: <M>{"f(x) = x"}</M> auf <M>{"(0, 1]"}</M> hat
         keinen Minimierer (nicht abgeschlossen), und auf ganz <M>{"\\R"}</M>{" "}

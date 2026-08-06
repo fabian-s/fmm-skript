@@ -45,7 +45,7 @@ function PythagorasWidget() {
         ]}
       />
       <p className="mt-1 text-xs text-slate-300">
-        Die beiden Zahlen oben stimmen genau dann überein, wenn uᵀv = 0 —
+        Die beiden Zahlen oben stimmen genau dann überein, wenn uᵀv = 0:
         Pythagoras gilt nur im rechten Winkel.
       </p>
     </div>

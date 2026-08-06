@@ -64,7 +64,7 @@ function TriangleWidget() {
         <M>{"\\lVert \\ba + \\bb \\rVert"}</M> pendelt zwischen den beiden grauen
         Schranken. Die obere erreicht sie nur bei <M>{"\\omega = 0^\\circ"}</M>{" "}
         (gleiche Richtung, Dreieck fällt zur Strecke zusammen), die untere nur
-        bei <M>{"\\omega = 180^\\circ"}</M> (Gegenrichtung) — das ist die
+        bei <M>{"\\omega = 180^\\circ"}</M> (Gegenrichtung). Das ist die
         umgekehrte Dreiecksungleichung, angewandt auf <M>{"\\ba"}</M> und{" "}
         <M>{"-\\bb"}</M>.
       </p>
@@ -91,7 +91,7 @@ registerConcept({
       <p>
         Diese <em>Dreiecksungleichung</em> (triangle inequality) ist eine der
         drei definierenden Eigenschaften jeder{" "}
-        <ConceptLink id="norm">Norm</ConceptLink> — sie gilt also nicht nur für
+        <ConceptLink id="norm">Norm</ConceptLink>. Sie gilt also nicht nur für
         die <ConceptLink id="euclidean-norm">euklidische Norm</ConceptLink>,
         sondern etwa auch für Summen- und Maximumsnorm. Für reelle Zahlen ist
         sie die aus der Analysis vertraute Betragsungleichung{" "}
@@ -112,7 +112,7 @@ registerConcept({
         <M>{"\\lVert \\ba \\rVert - \\lVert \\bb \\rVert \\leq \\lVert \\ba - \\bb \\rVert"}</M>.
         Vertauschen wir die Rollen von <M>{"\\ba"}</M> und <M>{"\\bb"}</M>,
         gilt dieselbe Schranke auch für{" "}
-        <M>{"\\lVert \\bb \\rVert - \\lVert \\ba \\rVert"}</M> — zusammen:
+        <M>{"\\lVert \\bb \\rVert - \\lVert \\ba \\rVert"}</M>. Zusammen:
       </p>
       <MD>
         {"\\bigl|\\, \\lVert \\ba \\rVert - \\lVert \\bb \\rVert \\,\\bigr| \\;\\leq\\; \\lVert \\ba - \\bb \\rVert."}
@@ -120,7 +120,7 @@ registerConcept({
       <p>
         Diese <em>umgekehrte Dreiecksungleichung</em> (reverse triangle
         inequality) sagt: liegen zwei Vektoren nahe beieinander, dann sind auch
-        ihre Normen nahe beieinander — die Norm ist eine stetige Funktion.
+        ihre Normen nahe beieinander, die Norm ist also eine stetige Funktion.
         Genau so wird sie in Fehlerabschätzungen benutzt: der Abstand{" "}
         <M>{"\\lVert \\ba - \\bb \\rVert"}</M> zweier Größen kontrolliert die
         Differenz ihrer Längen. Im Beispiel oben:{" "}

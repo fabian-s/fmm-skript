@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Konvergenzrate — linear vs. quadratisch. */
+/** Konzept-Tooltip: Konvergenzrate: linear vs. quadratisch. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -47,7 +47,7 @@ function RateWidget() {
         Schritten aus dem Diagramm. Der Plot endet bei <M>{"10^{-16}"}</M>,
         ungefähr die{" "}
         <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink>{" "}
-        in doppelter Genauigkeit — darunter bringen weitere Iterationen nichts
+        in doppelter Genauigkeit; darunter bringen weitere Iterationen nichts
         mehr.
       </p>
     </div>
@@ -65,7 +65,7 @@ registerConcept({
         Lösung <M>{"x^*"}</M> nähern. Schreiben wir{" "}
         <M>{"e_k = \\|x_k - x^*\\|"}</M> für den Fehler in Schritt{" "}
         <M>{"k"}</M>, dann beschreibt die <em>Konvergenzrate</em> (rate of
-        convergence), wie schnell die Fehler schrumpfen — typischerweise über
+        convergence), wie schnell die Fehler schrumpfen, typischerweise über
       </p>
       <MD>{"e_{k+1} \\approx C\\, e_k^{\\,r}."}</MD>
       <p>
@@ -76,7 +76,7 @@ registerConcept({
         Stelle pro Schritt). Mit <M>{"r = 2"}</M> ist sie{" "}
         <em>quadratisch</em>: Der Fehler wird in jedem Schritt ungefähr{" "}
         <em>quadriert</em>, aus <M>{"10^{-2}"}</M> wird also{" "}
-        <M>{"10^{-4}"}</M>, dann <M>{"10^{-8}"}</M> — die Anzahl korrekter
+        <M>{"10^{-4}"}</M>, dann <M>{"10^{-8}"}</M>: die Anzahl korrekter
         Stellen verdoppelt sich mit jeder Iteration. Kubische Konvergenz (
         <M>{"r = 3"}</M>) verdreifacht sie.
       </p>
@@ -84,7 +84,7 @@ registerConcept({
         Deshalb lohnt sich Eigenwert-Analyse für Algorithmen: Die
         Potenziteration (power iteration) konvergiert linear mit Faktor{" "}
         <M>{"C = |\\lambda_2 / \\lambda_1|"}</M>, einem Verhältnis von
-        Eigenwerten — wer die Eigenwerte der Iterationsmatrix analysiert, weiß
+        Eigenwerten. Wer die Eigenwerte der Iterationsmatrix analysiert, weiß
         also im Voraus, ob das Verfahren überhaupt konvergiert und wie viele
         Schritte es braucht. Am anderen Ende der Skala konvergiert die
         Rayleigh-Quotienten-Iteration sogar kubisch.

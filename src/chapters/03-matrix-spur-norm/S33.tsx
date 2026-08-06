@@ -3,7 +3,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { S33OperatornormWidget } from "./widgets/S33OperatornormWidget";
 
 /**
- * Abschnitt 3.3 — Operatornormen.
+ * Abschnitt 3.3 – Operatornormen.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Operatornormen" (Definition,
  * induzierte 1-/2-/∞-Normen, Einschub Orthogonalmatrizen, Spektralnorm-Satz,
  * Beispiele). Prosa eigenständig aus den Folien formuliert; Widget-Code nach
@@ -36,7 +36,7 @@ export function S33() {
         <a className="underline" href="#sec-3.2">Abschnitt 3.2</a> haben einen blinden
         Fleck: Sie behandeln die Matrix als bloße Zahlentabelle. Die Identitätsmatrix{" "}
         <ConceptLink id="identity-matrix"><M>{"\\bI_n"}</M></ConceptLink> etwa verändert
-        als Abbildung überhaupt nichts — trotzdem wächst ihre Frobenius-Norm{" "}
+        als Abbildung überhaupt nichts; trotzdem wächst ihre Frobenius-Norm{" "}
         <M>{"\\left\\| \\bI_n \\right\\|_F = \\sqrt{n}"}</M> mit der Dimension. Was die
         Matrix als <ConceptLink id="linear-map">lineare Abbildung</ConceptLink>{" "}
         <M>{"\\bx \\mapsto \\bA\\bx"}</M> <em>tut</em>, sehen diese Normen nicht. In
@@ -50,7 +50,7 @@ export function S33() {
       <p>
         Die Idee: Wir schicken alle Vektoren <M>{"\\bx \\neq \\bnull"}</M> durch die
         Abbildung und vergleichen die Länge des Bildes <M>{"\\bA\\bx"}</M> mit der Länge
-        des Urbildes <M>{"\\bx"}</M> — gemessen mit einer{" "}
+        des Urbildes <M>{"\\bx"}</M>, gemessen mit einer{" "}
         <ConceptLink id="norm">Vektornorm</ConceptLink> unserer Wahl. Der größte
         auftretende Streckfaktor ist die Norm der Matrix.
       </p>
@@ -89,7 +89,7 @@ export function S33() {
             Einheitssphäre{" "}
             <M>{"\\{\\bx : \\left\\| \\bx \\right\\|_V = 1\\}"}</M> ist eine{" "}
             <ConceptLink id="closed-bounded-set">abgeschlossene und beschränkte
-            Menge</ConceptLink> — das Maximum wird also tatsächlich angenommen.
+            Menge</ConceptLink>; das Maximum wird also tatsächlich angenommen.
           </li>
         </ul>
       </EnvBlock>
@@ -116,8 +116,8 @@ export function S33() {
         </p>
         <MD>{"\\left\\| \\bA \\right\\|_2 = \\sqrt{\\corange{3 + \\sqrt{5}}} \\approx 2{,}29."}</MD>
         <p>
-          In R können wir das direkt nachprüfen — <code>crossprod(A)</code> berechnet{" "}
-          <M>{"\\bA^\\top\\bA"}</M>:
+          In R können wir das direkt nachprüfen (<code>crossprod(A)</code> berechnet{" "}
+          <M>{"\\bA^\\top\\bA"}</M>):
         </p>
         <pre className="max-w-prose overflow-x-auto rounded bg-slate-200/70 p-3 font-mono text-sm dark:bg-slate-900/60">
           <code>{"A <- matrix(c(2, 1,\n              0, 1), nrow = 2, byrow = TRUE)\nAtA <- crossprod(A)   # t(A) %*% A\nsqrt(eigen(AtA)$values)\n#> [1] 2.288246 0.874032"}</code>
@@ -125,13 +125,13 @@ export function S33() {
         <p>
           Der größte Wert ist die Operatornorm: Kein Einheitsvektor wird um mehr als den
           Faktor <M>{"2{,}29"}</M> gestreckt. Der kleinere Wert <M>{"0{,}874"}</M> ist
-          die kürzeste Halbachse der Bildellipse — die stärkste Stauchung. Dieselbe
+          die kürzeste Halbachse der Bildellipse, also die stärkste Stauchung. Dieselbe
           Matrix begegnet uns in Beispiel 3.4.6 (
-          <a className="underline" href="#sec-3.4">Abschnitt 3.4</a>) wieder — dort
+          <a className="underline" href="#sec-3.4">Abschnitt 3.4</a>) wieder. Dort
           berechnen wir ihre Schattennormen aus genau diesen Eigenwerten.
         </p>
       </EnvBlock>
-      <ExpandedReading title="Operatornorm zum Anfassen — der Einheitskreis unter A">
+      <ExpandedReading title="Operatornorm zum Anfassen: der Einheitskreis unter A">
         <S33OperatornormWidget />
       </ExpandedReading>
 
@@ -142,7 +142,7 @@ export function S33() {
         Jede <M>{"p"}</M>-Norm{" "}
         <M>{"\\left\\| \\bv \\right\\|_p = \\left( \\sum_i |v_i|^p \\right)^{1/p}"}</M>{" "}
         induziert ihre eigene Operatornorm. Drei Fälle sind so wichtig, dass sie eigene
-        Namen tragen — und für zwei davon gibt es erfreulich einfache Formeln:
+        Namen tragen, und für zwei davon gibt es erfreulich einfache Formeln:
       </p>
       <EnvBlock kind="Satz" label="3.3.4 (Induzierte p-Normen)">
         <p>
@@ -164,7 +164,7 @@ export function S33() {
       </EnvBlock>
       <p>
         Die 1-Norm einer Matrix ist also einfach die größte betragsmäßige Spaltensumme,
-        die <M>{"\\infty"}</M>-Norm die größte betragsmäßige Zeilensumme — beide lassen
+        die <M>{"\\infty"}</M>-Norm die größte betragsmäßige Zeilensumme. Beide lassen
         sich ohne jede Eigenwertrechnung ablesen. Als Eselsbrücke: Die <M>{"1"}</M>{" "}
         steht senkrecht wie eine Spalte, das Symbol <M>{"\\infty"}</M> liegt waagrecht
         wie eine Zeile. Die Spektralnorm ist
@@ -233,7 +233,7 @@ export function S33() {
       <p>
         Für den Beweis der Spektralnorm-Formel brauchen wir eine besondere Klasse von
         Matrizen: solche, die Längen überhaupt nicht verändern. Sie werden uns im ganzen
-        Kurs immer wieder begegnen — gerade <em>weil</em> sie Normen unangetastet
+        Kurs immer wieder begegnen, gerade <em>weil</em> sie Normen unangetastet
         lassen.
       </p>
       <EnvBlock kind="Definition" label="3.3.5 (Orthogonalmatrix)">
@@ -261,7 +261,7 @@ export function S33() {
             Rayleigh-Quotient ist exakt 1.
           </li>
           <li>
-            <M>{"\\bQ^{-1} = \\bQ^\\top"}</M> — die{" "}
+            <M>{"\\bQ^{-1} = \\bQ^\\top"}</M>. Die{" "}
             <ConceptLink id="matrix-inverse">Inverse</ConceptLink> ist gratis: Statt
             eines Gleichungssystems genügt Transponieren.
           </li>
@@ -277,8 +277,8 @@ export function S33() {
             (denn <M>{"(\\bQ^\\top)^\\top\\bQ^\\top = \\bQ\\bQ^\\top = \\bI"}</M>), hat
             also ebenfalls Spektralnorm 1. Für die{" "}
             <ConceptLink id="condition-number">Konditionszahl</ConceptLink> folgt{" "}
-            <M>{"\\kappa_2(\\bQ) = \\left\\| \\bQ \\right\\|_2 \\left\\| \\bQ^{-1} \\right\\|_2 = 1"}</M>{" "}
-            — Multiplikation mit <M>{"\\bQ"}</M> oder{" "}
+            <M>{"\\kappa_2(\\bQ) = \\left\\| \\bQ \\right\\|_2 \\left\\| \\bQ^{-1} \\right\\|_2 = 1"}</M>:{" "}
+            Multiplikation mit <M>{"\\bQ"}</M> oder{" "}
             <M>{"\\bQ^{-1}"}</M> ist immer gut konditioniert und verschlechtert die
             Stabilität von Algorithmen nicht. Das ist der Grund, warum orthogonale
             Transformationen das Arbeitspferd der numerischen linearen Algebra sind
@@ -303,7 +303,7 @@ export function S33() {
         beweisen. Der Schlüssel: <M>{"\\bA^\\top\\bA"}</M> ist{" "}
         <ConceptLink id="symmetric-matrix">symmetrisch</ConceptLink> und besitzt deshalb
         eine Spektralzerlegung <M>{"\\bA^\\top\\bA = \\bP\\bLambda\\bP^\\top"}</M> mit
-        einer <em>orthogonalen</em> Eigenvektormatrix <M>{"\\bP"}</M> — und genau die
+        einer <em>orthogonalen</em> Eigenvektormatrix <M>{"\\bP"}</M> – und genau die
         Normerhaltung aus Bemerkung 3.3.6 macht den Beweis kurz. Die Eigenwerte sind
         dabei automatisch nichtnegativ, denn{" "}
         <M>{"\\bx^\\top\\bA^\\top\\bA\\bx = \\left\\| \\bA\\bx \\right\\|_2^2 \\geq 0"}</M>{" "}
@@ -337,7 +337,7 @@ export function S33() {
             <>
               <M>{"\\bLambda = \\bLambda^{1/2}\\bLambda^{1/2}"}</M> mit{" "}
               <M>{"\\bLambda^{1/2} = \\diag(\\sqrt{\\lambda_i})"}</M> aufspalten und die
-              Faktoren den beiden Seiten zuschlagen — wieder eine quadrierte Norm
+              Faktoren den beiden Seiten zuschlagen, wieder eine quadrierte Norm
             </>
           }
         >
@@ -350,7 +350,7 @@ export function S33() {
               <M>{"\\bP"}</M> orthogonal ist, gilt{" "}
               <M>{"\\left\\| \\cbgreen{\\by} \\right\\|_2 = \\left\\| \\bx \\right\\|_2"}</M>{" "}
               (Bemerkung 3.3.6), und <M>{"\\bx \\mapsto \\bP^\\top\\bx"}</M> ist
-              bijektiv — <M>{"\\cbgreen{\\by}"}</M> durchläuft also die Einheitssphäre,
+              bijektiv; <M>{"\\cbgreen{\\by}"}</M> durchläuft also die Einheitssphäre,
               wenn <M>{"\\bx"}</M> dies tut
             </>
           }
@@ -372,9 +372,9 @@ export function S33() {
           why={
             <>
               die Schranke wird angenommen: Für{" "}
-              <M>{"\\cbgreen{\\by} = \\be_1"}</M> — also <M>{"\\bx = "}</M> erste Spalte
+              <M>{"\\cbgreen{\\by} = \\be_1"}</M> (also <M>{"\\bx = "}</M> erste Spalte
               von <M>{"\\bP"}</M>, der Eigenvektor zu{" "}
-              <M>{"\\corange{\\lambda_1}"}</M> — gilt Gleichheit; Wurzel ziehen liefert
+              <M>{"\\corange{\\lambda_1}"}</M>) gilt Gleichheit; Wurzel ziehen liefert
               die Behauptung
             </>
           }
@@ -385,10 +385,10 @@ export function S33() {
       <p>
         Die Interpretation: Der größte Eigenwert von <M>{"\\bA^\\top\\bA"}</M> ist die
         quadrierte maximale Streckung, und die Richtung der stärksten Streckung ist der
-        zugehörige Eigenvektor — im Widget oben der graue Pfeil <M>{"\\bx^*"}</M>. Noch
+        zugehörige Eigenvektor, im Widget oben der graue Pfeil <M>{"\\bx^*"}</M>. Noch
         intuitiver wird das über die Singulärwerte von <M>{"\\bA"}</M> und die{" "}
-        <ConceptLink id="singular-value-decomposition">Singulärwertzerlegung</ConceptLink>{" "}
-        — dazu später mehr.
+        <ConceptLink id="singular-value-decomposition">Singulärwertzerlegung</ConceptLink>;{" "}
+        dazu später mehr.
       </p>
 
       <h3 id="sec-3.3.5" className="mb-2 mt-8 text-xl font-semibold">
@@ -400,17 +400,17 @@ export function S33() {
           <M>{"\\bA = \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix}"}</M>.
         </p>
         <p>
-          <strong>Spaltensummennorm</strong> — Grün verfolgt die erste, Blau die zweite
-          Spalte:
+          <strong>Spaltensummennorm</strong> (Grün verfolgt die erste, Blau die zweite
+          Spalte):
         </p>
         <MD>{"\\left\\| \\bA \\right\\|_1 = \\max\\left\\{ \\cgreen{|2| + |0|},\\; \\cblue{|1| + |3|} \\right\\} = \\max\\{\\cgreen{2}, \\cblue{4}\\} = \\cblue{4}."}</MD>
         <p>
-          <strong>Zeilensummennorm</strong> — Rot verfolgt die erste, Violett die zweite
-          Zeile:
+          <strong>Zeilensummennorm</strong> (Rot verfolgt die erste, Violett die zweite
+          Zeile):
         </p>
         <MD>{"\\left\\| \\bA \\right\\|_\\infty = \\max\\left\\{ \\cred{|2| + |1|},\\; \\cpurp{|0| + |3|} \\right\\} = \\max\\{\\cred{3}, \\cpurp{3}\\} = 3."}</MD>
         <p>
-          <strong>Spektralnorm</strong> — hier müssen wir rechnen:
+          <strong>Spektralnorm</strong> (hier müssen wir rechnen):
         </p>
         <MD>{"\\bA^\\top\\bA = \\begin{pmatrix} 2 & 0 \\\\ 1 & 3 \\end{pmatrix} \\begin{pmatrix} 2 & 1 \\\\ 0 & 3 \\end{pmatrix} = \\begin{pmatrix} 4 & 2 \\\\ 2 & 10 \\end{pmatrix}."}</MD>
         <p>
@@ -422,7 +422,7 @@ export function S33() {
         <MD>{"\\left\\| \\bA \\right\\|_2 = \\sqrt{\\corange{\\lambda_{\\max}(\\bA^\\top\\bA)}} = \\sqrt{\\corange{7 + \\sqrt{13}}} \\approx \\sqrt{10{,}61} \\approx 3{,}26."}</MD>
         <p>
           Die drei Normen liefern verschiedene Werte (<M>{"4"}</M>,{" "}
-          <M>{"3{,}26"}</M>, <M>{"3"}</M>) — sie messen die maximale Streckung ja auch
+          <M>{"3{,}26"}</M>, <M>{"3"}</M>), denn sie messen die maximale Streckung ja auch
           in verschiedenen Geometrien. Weit auseinander liegen können sie aber nie; mehr
           dazu in <a className="underline" href="#sec-3.5">Abschnitt 3.5</a>.
         </p>
@@ -436,7 +436,7 @@ export function S33() {
         <MD>{"\\left\\| \\bI_n \\right\\|_1 = \\left\\| \\bI_n \\right\\|_2 = \\left\\| \\bI_n \\right\\|_\\infty = 1. \\quad \\checkmark"}</MD>
         <p>
           Das ist genau das Verhalten, das wir uns eingangs gewünscht haben: Eine
-          Abbildung, die nichts verändert, bekommt Norm 1 — unabhängig von der
+          Abbildung, die nichts verändert, bekommt Norm 1, unabhängig von der
           Dimension. Der Schönheitsfehler der elementweisen Normen (
           <M>{"\\left\\| \\bI_n \\right\\|_F = \\sqrt{n}"}</M>) ist behoben.
         </p>
@@ -449,7 +449,7 @@ export function S33() {
             <>
               Berechnen wir <M>{"\\left\\| \\bA \\right\\|_1"}</M> und{" "}
               <M>{"\\left\\| \\bA \\right\\|_\\infty"}</M> für{" "}
-              <M>{"\\bA = \\begin{pmatrix} 1 & -2 \\\\ 3 & 4 \\end{pmatrix}"}</M> — ganz
+              <M>{"\\bA = \\begin{pmatrix} 1 & -2 \\\\ 3 & 4 \\end{pmatrix}"}</M>, ganz
               ohne Eigenwerte.
             </>
           }
@@ -459,7 +459,7 @@ export function S33() {
             also <M>{"\\left\\| \\bA \\right\\|_1 = 6"}</M>. Zeilensummen:{" "}
             <M>{"|1| + |{-2}| = 3"}</M> und <M>{"|3| + |4| = 7"}</M>, also{" "}
             <M>{"\\left\\| \\bA \\right\\|_\\infty = 7"}</M>. Vorsicht: Die Beträge
-            nicht vergessen — das Minuszeichen in <M>{"-2"}</M> zählt positiv.
+            nicht vergessen, denn das Minuszeichen in <M>{"-2"}</M> zählt positiv.
           </p>
         </Frage>
         <Frage
@@ -473,7 +473,7 @@ export function S33() {
           <p>
             Wahr. Wegen{" "}
             <M>{"\\left\\| \\bQ\\bx \\right\\|_2 = \\left\\| \\bx \\right\\|_2"}</M>{" "}
-            (Bemerkung 3.3.6) ist jeder Rayleigh-Quotient gleich 1 — also auch das
+            (Bemerkung 3.3.6) ist jeder Rayleigh-Quotient gleich 1, also auch das
             Maximum. Geometrisch: Eine Drehung oder Spiegelung streckt nichts, der
             Einheitskreis bleibt ein Einheitskreis.
           </p>
@@ -491,7 +491,7 @@ export function S33() {
             Rayleigh-Quotient ist konstant{" "}
             <M>{"\\left\\| \\bx \\right\\| / \\left\\| \\bx \\right\\| = 1"}</M>, also
             ist auch sein Maximum 1. Elementweise Normen wie die Frobenius-Norm haben
-            diese Eigenschaft nicht — genau deshalb haben wir die Operatornormen
+            diese Eigenschaft nicht; deshalb haben wir die Operatornormen
             eingeführt.
           </p>
         </Frage>

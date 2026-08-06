@@ -34,7 +34,7 @@ registerConcept({
       <p>
         Ein lineares Gleichungssystem ist eine Sammlung von Gleichungen, in
         denen jede Unbekannte nur mit einer Zahl multipliziert und aufsummiert
-        vorkommt — keine Quadrate, keine Produkte von Unbekannten, keine
+        vorkommt: keine Quadrate, keine Produkte von Unbekannten, keine
         anderen nichtlinearen Terme. Zum Beispiel bilden{" "}
         <M>{"2x + 3y = 5"}</M> und <M>{"x - y = 1"}</M> zusammen ein System in
         den zwei Unbekannten <M>{"x, y"}</M>; eine Lösung ist jede Belegung der

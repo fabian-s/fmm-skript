@@ -29,7 +29,7 @@ registerConcept({
         </ConceptLink>
         , bilde jeweils das{" "}
         <ConceptLink id="matrix-vector-product">Produkt</ConceptLink>{" "}
-        <M>{"\\bA\\bx"}</M> und sammle alle Ergebnisse in einer Menge — das
+        <M>{"\\bA\\bx"}</M> und sammle alle Ergebnisse in einer Menge. Das
         ist genau der <ConceptLink id="span">Spann</ConceptLink> der Spalten
         von <M>{"\\bA"}</M>.
       </p>

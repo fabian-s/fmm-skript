@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: erwartungstreuer Schätzer — im Mittel richtig, E[θ̂] = θ. */
+/** Konzept-Tooltip: erwartungstreuer Schätzer: im Mittel richtig, E[θ̂] = θ. */
 import { ConceptLink, M, MD, registerConcept } from "../lib";
 
 // fester "zufälliger" Scatter (deterministisch, damit das Widget stabil ist)
@@ -46,7 +46,7 @@ function DartboardWidget() {
         Blauer Punkt: der wahre Wert θ. Rote Punkte: Schätzungen aus
         wiederholten Stichproben. Links: Die einzelnen Schätzungen sind
         verrauscht, aber ihr Mittel sitzt auf dem Ziel. Rechts: Die
-        Schätzungen stimmen untereinander überein — und liegen alle
+        Schätzungen stimmen untereinander überein, liegen aber alle
         systematisch daneben.
       </p>
     </div>
@@ -62,7 +62,7 @@ registerConcept({
         Ein Schätzer <M>{"\\hat{\\theta}"}</M> ist ein Rezept, das aus einer
         zufälligen Stichprobe eine Schätzung für eine unbekannte Größe{" "}
         <M>{"\\theta"}</M> macht. Weil die Daten zufällig sind, ist es auch
-        die Schätzung — und der Schätzer heißt <em>erwartungstreu</em> (engl.{" "}
+        die Schätzung. Der Schätzer heißt <em>erwartungstreu</em> (engl.{" "}
         <em>unbiased</em>), wenn sein{" "}
         <ConceptLink id="expected-value">Erwartungswert</ConceptLink> über
         wiederholte Stichproben die Wahrheit exakt trifft:
@@ -71,15 +71,15 @@ registerConcept({
       <p>
         Kleines Beispiel: Das Stichprobenmittel{" "}
         <M>{"\\bar{X} = \\tfrac{1}{n}(X_1 + \\dots + X_n)"}</M> ist
-        erwartungstreu für den Populationsmittelwert <M>{"\\mu"}</M> — jedes
+        erwartungstreu für den Populationsmittelwert <M>{"\\mu"}</M>; jedes
         einzelne <M>{"\\bar{X}"}</M> liegt daneben, aber es gibt keine
         systematische Drift in eine Richtung. Erwartungstreu heißt{" "}
         <em>nicht</em> präzise: Ein erwartungstreuer Schätzer kann sehr
         verrauscht sein. Genau diese Eigenschaft lässt das stochastische
         Gradientenverfahren (stochastic gradient descent, vgl. MML §7.1.3)
         funktionieren: Der mittlere Gradient über ein zufälliges Mini-Batch
-        ist eine erwartungstreue Schätzung des Gradienten über alle Daten —
-        im Mittel zeigt also jeder verrauschte Schritt in die richtige
+        ist eine erwartungstreue Schätzung des Gradienten über alle Daten.
+        Im Mittel zeigt also jeder verrauschte Schritt in die richtige
         Richtung.
       </p>
       <DartboardWidget />

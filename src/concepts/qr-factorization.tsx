@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: QR-Zerlegung — Gram-Schmidt-Sicht und Kleinste Quadrate. */
+/** Konzept-Tooltip: QR-Zerlegung: Gram-Schmidt-Sicht und Kleinste Quadrate. */
 import { useState } from "react";
 import { ConceptLink, LabeledTransformCanvas, M, MD, registerConcept, Slider } from "../lib";
 
@@ -46,7 +46,7 @@ function GramSchmidtWidget() {
         <M>
           {`\\bR = \\begin{bmatrix} ${r11.toFixed(2)} & ${r12.toFixed(2)} \\\\ 0 & ${r22.toFixed(2)} \\end{bmatrix}`}
         </M>
-        {" — "}
+        {": "}
         <M>{"\\bq_1"}</M> ist <M>{"\\ba_1"}</M>, auf Länge 1 geschrumpft;{" "}
         <M>{"\\bq_2"}</M> ist das, was von <M>{"\\ba_2"}</M> übrig bleibt,
         nachdem wir seinen <M>{"\\bq_1"}</M>-Anteil (
@@ -113,7 +113,7 @@ registerConcept({
         Residuennorm gratis dazu. Weil <M>{"\\bA^{\\mathsf T}\\bA"}</M> nie
         gebildet wird, wird auch die{" "}
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink> nicht
-        quadriert — der entscheidende Genauigkeitsvorteil gegenüber den{" "}
+        quadriert, der entscheidende Genauigkeitsvorteil gegenüber den{" "}
         <ConceptLink id="normal-equations">Normalengleichungen</ConceptLink>.
         Produktionsreife Software berechnet <M>{"\\bQ"}</M> mit
         Householder-

@@ -13,7 +13,7 @@ registerConcept({
         <ConceptLink id="scalar">Skalar</ConceptLink>, landen wir immer wieder
         in der Sammlung. Welche{" "}
         <ConceptLink id="linear-combination">Linearkombinationen</ConceptLink>{" "}
-        wir auch bilden — dem Raum entkommen wir nie.
+        wir auch bilden, dem Raum entkommen wir nie.
       </p>
       <p>
         Das Standardbeispiel ist{" "}
@@ -26,7 +26,7 @@ registerConcept({
         Beispiel ist eine Gerade durch den Ursprung in der Ebene, etwa alle
         Vielfachen von <M>{"(1, 2)"}</M>: Summen und Skalierungen solcher
         Vielfachen sind wieder Vielfache von <M>{"(1,2)"}</M>. Eine Gerade,
-        die den Ursprung verfehlt, ist dagegen <em>kein</em> Vektorraum —
+        die den Ursprung verfehlt, ist dagegen <em>kein</em> Vektorraum:
         verdoppeln wir einen ihrer Punkte, verlassen wir die Gerade.
       </p>
       <p>

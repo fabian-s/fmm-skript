@@ -3,7 +3,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { S24WachstumWidget } from "./widgets/S24WachstumWidget";
 
 /**
- * Abschnitt 2.4 — Landau-Symbole und Rechenregeln.
+ * Abschnitt 2.4: Landau-Symbole und Rechenregeln.
  * Quelle: Folien 02-algos.Rmd, Block „Landausymbole" bis „Quiz" (Z. 371–482).
  * Prosa eigenständig aus den Folien formuliert.
  */
@@ -32,7 +32,7 @@ export function S24() {
       <p>
         In <a className="underline" href="#sec-2.3">Abschnitt 2.3</a> haben wir den Aufwand von
         Algorithmen gemessen, indem wir elementare Operationen gezählt haben. Das Ergebnis sind
-        Ausdrücke wie <M>{"4n^3 + 16n^2 + 239"}</M> — exakt, aber unhandlich. Für den Vergleich
+        Ausdrücke wie <M>{"4n^3 + 16n^2 + 239"}</M>: exakt, aber unhandlich. Für den Vergleich
         von Algorithmen interessiert uns fast immer nur eine Frage: Wie schnell wächst der
         Aufwand, wenn die Problemgröße <M>{"n"}</M> groß wird? Die konkreten Vorfaktoren hängen
         ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also eine
@@ -85,7 +85,7 @@ export function S24() {
       <EnvBlock kind="Bemerkung" label="2.4.2 (Zwei Feinheiten der Definition)">
         <p>
           <em>Warum Limes superior statt Grenzwert?</em> Der Quotient <M>{"a_n/b_n"}</M> muss
-          nicht <ConceptLink id="convergence">konvergieren</ConceptLink> — er darf zum Beispiel
+          nicht <ConceptLink id="convergence">konvergieren</ConceptLink>; er darf zum Beispiel
           oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der{" "}
           <ConceptLink id="supremum">Suprema</ConceptLink> der Restfolgen) existiert dagegen
           immer, notfalls als <M>{"\\infty"}</M>. Die Bedingung{" "}
@@ -129,17 +129,17 @@ export function S24() {
         </p>
         <MD>{"\\lim_{n \\to \\infty} \\frac{\\cred{n^2}}{\\cblue{n}} = \\lim_{n \\to \\infty} n = \\infty \\quad \\text{(divergiert!)} \\quimpl \\cred{n^2} \\neq O(\\cblue{n})."}</MD>
         <p>
-          Der Quotient wächst über jede Schranke hinaus — <M>{"\\cred{n^2}"}</M> wächst echt
+          Der Quotient wächst über jede Schranke hinaus; <M>{"\\cred{n^2}"}</M> wächst echt
           schneller als <M>{"\\cblue{n}"}</M>.
         </p>
       </EnvBlock>
       <EnvBlock kind="Bemerkung" label="2.4.4 (Scharfe Schranken)">
         <p>
           Meist suchen wir eine möglichst <em>einfache</em> Vergleichsfolge <M>{"b_n"}</M>,
-          sodass <M>{"a_n = O(b_n)"}</M>, aber <em>nicht</em> <M>{"a_n = o(b_n)"}</M> gilt —
+          sodass <M>{"a_n = O(b_n)"}</M>, aber <em>nicht</em> <M>{"a_n = o(b_n)"}</M> gilt:
           eine Schranke, die das Wachstum genau trifft. Für <M>{"3n^2 + 5n"}</M> ist das{" "}
           <M>{"b_n = n^2"}</M>: Der Quotient konvergiert gegen <M>{"3 \\neq 0"}</M>. Zwar wäre
-          auch <M>{"3n^2 + 5n = O(n^3)"}</M> formal korrekt, aber wertlos grob — so wie „die
+          auch <M>{"3n^2 + 5n = O(n^3)"}</M> formal korrekt, aber wertlos grob, so wie „die
           Fahrt dauert höchstens drei Wochen" für eine Zugfahrt nach Berlin.
         </p>
       </EnvBlock>
@@ -150,8 +150,8 @@ export function S24() {
       <p>
         Aufwandsausdrücke entstehen durch Hintereinanderausführung (Addition der Kosten) und
         Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Praktischerweise
-        vertragen sich die Landau-Symbole genau mit diesen beiden Operationen — wir müssen die
-        Grenzwertrechnung also nicht jedes Mal neu machen:
+        vertragen sich die Landau-Symbole genau mit diesen beiden Operationen, so dass wir die
+        Grenzwertrechnung nicht jedes Mal neu machen müssen:
       </p>
       <EnvBlock kind="Lemma" label="2.4.5 (Rechenregeln für Landau-Symbole)">
         <p>
@@ -175,7 +175,7 @@ export function S24() {
       <p>
         Die Positivität der Vergleichsfolgen setzen wir voraus, damit sich in{" "}
         <M>{"a_n + b_n"}</M> nichts wegheben kann. Für Aufwandsvergleiche ist das keine
-        Einschränkung — Operationenzahlen sind positiv. Die Beweise sind kurze
+        Einschränkung, denn Operationenzahlen sind positiv. Die Beweise sind kurze
         Grenzwertargumente:
       </p>
       <Proof>
@@ -203,7 +203,7 @@ export function S24() {
         >
           <MD>{"\\limsup_{n \\to \\infty} \\frac{\\left\\vert \\cred{f_n} + \\cgreen{g_n} \\right\\vert}{a_n + b_n} < \\infty \\quimpl \\cred{f_n} + \\cgreen{g_n} = O(a_n + b_n)."}</MD>
         </PStep>
-        <PStep why={<>Betrag und Bruch faktorisieren — beide Faktoren kennen wir schon</>}>
+        <PStep why={<>Betrag und Bruch faktorisieren, beide Faktoren kennen wir schon</>}>
           <p>
             <em>Regel 1, Multiplikation, und Regel 2.</em> Der Quotient zerfällt in ein Produkt:
           </p>
@@ -242,7 +242,7 @@ export function S24() {
         <PStep
           why={
             <>
-              Produkt zweier beschränkter Folgen — das ist gerade Regel 1 (Multiplikation) mit{" "}
+              Produkt zweier beschränkter Folgen; das ist gerade Regel 1 (Multiplikation) mit{" "}
               <M>{"b_n \\cdot 1"}</M> als Vergleichsfolge
             </>
           }
@@ -280,7 +280,7 @@ export function S24() {
         </p>
         <MD>{"\\cred{4n^3} + 16n^2 + 239 = O(\\cred{n^3} + n^2 + 1) = O(\\cred{n^3}),"}</MD>
         <p>
-          denn <M>{"n^2 = O(n^3)"}</M> und <M>{"1 = O(n^3)"}</M> — zweimal Regel 3 angewandt.
+          denn <M>{"n^2 = O(n^3)"}</M> und <M>{"1 = O(n^3)"}</M>, zweimal Regel 3 angewandt.
           Dass auch der Vorfaktor <M>{"4"}</M> verschwindet, liegt an der Definition: Für jede
           Konstante <M>{"c > 0"}</M> ist{" "}
           <M>{"\\limsup_{n \\to \\infty} \\left\\vert c \\, b_n / b_n \\right\\vert = c < \\infty"}</M>,
@@ -291,24 +291,24 @@ export function S24() {
         <strong>
           Wir können komplexe Aufwandsausdrücke also auf ihren dominanten Term reduzieren.
         </strong>{" "}
-        Genau deshalb sprechen wir von einem „<M>{"O(n^3)"}</M>-Algorithmus", ohne Vorfaktoren
+        Deshalb sprechen wir von einem „<M>{"O(n^3)"}</M>-Algorithmus", ohne Vorfaktoren
         oder niedrigere Terme zu nennen: Für großes <M>{"n"}</M> bestimmt allein der dominante
         Term, wie sich die Laufzeit verhält. Und die üblichen Komplexitätsklassen bilden eine
-        strikte Hierarchie — jede wächst klein-o-mäßig langsamer als die nächste:
+        strikte Hierarchie, in der jede klein-o-mäßig langsamer wächst als die nächste:
       </p>
       <MD>{"\\log n \\,,\\quad n \\,,\\quad n \\log n \\,,\\quad n^2 \\,,\\quad n^3 \\,,\\quad 2^n."}</MD>
       <p>
-        Wie drastisch sich diese Klassen unterscheiden — und ab welchem <M>{"n"}</M> ein
-        schneller wachsender Term jeden noch so großen Vorfaktor überholt — zeigt das folgende
+        Wie drastisch sich diese Klassen unterscheiden (und ab welchem <M>{"n"}</M> ein
+        schneller wachsender Term jeden noch so großen Vorfaktor überholt), zeigt das folgende
         Widget. Der <ConceptLink id="logarithm">Logarithmus</ConceptLink>-Trick der log-Skala
         macht dabei aus <M>{"2^n"}</M> eine Gerade.
       </p>
-      <ExpandedReading title="Wachstumsraten-Explorer — wer dominiert wen, und ab wann?">
+      <ExpandedReading title="Wachstumsraten-Explorer: wer dominiert wen, und ab wann?">
         <p className="mb-3 max-w-prose text-sm">
           Wählen Sie Komplexitätsklassen aus und vergleichen Sie sie auf linearer und
           logarithmischer Skala. Der Schieberegler für den Vorfaktor <M>{"c"}</M> skaliert die{" "}
           <M>{"n^2"}</M>-Kurve: Selbst <M>{"c = 1000"}</M> verschiebt nur den Schnittpunkt mit{" "}
-          <M>{"2^n"}</M> und <M>{"n^3"}</M> nach rechts — gewinnen kann der langsamer wachsende
+          <M>{"2^n"}</M> und <M>{"n^3"}</M> nach rechts – gewinnen kann der langsamer wachsende
           Term nie. Das ist die praktische Bedeutung von{" "}
           <M>{"n^2 = o(n^3)"}</M>: Vorfaktoren sind auf lange Sicht bedeutungslos.
         </p>
@@ -325,8 +325,8 @@ export function S24() {
       <SelfTest nr={1} frage={<M>{"2n = O(n^2)"}</M>}>
         <p>
           <strong>Wahr.</strong>{" "}
-          <M>{"\\lim_{n \\to \\infty} \\frac{2n}{n^2} = \\lim_{n \\to \\infty} \\frac{2}{n} = 0 < \\infty"}</M>{" "}
-          — es gilt sogar die stärkere Aussage <M>{"2n = o(n^2)"}</M>. Die <em>scharfe</em>{" "}
+          <M>{"\\lim_{n \\to \\infty} \\frac{2n}{n^2} = \\lim_{n \\to \\infty} \\frac{2}{n} = 0 < \\infty"}</M>;
+          es gilt sogar die stärkere Aussage <M>{"2n = o(n^2)"}</M>. Die <em>scharfe</em>{" "}
           Schranke im Sinne von Bemerkung 2.4.4 wäre <M>{"2n = O(n)"}</M>.
         </p>
       </SelfTest>
@@ -334,15 +334,15 @@ export function S24() {
         <p>
           <strong>Wahr.</strong> Mit <M>{"b_n = 1"}</M> ist{" "}
           <M>{"\\lim_{n \\to \\infty} \\frac{7/n}{1} = 0"}</M>. Landau-Symbole beschreiben also
-          nicht nur Wachstum, sondern auch das Abklingen von Nullfolgen — so werden wir später
+          nicht nur Wachstum, sondern auch das Abklingen von Nullfolgen. So werden wir später
           Approximations- und Rundungsfehler klassifizieren.
         </p>
       </SelfTest>
       <SelfTest nr={3} frage={<M>{"8n^3 + 7n^2 + n = O(n)"}</M>}>
         <p>
           <strong>Falsch.</strong>{" "}
-          <M>{"\\lim_{n \\to \\infty} \\frac{8n^3 + 7n^2 + n}{n} = \\lim_{n \\to \\infty} \\left(8n^2 + 7n + 1\\right) = \\infty"}</M>{" "}
-          — der Quotient divergiert. Richtig wäre <M>{"O(n^3)"}</M>: der dominante Term
+          <M>{"\\lim_{n \\to \\infty} \\frac{8n^3 + 7n^2 + n}{n} = \\lim_{n \\to \\infty} \\left(8n^2 + 7n + 1\\right) = \\infty"}</M>;
+          der Quotient divergiert. Richtig wäre <M>{"O(n^3)"}</M>: der dominante Term
           entscheidet (Beispiel 2.4.7).
         </p>
       </SelfTest>
@@ -360,7 +360,7 @@ export function S24() {
         Damit haben wir das Handwerkszeug beisammen. Im{" "}
         <a className="underline" href="#sec-2.5">nächsten Abschnitt</a> setzen wir es ein, um
         die Komplexität unserer Fibonacci-Algorithmen aus{" "}
-        <a className="underline" href="#sec-2.2">Abschnitt 2.2</a> präzise zu bestimmen — mit
+        <a className="underline" href="#sec-2.2">Abschnitt 2.2</a> präzise zu bestimmen – mit
         einem drastischen Ergebnis.
       </p>
 

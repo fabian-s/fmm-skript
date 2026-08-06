@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Zielfunktion — die Größe, die beim Trainieren optimiert wird. */
+/** Konzept-Tooltip: Zielfunktion: die Größe, die beim Trainieren optimiert wird. */
 import { ConceptLink, M, MD, Plot, registerConcept } from "../lib";
 
 const data: [number, number][] = [
@@ -47,8 +47,8 @@ registerConcept({
         <ConceptLink id="optimization">optimieren</ConceptLink>. Misst die
         Zahl einen Fehler, minimieren wir sie (dann heißt sie oft
         Verlust- oder Kostenfunktion); misst sie, wie gut die Parameter die
-        Daten erklären — etwa eine{" "}
-        <ConceptLink id="likelihood">Likelihood</ConceptLink> —, maximieren
+        Daten erklären (etwa eine{" "}
+        <ConceptLink id="likelihood">Likelihood</ConceptLink>), maximieren
         wir sie. Ein Klassiker ist die quadratische Fehlerfunktion der{" "}
         <ConceptLink id="linear-regression">linearen Regression</ConceptLink>:
       </p>

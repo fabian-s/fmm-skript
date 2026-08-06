@@ -16,7 +16,7 @@ function EigenWidget() {
       <Slider label="Richtung von v (Grad)" value={deg} onChange={setDeg} min={0} max={180} step={1} />
       <div className="my-1 font-mono text-xs">
         A v = ({Av[0].toFixed(2)}, {Av[1].toFixed(2)})ᵀ
-        {aligned ? ` — parallel! Eigenvektor mit λ ≈ ${lam.toFixed(2)}` : " — nicht parallel zu v"}
+        {aligned ? `, parallel! Eigenvektor mit λ ≈ ${lam.toFixed(2)}` : ", nicht parallel zu v"}
       </div>
       <LabeledTransformCanvas
         tickClass="text-slate-300"
@@ -61,8 +61,8 @@ registerConcept({
         und der Streckungsfaktor <M>{"\\lambda"}</M> ist der zugehörige{" "}
         <em>Eigenwert</em>. Kleines Beispiel: Für{" "}
         <M>{"\\bA = \\begin{pmatrix}2 & 1\\\\ 1 & 2\\end{pmatrix}"}</M> wird
-        der Vektor <M>{"(1,1)^T"}</M> auf <M>{"(3,3)^T"}</M> abgebildet — er
-        ist also ein Eigenvektor mit <M>{"\\lambda = 3"}</M> —, während{" "}
+        der Vektor <M>{"(1,1)^T"}</M> auf <M>{"(3,3)^T"}</M> abgebildet (also
+        ein Eigenvektor mit <M>{"\\lambda = 3"}</M>), während{" "}
         <M>{"(1,-1)^T"}</M> auf sich selbst abgebildet wird (
         <M>{"\\lambda = 1"}</M>).
       </p>
@@ -71,7 +71,7 @@ registerConcept({
         <ConceptLink id="symmetric-matrix">symmetrische Matrix</ConceptLink>{" "}
         sind die Eigenwerte reell, und die Eigenvektoren lassen sich als{" "}
         <ConceptLink id="orthonormal-basis">Orthonormalbasis</ConceptLink>{" "}
-        wählen — deshalb verbinden die Eigenwerte von <M>{"\\bA^T\\bA"}</M> das
+        wählen. Deshalb verbinden die Eigenwerte von <M>{"\\bA^T\\bA"}</M> das
         Kleinste-Quadrate-Problem mit der Singulärwertzerlegung. Bemerkenswert:
         Die Orthonormalbasen aus der QR-Zerlegung stecken auch in den
         Algorithmen, die Eigenwerte überhaupt erst berechnen (vgl. Heath

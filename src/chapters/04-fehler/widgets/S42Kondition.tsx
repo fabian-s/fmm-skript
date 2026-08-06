@@ -22,14 +22,14 @@ const COL = {
 };
 
 const fmt = (v: number): string => {
-  if (Number.isNaN(v)) return "—"; // undefinierter Quotient (z. B. ε = 0), NICHT ∞
+  if (Number.isNaN(v)) return "–"; // undefinierter Quotient (z. B. ε = 0), NICHT ∞
   if (!Number.isFinite(v)) return "∞";
   const a = Math.abs(v);
   if (a === 0) return "0";
   return a >= 0.01 && a < 10000 ? v.toPrecision(3) : v.toExponential(2);
 };
 
-const fmtPct = (v: number): string => (Number.isFinite(v) ? (100 * v).toFixed(1) + " %" : "—");
+const fmtPct = (v: number): string => (Number.isFinite(v) ? (100 * v).toFixed(1) + " %" : "–");
 
 function Readout({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
@@ -160,7 +160,7 @@ export function KehrwertWidget() {
             <circle cx={sx(xt)} cy={sy(fxtC)} r={4.5} fill={COL.pert} />
             {fxt > YMAX && (
               <text x={sx(xt) + 7} y={sy(fxtC) + 12} fill={COL.pert} fontSize={11}>
-                f(x̃) &gt; 10 — außerhalb des Bildes
+                f(x̃) &gt; 10, außerhalb des Bildes
               </text>
             )}
           </g>
@@ -172,21 +172,21 @@ export function KehrwertWidget() {
         <div className="mt-3 rounded bg-slate-100 p-2 dark:bg-slate-800">
           <Readout label="x̃ = x + ε" value={fmt(xt)} />
           <Readout label="f(x) = 1/x" value={fmt(fx)} color={COL.x} />
-          <Readout label="f(x̃) = 1/x̃" value={valid ? fmt(fxt) : "—"} />
+          <Readout label="f(x̃) = 1/x̃" value={valid ? fmt(fxt) : "–"} />
           <Readout label="rel. Inputfehler |ε|/|x|" value={fmtPct(relIn)} color={COL.pert} />
           <Readout label="rel. Outputfehler |f(x̃)−f(x)|/|f(x)|" value={fmtPct(relOut)} color={COL.out} />
           <Readout label="Verstärkung: Output-/Inputfehler" value={fmt(amp)} color={COL.amp} />
         </div>
         {!valid ? (
           <p className="mt-2 text-xs font-semibold" style={{ color: COL.pert }}>
-            x̃ = x + ε ≤ 0: Die Störung hat uns über die Polstelle geschoben — das Ergebnis hat
+            x̃ = x + ε ≤ 0: Die Störung hat uns über die Polstelle geschoben; das Ergebnis hat
             nicht einmal mehr das richtige Vorzeichen.
           </p>
         ) : (
           <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
             {!(amp >= 1.5) ? ( // NaN (ε = 0) fällt in den Normalzweig
               <>
-                Solange |ε| klein gegenüber x ist, liegt die Verstärkung nahe 1 — der Kehrwert
+                Solange |ε| klein gegenüber x ist, liegt die Verstärkung nahe 1: Der Kehrwert
                 gibt relative Fehler fast unverändert weiter (κ<sub>rel</sub> = 1).
               </>
             ) : (
@@ -198,7 +198,7 @@ export function KehrwertWidget() {
           </p>
         )}
         <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          Beide Fehlerquotienten hängen nur vom Verhältnis ε/x ab — das Widget mit{" "}
+          Beide Fehlerquotienten hängen nur vom Verhältnis ε/x ab. Das Widget mit{" "}
           <M>{"x \\approx 1"}</M> zeigt also exakt dasselbe Verhalten wie Beispiel 4.2.1 mit{" "}
           <M>{"x = 10^{-17}"}</M>.
         </p>
@@ -266,7 +266,7 @@ export function SummenKonditionWidget() {
     !Number.isFinite(kappa) ? (
       <>
         <strong style={{ color: COL.pert }}>Schlecht gestellt:</strong> Auf der Antidiagonalen ist{" "}
-        x₁ + x₂ = 0 — der relative Outputfehler ist nicht einmal definiert, κ<sub>rel</sub> = ∞.
+        x₁ + x₂ = 0, der relative Outputfehler ist also nicht einmal definiert, κ<sub>rel</sub> = ∞.
       </>
     ) : kappa < 3 ? (
       <>
@@ -276,13 +276,13 @@ export function SummenKonditionWidget() {
     ) : kappa < 50 ? (
       <>
         <strong style={{ color: COL.amp }}>Mäßig konditioniert:</strong> Fehler können bereits um
-        den Faktor {fmt(kappa)} wachsen — wir verlieren bis zu {Math.ceil(Math.log10(kappa))}{" "}
+        den Faktor {fmt(kappa)} wachsen; wir verlieren bis zu {Math.ceil(Math.log10(kappa))}{" "}
         Dezimalstellen.
       </>
     ) : (
       <>
         <strong style={{ color: COL.pert }}>Schlecht konditioniert:</strong> Nahe der
-        Antidiagonalen löschen sich x₁ und x₂ fast aus — winzige relative Inputfehler zerstören
+        Antidiagonalen löschen sich x₁ und x₂ fast aus: Winzige relative Inputfehler zerstören
         das Ergebnis.
       </>
     );
@@ -353,7 +353,7 @@ export function SummenKonditionWidget() {
         <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
           Ziehen wir den Punkt durch die Ebene: Die Farbe zeigt{" "}
           <M>{"\\kappa_{rel}"}</M> (hell: nahe 1, dunkel: ≥ 100). Entlang der roten Antidiagonalen
-          heben sich x₁ und x₂ gegenseitig auf — dieselbe Auslöschung, die uns in Kapitel 2
+          heben sich x₁ und x₂ gegenseitig auf – dieselbe Auslöschung, die uns in Kapitel 2
           begegnet ist. Auf der grünen Diagonalen x₂ = x₁ ist die Summe dagegen maximal gutmütig:{" "}
           <M>{"\\kappa_{rel} = 1"}</M>. Da κ<sub>rel</sub> nur von der <em>Richtung</em> von x
           abhängt, ist die Karte entlang jedes Strahls durch den Ursprung einfarbig.

@@ -45,7 +45,7 @@ registerConcept({
         <M>{"\\bu \\in \\R^m"}</M> und{" "}
         <M>{"\\bv \\in \\R^n"}</M> ist das{" "}
         <ConceptLink id="matrix-multiplication">Matrixprodukt</ConceptLink>{" "}
-        <M>{"\\bu\\bv^T"}</M> — Spalte mal Zeile. Das ergibt eine volle{" "}
+        <M>{"\\bu\\bv^T"}</M>, Spalte mal Zeile. Das ergibt eine volle{" "}
         <M>{"m \\times n"}</M>-
         <ConceptLink id="matrix">Matrix</ConceptLink>, deren{" "}
         <M>{"(i,j)"}</M>-Eintrag <M>{"u_i v_j"}</M> ist. Vergleichen wir das
@@ -58,7 +58,7 @@ registerConcept({
       <MD>{"\\begin{pmatrix}1\\\\2\\\\3\\end{pmatrix} \\begin{pmatrix}4 & 5\\end{pmatrix} = \\begin{pmatrix}4 & 5\\\\ 8 & 10\\\\ 12 & 15\\end{pmatrix}."}</MD>
       <p>
         Jede Spalte von <M>{"\\bu\\bv^T"}</M> ist ein Vielfaches des einen
-        Vektors <M>{"\\bu"}</M> — ein äußeres Produkt (ungleich Null) hat
+        Vektors <M>{"\\bu"}</M>; ein äußeres Produkt (ungleich Null) hat
         also immer <ConceptLink id="rank">Rang</ConceptLink> eins und ist
         damit die einfachste nichttriviale Matrix überhaupt. Genau deshalb
         schreibt die abgeschnittene Singulärwertzerlegung (truncated SVD){" "}

@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Permutationsmatrix — Einheitsmatrix mit gemischten Zeilen. */
+/** Konzept-Tooltip: Permutationsmatrix: Einheitsmatrix mit gemischten Zeilen. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept } from "../lib";
 
@@ -30,7 +30,7 @@ function PermWidget() {
       <MD>{`\\bP = \\begin{pmatrix} ${rows} \\end{pmatrix}, \\qquad \\bP \\begin{pmatrix} 5 \\\\ 7 \\\\ 9 \\end{pmatrix} = \\begin{pmatrix} ${Px.join(" \\\\ ")} \\end{pmatrix}`}</MD>
       <p className="mt-1 text-xs opacity-80">
         Jede der sechs 3×3-Permutationsmatrizen ordnet die Einträge von{" "}
-        <M>{"(5,7,9)^T"}</M> auf eine andere Weise um — kein Eintrag wird je
+        <M>{"(5,7,9)^T"}</M> auf eine andere Weise um; kein Eintrag wird je
         verändert, nur verschoben.
       </p>
     </div>
@@ -48,7 +48,7 @@ registerConcept({
         Zeilen (oder Spalten) durchgemischt wurden: Jede Zeile und jede Spalte
         enthält genau eine <M>{"1"}</M>, alle anderen Einträge sind{" "}
         <M>{"0"}</M>. Multiplikation mit ihr schiebt Daten umher, ohne einen
-        einzigen Wert zu ändern — <M>{"\\bP\\bx"}</M> ordnet die Einträge eines
+        einzigen Wert zu ändern: <M>{"\\bP\\bx"}</M> ordnet die Einträge eines
         Vektors um, und das{" "}
         <ConceptLink id="matrix-multiplication">Produkt</ConceptLink>{" "}
         <M>{"\\bA\\bP"}</M> ordnet die Spalten von <M>{"\\bA"}</M> um.

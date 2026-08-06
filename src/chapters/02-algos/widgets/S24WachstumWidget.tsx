@@ -5,7 +5,7 @@ import type { Series } from "../../../lib";
 /**
  * Wachstumsraten-Explorer (Abschnitt 2.4): die gängigen Komplexitätsklassen
  * auf linearer und logarithmischer Skala, mit verstellbarem Vorfaktor c für
- * die n²-Kurve — „ab welchem n dominiert was?".
+ * die n²-Kurve: „ab welchem n dominiert was?".
  * Farben folgen der FMM-Palette (siehe KONVENTIONEN.md, Lessons).
  */
 
@@ -176,12 +176,12 @@ export function S24WachstumWidget() {
           </table>
           <p className="text-slate-600 dark:text-slate-300">
             Ab n = {nStar} gilt endgültig 2ⁿ &gt; c·n² (mit c = {c}); ab n &gt; {c} gilt n³ &gt;
-            c·n². Der Vorfaktor verschiebt die Schwelle nur — aufhalten kann er das schnellere
+            c·n². Der Vorfaktor verschiebt die Schwelle nur; aufhalten kann er das schnellere
             Wachstum nicht.
           </p>
           {capped && (
             <p className="text-slate-500 dark:text-slate-400">
-              Hinweis: Die y-Achse ist bei 10⁵ gekappt — die schnellsten Kurven verlassen den
+              Hinweis: Die y-Achse ist bei 10⁵ gekappt, die schnellsten Kurven verlassen den
               sichtbaren Bereich als fast senkrechte Wand. Auf der log-Skala werden sie wieder
               vergleichbar: 2ⁿ ist dort eine Gerade.
             </p>

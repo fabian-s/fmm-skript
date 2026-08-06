@@ -28,7 +28,7 @@ function KernelWidget() {
       />
       <p className="mt-1 text-xs">
         {inKernel
-          ? "v zeigt entlang (2, −1): Av = 0 — v liegt im Kern."
+          ? "v zeigt entlang (2, −1): Av = 0, v liegt im Kern."
           : "Av ≠ 0, dieses v liegt also nicht im Kern. Richten wir v entlang (2, −1) aus, verschwindet Av."}
       </p>
     </div>
@@ -56,7 +56,7 @@ registerConcept({
         steht im Tausch mit dem <ConceptLink id="image">Bild</ConceptLink>:
         nach dem{" "}
         <ConceptLink id="rank-nullity-theorem">Rangsatz</ConceptLink> gilt{" "}
-        <M>{"\\dim\\ker(\\bA) = n - \\operatorname{rk}(\\bA)"}</M> — eine
+        <M>{"\\dim\\ker(\\bA) = n - \\operatorname{rk}(\\bA)"}</M>. Eine
         invertierbare Matrix hat also nur den Kern <M>{"\\{\\mathbf{0}\\}"}</M>.
         Kerne sind auch der Motor hinter Eigenräumen:{" "}
         <M>{"\\bA\\bx = \\lambda\\bx"}</M> lässt sich umstellen zu{" "}
@@ -64,7 +64,7 @@ registerConcept({
         also genau{" "}
         <M>{"E_\\lambda = \\ker(\\bA - \\lambda\\bI)"}</M>. Unten hat{" "}
         <M>{"\\bA = \\begin{pmatrix} 1 & 2 \\\\ 0.5 & 1 \\end{pmatrix}"}</M>{" "}
-        Rang 1 — finden wir die Richtung, die <M>{"\\bA"}</M> auslöscht:
+        Rang 1. Finden wir die Richtung, die <M>{"\\bA"}</M> auslöscht:
       </p>
       <KernelWidget />
     </>

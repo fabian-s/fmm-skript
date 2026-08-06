@@ -3,7 +3,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { KehrwertWidget, SummenKonditionWidget } from "./widgets/S42Kondition";
 
 /**
- * Abschnitt 4.2 — Kondition.
+ * Abschnitt 4.2: Kondition.
  * Quelle: Folien 04-fehler.Rmd, Block „Kondition" (Z. 179–297): Motivation,
  * 1/x-Beispiel, Definition absolute/relative Konditionszahl, Interpretation,
  * Beispiel f(x) = A⁻¹x, Quiz und Aufgabe. Prosa eigenständig formuliert;
@@ -44,7 +44,7 @@ export function S42() {
       </p>
       <p>
         Die entscheidende Beobachtung: Wie stark sich solche Inputfehler im Ergebnis
-        niederschlagen, ist eine Eigenschaft des <em>Problems</em> <M>{"f"}</M> — noch bevor
+        niederschlagen, ist eine Eigenschaft des <em>Problems</em> <M>{"f"}</M>, noch bevor
         irgendein Algorithmus ins Spiel kommt. Stellen wir uns die Menge aller Inputs vor, die
         wir von <M>{"\\bx"}</M> nicht unterscheiden können, weil ihr relativer Fehler unter einer
         Toleranz <M>{"\\delta"}</M> liegt:
@@ -54,7 +54,7 @@ export function S42() {
         Jeder Punkt in <M>{"E"}</M> ist ein plausibler Input, also ist jeder Punkt der Bildmenge{" "}
         <M>{"R = f(E)"}</M> ein plausibles Ergebnis. Ist <M>{"R"}</M> <em>groß</em> im Vergleich
         zu <M>{"E"}</M>, bläst <M>{"f"}</M> kleine Eingabestörungen zu großen
-        Ergebnisänderungen auf — wir nennen das Problem dann{" "}
+        Ergebnisänderungen auf. Wir nennen das Problem dann{" "}
         <em>schlecht konditioniert</em>. Vorsicht: Kein noch so guter Algorithmus kann das
         reparieren, denn er sieht nur <M>{"\\wt{\\bx}"}</M> und kann nicht wissen, welcher Punkt
         von <M>{"E"}</M> der „wahre" Input war.
@@ -78,7 +78,7 @@ export function S42() {
         <p>
           Der Output kann also um <em>Größenordnungen</em> vom wahren Wert{" "}
           <M>{"f(x) = 10^{17}"}</M> abweichen. Rechnen wir den relativen Outputfehler explizit
-          aus — die Störung <M>{"\\cred{\\eps}"}</M> verfolgen wir in Rot:
+          aus. Die Störung <M>{"\\cred{\\eps}"}</M> verfolgen wir in Rot:
         </p>
         <MD>{"f(\\wt{x}) - f(x) = \\frac{1}{x + \\cred{\\eps}} - \\frac{1}{x} = \\frac{x - (x + \\cred{\\eps})}{(x + \\cred{\\eps})\\, x} = \\frac{-\\cred{\\eps}}{(x + \\cred{\\eps})\\, x},"}</MD>
         <p>und nach Division durch <M>{"f(x) = 1/x"}</M>:</p>
@@ -88,11 +88,11 @@ export function S42() {
           <span style={{ color: "#D55E00" }}>relative Inputfehler</span>, multipliziert mit dem{" "}
           <span style={{ color: "#E69F00" }}>Verstärkungsfaktor</span>{" "}
           <M>{"\\corange{|x| / |x + \\cred{\\eps}|}"}</M>. Für{" "}
-          <M>{"\\cred{\\eps} \\to -10^{-17}"}</M> wächst dieser Faktor über alle Grenzen —
+          <M>{"\\cred{\\eps} \\to -10^{-17}"}</M> wächst dieser Faktor über alle Grenzen;
           insgesamt durchläuft der relative Outputfehler das gesamte Intervall{" "}
           <M>{"[0, \\infty)"}</M>. Und das, obwohl die Störung absolut winziger ist als jede
           Messgenauigkeit der Welt: <M>{"|\\cred{\\eps}| < 10^{-17}"}</M>. Relativ zu{" "}
-          <M>{"x"}</M> kann sie allerdings bis zu 100 % betragen — diesen Unterschied schauen wir
+          <M>{"x"}</M> kann sie allerdings bis zu 100 % betragen. Diesen Unterschied schauen wir
           uns gleich noch genauer an.
         </p>
       </EnvBlock>
@@ -105,7 +105,7 @@ export function S42() {
       </h3>
       <p>
         Um „sensitiv gegenüber Inputfehlern" quantitativ zu fassen, setzen wir Output- und
-        Inputfehler direkt ins Verhältnis — einmal für absolute, einmal für relative Fehler. Im
+        Inputfehler direkt ins Verhältnis, einmal für absolute, einmal für relative Fehler. Im
         Folgenden betrachten wir Abbildungen <M>{"f \\colon \\R^n \\to \\R^m"}</M>;{" "}
         <M>{"\\left\\| \\cdot \\right\\|"}</M> bezeichnet eine beliebige Vektor
         <ConceptLink id="norm">norm</ConceptLink> bzw. die von ihr induzierte{" "}
@@ -133,7 +133,7 @@ export function S42() {
             Der Zusatz „für <M>{"\\wt{\\bx} \\to \\bx"}</M>" bedeutet: Die Ungleichung muss
             nicht für alle <M>{"\\wt{\\bx}"}</M> gelten, sondern nur für hinreichend kleine
             Störungen. <M>{"\\kappa"}</M> ist also der schlimmste Verstärkungsfaktor{" "}
-            <em>im Grenzfall</em> verschwindender Störung — Konditionszahlen sind asymptotische
+            <em>im Grenzfall</em> verschwindender Störung. Konditionszahlen sind asymptotische
             Größen, und sie hängen sowohl vom Problem <M>{"f"}</M> als auch von der
             konkreten Stelle <M>{"\\bx"}</M> ab.
           </li>
@@ -153,7 +153,7 @@ export function S42() {
         </ul>
       </EnvBlock>
       <p>
-        Die Konditionszahl sortiert Probleme in gutartige und bösartige — mit einem wichtigen
+        Die Konditionszahl sortiert Probleme in gutartige und bösartige, mit einem wichtigen
         Extremfall:
       </p>
       <EnvBlock kind="Bemerkung" label="4.2.4 (Interpretation)">
@@ -170,7 +170,7 @@ export function S42() {
           </li>
           <li>
             <em>schlecht gestellt</em> (engl. <em>ill-posed</em>, <M>{"\\kappa = \\infty"}</M>):
-            Bei Inputfehlern ist das Problem praktisch nicht lösbar — beliebig kleine Störungen
+            Bei Inputfehlern ist das Problem praktisch nicht lösbar: Beliebig kleine Störungen
             können das Ergebnis beliebig stark verfälschen.
           </li>
         </ul>
@@ -190,10 +190,10 @@ export function S42() {
           relativ gemessen dagegen völlig harmlos: Asymptotisch wird ein relativer Inputfehler
           von 0,1 % zu einem relativen Outputfehler von ebenfalls 0,1 %. Das Drama in
           Beispiel 4.2.1 entsteht, weil die Störungen dort <em>relativ zu</em> <M>{"x"}</M>{" "}
-          eben nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe — etwa ein
-          additiver Messfehler — bedeutet bei winzigem <M>{"x"}</M> eine riesige relative
+          eben nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe (etwa ein
+          additiver Messfehler) bedeutet bei winzigem <M>{"x"}</M> eine riesige relative
           Störung. Merken wir uns: <em>Welche</em> Konditionszahl zählt, hängt davon ab, welche
-          Fehlerart im Input unvermeidbar ist. Im Widget oben sehen wir beide Regime — für
+          Fehlerart im Input unvermeidbar ist. Im Widget oben sehen wir beide Regime: Für
           kleine <M>{"\\eps/x"}</M> liegt die Verstärkung nahe 1, erst wenn <M>{"\\eps"}</M> in
           die Größenordnung von <M>{"x"}</M> kommt, explodiert sie.
         </p>
@@ -208,7 +208,7 @@ export function S42() {
         <M>{"\\bA \\by = \\bx"}</M> mit invertierbarem{" "}
         <M>{"\\bA \\in \\R^{n \\times n}"}</M>, wobei die rechte Seite <M>{"\\bx"}</M> der
         fehlerbehaftete Input ist. Als Problem geschrieben:{" "}
-        <M>{"f(\\bx) = \\bA^{-1} \\bx = \\by"}</M> — wobei die{" "}
+        <M>{"f(\\bx) = \\bA^{-1} \\bx = \\by"}</M>, wobei die{" "}
         <ConceptLink id="matrix-inverse">Inverse</ConceptLink> hier nur die Lösungsabbildung
         bezeichnet, nicht etwa eine Empfehlung, sie auszurechnen. Wie sensitiv reagiert die
         Lösung <M>{"\\by"}</M> auf Störungen von <M>{"\\bx"}</M>? Die Antwort führt genau auf
@@ -289,7 +289,7 @@ export function S42() {
           <li>
             Die relative Kondition des Gleichungslösens hängt von der rechten Seite{" "}
             <M>{"\\bx"}</M> ab; <M>{"\\corange{\\kappa(\\bA)} = \\left\\| \\bA \\right\\| \\left\\| \\bA^{-1} \\right\\|"}</M>{" "}
-            ist die von <M>{"\\bx"}</M> unabhängige <em>Worst-Case</em>-Schranke — und sie wird
+            ist die von <M>{"\\bx"}</M> unabhängige <em>Worst-Case</em>-Schranke – und sie wird
             für ungünstige <M>{"\\bx"}</M> auch angenommen. Das erklärt im Nachhinein, warum
             genau dieses Produkt in{" "}
             <a className="underline" href="?k=03-matrix-spur-norm#sec-3.5">Abschnitt 3.5</a> den Namen{" "}
@@ -312,7 +312,7 @@ export function S42() {
           <>
             Sei{" "}
             <M>{"\\bA = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & 0{,}1 \\end{pmatrix}"}</M>.
-            Was ist die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> bezüglich der 2-Norm — 2, 5,
+            Was ist die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> bezüglich der 2-Norm: 2, 5,
             20 oder 50?
           </>
         }
@@ -327,7 +327,7 @@ export function S42() {
         <p>
           Vorsicht vor der Distraktor-Antwort 20 <M>{"= 2/0{,}1"}</M>: Der größte Singulärwert
           ist 5, nicht der erste Diagonaleintrag 2. Die Werte 2 und 5 wären nur Normen, keine
-          Konditionszahlen — <M>{"\\kappa_2"}</M> misst das <em>Verhältnis</em> von stärkster zu
+          Konditionszahlen; <M>{"\\kappa_2"}</M> misst das <em>Verhältnis</em> von stärkster zu
           schwächster Streckung.
         </p>
       </SelfTest>
@@ -336,7 +336,7 @@ export function S42() {
         4.2.4 Aufgabe: die Kondition einer Summe
       </h3>
       <p>
-        Zum Abschluss eine Aufgabe von den Folien — versuchen wir es erst selbst, bevor wir die
+        Zum Abschluss eine Aufgabe von den Folien. Versuchen wir es erst selbst, bevor wir die
         Lösung aufklappen. Sie sieht harmlos aus, trägt aber den Keim eines Phänomens in sich,
         das wir schon kennen.
       </p>
@@ -362,7 +362,7 @@ export function S42() {
             <MD>{"\\left| f(\\wt{\\bx}) - f(\\bx) \\right| = \\left| \\symbf{1}^\\top \\cbred{\\bh} \\right| \\le \\left\\| \\symbf{1} \\right\\|_2 \\left\\| \\cbred{\\bh} \\right\\|_2 = \\sqrt{2}\\, \\left\\| \\cbred{\\bh} \\right\\|_2,"}</MD>
             <p>
               mit Gleichheit genau dann, wenn <M>{"\\cbred{\\bh}"}</M> parallel zu{" "}
-              <M>{"\\symbf{1} = (1, 1)^\\top"}</M> liegt — solche beliebig kleinen Störungen
+              <M>{"\\symbf{1} = (1, 1)^\\top"}</M> liegt. Solche beliebig kleinen Störungen
               gibt es, also ist die Schranke scharf:{" "}
               <M>{"\\kappa_{abs} = \\sqrt{2}"}</M>. (Die Folien notieren nur{" "}
               <M>{"\\kappa_{abs} \\le \\sqrt{2}"}</M>; der Gleichheitsfall von Cauchy-Schwarz
@@ -375,12 +375,12 @@ export function S42() {
               <strong>2.</strong> Schlecht konditioniert ist das Problem, wenn{" "}
               <M>{"\\corange{\\kappa_{rel}} \\gg 1"}</M>, also wenn{" "}
               <M>{"\\left| x_1 + x_2 \\right| \\approx 0"}</M>, während{" "}
-              <M>{"\\left\\| \\bx \\right\\|_2"}</M> nicht klein ist — sprich für{" "}
+              <M>{"\\left\\| \\bx \\right\\|_2"}</M> nicht klein ist, sprich für{" "}
               <M>{"x_1 \\approx -x_2"}</M>, nahe der Antidiagonalen. Dort heben sich die beiden
               Summanden fast auf: Das ist exakt die{" "}
               <ConceptLink id="cancellation">Auslöschung</ConceptLink> aus{" "}
               <a className="underline" href="?k=02-algos#sec-2.1">Abschnitt 2.1</a>, jetzt als
-              Konditionsaussage über das <em>Problem</em> „addiere zwei Zahlen" — unabhängig
+              Konditionsaussage über das <em>Problem</em> „addiere zwei Zahlen", unabhängig
               davon, wie wir die Summe ausrechnen. Auf der Diagonalen{" "}
               <M>{"x_1 = x_2"}</M> gilt dagegen <M>{"\\kappa_{rel} = 1"}</M>: besser geht es
               nicht.

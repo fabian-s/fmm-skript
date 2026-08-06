@@ -63,7 +63,7 @@ export function S32VecNormWidget() {
       <MD>{`\\corange{\\left\\| \\bA \\right\\|_S} = \\left\\| \\vec(\\bA) \\right\\|_1 = ${absTerms} = \\corange{${de(sum)}}`}</MD>
       <MD>{`\\cpurp{\\left\\| \\bA \\right\\|_M} = \\left\\| \\vec(\\bA) \\right\\|_\\infty = \\max\\left\\{ ${absList} \\right\\} = \\cpurp{${de(max)}}`}</MD>
       <p className="mt-2 text-slate-500">
-        Die Reihenfolge der Einträge spielt für alle drei Normen keine Rolle — vertauschen wir
+        Die Reihenfolge der Einträge spielt für alle drei Normen keine Rolle: Vertauschen wir
         zwei Einträge, ändert sich nichts. Als lineare Abbildung ist die Matrix nach dem
         Vertauschen aber im Allgemeinen eine völlig andere. (Die Voreinstellung{" "}
         <M>{"\\bA_3"}</M> verwendet den gerundeten Wert <M>{"1{,}4142 \\approx \\sqrt{2}"}</M>,

@@ -61,7 +61,7 @@ registerConcept({
         keine Redundanz gibt, lässt sich jedes Element des Raums auf genau{" "}
         <em>eine</em> Weise als{" "}
         <ConceptLink id="linear-combination">Linearkombination</ConceptLink>{" "}
-        der Basis schreiben — die Koeffizienten sind seine{" "}
+        der Basis schreiben; die Koeffizienten sind seine{" "}
         <em>Koordinaten</em>. In <M>{"\\R^2"}</M> lautet die Standardbasis
       </p>
       <MD>{"\\be_1 = \\begin{bmatrix} 1 \\\\ 0 \\end{bmatrix}, \\quad \\be_2 = \\begin{bmatrix} 0 \\\\ 1 \\end{bmatrix}, \\qquad \\begin{bmatrix} 3 \\\\ 5 \\end{bmatrix} = 3\\,\\be_1 + 5\\,\\be_2 ."}</MD>

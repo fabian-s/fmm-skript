@@ -1,4 +1,4 @@
-/** Concept-Tooltip: Newton-Verfahren — Optimierung über lokale quadratische Modelle. */
+/** Concept-Tooltip: Newton-Verfahren: Optimierung über lokale quadratische Modelle. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept } from "../lib";
 
@@ -34,7 +34,7 @@ function NewtonWidget() {
         Blau: <M>{"f(x) = \\tfrac{1}{4}x^4 - x + 1"}</M> (Minimum bei{" "}
         <M>{"x = 1"}</M>). Gestrichelt: die Parabel, die am roten Punkt Wert,
         Steigung und Krümmung teilt. Jeder Schritt springt zum tiefsten Punkt
-        der Parabel — beobachten wir, wie wenige Schritte nötig sind.
+        der Parabel. Beobachten wir, wie wenige Schritte nötig sind.
       </div>
       <Plot
         series={[{ f }, { f: quad, color: "#dc2626", dash: [5, 4] }]}

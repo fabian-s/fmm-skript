@@ -72,7 +72,7 @@ function GsWidget() {
       </svg>
       <p className="mt-1 text-xs">
         u₂ = v₂ − proj (orange) ist das, was von v₂ übrig bleibt, wenn wir
-        seinen „Schatten“ entlang v₁ entfernen — nach Konstruktion gilt
+        seinen „Schatten“ entlang v₁ entfernen; nach Konstruktion gilt
         u₂ ⊥ v₁, egal in welche Richtung v₂ zeigt.
       </p>
     </div>
@@ -102,7 +102,7 @@ registerConcept({
         Kleines Beispiel: Für <M>{"\\bv_1 = (2, 0)^{\\top}"}</M> und{" "}
         <M>{"\\bv_2 = (1, 1)^{\\top}"}</M> ist der Koeffizient{" "}
         <M>{"2/4 = 1/2"}</M>, also{" "}
-        <M>{"\\bu_2 = (1,1)^{\\top} - (1, 0)^{\\top} = (0, 1)^{\\top}"}</M> —
+        <M>{"\\bu_2 = (1,1)^{\\top} - (1, 0)^{\\top} = (0, 1)^{\\top}"}</M>,
         orthogonal zu <M>{"\\bv_1"}</M>, wie versprochen. Teilen wir jedes{" "}
         <M>{"\\bu_i"}</M> noch durch seine{" "}
         <ConceptLink id="norm">Norm</ConceptLink>, wird aus dem Ergebnis eine{" "}

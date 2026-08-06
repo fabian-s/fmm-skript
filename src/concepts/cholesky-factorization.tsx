@@ -3,7 +3,7 @@ import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 
 /**
  * Live-2x2-Cholesky: die Einträge einer symmetrischen Matrix verstellen und
- * zusehen, wie sich der Faktor L aktualisiert — oder wie die Zerlegung
+ * zusehen, wie sich der Faktor L aktualisiert, oder wie die Zerlegung
  * zusammenbricht, sobald die Matrix nicht mehr positiv definit ist.
  */
 function CholeskyWidget() {
@@ -30,7 +30,7 @@ function CholeskyWidget() {
         </p>
       ) : (
         <p className="my-1 font-mono text-xs text-rose-300">
-          Abbruch: l₂₂² = a₂₂ − a₂₁²/a₁₁ = {l22sq.toFixed(3)} ≤ 0 — dieses A
+          Abbruch: l₂₂² = a₂₂ − a₂₁²/a₁₁ = {l22sq.toFixed(3)} ≤ 0. Dieses A
           ist nicht positiv definit, es gibt keine reelle Wurzel
         </p>
       )}
@@ -58,7 +58,7 @@ registerConcept({
       <p>
         mit einer unteren{" "}
         <ConceptLink id="triangular-matrix">Dreiecksmatrix</ConceptLink>{" "}
-        <M>{"\\bL"}</M> — eine Art &bdquo;Quadratwurzel&ldquo; der Matrix. Sie
+        <M>{"\\bL"}</M>, einer Art &bdquo;Quadratwurzel&ldquo; der Matrix. Sie
         ist die SPD-Spezialisierung der{" "}
         <ConceptLink id="lu-decomposition">LU-Zerlegung</ConceptLink> aus der{" "}
         <ConceptLink id="gaussian-elimination">
@@ -82,7 +82,7 @@ registerConcept({
         : erst <M>{"\\bL\\by = \\bb"}</M>, dann{" "}
         <M>{"\\bL^T\\bx = \\by"}</M>. Genau so lassen sich die
         Normalengleichungen{" "}
-        <M>{"\\bA^T\\bA\\,\\bx = \\bA^T\\bb"}</M> lösen — unter
+        <M>{"\\bA^T\\bA\\,\\bx = \\bA^T\\bb"}</M> lösen, unter
         Wiederverwendung der Cholesky-Zerlegung (vgl. Heath Bsp. 2.21 und
         Bsp. 3.3).
       </p>

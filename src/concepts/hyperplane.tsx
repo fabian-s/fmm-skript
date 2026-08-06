@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Hyperebene — das n-dimensionale Gegenstück zu Gerade/Ebene. */
+/** Konzept-Tooltip: Hyperebene, das n-dimensionale Gegenstück zu Gerade/Ebene. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -11,9 +11,9 @@ function OneEquationWidget() {
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <p className="mb-1 text-sm">
         Die Lösungsmenge der einzelnen Gleichung{" "}
-        <M>{"a_1 x_1 + a_2 x_2 = b"}</M> ist eine Gerade &mdash; eine
+        <M>{"a_1 x_1 + a_2 x_2 = b"}</M> ist eine Gerade, eine
         Hyperebene im <M>{"\\R^2"}</M>. Verschieben wir die Koeffizienten,
-        kippt und wandert die Gerade &mdash; aber sie bleibt immer eine
+        kippt und wandert die Gerade, aber sie bleibt immer eine
         Gerade.
       </p>
       <Slider label="a₁" value={a1} onChange={setA1} min={-3} max={3} step={0.1} />
@@ -46,7 +46,7 @@ registerConcept({
         <M>{"x_1 + 2x_2 = 3"}</M>. Die Paare <M>{"(x_1, x_2)"}</M>, die sie
         erfüllen, bilden eine Gerade in der Ebene. Bei drei Unbekannten wird
         eine Gleichung wie <M>{"x_1 + x_2 + x_3 = 1"}</M> von einer ganzen
-        flachen Punktschicht erfüllt &mdash; einer Ebene, die im Raum schwebt.
+        flachen Punktschicht erfüllt – einer Ebene, die im Raum schwebt.
         Eine <em>Hyperebene</em> (hyperplane) ist dieselbe Idee, fortgesetzt in
         den{" "}
         <ConceptLink id="real-coordinate-space">
@@ -59,7 +59,7 @@ registerConcept({
       <p>
         Sie ist vollkommen flach und hat{" "}
         <ConceptLink id="dimension">Dimension</ConceptLink> <M>{"n-1"}</M>,
-        eins weniger als der umgebende Raum &mdash; genauso wie eine Gerade
+        eins weniger als der umgebende Raum, genauso wie eine Gerade
         (Dimension 1) in der Ebene (Dimension 2) liegt. Diese eine verlorene
         Dimension ist der „Preis“ einer Gleichung: Eine lineare Bedingung
         festzulegen kostet einen Freiheitsgrad. Deshalb steuert im

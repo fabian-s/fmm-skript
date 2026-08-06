@@ -33,7 +33,7 @@ function OrthogonalMatrixWidget() {
         Q als Spiegelung statt als Drehung
       </label>
       <p className="my-1 font-mono text-xs">
-        ‖v‖₂ = {nv.toFixed(3)}{"   "}‖Qv‖₂ = {nQv.toFixed(3)} — immer gleich
+        ‖v‖₂ = {nv.toFixed(3)}{"   "}‖Qv‖₂ = {nQv.toFixed(3)} (immer gleich)
       </p>
       <LabeledTransformCanvas
         tickClass="text-slate-300"
@@ -62,14 +62,14 @@ registerConcept({
         Eine quadratische Matrix <M>{"\\bQ"}</M> heißt <em>orthogonal</em>{" "}
         (engl. <em>orthogonal matrix</em>), wenn ihre Spalten eine{" "}
         <ConceptLink id="orthonormal-basis">Orthonormalbasis</ConceptLink>{" "}
-        bilden — paarweise senkrechte Einheitsvektoren. Mit der{" "}
+        bilden, also paarweise senkrechte Einheitsvektoren. Mit der{" "}
         <ConceptLink id="transpose">Transposition</ConceptLink> geschrieben,
         passt diese Bedingung in eine einzige Gleichung:
       </p>
       <MD>{"\\bQ^T \\bQ = \\bI, \\qquad \\text{also} \\qquad \\bQ^{-1} = \\bQ^T ."}</MD>
       <p>
         Die <ConceptLink id="matrix-inverse">Inverse</ConceptLink> bekommen
-        wir also geschenkt — nichts zu lösen, wir vertauschen einfach Zeilen
+        wir also geschenkt: nichts zu lösen, wir vertauschen einfach Zeilen
         und Spalten von <M>{"\\bQ"}</M>. Geometrisch sind orthogonale
         Matrizen die starren Bewegungen:{" "}
         <ConceptLink id="rotation-matrix">Drehungen</ConceptLink> und{" "}

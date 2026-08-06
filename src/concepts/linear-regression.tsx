@@ -1,4 +1,4 @@
-/** Concept tooltip: lineare Regression — Kurvenanpassung mit linearen Parametern. */
+/** Concept tooltip: lineare Regression, Kurvenanpassung mit linearen Parametern. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -20,7 +20,7 @@ function RegressionWidget() {
       <Slider label="Achsenabschnitt b" value={b} onChange={setB} min={-2} max={2} />
       <div className="mb-1 text-xs">
         Passen wir die Gerade <M>{"f(x) = a x + b"}</M> an die Punkte an.
-        Summe der quadrierten Fehler: <M>{`${sse.toFixed(2)}`}</M> — schaffen
+        Summe der quadrierten Fehler: <M>{`${sse.toFixed(2)}`}</M>. Schaffen
         wir es unter 0.25?
       </div>
       <Plot
@@ -53,11 +53,11 @@ registerConcept({
         und die <ConceptLink id="slope">Steigung</ConceptLink>{" "}
         <M>{"\\theta_1"}</M> so, dass sie eine{" "}
         <ConceptLink id="objective-function">Zielfunktion</ConceptLink>{" "}
-        minimieren, etwa die Summe der quadrierten vertikalen Abstände —
+        minimieren, etwa die Summe der quadrierten vertikalen Abstände,
         gleichbedeutend damit, die{" "}
         <ConceptLink id="likelihood">Likelihood</ConceptLink> der Daten unter
         einem Fehlermodell zu maximieren. „Linear" bezieht sich darauf, dass
-        die Parameter <M>{"\\btheta"}</M> linear eingehen — dieselbe Maschinerie
+        die Parameter <M>{"\\btheta"}</M> linear eingehen; dieselbe Maschinerie
         passt also auch Kurven wie{" "}
         <M>{"\\theta_0 + \\theta_1 x + \\theta_2 x^2"}</M> an.
       </p>

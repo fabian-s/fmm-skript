@@ -40,7 +40,7 @@ function CosSeriesWidget() {
         height={170}
       />
       <div className="mt-1 text-xs">
-        Blau: <M>{"\\sum_{k=0}^{n} (-1)^k x^{2k}/(2k)!"}</M> — jeder weitere
+        Blau: <M>{"\\sum_{k=0}^{n} (-1)^k x^{2k}/(2k)!"}</M>. Jeder weitere
         Term schmiegt sich auf einem breiteren Intervall an <M>{"\\cos x"}</M>{" "}
         (grau gestrichelt) an.
       </div>
@@ -76,7 +76,7 @@ registerConcept({
         <ConceptLink id="sine-cosine">Kosinus</ConceptLink> mit seiner
         Potenzreihe um <M>{"c = 0"}</M> überein,{" "}
         <M>{"\\cos x = \\sum_{k=0}^{\\infty} \\frac{(-1)^k}{(2k)!} x^{2k}"}</M>,
-        und zwar für jedes reelle <M>{"x"}</M> — probieren wir es unten aus,
+        und zwar für jedes reelle <M>{"x"}</M>; probieren wir es unten aus,
         indem wir die Anzahl der Terme erhöhen. Taylor-Reihen sind genau
         Potenzreihen, deren Koeffizienten aus den Ableitungen einer Funktion
         gebaut sind.

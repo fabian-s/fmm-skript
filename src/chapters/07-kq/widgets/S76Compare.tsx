@@ -109,10 +109,10 @@ export function CostWidget() {
         />
       </div>
       <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
-        Bei <M>{"m = n"}</M> kosten beide Wege je <M>{"\\tfrac{2}{3}n^3"}</M> Multiplikationen —
+        Bei <M>{"m = n"}</M> kosten beide Wege je <M>{"\\tfrac{2}{3}n^3"}</M> Multiplikationen,
         das Verhältnis startet also exakt bei 1. Für <M>{"m/n \\to \\infty"}</M> klettert es gegen
         2: stark überbestimmte Probleme lösen die Normalengleichungen mit etwa halbem Aufwand.
-        Alle drei Methoden liegen in derselben <M>{"O"}</M>-Klasse — die Konstanten machen den
+        Alle drei Methoden liegen in derselben <M>{"O"}</M>-Klasse; die Konstanten machen den
         Unterschied.
       </p>
     </div>
@@ -142,7 +142,7 @@ function DigitBar({
           {label}
         </span>
         <span className="font-mono">
-          rel. Fehler ≈ {err >= 1 ? "O(1) — unbrauchbar" : err.toExponential(1)}
+          rel. Fehler ≈ {err >= 1 ? "O(1), unbrauchbar" : err.toExponential(1)}
         </span>
       </div>
       <div className="h-4 w-full overflow-hidden rounded bg-slate-200 dark:bg-slate-700">
@@ -202,20 +202,20 @@ export function AccuracyWidget() {
         Erwartete korrekte Stellen der berechneten Lösung:
       </p>
       <DigitBar
-        label="Normalengleichungen — Fehler ~ κ² · ε"
+        label="Normalengleichungen: Fehler ~ κ² · ε"
         digits={neBroken ? 0 : digits(errNE)}
         err={neBroken ? 1 : errNE}
         color={COL.ne}
         broken={neBroken}
-        brokenNote="κ₂(A) ≳ 1/√ε ≈ 10⁸ — die Cholesky-Zerlegung von AᵀA bricht voraussichtlich ab"
+        brokenNote="κ₂(A) ≳ 1/√ε ≈ 10⁸, die Cholesky-Zerlegung von AᵀA bricht voraussichtlich ab"
       />
       <DigitBar
-        label="QR (Householder) — Fehler ~ (κ + ‖r‖₂ κ²) · ε"
+        label="QR (Householder): Fehler ~ (κ + ‖r‖₂ κ²) · ε"
         digits={qrBroken ? 0 : digits(errQR)}
         err={qrBroken ? 1 : errQR}
         color={COL.qr}
         broken={qrBroken}
-        brokenNote="κ₂(A) ≳ 1/ε ≈ 4,5·10¹⁵ — das Rückwärtseinsetzen bricht voraussichtlich ab"
+        brokenNote="κ₂(A) ≳ 1/ε ≈ 4,5·10¹⁵, das Rückwärtseinsetzen bricht voraussichtlich ab"
       />
       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
         {squaringActive ? (
@@ -232,7 +232,7 @@ export function AccuracyWidget() {
             Bei diesem kleinen Residuum ist der QR-Fehler im Wesentlichen{" "}
             <M>{"\\kappa_2(\\bA)\\,\\eps"}</M> (etwa {Math.round(lc)} verlorene Stellen), während
             die Normalengleichungen immer rund <M>{"2\\log_{10}\\kappa_2(\\bA)"}</M> Stellen
-            verlieren (hier {Math.round(2 * lc)}) — die <M>{"\\kappa^2"}</M>-Strafe fällt auch
+            verlieren (hier {Math.round(2 * lc)}): Die <M>{"\\kappa^2"}</M>-Strafe fällt auch
             bei fast perfektem Fit an.
           </>
         )}
@@ -292,8 +292,8 @@ export function MethodChooser() {
       <>
         Die Normalengleichungen scheitern hier komplett: <M>{"\\bA^\\top\\bA"}</M> ist singulär
         (oder numerisch singulär), Cholesky bricht ab. Die SVD diagnostiziert den numerischen
-        Rang explizit und liefert unter allen KQ-Lösungen die mit minimaler Norm (Satz 7.6.1) —
-        genau dafür ist sie da.
+        Rang explizit und liefert unter allen KQ-Lösungen die mit minimaler Norm (Satz 7.6.1).
+        Genau dafür ist sie da.
       </>
     );
   } else if (cond === "borderline") {
@@ -305,7 +305,7 @@ export function MethodChooser() {
         raus: ihr <M>{"\\kappa^2"}</M>-Fehler frisst praktisch alle Stellen, und der
         Cholesky-Schritt bricht voraussichtlich ab. QR arbeitet zuverlässig bis{" "}
         <M>{"\\kappa_2(\\bA) \\approx 1/\\eps"}</M>
-        {critical ? " — wenn wirklich viel auf dem Spiel steht, lohnt der SVD-Aufpreis." : "."}
+        {critical ? ". Wenn wirklich viel auf dem Spiel steht, lohnt der SVD-Aufpreis." : "."}
       </>
     );
   } else if (shape === "tall") {
@@ -313,7 +313,7 @@ export function MethodChooser() {
     color = critical ? COL.qr : COL.ne;
     why = critical ? (
       <>
-        Das Problem ist gutartig — aber wenn es auf Genauigkeit ankommt, kostet QR nur etwa
+        Das Problem ist gutartig, aber wenn es auf Genauigkeit ankommt, kostet QR nur etwa
         das Doppelte der Normalengleichungen, und sein Fehler ist so klein, wie es die
         Empfindlichkeit des Problems überhaupt zulässt.
       </>
@@ -330,7 +330,7 @@ export function MethodChooser() {
     why = (
       <>
         Für fast quadratische Probleme (<M>{"m \\approx n"}</M>) kosten Normalengleichungen und QR
-        ungefähr gleich viel — der Kostenvorteil der Normalengleichungen verschwindet, und die
+        ungefähr gleich viel: Der Kostenvorteil der Normalengleichungen verschwindet, und die
         bessere Genauigkeit macht QR zur natürlichen Wahl.
       </>
     );

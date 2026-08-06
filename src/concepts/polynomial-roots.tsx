@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Nullstellen von Polynomen — Fundamentalsatz der Algebra. */
+/** Konzept-Tooltip: Nullstellen von Polynomen: Fundamentalsatz der Algebra. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -38,7 +38,7 @@ function RootsWidget() {
         Schieben wir <M>{"c"}</M> nach oben: Die beiden reellen Nullstellen von{" "}
         <M>{"p(x) = x^2 + c"}</M> verschmelzen bei <M>{"c = 0"}</M> zu einer
         doppelten Nullstelle und verlassen dann die reelle Achse ganz. Sie
-        verschwinden aber nicht — sie wandern als Paar{" "}
+        verschwinden aber nicht, sondern wandern als Paar{" "}
         <M>{"\\pm i\\sqrt{c}"}</M> in die komplexe Ebene, die Anzahl bleibt
         zwei.
       </p>
@@ -55,7 +55,7 @@ registerConcept({
         Eine <em>Nullstelle</em> (engl. <em>root</em>) eines Polynoms{" "}
         <M>{"p"}</M> ist eine Zahl <M>{"x"}</M> mit <M>{"p(x) = 0"}</M>. Der{" "}
         <em>Fundamentalsatz der Algebra</em> sagt: Ein Polynom vom Grad{" "}
-        <M>{"n"}</M> hat <em>genau</em> <M>{"n"}</M> Nullstellen — sofern wir
+        <M>{"n"}</M> hat <em>genau</em> <M>{"n"}</M> Nullstellen, sofern wir
         sie in den{" "}
         <ConceptLink id="complex-numbers">komplexen Zahlen</ConceptLink> zählen
         und mehrfache Nullstellen mit ihrer <em>Vielfachheit</em> mitzählen.

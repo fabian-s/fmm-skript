@@ -31,7 +31,7 @@ function ImageWidget() {
       />
       <p className="mt-1 text-xs">
         Drehen wir v, wohin wir wollen: Die Ausgabe Av landet immer auf der
-        Geraden durch (1, 0.5) — diese Gerade ist das gesamte Bild dieser
+        Geraden durch (1, 0.5); diese Gerade ist das gesamte Bild dieser
         Rang-1-Matrix.
       </p>
     </div>
@@ -54,8 +54,8 @@ registerConcept({
         Da <M>{"\\bA\\bx"}</M> genau eine{" "}
         <ConceptLink id="linear-combination">Linearkombination</ConceptLink>{" "}
         der Spalten der <ConceptLink id="matrix">Matrix</ConceptLink> ist, ist
-        das Bild der <ConceptLink id="span">Spann</ConceptLink> der Spalten
-        &mdash; daher der alternative Name <em>Spaltenraum</em> (column space).
+        das Bild der <ConceptLink id="span">Spann</ConceptLink> der Spalten,
+        daher der alternative Name <em>Spaltenraum</em> (column space).
         Es ist immer ein{" "}
         <ConceptLink id="subspace">Unterraum</ConceptLink> des Zielraums, und
         seine <ConceptLink id="dimension">Dimension</ConceptLink> ist genau der{" "}
@@ -70,7 +70,7 @@ registerConcept({
         Beispiel zeigen bei{" "}
         <M>{"\\bA = \\begin{pmatrix} 1 & 2 \\\\ 0.5 & 1 \\end{pmatrix}"}</M>{" "}
         beide Spalten entlang <M>{"(1, 0.5)^\\top"}</M>, das Bild ist also nur
-        diese eine Gerade &mdash; probieren wir es aus:
+        diese eine Gerade. Probieren wir es aus:
       </p>
       <ImageWidget />
     </>

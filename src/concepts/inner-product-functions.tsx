@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Skalarprodukt von Funktionen — das Integral-Gegenstück zum Skalarprodukt von Vektoren. */
+/** Konzept-Tooltip: Skalarprodukt von Funktionen, das Integral-Gegenstück zum Skalarprodukt von Vektoren. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -85,9 +85,9 @@ registerConcept({
       <p>
         Das <ConceptLink id="dot-product">Skalarprodukt</ConceptLink> zweier
         Vektoren multipliziert zueinander passende Komponenten und summiert
-        sie auf. Funktionen auf einem Intervall können wir genauso behandeln
-        &mdash; stellen wir uns <M>{"p(t)"}</M> und <M>{"q(t)"}</M> als
-        „Vektoren“ mit einer Komponente pro Punkt <M>{"t"}</M> vor &mdash;
+        sie auf. Funktionen auf einem Intervall können wir genauso behandeln.
+        Stellen wir uns <M>{"p(t)"}</M> und <M>{"q(t)"}</M> als
+        „Vektoren“ mit einer Komponente pro Punkt <M>{"t"}</M> vor;
         nur wird aus der Summe über unendlich viele Punkte ein Integral:
       </p>
       <MD>{"\\langle p, q \\rangle = \\int_a^b p(t)\\, q(t)\\, w(t)\\, dt,"}</MD>
@@ -99,7 +99,7 @@ registerConcept({
         <M>{"\\langle p, q \\rangle = 0"}</M>. Kleines Beispiel: Auf{" "}
         <M>{"[-1, 1]"}</M> mit <M>{"w(t) \\equiv 1"}</M> ist{" "}
         <M>{"\\langle 1, t \\rangle = \\int_{-1}^{1} t \\, dt = 0"}</M>, die
-        konstante Funktion und <M>{"t"}</M> sind also orthogonal &mdash; der
+        konstante Funktion und <M>{"t"}</M> sind also orthogonal, der
         erste Schritt beim Aufbau orthogonaler Polynome (vgl. Heath §7.3.4).
       </p>
       <InnerProductWidget />

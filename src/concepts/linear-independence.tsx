@@ -47,7 +47,7 @@ registerConcept({
     <>
       <p>
         Eine Sammlung von <ConceptLink id="vector">Vektoren</ConceptLink> ist{" "}
-        <em>linear unabhängig</em>, wenn keiner von ihnen überflüssig ist —
+        <em>linear unabhängig</em>, wenn keiner von ihnen überflüssig ist:
         kein Vektor der Sammlung lässt sich als{" "}
         <ConceptLink id="linear-combination">Linearkombination</ConceptLink>{" "}
         der übrigen schreiben. Lässt sich ein Vektor doch aus den anderen
@@ -57,7 +57,7 @@ registerConcept({
         In der Ebene ist das leicht vorstellbar: Zwei Vektoren sind genau dann
         abhängig, wenn sie auf einer gemeinsamen Ursprungsgeraden liegen. Zum
         Beispiel ist <M>{"(2, 4)"}</M> einfach <M>{"2 \\cdot (1, 2)"}</M>, das
-        Paar <M>{"(1,2), (2,4)"}</M> ist also abhängig — während{" "}
+        Paar <M>{"(1,2), (2,4)"}</M> ist also abhängig, während{" "}
         <M>{"(1,2)"}</M> und <M>{"(3,1)"}</M> in wirklich verschiedene
         Richtungen zeigen und unabhängig sind. Unabhängige Vektoren steuern je
         eine neue Richtung bei; auf genau dieser Zählidee bauen die Begriffe{" "}

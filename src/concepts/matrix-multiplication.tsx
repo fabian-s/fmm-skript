@@ -25,7 +25,7 @@ function ProductWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-xs">
       <div className="mb-1 text-slate-300">
-        Ändern wir die Einträge — das Produkt aktualisiert sich Eintrag für
+        Ändern wir die Einträge: das Produkt aktualisiert sich Eintrag für
         Eintrag (Zeile der linken Matrix mal Spalte der rechten):
       </div>
       <div className="flex flex-wrap items-center gap-2">
@@ -71,8 +71,8 @@ registerConcept({
         Regel „Zeile mal Spalte“ multipliziert: Der Eintrag in Zeile{" "}
         <M>{"i"}</M>, Spalte <M>{"j"}</M> des Produkts <M>{"\\bA\\bB"}</M>{" "}
         entsteht, indem wir Zeile <M>{"i"}</M> von <M>{"\\bA"}</M> mit Spalte{" "}
-        <M>{"j"}</M> von <M>{"\\bB"}</M> paarweise durchgehen — Paare
-        multiplizieren, alles aufsummieren. Zum Beispiel:
+        <M>{"j"}</M> von <M>{"\\bB"}</M> paarweise durchgehen, die Paare
+        multiplizieren und alles aufsummieren. Zum Beispiel:
       </p>
       <MD>
         {"\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix} \\begin{bmatrix} 5 & 6 \\\\ 7 & 8 \\end{bmatrix} = \\begin{bmatrix} 1\\cdot 5 + 2\\cdot 7 & 1\\cdot 6 + 2\\cdot 8 \\\\ 3\\cdot 5 + 4\\cdot 7 & 3\\cdot 6 + 4\\cdot 8 \\end{bmatrix} = \\begin{bmatrix} 19 & 22 \\\\ 43 & 50 \\end{bmatrix}."}
@@ -91,10 +91,10 @@ registerConcept({
         anwenden, dann <M>{"\\bA"}</M>“ dasselbe ist wie die einzelne Matrix{" "}
         <M>{"\\bA\\bB"}</M> anzuwenden, also{" "}
         <M>{"\\bA(\\bB\\bx) = (\\bA\\bB)\\bx"}</M>. Die Formate müssen
-        zusammenpassen — eine <M>{"m \\times n"}</M>-Matrix mal einer{" "}
+        zusammenpassen: eine <M>{"m \\times n"}</M>-Matrix mal einer{" "}
         <M>{"n \\times p"}</M>-Matrix ergibt ein <M>{"m \\times p"}</M>
         -Resultat. Vorsicht, die Reihenfolge zählt: Im Allgemeinen ist{" "}
-        <M>{"\\bA\\bB \\neq \\bB\\bA"}</M> — genau wie zwei Handlungen in
+        <M>{"\\bA\\bB \\neq \\bB\\bA"}</M>, genau wie zwei Handlungen in
         umgekehrter Reihenfolge anders enden können.
       </p>
       <ProductWidget />

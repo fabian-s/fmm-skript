@@ -72,7 +72,7 @@ registerConcept({
       <MD>{"\\sum_{k=0}^{\\infty} \\left(\\tfrac{1}{2}\\right)^k = 1 + \\tfrac{1}{2} + \\tfrac{1}{4} + \\tfrac{1}{8} + \\cdots = 2,"}</MD>
       <p>
         bei der jeder weitere Summand die Hälfte der verbleibenden Lücke zur{" "}
-        <M>{"2"}</M> schließt — schauen wir unten zu, wie sich der Balken
+        <M>{"2"}</M> schließt. Schauen wir unten zu, wie sich der Balken
         füllt. Nicht jede Reihe verhält sich so brav:{" "}
         <M>{"1 + 1 + 1 + \\cdots"}</M> wächst über alle Grenzen und hat darum
         keinen Wert. Taylorreihen sind genau solche Objekte: eine unendliche

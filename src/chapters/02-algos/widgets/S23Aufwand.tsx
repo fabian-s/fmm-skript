@@ -84,7 +84,7 @@ export function S23FlopWidget() {
       </div>
       <p className="max-w-prose text-sm text-slate-600 dark:text-slate-400">
         Probieren wir aus: Verdoppeln wir beim Matrix-Vektor-Produkt <M>{"n"}</M> (oder{" "}
-        <M>{"d"}</M>), verdoppelt sich der Aufwand ungefähr — er wächst <em>linear</em> in jeder
+        <M>{"d"}</M>), verdoppelt sich der Aufwand ungefähr; er wächst <em>linear</em> in jeder
         Dimension. Beim Matrix-Matrix-Produkt stecken <em>drei</em> Dimensionen im Produkt{" "}
         <M>{"2ndm"}</M>: Für quadratische Matrizen (<M>{"n = d = m"}</M>) bedeutet Verdoppeln
         aller Dimensionen den <em>achtfachen</em> Aufwand.
@@ -128,10 +128,10 @@ export function S23GrowthWidget() {
       <p className="max-w-prose text-sm text-slate-600 dark:text-slate-400">
         Die senkrechte Achse ist logarithmisch: Eine Einheit nach oben bedeutet den{" "}
         <em>zehnfachen</em> Aufwand. Polynomiale Klassen (<M>{"n, n^2, n^3"}</M>) erscheinen als
-        gekrümmte, immer flacher werdende Kurven — <M>{"2^n"}</M> dagegen als steile Gerade, die
+        gekrümmte, immer flacher werdende Kurven, <M>{"2^n"}</M> dagegen als steile Gerade, die
         alle anderen ab <M>{"n \\approx 10"}</M>–<M>{"20"}</M> hoffnungslos abhängt. Schieben
         wir <M>{"n"}</M> nach oben: Bei <M>{"n = 200"}</M> braucht ein{" "}
-        <M>{"O(2^n)"}</M>-Algorithmus rund <M>{"10^{60}"}</M> Operationen — selbst ein
+        <M>{"O(2^n)"}</M>-Algorithmus rund <M>{"10^{60}"}</M> Operationen. Selbst ein
         Superrechner mit <M>{"10^{18}"}</M> Operationen pro Sekunde rechnete daran länger als{" "}
         <M>{"10^{34}"}</M> Jahre, das Universum ist erst etwa <M>{"10^{10}"}</M> Jahre alt.
       </p>
@@ -159,15 +159,15 @@ export function S23KonstantenWidget() {
       />
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
         <span className="font-medium" style={{ color: BLUE }}>
-          1000n + 10000 — O(n)
+          1000n + 10000: O(n)
         </span>
         <span className="font-medium" style={{ color: ORANGE }}>
-          n² — O(n²)
+          n²: O(n²)
         </span>
       </div>
       <p className="max-w-prose text-sm text-slate-600 dark:text-slate-400">
         Der <M>{"O(n)"}</M>-Algorithmus mit großen Konstanten (blau) liegt bis zum Schnittpunkt
-        bei <M>{"n \\approx 1010"}</M> <em>über</em> der <M>{"O(n^2)"}</M>-Kurve (orange) — für
+        bei <M>{"n \\approx 1010"}</M> <em>über</em> der <M>{"O(n^2)"}</M>-Kurve (orange); für
         kleine Probleme ist er also der langsamere. Erst rechts davon zahlt sich die bessere
         Komplexitätsklasse aus, dann aber unaufhaltsam: Die Kurven entfernen sich immer weiter
         voneinander.

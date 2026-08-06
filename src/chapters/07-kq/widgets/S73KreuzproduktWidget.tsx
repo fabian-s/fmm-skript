@@ -3,7 +3,7 @@ import { M, MD, Slider } from "../../../lib";
 
 /**
  * Informationsverlust beim Bilden von AᵀA: die Addition 1 + ε² wird hier
- * WIRKLICH in IEEE-Doppelgenauigkeit ausgeführt — das Widget ist das
+ * WIRKLICH in IEEE-Doppelgenauigkeit ausgeführt, das Widget ist das
  * Experiment. (Berechnungs-/SVG-Code recycelt aus der internen
  * heath-ch3-App; Texte eigenständig.)
  */
@@ -30,13 +30,13 @@ export function S73KreuzproduktWidget() {
       </p>
       <MD>{"\\bA = \\begin{pmatrix} 1 & 1 \\\\ \\eps & 0 \\\\ 0 & \\eps \\end{pmatrix} \\quimpl \\bA^\\top\\bA = \\begin{pmatrix} 1 + \\eps^2 & 1 \\\\ 1 & 1 + \\eps^2 \\end{pmatrix}."}</MD>
       <p className="mb-2">
-        Dieses Widget führt die kritische Addition <M>{"1 + \\eps^2"}</M> wirklich aus — der
+        Dieses Widget führt die kritische Addition <M>{"1 + \\eps^2"}</M> wirklich aus: Der
         Browser rechnet in IEEE-Doppelgenauigkeit mit{" "}
         <M>{"\\eps_{\\text{mach}} = 2^{-52} \\approx 2{,}2 \\cdot 10^{-16}"}</M>. Verkleinere{" "}
         <M>{"\\eps"}</M> mit dem Regler. Faustregel: Sobald <M>{"\\eps"}</M> in die Größenordnung
         von <M>{"\\sqrt{\\eps_{\\text{mach}}} \\approx 1{,}5 \\cdot 10^{-8}"}</M> kommt, geht{" "}
-        <M>{"\\eps^2"}</M> in der Addition unter; hier passiert das ab <M>{"k \\approx 8"}</M>{" "}
-        — dann speichert der Rechner <M>{"\\operatorname{fl}(1 + \\eps^2) = 1"}</M>, und{" "}
+        <M>{"\\eps^2"}</M> in der Addition unter; hier passiert das ab <M>{"k \\approx 8"}</M>.
+        Dann speichert der Rechner <M>{"\\operatorname{fl}(1 + \\eps^2) = 1"}</M>, und{" "}
         <M>{"\\operatorname{fl}(\\bA^\\top\\bA)"}</M> wird singulär.
       </p>
       <Slider label="k (ε = 10⁻ᵏ)" value={k} onChange={setK} min={4} max={10} step={0.1} fmt={(v) => v.toFixed(1)} />
@@ -53,13 +53,13 @@ export function S73KreuzproduktWidget() {
       {singular ? (
         <p className="font-semibold text-rose-600 dark:text-rose-400">
           fl(1 + ε²) = 1: Beide Spalten der gespeicherten Matrix sind jetzt identisch, ihr Rang
-          ist 1 — dabei hat <M>{"\\bA"}</M> selbst vollen Spaltenrang 2. Was die Spalten
+          ist 1, dabei hat <M>{"\\bA"}</M> selbst vollen Spaltenrang 2. Was die Spalten
           unterschied, steckte allein im Summanden ε², und genau den hat die Rundung
           ausgelöscht.
         </p>
       ) : (
         <p className="text-emerald-700 dark:text-emerald-400">
-          In Doppelgenauigkeit noch regulär — aber vom Abstand zur Singularität bleibt nur der
+          In Doppelgenauigkeit noch regulär, aber vom Abstand zur Singularität bleibt nur der
           winzige Eigenwert {gap.toExponential(3)}. Singulär wird die gespeicherte Matrix
           unterhalb von ε ≈ {collapseEps.toExponential(2)}.
         </p>

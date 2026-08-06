@@ -31,7 +31,7 @@ function SvdWidget() {
         Der gestrichelte Einheitskreis wird von <M>{"\\bA = \\bU\\bSigma\\bV^\\top"}</M> auf eine
         Ellipse mit Halbachsen <M>{"\\sigma_1, \\sigma_2"}</M> abgebildet; <M>{"\\bU"}</M> dreht
         die Ellipse um <M>{"\\theta"}</M>. Die erste Drehung <M>{"\\bV^\\top"}</M> sehen wir hier
-        nicht — sie dreht nur den Kreis in sich selbst. Für <M>{"\\sigma_2 \\to 0"}</M> kollabiert
+        nicht; sie dreht nur den Kreis in sich selbst. Für <M>{"\\sigma_2 \\to 0"}</M> kollabiert
         die Ellipse zu einer Strecke: <M>{"\\bA"}</M> verliert Rang.
       </p>
     </div>
@@ -62,7 +62,7 @@ registerConcept({
         <ConceptLink id="rank">Rang</ConceptLink> <M>{"r"}</M> von <M>{"\\bA"}</M>. Lassen wir
         die Nullanteile weg, bleibt die <em>reduzierte SVD</em>{" "}
         <M>{"\\bA = \\bU_r\\bSigma_r\\bV_r^\\top"}</M> mit <M>{"\\bSigma_r \\in \\R^{r \\times r}"}</M>{" "}
-        regulär — die Grundlage für die Pseudoinverse <M>{"\\bA\\pinv"}</M>.
+        regulär, die Grundlage für die Pseudoinverse <M>{"\\bA\\pinv"}</M>.
       </p>
       <p>
         Anschaulich bildet <M>{"\\bA"}</M> die Einheitskugel auf ein Ellipsoid mit Halbachsen{" "}

@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: stetige Funktion — kleine Eingabeänderung, kleine Ausgabeänderung. */
+/** Konzept-Tooltip: stetige Funktion (kleine Eingabeänderung, kleine Ausgabeänderung). */
 import { useState } from "react";
 import { M, MD, registerConcept, Slider } from "../lib";
 
@@ -18,8 +18,8 @@ function JumpWidget() {
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <p className="mb-1 text-sm">
         Schieben wir <M>{"x_0"}</M>: der blaue Ausgabewert gleitet mit, aber
-        der rote springt, sobald <M>{"x_0"}</M> die <M>{"0"}</M> überquert
-        &mdash; die rote Funktion ist dort <em>nicht</em> stetig.
+        der rote springt, sobald <M>{"x_0"}</M> die <M>{"0"}</M> überquert;
+        die rote Funktion ist dort <em>nicht</em> stetig.
       </p>
       <Slider label="x₀" value={x0} onChange={setX0} min={-2} max={2} step={0.02} />
       <svg width={W} height={H} className="rounded bg-slate-900/60">
@@ -51,7 +51,7 @@ registerConcept({
         <M>{"f(a)"}</M>, ohne Sprung. Vertraute Funktionen wie{" "}
         <M>{"x^2"}</M>, <M>{"|x|"}</M> und <M>{"\\sin x"}</M> sind überall
         stetig; eine Portotabelle, die bis 1&#8202;kg einen Preis verlangt und
-        darüber einen höheren, ist es nicht &mdash; ihr Graph springt.
+        darüber einen höheren, ist es nicht: ihr Graph springt.
         Stetigkeit ist genau das, was wir brauchen, um einem numerischen
         Ergebnis zu vertrauen: könnte die Ausgabe springen, dürfte ein beliebig
         winziger Eingabefehler das Resultat stark verändern. Für Vektornormen
@@ -61,8 +61,8 @@ registerConcept({
         {"\\bigl|\\, \\|\\bx\\| - \\|\\by\\| \\,\\bigr| \\le \\|\\bx - \\by\\|"}
       </MD>
       <p>
-        dass sich die Norm um höchstens so viel ändert wie die Störung selbst
-        &mdash; eine Norm ist also eine stetige Funktion ihres
+        dass sich die Norm um höchstens so viel ändert wie die Störung selbst;
+        eine Norm ist also eine stetige Funktion ihres
         Vektorarguments.
       </p>
       <JumpWidget />

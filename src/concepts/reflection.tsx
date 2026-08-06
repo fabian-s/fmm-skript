@@ -54,7 +54,7 @@ registerConcept({
         <ConceptLink id="matrix">Matrix</ConceptLink> ist also eine{" "}
         <ConceptLink id="orthogonal-matrix">orthogonale Matrix</ConceptLink>;
         anders als eine <ConceptLink id="rotation-matrix">Drehung</ConceptLink>{" "}
-        kehrt sie aber die Orientierung um — das zeigt sich an der{" "}
+        kehrt sie aber die Orientierung um; das zeigt sich an der{" "}
         <ConceptLink id="determinant">Determinante</ConceptLink> <M>{"-1"}</M>.
       </p>
       <p>

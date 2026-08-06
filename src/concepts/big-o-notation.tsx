@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: O-Notation — Restglied-Sinn (t→0) und Aufwands-Sinn (n→∞). */
+/** Konzept-Tooltip: O-Notation, Restglied-Sinn (t→0) und Aufwands-Sinn (n→∞). */
 import { useState } from "react";
 import { M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -11,7 +11,7 @@ function RemainderWidget() {
       <p className="mb-1 text-sm">
         Das Restglied <M>{"|e^t - (1 + t)|"}</M> (durchgezogen) im Vergleich
         zur Hüllkurve <M>{"C\\,t^2"}</M> (gestrichelt). Nahe <M>{"t = 0"}</M>{" "}
-        fängt schon ein moderates <M>{"C"}</M> das Restglied ein &mdash; genau
+        fängt schon ein moderates <M>{"C"}</M> das Restglied ein; genau
         diese Schranke behauptet <M>{"O(t^2)"}</M>.
       </p>
       <Slider label="C" value={C} onChange={setC} min={0} max={2} step={0.05} />
@@ -50,8 +50,8 @@ registerConcept({
       <p>
         Im ersten Sinn (Restglied) schrumpft ein <M>{"O(t^2)"}</M>-Term{" "}
         <em>schneller</em> als der <M>{"t"}</M>-Term, wenn{" "}
-        <M>{"t \\to 0"}</M> geht &mdash; halbieren wir <M>{"t"}</M>, viertelt
-        er sich &mdash; deshalb können wir ihn durch eine ganze Kette von
+        <M>{"t \\to 0"}</M> geht: halbieren wir <M>{"t"}</M>, viertelt
+        er sich. Deshalb können wir ihn durch eine ganze Kette von
         Ungleichungen mitschleppen und am Ende weglassen. Im zweiten Sinn
         (Aufwand) sagt <M>{"O(n^3)"}</M>, dass die Zahl der Rechenoperationen
         für große Matrizen wie <M>{"n^3"}</M> wächst: verdoppeln wir{" "}

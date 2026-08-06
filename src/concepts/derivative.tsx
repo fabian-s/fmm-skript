@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Ableitung — Auffrischung über Sekantensteigungen. */
+/** Konzept-Tooltip: Ableitung, Auffrischung über Sekantensteigungen. */
 import { useState } from "react";
 import { ConceptLink, M, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -46,7 +46,7 @@ registerConcept({
     <>
       <p>
         Die Ableitung <M>{"f'(a)"}</M> misst, wie schnell sich eine Funktion
-        an der einzelnen Stelle <M>{"x = a"}</M> ändert &mdash; sie ist die
+        an der einzelnen Stelle <M>{"x = a"}</M> ändert: sie ist die
         Steigung des Graphen <em>genau dort</em>. Um sie zu fassen, berechnen
         wir die Steigung der Geraden durch zwei nahe Punkte des Graphen,{" "}
         <M>{"\\tfrac{f(a+h) - f(a)}{h}"}</M>, und lassen dann den zweiten
@@ -60,7 +60,7 @@ registerConcept({
         Das ist der Schlüssel zu gekrümmten Problemen: Weil die Ableitung die
         Steigung der <ConceptLink id="tangent-line">Tangente</ConceptLink>{" "}
         liefert, sieht jede glatte Kurve wie eine Gerade aus, wenn wir nur
-        nah genug herangehen &mdash; ein komplizierter nichtlinearer
+        nah genug herangehen; ein komplizierter nichtlinearer
         Zusammenhang lässt sich also lokal durch einen einfachen linearen
         ersetzen.
       </p>

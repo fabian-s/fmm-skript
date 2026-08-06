@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Konvergenz — Werte pendeln sich bei einem Grenzwert ein. */
+/** Konzept-Tooltip: Konvergenz, Werte pendeln sich bei einem Grenzwert ein. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 
@@ -63,7 +63,7 @@ function ToleranceBandWidget() {
       <p className="mt-1 text-xs text-slate-300">
         a<sub>n</sub> = 1 + (−0.75)<sup>n</sup> konvergiert gegen 1
         (gestrichelte Linie). Egal wie schmal wir das grüne Band machen: Nur
-        die ersten paar Punkte (orange: {nOutside}) liegen außerhalb — alle
+        die ersten paar Punkte (orange: {nOutside}) liegen außerhalb. Alle
         späteren bleiben endgültig darin.
       </p>
     </div>
@@ -98,7 +98,7 @@ registerConcept({
         <ConceptLink id="limit">Grenzwert</ConceptLink> einer Funktion für{" "}
         <M>{"h \\to 0"}</M>, und sie entscheidet, ob eine{" "}
         <ConceptLink id="infinite-series">unendliche Reihe</ConceptLink> einen
-        Wert hat: Eine Reihe konvergiert, wenn ihre Partialsummen es tun — die{" "}
+        Wert hat: Eine Reihe konvergiert, wenn ihre Partialsummen es tun. Die{" "}
         <ConceptLink id="geometric-series">geometrische Reihe</ConceptLink>{" "}
         <M>{"\\sum_k (1/2)^k"}</M> ist das klassische konvergente Beispiel.
       </p>

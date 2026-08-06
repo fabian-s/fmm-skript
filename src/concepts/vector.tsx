@@ -20,7 +20,7 @@ registerConcept({
         der Ebene vorstellen, oder als Pfeil vom Ursprung zu diesem Punkt. Die
         Reihenfolge zählt: <M>{"(3,-1)"}</M> und <M>{"(-1,3)"}</M> sind
         verschiedene Vektoren. Mit Vektoren bündeln wir mehrere
-        zusammengehörige Größen zu einem Objekt — in{" "}
+        zusammengehörige Größen zu einem Objekt: in{" "}
         <M>{"\\bL\\bu = \\boldsymbol{f}"}</M> werden alle „Ursachen“ zu einem
         Vektor <M>{"\\bu"}</M> und alle „Wirkungen“ zu einem Vektor{" "}
         <M>{"\\boldsymbol{f}"}</M>. Vektoren addieren wir Eintrag für Eintrag,

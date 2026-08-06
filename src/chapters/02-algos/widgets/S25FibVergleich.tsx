@@ -3,7 +3,7 @@ import { LabeledPlot, Slider } from "../../../lib";
 import type { Series } from "../../../lib";
 
 /**
- * §2.5 — Gezählte Schrittzahlen der naiven vs. der iterativen
+ * §2.5: Gezählte Schrittzahlen der naiven vs. der iterativen
  * Fibonacci-Variante gegen die Landau-Vorhersage, auf log-Skala.
  *
  * Punkte: exakte Zählungen (Aufrufzahl T(n) über die Rekurrenz
@@ -90,7 +90,7 @@ export function S25FibVergleichWidget() {
       <p className="max-w-prose text-sm">
         Die Punkte sind <em>exakt gezählte</em> Schrittzahlen: rot die Aufrufe der naiven
         Rekursion, blau die Operationen der iterativen Variante. Die y-Achse zeigt den
-        Zehnerlogarithmus der Schrittzahl — auf dieser Skala wird exponentielles Wachstum zu
+        Zehnerlogarithmus der Schrittzahl. Auf dieser Skala wird exponentielles Wachstum zu
         einer Geraden, und die Steigung verrät die Basis. Die gestrichelten Linien sind die
         Landau-Vorhersagen (bei <span className="font-mono">n = 10</span> an die Zählungen
         angeheftet).
@@ -126,14 +126,14 @@ export function S25FibVergleichWidget() {
       <div className="max-w-prose space-y-1 text-xs text-slate-600 dark:text-slate-300">
         <p>
           <span style={{ color: RED }}>●</span> naive Rekursion (gezählte Aufrufe) &ensp;
-          <span style={{ color: RED }}>— —</span> Schranke c·2ⁿ &ensp;
+          <span style={{ color: RED }}>– –</span> Schranke c·2ⁿ &ensp;
           {showPhi && (
             <>
               <span style={{ color: RED }}>· ·</span> scharfe Vorhersage c·φⁿ &ensp;
             </>
           )}
           <span style={{ color: BLUE }}>●</span> iterativ (gezählte Operationen) &ensp;
-          <span style={{ color: BLUE }}>— —</span> Vorhersage c·n
+          <span style={{ color: BLUE }}>– –</span> Vorhersage c·n
         </p>
       </div>
       <div className="max-w-prose rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
@@ -148,7 +148,7 @@ export function S25FibVergleichWidget() {
         Operationen (≈ {fmtTime(iter)}).
       </div>
       <p className="max-w-prose text-sm">
-        Zwei Beobachtungen: Die roten Punkte liegen exakt auf einer Geraden — aber auf der
+        Zwei Beobachtungen: Die roten Punkte liegen exakt auf einer Geraden, aber auf der
         flacheren mit Steigung log₁₀ φ ≈ 0,209, nicht auf der 2ⁿ-Geraden mit Steigung
         log₁₀ 2 ≈ 0,301. Die Schranke O(2ⁿ) von den Folien ist also korrekt, aber nicht
         scharf; das tatsächliche Wachstum hat die Basis φ ≈ 1,618 (siehe Vertiefung oben).

@@ -14,11 +14,11 @@ function CompositionPipeline() {
       <div className="mt-1 flex flex-wrap items-center gap-2 text-xs">
         <span className={box}>x = {x.toFixed(1)}</span>
         <span>
-          —<M>{"f"}</M>→
+          –<M>{"f"}</M>→
         </span>
         <span className={box}>f(x) = {fx.toFixed(1)}</span>
         <span>
-          —<M>{"g"}</M>→
+          –<M>{"g"}</M>→
         </span>
         <span className={box}>g(f(x)) = {gfx.toFixed(2)}</span>
       </div>
@@ -44,7 +44,7 @@ registerConcept({
       </p>
       <MD>{"(g \\circ f)(x) = g(f(x)), \\qquad x \\mapsto f(x) \\mapsto g(f(x))."}</MD>
       <p>
-        Die Reihenfolge zählt — <M>{"g \\circ f"}</M> und{" "}
+        Die Reihenfolge zählt: <M>{"g \\circ f"}</M> und{" "}
         <M>{"f \\circ g"}</M> sind in der Regel verschiedene Funktionen. Damit
         die Kette Sinn ergibt, müssen die Ausgaben von <M>{"f"}</M> im{" "}
         <ConceptLink id="domain-codomain">Definitionsbereich</ConceptLink> von{" "}
@@ -53,7 +53,7 @@ registerConcept({
       <p>
         Kleines Beispiel: Mit <M>{"f(x) = x + 1"}</M> und{" "}
         <M>{"g(y) = y^2"}</M> ist die Verkettung{" "}
-        <M>{"(g \\circ f)(x) = (x + 1)^2"}</M> — bei <M>{"x = 2"}</M> also:{" "}
+        <M>{"(g \\circ f)(x) = (x + 1)^2"}</M>, bei <M>{"x = 2"}</M> also:{" "}
         <M>{"2 \\mapsto 3 \\mapsto 9"}</M>. Eine komplizierte Funktion als
         solche Kette einfacher Schritte zu erkennen ist genau das, was die
         Kettenregel beim Ableiten ausnutzt.

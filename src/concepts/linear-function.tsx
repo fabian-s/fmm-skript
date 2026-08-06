@@ -40,7 +40,7 @@ registerConcept({
         <em>denselben</em> Betrag <M>{"a"}</M>, egal wo wir stehen. Für eine
         lineare Funktion ist der Differenzenquotient{" "}
         <M>{"\\frac{f(x+h)-f(x)}{h}"}</M> deshalb gleich <M>{"a"}</M> für jedes{" "}
-        <M>{"x"}</M> und jedes <M>{"h"}</M> — mittlere Steigung und momentane
+        <M>{"x"}</M> und jedes <M>{"h"}</M>: mittlere Steigung und momentane
         Steigung fallen zusammen. Für eine gekrümmte Funktion stimmt das nicht
         mehr, und genau darum ist der Differenzenquotient nur eine{" "}
         <em>mittlere</em> Steigung: Um die Steigung in einem einzelnen Punkt zu

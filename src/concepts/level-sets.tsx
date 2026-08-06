@@ -10,7 +10,7 @@ function LevelSetWidget() {
   const [th, setTh] = useState(0.9);
   const W = 260;
   const H = 260;
-  const S = W / 4.4; // isotropic px per world unit — right angles stay right
+  const S = W / 4.4; // isotropic px per world unit, so right angles stay right
   const cx = W / 2;
   const cy = H / 2;
   const X = (x: number) => cx + x * S;
@@ -93,7 +93,7 @@ function LevelSetWidget() {
         Punkt <M>{`(${px.toFixed(2)}, ${py.toFixed(2)})`}</M> auf der Höhenlinie{" "}
         <M>{`f = ${L0}`}</M>; der Gradient{" "}
         <M>{`\\nabla f = (${g[0].toFixed(2)}, ${g[1].toFixed(2)})`}</M> (rot)
-        steht immer senkrecht auf der Höhenlinie (gestrichelte Tangente) — für
+        steht immer senkrecht auf der Höhenlinie (gestrichelte Tangente), für
         jedes λ und θ.
       </p>
     </div>
@@ -108,7 +108,7 @@ registerConcept({
       <p>
         Denken wir an eine topografische Wanderkarte: Kurven verbinden alle
         Punkte gleicher Höhe. Für eine Funktion{" "}
-        <M>{"f\\colon \\R^2 \\to \\R"}</M> gilt dasselbe Bild — die{" "}
+        <M>{"f\\colon \\R^2 \\to \\R"}</M> gilt dasselbe Bild: die{" "}
         <em>Niveaumenge</em> (level set) zur Höhe <M>{"c"}</M> sammelt alle
         Eingaben, an denen <M>{"f"}</M> genau diesen Wert annimmt:
       </p>
@@ -125,10 +125,10 @@ registerConcept({
         Für die Optimierung sind zwei Fakten wichtig. Erstens: Der{" "}
         <ConceptLink id="gradient">Gradient</ConceptLink>{" "}
         <M>{"\\nabla f(\\bx)"}</M> steht senkrecht auf der Niveaumenge durch{" "}
-        <M>{"\\bx"}</M> und zeigt in Richtung größerer Werte von <M>{"f"}</M> —{" "}
+        <M>{"\\bx"}</M> und zeigt in Richtung größerer Werte von <M>{"f"}</M>;{" "}
         <M>{"-\\nabla f"}</M> ist also lokal der steilste Weg bergab. Zweitens:
         Nahe einem Minimum sehen die Höhenlinien einer glatten Funktion aus wie
-        verschachtelte Ellipsen, deren Form die Hesse-Matrix bestimmt — stark
+        verschachtelte Ellipsen, deren Form die Hesse-Matrix bestimmt. Stark
         gestreckte Ellipsen signalisieren ein schlecht konditioniertes Problem.
       </p>
       <LevelSetWidget />

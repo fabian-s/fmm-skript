@@ -29,8 +29,8 @@ const ZEROED: Set<string>[] = [new Set(), new Set(["1-0", "2-0"]), new Set(["2-1
 
 const CAPTIONS = [
   "Start: Das Pivotelement ist die 2 in der linken oberen Ecke.",
-  "Schritt 1: Wir ziehen das 2-Fache von Zeile 1 von Zeile 2 ab und das 1-Fache von Zeile 1 von Zeile 3 (Multiplikatoren 4/2 = 2 und 2/2 = 1) — Spalte 1 ist unterhalb des Pivots geräumt.",
-  "Schritt 2: Das nächste Pivotelement ist die 3; der Multiplikator ist \u22123/3 = \u22121, also wird Zeile 2 zu Zeile 3 addiert — obere Dreiecksform erreicht.",
+  "Schritt 1: Wir ziehen das 2-Fache von Zeile 1 von Zeile 2 ab und das 1-Fache von Zeile 1 von Zeile 3 (Multiplikatoren 4/2 = 2 und 2/2 = 1); Spalte 1 ist unterhalb des Pivots geräumt.",
+  "Schritt 2: Das nächste Pivotelement ist die 3; der Multiplikator ist \u22123/3 = \u22121, also wird Zeile 2 zu Zeile 3 addiert. Obere Dreiecksform erreicht.",
 ];
 
 function EliminationWidget() {
@@ -87,7 +87,7 @@ registerConcept({
         der Diagonale nur noch Nullen stehen und die{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink> eine{" "}
         <ConceptLink id="triangular-matrix">obere Dreiecksmatrix</ConceptLink>{" "}
-        ist — danach erledigt{" "}
+        ist. Danach erledigt{" "}
         <ConceptLink id="triangular-solve">Rückwärtseinsetzen</ConceptLink>{" "}
         den Rest. In der Praxis werden zusätzlich Zeilen getauscht (
         <em>Pivotisierung</em>), damit stets durch einen sicher großen Eintrag
@@ -112,7 +112,7 @@ registerConcept({
       </MD>
       <p>
         Ein Kleinste-Quadrate-Problem verlangt aber die{" "}
-        <em>kleinste Residuumsnorm</em>, nicht eine exakte Lösung — eine
+        <em>kleinste Residuumsnorm</em>, nicht eine exakte Lösung; eine
         Transformation mit <M>{"\\bM"}</M> ändert deshalb im Allgemeinen,
         welches <M>{"\\bx"}</M> gewinnt (vgl. Heath §3.4.3). Darum
         triangularisiert man dort stattdessen mit{" "}

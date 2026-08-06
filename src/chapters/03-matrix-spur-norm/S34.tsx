@@ -18,7 +18,7 @@ function Frage({ q, children }: { q: ReactNode; children: ReactNode }) {
 }
 
 /**
- * Abschnitt 3.4 — Schattennormen.
+ * Abschnitt 3.4 – Schattennormen.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Schattennormen" (Definition
  * über Singulärwerte, Spezialfälle Nuklear-/Frobenius-/Spektralnorm, unitäre
  * Invarianz, Frobenius-Spur-Verbindung). Prosa eigenständig formuliert.
@@ -35,7 +35,7 @@ export function S34() {
         Zahlenhaufen und verlieren dabei jede Information über die Transformation, die sie
         beschreibt. Die Operatornormen aus{" "}
         <a className="underline" href="#sec-3.3">Abschnitt 3.3</a> messen die Transformation
-        direkt — aber nur ihre <em>stärkste</em> Streckung. Eine Matrix streckt verschiedene
+        direkt, aber nur ihre <em>stärkste</em> Streckung. Eine Matrix streckt verschiedene
         Richtungen jedoch verschieden stark, und diese vollständige Streckungsinformation
         steckt in <em>allen</em>{" "}
         <ConceptLink id="eigenvalue-eigenvector">Eigenwerten</ConceptLink> von{" "}
@@ -52,7 +52,7 @@ export function S34() {
         <M>{"\\left\\| \\bA \\right\\|_2 = \\sqrt{\\lambda_{\\max}(\\bA^\\top\\bA)}"}</M>. Die
         Matrix <M>{"\\bA^\\top\\bA"}</M> ist{" "}
         <ConceptLink id="symmetric-matrix">symmetrisch</ConceptLink>, ihre Eigenwerte sind also
-        reell — und sogar nie negativ, denn{" "}
+        reell und sogar nie negativ, denn{" "}
         <M>{"\\bx^\\top\\bA^\\top\\bA\\bx = \\left\\| \\bA\\bx \\right\\|_2^2 \\geq 0"}</M>{" "}
         für alle <M>{"\\bx"}</M> (die Matrix ist{" "}
         <ConceptLink id="positive-definite">positiv semidefinit</ConceptLink>). Wir dürfen
@@ -89,7 +89,7 @@ export function S34() {
             Das Bauprinzip ist dasselbe wie bei der Vektorisierung in{" "}
             <a className="underline" href="#sec-3.2">Abschnitt 3.2</a>: „Wende eine
             Vektor-p-Norm an." Nur wenden wir sie nicht auf die rohen Einträge{" "}
-            <M>{"\\vec(\\bA)"}</M> an, sondern auf den Singulärwertvektor — also auf die
+            <M>{"\\vec(\\bA)"}</M> an, sondern auf den Singulärwertvektor, also auf die
             geometrische Wirkung der Matrix statt auf ihre Zahlen.
           </li>
           <li>
@@ -110,7 +110,7 @@ export function S34() {
         3.4.2 Die drei wichtigen Spezialfälle
       </h3>
       <p>
-        Drei Werte von <M>{"p"}</M> liefern genau die Normen, die in der Praxis dominieren —
+        Drei Werte von <M>{"p"}</M> liefern genau die Normen, die in der Praxis dominieren,
         und zwei davon kennen wir schon. Der Schlüssel zum überraschendsten Fall ist die
         Verbindung zwischen Frobenius-Norm und{" "}
         <a className="underline" href="#sec-3.1">Spur</a>:
@@ -131,7 +131,7 @@ export function S34() {
               Der Diagonaleintrag <M>{"(\\bA^\\top\\bA)_{jj}"}</M> ist das Skalarprodukt der{" "}
               <M>{"j"}</M>-ten Spalte von <M>{"\\bA"}</M> mit sich selbst, also{" "}
               <M>{"\\sum_{i=1}^m a_{ij}^2"}</M>; Aufsummieren über alle <M>{"j"}</M> ergibt
-              die Summe aller quadrierten Einträge — genau die quadrierte Frobenius-Norm aus{" "}
+              die Summe aller quadrierten Einträge, genau die quadrierte Frobenius-Norm aus{" "}
               <a className="underline" href="#sec-3.2">Abschnitt 3.2</a>
             </>
           }
@@ -160,29 +160,29 @@ export function S34() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             <M>{"p = \\infty"}</M>:{" "}
-            <M>{"\\left\\| \\bA \\right\\|_{S,\\infty} = \\sigma_1 = \\sqrt{\\lambda_{\\max}} = \\left\\| \\bA \\right\\|_2"}</M>{" "}
-            — die <strong>Spektralnorm</strong> aus{" "}
+            <M>{"\\left\\| \\bA \\right\\|_{S,\\infty} = \\sigma_1 = \\sqrt{\\lambda_{\\max}} = \\left\\| \\bA \\right\\|_2"}</M>,{" "}
+            die <strong>Spektralnorm</strong> aus{" "}
             <a className="underline" href="#sec-3.3">Abschnitt 3.3</a>.
           </li>
           <li>
             <M>{"p = 2"}</M>:{" "}
-            <M>{"\\left\\| \\bA \\right\\|_{S,2} = \\left(\\sum_{i} \\lambda_i\\right)^{1/2} = \\sqrt{\\tr\\left(\\bA^\\top\\bA\\right)} = \\left\\| \\bA \\right\\|_F"}</M>{" "}
-            — die <strong>Frobenius-Norm</strong> (nach Satz 3.4.3).
+            <M>{"\\left\\| \\bA \\right\\|_{S,2} = \\left(\\sum_{i} \\lambda_i\\right)^{1/2} = \\sqrt{\\tr\\left(\\bA^\\top\\bA\\right)} = \\left\\| \\bA \\right\\|_F"}</M>,{" "}
+            die <strong>Frobenius-Norm</strong> (nach Satz 3.4.3).
           </li>
           <li>
             <M>{"p = 1"}</M>:{" "}
-            <M>{"\\left\\| \\bA \\right\\|_{S,1} = \\sum_{i=1}^r \\sigma_i =: \\left\\| \\bA \\right\\|_*"}</M>{" "}
-            — die <em>Nuklearnorm</em> (nuclear norm), für uns neu.
+            <M>{"\\left\\| \\bA \\right\\|_{S,1} = \\sum_{i=1}^r \\sigma_i =: \\left\\| \\bA \\right\\|_*"}</M>,{" "}
+            die <em>Nuklearnorm</em> (nuclear norm), für uns neu.
           </li>
         </ul>
       </EnvBlock>
       <p>
         Der Fall <M>{"p = 2"}</M> ist eine echte Überraschung. Die Frobenius-Norm hatten wir
         in <a className="underline" href="#sec-3.2">Abschnitt 3.2</a> als elementweise Norm
-        eingeführt — als Musterbeispiel einer Norm, die von der Transformation nichts weiß.
+        eingeführt, als Musterbeispiel einer Norm, die von der Transformation nichts weiß.
         Jetzt stellt sich heraus: Sie ist zugleich eine Schatten-Norm, also vollständig durch
         die Singulärwerte bestimmt. Sie weiß mehr über die Transformation, als ihre Definition
-        vermuten lässt — das erklärt auch im Nachhinein das Beispiel aus Abschnitt 3.2, in dem
+        vermuten lässt. Das erklärt auch im Nachhinein das Beispiel aus Abschnitt 3.2, in dem
         drei völlig verschiedene Transformationen dieselbe Frobenius-Norm hatten: Ihre
         quadrierten Singulärwerte summierten sich jeweils zu <M>{"2"}</M>.
       </p>
@@ -191,7 +191,7 @@ export function S34() {
           Warum eine dritte Norm, wenn wir schon zwei haben? Der{" "}
           <ConceptLink id="rank">Rang</ConceptLink> von <M>{"\\bA"}</M> ist die Anzahl der
           Singulärwerte <M>{"\\sigma_i > 0"}</M>. Rang-Minimierung ist ein kombinatorisch
-          schwieriges Problem — die Nuklearnorm <M>{"\\sum_i \\sigma_i"}</M> ist dagegen
+          schwieriges Problem; die Nuklearnorm <M>{"\\sum_i \\sigma_i"}</M> ist dagegen
           konvex und wird klein, wenn viele Singulärwerte (nahezu) verschwinden. Sie dient
           deshalb in Statistik und maschinellem Lernen als gutmütiger Ersatz für den Rang,
           etwa bei der{" "}
@@ -201,8 +201,9 @@ export function S34() {
         </p>
       </EnvBlock>
       <p>
-        Rechnen wir die drei Normen einmal konkret aus — für die Matrix, deren Streckung wir
-        in <a className="underline" href="#sec-3.3">Abschnitt 3.3</a> visualisiert haben.
+        Rechnen wir die drei Normen einmal konkret aus, und zwar für die Matrix, deren
+        Streckung wir in <a className="underline" href="#sec-3.3">Abschnitt 3.3</a>{" "}
+        visualisiert haben.
       </p>
       <EnvBlock kind="Beispiel" label="3.4.6">
         <p>
@@ -220,14 +221,14 @@ export function S34() {
         </p>
         <MD>{"\\left\\| \\bA \\right\\|_{S,\\infty} = \\cred{\\sigma_1} \\approx 2{,}288."}</MD>
         <p>
-          <strong>Frobenius-Norm</strong> (<M>{"p = 2"}</M>): über die Singulärwerte und —
-          zur Probe — <span style={{ color: "#009E73" }}>elementweise</span>, beides muss
+          <strong>Frobenius-Norm</strong> (<M>{"p = 2"}</M>): über die Singulärwerte und,
+          zur Probe, <span style={{ color: "#009E73" }}>elementweise</span>, beides muss
           nach Korollar 3.4.4 dasselbe ergeben:
         </p>
         <MD>{"\\left\\| \\bA \\right\\|_{S,2} = \\sqrt{\\cred{\\lambda_1} + \\cblue{\\lambda_2}} = \\sqrt{6}, \\qquad \\cgreen{\\sqrt{2^2 + 1^2 + 0^2 + 1^2}} = \\sqrt{6} \\approx 2{,}449. \\quad \\checkmark"}</MD>
         <p>
           <strong>Nuklearnorm</strong> (<M>{"p = 1"}</M>): die Summe{" "}
-          <M>{"\\cred{\\sigma_1} + \\cblue{\\sigma_2} \\approx 3{,}162"}</M> — hier sogar mit
+          <M>{"\\cred{\\sigma_1} + \\cblue{\\sigma_2} \\approx 3{,}162"}</M>, hier sogar mit
           geschlossener Form, denn
         </p>
         <MD>{"\\left(\\cred{\\sigma_1} + \\cblue{\\sigma_2}\\right)^2 = \\cred{\\lambda_1} + \\cblue{\\lambda_2} + 2\\sqrt{\\cred{\\lambda_1}\\cblue{\\lambda_2}} = 6 + 2\\sqrt{\\det\\left(\\bA^\\top\\bA\\right)} = 6 + 2\\sqrt{4} = 10,"}</MD>
@@ -247,13 +248,13 @@ export function S34() {
         3.4.3 Unitäre Invarianz
       </h3>
       <p>
-        Was macht die Schatten-Familie so besonders? Drehen wir eine Matrix — genauer:
+        Was macht die Schatten-Familie so besonders? Drehen wir eine Matrix (genauer:
         multiplizieren wir sie mit einer{" "}
-        <ConceptLink id="orthogonal-matrix">Orthogonalmatrix</ConceptLink> —, dann ändern
+        <ConceptLink id="orthogonal-matrix">Orthogonalmatrix</ConceptLink>), dann ändern
         sich ihre Einträge komplett. Elementweise Normen wie Summen- oder Maximumsnorm ändern
         sich mit. Die Streckungswirkung der Transformation bleibt aber dieselbe, nur die
         Richtungen rotieren. Da Schattennormen ausschließlich von den Streckungsfaktoren
-        abhängen, dürfen sie sich nicht ändern — und genau das lässt sich beweisen:
+        abhängen, dürfen sie sich nicht ändern – und das lässt sich beweisen:
       </p>
       <EnvBlock kind="Satz" label="3.4.7 (Unitäre Invarianz)">
         <p>
@@ -302,7 +303,7 @@ export function S34() {
         >
           <p>
             Also haben <M>{"\\bP\\bA\\bQ"}</M> und <M>{"\\bA"}</M> dieselben Singulärwerte
-            und damit dieselbe Schatten-p-Norm — für jedes <M>{"p"}</M> gleichzeitig.
+            und damit dieselbe Schatten-p-Norm, für jedes <M>{"p"}</M> gleichzeitig.
           </p>
         </PStep>
       </Proof>
@@ -310,7 +311,7 @@ export function S34() {
         Eine bemerkenswerte Konsequenz für die Frobenius-Norm: Ihrer elementweisen Definition
         sieht man die Invarianz{" "}
         <M>{"\\left\\| \\bP\\bA\\bQ \\right\\|_F = \\left\\| \\bA \\right\\|_F"}</M>{" "}
-        überhaupt nicht an — erst der Umweg über Korollar 3.4.4 macht sie offensichtlich. Für
+        überhaupt nicht an; erst der Umweg über Korollar 3.4.4 macht sie offensichtlich. Für
         Summen- und Maximumsnorm gilt nichts dergleichen.
       </p>
       <EnvBlock kind="Bemerkung" label="3.4.8 (Namensgeber und Anwendung)">
@@ -324,12 +325,12 @@ export function S34() {
             <em>Approximationsprobleme</em>: Wie gut eine Matrix eine andere approximiert,
             sollte nicht davon abhängen, in welchem (orthogonalen) Koordinatensystem wir die
             Daten aufschreiben. Messen wir Approximationsfehler in einer Schatten-Norm, ist
-            genau das garantiert — darauf kommen wir bei der Niedrigrang-Approximation
+            genau das garantiert. Darauf kommen wir bei der Niedrigrang-Approximation
             zurück.
           </li>
         </ul>
       </EnvBlock>
-      <ExpandedReading title="Singulärwerte und Schattennormen einer 2×2-Matrix — live">
+      <ExpandedReading title="Singulärwerte und Schattennormen einer 2×2-Matrix: live">
         <S34SchattenWidget />
       </ExpandedReading>
 
@@ -339,7 +340,7 @@ export function S34() {
           q={
             <>
               Sei <M>{"\\bQ \\in \\R^{n \\times n}"}</M> orthogonal. Was sind die
-              Singulärwerte von <M>{"\\bQ"}</M> — und damit ihre Spektral-, Frobenius- und
+              Singulärwerte von <M>{"\\bQ"}</M>, und damit ihre Spektral-, Frobenius- und
               Nuklearnorm?
             </>
           }
@@ -352,7 +353,7 @@ export function S34() {
             <M>{"\\left\\| \\bQ \\right\\|_{S,2} = \\sqrt{n}"}</M> und{" "}
             <M>{"\\left\\| \\bQ \\right\\|_{S,1} = n"}</M>. Das passt zu{" "}
             <a className="underline" href="#sec-3.2">Abschnitt 3.2</a>: Auch dort war{" "}
-            <M>{"\\left\\| \\bI_n \\right\\|_F = \\sqrt{n}"}</M> — nur die Spektralnorm
+            <M>{"\\left\\| \\bI_n \\right\\|_F = \\sqrt{n}"}</M>; nur die Spektralnorm
             honoriert, dass eine Orthogonalmatrix „nichts streckt".
           </p>
         </Frage>
@@ -364,11 +365,11 @@ export function S34() {
           }
         >
           <p>
-            Der Rang ist die <em>Anzahl</em> der Singulärwerte <M>{"\\sigma_i > 0"}</M> —
+            Der Rang ist die <em>Anzahl</em> der Singulärwerte <M>{"\\sigma_i > 0"}</M>,
             eine Zählgröße, die springt, sobald ein Singulärwert exakt null wird, und die
             sich deshalb schlecht optimieren lässt. Die Nuklearnorm{" "}
             <M>{"\\sum_i \\sigma_i"}</M> ersetzt das Zählen durch Summieren: Sie ist als Norm
-            konvex und wird genau dann klein, wenn viele Singulärwerte nahe null liegen —
+            konvex und wird genau dann klein, wenn viele Singulärwerte nahe null liegen,
             also wenn die Matrix „fast niedrigen Rang" hat.
           </p>
         </Frage>

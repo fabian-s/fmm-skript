@@ -76,7 +76,7 @@ registerConcept({
       <MD>{"f\\left(\\alpha \\bx + (1-\\alpha) \\by\\right) \\;\\le\\; \\alpha f(\\bx) + (1-\\alpha) f(\\by) ."}</MD>
       <p>
         Die Funktion ist <em>strikt</em> konvex, wenn die Ungleichung für
-        verschiedene Punkte und <M>{"0 < \\alpha < 1"}</M> strikt ist — keine
+        verschiedene Punkte und <M>{"0 < \\alpha < 1"}</M> strikt ist: keine
         geraden Flachstücke in der Schüssel. Strikte Konvexität ist eine
         Garantie gegen Mehrdeutigkeit: Die Funktion kann höchstens einen
         Minimierer haben, also ist jeder Punkt, an dem der{" "}

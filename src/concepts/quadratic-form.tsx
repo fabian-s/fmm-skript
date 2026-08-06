@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: quadratische Form — x^T B x als skalare Funktion von x. */
+/** Konzept-Tooltip: quadratische Form: x^T B x als skalare Funktion von x. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -22,7 +22,7 @@ function QuadFormWidget() {
         <M>{"\\bx^\\top \\bB \\bx"}</M> mit{" "}
         <M>{"\\bB = \\begin{bmatrix} 2 & 1 \\\\ 0 & 1 \\end{bmatrix}"}</M>{" "}
         die Parabel{" "}
-        <M>{`${q.toFixed(2)} \\, t^2`}</M> — immer eine Parabel, aber wie
+        <M>{`${q.toFixed(2)} \\, t^2`}</M>: immer eine Parabel, aber wie
         steil sie ist, hängt von der gewählten Richtung ab.
       </div>
       <Plot
@@ -50,13 +50,13 @@ registerConcept({
         <ConceptLink id="matrix">Matrix</ConceptLink> <M>{"\\bB"}</M> mit{" "}
         <M>{"\\bx"}</M>, dann bilden wir das{" "}
         <ConceptLink id="dot-product">Skalarprodukt</ConceptLink> des
-        Ergebnisses noch einmal mit <M>{"\\bx"}</M> — also ist{" "}
+        Ergebnisses noch einmal mit <M>{"\\bx"}</M>. Also ist{" "}
         <M>{"\\bx^\\top \\bB \\bx"}</M> eine einzelne Zahl, und wenn{" "}
         <M>{"\\bx"}</M> variiert, definiert das eine skalarwertige{" "}
         <ConceptLink id="function">Funktion</ConceptLink>. Für zwei Einträge
         ausgeschrieben ist sie ein{" "}
         <ConceptLink id="polynomial">Polynom</ConceptLink>, in dem jeder Term
-        genau Grad zwei hat — der mehrdimensionale Vetter der Schulparabel{" "}
+        genau Grad zwei hat, der mehrdimensionale Vetter der Schulparabel{" "}
         <M>{"b x^2"}</M>:
       </p>
       <MD>
@@ -65,13 +65,13 @@ registerConcept({
       <p>
         Weil ein <M>{"1 \\times 1"}</M>-Ergebnis gleich seiner eigenen{" "}
         <ConceptLink id="transpose">Transponierten</ConceptLink> ist, gilt{" "}
-        <M>{"\\bx^\\top \\bB \\bx = \\bx^\\top \\bB^\\top \\bx"}</M> — nur der{" "}
+        <M>{"\\bx^\\top \\bB \\bx = \\bx^\\top \\bB^\\top \\bx"}</M>. Nur der{" "}
         <ConceptLink id="symmetric-matrix">symmetrische</ConceptLink> Anteil{" "}
         <M>{"\\tfrac{1}{2}(\\bB + \\bB^\\top)"}</M> von <M>{"\\bB"}</M>{" "}
         zählt. Dieselbe Kombination taucht beim Differenzieren auf: Eine
         Standard-Identität des Matrix-Kalküls (vgl. MML Gl. (5.107)) besagt,
         dass der Gradient von <M>{"\\bx^\\top \\bB \\bx"}</M> nach{" "}
-        <M>{"\\bx"}</M> gerade <M>{"\\bx^\\top (\\bB + \\bB^\\top)"}</M> ist —
+        <M>{"\\bx"}</M> gerade <M>{"\\bx^\\top (\\bB + \\bB^\\top)"}</M> ist,
         für symmetrisches <M>{"\\bB"}</M> also{" "}
         <M>{"2\\bx^\\top \\bB"}</M>, ganz analog zu{" "}
         <M>{"\\tfrac{\\mathrm{d}}{\\mathrm{d}x} (b x^2) = 2bx"}</M>.

@@ -51,14 +51,14 @@ registerConcept({
         Warum die numerische lineare Algebra von dieser Form besessen ist: Ein
         lineares Gleichungssystem mit Dreiecksmatrix ist fast schon gelöst. In{" "}
         <M>{"\\bU\\bx = \\bb"}</M> lautet die letzte Gleichung{" "}
-        <M>{"6\\,x_3 = b_3"}</M> — eine Gleichung, eine Unbekannte — und jede
+        <M>{"6\\,x_3 = b_3"}</M> (eine Gleichung, eine Unbekannte), und jede
         Gleichung darüber bringt nur eine neue Unbekannte hinzu. Das ganze
         System entwirrt sich also durch{" "}
         <ConceptLink id="triangular-solve">Einsetzen</ConceptLink>, ganz ohne
         Tricks. Genau deshalb stecken Algorithmen wie das{" "}
         <ConceptLink id="gaussian-elimination">Gaußsche Eliminationsverfahren</ConceptLink>{" "}
         und die <ConceptLink id="lu-decomposition">LU-Zerlegung</ConceptLink>{" "}
-        ihre ganze Arbeit darin, Dreiecksform zu <em>erreichen</em> — und
+        ihre ganze Arbeit darin, Dreiecksform zu <em>erreichen</em>, und
         deshalb konstruiert das QR-Verfahren (vgl. Heath §3.5) eine{" "}
         <ConceptLink id="orthogonal-matrix">orthogonale Matrix</ConceptLink>{" "}
         <M>{"\\bQ"}</M> gerade so, dass{" "}

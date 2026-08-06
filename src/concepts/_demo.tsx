@@ -1,5 +1,5 @@
 /**
- * Reference implementation for concept tooltip modules — used as the build
+ * Reference implementation for concept tooltip modules; used as the build
  * smoke test and as the canonical pattern for tooltip workers.
  */
 import { useState } from "react";

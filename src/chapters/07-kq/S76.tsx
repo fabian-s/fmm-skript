@@ -31,7 +31,7 @@ export function S76() {
         <M>{"\\bA^\\top\\bA"}</M> singulär, die Cholesky-Zerlegung bricht ab, und auch{" "}
         <M>{"\\bR"}</M> in der QR-Zerlegung wird singulär. Genau hier hilft die{" "}
         <ConceptLink id="singular-value-decomposition">Singulärwertzerlegung</ConceptLink> (SVD)
-        aus Kapitel 6 — sie liefert das dritte und robusteste Lösungsverfahren. Am Ende des
+        aus Kapitel 6; sie liefert das dritte und robusteste Lösungsverfahren. Am Ende des
         Abschnitts vergleichen wir alle drei Methoden und fassen das Kapitel zusammen.
       </p>
 
@@ -49,7 +49,7 @@ export function S76() {
         <ConceptLink id="diagonal-matrix">Diagonalmatrix</ConceptLink> ist. Die zentrale
         Eigenschaft aus Kapitel 6: <M>{"\\bA\\bA\\pinv"}</M> ist die{" "}
         <ConceptLink id="projection">Projektion</ConceptLink> auf den Spaltenraum{" "}
-        <M>{"\\col(\\bA)"}</M>. Das ist exakt das, was wir für Kleinste Quadrate brauchen — denn
+        <M>{"\\col(\\bA)"}</M>. Das ist exakt das, was wir für Kleinste Quadrate brauchen, denn
         in{" "}
         <a className="underline decoration-dotted" href="#sec-7.1">
           Abschnitt 7.1
@@ -185,14 +185,14 @@ export function S76() {
           }
         >
           <p>
-            <M>{"\\wh{\\bx}"}</M> hat unter allen KQ-Lösungen die kleinste Norm — und ist bei
+            <M>{"\\wh{\\bx}"}</M> hat unter allen KQ-Lösungen die kleinste Norm und ist bei
             vollem Rang die einzige Lösung.
           </p>
         </PStep>
       </Proof>
 
       <p>
-        Rechnen wir das an einem bewusst „kaputten“ Beispiel durch — einer Matrix, an der die
+        Rechnen wir das an einem bewusst „kaputten“ Beispiel durch, an einer Matrix, an der die
         Normalengleichungen scheitern.
       </p>
 
@@ -212,8 +212,8 @@ export function S76() {
           {"\\bA = \\cbred{\\bu_1}\\cgreen{\\sigma_1}\\cblue{\\bv_1^\\top} \\quad \\text{mit} \\quad \\cbred{\\bu_1} = \\tfrac{1}{\\sqrt{3}}\\begin{pmatrix} 1 \\\\ 1 \\\\ 1 \\end{pmatrix}, \\quad \\cgreen{\\sigma_1} = \\sqrt{6}, \\quad \\cblue{\\bv_1} = \\tfrac{1}{\\sqrt{2}}\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}."}
         </MD>
         <p>
-          (Probe: <M>{"\\cgreen{\\sqrt{6}} \\cdot \\tfrac{1}{\\sqrt{3}} \\cdot \\tfrac{1}{\\sqrt{2}} = 1"}</M>{" "}
-          — jeder Eintrag von <M>{"\\cbred{\\bu_1}\\cgreen{\\sigma_1}\\cblue{\\bv_1^\\top}"}</M>{" "}
+          (Probe: <M>{"\\cgreen{\\sqrt{6}} \\cdot \\tfrac{1}{\\sqrt{3}} \\cdot \\tfrac{1}{\\sqrt{2}} = 1"}</M>
+          ; jeder Eintrag von <M>{"\\cbred{\\bu_1}\\cgreen{\\sigma_1}\\cblue{\\bv_1^\\top}"}</M>{" "}
           ist <M>{"1"}</M>.) Die Pseudoinverse wird damit
         </p>
         <MD>
@@ -227,9 +227,9 @@ export function S76() {
           Probe: <M>{"\\bA\\wh{\\bx} = (2, 2, 2)^\\top"}</M> ist genau die Projektion von{" "}
           <M>{"\\bb"}</M> auf <M>{"\\col(\\bA) = \\spann\\{(1,1,1)^\\top\\}"}</M> (der Mittelwert
           von <M>{"\\bb"}</M> ist <M>{"2"}</M>). Alle KQ-Lösungen erfüllen{" "}
-          <M>{"x_1 + x_2 = 2"}</M> — etwa auch <M>{"(2, 0)^\\top"}</M> mit Norm <M>{"2"}</M>.
+          <M>{"x_1 + x_2 = 2"}</M>, etwa auch <M>{"(2, 0)^\\top"}</M> mit Norm <M>{"2"}</M>.
           Unsere Lösung <M>{"\\wh{\\bx} = (1,1)^\\top"}</M> hat Norm{" "}
-          <M>{"\\sqrt{2} \\approx 1{,}41"}</M> — die kleinste, wie Satz 7.6.1 verspricht.
+          <M>{"\\sqrt{2} \\approx 1{,}41"}</M> – die kleinste, wie Satz 7.6.1 verspricht.
         </p>
       </EnvBlock>
 
@@ -243,7 +243,8 @@ export function S76() {
           Normalengleichungen
         </a>{" "}
         <M>{"\\bA^\\top\\bA\\,\\bx = \\bA^\\top\\bb"}</M> sind schnell, haben aber drei
-        strukturelle Schwächen: <M>{"\\bA^\\top\\bA"}</M> kann schlecht konditioniert sein — aus{" "}
+        strukturelle Schwächen: <M>{"\\bA^\\top\\bA"}</M> kann schlecht konditioniert sein, denn
+        aus{" "}
         <a className="underline decoration-dotted" href="#sec-7.2">
           Abschnitt 7.2
         </a>{" "}
@@ -256,8 +257,8 @@ export function S76() {
       <p>
         Der SVD-Zugang <M>{"\\wh{\\bx} = \\bA\\pinv\\bb"}</M> vermeidet all das: Er arbeitet
         direkt mit <M>{"\\bA"}</M> statt mit <M>{"\\bA^\\top\\bA"}</M>, quadriert die Kondition
-        also nicht. Singuläre und rangdefiziente Probleme behandelt er automatisch — Beispiel
-        7.6.2 hat das vorgeführt. Formel (7.6.1) ist zudem eine <em>explizite Konstruktion</em>{" "}
+        also nicht. Singuläre und rangdefiziente Probleme behandelt er automatisch, wie
+        Beispiel 7.6.2 vorgeführt hat. Formel (7.6.1) ist zudem eine <em>explizite Konstruktion</em>{" "}
         der Lösung: Sobald die SVD vorliegt, ist kein Gleichungssystem mehr zu lösen, nur noch
         Matrix-Vektor-Produkte auszuwerten. Er hat eine klare geometrische Interpretation (Projektion auf{" "}
         <M>{"\\col(\\bA)"}</M> plus Minimal-Norm-Auswahl). Und für <M>{"\\rang(\\bA) < n"}</M>{" "}
@@ -287,21 +288,21 @@ export function S76() {
           </li>
           <li>
             Wir können dann <M>{"\\bSigma_r"}</M> verkleinern, indem wir die <M>{"r - k"}</M>{" "}
-            kleinsten Singulärwerte auf <M>{"0"}</M> setzen — das ist die{" "}
+            kleinsten Singulärwerte auf <M>{"0"}</M> setzen; das ist die{" "}
             <ConceptLink id="low-rank-approximation">Rang-k-Approximation</ConceptLink> aus
             Kapitel 6, hier als gezielte Glättung eines fast singulären Problems.
           </li>
           <li>
             Alle genannten Methoden haben für <M>{"m \\gg n"}</M> eine{" "}
             <ConceptLink id="big-o-notation">Komplexität</ConceptLink> von{" "}
-            <M>{"O(mn^2 + n^3)"}</M> — aber die Konstanten unterscheiden sich deutlich.
+            <M>{"O(mn^2 + n^3)"}</M>, aber die Konstanten unterscheiden sich deutlich.
           </li>
         </ul>
       </EnvBlock>
 
       <ExpandedReading title="Was kostet welche Methode? (interaktiv)">
         <p className="mb-2 text-sm">
-          Die <M>{"O"}</M>-Klasse ist bei allen drei Methoden gleich — entscheidend sind die
+          Die <M>{"O"}</M>-Klasse ist bei allen drei Methoden gleich; entscheidend sind die
           Konstanten. Stellen wir <M>{"n"}</M> und das Seitenverhältnis <M>{"m/n"}</M> ein und
           vergleichen die ungefähren Operationszahlen. Die SVD-Konstante hängt vom Algorithmus
           ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).
@@ -345,7 +346,7 @@ export function S76() {
           </a>
           ): bzgl. <M>{"\\bb"}</M> hängt sie vom Winkel zwischen <M>{"\\bb"}</M> und{" "}
           <M>{"\\col(\\bA)"}</M> ab, bzgl. <M>{"\\bA"}</M> ist sie typischerweise{" "}
-          <M>{"O(\\kappa_2(\\bA)^2)"}</M> — die quadrierte Konditionszahl.
+          <M>{"O(\\kappa_2(\\bA)^2)"}</M>, also die quadrierte Konditionszahl.
         </li>
         <li>
           <strong>Normalengleichungen + Cholesky</strong> (
@@ -372,7 +373,7 @@ export function S76() {
           ): <M>{"\\bA = \\bQ \\left(\\begin{smallmatrix} \\bR \\\\ \\bnull \\end{smallmatrix}\\right)"}</M>,
           löse <M>{"\\bR\\bx = \\bc_1"}</M> mit{" "}
           <M>{"\\bQ^\\top\\bb = \\left(\\begin{smallmatrix} \\bc_1 \\\\ \\bc_2 \\end{smallmatrix}\\right)"}</M>;{" "}
-          <M>{"O(mn^2)"}</M>. Stabil, quadriert die Kondition nicht — die Standardwahl.
+          <M>{"O(mn^2)"}</M>. Stabil, quadriert die Kondition nicht und ist die Standardwahl.
         </li>
         <li>
           <strong>SVD und Pseudoinverse</strong> (dieser Abschnitt):{" "}
@@ -397,7 +398,7 @@ export function S76() {
       <ExpandedReading title="Entscheidungshilfe: welche Methode wählen? (interaktiv)">
         <p className="mb-2 text-sm">
           Die Abwägungen des Kapitels als Daumenregel-Automat: Form von <M>{"\\bA"}</M>,
-          Kondition und Anspruch einstellen — die Empfehlung samt Begründung erscheint unten.
+          Kondition und Anspruch einstellen; die Empfehlung samt Begründung erscheint unten.
         </p>
         <MethodChooser />
       </ExpandedReading>

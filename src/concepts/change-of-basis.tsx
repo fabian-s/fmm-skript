@@ -50,7 +50,7 @@ registerConcept({
         <ConceptLink id="basis">Basis</ConceptLink> wir messen. Der Wechsel von
         der Standardbasis zu einer neuen Basis{" "}
         <M>{"(\\bb_1, \\dots, \\bb_n)"}</M> etikettiert jeden Vektor mit neuen
-        Koordinaten um — und ebenso jede{" "}
+        Koordinaten um, und ebenso jede{" "}
         <ConceptLink id="linear-map">lineare Abbildung</ConceptLink>: aus einer{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink> <M>{"\\bA"}</M> wird
       </p>
@@ -60,8 +60,8 @@ registerConcept({
         <M>{"\\bS^{-1}"}</M> ihre{" "}
         <ConceptLink id="inverse-matrix">Inverse</ConceptLink> ist. Die beiden
         Matrizen <M>{"\\bA"}</M> und <M>{"\\bA'"}</M> beschreiben{" "}
-        <em>dieselbe</em> Abbildung in verschiedenen Koordinaten — sie heißen{" "}
-        <ConceptLink id="similar-matrices">ähnlich</ConceptLink> — also muss
+        <em>dieselbe</em> Abbildung in verschiedenen Koordinaten (sie heißen{" "}
+        <ConceptLink id="similar-matrices">ähnlich</ConceptLink>), also muss
         jede Größe, die wirklich eine Eigenschaft der Abbildung selbst ist,
         etwa Determinante und Spur, für beide gleich herauskommen. Probieren
         wir es unten aus: das Drehen der Basis ändert die Koordinaten des roten

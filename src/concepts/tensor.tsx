@@ -59,7 +59,7 @@ registerConcept({
     <>
       <p>
         Ein Tensor (in dem hier gemeinten Sinn) ist einfach ein
-        mehrdimensionales Zahlen-Array &mdash; der natürliche nächste Schritt
+        mehrdimensionales Zahlen-Array, der natürliche nächste Schritt
         in einer Folge, die wir schon kennen: Eine einzelne Zahl ist ein
         0-dimensionales Array, ein{" "}
         <ConceptLink id="vector">Vektor</ConceptLink> ein 1-dimensionales,
@@ -77,7 +77,7 @@ registerConcept({
         4-dimensionaler Tensor. Deshalb verlieren vertraute Matrix-Gewohnheiten
         wie das{" "}
         <ConceptLink id="transpose">Transponieren</ConceptLink> ihre
-        Selbstverständlichkeit &mdash; bei drei oder mehr Indexpositionen
+        Selbstverständlichkeit: bei drei oder mehr Indexpositionen
         gibt es nicht mehr die eine natürliche Art, „Zeilen und Spalten zu
         vertauschen&ldquo;.
       </p>

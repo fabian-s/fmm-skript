@@ -12,10 +12,10 @@ function HessianWidget() {
   const [b, setB] = useState(-0.5);
   const verdict =
     a > 0 && b > 0
-      ? "beide Schnitte krümmen sich nach oben: eine Schüssel — Hesse-Matrix positiv definit, (0,0) ist ein Minimum"
+      ? "beide Schnitte krümmen sich nach oben: eine Schüssel. Hesse-Matrix positiv definit, (0,0) ist ein Minimum"
       : a < 0 && b < 0
-        ? "beide Schnitte krümmen sich nach unten: eine Kuppel — (0,0) ist ein Maximum"
-        : "ein Schnitt krümmt sich nach oben, einer nach unten (oder ist flach): ein Sattel — kein Minimum in (0,0)";
+        ? "beide Schnitte krümmen sich nach unten: eine Kuppel, (0,0) ist ein Maximum"
+        : "ein Schnitt krümmt sich nach oben, einer nach unten (oder ist flach): ein Sattel, kein Minimum in (0,0)";
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Slider label="a (Krümmung in x)" value={a} onChange={setA} min={-2} max={2} step={0.1} fmt={(v) => v.toFixed(1)} />
@@ -67,7 +67,7 @@ registerConcept({
         der zweiten Ableitung aus der Schule: Dort, wo der{" "}
         <ConceptLink id="gradient">Gradient</ConceptLink> verschwindet, hat{" "}
         <M>{"\\phi"}</M> ein lokales Minimum, wenn die Hesse-Matrix{" "}
-        <ConceptLink id="positive-definite">positiv definit</ConceptLink> ist —
+        <ConceptLink id="positive-definite">positiv definit</ConceptLink> ist;
         sie krümmt sich dann in jede Richtung nach oben, wie eine Schüssel. Für
         die Kleinste-Quadrate-Zielfunktion ergibt sich als Hesse-Matrix die
         konstante Matrix <M>{"2\\bA^T\\bA"}</M>; ihre positive Definitheit ist

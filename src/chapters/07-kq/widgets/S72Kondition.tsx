@@ -1,7 +1,7 @@
 /**
  * Widgets für §7.2 „Kondition des Kleinste-Quadrate-Problems".
  * SVG-/Berechnungscode adaptiert aus der internen Heath-Kap.-3-App
- * (interactive/heath-ch3, S33Sensitivity.tsx) — nur Code, Beschriftungen
+ * (interactive/heath-ch3, S33Sensitivity.tsx): nur Code, Beschriftungen
  * und Erklärtexte neu auf Deutsch; Farben = FMM-Palette.
  *
  * Farbcode, konsistent mit den Herleitungen im Fließtext:
@@ -140,7 +140,7 @@ function Readout({ label, value, color }: { label: string; value: string; color?
 /**
  * Interaktive Version der KQ-Geometrie im einfachsten nichttrivialen Fall:
  * m = 2, n = 1, A = (1, 0)ᵀ, also col(A) = horizontale Achse und
- * κ₂(A) = 1 — die gesamte Empfindlichkeit stammt aus dem Winkel θ.
+ * κ₂(A) = 1; die gesamte Empfindlichkeit stammt aus dem Winkel θ.
  */
 export function WinkelWidget() {
   const [thetaDeg, setThetaDeg] = useState(30);
@@ -265,8 +265,8 @@ export function FastRangdefektWidget() {
           wir α, werden die Spalten fast{" "}
           <ConceptLink id="linear-independence">linear abhängig</ConceptLink>:
           Die Ellipse plättet sich zu einem Strich (σ₂ → 0) und κ₂(A) explodiert.
-          Bei α = 0 ist die Matrix exakt rangdefekt — nach Definition 7.2.1 dann
-          κ(A) = ∞.
+          Bei α = 0 ist die Matrix exakt rangdefekt; nach Definition 7.2.1 ist
+          dann κ(A) = ∞.
         </p>
       </div>
     </div>
@@ -331,7 +331,7 @@ export function KonditionsQuadrierungLab() {
             <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink>)
             ist eine relative Störung der Größe ε ohnehin durch unvermeidbare{" "}
             <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>{" "}
-            gegeben — dieses Szenario ist also keineswegs exotisch.
+            gegeben; dieses Szenario ist also keineswegs exotisch.
           </p>
         </div>
         <div className="min-w-[18rem] grow basis-72 rounded bg-slate-100 p-2 dark:bg-slate-800">
@@ -352,7 +352,7 @@ export function KonditionsQuadrierungLab() {
           <>
             <strong>Regime der quadrierten Kondition:</strong> Der Term{" "}
             <M>{"\\kappa_2(\\bA)^2 \\tan(\\theta) \\cdot \\eps = b_3/\\eps"}</M>{" "}
-            dominiert die Schranke — das Residuum ist groß genug, dass der
+            dominiert die Schranke: Das Residuum ist groß genug, dass der
             Fehler in <M>{"\\wh{\\bx}"}</M> ungefähr mit dem{" "}
             <em>Quadrat</em> der Konditionszahl verstärkt wird.
           </>

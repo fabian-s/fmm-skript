@@ -13,7 +13,7 @@ registerConcept({
       </p>
       <MD>{"F = m\\,a,"}</MD>
       <p>
-        wobei die Masse <M>{"m"}</M> die Proportionalitätskonstante ist &mdash;
+        wobei die Masse <M>{"m"}</M> die Proportionalitätskonstante ist;
         sie misst, wie viel &bdquo;Zeug&ldquo; wir bewegen müssen. (Die
         Beschleunigung gibt an, wie schnell sich die Geschwindigkeit ändert,
         ist also die{" "}
@@ -28,7 +28,7 @@ registerConcept({
         mit 6&nbsp;N anschieben, beschleunigt mit 3&nbsp;m/s&sup2;; mit
         12&nbsp;N sind es 6&nbsp;m/s&sup2;. Viele der fundamentalsten
         physikalischen Gesetze haben genau diese Struktur &bdquo;doppelter
-        Input, doppelter Output&ldquo; &mdash; deshalb begegnen uns lineare
+        Input, doppelter Output&ldquo;. Deshalb begegnen uns lineare
         Zusammenhänge und lineare Gleichungssysteme im wissenschaftlichen
         Rechnen auf Schritt und Tritt.
       </p>

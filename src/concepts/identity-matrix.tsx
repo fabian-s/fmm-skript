@@ -16,9 +16,9 @@ registerConcept({
         Multiplikation mit ihr ändert nichts. Für jeden{" "}
         <ConceptLink id="vector">Vektor</ConceptLink> <M>{"\\bx"}</M> ist das{" "}
         <ConceptLink id="matrix-vector-product">Produkt</ConceptLink>{" "}
-        <M>{"\\bI\\bx"}</M> einfach wieder <M>{"\\bx"}</M> &mdash; jede Zeile
-        pickt genau einen Eintrag von <M>{"\\bx"}</M> unverändert heraus
-        &mdash; und ebenso gilt{" "}
+        <M>{"\\bI\\bx"}</M> einfach wieder <M>{"\\bx"}</M> (jede Zeile
+        pickt genau einen Eintrag von <M>{"\\bx"}</M> unverändert heraus),
+        und ebenso gilt{" "}
         <M>{"\\bA\\bI = \\bI\\bA = \\bA"}</M> bei der{" "}
         <ConceptLink id="matrix-multiplication">Matrixmultiplikation</ConceptLink>.
       </p>

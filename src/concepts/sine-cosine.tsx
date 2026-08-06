@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Sinus und Kosinus — Werte, Periodizität, Ableitungen. */
+/** Konzept-Tooltip: Sinus und Kosinus: Werte, Periodizität, Ableitungen. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -54,7 +54,7 @@ registerConcept({
       <MD>{"(\\sin x)' = \\cos x, \\quad (\\cos x)' = -\\sin x, \\quad (-\\sin x)' = -\\cos x, \\quad (-\\cos x)' = \\sin x."}</MD>
       <p>
         Viermal ableiten bringt <M>{"\\cos"}</M> also zurück zu{" "}
-        <M>{"\\cos"}</M> — und darum durchlaufen die Ableitungswerte an der
+        <M>{"\\cos"}</M>, und darum durchlaufen die Ableitungswerte an der
         Stelle <M>{"x_0 = 0"}</M>, die wir für eine Taylorreihe brauchen, den
         Zyklus <M>{"1, 0, -1, 0, 1, \\dots"}</M>
       </p>

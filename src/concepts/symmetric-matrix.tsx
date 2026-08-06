@@ -4,7 +4,7 @@ import { LabeledTransformCanvas } from "../lib";
 
 /**
  * Eine symmetrische 2x2-Matrix wirkt als reine Streckung entlang zweier
- * senkrechter Achsen (ihrer Eigenvektor-Richtungen) — der Einheitskreis
+ * senkrechter Achsen (ihrer Eigenvektor-Richtungen): der Einheitskreis
  * wird zu einer Ellipse, deren Achsen die Eigenrichtungen sind.
  */
 function SymmetricWidget() {
@@ -45,8 +45,8 @@ function SymmetricWidget() {
       />
       <p className="mt-1 text-xs text-slate-300">
         Der gestrichelte Einheitskreis wird auf die durchgezogene Ellipse
-        abgebildet. Ihre beiden Achsen &mdash; die Pfeile λ₁v₁ und λ₂v₂
-        &mdash; bleiben für jedes c senkrecht zueinander: Eine symmetrische
+        abgebildet. Ihre beiden Achsen (die Pfeile λ₁v₁ und λ₂v₂)
+        bleiben für jedes c senkrecht zueinander: Eine symmetrische
         Matrix streckt (oder spiegelt) nur entlang zweier orthogonaler
         Richtungen.
       </p>
@@ -63,7 +63,7 @@ registerConcept({
         Eine quadratische <ConceptLink id="matrix">Matrix</ConceptLink> heißt{" "}
         <em>symmetrisch</em>, wenn sie gleich ihrer eigenen{" "}
         <ConceptLink id="transpose">Transponierten</ConceptLink> ist,{" "}
-        <M>{"\\bA = \\bA^T"}</M> &mdash; die Einträge spiegeln sich an der
+        <M>{"\\bA = \\bA^T"}</M>: die Einträge spiegeln sich an der
         Hauptdiagonale, <M>{"a_{ij} = a_{ji}"}</M>. Zum Beispiel:
       </p>
       <MD>
@@ -81,7 +81,7 @@ registerConcept({
         <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink> und
         paarweise{" "}
         <ConceptLink id="orthogonality">senkrechte</ConceptLink>{" "}
-        Eigenvektor-Richtungen &mdash; sie wirkt also als reine Streckung
+        Eigenvektor-Richtungen; sie wirkt also als reine Streckung
         entlang orthogonaler Achsen, ganz ohne Scherung.
       </p>
       <SymmetricWidget />

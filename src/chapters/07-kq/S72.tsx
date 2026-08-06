@@ -19,7 +19,7 @@ export function S72() {
         den linearen Gleichungssystemen: Wie empfindlich reagiert die Lösung{" "}
         <M>{"\\wh{\\bx}"}</M> auf kleine Störungen der Eingaben? Die Antwort
         gibt die <ConceptLink id="condition-number">Kondition</ConceptLink> des
-        Problems — und sie legt fest, welche Genauigkeit wir von{" "}
+        Problems, und sie legt fest, welche Genauigkeit wir von{" "}
         <em>jedem</em> Algorithmus bestenfalls erwarten dürfen. Denn die
         Kondition ist eine Eigenschaft des Problems selbst, nicht des
         Lösungswegs. Beim KQ-Problem gibt es zwei Eingaben, die gestört sein
@@ -33,7 +33,7 @@ export function S72() {
         Wir untersuchen nun die Kondition von KQ-Problemen{" "}
         <M>{"\\bA\\bx \\approx \\bb"}</M> mit <M>{"\\bA \\in \\R^{m \\times n}"}</M>{" "}
         und <M>{"\\bb \\in \\R^m"}</M>. Dabei beschränken wir uns auf den Fall{" "}
-        <M>{"m \\ge n"}</M> und <M>{"\\rang(\\bA) = n"}</M> — dann existiert,
+        <M>{"m \\ge n"}</M> und <M>{"\\rang(\\bA) = n"}</M>. Dann existiert,
         wie in <a className="underline" href="#sec-7.1">Abschnitt 7.1</a> gesehen, eine eindeutige
         Lösung <M>{"\\wh{\\bx}"}</M>. Als Norm verwenden wir im Folgenden stets{" "}
         <M>{"\\left\\|\\cdot\\right\\| = \\left\\|\\cdot\\right\\|_2"}</M>: Das
@@ -71,8 +71,8 @@ export function S72() {
           <M>{"\\bA\\pinv = \\bA^{-1}"}</M>, und wir erhalten die bekannte
           Konditionszahl{" "}
           <M>{"\\kappa(\\bA) = \\left\\|\\bA\\right\\| \\left\\|\\bA^{-1}\\right\\|"}</M>{" "}
-          zurück. In der 2-Norm gilt außerdem — mit den Singulärwerten aus der{" "}
-          <ConceptLink id="singular-value-decomposition">SVD</ConceptLink> —
+          zurück. In der 2-Norm gilt außerdem (mit den Singulärwerten aus der{" "}
+          <ConceptLink id="singular-value-decomposition">SVD</ConceptLink>)
         </p>
         <MD>{"\\kappa_2(\\bA) = \\frac{\\sigma_{\\max}}{\\sigma_{\\min}},"}</MD>
         <p>
@@ -88,7 +88,7 @@ export function S72() {
       <ExpandedReading title="Konditionszahl als Nähe zum Rangdefekt">
         <p className="mb-3 text-sm">
           Zwei Einheitsspalten im Winkel α zueinander: Je kleiner α, desto
-          näher ist <M>{"\\bA"}</M> am Rangdefekt — und desto größer{" "}
+          näher ist <M>{"\\bA"}</M> am Rangdefekt, und desto größer{" "}
           <M>{"\\kappa_2(\\bA)"}</M>. Ziehen Sie am Regler und beobachten Sie,
           wie das Bild des Einheitskreises kollabiert.
         </p>
@@ -101,7 +101,7 @@ export function S72() {
 
       <p>
         Beginnen wir mit dem statistisch wichtigsten Fall: <M>{"\\bA"}</M> ist
-        fix, aber der Datenvektor <M>{"\\bb"}</M> ist gestört — etwa durch
+        fix, aber der Datenvektor <M>{"\\bb"}</M> ist gestört, etwa durch
         Messfehler oder schlicht durch{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> beim
         Einlesen. Das Problem ist dann die Abbildung{" "}
@@ -176,8 +176,8 @@ export function S72() {
           why={
             <>
               nochmals Submultiplikativität:{" "}
-              <M>{"\\left\\|\\bA\\bA\\pinv\\bb\\right\\| \\le \\left\\|\\bA\\right\\| \\left\\|\\bA\\pinv\\bb\\right\\|"}</M>{" "}
-              — wir verkleinern den Nenner, der Bruch kann nur wachsen
+              <M>{"\\left\\|\\bA\\bA\\pinv\\bb\\right\\| \\le \\left\\|\\bA\\right\\| \\left\\|\\bA\\pinv\\bb\\right\\|"}</M>
+              ; wir verkleinern den Nenner, der Bruch kann nur wachsen
             </>
           }
         >
@@ -233,7 +233,7 @@ export function S72() {
           <strong>Best case:</strong>{" "}
           <M>{"\\bb = \\cgreen{\\proj_{\\col(\\bA)} \\bb}"}</M>, d.&thinsp;h.{" "}
           <M>{"\\bb \\in \\col(\\bA)"}</M> und <M>{"\\theta = 0"}</M>. Dann ist{" "}
-          <M>{"\\kappa = \\corange{\\kappa_2(\\bA)}"}</M> — besser geht es
+          <M>{"\\kappa = \\corange{\\kappa_2(\\bA)}"}</M> – besser geht es
           nicht.
         </li>
         <li>
@@ -248,8 +248,8 @@ export function S72() {
       </ul>
       <p>
         Für die Regression heißt das: Je weniger die Daten <M>{"\\bb"}</M> vom
-        Spaltenraum der Designmatrix erklärt werden — je schlechter also der
-        Fit —, desto schlechter konditioniert ist die Bestimmung der
+        Spaltenraum der Designmatrix erklärt werden (je schlechter also der
+        Fit), desto schlechter konditioniert ist die Bestimmung der
         Koeffizienten. Und zwar unabhängig davon, wie gut <M>{"\\bA"}</M>{" "}
         selbst konditioniert ist.
       </p>
@@ -259,7 +259,7 @@ export function S72() {
           Das einfachste nichttriviale KQ-Problem: <M>{"m = 2"}</M>,{" "}
           <M>{"n = 1"}</M>, <M>{"\\bA = (1, 0)^\\top"}</M>, also{" "}
           <M>{"\\kappa_2(\\bA) = 1"}</M> und <M>{"\\col(\\bA)"}</M> gleich der
-          horizontalen Achse. Verstellen Sie den Winkel θ und die Störung Δb —
+          horizontalen Achse. Verstellen Sie den Winkel θ und die Störung Δb,
           und beobachten Sie, wann die Schranke aus Satz 7.2.3 tatsächlich
           angenommen wird.
         </p>
@@ -272,7 +272,7 @@ export function S72() {
 
       <p>
         Nun der umgekehrte Fall: <M>{"\\bb"}</M> ist fix, aber die Matrix{" "}
-        <M>{"\\bA"}</M> selbst ist gestört. Auch das ist praktisch relevant —
+        <M>{"\\bA"}</M> selbst ist gestört. Auch das ist praktisch relevant:
         etwa durch Messfehler in den Kovariablen oder durch Rundungsfehler,
         die beim Speichern von <M>{"\\bA"}</M> und in den Zwischenschritten
         der Algorithmen zwangsläufig entstehen. Das Problem ist jetzt die
@@ -297,7 +297,7 @@ export function S72() {
 
       <EnvBlock kind="Bemerkung" label="7.2.5">
         <p>
-          Der Beweis ist — anders als der von Satz 7.2.3 — eine sehr
+          Der Beweis ist (anders als der von Satz 7.2.3) eine sehr
           aufwändige und, offen gesagt, langweilige Rechnung. Wir verzichten
           darauf und verweisen auf die Literatur (vgl. Heath §3.3).
         </p>
@@ -311,9 +311,9 @@ export function S72() {
         an das Verhältnis von Residuum zu Projektion. Mit dem Winkel{" "}
         <M>{"\\theta"}</M> von oben ist{" "}
         <M>{"\\left\\|\\cpurp{\\br}\\right\\| = \\sin(\\theta) \\left\\|\\bb\\right\\|"}</M>{" "}
-        — das Residuum ist gerade die zu <M>{"\\col(\\bA)"}</M>{" "}
+        (das Residuum ist gerade die zu <M>{"\\col(\\bA)"}</M>{" "}
         <ConceptLink id="orthogonality">orthogonale</ConceptLink> Komponente
-        von <M>{"\\bb"}</M> —, also
+        von <M>{"\\bb"}</M>), also
       </p>
       <MD>
         {"\\kappa = \\corange{\\kappa_2(\\bA)} + \\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)."}
@@ -322,7 +322,7 @@ export function S72() {
         <li>
           <strong>Best case:</strong> <M>{"\\cpurp{\\br} = \\bnull"}</M>,
           d.&thinsp;h. <M>{"\\bA\\bx = \\bb"}</M> ist exakt lösbar. Dann ist{" "}
-          <M>{"\\kappa = \\corange{\\kappa_2(\\bA)}"}</M> — wie bei einem
+          <M>{"\\kappa = \\corange{\\kappa_2(\\bA)}"}</M>, wie bei einem
           gewöhnlichen{" "}
           <ConceptLink id="linear-system">linearen Gleichungssystem</ConceptLink>.
         </li>
@@ -342,8 +342,8 @@ export function S72() {
         </li>
       </ul>
       <p>
-        Vorsicht also: Sobald das Residuum nicht verschwindet — und in der
-        Statistik verschwindet es praktisch nie —, kann eine Störung von{" "}
+        Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
+        Statistik verschwindet es praktisch nie), kann eine Störung von{" "}
         <M>{"\\bA"}</M> mit dem Quadrat der Konditionszahl verstärkt werden.
         Dieses Quadrat wird uns in <a className="underline" href="#sec-7.3">Abschnitt 7.3</a> gleich
         wieder begegnen: Der Lösungsweg über die Normalengleichungen handelt es
@@ -365,7 +365,7 @@ export function S72() {
           Störung ist{" "}
           <M>{"\\left\\|\\cblue{\\bE}\\right\\|_2 / \\left\\|\\bA\\right\\|_2 = \\eps"}</M>.
           Die ungestörte Lösung ist stets{" "}
-          <M>{"\\wh{\\bx} = (1/2,\\, 1/2)^\\top"}</M> — unabhängig von{" "}
+          <M>{"\\wh{\\bx} = (1/2,\\, 1/2)^\\top"}</M>, unabhängig von{" "}
           <M>{"\\eps"}</M> und <M>{"b_3"}</M>. Der Regler für{" "}
           <M>{"b_3"}</M> steuert die Größe des Residuums und schaltet damit
           zwischen den beiden Regimen von Satz 7.2.4 um.
@@ -374,7 +374,7 @@ export function S72() {
       </ExpandedReading>
 
       <p>
-        <em>Vertiefung:</em> Heath §3.1–3.3 — insbesondere §3.3 („Sensitivity
+        <em>Vertiefung:</em> Heath §3.1–3.3, insbesondere §3.3 („Sensitivity
         and Conditioning") mit der vollständigen Störungsanalyse inklusive des
         Beweises von Satz 7.2.4; zum KQ-Problem als Optimierungsproblem und
         seiner Rolle in der Regression außerdem MML §7.1 und §9.2.

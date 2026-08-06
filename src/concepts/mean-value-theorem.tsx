@@ -1,5 +1,5 @@
 /**
- * Concept-Tooltip: Mittelwertsatz — irgendwo stimmt die momentane Steigung
+ * Concept-Tooltip: Mittelwertsatz: irgendwo stimmt die momentane Steigung
  * mit der durchschnittlichen Steigung überein.
  */
 import { useState } from "react";
@@ -27,7 +27,7 @@ function MvtWidget() {
         <M>{"f(x) = x^3/3 - x"}</M>: Die rote Sekante von <M>{"a"}</M> nach <M>{"b"}</M> hat
         Steigung <M>{"m = " + m.toFixed(3)}</M>; die grün gestrichelte(n) Tangente(n) bei{" "}
         <M>{"\\xi = " + xis.map((x) => x.toFixed(3)).join(",\\; ")}</M> haben exakt dieselbe
-        Steigung — für jede Wahl der Endpunkte.
+        Steigung, für jede Wahl der Endpunkte.
       </p>
       <div className="flex flex-wrap gap-x-6">
         <div className="w-40">
@@ -66,22 +66,22 @@ registerConcept({
         <ConceptLink id="continuity">stetig</ConceptLink> und dazwischen{" "}
         <ConceptLink id="differentiability">differenzierbar</ConceptLink>, dann stimmt irgendwo
         in <M>{"(a, b)"}</M> die momentane Steigung mit der durchschnittlichen Steigung über das
-        ganze Intervall überein — das ist der <em>Mittelwertsatz</em> (engl.{" "}
+        ganze Intervall überein. Das ist der <em>Mittelwertsatz</em> (engl.{" "}
         <em>mean value theorem</em>): Es gibt einen Punkt <M>{"\\xi \\in (a, b)"}</M> mit
       </p>
       <MD>{"f(b) - f(a) = f'(\\xi)\\,(b - a)."}</MD>
       <p>
         Blitzer-Intuition: Wenn eine 100&nbsp;km lange Fahrt genau eine Stunde gedauert hat, dann
-        zeigte der Tacho in irgendeinem Moment genau 100&nbsp;km/h — die{" "}
+        zeigte der Tacho in irgendeinem Moment genau 100&nbsp;km/h; die{" "}
         <ConceptLink id="tangent-line">Tangente</ConceptLink> ist an einem inneren Punkt parallel
         zur Sekante. Der Haken: Der Satz garantiert nur, dass so ein <M>{"\\xi"}</M> existiert,
         er verrät aber nicht, wo es liegt.
       </p>
       <p>
-        Genau so nutzt ihn das Konvergenzargument für Fixpunkt-Iterationen:
+        So nutzt ihn das Konvergenzargument für Fixpunkt-Iterationen:
         Schreiben wir <M>{"g(x_k) - g(x^*) = g'(\\theta_k)(x_k - x^*)"}</M> für ein unbekanntes{" "}
         <M>{"\\theta_k"}</M> zwischen <M>{"x_k"}</M> und <M>{"x^*"}</M>, dann wird ein
-        Iterationsschritt zu einer exakten Aussage darüber, wie der Fehler schrumpft — ohne{" "}
+        Iterationsschritt zu einer exakten Aussage darüber, wie der Fehler schrumpft, ohne{" "}
         <M>{"\\theta_k"}</M> je zu lokalisieren.
       </p>
       <MvtWidget />

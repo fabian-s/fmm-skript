@@ -2,7 +2,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { S31SpurWidget } from "./widgets/S31SpurWidget";
 
 /**
- * Abschnitt 3.1 — Die Spur einer Matrix.
+ * Abschnitt 3.1 – Die Spur einer Matrix.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Kapitelauftakt + Block
  * „Die Spur einer Matrix" (Definition, Eigenschaften, zyklische
  * Vertauschung, Spur = Eigenwertsumme, Frobenius-Norm). Prosa
@@ -23,7 +23,7 @@ export function S31() {
         diese Fragen verlangen, eine ganze Tabelle voller Zahlen zu einer einzigen aussagekräftigen
         Kennzahl zu verdichten. Dieses Kapitel stellt die beiden wichtigsten solchen Kennzahlen
         vor: die <em>Spur</em> (dieser Abschnitt) und die <em>Matrixnormen</em> (Rest des
-        Kapitels). Beide begegnen uns in der Statistik ständig — die Gesamtvarianz eines
+        Kapitels). Beide begegnen uns in der Statistik ständig: Die Gesamtvarianz eines
         Zufallsvektors ist zum Beispiel die Spur seiner{" "}
         <ConceptLink id="covariance-matrix">Kovarianzmatrix</ConceptLink>.
       </p>
@@ -56,8 +56,8 @@ export function S31() {
       </h3>
       <p>
         Die einfachste Art, eine quadratische Matrix zu einer Zahl zu verdichten, ist zugleich die
-        billigste: Wir addieren einfach die Diagonalelemente. Das klingt zunächst willkürlich —
-        warum ausgerechnet die Diagonale? Die Antwort liefert dieser Abschnitt: Diese Summe ist
+        billigste: Wir addieren einfach die Diagonalelemente. Das klingt zunächst willkürlich.
+        Warum ausgerechnet die Diagonale? Die Antwort liefert dieser Abschnitt: Diese Summe ist
         eine erstaunlich stabile Kenngröße der Matrix, die sich von Basiswechseln nicht
         beeindrucken lässt und die Summe der Eigenwerte liefert, ohne dass wir auch nur einen
         davon ausrechnen müssten.
@@ -71,7 +71,7 @@ export function S31() {
       </EnvBlock>
       <p>
         Zwei Dinge halten wir gleich fest: Erstens ist die Spur <em>nur für quadratische
-        Matrizen</em> definiert — bei einer rechteckigen Matrix hat „die Diagonale" keine
+        Matrizen</em> definiert, denn bei einer rechteckigen Matrix hat „die Diagonale" keine
         sinnvolle Bedeutung. Zweitens ist die Spur eine <em>skalare Invariante</em> der Matrix:
         Sie ändert sich nicht, wenn wir dieselbe lineare Abbildung in einer anderen{" "}
         <ConceptLink id="basis">Basis</ConceptLink> darstellen (das ist die
@@ -87,7 +87,7 @@ export function S31() {
         </p>
         <MD>{"\\tr\\begin{pmatrix} \\cgreen{1} & 2 \\\\ 3 & \\cgreen{4} \\end{pmatrix} = \\cgreen{1} + \\cgreen{4} = 5, \\qquad \\tr\\begin{pmatrix} \\cgreen{2} & -1 & 0 \\\\ 0 & \\cgreen{3} & 5 \\\\ 1 & 0 & \\cgreen{-2} \\end{pmatrix} = \\cgreen{2} + \\cgreen{3} + (\\cgreen{-2}) = 3."}</MD>
         <p>
-          Alle Einträge abseits der Diagonale sind für die Spur unsichtbar — die <M>{"5"}</M> im
+          Alle Einträge abseits der Diagonale sind für die Spur unsichtbar; die <M>{"5"}</M> im
           zweiten Beispiel könnte genauso gut <M>{"5000"}</M> sein.
         </p>
       </EnvBlock>
@@ -127,7 +127,7 @@ export function S31() {
         Die Eigenschaften 1, 2 und 5 folgen direkt aus der Definition: Addition und Skalierung
         wirken eintragsweise, also insbesondere auf jedes Diagonalelement einzeln, und das{" "}
         <ConceptLink id="transpose">Transponieren</ConceptLink> spiegelt die Matrix an der
-        Diagonale — die Diagonalelemente selbst bleiben dabei, wo sie sind. Interessant sind die
+        Diagonale, wobei die Diagonalelemente selbst bleiben, wo sie sind. Interessant sind die
         Eigenschaften 3 und 4; die beweisen wir jetzt.
       </p>
       <Proof>
@@ -175,7 +175,7 @@ export function S31() {
       </p>
       <MD>{"\\tr(\\bA\\bB\\bC) = \\tr(\\bB\\bC\\bA) = \\tr(\\bC\\bA\\bB)."}</MD>
       <p>
-        Wir dürfen die Faktoren unter der Spur also „im Kreis herumschieben" — so, als stünden
+        Wir dürfen die Faktoren unter der Spur also „im Kreis herumschieben", so als stünden
         sie auf einem Karussell: Die Reihenfolge im Kreis bleibt erhalten, nur der Startpunkt
         wandert.
       </p>
@@ -190,9 +190,9 @@ export function S31() {
           </li>
           <li>
             Erlaubt sind nur <em>zyklische</em> Vertauschungen, keine beliebigen: Im Allgemeinen
-            ist <M>{"\\tr(\\bA\\bB\\bC) \\neq \\tr(\\bA\\bC\\bB)"}</M> — die Umordnung{" "}
-            <M>{"\\bA\\bC\\bB"}</M> lässt sich nicht durch Weiterdrehen aus{" "}
-            <M>{"\\bA\\bB\\bC"}</M> erzeugen.
+            ist <M>{"\\tr(\\bA\\bB\\bC) \\neq \\tr(\\bA\\bC\\bB)"}</M>, weil sich die Umordnung{" "}
+            <M>{"\\bA\\bC\\bB"}</M> nicht durch Weiterdrehen aus{" "}
+            <M>{"\\bA\\bB\\bC"}</M> erzeugen lässt.
           </li>
         </ul>
       </EnvBlock>
@@ -204,7 +204,7 @@ export function S31() {
           <M>{"\\bX \\in \\R^{n \\times p}"}</M> (voller Spaltenrang) erzeugt die „Hutmatrix"{" "}
           <M>{"\\bH = \\bX(\\bX^\\top\\bX)^{-1}\\bX^\\top \\in \\R^{n \\times n}"}</M> die
           gefitteten Werte <M>{"\\wh{\\by} = \\bH\\by"}</M>. Ihre Spur zählt die effektiven
-          Parameter des Modells — und die zyklische Vertauschung berechnet sie, ohne dass wir
+          Parameter des Modells. Die zyklische Vertauschung berechnet sie, ohne dass wir
           einen einzigen Eintrag der <M>{"n \\times n"}</M>-Matrix <M>{"\\bH"}</M> kennen müssen:
         </p>
         <MD>{"\\tr(\\bH) = \\tr\\left(\\cred{\\bX}\\,\\cblue{(\\bX^\\top\\bX)^{-1}\\bX^\\top}\\right) = \\tr\\left(\\cblue{(\\bX^\\top\\bX)^{-1}\\bX^\\top}\\,\\cred{\\bX}\\right) = \\tr(\\bI_p) = p."}</MD>
@@ -221,7 +221,7 @@ export function S31() {
       <p>
         Warum ist ausgerechnet die Diagonalsumme so invariant? Das folgende Resultat liefert die
         tiefere Erklärung: Die Spur ist in Wahrheit eine Kennzahl der{" "}
-        <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink> — und die hängen nur
+        <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink> – und die hängen nur
         von der linearen Abbildung ab, nicht von der Basis, in der wir sie aufschreiben.
       </p>
       <EnvBlock kind="Satz" label="3.1.7 (Spur als Summe der Eigenwerte)">
@@ -253,7 +253,7 @@ export function S31() {
         <PStep
           why={
             <>
-              Ähnlichkeitsinvarianz der Spur (Satz 3.1.4, Eigenschaft 4) —{" "}
+              Ähnlichkeitsinvarianz der Spur (Satz 3.1.4, Eigenschaft 4):{" "}
               <ConceptLink id="similar-matrices">ähnliche Matrizen</ConceptLink> haben dieselbe
               Spur
             </>
@@ -279,15 +279,15 @@ export function S31() {
         <ConceptLink id="determinant">Determinante</ConceptLink>) und ist hier nicht unser Thema.
         Zwei Feinheiten sind trotzdem erwähnenswert: Die Eigenwerte zählen wir mit ihrer
         algebraischen Vielfachheit, und sie dürfen{" "}
-        <ConceptLink id="complex-numbers">komplex</ConceptLink> sein — eine reelle Matrix kann
-        komplexe Eigenwerte haben. Die treten dann aber immer als konjugierte Paare{" "}
+        <ConceptLink id="complex-numbers">komplex</ConceptLink> sein (eine reelle Matrix kann
+        komplexe Eigenwerte haben). Die treten dann aber immer als konjugierte Paare{" "}
         <M>{"a \\pm b\\,i"}</M> auf, deren Imaginärteile sich in der Summe wegheben: Die Spur
         bleibt reell, wie es sich für eine Summe reeller Diagonalelemente gehört. Praktisch
         bedeutet der Satz: Die Spur verrät uns die Summe aller Eigenwerte zum Preis von{" "}
-        <M>{"n - 1"}</M> Additionen — die Eigenwerte selbst zu berechnen wäre um Größenordnungen
+        <M>{"n - 1"}</M> Additionen. Die Eigenwerte selbst zu berechnen wäre um Größenordnungen
         teurer.
       </p>
-      <ExpandedReading title="Spur = Eigenwertsumme — live ausprobieren">
+      <ExpandedReading title="Spur = Eigenwertsumme: live ausprobieren">
         <S31SpurWidget />
       </ExpandedReading>
 
@@ -295,7 +295,7 @@ export function S31() {
         3.1.4 Die Frobenius-Norm
       </h3>
       <p>
-        Die Spur verdichtet eine Matrix zu einer Zahl — aber als Maß für die „Größe" einer Matrix
+        Die Spur verdichtet eine Matrix zu einer Zahl, aber als Maß für die „Größe" einer Matrix
         taugt sie nicht: Sie ignoriert alle Einträge abseits der Diagonale, kann negativ werden
         und ist für rechteckige Matrizen gar nicht definiert. Für ein echtes Größenmaß liegt eine
         andere Idee nahe: Wir behandeln die <M>{"m \\cdot n"}</M> Einträge der Matrix wie einen
@@ -312,14 +312,14 @@ export function S31() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             Die Frobenius-Norm ist das exakte Analogon zur euklidischen Vektornorm: Quadrieren,
-            aufsummieren, Wurzel ziehen — nur eben über alle <M>{"m \\cdot n"}</M> Einträge. Sie
+            aufsummieren, Wurzel ziehen, nur eben über alle <M>{"m \\cdot n"}</M> Einträge. Sie
             ist insbesondere auch für rechteckige Matrizen definiert.
           </li>
           <li>
             In der Literatur heißt sie auch <em>Hilbert-Schmidt-Norm</em>.
           </li>
           <li>
-            Sie misst so etwas wie die „Größe" der Matrix — ob sie das <em>richtige</em> Maß für
+            Sie misst so etwas wie die „Größe" der Matrix. Ob sie das <em>richtige</em> Maß für
             unsere Zwecke ist, klären wir im{" "}
             <a className="underline" href="#sec-3.2">nächsten Abschnitt</a>.
           </li>
@@ -328,7 +328,7 @@ export function S31() {
       <p>
         Das folgende Resultat verknüpft die beiden Begriffe dieses Abschnitts: Die Frobenius-Norm
         lässt sich vollständig durch die Spur ausdrücken. Damit stehen ihr alle Rechenregeln aus
-        Satz 3.1.4 zur Verfügung — insbesondere die zyklische Vertauschung.
+        Satz 3.1.4 zur Verfügung, insbesondere die zyklische Vertauschung.
       </p>
       <EnvBlock kind="Satz" label="3.1.10 (Frobenius-Norm über die Spur)">
         <p>
@@ -341,8 +341,8 @@ export function S31() {
           why={
             <>
               Eintrag <M>{"(j, k)"}</M> von <M>{"\\bA^\\top\\bA"}</M> ist das Skalarprodukt aus{" "}
-              <M>{"j"}</M>-ter Zeile von <M>{"\\bA^\\top"}</M> — also <M>{"j"}</M>-ter{" "}
-              <em>Spalte</em> von <M>{"\\bA"}</M> — und <M>{"k"}</M>-ter Spalte von{" "}
+              <M>{"j"}</M>-ter Zeile von <M>{"\\bA^\\top"}</M> (also <M>{"j"}</M>-ter{" "}
+              <em>Spalte</em> von <M>{"\\bA"}</M>) und <M>{"k"}</M>-ter Spalte von{" "}
               <M>{"\\bA"}</M>; auf der Diagonale (<M>{"j = k"}</M>, grün) steht also jede Spalte
               im Skalarprodukt mit sich selbst
             </>
@@ -370,8 +370,8 @@ export function S31() {
       <p>
         Diese Spur-Darstellung ist mehr als eine Kuriosität: Sie macht die Frobenius-Norm in
         Rechnungen handhabbar, in denen die Doppelsumme unhandlich wäre. Ob die Frobenius-Norm
-        allerdings das misst, was wir bei der Fehleranalyse wirklich brauchen — nämlich wie stark
-        eine Matrix Vektoren verzerren kann —, ist eine andere Frage. Ihr gehen wir im{" "}
+        allerdings das misst, was wir bei der Fehleranalyse wirklich brauchen (nämlich wie stark
+        eine Matrix Vektoren verzerren kann), ist eine andere Frage. Ihr gehen wir im{" "}
         <a className="underline" href="#sec-3.2">nächsten Abschnitt</a> nach, wo wir den Begriff
         der Matrixnorm systematisch entwickeln.
       </p>

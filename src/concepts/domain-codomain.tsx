@@ -91,7 +91,7 @@ registerConcept({
         <ConceptLink id="vector">Vektoren</ConceptLink> mit <M>{"D"}</M>{" "}
         reellen Einträgen) und der Zielbereich ist <M>{"\\R"}</M>. Das{" "}
         <em>Bild</em> (image) ist die Menge der Werte <M>{"f(\\bx)"}</M>, die
-        tatsächlich vorkommen — es kann kleiner sein als der Zielbereich. Zum
+        tatsächlich vorkommen; es kann kleiner sein als der Zielbereich. Zum
         Beispiel hat <M>{"f(x) = x^2"}</M> den Zielbereich <M>{"\\R"}</M>,
         aber sein Bild ist nur <M>{"[0, \\infty)"}</M>, denn ein Quadrat ist
         nie negativ.

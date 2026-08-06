@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Supremum (und Infimum) — kleinste obere Schranke, wird evtl. nie angenommen. */
+/** Konzept-Tooltip: Supremum (und Infimum): kleinste obere Schranke, wird evtl. nie angenommen. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -12,7 +12,7 @@ function SupWidget() {
       <div className="mb-1 text-xs">
         <M>{"f(x) = \\tfrac{x}{1+x}"}</M> an der Stelle{" "}
         <M>{`x = ${x.toFixed(1)}`}</M> liefert{" "}
-        <M>{`f(x) = ${fx.toFixed(3)}`}</M> &mdash; schieben wir <M>{"x"}</M>{" "}
+        <M>{`f(x) = ${fx.toFixed(3)}`}</M>. Schieben wir <M>{"x"}</M>{" "}
         beliebig weit nach rechts: Der Wert kriecht auf die gestrichelte Linie{" "}
         <M>{"y = 1"}</M> zu, berührt sie aber nie. Also ist{" "}
         <M>{"\\sup_x f(x) = 1"}</M>, während <M>{"\\max_x f(x)"}</M> nicht
@@ -43,7 +43,7 @@ registerConcept({
         Schranke</em> (least upper bound): die kleinste Zahl, die immer noch{" "}
         <M>{"\\geq"}</M> jedem Element der Menge ist. Hat die Menge ein
         größtes Element, dann <em>ist</em> das Supremum einfach dieses
-        Maximum &mdash; der Witz des neuen Begriffs ist, dass ein Supremum
+        Maximum. Der Witz des neuen Begriffs ist, dass ein Supremum
         auch dann existieren kann, wenn ein Maximum fehlt. Die{" "}
         <ConceptLink id="sequence">Folge</ConceptLink> der Werte{" "}
         <M>{"1 - \\tfrac{1}{n}"}</M>, also{" "}
@@ -54,8 +54,8 @@ registerConcept({
       <MD>{"\\sup_{n \\in \\N} \\left( 1 - \\tfrac{1}{n} \\right) = 1, \\qquad \\text{aber } \\max_n \\left( 1 - \\tfrac{1}{n} \\right) \\text{ existiert nicht.}"}</MD>
       <p>
         Für eine <ConceptLink id="function">Funktion</ConceptLink> meint{" "}
-        <M>{"\\sup_x f(x)"}</M> das Supremum aller Werte <M>{"f(x)"}</M>{" "}
-        &mdash; die Höhe, der sich der Graph nähert, selbst wenn kein
+        <M>{"\\sup_x f(x)"}</M> das Supremum aller Werte <M>{"f(x)"}</M>,{" "}
+        die Höhe, der sich der Graph nähert, selbst wenn kein
         einzelnes <M>{"x"}</M> sie je annimmt (dafür brauchen wir keinen{" "}
         <ConceptLink id="limit">Grenzwert</ConceptLink>-Apparat, nur
         Schranken). Das Spiegelbild ist das <em>Infimum</em>, die größte
@@ -65,7 +65,7 @@ registerConcept({
         Konjugierten (vgl. MML §7.3.3) ein Supremum verwendet: Für eine
         geknickte Funktion wie <M>{"f(x) = |x|"}</M> gibt es keine
         Ableitungsbedingung, um eine Maximalstelle zu finden, und für manche
-        Steigungen existiert gar keine Maximalstelle &mdash; das Supremum ist
+        Steigungen existiert gar keine Maximalstelle; das Supremum ist
         trotzdem in jedem Fall eine wohldefinierte Zahl (oder{" "}
         <M>{"+\\infty"}</M>).
       </p>

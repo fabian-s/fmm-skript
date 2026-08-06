@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Taylor-Reihe — lokale Polynom-Näherung um einen Punkt. */
+/** Konzept-Tooltip: Taylor-Reihe: lokale Polynom-Näherung um einen Punkt. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -23,7 +23,7 @@ function TaylorWidget() {
         <span className="text-sky-400">sin(x)</span> und sein{" "}
         <span className="text-red-400">Taylor-Polynom vom Grad n</span> um{" "}
         <M>{"a = 0"}</M>. Nahe 0 passt es hervorragend; weiter draußen
-        schießt das Polynom irgendwann aus dem Bild &mdash; ein größeres{" "}
+        schießt das Polynom irgendwann aus dem Bild; ein größeres{" "}
         <M>{"n"}</M> verbreitert den Bereich guter Übereinstimmung.
       </p>
       <Slider label="Grad n" value={n} onChange={setN} min={1} max={13} step={2} />
@@ -77,7 +77,7 @@ registerConcept({
         <M>{"x = 0.5"}</M> liefert es <M>{"0.47917"}</M> gegenüber dem wahren
         Wert <M>{"\\sin(0.5) = 0.47943"}</M>. Weil alle Information aus einem
         einzigen Punkt stammt, können wir die abgeschnittene Taylor-Reihe als
-        Extremfall der Interpolation auffassen &mdash; als ihren
+        Extremfall der Interpolation auffassen: als ihren
         Ein-Punkt-Grenzfall (vgl. Heath §7.3.5).
       </p>
       <TaylorWidget />

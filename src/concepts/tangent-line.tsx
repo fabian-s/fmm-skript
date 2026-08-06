@@ -1,4 +1,4 @@
-/** Konzept-Tooltip: Tangente — lokale lineare Näherung, mit Zoom. */
+/** Konzept-Tooltip: Tangente: lokale lineare Näherung, mit Zoom. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
@@ -49,7 +49,7 @@ registerConcept({
       <p>
         Die Tangente an eine Kurve in einem Punkt ist die Gerade, die die
         Kurve dort berührt und exakt dieselbe Steigung hat wie die Kurve an
-        dieser Stelle &mdash; nämlich die{" "}
+        dieser Stelle, nämlich die{" "}
         <ConceptLink id="derivative">Ableitung</ConceptLink>{" "}
         <M>{"f'(a)"}</M>. Ihre Gleichung lautet
       </p>
@@ -58,7 +58,7 @@ registerConcept({
         Für <M>{"f(x) = x^2"}</M> an der Stelle <M>{"a = 1"}</M> ist das{" "}
         <M>{"y = 1 + 2(x-1) = 2x - 1"}</M>. Was die Tangente so nützlich
         macht: Nahe <M>{"x = a"}</M> ist sie ein hervorragender Ersatz für
-        die Kurve selbst &mdash; sie ist die <em>lokale lineare
+        die Kurve selbst: sie ist die <em>lokale lineare
         Näherung</em> (local linear approximation). Das ist der handfeste
         geometrische Grund, warum Methoden für lineare Probleme so weit
         tragen: Nahe genug an jedem interessanten Punkt verhält sich eine

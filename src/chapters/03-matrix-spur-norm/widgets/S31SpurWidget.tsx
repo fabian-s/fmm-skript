@@ -4,7 +4,7 @@ import { M } from "../../../lib";
 /**
  * Spur-Rechen-Widget: eine editierbare 2×2-Matrix, deren Spur (grüne
  * Diagonale) und Eigenwerte (blau) live berechnet werden. Zeigt Satz
- * „Spur = Summe der Eigenwerte" — auch im Fall komplexer Eigenwerte.
+ * „Spur = Summe der Eigenwerte" – auch im Fall komplexer Eigenwerte.
  * Eigenwerte in geschlossener Form über die Mitternachtsformel.
  */
 
@@ -51,7 +51,7 @@ export function S31SpurWidget() {
         <span style={{ color: GREEN }} className="font-semibold">grünen</span> Diagonaleinträge
         bestimmen die Spur direkt; die{" "}
         <span style={{ color: BLUE }} className="font-semibold">blauen</span> Eigenwerte dagegen
-        hängen von <em>allen</em> Einträgen ab und wandern beim Editieren wild umher — ihre Summe
+        hängen von <em>allen</em> Einträgen ab und wandern beim Editieren wild umher; ihre Summe
         bleibt trotzdem in jedem Fall exakt die Spur (Satz 3.1.7). Die Voreinstellung „Drehung um
         90°" zeigt den Fall komplexer Eigenwerte: Sie treten als konjugiertes Paar{" "}
         <M>{"a \\pm b\\,i"}</M> auf, die Imaginärteile heben sich in der Summe weg.
@@ -123,8 +123,8 @@ export function S31SpurWidget() {
         Die Eigenwerte einer 2&times;2-Matrix berechnet das Widget in geschlossener Form: Sie sind
         die Nullstellen des charakteristischen Polynoms
         &lambda;&sup2; &minus; tr(A)&thinsp;&lambda; + det(A), also
-        &lambda; = (tr(A) &plusmn; &radic;(tr(A)&sup2; &minus; 4&thinsp;det(A)))&thinsp;/&thinsp;2 —
-        schon an dieser Formel sieht man &lambda;<sub>1</sub> + &lambda;<sub>2</sub> = tr(A),
+        &lambda; = (tr(A) &plusmn; &radic;(tr(A)&sup2; &minus; 4&thinsp;det(A)))&thinsp;/&thinsp;2.
+        Schon an dieser Formel sieht man &lambda;<sub>1</sub> + &lambda;<sub>2</sub> = tr(A),
         weil sich die Wurzelterme wegheben.
       </p>
     </div>

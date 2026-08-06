@@ -43,7 +43,7 @@ function LsFitWidget() {
       <p className="mt-1 text-xs">
         Residuen <M>{`(${res.map((r) => r.toFixed(2)).join(",\\; ")})`}</M>, Quadratsumme{" "}
         <M>{`${ssr.toFixed(3)}`}</M>. Das Minimum <M>{"1/6 \\approx 0.167"}</M> erreicht nur
-        die gestrichelte Gerade <M>{"y = \\tfrac{2}{3} + \\tfrac{1}{2}\\,t"}</M> — versuchen
+        die gestrichelte Gerade <M>{"y = \\tfrac{2}{3} + \\tfrac{1}{2}\\,t"}</M>. Versuchen
         wir, sie zu schlagen.
       </p>
     </div>
@@ -60,7 +60,7 @@ registerConcept({
         Unbekannten: <M>{"\\bA\\bx \\cong \\bb"}</M> mit einer{" "}
         <M>{"m \\times n"}</M>-<ConceptLink id="matrix">Matrix</ConceptLink>,{" "}
         <M>{"m > n"}</M>. Typischerweise erfüllt kein <M>{"\\bx"}</M> alle{" "}
-        <M>{"m"}</M> Gleichungen exakt — wir begnügen uns also mit dem besten
+        <M>{"m"}</M> Gleichungen exakt, also begnügen wir uns mit dem besten
         Kompromiss: Wir wählen <M>{"\\bx"}</M> so, dass das <em>Residuum</em>{" "}
         <M>{"\\br = \\bb - \\bA\\bx"}</M> in der{" "}
         <ConceptLink id="euclidean-norm">euklidischen Norm</ConceptLink> so
@@ -68,7 +68,7 @@ registerConcept({
       </p>
       <MD>{"\\min_{\\bx} \\; \\left\\| \\bb - \\bA\\bx \\right\\|_2^2 ."}</MD>
       <p>
-        Das ist die Methode der <em>kleinsten Quadrate</em> (least squares) —
+        Das ist die Methode der <em>kleinsten Quadrate</em> (least squares),
         und sie ist <em>linear</em>, weil die unbekannten Parameter linear
         eingehen, als{" "}
         <ConceptLink id="linear-combination">Linearkombination</ConceptLink>{" "}
@@ -85,7 +85,7 @@ registerConcept({
         <ConceptLink id="convexity">Konvexität</ConceptLink>), lässt sich der
         Minimierer direkt berechnen: über die{" "}
         <ConceptLink id="normal-equations">Normalengleichungen</ConceptLink>{" "}
-        oder — genauer — über eine{" "}
+        oder, genauer, über eine{" "}
         <ConceptLink id="qr-factorization">QR-Zerlegung</ConceptLink> von{" "}
         <M>{"\\bA"}</M>.
       </p>

@@ -46,7 +46,7 @@ function LuWidget() {
           </>
         ) : (
           <span className="text-xs text-red-400">
-            Null-Pivot oben links — erst die Zeilen tauschen (partielle
+            Null-Pivot oben links: erst die Zeilen tauschen (partielle
             Pivotisierung)
           </span>
         )}
@@ -54,7 +54,7 @@ function LuWidget() {
       <p className="mt-1 text-xs opacity-80">
         Links: unsere Matrix A. Rechts: ihre Faktoren L (untere Dreiecksmatrix
         mit Einsen auf der Diagonale, enthält den Multiplikator{" "}
-        {pivotOk ? l21.toFixed(2) : "—"}) und U (obere Dreiecksmatrix).
+        {pivotOk ? l21.toFixed(2) : "–"}) und U (obere Dreiecksmatrix).
         Multiplizieren wir sie zurück, erhalten wir LU = A.
       </p>
     </div>
@@ -84,7 +84,7 @@ registerConcept({
       </MD>
       <p>
         Was bringt das? Ist die Matrix einmal zerlegt, wird{" "}
-        <M>{"\\bA\\bx = \\bb"}</M> zu <M>{"\\bL(\\bU\\bx) = \\bb"}</M> — zwei
+        <M>{"\\bA\\bx = \\bb"}</M> zu <M>{"\\bL(\\bU\\bx) = \\bb"}</M>, also zwei
         billige{" "}
         <ConceptLink id="triangular-solve">Substitutions-Durchläufe</ConceptLink>{" "}
         (erst <M>{"\\bL\\by = \\bb"}</M> vorwärts lösen, dann{" "}
@@ -103,7 +103,7 @@ registerConcept({
         <ConceptLink id="cholesky-factorization">Cholesky-Zerlegung</ConceptLink>{" "}
         <M>{"\\bA = \\bL\\bL^T"}</M>. Und das erweiterte Gleichungssystem der
         Kleinste-Quadrate-Rechnung (vgl. Heath §3.4.2) ist symmetrisch, aber{" "}
-        <em>indefinit</em> — dafür braucht es eine symmetrisch-indefinite
+        <em>indefinit</em>. Dafür braucht es eine symmetrisch-indefinite
         Variante oder die gewöhnliche LU-Zerlegung, die ihre Pivots frei
         wählen darf; genau diese Freiheit nutzt jene Methode aus.
       </p>

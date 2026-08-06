@@ -1,5 +1,5 @@
 /**
- * Konzept-Tooltip: Spektralradius — größter Eigenwert-Betrag; entscheidet,
+ * Konzept-Tooltip: Spektralradius: größter Eigenwert-Betrag; entscheidet,
  * ob Matrixpotenzen (und stationäre Iterationen) schrumpfen oder explodieren.
  * Kanonische id, geteilt mit den internen Apps.
  */
@@ -79,7 +79,7 @@ function PowerSpiralWidget() {
         Iterierte <M>{"\\bx_{k+1} = \\bG\\bx_k"}</M> für eine
         Dreh-und-Streck-Matrix mit <M>{"\\rho(\\bG) = " + s.toFixed(2)}</M>{" "}
         (roter Punkt = Start). Nach 16 Schritten ist{" "}
-        <M>{"\\|\\bx_{16}\\| = " + nLast.toFixed(3)}</M> &mdash;{" "}
+        <M>{"\\|\\bx_{16}\\| = " + nLast.toFixed(3)}</M>,{" "}
         {s < 1
           ? "die Spirale zieht sich zusammen: ρ < 1."
           : s > 1

@@ -84,13 +84,13 @@ registerConcept({
         <M>{"\\|\\bx\\|_2 = \\sqrt{9 + 16} = 5"}</M>. Der letzte Ausdruck zeigt
         die besondere Verbindung zum{" "}
         <ConceptLink id="dot-product">Skalarprodukt</ConceptLink>: Das Quadrat
-        der 2-Norm ist einfach <M>{"\\bx^T\\bx"}</M> — deshalb ist das
+        der 2-Norm ist einfach <M>{"\\bx^T\\bx"}</M>. Deshalb ist das
         Minimieren einer Summe quadrierter Residuen genau das Minimieren einer
         2-Norm. Es gibt auch andere Normen, die manchmal natürlicher sind: Die
         1-Norm <M>{"\\|\\bx\\|_1 = \\sum_i |x_i|"}</M> addiert Absolutbeträge,
         und die ∞-Norm <M>{"\\|\\bx\\|_\\infty = \\max_i |x_i|"}</M> nimmt nur
         die betragsgrößte Komponente. Welche Norm wir wählen, ändert, was
-        „beste Anpassung" bedeutet — die Kleinste-Quadrate-Methode ist per
+        „beste Anpassung" bedeutet; die Kleinste-Quadrate-Methode ist per
         Definition die Wahl der 2-Norm.
       </p>
       <NormBallsWidget />

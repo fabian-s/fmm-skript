@@ -3,7 +3,7 @@ import { S73KreuzproduktWidget } from "./widgets/S73KreuzproduktWidget";
 import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
 
 /**
- * Abschnitt 7.3 — Normalengleichungen und Cholesky-Zerlegung.
+ * Abschnitt 7.3: Normalengleichungen und Cholesky-Zerlegung.
  * Quelle: Folien 07-kq.Rmd, Block „Lösungsverfahren" (Frage-Folien,
  * Cholesky-Zerlegung, Alternative Lösungswege). Prosa eigenständig aus den
  * Folien formuliert; Widget-Code aus der internen heath-ch3-App recycelt.
@@ -19,7 +19,7 @@ export function S73() {
         <ConceptLink id="linear-least-squares">Kleinste-Quadrate-Problem</ConceptLink> für{" "}
         <M>{"\\bA \\in \\R^{m \\times n}"}</M> mit <M>{"\\rang(\\bA) = n"}</M> die eindeutige
         Lösung <M>{"\\wh{\\bx} = (\\bA^\\top\\bA)^{-1}\\bA^\\top\\bb"}</M> besitzt. Das ist eine
-        Formel — aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste und
+        Formel – aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste und
         einfachste Lösungsverfahren: Wir leiten die Normalengleichungen her, lösen sie mit der{" "}
         <ConceptLink id="cholesky-factorization">Cholesky-Zerlegung</ConceptLink> und sehen dann,
         warum dieser bequeme Weg numerisch seinen Preis hat. Das motiviert am Ende des Abschnitts
@@ -107,7 +107,7 @@ export function S73() {
           <M>{"\\bA"}</M>. Das ist genau die{" "}
           <ConceptLink id="projection">Projektions</ConceptLink>-Sicht aus{" "}
           <a className="underline" href="#sec-7.1">Abschnitt 7.1</a>: <M>{"\\bA\\wh{\\bx}"}</M>{" "}
-          ist der Punkt in <M>{"\\col(\\bA)"}</M>, der <M>{"\\bb"}</M> am nächsten liegt — daher
+          ist der Punkt in <M>{"\\col(\\bA)"}</M>, der <M>{"\\bb"}</M> am nächsten liegt; daher
           der Name <em>Normal</em>gleichungen.
         </p>
       </EnvBlock>
@@ -118,7 +118,7 @@ export function S73() {
       <p>
         Wie berechnen wir <M>{"\\wh{\\bx}"}</M> nun konkret? Betrachten wir dazu eine kleine
         Programmieraufgabe von den Folien. Gegeben ist eine R-Funktion, die die Lösungsformel{" "}
-        <M>{"\\wh{\\bx} = (\\bA^\\top\\bA)^{-1}\\bA^\\top\\bb"}</M> wörtlich umsetzt — sie
+        <M>{"\\wh{\\bx} = (\\bA^\\top\\bA)^{-1}\\bA^\\top\\bb"}</M> wörtlich umsetzt: Sie
         bildet also erst die <ConceptLink id="matrix-inverse">Inverse</ConceptLink> von{" "}
         <M>{"\\bA^\\top\\bA"}</M> und multipliziert dann:
       </p>
@@ -137,7 +137,7 @@ export function S73() {
           Die Formel <M>{"\\wh{\\bx} = (\\bA^\\top\\bA)^{-1}\\bA^\\top\\bb"}</M> ist ein{" "}
           <em>mathematisches</em> Objekt, keine Rechenvorschrift. Numerisch lösen wir stattdessen
           das lineare Gleichungssystem{" "}
-          <M>{"(\\bA^\\top\\bA)\\,\\wh{\\bx} = \\bA^\\top\\bb"}</M> — mit einer geeigneten
+          <M>{"(\\bA^\\top\\bA)\\,\\wh{\\bx} = \\bA^\\top\\bb"}</M>, mit einer geeigneten
           Zerlegung der Matrix.
         </p>
       </EnvBlock>
@@ -147,7 +147,7 @@ export function S73() {
         <M>{"\\bI"}</M>), obwohl wir nur die Lösung zu <em>einer</em> rechten Seite brauchen.
         Zweitens ist es ungenauer: Jeder Eintrag der berechneten Inversen trägt eigene{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>, die sich bei der
-        anschließenden Multiplikation weiter verstärken — eine Zerlegung mit Substitution löst
+        anschließenden Multiplikation weiter verstärken; eine Zerlegung mit Substitution löst
         dasselbe System direkter und stabiler. Und drittens zerstört die Inverse Struktur:
         Die Inverse einer{" "}
         <ConceptLink id="sparse-matrix">dünnbesetzten</ConceptLink> Matrix ist typischerweise
@@ -191,8 +191,8 @@ export function S73() {
         </PStep>
       </Proof>
       <p>
-        Symmetrisch positiv definit — kurz <em>SPD</em> (engl. <em>symmetric positive
-        definite</em>) — das ist genau die Klasse von Matrizen, für die die{" "}
+        Symmetrisch positiv definit, kurz <em>SPD</em> (engl. <em>symmetric positive
+        definite</em>): das ist genau die Klasse von Matrizen, für die die{" "}
         <ConceptLink id="cholesky-factorization">Cholesky-Zerlegung</ConceptLink>{" "}
         <M>{"\\bM = \\bL\\bL^\\top"}</M> mit einer unteren{" "}
         <ConceptLink id="triangular-matrix">Dreiecksmatrix</ConceptLink> <M>{"\\bL"}</M>{" "}
@@ -220,7 +220,7 @@ export function S73() {
       <p>
         Schritt 1 ersetzt das <M>{"m \\times n"}</M>-Ausgangsproblem durch ein quadratisches{" "}
         <M>{"n \\times n"}</M>-Gleichungssystem. Die Schritte 2–4 lösen dieses System dann so,
-        wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren — denn
+        wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren, denn
         Dreieckssysteme können wir direkt auflösen. Rechnen wir das einmal vollständig durch.
       </p>
       <EnvBlock kind="Beispiel" label="7.3.6">
@@ -228,7 +228,7 @@ export function S73() {
           Wie im Wohnungspreis-Beispiel 7.1.8 aus{" "}
           <a className="underline" href="#sec-7.1">Abschnitt 7.1</a> fitten wir eine{" "}
           <ConceptLink id="linear-regression">Regressionsgerade</ConceptLink>{" "}
-          <M>{"y = \\beta_0 + \\beta_1 x"}</M> — diesmal mit bewusst kleinen Zahlen, durch die
+          <M>{"y = \\beta_0 + \\beta_1 x"}</M>, diesmal mit bewusst kleinen Zahlen, durch die
           drei Punkte <M>{"(1, 2),\\ (2, 3),\\ (3, 5)"}</M>:
         </p>
         <MD>{"\\bA = \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\\\ 1 & 3 \\end{pmatrix}, \\qquad \\bb = \\begin{pmatrix} 2 \\\\ 3 \\\\ 5 \\end{pmatrix}."}</MD>
@@ -239,12 +239,12 @@ export function S73() {
           <M>{"2, 3, 5"}</M> bilden den Vektor <M>{"\\bb"}</M>.
         </p>
         <p>
-          <strong>Schritt 1</strong> — <M>{"\\cbred{\\bM}"}</M> und <M>{"\\cbgreen{\\bc}"}</M>{" "}
-          aufstellen:
+          <strong>Schritt 1:</strong> <M>{"\\cbred{\\bM}"}</M> und <M>{"\\cbgreen{\\bc}"}</M>{" "}
+          aufstellen.
         </p>
         <MD>{"\\cbred{\\bM} = \\bA^\\top\\bA = \\begin{pmatrix} 1 & 1 & 1 \\\\ 1 & 2 & 3 \\end{pmatrix} \\begin{pmatrix} 1 & 1 \\\\ 1 & 2 \\\\ 1 & 3 \\end{pmatrix} = \\cbred{\\begin{pmatrix} 3 & 6 \\\\ 6 & 14 \\end{pmatrix}}, \\qquad \\cbgreen{\\bc} = \\bA^\\top\\bb = \\cbgreen{\\begin{pmatrix} 10 \\\\ 23 \\end{pmatrix}}."}</MD>
         <p>
-          <strong>Schritt 2</strong> — Cholesky-Zerlegung{" "}
+          <strong>Schritt 2:</strong> Cholesky-Zerlegung{" "}
           <M>{"\\cbred{\\bM} = \\cborange{\\bL}\\cborange{\\bL}^\\top"}</M>. Für{" "}
           <M>{"2 \\times 2"}</M> lauten die Formeln{" "}
           <M>{"\\corange{\\ell_{11}} = \\sqrt{\\cred{m_{11}}}"}</M>,{" "}
@@ -254,15 +254,15 @@ export function S73() {
         <MD>{"\\corange{\\ell_{11}} = \\sqrt{\\cred{3}}, \\qquad \\corange{\\ell_{21}} = \\frac{\\cred{6}}{\\sqrt{3}} = 2\\sqrt{3}, \\qquad \\corange{\\ell_{22}} = \\sqrt{\\cred{14} - \\left(2\\sqrt{3}\\right)^2} = \\sqrt{2},"}</MD>
         <MD>{"\\text{also} \\quad \\cborange{\\bL} = \\cborange{\\begin{pmatrix} \\sqrt{3} & 0 \\\\ 2\\sqrt{3} & \\sqrt{2} \\end{pmatrix}}."}</MD>
         <p>
-          <strong>Schritt 3</strong> — Vorwärtssubstitution{" "}
+          <strong>Schritt 3:</strong> Vorwärtssubstitution{" "}
           <M>{"\\cborange{\\bL}\\,\\cbpurp{\\by} = \\cbgreen{\\bc}"}</M>, Zeile für Zeile von
-          oben:
+          oben.
         </p>
         <MD>{"\\cpurp{y_1} = \\frac{\\cgreen{10}}{\\corange{\\sqrt{3}}} = \\frac{10}{\\sqrt{3}}, \\qquad \\cpurp{y_2} = \\frac{\\cgreen{23} - \\corange{2\\sqrt{3}} \\cdot \\cpurp{\\tfrac{10}{\\sqrt{3}}}}{\\corange{\\sqrt{2}}} = \\frac{23 - 20}{\\sqrt{2}} = \\frac{3}{\\sqrt{2}}."}</MD>
         <p>
-          <strong>Schritt 4</strong> — Rückwärtssubstitution{" "}
+          <strong>Schritt 4:</strong> Rückwärtssubstitution{" "}
           <M>{"\\cborange{\\bL}^\\top\\cblue{\\wh{\\bx}} = \\cbpurp{\\by}"}</M>, Zeile für Zeile
-          von unten:
+          von unten.
         </p>
         <MD>{"\\cblue{x_2} = \\frac{\\cpurp{3/\\sqrt{2}}}{\\corange{\\sqrt{2}}} = \\frac{3}{2}, \\qquad \\cblue{x_1} = \\frac{\\cpurp{\\tfrac{10}{\\sqrt{3}}} - \\corange{2\\sqrt{3}} \\cdot \\cblue{\\tfrac{3}{2}}}{\\corange{\\sqrt{3}}} = \\frac{10}{3} - 3 = \\frac{1}{3}."}</MD>
         <p>
@@ -275,7 +275,7 @@ export function S73() {
         <p>
           Auch die geometrische Deutung aus Bemerkung 7.3.2 können wir nachprüfen: Das Residuum{" "}
           <M>{"\\wh{\\br} = \\bb - \\bA\\cblue{\\wh{\\bx}} = \\left(\\tfrac{1}{6}, -\\tfrac{1}{3}, \\tfrac{1}{6}\\right)^\\top"}</M>{" "}
-          erfüllt <M>{"\\bA^\\top\\wh{\\br} = \\bnull"}</M> — es steht senkrecht auf beiden
+          erfüllt <M>{"\\bA^\\top\\wh{\\br} = \\bnull"}</M>: Es steht senkrecht auf beiden
           Spalten von <M>{"\\bA"}</M>.
         </p>
       </EnvBlock>
@@ -287,7 +287,7 @@ export function S73() {
         Das Cholesky-Verfahren ist effizient: Ab Schritt 2 rechnen wir nur noch mit der kleinen{" "}
         <M>{"n \\times n"}</M>-Matrix <M>{"\\bA^\\top\\bA"}</M> statt mit der{" "}
         <M>{"m \\times n"}</M>-Matrix <M>{"\\bA"}</M>, und die Cholesky-Zerlegung nutzt deren
-        Symmetrie aus — sie kostet nur etwa halb so viel wie eine LR-Zerlegung. Für gut
+        Symmetrie aus und kostet nur etwa halb so viel wie eine LR-Zerlegung. Für gut
         konditionierte Probleme ist das Verfahren in der Praxis brauchbar. Es hat aber einen
         eingebauten Schwachpunkt, und der liegt ausgerechnet im allerersten Schritt.
       </p>
@@ -295,7 +295,7 @@ export function S73() {
         <ul className="list-disc space-y-1 pl-5">
           <li>
             Fehler, die beim Aufstellen von <M>{"\\bA^\\top\\bA"}</M> passieren, beeinflussen
-            alle folgenden Schritte — kein späterer Schritt kann sie reparieren.
+            alle folgenden Schritte; kein späterer Schritt kann sie reparieren.
           </li>
           <li>
             Man kann zeigen: Der relative algorithmische Fehler ist bestenfalls{" "}
@@ -311,20 +311,20 @@ export function S73() {
       <p>
         Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit <M>{"\\bA^\\top\\bA"}</M>, und
         deren Konditionszahl ist{" "}
-        <M>{"\\kappa_2(\\bA^\\top\\bA) = \\kappa_2(\\bA)^2"}</M> — denn die Singulärwerte von{" "}
+        <M>{"\\kappa_2(\\bA^\\top\\bA) = \\kappa_2(\\bA)^2"}</M>, denn die Singulärwerte von{" "}
         <M>{"\\bA^\\top\\bA"}</M> sind die Quadrate der Singulärwerte von <M>{"\\bA"}</M>. Diese
         quadrierte Kondition erben alle weiteren Schritte, ganz gleich, wie empfindlich das
         eigentliche KQ-Problem ist. Besonders ärgerlich ist das im günstigsten Fall: Bei kleinem
         Residuum gilt <M>{"\\kappa \\approx \\kappa_2(\\bA)"}</M>, der Algorithmus verstärkt
-        Fehler aber trotzdem mit <M>{"\\kappa_2(\\bA)^2"}</M> — er ist also deutlich
+        Fehler aber trotzdem mit <M>{"\\kappa_2(\\bA)^2"}</M>. Er ist also deutlich
         fehleranfälliger, als die Kondition des Problems erzwingt. Genau solche Verfahren nennen
         wir <em>instabil</em>. Es gibt noch einen zweiten Effekt, den die Konditionszahl allein
         gar nicht erfasst: Schon beim Ausrechnen von <M>{"\\bA^\\top\\bA"}</M> in{" "}
         <ConceptLink id="floating-point">Gleitkommaarithmetik</ConceptLink> kann Information
-        über die Spalten von <M>{"\\bA"}</M> verloren gehen — im Extremfall macht ein einziger
+        über die Spalten von <M>{"\\bA"}</M> verloren gehen. Im Extremfall macht ein einziger
         Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
       </p>
-      <ExpandedReading title="Informationsverlust beim Bilden von AᵀA — live im Browser">
+      <ExpandedReading title="Informationsverlust beim Bilden von AᵀA, live im Browser">
         <S73KreuzproduktWidget />
       </ExpandedReading>
 
@@ -338,7 +338,7 @@ export function S73() {
       <MD>{"\\wh{\\bx} = \\argmin_{\\bx} \\left\\| \\bA\\bx - \\bb \\right\\|_2."}</MD>
       <p>
         Die Idee: Wir transformieren das Problem mit einer Matrix <M>{"\\bQ"}</M> zu einem
-        „einfacheren" Problem <M>{"\\bQ\\bA\\bx \\approx \\bQ\\bb"}</M> — ohne die Lösung zu
+        „einfacheren" Problem <M>{"\\bQ\\bA\\bx \\approx \\bQ\\bb"}</M>, ohne die Lösung zu
         ändern. Wann ändert sich die Lösung nicht? Wenn die Zielfunktion für <em>jedes</em>{" "}
         <M>{"\\bx"}</M> denselben Wert behält, das Transformieren also alle Normen unangetastet
         lässt. Genau das leisten{" "}
@@ -351,22 +351,22 @@ export function S73() {
         Die erste Gleichheit ist nur Ausklammern; die zweite ist die Norminvarianz:{" "}
         <M>{"\\left\\| \\bQ\\bv \\right\\|_2^2 = \\bv^\\top\\bQ^\\top\\bQ\\bv = \\bv^\\top\\bv = \\left\\| \\bv \\right\\|_2^2"}</M>{" "}
         für jeden Vektor <M>{"\\bv"}</M>. Jedes <M>{"\\bx"}</M> liefert im transformierten
-        Problem also exakt denselben Zielfunktionswert wie im ursprünglichen — insbesondere
+        Problem also exakt denselben Zielfunktionswert wie im ursprünglichen. Insbesondere
         stimmen die Minimierer überein.
       </p>
       <p>
         Vorsicht: Nicht jede Transformation, die ein System „einfacher" macht, ist hier erlaubt.
         Das <ConceptLink id="gaussian-elimination">Gauß-Verfahren</ConceptLink> etwa bringt{" "}
-        <M>{"\\bA"}</M> zwar auf Dreiecksform, aber seine Eliminationsschritte sind Scherungen —
-        sie verzerren Längen und würden den Minimierer verschieben. Für KQ-Probleme brauchen wir
+        <M>{"\\bA"}</M> zwar auf Dreiecksform, aber seine Eliminationsschritte sind Scherungen:
+        Sie verzerren Längen und würden den Minimierer verschieben. Für KQ-Probleme brauchen wir
         die norm-erhaltenden Transformationen:{" "}
         <ConceptLink id="rotation-matrix">Drehungen</ConceptLink> und{" "}
         <ConceptLink id="reflection">Spiegelungen</ConceptLink>. Wie wir mit ihnen{" "}
-        <M>{"\\bQ\\bA"}</M> gezielt auf Dreiecksform bringen — die{" "}
-        <em>QR-Zerlegung</em> —, ist das Thema der{" "}
+        <M>{"\\bQ\\bA"}</M> gezielt auf Dreiecksform bringen (die{" "}
+        <em>QR-Zerlegung</em>), ist das Thema der{" "}
         <a className="underline" href="#sec-7.4">nächsten Abschnitte</a>.
       </p>
-      <ExpandedReading title="Drehungen und Spiegelungen erhalten Längen — Scherungen nicht">
+      <ExpandedReading title="Drehungen und Spiegelungen erhalten Längen, Scherungen nicht">
         <S73NormerhaltungWidget />
       </ExpandedReading>
 

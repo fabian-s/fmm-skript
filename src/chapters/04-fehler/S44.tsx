@@ -1,7 +1,7 @@
 import { ConceptLink, EnvBlock, M, MD } from "../../lib";
 
 /**
- * Abschnitt 4.4 — Zusammenfassung.
+ * Abschnitt 4.4: Zusammenfassung.
  * Quelle: Folien 04-fehler.Rmd, Blöcke „Übersicht" und „Wrap-up".
  * Prosa eigenständig aus den Folien formuliert; bewusst schlank gehalten.
  */
@@ -14,7 +14,7 @@ export function S44() {
       <p>
         Fassen wir das Kapitel zusammen. Der rote Faden war die Frage, warum ein berechnetes
         Ergebnis <M>{"\\wt{f}(\\wt{\\bx})"}</M> vom idealen Ergebnis <M>{"f(\\bx)"}</M>{" "}
-        abweicht — und wie wir diese Abweichung messen, zerlegen und den beiden Schuldigen
+        abweicht, und wie wir diese Abweichung messen, zerlegen und den beiden Schuldigen
         zuordnen: dem <em>Problem</em> und dem <em>Algorithmus</em>.
       </p>
 
@@ -33,8 +33,8 @@ export function S44() {
               <td className="py-1 pr-6">absoluter / relativer Fehler</td>
               <td className="py-1 pr-6">
                 <M>{"\\bDelta_{\\bv} = \\wt{\\bv} - \\bv"}</M> bzw.{" "}
-                <M>{"\\delta_{\\bv} = \\left\\| \\wt{\\bv} - \\bv \\right\\| / \\left\\| \\bv \\right\\|"}</M>{" "}
-                — gemessen in einer <ConceptLink id="norm">Norm</ConceptLink> unserer Wahl
+                <M>{"\\delta_{\\bv} = \\left\\| \\wt{\\bv} - \\bv \\right\\| / \\left\\| \\bv \\right\\|"}</M>
+                , gemessen in einer <ConceptLink id="norm">Norm</ConceptLink> unserer Wahl
               </td>
               <td className="py-1">
                 <a className="underline" href="#sec-4.1">4.1</a>
@@ -54,7 +54,7 @@ export function S44() {
             <tr className="border-b border-slate-200 dark:border-slate-700">
               <td className="py-1 pr-6">Kondition</td>
               <td className="py-1 pr-6">
-                Sensitivität eines <em>Problems</em> bezüglich Inputfehlern — unabhängig vom
+                Sensitivität eines <em>Problems</em> bezüglich Inputfehlern, unabhängig vom
                 verwendeten Algorithmus
               </td>
               <td className="py-1">
@@ -79,7 +79,7 @@ export function S44() {
               </td>
               <td className="py-1 pr-6">
                 <M>{"\\kappa(\\bA) = \\left\\| \\bA \\right\\| \\left\\| \\bA^{-1} \\right\\|"}</M>{" "}
-                in einer <ConceptLink id="matrix-norm">Matrixnorm</ConceptLink> — obere Schranke
+                in einer <ConceptLink id="matrix-norm">Matrixnorm</ConceptLink>: obere Schranke
                 für die relative Kondition des Problems <M>{"\\bx \\mapsto \\bA^{-1}\\bx"}</M>{" "}
                 (eingeführt in{" "}
                 <a className="underline" href="?k=03-matrix-spur-norm#sec-3.5">Abschnitt 3.5</a>)
@@ -113,7 +113,7 @@ export function S44() {
         </table>
       </div>
 
-      <h3 className="mt-6 text-lg font-semibold">Kondition und Stabilität — die Arbeitsteilung</h3>
+      <h3 className="mt-6 text-lg font-semibold">Kondition und Stabilität: die Arbeitsteilung</h3>
       <p>
         Die beiden zentralen Begriffe des Kapitels beantworten verschiedene Fragen, und die
         Fehlerzerlegung aus <a className="underline" href="#sec-4.1">Abschnitt 4.1</a> hält sie
@@ -123,7 +123,7 @@ export function S44() {
       <p>
         Die <em>Kondition</em> beschreibt die <strong>Sensitivität des Problems</strong>: Sie
         kontrolliert den <span className="font-semibold" style={{ color: "#E69F00" }}>orangen</span>{" "}
-        Term, also wie stark <M>{"f"}</M> selbst — in exakter Arithmetik — Inputfehler
+        Term, also wie stark <M>{"f"}</M> selbst (in exakter Arithmetik) Inputfehler
         verstärkt. Daran kann kein noch so guter Algorithmus etwas ändern. Die{" "}
         <em>Stabilität</em> beschreibt die <strong>Robustheit des Algorithmus</strong>: Sie
         kontrolliert den <span className="font-semibold" style={{ color: "#D55E00" }}>roten</span>{" "}
@@ -132,7 +132,7 @@ export function S44() {
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> in{" "}
         <ConceptLink id="floating-point">Gleitkommaarithmetik</ConceptLink> obendrauf legt. Ein
         stabiler Algorithmus für ein schlecht konditioniertes Problem liefert also trotzdem
-        ungenaue Ergebnisse — aber nicht ungenauer, als das Problem es erzwingt.
+        ungenaue Ergebnisse, aber nicht ungenauer, als das Problem es erzwingt.
       </p>
       <EnvBlock kind="Bemerkung" label="4.4.1 (Merkregel)">
         <p className="font-semibold">
@@ -143,11 +143,11 @@ export function S44() {
           <a className="underline" href="#sec-4.3">Abschnitt 4.3</a> verstärkt die Kondition
           eines Teilschritts die angesammelten Fehler aller <em>vorangegangenen</em> Schritte.
           Ein schlecht konditionierter Schritt am Ende der Kette trifft auf einen Input, der
-          schon viele Fehler trägt — und bläst sie alle auf. Derselbe Schritt am Anfang sieht
+          schon viele Fehler trägt, und bläst sie alle auf. Derselbe Schritt am Anfang sieht
           nur den unvermeidbaren Inputfehler. Genau das haben wir am Varianz-Beispiel gesehen:
           Die Verschiebungsformel hebt sich die schlecht konditionierte Subtraktion (Stichwort{" "}
           <ConceptLink id="cancellation">Auslöschung</ConceptLink>) bis zum Schluss auf, die
-          Zwei-Pass-Formel zieht sie vor — und ist deshalb stabil.
+          Zwei-Pass-Formel zieht sie vor und ist deshalb stabil.
         </p>
       </EnvBlock>
 
@@ -157,7 +157,7 @@ export function S44() {
         Statistik an: die numerische Lösung{" "}
         <ConceptLink id="linear-system">linearer Gleichungssysteme</ConceptLink>{" "}
         <M>{"\\bA\\bx = \\bb"}</M>. Die Konditionszahl <M>{"\\kappa(\\bA)"}</M> sagt uns dann,
-        wie genau die Lösung überhaupt sein <em>kann</em> — und die Stabilitätsanalyse, welche
+        wie genau die Lösung überhaupt sein <em>kann</em> – und die Stabilitätsanalyse, welche
         Lösungsverfahren diese Genauigkeit auch wirklich erreichen.
       </p>
 

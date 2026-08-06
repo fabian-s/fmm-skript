@@ -1,5 +1,5 @@
 /**
- * Concept-Tooltip: Umgebung eines Punktes — alle Punkte innerhalb eines
+ * Concept-Tooltip: Umgebung eines Punktes: alle Punkte innerhalb eines
  * kleinen Abstands eps. Genutzt u. a. von der Definition lokaler Minima.
  */
 import { useState } from "react";
@@ -78,8 +78,8 @@ function NeighborhoodWidget() {
         Schattiert: die Umgebung <M>{"(x^* - \\varepsilon,\\; x^* + \\varepsilon)"}</M> der
         lokalen Minimalstelle <M>{"x^* = 1"}</M> von <M>{"f(x) = x^4/4 + x^3/3 - x^2"}</M>.{" "}
         {holds
-          ? "Hier gilt f(x) ≥ f(x*) überall in der Umgebung — die Bedingung für ein lokales Minimum ist erfüllt."
-          : "Zu groß: Die Umgebung erreicht jetzt Punkte mit f(x) < f(x*) (links vom Hügel), dieses ε funktioniert also nicht — ein kleineres aber schon."}
+          ? "Hier gilt f(x) ≥ f(x*) überall in der Umgebung. Die Bedingung für ein lokales Minimum ist erfüllt."
+          : "Zu groß: Die Umgebung erreicht jetzt Punkte mit f(x) < f(x*) (links vom Hügel), dieses ε funktioniert also nicht, ein kleineres aber schon."}
       </p>
     </div>
   );
@@ -93,7 +93,7 @@ registerConcept({
       <p>
         Eine <em>Umgebung</em> (engl. <em>neighborhood</em>) eines Punktes{" "}
         <M>{"\\bx^*"}</M> ist die Menge aller Punkte, die näher an ihm liegen als ein Radius{" "}
-        <M>{"\\varepsilon > 0"}</M> — eine offene Kugel, gemessen mit der{" "}
+        <M>{"\\varepsilon > 0"}</M>, also eine offene Kugel, gemessen mit der{" "}
         <ConceptLink id="euclidean-norm">euklidischen Norm</ConceptLink>:
       </p>
       <MD>{"\\{\\, \\bx \\in \\R^n : \\|\\bx - \\bx^*\\| < \\varepsilon \\,\\}."}</MD>
@@ -102,13 +102,13 @@ registerConcept({
         <M>{"(x^* - \\varepsilon,\\, x^* + \\varepsilon)"}</M>; in{" "}
         <ConceptLink id="real-coordinate-space">zwei Dimensionen</ConceptLink> eine Kreisscheibe
         ohne ihren Rand. Dass eine Eigenschaft <em>in einer Umgebung</em> von{" "}
-        <M>{"\\bx^*"}</M> gilt, heißt: Sie gilt für alle hinreichend nahen Punkte — wir dürfen
+        <M>{"\\bx^*"}</M> gilt, heißt: Sie gilt für alle hinreichend nahen Punkte. Wir dürfen
         den Radius selbst wählen, und er darf winzig sein.
       </p>
       <p>
         Diese Formulierung leistet die eigentliche Arbeit in der Definition eines lokalen
         Minimums: <M>{"f(\\bx^*) \\le f(\\bx)"}</M> wird nur für zulässige <M>{"\\bx"}</M> nahe{" "}
-        <M>{"\\bx^*"}</M> verlangt, nicht überall — weiter weg darf <M>{"f"}</M> durchaus tiefer
+        <M>{"\\bx^*"}</M> verlangt, nicht überall – weiter weg darf <M>{"f"}</M> durchaus tiefer
         absinken.
       </p>
       <NeighborhoodWidget />

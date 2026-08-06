@@ -45,7 +45,7 @@ registerConcept({
       <p>
         Die tiefere Bedeutung: Matrizen stellen{" "}
         <ConceptLink id="linear-map">lineare Abbildungen</ConceptLink> dar, und
-        das Produkt steht für das Hintereinanderausführen —{" "}
+        das Produkt steht für das Hintereinanderausführen:{" "}
         <M>{"\\bA\\bB"}</M> heißt „erst <M>{"\\bB"}</M> anwenden, dann{" "}
         <M>{"\\bA"}</M>“. Weil die Reihenfolge von Transformationen eine Rolle
         spielt, ist die Matrixmultiplikation <em>nicht</em> kommutativ: Im

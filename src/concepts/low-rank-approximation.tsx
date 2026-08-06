@@ -59,7 +59,7 @@ function TruncateWidget() {
       </div>
       <p className="mt-1 text-xs opacity-80">
         Blaue Singulärwerte behalten wir, graue setzen wir auf Null. Der Approximationsfehler
-        ist immer der größte verworfene Singulärwert — fällt das Spektrum schnell ab, kostet
+        ist immer der größte verworfene Singulärwert. Fällt das Spektrum schnell ab, kostet
         das Abschneiden fast nichts.
       </p>
     </div>
@@ -87,7 +87,7 @@ registerConcept({
         Frobenius-<ConceptLink id="matrix-norm">Norm</ConceptLink>, mit Fehler{" "}
         <M>{"\\|\\bA - \\bA_k\\|_2 = \\sigma_{k+1}"}</M> (Eckart-Young-Theorem, Kapitel 6).
         Fällt das Spektrum schnell ab, komprimiert das enorm: Statt <M>{"m \\cdot n"}</M>{" "}
-        Einträgen speichern wir nur <M>{"k(m + n + 1)"}</M> Zahlen — so funktioniert
+        Einträgen speichern wir nur <M>{"k(m + n + 1)"}</M> Zahlen; so funktioniert
         SVD-Bildkompression.
       </p>
       <p>

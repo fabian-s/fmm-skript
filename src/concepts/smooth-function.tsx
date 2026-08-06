@@ -13,7 +13,7 @@ registerConcept({
         <M>{"f', f'', f''', \\dots"}</M> existieren alle, und jede dieser
         Ableitungen ist{" "}
         <ConceptLink id="continuity">stetig</ConceptLink>. Anschaulich: Der
-        Graph hat weder Knicke noch Sprünge &mdash; und die Graphen aller
+        Graph hat weder Knicke noch Sprünge, und die Graphen aller
         Ableitungen auch nicht.
       </p>
       <p>
@@ -24,7 +24,7 @@ registerConcept({
         „liegt in <M>{"C^k"}</M> für jedes <M>{"k"}</M>&ldquo;. Polynome,{" "}
         <M>{"e^x"}</M>, <M>{"\\sin"}</M> und <M>{"\\cos"}</M> sind alle glatt.
         Ein Gegenbeispiel ist <M>{"f(x) = |x|"}</M>: Wegen des Knicks bei{" "}
-        <M>{"x = 0"}</M> existiert <M>{"f'(0)"}</M> gar nicht &mdash; es
+        <M>{"x = 0"}</M> existiert <M>{"f'(0)"}</M> gar nicht; es
         scheitert also schon an der ersten Ableitung.
       </p>
       <p>
@@ -44,8 +44,8 @@ registerConcept({
           height={170}
         />
         <div className="mt-1 text-xs">
-          Blau: <M>{"x^2/2"}</M> (glatt). Rot gestrichelt: <M>{"|x|"}</M>{" "}
-          &mdash; der Knick bei 0 lässt schon die erste Ableitung scheitern.
+          Blau: <M>{"x^2/2"}</M> (glatt). Rot gestrichelt: <M>{"|x|"}</M>.{" "}
+          Der Knick bei 0 lässt schon die erste Ableitung scheitern.
         </div>
       </div>
     </>

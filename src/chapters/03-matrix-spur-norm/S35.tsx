@@ -18,7 +18,7 @@ function Frage({ q, children }: { q: ReactNode; children: ReactNode }) {
 }
 
 /**
- * Abschnitt 3.5 — Eigenschaften von Matrixnormen.
+ * Abschnitt 3.5 – Eigenschaften von Matrixnormen.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Eigenschaften von
  * Matrixnormen" (Normenäquivalenz, Submultiplikativität, Verträglichkeit,
  * Konditionierung, Fehleranalyse). Prosa eigenständig aus den Folien
@@ -35,13 +35,13 @@ export function S35() {
         <a className="underline" href="#sec-3.4">3.4</a> haben wir einen ganzen Zoo von
         Matrixnormen kennengelernt: elementweise Normen wie die Frobenius- und die Maximumsnorm,
         die Operatornormen und die Schatten-Normen. Drei Fragen drängen sich jetzt auf. Erstens:
-        Wie hängen all diese Normen zusammen — kann dieselbe Matrix in einer Norm „klein" und in
+        Wie hängen all diese Normen zusammen? Kann dieselbe Matrix in einer Norm „klein" und in
         einer anderen „riesig" sein? Zweitens: Wie verhalten sich Matrixnormen unter der
         wichtigsten Matrixoperation überhaupt, der Multiplikation? Und drittens: Was haben wir
         davon? Die Antworten auf die ersten beiden Fragen heißen <em>Normenäquivalenz</em>,{" "}
         <em>Submultiplikativität</em> und <em>Verträglichkeit</em>; die Antwort auf die dritte
         führt uns zur <ConceptLink id="condition-number">Konditionszahl</ConceptLink> und zur
-        Fehleranalyse — also mitten hinein in die Numerik.
+        Fehleranalyse, also mitten hinein in die Numerik.
       </p>
 
       <h3 id="sec-3.5.1" className="mb-2 mt-8 text-xl font-semibold">
@@ -51,8 +51,8 @@ export function S35() {
         Beginnen wir mit der ersten Frage. Für <ConceptLink id="norm">Vektornormen</ConceptLink>{" "}
         auf <M>{"\\R^n"}</M> gilt bekanntlich: Alle Normen sind äquivalent, d. h. je zwei Normen
         schätzen sich gegenseitig bis auf konstante Faktoren ab. Weil Matrixnormen auf{" "}
-        <M>{"\\R^{m \\times n}"}</M> denselben Axiomen gehorchen — eine Matrix ist aus Sicht der
-        Normaxiome nur ein langer Vektor mit <M>{"mn"}</M> Einträgen —, überträgt sich dieses
+        <M>{"\\R^{m \\times n}"}</M> denselben Axiomen gehorchen (eine Matrix ist aus Sicht der
+        Normaxiome nur ein langer Vektor mit <M>{"mn"}</M> Einträgen), überträgt sich dieses
         Resultat direkt:
       </p>
       <EnvBlock kind="Satz" label="3.5.1 (Alle Matrixnormen sind äquivalent)">
@@ -79,10 +79,10 @@ export function S35() {
         <MD>{"\\tfrac{1}{\\sqrt{n}} \\left\\|\\bA\\right\\|_\\infty \\le \\left\\|\\bA\\right\\|_2 \\le \\sqrt{m}\\, \\left\\|\\bA\\right\\|_\\infty."}</MD>
         <p>
           (<M>{"\\left\\|\\cdot\\right\\|_\\infty"}</M> ist hier die Zeilensummennorm aus{" "}
-          <a className="underline" href="#sec-3.3">Abschnitt 3.3</a> — nicht zu verwechseln mit
+          <a className="underline" href="#sec-3.3">Abschnitt 3.3</a>, nicht zu verwechseln mit
           der elementweisen Maximumsnorm <M>{"\\left\\|\\cdot\\right\\|_M"}</M>.) Die Konstanten
-          hängen also nur über die Dimensionen <M>{"m, n"}</M> von der Matrix ab
-          — und sie wachsen mit der Dimension. Für sehr große Matrizen können zwei Normen also
+          hängen also nur über die Dimensionen <M>{"m, n"}</M> von der Matrix ab,
+          und sie wachsen mit der Dimension. Für sehr große Matrizen können zwei Normen also
           durchaus um Größenordnungen auseinanderliegen.
         </p>
       </EnvBlock>
@@ -134,7 +134,7 @@ export function S35() {
           <M>{"\\left\\|\\bA\\right\\|_F = \\sqrt{2} \\approx 1{,}41 > 1{,}2 = \\left\\|\\bB\\right\\|_F"}</M>.
           In der Spektralnorm ist es umgekehrt:{" "}
           <M>{"\\left\\|\\bA\\right\\|_2 = 1 < 1{,}2 = \\left\\|\\bB\\right\\|_2"}</M>. Beide
-          Antworten sind richtig — jede Norm misst eben etwas anderes: Die Frobenius-Norm
+          Antworten sind richtig, denn jede Norm misst eben etwas anderes: Die Frobenius-Norm
           summiert die „Gesamtmasse" aller Einträge, die Spektralnorm die maximale Streckung.
           Welche Norm die passende ist, entscheidet die Anwendung.
         </p>
@@ -149,7 +149,7 @@ export function S35() {
         Dreiecksungleichung, wie sich Normen unter <em>Addition</em> verhalten:{" "}
         <M>{"\\left\\|\\bA + \\bB\\right\\| \\le \\left\\|\\bA\\right\\| + \\left\\|\\bB\\right\\|"}</M>.
         Über das Matrix<em>produkt</em> sagen sie dagegen gar nichts. Für die Numerik ist das
-        Produkt aber die zentrale Operation — Algorithmen sind Ketten von
+        Produkt aber die zentrale Operation: Algorithmen sind Ketten von
         Matrixmultiplikationen, und wir wollen abschätzen können, wie stark so eine Kette
         Fehler aufbläht. Normen, die das erlauben, bekommen einen eigenen Namen:
       </p>
@@ -219,10 +219,10 @@ export function S35() {
       </Proof>
       <p>
         Auch alle Schatten-Normen aus{" "}
-        <a className="underline" href="#sec-3.4">Abschnitt 3.4</a> — insbesondere die
-        Frobenius-Norm und die Nuklearnorm — sind submultiplikativ. Der Beweis braucht
+        <a className="underline" href="#sec-3.4">Abschnitt 3.4</a> (insbesondere die
+        Frobenius-Norm und die Nuklearnorm) sind submultiplikativ. Der Beweis braucht
         Ungleichungen für Singulärwerte von Produkten, die wir hier nicht entwickeln; wir merken
-        uns das Resultat. Nicht jede Matrixnorm ist aber submultiplikativ — das prominenteste
+        uns das Resultat. Nicht jede Matrixnorm ist aber submultiplikativ; das prominenteste
         Gegenbeispiel ist die Maximumsnorm:
       </p>
       <EnvBlock kind="Beispiel" label="3.5.6 (Die Maximumsnorm ist nicht submultiplikativ)">
@@ -237,7 +237,7 @@ export function S35() {
         <MD>{"\\left\\|\\cgreen{\\bA^2}\\right\\|_M = 2 > 1 = 1 \\cdot 1 = \\left\\|\\cbred{\\bA}\\right\\|_M \\cdot \\left\\|\\cbred{\\bA}\\right\\|_M."}</MD>
         <p>
           Die Maximumsnorm „übersieht", dass bei der Matrixmultiplikation viele Produkte{" "}
-          <em>aufsummiert</em> werden — sie schaut nur auf den größten einzelnen Eintrag.
+          <em>aufsummiert</em> werden, denn sie schaut nur auf den größten einzelnen Eintrag.
         </p>
       </EnvBlock>
       <EnvBlock kind="Bemerkung" label="3.5.7 (Reparatur: die Gesamtnorm)">
@@ -245,30 +245,30 @@ export function S35() {
           Der Defekt lässt sich durch einen dimensionsabhängigen Faktor beheben: Die{" "}
           <em>Gesamtnorm</em>{" "}
           <M>{"\\left\\|\\bA\\right\\|_G := \\sqrt{mn}\\, \\left\\|\\bA\\right\\|_M"}</M> ist
-          submultiplikativ. Der Nachweis ist eine gute Übung — er benutzt genau die
+          submultiplikativ. Der Nachweis ist eine gute Übung. Er benutzt genau die
           Summenstruktur der Matrixmultiplikation, die die Maximumsnorm ignoriert. (Probe am
           Beispiel 3.5.6 mit <M>{"m = n = 2"}</M>, also <M>{"\\sqrt{mn} = 2"}</M>:{" "}
           <M>{"\\left\\|\\bA\\right\\|_G = 2 \\cdot 1 = 2"}</M> und{" "}
-          <M>{"\\left\\|\\bA^2\\right\\|_G = 2 \\cdot 2 = 4 \\le 4 = \\left\\|\\bA\\right\\|_G^2"}</M>{" "}
-          — es passt.)
+          <M>{"\\left\\|\\bA^2\\right\\|_G = 2 \\cdot 2 = 4 \\le 4 = \\left\\|\\bA\\right\\|_G^2"}</M>,{" "}
+          es passt.)
         </p>
       </EnvBlock>
       <p>
         Warum ist Submultiplikativität so wertvoll? Drei Gründe. Erstens kontrolliert sie die{" "}
         <em>Fehlerfortpflanzung</em>: Für eine Kette{" "}
         <M>{"\\bA_1 \\bA_2 \\cdots \\bA_k"}</M> folgt durch wiederholtes Anwenden{" "}
-        <M>{"\\left\\|\\bA_1 \\cdots \\bA_k\\right\\| \\le \\left\\|\\bA_1\\right\\| \\cdots \\left\\|\\bA_k\\right\\|"}</M>{" "}
-        — die Normen der Faktoren deckeln die Norm des Produkts. Zweitens ermöglicht sie{" "}
+        <M>{"\\left\\|\\bA_1 \\cdots \\bA_k\\right\\| \\le \\left\\|\\bA_1\\right\\| \\cdots \\left\\|\\bA_k\\right\\|"}</M>;{" "}
+        die Normen der Faktoren deckeln die Norm des Produkts. Zweitens ermöglicht sie{" "}
         <ConceptLink id="convergence">Konvergenz</ConceptLink>analysen iterativer Verfahren: Aus{" "}
         <M>{"\\left\\|\\bA\\right\\| < 1"}</M> folgt{" "}
         <M>{"\\left\\|\\bA^k\\right\\| \\le \\left\\|\\bA\\right\\|^k \\to 0"}</M>, die Potenzen
         einer „kontrahierenden" Matrix sterben also garantiert aus. Drittens verbindet sie
         Normen mit dem <ConceptLink id="spectral-radius">Spektralradius</ConceptLink>: Man kann
         zeigen, dass <M>{"\\rho(\\bA) \\le \\left\\|\\bA\\right\\|"}</M> für jede
-        submultiplikative Norm gilt — jede solche Norm ist eine obere Schranke für die
+        submultiplikative Norm gilt: Jede solche Norm ist eine obere Schranke für die
         betragsgrößten Eigenwerte.
       </p>
-      <ExpandedReading title="Submultiplikativität ausprobieren — ‖AB‖ gegen ‖A‖·‖B‖">
+      <ExpandedReading title="Submultiplikativität ausprobieren: ‖AB‖ gegen ‖A‖·‖B‖">
         <S35SubmultWidget />
       </ExpandedReading>
 
@@ -375,8 +375,8 @@ export function S35() {
         <ConceptLink id="rounding-error">Rundungsfehlern</ConceptLink> früherer
         Rechenschritte) und multiplizieren wir mit <M>{"\\bA"}</M>, dann garantiert{" "}
         <M>{"\\left\\|\\bA\\be\\right\\|_V \\le \\left\\|\\bA\\right\\| \\cdot \\left\\|\\be\\right\\|_V"}</M>:
-        Ein kleiner Eingangsfehler bleibt nach der Multiplikation kontrolliert — die Matrixnorm
-        ist der Verstärkungsfaktor im schlimmsten Fall. Genau diese Denkfigur bauen wir jetzt zu
+        Ein kleiner Eingangsfehler bleibt nach der Multiplikation kontrolliert, denn die Matrixnorm
+        ist der Verstärkungsfaktor im schlimmsten Fall. Diese Denkfigur bauen wir jetzt zu
         den zwei wichtigsten Anwendungen aus.
       </p>
 
@@ -388,7 +388,7 @@ export function S35() {
         als Maß dafür, wie stark ein Problem relative Eingabefehler verstärkt. Für das Lösen
         linearer <ConceptLink id="linear-system">Gleichungssysteme</ConceptLink>{" "}
         <M>{"\\bA\\bx = \\bb"}</M> lässt sich dieser Verstärkungsfaktor direkt aus Matrixnormen
-        gewinnen — das rechnen wir im Kapitel über lineare Gleichungssysteme nach, halten die
+        gewinnen. Das rechnen wir im Kapitel über lineare Gleichungssysteme nach, halten die
         Definition aber schon hier fest:
       </p>
       <EnvBlock kind="Definition" label="3.5.10 (Konditionszahl einer Matrix)">
@@ -409,7 +409,7 @@ export function S35() {
         <a className="underline" href="#sec-3.3">Abschnitt 3.3</a> ist{" "}
         <M>{"\\left\\|\\bA\\right\\|_2 = \\lambda_{\\max}(\\bA^\\top\\bA)^{1/2}"}</M>, und die
         Eigenwerte von <M>{"(\\bA^{-1})^\\top\\bA^{-1} = (\\bA\\bA^\\top)^{-1}"}</M> sind die
-        Kehrwerte der Eigenwerte von <M>{"\\bA\\bA^\\top"}</M> — und{" "}
+        Kehrwerte der Eigenwerte von <M>{"\\bA\\bA^\\top"}</M>, und{" "}
         <M>{"\\bA\\bA^\\top"}</M> hat dieselben Eigenwerte wie <M>{"\\bA^\\top\\bA"}</M>. Der
         größte Eigenwert von <M>{"(\\bA\\bA^\\top)^{-1}"}</M> ist also{" "}
         <M>{"1/\\lambda_{\\min}(\\bA^\\top\\bA)"}</M>. Die Konditionszahl misst damit das{" "}
@@ -419,17 +419,17 @@ export function S35() {
         wir später kennenlernen: <M>{"\\kappa_2(\\bA)"}</M> ist der Quotient aus größtem und
         kleinstem Singulärwert. Für <em>symmetrische</em> Matrizen sind die Singulärwerte
         gerade die Beträge der Eigenwerte; dort ist{" "}
-        <M>{"\\kappa_2(\\bA) = \\max_i |\\lambda_i| \\,/\\, \\min_i |\\lambda_i|"}</M> — das
+        <M>{"\\kappa_2(\\bA) = \\max_i |\\lambda_i| \\,/\\, \\min_i |\\lambda_i|"}</M>, das
         Verhältnis der betragsmäßig extremen Eigenwerte.
       </p>
       <EnvBlock kind="Bemerkung" label="3.5.11 (Interpretation der Konditionszahl)">
         <ul className="list-disc space-y-1 pl-5">
           <li>
-            <M>{"\\kappa(\\bA) \\approx 1"}</M>: gut konditioniert — <M>{"\\bA"}</M> streckt
+            <M>{"\\kappa(\\bA) \\approx 1"}</M>: gut konditioniert; <M>{"\\bA"}</M> streckt
             alle Richtungen ungefähr gleich stark.
           </li>
           <li>
-            <M>{"\\kappa(\\bA) \\gg 1"}</M>: schlecht konditioniert — manche Richtungen werden
+            <M>{"\\kappa(\\bA) \\gg 1"}</M>: schlecht konditioniert; manche Richtungen werden
             enorm gestreckt, andere fast plattgedrückt.
           </li>
           <li>
@@ -456,12 +456,12 @@ export function S35() {
       <p>
         Zum Abschluss zeigen wir an einem konkreten Resultat, wie Matrixnormen in der
         Fehleranalyse arbeiten. Angenommen, wir lösen <M>{"\\bA\\bx = \\bb"}</M> numerisch und
-        erhalten — dank Rundungsfehlern — nicht die exakte Lösung, sondern eine Näherung{" "}
+        erhalten (dank Rundungsfehlern) nicht die exakte Lösung, sondern eine Näherung{" "}
         <M>{"\\wt{\\bx}"}</M>. Die <em>Rückwärts-Fehleranalyse</em> (backward error analysis)
         stellt die Frage geschickt um: Statt zu fragen, wie falsch <M>{"\\wt{\\bx}"}</M> ist
         (Vorwärtsfehler), fragen wir: <em>Für welches gestörte Problem ist{" "}
         <M>{"\\wt{\\bx}"}</M> die exakte Lösung?</em> Ist die nötige Störung winzig, hat der
-        Algorithmus sein Bestes getan — alles Weitere ist Sache der Kondition des Problems.
+        Algorithmus sein Bestes getan; alles Weitere ist Sache der Kondition des Problems.
       </p>
       <EnvBlock kind="Satz" label="3.5.12 (Rückwärtsfehler beim linearen Gleichungssystem)">
         <p>
@@ -524,8 +524,8 @@ export function S35() {
         <M>{"\\wt{\\bx}"}</M>. Matrixnormen machen den Rückwärtsfehler also <em>berechenbar</em>:
         Ein kleines relatives Residuum bedeutet, dass <M>{"\\wt{\\bx}"}</M> die exakte Lösung
         eines nur winzig gestörten Systems ist. Wie weit <M>{"\\wt{\\bx}"}</M> dann von der
-        wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus Definition 3.5.10 —
-        als Faustregel gilt: Vorwärtsfehler <M>{"\\lesssim \\kappa(\\bA) \\times"}</M>{" "}
+        wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus Definition 3.5.10.
+        Als Faustregel gilt: Vorwärtsfehler <M>{"\\lesssim \\kappa(\\bA) \\times"}</M>{" "}
         Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
       </p>
 
@@ -540,7 +540,7 @@ export function S35() {
           }
         >
           <p>
-            Nein — das gilt nur für submultiplikative Normen. Die Maximumsnorm liefert ein
+            Nein, das gilt nur für submultiplikative Normen. Die Maximumsnorm liefert ein
             Gegenbeispiel: Für die Einsermatrix aus Beispiel 3.5.6 ist{" "}
             <M>{"\\left\\|\\bA^2\\right\\|_M = 2 > 1 = \\left\\|\\bA\\right\\|_M^2"}</M>.
             Operator- und Schatten-Normen (also auch Spektral-, Frobenius- und Nuklearnorm)
@@ -561,7 +561,7 @@ export function S35() {
             <M>{"\\bx"}</M> ist <M>{"\\left\\|\\bQ\\right\\|_2 = 1"}</M>; und{" "}
             <M>{"\\bQ^{-1} = \\bQ^\\top"}</M> ist selbst orthogonal, also auch{" "}
             <M>{"\\left\\|\\bQ^{-1}\\right\\|_2 = 1"}</M>. Orthogonalmatrizen sind perfekt
-            konditioniert — ein Hauptgrund, warum numerische Verfahren so gerne mit ihnen
+            konditioniert – ein Hauptgrund, warum numerische Verfahren so gerne mit ihnen
             arbeiten.
           </p>
         </Frage>
@@ -579,8 +579,8 @@ export function S35() {
             Kein Widerspruch: Satz 3.5.1 gilt bei <em>festen</em> Dimensionen, und die
             Konstanten dürfen von <M>{"m, n"}</M> abhängen. Das Beispiel zeigt sogar, dass die
             Konstante scharf ist: <M>{"\\bI_n"}</M> erfüllt{" "}
-            <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n} = \\sqrt{\\min(n,n)} \\cdot \\left\\|\\bI_n\\right\\|_2"}</M>{" "}
-            — die obere Schranke aus Beispiel 3.5.2 wird hier mit Gleichheit angenommen, besser
+            <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n} = \\sqrt{\\min(n,n)} \\cdot \\left\\|\\bI_n\\right\\|_2"}</M>;{" "}
+            die obere Schranke aus Beispiel 3.5.2 wird hier mit Gleichheit angenommen, besser
             geht es also nicht.
           </p>
         </Frage>

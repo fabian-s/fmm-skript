@@ -8,7 +8,7 @@ registerConcept({
       <p>
         Die <em>Dimension</em> eines{" "}
         <ConceptLink id="vector-space">Vektorraums</ConceptLink> ist die
-        Anzahl unabhängiger Richtungen darin — gleichbedeutend: wie viele{" "}
+        Anzahl unabhängiger Richtungen darin, gleichbedeutend: wie viele{" "}
         <ConceptLink id="linear-independence">linear unabhängige</ConceptLink>{" "}
         <ConceptLink id="vector">Vektoren</ConceptLink> wir brauchen, damit
         jedes Element des Raums eine{" "}
@@ -23,7 +23,7 @@ registerConcept({
         <ConceptLink id="real-coordinate-space">
           <M>{"\\R^n"}</M>
         </ConceptLink>{" "}
-        hat Dimension <M>{"n"}</M> — zum Beispiel erzeugen die beiden
+        hat Dimension <M>{"n"}</M>. Zum Beispiel erzeugen die beiden
         Vektoren <M>{"(1,0)"}</M> und <M>{"(0,1)"}</M> die ganze Ebene, und
         kein einzelner Vektor schafft das allein.
       </p>

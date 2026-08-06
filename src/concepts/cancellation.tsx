@@ -38,7 +38,7 @@ function DigitWidget() {
       </div>
       <p className="mt-1 text-xs opacity-80">
         Die durchgestrichenen führenden Ziffern sind in <M>{"a"}</M> und <M>{"b"}</M> identisch
-        und heben sich bei der Subtraktion exakt weg — nur der grüne Rest trägt Information.
+        und heben sich bei der Subtraktion exakt weg; nur der grüne Rest trägt Information.
         Tragen <M>{"a"}</M> und <M>{"b"}</M> je einen relativen Rundungsfehler{" "}
         <M>{"\\approx \\eps_{\\text{mach}}"}</M>, dann trägt <M>{"a - b"}</M> ungefähr den{" "}
         <M>{"|a| / |a - b| \\approx 10^{k}"}</M>-fachen relativen Fehler.
@@ -56,7 +56,7 @@ registerConcept({
         <em>Auslöschung</em> (catastrophic cancellation) passiert, wenn wir zwei fast gleich
         große <ConceptLink id="floating-point">Gleitkommazahlen</ConceptLink> voneinander
         abziehen: Ihre gemeinsamen führenden Ziffern heben sich exakt weg, und übrig bleiben
-        nur die hinteren Ziffern — genau die, die von früheren{" "}
+        nur die hinteren Ziffern – genau die, die von früheren{" "}
         <ConceptLink id="rounding-error">Rundungsfehlern</ConceptLink> verseucht sind. Die
         Subtraktion selbst ist dabei exakt; sie <em>erzeugt</em> keinen Fehler, sondern{" "}
         <em>verstärkt</em> die schon vorhandenen: Der relative Fehler wächst ungefähr um den
@@ -69,7 +69,7 @@ registerConcept({
         <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink> lässt.
         Klassisches Beispiel aus den Folien: Die Varianz-„Formel"{" "}
         <M>{"\\tfrac{1}{n}\\sum_i x_i^2 - \\bar{x}^2"}</M> subtrahiert für Daten um{" "}
-        <M>{"10^9"}</M> zwei Zahlen der Größe <M>{"10^{18}"}</M> — das Ergebnis kann sogar
+        <M>{"10^9"}</M> zwei Zahlen der Größe <M>{"10^{18}"}</M>; das Ergebnis kann sogar
         negativ werden.
       </p>
       <p>

@@ -147,8 +147,8 @@ export function S73NormerhaltungWidget() {
           {istOrth ? (
             <p className="text-emerald-700 dark:text-emerald-400">
               <M>{"\\bM^\\top\\bM = \\bI"}</M>: Der Einheitskreis wird auf sich selbst
-              abgebildet, und es gilt <M>{"\\left\\| \\bM\\bv \\right\\|_2 = \\left\\| \\bv \\right\\|_2"}</M>{" "}
-              — für jeden Winkel und jeden Vektor. Drehungen und Spiegelungen sind
+              abgebildet, und es gilt <M>{"\\left\\| \\bM\\bv \\right\\|_2 = \\left\\| \\bv \\right\\|_2"}</M>
+              , und zwar für jeden Winkel und jeden Vektor. Drehungen und Spiegelungen sind
               Orthogonalmatrizen.
             </p>
           ) : (

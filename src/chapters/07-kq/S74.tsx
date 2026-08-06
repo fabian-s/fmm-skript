@@ -56,7 +56,7 @@ function OrthoWidget() {
         <ConceptLink id="rotation-matrix">Drehung</ConceptLink> oder eine{" "}
         <ConceptLink id="reflection">Spiegelung</ConceptLink>. Verstellen wir den Winkel: das
         hellblaue Bild des Einheitskreises bleibt immer der Einheitskreis, und der Vektor{" "}
-        <M>{"\\bx = (2, 1)^\\top"}</M> wird nur gedreht bzw. gespiegelt — nie gestreckt oder
+        <M>{"\\bx = (2, 1)^\\top"}</M> wird nur gedreht bzw. gespiegelt, nie gestreckt oder
         gestaucht.
       </p>
       <Slider
@@ -83,8 +83,8 @@ function OrthoWidget() {
       </div>
       <p className="my-2 text-sm">
         Die Determinante verrät den Typ: <M>{"\\det \\bQ = +1"}</M> für Drehungen,{" "}
-        <M>{"\\det \\bQ = -1"}</M> für Spiegelungen. Beide lassen alle Längen — und damit auch
-        alle <ConceptLink id="condition-number">Konditionszahlen</ConceptLink> — unverändert.
+        <M>{"\\det \\bQ = -1"}</M> für Spiegelungen. Beide lassen alle Längen und damit auch
+        alle <ConceptLink id="condition-number">Konditionszahlen</ConceptLink> unverändert.
       </p>
     </div>
   );
@@ -218,7 +218,7 @@ function GSFigure({ a1, a2 }: { a1: V2; a2: V2 }) {
       {!collinear && label(q2, "q₂", "#047857", 6, 14)}
       {collinear && (
         <text x={16} y={24} fontSize={12} fill="#dc2626">
-          a₂ ist kollinear zu a₁ — das Residuum verschwindet, es gibt kein q₂.
+          a₂ ist kollinear zu a₁: Das Residuum verschwindet, es gibt kein q₂.
         </text>
       )}
     </svg>
@@ -248,7 +248,8 @@ function GramSchmidtWidget() {
         der zu <M>{"\\bq_1"}</M> senkrechte Anteil übrig; normiert ergibt er{" "}
         <M>{"\\bq_2"}</M>. Probieren wir vor allem aus, was passiert, wenn{" "}
         <M>{"\\ba_2"}</M> fast parallel zu <M>{"\\ba_1"}</M> liegt: der senkrechte Anteil wird
-        dann winzig — die Quelle der numerischen Probleme, die wir weiter unten untersuchen.
+        dann winzig, und das ist die Quelle der numerischen Probleme, die wir weiter unten
+        untersuchen.
       </p>
       <Slider
         label="Winkel a₁ (°)"
@@ -357,7 +358,7 @@ function CgsVsMgsWidget() {
     <div className="my-2 rounded bg-slate-100 p-3 dark:bg-slate-800/60">
       <p className="my-2 text-sm">
         Als Stresstest dient uns eine <M>{"4 \\times 3"}</M>-Matrix nach Läuchli. Ihre drei
-        Spalten unterscheiden sich für kleines <M>{"\\varepsilon"}</M> kaum voneinander — die
+        Spalten unterscheiden sich für kleines <M>{"\\varepsilon"}</M> kaum voneinander: Die
         Matrix ist fast rangdefizient, und ihre Konditionszahl wächst wie{" "}
         <M>{"1/\\varepsilon"}</M>:
       </p>
@@ -414,7 +415,7 @@ function CgsVsMgsWidget() {
         Genauigkeit braucht, orthogonalisiert einfach ein zweites Mal nach: ein einziger
         Extra-Durchlauf drückt beide Varianten auf Maschinengenauigkeit (Faustregel „twice is
         enough"). Vorsicht bei <M>{"p \\gtrsim 8"}</M>: dort rundet der Rechner{" "}
-        <M>{"1 + \\varepsilon^2"}</M> exakt zu <M>{"1"}</M> — das Experiment bildet die
+        <M>{"1 + \\varepsilon^2"}</M> exakt zu <M>{"1"}</M>. Das Experiment bildet die
         Theorie dann nicht mehr sauber ab, und die Messwerte springen.
       </p>
     </div>
@@ -428,15 +429,15 @@ export function S74() {
     <div className="space-y-4 [&>p]:max-w-prose">
       <p>
         In <a href="#sec-7.3" className="text-sky-700 underline dark:text-sky-400">Abschnitt 7.3</a>{" "}
-        haben wir das Kleinste-Quadrate-Problem über die Normalengleichungen gelöst — schnell,
-        aber mit einem Haken: Das Aufstellen von <M>{"\\bA^\\top\\bA"}</M> quadriert die{" "}
+        haben wir das Kleinste-Quadrate-Problem über die Normalengleichungen gelöst: schnell,
+        aber mit einem Haken. Das Aufstellen von <M>{"\\bA^\\top\\bA"}</M> quadriert die{" "}
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink>,{" "}
         <M>{"\\kappa_2(\\bA^\\top\\bA) = \\kappa_2(\\bA)^2"}</M>. Wir suchen deshalb ein
         Verfahren, das direkt mit <M>{"\\bA"}</M> arbeitet. Die Idee dieses Abschnitts:
         Wir transformieren das Problem mit Matrizen, die die{" "}
         <ConceptLink id="euclidean-norm">euklidische Norm</ConceptLink> unverändert lassen.
         Solche Transformationen ändern die Norm des Residuums{" "}
-        <M>{"\\|\\bA\\bx - \\bb\\|_2"}</M> nicht — das transformierte Problem hat also
+        <M>{"\\|\\bA\\bx - \\bb\\|_2"}</M> nicht, das transformierte Problem hat also
         dieselbe Lösung wie das ursprüngliche. Wenn wir so lange transformieren, bis eine{" "}
         <ConceptLink id="triangular-matrix">Dreiecksgestalt</ConceptLink> erreicht ist, wird
         das Problem trivial lösbar. (Folien 07-kq, „Recap: Orthogonalmatrizen" bis
@@ -446,7 +447,7 @@ export function S74() {
       <h3 className="mt-6 text-lg font-semibold">Recap: Orthogonalmatrizen</h3>
 
       <p>
-        Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra — frischen wir
+        Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra. Frischen wir
         das kurz auf.
       </p>
 
@@ -465,7 +466,7 @@ export function S74() {
       <p>
         Geometrisch beschreibt <M>{"\\bQ"}</M> eine{" "}
         <ConceptLink id="rotation-matrix">Rotation</ConceptLink> und/oder{" "}
-        <ConceptLink id="reflection">Spiegelung</ConceptLink> des <M>{"\\R^n"}</M> — also genau
+        <ConceptLink id="reflection">Spiegelung</ConceptLink> des <M>{"\\R^n"}</M>, also genau
         die Sorte Abbildung, die Längen und Winkel unangetastet lässt. Die für uns wichtigen
         Eigenschaften fassen wir zusammen:
       </p>
@@ -476,8 +477,8 @@ export function S74() {
         </p>
         <ol className="list-[lower-roman] space-y-1 pl-6">
           <li>
-            <M>{"\\bQ^{-1} = \\bQ^\\top"}</M> — die{" "}
-            <ConceptLink id="matrix-inverse">Inverse</ConceptLink> ist gratis.
+            <M>{"\\bQ^{-1} = \\bQ^\\top"}</M>, die{" "}
+            <ConceptLink id="matrix-inverse">Inverse</ConceptLink> ist also gratis.
           </li>
           <li>
             <M>{"\\|\\bQ\\bx\\|_2 = \\|\\bx\\|_2"}</M> für alle <M>{"\\bx \\in \\R^n"}</M>.
@@ -551,12 +552,12 @@ export function S74() {
             Abschnitt 7.3
           </a>
           ) können orthogonale Transformationen die Kondition unseres Problems also nicht
-          verschlimmern — vgl. die Konditionsanalyse in{" "}
+          verschlimmern (vgl. die Konditionsanalyse in{" "}
           <a href="#sec-7.2" className="text-sky-700 underline dark:text-sky-400">
             Abschnitt 7.2
           </a>
-          . Eigenschaft (iv) erlaubt uns außerdem, <M>{"\\bQ"}</M> aus vielen einfachen
-          orthogonalen Bausteinen zusammenzusetzen — das nutzen wir in{" "}
+          ). Eigenschaft (iv) erlaubt uns außerdem, <M>{"\\bQ"}</M> aus vielen einfachen
+          orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in{" "}
           <a href="#sec-7.5" className="text-sky-700 underline dark:text-sky-400">
             Abschnitt 7.5
           </a>{" "}
@@ -564,7 +565,7 @@ export function S74() {
         </p>
       </EnvBlock>
 
-      <ExpandedReading title="Orthogonalmatrizen als Drehungen und Spiegelungen — live">
+      <ExpandedReading title="Orthogonalmatrizen als Drehungen und Spiegelungen, live">
         <OrthoWidget />
       </ExpandedReading>
 
@@ -618,7 +619,7 @@ export function S74() {
         Spalten von <M>{"\\bA"}</M>. Sie liefert orthonormale Vektoren{" "}
         <M>{"\\bq_1, \\bq_2, \\dots"}</M>, die denselben Raum{" "}
         <ConceptLink id="span">aufspannen</ConceptLink> wie die Spalten{" "}
-        <M>{"\\ba_1, \\ba_2, \\dots"}</M> — und die Koeffizienten, die dabei anfallen
+        <M>{"\\ba_1, \\ba_2, \\dots"}</M>, und die Koeffizienten, die dabei anfallen
         (Normen und <ConceptLink id="projection">Projektions</ConceptLink>-Koeffizienten),
         sind genau die Einträge von <M>{"\\bR"}</M>. Rechnen wir das Beispiel der Folien
         vollständig durch. Zur Orientierung: <M>{"\\cbred{\\bq_1}"}</M> verfolgt den ersten
@@ -640,14 +641,14 @@ export function S74() {
           <M>{"\\bR \\in \\R^{2 \\times 2}"}</M> obere Dreiecksmatrix.
         </p>
         <p>
-          <strong>Schritt 1</strong> — erste Spalte <M>{"\\ba_1 = (1, 0, 0)^\\top"}</M>{" "}
-          normieren:
+          <strong>Schritt 1:</strong> erste Spalte <M>{"\\ba_1 = (1, 0, 0)^\\top"}</M>{" "}
+          normieren.
         </p>
         <MD>
           {"\\cbred{\\bq_1} = \\frac{\\ba_1}{\\|\\ba_1\\|_2} = \\frac{1}{1}\\begin{pmatrix} 1 \\\\ 0 \\\\ 0 \\end{pmatrix} = \\cbred{\\begin{pmatrix} 1 \\\\ 0 \\\\ 0 \\end{pmatrix}}, \\qquad R_{11} = \\|\\ba_1\\|_2 = 1\\,."}
         </MD>
         <p>
-          <strong>Schritt 2</strong> — zweite Spalte{" "}
+          <strong>Schritt 2:</strong> zweite Spalte{" "}
           <M>{"\\cblue{\\ba_2} = \\cblue{(2, 0, 2)^\\top}"}</M> orthogonalisieren. Zuerst die
           Projektion auf <M>{"\\cbred{\\bq_1}"}</M>:
         </p>
@@ -663,7 +664,7 @@ export function S74() {
           {"\\cbpurp{\\bq_2} = \\frac{\\cborange{\\wt{\\bq}_2}}{\\left\\|\\cborange{\\wt{\\bq}_2}\\right\\|_2} = \\frac{1}{2}\\cborange{\\begin{pmatrix} 0 \\\\ 0 \\\\ 2 \\end{pmatrix}} = \\cbpurp{\\begin{pmatrix} 0 \\\\ 0 \\\\ 1 \\end{pmatrix}}, \\qquad R_{22} = \\left\\|\\cborange{\\wt{\\bq}_2}\\right\\|_2 = 2\\,."}
         </MD>
         <p>
-          <strong>Schritt 3</strong> — zu einer{" "}
+          <strong>Schritt 3:</strong> zu einer{" "}
           <ConceptLink id="orthonormal-basis">Orthonormalbasis</ConceptLink> des{" "}
           <M>{"\\R^3"}</M> vervollständigen. Wir brauchen ein <M>{"\\bq_3"}</M> orthogonal zu{" "}
           <M>{"\\cbred{\\bq_1}"}</M> und <M>{"\\cbpurp{\\bq_2}"}</M>; hier geht das durch
@@ -677,7 +678,7 @@ export function S74() {
           {"\\bQ = \\begin{pmatrix} \\cbred{1} & \\cbpurp{0} & 0 \\\\ \\cbred{0} & \\cbpurp{0} & 1 \\\\ \\cbred{0} & \\cbpurp{1} & 0 \\end{pmatrix}, \\qquad \\bR = \\begin{pmatrix} 1 & \\cgreen{2} \\\\ 0 & 2 \\end{pmatrix}\\,."}
         </MD>
         <p>
-          <strong>Verifikation</strong> — Zerlegung ausmultiplizieren:
+          <strong>Verifikation:</strong> Zerlegung ausmultiplizieren.
         </p>
         <MD>
           {"\\bQ \\begin{pmatrix} \\bR \\\\ \\bnull \\end{pmatrix} = \\begin{pmatrix} \\cbred{1} & \\cbpurp{0} & 0 \\\\ \\cbred{0} & \\cbpurp{0} & 1 \\\\ \\cbred{0} & \\cbpurp{1} & 0 \\end{pmatrix} \\begin{pmatrix} 1 & \\cgreen{2} \\\\ 0 & 2 \\\\ 0 & 0 \\end{pmatrix} = \\begin{pmatrix} 1 & 2 \\\\ 0 & 0 \\\\ 0 & 2 \\end{pmatrix} = \\bA \\;\\checkmark"}
@@ -701,13 +702,13 @@ export function S74() {
       </ExpandedReading>
 
       <p>
-        Vorsicht: So elegant Gram-Schmidt auf dem Papier ist — in Gleitkommaarithmetik ist das
+        Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
         klassische Verfahren heikel. Sind zwei Spalten fast{" "}
         <ConceptLink id="linear-independence">linear abhängig</ConceptLink>, ist das Residuum
         nach der Projektion winzig, und beim Normieren blasen wir{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink> massiv auf: die
-        berechneten <M>{"\\bq_k"}</M> verlieren ihre Orthogonalität. Wie dramatisch das wird —
-        und wie wenig es braucht, um es zu reparieren — zeigt das folgende Experiment.
+        berechneten <M>{"\\bq_k"}</M> verlieren ihre Orthogonalität. Wie dramatisch das wird
+        und wie wenig es braucht, um es zu reparieren, zeigt das folgende Experiment.
       </p>
 
       <ExpandedReading title="wie Gram-Schmidt numerisch zerbricht (und wie man es repariert)">
@@ -783,7 +784,7 @@ export function S74() {
           why={
             <>
               der zweite Term <M>{"\\left\\|\\cblue{\\bc_2}\\right\\|_2^2"}</M> hängt nicht von{" "}
-              <M>{"\\bx"}</M> ab — minimieren müssen wir nur den ersten
+              <M>{"\\bx"}</M> ab, minimieren müssen wir nur den ersten
             </>
           }
         >
@@ -795,8 +796,8 @@ export function S74() {
           why={
             <>
               <M>{"\\bR"}</M> ist invertierbar, also bringt{" "}
-              <M>{"\\wh{\\bx} = \\bR^{-1}\\bc_1"}</M> den ersten Term exakt auf null — kleiner
-              als null kann eine Norm nicht werden
+              <M>{"\\wh{\\bx} = \\bR^{-1}\\bc_1"}</M> den ersten Term exakt auf null, und
+              kleiner als null kann eine Norm nicht werden
             </>
           }
         >
@@ -819,7 +820,7 @@ export function S74() {
 
       <p>
         Was noch fehlt, ist ein stabiler Weg zu <M>{"\\bQ"}</M>: Gram-Schmidt hat uns die
-        Zerlegung im Beispiel geliefert, ist aber — wie oben gesehen — numerisch fragil. In{" "}
+        Zerlegung im Beispiel geliefert, ist aber, wie oben gesehen, numerisch fragil. In{" "}
         <a href="#sec-7.5" className="text-sky-700 underline dark:text-sky-400">
           Abschnitt 7.5
         </a>{" "}

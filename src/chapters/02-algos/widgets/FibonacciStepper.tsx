@@ -56,7 +56,7 @@ function callCounts(k: number): number[] {
   return cnt;
 }
 
-/** Pastellton pro Argument j — gleiche Teilbäume bekommen dieselbe Farbe. */
+/** Pastellton pro Argument j: gleiche Teilbäume bekommen dieselbe Farbe. */
 function shade(j: number): string {
   const base = [GREEN, BLUE, ORANGE, "#9E57D5", RED];
   return base[j % base.length] + "2e";
@@ -161,12 +161,12 @@ export function FibonacciStepper() {
               Schritt {k}: hänge{" "}
               <span style={{ color: ORANGE, fontWeight: 600 }}>{seq[k - 1]}</span> ={" "}
               <span style={{ color: BLUE, fontWeight: 600 }}>{seq[k - 2]}</span> +{" "}
-              <span style={{ color: GREEN, fontWeight: 600 }}>{seq[k - 3]}</span> an — eine
+              <span style={{ color: GREEN, fontWeight: 600 }}>{seq[k - 3]}</span> an, eine
               einzige Addition.
             </p>
           ) : (
             <p className="text-xs text-slate-600 dark:text-slate-300">
-              {k === 1 ? "Startwert 0 setzen — noch keine Addition." : "1 anhängen — noch keine Addition."}
+              {k === 1 ? "Startwert 0 setzen, noch keine Addition." : "1 anhängen, noch keine Addition."}
             </p>
           )}
           <p className="mt-2 font-mono text-xs">
@@ -178,11 +178,11 @@ export function FibonacciStepper() {
         {/* naiv rekursiv */}
         <div className="rounded border border-slate-200 p-3 dark:border-slate-700">
           <p className="mb-2 font-semibold">
-            Naive Rekursion — nur x<sub>{k}</sub>
+            Naive Rekursion: nur x<sub>{k}</sub>
           </p>
           <p className="mb-2 text-xs text-slate-600 dark:text-slate-300">
             Direkt nach Definition: berechne x<sub>{k}</sub> aus x<sub>{k - 1}</sub> und x
-            <sub>{k - 2}</sub>, jeweils wieder rekursiv — ohne Zwischenergebnisse zu speichern.
+            <sub>{k - 2}</sub>, jeweils wieder rekursiv, ohne Zwischenergebnisse zu speichern.
           </p>
           <p className="font-mono text-xs">
             Funktionsaufrufe: <strong style={{ color: RED }}>{calls[k]}</strong> &nbsp;|&nbsp;
@@ -222,14 +222,14 @@ export function FibonacciStepper() {
       {k <= 8 ? (
         <div className="overflow-x-auto rounded border border-slate-200 p-2 dark:border-slate-700">
           <p className="mb-1 text-xs text-slate-500 dark:text-slate-400">
-            Aufrufbaum der naiven Rekursion für x<sub>{k}</sub> — gleiche Farbe = identische,
+            Aufrufbaum der naiven Rekursion für x<sub>{k}</sub>; gleiche Farbe = identische,
             mehrfach ausgeführte Teilrechnung:
           </p>
           <CallTree j={k} />
         </div>
       ) : (
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          (Der Aufrufbaum hat jetzt {calls[k]} Knoten — zum Anzeigen Schritt ≤ 8 wählen.)
+          (Der Aufrufbaum hat jetzt {calls[k]} Knoten; zum Anzeigen Schritt ≤ 8 wählen.)
         </p>
       )}
     </div>

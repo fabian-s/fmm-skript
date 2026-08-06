@@ -50,8 +50,8 @@ registerConcept({
         Das <em>Skalarprodukt</em> (engl. <em>inner product</em> oder{" "}
         <em>dot product</em>) zweier{" "}
         <ConceptLink id="vector">Vektoren</ConceptLink> gleicher Länge
-        multipliziert die zusammengehörigen Komponenten und summiert alles auf
-        — mit der <ConceptLink id="transpose">Transposition</ConceptLink>{" "}
+        multipliziert die zusammengehörigen Komponenten und summiert alles auf;
+        mit der <ConceptLink id="transpose">Transposition</ConceptLink>{" "}
         schreiben wir es als Matrixprodukt:
       </p>
       <MD>{"\\bx^T \\by = x_1 y_1 + x_2 y_2 + \\cdots + x_n y_n ."}</MD>
@@ -61,7 +61,7 @@ registerConcept({
         einzelne Zahl, die misst, wie stark zwei Vektoren in dieselbe Richtung
         zeigen: Geometrisch gilt{" "}
         <M>{"\\bx^T \\by = \\|\\bx\\|_2 \\|\\by\\|_2 \\cos\\theta"}</M>, wobei{" "}
-        <M>{"\\theta"}</M> der Winkel zwischen den Vektoren ist — positiv, wenn
+        <M>{"\\theta"}</M> der Winkel zwischen den Vektoren ist: positiv, wenn
         sie grob in dieselbe Richtung zeigen, null, wenn sie senkrecht
         aufeinander stehen (
         <ConceptLink id="orthogonality">Orthogonalität</ConceptLink>), negativ,

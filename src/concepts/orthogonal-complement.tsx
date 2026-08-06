@@ -43,7 +43,7 @@ function ComplementWidget() {
       <p className="mt-1 text-xs text-slate-300">
         Egal, wie wir b verschieben: Der grüne Anteil liegt auf der blauen
         Geraden S, und der pinke Rest r steht senkrecht darauf (rᵀu = 0 bis
-        auf Rundung) — r lebt im orthogonalen Komplement S⊥.
+        auf Rundung); r lebt im orthogonalen Komplement S⊥.
       </p>
     </div>
   );
@@ -78,7 +78,7 @@ registerConcept({
         <M>{"S = \\mathrm{span}(\\bA)"}</M>, sein Gegenstück{" "}
         <M>{"\\bI - \\bP"}</M> das Stück in <M>{"S^\\perp"}</M>, und das
         Residuum landet in{" "}
-        <M>{"\\mathrm{span}(\\bA)^\\perp"}</M> — und das ist dieselbe Menge
+        <M>{"\\mathrm{span}(\\bA)^\\perp"}</M>, und das ist dieselbe Menge
         wie der <ConceptLink id="null-space">Nullraum</ConceptLink> von{" "}
         <M>{"\\bA^T"}</M>.
       </p>

@@ -4,7 +4,7 @@ import { LabeledTransformCanvas } from "../lib";
 
 /**
  * Rotate an orthonormal pair q1, q2 and read off the coordinates of a fixed
- * vector w by dot products — no linear system needed.
+ * vector w by dot products; no linear system needed.
  */
 function OrthonormalBasisWidget() {
   const [th, setTh] = useState(0.5);
@@ -45,7 +45,7 @@ function OrthonormalBasisWidget() {
       />
       <p className="mt-1 text-xs text-slate-300">
         Wie auch immer wir das Paar drehen: q₁ und q₂ bleiben senkrechte
-        Einheitsvektoren — und die Koordinaten des festen gelben Vektors w
+        Einheitsvektoren, und die Koordinaten des festen gelben Vektors w
         in dieser Basis sind einfach die beiden Skalarprodukte. Kein
         Gleichungssystem nötig.
       </p>
@@ -70,11 +70,11 @@ registerConcept({
         {"\\bq_i^T \\bq_j = \\begin{cases} 1 & i = j \\\\ 0 & i \\neq j \\end{cases}"}
       </MD>
       <p>
-        Die Standardachsen des <M>{"\\R^2"}</M> sind das vertraute Beispiel —
+        Die Standardachsen des <M>{"\\R^2"}</M> sind das vertraute Beispiel,
         aber jede gedrehte Kopie davon funktioniert genauso gut. So eine
         Basis ist das bequemste Koordinatensystem überhaupt: Um einen Vektor{" "}
         <M>{"\\bw"}</M> darin auszudrücken, müssen wir nie ein
-        Gleichungssystem lösen — der Koeffizient von jedem{" "}
+        Gleichungssystem lösen, denn der Koeffizient von jedem{" "}
         <M>{"\\bq_i"}</M> ist schlicht das{" "}
         <ConceptLink id="dot-product">Skalarprodukt</ConceptLink>{" "}
         <M>{"\\bq_i^T \\bw"}</M>. Stapeln wir orthonormale Vektoren als

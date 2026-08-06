@@ -1,10 +1,10 @@
-/** Konzept-Tooltip: partielle Ableitung — Schnittkurve einfrieren und ableiten. */
+/** Konzept-Tooltip: partielle Ableitung: Schnittkurve einfrieren und ableiten. */
 import { useState } from "react";
 import { ConceptLink, M, MD, registerConcept, Slider } from "../lib";
 import { LabeledPlot } from "../lib";
 
 /**
- * Schneide f(x, y) = x² + xy bei festem y auf und leite die Schnittkurve ab —
+ * Schneide f(x, y) = x² + xy bei festem y auf und leite die Schnittkurve ab:
  * die Steigung der Tangente an die Schnittkurve IST ∂f/∂x.
  */
 function PartialDerivativeWidget() {
@@ -36,7 +36,7 @@ function PartialDerivativeWidget() {
       />
       <p className="mt-1 text-xs text-slate-300">
         Blau: die Schnittkurve von f(x, y) = x² + xy bei dem von uns
-        festgehaltenen y — eine ganz gewöhnliche Kurve in einer Variablen. Die
+        festgehaltenen y, eine ganz gewöhnliche Kurve in einer Variablen. Die
         Steigung der gestrichelten Tangente bei x₀ ist die partielle Ableitung
         ∂f/∂x = 2x₀ + y. Ändern wir das festgehaltene y, verschiebt sich die
         ganze Schnittkurve (und mit ihr die Steigung).
@@ -73,7 +73,7 @@ registerConcept({
         <M>{"x_i"}</M>-Richtung aufschneiden. Sammeln wir alle <M>{"n"}</M>{" "}
         partiellen Ableitungen von <M>{"\\phi(\\bx)"}</M> in einem Vektor,
         erhalten wir den{" "}
-        <ConceptLink id="gradient">Gradienten</ConceptLink> — genau das Objekt,
+        <ConceptLink id="gradient">Gradienten</ConceptLink>, genau das Objekt,
         das man bei der Kleinste-Quadrate-Herleitung gleich null setzt,
         Komponente <M>{"\\partial \\phi(\\bx) / \\partial x_i"}</M> für
         Komponente (vgl. Heath §3.2).

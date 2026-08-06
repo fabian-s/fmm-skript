@@ -45,14 +45,14 @@ registerConcept({
         <M>{"(x_0, f(x_0))"}</M> und <M>{"(x_0 + h, f(x_0 + h))"}</M>, so ist
         die <ConceptLink id="slope">Steigung</ConceptLink> der Sekante
         &bdquo;Höhenzuwachs durch Schrittweite&ldquo;:{" "}
-        <M>{"\\frac{f(x_0+h) - f(x_0)}{h}"}</M> &mdash; genau der
+        <M>{"\\frac{f(x_0+h) - f(x_0)}{h}"}</M>, genau der
         Differenzenquotient (vgl. MML Def. 5.1). Zum Beispiel hat auf{" "}
         <M>{"f(x) = x^2"}</M> die Sekante durch die Punkte bei{" "}
         <M>{"x=1"}</M> und <M>{"x=2"}</M> die Steigung{" "}
         <M>{"(4-1)/(2-1) = 3"}</M>. Rücken die beiden Punkte zusammen (
         <M>{"h \\to 0"}</M>), wird aus der Sekante die{" "}
         <ConceptLink id="tangent-line">Tangente</ConceptLink> bei{" "}
-        <M>{"x_0"}</M> &mdash; das ist die ganze Idee hinter der Ableitung.
+        <M>{"x_0"}</M>. Das ist die ganze Idee hinter der Ableitung.
       </p>
       <SecantWidget />
     </>

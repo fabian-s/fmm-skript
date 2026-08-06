@@ -58,7 +58,7 @@ registerConcept({
         <M>{"k!"}</M> vielleicht als die Anzahl der Möglichkeiten,{" "}
         <M>{"k"}</M> Objekte anzuordnen. Hier taucht die Fakultät in
         Binomialkoeffizienten wie <M>{"\\frac{n!}{i!\\,(n-i)!}"}</M> auf (vgl.
-        MML, Beispiel 5.2) und — am wichtigsten — als Nenner{" "}
+        MML, Beispiel 5.2) und, am wichtigsten, als Nenner{" "}
         <M>{"\\frac{f^{(k)}(x_0)}{k!}"}</M> in Taylor-Polynomen: Das rasante
         Wachstum von <M>{"k!"}</M> zähmt die Terme höherer Ordnung, sodass die
         Reihe zur Ruhe kommen kann.

@@ -3,7 +3,7 @@ import { S32NormBallWidget } from "./widgets/S32NormBallWidget";
 import { S32VecNormWidget } from "./widgets/S32VecNormWidget";
 
 /**
- * Abschnitt 3.2 — Matrixnormen: Definition und Beispiele.
+ * Abschnitt 3.2 – Matrixnormen: Definition und Beispiele.
  * Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Matrixnormen - Definition
  * und Beispiele". Prosa eigenständig aus den Folien formuliert; der
  * Einheitskugel-Widget-Code ist aus der internen heath-ch2-App recycelt.
@@ -19,7 +19,7 @@ export function S32() {
         Frobenius-Norm bereits eine erste Möglichkeit kennengelernt, die „Größe" einer Matrix in
         einer einzigen Zahl zusammenzufassen. In diesem Abschnitt gehen wir das Thema
         grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm überhaupt ist,
-        konstruieren eine ganze Familie von Beispielen — und entdecken dann, dass diese
+        konstruieren eine ganze Familie von Beispielen und entdecken dann, dass diese
         naheliegenden Normen einen blinden Fleck haben. Das motiviert die Operatornormen des{" "}
         <a className="underline" href="#sec-3.3">nächsten Abschnitts</a>.
       </p>
@@ -30,12 +30,12 @@ export function S32() {
       <p>
         Für Vektoren sind <ConceptLink id="norm">Normen</ConceptLink> unser wichtigstes
         Messinstrument: Sie machen aus einem Fehler<em>vektor</em> eine Fehler<em>größe</em>,
-        mit der wir rechnen und argumentieren können. Genau dasselbe brauchen wir für Matrizen —
-        aus vier konkreten Anlässen:
+        mit der wir rechnen und argumentieren können. Dasselbe brauchen wir für Matrizen, und
+        zwar aus vier konkreten Anlässen:
       </p>
       <ul className="max-w-prose list-disc space-y-1 pl-5">
         <li>
-          die „Größe" einer Matrix messen — analog zur Länge eines Vektors;
+          die „Größe" einer Matrix messen, analog zur Länge eines Vektors;
         </li>
         <li>
           <em>Fehler</em> quantifizieren: Wie weit liegt eine mit{" "}
@@ -60,7 +60,7 @@ export function S32() {
         „Aussehen" lässt sich am besten über ihre Einheitskugeln{" "}
         <M>{"\\{\\bx : \\|\\bx\\|_p = 1\\}"}</M> vergleichen: Raute, Kreis, Quadrat.
       </p>
-      <ExpandedReading title="Auffrischung: die Einheitskugeln der p-Normen — interaktiv">
+      <ExpandedReading title="Auffrischung: die Einheitskugeln der p-Normen – interaktiv">
         <S32NormBallWidget />
       </ExpandedReading>
 
@@ -91,14 +91,14 @@ export function S32() {
       </EnvBlock>
       <EnvBlock kind="Bemerkung" label="3.2.2">
         <p>
-          Das sind exakt die Axiome einer Vektornorm — kein Zufall: Die Menge{" "}
+          Das sind exakt die Axiome einer Vektornorm, und das ist kein Zufall: Die Menge{" "}
           <M>{"\\R^{m \\times n}"}</M> ist ein{" "}
           <ConceptLink id="vector-space">Vektorraum</ConceptLink> (der Dimension{" "}
           <M>{"mn"}</M>), und eine Matrixnorm ist schlicht eine Norm auf diesem Raum.
           Umgekehrt ist jede Vektornorm eine Matrixnorm auf dem Raum{" "}
           <M>{"\\R^{n \\times 1}"}</M> der einspaltigen Matrizen. Was eine Matrixnorm über
-          diese Grundaxiome hinaus leisten <em>sollte</em> — etwa gut mit dem Matrixprodukt
-          zusammenzuspielen — untersuchen wir in{" "}
+          diese Grundaxiome hinaus leisten <em>sollte</em> (etwa gut mit dem Matrixprodukt
+          zusammenzuspielen), untersuchen wir in{" "}
           <a className="underline" href="#sec-3.5">Abschnitt 3.5</a>.
         </p>
       </EnvBlock>
@@ -119,7 +119,7 @@ export function S32() {
         <MD>{"\\vec(\\bA) = \\left(a_{11}, \\ldots, a_{m1},\\; a_{12}, \\ldots, a_{m2},\\; \\ldots,\\; a_{1n}, \\ldots, a_{mn}\\right)^\\top \\in \\R^{mn}."}</MD>
       </EnvBlock>
       <p>
-        Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen — die
+        Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen, denn die
         Vektorisierung sortiert die Einträge ja nur um:
       </p>
       <EnvBlock kind="Satz" label="3.2.4">
@@ -185,7 +185,7 @@ export function S32() {
           <li>
             <em>Frobenius-Norm</em> (aus der <M>{"2"}</M>-Norm):{" "}
             <MD>{"\\cblue{\\left\\| \\bA \\right\\|_F} = \\left\\| \\vec(\\bA) \\right\\|_2 = \\sqrt{\\sum_{i,j} a_{ij}^2}"}</MD>
-            — das stimmt mit der Definition aus{" "}
+            Das stimmt mit der Definition aus{" "}
             <a className="underline" href="#sec-3.1">Abschnitt 3.1</a> überein, wo wir außerdem{" "}
             <M>{"\\cblue{\\left\\| \\bA \\right\\|_F} = \\sqrt{\\tr(\\bA^\\top\\bA)}"}</M>{" "}
             gezeigt haben.
@@ -200,7 +200,7 @@ export function S32() {
           </li>
         </ul>
       </EnvBlock>
-      <ExpandedReading title="Frobenius-, Summen- und Maximumsnorm — live nachgerechnet">
+      <ExpandedReading title="Frobenius-, Summen- und Maximumsnorm: live nachgerechnet">
         <S32VecNormWidget />
       </ExpandedReading>
 
@@ -209,9 +209,9 @@ export function S32() {
       </h3>
       <p>
         Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Trotzdem
-        haben sie einen konzeptionellen Haken: Sie behandeln die Matrix wie einen langen Vektor
-        — jede Umordnung der Einträge lässt die Norm unverändert. Eine Matrix ist aber mehr als
-        eine Tabelle von Zahlen: Sie repräsentiert die{" "}
+        haben sie einen konzeptionellen Haken: Sie behandeln die Matrix wie einen langen
+        Vektor; jede Umordnung der Einträge lässt die Norm unverändert. Eine Matrix ist aber
+        mehr als eine Tabelle von Zahlen: Sie repräsentiert die{" "}
         <ConceptLink id="linear-transformation">lineare Abbildung</ConceptLink>{" "}
         <M>{"\\bx \\mapsto \\bA\\bx"}</M>, und von dieser Abbildung wissen die elementweisen
         Normen nichts. Ihnen fehlt damit auch eine direkte geometrische Interpretation: Was
@@ -232,12 +232,12 @@ export function S32() {
         </p>
         <ul className="list-disc space-y-1 pl-5">
           <li>
-            <M>{"\\cred{\\bA_1}\\bx = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\bx"}</M> —
-            die <ConceptLink id="identity-matrix">Identität</ConceptLink> lässt{" "}
+            <M>{"\\cred{\\bA_1}\\bx = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix} = \\bx"}</M>:
+            Die <ConceptLink id="identity-matrix">Identität</ConceptLink> lässt{" "}
             <em>jeden</em> Vektor unverändert.
           </li>
           <li>
-            <M>{"\\cblue{\\bA_2}\\bx = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}"}</M> — die{" "}
+            <M>{"\\cblue{\\bA_2}\\bx = \\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}"}</M>: Die{" "}
             <ConceptLink id="permutation-matrix">Permutationsmatrix</ConceptLink>{" "}
             <M>{"\\cblue{\\bA_2}"}</M> vertauscht die beiden Koordinaten. Geometrisch ist das
             eine <ConceptLink id="reflection">Spiegelung</ConceptLink> an der
@@ -246,16 +246,16 @@ export function S32() {
             <ConceptLink id="determinant">Determinante</ConceptLink>).
           </li>
           <li>
-            <M>{"\\cgreen{\\bA_3}\\bx = \\begin{pmatrix} \\sqrt{2} \\\\ 0 \\end{pmatrix}"}</M>{" "}
-            — <M>{"\\cgreen{\\bA_3}"}</M> streckt die erste Koordinate um den Faktor{" "}
+            <M>{"\\cgreen{\\bA_3}\\bx = \\begin{pmatrix} \\sqrt{2} \\\\ 0 \\end{pmatrix}"}</M>:{" "}
+            <M>{"\\cgreen{\\bA_3}"}</M> streckt die erste Koordinate um den Faktor{" "}
             <M>{"\\sqrt{2}"}</M> und löscht die zweite komplett:{" "}
             <M>{"\\cgreen{\\bA_3}(0,1)^\\top = \\bnull"}</M>. Diese Matrix ist singulär (nicht{" "}
-            <ConceptLink id="matrix-inverse">invertierbar</ConceptLink>) — sie kollabiert die
+            <ConceptLink id="matrix-inverse">invertierbar</ConceptLink>); sie kollabiert die
             ganze Ebene auf die <M>{"x_1"}</M>-Achse.
           </li>
         </ul>
         <p>
-          Zwei längentreue Abbildungen und eine, die eine ganze Dimension vernichtet — und die
+          Zwei längentreue Abbildungen und eine, die eine ganze Dimension vernichtet – und die
           Frobenius-Norm kann sie nicht auseinanderhalten.
         </p>
       </EnvBlock>
@@ -270,13 +270,13 @@ export function S32() {
         </p>
         <MD>{"\\cblue{\\left\\| \\bI_n \\right\\|_F} = \\sqrt{\\underbrace{1 + \\cdots + 1}_{n}} = \\cblue{\\sqrt{n}}, \\qquad \\corange{\\left\\| \\bI_n \\right\\|_S} = \\corange{n}, \\qquad \\cpurp{\\left\\| \\bI_n \\right\\|_M} = \\cpurp{1}."}</MD>
         <p>
-          Die Abbildung <M>{"\\bx \\mapsto \\bI_n\\bx = \\bx"}</M> ändert überhaupt nichts —
+          Die Abbildung <M>{"\\bx \\mapsto \\bI_n\\bx = \\bx"}</M> ändert überhaupt nichts,
           trotzdem wachsen Frobenius- und Summennorm mit <M>{"n"}</M> über alle Grenzen.
         </p>
       </EnvBlock>
       <p>
         Eine Norm, die die Matrix als <em>Abbildung</em> misst, sollte der Identität den Wert{" "}
-        <M>{"1"}</M> geben — unabhängig von der Dimension. Die Maximumsnorm trifft diesen Wert
+        <M>{"1"}</M> geben, unabhängig von der Dimension. Die Maximumsnorm trifft diesen Wert
         hier zwar zufällig, bleibt aber genauso blind für das, was{" "}
         <M>{"\\bA"}</M> mit Vektoren <em>tut</em> (im{" "}
         <ConceptLink id="matrix-vector-product">Matrix-Vektor-Produkt</ConceptLink>{" "}

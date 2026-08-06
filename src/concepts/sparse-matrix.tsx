@@ -41,7 +41,7 @@ function SpyWidget() {
         Besetzungsmuster (spy plot) einer 12×12-Bandmatrix: blau =
         Nichtnull-Eintrag (Zeile i, Spalte j), grau = Null, die wir gar nicht
         erst speichern müssen. Bandbreite 1 ergibt eine{" "}
-        <em>Tridiagonalmatrix</em> &mdash; nur {3 * N - 2} von {N * N}{" "}
+        <em>Tridiagonalmatrix</em>: nur {3 * N - 2} von {N * N}{" "}
         Einträgen können ungleich Null sein.
       </p>
     </div>
@@ -56,7 +56,7 @@ registerConcept({
       <p>
         Eine <ConceptLink id="matrix">Matrix</ConceptLink> heißt{" "}
         <em>dünnbesetzt</em> (sparse), wenn die allermeisten ihrer Einträge
-        Null sind &mdash; so viele, dass es sich lohnt, nur die
+        Null sind, so viele, dass es sich lohnt, nur die
         Nichtnull-Einträge zu speichern und mit ihnen zu rechnen. Eine
         tridiagonale <M>{"n \\times n"}</M>-Matrix etwa hat höchstens{" "}
         <M>{"3n - 2"}</M> Nichtnull-Einträge von <M>{"n^2"}</M> insgesamt: Für{" "}
@@ -68,8 +68,8 @@ registerConcept({
         <em>lässt</em>. Wenden wir eine Transformation unbedacht an, können
         aus Nullen Nichtnullen werden (sogenanntes <em>Fill-in</em>, bekannt
         aus der{" "}
-        <ConceptLink id="lu-decomposition">LR-Zerlegung</ConceptLink>) &mdash;
-        und die Ersparnis ist dahin. Deshalb bevorzugen wir für dünnbesetzte
+        <ConceptLink id="lu-decomposition">LR-Zerlegung</ConceptLink>), und
+        die Ersparnis ist dahin. Deshalb bevorzugen wir für dünnbesetzte
         Kleinste-Quadrate-Probleme Givens-Rotationen, die gezielt einen
         einzelnen Eintrag auslöschen und das restliche Nullmuster in Ruhe
         lassen, gegenüber Householder-Spiegelungen, die ganze Spalten auf

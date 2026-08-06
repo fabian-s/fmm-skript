@@ -1,7 +1,7 @@
 /**
  * Widgets für §2.1: Auslöschungs-Demo (Varianz-Verschiebungsformel bei
  * wachsender Verschiebung) und Assoziativitäts-Demo (Reihenfolge der
- * Gleitkomma-Addition). Beide rechnen live in IEEE-Doppelpräzision —
+ * Gleitkomma-Addition). Beide rechnen live in IEEE-Doppelpräzision,
  * derselben Arithmetik, die auch R verwendet.
  */
 import { useState } from "react";
@@ -55,17 +55,17 @@ export function AusloeschungDemo() {
     ok = true;
     status =
       "Beide Rechenwege liefern exakt 22,5. Die Rundungsfehler der beiden großen " +
-      "Terme bleiben noch deutlich unter deren wahrer Differenz 22,5 — die " +
+      "Terme bleiben noch deutlich unter deren wahrer Differenz 22,5; die " +
       "Subtraktion verliert nichts Wesentliches.";
   } else if (formel === 0) {
     status =
       "Totalausfall: Beide Terme werden auf dieselbe Maschinenzahl gerundet, die " +
-      "Differenz ist exakt 0 — die gesamte Information über die Streuung der Daten " +
+      "Differenz ist exakt 0. Die gesamte Information über die Streuung der Daten " +
       "ist ausgelöscht.";
   } else if (formel < 0) {
     status =
       "Eine negative Varianz! Die Rundungsfehler der beiden Terme sind inzwischen " +
-      "größer als ihre wahre Differenz 22,5 — das Vorzeichen des Ergebnisses ist " +
+      "größer als ihre wahre Differenz 22,5: Das Vorzeichen des Ergebnisses ist " +
       "reiner Rundungszufall.";
   } else {
     status =
@@ -118,14 +118,14 @@ export function AusloeschungDemo() {
       <p className="max-w-prose text-sm text-slate-600 dark:text-slate-300">
         Die zweistufige Rechnung <M>{"\\tfrac{1}{n}\\sumin (x_i - \\bar{x})^2"}</M>{" "}
         bleibt dagegen für jedes <M>{"k"}</M> exakt: Sie subtrahiert <em>zuerst</em> und
-        quadriert dann die kleinen Abweichungen <M>{"-6, -3, 3, 6"}</M> — es treffen nie
+        quadriert dann die kleinen Abweichungen <M>{"-6, -3, 3, 6"}</M>; es treffen nie
         zwei riesige, fast gleiche Zahlen aufeinander.
       </p>
       <p className="max-w-prose text-xs text-slate-500 dark:text-slate-400">
         Übrigens: Die genauen Zahlenwerte hier können von der R-Ausgabe in Beispiel
         2.1.3 abweichen (bei <M>{"k = 9"}</M> zeigt das Widget <M>{"-128"}</M> statt{" "}
         <M>{"0"}</M>). Das Widget summiert naiv von vorne nach hinten, Rs{" "}
-        <code>mean()</code> hängt intern einen Korrekturschritt an — beides ist
+        <code>mean()</code> hängt intern einen Korrekturschritt an. Beides ist
         IEEE-Doppelpräzision, nur die Reihenfolge der Rundungen unterscheidet sich.
         Dass schon <em>das</em> das Ergebnis ändert, ist selbst der beste Beleg für die
         Kernbotschaft dieses Abschnitts.
@@ -151,7 +151,7 @@ export function AssoziativDemo() {
   const status = kaputt
     ? "Jetzt gehen die Klammerungen auseinander: Der Abstand benachbarter " +
       "Maschinenzahlen bei 10^k ist inzwischen mindestens 2, also ist -10^k + 1 " +
-      "nicht mehr darstellbar und wird auf -10^k zurückgerundet — die 1 " +
+      "nicht mehr darstellbar und wird auf -10^k zurückgerundet; die 1 " +
       "verschwindet spurlos, bevor x sie retten kann."
     : "Noch stimmen beide Klammerungen überein: 1 ist groß genug gegenüber dem " +
       "Abstand benachbarter Maschinenzahlen bei 10^k, die Zwischensumme y + z kann " +
@@ -162,7 +162,7 @@ export function AssoziativDemo() {
       <p className="max-w-prose text-sm">
         Wir addieren <M>{"\\cred{x = 10^k}"}</M>, <M>{"\\cblue{y = -10^k}"}</M> und{" "}
         <M>{"\\cgreen{z = 1}"}</M> in zwei Klammerungen. Mathematisch ist beides{" "}
-        <M>{"1"}</M> — in Gleitkommaarithmetik nicht immer:
+        <M>{"1"}</M>, in Gleitkommaarithmetik nicht immer:
       </p>
       <Slider label="Exponent k" value={k} onChange={setK} min={0} max={30} step={1} fmt={(v) => `10^${v}`} />
       <div className="overflow-x-auto rounded border border-slate-200 p-3 text-sm dark:border-slate-700">

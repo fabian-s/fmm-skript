@@ -47,10 +47,10 @@ function TraceWidget() {
         λ₁ + λ₂ = {sum} = tr(A) · λ₁ · λ₂ = {prod} = det(A)
       </div>
       <p className="mt-1 text-xs opacity-80">
-        Ändern wir die Einträge: Die Eigenwerte springen umher — sie können
+        Ändern wir die Einträge: Die Eigenwerte springen umher (sie können
         sogar zu einem{" "}
         <ConceptLink id="complex-numbers">komplex</ConceptLink> konjugierten
-        Paar werden — aber ihre Summe ist immer die Spur und ihr Produkt die
+        Paar werden), aber ihre Summe ist immer die Spur und ihr Produkt die
         Determinante.
       </p>
     </div>
@@ -71,7 +71,7 @@ registerConcept({
       <p>
         Für{" "}
         <M>{"\\bA = \\begin{pmatrix} 3 & 1 \\\\ 1 & 3 \\end{pmatrix}"}</M>{" "}
-        ist sie <M>{"3 + 3 = 6"}</M> — die Einträge abseits der Diagonale
+        ist sie <M>{"3 + 3 = 6"}</M>; die Einträge abseits der Diagonale
         ignorieren wir komplett. Obwohl sie so billig zu berechnen ist, steckt
         in der Spur etwas Tiefes: Sie ist gleich der Summe aller{" "}
         <ConceptLink id="eigenvalue-eigenvector">Eigenwerte</ConceptLink>{" "}
@@ -85,7 +85,7 @@ registerConcept({
         eine <M>{"2 \\times 2"}</M>-Matrix{" "}
         <M>{"\\lambda^2 - \\tr(\\bA)\\,\\lambda + \\det(\\bA)"}</M>{" "}
         lautet. Weil eine Ähnlichkeitstransformation die Eigenwerte erhält,
-        erhält sie auch Spur und Determinante — das macht die beiden zu
+        erhält sie auch Spur und Determinante. Das macht die beiden zu
         praktischen Invarianten, um Rechnungen zu prüfen: Hat eine angeblich
         ähnliche Matrix eine andere Spur, ist etwas schiefgelaufen.
       </p>

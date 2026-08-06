@@ -2,7 +2,7 @@ import { ConceptLink, EnvBlock, Eq, ExpandedReading, M, MD, Proof, PStep } from 
 import { FehlermassRechner, FehlerzerlegungExplorer } from "./widgets/S41Widgets";
 
 /**
- * Abschnitt 4.1 — Fehlermaße und Fehlerzerlegung.
+ * Abschnitt 4.1: Fehlermaße und Fehlerzerlegung.
  * Quelle: Folien 04-fehler.Rmd, Kapitelauftakt + Blöcke „Fehleranalyse"
  * (absolute/relative Fehler, Fehlermaß, Fehlerschranken-Lemma,
  * Vektor-Beispiel) und „Fehlerzerlegung" (Schema, Zerlegungsformel,
@@ -20,8 +20,8 @@ export function S41() {
         Speichern einer Zahl im <ConceptLink id="floating-point">Gleitkommaformat</ConceptLink>{" "}
         erzeugt <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>, und jede
         Rechenoperation kann weitere hinzufügen (
-        <a className="underline" href="?k=02-algos#sec-2.1">Abschnitt 2.1</a>). Für Statistiker:innen kommt
-        noch etwas Grundsätzlicheres dazu: Unsere Inputs sind Daten, und Daten sind gemessen —
+        <a className="underline" href="?k=02-algos#sec-2.1">Abschnitt 2.1</a>). Für Statistiker/innen kommt
+        noch etwas Grundsätzlicheres dazu: Unsere Inputs sind Daten, und Daten sind gemessen,
         also selbst schon fehlerbehaftet, bevor der Computer überhaupt anfängt zu rechnen. Dieses
         Kapitel entwickelt das Handwerkszeug, um mit beidem systematisch umzugehen. Wir klären
         zuerst, wie man Fehler überhaupt <em>misst</em>, und zerlegen dann den Gesamtfehler eines
@@ -83,7 +83,7 @@ export function S41() {
       <MD>{"\\cblue{\\text{fehlerhafter Wert}} = \\cgreen{\\text{tatsächlicher Wert}} \\cdot \\left(1 + \\corange{\\text{relativer Fehler}}\\right)."}</MD>
       <p>
         Ein fehlerbehafteter Wert ist also der wahre Wert, multiplikativ verzerrt um den Faktor{" "}
-        <M>{"1 + \\corange{\\text{relativer Fehler}}"}</M> — genau so lässt sich auch das aus
+        <M>{"1 + \\corange{\\text{relativer Fehler}}"}</M>. So lässt sich auch das aus
         Kapitel 2 bekannte Runden im Gleitkommaformat beschreiben: Dort ist der relative Fehler
         höchstens die{" "}
         <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink>.
@@ -93,7 +93,7 @@ export function S41() {
         4.1.2 Fehlermaße und Fehlerschranken
       </h3>
       <p>
-        In der Statistik sind unsere Ergebnisse selten einzelne Zahlen — wir rechnen mit
+        In der Statistik sind unsere Ergebnisse selten einzelne Zahlen: Wir rechnen mit
         Vektoren von Schätzern, mit Kovarianzmatrizen, mit ganzen Funktionen. Um Fehler auch
         dort messen zu können, brauchen wir statt des Betrags eine{" "}
         <ConceptLink id="norm">Norm</ConceptLink>. Genau dafür haben wir in Kapitel 3 die
@@ -120,7 +120,7 @@ export function S41() {
       </EnvBlock>
       <p>
         Beachten wir den kleinen, aber wichtigen Unterschied: Der absolute Fehler{" "}
-        <M>{"\\cred{\\bDelta_{\\bv}}"}</M> ist selbst ein Element von <M>{"V"}</M> — er sagt uns
+        <M>{"\\cred{\\bDelta_{\\bv}}"}</M> ist selbst ein Element von <M>{"V"}</M> und sagt uns
         auch, <em>in welche Richtung</em> die Approximation danebenliegt. Der relative Fehler{" "}
         <M>{"\\corange{\\delta_{\\bv}}"}</M> ist dagegen eine einzelne nichtnegative Zahl. Für
         Skalare (<M>{"V = \\R"}</M> mit dem Betrag als Norm) liefert die Definition gerade den
@@ -128,7 +128,7 @@ export function S41() {
         <a className="underline" href="#sec-4.1.1">Abschnitt 4.1.1</a>.
       </p>
       <p>
-        Oft kennen wir den Fehler nicht exakt — sonst könnten wir ihn ja einfach abziehen und
+        Oft kennen wir den Fehler nicht exakt, sonst könnten wir ihn ja einfach abziehen und
         exakt rechnen. Was wir realistischerweise angeben können, ist eine Garantie nach oben:
         Gilt <M>{"\\left\\| \\cred{\\bDelta_{\\bv}} \\right\\| \\le \\eps"}</M> bzw.{" "}
         <M>{"\\corange{\\delta_{\\bv}} \\le \\eps"}</M>, so nennen wir <M>{"\\eps"}</M> eine{" "}
@@ -197,7 +197,7 @@ export function S41() {
           <M>{"\\left\\| \\cdot \\right\\|_2"}</M>.
         </p>
         <p>
-          <strong>Absoluter Fehler</strong> — komponentenweise Differenz:
+          <strong>Absoluter Fehler</strong>, komponentenweise Differenz:
         </p>
         <MD>{"\\cred{\\bDelta_{\\bv}} = \\cblue{\\wt{\\bv}} - \\cgreen{\\bv} = \\cblue{\\begin{pmatrix} 3{,}2 \\\\ 4{,}3 \\end{pmatrix}} - \\cgreen{\\begin{pmatrix} 3 \\\\ 4 \\end{pmatrix}} = \\cred{\\begin{pmatrix} 0{,}2 \\\\ 0{,}3 \\end{pmatrix}}."}</MD>
         <p>
@@ -205,7 +205,7 @@ export function S41() {
         </p>
         <MD>{"\\left\\| \\cred{\\bDelta_{\\bv}} \\right\\|_2 = \\sqrt{0{,}2^2 + 0{,}3^2} = \\sqrt{0{,}04 + 0{,}09} = \\sqrt{0{,}13} \\approx 0{,}361."}</MD>
         <p>
-          <strong>Relativer Fehler</strong> — wegen{" "}
+          <strong>Relativer Fehler</strong>, wegen{" "}
           <M>{"\\left\\| \\cgreen{\\bv} \\right\\|_2 = \\sqrt{3^2 + 4^2} = \\sqrt{25} = 5"}</M>:
         </p>
         <MD>{"\\corange{\\delta_{\\bv}} = \\frac{\\left\\| \\cred{\\bDelta_{\\bv}} \\right\\|_2}{\\left\\| \\cgreen{\\bv} \\right\\|_2} = \\frac{\\sqrt{0{,}13}}{5} \\approx \\frac{0{,}361}{5} \\approx 0{,}072 = 7{,}2\\,\\%."}</MD>
@@ -232,8 +232,8 @@ export function S41() {
         Jetzt zur zweiten Leitfrage: <em>Woher</em> kommt der Fehler in einem berechneten
         Ergebnis? Formalisieren wir dazu die Situation. Sei <M>{"f"}</M> ein Problem (eine
         Funktion, die wir auswerten wollen) mit idealem Input <M>{"\\bx"}</M>. Was der Computer
-        stattdessen ausführt, ist ein Algorithmus <M>{"\\wt{f}"}</M> — eine Näherung an{" "}
-        <M>{"f"}</M> —, und zwar am tatsächlichen Input <M>{"\\wt{\\bx}"}</M>, einer Näherung an{" "}
+        stattdessen ausführt, ist ein Algorithmus <M>{"\\wt{f}"}</M> (eine Näherung an{" "}
+        <M>{"f"}</M>), und zwar am tatsächlichen Input <M>{"\\wt{\\bx}"}</M>, einer Näherung an{" "}
         <M>{"\\bx"}</M>:
       </p>
       <MD>{"\\text{Input } \\wt{\\bx} \\quad \\longrightarrow \\quad \\text{Algorithmus } \\wt{f} \\quad \\longrightarrow \\quad \\text{Ergebnis } \\cblue{\\wt{f}(\\wt{\\bx})}."}</MD>
@@ -243,12 +243,12 @@ export function S41() {
       </p>
       <ul className="max-w-prose list-disc space-y-1 pl-5">
         <li>
-          am <em>Fehler im Input</em> — <M>{"\\wt{\\bx} \\neq \\bx"}</M>, etwa durch Messen oder
+          am <em>Fehler im Input</em>, also <M>{"\\wt{\\bx} \\neq \\bx"}</M>, etwa durch Messen oder
           Speichern von <M>{"\\bx"}</M>. Diese Fehler sind <em>unvermeidbar</em>: Sie entstehen,
           bevor unser Programm die erste Zeile ausführt.
         </li>
         <li>
-          am <em>Fehler im Algorithmus</em> — <M>{"\\wt{f} \\neq f"}</M>, etwa durch Rundung in
+          am <em>Fehler im Algorithmus</em>, also <M>{"\\wt{f} \\neq f"}</M>, etwa durch Rundung in
           Maschinenarithmetik oder durch bewusste Approximation (abgebrochene Reihen,
           Diskretisierung, endlich viele Iterationen). Diese Fehler <em>können wir
           beeinflussen</em>: durch die Wahl eines besseren Algorithmus.
@@ -257,7 +257,7 @@ export function S41() {
       <p>
         Der zentrale Trick dieses Kapitels ist nun, den Gesamtfehler exakt in diese zwei Anteile
         zu zerlegen. Dazu subtrahieren und addieren wir den Zwischenwert{" "}
-        <M>{"f(\\wt{\\bx})"}</M> — das ideale Problem, ausgewertet am tatsächlichen Input:
+        <M>{"f(\\wt{\\bx})"}</M> (das ideale Problem, ausgewertet am tatsächlichen Input):
       </p>
       <Eq tag="4.1.1">
         {"\\cpurp{\\underbrace{\\wt{f}(\\wt{\\bx}) - f(\\bx)}_{\\text{Gesamtfehler}}} \\;=\\; \\cred{\\underbrace{\\wt{f}(\\wt{\\bx}) - f(\\wt{\\bx})}_{\\substack{\\text{Fehler im Algorithmus} \\\\ \\text{(Maschinenarithmetik)}}}} \\;+\\; \\corange{\\underbrace{f(\\wt{\\bx}) - f(\\bx)}_{\\substack{\\text{Folgefehler aus Input} \\\\ \\text{(exakte Arithmetik)}}}}"}
@@ -266,18 +266,18 @@ export function S41() {
         Warum ist diese Zerlegung so nützlich? Weil die beiden Terme sauber getrennte
         Verantwortlichkeiten haben:
       </p>
-      <EnvBlock kind="Bemerkung" label="4.1.5 (Stabilität und Kondition — Ausblick)">
+      <EnvBlock kind="Bemerkung" label="4.1.5 (Stabilität und Kondition: Ausblick)">
         <ul className="list-disc space-y-1 pl-5">
           <li>
             Der erste Term <M>{"\\cred{\\wt{f}(\\wt{\\bx}) - f(\\wt{\\bx})}"}</M> vergleicht
-            Algorithmus und Problem <em>am selben Input</em> — er hängt nicht vom Inputfehler ab.
-            Ist er „klein", nennen wir den Algorithmus <em>stabil</em> (
+            Algorithmus und Problem <em>am selben Input</em> und hängt damit nicht vom
+            Inputfehler ab. Ist er „klein", nennen wir den Algorithmus <em>stabil</em> (
             <a className="underline" href="#sec-4.3">Abschnitt 4.3</a>).
           </li>
           <li>
             Der zweite Term <M>{"\\corange{f(\\wt{\\bx}) - f(\\bx)}"}</M> vergleicht das ideale
-            Problem <M>{"f"}</M> an zwei Inputs, in exakter Arithmetik — er hängt nicht vom
-            Algorithmus <M>{"\\wt{f}"}</M> ab. Ist er „klein", nennen wir das Problem{" "}
+            Problem <M>{"f"}</M> an zwei Inputs, in exakter Arithmetik, und hängt damit nicht
+            vom Algorithmus <M>{"\\wt{f}"}</M> ab. Ist er „klein", nennen wir das Problem{" "}
             <M>{"f"}</M> an der Stelle <M>{"\\bx"}</M> <em>gut konditioniert</em> (
             <a className="underline" href="#sec-4.2">Abschnitt 4.2</a>).
           </li>
@@ -285,7 +285,7 @@ export function S41() {
       </EnvBlock>
       <p>
         Die Zerlegung (4.1.1) trennt also, was der Algorithmus verbockt, von dem, was am
-        gestörten Input liegt — und nur den ersten Anteil können wir durch bessere Software
+        gestörten Input liegt – und nur den ersten Anteil können wir durch bessere Software
         reparieren. Sehen wir uns das an einem vollständig durchgerechneten Beispiel an.
       </p>
       <EnvBlock kind="Beispiel" label="4.1.6 (Fehlerzerlegung: Berechnung von e^π)">
@@ -297,7 +297,7 @@ export function S41() {
           <M>{"\\wt{\\pi} = 3"}</M> (auf eine ganze Zahl gerundet) und als Algorithmus die nach
           dem quadratischen Glied abgebrochene Reihe{" "}
           <M>{"\\wt{f}(x) = \\sum_{n=0}^{2} \\frac{x^n}{n!} = 1 + x + \\tfrac{x^2}{2}"}</M>.
-          Zerlegen wir den Gesamtfehler wie in (4.1.1) — am besten erst selbst probieren, dann
+          Zerlegen wir den Gesamtfehler wie in (4.1.1). Am besten erst selbst probieren, dann
           weiterlesen.
         </p>
         <p>
@@ -307,17 +307,17 @@ export function S41() {
         </p>
         <MD>{"\\cpurp{\\wt{f}(3) - f(\\pi)} = \\cred{\\bigl[\\wt{f}(3) - f(3)\\bigr]} + \\corange{\\bigl[f(3) - f(\\pi)\\bigr]}."}</MD>
         <p>
-          <strong>Fehler im Algorithmus</strong> — die abgebrochene Reihe gegen{" "}
+          <strong>Fehler im Algorithmus</strong>, also die abgebrochene Reihe gegen{" "}
           <M>{"e^3"}</M>; der Fehler ist gerade der weggelassene Reihenrest, mit Minuszeichen:
         </p>
         <MD>{"\\cred{\\wt{f}(3) - f(3)} = \\left(1 + 3 + \\tfrac{9}{2}\\right) - e^3 = -\\sum_{n=3}^{\\infty} \\frac{3^n}{n!} \\approx 8{,}5 - 20{,}086 = \\cred{-11{,}586}."}</MD>
         <p>
-          <strong>Folgefehler aus dem Input</strong> — das exakte Problem <M>{"f"}</M> an den
+          <strong>Folgefehler aus dem Input</strong>, das exakte Problem <M>{"f"}</M> an den
           zwei Inputs <M>{"3"}</M> und <M>{"\\pi"}</M>:
         </p>
         <MD>{"\\corange{f(3) - f(\\pi)} = e^3 - e^{\\pi} \\approx 20{,}086 - 23{,}141 = \\corange{-3{,}055}."}</MD>
         <p>
-          <strong>Gesamtfehler</strong> — zur Probe direkt und über die Zerlegung:
+          <strong>Gesamtfehler</strong>, zur Probe direkt und über die Zerlegung:
         </p>
         <MD>{"\\cpurp{\\wt{f}(3) - f(\\pi)} \\approx 8{,}5 - 23{,}141 = \\cpurp{-14{,}641} = \\cred{(-11{,}586)} + \\corange{(-3{,}055)}. \\quad \\checkmark"}</MD>
         <p>
@@ -325,7 +325,7 @@ export function S41() {
           Reihe lässt nur positive Terme weg und unterschätzt <M>{"e^3"}</M> deshalb systematisch;
           und wegen <M>{"3 < \\pi"}</M> und der Monotonie von <M>{"e^x"}</M> ist auch{" "}
           <M>{"e^3 < e^{\\pi}"}</M>. Der Algorithmusfehler dominiert klar (<M>{"-11{,}6"}</M>{" "}
-          gegenüber <M>{"-3{,}1"}</M>) — hier würde sich also zuerst ein besserer Algorithmus
+          gegenüber <M>{"-3{,}1"}</M>). Hier würde sich also zuerst ein besserer Algorithmus
           lohnen (mehr Reihenglieder), nicht ein genauerer Input.
         </p>
       </EnvBlock>

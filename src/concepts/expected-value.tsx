@@ -1,4 +1,4 @@
-/** Concept tooltip: expected value — probability-weighted average, E[X]. */
+/** Concept tooltip: expected value, the probability-weighted average E[X]. */
 import { useState } from "react";
 import { ConceptLink, M, MD, Plot, registerConcept, Slider } from "../lib";
 
@@ -44,13 +44,13 @@ registerConcept({
       <p>
         und für stetige Größen wird aus der Summe ein Integral über die Dichte
         (vgl. MML §6.4.1). Kleines Beispiel: Ein fairer Würfel hat{" "}
-        <M>{"\\E[X] = \\tfrac{1}{6}(1 + 2 + \\dots + 6) = 3.5"}</M> — kein
+        <M>{"\\E[X] = \\tfrac{1}{6}(1 + 2 + \\dots + 6) = 3.5"}</M>. Kein
         einzelner Wurf zeigt 3.5, aber der Durchschnitt vieler Würfe landet auf
-        lange Sicht dort. Genau diese Verbindung nutzt das stochastische
-        Gradientenverfahren: Ein Mittelwert über alle Datenpunkte — wie die
-        volle Gradientensumme — ist die empirische Schätzung eines
+        lange Sicht dort. Diese Verbindung nutzt das stochastische
+        Gradientenverfahren: Ein Mittelwert über alle Datenpunkte (wie die
+        volle Gradientensumme) ist die empirische Schätzung eines
         Erwartungswerts, und der Mittelwert über eine zufällige Teilstichprobe
-        schätzt dieselbe Größe — nur mit mehr Rauschen.
+        schätzt dieselbe Größe, nur mit mehr Rauschen.
       </p>
       <BetWidget />
     </>

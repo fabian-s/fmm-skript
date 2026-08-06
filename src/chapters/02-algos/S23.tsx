@@ -3,7 +3,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { S23FlopWidget, S23GrowthWidget, S23KonstantenWidget } from "./widgets/S23Aufwand";
 
 /**
- * Abschnitt 2.3 — Aufwand und Komplexität.
+ * Abschnitt 2.3: Aufwand und Komplexität.
  * Quelle: Folien 02-algos.Rmd, Block „Aufwand und Komplexität" (inkl. der
  * beiden Quiz-Folien als Selbsttests). Prosa eigenständig aus den Folien
  * formuliert; Widgets eigenständig implementiert.
@@ -62,7 +62,7 @@ function SelfTest({
         >
           {correct
             ? "Richtig!"
-            : "Leider nein — noch einmal probieren oder die Lösung ansehen."}
+            : "Leider nein, noch einmal probieren oder die Lösung ansehen."}
         </p>
       )}
       <button
@@ -94,7 +94,7 @@ export function S23() {
         anfühlen können: Der Aufruf-Zähler der naiven Fibonacci-Rekursion explodiert schon für
         kleine <M>{"n"}</M>, die iterative Variante ist sofort fertig. „Fühlt sich langsam an" ist aber kein
         mathematischer Begriff. In diesem Abschnitt machen wir daraus eine Größe, die wir{" "}
-        <em>zählen</em> können — den Aufwand eines Algorithmus — und lernen dann, wie man
+        <em>zählen</em> können (den Aufwand eines Algorithmus), und lernen dann, wie man
         Aufwände sinnvoll vergleicht: nicht über exakte Zahlen, sondern über ihr{" "}
         <em>Skalierungsverhalten</em>, die Komplexität.
       </p>
@@ -104,7 +104,7 @@ export function S23() {
       </h3>
       <p>
         Was kostet ein Algorithmus? Der Computer führt ihn letztlich als Folge{" "}
-        <em>elementarer Rechenoperationen</em> aus — Additionen, Subtraktionen,
+        <em>elementarer Rechenoperationen</em> aus: Additionen, Subtraktionen,
         Multiplikationen und Divisionen von{" "}
         <ConceptLink id="floating-point">Gleitkommazahlen</ConceptLink>. Jede dieser
         Operationen kostet ungefähr gleich viel Zeit, also ist ihre <em>Anzahl</em> ein gutes
@@ -130,7 +130,7 @@ export function S23() {
       </EnvBlock>
       <p>
         Elementare Gleitkomma-Operationen heißen in der Numerik-Literatur auch <em>FLOPs</em>{" "}
-        (engl. <em>floating point operations</em>) — „der Algorithmus braucht{" "}
+        (engl. <em>floating point operations</em>); „der Algorithmus braucht{" "}
         <M>{"2nd"}</M> FLOPs" ist also nur eine kompakte Sprechweise für unseren Zeitaufwand.
         Der Zusatz „ungefähr" in der Definition ist übrigens Absicht: Reale Laufzeiten hängen
         auch von Speicherzugriffen, Zwischenspeichern (Caches) und Parallelisierung ab. Für den
@@ -145,7 +145,7 @@ export function S23() {
         Zählen wir das an einem Arbeitspferd der Statistik konkret durch: dem{" "}
         <ConceptLink id="matrix-vector-product">Matrix-Vektor-Produkt</ConceptLink>{" "}
         <M>{"\\by = \\bA\\bx"}</M>. Es steckt in jeder Vorhersage eines linearen Modells und
-        in jeder Schicht eines neuronalen Netzes — sein Aufwand ist also alles andere als eine
+        in jeder Schicht eines neuronalen Netzes. Sein Aufwand ist also alles andere als eine
         akademische Frage. Wir verfolgen die <ConceptLink id="matrix">Matrix</ConceptLink>{" "}
         <M>{"\\cbred{\\bA}"}</M> in Rot und den{" "}
         <ConceptLink id="vector">Vektor</ConceptLink> <M>{"\\cblue{\\bx}"}</M> in Blau durch
@@ -170,7 +170,7 @@ export function S23() {
           <li>
             <em>Speicheraufwand:</em> <M>{"6"}</M> Zahlen für <M>{"\\cbred{\\bA}"}</M>,{" "}
             <M>{"2"}</M> für <M>{"\\cblue{\\bx}"}</M>, <M>{"3"}</M> für{" "}
-            <M>{"\\cbgreen{\\by}"}</M> — zusammen <M>{"11"}</M> Zahlen.
+            <M>{"\\cbgreen{\\by}"}</M>, zusammen <M>{"11"}</M> Zahlen.
           </li>
         </ul>
       </EnvBlock>
@@ -248,7 +248,7 @@ export function S23() {
       </Proof>
       <p>
         Die Faustregel lautet also: <em>Matrix-Vektor kostet</em>{" "}
-        <M>{"\\approx 2nd"}</M> <em>Operationen</em> — je zwei pro Matrixeintrag, eine
+        <M>{"\\approx 2nd"}</M> <em>Operationen</em>, je zwei pro Matrixeintrag, eine
         Multiplikation und eine Addition. Dieselbe Zählung funktioniert für die{" "}
         <ConceptLink id="matrix-multiplication">Matrix-Matrix-Multiplikation</ConceptLink>{" "}
         <M>{"\\bC = \\bA\\bB"}</M> mit <M>{"\\bB \\in \\R^{d \\times m}"}</M>: Sie besteht aus{" "}
@@ -264,7 +264,7 @@ export function S23() {
         Selbsttest: Operationen und Speicher zählen
       </h3>
       <p>
-        Zeit für einen Selbsttest — versuchen wir uns an den beiden Quizfragen aus der
+        Zeit für einen Selbsttest. Versuchen wir uns an den beiden Quizfragen aus der
         Vorlesung. Gegeben sind{" "}
         <M>{"\\bA \\in \\R^{n \\times d}"}</M> und <M>{"\\bx, \\by \\in \\R^d"}</M>, und wir
         wollen
@@ -309,15 +309,15 @@ export function S23() {
             </p>
             <ol className="list-decimal space-y-1 pl-5">
               <li>
-                <em>Subtraktion:</em> <M>{"(x_i - y_i)"}</M> — <M>{"1"}</M> Operation.
+                <em>Subtraktion:</em> <M>{"(x_i - y_i)"}</M>, das ist <M>{"1"}</M> Operation.
               </li>
               <li>
-                <em>Skalierung:</em> <M>{"(x_i - y_i) \\cdot \\bA_{\\cdot i}"}</M> — der
+                <em>Skalierung:</em> <M>{"(x_i - y_i) \\cdot \\bA_{\\cdot i}"}</M>; der
                 Skalar trifft jeden der <M>{"n"}</M> Einträge der Spalte, also{" "}
                 <M>{"n"}</M> Multiplikationen.
               </li>
               <li>
-                <em>Aktualisierung:</em> <M>{"\\bz \\leftarrow \\bz + \\ldots"}</M> —{" "}
+                <em>Aktualisierung:</em> <M>{"\\bz \\leftarrow \\bz + \\ldots"}</M>, also{" "}
                 <M>{"n"}</M> Additionen, eine pro Eintrag.
               </li>
             </ol>
@@ -329,7 +329,7 @@ export function S23() {
             <p>
               Zum Vergleich: Das ist bis auf den kleinen Term <M>{"+\\,d"}</M> dasselbe{" "}
               <M>{"\\approx 2nd"}</M> wie beim gewöhnlichen Matrix-Vektor-Produkt aus Satz
-              2.3.3 — kein Wunder, denn es <em>ist</em> ein Matrix-Vektor-Produkt, nur
+              2.3.3 – kein Wunder, denn es <em>ist</em> ein Matrix-Vektor-Produkt, nur
               spaltenweise organisiert.
             </p>
           </>
@@ -366,7 +366,7 @@ export function S23() {
             </ul>
             <p>
               Insgesamt also <M>{"n + nd + 2d"}</M> Gleitkommazahlen. (Streng genommen kommt
-              noch der eine Skalar <M>{"(x_i - y_i)"}</M> als Zwischenergebnis dazu — solche
+              noch der eine Skalar <M>{"(x_i - y_i)"}</M> als Zwischenergebnis dazu; solche
               konstanten Zusatzterme spielen keine Rolle, wie der nächste Unterabschnitt
               zeigt.)
             </p>
@@ -380,7 +380,7 @@ export function S23() {
       <p>
         Beim Nachrechnen der Quizfragen ist vielleicht aufgefallen: Ob nun{" "}
         <M>{"2nd + d"}</M> oder <M>{"2nd - n"}</M> oder <M>{"2nd"}</M> herauskommt, hängt von
-        Buchhaltungsdetails ab — zählt man die Initialisierung mit? Das Zwischenergebnis?
+        Buchhaltungsdetails ab: zählt man die Initialisierung mit? Das Zwischenergebnis?
         Solche Details sind für den Vergleich von Algorithmen unwichtig. Die <em>exakte</em>{" "}
         Anzahl an Operationen und gespeicherten Zahlen interessiert uns nicht. Was uns
         interessiert, ist, <em>wie der Aufwand mit der Größe des Problems wächst</em>: Was
@@ -400,7 +400,7 @@ export function S23() {
           <M>{"n"}</M> ist <M>{"16n^2 + 239"}</M> gegenüber <M>{"4n^3"}</M> vernachlässigbar:
           Bei <M>{"n = 100"}</M> steuert der kubische Term{" "}
           <M>{"4 \\cdot 10^6"}</M> Operationen bei, die restlichen Terme nur{" "}
-          <M>{"160\\,239"}</M> — rund <M>{"4\\,\\%"}</M> des Gesamtaufwands. Bei{" "}
+          <M>{"160\\,239"}</M>, rund <M>{"4\\,\\%"}</M> des Gesamtaufwands. Bei{" "}
           <M>{"n = 1000"}</M> sind es nur noch <M>{"0{,}4\\,\\%"}</M>. Der Algorithmus{" "}
           <em>skaliert</em> also wie <M>{"4n^3"}</M>; seine Komplexität ist von{" "}
           <em>kubischer Ordnung</em>, und wir schreiben kurz: „<M>{"O(n^3)"}</M>".
@@ -408,7 +408,7 @@ export function S23() {
       </EnvBlock>
       <p>
         Die Schreibweise <M>{"O(n^3)"}</M> lässt dabei bewusst auch den Vorfaktor{" "}
-        <M>{"4"}</M> weg — es zählt allein die <em>Ordnung</em> des Wachstums. Was genau
+        <M>{"4"}</M> weg; es zählt allein die <em>Ordnung</em> des Wachstums. Was genau
         hinter dem großen <M>{"O"}</M> steckt, definieren wir sauber in{" "}
         <a className="underline" href="#sec-2.4">Abschnitt 2.4</a>; hier genügt uns die
         Lesart „wächst höchstens wie".
@@ -430,7 +430,7 @@ export function S23() {
           </li>
           <li>
             <M>{"O(\\log n)"}</M> <em>(logarithmisch)</em>: Verdoppelt sich <M>{"n"}</M>,
-            kommt (nur!) eine Operation hinzu — denn{" "}
+            kommt (nur!) eine Operation hinzu, denn{" "}
             <M>{"\\log_2(2n) = \\log_2(n) + 1"}</M> (
             <ConceptLink id="logarithm">Logarithmus</ConceptLink>).
           </li>
@@ -452,7 +452,7 @@ export function S23() {
       </EnvBlock>
       <p>
         Exponentielle Algorithmen sind damit für alle nicht winzigen Probleme praktisch
-        unbrauchbar — genau das ist der naiven Fibonacci-Rekursion aus{" "}
+        unbrauchbar. Genau das ist der naiven Fibonacci-Rekursion aus{" "}
         <a className="underline" href="#sec-2.2">Abschnitt 2.2</a> passiert, wie wir in{" "}
         <a className="underline" href="#sec-2.5">Abschnitt 2.5</a> genau nachrechnen werden.
         In der numerischen linearen Algebra bewegen wir uns dagegen meist zwischen{" "}
@@ -469,10 +469,10 @@ export function S23() {
           Ordnung. Ein Algorithmus mit <M>{"1000n + 10\\,000"}</M> Operationen ist{" "}
           <M>{"O(n)"}</M>, aber trotzdem <em>langsamer</em> als ein{" "}
           <M>{"O(n^2)"}</M>-Algorithmus mit <M>{"n^2"}</M> Operationen, solange{" "}
-          <M>{"n^2 < 1000n + 10\\,000"}</M> gilt — und das ist für alle{" "}
+          <M>{"n^2 < 1000n + 10\\,000"}</M> gilt, und das ist für alle{" "}
           <M>{"n \\le 1009"}</M> der Fall! Bei <M>{"n = 100"}</M> etwa stehen{" "}
           <M>{"110\\,000"}</M> Operationen gegen nur <M>{"10\\,000"}</M>. Die
-          Komplexitätsklasse sagt, wer für <em>hinreichend große</em> Probleme gewinnt —
+          Komplexitätsklasse sagt, wer für <em>hinreichend große</em> Probleme gewinnt –
           nicht, wer bei <em>unserem konkreten</em> Problem gewinnt.
         </p>
       </EnvBlock>

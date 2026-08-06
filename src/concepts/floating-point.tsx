@@ -1,5 +1,5 @@
 /**
- * Concept tooltip: floating-point number — how computers store real numbers
+ * Concept tooltip: floating-point number, how computers store real numbers
  * with a fixed number of significant binary digits (mantissa + exponent).
  */
 import { useState } from "react";
@@ -107,7 +107,7 @@ registerConcept({
   body: (
     <>
       <p>
-        Ein Computer kann die meisten reellen Zahlen nicht exakt speichern —
+        Ein Computer kann die meisten reellen Zahlen nicht exakt speichern:
         er behält nur eine feste Anzahl signifikanter Binärziffern. Eine{" "}
         <em>Gleitkommazahl</em> (engl. <em>floating-point number</em>) wird
         wie in wissenschaftlicher Notation zur Basis 2 geschrieben: ein
@@ -121,7 +121,7 @@ registerConcept({
         <M>{"t = 52"}</M>). Zum Beispiel passt{" "}
         <M>{"3.25 = (1.101)_2 \\times 2^{1}"}</M> exakt, aber <M>{"0.1"}</M>{" "}
         hat eine unendlich periodische Binärdarstellung und muss nach{" "}
-        <M>{"t"}</M> Bits abgeschnitten werden — gespeichert wird nur eine
+        <M>{"t"}</M> Bits abgeschnitten werden; gespeichert wird nur eine
         darstellbare Zahl in der Nähe.
       </p>
       <p>
@@ -132,7 +132,7 @@ registerConcept({
         <ConceptLink id="machine-epsilon">Maschinen-Epsilon</ConceptLink>{" "}
         <M>{"2^{-t}"}</M>, nahe <M>{"1000"}</M> ist sie etwa tausendmal
         breiter. Jede Eingabe und jedes Rechenergebnis wird auf den nächsten
-        Gitterpunkt gerundet — die Quelle der{" "}
+        Gitterpunkt gerundet – die Quelle der{" "}
         <ConceptLink id="rounding-error">Rundungsfehler</ConceptLink>.
       </p>
       <ToyFloatLine />

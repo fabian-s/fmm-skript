@@ -45,7 +45,7 @@ registerConcept({
       <p>
         Eine einzelne Glockenkurve kann nur einen „Hügel" modellieren, aber
         eine Mischung aus wenigen passt sich auch Daten mit mehreren Clustern
-        an — deshalb sind GMMs ein Standardwerkzeug der{" "}
+        an; deshalb sind GMMs ein Standardwerkzeug der{" "}
         <ConceptLink id="density-estimation">Dichteschätzung</ConceptLink>.
         Die Parameter (Mittelwerte <M>{"\\mu_k"}</M>, Varianzen{" "}
         <M>{"\\sigma_k^2"}</M>, Gewichte <M>{"\\pi_k"}</M>) werden so gewählt,
@@ -53,7 +53,7 @@ registerConcept({
         <ConceptLink id="likelihood">Likelihood</ConceptLink> der
         beobachteten Daten maximieren; eine geschlossene Lösung gibt es nicht,
         also geschieht das per iterativer numerischer{" "}
-        <ConceptLink id="optimization">Optimierung</ConceptLink> — eines der
+        <ConceptLink id="optimization">Optimierung</ConceptLink>, eines der
         motivierenden Beispiele für dieses Thema.
       </p>
       <MixtureWidget />

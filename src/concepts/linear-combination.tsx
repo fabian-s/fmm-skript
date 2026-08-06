@@ -59,7 +59,7 @@ registerConcept({
         . Die Frage, ob sich <M>{"\\bb"}</M> durch Gewichten und Addieren der
         Spalten einer <ConceptLink id="matrix">Matrix</ConceptLink>{" "}
         <M>{"\\bA"}</M> bauen lässt, ist die Frage, ob irgendeine Wahl von
-        Gewichten diese Spalten genau zu <M>{"\\bb"}</M> mischt — und die
+        Gewichten diese Spalten genau zu <M>{"\\bb"}</M> mischt, und die
         Gewichte sind dann genau eine Lösung <M>{"\\bx"}</M> von{" "}
         <M>{"\\bA\\bx = \\bb"}</M>. Drehen wir an den beiden Reglern unten und
         schauen, welche Punkte die gelbe Mischung erreichen kann.

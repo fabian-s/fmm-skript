@@ -55,7 +55,7 @@ function GivensWidget() {
       <p className="my-2 text-sm">
         Stellen wir die beiden Komponenten von <M>{"\\ba"}</M> ein. Daraus berechnet das
         Widget <M>{"c"}</M> und <M>{"s"}</M> wie in Satz 7.5.2 und wendet die Rotation an:
-        blau ist <M>{"\\ba"}</M>, orange das Ergebnis <M>{"\\bG\\ba"}</M> — es landet stets
+        blau ist <M>{"\\ba"}</M>, orange das Ergebnis <M>{"\\bG\\ba"}</M>. Es landet stets
         auf der ersten Koordinatenachse, mit Länge{" "}
         <M>{"\\alpha = \\left\\|\\ba\\right\\|_2"}</M>. Im Hintergrund sehen wir, wohin{" "}
         <M>{"\\bG"}</M> das Koordinatengitter schickt: Alles wird nur gedreht, nichts
@@ -65,7 +65,7 @@ function GivensWidget() {
       <Slider label="a₂" value={a2} onChange={setA2} min={-5} max={5} step={0.1} />
       {degeneriert ? (
         <p className="my-2 text-sm italic">
-          <M>{"\\ba = \\bnull"}</M> — hier gibt es nichts zu drehen; jedes Paar mit{" "}
+          <M>{"\\ba = \\bnull"}</M>: hier gibt es nichts zu drehen; jedes Paar mit{" "}
           <M>{"c^2 + s^2 = 1"}</M> funktioniert, wir nehmen <M>{"\\bG = \\bI"}</M>.
         </p>
       ) : (
@@ -86,7 +86,7 @@ function GivensWidget() {
       )}
       <LabeledTransformCanvas matrix={G} vectors={vecs} worldHalf={wh} showUnitCircle />
       <p className="my-2 text-sm">
-        Der angezeigte Winkel <M>{"\\theta"}</M> dient nur unserer Anschauung — in die
+        Der angezeigte Winkel <M>{"\\theta"}</M> dient nur unserer Anschauung; in die
         Formeln für <M>{"c"}</M> und <M>{"s"}</M> geht er an keiner Stelle ein.
       </p>
     </div>
@@ -97,7 +97,7 @@ function GivensWidget() {
 
 const FARBEN = {
   a: "#0072B2", // FMM-blau: der gegebene Vektor a
-  p: "#D55E00", // FMM-rot: v-Anteil v(vᵀa/vᵀv) — rot wie \cbred{v} im Text
+  p: "#D55E00", // FMM-rot: v-Anteil v(vᵀa/vᵀv), rot wie \cbred{v} im Text
   proj: "#9E57D5", // FMM-violett: Projektion auf die Spiegelgerade
   refl: "#009E73", // FMM-grün: Ha bzw. Wanderpunkt w(t)
   spiegel: "#475569",
@@ -282,14 +282,14 @@ function HouseholderWidget() {
   const sicher: 1 | -1 = a[0] < 0 ? 1 : -1;
   const phase =
     t < 0.05
-      ? "w(0) = a — wir stehen noch am Ausgangsvektor."
+      ? "w(0) = a: wir stehen noch am Ausgangsvektor."
       : Math.abs(t - 1) < 0.05
-        ? "w(1) = (I − P)a — Projektion: der Wanderpunkt liegt jetzt auf der Spiegelgeraden."
+        ? "w(1) = (I − P)a ist die Projektion: der Wanderpunkt liegt jetzt auf der Spiegelgeraden."
         : t >= 1.95
-          ? "w(2) = (I − 2P)a = Ha — die Spiegelung ist komplett, die Norm wieder da."
+          ? "w(2) = (I − 2P)a = Ha: die Spiegelung ist komplett, die Norm wieder da."
           : t < 1
-            ? "der v-Anteil schrumpft — Richtung Spiegelgerade …"
-            : "hinter der Spiegelgeraden — gleich ist die x₁-Achse erreicht …";
+            ? "der v-Anteil schrumpft, Richtung Spiegelgerade …"
+            : "hinter der Spiegelgeraden, gleich ist die x₁-Achse erreicht …";
   return (
     <div className="my-2 rounded bg-slate-100 p-3 dark:bg-slate-800/60">
       <p className="my-2 text-sm">
@@ -298,7 +298,7 @@ function HouseholderWidget() {
         bei <M>{"t = 0"}</M> in <M>{"\\ba"}</M>, erreicht bei <M>{"t = 1"}</M> die
         Spiegelgerade (einmal den <M>{"\\bv"}</M>-Anteil abziehen: die Projektion) und bei{" "}
         <M>{"t = 2"}</M> den gespiegelten Punkt (zweimal abziehen). Über die Knöpfe legen wir
-        das Vorzeichen von <M>{"\\alpha"}</M> fest — und damit, an welcher der beiden
+        das Vorzeichen von <M>{"\\alpha"}</M> fest, und damit, an welcher der beiden
         Spiegelgeraden gespiegelt wird.
       </p>
       <div className="flex flex-wrap items-start gap-4">
@@ -355,21 +355,21 @@ function HouseholderWidget() {
           <ul className="mt-2 space-y-0.5 text-xs">
             <li>
               <Swatch color={FARBEN.a} />
-              <M>{"\\ba"}</M> — der gegebene Vektor
+              <M>{"\\ba"}</M> – der gegebene Vektor
             </li>
             <li>
               <Swatch color={FARBEN.p} />
-              <M>{"\\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> — Anteil von <M>{"\\ba"}</M>{" "}
+              <M>{"\\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Anteil von <M>{"\\ba"}</M>{" "}
               längs <M>{"\\bv"}</M>
             </li>
             <li>
               <Swatch color={FARBEN.proj} />
-              <M>{"\\ba - \\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> — Projektion auf die
+              <M>{"\\ba - \\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Projektion auf die
               Spiegelgerade
             </li>
             <li>
               <Swatch color={FARBEN.refl} />
-              <M>{"\\bH\\ba = \\alpha\\,\\be_1"}</M> — die Spiegelung (bzw. Wanderpunkt{" "}
+              <M>{"\\bH\\ba = \\alpha\\,\\be_1"}</M> – die Spiegelung (bzw. Wanderpunkt{" "}
               <M>{"\\bw(t)"}</M>)
             </li>
             <li>
@@ -383,7 +383,7 @@ function HouseholderWidget() {
             Der Zahlenzustand verrät dabei ein wichtiges Detail: Für{" "}
             <M>{"0 < t < 2"}</M> ist <M>{"\\left\\|\\bw(t)\\right\\|_2"}</M> echt kleiner als{" "}
             <M>{"\\left\\|\\ba\\right\\|_2"}</M>. Die Projektion allein (<M>{"t = 1"}</M>)
-            verkürzt den Vektor also — sie ist keine Orthogonalmatrix; erst der doppelte
+            verkürzt den Vektor also und ist keine Orthogonalmatrix; erst der doppelte
             Schritt bringt die volle Länge zurück. Und dass <M>{"\\bw(1)"}</M> wirklich auf
             der Spiegelgeraden liegt, zeigt die Zeile <M>{"\\bv^\\top\\bw(t)"}</M>: bei{" "}
             <M>{"t = 1"}</M> steht dort 0.
@@ -465,7 +465,7 @@ function AusloeschungWidget() {
         <M>{"\\left\\|\\ba\\right\\|_2 = \\sqrt{1 + \\delta^2} \\approx 1"}</M>: Bei der
         ungünstigen Wahl <M>{"\\alpha = +\\left\\|\\ba\\right\\|_2"}</M> (gleiches Vorzeichen
         wie <M>{"a_1"}</M>) entsteht <M>{"v_1 = 1 - \\left\\|\\ba\\right\\|_2"}</M> als
-        Differenz zweier fast identischer Zahlen — genau der Auslöschungs-Fall aus Bemerkung
+        Differenz zweier fast identischer Zahlen, genau der Auslöschungs-Fall aus Bemerkung
         7.5.9. Die sichere Wahl <M>{"\\alpha = -\\left\\|\\ba\\right\\|_2"}</M> vermeidet das.
       </p>
       <Slider
@@ -509,7 +509,7 @@ function AusloeschungWidget() {
         <M>{"v_1"}</M> übrig bleibt, ist im Wesentlichen der Rundungsfehler von{" "}
         <M>{"\\left\\|\\ba\\right\\|_2 \\approx 1 + \\delta^2/2"}</M>. Ist <M>{"\\delta^2"}</M>{" "}
         so klein, dass es in <M>{"t"}</M> Stellen gar nicht mehr sichtbar ist, wird{" "}
-        <M>{"v_1"}</M> sogar zu exakt 0 gerundet — die daraus gebaute „Spiegelung" hat mit der
+        <M>{"v_1"}</M> sogar zu exakt 0 gerundet; die daraus gebaute „Spiegelung" hat mit der
         gesuchten dann nichts mehr zu tun (letzte Spalte!). In der unteren Zeile werden dagegen
         zwei positive Zahlen addiert; dabei geht keine einzige Ziffer verloren. Geometrisch
         gesprochen: Die sichere Wahl spiegelt auf das Ziel <M>{"\\alpha\\,\\be_1"}</M>, das von{" "}
@@ -543,13 +543,13 @@ export function S75() {
         Die Strategie kennen wir im Kern schon vom{" "}
         <ConceptLink id="gaussian-elimination">Gauß-Verfahren</ConceptLink>: Wir gehen von links
         nach rechts durch die Spalten von <M>{"\\bA"}</M> und entfernen die Einträge unter der
-        Diagonalen — diesmal aber durch Multiplikation mit Orthogonalmatrizen{" "}
+        Diagonalen, diesmal aber durch Multiplikation mit Orthogonalmatrizen{" "}
         <M>{"\\bQ_k"}</M>. Warum ausgerechnet orthogonal? Weil solche Matrizen die{" "}
-        <ConceptLink id="euclidean-norm">euklidische Norm</ConceptLink> jedes Vektors erhalten —
+        <ConceptLink id="euclidean-norm">euklidische Norm</ConceptLink> jedes Vektors erhalten;
         das Kleinste-Quadrate-Kriterium bleibt unter ihnen also unverändert, wie wir in
         Abschnitt 7.4 ausgenutzt haben. Die beiden gängigsten Bausteine für die{" "}
         <M>{"\\bQ_k"}</M> sind die <em>Givens-Rotation</em> und die{" "}
-        <em>Householder-Spiegelung</em> (engl. <em>Householder reflection</em>) — beide schauen
+        <em>Householder-Spiegelung</em> (engl. <em>Householder reflection</em>). Beide schauen
         wir uns nun im Detail an.
       </p>
 
@@ -588,7 +588,7 @@ export function S75() {
       <p>
         Für <M>{"n = 2"}</M> und <M>{"k = 1"}</M> ist die Intuition ein Bild wert: Wir müssen{" "}
         <M>{"\\ba"}</M> längentreu auf die erste Koordinatenachse bringen. Dafür gibt es genau
-        zwei natürliche Bewegungen —
+        zwei natürliche Bewegungen:
       </p>
       <ul className="my-3 max-w-prose list-disc space-y-1 pl-6">
         <li>
@@ -609,7 +609,7 @@ export function S75() {
 
       <p>
         Beginnen wir mit der Drehung. Aus der linearen Algebra kennen wir die{" "}
-        <ConceptLink id="rotation-matrix">Drehmatrix</ConceptLink> der Ebene — Drehungen sind
+        <ConceptLink id="rotation-matrix">Drehmatrix</ConceptLink> der Ebene. Drehungen sind
         orthogonal und damit genau die Art von Transformation, die wir suchen.
       </p>
 
@@ -629,7 +629,7 @@ export function S75() {
       <p>
         Wie müssen wir <M>{"c"}</M> und <M>{"s"}</M> wählen, damit die Drehung{" "}
         <M>{"\\ba"}</M> auf die erste Koordinatenachse bringt? Das folgende Resultat gibt die
-        Antwort — und die Herleitung ist erfreulich kurz.
+        Antwort, und die Herleitung ist erfreulich kurz.
       </p>
 
       <EnvBlock kind="Satz" label="7.5.2 (Wahl von c und s)">
@@ -672,7 +672,7 @@ export function S75() {
             {"r := \\sqrt{\\cblue{a_1}^2 + \\cred{a_2}^2} = \\left\\|\\ba\\right\\|_2 > 0, \\qquad c := \\frac{\\cblue{a_1}}{r}, \\quad s := \\frac{\\cred{a_2}}{r}"}
           </MD>
         </PStep>
-        <PStep why={<>einsetzen — die zweite Komponente verschwindet wie gefordert</>}>
+        <PStep why={<>einsetzen; die zweite Komponente verschwindet wie gefordert</>}>
           <MD>
             {"-s\\,\\cblue{a_1} + c\\,\\cred{a_2} = \\frac{-\\cred{a_2}\\,\\cblue{a_1} + \\cblue{a_1}\\,\\cred{a_2}}{r} = 0"}
           </MD>
@@ -685,9 +685,9 @@ export function S75() {
       </Proof>
 
       <p>
-        Dass <M>{"\\alpha = \\left\\|\\ba\\right\\|_2"}</M> herauskommt, ist kein Zufall — eine
+        Dass <M>{"\\alpha = \\left\\|\\ba\\right\\|_2"}</M> herauskommt, ist kein Zufall: Eine
         Orthogonalmatrix kann die Norm gar nicht ändern. Und noch eine Beobachtung: Um{" "}
-        <M>{"\\bG"}</M> aufzustellen, mussten wir den Drehwinkel nie ausrechnen —{" "}
+        <M>{"\\bG"}</M> aufzustellen, mussten wir den Drehwinkel nie ausrechnen;{" "}
         <M>{"c"}</M> und <M>{"s"}</M> ergeben sich unmittelbar aus <M>{"a_1"}</M> und{" "}
         <M>{"a_2"}</M>, ganz ohne Trigonometrie.
       </p>
@@ -711,7 +711,7 @@ export function S75() {
         <p>
           In der zweiten Komponente steht die gewünschte Null, und wegen{" "}
           <M>{"\\left\\|\\bG\\ba\\right\\|_2 = \\corange{5} = \\left\\|\\ba\\right\\|_2"}</M>{" "}
-          hat die Rotation die Länge nicht angetastet — für eine Orthogonalmatrix keine
+          hat die Rotation die Länge nicht angetastet, für eine Orthogonalmatrix keine
           Überraschung.
         </p>
       </EnvBlock>
@@ -734,7 +734,7 @@ export function S75() {
         {"\\begin{pmatrix} 1 & 0 & 0 & 0 & 0 \\\\ 0 & 1 & 0 & 0 & 0 \\\\ 0 & 0 & c & 0 & s \\\\ 0 & 0 & 0 & 1 & 0 \\\\ 0 & 0 & -s & 0 & c \\end{pmatrix} \\begin{pmatrix} a_1 \\\\ a_2 \\\\ a_3 \\\\ a_4 \\\\ a_5 \\end{pmatrix} = \\begin{pmatrix} a_1 \\\\ a_2 \\\\ \\alpha \\\\ a_4 \\\\ 0 \\end{pmatrix}."}
       </MD>
       <p>
-        Alle übrigen Komponenten bleiben unberührt — genau die Eigenschaft, die unsere
+        Alle übrigen Komponenten bleiben unberührt, genau wie es unsere
         Eliminationsaufgabe verlangt. Pro Rotation gewinnen wir allerdings nur eine einzige
         Null. Eine ganze Spalte räumen wir deshalb mit einer Folge solcher Rotationen leer.
         Dabei ist nur auf die Reihenfolge zu achten: Schon erzeugte Nullen dürfen von den
@@ -780,8 +780,8 @@ export function S75() {
 
       <p>
         Warum „Spiegelung"? Der Baustein{" "}
-        <M>{"\\bP = \\bv\\bv^\\top / (\\bv^\\top\\bv)"}</M> — ein skaliertes{" "}
-        <ConceptLink id="outer-product">dyadisches Produkt</ConceptLink> — ist die orthogonale{" "}
+        <M>{"\\bP = \\bv\\bv^\\top / (\\bv^\\top\\bv)"}</M>, ein skaliertes{" "}
+        <ConceptLink id="outer-product">dyadisches Produkt</ConceptLink>, ist die orthogonale{" "}
         <ConceptLink id="projection">Projektion</ConceptLink> auf die Gerade{" "}
         <M>{"\\spann(\\bv)"}</M> (<ConceptLink id="span">lineare Hülle</ConceptLink> von{" "}
         <M>{"\\bv"}</M>). Entsprechend projiziert <M>{"\\bI - \\bP"}</M> auf die Hyperebene{" "}
@@ -789,7 +789,7 @@ export function S75() {
         <ConceptLink id="orthogonal-complement">orthogonale Komplement</ConceptLink>.{" "}
         <M>{"\\bH = \\bI - 2\\bP"}</M> geht doppelt so weit: Es zieht von <M>{"\\ba"}</M> den{" "}
         <M>{"\\bv"}</M>-Anteil gleich <em>zweimal</em> ab und landet damit auf der anderen Seite
-        der Hyperebene — <M>{"\\spann(\\bv)^\\perp"}</M> ist der Spiegel.
+        der Hyperebene; <M>{"\\spann(\\bv)^\\perp"}</M> ist der Spiegel.
       </p>
 
       <EnvBlock kind="Satz" label="7.5.6 (Symmetrie und Orthogonalität)">
@@ -816,7 +816,7 @@ export function S75() {
         <PStep
           why={
             <>
-              <M>{"\\bv^\\top\\bv"}</M> ist ein Skalar (<ConceptLink id="dot-product">Skalarprodukt</ConceptLink>) — er lässt sich kürzen: <M>{"\\bP"}</M> ist eine Projektion
+              <M>{"\\bv^\\top\\bv"}</M> ist ein Skalar (<ConceptLink id="dot-product">Skalarprodukt</ConceptLink>) und lässt sich kürzen: <M>{"\\bP"}</M> ist eine Projektion
             </>
           }
         >
@@ -835,7 +835,7 @@ export function S75() {
       </Proof>
 
       <p>
-        <M>{"\\bH"}</M> ist also orthogonal und selbstinvers — eine
+        <M>{"\\bH"}</M> ist also orthogonal und selbstinvers: Eine
         Spiegelung, zweimal ausgeführt, ist die Identität. Bleibt die Frage, <em>welchen</em>{" "}
         Spiegelvektor <M>{"\\bv"}</M> wir wählen müssen, damit <M>{"\\ba"}</M> auf{" "}
         <M>{"\\alpha\\,\\be_1"}</M> landet. Die Antwort kann man aus dem geometrischen Bild
@@ -934,41 +934,42 @@ export function S75() {
           {"\\bH = \\bI - \\tfrac{2}{24}\\,\\cbred{\\bv}\\cbred{\\bv}^\\top = \\bI - \\tfrac{1}{12}\\begin{pmatrix} 16 & 8 & 8 \\\\ 8 & 4 & 4 \\\\ 8 & 4 & 4 \\end{pmatrix} = \\begin{pmatrix} -\\tfrac{1}{3} & -\\tfrac{2}{3} & -\\tfrac{2}{3} \\\\[2pt] -\\tfrac{2}{3} & \\tfrac{2}{3} & -\\tfrac{1}{3} \\\\[2pt] -\\tfrac{2}{3} & -\\tfrac{1}{3} & \\tfrac{2}{3} \\end{pmatrix}."}
         </MD>
         <p>
-          Nachrechnen bestätigt <M>{"\\bH\\ba = (-3, 0, 0)^\\top"}</M> — zum Beispiel liefert
-          die erste Zeile{" "}
-          <M>{"-\\tfrac{1}{3} \\cdot 1 - \\tfrac{2}{3} \\cdot 2 - \\tfrac{2}{3} \\cdot 2 = -\\tfrac{9}{3} = -3"}</M>{" "}
-          — und natürlich{" "}
+          Nachrechnen bestätigt <M>{"\\bH\\ba = (-3, 0, 0)^\\top"}</M>: Die erste Zeile liefert
+          etwa{" "}
+          <M>{"-\\tfrac{1}{3} \\cdot 1 - \\tfrac{2}{3} \\cdot 2 - \\tfrac{2}{3} \\cdot 2 = -\\tfrac{9}{3} = -3"}</M>
+          , und natürlich gilt{" "}
           <M>{"\\left\\|\\bH\\ba\\right\\|_2 = 3 = \\left\\|\\ba\\right\\|_2"}</M>. Beide
           Komponenten unterhalb der ersten sind mit <em>einer einzigen</em> Spiegelung
           verschwunden.
         </p>
       </EnvBlock>
 
-      <ExpandedReading title="die Spiegelung Schritt für Schritt — warum H = I − 2P">
+      <ExpandedReading title="die Spiegelung Schritt für Schritt: warum H = I − 2P">
         <HouseholderWidget />
       </ExpandedReading>
 
       <EnvBlock kind="Bemerkung" label="7.5.9 (Vorzeichenwahl)">
         <p>
           In exakter Arithmetik funktionieren beide Vorzeichen von{" "}
-          <M>{"\\alpha = \\pm\\left\\|\\ba\\right\\|_2"}</M> — es gibt schließlich zwei
+          <M>{"\\alpha = \\pm\\left\\|\\ba\\right\\|_2"}</M>, es gibt schließlich zwei
           Spiegelebenen, die <M>{"\\ba"}</M> auf die Achse bringen. Numerisch sind sie{" "}
           <em>nicht</em> gleichwertig: Die erste Komponente des Spiegelvektors ist{" "}
           <M>{"v_1 = a_1 - \\alpha"}</M>. Hat <M>{"\\alpha"}</M> dasselbe Vorzeichen wie{" "}
           <M>{"a_1"}</M> und dominiert <M>{"a_1"}</M> die Norm, subtrahieren wir zwei fast
-          gleiche Zahlen — es droht{" "}
+          gleiche Zahlen; es droht{" "}
           <ConceptLink id="cancellation">Auslöschung</ConceptLink> der führenden Ziffern, und
           der winzige Rest besteht fast nur noch aus Rundungsfehlern. Deshalb wählt man
         </p>
         <MD>{"\\alpha = -\\sign(a_1)\\left\\|\\ba\\right\\|_2,"}</MD>
         <p>
           denn dann ist <M>{"v_1 = a_1 + \\sign(a_1)\\left\\|\\ba\\right\\|_2"}</M> eine
-          Addition von Zahlen gleichen Vorzeichens — immer gutartig. Geometrisch heißt das: Wir
+          Addition von Zahlen gleichen Vorzeichens und damit immer gutartig. Geometrisch heißt
+          das: Wir
           spiegeln stets auf das Ziel, das <em>weiter</em> von <M>{"\\ba"}</M> entfernt liegt.
         </p>
       </EnvBlock>
 
-      <ExpandedReading title="warum das Vorzeichen von α zählt — Auslöschung, live">
+      <ExpandedReading title="warum das Vorzeichen von α zählt: Auslöschung, live">
         <AusloeschungWidget />
       </ExpandedReading>
 
@@ -981,7 +982,7 @@ export function S75() {
           {"\\bH\\bu = \\bu - \\left(2\\,\\frac{\\bv^\\top\\bu}{\\bv^\\top\\bv}\\right)\\bv,"}
         </MD>
         <p>
-          also genügen zwei Skalarprodukte und eine Vektor-Aktualisierung —{" "}
+          also genügen zwei Skalarprodukte und eine Vektor-Aktualisierung:{" "}
           <M>{"\\Ocal(n)"}</M> Operationen statt <M>{"\\Ocal(n^2)"}</M> für das explizite
           Matrix-Vektor-Produkt (<ConceptLink id="big-o-notation">Landau-Notation</ConceptLink>
           ). Genauso wird <M>{"\\bQ"}</M> selbst nie explizit gebildet: Man speichert nur die
@@ -1011,7 +1012,7 @@ export function S75() {
         macht in Spalte <M>{"k"}</M> alle Einträge unter der Diagonalen zu Null. Entscheidend:
         Die schon fertigen Spalten <M>{"1, \\ldots, k-1"}</M> bleiben fertig. Warum? Unterhalb
         der Diagonalen stehen dort bereits Nullen, und <M>{"\\bQ_k"}</M> verändert nur die
-        Zeilen <M>{"k, \\ldots, m"}</M> — auf diesem Nullblock wirkt{" "}
+        Zeilen <M>{"k, \\ldots, m"}</M>; auf diesem Nullblock wirkt{" "}
         <M>{"\\wt{\\bH}_k"}</M> als <M>{"\\wt{\\bH}_k\\bnull = \\bnull"}</M>. Nach{" "}
         <M>{"p = \\min(n, m-1)"}</M> Schritten ist{" "}
         <ConceptLink id="triangular-matrix">obere Dreiecksgestalt</ConceptLink> erreicht:
@@ -1020,7 +1021,7 @@ export function S75() {
         {"\\bQ_p \\cdots \\bQ_1\\,\\bA = \\begin{pmatrix} \\bR \\\\ \\bnull \\end{pmatrix} \\quimpl \\bQ^\\top = \\bQ_p \\cdots \\bQ_1, \\qquad \\bA = \\bQ \\begin{pmatrix} \\bR \\\\ \\bnull \\end{pmatrix}."}
       </MD>
       <p>
-        Das Produkt von Orthogonalmatrizen ist wieder orthogonal — also ist{" "}
+        Das Produkt von Orthogonalmatrizen ist wieder orthogonal, also ist{" "}
         <M>{"\\bQ = \\bQ_1^\\top \\cdots \\bQ_p^\\top"}</M> tatsächlich die gesuchte
         Orthogonalmatrix, und wir haben eine QR-Zerlegung im Sinne von{" "}
         <a className="underline" href="#sec-7.4">
@@ -1033,7 +1034,7 @@ export function S75() {
       </p>
       <p>
         Als Faustregel zum Mitnehmen: Für voll besetzte Matrizen ist{" "}
-        <b>Householder</b> die Standardwahl — weniger Operationen pro Spalte, hervorragende
+        <b>Householder</b> die Standardwahl: weniger Operationen pro Spalte, hervorragende
         numerische Stabilität; genau so arbeiten die QR-Löser der gängigen Software (etwa hinter{" "}
         <code>lm()</code> in R). <b>Givens</b> spielt seine Stärke aus, wenn{" "}
         <ConceptLink id="sparse-matrix">Dünnbesetztheit</ConceptLink> (sparsity) erhalten
@@ -1042,7 +1043,7 @@ export function S75() {
           Normalengleichungen
         </a>{" "}
         vermeiden beide Zugänge das Quadrieren der{" "}
-        <ConceptLink id="condition-number">Konditionszahl</ConceptLink> — dazu mehr im
+        <ConceptLink id="condition-number">Konditionszahl</ConceptLink>. Dazu mehr im
         Methodenvergleich in{" "}
         <a className="underline" href="#sec-7.6">
           Abschnitt 7.6

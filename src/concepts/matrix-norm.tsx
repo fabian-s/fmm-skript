@@ -29,7 +29,7 @@ function NormWidget() {
         </span>
         <MatrixInput value={A} onChange={setA} />
         <span className="font-mono text-xs">
-          ‖A‖₂ = {Number.isFinite(s1) ? s1.toFixed(3) : "—"}
+          ‖A‖₂ = {Number.isFinite(s1) ? s1.toFixed(3) : "–"}
         </span>
       </div>
       <LabeledTransformCanvas
@@ -43,7 +43,7 @@ function NormWidget() {
       <p className="mt-1 text-xs opacity-80">
         Alle Vektoren auf dem gestrichelten Einheitskreis werden von <M>{"\\bA"}</M> auf die
         Ellipse geschickt. Die 2-Norm <M>{"\\|\\bA\\|_2"}</M> ist die Länge der längsten
-        Halbachse — die stärkste Streckung, die <M>{"\\bA"}</M> irgendeinem Einheitsvektor
+        Halbachse, also die stärkste Streckung, die <M>{"\\bA"}</M> irgendeinem Einheitsvektor
         antut. Probieren wir Einträge nahe an einer singulären Matrix: Die Ellipse wird zur
         Nadel, aber die Norm bleibt die halbe Nadellänge.
       </p>
@@ -60,7 +60,7 @@ registerConcept({
         Wie „groß" ist eine Matrix? Für Fehlerabschätzungen wollen wir nicht die Einträge
         messen, sondern die <em>Wirkung</em> von <M>{"\\bA"}</M> als lineare Abbildung. Die von
         einer <ConceptLink id="norm">Vektornorm</ConceptLink> <em>induzierte</em> (oder{" "}
-        <em>natürliche</em>, auch <em>Operator-</em>) Norm misst genau das — die maximale
+        <em>natürliche</em>, auch <em>Operator-</em>) Norm misst genau das, die maximale
         Streckung eines Vektors:
       </p>
       <MD>

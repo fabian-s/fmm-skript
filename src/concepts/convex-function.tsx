@@ -30,7 +30,7 @@ function ConvexWidget() {
       <Slider label="v" value={v} onChange={setV} min={-2.4} max={2.4} step={0.1} fmt={(x) => x.toFixed(1)} />
       <p className="my-1 font-mono text-xs">
         am Mittelpunkt: f = {f(mid).toFixed(2)} vs. Sehne ={" "}
-        {Number.isFinite(chord(mid)) ? chord(mid).toFixed(2) : "—"}{" "}
+        {Number.isFinite(chord(mid)) ? chord(mid).toFixed(2) : "–"}{" "}
         {ok ? "→ Graph unter der Sehne ✓" : "→ Graph ÜBER der Sehne ✗"}
       </p>
       <LabeledPlot
@@ -53,7 +53,7 @@ function ConvexWidget() {
       <p className="mt-1 text-xs text-slate-300">
         Bei der parabelartigen Funktion bleibt jede Sehne oberhalb des Graphen,
         egal wohin wir u und v legen. Beim Doppelmulden-Graphen tauchen Sehnen
-        über den mittleren Buckel hinweg unter den Graphen — der Konvexitätstest
+        über den mittleren Buckel hinweg unter den Graphen: der Konvexitätstest
         schlägt fehl, und tatsächlich hat diese Funktion zwei getrennte Minima.
       </p>
     </div>
@@ -76,12 +76,12 @@ registerConcept({
       </MD>
       <p>
         Sie ist <em>strikt</em> konvex, wenn die Ungleichung strikt ist, sobald{" "}
-        <M>{"\\bu \\neq \\bv"}</M> und <M>{"0 < \\alpha < 1"}</M> — keine
+        <M>{"\\bu \\neq \\bv"}</M> und <M>{"0 < \\alpha < 1"}</M>: keine
         geraden Flachstücke in der Schüssel. <M>{"f(x) = x^2"}</M> ist strikt
         konvex; <M>{"f(x) = |x|"}</M> ist konvex, aber nicht strikt. Warum uns
         das interessiert: Eine strikt konvexe Funktion kann über einer{" "}
         <ConceptLink id="convexity">konvexen Menge</ConceptLink>{" "}
-        <em>höchstens einen</em> Minimierer haben — zwei verschiedene
+        <em>höchstens einen</em> Minimierer haben. Zwei verschiedene
         Minimierer würden den Mittelpunkt der Sehne unter den Minimalwert
         drücken, ein Widerspruch. Genau das ist das Eindeutigkeitsargument bei
         Kleinsten Quadraten (vgl. Heath §3.1): Der quadrierte{" "}

@@ -123,7 +123,7 @@ export function S33OperatornormWidget() {
             die Werte aus Beispiel 3.3.3 (<M>{"\\left\\| \\bA \\right\\|_2 \\approx 2{,}29"}</M>).
             Eine Drehmatrix wie{" "}
             <M>{"\\begin{pmatrix} 0{,}6 & -0{,}8 \\\\ 0{,}8 & 0{,}6 \\end{pmatrix}"}</M>{" "}
-            lässt den Kreis unverzerrt — alle Streckfaktoren sind 1. Skalieren wir alle
+            lässt den Kreis unverzerrt, alle Streckfaktoren sind 1. Skalieren wir alle
             Einträge mit 10, wächst die Norm um denselben Faktor mit. Und die drei
             Operatornormen stimmen im Allgemeinen nicht überein, liegen aber stets in
             derselben Größenordnung.

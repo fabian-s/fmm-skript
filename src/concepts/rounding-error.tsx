@@ -37,7 +37,7 @@ function CancellationWidget() {
         <M>{"\\to 1/2"}</M> für <M>{"x \\to 0"}</M>. Das hier sind die echten
         Double-Precision-Ergebnisse dieses Browsers, live berechnet: Bei{" "}
         <M>{"x = 10^{-8}"}</M> hat die naive Variante <M>{"\\cos x"}</M> exakt
-        als 1 berechnet, und die Subtraktion liefert 0 — jede korrekte Ziffer
+        als 1 berechnet, und die Subtraktion liefert 0; jede korrekte Ziffer
         ist weg. Die stabile Variante subtrahiert nie fast gleich große Zahlen.
       </p>
     </div>
@@ -69,7 +69,7 @@ registerConcept({
         wir zwei fast gleich große Zahlen voneinander ab, heben sich ihre
         gemeinsamen führenden Ziffern weg, und was übrig bleibt, wird von den
         vorher begangenen Rundungsfehlern dominiert. In 6-stelliger Arithmetik
-        ist <M>{"1{,}23457 - 1{,}23456 = 0{,}00001"}</M> — von sechs
+        ist <M>{"1{,}23457 - 1{,}23456 = 0{,}00001"}</M>: von sechs
         gespeicherten Ziffern überlebt nur eine einzige (ohnehin unsichere)
         Ziffer.
       </p>
@@ -78,7 +78,7 @@ registerConcept({
         Genauigkeitsfragen ein: Jede Eingabematrix ist sowieso nur bis auf
         relative Störungen der Größenordnung{" "}
         <M>{"\\varepsilon_{\\text{mach}}"}</M> bekannt. Eine Störung dieser
-        Größe ist also kein künstlicher Extremfall, sondern der Alltag — und
+        Größe ist also kein künstlicher Extremfall, sondern der Alltag;
         wie viel Schaden so eine Störung anrichten kann, misst genau die{" "}
         <ConceptLink id="condition-number">Konditionszahl</ConceptLink>.
       </p>

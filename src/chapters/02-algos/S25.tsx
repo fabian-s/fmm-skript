@@ -3,7 +3,7 @@ import { ConceptLink, EnvBlock, ExpandedReading, M, MD, Proof, PStep } from "../
 import { S25FibVergleichWidget } from "./widgets/S25FibVergleich";
 
 /**
- * Abschnitt 2.5 — Fibonacci: Komplexitätsanalyse.
+ * Abschnitt 2.5, Fibonacci: Komplexitätsanalyse.
  * Quelle: Folien 02-algos.Rmd, „Fibonacci: Komplexitätsanalyse 1/2" und
  * „Wrap-up". Prosa eigenständig aus den Folien formuliert.
  */
@@ -19,13 +19,13 @@ export function S25() {
       <p>
         Jetzt wird geerntet. In{" "}
         <a className="underline" href="#sec-2.2">Abschnitt 2.2</a> haben wir zwei Algorithmen
-        für dasselbe Problem kennengelernt — die ersten <M>{"n"}</M> Fibonacci-Zahlen zu
-        berechnen — und im Widget dort beobachtet, dass die rekursive Variante schon für
+        für dasselbe Problem kennengelernt (die ersten <M>{"n"}</M> Fibonacci-Zahlen zu
+        berechnen) und im Widget dort beobachtet, dass die rekursive Variante schon für
         moderate <M>{"n"}</M> unangenehm viele Aufrufe produziert. In{" "}
         <a className="underline" href="#sec-2.3">Abschnitt 2.3</a> haben wir gelernt, Aufwand
         zu zählen, und in <a className="underline" href="#sec-2.4">Abschnitt 2.4</a>, die
         Zählerei mit Landau-Symbolen auf ihre Ordnung einzudampfen. Mit diesen Werkzeugen
-        können wir den Unterschied zwischen beiden Varianten nun präzise machen — und er ist
+        können wir den Unterschied zwischen beiden Varianten nun präzise machen. Und er ist
         drastischer, als man zunächst vermuten würde: Es geht nicht um einen konstanten
         Faktor, sondern um <em>linear gegen exponentiell</em>.
       </p>
@@ -40,7 +40,7 @@ export function S25() {
         <M>{"x_1 = 0"}</M> und <M>{"x_2 = 1"}</M> und füllt dann in einer einzigen Schleife
         jeden weiteren Eintrag als Summe seiner beiden Vorgänger:{" "}
         <M>{"x_{i+1} = x_i + x_{i-1}"}</M> für <M>{"i = 2, \\dots, n-1"}</M>. Zählen wir die
-        Schritte — so wie wir es beim{" "}
+        Schritte, so wie wir es beim{" "}
         <ConceptLink id="matrix-vector-product">Matrix-Vektor-Produkt</ConceptLink> in{" "}
         <a className="underline" href="#sec-2.3">Abschnitt 2.3</a> geübt haben.
       </p>
@@ -55,7 +55,7 @@ export function S25() {
         <PStep
           why={
             <>
-              das Anlegen des Ergebnisvektors schreibt <M>{"n"}</M> Nullen — eine
+              das Anlegen des Ergebnisvektors schreibt <M>{"n"}</M> Nullen, eine
               Schreiboperation pro Eintrag
             </>
           }
@@ -69,7 +69,7 @@ export function S25() {
             <>
               die Schleife durchläuft <M>{"i = 2, \\dots, n-1"}</M>, das sind{" "}
               <M>{"(n-1) - 2 + 1 = n-2"}</M> Durchläufe; pro Durchlauf zählen die Folien 2
-              Additionen und 1 Zuweisung — man könnte auch die Indexrechnungen{" "}
+              Additionen und 1 Zuweisung; man könnte auch die Indexrechnungen{" "}
               <M>{"i+1"}</M>, <M>{"i-1"}</M> mitzählen, für die Ordnung ist das egal
               (Bemerkung 2.5.2)
             </>
@@ -103,7 +103,7 @@ export function S25() {
           </p>
         </PStep>
       </Proof>
-      <EnvBlock kind="Bemerkung" label="2.5.2 (Zählen ist Konvention — die Ordnung nicht)">
+      <EnvBlock kind="Bemerkung" label="2.5.2 (Zählen ist Konvention, die Ordnung nicht)">
         <p>
           Ob wir pro Schleifendurchlauf 3, 5 oder 10 Elementaroperationen ansetzen, ändert am
           Ergebnis nichts: Jede konstante Zahl von Operationen pro Durchlauf liefert einen
@@ -111,7 +111,7 @@ export function S25() {
           <M>{"\\cblue{O(n)}"}</M>. Genau dafür haben wir die Landau-Notation in{" "}
           <a className="underline" href="#sec-2.4">Abschnitt 2.4</a> eingeführt: Sie macht
           die Analyse unabhängig von solchen Zählkonventionen. Schneller als linear geht es
-          für dieses Problem übrigens prinzipiell nicht — allein das Hinschreiben der{" "}
+          für dieses Problem übrigens prinzipiell nicht. Allein das Hinschreiben der{" "}
           <M>{"n"}</M> Ergebniszahlen kostet schon <M>{"n"}</M> Schritte. Die iterative
           Variante ist also ordnungsoptimal.
         </p>
@@ -136,7 +136,7 @@ export function S25() {
         </code>
       </pre>
       <p>
-        Das ist verführerisch elegant — der Code <em>ist</em> praktisch die Rekursionsformel.
+        Das ist verführerisch elegant: der Code <em>ist</em> praktisch die Rekursionsformel.
         Aber die Eleganz täuscht.
       </p>
       <EnvBlock kind="Bemerkung" label="2.5.3 (Was wird hier eigentlich berechnet?)">
@@ -196,7 +196,7 @@ export function S25() {
       </Proof>
       <p>
         Bevor wir <M>{"\\cred{T(n)}"}</M> allgemein abschätzen, sehen wir uns den
-        Aufrufbaum einmal konkret an — dann ist auch sofort klar, <em>woher</em> die
+        Aufrufbaum einmal konkret an. Dann ist auch sofort klar, <em>woher</em> die
         Explosion kommt.
       </p>
       <EnvBlock kind="Beispiel" label="2.5.5 (Der Aufrufbaum für n = 5)">
@@ -215,7 +215,7 @@ export function S25() {
           Zählen wir nach: <M>{"F_5"}</M> und <M>{"F_4"}</M> werden je einmal berechnet,{" "}
           <M>{"F_3"}</M> aber <M>{"\\cred{2}"}</M>-mal, <M>{"F_2"}</M> schon{" "}
           <M>{"\\cred{3}"}</M>-mal, <M>{"F_1"}</M> sogar <M>{"\\cred{5}"}</M>-mal und{" "}
-          <M>{"F_0"}</M> noch <M>{"\\cred{3}"}</M>-mal — zusammen{" "}
+          <M>{"F_0"}</M> noch <M>{"\\cred{3}"}</M>-mal, zusammen{" "}
           <M>{"1 + 1 + 2 + 3 + 5 + 3 = \\cred{15}"}</M> Aufrufe. Das passt zum Lemma: Aus{" "}
           <M>{"\\cred{T(2)} = 3"}</M> und <M>{"\\cred{T(3)} = 1 + 3 + 1 = 5"}</M> folgt{" "}
           <M>{"\\cred{T(4)} = 1 + 5 + 3 = 9"}</M> und{" "}
@@ -225,7 +225,7 @@ export function S25() {
           Die Wurzel des Übels ist rot markiert: Der komplette Teilbaum unter{" "}
           <M>{"\\texttt{fib\\_rek}(3)"}</M> wird zweimal durchgerechnet, denn die Rekursion
           „vergisst" alles, was sie schon berechnet hat. Bei größerem <M>{"n"}</M>{" "}
-          verdoppeln sich diese Dopplungen immer weiter — die iterative Variante berechnet
+          verdoppeln sich diese Dopplungen immer weiter. Die iterative Variante berechnet
           dagegen jede Zahl genau einmal, weil sie die Zwischenergebnisse im Vektor
           aufbewahrt.
         </p>
@@ -233,7 +233,7 @@ export function S25() {
       <p>
         Jetzt die allgemeine Analyse. Die Folien argumentieren kurz und bündig: Jeder Aufruf
         erzeugt bis zu 2 weitere Aufrufe, diese wieder je 2, und so fort über bis zu{" "}
-        <M>{"n"}</M> Ebenen — insgesamt höchstens{" "}
+        <M>{"n"}</M> Ebenen, insgesamt höchstens{" "}
         <M>{"1 + 2 + 4 + \\dots + 2^n"}</M> Aufrufe, also <M>{"O(2^n)"}</M>. Das folgende
         Resultat macht dieses Argument präzise und ergänzt die Gegenrichtung: Das Wachstum
         ist auch wirklich exponentiell, nicht nur durch eine Exponentialfunktion beschränkt.
@@ -288,8 +288,8 @@ export function S25() {
         <PStep
           why={
             <>
-              <M>{"\\cred{T}"}</M> ist monoton wachsend — in der Rekurrenz kommt zu{" "}
-              <M>{"\\cred{T(n-1)}"}</M> nur Positives hinzu —, also{" "}
+              <M>{"\\cred{T}"}</M> ist monoton wachsend (in der Rekurrenz kommt zu{" "}
+              <M>{"\\cred{T(n-1)}"}</M> nur Positives hinzu), also{" "}
               <M>{"\\cred{T(n-1)} \\ge \\cred{T(n-2)}"}</M>
             </>
           }
@@ -302,7 +302,7 @@ export function S25() {
         <PStep
           why={
             <>
-              die Ungleichung <M>{"\\lfloor n/2 \\rfloor"}</M>-mal anwenden — bei jedem
+              die Ungleichung <M>{"\\lfloor n/2 \\rfloor"}</M>-mal anwenden; bei jedem
               Schritt verdoppelt sich der Faktor wie bei einer{" "}
               <ConceptLink id="geometric-series">geometrischen Folge</ConceptLink>, bis das
               Argument <M>{"0"}</M> oder <M>{"1"}</M> erreicht (dort ist{" "}
@@ -319,7 +319,7 @@ export function S25() {
               exponentiell schlägt polynomiell: Der{" "}
               <ConceptLink id="limit">Grenzwert</ConceptLink>{" "}
               <M>{"n^k / q^n \\to 0"}</M> für jedes <M>{"q > 1"}</M> ist ein
-              Analysis-Standardresultat — hier mit <M>{"q = \\sqrt{2}"}</M>
+              Analysis-Standardresultat, hier mit <M>{"q = \\sqrt{2}"}</M>
             </>
           }
         >
@@ -345,7 +345,7 @@ export function S25() {
       <EnvBlock kind="Bemerkung" label="2.5.7 (Wie schlimm ist es wirklich?)">
         <p>
           Zwischen unserer unteren Schranke (Basis <M>{"\\sqrt{2} \\approx 1{,}41"}</M>) und
-          der oberen (Basis <M>{"2"}</M>) klafft noch eine Lücke — die Folienangabe{" "}
+          der oberen (Basis <M>{"2"}</M>) klafft noch eine Lücke: Die Folienangabe{" "}
           <M>{"O(2^n)"}</M> ist eine korrekte obere Schranke, aber nicht scharf. Der wahre
           Wachstumsfaktor liegt dazwischen und ist eine alte Bekannte: der goldene Schnitt{" "}
           <M>{"\\varphi \\approx 1{,}618"}</M> (Vertiefung unten). Für das Urteil{" "}
@@ -357,7 +357,7 @@ export function S25() {
       <ExpandedReading title="Der goldene Schnitt im Aufrufbaum">
         <div className="space-y-3">
           <p className="max-w-prose">
-            Die Aufrufzahl lässt sich sogar exakt angeben — und sie ist selbst fast eine
+            Die Aufrufzahl lässt sich sogar exakt angeben, und sie ist selbst fast eine
             Fibonacci-Zahl. Per Induktion zeigen wir{" "}
             <M>{"\\cred{T(n)} = 2 F_{n+1} - 1"}</M>: Der Anfang stimmt wegen{" "}
             <M>{"\\cred{T(0)} = 1 = 2 F_1 - 1"}</M> und{" "}
@@ -375,7 +375,7 @@ export function S25() {
           </p>
           <MD>{"\\cred{T(n)} = \\Theta\\left(\\varphi^n\\right), \\qquad \\varphi \\approx 1{,}618."}</MD>
           <p className="max-w-prose">
-            Das tatsächliche Wachstum hat also die Basis <M>{"\\varphi"}</M> — sauber
+            Das tatsächliche Wachstum hat also die Basis <M>{"\\varphi"}</M>, sauber
             zwischen unseren Schranken <M>{"\\sqrt{2}"}</M> und <M>{"2"}</M>. Im Widget
             unten können wir das sehen: Auf der logarithmischen Skala liegen die gezählten
             Aufrufe exakt auf einer Geraden mit Steigung{" "}
@@ -390,10 +390,10 @@ export function S25() {
       </h3>
       <p>
         Was bedeuten <M>{"\\cblue{O(n)}"}</M> gegen <M>{"\\cred{O(2^n)}"}</M> in echten
-        Zahlen? Setzen wir unsere gezählten Aufwände ein — iterativ{" "}
+        Zahlen? Setzen wir unsere gezählten Aufwände ein – iterativ{" "}
         <M>{"\\cblue{4n - 6}"}</M> Operationen (die additive Konstante <M>{"c"}</M> aus dem
         Beweis von Satz 2.5.1 lassen wir weg), naiv rekursiv{" "}
-        <M>{"\\cred{T(n) = 2F_{n+1} - 1}"}</M> Aufrufe — und rechnen als grobes Modell mit{" "}
+        <M>{"\\cred{T(n) = 2F_{n+1} - 1}"}</M> Aufrufe – und rechnen als grobes Modell mit{" "}
         <M>{"10^9"}</M> Elementarschritten pro Sekunde (ein realer Funktionsaufruf in R
         kostet deutlich mehr, das macht es nur schlimmer):
       </p>
@@ -442,14 +442,14 @@ export function S25() {
       <p>
         Die iterative Spalte bleibt dabei durchgehend im Nanosekundenbereich. Das ist die
         zentrale Botschaft dieses Kapitels: Der Unterschied zwischen den beiden Varianten
-        ist kein Implementierungsdetail und keine Frage schnellerer Hardware — ein tausendmal
+        ist kein Implementierungsdetail und keine Frage schnellerer Hardware: Ein tausendmal
         schnellerer Rechner verschiebt die <M>{"36\\,000"}</M> Jahre lediglich auf{" "}
         <M>{"36"}</M> Jahre. Nur ein <em>besserer Algorithmus</em> hilft, und die
         Landau-Notation ist das Instrument, mit dem wir „besser" präzise ausdrücken:{" "}
-        <em>Die iterative Lösung ist dramatisch effizienter — sie liegt in einer anderen
+        <em>Die iterative Lösung ist dramatisch effizienter; sie liegt in einer anderen
         Komplexitätsklasse.</em>
       </p>
-      <ExpandedReading title="Gezählte Schritte gegen die Landau-Vorhersage — live">
+      <ExpandedReading title="Gezählte Schritte gegen die Landau-Vorhersage, live">
         <S25FibVergleichWidget />
       </ExpandedReading>
       <p>
@@ -462,7 +462,7 @@ export function S25() {
         Selbsttest
       </h3>
       <p>
-        Vier Aussagen zu diesem Abschnitt — welche sind wahr?
+        Vier Aussagen zu diesem Abschnitt. Welche sind wahr?
       </p>
       <QuizWidget />
 
@@ -480,7 +480,7 @@ export function S25() {
         daran, dass sie mit wenig Laufzeit und Speicher auskommen; beides messen wir als
         Funktion der Problemgröße <M>{"n"}</M> (
         <a className="underline" href="#sec-2.3">Abschnitt 2.3</a>) und beschreiben es nur
-        noch durch seine Ordnung — mit Landau-Symbolen und ihren Rechenregeln (
+        noch durch seine Ordnung, mit Landau-Symbolen und ihren Rechenregeln (
         <a className="underline" href="#sec-2.4">Abschnitt 2.4</a>). Die Fibonacci-Fallstudie
         dieses Abschnitts hat gezeigt, wie viel diese komprimierte Sprache leistet:{" "}
         <M>{"\\cblue{O(n)}"}</M> gegen <M>{"\\cred{O(2^n)}"}</M> ist der Unterschied
@@ -514,7 +514,7 @@ const QUIZ: { statement: React.ReactNode; wahr: boolean; expl: React.ReactNode }
     expl: (
       <>
         <M>{"O"}</M> ist nur eine <em>obere</em> Schranke: <M>{"4n - 6"}</M> wächst
-        höchstens so schnell wie <M>{"n^2"}</M>, also gilt <M>{"O(n^2)"}</M> — die Aussage
+        höchstens so schnell wie <M>{"n^2"}</M>, also gilt <M>{"O(n^2)"}</M>; die Aussage
         ist wahr, aber wenig informativ. Die scharfe Beschreibung ist{" "}
         <M>{"O(n)"}</M>, und mehr noch: <M>{"4n - 6"}</M> ist sogar <M>{"o(n^2)"}</M>.
       </>
@@ -532,7 +532,7 @@ const QUIZ: { statement: React.ReactNode; wahr: boolean; expl: React.ReactNode }
       <>
         Der Baum wird nie ganz gleichzeitig gespeichert: Auf dem Aufruf-Stapel liegt immer
         nur der aktive Pfad von der Wurzel zum aktuellen Aufruf, und der ist höchstens{" "}
-        <M>{"n"}</M> Aufrufe lang — Speicherkomplexität <M>{"O(n)"}</M> (Satz 2.5.6).
+        <M>{"n"}</M> Aufrufe lang: Speicherkomplexität <M>{"O(n)"}</M> (Satz 2.5.6).
         Exponentiell ist nur die <em>Zeit</em>.
       </>
     ),
@@ -549,7 +549,7 @@ const QUIZ: { statement: React.ReactNode; wahr: boolean; expl: React.ReactNode }
       <>
         Konstante Faktoren und additive Konstanten verschwinden in der Landau-Notation:{" "}
         <M>{"n + 5(n-2) + c = O(n)"}</M> genauso wie <M>{"n + 3(n-2) + c"}</M>{" "}
-        (Bemerkung 2.5.2). Genau diese Robustheit gegen Zählkonventionen ist der Zweck der
+        (Bemerkung 2.5.2). Diese Robustheit gegen Zählkonventionen ist der Zweck der
         Notation.
       </>
     ),
@@ -566,8 +566,8 @@ const QUIZ: { statement: React.ReactNode; wahr: boolean; expl: React.ReactNode }
     expl: (
       <>
         Wiederholtes Einsetzen liefert{" "}
-        <M>{"T(n) \\ge 2^{\\lfloor n/2 \\rfloor} \\ge \\left(\\sqrt{2}\\right)^{n-1}"}</M> —
-        geometrisches Wachstum mit Basis <M>{"\\sqrt{2} > 1"}</M>. Genau so haben wir die
+        <M>{"T(n) \\ge 2^{\\lfloor n/2 \\rfloor} \\ge \\left(\\sqrt{2}\\right)^{n-1}"}</M>,
+        geometrisches Wachstum mit Basis <M>{"\\sqrt{2} > 1"}</M>. So haben wir die
         untere Schranke in Satz 2.5.6 bewiesen.
       </>
     ),
@@ -617,7 +617,7 @@ function QuizWidget() {
               >
                 {correct
                   ? "Richtig! "
-                  : `Leider nein — die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
+                  : `Leider nein, die Aussage ist ${q.wahr ? "wahr" : "falsch"}. `}
                 <span className="text-slate-600 dark:text-slate-300">{q.expl}</span>
               </p>
             )}

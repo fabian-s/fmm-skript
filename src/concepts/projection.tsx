@@ -55,7 +55,7 @@ registerConcept({
         plättet und dabei jeden Punkt, der schon in <M>{"U"}</M> liegt, an
         seinem Platz lässt. Zweimal projizieren ändert deshalb nichts
         gegenüber einmal projizieren:{" "}
-        <M>{"\\pi \\circ \\pi = \\pi"}</M> — gleichwertig erfüllt ihre{" "}
+        <M>{"\\pi \\circ \\pi = \\pi"}</M>; gleichwertig erfüllt ihre{" "}
         <ConceptLink id="matrix">Matrix</ConceptLink>{" "}
         <M>{"\\bP^2 = \\bP"}</M>.
       </p>
@@ -75,7 +75,7 @@ registerConcept({
         <ConceptLink id="dot-product">Skalarprodukt</ConceptLink> ist. Kleines
         Beispiel: Projizieren wir <M>{"(2, 3)^\\top"}</M> auf die{" "}
         <M>{"x_1"}</M>-Achse (also <M>{"\\bb = (1, 0)^\\top"}</M>), erhalten
-        wir <M>{"(2, 0)^\\top"}</M> — die zweite Koordinate wird schlicht
+        wir <M>{"(2, 0)^\\top"}</M>: die zweite Koordinate wird schlicht
         verworfen. Die Kleinste-Quadrate-Schätzung in der Statistik ist genau
         so eine Projektion: die des Datenvektors auf den Untervektorraum der
         Modellvorhersagen.
