@@ -27,3 +27,11 @@ jobs:
         with: { path: dist }
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # Vier Deployments in Folge sind am 10-Minuten-Standard gescheitert,
+          # jedes Mal mit „Current status: deployment_queued" bis zum Abbruch.
+          # Der Artefakt-Upload war jeweils sauber (1 Artefakt, korrekte ID) —
+          # der Pages-Dienst hat die Ablieferung nur nicht abgeschlossen.
+          # 30 Minuten unterscheiden „langsam" von „hängt": läuft es auch damit
+          # ab, liegt es nicht am Zeitlimit.
+          timeout: 1800000
