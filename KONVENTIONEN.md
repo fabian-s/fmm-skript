@@ -268,3 +268,9 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   2026-08-06. Dafür gehört EINE generische <Quiz>/<Frage>-Komponente nach
   src/lib/ — sie ersetzt die vier kopierten QuizWidget-Duplikate in den
   Kapiteln.
+- MDX wird das Autorenformat, und die BESTEHENDEN Kapitel werden ebenfalls
+  migriert (Dozenten-Entscheidung 2026-08-06), also 28 Abschnittsdateien
+  plus die 134 Konzept-Module. Reihenfolge: erst den vorbestehenden
+  Dev-Server-Bug (typesetzt gar keine Mathe) fixen, dann Plugin +
+  <Quiz>/<Frage> nach src/lib, dann Kapitel 5 als erstes echtes MDX-Kapitel,
+  dann die Migration der Altkapitel.
