@@ -274,3 +274,27 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Dev-Server-Bug (typesetzt gar keine Mathe) fixen, dann Plugin +
   <Quiz>/<Frage> nach src/lib, dann Kapitel 5 als erstes echtes MDX-Kapitel,
   dann die Migration der Altkapitel.
+
+## Als Nächstes (offen, aus Council-Runde 2 vom 2026-08-06)
+
+1. **Proof/Quiz sind deutsch verdrahtet.** `src/lib/Proof.tsx` schreibt
+   „Beweis.", „Schritt für Schritt", „nächster Schritt"; `src/lib/Quiz.tsx`
+   schreibt „wahr"/„falsch", „Richtig!", „Leider nein, …". Für das Skript ist
+   das richtig, aber die Bibliothek liegt in acht Apps, und die
+   interactive-textbook-Skill baut standardmässig ENGLISCHE Bücher. Seit die
+   Direktiven englische Zweitnamen haben (`::::proof`, `:::question{true}`),
+   ist die Hälfte der Übersetzung fertig und die andere fehlt: ein englisches
+   Buch bekommt eine deutsche Beweis-Box. Lösung wie bei `TooltipProvider`:
+   ein `labels`-Prop bzw. ein Provider mit DEUTSCHEN Defaults, damit das
+   Skript unverändert bleibt, und englische Labels im Skill-Template.
+2. **Das Orakel sieht Inline-Auszeichnung nicht.** `contentSignature` in
+   `mdx/inventory.mjs` läuft durch `<em>/<strong>/<code>/<sub>/<sup>`
+   hindurch, deshalb vergleichen sich `x<sub>1</sub>` und `x1` sowie
+   `<code>fib(5)</code>` und `fib(5)` als GLEICH. In einem Mathetext ist ein
+   verlorener Index echter Schaden. Beim Migrieren der restlichen 27
+   Abschnitte also zusätzlich per Auge prüfen — oder die Marker in
+   `contentSignature` um diese Elemente erweitern (dann aber gegen den
+   Pilotabschnitt auf Fehlalarme testen).
+
+Beides ist in der Skill-Doku (`references/verification.md`) als bekannter
+blinder Fleck vermerkt, nicht stillschweigend fallengelassen.
