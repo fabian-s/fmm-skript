@@ -64,6 +64,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./07-kq"),
   },
   {
+    id: "mdx-lab",
+    title: "MDX-Syntaxlabor",
+    deck: "02-algos",
+    load: () => import("./mdx-lab"),
+  },
+  {
     id: "demo",
     title: "Makro- und Farb-Demo",
     deck: "07-kq",

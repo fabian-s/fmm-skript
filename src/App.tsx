@@ -4,6 +4,8 @@ import { chapters, type ChapterModule } from "./chapters";
 
 // side-effect imports: every concept module registers its tooltip
 import.meta.glob("./concepts/*.tsx", { eager: true });
+// MDX-Konzepte können sich nicht selbst registrieren — das erledigt dieses Modul
+import "./mdx/concepts-mdx";
 
 function currentChapterId(): string {
   return new URLSearchParams(window.location.search).get("k") ?? chapters[0].id;

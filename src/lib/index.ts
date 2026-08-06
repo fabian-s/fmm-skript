@@ -5,6 +5,7 @@ export { TooltipProvider, ConceptLink } from "./tooltip/TooltipEngine";
 export type { TooltipLabels } from "./tooltip/TooltipEngine";
 export { ExpandedReading } from "./ExpandedReading";
 export { M, MD, Eq, EnvBlock } from "./Math";
+export { Quiz, Frage } from "./Quiz";
 export { Slider } from "./widgets/Slider";
 export { MatrixInput } from "./widgets/MatrixInput";
 export { TransformCanvas } from "./widgets/TransformCanvas";

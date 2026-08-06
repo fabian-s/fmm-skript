@@ -1,0 +1,79 @@
+import { FibonacciStepper } from "../02-algos/widgets/FibonacciStepper";
+
+::quelle[Syntaxlabor der MDX-Autorenschicht — kein Kursinhalt.]
+
+Dieser Abschnitt übt jede Form der Autorensyntax genau einmal, damit ein
+Rendering-Vergleich alle Konstrukte auf einmal abdeckt. Inline-Mathe sieht so
+aus: $\|\bA\|_2 = \sigma_{\max}(\bA)$, mit einfachen Backslashes wie in den
+Folien. Ein Verweis auf ein Konzept: :k[die Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}.
+Geschweifte Klammern schreibt man maskiert: \{1, 2, 3\}. Und hier ein in MDX
+geschriebenes Konzept: :k[die MDX-Probe]{#mdx-probe}.
+
+### 99.1 Umgebungen und Gleichungen
+
+:::definition[99.1.1 (Spektralnorm)]
+Für $\bA \in \R^{m \times n}$ ist die *Spektralnorm* der größte Streckfaktor,
+den $\bA$ auf einen Einheitsvektor anwenden kann:
+
+$$ {#eq-99.1}
+\|\bA\|_2 = \max_{\|\bx\|_2 = 1} \|\bA\bx\|_2 .
+$$
+:::
+
+Gleichung ($99.1$) ist eine Operatornorm. Eine unnummerierte Formel:
+
+$$
+\|\bA\|_F^2 = \sum_{i,j} a_{ij}^2 .
+$$
+
+:::satz[99.1.2 (Submultiplikativität)]
+Für verträgliche Matrizen gilt $\|\bA\bB\| \le \|\bA\| \, \|\bB\|$.
+:::
+
+::::beweis
+
+:::schritt
+Wir setzen die Definition ein und schätzen ab.
+
+::why[nach Definition der Operatornorm als Maximum über $\|\bx\|=1$]
+:::
+
+:::schritt
+Der zweite Faktor hängt nicht mehr von $\bx$ ab.
+
+::why[weil $\|\bB\bx\| \le \|\bB\|\,\|\bx\|$ für *jedes* $\bx$ gilt]
+:::
+
+::::
+
+### 99.2 Vertiefung, Widget, Selbsttest
+
+:::vertiefung[Warum das Maximum angenommen wird]
+Die Einheitssphäre ist kompakt und $\bx \mapsto \|\bA\bx\|_2$ stetig, also
+nimmt die Funktion ihr Maximum an. Ohne Kompaktheit müsste dort ein Supremum
+stehen.
+
+<FibonacciStepper />
+:::
+
+Eine Liste, um die Typografie zu prüfen:
+
+- erster Punkt mit Mathe $a_{ij}$,
+- zweiter Punkt mit *Betonung* und **starker Betonung**,
+- dritter Punkt mit `Code` und einem [Link auf 99.1](#sec-99.1).
+
+::::quiz
+
+:::frage{wahr}
+Die Spektralnorm ist submultiplikativ.
+
+Das ist genau Satz 99.1.2; für Operatornormen folgt es direkt aus der Definition.
+:::
+
+:::frage{falsch}
+Die Frobeniusnorm ist eine Operatornorm.
+
+Sie wird elementweise gebildet und ist keiner Vektornorm zugeordnet.
+:::
+
+::::
