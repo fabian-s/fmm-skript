@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import remarkMath from "remark-math";
 import remarkDirective from "remark-directive";
 import remarkFmm from "./remark-fmm.mjs";
+import { remarkChain } from "./plugins.mjs";
 import {
   diffInventories,
   inventoryFromMdx,
@@ -31,7 +32,7 @@ async function build(src) {
   return String(
     await compile(
       { value: src, path: PATH },
-      { remarkPlugins: [remarkMath, remarkDirective, [remarkFmm, { root: "/x" }]], jsx: true }
+      { remarkPlugins: remarkChain("/x"), jsx: true }
     )
   );
 }
@@ -67,6 +68,39 @@ const ACCEPT = {
   "locally declared component": [
     `export const W = () => <b>x</b>;\n\n<W />`,
     `<W />`,
+  ],
+  "english proof directives": [
+    `::::proof\n\n:::step\nEins.\n\n::why[weil]\n:::\n\n::::`,
+    `<PStep why={`,
+  ],
+  "english quiz directives": [
+    `::::quiz\n\n:::question{true}\nA.\n\nB.\n:::\n\n::::`,
+    `wahr={true}`,
+  ],
+  "english environment and deepdive": [
+    `:::corollary[3.2]\nText.\n:::`,
+    `<EnvBlock kind="Corollary" label="3.2">`,
+  ],
+  "english concept link": [`See :c[the trace]{#trace} here.`, `<ConceptLink id="trace">`],
+  "english deepdive and source": [
+    `::source[Slides 4, p. 12]\n\n:::deepdive[More]\nText.\n:::`,
+    `<ExpandedReading title="More">`,
+  ],
+  "english algorithm environment": [
+    `:::algorithm[2.1 (Gauss)]\nText.\n:::`,
+    `<EnvBlock kind="Algorithm" label="2.1 (Gauss)">`,
+  ],
+  "english no-qed flag": [
+    `::::proof{no-qed}\n\n:::step\nEins.\n:::\n\n::::`,
+    `qed={false}`,
+  ],
+  // Council 2 (Codex): ein \$ im FLIESSTEXT ist gewöhnliches Markdown und
+  // darf nicht scheitern — die Regel gilt nur innerhalb von Formeln.
+  "escaped dollar in prose is fine": [`Der Preis ist \\$5 heute.`, `$5`],
+  "fenced code keeps indentation": ["```text\nfib(5)\n  |-- fib(4)\n```", `|-- fib(4)`],
+  "display math may contain an escaped dollar": [
+    `$$\n\\text{Kosten in \\$}\n$$`,
+    `<MD>`,
   ],
   "no layout wrapper is emitted": [`Nur Text.`, `Nur Text.`],
 };
@@ -112,6 +146,30 @@ const REJECT = {
   "question without explanation": [
     `::::quiz\n\n:::frage{wahr}\nNur eine Aussage.\n:::\n\n::::`,
     `Erklärungsblock`,
+  ],
+  // Council 2026-08-06 (Claude-Leg): jede dieser Formen kompilierte vorher
+  // GRÜN und verlor oder verfälschte dabei still Inhalt.
+  "math in a directive label": [`:::satz[2.4 ($\\bA$ regulär)]\nText.\n:::`, `Label`],
+  "equal-colon nesting leaves a stray fence": [
+    `:::beweis\n\n:::schritt\nx\n:::\n\n:::`,
+    `Zaun-Zeile`,
+  ],
+  "stray backtick must not disable the dollar guard": [
+    "Ein \` einzelner Backtick.\n\nVor $a \\$ b$ nach.",
+    `maskiertes Dollarzeichen`,
+  ],
+  // Council 2 (Claude-Leg): jede dieser Formen kompilierte grün und war falsch.
+  "pre in mdx loses indentation": [
+    `<pre>\nfib(5)\n  |-- fib(4)\n</pre>`,
+    `<pre> im MDX`,
+  ],
+  "same-paragraph backtick cannot disable the dollar guard": [
+    "Ein \` Backtick und $a \\$ b$ danach.",
+    `maskiertes Dollarzeichen`,
+  ],
+  "list-indented corrupt math": [
+    `- Punkt\n\n    Formel $a \\$ b$ hier.`,
+    `maskiertes Dollarzeichen`,
   ],
   "image inside why": [
     `::::beweis\n\n:::schritt\nEins.\n\n::why[vor ![alt](x.png) nach]\n:::\n\n::::`,
@@ -196,6 +254,21 @@ Text.
 
 $x$`,
     false,
+  ],
+  // Gemini (Council 2026-08-06): Weißraum ENTFERNEN statt normalisieren hätte
+  // zusammengelaufene Wörter durchgelassen — genau der Fehler, den eine
+  // schludrige Konvertierung produziert.
+  "run-together words are caught": [
+    `export default () => <p>{"Das Ende. Deshalb gilt"}</p>`,
+    `Das Ende.Deshalb gilt`,
+    false,
+  ],
+  // ...und die Gegenprobe: reine Quelltext-Einrückung und `{" "}` dürfen
+  // KEINEN Fehlalarm erzeugen (Blockgrenzen + JSX-Leerzeichensemantik).
+  "jsx explicit space is not a difference": [
+    `export default () => <p>Vor{" "}<em>kursiv</em> nach.</p>`,
+    `Vor *kursiv* nach.`,
+    true,
   ],
   "TeX whitespace remains harmless": [
     `export default () => <MD>{"a + b"}</MD>`,

@@ -3,7 +3,12 @@ import { S21 } from "./S21";
 import { S22 } from "./S22";
 import { S23 } from "./S23";
 import { S24 } from "./S24";
-import { S25 } from "./S25";
+// erster in MDX geschriebener Abschnitt (Pilot der Migration); die
+// Seitentypografie kommt aus dem Adapter, nicht aus dem MDX selbst
+import { mdxSection } from "../../mdx/adapters";
+import S25Body from "./S25.mdx";
+
+const S25 = mdxSection(S25Body);
 
 const chapter: ChapterModule = {
   sections: [

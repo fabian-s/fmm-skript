@@ -287,11 +287,13 @@ export function EnvBlock({
     | "Satz"
     | "Lemma"
     | "Korollar"
+    | "Corollary"
     | "Example"
     | "Beispiel"
     | "Remark"
     | "Bemerkung"
-    | "Algorithmus";
+    | "Algorithmus"
+    | "Algorithm";
   label: string;
   children: ReactNode;
 }) {
@@ -301,9 +303,11 @@ export function EnvBlock({
     Satz: "border-violet-500 bg-violet-50 dark:bg-violet-950/40",
     Lemma: "border-violet-400 bg-violet-50/70 dark:bg-violet-950/30",
     Korollar: "border-violet-400 bg-violet-50/70 dark:bg-violet-950/30",
+    Corollary: "border-violet-400 bg-violet-50/70 dark:bg-violet-950/30",
     Beispiel: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40",
     Bemerkung: "border-slate-400 bg-slate-50 dark:bg-slate-800/40",
     Algorithmus: "border-amber-500 bg-amber-50 dark:bg-amber-950/30",
+    Algorithm: "border-amber-500 bg-amber-50 dark:bg-amber-950/30",
     Example: "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40",
     Remark: "border-slate-400 bg-slate-50 dark:bg-slate-800/40",
   };

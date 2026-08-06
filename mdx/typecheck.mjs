@@ -7,6 +7,9 @@
  */
 import { readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
+
+/** eindeutig pro Lauf; siehe checkFileFor() */
+const RUN = Math.random().toString(36).slice(2, 8);
 import { fileURLToPath } from "node:url";
 import { parse as babelParse } from "@babel/parser";
 import _traverse from "@babel/traverse";
@@ -15,6 +18,7 @@ import remarkMath from "remark-math";
 import remarkDirective from "remark-directive";
 import ts from "typescript";
 import remarkFmm from "./remark-fmm.mjs";
+import { remarkChain } from "./plugins.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const traverse = _traverse.default ?? _traverse;
@@ -30,7 +34,16 @@ async function mdxFiles(dir) {
 }
 
 function generatedPath(file) {
-  return path.join(path.dirname(file), `.${path.basename(file, ".mdx")}.mdx-check.tsx`);
+  // Der Name trägt PID und Zufallsanteil, weil im Workflow MEHRERE
+  // Abschnitts-Agenten gleichzeitig `npm run typecheck:mdx` laufen lassen.
+  // Bei festem Namen räumt der eine Lauf die Dateien des anderen weg, und der
+  // zweite scheitert mit einem Fehler, der nichts mit seinem Abschnitt zu tun
+  // hat. Die Datei muss NEBEN der Quelle liegen, damit relative Imports
+  // (./widgets/…) auflösen — nur der Name darf eindeutig sein.
+  return path.join(
+    path.dirname(file),
+    `.${path.basename(file, ".mdx")}.${process.pid}-${RUN}.mdx-check.tsx`
+  );
 }
 
 async function compiled(entry) {
@@ -38,7 +51,7 @@ async function compiled(entry) {
     await compile(
       { value: entry.source, path: entry.path },
       {
-        remarkPlugins: [remarkMath, remarkDirective, [remarkFmm, { root: ROOT }]],
+        remarkPlugins: remarkChain(ROOT),
         jsx: true,
       }
     )

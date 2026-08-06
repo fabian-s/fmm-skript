@@ -13,6 +13,7 @@ import { compile } from "@mdx-js/mdx";
 import remarkMath from "remark-math";
 import remarkDirective from "remark-directive";
 import remarkFmm from "./remark-fmm.mjs";
+import { remarkChain } from "./plugins.mjs";
 
 const traverse = _traverse.default ?? _traverse;
 const norm = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
@@ -31,7 +32,16 @@ const SEMANTIC = new Set([
 ]);
 
 const CONTAINERS = new Set(["EnvBlock", "ExpandedReading", "Proof", "PStep", "Quiz"]);
-const BLOCKS = new Set(["p", "li", "blockquote", "pre", "table", "tr"]);
+// Blockgrenzen beenden einen Prosalauf. Das muss VOLLSTÄNDIG sein: fehlten
+// hier th/td, sickerte der Quelltext-Umbruch zwischen `</th>` und `<th>` als
+// Leerzeichen in den Lauf, und die MDX-Tabellenzelle erzeugte keinen — vier
+// Fehlalarme allein im Pilotabschnitt. Die Antwort darauf ist, hier
+// vollständig zu sein, NICHT den Vergleich weichzuspülen.
+const BLOCKS = new Set([
+  "p", "li", "blockquote", "pre", "table", "tr", "th", "td", "thead", "tbody",
+  "tfoot", "caption", "div", "ul", "ol", "dl", "dt", "dd", "section", "figure",
+  "figcaption", "h1", "h2", "h3", "h4", "h5", "h6",
+]);
 
 const jsxName = (n) =>
   n?.type === "JSXIdentifier"
@@ -324,7 +334,16 @@ export function inventoryFromTsx(code) {
     proseWithin = [];
   };
   const appendProse = (value, path) => {
-    if (!norm(value)) return;
+    if (!norm(value)) {
+      // Reiner Weißraum: JSX verwirft ihn, WENN er einen Zeilenumbruch
+      // enthält (Quelltext-Einrückung), behält ihn aber sonst — und `{" "}`
+      // ist genau die Schreibweise für ein bewusst gesetztes Leerzeichen
+      // zwischen Inline-Elementen. Das früher pauschale Verwerfen ließ
+      // `Urteil{" "}<em>…` zu „Urteil…" zusammenlaufen und meldete gegen die
+      // MDX-Fassung eine Abweichung, die es im Rendering nicht gibt.
+      if (prose && !/\n/.test(value)) prose += " ";
+      return;
+    }
     const within = scopeOf(path, code);
     if (prose && stable(within) !== stable(proseWithin)) flushProse();
     if (!prose) proseWithin = within;
@@ -390,7 +409,16 @@ export function inventoryFromTsx(code) {
         } else if (/^h[1-6]$/.test(name)) {
           add(path, { kind: "heading", level: Number(name[1]), id: attrValue(el, "id", code), text: contentSignature(path.node.children, code) });
           path.skip();
-        } else if (name === "a") {
+        } else if (name === "img") {
+        // Bilder waren für den Gate unsichtbar: ein gelöschtes `<img>` verglich
+        // sich gleich. Quelle und Alt-Text gehören zum Inhalt.
+        add(path, {
+          kind: "image",
+          src: attrValue(el, "src", code),
+          alt: attrValue(el, "alt", code),
+        });
+        path.skip();
+      } else if (name === "a") {
           add(path, { kind: "link", href: attrValue(el, "href", code), text: contentSignature(path.node.children, code) });
           path.skip();
         } else if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) {
@@ -419,7 +447,7 @@ export async function inventoryFromMdx(source, filePath, root) {
   const js = String(
     await compile(
       { value: source, path: filePath },
-      { remarkPlugins: [remarkMath, remarkDirective, [remarkFmm, { root }]], jsx: true }
+      { remarkPlugins: remarkChain(root), jsx: true }
     )
   );
   const cleaned = js.replace(/_components\.([a-z][a-z0-9]*)/g, "$1");
@@ -443,8 +471,16 @@ const key = (it) => {
     case "frage": value = `frage[${it.order}] wahr=${stable(it.wahr)} aussage=„${it.statement}" erklärung=„${it.explanation}"`; break;
     case "heading": value = `h${it.level}#${it.id ?? "-"} ${it.text}`; break;
     case "link": value = `link ${it.href} „${it.text}"`; break;
+    case "image":
+      value = `image ${stable(it.src)} alt=${stable(it.alt)}`;
+      break;
     case "widget": value = `widget <${it.name}> props(${it.props})`; break;
-    default: value = `text ${it.text}`;
+    // Weißraum wird NORMALISIERT, nicht entfernt. Entfernen hätte
+    // „Ende.Deshalb" und „Ende. Deshalb" gleich gemacht, also genau die
+    // zusammengelaufenen Wörter durchgelassen, die eine schludrige
+    // Konvertierung produziert. Die Fehlalarme an Element-Grenzen sind
+    // stattdessen an der Wurzel behoben (siehe BLOCKS oben).
+    default: value = `text ${norm(it.text)}`;
   }
   return value + where(it);
 };

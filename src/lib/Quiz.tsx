@@ -18,21 +18,20 @@ import { Children, createContext, useContext, useId, useState, type ReactNode } 
 
 interface QuizApi {
   /** Antwort einer Frage; null = noch nicht beantwortet */
-  answer: (key: number) => boolean | null;
-  pick: (key: number, v: boolean) => void;
-  /** laufende Nummer, damit jede <Frage> ihren eigenen Zustand bekommt */
-  next: () => number;
+  answer: (key: string) => boolean | null;
+  pick: (key: string, v: boolean) => void;
 }
 
 const Ctx = createContext<QuizApi | null>(null);
 
 export function Quiz({ children }: { children: ReactNode }) {
-  const [chosen, setChosen] = useState<Record<number, boolean>>({});
-  let counter = 0;
+  const [chosen, setChosen] = useState<Record<string, boolean>>({});
+  // Schlüssel ist die von React vergebene useId der jeweiligen <Frage>, nicht
+  // eine im Render hochgezählte Nummer: ein später montierendes <Frage>
+  // bekäme sonst wieder 0 und teilte sich den Zustand mit der ersten.
   const api: QuizApi = {
     answer: (k) => (k in chosen ? chosen[k] : null),
     pick: (k, v) => setChosen((c) => ({ ...c, [k]: v })),
-    next: () => counter++,
   };
   return (
     <Ctx.Provider value={api}>
@@ -44,8 +43,7 @@ export function Quiz({ children }: { children: ReactNode }) {
 export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }) {
   const api = useContext(Ctx);
   const labelId = useId();
-  // die laufende Nummer wird beim ersten Render vergeben und dann festgehalten
-  const [key] = useState(() => api?.next() ?? 0);
+  const key = labelId;
   if (!api) throw new Error("<Frage> darf nur in <Quiz> stehen");
 
   const items = Children.toArray(children);

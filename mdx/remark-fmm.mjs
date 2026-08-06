@@ -33,19 +33,45 @@ import acornJsx from "acorn-jsx";
 
 const JsxParser = Parser.extend(acornJsx());
 
-/** erlaubte kind-Werte von <EnvBlock> (siehe src/lib/Math.tsx) */
+/**
+ * Erlaubte kind-Werte von <EnvBlock> (siehe src/lib/Math.tsx). Der Wert ist
+ * zugleich die ANGEZEIGTE Beschriftung, deshalb gibt es englische und
+ * deutsche Direktiven nebeneinander: ein englischsprachiges Buchkapitel soll
+ * „Theorem 4.6" schreiben, das deutsche Skript „Satz 4.6".
+ */
 const ENV = {
+  // englisch
   definition: "Definition",
   theorem: "Theorem",
-  satz: "Satz",
   lemma: "Lemma",
-  korollar: "Korollar",
+  corollary: "Corollary",
   example: "Example",
-  beispiel: "Beispiel",
   remark: "Remark",
+  algorithm: "Algorithm",
+  // deutsch
+  satz: "Satz",
+  korollar: "Korollar",
+  beispiel: "Beispiel",
   bemerkung: "Bemerkung",
   algorithmus: "Algorithmus",
 };
+
+/**
+ * Englische Zweitnamen der übrigen Direktiven. Intern wird auf die deutschen
+ * Namen normalisiert, damit es nur EINEN Satz Regeln gibt; beide Schreibweisen
+ * verhalten sich also garantiert identisch.
+ */
+const DIRECTIVE_ALIAS = {
+  proof: "beweis",
+  step: "schritt",
+  question: "frage",
+  deepdive: "vertiefung",
+  source: "quelle",
+  c: "k",
+};
+
+/** englische Zweitnamen der Flags */
+const FLAG_ALIAS = { true: "wahr", false: "falsch", "no-qed": "ohne-qed" };
 
 /** Komponenten, die das Plugin selbst aus src/lib holt */
 const LIB = [
@@ -65,17 +91,17 @@ const LIB = [
 const ALLOWED_ATTRS = {
   k: ["id"],
   vertiefung: ["title"],
-  beweis: ["ohne-qed"],
+  beweis: ["ohne-qed", "no-qed"],
   schritt: [],
   why: [],
   quiz: [],
-  frage: ["wahr", "falsch"],
+  frage: ["wahr", "falsch", "true", "false"],
   quelle: [],
 };
 for (const name of Object.keys(ENV)) ALLOWED_ATTRS[name] = ["label"];
 
 /** Attribute, die als reine Flags geschrieben werden MÜSSEN */
-const BARE_FLAGS = new Set(["wahr", "falsch", "ohne-qed"]);
+const BARE_FLAGS = new Set(["wahr", "falsch", "ohne-qed", "true", "false", "no-qed"]);
 
 /** im why-Prop unterstützte Inline-Knoten (alles andere scheitert) */
 const WHY_OK = new Set([
@@ -182,64 +208,33 @@ function plain(node) {
  * Directive-Label: `:::satz[2.4 (Cauchy)]` legt einen ersten Absatz mit
  * data.directiveLabel ab. Zieht ihn heraus und liefert seinen Klartext.
  */
-function takeLabel(node) {
+function takeLabel(node, fail) {
   const first = node.children?.[0];
-  if (first?.data?.directiveLabel) {
-    node.children = node.children.slice(1);
-    return plain(first);
-  }
-  return null;
+  if (!first?.data?.directiveLabel) return null;
+  node.children = node.children.slice(1);
+  // Das Label wird als STRING an <EnvBlock label> gereicht. plain() wirft
+  // alles weg, was kein Text ist — aus `:::satz[2.4 ($\bA$ regulär)]` wurde
+  // still „2.4 ( regulär)". Lieber laut scheitern als die Formel schlucken.
+  const bad = [];
+  const scan = (n) => {
+    if (n.type === "text" || n.type === "inlineCode" || n.type === "paragraph")
+      return (n.children ?? []).forEach(scan);
+    bad.push(n.type === "inlineMath" ? "Mathematik" : n.type);
+  };
+  (first.children ?? []).forEach(scan);
+  if (bad.length)
+    fail(
+      node,
+      `das Label in [ … ] wird als reiner Text weitergereicht und kann ` +
+        `${[...new Set(bad)].join("/")} nicht darstellen — schreib es ohne ` +
+        `Auszeichnung, z.B. [2.4 (Cauchy-Schwarz)]`,
+      "remark-fmm:label-markup"
+    );
+  return plain(first);
 }
 
 const DIRECTIVE_TYPES = new Set(["containerDirective", "leafDirective", "textDirective"]);
 
-/**
- * Fundstellen von \$ außerhalb von Code. Fence-Zeichen und -Länge müssen
- * zusammenpassen, weil ein ~~~ innerhalb eines ````-Blocks kein Fence-Ende
- * ist. Backtick-Spans dürfen wie normaler Markdown-Code Dollarpfade zeigen.
- */
-function escapedDollarsOutsideCode(source) {
-  const hits = [];
-  let fence = null;
-  let inlineTicks = 0;
-  const lines = source.split("\n");
-
-  for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-    const line = lines[lineIndex];
-    if (fence) {
-      const close = new RegExp(`^ {0,3}${fence.char === "`" ? "`" : "~"}{${fence.length},}[ \\t]*$`);
-      if (close.test(line)) fence = null;
-      continue;
-    }
-
-    if (!inlineTicks) {
-      const opening = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
-      if (opening && (opening[1][0] !== "`" || !opening[2].includes("`"))) {
-        fence = { char: opening[1][0], length: opening[1].length };
-        continue;
-      }
-      // Vier Leerzeichen sind bereits ein Codeblock; remark-math sieht ihn
-      // ebenfalls nicht als Fließtext.
-      if (/^( {4}|\t)/.test(line)) continue;
-    }
-
-    for (let i = 0; i < line.length; ) {
-      if (line[i] === "`") {
-        let end = i + 1;
-        while (line[end] === "`") end++;
-        const length = end - i;
-        if (!inlineTicks) inlineTicks = length;
-        else if (inlineTicks === length) inlineTicks = 0;
-        i = end;
-        continue;
-      }
-      if (!inlineTicks && line[i] === "\\" && line[i + 1] === "$")
-        hits.push({ line: lineIndex + 1, column: i + 1 });
-      i++;
-    }
-  }
-  return hits;
-}
 
 function hasAuthoredContent(node) {
   if (!node) return false;
@@ -261,19 +256,42 @@ export default function remarkFmm(options = {}) {
     const source = String(file.value ?? "");
     const lines = source.split("\n");
 
-    /* ---- 0. Rohtext-Regeln ---------------------------------------- */
-
-    // Ein maskiertes Dollarzeichen beendet die Formel BEVOR dieses Plugin sie
-    // sieht: aus `$a \$ b$` wird <M>{"a \\"}</M> plus literales „b$ nach".
-    // Der Build blieb dabei grün und die Mathematik war still zerstört.
-    for (const position of escapedDollarsOutsideCode(source))
+    /* ---- 0. Maskiertes Dollarzeichen IN Mathematik -------------------- */
+    // `$a \$ b$` beendet die Formel schon am maskierten Dollar: es entsteht
+    // <M>{"a \\"}</M> plus literales „b$ nach", grün kompiliert und still
+    // falsch. Geprüft wird deshalb der ROHTEXT der Mathe-Knoten, nicht die
+    // ganze Datei — ein `\$` im Fliesstext („Der Preis ist \$5") ist
+    // gewöhnliches Markdown und völlig in Ordnung, und ein Backtick-Span
+    // kann die Prüfung nicht mehr aushebeln.
+    visit(tree, (node) => {
+      // nur INLINE-Mathe: in $$…$$ ist alles bis zum Schlusszaun roh, ein
+      // \$ überlebt dort unbeschadet und wird von MathJax gesetzt.
+      if (node.type !== "inlineMath") return;
+      const a = node.position?.start?.offset;
+      const b = node.position?.end?.offset;
+      if (a == null || b == null) return;
+      if (!source.slice(a, b).includes("\\$")) return;
       fail(
-        { position: { start: position } },
-        `maskiertes Dollarzeichen „\\$" wird vom Markdown-Mathe-Parser NICHT als ` +
-          `Zeichen gelesen, sondern beendet die Formel — die Mathematik wäre still ` +
-          `zerstört. Nutze in TeX \\mathdollar oder \\text{\\textdollar}.`,
+        node,
+        `maskiertes Dollarzeichen „\\$" in einer Formel: der Markdown-Parser ` +
+          `beendet die Mathematik dort, statt ein Zeichen zu setzen — die Formel ` +
+          `wäre still zerstört. Nutze \\mathdollar oder \\text{\\textdollar}.`,
         "remark-fmm:dollar"
       );
+    });
+
+    /* ---- 0b. Englische Zweitnamen auf die internen Namen abbilden --- */
+    visit(tree, (node) => {
+      if (!DIRECTIVE_TYPES.has(node.type)) return;
+      if (DIRECTIVE_ALIAS[node.name]) node.name = DIRECTIVE_ALIAS[node.name];
+      const a = node.attributes;
+      if (!a) return;
+      for (const [en, de] of Object.entries(FLAG_ALIAS))
+        if (en in a && !(de in a)) {
+          a[de] = a[en];
+          delete a[en];
+        }
+    });
 
     /* ---- 1. Struktur prüfen, BEVOR irgendetwas umgebaut wird ------- */
 
@@ -402,7 +420,7 @@ export default function remarkFmm(options = {}) {
       if (name === "why") return; // wird vom umgebenden :::schritt eingesammelt
 
       if (ENV[name]) {
-        const label = takeLabel(node) ?? a.label;
+        const label = takeLabel(node, fail) ?? a.label;
         if (!label)
           fail(
             node,
@@ -419,7 +437,7 @@ export default function remarkFmm(options = {}) {
       }
 
       if (name === "vertiefung") {
-        const title = takeLabel(node) ?? a.title;
+        const title = takeLabel(node, fail) ?? a.title;
         if (!title)
           fail(node, `:::vertiefung braucht einen Titel in [ … ]`, "remark-fmm:missing-label");
         parent.children[index] = el(
@@ -523,6 +541,46 @@ export default function remarkFmm(options = {}) {
         attrs.push(attr("id", id));
       }
       parent.children[index] = el(`h${node.depth}`, attrs, node.children, node);
+    });
+
+    /* ---- 4b. Übrig gebliebene Zaun-Zeile ---------------------------- */
+    // Gleich viele Doppelpunkte innen wie aussen: remark-directive schliesst
+    // den äusseren Block schon am inneren Zaun, der letzte `:::` bleibt als
+    // Absatz stehen und wird auf der Seite ANGEZEIGT. Der äussere Block
+    // braucht mehr Doppelpunkte als der innere.
+    visit(tree, "paragraph", (node) => {
+      const only = (node.children ?? []).every((c) => c.type === "text");
+      if (!only) return;
+      const text = (node.children ?? []).map((c) => c.value).join("").trim();
+      if (/^:{2,}$/.test(text))
+        fail(
+          node,
+          `hier steht eine nackte Zaun-Zeile „${text}" im Text. Ein Block, der ` +
+            `andere Blöcke enthält, braucht MEHR Doppelpunkte als sie: ` +
+            `::::beweis um :::schritt, ::::quiz um :::frage.`,
+          "remark-fmm:stray-fence"
+        );
+    });
+
+    /* ---- 4c. <pre> in MDX ist eine Falle ---------------------------- */
+    // MDX liest die Kinder von <pre> als MARKDOWN. Aus einer ASCII-Grafik
+    // wird ein Absatz ohne Einrückung — grün kompiliert und still zerstört,
+    // genau das, was jede andere Regel hier verhindert. Ein Zaun-Codeblock
+    // (```) bleibt dagegen zeichengetreu.
+    visit(tree, (node) => {
+      if (node.type !== "mdxJsxFlowElement" || node.name !== "pre") return;
+      if (node.data?.fmmGenerated) return;
+      const kids = node.children ?? [];
+      const harmless = kids.length === 0 || (kids.length === 1 && kids[0].type === "text");
+      if (harmless) return;
+      fail(
+        node,
+        `<pre> im MDX: die Kinder werden als Markdown gelesen, dabei geht die ` +
+          `Einrückung verloren und der Inhalt landet in einem <p>. Nimm einen ` +
+          `Zaun-Codeblock (\`\`\`), oder — wenn Teile farbig sein sollen — eine ` +
+          `importierte .tsx-Komponente.`,
+        "remark-fmm:pre-in-mdx"
+      );
     });
 
     /* ---- 5. Keine freien Ausdrücke im Fließtext -------------------- */
