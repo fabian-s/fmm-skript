@@ -51,8 +51,6 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
   const items = Children.toArray(children);
   const statement = items[0];
   const expl = items.slice(1);
-  if (import.meta.env?.DEV && expl.length === 0)
-    console.warn("[Frage] ohne Erklärung — nach der Aussage fehlt ein zweiter Absatz");
 
   const c = api.answer(key);
   const answered = c !== null;
@@ -65,9 +63,9 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
       className="rounded border border-slate-200 p-3 dark:border-slate-700"
     >
       <div className="flex flex-wrap items-center gap-3">
-        <span id={labelId} className="grow [&>p]:m-0">
+        <div id={labelId} className="grow [&>p]:m-0">
           {statement}
-        </span>
+        </div>
         <span className="flex gap-2">
           {[true, false].map((v) => (
             <button
@@ -99,9 +97,9 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
           <span className="font-medium">
             {correct ? "Richtig! " : `Leider nein, die Aussage ist ${wahr ? "wahr" : "falsch"}. `}
           </span>
-          <span className="text-slate-600 dark:text-slate-300 [&>p:first-child]:inline [&>p]:my-1">
+          <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">
             {expl}
-          </span>
+          </div>
         </div>
       )}
     </div>

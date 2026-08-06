@@ -66,11 +66,14 @@ export function ConceptBody({ children }: { children: ReactNode }) {
   return (
     <div
       className={
-        "[&_p]:my-1.5 [&>p]:first:mt-0 " +
+        "concept-body [color-scheme:dark] [&_p]:my-1.5 [&>p]:first:mt-0 " +
+        "[&_h3]:mb-1 [&_h3]:mt-3 [&_h3]:text-base [&_h3]:font-semibold " +
         "[&_h4]:mb-1 [&_h4]:mt-3 [&_h4]:font-semibold " +
         "[&_a]:underline " +
         "[&_ul]:list-disc [&_ul]:space-y-0.5 [&_ul]:pl-4 " +
         "[&_ol]:list-decimal [&_ol]:space-y-0.5 [&_ol]:pl-4 " +
+        "[&_table]:my-2 [&_table]:w-full [&_table]:text-xs [&_th]:border-b " +
+        "[&_th]:py-1 [&_th]:pr-2 [&_th]:text-left [&_td]:py-1 [&_td]:pr-2 " +
         "[&_pre]:my-2 [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-slate-900/70 " +
         "[&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-xs"
       }

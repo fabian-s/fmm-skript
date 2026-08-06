@@ -7,11 +7,25 @@
  * hinweg fest: `node mdx/fixtures.test.mjs`.
  */
 import { compile } from "@mdx-js/mdx";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import remarkMath from "remark-math";
 import remarkDirective from "remark-directive";
 import remarkFmm from "./remark-fmm.mjs";
+import {
+  diffInventories,
+  inventoryFromMdx,
+  inventoryFromTsx,
+} from "./inventory.mjs";
+import {
+  assertStaticConceptTitle,
+  assertUniqueConceptIds,
+  typecheckMdxSources,
+} from "./typecheck.mjs";
 
 const PATH = "/x/src/chapters/xx/S.mdx";
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 async function build(src) {
   return String(
@@ -44,6 +58,11 @@ const ACCEPT = {
   quelle: [`::quelle[Folien 02-algos, S. 4]`, `text-sm text-slate-500`],
   "escaped braces are literal": [`Die Menge \\{1,2,3\\} im Text.`, `{1,2,3}`],
   "mdx comment allowed": [`{/* Notiz an mich */}\n\nText.`, `Text.`],
+  "escaped dollar in inline code": ["`\\$HOME`", "$HOME"],
+  "fence character and length tracked": [
+    "````text\n\\$HOME\n~~~\n````",
+    "$HOME",
+  ],
   "imported widget": [`import { W } from "./widgets/W";\n\n<W />`, `<W />`],
   "locally declared component": [
     `export const W = () => <b>x</b>;\n\n<W />`,
@@ -81,9 +100,125 @@ const REJECT = {
   "unimported component": [`<Widget />`, `nicht importiert`],
   "lowercase component": [`<widget />`, `kein bekanntes HTML-Element`],
   "component hidden in expression": [`{true && <Widget />}`, `geschweifte Klammern`],
+  "expression disguised as comment": [
+    `{/* harmlose Notiz */ 7 /* Ende */}`,
+    `geschweifte Klammern`,
+  ],
+  "reserved math component": [`export const M = () => null;\n\n$x+1$`, `reserviert`],
+  "empty question": [
+    `::::quiz\n\n:::frage{wahr}\n\n:::\n\n::::`,
+    `ist leer`,
+  ],
+  "question without explanation": [
+    `::::quiz\n\n:::frage{wahr}\nNur eine Aussage.\n:::\n\n::::`,
+    `Erklärungsblock`,
+  ],
   "image inside why": [
     `::::beweis\n\n:::schritt\nEins.\n\n::why[vor ![alt](x.png) nach]\n:::\n\n::::`,
     `unterstützt keinen Knoten`,
+  ],
+};
+
+/** Gate-Fixtures: true = exakt gleich, false = der Gate muss ablehnen. */
+const INVENTORY = {
+  "prose in expression container": [
+    `export default () => <p>{"Inhalt der überleben muss."}</p>`,
+    `Inhalt der überleben muss.`,
+    true,
+  ],
+  "complete prose loss": [
+    `export default () => <p>{"GANZER ABSATZ VERLOREN"}</p>`,
+    `{/* nur Kommentar */}`,
+    false,
+  ],
+  "hoisted old quiz": [
+    `const QUIZ = [{ statement: <>Aussage.</>, wahr: true, expl: <>Erklärung.</> }];
+     function QuizWidget() { return <div />; }
+     export default () => <><p>Vorher</p><QuizWidget /><p>Nachher</p></>`,
+    `Vorher
+
+::::quiz
+
+:::frage{wahr}
+Aussage.
+
+Erklärung.
+:::
+
+::::
+
+Nachher`,
+    true,
+  ],
+  "changed quiz truth and prose": [
+    `const QUIZ = [{ statement: <>Original.</>, wahr: true, expl: <>Begründung.</> }];
+     function QuizWidget() { return <div />; }
+     export default () => <QuizWidget />`,
+    `::::quiz
+
+:::frage{falsch}
+Ersetzt.
+
+Andere Erklärung.
+:::
+
+::::`,
+    false,
+  ],
+  "widget props changed": [
+    `export default () => <Widget mode="correct" data={[1, 2, 3]} />`,
+    `import { Widget } from "./Widget";
+
+<Widget mode="corrupt" data={null} />`,
+    false,
+  ],
+  "proof prop changed": [
+    `export default () => <Proof qed={false}><PStep><p>Schritt.</p></PStep></Proof>`,
+    `::::beweis
+
+:::schritt
+Schritt.
+:::
+
+::::`,
+    false,
+  ],
+  "math reordered": [
+    `export default () => <><M>{"first"}</M><M>{"second"}</M></>`,
+    `$second$ dann $first$`,
+    false,
+  ],
+  "math moved out of theorem": [
+    `export default () => <EnvBlock kind="Satz" label="1"><M>{"x"}</M></EnvBlock>`,
+    `:::satz[1]
+Text.
+:::
+
+$x$`,
+    false,
+  ],
+  "TeX whitespace remains harmless": [
+    `export default () => <MD>{"a + b"}</MD>`,
+    `$$
+a   +
+b
+$$`,
+    true,
+  ],
+};
+
+const TYPE_REJECT = {
+  "missing local JSX component": [
+    `export const W = () => <Missing />;\n\n<W />`,
+    "Missing",
+  ],
+  "missing member component": [
+    `export const Widgets = {};\n\n<Widgets.Missing />`,
+    "Missing",
+  ],
+  "undefined prop expression": [
+    `export const W = props => <b>{props.count}</b>;\n\n<W count={notDefined} />`,
+    "notDefined",
   ],
 };
 
@@ -113,7 +248,77 @@ for (const [name, [src, expect]] of Object.entries(REJECT)) {
   failures.push(`REJECT ${name}: compiled GREEN but must fail (${out.length} chars)`);
 }
 
-const total = Object.keys(ACCEPT).length + Object.keys(REJECT).length;
+for (const [name, [tsx, mdx, equal]] of Object.entries(INVENTORY)) {
+  try {
+    const oldInventory = inventoryFromTsx(tsx);
+    const newInventory = await inventoryFromMdx(mdx, PATH, "/x");
+    const isEqual = diffInventories(oldInventory, newInventory).length === 0;
+    if (isEqual === equal) pass++;
+    else failures.push(`INVENTORY ${name}: ${isEqual ? "unerwartet gleich" : "unerwartet verschieden"}`);
+  } catch (e) {
+    failures.push(`INVENTORY ${name}: warf Fehler — ${String(e.message).split("\n")[0]}`);
+  }
+}
+
+const typeEntries = Object.entries(TYPE_REJECT).map(([name, [source]]) => ({
+  name,
+  source,
+  path: path.join(ROOT, "src/chapters/mdx-lab", `fixture-${name.replace(/\s+/g, "-")}.mdx`),
+}));
+try {
+  const diagnostics = await typecheckMdxSources(typeEntries);
+  for (const entry of typeEntries) {
+    const expect = TYPE_REJECT[entry.name][1];
+    const own = diagnostics.filter((d) => d.file.includes(`fixture-${entry.name.replace(/\s+/g, "-")}`));
+    if (own.some((d) => d.message.includes(expect))) pass++;
+    else failures.push(`TYPE ${entry.name}: erwarteter Fehler ${JSON.stringify(expect)} fehlt`);
+  }
+} catch (e) {
+  failures.push(`TYPE-FIXTURES: warfen Fehler — ${String(e.message).split("\n")[0]}`);
+}
+
+try {
+  const withTitle = await build(`export const title = "Titel";\n\nText.`);
+  assertStaticConceptTitle(withTitle, "konzept.mdx");
+  pass++;
+} catch (e) {
+  failures.push(`CONCEPT title accepted: ${String(e.message).split("\n")[0]}`);
+}
+try {
+  assertStaticConceptTitle(await build(`Nur Text.`), "ohne-titel.mdx");
+  failures.push(`CONCEPT missing title: wurde akzeptiert`);
+} catch (e) {
+  if (String(e.message).includes("exportiert keinen Titel")) pass++;
+  else failures.push(`CONCEPT missing title: falscher Fehler — ${String(e.message).split("\n")[0]}`);
+}
+try {
+  assertUniqueConceptIds([
+    { id: "spur", file: "src/concepts/anders-benannt.tsx" },
+    { id: "spur", file: "src/concepts/spur.mdx" },
+  ]);
+  failures.push(`CONCEPT duplicate id: wurde akzeptiert`);
+} catch (e) {
+  if (String(e.message).includes("doppelt")) pass++;
+  else failures.push(`CONCEPT duplicate id: falscher Fehler — ${String(e.message).split("\n")[0]}`);
+}
+
+try {
+  const quizSource = await readFile(path.join(ROOT, "src/lib/Quiz.tsx"), "utf8");
+  const adapterSource = await readFile(path.join(ROOT, "src/mdx/adapters.tsx"), "utf8");
+  if (!quizSource.includes('<span id={labelId}') && quizSource.includes('<div id={labelId}')) pass++;
+  else failures.push("DOM Frage: Aussage steckt weiterhin in einem span");
+  if (adapterSource.includes("concept-body") && adapterSource.includes("[&_h3]") && adapterSource.includes("[&_table]")) pass++;
+  else failures.push("DOM ConceptBody: Dunkelkontext-, h3- oder Tabellenregel fehlt");
+} catch (e) {
+  failures.push(`DOM-FIXTURES: ${String(e.message).split("\n")[0]}`);
+}
+
+const total =
+  Object.keys(ACCEPT).length +
+  Object.keys(REJECT).length +
+  Object.keys(INVENTORY).length +
+  Object.keys(TYPE_REJECT).length +
+  5;
 console.log(`${pass}/${total} fixtures passed`);
 failures.forEach((f) => console.log("  FAIL " + f));
 process.exit(failures.length ? 1 : 0);

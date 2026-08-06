@@ -2,9 +2,10 @@
 
 // Nur der Modultyp. ACHTUNG: `tsc --noEmit` prüft damit den INHALT einer
 // .mdx-Datei NICHT — im Programm liegt bloß diese Deklaration. Die
-// inhaltliche Absicherung leisten die Regeln in mdx/remark-fmm.mjs
-// (unbekannte Komponente, freier Ausdruck, kaputte Struktur = Buildfehler)
-// und mdx/fixtures.test.mjs.
+// inhaltliche Absicherung leisten die Regeln in mdx/remark-fmm.mjs, die
+// Fixtures und mdx/typecheck.mjs. Letzteres kompiliert MDX vor dem normalen
+// Build zu temporärem TSX, damit auch Namen und Komponenten-Props im
+// erzeugten JSX statisch geprüft werden.
 
 declare module "*.mdx" {
   import type { ComponentType } from "react";

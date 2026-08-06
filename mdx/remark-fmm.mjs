@@ -193,6 +193,62 @@ function takeLabel(node) {
 
 const DIRECTIVE_TYPES = new Set(["containerDirective", "leafDirective", "textDirective"]);
 
+/**
+ * Fundstellen von \$ außerhalb von Code. Fence-Zeichen und -Länge müssen
+ * zusammenpassen, weil ein ~~~ innerhalb eines ````-Blocks kein Fence-Ende
+ * ist. Backtick-Spans dürfen wie normaler Markdown-Code Dollarpfade zeigen.
+ */
+function escapedDollarsOutsideCode(source) {
+  const hits = [];
+  let fence = null;
+  let inlineTicks = 0;
+  const lines = source.split("\n");
+
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+    const line = lines[lineIndex];
+    if (fence) {
+      const close = new RegExp(`^ {0,3}${fence.char === "`" ? "`" : "~"}{${fence.length},}[ \\t]*$`);
+      if (close.test(line)) fence = null;
+      continue;
+    }
+
+    if (!inlineTicks) {
+      const opening = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
+      if (opening && (opening[1][0] !== "`" || !opening[2].includes("`"))) {
+        fence = { char: opening[1][0], length: opening[1].length };
+        continue;
+      }
+      // Vier Leerzeichen sind bereits ein Codeblock; remark-math sieht ihn
+      // ebenfalls nicht als Fließtext.
+      if (/^( {4}|\t)/.test(line)) continue;
+    }
+
+    for (let i = 0; i < line.length; ) {
+      if (line[i] === "`") {
+        let end = i + 1;
+        while (line[end] === "`") end++;
+        const length = end - i;
+        if (!inlineTicks) inlineTicks = length;
+        else if (inlineTicks === length) inlineTicks = 0;
+        i = end;
+        continue;
+      }
+      if (!inlineTicks && line[i] === "\\" && line[i + 1] === "$")
+        hits.push({ line: lineIndex + 1, column: i + 1 });
+      i++;
+    }
+  }
+  return hits;
+}
+
+function hasAuthoredContent(node) {
+  if (!node) return false;
+  if (node.type === "text") return Boolean(node.value?.trim());
+  if (["inlineCode", "inlineMath", "math", "code", "image", "mdxJsxTextElement", "mdxJsxFlowElement"].includes(node.type))
+    return true;
+  return (node.children ?? []).some(hasAuthoredContent);
+}
+
 /* ------------------------------------------------------------------ */
 /* Das Plugin                                                          */
 /* ------------------------------------------------------------------ */
@@ -210,20 +266,14 @@ export default function remarkFmm(options = {}) {
     // Ein maskiertes Dollarzeichen beendet die Formel BEVOR dieses Plugin sie
     // sieht: aus `$a \$ b$` wird <M>{"a \\"}</M> plus literales „b$ nach".
     // Der Build blieb dabei grün und die Mathematik war still zerstört.
-    let inFence = false;
-    lines.forEach((line, i) => {
-      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
-      if (inFence) return;
-      const col = line.indexOf("\\$");
-      if (col >= 0)
-        fail(
-          { position: { start: { line: i + 1, column: col + 1 } } },
-          `maskiertes Dollarzeichen „\\$" wird vom Markdown-Mathe-Parser NICHT als ` +
-            `Zeichen gelesen, sondern beendet die Formel — die Mathematik wäre still ` +
-            `zerstört. Nutze in TeX \\mathdollar oder \\text{\\textdollar}.`,
-          "remark-fmm:dollar"
-        );
-    });
+    for (const position of escapedDollarsOutsideCode(source))
+      fail(
+        { position: { start: position } },
+        `maskiertes Dollarzeichen „\\$" wird vom Markdown-Mathe-Parser NICHT als ` +
+          `Zeichen gelesen, sondern beendet die Formel — die Mathematik wäre still ` +
+          `zerstört. Nutze in TeX \\mathdollar oder \\text{\\textdollar}.`,
+        "remark-fmm:dollar"
+      );
 
     /* ---- 1. Struktur prüfen, BEVOR irgendetwas umgebaut wird ------- */
 
@@ -313,6 +363,15 @@ export default function remarkFmm(options = {}) {
             node,
             `:::frage braucht genau eines von {wahr} oder {falsch}`,
             "remark-fmm:frage-flag"
+          );
+        const blocks = (node.children ?? []).filter(hasAuthoredContent);
+        if (blocks.length === 0)
+          fail(node, `:::frage ist leer — ergänze Aussage und Erklärung`, "remark-fmm:empty-frage");
+        if (blocks.length === 1)
+          fail(
+            node,
+            `:::frage braucht nach der Aussage einen eigenen Erklärungsblock`,
+            "remark-fmm:missing-explanation"
           );
       }
     });
@@ -475,8 +534,10 @@ export default function remarkFmm(options = {}) {
     visit(tree, (node) => {
       if (node.type !== "mdxTextExpression" && node.type !== "mdxFlowExpression") return;
       if (node.data?.fmmGenerated) return;
-      const v = String(node.value ?? "").trim();
-      if (v.startsWith("/*") && v.endsWith("*/")) return; // MDX-Kommentar
+      const program = node.data?.estree;
+      // Nur ein AST ohne Anweisungen und mit Kommentar ist ein Kommentar.
+      // Präfixprüfungen lassen etwa {/* Notiz */ 7 /* Ende */} durch.
+      if (program?.body?.length === 0 && (program.comments?.length ?? 0) > 0) return;
       fail(
         node,
         `geschweifte Klammern im Fließtext werden als JavaScript ausgewertet und ` +
@@ -512,6 +573,15 @@ export default function remarkFmm(options = {}) {
         else if (st.type === "ExportNamedDeclaration") declared(st.declaration);
       }
 
+    for (const name of LIB)
+      if (bound.has(name))
+        fail(
+          esm.find((node) => String(node.value ?? "").includes(name)) ?? tree,
+          `„${name}" ist für die MDX-Autorenschicht reserviert und darf nicht importiert ` +
+            `oder lokal deklariert werden`,
+          "remark-fmm:reserved-component"
+        );
+
     // Erstes Vorkommen je Name merken, damit die Fehlermeldung eine Zeile hat.
     const used = new Map();
     visit(tree, (n) => {
@@ -544,9 +614,7 @@ export default function remarkFmm(options = {}) {
         );
     }
 
-    // Bibliotheks-Namen, die der Autor selbst gebunden hat, nicht doppelt
-    // importieren (und damit auch nicht überschreiben).
-    const needed = LIB.filter((n) => !bound.has(n));
+    const needed = LIB;
     let rel = path
       .relative(path.dirname(file.path ?? path.join(libRoot, "..", "x.mdx")), libRoot)
       .replace(/\\/g, "/");

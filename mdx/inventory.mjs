@@ -1,30 +1,11 @@
 /**
  * Semantisches Inventar einer Abschnittsdatei — das Migrations-Orakel.
  *
- * WARUM NICHT innerText: Die naheliegende Prüfung „gerenderter Text der
- * TSX-Fassung == gerenderter Text der MDX-Fassung" ist UNBRAUCHBAR, weil
- * `src/App.tsx` jeden Abschnitt mit `content-visibility: auto` rendert.
- * Übersprungene Teilbäume tragen laut CSS-Spezifikation NICHTS zu innerText
- * bei, also vergleicht man unbemerkt nur den sichtbaren Ausschnitt (bei uns
- * gemessen: gut die Hälfte des Kapitels fehlte in der Zählung).
- *
- * Stattdessen wird aus BEIDEN Fassungen dieselbe geordnete Liste semantischer
- * Einträge gezogen und Eintrag für Eintrag verglichen:
- *
- *   heading   Ebene, Text, ID
- *   math      jede TeX-Zeichenkette ZEICHENGENAU und in Reihenfolge
- *   eq        zusätzlich die Gleichungsnummer
- *   env       kind + label
- *   concept   Concept-ID + verlinkter Text
- *   link      Ziel + Text
- *   deepdive  Titel
- *   step      why-Text
- *   quiz      Wahrheitswert + Aussage
- *   widget    Komponentenname
- *   text      normalisierte Prosa-Tokens
- *
- * Läuft ohne Browser, also auch in CI. Der Browser-Abgleich (Screenshots,
- * geöffnete Vertiefungen, Widgets) bleibt ein zweiter, separater Schritt.
+ * Der Extraktor liest nur den tatsächlich gerenderten Abschnitts- bzw.
+ * Konzept-Teilbaum. Deklarationskörper und hochgezogene Quizdaten dürfen die
+ * Dokumentreihenfolge nicht verschieben. Jeder Eintrag trägt außerdem seinen
+ * semantischen Elternpfad; damit ist „dieselbe Formel, aber außerhalb des
+ * Satzes" keine gleichwertige Konvertierung.
  */
 import { parse as babelParse } from "@babel/parser";
 import _traverse from "@babel/traverse";
@@ -34,11 +15,8 @@ import remarkDirective from "remark-directive";
 import remarkFmm from "./remark-fmm.mjs";
 
 const traverse = _traverse.default ?? _traverse;
-
-/** Prosa vergleichbar machen: Whitespace normalisieren, leere Stücke weg. */
 const norm = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
 
-/** Namen, deren Kinder als Inventar-Einträge zählen (statt als Prosa). */
 const SEMANTIC = new Set([
   "M",
   "MD",
@@ -52,222 +30,428 @@ const SEMANTIC = new Set([
   "Frage",
 ]);
 
-/* ------------------------------------------------------------------ */
-/* JSX/TSX                                                             */
-/* ------------------------------------------------------------------ */
+const CONTAINERS = new Set(["EnvBlock", "ExpandedReading", "Proof", "PStep", "Quiz"]);
+const BLOCKS = new Set(["p", "li", "blockquote", "pre", "table", "tr"]);
 
 const jsxName = (n) =>
-  n.type === "JSXIdentifier"
+  n?.type === "JSXIdentifier"
     ? n.name
-    : n.type === "JSXMemberExpression"
+    : n?.type === "JSXMemberExpression"
       ? `${jsxName(n.object)}.${jsxName(n.property)}`
       : "";
 
-/** Wert eines JSX-Attributs, soweit statisch bestimmbar. */
-function attrValue(el, name) {
-  const a = (el.attributes ?? []).find((x) => x.type === "JSXAttribute" && x.name?.name === name);
-  if (!a) return null;
-  if (!a.value) return true; // bares Flag
-  if (a.value.type === "StringLiteral") return a.value.value;
-  if (a.value.type === "JSXExpressionContainer") {
-    const e = a.value.expression;
-    if (e.type === "StringLiteral") return e.value;
-    if (e.type === "BooleanLiteral") return e.value;
-    if (e.type === "TemplateLiteral" && e.expressions.length === 0) return e.quasis[0].value.cooked;
-  }
-  return "«dynamisch»";
+function sourceOf(node, code) {
+  return node?.start != null && node?.end != null ? code.slice(node.start, node.end) : "?";
 }
 
-/** einziger String-Kindknoten, z.B. <M>{"\\bA"}</M> */
-function stringChild(el) {
+/** Statischer Ausdruckswert; Unbekanntes bleibt mit Quelltext sichtbar. */
+function expressionValue(e, code) {
+  if (!e) return "«leer»";
+  if (e.type === "JSXEmptyExpression") return undefined;
+  if (e.type === "StringLiteral" || e.type === "BooleanLiteral" || e.type === "NumericLiteral")
+    return e.value;
+  if (e.type === "NullLiteral") return null;
+  if (e.type === "TemplateLiteral" && e.expressions.length === 0)
+    return e.quasis[0]?.value?.cooked ?? "";
+  if (e.type === "Identifier" && e.name === "undefined") return undefined;
+  if (e.type === "ArrayExpression")
+    return e.elements.map((x) =>
+      x?.type === "SpreadElement" ? `«dynamisch:${sourceOf(x, code)}»` : expressionValue(x, code)
+    );
+  if (e.type === "ObjectExpression") {
+    const entries = [];
+    for (const p of e.properties) {
+      if (p.type !== "ObjectProperty" || p.computed) {
+        entries.push([`«dynamisch:${sourceOf(p, code)}»`, true]);
+        continue;
+      }
+      const k = p.key.type === "Identifier" ? p.key.name : String(p.key.value);
+      entries.push([k, expressionValue(p.value, code)]);
+    }
+    return Object.fromEntries(entries.sort(([a], [b]) => a.localeCompare(b)));
+  }
+  if (e.type === "UnaryExpression" && ["+", "-", "!"].includes(e.operator)) {
+    const v = expressionValue(e.argument, code);
+    if (typeof v === "number" || typeof v === "boolean") {
+      if (e.operator === "+") return +v;
+      if (e.operator === "-") return -v;
+      return !v;
+    }
+  }
+  return `«dynamisch:${norm(sourceOf(e, code))}»`;
+}
+
+function stable(value) {
+  if (value === undefined) return "undefined";
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (value && typeof value === "object")
+    return `{${Object.entries(value)
+      .map(([k, v]) => `${JSON.stringify(k)}:${stable(v)}`)
+      .join(",")}}`;
+  return JSON.stringify(value);
+}
+
+/** Wert eines JSX-Attributs, soweit statisch bestimmbar. */
+function attrValue(el, name, code) {
+  const a = (el.attributes ?? []).find(
+    (x) => x.type === "JSXAttribute" && x.name?.name === name
+  );
+  if (!a) return null;
+  if (!a.value) return true;
+  if (a.value.type === "StringLiteral") return a.value.value;
+  if (a.value.type === "JSXExpressionContainer") return expressionValue(a.value.expression, code);
+  return `«dynamisch:${norm(sourceOf(a.value, code))}»`;
+}
+
+/** Alle Komponenten-Props in kanonischer Reihenfolge, inklusive Spreads. */
+function propsOf(el, code, omit = []) {
+  const ignored = new Set(omit);
+  const out = [];
+  for (const a of el.attributes ?? []) {
+    if (a.type === "JSXSpreadAttribute") {
+      out.push([`...${norm(sourceOf(a.argument, code))}`, "«dynamisch»"]);
+      continue;
+    }
+    const name = a.name?.name;
+    if (!name || ignored.has(name)) continue;
+    out.push([name, attrValue(el, name, code)]);
+  }
+  return out
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([name, value]) => `${name}=${stable(value)}`)
+    .join(" ");
+}
+
+function stringChild(el, code) {
   const parts = [];
   for (const c of el.children ?? []) {
-    if (c.type === "JSXText") {
-      if (norm(c.value)) parts.push(c.value);
-    } else if (c.type === "JSXExpressionContainer") {
-      const e = c.expression;
-      if (e.type === "StringLiteral") parts.push(e.value);
-      else if (e.type === "TemplateLiteral" && e.expressions.length === 0)
-        parts.push(e.quasis[0].value.cooked);
-      else return "«dynamisch»";
-    } else return "«dynamisch»";
+    if (c.type === "JSXText") parts.push(c.value);
+    else if (c.type === "JSXExpressionContainer") {
+      const v = expressionValue(c.expression, code);
+      if (typeof v === "string" || typeof v === "number") parts.push(String(v));
+      else return `«dynamisch:${norm(sourceOf(c.expression, code))}»`;
+    } else return `«dynamisch:${norm(sourceOf(c, code))}»`;
   }
   return parts.join("");
 }
 
-/** reiner Text eines JSX-Teilbaums (für Überschriften, Linktexte, …) */
-function jsxText(node) {
+/** Sichtbarer Inhalt eines JSX-Teilbaums, mit semantischen Inline-Markern. */
+function contentSignature(node, code) {
   let out = "";
   const walk = (n) => {
     if (!n) return;
-    if (n.type === "JSXText") out += n.value;
-    else if (n.type === "JSXExpressionContainer") {
-      const e = n.expression;
-      if (e.type === "StringLiteral") out += e.value;
-      else if (e.type === "TemplateLiteral" && e.expressions.length === 0)
-        out += e.quasis[0].value.cooked;
-    } else for (const c of n.children ?? []) walk(c);
+    if (Array.isArray(n)) {
+      for (const x of n) walk(x);
+      return;
+    }
+    if (n.type === "JSXText") {
+      out += n.value;
+      return;
+    }
+    if (n.type === "StringLiteral" || n.type === "NumericLiteral") {
+      out += String(n.value);
+      return;
+    }
+    if (n.type === "JSXExpressionContainer") {
+      if (n.expression.type === "JSXElement" || n.expression.type === "JSXFragment") walk(n.expression);
+      else {
+        const v = expressionValue(n.expression, code);
+        out += typeof v === "string" || typeof v === "number" ? String(v) : stable(v);
+      }
+      return;
+    }
+    if (n.type === "JSXFragment") {
+      walk(n.children);
+      return;
+    }
+    if (n.type !== "JSXElement") return;
+    const el = n.openingElement;
+    const name = jsxName(el.name);
+    if (name === "M" || name === "MD") {
+      out += ` «${name}:${norm(stringChild(n, code))}» `;
+      return;
+    }
+    if (name === "ConceptLink") {
+      out += ` «Konzept:${stable(attrValue(el, "id", code))}|`;
+      walk(n.children);
+      out += "» ";
+      return;
+    }
+    if (name === "a") {
+      out += ` «Link:${stable(attrValue(el, "href", code))}|`;
+      walk(n.children);
+      out += "» ";
+      return;
+    }
+    if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) {
+      out += ` «Widget:${name} ${propsOf(el, code)}» `;
+      walk(n.children);
+      return;
+    }
+    walk(n.children);
   };
   walk(node);
   return norm(out);
 }
 
-export function inventoryFromTsx(code) {
-  const ast = babelParse(code, {
-    sourceType: "module",
-    plugins: ["typescript", "jsx"],
+function attrWhyText(el, code) {
+  const a = (el.attributes ?? []).find(
+    (x) => x.type === "JSXAttribute" && x.name?.name === "why"
+  );
+  if (!a?.value || a.value.type !== "JSXExpressionContainer") return "";
+  return contentSignature(a.value.expression, code);
+}
+
+function returnExpression(fn) {
+  if (!fn) return null;
+  if (fn.type === "ArrowFunctionExpression" && fn.body.type !== "BlockStatement") return fn.body;
+  for (const st of fn.body?.body ?? []) if (st.type === "ReturnStatement") return st.argument;
+  return null;
+}
+
+/** Gerenderte Wurzel statt sämtlicher JSX-Deklarationen der Datei. */
+function renderRoots(ast) {
+  const functions = new Map();
+  for (const st of ast.program.body) {
+    const d = st.type === "ExportNamedDeclaration" ? st.declaration : st;
+    if (d?.type === "FunctionDeclaration" && d.id) functions.set(d.id.name, d);
+    if (d?.type === "VariableDeclaration")
+      for (const v of d.declarations)
+        if (v.id.type === "Identifier" && ["ArrowFunctionExpression", "FunctionExpression"].includes(v.init?.type))
+          functions.set(v.id.name, v.init);
+  }
+
+  if (functions.has("_createMdxContent")) return [returnExpression(functions.get("_createMdxContent"))].filter(Boolean);
+
+  const roots = [];
+  for (const st of ast.program.body) {
+    if (st.type === "ExportDefaultDeclaration") {
+      const d = st.declaration;
+      const fn = d.type === "Identifier" ? functions.get(d.name) : d;
+      const root = returnExpression(fn);
+      if (root) roots.push(root);
+    }
+    if (st.type === "ExportNamedDeclaration" && st.declaration?.type === "FunctionDeclaration") {
+      if (/^S\d/.test(st.declaration.id?.name ?? "")) {
+        const root = returnExpression(st.declaration);
+        if (root) roots.push(root);
+      }
+    }
+  }
+
+  traverse(ast, {
+    CallExpression(path) {
+      if (path.node.callee.type !== "Identifier" || path.node.callee.name !== "registerConcept") return;
+      const obj = path.node.arguments[0];
+      if (obj?.type !== "ObjectExpression") return;
+      const body = obj.properties.find(
+        (p) => p.type === "ObjectProperty" && !p.computed && (p.key.name ?? p.key.value) === "body"
+      );
+      if (body?.type === "ObjectProperty") roots.push(body.value);
+    },
   });
+  return roots;
+}
+
+function quizData(ast, code) {
+  const quizzes = new Map();
+  traverse(ast, {
+    VariableDeclarator(path) {
+      if (path.node.id.type !== "Identifier" || path.node.id.name !== "QUIZ") return;
+      let init = path.node.init;
+      while (init && ["TSAsExpression", "TSSatisfiesExpression", "TypeCastExpression"].includes(init.type)) init = init.expression;
+      if (init?.type !== "ArrayExpression") return;
+      const entries = [];
+      for (const item of init.elements) {
+        if (item?.type !== "ObjectExpression") continue;
+        const get = (name) =>
+          item.properties.find(
+            (p) => p.type === "ObjectProperty" && !p.computed && (p.key.name ?? p.key.value) === name
+          )?.value;
+        const statement = get("statement");
+        const truth = get("wahr");
+        const explanation = get("expl");
+        entries.push({
+          wahr: truth ? expressionValue(truth, code) : "«fehlt»",
+          statement: statement ? contentSignature(statement, code) : "«fehlt»",
+          explanation: explanation ? contentSignature(explanation, code) : "«fehlt»",
+        });
+      }
+      quizzes.set("QuizWidget", entries);
+    },
+  });
+  return quizzes;
+}
+
+function scopeLabel(el, code) {
+  const name = jsxName(el.name);
+  if (name === "EnvBlock")
+    return `EnvBlock(${stable(attrValue(el, "kind", code))},${stable(attrValue(el, "label", code))})`;
+  if (name === "ExpandedReading") return `ExpandedReading(${stable(attrValue(el, "title", code))})`;
+  if (name === "Proof") return `Proof(${propsOf(el, code) || "qed=Standard"})`;
+  if (name === "PStep") return `PStep(${norm(attrWhyText(el, code)) || "ohne why"})`;
+  if (name === "Quiz") return "Quiz";
+  if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) return `${name}(${propsOf(el, code)})`;
+  return null;
+}
+
+function scopeOf(path, code) {
+  const out = [];
+  for (let p = path.parentPath; p; p = p.parentPath) {
+    if (p.node?.type !== "JSXElement") continue;
+    const label = scopeLabel(p.node.openingElement, code);
+    if (label) out.unshift(label);
+  }
+  return out;
+}
+
+export function inventoryFromTsx(code) {
+  const ast = babelParse(code, { sourceType: "module", plugins: ["typescript", "jsx"] });
+  const roots = renderRoots(ast);
+  const ranges = roots.length
+    ? roots.map((r) => [r.start, r.end])
+    : [[ast.program.start, ast.program.end]];
+  const inside = (n) => ranges.some(([a, b]) => n.start >= a && n.end <= b);
+  const hoistedQuizzes = quizData(ast, code);
   const items = [];
   let prose = "";
+  let proseWithin = [];
+
   const flushProse = () => {
-    const t = norm(prose);
-    if (t) items.push({ kind: "text", text: t });
+    const text = norm(prose);
+    if (text) items.push({ kind: "text", text, within: proseWithin });
     prose = "";
+    proseWithin = [];
+  };
+  const appendProse = (value, path) => {
+    if (!norm(value)) return;
+    const within = scopeOf(path, code);
+    if (prose && stable(within) !== stable(proseWithin)) flushProse();
+    if (!prose) proseWithin = within;
+    prose += value;
+  };
+  const add = (path, item) => {
+    flushProse();
+    items.push({ ...item, within: scopeOf(path, code) });
   };
 
   traverse(ast, {
-    JSXElement(path) {
-      const el = path.node.openingElement;
-      const name = jsxName(el.name);
+    JSXElement: {
+      enter(path) {
+        if (!inside(path.node)) {
+          path.skip();
+          return;
+        }
+        const el = path.node.openingElement;
+        const name = jsxName(el.name);
+        if (BLOCKS.has(name)) flushProse();
 
-      if (name === "M" || name === "MD") {
-        flushProse();
-        items.push({ kind: "math", display: name === "MD", tex: stringChild(path.node) });
-        path.skip();
-      } else if (name === "Eq") {
-        flushProse();
-        items.push({ kind: "eq", tag: attrValue(el, "tag"), tex: stringChild(path.node) });
-        path.skip();
-      } else if (name === "EnvBlock") {
-        flushProse();
-        items.push({ kind: "env", envKind: attrValue(el, "kind"), label: attrValue(el, "label") });
-      } else if (name === "ConceptLink") {
-        flushProse();
-        items.push({ kind: "concept", id: attrValue(el, "id"), text: jsxText(path.node) });
-        path.skip();
-      } else if (name === "ExpandedReading") {
-        flushProse();
-        items.push({ kind: "deepdive", title: attrValue(el, "title") });
-      } else if (name === "PStep") {
-        flushProse();
-        items.push({ kind: "step", why: norm(attrWhyText(el)) });
-      } else if (/^h[1-6]$/.test(name)) {
-        flushProse();
-        items.push({
-          kind: "heading",
-          level: Number(name[1]),
-          id: attrValue(el, "id"),
-          text: jsxText(path.node),
-        });
-        path.skip();
-      } else if (name === "a") {
-        flushProse();
-        items.push({ kind: "link", href: attrValue(el, "href"), text: jsxText(path.node) });
-        path.skip();
-      } else if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) {
-        flushProse();
-        items.push({ kind: "widget", name });
-      }
+        if (name === "M" || name === "MD") {
+          add(path, { kind: "math", display: name === "MD", tex: stringChild(path.node, code) });
+          path.skip();
+        } else if (name === "Eq") {
+          add(path, { kind: "eq", tag: attrValue(el, "tag", code), tex: stringChild(path.node, code) });
+          path.skip();
+        } else if (name === "EnvBlock") {
+          add(path, { kind: "env", envKind: attrValue(el, "kind", code), label: attrValue(el, "label", code) });
+        } else if (name === "ConceptLink") {
+          add(path, { kind: "concept", id: attrValue(el, "id", code), text: contentSignature(path.node.children, code) });
+          path.skip();
+        } else if (name === "ExpandedReading") {
+          add(path, { kind: "deepdive", title: attrValue(el, "title", code) });
+        } else if (name === "Proof") {
+          add(path, { kind: "proof", props: propsOf(el, code) || "qed=Standard" });
+        } else if (name === "PStep") {
+          add(path, { kind: "step", why: norm(attrWhyText(el, code)) });
+        } else if (name === "Quiz") {
+          add(path, { kind: "quiz", props: propsOf(el, code) });
+        } else if (name === "Frage") {
+          const children = path.node.children.filter(
+            (c) => !(c.type === "JSXText" && !norm(c.value)) &&
+              !(c.type === "JSXExpressionContainer" && !norm(contentSignature(c, code)))
+          );
+          const siblings = path.parentPath.node?.children ?? [];
+          const order = siblings.filter(
+            (c) => c.type === "JSXElement" && jsxName(c.openingElement.name) === "Frage" && c.start < path.node.start
+          ).length;
+          add(path, {
+            kind: "frage",
+            order,
+            wahr: attrValue(el, "wahr", code),
+            statement: contentSignature(children[0], code),
+            explanation: contentSignature(children.slice(1), code),
+          });
+          path.skip();
+        } else if (name === "QuizWidget" && hoistedQuizzes.has(name)) {
+          add(path, { kind: "quiz", props: "" });
+          const within = [...scopeOf(path, code), "Quiz"];
+          hoistedQuizzes.get(name).forEach((q, order) => items.push({ kind: "frage", order, ...q, within }));
+          path.skip();
+        } else if (/^h[1-6]$/.test(name)) {
+          add(path, { kind: "heading", level: Number(name[1]), id: attrValue(el, "id", code), text: contentSignature(path.node.children, code) });
+          path.skip();
+        } else if (name === "a") {
+          add(path, { kind: "link", href: attrValue(el, "href", code), text: contentSignature(path.node.children, code) });
+          path.skip();
+        } else if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) {
+          add(path, { kind: "widget", name, props: propsOf(el, code) });
+        }
+      },
+      exit(path) {
+        if (inside(path.node) && BLOCKS.has(jsxName(path.node.openingElement.name))) flushProse();
+      },
     },
     JSXText(path) {
-      prose += path.node.value;
+      if (inside(path.node) && path.parentPath.node.type !== "JSXAttribute") appendProse(path.node.value, path);
+    },
+    JSXExpressionContainer(path) {
+      if (!inside(path.node)) return;
+      if (path.parentPath.node.type !== "JSXElement" && path.parentPath.node.type !== "JSXFragment") return;
+      const v = expressionValue(path.node.expression, code);
+      if (typeof v === "string" || typeof v === "number") appendProse(String(v), path);
     },
   });
   flushProse();
   return items;
 }
 
-/** Text des why-Props, soweit statisch */
-function attrWhyText(el) {
-  const a = (el.attributes ?? []).find((x) => x.type === "JSXAttribute" && x.name?.name === "why");
-  if (!a || a.value?.type !== "JSXExpressionContainer") return "";
-  let out = "";
-  const walk = (n) => {
-    if (!n) return;
-    if (n.type === "JSXText") out += n.value;
-    else if (n.type === "StringLiteral") out += n.value;
-    else if (n.type === "JSXExpressionContainer") walk(n.expression);
-    else for (const c of n.children ?? []) walk(c);
-  };
-  walk(a.value.expression);
-  return out;
-}
-
-/* ------------------------------------------------------------------ */
-/* MDX — über den kompilierten JSX-Output, damit dieselbe Extraktion    */
-/*        greift und das Plugin mitgeprüft wird                        */
-/* ------------------------------------------------------------------ */
-
 export async function inventoryFromMdx(source, filePath, root) {
   const js = String(
     await compile(
       { value: source, path: filePath },
-      {
-        remarkPlugins: [remarkMath, remarkDirective, [remarkFmm, { root }]],
-        jsx: true,
-      }
+      { remarkPlugins: [remarkMath, remarkDirective, [remarkFmm, { root }]], jsx: true }
     )
   );
-  // `_components.h3` wieder auf `h3` zurückführen, sonst zählt die Extraktion
-  // Überschriften als Widgets
   const cleaned = js.replace(/_components\.([a-z][a-z0-9]*)/g, "$1");
-  return inventoryFromTsx(cleaned).filter(
-    // MDX erzeugt einen Fragment-/Wrapper-Rahmen, den es im TSX nicht gibt
-    (it) => !(it.kind === "widget" && /^(MDXLayout|_createMdxContent|_Fragment)$/.test(it.name))
-  );
+  return inventoryFromTsx(cleaned);
 }
 
-/* ------------------------------------------------------------------ */
-/* Vergleich                                                           */
-/* ------------------------------------------------------------------ */
-
-/**
- * TeX vergleichbar machen. NICHT zeichengenau, sondern mit normalisiertem
- * Weißraum: im MDX darf (und soll) eine lange Formel über mehrere Zeilen
- * umbrochen werden, während sie im TSX-String auf einer Zeile stand. Für
- * TeX ist das derselbe Ausdruck; ein zeichengenauer Vergleich würde die
- * gewünschte Lesbarkeit der Quelle bestrafen. Alles andere an der Formel
- * (jedes Makro, jede Klammer, jede Farbe) wird weiterhin exakt verglichen.
- */
 const tex = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
+const where = (it) => (it.within?.length ? ` in ${it.within.join(" > ")}` : "");
 
 const key = (it) => {
+  let value;
   switch (it.kind) {
-    case "math":
-      return `math${it.display ? "!" : ""} ${tex(it.tex)}`;
-    case "eq":
-      return `eq(${it.tag}) ${tex(it.tex)}`;
-    case "env":
-      return `env ${it.envKind} ${it.label}`;
-    case "concept":
-      return `concept #${it.id} „${it.text}"`;
-    case "deepdive":
-      return `deepdive ${it.title}`;
-    case "step":
-      return `step why=${it.why}`;
-    case "heading":
-      return `h${it.level}#${it.id ?? "-"} ${it.text}`;
-    case "link":
-      return `link ${it.href} „${it.text}"`;
-    case "widget":
-      return `widget <${it.name}>`;
-    default:
-      return `text ${it.text}`;
+    case "math": value = `math${it.display ? "!" : ""} ${tex(it.tex)}`; break;
+    case "eq": value = `eq(${it.tag}) ${tex(it.tex)}`; break;
+    case "env": value = `env ${it.envKind} ${it.label}`; break;
+    case "concept": value = `concept #${it.id} „${it.text}"`; break;
+    case "deepdive": value = `deepdive ${it.title}`; break;
+    case "proof": value = `proof ${it.props}`; break;
+    case "step": value = `step why=${it.why}`; break;
+    case "quiz": value = `quiz ${it.props}`; break;
+    case "frage": value = `frage[${it.order}] wahr=${stable(it.wahr)} aussage=„${it.statement}" erklärung=„${it.explanation}"`; break;
+    case "heading": value = `h${it.level}#${it.id ?? "-"} ${it.text}`; break;
+    case "link": value = `link ${it.href} „${it.text}"`; break;
+    case "widget": value = `widget <${it.name}> props(${it.props})`; break;
+    default: value = `text ${it.text}`;
   }
+  return value + where(it);
 };
 
 export { key as inventoryKey };
 
-/**
- * MENGENVERGLEICH — das eigentliche Gate.
- *
- * Der reine Reihenfolgevergleich ist zu streng: viele TSX-Abschnitte ziehen
- * ihre Quiz-Daten als `const QUIZ = […]` an den DATEIANFANG, während sie im
- * MDX an ihrer inhaltlichen Stelle stehen. Dann verschiebt sich alles, obwohl
- * nichts verloren ging. Der Mengenvergleich beantwortet die Frage, auf die es
- * ankommt: Ist eine Formel/ein Konzept/eine Umgebung VERSCHWUNDEN oder
- * VERÄNDERT? Er muss leer sein. Der Reihenfolgevergleich bleibt als Hinweis.
- */
+/** Mengenvergleich nur für eine zusätzliche, verständliche Verlustdiagnose. */
 export function diffMultiset(a, b, { ignoreText = false } = {}) {
   const bag = (inv) => {
     const m = new Map();
@@ -281,18 +465,12 @@ export function diffMultiset(a, b, { ignoreText = false } = {}) {
   const ma = bag(a);
   const mb = bag(b);
   const out = [];
-  for (const [k, n] of ma) {
-    const m = mb.get(k) ?? 0;
-    if (m < n) out.push({ side: "fehlt in MDX", entry: k, alt: n, neu: m });
-  }
-  for (const [k, n] of mb) {
-    const m = ma.get(k) ?? 0;
-    if (m < n) out.push({ side: "nur in MDX", entry: k, alt: m, neu: n });
-  }
+  for (const [k, n] of ma) if ((mb.get(k) ?? 0) < n) out.push({ side: "fehlt in MDX", entry: k, alt: n, neu: mb.get(k) ?? 0 });
+  for (const [k, n] of mb) if ((ma.get(k) ?? 0) < n) out.push({ side: "nur in MDX", entry: k, alt: ma.get(k) ?? 0, neu: n });
   return out;
 }
 
-/** Liefert die Liste der Unterschiede (leer = gleichwertig). */
+/** Geordneter Vergleich; leer bedeutet einschließlich Verschachtelung gleichwertig. */
 export function diffInventories(a, b, { ignoreText = false } = {}) {
   const fa = ignoreText ? a.filter((x) => x.kind !== "text") : a;
   const fb = ignoreText ? b.filter((x) => x.kind !== "text") : b;
