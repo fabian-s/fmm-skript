@@ -135,7 +135,22 @@ function useLazyTypeset(ref: RefObject<Element | null>, tex: string) {
       }
       return;
     }
-    if (lastTex.current === tex) return; // effect replay, nothing to do
+    if (lastTex.current === tex) {
+      // Effect replay with unchanged TeX — in practice only React StrictMode,
+      // which mounts, tears down, and mounts again. The unmount cleanup below
+      // already unobserved this element, so returning here would leave it
+      // registered nowhere and it would NEVER be typeset. That is exactly why
+      // `npm run dev` used to render raw TeX across the whole app while the
+      // production build was fine (StrictMode only double-invokes in dev).
+      // Re-registering is safe: once MathJax has replaced the children there is
+      // no delimiter left to find, so a repeat typeset is a no-op.
+      if (io) io.observe(el);
+      else {
+        queue.add(el);
+        schedule();
+      }
+      return;
+    }
     // live update: typeset the NEW formula in a hidden sibling while the old
     // rendering stays visible, then swap atomically — no raw-TeX flash, no
     // double layout jump. The sibling clones the element's shell so its
