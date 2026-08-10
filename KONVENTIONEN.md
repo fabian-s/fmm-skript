@@ -199,12 +199,18 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Folienquelle in dieser Umgebung: `/workspace/fmm-lmu/slides/05-lgs.Rmd`
   (Rmd-LaTeX direkt lesen, Zeilenbereiche stehen im Workflow-Prompt;
   Quiz-Lösungen stehen in HTML-Kommentaren unter den Quiz-Folien).
-- Die private heath-ch2-App ist in dieser Umgebung NICHT verfügbar (das
-  Verzeichnis `interactive/` liegt nicht im GitHub-Repo fmm-lmu). Das
-  Widget-Recycling aus dem Bauauftrag entfällt: Kapitel-5-Widgets werden
-  NEU geschrieben, nach `src/chapters/05-lgs/widgets/`, im Stil der
-  Kap.-3/4-Widgets (lib-Primitives `Slider`/`MatrixInput`/`LabeledPlot`,
-  FMM-Palette, Qualitätslatte unverändert).
+- Die privaten Heath/MML-Apps liegen in dieser Umgebung unter
+  `/workspace/interactive/interactive/` (heath-ch2, heath-ch3, heath-ch7,
+  mml-ch4, mml-ch5-1, mml-ch7 — vom Dozenten hochgeladen 2026-08-10).
+  Für Kapitel 5 relevant: `heath-ch2/src/sections/S24.tsx` (Dreieckssysteme,
+  Gauss/LU), `S244.tsx` (Pivotierung, Komplexität), `S246.tsx` (Varianten)
+  und `heath-ch2/src/sections/widgets/` (`LUStepper.tsx`,
+  `Pivoting244.tsx`). Widget-/SVG-/Berechnungs-CODE 1:1 portieren ist
+  erlaubt und erwünscht (Ziel: `src/chapters/05-lgs/widgets/`); Labels,
+  Captions und Statustexte deutsch NEU schreiben — App-Prosa ist
+  buchadaptiert und VERBOTEN (Skript ist öffentlich; Lessons zu
+  heath-ch3-Portierungen beachten). Was dort fehlt (z. B. ein
+  Cholesky-Sampler), wird neu geschrieben im Stil der Kap.-3/4-Widgets.
 - Neue Tooltip-Konzepte entstehen als `.mdx` (`export const title = "…";`
   + Prosa, KEIN Frontmatter), Bestand prüfen mit `ls src/concepts/`.
 
@@ -299,16 +305,16 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 
 ## Als Nächstes (offen, aus Council-Runde 2 vom 2026-08-06)
 
-1. **Proof/Quiz sind deutsch verdrahtet.** `src/lib/Proof.tsx` schreibt
-   „Beweis.", „Schritt für Schritt", „nächster Schritt"; `src/lib/Quiz.tsx`
-   schreibt „wahr"/„falsch", „Richtig!", „Leider nein, …". Für das Skript ist
-   das richtig, aber die Bibliothek liegt in acht Apps, und die
-   interactive-textbook-Skill baut standardmässig ENGLISCHE Bücher. Seit die
-   Direktiven englische Zweitnamen haben (`::::proof`, `:::question{true}`),
-   ist die Hälfte der Übersetzung fertig und die andere fehlt: ein englisches
-   Buch bekommt eine deutsche Beweis-Box. Lösung wie bei `TooltipProvider`:
-   ein `labels`-Prop bzw. ein Provider mit DEUTSCHEN Defaults, damit das
-   Skript unverändert bleibt, und englische Labels im Skill-Template.
+1. **ERLEDIGT (repo-seitig, 2026-08-10): Proof/Quiz-Labels lokalisierbar.**
+   `src/lib/Proof.tsx` und `src/lib/Quiz.tsx` haben jetzt das
+   `TooltipProvider`-Muster: `Partial<ProofLabels>`/`Partial<QuizLabels>` als
+   `labels`-Prop bzw. app-weit per `<ProofLabelsProvider>` /
+   `<QuizLabelsProvider>` (alles über `src/lib/index.ts` exportiert), mit
+   DEUTSCHEN Defaults — das Skript und alle `::::beweis`/`::::quiz`-Direktiven
+   bleiben unverändert. Abgedeckt sind alle sichtbaren UI-Strings inkl.
+   aria-Label des ∎. OFFEN bleibt der Schritt ausserhalb dieses Repos:
+   englische Default-Labels ins Skill-Template der interactive-textbook-Skill
+   eintragen, damit englische Bücher sie per Provider setzen.
 2. **Das Orakel sieht Inline-Auszeichnung nicht.** `contentSignature` in
    `mdx/inventory.mjs` läuft durch `<em>/<strong>/<code>/<sub>/<sup>`
    hindurch, deshalb vergleichen sich `x<sub>1</sub>` und `x1` sowie
