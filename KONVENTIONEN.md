@@ -69,6 +69,9 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Beweise aus den Folien als `<Proof>` mit Begründungs-Annotationen.
 - Konzepte, die das Skript-Kapitel selbst einführt: Abschnittsanker statt
   Tooltip; Vorwissen: Tooltip (`ls src/concepts/`, kanonische ids nutzen).
+- **Folienfehler-Register:** Jeder gefundene Folienfehler wird ZUSÄTZLICH
+  zur Lesson-Zeile in `FOLIENFEHLER.md` eingetragen (Foliensatz, Zeile,
+  Befund, Status im Skript) — Sammelstelle für die Folien-Überarbeitung.
 
 ## KAPITEL 7 (Foliensatz 07-kq) — Bauauftrag 2026-08-04
 
