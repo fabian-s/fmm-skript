@@ -10,9 +10,6 @@
 import { parse as babelParse } from "@babel/parser";
 import _traverse from "@babel/traverse";
 import { compile } from "@mdx-js/mdx";
-import remarkMath from "remark-math";
-import remarkDirective from "remark-directive";
-import remarkFmm from "./remark-fmm.mjs";
 import { remarkChain } from "./plugins.mjs";
 
 const traverse = _traverse.default ?? _traverse;
