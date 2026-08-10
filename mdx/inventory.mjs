@@ -40,6 +40,22 @@ const BLOCKS = new Set([
   "figcaption", "h1", "h2", "h3", "h4", "h5", "h6",
 ]);
 
+// Inline-Auszeichnung geht als Marker in die Signatur ein: `x<sub>1</sub>`
+// und `x1` bzw. `<code>fib(5)</code>` und `fib(5)` sind KEINE gleichwertige
+// Konvertierung — ein verlorener Index ist in einem Mathetext echter Schaden.
+// b/i werden auf strong/em normalisiert, weil Markdown-Betonung (`**…**`,
+// `*…*`) zu strong/em kompiliert, der TSX-Bestand aber teils <b>/<i> schreibt;
+// <sub>/<sup> existieren in MDX nur als wörtliches JSX und matchen so trotzdem.
+const INLINE = new Map([
+  ["em", "em"],
+  ["i", "em"],
+  ["strong", "strong"],
+  ["b", "strong"],
+  ["code", "code"],
+  ["sub", "sub"],
+  ["sup", "sup"],
+]);
+
 const jsxName = (n) =>
   n?.type === "JSXIdentifier"
     ? n.name
@@ -188,6 +204,14 @@ function contentSignature(node, code) {
       out += ` «Link:${stable(attrValue(el, "href", code))}|`;
       walk(n.children);
       out += "» ";
+      return;
+    }
+    if (INLINE.has(name)) {
+      // Bewusst OHNE umgebende Leerzeichen: `x<sub>1</sub>` und
+      // `x <sub>1</sub>` unterscheiden sich auch im Rendering.
+      out += `«${INLINE.get(name)}:`;
+      walk(n.children);
+      out += "»";
       return;
     }
     if (/^[A-Z]/.test(name) && !SEMANTIC.has(name)) {
@@ -361,6 +385,9 @@ export function inventoryFromTsx(code) {
         const el = path.node.openingElement;
         const name = jsxName(el.name);
         if (BLOCKS.has(name)) flushProse();
+        // Inline-Auszeichnung markiert den Prosalauf, statt unsichtbar
+        // durchlaufen zu werden; das schließende «»-Ende setzt exit().
+        if (INLINE.has(name)) appendProse(`«${INLINE.get(name)}:`, path);
 
         if (name === "M" || name === "MD") {
           add(path, { kind: "math", display: name === "MD", tex: stringChild(path.node, code) });
@@ -423,7 +450,10 @@ export function inventoryFromTsx(code) {
         }
       },
       exit(path) {
-        if (inside(path.node) && BLOCKS.has(jsxName(path.node.openingElement.name))) flushProse();
+        if (!inside(path.node)) return;
+        const name = jsxName(path.node.openingElement.name);
+        if (INLINE.has(name)) appendProse("»", path);
+        if (BLOCKS.has(name)) flushProse();
       },
     },
     JSXText(path) {
