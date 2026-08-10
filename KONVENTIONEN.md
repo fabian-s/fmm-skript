@@ -186,6 +186,28 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   permutation-matrix, covariance-matrix, … (`ls src/concepts/` prüfen).
 - Kapitel 5.5 (Zusammenfassung) schlank halten.
 
+## KAPITEL 5 — Update für den MDX-Lauf (2026-08-10)
+
+- Kapitel 5 wird als ERSTES Kapitel in MDX geschrieben: `S51.mdx` …
+  `S55.mdx` in `src/chapters/05-lgs/` (Registry nutzt `mdxSection`; nur
+  der Orchestrator editiert `index.ts`). Autorenformat: MDX-Direktiven
+  (Muster: `src/chapters/mdx-lab/SLab.mdx`, Konzept-Muster:
+  `src/concepts/mdx-probe.mdx`); Quiz als `::::quiz` /
+  `:::frage{wahr|falsch}`; Mathe mit EINFACHEN Backslashes ($\bA\bx=\bb$),
+  Kursmakros direkt. Nach dem Schreiben: `npm run typecheck:mdx &&
+  npm run test:mdx`.
+- Folienquelle in dieser Umgebung: `/workspace/fmm-lmu/slides/05-lgs.Rmd`
+  (Rmd-LaTeX direkt lesen, Zeilenbereiche stehen im Workflow-Prompt;
+  Quiz-Lösungen stehen in HTML-Kommentaren unter den Quiz-Folien).
+- Die private heath-ch2-App ist in dieser Umgebung NICHT verfügbar (das
+  Verzeichnis `interactive/` liegt nicht im GitHub-Repo fmm-lmu). Das
+  Widget-Recycling aus dem Bauauftrag entfällt: Kapitel-5-Widgets werden
+  NEU geschrieben, nach `src/chapters/05-lgs/widgets/`, im Stil der
+  Kap.-3/4-Widgets (lib-Primitives `Slider`/`MatrixInput`/`LabeledPlot`,
+  FMM-Palette, Qualitätslatte unverändert).
+- Neue Tooltip-Konzepte entstehen als `.mdx` (`export const title = "…";`
+  + Prosa, KEIN Frontmatter), Bestand prüfen mit `ls src/concepts/`.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
