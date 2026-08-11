@@ -13,7 +13,16 @@ import { compile } from "@mdx-js/mdx";
 import { remarkChain } from "./plugins.mjs";
 
 const traverse = _traverse.default ?? _traverse;
-const norm = (s) => String(s ?? "").replace(/\s+/g, " ").trim();
+// Nach dem Kollabieren: Weißraum direkt an Inline-Marker-Grenzen entfernen.
+// Ein MDX-Code-Fence endet mit Zeilenumbruch, der TSX-String nicht — ohne
+// diese Angleichung meldete «code:… }» gegen «code:… } » einen Scheinverlust.
+// Symmetrisch unbedenklich: BEIDE Seiten laufen durch dieselbe Funktion.
+const norm = (s) =>
+  String(s ?? "")
+    .replace(/\s+/g, " ")
+    .replace(/(«[a-z]+:)\s/g, "$1")
+    .replace(/\s»/g, "»")
+    .trim();
 
 const SEMANTIC = new Set([
   "M",

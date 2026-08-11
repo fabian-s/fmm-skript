@@ -305,6 +305,8 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Dev-Server-Bug (typesetzt gar keine Mathe) fixen, dann Plugin +
   <Quiz>/<Frage> nach src/lib, dann Kapitel 5 als erstes echtes MDX-Kapitel,
   dann die Migration der Altkapitel.
+- Folienfehler 05-lgs (Z. 288-298): Das Theorem „Jede invertierbare Matrix hat A=LU" ist falsch (Gegenbeispiel Vertauschungsmatrix (0 1; 1 0): Pivot 0) — Skript Satz 5.3.5 sagt korrekt: PA=LU existiert stets, A=LU genau bei Nullpivot-freier Elimination; ausserdem indizieren die Folien Z. 232-249 bis L_n, obwohl nur n-1 Eliminationsschritte existieren (Skript §5.3: L_{n-1}).
+- Folienfehler 05-lgs Induktionsbeweis Cholesky (Z. 462-463): im Testvektor steht zweimal \bc\top statt \bc^\top (fehlendes Dach), und die strikte Ungleichung braucht den Quantor x ≠ 0 — Skript §5.4 setzt beides korrekt (Beweis zu Satz 5.4.2); ins FOLIENFEHLER-Register übertragen (Abschnitts-Agenten dürfen die Datei nicht anfassen).
 
 ## Als Nächstes (offen, aus Council-Runde 2 vom 2026-08-06)
 
@@ -318,16 +320,20 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
    aria-Label des ∎. OFFEN bleibt der Schritt ausserhalb dieses Repos:
    englische Default-Labels ins Skill-Template der interactive-textbook-Skill
    eintragen, damit englische Bücher sie per Provider setzen.
-2. **Das Orakel sieht Inline-Auszeichnung nicht.** `contentSignature` in
-   `mdx/inventory.mjs` läuft durch `<em>/<strong>/<code>/<sub>/<sup>`
-   hindurch, deshalb vergleichen sich `x<sub>1</sub>` und `x1` sowie
-   `<code>fib(5)</code>` und `fib(5)` als GLEICH. In einem Mathetext ist ein
-   verlorener Index echter Schaden. Beim Migrieren der restlichen 27
-   Abschnitte also zusätzlich per Auge prüfen — oder die Marker in
-   `contentSignature` um diese Elemente erweitern (dann aber gegen den
-   Pilotabschnitt auf Fehlalarme testen).
+2. **ERLEDIGT (2026-08-10): Das Orakel sieht Inline-Auszeichnung.**
+   `contentSignature`/`inventoryFromTsx` markieren jetzt
+   `em/strong/code/sub/sup` (b/i auf strong/em normalisiert, weil
+   Markdown-Betonung dorthin kompiliert); Weißraum an Marker-Grenzen wird
+   normalisiert (Code-Fences enden mit Zeilenumbruch). Gepinnt durch
+   `mdx/inventory.test.mjs` (läuft in `npm run test:mdx`): Verlustpaar wird
+   abgelehnt, treues Paar besteht, Fence-Zeilenumbruch erzeugt keinen
+   Scheinverlust. Fehlalarm-Test am Pilotabschnitt S25: nur EINE neue
+   Meldung (TSX-Klartext vs. MDX-`*…*`-em bei der Heath-Vertiefungszeile —
+   echte Darstellungsdifferenz, kein Inhaltsverlust); die drei bekannten
+   Alt-Abweichungen (ASCII-Baum→Widget, zwei ungenutzte h3-Anker) bleiben
+   unverändert. Beim Migrieren heisst das: `className`-Kursivierung des
+   Bestands wird als em-Differenz sichtbar und ist dann bewusst abzunicken.
 
-Beides ist in der Skill-Doku (`references/verification.md`) als bekannter
-blinder Fleck vermerkt, nicht stillschweigend fallengelassen.
-- Folienfehler 05-lgs (Z. 288-298): Das Theorem „Jede invertierbare Matrix hat A=LU" ist falsch (Gegenbeispiel Vertauschungsmatrix (0 1; 1 0): Pivot 0) — Skript Satz 5.3.5 sagt korrekt: PA=LU existiert stets, A=LU genau bei Nullpivot-freier Elimination; ausserdem indizieren die Folien Z. 232-249 bis L_n, obwohl nur n-1 Eliminationsschritte existieren (Skript §5.3: L_{n-1}).
-- Folienfehler 05-lgs Induktionsbeweis Cholesky (Z. 462-463): im Testvektor steht zweimal \bc\top statt \bc^\top (fehlendes Dach), und die strikte Ungleichung braucht den Quantor x ≠ 0 — Skript §5.4 setzt beides korrekt (Beweis zu Satz 5.4.2); ins FOLIENFEHLER-Register übertragen (Abschnitts-Agenten dürfen die Datei nicht anfassen).
+Der Skill-Doku-Vermerk (`references/verification.md`) zum Blindfleck kann
+beim nächsten Skill-Update auf „behoben" gesetzt werden (ausserhalb dieses
+Repos).
