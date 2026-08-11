@@ -4,7 +4,7 @@ import type { Series } from "../../../lib";
 
 /**
  * Kosten-Vergleich für §5.3 (Komplexität): J Gleichungssysteme mit derselben
- * Matrix lösen — einmal zerlegen und dann nur noch substituieren
+ * Matrix lösen: einmal zerlegen und dann nur noch substituieren
  * (n³/3 + J·n²) gegen jedes Mal komplett neu eliminieren (J·(n³/3 + n²)).
  * Beide Kurven als Funktionen von J auf log₁₀-Skala; Farbcode: grün = mit
  * gespeicherter Zerlegung, rot = jedes Mal neu (FMM-Palette).

@@ -25,7 +25,7 @@ export function PivotVergleich() {
   const [e, setE] = useState(-8);
   const eps = Math.pow(10, e);
 
-  // ohne Zeilentausch: Pivot ε, Multiplikator 1/ε — alles ehrlich in float64
+  // ohne Zeilentausch: Pivot ε, Multiplikator 1/ε, alles ehrlich in float64
   const m = 1 / eps;
   const u22 = 1 - m;
   const b1 = 1 + eps;
@@ -58,13 +58,14 @@ export function PivotVergleich() {
   return (
     <div className="text-sm">
       <p className="mb-2">
-        Lösen wir{" "}
+        Testsystem ist{" "}
         <M>{"\\begin{pmatrix} \\cred{\\epsilon} & 1 \\\\ 1 & 1 \\end{pmatrix} \\bx = \\begin{pmatrix} 1+\\epsilon \\\\ 2 \\end{pmatrix}"}</M>{" "}
-        (exakte Lösung <M>{"\\bx = (1, 1)^\\top"}</M>) in echter IEEE-Doppelgenauigkeit,
-        also mit <M>{"\\eps_{\\text{mach}} \\approx 2{,}2 \\cdot 10^{-16}"}</M>. Ohne
-        Zeilentausch ist <M>{"\\cred{\\epsilon}"}</M> das Pivot und der Multiplikator{" "}
-        <M>{"1/\\epsilon"}</M> riesig; nach dem Tausch ist das Pivot 1 und der
-        Multiplikator winzig.
+        mit der Lösung <M>{"\\bx = (1, 1)^\\top"}</M>, die wir von Hand ablesen können. Beide
+        Tabellenzeilen rechnen denselben Weg in float64 nach
+        (<M>{"\\eps_{\\text{mach}} \\approx 2{,}2 \\cdot 10^{-16}"}</M>), einmal mit{" "}
+        <M>{"\\cred{\\epsilon}"}</M> als Pivot und Multiplikator <M>{"1/\\epsilon"}</M>, einmal
+        nach Zeilentausch mit Pivot 1 und Multiplikator <M>{"\\epsilon"}</M>. Jede Abweichung
+        von 1 in der Tabelle ist also reiner Rundungsfehler.
       </p>
       <Slider
         label="log₁₀ ε"
@@ -94,22 +95,22 @@ export function PivotVergleich() {
         <span className="font-mono">{fmt(u22)}</span>
         {absorbed ? (
           <span className="ml-1" style={{ color: RED, fontWeight: 600 }}>
-            : Die 1 ist vollständig verschluckt, fl(1 − 1/ε) = −1/ε. Vom ursprünglichen
-            Eintrag a₂₂ = 1 ist nichts mehr übrig, und dann gilt L·U ≠ A.
+            , exakt −1/ε: Die Subtraktion hat die 1 restlos geschluckt. In der Zerlegung steckt
+            der Eintrag a₂₂ = 1 damit gar nicht mehr, und L·U reproduziert A nicht.
           </span>
         ) : (
           <span className="ml-1">
-            : Von a₂₂ = 1 überleben noch einige Ziffern, der Schaden bleibt partiell (etwa{" "}
-            {Math.max(0, Math.round(-Math.log10(Math.max(errN, 1e-17))))} korrekte Ziffern in
-            der schlechteren Komponente).
+            . Der Eintrag a₂₂ = 1 hat die Subtraktion überstanden, ganz oder in Teilen:
+            Im schlechteren Lösungseintrag stimmen noch rund{" "}
+            {Math.max(0, Math.round(-Math.log10(Math.max(errN, 1e-17))))} Stellen.
           </span>
         )}
       </p>
       <p className="mt-1 text-xs" style={{ color: "#64748b" }}>
-        Schieben wir ε nach unten: Ohne Pivotierung verlieren wir ungefähr so viele Ziffern,
-        wie ε führende Nullen hat, und nahe der Maschinengenauigkeit kollabiert die Lösung
-        komplett. Mit Zeilentausch bleibt die volle Genauigkeit über den ganzen Bereich
-        erhalten.
+        Schieben wir ε nach unten, kostet uns das ungefähr eine Stelle pro Zehnerpotenz: Bei
+        ε = 1e−8 ist rund die Hälfte der 16 verfügbaren Stellen von x₁ dahin, ab ε ≈ 1e−16
+        bleibt davon nichts Brauchbares übrig. Die getauschte Variante hält über den ganzen
+        Reglerbereich volle Genauigkeit; der Tausch selbst kostet nur einen Vergleich.
       </p>
     </div>
   );

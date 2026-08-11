@@ -215,16 +215,19 @@ export function RueckSubStepper() {
           )}
           {trace.failRow >= 0 && shown >= maxT && (
             <p className="mt-2 text-sm" style={{ color: RED }}>
-              In Zeile {trace.failRow + 1} steht auf der Diagonalen eine Null: die Division
-              ist unmöglich. Eine Null auf der Diagonalen macht eine Dreiecksmatrix singulär,
-              das System hat dann keine eindeutige Lösung.
+              Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile
+              ist 0, und Formel (5.2.1) verlangt, genau dadurch zu teilen. Bei einer
+              Dreiecksmatrix entscheidet allein die Diagonale über die Invertierbarkeit;
+              mit einer Null dort verliert das System seine eindeutige Lösung.
             </p>
           )}
           {trace.failRow < 0 && shown === maxT && maxT > 0 && (
             <p className="mt-2 text-sm">
-              Fertig: Zeile für Zeile kostete uns eine Division plus das Einsetzen der schon
-              bekannten Komponenten, insgesamt also größenordnungsmäßig n²/2 Multiplikationen
-              für ein n×n-System.
+              Alle Komponenten stehen. Zählen wir nach: Zeile i setzt n−i bekannte Werte
+              ein (je eine Multiplikation und Subtraktion) und teilt einmal durch ihr
+              Diagonalelement — macht n(n−1)/2 Multiplikationen, ebenso viele
+              Subtraktionen und n Divisionen, zusammen exakt n² Operationen: das O(n²)
+              aus dem Quiz.
             </p>
           )}
         </div>

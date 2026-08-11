@@ -1,0 +1,324 @@
+import { FehlermassRechner, FehlerzerlegungExplorer } from "./widgets/S41Widgets";
+
+{/*
+  Abschnitt 4.1: Fehlermaße und Fehlerzerlegung.
+  Quelle: Folien 04-fehler.Rmd, Kapitelauftakt + Blöcke „Fehleranalyse"
+  (absolute/relative Fehler, Fehlermaß, Fehlerschranken-Lemma,
+  Vektor-Beispiel) und „Fehlerzerlegung" (Schema, Zerlegungsformel,
+  e^π-Beispiel). Prosa eigenständig aus den Folien formuliert; alle
+  Zahlenwerte nachgerechnet.
+*/}
+
+::quelle[Folien: 04-fehler, „Fehleranalyse" und „Fehlerzerlegung".]
+
+In Kapitel 2 haben wir gesehen, dass Computer praktisch nie exakt rechnen: Schon das
+Speichern einer Zahl im :k[Gleitkommaformat]{#floating-point}
+erzeugt :k[Rundungsfehler]{#rounding-error}, und jede
+Rechenoperation kann weitere hinzufügen
+([Abschnitt 2.1](?k=02-algos#sec-2.1)). Für Statistiker/innen kommt
+noch etwas Grundsätzlicheres dazu: Unsere Inputs sind Daten, und Daten sind gemessen,
+also selbst schon fehlerbehaftet, bevor der Computer überhaupt anfängt zu rechnen. Dieses
+Kapitel entwickelt das Handwerkszeug, um mit beidem systematisch umzugehen. Wir klären
+zuerst, wie man Fehler überhaupt *misst*, und zerlegen dann den Gesamtfehler eines
+berechneten Ergebnisses in seine zwei grundverschiedenen Quellen. Diese Zerlegung ist der
+rote Faden des ganzen Kapitels: Sie führt direkt auf die Begriffe *Kondition*
+([Abschnitt 4.2](#sec-4.2)) und *Stabilität*
+([Abschnitt 4.3](#sec-4.3)).
+
+:::bemerkung[4.1.1 (Verwendete Vorkenntnisse)]
+Dieses Kapitel setzt voraus:
+
+- aus Kapitel 2: den Algorithmusbegriff und die Komplexitätsanalyse
+  ([Abschnitte 2.1](?k=02-algos#sec-2.1)–[2.3](?k=02-algos#sec-2.3)) sowie das Verständnis, dass
+  Algorithmen meist nur *approximative* Lösungen berechnen,
+- aus der linearen Algebra: Vektor- und
+  :k[Matrixnormen]{#matrix-norm} (Kapitel 3, insbesondere
+  [Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2)) mit den
+  :k[Normeigenschaften]{#norm} Definitheit, Homogenität und
+  :k[Dreiecksungleichung]{#triangle-inequality}, außerdem
+  Matrixoperationen und
+  :k[Matrix-Vektor-Produkte]{#matrix-vector-product},
+- aus der Analysis: :k[Grenzwerte]{#limit} und
+  :k[Konvergenz]{#convergence},
+  :k[Stetigkeit]{#continuity} und die Grundlagen der
+  :k[Taylor-Approximation]{#taylor-series}.
+:::
+
+### 4.1.1 Absolute und relative Fehler
+
+Beginnen wir mit dem einfachsten Fall: Eine einzelne Zahl soll gespeichert oder berechnet
+werden, und statt des $\cgreen{\text{tatsächlichen Werts}}$ erhalten wir einen
+$\cblue{\text{fehlerhaften Wert}}$. Die naheliegendste Art, den Fehler zu
+quantifizieren, ist die Differenz der beiden:
+
+$$
+\text{absoluter Fehler} = \cblue{\text{fehlerhafter Wert}} - \cgreen{\text{tatsächlicher Wert}}.
+$$
+
+Der absolute Fehler hat aber einen Schönheitsfehler: Er hängt von der Skala ab. Ein
+Fehler von einem Meter ist beim Vermessen eines Zimmers eine Katastrophe, beim Abstand
+zwischen München und Hamburg belanglos. Deshalb ist es üblicher, Fehler *relativ*
+zum tatsächlichen Wert zu betrachten:
+
+$$
+\corange{\text{relativer Fehler}} = \frac{\cblue{\text{fehlerhafter Wert}} - \cgreen{\text{tatsächlicher Wert}}}{\cgreen{\text{tatsächlicher Wert}}}.
+$$
+
+Der Vorteil: Der relative Fehler ist einheitenfrei und lässt sich als Prozentzahl lesen.
+Der Nachteil: Der tatsächliche Wert darf nicht $0$ sein. Lösen wir die
+Definition nach dem fehlerhaften Wert auf, erhalten wir eine Umformung, die uns noch oft
+begegnen wird:
+
+$$
+\cblue{\text{fehlerhafter Wert}} = \cgreen{\text{tatsächlicher Wert}} \cdot \left(1 + \corange{\text{relativer Fehler}}\right).
+$$
+
+Ein fehlerbehafteter Wert ist also der wahre Wert, multiplikativ verzerrt um den Faktor
+$1 + \corange{\text{relativer Fehler}}$. So lässt sich auch das aus
+Kapitel 2 bekannte Runden im Gleitkommaformat beschreiben: Dort ist der relative Fehler
+höchstens die
+:k[Maschinengenauigkeit]{#machine-epsilon}.
+
+### 4.1.2 Fehlermaße und Fehlerschranken
+
+In der Statistik sind unsere Ergebnisse selten einzelne Zahlen: Wir rechnen mit
+Vektoren von Schätzern, mit Kovarianzmatrizen, mit ganzen Funktionen. Um Fehler auch
+dort messen zu können, brauchen wir statt des Betrags eine
+:k[Norm]{#norm}. Genau dafür haben wir in Kapitel 3 die
+Normbegriffe bereitgestellt; jetzt zahlt sich das aus. Die folgende Definition überträgt
+beide Fehlerbegriffe wörtlich auf beliebige
+:k[Vektorräume]{#vector-space}:
+
+:::definition[4.1.2 (Fehlermaß)]
+Sei $V$ ein Vektorraum mit (Semi-)Norm $\left\| \cdot \right\|$
+und $\cblue{\wt{\bv}} \in V$ eine Approximation zu
+$\cgreen{\bv} \in V$. Dann ist
+
+- der *absolute Fehler*
+
+  $$
+  \cred{\bDelta_{\bv}} = \cblue{\wt{\bv}} - \cgreen{\bv},
+  $$
+
+- der *relative Fehler*
+
+  $$
+  \corange{\delta_{\bv}} = \frac{\left\| \cblue{\wt{\bv}} - \cgreen{\bv} \right\|}{\left\| \cgreen{\bv} \right\|} = \frac{\left\| \cred{\bDelta_{\bv}} \right\|}{\left\| \cgreen{\bv} \right\|} \qquad \text{(sofern } \left\| \cgreen{\bv} \right\| \neq 0\text{)}.
+  $$
+:::
+
+Beachten wir den kleinen, aber wichtigen Unterschied: Der absolute Fehler
+$\cred{\bDelta_{\bv}}$ ist selbst ein Element von $V$ und sagt uns
+auch, *in welche Richtung* die Approximation danebenliegt. Der relative Fehler
+$\corange{\delta_{\bv}}$ ist dagegen eine einzelne nichtnegative Zahl. Für
+Skalare ($V = \R$ mit dem Betrag als Norm) liefert die Definition gerade den
+Betrag des relativen Fehlers aus
+[Abschnitt 4.1.1](#sec-4.1.1).
+
+Oft kennen wir den Fehler nicht exakt, sonst könnten wir ihn ja einfach abziehen und
+exakt rechnen. Was wir realistischerweise angeben können, ist eine Garantie nach oben:
+Gilt $\left\| \cred{\bDelta_{\bv}} \right\| \le \eps$ bzw.
+$\corange{\delta_{\bv}} \le \eps$, so nennen wir $\eps$ eine
+*absolute* bzw. *relative Fehlerschranke*. Das folgende Lemma zeigt, was
+eine relative Fehlerschranke praktisch wert ist: Sie kontrolliert, wie stark die Norm der
+Approximation von der Norm des wahren Werts abweichen kann.
+
+:::lemma[4.1.3 (Fehlerschranken)]
+Es gilt
+
+$$
+\left\| \cgreen{\bz} \right\| \left(1 - \corange{\delta_{\bz}}\right) \;\le\; \left\| \cblue{\wt{\bz}} \right\| \;\le\; \left\| \cgreen{\bz} \right\| \left(1 + \corange{\delta_{\bz}}\right).
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\corange{\delta_{\bz}} = \frac{\left\| \cblue{\wt{\bz}} - \cgreen{\bz} \right\|}{\left\| \cgreen{\bz} \right\|} \quimpl \left\| \cblue{\wt{\bz}} - \cgreen{\bz} \right\| = \corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\|
+$$
+
+::why[Definition des relativen Fehlers $\corange{\delta_{\bz}}$, beide Seiten mit $\left\| \cgreen{\bz} \right\| > 0$ multipliziert]
+:::
+
+:::schritt
+$$
+\Bigl| \left\| \cblue{\wt{\bz}} \right\| - \left\| \cgreen{\bz} \right\| \Bigr| \le \left\| \cblue{\wt{\bz}} - \cgreen{\bz} \right\| = \corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\|
+$$
+
+::why[umgekehrte :k[Dreiecksungleichung]{#triangle-inequality}: $\bigl| \left\| \ba \right\| - \left\| \bb \right\| \bigr| \le \left\| \ba - \bb \right\|$ für alle $\ba, \bb \in V$]
+:::
+
+:::schritt
+$$
+-\corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\| \;\le\; \left\| \cblue{\wt{\bz}} \right\| - \left\| \cgreen{\bz} \right\| \;\le\; \corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\|
+$$
+
+::why[Definition des Betrags: $|t| \le c \quequiv -c \le t \le c$]
+:::
+
+:::schritt
+$$
+\left\| \cgreen{\bz} \right\| - \corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\| \;\le\; \left\| \cblue{\wt{\bz}} \right\| \;\le\; \left\| \cgreen{\bz} \right\| + \corange{\delta_{\bz}} \left\| \cgreen{\bz} \right\|
+$$
+
+::why[überall $\left\| \cgreen{\bz} \right\|$ addiert; Ausklammern liefert die Behauptung]
+:::
+
+::::
+
+Ein relativer Fehler von zum Beispiel $\corange{\delta_{\bz}} = 0{,}01$
+garantiert also: Die Norm der Approximation liegt zwischen $99\,\%$ und
+$101\,\%$ der wahren Norm. Rechnen wir das Ganze einmal konkret an einem
+Vektor durch.
+
+:::beispiel[4.1.4 (Fehlermaße für Vektoren)]
+Sei $\cgreen{\bv} = \cgreen{\begin{pmatrix} 3 \\ 4 \end{pmatrix}}$ und
+$\cblue{\wt{\bv}} = \cblue{\begin{pmatrix} 3{,}2 \\ 4{,}3 \end{pmatrix}}$
+mit der :k[euklidischen Norm]{#euclidean-norm}
+$\left\| \cdot \right\|_2$.
+
+**Absoluter Fehler**, komponentenweise Differenz:
+
+$$
+\cred{\bDelta_{\bv}} = \cblue{\wt{\bv}} - \cgreen{\bv} = \cblue{\begin{pmatrix} 3{,}2 \\ 4{,}3 \end{pmatrix}} - \cgreen{\begin{pmatrix} 3 \\ 4 \end{pmatrix}} = \cred{\begin{pmatrix} 0{,}2 \\ 0{,}3 \end{pmatrix}}.
+$$
+
+**Norm des absoluten Fehlers:**
+
+$$
+\left\| \cred{\bDelta_{\bv}} \right\|_2 = \sqrt{0{,}2^2 + 0{,}3^2} = \sqrt{0{,}04 + 0{,}09} = \sqrt{0{,}13} \approx 0{,}361.
+$$
+
+**Relativer Fehler**, wegen
+$\left\| \cgreen{\bv} \right\|_2 = \sqrt{3^2 + 4^2} = \sqrt{25} = 5$:
+
+$$
+\corange{\delta_{\bv}} = \frac{\left\| \cred{\bDelta_{\bv}} \right\|_2}{\left\| \cgreen{\bv} \right\|_2} = \frac{\sqrt{0{,}13}}{5} \approx \frac{0{,}361}{5} \approx 0{,}072 = 7{,}2\,\%.
+$$
+
+**Fehlerschranke:** Wegen
+$\corange{\delta_{\bv}} \approx 0{,}072 \le 0{,}1$ ist
+$\eps = 0{,}1$ eine relative Fehlerschranke.
+
+Zur Probe können wir auch Lemma 4.1.3 nachrechnen: Es ist
+$\left\| \cblue{\wt{\bv}} \right\|_2 = \sqrt{3{,}2^2 + 4{,}3^2} = \sqrt{28{,}73} \approx 5{,}3600$,
+und tatsächlich gilt
+$5 \cdot (1 - \corange{\delta_{\bv}}) \approx 4{,}6394 \le 5{,}3600 \le 5{,}3606 \approx 5 \cdot (1 + \corange{\delta_{\bv}})$.
+:::
+
+:::vertiefung[Fehlermaß-Rechner: v und ṽ selbst wählen]
+<FehlermassRechner />
+:::
+
+### 4.1.3 Fehlerzerlegung
+
+Jetzt zur zweiten Leitfrage: *Woher* kommt der Fehler in einem berechneten
+Ergebnis? Formalisieren wir dazu die Situation. Sei $f$ ein Problem (eine
+Funktion, die wir auswerten wollen) mit idealem Input $\bx$. Was der Computer
+stattdessen ausführt, ist ein Algorithmus $\wt{f}$ (eine Näherung an
+$f$), und zwar am tatsächlichen Input $\wt{\bx}$, einer Näherung an
+$\bx$:
+
+$$
+\text{Input } \wt{\bx} \quad \longrightarrow \quad \text{Algorithmus } \wt{f} \quad \longrightarrow \quad \text{Ergebnis } \cblue{\wt{f}(\wt{\bx})}.
+$$
+
+Weicht das Ergebnis $\cblue{\wt{f}(\wt{\bx})}$ vom idealen Wert
+$\cgreen{f(\bx)}$ ab, kann das an zwei ganz verschiedenen Stellen liegen:
+
+- am *Fehler im Input*, also $\wt{\bx} \neq \bx$, etwa durch Messen oder
+  Speichern von $\bx$. Diese Fehler sind *unvermeidbar*: Sie entstehen,
+  bevor unser Programm die erste Zeile ausführt.
+- am *Fehler im Algorithmus*, also $\wt{f} \neq f$, etwa durch Rundung in
+  Maschinenarithmetik oder durch bewusste Approximation (abgebrochene Reihen,
+  Diskretisierung, endlich viele Iterationen). Diese Fehler *können wir
+  beeinflussen*: durch die Wahl eines besseren Algorithmus.
+
+Der zentrale Trick dieses Kapitels ist nun, den Gesamtfehler exakt in diese zwei Anteile
+zu zerlegen. Dazu subtrahieren und addieren wir den Zwischenwert
+$f(\wt{\bx})$ (das ideale Problem, ausgewertet am tatsächlichen Input):
+
+$$ {#eq-4.1.1}
+\cpurp{\underbrace{\wt{f}(\wt{\bx}) - f(\bx)}_{\text{Gesamtfehler}}} \;=\; \cred{\underbrace{\wt{f}(\wt{\bx}) - f(\wt{\bx})}_{\substack{\text{Fehler im Algorithmus} \\ \text{(Maschinenarithmetik)}}}} \;+\; \corange{\underbrace{f(\wt{\bx}) - f(\bx)}_{\substack{\text{Folgefehler aus Input} \\ \text{(exakte Arithmetik)}}}}
+$$
+
+Warum ist diese Zerlegung so nützlich? Weil die beiden Terme sauber getrennte
+Verantwortlichkeiten haben:
+
+:::bemerkung[4.1.5 (Stabilität und Kondition: Ausblick)]
+
+- Der erste Term $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ vergleicht
+  Algorithmus und Problem *am selben Input* und hängt damit nicht vom
+  Inputfehler ab. Ist er „klein", nennen wir den Algorithmus *stabil*
+  ([Abschnitt 4.3](#sec-4.3)).
+- Der zweite Term $\corange{f(\wt{\bx}) - f(\bx)}$ vergleicht das ideale
+  Problem $f$ an zwei Inputs, in exakter Arithmetik, und hängt damit nicht
+  vom Algorithmus $\wt{f}$ ab. Ist er „klein", nennen wir das Problem
+  $f$ an der Stelle $\bx$ *gut konditioniert*
+  ([Abschnitt 4.2](#sec-4.2)).
+:::
+
+Die Zerlegung (4.1.1) trennt also, was der Algorithmus verbockt, von dem, was am
+gestörten Input liegt – und nur den ersten Anteil können wir durch bessere Software
+reparieren. Sehen wir uns das an einem vollständig durchgerechneten Beispiel an.
+
+:::beispiel[4.1.6 (Fehlerzerlegung: Berechnung von e^π)]
+Bekanntlich lässt sich die Exponentialfunktion als
+:k[Potenzreihe]{#power-series} schreiben:
+$e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}$. Angenommen, wir wollen
+$f(\pi) = e^{\pi}$ berechnen und verwenden dazu zwei Näherungen: als Input
+$\wt{\pi} = 3$ (auf eine ganze Zahl gerundet) und als Algorithmus die nach
+dem quadratischen Glied abgebrochene Reihe
+$\wt{f}(x) = \sum_{n=0}^{2} \frac{x^n}{n!} = 1 + x + \tfrac{x^2}{2}$.
+Zerlegen wir den Gesamtfehler wie in (4.1.1). Am besten erst selbst probieren, dann
+weiterlesen.
+
+Der Algorithmus liefert
+$\wt{f}(3) = 1 + 3 + \tfrac{9}{2} = 8{,}5$. Einsetzen des Zwischenwerts
+$f(3) = e^3$ ergibt die Zerlegung
+
+$$
+\cpurp{\wt{f}(3) - f(\pi)} = \cred{\bigl[\wt{f}(3) - f(3)\bigr]} + \corange{\bigl[f(3) - f(\pi)\bigr]}.
+$$
+
+**Fehler im Algorithmus**, also die abgebrochene Reihe gegen
+$e^3$; der Fehler ist gerade der weggelassene Reihenrest, mit Minuszeichen:
+
+$$
+\cred{\wt{f}(3) - f(3)} = \left(1 + 3 + \tfrac{9}{2}\right) - e^3 = -\sum_{n=3}^{\infty} \frac{3^n}{n!} \approx 8{,}5 - 20{,}086 = \cred{-11{,}586}.
+$$
+
+**Folgefehler aus dem Input**, das exakte Problem $f$ an den
+zwei Inputs $3$ und $\pi$:
+
+$$
+\corange{f(3) - f(\pi)} = e^3 - e^{\pi} \approx 20{,}086 - 23{,}141 = \corange{-3{,}055}.
+$$
+
+**Gesamtfehler**, zur Probe direkt und über die Zerlegung:
+
+$$
+\cpurp{\wt{f}(3) - f(\pi)} \approx 8{,}5 - 23{,}141 = \cpurp{-14{,}641} = \cred{(-11{,}586)} + \corange{(-3{,}055)}. \quad \checkmark
+$$
+
+Beide Anteile sind hier negativ, und das aus jeweils gutem Grund: Die abgebrochene
+Reihe lässt nur positive Terme weg und unterschätzt $e^3$ deshalb systematisch;
+und wegen $3 < \pi$ und der Monotonie von $e^x$ ist auch
+$e^3 < e^{\pi}$. Der Algorithmusfehler dominiert klar ($-11{,}6$
+gegenüber $-3{,}1$). Hier würde sich also zuerst ein besserer Algorithmus
+lohnen (mehr Reihenglieder), nicht ein genauerer Input.
+:::
+
+:::vertiefung[Fehlerzerlegungs-Explorer: Abbruchordnung und Input-Genauigkeit selbst steuern]
+<FehlerzerlegungExplorer />
+:::
+
+Damit haben wir das Vokabular beisammen: Fehler messen wir mit Normen (absolut oder
+relativ), und den Gesamtfehler eines berechneten Ergebnisses zerlegen wir in den
+Algorithmus-Anteil und den Folgefehler aus dem Input. Die nächsten beiden Abschnitte
+quantifizieren die zwei Anteile: Die *Kondition* eines Problems misst, wie stark
+Inputfehler im Ergebnis verstärkt werden; die *Stabilität* beurteilt, wie viel
+Fehler der Algorithmus selbst hinzufügt.
+
+*Vertiefung: Heath §1.2.*

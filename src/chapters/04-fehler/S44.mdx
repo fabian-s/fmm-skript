@@ -1,0 +1,112 @@
+{/*
+  Abschnitt 4.4: Zusammenfassung.
+  Quelle: Folien 04-fehler.Rmd, Blöcke „Übersicht" und „Wrap-up".
+  Prosa eigenständig aus den Folien formuliert; bewusst schlank gehalten.
+  MDX-Migration 2026-08-11 (nur Format gewechselt, Prosa wörtlich übernommen).
+*/}
+
+::quelle[Folien: 04-fehler, „Übersicht" und „Wrap-up".]
+
+Fassen wir das Kapitel zusammen. Der rote Faden war die Frage, warum ein berechnetes
+Ergebnis $\wt{f}(\wt{\bx})$ vom idealen Ergebnis $f(\bx)$ abweicht, und wie wir diese
+Abweichung messen, zerlegen und den beiden Schuldigen zuordnen: dem *Problem* und dem
+*Algorithmus*.
+
+### Die Konzepte im Überblick
+
+<div className="max-w-prose overflow-x-auto">
+<table className="text-sm">
+<thead>
+<tr className="border-b border-slate-300 text-left dark:border-slate-600">
+<th className="py-1 pr-6">Konzept</th>
+<th className="py-1 pr-6">Kernaussage</th>
+<th className="py-1">Abschnitt</th>
+</tr>
+</thead>
+<tbody>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">absoluter / relativer Fehler</td>
+<td className="py-1 pr-6">$\bDelta_{\bv} = \wt{\bv} - \bv$ bzw. $\delta_{\bv} = \left\| \wt{\bv} - \bv \right\| / \left\| \bv \right\|$, gemessen in einer :k[Norm]{#norm} unserer Wahl</td>
+<td className="py-1">[4.1](#sec-4.1)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Fehlerzerlegung</td>
+<td className="py-1 pr-6">Gesamtfehler = algorithmischer Fehler $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ + Input-Folgefehler $\corange{f(\wt{\bx}) - f(\bx)}$</td>
+<td className="py-1">[4.1](#sec-4.1)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Kondition</td>
+<td className="py-1 pr-6">Sensitivität eines *Problems* bezüglich Inputfehlern, unabhängig vom verwendeten Algorithmus</td>
+<td className="py-1">[4.2](#sec-4.2)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Konditionszahlen</td>
+<td className="py-1 pr-6">$\kappa_{abs}$ und $\kappa_{rel}$: kleinste Verstärkungsfaktoren von absolutem bzw. relativem Inputfehler; gut konditioniert ($\kappa \lesssim 1$), schlecht konditioniert ($\kappa \gg 1$), schlecht gestellt ($\kappa = \infty$)</td>
+<td className="py-1">[4.2](#sec-4.2)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">:k[Konditionszahl einer Matrix]{#condition-number}</td>
+<td className="py-1 pr-6">$\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$ in einer :k[Matrixnorm]{#matrix-norm}: obere Schranke für die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$ (eingeführt in [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5))</td>
+<td className="py-1">[4.2](#sec-4.2)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Stabilität</td>
+<td className="py-1 pr-6">Eigenschaft eines *Algorithmus*: $\wt{f}$ ist stabil, wenn der algorithmische Fehler $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ klein ist</td>
+<td className="py-1">[4.3](#sec-4.3)</td>
+</tr>
+<tr>
+<td className="py-1 pr-6">zusammengesetzte Algorithmen</td>
+<td className="py-1 pr-6">Fehlerfortpflanzung über Teilschritte: Die Kondition eines späteren Teilschritts verstärkt die Fehler aller früheren</td>
+<td className="py-1">[4.3](#sec-4.3)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+### Kondition und Stabilität: die Arbeitsteilung
+
+Die beiden zentralen Begriffe des Kapitels beantworten verschiedene Fragen, und die
+Fehlerzerlegung aus [Abschnitt 4.1](#sec-4.1) hält sie
+sauber auseinander:
+
+$$
+\wt{f}(\wt{\bx}) - f(\bx) = \underbrace{\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}}_{\text{algorithmischer Fehler}} + \underbrace{\corange{f(\wt{\bx}) - f(\bx)}}_{\text{Input-Folgefehler}}
+$$
+
+Die *Kondition* beschreibt die **Sensitivität des Problems**: Sie
+kontrolliert den <span className="font-semibold" style={{ color: "#E69F00" }}>orangen</span>
+Term, also wie stark $f$ selbst (in exakter Arithmetik) Inputfehler
+verstärkt. Daran kann kein noch so guter Algorithmus etwas ändern. Die
+*Stabilität* beschreibt die **Robustheit des Algorithmus**: Sie
+kontrolliert den <span className="font-semibold" style={{ color: "#D55E00" }}>roten</span>
+Term, also wie viel zusätzlichen Fehler die Umsetzung
+$\wt{f}$ durch
+:k[Rundungsfehler]{#rounding-error} in
+:k[Gleitkommaarithmetik]{#floating-point} obendrauf legt. Ein
+stabiler Algorithmus für ein schlecht konditioniertes Problem liefert also trotzdem
+ungenaue Ergebnisse, aber nicht ungenauer, als das Problem es erzwingt.
+
+:::bemerkung[4.4.1 (Merkregel)]
+<p className="font-semibold">Schlecht konditionierte Teilschritte möglichst früh ausführen!</p>
+
+Warum? Nach der Fehlerfortpflanzungs-Schranke aus
+[Abschnitt 4.3](#sec-4.3) verstärkt die Kondition
+eines Teilschritts die angesammelten Fehler aller *vorangegangenen* Schritte.
+Ein schlecht konditionierter Schritt am Ende der Kette trifft auf einen Input, der
+schon viele Fehler trägt, und bläst sie alle auf. Derselbe Schritt am Anfang sieht
+nur den unvermeidbaren Inputfehler. Genau das haben wir am Varianz-Beispiel gesehen:
+Die Verschiebungsformel hebt sich die schlecht konditionierte Subtraktion (Stichwort
+:k[Auslöschung]{#cancellation}) bis zum Schluss auf, die
+Zwei-Pass-Formel zieht sie vor und ist deshalb stabil.
+:::
+
+### Wie geht es weiter?
+
+Im nächsten Kapitel wenden wir das neue Vokabular auf das wichtigste Rechenproblem der
+Statistik an: die numerische Lösung
+:k[linearer Gleichungssysteme]{#linear-system}
+$\bA\bx = \bb$. Die Konditionszahl $\kappa(\bA)$ sagt uns dann,
+wie genau die Lösung überhaupt sein *kann* – und die Stabilitätsanalyse, welche
+Lösungsverfahren diese Genauigkeit auch wirklich erreichen.
+
+*Vertiefung: Heath §1.2.*

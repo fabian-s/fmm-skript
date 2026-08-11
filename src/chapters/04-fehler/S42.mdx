@@ -1,0 +1,362 @@
+import { KehrwertWidget, SummenKonditionWidget } from "./widgets/S42Kondition";
+import { SelfTest } from "./widgets/S42Local";
+
+{/*
+  Abschnitt 4.2: Kondition.
+  Quelle: Folien 04-fehler.Rmd, Block „Kondition" (Z. 179–297): Motivation,
+  1/x-Beispiel, Definition absolute/relative Konditionszahl, Interpretation,
+  Beispiel f(x) = A^-1 x, Quiz und Aufgabe. Prosa eigenständig formuliert;
+  die Folien-Herleitung zur relativen Konditionszahl (Z. 240–246) ist hier
+  sauber als Beweis aufgeschrieben.
+*/}
+
+::quelle[Folien: 04-fehler, „Kondition".]
+
+In [Abschnitt 4.1](#sec-4.1) haben wir den Gesamtfehler
+einer numerischen Rechnung in zwei Teile zerlegt: den Fehler des Algorithmus selbst und
+den Folgefehler, der aus einem fehlerhaften Input entsteht. Um den zweiten Teil geht es
+jetzt. Inputfehler betrachten wir als *unvermeidbar*: Messwerte sind ungenau,
+Daten wurden gerundet gespeichert, und schon das Ablegen einer reellen Zahl als
+:k[Gleitkommazahl]{#floating-point} erzeugt einen relativen
+:k[Rundungsfehler]{#rounding-error} von der Größenordnung der
+:k[Maschinengenauigkeit]{#machine-epsilon}.
+
+Die entscheidende Beobachtung: Wie stark sich solche Inputfehler im Ergebnis
+niederschlagen, ist eine Eigenschaft des *Problems* $f$, noch bevor
+irgendein Algorithmus ins Spiel kommt. Stellen wir uns die Menge aller Inputs vor, die
+wir von $\bx$ nicht unterscheiden können, weil ihr relativer Fehler unter einer
+Toleranz $\delta$ liegt:
+
+$$
+E = \left\{ \wt{\bx} \colon \left\| \wt{\bx} - \bx \right\| / \left\| \bx \right\| \le \delta \right\}.
+$$
+
+Jeder Punkt in $E$ ist ein plausibler Input, also ist jeder Punkt der Bildmenge
+$R = f(E)$ ein plausibles Ergebnis. Ist $R$ *groß* im Vergleich
+zu $E$, bläst $f$ kleine Eingabestörungen zu großen
+Ergebnisänderungen auf. Wir nennen das Problem dann
+*schlecht konditioniert*. Vorsicht: Kein noch so guter Algorithmus kann das
+reparieren, denn er sieht nur $\wt{\bx}$ und kann nicht wissen, welcher Punkt
+von $E$ der „wahre" Input war.
+
+### 4.2.1 Ein Warnbeispiel: der Kehrwert
+
+Wie schlimm kann es werden? Ein bewusst extremes Beispiel von den Folien:
+
+:::beispiel[4.2.1 (Kehrwert nahe null)]
+Sei $f(x) = x^{-1}$ mit Input $x = 10^{-17}$, und sei der gestörte
+Input $\wt{x} = x + \cred{\eps}$ mit
+$\cred{\eps} \in \left(-10^{-17},\, 10^{-17}\right)$. Dann durchläuft
+$\wt{x}$ das Intervall $\left(0,\, 2 \cdot 10^{-17}\right)$ und
+damit
+
+$$
+f(\wt{x}) = \frac{1}{\wt{x}} \in \left( \tfrac{1}{2} \cdot 10^{17},\, \infty \right).
+$$
+
+Der Output kann also um *Größenordnungen* vom wahren Wert
+$f(x) = 10^{17}$ abweichen. Rechnen wir den relativen Outputfehler explizit
+aus. Die Störung $\cred{\eps}$ verfolgen wir in Rot:
+
+$$
+f(\wt{x}) - f(x) = \frac{1}{x + \cred{\eps}} - \frac{1}{x} = \frac{x - (x + \cred{\eps})}{(x + \cred{\eps})\, x} = \frac{-\cred{\eps}}{(x + \cred{\eps})\, x},
+$$
+
+und nach Division durch $f(x) = 1/x$:
+
+$$
+\cgreen{\frac{\left| f(\wt{x}) - f(x) \right|}{\left| f(x) \right|}} = \frac{\left| \cred{\eps} \right|}{\left| x + \cred{\eps} \right|} = \corange{\frac{|x|}{\left| x + \cred{\eps} \right|}} \cdot \frac{\left| \cred{\eps} \right|}{|x|}.
+$$
+
+Der <span style={{ color: "#009E73" }}>relative Outputfehler</span> ist also der
+<span style={{ color: "#D55E00" }}>relative Inputfehler</span>, multipliziert mit dem
+<span style={{ color: "#E69F00" }}>Verstärkungsfaktor</span>
+$\corange{|x| / |x + \cred{\eps}|}$. Für
+$\cred{\eps} \to -10^{-17}$ wächst dieser Faktor über alle Grenzen;
+insgesamt durchläuft der relative Outputfehler das gesamte Intervall
+$[0, \infty)$. Und das, obwohl die Störung absolut winziger ist als jede
+Messgenauigkeit der Welt: $|\cred{\eps}| < 10^{-17}$. Relativ zu
+$x$ kann sie allerdings bis zu 100 % betragen. Diesen Unterschied schauen wir
+uns gleich noch genauer an.
+:::
+
+:::vertiefung[Kondition-Spielwiese: der Kehrwert unter Störungen]
+<KehrwertWidget />
+:::
+
+### 4.2.2 Konditionszahlen
+
+Um „sensitiv gegenüber Inputfehlern" quantitativ zu fassen, setzen wir Output- und
+Inputfehler direkt ins Verhältnis, einmal für absolute, einmal für relative Fehler. Im
+Folgenden betrachten wir Abbildungen $f \colon \R^n \to \R^m$;
+$\left\| \cdot \right\|$ bezeichnet eine beliebige Vektor:k[norm]{#norm} bzw. die von ihr induzierte
+:k[Operatornorm]{#matrix-norm} für Matrizen ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
+
+:::definition[4.2.2 (Konditionszahl)]
+Sei $f$ ein Problem mit Input $\bx$.
+
+- Die *absolute Konditionszahl*
+  $\kappa_{abs} = \kappa_{abs}(f, \bx)$ ist die kleinste Zahl mit
+
+  $$
+  \left\| f(\wt{\bx}) - f(\bx) \right\| \le \kappa_{abs} \left\| \wt{\bx} - \bx \right\|, \quad \text{für } \wt{\bx} \to \bx.
+  $$
+
+- Die *relative Konditionszahl*
+  $\kappa_{rel} = \kappa_{rel}(f, \bx)$ ist die kleinste Zahl mit
+
+  $$
+  \frac{\left\| f(\wt{\bx}) - f(\bx) \right\|}{\left\| f(\bx) \right\|} \le \kappa_{rel} \frac{\left\| \wt{\bx} - \bx \right\|}{\left\| \bx \right\|}, \quad \text{für } \wt{\bx} \to \bx.
+  $$
+:::
+
+:::bemerkung[4.2.3 (Wie lesen wir das?)]
+
+- Der Zusatz „für $\wt{\bx} \to \bx$" bedeutet: Die Ungleichung muss
+  nicht für alle $\wt{\bx}$ gelten, sondern nur für hinreichend kleine
+  Störungen. $\kappa$ ist also der schlimmste Verstärkungsfaktor
+  *im Grenzfall* verschwindender Störung. Konditionszahlen sind asymptotische
+  Größen, und sie hängen sowohl vom Problem $f$ als auch von der
+  konkreten Stelle $\bx$ ab.
+
+- Für :k[differenzierbares]{#differentiability}
+  $f \colon \R \to \R$ können wir die Konditionszahlen direkt ausrechnen:
+  Wegen $f(\wt{x}) - f(x) \approx f'(x)\,(\wt{x} - x)$ (:k[Taylor-Näherung]{#taylor-series} erster Ordnung) gilt
+
+  $$
+  \kappa_{abs} = \left| f'(x) \right| \quad \text{und} \quad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|}.
+  $$
+
+- Meist ist $\kappa_{rel}$ die relevantere Größe: Gleitkommarechnung
+  erzeugt naturgemäß *relative* Fehler ([Abschnitt 4.1](#sec-4.1)), und relative Fehler
+  sind unabhängig von Maßeinheiten und Skalierung.
+:::
+
+Die Konditionszahl sortiert Probleme in gutartige und bösartige, mit einem wichtigen
+Extremfall:
+
+:::bemerkung[4.2.4 (Interpretation)]
+
+- *gut konditioniert* ($\kappa \lesssim 1$): Ein Inputfehler führt
+  zu einem ähnlich großen oder kleineren Outputfehler.
+
+- *schlecht konditioniert* ($\kappa \gg 1$): Jeglicher Inputfehler
+  führt zu einem viel größeren Outputfehler. Als Faustregel bei
+  $\kappa_{rel} \approx 10^k$: Wir verlieren bis zu $k$
+  signifikante Dezimalstellen gegenüber der Genauigkeit des Inputs.
+
+- *schlecht gestellt* (engl. *ill-posed*, $\kappa = \infty$):
+  Bei Inputfehlern ist das Problem praktisch nicht lösbar: Beliebig kleine Störungen
+  können das Ergebnis beliebig stark verfälschen.
+:::
+
+Mit den Formeln aus Bemerkung 4.2.3 können wir nun auch das Rätsel aus dem Warnbeispiel
+auflösen:
+
+:::beispiel[4.2.5 (Der Kehrwert, aufgelöst)]
+Für $f(x) = x^{-1}$ ist $f'(x) = -x^{-2}$, also an der Stelle
+$x = 10^{-17}$:
+
+$$
+\kappa_{abs} = \left| f'(x) \right| = \frac{1}{x^2} = 10^{34}, \qquad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|} = \frac{x^{-2} \cdot x}{x^{-1}} = 1.
+$$
+
+Absolut gemessen ist das Problem also katastrophal sensitiv ($\kappa_{abs} = 10^{34}$),
+relativ gemessen dagegen völlig harmlos: Asymptotisch wird ein relativer Inputfehler
+von 0,1 % zu einem relativen Outputfehler von ebenfalls 0,1 %. Das Drama in
+Beispiel 4.2.1 entsteht, weil die Störungen dort *relativ zu* $x$
+eben nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe (etwa ein
+additiver Messfehler) bedeutet bei winzigem $x$ eine riesige relative
+Störung. Merken wir uns: *Welche* Konditionszahl zählt, hängt davon ab, welche
+Fehlerart im Input unvermeidbar ist. Im Widget oben sehen wir beide Regime: Für
+kleine $\eps/x$ liegt die Verstärkung nahe 1, erst wenn $\eps$ in
+die Größenordnung von $x$ kommt, explodiert sie.
+:::
+
+### 4.2.3 Kondition eines linearen Gleichungssystems
+
+Nun zum wichtigsten Beispiel dieses Kapitels. Wir lösen ein
+:k[lineares Gleichungssystem]{#linear-system}
+$\bA \by = \bx$ mit invertierbarem
+$\bA \in \R^{n \times n}$, wobei die rechte Seite $\bx$ der
+fehlerbehaftete Input ist. Als Problem geschrieben:
+$f(\bx) = \bA^{-1} \bx = \by$, wobei die
+:k[Inverse]{#matrix-inverse} hier nur die Lösungsabbildung
+bezeichnet, nicht etwa eine Empfehlung, sie auszurechnen. Wie sensitiv reagiert die
+Lösung $\by$ auf Störungen von $\bx$? Die Antwort führt genau auf
+die *Konditionszahl der Matrix*
+$\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$,
+die wir in [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) kennengelernt
+haben.
+
+:::satz[4.2.6 (Kondition der Lösung eines LGS)]
+Sei $\bA \in \R^{n \times n}$ invertierbar und
+$f(\bx) = \bA^{-1} \bx$. Bezüglich einer beliebigen Vektornorm und der von
+ihr induzierten Operatornorm gilt dann
+
+$$
+\kappa_{abs} = \cgreen{\left\| \bA^{-1} \right\|}, \qquad \kappa_{rel} = \cgreen{\left\| \bA^{-1} \right\|} \, \frac{\left\| \bx \right\|}{\left\| \bA^{-1} \bx \right\|} \; \le \; \left\| \bA \right\| \cgreen{\left\| \bA^{-1} \right\|} = \corange{\kappa(\bA)}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+f(\wt{\bx}) - f(\bx) = \bA^{-1} \wt{\bx} - \bA^{-1} \bx = \bA^{-1} \cbred{\bh}
+$$
+
+::why[$f$ ist :k[linear]{#linear-map}; wir kürzen die Störung als $\cbred{\bh} = \wt{\bx} - \bx$ ab]
+:::
+
+:::schritt
+$$
+\left\| f(\wt{\bx}) - f(\bx) \right\| = \left\| \bA^{-1} \cbred{\bh} \right\| \le \cgreen{\left\| \bA^{-1} \right\|} \left\| \cbred{\bh} \right\| \quimpl \kappa_{abs} \le \cgreen{\left\| \bA^{-1} \right\|}
+$$
+
+::why[definierende Eigenschaft der Operatornorm: $\left\| \bA^{-1} \bv \right\| \le \left\| \bA^{-1} \right\| \left\| \bv \right\|$ für alle $\bv$ ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3))]
+:::
+
+:::schritt
+Keine kleinere Konstante genügt: Wählen wir $\cbred{\bh}$ (beliebig
+klein) entlang einer maximierenden Richtung, gilt in der Ungleichung Gleichheit.
+Also ist $\kappa_{abs} = \cgreen{\left\| \bA^{-1} \right\|}$.
+
+::why[die Operatornorm ist ein Maximum: $\cgreen{\left\| \bA^{-1} \right\|} = \max_{\bv \ne \bnull} \left\| \bA^{-1} \bv \right\| / \left\| \bv \right\|$, und eine maximierende Richtung dürfen wir beliebig klein skalieren]
+:::
+
+:::schritt
+$$
+\frac{\left\| \bA^{-1} \cbred{\bh} \right\| / \left\| \bA^{-1} \bx \right\|}{\left\| \cbred{\bh} \right\| / \left\| \bx \right\|} = \underbrace{\frac{\left\| \bA^{-1} \cbred{\bh} \right\|}{\left\| \cbred{\bh} \right\|}}_{\le\, \cgreen{\left\| \bA^{-1} \right\|}} \cdot \frac{\left\| \bx \right\|}{\left\| \bA^{-1} \bx \right\|} \quimpl \kappa_{rel} = \cgreen{\left\| \bA^{-1} \right\|} \, \frac{\left\| \bx \right\|}{\left\| \bA^{-1} \bx \right\|}
+$$
+
+::why[den Quotienten aus relativem Output- und Inputfehler umsortieren; dann liefern Schritt 2 und 3 wieder Schranke und Gleichheitsfall für den ersten Faktor]
+:::
+
+:::schritt
+$$
+\kappa_{rel} = \cgreen{\left\| \bA^{-1} \right\|} \, \frac{\left\| \bA \by \right\|}{\left\| \by \right\|} \le \left\| \bA \right\| \cgreen{\left\| \bA^{-1} \right\|} = \corange{\kappa(\bA)}
+$$
+
+::why[substituiere $\by = \bA^{-1} \bx$, also $\bx = \bA \by$; Operatornorm-Schranke $\left\| \bA \by \right\| \le \left\| \bA \right\| \left\| \by \right\|$]
+:::
+
+::::
+
+:::bemerkung[4.2.7 (Konditionszahl einer Matrix)]
+
+- Die relative Kondition des Gleichungslösens hängt von der rechten Seite
+  $\bx$ ab; $\corange{\kappa(\bA)} = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
+  ist die von $\bx$ unabhängige *Worst-Case*-Schranke – und sie wird
+  für ungünstige $\bx$ auch angenommen. Das erklärt im Nachhinein, warum
+  genau dieses Produkt in
+  [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) den Namen
+  *Konditionszahl von* $\bA$ bekommen hat.
+
+- Für die von $\left\| \cdot \right\|_2$ induzierte Operatornorm (*Spektralnorm*) gilt
+
+  $$
+  \kappa_2(\bA) = \frac{\sqrt{\lambda_{\max}\left(\bA^\top\bA\right)}}{\sqrt{\lambda_{\min}\left(\bA^\top\bA\right)}} = \frac{\sigma_{\max}(\bA)}{\sigma_{\min}(\bA)},
+  $$
+
+  das Verhältnis des größten zum kleinsten
+  :k[Singulärwert]{#singular-value-decomposition} (bzw. der
+  Wurzeln der extremen
+  :k[Eigenwerte]{#eigenvalue-eigenvector} von
+  $\bA^\top\bA$).
+:::
+
+<SelfTest
+  frage={
+    <>
+      Sei{" "}
+      <M>{"\\bA = \\begin{pmatrix} 2 & 0 & 0 \\\\ 0 & 5 & 0 \\\\ 0 & 0 & 0{,}1 \\end{pmatrix}"}</M>.
+      Was ist die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> bezüglich der 2-Norm: 2, 5,
+      20 oder 50?
+    </>
+  }
+>
+
+Für eine :k[Diagonalmatrix]{#diagonal-matrix} ist
+$\bA^\top\bA = \diag\left(4,\, 25,\, 0{,}01\right)$, die
+Singulärwerte sind also die Beträge der Diagonaleinträge:
+$\sigma \in \{2,\, 5,\, 0{,}1\}$. Damit
+
+$$
+\kappa_2(\bA) = \frac{\sigma_{\max}}{\sigma_{\min}} = \frac{5}{0{,}1} = 50.
+$$
+
+Vorsicht vor der Distraktor-Antwort 20 $= 2/0{,}1$: Der größte Singulärwert
+ist 5, nicht der erste Diagonaleintrag 2. Die Werte 2 und 5 wären nur Normen, keine
+Konditionszahlen; $\kappa_2$ misst das *Verhältnis* von stärkster zu
+schwächster Streckung.
+
+</SelfTest>
+
+### 4.2.4 Aufgabe: die Kondition einer Summe
+
+Zum Abschluss eine Aufgabe von den Folien. Versuchen wir es erst selbst, bevor wir die
+Lösung aufklappen. Sie sieht harmlos aus, trägt aber den Keim eines Phänomens in sich,
+das wir schon kennen.
+
+:::beispiel[4.2.8 (Aufgabe: Kondition der Summe)]
+Sei
+$f(\bx) = x_1 + x_2 = \binom{1}{1}^\top \bx = \symbf{1}^\top \bx$ mit
+$\bx \in \R^2$ und der euklidischen Norm
+$\left\| \cdot \right\|_2$.
+
+1. Was sind die Konditionszahlen?
+2. Für welche $\bx$ ist das Problem schlecht konditioniert?
+
+<details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
+<summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
+<div className="space-y-2 pt-2">
+
+**1.** Für die Störung $\cbred{\bh} = \wt{\bx} - \bx$
+liefert die
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
+
+$$
+\left| f(\wt{\bx}) - f(\bx) \right| = \left| \symbf{1}^\top \cbred{\bh} \right| \le \left\| \symbf{1} \right\|_2 \left\| \cbred{\bh} \right\|_2 = \sqrt{2}\, \left\| \cbred{\bh} \right\|_2,
+$$
+
+mit Gleichheit genau dann, wenn $\cbred{\bh}$ parallel zu
+$\symbf{1} = (1, 1)^\top$ liegt. Solche beliebig kleinen Störungen
+gibt es, also ist die Schranke scharf:
+$\kappa_{abs} = \sqrt{2}$. (Die Folien notieren nur
+$\kappa_{abs} \le \sqrt{2}$; der Gleichheitsfall von Cauchy-Schwarz
+liefert sogar Gleichheit.) Da $f$ linear ist, tritt derselbe
+Gleichheitsfall auch beim relativen Fehlerquotienten auf, und wie im Beweis von
+Satz 4.2.6 folgt
+
+$$
+\kappa_{rel} = \kappa_{abs}\, \frac{\left\| \bx \right\|_2}{\left| f(\bx) \right|} = \corange{\frac{\sqrt{2}\, \left\| \bx \right\|_2}{\left| x_1 + x_2 \right|}}.
+$$
+
+**2.** Schlecht konditioniert ist das Problem, wenn
+$\corange{\kappa_{rel}} \gg 1$, also wenn
+$\left| x_1 + x_2 \right| \approx 0$, während
+$\left\| \bx \right\|_2$ nicht klein ist, sprich für
+$x_1 \approx -x_2$, nahe der Antidiagonalen. Dort heben sich die beiden
+Summanden fast auf: Das ist exakt die
+:k[Auslöschung]{#cancellation} aus
+[Abschnitt 2.1](?k=02-algos#sec-2.1), jetzt als
+Konditionsaussage über das *Problem* „addiere zwei Zahlen", unabhängig
+davon, wie wir die Summe ausrechnen. Auf der Diagonalen
+$x_1 = x_2$ gilt dagegen $\kappa_{rel} = 1$: besser geht es
+nicht.
+
+</div>
+</details>
+:::
+
+:::vertiefung[Kondition-Spielwiese: die Summe zweier Zahlen in der Ebene]
+<SummenKonditionWidget />
+:::
+
+Diese Rechnung ist mehr als eine Fingerübung: In
+[Abschnitt 4.3](#sec-4.3) wird genau die Kondition der
+Differenz zweier fast gleicher Zahlen erklären, warum die
+Verschiebungsformel für die Varianz numerisch scheitert.
+
+*Vertiefung: Heath §1.2.5–1.2.6 (Fehlerfortpflanzung, Sensitivität und Kondition).*

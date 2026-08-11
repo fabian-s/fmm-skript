@@ -1,0 +1,428 @@
+import { RegressionWidget, ProjektionWidget } from "./widgets/S71Local";
+import { FigKQGeometrie } from "./widgets/S72Kondition";
+
+{/*
+  §7.1 Kleinste Quadrate: Problem und Motivation.
+  Grundlage: Folien 07-kq.Rmd, Auftakt (Vorkenntnisse) und Block
+  „Recap: Kleinste Quadrate" (Zeilen 1–154). Prosa eigenständig
+  ausformuliert; Widget-Code adaptiert aus interactive/heath-ch3
+  (QuadraticFitWidget, OrthogonalityWidget, Labels deutsch).
+*/}
+
+::quelle[Grundlage: Folien 07-kq, Auftakt und „Recap: Kleinste Quadrate".]
+
+In den bisherigen Kapiteln haben wir
+:k[lineare Gleichungssysteme]{#linear-system}
+$\bA\bx = \bb$ mit quadratischer Matrix gelöst, also genauso viele Gleichungen
+wie Unbekannte. In der Statistik ist die Lage fast immer anders: Wir haben
+*viel mehr* Beobachtungen als Modellparameter, und die Beobachtungen sind
+fehlerbehaftet. Ein Gleichungssystem mit mehr Gleichungen als Unbekannten
+(*überbestimmt*, engl. *overdetermined*) hat in aller Regel gar keine exakte
+Lösung. Was tun? Wir geben den Anspruch auf, alle Gleichungen exakt zu erfüllen, und
+suchen stattdessen den Vektor, der sie *möglichst gut* erfüllt, gemessen an der
+:k[euklidischen Norm]{#euclidean-norm} des Fehlers. Das ist die
+*Methode der Kleinsten Quadrate* (engl. *least squares*), das Arbeitspferd
+der gesamten Regressionsrechnung. Dieses Kapitel behandelt, wie man solche Probleme
+*numerisch* löst: stabil, effizient und mit kontrollierbarem Fehler.
+
+Wir bauen dabei auf früheren Kapiteln auf:
+:k[Kondition und Konditionszahl]{#condition-number}
+$\kappa(\bA)$, :k[Matrixnormen]{#norm} (besonders
+$\|\cdot\|_2$),
+:k[Orthogonalmatrizen]{#orthogonal-matrix}, die
+:k[LU-]{#lu-decomposition} und
+:k[Cholesky-Zerlegung]{#cholesky-factorization} sowie die
+:k[Singulärwertzerlegung]{#singular-value-decomposition}
+$\bA = \bU\bSigma\bV^\top$ (auch in reduzierter Form) mit der
+:k[Pseudoinversen]{#pseudoinverse} $\bA\pinv$. Aus
+der linearen Algebra brauchen wir
+:k[orthogonale Projektionen]{#projection} auf
+:k[Unterräume]{#subspace} und die
+:k[Normalengleichungen]{#normal-equations}, aus der Statistik
+das :k[lineare Regressionsmodell]{#linear-regression} und die
+Methode der Kleinsten Quadrate (OLS), die wir hier aus numerischer Sicht neu betrachten.
+
+<h3 id="sec-7.1-problem">Vom Gleichungssystem zum Ausgleichsproblem</h3>
+
+:::definition[7.1.1 (Kleinste-Quadrate-Problem, KQ-Problem)]
+Gegeben seien eine Matrix $\bA \in \R^{m \times n}$ und ein Vektor
+$\bb \in \R^m$. Gesucht ist ein Vektor $\wh{\bx} \in \R^n$,
+der die Norm des *Residuums* minimiert:
+
+$$
+\wh{\bx} \in \argmin_{\bx \in \R^n} \left\| \bA\bx - \bb \right\|_2\,.
+$$
+:::
+
+Da $t \mapsto t^2$ auf $[0, \infty)$ streng monoton wächst, können wir
+genauso gut $\left\| \bA\bx - \bb \right\|_2^2$ minimieren – dieselben
+Minimalstellen, aber ohne Wurzel. Ausgeschrieben ist das eine Summe von Quadraten,
+
+$$
+\left\| \bA\bx - \bb \right\|_2^2 = \sum_{i=1}^m \left( (\bA\bx)_i - b_i \right)^2,
+$$
+
+daher der Name der Methode.
+
+:::bemerkung[7.1.2]
+Hat das Gleichungssystem $\bA\bx = \bb$ eine exakte Lösung
+$\bx^*$, dann gilt $\left\| \bA\bx^* - \bb \right\|_2 = 0$,
+und $\bx^*$ löst automatisch auch das KQ-Problem. Das KQ-Problem
+verallgemeinert also das Lösen von Gleichungssystemen. Interessant ist es vor allem für
+„Gleichungssysteme" $\bA\bx \approx \bb$, die *keine* exakte Lösung
+besitzen: typischerweise überbestimmte Systeme mit $m > n$, bei denen
+$\bb$ wegen Messfehlern nicht im
+:k[Spaltenraum]{#span} von $\bA$ liegt.
+:::
+
+<h3 id="sec-7.1-motivation">Motivation: Regression und Ausgleichsrechnung</h3>
+
+Warum ist gerade dieses Problem so wichtig? Weil die KQ-Methode das Fundament von
+Statistik und Machine Learning ist: Jedes Mal, wenn wir ein lineares Modell an Daten
+anpassen, lösen wir ein KQ-Problem.
+
+:::beispiel[7.1.3 (Lineare Regression)]
+Wir wollen Immobilienpreise anhand der Wohnfläche vorhersagen. Unsere Daten sind
+$n$ Beobachtungen $(x_i, y_i)$ mit $x_i$ = Fläche in
+$m^2$ und $y_i$ = Preis in €. Als Modell wählen wir eine Gerade mit
+Fehlerterm $\epsilon_i$:
+
+$$
+y_i = \beta_0 + \beta_1 x_i + \epsilon_i, \qquad i = 1, \ldots, n.
+$$
+
+In Matrixform lauten die $n$ Modellgleichungen
+$\bb \approx \bA\bbeta$ mit
+
+$$
+\cbred{\bA} = \begin{pmatrix} 1 & x_1 \\ 1 & x_2 \\ \vdots & \vdots \\ 1 & x_n \end{pmatrix}, \qquad \bb = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}, \qquad \cblue{\bbeta} = \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix}.
+$$
+
+Sobald $n > 2$ Datenpunkte nicht alle exakt auf einer gemeinsamen Geraden
+liegen (bei verrauschten Messungen praktisch immer), liegt $\bb$ nicht im
+Spaltenraum von $\cbred{\bA}$: Kein Parameterpaar
+$(\beta_0, \beta_1)$ erfüllt alle $n$ Gleichungen zugleich. Die
+KQ-Lösung
+
+$$
+\cblue{\wh{\bbeta}} = (\cbred{\bA}^\top\cbred{\bA})^{-1} \cbred{\bA}^\top \bb
+$$
+
+minimiert stattdessen die Summe der quadrierten Abweichungen
+$\sumin \left( y_i - \beta_0 - \beta_1 x_i \right)^2 = \left\| \cbred{\bA}\cblue{\bbeta} - \bb \right\|_2^2$
+und ist damit der Kleinste-Quadrate-Schätzer (OLS) aus der Einführungsvorlesung.
+Woher die Lösungsformel kommt, klären die Sätze 7.1.5 und 7.1.7 unten.
+:::
+
+Die lineare Regression ist nur der Anfang. KQ-Probleme stecken auch in
+*generalisierten linearen Modellen* und *additiven Modellen* (dort löst man
+iterativ gewichtete KQ-Probleme), im Training
+:k[neuronaler Netze]{#neural-network} (der quadratische
+Verlust ist ein KQ-Kriterium), in der Computer Vision (Kamerakalibrierung,
+3D-Rekonstruktion aus 2D-Bildern), im Signal Processing (De-Noising, Signalschätzung)
+und in der Geodäsie (GPS-Positionsbestimmung gleicht widersprüchliche Distanzmessungen
+aus). Wer KQ-Probleme schnell und stabil lösen kann, hat also einen Universalschlüssel
+in der Hand.
+
+:::vertiefung[Regressionsgerade von Hand anpassen]
+<p className="my-2">Jeder Punkt ist ein (fiktiver) Wohnungsverkauf: Fläche gegen Preis in Tsd. €. Die <span className="font-semibold" style={{ color: "#0072B2" }}>blaue Gerade</span> gehört zum aktuell eingestellten Parameterpaar $(\beta_0, \beta_1)$, jede <span className="font-semibold" style={{ color: "#9E57D5" }}>violette Strecke</span> zeigt ein Residuum $y_i - \beta_0 - \beta_1 x_i$. Probieren wir aus, wie klein wir die Summe der Residuen*quadrate* mit den beiden Reglern bekommen, und vergleichen dann mit der KQ-Geraden. Besser als sie kann keine Wahl von $(\beta_0, \beta_1)$ abschneiden, denn sie löst genau das Minimierungsproblem aus Definition 7.1.1.</p>
+
+<RegressionWidget />
+
+<p className="my-2 text-sm">Auffällig ist auch, wie *empfindlich* das Kriterium auf große Residuen reagiert: Quadrieren bestraft einen doppelt so großen Fehler viermal so stark. Deshalb zieht die KQ-Gerade spürbar zu Ausreißern hin – ein statistischer Preis für die schöne Geometrie und die effizienten Algorithmen, die wir in diesem Kapitel entwickeln.</p>
+:::
+
+<h3 id="sec-7.1-geometrie">Die Geometrie: Projektion auf den Spaltenraum</h3>
+
+Der Schlüssel zum KQ-Problem ist ein Perspektivwechsel. Während $\bx$ alle
+Vektoren in $\R^n$ durchläuft, durchläuft $\cblue{\bA\bx}$ genau
+den :k[Spaltenraum]{#span}
+$\col(\bA) \subseteq \R^m$, also alle
+:k[Linearkombinationen]{#linear-combination} der Spalten von
+$\bA$. Das KQ-Problem fragt daher: Welcher Punkt des Unterraums
+$\col(\bA)$ liegt am nächsten an $\bb$? Aus der linearen Algebra
+wissen wir: der Fußpunkt des Lots, also die
+:k[orthogonale Projektion]{#projection} von $\bb$ auf
+$\col(\bA)$. Das folgende Resultat macht diese Anschauung präzise.
+
+<FigKQGeometrie />
+
+:::satz[7.1.4 (KQ-Lösung als Projektion)]
+Die Lösungsmenge des KQ-Problems zu $\bA$ und $\bb$ gleicht der
+Lösungsmenge des linearen Gleichungssystems
+
+$$
+\bA\wh{\bx} = \cgreen{\wh{\bb}} \qquad \text{mit } \cgreen{\wh{\bb}} = \proj_{\col(\bA)} \bb\,.
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir zerlegen $\bb$ orthogonal bezüglich $S := \col(\bA)$:
+
+$$
+\bb = \cgreen{\wh{\bb}} + \cpurp{\br}, \qquad \cgreen{\wh{\bb}} = \proj_{S} \bb \in S, \quad \cpurp{\br} \perp S\,.
+$$
+
+::why[$\R^m = \col(\bA) \oplus \col(\bA)^\perp$: Zerlegung in Unterraum und :k[orthogonales Komplement]{#orthogonal-complement} existiert und ist eindeutig]
+:::
+
+:::schritt
+Für ein beliebiges $\bx \in \R^n$ schreiben wir das Residuum als
+
+$$
+\bb - \cblue{\bA\bx} = \underbrace{\left( \cgreen{\wh{\bb}} - \cblue{\bA\bx} \right)}_{\in\, S} + \underbrace{\cpurp{\br}}_{\perp\, S}\,.
+$$
+
+::why[$\cblue{\bA\bx} \in S$ und $\cgreen{\wh{\bb}} \in S$; $S$ ist ein :k[Untervektorraum]{#subspace}, also liegt auch die Differenz in $S$]
+:::
+
+:::schritt
+$$
+\left\| \bb - \cblue{\bA\bx} \right\|_2^2 = \left\| \cgreen{\wh{\bb}} - \cblue{\bA\bx} \right\|_2^2 + \left\| \cpurp{\br} \right\|_2^2 \;\geq\; \left\| \cpurp{\br} \right\|_2^2\,.
+$$
+
+::why[Satz des Pythagoras: für $\bu \perp \bv$ gilt $\left\| \bu + \bv \right\|_2^2 = \left\| \bu \right\|_2^2 + \left\| \bv \right\|_2^2$]
+:::
+
+:::schritt
+Die untere Schranke $\left\| \cpurp{\br} \right\|_2^2$ hängt nicht von
+$\bx$ ab, und Gleichheit gilt genau für
+$\cblue{\bA\bx} = \cgreen{\wh{\bb}}$. Also minimiert
+$\bx$ das KQ-Kriterium genau dann, wenn
+$\bA\bx = \cgreen{\wh{\bb}}$ gilt.
+
+::why[$\left\| \bv \right\|_2 = 0 \quequiv \bv = \bnull$ (Definitheit der Norm)]
+:::
+
+::::
+
+Der Beweis zeigt mehr als die Behauptung: Das optimale Residuum ist genau der Anteil
+$\cpurp{\br}$ von $\bb$, der *senkrecht* auf
+$\col(\bA)$ steht: der Teil der Daten, den das Modell prinzipiell nicht
+erklären kann. Vorsicht: Das Gleichungssystem
+$\bA\wh{\bx} = \cgreen{\wh{\bb}}$ ist stets lösbar (denn
+$\cgreen{\wh{\bb}} \in \col(\bA)$), aber seine Lösung ist nur dann
+eindeutig, wenn die Spalten von $\bA$
+:k[linear unabhängig]{#linear-independence} sind. Dazu gleich
+mehr.
+
+:::vertiefung[Projektion und senkrechtes Residuum zum Anfassen]
+<p className="my-2">Verfolgen wir Satz 7.1.4 an einem Miniaturbeispiel: Der Regler schiebt den Kandidaten $\cblue{\bA\bx}$ den Spaltenraum entlang; daneben stehen $\left\| \cpurp{\br} \right\|_2^2$ und der Winkel zwischen $\ba$ und $\cpurp{\br}$. Das Minimum liegt exakt dort, wo das Residuum senkrecht steht und der Kandidat dabei die grün markierte Projektion $\cgreen{\wh{\bb}}$ trifft.</p>
+
+<ProjektionWidget />
+:::
+
+<h3 id="sec-7.1-normalengleichungen">Normalengleichungen und eindeutige Lösung</h3>
+
+Satz 7.1.4 ist geometrisch erhellend, aber unpraktisch: Um
+$\cgreen{\wh{\bb}}$ auszurechnen, müssten wir die Projektion schon kennen.
+Die Orthogonalitätsbedingung lässt sich aber in ein Gleichungssystem übersetzen, das nur
+$\bA$ und $\bb$ enthält: die aus der linearen Algebra bekannten
+:k[Normalengleichungen]{#normal-equations}.
+
+:::satz[7.1.5 (Normalengleichungen)]
+Die Lösungsmenge des KQ-Problems gleicht der Lösungsmenge der
+*Normalengleichungen*
+
+$$ {#eq-7.1.1}
+\bA^\top \bA\, \wh{\bx} = \bA^\top \bb\,.
+$$
+:::
+
+::::beweis
+
+:::schritt
+Nach Satz 7.1.4 löst $\wh{\bx}$ das KQ-Problem genau dann, wenn
+$\bA\wh{\bx} = \cgreen{\wh{\bb}}$ gilt. Das wiederum ist genau dann der
+Fall, wenn das Residuum *nur* aus dem senkrechten Anteil besteht:
+
+$$
+\bA\wh{\bx} = \cgreen{\wh{\bb}} \quequiv \bb - \bA\wh{\bx} = \cpurp{\br} \perp \col(\bA)\,.
+$$
+
+::why[Zerlegung aus dem Beweis von Satz 7.1.4: $\bb - \bA\wh{\bx} = (\cgreen{\wh{\bb}} - \bA\wh{\bx}) + \cpurp{\br}$ mit $\cgreen{\wh{\bb}} - \bA\wh{\bx} \in \col(\bA)$ und $\cpurp{\br} \perp \col(\bA)$]
+:::
+
+:::schritt
+Senkrecht auf dem ganzen Spaltenraum zu stehen heißt, senkrecht auf jeder einzelnen
+Spalte $\ba_j$ zu stehen:
+
+$$
+\bb - \bA\wh{\bx} \perp \col(\bA) \quequiv \ba_j^\top \left( \bb - \bA\wh{\bx} \right) = 0 \;\; \forall j \quequiv \bA^\top \left( \bb - \bA\wh{\bx} \right) = \bnull\,.
+$$
+
+::why[$\col(\bA) = \spann\{\ba_1, \ldots, \ba_n\}$: senkrecht auf dem :k[Spann]{#span} heißt senkrecht auf jedem Erzeuger; $\bA^\top \bv$ stapelt gerade die Skalarprodukte $\ba_j^\top \bv$]
+:::
+
+:::schritt
+$$
+\bA^\top \bb - \bA^\top\bA\,\wh{\bx} = \bnull \quequiv \bA^\top\bA\,\wh{\bx} = \bA^\top\bb\,.
+$$
+
+::why[Ausmultiplizieren und Umstellen]
+:::
+
+::::
+
+:::bemerkung[7.1.6 (Analysis-Perspektive)]
+Dieselben Gleichungen liefert auch die Analysis, ganz ohne Geometrie: Die Zielfunktion
+$g(\bx) = \left\| \bA\bx - \bb \right\|_2^2 = \bx^\top\bA^\top\bA\bx - 2\,\bb^\top\bA\bx + \bb^\top\bb$
+ist eine :k[konvexe]{#convex-function}
+:k[quadratische Funktion]{#quadratic-form} mit
+:k[Gradient]{#gradient}
+
+$$
+\nabla g(\bx) = 2\,\bA^\top\bA\,\bx - 2\,\bA^\top\bb\,.
+$$
+
+Nullsetzen ergibt exakt (7.1.1); wegen der Konvexität ist die notwendige Bedingung auch
+hinreichend. Diese Sichtweise wird uns im Optimierungsteil der Vorlesung wieder
+begegnen (vgl. MML §7.1).
+:::
+
+Bleibt die Frage nach der Eindeutigkeit. Sie hängt am
+:k[Rang]{#rank} von $\bA$: Genau bei vollem
+Spaltenrang gibt es nur eine Lösung.
+
+:::satz[7.1.7 (Eindeutige Lösung bei vollem Spaltenrang)]
+Falls $\rang(\bA) = n$, ist $\bA^\top\bA$
+:k[invertierbar]{#matrix-inverse} und das KQ-Problem hat die
+eindeutige Lösung
+
+$$
+\wh{\bx} = (\bA^\top\bA)^{-1} \bA^\top \bb =: \bA\pinv \bb\,.
+$$
+:::
+
+::::beweis
+
+:::schritt
+Sei $\bx \neq \bnull$ beliebig. Wegen $\rang(\bA) = n$ sind
+die Spalten von $\bA$ linear unabhängig, also
+$\bA\bx \neq \bnull$.
+
+::why[volle Spaltenzahl im Rang $\quimpl$ Spalten linear unabhängig $\quimpl$ :k[Kern]{#kernel} $= \{\bnull\}$]
+:::
+
+:::schritt
+Damit ist $\bA^\top\bA$
+:k[symmetrisch]{#symmetric-matrix} und
+:k[positiv definit]{#positive-definite}:
+
+$$
+\bx^\top \bA^\top\bA\, \bx = \left\| \bA\bx \right\|_2^2 > 0 \quad \text{für alle } \bx \neq \bnull\,.
+$$
+
+::why[$\bx^\top\bA^\top\bA\bx = (\bA\bx)^\top(\bA\bx)$; Definitheit der Norm]
+:::
+
+:::schritt
+Eine positiv definite Matrix ist invertierbar. Die Normalengleichungen (7.1.1) haben
+daher genau eine Lösung, und Auflösen liefert
+$\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$.
+
+::why[positiv definit $\quimpl$ alle :k[Eigenwerte]{#eigenvalue-eigenvector} $> 0$ $\quimpl$ $\det(\bA^\top\bA) \neq 0$]
+:::
+
+::::
+
+Die Matrix $\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top$ ist genau die aus dem
+SVD-Kapitel bekannte
+:k[Pseudoinverse]{#pseudoinverse} von $\bA$
+(eingeschränkt auf den Fall $\rang(\bA) = n$): Für quadratisches,
+invertierbares $\bA$ gilt $\bA\pinv = \bA^{-1}$, und allgemein
+löst $\bA\pinv\bb$ das KQ-Problem. Wie man $\wh{\bx}$
+*numerisch* am besten berechnet (über die Normalengleichungen sicher
+*nicht* immer!), ist das Thema der Abschnitte
+[7.3](#sec-7.3) bis [7.6](#sec-7.6); zuvor klären wir in Abschnitt
+[7.2](#sec-7.2), wie gut das Problem überhaupt *konditioniert* ist.
+
+:::beispiel[7.1.8 (Rechenbeispiel: Regressionsgerade durch drei Punkte)]
+Rechnen wir die Lösungsformel einmal komplett durch. Drei Wohnungen wurden verkauft:
+$50\,m^2$ für $250$, $75\,m^2$ für $350$ und
+$100\,m^2$ für $500$ (Preise in Tsd. €). Mit dem Modell aus
+Beispiel 7.1.3:
+
+$$
+\cbred{\bA} = \begin{pmatrix} 1 & 50 \\ 1 & 75 \\ 1 & 100 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 250 \\ 350 \\ 500 \end{pmatrix}.
+$$
+
+Wir bilden die Bausteine der Normalengleichungen:
+
+$$
+\cbred{\bA^\top\bA} = \begin{pmatrix} 3 & 225 \\ 225 & 18\,125 \end{pmatrix}, \qquad \corange{\bA^\top\bb} = \begin{pmatrix} 1\,100 \\ 88\,750 \end{pmatrix}.
+$$
+
+Wegen
+$\det(\cbred{\bA^\top\bA}) = 3 \cdot 18\,125 - 225^2 = 54\,375 - 50\,625 = 3\,750 \neq 0$
+ist die Lösung eindeutig (Satz 7.1.7), und mit der Inversionsformel für
+$2 \times 2$-Matrizen erhalten wir
+
+$$
+\cblue{\wh{\bbeta}} = (\cbred{\bA^\top\bA})^{-1} \corange{\bA^\top\bb} = \frac{1}{3\,750} \begin{pmatrix} 18\,125 & -225 \\ -225 & 3 \end{pmatrix} \begin{pmatrix} 1\,100 \\ 88\,750 \end{pmatrix} = \begin{pmatrix} -25/3 \\ 5 \end{pmatrix} \approx \begin{pmatrix} -8{,}33 \\ 5 \end{pmatrix}.
+$$
+
+Jeder Quadratmeter kostet also geschätzt $5\,000$ € mehr. Zur Probe berechnen
+wir angepasste Werte und Residuum:
+
+$$
+\cgreen{\wh{\bb}} = \cbred{\bA}\cblue{\wh{\bbeta}} = \frac{1}{3}\begin{pmatrix} 725 \\ 1\,100 \\ 1\,475 \end{pmatrix} \approx \begin{pmatrix} 241{,}7 \\ 366{,}7 \\ 491{,}7 \end{pmatrix}, \qquad \cpurp{\br} = \bb - \cgreen{\wh{\bb}} = \frac{1}{3}\begin{pmatrix} 25 \\ -50 \\ 25 \end{pmatrix}.
+$$
+
+Tatsächlich gilt
+$\cbred{\bA}^\top \cpurp{\br} = \bnull$: Die Summe der Residuen ist
+$(25 - 50 + 25)/3 = 0$, und
+$\sumin x_i r_i = (50 \cdot 25 - 75 \cdot 50 + 100 \cdot 25)/3 = 0$. Das
+Residuum steht senkrecht auf beiden Spalten, genau wie Satz 7.1.5 verspricht. Der
+minimale Zielfunktionswert ist
+$\left\| \cpurp{\br} \right\|_2^2 = (625 + 2\,500 + 625)/9 = 1\,250/3 \approx 416{,}7$
+.
+:::
+
+<h3 id="sec-7.1-quiz">Selbsttest</h3>
+
+Zum Abschluss vier Aussagen über die Pseudoinverse und Projektionen (aus der Vorlesung).
+Welche sind wahr? Es sei dabei $\rang(\bA) = n$ mit $m > n$ und
+$\wh{\bx} = \bA\pinv\bb$.
+
+::::quiz
+
+:::frage{falsch}
+$\bA \bA\pinv = \bI_m$
+
+$\bA\bA\pinv = \bA(\bA^\top\bA)^{-1}\bA^\top$ ist die
+Projektionsmatrix auf $\col(\bA)$; die Identität auf $\R^m$ ist das
+nur, wenn $\col(\bA) = \R^m$ gilt, also für invertierbares quadratisches
+$\bA$. (Richtig ist dagegen stets $\bA\pinv\bA = \bI_n$ bei vollem
+Spaltenrang.)
+:::
+
+:::frage{wahr}
+$\bA \bA\pinv \bb = \proj_{\col(\bA)} \bb$
+
+$\bA\bA\pinv\bb = \bA\wh{\bx} = \cgreen{\wh{\bb}}$: die KQ-Lösung
+bildet $\bb$ gerade auf seine Projektion in den Spaltenraum ab (Satz 7.1.4).
+:::
+
+:::frage{wahr}
+$\br = \bb - \bA\wh{\bx} \perp \col(\bA)$
+
+Das ist genau die Aussage der Normalengleichungen:
+$\bA^\top(\bb - \bA\wh{\bx}) = \bnull$ heißt, das Residuum steht senkrecht
+auf allen Spalten von $\bA$.
+:::
+
+:::frage{wahr}
+$\bb = \proj_{V} \bb + \proj_{V^\perp} \bb$ für jeden Untervektorraum
+$V \subseteq \R^m$
+
+Wegen $\R^m = V \oplus V^\perp$ zerfällt jeder Vektor eindeutig in seine
+Anteile in $V$ und im orthogonalen Komplement $V^\perp$.
+:::
+
+::::
+
+*Vertiefung: Heath §3.1–3.2; MML §7.1 (Gradienten-Perspektive) und §9.2 (lineare
+Regression aus statistischer Sicht).*

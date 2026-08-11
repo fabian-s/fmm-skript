@@ -1,0 +1,210 @@
+import { FibonacciStepper } from "./widgets/FibonacciStepper";
+
+::quelle[Folien: 02-algos, „Beispiel: Fibonacci-Zahlen" bis „Gute Algorithmen".]
+
+In [Abschnitt 2.1](#sec-2.1) haben wir Algorithmen abstrakt definiert: als Verkettung
+$\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$ elementarer Rechenschritte. Diese
+Definition bleibt blass, solange wir sie nicht einmal vollständig durchspielen. Das tun
+wir jetzt an einem Problem, das einfach genug ist, um jeden einzelnen Schritt
+hinzuschreiben, und trotzdem reich genug, um uns durch das ganze Kapitel zu begleiten:
+den Fibonacci-Zahlen. Danach ordnen wir das Beispiel in die Landschaft der
+Algorithmenarten ein, die uns in Statistik und Machine Learning begegnen, und überlegen,
+was einen *guten* Algorithmus eigentlich auszeichnet.
+
+### 2.2.1 Beispiel: Fibonacci-Zahlen
+
+:::definition[2.2.1 (Fibonacci-Zahlen)]
+Die *Fibonacci-Zahlen* sind die :k[Folge]{#sequence} $(x_n)_{n \in \N}$ mit
+
+$$
+x_1 = 0, \quad x_2 = 1, \quad x_{n+1} = \cblue{x_n} + \cgreen{x_{n-1}} \quad (n \ge 2).
+$$
+:::
+
+Jedes Folgenglied ist also die Summe seiner beiden Vorgänger; die Folge beginnt mit
+$0, 1, 1, 2, 3, 5, 8, 13, 21, \dots$ (Manche Bücher lassen die Folge bei $1, 1$ oder mit
+dem Index $0$ beginnen; wir bleiben bei der Konvention der Folien.) Unser numerisches
+Problem lautet: *Berechne die ersten $n$ Fibonacci-Zahlen.* In der Sprache von
+[Abschnitt 2.1](#sec-2.1): Das Problem ist die Abbildung $f$ mit Input $n$ und Lösung
+$f(n) = (x_1, \dots, x_n)$.
+
+Wie berechnen wir das? Die Definition selbst gibt den Weg vor: Wir bauen den
+Ergebnisvektor von links nach rechts auf und gewinnen jeden neuen Eintrag durch *eine*
+Addition aus den beiden zuletzt berechneten. Als Verkettung elementarer Schritte
+(:k[Komposition]{#function-composition} von Funktionen) aufgeschrieben:
+
+:::algorithmus[2.2.2 (Fibonacci, iterativ)]
+$$
+\wt{f} : \N \to \N_0^n, \qquad \wt{f}(n) = \left(\wt{f}_n \circ \cdots \circ \wt{f}_3 \circ \wt{f}_2 \circ \wt{f}_1\right)(n)
+$$
+
+mit den elementaren Schritten
+
+$$
+\wt{f}_1(n) = 0, \qquad \wt{f}_2(x) = (x, 1), \qquad \wt{f}_{i+1}(x_1, \dots, x_i) = \left(x_1, \dots, x_i,\ \corange{\cblue{x_i} + \cgreen{x_{i-1}}}\right) \quad (i \ge 2).
+$$
+:::
+
+Lesen wir die Verkettung wie immer von rechts nach links: $\wt{f}_1$ ignoriert den Input
+und setzt den Startwert $x_1 = 0$; $\wt{f}_2$ hängt $x_2 = 1$ an; jeder weitere Schritt
+$\wt{f}_{i+1}$ hängt an das bisher berechnete Tupel die Summe aus dem
+$\cblue{\text{letzten}}$ und dem $\cgreen{\text{vorletzten}}$ Element als
+$\corange{\text{neues Element}}$ an. Nach dem letzten Schritt $\wt{f}_n$ steht das
+vollständige Ergebnis da. (Kleine Korrektur gegenüber den Folien: Da $x_1 = 0$ ist, leben
+die Outputs in $\N_0^n$, nicht in $\N^n$.)
+
+:::beispiel[2.2.3 (Die ersten 6 Fibonacci-Zahlen)]
+Berechnen wir $\wt{f}(6)$ Schritt für Schritt. Die Farben verfolgen die Rollen aus
+Algorithmus 2.2.2: $\cblue{\text{letztes Element}}$,
+$\cgreen{\text{vorletztes Element}}$, $\corange{\text{neu berechnete Summe}}$.
+
+$$
+\begin{aligned}
+\wt{f}_1(6) &= 0 \\
+\wt{f}_2(0) &= (0, 1) \\
+\wt{f}_3(\cgreen{0}, \cblue{1}) &= (0, 1, \corange{1}) \\
+\wt{f}_4(0, \cgreen{1}, \cblue{1}) &= (0, 1, 1, \corange{2}) \\
+\wt{f}_5(0, 1, \cgreen{1}, \cblue{2}) &= (0, 1, 1, 2, \corange{3}) \\
+\wt{f}_6(0, 1, 1, \cgreen{2}, \cblue{3}) &= (0, 1, 1, 2, 3, \corange{5})
+\end{aligned}
+$$
+
+Ergebnis: $\wt{f}(6) = (0, 1, 1, 2, 3, 5)$ – vier Additionen
+($\corange{1}, \corange{2}, \corange{3}, \corange{5}$) für sechs Zahlen.
+:::
+
+### 2.2.2 Vom Algorithmus zum Programm
+
+Der Algorithmus lässt sich fast wörtlich in Code übersetzen. Lege zuerst einen Vektor der
+Länge $n$ an, mit Nullen vorbelegt; damit ist $x_1 = 0$ bereits erledigt. Setze dann
+(falls $n > 1$) das zweite Element auf $1$. Durchlaufe schließlich $i = 2, \dots, n-1$ und
+setze in jedem Durchlauf $x_{i+1} = \cblue{x_i} + \cgreen{x_{i-1}}$. In R:
+
+```r
+fibonacci <- function(n) {
+  x <- numeric(n)  # Vektor (0, ..., 0) der Länge n
+  if (n > 1) {
+    x[2] <- 1
+  }
+  if (n > 2) {
+    for (i in 2:(n - 1)) {
+      x[i + 1] <- x[i] + x[i - 1]
+    }
+  }
+  x
+}
+```
+
+Eine Schleife, eine Addition pro Durchlauf, und jedes Zwischenergebnis wird genau einmal
+berechnet und dann wiederverwendet.
+
+Dass hier *nichts doppelt* gerechnet wird, ist keine Selbstverständlichkeit. Die
+Definition 2.2.1 legt nämlich noch einen zweiten, verführerisch eleganten Weg nahe: Um
+$x_n$ zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$
+auf, ohne Zwischenergebnisse zu speichern. Das liefert dieselben Zahlen, aber zu einem
+absurden Preis: Beide Teilaufrufe berechnen große Teile der Folge unabhängig voneinander
+noch einmal, und deren Teilaufrufe wieder. Das folgende Widget stellt beide Varianten
+nebeneinander; die genaue Analyse, *wie* schnell die naive Rekursion explodiert, folgt in
+[Abschnitt 2.5](#sec-2.5).
+
+:::vertiefung[Fibonacci-Stepper: Iteration gegen naive Rekursion, mit Zählern]
+<FibonacciStepper />
+:::
+
+### 2.2.3 Selbsttest
+
+Ordnen wir Algorithmus 2.2.2 in die Arten aus [Abschnitt 2.1](#sec-2.1) ein. Für jede
+Aussage: wahr oder falsch?
+
+::::quiz
+
+:::frage{wahr}
+Der Algorithmus ist *exakt*.
+
+Es gilt $f(n) = \wt{f}(n)$: Der Algorithmus liefert genau die definierten
+Fibonacci-Zahlen, keine Näherung. (Die Einschränkung „bis auf
+:k[Rundungsfehler]{#rounding-error}" aus der Definition greift hier erst, wenn $x_n$ für
+sehr großes $n$ den exakt darstellbaren Ganzzahlbereich der
+:k[Gleitkommazahlen]{#floating-point} verlässt.)
+:::
+
+:::frage{falsch}
+Der Algorithmus ist *approximativ*.
+
+Approximativ hieße $f(n) \approx \wt{f}(n)$: der Algorithmus bricht etwa bei einem
+Toleranzlevel ab, bevor die exakte Lösung erreicht ist. Hier gibt es nichts zu
+approximieren: Nach $n$ Schritten steht das exakte Ergebnis fest.
+:::
+
+:::frage{wahr}
+Der Algorithmus ist *iterativ*.
+
+Dieselbe Vorschrift („hänge die Summe der letzten beiden Elemente an") wird für
+$i = 2, \dots, n-1$ immer wieder ausgeführt. Genau das meint *iterativ*.
+:::
+
+:::frage{falsch}
+Der Algorithmus ist *probabilistisch*.
+
+Es kommt kein Zufall vor: Der Algorithmus ist deterministisch und liefert bei jedem
+Aufruf mit demselben $n$ exakt dasselbe Ergebnis.
+:::
+
+::::
+
+### 2.2.4 Algorithmenarten in ML und Statistik
+
+Der Fibonacci-Algorithmus ist also exakt *und* iterativ. Die vier Arten schließen sich
+nicht gegenseitig aus. Wie verteilen sich die Algorithmen, mit denen wir in Statistik und
+Machine Learning tatsächlich arbeiten, auf diese Kategorien?
+
+:::beispiel[2.2.4 (Algorithmenarten in ML und Statistik)]
+- **Exakt/direkt:** die Lösung :k[linearer Gleichungssysteme]{#linear-system} per
+  :k[Gauß-Elimination]{#gaussian-elimination} (dazu später im Kurs viel mehr) oder die
+  :k[Matrixmultiplikation]{#matrix-multiplication}: nach endlich vielen, vorab bekannten
+  Schritten steht das exakte Ergebnis fest.
+- **Approximativ:** Monte-Carlo-Integration, die Integrale durch Stichprobenmittel
+  schätzt (ein Integral ist ein :k[Erwartungswert]{#expected-value}, und den schätzen
+  Statistiker/innen mit Stichproben); das Training
+  :k[neuronaler Netze]{#neural-network}, das nur bis zu einem Toleranzlevel optimiert.
+- **Iterativ:** der :k[Gradientenabstieg]{#gradient-descent} im Machine Learning und das
+  :k[Newton-Verfahren]{#newtons-method} zum Nullstellenfinden: dieselbe
+  Update-Vorschrift wird wiederholt, bis das Ergebnis gut genug ist.
+- **Probabilistisch:** randomisierte Quicksort-Varianten (das Pivot-Element wird zufällig
+  gewählt) und MCMC-Verfahren in der Bayesianischen Statistik, die die gesuchte
+  Verteilung durch Zufallspfade erkunden.
+:::
+
+In der Praxis treten die Arten meist kombiniert auf: Das Training eines neuronalen Netzes
+per stochastischem Gradientenabstieg etwa ist iterativ (wiederholte Updates),
+approximativ (Abbruch bei einer Toleranz statt am exakten Optimum) *und* probabilistisch
+(zufällig gewählte Teilstichproben in jedem Schritt) zugleich.
+
+### 2.2.5 Was ist ein guter Algorithmus?
+
+:::bemerkung[2.2.5 (Eine Analogie)]
+Problem: *Koche Schweinsbraten wie bei Oma.* Dann entspricht der Algorithmus dem
+Kochrezept, und der Computer dem Koch, der sich zwar an das Rezept hält, dabei aber
+Fehler macht.
+:::
+
+Die Analogie trägt weiter, als sie zunächst wirkt. Erstens: Für dasselbe Gericht gibt es
+viele Rezepte, und sie sind nicht gleich gut, genau wie unsere beiden Fibonacci-Varianten
+dasselbe Problem lösen, aber zu drastisch verschiedenen Kosten. Zweitens: Ein gutes
+Rezept ist *robust* gegen die kleinen Ungenauigkeiten des Kochs; ein gutes numerisches
+Verfahren verstärkt die unvermeidlichen :k[Rundungsfehler]{#rounding-error} des Computers
+nicht unnötig. Zusammengefasst wollen wir Algorithmen, die
+
+- möglichst exakte Ergebnisse liefern,
+- schnell sind,
+- wenig Speicher brauchen.
+
+Diese drei Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
+Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um solche
+Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst einmal
+präzise messen. Das ist das Thema des [nächsten Abschnitts](#sec-2.3). Wie wir „möglichst
+exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 3.
+
+*Vertiefung: Heath §1.1 (Näherungen und Fehlerquellen im wissenschaftlichen Rechnen);
+Cormen, Leiserson, Rivest & Stein, _Introduction to Algorithms_, der Klassiker zu Entwurf
+und Analyse von Algorithmen.*

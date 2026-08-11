@@ -1,0 +1,274 @@
+import { AccuracyWidget, CostWidget, MethodChooser } from "./widgets/S76Compare";
+
+{/*
+  §7.6 Pseudoinverse, SVD-Lösung und Methodenvergleich.
+  Quelle: Folien 07-kq.Rmd, „Pseudoinverse und Kleinste Quadrate" bis „Wrap-up".
+  MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
+*/}
+
+::quelle[Folien: 07-kq, „Pseudoinverse und Kleinste Quadrate“ bis „Wrap-up“.]
+
+Zwei Lösungswege für das [Kleinste-Quadrate-Problem](#sec-7.1) kennen wir schon:
+die [Normalengleichungen](#sec-7.3) mit
+:k[Cholesky-Zerlegung]{#cholesky-factorization} und die
+[QR-Zerlegung](#sec-7.4). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
+Was aber, wenn $\bA$ rangdefizient oder fast singulär ist? Dann ist
+$\bA^\top\bA$ singulär, die Cholesky-Zerlegung bricht ab, und auch $\bR$ in der
+QR-Zerlegung wird singulär. Genau hier hilft die
+:k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) aus Kapitel 6; sie
+liefert das dritte und robusteste Lösungsverfahren. Am Ende des Abschnitts
+vergleichen wir alle drei Methoden und fassen das Kapitel zusammen.
+
+<h3 id="sec-7.6-svd-loesung">Die SVD-Lösung über die Pseudoinverse</h3>
+
+Erinnern wir uns an Kapitel 6: Für $\bA \in \R^{m \times n}$ mit
+:k[Rang]{#rank} $r$ und reduzierter SVD
+$\bA = \bU_r \bSigma_r \bV_r^\top$ ist die
+:k[Moore-Penrose-Pseudoinverse]{#pseudoinverse}
+definiert als $\bA\pinv = \bV_r \bSigma_r^{-1} \bU_r^\top \in \R^{n \times m}$,
+wobei $\bSigma_r^{-1} = \diag(1/\sigma_1, \ldots, 1/\sigma_r)$ eine
+:k[Diagonalmatrix]{#diagonal-matrix} ist. Die zentrale
+Eigenschaft aus Kapitel 6: $\bA\bA\pinv$ ist die
+:k[Projektion]{#projection} auf den Spaltenraum
+$\col(\bA)$. Das ist exakt das, was wir für Kleinste Quadrate brauchen, denn
+in [Abschnitt 7.1](#sec-7.1) haben wir gesehen: $\wh{\bx}$ löst das KQ-Problem
+genau dann, wenn $\bA\wh{\bx} = \proj_{\col(\bA)}\bb$.
+
+:::satz[7.6.1 (SVD-Lösung des KQ-Problems)]
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und
+reduzierter SVD $\bA = \bU_r \bSigma_r \bV_r^\top$, und sei
+$\bb \in \R^m$. Dann löst
+
+$$ {#eq-7.6.1}
+\wh{\bx} = \bA\pinv\bb = \bV_r \bSigma_r^{-1} \bU_r^\top \bb
+$$
+
+das Kleinste-Quadrate-Problem $\min_{\bx} \left\| \bA\bx - \bb \right\|_2$.
+Ist $r = n$, so ist $\wh{\bx}$ die eindeutige Lösung. Ist
+$r < n$, so ist $\wh{\bx}$ unter allen KQ-Lösungen diejenige mit
+minimaler Norm:
+
+$$
+\bA\pinv\bb = \argmin \left\{ \left\| \bx \right\|_2 : \bx \text{ minimiert } \left\| \bA\bx - \bb \right\|_2 \right\}.
+$$
+:::
+
+Der Beweis besteht aus zwei Teilen. Zuerst zeigen wir, dass $\bA\wh{\bx}$
+tatsächlich die Projektion von $\bb$ auf $\col(\bA)$ ist; die Farben
+verfolgen $\cbred{\bU_r}$, $\cgreen{\bSigma_r}$ und
+$\cblue{\bV_r}$ durch die Rechnung.
+
+::::beweis
+
+:::schritt
+$$
+\bA\bA\pinv = \cbred{\bU_r}\cgreen{\bSigma_r}\cblue{\bV_r^\top}\,\cblue{\bV_r}\cgreen{\bSigma_r^{-1}}\cbred{\bU_r^\top}
+$$
+
+::why[reduzierte SVD und Definition der Pseudoinversen einsetzen; die inneren Faktoren treffen aufeinander]
+:::
+
+:::schritt
+$$
+\bA\bA\pinv = \cbred{\bU_r}\cgreen{\bSigma_r\bSigma_r^{-1}}\cbred{\bU_r^\top} = \cbred{\bU_r\bU_r^\top}
+$$
+
+::why[$\cblue{\bV_r^\top\bV_r} = \bI_r$, denn die Spalten von $\cblue{\bV_r}$ sind orthonormal; danach $\cgreen{\bSigma_r\bSigma_r^{-1}} = \bI_r$]
+:::
+
+:::schritt
+$$
+\bA\wh{\bx} = \bA\bA\pinv\bb = \cbred{\bU_r\bU_r^\top}\bb = \proj_{\col(\bA)}\bb
+$$
+
+::why[die Spalten von $\cbred{\bU_r}$ bilden eine :k[Orthonormalbasis]{#orthonormal-basis} von $\col(\bA)$, also ist $\cbred{\bU_r\bU_r^\top}$ die Projektionsmatrix auf $\col(\bA)$]
+:::
+
+:::schritt
+Also minimiert $\wh{\bx} = \bA\pinv\bb$ die Norm
+$\left\| \bA\bx - \bb \right\|_2$.
+
+::why[das ist genau die geometrische Charakterisierung der KQ-Lösung aus Abschnitt 7.1]
+:::
+
+:::schritt
+<p className="mb-1">Nun zur Minimal-Norm-Eigenschaft. Ab hier verfolgt $\cpurp{\bz}$ den Anteil einer beliebigen KQ-Lösung, der im :k[Kern]{#null-space} von $\bA$ liegt:</p>
+
+$$
+\bx = \wh{\bx} + \cpurp{\bz} \quad \text{mit} \quad \bA\cpurp{\bz} = \bnull
+$$
+
+::why[jede KQ-Lösung $\bx$ erfüllt dieselbe Projektionsgleichung $\bA\bx = \proj_{\col(\bA)}\bb = \bA\wh{\bx}$; die Differenz $\cpurp{\bz} = \bx - \wh{\bx}$ liegt also im Kern]
+:::
+
+:::schritt
+$$
+\wh{\bx} = \cblue{\bV_r}\left(\bSigma_r^{-1}\bU_r^\top\bb\right) \in \spann(\cblue{\bV_r}) = \col(\bA^\top) \perp \operatorname{Kern}(\bA) \ni \cpurp{\bz}
+$$
+
+::why[$\wh{\bx}$ ist eine Linearkombination der Spalten von $\cblue{\bV_r}$; deren Spann ist der Zeilenraum $\col(\bA^\top)$, und der steht senkrecht auf dem Kern (:k[orthogonales Komplement]{#orthogonal-complement}, Kapitel 6)]
+:::
+
+:::schritt
+$$
+\left\| \bx \right\|_2^2 = \left\| \wh{\bx} \right\|_2^2 + \left\| \cpurp{\bz} \right\|_2^2 \;\geq\; \left\| \wh{\bx} \right\|_2^2
+$$
+
+::why[Satz des Pythagoras für $\wh{\bx} \perp \cpurp{\bz}$; Gleichheit nur für $\cpurp{\bz} = \bnull$]
+:::
+
+:::schritt
+$\wh{\bx}$ hat unter allen KQ-Lösungen die kleinste Norm und ist bei
+vollem Rang die einzige Lösung.
+
+::why[für $\rang(\bA) = n$ ist $\operatorname{Kern}(\bA) = \{\bnull\}$, also $\cpurp{\bz} = \bnull$ erzwungen]
+:::
+
+::::
+
+Rechnen wir das an einem bewusst „kaputten“ Beispiel durch, an einer Matrix, an der die
+Normalengleichungen scheitern.
+
+:::beispiel[7.6.2 (rangdefizientes KQ-Problem)]
+Betrachten wir
+
+$$
+\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1 \\ 1 & 1 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}, \qquad \rang(\bA) = 1 < n = 2.
+$$
+
+Die Normalengleichungen sind hier chancenlos:
+$\bA^\top\bA = \left(\begin{smallmatrix} 3 & 3 \\ 3 & 3 \end{smallmatrix}\right)$
+ist singulär, die Cholesky-Zerlegung bricht ab. Die reduzierte SVD existiert trotzdem
+($r = 1$): Wegen $\bA^\top\bA$ mit Eigenwerten $6$ und
+$0$ ist $\cgreen{\sigma_1} = \sqrt{6}$, und
+
+$$
+\bA = \cbred{\bu_1}\cgreen{\sigma_1}\cblue{\bv_1^\top} \quad \text{mit} \quad \cbred{\bu_1} = \tfrac{1}{\sqrt{3}}\begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}, \quad \cgreen{\sigma_1} = \sqrt{6}, \quad \cblue{\bv_1} = \tfrac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+$$
+
+(Probe: $\cgreen{\sqrt{6}} \cdot \tfrac{1}{\sqrt{3}} \cdot \tfrac{1}{\sqrt{2}} = 1$; jeder Eintrag von $\cbred{\bu_1}\cgreen{\sigma_1}\cblue{\bv_1^\top}$ ist $1$.) Die Pseudoinverse wird damit
+
+$$
+\bA\pinv = \cblue{\bv_1}\,\cgreen{\sigma_1^{-1}}\,\cbred{\bu_1^\top} = \tfrac{1}{\sqrt{2}} \cdot \cgreen{\tfrac{1}{\sqrt{6}}} \cdot \tfrac{1}{\sqrt{3}} \begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix} = \tfrac{1}{6}\begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix},
+$$
+
+und die SVD-Lösung nach (7.6.1):
+
+$$
+\wh{\bx} = \bA\pinv\bb = \tfrac{1}{6}\begin{pmatrix} 1 & 1 & 1 \\ 1 & 1 & 1 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix} = \tfrac{1}{6}\begin{pmatrix} 6 \\ 6 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}.
+$$
+
+Probe: $\bA\wh{\bx} = (2, 2, 2)^\top$ ist genau die Projektion von
+$\bb$ auf $\col(\bA) = \spann\{(1,1,1)^\top\}$ (der Mittelwert
+von $\bb$ ist $2$). Alle KQ-Lösungen erfüllen
+$x_1 + x_2 = 2$, etwa auch $(2, 0)^\top$ mit Norm $2$.
+Unsere Lösung $\wh{\bx} = (1,1)^\top$ hat Norm
+$\sqrt{2} \approx 1{,}41$ – die kleinste, wie Satz 7.6.1 verspricht.
+:::
+
+<h3 id="sec-7.6-svd-vs-ne">SVD vs. Normalengleichungen</h3>
+
+Stellen wir die beiden extremen Zugänge einander gegenüber. Die
+[Normalengleichungen](#sec-7.3)
+$\bA^\top\bA\,\bx = \bA^\top\bb$ sind schnell, haben aber drei
+strukturelle Schwächen: $\bA^\top\bA$ kann schlecht konditioniert sein, denn
+aus [Abschnitt 7.2](#sec-7.2)
+wissen wir $\kappa(\bA^\top\bA) \approx \kappa(\bA)^2$, die
+:k[Konditionszahl]{#condition-number} wird quadriert. Sie
+funktionieren gar nicht, wenn $\bA^\top\bA$ singulär ist. Und
+:k[Rundungsfehler]{#rounding-error} werden entsprechend
+verstärkt.
+
+Der SVD-Zugang $\wh{\bx} = \bA\pinv\bb$ vermeidet all das: Er arbeitet
+direkt mit $\bA$ statt mit $\bA^\top\bA$, quadriert die Kondition
+also nicht. Singuläre und rangdefiziente Probleme behandelt er automatisch, wie
+Beispiel 7.6.2 vorgeführt hat. Formel (7.6.1) ist zudem eine *explizite Konstruktion*
+der Lösung: Sobald die SVD vorliegt, ist kein Gleichungssystem mehr zu lösen, nur noch
+Matrix-Vektor-Produkte auszuwerten. Er hat eine klare geometrische Interpretation (Projektion auf
+$\col(\bA)$ plus Minimal-Norm-Auswahl). Und für $\rang(\bA) < n$
+wirkt die Minimal-Norm-Eigenschaft aus Satz 7.6.1 wie eine eingebaute
+*Regularisierung*: Unter unendlich vielen Lösungen wählt die Pseudoinverse
+reproduzierbar die „kleinste“ aus.
+
+<h3 id="sec-7.6-vergleich">Praktischer Methodenvergleich</h3>
+
+Warum dann nicht immer SVD? Weil Robustheit ihren Preis hat. Fassen wir die
+Praxis-Regeln der Folien zusammen:
+
+:::bemerkung[7.6.3 (Anmerkungen zur Methodenwahl)]
+- Die QR-Zerlegung ist stabiler, aber langsamer als der Cholesky-Weg über die
+  Normalengleichungen.
+- Die SVD ist am langsamsten, aber sinnvoll, wenn $\bA$ fast singulär ist,
+  d.&thinsp;h. $\sigma_{\min}(\bA) \approx 0 \impl \kappa(\bA) \gg 1$.
+- Wir können dann $\bSigma_r$ verkleinern, indem wir die $r - k$
+  kleinsten Singulärwerte auf $0$ setzen; das ist die
+  :k[Rang-k-Approximation]{#low-rank-approximation} aus
+  Kapitel 6, hier als gezielte Glättung eines fast singulären Problems.
+- Alle genannten Methoden haben für $m \gg n$ eine
+  :k[Komplexität]{#big-o-notation} von
+  $O(mn^2 + n^3)$, aber die Konstanten unterscheiden sich deutlich.
+:::
+
+:::vertiefung[Was kostet welche Methode? (interaktiv)]
+<p className="mb-2 text-sm">Die $O$-Klasse ist bei allen drei Methoden gleich; entscheidend sind die Konstanten. Stellen wir $n$ und das Seitenverhältnis $m/n$ ein und vergleichen die ungefähren Operationszahlen. Die SVD-Konstante hängt vom Algorithmus ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).</p>
+
+<CostWidget />
+:::
+
+:::vertiefung[Genauigkeit: wie viele korrekte Stellen? (interaktiv)]
+<p className="mb-2 text-sm">Der Rundungsfehler der Normalengleichungen wächst wie $\kappa_2(\bA)^2 \, \eps$, der von QR nur wie $\left(\kappa_2(\bA) + \left\|\br\right\|_2 \kappa_2(\bA)^2\right)\eps$ mit der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Verschieben wir Kondition und Residuumsnorm und beobachten, wann welche Methode ihre Stellen verliert.</p>
+
+<AccuracyWidget />
+:::
+
+<h3 id="sec-7.6-zusammenfassung">Zusammenfassung: das Kapitel im Überblick</h3>
+
+Damit haben wir alle Bausteine des Kapitels beisammen:
+
+- **Kleinste-Quadrate-Problem** ([Abschnitt 7.1](#sec-7.1)): minimiere
+  $\left\| \bA\bx - \bb \right\|_2$ für ein überbestimmtes
+  :k[LGS]{#linear-system}. Geometrisch:
+  $\bA\wh{\bx}$ ist die Projektion von $\bb$ auf
+  $\col(\bA)$.
+- **Kondition** ([Abschnitt 7.2](#sec-7.2)): bzgl. $\bb$ hängt sie vom Winkel
+  zwischen $\bb$ und
+  $\col(\bA)$ ab, bzgl. $\bA$ ist sie typischerweise
+  $O(\kappa_2(\bA)^2)$, also die quadrierte Konditionszahl.
+- **Normalengleichungen + Cholesky** ([Abschnitt 7.3](#sec-7.3)): löse
+  $\bA^\top\bA\,\bx = \bA^\top\bb$, also
+  $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ falls
+  $\rang(\bA) = n$; $O(mn^2 + n^3)$. Schnell, aber wegen
+  $\kappa^2$ potenziell
+  instabil. Möglich, weil $\bA^\top\bA$
+  :k[SPD]{#positive-definite} ist (falls
+  $\rang(\bA) = n$).
+- **QR-Zerlegung** ([Abschnitte 7.4](#sec-7.4)–[7.5](#sec-7.5)):
+  $\bA = \bQ \left(\begin{smallmatrix} \bR \\ \bnull \end{smallmatrix}\right)$,
+  löse $\bR\bx = \bc_1$ mit
+  $\bQ^\top\bb = \left(\begin{smallmatrix} \bc_1 \\ \bc_2 \end{smallmatrix}\right)$;
+  $O(mn^2)$. Stabil, quadriert die Kondition nicht und ist die Standardwahl.
+- **SVD und Pseudoinverse** (dieser Abschnitt):
+  $\wh{\bx} = \bA\pinv\bb$; $O(\min(m^2n,\, mn^2))$ mit großen
+  Konstanten. Am stabilsten, funktioniert auch für rangdefiziente $\bA$ und
+  liefert dann die Minimal-Norm-Lösung.
+
+Warum ist das für die Statistik zentral? Wir haben fast immer mehr Beobachtungen als
+Parameter ($m > n$): Das
+:k[lineare Modell]{#linear-regression}
+$\by = \bX\bbeta + \bepsilon$ ist genau ein Kleinste-Quadrate-Problem, und
+auch nichtlineare Probleme werden oft iterativ gelöst: linear approximieren,
+Approximation minimieren, wiederholen. Die Projektionsgeometrie liefert dabei die
+Intuition, die Analysis die Normalengleichungen ($\nabla \left\| \bA\bx - \bb \right\|_2^2 = \bnull$),
+und die numerische lineare Algebra sagt uns, welchen Lösungsweg wir wählen sollten:
+einen Kompromiss aus Geschwindigkeit und Stabilität.
+
+:::vertiefung[Entscheidungshilfe: welche Methode wählen? (interaktiv)]
+<p className="mb-2 text-sm">Die Abwägungen des Kapitels als Daumenregel-Automat: Form von $\bA$, Kondition und Anspruch einstellen; die Empfehlung samt Begründung erscheint unten.</p>
+
+<MethodChooser />
+:::
+
+Damit endet unser Rundgang durch die Kleinste-Quadrate-Verfahren. Im nächsten Kapitel
+wechseln wir die Perspektive: probabilistische Sichtweisen und iterative Methoden.
+
+<p className="border-t border-slate-200 pt-3 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">*Vertiefung:* Heath §3.6 (SVD und Pseudoinverse) und §3.7 (Methodenvergleich); MML §7.1 verbindet Kleinste Quadrate mit dem Gradientenblick auf Optimierung.</p>

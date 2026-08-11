@@ -1,0 +1,292 @@
+import {
+  FastRangdefektWidget,
+  KonditionsQuadrierungLab,
+  WinkelWidget,
+} from "./widgets/S72Kondition";
+
+{/*
+  §7.2 Kondition des Kleinste-Quadrate-Problems (Folien 07-kq, „Kondition").
+  MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
+*/}
+
+::quelle[Folien: 07-kq, Abschnitt „Kondition".]
+
+Bevor wir in den folgenden Abschnitten Algorithmen zur Lösung des
+KQ-Problems entwickeln, stellen wir dieselbe Frage wie seinerzeit bei
+den linearen Gleichungssystemen: Wie empfindlich reagiert die Lösung
+$\wh{\bx}$ auf kleine Störungen der Eingaben? Die Antwort
+gibt die :k[Kondition]{#condition-number} des
+Problems, und sie legt fest, welche Genauigkeit wir von
+*jedem* Algorithmus bestenfalls erwarten dürfen. Denn die
+Kondition ist eine Eigenschaft des Problems selbst, nicht des
+Lösungswegs. Beim KQ-Problem gibt es zwei Eingaben, die gestört sein
+können: den Datenvektor $\bb$ und die Matrix
+$\bA$. Wir behandeln beide Fälle getrennt.
+
+### Vorbemerkungen
+
+Wir untersuchen nun die Kondition von KQ-Problemen
+$\bA\bx \approx \bb$ mit $\bA \in \R^{m \times n}$
+und $\bb \in \R^m$. Dabei beschränken wir uns auf den Fall
+$m \ge n$ und $\rang(\bA) = n$. Dann existiert,
+wie in [Abschnitt 7.1](#sec-7.1) gesehen, eine eindeutige
+Lösung $\wh{\bx}$. Als Norm verwenden wir im Folgenden stets
+$\left\|\cdot\right\| = \left\|\cdot\right\|_2$: Das
+KQ-Problem minimiert gerade einen Abstand in der
+:k[euklidischen Norm]{#euclidean-norm}, sie
+ist also die natürliche Wahl.
+
+Die Abbildung von den Daten zur Lösung schreiben wir als
+$\wh{\bx} = \bA\pinv\bb$. Hier bezeichnet
+$\bA\pinv$ die *Pseudoinverse* von $\bA$,
+die wir in [Abschnitt 7.6](#sec-7.6) genauer kennenlernen.
+Für den Moment genügt: $\bA\pinv$ ist die Matrix, die jedem
+$\bb$ seine eindeutige KQ-Lösung zuordnet, und für
+quadratisches, reguläres $\bA$ gilt schlicht
+$\bA\pinv = \bA^{-1}$. Damit können wir die vertraute
+Definition der Konditionszahl auf rechteckige Matrizen übertragen:
+
+:::definition[7.2.1]
+Für eine nicht notwendigerweise quadratische Matrix
+$\bA \in \R^{m \times n}$ mit $m \ge n$
+definieren wir die *Konditionszahl*
+
+$$
+\kappa(\bA) = \begin{cases} \infty, & \rang(\bA) < n, \\ \left\|\bA\right\| \left\|\bA\pinv\right\|, & \text{sonst}. \end{cases}
+$$
+:::
+
+:::bemerkung[7.2.2]
+Für quadratisches, reguläres $\bA$ ist
+$\bA\pinv = \bA^{-1}$, und wir erhalten die bekannte
+Konditionszahl
+$\kappa(\bA) = \left\|\bA\right\| \left\|\bA^{-1}\right\|$
+zurück. In der 2-Norm gilt außerdem (mit den Singulärwerten aus der
+:k[SVD]{#singular-value-decomposition})
+
+$$
+\kappa_2(\bA) = \frac{\sigma_{\max}}{\sigma_{\min}},
+$$
+
+denn $\left\|\bA\right\|_2 = \sigma_{\max}$ und
+$\left\|\bA\pinv\right\|_2 = 1/\sigma_{\min}$. Die
+Fallunterscheidung in Definition 7.2.1 ist dabei konsistent: Nähert
+sich $\bA$ dem :k[Rang]{#rank}defekt,
+geht $\sigma_{\min} \to 0$ und damit
+$\kappa_2(\bA) \to \infty$.
+:::
+
+:::vertiefung[Konditionszahl als Nähe zum Rangdefekt]
+<p className="mb-3 text-sm">Zwei Einheitsspalten im Winkel α zueinander: Je kleiner α, desto näher ist $\bA$ am Rangdefekt, und desto größer $\kappa_2(\bA)$. Ziehen Sie am Regler und beobachten Sie, wie das Bild des Einheitskreises kollabiert.</p>
+
+<FastRangdefektWidget />
+:::
+
+### Kondition bezüglich $\bb$
+
+Beginnen wir mit dem statistisch wichtigsten Fall: $\bA$ ist
+fix, aber der Datenvektor $\bb$ ist gestört, etwa durch
+Messfehler oder schlicht durch
+:k[Rundungsfehler]{#rounding-error} beim
+Einlesen. Das Problem ist dann die Abbildung
+$f(\bb) = \bA\pinv\bb$, und wir fragen: Wie stark ändert
+sich $f(\bb)$ relativ, wenn wir $\bb$ durch ein
+gestörtes $\tilde{\bb}$ ersetzen?
+
+:::satz[7.2.3]
+Sei $\bA \in \R^{m \times n}$ fix mit
+$\rang(\bA) = n$, und sei $f$ das Problem mit
+Lösung $f(\bb) = \bA\pinv\bb$. Dann gilt
+
+$$
+\frac{\left\|f(\tilde{\bb}) - f(\bb)\right\|}{\left\|f(\bb)\right\|} \le \kappa\, \frac{\left\|\cblue{\tilde{\bb} - \bb}\right\|}{\left\|\bb\right\|} \quad \text{mit} \quad \kappa = \corange{\kappa_2(\bA)}\, \frac{\left\|\bb\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|}.
+$$
+:::
+
+Die Konditionszahl des Problems ist also *nicht* einfach
+$\corange{\kappa_2(\bA)}$: Es kommt ein zweiter Faktor
+hinzu, der misst, wie viel von $\bb$ überhaupt im
+Spaltenraum (:k[Bild]{#image})
+$\col(\bA)$ liegt. Der Beweis ist eine kurze Kette von
+Normabschätzungen; wir verfolgen die Störung
+$\cblue{\tilde{\bb} - \bb}$ in Blau und die Projektion
+$\cgreen{\proj_{\col(\bA)} \bb}$ in Grün.
+
+::::beweis
+
+:::schritt
+$$
+\frac{\left\|\bA\pinv\tilde{\bb} - \bA\pinv\bb\right\|}{\left\|\bA\pinv\bb\right\|} = \frac{\left\|\bA\pinv(\cblue{\tilde{\bb} - \bb})\right\|}{\left\|\bA\pinv\bb\right\|}
+$$
+
+::why[$\bA\pinv$ ist eine Matrix, die Abbildung $\bb \mapsto \bA\pinv\bb$ also linear]
+:::
+
+:::schritt
+$$
+\le \frac{\left\|\bA\pinv\right\| \left\|\cblue{\tilde{\bb} - \bb}\right\|}{\left\|\bA\pinv\bb\right\|}
+$$
+
+::why[Submultiplikativität der natürlichen :k[Matrixnorm]{#matrix-norm}: $\left\|\bA\pinv\bv\right\| \le \left\|\bA\pinv\right\| \left\|\bv\right\|$]
+:::
+
+:::schritt
+$$
+= \frac{\corange{\kappa_2(\bA)}}{\left\|\bA\right\| \left\|\bA\pinv\bb\right\|}\, \left\|\cblue{\tilde{\bb} - \bb}\right\|
+$$
+
+::why[Definition 7.2.1: $\corange{\kappa_2(\bA)} = \left\|\bA\right\| \left\|\bA\pinv\right\|$, also $\left\|\bA\pinv\right\| = \corange{\kappa_2(\bA)} / \left\|\bA\right\|$]
+:::
+
+:::schritt
+$$
+\le \frac{\corange{\kappa_2(\bA)}}{\left\|\bA\bA\pinv\bb\right\|}\, \left\|\cblue{\tilde{\bb} - \bb}\right\|
+$$
+
+::why[nochmals Submultiplikativität: $\left\|\bA\bA\pinv\bb\right\| \le \left\|\bA\right\| \left\|\bA\pinv\bb\right\|$; wir verkleinern den Nenner, der Bruch kann nur wachsen]
+:::
+
+:::schritt
+$$
+= \corange{\kappa_2(\bA)}\, \frac{\left\|\bb\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|} \cdot \frac{\left\|\cblue{\tilde{\bb} - \bb}\right\|}{\left\|\bb\right\|}
+$$
+
+::why[$\bA\bA\pinv\bb = \bA\wh{\bx} = \cgreen{\proj_{\col(\bA)} \bb}$: Die KQ-Lösung ist die orthogonale :k[Projektion]{#projection} von $\bb$ auf $\col(\bA)$ ([Abschnitt 7.1](#sec-7.1)); anschließend erweitern wir mit $\left\|\bb\right\|$]
+:::
+
+::::
+
+#### Geometrische Interpretation
+
+Der Faktor
+$\left\|\bb\right\| / \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|$
+hat eine anschauliche Bedeutung. Erinnern wir uns an den Satz des
+Pythagoras: $\bb$ zerlegt sich orthogonal in seinen Anteil
+im Spaltenraum und seinen Anteil im
+:k[orthogonalen Komplement]{#orthogonal-complement},
+
+$$
+\left\|\bb\right\|^2 = \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2 + \left\|\proj_{\col(\bA)^\perp} \bb\right\|^2 \ge \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2,
+$$
+
+also ist der Faktor stets $\ge 1$ und damit
+$\kappa \ge \corange{\kappa_2(\bA)}$. Bezeichnet
+$\theta$ den Winkel zwischen $\bb$ und
+$\col(\bA)$ (siehe die Abbildung in
+[Abschnitt 7.1](#sec-7.1-geometrie)), dann ist
+$\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\| = \cos(\theta) \left\|\bb\right\|$
+und damit
+
+$$
+\kappa = \frac{\corange{\kappa_2(\bA)}}{\cos(\theta)}.
+$$
+
+Was sind nun best und worst case für $\kappa$?
+
+- **Best case:** $\bb = \cgreen{\proj_{\col(\bA)} \bb}$, d.&thinsp;h.
+  $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist
+  $\kappa = \corange{\kappa_2(\bA)}$ – besser geht es
+  nicht.
+- **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, d.&thinsp;h.
+  $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Dann
+  ist $\kappa = \infty$. Warum? Weil dann
+  $\wh{\bx} = \bA\pinv\bb = \bnull$ gilt: Schon eine
+  winzige Störung mit Anteil in $\col(\bA)$ erzeugt einen
+  beliebig großen *relativen* Fehler in der Lösung.
+
+Für die Regression heißt das: Je weniger die Daten $\bb$ vom
+Spaltenraum der Designmatrix erklärt werden (je schlechter also der
+Fit), desto schlechter konditioniert ist die Bestimmung der
+Koeffizienten. Und zwar unabhängig davon, wie gut $\bA$
+selbst konditioniert ist.
+
+:::vertiefung[Störungen von b interaktiv]
+<p className="mb-3 text-sm">Das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\kappa_2(\bA) = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Verstellen Sie den Winkel θ und die Störung Δb, und beobachten Sie, wann die Schranke aus Satz 7.2.3 tatsächlich angenommen wird.</p>
+
+<WinkelWidget />
+:::
+
+### Kondition bezüglich $\bA$
+
+Nun der umgekehrte Fall: $\bb$ ist fix, aber die Matrix
+$\bA$ selbst ist gestört. Auch das ist praktisch relevant:
+etwa durch Messfehler in den Kovariablen oder durch Rundungsfehler,
+die beim Speichern von $\bA$ und in den Zwischenschritten
+der Algorithmen zwangsläufig entstehen. Das Problem ist jetzt die
+Abbildung $f(\bA) = \bA\pinv\bb$. Das Ergebnis sieht auf
+den ersten Blick ähnlich aus wie Satz 7.2.3, hat aber eine
+entscheidend andere Struktur:
+
+:::satz[7.2.4]
+Sei $\bb \in \R^m$ fix und $f$ das Problem mit
+Lösung $f(\bA) = \bA\pinv\bb$. Dann gilt
+
+$$
+\frac{\left\|f(\tilde{\bA}) - f(\bA)\right\|}{\left\|f(\bA)\right\|} \le \kappa\, \frac{\left\|\cblue{\tilde{\bA} - \bA}\right\|}{\left\|\bA\right\|} \quad \text{mit} \quad \kappa = \corange{\kappa_2(\bA)} + \corange{\kappa_2(\bA)}^2\, \frac{\left\|\cpurp{\br}\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|},
+$$
+
+wobei $\cpurp{\br} = \bb - \bA\wh{\bx}$ das Residuum
+des ungestörten Problems bezeichnet.
+:::
+
+:::bemerkung[7.2.5]
+Der Beweis ist (anders als der von Satz 7.2.3) eine sehr
+aufwändige und, offen gesagt, langweilige Rechnung. Wir verzichten
+darauf und verweisen auf die Literatur (vgl. Heath §3.3).
+:::
+
+#### Interpretation
+
+Der erste Summand $\corange{\kappa_2(\bA)}$ ist vertraut.
+Neu ist der zweite: Er koppelt das *Quadrat* der Konditionszahl
+an das Verhältnis von Residuum zu Projektion. Mit dem Winkel
+$\theta$ von oben ist
+$\left\|\cpurp{\br}\right\| = \sin(\theta) \left\|\bb\right\|$
+(das Residuum ist gerade die zu $\col(\bA)$
+:k[orthogonale]{#orthogonality} Komponente
+von $\bb$), also
+
+$$
+\kappa = \corange{\kappa_2(\bA)} + \corange{\kappa_2(\bA)}^2 \tan(\theta).
+$$
+
+- **Best case:** $\cpurp{\br} = \bnull$,
+  d.&thinsp;h. $\bA\bx = \bb$ ist exakt lösbar. Dann ist
+  $\kappa = \corange{\kappa_2(\bA)}$, wie bei einem
+  gewöhnlichen
+  :k[linearen Gleichungssystem]{#linear-system}.
+- **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, aber
+  $\cpurp{\br} \ne \bnull$: Dann ist
+  $\bA\bx = \bb$ nicht lösbar,
+  $\bb \perp \col(\bA)$, und es gilt
+  $\kappa = \infty$.
+- **Normalfall:** $\cpurp{\br} \ne \bnull$
+  und $\cgreen{\proj_{\col(\bA)} \bb} \ne \bnull$. Dann
+  ist $\kappa = O\left(\corange{\kappa_2(\bA)}^2\right)$:
+  Die Konditionszahl geht *quadratisch* ein!
+
+Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
+Statistik verschwindet es praktisch nie), kann eine Störung von
+$\bA$ mit dem Quadrat der Konditionszahl verstärkt werden.
+Dieses Quadrat wird uns in [Abschnitt 7.3](#sec-7.3) gleich
+wieder begegnen: Der Lösungsweg über die Normalengleichungen handelt es
+sich *immer* ein, also auch im gutartigen Fall kleiner
+Residuen, in dem das Problem selbst nur mit
+$\corange{\kappa_2(\bA)}$ reagiert.
+
+:::vertiefung[Die quadrierte Kondition im Experiment]
+<p className="mb-2 text-sm">Wir stören eine konkrete Problemfamilie mit einstellbarem $\eps$:</p>
+
+$$
+\bA = \begin{pmatrix} 1 & 1 \\ \eps & -\eps \\ 0 & 0 \end{pmatrix}, \quad \tilde{\bA} = \bA + \cblue{\bE} \text{ mit } \cblue{\bE} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \\ -\eps & \eps \end{pmatrix}, \quad \bb = \begin{pmatrix} 1 \\ 0 \\ b_3 \end{pmatrix}.
+$$
+
+<p className="mb-3 text-sm">Hier ist $\kappa_2(\bA) = 1/\eps$, und die relative Störung ist $\left\|\cblue{\bE}\right\|_2 / \left\|\bA\right\|_2 = \eps$. Die ungestörte Lösung ist stets $\wh{\bx} = (1/2,\, 1/2)^\top$, unabhängig von $\eps$ und $b_3$. Der Regler für $b_3$ steuert die Größe des Residuums und schaltet damit zwischen den beiden Regimen von Satz 7.2.4 um.</p>
+
+<KonditionsQuadrierungLab />
+:::
+
+*Vertiefung:* Heath §3.1–3.3, insbesondere §3.3 („Sensitivity
+and Conditioning") mit der vollständigen Störungsanalyse inklusive des
+Beweises von Satz 7.2.4; zum KQ-Problem als Optimierungsproblem und
+seiner Rolle in der Regression außerdem MML §7.1 und §9.2.

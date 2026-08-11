@@ -1,0 +1,304 @@
+import { OrthoWidget, GramSchmidtWidget, CgsVsMgsWidget } from "./widgets/S74Local";
+
+{/*
+  §7.4 QR-Zerlegung und Gram-Schmidt-Verfahren
+  Quelle: Folien 07-kq.Rmd, „Recap: Orthogonalmatrizen" bis „QR-Zerlegung: Idee".
+  MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
+*/}
+
+In [Abschnitt 7.3](#sec-7.3) haben wir das Kleinste-Quadrate-Problem über die
+Normalengleichungen gelöst: schnell, aber mit einem Haken. Das Aufstellen von
+$\bA^\top\bA$ quadriert die :k[Konditionszahl]{#condition-number},
+$\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$. Wir suchen deshalb ein Verfahren, das direkt
+mit $\bA$ arbeitet. Die Idee dieses Abschnitts: Wir transformieren das Problem mit
+Matrizen, die die :k[euklidische Norm]{#euclidean-norm} unverändert lassen. Solche
+Transformationen ändern die Norm des Residuums $\|\bA\bx - \bb\|_2$ nicht, das
+transformierte Problem hat also dieselbe Lösung wie das ursprüngliche. Wenn wir so lange
+transformieren, bis eine :k[Dreiecksgestalt]{#triangular-matrix} erreicht ist, wird das
+Problem trivial lösbar. (Folien 07-kq, „Recap: Orthogonalmatrizen" bis
+„QR-Zerlegung: Idee".)
+
+### Recap: Orthogonalmatrizen
+
+Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra. Frischen wir
+das kurz auf.
+
+:::definition[7.4.1 (Orthogonalmatrix)]
+Eine Matrix $\bQ \in \R^{n \times n}$ heißt
+:k[*Orthogonalmatrix*]{#orthogonal-matrix}, wenn ihre Spalten
+:k[orthonormale Vektoren]{#orthonormal-basis} sind, also
+
+$$
+\bQ^\top \bQ = \bI\,.
+$$
+:::
+
+Geometrisch beschreibt $\bQ$ eine :k[Rotation]{#rotation-matrix} und/oder
+:k[Spiegelung]{#reflection} des $\R^n$, also genau
+die Sorte Abbildung, die Längen und Winkel unangetastet lässt. Die für uns wichtigen
+Eigenschaften fassen wir zusammen:
+
+:::lemma[7.4.2 (Eigenschaften von Orthogonalmatrizen)]
+Sei $\bQ \in \R^{n \times n}$ orthogonal. Dann gilt:
+
+<ol className="list-[lower-roman] space-y-1 pl-6">
+  <li>$\bQ^{-1} = \bQ^\top$, die :k[Inverse]{#matrix-inverse} ist also gratis.</li>
+  <li>$\|\bQ\bx\|_2 = \|\bx\|_2$ für alle $\bx \in \R^n$.</li>
+  <li>Alle :k[Eigenwerte]{#eigenvalue-eigenvector} haben Betrag $1$: $|\lambda_1(\bQ)| = \cdots = |\lambda_n(\bQ)| = 1$, und es gilt $\kappa_2(\bQ) = 1$.</li>
+  <li>Für Orthogonalmatrizen $\bQ_1, \dots, \bQ_n$ ist auch das Produkt $\bQ = \bQ_1 \cdots \bQ_n$ orthogonal.</li>
+</ol>
+:::
+
+::::beweis
+
+:::schritt
+$$
+\text{(i):} \quad \bQ^\top \bQ = \bI \quimpl \bQ^{-1} = \bQ^\top
+$$
+
+::why[$\bQ^\top\bQ = \bI$ per Definition; eine quadratische Matrix mit Linksinverser ist invertierbar, und die Linksinverse ist dann die Inverse]
+:::
+
+:::schritt
+$$
+\text{(ii):} \quad \|\bQ\bx\|_2 = \sqrt{\bx^\top \bQ^\top \bQ \bx} = \sqrt{\bx^\top \bx} = \|\bx\|_2
+$$
+
+::why[Norm als :k[Skalarprodukt]{#dot-product} schreiben und $\bQ^\top\bQ = \bI$ einsetzen]
+:::
+
+:::schritt
+$$
+\text{(iii):} \quad \|\bv\|_2 = \|\bQ\bv\|_2 = \|\lambda\bv\|_2 = |\lambda| \, \|\bv\|_2 \quimpl |\lambda| = 1
+$$
+
+::why[(ii) auf einen Eigenvektor $\bv \neq \bnull$ anwenden; $\kappa_2$ ist das Produkt $\|\bQ\|_2 \|\bQ^{-1}\|_2$, und beide Faktoren sind wegen (i) und (ii) gleich $1$]
+:::
+
+:::schritt
+$$
+\text{(iv):} \quad (\bQ_1\bQ_2)^\top(\bQ_1\bQ_2) = \bQ_2^\top \underbrace{\bQ_1^\top \bQ_1}_{=\,\bI} \bQ_2 = \bQ_2^\top\bQ_2 = \bI
+$$
+
+::why[Definition nachrechnen für zwei Faktoren; der allgemeine Fall folgt induktiv]
+:::
+
+::::
+
+:::bemerkung[7.4.3]
+Eigenschaft (iii) ist der numerische Kern des ganzen Abschnitts: wegen
+$\kappa_2(\bQ) = 1$ ist die Multiplikation mit $\bQ$ oder $\bQ^{-1}$ *immer* gut
+konditioniert und verschlechtert die Stabilität eines Algorithmus nicht. Anders als die
+Normalengleichungen ([Abschnitt 7.3](#sec-7.3)) können orthogonale Transformationen die
+Kondition unseres Problems also nicht verschlimmern (vgl. die Konditionsanalyse in
+[Abschnitt 7.2](#sec-7.2)). Eigenschaft (iv) erlaubt uns außerdem, $\bQ$ aus vielen
+einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
+[Abschnitt 7.5](#sec-7.5) aus.
+:::
+
+:::vertiefung[Orthogonalmatrizen als Drehungen und Spiegelungen, live]
+<OrthoWidget />
+:::
+
+### Die QR-Zerlegung
+
+Welche „einfache Gestalt" streben wir mit unseren orthogonalen Transformationen an?
+Wie beim :k[Gauß-Verfahren]{#gaussian-elimination}: eine obere
+:k[Dreiecksmatrix]{#triangular-matrix}, denn Dreieckssysteme lösen wir mühelos durch
+:k[Rückwärtseinsetzen]{#triangular-solve}. Das führt auf die zentrale Zerlegung dieses
+Kapitels:
+
+:::definition[7.4.4 (QR-Zerlegung)]
+Sei $\bA \in \R^{m \times n}$ und $\bQ \in \R^{m \times m}$ eine Orthogonalmatrix,
+sodass
+
+$$
+\bQ^\top \bA = \begin{pmatrix} \bR \\ \bnull_{(m-n) \times n} \end{pmatrix},
+$$
+
+wobei $\bR \in \R^{n \times n}$ eine obere Dreiecksmatrix ist. Dann nennen wir
+
+$$
+\bA = \bQ \begin{pmatrix} \bR \\ \bnull \end{pmatrix}
+$$
+
+eine *QR-Zerlegung* von $\bA$.
+:::
+
+:::bemerkung[7.4.5]
+Eine QR-Zerlegung existiert für *jede* Matrix $\bA \in \R^{m \times n}$. Eindeutig ist
+sie aber nicht: schon ein Vorzeichenwechsel in einer Spalte von $\bQ$ (mit passendem
+Vorzeichenwechsel in der zugehörigen Zeile von $\bR$) liefert eine andere gültige
+Zerlegung.
+:::
+
+### Ein Beispiel: QR-Zerlegung über Gram-Schmidt
+
+Woher bekommen wir $\bQ$ und $\bR$? Ein Verfahren kennen wir bereits aus der linearen
+Algebra: die :k[Gram-Schmidt-Orthonormalisierung]{#gram-schmidt} der Spalten von $\bA$.
+Sie liefert orthonormale Vektoren $\bq_1, \bq_2, \dots$, die denselben Raum
+:k[aufspannen]{#span} wie die Spalten $\ba_1, \ba_2, \dots$, und die Koeffizienten, die
+dabei anfallen (Normen und :k[Projektions]{#projection}-Koeffizienten), sind genau die
+Einträge von $\bR$. Rechnen wir das Beispiel der Folien vollständig durch. Zur
+Orientierung: $\cbred{\bq_1}$ verfolgt den ersten Orthonormalvektor, $\cblue{\ba_2}$ die
+zweite Spalte, $\cgreen{R_{12}}$ den Projektionskoeffizienten,
+$\cborange{\wt{\bq}_2}$ den orthogonalisierten (noch unnormierten) und
+$\cbpurp{\bq_2}$ den fertigen zweiten Orthonormalvektor.
+
+:::beispiel[7.4.6 (QR-Zerlegung via Gram-Schmidt)]
+**Gegeben:** $\bA = \begin{pmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 2 \end{pmatrix}$.
+**Gesucht:** $\bQ^\top \bA = \begin{pmatrix} \bR \\ \bnull_{1 \times 2} \end{pmatrix}$
+mit $\bQ \in \R^{3 \times 3}$ orthogonal und $\bR \in \R^{2 \times 2}$ obere
+Dreiecksmatrix.
+
+**Schritt 1:** erste Spalte $\ba_1 = (1, 0, 0)^\top$ normieren.
+
+$$
+\cbred{\bq_1} = \frac{\ba_1}{\|\ba_1\|_2} = \frac{1}{1}\begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix} = \cbred{\begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}}, \qquad R_{11} = \|\ba_1\|_2 = 1\,.
+$$
+
+**Schritt 2:** zweite Spalte $\cblue{\ba_2} = \cblue{(2, 0, 2)^\top}$
+orthogonalisieren. Zuerst die Projektion auf $\cbred{\bq_1}$:
+
+$$
+\cgreen{R_{12}} = \cbred{\bq_1}^\top \cblue{\ba_2} = 1 \cdot 2 + 0 \cdot 0 + 0 \cdot 2 = \cgreen{2}\,.
+$$
+
+Dann den Projektionsanteil abziehen:
+
+$$
+\cborange{\wt{\bq}_2} = \cblue{\ba_2} - \cgreen{R_{12}}\,\cbred{\bq_1} = \cblue{\begin{pmatrix} 2 \\ 0 \\ 2 \end{pmatrix}} - \begin{pmatrix} 2 \\ 0 \\ 0 \end{pmatrix} = \cborange{\begin{pmatrix} 0 \\ 0 \\ 2 \end{pmatrix}}
+$$
+
+und normieren:
+
+$$
+\cbpurp{\bq_2} = \frac{\cborange{\wt{\bq}_2}}{\left\|\cborange{\wt{\bq}_2}\right\|_2} = \frac{1}{2}\cborange{\begin{pmatrix} 0 \\ 0 \\ 2 \end{pmatrix}} = \cbpurp{\begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}}, \qquad R_{22} = \left\|\cborange{\wt{\bq}_2}\right\|_2 = 2\,.
+$$
+
+**Schritt 3:** zu einer :k[Orthonormalbasis]{#orthonormal-basis} des $\R^3$
+vervollständigen. Wir brauchen ein $\bq_3$ orthogonal zu $\cbred{\bq_1}$ und
+$\cbpurp{\bq_2}$; hier geht das durch Hinsehen:
+
+$$
+\bq_3 = \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}\,.
+$$
+
+**Ergebnis:**
+
+$$
+\bQ = \begin{pmatrix} \cbred{1} & \cbpurp{0} & 0 \\ \cbred{0} & \cbpurp{0} & 1 \\ \cbred{0} & \cbpurp{1} & 0 \end{pmatrix}, \qquad \bR = \begin{pmatrix} 1 & \cgreen{2} \\ 0 & 2 \end{pmatrix}\,.
+$$
+
+**Verifikation:** Zerlegung ausmultiplizieren.
+
+$$
+\bQ \begin{pmatrix} \bR \\ \bnull \end{pmatrix} = \begin{pmatrix} \cbred{1} & \cbpurp{0} & 0 \\ \cbred{0} & \cbpurp{0} & 1 \\ \cbred{0} & \cbpurp{1} & 0 \end{pmatrix} \begin{pmatrix} 1 & \cgreen{2} \\ 0 & 2 \\ 0 & 0 \end{pmatrix} = \begin{pmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 2 \end{pmatrix} = \bA \;\checkmark
+$$
+:::
+
+Beachten wir die Arbeitsteilung: $\bQ$ sammelt die orthonormalen Richtungen, $\bR$
+protokolliert, wie sich die Originalspalten aus diesen Richtungen
+:k[linear kombinieren]{#linear-combination}:
+$\ba_1 = R_{11}\,\cbred{\bq_1}, \quad \cblue{\ba_2} = \cgreen{R_{12}}\,\cbred{\bq_1} + R_{22}\,\cbpurp{\bq_2}\,.$
+Dass $\bR$ eine obere Dreiecksmatrix ist, ist kein Zufall, sondern die Struktur des
+Verfahrens: die $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
+
+:::vertiefung[ein Gram-Schmidt-Schritt zum Anfassen]
+<GramSchmidtWidget />
+:::
+
+Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
+klassische Verfahren heikel. Sind zwei Spalten fast
+:k[linear abhängig]{#linear-independence}, ist das Residuum nach der Projektion winzig,
+und beim Normieren blasen wir :k[Rundungsfehler]{#rounding-error} massiv auf: die
+berechneten $\bq_k$ verlieren ihre Orthogonalität. Wie dramatisch das wird und wie wenig
+es braucht, um es zu reparieren, zeigt das folgende Experiment.
+
+:::vertiefung[wie Gram-Schmidt numerisch zerbricht (und wie man es repariert)]
+<CgsVsMgsWidget />
+:::
+
+### Warum die QR-Zerlegung das KQ-Problem löst
+
+Jetzt zahlt sich die Vorarbeit aus. Haben wir eine QR-Zerlegung, zerfällt das
+:k[Kleinste-Quadrate-Problem]{#linear-least-squares} in einen Teil, den wir exakt auf
+null bringen können, und einen Teil, den keine Wahl von $\bx$ beeinflusst. Zur
+Orientierung im Beweis: $\cbred{\bR\bx - \bc_1}$ verfolgt den steuerbaren,
+$\cblue{\bc_2}$ den unvermeidbaren Anteil.
+
+:::satz[7.4.7 (KQ-Lösung über die QR-Zerlegung)]
+Sei $\bA \in \R^{m \times n}$, $\bb \in \R^m$ und $\bQ \in \R^{m \times m}$ eine
+Orthogonalmatrix, sodass
+
+$$
+\bQ^\top \bA = \begin{pmatrix} \bR \\ \bnull_{(m-n) \times n} \end{pmatrix} \quad\text{und}\quad \bQ^\top \bb = \begin{pmatrix} \bc_1 \\ \bc_2 \end{pmatrix}
+$$
+
+mit $\bR \in \R^{n \times n}$ invertierbar. Dann gilt
+
+$$
+\wh{\bx} = \bR^{-1}\bc_1 = \argmin_{\bx} \|\bA\bx - \bb\|_2\,.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\|\bA\bx - \bb\|_2^2 = \left\|\bQ^\top(\bA\bx - \bb)\right\|_2^2 = \left\|\bQ^\top\bA\,\bx - \bQ^\top\bb\right\|_2^2
+$$
+
+::why[Multiplikation mit $\bQ^\top$ ändert die Norm nicht (Lemma 7.4.2 (ii), angewandt auf die Orthogonalmatrix $\bQ^\top$)]
+:::
+
+:::schritt
+$$
+= \left\| \begin{pmatrix} \cbred{\bR\bx - \bc_1} \\ -\cblue{\bc_2} \end{pmatrix} \right\|_2^2
+$$
+
+::why[Blockstruktur einsetzen: $\bQ^\top\bA\,\bx = \begin{pmatrix} \bR\bx \\ \bnull \end{pmatrix}$ und $\bQ^\top\bb = \begin{pmatrix} \bc_1 \\ \bc_2 \end{pmatrix}$]
+:::
+
+:::schritt
+$$
+= \left\|\cbred{\bR\bx - \bc_1}\right\|_2^2 + \left\|\cblue{\bc_2}\right\|_2^2
+$$
+
+::why[die Quadratsumme eines gestapelten Vektors zerfällt über die Blöcke: $\left\|\begin{pmatrix} \bu \\ \bv \end{pmatrix}\right\|_2^2 = \|\bu\|_2^2 + \|\bv\|_2^2$]
+:::
+
+:::schritt
+$$
+\argmin_{\bx} \|\bA\bx - \bb\|_2 = \argmin_{\bx} \left\|\cbred{\bR\bx - \bc_1}\right\|_2
+$$
+
+::why[der zweite Term $\left\|\cblue{\bc_2}\right\|_2^2$ hängt nicht von $\bx$ ab, minimieren müssen wir nur den ersten]
+:::
+
+:::schritt
+$$
+\left\|\cbred{\bR\wh{\bx} - \bc_1}\right\|_2 = \left\|\bR\bR^{-1}\bc_1 - \bc_1\right\|_2 = 0 \quimpl \wh{\bx} = \bR^{-1}\bc_1 \text{ ist Minimierer.} \quad \blacksquare
+$$
+
+::why[$\bR$ ist invertierbar, also bringt $\wh{\bx} = \bR^{-1}\bc_1$ den ersten Term exakt auf null, und kleiner als null kann eine Norm nicht werden]
+:::
+
+::::
+
+In der Praxis :k[invertieren]{#matrix-inverse} wir $\bR$ natürlich nicht explizit,
+sondern lösen das Dreieckssystem $\bR\wh{\bx} = \bc_1$ durch
+:k[Rückwärtseinsetzen]{#triangular-solve} in $\mathcal{O}(n^2)$ Operationen. Als Bonus
+fällt die Residuumsnorm gratis ab: aus dem Beweis lesen wir
+$\min_{\bx}\|\bA\bx - \bb\|_2 = \left\|\cblue{\bc_2}\right\|_2$ ab, ohne $\wh{\bx}$
+überhaupt einsetzen zu müssen.
+
+Was noch fehlt, ist ein stabiler Weg zu $\bQ$: Gram-Schmidt hat uns die Zerlegung im
+Beispiel geliefert, ist aber, wie oben gesehen, numerisch fragil. In
+[Abschnitt 7.5](#sec-7.5) konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
+spaltenweise aus einfachen orthogonalen Bausteinen: Givens-Rotationen und
+Householder-Spiegelungen.
+
+*Vertiefung: Heath §3.5 (Orthogonalisierungsverfahren, QR-Zerlegung, Gram-Schmidt);
+MML §3.8 (Orthonormalbasen) und MML §9.2 für die KQ-Perspektive der linearen
+Regression.*

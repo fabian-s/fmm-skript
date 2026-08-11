@@ -1,0 +1,309 @@
+import { SelfTest } from "./widgets/S24Local";
+import { S24WachstumWidget } from "./widgets/S24WachstumWidget";
+
+{/* Abschnitt 2.4: Landau-Symbole und Rechenregeln.
+    Quelle: Folien 02-algos.Rmd, Block „Landausymbole" bis „Quiz" (Z. 371–482).
+    Prosa eigenständig aus den Folien formuliert; MDX-Migration 2026-08-11. */}
+
+::quelle[Folien: 02-algos, „Landausymbole" bis „Quiz".]
+
+In [Abschnitt 2.3](#sec-2.3) haben wir den Aufwand von
+Algorithmen gemessen, indem wir elementare Operationen gezählt haben. Das Ergebnis sind
+Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber unhandlich. Für den Vergleich
+von Algorithmen interessiert uns fast immer nur eine Frage: Wie schnell wächst der
+Aufwand, wenn die Problemgröße $n$ groß wird? Die konkreten Vorfaktoren hängen
+ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also eine
+Notation, die genau das Wachstumsverhalten festhält und alles Unwesentliche wegwirft.
+Das leisten die *Landau-Symbole* (engl. *big-O notation*).
+
+### 2.4.1 Klein-o und Groß-O
+
+Die Idee: Wir vergleichen den Aufwand $a_n$ mit einer möglichst einfachen
+Vergleichsfolge $b_n$ (etwa $n^2$ oder $2^n$), indem wir den
+:k[Grenzwert]{#limit} des Quotienten
+$a_n / b_n$ betrachten. Bleibt der Quotient beschränkt, wächst $a_n$
+höchstens so schnell wie $b_n$; verschwindet er sogar, wächst $a_n$
+echt langsamer.
+
+:::definition[2.4.1 (Landau-Symbole)]
+Seien $a_n, b_n$ :k[Folgen]{#sequence}.
+
+- $a_n = o(b_n)$ („$a_n$ *ist klein-o von* $b_n$"),
+  wenn
+
+  $$
+  \lim_{n \to \infty} \frac{a_n}{b_n} = 0.
+  $$
+
+- $a_n = O(b_n)$ („$a_n$ *ist groß-O von* $b_n$"),
+  wenn
+
+  $$
+  \limsup_{n \to \infty} \left\vert \frac{a_n}{b_n} \right\vert < \infty.
+  $$
+:::
+
+Die Interpretation der beiden Symbole:
+
+- $a_n = o(b_n)$: $a_n$ wächst *langsamer* als $b_n$;
+  gegenüber $b_n$ wird $a_n$ vernachlässigbar klein.
+- $a_n = O(b_n)$: $a_n$ wächst *höchstens so schnell* wie
+  $b_n$; die Vergleichsfolge $b_n$ ist gegenüber $a_n$ nicht
+  vernachlässigbar.
+
+:::bemerkung[2.4.2 (Zwei Feinheiten der Definition)]
+*Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
+nicht :k[konvergieren]{#convergence}; er darf zum Beispiel
+oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der
+:k[Suprema]{#supremum} der Restfolgen) existiert dagegen
+immer, notfalls als $\infty$. Die Bedingung
+$\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$
+bedeutet schlicht: Ab irgendeinem Index gilt
+$\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$
+für eine Konstante $C$.
+
+*Das Gleichheitszeichen ist ein Notationsmissbrauch:*
+$a_n = O(b_n)$ liest man besser als „$a_n$ gehört zur Klasse
+$O(b_n)$". Insbesondere ist die Beziehung nicht symmetrisch: Aus
+$5n = O(n^2)$ folgt nicht $n^2 = O(5n)$.
+:::
+
+### 2.4.2 Rechenbeispiele
+
+Wie weist man eine Landau-Beziehung konkret nach? Wir bilden den Quotienten und rechnen
+seinen Grenzwert aus. In den folgenden drei Beispielen verfolgt
+$\cred{\text{Rot}}$ die untersuchte Folge $\cred{a_n}$ und
+$\cblue{\text{Blau}}$ die Vergleichsfolge $\cblue{b_n}$.
+
+:::beispiel[2.4.3]
+**(a)** Wir zeigen $\cred{3n^2 + 5n} = O(\cblue{n^2})$:
+
+$$
+\lim_{n \to \infty} \frac{\cred{3n^2 + 5n}}{\cblue{n^2}} = \lim_{n \to \infty} \left(3 + \frac{5}{n}\right) = 3 < \infty \quimpl \cred{3n^2 + 5n} = O(\cblue{n^2}). \quad \checkmark
+$$
+
+Der Quotient konvergiert gegen $3$, also ist auch sein Limes superior
+$3 < \infty$.
+
+**(b)** Wir zeigen $\cred{5n} = o(\cblue{n^2})$:
+
+$$
+\lim_{n \to \infty} \frac{\cred{5n}}{\cblue{n^2}} = \lim_{n \to \infty} \frac{5}{n} = 0 \quimpl \cred{5n} = o(\cblue{n^2}). \quad \checkmark
+$$
+
+**(c)** Gilt $\cred{n^2} = O(\cblue{n})$? **Nein!**
+
+$$
+\lim_{n \to \infty} \frac{\cred{n^2}}{\cblue{n}} = \lim_{n \to \infty} n = \infty \quad \text{(divergiert!)} \quimpl \cred{n^2} \neq O(\cblue{n}).
+$$
+
+Der Quotient wächst über jede Schranke hinaus; $\cred{n^2}$ wächst echt
+schneller als $\cblue{n}$.
+:::
+
+:::bemerkung[2.4.4 (Scharfe Schranken)]
+Meist suchen wir eine möglichst *einfache* Vergleichsfolge $b_n$,
+sodass $a_n = O(b_n)$, aber *nicht* $a_n = o(b_n)$ gilt:
+eine Schranke, die das Wachstum genau trifft. Für $3n^2 + 5n$ ist das
+$b_n = n^2$: Der Quotient konvergiert gegen $3 \neq 0$. Zwar wäre
+auch $3n^2 + 5n = O(n^3)$ formal korrekt, aber wertlos grob, so wie „die
+Fahrt dauert höchstens drei Wochen" für eine Zugfahrt nach Berlin.
+:::
+
+### 2.4.3 Rechenregeln
+
+Aufwandsausdrücke entstehen durch Hintereinanderausführung (Addition der Kosten) und
+Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Praktischerweise
+vertragen sich die Landau-Symbole genau mit diesen beiden Operationen, so dass wir die
+Grenzwertrechnung nicht jedes Mal neu machen müssen:
+
+:::lemma[2.4.5 (Rechenregeln für Landau-Symbole)]
+Seien $a_n, b_n > 0$ Vergleichsfolgen.
+
+1. Sei $\cred{f_n} = O(a_n)$ und $\cgreen{g_n} = O(b_n)$. Dann gilt
+
+   $$
+   \cred{f_n} + \cgreen{g_n} = O(a_n + b_n) \quad\text{und}\quad \cred{f_n} \cdot \cgreen{g_n} = O(a_n \cdot b_n).
+   $$
+
+2. Sei $\cred{f_n} = O(a_n)$ und $\cgreen{g_n} = o(b_n)$. Dann gilt
+
+   $$
+   \cred{f_n} \cdot \cgreen{g_n} = o(a_n \cdot b_n).
+   $$
+
+3. Sei $\cred{f_n} = O(a_n + b_n)$ mit $a_n = O(b_n)$. Dann gilt
+
+   $$
+   \cred{f_n} = O(b_n).
+   $$
+:::
+
+Die Positivität der Vergleichsfolgen setzen wir voraus, damit sich in
+$a_n + b_n$ nichts wegheben kann. Für Aufwandsvergleiche ist das keine
+Einschränkung, denn Operationenzahlen sind positiv. Die Beweise sind kurze
+Grenzwertargumente:
+
+::::beweis
+
+:::schritt
+*Regel 1, Addition.* Wir schätzen den Quotienten ab:
+
+$$
+\frac{\left\vert \cred{f_n} + \cgreen{g_n} \right\vert}{a_n + b_n} \le \frac{\left\vert \cred{f_n} \right\vert}{a_n + b_n} + \frac{\left\vert \cgreen{g_n} \right\vert}{a_n + b_n} \le \frac{\left\vert \cred{f_n} \right\vert}{a_n} + \frac{\left\vert \cgreen{g_n} \right\vert}{b_n}.
+$$
+
+::why[Dreiecksungleichung; danach verkleinern wir die Nenner ($a_n + b_n \ge a_n$ bzw. $\ge b_n$, da beide Folgen positiv sind), was die Brüche höchstens vergrößert]
+:::
+
+:::schritt
+$$
+\limsup_{n \to \infty} \frac{\left\vert \cred{f_n} + \cgreen{g_n} \right\vert}{a_n + b_n} < \infty \quimpl \cred{f_n} + \cgreen{g_n} = O(a_n + b_n).
+$$
+
+::why[beide Summanden haben nach Voraussetzung endlichen Limes superior, und der Limes superior einer Summe ist höchstens die Summe der Limites superiores]
+:::
+
+:::schritt
+*Regel 1, Multiplikation, und Regel 2.* Der Quotient zerfällt in ein Produkt:
+
+$$
+\frac{\left\vert \cred{f_n} \cdot \cgreen{g_n} \right\vert}{a_n \cdot b_n} = \frac{\left\vert \cred{f_n} \right\vert}{a_n} \cdot \frac{\left\vert \cgreen{g_n} \right\vert}{b_n}.
+$$
+
+::why[Betrag und Bruch faktorisieren, beide Faktoren kennen wir schon]
+:::
+
+:::schritt
+Der erste Faktor ist beschränkt ($\cred{f_n} = O(a_n)$). Ist
+$\cgreen{g_n} = O(b_n)$, so ist auch der zweite Faktor beschränkt und das
+Produkt bleibt beschränkt: $\cred{f_n} \cgreen{g_n} = O(a_n b_n)$. Ist
+dagegen $\cgreen{g_n} = o(b_n)$, so konvergiert der zweite Faktor gegen
+$0$ und damit das ganze Produkt:
+$\cred{f_n} \cgreen{g_n} = o(a_n b_n)$.
+
+::why[das Produkt zweier beschränkter Folgen ist beschränkt; das Produkt einer beschränkten Folge mit einer Nullfolge ist eine Nullfolge]
+:::
+
+:::schritt
+*Regel 3.* Zuerst zeigen wir $a_n + b_n = O(b_n)$:
+
+$$
+\frac{a_n + b_n}{b_n} = \frac{a_n}{b_n} + 1 = O(1).
+$$
+
+::why[$a_n = O(b_n)$ macht den ersten Summanden beschränkt; die Konstante $1$ ist es sowieso]
+:::
+
+:::schritt
+$$
+\frac{\left\vert \cred{f_n} \right\vert}{b_n} = \frac{\left\vert \cred{f_n} \right\vert}{a_n + b_n} \cdot \frac{a_n + b_n}{b_n} \quimpl \cred{f_n} = O(b_n).
+$$
+
+::why[Produkt zweier beschränkter Folgen; das ist gerade Regel 1 (Multiplikation) mit $b_n \cdot 1$ als Vergleichsfolge]
+:::
+
+::::
+
+### 2.4.4 Anwendung: auf den dominanten Term reduzieren
+
+Sehen wir die Regeln im Einsatz. Wieder verfolgt $\cred{\text{Rot}}$ die
+Folge $\cred{f_n}$ und $\cgreen{\text{Grün}}$ die Folge
+$\cgreen{g_n}$.
+
+:::beispiel[2.4.6 (Addition und Multiplikation)]
+Gegeben seien $\cred{f_n} = 3n^2 = O(n^2)$ und
+$\cgreen{g_n} = 5n = O(n)$.
+
+**Addition** (Regel 1, dann Regel 3):
+
+$$
+\cred{f_n} + \cgreen{g_n} = \cred{3n^2} + \cgreen{5n} = O(n^2 + n) = O(n^2), \quad \text{denn } n = O(n^2).
+$$
+
+**Multiplikation** (Regel 1):
+
+$$
+\cred{f_n} \cdot \cgreen{g_n} = \cred{3n^2} \cdot \cgreen{5n} = 15n^3 = O(n^2 \cdot n) = O(n^3).
+$$
+:::
+
+:::beispiel[2.4.7 (Vereinfachung eines Aufwandsausdrucks)]
+Ein Algorithmus benötige $\cred{4n^3} + 16n^2 + 239$ Operationen. Rot
+verfolgt jetzt den am schnellsten wachsenden Term:
+
+$$
+\cred{4n^3} + 16n^2 + 239 = O(\cred{n^3} + n^2 + 1) = O(\cred{n^3}),
+$$
+
+denn $n^2 = O(n^3)$ und $1 = O(n^3)$, zweimal Regel 3 angewandt.
+Dass auch der Vorfaktor $4$ verschwindet, liegt an der Definition: Für jede
+Konstante $c > 0$ ist
+$\limsup_{n \to \infty} \left\vert c \, b_n / b_n \right\vert = c < \infty$,
+also $c \cdot b_n = O(b_n)$.
+:::
+
+**Wir können komplexe Aufwandsausdrücke also auf ihren dominanten Term reduzieren.**
+Deshalb sprechen wir von einem „$O(n^3)$-Algorithmus", ohne Vorfaktoren
+oder niedrigere Terme zu nennen: Für großes $n$ bestimmt allein der dominante
+Term, wie sich die Laufzeit verhält. Und die üblichen Komplexitätsklassen bilden eine
+strikte Hierarchie, in der jede klein-o-mäßig langsamer wächst als die nächste:
+
+$$
+\log n \,,\quad n \,,\quad n \log n \,,\quad n^2 \,,\quad n^3 \,,\quad 2^n.
+$$
+
+Wie drastisch sich diese Klassen unterscheiden (und ab welchem $n$ ein
+schneller wachsender Term jeden noch so großen Vorfaktor überholt), zeigt das folgende
+Widget. Der :k[Logarithmus]{#logarithm}-Trick der log-Skala
+macht dabei aus $2^n$ eine Gerade.
+
+:::vertiefung[Wachstumsraten-Explorer: wer dominiert wen, und ab wann?]
+<p className="mb-3 max-w-prose text-sm">Wählen Sie Komplexitätsklassen aus und vergleichen Sie sie auf linearer und logarithmischer Skala. Der Schieberegler für den Vorfaktor $c$ skaliert die $n^2$-Kurve: Selbst $c = 1000$ verschiebt nur den Schnittpunkt mit $2^n$ und $n^3$ nach rechts – gewinnen kann der langsamer wachsende Term nie. Das ist die praktische Bedeutung von $n^2 = o(n^3)$: Vorfaktoren sind auf lange Sicht bedeutungslos.</p>
+
+<S24WachstumWidget />
+:::
+
+### 2.4.5 Selbsttest
+
+Welche der folgenden Aussagen sind wahr? Erst selbst entscheiden (Quotient bilden!),
+dann die Lösung aufklappen.
+
+<SelfTest nr={1} frage={<M>{"2n = O(n^2)"}</M>}>
+**Wahr.**
+$\lim_{n \to \infty} \frac{2n}{n^2} = \lim_{n \to \infty} \frac{2}{n} = 0 < \infty$;
+es gilt sogar die stärkere Aussage $2n = o(n^2)$. Die *scharfe*
+Schranke im Sinne von Bemerkung 2.4.4 wäre $2n = O(n)$.
+</SelfTest>
+
+<SelfTest nr={2} frage={<M>{"7/n = o(1)"}</M>}>
+**Wahr.** Mit $b_n = 1$ ist
+$\lim_{n \to \infty} \frac{7/n}{1} = 0$. Landau-Symbole beschreiben also
+nicht nur Wachstum, sondern auch das Abklingen von Nullfolgen. So werden wir später
+Approximations- und Rundungsfehler klassifizieren.
+</SelfTest>
+
+<SelfTest nr={3} frage={<M>{"8n^3 + 7n^2 + n = O(n)"}</M>}>
+**Falsch.**
+$\lim_{n \to \infty} \frac{8n^3 + 7n^2 + n}{n} = \lim_{n \to \infty} \left(8n^2 + 7n + 1\right) = \infty$;
+der Quotient divergiert. Richtig wäre $O(n^3)$: der dominante Term
+entscheidet (Beispiel 2.4.7).
+</SelfTest>
+
+<SelfTest nr={4} frage={<M>{"n^{-3} + n^{-2} = O(n^{-2})"}</M>}>
+**Wahr.**
+$\lim_{n \to \infty} \frac{n^{-3} + n^{-2}}{n^{-2}} = \lim_{n \to \infty} \left(\frac{1}{n} + 1\right) = 1 < \infty. \quad \checkmark$
+Auch $n^{-3} + n^{-2} = o(1)$ wäre richtig (die Folge ist eine Nullfolge),
+aber $O(n^{-2})$ ist die schärfere Aussage: Sie sagt nicht nur *dass*,
+sondern *wie schnell* die Folge verschwindet.
+</SelfTest>
+
+Damit haben wir das Handwerkszeug beisammen. Im
+[nächsten Abschnitt](#sec-2.5) setzen wir es ein, um
+die Komplexität unserer Fibonacci-Algorithmen aus
+[Abschnitt 2.2](#sec-2.2) präzise zu bestimmen – mit
+einem drastischen Ergebnis.
+
+*Vertiefung: Heath §1.1 (Aufwand und Genauigkeit numerischer Verfahren); Cormen,
+Leiserson, Rivest & Stein, _Introduction to Algorithms_, Kap. 3
+(asymptotische Notation, dort auch $\Theta$ und $\Omega$).*

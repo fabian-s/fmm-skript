@@ -1,0 +1,319 @@
+import { S31SpurWidget } from "./widgets/S31SpurWidget";
+
+::quelle[Folien: 03-matrix-spur-norm, „Die Spur einer Matrix".]
+
+Mit diesem Kapitel beginnt der Numerik-Teil des Kurses in der linearen Algebra. Bevor wir
+in den folgenden Kapiteln Gleichungssysteme zerlegen und lösen, brauchen wir ein
+Handwerkszeug, das dort auf Schritt und Tritt auftaucht: Wir müssen
+:k[Matrizen]{#matrix} *messen* können. Wie groß ist eine
+Matrix? Wie stark verstärkt sie Fehler? Wann konvergiert ein iteratives Verfahren? Alle
+diese Fragen verlangen, eine ganze Tabelle voller Zahlen zu einer einzigen aussagekräftigen
+Kennzahl zu verdichten. Dieses Kapitel stellt die beiden wichtigsten solchen Kennzahlen
+vor: die *Spur* (dieser Abschnitt) und die *Matrixnormen* (Rest des
+Kapitels). Beide begegnen uns in der Statistik ständig: Die Gesamtvarianz eines
+Zufallsvektors ist zum Beispiel die Spur seiner
+:k[Kovarianzmatrix]{#covariance-matrix}.
+
+:::bemerkung[3.1.1 (Verwendete Vorkenntnisse)]
+Dieses Kapitel setzt voraus:
+
+- :k[Normen]{#norm} als Fehlermaße und
+  :k[Konditionszahlen]{#condition-number},
+- aus der linearen Algebra: Matrixoperationen (Addition,
+  :k[Multiplikation]{#matrix-multiplication},
+  :k[Transposition]{#transpose}),
+  :k[Eigenwerte und Eigenvektoren]{#eigenvalue-eigenvector},
+  :k[Orthogonalität]{#orthogonality},
+  :k[Skalarprodukte]{#dot-product} sowie die grundlegenden
+  Vektornormen (:k[euklidische Norm]{#euclidean-norm}
+  $\left\| \bx \right\|_2$ und $p$-Normen),
+- aus der Analysis: :k[Grenzwerte]{#limit} und
+  :k[Suprema]{#supremum}, Maximum und Minimum von Funktionen.
+
+:::
+
+### 3.1.1 Definition und erste Beispiele
+
+Die einfachste Art, eine quadratische Matrix zu einer Zahl zu verdichten, ist zugleich die
+billigste: Wir addieren einfach die Diagonalelemente. Das klingt zunächst willkürlich.
+Warum ausgerechnet die Diagonale? Die Antwort liefert dieser Abschnitt: Diese Summe ist
+eine erstaunlich stabile Kenngröße der Matrix, die sich von Basiswechseln nicht
+beeindrucken lässt und die Summe der Eigenwerte liefert, ohne dass wir auch nur einen
+davon ausrechnen müssten.
+
+:::definition[3.1.2 (Spur)]
+Die *Spur* (*trace*) einer quadratischen Matrix
+$\bA \in \R^{n \times n}$ ist die Summe ihrer Diagonalelemente:
+
+$$
+\tr(\bA) = \sum_{i=1}^n \cgreen{a_{ii}}.
+$$
+:::
+
+Zwei Dinge halten wir gleich fest: Erstens ist die Spur *nur für quadratische
+Matrizen* definiert, denn bei einer rechteckigen Matrix hat „die Diagonale" keine
+sinnvolle Bedeutung. Zweitens ist die Spur eine *skalare Invariante* der Matrix:
+Sie ändert sich nicht, wenn wir dieselbe lineare Abbildung in einer anderen
+:k[Basis]{#basis} darstellen (das ist die
+Ähnlichkeitsinvarianz, die wir gleich in Satz 3.1.4 beweisen). Nebenbei bemerkt ist die
+Spur auch numerisch ein Schnäppchen: $n - 1$ Additionen, keine einzige
+Multiplikation.
+
+:::beispiel[3.1.3]
+Für die :k[Einheitsmatrix]{#identity-matrix} stehen auf der
+Diagonale $n$ Einsen, also $\tr(\bI_n) = n$. Zwei konkrete
+Rechnungen (die Diagonalelemente sind grün markiert):
+
+$$
+\tr\begin{pmatrix} \cgreen{1} & 2 \\ 3 & \cgreen{4} \end{pmatrix} = \cgreen{1} + \cgreen{4} = 5, \qquad \tr\begin{pmatrix} \cgreen{2} & -1 & 0 \\ 0 & \cgreen{3} & 5 \\ 1 & 0 & \cgreen{-2} \end{pmatrix} = \cgreen{2} + \cgreen{3} + (\cgreen{-2}) = 3.
+$$
+
+Alle Einträge abseits der Diagonale sind für die Spur unsichtbar; die $5$ im
+zweiten Beispiel könnte genauso gut $5000$ sein.
+:::
+
+### 3.1.2 Rechenregeln und zyklische Vertauschung
+
+Der eigentliche Wert der Spur liegt in ihren Rechenregeln. Sie machen aus der harmlosen
+Diagonalsumme ein Werkzeug, mit dem sich viele Matrixausdrücke drastisch vereinfachen
+lassen.
+
+:::satz[3.1.4 (Eigenschaften der Spur)]
+Für Matrizen $\bA, \bB \in \R^{n \times n}$, invertierbares
+$\bP \in \R^{n \times n}$ und $c \in \R$ gilt:
+
+1. *Additiv:* $\tr(\bA + \bB) = \tr(\bA) + \tr(\bB)$
+2. *Homogen:* $\tr(c\bA) = c \cdot \tr(\bA)$
+3. *Zyklisch:* $\tr(\bA\bB) = \tr(\bB\bA)$
+4. *Ähnlichkeitsinvariant:* $\tr(\bP\bA\bP^{-1}) = \tr(\bA)$
+5. *Transpositionsinvariant:* $\tr(\bA^\top) = \tr(\bA)$
+
+:::
+
+Die Eigenschaften 1, 2 und 5 folgen direkt aus der Definition: Addition und Skalierung
+wirken eintragsweise, also insbesondere auf jedes Diagonalelement einzeln, und das
+:k[Transponieren]{#transpose} spiegelt die Matrix an der
+Diagonale, wobei die Diagonalelemente selbst bleiben, wo sie sind. Interessant sind die
+Eigenschaften 3 und 4; die beweisen wir jetzt.
+
+::::beweis
+
+:::schritt
+Zu Eigenschaft 3: Wir schreiben beide Seiten als Doppelsumme aus.
+
+$$
+\tr(\bA\bB) = \sum_{i=1}^n (\bA\bB)_{ii} = \sum_{i=1}^n \sum_{k=1}^n \cred{a_{ik}}\,\cblue{b_{ki}}
+$$
+
+::why[Definition der Spur; der Diagonaleintrag $(\bA\bB)_{ii}$ ist das :k[Skalarprodukt]{#dot-product} aus $i$-ter Zeile von $\bA$ und $i$-ter Spalte von $\bB$ (:k[Matrixprodukt]{#matrix-multiplication})]
+:::
+
+:::schritt
+$$
+= \sum_{k=1}^n \sum_{i=1}^n \cblue{b_{ki}}\,\cred{a_{ik}} = \sum_{k=1}^n (\bB\bA)_{kk} = \tr(\bB\bA)
+$$
+
+::why[endliche Summen dürfen wir vertauschen, und die Faktoren $\cred{a_{ik}}$, $\cblue{b_{ki}}$ sind Skalare, kommutieren also]
+:::
+
+:::schritt
+Eigenschaft 4 ist damit ein Einzeiler:
+
+$$
+\tr(\bP\bA\bP^{-1}) = \tr\left((\bP\bA)\,\bP^{-1}\right) = \tr\left(\bP^{-1}(\bP\bA)\right) = \tr(\bA).
+$$
+
+::why[Eigenschaft 3, angewendet auf die beiden Faktoren $\bP\bA$ und $\bP^{-1}$; dann $\bP^{-1}\bP = \bI$ (:k[Inverse]{#inverse-matrix})]
+:::
+
+::::
+
+Eigenschaft 3 ist die *wichtigste* Eigenschaft der Spur. Wenden wir sie auf ein
+Produkt aus drei Matrizen an (mit den Faktorpaaren
+$\bA \cdot (\bB\bC)$ bzw. $(\bA\bB) \cdot \bC$), erhalten wir
+die *zyklische Vertauschung*:
+
+$$
+\tr(\bA\bB\bC) = \tr(\bB\bC\bA) = \tr(\bC\bA\bB).
+$$
+
+Wir dürfen die Faktoren unter der Spur also „im Kreis herumschieben", so als stünden
+sie auf einem Karussell: Die Reihenfolge im Kreis bleibt erhalten, nur der Startpunkt
+wandert.
+
+:::bemerkung[3.1.5 (Vorsicht: Was die Spur nicht kann)]
+- Die Spur ist *nicht* multiplikativ: $\tr(\bA\bB) = \tr(\bB\bA)$,
+  aber $\tr(\bA\bB) \neq \tr(\bA) \cdot \tr(\bB)$! Kleinstes
+  Gegenbeispiel: $\bA = \bB = \bI_2$, denn
+  $\tr(\bI_2 \bI_2) = \tr(\bI_2) = 2$, aber
+  $\tr(\bI_2) \cdot \tr(\bI_2) = 4$.
+- Erlaubt sind nur *zyklische* Vertauschungen, keine beliebigen: Im Allgemeinen
+  ist $\tr(\bA\bB\bC) \neq \tr(\bA\bC\bB)$, weil sich die Umordnung
+  $\bA\bC\bB$ nicht durch Weiterdrehen aus
+  $\bA\bB\bC$ erzeugen lässt.
+
+:::
+
+:::beispiel[3.1.6 (Zyklische Vertauschung in der Statistik)]
+Ein Vorgeschmack darauf, warum die zyklische Vertauschung in der Statistik ein
+Dauerbrenner ist: In der
+:k[linearen Regression]{#linear-regression} mit Designmatrix
+$\bX \in \R^{n \times p}$ (voller Spaltenrang) erzeugt die „Hutmatrix"
+$\bH = \bX(\bX^\top\bX)^{-1}\bX^\top \in \R^{n \times n}$ die
+gefitteten Werte $\wh{\by} = \bH\by$. Ihre Spur zählt die effektiven
+Parameter des Modells. Die zyklische Vertauschung berechnet sie, ohne dass wir
+einen einzigen Eintrag der $n \times n$-Matrix $\bH$ kennen müssen:
+
+$$
+\tr(\bH) = \tr\left(\cred{\bX}\,\cblue{(\bX^\top\bX)^{-1}\bX^\top}\right) = \tr\left(\cblue{(\bX^\top\bX)^{-1}\bX^\top}\,\cred{\bX}\right) = \tr(\bI_p) = p.
+$$
+
+Im zweiten Schritt haben wir den Faktor $\cred{\bX}$ einmal im Kreis nach
+hinten geschoben; dann kürzt sich $(\bX^\top\bX)^{-1}\,\bX^\top\bX$ zur
+$p \times p$-Einheitsmatrix.
+:::
+
+### 3.1.3 Spur und Eigenwerte
+
+Warum ist ausgerechnet die Diagonalsumme so invariant? Das folgende Resultat liefert die
+tiefere Erklärung: Die Spur ist in Wahrheit eine Kennzahl der
+:k[Eigenwerte]{#eigenvalue-eigenvector} – und die hängen nur
+von der linearen Abbildung ab, nicht von der Basis, in der wir sie aufschreiben.
+
+:::satz[3.1.7 (Spur als Summe der Eigenwerte)]
+Für eine Matrix $\bA \in \R^{n \times n}$ mit Eigenwerten
+$\lambda_1, \ldots, \lambda_n$ gilt
+
+$$
+\tr(\bA) = \sum_{i=1}^n \lambda_i.
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir führen den Beweis für *diagonalisierbare* $\bA$. Sei dazu
+
+$$
+\bA = \bP\bD\bP^{-1} \quad \text{mit} \quad \bD = \diag(\cblue{\lambda_1}, \ldots, \cblue{\lambda_n})
+$$
+
+eine Diagonalisierung von $\bA$.
+
+::why[$\bA$ diagonalisierbar heißt gerade: Es gibt eine Basis aus Eigenvektoren (Spalten von $\bP$), und in dieser Basis ist die Abbildung eine :k[Diagonalmatrix]{#diagonal-matrix} mit den Eigenwerten auf der Diagonale]
+:::
+
+:::schritt
+$$
+\tr(\bA) = \tr\left(\bP\bD\bP^{-1}\right) = \tr(\bD)
+$$
+
+::why[Ähnlichkeitsinvarianz der Spur (Satz 3.1.4, Eigenschaft 4): :k[ähnliche Matrizen]{#similar-matrices} haben dieselbe Spur]
+:::
+
+:::schritt
+$$
+\tr(\bD) = \sum_{i=1}^n \cblue{\lambda_i}.
+$$
+
+::why[Definition der Spur: Die Diagonalelemente von $\bD$ sind genau die Eigenwerte]
+:::
+
+::::
+
+Der Satz gilt auch für nicht diagonalisierbare Matrizen; der allgemeine Beweis läuft über
+einen Koeffizientenvergleich im charakteristischen Polynom
+$\det(\bA - \lambda\bI)$
+(:k[Determinante]{#determinant}) und ist hier nicht unser Thema.
+Zwei Feinheiten sind trotzdem erwähnenswert: Die Eigenwerte zählen wir mit ihrer
+algebraischen Vielfachheit, und sie dürfen
+:k[komplex]{#complex-numbers} sein (eine reelle Matrix kann
+komplexe Eigenwerte haben). Die treten dann aber immer als konjugierte Paare
+$a \pm b\,i$ auf, deren Imaginärteile sich in der Summe wegheben: Die Spur
+bleibt reell, wie es sich für eine Summe reeller Diagonalelemente gehört. Praktisch
+bedeutet der Satz: Die Spur verrät uns die Summe aller Eigenwerte zum Preis von
+$n - 1$ Additionen. Die Eigenwerte selbst zu berechnen wäre um Größenordnungen
+teurer.
+
+:::vertiefung[Spur = Eigenwertsumme: live ausprobieren]
+<S31SpurWidget />
+:::
+
+### 3.1.4 Die Frobenius-Norm
+
+Die Spur verdichtet eine Matrix zu einer Zahl, aber als Maß für die „Größe" einer Matrix
+taugt sie nicht: Sie ignoriert alle Einträge abseits der Diagonale, kann negativ werden
+und ist für rechteckige Matrizen gar nicht definiert. Für ein echtes Größenmaß liegt eine
+andere Idee nahe: Wir behandeln die $m \cdot n$ Einträge der Matrix wie einen
+langen Vektor und nehmen dessen
+:k[euklidische Norm]{#euclidean-norm}.
+
+:::definition[3.1.8 (Frobenius-Norm)]
+Die *Frobenius-Norm* einer Matrix $\bA \in \R^{m \times n}$ ist
+
+$$
+\left\| \bA \right\|_F := \sqrt{\sum_{i=1}^m \sum_{j=1}^n a_{ij}^2}.
+$$
+:::
+
+:::bemerkung[3.1.9]
+- Die Frobenius-Norm ist das exakte Analogon zur euklidischen Vektornorm: Quadrieren,
+  aufsummieren, Wurzel ziehen, nur eben über alle $m \cdot n$ Einträge. Sie
+  ist insbesondere auch für rechteckige Matrizen definiert.
+- In der Literatur heißt sie auch *Hilbert-Schmidt-Norm*.
+- Sie misst so etwas wie die „Größe" der Matrix. Ob sie das *richtige* Maß für
+  unsere Zwecke ist, klären wir im
+  [nächsten Abschnitt](#sec-3.2).
+
+:::
+
+Das folgende Resultat verknüpft die beiden Begriffe dieses Abschnitts: Die Frobenius-Norm
+lässt sich vollständig durch die Spur ausdrücken. Damit stehen ihr alle Rechenregeln aus
+Satz 3.1.4 zur Verfügung, insbesondere die zyklische Vertauschung.
+
+:::satz[3.1.10 (Frobenius-Norm über die Spur)]
+Für $\bA \in \R^{m \times n}$ gilt
+
+$$
+\left\| \bA \right\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n a_{ij}^2} = \sqrt{\tr(\bA^\top\bA)}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir berechnen $\bA^\top\bA \in \R^{n \times n}$ eintragsweise:
+
+$$
+\bA^\top\bA = \begin{pmatrix} \cgreen{\sum_{i=1}^m a_{i1}^2} & \sum_{i=1}^m a_{i1}a_{i2} & \cdots \\ \sum_{i=1}^m a_{i2}a_{i1} & \cgreen{\sum_{i=1}^m a_{i2}^2} & \cdots \\ \vdots & \vdots & \ddots \end{pmatrix}
+$$
+
+::why[Eintrag $(j, k)$ von $\bA^\top\bA$ ist das Skalarprodukt aus $j$-ter Zeile von $\bA^\top$ (also $j$-ter *Spalte* von $\bA$) und $k$-ter Spalte von $\bA$; auf der Diagonale ($j = k$, grün) steht also jede Spalte im Skalarprodukt mit sich selbst]
+:::
+
+:::schritt
+$$
+\quimpl \tr(\bA^\top\bA) = \sum_{j=1}^n \cgreen{\sum_{i=1}^m a_{ij}^2} = \sum_{i=1}^m \sum_{j=1}^n a_{ij}^2
+$$
+
+::why[die Spur summiert die grünen Diagonalelemente; zusammen durchlaufen die beiden Summen alle $m \cdot n$ Einträge von $\bA$ genau einmal]
+:::
+
+:::schritt
+$$
+\quimpl \sqrt{\tr(\bA^\top\bA)} = \sqrt{\sum_{i=1}^m \sum_{j=1}^n a_{ij}^2} = \left\| \bA \right\|_F.
+$$
+
+::why[Wurzel ziehen auf beiden Seiten; Definition 3.1.8]
+:::
+
+::::
+
+Diese Spur-Darstellung ist mehr als eine Kuriosität: Sie macht die Frobenius-Norm in
+Rechnungen handhabbar, in denen die Doppelsumme unhandlich wäre. Ob die Frobenius-Norm
+allerdings das misst, was wir bei der Fehleranalyse wirklich brauchen (nämlich wie stark
+eine Matrix Vektoren verzerren kann), ist eine andere Frage. Ihr gehen wir im
+[nächsten Abschnitt](#sec-3.2) nach, wo wir den Begriff
+der Matrixnorm systematisch entwickeln.
+
+*Vertiefung: Heath §2; MML §4.1.*

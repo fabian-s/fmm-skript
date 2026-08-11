@@ -1,0 +1,407 @@
+import { S33OperatornormWidget } from "./widgets/S33OperatornormWidget";
+import { SelbsttestFrage } from "./widgets/S33Local";
+
+::quelle[Folien: 03-matrix-spur-norm, „Operatornormen".]
+
+Die elementweisen Matrixnormen aus [Abschnitt 3.2](#sec-3.2) haben einen blinden
+Fleck: Sie behandeln die Matrix als bloße Zahlentabelle. Die Identitätsmatrix
+:k[$\bI_n$]{#identity-matrix} etwa verändert
+als Abbildung überhaupt nichts; trotzdem wächst ihre Frobenius-Norm
+$\left\| \bI_n \right\|_F = \sqrt{n}$ mit der Dimension. Was die
+Matrix als :k[lineare Abbildung]{#linear-map}
+$\bx \mapsto \bA\bx$ *tut*, sehen diese Normen nicht. In
+diesem Abschnitt bauen wir Normen, die genau das messen: Wie stark kann
+$\bA$ einen Vektor strecken?
+
+### 3.3.1 Definition und Interpretation
+
+Die Idee: Wir schicken alle Vektoren $\bx \neq \bnull$ durch die
+Abbildung und vergleichen die Länge des Bildes $\bA\bx$ mit der Länge
+des Urbildes $\bx$, gemessen mit einer
+:k[Vektornorm]{#norm} unserer Wahl. Der größte
+auftretende Streckfaktor ist die Norm der Matrix.
+
+:::definition[3.3.1 (Operatornorm)]
+Sei $\left\| \cdot \right\|_V$ eine Vektornorm. Die
+*Operatornorm* (auch: *induzierte Norm*) von
+$\bA \in \R^{m \times n}$ ist
+
+$$
+\left\| \bA \right\|_V := \max_{\bx \neq \bnull} \frac{\left\| \bA\bx \right\|_V}{\left\| \bx \right\|_V} = \max_{\left\| \bx \right\|_V = 1} \left\| \bA\bx \right\|_V.
+$$
+:::
+
+Der Quotient
+$R_{\bA}(\bx) = \left\| \bA\bx \right\|_V / \left\| \bx \right\|_V$
+heißt *Rayleigh-Quotient*: Er gibt an, um welchen Faktor $\bA$
+den Vektor $\bx$ streckt. Eine große Operatornorm bedeutet also: Es
+gibt mindestens eine Richtung, in der $\bA$ stark streckt. Eine kleine
+Operatornorm bedeutet: $\bA$ staucht jeden Vektor (oder lässt ihn
+höchstens schwach wachsen). Die zweite Gleichheit in der Definition gilt, weil
+der Rayleigh-Quotient skaleninvariant ist: Ersetzen wir $\bx$ durch
+$c\,\bx$ mit $c \neq 0$, kürzt sich $|c|$ heraus.
+Wir dürfen uns deshalb auf Vektoren der Länge 1 beschränken.
+
+:::bemerkung[3.3.2]
+- Genau genommen brauchen wir zwei Normen: eine auf $\R^n$ für
+  $\bx$ und eine auf $\R^m$ für $\bA\bx$. Wir
+  verwenden stets dieselbe Normfamilie in der jeweils passenden Dimension und
+  schreiben dafür dasselbe Symbol.
+- Warum dürfen wir „max" statt „sup" schreiben? Die Funktion
+  $\bx \mapsto \left\| \bA\bx \right\|_V$ ist
+  :k[stetig]{#continuous-function}, und die
+  Einheitssphäre
+  $\{\bx : \left\| \bx \right\|_V = 1\}$ ist eine
+  :k[abgeschlossene und beschränkte Menge]{#closed-bounded-set}; das Maximum wird also tatsächlich angenommen.
+
+:::
+
+Schauen wir uns das geometrisch an. In der euklidischen Norm (
+$p = 2$) ist die Menge aller Einheitsvektoren der Einheitskreis. Sein
+Bild unter einer $2 \times 2$-Matrix ist eine Ellipse, und die
+Operatornorm ist die längste Halbachse dieser Ellipse.
+
+:::beispiel[3.3.3 (Visualisierung)]
+Betrachten wir
+$\bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix}$. Wie wir in
+Satz 3.3.7 beweisen werden, ist
+$\left\| \bA \right\|_2 = \sqrt{\corange{\lambda_{\max}(\bA^\top\bA)}}$.
+Rechnen wir nach:
+
+$$
+\bA^\top\bA = \begin{pmatrix} 2 & 0 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 4 & 2 \\ 2 & 2 \end{pmatrix}.
+$$
+
+Die :k[Eigenwerte]{#eigenvalue-eigenvector} sind die
+Nullstellen des charakteristischen Polynoms
+$\lambda^2 - 6\lambda + 4$, also
+$\lambda_{1,2} = 3 \pm \sqrt{5}$, und damit
+
+$$
+\left\| \bA \right\|_2 = \sqrt{\corange{3 + \sqrt{5}}} \approx 2{,}29.
+$$
+
+In R können wir das direkt nachprüfen (`crossprod(A)` berechnet
+$\bA^\top\bA$):
+
+```r
+A <- matrix(c(2, 1,
+              0, 1), nrow = 2, byrow = TRUE)
+AtA <- crossprod(A)   # t(A) %*% A
+sqrt(eigen(AtA)$values)
+#> [1] 2.288246 0.874032
+```
+
+Der größte Wert ist die Operatornorm: Kein Einheitsvektor wird um mehr als den
+Faktor $2{,}29$ gestreckt. Der kleinere Wert $0{,}874$ ist
+die kürzeste Halbachse der Bildellipse, also die stärkste Stauchung. Dieselbe
+Matrix begegnet uns in Beispiel 3.4.6 ([Abschnitt 3.4](#sec-3.4)) wieder. Dort
+berechnen wir ihre Schattennormen aus genau diesen Eigenwerten.
+:::
+
+:::vertiefung[Operatornorm zum Anfassen: der Einheitskreis unter A]
+<S33OperatornormWidget />
+:::
+
+### 3.3.2 Die wichtigsten Operatornormen
+
+Jede $p$-Norm
+$\left\| \bv \right\|_p = \left( \sum_i |v_i|^p \right)^{1/p}$
+induziert ihre eigene Operatornorm. Drei Fälle sind so wichtig, dass sie eigene
+Namen tragen, und für zwei davon gibt es erfreulich einfache Formeln:
+
+:::satz[3.3.4 (Induzierte p-Normen)]
+Sei $\bA \in \R^{m \times n}$ mit Einträgen $a_{ij}$.
+Dann gilt:
+
+*Spektralnorm* ($p = 2$):
+
+$$
+\left\| \bA \right\|_2 = \max_{\left\| \bx \right\|_2 = 1} \left\| \bA\bx \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}
+$$
+
+*Spaltensummennorm* ($p = 1$):
+
+$$
+\left\| \bA \right\|_1 = \max_{\left\| \bx \right\|_1 = 1} \left\| \bA\bx \right\|_1 = \max_{1 \leq j \leq n} \sum_{i=1}^m |a_{ij}|
+$$
+
+*Zeilensummennorm* ($p = \infty$):
+
+$$
+\left\| \bA \right\|_\infty = \max_{\left\| \bx \right\|_\infty = 1} \left\| \bA\bx \right\|_\infty = \max_{1 \leq i \leq m} \sum_{j=1}^n |a_{ij}|
+$$
+:::
+
+Die 1-Norm einer Matrix ist also einfach die größte betragsmäßige Spaltensumme,
+die $\infty$-Norm die größte betragsmäßige Zeilensumme. Beide lassen
+sich ohne jede Eigenwertrechnung ablesen. Als Eselsbrücke: Die $1$
+steht senkrecht wie eine Spalte, das Symbol $\infty$ liegt waagrecht
+wie eine Zeile. Die Spektralnorm ist
+teurer zu berechnen, dafür passt sie zur euklidischen Geometrie: Sie ist die
+längste Halbachse der Bildellipse aus Beispiel 3.3.3. Ihre Formel beweisen wir
+in Satz 3.3.7; für die Spaltensummennorm holen wir den Beweis in der folgenden
+Vertiefung nach, der Fall $p = \infty$ verläuft völlig analog und ist
+eine gute Übung.
+
+:::::vertiefung[Beweis der Spaltensummenformel]
+<p className="text-sm">Wir zeigen $\left\| \bA \right\|_1 = \max_j \cgreen{c_j}$ mit den Spaltensummen $\cgreen{c_j} := \sum_{i=1}^m |a_{ij}|$. Die Farbe Grün verfolgt dabei die Spaltensummen durch die gesamte Rechnung.</p>
+
+::::beweis
+
+:::schritt
+$$
+\left\| \bA\bx \right\|_1 = \sum_{i=1}^m \left| \sum_{j=1}^n a_{ij} x_j \right| \leq \sum_{i=1}^m \sum_{j=1}^n |a_{ij}|\,|x_j|
+$$
+
+::why[$i$-te Komponente von $\bA\bx$ ausschreiben; Dreiecksungleichung $|u + v| \leq |u| + |v|$ im Betrag]
+:::
+
+:::schritt
+$$
+\sum_{i=1}^m \sum_{j=1}^n |a_{ij}|\,|x_j| = \sum_{j=1}^n |x_j| \sum_{i=1}^m |a_{ij}| = \sum_{j=1}^n |x_j|\,\cgreen{c_j}
+$$
+
+::why[Summationsreihenfolge tauschen (endliche Summen), dann $\sum_i |a_{ij}| = \cgreen{c_j}$ einsetzen]
+:::
+
+:::schritt
+$$
+\sum_{j=1}^n |x_j|\,\cgreen{c_j} \leq \left( \max_j \cgreen{c_j} \right) \sum_{j=1}^n |x_j| = \max_j \cgreen{c_j}
+$$
+
+::why[jede Spaltensumme durch die größte abschätzen; $\sum_j |x_j| = \left\| \bx \right\|_1 = 1$]
+:::
+
+:::schritt
+$$
+\left\| \bA\be_{j^*} \right\|_1 = \sum_{i=1}^m |a_{ij^*}| = \cgreen{c_{j^*}} = \max_j \cgreen{c_j}
+$$
+
+::why[die Schranke wird angenommen: Für den Einheitsvektor $\be_{j^*}$ zur maximalen Spalte $j^*$ ist $\bA\be_{j^*}$ genau die $j^*$-te Spalte von $\bA$]
+:::
+
+::::
+
+:::::
+
+### 3.3.3 Einschub: Orthogonalmatrizen
+
+Für den Beweis der Spektralnorm-Formel brauchen wir eine besondere Klasse von
+Matrizen: solche, die Längen überhaupt nicht verändern. Sie werden uns im ganzen
+Kurs immer wieder begegnen, gerade *weil* sie Normen unangetastet
+lassen.
+
+:::definition[3.3.5 (Orthogonalmatrix)]
+Eine Matrix $\bQ \in \R^{n \times n}$ heißt
+*Orthogonalmatrix*, wenn ihre Spalten
+:k[orthonormale Vektoren]{#orthonormal-basis} sind,
+also
+
+$$
+\bQ^\top\bQ = \bI.
+$$
+:::
+
+:::bemerkung[3.3.6 (Eigenschaften von Orthogonalmatrizen)]
+- Geometrisch beschreibt $\bQ$ eine
+  :k[Rotation]{#rotation-matrix} und/oder
+  :k[Spiegelung]{#reflection} in $\R^n$.
+- $\bQ$ erhält die
+  :k[euklidische Norm]{#euclidean-norm}: Für alle
+  $\bx \in \R^n$ gilt
+
+  $$
+  \left\| \bQ\bx \right\|_2 = \sqrt{\bx^\top\bQ^\top\bQ\bx} = \sqrt{\bx^\top\bx} = \left\| \bx \right\|_2.
+  $$
+
+  Insbesondere ist $\left\| \bQ \right\|_2 = 1$: Jeder
+  Rayleigh-Quotient ist exakt 1.
+- $\bQ^{-1} = \bQ^\top$. Die
+  :k[Inverse]{#matrix-inverse} ist gratis: Statt
+  eines Gleichungssystems genügt Transponieren.
+- Alle :k[Eigenwerte]{#eigenvalue-eigenvector} haben
+  Betrag 1: Aus $\bQ\bx = \lambda\bx$ mit
+  $\bx \neq \bnull$ folgt
+  $\left\| \bx \right\|_2 = \left\| \bQ\bx \right\|_2 = |\lambda| \left\| \bx \right\|_2$,
+  also $|\lambda| = 1$.
+- Mit $\bQ$ ist auch $\bQ^{-1} = \bQ^\top$ orthogonal
+  (denn $(\bQ^\top)^\top\bQ^\top = \bQ\bQ^\top = \bI$), hat
+  also ebenfalls Spektralnorm 1. Für die
+  :k[Konditionszahl]{#condition-number} folgt
+  $\kappa_2(\bQ) = \left\| \bQ \right\|_2 \left\| \bQ^{-1} \right\|_2 = 1$:
+  Multiplikation mit $\bQ$ oder
+  $\bQ^{-1}$ ist immer gut konditioniert und verschlechtert die
+  Stabilität von Algorithmen nicht. Das ist der Grund, warum orthogonale
+  Transformationen das Arbeitspferd der numerischen linearen Algebra sind
+  (mehr dazu bei der QR-Zerlegung in Kapitel 7).
+- Produkte bleiben orthogonal: Sind $\bQ_1, \dots, \bQ_k$
+  orthogonal, dann auch $\bQ = \bQ_1 \cdots \bQ_k$. Warum? Weil
+  $(\bQ_1\bQ_2)^\top \bQ_1\bQ_2 = \bQ_2^\top \bQ_1^\top \bQ_1 \bQ_2 = \bQ_2^\top \bQ_2 = \bI$
+  (:k[Transponierregeln]{#transpose}), und dann
+  induktiv weiter.
+
+:::
+
+### 3.3.4 Spektralnorm und Spektralzerlegung
+
+Jetzt können wir die Formel
+$\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$
+beweisen. Der Schlüssel: $\bA^\top\bA$ ist
+:k[symmetrisch]{#symmetric-matrix} und besitzt deshalb
+eine Spektralzerlegung $\bA^\top\bA = \bP\bLambda\bP^\top$ mit
+einer *orthogonalen* Eigenvektormatrix $\bP$ – und genau die
+Normerhaltung aus Bemerkung 3.3.6 macht den Beweis kurz. Die Eigenwerte sind
+dabei automatisch nichtnegativ, denn
+$\bx^\top\bA^\top\bA\bx = \left\| \bA\bx \right\|_2^2 \geq 0$
+($\bA^\top\bA$ ist
+:k[positiv semidefinit]{#positive-definite}).
+
+:::satz[3.3.7 (Spektralnorm und Spektralzerlegung)]
+Sei $\bA \in \R^{m \times n}$ mit
+:k[Rang]{#rank} $r$ und Spektralzerlegung
+$\bA^\top\bA = \bP\bLambda\bP^\top$, wobei
+$\bLambda = \diag(\corange{\lambda_1}, \ldots, \lambda_r, 0, \ldots, 0)$
+mit $\corange{\lambda_1} \geq \lambda_2 \geq \cdots \geq \lambda_r > 0$.
+Dann gilt
+
+$$
+\left\| \bA \right\|_2 = \sqrt{\corange{\lambda_1}} = \sqrt{\lambda_{\max}(\bA^\top\bA)}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\left\| \bA\bx \right\|_2^2 = \bx^\top\bA^\top\bA\,\bx = \bx^\top\bP\bLambda\bP^\top\bx
+$$
+
+::why[euklidische Norm als Skalarprodukt schreiben, dann die Spektralzerlegung einsetzen]
+:::
+
+:::schritt
+$$
+\bx^\top\bP\bLambda\bP^\top\bx = \left( \bLambda^{1/2}\cbgreen{\bP^\top\bx} \right)^\top \left( \bLambda^{1/2}\cbgreen{\bP^\top\bx} \right) = \left\| \bLambda^{1/2}\,\cbgreen{\bP^\top\bx} \right\|_2^2
+$$
+
+::why[$\bLambda = \bLambda^{1/2}\bLambda^{1/2}$ mit $\bLambda^{1/2} = \diag(\sqrt{\lambda_i})$ aufspalten und die Faktoren den beiden Seiten zuschlagen, wieder eine quadrierte Norm]
+:::
+
+:::schritt
+$$
+\max_{\left\| \bx \right\|_2 = 1} \left\| \bLambda^{1/2}\,\cbgreen{\bP^\top\bx} \right\|_2^2 = \max_{\left\| \cbgreen{\by} \right\|_2 = 1} \left\| \bLambda^{1/2}\,\cbgreen{\by} \right\|_2^2
+$$
+
+::why[Substitution $\cbgreen{\by} = \cbgreen{\bP^\top\bx}$: Weil $\bP$ orthogonal ist, gilt $\left\| \cbgreen{\by} \right\|_2 = \left\| \bx \right\|_2$ (Bemerkung 3.3.6), und $\bx \mapsto \bP^\top\bx$ ist bijektiv; $\cbgreen{\by}$ durchläuft also die Einheitssphäre, wenn $\bx$ dies tut]
+:::
+
+:::schritt
+$$
+\left\| \bLambda^{1/2}\,\cbgreen{\by} \right\|_2^2 = \corange{\lambda_1} y_1^2 + \lambda_2 y_2^2 + \cdots + \lambda_r y_r^2 \leq \corange{\lambda_1} \left( y_1^2 + \cdots + y_r^2 \right) \leq \corange{\lambda_1}
+$$
+
+::why[$\bLambda^{1/2}$ ist diagonal; jeden Koeffizienten durch den größten Eigenwert $\corange{\lambda_1}$ abschätzen und $\sum_i y_i^2 = 1$ benutzen]
+:::
+
+:::schritt
+$$
+\left\| \bA \right\|_2^2 = \max_{\left\| \bx \right\|_2 = 1} \left\| \bA\bx \right\|_2^2 = \corange{\lambda_1}
+$$
+
+::why[die Schranke wird angenommen: Für $\cbgreen{\by} = \be_1$ (also $\bx = $ erste Spalte von $\bP$, der Eigenvektor zu $\corange{\lambda_1}$) gilt Gleichheit; Wurzel ziehen liefert die Behauptung]
+:::
+
+::::
+
+Die Interpretation: Der größte Eigenwert von $\bA^\top\bA$ ist die
+quadrierte maximale Streckung, und die Richtung der stärksten Streckung ist der
+zugehörige Eigenvektor, im Widget oben der graue Pfeil $\bx^*$. Noch
+intuitiver wird das über die Singulärwerte von $\bA$ und die
+:k[Singulärwertzerlegung]{#singular-value-decomposition};
+dazu später mehr.
+
+### 3.3.5 Beispiele
+
+:::beispiel[3.3.8]
+Berechnen wir alle drei Operatornormen von
+$\bA = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$.
+
+**Spaltensummennorm** (Grün verfolgt die erste, Blau die zweite
+Spalte):
+
+$$
+\left\| \bA \right\|_1 = \max\left\{ \cgreen{|2| + |0|},\; \cblue{|1| + |3|} \right\} = \max\{\cgreen{2}, \cblue{4}\} = \cblue{4}.
+$$
+
+**Zeilensummennorm** (Rot verfolgt die erste, Violett die zweite
+Zeile):
+
+$$
+\left\| \bA \right\|_\infty = \max\left\{ \cred{|2| + |1|},\; \cpurp{|0| + |3|} \right\} = \max\{\cred{3}, \cpurp{3}\} = 3.
+$$
+
+**Spektralnorm** (hier müssen wir rechnen):
+
+$$
+\bA^\top\bA = \begin{pmatrix} 2 & 0 \\ 1 & 3 \end{pmatrix} \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix} = \begin{pmatrix} 4 & 2 \\ 2 & 10 \end{pmatrix}.
+$$
+
+Das charakteristische Polynom ist
+$\lambda^2 - 14\lambda + 36$ (Spur 14, Determinante
+$4 \cdot 10 - 2 \cdot 2 = 36$), mit Nullstellen
+$\lambda_{1,2} = 7 \pm \sqrt{13}$. Also
+
+$$
+\left\| \bA \right\|_2 = \sqrt{\corange{\lambda_{\max}(\bA^\top\bA)}} = \sqrt{\corange{7 + \sqrt{13}}} \approx \sqrt{10{,}61} \approx 3{,}26.
+$$
+
+Die drei Normen liefern verschiedene Werte ($4$,
+$3{,}26$, $3$), denn sie messen die maximale Streckung ja auch
+in verschiedenen Geometrien. Weit auseinander liegen können sie aber nie; mehr
+dazu in [Abschnitt 3.5](#sec-3.5).
+:::
+
+:::beispiel[3.3.9 (Identitätsmatrix)]
+Für die Identitätsmatrix $\bI_n$ gilt in jeder Operatornorm
+$\left\| \bI_n\bx \right\| / \left\| \bx \right\| = 1$ für
+alle $\bx \neq \bnull$, also
+
+$$
+\left\| \bI_n \right\|_1 = \left\| \bI_n \right\|_2 = \left\| \bI_n \right\|_\infty = 1. \quad \checkmark
+$$
+
+Das ist genau das Verhalten, das wir uns eingangs gewünscht haben: Eine
+Abbildung, die nichts verändert, bekommt Norm 1, unabhängig von der
+Dimension. Der Schönheitsfehler der elementweisen Normen (
+$\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
+:::
+
+#### Selbsttest
+
+<ul className="max-w-prose list-none space-y-3 pl-0">
+  <SelbsttestFrage q={<>Berechnen wir <M>{"\\left\\| \\bA \\right\\|_1"}</M> und <M>{"\\left\\| \\bA \\right\\|_\\infty"}</M> für <M>{"\\bA = \\begin{pmatrix} 1 & -2 \\\\ 3 & 4 \\end{pmatrix}"}</M>, ganz ohne Eigenwerte.</>}>
+    Spaltensummen: $|1| + |3| = 4$ und $|{-2}| + |4| = 6$,
+    also $\left\| \bA \right\|_1 = 6$. Zeilensummen:
+    $|1| + |{-2}| = 3$ und $|3| + |4| = 7$, also
+    $\left\| \bA \right\|_\infty = 7$. Vorsicht: Die Beträge
+    nicht vergessen, denn das Minuszeichen in $-2$ zählt positiv.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Wahr oder falsch: Für jede Orthogonalmatrix <M>{"\\bQ"}</M> gilt <M>{"\\left\\| \\bQ \\right\\|_2 = 1"}</M>.</>}>
+    Wahr. Wegen
+    $\left\| \bQ\bx \right\|_2 = \left\| \bx \right\|_2$
+    (Bemerkung 3.3.6) ist jeder Rayleigh-Quotient gleich 1, also auch das
+    Maximum. Geometrisch: Eine Drehung oder Spiegelung streckt nichts, der
+    Einheitskreis bleibt ein Einheitskreis.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Warum gilt <M>{"\\left\\| \\bI_n \\right\\| = 1"}</M> für <em>jede</em> Operatornorm, egal welche Vektornorm wir zugrunde legen?</>}>
+    Weil $\bI_n\bx = \bx$ für alle $\bx$: Der
+    Rayleigh-Quotient ist konstant
+    $\left\| \bx \right\| / \left\| \bx \right\| = 1$, also
+    ist auch sein Maximum 1. Elementweise Normen wie die Frobenius-Norm haben
+    diese Eigenschaft nicht; deshalb haben wir die Operatornormen
+    eingeführt.
+  </SelbsttestFrage>
+</ul>
+
+*Vertiefung: Heath §2.3.2.*

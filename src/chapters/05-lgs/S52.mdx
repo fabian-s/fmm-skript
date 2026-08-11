@@ -1,21 +1,21 @@
 import { RueckSubStepper } from "./widgets/RueckSubStepper";
 
-::quelle[Folien 05-lgs, „Lineare Gleichungssysteme" und „Warum Matrixzerlegungen?"]
+::quelle[Folien 05-lgs, „Lineare Gleichungssysteme" bis „Warum Matrixzerlegungen?".]
 
 ### Problemstellung
 
-In [Abschnitt 5.1](#sec-5.1) haben wir gezählt, was einzelne Matrix- und
-Vektoroperationen kosten. Jetzt setzen wir sie zu der Aufgabe zusammen, die
-in der Statistik ständig auftritt: Wir beschäftigen uns mit der Lösung eines
-:k[linearen Gleichungssystems]{#linear-system} (LGS). Gesucht ist also der
-Vektor $\bx$ mit
+In [Abschnitt 5.1](#sec-5.1) haben wir gezählt, was Matrixaddition und
+Matrixmultiplikation kosten. Jetzt setzen wir diese Bausteine zu der Aufgabe
+zusammen, die in der Statistik ständig auftritt: Wir beschäftigen uns mit der
+Lösung eines :k[linearen Gleichungssystems]{#linear-system} (LGS). Gesucht
+ist also der Vektor $\bx$ mit
 
 $$
 \bA \bx = \bb .
 $$
 
-Ob Kleinste-Quadrate-Schätzer ([Kapitel 7](?k=07-kq)) oder gemischtes Modell:
-am Ende steht fast immer ein solches System.
+Ob Kleinste-Quadrate-Schätzer ([Abschnitt 7.1](?k=07-kq#sec-7.1)) oder
+gemischtes Modell: am Ende steht fast immer ein solches System.
 
 Die Aufgabe ist nur dann sinnvoll gestellt, wenn es genau eine Lösung gibt.
 Wir nehmen deshalb in diesem Kapitel an, dass $\bA \in \R^{n \times n}$
@@ -34,8 +34,11 @@ Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
 - *Aufwand:* $\bA^{-1}$ explizit auszurechnen heißt, die $n$ Systeme
   $\bA \bz_j = \be_j$ für alle Einheitsvektoren $\be_j$ zu lösen und
   anschließend noch das Produkt $\bA^{-1}\bb$ zu bilden. Wer nur $\bx$
-  braucht, löst so $n$ Gleichungssysteme statt einem; die
-  [Komplexität](?k=02-algos#sec-2.4) wächst entsprechend.
+  braucht, erledigt also $n$ Lösungen statt einer. In der
+  [Größenordnung](?k=02-algos#sec-2.4) bleibt das zwar beim Aufwand einer
+  einzigen Elimination, weil sich deren teure Vorarbeit für alle $n$ rechten
+  Seiten wiederverwenden lässt; in der versteckten Konstanten kostet der
+  Umweg aber ein Mehrfaches.
 - *Stabilität:* Jeder Eintrag von $\bA^{-1}$ entsteht aus einer eigenen
   Rechnung mit eigenen Rundungsfehlern, und das Produkt $\bA^{-1}\bb$
   verstärkt diese Fehler noch, umso mehr, je größer die
@@ -88,7 +91,10 @@ $$
 $$
 
 Weil $\bA$ invertierbar ist, sind alle Pivots $\cred{u_{ii}}$ von null
-verschieden; die Divisionen in Formel ($5.2.1$) gehen also immer gut.
+verschieden: Die Zeilenoperationen der Elimination ändern die Determinante
+höchstens im Vorzeichen, und eine Dreiecksmatrix mit einer Null auf der
+Diagonalen wäre singulär. Die Divisionen in Formel ($5.2.1$) gehen also
+immer gut.
 
 :::vertiefung[Rückwärtssubstitution Schritt für Schritt]
 Probieren wir Formel ($5.2.1$) an einem kleinen System aus. Das
@@ -97,9 +103,9 @@ voreingestellte Beispiel hat die Lösung $\bx = (2, 1, 2)^\top$.
 <RueckSubStepper />
 :::
 
-Wie teuer ist die zweite Phase? Die Antwortmöglichkeiten stammen aus der
-Vorlesung; prüfen wir jede einzeln (zur Erinnerung:
-[Landau-Notation in Abschnitt 2.4](?k=02-algos#sec-2.4)).
+Wie teuer ist die zweite Phase? Prüfen wir die vier Antwortmöglichkeiten
+einzeln (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
+[Abschnitt 2.4](?k=02-algos#sec-2.4)).
 
 ::::quiz
 
@@ -122,9 +128,10 @@ ungünstigsten Fall also $n - 1$ Stück.
 Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^2)$.
 
 Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel ($5.2.1$) je
-$n - i$ Multiplikationen und Subtraktionen sowie eine Division, also bis zu
-$n - 1$ Additionen und eine Division pro Schritt. Aufsummiert sind das etwa
-$n^2/2$ Multiplikationen: die Größenordnung ist $O(n^2)$.
+$n - i$ Multiplikationen und ebenso viele Subtraktionen, dazu eine Division;
+im ungünstigsten Fall sind das $n - 1$ Multiplikationen pro Schritt.
+Aufsummiert ergibt das $n(n-1)/2 \approx n^2/2$ Multiplikationen und
+insgesamt genau $n^2$ Rechenoperationen: die Größenordnung ist $O(n^2)$.
 :::
 
 :::frage{falsch}
@@ -188,7 +195,7 @@ Was bringt uns eine Zerlegung konkret? Vier Dinge:
    bei der Zerlegung gratis mit ab.
 4. **Grundlage für weitere Algorithmen.** Auf Zerlegungen bauen viele
    Verfahren auf, von der QR-Zerlegung für das KQ-Problem
-   ([Kapitel 7](?k=07-kq)) bis zur Spektralzerlegung und der
+   ([Abschnitt 7.4](?k=07-kq#sec-7.4)) bis zur Spektralzerlegung und der
    :k[Singulärwertzerlegung]{#singular-value-decomposition} (*SVD*), die
    uns in einem späteren Kapitel begegnet.
 

@@ -193,9 +193,9 @@ export function CholeskySampler() {
             Probe: max |LLᵀ − Σ| = {fmtNum(residual)}
           </div>
           <p className="mt-2 text-xs" style={{ color: GREY }}>
-            Die erste Spalte von L skaliert nur (y₁ = σ₁z₁); die zweite Zeile mischt z₁ in
-            y₂ hinein und erzeugt so die Korrelation. Weil die Punktwolke fest bleibt,
-            sehen wir ausschließlich den Effekt von L.
+            Die erste Zeile von L skaliert nur (y₁ = σ₁z₁); die zweite mischt z₁ in y₂
+            hinein und erzeugt so die Korrelation. Weil die Punktwolke fest bleibt, sehen
+            wir ausschließlich den Effekt von L.
           </p>
         </div>
       </div>

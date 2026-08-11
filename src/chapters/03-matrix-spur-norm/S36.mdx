@@ -1,0 +1,249 @@
+import { SelbsttestFrage } from "./widgets/S36Local";
+
+{/*
+  Abschnitt 3.6 – Zusammenfassung.
+  Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Zusammenfassung" (Quiz-Folien,
+  Kernkonzepte Spur/Normen, ML-Verbindung, Rechenaufwand). Prosa eigenständig
+  aus den Folien formuliert; bewusst schlank gehalten.
+  MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
+*/}
+
+::quelle[Folien: 03-matrix-spur-norm, „Zusammenfassung".]
+
+Fassen wir das Kapitel zusammen. Der rote Faden war die Frage, wie wir die „Größe" einer
+Matrix messen, und zwar so, dass die Zahl etwas über die
+:k[lineare Abbildung]{#linear-transformation}
+$\bx \mapsto \bA\bx$ aussagt, nicht nur über die Einträge. Als Werkzeuge
+haben wir die Spur als skalare Invariante und drei Familien von Matrixnormen
+kennengelernt.
+
+### Die Konzepte im Überblick
+
+<div className="max-w-prose overflow-x-auto">
+<table className="text-sm">
+<thead>
+<tr className="border-b border-slate-300 text-left dark:border-slate-600">
+<th className="py-1 pr-6">Konzept</th>
+<th className="py-1 pr-6">Kernaussage</th>
+<th className="py-1">Abschnitt</th>
+</tr>
+</thead>
+<tbody>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Spur</td>
+<td className="py-1 pr-6">$\tr(\bA) = \sumin a_{ii}$; linear, zyklisch ($\tr(\bA\bB) = \tr(\bB\bA)$) und damit ähnlichkeitsinvariant; gleich der Summe der :k[Eigenwerte]{#eigenvalue-eigenvector} (Koeffizient des charakteristischen Polynoms)</td>
+<td className="py-1">[3.1](#sec-3.1)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Matrixnorm</td>
+<td className="py-1 pr-6">dieselben Axiome wie bei :k[Vektornormen]{#norm}: Definitheit, absolute Homogenität, Dreiecksungleichung</td>
+<td className="py-1">[3.2](#sec-3.2)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">elementweise Normen</td>
+<td className="py-1 pr-6">Vektornorm auf $\vec(\bA)$: $\left\|\bA\right\|_F, \left\|\bA\right\|_S, \left\|\bA\right\|_M$; billig, aber blind für die Transformation</td>
+<td className="py-1">[3.2](#sec-3.2)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Operatornormen</td>
+<td className="py-1 pr-6">maximale Streckung $\max_{\bx \neq \bnull} \left\|\bA\bx\right\|_V / \left\|\bx\right\|_V$: Spaltensummennorm $\left\|\bA\right\|_1$, Spektralnorm $\left\|\bA\right\|_2$, Zeilensummennorm $\left\|\bA\right\|_\infty$</td>
+<td className="py-1">[3.3](#sec-3.3)</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Schatten-p-Normen</td>
+<td className="py-1 pr-6">$p$-Norm des Vektors der Wurzeln der Eigenwerte von $\bA^\top\bA$; invariant unter :k[orthogonalen Transformationen]{#orthogonal-matrix}</td>
+<td className="py-1">[3.4](#sec-3.4)</td>
+</tr>
+<tr>
+<td className="py-1 pr-6">Eigenschaften</td>
+<td className="py-1 pr-6">Normäquivalenz, Submultiplikativität ($\left\|\bA\bB\right\| \le \left\|\bA\right\| \left\|\bB\right\|$), Verträglichkeit mit Vektornormen</td>
+<td className="py-1">[3.5](#sec-3.5)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+Die drei Familien sind dabei kein loses Nebeneinander, sondern eng verwoben. Die
+Frobenius-Norm gehört gleich zwei Familien an: Sie ist elementweise Norm (die
+:k[euklidische Norm]{#euclidean-norm} von
+$\vec(\bA)$) und zugleich die Schatten-Norm mit $p = 2$. Die
+Brücke schlägt die Spur:
+$\left\|\bA\right\|_F^2 = \tr\left(\bA^\top\bA\right)$. Und die
+Spektralnorm verbindet Operator- und Schatten-Welt: Sie ist die von der euklidischen
+Norm induzierte Operatornorm *und* die Schatten-Norm mit
+$p = \infty$, berechenbar als
+$\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}\left(\bA^\top\bA\right)}$,
+der Anknüpfungspunkt zur
+:k[Singulärwertzerlegung]{#singular-value-decomposition},
+die uns später noch ausführlich beschäftigen wird.
+
+### Was kostet die Berechnung?
+
+Für die Praxis ist entscheidend, wie teuer die einzelnen Normen sind. Spalten- und
+Zeilensummennorm sowie die Frobenius-Norm brauchen nur einen Durchlauf über alle
+Einträge. Spektral- und Nuklearnorm dagegen erfordern eine (partielle)
+Spektralzerlegung bzw. SVD; für sehr große Matrizen weichen wir deshalb auf
+approximative Verfahren aus.
+
+<div className="max-w-prose overflow-x-auto">
+<table className="text-sm">
+<thead>
+<tr className="border-b border-slate-300 text-left dark:border-slate-600">
+<th className="py-1 pr-6">Norm</th>
+<th className="py-1 pr-6">Aufwand</th>
+<th className="py-1">Algorithmus</th>
+</tr>
+</thead>
+<tbody>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">$\left\|\bA\right\|_1$</td>
+<td className="py-1 pr-6">$O(mn)$</td>
+<td className="py-1">Spaltensummen berechnen</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">$\left\|\bA\right\|_\infty$</td>
+<td className="py-1 pr-6">$O(mn)$</td>
+<td className="py-1">Zeilensummen berechnen</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">$\left\|\bA\right\|_F$</td>
+<td className="py-1 pr-6">$O(mn)$</td>
+<td className="py-1">Quadratsumme aller Einträge</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">$\left\|\bA\right\|_2$</td>
+<td className="py-1 pr-6">$O\left(\min\left(m^2 n, m n^2\right)\right)$</td>
+<td className="py-1">partielle SVD</td>
+</tr>
+<tr>
+<td className="py-1 pr-6">$\left\|\bA\right\|_*$</td>
+<td className="py-1 pr-6">$O\left(\min\left(m^2 n, m n^2\right)\right)$</td>
+<td className="py-1">SVD, dann Singulärwerte summieren</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+:::bemerkung[3.6.1 (Ausblick: Normen als Regularisierer)]
+Normen messen nicht nur Fehler: Im maschinellen Lernen steuern sie als Strafterme,
+*welche* Lösung ein Schätzproblem liefert. Drei prominente Beispiele, alle
+Varianten des :k[KQ-Problems]{#linear-least-squares}:
+
+$$
+\text{Ridge: } \min_{\bx}\, \left\|\bA\bx - \bb\right\|_2^2 + \lambda \left\|\bx\right\|_2^2, \qquad \text{LASSO: } \min_{\bx}\, \left\|\bA\bx - \bb\right\|_2^2 + \lambda \left\|\bx\right\|_1,
+$$
+
+$$
+\text{Matrix Completion: } \min_{\bX}\, \left\|\bP_\Omega(\bX) - \bP_\Omega(\bM)\right\|_F^2 + \lambda \left\|\bX\right\|_*.
+$$
+
+Verschiedene Normen erzwingen verschiedene Lösungseigenschaften: Die
+$2$-Norm schrumpft alle Koeffizienten gleichmäßig, die $1$-Norm
+setzt viele exakt auf null, und die Nuklearnorm aus
+[Abschnitt 3.4](#sec-3.4) begünstigt Lösungen mit
+kleinem Rang (:k[Niedrigrang-Approximation]{#low-rank-approximation}).
+:::
+
+### Selbsttest
+
+Prüfen wir zum Abschluss, ob die Kernaussagen sitzen. Welche der folgenden Aussagen
+über die Spur sind wahr ($\bA, \bB \in \R^{n \times n}$)?
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{falsch}
+$\tr(\bA\bB) = \tr(\bA) \cdot \tr(\bB)$
+
+Die Spur ist mit dem Matrixprodukt nicht verträglich. Gegenbeispiel
+$\bA = \bB = \bI_2$: links steht
+$\tr(\bI_2) = 2$, rechts $2 \cdot 2 = 4$.
+:::
+
+:::frage{wahr}
+$\tr(\bA\bB) = \tr(\bB\bA)$
+
+Das ist die zyklische Eigenschaft aus
+[Abschnitt 3.1](#sec-3.1), die wichtigste Rechenregel
+der Spur.
+:::
+
+:::frage{falsch}
+$\tr(\bA^\top) = -\tr(\bA)$
+
+Transponieren spiegelt an der Diagonale und lässt die Diagonaleinträge unverändert; es
+gilt $\tr(\bA^\top) = \tr(\bA)$, ohne Vorzeichenwechsel.
+:::
+
+:::frage{wahr}
+$\tr(\bI_n) = n$
+
+Auf der Diagonale stehen $n$ Einsen, also ist die Summe $n$.
+:::
+
+:::frage{falsch}
+Ist $\bA$ invertierbar, so gilt
+$\tr\left(\bA^{-1}\right) = 1/\tr(\bA)$.
+
+Gegenbeispiel $\bA = 2\bI_2$: dann ist
+$\bA^{-1} = \tfrac{1}{2}\bI_2$, also
+$\tr\left(\bA^{-1}\right) = 1$, aber
+$1/\tr(\bA) = \tfrac{1}{4}$.
+:::
+
+::::
+
+</div>
+
+<div className="max-w-prose">
+<SelbsttestFrage q={<>Berechnen wir für{" "}<M>{"\\bA = \\begin{pmatrix} 1 & 2 \\\\ 3 & 0 \\end{pmatrix}"}</M> die Spaltensummennorm <M>{"\\left\\|\\bA\\right\\|_1"}</M>, die Zeilensummennorm{" "}<M>{"\\left\\|\\bA\\right\\|_\\infty"}</M> und die Frobenius-Norm{" "}<M>{"\\left\\|\\bA\\right\\|_F"}</M>.</>}>
+
+**Spaltensummennorm:** Die Beträge spaltenweise summieren; die
+$\cred{\text{erste Spalte}}$ gewinnt:
+
+$$
+\left\|\bA\right\|_1 = \max\left\{ \cred{|1| + |3|},\; |2| + |0| \right\} = \max\{\cred{4}, 2\} = 4.
+$$
+
+**Zeilensummennorm:** Die Beträge zeilenweise summieren; hier liefern
+$\cblue{\text{beide Zeilen}}$ denselben Wert:
+
+$$
+\left\|\bA\right\|_\infty = \max\left\{ \cblue{|1| + |2|},\; \cblue{|3| + |0|} \right\} = \max\{\cblue{3}, \cblue{3}\} = 3.
+$$
+
+**Frobenius-Norm:** Wurzel aus der Quadratsumme aller Einträge:
+
+$$
+\left\|\bA\right\|_F = \sqrt{1^2 + 2^2 + 3^2 + 0^2} = \sqrt{14} \approx 3{,}74.
+$$
+
+Probe über die Spur ([Abschnitt 3.2](#sec-3.2)):
+$\bA^\top\bA = \begin{pmatrix} 10 & 2 \\ 2 & 4 \end{pmatrix}$, also
+$\tr\left(\bA^\top\bA\right) = 10 + 4 = 14 = \left\|\bA\right\|_F^2$.
+$\checkmark$ Zum Vergleich: Die Spektralnorm ist
+$\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}\left(\bA^\top\bA\right)} = \sqrt{7 + \sqrt{13}} \approx 3{,}26$,
+wie es sein muss kleiner als die Frobenius-Norm.
+
+</SelbsttestFrage>
+</div>
+
+### Wie geht es weiter?
+
+Warum der ganze Aufwand? Weil Matrixnormen das zentrale Messwerkzeug der
+*Fehleranalyse* sind, mit der wir uns im nächsten Kapitel beschäftigen: Die
+:k[Konditionszahl]{#condition-number}
+$\kappa(\bA) = \left\|\bA\right\| \cdot \left\|\bA^{-1}\right\|$
+misst, wie stark eine Matrix relative Störungen der Eingabe verstärken kann; für die
+Spektralnorm ist das gerade das Verhältnis von größtem zu kleinstem Singulärwert (bei
+symmetrischen Matrizen: der Beträge der Eigenwerte). Und wenn ein Algorithmus statt der exakten Lösung von
+$\bA\bx = \bb$ nur ein $\wt{\bx}$ liefert, sagen uns Normen, für
+welches gestörte Problem $(\bA + \bDelta\bA)\,\wt{\bx} = \bb$ dieses
+$\wt{\bx}$ die exakte Lösung ist. Die Größe
+$\left\|\bDelta\bA\right\|_2 / \left\|\bA\right\|_2$ quantifiziert
+dann den Rückwärtsfehler. Submultiplikativität und Verträglichkeit aus
+[Abschnitt 3.5](#sec-3.5) sind genau die
+Eigenschaften, die solche Abschätzungen erst möglich machen.
+
+*Vertiefung: Heath §2.3; MML §4.1/4.5.*

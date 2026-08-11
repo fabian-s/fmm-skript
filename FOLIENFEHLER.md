@@ -75,10 +75,31 @@ Lesson-Zeile ein.
 
 ## 05-lgs
 
+- **Z. 108 („Matrixmultiplikation")**: „Alman & Williams (2020):
+  ≈ O(n^2.37) (nichts besseres bekannt)" ist überholt — der Exponent
+  wurde seit 2020 mehrfach gedrückt (Duan/Wu/Zhou 2022: 2,371866;
+  Williams/Xu/Xu/Zhou 2023: 2,371552; Alman/Duan/Williams/Xu/Xu/Zhou
+  2024: 2,371339). Der Wert ≈ 2,37 stimmt weiterhin, die Zuschreibung
+  „nichts Besseres bekannt" nicht mehr. *Skript §5.1 schreibt
+  „wesentlich Besseres ist bislang nicht bekannt".* Nebenbei: Z. 61
+  „insbesonders" → „insbesondere"; die Abbildung Z. 109
+  (`resources/deepmind`) steht ohne Quellenangabe und Bildunterschrift
+  auf der Folie. *Skript übernimmt sie nicht (öffentliches Repo) und
+  nennt AlphaTensor stattdessen im Text.*
 - **Z. 232–233 (LU-Zerlegung)**: U = L_n⋯L_1·A und
   L = L_1⁻¹⋯L_n⁻¹ — es gibt aber nur n−1 nichttriviale
   Eliminationsschritte (L_n wäre I); sauber wäre L_{n−1}.
   *Skript §5.3 (Satz 5.3.3) indiziert mit L_{n−1} und merkt das an.*
+  Dieselbe Off-by-one steht auf der Komplexitätsfolie (Z. 381:
+  Σ_{k=1}^n statt Σ_{k=1}^{n−1}). *Skript Satz 5.3.10 summiert bis n−1.*
+- **Z. 375 (Lösungskommentar zur Quiz-Folie)**: „nur die einträge in der
+  rechten unteren (n−k−1)×(n−k−1) ecke ändern sich" ist um eins
+  verschoben — im k-ten Schritt ändern sich die Zeilen k+1,…,n in den
+  Spalten k+1,…,n, also ein (n−k)×(n−k)-Block, dazu die neue Null in
+  Spalte k und die rechte Seite (zusammen (n−k)(n−k+1) Aktualisierungen).
+  Die Antwort O((n−k)²) bleibt richtig, die Begründung stimmt so nicht.
+  *Skript §5.3 (Quiz-Frage 2 und Beweis zu Satz 5.3.10) rechnet den Block
+  explizit ab.*
 - **Z. 288–298 (Theorem „LU-Zerlegung")**: „Jede invertierbare Matrix A
   hat eine Darstellung A = LU" ist FALSCH — Gegenbeispiel
   (0 1; 1 0): Pivot 0, keine LU-Zerlegung ohne Zeilentausch. Korrekt:
@@ -94,6 +115,26 @@ Lesson-Zeile ein.
   \bc^\top (fehlendes Dach) im Testvektor; außerdem fehlt der Quantor
   „für x ≠ 0" an der strikten Ungleichung. *Skript §5.4: Beweis zu
   Satz 5.4.2 setzt beides korrekt und führt den Quantor explizit mit.*
+- **Z. 465 (Cholesky-Induktionsbeweis, Blockmatrix L)**: Der Block rechts
+  oben ist als \bnull gesetzt, gebraucht wird der Zeilenvektor \bnull^⊤
+  (1 × (n−1)); so wie gedruckt passen die Blockdimensionen nicht.
+  *Skript §5.4 (Beweis zu Satz 5.4.2, letzter Schritt) schreibt \bnull^⊤.*
+- **Z. 438 („Warum wichtig?")**: „Existenz und Eindeutigkeit der
+  Cholesky-Zerlegung" — eindeutig ist die Zerlegung erst mit einer
+  Normierung: Mit D = diag(±1) ist auch (LD)(LD)^⊤ = LL^⊤ eine Zerlegung
+  in eine untere Dreiecksmatrix. Verlangt man positive Diagonaleinträge
+  in L (genau das liefert die Induktion mit √a > 0), stimmt die Aussage.
+  *Skript §5.4 nennt die Normierung sowohl in der Aufzählung als auch im
+  Absatz nach dem Beweis.* Nebenbei: Z. 423 „Hauptkomponententanalyse" →
+  „Hauptkomponentenanalyse"; Z. 429/430 setzen die Indexkomponenten fett
+  (∂²/∂\bx_i∂\bx_j, ∂²/∂\btheta_i∂\btheta_j), gemeint sind die Skalare
+  x_i bzw. θ_i. *Skript §5.4 setzt sie unfett.*
+- **Z. 584 („Vergleich: LU und Cholesky")**: Der Fazit-Block ist als
+  einziger Block des ganzen Foliensatzes um zwei Spalten eingerückt und
+  zählt damit als Fortsetzungsabsatz des letzten Aufzählungspunkts
+  („Pivotierte Variante"), statt eigenständig zu stehen; rein
+  typografisch, aber die Zusammenfassung rutscht so in die Cholesky-Liste.
+  *Skript §5.5 stellt das Fazit als eigene Bemerkung 5.5.1 dar.*
 
 ## 07-kq
 

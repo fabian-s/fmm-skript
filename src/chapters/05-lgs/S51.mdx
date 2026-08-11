@@ -1,9 +1,9 @@
 ::quelle[Folien: 05-lgs, „Verwendete Vorkenntnisse" bis „Matrixmultiplikation".]
 
-Mit diesem Kapitel beginnt der zweite große Block der Vorlesung: die
-*numerische lineare Algebra*. Sie fragt, wie sich die Objekte und Operationen
-der linearen Algebra auf dem Rechner tatsächlich berechnen lassen, und zwar
-schnell und verlässlich. Konkret geht es um numerische Methoden für
+Ab hier geht es um *numerische lineare Algebra*. Sie fragt, wie sich die
+Objekte und Operationen der linearen Algebra auf dem Rechner tatsächlich
+berechnen lassen, und zwar schnell und verlässlich. Auf dem Programm stehen
+numerische Methoden für
 
 - die Matrizenrechnung (Addition, Multiplikation),
 - :k[lineare Gleichungssysteme]{#linear-system} (der Kern dieses Kapitels,
@@ -21,15 +21,15 @@ der Problemgröße?).
 
 Dieses Kapitel führt die Fäden der bisherigen Kapitel zusammen. Wir brauchen:
 
-- aus [Kapitel 2](?k=02-algos#sec-2.1) den Algorithmus-Begriff, insbesondere
+- aus Kapitel 2 den [Algorithmus-Begriff](?k=02-algos#sec-2.1), insbesondere
   *direkte Methoden* (endlich viele Schritte, exakte Lösung in exakter
   Arithmetik) und die [Komplexitätsanalyse](?k=02-algos#sec-2.4) mit
   Landau-Symbolen,
-- aus [Kapitel 4](?k=04-fehler#sec-4.2) die Kondition von Problemen und die
+- aus Kapitel 4 die [Kondition](?k=04-fehler#sec-4.2) von Problemen und die
   [Stabilität](?k=04-fehler#sec-4.3) von Algorithmen,
 - aus Kapitel 3 die [Matrixnormen](?k=03-matrix-spur-norm#sec-3.2) und die
   [Orthogonalmatrizen](?k=03-matrix-spur-norm#sec-3.3) mit ihrer perfekten
-  Kondition $\kappa_2(\bQ) = 1$.
+  Kondition $\corange{\kappa_2(\bQ)} = 1$.
 
 Dazu kommt Grundwissen aus der Linearen Algebra I: das Lösen linearer
 Gleichungssysteme mit grundlegenden Methoden,
@@ -73,9 +73,9 @@ untersuchen wir in der Übung. Das Handwerkszeug dafür steht in
 [Kapitel 4](?k=04-fehler#sec-4.2).
 :::
 
-Die Komplexität der beiden Formeln können wir dagegen sofort selbst
-bestimmen, indem wir Operationen zählen wie in
-[Kapitel 2](?k=02-algos#sec-2.3). Prüfen wir uns zuerst selbst.
+Die Komplexität der beiden Formeln können wir dagegen sofort bestimmen,
+indem wir Operationen zählen wie in [Kapitel 2](?k=02-algos#sec-2.3).
+Prüfen wir uns zuerst selbst.
 
 Was ist die algorithmische Komplexität der *Addition* von
 $\bA, \bB \in \R^{n \times m}$? Zur Auswahl stehen $O(nm)$, $O(n + m)$ und
@@ -152,14 +152,15 @@ Aufwand also drastisch, sobald die Dimensionen wachsen.
 
 Erstaunlicherweise ja, zumindest auf dem Papier. Für das Produkt zweier
 quadratischer Matrizen $\bA, \bB \in \R^{n \times n}$ gibt es Algorithmen
-mit besserer Komplexität als $O(n^3)$. Der erste stammt von Strassen (1969)
-und kommt durch geschicktes Umsortieren der Teilprodukte auf etwa
-$O(n^{2{,}8})$; genauer ist der Exponent $\log_2 7 \approx 2{,}807$. Der
-aktuelle Rekord von Alman und Williams (2020) liegt bei etwa
-$O(n^{2{,}37})$, und etwas Besseres ist bislang nicht bekannt. Die Suche
-nach neuen Multiplikationsschemata geht weiter; 2022 hat etwa DeepMinds
-AlphaTensor per Reinforcement Learning bisher unbekannte Varianten für
-kleine Matrixformate gefunden.
+mit besserer Komplexität als $O(n^3)$. Der erste stammt von Strassen (1969):
+Er zerlegt beide Matrizen in vier Blöcke und kommt mit sieben statt acht
+Blockmultiplikationen aus. Rekursiv angewandt kostet das
+$O\bigl(n^{\log_2 7}\bigr)$ Operationen, also etwa $O(n^{2{,}8})$, denn
+$\log_2 7 \approx 2{,}807$. Der aktuelle Rekord von Alman und Williams
+(2020) liegt bei etwa $O(n^{2{,}37})$; wesentlich Besseres ist bislang nicht
+bekannt. Die Suche nach neuen Multiplikationsschemata geht weiter. 2022 hat
+etwa DeepMinds AlphaTensor per Reinforcement Learning bisher unbekannte
+Varianten für kleine Matrixformate gefunden.
 
 :::bemerkung[5.1.2 (Warum wir trotzdem mit O(nmk) rechnen)]
 Die Landau-Notation versteckt konstante Faktoren, und bei den schnellen

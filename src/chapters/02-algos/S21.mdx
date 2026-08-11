@@ -1,0 +1,251 @@
+import { AusloeschungDemo, AssoziativDemo } from "./widgets/S21Demos";
+import { RSelbsttest } from "./widgets/S21Local";
+
+::quelle[Grundlage: Folien 02-algos, Auftakt und „Numerische Probleme und Algorithmen".]
+
+Mit diesem Kapitel beginnt die eigentliche Numerik. Statistische Methoden sind am
+Ende immer Rechenvorschriften, die ein Computer ausführt, und Computer rechnen
+anders als die Mathematik auf dem Papier. In diesem Kapitel klären wir zuerst,
+was ein *numerisches Problem* und was ein *Algorithmus* überhaupt
+ist. Dann sehen wir an konkreten Beispielen, warum es entscheidend darauf
+ankommt, *wie* wir etwas berechnen: dieselbe Formel kann als
+Rechenvorschrift brillant oder katastrophal sein. In den folgenden Abschnitten
+fragen wir dann, wie *teuer* ein Algorithmus ist, und entwickeln mit den
+Landau-Symbolen die Sprache, um Rechenaufwand zu vergleichen.
+
+### Verwendete Vorkenntnisse
+
+Wir brauchen in diesem Kapitel nur Grundbegriffe aus dem ersten Semester: aus der
+Analysis :k[Folgen]{#sequence} und ihre :k[Grenzwerte]{#limit} sowie die Grundidee der
+:k[Konvergenz]{#convergence}; aus der linearen Algebra
+:k[Matrizen]{#matrix} und ihre Grundoperationen,
+insbesondere :k[Matrix-Vektor-]{#matrix-vector-product}
+und :k[Matrixmultiplikation]{#matrix-multiplication};
+dazu ein erstes Gespür dafür, wie viele Einzelrechnungen darin stecken.
+
+<h3 id="sec-2.1-numerische-probleme">Numerische Probleme</h3>
+
+Was ist ein numerisches Problem? Kurz gesagt: eine Rechenaufgabe, deren Lösung
+aus einer oder mehreren Zahlen besteht. Drei typische Beispiele aus der
+Statistik: der Wert eines Integrals (etwa eine Wahrscheinlichkeit als Fläche
+unter einer Dichte), die Lösung eines
+:k[linearen Gleichungssystems]{#linear-system} (etwa
+die Koeffizienten einer Regression) oder die
+:k[Basis]{#basis}-Koeffizienten einer
+Funktionsapproximation. Allgemein fassen wir das so:
+
+:::definition[2.1.1 (Numerisches Problem)]
+Ein *numerisches Problem* ist eine Aufgabe der Form:
+*Gegeben ein Problem $f$ mit Input $\bx$, berechne die
+Lösung $f(\bx)$.*
+:::
+
+Die Schreibweise ist bewusst abstrakt: $f$ ist die mathematische
+Abbildung von den Eingabedaten auf die exakte Lösung; beim Gleichungssystem
+$\bA\by = \bb$ etwa $f(\bA, \bb) = \bA^{-1}\bb$. Ob und
+wie wir $f(\bx)$ tatsächlich ausrechnen können, ist damit noch völlig
+offen. Und da beginnen die Schwierigkeiten.
+
+### Zwei grundsätzliche Schwierigkeiten
+
+Computer sind so gut wie nie exakt. Das liegt nicht an schlampiger Technik,
+sondern an zwei prinzipiellen Beschränkungen jeder endlichen Maschine:
+
+:::bemerkung[2.1.2 (Grenzen des Rechnens)]
+- Computer können nur *endlich viele Zahlen mit endlich vielen Stellen*
+  darstellen. Schon
+
+  $$
+  \pi = 3{,}141592653589793238462643383279\ldots
+  $$
+
+  passt in keinen endlichen Speicher. Gespeichert wird immer nur eine
+  gerundete Näherung.
+
+- Computer können nur *endlich viele Rechenoperationen* ausführen.
+  Schon die harmlose Exponentialfunktion ist über eine
+  :k[unendliche Reihe]{#infinite-series} definiert,
+
+  $$
+  e^x = \sum_{n = 0}^\infty \frac{x^n}{n!},
+  $$
+
+  und unendlich viele Summanden kann keine Maschine aufaddieren. Jede
+  Auswertung bricht irgendwo ab.
+:::
+
+Deshalb ist es wichtig, *wie* wir Dinge berechnen. Wie schlimm kann es
+schon sein? Testen Sie Ihre Intuition an vier kurzen R-Ausdrücken von den
+Folien. Überlegen Sie sich jeweils zuerst selbst eine Vorhersage, bevor Sie
+die Lösung aufklappen:
+
+<RSelbsttest />
+
+Halten wir die Beobachtungen fest: Computer können nur endlich viele Zahlen
+darstellen. Das führt zu *Rundungsfehlern*
+(:k[Rundungsfehler]{#rounding-error}; ausführlich in
+Kapitel 3), und diese Fehler können sich *akkumulieren*. Der Fehler einer
+einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
+vieler kleiner Fehler. Und weil jede Operation frisch rundet, spielt sogar die
+*Reihenfolge* unserer Rechenschritte eine Rolle. Eine erste praktische
+Empfehlung, die wir gleich zweimal in Aktion sehen: besonders große und
+besonders kleine Zahlen im selben Ausdruck vermeiden.
+
+### Zwei warnende Beispiele
+
+Die beiden folgenden Beispiele zeigen die zwei wichtigsten Mechanismen, mit
+denen Gleitkommarechnung schiefgeht. Beide sehen auf dem Papier völlig harmlos
+aus.
+
+:::beispiel[2.1.3 (Katastrophale Auslöschung)]
+Wir berechnen die Varianz von $\bx$ mit der bekannten
+Verschiebungsformel
+
+$$
+\text{Var}(x) = \cred{\frac{1}{n}\sumin x_i^2} - \cblue{\left(\frac{1}{n}\sumin x_i\right)^2}
+$$
+
+(wir teilen der Einfachheit halber durch $n$ statt $n-1$; am
+Phänomen ändert das nichts). Die Daten sind vier kleine Zahlen, verschoben um
+eine große Konstante:
+
+$$
+\bx = \left(4 + 10^9,\; 7 + 10^9,\; 13 + 10^9,\; 16 + 10^9\right).
+$$
+
+Rechnen wir zunächst exakt. Der Mittelwert ist
+$\bar{x} = 10^9 + 10$, die Abweichungen davon sind
+$-6, -3, 3, 6$, also
+
+$$
+\text{Var}(x) = \frac{36 + 9 + 9 + 36}{4} = \frac{90}{4} = 22{,}5.
+$$
+
+Für die beiden Terme der Verschiebungsformel gilt exakt
+
+$$
+\cred{\frac{1}{n}\sumin x_i^2} = 10^{18} + 2 \cdot 10^{10} + 122{,}5, \qquad \cblue{\bar{x}^2} = 10^{18} + 2 \cdot 10^{10} + 100,
+$$
+
+und die Differenz $\cred{122{,}5} - \cblue{100} = 22{,}5$ stimmt.
+Aber: Beide Terme sind riesig ($\approx 10^{18}$), und ihre gesamte
+Information über die Varianz steckt in den letzten drei Ziffern. Bei der
+Größenordnung $10^{18}$ liegen benachbarte
+:k[Gleitkommazahlen]{#floating-point} aber schon
+$128$ auseinander. Feiner kann die Maschine dort nicht auflösen. In
+R (Doppelpräzision) werden deshalb *beide* Terme auf dieselbe
+Maschinenzahl gerundet:
+
+$$
+\cred{1\,000\,000\,020\,000\,000\,128} - \cblue{1\,000\,000\,020\,000\,000\,128} = 0.
+$$
+
+Die berechnete „Varianz" ist $0$ statt $22{,}5$ – nicht
+ungefähr falsch, sondern komplett informationsfrei. Die zweistufige Rechnung
+$\frac{1}{n}\sumin \left(x_i - \bar{x}\right)^2$ liefert dagegen
+exakt $22{,}5$, denn sie subtrahiert die großen Zahlen, *bevor*
+quadriert wird, und arbeitet danach nur noch mit den kleinen Abweichungen.
+
+**Ursache** des Desasters ist die Subtraktion zweier fast gleich
+großer Zahlen: Die übereinstimmenden führenden Ziffern heben sich weg, übrig
+bleiben nur die (verrauschten) hinteren Stellen. Dieses Phänomen heißt
+*:k[katastrophale Auslöschung]{#cancellation}*
+(engl. *catastrophic cancellation*) und ist der Klassiker unter den
+numerischen Fallen.
+:::
+
+:::vertiefung[Auslöschung zum Nachspielen: Ab welcher Verschiebung kippt die Varianz-Formel?]
+<AusloeschungDemo />
+:::
+
+:::beispiel[2.1.4 (Verletzte Assoziativität)]
+Gleitkomma-Addition ist nicht assoziativ! Seien
+$\cred{x = 10^{30}}$, $\cblue{y = -10^{30}}$ und
+$\cgreen{z = 1}$. Mathematisch ist
+$x + y + z = 1$, egal wie wir klammern. Die Maschine rechnet:
+
+$$
+(\cred{x} + \cblue{y}) + \cgreen{z} = (\cred{10^{30}} + \cblue{(-10^{30})}) + \cgreen{1} = 0 + \cgreen{1} = 1,
+$$
+
+$$
+\cred{x} + (\cblue{y} + \cgreen{z}) = \cred{10^{30}} + (\cblue{(-10^{30})} + \cgreen{1}) \;\stackrel{!!}{\approx}\; \cred{10^{30}} + \cblue{(-10^{30})} = 0.
+$$
+
+Die erste Klammerung ist exakt: $\cred{x} + \cblue{y} = 0$ löscht
+die riesigen Zahlen sauber aus, danach überlebt die $\cgreen{1}$. In
+der zweiten Klammerung muss die Maschine
+$\cblue{-10^{30}} + \cgreen{1}$ als Gleitkommazahl speichern. Aber
+bei der Größenordnung $10^{30}$ liegen benachbarte Maschinenzahlen
+etwa $10^{14}$ auseinander. Die $\cgreen{1}$ ist viel
+kleiner als diese Auflösung, das Zwischenergebnis wird auf
+$\cblue{-10^{30}}$ zurückgerundet, und am Ende steht $0$
+statt $1$.
+
+$\impl$ Die Reihenfolge (Klammerung) einer Summe beeinflusst das
+Ergebnis. Das haben wir oben im Selbsttest bei
+`sum(x) - sum(rev(x))` beobachtet: vorwärts und rückwärts summiert
+ergeben dieselben $10^5$ Zahlen verschiedene Summen.
+:::
+
+:::vertiefung[Assoziativität zum Nachspielen: Wann verschluckt 10^k die 1?]
+<AssoziativDemo />
+:::
+
+<h3 id="sec-2.1-algorithmen">Algorithmen</h3>
+
+Die Beispiele zeigen: Zum numerischen Problem $f$ gehört immer noch
+eine zweite Zutat, nämlich die konkrete Rechenvorschrift, mit der wir $f(\bx)$
+zu berechnen versuchen. Für dieselbe Varianz gab es zwei Vorschriften mit
+drastisch verschiedenem Ausgang. Diese zweite Zutat bekommt jetzt einen Namen:
+
+:::definition[2.1.5 (Algorithmus)]
+Ein *Algorithmus* ist ein Verfahren
+$\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$, das für Inputs
+$\bx$ eine mögliche Lösung $\wt{f}(\bx)$ berechnet.
+:::
+
+Lesen wir die Definition genau. Ein Algorithmus ist eine
+:k[Verkettung]{#function-composition}
+$\wt{f}_s \circ \cdots \circ \wt{f}_1$ endlich vieler elementarer
+Rechenschritte $\wt{f}_1, \ldots, \wt{f}_s$: erst wird
+$\wt{f}_1$ auf den Input angewandt, dann $\wt{f}_2$ auf
+dessen Ergebnis, und so weiter. Die Tilde ist Programm: $\wt{f}$ ist
+nicht dasselbe wie $f$, sondern nur ein Versuch, $f$
+nachzubauen; die Definition verspricht vorsichtig nur eine „mögliche Lösung".
+Wie gut $\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, ist
+genau die Frage, die uns in Kapitel 3 beschäftigen wird. Zu einem Problem
+$f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
+unterscheiden sich in Genauigkeit *und* Rechenaufwand.
+
+:::bemerkung[2.1.6 (Arten von Algorithmen)]
+- *exakt/direkt*: Es gilt $f(\bx) = \wt{f}(\bx)$ (bis auf
+  Rundungsfehler). Beispiel: das
+  :k[Gauß-Verfahren]{#gaussian-elimination} für
+  lineare Gleichungssysteme: nach endlich vielen Schritten steht die exakte
+  Lösung da, wäre da nicht die Gleitkommarundung.
+- *approximativ*: Es gilt lediglich
+  $f(\bx) \approx \wt{f}(\bx)$, und zwar schon in exakter Arithmetik.
+  Beispiel: die nach endlich vielen Summanden abgebrochene Reihe für
+  $e^x$.
+- *iterativ*: Dieselbe Vorschrift wird mehrfach ausgeführt, und jede
+  Wiederholung verbessert die aktuelle Näherung. Beispiel: das
+  :k[Newton-Verfahren]{#newtons-method} oder das
+  :k[Gradientenverfahren]{#gradient-descent}.
+- *probabilistisch*: Das Verfahren beruht auf Zufall, es würfelt.
+  Beispiel: Monte-Carlo-Integration, die ein Integral durch den Mittelwert
+  zufällig gezogener Funktionswerte schätzt.
+
+Die Kategorien schließen sich nicht aus: Das stochastische Gradientenverfahren
+etwa, das Arbeitspferd des maschinellen Lernens, ist iterativ, approximativ und
+probabilistisch zugleich.
+:::
+
+Im nächsten Abschnitt sehen wir an einem klassischen Beispiel (den
+Fibonacci-Zahlen), dass zwei exakte Algorithmen für dasselbe Problem sich im
+Rechenaufwand so drastisch unterscheiden können, dass der eine praktisch
+unbrauchbar ist.
+
+*Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
+Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt
+Heath §1.3 sowie unser Kapitel 3.*

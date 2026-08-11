@@ -139,7 +139,7 @@ function buildTrace(A0: number[][], b0: number[]): Step[] {
     const piv = W[k][k];
     if (Math.abs(piv) < 1e-12) {
       snap("fail", k, null, [
-        `m${sub(k + 1)}${sub(k + 1)} = 0: kein Multiplikator definierbar`,
+        `m${sub(k + 1)}${sub(k + 1)} = 0  ⇒  Abbruch in Spalte ${k + 1}`,
       ]);
       return steps;
     }
@@ -228,46 +228,50 @@ export function LUZerlegungStepper() {
   const phaseText: Record<Phase, ReactNode> = {
     init: (
       <>
-        Das erweiterte System, wie eingegeben. <span className="font-mono">L</span> startet
-        mit seinem festen Gerüst: Einsen auf der Diagonalen, Nullen darüber. Die Plätze
-        darunter (·) warten auf die Multiplikatoren. Klicken wir uns Spalte für Spalte durch
-        die Elimination.
+        Startzustand. Rechts vom Strich steht die rechte Seite, die jede Zeilenoperation
+        mitmacht. Von <span className="font-mono">L</span> kennen wir bisher nur das Gerüst aus
+        Einsen und Nullen; auf den Punkten darunter landen gleich die Multiplikatoren, einer
+        pro eliminiertem Eintrag.
       </>
     ),
     mult: (
       <>
-        Spalte {s.k + 1}: Das Diagonalelement (<span style={{ color: RED, fontWeight: 600 }}>rot</span>)
-        ist das Pivot. Jeden Eintrag darunter (<span style={{ color: BLUE, fontWeight: 600 }}>blau</span>)
-        teilen wir durch das Pivot; die Quotienten sind die Multiplikatoren, und sie wandern
-        unverändert nach <span className="font-mono">L</span>{" "}
-        (<span style={{ color: GREEN, fontWeight: 600 }}>grün</span>). Die Eliminationsmatrix{" "}
-        <span className="font-mono">L{sub(s.k + 1)}</span> trägt dieselben Multiplikatoren mit
-        gekipptem Vorzeichen.
+        Spalte {s.k + 1}, erste Hälfte. Auf der Diagonalen sitzt das Pivot
+        (<span style={{ color: RED, fontWeight: 600 }}>rot</span>); darunter stehen die
+        Einträge, die weg sollen (<span style={{ color: BLUE, fontWeight: 600 }}>blau</span>).
+        Jeder von ihnen geteilt durch das Pivot ergibt seinen Multiplikator, und den notieren
+        wir uns an derselben Stelle in <span className="font-mono">L</span>{" "}
+        (<span style={{ color: GREEN, fontWeight: 600 }}>grün</span>). In{" "}
+        <span className="font-mono">L{sub(s.k + 1)}</span> steht derselbe Wert negativ, denn
+        diese Matrix zieht ab, was <span className="font-mono">L</span> aufbewahrt.
       </>
     ),
     apply: (
       <>
-        Jetzt ziehen wir das Multiplikator-fache der Pivotzeile von jeder Zeile darunter ab:
-        Unter dem Pivot entstehen Nullen (<span style={{ color: GREEN, fontWeight: 600 }}>grün</span>),
-        der übrige rechte untere Block und die rechte Seite werden aktualisiert
-        (<span style={{ color: BLUE, fontWeight: 600 }}>blau</span>). Alles darüber und links
-        davon bleibt unberührt.
+        Zweite Hälfte: Von jeder Zeile unterhalb des Pivots ziehen wir die mit ihrem
+        Multiplikator skalierte Pivotzeile ab. In Spalte {s.k + 1} liefert das die gewünschte Null
+        (<span style={{ color: GREEN, fontWeight: 600 }}>grün</span>), weiter rechts neue Werte
+        in der Zeile und in der rechten Seite
+        (<span style={{ color: BLUE, fontWeight: 600 }}>blau</span>). Die Zeilen oberhalb des
+        Pivots bleiben, wie sie sind.
       </>
     ),
     fail: (
       <>
-        Das Pivot ist exakt null: Die Division für die Multiplikatoren ist unmöglich, die
-        Elimination bricht ab, obwohl die Matrix invertierbar sein kann. Ein Zeilentausch
-        (Pivotierung, siehe Text) behebt das.
+        Auf dem Pivotplatz steht eine Null. Ein Multiplikator wäre hier nur mit einer Division
+        durch null zu haben, also endet die Elimination an dieser Stelle. Invertierbar darf die
+        Matrix dabei durchaus sein (Beispiel 5.3.6); wer weiterrechnen will, tauscht zuerst
+        Zeilen.
       </>
     ),
     done: (
       <>
-        Unter der Diagonalen stehen nur noch Nullen: Die Arbeitsmatrix ist{" "}
-        <span className="font-mono">U</span>, aus <span className="font-mono">b</span> ist der
-        Zwischenvektor <span className="font-mono">y</span> geworden, und{" "}
-        <span className="font-mono">L</span> hält alle Multiplikatoren. Rückwärtssubstitution
-        auf <span className="font-mono">Ux = y</span> liefert die Lösung.
+        Unterhalb der Diagonalen ist nichts mehr übrig: Die Arbeitsmatrix ist das gesuchte{" "}
+        <span className="font-mono">U</span>. Dieselben Operationen haben aus{" "}
+        <span className="font-mono">b</span> den Vektor <span className="font-mono">y</span>{" "}
+        gemacht, den auch die Vorwärtssubstitution mit{" "}
+        <span className="font-mono">L</span> geliefert hätte. Bleibt der letzte Schritt:
+        rückwärts durch <span className="font-mono">Ux = y</span>.
       </>
     ),
   };
@@ -275,9 +279,10 @@ export function LUZerlegungStepper() {
   return (
     <div>
       <p className="text-sm">
-        Editieren wir Matrix und rechte Seite und steppen durch die Elimination: Links steht
-        das erweiterte Arbeitssystem, in dem die Nullen unter der Diagonalen wachsen; rechts
-        füllt sich <span className="font-mono">L</span> nach und nach mit den Multiplikatoren.
+        Links läuft das erweiterte System, rechts die Buchhaltung: Was im Arbeitssystem zu
+        einer Null wird, taucht in <span className="font-mono">L</span> als Multiplikator
+        wieder auf. Matrix und rechte Seite sind editierbar, jede Änderung setzt den Ablauf
+        auf den Anfang zurück.
       </p>
       <div className="my-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 text-sm">
@@ -342,8 +347,9 @@ export function LUZerlegungStepper() {
         <p className="mt-2 text-sm">
           {doneX.failRow >= 0 ? (
             <>
-              Auf der Diagonalen von <span className="font-mono">U</span> steht eine Null:
-              Die Rückwärtssubstitution bricht ab, die Matrix ist singulär.
+              In Zeile {doneX.failRow + 1} von <span className="font-mono">U</span> steht eine
+              Null auf der Diagonalen. Dividieren lässt sich dort nicht, und das liegt nicht am
+              Verfahren: Diese Matrix ist singulär.
             </>
           ) : (
             <>

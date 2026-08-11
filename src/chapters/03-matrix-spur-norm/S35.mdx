@@ -1,0 +1,495 @@
+import { S35SubmultWidget } from "./widgets/S35SubmultWidget";
+import { SelbsttestFrage } from "./widgets/S35Local";
+
+::quelle[Folien: 03-matrix-spur-norm, „Eigenschaften von Matrixnormen".]
+
+In den [Abschnitten 3.2](#sec-3.2) bis [3.4](#sec-3.4) haben wir einen ganzen Zoo von
+Matrixnormen kennengelernt: elementweise Normen wie die Frobenius- und die Maximumsnorm,
+die Operatornormen und die Schatten-Normen. Drei Fragen drängen sich jetzt auf. Erstens:
+Wie hängen all diese Normen zusammen? Kann dieselbe Matrix in einer Norm „klein" und in
+einer anderen „riesig" sein? Zweitens: Wie verhalten sich Matrixnormen unter der
+wichtigsten Matrixoperation überhaupt, der Multiplikation? Und drittens: Was haben wir
+davon? Die Antworten auf die ersten beiden Fragen heißen *Normenäquivalenz*,
+*Submultiplikativität* und *Verträglichkeit*; die Antwort auf die dritte
+führt uns zur :k[Konditionszahl]{#condition-number} und zur
+Fehleranalyse, also mitten hinein in die Numerik.
+
+### 3.5.1 Normenäquivalenz
+
+Beginnen wir mit der ersten Frage. Für :k[Vektornormen]{#norm}
+auf $\R^n$ gilt bekanntlich: Alle Normen sind äquivalent, d. h. je zwei Normen
+schätzen sich gegenseitig bis auf konstante Faktoren ab. Weil Matrixnormen auf
+$\R^{m \times n}$ denselben Axiomen gehorchen (eine Matrix ist aus Sicht der
+Normaxiome nur ein langer Vektor mit $mn$ Einträgen), überträgt sich dieses
+Resultat direkt:
+
+:::satz[3.5.1 (Alle Matrixnormen sind äquivalent)]
+Für je zwei Matrixnormen $\left\|\cdot\right\|_a$ und
+$\left\|\cdot\right\|_b$ auf $\R^{m \times n}$ (bei festen
+$m, n$) existieren Konstanten $c, C > 0$ mit
+
+$$
+c\left\|\bA\right\|_a \le \left\|\bA\right\|_b \le C\left\|\bA\right\|_a \quad \text{für alle } \bA \in \R^{m \times n}.
+$$
+:::
+
+Der Beweis läuft wie im Vektorfall über ein Kompaktheitsargument (jede Norm ist als
+Funktion stetig und nimmt auf der Einheitssphäre einer Referenznorm ihr Minimum und
+Maximum an); wir übernehmen das Resultat hier ohne Beweis. Interessanter für die Praxis
+ist, *wie groß* die Konstanten für die konkreten Normen aus den letzten
+Abschnitten ausfallen:
+
+:::beispiel[3.5.2 (Explizite Äquivalenzkonstanten)]
+Für $\bA \in \R^{m \times n}$ gilt unter anderem:
+
+$$
+\left\|\bA\right\|_2 \le \left\|\bA\right\|_F \le \sqrt{\min(m,n)}\, \left\|\bA\right\|_2,
+$$
+
+$$
+\left\|\bA\right\|_F \le \left\|\bA\right\|_* \le \sqrt{\min(m,n)}\, \left\|\bA\right\|_F,
+$$
+
+$$
+\tfrac{1}{\sqrt{n}} \left\|\bA\right\|_\infty \le \left\|\bA\right\|_2 \le \sqrt{m}\, \left\|\bA\right\|_\infty.
+$$
+
+($\left\|\cdot\right\|_\infty$ ist hier die Zeilensummennorm aus
+[Abschnitt 3.3](#sec-3.3), nicht zu verwechseln mit
+der elementweisen Maximumsnorm $\left\|\cdot\right\|_M$.) Die Konstanten
+hängen also nur über die Dimensionen $m, n$ von der Matrix ab,
+und sie wachsen mit der Dimension. Für sehr große Matrizen können zwei Normen also
+durchaus um Größenordnungen auseinanderliegen.
+:::
+
+Die erste Kette können wir mit dem Schatten-Blick aus
+[Abschnitt 3.4](#sec-3.4) vollständig beweisen. Dort
+haben wir gesehen: Sind $\lambda_1 \ge \cdots \ge \lambda_r > 0$ die
+positiven :k[Eigenwerte]{#eigenvalue-eigenvector} von
+$\bA^\top\bA$ (mit $r = \rang(\bA)$), so ist
+$\left\|\bA\right\|_2 = \sqrt{\cred{\lambda_1}}$ und
+$\left\|\bA\right\|_F = \sqrt{\cgreen{\sum_{i=1}^r \lambda_i}}$. Wir
+verfolgen $\cred{\lambda_1}$ rot und die Eigenwertsumme grün:
+
+::::beweis
+
+:::schritt
+$$
+\left\|\bA\right\|_2^2 = \cred{\lambda_1} \le \cgreen{\sum_{i=1}^r \lambda_i} = \left\|\bA\right\|_F^2
+$$
+
+::why[alle $\lambda_i$ sind positiv, die Summe ist also mindestens so groß wie ihr größter Summand $\cred{\lambda_1}$]
+:::
+
+:::schritt
+$$
+\left\|\bA\right\|_F^2 = \cgreen{\sum_{i=1}^r \lambda_i} \le r \cdot \cred{\lambda_1} \le \min(m,n) \cdot \cred{\lambda_1} = \min(m,n) \cdot \left\|\bA\right\|_2^2
+$$
+
+::why[jeder der $r$ Summanden ist höchstens $\cred{\lambda_1}$; und der :k[Rang]{#rank} erfüllt $r \le \min(m,n)$]
+:::
+
+:::schritt
+$$
+\left\|\bA\right\|_2 \le \left\|\bA\right\|_F \le \sqrt{\min(m,n)}\, \left\|\bA\right\|_2
+$$
+
+::why[Wurzelziehen ist monoton, erhält also beide Ungleichungen]
+:::
+
+::::
+
+:::bemerkung[3.5.3 (Äquivalenz ist nicht Gleichheit)]
+Vorsicht: Äquivalenz heißt nur, dass keine Norm „unendlich viel größer" sein kann als
+eine andere. Verschiedene Normen können Matrizen aber durchaus
+*unterschiedlich ordnen*. Betrachten wir
+
+$$
+\bA = \bI_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}, \qquad \bB = \begin{pmatrix} 1{,}2 & 0 \\ 0 & 0 \end{pmatrix}.
+$$
+
+In der Frobenius-Norm ist $\bA$ die größere Matrix:
+$\left\|\bA\right\|_F = \sqrt{2} \approx 1{,}41 > 1{,}2 = \left\|\bB\right\|_F$.
+In der Spektralnorm ist es umgekehrt:
+$\left\|\bA\right\|_2 = 1 < 1{,}2 = \left\|\bB\right\|_2$. Beide
+Antworten sind richtig, denn jede Norm misst eben etwas anderes: Die Frobenius-Norm
+summiert die „Gesamtmasse" aller Einträge, die Spektralnorm die maximale Streckung.
+Welche Norm die passende ist, entscheidet die Anwendung.
+:::
+
+### 3.5.2 Submultiplikativität
+
+Kommen wir zur zweiten Frage. Die Normaxiome aus
+[Abschnitt 3.2](#sec-3.2) regeln per
+Dreiecksungleichung, wie sich Normen unter *Addition* verhalten:
+$\left\|\bA + \bB\right\| \le \left\|\bA\right\| + \left\|\bB\right\|$.
+Über das Matrix*produkt* sagen sie dagegen gar nichts. Für die Numerik ist das
+Produkt aber die zentrale Operation: Algorithmen sind Ketten von
+Matrixmultiplikationen, und wir wollen abschätzen können, wie stark so eine Kette
+Fehler aufbläht. Normen, die das erlauben, bekommen einen eigenen Namen:
+
+:::definition[3.5.4 (Submultiplikative Matrixnorm)]
+Eine Matrixnorm $\left\|\cdot\right\|$ heißt
+*submultiplikativ*, wenn für alle Matrizen mit passenden Formaten (
+$\cbred{\bA} \in \R^{m \times n}$, $\cblue{\bB} \in \R^{n \times p}$) gilt:
+
+$$
+\left\|\cbred{\bA}\cblue{\bB}\right\| \le \left\|\cbred{\bA}\right\| \cdot \left\|\cblue{\bB}\right\|.
+$$
+:::
+
+Die gute Nachricht: Die wichtigsten Normen aus diesem Kapitel haben diese Eigenschaft.
+
+:::satz[3.5.5 (Operatornormen sind submultiplikativ)]
+Jede Operatornorm ([Abschnitt 3.3](#sec-3.3)) ist
+submultiplikativ.
+:::
+
+::::beweis
+
+:::schritt
+Zuerst eine Hilfsungleichung: Für jede Matrix $\bM$ und jeden Vektor
+$\by$ gilt
+
+$$
+\left\|\bM\by\right\|_V \le \left\|\bM\right\|_V \cdot \left\|\by\right\|_V.
+$$
+
+::why[Definition der Operatornorm als Maximum des Quotienten $\left\|\bA\by\right\|_V / \left\|\by\right\|_V$: das Maximum ist mindestens so groß wie der Quotient für jedes einzelne $\by \ne \bnull$; für $\by = \bnull$ stehen links und rechts null]
+:::
+
+:::schritt
+Sei nun $\bx$ ein Vektor mit $\left\|\bx\right\|_V = 1$.
+Dann:
+
+$$
+\left\|(\cbred{\bA}\cblue{\bB})\bx\right\|_V = \left\|\cbred{\bA}(\cblue{\bB}\bx)\right\|_V \le \left\|\cbred{\bA}\right\|_V \left\|\cblue{\bB}\bx\right\|_V \le \left\|\cbred{\bA}\right\|_V \left\|\cblue{\bB}\right\|_V.
+$$
+
+::why[Hilfsungleichung zweimal anwenden: erst auf $\cbred{\bA}$ mit dem Vektor $\cblue{\bB}\bx$, dann auf $\cblue{\bB}$ mit $\bx$, wobei $\left\|\bx\right\|_V = 1$]
+:::
+
+:::schritt
+$$
+\left\|\cbred{\bA}\cblue{\bB}\right\|_V = \max_{\left\|\bx\right\|_V = 1} \left\|(\cbred{\bA}\cblue{\bB})\bx\right\|_V \le \left\|\cbred{\bA}\right\|_V \cdot \left\|\cblue{\bB}\right\|_V
+$$
+
+::why[die Operatornorm von $\cbred{\bA}\cblue{\bB}$ ist das Maximum der linken Seite über alle $\bx$ mit $\left\|\bx\right\|_V = 1$; die rechte Seite hängt nicht von $\bx$ ab]
+:::
+
+::::
+
+Auch alle Schatten-Normen aus
+[Abschnitt 3.4](#sec-3.4) (insbesondere die
+Frobenius-Norm und die Nuklearnorm) sind submultiplikativ. Der Beweis braucht
+Ungleichungen für Singulärwerte von Produkten, die wir hier nicht entwickeln; wir merken
+uns das Resultat. Nicht jede Matrixnorm ist aber submultiplikativ; das prominenteste
+Gegenbeispiel ist die Maximumsnorm:
+
+:::beispiel[3.5.6 (Die Maximumsnorm ist nicht submultiplikativ)]
+Betrachten wir die Einsermatrix
+$\cbred{\bA} = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}$ und ihr
+Quadrat. Jeder Eintrag von $\cgreen{\bA^2}$ ist ein Skalarprodukt aus einer
+Zeile und einer Spalte voller Einsen:
+
+$$
+\cgreen{\bA^2} = \begin{pmatrix} \cred{1} \cdot \cred{1} + \cred{1} \cdot \cred{1} & 1 \cdot 1 + 1 \cdot 1 \\ 1 \cdot 1 + 1 \cdot 1 & 1 \cdot 1 + 1 \cdot 1 \end{pmatrix} = \cgreen{\begin{pmatrix} 2 & 2 \\ 2 & 2 \end{pmatrix}}.
+$$
+
+Damit ist
+
+$$
+\left\|\cgreen{\bA^2}\right\|_M = 2 > 1 = 1 \cdot 1 = \left\|\cbred{\bA}\right\|_M \cdot \left\|\cbred{\bA}\right\|_M.
+$$
+
+Die Maximumsnorm „übersieht", dass bei der Matrixmultiplikation viele Produkte
+*aufsummiert* werden, denn sie schaut nur auf den größten einzelnen Eintrag.
+:::
+
+:::bemerkung[3.5.7 (Reparatur: die Gesamtnorm)]
+Der Defekt lässt sich durch einen dimensionsabhängigen Faktor beheben: Die
+*Gesamtnorm* $\left\|\bA\right\|_G := \sqrt{mn}\, \left\|\bA\right\|_M$ ist
+submultiplikativ. Der Nachweis ist eine gute Übung. Er benutzt genau die
+Summenstruktur der Matrixmultiplikation, die die Maximumsnorm ignoriert. (Probe am
+Beispiel 3.5.6 mit $m = n = 2$, also $\sqrt{mn} = 2$:
+$\left\|\bA\right\|_G = 2 \cdot 1 = 2$ und
+$\left\|\bA^2\right\|_G = 2 \cdot 2 = 4 \le 4 = \left\|\bA\right\|_G^2$,
+es passt.)
+:::
+
+Warum ist Submultiplikativität so wertvoll? Drei Gründe. Erstens kontrolliert sie die
+*Fehlerfortpflanzung*: Für eine Kette
+$\bA_1 \bA_2 \cdots \bA_k$ folgt durch wiederholtes Anwenden
+$\left\|\bA_1 \cdots \bA_k\right\| \le \left\|\bA_1\right\| \cdots \left\|\bA_k\right\|$;
+die Normen der Faktoren deckeln die Norm des Produkts. Zweitens ermöglicht sie
+:k[Konvergenz]{#convergence}analysen iterativer Verfahren: Aus
+$\left\|\bA\right\| < 1$ folgt
+$\left\|\bA^k\right\| \le \left\|\bA\right\|^k \to 0$, die Potenzen
+einer „kontrahierenden" Matrix sterben also garantiert aus. Drittens verbindet sie
+Normen mit dem :k[Spektralradius]{#spectral-radius}: Man kann
+zeigen, dass $\rho(\bA) \le \left\|\bA\right\|$ für jede
+submultiplikative Norm gilt: Jede solche Norm ist eine obere Schranke für die
+betragsgrößten Eigenwerte.
+
+:::vertiefung[Submultiplikativität ausprobieren: ‖AB‖ gegen ‖A‖·‖B‖]
+<S35SubmultWidget />
+:::
+
+### 3.5.3 Verträglichkeit von Normen
+
+Submultiplikativität vergleicht Matrixnormen mit Matrixnormen. Genauso oft brauchen wir
+aber ein gemischtes Szenario: Eine Matrix wirkt auf einen *Vektor*, und wir
+wollen $\left\|\bA\bx\right\|$ durch die Norm von $\bA$ und
+die Norm von $\bx$ abschätzen. Das führt auf folgenden Begriff:
+
+:::definition[3.5.8 (Verträgliche Norm)]
+Eine Matrixnorm $\left\|\cdot\right\|$ ist *verträglich*
+(kompatibel) mit einer :k[Vektornorm]{#norm}
+$\left\|\cdot\right\|_V$, wenn für alle
+$\bA \in \R^{m \times n}$ und $\bx \in \R^n$ gilt:
+
+$$
+\left\|\bA\bx\right\|_V \le \left\|\bA\right\| \cdot \left\|\bx\right\|_V.
+$$
+
+(Dabei bezeichnet $\left\|\cdot\right\|_V$ die Vektornorm gleichen Typs
+auf $\R^n$ und auf $\R^m$.)
+:::
+
+:::satz[3.5.9 (Wichtige Verträglichkeiten)]
+1. Jede submultiplikative Matrixnorm ist mit „sich selbst" verträglich, d. h. mit der
+   Vektornorm, die entsteht, wenn wir $\bx \in \R^n$ als
+   $n \times 1$-Matrix lesen.
+2. Jede Operatornorm ist mit der Vektornorm verträglich, die sie induziert.
+3. Die Frobenius-Norm ist mit der
+   :k[euklidischen Norm]{#euclidean-norm} verträglich:
+   $\left\|\bA\bx\right\|_2 \le \left\|\bA\right\|_F \left\|\bx\right\|_2$.
+
+:::
+
+::::beweis
+
+:::schritt
+*Zu (1):* Lesen wir $\bx$ als $n \times 1$-Matrix, so
+ist $\bA\bx$ ein Matrixprodukt, und die Submultiplikativität liefert
+direkt
+
+$$
+\left\|\bA\bx\right\| \le \left\|\bA\right\| \cdot \left\|\bx\right\|.
+$$
+
+::why[Submultiplikativität (Definition 3.5.4), angewendet auf das Matrixprodukt einer $m \times n$- mit einer $n \times 1$-Matrix]
+:::
+
+:::schritt
+*Zu (2):* Das ist die Hilfsungleichung aus dem Beweis von Satz 3.5.5: Für
+$\bx \ne \bnull$ gilt
+
+$$
+\frac{\left\|\bA\bx\right\|_V}{\left\|\bx\right\|_V} \le \max_{\by \ne \bnull} \frac{\left\|\bA\by\right\|_V}{\left\|\by\right\|_V} = \left\|\bA\right\|_V.
+$$
+
+::why[die Operatornorm ist als Maximum des Quotienten definiert, also ist sie mindestens so groß wie der Quotient an jeder einzelnen Stelle $\bx \ne \bnull$]
+:::
+
+:::schritt
+*Zu (3):* Schreiben wir $\bA$ zeilenweise mit Zeilenvektoren
+$\cred{\ba_1}^\top, \ldots, \cred{\ba_m}^\top$. Die $i$-te
+Komponente von $\bA\cblue{\bx}$ ist das Skalarprodukt
+$\cred{\ba_i}^\top\cblue{\bx}$, also
+
+$$
+\left\|\bA\cblue{\bx}\right\|_2^2 = \sum_{i=1}^m \left(\cred{\ba_i}^\top\cblue{\bx}\right)^2 \le \sum_{i=1}^m \left\|\cred{\ba_i}\right\|_2^2 \left\|\cblue{\bx}\right\|_2^2.
+$$
+
+::why[:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} für jedes einzelne Skalarprodukt $\cred{\ba_i}^\top \cblue{\bx}$]
+:::
+
+:::schritt
+$$
+\left\|\bA\cblue{\bx}\right\|_2^2 \le \left(\sum_{i=1}^m \left\|\cred{\ba_i}\right\|_2^2\right) \left\|\cblue{\bx}\right\|_2^2 = \left\|\bA\right\|_F^2 \left\|\cblue{\bx}\right\|_2^2
+$$
+
+::why[die Summe der quadrierten Zeilennormen ist genau die Summe aller quadrierten Einträge, also $\left\|\bA\right\|_F^2$; dann Wurzel ziehen]
+:::
+
+::::
+
+Wozu das Ganze? Verträglichkeit ist das Werkzeug für *Fehlerabschätzungen*.
+Steckt in einem Vektor ein Fehler $\be$ (etwa aus
+:k[Rundungsfehlern]{#rounding-error} früherer
+Rechenschritte) und multiplizieren wir mit $\bA$, dann garantiert
+$\left\|\bA\be\right\|_V \le \left\|\bA\right\| \cdot \left\|\be\right\|_V$:
+Ein kleiner Eingangsfehler bleibt nach der Multiplikation kontrolliert, denn die Matrixnorm
+ist der Verstärkungsfaktor im schlimmsten Fall. Diese Denkfigur bauen wir jetzt zu
+den zwei wichtigsten Anwendungen aus.
+
+### 3.5.4 Matrixnormen und Konditionierung
+
+Die :k[Konditionszahl]{#condition-number} kennen wir bereits
+als Maß dafür, wie stark ein Problem relative Eingabefehler verstärkt. Für das Lösen
+linearer :k[Gleichungssysteme]{#linear-system}
+$\bA\bx = \bb$ lässt sich dieser Verstärkungsfaktor direkt aus Matrixnormen
+gewinnen. Das rechnen wir im Kapitel über lineare Gleichungssysteme nach, halten die
+Definition aber schon hier fest:
+
+:::definition[3.5.10 (Konditionszahl einer Matrix)]
+Für eine :k[invertierbare]{#matrix-inverse} Matrix
+$\bA \in \R^{n \times n}$ und eine submultiplikative Matrixnorm
+$\left\|\cdot\right\|$ ist die *Konditionszahl*
+
+$$
+\kappa(\bA) = \left\|\bA\right\| \cdot \left\|\bA^{-1}\right\|;
+$$
+
+für singuläre Matrizen setzen wir $\kappa(\bA) = \infty$. Speziell für die
+Spektralnorm ergibt sich die *Spektralkondition*
+
+$$
+\kappa_2(\bA) = \left\|\bA\right\|_2 \cdot \left\|\bA^{-1}\right\|_2 = \frac{\lambda_{\max}(\bA^\top\bA)^{1/2}}{\lambda_{\min}(\bA^\top\bA)^{1/2}}.
+$$
+:::
+
+Die zweite Gleichheit sieht man so: Nach
+[Abschnitt 3.3](#sec-3.3) ist
+$\left\|\bA\right\|_2 = \lambda_{\max}(\bA^\top\bA)^{1/2}$, und die
+Eigenwerte von $(\bA^{-1})^\top\bA^{-1} = (\bA\bA^\top)^{-1}$ sind die
+Kehrwerte der Eigenwerte von $\bA\bA^\top$, und
+$\bA\bA^\top$ hat dieselben Eigenwerte wie $\bA^\top\bA$. Der
+größte Eigenwert von $(\bA\bA^\top)^{-1}$ ist also
+$1/\lambda_{\min}(\bA^\top\bA)$. Die Konditionszahl misst damit das
+*Verhältnis der extremen Streckungsfaktoren*: maximale Streckung durch
+$\bA$ geteilt durch minimale Streckung. Noch durchsichtiger wird das mit der
+:k[Singulärwertzerlegung]{#singular-value-decomposition}, die
+wir später kennenlernen: $\kappa_2(\bA)$ ist der Quotient aus größtem und
+kleinstem Singulärwert. Für *symmetrische* Matrizen sind die Singulärwerte
+gerade die Beträge der Eigenwerte; dort ist
+$\kappa_2(\bA) = \max_i |\lambda_i| \,/\, \min_i |\lambda_i|$, das
+Verhältnis der betragsmäßig extremen Eigenwerte.
+
+:::bemerkung[3.5.11 (Interpretation der Konditionszahl)]
+- $\kappa(\bA) \approx 1$: gut konditioniert; $\bA$ streckt
+  alle Richtungen ungefähr gleich stark.
+- $\kappa(\bA) \gg 1$: schlecht konditioniert; manche Richtungen werden
+  enorm gestreckt, andere fast plattgedrückt.
+- $\kappa(\bA) = \infty$: singulär.
+
+Kleiner als 1 kann die Konditionszahl (in einer Operatornorm) nie werden: Wegen
+$\left\|\bI\right\| = 1$ und der Submultiplikativität gilt
+
+$$
+1 = \left\|\bI\right\| = \left\|\bA\bA^{-1}\right\| \le \left\|\bA\right\| \cdot \left\|\bA^{-1}\right\| = \kappa(\bA).
+$$
+
+Den Idealwert $\kappa_2 = 1$ erreichen zum Beispiel
+:k[Orthogonalmatrizen]{#orthogonal-matrix}: Sie lassen alle
+euklidischen Längen unverändert (
+[Abschnitt 3.3](#sec-3.3)), strecken also jede
+Richtung mit dem Faktor 1.
+:::
+
+### 3.5.5 Normen in der Fehleranalyse
+
+Zum Abschluss zeigen wir an einem konkreten Resultat, wie Matrixnormen in der
+Fehleranalyse arbeiten. Angenommen, wir lösen $\bA\bx = \bb$ numerisch und
+erhalten (dank Rundungsfehlern) nicht die exakte Lösung, sondern eine Näherung
+$\wt{\bx}$. Die *Rückwärts-Fehleranalyse* (backward error analysis)
+stellt die Frage geschickt um: Statt zu fragen, wie falsch $\wt{\bx}$ ist
+(Vorwärtsfehler), fragen wir: *Für welches gestörte Problem ist
+$\wt{\bx}$ die exakte Lösung?* Ist die nötige Störung winzig, hat der
+Algorithmus sein Bestes getan; alles Weitere ist Sache der Kondition des Problems.
+
+:::satz[3.5.12 (Rückwärtsfehler beim linearen Gleichungssystem)]
+Sei $\wt{\bx} \ne \bnull$ eine Näherungslösung von
+$\bA\bx = \bb$ mit Residuum
+$\cbpurp{\br} = \bA\wt{\bx} - \bb$. Dann löst $\wt{\bx}$
+das gestörte System
+
+$$
+(\bA + \cblue{\bDelta\bA})\,\wt{\bx} = \bb \qquad \text{mit} \qquad \cblue{\bDelta\bA} = -\frac{\cbpurp{\br}\,\wt{\bx}^\top}{\left\|\wt{\bx}\right\|_2^2}
+$$
+
+exakt, und die relative Größe der Störung ist
+
+$$
+\frac{\left\|\cblue{\bDelta\bA}\right\|_2}{\left\|\bA\right\|_2} = \frac{\left\|\cbpurp{\br}\right\|_2}{\left\|\bA\right\|_2 \cdot \left\|\wt{\bx}\right\|_2}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\cblue{\bDelta\bA}\,\wt{\bx} = -\frac{\cbpurp{\br}\,(\wt{\bx}^\top\wt{\bx})}{\left\|\wt{\bx}\right\|_2^2} = -\cbpurp{\br}
+$$
+
+::why[$\cbpurp{\br}\,\wt{\bx}^\top$ ist ein :k[äußeres Produkt]{#outer-product}; multiplizieren wir es mit $\wt{\bx}$, entsteht das Skalarprodukt $\wt{\bx}^\top\wt{\bx} = \left\|\wt{\bx}\right\|_2^2$, das sich gegen den Nenner kürzt]
+:::
+
+:::schritt
+$$
+(\bA + \cblue{\bDelta\bA})\,\wt{\bx} = \bA\wt{\bx} - \cbpurp{\br} = \bb + \cbpurp{\br} - \cbpurp{\br} = \bb
+$$
+
+::why[Definition des Residuums: $\bA\wt{\bx} = \bb + \cbpurp{\br}$]
+:::
+
+:::schritt
+$$
+\left\|\cblue{\bDelta\bA}\right\|_2 = \frac{\left\|\cbpurp{\br}\,\wt{\bx}^\top\right\|_2}{\left\|\wt{\bx}\right\|_2^2} = \frac{\left\|\cbpurp{\br}\right\|_2 \left\|\wt{\bx}\right\|_2}{\left\|\wt{\bx}\right\|_2^2} = \frac{\left\|\cbpurp{\br}\right\|_2}{\left\|\wt{\bx}\right\|_2}
+$$
+
+::why[für Rang-1-Matrizen gilt $\left\|\bu\bv^\top\right\|_2 = \left\|\bu\right\|_2 \left\|\bv\right\|_2$: wegen $(\bu\bv^\top)\bx = (\bv^\top\bx)\,\bu$ wird $\left\|(\bu\bv^\top)\bx\right\|_2 = |\bv^\top\bx| \left\|\bu\right\|_2$ nach :k[Cauchy-Schwarz]{#cauchy-schwarz-inequality} maximal für $\bx = \bv / \left\|\bv\right\|_2$]
+:::
+
+:::schritt
+$$
+\frac{\left\|\cblue{\bDelta\bA}\right\|_2}{\left\|\bA\right\|_2} = \frac{\left\|\cbpurp{\br}\right\|_2}{\left\|\bA\right\|_2 \cdot \left\|\wt{\bx}\right\|_2}
+$$
+
+::why[beide Seiten durch $\left\|\bA\right\|_2$ teilen]
+:::
+
+::::
+
+Lesen wir das Resultat noch einmal in Ruhe. Links steht die *relative Störung des
+Problems*, die nötig wäre, damit unsere Näherung exakt richtig ist. Rechts stehen
+nur Größen, die wir nach der Rechnung kennen: das Residuum
+$\cbpurp{\br}$ und die Normen von $\bA$ und
+$\wt{\bx}$. Matrixnormen machen den Rückwärtsfehler also *berechenbar*:
+Ein kleines relatives Residuum bedeutet, dass $\wt{\bx}$ die exakte Lösung
+eines nur winzig gestörten Systems ist. Wie weit $\wt{\bx}$ dann von der
+wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus Definition 3.5.10.
+Als Faustregel gilt: Vorwärtsfehler $\lesssim \kappa(\bA) \times$
+Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
+
+### Selbsttest
+
+<ul className="max-w-prose list-none space-y-4 pl-0">
+  <SelbsttestFrage q={<>Gilt <M>{"\\left\\|\\bA^2\\right\\| \\le \\left\\|\\bA\\right\\|^2"}</M> für <em>jede</em> Matrixnorm?</>}>
+    Nein, das gilt nur für submultiplikative Normen. Die Maximumsnorm liefert ein
+    Gegenbeispiel: Für die Einsermatrix aus Beispiel 3.5.6 ist
+    $\left\|\bA^2\right\|_M = 2 > 1 = \left\|\bA\right\|_M^2$.
+    Operator- und Schatten-Normen (also auch Spektral-, Frobenius- und Nuklearnorm)
+    erfüllen die Ungleichung dagegen immer.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Sei <M>{"\\bQ"}</M> eine Orthogonalmatrix. Was ist <M>{"\\kappa_2(\\bQ)"}</M>?</>}>
+    $\kappa_2(\bQ) = 1$. Wegen
+    $\left\|\bQ\bx\right\|_2 = \left\|\bx\right\|_2$ für alle
+    $\bx$ ist $\left\|\bQ\right\|_2 = 1$; und
+    $\bQ^{-1} = \bQ^\top$ ist selbst orthogonal, also auch
+    $\left\|\bQ^{-1}\right\|_2 = 1$. Orthogonalmatrizen sind perfekt
+    konditioniert – ein Hauptgrund, warum numerische Verfahren so gerne mit ihnen
+    arbeiten.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Für die Einheitsmatrix gilt <M>{"\\left\\|\\bI_n\\right\\|_2 = 1"}</M>, aber <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n}"}</M>. Widerspricht das der Normenäquivalenz (Satz 3.5.1)? Und was sagt uns das Beispiel über die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus Beispiel 3.5.2?</>}>
+    Kein Widerspruch: Satz 3.5.1 gilt bei *festen* Dimensionen, und die
+    Konstanten dürfen von $m, n$ abhängen. Das Beispiel zeigt sogar, dass die
+    Konstante scharf ist: $\bI_n$ erfüllt
+    $\left\|\bI_n\right\|_F = \sqrt{n} = \sqrt{\min(n,n)} \cdot \left\|\bI_n\right\|_2$;
+    die obere Schranke aus Beispiel 3.5.2 wird hier mit Gleichheit angenommen, besser
+    geht es also nicht.
+  </SelbsttestFrage>
+</ul>
+
+*Vertiefung: Heath §2.3.*

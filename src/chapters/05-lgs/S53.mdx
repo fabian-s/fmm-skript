@@ -104,11 +104,9 @@ unter der Diagonalen stehen unverändert die Multiplikatoren
 $\cgreen{l_{ik}}$ aus der Elimination.
 :::
 
-Dieselben Schritte treffen bei der klassischen Elimination auch die rechte
-Seite: Aus $\bb$ wird $\bc = \bL_{n-1} \cdots \bL_1 \bb$, das gestaffelte
-Endsystem ist $(\bU \mid \bc)$. Mit gespeichertem $\bL$ dürfen wir uns
-dieses Mitschleppen sparen, denn die Vorwärtssubstitution $\bL\by = \bb$
-liefert später denselben Vektor: $\by = \bL^{-1}\bb = \bc$.
+Der Beweis rechnet mit einer kompakten Schreibweise für $\bL_k$; die
+eigentliche Arbeit steckt darin, dass sich die Inversen ohne jede
+Nebenwirkung aufeinanderstapeln.
 
 ::::beweis
 
@@ -155,6 +153,12 @@ ergibt schließlich $\bA = \bL_1^{-1} \cdots \bL_{n-1}^{-1} \bU = \bL\bU$.
 :::
 
 ::::
+
+Dieselben Schritte treffen bei der klassischen Elimination auch die rechte
+Seite: Aus $\bb$ wird $\bc = \bL_{n-1} \cdots \bL_1 \bb$, das gestaffelte
+Endsystem ist $(\bU \mid \bc)$. Mit gespeichertem $\bL$ dürfen wir uns
+dieses Mitschleppen sparen, denn die Vorwärtssubstitution $\bL\by = \bb$
+liefert später denselben Vektor: $\by = \bL^{-1}\bb = \bc$.
 
 ### Ein vollständiges Beispiel
 
@@ -255,9 +259,19 @@ $$
 $$
 
 erzwingt $u_{11} = 0$ aus dem Eintrag links oben und zugleich
-$l\, u_{11} = 1$ aus dem Eintrag links unten: ein Widerspruch. Ein
-Zeilentausch löst das Problem sofort auf, denn mit $\bP = \bA$ ist
-$\bP\bA = \bI = \bI \cdot \bI$ eine (zugegeben langweilige) LU-Zerlegung.
+$l\, u_{11} = 1$ aus dem Eintrag links unten: ein Widerspruch.
+
+An den Einsen auf der Diagonalen von $\bL$ liegt das nicht. Lassen wir sie
+fallen und setzen allgemeiner
+$\bL = \bigl(\begin{smallmatrix} l_{11} & 0 \\ l_{21} & l_{22} \end{smallmatrix}\bigr)$
+an, so verlangt der Eintrag rechts oben $l_{11} u_{12} = 1$, also
+$l_{11} \neq 0$. Links oben folgt daraus $u_{11} = 0$, links unten also
+$l_{21} u_{11} = 0 \neq 1$, und wir stehen wieder vor demselben
+Widerspruch.
+
+Ein Zeilentausch löst das Problem dagegen sofort auf, denn mit $\bP = \bA$
+ist $\bP\bA = \bI = \bI \cdot \bI$ eine (zugegeben langweilige)
+LU-Zerlegung.
 :::
 
 ### Lösen mit der LU-Zerlegung
@@ -269,7 +283,7 @@ Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
 1. *Vorwärtssubstitution:* Löse $\bL\by = \bb$ von oben nach unten,
 
    $$
-   \cblue{y_i} = b_i - \sum_{j=1}^{i-1} l_{ij}\, \cgreen{y_j}
+   \cgreen{y_i} = b_i - \sum_{j=1}^{i-1} l_{ij}\, \cgreen{y_j}
    \qquad (i = 1, \dots, n) ;
    $$
 
@@ -279,7 +293,7 @@ Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
    Formel ($5.2.1$),
 
    $$
-   \cblue{x_i} = \Bigl(y_i - \sum_{j=i+1}^{n} u_{ij}\, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}}
+   \cgreen{x_i} = \Bigl(y_i - \sum_{j=i+1}^{n} u_{ij}\, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}}
    \qquad (i = n, \dots, 1) .
    $$
 :::
@@ -296,9 +310,9 @@ $$
 = \begin{pmatrix} 5 \\ -2 \\ 9 \end{pmatrix}
 \quad\Longrightarrow\quad
 \begin{aligned}
-y_1 &= 5 , \\
-y_2 &= -2 - 2 \cdot 5 = -12 , \\
-y_3 &= 9 - (-1) \cdot 5 - (-1) \cdot (-12) = 9 + 5 - 12 = 2 .
+y_1 &= \cgreen{5} , \\
+y_2 &= -2 - 2 \cdot \cgreen{5} = \cgreen{-12} , \\
+y_3 &= 9 - (-1) \cdot \cgreen{5} - (-1) \cdot (\cgreen{-12}) = 9 + 5 - 12 = \cgreen{2} .
 \end{aligned}
 $$
 
@@ -309,8 +323,8 @@ $\cred{u_{ii}}$:
 $$
 \begin{aligned}
 x_3 &= 2 / \cred{3} = \cgreen{\tfrac{2}{3}} , \\
-x_2 &= \bigl(-12 - 2 \cdot \tfrac{2}{3}\bigr) / (\cred{-8}) = \cgreen{\tfrac{5}{3}} , \\
-x_1 &= \bigl(5 - 1 \cdot \tfrac{5}{3} - (-1) \cdot \tfrac{2}{3}\bigr) / \cred{2} = \cgreen{2} .
+x_2 &= \bigl(-12 - 2 \cdot \cgreen{\tfrac{2}{3}}\bigr) / (\cred{-8}) = \cgreen{\tfrac{5}{3}} , \\
+x_1 &= \bigl(5 - 1 \cdot \cgreen{\tfrac{5}{3}} - (-1) \cdot \cgreen{\tfrac{2}{3}}\bigr) / \cred{2} = \cgreen{2} .
 \end{aligned}
 $$
 
@@ -323,7 +337,7 @@ Die Faktoren $\bL$ und $\bU$ hängen nur von $\bA$ ab, nicht von $\bb$. Für
 jede weitere rechte Seite wiederholen wir deshalb nur die beiden billigen
 Substitutionen; die teure Elimination fällt kein zweites Mal an. Dieses
 Muster trägt weit über die LU-Zerlegung hinaus: Auch die QR-Zerlegung für
-Kleinste-Quadrate-Probleme ([Kapitel 7](?k=07-kq)) folgt ihm.
+Kleinste-Quadrate-Probleme ([Abschnitt 7.4](?k=07-kq#sec-7.4)) folgt ihm.
 :::
 
 :::vertiefung[Die Elimination im Zeitraffer]
@@ -388,10 +402,11 @@ Im $k$-ten Schritt ändern sich nur die Einträge im rechten unteren
 $(n-k) \times (n-k)$-Block (und die rechte Seite); der Aufwand ist
 $O((n-k)^2)$.
 
-Betroffen sind die Zeilen $k+1, \dots, n$, und dort nur die Spalten
-$k, \dots, n$: Links davon stehen schon Nullen, und die bleiben null. Das
-sind $n-k$ Zeilen mit je höchstens $n-k+1$ zu aktualisierenden Einträgen,
-also $O((n-k)^2)$ Operationen.
+Betroffen sind die Zeilen $k+1, \dots, n$; links von Spalte $k$ stehen dort
+schon Nullen, und die bleiben null. In Spalte $k$ entsteht die neue Null,
+neu ausgerechnet werden die Spalten $k+1, \dots, n$ und der Eintrag der
+rechten Seite. Das sind $n-k$ Zeilen mit je $n-k+1$ Aktualisierungen, in
+der Summe $(n-k)(n-k+1)$ Rechenschritte, also $O((n-k)^2)$.
 :::
 
 :::frage{wahr}
