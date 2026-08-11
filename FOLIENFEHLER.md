@@ -78,22 +78,22 @@ Lesson-Zeile ein.
 - **Z. 232–233 (LU-Zerlegung)**: U = L_n⋯L_1·A und
   L = L_1⁻¹⋯L_n⁻¹ — es gibt aber nur n−1 nichttriviale
   Eliminationsschritte (L_n wäre I); sauber wäre L_{n−1}.
-  *Wird im laufenden Kapitel-5-Lauf korrigiert.*
+  *Skript §5.3 (Satz 5.3.3) indiziert mit L_{n−1} und merkt das an.*
 - **Z. 288–298 (Theorem „LU-Zerlegung")**: „Jede invertierbare Matrix A
   hat eine Darstellung A = LU" ist FALSCH — Gegenbeispiel
   (0 1; 1 0): Pivot 0, keine LU-Zerlegung ohne Zeilentausch. Korrekt:
   PA = LU existiert für jede invertierbare Matrix (Pivotierung); A = LU
   ohne P genau dann, wenn die Elimination ohne Nullpivot durchläuft
-  (führende Hauptminoren ≠ 0). *Wird im laufenden Kapitel-5-Lauf als
-  korrekter Satz formuliert.*
+  (führende Hauptminoren ≠ 0). *Skript §5.3: Satz 5.3.5 mit
+  Warnbeispiel 5.3.6 (Widerspruchsbeweis für die Vertauschungsmatrix).*
 - **Z. 410–416 (SPD-Definition)**: Doppelte Mengenklammern
   „x ∈ {ℝⁿ \ {0}}"; in der Semidefinit-Zeile ist der Ausschluss von 0
   zudem unnötig (für ≥ 0 unerheblich). *Skript schreibt
   x ∈ ℝⁿ, x ≠ 0.*
 - **Z. 462–463 (Cholesky-Induktionsbeweis)**: Tippfehler \bc\top statt
   \bc^\top (fehlendes Dach) im Testvektor; außerdem fehlt der Quantor
-  „für x ≠ 0" an der strikten Ungleichung. *Wird im laufenden
-  Kapitel-5-Lauf korrigiert.*
+  „für x ≠ 0" an der strikten Ungleichung. *Skript §5.4: Beweis zu
+  Satz 5.4.2 setzt beides korrekt und führt den Quantor explizit mit.*
 
 ## 07-kq
 

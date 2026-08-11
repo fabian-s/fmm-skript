@@ -1,1 +1,200 @@
-Abschnitt 5.2 – im Aufbau.
+import { RueckSubStepper } from "./widgets/RueckSubStepper";
+
+::quelle[Folien 05-lgs, „Lineare Gleichungssysteme" und „Warum Matrixzerlegungen?"]
+
+### Problemstellung
+
+In [Abschnitt 5.1](#sec-5.1) haben wir gezählt, was einzelne Matrix- und
+Vektoroperationen kosten. Jetzt setzen wir sie zu der Aufgabe zusammen, die
+in der Statistik ständig auftritt: Wir beschäftigen uns mit der Lösung eines
+:k[linearen Gleichungssystems]{#linear-system} (LGS). Gesucht ist also der
+Vektor $\bx$ mit
+
+$$
+\bA \bx = \bb .
+$$
+
+Ob Kleinste-Quadrate-Schätzer ([Kapitel 7](?k=07-kq)) oder gemischtes Modell:
+am Ende steht fast immer ein solches System.
+
+Die Aufgabe ist nur dann sinnvoll gestellt, wenn es genau eine Lösung gibt.
+Wir nehmen deshalb in diesem Kapitel an, dass $\bA \in \R^{n \times n}$
+quadratisch und :k[invertierbar]{#matrix-inverse} ist. Auf dem Papier ist
+damit alles erledigt: Die Lösung lässt sich als $\bx = \bA^{-1}\bb$
+schreiben. Vorsicht: Diese Formel ist eine Schreibweise, kein Rechenweg.
+
+:::bemerkung[5.2.1 (Invertiere niemals eine Matrix)]
+Das numerische Invertieren einer Matrix ist relativ instabil und oft
+langsamer als das direkte Lösen des LGS. Deshalb gilt:
+
+**Invertiere niemals eine Matrix!**
+
+Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
+
+- *Aufwand:* $\bA^{-1}$ explizit auszurechnen heißt, die $n$ Systeme
+  $\bA \bz_j = \be_j$ für alle Einheitsvektoren $\be_j$ zu lösen und
+  anschließend noch das Produkt $\bA^{-1}\bb$ zu bilden. Wer nur $\bx$
+  braucht, löst so $n$ Gleichungssysteme statt einem; die
+  [Komplexität](?k=02-algos#sec-2.4) wächst entsprechend.
+- *Stabilität:* Jeder Eintrag von $\bA^{-1}$ entsteht aus einer eigenen
+  Rechnung mit eigenen Rundungsfehlern, und das Produkt $\bA^{-1}\bb$
+  verstärkt diese Fehler noch, umso mehr, je größer die
+  Konditionszahl $\corange{\kappa(\bA)}$ ist
+  ([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) und
+  [Abschnitt 4.2](?k=04-fehler#sec-4.2)). Direkte Löser wie die
+  Gauß-Elimination sind [stabiler](?k=04-fehler#sec-4.3) und kommen ohne
+  den Umweg aus.
+
+Wo immer in einer Formel $\bA^{-1}\bb$ steht, lösen wir in der
+Implementierung stattdessen das LGS $\bA\bx = \bb$.
+:::
+
+### Gauß-Elimination und Rückwärtssubstitution
+
+Wie lösen wir stattdessen? Wir erinnern uns an das
+:k[Gauß'sche Eliminationsverfahren]{#gaussian-elimination} aus der linearen
+Algebra. Es besteht aus zwei Phasen:
+
+:::algorithmus[5.2.2 (Gauß-Elimination mit Rückwärtssubstitution)]
+1. Bringe $(\bA \mid \bb)$ in Zeilenstufenform $(\bU \mid \bc)$ mit
+   oberer :k[Dreiecksmatrix]{#triangular-matrix} $\bU$.
+2. Löse das gestaffelte System
+
+   $$
+   \begin{array}{ccccccccc}
+   u_{11} x_1 & + & u_{12} x_2 & + & \dots  & + & u_{1n} x_n & = & c_1    \\
+              &   & u_{22} x_2 & + & \dots  & + & u_{2n} x_n & = & c_2    \\
+              &   &            &   & \ddots &   & \vdots     &   & \vdots \\
+              &   &            &   &        &   & u_{nn} x_n & = & c_n
+   \end{array}
+   $$
+
+   durch *Rückwärtssubstitution* (backward substitution):
+
+   $$ {#eq-5.2.1}
+   x_{n} = c_n / u_{nn}, \quad x_{i} = \biggl(c_{i} - \sum_{j = i + 1}^n u_{ij} x_j\biggr) / u_{ii} \quad (i \le n - 1).
+   $$
+:::
+
+Die letzte Gleichung des gestaffelten Systems enthält nur noch $x_n$ und
+verrät diesen Wert sofort. Danach arbeiten wir uns Zeile für Zeile nach
+oben. Im Farbcode dieses Kapitels: Ist Zeile $i$ an der Reihe (blau), sind
+die Komponenten aus den Zeilen darunter schon bekannt (grün). Die Zeile
+setzt sie ein und teilt zum Schluss durch ihr Diagonalelement, das Pivot
+(rot):
+
+$$
+\cblue{x_i} = \Bigl(c_i - \sum_{j = i + 1}^n u_{ij} \, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}} .
+$$
+
+Weil $\bA$ invertierbar ist, sind alle Pivots $\cred{u_{ii}}$ von null
+verschieden; die Divisionen in Formel ($5.2.1$) gehen also immer gut.
+
+:::vertiefung[Rückwärtssubstitution Schritt für Schritt]
+Probieren wir Formel ($5.2.1$) an einem kleinen System aus. Das
+voreingestellte Beispiel hat die Lösung $\bx = (2, 1, 2)^\top$.
+
+<RueckSubStepper />
+:::
+
+Wie teuer ist die zweite Phase? Die Antwortmöglichkeiten stammen aus der
+Vorlesung; prüfen wir jede einzeln (zur Erinnerung:
+[Landau-Notation in Abschnitt 2.4](?k=02-algos#sec-2.4)).
+
+::::quiz
+
+:::frage{falsch}
+Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(1)$.
+
+Konstanter Aufwand ist unmöglich: Schon um jeden Eintrag von $\bU$ einmal
+anzufassen, braucht es mit $n$ wachsende Arbeit.
+:::
+
+:::frage{falsch}
+Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n)$, denn sie besteht aus $n$ Schritten.
+
+Die Schrittzahl stimmt, aber die Schritte sind nicht konstant teuer:
+Schritt $i$ setzt die $n - i$ schon bekannten Komponenten ein, im
+ungünstigsten Fall also $n - 1$ Stück.
+:::
+
+:::frage{wahr}
+Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^2)$.
+
+Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel ($5.2.1$) je
+$n - i$ Multiplikationen und Subtraktionen sowie eine Division, also bis zu
+$n - 1$ Additionen und eine Division pro Schritt. Aufsummiert sind das etwa
+$n^2/2$ Multiplikationen: die Größenordnung ist $O(n^2)$.
+:::
+
+:::frage{falsch}
+Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^3)$.
+
+Das überschätzt den Aufwand um einen Faktor $n$. (Formal enthält $O(n^3)$
+zwar auch alle $O(n^2)$-Algorithmen, gemeint ist hier aber die
+Größenordnung des tatsächlichen Aufwands, und die ist $n^2$.) Bei $O(n^3)$
+liegt erst die Eliminationsphase selbst, wie wir in
+[Abschnitt 5.3](#sec-5.3) sehen werden.
+:::
+
+::::
+
+### Warum Matrixzerlegungen?
+
+Die Gauß-Elimination löst unser LGS. In den nächsten Abschnitten
+organisieren wir sie neu, nämlich als *Matrixzerlegung* (matrix
+decomposition). Die Grundidee ist „Teile und herrsche" für Matrizen:
+Statt direkt mit $\bA$ zu arbeiten, schreiben wir $\bA = \bB\bC$ mit
+„einfachen" Faktoren $\bB$ und $\bC$.
+
+Eine Analogie aus der Zahlenwelt ist die Primfaktorzerlegung. Es gilt
+$84 = 2^2 \cdot 3 \cdot 7$, und wer diese Zerlegung einmal kennt, rechnet
+bequemer weiter:
+
+$$
+84 \cdot 126 = (2^2 \cdot 3 \cdot 7) \cdot (2 \cdot 3^2 \cdot 7) = 2^3 \cdot 3^3 \cdot 7^2 .
+$$
+
+Die Faktoren machen die Struktur der Zahl sichtbar, und Multiplizieren
+schrumpft zum Addieren von Exponenten. Dasselbe wollen wir für Matrizen:
+Faktoren finden, an denen sich billig rechnen lässt. Drei Familien haben
+sich als „einfach" bewährt:
+
+- :k[Dreiecksmatrizen]{#triangular-matrix}: Ein Dreieckssystem lösen wir
+  per Vorwärts- bzw. Rückwärtssubstitution in $O(n^2)$ statt $O(n^3)$,
+  wie eben gesehen.
+- :k[Orthogonale Matrizen]{#orthogonal-matrix}: numerisch stabil, denn sie
+  verstärken keine Fehler, und trivial zu invertieren wegen
+  $\bQ^{-1} = \bQ^\top$.
+- :k[Diagonalmatrizen]{#diagonal-matrix}: Invertieren, Multiplizieren und
+  Potenzieren laufen elementweise auf der Diagonalen, alle Operationen
+  sind trivial.
+
+Was bringt uns eine Zerlegung konkret? Vier Dinge:
+
+1. **Mehrere LGS mit derselben Matrix effizient lösen.** Die Zerlegung
+   bezahlen wir einmal; danach kostet jedes weitere System
+   $\bA\bx = \bb_i$ mit neuer rechter Seite nur noch die billigen
+   Dreiecks- oder Diagonallösungen. In der Statistik ist das der
+   Normalfall, etwa wenn dieselbe Modellmatrix auf viele Zielvariablen
+   trifft.
+2. **Numerische Stabilität verbessern.** Wer die Arbeit in gut
+   konditionierte Teilschritte zerlegt, etwa über orthogonale Faktoren,
+   vermeidet unnötige Fehlerverstärkung
+   ([Abschnitt 4.3](?k=04-fehler#sec-4.3)).
+3. **Struktur und Eigenschaften von $\bA$ erkennen.** An den Faktoren
+   lässt sich ablesen, ob $\bA$ (fast) singulär oder
+   :k[positiv definit]{#positive-definite} ist; solche Diagnosen fallen
+   bei der Zerlegung gratis mit ab.
+4. **Grundlage für weitere Algorithmen.** Auf Zerlegungen bauen viele
+   Verfahren auf, von der QR-Zerlegung für das KQ-Problem
+   ([Kapitel 7](?k=07-kq)) bis zur Spektralzerlegung und der
+   :k[Singulärwertzerlegung]{#singular-value-decomposition} (*SVD*), die
+   uns in einem späteren Kapitel begegnet.
+
+Den Anfang macht im nächsten Abschnitt die
+[LU-Zerlegung](#sec-5.3): Sie ist nichts anderes als die Gauß-Elimination,
+klug verbucht.
+
+*Vertiefung: Heath §2.1–2.2 (Problemstellung und Lösbarkeit) sowie §2.4.2
+(Dreieckssysteme und Rückwärtssubstitution).*

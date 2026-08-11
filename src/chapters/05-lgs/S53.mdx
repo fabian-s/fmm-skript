@@ -1,1 +1,487 @@
-Abschnitt 5.3 – im Aufbau.
+import { LUZerlegungStepper } from "./widgets/LUStepper";
+import { PivotVergleich } from "./widgets/PivotDemo";
+import { LUKostenPlot } from "./widgets/LUKosten";
+
+::quelle[Folien 05-lgs, „Intuition: LU-Zerlegung" bis „Komplexität".]
+
+### Elimination als Zerlegung
+
+Die Gauß-Elimination aus [Abschnitt 5.2](#sec-5.2) verwandelt $(\bA \mid \bb)$
+durch Zeilenoperationen in ein gestaffeltes System. In diesem Abschnitt
+wechseln wir den Blickwinkel: Die Elimination rechnet nicht nur ein konkretes
+System um, sie zerlegt die Matrix selbst. Alles, was wir dabei tun, lässt
+sich in zwei Faktoren verbuchen:
+
+- $\bL$ (*lower*) speichert sämtliche Eliminationsschritte,
+- $\bU$ (*upper*) ist die entstehende obere :k[Dreiecksmatrix]{#triangular-matrix}.
+
+:::definition[5.3.1 (LU-Zerlegung)]
+Eine Darstellung
+
+$$
+\bA = \bL\bU
+$$
+
+von $\bA \in \R^{n \times n}$ mit einer unteren Dreiecksmatrix $\bL$ mit
+Einsen auf der Diagonalen und einer oberen Dreiecksmatrix $\bU$ heißt
+*LU-Zerlegung* (LU decomposition) von $\bA$.
+:::
+
+Warum lohnt sich diese Buchführung? Sobald wir $\bA = \bL\bU$ einmal
+berechnet haben, können wir $\bA\bx = \bb_i$ für *jedes* $\bb_i$ billig
+lösen, denn beide Faktoren sind Dreiecksmatrizen:
+
+:::bemerkung[5.3.2 (Merkregel: ein LGS, zwei Dreieckssysteme)]
+Aus der Zerlegung wird ein zweistufiger Lösungsweg:
+
+$$
+\bA\bx = \bb
+\quad\Longrightarrow\quad
+\bL\,\underbrace{\bU\bx}_{=\,\by} = \bb ,
+$$
+
+wir lösen also nacheinander zwei gestaffelte Systeme:
+
+1. $\bL\by = \bb$ durch :k[Vorwärtssubstitution]{#triangular-solve}
+   (forward substitution), von oben nach unten;
+2. $\bU\bx = \by$ durch Rückwärtssubstitution
+   ([Abschnitt 5.2](#sec-5.2)), von unten nach oben.
+
+Beide Teilschritte kosten nur $O(n^2)$ Operationen.
+:::
+
+### Eliminationsmatrizen
+
+Wie sehen die Faktoren aus? Wir gehen die Elimination noch einmal durch,
+diesmal in Matrixsprache. Von links nach rechts arbeiten wir uns durch die
+Spalten und entfernen alle Einträge unter der Diagonalen. Nennen wir das
+aktuelle System $(\bM \mid \br)$. Die $k$-te Spalte räumen wir, indem wir von
+links mit der *Eliminationsmatrix* $\bL_k$ multiplizieren:
+
+$$ {#eq-5.3.1}
+\bL_k = \begin{pmatrix}
+1 &        &                     &   &        &   \\
+  & \ddots &                     &   &        &   \\
+  &        & 1                   &   &        &   \\
+  &        & \cblue{-l_{(k+1)k}} & 1 &        &   \\
+  &        & \vdots              &   & \ddots &   \\
+  &        & \cblue{-l_{nk}}     &   &        & 1
+\end{pmatrix}
+\qquad \text{mit} \qquad
+\cblue{l_{ik}} = \frac{m_{ik}}{\cred{m_{kk}}} .
+$$
+
+$\bL_k$ ist eine Einheitsmatrix mit Zusatzeinträgen in Spalte $k$. Das
+Produkt $\bL_k \bM$ zieht für jedes $i > k$ von Zeile $i$ das
+$\cblue{l_{ik}}$-fache der Pivotzeile $k$ ab und erzeugt so die Nullen unter
+dem Pivot $\cred{m_{kk}}$. Nach $n - 1$ solchen Schritten sind alle Spalten
+abgeräumt; ein $n$-ter Schritt wäre arbeitslos, denn unterhalb von $m_{nn}$
+steht kein Eintrag mehr ($\bL_n$ wäre schlicht die Einheitsmatrix).
+
+:::satz[5.3.3 (Die Gauß-Elimination liefert eine LU-Zerlegung)]
+Läuft die Gauß-Elimination für $\bA \in \R^{n \times n}$ ohne Nullpivot
+durch, so ist
+
+$$
+\bU = \bL_{n-1} \cdots \bL_1 \bA
+$$
+
+eine obere Dreiecksmatrix, und es gilt $\bA = \bL\bU$ mit
+
+$$ {#eq-5.3.2}
+\bL = \bL_1^{-1} \cdots \bL_{n-1}^{-1} =
+\begin{pmatrix}
+1               &                 &        &                     &   \\
+\cgreen{l_{21}} & 1               &        &                     &   \\
+\cgreen{l_{31}} & \cgreen{l_{32}} & 1      &                     &   \\
+\vdots          &                 & \ddots & \ddots              &   \\
+\cgreen{l_{n1}} & \cdots          & \cdots & \cgreen{l_{n(n-1)}} & 1
+\end{pmatrix} .
+$$
+
+$\bL$ ist also eine untere Dreiecksmatrix mit Einsen auf der Diagonalen, und
+unter der Diagonalen stehen unverändert die Multiplikatoren
+$\cgreen{l_{ik}}$ aus der Elimination.
+:::
+
+Dieselben Schritte treffen bei der klassischen Elimination auch die rechte
+Seite: Aus $\bb$ wird $\bc = \bL_{n-1} \cdots \bL_1 \bb$, das gestaffelte
+Endsystem ist $(\bU \mid \bc)$. Mit gespeichertem $\bL$ dürfen wir uns
+dieses Mitschleppen sparen, denn die Vorwärtssubstitution $\bL\by = \bb$
+liefert später denselben Vektor: $\by = \bL^{-1}\bb = \bc$.
+
+::::beweis
+
+:::schritt
+Wir schreiben $\bL_k$ kompakt als $\bL_k = \bI - \bl_k \be_k^\top$, wobei
+$\be_k$ der $k$-te Einheitsvektor ist und
+$\bl_k = (0, \dots, 0, \cblue{l_{(k+1)k}}, \dots, \cblue{l_{nk}})^\top$ die
+Multiplikatoren der $k$-ten Spalte sammelt; die ersten $k$ Komponenten von
+$\bl_k$ sind null.
+
+::why[$\bl_k \be_k^\top$ ist die Matrix, die in Spalte $k$ unterhalb der Diagonalen die Einträge $l_{ik}$ trägt und sonst nur Nullen; abgezogen von $\bI$ ergibt das die Gestalt aus ($5.3.1$)]
+:::
+
+:::schritt
+Es gilt $\bL_k^{-1} = \bI + \bl_k \be_k^\top$: Die Inverse macht die
+Zeilenoperationen rückgängig, indem sie die abgezogenen Vielfachen wieder
+addiert. Nur die Vorzeichen der Multiplikatoren kippen.
+
+::why[Ausmultiplizieren: $(\bI - \bl_k \be_k^\top)(\bI + \bl_k \be_k^\top) = \bI - \bl_k (\be_k^\top \bl_k) \be_k^\top = \bI$, denn $\be_k^\top \bl_k$ ist die $k$-te Komponente von $\bl_k$, und die ist null]
+:::
+
+:::schritt
+Für das Produkt der Inversen gilt
+
+$$
+\bL
+= (\bI + \bl_1 \be_1^\top) \cdots (\bI + \bl_{n-1} \be_{n-1}^\top)
+= \bI + \sum_{k=1}^{n-1} \bl_k \be_k^\top ,
+$$
+
+und die rechte Seite ist die Matrix aus ($5.3.2$): Einsen auf der
+Diagonalen, darunter die Multiplikatoren, jeder an seinem Platz.
+
+::why[Beim Ausmultiplizieren verschwinden alle gemischten Terme: Sie enthalten Faktoren der Form $\be_j^\top \bl_k$ mit $j < k$, und die $j$-te Komponente von $\bl_k$ ist für $j \le k$ null]
+:::
+
+:::schritt
+Insbesondere ist $\bL$ als Summe der Einheitsmatrix und von Beiträgen
+unterhalb der Diagonalen eine untere Dreiecksmatrix mit Einsen auf der
+Diagonalen. Auflösen von $\bU = \bL_{n-1} \cdots \bL_1 \bA$ nach $\bA$
+ergibt schließlich $\bA = \bL_1^{-1} \cdots \bL_{n-1}^{-1} \bU = \bL\bU$.
+
+::why[wir multiplizieren von links nacheinander mit $\bL_{n-1}^{-1}, \dots, \bL_1^{-1}$; diese Inversen existieren nach Schritt 2]
+:::
+
+::::
+
+### Ein vollständiges Beispiel
+
+Rechnen wir das einmal komplett durch, im Farbcode dieses Kapitels: Pivots
+rot, Multiplikatoren blau, fertige $\bL$-Einträge grün.
+
+:::beispiel[5.3.4 (LU-Zerlegung einer 3×3-Matrix)]
+Sei
+
+$$
+\bA = \begin{pmatrix} 2 & 1 & -1 \\ 4 & -6 & 0 \\ -2 & 7 & 2 \end{pmatrix} .
+$$
+
+**Schritt 1:** Spalte 1 räumen. Das Pivot ist $\cred{m_{11}} = \cred{2}$,
+die Multiplikatoren nach Formel ($5.3.1$) sind
+
+$$
+\cblue{l_{21}} = \frac{4}{\cred{2}} = \cblue{2} ,
+\qquad
+\cblue{l_{31}} = \frac{-2}{\cred{2}} = \cblue{-1} .
+$$
+
+Damit ist
+
+$$
+\bL_1 = \begin{pmatrix} 1 & 0 & 0 \\ \cblue{-2} & 1 & 0 \\ \cblue{1} & 0 & 1 \end{pmatrix},
+\qquad
+\bL_1 \bA = \begin{pmatrix} 2 & 1 & -1 \\ 0 & -8 & 2 \\ 0 & 8 & 1 \end{pmatrix} .
+$$
+
+**Schritt 2:** Spalte 2 räumen. Das Pivot ist jetzt $\cred{-8}$, und mit
+
+$$
+\cblue{l_{32}} = \frac{8}{\cred{-8}} = \cblue{-1} ,
+\qquad
+\bL_2 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & \cblue{1} & 1 \end{pmatrix}
+$$
+
+erreichen wir die Dreiecksform:
+
+$$
+\bL_2 \bL_1 \bA = \begin{pmatrix} 2 & 1 & -1 \\ 0 & -8 & 2 \\ 0 & 0 & 3 \end{pmatrix} = \bU .
+$$
+
+**Ergebnis:** Die Multiplikatoren wandern mit ihrem ursprünglichen
+Vorzeichen nach $\bL$:
+
+$$
+\bL = \bL_1^{-1} \bL_2^{-1}
+= \begin{pmatrix} 1 & 0 & 0 \\ \cgreen{2} & 1 & 0 \\ \cgreen{-1} & \cgreen{-1} & 1 \end{pmatrix},
+\qquad
+\bU = \begin{pmatrix} 2 & 1 & -1 \\ 0 & -8 & 2 \\ 0 & 0 & 3 \end{pmatrix} .
+$$
+
+Die Probe $\bL\bU = \bA$ geht auf (nachrechnen!).
+:::
+
+### Wann existiert die Zerlegung?
+
+Die Konstruktion hat eine Schwachstelle: In jedem Schritt teilen wir durch
+das Pivot $\cred{m_{kk}}$. Steht dort eine Null, bricht die Elimination ab,
+und zwar auch dann, wenn $\bA$ :k[invertierbar]{#matrix-inverse} ist.
+Invertierbarkeit allein garantiert also noch keine LU-Zerlegung; sie
+garantiert nur, dass sich das Problem durch Zeilentausch beheben lässt.
+
+:::satz[5.3.5 (Existenz der LU-Zerlegung)]
+Sei $\bA \in \R^{n \times n}$ invertierbar. Dann gilt:
+
+1. Die LU-Zerlegung $\bA = \bL\bU$ aus Definition 5.3.1 existiert genau
+   dann, wenn die Gauß-Elimination an $\bA$ ohne Nullpivot durchläuft. In
+   diesem Fall ist sie eindeutig.
+2. Es gibt stets eine :k[Permutationsmatrix]{#permutation-matrix} $\bP$
+   (sie vertauscht Zeilen), sodass die Elimination an $\bP\bA$ ohne
+   Nullpivot durchläuft; es gilt dann $\bP\bA = \bL\bU$.
+:::
+
+Die Richtung „kein Nullpivot $\Rightarrow$ Zerlegung existiert" ist
+Satz 5.3.3; auf die übrigen Beweisteile verzichten wir. Wichtiger ist ein
+Warnbeispiel, das zeigt, dass die Bedingung in Teil 1 keine leere
+Vorsichtsmaßnahme ist:
+
+:::beispiel[5.3.6 (Invertierbar, aber keine LU-Zerlegung)]
+Die Vertauschungsmatrix
+
+$$
+\bA = \begin{pmatrix} \cred{0} & 1 \\ 1 & 0 \end{pmatrix}
+$$
+
+ist invertierbar ($\det \bA = -1$). Trotzdem scheitert die Elimination
+sofort, denn das erste Pivot ist $\cred{m_{11}} = \cred{0}$. Auch keine
+andere Konstruktion hilft: Der Ansatz
+
+$$
+\bL\bU
+= \begin{pmatrix} 1 & 0 \\ l & 1 \end{pmatrix}
+  \begin{pmatrix} u_{11} & u_{12} \\ 0 & u_{22} \end{pmatrix}
+= \begin{pmatrix} u_{11} & u_{12} \\ l\, u_{11} & l\, u_{12} + u_{22} \end{pmatrix}
+$$
+
+erzwingt $u_{11} = 0$ aus dem Eintrag links oben und zugleich
+$l\, u_{11} = 1$ aus dem Eintrag links unten: ein Widerspruch. Ein
+Zeilentausch löst das Problem sofort auf, denn mit $\bP = \bA$ ist
+$\bP\bA = \bI = \bI \cdot \bI$ eine (zugegeben langweilige) LU-Zerlegung.
+:::
+
+### Lösen mit der LU-Zerlegung
+
+Angenommen, wir haben eine Faktorisierung $\bA = \bL\bU$ gefunden. Die
+Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
+
+:::algorithmus[5.3.7 (Lösen von Ax = b mit der LU-Zerlegung)]
+1. *Vorwärtssubstitution:* Löse $\bL\by = \bb$ von oben nach unten,
+
+   $$
+   \cblue{y_i} = b_i - \sum_{j=1}^{i-1} l_{ij}\, \cgreen{y_j}
+   \qquad (i = 1, \dots, n) ;
+   $$
+
+   eine Division ist nicht nötig, denn auf der Diagonalen von $\bL$ stehen
+   Einsen.
+2. *Rückwärtssubstitution:* Löse $\bU\bx = \by$ von unten nach oben wie in
+   Formel ($5.2.1$),
+
+   $$
+   \cblue{x_i} = \Bigl(y_i - \sum_{j=i+1}^{n} u_{ij}\, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}}
+   \qquad (i = n, \dots, 1) .
+   $$
+:::
+
+:::beispiel[5.3.8 (Fortsetzung: Lösen mit der Zerlegung)]
+Wir nehmen $\bL$ und $\bU$ aus Beispiel 5.3.4 und lösen $\bA\bx = \bb$ für
+$\bb = (5, -2, 9)^\top$.
+
+**Schritt 1: Vorwärtssubstitution** für $\bL\by = \bb$:
+
+$$
+\begin{pmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & -1 & 1 \end{pmatrix}
+\begin{pmatrix} y_1 \\ y_2 \\ y_3 \end{pmatrix}
+= \begin{pmatrix} 5 \\ -2 \\ 9 \end{pmatrix}
+\quad\Longrightarrow\quad
+\begin{aligned}
+y_1 &= 5 , \\
+y_2 &= -2 - 2 \cdot 5 = -12 , \\
+y_3 &= 9 - (-1) \cdot 5 - (-1) \cdot (-12) = 9 + 5 - 12 = 2 .
+\end{aligned}
+$$
+
+**Schritt 2: Rückwärtssubstitution** für $\bU\bx = \by$ mit
+$\by = (5, -12, 2)^\top$; die Divisoren sind die Diagonalelemente
+$\cred{u_{ii}}$:
+
+$$
+\begin{aligned}
+x_3 &= 2 / \cred{3} = \cgreen{\tfrac{2}{3}} , \\
+x_2 &= \bigl(-12 - 2 \cdot \tfrac{2}{3}\bigr) / (\cred{-8}) = \cgreen{\tfrac{5}{3}} , \\
+x_1 &= \bigl(5 - 1 \cdot \tfrac{5}{3} - (-1) \cdot \tfrac{2}{3}\bigr) / \cred{2} = \cgreen{2} .
+\end{aligned}
+$$
+
+Die Lösung ist $\bx = \bigl(2, \tfrac{5}{3}, \tfrac{2}{3}\bigr)^\top$; die
+Probe $\bA\bx = \bb$ geht auf.
+:::
+
+:::bemerkung[5.3.9 (Eine Zerlegung, viele rechte Seiten)]
+Die Faktoren $\bL$ und $\bU$ hängen nur von $\bA$ ab, nicht von $\bb$. Für
+jede weitere rechte Seite wiederholen wir deshalb nur die beiden billigen
+Substitutionen; die teure Elimination fällt kein zweites Mal an. Dieses
+Muster trägt weit über die LU-Zerlegung hinaus: Auch die QR-Zerlegung für
+Kleinste-Quadrate-Probleme ([Kapitel 7](?k=07-kq)) folgt ihm.
+:::
+
+:::vertiefung[Die Elimination im Zeitraffer]
+Voreingestellt ist das System aus den Beispielen 5.3.4 und 5.3.8; jeder
+Klick zeigt eine Phase der Elimination. Sehenswert ist auch der
+Problemfall: Setzen wir den Eintrag links oben auf 0, bricht die
+Elimination sofort ab, wie es Beispiel 5.3.6 im Kleinen vorführt.
+
+<LUZerlegungStepper />
+:::
+
+### Pivotierung
+
+Was tun, wenn ein Pivot $\cred{m_{kk}} = 0$ auftritt, wie in
+Beispiel 5.3.6? Wir tauschen die Pivotzeile gegen eine Zeile weiter unten,
+in deren $k$-ter Spalte keine Null steht; bei invertierbarem $\bA$ gibt es
+so eine Zeile immer. Dieses Umsortieren heißt *Pivotierung* (pivoting).
+Buchhalterisch sammeln wir alle Vertauschungen in einer
+:k[Permutationsmatrix]{#permutation-matrix} $\bP$ und erhalten die
+pivotierte Zerlegung $\bP\bA = \bL\bU$ aus Satz 5.3.5. Zum Lösen von
+$\bA\bx = \bb$ substituieren wir dann entlang $\bL\bU\bx = \bP\bb$: Die
+rechte Seite wird mitvertauscht, sonst ändert sich nichts.
+
+Pivotierung ist aber mehr als eine Notfallmaßnahme für exakte Nullen. Auch
+ein sehr kleines Pivot $\cred{m_{kk}} \approx 0$ ist gefährlich: Die
+Multiplikatoren $l_{ik} = m_{ik}/\cred{m_{kk}}$ werden dann riesig, beim
+Abziehen der aufgeblähten Pivotzeile gehen die ursprünglichen Einträge der
+Matrix in Rundungsfehlern unter, und der Eliminationsschritt wird
+[instabil](?k=04-fehler#sec-4.3). Der Tausch zum betragsgrößten Pivot der
+Spalte (*partielle Pivotierung*) hält alle Multiplikatoren im Betrag bei
+höchstens 1 und macht die Elimination in der Praxis stabil.
+Numerikbibliotheken pivotieren deshalb grundsätzlich, auch wenn kein Pivot
+exakt null ist.
+
+:::vertiefung[Kleine Pivots, große Fehler]
+<PivotVergleich />
+:::
+
+### Komplexität
+
+Was kostet die Zerlegung? Zählen wir zuerst einen einzelnen Schritt nach.
+Im $k$-ten Schritt multiplizieren wir das aktuelle System mit $\bL_k$; die
+ersten $k - 1$ Spalten der Arbeitsmatrix haben ihre Nullen unter der
+Diagonalen bereits. Vor dem Nachrechnen ein Selbsttest
+(:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
+[Abschnitt 2.4](?k=02-algos#sec-2.4)):
+
+::::quiz
+
+:::frage{falsch}
+Für den $k$-ten Schritt müssen wir das volle Matrixprodukt $\bL_k \bM$
+ausrechnen; er kostet also $O(n^3)$ Operationen.
+
+Niemand multipliziert $\bL_k$ wirklich aus. $\bL_k$ unterscheidet sich von
+der Einheitsmatrix nur in Spalte $k$: Das Produkt zieht lediglich von den
+Zeilen $k+1, \dots, n$ je ein Vielfaches der Pivotzeile ab; alle anderen
+Zeilen bleiben unverändert stehen.
+:::
+
+:::frage{wahr}
+Im $k$-ten Schritt ändern sich nur die Einträge im rechten unteren
+$(n-k) \times (n-k)$-Block (und die rechte Seite); der Aufwand ist
+$O((n-k)^2)$.
+
+Betroffen sind die Zeilen $k+1, \dots, n$, und dort nur die Spalten
+$k, \dots, n$: Links davon stehen schon Nullen, und die bleiben null. Das
+sind $n-k$ Zeilen mit je höchstens $n-k+1$ zu aktualisierenden Einträgen,
+also $O((n-k)^2)$ Operationen.
+:::
+
+:::frage{wahr}
+$O(n^2)$ ist eine korrekte obere Schranke für den Aufwand des $k$-ten
+Schritts.
+
+Wegen $(n-k)^2 \le n^2$ stimmt das; die Schranke ist nur nicht scharf, denn
+späte Schritte sind viel billiger. Für die Gesamtkosten macht das keinen
+Unterschied: Beide Abschätzungen liefern aufsummiert $O(n^3)$.
+:::
+
+:::frage{falsch}
+Die Schritte werden mit wachsendem $k$ teurer; der $k$-te Schritt kostet
+$O(k^3)$ Operationen.
+
+Umgekehrt: Der aktive Block schrumpft von Schritt zu Schritt. Der erste
+Schritt ist mit etwa $n^2$ Aktualisierungen der teuerste; der letzte
+bearbeitet nur noch die unterste Zeile, also eine neue Null, einen
+aktualisierten Eintrag und die rechte Seite.
+:::
+
+::::
+
+:::satz[5.3.10 (Komplexität der LU-Zerlegung)]
+Für invertierbares $\bA \in \R^{n \times n}$ gilt:
+
+1. Die Berechnung der LU-Zerlegung kostet $O(n^3)$ Operationen.
+2. Vorwärts- und Rückwärtssubstitution kosten je $O(n^2)$.
+3. Das Lösen von $J$ Systemen $\bA\bx = \bb_j$, $j = 1, \dots, J$, mit
+   derselben Matrix kostet insgesamt $O(n^3 + J n^2)$.
+:::
+
+::::beweis
+
+:::schritt
+Der $k$-te Eliminationsschritt kostet $O((n-k)^2)$ Operationen.
+
+::why[siehe Quiz: Es ändern sich nur die $(n-k)(n-k+1)$ Einträge des rechten unteren Blocks samt rechter Seite]
+:::
+
+:::schritt
+Aufsummiert über die $n - 1$ Schritte ergibt sich
+
+$$
+\sum_{k=1}^{n-1} O\bigl((n-k)^2\bigr)
+= O\Bigl(\sum_{j=1}^{n-1} j^2\Bigr)
+= O(n^3) .
+$$
+
+::why[Substitution $j = n - k$; die Quadratsumme ist $\sum_{j=1}^{n-1} j^2 = \frac{(n-1)n(2n-1)}{6} \approx \frac{n^3}{3}$]
+:::
+
+:::schritt
+Jede Substitution durchläuft die $n$ Zeilen ihres Dreiecksfaktors und setzt
+pro Zeile bis zu $n - 1$ bekannte Komponenten ein, kostet also $O(n^2)$,
+wie in [Abschnitt 5.2](#sec-5.2) gezählt. Für $J$ rechte Seiten fällt die
+Zerlegung einmal an, dazu kommen $J$ Substitutionspaare:
+$O(n^3 + J n^2)$ insgesamt.
+
+::why[die Zerlegung hängt nicht von $\bb$ ab (Bemerkung 5.3.9)]
+:::
+
+::::
+
+Wer die Multiplikationen exakt zählt, findet rund $n^3/3$ für die Zerlegung
+und rund $n^2$ für ein Substitutionspaar. Mit diesen Konstanten rechnet das
+folgende Widget:
+
+:::vertiefung[Einmal zerlegen oder jedes Mal neu?]
+<LUKostenPlot />
+:::
+
+:::bemerkung[5.3.11 (Struktur ausnutzen)]
+Die Laufzeit lässt sich weiter drücken, wenn $\bA$ besondere Eigenschaften
+erfüllt, zum Beispiel:
+
+- :k[symmetrisch]{#symmetric-matrix}: $\bA = \bA^\top$;
+- :k[positiv definit]{#positive-definite}: $\bx^\top \bA \bx > 0$ für alle
+  $\bx \neq \bnull$;
+- *Bandeigenschaft:* $a_{ij} = 0$ für alle $|i - j| > \beta$, das heißt,
+  außerhalb eines Bandes der Breite $\beta$ um die Diagonale stehen nur
+  Nullen;
+- :k[dünn besetzt]{#sparse-matrix} (*sparse*): $a_{ij} = 0$ für die
+  allermeisten $(i, j)$.
+
+Für symmetrische, positiv definite Matrizen halbiert etwa die
+Cholesky-Zerlegung des nächsten Abschnitts ([Abschnitt 5.4](#sec-5.4)) den
+Aufwand. Für all diese Fälle existieren hervorragende, über Jahrzehnte
+gereifte Implementierungen; man schreibt solche Algorithmen selten selbst.
+:::
+
+*Vertiefung: Heath §2.4 (Gauß-Elimination, LU-Zerlegung, Pivotierung) und
+§2.5 (Spezialstrukturen).*

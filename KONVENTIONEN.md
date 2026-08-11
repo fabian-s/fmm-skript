@@ -329,3 +329,5 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 
 Beides ist in der Skill-Doku (`references/verification.md`) als bekannter
 blinder Fleck vermerkt, nicht stillschweigend fallengelassen.
+- Folienfehler 05-lgs (Z. 288-298): Das Theorem „Jede invertierbare Matrix hat A=LU" ist falsch (Gegenbeispiel Vertauschungsmatrix (0 1; 1 0): Pivot 0) — Skript Satz 5.3.5 sagt korrekt: PA=LU existiert stets, A=LU genau bei Nullpivot-freier Elimination; ausserdem indizieren die Folien Z. 232-249 bis L_n, obwohl nur n-1 Eliminationsschritte existieren (Skript §5.3: L_{n-1}).
+- Folienfehler 05-lgs Induktionsbeweis Cholesky (Z. 462-463): im Testvektor steht zweimal \bc\top statt \bc^\top (fehlendes Dach), und die strikte Ungleichung braucht den Quantor x ≠ 0 — Skript §5.4 setzt beides korrekt (Beweis zu Satz 5.4.2); ins FOLIENFEHLER-Register übertragen (Abschnitts-Agenten dürfen die Datei nicht anfassen).
