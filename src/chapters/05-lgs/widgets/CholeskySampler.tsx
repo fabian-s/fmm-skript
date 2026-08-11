@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Slider } from "../../../lib";
-import { fmtNum, MatTable, WidgetLabel } from "./CholeskyStepper";
+import { fmtNum, MatTable, WidgetLabel } from "./shared";
 
 /**
  * Cholesky-Sampler für §5.4: aus σ₁, σ₂ und ρ entsteht live die

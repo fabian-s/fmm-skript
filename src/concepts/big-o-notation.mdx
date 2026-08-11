@@ -1,0 +1,25 @@
+export const title = "O-Notation (big-O)";
+
+import { RemainderWidget } from "./widgets/BigONotationWidget";
+
+{/* Konzept-Tooltip: O-Notation, Restglied-Sinn (t→0) und Aufwands-Sinn (n→∞). */}
+
+Die Schreibweise $O(\cdot)$ („big-O“) ist absichtliche Ungenauigkeit: sie
+benennt eine Größe, deren exakten Wert wir nicht wissen wollen, und verspricht
+nur eine Schranke der angegebenen Größenordnung. Präzise: ein Term ist $O(t^2)$
+für $t \to 0$, wenn ihn eine Konstante $C$ für alle hinreichend kleinen $t$
+unter $C\,t^2$ hält. Die Numerik benutzt das in zwei Richtungen:
+
+$$
+\underbrace{x(t) = x(0) + t\,x'(0) + O(t^2)}_{\text{kleiner Parameter } t \to 0} \qquad \underbrace{\text{Aufwand} \approx \tfrac{n^3}{3} \text{ Flops, d.h. } O(n^3)}_{\text{großer Parameter } n \to \infty}
+$$
+
+Im ersten Sinn (Restglied) schrumpft ein $O(t^2)$-Term *schneller* als der
+$t$-Term, wenn $t \to 0$ geht: halbieren wir $t$, viertelt er sich. Deshalb
+können wir ihn durch eine ganze Kette von Ungleichungen mitschleppen und am
+Ende weglassen. Im zweiten Sinn (Aufwand) sagt $O(n^3)$, dass die Zahl der
+Rechenoperationen für große Matrizen wie $n^3$ wächst: verdoppeln wir $n$,
+wächst der Aufwand etwa um den Faktor acht, während konstante Faktoren und
+Terme niedrigerer Ordnung wie $n^2$ unter den Teppich gekehrt werden.
+
+<RemainderWidget />

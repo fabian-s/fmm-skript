@@ -1,5 +1,6 @@
-import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { MatrixInput } from "../../../lib";
+import { fmtNum, MatTable, sub, WidgetLabel } from "./shared";
 
 /**
  * Cholesky-Stepper für §5.4: die Zerlegung A = LLᵀ entsteht Eintrag für
@@ -9,68 +10,13 @@ import { MatrixInput } from "../../../lib";
  * auflösen, grün = fertige L-Einträge.
  *
  * Tabellen-Renderer und Formatter folgen dem Muster des LUStepper aus der
- * privaten heath-ch2-App (nur Code-Struktur; alle Texte neu geschrieben).
+ * privaten heath-ch2-App (nur Code-Struktur; alle Texte neu geschrieben)
+ * und liegen gemeinsam mit den anderen Kapitel-5-Steppern in shared.tsx.
  */
 
 const BLUE = "#0072B2";
 const GREEN = "#009E73";
 const RED = "#D55E00";
-
-/** Kompakte Zahlformatierung (3 Dezimalen, deutsches Komma, kein -0);
- *  NaN und ±∞ werden getrennt ausgewiesen. */
-export function fmtNum(v: number): string {
-  if (Number.isNaN(v)) return "NaN";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Math.round(v * 1000) / 1000;
-  if (Object.is(r, -0)) r = 0;
-  return String(r).replace("-", "−").replace(".", ",");
-}
-
-const SUBS = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];
-const sub = (i: number) => SUBS[i] ?? String(i);
-
-/** Matrix als Mono-Zellen-Raster mit eckigen Klammerlinien; null = „noch offen". */
-export function MatTable({
-  m,
-  cellClass,
-  cellStyle,
-}: {
-  m: (number | null)[][];
-  cellClass?: (i: number, j: number) => string;
-  cellStyle?: (i: number, j: number) => CSSProperties | undefined;
-}) {
-  return (
-    <div
-      className="inline-grid gap-px self-start rounded border-x-2 border-slate-500 px-1.5 py-1"
-      style={{ gridTemplateColumns: `repeat(${m[0].length}, minmax(2.3rem, auto))` }}
-    >
-      {m.map((row, i) =>
-        row.map((v, j) => (
-          <div
-            key={`${i}-${j}`}
-            className={`rounded px-1 py-0.5 text-center font-mono text-xs ${
-              v === null ? "text-slate-400" : ""
-            } ${cellClass?.(i, j) ?? ""}`}
-            style={cellStyle?.(i, j)}
-          >
-            {v === null ? "·" : fmtNum(v)}
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
-
-export function WidgetLabel({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <span className="text-xs font-medium" style={{ color: "#64748b" }}>
-        {label}
-      </span>
-      {children}
-    </div>
-  );
-}
 
 interface CholStep {
   i: number; // Zeile des L-Eintrags (0-basiert)
