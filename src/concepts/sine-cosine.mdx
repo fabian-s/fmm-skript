@@ -1,0 +1,30 @@
+export const title = "Sinus und Kosinus";
+
+import { SinCosExplorer } from "./widgets/SineCosineWidget";
+
+{/* Konzept-Tooltip: Sinus und Kosinus: Werte, Periodizität, Ableitungen. */}
+
+$\sin$ und $\cos$ sind die beiden grundlegenden
+schwingenden :k[Funktionen]{#function}. Für
+einen Winkel $x$ (gemessen im Bogenmaß, eine volle Umdrehung
+ist also $2\pi \approx 6{,}28$) sind $\cos x$ und
+$\sin x$ die horizontale und die vertikale Koordinate des
+Punkts, den wir erreichen, wenn wir die Strecke $x$ auf dem
+Einheitskreis entlanglaufen. Beide pendeln zwischen $-1$ und
+$1$ und wiederholen sich mit Periode $2\pi$.
+
+Die Werte, die wir uns hier merken: $\sin 0 = 0$ und
+$\cos 0 = 1$. Beide Funktionen sind
+:k[glatt]{#smooth-function}, und ihre
+Ableitungen rotieren durch einen Viererzyklus:
+
+$$
+(\sin x)' = \cos x, \quad (\cos x)' = -\sin x, \quad (-\sin x)' = -\cos x, \quad (-\cos x)' = \sin x.
+$$
+
+Viermal ableiten bringt $\cos$ also zurück zu
+$\cos$, und darum durchlaufen die Ableitungswerte an der
+Stelle $x_0 = 0$, die wir für eine Taylorreihe brauchen, den
+Zyklus $1, 0, -1, 0, 1, \dots$
+
+<SinCosExplorer />

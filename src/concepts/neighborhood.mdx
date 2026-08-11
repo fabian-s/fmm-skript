@@ -1,0 +1,29 @@
+export const title = "Umgebung eines Punktes";
+
+import { NeighborhoodWidget } from "./widgets/NeighborhoodWidget";
+
+{/*
+ * Concept-Tooltip: Umgebung eines Punktes: alle Punkte innerhalb eines
+ * kleinen Abstands eps. Genutzt u. a. von der Definition lokaler Minima.
+ */}
+
+Eine *Umgebung* (engl. *neighborhood*) eines Punktes $\bx^*$ ist die Menge
+aller Punkte, die näher an ihm liegen als ein Radius $\varepsilon > 0$, also
+eine offene Kugel, gemessen mit der :k[euklidischen Norm]{#euclidean-norm}:
+
+$$
+\{\, \bx \in \R^n : \|\bx - \bx^*\| < \varepsilon \,\}.
+$$
+
+In einer Dimension ist das einfach das Intervall
+$(x^* - \varepsilon,\, x^* + \varepsilon)$; in
+:k[zwei Dimensionen]{#real-coordinate-space} eine Kreisscheibe ohne ihren Rand.
+Dass eine Eigenschaft *in einer Umgebung* von $\bx^*$ gilt, heißt: Sie gilt für
+alle hinreichend nahen Punkte. Wir dürfen den Radius selbst wählen, und er darf
+winzig sein.
+
+Diese Formulierung leistet die eigentliche Arbeit in der Definition eines
+lokalen Minimums: $f(\bx^*) \le f(\bx)$ wird nur für zulässige $\bx$ nahe
+$\bx^*$ verlangt, nicht überall – weiter weg darf $f$ durchaus tiefer absinken.
+
+<NeighborhoodWidget />

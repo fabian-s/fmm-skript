@@ -1,0 +1,44 @@
+export const title = "LU-Zerlegung";
+
+import { LuWidget } from "./widgets/LuDecompositionWidget";
+
+Die *LU-Zerlegung* (engl. *LU factorization*, auch
+*LR-Zerlegung*) ist
+:k[Gauß-Elimination]{#gaussian-elimination}
+mit Buchführung: Wir merken uns jeden Multiplikator genau an der
+Stelle, an der er eine Null erzeugt hat. Die Multiplikatoren bilden
+eine untere
+:k[Dreiecksmatrix]{#triangular-matrix}
+$\bL$ mit Einsen auf der Diagonale, das eliminierte Ergebnis
+ist eine obere Dreiecksmatrix $\bU$, und ihr
+:k[Produkt]{#matrix-multiplication} stellt
+die Ausgangsmatrix wieder her:
+
+$$
+\bA = \bL\bU, \qquad \begin{bmatrix} 2 & 1 \\ 4 & 5 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}.
+$$
+
+Was bringt das? Ist die Matrix einmal zerlegt, wird
+$\bA\bx = \bb$ zu $\bL(\bU\bx) = \bb$, also zwei
+billige
+:k[Substitutions-Durchläufe]{#triangular-solve}
+(erst $\bL\by = \bb$ vorwärts lösen, dann
+$\bU\bx = \by$ rückwärts). Die teure Zerlegung zahlen wir
+einmal und verwenden sie für jede neue rechte Seite wieder. Mit
+Zeilentauschen für die Stabilität wird die Identität zu
+$\bP\bA = \bL\bU$ mit einer
+:k[Permutationsmatrix]{#permutation-matrix}
+$\bP$.
+
+Zwei Verwandte sind wichtig: Für
+:k[symmetrische]{#symmetric-matrix},
+:k[positiv definite]{#positive-definite}
+Matrizen spezialisiert sich die Zerlegung zur
+:k[Cholesky-Zerlegung]{#cholesky-factorization}
+$\bA = \bL\bL^T$. Und das erweiterte Gleichungssystem der
+Kleinste-Quadrate-Rechnung (vgl. Heath §3.4.2) ist symmetrisch, aber
+*indefinit*. Dafür braucht es eine symmetrisch-indefinite
+Variante oder die gewöhnliche LU-Zerlegung, die ihre Pivots frei
+wählen darf; genau diese Freiheit nutzt jene Methode aus.
+
+<LuWidget />

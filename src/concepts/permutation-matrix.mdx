@@ -1,0 +1,26 @@
+export const title = "Permutationsmatrix";
+
+import { PermWidget } from "./widgets/PermutationMatrixWidget";
+
+{/* Konzept-Tooltip: Permutationsmatrix: Einheitsmatrix mit gemischten Zeilen. */}
+
+Eine *Permutationsmatrix* $\bP$ ist eine
+:k[Einheitsmatrix]{#identity-matrix}, deren Zeilen (oder Spalten)
+durchgemischt wurden: Jede Zeile und jede Spalte enthält genau eine $1$, alle
+anderen Einträge sind $0$. Multiplikation mit ihr schiebt Daten umher, ohne
+einen einzigen Wert zu ändern: $\bP\bx$ ordnet die Einträge eines Vektors um,
+und das :k[Produkt]{#matrix-multiplication} $\bA\bP$ ordnet die Spalten von
+$\bA$ um.
+
+Weil das Umsortieren von Einträgen keine Längen ändert, ist $\bP$ eine
+:k[orthogonale Matrix]{#orthogonal-matrix}, und ihre
+:k[Inverse]{#matrix-inverse} ist einfach ihre :k[Transponierte]{#transpose}:
+Das Rückgängigmachen einer Mischung ist selbst wieder eine Mischung.
+
+Mit Permutationsmatrizen führen Algorithmen Buch über Zeilen- oder
+Spaltenvertauschungen: Die partielle Pivotsuche bei der
+:k[LU-Zerlegung]{#lu-decomposition} protokolliert ihre Zeilentausche in einem
+$\bP$, und die Spaltenpivotsuche der QR-Zerlegung hält ihre Spaltentausche im
+$\bP$ von $\bQ^T \bA \bP$ fest (vgl. Heath §3.5).
+
+<PermWidget />

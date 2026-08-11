@@ -1,0 +1,36 @@
+export const title = "Satz von Taylor";
+
+import { TaylorWidget } from "./widgets/TaylorTheoremWidget";
+
+{/* Konzept-Tooltip: Satz von Taylor: lokale Polynom-Näherung mit kontrolliertem Restglied. */}
+
+Der Satz von Taylor (Taylor&rsquo;s theorem) besagt: Eine glatte
+Funktion lässt sich in der Nähe eines Punktes allein aus ihren
+:k[Ableitungen]{#derivative} an diesem
+Punkt rekonstruieren. Die Version erster Ordnung ist das Arbeitspferd
+der Numerik:
+
+$$
+x(t) = x(0) + t\,x'(0) + O(t^2) \quad \text{für } t \to 0,
+$$
+
+d.&thinsp;h. die Funktion ist gleich ihrer
+:k[Tangente]{#tangent-line} bei
+$t = 0$ plus einem Restglied der Größenordnung
+:k[$O(t^2)$]{#big-o-notation}: es schrumpft garantiert wie $t^2$ und ist für
+kleines $t$ gegenüber dem $t$-Term vernachlässigbar.
+Weitere Terme
+$\tfrac{t^2}{2} x''(0), \tfrac{t^3}{6} x'''(0), \dots$
+verbessern die Näherung und drücken das Restglied auf noch höhere
+Potenzen von $t$.
+
+Ein kleiner Check mit $\sin t$: Der Satz liefert
+$\sin t = t + O(t^3)$, und tatsächlich ist
+$\sin(0.1) = 0.0998\ldots$, also nur
+$2 \times 10^{-4}$ von $t = 0.1$ entfernt.
+Sensitivitätsanalysen nutzen genau das aus: Um zu sehen, wie eine
+Lösung auf eine kleine Störung der Größe $t$ reagiert,
+behalten wir den linearen Term und stecken alles Übrige in
+$O(t^2)$.
+
+<TaylorWidget />

@@ -1,0 +1,35 @@
+export const title = "Eigenwerte und Eigenvektoren";
+
+import { EigenWidget } from "./widgets/EigenvalueEigenvectorWidget";
+
+Die meisten Vektoren ändern ihre Richtung, wenn eine
+:k[Matrix]{#matrix} $\bA$ sie
+multipliziert. Ein *Eigenvektor* ist ein spezieller Vektor
+ungleich null, dessen Richtung erhalten bleibt: Das
+:k[Produkt]{#matrix-vector-product}
+$\bA\bv$ ist einfach ein
+:k[skalares]{#scalar} Vielfaches von
+$\bv$ selbst,
+
+$$
+\bA\bv = \lambda \bv, \qquad \bv \neq \bzero,
+$$
+
+und der Streckungsfaktor $\lambda$ ist der zugehörige
+*Eigenwert*. Kleines Beispiel: Für
+$\bA = \begin{pmatrix}2 & 1\\ 1 & 2\end{pmatrix}$ wird
+der Vektor $(1,1)^T$ auf $(3,3)^T$ abgebildet (also
+ein Eigenvektor mit $\lambda = 3$), während
+$(1,-1)^T$ auf sich selbst abgebildet wird ($\lambda = 1$).
+
+Für eine
+:k[symmetrische Matrix]{#symmetric-matrix}
+sind die Eigenwerte reell, und die Eigenvektoren lassen sich als
+:k[Orthonormalbasis]{#orthonormal-basis}
+wählen. Deshalb verbinden die Eigenwerte von $\bA^T\bA$ das
+Kleinste-Quadrate-Problem mit der Singulärwertzerlegung. Bemerkenswert:
+Die Orthonormalbasen aus der QR-Zerlegung stecken auch in den
+Algorithmen, die Eigenwerte überhaupt erst berechnen (vgl. Heath
+§3.4.5).
+
+<EigenWidget />

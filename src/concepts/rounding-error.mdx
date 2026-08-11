@@ -1,0 +1,36 @@
+export const title = "Rundungsfehler";
+
+import { CancellationWidget } from "./widgets/RoundingErrorWidget";
+
+Weil ein Computer pro
+:k[Gleitkommazahl]{#floating-point} nur etwa
+16 signifikante Ziffern speichert, ist das exakte Ergebnis einer
+Rechenoperation meistens nicht darstellbar und muss auf die nächste
+darstellbare Zahl gerundet werden. Jede Operation begeht darum einen
+*Rundungsfehler* (rounding error): einen relativen Fehler von
+höchstens etwa
+:k[Maschinengenauigkeit]{#machine-epsilon},
+
+$$
+\frac{|\operatorname{fl}(x \circ y) - (x \circ y)|}{|x \circ y|} \;\le\; \varepsilon_{\text{mach}} \approx 2{,}2 \times 10^{-16}.
+$$
+
+Einzeln sind diese Fehler mikroskopisch, und in einer langen Rechnung
+bleiben sie meist harmlos. Sichtbar werden sie klassischerweise durch
+*katastrophale Auslöschung* (catastrophic cancellation): Ziehen
+wir zwei fast gleich große Zahlen voneinander ab, heben sich ihre
+gemeinsamen führenden Ziffern weg, und was übrig bleibt, wird von den
+vorher begangenen Rundungsfehlern dominiert. In 6-stelliger Arithmetik
+ist $1{,}23457 - 1{,}23456 = 0{,}00001$: von sechs
+gespeicherten Ziffern überlebt nur eine einzige (ohnehin unsichere)
+Ziffer.
+
+Rundungsfehler ziehen eine harte Untergrenze für alle
+Genauigkeitsfragen ein: Jede Eingabematrix ist sowieso nur bis auf
+relative Störungen der Größenordnung
+$\varepsilon_{\text{mach}}$ bekannt. Eine Störung dieser
+Größe ist also kein künstlicher Extremfall, sondern der Alltag;
+wie viel Schaden so eine Störung anrichten kann, misst genau die
+:k[Konditionszahl]{#condition-number}.
+
+<CancellationWidget />

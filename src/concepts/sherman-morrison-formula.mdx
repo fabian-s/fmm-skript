@@ -1,0 +1,41 @@
+export const title = "Sherman-Morrison-Formel";
+
+{/*
+ * Konzept-Tooltip: Sherman-Morrison-Formel: die Inverse (oder Zerlegung)
+ * von A + u v^T aus der Inversen von A in O(n^2) Arbeit. Kanonische id;
+ * der Trick hinter Broydens billigen Jacobi-Updates (vgl. Heath §5.6.3).
+ */}
+
+Angenommen, wir kennen die
+:k[Inverse]{#matrix-inverse} von
+$\bA$ bereits, und dann ändert sich $\bA$ um einen
+Rang-1-Anteil, ein
+:k[äußeres Produkt]{#outer-product}
+$\bu\bv^T$. Die Inverse komplett neu zu berechnen würde
+$\mathcal{O}(n^3)$ Arbeit kosten, aber die
+Sherman-Morrison-Formel flickt stattdessen die alte Inverse:
+
+$$
+(\bA + \bu\bv^T)^{-1} = \bA^{-1} - \frac{\bA^{-1}\bu\,\bv^T\bA^{-1}}{1 + \bv^T\bA^{-1}\bu},
+$$
+
+gültig, solange der skalare Nenner
+$1 + \bv^T\bA^{-1}\bu$ nicht Null ist. Alles auf der
+rechten Seite besteht aus Matrix-Vektor-Produkten; die Formel
+anzuwenden (oder analog eine vorhandene
+:k[Zerlegung]{#lu-decomposition} zu
+aktualisieren) kostet darum nur $\mathcal{O}(n^2)$.
+
+Kleine Probe mit $\bA = \bI$ (der
+:k[Einheitsmatrix]{#identity-matrix}) und
+$\bu = \bv = (1, 0)^T$: Die Formel liefert
+
+$$
+(\bI + \bu\bu^T)^{-1} = \bI - \frac{\bu\bu^T}{2} = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & 1 \end{bmatrix}, \quad \text{und tatsächlich } \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}^{-1} = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & 1 \end{bmatrix}.
+$$
+
+Genau das macht Broydens Verfahren so billig: Jeder Schritt ändert die
+approximierte Jacobi-Matrix nur um einen Rang-1-Term, sodass die
+Zerlegung, mit der der nächste Schritt berechnet wird, in
+$\mathcal{O}(n^2)$ aktualisiert werden kann, statt für
+$\mathcal{O}(n^3)$ neu berechnet zu werden.

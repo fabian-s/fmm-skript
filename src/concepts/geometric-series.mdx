@@ -1,0 +1,37 @@
+export const title = "Geometrische Reihe";
+
+import { GeometricSumWidget } from "./widgets/GeometricSeriesWidget";
+
+{/* Concept tooltip: geometric series, the sum of powers of a fixed ratio r. */}
+
+Eine *geometrische Reihe* summiert die Potenzen eines festen
+Quotienten $r$ auf: Sie ist die
+:k[unendliche Reihe]{#infinite-series}
+$\sum_{k=0}^{\infty} r^k = 1 + r + r^2 + r^3 + \cdots$,
+jeder Term ist also der vorherige mal $r$. Für
+$r = \tfrac{1}{2}$ gilt
+
+$$
+1 + \tfrac{1}{2} + \tfrac{1}{4} + \tfrac{1}{8} + \cdots = 2:
+$$
+
+Jeder neue Term schließt die Hälfte der verbleibenden Lücke zur
+$2$, die Partialsummen bilden also eine
+:k[Folge]{#sequence}, die
+:k[konvergiert]{#convergence}. Allgemein
+schrumpfen die Potenzen $r^k$ für $|r| < 1$ schnell
+genug, sodass
+
+$$
+\sum_{k=0}^{\infty} r^k = \frac{1}{1-r} \qquad (|r| < 1),
+$$
+
+während für $|r| \geq 1$ die Terme nie abklingen und die
+Reihe keinen Wert hat (probieren wir unten $r$ nahe
+$\pm 0.9$ aus und beobachten, wie viel langsamer sich die
+Punkte einpendeln). Lesen wir $r$ als Variable
+$x$, wird aus $\sum_k x^k$ die einfachste
+:k[Potenzreihe]{#power-series}, der
+Prototyp dafür, wie sich Taylor-Reihen verhalten.
+
+<GeometricSumWidget />

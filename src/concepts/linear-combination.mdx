@@ -1,0 +1,26 @@
+export const title = "Linearkombination";
+
+import { MixWidget } from "./widgets/LinearCombinationWidget";
+
+Eine *Linearkombination* von
+:k[Vektoren]{#vector}
+$\bv_1, \ldots, \bv_k$ entsteht, indem wir jeden Vektor mit
+einem :k[Skalar]{#scalar} strecken und die
+Ergebnisse addieren:
+
+$$
+c_1 \bv_1 + c_2 \bv_2 + \cdots + c_k \bv_k.
+$$
+
+Denken wir an ein Rezept: Die Vektoren sind die Zutaten, und die
+Skalare $c_1, \ldots, c_k$ geben an, wie viel von jeder wir
+verwenden (negative Mengen erlaubt). Zum Beispiel:
+$2 \begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1 \begin{bmatrix} -1 \\ 1 \end{bmatrix} = \begin{bmatrix} 5 \\ 1 \end{bmatrix}$. Die Frage, ob sich $\bb$ durch Gewichten und Addieren der
+Spalten einer :k[Matrix]{#matrix}
+$\bA$ bauen lässt, ist die Frage, ob irgendeine Wahl von
+Gewichten diese Spalten genau zu $\bb$ mischt, und die
+Gewichte sind dann genau eine Lösung $\bx$ von
+$\bA\bx = \bb$. Drehen wir an den beiden Reglern unten und
+schauen, welche Punkte die gelbe Mischung erreichen kann.
+
+<MixWidget />

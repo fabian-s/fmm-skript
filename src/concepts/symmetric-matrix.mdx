@@ -1,0 +1,29 @@
+export const title = "Symmetrische Matrix";
+
+import { SymmetricWidget } from "./widgets/SymmetricMatrixWidget";
+
+Eine quadratische :k[Matrix]{#matrix} heißt
+*symmetrisch*, wenn sie gleich ihrer eigenen
+:k[Transponierten]{#transpose} ist,
+$\bA = \bA^T$: die Einträge spiegeln sich an der
+Hauptdiagonale, $a_{ij} = a_{ji}$. Zum Beispiel:
+
+$$
+\begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix} \text{ ist symmetrisch,} \qquad \begin{bmatrix} 2 & 1 \\ 0 & 1 \end{bmatrix} \text{ nicht.}
+$$
+
+Symmetrische Matrizen begegnen uns ständig:
+$\bA^T \bA$ ist *immer* symmetrisch, egal wie
+$\bA$ aussieht, denn
+$(\bA^T\bA)^T = \bA^T(\bA^T)^T = \bA^T\bA$, und
+Symmetrie ($\bP^T = \bP$) ist die halbe Definition einer
+orthogonalen Projektionsmatrix (orthogonal projector). Geometrisch
+sind sie die „gutartigsten&ldquo; linearen Abbildungen: Eine
+symmetrische Matrix hat reelle
+:k[Eigenwerte]{#eigenvalue-eigenvector} und
+paarweise
+:k[senkrechte]{#orthogonality}
+Eigenvektor-Richtungen; sie wirkt also als reine Streckung
+entlang orthogonaler Achsen, ganz ohne Scherung.
+
+<SymmetricWidget />

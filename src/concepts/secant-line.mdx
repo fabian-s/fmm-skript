@@ -1,0 +1,21 @@
+export const title = "Sekante";
+
+import { SecantWidget } from "./widgets/SecantLineWidget";
+
+{/* Konzept-Tooltip: Sekante (vgl. MML Definition 5.1 / Abbildung 5.3). */}
+
+Eine Sekante (secant line) ist schlicht eine Gerade durch
+*zwei* Punkte auf dem Graphen einer
+:k[Funktion]{#function}. Sind die Punkte
+$(x_0, f(x_0))$ und $(x_0 + h, f(x_0 + h))$, so ist
+die :k[Steigung]{#slope} der Sekante
+„Höhenzuwachs durch Schrittweite“:
+$\frac{f(x_0+h) - f(x_0)}{h}$, genau der
+Differenzenquotient (vgl. MML Def. 5.1). Zum Beispiel hat auf
+$f(x) = x^2$ die Sekante durch die Punkte bei
+$x=1$ und $x=2$ die Steigung
+$(4-1)/(2-1) = 3$. Rücken die beiden Punkte zusammen ($h \to 0$), wird aus der Sekante die
+:k[Tangente]{#tangent-line} bei
+$x_0$. Das ist die ganze Idee hinter der Ableitung.
+
+<SecantWidget />

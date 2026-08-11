@@ -1,0 +1,33 @@
+export const title = "Äußeres Produkt (outer product)";
+
+import { OuterWidget } from "./widgets/OuterProductWidget";
+
+Das *äußere Produkt* (engl. *outer product*) zweier
+:k[Vektoren]{#vector}
+$\bu \in \R^m$ und
+$\bv \in \R^n$ ist das
+:k[Matrixprodukt]{#matrix-multiplication}
+$\bu\bv^T$, Spalte mal Zeile. Das ergibt eine volle
+$m \times n$-:k[Matrix]{#matrix}, deren
+$(i,j)$-Eintrag $u_i v_j$ ist. Vergleichen wir das
+mit dem
+:k[Skalarprodukt]{#dot-product}
+$\bu^T\bv$: Dort steht Zeile mal Spalte, und alles
+kollabiert zu einer einzigen Zahl.
+
+Ein Mini-Beispiel:
+
+$$
+\begin{pmatrix}1\\2\\3\end{pmatrix} \begin{pmatrix}4 & 5\end{pmatrix} = \begin{pmatrix}4 & 5\\ 8 & 10\\ 12 & 15\end{pmatrix}.
+$$
+
+Jede Spalte von $\bu\bv^T$ ist ein Vielfaches des einen
+Vektors $\bu$; ein äußeres Produkt (ungleich Null) hat
+also immer :k[Rang]{#rank} eins und ist
+damit die einfachste nichttriviale Matrix überhaupt. Genau deshalb
+schreibt die abgeschnittene Singulärwertzerlegung (truncated SVD)
+$\bA = \sum_i \sigma_i \bu_i \bv_i^T$: Sie zerlegt eine
+beliebige Matrix in eine Summe solcher Rang-1-Bausteine, geordnet
+nach Wichtigkeit.
+
+<OuterWidget />

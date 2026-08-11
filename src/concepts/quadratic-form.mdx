@@ -1,0 +1,31 @@
+export const title = "Quadratische Form";
+
+import { QuadFormWidget } from "./widgets/QuadraticFormWidget";
+
+{/* Konzept-Tooltip: quadratische Form: x^T B x als skalare Funktion von x. */}
+
+Eine *quadratische Form* schickt einen :k[Vektor]{#vector} $\bx$ durch ein
+„Matrix-Sandwich": Zuerst :k[multiplizieren]{#matrix-multiplication} wir die
+quadratische :k[Matrix]{#matrix} $\bB$ mit $\bx$, dann bilden wir das
+:k[Skalarprodukt]{#dot-product} des Ergebnisses noch einmal mit $\bx$. Also
+ist $\bx^\top \bB \bx$ eine einzelne Zahl, und wenn $\bx$ variiert, definiert
+das eine skalarwertige :k[Funktion]{#function}. Für zwei Einträge
+ausgeschrieben ist sie ein :k[Polynom]{#polynomial}, in dem jeder Term genau
+Grad zwei hat, der mehrdimensionale Vetter der Schulparabel $b x^2$:
+
+$$
+\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}^\top \begin{bmatrix} 2 & 1 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = 2x_1^2 + x_1 x_2 + x_2^2 .
+$$
+
+Weil ein $1 \times 1$-Ergebnis gleich seiner eigenen
+:k[Transponierten]{#transpose} ist, gilt
+$\bx^\top \bB \bx = \bx^\top \bB^\top \bx$. Nur der
+:k[symmetrische]{#symmetric-matrix} Anteil
+$\tfrac{1}{2}(\bB + \bB^\top)$ von $\bB$ zählt. Dieselbe Kombination taucht
+beim Differenzieren auf: Eine Standard-Identität des Matrix-Kalküls (vgl. MML
+Gl. (5.107)) besagt, dass der Gradient von $\bx^\top \bB \bx$ nach $\bx$
+gerade $\bx^\top (\bB + \bB^\top)$ ist, für symmetrisches $\bB$ also
+$2\bx^\top \bB$, ganz analog zu
+$\tfrac{\mathrm{d}}{\mathrm{d}x} (b x^2) = 2bx$.
+
+<QuadFormWidget />

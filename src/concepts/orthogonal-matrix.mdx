@@ -1,0 +1,36 @@
+export const title = "Orthogonale Matrix";
+
+import { OrthogonalMatrixWidget } from "./widgets/OrthogonalMatrixWidget";
+
+Eine quadratische Matrix $\bQ$ heißt *orthogonal*
+(engl. *orthogonal matrix*), wenn ihre Spalten eine
+:k[Orthonormalbasis]{#orthonormal-basis}
+bilden, also paarweise senkrechte Einheitsvektoren. Mit der
+:k[Transposition]{#transpose} geschrieben,
+passt diese Bedingung in eine einzige Gleichung:
+
+$$
+\bQ^T \bQ = \bI, \qquad \text{also} \qquad \bQ^{-1} = \bQ^T .
+$$
+
+Die :k[Inverse]{#matrix-inverse} bekommen
+wir also geschenkt: nichts zu lösen, wir vertauschen einfach Zeilen
+und Spalten von $\bQ$. Geometrisch sind orthogonale
+Matrizen die starren Bewegungen:
+:k[Drehungen]{#rotation-matrix} und
+:k[Spiegelungen]{#reflection}, die Vektoren
+bewegen, ohne irgendetwas zu strecken oder zu stauchen. Insbesondere
+bleibt die :k[2-Norm]{#euclidean-norm}
+unangetastet:
+
+$$
+\|\bQ\bv\|_2^2 = (\bQ\bv)^T (\bQ\bv) = \bv^T \bQ^T \bQ \bv = \bv^T \bv = \|\bv\|_2^2 .
+$$
+
+Diese Invarianz ist der Motor hinter den QR-basierten
+Kleinste-Quadrate-Algorithmen (vgl. Heath §3.5): Multiplizieren wir
+das Residuum mit orthogonalen Matrizen, formen wir das Problem in
+ein leichtes Dreieckssystem um, *ohne die minimierte Größe zu
+verändern*.
+
+<OrthogonalMatrixWidget />

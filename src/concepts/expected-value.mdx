@@ -1,0 +1,28 @@
+export const title = "Erwartungswert";
+
+import { BetWidget } from "./widgets/ExpectedValueWidget";
+
+{/* Concept tooltip: expected value, the probability-weighted average E[X]. */}
+
+Der *Erwartungswert* (engl. *expected value*) einer
+Zufallsgröße $X$ ist ihr
+wahrscheinlichkeitsgewichteter Mittelwert: Jedes mögliche Ergebnis
+trägt seinen Wert mal die Wahrscheinlichkeit bei, mit der es
+eintritt. Für endlich viele Ergebnisse (in
+:k[Σ-Notation]{#summation-notation}) gilt
+
+$$
+\E[X] = \sum_{k} x_k \, P(X = x_k) ,
+$$
+
+und für stetige Größen wird aus der Summe ein Integral über die Dichte
+(vgl. MML §6.4.1). Kleines Beispiel: Ein fairer Würfel hat
+$\E[X] = \tfrac{1}{6}(1 + 2 + \dots + 6) = 3.5$. Kein
+einzelner Wurf zeigt 3.5, aber der Durchschnitt vieler Würfe landet auf
+lange Sicht dort. Diese Verbindung nutzt das stochastische
+Gradientenverfahren: Ein Mittelwert über alle Datenpunkte (wie die
+volle Gradientensumme) ist die empirische Schätzung eines
+Erwartungswerts, und der Mittelwert über eine zufällige Teilstichprobe
+schätzt dieselbe Größe, nur mit mehr Rauschen.
+
+<BetWidget />

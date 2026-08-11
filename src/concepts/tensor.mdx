@@ -1,0 +1,29 @@
+export const title = "Tensor";
+
+import { TensorStackWidget } from "./widgets/TensorWidget";
+
+{/* Konzept-Tooltip: Tensor (mehrdimensionales Zahlen-Array). */}
+
+Ein Tensor (in dem hier gemeinten Sinn) ist einfach ein
+mehrdimensionales Zahlen-Array, der natürliche nächste Schritt
+in einer Folge, die wir schon kennen: Eine einzelne Zahl ist ein
+0-dimensionales Array, ein
+:k[Vektor]{#vector} ein 1-dimensionales,
+eine :k[Matrix]{#matrix} ein
+2-dimensionales. Ein 3-dimensionaler Tensor
+$\mathsf{A} \in \R^{m \times n \times p}$ ist wie
+$p$ hintereinander gestapelte Matrizen der Größe
+$m \times n$; jeder Eintrag $a_{ijk}$ braucht drei
+Indizes zur Adressierung.
+
+Tensoren tauchen beim Ableiten auf, weil Differenzieren die Dimension
+der Buchführung erhöht: Die Ableitung eines matrixwertigen Ausdrucks
+nach einer Matrix hat vier Indexpositionen, ist also ein
+4-dimensionaler Tensor. Deshalb verlieren vertraute Matrix-Gewohnheiten
+wie das
+:k[Transponieren]{#transpose} ihre
+Selbstverständlichkeit: bei drei oder mehr Indexpositionen
+gibt es nicht mehr die eine natürliche Art, „Zeilen und Spalten zu
+vertauschen“.
+
+<TensorStackWidget />

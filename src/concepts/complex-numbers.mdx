@@ -1,0 +1,29 @@
+export const title = "Komplexe Zahlen";
+
+import { ComplexPlaneWidget } from "./widgets/ComplexNumbersWidget";
+
+Keine reelle Zahl hat das Quadrat $-1$. Deshalb wurde ein neues Symbol $i$
+eingeführt, die *imaginäre Einheit*, mit der einzigen Regel $i^2 = -1$. Eine
+*komplexe Zahl* kombiniert sie mit zwei gewöhnlichen reellen Zahlen,
+
+$$
+z = a + b i, \qquad a, b \in \R,
+$$
+
+wobei $a$ der *Realteil* und $b$ der *Imaginärteil* ist. Wir können uns $z$ als
+den Punkt $(a, b)$ in einer Ebene vorstellen, der *komplexen Zahlenebene*. Eine
+komplexe Zahl ist also im Wesentlichen ein 2D-:k[Vektor]{#vector}, den wir
+zusätzlich multiplizieren können: zum Beispiel
+$(1 + 2i)(3 + i) = 3 + i + 6i + 2i^2 = 1 + 7i$. Ihre Länge ist der *Betrag*
+$|z| = \sqrt{a^2 + b^2}$, und ein Vorzeichenwechsel im Imaginärteil liefert die
+*Konjugierte* $\bar{z} = a - b i$, mit der praktischen Identität
+$z \bar{z} = |z|^2$.
+
+Warum interessiert uns das in einem Kurs über Matrizen? Weil eine reelle Matrix
+komplexe Eigenwerte haben kann: das charakteristische Polynom hat vielleicht
+keine reellen :k[Nullstellen]{#polynomial-roots}, aber immer komplexe, und bei
+reellen Matrizen treten sie in konjugierten Paaren $a \pm b i$ auf. Komplexe
+Eigenwerte signalisieren Drehung oder Schwingung; genau deshalb funktioniert
+der harmonische Ansatz $e^{i\omega t}$ (vgl. Heath Bsp. 4.1).
+
+<ComplexPlaneWidget />

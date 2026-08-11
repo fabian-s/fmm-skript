@@ -1,0 +1,29 @@
+export const title = "Inverse einer Matrix";
+
+import { InverseWidget } from "./widgets/MatrixInverseWidget";
+
+Die *Inverse* einer quadratischen
+:k[Matrix]{#matrix} $\bA$ spielt
+dieselbe Rolle wie $1/a$ für eine gewöhnliche Zahl: Sie ist
+die Matrix $\bA^{-1}$, deren
+:k[Produkt]{#matrix-multiplication} mit
+$\bA$ (in beliebiger Reihenfolge) die
+:k[Einheitsmatrix]{#identity-matrix} ergibt:
+
+$$
+\bA \bA^{-1} = \bA^{-1} \bA = \bI.
+$$
+
+So wie wir $a x = b$ durch Multiplikation mit $1/a$
+lösen, isoliert die Multiplikation eines Systems
+$\bA\bx = \bb$ mit $\bA^{-1}$ die Unbekannte:
+$\bx = \bA^{-1}\bb$. Und so wie $a = 0$ keinen
+Kehrwert hat, besitzt nicht jede Matrix eine Inverse; sie existiert
+genau dann, wenn die
+:k[Determinante]{#determinant} ungleich Null
+ist, die Matrix also *regulär* (nicht singulär) ist.
+
+Konkrete Probe:
+$\begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & -1 \\ -1 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, diese beiden Matrizen sind also zueinander invers.
+
+<InverseWidget />

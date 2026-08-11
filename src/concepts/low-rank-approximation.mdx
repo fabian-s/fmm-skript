@@ -1,0 +1,31 @@
+export const title = "Rang-k-Approximation";
+
+import { TruncateWidget } from "./widgets/LowRankApproximationWidget";
+
+Die :k[SVD]{#singular-value-decomposition} schreibt eine
+Matrix als gewichtete Summe von Rang-1-Bausteinen (:k[äußeren Produkten]{#outer-product}):
+$\bA = \sum_{i=1}^{r} \sigma_i \bu_i \bv_i^\top$, sortiert nach
+Wichtigkeit $\sigma_1 \ge \cdots \ge \sigma_r > 0$. Behalten wir nur die
+$k$ größten Terme, erhalten wir die *Rang-k-Approximation*
+
+$$
+\bA_k = \sum_{i=1}^{k} \sigma_i \bu_i \bv_i^\top, \qquad \rang(\bA_k) = k.
+$$
+
+Das ist nicht irgendeine Näherung, sondern die bestmögliche: Unter allen Matrizen vom
+:k[Rang]{#rank} höchstens $k$ minimiert
+$\bA_k$ den Abstand zu $\bA$ in der Spektral- und der
+Frobenius-:k[Norm]{#matrix-norm}, mit Fehler
+$\|\bA - \bA_k\|_2 = \sigma_{k+1}$ (Eckart-Young-Theorem, Kapitel 6).
+Fällt das Spektrum schnell ab, komprimiert das enorm: Statt $m \cdot n$
+Einträgen speichern wir nur $k(m + n + 1)$ Zahlen; so funktioniert
+SVD-Bildkompression.
+
+In Kapitel 7 nutzen wir das als *Regularisierung*: Ist $\bA$ fast
+singulär ($\sigma_{\min} \approx 0$, riesige
+:k[Konditionszahl]{#condition-number}), setzen wir die
+kleinsten Singulärwerte auf Null, bevor wir die Pseudoinverse bilden. Wir opfern also
+bewusst einen winzigen Approximationsfehler und werden dafür die Richtungen los, in
+denen die Kleinste-Quadrate-Lösung nur verstärktes Rauschen enthielte.
+
+<TruncateWidget />

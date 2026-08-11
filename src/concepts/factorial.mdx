@@ -1,0 +1,25 @@
+export const title = "Fakultät";
+
+import { FactorialTable } from "./widgets/FactorialWidget";
+
+{/* Concept tooltip: factorial k! (Taylor coefficients). */}
+
+Die *Fakultät* (engl. *factorial*) einer natürlichen
+Zahl $k$, geschrieben $k!$, ist das Produkt aller
+ganzen Zahlen von 1 bis $k$:
+
+$$
+k! = 1 \cdot 2 \cdot 3 \cdots k, \qquad \text{z.B. } 4! = 1 \cdot 2 \cdot 3 \cdot 4 = 24.
+$$
+
+Per Konvention ist $0! = 1$ (ein „leeres Produkt"), was die
+Formeln einheitlich hält. Aus der Kombinatorik kennen wir
+$k!$ vielleicht als die Anzahl der Möglichkeiten,
+$k$ Objekte anzuordnen. Hier taucht die Fakultät in
+Binomialkoeffizienten wie $\frac{n!}{i!\,(n-i)!}$ auf (vgl.
+MML, Beispiel 5.2) und, am wichtigsten, als Nenner
+$\frac{f^{(k)}(x_0)}{k!}$ in Taylor-Polynomen: Das rasante
+Wachstum von $k!$ zähmt die Terme höherer Ordnung, sodass die
+Reihe zur Ruhe kommen kann.
+
+<FactorialTable />

@@ -1,0 +1,36 @@
+export const title = "Niveaumengen (Höhenlinien)";
+
+import { LevelSetWidget } from "./widgets/LevelSetsWidget";
+
+{/*
+ * Concept tooltip: Niveaumengen (Höhenlinien) einer Funktion mehrerer
+ * Variablen.
+ */}
+
+Denken wir an eine topografische Wanderkarte: Kurven verbinden alle
+Punkte gleicher Höhe. Für eine Funktion
+$f\colon \R^2 \to \R$ gilt dasselbe Bild: die
+*Niveaumenge* (level set) zur Höhe $c$ sammelt alle
+Eingaben, an denen $f$ genau diesen Wert annimmt:
+
+$$
+\{\, \bx \in \R^n : f(\bx) = c \,\}.
+$$
+
+In zwei Dimensionen sind das Kurven (Höhenlinien, contour lines), in
+$n$ Dimensionen Flächen. Zeichnen wir verschachtelte
+Höhenlinien für mehrere Werte von $c$, wird die Gestalt einer
+Funktion auf einen Blick sichtbar: Eng beieinander liegende Linien
+bedeuten steiles Gelände, weit auseinander liegende flaches, und
+kleine geschlossene Schleifen umschließen ein Minimum oder Maximum.
+
+Für die Optimierung sind zwei Fakten wichtig. Erstens: Der
+:k[Gradient]{#gradient}
+$\nabla f(\bx)$ steht senkrecht auf der Niveaumenge durch
+$\bx$ und zeigt in Richtung größerer Werte von $f$;
+$-\nabla f$ ist also lokal der steilste Weg bergab. Zweitens:
+Nahe einem Minimum sehen die Höhenlinien einer glatten Funktion aus wie
+verschachtelte Ellipsen, deren Form die Hesse-Matrix bestimmt. Stark
+gestreckte Ellipsen signalisieren ein schlecht konditioniertes Problem.
+
+<LevelSetWidget />

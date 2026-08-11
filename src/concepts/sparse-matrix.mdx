@@ -1,0 +1,25 @@
+export const title = "Dünnbesetzte Matrix";
+
+import { SpyWidget } from "./widgets/SparseMatrixWidget";
+
+Eine :k[Matrix]{#matrix} heißt
+*dünnbesetzt* (sparse), wenn die allermeisten ihrer Einträge
+Null sind, so viele, dass es sich lohnt, nur die
+Nichtnull-Einträge zu speichern und mit ihnen zu rechnen. Eine
+tridiagonale $n \times n$-Matrix etwa hat höchstens
+$3n - 2$ Nichtnull-Einträge von $n^2$ insgesamt: Für
+$n = 1000$ sind das rund 3&thinsp;000 Zahlen statt einer
+Million.
+
+Die Nullen nützen uns aber nur, wenn ein Algorithmus sie auch Null
+*lässt*. Wenden wir eine Transformation unbedacht an, können
+aus Nullen Nichtnullen werden (sogenanntes *Fill-in*, bekannt
+aus der
+:k[LR-Zerlegung]{#lu-decomposition}), und
+die Ersparnis ist dahin. Deshalb bevorzugen wir für dünnbesetzte
+Kleinste-Quadrate-Probleme Givens-Rotationen, die gezielt einen
+einzelnen Eintrag auslöschen und das restliche Nullmuster in Ruhe
+lassen, gegenüber Householder-Spiegelungen, die ganze Spalten auf
+einmal verändern.
+
+<SpyWidget />

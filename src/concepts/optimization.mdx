@@ -1,0 +1,21 @@
+export const title = "Optimierung";
+
+import { OptimizationWidget } from "./widgets/OptimizationWidget";
+
+{/* Konzept-Tooltip: Optimierung: Minimieren/Maximieren einer Zielfunktion. */}
+
+Optimierung heißt: Wir suchen die Eingabewerte, die eine
+:k[Funktion]{#function} so klein (oder so
+groß) wie möglich machen. Im maschinellen Lernen ist diese Funktion
+die :k[Zielfunktion]{#objective-function}
+$L(\btheta)$, und die Eingaben sind die Modellparameter
+$\btheta$. „Ein Modell trainieren“ bedeutet also nichts
+anderes, als
+$\min_{\btheta} L(\btheta)$ zu lösen. Alle Parameterwerte
+durchzuprobieren ist aussichtslos; praktische Algorithmen machen
+stattdessen wiederholt kleine Schritte bergab, und der
+:k[Gradient]{#gradient} (aufgebaut aus
+Ableitungen) verrät ihnen, in welcher Richtung es bergab geht.
+Deshalb spielt das Differenzieren hier eine so große Rolle.
+
+<OptimizationWidget />

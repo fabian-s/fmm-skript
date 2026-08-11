@@ -1,0 +1,34 @@
+export const title = "Dreieckssystem lösen (Rückwärts-/Vorwärtseinsetzen)";
+
+import { BackSubWidget } from "./widgets/TriangularSolveWidget";
+
+Ein lineares Gleichungssystem, dessen Matrix
+:k[Dreiecksform]{#triangular-matrix} hat,
+lässt sich direkt lösen, ganz ohne Eliminationsarbeit. Für ein oberes
+Dreieckssystem $\bU\bx = \bb$ enthält die unterste
+Gleichung nur eine einzige Unbekannte; lösen wir sie und arbeiten uns
+nach oben, steuert jede Gleichung genau eine neue Unbekannte bei.
+Dieser Durchlauf von unten nach oben heißt
+*Rückwärtseinsetzen* (engl. *back-substitution*); der
+spiegelbildliche Durchlauf von oben nach unten für ein unteres
+Dreieckssystem $\bL\by = \bb$ heißt
+*Vorwärtseinsetzen* (forward substitution).
+
+Die Kosten liegen bei nur etwa $n^2$ Operationen für
+$n$ Unbekannte, eine Größenordnung billiger als die
+$\sim n^3/3$, die das
+:k[Gaußsche Eliminationsverfahren]{#gaussian-elimination}
+zum Faktorisieren einer vollen Matrix braucht. Dieses Ungleichgewicht
+treibt die Standardstrategie der numerischen linearen Algebra an:
+Einmal zahlen, um die Matrix in Dreiecksfaktoren zu zerlegen (z.&nbsp;B.
+:k[LU]{#lu-decomposition} oder
+:k[Cholesky]{#cholesky-factorization}), dann
+jedes Lösen mit billigen Einsetz-Durchläufen abschließen. Bei den
+Kleinste-Quadrate-Verfahren taucht dieses Muster gleich zweimal auf
+(vgl. Heath §3.4): Die Normalengleichungs-Methode löst
+$\bL\by = \bA^T \bb$ vorwärts und dann
+$\bL^T \bx = \by$ rückwärts, und das QR-Verfahren endet
+mit Rückwärtseinsetzen in
+$\bR\bx = \bc_1$.
+
+<BackSubWidget />

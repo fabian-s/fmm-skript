@@ -1,0 +1,25 @@
+export const title = "Basiswechsel";
+
+import { BasisWidget } from "./widgets/ChangeOfBasisWidget";
+
+{/* Konzept-Tooltip: Basiswechsel. */}
+
+Die Koordinaten eines :k[Vektors]{#vector} sind nicht gottgegeben: sie hängen
+davon ab, an welcher :k[Basis]{#basis} wir messen. Der Wechsel von der
+Standardbasis zu einer neuen Basis $(\bb_1, \dots, \bb_n)$ etikettiert jeden
+Vektor mit neuen Koordinaten um, und ebenso jede
+:k[lineare Abbildung]{#linear-map}: aus einer :k[Matrix]{#matrix} $\bA$ wird
+
+$$
+\bA' = \bS^{-1} \bA \bS,
+$$
+
+wobei $\bS$ die neuen Basisvektoren als Spalten enthält und $\bS^{-1}$ ihre
+:k[Inverse]{#inverse-matrix} ist. Die beiden Matrizen $\bA$ und $\bA'$
+beschreiben *dieselbe* Abbildung in verschiedenen Koordinaten (sie heißen
+:k[ähnlich]{#similar-matrices}), also muss jede Größe, die wirklich eine
+Eigenschaft der Abbildung selbst ist, etwa Determinante und Spur, für beide
+gleich herauskommen. Probieren wir es unten aus: das Drehen der Basis ändert
+die Koordinaten des roten Pfeils, aber nie den Pfeil selbst.
+
+<BasisWidget />

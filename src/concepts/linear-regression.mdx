@@ -1,0 +1,29 @@
+export const title = "Lineare Regression";
+
+import { RegressionWidget } from "./widgets/LinearRegressionWidget";
+
+{/* Concept tooltip: lineare Regression, Kurvenanpassung mit linearen Parametern. */}
+
+Lineare Regression ist Kurvenanpassung: Zu Datenpunkten
+$(x_i, y_i)$ suchen wir die
+:k[Funktion]{#function} aus einer einfachen
+Familie, die ihnen am nächsten kommt. Im vertrautesten Fall besteht die
+Familie aus allen Geraden,
+
+$$
+f(x) = \theta_0 + \theta_1 x ,
+$$
+
+und Anpassen heißt: Wir wählen den Achsenabschnitt $\theta_0$
+und die :k[Steigung]{#slope}
+$\theta_1$ so, dass sie eine
+:k[Zielfunktion]{#objective-function}
+minimieren, etwa die Summe der quadrierten vertikalen Abstände,
+gleichbedeutend damit, die
+:k[Likelihood]{#likelihood} der Daten unter
+einem Fehlermodell zu maximieren. „Linear" bezieht sich darauf, dass
+die Parameter $\btheta$ linear eingehen; dieselbe Maschinerie
+passt also auch Kurven wie
+$\theta_0 + \theta_1 x + \theta_2 x^2$ an.
+
+<RegressionWidget />

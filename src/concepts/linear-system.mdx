@@ -1,0 +1,27 @@
+export const title = "Lineares Gleichungssystem";
+
+import { ZweiGeradenFigur } from "./widgets/LinearSystemWidget";
+
+Ein lineares Gleichungssystem ist eine Sammlung von Gleichungen, in
+denen jede Unbekannte nur mit einer Zahl multipliziert und aufsummiert
+vorkommt: keine Quadrate, keine Produkte von Unbekannten, keine
+anderen nichtlinearen Terme. Zum Beispiel bilden
+$2x + 3y = 5$ und $x - y = 1$ zusammen ein System in
+den zwei Unbekannten $x, y$; eine Lösung ist jede Belegung der
+Unbekannten, die *alle* Gleichungen gleichzeitig erfüllt.
+Stapeln wir die Koeffizienten in eine
+:k[Matrix]{#matrix} $\bA$ und die
+Unbekannten in einen :k[Vektor]{#vector}
+$\bx$, schrumpft das ganze System auf eine Gleichung:
+
+$$
+\begin{pmatrix} 2 & 3 \\ 1 & -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 5 \\ 1 \end{pmatrix}, \quad \text{d.h.} \quad \bA\bx = \bb.
+$$
+
+Systeme lassen sich mechanisch mit dem
+:k[Gauß-Verfahren]{#gaussian-elimination}
+lösen, und ob $\bA\bx = \bb$ genau eine Lösung hat,
+entscheidet die Determinante von $\bA$: genau eine Lösung,
+wenn sie ungleich null ist.
+
+<ZweiGeradenFigur />

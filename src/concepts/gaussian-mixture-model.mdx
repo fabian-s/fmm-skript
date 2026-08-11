@@ -1,0 +1,27 @@
+export const title = "Gauß-Mischmodell (Gaussian mixture model, GMM)";
+
+import { MixtureWidget } from "./widgets/GaussianMixtureModelWidget";
+
+Ein *Gauß-Mischmodell* (engl.
+*Gaussian mixture model*, GMM) beschreibt eine
+Wahrscheinlichkeitsdichte als gewichtete Summe von $K$
+Gauß-Dichten („Glockenkurven"):
+
+$$
+p(x) = \sum_{k=1}^{K} \pi_k\, \mathcal{N}\left(x \mid \mu_k, \sigma_k^2\right), \qquad \pi_k \ge 0, \quad \sum_{k=1}^{K} \pi_k = 1
+$$
+
+Eine einzelne Glockenkurve kann nur einen „Hügel" modellieren, aber
+eine Mischung aus wenigen passt sich auch Daten mit mehreren Clustern
+an; deshalb sind GMMs ein Standardwerkzeug der
+:k[Dichteschätzung]{#density-estimation}.
+Die Parameter (Mittelwerte $\mu_k$, Varianzen
+$\sigma_k^2$, Gewichte $\pi_k$) werden so gewählt,
+dass sie die
+:k[Likelihood]{#likelihood} der
+beobachteten Daten maximieren; eine geschlossene Lösung gibt es nicht,
+also geschieht das per iterativer numerischer
+:k[Optimierung]{#optimization}, eines der
+motivierenden Beispiele für dieses Thema.
+
+<MixtureWidget />

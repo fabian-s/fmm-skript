@@ -1,0 +1,34 @@
+export const title = "Zwischenwertsatz";
+
+import { JumpBreaksIvtWidget } from "./widgets/IntermediateValueTheoremWidget";
+
+{/*
+ * Konzept-Tooltip: Zwischenwertsatz. Ein Vorzeichenwechsel einer stetigen
+ * Funktion erzwingt eine Nullstelle.
+ */}
+
+Eine :k[stetige]{#continuity} Funktion kann
+keine Werte überspringen: Ist $f$ stetig auf
+$[a, b]$, dann nimmt sie auf dem Weg von $f(a)$ nach
+$f(b)$ *jeden* Wert dazwischen an. Das ist der
+*Zwischenwertsatz* (intermediate value theorem). Der Fall, den
+die Nullstellensuche ständig benutzt, ist der Wert $0$: Wenn
+$f(a)$ und $f(b)$ entgegengesetzte Vorzeichen haben,
+
+$$
+f(a)\,f(b) < 0 \;\implies\; f(x^*) = 0 \text{ für ein } x^* \in (a, b).
+$$
+
+Kleines Beispiel: $f(x) = x^2 - 2$ hat
+$f(1) = -1 < 0$ und $f(2) = 2 > 0$, also muss
+zwischen 1 und 2 eine Nullstelle liegen, nämlich
+$\sqrt{2} \approx 1.414$. Deshalb macht ein
+Vorzeichenwechsel das Intervall $[a, b]$ zu einem
+Einschlussintervall (bracket), das garantiert eine Lösung enthält, und
+das ist das gesamte Korrektheitsargument hinter der Bisektion.
+
+Die Stetigkeit ist dabei wesentlich, keine Dekoration: Eine Funktion
+mit Sprung kann das Vorzeichen wechseln, ohne je null zu sein;
+probieren wir es unten aus.
+
+<JumpBreaksIvtWidget />

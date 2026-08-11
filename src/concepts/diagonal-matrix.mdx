@@ -1,0 +1,39 @@
+export const title = "Diagonalmatrix";
+
+import { DiagWidget } from "./widgets/DiagonalMatrixWidget";
+
+Eine *Diagonalmatrix* ist eine
+:k[Matrix]{#matrix}, deren einzige
+Nicht-Null-Einträge auf der Hauptdiagonalen sitzen, etwa
+$\bD = \begin{pmatrix}2 & 0\\ 0 & 0.5\end{pmatrix}$.
+Multiplizieren wir einen Vektor damit, wird bloß jede Koordinate mit
+ihrem eigenen Faktor skaliert:
+$\bD(x_1, x_2)^T = (2x_1,\, 0.5\,x_2)^T$. Die
+Koordinaten kommen einander nie in die Quere. (Die
+:k[Einheitsmatrix]{#identity-matrix} ist der
+Spezialfall mit lauter Einsen auf der Diagonalen; eine Diagonalmatrix
+ist gleichzeitig obere und untere
+:k[Dreiecksmatrix]{#triangular-matrix}, und
+ihre
+:k[Eigenwerte]{#eigenvalue-eigenvector} sind
+genau die Diagonaleinträge.)
+
+Diese Unabhängigkeit macht lineare Gleichungssysteme und
+Kleinste-Quadrate-Probleme mit Diagonalmatrizen trivial:
+$\bD\bx = \bb$ zerfällt in eine winzige Gleichung pro
+Zeile,
+
+$$
+x_i = b_i / d_{ii} \quad (d_{ii} \neq 0),
+$$
+
+also $n$ unabhängige Divisionen. Die Matrix muss dafür nicht
+quadratisch sein: Das $\bSigma$ in der
+Singulärwertzerlegung (singular value decomposition, SVD) ist eine
+$m \times n$-Diagonalmatrix, und der ganze Witz der SVD
+ist, dass sie ein allgemeines Kleinste-Quadrate-Problem auf diese
+einfache diagonale Form zurückführt. Sogar ihre Pseudoinverse wird
+eintragsweise berechnet, durch Kehrwerte der
+Nicht-Null-Diagonaleinträge.
+
+<DiagWidget />

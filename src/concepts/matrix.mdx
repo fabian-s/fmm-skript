@@ -1,0 +1,18 @@
+export const title = "Matrix";
+
+Eine Matrix ist eine rechteckige Tabelle von Zahlen mit $m$ Zeilen und $n$
+Spalten; wir nennen sie eine $m \times n$-Matrix. Der Eintrag in Zeile $i$ und
+Spalte $j$ heißt $a_{ij}$; ein einzelnes Symbol wie $\bA$ packt also ein ganzes
+Zahlengitter in ein Objekt. Zum Beispiel ist
+
+$$
+\bA = \begin{bmatrix} 2 & 1 \\ 5 & 3 \end{bmatrix}
+$$
+
+eine $2 \times 2$-Matrix mit $a_{11} = 2$, $a_{12} = 1$, $a_{21} = 5$ und
+$a_{22} = 3$. In einem Gleichungssystem $\bA\bx = \bb$ speichert die Matrix
+alle Koeffizienten der Gleichungen auf einmal: Zeile $i$ enthält die
+Koeffizienten von Gleichung $i$, und jede Spalte lässt sich selbst als
+:k[Vektor]{#vector} lesen. Dieser Buchführungs-Trick erlaubt uns, über „das
+System“ als ein einziges Objekt zu sprechen, statt mit $m$ einzelnen
+Gleichungen zu jonglieren.

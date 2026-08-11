@@ -1,0 +1,32 @@
+export const title = "Konvergenz";
+
+import { ToleranceBandWidget } from "./widgets/ConvergenceWidget";
+
+Eine :k[Folge]{#sequence}
+$a_1, a_2, a_3, \dots$ *konvergiert* gegen einen Wert
+$L$, wenn sich ihre Glieder bei $L$ einpendeln:
+Irgendwann kommen sie $L$ beliebig nahe und bleiben dann auch
+so nahe. Wir schreiben
+
+$$
+a_n \to L \quad \text{oder} \quad \lim_{n \to \infty} a_n = L.
+$$
+
+„Beliebig nahe“ machen wir mit einer Toleranz
+$\varepsilon > 0$ präzise: Für jede noch so winzige Toleranz
+müssen ab irgendeinem Index alle Glieder
+$|a_n - L| < \varepsilon$ erfüllen. Probieren wir das im
+Widget unten aus, indem wir das Band schrumpfen lassen. Zum Beispiel
+konvergiert $a_n = 1/n$ gegen $0$, während
+$a_n = (-1)^n$ ewig zwischen $-1$ und $1$
+hin- und herspringt und gegen gar nichts konvergiert.
+
+Dieselbe Idee steckt hinter dem
+:k[Grenzwert]{#limit} einer Funktion für
+$h \to 0$, und sie entscheidet, ob eine
+:k[unendliche Reihe]{#infinite-series} einen
+Wert hat: Eine Reihe konvergiert, wenn ihre Partialsummen es tun. Die
+:k[geometrische Reihe]{#geometric-series}
+$\sum_k (1/2)^k$ ist das klassische konvergente Beispiel.
+
+<ToleranceBandWidget />

@@ -1,0 +1,33 @@
+export const title = "Spiegelung";
+
+import { ReflectionWidget } from "./widgets/ReflectionWidget";
+
+Eine *Spiegelung* (reflection) ist die
+:k[lineare Abbildung]{#linear-transformation}, die jeden Punkt an einer festen Geraden durch den Ursprung spiegelt
+(in höheren Dimensionen: an einer Ebene oder
+:k[Hyperebene]{#hyperplane}). Spiegeln
+ändert weder Längen noch Winkel, ihre
+:k[Matrix]{#matrix} ist also eine
+:k[orthogonale Matrix]{#orthogonal-matrix};
+anders als eine :k[Drehung]{#rotation-matrix}
+kehrt sie aber die Orientierung um; das zeigt sich an der
+:k[Determinante]{#determinant} $-1$.
+
+In der Ebene hat die Spiegelung an der Geraden mit Winkel
+$\theta$ die Matrix
+
+$$
+\bH = \begin{pmatrix} \cos 2\theta & \sin 2\theta \\ \sin 2\theta & -\cos 2\theta \end{pmatrix},
+$$
+
+z.&thinsp;B. liefert $\theta = 45^\circ$ die Abbildung, die
+die beiden Koordinaten vertauscht: $(2,1)^T \mapsto (1,2)^T$.
+Dieselbe Spiegelung zweimal ausgeführt hebt sich auf, also
+$\bH^{-1} = \bH$.
+
+Diese Geometrie ist der Kern der Householder-Transformationen (vgl.
+Heath §3.5.1): Eine geschickt gewählte Spiegelung wirft einen beliebig
+vorgegebenen Vektor auf eine Koordinatenachse und löscht dabei alle
+seine übrigen Einträge auf einen Schlag.
+
+<ReflectionWidget />

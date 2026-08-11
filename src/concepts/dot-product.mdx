@@ -1,0 +1,31 @@
+export const title = "Skalarprodukt (inner product)";
+
+import { DotProductWidget } from "./widgets/DotProductWidget";
+
+Das *Skalarprodukt* (engl. *inner product* oder
+*dot product*) zweier
+:k[Vektoren]{#vector} gleicher Länge
+multipliziert die zusammengehörigen Komponenten und summiert alles auf;
+mit der :k[Transposition]{#transpose}
+schreiben wir es als Matrixprodukt:
+
+$$
+\bx^T \by = x_1 y_1 + x_2 y_2 + \cdots + x_n y_n .
+$$
+
+Zum Beispiel liefern $[1, 2]^T$ und $[3, 1]^T$ den
+Wert $1 \cdot 3 + 2 \cdot 1 = 5$. Das Ergebnis ist eine
+einzelne Zahl, die misst, wie stark zwei Vektoren in dieselbe Richtung
+zeigen: Geometrisch gilt
+$\bx^T \by = \|\bx\|_2 \|\by\|_2 \cos\theta$, wobei
+$\theta$ der Winkel zwischen den Vektoren ist: positiv, wenn
+sie grob in dieselbe Richtung zeigen, null, wenn sie senkrecht
+aufeinander stehen (:k[Orthogonalität]{#orthogonality}), negativ,
+wenn sie einander entgegengesetzt sind. Außerdem erzeugt es die
+:k[euklidische Norm]{#euclidean-norm} über
+$\|\bx\|_2^2 = \bx^T \bx$. Diese enge Verbindung von
+Länge, Winkel und einer einfachen algebraischen Formel ist ein
+Hauptgrund, warum die Kleinste-Quadrate-Methode die 2-Norm ihren
+Konkurrentinnen vorzieht.
+
+<DotProductWidget />

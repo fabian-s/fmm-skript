@@ -1,0 +1,29 @@
+export const title = "Drehmatrix";
+
+import { RotationWidget } from "./widgets/RotationMatrixWidget";
+
+Eine *Drehmatrix* (rotation matrix) dreht jeden Punkt der Ebene
+um den Ursprung, und zwar um einen festen Winkel $\theta$.
+Sie ist die :k[Matrix]{#matrix} der
+:k[linearen Abbildung]{#linear-transformation}
+„drehe um $\theta$“:
+
+$$
+\bQ = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}.
+$$
+
+Mit $\theta = 90^\circ$ etwa wird $(1,0)^T$ auf
+$(0,1)^T$ geschickt: eine Vierteldrehung. Weil Drehen weder
+Längen noch Winkel ändert, ist $\bQ$ eine
+:k[orthogonale Matrix]{#orthogonal-matrix}
+(ihre Spalten sind zueinander senkrechte Einheitsvektoren), und ihre
+:k[Determinante]{#determinant} ist
+$+1$: Drehungen erhalten die Orientierung, anders als
+:k[Spiegelungen]{#reflection}, deren
+Determinante $-1$ ist.
+
+Drehungen, die gezielt jeweils einen Eintrag eines Vektors zu Null
+machen, heißen Givens-Rotationen und sind eines der wichtigsten
+Werkzeuge, um QR-Zerlegungen aufzubauen.
+
+<RotationWidget />

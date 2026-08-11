@@ -1,0 +1,33 @@
+export const title = "Dreiecksmatrix";
+
+import { TriPattern } from "./widgets/TriangularMatrixWidget";
+
+Eine quadratische :k[Matrix]{#matrix} heißt
+*Dreiecksmatrix* (engl. *triangular matrix*), wenn alles
+auf einer Seite ihrer Hauptdiagonale null ist. Stehen die Nullen
+unterhalb der Diagonale, ist die Matrix eine *obere*
+Dreiecksmatrix; stehen sie oberhalb, eine *untere*:
+
+$$
+\bU = \begin{bmatrix} 2 & 1 & 3 \\ 0 & 4 & 5 \\ 0 & 0 & 6 \end{bmatrix}, \qquad \bL = \begin{bmatrix} 2 & 0 & 0 \\ 7 & 4 & 0 \\ 1 & 5 & 6 \end{bmatrix}.
+$$
+
+Warum die numerische lineare Algebra von dieser Form besessen ist: Ein
+lineares Gleichungssystem mit Dreiecksmatrix ist fast schon gelöst. In
+$\bU\bx = \bb$ lautet die letzte Gleichung
+$6\,x_3 = b_3$ (eine Gleichung, eine Unbekannte), und jede
+Gleichung darüber bringt nur eine neue Unbekannte hinzu. Das ganze
+System entwirrt sich also durch
+:k[Einsetzen]{#triangular-solve}, ganz ohne
+Tricks. Genau deshalb stecken Algorithmen wie das
+:k[Gaußsche Eliminationsverfahren]{#gaussian-elimination}
+und die :k[LU-Zerlegung]{#lu-decomposition}
+ihre ganze Arbeit darin, Dreiecksform zu *erreichen*, und
+deshalb konstruiert das QR-Verfahren (vgl. Heath §3.5) eine
+:k[orthogonale Matrix]{#orthogonal-matrix}
+$\bQ$ gerade so, dass
+$\bQ^T \bA$ obere Dreiecksform bekommt.
+
+<div className="mt-2 flex flex-wrap justify-center gap-6 rounded bg-slate-700/60 p-3"><TriPattern lower={false} caption="obere Dreiecksmatrix" /><TriPattern lower={true} caption="untere Dreiecksmatrix" /></div>
+
+<p className="mt-1 text-xs opacity-80">Nullmuster einer 5&times;5-Dreiecksmatrix: &lowast; markiert Einträge, die beliebig sein dürfen (auch null), die grauen Zellen müssen null sein.</p>

@@ -1,0 +1,30 @@
+export const title = "Positive Definitheit";
+
+import { PositiveDefiniteWidget } from "./widgets/PositiveDefiniteWidget";
+
+{/* Konzept-Tooltip: positive Definitheit: quadratische Form auf dem Einheitskreis. */}
+
+Eine :k[symmetrische Matrix]{#symmetric-matrix} $\bA$ heißt *positiv definit*
+(positive definite), wenn die Zahl $\bx^T \bA \bx$ (ihre *quadratische Form*)
+für jeden Vektor $\bx \neq \bnull$ strikt positiv ist:
+
+$$
+\bx^T \bA \bx > 0 \quad \text{für alle } \bx \neq \bnull.
+$$
+
+Stellen wir uns das als Matrix-Version von „eine positive Zahl" vor: In einer
+Dimension lautet die Bedingung $a x^2 > 0$, also $a > 0$. Gleichwertig: Alle
+:k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA$ sind positiv. Symmetrische
+positiv definite (SPD) Matrizen sind die gutartigsten linearen
+Gleichungssysteme überhaupt. Sie lassen sich stabil und billig per
+:k[Cholesky-Zerlegung]{#cholesky-factorization} lösen. Das zentrale Beispiel
+für uns ist $\bA^T \bA$: Wegen
+$\bx^T \bA^T \bA \bx = \left\| \bA\bx \right\|_2^2 \geq 0$ ist die
+quadratische Form eine quadrierte :k[Länge]{#euclidean-norm}, und sie ist
+genau dann strikt positiv für alle $\bx \neq \bnull$, wenn kein
+$\bx \neq \bnull$ die Gleichung $\bA\bx = \bnull$ erfüllt, d.h. wenn
+:k[$\rang(\bA) = n$]{#rank} gilt. Das ist genau die Bedingung, unter der die
+:k[Hesse-Matrix]{#hessian-matrix} $2\bA^T\bA$ ein eindeutiges
+Kleinste-Quadrate-Minimum garantiert.
+
+<PositiveDefiniteWidget />

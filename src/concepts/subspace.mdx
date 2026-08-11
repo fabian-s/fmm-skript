@@ -1,0 +1,30 @@
+export const title = "Untervektorraum";
+
+import { SubspaceWidget } from "./widgets/SubspaceWidget";
+
+Ein *Untervektorraum* (subspace) ist ein flaches Stück eines
+:k[Vektorraums]{#vector-space}, das durch
+den Ursprung geht und in sich abgeschlossen ist: Addieren wir zwei
+:k[Vektoren]{#vector} daraus oder skalieren
+wir einen, landen wir nie außerhalb. Formal ist eine Teilmenge
+$S$ ein Untervektorraum, wenn
+
+$$
+\bu, \bv \in S \;\Rightarrow\; \bu + \bv \in S \quad \text{und} \quad \alpha \bv \in S \text{ für jeden Skalar } \alpha.
+$$
+
+In $\R^3$ sind die Untervektorräume genau: der Ursprung
+allein, Geraden durch den Ursprung, Ebenen durch den Ursprung und ganz
+$\R^3$, jeder mit seiner eigenen
+:k[Dimension]{#dimension}. Das für uns
+wichtigste Beispiel: Die
+:k[lineare Hülle]{#span} der Spalten einer
+Matrix $\bA$, also alle
+:k[Linearkombinationen]{#linear-combination}
+$\bA\bx$, ist ein Untervektorraum. Die Methode der
+kleinsten Quadrate (vgl. Heath §3.1) sucht den Punkt dieses
+niedrigdimensionalen Untervektorraums, der einem Datenvektor
+$\bb$ am nächsten liegt – der typischerweise
+außerhalb liegt.
+
+<SubspaceWidget />

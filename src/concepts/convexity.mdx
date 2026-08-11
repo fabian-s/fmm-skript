@@ -1,0 +1,31 @@
+export const title = "Konvexität";
+
+import { ChordWidget } from "./widgets/ConvexityWidget";
+
+Eine Funktion ist *konvex*, wenn ihr Graph schüsselförmig ist:
+Die gerade Sehne zwischen zwei beliebigen Punkten des Graphen fällt
+nie unter den Graphen selbst. Formal: Für alle Punkte
+$\bx, \by$ und jedes Mischungsgewicht
+$0 \le \alpha \le 1$ gilt
+
+$$
+f\left(\alpha \bx + (1-\alpha) \by\right) \;\le\; \alpha f(\bx) + (1-\alpha) f(\by) .
+$$
+
+Die Funktion ist *strikt* konvex, wenn die Ungleichung für
+verschiedene Punkte und $0 < \alpha < 1$ strikt ist: keine
+geraden Flachstücke in der Schüssel. Strikte Konvexität ist eine
+Garantie gegen Mehrdeutigkeit: Die Funktion kann höchstens einen
+Minimierer haben, also ist jeder Punkt, an dem der
+:k[Gradient]{#gradient} verschwindet,
+*das* globale Minimum. Genau diese Situation liegt bei
+Kleinsten Quadraten vor: Die quadrierte 2-Norm
+$\|\bb - \bA\bx\|_2^2$ als Zielfunktion ist glatt und
+(für $\bA$ mit vollem Rang) strikt konvex, also legt das
+Nullsetzen ihres Gradienten eine eindeutige Lösung fest (vgl. Heath
+§3.2). Vergleichen wir $f(x) = x^2$ (strikt konvex, glatt)
+mit $f(x) = |x|$ (konvex, aber mit einem Knick am Minimum,
+wo keine :k[Ableitung]{#derivative}
+existiert).
+
+<ChordWidget />

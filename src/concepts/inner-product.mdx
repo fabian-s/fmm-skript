@@ -1,0 +1,35 @@
+export const title = "Skalarprodukt";
+
+import { AngleWidget } from "./widgets/InnerProductWidget";
+
+{/* Konzept-Tooltip: Skalarprodukt (inneres Produkt) x^T y. */}
+
+Das *Skalarprodukt* (inner product, dot product) zweier
+:k[Vektoren]{#vector}
+$\bx, \by$ im
+:k[$\R^n$]{#real-coordinate-space}
+multipliziert zueinander passende Komponenten und addiert die
+Ergebnisse; mit der
+:k[Transponierten]{#transpose} schreibt es
+sich als Zeile mal Spalte:
+
+$$
+\bx^T \by = x_1 y_1 + x_2 y_2 + \cdots + x_n y_n.
+$$
+
+Zum Beispiel erhalten wir mit $\bx = (1, 2)$ und
+$\by = (3, 4)$ den Wert
+$1 \cdot 3 + 2 \cdot 4 = 11$. Setzen wir
+$\by = \bx$, ergibt sich die Quadratsumme
+$\bx^T \bx = \sum_i x_i^2$, genau die quadrierte
+euklidische Länge. So hängt die 2-Norm über
+$\|\bx\|_2^2 = \bx^T \bx$ mit Quadratsummen zusammen.
+Geometrisch gilt
+$\bx^T \by = \|\bx\|_2 \, \|\by\|_2 \cos\theta$,
+wobei $\theta$ der Winkel zwischen den Vektoren ist; das
+Skalarprodukt ist also genau dann null, wenn die Vektoren senkrecht
+aufeinander stehen. In der Statistik begegnet es uns ständig: Die
+Stichprobenkovarianz zweier zentrierter Datenvektoren ist einfach ihr
+Skalarprodukt geteilt durch $n-1$.
+
+<AngleWidget />

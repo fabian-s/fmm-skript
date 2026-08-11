@@ -1,0 +1,29 @@
+export const title = "Hesse-Matrix";
+
+import { HessianWidget } from "./widgets/HessianMatrixWidget";
+
+Die *Hesse-Matrix* (engl. *Hessian*) einer Funktion
+$\phi: \R^n \to \R$ ist die
+:k[Matrix]{#matrix} aller zweiten
+:k[partiellen Ableitungen]{#partial-derivative},
+
+$$
+\bH_{\phi}(\bx) = \left[ \frac{\partial^2 \phi(\bx)}{\partial x_i \, \partial x_j} \right]_{i,j=1}^{n},
+$$
+
+das mehrdimensionale Gegenstück zur zweiten Ableitung
+$f''(x)$ (für glattes $\phi$ ist sie automatisch
+:k[symmetrisch]{#symmetric-matrix}, weil die
+Reihenfolge der Ableitungen keine Rolle spielt). Sie misst die Krümmung
+in alle Richtungen gleichzeitig und verallgemeinert damit den Test mit
+der zweiten Ableitung aus der Schule: Dort, wo der
+:k[Gradient]{#gradient} verschwindet, hat
+$\phi$ ein lokales Minimum, wenn die Hesse-Matrix
+:k[positiv definit]{#positive-definite} ist;
+sie krümmt sich dann in jede Richtung nach oben, wie eine Schüssel. Für
+die Kleinste-Quadrate-Zielfunktion ergibt sich als Hesse-Matrix die
+konstante Matrix $2\bA^T\bA$; ihre positive Definitheit ist
+genau das, was garantiert, dass die Lösung der Normalengleichungen
+wirklich ein Minimum ist und kein Sattelpunkt.
+
+<HessianWidget />

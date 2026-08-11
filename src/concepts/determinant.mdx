@@ -1,0 +1,25 @@
+export const title = "Determinante";
+
+import { DetWidget } from "./widgets/DeterminantWidget";
+
+Die *Determinante* $\det(\bA)$ ist eine einzelne
+Zahl, berechnet aus den Einträgen einer quadratischen
+:k[Matrix]{#matrix}, die zusammenfasst, ob
+die Matrix den Raum „plattdrückt“. Für eine $2 \times 2$-Matrix ist sie ein einfaches Kreuzmuster von Produkten:
+
+$$
+\det \begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc, \qquad \det \begin{pmatrix} 3 & 1 \\ 2 & 2 \end{pmatrix} = 3 \cdot 2 - 1 \cdot 2 = 4.
+$$
+
+Geometrisch: Fassen wir die Matrix als
+:k[lineare Abbildung]{#linear-transformation}
+der Ebene auf, dann ist $|\det(\bA)|$ der Faktor, um den
+sie Flächen skaliert (Volumina in 3D). Determinante null heißt: Die
+Abbildung quetscht die Ebene auf eine Gerade; keine Fläche
+überlebt, und die Matrix ist *singulär*. Deshalb ist der Test
+$\det(\bA) \neq 0$ gleichwertig dazu, dass die Matrix
+eine :k[Inverse]{#matrix-inverse} besitzt.
+
+<p className="text-xs opacity-80">Ändern wir die Matrix und beobachten wir das Bild des Einheitsquadrats: Machen wir etwa eine Spalte zum Vielfachen der anderen.</p>
+
+<DetWidget />

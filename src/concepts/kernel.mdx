@@ -1,0 +1,34 @@
+export const title = "Kern / Nullraum";
+
+import { KernelWidget } from "./widgets/KernelWidget";
+
+{/* Concept tooltip: Kern / Nullraum. */}
+
+Der *Kern* (engl. kernel, auch *Nullraum*, null space) einer
+:k[Matrix]{#matrix} $\bA$ ist die
+Menge aller :k[Vektoren]{#vector}, die die
+:k[Abbildung]{#linear-map}
+$\bx \mapsto \bA\bx$ auf null zusammendrückt:
+
+$$
+\ker(\bA) = \{ \bx : \bA\bx = \mathbf{0} \},
+$$
+
+also die Lösungsmenge des homogenen
+:k[linearen Gleichungssystems]{#linear-system}
+$\bA\bx = \mathbf{0}$. Der Kern ist immer ein
+:k[Unterraum]{#subspace}, und seine Größe
+steht im Tausch mit dem :k[Bild]{#image}:
+nach dem
+:k[Rangsatz]{#rank-nullity-theorem} gilt
+$\dim\ker(\bA) = n - \operatorname{rk}(\bA)$. Eine
+invertierbare Matrix hat also nur den Kern $\{\mathbf{0}\}$.
+Kerne sind auch der Motor hinter Eigenräumen:
+$\bA\bx = \lambda\bx$ lässt sich umstellen zu
+$(\bA - \lambda\bI)\bx = \mathbf{0}$, der Eigenraum ist
+also genau
+$E_\lambda = \ker(\bA - \lambda\bI)$. Unten hat
+$\bA = \begin{pmatrix} 1 & 2 \\ 0.5 & 1 \end{pmatrix}$
+Rang 1. Finden wir die Richtung, die $\bA$ auslöscht:
+
+<KernelWidget />

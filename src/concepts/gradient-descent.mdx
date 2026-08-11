@@ -1,0 +1,34 @@
+export const title = "Gradientenverfahren";
+
+import { GradientDescentWidget } from "./widgets/GradientDescentWidget";
+
+{/* Konzept-Tooltip: Gradientenverfahren, iterative Abstiegsschritte auf einer Zielfunktion. */}
+
+Das *Gradientenverfahren* (gradient descent) ist das
+Arbeitspferd hinter dem „Trainieren“ eines Modells: Es löst das
+:k[Optimierungsproblem]{#optimization}, eine
+:k[Zielfunktion]{#objective-function}
+$L(\btheta)$ zu minimieren, wenn wir die besten Parameter
+nicht direkt ausrechnen können. Das Rezept: Wir stehen am aktuellen
+Parameter-:k[Vektor]{#vector}, berechnen den
+:k[Gradienten]{#gradient} von $L$
+(die Richtung des steilsten *Anstiegs*) und machen einen kleinen
+Schritt in die Gegenrichtung,
+
+$$
+\btheta_{t+1} = \btheta_t - \gamma \, \big(\nabla_{\btheta} L(\btheta_t)\big)^\top,
+$$
+
+wobei die Schrittweite $\gamma > 0$ (die „Lernrate“)
+steuert, wie weit jeder Schritt geht. Kleines Beispiel: Für
+$L(\theta) = \theta^2$ lautet der Update-Schritt
+$\theta_{t+1} = \theta_t - \gamma \cdot 2\theta_t$. Er
+wandert zum Minimum bei $0$, solange $\gamma$ nicht
+zu groß ist. Genau deshalb steckt Backpropagation (vgl. MML §5.6) so
+viel Aufwand in die Gradienten der Verlustfunktion eines
+:k[neuronalen Netzes]{#neural-network} nach
+seinen Parametern: Jeder Trainingsschritt braucht einen. Eine
+ausführliche Behandlung des Verfahrens findet sich in der Literatur
+(vgl. MML §7.1).
+
+<GradientDescentWidget />

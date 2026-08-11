@@ -1,0 +1,36 @@
+export const title = "Konditionszahl";
+
+import { CondWidget } from "./widgets/ConditionNumberWidget";
+
+Die *Konditionszahl* (condition number) einer regulären quadratischen
+:k[Matrix]{#matrix} misst, wie empfindlich die Lösung von $\bA\bx = \bb$ auf
+kleine Änderungen in den Eingangsdaten reagiert. Definiert ist sie über eine
+:k[Matrixnorm]{#euclidean-norm} und die :k[Inverse]{#matrix-inverse}:
+
+$$
+\operatorname{cond}(\bA) = \|\bA\| \cdot \|\bA^{-1}\| \;\ge\; 1.
+$$
+
+Ihre Rolle: tragen die Daten des Systems einen relativen Fehler $\delta$ (aus
+Messung oder :k[Rundung]{#rounding-error}), kann der relative Fehler der
+berechneten Lösung ungefähr bis zu $\operatorname{cond}(\bA) \cdot \delta$
+betragen. Faustregel: wir verlieren etwa
+$\log_{10} \operatorname{cond}(\bA)$ Dezimalstellen an Genauigkeit. Mit
+:k[Maschinengenauigkeit]{#machine-epsilon} $\approx 10^{-16}$ lässt eine
+Konditionszahl von $10^{12}$ nur noch etwa vier verlässliche Stellen übrig.
+
+In der 2-Norm hat die Konditionszahl eine saubere geometrische Bedeutung:
+$\bA$ bildet den Einheitskreis auf eine Ellipse ab, und
+$\operatorname{cond}_2(\bA) = \sigma_{\max} / \sigma_{\min}$ ist das Verhältnis
+der stärksten zur schwächsten Streckung (der Singulärwerte). Eine Matrix mit
+$\operatorname{cond}(\bA) = 1$ (zum Beispiel eine
+:k[orthogonale Matrix]{#orthogonal-matrix}) behandelt jede Richtung gleich;
+eine fast singuläre Matrix quetscht irgendeine Richtung beinahe platt und hat
+eine riesige Konditionszahl.
+
+Das Konzept stammt aus der Theorie linearer Gleichungssysteme (vgl. Heath
+Kap. 2); für rechteckige Matrizen ersetzt man $\bA^{-1}$ durch die
+Pseudoinverse: $\operatorname{cond}(\bA) = \|\bA\|_2 \cdot \|\bA^{+}\|_2$
+(vgl. Heath §3.3).
+
+<CondWidget />
