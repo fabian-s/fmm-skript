@@ -217,6 +217,37 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Neue Tooltip-Konzepte entstehen als `.mdx` (`export const title = "…";`
   + Prosa, KEIN Frontmatter), Bestand prüfen mit `ls src/concepts/`.
 
+## KAPITEL 6 (Foliensatz 06-svd) — Bauauftrag 2026-08-11
+
+- `src/chapters/06-svd/`, S61–S65 als `.mdx` (Registry nutzt `mdxSection`,
+  nur der Orchestrator editiert `index.ts`); Anker `#sec-6.1` … `#sec-6.5`,
+  Labels „6.k.n"; MDX-Autorenformat und Regeln wie Kapitel 5 (sinngemäß).
+- Quelle in dieser Umgebung: `/workspace/fmm-lmu/slides/06-svd.Rmd`
+  (Zeilenbereiche im Workflow-Prompt; Quiz-Lösungen in HTML-Kommentaren).
+  Folien-Dezimalzahlen mit Punkt (9.53) werden im Skript deutsch gesetzt:
+  `9{,}53`.
+- Farbcode Kapitel 6: Singulärwerte σ orange (`\corange`), rechte
+  Singulärvektoren/V blau (`\cblue`), linke Singulärvektoren/U grün
+  (`\cgreen`), Rest-/Fehlerterme rot (`\cred`); Widget-SVGs mit den
+  Palette-Hexwerten.
+- Widget-Recycling: `/workspace/interactive/interactive/mml-ch4/`
+  (`src/sections/S45.tsx` SVD, `S46.tsx` Matrix Approximation;
+  `widgets/SvdFigure48.tsx`, `SvdFigure49.tsx`, `S46Widgets.tsx`,
+  `MovieRatings.tsx`, `OrthogonalImageProbe.tsx`) und ggf. heath-ch3 —
+  NUR CODE übernehmen, Labels/Captions/Statustexte deutsch NEU (MML-Prosa
+  ist buchadaptiert und VERBOTEN; jede Caption einzeln gegen die Quelle
+  halten, Lesson RueckSubStepper!).
+- Querbezüge: Spektralnorm/Orthogonalmatrizen →
+  `?k=03-matrix-spur-norm#sec-3.3`/`#sec-3.4`, κ₂ → `#sec-3.5` bzw.
+  `?k=04-fehler#sec-4.2`, Zerlegungs-Grundidee → `?k=05-lgs#sec-5.2`,
+  KQ/Normalgleichungen → `?k=07-kq`. Der SVD-Ausblick in S55 (Kapitel 5)
+  bekommt im Integrationslauf den `?k=06-svd`-Link.
+- Passende Tooltips existieren: singular-value-decomposition,
+  eigenvalue-eigenvector, rank, null-space, kernel, orthogonal-matrix,
+  orthonormal-basis, projection, pseudoinverse, low-rank-approximation,
+  matrix-norm, quadratic-form, outer-product, … (`ls src/concepts/`).
+- Kapitel 6.5 (Zusammenfassung) schlank halten.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben

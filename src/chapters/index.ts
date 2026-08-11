@@ -58,6 +58,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./05-lgs"),
   },
   {
+    id: "06-svd",
+    title: "Kap. 6 · Die Singulärwertzerlegung",
+    deck: "06-svd",
+    load: () => import("./06-svd"),
+  },
+  {
     id: "07-kq",
     title: "Kap. 7 · Kleinste Quadrate",
     deck: "07-kq",
