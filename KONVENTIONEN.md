@@ -337,3 +337,4 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 Der Skill-Doku-Vermerk (`references/verification.md`) zum Blindfleck kann
 beim nächsten Skill-Update auf „behoben" gesetzt werden (ausserhalb dieses
 Repos).
+- Migrations-Pilot 01-intro (2026-08-10): lokale Hilfskomponenten in ein widgets/-Modul portieren, aber NICHT als reservierte Namen (lokales "Frage" musste zu "SelbsttestFrage" — Frage/M/MD/Eq & Co. gehoeren der Autorenschicht); Fliesstext-<M>{"…"} verbietet die free-expression-Regel — Mathe im Konzept-Link als :k[$O(p^3)$]{#big-o-notation} schreiben; JSX-ATTRIBUTE (q={<>…</>}) duerfen Expressions enthalten (Regel prueft nur Flow/Text); das Orakel meldet beim Container-Wechsel (frage[]→Widget) und bei className-Fett/Kursiv→strong/em erwartbare Darstellungs-Abweichungen — Inhalts-Gleichheit dann ueber die "fehlt in MDX"-Liste pruefen.
