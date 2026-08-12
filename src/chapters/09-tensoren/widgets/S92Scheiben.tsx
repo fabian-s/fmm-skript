@@ -80,6 +80,7 @@ function Achse({
   label,
   lx,
   ly,
+  gedreht = false,
 }: {
   x1: number;
   y1: number;
@@ -88,11 +89,20 @@ function Achse({
   label: string;
   lx: number;
   ly: number;
+  /** Hochkant setzen: sonst läuft eine senkrechte Achsenbeschriftung links aus dem viewBox. */
+  gedreht?: boolean;
 }) {
   return (
     <g>
       <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={GREY} strokeWidth={1} markerEnd="url(#s92pfeil)" />
-      <text x={lx} y={ly} fontSize={11} fill={GREY} textAnchor="middle">
+      <text
+        x={lx}
+        y={ly}
+        fontSize={11}
+        fill={GREY}
+        textAnchor="middle"
+        transform={gedreht ? `rotate(-90 ${lx} ${ly})` : undefined}
+      >
         {label}
       </text>
     </g>
@@ -116,8 +126,8 @@ function MatrixTafel({
         {titel}
       </div>
       <div
-        className="inline-grid gap-x-2 font-mono text-xs"
-        style={{ gridTemplateColumns: `repeat(${n + 1}, auto)` }}
+        className="inline-grid gap-x-2 rounded border border-slate-300 px-2 py-1.5 font-mono text-xs"
+        style={{ gridTemplateColumns: `repeat(${n + 1}, auto)`, backgroundColor: "#ffffff" }}
       >
         <span />
         {Array.from({ length: n }, (_, j) => (
@@ -326,8 +336,9 @@ export function TensorScheibenViewer() {
             x2={vorne.x - 12}
             y2={vorne.y + gitter}
             label="i (Zeile)"
-            lx={16}
+            lx={18}
             ly={vorne.y + gitter / 2}
+            gedreht
           />
           {scheiben > 1 ? (
             <Achse

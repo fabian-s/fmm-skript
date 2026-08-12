@@ -3,11 +3,13 @@ import { BilinearitaetsDemo } from "./widgets/S91Bilinear";
 ::quelle[Folien 09-tensoren, „Verwendete Vorkenntnisse" bis „Darstellung von multilinearen Abbildungen".]
 
 Eine lineare Abbildung nimmt einen Vektor und liefert einen Vektor. Für viele
-Rechenvorschriften ist das zu eng. Ein Skalarprodukt braucht zwei Vektoren, eine
-quadratische Form ebenfalls, und die Matrizenmultiplikation verarbeitet zwei
-Matrizen zu einer dritten. Betrachten wir das ganze Tupel auf einmal, ist keine
-dieser Abbildungen linear. In jedem einzelnen Argument sind sie es aber sehr
-wohl, und diese Beobachtung trägt das gesamte Kapitel.
+Rechenvorschriften ist das zu eng. Ein Skalarprodukt braucht zwei Vektoren, die
+Matrizenmultiplikation verarbeitet zwei Matrizen zu einer dritten, und hinter
+einer quadratischen Form $\bx^\top\bA\bx$ steckt die Abbildung
+$(\bx, \by) \mapsto \bx^\top\bA\by$, die ebenfalls zwei Vektoren aufnimmt.
+Betrachten wir das ganze Tupel auf einmal, ist keine dieser Abbildungen linear.
+In jedem einzelnen Argument sind sie es aber sehr wohl, und diese Beobachtung
+trägt das gesamte Kapitel.
 
 ### Was wir brauchen
 
@@ -141,8 +143,10 @@ $n = 2$ der allgemeinen Regel $\cred{c^n}$ aus Bemerkung 9.1.2.
 
 :::vertiefung[Verdoppeln, einmal beide Seiten und einmal nur eine]
 Das Widget zeichnet zu den eingestellten Seitenlängen beide Rechtecke
-übereinander. Die dünnen Linien im gestrichelten Rechteck zerlegen es in Kopien
-des farbigen: vier bei zwei verdoppelten Seiten, zwei bei einer. Der Knopf hält
+übereinander. Die beiden Seiten tragen die Farben ihrer Argumente, die orange
+Fläche ist der Funktionswert $f(\cblue{x}, \cgreen{y})$. Die dünnen Linien im
+gestrichelten Rechteck zerlegen es in Kopien des farbigen: vier bei zwei
+verdoppelten Seiten, zwei bei einer. Der Knopf hält
 das zweite Argument fest und führt damit genau die Rechnung aus Beispiel 9.1.3
 vor. Lohnend ist auch der Rand der Schieberegler. Bei $\cblue{x} = 0$ oder
 $\cgreen{y} = 0$ ist die Fläche null, das Verhältnis der beiden Flächen also
@@ -167,17 +171,18 @@ $(\bv_1, \bv_2) \mapsto \inner{\bv_1, \bv_2}$, ist bilinear. Im ersten Argument
 rechnen wir
 
 $$
-\inner{\cblue{c\bv_1 + c'\bv_2}, \cgreen{\bv_3}}
-= \inner{\cblue{c\bv_1}, \cgreen{\bv_3}} + \inner{\cblue{c'\bv_2}, \cgreen{\bv_3}}
-= c\,\inner{\cblue{\bv_1}, \cgreen{\bv_3}} + c'\,\inner{\cblue{\bv_2}, \cgreen{\bv_3}} .
+\inner{\cblue{c\bv + c'\bv'}, \cgreen{\bw}}
+= \inner{\cblue{c\bv}, \cgreen{\bw}} + \inner{\cblue{c'\bv'}, \cgreen{\bw}}
+= c\,\inner{\cblue{\bv}, \cgreen{\bw}} + c'\,\inner{\cblue{\bv'}, \cgreen{\bw}} .
 $$
 
-Der erste Schritt ist die Additivität, der zweite die Homogenität. Je nachdem,
-wie das Skalarprodukt eingeführt wurde, sind beide Axiome oder eine kurze
-Rechnung; für das Standardskalarprodukt $\bx^\top\by$ etwa liefert sie das
-Distributivgesetz. Für das zweite Argument brauchen wir dann keine neue
-Rechnung: Die Symmetrie $\inner{\bv, \bw} = \inner{\bw, \bv}$ dreht die Rollen
-um.
+Der erste Schritt ist die Additivität, der zweite die Homogenität. Bei einer
+axiomatischen Einführung stehen beide schon in der Definition des
+Skalarprodukts. Für das Standardskalarprodukt $\bx^\top\by = \sum_i x_i y_i$
+rechnen wir sie in einer Zeile nach: Das Distributivgesetz der reellen Zahlen
+gibt die Additivität, das Herausziehen des Skalars die Homogenität. Für das
+zweite Argument brauchen wir dann keine neue Rechnung: Die Symmetrie
+$\inner{\bv, \bw} = \inner{\bw, \bv}$ dreht die Rollen um.
 :::
 
 :::beispiel[9.1.7 (Matrizenmultiplikation als bilineare Abbildung)]
@@ -201,8 +206,9 @@ $$
 
 Linear ist auch sie nicht. Skalieren wir beide Faktoren mit $c$, so erhalten wir
 $(c\cblue{\bA})(c\cgreen{\bB}) = \cred{c^2}\,\corange{\bA\bB}$, wie es
-Bemerkung 9.1.2 für $n = 2$ vorhersagt. Sie ist damit unser erstes Beispiel, in
-dem die drei beteiligten Räume im Allgemeinen verschieden sind.
+Bemerkung 9.1.2 für $n = 2$ vorhersagt. Die Matrizenmultiplikation ist damit
+unser erstes Beispiel, in dem die drei beteiligten Räume im Allgemeinen
+verschieden sind.
 :::
 
 ### Darstellung durch Koeffizienten
@@ -237,14 +243,16 @@ $\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
 Einen vollständigen Beweis führen wir nicht. Die Beweisidee ist aber kurz genug,
 um sie mitzunehmen, und sie liefert die Koeffizienten gleich mit.
 
-Die Richtung von rechts nach links ist Nachrechnen. In jedem Summanden von
-($9.1.1$) steht aus jedem Argument genau eine Koordinate als Faktor. Ersetzen
-wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder Summand
-entsprechend auf, und die rechte Seite ist in jedem Argument linear.
+Dass eine Abbildung der Gestalt ($9.1.1$) multilinear ist, ist Nachrechnen. In
+jedem Summanden steht aus jedem Argument genau eine Koordinate als Faktor.
+Ersetzen wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder
+Summand entsprechend auf, und die rechte Seite ist in jedem Argument linear.
 
-Für die andere Richtung entwickeln wir jedes Argument in der Standardbasis,
-$\bx^{(l)} = \sum_{i_l} x^{(l)}_{i_l} \be_{i_l}$, und ziehen die Summen
-nacheinander aus $T$ heraus. Das erlaubt die Multilinearität, und übrig bleibt
+Für die andere Richtung entwickeln wir jedes Argument in der Standardbasis
+seines eigenen Raums,
+$\bx^{(l)} = \sum_{i_l} x^{(l)}_{i_l} \be_{i_l}$ mit $\be_{i_l} \in \R^{n_l}$,
+und ziehen die Summen nacheinander aus $T$ heraus. Das erlaubt die
+Multilinearität, und übrig bleibt
 
 $$
 T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
@@ -265,8 +273,8 @@ Flächenfunktion aus Beispiel 9.1.3 hat $k = 2$ Argumente mit
 $n_1 = n_2 = 1$ und $m = 1$, kommt also mit einer einzigen Zahl aus, nämlich
 $a_{1,1,1} = 1$. Ein bilineares $T\colon \R^2 \times \R^2 \to \R$ braucht
 dagegen schon $2 \cdot 2 \cdot 1 = 4$ Koeffizienten. Wie wir diese Zahlen
-anordnen und warum ein Objekt mit $k$ Indizes daraus entsteht, ist das Thema von
-[Abschnitt 9.2](#sec-9.2).
+anordnen und warum daraus ein Objekt mit $k + 1$ Indexpositionen wird, bei
+$m = 1$ also mit $k$, ist das Thema von [Abschnitt 9.2](#sec-9.2).
 
 ### Selbsttest
 
@@ -276,8 +284,10 @@ anordnen und warum ein Objekt mit $k$ Indizes daraus entsteht, ist das Thema von
 Für jede multilineare Abbildung $f$ gilt
 $f(\bv_1, \dots, \bv_n) = \bnull$, sobald $\bv_i = \bnull$ für ein $i$ ist.
 
-Wir wenden Definition 9.1.1 im $i$-ten Argument mit dem Skalar $c = 0$ an. Wegen
-$\bnull = 0 \cdot \bv_i$ ist
+Setzen wir in Definition 9.1.1 den zweiten Skalar auf $c' = 0$, so bleibt im
+$i$-ten Argument die reine Homogenität
+$f(\bv_1, \dots, c\bv_i, \dots, \bv_n) = c\,f(\bv_1, \dots, \bv_i, \dots, \bv_n)$
+übrig. Darin wählen wir $c = 0$ und nutzen $\bnull = 0 \cdot \bv_i$:
 
 $$
 f(\bv_1, \dots, \bnull, \dots, \bv_n)
@@ -293,8 +303,12 @@ Nullargument genügt.
 Jede bilineare Abbildung ist insbesondere linear.
 
 Bemerkung 9.1.2 sagt das Gegenteil. Skalieren wir bei $n = 2$ beide Argumente
-mit $c$, so wird der Wert mit $c^2$ multipliziert und nicht mit $c$.
-Beispiel 9.1.3 führt es vor: $f(2x, 2y) = 4f(x, y)$.
+mit $c$, so wird der Wert mit $c^2$ multipliziert und nicht mit $c$. Ein
+konkreter Fall aus Beispiel 9.1.3: Für $x = y = 1$ ist $f(2, 2) = 4$, während
+eine lineare Abbildung $2\,f(1, 1) = 2$ liefern müsste. Beides zugleich, bilinear
+und linear, ist einzig die Nullabbildung: Aus
+$c^2 f(\bv, \bw) = c\,f(\bv, \bw)$ für alle $c$ folgt $f(\bv, \bw) = \bnull$ für
+jedes Paar.
 :::
 
 :::frage{wahr}

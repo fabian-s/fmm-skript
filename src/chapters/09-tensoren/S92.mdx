@@ -2,8 +2,8 @@ import { TensorScheibenViewer } from "./widgets/S92Scheiben";
 
 ::quelle[Folien 09-tensoren, Abschnitt „Tensoren".]
 
-Der Darstellungssatz aus [Abschnitt 9.1](#sec-9.1) hat multilineare Abbildungen
-vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist mehr als
+Der Darstellungssatz aus [Abschnitt 9.1](#sec-9.1) (Satz 9.1.8) hat multilineare
+Abbildungen vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist mehr als
 ein Nebenprodukt der Rechnung. Sie ist das Objekt, um das sich der Rest des
 Kapitels dreht, und sie hat einen Namen. Bevor wir ihn vergeben, sehen wir nach,
 was aus der Liste im einfachsten Fall wird.
@@ -41,8 +41,8 @@ T(\cblue{\bx}) = \corange{\bA}\,\cblue{\bx} .
 $$
 
 Der Darstellungssatz reproduziert für $k = 1$ also die vertraute Tatsache, dass
-jede lineare Abbildung eine :k[Matrix]{#matrix} ist. Eine Kleinigkeit lohnt dabei
-einen zweiten Blick.
+sich jede lineare Abbildung $\R^n \to \R^m$ als :k[Matrix]{#matrix} schreiben
+lässt. Eine Kleinigkeit lohnt dabei einen zweiten Blick.
 
 :::bemerkung[9.2.1 (Von der Koeffizientenfamilie zur Matrix)]
 Der Darstellungssatz nummeriert die Koeffizienten mit dem Eingangsindex vorn und
@@ -63,12 +63,12 @@ Bedeutung nicht.
 :::
 
 Die Ansammlung der $nm$ Koeffizienten nennen wir eine Matrix. Sie hat zwei
-Indexpositionen, und deshalb sprechen wir bei ihr von zwei „Dimensionen" (die
-Anführungszeichen holen wir in Bemerkung 9.2.6 wieder ein). Der Darstellungssatz
-sagt aber mehr: Zu jedem $k$ gehört eine Ansammlung von Koeffizienten mit $k$
-Indizes, und jede solche Ansammlung beschreibt umgekehrt eine multilineare
-Abbildung. Sehen wir uns den Fall $k = 2$ an, bevor wir dem Objekt einen Namen
-geben.
+Indexpositionen, und deshalb sprechen wir bei ihr von zwei „Dimensionen"; warum
+die Anführungszeichen nötig sind, klärt Bemerkung 9.2.6. Der Darstellungssatz
+sagt aber mehr: Zu jedem $k$ gehört eine Ansammlung von Koeffizienten mit
+$k + 1$ Indizes, bei $m = 1$ also mit $k$, und jede solche Ansammlung beschreibt
+umgekehrt eine multilineare Abbildung. Sehen wir uns den Fall $k = 2$ an, bevor
+wir dem Objekt einen Namen geben.
 
 ### Ein bilineares Beispiel
 
@@ -120,10 +120,12 @@ T(\cblue{\bx}, \cgreen{\by})
 $$
 
 **In Matrixschreibweise.** Die Doppelsumme ist der Ausdruck
-$\cblue{\bx}^\top \corange{\bA}\, \cgreen{\by}$, ausgeschrieben. Für
-$\cblue{\bx} = \cgreen{\by}$ wäre das eine
-:k[quadratische Form]{#quadratic-form}; hier laufen zwei verschiedene Vektoren
-hinein, deshalb sprechen wir von einer Bilinearform.
+$\cblue{\bx}^\top \corange{\bA}\, \cgreen{\by}$, ausgeschrieben. Eine bilineare
+Abbildung mit Werten in $\R$ heißt eine *Bilinearform*, und genau das ist $T$.
+Setzen wir beide Argumente gleich, so entsteht daraus die
+:k[quadratische Form]{#quadratic-form}
+$\cblue{\bx} \mapsto \cblue{\bx}^\top \corange{\bA}\, \cblue{\bx}$, eine
+Abbildung mit nur noch einem Argument.
 
 $$
 T(\cblue{\bx}, \cgreen{\by})
@@ -260,7 +262,8 @@ gewählten Reihenfolge durch, so wird aus jedem Tensor ein Vektor mit
 $n_1 n_2 \cdots n_k$ Komponenten und aus jeder Rechnung im Tensorraum eine
 Rechnung im $\R^{n_1 n_2 \cdots n_k}$. Die Operation heißt dort *reshape* oder
 *flatten*; verloren geht dabei nur die Information, welcher Index welche
-Bedeutung hatte.
+Bedeutung hatte. Für Matrizen bekommt sie in [Abschnitt 9.5](#sec-9.5) als
+spaltenweise Vektorisierung einen Namen und eine Rechenregel.
 :::
 
 :::vertiefung[Ein Stufe-3-Tensor, Scheibe für Scheibe]
@@ -419,8 +422,8 @@ Indexpositionen; Bemerkung 9.2.6 hält die beiden Zahlen auseinander.
 Ein Tensor ist durch die Menge seiner Einträge festgelegt.
 
 Eine Menge kennt weder Reihenfolge noch Vielfachheit. Vertauschen wir zwei
-Einträge einer Matrix, so bleibt die Menge der vorkommenden Zahlen dieselbe, die
-Matrix ist aber eine andere. Festgelegt ist ein Tensor durch die Zuordnung von
+verschiedene Einträge einer Matrix, so bleibt die Menge der vorkommenden Zahlen
+dieselbe, die Matrix ist aber eine andere. Festgelegt ist ein Tensor durch die Zuordnung von
 Indextupeln zu Zahlen (Definition 9.2.3 und Bemerkung 9.2.4).
 :::
 
@@ -429,8 +432,9 @@ Ein Farbbild mit $224 \times 224$ Pixeln und drei Farbkanälen ist ein Tensor de
 Stufe $3$ mit $150\,528$ Einträgen.
 
 Es ist $224 \cdot 224 \cdot 3 = 150\,528$, also rund $150 \cdot 10^3$ Zahlen
-(Beispiel 9.2.7). Die drei Indexpositionen sind waagerechte Pixelposition,
-senkrechte Pixelposition und Farbkanal.
+(Beispiel 9.2.7). Die drei Indexpositionen sind die beiden Pixelrichtungen und
+der Farbkanal; in welcher Reihenfolge sie stehen, ist Verabredung und von
+Bibliothek zu Bibliothek verschieden.
 :::
 
 :::frage{falsch}

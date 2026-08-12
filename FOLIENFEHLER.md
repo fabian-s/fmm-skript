@@ -429,6 +429,12 @@ Lesson-Zeile ein.
   (x = 0 oder y = 0) sind beide Seiten null und damit gleich. *Skript
   Beispiel 9.1.3 nennt die Bedingung xy ≠ 0, das Widget zu §9.1 druckt den
   entarteten Fall als eigenen Zustand aus.*
+- **Z. 113/115 (Beispiel Skalarprodukt)**: Auf derselben Folie stehen v₁, v₂
+  erst für die beiden Argumente der Abbildung ((v₁, v₂) ↦ ⟨v₁, v₂⟩) und in der
+  Bilinearitätsrechnung darunter für zwei Vektoren, die BEIDE im ersten Argument
+  auftreten (⟨c v₁ + c' v₂, v₃⟩); die Argumentnummer kollidiert also mit dem
+  Vektornamen. *Skript Beispiel 9.1.6 rechnet ⟨c v + c' v', w⟩ und trennt damit
+  die erste (blau) von der zweiten (grün) Argumentposition.*
 - **Z. 126 (Übung)**: Der Wert einer multilinearen Abbildung liegt in W, die
   Folie schreibt aber den Skalar 0 statt des Nullvektors. *Skript-Selbsttest
   in §9.1 setzt durchgehend den Nullvektor.*
@@ -456,6 +462,136 @@ Lesson-Zeile ein.
   vertikal", beim Batch dagegen „2. Höhe, 3. Breite". *Skript Beispiel 9.2.7
   sagt, dass die Reihenfolge Verabredung ist und zwischen Bibliotheken
   differiert.*
+- **Z. 154 („Tensoren")**: „Allgemeiner beschreibt jede solche Ansammlung von
+  Koeffizienten mit k Indizes eine entsprechende multilineare Funktion" — nach
+  dem Theorem der Vorfolie (Z. 135) hat die Familie a_{i_1,…,i_k,j} aber
+  k + 1 Indizes; auf k Indizes schrumpft sie erst bei m = 1. Der Satz
+  darüber (k = 1) hat gerade zwei. *Skript §9.2 schreibt „k + 1 Indizes, bei
+  m = 1 also mit k" (so auch schon der Ausblick am Ende von §9.1).*
+- **Z. 205–206 („Tensoren: Anwendungen")**: „Rechnungen auf Tensoren können
+  durch spezielle Algorithmen besonders schnell durchgeführt werden (Google
+  TPUs, NVIDIA Tensor Cores, …)" — TPUs und Tensor Cores sind keine
+  Algorithmen, sondern Rechenwerke in Hardware. *Skript Bemerkung 9.2.11
+  spricht von spezialisierten Rechenwerken für Blockoperationen.*
+- **Z. 249 (Feature Maps)**: Die Faltungsschicht steht als
+  `c: \R^{32×224×224×3} \mapsto \R^{32×56×56×64}`; `\mapsto` verbindet
+  Elemente, zwischen den Räumen gehört `\to`. *Skript Beispiel 9.2.9 setzt
+  `c \colon \R^{…} \to \R^{…}`.*
+- **Z. 283/284/334 (dieselbe `\mapsto`-Verwechslung wie Z. 249)**: Äußeres
+  Produkt, Skalarprodukt und Tensorprodukt werden als
+  `\otimes: \R^m \times \R^n \mapsto \R^{m×n}` usw. eingeführt; `\mapsto`
+  verbindet Elemente, zwischen den Räumen gehört `\to`. *Skript
+  Bemerkung 9.3.2 und Definition 9.3.8 setzen `\colon … \to …`.*
+- **Z. 305 („Bsp: Äußeres Produkt")**: Im Zeilenvektor steht
+  wᵀ = (−2 3 −1), gemeint ist w = (−2, 3, −11)ᵀ von Z. 297; die
+  Ergebnismatrix (−2 3 −11; −4 6 −22) gehört zur korrekten Fassung.
+  *Skript Beispiel 9.3.3 setzt durchgehend −11, Zahlen per node bestätigt.*
+- **Z. 328 („Anwendungsbeispiele", KI)**: Die Attention-Formel schreibt
+  softmax(QK/√d_k)V mit dem Kronecker-/Tensorzeichen zwischen Q und K.
+  Mit der folieneigenen ⊗-Definition wäre Q ⊗ K ein ganz anderes Objekt
+  (Stufe-4-Tensor bzw. n_q·n_k × d_k² -Matrix); die Standardform ist
+  softmax(QKᵀ/√d_k)V mit den Skalarprodukten ⟨q_i, k_j⟩ als Einträgen.
+  *Skript Bemerkung 9.3.7 setzt die Standardform und erklärt den Bezug zum
+  äußeren Produkt (QKᵀ = Σ_l q^(l) ⊗ k^(l), Rang ≤ d_k).*
+- **Z. 336 (Def. Tensorprodukt)**: Die Indexschreibweise
+  c_{i_1,…,i_{m_p}, j_1,…,j_{n_q}} verwechselt Indexanzahl und
+  Dimensionsgröße; gemeint sind p bzw. q Indizes, also
+  c_{i_1,…,i_p, j_1,…,j_q} = a_{i_1,…,i_p} b_{j_1,…,j_q}. *Skript
+  Definition 9.3.8 indiziert sauber und nennt die Stufe p + q.*
+- **Z. 371 („Bsp: Tensorprodukt")**: „Tensor der Form u ⊗ v ⊗ w hat Rang 1"
+  lässt die Bedingung u, v, w ≠ 0 weg, die dieselben Folien für das äußere
+  Produkt noch ausdrücklich verlangen (Z. 315); für u = 0 ist das Produkt der
+  Nulltensor und hat Rang 0. *Skript Beispiel 9.3.11 argumentiert über
+  Satz 9.3.4, der die Voraussetzung führt, und §9.5 behandelt den entarteten
+  Fall eigens.*
+- **Z. 443 („Bsp: Kroneckerprodukt")**: Die Warnung
+  „A ⊗ B ≠ (Bᵀ ⊗ Aᵀ)ᵀ" ist redundant und irreführend: Wegen
+  (X ⊗ Y)ᵀ = Xᵀ ⊗ Yᵀ ist (Bᵀ ⊗ Aᵀ)ᵀ = B ⊗ A, die Aussage wiederholt also
+  nur die Nicht-Kommutativität und legt zugleich nahe, das Transponieren
+  drehe wie beim Matrixprodukt die Reihenfolge um. *Skript
+  Bemerkung 9.3.15 bringt stattdessen die Identität (A ⊗ B)ᵀ = Aᵀ ⊗ Bᵀ
+  (am Beispiel per node verifiziert) und die Nicht-Kommutativität mit
+  Gegenbeispiel (Eintrag (2,1): 0 gegen 6).*
+- **Z. 527 (drei Faktoren)**: In der Kette
+  (ℝᵐ ⊗ ℝⁿ) ⊗ ℝᵠ = ℝ^{m×n} × ℝᵠ = ℝ^{m×n×q} steht im mittleren Ausdruck das
+  KARTESISCHE Produkt × statt ⊗. Das ist ein anderer Raum: dim(ℝ^{m×n} × ℝᵠ)
+  = mn + q, während dim(ℝ^{m×n×q}) = mnq ist (m=2, n=3, q=4: 10 gegen 24).
+  *Skript Beispiel 9.4.5 schreibt durchgehend ⊗ und nennt die Dimension mnq.*
+- **Z. 574 (Tensorproduktbasis bivariater Polynome)**: Die Basis wird als
+  B ⊗ B = {1⊗1, 1⊗x, y⊗1, x⊗y} angegeben, obwohl B = {1, x} ist: y kommt in
+  der univariaten Basis gar nicht vor, also ist y⊗1 kein Element von B ⊗ B,
+  und die Menge mischt zwei Benennungskonventionen für dieselbe Funktion.
+  *Skript Beispiel 9.4.11 legt (f ⊗ g)(x,y) := f(x)g(y) fest, benennt die
+  Variable des ersten Faktors x und die des zweiten y und erhält
+  {1⊗1, x⊗1, 1⊗y, x⊗y}.*
+- **Z. 576–577 (dieselbe Folie)**: Die Auswertungen widersprechen der
+  Konvention (f ⊗ g)(x,y) = f(x)g(y): φ₂ = (1⊗x)(x,y) wird als 1·x = x
+  gelesen (der zweite Faktor wird also an x statt an y ausgewertet; korrekt
+  wäre y), und φ₄ steht als (y⊗x)(x,y), während die Menge darüber x⊗y nennt.
+  *Skript Beispiel 9.4.11 wertet alle vier Basisfunktionen konsistent aus
+  (1, x, y, xy) und rechnet in Beispiel 9.4.12 die Zerlegung
+  f = 2 + 3x − y + 5xy nach, samt Rückrechnung der Koeffizienten aus den vier
+  Eckwerten f(0,0)=2, f(1,0)=5, f(0,1)=1, f(1,1)=9 (per node verifiziert).*
+- **Z. 583 (Dimension)**: `\dim(P_1 \otimes \P_1)` benutzt das Kursmakro \P,
+  das als ℙ (Wahrscheinlichkeitsmaß) gesetzt ist; gedruckt steht also
+  dim(P₁ ⊗ ℙ₁). Zudem heißt der Raum auf derselben Folie P_1 (Z. 570/583),
+  drei Zeilen weiter aber 𝒫_d (Z. 586). *Skript §9.4 schreibt durchgehend
+  𝒫_1 bzw. 𝒫_d.*
+- **Z. 502–509 (Def. Tensorprodukt von Vektorräumen)**: Die Definition
+  erklärt V ⊗ W als span{v ⊗ w} und setzt die bilineare Abbildung ⊗ dabei
+  stillschweigend als gegeben voraus; ohne sie ist die Definition zirkulär,
+  festgelegt wird der Raum erst durch die universelle Eigenschaft (bis auf
+  Isomorphie). *Skript Definition 9.4.1 nennt ⊗ ausdrücklich als Gegebenes
+  und Bemerkung 9.4.3 sagt, was die universelle Eigenschaft leistet.*
+- **Z. 511 („Bilinearität bedeutet: …")**: Die Aufzählung nennt die
+  Homogenität in beiden Argumenten und die Additivität nur im ERSTEN; die
+  Additivität im zweiten Argument fehlt, obwohl „bedeutet" sie als
+  vollständige Charakterisierung ausgibt. Die drei genannten Regeln reichen
+  nicht: f(v, w) = ⟨v, g(w)⟩ mit einem homogenen, aber nicht additiven
+  g: ℝ² → ℝ², g(w) = (w₁³/(w₁²+w₂²), w₂), erfüllt alle drei und ist trotzdem
+  nicht bilinear (f(e₁,e₁) + f(e₁,e₂) = 1 gegen f(e₁, e₁+e₂) = 0,5; per node
+  über 2·10⁵ Ziehungen bestätigt). *Skript Bemerkung 9.4.2 schreibt alle vier
+  Regeln aus.*
+- **Z. 524 (Beispiel mit drei Faktoren)**: „Seien V₁ = ℝᵐ, V₂ = ℝⁿ, V₃ = ℝᵠ
+  und ⊗ das äußere Produkt" — das äußere Produkt ist auf denselben Folien
+  (Z. 283) für zwei VEKTOREN erklärt, im zweiten Schritt der Kette steht
+  aber das Produkt einer Matrix mit einem Vektor; gemeint ist das
+  Tensorprodukt von Tensoren (Z. 334). *Skript Beispiel 9.4.5 nennt das
+  Tensorprodukt aus §9.3 und rechnet die Einträge a_{ij} w_k aus.*
+- **Z. 532 („Wichtige Unterscheidung")**: „v ⊗ w: Ein einzelnes
+  Tensorprodukt (Rang-1-Matrix)" lässt wie schon Z. 371 die Bedingung
+  v, w ≠ 0 weg; für v = 0 ist das Produkt die Nullmatrix vom Rang 0.
+  *Skript §9.4 sagt „Matrizen vom Rang höchstens 1" und benennt den
+  entarteten Fall.*
+- **Z. 585–586 („Allgemein")**: „Für k-variate Polynome vom Grad ≤ d:
+  dim(𝒫_d^{⊗k}) = (d+1)^k" — die Formel gilt für den Grad ≤ d in JEDER
+  Variablen einzeln; beim Gesamtgrad ≤ d ist die Dimension C(d+k, k)
+  (d = 3, k = 10: 4¹⁰ = 1 048 576 gegen C(13,10) = 286, per node bestätigt).
+  Der Tensorproduktraum begrenzt gerade nicht den Gesamtgrad, wie schon die
+  Basisfunktion xy mit Gesamtgrad 2 auf derselben Folie zeigt. *Skript
+  Bemerkung 9.4.14 schreibt „Grad höchstens d in jeder Variablen" und stellt
+  beide Zahlen nebeneinander; Bemerkung 9.4.13 und der Selbsttest greifen den
+  Unterschied auf.*
+- **Z. 618 („Kernkonzepte & Anwendungen")**: Die Hervorhebung
+  `[*SVD*]{.marḱ}` trägt ein ḱ (U+1E31) statt eines k, die Klasse heißt also
+  nicht `.mark`; die Auszeichnung fällt beim Setzen still aus, während alle
+  übrigen Schlagworte derselben Folie hervorgehoben werden. *Rein
+  typografisch, ohne Folgen für das Skript.*
+- **Z. 621 („Kernkonzepte & Anwendungen")**: Die Identität
+  vec(AXB) = (Bᵀ ⊗ A) vec(X) ist die einzige Stelle im ganzen Foliensatz, an
+  der vec vorkommt — definiert wird der Operator nirgends. Die Formel gilt
+  aber nur für die SPALTENweise Vektorisierung; bei zeilenweiser Stapelung
+  lautet sie vec_r(AXB) = (A ⊗ Bᵀ) vec_r(X), die Folie wäre dann falsch (per
+  node an A = (1 2; 0 1), X = (1 0; 2 3), B = (1 1; 0 2) geprüft: spaltenweise
+  (5, 2, 17, 8)ᵀ, die vertauschte Fassung liefert (1, 17, 0, 6)ᵀ). *Skript
+  Definition 9.5.2 legt die spaltenweise Konvention fest, Satz 9.5.3 beweist
+  die Identität, Beispiel 9.5.4 rechnet beide Anordnungen gegeneinander.*
+- **Z. 618/621 (Formatprobe)**: Die Folie sagt nicht, dass die Reihenfolge im
+  Kroneckerprodukt nicht am Format zu erkennen ist — Bᵀ ⊗ A und A ⊗ Bᵀ haben
+  IMMER dieselbe Zeilen- und Spaltenzahl (nm × qp bzw. mn × pq), und beide
+  sind mit vec(X) ∈ ℝ^{pq} multiplizierbar (per node über alle Formate bis 6
+  bestätigt). *Skript Beispiel 9.5.4 und der Selbsttest in §9.5 sagen das
+  ausdrücklich.*
 
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
