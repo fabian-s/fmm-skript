@@ -88,6 +88,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./10-ableitungen-1"),
   },
   {
+    id: "11-ableitungen-2",
+    title: "Kap. 11 · Differentialrechnung II",
+    deck: "11-ableitungen-II",
+    load: () => import("./11-ableitungen-2"),
+  },
+  {
     id: "mdx-lab",
     title: "MDX-Syntaxlabor",
     deck: "02-algos",

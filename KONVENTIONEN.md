@@ -346,6 +346,73 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Matrix Cookbook (Petersen/Pedersen 2012) als externer Link wie auf Folie.
 - Kapitel 10.5 (Zusammenfassung) schlank.
 
+## KAPITEL 11 (Foliensatz 11-ableitungen-II) — Bauauftrag 2026-08-12
+
+- `src/chapters/11-ableitungen-2/`, S111–S115 als `.mdx`; Anker `#sec-11.1` …
+  `#sec-11.5`, Labels „11.k.n"; Regeln wie Kapitel 5/6/8/9/10 (sinngemäß).
+- Quelle: `/workspace/fmm-lmu/slides/11-ableitungen-II.Rmd` (Zeilenbereiche im
+  Workflow-Prompt; Lösungen und GANZE Anwendungsfolien in HTML-Kommentaren —
+  auskommentierte Blöcke zählen zum Material und werden ausformuliert).
+- Farbcode Kapitel 11 = Kapitel 10 (Schwesterkapitel): Funktion/Funktionswerte
+  blau (`\cblue`), Ableitungsterm/Linearisierung grün (`\cgreen`), Restterm
+  $o(\cdot)$ rot (`\cred`), Ableitungsobjekte (Gradienten, Hesse-Einträge,
+  Pfeile) orange (`\corange`) — in Text UND Widget-SVGs.
+- BILDER: Die drei Taylor-R-Plots (e^x, Ordnung 1–3) sind aus im Quelltext
+  sichtbarem ggplot-Code erzeugt — als eigenes Widget nachbauen; die
+  taylor2d_*-Grafiken NICHT übernehmen (eigenes 2D-Widget); der Link auf die
+  hauseigene Shiny-App https://fabian-s.shinyapps.io/taylor-approx/ bleibt
+  als externer Verweis erhalten.
+- Widget-Recycling aus `/workspace/interactive/interactive/mml-ch5-1/src/sections/`:
+  S51.tsx (TaylorOrderWidget → 11.4, ChainRuleWidget → 11.2), S53.tsx
+  (ChainRuleSpiralWidget → 11.2). Nur CODE 1:1; ALLE Texte deutsch NEU.
+  Hesse-Definitheits-Widget (11.3) und Newton-Stepper (11.4) als Eigenbau.
+- Folienfehler (im Skript korrigieren + in FOLIENFEHLER.md registrieren;
+  alle drei numerisch belegt 2026-08-12):
+  1. Z. 320 (Logistische Regression): Die Fallunterscheidung vertauscht die
+     Klassen — für $y=1$ ist $\ell = -\log P(Y{=}1\mid\bx)$, für $y=0$
+     $-\log P(Y{=}0\mid\bx)$; die Folie schreibt es genau andersherum.
+  2. Z. 334: „analog für $y=0$: $\nabla\ell(\bbeta) = -\hat y\,\bx^\top$" hat
+     das falsche Vorzeichen — richtig $+\hat y\,\bx^\top = (\hat y - 0)\bx^\top$
+     (numerischer Gradient bestätigt), erst damit stimmt die
+     $(\hat y - y)$-Interpretation von Z. 333.
+  3. Z. 589–597 (Taylor-Beweisskizze): Die Hilfsfunktion muss
+     $F(t) = \sum_j f^{(j)}(\cred{t})/j!\,(x-t)^j$ lauten — die Folie schreibt
+     durchgehend $f^{(j)}(x)$; damit bricht das Teleskopieren (numerisch:
+     $F'_{\text{Folie}}(0{,}7) = -0{,}288 \neq -0{,}034 = f'''(t)/2\,(x-t)^2$).
+     Nach dem Cauchy-Mittelwertsatz steht $f^{(k+1)}(\xi)$, nicht
+     $f^{(k+1)}(x)$. Im Skript den Beweis korrekt führen.
+  4. Z. 155 (Produktregel): „bilineare Abbildung" ohne Beschränktheit — der
+     Beweis braucht $|\langle u,v\rangle| \le K\|u\|\|v\|$ für den
+     $O(\|h\|^2)$-Kreuzterm (der auskommentierte Block Z. 187 sagt es selbst);
+     in endlicher Dimension automatisch — als Voraussetzung ergänzen.
+  5. Präzisierungen (registrieren als Ungenauigkeit): Konvexitätskriterium
+     Z. 421 braucht konvexes, offenes $S$; Cramér-Rao Z. 461 sauber asymptotisch
+     ($\sqrt n(\wh\btheta - \btheta) \to N(\bnull, \bI_1(\btheta)^{-1})$ bzw.
+     $\var(\wh\btheta) \approx \bI_n(\btheta)^{-1}$); $\nabla\|\bx\|_2$ nur für
+     $\bx \neq \bnull$.
+- Verifizierte Zahlen (node, 2026-08-12): Linearitäts-Beispiel
+  $\nabla h(1,-1) = (4, -10)$ ✓; Logistik-Gradienten beide Fälle
+  $(\hat y - y)\bx^\top$ ✓; $\nabla\|\bx\| = \bx^\top/\|\bx\|$ ✓; Taylor
+  $e^{0{,}5}$: Fehler $0{,}1487 / 0{,}0237 / 0{,}0029$ für $T_1/T_2/T_3$ ✓
+  (auskommentiertes Beispiel Z. 564–585 korrekt — ausformulieren); Newton
+  löst Quadrik in 1 Schritt exakt ✓; $D^2$-Formel Z. 483 numerisch ✓.
+- Auskommentierte Blöcke ausformulieren: Linearitäts-Beweis (Z. 104–111),
+  Produktregel-Details ($O(\|h\|^2)+o(\|h\|) = o(\|h\|)$, Kreuzterm; Z. 169–195)
+  als ::why-Schritte, Ridge-Regression (Z. 231–251, Anwendung in 11.2 mit
+  Querbezug `?k=07-kq`; $\lambda$-Term-Gradient $2\lambda\bbeta^\top$ ergänzen),
+  $\var(\ba^\top\bX) = \ba^\top\bSigma\ba$-Anwendung (Z. 272), Taylor-
+  Zahlenbeispiel (Z. 564–585), Hesse-Intuition $x_1^2+4x_2^2$ (Z. 436–442,
+  als Widget-Grundlage).
+- Querbezüge: Vorkenntnisse → `?k=10-ableitungen-1` (Gradient #sec-10.2,
+  Jacobi #sec-10.3, Matrix-Ableitungen #sec-10.4); $|x|$-Knick →
+  `?k=10-ableitungen-1#sec-10.1` (dort schon als Widget, nicht doppeln);
+  $D^3$-Tensoren → `?k=09-tensoren#sec-9.2`; Sattelpunkte → das
+  Gradientenfeld-Widget in `?k=10-ableitungen-1#sec-10.2` (dieselbe indefinite
+  Beispielfunktion!); Spur-Produktregel → `?k=03-matrix-spur-norm`;
+  Fisher-Information → Tooltip likelihood; Konvexität → Ausblick OHNE Link
+  (Kapitel 12 existiert noch nicht).
+- Kapitel 11.5 (Zusammenfassung) schlank.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
