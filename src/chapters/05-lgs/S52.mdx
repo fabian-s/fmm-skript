@@ -23,11 +23,10 @@ quadratisch und :k[invertierbar]{#matrix-inverse} ist. Auf dem Papier ist
 damit alles erledigt: Die Lösung lässt sich als $\bx = \bA^{-1}\bb$
 schreiben. Vorsicht: Diese Formel ist eine Schreibweise, kein Rechenweg.
 
-:::bemerkung[5.2.1 (Invertiere niemals eine Matrix)]
-Das numerische Invertieren einer Matrix ist relativ instabil und oft
-langsamer als das direkte Lösen des LGS. Deshalb gilt:
+:::bemerkung[5.2.1 (Für ein LGS keine explizite Inverse bilden)]
+Wer nur $\bA\bx=\bb$ lösen will, sollte die Inverse nicht explizit bilden:
 
-**Invertiere niemals eine Matrix!**
+**Löse das System direkt.**
 
 Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
 
@@ -39,14 +38,18 @@ Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
   einzigen Elimination, weil sich deren teure Vorarbeit für alle $n$ rechten
   Seiten wiederverwenden lässt; in der versteckten Konstanten kostet der
   Umweg aber ein Mehrfaches.
-- *Stabilität:* Jeder Eintrag von $\bA^{-1}$ entsteht aus einer eigenen
-  Rechnung mit eigenen Rundungsfehlern, und das Produkt $\bA^{-1}\bb$
-  verstärkt diese Fehler noch, umso mehr, je größer die
-  Konditionszahl $\corange{\kappa(\bA)}$ ist
+- *Genauigkeit:* Die explizite Inverse ist nicht grundsätzlich „instabil".
+  Ein anschließendes Matrix-Vektor-Produkt bringt aber zusätzliche Rundungen mit
+  sich und bietet für eine einzelne rechte Seite keinen Genauigkeitsvorteil.
+  Gauß-Elimination *mit partieller Pivotierung* ist in der Praxis meist
+  rückwärtsstabil und vermeidet diesen Umweg. Wie genau die Lösung sein kann,
+  begrenzt in beiden Fällen die Konditionszahl $\corange{\kappa(\bA)}$
   ([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) und
-  [Abschnitt 4.2](?k=04-fehler#sec-4.2)). Direkte Löser wie die
-  Gauß-Elimination sind [stabiler](?k=04-fehler#sec-4.3) und kommen ohne
-  den Umweg aus.
+  [Abschnitt 4.2](?k=04-fehler#sec-4.2)).
+
+Explizite Inversen haben legitime Anwendungen, wenn die Inverse selbst das gesuchte
+Objekt ist. Die Warnung bezieht sich auf das unnötige Bilden von $\bA^{-1}$ zum Lösen
+eines Systems.
 
 Wo immer in einer Formel $\bA^{-1}\bb$ steht, lösen wir in der
 Implementierung stattdessen das LGS $\bA\bx = \bb$.
@@ -58,9 +61,12 @@ Wie lösen wir stattdessen? Wir erinnern uns an das
 :k[Gauß'sche Eliminationsverfahren]{#gaussian-elimination} aus der linearen
 Algebra. Es besteht aus zwei Phasen:
 
-:::algorithmus[5.2.2 (Gauß-Elimination mit Rückwärtssubstitution)]
-1. Bringe $(\bA \mid \bb)$ in Zeilenstufenform $(\bU \mid \bc)$ mit
-   oberer :k[Dreiecksmatrix]{#triangular-matrix} $\bU$.
+:::algorithmus[5.2.2 (Gauß-Elimination mit partieller Pivotierung)]
+1. Wähle in Eliminationsschritt $k$ unter den Zeilen $k,\ldots,n$ einen
+   Eintrag mit maximalem Betrag in Spalte $k$ und tausche seine Zeile nach oben.
+   Eliminiere anschließend die Einträge darunter. So entsteht aus
+   $(\bA \mid \bb)$ eine Zeilenstufenform $(\bU \mid \bc)$ mit oberer
+   :k[Dreiecksmatrix]{#triangular-matrix} $\bU$.
 2. Löse das gestaffelte System
 
    $$
@@ -90,11 +96,13 @@ $$
 \cblue{x_i} = \Bigl(c_i - \sum_{j = i + 1}^n u_{ij} \, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}} .
 $$
 
-Weil $\bA$ invertierbar ist, sind alle Pivots $\cred{u_{ii}}$ von null
-verschieden: Die Zeilenoperationen der Elimination ändern die Determinante
-höchstens im Vorzeichen, und eine Dreiecksmatrix mit einer Null auf der
-Diagonalen wäre singulär. Die Divisionen in Formel ($5.2.1$) gehen also
-immer gut.
+Mit partieller Pivotierung garantiert die Invertierbarkeit, dass sich in jedem
+Schritt ein von null verschiedenes Pivot finden lässt. *Ohne* Zeilentausch reicht
+Invertierbarkeit nicht: Die Matrix
+$\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$ ist invertierbar,
+beginnt aber mit einem Nullpivot. Auch ein von null verschiedenes, jedoch sehr kleines
+Pivot kann in Gleitkommaarithmetik problematisch sein; genau deshalb wählen wir den
+größten verfügbaren Betrag.
 
 :::vertiefung[Rückwärtssubstitution Schritt für Schritt]
 Probieren wir Formel ($5.2.1$) an einem kleinen System aus. Das
@@ -170,8 +178,8 @@ sich als „einfach" bewährt:
 - :k[Dreiecksmatrizen]{#triangular-matrix}: Ein Dreieckssystem lösen wir
   per Vorwärts- bzw. Rückwärtssubstitution in $O(n^2)$ statt $O(n^3)$,
   wie eben gesehen.
-- :k[Orthogonale Matrizen]{#orthogonal-matrix}: numerisch stabil, denn sie
-  verstärken keine Fehler, und trivial zu invertieren wegen
+- :k[Orthogonale Matrizen]{#orthogonal-matrix}: Sie verstärken Störungen in der
+  $2$-Norm nicht und sind trivial zu invertieren wegen
   $\bQ^{-1} = \bQ^\top$.
 - :k[Diagonalmatrizen]{#diagonal-matrix}: Invertieren, Multiplizieren und
   Potenzieren laufen elementweise auf der Diagonalen, alle Operationen

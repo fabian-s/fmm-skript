@@ -84,7 +84,7 @@ die Lösung aufklappen:
 Halten wir die Beobachtungen fest: Computer können nur endlich viele Zahlen
 darstellen. Das führt zu *Rundungsfehlern*
 (:k[Rundungsfehler]{#rounding-error}; ausführlich in
-Kapitel 3), und diese Fehler können sich *akkumulieren*. Der Fehler einer
+Kapitel 4, nach den Normen aus Kapitel 3), und diese Fehler können sich *akkumulieren*. Der Fehler einer
 einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
 vieler kleiner Fehler. Und weil jede Operation frisch rundet, spielt sogar die
 *Reihenfolge* unserer Rechenschritte eine Rolle. Eine erste praktische
@@ -214,31 +214,28 @@ dessen Ergebnis, und so weiter. Die Tilde ist Programm: $\wt{f}$ ist
 nicht dasselbe wie $f$, sondern nur ein Versuch, $f$
 nachzubauen; die Definition verspricht vorsichtig nur eine „mögliche Lösung".
 Wie gut $\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, ist
-genau die Frage, die uns in Kapitel 3 beschäftigen wird. Zu einem Problem
+genau die Frage, die uns in Kapitel 4 beschäftigen wird. Zu einem Problem
 $f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
 unterscheiden sich in Genauigkeit *und* Rechenaufwand.
 
 :::bemerkung[2.1.6 (Arten von Algorithmen)]
-- *exakt/direkt*: Es gilt $f(\bx) = \wt{f}(\bx)$ (bis auf
-  Rundungsfehler). Beispiel: das
-  :k[Gauß-Verfahren]{#gaussian-elimination} für
-  lineare Gleichungssysteme: nach endlich vielen Schritten steht die exakte
-  Lösung da, wäre da nicht die Gleitkommarundung.
-- *approximativ*: Es gilt lediglich
-  $f(\bx) \approx \wt{f}(\bx)$, und zwar schon in exakter Arithmetik.
-  Beispiel: die nach endlich vielen Summanden abgebrochene Reihe für
-  $e^x$.
-- *iterativ*: Dieselbe Vorschrift wird mehrfach ausgeführt, und jede
-  Wiederholung verbessert die aktuelle Näherung. Beispiel: das
-  :k[Newton-Verfahren]{#newtons-method} oder das
-  :k[Gradientenverfahren]{#gradient-descent}.
-- *probabilistisch*: Das Verfahren beruht auf Zufall, es würfelt.
-  Beispiel: Monte-Carlo-Integration, die ein Integral durch den Mittelwert
-  zufällig gezogener Funktionswerte schätzt.
+Die gebräuchlichen Bezeichnungen beschreiben drei *unabhängige Achsen*:
 
-Die Kategorien schließen sich nicht aus: Das stochastische Gradientenverfahren
-etwa, das Arbeitspferd des maschinellen Lernens, ist iterativ, approximativ und
-probabilistisch zugleich.
+- *exakt oder approximativ*: Trifft das Verfahren die mathematische Lösung in
+  exakter Arithmetik, oder entsteht bereits durch das Verfahren ein
+  Approximationsfehler? Eine abgebrochene Reihe für $e^x$ ist approximativ.
+- *direkt oder numerisch iterativ*: Liefert eine vorab endliche Folge von
+  Rechenschritten die Lösung, oder erzeugt das Verfahren eine Folge von
+  Näherungen mit Abbruchkriterium? Das Gauß-Verfahren ist direkt; Newton- und
+  Gradientenverfahren sind iterativ.
+- *deterministisch oder randomisiert*: Ist das Ergebnis bei gleichem Input
+  vollständig festgelegt, oder verwendet das Verfahren Zufall? Die
+  Monte-Carlo-Integration ist randomisiert.
+
+Eine Programmschleife allein macht ein Verfahren noch nicht *numerisch
+iterativ*: Auch ein direkter Algorithmus kann Schleifen enthalten. Umgekehrt
+können sich die Achsen beliebig kombinieren. Das stochastische
+Gradientenverfahren etwa ist numerisch iterativ, approximativ und randomisiert.
 :::
 
 Im nächsten Abschnitt sehen wir an einem klassischen Beispiel (den
@@ -248,4 +245,4 @@ unbrauchbar ist.
 
 *Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
 Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt
-Heath §1.3 sowie unser Kapitel 3.*
+Heath §1.3 sowie unser Kapitel 4, mit Normen aus Kapitel 3.*

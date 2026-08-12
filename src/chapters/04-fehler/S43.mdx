@@ -32,28 +32,47 @@ abgebrochene Reihen, durch geschätzte Zwischengrößen. Dieser Anteil hängt ni
 Inputfehler ab; er entsteht, selbst wenn der Input exakt ist. Ganz analog zur
 Kondition geben wir ihm einen Namen:
 
-:::definition[4.3.1 (Stabilität)]
-Sei $f$ ein Problem und $\wt{f}$ ein Algorithmus dafür. Ist der
-*algorithmische Fehler* $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$
-„klein", nennen wir $\wt{f}$ *stabil* (stable), andernfalls
-*instabil*.
+:::definition[4.3.1 (Vorwärts- und Rückwärtsstabilität)]
+Sei $f$ ein Problem, $\wt f$ ein Gleitkomma-Algorithmus und
+$\wh{\by}=\wt f(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
+Für $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ heißen
+
+$$
+\eta_{vor}=\frac{\|\wh{\by}-f(\bx)\|}{\|f(\bx)\|}
+$$
+
+der *relative Vorwärtsfehler* und
+
+$$
+\eta_{rück}=\inf\left\{
+\frac{\|\bDelta\bx\|}{\|\bx\|}:\ \wh{\by}=f(\bx+\bDelta\bx)
+\right\}
+$$
+
+der *relative Rückwärtsfehler*. Der Algorithmus heißt *rückwärtsstabil*, wenn
+$\eta_{rück}=O(u)$ ist, wobei $u$ die Rundungseinheit bezeichnet. Er heißt
+*vorwärtsstabil*, wenn sein Vorwärtsfehler bis auf moderate Faktoren nicht größer
+ist als der durch Kondition und Rundung erwartbare Fehler,
+$\eta_{vor}=O(\kappa_{rel}(f,\bx)u)$.
 :::
 
-Die Definition ist bewusst informell: Was „klein" heißt, hängt vom Kontext ab. Ein
-brauchbarer Maßstab ist die Kondition des Problems selbst: Inputfehler und Kondition
-erzwingen ohnehin einen gewissen Fehler im Ergebnis, und ein stabiler Algorithmus
-soll nicht wesentlich *mehr* Fehler produzieren als diesen unvermeidbaren
-Anteil. Wichtig ist die Arbeitsteilung der beiden Begriffe: Die
+Die Konstanten in den $O$-Aussagen dürfen von Dimension und Algorithmus abhängen,
+sollen aber nicht durch eine vermeidbare numerische Katastrophe riesig werden.
+Rückwärtsstabilität bedeutet besonders anschaulich: Das berechnete Ergebnis ist die
+exakte Lösung eines nur geringfügig gestörten Problems. Zusammen mit der Kondition
+liefert das typischerweise eine Vorwärtsfehlerschranke. Wichtig ist die Arbeitsteilung:
+Die
 *Kondition* ist eine Eigenschaft des *Problems*, die wir nicht wählen
 können. Die *Stabilität* ist eine Eigenschaft des *Algorithmus*, und
 den wählen wir sehr wohl. Deshalb lohnt sich dieser Abschnitt: Für dasselbe
 Problem können zwei mathematisch äquivalente Rechenwege dramatisch unterschiedlich
 stabil sein.
 
-### Ein Beispiel aus dem maschinellen Lernen: SGD
+### Eine verwandte Idee aus dem maschinellen Lernen: SGD
 
-Bevor wir Stabilität quantitativ fassen, ein Beispiel, das zeigt, dass der Begriff
-weit über Rundungsfehler hinaus trägt.
+Das nächste Beispiel illustriert die *dynamische* Stabilität einer Iteration. Es ist
+eine nützliche Analogie, aber nicht dasselbe wie die eben definierte numerische
+Vorwärts- oder Rückwärtsstabilität.
 
 :::beispiel[4.3.2 (Stochastic Gradient Descent)]
 Beim Training von Machine-Learning-Modellen minimieren wir eine
@@ -71,27 +90,21 @@ wobei $\wh{\nabla} L(\theta_k)$ nur eine *Schätzung* des
 zufälligen Teil der Daten, in endlicher Gleitkomma-Genauigkeit) und
 $\alpha > 0$ die *Lernrate* (learning rate).
 
-- *Kleine Lernrate* (etwa $\alpha = 0{,}001$): Jeder Schritt ist
-  vorsichtig, die Schätz- und Rundungsfehler des Gradienten akkumulieren nur
-  langsam, und das Verfahren konvergiert zuverlässig gegen ein Optimum.
-- *Zu große Lernrate* (etwa $\alpha = 1$): Jeder Schritt
-  verstärkt die Fehler des geschätzten Gradienten: Die Iterierten oszillieren
-  um das Optimum oder divergieren ganz.
+- Eine relativ zur Krümmung von $L$ hinreichend kleine Lernrate kann Fehler in
+  bestimmten Richtungen dämpfen und unter geeigneten Annahmen Konvergenz ermöglichen.
+- Eine zu große Lernrate kann Iterierte oszillieren oder divergieren lassen.
+  Zahlenwerte wie $0{,}001$ oder $1$ sind ohne Skalierung und Krümmung des konkreten
+  Problems nicht allgemein als „klein" oder „groß" einzuordnen.
 
-In der Sprache dieses Kapitels: Das *Problem* $f$ ist „finde das
-Minimum von $L$", der *Algorithmus* $\wt{f}$ ist SGD
-mit endlicher Präzision, und der algorithmische Fehler ist das, was sich über
-die Iterationen $k$ an Rundungs- und Schätzfehlern ansammelt. Die
-Lernrate ist ein Stabilitätsregler: Sie steuert, ob diese Fehler pro Schritt
-gedämpft oder verstärkt werden.
+Die Lernrate beeinflusst also die Stabilität der Iterationsdynamik. Ob SGD
+konvergiert und wogegen, hängt zusätzlich von Annahmen an $L$, an die
+Gradientenschätzung und an den Lernratenplan ab.
 :::
 
-Die Praxis kennt dafür eigene Stabilisierungstechniken: *Gradient Clipping*
-(deckelt zu große Updates), *Batch Normalization* (kontrolliert die
-zufälligen Fehler der Gradientenschätzung) und *Mixed Precision Training*
-(kontrolliert die Rundungsfehler bei reduzierter Genauigkeit). Alle drei tun im
-Kern dasselbe: Sie verhindern, dass sich kleine Fehler von Schritt zu Schritt
-aufschaukeln.
+Praktische Techniken adressieren unterschiedliche Mechanismen: *Gradient Clipping*
+begrenzt große Updates, Lernratenpläne steuern die Iterationsdynamik, und Verfahren
+für *Mixed Precision Training* schützen besonders empfindliche Rechenschritte vor
+Rundungsproblemen. Diese Maßnahmen sind nicht untereinander austauschbar.
 
 :::vertiefung[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
 <SgdLernratenDemo />
@@ -107,82 +120,70 @@ Abschnitts. Wir betrachten dazu ein Problem, das als
 :k[Verkettung]{#function-composition} zweier Teilprobleme
 geschrieben ist.
 
-:::satz[4.3.3 (Stabilität zusammengesetzter Algorithmen)]
-Sei $f$ ein Problem mit Input $\bx$, wobei
-$f(\bx) = (h \circ g)(\bx)$ für zwei Teilprobleme $g$ und
-$h$. Dann gilt für einen Algorithmus
-$\wt{f} = \wt{h} \circ \wt{g}$:
+:::satz[4.3.3 (Fehlerfortpflanzung in einer Komposition)]
+Sei $f=h\circ g$, $\by=g(\bx)\ne\bnull$ und
+$\wt{\by}=\wt g(\bx)$. Wir setzen $h(\by)\ne\bnull$ voraus und definieren
 
 $$
-\frac{\|\wt{f}(\bx) - f(\bx)\|}{\|f(\bx)\|} \le \cred{\frac{\|\wt{h}(\wt{\by}) - h(\wt{\by})\|}{\|h(\by)\|}} + \corange{\kappa_{rel}(h, g(\bx))}\, \cblue{\frac{\|\wt{g}(\bx) - g(\bx)\|}{\|g(\bx)\|}},
+\eta_g=\frac{\|\wt{\by}-\by\|}{\|\by\|},\qquad
+\eta_h=\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\wt{\by})\|}.
 $$
 
-wobei $\by = g(\bx)$ und $\wt{\by} = \wt{g}(\bx)$.
+Ist $h$ in $\by$ stetig und $\wt{\by}\to\by$, dann gilt in erster Ordnung
+
+$$
+\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\le \bigl(1+o(1)\bigr)\eta_h
++\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)\eta_g.
+$$
 :::
 
-Lesen wir die Schranke Term für Term: Der
-$\cred{\text{erste Summand}}$ ist der algorithmische Fehler von
-$\wt{h}$ allein und misst, wie stabil der *zweite* Teilschritt
-für sich genommen ist. Der $\cblue{\text{blaue Faktor}}$ ist der relative
-Fehler, den der *erste* Teilschritt $\wt{g}$ produziert (der Input
-$\bx$ ist hier exakt, es handelt sich also um den algorithmischen Fehler
-von $\wt{g}$). Und dieser Fehler wird multipliziert mit
-$\corange{\kappa_{rel}(h, g(\bx))}$, der Kondition des zweiten
-Teilproblems an der Übergabestelle: Aus Sicht von $h$ ist das Ergebnis von
-$\wt{g}$ nichts anderes als ein fehlerbehafteter Input.
+Der erste Term ist der relative algorithmische Fehler des zweiten Schritts am
+tatsächlich übergebenen Input. Der zweite Term ist der Fehler des ersten Schritts,
+verstärkt durch die lokale Kondition des zweiten Problems. Die $o(1)$-Terme machen
+explizit, dass dies eine asymptotische Aussage für verschwindende Zwischenfehler ist,
+keine exakte Ungleichung für beliebig große Störungen.
 
 ::::beweis
 
 :::schritt
-$$
-\frac{\|\wt{f}(\bx) - f(\bx)\|}{\|f(\bx)\|} = \frac{\|\wt{h}(\wt{g}(\bx)) - h(g(\bx))\|}{\|h(g(\bx))\|}
-$$
+Durch Addieren und Subtrahieren von $h(\wt{\by})$ sowie die
+Dreiecksungleichung erhalten wir exakt
 
-::why[Einsetzen der Definitionen: $f = h \circ g$ und $\wt{f} = \wt{h} \circ \wt{g}$]
+$$
+\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\le
+\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\by)\|}
++\frac{\|h(\wt{\by})-h(\by)\|}{\|h(\by)\|}.
+$$
 :::
 
 :::schritt
-$$
-= \frac{\|\wt{h}(\wt{g}(\bx)) - h(\wt{g}(\bx)) + h(\wt{g}(\bx)) - h(g(\bx))\|}{\|h(g(\bx))\|}
-$$
-
-::why[Nulladdition: Wir ziehen $h(\wt{g}(\bx))$ ab und addieren es sofort wieder. Dieser Term vergleicht das *exakte* $h$ mit dem *berechneten* $\wt{h}$ am *selben* (gestörten) Input; genau dadurch trennt sich der Fehler von $\wt{h}$ vom Fehler aus $\wt{g}$]
+Stetigkeit und $h(\by)\ne\bnull$ liefern
+$\|h(\wt{\by})\|/\|h(\by)\|=1+o(1)$. Daher ist der erste Summand
+gleich $\bigl(1+o(1)\bigr)\eta_h$.
 :::
 
 :::schritt
-$$
-\le \cred{\frac{\|\wt{h}(\wt{g}(\bx)) - h(\wt{g}(\bx))\|}{\|h(g(\bx))\|}} + \frac{\|h(\wt{g}(\bx)) - h(g(\bx))\|}{\|h(g(\bx))\|}
-$$
+Nach Definition der relativen Konditionszahl ist der zweite Summand entlang
+$\wt{\by}\to\by$ höchstens
 
-::why[Dreiecksungleichung der :k[Norm]{#norm}: $\|\bu + \bv\| \le \|\bu\| + \|\bv\|$]
-:::
-
-:::schritt
 $$
-\le \cred{\frac{\|\wt{h}(\wt{\by}) - h(\wt{\by})\|}{\|h(\by)\|}} + \corange{\kappa_{rel}(h, g(\bx))}\, \cblue{\frac{\|\wt{g}(\bx) - g(\bx)\|}{\|g(\bx)\|}}
+\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)
+\frac{\|\wt{\by}-\by\|}{\|\by\|}
+=\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)\eta_g.
 $$
-
-::why[Erster Summand: nur Umbenennung $\wt{\by} = \wt{g}(\bx)$, $\by = g(\bx)$. Zweiter Summand: Definition der relativen Konditionszahl von $h$ an der Stelle $\by$, angewandt auf den gestörten Input $\wt{\by}$, dabei ist $\wt{\by} - \by = \wt{g}(\bx) - g(\bx)$]
 :::
 
 ::::
 
-Eine kleine Feinheit: Die Konditionszahl ist über den Grenzwert kleiner Störungen
-definiert ([Abschnitt 4.2](#sec-4.2)), die letzte Abschätzung gilt also in diesem
-Sinne, als Näherung erster Ordnung
-für kleine Fehler in $\wt{g}$. Für unsere Zwecke ist das genau die
-richtige Lesart: Wir wollen wissen, um welchen *Faktor* kleine Fehler
-verstärkt werden.
-
-:::bemerkung[4.3.4 (Merkregel)]
-Ein schlecht konditioniertes Teilproblem $h$ (an der Stelle
-$\by = g(\bx)$) verstärkt alle Fehler, die $\wt{g}$ vorher
-gemacht hat – ein *Indiz* für die Instabilität von $\wt{f}$.
-Deshalb: <span className="font-semibold">Schlecht konditionierte Schritte so früh wie möglich ausführen!</span>
-Ein früher schlecht konditionierter Schritt verstärkt nur den (ohnehin
-unvermeidbaren) Inputfehler. Derselbe Schritt am *Ende* des Algorithmus
-verstärkt zusätzlich alle Rundungsfehler, die sich bis dahin in den
-Zwischenschritten angesammelt haben.
+:::bemerkung[4.3.4 (Was folgt daraus – und was nicht?)]
+Ein schlecht konditionierter später Teilschritt kann Fehler aus früheren Schritten
+stark verstärken. Daraus folgt aber keine allgemeine Regel, schlecht konditionierte
+Operationen einfach „nach vorn" zu verschieben: Eine Umordnung verändert
+Zwischengrößen, Rundungsfehler und oft auch die relevanten Konditionen. Verlässlichere
+Strategien sind, das Teilproblem umzuformulieren, große beinahe gleiche
+Zwischengrößen zu vermeiden und eine rückwärtsstabile Implementierung zu verwenden.
 :::
 
 ### Anwendung: Stabilität der Varianzberechnung

@@ -16,7 +16,7 @@ ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also ei
 Notation, die genau das Wachstumsverhalten festhält und alles Unwesentliche wegwirft.
 Das leisten die *Landau-Symbole* (engl. *big-O notation*).
 
-### 2.4.1 Klein-o und Groß-O
+### 2.4.1 Klein-o, Groß-O und Theta
 
 Die Idee: Wir vergleichen den Aufwand $a_n$ mit einer möglichst einfachen
 Vergleichsfolge $b_n$ (etwa $n^2$ oder $2^n$), indem wir den
@@ -26,7 +26,8 @@ höchstens so schnell wie $b_n$; verschwindet er sogar, wächst $a_n$
 echt langsamer.
 
 :::definition[2.4.1 (Landau-Symbole)]
-Seien $a_n, b_n$ :k[Folgen]{#sequence}.
+Seien $a_n, b_n$ :k[Folgen]{#sequence}, wobei $b_n$ ab einem Index
+ungleich null ist.
 
 - $a_n = o(b_n)$ („$a_n$ *ist klein-o von* $b_n$"),
   wenn
@@ -41,6 +42,9 @@ Seien $a_n, b_n$ :k[Folgen]{#sequence}.
   $$
   \limsup_{n \to \infty} \left\vert \frac{a_n}{b_n} \right\vert < \infty.
   $$
+
+- $a_n=\Theta(b_n)$ („$a_n$ *ist Theta von* $b_n$"), wenn gleichzeitig
+  $a_n=O(b_n)$ und $b_n=O(a_n)$ gilt.
 :::
 
 Die Interpretation der beiden Symbole:
@@ -50,6 +54,8 @@ Die Interpretation der beiden Symbole:
 - $a_n = O(b_n)$: $a_n$ wächst *höchstens so schnell* wie
   $b_n$; die Vergleichsfolge $b_n$ ist gegenüber $a_n$ nicht
   vernachlässigbar.
+- $a_n=\Theta(b_n)$: Beide Folgen haben bis auf konstante Faktoren dieselbe
+  Wachstumsordnung. Das ist die passende Notation für eine scharfe Ordnung.
 
 :::bemerkung[2.4.2 (Zwei Feinheiten der Definition)]
 *Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
@@ -103,8 +109,8 @@ schneller als $\cblue{n}$.
 
 :::bemerkung[2.4.4 (Scharfe Schranken)]
 Meist suchen wir eine möglichst *einfache* Vergleichsfolge $b_n$,
-sodass $a_n = O(b_n)$, aber *nicht* $a_n = o(b_n)$ gilt:
-eine Schranke, die das Wachstum genau trifft. Für $3n^2 + 5n$ ist das
+sodass $a_n = \Theta(b_n)$ gilt: eine Schranke, die das Wachstum von oben
+und unten bis auf konstante Faktoren trifft. Für $3n^2 + 5n$ ist das
 $b_n = n^2$: Der Quotient konvergiert gegen $3 \neq 0$. Zwar wäre
 auch $3n^2 + 5n = O(n^3)$ formal korrekt, aber wertlos grob, so wie „die
 Fahrt dauert höchstens drei Wochen" für eine Zugfahrt nach Berlin.

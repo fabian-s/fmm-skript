@@ -93,29 +93,31 @@ $\left\| \cdot \right\|$ bezeichnet eine beliebige Vektor:k[norm]{#norm} bzw. di
 :k[Operatornorm]{#matrix-norm} für Matrizen ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
 
 :::definition[4.2.2 (Konditionszahl)]
-Sei $f$ ein Problem mit Input $\bx$.
+Sei $f$ ein Problem mit Input $\bx$. Für die relative Konditionszahl setzen
+wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
 
-- Die *absolute Konditionszahl*
-  $\kappa_{abs} = \kappa_{abs}(f, \bx)$ ist die kleinste Zahl mit
-
-  $$
-  \left\| f(\wt{\bx}) - f(\bx) \right\| \le \kappa_{abs} \left\| \wt{\bx} - \bx \right\|, \quad \text{für } \wt{\bx} \to \bx.
-  $$
-
-- Die *relative Konditionszahl*
-  $\kappa_{rel} = \kappa_{rel}(f, \bx)$ ist die kleinste Zahl mit
+- Die *absolute Konditionszahl* ist
 
   $$
-  \frac{\left\| f(\wt{\bx}) - f(\bx) \right\|}{\left\| f(\bx) \right\|} \le \kappa_{rel} \frac{\left\| \wt{\bx} - \bx \right\|}{\left\| \bx \right\|}, \quad \text{für } \wt{\bx} \to \bx.
+  \kappa_{abs}(f,\bx)
+  =\limsup_{\substack{\bh\to\bnull\\\bh\ne\bnull}}
+  \frac{\|f(\bx+\bh)-f(\bx)\|}{\|\bh\|}.
+  $$
+
+- Die *relative Konditionszahl* ist
+
+  $$
+  \kappa_{rel}(f,\bx)
+  =\limsup_{\substack{\bh\to\bnull\\\bh\ne\bnull}}
+  \frac{\|f(\bx+\bh)-f(\bx)\|/\|f(\bx)\|}{\|\bh\|/\|\bx\|}.
   $$
 :::
 
 :::bemerkung[4.2.3 (Wie lesen wir das?)]
 
-- Der Zusatz „für $\wt{\bx} \to \bx$" bedeutet: Die Ungleichung muss
-  nicht für alle $\wt{\bx}$ gelten, sondern nur für hinreichend kleine
-  Störungen. $\kappa$ ist also der schlimmste Verstärkungsfaktor
-  *im Grenzfall* verschwindender Störung. Konditionszahlen sind asymptotische
+- Der Limes superior betrachtet alle Richtungen, aus denen kleine Störungen gegen
+  null gehen. $\kappa$ ist also der größte asymptotische Verstärkungsfaktor
+  *im Grenzfall* verschwindender Störungen. Konditionszahlen sind lokale
   Größen, und sie hängen sowohl vom Problem $f$ als auch von der
   konkreten Stelle $\bx$ ab.
 
@@ -140,8 +142,8 @@ Extremfall:
 - *gut konditioniert* ($\kappa \lesssim 1$): Ein Inputfehler führt
   zu einem ähnlich großen oder kleineren Outputfehler.
 
-- *schlecht konditioniert* ($\kappa \gg 1$): Jeglicher Inputfehler
-  führt zu einem viel größeren Outputfehler. Als Faustregel bei
+- *schlecht konditioniert* ($\kappa \gg 1$): Ungünstig gerichtete kleine
+  Inputfehler können zu viel größeren Outputfehlern führen. Als Faustregel bei
   $\kappa_{rel} \approx 10^k$: Wir verlieren bis zu $k$
   signifikante Dezimalstellen gegenüber der Genauigkeit des Inputs.
 

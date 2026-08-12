@@ -326,8 +326,8 @@ den zwei wichtigsten Anwendungen aus.
 
 ### 3.5.4 Matrixnormen und Konditionierung
 
-Die :k[Konditionszahl]{#condition-number} kennen wir bereits
-als Maß dafür, wie stark ein Problem relative Eingabefehler verstärkt. Für das Lösen
+Die :k[Konditionszahl]{#condition-number} misst, wie stark ein Problem
+relative Eingabefehler verstärkt. Für das Lösen
 linearer :k[Gleichungssysteme]{#linear-system}
 $\bA\bx = \bb$ lässt sich dieser Verstärkungsfaktor direkt aus Matrixnormen
 gewinnen. Das rechnen wir im Kapitel über lineare Gleichungssysteme nach, halten die
@@ -350,6 +350,11 @@ $$
 $$
 :::
 
+Diese Definition ist für jede submultiplikative Matrixnorm algebraisch sinnvoll.
+Die geometrische Interpretation als Verhältnis von Streckungsfaktoren gilt jedoch
+für *induzierte Operatornormen*. Bei anderen Normen kann auch die Normierung anders
+aussehen: Beispielsweise ist $\kappa_F(\bI_n)=n$, nicht $1$.
+
 Die zweite Gleichheit sieht man so: Nach
 [Abschnitt 3.3](#sec-3.3) ist
 $\left\|\bA\right\|_2 = \lambda_{\max}(\bA^\top\bA)^{1/2}$, und die
@@ -357,7 +362,7 @@ Eigenwerte von $(\bA^{-1})^\top\bA^{-1} = (\bA\bA^\top)^{-1}$ sind die
 Kehrwerte der Eigenwerte von $\bA\bA^\top$, und
 $\bA\bA^\top$ hat dieselben Eigenwerte wie $\bA^\top\bA$. Der
 größte Eigenwert von $(\bA\bA^\top)^{-1}$ ist also
-$1/\lambda_{\min}(\bA^\top\bA)$. Die Konditionszahl misst damit das
+$1/\lambda_{\min}(\bA^\top\bA)$. In der Spektralnorm misst die Konditionszahl damit das
 *Verhältnis der extremen Streckungsfaktoren*: maximale Streckung durch
 $\bA$ geteilt durch minimale Streckung. Noch durchsichtiger wird das mit der
 :k[Singulärwertzerlegung]{#singular-value-decomposition}, die
@@ -368,6 +373,8 @@ $\kappa_2(\bA) = \max_i |\lambda_i| \,/\, \min_i |\lambda_i|$, das
 Verhältnis der betragsmäßig extremen Eigenwerte.
 
 :::bemerkung[3.5.11 (Interpretation der Konditionszahl)]
+Für eine induzierte Operatornorm gilt:
+
 - $\kappa(\bA) \approx 1$: gut konditioniert; $\bA$ streckt
   alle Richtungen ungefähr gleich stark.
 - $\kappa(\bA) \gg 1$: schlecht konditioniert; manche Richtungen werden

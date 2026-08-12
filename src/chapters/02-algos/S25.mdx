@@ -23,7 +23,7 @@ wie wir es beim :k[Matrix-Vektor-Produkt]{#matrix-vector-product} in
 
 :::satz[2.5.1 (Komplexität der iterativen Variante)]
 Der iterative Fibonacci-Algorithmus berechnet die ersten $n$ Fibonacci-Zahlen mit
-Zeitkomplexität $\cblue{O(n)}$ und Speicherkomplexität $O(n)$.
+Zeitkomplexität $\cblue{\Theta(n)}$ und Speicherkomplexität $\Theta(n)$.
 :::
 
 ::::beweis
@@ -267,7 +267,7 @@ $\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren $2^n$-Geraden.
 
 ### 2.5.3 Der Vergleich: Ordnung schlägt Konstante
 
-Was bedeuten $\cblue{O(n)}$ gegen $\cred{O(2^n)}$ in echten Zahlen? Setzen wir unsere
+Was bedeuten $\cblue{\Theta(n)}$ gegen $\cred{\Theta(\varphi^n)}$ in echten Zahlen? Setzen wir unsere
 gezählten Aufwände ein – iterativ $\cblue{4n - 6}$ Operationen (die additive Konstante $c$
 aus dem Beweis von Satz 2.5.1 lassen wir weg), naiv rekursiv
 $\cred{T(n) = 2F_{n+1} - 1}$ Aufrufe – und rechnen als grobes Modell mit $10^9$
@@ -349,11 +349,11 @@ Gute Algorithmen erkennen wir daran, dass sie mit wenig Laufzeit und Speicher au
 beides messen wir als Funktion der Problemgröße $n$ ([Abschnitt 2.3](#sec-2.3)) und
 beschreiben es nur noch durch seine Ordnung, mit Landau-Symbolen und ihren Rechenregeln
 ([Abschnitt 2.4](#sec-2.4)). Die Fibonacci-Fallstudie dieses Abschnitts hat gezeigt, wie
-viel diese komprimierte Sprache leistet: $\cblue{O(n)}$ gegen $\cred{O(2^n)}$ ist der
+viel diese komprimierte Sprache leistet: $\cblue{\Theta(n)}$ gegen
+$\cred{\Theta(\varphi^n)}$ ist der
 Unterschied zwischen „sofort fertig" und „Jahrtausende". Im nächsten Kapitel kommt die
-zweite Gütedimension hinzu: Was passiert mit schnellen Algorithmen, wenn jede einzelne
-Rechenoperation kleine :k[Rundungsfehler]{#rounding-error} macht? Das führt uns zu
-Kondition und Stabilität.
+Sprache für Fehlermaße hinzu: Normen. Kapitel 4 nutzt sie dann, um Rundungsfehler,
+Kondition und Stabilität präzise zu behandeln.
 
 *Vertiefung: Heath §1.1 (wissenschaftliches Rechnen: Probleme, Algorithmen und die Rolle
 des Aufwands).*

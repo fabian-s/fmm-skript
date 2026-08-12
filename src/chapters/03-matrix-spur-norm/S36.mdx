@@ -81,9 +81,10 @@ die uns später noch ausführlich beschäftigen wird.
 
 Für die Praxis ist entscheidend, wie teuer die einzelnen Normen sind. Spalten- und
 Zeilensummennorm sowie die Frobenius-Norm brauchen nur einen Durchlauf über alle
-Einträge. Spektral- und Nuklearnorm dagegen erfordern eine (partielle)
-Spektralzerlegung bzw. SVD; für sehr große Matrizen weichen wir deshalb auf
-approximative Verfahren aus.
+Einträge. Für die exakte Spektral- und Nuklearnorm verwenden dichte Standardverfahren
+dagegen eine entsprechende Spektralzerlegung bzw. SVD. Benötigen wir nur eine
+Approximation des größten Singulärwerts, können iterative oder randomisierte Verfahren
+deutlich billiger sein.
 
 <div className="max-w-prose overflow-x-auto">
 <table className="text-sm">
@@ -113,7 +114,7 @@ approximative Verfahren aus.
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">$\left\|\bA\right\|_2$</td>
 <td className="py-1 pr-6">$O\left(\min\left(m^2 n, m n^2\right)\right)$</td>
-<td className="py-1">partielle SVD</td>
+<td className="py-1">größten Singulärwert berechnen (dicht: SVD; approximativ: Iteration)</td>
 </tr>
 <tr>
 <td className="py-1 pr-6">$\left\|\bA\right\|_*$</td>
