@@ -12,22 +12,30 @@ import {
  * Einheitskreis → Ellipse: Wie lang ist das Bild eines Einheitsvektors, und
  * in welcher Richtung wird am stärksten gestreckt?
  *
- * Berechnungs-/Canvas-Code nach dem Muster der internen SVD-Widgets
- * (mml-ch4: SvdFigure48, SvdStages2x2) und des Operatornorm-Widgets aus
- * Kapitel 3; sämtliche Beschriftungen und Statustexte eigenständig
- * formuliert.
+ * Rechenkern (sigmaMin, maxStreckRichtung) 1:1 aus dem Operatornorm-Widget
+ * von Kapitel 3 (03-matrix-spur-norm/widgets/S33OperatornormWidget.tsx), der
+ * Rest aus den lib-Primitiven LabeledTransformCanvas + LabeledPlot. Aus den
+ * internen SVD-Widgets (mml-ch4) ist hier nichts übernommen: Sie zeigen
+ * statische 3D-Perspektivfiguren bzw. die schon fertige Zerlegung.
+ * Sämtliche Beschriftungen und Statustexte eigenständig formuliert.
  *
- * Die Folie zeigt eine Abbildung von R^3 nach R^2 (Einheitssphäre → Ellipse
- * in der Ebene). Hier steht das 2x2-Analogon: Einheitskreis in R^2 →
- * Ellipse in R^2. Die Aussage ist dieselbe, nur ohne Perspektivzeichnung.
+ * Die Folie zeigt eine Abbildung von R^3 nach R^2; deren Bild der
+ * Einheitssphäre ist die AUSGEFÜLLTE Ellipse (Folienfehler-Register).
+ * Hier steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei
+ * singulärem A zu einer Strecke entartet. Die Aussage über die Hauptachsen
+ * ist dieselbe, nur ohne Perspektivzeichnung.
  */
 
 type Mat2 = [[number, number], [number, number]];
 
+// FMM-Palette: Orange bleibt den Streckfaktoren vorbehalten (Kurve, Extrem-
+// marker), Blau den rechten und Grün den linken Singulärrichtungen; das
+// laufende Paar x / Ax ist grau bzw. violett.
 const GRAU = "#64748b";
 const ORANGE = "#E69F00";
 const BLAU = "#0072B2";
 const GRUEN = "#009E73";
+const VIOLETT = "#9E57D5";
 
 /** kleinste Streckung: kleinster Singulärwert einer 2x2-Matrix */
 function sigmaMin(m: Mat2): number {
@@ -105,7 +113,7 @@ export function EinheitskreisEllipse() {
 
   const pfeile = [
     { v: x, color: GRAU, label: "x" },
-    { v: Ax, color: ORANGE, label: "Ax" },
+    { v: Ax, color: VIOLETT, label: "Ax" },
   ];
   if (zeigeExtreme) {
     pfeile.push(
@@ -121,18 +129,20 @@ export function EinheitskreisEllipse() {
     { x: (thetaStern + 180) % 360, y: smax, color: ORANGE },
     { x: thetaSenk, y: smin, color: ORANGE, label: "min" },
     { x: (thetaSenk + 180) % 360, y: smin, color: ORANGE },
-    { x: theta, y: nAx, color: GRAU },
+    { x: theta, y: nAx, color: VIOLETT },
   ];
 
   return (
     <div className="text-sm">
       <p className="my-2">
         Links läuft der Einheitsvektor <M>{"\\bx"}</M> (grau) auf dem Einheitskreis, sein
-        Bild <M>{"\\bA\\bx"}</M> (orange) läuft dabei auf der Bildellipse. Rechts steht
+        Bild <M>{"\\bA\\bx"}</M> (violett) läuft dabei auf der Bildellipse. Rechts steht
         dieselbe Bewegung als Kurve: Wir tragen die Länge <M>{"\\left\\| \\bA\\bx \\right\\|"}</M>{" "}
-        über dem Winkel <M>{"\\theta"}</M> auf. Suchen wir zuerst von Hand das Maximum,
-        bevor wir uns die Extremrichtungen einblenden lassen. Diese zeigen dann die beiden
-        ausgezeichneten Urbildrichtungen in Blau und ihre Bilder in Grün.
+        über dem Winkel <M>{"\\theta"}</M> auf, der violette Punkt ist die aktuelle
+        Stellung. Suchen wir zuerst von Hand das Maximum, bevor wir uns die
+        Extremrichtungen einblenden lassen. Diese zeigen dann die beiden ausgezeichneten
+        Urbildrichtungen in Blau und ihre Bilder in Grün; orange bleibt den
+        Streckfaktoren vorbehalten.
       </p>
       <div className="my-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">

@@ -167,7 +167,7 @@ export function RangKExplorer() {
         <Tafel
           titel={
             <>
-              Residuum <M>{`\\bA - \\bA_{${k}}`}</M> (Mittelgrau = 0)
+              Differenz <M>{`\\bA - \\bA_{${k}}`}</M>, wobei 0 als Mittelgrau erscheint
             </>
           }
         >
@@ -207,17 +207,16 @@ export function RangKExplorer() {
             height={210}
             series={[
               { f: stetig(frobFehler), color: ROT },
-              { f: stetig(spektralFehler), color: ORANGE },
+              { f: stetig(spektralFehler), color: ROT, dash: [5, 4] },
             ]}
             markers={[
               { x: k, y: frobFehler[k], color: ROT },
-              { x: k, y: spektralFehler[k], color: ORANGE },
+              { x: k, y: spektralFehler[k], color: ROT },
             ]}
           />
           <span className="max-w-[330px] text-center text-xs" style={{ color: GRAU }}>
-            <span style={{ color: ROT }}>rot</span>:{" "}
-            <M>{"\\left\\| \\bA - \\bA_k \\right\\|_F"}</M>,{" "}
-            <span style={{ color: ORANGE }}>orange</span>:{" "}
+            Beide Fehlerkurven in <span style={{ color: ROT }}>Rot</span>: durchgezogen{" "}
+            <M>{"\\left\\| \\bA - \\bA_k \\right\\|_F"}</M>, gestrichelt{" "}
             <M>{"\\left\\| \\bA - \\bA_k \\right\\|_2 = \\sigma_{k+1}"}</M>. Sinnvoll sind nur
             ganzzahlige <M>{"k"}</M>; die Punkte sind der Übersicht halber verbunden.
           </span>
@@ -271,14 +270,24 @@ export function RangKExplorer() {
           Die dritte Tafel zeigt, wo die Rekonstruktion danebenliegt. Mittelgrau heißt: kein
           Unterschied; hell und dunkel markieren zu helle und zu dunkle Pixel. Bei{" "}
           <M>{"k = 1"}</M> zeichnen sich dort noch die Torbögen ab, hinter dem Knick bei{" "}
-          <M>{"k = 3"}</M> nur noch das Rauschen der Vorlage.
+          <M>{"k = 3"}</M> bleibt im Wesentlichen das Rauschen der Vorlage übrig.
         </p>
-        <p>
-          Wie viel ein weiterer Term überhaupt noch bringen kann, verrät der nächste graue
-          Balken: Er senkt den quadrierten Frobenius-Fehler um{" "}
-          <M>{`\\sigma_{${k + 1}}^2 = ${(spektralFehler[k] ** 2).toFixed(3).replace(".", ",")}`}</M>
-          .
-        </p>
+        {k < KMAX ? (
+          <p>
+            Wie viel ein weiterer Term überhaupt noch bringen kann, verrät der nächste graue
+            Balken: Er senkt den quadrierten Frobenius-Fehler um{" "}
+            <M>
+              {`\\sigma_{${k + 1}}^2 = ${(spektralFehler[k] ** 2).toFixed(3).replace(".", "{,}")}`}
+            </M>
+            .
+          </p>
+        ) : (
+          <p>
+            Alle {KMAX} gezeigten Balken sind aufgebraucht. Jeder weitere Term würde den
+            quadrierten Frobenius-Fehler noch um <M>{"\\sigma_{k+1}^2"}</M> senken; das sind
+            hier höchstens {fmt(spektralFehler[KMAX] ** 2)}.
+          </p>
+        )}
       </div>
     </div>
   );

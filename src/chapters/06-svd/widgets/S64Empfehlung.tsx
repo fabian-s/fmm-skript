@@ -7,10 +7,11 @@ import { energieAnteil, jacobiSVD, rankK, type Mat } from "./S64Numerik";
  * Folie, aufgefüllt nach wählbarer Regel, geglättet durch eine
  * Rang-k-Approximation, mit Vorhersagen für die fehlenden Einträge.
  *
- * Der Tabellen-/Heatmap-Renderer und der SVD-Kern sind aus der privaten
- * mml-ch4-App portiert (widgets/MovieRatings.tsx, widgets/S46Widgets.tsx,
- * widgets/svd.ts). Die Daten stammen von der Folie, Nutzer- und Filmnamen sind
- * frei erfunden, und alle Beschriftungen und Statustexte sind neu geschrieben.
+ * Der Tabellen-/Heatmap-Renderer (MovieHeat) und der SVD-Kern sind aus der
+ * privaten mml-ch4-App portiert (widgets/S46Widgets.tsx, widgets/svd.ts); aus
+ * widgets/MovieRatings.tsx ist nichts übernommen. Die Daten stammen von der
+ * Folie, Nutzer- und Filmnamen sind frei erfunden, und alle Beschriftungen und
+ * Statustexte sind neu geschrieben.
  */
 
 const ORANGE = "#E69F00";
@@ -37,6 +38,13 @@ const MODUS_NAME: Record<Modus, string> = {
   spalte: "Filmmittel (Spalten)",
   zeile: "Nutzermittel (Zeilen)",
   gesamt: "Gesamtmittel",
+};
+
+/** Dativ-Formulierung für den Fließtext („Aufgefüllt haben wir mit …") */
+const MODUS_SATZ: Record<Modus, string> = {
+  spalte: "dem Mittel der jeweiligen Filmspalte",
+  zeile: "dem Mittel der jeweiligen Nutzerzeile",
+  gesamt: "dem Gesamtmittel",
 };
 
 function fmt(v: number, stellen = 2): string {
@@ -284,8 +292,8 @@ export function EmpfehlungsExplorer() {
 
       <div className="mt-4 space-y-1 text-sm">
         <p>
-          Aufgefüllt haben wir mit dem {MODUS_NAME[modus].toLowerCase()}; das Gesamtmittel der
-          bekannten Bewertungen liegt bei {fmt(gesamtMittel)}. Beispielhaft steht in der Lücke
+          Aufgefüllt haben wir mit {MODUS_SATZ[modus]}; das Gesamtmittel aller bekannten
+          Bewertungen liegt bei {fmt(gesamtMittel)}. Beispielhaft steht in der Lücke
           von {NUTZER[0]} bei „{FILME[1]}" vor der Zerlegung {fmt(fuellwert(0, 1))} und nach der
           Rang-{k}-Glättung {fmt(Rk[0][1], 1)}.
         </p>

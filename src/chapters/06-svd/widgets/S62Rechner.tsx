@@ -225,7 +225,7 @@ export function SingulaerwertRechner() {
           {u.map((ui, i) => (
             <Zeile key={i}>
               <span className="font-mono text-xs">
-                A v{i === 0 ? "₁" : "₂"} = {vecStr(Av[i])} , geteilt durch σ
+                A v{i === 0 ? "₁" : "₂"} = {vecStr(Av[i])}, geteilt durch σ
                 {i === 0 ? "₁" : "₂"} = {fmt(sig[i])}:
               </span>
               {ui ? (
@@ -234,7 +234,7 @@ export function SingulaerwertRechner() {
                 </span>
               ) : (
                 <span style={{ color: GREY }}>
-                  σ{i === 0 ? "₁" : "₂"} = 0, hier liefert die Formel keinen Vektor – v
+                  σ{i === 0 ? "₁" : "₂"} = 0, hier liefert die Formel keinen Vektor; v
                   {i === 0 ? "₁" : "₂"} liegt im Kern von A.
                 </span>
               )}
@@ -259,10 +259,11 @@ export function SingulaerwertRechner() {
   return (
     <div>
       <p className="text-sm">
-        Rechnen wir die Singulärwertzerlegung einer 3×2-Matrix von Hand nach, Schritt für
-        Schritt. Voreingestellt ist die Matrix aus dem Beispiel des Abschnitts; jede andere
-        Eingabe rechnet das Widget genauso durch. Interessant sind besonders Matrizen mit
-        linear abhängigen Spalten, etwa beide Spalten gleich: dann fällt σ₂ auf null.
+        Rechnen wir Singulärwerte und Singulärvektoren einer 3×2-Matrix von Hand nach,
+        Schritt für Schritt. Voreingestellt ist die Matrix aus dem Beispiel des Abschnitts;
+        jede andere Eingabe rechnet das Widget genauso durch. Interessant sind besonders
+        Matrizen mit linear abhängigen Spalten, etwa beide Spalten gleich: dann fällt σ₂ auf
+        null.
       </p>
       <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
         <span>A =</span>

@@ -1,6 +1,6 @@
 import { ReduzierteSvdBloecke } from "./widgets/S63Bloecke";
 
-::quelle[Folien 06-svd, von der Motivation der reduzierten SVD bis zu den Eigenschaften der Pseudoinversen.]
+::quelle[Folien 06-svd, „Reduzierte SVD: Motivation" bis „Eigenschaften der Pseudoinverse".]
 
 Die Zerlegung $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ aus
 [Abschnitt 6.2](#sec-6.2) ist vollständig, aber verschwenderisch. Hat $\bA$ den
@@ -13,8 +13,8 @@ geht.
 
 ### Nullblöcke in Sigma
 
-Sehen wir uns die Gestalt von $\corange{\bSigma}$ noch einmal an. Für
-$\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ ist
+Für $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ hat $\corange{\bSigma}$ die
+Blockgestalt
 
 $$ {#eq-6.3.1}
 \corange{\bSigma} = \begin{pmatrix}
@@ -114,7 +114,8 @@ Damit hat sich die Zerlegung von selbst verkleinert, und wir geben dem Ergebnis
 einen Namen.
 
 :::definition[6.3.2 (Reduzierte SVD)]
-Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$. Die Darstellung ($6.3.3$),
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r \geq 1$. Die Darstellung
+($6.3.3$),
 
 $$
 \bA = \cgreen{\bU_r}\,\corange{\bSigma_r}\,\cblue{\bV_r^\top} ,
@@ -141,8 +142,11 @@ Drei Beobachtungen zur reduzierten Fassung:
    Prozent. Sogar $\bA$ selbst braucht mit $50\,000$ Einträgen noch fast das
    Zehnfache.
 2. *Rechenzeit.* Wer $\bA\bx$ über die Faktoren auswertet, macht drei
-   Matrix-Vektor-Produkte mit den kleinen Faktoren statt einem großen. Das
-   lohnt sich, sobald $r$ klein gegen $m$ und $n$ ist.
+   Matrix-Vektor-Produkte mit den kleinen Faktoren statt eines großen mit
+   $\bA$. Das kostet $rn + r + rm = r(m + n + 1)$ Multiplikationen gegen $mn$,
+   also wieder genau die Zahl aus Punkt 1, und lohnt sich für
+   $r < mn/(m + n + 1)$. Im Beispiel oben ist das jedes $r \leq 47$; bei
+   $r = 5$ sind wir weit darunter.
 3. *$\corange{\bSigma_r}$ ist invertierbar.* Sie ist quadratisch, und auf ihrer
    Diagonalen stehen ausschließlich positive Zahlen. Das ist der Punkt, an dem
    der Rest dieses Abschnitts ansetzt.
@@ -174,7 +178,8 @@ $$
 
 Die volle Zerlegung braucht ein $3 \times 3$-großes $\cgreen{\bU}$, ein
 $3 \times 2$-großes $\corange{\bSigma}$ und ein $2 \times 2$-großes
-$\cblue{\bV}$. Von alledem bleibt bei $r = 1$ je eine Spalte übrig:
+$\cblue{\bV}$. Bei $r = 1$ bleiben davon die erste Spalte von $\cgreen{\bU}$,
+die erste Spalte von $\cblue{\bV}$ und der einzige positive Singulärwert übrig:
 
 $$
 \cgreen{\bU_1} = \cgreen{\bu_1} = \tfrac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix} ,
@@ -205,8 +210,9 @@ Ausgangspunkt von [Abschnitt 6.4](#sec-6.4).
 Das Widget zeichnet die volle Zerlegung als Blockschema und lässt die Formate
 frei einstellen. Ein Klick auf einen Block sagt, wozu er da ist; der Umschalter
 führt Satz 6.3.1 vor und wirft alles heraus, was auf einen Nullblock von
-$\corange{\bSigma}$ trifft. Sehenswert ist der Fall $r = m = n$, in dem nichts
-wegfällt.
+$\corange{\bSigma}$ trifft. Die Zeile ganz unten zählt dazu die gespeicherten
+Zahlen aus Bemerkung 6.3.3 mit. Sehenswert ist der Fall $r = m = n$, in dem
+nichts wegfällt.
 
 <ReduzierteSvdBloecke />
 :::
@@ -224,11 +230,13 @@ Abbildung $\bx \mapsto \bA\bx$ in drei Etappen: $\cblue{\bV_r^\top}$ liest die
 Koordinaten von $\bx$ bezüglich $\cblue{\bv_1}, \dots, \cblue{\bv_r}$ ab,
 $\corange{\bSigma_r}$ streckt jede dieser Koordinaten um ihren Singulärwert, und
 $\cgreen{\bU_r}$ setzt das Ergebnis in die Basis $\cgreen{\bu_1}, \dots,
-\cgreen{\bu_r}$ des Spaltenraums zusammen. Jede dieser Etappen können wir
-umkehren. Die beiden äußeren sind Übergänge zwischen orthonormalen Systemen, sie
-werden durch Transponieren rückgängig gemacht; die mittlere ist eine Streckung
-um lauter positive Faktoren, sie wird durch Division rückgängig gemacht. Wir
-gehen den Weg also einfach rückwärts.
+\cgreen{\bu_r}$ des Spaltenraums zusammen. Auf diesen $r$ Koordinaten lässt sich
+jede Etappe rückwärts durchlaufen: Die beiden äußeren sind Übergänge zwischen
+orthonormalen Systemen, Transponieren macht sie rückgängig; die mittlere ist eine
+Streckung um lauter positive Faktoren, Division macht sie rückgängig. Was $\bx$
+außerhalb des Zeilenraums mitbrachte, ist dagegen verloren, denn $\bA$ hat es auf
+null gedrückt. Gehen wir den Weg trotzdem rückwärts und sehen wir nach, wie weit
+wir damit kommen.
 
 :::definition[6.3.5 (Moore-Penrose-Pseudoinverse)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r \geq 1$ und reduzierter SVD
@@ -259,12 +267,23 @@ Vier Anmerkungen zu dieser Definition:
 - Die Formate passen zusammen. $\bA$ bildet von $\R^n$ nach $\R^m$ ab, also muss
   $\bA\pinv$ von $\R^m$ nach $\R^n$ abbilden, und tatsächlich ist $\bA\pinv$ vom
   Format $(n \times r) \cdot (r \times r) \cdot (r \times m) = n \times m$.
-- Die Singulärvektoren sind nach Bemerkung 6.2.10 nur bis aufs Vorzeichen
-  bestimmt. Auf $\bA\pinv$ schlägt diese Freiheit nicht durch: Dreht sich das
-  Vorzeichen von $\cblue{\bv_i}$, so dreht sich nach ($6.2.2$) auch das von
-  $\cgreen{\bu_i}$, und im Produkt
-  $\cblue{\bv_i}\,\sigma_i^{-1}\,\cgreen{\bu_i^\top}$ heben beide Vorzeichen
-  einander auf.
+- Die Singulärvektoren liegen nach Bemerkung 6.2.10 nicht eindeutig fest, auf
+  $\bA\pinv$ schlägt diese Freiheit aber nicht durch. Beim Vorzeichen sieht man
+  es sofort: Dreht sich das von $\cblue{\bv_i}$, so dreht sich nach ($6.2.2$)
+  auch das von $\cgreen{\bu_i}$, und in der Summendarstellung
+
+  $$
+  \bA\pinv = \sum_{i=1}^{r} \frac{1}{\corange{\sigma_i}}\,\cblue{\bv_i}\,\cgreen{\bu_i^\top}
+  $$
+
+  heben die beiden Vorzeichen einander auf. Bei einem mehrfachen Singulärwert
+  ist die Freiheit größer, das Ergebnis aber dasselbe: Dort darf die
+  Orthonormalbasis des Eigenraums gedreht werden,
+  $\cblue{\bV_r} \mapsto \cblue{\bV_r}\bQ$ und mit ($6.2.2$) zugleich
+  $\cgreen{\bU_r} \mapsto \cgreen{\bU_r}\bQ$, und weil
+  $\corange{\bSigma_r^{-1}}$ in diesem Block ein Vielfaches der Einheitsmatrix
+  ist, kürzt sich $\bQ\bQ^\top = \bI$ ebenso weg. Die Pseudoinverse hängt also
+  allein an $\bA$, nicht an der gewählten Zerlegung.
 :::
 
 :::beispiel[6.3.7 (Fortsetzung: die Pseudoinverse der Rang-1-Matrix)]
@@ -290,10 +309,13 @@ $$
 = \cblue{\bv_1\bv_1^\top} .
 $$
 
-Beides sind keine Einheitsmatrizen, und das kann auch nicht sein: $\bA$ drückt
-eine ganze Richtung auf null, und was einmal verschwunden ist, holt keine
-Rechnung zurück. Was die beiden Matrizen stattdessen tun, zeigt ein
-Testvektor. Für $\bb = (1, 3, 5)^\top$ ist
+Beides sind keine Einheitsmatrizen, und beides kann auch nicht sein, wenn auch
+aus je eigenem Grund. $\bA\pinv\bA \neq \bI_2$: $\bA$ drückt die Richtung
+$\cblue{\bv_2}$ auf null, und was einmal verschwunden ist, holt keine Rechnung
+zurück. $\bA\bA\pinv \neq \bI_3$: Der Spaltenraum ist nur eine Gerade im $\R^3$,
+und $\bA\bA\pinv\bb$ landet immer auf ihr, welches $\bb$ wir auch einsetzen. Was
+die beiden Matrizen stattdessen tun, zeigt ein Testvektor. Für
+$\bb = (1, 3, 5)^\top$ ist
 
 $$
 \bA\bA\pinv\bb = \begin{pmatrix} 2 \\ 2 \\ 0 \end{pmatrix} ,
@@ -321,10 +343,12 @@ $\bA\pinv$. Dann gilt:
 Dabei ist $\proj_U$ die orthogonale Projektion auf den Untervektorraum $U$.
 :::
 
-Die Punkte 3 und 4 heißen *Konsistenzbedingungen*: Die Pseudoinverse verhält
-sich gegenüber $\bA$ wie eine Inverse, solange sie zwischen zwei Faktoren
-steht. Der Beweis ist eine einzige lange Rechnung mit ($6.3.4$), und er lohnt
-sich, weil er nebenbei die Projektionsmatrix explizit macht.
+Die Punkte 3 und 4 heißen *Konsistenzbedingungen*: In den Dreierprodukten
+$\bA\bA\pinv\bA$ und $\bA\pinv\bA\bA\pinv$ hebt ein benachbartes Paar einander
+weg, genau wie es eine echte Inverse täte. Für sich allein sind $\bA\bA\pinv$
+und $\bA\pinv\bA$ dagegen keine Einheitsmatrizen. Der Beweis ist eine einzige
+lange Rechnung mit ($6.3.4$), und er lohnt sich, weil er nebenbei die
+Projektionsmatrix explizit macht.
 
 ::::beweis
 
@@ -390,7 +414,12 @@ $$
 $$
 
 $\cgreen{\bP} = \cgreen{\bU_r\bU_r^\top}$ ist also die orthogonale
-Projektionsmatrix auf $\col(\bA)$.
+Projektionsmatrix auf $\col(\bA)$. Bild und Kern lesen wir gleich mit ab:
+$\col(\cgreen{\bP}) = \col(\bA)$ und
+$\operatorname{Kern}(\cgreen{\bP}) = \col(\bA)^\perp$. Schritt 2 bestätigt das
+von der anderen Seite, denn $\cgreen{\bP^2} = \cgreen{\bP}$ macht $\cgreen{\bP}$
+zu einer Projektion und $\cgreen{\bP^\top} = \cgreen{\bP}$ zu einer
+orthogonalen.
 
 ::why[die Spalten von $\cgreen{\bU} = (\cgreen{\bU_r} \mid \cgreen{\bU_{m-r}})$ sind eine Orthonormalbasis des $\R^m$; die ersten $r$ spannen $\col(\bA)$ auf, die übrigen den linken Kern $\operatorname{Kern}(\bA^\top) = \col(\bA)^\perp$, und die Entwicklung von $\bx$ in dieser Basis liefert die Zerlegung]
 :::
@@ -544,8 +573,8 @@ $$
 \cgreen{\bu_3} = \tfrac{1}{\sqrt{14}}\begin{pmatrix} 1 \\ -2 \\ 3 \end{pmatrix} .
 $$
 
-Diese Matrix ist symmetrisch, wie Satz 6.3.8 es verlangt, und ihre
-:k[Spur]{#trace} ist $(13 + 10 + 5)/14 = 2 = r$. Das ist kein Zufall: Aus der
+Diese Matrix ist symmetrisch, wie es Schritt 2 im Beweis zu Satz 6.3.8 für jeden
+Orthogonalprojektor zeigt, und ihre :k[Spur]{#trace} ist $(13 + 10 + 5)/14 = 2 = r$. Das ist kein Zufall: Aus der
 zyklischen Vertauschbarkeit der Spur ([Abschnitt 3.1](?k=03-matrix-spur-norm#sec-3.1))
 folgt $\tr(\cgreen{\bU_r\bU_r^\top}) = \tr(\cgreen{\bU_r^\top\bU_r}) = \tr(\bI_r) = r$.
 Die Spur eines Orthogonalprojektors zählt also die Dimensionen, die er
@@ -564,10 +593,13 @@ $$
 $$
 
 löst deshalb das :k[Kleinste-Quadrate-Problem]{#linear-least-squares}
-$\min_{\bx} \left\|\bA\bx - \bb\right\|$. Bei vollem Spaltenrang ist er nach
-($6.3.6$) die vertraute Lösung der Normalengleichungen; bei kleinerem Rang gibt
-es unendlich viele Lösungen, und $\bA\pinv\bb$ wählt unter ihnen die mit der
-kleinsten Norm. Ausgeführt wird das alles in
+$\min_{\bx} \left\|\cred{\bA\bx - \bb}\right\|$; der <span className="font-semibold" style={{ color: "#D55E00" }}>rote</span> Term ist das
+Residuum, und kleiner als
+$\left\|\cred{\proj_{\col(\bA)}\bb - \bb}\right\|$ wird es nicht. Bei vollem
+Spaltenrang ist $\wh{\bx}$ nach ($6.3.6$) die vertraute Lösung der
+Normalengleichungen; bei kleinerem Rang gibt es unendlich viele Lösungen, und
+$\bA\pinv\bb$ wählt unter ihnen die mit der kleinsten Norm. Ausgeführt wird das
+alles in
 [Kapitel 7](?k=07-kq#sec-7.6), wo die Pseudoinverse als robustester der drei
 Lösungswege auftritt.
 :::
@@ -588,9 +620,9 @@ sondern Projektionen (Satz 6.3.8).
 :::
 
 :::frage{wahr}
-Für eine Matrix $\bA \in \R^{1000 \times 50}$ vom Rang $5$ hat die reduzierte
-SVD dieselben drei Faktoren wie die volle, nur kleiner: $\bU_5$ ist
-$1000 \times 5$, $\bSigma_5$ ist $5 \times 5$ und $\bV_5$ ist $50 \times 5$.
+Für eine Matrix $\bA \in \R^{1000 \times 50}$ vom Rang $5$ haben die drei
+Faktoren der reduzierten SVD die Formate $1000 \times 5$ für $\bU_5$,
+$5 \times 5$ für $\bSigma_5$ und $50 \times 5$ für $\bV_5$.
 
 So ist die reduzierte SVD gebaut (Definition 6.3.2). Der Speicherbedarf
 sinkt dabei von $1000^2 + 50^2 + 50$ auf $5 \cdot (1000 + 50 + 1)$ Zahlen, also

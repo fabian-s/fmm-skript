@@ -149,6 +149,31 @@ Lesson-Zeile ein.
   beiden Fällen dieselben.*
 - **Z. 51 („Verwendete Vorkenntnisse")**: `\bA^T` statt `\bA^\top` (der
   ganze Foliensatz nutzt sonst `^\top`). Rein typografisch.
+- **Z. 56–61 („Diagonalisierung ist limitiert")**, Lücke: Die Folie nennt
+  als Grenzen nur „quadratisch" und „symmetrisch". Auch unter den
+  quadratischen Matrizen hat aber nicht jede eine Eigenwertzerlegung —
+  (0 1; 0 0) besitzt nur den Eigenwert 0 mit eindimensionalem Eigenraum,
+  also keine Basis aus Eigenvektoren. Dieselbe Verwechslung von
+  hinreichend und notwendig taucht im Lösungskommentar der Quiz-Folie
+  (Z. 700) wieder auf. *Skript §6.1 ergänzt den Fall im Motivationstext
+  und in Bemerkung 6.1.1.*
+- **Z. 89 („Geometrische Intuition")**: Die Folie verlinkt eine
+  interaktive Visualisierung auf einem fremden Hoster
+  (`claude.ai/public/artifacts/…`) — nicht Teil des Foliensatzes und
+  jederzeit tot. *Skript §6.1 ersetzt sie durch ein eigenes Widget
+  (Einheitskreis → Ellipse mit Winkel-Slider und Streckfaktor-Kurve); die
+  Folie kann darauf verweisen.*
+- **Z. 121–123 („Die Matrix AᵀA", Beweis für (2))**: „Für jeden
+  Eigenvektor v_i gilt 0 ≤ ‖Av_i‖² = v_iᵀ(AᵀA)v_i = v_iᵀ(λ_i v_i) = λ_i"
+  — der letzte Schritt gilt nur für ‖v_i‖ = 1, sonst steht dort
+  λ_i‖v_i‖². Die Aussage λ_i ≥ 0 bleibt richtig, die Rechnung so nicht.
+  Ausserdem ist „positiv semidefinit" (Z. 118) eine Eigenschaft der
+  quadratischen Form, xᵀ(AᵀA)x ≥ 0 für alle x; die Folie erklärt sie über
+  die Eigenwerte, was den Spektralsatz voraussetzt, der erst als
+  „Folgerung" darunter (Z. 125) auftaucht. *Skript Satz 6.2.1 nennt beide
+  Formen; der Beweis zeigt zuerst xᵀ(AᵀA)x = ‖Ax‖² ≥ 0 direkt aus der
+  quadratischen Form und normiert dann v_i, die Reihenfolge
+  Spektralsatz/Eigenwerte steht im Anschlusstext.*
 - **Z. 238 („Bsp: Singulärvektoren (2)")**: Vorzeichenfehler bei u₂. Zu
   dem auf Z. 231 gedruckten v₂ ≈ (0,662, −0,750)ᵀ gehört
   u₂ = Av₂/σ₂ ≈ (−0,691, 0,474, 0,546)ᵀ (nachgerechnet: Av₂ =
@@ -174,6 +199,11 @@ Lesson-Zeile ein.
   oder (n−r) Nullspalten" — beides gilt gleichzeitig, nicht alternativ
   (die Blockform Z. 323–326 zeigt es selbst). *Skript §6.3 schreibt
   ausdrücklich „und beides gilt gleichzeitig".*
+- **Z. 415 („Moore-Penrose Pseudoinverse")**: „Für jede Matrix A ∈ ℝ^{m×n}
+  mit Rang r und reduzierter SVD A = U_r Σ_r V_r^⊤" — für A = 0 ist r = 0,
+  eine reduzierte SVD in dieser Form gibt es dann nicht, und Σ_r^{-1} ist
+  undefiniert, obwohl 0⁺ = 0 sehr wohl existiert. *Skript §6.3 setzt in
+  Definition 6.3.2 und 6.3.5 durchgehend r ≥ 1 voraus.*
 - **Z. 472 („Spektralnorm und SVD")**: `‖A‖₂ := σ_max(A)` steht als
   Definition, obwohl die Folie zwei Zeilen darüber („Bisher: ‖A‖₂ =
   √λ_max(AᵀA)") die schon vergebene Definition zitiert; es ist eine
@@ -186,11 +216,41 @@ Lesson-Zeile ein.
   b ∈ [1, 5] den Fehler max(|3−b|, 2) = 2 = σ₂. *Skript Satz 6.4.4 sagt
   „löst beide Approximationsprobleme", Bemerkung 6.4.5 führt das
   Gegenbeispiel.*
+- **Z. 561 („Anwendung - Datenkompression")**: „*Kompressionsrate*:
+  ≈ 83% weniger Speicher" vermischt zwei Größen — 58.600/337.408 ≈ 17,4 %
+  ist der Speicheranteil, die Ersparnis 82,63 %, die Kompressionsrate wäre
+  337.408/58.600 ≈ 5,8. Der Zahlenwert 83 % stimmt als *Ersparnis*.
+  *Skript Beispiel 6.4.8 rechnet beide Zahlen aus und nennt nur die
+  Ersparnis; ergänzt ist die Break-even-Grenze k ≤ 287 (ab k = 288 kostet
+  die Rang-k-Form mehr als das Bild selbst).*
+- **Z. 572–581 („Beispiel - Datenkompression")**: Die vier
+  `resources/gauss-*.jpg` (Porträt) und `gauss-singular-values.pdf` stehen
+  ohne Quellen-, Lizenz- oder Urheberangabe auf der Folie; die
+  `\caption` ist auskommentiert, die Abbildung damit ganz unbeschriftet.
+  *Skript §6.4 übernimmt die Bilder nicht (öffentliches Repo) und ersetzt
+  sie durch ein Rang-k-Widget mit synthetischem Graustufenbild; der
+  Shiny-App-Link der Folie bleibt als eigenes Material erhalten.*
 - **Z. 651 („SVD vs. Eigenwertzerlegung")**: Die Zeile „Singularität:
   Problem bei det(A) = 0" trifft nicht den Punkt — ein Eigenwert 0 ist
   harmlos, es scheitert an fehlender Diagonalisierbarkeit (zu wenige
   Eigenvektoren für eine Basis). *Skript §6.4 formuliert die Tabellenzeile
   entsprechend um und ergänzt einen Absatz dazu.*
+- **Z. 646–649 (dieselbe Tabelle)**: Die Spalte heißt „Spektralzerlegung",
+  die Zeile darunter behauptet aber „Orthogonale Zerlegung: Nur
+  symmetrisch". Beides zusammen geht nicht: Die Spektralzerlegung
+  A = PΛPᵀ hat orthogonale Faktoren per Definition; gemeint ist die
+  allgemeine Eigenwertzerlegung A = PDP⁻¹ mit beliebigem invertierbarem P.
+  *Skript §6.4 nennt die Spalte „Eigenwertzerlegung" und sagt im Absatz
+  davor, dass daraus erst im symmetrischen Fall die Spektralzerlegung
+  aus §3.3 wird.*
+- **Z. 680 („Querverbindungen")**: „Fundamentale Unterräume: Explizite
+  Orthogonalbasen" bleibt hinter dem zurück, was die SVD liefert — die
+  Spalten von U und V sind orthoNORMAL, nicht bloß orthogonal (dieselbe
+  Untertreibung wie auf Z. 252–256). Ausserdem sagt der Stichpunkt nicht,
+  welcher Faktor welche Basis stellt. *Skript §6.5 schreibt
+  „Orthonormalbasen" und benennt die Spaltenbereiche: die ersten r Spalten
+  von U spannen col(A) auf, die ersten r Spalten von V den Zeilenraum, die
+  übrigen Spalten von V den Kern (Satz 6.2.11).*
 - **Z. 700 (Lösungskommentar der Quiz-Folie)**: Zu Aussage 4 („A ∈ ℝⁿˣⁿ
   ist immer diagonalisierbar") steht dort als Begründung „nur wenn
   symmetrisch". Symmetrie ist aber nur HINREICHEND: (2 1; 0 1) hat die
@@ -211,6 +271,98 @@ Lesson-Zeile ein.
 - **Z. 372 („Beispiel: QR-Zerlegung (2)")**: Die gezeigte Matrix A ist
   ein Tippfehler; die gerechneten Werte gehören zu A = (1 2; 0 0; 0 2)
   von der Vorfolie. *Skript §7.4 nutzt durchgehend die korrekte Matrix.*
+
+## 08-la-misc
+
+- **Z. 95 („Potenzmethode", Idee)**: Die Eigenwertschätzung
+  λ⁽ᵏ⁾ = ‖Ax⁽ᵏ⁾‖/‖Ax⁽ᵏ⁻¹⁾‖ passt nicht zu der direkt darüber definierten
+  *normierten* Iteration: Mit Normierung in jedem Schritt haben Zähler und
+  Nenner denselben Grenzwert |λ₁|, der Quotient strebt also gegen 1. Der
+  Quotient gehört zur unnormierten Iteration z⁽ᵏ⁾ = Az⁽ᵏ⁻¹⁾; mit Normierung
+  lautet die Schätzung λ⁽ᵏ⁾ = ‖Ax⁽ᵏ⁻¹⁾‖. *Skript Bemerkung 8.1.3 stellt beide
+  Formen gegenüber und ergänzt den Rayleigh-Quotienten.*
+- **Z. 154 („Beispiel", B = QAQᵀ)**: Die Folie liest die Diagonale von
+  B = diag(4, 9) als „λ₁ = 4, λ₂ = 9" und widerspricht damit der
+  Potenzmethoden-Folie (Z. 106: λ₁ = 9, λ₂ = 4). Die Reihenfolge auf der
+  Diagonalen hängt allein von der Spaltenwahl von Qᵀ ab. *Skript sortiert
+  durchgehend absteigend (λ₁ = 9 ≥ λ₂ = 4) und erklärt die Reihenfolge in
+  Beispiel 8.1.8.*
+- **Z. 183 („QR-Iteration", Ähnlichkeit)**: Die Kette endet mit
+  A⁽ᵏ⁾ = (Q⁽ᵏ⁾⋯Q⁽¹⁾)⁻¹ A (Q⁽¹⁾⋯Q⁽ᵏ⁾); der linke Faktor hat die Produkte in
+  der falschen Reihenfolge, denn (Q⁽ᵏ⁾⋯Q⁽¹⁾)⁻¹ = (Q⁽¹⁾)⁻¹⋯(Q⁽ᵏ⁾)⁻¹. Richtig
+  ist (Q⁽¹⁾⋯Q⁽ᵏ⁾)⁻¹ = Q_kᵀ, wie die Folie zwei Zeilen später (Z. 186, 218)
+  auch selbst schreibt. Für 2×2-Matrizen fällt das nicht auf, weil ebene
+  Drehungen kommutieren; ab n = 3 sind beide Ausdrücke verschieden (per node
+  an einer unsymmetrischen 3×3-Matrix nachgerechnet). *Skript Satz 8.1.11
+  formuliert A⁽ᵏ⁾ = Q_kᵀ A Q_k mit Q_k = Q⁽¹⁾⋯Q⁽ᵏ⁾ und beweist es per
+  Induktion.*
+- **Z. 184 („QR-Iteration")**: „Für k → ∞ konvergiert A⁽ᵏ⁾ gegen eine obere
+  Dreiecksmatrix (!)" gilt nicht ohne Voraussetzungen. Gegenbeispiel: die
+  Drehung um 90° (0 −1; 1 0) mit Q⁽¹⁾ = A, R⁽¹⁾ = I, also A⁽¹⁾ = A und
+  Stillstand; ihre Eigenwerte ±i sind komplex und betragsgleich. *Skript
+  Bemerkung 8.1.14 nennt reelle, betragsmäßig getrennte Eigenwerte als
+  Voraussetzung und führt das Gegenbeispiel vor.*
+- **Z. 218 („QR-Iteration: Interpretation")**: Die Schlusskette
+  Q_kᵀ A Q_k → VᵀAV = VᵀVΛVᵀV = Λ setzt A = VΛVᵀ voraus, also ein
+  SYMMETRISCHES A mit orthogonalem V. Allgemein ist der Grenzwert die
+  Schur-Form (obere Dreiecksmatrix), und von den Spalten des Grenz-Q ist nur
+  die erste ein Eigenvektor. *Skript Bemerkung 8.1.14 trennt beide Fälle.*
+- **Z. 503–505 („Bsp: Richardson-Iteration")**: Iteration 3 ist
+  verrechnet. Aus x⁽³⁾ = (7/64, 39/64) folgt mit γ = 0,25 exakt
+  x⁽⁴⁾ = (25/256, 160/256) ≈ (0,098, 0,625); die Folie druckt
+  (0,095, 0,628). Entsprechend ist der letzte Fehlerwert nicht 0,009,
+  sondern ‖x⁽⁴⁾ − x‖₂ ≈ 0,013. Nebenbefund: die Fehlerzeile ist
+  abgeschnitten statt gerundet (0,642 statt 0,643, 0,209 statt 0,210,
+  0,032 statt 0,033), und x⁽³⁾ steht dort als (0,109, 0,610) statt
+  (0,109, 0,609). *Skript Beispiel 8.3.11 rechnet korrekt (per node
+  nachgerechnet), Bemerkung 8.3.12 benennt die Abweichung.*
+- **Z. 566 („Beispiel", Sketching in R)**: Die Aussage „weniger als 1 %
+  [3 %] Abweichung in Distanz [Winkel]" ist eine glückliche Ziehung, keine
+  typische. Bei m = 50 hat die relative Abweichung des Abstands die
+  Standardabweichung 1/√(2m) = 10 % (Monte Carlo mit n = 10 000, 200
+  Ziehungen: sd 10,4 %, nur rund 6 % der Ziehungen unter 1 %; Winkel: sd
+  14 %). *Skript Beispiel 8.4.5 zitiert die Folienzahl als Bericht und
+  ergänzt die Streuung; das Widget führt sie vor.*
+- **Z. 578 (Theorem „Zufälliges Einbetten von Unterräumen")**: Die
+  Voraussetzung E[‖s_i‖⁴] ≤ K/m² passt nicht zum späteren Beispiel K = 3.
+  Für s_i ~ N(0, I_n/m) ist E[‖s_i‖⁴] = (n² + 2n)/m², das zugehörige K
+  wächst also wie n² (bei n = 10 000 rund 10⁸). Konsistent ist die
+  Bedingung E[(s_iᵀv)⁴] ≤ K/m² für alle Einheitsvektoren v: Gauss exakt
+  3/m², Rademacher (3 − 2Σ_j v_j⁴)/m² ≤ 3/m², Subsampling
+  n(Σ_j v_j⁴)/m² (alle per Monte Carlo bestätigt). *Skript Satz 8.4.6
+  formuliert mit dieser Bedingung, Bemerkung 8.4.7 benennt die
+  Inkonsistenz, Beispiel 8.4.11 rechnet alle drei K aus.*
+- **Z. 582 (dasselbe Theorem)**: Der Quantor „für alle x ∈ Rⁿ" steht
+  INNERHALB der Wahrscheinlichkeit, der Beweis liefert die Aussage aber nur
+  für jedes FESTE x. So formuliert ist sie sogar falsch: S hat höchstens
+  Rang m < n, also gibt es x ≠ 0 mit Sx = 0. *Skript Satz 8.4.6 ist für
+  festes x formuliert, Bemerkung 8.4.10 erklärt, warum gleichmäßige
+  Aussagen über Unterräume Netzargument und Vereinigungsschranke brauchen.*
+- **Z. 606–609 (Beweis, Schritt 3)**: Der Cauchy-Schwarz-Schritt
+  E[(s_1ᵀx)⁴] ≤ E[‖s_1‖⁴] ist korrekt, aber grob; im Gauss-Fall
+  verschenkt er den Faktor (n² + 2n)/3. *Skript schätzt var[‖Sx‖²] direkt
+  über E[(s_1ᵀx)⁴] ab (Beweis zu Satz 8.4.6, Bemerkung 8.4.7).*
+- **Z. 615 (Beweis, Schritt 4)**: Der Schluss von Erwartungswert und
+  Varianz auf die Wahrscheinlichkeit ist die TSCHEBYSCHEFF-Ungleichung
+  (Markov, angewandt auf die quadrierte Abweichung); die Folie nennt sie
+  „Markov". *Skript benennt sie korrekt.*
+- **Z. 631 („Anwendungen")**: „Wenn S m zufällige Zeilen aus x zieht" —
+  x ist ein Vektor, gemeint sind m Komponenten (die Zeilen zieht S aus der
+  Einheitsmatrix). *Skript spricht von Koordinaten.*
+- **Z. 642 („Beispiel: Dimensionsreduktion")**: Rechenfehler um den Faktor
+  10: m = K/(δε²) = 3/(0,05 · 0,01) = 6000, nicht 600. Damit stimmen auch
+  die Folgezeilen nicht mehr: Die Kompression ist 10 000/6000 ≈ 1,7 statt
+  „~17×" (Z. 650), und m = 600 garantiert bei δ = 0,05 nur
+  ε = √(3/(0,05 · 600)) = √0,1 ≈ 0,32 bzw. bei ε = 0,1 nur δ = 0,5
+  (Z. 646). *Skript Beispiel 8.4.14 rechnet mit 6000, Bemerkung 8.4.15
+  benennt den Fehler und ordnet ein, warum die Praxis trotzdem mit kleinem
+  m arbeitet (Tschebyscheff ist grob; schärfere Ungleichungen liefern
+  m ~ ε⁻²log(1/δ)).*
+- **Z. 651 (dieselbe Folie)**: „Rechenzeit für Distanzberechnungen
+  O(n²) → O(m²), Speed-up ~280×" ist irreführend. Eine einzelne
+  euklidische Distanz kostet O(n), der Gewinn ist also der Faktor n/m;
+  (n/m)² gilt nur für Verfahren, deren Kosten quadratisch in der Dimension
+  sind. *Skript Bemerkung 8.4.15 formuliert den Faktor n/m.*
 
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 

@@ -1,0 +1,38 @@
+export const title = "Fixpunktiteration";
+
+{/* Konzept-Tooltip: Fixpunktiteration, Kontraktion, Konvergenzbedingung. */}
+
+Ein *Fixpunkt* einer Abbildung $g$ ist ein Punkt, den $g$ nicht bewegt, also
+eine Lösung von $g(x^*) = x^*$. Die zugehörige *Fixpunktiteration* (fixed point
+iteration) besteht darin, $g$ immer wieder auf das eigene Ergebnis anzuwenden:
+
+$$
+x_{k+1} = g(x_k), \qquad k = 0, 1, 2, \dots
+$$
+
+Konvergiert diese Folge und ist $g$ stetig, so ist der Grenzwert genau ein
+Fixpunkt. Das ist der Grund, warum so viele numerische Verfahren diese Gestalt
+haben: Wir formen die zu lösende Gleichung so um, dass die gesuchte Größe als
+Fixpunkt dasteht, und lassen die Iteration den Rest erledigen.
+
+Ob sie das tut, hängt daran, ob $g$ Abstände verkleinert. Gilt in der Umgebung
+des Fixpunkts $|g'(x)| \le C$ mit einem $C < 1$, so schrumpft der Fehler
+$e_k = |x_k - x^*|$ in jedem Schritt mindestens um den Faktor $C$, und die
+Iteration konvergiert :k[linear]{#rate-of-convergence}. Für $|g'(x^*)| > 1$
+läuft sie dagegen weg, egal wie gut der Startwert ist.
+
+Ein Zahlenbeispiel: $g(x) = 1 + x/2$ hat den Fixpunkt $x^* = 2$ und die
+Ableitung $g'(x) = 1/2$. Von $x_0 = 0$ aus entsteht die Folge
+$1,\; 1{,}5,\; 1{,}75,\; 1{,}875,\; \dots$, deren Fehler sich pro Schritt
+tatsächlich halbiert. Dieselbe Gleichung lässt sich aber auch als
+$g(x) = 2x - 2$ schreiben, mit demselben Fixpunkt $2$ und $g'(x) = 2$; von
+$x_0 = 0$ aus liefert sie $-2,\; -6,\; -14,\; -30,\; \dots$ und entfernt sich
+immer weiter. Die Umformung entscheidet also über Erfolg oder Misserfolg, nicht
+die Gleichung.
+
+Im Mehrdimensionalen tritt an die Stelle der Ableitung eine Matrix. Iterative
+Löser für :k[lineare Gleichungssysteme]{#linear-system} schreiben sich als
+$\bx^{(k+1)} = \bB\bx^{(k)} + \bc$, und über die Konvergenz entscheidet dort,
+ob $\bB$ Vektoren schrumpfen lässt, gemessen an einer
+:k[Matrixnorm]{#matrix-norm} beziehungsweise am
+:k[Spektralradius]{#spectral-radius} von $\bB$.

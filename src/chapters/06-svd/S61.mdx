@@ -27,7 +27,7 @@ Sammeln wir zuerst das Vorwissen ein, auf dem das Kapitel steht.
   - :k[Eigenwerte und Eigenvektoren]{#eigenvalue-eigenvector}, $\bA\bv = \lambda\bv$;
   - der :k[Rang]{#rank} einer Matrix;
   - die fundamentalen Unterräume $\col(\bA)$, $\operatorname{Kern}(\bA)$ und
-    $\col(\bA^\top)$ (:k[Spaltenraum]{#span} und :k[Kern]{#null-space});
+    $\col(\bA^\top)$ (:k[Spaltenraum]{#image} und :k[Kern]{#null-space});
   - :k[Projektionen]{#projection} auf Unterräume.
 
 ### Diagonalisierung ist limitiert
@@ -39,7 +39,10 @@ Wirkungsrichtungen zu zerlegen. Nur ist sie doppelt eingeschränkt.
 Erstens verlangt schon die Gleichung $\bA\bv = \lambda\bv$, dass $\bA\bv$ und
 $\bv$ im selben Raum liegen. Die Matrix muss also quadratisch sein; für
 $\bA \in \R^{m \times n}$ mit $m \neq n$ stellt sich die Frage nach Eigenwerten
-gar nicht erst.
+gar nicht erst. Und selbst unter den quadratischen Matrizen hat nicht jede eine
+Eigenwertzerlegung: $\bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$
+besitzt nur den Eigenwert $0$, dessen Eigenraum eindimensional ist. Eine Basis
+aus Eigenvektoren kommt so nicht zustande.
 
 Zweitens nützt uns die Zerlegung vor allem dann etwas, wenn $\bP$ orthogonal
 gewählt werden kann, denn nur dann verzerrt der Basiswechsel nichts. Das gelingt
@@ -49,7 +52,8 @@ $(\bP\bD\bP^\top)^\top = \bP\bD^\top\bP^\top = \bP\bD\bP^\top$ zeigt auch, warum
 Was so zerlegbar ist, ist automatisch symmetrisch.
 
 :::bemerkung[6.1.1 (Wo die Diagonalisierung aufhört)]
-- Die Eigenwertzerlegung gibt es nur für **quadratische** Matrizen.
+- Die Eigenwertzerlegung setzt eine **quadratische** Matrix voraus, und auch
+  dann gibt es sie nicht immer.
 - Orthogonal diagonalisierbar, also $\bA = \bP\bD\bP^\top$ mit orthogonalem
   $\bP$, sind nur die **symmetrischen** Matrizen.
 - Die meisten Matrizen, die uns begegnen, sind weder das eine noch das andere.
@@ -68,7 +72,7 @@ Drei Dinge wünschen wir uns dabei:
 
 1. Sie existiert für *beliebige* Matrizen $\bA \in \R^{m \times n}$.
 2. $\corange{\bD}$ ist „diagonal", trägt also außerhalb der Diagonalen nur
-   Nullen. Bei einer rechteckigen Matrix muss man dafür genauer sagen, was
+   Nullen. Bei einer rechteckigen Matrix müssen wir dafür genauer sagen, was
    Diagonale heißen soll; das holen wir nach, sobald wir die Bausteine haben.
 3. $\cgreen{\bP}$ und $\cblue{\bQ}$ sind :k[Orthogonalmatrizen]{#orthogonal-matrix}.
 
@@ -98,8 +102,9 @@ $\bA$, andere staucht sie. Die Frage, die uns durch dieses Kapitel trägt, laute
 Welche Richtung wird am stärksten gestreckt, welche am zweitstärksten, und so
 weiter?
 
-Für eine $2 \times 2$-Matrix wird aus dem Einheitskreis eine Ellipse. Der längste
-Bildvektor liegt auf ihrer Hauptachse, der kürzeste auf der Nebenachse, und
+Für eine $2 \times 2$-Matrix wird aus dem Einheitskreis eine Ellipse; ist $\bA$
+singulär, so entartet sie zu einer Strecke. Der längste Bildvektor liegt auf
+ihrer Hauptachse, der kürzeste auf der Nebenachse, und
 diese Halbachsenlängen sind uns als Singulärwerte in
 [Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4) schon begegnet. Bildet $\bA$
 dagegen von $\R^3$ in die Ebene ab, so wird eine ganze Richtung platt gedrückt,
@@ -166,9 +171,17 @@ $$
 
 Ein Maximum gibt es tatsächlich, denn die Einheitssphäre ist
 :k[abgeschlossen und beschränkt]{#closed-bounded-set} und
-$\bx \mapsto \left\| \bA\bx \right\|$ ist stetig. Nur ist die Zielfunktion
-unhandlich: In der Norm steckt eine Wurzel über einer Quadratsumme. Der Ausweg
-ist ein alter Trick. Wir maximieren stattdessen das Quadrat.
+$\bx \mapsto \left\| \bA\bx \right\|$ ist stetig. Der Maximalwert steht sogar
+schon in unserer Vorwissensliste: Er ist die Spektralnorm
+$\left\| \bA \right\|_2$, die
+[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) als größten Streckfaktor
+einführt. Dort haben wir nach dem Wert gefragt, hier fragen wir nach der
+Maximalstelle, und gleich danach nach dem, was in den übrigen Richtungen
+passiert.
+
+Unhandlich an ($6.1.2$) ist die Zielfunktion: In der Norm steckt eine Wurzel
+über einer Quadratsumme. Der Ausweg ist ein alter Trick. Wir maximieren
+stattdessen das Quadrat.
 
 :::satz[6.1.3 (Streckung als quadratische Form)]
 Für $\bA \in \R^{m \times n}$ und alle $\bx \in \R^n$ gilt

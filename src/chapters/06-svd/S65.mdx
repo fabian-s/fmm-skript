@@ -2,8 +2,9 @@
 
 Dieses Kapitel hatte ein einziges Ziel: eine Zerlegung, die für jede Matrix
 funktioniert, gleich welches Format sie hat und ob sie symmetrisch ist. Seit
-[Abschnitt 6.2](#sec-6.2) steht sie da, und seither haben wir vor allem
-ausprobiert, was sich mit ihr anfangen lässt. Sammeln wir ein, was bleiben soll.
+[Abschnitt 6.2](#sec-6.2) steht sie da, und die beiden folgenden Abschnitte
+haben gezeigt, was sich mit ihr anfangen lässt. Sammeln wir ein, was bleiben
+soll.
 
 ### Was wir gelernt haben
 
@@ -15,7 +16,7 @@ ausprobiert, was sich mit ihr anfangen lässt. Sammeln wir ein, was bleiben soll
 2. **Singulärwerte sind Wurzeln von Eigenwerten:**
    $\corange{\sigma_i(\bA)} = \sqrt{\lambda_i\left(\bA^\top\bA\right)}$
    (Definition 6.2.4). Der Umweg über $\bA^\top\bA$ verwandelt eine beliebige
-   Matrix in ein symmetrisches Objekt, auf das der Spektralsatz passt.
+   Matrix in eine symmetrische, auf die der Spektralsatz passt.
 3. **Der Hauptsatz:**
    $\bA = \cgreen{\bU}\,\corange{\bSigma}\,\cblue{\bV^\top}$ mit orthogonalem
    $\cgreen{\bU} \in \R^{m \times m}$, orthogonalem
@@ -40,7 +41,9 @@ Zerlegung liefert die beste
 gibt, mit einem Fehler, den die weggelassenen Singulärwerte exakt beziffern
 ([Abschnitt 6.4](#sec-6.4)). Und weil diese Approximation gleichzeitig Speicher
 spart und Rauschen glättet, ist sie das Arbeitspferd für Datenkompression und
-Datenanalyse, von der Hauptkomponentenanalyse bis zum Empfehlungssystem.
+Datenanalyse, von der Hauptkomponentenanalyse
+([Abschnitt 8.2](?k=08-la-misc#sec-8.2)) bis zum Empfehlungssystem
+(Beispiel 6.4.10).
 
 ### Querverbindungen
 
@@ -48,16 +51,20 @@ Die SVD ist kein isoliertes Werkzeug. Sie hängt mit fast allem zusammen, was wi
 bisher über Matrizen gelernt haben.
 
 - *Eigenwerttheorie:* Der Zugang läuft komplett über $\bA^\top\bA$. Dessen
-  :k[Eigenwerte]{#eigenvalue-eigenvector} liefern die Singulärwerte, dessen
-  Eigenvektoren die rechten Singulärvektoren (Satz 6.2.1, Korollar 6.2.2).
-- *Fundamentale Unterräume:* $\cgreen{\bU}$ und $\cblue{\bV}$ enthalten fertige
-  :k[Orthonormalbasen]{#orthonormal-basis} für Zeilenraum, Spaltenraum und
-  :k[Kern]{#null-space}. Wo die Trennlinie zwischen ihnen verläuft, sagt der
-  Rang, und der ist die Anzahl der Singulärwerte über null (Satz 6.2.11).
+  :k[Eigenwerte]{#eigenvalue-eigenvector} liefern die Singulärwerte
+  (Definition 6.2.4), dessen Eigenvektoren die rechten Singulärvektoren
+  (Definition 6.2.7). Dass beides zu haben ist, sichern Satz 6.2.1 und
+  Korollar 6.2.2.
+- *Fundamentale Unterräume:* $\cgreen{\bU}$ und $\cblue{\bV}$ liefern fertige
+  :k[Orthonormalbasen]{#orthonormal-basis}: die ersten $r$ Spalten von
+  $\cgreen{\bU}$ spannen den Spaltenraum auf, die ersten $r$ Spalten von
+  $\cblue{\bV}$ den Zeilenraum, die übrigen Spalten von $\cblue{\bV}$ den
+  :k[Kern]{#null-space}. Wo die Trennlinie verläuft, sagt der Rang, und der ist
+  die Anzahl der Singulärwerte über null (Satz 6.2.11).
 - *Projektionen:* $\bA\bA\pinv$ und $\bA\pinv\bA$ sind
   :k[Projektionen]{#projection} auf $\col(\bA)$ beziehungsweise
-  $\col(\bA^\top)$ (Satz 6.3.8). Aus dieser einen Beobachtung folgt die ganze
-  Kleinste-Quadrate-Theorie.
+  $\col(\bA^\top)$ (Satz 6.3.8). Auf der ersten dieser beiden Aussagen ruht die
+  Kleinste-Quadrate-Lösung aus Bemerkung 6.3.12.
 - *[Normen](?k=03-matrix-spur-norm#sec-3.2):* Der größte Singulärwert ist die
   Spektralnorm, $\left\|\bA\right\|_2 = \corange{\sigma_1}$
   ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)); die Frobeniusnorm nimmt
@@ -67,9 +74,11 @@ bisher über Matrizen gelernt haben.
   invertierbare Matrizen ist der Quotient
   $\corange{\sigma_1}/\corange{\sigma_n}$ die
   :k[Spektralkondition]{#condition-number} $\kappa_2(\bA)$
+  ([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)); sie beschränkt, wie stark
+  ein relativer Datenfehler in der Lösung anwachsen kann
   ([Abschnitt 4.2](?k=04-fehler#sec-4.2)).
-- *Matrixzerlegungen:* LU und Cholesky
-  ([Kapitel 5](?k=05-lgs#sec-5.2)) zerlegen, um Gleichungssysteme schnell zu
+- *Matrixzerlegungen:* [LU](?k=05-lgs#sec-5.3) und
+  [Cholesky](?k=05-lgs#sec-5.4) zerlegen, um Gleichungssysteme schnell zu
   lösen. Die SVD zerlegt, um die Geometrie einer Abbildung sichtbar zu machen.
   Sie ist die teuerste der drei und die einzige, die für jede Matrix existiert.
 - *Optimierung:* Kleinste Quadrate ([Kapitel 7](?k=07-kq#sec-7.6)) und die
@@ -87,24 +96,26 @@ verwechselt.
 
 | Variante | Zerlegung | Formate | Wozu |
 | --- | --- | --- | --- |
-| volle SVD | $\bA = \bU\bSigma\bV^\top$ | $\bU$ ist $m \times m$, $\bV$ ist $n \times n$ | exakt, alle fundamentalen Unterräume auf einmal |
-| reduzierte SVD | $\bA = \bU_r\bSigma_r\bV_r^\top$ | $\bU_r$ ist $m \times r$, $\bV_r$ ist $n \times r$ | exakt, ohne die Nullblöcke |
-| truncated SVD | $\bA \approx \bA_k = \bU_k\bSigma_k\bV_k^\top$, $k < r$ | $\bU_k$ ist $m \times k$, $\bV_k$ ist $n \times k$ | Approximation, Kompression |
+| volle SVD | $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ | $\cgreen{\bU}$ ist $m \times m$, $\cblue{\bV}$ ist $n \times n$ | exakt, alle fundamentalen Unterräume auf einmal |
+| reduzierte SVD | $\bA = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}$ | $\cgreen{\bU_r}$ ist $m \times r$, $\cblue{\bV_r}$ ist $n \times r$ | exakt, ohne die Nullblöcke |
+| truncated SVD | $\bA \approx \bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$, $k < r$ | $\cgreen{\bU_k}$ ist $m \times k$, $\cblue{\bV_k}$ ist $n \times k$ | Approximation, Kompression |
 
 Nur die dritte Variante verliert Information, und wie viel, sagen die
 abgeschnittenen Singulärwerte. Die Wahl von $k$ ist deshalb keine technische
-Kleinigkeit, sondern eine Modellierungsentscheidung: Wir tragen die
-Singulärwerte der Größe nach auf und suchen den Knick, ab dem sie nur noch
-Rauschen beschreiben (Elbow-Methode, [Abschnitt 6.4](#sec-6.4)).
+Kleinigkeit, sondern eine Modellierungsentscheidung. Quantitativ helfen ein
+Fehler- oder ein Energiekriterium (Bemerkung 6.4.6), grafisch der *Ellenbogen*
+(elbow): Tragen wir $\log \corange{\sigma_i}$ gegen $i$ auf, markiert der Knick
+die Stelle, ab der die Singulärwerte nur noch Rauschen beschreiben
+(Bemerkung 6.4.7).
 
 Ein Hinweis wiegt schwerer, als er klingt. Die Definition der Singulärwerte
 führt über die Eigenwerte von $\bA^\top\bA$; als *Rechenweg* ist dieser Umweg
 trotzdem der schlechteste von allen. Das Produkt quadriert die Kondition,
 $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, und beim Aufstellen verschwinden
-kleine Beiträge neben großen im Rundungsfehler. Zurückholen ließen sie sich nur
-über die Differenz fast gleicher Zahlen, also über
-:k[Auslöschung]{#cancellation}, und die schafft keine verlorene Information
-zurück ([Abschnitt 4.3](?k=04-fehler#sec-4.3)).
+kleine Beiträge neben großen im :k[Rundungsfehler]{#rounding-error}. Was dann
+noch fehlt, müsste eine Differenz fast gleicher Zahlen hergeben, also
+ausgerechnet :k[Auslöschung]{#cancellation}. Die legt einen Verlust aber nur
+offen, statt ihn zu heilen ([Abschnitt 4.3](?k=04-fehler#sec-4.3)).
 
 :::beispiel[6.5.2 (Der Umweg über AᵀA)]
 Betrachten wir
@@ -116,13 +127,17 @@ $$
 \bA^\top\bA = \begin{pmatrix} 1 + \delta^2 & 1 \\ 1 & 1 + \delta^2 \end{pmatrix} .
 $$
 
-Exakt gerechnet hat $\bA^\top\bA$ die Eigenwerte $2 + \delta^2$ und $\delta^2$,
-also besitzt $\bA$ die Singulärwerte
+Eine Matrix der Bauart $\begin{pmatrix} a & b \\ b & a \end{pmatrix}$ hat die
+Eigenwerte $a + b$ und $a - b$, hier also $(1 + \delta^2) + 1 = 2 + \delta^2$
+und $(1 + \delta^2) - 1 = \delta^2$. Damit besitzt $\bA$ die Singulärwerte
 $\corange{\sigma_1} = \sqrt{2 + \delta^2} \approx 1{,}4142$ und
-$\corange{\sigma_2} = \delta = 10^{-8}$; die Matrix hat Rang $2$.
+$\corange{\sigma_2} = \delta = 10^{-8}$; die Matrix hat Rang $2$. Der kleinere
+Eigenwert ist buchstäblich eine Differenz fast gleicher Zahlen. Er hängt allein
+an dem Summanden $\delta^2$ im Diagonaleintrag, und genau der ist gefährdet.
 
 In doppelter Genauigkeit geht das schief. Der Abstand von $1$ zur nächstgrößeren
-darstellbaren Zahl ist $\eps \approx 2{,}22 \cdot 10^{-16}$, und gerundet wird
+darstellbaren Zahl ist die :k[Maschinengenauigkeit]{#machine-epsilon}
+$\eps \approx 2{,}22 \cdot 10^{-16}$, und gerundet wird
 zur nächstgelegenen. Weil $\delta^2 = 10^{-16}$ kleiner als die halbe
 Schrittweite $1{,}11 \cdot 10^{-16}$ ausfällt, ergibt sich
 $\operatorname{fl}(1 + \delta^2) = 1$. Die berechnete Matrix ist
@@ -135,15 +150,15 @@ $$
 Die Rechnung meldet $\corange{\sigma_2} = \cred{0}$ und damit Rang $1$. Ein Verfahren,
 das direkt mit $\bA$ arbeitet, bestimmt $\corange{\sigma_2}$ dagegen bis auf
 einen absoluten Fehler der Größenordnung $\eps \cdot \corange{\sigma_1}$, also
-auf etwa $10^{-16}$ genau, und sieht den Rang $2$. Als Faustregel: Über
+auf etwa $3 \cdot 10^{-16}$ genau, und sieht den Rang $2$. Als Faustregel: Über
 $\bA^\top\bA$ sind Singulärwerte unterhalb von
 $\sqrt{\eps} \cdot \corange{\sigma_1} \approx 1{,}5 \cdot 10^{-8} \cdot \corange{\sigma_1}$
 nicht mehr zu retten.
 :::
 
 Die gebräuchlichen Verfahren arbeiten deshalb direkt mit $\bA$ und benutzen
-ausschließlich orthogonale Transformationen, die Singulärwerte bekanntlich
-unverändert lassen ([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)); der
+ausschließlich orthogonale Transformationen, die alle Singulärwerte unverändert
+lassen (Satz 3.4.7 in [Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)); der
 Klassiker ist der Algorithmus von Golub und Reinsch. Bei sehr großen Matrizen
 lohnt die volle Zerlegung ohnehin nicht: Dort berechnen wir gleich nur die $k$
 größten Singulärwerte samt ihren Singulärvektoren, ohne $\bA$ je vollständig zu

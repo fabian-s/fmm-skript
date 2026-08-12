@@ -106,7 +106,7 @@ export function SvdGeometrieExplorer() {
   }[] = [
     {
       key: "start",
-      titel: "0 · Ausgangslage: Einheitskreis mit v₁, v₂",
+      titel: "Station 0 · Einheitskreis, dazu v₁ und v₂",
       m: I2,
       vecs: [
         { v: v1, color: BLUE, label: "v₁" },
@@ -115,7 +115,7 @@ export function SvdGeometrieExplorer() {
     },
     {
       key: "vt",
-      titel: "1 · nach Vᵀ: v₁, v₂ liegen auf den Achsen",
+      titel: "Station 1 · Bild unter Vᵀ: v₁, v₂ liegen jetzt auf den Achsen",
       m: VT,
       vecs: [
         { v: [1, 0], color: BLUE, label: "e₁" },
@@ -124,7 +124,7 @@ export function SvdGeometrieExplorer() {
     },
     {
       key: "svt",
-      titel: "2 · nach ΣVᵀ: Streckung um σ₁, σ₂",
+      titel: "Station 2 · Bild unter ΣVᵀ: gestreckt um σ₁ und σ₂",
       m: SVT,
       vecs: [
         { v: [s1, 0], color: ORANGE, label: "σ₁e₁" },
@@ -133,7 +133,7 @@ export function SvdGeometrieExplorer() {
     },
     {
       key: "a",
-      titel: "3 · nach UΣVᵀ = A: Ellipse in ihrer Endlage",
+      titel: "Station 3 · Bild unter UΣVᵀ = A: die Ellipse in ihrer Endlage",
       m: A,
       vecs: [
         { v: [s1 * u1[0], s1 * u1[1]], color: GREEN, label: "σ₁u₁" },

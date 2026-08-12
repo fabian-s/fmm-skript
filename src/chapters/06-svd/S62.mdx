@@ -28,9 +28,11 @@ Für $\bA \in \R^{m \times n}$ gilt:
 
 1. $\bA^\top\bA \in \R^{n \times n}$ ist :k[symmetrisch]{#symmetric-matrix}, das
    heißt $\bigl(\bA^\top\bA\bigr)^\top = \bA^\top\bA$.
-2. $\bA^\top\bA$ ist *positiv semidefinit*: Alle
+2. $\bA^\top\bA$ ist :k[*positiv semidefinit*]{#positive-definite}, das heißt
+   $\bx^\top\bigl(\bA^\top\bA\bigr)\bx \geq 0$ für alle $\bx \in \R^n$.
+   Insbesondere sind alle
    :k[Eigenwerte]{#eigenvalue-eigenvector} $\lambda_i$ von $\bA^\top\bA$
-   erfüllen $\lambda_i \geq 0$.
+   nichtnegativ.
 :::
 
 ::::beweis
@@ -47,8 +49,20 @@ $$
 :::
 
 :::schritt
-Zu (2): Sei $\bv_i$ ein auf Länge $1$ normierter Eigenvektor von $\bA^\top\bA$
-zum Eigenwert $\lambda_i$. Dann ist
+Zu (2): Die quadratische Form ist nach ($6.2.1$) ein Längenquadrat, und Längen
+werden nie negativ:
+
+$$
+\bx^\top\bigl(\bA^\top\bA\bigr)\bx = \left\|\bA\bx\right\|^2 \geq 0
+\qquad \text{für alle } \bx \in \R^n .
+$$
+
+::why[($6.2.1$), von rechts nach links gelesen]
+:::
+
+:::schritt
+Für die Eigenwerte setzen wir speziell $\bx = \bv_i$ ein, wobei $\bv_i$ ein auf
+Länge $1$ normierter Eigenvektor von $\bA^\top\bA$ zum Eigenwert $\lambda_i$ sei:
 
 $$
 0 \leq \left\|\bA\bv_i\right\|^2
@@ -58,7 +72,7 @@ $$
 = \lambda_i .
 $$
 
-::why[erst ($6.2.1$) mit $\bx = \bv_i$, dann die Eigenwertgleichung $\bA^\top\bA\bv_i = \lambda_i\bv_i$; ganz links steht das Quadrat einer Länge, und das wird nie negativ]
+::why[Eigenwertgleichung $\bA^\top\bA\bv_i = \lambda_i\bv_i$, dann $\left\|\bv_i\right\| = 1$; reelle Eigenwerte mit reellen Eigenvektoren gibt es dank des Spektralsatzes, siehe direkt im Anschluss]
 :::
 
 ::::
@@ -123,9 +137,14 @@ $$
 \corange{\lambda_1} \approx \corange{9{,}531}, \qquad \corange{\lambda_2} \approx \corange{1{,}469} .
 $$
 
-Beide Eigenwerte sind positiv, wie Satz 6.2.1 versprochen hat. Zwei schnelle
-Proben: Ihre Summe ist $11$, die Spur von $\bA^\top\bA$; ihr Produkt ist $14$,
-die :k[Determinante]{#determinant} $6 \cdot 5 - 4^2$.
+Satz 6.2.1 verspricht nur $\lambda_i \geq 0$. Hier sind beide Eigenwerte sogar
+echt positiv, $\bA^\top\bA$ ist also positiv definit. Der Grund: Die beiden
+Spalten von $\bA$ sind :k[linear unabhängig]{#linear-independence},
+$\bA\bx = \bnull$ gilt somit nur für
+$\bx = \bnull$, und ein Eigenwert $0$ hätte nach der Rechnung oben einen
+Eigenvektor mit $\bA\bv = \bnull$ verlangt. Zwei schnelle
+Proben: Die Summe der Eigenwerte ist $11$, die Spur von $\bA^\top\bA$; ihr
+Produkt ist $14$, die :k[Determinante]{#determinant} $6 \cdot 5 - 4^2$.
 :::
 
 ### Singulärwerte
@@ -158,8 +177,9 @@ $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_n \geq 0$.
 
 Der größte Singulärwert ist damit nichts anderes als die *Spektralnorm*
 $\left\|\bA\right\|_2$ aus
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3), die dort über
-$\lambda_{\max}(\bA^\top\bA)^{1/2}$ definiert wurde.
+[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3). Definiert war sie dort als die
+von der euklidischen Norm induzierte Operatornorm; Satz 3.3.7 hat sie zu
+$\lambda_{\max}(\bA^\top\bA)^{1/2}$ ausgerechnet, und das ist $\corange{\sigma_1}$.
 :::
 
 :::beispiel[6.2.6 (Singulärwerte der Beispielmatrix)]
@@ -174,7 +194,7 @@ $$
 $$
 
 In der einen Richtung streckt $\bA$ also um gut das Dreifache, in der anderen
-nur um gut das Eineinhalbfache. Ihr Verhältnis
+wächst die Länge nur um gut ein Fünftel. Ihr Verhältnis
 
 $$
 \frac{\corange{\sigma_1}}{\corange{\sigma_2}} \approx \frac{3{,}087}{1{,}212} \approx 2{,}55
@@ -184,8 +204,12 @@ sagt, wie richtungsabhängig (*anisotrop*) diese Matrix wirkt. Für quadratische
 invertierbare Matrizen ist $\sigma_1/\sigma_n$ genau die Spektralkondition
 $\kappa_2(\bA) = \left\|\bA\right\|_2 \left\|\bA^{-1}\right\|_2$ aus
 [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5); dort hatten wir sie als
-Verhältnis der extremen Streckungsfaktoren gedeutet und die Begründung auf die
-SVD vertagt. Für rechteckige Matrizen mit vollem Spaltenrang, wie hier, ist
+Verhältnis der extremen Streckungsfaktoren gedeutet und angekündigt, dass die
+Singulärwerte diese Deutung noch durchsichtiger machen. Damit lösen wir das
+ein: $\left\|\bA\right\|_2 = \corange{\sigma_1}$ ist die stärkste Streckung
+durch $\bA$, und $\left\|\bA^{-1}\right\|_2 = 1/\corange{\sigma_n}$, denn die
+schwächste Streckung durch $\bA$ ist die stärkste durch $\bA^{-1}$.
+Für rechteckige Matrizen mit vollem Spaltenrang, wie hier, ist
 $\sigma_1/\sigma_n$ die übliche Verallgemeinerung.
 :::
 
@@ -339,7 +363,7 @@ $$
 $$
 :::
 
-:::bemerkung[6.2.10 (Singulärvektoren sind nur bis aufs Vorzeichen bestimmt)]
+:::bemerkung[6.2.10 (Singulärvektoren sind nicht eindeutig)]
 Mit $\cblue{\bv_i}$ ist auch $-\cblue{\bv_i}$ ein normierter Eigenvektor zum
 selben Eigenwert. Die Singulärwerte ändern sich dadurch nicht, wohl aber die
 Vektoren, und zwar paarweise: Nach ($6.2.2$) dreht sich mit $\cblue{\bv_i}$
@@ -358,7 +382,12 @@ Das Widget rechnet den Weg von Beispiel 6.2.3 bis 6.2.9 nach: erst
 $\bA^\top\bA$, dann das charakteristische Polynom, die Eigenwerte, die
 Singulärwerte und schließlich beide Sorten von Singulärvektoren. Voreingestellt
 ist unsere Beispielmatrix samt der Vorzeichenwahl von oben; die beiden
-Vorzeichen-Knöpfe in Schritt 5 führen Bemerkung 6.2.10 direkt vor.
+Vorzeichen-Knöpfe in Schritt 5 führen Bemerkung 6.2.10 direkt vor. Ein
+Unterschied zum Text: Wir haben oben die gerundeten $\cblue{\bv_i}$ weiterverwendet,
+das Widget rechnet dagegen mit voller Genauigkeit. In der letzten gedruckten
+Stelle der Zwischenprodukte kann das um eins abweichen, etwa bei
+$\bA\cblue{\bv_1}$ mit $-2{,}073$ statt $-2{,}074$. Die Singulärvektoren selbst
+stimmen auf alle drei Stellen überein.
 
 <SingulaerwertRechner />
 :::
@@ -385,9 +414,11 @@ $\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
    verschiedenen Singulärwerte.
 :::
 
-Achten wir auf die Feinheit in (2): Die $\cblue{\bv_i}$ sind orthonormal, ihre
-Bilder $\bA\cblue{\bv_i}$ sind nur orthogonal und haben die Längen
-$\corange{\sigma_i}$. Erst nach der Normierung stimmt beides.
+Achten wir auf den Wechsel zwischen (1) und (2): In (1) steht eine
+Orthonormalbasis, in (2) nur eine Orthogonalbasis. Der Grund steht in
+Satz 6.2.8, die Längen $\left\|\bA\cblue{\bv_i}\right\| = \corange{\sigma_i}$
+sind im Allgemeinen eben nicht $1$. Erst das Teilen durch
+$\corange{\sigma_i}$ macht die $\cgreen{\bu_i}$ daraus.
 
 ::::beweis
 
@@ -501,8 +532,10 @@ $\operatorname{Kern}(\bA) = \spann\{\cblue{\bv_2}\} = \spann\bigl\{(1, -1)^\top\
 und die Probe bestätigt das:
 $\bA (1, -1)^\top = (0, 0, 0)^\top$.
 
-**Linker Kern.** Für $\cgreen{\bu_2}$ und $\cgreen{\bu_3}$ ist ($6.2.2$) nicht
-zuständig, denn $\corange{\sigma_2} = 0$. Wir ergänzen $\cgreen{\bu_1}$
+**Linker Kern.** Für $\cgreen{\bu_2}$ liefert ($6.2.2$) nichts, denn
+$\corange{\sigma_2} = 0$; ein $\cgreen{\bu_3}$ sieht die Formel gar nicht erst
+vor, weil $\bA$ nur zwei Spalten und damit nur zwei rechte Singulärvektoren
+hat. Wir ergänzen $\cgreen{\bu_1}$
 stattdessen zu einer Orthonormalbasis des $\R^3$, etwa durch
 
 $$
@@ -663,10 +696,11 @@ Vier Tafeln zeigen denselben Kreis an vier Stationen: zuerst der Einheitskreis
 mit den rechten Singulärvektoren, dann nacheinander die Wirkung von
 $\cblue{\bV^\top}$, $\corange{\bSigma}$ und $\cgreen{\bU}$. Voreingestellt ist
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 1 \end{smallmatrix}\bigr)$, die
-Matrix, an der Kapitel 3 die Spektralnorm vorgeführt hat
-([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)); ihre Singulärwerte
-$\corange{2{,}288}$ und $\corange{0{,}874}$ stehen dort schon. Zwei weitere
-Eingaben lohnen sich: zwei gleiche Spalten, deren Ellipse zu einer Strecke
+Matrix, an der Kapitel 3 die Operatornorm sichtbar gemacht hat
+([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)); ihre Singulärwerte
+$\corange{2{,}288}$ und $\corange{0{,}874}$ stehen in Beispiel 3.4.6
+([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)) schon ausgerechnet. Zwei
+weitere Eingaben lohnen sich: zwei gleiche Spalten, deren Ellipse zu einer Strecke
 zusammenfällt, und eine Drehmatrix wie
 $\bigl(\begin{smallmatrix} 0 & -1 \\ 1 & 0 \end{smallmatrix}\bigr)$, bei der
 beide Singulärwerte $1$ sind und die mittlere Etappe nichts zu tun hat.

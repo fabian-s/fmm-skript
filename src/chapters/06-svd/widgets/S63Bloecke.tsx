@@ -150,7 +150,7 @@ export function ReduzierteSvdBloecke() {
           width={w}
           height={h}
           fill={farbe}
-          fillOpacity={leer ? 0.04 : aktiv ? 0.55 : 0.22}
+          fillOpacity={leer ? (aktiv ? 0.14 : 0.04) : aktiv ? 0.55 : 0.22}
           stroke={farbe}
           strokeWidth={aktiv ? 2.5 : 1}
           strokeDasharray={leer ? "4 3" : undefined}
@@ -234,7 +234,11 @@ export function ReduzierteSvdBloecke() {
         <Slider
           label="Zeilen m"
           value={m}
-          onChange={(v) => setM(Math.round(v))}
+          onChange={(v) => {
+            const neu = Math.round(v);
+            setM(neu);
+            setR((alt) => Math.min(alt, neu, n));
+          }}
           min={2}
           max={8}
           step={1}
@@ -243,7 +247,11 @@ export function ReduzierteSvdBloecke() {
         <Slider
           label="Spalten n"
           value={n}
-          onChange={(v) => setN(Math.round(v))}
+          onChange={(v) => {
+            const neu = Math.round(v);
+            setN(neu);
+            setR((alt) => Math.min(alt, m, neu));
+          }}
           min={2}
           max={8}
           step={1}
