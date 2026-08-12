@@ -241,8 +241,8 @@ export function RichardsonStepper() {
         Ebene, der grüne Kreis markiert die wahre Lösung x = (1/11, 7/11). Der rote Pfeil
         ist der Korrekturschritt γ·r⁽ᵏ⁾, der beim nächsten Klick ausgeführt wird: Er zeigt
         in Richtung des Residuums. Rechts steht der Fehler auf logarithmischer Skala, dazu
-        als orange Gerade die Vorhersage ρᵏ aus Satz 8.3.5. Auf dieser Skala ist die
-        Vorhersage eine Gerade, und ihre Steigung ist log₁₀ ρ. Läuft die Iteration davon,
+        in Orange die Schranke ρᵏ·‖x⁽⁰⁾ − x‖ aus Satz 8.3.5. Auf dieser Skala ist sie eine
+        Gerade, und ihre Steigung ist log₁₀ ρ. Läuft die Iteration davon,
         bleibt der linke Ausschnitt auf die Lösung zentriert, und die Iterierten verlassen
         ihn nach und nach.
       </p>
@@ -320,18 +320,18 @@ export function RichardsonStepper() {
         </p>
         <p>
           {rho < 0.999
-            ? `ρ < 1: Satz 8.3.5 greift, und der Fehler schrumpft auf Dauer je Schritt um etwa den Faktor ${fmt(rho, 2)}.`
+            ? `ρ < 1: Satz 8.3.5 greift, und der Fehler fällt auf Dauer je Schritt auf etwa das ${fmt(rho, 2)}-fache.`
             : rho <= 1.001
               ? "ρ ≈ 1: der Grenzfall. Die Schranke des Satzes verspricht nichts mehr, die Iterierten kommen kaum noch voran."
-              : `ρ > 1: die Voraussetzung von Satz 8.3.5 ist verletzt, und hier läuft die Iteration tatsächlich davon (Faktor ${fmt(rho, 2)} je Schritt).`}
+              : `ρ > 1: die Voraussetzung von Satz 8.3.5 ist verletzt, und hier läuft die Iteration tatsächlich davon (auf Dauer das ${fmt(rho, 2)}-fache je Schritt).`}
         </p>
       </div>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-300">
         Drei Einstellungen lohnen sich: γ = 0,25 ist die Wahl aus Beispiel 8.3.11 mit
         ρ ≈ 0,405. Um γ ≈ 0,285 herum wird ρ am kleinsten, denn dort liegen
         1 − γλ<sub>min</sub> und 1 − γλ<sub>max</sub> betragsgleich um die Null verteilt;
-        das Optimum ist γ = 2/7 ≈ {fmt(GAMMA_OPT, 3)} mit ρ = √5/7 ≈ 0,319. Ab
-        γ = {fmt(GAMMA_GRENZ, 3)} = 2/λ<sub>max</sub> kippt ρ über 1, und aus der Korrektur
+        das Optimum ist γ = 2/7 ≈ {fmt(GAMMA_OPT, 3)} mit ρ = √5/7 ≈ 0,319. Jenseits von
+        γ = {fmt(GAMMA_GRENZ, 3)} = 2/λ<sub>max</sub> steigt ρ über 1, und aus der Korrektur
         wird eine Übersteuerung: Die Iterierten springen mit wachsender
         Amplitude um die Lösung herum.
       </p>

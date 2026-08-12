@@ -16,10 +16,13 @@ anderes dafür hergeben.
    taugt aber nicht als Algorithmus (Bemerkung 8.1.1). Stattdessen wenden wir
    die Matrix immer wieder an. Die Potenzmethode (Algorithmus 8.1.2) holt mit
    einem :k[Matrix-Vektor-Produkt]{#matrix-vector-product} pro Schritt das
-   betragsgrößte Eigenpaar, die QR-Iteration (Algorithmus 8.1.10) alle
-   Eigenwerte auf einmal, im Kern als simultane Potenzmethode auf allen
-   Koordinatenachsen (Bemerkung 8.1.13). Beide stützen sich darauf, dass
-   :k[ähnliche Matrizen]{#similar-matrices} dasselbe Spektrum haben
+   betragsgrößte Eigenpaar, sofern der größte Eigenwert einsam an der Spitze
+   steht (Satz 8.1.4); die QR-Iteration (Algorithmus 8.1.10) liefert unter den
+   Voraussetzungen von Bemerkung 8.1.14 alle Eigenwerte auf einmal, im Grunde
+   als simultane Potenzmethode auf allen Koordinatenachsen (Bemerkung 8.1.13).
+   Getragen wird die QR-Iteration von der Ähnlichkeit: Jeder Schritt ersetzt
+   $\bA^{(k-1)}$ durch eine ähnliche Matrix (Satz 8.1.11), und
+   :k[ähnliche Matrizen]{#similar-matrices} haben dasselbe Spektrum
    (Satz 8.1.7). Wie weit das trägt, zeigt [Abschnitt 8.2](#sec-8.2): PageRank
    ist eine Potenzmethode auf einer :k[dünnbesetzten]{#sparse-matrix} Matrix mit
    rund $10^{10}$ Zeilen, die Hauptkomponentenanalyse eine Eigenwertaufgabe für
@@ -27,23 +30,28 @@ anderes dafür hergeben.
    :k[SVD]{#singular-value-decomposition} liefert die $k$ größten Singulärwerte,
    ohne die Matrix je vollständig zu zerlegen.
 2. **Iterative Verfahren sind Fixpunktiterationen.** Aus dem Residuum
-   $\cred{\br^{(k)}} = \bb - \bA\,\cblue{\bx^{(k)}}$ wird eine Korrektur, und
-   ausmultipliziert steht dort die affine Vorschrift
+   $\cred{\br^{(k-1)}} = \bb - \bA\,\cblue{\bx^{(k-1)}}$ wird eine Korrektur,
+   und ausmultipliziert steht dort die affine Vorschrift
    $\cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb$ mit
    $\bB = \bI_n - \bC\bA$ (Bemerkung 8.3.4). Ob die Folge zusammenläuft,
-   entscheidet allein $\corange{\rho} = \left\|\bB\right\|_2$: Für
-   $\corange{\rho} < 1$ schrumpft der Fehler in jedem Schritt um mindestens
-   diesen Faktor (Satz 8.3.5). Diese
+   entscheidet allein die Iterationsmatrix $\bB$. Hinreichend dafür ist
+   $\corange{\rho} = \left\|\bB\right\|_2 < 1$: Dann schrumpft der Fehler in
+   jedem Schritt auf höchstens das $\corange{\rho}$-Fache (Satz 8.3.5). Notwendig ist die
+   kleine Norm nicht, auf lange Sicht zählt der
+   :k[Spektralradius]{#spectral-radius} (Beispiel 8.3.9). Diese
    :k[Fixpunktstruktur]{#fixed-point-iteration} verbindet beide Hälften des
    Kapitels. Auch die Potenzmethode ist eine: Die Abbildung
    $\bx \mapsto \bA\bx/\left\|\bA\bx\right\|$ lässt genau die normierten
-   :k[Eigenvektoren]{#eigenvalue-eigenvector} fest, bis auf ihr Vorzeichen, und
+   :k[Eigenvektoren]{#eigenvalue-eigenvector} zu Eigenwerten
+   $\lambda \neq 0$ fest, bis auf ihr Vorzeichen, und
    die Rate heißt dort $\corange{|\lambda_2/\lambda_1|}$ statt
    $\corange{\rho}$ (Satz 8.1.4).
 3. **Probabilistische Verfahren ersetzen ein schweres Problem durch ein
    zufälliges, kleineres.** Eine geeignet gezogene Matrix
-   $\bS \in \R^{m \times n}$ mit $m \ll n$ erhält Abstände und Winkel mit hoher
-   Wahrscheinlichkeit näherungsweise ([Abschnitt 8.4](#sec-8.4)). Statt mit
+   $\bS \in \R^{m \times n}$ mit $m \ll n$ erhält die Abstände und Winkel
+   *vorher festgelegter* Punkte mit hoher Wahrscheinlichkeit näherungsweise
+   ([Abschnitt 8.4](#sec-8.4)). Für alle Vektoren zugleich gilt das nicht,
+   schon weil $\bS$ einen nichttrivialen Kern hat (Bemerkung 8.4.10). Statt mit
    $\bA$ rechnen wir mit der Skizze $\bS\bA$ weiter, und aus einem
    $n$-dimensionalen Problem wird ein $m$-dimensionales. Die Garantie ist dafür
    von anderer Art als bisher: Sie gilt nur mit Wahrscheinlichkeit
@@ -59,9 +67,9 @@ verschiedenen Stellen.
 :::bemerkung[8.5.2 (Zwei Regler und ihre Preise)]
 | Zugang | Regler | Kosten | Was wir bekommen |
 | --- | --- | --- | --- |
-| Zerlegung ([Kapitel 5](?k=05-lgs#sec-5.2), [Kapitel 7](?k=07-kq#sec-7.4)) | keiner | fest, Größenordnung $n^3$ | Lösung bis auf Rundungsfehler |
+| Zerlegung ([Kapitel 5](?k=05-lgs#sec-5.3), [Kapitel 7](?k=07-kq#sec-7.4)) | keiner | fest, Größenordnung $n^3$ | Lösung bis auf Rundungsfehler |
 | Iteration ([8.1](#sec-8.1), [8.3](#sec-8.3)) | Iterationszahl $k$ | $k$ mal die Kosten eines Schritts | Fehler höchstens $\corange{\rho}^{\,k}$ mal Startfehler |
-| Sketching ([8.4](#sec-8.4)) | Skizzengröße $m$ | Rechnen in $\R^m$ statt in $\R^n$ | Verzerrung $\eps$, mit Wahrscheinlichkeit $1 - \delta$ |
+| Sketching ([8.4](#sec-8.4)) | Skizzengröße $m$ | Rechnen in $\R^m$ statt in $\R^n$ | Verzerrung $\eps$ je festem Paar, mit Wahrscheinlichkeit $1 - \delta$ |
 
 Die beiden Regler haben sehr verschiedene Preisschilder. Bei der Iteration
 fällt der Fehler geometrisch, die Schrittzahl wächst deshalb nur wie
@@ -131,7 +139,7 @@ Verschärfen wir bei der Korrekturiteration die geforderte Genauigkeit, so
 wächst die nötige Schrittzahl nur logarithmisch.
 
 Das ist Korollar 8.3.6: $k = O(\log(1/\eps))$, weil der Fehler in jedem
-Schritt um den Faktor $\corange{\rho}$ schrumpft. Bei
+Schritt auf höchstens das $\corange{\rho}$-Fache schrumpft. Bei
 $\corange{\rho} \approx \corange{0{,}405}$ sind das rund zweieinhalb Schritte
 je Dezimalstelle, unabhängig davon, bei welcher Stelle wir gerade sind.
 :::

@@ -1,1 +1,157 @@
-Abschnitt 8.2 – im Aufbau.
+import { PagerankDemo } from "./widgets/S82Pagerank";
+
+::quelle[Folien 08-la-misc, „Anwendung: Google PageRank" bis „Iterative Eigenwertverfahren: Vergleich".]
+
+Warum lohnt sich der Aufwand aus [Abschnitt 8.1](#sec-8.1)? Weil einige der
+größten Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche,
+bei denen direkte Verfahren keine Chance haben. Drei Beispiele aus Suche,
+Statistik und Bildverarbeitung.
+
+### Google PageRank
+
+Das Problem: eine Rangordnung für $n \approx 10^{10}$ Webseiten. Das Modell
+dahinter ist verblüffend schlicht. Jede Seite $i$ bekommt einen
+Wichtigkeits-Score $x_i$, und wichtig ist, wer von wichtigen Seiten
+verlinkt wird:
+
+$$
+x_i = \sum_{j\colon j \to i} \frac{x_j}{d_j} ,
+$$
+
+wobei $j \to i$ bedeutet, dass Seite $j$ auf Seite $i$ verlinkt, und $d_j$
+die Anzahl der ausgehenden Links von $j$ ist: Jede Seite vererbt ihren
+Score gleichmäßig an alle Seiten, auf die sie zeigt. In Matrixform, mit
+$\bA = \bigl[\tfrac{I(j \to i)}{d_j}\bigr]_{i,j}$, heißt das
+
+$$
+\bx = \bA\bx ,
+$$
+
+ein :k[Eigenwertproblem]{#eigenvalue-eigenvector} zum Eigenwert $1$.
+
+:::bemerkung[8.2.1 (Warum ausgerechnet der Eigenwert 1?)]
+Die Spalten von $\bA$ summieren sich zu $1$ (jede Seite verteilt ihren
+ganzen Score). Für solche *spaltenstochastischen* Matrizen liefert die
+Perron-Frobenius-Theorie, dass $1$ ein Eigenwert ist und kein Eigenwert
+betragsmäßig darüber liegt; der zugehörige Eigenvektor lässt sich
+nichtnegativ wählen. Der PageRank-Vektor ist also genau der dominante
+Eigenvektor, nach dem die [Potenzmethode](#sec-8.1) sucht. Reale
+Suchmaschinen ergänzen noch einen Dämpfungsfaktor, der Sackgassen und
+abgeschlossene Teilnetze entschärft; am Prinzip ändert das nichts.
+:::
+
+Und warum iterativ? Direkte Verfahren an einer Matrix mit $10^{10}$ Zeilen
+sind aussichtslos. Aber $\bA$ ist extrem
+:k[dünn besetzt]{#sparse-matrix}: Eine typische Seite hat nur etwa $10$
+ausgehende Links, der Speicherbedarf ist also $O(n)$ statt $O(n^2)$. Die
+Potenz-Iteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
+pro Schritt nur ein Matrix-Vektor-Produkt mit dieser dünnen Matrix, also
+$O(n)$ Operationen, und der Web-Graph ist so strukturiert, dass rund $50$
+Iterationen reichen. Insgesamt $O(n)$ statt $O(n^3)$: Dieser Unterschied
+macht eine Websuche überhaupt erst möglich.
+
+:::vertiefung[PageRank auf einem Vier-Seiten-Netz]
+Im Kleinen lässt sich das komplette Verfahren ansehen: vier Seiten, sechs
+Links, und die Potenz-Iteration aus [Abschnitt 8.1](#sec-8.1) läuft auf
+der spaltenstochastischen Link-Matrix. Der stationäre Vektor
+$\bx^* = (\tfrac{1}{3}, \tfrac{1}{6}, \tfrac{1}{3}, \tfrac{1}{6})^\top$
+lässt sich von Hand nachprüfen: etwa
+$x_a^* = \tfrac{1}{2}x_c^* + x_d^* = \tfrac{1}{6} + \tfrac{1}{6} = \tfrac{1}{3}$.
+
+<PagerankDemo />
+:::
+
+### Hauptkomponentenanalyse (PCA)
+
+Auch die Datenanalyse rechnet ständig Eigenwerte. Gegeben ist eine
+mittelwert-zentrierte Datenmatrix $\bX \in \R^{n \times p}$ ($n$
+Beobachtungen, $p$ Variablen); gesucht sind die Richtungen maximaler
+Varianz, um die Daten auf wenige Dimensionen zu verdichten. Die Antwort
+steckt in der :k[Kovarianzmatrix]{#covariance-matrix}
+
+$$
+\bSigma = \frac{1}{n-1}\,\bX^\top\bX \in \R^{p \times p} :
+$$
+
+Ihre Eigenvektoren sind die *Hauptkomponenten*, die Richtungen maximaler
+Varianz in $\R^p$, und die zugehörigen Eigenwerte geben an, wie viel
+Varianz jede Richtung erklärt. In der Praxis rechnet man noch schneller
+direkt mit der [Singulärwertzerlegung](?k=06-svd#sec-6.2) von $\bX$, ohne
+$\bX^\top\bX$ je zu bilden (warum das auch numerisch klüger ist, haben wir
+in [Kapitel 6](?k=06-svd#sec-6.5) gesehen).
+
+:::bemerkung[8.2.2 (Warum iterativ? Die Lanczos-Abkürzung)]
+Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen
+(Gen-Expression, Bildanalyse), gebraucht werden aber fast immer nur die
+$k$ größten Eigenwerte mit $k \ll p$. Die
+[Lanczos-Iteration](#sec-8.1) liefert genau diese in $O(k p^2)$
+Operationen statt $O(p^3)$ für alle. Bei $p = 100\,000$ und $k = 10$ ist
+das ein Faktor $p/k = 10\,000$: aus Tagen werden Sekunden. In R übernimmt
+das zum Beispiel `irlba::irlba()` (iterativ) oder `irlba::svdr()`
+(iterativ und probabilistisch, ein Vorgeschmack auf
+[Abschnitt 8.4](#sec-8.4)).
+:::
+
+### Approximative SVD in der Praxis
+
+Wie groß der Unterschied ist, zeigt ein Experiment aus der Vorlesung:
+eine :k[Rang-k-Approximation]{#low-rank-approximation} an einem
+Graustufen-Foto (2500 × 3300 Pixel), einmal mit der vollen SVD und
+zweimal iterativ mit `irlba`:
+
+```r
+library(irlba); suppressMessages(library(magick))
+# "img" ist 2500 × 3300 px (grayscale)
+img <- paste0(
+  "https://upload.wikimedia.org/wikipedia/commons/7/7e/",
+  "Bolzano_City_Image_-_Photo_by_Giovanni_Ussi_-_In_Black_and_White_19.jpg")
+X <- (image_read(img) |>
+        image_data(channels = "gray") |>
+        as.numeric())[,,1]
+r <- 50
+microbenchmark::microbenchmark(
+  svd_full   = svd(X),
+  svd_irlba  = irlba::irlba(X, nv = r, nu = r),
+  svd_random = irlba::svdr(X, k = r),
+  times = 5)
+```
+
+Die vollständige SVD berechnet alle 2500 Singulärwerte, obwohl nur 50
+gebraucht werden; `irlba` und `svdr` sind deshalb um Größenordnungen
+schneller. Und die Qualität? Der relative Frobenius-Fehler der drei
+Rang-50-Rekonstruktionen lässt sich direkt vergleichen:
+
+```r
+r <- 50
+X_r <- with(svd(X, nu = r, nv = r), u %*% diag(d[1:r]) %*% t(v))
+X_irlba <- with(irlba::irlba(X, nu = r, nv = r), u %*% diag(d) %*% t(v))
+X_svdr <- with(irlba::svdr(X, k = r), u %*% diag(d) %*% t(v))
+norm(X - X_r, "F") / norm(X, "F")
+c(norm(X_r - X_irlba, "F"), norm(X_r - X_svdr, "F")) / norm(X_r, "F")
+```
+
+Die iterativen Rekonstruktionen sind von der exakten Rang-50-Lösung
+praktisch nicht zu unterscheiden; der Unterschied liegt weit unter dem
+Approximationsfehler zum Original. Zum Selbst-Ausprobieren: das
+[Rang-k-Widget in Kapitel 6](?k=06-svd#sec-6.4) und die
+[Shiny-App zur Bildkompression](https://fabian-s.shinyapps.io/truncatedSVD-shiny/).
+
+### Die Verfahren im Vergleich
+
+| Methode | Komplexität / Iteration | Anwendung | Output |
+| --- | --- | --- | --- |
+| Potenzmethode | $O(\operatorname{nnz}(\bA))$ | größter Eigenwert/-vektor | 1 Eigenpaar |
+| (shifted) QR | $O(\operatorname{nnz}(\bA))$ bis $O(n^3)$ | alle Eigenwerte | $n$ Eigenwerte |
+| Lanczos | $O(m\operatorname{nnz}(\bA) + m^2)$ für $m$ Eigenwerte | wenige Extremal-Eigenwerte, *sparse* $\bA$ | $m \ll n$ Eigenpaare |
+
+Dabei zählt $\operatorname{nnz}(\cdot)$ die Nicht-Null-Einträge. Zur
+Einordnung: Die [Potenzmethode](#sec-8.1) konvergiert mit der Rate
+$\corange{|\lambda_2/\lambda_1|}$, die QR-Iteration (mit Shifts) oft
+quadratisch und am stabilsten. Als Faustregeln: Für *sparse* Matrizen ist
+Lanczos klar überlegen; wer alle Eigenwerte braucht und Speicher übrig
+hat, nimmt die (shifted) QR-Iteration; für wenige Eigenpaare reichen
+Potenzmethode (eines) oder Lanczos ($m \ll n$).
+
+*Vertiefung: Heath §4.5 (iterative Eigenwertverfahren: Potenzmethode,
+QR-Iteration, Lanczos); zur PCA-über-SVD-Verbindung noch einmal
+Kapitel 6.*

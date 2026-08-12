@@ -7,8 +7,8 @@ Kleinste-Quadrate-Probleme kennen wir bisher nur *direkte* Verfahren. Die
 LU-Zerlegung aus [Abschnitt 5.3](?k=05-lgs#sec-5.3) und die QR-Zerlegung aus
 [Abschnitt 7.4](?k=07-kq#sec-7.4) zerlegen die Matrix einmal vollständig und
 liefern danach die Lösung bis auf Rundungsfehler exakt. Der Preis steht dabei
-von vornherein fest, nämlich rund $n^3$ Operationen, ganz unabhängig davon, wie
-genau wir die Lösung überhaupt brauchen.
+von vornherein fest, nämlich eine Operationszahl der Größenordnung $n^3$, ganz
+unabhängig davon, wie genau wir die Lösung überhaupt brauchen.
 
 *Iterative Verfahren* drehen dieses Verhältnis um. Sie erzeugen eine Folge von
 Näherungen $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die
@@ -17,9 +17,8 @@ erreichte Genauigkeit genügt. Fast alle folgen dabei demselben Bauplan, einer
 :k[*Fixpunktiteration*]{#fixed-point-iteration} (fixed point iteration): Eine
 Vorschrift wird immer wieder auf ihr eigenes Ergebnis angewendet, und die
 gesuchte Lösung ist gerade der Punkt, den diese Vorschrift nicht mehr bewegt.
-Bei großen oder :k[dünnbesetzten]{#sparse-matrix} Matrizen sind solche Verfahren
-oft um Größenordnungen schneller als direkte, sofern wir bereit sind, etwas
-Genauigkeit abzugeben.
+Bei großen oder :k[dünnbesetzten]{#sparse-matrix} Matrizen lohnt sich dieser
+Handel fast immer: etwas Genauigkeit gegen viel Rechenzeit.
 
 ### Residuum und Korrekturschritt
 
@@ -130,6 +129,10 @@ Insbesondere ist $\lim_{k \to \infty} \cblue{\bx^{(k)}} = \cgreen{\bx}$, und
 zwar für jeden Startwert.
 :::
 
+Zur Notation: Das $\corange{\rho}$ hier ist die *Konvergenzrate* der
+Iteration; mit dem Rayleigh-Quotienten $\cblue{\rho^{(k)}}$ aus
+[Abschnitt 8.1](#sec-8.1) hat es nur den Buchstaben gemeinsam.
+
 ::::beweis
 
 :::schritt
@@ -175,8 +178,8 @@ $$
 :::
 
 :::schritt
-Jeder Schritt drückt den Fehler also um mindestens den Faktor
-$\corange{\rho}$. Iterieren wir die Ungleichung, so erhalten wir
+Jeder Schritt drückt den Fehler also auf höchstens das
+$\corange{\rho}$-fache. Iterieren wir die Ungleichung, so erhalten wir
 
 $$
 \left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|_2
@@ -193,10 +196,16 @@ und wegen $\corange{\rho} < 1$ geht die rechte Seite gegen null.
 
 ::::
 
-Die Schranke ($8.3.3$) ist eine :k[lineare Konvergenz]{#rate-of-convergence}: Der
-Fehler schrumpft pro Schritt um einen festen Faktor, nicht um eine feste
-Differenz. Auf logarithmischer Skala aufgetragen liegt er damit auf einer
+Die Schranke ($8.3.3$) beschreibt :k[lineare Konvergenz]{#rate-of-convergence}:
+Der Fehler schrumpft pro Schritt auf einen festen Bruchteil, nicht um eine feste
+Differenz. Auf logarithmischer Skala aufgetragen bleibt er damit unterhalb einer
 Geraden mit Steigung $\log \corange{\rho}$.
+
+Die Voraussetzung des Satzes ist übrigens stärker, als sie aussieht. Wäre $\bA$
+singulär, so gäbe es ein $\bv \neq \bnull$ mit $\bA\bv = \bnull$, also
+$(\bI_n - \bC\bA)\bv = \bv$ und damit $\corange{\rho} \ge 1$. Aus
+$\corange{\rho} < 1$ folgt somit von selbst, dass $\bA$ invertierbar ist und die
+Lösung eindeutig.
 
 ### Selbsttest: Was kostet ein Schritt?
 
@@ -270,7 +279,7 @@ Anschluss als Korollar 8.3.6.
 :::
 
 :::frage{falsch}
-Für $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\| \le \eps$ braucht man
+Für $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\| \le \eps$ brauchen wir
 $k = O(1/\eps)$ Schritte.
 
 Das wäre die Schrittzahl bei einem Fehler, der nur wie $1/k$ fällt. Hier fällt
@@ -280,7 +289,7 @@ System aus Beispiel 8.3.11 genügen.
 :::
 
 :::frage{falsch}
-Für $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\| \le \eps$ braucht man
+Für $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\| \le \eps$ brauchen wir
 $k = O(1/\eps^k)$ Schritte.
 
 Diese Antwort kann schon formal nicht stimmen, denn das gesuchte $k$ steht auf
@@ -346,8 +355,8 @@ $k = O(\log(1/\eps))$.
 
 ::::
 
-Wie freundlich diese Schranke ist, sieht man an Zahlen. Für das Beispiel weiter
-unten ist $\corange{\rho} \approx \corange{0{,}405}$ und
+Wie freundlich diese Schranke ist, zeigen ein paar Zahlen. Für das Beispiel
+weiter unten ist $\corange{\rho} \approx \corange{0{,}405}$ und
 $\cred{e_0} \approx \cred{0{,}643}$; ($8.3.4$) verlangt dann $8$ Schritte für
 $\eps = 10^{-3}$, $15$ Schritte für $\eps = 10^{-6}$ und $23$ Schritte für
 $\eps = 10^{-9}$. Drei zusätzliche Dezimalstellen kosten also jedes Mal rund
@@ -523,8 +532,9 @@ Beides stimmt nicht: Aus $\cblue{\bx^{(3)}} = \tfrac{1}{64}(7, 39)^\top$ folgt
 exakt $\cblue{\bx^{(4)}} = \tfrac{1}{256}(25, 160)^\top
 \approx (0{,}098,\; 0{,}625)^\top$ mit Fehler $\cred{0{,}013}$. Wir rechnen
 oben mit den korrigierten Werten. Auch die Fehlerspalte der Folie ist
-abgeschnitten statt gerundet ($0{,}642$ statt $0{,}643$); an der Aussage ändert
-das nichts.
+abgeschnitten statt gerundet ($0{,}642$ statt $0{,}643$), und
+$\cblue{\bx^{(3)}}$ erscheint dort als $(0{,}109,\; 0{,}610)^\top$ statt
+$(0{,}109,\; 0{,}609)^\top$; an der Aussage ändert das nichts.
 :::
 
 :::vertiefung[Richardson Schritt für Schritt, mit einstellbarem γ]
