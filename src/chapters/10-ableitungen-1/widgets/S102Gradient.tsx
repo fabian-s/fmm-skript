@@ -426,7 +426,7 @@ export function Gradientenfeld() {
       <p className="max-w-prose text-sm">
         Die blauen Kurven sind Höhenlinien von {feld.name}, die dicke Linie gehört zum Niveau
         des aktuellen Punktes. Der orange Pfeil ist der Gradient, als Spalte ∇f(x)ᵀ an den
-        Punkt geheftet. Seine Länge wächst mit ‖∇f(x)‖, bleibt aber zwischen 0,25 und 1,1
+        Punkt geheftet. Seine Länge wächst mit ‖∇f(x)‖₂, bleibt aber zwischen 0,25 und 1,1
         Einheiten: so ist er auch an flachen Stellen sichtbar und läuft an steilen nicht aus
         dem Bild. Den Zahlenwert lesen wir unten ab. Die blau gestrichelte Gerade ist die
         Tangente an die Höhenlinie, und zwischen ihr und dem Pfeil steht an jeder Stelle ein
@@ -524,7 +524,7 @@ export function Gradientenfeld() {
           <span className="font-mono" style={{ color: ORANGE }}>
             ∇f(x) = ({fmt(g[0], 3)}; {fmt(g[1], 3)})
           </span>{" "}
-          mit ‖∇f(x)‖ = <span className="font-mono">{fmt(norm, 3)}</span>
+          mit ‖∇f(x)‖₂ = <span className="font-mono">{fmt(norm, 3)}</span>
         </p>
         <p>
           Richtung{" "}
@@ -545,12 +545,12 @@ export function Gradientenfeld() {
           {norm < 1e-9
             ? "Hier verschwindet der Gradient. Dann zeichnet sich keine Richtung mehr aus, und die Höhenlinie durch den Punkt ist keine glatte Kurve mehr: solche Stellen sind die Kandidaten für Extremwerte und Sattelpunkte."
             : richtungsAbleitung >= norm * COS_RASTER
-              ? `Diese Richtung ist bis auf die 1°-Rasterung des Reglers die des stärksten Anstiegs: ∇f(x)d erreicht ‖∇f(x)‖ = ${fmt(norm, 3)}, wie Satz 10.2.4 es verlangt.`
+              ? `Diese Richtung ist bis auf die 1°-Rasterung des Reglers die des stärksten Anstiegs: ∇f(x)d erreicht ‖∇f(x)‖₂ = ${fmt(norm, 3)}, wie Satz 10.2.4 es verlangt.`
               : richtungsAbleitung <= -norm * COS_RASTER
-                ? `Diese Richtung ist die des stärksten Abstiegs, die Gegenrichtung zum Gradienten: ∇f(x)d erreicht −‖∇f(x)‖ = ${fmt(-norm, 3)}.`
+                ? `Diese Richtung ist die des stärksten Abstiegs, die Gegenrichtung zum Gradienten: ∇f(x)d erreicht −‖∇f(x)‖₂ = ${fmt(-norm, 3)}.`
                 : Math.abs(richtungsAbleitung) <= norm * SIN_RASTER
                   ? "Diese Richtung läuft längs der Höhenlinie: die Richtungsableitung ist bis auf die Rasterung des Reglers null, in erster Ordnung ändert sich f hier also nicht."
-                  : `In dieser Richtung ändert sich f mit der Rate ${fmt(richtungsAbleitung, 3)}, also dem ${fmt(richtungsAbleitung / norm, 3)}-fachen des Maximums ‖∇f(x)‖.`}
+                  : `In dieser Richtung ändert sich f mit der Rate ${fmt(richtungsAbleitung, 3)}, also dem ${fmt(richtungsAbleitung / norm, 3)}-fachen des Maximums ‖∇f(x)‖₂.`}
         </p>
       </div>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-300">
