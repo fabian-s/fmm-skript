@@ -1,1 +1,321 @@
-Abschnitt 9.1 – im Aufbau.
+import { BilinearitaetsDemo } from "./widgets/S91Bilinear";
+
+::quelle[Folien 09-tensoren, „Verwendete Vorkenntnisse" bis „Darstellung von multilinearen Abbildungen".]
+
+Eine lineare Abbildung nimmt einen Vektor und liefert einen Vektor. Für viele
+Rechenvorschriften ist das zu eng. Ein Skalarprodukt braucht zwei Vektoren, eine
+quadratische Form ebenfalls, und die Matrizenmultiplikation verarbeitet zwei
+Matrizen zu einer dritten. Betrachten wir das ganze Tupel auf einmal, ist keine
+dieser Abbildungen linear. In jedem einzelnen Argument sind sie es aber sehr
+wohl, und diese Beobachtung trägt das gesamte Kapitel.
+
+### Was wir brauchen
+
+Sammeln wir zuerst das Vorwissen ein, auf dem dieser Abschnitt steht.
+
+- :k[Vektorräume]{#vector-space} und ihre Unterräume, dazu :k[Basis]{#basis}
+  und :k[Dimension]{#dimension}. In einem Raum der Dimension $n$ ist jeder
+  Vektor durch seine $n$ Koordinaten bezüglich einer festen Basis bestimmt.
+- :k[Lineare Abbildungen]{#linear-map}, also $f(c\bv + c'\bv') = c f(\bv) + c' f(\bv')$.
+  Das ist die Eigenschaft, die wir gleich verallgemeinern.
+- Die :k[lineare Hülle]{#span}
+  $\spann\bigl(\{\bv_1, \dots, \bv_n\}\bigr) = \bigl\{\bw : \bw = \sum_i c_i \bv_i,\ c_i \in \R\bigr\}$.
+- Das :k[äußere Produkt]{#outer-product} $\bv \otimes \bw = \bv\bw^\top$. Das
+  Zeichen $\otimes$ begegnet uns in diesem Kapitel noch in allgemeinerer Rolle.
+- Aus der Analysis: Funktionen mehrerer Veränderlicher,
+  $f(\bx) = f(x_1, x_2, \dots, x_n)$.
+
+### Von einem Vektor zu einem Tupel
+
+Bisher haben wir einen Vektor $\bv \in V$ linear auf einen Vektor $\bw \in W$
+abgebildet. Jetzt bilden wir Paare oder allgemeiner Tupel
+$(\bv_1, \dots, \bv_n) \in V_1 \times \cdots \times V_n$ ab, und zwar wieder
+„linear". Die Anführungszeichen sind nötig, denn Linearität bezieht sich hier
+auf die *einzelnen* Argumente: Halten wir alle Argumente bis auf eines fest, so
+soll die verbleibende Abbildung linear sein. Solche Abbildungen heißen
+*multilinear*.
+
+:::definition[9.1.1 (Multilineare Abbildung)]
+Seien $V_1, \dots, V_n, W$ Vektorräume. Eine Abbildung
+$f\colon V_1 \times \cdots \times V_n \to W$ heißt *multilinear*, wenn
+
+$$
+\begin{aligned}
+&f(\bv_1, \dots, \cblue{c\bv_i + c'\bv_i'}, \dots, \bv_n) \\
+&\qquad = c\,f(\bv_1, \dots, \cblue{\bv_i}, \dots, \bv_n)
+        + c'\,f(\bv_1, \dots, \cblue{\bv_i'}, \dots, \bv_n)
+\end{aligned}
+$$
+
+für alle $i = 1, \dots, n$, alle $c, c' \in \R$ und alle
+$\bv_i, \bv_i' \in V_i$ gilt.
+:::
+
+Die Bedingung ist $n$ Bedingungen auf einmal, eine je Argument. Für festes $i$
+sagt sie: Frieren wir die übrigen $n - 1$ Argumente ein, so ist die verbleibende
+Abbildung $V_i \to W$ linear im gewohnten Sinn.
+
+:::bemerkung[9.1.2 (Bilinear, und eine Warnung)]
+Im Spezialfall $n = 2$ nennen wir $f$ *bilinear*. Dieser Fall begegnet uns in
+den Beispielen unten immer wieder.
+
+**Achtung:** Multilineare Abbildungen sind in der Regel *nicht* linear. Der
+Grund steckt schon in der Definition. Skalieren wir alle $n$ Argumente
+gleichzeitig mit demselben $c$, so zieht die Homogenität den Faktor $n$-mal
+heraus, einmal je Argument:
+
+$$
+f(c\bv_1, c\bv_2, \dots, c\bv_n) = \cred{c^n}\, f(\bv_1, \bv_2, \dots, \bv_n) .
+$$
+
+Für eine lineare Abbildung müsste dort $\cred{c}$ stehen. Ab $n \geq 2$ ist das
+ein Unterschied, sobald $f$ überhaupt einen Wert ungleich $\bnull$ annimmt.
+:::
+
+### Die Fläche eines Rechtecks
+
+Das kleinste interessante Beispiel steckt in der Schulgeometrie.
+
+:::beispiel[9.1.3 (Fläche eines Rechtecks)]
+Wir betrachten die Fläche eines Rechtecks als Funktion seiner beiden
+Seitenlängen:
+
+$$
+f\colon \R \times \R \to \R, \qquad
+(\cblue{x}, \cgreen{y}) \mapsto \cblue{x}\cgreen{y} .
+$$
+
+**Warum ist $f$ nicht linear?** Verdoppeln wir beide Seiten, setzen also
+$c = 2$, so wächst die Fläche auf das Vierfache:
+
+$$
+f(2\cblue{x}, 2\cgreen{y}) = 2\cblue{x} \cdot 2\cgreen{y}
+= \cred{4}\,\cblue{x}\cgreen{y} = \cred{4}\,f(\cblue{x}, \cgreen{y}) .
+$$
+
+Linear wäre $f(c\cblue{x}, c\cgreen{y}) = c\,f(\cblue{x}, \cgreen{y})$, hier
+also das Doppelte. Solange $\cblue{x}\cgreen{y} \neq 0$ ist, klaffen die beiden
+Werte auseinander.
+
+**Aber $f$ ist bilinear.** Halten wir $\cgreen{y}$ fest, so gelten Additivität
+und Homogenität im ersten Argument:
+
+$$
+\begin{aligned}
+f(\cblue{x_1} + \cblue{x_2}, \cgreen{y})
+&= (\cblue{x_1} + \cblue{x_2})\,\cgreen{y}
+ = \cblue{x_1}\cgreen{y} + \cblue{x_2}\cgreen{y}
+ = f(\cblue{x_1}, \cgreen{y}) + f(\cblue{x_2}, \cgreen{y}) , \\
+f(c\,\cblue{x}, \cgreen{y})
+&= (c\,\cblue{x})\,\cgreen{y} = c\,(\cblue{x}\cgreen{y})
+ = c\,f(\cblue{x}, \cgreen{y}) .
+\end{aligned}
+$$
+
+Halten wir umgekehrt $\cblue{x}$ fest, läuft dieselbe Rechnung im zweiten
+Argument:
+
+$$
+\begin{aligned}
+f(\cblue{x}, \cgreen{y_1} + \cgreen{y_2})
+&= \cblue{x}\,(\cgreen{y_1} + \cgreen{y_2})
+ = \cblue{x}\cgreen{y_1} + \cblue{x}\cgreen{y_2}
+ = f(\cblue{x}, \cgreen{y_1}) + f(\cblue{x}, \cgreen{y_2}) , \\
+f(\cblue{x}, c\,\cgreen{y})
+&= \cblue{x}\,(c\,\cgreen{y}) = c\,(\cblue{x}\cgreen{y})
+ = c\,f(\cblue{x}, \cgreen{y}) .
+\end{aligned}
+$$
+
+Die Funktion ist also **in jedem Argument einzeln** linear.
+:::
+
+:::bemerkung[9.1.4 (Das Vierfache, geometrisch gelesen)]
+Der Faktor $\cred{4}$ braucht keine Rechnung. Verdoppeln wir beide Seiten, passt
+das alte Rechteck viermal in das neue. Verdoppeln wir nur eine Seite, passt es
+genau zweimal hinein, und das ist die Linearität im einzelnen Argument. Mit
+$\cblue{x} = 3$ und $\cgreen{y} = 2$ etwa ist $f(3, 2) = 6$, während
+$f(6, 4) = 24$ und $f(6, 2) = 12$ gilt. Der Faktor $\cred{4} = 2^2$ ist der Fall
+$n = 2$ der allgemeinen Regel $\cred{c^n}$ aus Bemerkung 9.1.2.
+:::
+
+:::vertiefung[Verdoppeln, einmal beide Seiten und einmal nur eine]
+Das Widget zeichnet zu den eingestellten Seitenlängen beide Rechtecke
+übereinander. Die dünnen Linien im gestrichelten Rechteck zerlegen es in Kopien
+des farbigen: vier bei zwei verdoppelten Seiten, zwei bei einer. Der Knopf hält
+das zweite Argument fest und führt damit genau die Rechnung aus Beispiel 9.1.3
+vor. Lohnend ist auch der Rand der Schieberegler. Bei $\cblue{x} = 0$ oder
+$\cgreen{y} = 0$ ist die Fläche null, das Verhältnis der beiden Flächen also
+nicht definiert, und der Unterschied zwischen linear und bilinear verschwindet.
+
+<BilinearitaetsDemo />
+:::
+
+### Weitere Beispiele
+
+:::beispiel[9.1.5 (Multiplikation reeller Zahlen)]
+Die Multiplikation $f\colon \R \times \R \to \R$,
+$(\cblue{x_1}, \cgreen{x_2}) \mapsto \cblue{x_1}\cgreen{x_2}$, ist bilinear. Das
+ist wörtlich die Rechnung aus Beispiel 9.1.3 ohne die geometrische Deutung.
+Gebraucht haben wir dort nur Distributiv-, Assoziativ- und Kommutativgesetz der
+reellen Zahlen.
+:::
+
+:::beispiel[9.1.6 (Skalarprodukte sind bilinear)]
+Jedes :k[Skalarprodukt]{#inner-product} $f\colon V \times V \to \R$,
+$(\bv_1, \bv_2) \mapsto \inner{\bv_1, \bv_2}$, ist bilinear. Im ersten Argument
+rechnen wir
+
+$$
+\inner{\cblue{c\bv_1 + c'\bv_2}, \cgreen{\bv_3}}
+= \inner{\cblue{c\bv_1}, \cgreen{\bv_3}} + \inner{\cblue{c'\bv_2}, \cgreen{\bv_3}}
+= c\,\inner{\cblue{\bv_1}, \cgreen{\bv_3}} + c'\,\inner{\cblue{\bv_2}, \cgreen{\bv_3}} .
+$$
+
+Der erste Schritt ist die Additivität, der zweite die Homogenität. Je nachdem,
+wie das Skalarprodukt eingeführt wurde, sind beide Axiome oder eine kurze
+Rechnung; für das Standardskalarprodukt $\bx^\top\by$ etwa liefert sie das
+Distributivgesetz. Für das zweite Argument brauchen wir dann keine neue
+Rechnung: Die Symmetrie $\inner{\bv, \bw} = \inner{\bw, \bv}$ dreht die Rollen
+um.
+:::
+
+:::beispiel[9.1.7 (Matrizenmultiplikation als bilineare Abbildung)]
+Die :k[Matrizenmultiplikation]{#matrix-multiplication}
+
+$$
+\R^{m \times k} \times \R^{k \times n} \to \R^{m \times n}, \qquad
+(\cblue{\bA}, \cgreen{\bB}) \mapsto \corange{\bA\bB} ,
+$$
+
+ist bilinear. In beiden Argumenten ist das nichts anderes als das
+Distributivgesetz für Matrizen, zusammen mit der Verträglichkeit mit Skalaren:
+
+$$
+(c\,\cblue{\bA} + c'\,\cblue{\bA'})\,\cgreen{\bB}
+= c\,\corange{\bA\bB} + c'\,\corange{\bA'\bB} ,
+\qquad
+\cblue{\bA}\,(c\,\cgreen{\bB} + c'\,\cgreen{\bB'})
+= c\,\corange{\bA\bB} + c'\,\corange{\bA\bB'} .
+$$
+
+Linear ist auch sie nicht. Skalieren wir beide Faktoren mit $c$, so erhalten wir
+$(c\cblue{\bA})(c\cgreen{\bB}) = \cred{c^2}\,\corange{\bA\bB}$, wie es
+Bemerkung 9.1.2 für $n = 2$ vorhersagt. Sie ist damit unser erstes Beispiel, in
+dem die drei beteiligten Räume im Allgemeinen verschieden sind.
+:::
+
+### Darstellung durch Koeffizienten
+
+Multilineare Abbildungen wirken zunächst wie eine unübersichtliche Klasse. Sind
+die beteiligten Räume Koordinatenräume, lässt sich jede von ihnen aber durch
+eine endliche Liste von Zahlen vollständig beschreiben.
+
+:::satz[9.1.8 (Darstellung multilinearer Abbildungen)]
+Eine Abbildung $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ ist
+genau dann multilinear, wenn es reelle Koeffizienten
+
+$$
+A = \bigl(\corange{a_{i_1, \dots, i_k, j}} \colon
+1 \leq i_1 \leq n_1, \dots, 1 \leq i_k \leq n_k, 1 \leq j \leq m\bigr)
+$$
+
+gibt, sodass
+
+$$ {#eq-9.1.1}
+T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
+= \sum_{i_1 = 1}^{n_1} \cdots \sum_{i_k = 1}^{n_k} \sum_{j = 1}^{m}
+  \corange{a_{i_1, \dots, i_k, j}}\;
+  x^{(1)}_{i_1} \cdots x^{(k)}_{i_k}\; \be_j
+$$
+
+gilt, wobei $\be_j$ der $j$-te Einheitsvektor des $\R^m$ ist. Die Koeffizienten
+$\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
+:::
+
+:::bemerkung[9.1.9 (Woher die Koeffizienten kommen)]
+Einen vollständigen Beweis führen wir nicht. Die Beweisidee ist aber kurz genug,
+um sie mitzunehmen, und sie liefert die Koeffizienten gleich mit.
+
+Die Richtung von rechts nach links ist Nachrechnen. In jedem Summanden von
+($9.1.1$) steht aus jedem Argument genau eine Koordinate als Faktor. Ersetzen
+wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder Summand
+entsprechend auf, und die rechte Seite ist in jedem Argument linear.
+
+Für die andere Richtung entwickeln wir jedes Argument in der Standardbasis,
+$\bx^{(l)} = \sum_{i_l} x^{(l)}_{i_l} \be_{i_l}$, und ziehen die Summen
+nacheinander aus $T$ heraus. Das erlaubt die Multilinearität, und übrig bleibt
+
+$$
+T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
+= \sum_{i_1 = 1}^{n_1} \cdots \sum_{i_k = 1}^{n_k}
+  x^{(1)}_{i_1} \cdots x^{(k)}_{i_k}\;
+  T\bigl(\be_{i_1}, \dots, \be_{i_k}\bigr) .
+$$
+
+Der Vergleich mit ($9.1.1$) zeigt, was die Koeffizienten sind:
+$\corange{a_{i_1, \dots, i_k, j}}$ ist die $j$-te Komponente des Vektors
+$T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit ist auch die Eindeutigkeit
+klar, denn diese Werte legt $T$ selbst fest. Eine multilineare Abbildung ist
+also bereits dadurch bestimmt, was sie mit Tupeln von Einheitsvektoren macht.
+:::
+
+Zählen wir nach: Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
+Flächenfunktion aus Beispiel 9.1.3 hat $k = 2$ Argumente mit
+$n_1 = n_2 = 1$ und $m = 1$, kommt also mit einer einzigen Zahl aus, nämlich
+$a_{1,1,1} = 1$. Ein bilineares $T\colon \R^2 \times \R^2 \to \R$ braucht
+dagegen schon $2 \cdot 2 \cdot 1 = 4$ Koeffizienten. Wie wir diese Zahlen
+anordnen und warum ein Objekt mit $k$ Indizes daraus entsteht, ist das Thema von
+[Abschnitt 9.2](#sec-9.2).
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Für jede multilineare Abbildung $f$ gilt
+$f(\bv_1, \dots, \bv_n) = \bnull$, sobald $\bv_i = \bnull$ für ein $i$ ist.
+
+Wir wenden Definition 9.1.1 im $i$-ten Argument mit dem Skalar $c = 0$ an. Wegen
+$\bnull = 0 \cdot \bv_i$ ist
+
+$$
+f(\bv_1, \dots, \bnull, \dots, \bv_n)
+= f(\bv_1, \dots, 0 \cdot \bv_i, \dots, \bv_n)
+= 0 \cdot f(\bv_1, \dots, \bv_i, \dots, \bv_n) = \bnull .
+$$
+
+Welchen Wert die übrigen Argumente haben, spielt dabei keine Rolle. Ein einziges
+Nullargument genügt.
+:::
+
+:::frage{falsch}
+Jede bilineare Abbildung ist insbesondere linear.
+
+Bemerkung 9.1.2 sagt das Gegenteil. Skalieren wir bei $n = 2$ beide Argumente
+mit $c$, so wird der Wert mit $c^2$ multipliziert und nicht mit $c$.
+Beispiel 9.1.3 führt es vor: $f(2x, 2y) = 4f(x, y)$.
+:::
+
+:::frage{wahr}
+Halten wir in einer multilinearen Abbildung alle Argumente bis auf das $i$-te
+fest, so ist die verbleibende Abbildung $V_i \to W$ linear.
+
+Das ist Definition 9.1.1, in Worte gefasst. Sie fordert genau diese eine
+Bedingung, und zwar für jedes $i$ einzeln.
+:::
+
+:::frage{falsch}
+Zwei verschiedene Koeffizienten-Arrays können dieselbe multilineare Abbildung
+$T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ darstellen.
+
+Satz 9.1.8 sichert die Eindeutigkeit zu. Bemerkung 9.1.9 sagt auch, warum:
+$a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente von
+$T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ selbst festgelegt. Wer die
+Koeffizienten ändert, ändert die Abbildung.
+:::
+
+::::
+
+*Vertiefung: vgl. MML §2.7 zu linearen Abbildungen und MML §3.2, wo bilineare
+Abbildungen als Vorstufe des Skalarprodukts eingeführt werden.*

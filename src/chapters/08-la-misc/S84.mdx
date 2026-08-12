@@ -126,10 +126,15 @@ zwischen $60^\circ$ und $120^\circ$. Die Aussage lebt von großem $n$.
 :::
 
 Damit wird plausibel, was wir eigentlich vorhaben. Ziehen wir $m$ solcher
-Richtungen und schreiben sie als Zeilen in eine Matrix, so verhalten sich
-diese Zeilen fast wie ein Orthonormalsystem. Die Abbildung $\bx \mapsto \bS\bx$
-misst dann die Länge von $\bx$ entlang $m$ zufälliger, fast senkrechter
-Achsen, und das reicht überraschend weit.
+Richtungen und schreiben sie als Zeilen in eine Matrix, so stehen je zwei
+dieser Zeilen fast senkrecht aufeinander. Ein Orthonormalsystem sind sie
+deshalb noch lange nicht: Für eine Gauss-Zeile
+$\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
+$\E\left[\left\|\bs_i\right\|^2\right] = n/m$, bei $n = 10\,000$ und
+$m = 50$ also $200$. Um die Richtungen kümmert sich die hohe Dimension, um
+die Längen der Vorfaktor in der Verteilung. Die Abbildung
+$\bx \mapsto \bS\bx$ misst die Länge von $\bx$ dann entlang $m$ zufälliger,
+fast senkrechter Achsen, und das reicht überraschend weit.
 
 :::definition[8.4.4 (Sketching-Matrix und Skizze)]
 Sei $m < n$. Eine Zufallsmatrix $\bS \in \R^{m \times n}$ heißt
@@ -157,7 +162,7 @@ ist nur, dass das Bild in $m$ statt in $n$ Dimensionen lebt.
 
 ### Ein Zahlenbeispiel
 
-:::beispiel[8.4.5 (Sketching zweier Vektoren mit 10000 Komponenten)]
+:::beispiel[8.4.5 (Sketching zweier Vektoren mit 10 000 Komponenten)]
 Die Folien ziehen zwei beliebige Vektoren $\bx, \by \in \R^{10\,000}$ und eine
 Gauss-Sketchmatrix mit $m = 50$, also einen Faktor $200$ kleiner:
 
@@ -184,19 +189,23 @@ also die Kovarianzstruktur $\E\left[\bs_i\bs_i^\top\right] = \bI_n/m$; diese
 Bedingung brauchen wir gleich. Berichtet wird für diesen Seed weniger als
 $1\,\%$ Abweichung im Abstand und weniger als $3\,\%$ im Winkel.
 
-Diese Zahlen sind eine glückliche Ziehung. Bei $m = 50$ schwankt die relative
-Abweichung des Abstands typischerweise um $\pm 1/\sqrt{2m} \approx 10\,\%$;
-in einer Simulation mit 200 unabhängigen Ziehungen landeten nur rund
-$6\,\%$ davon unter der $1\,\%$-Marke. Das Verfahren funktioniert, aber
-einzelne Ziehungen streuen erheblich. Das Widget unten führt beides vor.
+Diese Zahlen sind eine glückliche Ziehung, und wie glücklich, lässt sich für
+eine Gauss-Skizze exakt beziffern. Ist $\bz \in \R^n$ fest, so sind die $m$
+Komponenten $\bs_i^\top\bz$ von $\bS\bz$ unabhängig
+$\Ncal(0, \left\|\bz\right\|^2/m)$-verteilt; damit ist
+$\left\|\bS\bz\right\|^2/\left\|\bz\right\|^2$ genau $\chi^2_m/m$-verteilt.
+Bei $m = 50$ hat die relative Abweichung des Abstands damit die
+Standardabweichung $9{,}97\,\%$, praktisch die Faustregel
+$1/\sqrt{2m} = 10\,\%$, und nur knapp $8\,\%$ aller Ziehungen landen unter
+der $1\,\%$-Marke. Das Verfahren funktioniert, aber einzelne Ziehungen
+streuen erheblich. Das Widget unten führt beides vor.
 :::
 
 :::vertiefung[Sketching mit verstellbarem m]
-Zwei feste Vektoren aus dem $\R^{200}$ werden mit einer Gauss-Sketchmatrix in
-den $\R^m$ geschickt. Der Slider steuert $m$, der Knopf zieht eine neue
-Matrix. Bei kleinem $m$ springen Abstand und Winkel wild umher, mit
-wachsendem $m$ beruhigen sie sich, und zwar nur so langsam, wie es die Wurzel
-in $\pm 1/\sqrt{2m}$ zulässt.
+Wie weit eine einzelne Ziehung danebenliegen kann, führt das Widget vor. Bei
+kleinem $m$ springen Abstand und Winkel wild umher, mit wachsendem $m$
+beruhigen sie sich, und zwar nur so langsam, wie es die Wurzel in
+$\pm 1/\sqrt{2m}$ zulässt.
 
 <SketchingDemo />
 :::
@@ -330,7 +339,7 @@ den genauen Blick.
 Satz 8.4.6 spricht über $\left\|\bS\bx\right\|^2$, interessant sind aber
 Längen und Abstände.
 
-- **Wurzelziehen.** Aus ($8.4.4$) folgt
+- **Wurzelziehen.** Für $\corange{\eps} \le 1$ folgt aus ($8.4.4$)
   $\sqrt{1-\corange{\eps}} \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le \sqrt{1+\corange{\eps}}$.
   Für $\corange{\eps} = 0{,}1$ heißt das $0{,}949 \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le 1{,}049$:
   Eine Verzerrung von $10\,\%$ im Quadrat sind rund $5\,\%$ in der Länge.
@@ -440,8 +449,12 @@ $$
 = \frac{3 - 2\sum_{j=1}^n v_j^4}{m^2} \le \frac{3}{m^2} ,
 $$
 
-also ebenfalls $K = 3$, und für gestreute $\bv$ sogar etwas besser. Der
-Vorteil liegt im Erzeugen und Speichern: ein Bit pro Eintrag.
+also ebenfalls $K = 3$. Besser wird die Schranke, je stärker $\bv$ auf
+wenige Koordinaten konzentriert ist: Für $\bv = \be_1$ ist
+$\sum_j v_j^4 = 1$ und damit $K = 1$, für einen gestreuten Vektor dagegen
+$\sum_j v_j^4 = 1/n$, also so gut wie die $3$ des Gauss-Falls. Der
+praktische Vorteil liegt ohnehin woanders, im Erzeugen und Speichern: ein
+Bit pro Eintrag.
 
 **Subsampling.** $\bs_i = \sqrt{n/m}\,\be_{K_i}$ mit
 $K_i \sim \unif\{1, \dots, n\}$, die Skizze greift also $m$ zufällige
@@ -460,8 +473,12 @@ Dieses $K$ hängt von den Daten ab. Für einen gestreuten Vektor mit
 $v_j = \pm 1/\sqrt{n}$ ist $\sum_j v_j^4 = 1/n$ und damit $K = 1$, besser als
 Gauss. Für $\bv = \be_1$ dagegen ist $K = n$: Die gesamte Information steckt
 in einer Koordinate, und die Stichprobe erwischt sie nur mit
-Wahrscheinlichkeit $m/n$. So ist die Folien-Tabelle zu lesen, wenn sie
-Subsampling „nur gut für spezielle Matrizen" nennt.
+Wahrscheinlichkeit $m/n$. Subsampling taugt also, wenn die Information über
+viele Koordinaten verteilt ist, und versagt, wenn sie in wenigen sitzt. So
+ist die Folienbemerkung zu lesen, Subsampling sei „nur gut für spezielle
+Matrizen". Die Qualitätsspalte derselben Folien-Tabelle, „Gut (bei
+strukturierter $\bA$)", weist dagegen in die falsche Richtung: Verteilte
+Information ist der gute Fall, wenige dominante Koordinaten der schlechte.
 :::
 
 ### Anwendungen
@@ -511,7 +528,7 @@ wegen $m > p$ ist das mehr als die $O(np^2)$, die wir sparen wollten. Erst
 mit schnell anwendbaren Skizzen wie der SRHT geht die Rechnung auf.
 :::
 
-### Wie klein darf m sein?
+### Wie klein darf $m$ sein?
 
 :::beispiel[8.4.14 (Dimensionsreduktion mit Matrix-Sketching)]
 Gegeben seien $n = 10\,000$ Dimensionen, eine Fehlerwahrscheinlichkeit
@@ -530,10 +547,13 @@ $$
 Mit $m = 6000$ Dimensionen bleibt der Abstand eines vorher festgelegten
 Punktepaares mit Wahrscheinlichkeit $95\,\%$ auf $10\,\%$ genau erhalten,
 gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$
-(Bemerkung 8.4.8). Der Speicher
-sinkt von $10\,000$ auf $6000$ Zahlen je Punkt, ein Faktor $n/m \approx 1{,}7$,
+(Bemerkung 8.4.8). Der Speicher sinkt von $10\,000$ auf $6000$ Zahlen je
+Punkt, ein Faktor $n/m \approx 1{,}7$,
 und eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
-Operationen, ebenfalls ein Faktor $n/m$.
+Operationen, ebenfalls ein Faktor $n/m$. Davon leben die Anwendungen, die
+die Folien nennen: die Suche nach nächsten Nachbarn und die Clusteranalyse
+in hohen Dimensionen. Beide berühren die Daten fast nur über Abstände, und
+die bleiben unter der Skizze erhalten.
 
 Umgekehrt gelesen sagt ($8.4.5$), was $m = 600$ wirklich hergibt: bei
 $\delta = 0{,}05$ nur $\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
@@ -555,8 +575,13 @@ schlägt der Faktor $(n/m)^2$ zu Buche.
 
 Bleibt die Frage, warum in der Praxis trotzdem mit $m$ in der Größenordnung
 einiger hundert gearbeitet wird. Der Grund ist unser Werkzeug: Tschebyscheff
-benutzt nur zwei Momente und ist entsprechend grob. Schärfere
-Konzentrationsungleichungen liefern für Gauss-Skizzen ein $m$ der
+benutzt nur zwei Momente und ist entsprechend grob. Wie grob, lässt sich für
+Gauss-Skizzen ausnahmsweise exakt sagen. Nach Beispiel 8.4.5 ist
+$\left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$ dort $\chi^2_m/m$-verteilt,
+und deren Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und
+$\delta = 0{,}05$ nur $m = 768$ Zeilen. Tschebyscheff fordert das Achtfache.
+Für andere Verteilungen steht diese exakte Rechnung nicht zur Verfügung,
+schärfere Konzentrationsungleichungen dagegen schon: Sie liefern ein $m$ der
 Größenordnung $\corange{\eps}^{-2}\log(1/\delta)$, also eine logarithmische
 statt einer linearen Abhängigkeit von $1/\delta$. Der Preis dafür sind
 deutlich mehr Voraussetzungen und ein längerer Beweis (Literatur am Ende des
@@ -586,7 +611,10 @@ einmal für ein einzelnes Produkt $\bS\bx$.
   Vektoren so groß wie $n$.
 - **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
   sondern durch eine schnelle Transformation angewendet, daher die
-  $O(n \log m)$ in der Tabelle.
+  $O(n \log m)$ in der Tabelle. Das $O(m)$ in der Speicherspalte ist
+  allerdings optimistisch: Neben den $m$ gezogenen Indizes gehören $n$
+  Vorzeichen zur Transformation, die entweder gespeichert oder aus einem
+  Seed neu erzeugt werden müssen.
 
 ### Selbsttest
 
@@ -637,13 +665,15 @@ Subsampling ist für beliebige Daten genauso gut wie eine Gauss-Skizze.
 
 Für Subsampling ist $K = n\sum_j v_j^4$ und hängt damit von den Daten ab.
 Bei gestreuten Vektoren ist $K = 1$ und damit besser als die $3$ der
-Gauss-Skizze, bei einem Einheitsvektor dagegen $K = n$. Die Tabelle oben
+Gauss-Skizze, beim Standard-Basisvektor $\be_1$ dagegen $K = n$. Die Tabelle oben
 schreibt deshalb „gut bei gestreuten Daten" und nicht „optimal".
 :::
 
 ::::
 
-*Vertiefung: Zufallsmatrizen, Konzentrationsungleichungen und Sketching
-behandelt R. Vershynin, High-Dimensional Probability (Cambridge University
-Press, 2018). Die deterministischen Gegenstücke dieses Kapitels stehen bei
-Heath: §4.5 für Eigenwertverfahren, §11.5 für iterative Löser.*
+*Vertiefung: Die wahrscheinlichkeitstheoretischen Werkzeuge, also
+Zufallsmatrizen und Konzentrationsungleichungen, behandelt R. Vershynin,
+High-Dimensional Probability (Cambridge University Press, 2018); die
+Sketching-Algorithmen selbst, samt SRHT und gesketchten KQ-Problemen,
+P.-G. Martinsson und J. A. Tropp, Randomized numerical linear algebra:
+Foundations and algorithms, Acta Numerica 29 (2020).*

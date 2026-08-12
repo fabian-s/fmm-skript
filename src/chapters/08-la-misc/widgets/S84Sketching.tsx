@@ -17,10 +17,11 @@ import type { Series } from "../../../lib";
  * Bildunterschrift.
  *
  * Alle Kennzahlen sind per node nachgerechnet: ||x - y|| = 5,6954,
- * Winkel(x, y) = 41,714 Grad; die Standardabweichung der relativen
- * Abstands-Abweichung ist 1/sqrt(2m) (Monte Carlo: m = 50 -> 10,0 %,
- * m = 100 -> 6,6 % gegen 7,1 % Faustregel), und das Band +-1/sqrt(2m)
- * faengt rund 68 % der Ziehungen.
+ * Winkel(x, y) = 41,714 Grad. Fuer Gauss-Skizzen ist ||Sz||^2/||z||^2 exakt
+ * chi^2_m/m-verteilt; die Standardabweichung der relativen Abstands-
+ * Abweichung ist damit 9,97 % bei m = 50 und 7,06 % bei m = 100, also
+ * praktisch die Faustregel 1/sqrt(2m) (10,00 % bzw. 7,07 %). Das Band
+ * +-1/sqrt(2m) faengt rund 68 % der Ziehungen (4000 Ziehungen: 68,2 %).
  */
 
 const GREEN = "#009E73"; // Originalgroessen x, y
@@ -306,7 +307,10 @@ export function SketchingDemo() {
         Drei Beobachtungen lohnen sich. Erstens: Bei kleinem m schwanken beide Größen
         wild, und zwar in beide Richtungen. Zweitens: Die Verzerrung schrumpft nur wie
         1/√m. Zehnmal genauer heißt deshalb hundertmal mehr Zeilen, und dieselbe
-        Wurzel steckt in ε = √(K/δm) aus Satz 8.4.6. Drittens: Die Zeilen von S
+        Wurzel steckt in ε = √(K/δm) aus Satz 8.4.6. Das orange Band ist aber nicht
+        dieses ε: Es zeigt die typische Schwankung der Länge, während ε eine Schranke
+        für das Längenquadrat ist, die nur mit Wahrscheinlichkeit 1 − δ hält.
+        Drittens: Die Zeilen von S
         werden je Ziehung EINMAL gezogen, und größere m benutzen die ersten m davon. Der
         Marker-Pfad ist deshalb ein zusammenhängender Weg und keine Folge unabhängiger
         Experimente; wer unabhängige Wiederholungen sehen will, zieht bei festem m mehrfach
