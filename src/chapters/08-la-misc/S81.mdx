@@ -794,10 +794,11 @@ Ursache.
 :::
 
 :::bemerkung[8.1.17 (Aufwand)]
-Eine QR-Zerlegung einer vollen $n \times n$-Matrix kostet
-[$O(n^3)$](?k=07-kq#sec-7.6) Operationen, also kostet das jede einzelne
-QR-Iteration. Das klingt teuer, doch in der Praxis genügen oft wenige
-Iterationen; wie viele, hängt von der Eigenwertverteilung ab. Ein Schritt der
+Der praktische QR-Eigenwertalgorithmus reduziert eine volle Matrix einmalig in
+$O(n^3)$ auf Hessenbergform. Danach kostet ein QR-Sweep $O(n^2)$; bei einer
+symmetrischen Matrix reduziert man zunächst auf Tridiagonalform, sodass ein
+impliziter Sweep sogar $O(n)$ kostet. Wie viele Sweeps nötig sind, hängt von
+Shifts, Deflation und Eigenwertverteilung ab. Ein Schritt der
 Potenzmethode ist mit einem Matrix-Vektor-Produkt dagegen konkurrenzlos
 billig, liefert aber eben auch nur einen Eigenwert.
 

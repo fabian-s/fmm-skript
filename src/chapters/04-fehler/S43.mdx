@@ -335,11 +335,12 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
       </>
     }
   >
-    Nein. Satz 4.3.3 liefert nur eine *obere Schranke*: Die schlechte
-    Kondition von $h$ verstärkt den Fehler von $\wt{g}$; wenn
-    $\wt{g}$ aber (nahezu) exakt rechnet, bleibt der verstärkte Term
-    trotzdem klein. Eine schlecht konditionierte Zwischenstelle ist deshalb ein
-    *Indiz* für Instabilität, kein Beweis.
+    Nein. Satz 4.3.3 liefert eine lokale *obere Schranke*: Die schlechte
+    Kondition von $h$ kann ungünstig gerichtete Fehler von $\wt{g}$ stark
+    verstärken. Ist $\wt{g}$ (nahezu) exakt oder liegt sein Fehler in einer
+    wenig empfindlichen Richtung, kann der resultierende Fehler trotzdem klein
+    bleiben. Eine schlecht konditionierte Zwischenstelle ist deshalb ein Indiz,
+    kein Beweis für Instabilität.
   </SelbsttestFrage>
   <SelbsttestFrage
     q={
@@ -350,15 +351,13 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
       </>
     }
   >
-    Wegen Position und Größenordnung des schlecht konditionierten Schritts. Bei
-    $\wt{f}_1$ steht die Subtraktion ganz am *Anfang* und
-    verarbeitet Zahlen der Größenordnung $c$: Die absoluten
-    Rundungsfehler sind $\sim c \cdot \eps$, und alles Weitere
-    (Quadrieren, Mitteln) ist gut konditioniert. Bei $\wt{f}_2$ steht
-    sie ganz am *Ende*, nach dem Quadrieren, auf Zahlen der Größenordnung
-    $c^2$: Fehler $\sim c^2 \cdot \eps$, und der Schritt
-    verstärkt zusätzlich alle vorher akkumulierten Fehler. Genau die Merkregel
-    4.3.4.
+    Entscheidend ist nicht allein die Position der Subtraktion. $\wt{f}_1$
+    bildet direkt die Abweichungen und arbeitet danach mit deren Quadraten.
+    $\wt{f}_2$ bildet dagegen zunächst zwei Aggregate der Größenordnung $c^2$
+    und versucht, ihre kleine Differenz als Varianz zurückzugewinnen; deren
+    Information kann schon in den Rundungen der großen Aggregate verschwunden
+    sein. Die Zentrierung vermeidet genau diese großen, beinahe gleichen
+    Zwischenwerte.
   </SelbsttestFrage>
   <SelbsttestFrage
     q={

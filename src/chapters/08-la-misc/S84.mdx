@@ -472,8 +472,14 @@ $$
 Dieses $K$ hängt von den Daten ab. Für einen gestreuten Vektor mit
 $v_j = \pm 1/\sqrt{n}$ ist $\sum_j v_j^4 = 1/n$ und damit $K = 1$, besser als
 Gauss. Für $\bv = \be_1$ dagegen ist $K = n$: Die gesamte Information steckt
-in einer Koordinate, und die Stichprobe erwischt sie nur mit
-Wahrscheinlichkeit $m/n$. Subsampling taugt also, wenn die Information über
+in einer Koordinate, und die Stichprobe mit Zurücklegen erwischt sie mindestens
+einmal nur mit Wahrscheinlichkeit
+
+$$
+1-\left(1-\frac1n\right)^m,
+$$
+
+nicht mit $m/n$. Subsampling taugt also, wenn die Information über
 viele Koordinaten verteilt ist, und versagt, wenn sie in wenigen sitzt. So
 ist die Folienbemerkung zu lesen, Subsampling sei „nur gut für spezielle
 Matrizen". Die Qualitätsspalte derselben Folien-Tabelle, „Gut (bei
@@ -504,9 +510,11 @@ Information ist der gute Fall, wenige dominante Koordinaten der schlechte.
 
 Ein Vorbehalt gilt für alle drei Punkte: Schneller wird ein Algorithmus nur,
 wenn sich $\bS\bx$ schnell berechnen lässt. Zieht $\bS$ nur $m$ Komponenten
-von $\bx$ heraus, kostet das $O(m)$ Operationen; der Stand der Technik ist
-die *Subsampled Randomized Hadamard Transform* (SRHT) mit
-$O(n \log m)$ Rechenschritten. Bei einer dichten Gauss-Matrix dagegen kostet
+von $\bx$ heraus, kostet das $O(m)$ Operationen. Eine klassische schnelle Wahl
+ist die *Subsampled Randomized Hadamard Transform* (SRHT). Ihre vollständige
+Hadamard-Transformation kostet $O(n\log n)$ Rechenschritte; speziell geprunte
+Varianten können unter zusätzlichen Implementationsannahmen weniger benötigen.
+Bei einer dichten Gauss-Matrix dagegen kostet
 $\bS\bx$ schon $O(mn)$ Operationen, und dann kann die Skizze teurer sein als
 das Problem, das sie vereinfachen soll.
 
@@ -595,7 +603,7 @@ Abschnitts).
 | Gauss | $O(mn)$ | $O(mn)$ | optimal |
 | Rademacher ($\pm 1/\sqrt{m}$) | $O(mn)$ | $O(mn)$ | optimal |
 | Subsampling | $O(m)$ | $O(m)$ | gut bei gestreuten Daten |
-| SRHT (Hadamard) | $O(m)$ | $O(n \log m)$ | sehr gut |
+| SRHT (Hadamard) | $O(n+m)$ oder reproduzierbar erzeugte Vorzeichen | $O(n \log n)$ | sehr gut |
 
 Speicher und Rechenzeit stehen in
 :k[Landau-Notation]{#big-o-notation}: einmal für das Vorhalten von $\bS$,
@@ -611,10 +619,10 @@ einmal für ein einzelnes Produkt $\bS\bx$.
   Vektoren so groß wie $n$.
 - **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
   sondern durch eine schnelle Transformation angewendet, daher die
-  $O(n \log m)$ in der Tabelle. Das $O(m)$ in der Speicherspalte ist
-  allerdings optimistisch: Neben den $m$ gezogenen Indizes gehören $n$
-  Vorzeichen zur Transformation, die entweder gespeichert oder aus einem
-  Seed neu erzeugt werden müssen.
+  $O(n \log n)$ in der Tabelle. Neben den $m$ gezogenen Indizes gehören $n$
+  Vorzeichen zur Transformation; sie werden gespeichert oder reproduzierbar
+  aus einem Seed erzeugt. Die Arbeitskopie des transformierten Vektors benötigt
+  unabhängig davon $O(n)$ Speicher.
 
 ### Selbsttest
 

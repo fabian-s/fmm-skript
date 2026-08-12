@@ -3,6 +3,19 @@
 **Stand:** `claude/textbook-skill-workflow-olwbzr` bei `552553d27af6013e4bf93125e5f2b5982c191e8d`  
 **Gegenstand:** Didaktische Qualität und fachliche Korrektheit der Kapitel 1–8. Geprüft wurden der Lehrtext, Definitionen, Sätze, Beweise, Beispiele und Selbsttests; Widget-Code wurde dort einbezogen, wo er für einen Befund relevant ist.
 
+## Umsetzungsstand
+
+Die in diesem Review aufgeführten 13 Befunde der Priorität A und 12 Befunde der
+Priorität B sind auf dem PR-Branch umgesetzt. Die Änderungen betreffen insbesondere
+die Grundbegriffe zu Algorithmen, $O$ versus $\Theta$, Kondition und Stabilität,
+Pivotierung, KQ-Störungsrechnung, Voraussetzungen und Kosten iterativer Verfahren
+sowie Sketching. Zusätzlich wurden die kleineren didaktischen Präzisierungen aus den
+Kapitelurteilen eingearbeitet, soweit sie direkt an diesen Korrekturen hingen.
+
+Verifiziert wurde der resultierende Stand mit dem Produktions-Build, der statischen
+Prüfung aller 180 MDX-Dateien und der vollständigen MDX-Regression mit 81 von 81
+bestandenen Fixtures.
+
 ## Kurzfazit
 
 Das Skript ist didaktisch deutlich überdurchschnittlich. Es motiviert Begriffe vor der Formalisierung, führt Farben und Interaktion konsistent als Verständnishilfen ein, zerlegt viele Beweise in überprüfbare Schritte und stellt numerische Verfahren fast immer über die drei richtigen Fragen vor: Was berechnen sie, was kosten sie und wie verlässlich sind sie? Besonders stark sind die Fibonacci-Fallstudie, die geometrische Entwicklung der Matrixnormen und SVD, die Gegenüberstellung der KQ-Löser sowie die ungewöhnlich sorgfältige Sketching-Einführung.

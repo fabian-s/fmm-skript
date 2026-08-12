@@ -153,16 +153,24 @@ Die Eigenwerte von $\bA^\top\bA$ sind nach ($6.2.1$) quadrierte Längen. Wer an
 Streckungsfaktoren interessiert ist, zieht deshalb die Wurzel.
 
 :::definition[6.2.4 (Singulärwerte)]
-Seien $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0$ die
-Eigenwerte von $\bA^\top\bA$ für $\bA \in \R^{m \times n}$. Die
-*Singulärwerte* (singular values) von $\bA$ sind
+Für $\bA \in \R^{m \times n}$ heißen die $q=\min(m,n)$ Zahlen
 
 $$
-\corange{\sigma_i} = \sqrt{\lambda_i}, \qquad i = 1, 2, \dots, n .
+\corange{\sigma_1}\ge\cdots\ge\corange{\sigma_q}\ge0
 $$
 
-Sie erben die Sortierung der Eigenwerte:
-$\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_n \geq 0$.
+die *Singulärwerte* (singular values) von $\bA$. Die positiven unter ihnen
+sind die Quadratwurzeln der positiven Eigenwerte von $\bA^\top\bA$; bis zur
+Länge $q$ wird die Liste mit Nullen ergänzt.
+:::
+
+:::bemerkung[Konvention bei breiten Matrizen]
+Für $m<n$ besitzt $\bA^\top\bA$ insgesamt $n$ Eigenwerte, davon aber mindestens
+$n-m$ strukturell erzwungene Nullen. Üblicherweise zählt die SVD nur die
+$q=\min(m,n)$ Diagonalplätze von $\bSigma$ als Singulärwerte. Möchte man alle
+Eigenwerte von $\bA^\top\bA$ indizieren, kann man zusätzlich
+$\sigma_{q+1}=\cdots=\sigma_n=0$ setzen; diese ergänzten Nullen stehen nicht als
+weitere Diagonaleinträge in $\bSigma$.
 :::
 
 :::bemerkung[6.2.5 (Singulärwerte sind Streckungsfaktoren)]
@@ -171,8 +179,9 @@ $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_n \geq 0$.
   [Abschnitt 6.1](#sec-6.1): Über ($6.2.1$) maximieren wir die quadratische
   Form von $\bA^\top\bA$, und deren größter Wert auf der Einheitssphäre ist
   $\lambda_1$.
-- $\corange{\sigma_n} = \min_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
-  die minimale Streckung, also die stärkste Stauchung.
+- Falls $m\ge n$, ist $\corange{\sigma_n} = \min_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$
+  die minimale Streckung. Für $m<n$ ist dieses Minimum wegen des nichttrivialen
+  Kerns null; in der erweiterten Konvention entspricht es $\sigma_n=0$.
 - $\sigma_i = 0$ gilt genau dann, wenn $\lambda_i = 0$ ist.
 
 Der größte Singulärwert ist damit nichts anderes als die *Spektralnorm*
@@ -220,8 +229,10 @@ Richtung um $\sigma_i$ gestreckt wird. Diese Richtungen stecken bereits in
 Korollar 6.2.2.
 
 :::definition[6.2.7 (Rechte und linke Singulärvektoren)]
-Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
-$\sigma_1 \geq \cdots \geq \sigma_n \geq 0$.
+Sei $\bA \in \R^{m \times n}$. Für die rechten Singulärvektoren verwenden wir
+die in Bemerkung 6.2.5 erklärte erweiterte Liste
+$\sigma_1 \geq \cdots \geq \sigma_n \geq 0$; bei $m<n$ enthält sie die
+zusätzlichen erzwungenen Nullen.
 
 - Die *rechten Singulärvektoren* $\cblue{\bv_1}, \dots, \cblue{\bv_n} \in \R^n$
   sind normierte, paarweise orthogonale Eigenvektoren von $\bA^\top\bA$:
@@ -399,7 +410,8 @@ beschreiben auf einen Schlag alle Unterräume, die zu einer Matrix gehören.
 
 :::satz[6.2.11 (Charakterisierung der fundamentalen Unterräume)]
 Sei $\bA \in \R^{m \times n}$ mit genau $r$ von null verschiedenen
-Singulärwerten, also $\sigma_1 \geq \cdots \geq \sigma_r > 0$ und
+Singulärwerten. In der erweiterten Liste aus Bemerkung 6.2.5 gilt also
+$\sigma_1 \geq \cdots \geq \sigma_r > 0$ und
 $\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
 
 1. $\{\cblue{\bv_1}, \dots, \cblue{\bv_r}\}$ ist eine Orthonormalbasis des

@@ -96,19 +96,27 @@ gestörtes $\tilde{\bb}$ ersetzen?
 :::satz[7.2.3]
 Sei $\bA \in \R^{m \times n}$ fix mit
 $\rang(\bA) = n$, und sei $f$ das Problem mit
-Lösung $f(\bb) = \bA\pinv\bb$. Dann gilt
+Lösung $f(\bb) = \bA\pinv\bb$. Für $f(\bb)\ne\bnull$ ist die exakte
+relative Konditionszahl bezüglich $\bb$
 
 $$
-\frac{\left\|f(\tilde{\bb}) - f(\bb)\right\|}{\left\|f(\bb)\right\|} \le \kappa\, \frac{\left\|\cblue{\tilde{\bb} - \bb}\right\|}{\left\|\bb\right\|} \quad \text{mit} \quad \kappa = \corange{\kappa_2(\bA)}\, \frac{\left\|\bb\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|}.
+\kappa_{rel}(f,\bb)
+=\|\bA\pinv\|_2\frac{\|\bb\|_2}{\|\bA\pinv\bb\|_2}.
+$$
+
+Sie erfüllt die geometrisch anschauliche obere Schranke
+
+$$
+\kappa_{rel}(f,\bb)
+\le \corange{\kappa_2(\bA)}\,
+\frac{\|\bb\|_2}{\|\cgreen{\proj_{\col(\bA)}\bb}\|_2}.
 $$
 :::
 
-Die Konditionszahl des Problems ist also *nicht* einfach
-$\corange{\kappa_2(\bA)}$: Es kommt ein zweiter Faktor
-hinzu, der misst, wie viel von $\bb$ überhaupt im
-Spaltenraum (:k[Bild]{#image})
-$\col(\bA)$ liegt. Der Beweis ist eine kurze Kette von
-Normabschätzungen; wir verfolgen die Störung
+Die exakte Formel folgt unmittelbar daraus, dass die Ableitung der linearen
+Abbildung $f$ die Matrix $\bA\pinv$ ist. Die obere Schranke zeigt zusätzlich,
+wie viel von $\bb$ im Spaltenraum (:k[Bild]{#image}) $\col(\bA)$ liegt.
+Sie muss für ein festes $\bb$ nicht scharf sein. Wir verfolgen die Störung
 $\cblue{\tilde{\bb} - \bb}$ in Blau und die Projektion
 $\cgreen{\proj_{\col(\bA)} \bb}$ in Grün.
 
@@ -156,7 +164,7 @@ $$
 
 ::::
 
-#### Geometrische Interpretation
+#### Geometrische Interpretation der oberen Schranke
 
 Der Faktor
 $\left\|\bb\right\| / \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|$
@@ -169,8 +177,9 @@ $$
 \left\|\bb\right\|^2 = \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2 + \left\|\proj_{\col(\bA)^\perp} \bb\right\|^2 \ge \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2,
 $$
 
-also ist der Faktor stets $\ge 1$ und damit
-$\kappa \ge \corange{\kappa_2(\bA)}$. Bezeichnet
+also ist der Faktor stets $\ge 1$. Das macht die *obere Schranke* mindestens
+so groß wie $\corange{\kappa_2(\bA)}$, nicht notwendig die exakte Kondition.
+Bezeichnet
 $\theta$ den Winkel zwischen $\bb$ und
 $\col(\bA)$ (siehe die Abbildung in
 [Abschnitt 7.1](#sec-7.1-geometrie)), dann ist
@@ -178,27 +187,29 @@ $\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\| = \cos(\theta) \left\|\bb\right\|
 und damit
 
 $$
-\kappa = \frac{\corange{\kappa_2(\bA)}}{\cos(\theta)}.
+\kappa_{rel}(f,\bb) \le
+\frac{\corange{\kappa_2(\bA)}}{\cos(\theta)}.
 $$
 
-Was sind nun best und worst case für $\kappa$?
+Was sind nun die geometrischen Extremfälle dieser Schranke?
 
 - **Best case:** $\bb = \cgreen{\proj_{\col(\bA)} \bb}$, d.&thinsp;h.
   $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist
-  $\kappa = \corange{\kappa_2(\bA)}$ – besser geht es
-  nicht.
+  Die Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$; die exakte
+  Kondition am konkreten $\bb$ kann kleiner sein.
 - **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, d.&thinsp;h.
   $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Dann
-  ist $\kappa = \infty$. Warum? Weil dann
+  ist $f(\bb)=\bnull$, sodass der relative Outputfehler nicht definiert ist.
+  Setzt man die relative Kondition in diesem Fall konventionsgemäß auf $\infty$,
+  passt das zum Grenzverhalten. Schon eine
   $\wh{\bx} = \bA\pinv\bb = \bnull$ gilt: Schon eine
   winzige Störung mit Anteil in $\col(\bA)$ erzeugt einen
   beliebig großen *relativen* Fehler in der Lösung.
 
-Für die Regression heißt das: Je weniger die Daten $\bb$ vom
-Spaltenraum der Designmatrix erklärt werden (je schlechter also der
-Fit), desto schlechter konditioniert ist die Bestimmung der
-Koeffizienten. Und zwar unabhängig davon, wie gut $\bA$
-selbst konditioniert ist.
+Für die Regression heißt das vorsichtiger: Ein kleiner Projektionsanteil kann die
+Bestimmung der Koeffizienten relativ empfindlich machen. Die exakte Empfindlichkeit
+hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums und von
+den Singulärrichtungen von $\bA$ ab.
 
 :::vertiefung[Störungen von b interaktiv]
 <p className="mb-3 text-sm">Das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\kappa_2(\bA) = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Verstellen Sie den Winkel θ und die Störung Δb, und beobachten Sie, wann die Schranke aus Satz 7.2.3 tatsächlich angenommen wird.</p>
@@ -217,12 +228,19 @@ Abbildung $f(\bA) = \bA\pinv\bb$. Das Ergebnis sieht auf
 den ersten Blick ähnlich aus wie Satz 7.2.3, hat aber eine
 entscheidend andere Struktur:
 
-:::satz[7.2.4]
-Sei $\bb \in \R^m$ fix und $f$ das Problem mit
-Lösung $f(\bA) = \bA\pinv\bb$. Dann gilt
+:::satz[7.2.4 (Störung der Designmatrix, erste Ordnung)]
+Sei $\bb \in \R^m$ fix, $\bA$ habe vollen Spaltenrang und
+$f(\bA) = \bA\pinv\bb\ne\bnull$. Für $\bDelta\bA\to\bnull$ und
+$\bA+\bDelta\bA$ weiterhin von vollem Spaltenrang gilt
 
 $$
-\frac{\left\|f(\tilde{\bA}) - f(\bA)\right\|}{\left\|f(\bA)\right\|} \le \kappa\, \frac{\left\|\cblue{\tilde{\bA} - \bA}\right\|}{\left\|\bA\right\|} \quad \text{mit} \quad \kappa = \corange{\kappa_2(\bA)} + \corange{\kappa_2(\bA)}^2\, \frac{\left\|\cpurp{\br}\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|},
+\frac{\|f(\bA+\bDelta\bA)-f(\bA)\|}{\|f(\bA)\|}
+\le \left(
+\corange{\kappa_2(\bA)}
++\corange{\kappa_2(\bA)}^2
+\frac{\|\cpurp{\br}\|}{\|\cgreen{\proj_{\col(\bA)}\bb}\|}
++o(1)\right)
+\frac{\|\bDelta\bA\|}{\|\bA\|},
 $$
 
 wobei $\cpurp{\br} = \bb - \bA\wh{\bx}$ das Residuum
@@ -237,8 +255,8 @@ darauf und verweisen auf die Literatur (vgl. Heath §3.3).
 
 #### Interpretation
 
-Der erste Summand $\corange{\kappa_2(\bA)}$ ist vertraut.
-Neu ist der zweite: Er koppelt das *Quadrat* der Konditionszahl
+Der Koeffizient der lokalen oberen Schranke enthält zunächst
+$\corange{\kappa_2(\bA)}$. Der zweite Term koppelt das *Quadrat* der Konditionszahl
 an das Verhältnis von Residuum zu Projektion. Mit dem Winkel
 $\theta$ von oben ist
 $\left\|\cpurp{\br}\right\| = \sin(\theta) \left\|\bb\right\|$
@@ -247,23 +265,23 @@ $\left\|\cpurp{\br}\right\| = \sin(\theta) \left\|\bb\right\|$
 von $\bb$), also
 
 $$
-\kappa = \corange{\kappa_2(\bA)} + \corange{\kappa_2(\bA)}^2 \tan(\theta).
+\kappa_{lok}^{oben} = \corange{\kappa_2(\bA)} + \corange{\kappa_2(\bA)}^2 \tan(\theta).
 $$
 
 - **Best case:** $\cpurp{\br} = \bnull$,
   d.&thinsp;h. $\bA\bx = \bb$ ist exakt lösbar. Dann ist
-  $\kappa = \corange{\kappa_2(\bA)}$, wie bei einem
+  Die lokale obere Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$, wie bei einem
   gewöhnlichen
   :k[linearen Gleichungssystem]{#linear-system}.
 - **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, aber
   $\cpurp{\br} \ne \bnull$: Dann ist
   $\bA\bx = \bb$ nicht lösbar,
   $\bb \perp \col(\bA)$, und es gilt
-  $\kappa = \infty$.
+  die relative Kondition wird konventionsgemäß als $\infty$ behandelt.
 - **Normalfall:** $\cpurp{\br} \ne \bnull$
   und $\cgreen{\proj_{\col(\bA)} \bb} \ne \bnull$. Dann
-  ist $\kappa = O\left(\corange{\kappa_2(\bA)}^2\right)$:
-  Die Konditionszahl geht *quadratisch* ein!
+  kann die obere Schranke einen Term der Ordnung
+  $\corange{\kappa_2(\bA)}^2$ enthalten.
 
 Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
 Statistik verschwindet es praktisch nie), kann eine Störung von
