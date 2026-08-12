@@ -4,9 +4,11 @@ import { M } from "../../../lib";
 /**
  * PageRank-Mini-Netz für §8.2: Potenz-Iteration x, Ax, A²x, … auf einem
  * Vier-Seiten-Web konvergiert gegen den PageRank-Vektor x* (Eigenvektor zum
- * Eigenwert 1). Graph-/Iterations-CODE aus der privaten mml-ch4-App
- * portiert (PageRankWidget.tsx); alle Texte neu. Farbcode Kapitel 8:
- * Iterierte blau, Grenzwert grün.
+ * Eigenwert 1). Graph-Daten, edgePath() und die Iterationsmechanik sind aus
+ * der privaten mml-ch4-App portiert (PageRankWidget.tsx). Sämtliche Texte
+ * sind aus §8.2 heraus neu formuliert (Review 8.2: die erste Fassung war
+ * eingedeutschte App-Prosa). Farbcode Kapitel 8: Iterierte blau,
+ * Grenzwert grün.
  */
 
 // Mini-Netz: a→b, a→c, b→c, c→a, c→d, d→a.
@@ -24,6 +26,9 @@ const STAR = [1 / 3, 1 / 6, 1 / 3, 1 / 6];
 
 const BLUE = "#0072B2";
 const GREEN = "#009E73";
+
+/** deutsche Dezimalzahl mit Minuszeichen U+2212, wie in den Nachbar-Widgets */
+const fmt = (v: number, d = 3) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
 
 const step = (x: number[]) => T.map((row) => row.reduce((s, v, j) => s + v * x[j], 0));
 
@@ -78,14 +83,17 @@ export function PagerankDemo() {
   return (
     <div className="my-2">
       <p className="mb-2 text-sm">
-        Ein Netz aus vier Seiten; jeder Pfeil ist ein Link, und ein Surfer klickt
-        gleichverteilt auf einen der ausgehenden Links seiner Seite. Diese
-        Klickwahrscheinlichkeiten füllen Spalte <M>{"j"}</M> der Matrix{" "}
-        <M>{"\\bA"}</M>. Wenden wir <M>{"\\bA"}</M> wiederholt auf den
-        gleichverteilten Startvektor an, pendelt sich die Folge{" "}
-        <M>{"\\bx, \\bA\\bx, \\bA^2\\bx, \\dots"}</M> beim Fixvektor{" "}
-        <M>{"\\bx^*"}</M> mit <M>{"\\bA\\bx^* = \\bx^*"}</M> ein; die
-        Kreisflächen zeigen die aktuellen Scores.
+        Vier Seiten, sechs Links. Spalte <M>{"j"}</M> von <M>{"\\bA"}</M> hält fest,
+        wie Seite <M>{"j"}</M> ihren Score weitergibt: zu gleichen Teilen an jede
+        Seite, auf die sie zeigt. Jede Spalte summiert sich damit zu <M>{"1"}</M>,
+        und weil die Startscores zusammen <M>{"1"}</M> ergeben, bleibt diese Summe
+        erhalten. Wir wenden <M>{"\\bA"}</M> deshalb einfach an, ohne zu normieren;
+        die Folge <M>{"\\bx, \\bA\\bx, \\bA^2\\bx, \\dots"}</M> läuft dann auf den
+        Fixvektor <M>{"\\bx^*"}</M> mit <M>{"\\bA\\bx^* = \\bx^*"}</M> zu, und die
+        Kreise wachsen mit dem Score ihrer Seite. Im Grenzwert bekommen{" "}
+        <M>{"a"}</M> und <M>{"c"}</M> doppelt so viel
+        wie <M>{"b"}</M> und <M>{"d"}</M>: Auf die ersten beiden zeigen je zwei
+        Links, auf die anderen nur einer.
       </p>
       <div className="flex flex-wrap items-start gap-5">
         <svg
@@ -127,7 +135,7 @@ export function PagerankDemo() {
               onClick={() => doSteps(1)}
               className="rounded border border-slate-400 bg-slate-100 px-3 py-1 font-medium dark:bg-slate-800"
             >
-              einmal A anwenden
+              A anwenden
             </button>
             <button
               type="button"
@@ -149,8 +157,8 @@ export function PagerankDemo() {
           </div>
           {x.map((v, i) => (
             <div key={i} className="my-1 flex items-center gap-2">
-              <span className="w-16 font-mono text-xs">
-                x{NAMES[i]} = {v.toFixed(3)}
+              <span className="w-20 font-mono text-xs">
+                x_{NAMES[i]} = {fmt(v)}
               </span>
               <div className="h-3 grow rounded bg-slate-200 dark:bg-slate-700">
                 <div
@@ -164,17 +172,18 @@ export function PagerankDemo() {
             Iteration {iter}
             {converged ? (
               <>
-                {" – "}
+                :{" "}
                 <span style={{ color: GREEN, fontWeight: 600 }}>
-                  konvergiert gegen x* = (1/3, 1/6, 1/3, 1/6), den Eigenvektor von A zum
-                  Eigenwert 1.
+                  Der Abstand zu x* ist unter 5 · 10⁻⁴ gefallen. Erreicht ist
+                  x* = (1/3, 1/6, 1/3, 1/6), der auf Summe 1 normierte Eigenvektor von A
+                  zum Eigenwert 1.
                 </span>
               </>
             ) : (
               <>
-                ; Abstand zu x*: {delta.toFixed(4)}. Die Seiten a und c sammeln die meisten
-                (und die wichtigsten) eingehenden Links, ihre Scores wachsen deshalb am
-                stärksten.
+                ; größter Abstand zu x*: {fmt(delta, 4)}. Er halbiert sich in jedem
+                Schritt, und die Scores nähern sich x* nicht von einer Seite, sondern
+                pendeln um ihre Grenzwerte.
               </>
             )}
           </p>

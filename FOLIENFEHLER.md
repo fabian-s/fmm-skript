@@ -307,6 +307,36 @@ Lesson-Zeile ein.
   SYMMETRISCHES A mit orthogonalem V. Allgemein ist der Grenzwert die
   Schur-Form (obere Dreiecksmatrix), und von den Spalten des Grenz-Q ist nur
   die erste ein Eigenvektor. *Skript Bemerkung 8.1.14 trennt beide Fälle.*
+- **Z. 248–249 („Anwendung: Google PageRank", Matrixform)**: „x = Ax ⟹
+  Eigenwertproblem mit λ = 1!" setzt still voraus, dass A
+  spaltenstochastisch ist, also dass JEDE Seite mindestens einen ausgehenden
+  Link hat — sonst ist d_j = 0 und die Spalte gar nicht definiert. Und für
+  die Potenzmethode (Z. 256) genügt „λ = 1 ist Eigenwert" nicht: Zerfällt
+  der Graph in mehrere Teile, gehören zum Eigenwert 1 mehrere unabhängige
+  Eigenvektoren, periodische Teilnetze liefern weitere Eigenwerte vom
+  Betrag 1, und die Voraussetzung |λ₁| > |λ₂| ist verletzt. Der
+  Dämpfungsfaktor, der beides repariert, kommt auf den Folien nicht vor.
+  *Skript Bemerkung 8.2.1 leitet 1 = größter Eigenwert über ‖A‖₁ = 1 und
+  ρ(A) ≤ ‖A‖ her, füllt leere Spalten gleichverteilt auf und führt
+  αA + (1−α)/n·E ein (Eigenwert 1 einfach, alle übrigen ≤ α im Betrag).*
+- **Z. 257 (dieselbe Folie)**: „Konvergiert in ~50 Iterationen (Web-Graph
+  hat spezielle Struktur)" nennt die falsche Ursache. Ohne Dämpfung gibt es
+  überhaupt keine Ratengarantie; mit dem klassischen α = 0,85 dagegen ist
+  |λ₂| ≤ α und 0,85⁵⁰ ≈ 3·10⁻⁴, was die Zahl 50 gerade erklärt (per node
+  nachgerechnet). *Skript §8.2 ergänzt diese Rechnung.*
+- **Z. 304 („Anwendung: Approximative SVD (2)")**: „relative
+  Frobenius-Fehler der niedrigrangigen Approximationen (zu X und
+  zueinander)" beschreibt den Code nicht: Die zweite Zeile misst
+  ‖X_r − X_irlba‖_F/‖X_r‖_F und ‖X_r − X_svdr‖_F/‖X_r‖_F, vergleicht die
+  beiden iterativen Rekonstruktionen also mit der EXAKTEN Rang-50-Lösung
+  X_r, nicht miteinander. *Skript §8.2 benennt beide Zeilen einzeln.*
+- **Z. 339 („Iterative Eigenwertverfahren: Vergleich")**: „QR-Iteration oft
+  mit quadratischer Konvergenz" gilt nur mit Shifts. Die reine QR-Iteration
+  konvergiert linear, der Eintrag (i, j) unter der Diagonalen wie
+  |λ_i/λ_j|ᵏ; quadratisch (im symmetrischen Fall mit Rayleigh-Shift sogar
+  kubisch) wird sie erst durch die Verschiebungen, die in der Tabellenzeile
+  darüber als „(shifted) QR" ja auch stehen. *Skript §8.2 schreibt „die
+  QR-Iteration (mit Shifts) oft quadratisch".*
 - **Z. 503–505 („Bsp: Richardson-Iteration")**: Iteration 3 ist
   verrechnet. Aus x⁽³⁾ = (7/64, 39/64) folgt mit γ = 0,25 exakt
   x⁽⁴⁾ = (25/256, 160/256) ≈ (0,098, 0,625); die Folie druckt
@@ -318,11 +348,15 @@ Lesson-Zeile ein.
   nachgerechnet), Bemerkung 8.3.12 benennt die Abweichung.*
 - **Z. 566 („Beispiel", Sketching in R)**: Die Aussage „weniger als 1 %
   [3 %] Abweichung in Distanz [Winkel]" ist eine glückliche Ziehung, keine
-  typische. Bei m = 50 hat die relative Abweichung des Abstands die
-  Standardabweichung 1/√(2m) = 10 % (Monte Carlo mit n = 10 000, 200
-  Ziehungen: sd 10,4 %, nur rund 6 % der Ziehungen unter 1 %; Winkel: sd
-  14 %). *Skript Beispiel 8.4.5 zitiert die Folienzahl als Bericht und
-  ergänzt die Streuung; das Widget führt sie vor.*
+  typische. Für Gauss-Skizzen ist ‖Sz‖²/‖z‖² exakt χ²_m/m-verteilt; bei
+  m = 50 hat die relative Abweichung des Abstands damit die
+  Standardabweichung 9,97 % (Faustregel 1/√(2m) = 10 %), und nur 7,94 %
+  aller Ziehungen bleiben unter der 1 %-Marke, also knapp 8 %. (Die frühere
+  Fassung dieses Eintrags schätzte aus 200 Monte-Carlo-Ziehungen „rund 6 %";
+  eine unabhängige Nachrechnung mit 400 Ziehungen liefert 8,5 %, die exakte
+  χ²-Rechnung 7,94 %.) Winkel: sd rund 14 %, rund 18 % der Ziehungen unter
+  3 %. *Skript Beispiel 8.4.5 zitiert die Folienzahl als Bericht und
+  ergänzt die exakte Streuung; das Widget führt sie vor.*
 - **Z. 578 (Theorem „Zufälliges Einbetten von Unterräumen")**: Die
   Voraussetzung E[‖s_i‖⁴] ≤ K/m² passt nicht zum späteren Beispiel K = 3.
   Für s_i ~ N(0, I_n/m) ist E[‖s_i‖⁴] = (n² + 2n)/m², das zugehörige K
@@ -357,12 +391,36 @@ Lesson-Zeile ein.
   (Z. 646). *Skript Beispiel 8.4.14 rechnet mit 6000, Bemerkung 8.4.15
   benennt den Fehler und ordnet ein, warum die Praxis trotzdem mit kleinem
   m arbeitet (Tschebyscheff ist grob; schärfere Ungleichungen liefern
-  m ~ ε⁻²log(1/δ)).*
+  m ~ ε⁻²log(1/δ)). Nachtrag Review 8.4: Für Gauss-Skizzen lässt sich das
+  nötige m sogar exakt angeben, weil ‖Sx‖²/‖x‖² dann χ²_m/m-verteilt ist —
+  für ε = 0,1 und δ = 0,05 genügen m = 768 Zeilen (Normalapproximation
+  2·(1,96/ε)² = 768,3), Tschebyscheff fordert mit 6000 das Achtfache. Das
+  steht jetzt in Bemerkung 8.4.15 und erklärt die „einige hundert" der
+  Praxis.*
 - **Z. 651 (dieselbe Folie)**: „Rechenzeit für Distanzberechnungen
   O(n²) → O(m²), Speed-up ~280×" ist irreführend. Eine einzelne
   euklidische Distanz kostet O(n), der Gewinn ist also der Faktor n/m;
   (n/m)² gilt nur für Verfahren, deren Kosten quadratisch in der Dimension
   sind. *Skript Bemerkung 8.4.15 formuliert den Faktor n/m.*
+- **Z. 662 („Vergleich Sketching-Matrizen", Qualitätsspalte)**: Für
+  Subsampling steht dort „Gut (bei strukturierter A)". Das Kriterium läuft
+  andersherum: Subsampling ist gut, wenn die Information über viele
+  Koordinaten VERTEILT ist (K = n·Σ_j v_j⁴ = 1 für v_j = ±1/√n), und
+  schlecht, wenn sie in wenigen Koordinaten sitzt (K = n für v = e₁).
+  Struktur im Sinne weniger dominanter Koordinaten ist gerade der schlechte
+  Fall. Die Trade-off-Zeile Z. 669 („nur gut für spezielle Matrizen") ist
+  dagegen unverfänglich. *Skript-Tabelle in §8.4 schreibt „gut bei
+  gestreuten Daten", Beispiel 8.4.11 rechnet beide Extremfälle vor und
+  benennt die Folienformulierung.*
+- **Z. 663 (dieselbe Tabelle, SRHT-Speicher)**: Die Speicherspalte nennt
+  O(m). Zur SRHT gehören neben den m gezogenen Zeilenindizes aber n
+  Vorzeichen (die Diagonalmatrix vor der Hadamard-Transformation), also
+  O(n), sofern man sie nicht aus einem Seed neu erzeugt. Nach demselben
+  Maßstab käme auch Gauss mit O(1) aus. Die Folie erklärt zwar zwei Zeilen
+  später, dass S nicht explizit gespeichert wird (Z. 672), aber das trifft
+  nur die Hadamard-Matrix selbst. *Skript nennt die Tabellenangabe im
+  SRHT-Punkt unter der Tabelle „optimistisch" und sagt, was wirklich zu
+  halten ist.*
 
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
