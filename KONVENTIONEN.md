@@ -295,6 +295,57 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   `?k=08-la-misc`, Funktionsapproximation als Ausblick OHNE Link.
 - Kapitel 9.5 (Zusammenfassung) schlank.
 
+## KAPITEL 10 (Foliensatz 10-ableitungen-I) — Bauauftrag 2026-08-12
+
+- `src/chapters/10-ableitungen-1/`, S101–S105 als `.mdx`; Anker `#sec-10.1` …
+  `#sec-10.5`, Labels „10.k.n"; Regeln wie Kapitel 5/6/8/9 (sinngemäß).
+- Quelle: `/workspace/fmm-lmu/slides/10-ableitungen-I.Rmd` (Zeilenbereiche im
+  Workflow-Prompt; Quiz-/Übungslösungen in HTML-Kommentaren).
+- Farbcode Kapitel 10: Funktion/Funktionswerte blau (`\cblue`), lineare
+  Approximation/Ableitungsterm $D_x f$ grün (`\cgreen`), Restterm $o(\|h\|)$
+  rot (`\cred`), Gradient-/Jacobi-Objekte (Pfeile, Matrixeinträge) orange
+  (`\corange`) — in Text UND Widget-SVGs.
+- BILDER: Folien nutzen figure_slds/tangent, gradient4, jacobian sowie
+  gradient_*-R-Plots und jacobian-viz-*.png — NICHTS übernehmen (Fremd- bzw.
+  Rendermaterial, öffentliches Repo); eigene Widgets/SVG bauen.
+- Widget-Recycling aus `/workspace/interactive/interactive/mml-ch5-1/src/sections/`:
+  S51.tsx (SecantTangentWidget → 10.1), S52.tsx (FieldCanvas, SliceExplorer,
+  GradientCheckWidget → 10.2), S53.tsx (JacobianShapeWidget, JacobianAreaWidget
+  → 10.3), S54.tsx (PokeAWidget, IdentityWidget → 10.4), S56.tsx (BackpropWidget,
+  CompGraph → 10.3-Anwendung). Nur CODE 1:1; ALLE Texte deutsch NEU (Buch-App-
+  Prosa verboten, jede Caption gegen die Quelle halten). Für lokale
+  Linearisierung ggf. `TransformCanvas`/`LabeledTransformCanvas` aus src/lib.
+- Gradient ist ZEILENVEKTOR $\in \R^{1\times n}$ (Folien-Konvention, Anmerkung
+  übernehmen); darum steht im Gradient-Descent-Update $\btheta - \alpha
+  \nabla L(\btheta)^\top$ das Transponierte.
+- Folienfehler (im Skript korrigieren + in FOLIENFEHLER.md registrieren):
+  1. Backprop-Folie (Z. 389): Die Jacobikette läuft fälschlich bis
+     $\bJ_{f_k}(\bz_{k-1})$ und multipliziert DANN $\partial\bW_k/\partial\btheta_k$
+     — $\bW_k$ wird doppelt gezählt. Korrekt endet die Kette bei
+     $\bJ_{f_{k+1}}(\bz_k)$, letzter Faktor ist $\partial f_k(\bz_{k-1};\btheta_k)/\partial\btheta_k$.
+  2. Z. 158: „$\le M|h|\ \forall x$ mit $M = 2|x|$" — Quantor falsch: $\forall h$
+     bei festem $x$ (Beschränktheit ist punktweise in $x$).
+  3. Z. 480: links fehlt $\tr$ (det·[F⁻¹F′] statt det·tr[F⁻¹F′]).
+  4. Z. 543: „·" zwischen $\bP_\Omega$ und der Klammer ist das ELEMENTWEISE
+     (Hadamard-)Produkt — im Skript $\odot$ schreiben und kurz definieren.
+  5. Spur-Identität samt Beweis (Z. 450 ff.) braucht quadratisches $\bF$ —
+     die Folie deklariert $\R^{m\times n}$; im Skript $n \times n$ sagen.
+- Verifizierte Zahlen (node, 2026-08-12): $\nabla(x_1^2+3x_1x_2+2x_2^2) =
+  (2x_1+3x_2,\ 3x_1+4x_2)$ ✓; Det-Beispiel $\bF = \diag(x, 2x)$: beide Wege
+  $4x$ ✓; $\nabla(\bx^\top\bA\bx) = 2\bx^\top\bA$ (A sym.) ✓; Matrix-Completion-
+  Gradienten $-(\bP\odot(\bY-\bU\bV^\top))\bV$ / $-(\bP\odot(\bY-\bU\bV^\top))^\top\bU$
+  numerisch bestätigt ✓; $\partial(\ba^\top\bX\bb)/\partial\bX = \ba\bb^\top$ ✓.
+- Quiz „Recap" (Z. 80–89): wahr sind 2, 3, 4; Aussage 1 ist i. A. FALSCH
+  ($f'$ selbst muss nicht linear sein — $h \mapsto f'(x)h$ ist es); Beweis
+  3 ⟺ 4 steht im auskommentierten Block Z. 91–107.
+- Querbezüge: Spur/Normen → `?k=03-matrix-spur-norm`, Landau/o(h) → Tooltip
+  big-o-notation, Störungsanalyse/Kondition → `?k=04-fehler`, ausgelassene
+  Fälle über Tensoren → `?k=09-tensoren`, SVD/Low-Rank (Matrix Completion) →
+  `?k=06-svd#sec-6.4`; Literaturhinweis: MML Kapitel 5 (PDF liegt in
+  `/workspace/fmm-lmu/literature/`, Abschnittsnummern DORT verifizieren);
+  Matrix Cookbook (Petersen/Pedersen 2012) als externer Link wie auf Folie.
+- Kapitel 10.5 (Zusammenfassung) schlank.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
