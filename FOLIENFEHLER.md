@@ -422,6 +422,41 @@ Lesson-Zeile ein.
   SRHT-Punkt unter der Tabelle „optimistisch" und sagt, was wirklich zu
   halten ist.*
 
+## 09-tensoren
+
+- **Z. 91 („Intuition: Linear vs. Multilinear")**: Die Kette
+  f(2x, 2y) = 4xy = 4f(x,y) ≠ 2f(x,y) stimmt nur für xy ≠ 0; auf den Achsen
+  (x = 0 oder y = 0) sind beide Seiten null und damit gleich. *Skript
+  Beispiel 9.1.3 nennt die Bedingung xy ≠ 0, das Widget zu §9.1 druckt den
+  entarteten Fall als eigenen Zustand aus.*
+- **Z. 126 (Übung)**: Der Wert einer multilinearen Abbildung liegt in W, die
+  Folie schreibt aber den Skalar 0 statt des Nullvektors. *Skript-Selbsttest
+  in §9.1 setzt durchgehend den Nullvektor.*
+- **Z. 149–151 („Tensoren")**: Die Gleichungskette für k = 1 wiederholt
+  denselben Summenausdruck zweimal (`\sum_i \sum_j a_{i,j} x_i e_j` steht
+  doppelt hintereinander); zudem laufen die Summen bis n_1, während der Text
+  darüber n schreibt. *Skript §9.2 schreibt die Kette einmal sauber und
+  benutzt durchgehend n.*
+- **Z. 148/152 („Tensoren")**: Die Koeffizientenfamilie
+  A = (a_{i,j}: 1 ≤ i ≤ n, 1 ≤ j ≤ m) wird unbesehen als Matrix in A x
+  gelesen. Mit i als Zeilen- und j als Spaltenindex wäre A eine n×m-Matrix
+  und A x für x ∈ ℝⁿ gar nicht definiert; gemeint ist A ∈ ℝ^{m×n} mit
+  (A)_{j,i} = a_{i,j}. *Skript Bemerkung 9.2.1 stellt die Indexreihenfolge
+  explizit richtig.*
+- **Z. 184 (Def. Tensor)**: „geordnete Menge von reellen Zahlen" — eine Menge
+  kennt weder Reihenfolge noch Vielfachheiten ({1,1,2} = {2,1}), der Begriff
+  passt also nicht. *Skript Definition 9.2.3 formuliert als indizierte
+  Familie (Abbildung Indextupel → Zahl), Bemerkung 9.2.4 benennt den
+  Unterschied.*
+- **Z. 241 (Batch von Bildern)**: `4\,8 \cdot 10^6` ist ein Tippfehler für
+  4,8·10⁶ (nachgerechnet: 32·224·224·3 = 4 816 896). *Skript Beispiel 9.2.8
+  setzt 4{,}8·10⁶ und druckt die exakte Zahl.*
+- **Z. 202 gegen Z. 238–239**: Die Reihenfolge der Bildachsen ist zwischen
+  zwei Folien inkonsistent — beim Bild „erste Dimension horizontal, zweite
+  vertikal", beim Batch dagegen „2. Höhe, 3. Breite". *Skript Beispiel 9.2.7
+  sagt, dass die Reihenfolge Verabredung ist und zwischen Bibliotheken
+  differiert.*
+
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
 - **heath-ch3-App (privat)**: Die AᵀA-Kollaps-Schwelle „k ≈ 7,9" im
