@@ -1,1 +1,156 @@
-Abschnitt 8.5 – im Aufbau.
+::quelle[Folien 08-la-misc, Abschnitt „Wrap-up".]
+
+Bis Kapitel 7 lief fast alles über *Zerlegungen*. LU, Cholesky, QR und die SVD
+schreiben eine Matrix als Produkt handlicher Faktoren, und die eigentliche
+Rechnung findet danach in diesen Faktoren statt. Das ist exakt bis auf
+Rundungsfehler, und es kostet, was es kostet: rund $n^3$ Operationen, gleich ob
+wir drei Stellen brauchen oder fünfzehn. In diesem Kapitel sind zwei
+Bauprinzipien dazugekommen, die diesen festen Preis drücken, indem sie etwas
+anderes dafür hergeben.
+
+### Die drei Kernideen
+
+:::bemerkung[8.5.1 (Die drei Kernideen)]
+1. **Eigenwerte berechnen wir iterativ.** Das charakteristische Polynom
+   beschreibt die :k[Eigenwerte]{#eigenvalue-eigenvector} zwar vollständig,
+   taugt aber nicht als Algorithmus (Bemerkung 8.1.1). Stattdessen wenden wir
+   die Matrix immer wieder an. Die Potenzmethode (Algorithmus 8.1.2) holt mit
+   einem :k[Matrix-Vektor-Produkt]{#matrix-vector-product} pro Schritt das
+   betragsgrößte Eigenpaar, die QR-Iteration (Algorithmus 8.1.10) alle
+   Eigenwerte auf einmal, im Kern als simultane Potenzmethode auf allen
+   Koordinatenachsen (Bemerkung 8.1.13). Beide stützen sich darauf, dass
+   :k[ähnliche Matrizen]{#similar-matrices} dasselbe Spektrum haben
+   (Satz 8.1.7). Wie weit das trägt, zeigt [Abschnitt 8.2](#sec-8.2): PageRank
+   ist eine Potenzmethode auf einer :k[dünnbesetzten]{#sparse-matrix} Matrix mit
+   rund $10^{10}$ Zeilen, die Hauptkomponentenanalyse eine Eigenwertaufgabe für
+   die :k[Kovarianzmatrix]{#covariance-matrix}, und die approximative
+   :k[SVD]{#singular-value-decomposition} liefert die $k$ größten Singulärwerte,
+   ohne die Matrix je vollständig zu zerlegen.
+2. **Iterative Verfahren sind Fixpunktiterationen.** Aus dem Residuum
+   $\cred{\br^{(k)}} = \bb - \bA\,\cblue{\bx^{(k)}}$ wird eine Korrektur, und
+   ausmultipliziert steht dort die affine Vorschrift
+   $\cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb$ mit
+   $\bB = \bI_n - \bC\bA$ (Bemerkung 8.3.4). Ob die Folge zusammenläuft,
+   entscheidet allein $\corange{\rho} = \left\|\bB\right\|_2$: Für
+   $\corange{\rho} < 1$ schrumpft der Fehler in jedem Schritt um mindestens
+   diesen Faktor (Satz 8.3.5). Diese
+   :k[Fixpunktstruktur]{#fixed-point-iteration} verbindet beide Hälften des
+   Kapitels. Auch die Potenzmethode ist eine: Die Abbildung
+   $\bx \mapsto \bA\bx/\left\|\bA\bx\right\|$ lässt genau die normierten
+   :k[Eigenvektoren]{#eigenvalue-eigenvector} fest, bis auf ihr Vorzeichen, und
+   die Rate heißt dort $\corange{|\lambda_2/\lambda_1|}$ statt
+   $\corange{\rho}$ (Satz 8.1.4).
+3. **Probabilistische Verfahren ersetzen ein schweres Problem durch ein
+   zufälliges, kleineres.** Eine geeignet gezogene Matrix
+   $\bS \in \R^{m \times n}$ mit $m \ll n$ erhält Abstände und Winkel mit hoher
+   Wahrscheinlichkeit näherungsweise ([Abschnitt 8.4](#sec-8.4)). Statt mit
+   $\bA$ rechnen wir mit der Skizze $\bS\bA$ weiter, und aus einem
+   $n$-dimensionalen Problem wird ein $m$-dimensionales. Die Garantie ist dafür
+   von anderer Art als bisher: Sie gilt nur mit Wahrscheinlichkeit
+   $1 - \delta$.
+:::
+
+Die zweite und die dritte Idee laufen auf dasselbe Geschäft hinaus: Wir geben
+Genauigkeit her und bekommen Laufzeit zurück. Nur sitzt der Regler an
+verschiedenen Stellen.
+
+### Laufzeit gegen Genauigkeit
+
+:::bemerkung[8.5.2 (Zwei Regler und ihre Preise)]
+| Zugang | Regler | Kosten | Was wir bekommen |
+| --- | --- | --- | --- |
+| Zerlegung ([Kapitel 5](?k=05-lgs#sec-5.2), [Kapitel 7](?k=07-kq#sec-7.4)) | keiner | fest, Größenordnung $n^3$ | Lösung bis auf Rundungsfehler |
+| Iteration ([8.1](#sec-8.1), [8.3](#sec-8.3)) | Iterationszahl $k$ | $k$ mal die Kosten eines Schritts | Fehler höchstens $\corange{\rho}^{\,k}$ mal Startfehler |
+| Sketching ([8.4](#sec-8.4)) | Skizzengröße $m$ | Rechnen in $\R^m$ statt in $\R^n$ | Verzerrung $\eps$, mit Wahrscheinlichkeit $1 - \delta$ |
+
+Die beiden Regler haben sehr verschiedene Preisschilder. Bei der Iteration
+fällt der Fehler geometrisch, die Schrittzahl wächst deshalb nur wie
+$\log(1/\eps)$ (Korollar 8.3.6). In Beispiel 8.3.11 mit
+$\corange{\rho} \approx \corange{0{,}405}$ kostet jede weitere Dezimalstelle
+gut zweieinhalb Schritte, und daran ändert sich auch bei der zehnten Stelle
+nichts. Beim Sketching fällt die Verzerrung dagegen nur wie $1/\sqrt{m}$: Wer
+doppelt so viele Zeilen zieht, drückt sie auf das $1/\sqrt{2} \approx 0{,}71$-fache,
+und eine zusätzliche Dezimalstelle verlangt die hundertfache Skizzengröße.
+
+Ein fairer Vergleich ist das trotzdem nicht, denn die beiden $\eps$ messen
+Verschiedenes: einmal den Abstand zur Lösung, einmal die Verzerrung der
+Geometrie. Die Faustregel, die bleibt: Wo hohe Genauigkeit gefragt ist,
+iterieren wir; wo eine grobe Antwort genügt und $n$ riesig ist, würfeln wir.
+:::
+
+### Ausblick
+
+Mit diesem Kapitel endet der erste Block des Kurses, die numerische lineare
+Algebra ([Abschnitt 1.1](?k=01-intro#sec-1.1)). Die nächste Vorlesung beginnt
+mit :k[Tensoren]{#tensor} und Tensorprodukten. Ein Tensor ist ein
+mehrdimensionales Zahlenfeld, die Matrix also der zweidimensionale Sonderfall.
+Gebraucht werden sie, sobald wir nach Matrizen ableiten wollen, denn jedes
+Differenzieren hängt der Buchführung eine weitere Dimension an. Die Fragen
+bleiben dabei dieselben wie hier: zerlegen, approximieren, iterieren.
+
+### Selbsttest
+
+Fünf Aussagen zu den Kernideen dieses Kapitels. Welche stimmen?
+
+::::quiz
+
+:::frage{wahr}
+Die Eigenwerte einer großen Matrix bestimmen wir besser nicht über die
+Nullstellen des charakteristischen Polynoms.
+
+Drei Gründe stehen in Bemerkung 8.1.1. Ab Grad $5$ gibt es keine allgemeine
+Lösungsformel mehr, wir müssten die Nullstellen also ohnehin iterativ suchen.
+Der Umweg über die Koeffizienten ist schlecht konditioniert. Und schon das
+Aufstellen kostet mehr als eine ganze Matrixzerlegung.
+:::
+
+:::frage{falsch}
+Iterative Verfahren liefern grundsätzlich nur Näherungen; die exakte Lösung
+erreichen sie nie.
+
+In Sonderfällen erreichen sie sie sehr wohl (Bemerkung 8.3.13). Mit
+$\bC = \bA^{-1}$ ist $\corange{\rho} = 0$, und ein einziger Schritt trifft die
+Lösung; Verfahren vom Krylov-Typ wie das der konjugierten Gradienten kommen in
+exakter Arithmetik nach höchstens $n$ Schritten an. Nützlich ist das selten,
+denn $\bA^{-1}$ zu kennen wäre teurer als das Gleichungssystem selbst.
+:::
+
+:::frage{falsch}
+Die Potenzmethode konvergiert umso schneller, je näher $|\lambda_2|$ bei
+$|\lambda_1|$ liegt.
+
+Es ist genau umgekehrt. Die Rate ist $\corange{|\lambda_2/\lambda_1|}$
+(Satz 8.1.4), und die geht gegen $1$, sobald sich die beiden Eigenwerte
+nähern; im Grenzfall $|\lambda_2| = |\lambda_1|$ trägt Satz 8.1.4 gar nicht
+mehr (Bemerkung 8.1.6). Dieselbe Nähe macht auch die Eigenvektoren schlecht
+konditioniert (Bemerkung 8.1.16).
+:::
+
+:::frage{wahr}
+Verschärfen wir bei der Korrekturiteration die geforderte Genauigkeit, so
+wächst die nötige Schrittzahl nur logarithmisch.
+
+Das ist Korollar 8.3.6: $k = O(\log(1/\eps))$, weil der Fehler in jedem
+Schritt um den Faktor $\corange{\rho}$ schrumpft. Bei
+$\corange{\rho} \approx \corange{0{,}405}$ sind das rund zweieinhalb Schritte
+je Dezimalstelle, unabhängig davon, bei welcher Stelle wir gerade sind.
+:::
+
+:::frage{falsch}
+Verdoppeln wir beim Sketching die Zeilenzahl $m$, so halbiert sich die
+Verzerrung.
+
+Die Schranke aus [Abschnitt 8.4](#sec-8.4) fällt wie $1/\sqrt{m}$, nicht wie
+$1/m$. Doppelt so viele Zeilen drücken die Verzerrung deshalb nur auf das
+$1/\sqrt{2} \approx 0{,}71$-fache; halbieren lässt sie sich erst mit der
+vierfachen Skizzengröße. Genauigkeit ist bei zufälligen Verfahren der teure
+Teil, Dimensionsreduktion der billige.
+:::
+
+::::
+
+*Vertiefung: Heath §4.5 zu den Eigenwertverfahren, Heath §11.5 zu den
+iterativen Lösern für lineare Gleichungssysteme. Die
+wahrscheinlichkeitstheoretischen Werkzeuge hinter den Sketching-Schranken
+behandelt R. Vershynin, High-Dimensional Probability, Cambridge University
+Press 2018.*

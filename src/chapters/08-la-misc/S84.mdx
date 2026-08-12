@@ -1,1 +1,649 @@
-Abschnitt 8.4 – im Aufbau.
+import { SketchingDemo } from "./widgets/S84Sketching";
+
+::quelle[Folien 08-la-misc, Abschnitt „Probabilistische Methoden".]
+
+Die iterativen Verfahren der [Abschnitte 8.1](#sec-8.1) und
+[8.3](#sec-8.3) handeln Genauigkeit gegen Laufzeit: Wir brechen ab, sobald
+uns das Erreichte genügt. Dieser Abschnitt zieht einen anderen Hebel. Wir
+verkleinern nicht die Zahl der Schritte, sondern das Problem selbst, und das
+Werkzeug dafür ist Zufall.
+
+### Zufall mit Absicht
+
+Oft sind Probleme so groß, dass wir Genauigkeit gern gegen bessere
+Komplexität tauschen. Zunehmend geschieht das durch *Randomisierung*
+(randomization): Statt sorgfältig auszuwählen, welchen Teil der Daten wir
+wegwerfen, würfeln wir ihn aus.
+
+:::bemerkung[8.4.1 (Hauptidee der Randomisierung)]
+Wir ersetzen ein großes Problem durch ein zufällig erzeugtes, kleines
+Problem, das höchstwahrscheinlich eine ähnliche Lösung hat.
+
+Das Wort „höchstwahrscheinlich" ist dabei wörtlich gemeint. Ein
+randomisiertes Verfahren darf danebenliegen, und die Fehlerwahrscheinlichkeit
+$\delta$ ist ein Parameter, den wir einstellen. Wir kaufen uns Rechenzeit,
+indem wir ein kontrolliertes Risiko eingehen.
+:::
+
+Warum sollte das gutgehen? Wer eine Punktwolke im $\R^{10\,000}$ auf ein paar
+hundert Koordinaten eindampft, wirft weit über 90 % der Koordinaten weg. Dass
+die Wolke danach noch dieselbe Form hat, klingt zunächst absurd. Der Grund
+liegt in einer Eigenart hochdimensionaler Räume, die wir uns zuerst ansehen.
+
+### Fast orthogonale Zufallsvektoren
+
+In der Ebene sind zwei zufällige Richtungen selten senkrecht: Der Winkel
+zwischen ihnen ist gleichverteilt, jeder Wert ist so gut wie jeder andere. Im
+$\R^n$ mit großem $n$ ändert sich das Bild vollständig.
+
+:::satz[8.4.2 (Zufallsrichtungen stehen fast senkrecht aufeinander)]
+Seien $\bs_1, \bs_2 \in \R^n$ unabhängig und je $\Ncal(\bnull, \bI_n)$-verteilt,
+und sei $\theta$ der Winkel zwischen ihnen. Dann gilt
+
+$$
+\E[\cos\theta] = 0, \qquad \var[\cos\theta] = \frac{1}{n},
+$$
+
+und für jedes $t > 0$ folgt
+
+$$
+\Pr\left(\left|\cos\theta\right| \ge \frac{t}{\sqrt{n}}\right) \le \frac{1}{t^2} .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir normieren beide Vektoren, $\bu = \bs_1/\left\|\bs_1\right\|$ und
+$\bv = \bs_2/\left\|\bs_2\right\|$, und schreiben den Kosinus als
+:k[Skalarprodukt]{#dot-product}
+
+$$
+\cos\theta = \bu^\top\bv .
+$$
+
+::why[der Winkel zwischen zwei Vektoren hängt nur von ihren Richtungen ab; $\bs_i = \bnull$ tritt mit Wahrscheinlichkeit $0$ ein und stört deshalb nicht]
+:::
+
+:::schritt
+Die Standardnormalverteilung ist drehinvariant, also ist $\bu$ gleichverteilt
+auf der Einheitssphäre. Daraus folgt
+
+$$ {#eq-8.4.1}
+\E[\bu] = \bnull, \qquad \E\left[\bu\bu^\top\right] = \frac{1}{n}\,\bI_n .
+$$
+
+::why[$\bu$ und $-\bu$ sind gleich verteilt, also ist der Erwartungswert null; die Matrix $\E[\bu\bu^\top]$ ändert sich unter Drehungen nicht und ist deshalb ein Vielfaches der :k[Einheitsmatrix]{#identity-matrix}, und der Faktor folgt aus $\tr \E[\bu\bu^\top] = \E\left[\left\|\bu\right\|^2\right] = 1$]
+:::
+
+:::schritt
+Jetzt bedingen wir auf $\bv$ und nutzen die Unabhängigkeit:
+
+$$
+\E\left[\bu^\top\bv \mid \bv\right] = \E[\bu]^\top\bv = 0,
+\qquad
+\E\left[\left(\bu^\top\bv\right)^2 \mid \bv\right]
+= \bv^\top\E\left[\bu\bu^\top\right]\bv
+= \frac{\left\|\bv\right\|^2}{n} = \frac{1}{n} .
+$$
+
+Beide Werte hängen nicht mehr von $\bv$ ab, gelten also auch unbedingt.
+
+::why[($8.4.1$) mit $\left(\bu^\top\bv\right)^2 = \bv^\top\bu\bu^\top\bv$; $\left\|\bv\right\| = 1$ nach Konstruktion]
+:::
+
+:::schritt
+Wegen $\E[\cos\theta] = 0$ ist $\var[\cos\theta] = \E\left[\cos^2\theta\right] = 1/n$,
+und die Tschebyscheff-Ungleichung liefert
+
+$$
+\Pr\left(\left|\cos\theta\right| \ge \frac{t}{\sqrt{n}}\right)
+\le \frac{\var[\cos\theta]}{t^2/n} = \frac{1}{t^2} .
+$$
+
+::why[Tschebyscheff ist die Markov-Ungleichung, angewandt auf die quadrierte Abweichung vom Erwartungswert]
+:::
+
+::::
+
+Der Satz sagt: Die Streuung des Kosinus schrumpft wie $1/\sqrt{n}$. In hohen
+Dimensionen drängt sich die Verteilung des Winkels also um $90^\circ$
+zusammen, zufällige Richtungen sind praktisch
+:k[orthogonal]{#orthogonality}.
+
+:::beispiel[8.4.3 (Wie senkrecht ist fast senkrecht?)]
+Für $n = 10\,000$ ist $\var[\cos\theta] = 10^{-4}$, die Standardabweichung
+also $0{,}01$. Mit $t = 5$ liefert Satz 8.4.2
+
+$$
+\Pr\left(\left|\cos\theta\right| \ge 0{,}05\right) \le \frac{1}{25} = 0{,}04 ,
+$$
+
+mit Wahrscheinlichkeit mindestens $96\,\%$ liegt der Winkel also zwischen
+$87{,}1^\circ$ und $92{,}9^\circ$. Zum Vergleich: Für $n = 100$ erlaubt
+dieselbe Schranke noch $\left|\cos\theta\right| \le 0{,}5$, also jeden Winkel
+zwischen $60^\circ$ und $120^\circ$. Die Aussage lebt von großem $n$.
+:::
+
+Damit wird plausibel, was wir eigentlich vorhaben. Ziehen wir $m$ solcher
+Richtungen und schreiben sie als Zeilen in eine Matrix, so verhalten sich
+diese Zeilen fast wie ein Orthonormalsystem. Die Abbildung $\bx \mapsto \bS\bx$
+misst dann die Länge von $\bx$ entlang $m$ zufälliger, fast senkrechter
+Achsen, und das reicht überraschend weit.
+
+:::definition[8.4.4 (Sketching-Matrix und Skizze)]
+Sei $m < n$. Eine Zufallsmatrix $\bS \in \R^{m \times n}$ heißt
+*Sketching-Matrix* (sketching matrix), und für $\bx \in \R^n$ heißt
+$\cblue{\bS\bx} \in \R^m$ die *Skizze* (sketch) von $\bx$. Gesucht sind
+Verteilungen für $\bS$, unter denen mit hoher Wahrscheinlichkeit
+
+$$
+\left\|\cblue{\bS\bx} - \cblue{\bS\by}\right\|
+\approx \left\|\cgreen{\bx} - \cgreen{\by}\right\|
+\qquad\text{und}\qquad
+\angle\left(\cblue{\bS\bx}, \cblue{\bS\by}\right)
+\approx \angle\left(\cgreen{\bx}, \cgreen{\by}\right)
+$$
+
+gilt, die Skizze also Abstände und Winkel der Originaldaten erbt. Wie im
+ganzen Kapitel ist $\left\|\cdot\right\|$ die
+:k[euklidische Norm]{#euclidean-norm}.
+:::
+
+Häufig heißt $\bS$ eine zufällige „Projektion". Das Wort ist mit Vorsicht zu
+lesen: Eine :k[Projektion]{#projection} bildet einen Raum in sich ab und ist
+idempotent, $\bS$ dagegen führt vom $\R^n$ in den kleineren $\R^m$. Gemeint
+ist nur, dass das Bild in $m$ statt in $n$ Dimensionen lebt.
+
+### Ein Zahlenbeispiel
+
+:::beispiel[8.4.5 (Sketching zweier Vektoren mit 10000 Komponenten)]
+Die Folien ziehen zwei beliebige Vektoren $\bx, \by \in \R^{10\,000}$ und eine
+Gauss-Sketchmatrix mit $m = 50$, also einen Faktor $200$ kleiner:
+
+```r
+set.seed(1312)
+## Zwei beliebige n-dimensionale Vektoren
+n <- 10000
+x <- runif(n)
+y <- runif(n)
+# (m x n)-Matrix mit m << n und zufälligen Einträgen
+m <- 50 # m << n !!
+S <- rnorm(m * n, sd = sqrt(1 / m)) |> matrix(nrow = m, ncol = n)
+Sx <- S %*% x
+Sy <- S %*% y
+## Distanzen ||x - y|| und ||Sx - Sy||
+c(norm(x - y, "2"), norm(Sx - Sy, "2"))
+## Winkel: cos(angle) = (x'y) / (||x|| ||y||)
+angle <- function(x, y) (sum(x * y) / (norm(x, "2") * norm(y, "2"))) |> acos()
+c(angle(x, y), angle(Sx, Sy))
+```
+
+Die Einträge sind unabhängig $\Ncal(0, 1/m)$-verteilt, eine Zeile $\bs_i$ hat
+also die Kovarianzstruktur $\E\left[\bs_i\bs_i^\top\right] = \bI_n/m$; diese
+Bedingung brauchen wir gleich. Berichtet wird für diesen Seed weniger als
+$1\,\%$ Abweichung im Abstand und weniger als $3\,\%$ im Winkel.
+
+Diese Zahlen sind eine glückliche Ziehung. Bei $m = 50$ schwankt die relative
+Abweichung des Abstands typischerweise um $\pm 1/\sqrt{2m} \approx 10\,\%$;
+in einer Simulation mit 200 unabhängigen Ziehungen landeten nur rund
+$6\,\%$ davon unter der $1\,\%$-Marke. Das Verfahren funktioniert, aber
+einzelne Ziehungen streuen erheblich. Das Widget unten führt beides vor.
+:::
+
+:::vertiefung[Sketching mit verstellbarem m]
+Zwei feste Vektoren aus dem $\R^{200}$ werden mit einer Gauss-Sketchmatrix in
+den $\R^m$ geschickt. Der Slider steuert $m$, der Knopf zieht eine neue
+Matrix. Bei kleinem $m$ springen Abstand und Winkel wild umher, mit
+wachsendem $m$ beruhigen sie sich, und zwar nur so langsam, wie es die Wurzel
+in $\pm 1/\sqrt{2m}$ zulässt.
+
+<SketchingDemo />
+:::
+
+### Der Einbettungssatz
+
+Bisher haben wir plausibel gemacht, dass Sketching funktionieren kann. Jetzt
+beweisen wir es, und zwar mit erstaunlich wenig Aufwand: Erwartungswert,
+Varianz und die Tschebyscheff-Ungleichung genügen.
+
+:::satz[8.4.6 (Zufällige Einbettung eines festen Vektors)]
+Sei $\bS \in \R^{m \times n}$ eine Zufallsmatrix, deren Zeilen
+$\bs_1^\top, \dots, \bs_m^\top$ unabhängig und identisch verteilt sind und
+
+$$ {#eq-8.4.2}
+\E\left[\bs_i\bs_i^\top\right] = \frac{1}{m}\,\bI_n
+$$
+
+erfüllen, sowie für ein $K > 0$
+
+$$ {#eq-8.4.3}
+\E\left[\left(\bs_i^\top\bv\right)^4\right] \le \frac{K}{m^2}
+\qquad \text{für alle } \bv \in \R^n \text{ mit } \left\|\bv\right\| = 1 .
+$$
+
+Seien weiter $\bx \in \R^n$ *fest* und $\delta > 0$. Dann gilt mit
+Wahrscheinlichkeit mindestens $1 - \delta$
+
+$$ {#eq-8.4.4}
+(1 - \corange{\eps})\left\|\cgreen{\bx}\right\|^2
+\le \left\|\cblue{\bS\bx}\right\|^2
+\le (1 + \corange{\eps})\left\|\cgreen{\bx}\right\|^2 ,
+\qquad
+\corange{\eps} = \sqrt{\frac{K}{\delta m}} .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir dürfen $\left\|\cgreen{\bx}\right\| = 1$ annehmen. Beide Seiten von
+($8.4.4$) sind homogen vom Grad $2$ in $\cgreen{\bx}$; für
+$\cgreen{\bx} \neq \bnull$ teilen wir die Ungleichung durch
+$\left\|\cgreen{\bx}\right\|^2$, und für $\cgreen{\bx} = \bnull$ ist nichts zu
+zeigen. Zu beweisen bleibt
+
+$$
+\Pr\left(\left| \left\|\cblue{\bS\bx}\right\|^2 - 1 \right| \le \corange{\eps}\right) \ge 1 - \delta .
+$$
+
+::why[mit $\bx$ erfüllt auch $\bx/\left\|\bx\right\|$ die Voraussetzungen, und $\left\|\bS(\bx/\left\|\bx\right\|)\right\|^2 = \left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$]
+:::
+
+:::schritt
+Die $i$-te Komponente von $\bS\bx$ ist $\bs_i^\top\bx$, also
+
+$$
+\left\|\cblue{\bS\bx}\right\|^2 = \sum_{i=1}^m \left(\bs_i^\top\cgreen{\bx}\right)^2
+\qquad\text{und}\qquad
+\E\left[\left\|\cblue{\bS\bx}\right\|^2\right]
+= \sum_{i=1}^m \cgreen{\bx}^\top \E\left[\bs_i\bs_i^\top\right] \cgreen{\bx}
+= m\,\cgreen{\bx}^\top \frac{\bI_n}{m} \cgreen{\bx}
+= \left\|\cgreen{\bx}\right\|^2 = 1 .
+$$
+
+Im Erwartungswert trifft die Skizze die Länge also exakt.
+
+::why[$\left(\bs_i^\top\bx\right)^2 = \bx^\top\bs_i\bs_i^\top\bx$, dann die Linearität des :k[Erwartungswerts]{#expected-value} und Bedingung ($8.4.2$)]
+:::
+
+:::schritt
+Die Summanden sind unabhängig, also addieren sich die Varianzen:
+
+$$
+\var\left[\left\|\cblue{\bS\bx}\right\|^2\right]
+= \sum_{i=1}^m \var\left[\left(\bs_i^\top\cgreen{\bx}\right)^2\right]
+\le \sum_{i=1}^m \E\left[\left(\bs_i^\top\cgreen{\bx}\right)^4\right]
+\le m \cdot \frac{K}{m^2} = \frac{K}{m} .
+$$
+
+Hier steckt die ganze Arbeit der vierten Momente: Sie beschränken die
+Streuung der Skizze.
+
+::why[$\var[Z] = \E\left[Z^2\right] - \E[Z]^2 \le \E\left[Z^2\right]$ mit $Z = \left(\bs_i^\top\bx\right)^2$, danach Bedingung ($8.4.3$) mit $\bv = \bx$]
+:::
+
+:::schritt
+Die Tschebyscheff-Ungleichung schlägt die Brücke von der Varianz zur
+Wahrscheinlichkeit:
+
+$$
+\Pr\left(\left| \left\|\cblue{\bS\bx}\right\|^2 - 1 \right| > \corange{\eps}\right)
+\le \frac{\var\left[\left\|\cblue{\bS\bx}\right\|^2\right]}{\corange{\eps}^2}
+\le \frac{K}{\corange{\eps}^2 m} .
+$$
+
+Die Wahl $\corange{\eps} = \sqrt{K/(\delta m)}$ macht die rechte Seite zu
+$\delta$, und das Gegenereignis hat damit Wahrscheinlichkeit mindestens
+$1 - \delta$.
+
+::why[Tschebyscheff mit dem in Schritt 2 berechneten Erwartungswert $1$; einsetzen: $K/(\eps^2 m) = K\delta m/(K m) = \delta$]
+:::
+
+::::
+
+:::bemerkung[8.4.7 (Drei Abweichungen von der Folienfassung)]
+Die Folien formulieren denselben Satz etwas anders, und drei Stellen lohnen
+den genauen Blick.
+
+1. **Die Momentenbedingung.** Dort steht
+   $\E\left[\left\|\bs_i\right\|^4\right] \le K/m^2$ statt ($8.4.3$). Diese
+   Bedingung passt nicht zum späteren Wert $K = 3$: Für
+   $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
+   $\E\left[\left\|\bs_i\right\|^4\right] = (n^2 + 2n)/m^2$, das zugehörige
+   $K$ wächst also wie $n^2$. Bei $n = 10\,000$ wäre $K \approx 10^8$ statt
+   $3$. Unsere Bedingung ($8.4.3$) ist dagegen für Gauss-Zeilen exakt mit
+   $K = 3$ erfüllt (Beispiel 8.4.11).
+2. **Der Weg dorthin.** Die Folien kommen von der einen zur anderen Größe
+   über die :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality},
+   $\left|\bs_i^\top\bv\right| \le \left\|\bs_i\right\|\left\|\bv\right\|$.
+   Das ist richtig, aber grob: Der Schritt verschenkt im Gauss-Fall den
+   Faktor $(n^2+2n)/3$. Wir schätzen die Varianz deshalb direkt über
+   $\E\left[\left(\bs_1^\top\bv\right)^4\right]$ ab.
+3. **Das benutzte Werkzeug.** Aus Erwartungswert und Varianz auf eine
+   Wahrscheinlichkeit zu schließen, ist die Tschebyscheff-Ungleichung. Sie
+   ist die Markov-Ungleichung, angewandt auf die quadrierte Abweichung; auf
+   den Folien steht nur „Markov".
+:::
+
+:::bemerkung[8.4.8 (Von Quadraten zu Längen und Abständen)]
+Satz 8.4.6 spricht über $\left\|\bS\bx\right\|^2$, interessant sind aber
+Längen und Abstände.
+
+- **Wurzelziehen.** Aus ($8.4.4$) folgt
+  $\sqrt{1-\corange{\eps}} \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le \sqrt{1+\corange{\eps}}$.
+  Für $\corange{\eps} = 0{,}1$ heißt das $0{,}949 \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le 1{,}049$:
+  Eine Verzerrung von $10\,\%$ im Quadrat sind rund $5\,\%$ in der Länge.
+- **Von der Länge zum Abstand.** $\bS$ ist linear, also ist
+  $\bS\bx - \bS\by = \bS(\bx - \by)$. Wenden wir den Satz auf den festen
+  Vektor $\bx - \by$ an, so erhalten wir die Abstandsaussage aus
+  Definition 8.4.4.
+- **Mehrere Paare.** Für $N$ Punkte und *alle* Paare brauchen wir die
+  Aussage für $N(N-1)/2$ Differenzvektoren gleichzeitig. Über eine
+  Vereinigungsschranke geht das, kostet aber $\delta \to 2\delta/(N(N-1))$
+  und damit ein deutlich größeres $m$.
+:::
+
+Winkel behandelt der Satz zunächst gar nicht. Sie folgen aber, denn
+Skalarprodukte lassen sich aus Längen zurückgewinnen.
+
+:::korollar[8.4.9 (Skalarprodukte bleiben erhalten)]
+Seien $\bx, \by \in \R^n$ fest und $\bS$ wie in Satz 8.4.6. Dann gilt mit
+Wahrscheinlichkeit mindestens $1 - 2\delta$
+
+$$
+\left| \cblue{(\bS\bx)^\top(\bS\by)} - \cgreen{\bx^\top\by} \right|
+\le \frac{\corange{\eps}}{2}\left(\left\|\cgreen{\bx}\right\|^2 + \left\|\cgreen{\by}\right\|^2\right) .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Für beliebige Vektoren $\ba, \bc$ gilt die Polarisationsformel
+
+$$
+\ba^\top\bc = \frac{\left\|\ba + \bc\right\|^2 - \left\|\ba - \bc\right\|^2}{4} .
+$$
+
+Wir wenden sie einmal auf $\bS\bx, \bS\by$ und einmal auf $\bx, \by$ an und
+nutzen $\bS\bx \pm \bS\by = \bS(\bx \pm \by)$.
+
+::why[ausmultiplizieren: $\left\|\ba+\bc\right\|^2 - \left\|\ba-\bc\right\|^2 = 4\,\ba^\top\bc$]
+:::
+
+:::schritt
+Satz 8.4.6 gilt für jeden festen Vektor, insbesondere für $\bx + \by$ und für
+$\bx - \by$. Jedes der beiden Ereignisse verfehlt die Schranke mit
+Wahrscheinlichkeit höchstens $\delta$, zusammen also höchstens $2\delta$.
+Treten beide ein, so ist
+
+$$
+\left| \cblue{(\bS\bx)^\top(\bS\by)} - \cgreen{\bx^\top\by} \right|
+\le \frac{\corange{\eps}\left\|\bx+\by\right\|^2 + \corange{\eps}\left\|\bx-\by\right\|^2}{4}
+= \frac{\corange{\eps}}{2}\left(\left\|\bx\right\|^2 + \left\|\by\right\|^2\right) .
+$$
+
+::why[Vereinigungsschranke für die beiden Ausnahmeereignisse; zuletzt die Parallelogrammgleichung $\left\|\bx+\by\right\|^2 + \left\|\bx-\by\right\|^2 = 2\left\|\bx\right\|^2 + 2\left\|\by\right\|^2$]
+:::
+
+::::
+
+Für Einheitsvektoren steht rechts schlicht $\corange{\eps}$. Der Kosinus des
+Winkels ist das Skalarprodukt der normierten Vektoren, und Zähler wie Nenner
+werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen. Damit ist auch
+die Winkelaussage aus Definition 8.4.4 gerechtfertigt.
+
+:::bemerkung[8.4.10 (Ein fester Vektor ist nicht jeder Vektor)]
+Auf den Folien steht „für alle $\bx \in \R^n$" *innerhalb* der
+Wahrscheinlichkeit. So stimmt die Aussage nicht: Unser Beweis fixiert $\bx$,
+bevor $\bS$ gezogen wird, und die Ausnahmemenge darf für jedes $\bx$ eine
+andere sein. Ein Gegenargument in einer Zeile: $\bS$ hat höchstens
+:k[Rang]{#rank} $m < n$, besitzt also einen nichttrivialen
+:k[Kern]{#kernel}. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ ist
+($8.4.4$) verletzt, ganz gleich wie $\bS$ ausgefallen ist.
+
+Gleichmäßige Aussagen sind trotzdem möglich, aber nur auf einem
+:k[Unterraum]{#subspace} kleiner Dimension und mit Zusatzarbeit: Man
+kontrolliert endlich viele Richtungen eines feinen Netzes und überträgt das
+Ergebnis per Vereinigungsschranke auf den ganzen Unterraum. Daher rührt der
+Name „Einbetten von Unterräumen", und daher stammt die Rechtfertigung für das
+gesketchte Kleinste-Quadrate-Problem weiter unten: Dort muss die Skizze alle
+Vektoren des von den Spalten von $\bA$ und $\bb$ aufgespannten Unterraums
+gleichzeitig gut treffen.
+:::
+
+### Drei Bauarten von Sketching-Matrizen
+
+Welche Verteilungen erfüllen ($8.4.2$) und ($8.4.3$)? Die Folien nennen drei,
+und alle drei lassen sich direkt nachrechnen.
+
+:::beispiel[8.4.11 (Gauss, Rademacher, Subsampling)]
+**Gauss.** $\bs_i \iid \Ncal(\bnull, \bI_n/m)$. Bedingung ($8.4.2$) ist die
+Definition der Kovarianzmatrix. Für einen Einheitsvektor $\bv$ ist
+$\bs_i^\top\bv \sim \Ncal(0, 1/m)$, und das vierte Moment einer
+zentrierten Normalverteilung ist das Dreifache des quadrierten zweiten:
+
+$$
+\E\left[\left(\bs_i^\top\bv\right)^4\right] = 3\left(\frac{1}{m}\right)^2 = \frac{3}{m^2},
+\qquad\text{also}\qquad K = 3 .
+$$
+
+**Rademacher.** $s_{ij}$ unabhängig mit
+$\Pr\left(s_{ij} = 1/\sqrt{m}\right) = \Pr\left(s_{ij} = -1/\sqrt{m}\right) = 1/2$.
+Wegen $\E\left[s_{ij}^2\right] = 1/m$ und $\E\left[s_{ij}s_{ik}\right] = 0$
+für $j \neq k$ gilt wieder ($8.4.2$). Ausmultiplizieren der vierten Potenz
+liefert für $\left\|\bv\right\| = 1$
+
+$$
+\E\left[\left(\bs_i^\top\bv\right)^4\right]
+= \frac{3 - 2\sum_{j=1}^n v_j^4}{m^2} \le \frac{3}{m^2} ,
+$$
+
+also ebenfalls $K = 3$, und für gestreute $\bv$ sogar etwas besser. Der
+Vorteil liegt im Erzeugen und Speichern: ein Bit pro Eintrag.
+
+**Subsampling.** $\bs_i = \sqrt{n/m}\,\be_{K_i}$ mit
+$K_i \sim \unif\{1, \dots, n\}$, die Skizze greift also $m$ zufällige
+Koordinaten heraus und skaliert sie. Auch hier ist
+$\E\left[\bs_i\bs_i^\top\right] = \frac{n}{m}\cdot\frac{1}{n}\bI_n = \bI_n/m$.
+Das vierte Moment sieht aber anders aus:
+
+$$
+\E\left[\left(\bs_i^\top\bv\right)^4\right]
+= \left(\frac{n}{m}\right)^2 \frac{1}{n} \sum_{j=1}^n v_j^4
+= \frac{n \sum_{j=1}^n v_j^4}{m^2} ,
+\qquad\text{also}\qquad K = n\sum_{j=1}^n v_j^4 .
+$$
+
+Dieses $K$ hängt von den Daten ab. Für einen gestreuten Vektor mit
+$v_j = \pm 1/\sqrt{n}$ ist $\sum_j v_j^4 = 1/n$ und damit $K = 1$, besser als
+Gauss. Für $\bv = \be_1$ dagegen ist $K = n$: Die gesamte Information steckt
+in einer Koordinate, und die Stichprobe erwischt sie nur mit
+Wahrscheinlichkeit $m/n$. So ist die Folien-Tabelle zu lesen, wenn sie
+Subsampling „nur gut für spezielle Matrizen" nennt.
+:::
+
+### Anwendungen
+
+:::bemerkung[8.4.12 (Wo Skizzen helfen)]
+- **Matrixprodukt.** Für $\bA \in \R^{p \times n}$ und
+  $\bB \in \R^{n \times q}$ ist
+  $\bA\bB \approx \left(\bA\bS^\top\right)\left(\bS\bB\right)$. Der Grund ist
+  ($8.4.2$): Wegen
+  $\E\left[\bS^\top\bS\right] = \sum_{i=1}^m \E\left[\bs_i\bs_i^\top\right] = \bI_n$
+  ist die rechte Seite :k[erwartungstreu]{#unbiased-estimator} für
+  $\bA\bB$. Statt $pnq$ kostet das
+  :k[Matrixprodukt]{#matrix-product} dann $pnm + mnq + pmq$ Multiplikationen,
+  für $p = q = n$ also rund $3n^2m$ statt $n^3$.
+- **Kleinste Quadrate.**
+  $\min_{\bx}\left\|\bA\bx - \bb\right\|_2
+  \approx \min_{\bx}\left\|\bS\bA\bx - \bS\bb\right\|_2$, siehe
+  Algorithmus 8.4.13.
+- **Approximative Zerlegungen.** Auch die randomisierte Näherung einer
+  :k[Singulärwertzerlegung]{#singular-value-decomposition} aus
+  [Abschnitt 8.2](#sec-8.2) arbeitet mit einer Skizze des Spaltenraums.
+:::
+
+Ein Vorbehalt gilt für alle drei Punkte: Schneller wird ein Algorithmus nur,
+wenn sich $\bS\bx$ schnell berechnen lässt. Zieht $\bS$ nur $m$ Komponenten
+von $\bx$ heraus, kostet das $O(m)$ Operationen; der Stand der Technik ist
+die *Subsampled Randomized Hadamard Transform* (SRHT) mit
+$O(n \log m)$ Rechenschritten. Bei einer dichten Gauss-Matrix dagegen kostet
+$\bS\bx$ schon $O(mn)$ Operationen, und dann kann die Skizze teurer sein als
+das Problem, das sie vereinfachen soll.
+
+:::algorithmus[8.4.13 (Sketching für ein KQ-Problem)]
+Gegeben $\bA \in \R^{n \times p}$ mit $n \gg p$, $\bb \in \R^n$ und eine
+Skizzengröße $m$ mit $p < m \ll n$.
+
+1. Ziehe eine Sketching-Matrix $\bS \in \R^{m \times n}$.
+2. Berechne $\bS\bA \in \R^{m \times p}$ und $\bS\bb \in \R^m$.
+3. Löse das kleine Problem
+   $\min_{\bx}\left\|(\bS\bA)\bx - \bS\bb\right\|_2$, etwa per
+   :k[QR-Zerlegung]{#qr-factorization}
+   ([Abschnitt 7.4](?k=07-kq#sec-7.4)).
+
+Schritt 3 kostet $O(mp^2)$ statt $O(np^2)$ für das
+:k[Ausgangsproblem]{#linear-least-squares}. Ob sich das lohnt, entscheidet
+Schritt 2: Eine dichte Gauss-Matrix braucht dort $O(mnp)$ Operationen, und
+wegen $m > p$ ist das mehr als die $O(np^2)$, die wir sparen wollten. Erst
+mit schnell anwendbaren Skizzen wie der SRHT geht die Rechnung auf.
+:::
+
+### Wie klein darf m sein?
+
+:::beispiel[8.4.14 (Dimensionsreduktion mit Matrix-Sketching)]
+Gegeben seien $n = 10\,000$ Dimensionen, eine Fehlerwahrscheinlichkeit
+$\delta = 0{,}05$ und eine zulässige Verzerrung $\corange{\eps} = 0{,}1$. Wie
+klein darf $m$ sein? Wir lösen ($8.4.4$) nach $m$ auf und setzen für
+Gauss-Zeilen $K = 3$ ein:
+
+$$ {#eq-8.4.5}
+\corange{\eps} = \sqrt{\frac{K}{\delta m}}
+\quad\Longleftrightarrow\quad
+m = \frac{K}{\delta\,\corange{\eps}^2}
+= \frac{3}{0{,}05 \cdot 0{,}01}
+= 6000 .
+$$
+
+Mit $m = 6000$ Dimensionen bleibt der Abstand eines vorher festgelegten
+Punktepaares mit Wahrscheinlichkeit $95\,\%$ auf $10\,\%$ genau erhalten,
+gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$
+(Bemerkung 8.4.8). Der Speicher
+sinkt von $10\,000$ auf $6000$ Zahlen je Punkt, ein Faktor $n/m \approx 1{,}7$,
+und eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
+Operationen, ebenfalls ein Faktor $n/m$.
+
+Umgekehrt gelesen sagt ($8.4.5$), was $m = 600$ wirklich hergibt: bei
+$\delta = 0{,}05$ nur $\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
+und bei $\corange{\eps} = 0{,}1$ nur $\delta = 3/(600 \cdot 0{,}01) = 0{,}5$,
+also die Verlässlichkeit eines Münzwurfs.
+:::
+
+:::bemerkung[8.4.15 (Zur Rechnung auf den Folien)]
+Die Folie schreibt an dieser Stelle $3/(0{,}05 \cdot 0{,}01) = 600$; richtig
+sind $6000$. Damit fallen auch die beiden Folgerungen anders aus. Die
+Kompression ist $10\,000/6000 \approx 1{,}7$ und nicht $17$.
+
+Fragwürdig ist zudem die Angabe „Rechenzeit für Distanzberechnungen
+$O(n^2) \to O(m^2)$, Speed-up $\sim 280\times$". Eine einzelne euklidische
+Distanz kostet $O(n)$ Operationen, nicht $O(n^2)$; der Gewinn ist deshalb der
+Faktor $n/m$. Quadratisch in der Dimension sind nur bestimmte Verfahren, etwa
+das Aufstellen einer :k[Kovarianzmatrix]{#covariance-matrix}, und nur dort
+schlägt der Faktor $(n/m)^2$ zu Buche.
+
+Bleibt die Frage, warum in der Praxis trotzdem mit $m$ in der Größenordnung
+einiger hundert gearbeitet wird. Der Grund ist unser Werkzeug: Tschebyscheff
+benutzt nur zwei Momente und ist entsprechend grob. Schärfere
+Konzentrationsungleichungen liefern für Gauss-Skizzen ein $m$ der
+Größenordnung $\corange{\eps}^{-2}\log(1/\delta)$, also eine logarithmische
+statt einer linearen Abhängigkeit von $1/\delta$. Der Preis dafür sind
+deutlich mehr Voraussetzungen und ein längerer Beweis (Literatur am Ende des
+Abschnitts).
+:::
+
+### Vergleich der Sketching-Matrizen
+
+| Typ | Speicher | Zeit für $\bS\bx$ | Qualität |
+| --- | --- | --- | --- |
+| Gauss | $O(mn)$ | $O(mn)$ | optimal |
+| Rademacher ($\pm 1/\sqrt{m}$) | $O(mn)$ | $O(mn)$ | optimal |
+| Subsampling | $O(m)$ | $O(m)$ | gut bei gestreuten Daten |
+| SRHT (Hadamard) | $O(m)$ | $O(n \log m)$ | sehr gut |
+
+Speicher und Rechenzeit stehen in
+:k[Landau-Notation]{#big-o-notation}: einmal für das Vorhalten von $\bS$,
+einmal für ein einzelnes Produkt $\bS\bx$.
+
+- **Gauss** ist theoretisch optimal, aber teuer: $mn$ Zahlen speichern und
+  $mn$ Multiplikationen je Vektor.
+- **Rademacher** ist genauso gut, wie Beispiel 8.4.11 mit $K = 3$ zeigt, und
+  einfacher zu erzeugen, weil nur Vorzeichen gewürfelt werden.
+- **Subsampling** wählt $m$ zufällige Koordinaten und ist damit extrem
+  schnell. Die Qualität hängt allerdings an den Daten: Nach Beispiel 8.4.11
+  ist $K = n\sum_j v_j^4$, für gestreute Vektoren klein und für konzentrierte
+  Vektoren so groß wie $n$.
+- **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
+  sondern durch eine schnelle Transformation angewendet, daher die
+  $O(n \log m)$ in der Tabelle.
+
+### Selbsttest
+
+::::quiz
+
+:::frage{falsch}
+Es gibt eine Matrix $\bS \in \R^{m \times n}$ mit $m < n$, die alle Abstände
+exakt erhält.
+
+Eine solche Matrix hat höchstens Rang $m < n$, also einen nichttrivialen
+Kern. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ schrumpft der Abstand
+zum Nullpunkt auf $0$. Sketching kann Abstände nur näherungsweise und nur mit
+hoher Wahrscheinlichkeit erhalten (Bemerkung 8.4.10).
+:::
+
+:::frage{wahr}
+Satz 8.4.6 macht eine Aussage über einen vorher festgelegten Vektor $\bx$,
+nicht gleichzeitig über alle $\bx \in \R^n$.
+
+Im Beweis wird $\bx$ fixiert, bevor $\bS$ gezogen wird; die Ausnahmemenge
+darf für jedes $\bx$ eine andere sein. Gleichmäßige Aussagen über einen ganzen
+Unterraum brauchen ein Netzargument und eine Vereinigungsschranke
+(Bemerkung 8.4.10).
+:::
+
+:::frage{falsch}
+Verdoppeln wir $m$, so halbiert sich die garantierte Verzerrung
+$\corange{\eps}$.
+
+Nach ($8.4.4$) ist $\eps = \sqrt{K/(\delta m)}$, also proportional zu
+$1/\sqrt{m}$. Verdoppeltes $m$ drückt $\eps$ nur um den Faktor
+$1/\sqrt{2} \approx 0{,}71$; für die Halbierung brauchen wir viermal so viele
+Zeilen.
+:::
+
+:::frage{wahr}
+Für Gauss-Zeilen $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ gilt
+$\E\left[\left(\bs_i^\top\bv\right)^4\right] = 3/m^2$ für jeden Vektor $\bv$
+mit $\left\|\bv\right\| = 1$.
+
+Es ist $\bs_i^\top\bv \sim \Ncal(0, 1/m)$, und das vierte Moment einer
+zentrierten Normalverteilung ist $3\sigma^4$ (Beispiel 8.4.11). Damit ist
+($8.4.3$) mit $K = 3$ erfüllt, und zwar mit Gleichheit.
+:::
+
+:::frage{falsch}
+Subsampling ist für beliebige Daten genauso gut wie eine Gauss-Skizze.
+
+Für Subsampling ist $K = n\sum_j v_j^4$ und hängt damit von den Daten ab.
+Bei gestreuten Vektoren ist $K = 1$ und damit besser als die $3$ der
+Gauss-Skizze, bei einem Einheitsvektor dagegen $K = n$. Die Tabelle oben
+schreibt deshalb „gut bei gestreuten Daten" und nicht „optimal".
+:::
+
+::::
+
+*Vertiefung: Zufallsmatrizen, Konzentrationsungleichungen und Sketching
+behandelt R. Vershynin, High-Dimensional Probability (Cambridge University
+Press, 2018). Die deterministischen Gegenstücke dieses Kapitels stehen bei
+Heath: §4.5 für Eigenwertverfahren, §11.5 für iterative Löser.*
