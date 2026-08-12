@@ -1,3 +1,432 @@
-::quelle[Folien 10-ableitungen-I.]
+import { SekanteTangenteWidget } from "./widgets/S101Sekante";
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 10, siehe KONVENTIONEN.md).*
+::quelle[Folien 10-ableitungen-I, von den verwendeten Vorkenntnissen bis zur Fréchet-Ableitung von $f(x) = x^2$.]
+
+### Was wir mitbringen
+
+Dieses Kapitel steht auf zwei Beinen. Aus der linearen Algebra brauchen wir die
+:k[Spur]{#trace} einer Matrix aus
+[Abschnitt 3.1](?k=03-matrix-spur-norm#sec-3.1) und die
+:k[Matrixnormen]{#matrix-norm} aus
+[Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2), dazu
+:k[Determinante]{#determinant} und :k[Matrixinversion]{#matrix-inverse}.
+Außerdem hantieren wir mit normierten Vektorräumen, also
+:k[Vektorräumen]{#vector-space} mit einer :k[Norm]{#norm}, und mit
+beschränkten :k[linearen Abbildungen]{#linear-map} darauf. Aus der Analysis
+setzen wir die :k[Ableitung]{#derivative} $f'(x)$ voraus, die
+:k[partiellen Ableitungen]{#partial-derivative}
+$\partial f(\bx)/\partial x_i$, die lineare Approximation
+$f(x+h) \approx f(x) + f'(x)h$ und die Grundzüge der
+:k[Taylorreihen]{#taylor-series}.
+
+Ein Werkzeug verdient eine eigene Zeile, weil das ganze Kapitel daran hängt:
+die Landau-Notation für kleine Argumente. Für eine Funktion $g$ schreiben wir
+
+$$
+g(h) = o(h)
+\quad :\Longleftrightarrow \quad
+\lim_{h \to 0} \frac{g(h)}{h} = 0 .
+$$
+
+Ein $o(h)$-Term verschwindet also nicht einfach nur, er verschwindet *schneller
+als $h$ selbst*: Sein Verhältnis zu $h$ geht gegen null. Für $g(h) = h^2$ etwa
+viertelt sich der Term, wenn wir $h$ halbieren. Genauso schreiben wir
+$g(h) = o(\left|h\right|)$ und später $o(\left\|h\right\|)$, wenn der Quotient
+mit $\left|h\right|$ beziehungsweise $\left\|h\right\|$ gegen null geht; für
+reelles $h$ ist $o(\left|h\right|)$ dasselbe wie $o(h)$, denn $g(h)/h$ und
+$g(h)/\left|h\right|$ unterscheiden sich höchstens im Vorzeichen. Die
+Landau-Symbole haben wir in
+[Abschnitt 2.4](?k=02-algos#sec-2.4) für große Argumente kennengelernt, wo sie
+Rechenaufwand messen; hier läuft das Argument gegen null statt gegen unendlich,
+die Rechenregeln bleiben dieselben (:k[O-Notation]{#big-o-notation}).
+
+Wohin geht die Reise? Ableitungen und :k[Differenzierbarkeit]{#differentiability}
+kennen wir aus der Analysis für Funktionen einer reellen Variablen. Neu ist in
+diesem Kapitel ein allgemeinerer Ableitungsbegriff, die *Fréchet-Ableitung*. Mit
+ihm können wir Funktionen ableiten, die Vektoren oder Matrizen als Eingabe oder
+als Ausgabe haben, und wir bleiben dabei nicht auf den $\R^n$ beschränkt. Die
+Spezialfälle mit Vektor- und Matrixargumenten füllen die
+[Abschnitte 10.2](#sec-10.2) bis [10.4](#sec-10.4). Der Leitgedanke steht schon
+in der Überschrift dieses Abschnitts: *Ableitung = lineare Approximation*.
+
+### Die Ableitung im Eindimensionalen
+
+Fangen wir dort an, wo wir uns auskennen. Für eine Funktion einer reellen
+Variablen misst der Differenzenquotient, wie stark sich der Funktionswert
+ändert, wenn wir das Argument um $h$ verrücken.
+
+:::definition[10.1.1 (Differenzierbarkeit)]
+Seien $S \subseteq \R$ offen und $f\colon S \to \R$ eine Funktion. Wir nennen
+$f$ an der Stelle $x \in S$ *differenzierbar* mit *Ableitung* $\cgreen{f'(x)}$,
+falls der Grenzwert
+
+$$ {#eq-10.1.1}
+\lim_{h \to 0} \frac{\cblue{f(x + h)} - \cblue{f(x)}}{h} = \cgreen{f'(x)}
+$$
+
+existiert.
+:::
+
+Geometrisch ist der Quotient in ($10.1.1$) die Steigung der
+:k[Sekante]{#secant-line} durch die beiden Punkte $(x, f(x))$ und
+$(x+h, f(x+h))$. Lassen wir $h$ gegen null laufen, so rutscht der zweite Punkt
+auf den ersten zu, und die Sekante dreht sich in die
+:k[Tangente]{#tangent-line}. Die Ableitung $\cgreen{f'(x)}$ ist deren
+:k[Steigung]{#slope}.
+
+Das Wort „der Grenzwert" in Definition 10.1.1 trägt mehr Gewicht, als es
+aussieht. Verlangt ist ein einziger Wert, gegen den der Differenzenquotient
+strebt, egal von welcher Seite und in welchem Tempo wir uns nähern. Daran kann
+es scheitern.
+
+:::bemerkung[10.1.2 (Wenn es keine eindeutige Tangente gibt)]
+Betrachten wir $f(x) = \left|x\right|$ an der Stelle $x = 0$. Für $h > 0$ ist
+der Differenzenquotient
+
+$$
+\frac{\left|0 + h\right| - \left|0\right|}{h} = \frac{h}{h} = 1 ,
+$$
+
+für $h < 0$ dagegen $-h/h = -1$. Von rechts kommend messen wir also die
+Steigung $1$, von links die Steigung $-1$, und zwar für *jedes* $h$, nicht erst
+im Grenzwert. Der Grenzwert in ($10.1.1$) existiert damit nicht, $f$ ist in
+$x = 0$ nicht differenzierbar. Anschaulich lässt sich an einen Knick keine
+eindeutige Tangente anlegen. Das Problem sind dabei nicht zu wenige Kandidaten,
+sondern zu viele: Jede Gerade $y = m x$ mit $-1 \le m \le 1$ läuft durch den
+Punkt $(0, 0)$ und steigt sonst nirgends über den Graphen, denn
+$m x \le \left|x\right|$ für alle $x$; für $m = \pm 1$ fällt sie auf einer Seite
+sogar mit ihm zusammen. Stetig ist die Betragsfunktion trotzdem,
+Knicke sind also kein Widerspruch zur :k[Stetigkeit]{#continuity}.
+:::
+
+### Ableitung als lineare Approximation
+
+Definition 10.1.1 beschreibt die Ableitung als Grenzwert. Für alles, was
+danach kommt, ist eine zweite Lesart nützlicher. Stellen wir ($10.1.1$) um und
+lösen nach $\cblue{f(x+h)}$ auf, so steht dort: In der Nähe von $x$ verhält sich
+$f$ wie eine Gerade, und $\cgreen{f'(x)}$ ist deren Steigung. Der Fehler dieser
+Näherung ist klein, und das lässt sich präzise sagen.
+
+:::satz[10.1.3 (Ableitung als lineare Approximation)]
+Seien $S \subseteq \R$ offen, $f\colon S \to \R$, $x \in S$ und $a \in \R$.
+Dann sind die folgenden drei Aussagen gleichwertig:
+
+1. $\displaystyle\lim_{h \to 0} \frac{\cblue{f(x+h)} - \cblue{f(x)}}{h} = \cgreen{a}$,
+2. $\displaystyle\lim_{h \to 0} \frac{\left|\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}\right|}{\left|h\right|} = 0$,
+3. $\cblue{f(x+h)} = \cblue{f(x)} + \cgreen{a h} + \cred{o(\left|h\right|)}$ für $h \to 0$.
+
+Trifft eine davon zu, so ist $f$ in $x$ differenzierbar mit
+$\cgreen{f'(x)} = \cgreen{a}$.
+:::
+
+::::beweis
+
+:::schritt
+Zu (1) $\Longleftrightarrow$ (2): Für $h \neq 0$ ziehen wir $\cgreen{a}$ in den
+Bruch hinein,
+
+$$
+\frac{\cblue{f(x+h)} - \cblue{f(x)}}{h} - \cgreen{a}
+= \frac{\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}}{h} .
+$$
+
+Der Differenzenquotient strebt also genau dann gegen $\cgreen{a}$, wenn die
+rechte Seite gegen $0$ strebt.
+
+::why[$\cgreen{a} = \cgreen{a h}/h$ für $h \neq 0$, dann beide Brüche zusammenfassen]
+:::
+
+:::schritt
+Eine Größe strebt genau dann gegen null, wenn ihr Betrag es tut, und Beträge
+vertragen sich mit dem Bruch:
+
+$$
+\left|\frac{\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}}{h}\right|
+= \frac{\left|\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}\right|}{\left|h\right|} .
+$$
+
+Damit ist (1) gleichwertig zu (2).
+
+::why[$\left|z/h\right| = \left|z\right|/\left|h\right|$; und $\lim_{h \to 0} g(h) = 0$ gilt genau dann, wenn $\lim_{h \to 0} \left|g(h)\right| = 0$]
+:::
+
+:::schritt
+Zu (2) $\Longrightarrow$ (3): Wir taufen den Fehler auf einen Namen und setzen
+
+$$
+\cred{r(h)} := \cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h} .
+$$
+
+Aussage (2) besagt $\left|\cred{r(h)}\right|/\left|h\right| \to 0$, also
+$\cred{r(h)} = \cred{o(\left|h\right|)}$. Einsetzen in die Definition von
+$\cred{r(h)}$ liefert
+
+$$
+\cblue{f(x+h)} = \cblue{f(x)} + \cgreen{a h} + \cred{r(h)}
+= \cblue{f(x)} + \cgreen{a h} + \cred{o(\left|h\right|)} ,
+$$
+
+und das ist (3).
+
+::why[Definition des Landau-Symbols: $g(h) = o(\left|h\right|)$ heißt genau, dass $g(h)/\left|h\right|$ gegen null strebt]
+:::
+
+:::schritt
+Zu (3) $\Longrightarrow$ (2): Gilt (3), so ist die Differenz
+$\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}$ ein Term der Ordnung
+$\cred{o(\left|h\right|)}$. Nach Definition strebt sein Quotient mit
+$\left|h\right|$ gegen null, und dann tut es auch der Betrag dieses Quotienten.
+Damit ist der Ring geschlossen, und Aussage (1) ist wörtlich Definition 10.1.1
+mit $\cgreen{f'(x)} = \cgreen{a}$.
+
+::why[wieder $\lim g = 0 \iff \lim \left|g\right| = 0$, diesmal in der Gegenrichtung]
+:::
+
+::::
+
+Aussage (3) ist die Fassung, die uns durch das ganze Kapitel trägt: *die
+Funktion, ihre lineare Näherung, und ein Rest, der schneller verschwindet als
+$h$.* Farblich halten wir das durch: blau die Funktion und ihre Werte, grün die
+lineare Approximation, rot der Restterm.
+
+:::bemerkung[10.1.4 (Was hier eigentlich linear ist)]
+Eine Verwechslung lohnt sich auszuräumen, bevor wir verallgemeinern. Die
+Ableitung $f'$ selbst ist im Allgemeinen keine
+:k[lineare Funktion]{#linear-function}: für $f(x) = \sin(x)$ etwa ist
+$f'(x) = \cos(x)$, und der Kosinus ist alles andere als linear.
+
+Linear ist eine andere Abbildung, nämlich
+
+$$
+\cgreen{D_x f} \colon \R \to \R , \qquad h \mapsto \cgreen{f'(x) h}
+$$
+
+bei *festem* $x$. Sie erfüllt
+$\cgreen{f'(x)(h_1 + h_2)} = \cgreen{f'(x) h_1} + \cgreen{f'(x) h_2}$ und
+$\cgreen{f'(x)(c h)} = c\,\cgreen{f'(x) h}$, ist also linear in $h$. Wie
+$\cgreen{f'(x)}$ von $x$ abhängt, bleibt davon völlig unberührt. Diese
+Trennung ist der Hebel für den Rest des Kapitels: Was wir verallgemeinern
+wollen, ist nicht die Zahl $f'(x)$, sondern die lineare Abbildung
+$\cgreen{D_x f}$.
+:::
+
+:::vertiefung[Sekante, Tangente und der Restterm zum Anfassen]
+Die Tafel zeigt drei Funktionen. Bei $f(x) = x^2$ und $f(x) = x^3/3 - x + 1$
+läuft die durchgezogene violette Sekante beim Verkleinern von $h$ sichtbar in
+die grüne Tangente hinein, und der rote Balken über $x+h$ schrumpft mit. Der interessante
+Wert ist der letzte Readout, der *relative* Fehler
+$\left|\cred{r(h)}\right|/\left|h\right|$: Er ist genau der Abstand zwischen
+Sekanten- und Tangentensteigung und geht nach Satz 10.1.3(2) gegen null. Bei
+$f(x) = x^2$ steht dort sogar exakt $\left|h\right|$, was Beispiel 10.1.7 gleich
+nachrechnet.
+
+Die dritte Funktion ist die Betragsfunktion aus Bemerkung 10.1.2. Schieben wir
+$x$ auf $0$, so trennen sich die beiden Sekanten und bleiben getrennt, wie klein
+$h$ auch wird. Lehrreich ist auch eine Stelle knapp neben dem Knick: Solange
+$\left|x\right| < h$ ist, liegt der Knick noch im Fenster, und genau eine der
+beiden Sekanten läuft über ihn hinweg und misst etwas anderes als die Ableitung
+(welche das ist, hängt am Vorzeichen von $x$). Erst für kleinere $h$ sieht sie
+nur noch das glatte Stück. Lineare Approximation ist eine lokale Angelegenheit.
+
+<SekanteTangenteWidget />
+:::
+
+### Der allgemeine Ableitungsbegriff
+
+Sobald wir Ableitung als lineare Approximation lesen, brauchen wir vom
+Definitionsbereich fast nichts mehr. Wir müssen Punkte verschieben können,
+$x + h$ muss also Sinn ergeben, wir müssen Länge messen können, um „der Fehler
+wird klein" zu präzisieren, und wir brauchen einen Begriff von linearer
+Abbildung. Ein normierter Vektorraum liefert alle drei Zutaten. Auf metrischen
+Räumen ohne Vektorraumstruktur funktioniert es dagegen nicht, dort fehlt der
+lineare Teil.
+
+Die folgende Definition geht auf Maurice Fréchet zurück. Sie reicht für alle
+endlich-dimensionalen Räume und für einige unendlich-dimensionale.
+
+:::definition[10.1.5 (Fréchet-Ableitung)]
+Seien $\D$ und $\E$ zwei normierte Räume und $f\colon \D \to \E$. Wir nennen $f$
+an der Stelle $x \in \D$ *(Fréchet-)differenzierbar*, falls eine beschränkte
+lineare Abbildung $\cgreen{D_x f}\colon \D \to \E$ existiert, sodass
+
+$$ {#eq-10.1.2}
+\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{o(\left\|h\right\|)}
+\qquad \text{für } h \to 0 .
+$$
+
+Die Abbildung $\cgreen{D_x f}$ heißt dann *Fréchet-Ableitung* von $f$ an der
+Stelle $x$.
+:::
+
+Die Folien schreiben $\D$ und $\E$ für die beiden Räume, und wir übernehmen das;
+mit dem Erwartungswert hat das $\E$ hier nichts zu tun. Auch die beiden
+Normstriche in ($10.1.2$) meinen zwei verschiedene Dinge: $\left\|h\right\|$ ist
+die Norm auf $\D$, der Restterm wird dagegen in der Norm auf $\E$ gemessen.
+
+:::bemerkung[10.1.6 (Wie die Definition zu lesen ist)]
+Vier Punkte, die in der knappen Formulierung leicht untergehen.
+
+*Der Restterm.* Setzen wir wie im Beweis von Satz 10.1.3
+
+$$
+\cred{r(h)} := \cblue{f(x+h)} - \cblue{f(x)} - \cgreen{D_x f(h)} ,
+$$
+
+so verlangt ($10.1.2$) genau
+$\left\|\cred{r(h)}\right\| / \left\|h\right\| \to 0$ für $h \to 0$. Die
+Gleichung selbst gilt für jedes zulässige $h$, sie definiert ja bloß
+$\cred{r(h)}$; die Aussage steckt in der Kleinheit des Restes. Die
+Folienformulierung „für alle $h \to 0$" ist so gemeint, sauberer ist: der
+Restterm ist $\cred{o(\left\|h\right\|)}$ für $h \to 0$.
+
+*Beschränktheit.* Dass $\cgreen{D_x f}$ beschränkt ist, heißt: es gibt ein
+$M < \infty$ mit
+
+$$
+\left\|\cgreen{D_x f(h)}\right\| \le M \left\|h\right\| \qquad \text{für alle } h .
+$$
+
+Das $M$ darf von $x$ abhängen, aber nicht von $h$. In endlich-dimensionalen
+Räumen ist jede lineare Abbildung automatisch beschränkt, dort kostet die
+Forderung also nichts; im Unendlichdimensionalen ist sie eine echte
+Zusatzbedingung und gleichbedeutend mit Stetigkeit.
+
+*Linear in $h$, beliebig in $x$.* Die Abbildung $h \mapsto \cgreen{D_x f(h)}$
+ist linear, so wie in Bemerkung 10.1.4. Wie $\cgreen{D_x f}$ von $x$ abhängt,
+schreibt die Definition in keiner Weise vor.
+
+*Der eindimensionale Fall.* Für $f\colon \R \to \R$ ist
+$\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und ($10.1.2$) ist wörtlich
+Aussage (3) aus Satz 10.1.3. Beschränkt ist diese Abbildung, sobald
+$\left|\cgreen{f'(x)}\right| < \infty$ ist, mit $M = \left|\cgreen{f'(x)}\right|$.
+Die alte Ableitung ist also ein Spezialfall der neuen.
+:::
+
+Prüfen wir die Definition an dem einfachsten Beispiel, das nicht trivial ist.
+
+:::beispiel[10.1.7 (Fréchet-Ableitung von f(x) = x²)]
+Sei $f\colon \R \to \R$ mit $\cblue{f(x)} = x^2$. Behauptung: $f$ ist
+Fréchet-differenzierbar mit $\cgreen{D_x f(h)} = \cgreen{2xh}$.
+
+Wir gehen die Definition Punkt für Punkt durch. Zuerst multiplizieren wir aus:
+
+$$
+\begin{aligned}
+\cblue{f(x+h)} &= (x+h)^2 = x^2 + 2xh + h^2 \\
+&= \cblue{f(x)} + \cgreen{2xh} + \cred{h^2} \\
+&= \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{h^2} .
+\end{aligned}
+$$
+
+Die Zerlegung liegt damit vor: Der Kandidat für die Ableitung ist
+$\cgreen{D_x f(h)} = \cgreen{2xh}$, und er ist linear in $h$. Übrig bleibt der
+Restterm $\cred{h^2}$.
+
+*Ist der Rest klein genug?* Wir rechnen den Quotienten aus ($10.1.2$) nach:
+
+$$
+\lim_{h \to 0} \frac{\left|\cred{h^2}\right|}{\left|h\right|}
+= \lim_{h \to 0} \left|h\right| = 0
+\qquad\Longrightarrow\qquad
+\cred{h^2} = \cred{o(\left|h\right|)} . \quad\checkmark
+$$
+
+Bemerkenswert daran: Der relative Fehler ist hier nicht bloß klein, er ist
+exakt $\left|h\right|$. Bei $h = 0{,}1$ beträgt er $0{,}1$, bei $h = 0{,}01$
+schon $0{,}01$. Das Widget oben zeigt diese Zahlen an.
+
+*Ist $\cgreen{D_x f}$ beschränkt?* Bei festem $x$ ist
+
+$$
+\left|\cgreen{D_x f(h)}\right| = \left|\cgreen{2xh}\right|
+= 2\left|x\right| \cdot \left|h\right| \le M \left|h\right|
+\qquad \text{für alle } h , \qquad M = 2\left|x\right| < \infty . \quad\checkmark
+$$
+
+Beide Bedingungen sind erfüllt, $f$ ist also Fréchet-differenzierbar mit
+$\cgreen{D_x f(h)} = \cgreen{2xh}$. Das passt zur Schulableitung: Nach
+Bemerkung 10.1.6 ist $\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und aus
+$\cgreen{f'(x) h} = \cgreen{2x \cdot h}$ lesen wir $\cgreen{f'(x)} = \cgreen{2x}$ ab.
+
+Ein Wort zum Quantor in der Beschränktheit. Die Folie schreibt an dieser Stelle
+„$\le M\left|h\right|$ für alle $x$ mit $M = 2\left|x\right|$". Das $\forall$
+gehört zum $h$, nicht zum $x$: Die Schranke $M$ hängt ja gerade von $x$ ab, und
+ein einziges $M$ für alle $x$ kann es nicht geben, weil $2\left|x\right|$ über
+jede Grenze wächst. Beschränktheit ist punktweise in $x$ zu verstehen, und bei
+festem $x$ gilt sie dann für alle $h$.
+:::
+
+:::bemerkung[10.1.8 (Ausblick: andere Ableitungsbegriffe)]
+Die Fréchet-Ableitung ist nicht die einzige Möglichkeit, den Ableitungsbegriff
+auf normierte Räume zu heben. Schwächere Varianten verlangen die Approximation
+nur richtungsweise oder nur gleichmäßig auf kompakten Richtungsmengen; sie
+heißen *Gateaux-* und *Hadamard-Ableitung* und spielen vor allem in der
+asymptotischen Statistik eine Rolle. Für dieses Kapitel reicht Fréchet
+vollständig aus, denn wir arbeiten durchweg in endlich-dimensionalen Räumen.
+:::
+
+### Selbsttest
+
+In den ersten vier Aussagen sei $f\colon S \to \R$ an der Stelle $x$
+differenzierbar mit Ableitung $f'(x)$.
+
+::::quiz
+
+:::frage{falsch}
+Ist $f$ in $x$ differenzierbar, so ist $f'$ eine lineare Funktion.
+
+Die Ableitung ist zunächst irgendeine Funktion von $x$, und die muss nichts mit
+Linearität zu tun haben: Für $f(x) = \sin(x)$ ist $f'(x) = \cos(x)$. Linear ist
+etwas anderes, nämlich die Abbildung $h \mapsto f'(x)h$ bei festem $x$
+(Bemerkung 10.1.4).
+:::
+
+:::frage{wahr}
+Für festes $x$ ist $h \mapsto f'(x)h$ eine lineare Funktion.
+
+Hier ist $f'(x)$ eine feste Zahl, und $h \mapsto f'(x)h$ ist die Multiplikation
+damit. Additivität und Homogenität sind in einer Zeile nachgerechnet. Diese
+Abbildung heißt in Definition 10.1.5 $D_x f$.
+:::
+
+:::frage{wahr}
+Es gilt $\displaystyle\lim_{h \to 0} \frac{\left|f(x+h) - f(x) - f'(x)h\right|}{\left|h\right|} = 0$.
+
+Das ist Aussage (2) aus Satz 10.1.3. Der Zähler ist der Restterm $r(h)$, und
+Schritt 1 und 2 des Beweises zeigen, dass die Grenzwertdefinition der Ableitung
+genau dieses Verschwinden des relativen Fehlers bedeutet.
+:::
+
+:::frage{wahr}
+Es gilt $f(x+h) = f(x) + f'(x)h + o(\left|h\right|)$ für $h \to 0$.
+
+Das ist Aussage (3) aus Satz 10.1.3, gleichwertig zur vorigen: Setzen wir
+$r(h) := f(x+h) - f(x) - f'(x)h$, so heißt $\left|r(h)\right|/\left|h\right| \to 0$
+gerade $r(h) = o(\left|h\right|)$. Diese Zeile ist die Vorlage für
+Definition 10.1.5.
+:::
+
+:::frage{wahr}
+Für $f(x) = x^2$ gilt bei festem $x$ die Schranke
+$\left|D_x f(h)\right| \le M \left|h\right|$ für alle $h$, mit $M = 2\left|x\right|$.
+
+So herum stimmt es: $\left|2xh\right| = 2\left|x\right|\left|h\right|$, und
+$M = 2\left|x\right|$ ist bei festem $x$ endlich. Die Folie stellt den Quantor
+falsch und schreibt „für alle $x$"; ein einziges $M$ für alle $x$ gibt es nicht,
+denn $2\left|x\right|$ wächst unbeschränkt (Beispiel 10.1.7).
+:::
+
+:::frage{falsch}
+Die Fréchet-Ableitung $D_x f$ ist sowohl in $h$ als auch in $x$ linear.
+
+Linear ist nur die Abhängigkeit von $h$. Wie $D_x f$ von der Stelle $x$ abhängt,
+lässt Definition 10.1.5 offen, und schon $f(x) = x^2$ zeigt den Unterschied:
+$D_x f(h) = 2xh$ ist linear in $h$, die Zuordnung $x \mapsto D_x f$ ist es
+zufällig ebenfalls, bei $f(x) = x^3$ mit $D_x f(h) = 3x^2h$ dagegen nicht mehr.
+:::
+
+::::
+
+*Vertiefung: MML §5.1 behandelt den eindimensionalen Ableitungsbegriff, §5.1.1
+die Taylorreihen, die wir hier nur als Vorkenntnis gestreift haben, und §5.1.2
+die Differentiationsregeln.*

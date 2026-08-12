@@ -593,6 +593,119 @@ Lesson-Zeile ein.
   bestätigt). *Skript Beispiel 9.5.4 und der Selbsttest in §9.5 sagen das
   ausdrücklich.*
 
+## 10-ableitungen-I
+
+- **Z. 158 (Beispiel f(x) = x²)**: „|D_x f(h)| = |2xh| = 2|x|·|h| ≤ M|h| ∀x mit
+  M = 2|x|" hat den falschen Quantor. M hängt von x ab, ein einziges M für
+  alle x kann es also nicht geben (bei x = 100 wäre |D_x f(1)| = 200, die mit
+  x = 1 gebildete Schranke M = 2 hält nicht). Richtig: Beschränktheit ist
+  punktweise in x, bei FESTEM x gilt die Schranke für alle h.
+  *Skript Beispiel 10.1.7 rechnet mit dem korrekten Quantor und sagt den
+  Unterschied ausdrücklich; der Selbsttest in §10.1 greift ihn nochmals auf.*
+- **Z. 129 (Definition (Fréchet-)differenzierbar)**: „f(x+h) = f(x) + D_x f(h)
+  + o(‖h‖) für alle h → 0" vermischt zwei Dinge. Die Gleichung selbst gilt für
+  jedes zulässige h, sie definiert bloß den Restterm; die Aussage steckt in
+  ‖r(h)‖/‖h‖ → 0 für h → 0. *Skript Definition 10.1.5 schreibt „für h → 0",
+  Bemerkung 10.1.6 löst die Formulierung auf.*
+- **Z. 61 (Überblick)**: „Ableitungen in allgemeinen metrischen Räumen"
+  verspricht zu viel und widerspricht Z. 114, wo (richtig) von normierten
+  Räumen die Rede ist. Ohne Vektorraumstruktur gibt es weder x + h noch einen
+  Begriff von linearer Abbildung, die Fréchet-Definition ist dort gar nicht
+  formulierbar. *Skript §10.1 sagt durchgehend normierte Räume und begründet,
+  warum eine Metrik allein nicht reicht.*
+- **Z. 68 (Def. Differenzierbarkeit)**: „Sei f: S ⊆ ℝ → ℝ … an der Stelle
+  x ∈ S" lässt offen, dass der beidseitige Grenzwert nur für innere Punkte von
+  S sinnvoll ist. *Skript Definition 10.1.1 verlangt S offen.*
+- **Z. 127 (Layout)**: „$D_{x} f$$\colon \D \to \E$" schließt und öffnet den
+  Mathe-Modus mitten in der Zeile; der Doppelpunkt-Pfeil landet dadurch in
+  einer eigenen Formel. *Rein typografisch, ohne Folgen für das Skript.*
+- **Z. 230 und Z. 273 (Vektor zu Skalar, Beispiel und Übung)**: Beide Zeilen
+  geben einem FUNKTIONSWERT einen Definitions- und Zielbereich:
+  „$\nabla f(\bx)\colon \R^2 \to \R^{1 \times 2}$" bzw.
+  „$f(\bx)\colon \R^n \to \R$". Werte sind aber Elemente von
+  $\R^{1 \times 2}$ bzw. $\R$; die Abbildungen heißen $\nabla f$ und $f$.
+  Nebenbei steht in Z. 230 innerhalb der `pmatrix` ein Komma VOR dem
+  Spaltentrenner (`2x_1 + 3x_2, & 3x_1 + 4x_2`), das im Satz als überzähliges
+  Zeichen erscheint. *Skript Definition 10.2.1 und Beispiel 10.2.6 schreiben
+  durchgehend $f\colon \R^n \to \R$ und formulieren die Formataussage über
+  $\nabla f$ statt über $\nabla f(\bx)$; die Zeile steht ohne Komma.*
+- **Z. 217 und Z. 299 (Gradient als „Richtung")**: Z. 193 und die Anmerkung
+  Z. 203 legen den Gradienten ausdrücklich als ZEILENvektor in
+  $\R^{1 \times n}$ fest. Zwei Folien später heißt es dann, $\nabla f(\bx)$
+  (der rote Pfeil der Abbildung) sei die „Richtung, in die $f$ am stärksten
+  steigt", und bei Gradient Descent: „$-\nabla L(\btheta^{(t)})$: Negativer
+  Gradient zeigt in Richtung des steilsten Abstiegs". Eine Zeile ist keine
+  Richtung im $\R^n$; gemeint ist $\nabla f(\bx)^\top$, und genau dieses
+  $^\top$ setzt die Folie im Update Z. 295 selbst. *Skript Satz 10.2.4
+  formuliert die Aussage über $\bd^\ast = \nabla f(\bx)^\top /
+  \left\|\nabla f(\bx)\right\|$, Bemerkung 10.2.11 begründet das $^\top$ im
+  Update, und der Selbsttest in §10.2 fragt es ab.*
+- **Z. 389 („Kettenregel mit Jacobimatrizen")**: Die Kette läuft bis
+  $\bJ_{f_k}(\bz_{k-1})$ und multipliziert DANACH noch
+  $\partial \bW_k(\btheta_k)/\partial\btheta_k$ — damit wird $\bW_k$ doppelt
+  gezählt, denn $\bJ_{f_k}(\bz_{k-1})$ ist die Ableitung der Schicht $k$ nach
+  ihrer EINGABE und enthält $\bW_k$ bereits (siehe die ReLU-Formel zwei Zeilen
+  darunter). Richtig endet das Produkt bei $\bJ_{f_{k+1}}(\bz_k)$, letzter
+  Faktor ist $\partial f_k(\bz_{k-1};\btheta_k)/\partial\btheta_k$.
+  *Skript Bemerkung 10.3.10 setzt die korrigierte Kette als Gl. (10.3.3),
+  Bemerkung 10.3.11 erklärt die Doppelzählung, der Selbsttest in §10.3 fragt
+  sie ab.*
+- **Z. 393–394 (ReLU-Beispiel)**: $\bJ_{f_k}(\bz_{k-1}) =
+  \text{diag}(\mathbb{I}_{\bW_k\bz_{k-1} > 0})\cdot\bW_k$ steht ohne
+  Einschränkung, gilt aber nur abseits der Knickstellen: Für
+  $(\bW_k\bz_{k-1})_i = 0$ ist $\max(0,\cdot)$ nicht differenzierbar (links
+  Steigung 0, rechts Steigung 1). Ausserdem wechselt die Zeile zwischen
+  $f(\bz)$ und $\bJ_{f_k}$ den Index. *Skript Beispiel 10.3.12 nennt die
+  Ausnahme, erklärt die Indikator-Diagonalmatrix und rechnet ein
+  Zahlenbeispiel; der Selbsttest greift den Knick auf.*
+- **Z. 332 (Identität $f(\bx) = \bx^\top\bA \impl \bJ_f = \bA^\top$)**: Der
+  Output ist formal ein ZEILENvektor in $\R^{1\times m}$, die Definition der
+  Jacobimatrix zwei Folien davor verlangt aber eine Spalte. Die Identität ist
+  also über die Lesart $(\bx^\top\bA)^\top = \bA^\top\bx$ zu verstehen.
+  *Skript Bemerkung 10.3.5 sagt das ausdrücklich.*
+- **Z. 384 (Layout)**: $\sigma_k\bigl(\bW_k(\btheta_k) \bz_{k-1})$ öffnet mit
+  `\bigl(` und schliesst mit einer normalen Klammer, die Klammergrössen passen
+  deshalb nicht zusammen. *Rein typografisch, ohne Folgen für das Skript.*
+- **Z. 339 und Z. 349 (Übung „Vektor zu Vektor")**: In Z. 339 klebt
+  `\text{(komponentenweise)}` ohne Abstand an der Formel, gesetzt wird also
+  „$\sum_j a_{ij}x_j$(komponentenweise)". In Z. 349 steht die lineare Näherung
+  als $\bJ_f(\bx)(\bh)$, mit Funktionsklammer, obwohl $\bJ_f(\bx)$ eine Matrix
+  ist und das Matrix-Vektor-Produkt $\bJ_f(\bx)\bh$ gemeint ist (zwei Zeilen
+  weiter oben, Z. 318, steht es richtig ohne Klammer).
+  *Typografisch bzw. notationell; Skript §10.3 schreibt im Beweis zu
+  Satz 10.3.4 und in Korollar 10.3.6 beides sauber.*
+- **Z. 480 („Beispiel: Ableitung der Determinante")**: In der Schlusszeile
+  fehlt links das $\tr$: dort steht $\det(\bF)\cdot[\bF^{-1}\bF']$ statt
+  $\det(\bF)\cdot\tr[\bF^{-1}\bF']$. Ohne die Spur wäre die rechte Seite
+  das Produkt einer Zahl mit einer Matrix, die linke Seite ist aber eine Zahl;
+  das Ergebnis $4x$ stimmt nur mit der Spur (per node bestätigt: $\bF^{-1}\bF'
+  = \diag(1/x, 1/x)$, Spur $2/x$, mal $2x^2$ ergibt $4x$).
+  *Skript Beispiel 10.4.5 rechnet mit $\tr$ und sagt ausdrücklich, warum es
+  dort stehen muss.*
+- **Z. 444–462 („Skalar zu Matrix: Wichtige Identitäten" samt Spur-Beweis)**:
+  Der Foliensatz deklariert $\bF\colon \R \to \R^{m\times n}$, doch Spur,
+  Determinante und Inverse sind nur für quadratische Matrizen erklärt; der
+  Beweis summiert entsprechend $\sum_{i=1}^n f_{ii}$ über eine Diagonale, die
+  es bei $m \neq n$ gar nicht gibt. *Skript Satz 10.4.4 setzt
+  $\bF\colon \R \to \R^{n\times n}$ voraus und benennt die Einschränkung; nur
+  Definition 10.4.1 bleibt beim allgemeinen Format $m \times n$.*
+- **Z. 543 (Verlustfunktion der Matrix Completion)**: Zwischen $\bP_\Omega$
+  und der Klammer steht ein gewöhnlicher Malpunkt, gemeint ist das
+  ELEMENTWEISE (Hadamard-)Produkt. Ein Matrixprodukt passt dort schon von den
+  Formaten her nicht ($\bP_\Omega$ und $\bY - \bU\bV^\top$ sind beide
+  $m \times n$), und nur elementweise blendet die Maske die unbeobachteten
+  Positionen aus. Dieselbe Stelle in den beiden Gradienten (Z. 547–548).
+  *Skript Gl. (10.4.13) schreibt $\odot$ und definiert das Zeichen im
+  Anschluss; Satz 10.4.12 nutzt es in beiden Gradienten.*
+- **Z. 427–430 und Z. 438 (Übung „Skalar zu Matrix")**: Die Übungsmatrix
+  enthält $\ln(x)$ und die Musterlösung $1/x$, die Folie nennt aber keinen
+  Definitionsbereich; ohne $x > 0$ ist die Funktion an der Hälfte der reellen
+  Achse gar nicht erklärt. Ausserdem schreibt die auskommentierte Lösung
+  $\partial f(x)/\partial x$ statt $\partial \bF(x)/\partial x$ — abgeleitet
+  wird eine Matrix, kein Skalar. *Skript Beispiel 10.4.3 setzt $x > 0$ und
+  begründet die Einschränkung; die Lösung $\bigl(\begin{smallmatrix} 2x &
+  2e^x & 0 \\ 0 & 1 & 1/x\end{smallmatrix}\bigr)$ ist nachgerechnet.*
+
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
 - **heath-ch3-App (privat)**: Die AᵀA-Kollaps-Schwelle „k ≈ 7,9" im

@@ -1,3 +1,302 @@
-::quelle[Folien 10-ableitungen-I.]
+::quelle[Folien 10-ableitungen-I, Abschnitte „Bemerkungen" und „Wrap-up".]
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 10, siehe KONVENTIONEN.md).*
+Ein einziger Gedanke trägt dieses Kapitel: Ableiten heißt linear approximieren.
+Alles Weitere war Buchführung darüber, in welchem Format die lineare Näherung
+steht. Sammeln wir ein, was bleiben soll, und sagen wir dazu, was wir bewusst
+liegengelassen haben.
+
+### Die Kernkonzepte
+
+:::bemerkung[10.5.1 (Fünf Begriffe, die bleiben)]
+1. **Die Fréchet-Ableitung** ist eine beschränkte lineare Abbildung
+   $\cgreen{D_x f}$ mit
+   $\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{o(\left\|h\right\|)}$
+   (Definition 10.1.5, [Abschnitt 10.1](#sec-10.1)). Linear ist dabei die
+   Abhängigkeit von $h$, über die Abhängigkeit von der Stelle $x$ sagt die
+   Definition nichts (Bemerkung 10.1.4). Im Eindimensionalen ist das genau die
+   vertraute Ableitung, in drei gleichwertigen Fassungen (Satz 10.1.3); in
+   endlich-dimensionalen Räumen ist die Beschränktheit ohnehin automatisch
+   erfüllt (Bemerkung 10.1.6).
+
+2. **Der :k[Gradient]{#gradient}** sammelt die
+   :k[partiellen Ableitungen]{#partial-derivative} einer skalarwertigen Funktion
+   als *Zeile*, $\corange{\nabla f(\bx)} \in \R^{1 \times n}$
+   (Definition 10.2.1, [Abschnitt 10.2](#sec-10.2)), und der Ableitungsterm ist
+   $\cgreen{D_{\bx} f(\bh)} = \corange{\nabla f(\bx)}\,\bh$. Verschwindet er
+   nicht, so zeigt er transponiert in die Richtung des stärksten Anstiegs, und
+   $\left\|\corange{\nabla f(\bx)}\right\|$ ist die Steigung dorthin
+   (Satz 10.2.4). Daran hängt der
+   :k[Gradientenabstieg]{#gradient-descent} (Algorithmus 10.2.10), und daher
+   auch das $^\top$ in seinem Update (Bemerkung 10.2.11).
+
+3. **Die Jacobimatrix** stapelt diese Zeilen: Für $f\colon \R^n \to \R^m$ ist
+   $\corange{\bJ_f(\bx)} \in \R^{m \times n}$, und Zeile $i$ ist der Gradient
+   der $i$-ten Komponentenfunktion (Definition 10.3.1,
+   [Abschnitt 10.3](#sec-10.3)). Vier Bausteine (Satz 10.3.4) und die
+   Kettenregel als gewöhnliches Matrixprodukt
+   $\corange{\bJ_f(g(\bx))}\,\corange{\bJ_g(\bx)}$ (Satz 10.3.9) reichen für
+   fast jede Rechnung dieses Kapitels; bei quadratischer Jacobimatrix misst
+   $\left|\det \corange{\bJ_f(\bx)}\right|$, wie stark sich Flächen und Volumina
+   lokal ändern (Bemerkung 10.3.8), und die Auswertung der Kette von links ist die
+   Backpropagation im Training :k[neuronaler Netze]{#neural-network}
+   (Bemerkung 10.3.13).
+
+4. **Skalar zu Matrix** heißt: jeden Eintrag einzeln ableiten und stehen lassen,
+   wo er steht (Definition 10.4.1, [Abschnitt 10.4](#sec-10.4)). Für Kennzahlen
+   eines *quadratischen* $\cblue{\bF(x)}$ gibt es geschlossene Formeln, für die
+   :k[Spur]{#trace}, die :k[Determinante]{#determinant} und die
+   :k[Inverse]{#matrix-inverse} (Satz 10.4.4). Zwei davon braucht die
+   Score-Funktion eines multivariaten Normalmodells (Bemerkung 10.4.6).
+
+5. **Matrix zu Skalar** läuft ebenfalls eintragsweise, und der Ableitungsterm
+   ist das Frobenius-Skalarprodukt
+   $\cgreen{D_{\bX} f(\bH)} = \tr\bigl(\corange{(\partial f(\bX)/\partial \bX)}^\top \bH\bigr)$
+   (Definition 10.4.7, Bemerkung 10.4.8). Drei Identitäten decken die häufigsten
+   Fälle ab (Satz 10.4.10), und bei der
+   :k[Rang-$k$-Approximation]{#low-rank-approximation} einer lückenhaften Matrix
+   liefert genau dieser Fall die beiden Gradienten, von denen der
+   Gradientenabstieg lebt (Satz 10.4.12, Algorithmus 10.4.13).
+:::
+
+Zwei Anordnungen laufen dabei nebeneinander her. Solange nur Skalare und
+Vektoren beteiligt sind, gilt: pro Ausgabekomponente eine Zeile, pro
+Eingabevariable eine Spalte. Sobald eine Matrix als Eingabe oder als Ausgabe
+auftritt, sortieren wir die Ableitungen dagegen so, dass ihr Format erhalten
+bleibt (Bemerkung 10.4.2); der Ableitungsterm entsteht dann nicht als
+Matrixprodukt, sondern im Fall Matrix zu Skalar über die Spur
+(Bemerkung 10.4.8). Einzeln ausrechnen müssen wir die partiellen Ableitungen
+nur dann, wenn wir die lineare Näherung nicht schon auf anderem Weg haben.
+Finden wir irgendeine Matrix $\bM$ mit
+$\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{\bM\bh} + \cred{o(\left\|\bh\right\|)}$,
+so ist sie bereits die Jacobimatrix (Lemma 10.3.3). Ausmultiplizieren ist oft
+kürzer als Ableiten.
+
+### Was wir ausgelassen haben
+
+:::bemerkung[10.5.2 (Die drei leeren Felder)]
+In der Übersicht aus [Abschnitt 10.2](#sec-10.2) sind drei Zellen leer
+geblieben: Matrix zu Vektor, Vektor zu Matrix und Matrix zu Matrix. Sie fehlen
+nicht, weil sie schwierig wären, sondern weil ihre Ableitungen aus dem
+Matrixschema herausfallen. Zählen wir nach. Eine Funktion
+$f\colon \R^{m \times n} \to \R^{p \times q}$ hat $m n p q$ partielle
+Ableitungen, jede davon adressiert durch zwei Indizes für die Eingabe und zwei
+für die Ausgabe. Ordentlich sortiert ergibt das ein Zahlenfeld mit vier
+Indexpositionen, also einen :k[Tensor]{#tensor} der Stufe $4$
+([Abschnitt 9.2](?k=09-tensoren#sec-9.2)). Für $2 \times 2$-Matrizen auf beiden
+Seiten sind das $16$ Zahlen in $\R^{2 \times 2 \times 2 \times 2}$. Bei den
+gemischten Fällen Vektor zu Matrix und Matrix zu Vektor bleiben drei
+Indexpositionen übrig.
+
+Gebraucht werden diese Fälle seltener als die sechs ausgefüllten Zellen, und wo
+sie doch auftreten, gibt es zwei Wege. Entweder wir rechnen mit Tensoren
+weiter, oder wir klopfen alles flach und stapeln jede Matrix zu einem Vektor:
+Dafür stehen die Vektorisierung und das Kroneckerprodukt aus
+[Abschnitt 9.5](?k=09-tensoren#sec-9.5) bereit, die eine Matrixgleichung in ein
+gewöhnliches :k[lineares Gleichungssystem]{#linear-system} verwandeln.
+:::
+
+Eine zweite Lücke ist keine Formatfrage. Definition 10.1.5 lässt für $\D$ und
+$\E$ beliebige normierte Räume zu, also auch Räume von Funktionen. Ableitungen
+von Abbildungen zwischen Funktionenräumen bleiben hier eine Übungsaufgabe. Der
+Begriff trägt dorthin, doch die Beschränktheit von $\cgreen{D_x f}$ ist dann
+keine Formalie mehr, sondern eine echte Zusatzbedingung (Bemerkung 10.1.6).
+
+### Ableiten in eine Richtung
+
+:::bemerkung[10.5.3 (Störungsanalyse als Richtungsableitung)]
+Ein Werkzeug lohnt den Nachtrag, weil es die Matrixfälle auf den
+eindimensionalen zurückführt. Wollen wir wissen, wie empfindlich eine
+Matrixrechnung auf eine Störung reagiert, so halten wir eine Störungsrichtung
+$\bE$ fest und betrachten die Funktion einer einzigen reellen Variablen
+
+$$
+\varphi(h) := \cblue{f(\bX + h\bE)} .
+$$
+
+Ableiten nach dem Skalar $h$ an der Stelle $h = 0$ liefert genau den
+Ableitungsterm in Richtung $\bE$, für skalarwertiges $f$ also
+
+$$
+\varphi'(0) = \cgreen{D_{\bX} f(\bE)}
+= \tr\Biggl(\corange{\biggl(\frac{\partial f(\bX)}{\partial \bX}\biggr)^{\!\top}}\bE\Biggr) .
+$$
+
+Nachzurechnen ist das schnell: Setzen wir $\bH = h\bE$ in ($10.4.7$) ein, so
+zieht die Linearität den Faktor heraus,
+$\cgreen{D_{\bX} f(h\bE)} = h\,\cgreen{D_{\bX} f(\bE)}$, und der Restterm ist
+$\cred{o(\left|h\right|)}$, weil $\left\|h\bE\right\| = \left|h\right|\left\|\bE\right\|$
+gilt. Das ist dieselbe Idee wie die Richtungsableitung aus Definition 10.2.3,
+nur mit einer Matrix als Richtung. Anders als dort verlangen wir von $\bE$ keine
+Länge $1$; deshalb steht „Richtung" auf der Folie in Anführungszeichen. Rechnen
+wir ein kleines Beispiel nach. Für
+$\cblue{f(\bX)} = \left\|\bX\right\|_F^2$ mit
+$\bX = \bigl(\begin{smallmatrix} 1 & 2 \\ 3 & 4 \end{smallmatrix}\bigr)$ und
+$\bE = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ ist
+$\varphi(h) = \cblue{30} + \cgreen{4h} + \cred{h^2}$, also $\varphi'(0) = 4$,
+und das ist der Eintrag $(1,2)$ von $\corange{2\bX}$ nach ($10.4.12$). Diese
+Wahl von $\bE$ ist gerade das $\bE_{ij}$ aus Bemerkung 10.4.8, das Anstupsen
+eines einzelnen Eintrags; beliebige $\bE$ stupsen alle Einträge zugleich an.
+
+Für die Praxis lesen wir das als Störungsanalyse: $\bE$ gibt an, wohin gestört
+wird, und $\varphi'(0)$ misst in erster Ordnung, wie stark diese Störung im
+Ergebnis ankommt. Über alle Störungsrichtungen zugleich beschränken die
+:k[Konditionszahlen]{#condition-number} aus
+[Abschnitt 4.2](?k=04-fehler#sec-4.2), wie stark ein relativer Datenfehler
+anwachsen kann.
+:::
+
+### Zum Nachschlagen
+
+Die Identitäten dieses Kapitels sind eine kleine Auswahl. Brauchen wir eine
+Ableitung, die hier nicht steht, so schlagen wir sie besser nach, statt sie neu
+herzuleiten. Das *Matrix Cookbook* von
+[Petersen und Pedersen (2012)](https://archive.org/details/imm3274) sammelt die
+Formeln, die in Anwendungen tatsächlich vorkommen, von Determinanten und
+Inversen bis zu Spur- und Normausdrücken. Eine Warnung gehört dazu: Die
+Konventionen unterscheiden sich zwischen den Quellen, und dieselbe Formel steht
+je nach Zeilen- oder Spaltenkonvention transponiert (Bemerkung 10.2.2). Bei
+rechteckigen Formaten fällt das schon beim Nachzählen von Zeilen und Spalten
+auf. Bei quadratischen passt die transponierte Fassung genauso gut, und dann
+hilft nur eine numerische Probe an einem kleinen Beispiel.
+
+### Heute gelernt
+
+| Abschnitt | Thema | Was bleibt |
+| --- | --- | --- |
+| [10.1](#sec-10.1) | Ableitung als lineare Approximation | Fréchet-Ableitung auf normierten Räumen: $\cblue{f(x+h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{r(h)}$ mit linearem, beschränktem $\cgreen{D_x f}$ und einem Restterm $\cred{r(h)}$, der schneller verschwindet als $h$ |
+| [10.2](#sec-10.2) | Der Gradient | $\corange{\nabla f(\bx)} \in \R^{1 \times n}$ als Zeile der partiellen Ableitungen; Richtung des stärksten Anstiegs; Gradientenabstieg |
+| [10.3](#sec-10.3) | Die Jacobimatrix | $\corange{\bJ_f(\bx)} \in \R^{m \times n}$ mit Gradienten als Zeilen; Kettenregel als Matrixprodukt; Backpropagation als Auswertung von links |
+| [10.4](#sec-10.4) | Ableitungen mit Matrizen | eintragsweise Ableitungen für Skalar zu Matrix und Matrix zu Skalar; Spur, Jacobi-Formel, Inverse; Frobenius-Skalarprodukt als Ableitungsterm |
+
+Zwei Dinge nehmen wir aus diesem Kapitel mit: den Ableitungsbegriff auf
+normierten Räumen und seine Spezialfälle für Skalare, Vektoren und Matrizen.
+Offen geblieben sind die Eigenschaften dieses Begriffs und die Rechenregeln, mit
+denen sich zusammengesetzte Ausdrücke ableiten lassen, ohne jedes Mal auf die
+Definition zurückzugehen. Offen sind auch höhere Ableitungen. Die zweiten
+partiellen Ableitungen einer skalarwertigen Funktion sammelt die
+:k[Hesse-Matrix]{#hessian-matrix}, der wir in Bemerkung 10.2.9 schon einmal
+begegnet sind, als sie über Minimum oder Sattel entschieden hat. Mit diesen drei
+Punkten setzt die nächste Vorlesung ein.
+
+### Selbsttest
+
+Acht Aussagen quer durch das Kapitel. Welche davon stimmen?
+
+::::quiz
+
+:::frage{wahr}
+Für $g\colon \R^n \to \R^m$ und $f\colon \R^m \to \R$ gilt
+$\nabla (f \circ g)(\bx) = \nabla f(g(\bx))\,\bJ_g(\bx)$, ganz ohne
+Transponierte.
+
+Genau dafür ist der Gradient eine Zeile (Bemerkung 10.2.2): Das Produkt einer
+$1 \times m$-Zeile mit einer $m \times n$-Matrix ist wieder eine Zeile, und für
+$m = 1$ ist der Gradient der Sonderfall der Jacobimatrix (Bemerkung 10.3.2).
+Zahlenprobe mit $g(\bx) = \bA\bx$,
+$\bA = \bigl(\begin{smallmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \end{smallmatrix}\bigr)$
+und $f(\by) = \left\|\by\right\|^2$: In $\bx = (1,2,3)^\top$ ist
+$\bA\bx = (5, 11)^\top$, also
+$\nabla f(\bA\bx)\,\bA = 2(5,11)\bA = (10, 42, 66)$. Direkt ausgerechnet ist
+$f(g(\bx)) = \bx^\top\bA^\top\bA\bx$ mit Gradient $2\bx^\top\bA^\top\bA$ nach
+Satz 10.2.8, dessen Symmetrieforderung $\bA^\top\bA$ erfüllt. Das ergibt
+dieselbe Zeile.
+:::
+
+:::frage{falsch}
+Die Forderung in Definition 10.1.5, dass $\cgreen{D_x f}$ beschränkt sein soll,
+ist überflüssig, denn lineare Abbildungen sind ohnehin beschränkt.
+
+In endlich-dimensionalen Räumen stimmt das, dort kostet die Forderung nichts
+(Bemerkung 10.1.6). Im Unendlichdimensionalen ist sie eine echte
+Zusatzbedingung. Auf dem Raum der
+Polynome auf $[0,1]$ mit der Supremumsnorm etwa ist das Ableiten
+$p \mapsto p'$ linear, aber unbeschränkt: Für $p_n(x) = x^n$ ist
+$\left\|p_n\right\|_\infty = 1$, während $p_n'(x) = n x^{n-1}$ die Norm $n$ hat.
+Genau deshalb bleiben Abbildungen zwischen Funktionenräumen in diesem Kapitel
+außen vor.
+:::
+
+:::frage{falsch}
+Für $f(\bx) = \bx^\top\bA$ mit $\bA \in \R^{n \times m}$ ist
+$\corange{\bJ_f(\bx)} = \bA$.
+
+Richtig ist $\corange{\bJ_f(\bx)} = \bA^\top$ nach Satz 10.3.4(4), gelesen über
+$(\bx^\top\bA)^\top = \bA^\top\bx$ (Bemerkung 10.3.5). Für $n \neq m$ verraten
+schon die Formate den Fehler: $f$ bildet von $\R^n$ nach $\R^m$ ab, die
+Jacobimatrix ist also $m \times n$, während $\bA$ das Format $n \times m$ hat.
+Bei $n = m$ passt die falsche Antwort formal, dort fällt sie erst beim
+Nachrechnen auf. Für
+$\bA = \bigl(\begin{smallmatrix} 1 & 2 \\ 0 & 1 \\ 3 & -1 \end{smallmatrix}\bigr) \in \R^{3 \times 2}$
+ist $\corange{\bJ_f(\bx)} = \bigl(\begin{smallmatrix} 1 & 0 & 3 \\ 2 & 1 & -1 \end{smallmatrix}\bigr)$.
+:::
+
+:::frage{falsch}
+Für differenzierbares $\bF\colon \R \to \R^{n \times n}$ gilt
+$\partial \det(\cblue{\bF(x)}) / \partial x = \det(\corange{\partial \bF(x)/\partial x})$.
+
+Die Determinante ist nicht linear, Ableiten und Auswerten lassen sich hier also
+nicht vertauschen. Für $\cblue{\bF(x)} = \diag(x, 2x)$ ist
+$\det(\cblue{\bF(x)}) = 2x^2$ mit Ableitung $4x$, während
+$\det(\corange{\partial \bF(x)/\partial x}) = \det(\diag(1,2)) = 2$ konstant
+ist. Beide stimmen nur zufällig bei $x = 0{,}5$ überein. Richtig ist die
+Jacobi-Formel ($10.4.4$), die den Faktor $\det(\cblue{\bF(x)})$ und die Spur
+mitführt; für die :k[Spur]{#trace} dagegen dürfen wir vertauschen ($10.4.3$),
+denn sie ist linear.
+:::
+
+:::frage{wahr}
+Sei $\cblue{f(\bX)} = \left\|\bX\right\|_F^2$ und
+$\bX = \bigl(\begin{smallmatrix} 1 & 2 \\ 3 & 4 \end{smallmatrix}\bigr)$.
+Erhöhen wir $x_{12}$ um $h$ und lassen alles andere stehen, so ändert sich der
+Funktionswert um $\cgreen{4h} + \cred{h^2}$.
+
+Nach ($10.4.12$) ist $\corange{\partial f(\bX)/\partial \bX} = 2\bX$, an der
+Stelle $(1,2)$ also $\corange{4}$. Der grüne Ableitungsterm ist damit
+$\cgreen{4h}$, und weil nur $x_{12}$ verändert wird, bleibt vom Rest genau
+$\cred{h^2}$ übrig (Beispiel 10.4.11). Nachgerechnet: $\cblue{f(\bX)} = 30$, und für
+$h = 0{,}1$ steht dort $30{,}41$, also eine Änderung von $0{,}41 = 0{,}4 + 0{,}01$.
+:::
+
+:::frage{falsch}
+Weil $L$ skalar ist, ist in der Gradientenkette ($10.3.3$) jede einzelne
+Jacobimatrix $\corange{\bJ_{f_j}(\bz_{j-1})}$ ein Zeilenvektor.
+
+Verwechselt sind die Faktoren mit den Teilprodukten. Jede Jacobimatrix hat so
+viele Zeilen, wie ihre Ausgabe Komponenten hat, im Netz aus Bemerkung 10.3.13
+etwa $10 \times 20$ und $20 \times 50$. Eine Zeile bleibt nur das Produkt,
+solange wir es von links aufbauen: Der äußerste linke Faktor
+$\partial L / \partial \wh{\by}$ ist eine Zeile, und Zeile mal Matrix gibt
+wieder eine Zeile. Deshalb kostet die Auswertung von links dort $1200$
+statt $10\,500$ Multiplikationen.
+:::
+
+:::frage{wahr}
+Für feste $\ba \in \R^m$ und $\bb \in \R^n$ mit $\ba, \bb \neq \bnull$ ist
+$\corange{\partial (\ba^\top\bX\bb) / \partial \bX} = \ba\bb^\top$, und diese
+Matrix hat den Rang $1$.
+
+Die Formel ist ($10.4.9$), und rechts steht ein
+:k[äußeres Produkt]{#outer-product}, das nach Satz 9.3.4
+([Abschnitt 9.3](?k=09-tensoren#sec-9.3)) für Vektoren $\neq \bnull$ genau den
+Rang $1$ hat. Für $\ba = (1,2)^\top$ und $\bb = (3,-1)^\top$ ist
+$\ba\bb^\top = \bigl(\begin{smallmatrix} 3 & -1 \\ 6 & -2 \end{smallmatrix}\bigr)$
+mit Determinante $0$; die zweite Zeile ist das Doppelte der ersten.
+:::
+
+:::frage{wahr}
+Die Ableitung einer matrixwertigen Funktion nach einer Matrix passt im
+Allgemeinen in kein rechteckiges Zahlenschema mehr.
+
+Für $f\colon \R^{m \times n} \to \R^{p \times q}$ entstehen $m n p q$ partielle
+Ableitungen mit vier Indexpositionen, also ein Tensor der Stufe $4$
+(Bemerkung 10.5.2). Deshalb bleiben die drei Zellen der Übersicht aus
+[Abschnitt 10.2](#sec-10.2) leer. Wer den Fall braucht, rechnet mit Tensoren
+oder stapelt die Matrizen per Vektorisierung zu Vektoren um
+([Abschnitt 9.5](?k=09-tensoren#sec-9.5)).
+:::
+
+::::
+
+*Vertiefung: Die nächsten Schritte stehen in MML §5.7 (höhere Ableitungen) und
+§5.8 (Linearisierung und multivariate Taylorreihen); §5.9 sammelt weiterführende
+Literatur zur Matrixdifferentialrechnung.*
