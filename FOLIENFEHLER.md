@@ -136,6 +136,76 @@ Lesson-Zeile ein.
   typografisch, aber die Zusammenfassung rutscht so in die Cholesky-Liste.
   *Skript §5.5 stellt das Fazit als eigene Bemerkung 5.5.1 dar.*
 
+## 06-svd
+
+- **Z. 84 („Geometrische Intuition")**: „Einheitssphäre in R³ → Ellipse
+  in R²" ist für das gezeigte A ∈ R^{2×3} ungenau. Bei Rang 2 ist der
+  Kern eindimensional, also enthält {Ax : ‖x‖ = 1} auch den Nullpunkt;
+  das Bild ist die AUSGEFÜLLTE Ellipse, nicht die Ellipsenkurve. Erst
+  für injektives A (m ≥ n, voller Spaltenrang) ist das Bild der
+  Einheitssphäre wieder eine Sphäre/Ellipse ohne Inneres. *Skript §6.1
+  sagt für den 2×2-Fall „Ellipse" und für die Abbildung von R³ in die
+  Ebene ausdrücklich „ausgefüllte Ellipse"; die Hauptachsen sind in
+  beiden Fällen dieselben.*
+- **Z. 51 („Verwendete Vorkenntnisse")**: `\bA^T` statt `\bA^\top` (der
+  ganze Foliensatz nutzt sonst `^\top`). Rein typografisch.
+- **Z. 238 („Bsp: Singulärvektoren (2)")**: Vorzeichenfehler bei u₂. Zu
+  dem auf Z. 231 gedruckten v₂ ≈ (0,662, −0,750)ᵀ gehört
+  u₂ = Av₂/σ₂ ≈ (−0,691, 0,474, 0,546)ᵀ (nachgerechnet: Av₂ =
+  (−0,838, 0,574, 0,662)ᵀ, σ₂ ≈ 1,212); die Folie druckt das Negative
+  (0,691, −0,474, −0,546)ᵀ, das zu v₂ ≈ (−0,662, 0,750)ᵀ gehören würde.
+  u₁ (Z. 237) passt dagegen zum dortigen v₁. Die Orthonormalitätsprobe
+  auf Z. 242 rechnet mit der falschen Variante weiter; ihre drei
+  Summanden haben deshalb alle das umgekehrte Vorzeichen, und dass die
+  Summe trotzdem 0 ergibt, liegt allein daran, dass Negieren die
+  Orthogonalität nicht ändert. *Skript §6.2 (Beispiel 6.2.9) behält die v_i der
+  Folie und druckt u₂ ≈ (−0,691, 0,474, 0,546)ᵀ; Bemerkung 6.2.10
+  erklärt die Vorzeichenfreiheit.*
+- **Z. 252–256 („Fundamentale Unterräume")**: Die v_i sind orthoNORMAL,
+  nicht bloß orthogonal; umgekehrt sind die Av_i in (2) tatsächlich nur
+  orthogonal, ihre Längen sind σ_i. *Skript Satz 6.2.11 unterscheidet
+  beides und normiert in (2) ausdrücklich zu den u_i.*
+- **Z. 285 („Rechenbeispiel: Fundamentale Unterräume")**: u₂ und u₃
+  stehen dort ohne Kommentar, obwohl die Definition u_i = Av_i/σ_i sie
+  wegen σ₂ = 0 gar nicht liefert; sie entstehen erst durch Ergänzung von
+  u₁ zu einer Orthonormalbasis des R³. *Skript Beispiel 6.2.12 sagt das
+  dazu.*
+- **Z. 377 („Reduzierte SVD: Motivation")**: „Σ enthält (m−r) Nullzeilen
+  oder (n−r) Nullspalten" — beides gilt gleichzeitig, nicht alternativ
+  (die Blockform Z. 323–326 zeigt es selbst). *Skript §6.3 schreibt
+  ausdrücklich „und beides gilt gleichzeitig".*
+- **Z. 472 („Spektralnorm und SVD")**: `‖A‖₂ := σ_max(A)` steht als
+  Definition, obwohl die Folie zwei Zeilen darüber („Bisher: ‖A‖₂ =
+  √λ_max(AᵀA)") die schon vergebene Definition zitiert; es ist eine
+  Aussage, keine Festlegung. *Skript §6.4 formuliert sie als Satz 6.4.1
+  mit Beweis und weist auf die Doppelbelegung hin.*
+- **Z. 500–503 („Theorem: Optimale Approximation")**: `A_k = argmin …_F =
+  argmin …₂` behauptet Eindeutigkeit der Minimalstelle. In der
+  Frobeniusnorm gilt sie nur für σ_k > σ_{k+1}, in der Spektralnorm i. A.
+  gar nicht: für A = diag(3, 2) und k = 1 hat jedes B = diag(b, 0) mit
+  b ∈ [1, 5] den Fehler max(|3−b|, 2) = 2 = σ₂. *Skript Satz 6.4.4 sagt
+  „löst beide Approximationsprobleme", Bemerkung 6.4.5 führt das
+  Gegenbeispiel.*
+- **Z. 651 („SVD vs. Eigenwertzerlegung")**: Die Zeile „Singularität:
+  Problem bei det(A) = 0" trifft nicht den Punkt — ein Eigenwert 0 ist
+  harmlos, es scheitert an fehlender Diagonalisierbarkeit (zu wenige
+  Eigenvektoren für eine Basis). *Skript §6.4 formuliert die Tabellenzeile
+  entsprechend um und ergänzt einen Absatz dazu.*
+- **Z. 700 (Lösungskommentar der Quiz-Folie)**: Zu Aussage 4 („A ∈ ℝⁿˣⁿ
+  ist immer diagonalisierbar") steht dort als Begründung „nur wenn
+  symmetrisch". Symmetrie ist aber nur HINREICHEND: (2 1; 0 1) hat die
+  verschiedenen Eigenwerte 2 und 1, ist diagonalisierbar und
+  unsymmetrisch. Äquivalent ist Symmetrie erst zur ORTHOGONALEN
+  Diagonalisierbarkeit. *Skript §6.5 begründet die Antwort mit dem
+  Jordan-Block (0 1; 0 0), dessen Eigenraum zum einzigen Eigenwert 0 nur
+  eindimensional ist, und stellt hinreichend/notwendig richtig.*
+- **Z. 718 („Praktische Hinweise")**: `irlba::irlba(A, nv = k)` wird als
+  „randomized (truncated) SVD … (stochastische Approximation)" geführt.
+  IRLBA ist ein Krylov-Verfahren (implicitly restarted Lanczos
+  bidiagonalization); zufällig ist allenfalls der Startvektor, die
+  Genauigkeit ruht nicht auf Randomisierung. *Skript §6.5 nennt irlba als
+  Weg zu den k größten Singulärwerten, ohne das Etikett „stochastisch".*
+
 ## 07-kq
 
 - **Z. 372 („Beispiel: QR-Zerlegung (2)")**: Die gezeigte Matrix A ist

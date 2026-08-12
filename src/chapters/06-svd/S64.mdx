@@ -1,1 +1,610 @@
-Abschnitt 6.4 – im Aufbau.
+import { RangKExplorer } from "./widgets/S64RangK";
+import { EmpfehlungsExplorer } from "./widgets/S64Empfehlung";
+
+::quelle[Folien 06-svd, „Spektralnorm und SVD" bis „SVD vs. Eigenwertzerlegung".]
+
+Die Zerlegung steht. Was fangen wir damit an? Bisher war die SVD vor allem eine
+Aussage über die Geometrie einer Abbildung. In diesem Abschnitt wird sie zum
+Werkzeug. Wir lesen die Spektralnorm direkt aus ihr ab, zerlegen $\bA$ in eine
+Summe denkbar einfacher Bausteine und gewinnen daraus die beste Approximation
+von kleinem Rang. Zwei Anwendungen führen vor, wozu das gut ist: Bilder
+komprimieren und Filmbewertungen vorhersagen.
+
+### Die Spektralnorm ist der größte Singulärwert
+
+Die Spektralnorm haben wir in
+[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) als
+$\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$ eingeführt. So
+notiert verlangt sie einen Umweg: erst $\bA^\top\bA$ aufstellen, dann dessen
+größten Eigenwert bestimmen, dann die Wurzel ziehen. Wer die SVD kennt, liest
+den Wert dagegen ab.
+
+:::satz[6.4.1 (Spektralnorm und größter Singulärwert)]
+Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
+$\corange{\sigma_1} \geq \corange{\sigma_2} \geq \cdots \geq \corange{\sigma_n} \geq 0$.
+Dann gilt
+
+$$ {#eq-6.4.1}
+\left\| \bA \right\|_2 = \corange{\sigma_1} = \corange{\sigma_{\max}}(\bA) .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Nach Definition ist $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$,
+wobei $\lambda_{\max}(\bA^\top\bA)$ der größte Eigenwert von $\bA^\top\bA$ ist.
+
+::why[so wurde die Spektralnorm in [Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) definiert; die Wurzel ist reell, weil $\bA^\top\bA$ nach Satz 6.2.1 nur nichtnegative :k[Eigenwerte]{#eigenvalue-eigenvector} hat]
+:::
+
+:::schritt
+Definition 6.2.4 setzt $\corange{\sigma_i} = \sqrt{\lambda_i}$ für die
+absteigend sortierten Eigenwerte $\lambda_1 \geq \cdots \geq \lambda_n$ von
+$\bA^\top\bA$. Insbesondere ist $\lambda_{\max}(\bA^\top\bA) = \lambda_1$ und
+damit $\corange{\sigma_1} = \sqrt{\lambda_1}$.
+
+::why[die Singulärwerte erben die Sortierung der Eigenwerte, weil die Wurzel auf $[0,\infty)$ monoton wächst]
+:::
+
+:::schritt
+Beide Ausdrücke stimmen also überein:
+
+$$
+\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)} = \sqrt{\lambda_1} = \corange{\sigma_1} .
+$$
+
+::why[erste Gleichheit nach Schritt 1, zweite wegen $\lambda_{\max} = \lambda_1$, dritte nach Schritt 2]
+:::
+
+::::
+
+Die Gleichung ($6.4.1$) sieht man gelegentlich als Definition geschrieben. Das
+wäre eine Doppelbelegung: Die Spektralnorm trägt aus Kapitel 3 bereits eine
+Definition, und dass sie mit $\corange{\sigma_1}$ übereinstimmt, ist eine
+Aussage, die bewiesen werden will. Bemerkung 6.2.5 hatte sie schon angekündigt,
+Satz 6.4.1 rechnet sie nach.
+
+Inhaltlich sagt der Satz nichts Neues, sondern bündelt zwei Sichtweisen: Die
+:k[Matrixnorm]{#matrix-norm} $\left\| \bA \right\|_2$ misst die maximale
+Streckung, die $\bA$ einem Einheitsvektor antun kann, und genau diese Streckung
+ist der größte Singulärwert. Das Bild dazu kennen wir aus
+[Abschnitt 6.1](#sec-6.1): $\corange{\sigma_1}$ ist die längste Halbachse der
+Bildellipse.
+
+### Die SVD als Summe von Rang-1-Matrizen
+
+Die Zerlegung $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ verpackt
+alles in drei Matrizen. Multiplizieren wir sie aus, kommt eine Darstellung
+zum Vorschein, die für Anwendungen viel handlicher ist. Dass $\corange{\bSigma}$
+außerhalb der Diagonalen nur Nullen trägt, schaltet nämlich fast alle Summanden
+ab: Übrig bleibt für jeden von null verschiedenen Singulärwert genau ein Term.
+
+:::satz[6.4.2 (Summenform der SVD)]
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und der Zerlegung
+$\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ aus Satz 6.2.13
+([Abschnitt 6.2](#sec-6.2)). Dann gilt
+
+$$ {#eq-6.4.2}
+\bA = \sum_{i=1}^{r} \corange{\sigma_i}\, \cgreen{\bu_i} \cblue{\bv_i}^\top .
+$$
+
+Jeder Summand $\cgreen{\bu_i} \cblue{\bv_i}^\top \in \R^{m \times n}$ hat
+:k[Rang]{#rank} $1$, und in der Frobeniusnorm gilt
+
+$$
+\left\| \cgreen{\bu_i} \cblue{\bv_i}^\top \right\|_F = 1 .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir schreiben den Eintrag $(a,b)$ des Produkts aus:
+
+$$
+\bigl(\cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}\bigr)_{ab}
+= \sum_{i=1}^{m} \sum_{j=1}^{n} \cgreen{U_{ai}}\, \corange{\Sigma_{ij}}\, \cblue{V_{bj}}
+= \sum_{i=1}^{r} \corange{\sigma_i}\, \cgreen{U_{ai}}\, \cblue{V_{bi}} .
+$$
+
+::why[$\corange{\Sigma_{ij}}$ ist null, außer für $i = j \leq r$; dort steht $\corange{\sigma_i}$. Von der Doppelsumme bleibt also nur die Diagonale übrig]
+:::
+
+:::schritt
+Die rechte Seite ist genau der Eintrag $(a,b)$ von
+$\sum_{i=1}^{r} \corange{\sigma_i} \cgreen{\bu_i} \cblue{\bv_i}^\top$, denn
+$\bigl(\cgreen{\bu_i} \cblue{\bv_i}^\top\bigr)_{ab} = \cgreen{U_{ai}} \cblue{V_{bi}}$.
+Da die Einträge übereinstimmen, stimmen die Matrizen überein, und ($6.4.2$) ist
+gezeigt.
+
+::why[das :k[äußere Produkt]{#outer-product} $\bx\by^\top$ hat an der Stelle $(a,b)$ den Eintrag $x_a y_b$; hier ist $\cgreen{\bu_i}$ die $i$-te Spalte von $\cgreen{\bU}$ und $\cblue{\bv_i}$ die $i$-te Spalte von $\cblue{\bV}$]
+:::
+
+:::schritt
+Jede Spalte von $\cgreen{\bu_i} \cblue{\bv_i}^\top$ ist ein Vielfaches von
+$\cgreen{\bu_i}$, nämlich die $b$-te Spalte gerade
+$\cblue{V_{bi}} \cdot \cgreen{\bu_i}$. Der Spaltenraum wird also von einem
+einzigen Vektor aufgespannt, und weil $\cgreen{\bu_i} \neq \bnull$ und
+$\cblue{\bv_i} \neq \bnull$ sind, ist er nicht der Nullvektorraum. Der Rang
+ist damit genau $1$.
+
+::why[$\cgreen{\bu_i}$ und $\cblue{\bv_i}$ sind Spalten von Orthogonalmatrizen, haben also Länge $1$ und sind insbesondere nicht der Nullvektor]
+:::
+
+:::schritt
+Für die Frobeniusnorm rechnen wir elementweise:
+
+$$
+\left\| \cgreen{\bu_i} \cblue{\bv_i}^\top \right\|_F^2
+= \sum_{a=1}^{m} \sum_{b=1}^{n} \bigl(\cgreen{U_{ai}}\, \cblue{V_{bi}}\bigr)^2
+= \Bigl(\sum_{a=1}^{m} \cgreen{U_{ai}}^2\Bigr) \Bigl(\sum_{b=1}^{n} \cblue{V_{bi}}^2\Bigr)
+= 1 \cdot 1 = 1 .
+$$
+
+::why[die Doppelsumme faktorisiert, weil $\cgreen{U_{ai}}^2$ nicht von $b$ und $\cblue{V_{bi}}^2$ nicht von $a$ abhängt; beide Klammern sind quadrierte Längen von Einheitsvektoren, nämlich von $\cgreen{\bu_i}$ und $\cblue{\bv_i}$]
+:::
+
+::::
+
+Neu ist an ($6.4.2$) inhaltlich nichts: Es ist dieselbe Information wie in der
+reduzierten SVD $\bA = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}$ aus
+[Abschnitt 6.3](#sec-6.3), nur als Summe statt als Produkt geschrieben. Die
+Schreibweise macht aber etwas sichtbar, das im Produkt versteckt bleibt: Die
+Matrix $\bA$ ist eine gewichtete Summe von $r$ Bausteinen, die alle dieselbe
+Größe haben. Was die Bausteine
+unterscheidet, sind allein die Gewichte $\corange{\sigma_i}$. Ein großes
+$\corange{\sigma_i}$ markiert eine Richtung, in der viel von $\bA$ steckt, ein
+kleines eine, in der wenig passiert. Und weil die Singulärwerte absteigend
+sortiert sind, stehen die wichtigen Terme vorn.
+
+Daraus wird sofort eine Idee: Nehmen wir nur die ersten Summanden und lassen
+den Rest weg.
+
+### Die beste Approximation von kleinem Rang
+
+:::definition[6.4.3 (Rang-k-Approximation)]
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und der Summenform
+($6.4.2$). Für $k \leq r$ heißt
+
+$$ {#eq-6.4.3}
+\bA_k = \sum_{i=1}^{k} \corange{\sigma_i}\, \cgreen{\bu_i} \cblue{\bv_i}^\top
+$$
+
+die *Rang-k-Approximation* (:k[low-rank approximation]{#low-rank-approximation})
+von $\bA$. Für $k \geq 1$ hat sie tatsächlich Rang $k$, denn wegen $k \leq r$
+sind alle beteiligten $\corange{\sigma_i}$ positiv und die $\cgreen{\bu_i}$
+orthonormal.
+:::
+
+Das Abschneiden ist schnell erledigt. Interessant ist, was wir dabei verlieren
+und ob eine andere Matrix vom Rang $k$ es besser könnte. Auf beide Fragen gibt
+derselbe Satz Antwort, und die Antwort ist bemerkenswert glatt.
+
+:::satz[6.4.4 (Eckart und Young: beste Approximation von Rang k)]
+Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
+$\corange{\sigma_1} \geq \cdots \geq \corange{\sigma_r} > 0$ und sei $k < r$.
+Dann löst $\bA_k$ aus ($6.4.3$) beide Approximationsprobleme
+
+$$
+\min_{\substack{\bB \in \R^{m \times n} \\ \rang(\bB) \leq k}} \left\| \bA - \bB \right\|_F
+\qquad\text{und}\qquad
+\min_{\substack{\bB \in \R^{m \times n} \\ \rang(\bB) \leq k}} \left\| \bA - \bB \right\|_2 ,
+$$
+
+und die zugehörigen Fehler sind
+
+$$ {#eq-6.4.4}
+\cred{\left\| \bA - \bA_k \right\|_F} = \sqrt{\sum_{i=k+1}^{r} \corange{\sigma_i}^2} ,
+\qquad
+\cred{\left\| \bA - \bA_k \right\|_2} = \corange{\sigma_{k+1}} .
+$$
+:::
+
+Wir verzichten auf den Beweis; nachlesen lässt er sich in der Literatur
+(vgl. Heath §3.6; MML §4.6). Die Fehlerformeln selbst sind dagegen leicht zu
+merken und sagen viel:
+
+:::bemerkung[6.4.5 (Was der Satz liefert und was nicht)]
+- **Der Fehler steht in den weggeworfenen Singulärwerten.** In der
+  Spektralnorm ist es der größte weggelassene Wert $\corange{\sigma_{k+1}}$,
+  in der Frobeniusnorm die Wurzel aus der Summe aller weggelassenen Quadrate.
+  Wir kennen den Approximationsfehler also, bevor wir approximieren.
+- **Beide Normen führen zum selben Sieger.** Das ist keine
+  Selbstverständlichkeit: Zwei verschiedene Gütemaße haben im Allgemeinen zwei
+  verschiedene Optima. Hier fallen sie zusammen.
+- **Der Fall $k = 0$ ist erlaubt.** Dann ist $\bA_0 = \bnull$ die leere Summe,
+  und ($6.4.4$) liefert nebenbei die nützliche Identität
+
+  $$
+  \left\| \bA \right\|_F = \sqrt{\sum_{i=1}^{r} \corange{\sigma_i}^2} .
+  $$
+
+- **Der Satz sagt, dass $\bA_k$ das Minimum annimmt, nicht dass es der einzige
+  Minimierer ist.** In der Frobeniusnorm ist $\bA_k$ eindeutig, solange
+  $\corange{\sigma_k} > \corange{\sigma_{k+1}}$ gilt; bei Gleichheit gibt es
+  mehrere. In der Spektralnorm sieht es schlechter aus. Für
+  $\bA = \bigl(\begin{smallmatrix} 3 & 0 \\ 0 & 2 \end{smallmatrix}\bigr)$ und
+  $k = 1$ etwa hat jede Matrix
+  $\bB = \bigl(\begin{smallmatrix} b & 0 \\ 0 & 0 \end{smallmatrix}\bigr)$ mit
+  $b \in [1, 5]$ den Fehler
+  $\cred{\left\| \bA - \bB \right\|_2} = \max(|3 - b|, 2) = 2 = \corange{\sigma_2}$.
+  $\bA_1$ ist also *eine* beste Approximation, nicht *die*.
+- **Ab $k = r$ ist nichts mehr zu holen.** Dann ist $\bA_k = \bA$ und der
+  Fehler null. Setzen wir $\corange{\sigma_i} = 0$ für $i > r$, sagt ($6.4.4$)
+  genau das; weitere Terme kosten dann nur noch Speicher.
+:::
+
+### Wie wählen wir k?
+
+Der Satz von Eckart und Young sagt, wie gut jedes $k$ ist. Er sagt nicht,
+welches wir nehmen sollen. Diese Entscheidung ist ein Kompromiss zwischen
+Genauigkeit und Aufwand, und dafür gibt es drei gebräuchliche Kriterien.
+
+:::bemerkung[6.4.6 (Drei Kriterien für die Wahl von k)]
+1. *Relativer Fehler in der Spektralnorm.* Aus ($6.4.4$) folgt
+
+   $$
+   \frac{\cred{\left\| \bA - \bA_k \right\|_2}}{\left\| \bA \right\|_2}
+   = \frac{\corange{\sigma_{k+1}}}{\corange{\sigma_1}} ,
+   $$
+
+   denn der Nenner ist nach Satz 6.4.1 gerade $\corange{\sigma_1}$. Wir wählen
+   das kleinste $k$, für das dieser Quotient unter einer Schranke bleibt.
+2. *Relativer Fehler in der Frobeniusnorm.* Mit derselben Rechnung und der
+   Identität aus Bemerkung 6.4.5 ist
+
+   $$
+   \frac{\cred{\left\| \bA - \bA_k \right\|_F}}{\left\| \bA \right\|_F}
+   = \frac{\sqrt{\sum_{i=k+1}^{r} \corange{\sigma_i}^2}}{\sqrt{\sum_{i=1}^{r} \corange{\sigma_i}^2}} .
+   $$
+
+   Dieses Maß nimmt alle Richtungen zusammen, das erste nur die schlechteste.
+3. *Energiekriterium.* Statt den Fehler zu beschränken, verlangen wir einen
+   Mindestanteil an erklärter „Energie":
+
+   $$
+   \frac{\sum_{i=1}^{k} \corange{\sigma_i}^2}{\sum_{i=1}^{r} \corange{\sigma_i}^2} \geq p ,
+   $$
+
+   üblich sind $p = 0{,}9$ oder $p = 0{,}99$. Das ist nur eine Umformulierung
+   von Kriterium 2, denn die linke Seite ist $1$ minus dem Quadrat des
+   relativen Frobeniusfehlers.
+:::
+
+Vorsicht bei Kriterium 3: Wenn $\corange{\sigma_1}$ die übrigen Singulärwerte
+weit überragt, ist der Energieanteil schon bei $k = 1$ nahe bei eins, obwohl
+die Approximation noch sehr grob ist. Ein Kriterium, das so leicht zufrieden
+ist, taugt wenig als alleiniger Ratgeber.
+
+:::bemerkung[6.4.7 (Typische Singulärwert-Verläufe und der Ellenbogen)]
+Wie gut sich eine Matrix überhaupt komprimieren lässt, steht im Verlauf ihrer
+Singulärwerte. Drei Muster begegnen uns immer wieder:
+
+1. *Schneller Abfall*, etwa $\corange{\sigma_i} \approx c \cdot e^{-\alpha i}$.
+   Wenige Werte dominieren, alles Weitere ist Kleinkram. Solche Matrizen sind
+   der ideale Fall für eine Rang-k-Approximation.
+2. *Linearer Abfall*, $\corange{\sigma_i} \approx c - \alpha i$. Die
+   Approximation gelingt noch ordentlich, der Kompressionsfaktor bleibt aber
+   mittelmäßig.
+3. *Langsamer Abfall*, $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$. Viele
+   Komponenten tragen ähnlich viel bei; ein kleines $k$ verliert dann
+   zwangsläufig Substanz.
+
+**Heuristik:** Tragen wir $\log \corange{\sigma_i}$ gegen $i$ auf, so wird ein
+exponentieller Abfall zur Geraden. Interessant ist der Knick, an dem die Kurve
+flach wird, der sogenannte *Ellenbogen* (elbow). Er trennt die Richtungen, in
+denen wirklich Struktur steckt, von denen, in denen nur noch Rauschen sitzt,
+und liefert einen brauchbaren Startwert für $k$. Eine Garantie ist das nicht;
+manche Spektren haben schlicht keinen Ellenbogen.
+:::
+
+### Anwendung: Datenkompression
+
+Ein Graustufenbild ist eine Matrix. Jeder Pixel ist ein Eintrag, seine
+Helligkeit der Wert. Farbbilder bestehen aus drei solchen Matrizen, einer pro
+Kanal. Damit ist die Bildkompression eine reine Übung in Rang-k-Approximation.
+
+:::beispiel[6.4.8 (Ein Bild mit 659 × 512 Pixeln)]
+Das Bild sei $\bA \in \R^{659 \times 512}$. Vollständig gespeichert sind das
+
+$$
+659 \cdot 512 = 337\,408 \text{ Zahlen (pro Kanal)} .
+$$
+
+Für die Rang-50-Approximation brauchen wir dagegen nur die ersten $50$ Spalten
+von $\cgreen{\bU}$, die ersten $50$ Singulärwerte und die ersten $50$ Spalten
+von $\cblue{\bV}$:
+
+$$
+\underbrace{659 \cdot 50}_{\cgreen{\bU_{50}}}
++ \underbrace{50}_{\corange{\bSigma_{50}}}
++ \underbrace{50 \cdot 512}_{\cblue{\bV_{50}}}
+= 32\,950 + 50 + 25\,600 = 58\,600 .
+$$
+
+Das sind $58\,600 / 337\,408 \approx 17{,}4\,\%$ des Originals, wir sparen also
+rund $83\,\%$ des Speichers.
+
+Beliebig weit trägt das nicht. Der Speicherbedarf wächst linear in $k$, und
+sobald $k \cdot (659 + 512 + 1) > 337\,408$ ist, also ab $k = 288$, legen wir
+mehr Zahlen ab als das Bild selbst hat. Kompression gibt es hier nur für
+$k \leq 287$.
+:::
+
+:::algorithmus[6.4.9 (Kompression mit der SVD)]
+1. Berechne die SVD $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$.
+2. Wähle $k$ anhand des Singulärwert-Verlaufs (Bemerkung 6.4.6 und 6.4.7).
+3. Bilde die Approximation
+   $\bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$.
+4. Speichere nur $\cgreen{\bU_k}$, $\corange{\bSigma_k}$ und $\cblue{\bV_k}$;
+   das Bild wird bei Bedarf daraus zurückgerechnet.
+:::
+
+:::vertiefung[Rang-k-Approximation zum Anfassen]
+Ein echtes Foto scheidet für ein öffentliches Skript aus Rechtegründen aus,
+also rechnen wir mit einem synthetisch erzeugten Graustufenbild; als Matrix
+verhält es sich genauso. Der Schieber gibt $k$ vor. Die beiden Kurven sind die
+Fehlerformeln aus ($6.4.4$), an diesem Bild live ausgewertet, und die dritte
+Tafel zeigt die Differenz $\bA - \bA_k$ als Bild.
+
+<RangKExplorer />
+
+Wer lieber mit echten Fotos spielt, findet unter
+[shinyapps.io](https://fabian-s.shinyapps.io/truncatedSVD-shiny/) eine
+Shiny-App zur abgeschnittenen SVD.
+:::
+
+### Anwendung: Empfehlungssysteme
+
+Der zweite Klassiker heißt *kollaboratives Filtern* (collaborative filtering).
+Ein Streamingdienst kennt $m$ Nutzer und $n$ Filme und will für jedes Paar
+vorhersagen, wie gut der Film ankommt. Die Bewertungen bilden eine Matrix,
+aber eine mit einem Haken: Fast niemand hat fast alles gesehen.
+
+:::beispiel[6.4.10 (Eine dünn besetzte Bewertungsmatrix)]
+Zeilen sind Nutzer, Spalten sind Filme, ein Fragezeichen steht für eine
+fehlende Bewertung:
+
+$$
+\bR = \begin{pmatrix}
+5 & ? & 1 & ? & 4 \\
+? & 3 & ? & 4 & ? \\
+2 & 1 & ? & ? & 5 \\
+? & 5 & 4 & 3 & ?
+\end{pmatrix} \in \R^{m \times n} .
+$$
+
+Hier sind $m = 4$ und $n = 5$, und von $20$ möglichen Einträgen sind $11$
+bekannt. In der Praxis ist die Matrix noch weit
+:k[dünner besetzt]{#sparse-matrix}: Millionen von Nutzern, Hunderttausende von
+Titeln, und pro Zeile eine Handvoll Bewertungen.
+
+Füllen wir die Lücken mit den Spaltenmitteln der bekannten Einträge, so sind
+das der Reihe nach $3{,}5$, $3$, $2{,}5$, $3{,}5$ und $4{,}5$.
+:::
+
+Warum sollte eine Zerlegung dabei helfen? Weil Geschmack Struktur hat.
+Niemand mag Filme unabhängig voneinander: Wer zwei Science-Fiction-Filme mag,
+mag wahrscheinlich auch den dritten. Die Vorlieben von Millionen Nutzern
+lassen sich deshalb erstaunlich gut durch wenige Zahlen beschreiben. In der
+Sprache dieses Kapitels heißt das: Die Bewertungsmatrix ist näherungsweise von
+kleinem Rang.
+
+:::algorithmus[6.4.11 (Empfehlungen über eine Rang-k-Approximation)]
+1. Ergänze die fehlenden Einträge grob, etwa durch die Spaltenmittel der
+   bekannten Bewertungen.
+2. Berechne von der aufgefüllten Matrix die Rang-k-Approximation
+   $\bR_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$.
+3. Lies die Vorhersagen an den zuvor fehlenden Stellen von $\bR_k$ ab.
+:::
+
+:::bemerkung[6.4.12 (Was die Faktoren bedeuten)]
+Die drei Bestandteile der Zerlegung lassen sich hier ungewöhnlich gut deuten:
+
+- Die *rechten* Singulärvektoren $\cblue{\bv_j} \in \R^n$ leben im Filmraum.
+  Sie sind gelernte Genres: $\cblue{\bv_1}$ könnte eine Achse von Action nach
+  Drama beschreiben, $\cblue{\bv_2}$ eine von Komödie nach Thriller. Diese
+  Achsen hat niemand vorgegeben, sie fallen aus den Daten.
+- Die *linken* Singulärvektoren $\cgreen{\bu_i} \in \R^m$ leben im Nutzerraum
+  und geben an, wie stark die einzelnen Nutzer auf diese Genre-Achsen
+  ansprechen.
+- Die Singulärwerte $\corange{\sigma_i}$ gewichten, wie viel eine Achse
+  überhaupt erklärt.
+
+Eine Vorhersage ist damit nichts anderes als ein Skalarprodukt: Nutzerprofil
+mal Genreprofil, gewichtet mit $\corange{\sigma_i}$ und über die ersten $k$
+Achsen summiert.
+:::
+
+:::vertiefung[Rang-k-Glättung einer Bewertungsmatrix]
+Das Widget rechnet Beispiel 6.4.10 durch. Halten wir eine bekannte Bewertung
+zurück, wird sie zur Testgröße: Wir sehen dann, wie nah die Vorhersage am
+tatsächlichen Wert liegt. Der Vergleich der drei Auffüllregeln zeigt außerdem,
+wie viel von dem, was am Ende herauskommt, wir selbst hineingesteckt haben.
+
+<EmpfehlungsExplorer />
+:::
+
+:::bemerkung[6.4.13 (Stärken, Schwächen, Ausblick)]
+Für den Ansatz spricht einiges:
+
+- **Speicher.** Statt $m \cdot n$ Zahlen genügen $(m + n) \cdot k + k$, und für
+  $k \ll \min(m,n)$ ist das drastisch weniger.
+- **Glättung.** Das Abschneiden wirkt als *Regularisierung*: Die
+  Rang-k-Approximation kann den Zufall in einzelnen Bewertungen gar nicht
+  nachbilden, weil ihr die Freiheitsgrade fehlen.
+- **Robustheit gegen Lücken.** Auch bei sehr spärlichen Daten liefert das
+  Verfahren brauchbare Schätzungen, solange die zugrunde liegende Struktur
+  wirklich niedrigdimensional ist.
+
+Ein Einwand bleibt, und er ist gewichtig: Schritt 1 erfindet Daten, und
+Schritt 2 behandelt diese Erfindungen wie Messwerte. Der Satz von Eckart und
+Young minimiert den Fehler über *alle* Einträge, also auch über die
+selbstgesetzten Mittelwerte. Modernere Verfahren umgehen das. Unter dem
+Stichwort *Matrix Completion* sucht man direkt eine Matrix von kleinem Rang,
+die nur an den beobachteten Stellen gut passt; die (nichtnegative)
+Matrixfaktorisierung ist die bekannteste Variante.
+:::
+
+### Wann lohnt sich die SVD?
+
+:::bemerkung[6.4.14 (Ideale Situationen für die SVD)]
+1. *Niedrig-Rang-Strukturen:* $\rang(\bA) \ll \min(m,n)$, oder wenigstens
+   näherungsweise.
+2. *Schnell abfallende Singulärwerte:* wenige Richtungen dominieren
+   (Bemerkung 6.4.7).
+3. *Überbestimmte Systeme:* $m > n$ und womöglich inkonsistent, wie bei
+   :k[Kleinste-Quadrate-Problemen]{#linear-least-squares}
+   ([Kapitel 7](?k=07-kq#sec-7.1)).
+4. *Datenanalyse:* Die Hauptkomponentenanalyse (PCA) lässt sich direkt aus der
+   SVD der zentrierten Datenmatrix $\bX$ ablesen, ohne dass wir das
+   Kreuzprodukt $\bX^\top\bX$ je aufstellen müssen; das ist bis auf einen
+   Faktor die empirische
+   :k[Kovarianzmatrix]{#covariance-matrix}.
+5. *Numerische Robustheit:* als Alternative zu den
+   :k[Normalgleichungen]{#normal-equations}
+   ([Abschnitt 7.3](?k=07-kq#sec-7.3)).
+:::
+
+Punkt 4 und Punkt 5 haben denselben Kern. Das Produkt $\bX^\top\bX$ zu bilden
+kostet Genauigkeit, denn es quadriert die
+:k[Konditionszahl]{#condition-number}
+([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)). Die SVD arbeitet direkt an
+$\bX$ und vermeidet diesen Schritt.
+
+Umsonst ist die Robustheit nicht.
+
+:::bemerkung[6.4.15 (Rechenaufwand)]
+Für $\bA \in \R^{m \times n}$ gilt in der
+:k[Landau-Notation]{#big-o-notation}
+([Abschnitt 2.4](?k=02-algos#sec-2.4)):
+
+- *SVD:* $O(\min(m^2 n,\, m n^2))$; für $m \gg n$ sind das rund $4 m n^2$
+  Operationen.
+- *Normalgleichungen:* $O(m n^2 + n^3)$; für $m \gg n$ dominiert der Aufbau von
+  $\bA^\top\bA$ mit rund $m n^2$ Operationen.
+
+Für $m \gg n$ ist die SVD also grob viermal so teuer. Das ist der übliche
+Kompromiss: Geschwindigkeit gegen Stabilität. Wer schlecht konditionierte
+Daten hat, zahlt den Faktor gern.
+:::
+
+### SVD und Eigenwertzerlegung im Vergleich
+
+Zum Abschluss stellen wir die beiden Zerlegungen nebeneinander, die dieses und
+das dritte Kapitel getragen haben.
+
+<table className="text-sm">
+<thead>
+<tr className="border-b border-slate-300 text-left dark:border-slate-600">
+<th className="py-1 pr-6">Eigenschaft</th>
+<th className="py-1 pr-6">Spektralzerlegung</th>
+<th className="py-1">SVD</th>
+</tr>
+</thead>
+<tbody>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">Matrixtyp</td>
+<td className="py-1 pr-6">quadratisch</td>
+<td className="py-1">beliebig, $m \times n$</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">orthogonale Faktoren</td>
+<td className="py-1 pr-6">nur für :k[symmetrische]{#symmetric-matrix} Matrizen</td>
+<td className="py-1">immer</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">numerische Stabilität</td>
+<td className="py-1 pr-6">kann heikel werden</td>
+<td className="py-1">stabil</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">singuläre Matrizen</td>
+<td className="py-1 pr-6">Eigenwert $0$; ohne Basis aus Eigenvektoren gibt es die Zerlegung gar nicht</td>
+<td className="py-1">unkritisch, $\corange{\sigma_i} = 0$ zeigt den Rangabfall an</td>
+</tr>
+<tr className="border-b border-slate-200 dark:border-slate-700">
+<td className="py-1 pr-6">geometrische Deutung</td>
+<td className="py-1 pr-6">Hauptachsen (im symmetrischen Fall)</td>
+<td className="py-1">optimale Koordinaten in Urbild und Bild</td>
+</tr>
+</tbody>
+</table>
+
+Die Zeile zu den singulären Matrizen verdient eine Fußnote. Ein Eigenwert $0$
+ist für sich genommen harmlos; problematisch wird es, wenn zu wenige
+Eigenvektoren existieren, um eine Basis zu bilden. Dann gibt es die
+Zerlegung $\bA = \bP\bD\bP^{-1}$ überhaupt nicht. Die SVD kennt diesen Fall
+nicht: Sie existiert für jede Matrix.
+
+### Selbsttest
+
+::::quiz
+
+:::frage{falsch}
+Die Spektralnorm $\left\| \bA \right\|_2$ ist der betragsgrößte Eigenwert von
+$\bA$.
+
+Sie ist der größte *Singulärwert* (Satz 6.4.1). Für symmetrische Matrizen
+fallen beide Größen bis aufs Vorzeichen zusammen, sonst nicht. Gegenbeispiel:
+$\bA = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ hat
+den doppelten Eigenwert $0$, aber
+$\bA^\top\bA = \bigl(\begin{smallmatrix} 0 & 0 \\ 0 & 1 \end{smallmatrix}\bigr)$
+und damit $\left\| \bA \right\|_2 = 1$. Für nicht quadratische Matrizen
+existieren Eigenwerte ohnehin nicht.
+:::
+
+:::frage{wahr}
+Unter allen Matrizen vom Rang höchstens $k$ minimiert $\bA_k$ den Fehler
+gleichzeitig in der Frobenius- und in der Spektralnorm.
+
+So steht es in Satz 6.4.4. Bemerkenswert daran ist, dass zwei verschiedene
+Gütemaße dieselbe Lösung zulassen; erwarten müsste man das nicht. Der einzige
+Minimierer ist $\bA_k$ deshalb noch lange nicht, siehe Bemerkung 6.4.5.
+:::
+
+:::frage{falsch}
+Für $\bA = \bigl(\begin{smallmatrix} 3 & 0 \\ 0 & 2 \end{smallmatrix}\bigr)$
+ist $\bigl(\begin{smallmatrix} 2{,}5 & 0 \\ 0 & 2{,}5 \end{smallmatrix}\bigr)$
+die beste Rang-1-Approximation.
+
+Diese Matrix hat Rang $2$, ist also gar nicht zugelassen. Die Singulärwerte
+von $\bA$ sind $\corange{\sigma_1} = 3$ und $\corange{\sigma_2} = 2$, die beste
+Rang-1-Approximation ist
+$\bA_1 = \bigl(\begin{smallmatrix} 3 & 0 \\ 0 & 0 \end{smallmatrix}\bigr)$, und
+der Fehler beträgt $\cred{\left\| \bA - \bA_1 \right\|_2} = \corange{\sigma_2} = 2$.
+:::
+
+:::frage{falsch}
+Solange $k < \min(m,n)$ gilt, spart die Rang-k-Approximation immer Speicher.
+
+Sie kostet $k(m + n + 1)$ Zahlen gegen $mn$ für die volle Matrix, und das ist
+für großes $k$ mehr. Bei $m = n = 100$ und $k = 50$ etwa speichern wir
+$50 \cdot 201 = 10\,050$ statt $10\,000$ Zahlen. Ein Gewinn entsteht erst für
+$k < mn/(m + n + 1) \approx 49{,}8$, hier also für $k \leq 49$.
+:::
+
+:::frage{falsch}
+Ein Spektrum mit langsam abfallenden Singulärwerten,
+$\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
+eine Rang-k-Approximation.
+
+Es ist der ungünstigste der drei Fälle aus Bemerkung 6.4.7. Viele Komponenten
+tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
+sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
+komprimieren lässt sich der exponentielle Abfall.
+:::
+
+:::frage{wahr}
+Ist $\corange{\sigma_{k+1}} = 0$, so ist die Rang-k-Approximation exakt.
+
+Nach ($6.4.4$) ist dann $\cred{\left\| \bA - \bA_k \right\|_2} = 0$, also
+$\bA_k = \bA$. Anschaulich: Die Summenform ($6.4.2$) hat gar nicht mehr als $k$
+Summanden, weil $\rang(\bA) \leq k$ ist.
+:::
+
+::::
+
+*Vertiefung: vgl. Heath §3.6 (Singulärwertzerlegung und ihre Anwendungen)
+sowie MML §4.5 und §4.6 (SVD und Matrixapproximation).*

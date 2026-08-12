@@ -1,1 +1,731 @@
-Abschnitt 6.2 – im Aufbau.
+import { SingulaerwertRechner } from "./widgets/S62Rechner";
+import { SvdGeometrieExplorer } from "./widgets/S62Geometrie";
+
+::quelle[Folien 06-svd, von der Matrix $\bA^\top\bA$ bis zur geometrischen Interpretation.]
+
+In [Abschnitt 6.1](#sec-6.1) haben wir die Frage nach der Richtung stärkster
+Streckung auf ein Maximierungsproblem über der Einheitssphäre zurückgeführt.
+Der entscheidende Kniff war, statt $\left\|\bA\bx\right\|$ das Quadrat zu
+maximieren:
+
+$$ {#eq-6.2.1}
+\left\|\bA\bx\right\|^2 = (\bA\bx)^\top(\bA\bx) = \bx^\top\bigl(\bA^\top\bA\bigr)\bx .
+$$
+
+Rechts steht eine :k[quadratische Form]{#quadratic-form} in $\bA^\top\bA$. Diese
+eine Matrix trägt also die komplette Information darüber, wie stark $\bA$ in
+welche Richtung streckt. Bevor wir daraus Singulärwerte gewinnen, sollten wir
+sie uns genauer ansehen. (Wie im ganzen Kapitel ist $\left\|\cdot\right\|$
+dabei die :k[euklidische Norm]{#euclidean-norm} $\left\|\cdot\right\|_2$.)
+
+### Die Matrix $\bA^\top\bA$
+
+Zwei Eigenschaften machen $\bA^\top\bA$ so angenehm, und beide fallen fast von
+selbst ab.
+
+:::satz[6.2.1 (Eigenschaften von AᵀA)]
+Für $\bA \in \R^{m \times n}$ gilt:
+
+1. $\bA^\top\bA \in \R^{n \times n}$ ist :k[symmetrisch]{#symmetric-matrix}, das
+   heißt $\bigl(\bA^\top\bA\bigr)^\top = \bA^\top\bA$.
+2. $\bA^\top\bA$ ist *positiv semidefinit*: Alle
+   :k[Eigenwerte]{#eigenvalue-eigenvector} $\lambda_i$ von $\bA^\top\bA$
+   erfüllen $\lambda_i \geq 0$.
+:::
+
+::::beweis
+
+:::schritt
+Zu (1): Transponieren dreht die Reihenfolge eines Produkts um und hebt sich
+selbst auf, also
+
+$$
+\bigl(\bA^\top\bA\bigr)^\top = \bA^\top\bigl(\bA^\top\bigr)^\top = \bA^\top\bA .
+$$
+
+::why[$(\bX\bY)^\top = \bY^\top\bX^\top$ und $\bigl(\bX^\top\bigr)^\top = \bX$]
+:::
+
+:::schritt
+Zu (2): Sei $\bv_i$ ein auf Länge $1$ normierter Eigenvektor von $\bA^\top\bA$
+zum Eigenwert $\lambda_i$. Dann ist
+
+$$
+0 \leq \left\|\bA\bv_i\right\|^2
+= \bv_i^\top\bigl(\bA^\top\bA\bigr)\bv_i
+= \bv_i^\top\bigl(\lambda_i\bv_i\bigr)
+= \lambda_i \left\|\bv_i\right\|^2
+= \lambda_i .
+$$
+
+::why[erst ($6.2.1$) mit $\bx = \bv_i$, dann die Eigenwertgleichung $\bA^\top\bA\bv_i = \lambda_i\bv_i$; ganz links steht das Quadrat einer Länge, und das wird nie negativ]
+:::
+
+::::
+
+Dass die Eigenwerte überhaupt reell sind und dass es eine
+:k[Orthonormalbasis]{#orthonormal-basis} aus Eigenvektoren gibt, garantiert der
+:k[Spektralsatz]{#spectral-theorem} für symmetrische Matrizen. Zusammen mit
+Satz 6.2.1 ergibt das:
+
+:::korollar[6.2.2 (AᵀA ist orthogonal diagonalisierbar)]
+Zu $\bA \in \R^{m \times n}$ gibt es eine
+:k[Orthogonalmatrix]{#orthogonal-matrix} $\cblue{\bV} \in \R^{n \times n}$ und
+eine :k[Diagonalmatrix]{#diagonal-matrix}
+$\bLambda = \diag(\lambda_1, \dots, \lambda_n)$ mit
+$\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0$, sodass
+
+$$
+\bA^\top\bA = \cblue{\bV}\bLambda\cblue{\bV^\top} .
+$$
+
+Die Spalten von $\cblue{\bV}$ sind Eigenvektoren von $\bA^\top\bA$ und bilden
+eine Orthonormalbasis des $\R^n$.
+:::
+
+Damit liegt das halbe Rüstzeug für die Singulärwertzerlegung schon bereit: eine
+orthonormale Basis, in der $\bA^\top\bA$ nichts weiter tut als achsenweises
+Skalieren. Rechnen wir das an einer kleinen Matrix durch, die uns durch den
+ganzen Abschnitt begleitet.
+
+:::beispiel[6.2.3 (Die Matrix AᵀA einer 3×2-Matrix)]
+Sei
+
+$$
+\bA = \begin{pmatrix} \ba_1 & \ba_2 \end{pmatrix}
+= \begin{pmatrix} 1 & 2 \\ 2 & 1 \\ 1 & 0 \end{pmatrix} \in \R^{3 \times 2} .
+$$
+
+Der Eintrag $(i,j)$ von $\bA^\top\bA$ ist das Skalarprodukt der $i$-ten mit der
+$j$-ten Spalte von $\bA$:
+
+$$
+\bA^\top\bA
+= \begin{pmatrix} \ba_1^\top\ba_1 & \ba_1^\top\ba_2 \\ \ba_2^\top\ba_1 & \ba_2^\top\ba_2 \end{pmatrix}
+= \begin{pmatrix} 1 & 2 & 1 \\ 2 & 1 & 0 \end{pmatrix}
+  \begin{pmatrix} 1 & 2 \\ 2 & 1 \\ 1 & 0 \end{pmatrix}
+= \begin{pmatrix} 6 & 4 \\ 4 & 5 \end{pmatrix} .
+$$
+
+Die Symmetrie sieht man der Matrix an. Die Eigenwerte liefert das
+:k[charakteristische Polynom]{#characteristic-polynomial}:
+
+$$
+\det\bigl(\bA^\top\bA - \lambda\bI\bigr) = (6-\lambda)(5-\lambda) - 16
+= \lambda^2 - 11\lambda + 14 \overset{!}{=} 0 ,
+$$
+
+also
+
+$$
+\lambda_{1,2} = \frac{11 \pm \sqrt{11^2 - 4 \cdot 14}}{2} = \frac{11 \pm \sqrt{65}}{2},
+\qquad
+\corange{\lambda_1} \approx \corange{9{,}531}, \qquad \corange{\lambda_2} \approx \corange{1{,}469} .
+$$
+
+Beide Eigenwerte sind positiv, wie Satz 6.2.1 versprochen hat. Zwei schnelle
+Proben: Ihre Summe ist $11$, die Spur von $\bA^\top\bA$; ihr Produkt ist $14$,
+die :k[Determinante]{#determinant} $6 \cdot 5 - 4^2$.
+:::
+
+### Singulärwerte
+
+Die Eigenwerte von $\bA^\top\bA$ sind nach ($6.2.1$) quadrierte Längen. Wer an
+Streckungsfaktoren interessiert ist, zieht deshalb die Wurzel.
+
+:::definition[6.2.4 (Singulärwerte)]
+Seien $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0$ die
+Eigenwerte von $\bA^\top\bA$ für $\bA \in \R^{m \times n}$. Die
+*Singulärwerte* (singular values) von $\bA$ sind
+
+$$
+\corange{\sigma_i} = \sqrt{\lambda_i}, \qquad i = 1, 2, \dots, n .
+$$
+
+Sie erben die Sortierung der Eigenwerte:
+$\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_n \geq 0$.
+:::
+
+:::bemerkung[6.2.5 (Singulärwerte sind Streckungsfaktoren)]
+- $\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
+  die maximale Streckung. Das ist genau das Maximierungsproblem aus
+  [Abschnitt 6.1](#sec-6.1): Über ($6.2.1$) maximieren wir die quadratische
+  Form von $\bA^\top\bA$, und deren größter Wert auf der Einheitssphäre ist
+  $\lambda_1$.
+- $\corange{\sigma_n} = \min_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
+  die minimale Streckung, also die stärkste Stauchung.
+- $\sigma_i = 0$ gilt genau dann, wenn $\lambda_i = 0$ ist.
+
+Der größte Singulärwert ist damit nichts anderes als die *Spektralnorm*
+$\left\|\bA\right\|_2$ aus
+[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3), die dort über
+$\lambda_{\max}(\bA^\top\bA)^{1/2}$ definiert wurde.
+:::
+
+:::beispiel[6.2.6 (Singulärwerte der Beispielmatrix)]
+Für $\bA$ aus Beispiel 6.2.3 mit
+$\corange{\lambda_1} \approx \corange{9{,}531}$ und
+$\corange{\lambda_2} \approx \corange{1{,}469}$ ist
+
+$$
+\corange{\sigma_1} = \sqrt{\lambda_1} \approx \sqrt{9{,}531} \approx \corange{3{,}087} ,
+\qquad
+\corange{\sigma_2} = \sqrt{\lambda_2} \approx \sqrt{1{,}469} \approx \corange{1{,}212} .
+$$
+
+In der einen Richtung streckt $\bA$ also um gut das Dreifache, in der anderen
+nur um gut das Eineinhalbfache. Ihr Verhältnis
+
+$$
+\frac{\corange{\sigma_1}}{\corange{\sigma_2}} \approx \frac{3{,}087}{1{,}212} \approx 2{,}55
+$$
+
+sagt, wie richtungsabhängig (*anisotrop*) diese Matrix wirkt. Für quadratische,
+invertierbare Matrizen ist $\sigma_1/\sigma_n$ genau die Spektralkondition
+$\kappa_2(\bA) = \left\|\bA\right\|_2 \left\|\bA^{-1}\right\|_2$ aus
+[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5); dort hatten wir sie als
+Verhältnis der extremen Streckungsfaktoren gedeutet und die Begründung auf die
+SVD vertagt. Für rechteckige Matrizen mit vollem Spaltenrang, wie hier, ist
+$\sigma_1/\sigma_n$ die übliche Verallgemeinerung.
+:::
+
+### Singulärvektoren
+
+Streckungsfaktoren allein nützen wenig, solange wir nicht wissen, *welche*
+Richtung um $\sigma_i$ gestreckt wird. Diese Richtungen stecken bereits in
+Korollar 6.2.2.
+
+:::definition[6.2.7 (Rechte und linke Singulärvektoren)]
+Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
+$\sigma_1 \geq \cdots \geq \sigma_n \geq 0$.
+
+- Die *rechten Singulärvektoren* $\cblue{\bv_1}, \dots, \cblue{\bv_n} \in \R^n$
+  sind normierte, paarweise orthogonale Eigenvektoren von $\bA^\top\bA$:
+
+  $$
+  \bA^\top\bA\,\cblue{\bv_i} = \lambda_i \cblue{\bv_i} = \corange{\sigma_i^2}\,\cblue{\bv_i} ,
+  \qquad \left\|\cblue{\bv_i}\right\| = 1 .
+  $$
+
+- Die *linken Singulärvektoren* $\cgreen{\bu_i} \in \R^m$ sind für
+  $\sigma_i > 0$ erklärt durch
+
+  $$ {#eq-6.2.2}
+  \cgreen{\bu_i} = \frac{\bA\,\cblue{\bv_i}}{\corange{\sigma_i}} ,
+  \qquad\text{gleichwertig}\qquad
+  \bA\,\cblue{\bv_i} = \corange{\sigma_i}\,\cgreen{\bu_i} .
+  $$
+:::
+
+Die zweite Schreibweise in ($6.2.2$) ist die aussagekräftigere: $\bA$ bildet die
+Richtung $\cblue{\bv_i}$ auf die Richtung $\cgreen{\bu_i}$ ab und streckt dabei
+um $\corange{\sigma_i}$. Dass die Bildrichtungen dabei aufeinander senkrecht
+stehen, ist der eigentliche Grund, warum die ganze Konstruktion trägt.
+
+:::satz[6.2.8 (Orthogonalität der Singulärvektoren)]
+Seien $\cblue{\bv_1}, \dots, \cblue{\bv_n}$ orthonormale rechte
+Singulärvektoren von $\bA$. Dann gilt
+
+$$
+\bigl(\bA\,\cblue{\bv_i}\bigr)^\top\bigl(\bA\,\cblue{\bv_j}\bigr) = 0
+\quad \text{für } i \neq j ,
+\qquad
+\left\|\bA\,\cblue{\bv_i}\right\| = \corange{\sigma_i} .
+$$
+
+Insbesondere sind die linken Singulärvektoren $\cgreen{\bu_1}, \dots,
+\cgreen{\bu_r}$ zu den $r$ von null verschiedenen Singulärwerten orthonormal.
+:::
+
+::::beweis
+
+:::schritt
+Für $i \neq j$ rechnen wir
+
+$$
+\bigl(\bA\bv_i\bigr)^\top\bigl(\bA\bv_j\bigr)
+= \bv_i^\top\bigl(\bA^\top\bA\bigr)\bv_j
+= \bv_i^\top\bigl(\lambda_j\bv_j\bigr)
+= \lambda_j\bigl(\bv_i^\top\bv_j\bigr)
+= \lambda_j \cdot 0 = 0 .
+$$
+
+::why[$(\bA\bv_i)^\top(\bA\bv_j) = \bv_i^\top\bA^\top\bA\bv_j$; dann die Eigenwertgleichung für $\bv_j$ und zuletzt die Orthogonalität $\bv_i^\top\bv_j = 0$]
+:::
+
+:::schritt
+Für $i = j$ liefert dieselbe Rechnung die Länge:
+
+$$
+\left\|\bA\bv_i\right\|^2 = \bv_i^\top\bigl(\bA^\top\bA\bigr)\bv_i
+= \lambda_i \left\|\bv_i\right\|^2 = \lambda_i = \corange{\sigma_i^2} .
+$$
+
+::why[($6.2.1$) mit $\bx = \bv_i$, danach Eigenwertgleichung und $\left\|\bv_i\right\| = 1$]
+:::
+
+:::schritt
+Halten wir den Unterschied fest: Die $\cblue{\bv_i}$ sind orthoNORMAL, ihre
+Bilder $\bA\cblue{\bv_i}$ dagegen nur orthogonal, mit Längen
+$\corange{\sigma_i}$. Erst die Normierung ($6.2.2$) macht daraus orthonormale
+Vektoren,
+
+$$
+\cgreen{\bu_i^\top\bu_j}
+= \frac{\bigl(\bA\bv_i\bigr)^\top\bigl(\bA\bv_j\bigr)}{\corange{\sigma_i\sigma_j}} = 0
+\quad (i \neq j) ,
+\qquad
+\left\|\cgreen{\bu_i}\right\| = \frac{\left\|\bA\bv_i\right\|}{\corange{\sigma_i}} = 1 .
+$$
+
+::why[dividieren dürfen wir nur bei $\sigma_i, \sigma_j > 0$, also für Indizes $i, j \leq r$; die übrigen $\bu_i$ liefert Definition 6.2.7 gar nicht erst]
+:::
+
+::::
+
+:::beispiel[6.2.9 (Singulärvektoren der Beispielmatrix)]
+Wir bleiben bei $\bA$ aus Beispiel 6.2.3 mit
+$\bA^\top\bA = \bigl(\begin{smallmatrix} 6 & 4 \\ 4 & 5 \end{smallmatrix}\bigr)$.
+
+**Rechte Singulärvektoren.** Für $\lambda_1 \approx 9{,}531$ suchen wir
+$\cblue{\bv_1}$ mit
+
+$$
+\begin{pmatrix} 6 & 4 \\ 4 & 5 \end{pmatrix}
+\begin{pmatrix} v_{11} \\ v_{21} \end{pmatrix}
+= 9{,}531 \begin{pmatrix} v_{11} \\ v_{21} \end{pmatrix} .
+$$
+
+Die erste Zeile heißt $(6 - 9{,}531)\,v_{11} + 4\,v_{21} = 0$, also
+$v_{21} \approx 0{,}883\,v_{11}$. Normieren wir (das Vorzeichen dürfen wir dabei
+frei wählen, siehe Bemerkung 6.2.10), so ergibt sich zusammen mit dem dazu
+orthogonalen zweiten Eigenvektor
+
+$$
+\cblue{\bv_1} \approx \begin{pmatrix} -0{,}750 \\ -0{,}662 \end{pmatrix} ,
+\qquad
+\cblue{\bv_2} \approx \begin{pmatrix} 0{,}662 \\ -0{,}750 \end{pmatrix} .
+$$
+
+**Linke Singulärvektoren.** Jetzt liefert ($6.2.2$) die Bildrichtungen:
+
+$$
+\cgreen{\bu_1} = \frac{\bA\,\cblue{\bv_1}}{\corange{\sigma_1}}
+\approx \frac{1}{\corange{3{,}087}}
+\begin{pmatrix} 1 & 2 \\ 2 & 1 \\ 1 & 0 \end{pmatrix}
+\begin{pmatrix} -0{,}750 \\ -0{,}662 \end{pmatrix}
+= \frac{1}{\corange{3{,}087}} \begin{pmatrix} -2{,}074 \\ -2{,}162 \\ -0{,}750 \end{pmatrix}
+\approx \begin{pmatrix} -0{,}672 \\ -0{,}700 \\ -0{,}243 \end{pmatrix} ,
+$$
+
+$$
+\cgreen{\bu_2} = \frac{\bA\,\cblue{\bv_2}}{\corange{\sigma_2}}
+\approx \frac{1}{\corange{1{,}212}} \begin{pmatrix} -0{,}838 \\ 0{,}574 \\ 0{,}662 \end{pmatrix}
+\approx \begin{pmatrix} -0{,}691 \\ 0{,}474 \\ 0{,}546 \end{pmatrix} .
+$$
+
+**Probe auf Orthonormalität.** Satz 6.2.8 behauptet, dass diese beiden Vektoren
+orthonormal sind, und die Zahlen bestätigen es:
+
+$$
+\begin{aligned}
+\cgreen{\bu_1^\top\bu_2}
+&\approx (-0{,}672)(-0{,}691) + (-0{,}700)(0{,}474) + (-0{,}243)(0{,}546) \\
+&= 0{,}4644 - 0{,}3318 - 0{,}1327 \approx 0 , \\[2pt]
+\left\|\cgreen{\bu_1}\right\|
+&\approx \sqrt{0{,}672^2 + 0{,}700^2 + 0{,}243^2}
+= \sqrt{0{,}4516 + 0{,}4900 + 0{,}0590} \approx 1 .
+\end{aligned}
+$$
+:::
+
+:::bemerkung[6.2.10 (Singulärvektoren sind nur bis aufs Vorzeichen bestimmt)]
+Mit $\cblue{\bv_i}$ ist auch $-\cblue{\bv_i}$ ein normierter Eigenvektor zum
+selben Eigenwert. Die Singulärwerte ändern sich dadurch nicht, wohl aber die
+Vektoren, und zwar paarweise: Nach ($6.2.2$) dreht sich mit $\cblue{\bv_i}$
+zugleich $\cgreen{\bu_i}$ um. Wer in einem Beispiel das Vorzeichen von
+$\cblue{\bv_2}$ umdreht, muss deshalb auch $\cgreen{\bu_2}$ umdrehen, sonst
+passen linke und rechte Seite von $\bA\cblue{\bv_2} = \corange{\sigma_2}\cgreen{\bu_2}$
+nicht mehr zusammen. Numerische Bibliotheken treffen die Wahl nach eigenen
+Konventionen; zwei Programme dürfen also verschiedene Vorzeichen ausgeben, ohne
+dass eines von beiden falsch rechnet. Bei mehrfachen Singulärwerten ist die
+Freiheit sogar größer: Im zugehörigen Eigenraum lässt sich die Orthonormalbasis
+beliebig drehen.
+:::
+
+:::vertiefung[Die Rechnung Schritt für Schritt]
+Das Widget rechnet den Weg von Beispiel 6.2.3 bis 6.2.9 nach: erst
+$\bA^\top\bA$, dann das charakteristische Polynom, die Eigenwerte, die
+Singulärwerte und schließlich beide Sorten von Singulärvektoren. Voreingestellt
+ist unsere Beispielmatrix samt der Vorzeichenwahl von oben; die beiden
+Vorzeichen-Knöpfe in Schritt 5 führen Bemerkung 6.2.10 direkt vor.
+
+<SingulaerwertRechner />
+:::
+
+### Fundamentale Unterräume
+
+Bisher waren die Singulärvektoren Rechengrößen. Sie leisten aber mehr: Sie
+beschreiben auf einen Schlag alle Unterräume, die zu einer Matrix gehören.
+
+:::satz[6.2.11 (Charakterisierung der fundamentalen Unterräume)]
+Sei $\bA \in \R^{m \times n}$ mit genau $r$ von null verschiedenen
+Singulärwerten, also $\sigma_1 \geq \cdots \geq \sigma_r > 0$ und
+$\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
+
+1. $\{\cblue{\bv_1}, \dots, \cblue{\bv_r}\}$ ist eine Orthonormalbasis des
+   Zeilenraums $\col(\bA^\top)$.
+2. $\{\bA\cblue{\bv_1}, \dots, \bA\cblue{\bv_r}\}$ ist eine Orthogonalbasis des
+   Spaltenraums $\col(\bA)$, also des :k[Bildes]{#image} von $\bA$; normiert
+   man sie, erhält man die Orthonormalbasis
+   $\{\cgreen{\bu_1}, \dots, \cgreen{\bu_r}\}$.
+3. $\{\cblue{\bv_{r+1}}, \dots, \cblue{\bv_n}\}$ ist eine Orthonormalbasis des
+   :k[Kerns]{#kernel} $\operatorname{Kern}(\bA)$.
+4. $\rang(\bA) = r$: Der :k[Rang]{#rank} von $\bA$ ist die Anzahl der von null
+   verschiedenen Singulärwerte.
+:::
+
+Achten wir auf die Feinheit in (2): Die $\cblue{\bv_i}$ sind orthonormal, ihre
+Bilder $\bA\cblue{\bv_i}$ sind nur orthogonal und haben die Längen
+$\corange{\sigma_i}$. Erst nach der Normierung stimmt beides.
+
+::::beweis
+
+:::schritt
+Für $i > r$ ist $\corange{\sigma_i} = 0$, nach Satz 6.2.8 also
+$\left\|\bA\cblue{\bv_i}\right\| = 0$ und damit $\bA\cblue{\bv_i} = \bnull$. Die
+letzten $n - r$ rechten Singulärvektoren liegen im Kern von $\bA$.
+
+::why[nur der Nullvektor hat die Länge null]
+:::
+
+:::schritt
+Umgekehrt liegt jedes $\bx$ mit $\bA\bx = \bnull$ in deren
+:k[linearer Hülle]{#span}. Wir
+entwickeln $\bx = \sum_{i=1}^n c_i \cblue{\bv_i}$ und erhalten
+
+$$
+\bnull = \bA\bx = \sum_{i=1}^{r} c_i\,\corange{\sigma_i}\,\cgreen{\bu_i} ,
+$$
+
+woraus $c_1 = \cdots = c_r = 0$ folgt. Zusammen mit dem ersten Schritt ist
+$\operatorname{Kern}(\bA) = \spann\{\cblue{\bv_{r+1}}, \dots, \cblue{\bv_n}\}$,
+und diese Vektoren sind als Teil einer Orthonormalbasis orthonormal.
+
+::why[die Summanden mit $i > r$ fallen weg; die $\cgreen{\bu_i}$ sind orthonormal, also linear unabhängig, und wegen $\corange{\sigma_i} > 0$ müssen alle Koeffizienten verschwinden]
+:::
+
+:::schritt
+Die Spalten von $\bA$ sind Linearkombinationen der $\bA\cblue{\bv_i}$ mit
+$i \leq r$: Für jeden Einheitsvektor $\be_j$ ist
+$\be_j = \sum_{i=1}^n (\cblue{\bv_i^\top}\be_j)\,\cblue{\bv_i}$, und Anwenden von
+$\bA$ liefert
+$\bA\be_j = \sum_{i \leq r} (\cblue{\bv_i^\top}\be_j)\,\bA\cblue{\bv_i}$. Die
+$r$ Vektoren $\bA\cblue{\bv_i}$ sind nach Satz 6.2.8 orthogonal und von null
+verschieden, also linear unabhängig. Sie bilden damit eine Orthogonalbasis von
+$\col(\bA)$, und es folgt $\rang(\bA) = \dim \col(\bA) = r$.
+
+::why[$\bA\be_j$ ist die $j$-te Spalte von $\bA$; die Summanden mit $i > r$ fallen nach Schritt 1 weg]
+:::
+
+:::schritt
+Für den Zeilenraum multiplizieren wir ($6.2.2$) von links mit $\bA^\top$: Für
+$i \leq r$ ist
+
+$$
+\bA^\top\cgreen{\bu_i} = \frac{\bA^\top\bA\,\cblue{\bv_i}}{\corange{\sigma_i}}
+= \frac{\corange{\sigma_i^2}\,\cblue{\bv_i}}{\corange{\sigma_i}}
+= \corange{\sigma_i}\,\cblue{\bv_i} .
+$$
+
+Jedes $\cblue{\bv_i}$ mit $i \leq r$ ist also eine Linearkombination von Spalten
+von $\bA^\top$, liegt somit in $\col(\bA^\top)$. Da
+$\dim\col(\bA^\top) = \rang(\bA^\top) = \rang(\bA) = r$ ist und die
+$\cblue{\bv_1}, \dots, \cblue{\bv_r}$ orthonormal sind, spannen sie
+$\col(\bA^\top)$ vollständig auf.
+
+::why[$r$ linear unabhängige Vektoren in einem $r$-dimensionalen Raum bilden bereits eine Basis, und orthonormale Vektoren sind linear unabhängig]
+:::
+
+::::
+
+Damit liefert die SVD explizite Orthonormalbasen für alle vier fundamentalen
+Unterräume. Der vierte, der linke Kern $\operatorname{Kern}(\bA^\top)$, fällt
+im nächsten Beispiel nebenbei mit ab.
+
+:::beispiel[6.2.12 (Alle Unterräume einer Rang-1-Matrix)]
+Wir nehmen
+
+$$
+\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1 \\ 0 & 0 \end{pmatrix} ,
+\qquad
+\bA^\top\bA = \begin{pmatrix} 2 & 2 \\ 2 & 2 \end{pmatrix} .
+$$
+
+**Singulärwerte.** Das charakteristische Polynom ist
+$(2-\lambda)^2 - 4 = \lambda^2 - 4\lambda = \lambda(\lambda - 4)$, also
+$\lambda_1 = 4$ und $\lambda_2 = 0$ und damit
+
+$$
+\corange{\sigma_1} = 2 , \qquad \corange{\sigma_2} = 0 , \qquad r = 1 .
+$$
+
+In Richtung $\cblue{\bv_1}$ streckt $\bA$ um den Faktor $2$, in Richtung
+$\cblue{\bv_2}$ um den Faktor $0$.
+
+**Rechte Singulärvektoren und Zeilenraum.** Die Eigenvektoren von
+$\bA^\top\bA$ sind
+
+$$
+\cblue{\bv_1} = \tfrac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix} ,
+\qquad
+\cblue{\bv_2} = \tfrac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -1 \end{pmatrix} ,
+$$
+
+also $\col(\bA^\top) = \spann\{\cblue{\bv_1}\} = \spann\bigl\{(1, 1)^\top\bigr\}$.
+Das passt: Die beiden Zeilen von $\bA$, die nicht null sind, lauten beide
+$(1, 1)$.
+
+**Linker Singulärvektor und Spaltenraum.** Aus ($6.2.2$) folgt
+
+$$
+\cgreen{\bu_1} = \frac{\bA\cblue{\bv_1}}{\corange{\sigma_1}}
+= \frac{1}{2} \cdot \tfrac{1}{\sqrt{2}} \begin{pmatrix} 2 \\ 2 \\ 0 \end{pmatrix}
+= \tfrac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix} ,
+$$
+
+also $\col(\bA) = \spann\{\cgreen{\bu_1}\} = \spann\bigl\{(1, 1, 0)^\top\bigr\}$.
+
+**Kern.** Nach Satz 6.2.11 ist
+$\operatorname{Kern}(\bA) = \spann\{\cblue{\bv_2}\} = \spann\bigl\{(1, -1)^\top\bigr\}$,
+und die Probe bestätigt das:
+$\bA (1, -1)^\top = (0, 0, 0)^\top$.
+
+**Linker Kern.** Für $\cgreen{\bu_2}$ und $\cgreen{\bu_3}$ ist ($6.2.2$) nicht
+zuständig, denn $\corange{\sigma_2} = 0$. Wir ergänzen $\cgreen{\bu_1}$
+stattdessen zu einer Orthonormalbasis des $\R^3$, etwa durch
+
+$$
+\cgreen{\bu_2} = \tfrac{1}{\sqrt{2}}\begin{pmatrix} -1 \\ 1 \\ 0 \end{pmatrix} ,
+\qquad
+\cgreen{\bu_3} = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix} .
+$$
+
+Diese beiden spannen den linken Kern auf,
+$\operatorname{Kern}(\bA^\top) = \spann\{\cgreen{\bu_2}, \cgreen{\bu_3}\}$, denn
+
+$$
+\bA^\top \begin{pmatrix} -1 & 0 \\ 1 & 0 \\ 0 & 1 \end{pmatrix}
+= \begin{pmatrix} 0 & 0 \\ 0 & 0 \end{pmatrix} .
+$$
+:::
+
+### Der SVD-Hauptsatz
+
+Alle Bausteine liegen bereit. Sammeln wir die rechten Singulärvektoren als
+Spalten in einer Matrix, ebenso die linken, und schreiben wir die Singulärwerte
+auf eine Diagonale, dann steht die Zerlegung da.
+
+:::satz[6.2.13 (Singulärwertzerlegung)]
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$. Dann existiert eine
+Zerlegung
+
+$$ {#eq-6.2.3}
+\bA = \cgreen{\bU}\,\corange{\bSigma}\,\cblue{\bV^\top}
+$$
+
+mit
+
+- $\cblue{\bV} \in \R^{n \times n}$ orthogonal, in den Spalten die rechten
+  Singulärvektoren $\cblue{\bv_1}, \dots, \cblue{\bv_n}$;
+- $\cgreen{\bU} \in \R^{m \times m}$ orthogonal, in den ersten $r$ Spalten die
+  linken Singulärvektoren $\cgreen{\bu_1}, \dots, \cgreen{\bu_r}$, ergänzt zu
+  einer Orthonormalbasis des $\R^m$;
+- $\corange{\bSigma} \in \R^{m \times n}$ „diagonal" mit den Singulärwerten auf
+  der Hauptdiagonalen,
+
+  $$ {#eq-6.2.4}
+  \corange{\bSigma} = \begin{pmatrix}
+  \diag(\sigma_1, \dots, \sigma_r) & \bnull_{r \times (n-r)} \\
+  \bnull_{(m-r) \times r} & \bnull_{(m-r) \times (n-r)}
+  \end{pmatrix} .
+  $$
+:::
+
+Die Anführungszeichen um „diagonal" sind nötig, weil $\corange{\bSigma}$ dieselbe
+Form wie $\bA$ hat und für $m \neq n$ gar nicht quadratisch ist. Der folgende
+Beweis ist eine Skizze: Er sammelt die Konstruktion, die wir in diesem
+Abschnitt ohnehin schon durchgeführt haben, und stützt sich dabei auf den
+Spektralsatz, den wir nicht bewiesen haben.
+
+::::beweis{ohne-qed}
+
+:::schritt
+**Rechte Singulärvektoren.** Nach Korollar 6.2.2 besitzt $\bA^\top\bA$ eine
+Orthonormalbasis aus Eigenvektoren. Wir sortieren sie nach absteigenden
+Eigenwerten und stellen sie spaltenweise zusammen:
+$\cblue{\bV} = (\cblue{\bv_1} \mid \cblue{\bv_2} \mid \cdots \mid \cblue{\bv_n})$.
+
+::why[$\cblue{\bV}$ ist orthogonal, weil seine Spalten orthonormal sind]
+:::
+
+:::schritt
+**Linke Singulärvektoren.** Für $i \leq r$ setzen wir
+$\cgreen{\bu_i} = \bA\cblue{\bv_i}/\corange{\sigma_i}$ nach ($6.2.2$) und
+sammeln sie in $\cgreen{\bU_r} = (\cgreen{\bu_1} \mid \cdots \mid \cgreen{\bu_r})$.
+
+::why[nach Satz 6.2.8 sind diese $r$ Vektoren orthonormal]
+:::
+
+:::schritt
+**Vervollständigung.** Wir ergänzen $\cgreen{\bU_r}$ zu einer Orthonormalbasis
+des $\R^m$, etwa mit dem
+:k[Gram-Schmidt-Verfahren]{#gram-schmidt}. Das ergibt die Orthogonalmatrix
+$\cgreen{\bU} \in \R^{m \times m}$.
+
+::why[die ergänzten Spalten spannen gerade $\operatorname{Kern}(\bA^\top)$ auf, wie in Beispiel 6.2.12]
+:::
+
+:::schritt
+**Verifikation.** Für $i \leq r$ ist
+$\cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}\cblue{\bv_i}
+= \cgreen{\bU}\corange{\bSigma}\be_i
+= \corange{\sigma_i}\,\cgreen{\bU}\be_i
+= \corange{\sigma_i}\,\cgreen{\bu_i} = \bA\cblue{\bv_i}$,
+und für $i > r$ steht auf beiden Seiten der Nullvektor. Beide Abbildungen
+stimmen also auf einer Basis des $\R^n$ überein und sind damit gleich.
+
+::why[$\cblue{\bV^\top}\cblue{\bv_i} = \be_i$, weil $\cblue{\bV}$ orthogonal ist; $\corange{\bSigma}\be_i = \corange{\sigma_i}\be_i$ nach ($6.2.4$), und für $i > r$ ist $\corange{\bSigma}\be_i = \bnull$]
+:::
+
+::::
+
+:::beispiel[6.2.14 (Die Gestalt von Σ)]
+Die Blockform ($6.2.4$) wirkt sperriger, als sie ist. Drei Fälle:
+
+Für ein quadratisches $\bA$ mit $m = n = 3$ und $r = 2$ ist
+
+$$
+\corange{\bSigma} = \begin{pmatrix} \sigma_1 & 0 & 0 \\ 0 & \sigma_2 & 0 \\ 0 & 0 & 0 \end{pmatrix} .
+$$
+
+Für ein rechteckiges $\bA$ mit $m = 2$, $n = 3$ und $r = 2$ ist
+
+$$
+\corange{\bSigma} = \begin{pmatrix} \sigma_1 & 0 & 0 \\ 0 & \sigma_2 & 0 \end{pmatrix} .
+$$
+
+Und für unsere Beispielmatrix aus 6.2.3 mit $m = 3$, $n = 2$, $r = 2$ ist
+
+$$
+\corange{\bSigma} \approx \begin{pmatrix} 3{,}087 & 0 \\ 0 & 1{,}212 \\ 0 & 0 \end{pmatrix} .
+$$
+
+Hier hat $\cgreen{\bU}$ drei Spalten, wir kennen aber erst zwei. Die dritte
+ergänzt Schritt 3 des Beweises; sie spannt den linken Kern auf und ist bis aufs
+Vorzeichen
+
+$$
+\cgreen{\bu_3} = \tfrac{1}{\sqrt{14}} \begin{pmatrix} 1 \\ -2 \\ 3 \end{pmatrix}
+\approx \begin{pmatrix} 0{,}267 \\ -0{,}535 \\ 0{,}802 \end{pmatrix} ,
+\qquad\text{denn}\qquad
+\bA^\top \begin{pmatrix} 1 \\ -2 \\ 3 \end{pmatrix} = \begin{pmatrix} 0 \\ 0 \end{pmatrix} .
+$$
+:::
+
+### Geometrische Interpretation
+
+:::bemerkung[6.2.15 (Merkregel: Drehen, Strecken, Drehen)]
+Lesen wir ($6.2.3$) als Abbildungsvorschrift
+$\bx \mapsto \bA\bx = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}\bx$, dann
+geschieht die Abbildung in drei Etappen:
+
+1. $\cblue{\bV^\top}$: Koordinatenwechsel im $\R^n$, eine Drehung oder
+   Spiegelung auf die „optimalen" Richtungen
+   $\cblue{\bv_1}, \dots, \cblue{\bv_n}$.
+2. $\corange{\bSigma}$: Strecken entlang dieser Achsen um die Faktoren
+   $\corange{\sigma_i}$, Nullsetzen der Richtungen mit $i > r$ und Übergang von
+   $\R^n$ nach $\R^m$.
+3. $\cgreen{\bU}$: Koordinatenwechsel im $\R^m$, wieder eine Drehung oder
+   Spiegelung, diesmal in die Endlage.
+
+Die SVD zerlegt also *jede* lineare Abbildung von $\R^n$ nach $\R^m$ in Drehen,
+Strecken, Drehen. Aus der Einheitssphäre des $\R^n$ wird dabei ein Ellipsoid mit
+den Hauptachsenrichtungen $\cgreen{\bu_i}$ und den Halbachsenlängen
+$\corange{\sigma_i}$. Drückt $\bA$ ganze Richtungen auf null, gilt also
+$r < n$, dann liegt der Nullpunkt mit im Bild, und aus dem Ellipsoid wird ein
+ausgefülltes Ellipsoid im $r$-dimensionalen Spaltenraum
+([Abschnitt 6.1](#sec-6.1)).
+:::
+
+:::vertiefung[Drehen, Strecken, Drehen an einer editierbaren Matrix]
+Vier Tafeln zeigen denselben Kreis an vier Stationen: zuerst der Einheitskreis
+mit den rechten Singulärvektoren, dann nacheinander die Wirkung von
+$\cblue{\bV^\top}$, $\corange{\bSigma}$ und $\cgreen{\bU}$. Voreingestellt ist
+$\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 1 \end{smallmatrix}\bigr)$, die
+Matrix, an der Kapitel 3 die Spektralnorm vorgeführt hat
+([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)); ihre Singulärwerte
+$\corange{2{,}288}$ und $\corange{0{,}874}$ stehen dort schon. Zwei weitere
+Eingaben lohnen sich: zwei gleiche Spalten, deren Ellipse zu einer Strecke
+zusammenfällt, und eine Drehmatrix wie
+$\bigl(\begin{smallmatrix} 0 & -1 \\ 1 & 0 \end{smallmatrix}\bigr)$, bei der
+beide Singulärwerte $1$ sind und die mittlere Etappe nichts zu tun hat.
+
+<SvdGeometrieExplorer />
+:::
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Für jede Matrix $\bA \in \R^{m \times n}$ sind alle Eigenwerte von
+$\bA^\top\bA$ nichtnegativ.
+
+Das ist Satz 6.2.1(2). Der Grund steckt in ($6.2.1$): Für einen normierten
+Eigenvektor $\bv_i$ ist $\lambda_i = \left\|\bA\bv_i\right\|^2$, also das
+Quadrat einer Länge.
+:::
+
+:::frage{falsch}
+Wenn ein Singulärwert von $\bA$ null ist, muss $\bA$ die Nullmatrix sein.
+
+Ein einziger verschwindender Singulärwert bedeutet nur, dass $\bA$ eine
+Richtung plattdrückt. Beispiel 6.2.12 zeigt eine Matrix mit
+$\sigma_1 = 2$ und $\sigma_2 = 0$, die alles andere als null ist; nach
+Satz 6.2.11 hat sie den Rang $1$ und einen eindimensionalen Kern.
+:::
+
+:::frage{wahr}
+Die rechten Singulärvektoren $\bv_i$ sind orthonormal, die Bildvektoren
+$\bA\bv_i$ dagegen im Allgemeinen nur orthogonal.
+
+Genau das sagt Satz 6.2.8: Die Bilder stehen paarweise senkrecht aufeinander,
+haben aber die Längen $\sigma_i$. Erst die Division durch $\sigma_i$ macht
+daraus die orthonormalen linken Singulärvektoren.
+:::
+
+:::frage{falsch}
+In der Zerlegung $\bA = \bU\bSigma\bV^\top$ ist $\bSigma$ immer eine
+quadratische Diagonalmatrix.
+
+$\bSigma$ hat dasselbe Format wie $\bA$, ist also für $m \neq n$ rechteckig.
+Quadratisch sind nur die beiden Orthogonalmatrizen: $\bU$ ist
+$m \times m$, $\bV$ ist $n \times n$.
+:::
+
+:::frage{falsch}
+Die Singulärwerte und die Singulärvektoren einer Matrix sind eindeutig
+bestimmt.
+
+Die Singulärwerte schon, die Vektoren nicht: Mit $\bv_i$ leistet auch
+$-\bv_i$ dasselbe, und dann dreht sich nach ($6.2.2$) auch $\bu_i$ um
+(Bemerkung 6.2.10). Bei mehrfachen Singulärwerten kommt sogar noch die freie
+Wahl einer Orthonormalbasis im zugehörigen Eigenraum hinzu.
+:::
+
+::::
+
+*Vertiefung: Heath §3.6 (Singulärwertzerlegung); vgl. MML §4.5 für die
+geometrische Deutung der SVD und §4.6 für die daran anschließende
+Rang-k-Approximation.*
