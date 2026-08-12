@@ -248,6 +248,33 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   matrix-norm, quadratic-form, outer-product, … (`ls src/concepts/`).
 - Kapitel 6.5 (Zusammenfassung) schlank halten.
 
+## KAPITEL 8 (Foliensatz 08-la-misc) — Bauauftrag 2026-08-12
+
+- `src/chapters/08-la-misc/`, S81–S85 als `.mdx`; Anker `#sec-8.1` …
+  `#sec-8.5`, Labels „8.k.n"; Regeln wie Kapitel 5/6 (sinngemäß). Der
+  Folien-`##`-Block „Eigenwertprobleme" ist zu groß für einen Abschnitt
+  und wird geteilt: 8.1 Verfahren (Potenzmethode, Ähnlichkeit,
+  QR-Iteration), 8.2 Anwendungen (PageRank, PCA, approximative SVD).
+- Quelle: `/workspace/fmm-lmu/slides/08-la-misc.Rmd` (Zeilenbereiche im
+  Workflow-Prompt; Quiz-Lösungen in HTML-Kommentaren).
+- Farbcode Kapitel 8: aktuelle Iterierte/Schritt blau (`\cblue`),
+  Grenzwert/Eigenvektor grün (`\cgreen`), Konvergenzrate ρ bzw. λ₂/λ₁
+  orange (`\corange`), Residuum/Fehler rot (`\cred`).
+- R-Chunks dieses Foliensatzes berechnen ihre Outputs erst beim Knitten
+  (microbenchmark, Sketching-Beispiel): R-Code als ```r-Fence zeigen,
+  Ergebnisse NIE erfinden — qualitativ beschreiben oder das eigene
+  Widget zeigen lassen; Zufalls-Widgets nutzen FESTE eingebettete
+  Punkte/Seeds (kein Math.random im Render, Lesson CholeskySampler).
+- Widget-Recycling: mml-ch4 `widgets/PageRankWidget.tsx` (portieren),
+  ggf. EigenExplorer/EigenspectrumFig; alles andere neu (Potenzmethoden-
+  und QR-Iterations-Stepper ersetzen die Folien-PDFs, Richardson-Stepper,
+  Sketching-Demo). NUR CODE, Captions deutsch NEU.
+- Querbezüge: QR-Zerlegung → `?k=07-kq` (Registry ansehen), SVD/PCA/
+  Rang-k → `?k=06-svd` (#sec-6.2/6.4), LGS/Zerlegungen → `?k=05-lgs`,
+  Spektralnorm/κ → `?k=03-matrix-spur-norm`, Komplexität → `?k=02-algos`,
+  Stabilität/Kondition → `?k=04-fehler`.
+- Kapitel 8.5 (Zusammenfassung) schlank; Ausblick Tensoren ohne Link.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben

@@ -70,6 +70,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./07-kq"),
   },
   {
+    id: "08-la-misc",
+    title: "Kap. 8 · Numerische LA: Iteration & Zufall",
+    deck: "08-la-misc",
+    load: () => import("./08-la-misc"),
+  },
+  {
     id: "mdx-lab",
     title: "MDX-Syntaxlabor",
     deck: "02-algos",
