@@ -275,6 +275,26 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Stabilität/Kondition → `?k=04-fehler`.
 - Kapitel 8.5 (Zusammenfassung) schlank; Ausblick Tensoren ohne Link.
 
+## KAPITEL 9 (Foliensatz 09-tensoren) — Bauauftrag 2026-08-12
+
+- `src/chapters/09-tensoren/`, S91–S95 als `.mdx`; Anker `#sec-9.1` …
+  `#sec-9.5`, Labels „9.k.n"; Regeln wie Kapitel 5/6/8 (sinngemäß).
+- Quelle: `/workspace/fmm-lmu/slides/09-tensoren.Rmd` (Zeilenbereiche im
+  Workflow-Prompt; Quiz-/Übungslösungen in HTML-Kommentaren).
+- Farbcode Kapitel 9: erster Faktor (v/A) blau (`\cblue`), zweiter
+  Faktor (w/B) grün (`\cgreen`), Produkt-Einträge orange (`\corange`),
+  Hervorhebungen/Warnungen rot (`\cred`) — in Text UND Widget-SVGs.
+- BILDER: Die Folien nutzen MML-Abbildungen (Fig 5.13, tensor-2/3,
+  tensorproduct-2/3) und Fremdbilder (bird.jpg, VGG16-Feature-Maps von
+  machinelearningmastery.com) — NICHTS davon übernehmen (öffentliches
+  Repo!); eigene SVG-Grafiken/Widgets bauen, Quellen nur als Prosa-Zitat.
+- Widgets komplett neu (kein passendes Recycling); Ideen im
+  Workflow-Prompt (Kronecker-Rechner, Tensorbasis-Explorer, Slice-Viewer).
+- Querbezüge: äußeres Produkt/Rang-1/SVD → `?k=06-svd#sec-6.4`,
+  Kovarianzmatrizen → Tooltip covariance-matrix, Eigenwerte →
+  `?k=08-la-misc`, Funktionsapproximation als Ausblick OHNE Link.
+- Kapitel 9.5 (Zusammenfassung) schlank.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben

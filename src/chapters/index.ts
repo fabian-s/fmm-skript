@@ -76,6 +76,12 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./08-la-misc"),
   },
   {
+    id: "09-tensoren",
+    title: "Kap. 9 · Tensoren & Tensorprodukte",
+    deck: "09-tensoren",
+    load: () => import("./09-tensoren"),
+  },
+  {
     id: "mdx-lab",
     title: "MDX-Syntaxlabor",
     deck: "02-algos",
