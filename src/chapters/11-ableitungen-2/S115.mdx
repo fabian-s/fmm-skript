@@ -56,16 +56,18 @@ Approximation ($11.1.1$). Sammeln wir ein, was bleiben soll.
    $k$-ten Ableitung an (Definition 11.4.1), und für den Fehler gibt es zwei
    Fassungen: das Lagrange-Restglied ($11.4.3$) mit einer Zwischenstelle, das
    $(k+1)$-mal stetige Differenzierbarkeit verlangt, und die Ordnungsaussage
-   $\cred{o(\left|h\right|^k)}$ (Satz 11.4.2). Dieselbe Aussage gilt in
-   normierten Räumen für $k$-mal *stetig* differenzierbares $f$, wenn wir den
+   $\cred{o(\left|h\right|^k)}$ (Satz 11.4.2). Dieselbe Aussage gilt für
+   Abbildungen aus einem normierten Vektorraum in einen Banachraum und $k$-mal
+   *stetig* differenzierbares $f$, wenn wir den
    ganzen Summanden $\cgreen{f^{(j)}(x)}\,h^j$ durch
-   $\cgreen{D^j_{\bx} f(\bh, \dots, \bh)}$ ersetzen (Satz 11.4.7;
-   die Stetigkeit trägt dabei die Gleichmäßigkeit über alle Richtungen,
-   Bemerkung 11.4.8). Für
+   $\cgreen{D^j_{\bx} f(\bh, \dots, \bh)}$ ersetzen (Satz 11.4.7). Die
+   Integralform des Restglieds und die Operatornorm tragen dabei die
+   Gleichmäßigkeit über alle Richtungen (Bemerkung 11.4.8). Für
    $f\colon \R^n \to \R$ stehen in den ersten beiden Ordnungen Gradient und
    Hesse-Matrix (Korollar 11.4.9), geometrisch Tangentialebene und Quadrik
-   (Bemerkung 11.4.10). Wer die Quadrik minimiert statt der Funktion, hat das
-   Newton-Raphson-Verfahren (Algorithmus 11.4.11).
+   (Bemerkung 11.4.10). Wer den stationären Punkt der Quadrik bestimmt, erhält den
+   Newton-Schritt; ein Minimum ist er bei positiver Hesse-Matrix
+   (Algorithmus 11.4.11, Bemerkung 11.4.12).
 :::
 
 Die meisten Beweise dieses Kapitels folgen demselben Muster. Wir setzen die
@@ -83,8 +85,8 @@ letzten Schritt zu Satz 11.1.5 und in Schritt 4 zu Satz 11.3.6: Zwei lineare
 Abbildungen, die sich nur um $\cred{o(\left\|\bh\right\|)}$ unterscheiden, sind
 gleich. Aus dem Muster fallen der Satz von Schwarz und die eindimensionale
 Taylorentwicklung heraus, denn beide brauchen einen
-:k[Mittelwertsatz]{#mean-value-theorem}; der allgemeine Satz 11.4.7 führt sich
-danach wieder auf die eindimensionale Fassung zurück.
+:k[Mittelwertsatz]{#mean-value-theorem}; der allgemeine Satz 11.4.7 verwendet
+statt einer skalaren Zwischenstelle die Integralform des Restglieds.
 
 ### Heute gelernt
 
@@ -93,7 +95,7 @@ danach wieder auf die eindimensionale Fassung zurück.
 | [11.1](#sec-11.1) | Stetigkeit und Linearität | Differenzierbar zieht stetig nach sich, nicht umgekehrt; die Ableitungsoperation $f \mapsto \cgreen{D_{\bx} f}$ ist linear, in jedem der fünf Formate aus Kapitel 10 |
 | [11.2](#sec-11.2) | Produkt- und Kettenregel | Produktregel für jede beschränkte bilineare Multiplikation $\inner{\cdot, \cdot}$; Kettenregel als Verkettung $\cgreen{D_{\by} g} \circ \cgreen{D_{\bx} f}$, in Koordinaten ein Matrixprodukt |
 | [11.3](#sec-11.3) | Ableitungen höheren Grades | $\cgreen{D^j_{\bx} f}$ als multilineare Abbildung; Hesse-Matrix $\corange{\bH_f(\bx)}$, Satz von Schwarz, Definitheit im kritischen Punkt trennt lokales Minimum, Maximum und Sattel, entscheidet aber nichts, wenn sie semidefinit und nicht definit ist |
-| [11.4](#sec-11.4) | Taylorapproximation | $\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \corange{\nabla f(\bx)}\bh + \tfrac{1}{2}\bh^\top \corange{\bH_f(\bx)}\bh + \cred{r(\bh)}$ mit einem Rest, der schneller verschwindet als die letzte mitgenommene Potenz; Newton als Minimierung der Quadrik |
+| [11.4](#sec-11.4) | Taylorapproximation | $\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \corange{\nabla f(\bx)}\bh + \tfrac{1}{2}\bh^\top \corange{\bH_f(\bx)}\bh + \cred{r(\bh)}$ mit einem Rest, der schneller verschwindet als die letzte mitgenommene Potenz; Newton bestimmt den stationären Punkt der Quadrik |
 
 Zwei Dinge nehmen wir mit. Erstens ein Regelwerk, mit dem sich zusammengesetzte
 Ausdrücke ableiten lassen, ohne jedes Mal zur Definition zurückzukehren.

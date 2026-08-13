@@ -10,14 +10,16 @@ sind. Jetzt geht es um das Rechnen damit: Welche Eigenschaften erbt eine differe
 Funktion, und wie leiten wir zusammengesetzte Ausdrücke ab, ohne jedes Mal zur Definition
 zurückzukehren.
 
-Der Begriff, an dem alles hängt, ist die *Fréchet-Ableitung*. Für normierte Räume $\D$
+Der Begriff, an dem alles hängt, ist die *Fréchet-Ableitung*. Für normierte Vektorräume $\D$
 und $\E$, eine Funktion $f\colon \D \to \E$ und eine Stelle $\bx \in \D$ heißt $f$ dort
 :k[differenzierbar]{#differentiability}, wenn es eine beschränkte lineare Abbildung
-$\cgreen{D_{\bx} f}\colon \D \to \E$ gibt mit
+$\cgreen{D_{\bx} f}\colon \D \to \E$ und einen Rest $\cred{r(\bh)} \in \E$ gibt mit
 
 $$ {#eq-11.1.1}
-\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{D_{\bx} f(\bh)} + \cred{o(\left\|\bh\right\|)}
-\qquad \text{für } \left\|\bh\right\| \to 0 .
+\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{D_{\bx} f(\bh)} + \cred{r(\bh)},
+\qquad
+\frac{\left\|\cred{r(\bh)}\right\|_{\E}}{\left\|\bh\right\|_{\D}} \longrightarrow 0
+\quad \text{für } \bh \to \bnull .
 $$
 
 Das ist Definition 10.1.5 aus [Abschnitt 10.1](?k=10-ableitungen-1#sec-10.1), und die
@@ -85,7 +87,7 @@ zwingt die Funktion nämlich, sich in der Nähe von $\bx$ zahm zu verhalten: Wer
 erster Ordnung linear approximieren lässt, kann an dieser Stelle nicht springen.
 
 :::satz[11.1.2 (Stetigkeit aus Differenzierbarkeit)]
-Seien $\D$ und $\E$ normierte Räume und $f\colon \D \to \E$ in $\bx \in \D$
+Seien $\D$ und $\E$ normierte Vektorräume und $f\colon \D \to \E$ in $\bx \in \D$
 differenzierbar. Dann ist $f$ in $\bx$ :k[stetig]{#continuity}.
 :::
 
@@ -226,7 +228,7 @@ Vielfachen, und das ist der Grund, warum wir Summen von Bausteinen Summand für 
 ableiten dürfen.
 
 :::satz[11.1.5 (Linearität der Ableitungsoperation)]
-Seien $\D$ und $\E$ normierte Räume und $f, g\colon \D \to \E$ in $\bx \in \D$
+Seien $\D$ und $\E$ normierte Vektorräume und $f, g\colon \D \to \E$ in $\bx \in \D$
 differenzierbar. Dann ist für alle $c_1, c_2 \in \R$ auch $c_1 f + c_2 g$ in $\bx$
 differenzierbar, und es gilt
 

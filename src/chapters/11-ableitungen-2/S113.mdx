@@ -26,39 +26,65 @@ und in der Statistik führt sie direkt zur Fisher-Information.
 
 ### Ableitungen höheren Grades
 
-Die Folien definieren höhere Ableitungen in einem Zug für normierte Räume. Die Definition
+Die Folien definieren höhere Ableitungen in einem Zug für normierte Vektorräume. Die Definition
 wirkt beim ersten Lesen sperrig, sagt aber etwas sehr Einfaches, das wir gleich danach
 auspacken.
 
 :::definition[11.3.1 (k-mal (Fréchet-)differenzierbar)]
-Seien $\D$ und $\E$ zwei normierte Räume und $f\colon \D \to \E$. Wir setzen
-$D^0_{\bx} f := f(\bx)$.
+Seien $\D$ und $\E$ normierte Vektorräume, $U \subseteq \D$ offen und
+$f\colon U \to \E$. Mit $\mathcal L^j(\D,\E)$ bezeichnen wir den normierten
+Vektorraum der beschränkten $j$-linearen Abbildungen $\D^j \to \E$; für
+$j=0$ setzen wir $\mathcal L^0(\D,\E):=\E$. Für $j\ge1$ ist seine Operatornorm
 
-Wir nennen $f$ an der Stelle $\bx \in \D$ *$k$-mal (Fréchet-)differenzierbar*, falls für
-$j = 1, \dots, k$ beschränkte, multilineare Abbildungen
-$\cgreen{D^j_{\bx} f}\colon \D^j \to \E$ existieren, sodass für alle
-$(\bh_1, \dots, \bh_{j-1}, \bh)$ gilt:
+$$
+\left\|A\right\|_{\mathrm{op}}
+:= \sup_{\left\|\bh_1\right\|,\dots,\left\|\bh_j\right\|\le 1}
+\left\|A(\bh_1,\dots,\bh_j)\right\| .
+$$
+
+Wir setzen $D^0 f:=f$. Rekursiv heißt $f$ auf $U$ *$k$-mal
+(Fréchet-)differenzierbar*, wenn für jedes $j=1,\dots,k$ die Abbildung
+
+$$
+U \longrightarrow \mathcal L^{j-1}(\D,\E),
+\qquad \by \longmapsto D^{j-1}_{\by}f
+$$
+
+Fréchet-differenzierbar ist. Ihre Ableitung an $\bx$, eine beschränkte lineare
+Abbildung $\D\to\mathcal L^{j-1}(\D,\E)$, identifizieren wir mit der
+beschränkten $j$-linearen Abbildung
+$\cgreen{D^j_{\bx}f}\in\mathcal L^j(\D,\E)$. Äquivalent gilt
 
 $$ {#eq-11.3.1}
-\cgreen{D^{j}_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}
-= \cblue{D^{j-1}_{\bx + \bh} f(\bh_1, \dots, \bh_{j-1})}
-- \cblue{D^{j-1}_{\bx} f(\bh_1, \dots, \bh_{j-1})}
-+ \cred{o(\left\|\bh\right\|)\prod_{i=1}^{j-1}\left\|\bh_i\right\|} .
+\lim_{\substack{\bh\to\bnull\\\bx+\bh\in U}}
+\frac{
+\left\|\cblue{D^{j-1}_{\bx+\bh}f}-\cblue{D^{j-1}_{\bx}f}
+-\cgreen{D^j_{\bx}f(\,\cdot,\dots,\cdot,\bh)}\right\|_{\mathrm{op}}
+}{\left\|\bh\right\|}=0 .
 $$
+
+Von $k$-maliger Differenzierbarkeit *an $\bx$* sprechen wir, wenn diese
+Voraussetzungen in einer offenen Umgebung von $\bx$ erfüllt sind.
 :::
 
 :::bemerkung[11.3.2 (Wie die Definition zu lesen ist)]
 Sechs Beobachtungen, und die sperrige Formel wird handzahm.
 
-*Für $j = 1$ steht dort die alte Definition.* Das leere Produkt ist $1$, und
-$D^0$ ist $f$ selbst, also lautet ($11.3.1$)
+*Für $j = 1$ steht dort die alte Definition.* Dann ist
+$\mathcal L^0(\D,\E)=\E$ und $D^0f=f$, also lautet die Restbedingung
 
 $$
-\cgreen{D_{\bx} f(\bh)} = \cblue{f(\bx + \bh)} - \cblue{f(\bx)} + \cred{o(\left\|\bh\right\|)} ,
+\cblue{f(\bx+\bh)}=\cblue{f(\bx)}+\cgreen{D_{\bx}f(\bh)}+\cred{r(\bh)},
+\qquad
+\frac{\left\|\cred{r(\bh)}\right\|}{\left\|\bh\right\|}\longrightarrow0 ,
 $$
 
-und das ist die Fréchet-Ableitung aus Definition 10.1.5, nur umgestellt. Die höheren
+und das ist die Fréchet-Ableitung aus Definition 10.1.5. Die höheren
 Stufen sind also keine neue Idee, sondern dieselbe Idee, mehrfach angewandt.
+
+*Warum eine Umgebung vorkommt.* Um $D^j_{\bx}f$ zu bilden, müssen die Werte
+$D^{j-1}_{\bx+\bh}f$ für kleine $\bh$ bereits existieren. Ableitungen nur an der
+einzelnen Stelle $\bx$ reichen dafür nicht.
 
 *Was hier wonach abgeleitet wird.* Halten wir $\bh_1, \dots, \bh_{j-1}$ fest. Dann ist
 
@@ -66,19 +92,17 @@ $$
 \bx \longmapsto \cblue{D^{j-1}_{\bx} f(\bh_1, \dots, \bh_{j-1})}
 $$
 
-eine ganz gewöhnliche Abbildung von $\D$ nach $\E$, und ($11.3.1$) sagt: Ihre
+eine Abbildung von $\D$ nach $\E$. Aus ($11.3.1$) folgt insbesondere: Ihre
 Fréchet-Ableitung an der Stelle $\bx$, angewandt auf $\bh$, ist
 $\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. In einem Satz: *Die $j$-te Ableitung
 ist die lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere
 Ableitungen wie gewohnt iterativ aus, Stufe für Stufe.
 
-*Wozu der Faktor $\prod_i \left\|\bh_i\right\|$?* Die linke Seite ist in jedem Argument
-linear. Ersetzen wir $\bh_1$ durch $c\,\bh_1$, so multipliziert sich die linke Seite mit
-$c$, und die beiden $D^{j-1}$-Terme tun dasselbe. Der Fehlerterm muss also dem Betrag nach
-mitwachsen, sonst könnte die Gleichung nicht für alle $\bh_i$ gleichzeitig gelten. Der
-Faktor $\prod_i\left\|\bh_i\right\|$ leistet genau das: Er macht den Fehlerterm in den
-$\bh_i$ homogen vom richtigen Grad, während er in $\bh$ nach wie vor schneller verschwindet
-als $\left\|\bh\right\|$.
+*Warum die Operatornorm entscheidend ist.* Setzen wir feste Richtungen
+$\bh_1,\dots,\bh_{j-1}$ ein, folgt aus ($11.3.1$) eine punktweise Restabschätzung.
+Die Operatornorm verlangt mehr: Der Rest muss gleichmäßig für alle Richtungen mit
+Norm höchstens eins klein werden. Genau diese Gleichmäßigkeit wird später im
+allgemeinen Taylor-Satz gebraucht.
 
 *Multilinear und beschränkt.* Multilinear heißt: linear in jedem Argument, wenn die
 übrigen festgehalten werden. Solche Abbildungen kennen wir aus
@@ -97,9 +121,7 @@ automatisch erfüllt und kostet uns nichts.
 Zeilenvektor mit $n$ Zahlen, $\cgreen{D^2_{\bx} f}$ eine Matrix mit $n^2$ Zahlen,
 $\cgreen{D^3_{\bx} f}$ einen :k[Tensor]{#tensor} dritter Stufe mit $n^3$ Zahlen. Die Stufe
 wächst mit $j$, und ab $j = 3$ verlassen wir die Matrixsprache
-([Abschnitt 9.2](?k=09-tensoren#sec-9.2)).
-
-*Der Preis der Allgemeinheit.* Die Definition sagt nichts darüber, wie wir
+([Abschnitt 9.2](?k=09-tensoren#sec-9.2)). Die Definition sagt noch nichts darüber, wie wir
 $\cgreen{D^j_{\bx} f}$ ausrechnen. Das tun die nächsten Seiten für den wichtigsten Fall,
 $f\colon \R^n \to \R$, und danach für $f\colon \R^n \to \R^m$.
 :::
@@ -527,28 +549,28 @@ Thema für sich und kommt in der Vorlesung später ausführlich vor.
 :::bemerkung[11.3.13 (Praxisrelevanz der Hesse-Matrix)]
 Vier Punkte, die die Folien aufzählen.
 
-*Hohe Dimensionen sind voller Sattelpunkte.* Ein kritischer Punkt ist nur dann ein
+*Warum Sattelpunkte in hoher Dimension plausibel sind.* Ein kritischer Punkt ist nur dann ein
 Extremum, wenn *alle* $n$ Eigenwerte dasselbe Vorzeichen haben. Schon eine grobe Zählung
 macht klar, wie selten das ist: Wären die $n$ Vorzeichen wie Münzwürfe, so hätte ein
 Minimum (alle Vorzeichen positiv) die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum,
 Maximum eingeschlossen, die Wahrscheinlichkeit $2^{1-n}$. Für $n = 100$ sind das
 $7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Die Eigenwerte
-sind nicht unabhängig, die Zählung ist deshalb nur eine Faustregel, aber genauere Modelle
-aus der Zufallsmatrixtheorie liefern dasselbe Bild. Für die Praxis heißt das: Wer in einem
-Netz mit Millionen Parametern hängenbleibt, hängt fast nie in einem schlechten lokalen
-Minimum, sondern an einem Sattel, und aus einem Sattel kommt der
-:k[stochastische Gradientenabstieg]{#gradient-descent} durch das Rauschen seiner Schritte
-wieder heraus. Die Folien hängen daran augenzwinkernd die Bemerkung, dass die Singularität
-also bevorstehe, vielleicht.
+sind nicht unabhängig, die Zählung ist deshalb nur eine Faustregel. Sie motiviert aber,
+warum indefinite kritische Punkte in hochdimensionalen Verlustlandschaften eine wichtige
+Rolle spielen können. Auch das Rauschen des
+:k[stochastischen Gradientenabstiegs]{#gradient-descent} *kann* helfen, instabile
+Sattelregionen zu verlassen; eine Garantie gegen schlechte lokale Minima oder jeden
+Sattelpunkt folgt aus der Münzwurfrechnung nicht. Die Folien hängen daran augenzwinkernd
+die Bemerkung, dass die Singularität also bevorstehe, vielleicht.
 
 *Statistik.* Der wichtigste Spezialfall einer Funktion $\R^p \to \R$ ist die
 :k[Log-Likelihood]{#likelihood} $\ell(\btheta)$. Die Hesse-Matrix der negativen
 Log-Likelihood heißt *beobachtete Fisher-Information* und bestimmt, wie genau ein Schätzer
 den Parameter trifft. Der nächste Unterabschnitt führt das aus.
 
-*Maschinelles Lernen.* Die Hesse-Matrix der Verlustfunktion bestimmt die
-:k[Kondition]{#condition-number} des Optimierungsproblems. Für den Gradientenabstieg aus
-[Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) hängt die Konvergenzrate am Verhältnis
+*Maschinelles Lernen.* Im streng konvexen quadratischen Modell bestimmt die Hesse-Matrix
+die :k[Kondition]{#condition-number} exakt. Für den Gradientenabstieg aus
+[Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) hängt die Konvergenzrate dann am Verhältnis
 $\kappa = \corange{\lambda_{\max}}/\corange{\lambda_{\min}}$ der extremen Eigenwerte: Bei
 optimal gewählter Lernrate schrumpft der Abstand zum Minimum je Schritt auf das
 $(\kappa - 1)/(\kappa + 1)$-fache. Dort wird
@@ -558,6 +580,9 @@ $\corange{\bH_L(\btheta)} = \bA$ an jeder Stelle gilt, sind die Eigenwerte von $
 die gesuchten Krümmungen: $\corange{\lambda_{\max}} = 3{,}618$,
 $\corange{\lambda_{\min}} = 1{,}382$ und $\kappa = 2{,}618$, der Faktor also $0{,}447$.
 Bei $\kappa = 1000$ stünde dort $0{,}998$, und das Verfahren käme kaum voran.
+Für eine allgemeine Verlustfunktion ist die Hesse-Matrix ortsabhängig. Dieselbe Aussage
+gilt dort nur lokal beziehungsweise unter zusätzlichen Annahmen wie einer gleichmäßigen
+Schranke $\mu\bI\preceq\bH_L(\btheta)\preceq L\bI$.
 
 *Optimierung.* Verfahren, die $\corange{\bH_f}$ nicht nur analysieren, sondern benutzen,
 konvergieren erheblich schneller. Das Newton-Verfahren in
@@ -568,7 +593,9 @@ konvergieren erheblich schneller. Das Newton-Verfahren in
 
 :::definition[11.3.14 (Fisher-Informationsmatrix)]
 Für ein statistisches Modell mit Log-Likelihood $\ell(\btheta)$ und Parameter
-$\btheta \in \R^p$ ist die *Fisher-Informationsmatrix* definiert als
+$\btheta \in \R^p$ ist unter den üblichen Regularitätsbedingungen, die insbesondere
+das Differenzieren unter dem Erwartungswert erlauben, die *Fisher-Informationsmatrix*
+definiert als
 
 $$
 \corange{\bI(\btheta)} := \E\left[-\corange{\bH_\ell(\btheta)}\right]
@@ -579,9 +606,11 @@ $$
 
 Das $\E$ ist hier wieder der :k[Erwartungswert]{#expected-value} und nicht der Zielraum aus
 Definition 11.3.1; erwartet wird über die Daten, bei festem wahrem $\btheta$. Lassen wir
-den Erwartungswert weg und setzen den Schätzer ein, so erhalten wir die *beobachtete*
-Fisher-Information $-\corange{\bH_\ell(\wh{\btheta})}$, die in der Praxis aus den Daten
-ausgerechnet wird.
+den Erwartungswert weg, so erhalten wir die *beobachtete* Fisher-Information
+$-\corange{\bH_\ell(\btheta)}$ am jeweiligen Parameterwert; häufig wird sie am
+ML-Schätzer $\wh{\btheta}$ ausgewertet. Unter denselben Regularitätsbedingungen ist
+die erwartete Score-Funktion null und es gilt außerdem
+$\bI(\btheta)=\E[\nabla\ell(\btheta)^\top\nabla\ell(\btheta)]$.
 
 Die Intuition steckt schon in der Krümmung. Eine stark gekrümmte Log-Likelihood fällt
 neben ihrem Maximum steil ab: Benachbarte Parameterwerte erklären die Daten deutlich
@@ -591,7 +620,7 @@ schwer zu schätzen. Beides misst dieselbe zweite Ableitung.
 
 :::beispiel[11.3.15 (Fisher-Information im Bernoulli-Modell)]
 Seien $y_1, \dots, y_n$ unabhängige, identisch verteilte Bernoulli-Variablen mit
-Erfolgswahrscheinlichkeit $p$. Die Log-Likelihood ist
+Erfolgswahrscheinlichkeit $0<p<1$. Die Log-Likelihood ist
 
 $$
 \ell(p) = \sum_{i=1}^{n} \left[y_i \log p + (1 - y_i)\log(1-p)\right] .
@@ -847,15 +876,18 @@ endliches $n$ gilt.
 :::
 
 :::frage{falsch}
-In sehr hohen Dimensionen sind die meisten kritischen Punkte lokale Minima oder Maxima.
+Nach der Münzwurf-Heuristik aus Bemerkung 11.3.13 sind in sehr hohen Dimensionen die
+meisten kritischen Punkte lokale Minima oder Maxima.
 
-Es ist umgekehrt. Ein Extremum verlangt, dass alle $n$ Eigenwerte dasselbe Vorzeichen
-haben; jedes einzelne abweichende Vorzeichen macht daraus einen Sattelpunkt. Eine grobe
+Im Münzwurfmodell aus Bemerkung 11.3.13 ist es umgekehrt. Ein Extremum verlangt, dass
+alle $n$ Eigenwerte dasselbe Vorzeichen haben; jedes einzelne abweichende Vorzeichen
+macht daraus einen Sattelpunkt. Eine grobe
 Zählung mit unabhängigen Vorzeichen gibt $2^{-n}$ für ein Minimum und $2^{1-n}$ für ein
 Extremum irgendeiner Sorte, für $n = 100$ also $7{,}9 \cdot 10^{-31}$ beziehungsweise
-$1{,}6 \cdot 10^{-30}$ (Bemerkung 11.3.13). Dass Verfahren wie der stochastische
-Gradientenabstieg trotzdem funktionieren, liegt gerade daran: An einem Sattel gibt es immer
-eine Abstiegsrichtung.
+$1{,}6 \cdot 10^{-30}$. Das ist eine qualitative Motivation, keine Verteilungsaussage
+über reale Verlustlandschaften. Bei indefiniter Hesse-Matrix existiert eine Richtung
+negativer Krümmung, und Rauschen kann einem stochastischen Verfahren helfen, eine solche
+instabile Region zu verlassen; automatisch gelingt das nicht.
 :::
 
 ::::
