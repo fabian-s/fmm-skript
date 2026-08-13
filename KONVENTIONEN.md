@@ -540,6 +540,124 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   als Abschluss-Literaturhinweise.
 - Kapitel 13.6 mit Selbsttest über das ganze Kapitel.
 
+## KAPITEL 14 (Foliensatz 14-funktionsapproximation) — Bauauftrag 2026-08-13
+
+- `src/chapters/14-funktionsapproximation/`, S141–S145 als `.mdx`; Anker
+  `#sec-14.1` … `#sec-14.5`, Labels „14.k.n"; Regeln wie bisher.
+- Quelle: `/workspace/fmm-lmu/slides/14-funktionsapproximation.Rmd`. ZUSÄTZLICH
+  liegt unter `/workspace/fmm-lmu/slides/14-review.md` ein externes Review der
+  Folien — LESEN: Viele Punkte sind in der aktuellen Folienfassung schon
+  eingearbeitet, die dort genannten Restpunkte fließen unten ein.
+- Farbcode Kapitel 14: Daten/Stützpunkte blau (`\cblue`), Interpolant/
+  Approximant grün (`\cgreen`), Basisfunktionen orange (`\corange`),
+  Problemzonen (Runge-Oszillationen, Instabilität) rot (`\cred`).
+- BILDER: alle resources/-Grafiken (problems-*, interpolants-example,
+  basis-monomial, interp-*, runge-phenomenon, bspl*, spline-bases) NICHT
+  übernehmen — Widgets bauen.
+- Widget-Recycling aus `/workspace/interactive/interactive/heath-ch7/src/sections/`:
+  S71.tsx (ManyInterpolantsWidget → 14.1, DegreeSliderWidget), S73.tsx
+  (VandermondeCondWidget, MonomialFigure → 14.3), S734.tsx
+  (RungeExplorerWidget → 14.3; Chebyshev-Material als Bemerkung), S74.tsx
+  (PiecewiseVsPolyWidget, SplineSystemWidget → 14.4), S743.tsx
+  (BasisExplorer, RecursionAnatomy, BandedLocality → 14.4). Nur CODE 1:1,
+  ALLE Texte deutsch NEU (jede Caption gegen Quelle halten).
+- Folienfehler/Präzisierungen (korrigieren + registrieren):
+  1. Cox-de-Boor-Knotenfolge (Z. 492–493) hat ÜBERLAPPENDE Indexbereiche:
+     „$\tau_{q+1+i} = \xi_i$" und „$\tau_{m+1} = \dots = \tau_n = \xi_m$"
+     kollidieren (für $q=3$, $m=5$ bekäme $\tau_6$ sowohl $\xi_2$ als auch
+     $\xi_5$), und $n = m+q$ Knoten reichen nicht — der offene Knotenvektor
+     zu $K = m+q$ Basisfunktionen vom Grad $q$ braucht $m + 2q + 1$ Knoten:
+     $\tau_1 = \dots = \tau_{q+1} = \xi_0$; $\tau_{q+1+i} = \xi_i$ für
+     $i = 1, \dots, m-1$; $\tau_{m+q+1} = \dots = \tau_{m+2q+1} = \xi_m$
+     (numerisch geprüft: Länge 24 für q=3, m=17). Das externe Review
+     monierte das bereits; die Folie ist nur halb repariert.
+  2. Runge-Folie (Z. 361): „$\|f - p_n\|_\infty \to \infty$" stimmt im
+     Limes, aber NICHT monoton — verifiziert: max-Fehler 0{,}44 (n=5),
+     0{,}30 (n=10), 7{,}2 (n=15), 8{,}6 (n=20); im Skript sagen (Wachstum
+     asymptotisch, Oszillationen am Rand) und Chebyshev-Knoten als Ausweg
+     nennen (Review-Punkt).
+  3. Konditions-Tabelle (Z. 332–339) als GRÖSSENORDNUNGEN/illustrativ
+     kennzeichnen (Review-Punkt; verifiziert n=5: ~10^3; die Werte hängen
+     von Norm und Knotenwahl ab); B-Spline-Vergleich „≈ 10^2" ebenso
+     (eigene Rechnung: ~10^1–10^2 je nach Knoten).
+  4. Spline-Definition: „Polynome q-ten Grades" heißt Grad HÖCHSTENS q;
+     C^{q-1}-Glattheit ist Teil der Definition (klassischer Spline), für
+     q = 0 bedeutet C^{-1} keine Stetigkeitsforderung — kurz sagen
+     (Review-Punkt 2).
+  5. m+q-Parameterzählung gilt für EINFACHE innere Knoten und maximale
+     Glattheit — steht in der Folien-Annahme, im Skript beibehalten.
+  6. Bemerkung ergänzen (Review-Punkt 12): Allgemein ist jede Funktion
+     $\wh f = p + g$ mit $g(x_i) = 0$ ebenfalls Interpolant — daher die
+     unendlich vielen Lösungen.
+  7. Anwendungsfolie (Z. 86–91): Positional Encodings u.ä. als verwandte
+     Konzepte/Analogien kennzeichnen, nicht als Interpolation im engen
+     Sinn (Review-Punkt 13).
+- Verifizierte Zahlen (node, 2026-08-13): Beispiel $\bB$-System:
+  $a = (1, 0, 1)$, $\wh f = 1 + x^2$, Probe ✓; Parameterzählung
+  $m(q+1) - (m-1)q = m+q$, Beispiel $20 - 12 = 8$ ✓; Konstruktions-Zählung
+  $4+2+2+2+2 = 12 = 3 \cdot 4$ ✓; Quiz 14.1: wahr sind 1 und 3;
+  Quiz Spline-Parameter: Antwort 3 ($m+q$).
+- R-Code (eval=FALSE auf den Folien) als Fences übernehmen; Rscript fehlt —
+  keine Outputs erfinden.
+- Querbezüge: LGS/Lösbarkeit → `?k=05-lgs`, Kondition →
+  `?k=04-fehler#sec-4.2` und `?k=03-matrix-spur-norm`, Bandmatrizen/
+  Aufwand → `?k=05-lgs` und `?k=02-algos`, Basen → Tooltip basis,
+  Normen → `?k=03-matrix-spur-norm`; Ausblick 14.5 →
+  `?k=15-funktionsapproximation-2#sec-15.1` (Scaffold existiert; Kapitel 15
+  entsteht PARALLEL: NUR Abschnittslinks, KEINE 15.x.y-Zitate).
+- Kapitel 14.5 mit Selbsttest über das ganze Kapitel.
+
+## KAPITEL 15 (Foliensatz 15-funktionsapproximation-II) — Bauauftrag 2026-08-13
+
+- `src/chapters/15-funktionsapproximation-2/`, S151–S155 als `.mdx`; Anker
+  `#sec-15.1` … `#sec-15.5`, Labels „15.k.n"; Regeln wie bisher. Das ist das
+  LETZTE Kapitel des Kurses („Finito!").
+- Quelle: `/workspace/fmm-lmu/slides/15-funktionsapproximation-II.Rmd`.
+  ZUSÄTZLICH `/workspace/fmm-lmu/slides/15-review.md` LESEN — die aktuelle
+  Folienfassung hat die meisten Punkte schon eingearbeitet (natürlicher
+  Spline im Krümmungssatz, Partition, C = 5/384, Boundary.knots,
+  Annahme-Zeilen, „illustrativ"-Fußnote); prüfen, dass das Skript sie
+  ebenfalls sauber führt.
+- Farbcode Kapitel 15: Daten(punkte) blau (`\cblue`), Schätzer/Interpolant
+  $\wh f$ grün (`\cgreen`), Basis/Knoten orange (`\corange`),
+  Fehler/Rauschen/Bias rot (`\cred`).
+- Widget-Plan (Eigenbauten; heath-ch7-Code als Grundlage wo passend):
+  15.1 Krümmungs-Vergleich (natürlicher Spline vs. Parabel durch (0,0),
+  (1,1), (2,0) mit $\int|f''|^2$-Readout 6 vs. 8); 15.2 h^4-Konvergenz
+  ($\sin 2\pi x$, Knotenzahl-Slider, Fehler + Schranke im Log-Readout;
+  natürlichen kubischen Spline in JS lösen); 15.3/15.4 Glättungs-Widget
+  (seeded Daten wie Folien-Setup, K-Slider, Unter-/Überanpassung sichtbar,
+  optional Bias²/Var/MSE per seeded Monte-Carlo). KEINE R-Outputs erfinden:
+  Die Folien-Tabellenwerte (Bias² 0{,}42 usw.) stammen aus
+  resources/bias-variance-example.R mit set.seed — als Folien-Zitat
+  kennzeichnen oder eigene JS-Simulation mit EIGENEN Werten zeigen.
+- Verifizierte Zahlen (node/Hand, 2026-08-13): Krümmungs-Beispiel: Spline
+  $s(x) = 1{,}5x - 0{,}5x^3$ (gespiegelt) ist C², natürlich, interpoliert;
+  $\int|s''|^2 = 3 + 3 = 6$, Parabel $p = -x^2 + 2x$: $\int 4 = 8$ ✓ (die
+  auskommentierte Folien-Rechnung Z. 171–196 ausformulieren);
+  Fehlerschranken-Tabelle Z. 228–233 mit $C = 5/384$,
+  $\max|f^{(4)}| = (2\pi)^4 \approx 1559$: 0{,}079 / 0{,}005 / 0{,}0003 ✓;
+  MSE-Exponenten: Bias² $O(K^{-8})$, Var $O(K/n)$, optimal
+  $K \sim n^{1/9}$, MSE $O(n^{-8/9})$ ✓; multivariat $K \sim n^{1/(8+p)}$,
+  MSE $O(n^{-8/(8+p)})$ ✓; Speicher-Tabelle $10^{10} \cdot 8$ B = 80 GB ✓;
+  Konvergenz-Tabelle: exakte n-Werte (Konstante 1) wären
+  $10^{2{,}25}/10^{2{,}5}/10^{3{,}25}/10^{4{,}5}$ — Folienwerte sind
+  gerundet, die „illustrativ"-Fußnote MUSS mit ins Skript.
+- Präzisierungen: Gleichheit im Krümmungssatz erst „h'' ≡ 0 ⟹ h linear ⟹
+  mit $h(x_i) = 0$ an $n \ge 2$ Stellen h ≡ 0" — sauber führen; die
+  „tatsächlichen Fehler" der Tabelle Z. 228–233 (0{,}020/0{,}001/0{,}00006)
+  sind R-Outputs — im JS-Widget selbst nachrechnen und die EIGENEN Werte
+  nennen; Varianz-Herleitung nutzt Pseudoinverse → `?k=07-kq#sec-7.5`.
+- Querbezüge: Splines/B-Splines → `?k=14-funktionsapproximation` (entsteht
+  PARALLEL: NUR Abschnittslinks ?k=14-funktionsapproximation#sec-14.x,
+  KEINE 14.x.y-Zitate!); KQ/Pseudoinverse → `?k=07-kq`; Ridge/Penalty →
+  `?k=13-optim#sec-13.5`; Tensor-Produkt-Basis und Fluch der
+  Dimensionalität → `?k=09-tensoren#sec-9.4` (dort Bemerkung zu
+  $(d+1)^k$!); partielle Integration/Analysis → Tooltips. GAM/mgcv,
+  Nagler-Vorlesungen und Statistik V als externe Ausblicke (Prosa).
+- Kapitel 15.5 mit Kapitel-Selbsttest UND einem kurzen Kursabschluss
+  (der Kurs endet hier — kein Vorwärtslink; „Finito"-Folie würdigen).
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 

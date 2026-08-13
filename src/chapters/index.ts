@@ -106,6 +106,18 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./13-optim"),
   },
   {
+    id: "14-funktionsapproximation",
+    title: "Kap. 14 · Funktionsapproximation I",
+    deck: "14-funktionsapproximation",
+    load: () => import("./14-funktionsapproximation"),
+  },
+  {
+    id: "15-funktionsapproximation-2",
+    title: "Kap. 15 · Funktionsapproximation II",
+    deck: "15-funktionsapproximation-II",
+    load: () => import("./15-funktionsapproximation-2"),
+  },
+  {
     id: "mdx-lab",
     title: "MDX-Syntaxlabor",
     deck: "02-algos",
