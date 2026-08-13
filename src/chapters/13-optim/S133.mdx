@@ -358,9 +358,12 @@ $$
 
 Anschaulich: Die Funktionswerte ändern sich höchstens $L$-mal so schnell wie die
 Argumente. Je größer $L$, desto zackiger darf $f$ verlaufen. Lipschitz-Stetigkeit
-ist deutlich stärker als bloße :k[Stetigkeit]{#continuity}, aber schwächer als
-Differenzierbarkeit; $f(x) = \left|x\right|$ ist mit $L = 1$ Lipschitz-stetig und
-im Nullpunkt trotzdem nicht differenzierbar.
+ist deutlich stärker als bloße :k[Stetigkeit]{#continuity}, mit
+Differenzierbarkeit aber ohne Zusatzannahmen nicht vergleichbar:
+$f(x)=\left|x\right|$ ist mit $L=1$ Lipschitz-stetig und im Nullpunkt trotzdem
+nicht differenzierbar; $f(x)=x^2$ ist auf $\R$ differenzierbar, aber nicht global
+Lipschitz-stetig. Auf einem kompakten Intervall ist eine stetig differenzierbare
+Funktion wegen ihrer dort beschränkten Ableitung Lipschitz-stetig.
 
 Für den Gradientenabstieg brauchen wir die Bedingung nicht für $f$, sondern für
 den Gradienten.
@@ -382,11 +385,14 @@ differenzierbar, so ist das gleichwertig zu
 $$ {#eq-13.3.3}
 \left\|\corange{\bH_f(\bx)}\right\|_2 \le L \quad \text{für alle } \bx ,
 \qquad\text{also}\qquad
-L = \sup_{\bx} \left\|\corange{\bH_f(\bx)}\right\|_2
+L_{\min} = \sup_{\bx} \left\|\corange{\bH_f(\bx)}\right\|_2
  = \sup_{\bx} \max_{i} \left|\lambda_i\bigl(\corange{\bH_f(\bx)}\bigr)\right| ,
 $$
 
-denn für :k[symmetrische]{#symmetric-matrix} Matrizen ist die
+wobei $L_{\min}$ die kleinste mögliche Lipschitz-Konstante bezeichnet; jede
+größere Zahl ist ebenfalls eine gültige Konstante.
+
+Denn für :k[symmetrische]{#symmetric-matrix} Matrizen ist die
 :k[Spektralnorm]{#matrix-norm} der betragsgrößte
 :k[Eigenwert]{#eigenvalue-eigenvector}. Satz 3.3.7 in
 [Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) berechnet

@@ -171,8 +171,10 @@ Dieselbe Rechnung trägt mehr, als der Satz behauptet. Für jedes $c \in \R$ ist
 *Subniveaumenge* $\{\bx \in \cblue{\Xcal}\colon f(\bx) \le c\}$ konvex, denn aus
 $f(\bu) \le c$ und $f(\bw) \le c$ folgt $f(\cgreen{\bz}) \le \lambda c + (1-\lambda)c = c$.
 Die Minimalstellen sind davon der Sonderfall $c = \min f$, sofern dieses Minimum angenommen
-wird. Konvexe Funktionen haben also konvexe :k[Niveaumengen]{#level-sets}, und daran hängt in
-[Abschnitt 13.5](?k=13-optim#sec-13.5) die Beschreibung zulässiger Bereiche.
+wird. Konvexe Funktionen haben also konvexe *Subniveaumengen*, und daran hängt in
+[Abschnitt 13.5](?k=13-optim#sec-13.5) die Beschreibung zulässiger Bereiche. Für exakte
+:k[Niveaumengen]{#level-sets} $\{\bx:f(\bx)=c\}$ gilt das nicht: Das Niveau $1$ von
+$f(x)=x^2$ besteht aus $\{-1,1\}$ und ist nicht konvex.
 
 ### Strikte Konvexität und Eindeutigkeit
 
@@ -331,7 +333,8 @@ erstaunlich nützlich: Sie sagt voraus, ob ein Startwert das Ergebnis beeinfluss
 
 :::bemerkung[12.5.7 (Eine Landkarte der Optimierungsprobleme)]
 *Strikt konvexe Probleme* haben höchstens eine Lösung (Satz 12.5.5), und wo sie existiert, ist
-sie eindeutig und global. Startwerte spielen keine Rolle.
+sie eindeutig und global. Jeder korrekt konvergierte Lauf muss daher dieselbe Lösung liefern;
+Rechenweg, Laufzeit und Abbruchstatus können trotzdem vom Startwert abhängen.
 
 - Kleinste Quadrate, $\min_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2$, sofern $\bX$ vollen
   *Spalten*rang hat (Beispiel 12.3.16). Die Folie schreibt nur „vollen Rang"; entscheidend ist
@@ -377,8 +380,9 @@ verschiedene Implementierungen dürfen verschiedene Koeffizienten melden.
   bleibt die negative Log-Likelihood trotzdem oft, etwa im Probit-Modell, weil die
   Verteilungsfunktion der Normalverteilung log-konkav ist. Automatisch ist es eben nicht mehr.
 
-*Nicht-konvexe Probleme* haben lokale Minima und Sattelpunkte. Verschiedene Startwerte führen
-zu verschiedenen Lösungen, und keine davon trägt ein Gütesiegel.
+*Nicht-konvexe Probleme* können mehrere lokale Minima und Sattelpunkte haben. Verschiedene
+Startwerte können dann in verschiedene Einzugsgebiete führen, und ein bloß stationäres Ergebnis
+trägt kein globales Gütesiegel.
 
 - :k[Neuronale Netze]{#neural-network}. Schon das Vertauschen zweier Neuronen einer Schicht
   liefert ein anderes Parameterset mit demselben Verlust, das Problem ist also nicht einmal
@@ -515,8 +519,9 @@ Ist $f_1$ konvex und $f_2$ strikt konvex, so ist $f_1 + f_2$ strikt konvex.
 
 Wir addieren die beiden Ungleichungen ($12.3.4$) und ($12.5.1$) für
 $\bx \neq \by$ und $\lambda \in (0,1)$: Links steht $\le$, rechts $<$, in der Summe also $<$.
-Davon lebt die Ridge-Regression. Der Kleinste-Quadrate-Term ist nur konvex, sobald die
-Designmatrix rangdefizient ist, der Strafterm $\lambda\left\|\bbeta\right\|_2^2$ ist für
+Davon lebt die Ridge-Regression. Der Kleinste-Quadrate-Term ist immer konvex und bei
+rangdefizienter Designmatrix nur nicht strikt konvex; der Strafterm
+$\lambda\left\|\bbeta\right\|_2^2$ ist für
 $\lambda > 0$ strikt konvex, und die Summe erbt die strikte Konvexität
 (Beispiel 12.3.16, Satz 12.4.1). Ohne den strikten Summanden geht es nicht: $\left|x\right|$
 und $\max\{0, x\}$ sind beide konvex, ihre Summe stimmt auf $(-\infty, 0]$ aber mit
@@ -562,16 +567,18 @@ $[0,\infty)$ hat das konvexe $-\sqrt{x}$ in $0$ wirklich keinen Subgradienten
 :::
 
 :::frage{wahr}
-Meldet ein LASSO-Programm bei zwei verschiedenen Startwerten zwei verschiedene
-Koeffizientenvektoren, so sind trotzdem beide optimal.
+Erfüllen zwei verschiedene Koeffizientenvektoren eines LASSO-Problems beide die
+Subgradienten-Optimalitätsbedingung, so sind beide global optimal.
 
 Die LASSO-Zielfunktion ist als Summe zweier konvexer Funktionen konvex (Satz 12.4.1), also
-ist jedes lokale Minimum global (Bemerkung 12.5.2). Strikt konvex ist sie bei
+ist jeder Punkt mit $\bnull$ im Subdifferential global optimal (Bemerkung 12.5.2). Strikt
+konvex ist sie bei
 rangdefizienter Designmatrix nicht, die Lösungsmenge kann deshalb mehr als einen Punkt
 enthalten. Nach Satz 12.5.3 ist sie konvex, also liegt sogar die ganze Verbindungsstrecke
-zwischen den beiden Ausgaben in der Lösungsmenge, und alle Punkte darauf haben denselben
-Zielwert. Bei nicht-konvexen Verfahren wie $k$-means wäre derselbe Befund eine schlechte
-Nachricht (Bemerkung 12.5.7).
+zwischen den beiden Lösungen in der Lösungsmenge, und alle Punkte darauf haben denselben
+Zielwert. Zwei bloße Softwareausgaben wären dagegen noch kein Beweis: Zuerst sind
+Konvergenzstatus und Optimalitätsresiduum zu prüfen. Bei nicht-konvexen Verfahren wie
+$k$-means wäre selbst erfüllte lokale Optimalität kein globales Gütesiegel (Bemerkung 12.5.7).
 :::
 
 ::::

@@ -31,7 +31,7 @@ $f\colon \Xcal \to \R$ die :k[Zielfunktion]{#objective-function} (objective
 function), das Problem also
 
 $$ {#eq-13.2.1}
-\cgreen{\bx^\star} = \argmin_{\bx \in \Xcal} f(\bx) .
+\cgreen{\bx^\star} \in \argmin_{\bx \in \Xcal} f(\bx) .
 $$
 
 Ein Punkt $\cgreen{\bx^\star} \in \Xcal$ heißt
@@ -393,19 +393,25 @@ Bei nicht-konvexen Funktionen sagt $\corange{\nabla f(\bx)} = \bnull^\top$ wenig
 Der Punkt kann ein Minimum sein, ein Maximum, oder keines von beidem.
 
 :::definition[13.2.10 (Sattelpunkt)]
-Ein stationärer Punkt $\bx^\star$ von $f$ heißt *Sattelpunkt*, wenn die
-:k[Hesse-Matrix]{#hessian-matrix} $\corange{\bH_f(\bx^\star)}$ *indefinit* ist,
-wenn sie also sowohl positive als auch negative
-:k[Eigenwerte]{#eigenvalue-eigenvector} hat.
+Ein stationärer Punkt $\bx^\star$ von $f$ heißt *Sattelpunkt*, wenn jede
+Umgebung von $\bx^\star$ Punkte $\bx_-$ und $\bx_+$ enthält mit
+
+$$
+f(\bx_-) < f(\bx^\star) < f(\bx_+) .
+$$
+
+Ist die :k[Hesse-Matrix]{#hessian-matrix}
+$\corange{\bH_f(\bx^\star)}$ *indefinit*, hat sie also sowohl positive als auch
+negative :k[Eigenwerte]{#eigenvalue-eigenvector}, so sprechen wir genauer von
+einem *Sattelpunkt mit indefiniter Hesse-Matrix*.
 :::
 
-Ist $f$ zweimal stetig differenzierbar, wie es Satz 11.3.9 verlangt, so ist ein
-solcher Punkt weder ein lokales Minimum noch ein lokales
-Maximum: In jeder Umgebung liegen Punkte mit größerem und Punkte mit kleinerem
-Funktionswert. Die Umkehrung gilt nicht. Ein stationärer Punkt kann auch dann
-weder Minimum noch Maximum sein, wenn die Hesse-Matrix semidefinit ist, wie
-$f(x) = x^3$ in $x = 0$ zeigt. Die Definition oben ist die der Folien, sie deckt
-den in der Praxis wichtigen Fall ab.
+Ist $f$ zweimal stetig differenzierbar, wie es Satz 11.3.9 verlangt, so ist die
+indefinite Hesse-Matrix ein hinreichendes Kriterium für die Definition: In jeder
+Umgebung liegen Punkte mit größerem und Punkte mit kleinerem Funktionswert. Die
+Umkehrung gilt nicht. Bei $f(x)=x^3$ ist $x=0$ ebenfalls ein Sattelpunkt, obwohl
+$f''(0)=0$ ist und das Kriterium zweiter Ordnung nichts entscheidet. Die Folien
+behandeln nur den praktisch wichtigen Fall der indefiniten Hesse-Matrix.
 
 :::beispiel[13.2.11 (Der Standardsattel)]
 Wir rechnen das Beispiel der Folien vollständig durch. Sei
@@ -505,21 +511,24 @@ eine Gerade im $\R^2$ und hat das Volumen null. In der Praxis genügt schon
 Rundungsrauschen, um sie zu verfehlen, und der stochastische Gradientenabstieg
 aus [Abschnitt 13.4](#sec-13.4) bringt sein eigenes Rauschen mit.
 
-*In hohen Dimensionen ist der Sattel der Normalfall.* Solange kein Eigenwert von
+*Eine hochdimensionale Vorzeichenheuristik.* Solange kein Eigenwert von
 $\corange{\bH_f}$ null ist, entscheidet allein das Vorzeichenmuster: Ein Minimum
-verlangt dann, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt
-genügt schon *ein einziger*, der aus der Reihe tanzt. (Ein Eigenwert null lässt
+verlangt dann, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt mit
+indefiniter Hesse-Matrix genügen gemischte Vorzeichen. (Ein Eigenwert null lässt
 beide Fälle offen, dazu Bemerkung 13.2.14.) Die Münzwurf-Faustregel aus
-[Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) beziffert den Unterschied: Wären
+[Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) illustriert den Unterschied: Wären
 die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte ein Minimum die
 Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$; für $n = 100$ sind
-das $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$. Unabhängig sind die
-Vorzeichen natürlich nicht, die Zahlen taugen also nur als Größenordnung; genauere
-Modelle aus der Zufallsmatrixtheorie ändern am Bild aber nichts. Für ein
-:k[neuronales Netz]{#neural-network} mit Millionen Parametern heißt das: Wo ein
-Verfahren stehenbleibt, ist fast immer ein Sattel und fast nie ein schlechtes
-lokales Minimum. Nach Verfahren, die dort wieder herauskommen, fragen die
-[Abschnitte 13.3](#sec-13.3) und [13.4](#sec-13.4).
+das $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$.
+
+Das ist ein Toy-Modell, keine Verteilungsaussage über die stationären Punkte
+eines konkreten Problems und erst recht nicht über die Punkte, die ein
+Optimierungsverfahren besucht. In neuronalen Netzen sind die Eigenwertvorzeichen
+weder unabhängig noch fair verteilt, und wegen Überparametrisierung treten zudem
+viele nahezu flache Richtungen auf. Belastbar bleibt die geometrische Aussage:
+Positive Definitheit verlangt ein einheitliches Vorzeichen, Indefinitheit nur ein
+gemischtes Muster. Wie Verfahren auf solche negative Krümmung reagieren, zeigen
+die [Abschnitte 13.3](#sec-13.3) und [13.4](#sec-13.4).
 :::
 
 ### Optimalitätsbedingungen im Überblick
@@ -708,15 +717,16 @@ $1 + 2\gamma$ vergrößert.
 :::
 
 :::frage{wahr}
-In hohen Dimensionen sind stationäre Punkte typischerweise Sattelpunkte.
+Im Münzwurfmodell für Hesse-Eigenwertvorzeichen wird positive Definitheit mit
+wachsender Dimension exponentiell selten.
 
-Ist kein Eigenwert der Hesse-Matrix null, so verlangt ein Minimum, dass alle $n$
-positiv sind; für einen Sattelpunkt genügt ein einziger mit abweichendem
-Vorzeichen. Die
-Münzwurf-Faustregel gibt $2^{-n}$ für ein Minimum und $2^{1-n}$ für irgendein
-Extremum, bei $n = 100$ also $7{,}9 \cdot 10^{-31}$ beziehungsweise
-$1{,}6 \cdot 10^{-30}$. Die Vorzeichen sind in Wahrheit nicht unabhängig, das Bild
-bleibt aber (Bemerkung 13.2.12).
+Sind die $n$ Vorzeichen unabhängig und fair, müssen für positive Definitheit alle
+$n$ positiv ausfallen; das hat Wahrscheinlichkeit $2^{-n}$. Für irgendein
+Extremum dürfen alle positiv oder alle negativ sein, also $2^{1-n}$. Bei $n=100$
+sind das $7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Für reale
+Probleme ist die Unabhängigkeitsannahme im Allgemeinen falsch; der Selbsttest
+prüft deshalb ausdrücklich nur die Konsequenz des Toy-Modells
+(Bemerkung 13.2.12).
 :::
 
 ::::

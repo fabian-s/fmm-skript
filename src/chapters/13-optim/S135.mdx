@@ -220,9 +220,12 @@ Problem mit $\mu_2 > 0$.
 
 ### Anwendung: Ridge und Lasso als beschränkte Optimierung
 
-Die regularisierte Regression aus [Abschnitt 13.1](#sec-13.1) lässt sich auf
-zwei äquivalente Arten schreiben, und die zweite ist ein beschränktes Problem
-im Sinn von Definition 13.5.1:
+Die regularisierte Regression aus [Abschnitt 13.1](#sec-13.1) lässt sich in einer
+penalisierten und einer beschränkten Form schreiben. Bei den konvexen Ridge- und
+Lasso-Problemen kann zu einer penalisierten Lösung ein Budget mit derselben
+Lösung gewählt werden; für die umgekehrte Zuordnung sind Aktivität und
+Regularität der Nebenbedingung zu beachten. Die zweite Form ist ein beschränktes
+Problem im Sinn von Definition 13.5.1:
 
 $$
 \begin{aligned}
@@ -253,8 +256,12 @@ $$
 $$
 
 Das ist die Ridge-Lösung mit dem Multiplikator $\mu$ in der Rolle des
-Strafparameters. Zu jedem $\lambda > 0$ der penalisierten Form gehört ein
-$c > 0$ der beschränkten Form mit derselben Lösung. Die Umkehrung gilt nur,
+Strafparameters. Ist die penalisiert geschätzte Lösung zu $\lambda>0$ von null
+verschieden, so gehört mit $c=\|\wh{\bbeta}(\lambda)\|_2^2>0$ eine bindende
+beschränkte Form mit derselben Lösung dazu. Im Sonderfall
+$\wh{\bbeta}(\lambda)=\bnull$ ist das aktive Budget $c=0$; ein größeres Budget
+kann dieselbe Lösung enthalten, ist dann aber inaktiv und hat $\mu=0$. Die
+Umkehrung gilt nur,
 solange die Nebenbedingung wirklich bindet: Ist $c$ so groß, dass der
 Kleinste-Quadrate-Schätzer selbst zulässig ist, dann erzwingt die
 Komplementarität $\mu = 0$, und das entspricht $\lambda = 0$. Welches $c$ zu
@@ -281,6 +288,11 @@ Koordinaten sind wieder besetzt. Am Regler des Widgets lassen sich beide
 Regime durchfahren. Der Ecken-Fall ist der geometrische Grund für die
 Sparsity des Lasso; formal steckt dahinter das Subdifferential der
 Betragsfunktion ([Abschnitt 12.4](?k=12-konvexitaet#sec-12.4)).
+
+Das Widget parametrisiert beide Mengen über ihren direkt sichtbaren Radius $r$:
+Es zeigt $\|\bbeta\|_2\le r$ und $\|\bbeta\|_1\le r$. Für Ridge entspricht das
+dem Budget $c=r^2$ in der Formel oben, für Lasso $c=r$. Die zulässigen Mengen
+sind dieselben; nur die Parametrisierung unterscheidet sich.
 
 <RidgeLassoGeometrie />
 :::
@@ -324,8 +336,10 @@ dagegen nur Kandidaten, unter denen auch lokale Optima und Sattelpunkte sind
 Der prominenteste konvexe Spezialfall bleibt hier ein Ausblick: Sind Ziel
 und alle Nebenbedingungen affin, heißt die Aufgabe *lineares Programm*. Ihr
 zulässiger Bereich ist ein Polyeder aus geschnittenen Halbräumen
-([Abschnitt 12.2](?k=12-konvexitaet#sec-12.2)), das Optimum sitzt in einer
-Ecke, und darauf sind eigene Verfahren gebaut (das Simplex-Verfahren und
+([Abschnitt 12.2](?k=12-konvexitaet#sec-12.2)). Ist ein endliches Optimum
+vorhanden und besitzt der zulässige Bereich Extrempunkte, so gibt es mindestens
+eine optimale Ecke; eine ganze Kante oder Fläche kann ebenfalls optimal sein.
+Darauf sind eigene Verfahren gebaut (das Simplex-Verfahren und
 Innere-Punkte-Methoden), die dieser Kurs nicht behandelt.
 
 ### Selbsttest
@@ -367,8 +381,9 @@ $\mu = 0$. Nur die andere Richtung trägt: inaktiv erzwingt $\mu_j = 0$.
 :::
 
 :::frage{wahr}
-Zu jedem Strafparameter $\lambda > 0$ der penalisierten Ridge-Regression
-gehört ein Budget $c > 0$ der beschränkten Form mit derselben Lösung.
+Ist die Lösung der penalisierten Ridge-Regression zu $\lambda>0$ von null
+verschieden, so liefert $c=\|\wh{\bbeta}(\lambda)\|_2^2$ eine bindende
+beschränkte Form mit derselben Lösung.
 
 Wir lösen die penalisierte Form und setzen $c := \|\wh{\bbeta}(\lambda)\|_2^2$.
 Dann ist $\wh{\bbeta}(\lambda)$ zulässig, die Nebenbedingung aktiv, und mit
@@ -376,7 +391,9 @@ $\mu = \lambda$ sind alle KKT-Bedingungen erfüllt; Satz 13.5.12 macht daraus
 das globale Optimum. Für $\bX$ und $\by$ aus Beispiel 11.2.7
 ([Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2)) und $\lambda = 1{,}5$ ist
 das $\wh{\bbeta} = (0{,}341;\, 0{,}578)$ mit $c = 0{,}450$. Die Umkehrung
-gilt dagegen nur, solange die Nebenbedingung bindet.
+gilt dagegen nur, solange die Nebenbedingung bindet. Ist die penalisierte
+Lösung null, ergibt die aktive Zuordnung $c=0$; genau deshalb steht die
+Nichtnull-Voraussetzung im Selbsttest.
 :::
 
 :::frage{falsch}

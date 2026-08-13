@@ -30,16 +30,19 @@ Schnitts teilen; in jedem Schritt fällt das Teilintervall weg, das das
 Minimum nicht enthalten kann, und ein einziger neuer Funktionswert genügt,
 weil der andere Testpunkt wiederverwendet wird. Das Intervall schrumpft pro
 Schritt auf das $0{,}618$-fache, ganz ohne Ableitungen; verlässlich ist das
-für *unimodale* Funktionen, also solche mit genau einer Talsohle im
-Startintervall.
+für *unimodale* Funktionen: Bis zu einer Minimalstelle steigen sie nicht an,
+danach fallen sie nicht mehr. Ein bloß eindeutiges globales Minimum ohne diese
+Formbedingung genügt nicht, weil zusätzliche Wellen die Intervallsuche täuschen
+können.
 
 Die Folie nennt nur diesen Baustein. Tatsächlich kombiniert `optimize()` ihn
 mit einer parabolischen Interpolation: Solange sich die drei zuletzt
 berechneten Punkte gutartig verhalten, springt der nächste Testpunkt in den
 Scheitel der Parabel durch sie, und erst wenn dieser Sprung aus dem
 eingeschachtelten Intervall führt oder zu wenig einbringt, greift wieder der
-goldene Schnitt. Die Einschachtelung bleibt dabei erhalten, der Aufruf ist
-also nie schlechter als die reine Golden Section Search.
+goldene Schnitt. Die Einschachtelung bleibt dabei erhalten; ein ungeeigneter
+Parabelschritt zerstört also nicht die robuste Intervallverkleinerung des
+goldenen Schnitts.
 :::
 
 ### Multivariat: optim
