@@ -706,6 +706,206 @@ Lesson-Zeile ein.
   begründet die Einschränkung; die Lösung $\bigl(\begin{smallmatrix} 2x &
   2e^x & 0 \\ 0 & 1 & 1/x\end{smallmatrix}\bigr)$ ist nachgerechnet.*
 
+## 11-ableitungen-II
+
+- **Z. 97–99 („Wichtige Eigenschaften: Linearität")**: Der Satz behauptet
+  nur die Identität $D_\bx(c_1f + c_2g) = c_1D_\bx f + c_2 D_\bx g$, sagt
+  aber nicht, dass $c_1 f + c_2 g$ in $\bx$ überhaupt differenzierbar ist;
+  ohne diese Aussage steht auf der linken Seite ein Objekt, dessen Existenz
+  gerade erst zu zeigen ist. *Skript Satz 11.1.5 nimmt die
+  Differenzierbarkeit der Linearkombination in die Behauptung auf.*
+- **Z. 104–111 (auskommentierter Linearitätsbeweis)**: Die Unterklammer
+  markiert $\left(c_1D_\bx f + c_2D_\bx g\right)(\bh)$ als
+  $D_\bx(c_1f+c_2g)(\bh)$, bevor das begründet ist; der Schritt braucht die
+  Eindeutigkeit der Fréchet-Ableitung, die der Foliensatz nirgends
+  formuliert. *Skript führt den Beweis in vier Schritten und schliesst mit
+  dem Eindeutigkeitsargument ($\bh = t\bu$, Quotient von $t$ unabhängig).*
+- **Z. 68 („Wichtige Eigenschaften: Stetigkeit")**: Die Kette
+  $\left\|D_\bx f(\bh)\right\| \le M\left\|\bh\right\| = O(\left\|\bh\right\|)$
+  mischt Ungleichung und Gleichheit in einer Zeile, und der Foliensatz
+  benutzt das grosse $O$ für kleine Argumente, ohne es je zu definieren.
+  *Skript Bemerkung 11.1.1 definiert $O(\left\|\bh\right\|)$ für
+  $\left\|\bh\right\| \to 0$ und trennt im Beweis zu Satz 11.1.2 die beiden
+  Abschätzungen.*
+- **Z. 131–136 („Bsp: Linearität der Ableitung")**: Der Buchstabe $h$ ist
+  im ganzen Foliensatz der Zuwachs in $f(\bx+\bh)$, hier plötzlich ein
+  Funktionsname. *Skript Beispiel 11.1.7 behält die Bezeichnung der Folie
+  bei und sagt die Doppelbelegung ausdrücklich dazu.*
+- **Z. 376 (Def. Hesse-Matrix)**: „einer differenzierbaren Funktion"
+  reicht nicht — für die Einträge braucht es zweite partielle Ableitungen,
+  für alles Weitere (Schwarz, $D^2$-Formel, Definitheitskriterium) sogar
+  deren Stetigkeit. *Skript Definition 11.3.3 verlangt zweimal partiell
+  differenzierbar und sagt im Anschluss, dass ab da $f \in \mathcal{C}^2$
+  gilt.*
+- **Z. 377 gegen Z. 384 (Indexkonvention)**: In $\bH_{i,j} = \partial^2
+  f/\partial x_i \partial x_j$ läuft die Indexreihenfolge der
+  Ableitungsreihenfolge entgegen, in $(D^3_\bx f)_{i,j,k} = \partial^3
+  f/\partial x_k \partial x_j \partial x_i$ dagegen mit ihr. Unter
+  $\mathcal{C}^2$ bzw. $\mathcal{C}^3$ folgenlos, aber uneinheitlich.
+  *Skript Bemerkung 11.3.8 benennt die Abweichung.*
+- **Z. 382/394 (Reihenfolge)**: Die Formel $D^2_\bx f(\bh_1,\bh_2) =
+  \bh_1^\top \bH_f(\bx)\bh_2$ steht eine Folie VOR dem Satz von Schwarz,
+  braucht dessen Symmetrie aber schon: Ohne sie liefert die Herleitung
+  über den Gradienten $\bh_2^\top \bH_f(\bx)\bh_1$, also die Transponierte.
+  *Skript zieht den Satz von Schwarz (Satz 11.3.4) vor und beweist ihn,
+  bevor Satz 11.3.6 die Formel herleitet.*
+- **Z. 421 (Konvexitätskriterium)**: „$f \in \mathcal{C}^2$ ist konvex auf
+  $S \subseteq \R^n \iff \bH_f \succeq 0$ auf $S$" braucht ein KONVEXES und
+  OFFENES $S$. Ohne Konvexität ist die linke Seite nicht definiert
+  (Gegenbeispiel $S = (-2,-1)\cup(1,2)$, $f \equiv -5$ links, $f \equiv 0$
+  rechts: $f'' \equiv 0$, aber keine konvexe Fortsetzung); ohne Offenheit
+  scheitert „$\Longrightarrow$" (Gegenbeispiel: $S$ = die $x_1$-Achse im
+  $\R^2$, $f = x_1^2 - x_2^2$ ist auf $S$ konvex, $\bH_f = \diag(2,-2)$ ist
+  indefinit). *Skript Satz 11.3.11 setzt beides voraus,
+  Bemerkung 11.3.12 führt die Gegenbeispiele aus.*
+- **Z. 432 („Praxisrelevanz", ML-Punkt)**: Der Satz bricht nach „bzw." ab.
+  *Skript Bemerkung 11.3.13 formuliert den Punkt aus (Kondition
+  $\kappa = \lambda_{\max}/\lambda_{\min}$ der Hesse-Matrix, Konvergenzrate
+  $(\kappa-1)/(\kappa+1)$ des Gradientenabstiegs).*
+- **Z. 461 (Cramér-Rao)**: „Für ML-Schätzer $\wh\btheta$ gilt asymptotisch
+  $\var(\wh\btheta) \to \bI(\btheta)^{-1}$" vermischt drei Dinge. Die
+  Varianz eines konsistenten Schätzers geht gegen $\bnull$, die Formel
+  trägt nur mit der Information der GANZEN Stichprobe
+  ($\var(\wh\btheta) \approx \bI_n(\btheta)^{-1} = \bI_1(\btheta)^{-1}/n$);
+  die saubere asymptotische Aussage ist
+  $\sqrt n(\wh\btheta_n - \btheta) \to N(\bnull, \bI_1(\btheta)^{-1})$; und
+  die Cramér-Rao-Schranke selbst ist eine Aussage bei festem $n$ über
+  ERWARTUNGSTREUE Schätzer ($\var \succeq \bI_n^{-1}$), die der ML-Schätzer
+  im Allgemeinen erst asymptotisch erreicht. *Skript Bemerkung 11.3.16
+  trennt die drei Fassungen.*
+
+- **Z. 320 („Anwendung: Logistische Regression")**: Die Fallunterscheidung
+  vertauscht die Klassen. Aus $\ell(\bbeta) = -[y\log\sigma(\bbeta^\top\bx) +
+  (1-y)\log(1-\sigma(\bbeta^\top\bx))]$ folgt für $y = 1$ der Term
+  $-\log P(Y{=}1\mid\bx)$ und für $y = 0$ der Term $-\log P(Y{=}0\mid\bx)$;
+  die Folie schreibt es genau andersherum. *Skript §11.2 setzt die
+  Fallunterscheidung richtig und sagt die Vertauschung dazu.*
+- **Z. 334 (Logistische Regression, Fall $y=0$)**: „analog für $y=0$:
+  $\nabla\ell(\bbeta) = -\wh y\,\bx^\top$" hat das falsche Vorzeichen.
+  Richtig ist $+\wh y\,\bx^\top = (\wh y - 0)\bx^\top$; erst damit stimmt die
+  $(\wh y - y)$-Deutung der Vorzeile. Numerisch bestätigt (zentrale
+  Differenzen, $\bx = (1, -2, 0{,}5)^\top$, $\bbeta = (0{,}3, -0{,}7,
+  1{,}1)^\top$: Gradient $(0{,}905, -1{,}809, 0{,}452)$, die Folienfassung
+  hat durchweg das umgekehrte Vorzeichen). *Skript Beispiel 11.2.10 rechnet
+  beide Fälle und benennt den Fehler.*
+- **Z. 155 (Theorem Produktregel)**: Vorausgesetzt wird nur eine „bilineare
+  Abbildung". Der Beweis braucht die Beschränktheit
+  $\left\|\langle u,v\rangle\right\| \le K\left\|u\right\|\left\|v\right\|$,
+  sonst lässt sich der Kreuzterm $\langle D_\bx f(\bh), D_\bx g(\bh)\rangle$
+  nicht als $O(\left\|\bh\right\|^2)$ abschätzen; der auskommentierte Block
+  Z. 187 sagt es selbst. In endlicher Dimension ist die Bedingung automatisch
+  erfüllt. *Skript Definition 11.2.1 fordert sie ausdrücklich,
+  Bemerkung 11.2.2 erklärt, warum sie dort nichts kostet.*
+- **Z. 208–209 (Produktregel, vierte Bauform)**: Die Folie deklariert
+  $\E = \R^{m\times n}$ für BEIDE Faktoren und bildet dann $\tr[\bF(x)\bG(x)]$.
+  Das Produkt ist nur für $\bG(x) \in \R^{n \times m}$ quadratisch, die Spur
+  also nur dann erklärt (für $m = n$ passt die Folienfassung). *Skript
+  Beispiel 11.2.4 setzt $\bF(x) \in \R^{m\times n}$, $\bG(x) \in
+  \R^{n\times m}$ und rechnet den Fall an einem Zahlenbeispiel nach.*
+- **Z. 246–249 (auskommentierte Ridge-Anwendung)**: Die Gleichungskette
+  setzt in derselben Zeile den Zeilenvektor $-2(\by-\bX\bbeta)^\top\bX$ mit
+  dem Spaltenvektor $-2\bX^\top(\by-\bX\bbeta)$ gleich, transponiert also
+  stillschweigend. Ausserdem wird nur der KQ-Term abgeleitet, obwohl die
+  Zielfunktion den Strafterm $\lambda\left\|\bbeta\right\|_2^2$ enthält, und
+  das eingeführte $g$ ist gar nicht definiert (es ist wieder $f$). *Skript
+  Beispiel 11.2.7 bleibt in der Zeilenkonvention, ergänzt den
+  $\lambda$-Gradienten $2\lambda\bbeta^\top$ und den Gesamtgradienten
+  $2(\bX^\top\bX\bbeta - \bX^\top\by + \lambda\bbeta)^\top$ (numerisch
+  bestätigt).*
+- **Z. 291–294 (Kettenregel-Beweis)**: In der zweiten Zeile wird der Restterm
+  von $g$ sofort als $o(\left\|\bh\right\|)$ geschrieben. Klein ist er zunächst
+  aber nur gemessen am weitergereichten Zuwachs
+  $\bk = D_\bx f(\bh) + o(\left\|\bh\right\|)$; der Wechsel des Bezugspunkts
+  braucht die Schranke $\left\|\bk\right\| \le (M_f+1)\left\|\bh\right\|$ für
+  kleine $\bh$, die die Folie nirgends aufstellt. *Skript Satz 11.2.8 stellt sie
+  als ersten Beweisschritt auf und benutzt sie im vierten.*
+- **Z. 338–350 (Übung $\nabla\left\|\bx\right\|_2$)**: Die Lösung
+  $\bx^\top/\left\|\bx\right\|$ ist richtig, gilt aber nur für
+  $\bx \neq \bnull$; im Nullpunkt existiert die Fréchet-Ableitung nicht
+  (einsetzen von $\bh = t\bd$ liefert für $t>0$ und $t<0$ widersprüchliche
+  Werte). *Skript Beispiel 11.2.12 nennt den Vorbehalt und begründet ihn.*
+
+- **Z. 496 (Theorem Taylorentwicklung I, Quantor)**: „Dann gilt für $h \in \R$"
+  passt nicht zur Aussage: $f(x+h) = \dots + o(\left|h\right|^k)$ ist eine
+  Aussage über das Verhalten für $h \to 0$, nicht eine für jedes einzelne $h$
+  (dieselbe Verwechslung wie 10-ableitungen-I Z. 129). Ausserdem bleibt offen,
+  dass $x+h$ im Definitionsbereich liegen muss. *Skript Satz 11.4.2 setzt
+  $S \subseteq \R$ offen und schreibt „für $x \in S$ und $h \to 0$".*
+- **Z. 618–619 (Beweisskizze Taylorentwicklung II, 1D-Schritt)**: „1D-Taylor
+  für $\psi$ um $w = 0$ (nutzt $f \in \mathcal{C}^k$)" beruft sich auf das
+  eigene Theorem von Z. 496, das aber $(k+1)$-mal stetige Differenzierbarkeit
+  verlangt; mit $f \in \mathcal{C}^k$ ist $\psi$ nur $k$-mal stetig
+  differenzierbar, der zitierte Satz also gar nicht anwendbar. Derselbe Schritt
+  verschweigt, dass die Entwicklung von $\psi$ zunächst nur für eine FESTE
+  Richtung $\bu$ gilt, während $o(\left\|\bh\right\|^k)$ Gleichmässigkeit über
+  alle Richtungen verlangt. Beides erledigt dieselbe Rechnung: Lagrange-Restglied
+  der Ordnung $k-1$ plus Stetigkeit von $D^k_\bx f$, mit der $\bu$-freien
+  Schranke $\sup_{\left\|\bz-\bx\right\| \le s}\left\|D^k_\bz f - D^k_\bx
+  f\right\|$. *Skript benennt beides im dritten Beweisschritt und führt die
+  Rechnung in Bemerkung 11.4.8 aus.*
+- **Z. 636 (Vektor-zu-Skalar, dritte Ordnung)**: Die Summe indiziert
+  $\partial^3 f/\partial x_i \partial x_j \partial x_k$, die D³-Definition
+  Z. 484 dagegen $\partial^3 f/\partial x_k \partial x_j \partial x_i$ — dritter
+  Fall der Indexkonvention von Z. 377 gegen Z. 384, unter $\mathcal{C}^3$
+  folgenlos. Zusätzlich kollidiert der Summationsindex $k$ mit dem Grad $k$ des
+  Taylorpolynoms aus Z. 498/502. *Skript Korollar 11.4.9 summiert über
+  $i, j, l$.*
+- **Z. 589–597 (Beweisskizze Taylorentwicklung I)**: Die Hilfsfunktion muss
+  $F(t) = \sum_{j=0}^k f^{(j)}(t)/j!\,(x-t)^j$ lauten; die Folie schreibt
+  durchgehend $f^{(j)}(x)$. Mit konstanten Koeffizienten teleskopiert
+  $F'$ nicht, und die behauptete Zeile
+  $F'(t) = f^{(k+1)}(x)/k!\,(x-t)^k$ ist falsch (numerisch mit $f = \exp$,
+  $x = 1$, $k = 2$, $t = 0{,}7$: die Folienfassung liefert $-3{,}534$, die
+  korrekte Fassung $0{,}0906 = e^{0{,}7}/2!\cdot(1-0{,}7)^2$). Ebenso steht
+  nach dem Cauchy-Mittelwertsatz $f^{(k+1)}(\xi)$ an der Zwischenstelle,
+  nicht $f^{(k+1)}(x)$; sonst wäre der Rest exakt bekannt und der
+  Mittelwertsatz überflüssig. Drittens trägt die Begründung des
+  $o(\left|h\right|^k)$ nicht: „$f^{(k+1)}$ stetig in $x$, also beschränkt in
+  $x$" liefert keine Schranke für die Werte an den Zwischenstellen, gebraucht
+  wird Beschränktheit auf einer kompakten Umgebung. Nebenbei gilt
+  $G'(t) = -(k+1)(x-t)^k \neq 0$ nur für $t \neq x$. *Skript Satz 11.4.2
+  führt den Beweis in fünf Schritten korrekt und benennt alle drei Stellen in
+  den Begründungen.*
+- **Z. 502 und Z. 590 (Notation des Taylorpolynoms)**: Auf der Theoremfolie
+  heißt es $T_k(x) := \sum_{j=0}^k 1/j!\,f^{(j)}(x)h^j$, das Argument ist
+  aber der Zuwachs $h$ und nicht $x$; zwei Folien später vertauschen sich die
+  Rollen der Buchstaben stillschweigend ($x$ ist dort die Auswertungsstelle,
+  $a$ der Entwicklungspunkt, $h = x - a$). *Skript Definition 11.4.1 schreibt
+  $T_k(h)$ bei festem Entwicklungspunkt, Bemerkung 11.4.4 stellt die
+  $x_0$-Fassung daneben, und der Beweis benennt den Rollenwechsel.*
+- **Z. 504 („Je höher der Grad $k$, desto besser/globaler die
+  Approximation")**: Als Faustregel brauchbar, als Aussage falsch. Für
+  $f(x) = 1/(1+x^2)$ um $0$ fallen die Fehler bei $x = 0{,}5$ von
+  $5{,}0\cdot10^{-2}$ ($k=2$) auf $3{,}1\cdot10^{-6}$ ($k=16$), bei
+  $x = 1{,}5$ wachsen sie dagegen von $1{,}6$ auf $455$ (Konvergenzradius 1).
+  *Skript Bemerkung 11.4.5 nennt die Faustregel samt Gegenbeispiel.*
+- **Z. 679–680 (Newton-Raphson, Idee)**: „$f(\bx) \approx T_2(\bx^{(k)})$" setzt
+  den Entwicklungspunkt als Argument ein, obwohl die rechte Seite von $\bx$
+  abhängt; gemeint ist $T_2(\bx)$, sonst stünde rechts eine Konstante und der
+  folgende Schritt „minimiere $T_2(\bx)$ bzgl. $\bx$" wäre gegenstandslos.
+  *Skript schreibt $T_2(\bx)$.*
+- **Z. 362 (Def. $k$-mal differenzierbar, typografisch)**: Die Zeile schreibt
+  `$D_{\bx}^j f$$\colon \D^j \to \E$` und schliesst den Mathe-Modus mitten
+  im Ausdruck — dieselbe Sorte wie der registrierte Befund
+  10-ableitungen-I Z. 127. *Skript Definition 11.3.1 setzt eine
+  durchgehende Mathe-Spanne.*
+- **Z. 429 gegen Z. 448 (Praxisrelevanz, Statistik-Punkt)**: Die
+  Log-Likelihood wird als „wichtiger Spezialfall für $f\colon \R^n \to \R$"
+  eingeführt, obwohl der Parameter neunzehn Zeilen später in $\R^p$ lebt und
+  $n$ im ganzen Foliensatz die Dimension des Arguments bzw. den
+  Stichprobenumfang bezeichnet. *Skript Bemerkung 11.3.13 und
+  Definition 11.3.14 schreiben durchgehend $\R^p$.*
+- **Z. 469/473–474 (Vektor-zu-Vektor, Score-Funktion und Notation)**: Als
+  Beispiel für $f\colon \R^n \to \R^m$ steht dort die Score-Funktion
+  $\nabla\ell(\btheta)$ — in der Zeilenkonvention des Kurses ist der
+  Gradient aber eine Zeile, erst $\nabla\ell(\btheta)^\top$ bildet $\R^p$
+  nach $\R^p$ ab (gleiche Sorte wie 10-ableitungen-I Z. 217/299). In der
+  Formel darunter sind ausserdem die Zuwächse unfett gesetzt ($h_1, \dots,
+  h_k$ statt $\bh_i$ wie in der Definition Z. 362), und der Ableitungsgrad
+  heisst dort $k$ statt $j$. *Skript §11.3 („Vektor zu Vektor") schreibt
+  $\nabla\ell(\btheta)^\top$, benennt die fehlende Transposition und führt
+  den Grad durchgehend als $j$.*
+
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
 - **heath-ch3-App (privat)**: Die AᵀA-Kollaps-Schwelle „k ≈ 7,9" im

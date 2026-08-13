@@ -141,7 +141,7 @@ export function RueckSubStepper() {
             <p className="mt-2 text-sm">
               Alle Komponenten stehen. Zählen wir nach: Zeile i setzt n−i bekannte Werte
               ein (je eine Multiplikation und Subtraktion) und teilt einmal durch ihr
-              Diagonalelement — macht n(n−1)/2 Multiplikationen, ebenso viele
+              Diagonalelement – macht n(n−1)/2 Multiplikationen, ebenso viele
               Subtraktionen und n Divisionen, zusammen exakt n² Operationen: das O(n²)
               aus dem Quiz.
             </p>
