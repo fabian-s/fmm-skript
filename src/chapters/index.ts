@@ -94,6 +94,18 @@ export const chapters: ChapterEntry[] = [
     load: () => import("./11-ableitungen-2"),
   },
   {
+    id: "12-konvexitaet",
+    title: "Kap. 12 · Konvexität",
+    deck: "12-konvexitaet",
+    load: () => import("./12-konvexitaet"),
+  },
+  {
+    id: "13-optim",
+    title: "Kap. 13 · Nichtlineare Gleichungen & Optimierung",
+    deck: "13-optim",
+    load: () => import("./13-optim"),
+  },
+  {
     id: "mdx-lab",
     title: "MDX-Syntaxlabor",
     deck: "02-algos",
