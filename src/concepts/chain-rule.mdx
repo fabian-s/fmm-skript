@@ -1,0 +1,30 @@
+export const title = "Kettenregel";
+
+{/* Konzept-Tooltip: Kettenregel, Verkettung, Jacobiprodukt. */}
+
+Die *Kettenregel* (chain rule) sagt, wie sich Ableitungen beim
+Hintereinanderausführen von Funktionen verhalten: Die
+:k[Ableitung]{#derivative} einer Verkettung ist die Verkettung der
+Ableitungen. Im einfachsten Fall, für $g \circ f$ mit reellen Funktionen,
+
+$$
+\bigl[g(f(x))\bigr]' = g'\bigl(f(x)\bigr) \cdot f'(x) ,
+$$
+
+wobei die äußere Ableitung an der *inneren Stelle* $f(x)$ ausgewertet wird.
+
+Dahinter steht ein einfaches Bild: Ableitungen sind lineare Näherungen, und
+die Näherung einer Verkettung ist die Verkettung der Näherungen. Deshalb
+überträgt sich die Regel wörtlich ins Mehrdimensionale, wo aus dem Produkt
+der Zahlen ein Produkt von :k[Jacobimatrizen]{#jacobian-matrix} wird:
+
+$$
+\bJ_{g \circ f}(\bx) = \bJ_g\bigl(f(\bx)\bigr)\, \bJ_f(\bx) .
+$$
+
+Ein Beispiel: $h(x) = \sin(x^2)$ ist die Verkettung von $f(x) = x^2$ und
+$g(u) = \sin u$, also $h'(x) = \cos(x^2) \cdot 2x$.
+
+Die Kettenregel ist das Arbeitspferd der Differentialrechnung: Sie zerlegt
+komplizierte Ableitungen in einfache Bausteine und ist der Kern der
+Backpropagation beim Training :k[neuronaler Netze]{#neural-network}.

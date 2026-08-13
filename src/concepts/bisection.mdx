@@ -1,0 +1,26 @@
+export const title = "Bisektionsverfahren";
+
+{/* Konzept-Tooltip: Bisektion, Intervallhalbierung, Vorzeichenwechsel. */}
+
+Das *Bisektionsverfahren* (bisection method) löst eine Gleichung $f(x) = 0$
+durch fortgesetztes Halbieren eines Intervalls. Es braucht nur zwei Zutaten:
+eine :k[stetige]{#continuity} Funktion $f$ und zwei Startpunkte $a < b$ mit
+verschiedenen Vorzeichen, $f(a) \cdot f(b) < 0$. Der
+:k[Zwischenwertsatz]{#intermediate-value-theorem} garantiert dann eine
+Nullstelle in $(a, b)$.
+
+In jedem Schritt wird der Mittelpunkt $m = (a + b)/2$ ausgewertet, und die
+Hälfte, in der der Vorzeichenwechsel liegt, wird zum neuen Intervall. Die
+Intervalllänge halbiert sich also pro Schritt, der Fehler fällt garantiert
+wie $2^{-k}$: Für die Genauigkeit $\epsilon$ genügen
+$\lceil \log_2((b - a)/\epsilon) \rceil$ Halbierungen.
+
+Ein Zahlenbeispiel: $f(x) = x^2 - 2$ auf $[1, 2]$ hat $f(1) = -1 < 0$ und
+$f(2) = 2 > 0$. Nach einem Schritt bleibt $[1;\ 1{,}5]$, nach zweien
+$[1{,}25;\ 1{,}5]$, und nach $10$ Schritten ist $\sqrt{2} \approx 1{,}4142$
+auf ungefähr $0{,}001$ eingeschachtelt.
+
+Die Bisektion ist langsam, aber unverwüstlich: keine Ableitungen, keine
+Glattheitsannahmen über die Stetigkeit hinaus, garantierte Konvergenz. Sie
+funktioniert allerdings nur für univariate Funktionen; im Mehrdimensionalen
+übernehmen Newton- und Fixpunktverfahren.

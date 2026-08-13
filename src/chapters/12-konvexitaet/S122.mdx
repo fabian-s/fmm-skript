@@ -1,3 +1,792 @@
-::quelle[Folien 12-konvexitaet.]
+import { KonvexTest } from "./widgets/S122KonvexTest";
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 12, siehe KONVENTIONEN.md).*
+::quelle[Folien 12-konvexitaet, von „Konvexe Mengen: Definition" bis „Konvexe Mengen: Anwendung"; die Quiz-Lösungen und die Beweisdetails aus den auskommentierten Folienblöcken sind mitverarbeitet.]
+
+### Mengen, die ihre Verbindungsstrecken enthalten
+
+In [Abschnitt 12.1](#sec-12.1) haben wir aus gegebenen Punkten neue gemacht: Konvexkombinationen
+mischen endlich viele Vektoren mit nichtnegativen Gewichten, die sich zu eins addieren. Jetzt
+drehen wir die Frage um. Statt zu fragen, welche Punkte aus einer Menge entstehen, fragen wir,
+welche Mengen unter dieser Konstruktion schon abgeschlossen sind.
+
+Das klingt nach einer technischen Spielerei, ist aber die Eigenschaft, an der in der Optimierung
+alles hängt. Die zulässige Menge eines Optimierungsproblems sammelt alle Punkte, die die
+Nebenbedingungen erfüllen. Ist sie konvex, so darf ein Verfahren, das zwei zulässige Punkte
+kennt, jeden Punkt dazwischen ausprobieren, ohne aus dem Erlaubten zu fallen. Ist sie es nicht,
+kann schon der Weg zwischen zwei guten Lösungen durch verbotenes Gebiet führen.
+
+:::definition[12.2.1 (Konvexe Menge)]
+Sei $V$ ein :k[Vektorraum]{#vector-space}. Eine Menge $\cblue{\Xcal} \subseteq V$ heißt
+*konvex* (convex), falls für alle $\bx, \by \in \cblue{\Xcal}$ und alle $\lambda \in [0,1]$ gilt:
+
+$$
+\cgreen{\lambda \bx + (1 - \lambda) \by} \in \cblue{\Xcal} .
+$$
+:::
+
+:::bemerkung[12.2.2 (Was die Bedingung verlangt)]
+Der grüne Ausdruck ist genau die Konvexkombination zweier Punkte aus
+[Abschnitt 12.1](#sec-12.1). Läuft $\lambda$ von $0$ nach $1$, so wandert er von $\by$ nach
+$\bx$ und durchläuft dabei die ganze Verbindungsstrecke. Konvex heißt also: Mit je zwei Punkten
+liegt auch die Strecke zwischen ihnen in der Menge. Anschaulich hat eine konvexe Menge weder
+Einbuchtungen noch Löcher.
+
+Drei Kleinigkeiten sind der Definition anzusehen. Erstens sind die Randfälle $\lambda = 0$ und
+$\lambda = 1$ zugelassen; sie geben $\by$ beziehungsweise $\bx$ zurück und sind damit
+automatisch erfüllt. Zweitens ist die leere Menge konvex, und einelementige Mengen sind es
+auch: Im ersten Fall gibt es kein Paar zu prüfen, im zweiten ist $\bx = \by$ und die
+Konvexkombination liefert wieder denselben Punkt.
+
+Drittens, und das ist beim Rechnen das Wichtigste, sind Nachweis und Widerlegung ungleich
+schwer. Ein einziges Paar, dessen Strecke heraushängt, widerlegt die Konvexität. Für den
+Nachweis dagegen müssen wir über *alle* Paare und alle $\lambda$ argumentieren, und dazu brauchen
+wir eine Rechnung, keine Beispiele.
+:::
+
+:::vertiefung[Konvexität zum Anklicken]
+Die Folien zeigen an dieser Stelle zwei Bilder, eine konvexe und eine nicht konvexe Menge.
+Statt sie abzudrucken, machen wir daraus einen Test: Wir wählen eine Menge, setzen zwei Punkte
+hinein und schauen der Verbindungsstrecke zu.
+
+<KonvexTest />
+
+Die Kreisscheibe und das Dreieck geben nicht nach, so oft wir es auch versuchen. Beim Kreisring
+und bei der Parabelunterseite finden wir dagegen schnell ein Paar, dessen Strecke hinausläuft.
+Der vorbereitete Knopf setzt beim Ring die Punkte $(1{,}1;\ 0)^\top$ und $(0;\ 1{,}1)^\top$; die
+Strecke zwischen ihnen liegt für $\lambda$ zwischen $0{,}380$ und $0{,}620$ im Loch, ihr
+Mittelpunkt hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und unterschreitet damit den Innenradius
+$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Die Kreisscheibe
+und die Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung statt mit
+Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
+anklickbar wäre.
+:::
+
+Die Definition spricht nur über zwei Punkte. Gemeint ist aber mehr, und der folgende Satz holt
+es nach. Die Folien benutzen ihn später stillschweigend, wenn sie über die konvexe Hülle
+argumentieren.
+
+:::satz[12.2.3 (Konvexe Mengen enthalten alle Konvexkombinationen)]
+Sei $\cblue{\Xcal} \subseteq V$ konvex, seien $\bx_1, \dots, \bx_N \in \cblue{\Xcal}$ und
+$w_1, \dots, w_N \ge 0$ mit $\sum_{i=1}^N w_i = 1$. Dann gilt
+
+$$
+\cgreen{\sum_{i=1}^N w_i \bx_i} \in \cblue{\Xcal} .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Induktion über $N$. Für $N = 1$ ist $w_1 = 1$ und die Summe gleich $\bx_1 \in \cblue{\Xcal}$.
+Für $N = 2$ ist $w_2 = 1 - w_1$, und die Behauptung ist wörtlich Definition 12.2.1.
+
+::why[die Nebenbedingung $\sum_i w_i = 1$ macht aus zwei Gewichten gerade das Paar $\lambda$ und $1 - \lambda$]
+:::
+
+:::schritt
+Sei die Aussage für $N$ Punkte bewiesen, und seien $\bx_1, \dots, \bx_{N+1}$ und Gewichte
+$w_1, \dots, w_{N+1}$ wie im Satz gegeben. Ist $w_{N+1} = 1$, so sind alle übrigen Gewichte
+null und die Summe ist $\bx_{N+1} \in \cblue{\Xcal}$. Sei also $w_{N+1} < 1$ und
+
+$$
+s := \sum_{i=1}^{N} w_i = 1 - w_{N+1} > 0 .
+$$
+
+::why[die Gewichte sind nichtnegativ und addieren sich zu eins, also ist $s = 1 - w_{N+1}$ und $s > 0$ genau dann, wenn $w_{N+1} < 1$]
+:::
+
+:::schritt
+Wir teilen die ersten $N$ Gewichte durch $s$. Die Zahlen $w_i/s$ sind nichtnegativ und addieren
+sich zu $1$, also ist
+
+$$
+\bu := \cgreen{\sum_{i=1}^{N} \frac{w_i}{s}\, \bx_i} \in \cblue{\Xcal}
+$$
+
+nach Induktionsvoraussetzung. Damit lässt sich die volle Summe als Konvexkombination *zweier*
+Punkte schreiben:
+
+$$
+\cgreen{\sum_{i=1}^{N+1} w_i \bx_i}
+= s\,\bu + (1 - s)\,\bx_{N+1}
+\in \cblue{\Xcal} ,
+$$
+
+denn $s \in (0, 1)$ und $\bu, \bx_{N+1} \in \cblue{\Xcal}$.
+
+::why[Definition 12.2.1 mit $\lambda = s$; der Trick ist das Normieren der ersten $N$ Gewichte, das aus einer $(N+1)$-Kombination eine Zweierkombination von etwas schon Bekanntem macht]
+:::
+
+:::schritt
+Zusammen mit $\cblue{\Xcal} \subseteq \conv(\cblue{\Xcal})$, was man an der Einerkombination
+$w_1 = 1$ abliest, folgt für konvexe Mengen
+
+$$
+\conv(\cblue{\Xcal}) = \cblue{\Xcal} .
+$$
+
+Eine Menge ist also genau dann konvex, wenn sie mit ihrer konvexen Hülle übereinstimmt.
+
+::why[der Satz liefert $\conv(\Xcal) \subseteq \Xcal$, die Einerkombination die umgekehrte Inklusion; die Definition der konvexen Hülle steht in Abschnitt 12.1]
+:::
+
+::::
+
+### Fünf Mengen im Selbsttest
+
+Die Folien stellen an dieser Stelle fünf Mengen zur Wahl. Rechnen wir sie einzeln durch.
+
+::::quiz
+
+:::frage{wahr}
+Die leere Menge $\emptyset$ ist konvex.
+
+Definition 12.2.1 fordert etwas über alle Paare $\bx, \by \in \cblue{\Xcal}$. In der leeren
+Menge gibt es kein solches Paar, also ist nichts zu prüfen und die Bedingung leer erfüllt. Mit
+demselben Argument ist jede einelementige Menge konvex, denn dort ist $\bx = \by$ und
+$\lambda\bx + (1-\lambda)\bx = \bx$.
+:::
+
+:::frage{wahr}
+Ein Vektorraum $V$ ist, als Teilmenge seiner selbst gelesen, konvex.
+
+Ein Vektorraum ist gegen Linearkombinationen abgeschlossen, und
+$\cgreen{\lambda\bx + (1-\lambda)\by}$ ist eine solche. Dasselbe gilt für jeden
+:k[Untervektorraum]{#subspace} und für affine Teilräume. Konvexe Mengen sind damit eine echte
+Verallgemeinerung: Sie verlangen die Abgeschlossenheit nur für Gewichte, die nichtnegativ sind
+und sich zu eins addieren.
+:::
+
+:::frage{falsch}
+Die Einheitssphäre $\{\bx \in V\colon \left\|\bx\right\| = 1\}$ ist konvex.
+
+Sie ist es nicht. Das Gegenbeispiel der Folien lebt im $\R^2$: Für
+$\cred{\bx} = (1, 0)^\top$ und $\cred{\by} = (0, 1)^\top$ ist $\left\|\bx\right\| = \left\|\by\right\| = 1$,
+aber der Mittelpunkt $\lambda = \tfrac12$ liefert
+
+$$
+\cred{\tfrac12 \bx + \tfrac12 \by} = (0{,}5;\ 0{,}5)^\top ,
+\qquad
+\left\|(0{,}5;\ 0{,}5)^\top\right\| = \sqrt{0{,}25 + 0{,}25} = \tfrac{1}{\sqrt 2} \approx 0{,}7071 \neq 1 .
+$$
+
+Kürzer und ohne Koordinaten geht es auch: Sobald $V \neq \{\bnull\}$ ist, gibt es ein $\bx$ mit
+$\left\|\bx\right\| = 1$, und dann liegt auch $-\bx$ auf der Sphäre. Deren Mittelpunkt ist
+$\bnull$ mit Norm $0$. Der Sphäre fehlt genau das Innere, das den Ball konvex macht.
+:::
+
+:::frage{wahr}
+Der geschlossene Ball $\{\bx \in V\colon \left\|\bx\right\| \le r\}$ ist konvex.
+
+Das ist die :k[Dreiecksungleichung]{#triangle-inequality} plus absolute Homogenität der
+:k[Norm]{#norm}. Für $\lambda \in [0,1]$ sind $\lambda$ und $1-\lambda$ nichtnegativ, also
+
+$$
+\left\|\cgreen{\lambda\bx + (1-\lambda)\by}\right\|
+\le \lambda\left\|\bx\right\| + (1-\lambda)\left\|\by\right\|
+\le \lambda r + (1-\lambda) r = r .
+$$
+
+Bemerkenswert daran ist, dass nirgends eine bestimmte Norm gebraucht wird: Kugeln bezüglich
+jeder Norm sind konvex, auch die Würfel und Rauten der $\infty$- und $1$-Norm aus
+[Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2).
+:::
+
+:::frage{falsch}
+Die Menge $\{(x, y) \in \R^2\colon y \le x^2\}$ ist konvex.
+
+Sie ist es nicht, denn sie liegt *unter* einer nach oben geöffneten Parabel. Die Punkte
+$\cred{(-1, 1)}$ und $\cred{(1, 1)}$ gehören dazu, denn $1 \le (\pm 1)^2 = 1$. Ihr Mittelpunkt
+ist $\cred{(0, 1)}$, und dort scheitert die Bedingung: $1 \le 0^2 = 0$ ist falsch. Die Strecke
+verlässt die Menge sogar für jedes $\lambda$ zwischen $0$ und $1$, wie das Widget vorführt.
+
+Konvex wäre die Menge oberhalb der Parabel, $\{(x,y)\colon y \ge x^2\}$. Diese Umkehrung ist
+kein Zufall, sie hängt daran, dass $x \mapsto x^2$ eine konvexe Funktion ist, und wir kommen in
+[Abschnitt 12.3](#sec-12.3) darauf zurück.
+:::
+
+::::
+
+### Weitere Beispiele
+
+:::beispiel[12.2.4 (Offener Ball)]
+Der offene Ball $\cblue{\Xcal} = \{\bx \in V\colon \left\|\bx\right\| < r\}$ ist ebenfalls
+konvex. Sei $\lambda \in [0,1]$. Mindestens eines der beiden Gewichte $\lambda$ und $1-\lambda$
+ist echt positiv, und schon deshalb wird die Abschätzung aus dem Selbsttest strikt:
+
+$$
+\left\|\cgreen{\lambda\bx + (1-\lambda)\by}\right\|
+\le \lambda\left\|\bx\right\| + (1-\lambda)\left\|\by\right\|
+< \lambda r + (1-\lambda) r = r .
+$$
+
+Die zweite Zeile verdient einen zweiten Blick. Aus $\left\|\bx\right\| < r$ folgt
+$\lambda\left\|\bx\right\| < \lambda r$ nur, solange $\lambda > 0$ ist; für $\lambda = 0$
+trägt der zweite Summand die strikte Ungleichung. Eine Fallunterscheidung brauchen wir
+deshalb nicht, wohl aber die Beobachtung, dass die beiden Gewichte nie gleichzeitig
+verschwinden.
+:::
+
+Der nächste Begriff beschreibt die Ecken einer konvexen Menge. In
+[Abschnitt 12.1](#sec-12.1) sind Extrempunkte über die Gewichte eingeführt worden, als Punkte
+also, die sich nur mit einem einzigen $w_i = 1$ erreichen lassen; die allgemeine Fassung steht
+dort schon als Nebenbemerkung. Hier machen wir sie zur Arbeitsgrundlage, denn die folgenden
+Sätze sprechen über konvexe Mengen, die niemand als Hülle einer Punktwolke gegeben hat.
+
+:::definition[12.2.5 (Extrempunkt)]
+Sei $\cblue{\Kcal} \subseteq V$ konvex. Ein Punkt $\corange{\bz} \in \cblue{\Kcal}$ heißt
+*Extrempunkt* (extreme point) von $\cblue{\Kcal}$, falls aus
+
+$$
+\corange{\bz} = \cgreen{\lambda \bu + (1-\lambda)\bw}
+\qquad \text{mit} \qquad
+\bu, \bw \in \cblue{\Kcal}, \ \lambda \in (0,1)
+$$
+
+stets $\bu = \bw = \corange{\bz}$ folgt.
+:::
+
+Ein Extrempunkt liegt also auf keiner Strecke, die ganz in der Menge verläuft und ihn im Inneren
+trifft. Der offene Ball aus Beispiel 12.2.4 hat deshalb gar keinen Extrempunkt: Jeder seiner
+Punkte ist Mittelpunkt zweier anderer Punkte des Balls. Beim geschlossenen *euklidischen* Ball
+dagegen ist jeder Randpunkt extrem. Auf die Norm kommt es dabei an: Der Einheitsball der
+$\infty$-Norm im $\R^2$ ist das Quadrat $[-1,1]^2$, und dessen Randpunkt $(1, 0)^\top$ ist der
+Mittelpunkt von $(1, -\tfrac12)^\top$ und $(1, \tfrac12)^\top$, die beide dazugehören. Extrem
+sind dort nur die vier Ecken.
+
+:::beispiel[12.2.6 (Der Simplex)]
+Der *Simplex*
+
+$$
+\cblue{\Delta^N} = \left\{\bx \in \R^N\colon x_i \ge 0 \text{ für alle } i, \ \sum_{i=1}^N x_i = 1\right\}
+$$
+
+ist konvex. Seien $\bx, \by \in \cblue{\Delta^N}$ und $\lambda \in [0,1]$. Die Komponenten von
+$\cgreen{\lambda\bx + (1-\lambda)\by}$ sind als Summe nichtnegativer Zahlen wieder
+nichtnegativ, und für die Gesamtsumme gilt
+
+$$
+\sum_{i=1}^N \left(\lambda x_i + (1-\lambda) y_i\right)
+= \lambda \sum_{i=1}^N x_i + (1-\lambda)\sum_{i=1}^N y_i
+= \lambda \cdot 1 + (1-\lambda)\cdot 1 = 1 .
+$$
+
+*Extrempunkte.* Die Extrempunkte von $\cblue{\Delta^N}$ sind genau die Standard-Basisvektoren
+$\corange{\be_1}, \dots, \corange{\be_N}$. Dass $\corange{\be_1}$ extrem ist, sieht man so: Gilt
+$\corange{\be_1} = \lambda\bu + (1-\lambda)\bw$ mit $\bu, \bw \in \cblue{\Delta^N}$ und
+$\lambda \in (0,1)$, so ist für jedes $i \ge 2$ die Zahl $\lambda u_i + (1-\lambda) w_i = 0$ eine
+Summe zweier nichtnegativer Terme mit positiven Vorfaktoren, also $u_i = w_i = 0$. Weil sich die
+Komponenten zu eins addieren, bleibt $u_1 = w_1 = 1$; für die übrigen $\corange{\be_i}$ läuft das
+Argument genauso. Umgekehrt ist jeder Punkt $\bx$ mit zwei *verschiedenen* positiven Komponenten
+$x_j, x_k > 0$, $j \neq k$, kein Extrempunkt: Für hinreichend kleines $\varepsilon > 0$
+liegen $\bx \pm \varepsilon(\be_j - \be_k)$ beide in $\cblue{\Delta^N}$, denn die Summe der
+Komponenten ändert sich nicht und alle bleiben nichtnegativ, und $\bx$ ist ihr Mittelpunkt.
+Dass die Ecken den Simplex auch aufspannen, sieht man ohne Umweg: Jedes $\bx \in \cblue{\Delta^N}$
+ist $\bx = \sum_{i=1}^N x_i \corange{\be_i}$, und die $x_i$ sind gerade nichtnegative Gewichte
+mit Summe eins. Also ist $\cblue{\Delta^N} = \conv\{\corange{\be_1}, \dots, \corange{\be_N}\}$.
+
+*Geometrie.* $\cblue{\Delta^2}$ ist die Strecke von $(1,0)^\top$ nach $(0,1)^\top$,
+$\cblue{\Delta^3}$ das Dreieck mit den Ecken $\corange{\be_1}, \corange{\be_2}, \corange{\be_3}$
+im $\R^3$, $\cblue{\Delta^4}$ ein Tetraeder. Der Simplex ist außerdem
+:k[abgeschlossen und beschränkt]{#closed-bounded-set}, denn er ist durch Gleichungen und
+nichtstrikte Ungleichungen beschrieben und erfüllt $\left\|\bx\right\|_1 = 1$.
+
+*Warum das in der Statistik zählt.* Ein Punkt von $\cblue{\Delta^N}$ ist nichts anderes als eine
+Wahrscheinlichkeitsverteilung über $N$ Ereignisse. Der Vektor $\bp = (0{,}2;\ 0{,}5;\ 0{,}3)^\top$
+beschreibt eine kategoriale Verteilung mit drei Kategorien, und die Extrempunkte
+$\corange{\be_i}$ sind die entarteten Verteilungen, die ihre ganze Masse auf eine Kategorie
+legen. Modelle, die Verteilungen vorhersagen, müssen deshalb in den Simplex hinein abbilden.
+Die übliche Wahl ist die Softmax-Abbildung
+
+$$
+\softmax(\bz)_i = \frac{\exp(z_i)}{\sum_{j=1}^N \exp(z_j)} ,
+$$
+
+deren Werte nichtnegativ sind und sich nach Konstruktion zu eins addieren. Für
+$\bz = (1;\ 2;\ 0{,}5)^\top$ etwa liefert sie $(0{,}231;\ 0{,}629;\ 0{,}140)^\top$. Alle
+Komponenten sind echt positiv, die Ecken werden also nie erreicht, sondern nur im Grenzwert
+angesteuert. Dieselbe Menge trägt die multinomiale Regression und die Dirichlet-Verteilung, die
+Verteilungen über $\cblue{\Delta^N}$ beschreibt.
+:::
+
+### Der Kegel der positiv semidefiniten Matrizen
+
+Das dritte Beispiel der Folien lebt nicht im $\R^n$, sondern in einem Raum von Matrizen. Das ist
+kein Sonderfall, denn die $n \times n$-Matrizen bilden mit der üblichen Addition und
+Skalarmultiplikation selbst einen :k[Vektorraum]{#vector-space}, und Definition 12.2.1 fragt
+nach nichts anderem.
+
+:::definition[12.2.7 (Positiv semidefinit)]
+Eine :k[symmetrische]{#symmetric-matrix} Matrix $\bA \in \R^{n \times n}$ heißt
+*positiv semidefinit* (PSD), falls
+
+$$
+\bx^\top \bA \bx \ge 0 \qquad \text{für alle } \bx \in \R^n .
+$$
+
+Wir schreiben dafür $\bA \succeq 0$ und sammeln alle diese Matrizen in
+
+$$
+\cblue{\Pcal_n} := \left\{\bA \in \R^{n \times n}\colon \bA = \bA^\top, \ \bx^\top\bA\bx \ge 0 \ \ \forall\, \bx \in \R^n \right\} .
+$$
+:::
+
+Die Folie verlangt die Symmetrie nicht. Für die Konvexität macht das keinen Unterschied, der
+Beweis unten läuft genauso, für alles andere aber sehr wohl. Die
+:k[quadratische Form]{#quadratic-form} $\bx^\top\bA\bx$ sieht von $\bA$ nur den symmetrischen
+Anteil $(\bA + \bA^\top)/2$, denn der schiefsymmetrische Teil liefert stets null. Ohne
+Symmetrie wäre $\bA \succeq 0$ also gar keine Eigenschaft von $\bA$ allein. Vor allem hängen die
+Aussagen, für die wir Semidefinitheit brauchen, an der Symmetrie: Nur für symmetrische Matrizen
+gibt der :k[Spektralsatz]{#spectral-theorem} die Äquivalenz zu „alle
+:k[Eigenwerte]{#eigenvalue-eigenvector} sind nichtnegativ" her, und nur dort greift das
+Cholesky-Verfahren aus [Abschnitt 5.4](?k=05-lgs#sec-5.4). Wir führen den Begriff deshalb wie
+üblich für symmetrische Matrizen.
+
+:::satz[12.2.8 (Die positiv semidefiniten Matrizen bilden eine konvexe Menge)]
+$\cblue{\Pcal_n}$ ist konvex.
+:::
+
+::::beweis
+
+:::schritt
+Seien $\bA_1, \bA_2 \in \cblue{\Pcal_n}$ und $\lambda \in [0,1]$. Wir setzen
+$\bA_\lambda := \cgreen{\lambda\bA_1 + (1-\lambda)\bA_2}$ und prüfen zuerst die Symmetrie:
+
+$$
+\bA_\lambda^\top = \lambda\bA_1^\top + (1-\lambda)\bA_2^\top = \lambda\bA_1 + (1-\lambda)\bA_2 = \bA_\lambda .
+$$
+
+::why[Transponieren ist linear, und beide Summanden sind nach Voraussetzung symmetrisch]
+:::
+
+:::schritt
+Sei nun $\bx \in \R^n$ beliebig. Dann ist
+
+$$
+\begin{aligned}
+\bx^\top \bA_\lambda \bx
+&= \bx^\top\left[\lambda\bA_1 + (1-\lambda)\bA_2\right]\bx \\
+&= \lambda\, \bx^\top\bA_1\bx + (1-\lambda)\, \bx^\top\bA_2\bx \\
+&\ge \lambda \cdot 0 + (1-\lambda)\cdot 0 = 0 .
+\end{aligned}
+$$
+
+Damit ist $\bA_\lambda \in \cblue{\Pcal_n}$.
+
+::why[die mittlere Zeile nutzt nur, dass das Matrix-Vektor-Produkt in der Matrix linear ist; die Abschätzung nutzt $\bA_1, \bA_2 \succeq 0$ und $\lambda, 1-\lambda \ge 0$]
+:::
+
+::::
+
+:::bemerkung[12.2.9 (Kovarianzmatrizen sind semidefinit, nicht immer definit)]
+Die Folie hängt als Anwendung an: Kovarianzmatrizen seien SPD, also symmetrisch und positiv
+*definit*, und bildeten deshalb eine konvexe Menge. Die Konvexität stimmt, die Begründung
+greift zu hoch.
+
+Richtig ist: Kovarianzmatrizen sind stets symmetrisch und positiv *semi*definit. Für einen
+Zufallsvektor $\bX$ mit :k[Kovarianzmatrix]{#covariance-matrix} $\bSigma$ und beliebiges
+$\ba \in \R^n$ gilt
+
+$$
+\ba^\top \bSigma \ba = \var\left(\ba^\top \bX\right) \ge 0 ,
+$$
+
+und eine Varianz ist nie negativ. Positiv definit ist $\bSigma$ dagegen nur, wenn es keine
+lineare Degeneration gibt, wenn also kein $\ba \neq \bnull$ existiert, für das
+$\ba^\top\bX$ fast sicher konstant ist. Ein Gegenbeispiel ist schnell gebaut: Für
+$\bX = (Z, Z)^\top$ mit $\var(Z) = 1$ ist
+
+$$
+\cred{\bSigma} = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix} ,
+\qquad
+\ba = (1, -1)^\top ,
+\qquad
+\ba^\top\cred{\bSigma}\ba = 0 ,
+$$
+
+und die Eigenwerte sind $2$ und $0$. In der Praxis passiert genau das, sobald zwei Merkmale
+exakt linear zusammenhängen oder eine empirische Kovarianzmatrix aus zu wenigen Beobachtungen
+geschätzt wird. Das ist kein Haarspalten: Das Cholesky-Verfahren aus
+[Abschnitt 5.4](?k=05-lgs#sec-5.4) verlangt positive Definitheit und scheitert im degenerierten
+Fall.
+
+Die konvexe Menge, die hier gemeint ist, ist also $\cblue{\Pcal_n}$, der Kegel der
+semidefiniten Matrizen. Die positiv definiten Matrizen bilden übrigens ebenfalls eine konvexe
+Menge, mit demselben Beweis und strikten Ungleichungen; sie ist das Innere von
+$\cblue{\Pcal_n}$ *innerhalb des Raums der symmetrischen Matrizen*. Im vollen
+$\R^{n \times n}$ hätte $\cblue{\Pcal_n}$ dagegen gar kein Inneres, denn die Forderung
+$\bA = \bA^\top$ sperrt sie in einen echten Untervektorraum.
+:::
+
+### Operationen, die Konvexität erhalten
+
+Bis hierhin haben wir jede Menge einzeln geprüft. Das wird schnell mühsam. Bequemer ist es,
+wenige Grundbausteine als konvex nachzuweisen und dann Regeln zu haben, die aus konvexen Mengen
+neue konvexe Mengen machen. Vier solche Regeln stellen die Folien zusammen.
+
+:::satz[12.2.10 (Konvexitätserhaltung)]
+Sei $\cblue{\Xcal}$ konvex und sei $(\cblue{\Xcal_i})_{i \in I}$ eine Familie konvexer Mengen
+über einer beliebigen Indexmenge $I$. Dann sind auch die folgenden Mengen konvex:
+
+1. *Schnitt:* $\displaystyle \cblue{\Scal} = \bigcap_{i \in I} \cblue{\Xcal_i}$, sofern alle
+   $\cblue{\Xcal_i}$ im selben Vektorraum liegen;
+2. *Kartesisches Produkt:* $\cblue{\Xcal_1} \times \cdots \times \cblue{\Xcal_k}$, hier dürfen
+   die Faktoren in verschiedenen Vektorräumen leben, und das Produkt trägt die
+   komponentenweisen Verknüpfungen;
+3. *Bild unter einer affinen Abbildung:* Für $\cblue{\Xcal} \subseteq \R^n$ und
+   $f\colon \R^n \to \R^m$, $f(\bx) = \bA\bx + \bb$, ist
+   $f(\cblue{\Xcal}) = \{\by = f(\bx)\colon \bx \in \cblue{\Xcal}\}$ konvex;
+4. *Summe:* $\cblue{\Xcal_1} \oplus \cblue{\Xcal_2} := \{\bx_1 + \bx_2\colon \bx_1 \in \cblue{\Xcal_1}, \bx_2 \in \cblue{\Xcal_2}\}$ für $\cblue{\Xcal_1}, \cblue{\Xcal_2} \subseteq \R^n$.
+:::
+
+::::beweis
+
+:::schritt
+*Schnitt.* Seien $\bx, \by \in \cblue{\Scal}$, $\lambda \in [0,1]$ und
+$\bz = \cgreen{\lambda\bx + (1-\lambda)\by}$. Aus $\bx, \by \in \cblue{\Scal}$ folgt
+$\bx, \by \in \cblue{\Xcal_i}$ für jedes $i \in I$. Weil jedes $\cblue{\Xcal_i}$ konvex ist,
+liegt $\bz$ in jedem $\cblue{\Xcal_i}$, also in ihrem Schnitt.
+
+::why[hier wird über die Indexmenge nichts vorausgesetzt; das Argument läuft für endlich, abzählbar oder überabzählbar viele Mengen gleich]
+:::
+
+:::schritt
+*Kartesisches Produkt.* Seien $(\bx_1, \dots, \bx_k)$ und $(\by_1, \dots, \by_k)$ zwei Elemente
+des Produkts und $\lambda \in [0,1]$. Addition und Skalarmultiplikation laufen im Produktraum
+komponentenweise, also ist
+
+$$
+\begin{aligned}
+&\quad \cgreen{\lambda (\bx_1, \dots, \bx_k) + (1-\lambda)(\by_1, \dots, \by_k)} \\
+&= \left(\cgreen{\lambda\bx_1 + (1-\lambda)\by_1}, \ \dots, \ \cgreen{\lambda\bx_k + (1-\lambda)\by_k}\right)
+\in \cblue{\Xcal_1} \times \cdots \times \cblue{\Xcal_k} ,
+\end{aligned}
+$$
+
+denn die $j$-te Komponente liegt nach Voraussetzung in $\cblue{\Xcal_j}$.
+
+::why[jede Komponente wird für sich gemischt, also greift die Konvexität von $\Xcal_j$ genau auf der $j$-ten Stelle]
+:::
+
+:::schritt
+*Affines Bild.* Seien $\by_1 = f(\bx_1)$ und $\by_2 = f(\bx_2)$ zwei Punkte von
+$f(\cblue{\Xcal})$ mit $\bx_1, \bx_2 \in \cblue{\Xcal}$, und sei $\lambda \in [0,1]$. Dann ist
+
+$$
+\begin{aligned}
+\cgreen{\lambda\by_1 + (1-\lambda)\by_2}
+&= \lambda(\bA\bx_1 + \bb) + (1-\lambda)(\bA\bx_2 + \bb) \\
+&= \bA\left(\cgreen{\lambda\bx_1 + (1-\lambda)\bx_2}\right) + \bb \\
+&= f\left(\cgreen{\lambda\bx_1 + (1-\lambda)\bx_2}\right) \in f(\cblue{\Xcal}) .
+\end{aligned}
+$$
+
+::why[in der mittleren Zeile heben sich die beiden $\bb$-Anteile zu einem einzigen $\bb$ auf, weil $\lambda + (1-\lambda) = 1$ ist; genau dafür braucht es Konvex- statt Linearkombinationen]
+:::
+
+:::schritt
+*Summe.* Das folgt aus den beiden vorigen Punkten. Nach Schritt 2 ist
+$\cblue{\Xcal_1} \times \cblue{\Xcal_2} \subseteq \R^{2n}$ konvex, und
+$f(\bx_1, \bx_2) = \bx_1 + \bx_2$ ist linear, in Matrixform
+$f(\bz) = (\bI_n \ \ \bI_n)\,\bz$. Nach Schritt 3 ist das Bild konvex, und dieses Bild ist
+gerade $\cblue{\Xcal_1} \oplus \cblue{\Xcal_2}$.
+
+::why[Schritt 3 mit $\bA = (\bI_n \ \ \bI_n) \in \R^{n \times 2n}$ und $\bb = \bnull$]
+:::
+
+::::
+
+:::bemerkung[12.2.11 (Drei Stellen, an denen die Folie ungenau ist)]
+*Das Produkt heißt kartesisch.* Die Folie überschreibt Punkt 2 mit „Äußeres Produkt". Gemeint
+ist das kartesische Produkt der Mengen, also die Menge aller Tupel. Das äußere Produkt ist in
+diesem Kurs etwas anderes, nämlich $\bv \otimes \bw = \bv\bw^\top$ aus
+[Abschnitt 9.3](?k=09-tensoren#sec-9.3), und die beiden haben nichts miteinander zu tun. Wir
+schreiben deshalb durchgehend kartesisches Produkt.
+
+*Die Abbildung ist affin.* Punkt 3 überschreibt die Folie mit „Lineare Abbildungen", die Formel
+darunter lautet aber $f(\bx) = \bA\bx + \bb$. Das ist eine affine Abbildung, und linear ist sie
+nur für $\bb = \bnull$. Der Beweis benutzt tatsächlich nur die Affinität, die Aussage gilt also
+in der allgemeineren Form; nur der Name auf der Folie passt nicht dazu. Der Verschiebungsanteil
+ist übrigens der Grund, warum Konvexkombinationen und nicht beliebige Linearkombinationen
+betrachtet werden: Erst $\lambda + (1-\lambda) = 1$ lässt aus zwei $\bb$-Anteilen wieder genau
+ein $\bb$ werden.
+
+*Der Schnitt darf beliebig groß sein.* Die Folie schreibt $\bigcap_{i=1}^\infty$ und deckt damit
+nur abzählbar viele Mengen ab. Der Beweis kennt gar keine Abzählung, und wir brauchen die
+allgemeine Fassung gleich: Satz 12.2.13 schneidet über *alle* konvexen Obermengen einer Menge,
+und das sind im Allgemeinen überabzählbar viele.
+:::
+
+:::beispiel[12.2.12 (Ein Dreieck als Schnitt dreier Halbräume)]
+Im $\R^2$ betrachten wir die drei Mengen
+
+$$
+\cblue{\Xcal_1} = \{(x,y)\colon x + y \le 1\}, \qquad
+\cblue{\Xcal_2} = \{(x,y)\colon x \ge 0\}, \qquad
+\cblue{\Xcal_3} = \{(x,y)\colon y \ge 0\} .
+$$
+
+Jede von ihnen ist ein *Halbraum*, also eine der beiden Seiten einer
+:k[Hyperebene]{#hyperplane} und damit von der Form $\{\bz\colon \ba^\top\bz \le \beta\}$; für
+$\cblue{\Xcal_2}$ etwa mit $\ba = (-1, 0)^\top$ und $\beta = 0$. Jeder Halbraum ist konvex:
+
+$$
+\ba^\top\left(\cgreen{\lambda\bz_1 + (1-\lambda)\bz_2}\right)
+= \lambda\, \ba^\top\bz_1 + (1-\lambda)\, \ba^\top\bz_2
+\le \lambda\beta + (1-\lambda)\beta = \beta .
+$$
+
+Nach Satz 12.2.10(1) ist damit auch der Schnitt konvex, und der ist
+
+$$
+\cblue{\Scal} = \cblue{\Xcal_1} \cap \cblue{\Xcal_2} \cap \cblue{\Xcal_3}
+= \{(x,y)\colon x \ge 0,\ y \ge 0,\ x + y \le 1\} ,
+$$
+
+also das Dreieck mit den Ecken $\corange{(0,0)}$, $\corange{(1,0)}$ und $\corange{(0,1)}$. Genau
+diese Menge steckt hinter dem Knopf „Dreieck" im Widget oben, samt ihren drei orangen
+Extrempunkten.
+
+Das Muster trägt weit. Endliche Schnitte von Halbräumen heißen *Polyeder*, und die zulässigen
+Mengen linearer Optimierungsprobleme sind von dieser Bauart: endlich viele lineare
+Ungleichungen, jede ein Halbraum, zusammen ein konvexes Polyeder. Die Optimierung unter solchen
+Nebenbedingungen ist Thema von [Abschnitt 13.5](?k=13-optim#sec-13.5).
+:::
+
+### Die konvexe Hülle als kleinste konvexe Obermenge
+
+In [Abschnitt 12.1](#sec-12.1) ist $\conv(\cblue{\Xcal})$ als Menge aller Konvexkombinationen
+endlich vieler Punkte aus $\cblue{\Xcal}$ eingeführt worden, mit dem Zusatz, sie sei die
+kleinste konvexe Menge, die $\cblue{\Xcal}$ enthält. Der folgende Satz sagt genau das, und zwar
+in einer Form, die sich beweisen lässt.
+
+:::satz[12.2.13 (Konvexe Hülle als Durchschnitt)]
+Für jede Menge $\cblue{\Xcal} \subseteq V$ gilt
+
+$$ {#eq-12.2.1}
+\conv(\cblue{\Xcal}) = \bigcap_{\cblue{\Xcal} \subseteq \cblue{\Ycal},\ \cblue{\Ycal} \text{ konvex}} \cblue{\Ycal} .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Zuerst halten wir fest, dass $\conv(\cblue{\Xcal})$ überhaupt konvex ist. Die Folie sagt das
+„per Definition", nachzurechnen ist es trotzdem. Seien
+$\bz = \sum_{i=1}^{N} w_i \bx_i$ und $\bz' = \sum_{j=1}^{M} w'_j \bx'_j$ zwei
+Konvexkombinationen von Punkten aus $\cblue{\Xcal}$ und $\lambda \in [0,1]$. Dann ist
+
+$$
+\cgreen{\lambda\bz + (1-\lambda)\bz'}
+= \sum_{i=1}^{N} \lambda w_i\, \bx_i + \sum_{j=1}^{M} (1-\lambda) w'_j\, \bx'_j
+$$
+
+wieder eine Konvexkombination von endlich vielen Punkten aus $\cblue{\Xcal}$: Alle Gewichte
+sind nichtnegativ, und ihre Summe ist $\lambda \cdot 1 + (1-\lambda)\cdot 1 = 1$.
+
+::why[Konvexkombinationen von Konvexkombinationen sind wieder Konvexkombinationen; das ist dieselbe Rechnung wie im Induktionsschritt zu Satz 12.2.3, nur in die andere Richtung gelesen]
+:::
+
+:::schritt
+Sei $\cblue{\Scal}$ die rechte Seite von ($12.2.1$). Über wie viele Mengen dieser Schnitt läuft,
+brauchen wir nicht zu wissen; leer ist die Familie jedenfalls nicht, denn $V$ selbst ist konvex
+und enthält $\cblue{\Xcal}$. Wir zeigen
+$\conv(\cblue{\Xcal}) \subseteq \cblue{\Scal}$. Sei dazu $\cblue{\Ycal}$ irgendeine konvexe
+Menge mit $\cblue{\Xcal} \subseteq \cblue{\Ycal}$, und sei $\bz \in \conv(\cblue{\Xcal})$, also
+$\bz = \sum_i w_i \bx_i$ mit $\bx_i \in \cblue{\Xcal}$. Dann sind alle $\bx_i$ auch Punkte von
+$\cblue{\Ycal}$, und weil $\cblue{\Ycal}$ konvex ist, liegt nach Satz 12.2.3 die ganze
+Konvexkombination in $\cblue{\Ycal}$. Das gilt für jedes solche $\cblue{\Ycal}$, also auch für
+den Schnitt.
+
+::why[genau hier wird Satz 12.2.3 gebraucht: Die Definition der Konvexität spricht nur über zwei Punkte, die Konvexkombination hat aber $N$ Summanden]
+:::
+
+:::schritt
+Umgekehrt gilt $\cblue{\Scal} \subseteq \conv(\cblue{\Xcal})$. Nach Schritt 1 ist
+$\cblue{\Ycal} = \conv(\cblue{\Xcal})$ selbst eine konvexe Menge, die $\cblue{\Xcal}$ enthält,
+denn jedes $\bx \in \cblue{\Xcal}$ ist die Einerkombination seiner selbst. Der Schnitt läuft
+also unter anderem über diese Menge und ist damit in ihr enthalten.
+
+::why[ein Durchschnitt ist in jedem seiner Teilnehmer enthalten; der Trick ist nur, $\conv(\Xcal)$ als einen dieser Teilnehmer zu erkennen]
+:::
+
+:::schritt
+Beide Inklusionen zusammen geben ($12.2.1$). Damit ist $\conv(\cblue{\Xcal})$ in einem präzisen
+Sinn die kleinste konvexe Obermenge von $\cblue{\Xcal}$: Sie ist konvex, sie enthält
+$\cblue{\Xcal}$, und sie steckt in jeder anderen Menge mit diesen beiden Eigenschaften.
+
+::why[Schritt 2 sagt „steckt in jeder anderen", Schritt 1 und die Einerkombination sagen „ist selbst eine solche"]
+:::
+
+::::
+
+### Anwendung: lineare Ziele werden in Ecken angenommen
+
+Zum Abschluss die Anwendung, mit der die Folien den Abschnitt beenden. Sie erklärt, warum sich
+der ganze Aufwand mit Hüllen und Extrempunkten in der Optimierung lohnt.
+
+Sei $\cblue{\Xcal} \subseteq \N^n$ eine Menge von Zusammenstellungen: Ein Vektor
+$\bx \in \cblue{\Xcal}$ sagt mit $x_i = k$, dass $k$ Einheiten des $i$-ten Gegenstands vorhanden
+sind. Jeder Gegenstand hat einen Wert $v_i$, und gesucht ist die wertvollste zulässige
+Zusammenstellung,
+
+$$
+\corange{\bx^\star} \in \argmax_{\bx \in \cblue{\Xcal}} \ \sum_{i=1}^n v_i x_i
+= \argmax_{\bx \in \cblue{\Xcal}} \ \bv^\top\bx .
+$$
+
+Die Folie schreibt an dieser Stelle $\bx^\star = \max_{\bx \in \cblue{\Xcal}} \sum_{i=1}^n v_i x_i$. Das Maximum ist
+aber der erreichte *Wert* und nicht die Stelle, an der er angenommen wird; gemeint ist das
+Argmax, und mehrdeutig ist es obendrein, weshalb dort ein Elementzeichen steht.
+
+Ist $\cblue{\Xcal}$ groß, so ist das Absuchen aller Vektoren aussichtslos. Der folgende Satz
+verkleinert die Suche drastisch.
+
+:::satz[12.2.14 (Lineare Ziele und Extrempunkte)]
+Sei $\cblue{\Xcal} \subset \R^n$ endlich und nichtleer, sei $\bv \in \R^n$ und
+$M := \max_{\bx \in \cblue{\Xcal}} \bv^\top\bx$. Dann gilt:
+
+1. $\displaystyle \max_{\bz \in \conv(\cblue{\Xcal})} \bv^\top\bz = M$, das Maximum wächst durch
+   den Übergang zur konvexen Hülle also nicht;
+2. unter den Maximierern in $\cblue{\Xcal}$ gibt es einen Extrempunkt $\corange{\bx^\star}$ von
+   $\conv(\cblue{\Xcal})$;
+3. jeder Extrempunkt von $\conv(\cblue{\Xcal})$ liegt in $\cblue{\Xcal}$.
+:::
+
+::::beweis
+
+:::schritt
+*Zu 1.* Wegen $\cblue{\Xcal} \subseteq \conv(\cblue{\Xcal})$ ist das Maximum über die Hülle
+mindestens $M$. Umgekehrt sei $\bz = \sum_i w_i \bx_i \in \conv(\cblue{\Xcal})$. Dann ist
+
+$$
+\bv^\top\bz = \sum_i w_i\, \bv^\top\bx_i \le \sum_i w_i M = M ,
+$$
+
+also ist das Maximum über die Hülle höchstens $M$.
+
+::why[ein gewichteter Durchschnitt von Zahlen, die alle höchstens $M$ sind, ist höchstens $M$; die Gewichte addieren sich zu eins]
+:::
+
+:::schritt
+Sei $\cblue{\Xcal_M} := \{\bx \in \cblue{\Xcal}\colon \bv^\top\bx = M\}$ die Menge der
+Maximierer und $\cblue{\Fcal} := \{\bz \in \conv(\cblue{\Xcal})\colon \bv^\top\bz = M\}$. Wir zeigen
+$\cblue{\Fcal} = \conv(\cblue{\Xcal_M})$. Von rechts nach links rechnen wir direkt nach: Für
+$\bz = \sum_i w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal_M}$ ist
+$\bv^\top\bz = \sum_i w_i M = M$. Für die andere Richtung sei $\bz = \sum_i w_i\bx_i \in \cblue{\Fcal}$
+mit $\bx_i \in \cblue{\Xcal}$ und $w_i > 0$. Aus
+$\sum_i w_i (M - \bv^\top\bx_i) = M - \bv^\top\bz = 0$ und
+$M - \bv^\top\bx_i \ge 0$ folgt $\bv^\top\bx_i = M$ für jedes dieser $i$.
+
+::why[eine Summe nichtnegativer Terme mit positiven Gewichten ist nur dann null, wenn jeder Term null ist]
+:::
+
+:::schritt
+Unter den endlich vielen Punkten von $\cblue{\Xcal_M}$ wählen wir einen mit größter
+euklidischer Norm und nennen ihn $\corange{\bx^\star}$. Er maximiert die Norm sogar über ganz
+$\conv(\cblue{\Xcal_M})$, denn
+$\left\|\sum_i w_i\bx_i\right\| \le \sum_i w_i \left\|\bx_i\right\| \le \max_i \left\|\bx_i\right\|$.
+Nun sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
+$\bu, \bw \in \conv(\cblue{\Xcal_M})$ und $\lambda \in (0,1)$. Ausmultiplizieren liefert die
+Identität
+
+$$ {#eq-12.2.2}
+\lambda\left\|\bu\right\|^2 + (1-\lambda)\left\|\bw\right\|^2
+- \left\|\cgreen{\lambda\bu + (1-\lambda)\bw}\right\|^2
+= \lambda(1-\lambda)\left\|\bu - \bw\right\|^2 .
+$$
+
+Die linke Seite ist höchstens null, weil $\left\|\bu\right\|$ und $\left\|\bw\right\|$ beide
+höchstens $\left\|\corange{\bx^\star}\right\|$ sind. Die rechte Seite ist mindestens null. Also
+sind beide null, und wegen $\lambda(1-\lambda) > 0$ folgt $\bu = \bw$ und damit
+$\bu = \bw = \corange{\bx^\star}$. Der Punkt $\corange{\bx^\star}$ ist somit Extrempunkt von
+$\conv(\cblue{\Xcal_M})$.
+
+::why[($12.2.2$) entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$]
+:::
+
+:::schritt
+*Zu 2.* Wir zeigen, dass $\corange{\bx^\star}$ sogar Extrempunkt von $\conv(\cblue{\Xcal})$ ist.
+Sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
+$\bu, \bw \in \conv(\cblue{\Xcal})$ und $\lambda \in (0,1)$. Dann ist
+$M = \lambda\,\bv^\top\bu + (1-\lambda)\,\bv^\top\bw$, und nach Schritt 1 sind $\bv^\top\bu$ und
+$\bv^\top\bw$ beide höchstens $M$. Also ist $\bv^\top\bu = \bv^\top\bw = M$, das heißt
+$\bu, \bw \in \cblue{\Fcal} = \conv(\cblue{\Xcal_M})$. Nach Schritt 3 folgt
+$\bu = \bw = \corange{\bx^\star}$.
+
+::why[dasselbe Durchschnittsargument wie in Schritt 2, diesmal mit nur zwei Summanden]
+:::
+
+:::schritt
+*Zu 3.* Sei $\corange{\bz}$ ein Extrempunkt von $\conv(\cblue{\Xcal})$, geschrieben als
+$\corange{\bz} = \sum_{i=1}^{N} w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal}$ und $w_i > 0$. Ist
+$N = 1$, so ist $\corange{\bz} = \bx_1 \in \cblue{\Xcal}$. Ist $N \ge 2$, so schreiben wir
+$\corange{\bz} = w_1\bx_1 + (1-w_1)\bu$ mit
+$\bu = \sum_{i\ge 2} \frac{w_i}{1-w_1}\bx_i \in \conv(\cblue{\Xcal})$ und $w_1 \in (0,1)$; weil
+$\corange{\bz}$ extrem ist, folgt $\bx_1 = \corange{\bz}$, also wieder
+$\corange{\bz} \in \cblue{\Xcal}$.
+
+::why[dieselbe Normierung wie im Beweis zu Satz 12.2.3, hier benutzt, um eine $N$-Kombination als Zweierkombination zu lesen]
+:::
+
+::::
+
+:::beispiel[12.2.15 (Auswahl unter einer Budgetschranke)]
+Zwei Gegenstände, der erste kostet $2$ und ist $5$ wert, der zweite kostet $3$ und ist $8$ wert.
+Das Budget beträgt $12$, ganze Einheiten sind zu wählen:
+
+$$
+\cblue{\Xcal} = \left\{\bx \in \N^2\colon 2x_1 + 3x_2 \le 12\right\} ,
+\qquad
+\bv = (5, 8)^\top .
+$$
+
+Diese Menge hat $19$ Elemente. Ihre konvexe Hülle ist das Dreieck
+$\{\bx \in \R^2\colon x_1 \ge 0,\ x_2 \ge 0,\ 2x_1 + 3x_2 \le 12\}$ mit den drei Extrempunkten
+
+$$
+\corange{(0,0)}, \qquad \corange{(6,0)}, \qquad \corange{(0,4)} ,
+$$
+
+denn alle Punkte von $\cblue{\Xcal}$ erfüllen die drei Ungleichungen, und die drei Ecken liegen
+selbst in $\cblue{\Xcal}$. Die Zielwerte dort sind $0$, $30$ und $32$. Nach Satz 12.2.14 ist
+$\corange{\bx^\star} = \corange{(0,4)}$ mit dem Wert $32$ eine Lösung, und wir haben dafür drei
+Punkte geprüft statt neunzehn.
+
+Lehrreich ist der Zweitplatzierte. Der Punkt $\cred{(3,2)}$ schöpft das Budget voll aus
+($2 \cdot 3 + 3 \cdot 2 = 12$) und erreicht den Wert $31$; er liegt damit auf der Kante von
+$\conv(\cblue{\Xcal})$ zwischen $\corange{(6,0)}$ und $\corange{(0,4)}$. Ein Extrempunkt ist er
+trotzdem nicht, denn er ist genau deren Mittelpunkt. Wer nur die Ecken absucht, übersieht ihn
+und verliert dadurch nichts.
+:::
+
+:::bemerkung[12.2.16 (Was der Satz leistet und was nicht)]
+*Nicht jeder Maximierer ist ein Extrempunkt.* Satz 12.2.14(2) verspricht die Existenz eines
+solchen, nicht mehr. Bei $\cblue{\Xcal} = \{(0,0), (1,0), (2,0)\}$ und $\bv = (0,1)^\top$ haben
+alle drei Punkte den Zielwert $0$, sind also alle Maximierer. Der mittlere ist aber der
+Mittelpunkt der beiden äußeren und deshalb kein Extrempunkt. Bei Gleichständen taugt der Satz
+also zum Finden *einer* Lösung, nicht zum Beschreiben aller.
+
+*Endlichkeit ist nicht kosmetisch.* Für unendliche Mengen muss das Maximum nicht angenommen
+werden. Der offene Ball aus Beispiel 12.2.4 hat, wie wir gesehen haben, überhaupt keine
+Extrempunkte, und für $\bv \neq \bnull$ erreicht $\bv^\top\bx$ dort sein Supremum nie. Ist die
+Menge dagegen kompakt und konvex, so wird das Maximum eines linearen Ziels weiterhin in einem
+Extrempunkt angenommen; dort besagt der Satz von Minkowski sogar, dass sich die ganze Menge als
+konvexe Hülle ihrer Extrempunkte schreiben lässt.
+
+*Die Arbeit verschiebt sich, sie verschwindet nicht.* Der Satz ersetzt die Suche über
+$\cblue{\Xcal}$ durch die Suche über die Extrempunkte von $\conv(\cblue{\Xcal})$. Das nützt nur,
+wenn wir diese Hülle beschreiben können. In Beispiel 12.2.15 war sie leicht zu bekommen, weil
+die Ecken des zugehörigen Ungleichungssystems zufällig ganzzahlig sind. Für allgemeine
+Teilmengen von $\N^n$ ist $\conv(\cblue{\Xcal})$ dagegen selbst schwer zu bestimmen, und genau
+darin liegt die Schwierigkeit der ganzzahligen Optimierung. Ist umgekehrt die zulässige Menge
+von vornherein ein Polyeder wie in Beispiel 12.2.12, so ist die Suche über die Ecken die
+Grundidee der linearen Programmierung. Dieses Verfahren behandelt der Kurs nicht;
+[Abschnitt 13.5](?k=13-optim#sec-13.5) geht die Optimierung unter Nebenbedingungen stattdessen
+über Lagrange-Multiplikatoren und die Karush-Kuhn-Tucker-Bedingungen an.
+:::
+
+*Vertiefung: Boyd und Vandenberghe, Convex Optimization, §2.2 und §2.3 behandeln dieselben Themen
+ausführlicher, mit §2.1 zu affinen und konvexen Mengen, §2.2 zu den wichtigen Beispielen
+einschließlich Simplex und semidefinitem Kegel und §2.3 zu den Operationen, die Konvexität
+erhalten.*
