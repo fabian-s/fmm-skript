@@ -906,6 +906,360 @@ Lesson-Zeile ein.
   $\nabla\ell(\btheta)^\top$, benennt die fehlende Transposition und führt
   den Grad durchgehend als $j$.*
 
+## 12-konvexitaet
+
+- **Z. 76 („Warum Konvexität wichtig ist")**: „Konvexe Optimierungsprobleme
+  haben *eindeutige globale* Minima" verspricht zu viel. Konvexität liefert
+  nur: jedes lokale Minimum ist global. Eindeutigkeit braucht STRIKTE
+  Konvexität (die Folie sagt das selbst erst auf Z. 717; Gegenbeispiel: jede
+  konstante Funktion), Existenz noch einmal eine eigene Voraussetzung
+  (f(x) = e^x ist konvex und nimmt ihr Infimum 0 auf R nie an).
+  *Skript §12.1 trennt die drei Aussagen in der Einführung und im Selbsttest
+  und verweist für die Belege auf §12.5.*
+- **Z. 105–107 (Beispiel Erwartungswert)**: Der Erwartungswert einer
+  „diskreten Zufallsvariable" ist nur bei ENDLICHEM Träger eine
+  Konvexkombination im Sinne der Definition von Z. 96 (dort ist
+  $\Xcal = \{\bx_1, \dots, \bx_k\}$ endlich); bei abzählbar unendlichem
+  Träger braucht es einen Grenzübergang. *Skript Beispiel 12.1.3 setzt
+  endlichen Träger voraus.*
+- **Z. 133 (Extrempunkte)**: „Extrempunkte sind Punkte, die nur mit einem
+  $w_i = 1$ erreicht werden" lässt offen, aus welcher Menge kombiniert wird,
+  und weicht stillschweigend von der üblichen Definition ab (x ist Extrempunkt
+  einer konvexen Menge C, wenn x im Inneren keiner ganz in C verlaufenden
+  Strecke liegt). *Skript Definition 12.1.7 formuliert die Folienfassung
+  präzise, Bemerkung 12.1.8 stellt die Literaturfassung daneben und hält fest,
+  dass die Eigenschaft an der ganzen Menge hängt.*
+- **Z. 111 und Z. 125 (Tippfehler)**: „Die Menge alle Konvexkombinationen"
+  (statt „aller") und „von endlichen vielen Vektoren" (statt „endlich vielen").
+- **Z. 239 (Def. Positiv Semi-Definit)**: Die Definition verlangt keine
+  Symmetrie. Die quadratische Form $\bx^\top\bA\bx$ sieht von $\bA$ aber nur
+  den symmetrischen Anteil $(\bA+\bA^\top)/2$, „$\bA \succeq 0$" ist ohne
+  Symmetrie also gar keine Eigenschaft von $\bA$ allein; ausserdem brauchen die
+  Aussagen, für die Semidefinitheit gebraucht wird (Spektralsatz, Cholesky),
+  die Symmetrie. *Skript Definition 12.2.7 führt PSD für symmetrische Matrizen
+  und begründet die Präzisierung im Anschluss.*
+- **Z. 255 (Anwendung zur PSD-Folie)**: „Kovarianzmatrizen sind SPD" ist
+  allgemein falsch. Sie sind stets symmetrisch und positiv SEMIdefinit
+  ($\ba^\top\bSigma\ba = \var(\ba^\top\bX) \ge 0$); positiv definit sind sie nur
+  ohne lineare Degeneration. Gegenbeispiel $\bX = (Z,Z)^\top$ mit $\var(Z)=1$:
+  $\bSigma = ((1,1),(1,1))$ hat die Eigenwerte 2 und 0, und für $\ba = (1,-1)^\top$
+  ist $\ba^\top\bSigma\ba = 0$. *Skript Bemerkung 12.2.9 korrigiert das und
+  nennt die Folge für Cholesky (§5.4).*
+- **Z. 266 gegen Z. 321 (Konvexitätserhaltung, Schnitt)**: Der Satz deckt mit
+  $\bigcap_{i=1}^\infty$ nur abzählbar viele Mengen ab (der Beweis Z. 278–279
+  quantifiziert entsprechend über $i \in \N$), während die Hüllen-Proposition
+  drei Folien später über ALLE konvexen Obermengen schneidet, im Allgemeinen
+  also über überabzählbar viele. Der Beweis braucht die Abzählung nirgends.
+  *Skript Satz 12.2.10(1) formuliert den Schnitt über eine beliebige
+  Indexmenge, Bemerkung 12.2.11 hält die Lücke fest.*
+- **Z. 267 (Konvexitätserhaltung, Terminologie)**: „Äußeres Produkt" meint hier
+  das KARTESISCHE Produkt der Mengen. Der Begriff ist im Kurs anders belegt
+  (09-tensoren: $\bv \otimes \bw = \bv\bw^\top$), die Kollision ist irreführend.
+  *Skript Satz 12.2.10(2) schreibt kartesisches Produkt, Bemerkung 12.2.11
+  nennt die Folien-Wortwahl.*
+- **Z. 268–269 (Konvexitätserhaltung, Bildmenge)**: Der Punkt heisst „Lineare
+  Abbildungen", die Formel darunter ist $f(\bx) = \bA\bx + \bb$ und damit AFFIN
+  (linear nur für $\bb = \bnull$). Der Beweis benutzt tatsächlich nur die
+  Affinität. *Skript Satz 12.2.10(3) sagt affin, Bemerkung 12.2.11 erklärt,
+  warum gerade $\lambda + (1-\lambda) = 1$ den Verschiebungsanteil rettet.*
+- **Z. 315 und Z. 328 (Konvexe Hülle: Eigenschaften)**: „Eine konvexe Hülle ist
+  per Definition eine konvexe Menge" ist eine Behauptung, kein Beweis (die
+  Definition von $\conv$ zählt Konvexkombinationen auf, sie sagt nichts über
+  Konvexität der entstehenden Menge). Und der Beweisschritt „jede
+  Konvexkombination von Punkten aus $\Xcal$ ist auch in jedem $\Ycal$" benutzt
+  stillschweigend, dass konvexe Mengen ALLE endlichen Konvexkombinationen
+  enthalten; die Definition gibt nur den Fall zweier Punkte her. *Skript
+  Satz 12.2.3 holt die Induktion nach, Beweisschritt 1 zu Satz 12.2.13 rechnet
+  die Konvexität von $\conv(\Xcal)$ nach.*
+- **Z. 340 und Z. 343 (Konvexe Mengen: Anwendung)**: $\bx^\star = \max_{\bx \in
+  \Xcal} \sum_i v_i x_i$ setzt die Maximalstelle gleich dem Maximalwert; gemeint
+  ist das Argmax, das obendrein mehrdeutig sein kann. Und „$\bx^\star$ ist ein
+  Extrempunkt von $\conv(\Xcal)$" gilt so nicht: Bei Gleichständen ist nicht
+  jeder Maximierer extrem (Gegenbeispiel $\Xcal = \{(0,0),(1,0),(2,0)\}$,
+  $\bv = (0,1)^\top$: alle drei Punkte maximieren, der mittlere ist der
+  Mittelpunkt der beiden anderen), und für unendliches $\Xcal$ muss das Maximum
+  gar nicht angenommen werden. *Skript Gleichung in §12.2 schreibt
+  $\bx^\star \in \argmax$, Satz 12.2.14 setzt $\Xcal$ endlich voraus und
+  behauptet nur die EXISTENZ eines extremen Maximierers, Bemerkung 12.2.16
+  führt beide Grenzen vor.*
+- **Z. 352 und Z. 363 (Projektionstheorem, Existenz)**: Der Satzkopf verlangt nur
+  einen „Skalarproduktraum", die Beweisskizze begründet die Existenz mit
+  „$\Xcal$ abgeschlossen $\implies$ konvergente Minimierungsfolge besitzt
+  Grenzwert $\in \Xcal$". Dass eine Minimierungsfolge überhaupt konvergiert,
+  folgt aber nicht aus der Abgeschlossenheit, sondern ist die eigentliche
+  Arbeit: In endlicher Dimension liefert sie Bolzano-Weierstraß (die Folge ist
+  beschränkt), im Allgemeinen braucht es die VOLLSTÄNDIGKEIT des Raums, und
+  dort zeigt man mit der Parallelogrammgleichung, dass die Folge eine
+  Cauchy-Folge ist. *Skript Satz 12.3.1 setzt endliche Dimension voraus und
+  führt die Existenz über Kompaktheit plus Weierstraß; Bemerkung 12.3.2 nennt
+  den Hilbertraum-Fall und je ein Gegenbeispiel zu „abgeschlossen" (offener
+  Ball) und „konvex" (Einheitssphäre).*
+- **Z. 373 (Projektionstheorem, Eindeutigkeit)**: „Orthogonalität liefert
+  $\langle \bx - \bz, \bz - \hat\bx_1\rangle = 0$" ist unbegründet: An dieser
+  Stelle des Beweises ist über den Winkel zwischen den beiden Vektoren nichts
+  bekannt, und für konvexe Mengen gibt es eine solche Orthogonalität im
+  Allgemeinen gar nicht (bei einer Kreisscheibe etwa ist
+  $\langle \bx - \hat\bx, \by - \hat\bx\rangle$ für Randpunkte
+  $\by \neq \hat\bx$ echt negativ). Zur Verfügung steht nur die
+  Variationsungleichung $\langle \bx - \hat\bx, \by - \hat\bx\rangle \le 0$;
+  Gleichheit gibt es erst, wenn $\Xcal$ ein Untervektorraum ist (dann sind es
+  die Normalgleichungen aus §7.1). *Skript beweist die Eindeutigkeit stattdessen
+  über $g(\lambda) = \|\bx - (\hat\bx_1 + \lambda(\hat\bx_2 - \hat\bx_1))\|^2$:
+  aus $g(0) = g(1) = d^2$ folgt $g(1/2) = d^2 - \tfrac14\|\hat\bx_2 -
+  \hat\bx_1\|^2 < d^2$, Widerspruch zur Minimalität; Satz 12.3.3 stellt die
+  Variationsungleichung als Kriterium daneben.*
+- **Z. 397 (Def.-Block Epigraph, Markup)**: Der `:::{.block}` der
+  Epigraph-Definition wird mit `::::` geschlossen statt mit `:::`, der Block
+  bleibt also offen.
+- **Z. 400–401 (Epigraph-Definition, Präzisierung)**: „(Dafür muss $\Xcal$
+  konvex sein.)" liest sich wie eine Zusatzforderung, ist aber eine Folgerung:
+  Ist $\epi(f)$ konvex, so ist $\Xcal$ als Menge der ersten Komponenten
+  automatisch konvex. Gebraucht wird die Voraussetzung erst für die
+  UNGLEICHUNGS-Fassung (Z. 419), damit $f(\lambda\bx + (1-\lambda)\by)$
+  überhaupt definiert ist. *Skript Bemerkung 12.3.7 dreht die Aussage um.*
+- **Z. 465 (Beispiele, Typo)**: $\bb \in \R^b$ statt $\R^n$. *Skript
+  Beispiel 12.3.11 korrigiert und merkt es an.*
+- **Z. 468 (Beispiele, quadratische Funktionen)**: Gleich drei Stellen.
+  $\bQ \in \R^{m \times n}$ müsste $n \times n$ heißen (sonst ist
+  $\bx^\top\bQ\bx$ nicht definiert), „$b \in \R$" meint den Absolutterm $a$,
+  und die Bedingung „falls $\bQ$ positiv semidefinit ist" ist zu eng: Die
+  quadratische Form sieht nur den symmetrischen Anteil, entscheidend ist also
+  $(\bQ + \bQ^\top)/2 \succeq 0$. Gegenbeispiel $\bQ = ((1,5),(-5,1))$:
+  $\bx^\top\bQ\bx = x_1^2 + x_2^2$ ist streng konvex, $\bQ$ selbst ist nicht
+  einmal symmetrisch. *Skript Satz 12.3.12 formuliert das Kriterium über
+  $\bQ_{\mathrm{sym}}$, Bemerkung 12.3.13 führt alle drei Punkte vor.*
+- **Z. 528 (Eigenschaften, Teil (iii))**: Über der Folge $f_1, f_2, \dots$ ist
+  $\max_i f_i$ nicht garantiert: Ein Maximum über unendlich viele Werte muss
+  weder angenommen noch endlich sein (für $f_i(x) = i\,x^2$ ist das Supremum
+  in jedem $x \neq 0$ gleich $+\infty$). Tragfähig ist die Aussage für das
+  punktweise SUPREMUM, sofern es überall endlich ist. *Skript Satz 12.4.1(3)
+  formuliert sie so, Beispiel 12.4.3 beweist beide Fassungen (endliches
+  Maximum über Argmax, Supremum ohne Fallunterscheidung).*
+- **Z. 539 (Beweis (ii), Tippfehler)**: In der zweiten Zeile steht
+  „$c(\lambda f_1(\bx) + (1-\lambda) f(\by))$"; gemeint ist $f_1(\by)$, denn
+  $f$ ist erst das Ergebnis $c f_1$. *Skript Beweisschritt 1 zu Satz 12.4.1
+  rechnet mit $f_1$ und merkt den Tippfehler an.*
+- **Z. 569 (Anwendung nichtnegative Varianz, Präzisierung)**: Die Folie wendet
+  die Jensen-Ungleichung auf eine beliebige Zufallsvariable $X$ an, während der
+  Satz darüber (Z. 558) nur endlich viele Punkte mit Gewichten abdeckt, also
+  endlichen Träger. Für allgemeine integrierbare $X$ braucht es die
+  Subgradienten-Fassung (dieselbe Lücke wie bei Z. 105–107). *Skript
+  Bemerkung 12.4.7 trennt beide Fälle, Bemerkung 12.4.17 liefert den
+  allgemeinen Beweis über die Stützgerade nach.*
+- **Z. 584 (Theorem, Tippfehler)**: „$\bH_f(\bx)$ is positiv semidefinit"
+  (englisches „is"). *Im Skript korrigiert.*
+- **Z. 622 (Beweis (ii) ⟹ (iii))**: Vor $\bh^\top\bH_f(\bx)\bh$ fehlt der
+  Faktor $\tfrac12$. Die Taylorentwicklung liefert
+  $\tfrac{t^2}{2}\bh^\top\bH_f(\bx)\bh$, die Folienkette ist um den Faktor 2
+  daneben, und zwar in beiden Zeilen (auch im umgestellten Quotienten fehlt die
+  2 im Zähler). Numerische Probe mit $f(x) = x^2$, $x = h = 1$, $t = 0{,}1$:
+  Links steht $0{,}01$, die Folienformel gäbe $0{,}02$. Der Schluss
+  $\bh^\top\bH_f\bh \ge 0$ bleibt richtig, weil ein positiver Faktor das
+  Vorzeichen nicht ändert. *Skript Beweisschritt 4 zu Satz 12.4.9 führt die
+  Kette korrekt und nennt den Fehler im ::why.*
+- **Z. 640 (Spektrum der Hesse-Matrix)**: Die lokale Näherung
+  $f(\bx + \bh) \approx f(\bx) + \tfrac12\bh^\top\bH_f(\bx)\bh$ lässt den
+  Gradiententerm weg; das stimmt nur an kritischen Punkten. Für
+  $\nabla f(\bx) \neq \bnull^\top$ ist der weggelassene Term für kleine $\bh$
+  sogar der größere (linear statt quadratisch klein). *Skript
+  Bemerkung 12.4.13 ergänzt $\nabla f(\bx)\bh$ in beiden Ausdrücken.*
+- **Z. 652 (Proposition Subgradienten, Präzisierung)**: „für jedes
+  $\bx \in \Xcal$" ist zu stark. In Randpunkten kann der Subgradient fehlen:
+  Auf $\Xcal = [0,\infty)$ ist $f(x) = -\sqrt{x}$ konvex, hat aber in $x = 0$
+  keinen Subgradienten (für $v = -c < 0$ ist
+  $\min_y (f(y) - vy) = -1/(4c) < 0$ bei $y = 1/(4c^2)$, für $v \ge 0$
+  scheitert schon $y = 1$). Gebraucht wird $\bx \in \interior(\Xcal)$.
+  Nebenbei nennt Z. 658 die Stützfunktion „linear", affin ist sie (dieselbe
+  Wortwahl wie in Z. 268–269). *Skript Satz 12.4.15 setzt einen inneren Punkt
+  voraus, Bemerkung 12.4.17 führt das Gegenbeispiel vor.*
+
+## 13-optim
+
+- **Z. 368–371 („Optimalitätsbedingungen: Zusammenfassung", hinreichende
+  Bedingung 2. Ordnung)**: Der Block schreibt „$\nabla f(\bx^\star) = \bnull$
+  und $\bH_f(\bx^\star) \succ 0$ $\iff$ $\bx^\star$ ist lokales Minimum". Der
+  Doppelpfeil ist falsch, es gilt nur „$\implies$". Gegenbeispiel $f(x) = x^4$
+  in $x = 0$: striktes globales Minimum, aber $f'(0) = f''(0) = 0$, die
+  Hesse-Matrix $(0)$ ist nicht positiv definit. Aus einem lokalen Minimum
+  folgt nur positive *Semi*definitheit. Zweite Ungenauigkeit derselben Zeile:
+  rechts vom Gradienten steht $\bnull$ statt $\bnull^\top$, während die Folie
+  sonst (Z. 231, Z. 365, Z. 373) korrekt transponiert.
+  *Skript Satz 13.2.13 formuliert alle drei Bedingungen getrennt (notwendig
+  1. und 2. Ordnung, hinreichend 2. Ordnung) und beweist die notwendige
+  Bedingung zweiter Ordnung; Bemerkung 13.2.14 führt das Gegenbeispiel vor.*
+- **Z. 250–252 (Eindeutigkeit / Projektionstheorem, Präzisierung)**: Die
+  Eindeutigkeitszeile nennt die Konvexität der zulässigen Menge nur nebenbei,
+  obwohl sie im Beweis genauso tragend ist wie die strikte Konvexität der
+  Zielfunktion (Gegenbeispiel $\Xcal = \{-1, +1\}$ mit $f(y) = y^2$: beide
+  Punkte optimal, der Mittelpunkt ist unzulässig). Der Zusatz „quadrierte
+  Distanz ist streng konvex" braucht ausserdem die Skalarproduktstruktur: Die
+  Dreiecksungleichung liefert nur die Konvexität der Norm, die strikte
+  Konvexität der quadrierten Norm kommt aus der Parallelogrammgleichung und
+  gilt in allgemeinen normierten Räumen nicht (Maximumsnorm im $\R^2$, Menge
+  $\{(t; 1) : t \in [-1, 1]\}$: jeder Punkt hat vom Ursprung den Abstand 1).
+  *Skript Sätze 13.2.6/13.2.7 nennen beide Bedingungen im Satzkopf,
+  Bemerkung 13.2.8 formuliert den auskommentierten Exkurs Z. 254–311 aus.*
+- **Z. 41 (Vorkenntnisse, Gradient)**: „$\nabla f(\bx)$ als Richtung des
+  steilsten Anstiegs" ohne Transponiertes; in der Zeilenkonvention des Kurses
+  ist erst $\nabla f(\bx)^\top$ eine Richtung im $\R^n$ (gleiche Sorte wie
+  10-ableitungen-I Z. 217/299). *Skript §13.1 („Was wir mitbringen") sagt es
+  dazu.*
+- **Z. 46 (Vorkenntnisse, Analysis)**: „Hinreichende Bedingung für Minima:
+  $f''(x^\star) > 0$" steht als eigener Punkt neben der notwendigen Bedingung.
+  Für sich genommen ist positive Krümmung nicht hinreichend; gebraucht wird
+  $f'(x^\star) = 0$ UND $f''(x^\star) > 0$. *Skript §13.1 formuliert die
+  hinreichende Bedingung mit beiden Teilen.*
+- **Z. 78/80 (Regularisierte Regression)**: Der Strafterm ist für beide Fälle
+  als $\lambda\|\bbeta\|_p$ geschrieben. Die übliche Ridge-Regression
+  bestraft die QUADRIERTE 2-Norm $\lambda\|\bbeta\|_2^2$; nur damit ergibt
+  sich $\wh\bbeta = (\bX^\top\bX + \lambda\bI_p)^{-1}\bX^\top\by$
+  (11-ableitungen-II, Ridge-Folie). Die unquadrierte Fassung ist ein anderes,
+  ebenfalls konvexes Problem. Zusatz: Die Äquivalenz von Straf- und
+  Nebenbedingungsform ist korrekt, aber die Übersetzung $\lambda
+  \leftrightarrow c$ hängt von den Daten ab, es gibt keine Formel dafür.
+  *Skript Beispiel 13.1.4 sagt beides.*
+- **Z. 136–142 (`bisect()`)**: Zwei Fehler in acht Zeilen R. (a) `mid` entsteht
+  erst im Schleifenrumpf; wird die Funktion mit einem Intervall aufgerufen, das
+  die Toleranz schon erfüllt (`b - a <= eps`), läuft der Rumpf nie und
+  `return(mid)` bricht mit „object 'mid' not found" ab. (b) Der Rückgabewert ist
+  der LETZTE MITTELPUNKT, und der ist nach der Zuweisung stets ein Randpunkt des
+  Endintervalls; statt der garantierten Genauigkeit $\epsilon/2$ bleibt so nur
+  $\epsilon$, ein ganzer Halbierungsschritt verschenkt. Damit hält der Code auch
+  die Zusage der Folie Z. 127 ($|x^\star - x^{(k)}| < \epsilon$) nur mit
+  „$\le$" statt „$<$" ein. Nebenbei: $(a+b)/2$ kann gerundet aus $[a, b]$
+  herausfallen und für große $a, b$ überlaufen ($a + (b-a)/2$ nicht), und das
+  Produkt `f(a) * f(mid)` unter- bzw. überläuft, wo ein Vorzeichenvergleich
+  genügt. *Skript Bemerkung 13.1.9 zeigt beide Fassungen nebeneinander und
+  begründet die robuste.*
+- **Z. 185 (Fixpunktiteration, Voraussetzung)**: „$f\colon \R^n \to \R^n$
+  monoton steigend" ist für $n > 1$ nicht definiert (im $\R^n$ gibt es keine
+  Anordnung); gemeint ist ein monotoner Operator, $\langle f(\bx) - f(\by),
+  \bx - \by\rangle \ge 0$, für differenzierbares $f$ also
+  $\bJ_f + \bJ_f^\top$ positiv semidefinit. Auch im Fall $n = 1$ trägt
+  Monotonie allein nicht: Bei $f'(x^\star) = 0$ ist $\rho = 1$ für JEDES
+  $\gamma$. Was die Annahme leistet, ist die Existenz einer brauchbaren
+  Schrittweite, nicht deren Angabe. *Skript Bemerkung 13.1.17 arbeitet das aus
+  und beziffert die hinreichende Schranke $\gamma <
+  \lambda_{\min}(\bJ_f+\bJ_f^\top)/\|\bJ_f\|_2^2$.*
+- **Z. 190–196 (Konvergenzrate, Präzisierung)**: Die Herleitung führt eine
+  Taylorapproximation mit „$\approx$" und lässt den Restterm kommentarlos
+  fallen; die Folgerung $\|\bx^{(k)} - \bx^\star\| = O(\rho^k)$ gilt
+  deshalb nur LOKAL (in einer Kugel um $\bx^\star$, deren Radius offenbleibt)
+  und im nichtaffinen Fall nur mit einer Rate $\rho' \in (\rho, 1)$. Exakt mit
+  $\rho$ und global gilt sie erst für affines $f$, wo der Restterm verschwindet.
+  *Skript Satz 13.1.16 formuliert beide Fassungen und führt den Restterm im
+  Beweis mit.*
+- **Z. 545 (Lipschitz-stetiger Gradient, Präzisierung)**: „Äquivalent:
+  $\|\bH_f(\bx)\| \le L$ mit $L = \sup_{\bx} \lambda_{\max}(\bH_f(\bx))$"
+  unterschlägt den BETRAG. Gebraucht wird die Spektralnorm, also
+  $L = \sup_{\bx} \max_i |\lambda_i(\bH_f(\bx))|$; nur bei konvexem $f$ ist
+  $\bH_f$ positiv semidefinit und der größte Eigenwert zugleich der
+  betragsgrößte. Gegenbeispiel $f(x) = -x^2$: $f'$ ist exakt $2$-Lipschitz,
+  $\lambda_{\max}(\bH_f) = -2$ ist nicht einmal positiv (numerisch bestätigt,
+  ebenso $\bH_f = \diag(0{,}5; -8)$ mit $L = 8$ gegen $\sup\lambda_{\max} =
+  0{,}5$, also Faktor 16). Nebenbei braucht die Äquivalenz einen konvexen
+  Definitionsbereich und zweimal stetige Differenzierbarkeit.
+  *Skript Bemerkung 13.3.9 korrigiert das und führt beide Gegenbeispiele vor.*
+- **Z. 470 (Gradientenabstieg, Kernidee)**: „Für konvexes $f$ ist
+  $-\nabla f(\bx)$ immer eine Abstiegsrichtung hin zum globalen Minimum" ist
+  doppelt zu großzügig. Abstiegsrichtung ist $-\nabla f(\bx)^\top$ für JEDES
+  differenzierbare $f$, sobald $\nabla f(\bx) \neq \bnull^\top$ ist
+  ($\nabla f(\bx)(-\nabla f(\bx)^\top) = -\|\nabla f(\bx)\|^2 < 0$);
+  Konvexität wird dafür nicht gebraucht. Und „hin zum" Minimum zeigt die
+  Richtung im Allgemeinen gerade nicht, wie das Zick-Zack auf schlecht
+  konditionierten Quadriken auf derselben Foliensammlung vorführt. Was
+  Konvexität beisteuert, ist, dass jeder stationäre Punkt global optimal ist.
+  Zusätzlich fehlt das Transponierte ($-\nabla f(\bx)$ ist eine Zeile).
+  *Skript Bemerkung 13.3.5 trennt die drei Aussagen.*
+- **Z. 478 (Bildfolie „Gradientenabstieg: $f: \R \to \R$")**: Die
+  Iterationsvorschrift steht dort ohne Transponiertes
+  ($\bx^{(k+1)} = \bx^{(k)} - \gamma \nabla f(\bx^{(k)})$), während Z. 464
+  korrekt $\nabla f(\bx^{(k)})^\top$ schreibt — dieselbe Sorte wie
+  10-ableitungen-I Z. 217/299. *Skript Algorithmus 13.3.4 setzt durchgehend
+  das Transponierte und sagt den Unterschied dazu.*
+- **Z. 575–580 (Konvergenzrate bei starker Konvexität, Lücke)**: Der Satz nennt
+  keine Schrittweite. Die Rate $\rho = 1 - \mu/L$ gehört zu $\gamma = 1/L$;
+  für $\gamma \le 1/L$ gilt die Aussage mit $\rho = 1 - \gamma\mu$, und für
+  kleines $\gamma$ ist das deutlich schlechter. Numerisch auf
+  $\bA = \diag(1, 10)$: mit $\gamma = 0{,}02$ fällt $f$ je Schritt auf das
+  $0{,}9604$-fache, die Folienrate $0{,}9$ wäre also verletzt.
+  *Skript Satz 13.3.13 formuliert beide Fassungen.*
+- **Z. 590 (Konditionszahl einer Funktion, Präzisierung)**:
+  $\kappa_f = \lambda_{\max}(\bH_f)/\lambda_{\min}(\bH_f)$ liest sich, als
+  gäbe es EINE Hesse-Matrix. Für nichtquadratisches $f$ wandert sie mit $\bx$,
+  gemeint ist $\sup_{\bx}\lambda_{\max}/\inf_{\bx}\lambda_{\min}$ passend zu
+  den Definitionen von $L$ und $\mu$ zwei Folien vorher; der auskommentierte
+  Block Z. 594–614 sagt es selbst richtig ($\mu\bI \preceq \bH_f(\bx) \preceq
+  L\bI$). *Skript Bemerkung 13.3.14 schreibt Supremum und Infimum aus und
+  formuliert den auskommentierten Block aus.*
+- **Z. 567–571 / Z. 641 (Notation)**: Die Definition der starken Konvexität
+  über $\bH_f(\bx) - \mu\bI \succeq 0$ setzt zweimalige Differenzierbarkeit
+  stillschweigend voraus (die ableitungsfreie Fassung „$f - \tfrac{\mu}{2}
+  \|\bx\|^2$ konvex" braucht sie nicht), und der Buchstabe $\rho$ ist im
+  Foliensatz doppelt belegt: Konvergenzrate $\rho = 1 - \mu/L$ (Z. 580) gegen
+  Verkleinerungsfaktor $\rho \in (0,1)$ der Backtracking-Liniensuche (Z. 641).
+  *Skript Definition 13.3.12 nennt die Voraussetzung, und vor
+  Algorithmus 13.3.18 steht ein Warnhinweis zur Doppelbelegung.*
+
+- **Z. 672 (Newton-Idee, Minimierung der Näherung)**: Die Zeile
+  $\nabla_{\bh}[\ldots] = \nabla f(\bx)^\top + \bH_f(\bx)\bh \overset{!}{=}
+  \bnull^\top$ mischt Spalten- und Zeilenkonvention: Links stehen zwei
+  Spaltenvektoren, rechts ein Zeilenvektor. Als Spaltengleichung gelesen ist die
+  Zeile richtig (und liefert denselben Schritt), aber sie ist dann nicht der
+  Gradient nach $\bh$, den die Kursnotation als Zeile führt.
+  *Skript §13.4 rechnet wie Kapitel 11: $\nabla_{\bh} T_2 = \nabla f(\bx) +
+  \bh^\top\bH_f(\bx) \overset{!}{=} \bnull^\top$, dann auflösen und
+  transponieren.*
+- **Z. 681 (Voraussetzung des Newton-Schritts)**: „bei konvexem $f$:
+  $\bH_f \succ 0$" ist zu stark. Konvexität liefert nur positive
+  Semidefinitheit, und selbst strikte Konvexität reicht nicht ($f(x) = x^4$ hat
+  $f''(0) = 0$). Positive Definitheit ist eine eigene Annahme.
+  *Skript Bemerkung 13.4.2 sagt es mit dem Gegenbeispiel.*
+- **Z. 715 (Geometrische Intuition, zweite Tafel)**: Der Zahlenwert
+  „$x^{(2)} \approx 2{,}44$" gehört zu einer Funktion, die nur als PDF-Grafik
+  existiert und im Quelltext nicht steht; er ist damit nicht nachrechenbar.
+  *Skript Beispiel 13.4.4 konstruiert ein eigenes Beispiel
+  ($f(x) = x - 2\ln x$, Minimum $x^\star = 2$) mit exakter Fehlerrekursion
+  $e_{k+1} = e_k^2/2$, per node verifiziert.*
+- **Z. 760 (Fußnote zum BFGS-Verfahren)**: „Broyden-Fletcher-Goldfarb-**Shannon**"
+  ist falsch. Der vierte Namensgeber ist David **Shanno** (nicht der
+  Informationstheoretiker Claude Shannon). *Skript Definition 13.4.9 nennt Shanno
+  und merkt die Verwechslung an.*
+- **Z. 787/789 (Methodenvergleich, R-Zeilen)**: „Quasi-Newton (BFGS): Default in
+  `R`s `optim()` mit Gradient" trifft nicht zu, und „Nelder-Mead: Default in `R`s
+  `optim()`, wenn keine Ableitungen verfügbar" trägt eine Bedingung, die es nicht
+  gibt. `optim()` benutzt ohne `method`-Angabe stets Nelder-Mead, auch wenn ein
+  Gradient über `gr` mitgeliefert wird; BFGS muss mit `method = "BFGS"`
+  angefordert werden. *Skript Bemerkung 13.4.12 stellt es richtig und verweist für
+  die Einzelheiten auf §13.6.*
+- **Z. 817 (Heavy-Ball, Parametername)**: $\alpha$ wird „Dämpfungsfaktor"
+  genannt. In der mechanischen Analogie der Nachbarfolie ist gerade $1 - \alpha$
+  die Reibung: Je größer $\alpha$, desto weniger Dämpfung der Bewegung und desto
+  mehr Gedächtnis. Gedämpft wird nur die Oszillation quer zum Tal.
+  *Skript Bemerkung 13.4.14 benennt $\alpha$ als Momentumparameter und erklärt
+  den Unterschied.*
+- **Z. 837/843 (Momentum, Zusammenfassung)**: „Bei streng konvexen
+  Funktionen beschleunigt Momentum die Konvergenz signifikant" gilt als Satz nur
+  für Quadriken (Rate $(\sqrt\kappa-1)/(\sqrt\kappa+1)$ mit
+  $\alpha^\star = ((\sqrt\kappa-1)/(\sqrt\kappa+1))^2$). Für allgemeine
+  glatte, strikt konvexe Funktionen gibt es Gegenbeispiele, auf denen Heavy-Ball
+  mit genau diesen Parametern zyklisch wird und nicht konvergiert; die Garantie
+  trägt erst die Nesterov-Variante. Auch „fast immer eine gute Idee" ist zu
+  pauschal: Bei kleiner Konditionszahl ist $\alpha = 0{,}9$ LANGSAMER als der
+  reine Gradientenabstieg (per node auf $f = \tfrac12(x_1^2 + 5x_2^2)$ mit
+  $\gamma = 1/L$: 106 gegen 31 Schritte bis $f \le 10^{-6}f_0$; erst ab
+  $\kappa \approx 25$ dreht sich das Bild).
+  *Skript Bemerkung 13.4.14 und das Momentum-Widget führen beides vor.*
+- **Z. 861–862 (SGD, Unverzerrtheit)**: $\E[\nabla L(y_i, p_\btheta(\bx_i))] =
+  \nabla R(\btheta)$ steht ohne Angabe, worüber der Erwartungswert läuft.
+  Gemeint ist allein die Ziehung des Index, $i \sim
+  \text{Uniform}(\{1, \dots, N\})$, bei festem Datensatz und festem
+  $\btheta$; über die Verteilung der Daten wird nichts vorausgesetzt.
+  Nebenbei schreibt die Update-Formel Z. 864 den Gradienten an $p_\btheta$ statt
+  an $p_{\btheta^{(k)}}$, obwohl er an der aktuellen Iterierten ausgewertet wird.
+  *Skript Satz 13.4.15 formuliert die Voraussetzung und beweist die Aussage in
+  einer Zeile; Algorithmus 13.4.16 indiziert den Parameter mit.*
+
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
 - **heath-ch3-App (privat)**: Die AᵀA-Kollaps-Schwelle „k ≈ 7,9" im
