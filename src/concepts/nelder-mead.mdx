@@ -1,0 +1,22 @@
+export const title = "Nelder-Mead-Verfahren";
+
+{/* Konzept-Tooltip: Nelder-Mead, Simplex-Suche, ableitungsfrei. */}
+
+Das *Nelder-Mead-Verfahren* (auch Downhill-Simplex) minimiert eine Funktion
+$f\colon \R^n \to \R$, ohne je eine Ableitung zu berechnen. Es hält dazu
+einen *Simplex* aus $n + 1$ Punkten, im $\R^2$ also ein Dreieck, und
+verformt ihn Schritt für Schritt: Der schlechteste Eckpunkt wird am
+Schwerpunkt der übrigen gespiegelt (*Reflection*), bei Erfolg weiter
+hinausgeschoben (*Expansion*), bei Misserfolg näher herangezogen
+(*Contraction*), und wenn nichts hilft, schrumpft der ganze Simplex zum
+besten Punkt hin (*Shrink*).
+
+Der Simplex tastet sich so bergab und zieht sich am Ende um ein Minimum
+zusammen. Weil nur Funktionswerte verglichen werden, funktioniert das auch
+für verrauschte oder nicht glatte Zielfunktionen, bei denen
+:k[Gradientenverfahren]{#gradient-descent} ausfallen.
+
+Der Preis: keine allgemeinen Konvergenzgarantien und schlechtes Verhalten in
+hohen Dimensionen; als Faustregel bleibt es bei $n \lesssim 10$ nützlich. In
+R ist Nelder-Mead die Voreinstellung von `optim()`, wenn kein Gradient
+übergeben wird.

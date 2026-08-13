@@ -1,3 +1,269 @@
-::quelle[Folien 13-optim.]
+import { LagrangeGeometrie } from "./widgets/S135Lagrange";
+import { RidgeLassoGeometrie } from "./widgets/S135RidgeLasso";
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 13, siehe KONVENTIONEN.md).*
+::quelle[Folien 13-optim, „Optimierung mit Nebenbedingungen: Motivation" bis „KKT und Konvexität".]
+
+Bisher haben wir $f$ auf ganz $\R^n$ minimiert. Oft ist aber nicht jeder Punkt
+erlaubt: Wahrscheinlichkeiten müssen nichtnegativ sein und sich zu $1$
+summieren, ein Budget hat eine Obergrenze, Erhaltungsgrößen der Physik stehen
+nicht zur Disposition. Solche Einschränkungen formulieren wir als Gleichungen
+und Ungleichungen an $\bx$.
+
+:::definition[13.5.1 (Beschränktes Optimierungsproblem)]
+Ein *beschränktes Optimierungsproblem* (constrained optimization) hat die Form
+
+$$
+\begin{aligned}
+\min_{\bx} \quad & f(\bx) && \text{(Zielfunktion)} \\
+\text{unter} \quad & \cred{g_i(\bx)} = 0, \quad i = 1, \dots, m && \text{(Gleichungen)} \\
+& \cred{h_j(\bx)} \le 0, \quad j = 1, \dots, p && \text{(Ungleichungen)} .
+\end{aligned}
+$$
+
+Die Menge aller Punkte, die sämtliche Nebenbedingungen erfüllen, heißt
+*zulässiger Bereich* (feasible set).
+:::
+
+:::bemerkung[13.5.2 (Das Optimum liegt oft auf der Nebenbedingung)]
+Minimieren wir etwa $f(x, y) = x^2 + y^2$ unter der Gleichungsnebenbedingung
+$\cred{g(x, y)} = x + y - 1 = 0$, so ist das unbeschränkte Minimum
+$(0, 0)$ nicht zulässig. Das beschränkte Optimum muss auf der Geraden
+$x + y = 1$ liegen, und zwar dort, wo die Gerade die niedrigste
+:k[Höhenlinie]{#level-sets} von $f$ berührt. Genau dieses Berührbild ist der
+Schlüssel zum folgenden Verfahren.
+:::
+
+### Die Idee der Lagrange-Multiplikatoren
+
+Dürfen wir uns nur entlang der Kurve $\cred{g(\bx)} = 0$ bewegen, dann zählt
+am Optimum nur noch die Richtung entlang der Kurve: Gäbe es dort eine
+Richtung mit Steigung nach unten, könnten wir den Zielwert weiter senken.
+Am Optimum $\cgreen{\bx^\star}$ hat $f$ also entlang der Nebenbedingung keine
+Steigung mehr. Das heißt geometrisch:
+
+- $\corange{\nabla f(\bx^\star)}$ steht senkrecht auf der Tangente der
+  Nebenbedingungskurve,
+- und weil auch $\corange{\nabla g(\bx^\star)}$ senkrecht auf dieser Tangente
+  steht ([Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2): der Gradient steht
+  senkrecht auf den Höhenlinien), sind die beiden Gradienten *parallel*:
+
+$$
+\exists\, \lambda \in \R \colon \quad
+\corange{\nabla f(\bx^\star)} + \lambda\, \corange{\nabla g(\bx^\star)} = \bnull^\top .
+$$
+
+:::bemerkung[13.5.3 (Auch null ist ein zulässiger Multiplikator)]
+Die Folie verlangt an dieser Stelle $\lambda \in \R / \{0\}$. Das ist doppelt
+schief: Gemeint wäre die Mengendifferenz $\R \setminus \{0\}$, und auch die
+stimmt nicht. Liegt das unbeschränkte Minimum zufällig auf der
+Nebenbedingung, dann ist dort schon $\corange{\nabla f(\bx^\star)} = \bnull^\top$,
+und die Bedingung gilt mit $\lambda = 0$. Der Multiplikator darf also jeden
+reellen Wert annehmen; sein Vorzeichen ist bei Gleichungsnebenbedingungen
+frei, wie gleich Beispiel 13.5.6 zeigt. Damit die Parallelitätsbedingung das
+Optimum wirklich erfasst, brauchen wir außerdem
+$\corange{\nabla g(\bx^\star)} \neq \bnull^\top$, sonst legt die
+Nebenbedingung ihre Tangente nicht fest.
+:::
+
+:::definition[13.5.4 (Lagrange-Funktion)]
+Für das Problem $\min f(\bx)$ unter $\cred{\bg(\bx)} = \bnull$ mit
+$\bg(\bx) = (g_1(\bx), \dots, g_m(\bx))^\top$ heißt
+
+$$
+\Lcal(\bx, \blambda) = f(\bx) + \blambda^\top \cred{\bg(\bx)},
+\qquad \blambda = (\lambda_1, \dots, \lambda_m)^\top \in \R^m,
+$$
+
+*Lagrange-Funktion*; die $\lambda_i$ heißen *Lagrange-Multiplikatoren*.
+:::
+
+:::satz[13.5.5 (Notwendige Bedingung von Lagrange)]
+Am beschränkten Optimum $\cgreen{\bx^\star}$ mit
+$\corange{\nabla g_i(\bx^\star)}$ linear unabhängig existiert ein
+$\blambda^\star$, sodass
+
+$$
+\nabla_{\bx} \Lcal(\bx^\star, \blambda^\star) = \bnull^\top
+\qquad \text{und} \qquad
+\cred{\bg(\bx^\star)} = \bnull .
+$$
+:::
+
+Die erste Gleichung ist genau die Parallelitätsbedingung von oben, für alle
+$m$ Nebenbedingungen gleichzeitig; die zweite ist die Zulässigkeit. Statt
+eines Minimierungsproblems mit Zwang lösen wir also ein Gleichungssystem in
+den $n + m$ Unbekannten $(\bx, \blambda)$, und dafür haben wir die Verfahren
+aus [Abschnitt 13.1](#sec-13.1). Hinreichende Bedingungen sind feiner
+(zweite Ableitungen der Lagrange-Funktion auf dem Tangentialraum); die Folien
+verweisen dafür auf Heath, Ch. 6.2.3.
+
+:::beispiel[13.5.6 (Minimieren auf einer Geraden)]
+Wir minimieren $f(x, y) = x^2 + y^2$ unter $\cred{x + y - 1 = 0}$.
+
+Die Lagrange-Funktion ist
+$\Lcal(x, y, \lambda) = x^2 + y^2 + \lambda\,(x + y - 1)$, und ihre
+partiellen Ableitungen liefern drei Gleichungen:
+
+$$
+\begin{aligned}
+\frac{\partial \Lcal}{\partial x} &= 2x + \lambda = 0
+&&\implies\quad x = -\lambda/2, \\
+\frac{\partial \Lcal}{\partial y} &= 2y + \lambda = 0
+&&\implies\quad y = -\lambda/2, \\
+\frac{\partial \Lcal}{\partial \lambda} &= x + y - 1 = 0
+&&\implies\quad -\lambda = 1 .
+\end{aligned}
+$$
+
+Also $\lambda^\star = -1$ und
+$\cgreen{x^\star = y^\star = \tfrac12}$ mit
+$f(\bx^\star) = \tfrac12$. Das passt zur Geometrie: Im Punkt
+$(\tfrac12, \tfrac12)$ ist $\corange{\nabla f} = (1, 1)$ parallel zu
+$\corange{\nabla g} = (1, 1)$, und das Vorzeichen von $\lambda^\star$ ist
+negativ. Bei Gleichungsnebenbedingungen ist das erlaubt.
+:::
+
+:::vertiefung[Hoehenlinien, Gerade und zwei Pfeile]
+Das Widget zeigt das Beispiel live: die Höhenlinien von $f$ in Blau, die
+Nebenbedingung in Rot, an einem verschiebbaren Punkt auf der Geraden die
+beiden Gradienten in Orange. Nur im Optimum sind die Pfeile parallel. Die
+beiden Ungleichungs-Modi nehmen die folgenden KKT-Bedingungen vorweg: Einmal
+bindet die Nebenbedingung mit $\mu > 0$, einmal ist sie inaktiv mit $\mu = 0$.
+
+<LagrangeGeometrie />
+:::
+
+### Ungleichungen: die KKT-Bedingungen
+
+Bei Ungleichungs-Nebenbedingungen $\cred{h_j(\bx)} \le 0$ kommt eine neue
+Unterscheidung dazu: Eine Ungleichung kann im Optimum *aktiv* sein (es gilt
+Gleichheit, sie blockiert die Bewegung) oder *inaktiv* (es gilt strikte
+Ungleichheit, lokal spürt das Problem sie gar nicht).
+
+:::satz[13.5.7 (Karush-Kuhn-Tucker-Bedingungen)]
+Für das Problem $\min f(\bx)$ unter $\cred{g_i(\bx)} = 0$ und
+$\cred{h_j(\bx)} \le 0$ gelten am Optimum $\cgreen{\bx^\star}$ (unter einer
+Regularitätsbedingung an die Gradienten der aktiven Nebenbedingungen) mit
+Multiplikatoren $\lambda_i, \mu_j$:
+
+1. *Stationarität:*
+   $\displaystyle \nabla f(\bx^\star) + \sum_i \lambda_i \nabla g_i(\bx^\star)
+   + \sum_j \mu_j \nabla h_j(\bx^\star) = \bnull^\top$
+2. *Primale Zulässigkeit:* $g_i(\bx^\star) = 0$ und $h_j(\bx^\star) \le 0$
+3. *Duale Zulässigkeit:* $\mu_j \ge 0$
+4. *Komplementarität:* $\mu_j\, h_j(\bx^\star) = 0$ für alle $j$
+:::
+
+:::bemerkung[13.5.8 (Komplementaritaet: bindet oder abgeschaltet)]
+Bedingung 4 ist ein Entweder-oder je Ungleichung:
+
+- $h_j(\bx^\star) < 0$ (inaktiv) $\implies \mu_j = 0$: Die Nebenbedingung
+  trägt nichts zur Stationarität bei.
+- $\mu_j > 0 \implies h_j(\bx^\star) = 0$ (aktiv): Die Nebenbedingung bindet,
+  und ihr Gradient stemmt sich in der Stationaritätsgleichung gegen
+  $\corange{\nabla f}$.
+
+Anders als bei Gleichungen ist das Vorzeichen hier festgelegt:
+$\mu_j \ge 0$, denn eine Ungleichung kann nur in eine Richtung drücken.
+Die $\lambda_i$ der Gleichungen bleiben vorzeichenfrei.
+:::
+
+:::beispiel[13.5.9 (Eine Box-Beschraenkung)]
+Wir minimieren $f(x) = (x - 3)^2$ unter $0 \le x \le 2$, also mit
+$\cred{h_1(x)} = -x \le 0$ und $\cred{h_2(x)} = x - 2 \le 0$.
+
+Die KKT-Bedingungen lauten
+
+$$ {#eq-13.5.1}
+2(x^\star - 3) - \mu_1 + \mu_2 = 0, \qquad
+\mu_1, \mu_2 \ge 0, \qquad
+\mu_1 x^\star = 0, \qquad \mu_2 (x^\star - 2) = 0 .
+$$
+
+Das unbeschränkte Minimum $x = 3$ ist unzulässig, der Kandidat ist der rechte
+Rand: $\cgreen{x^\star = 2}$. Komplementarität erzwingt dann $\mu_1 = 0$
+(denn $x^\star = 2 \neq 0$), und ($13.5.1$) liefert
+$2(2 - 3) + \mu_2 = 0$, also $\mu_2 = 2 > 0$. Alle vier Bedingungen sind
+erfüllt: Die obere Schranke ist *aktiv*, die untere *inaktiv*.
+
+Anschaulich zeigt die negative Ableitung $-f'(2) = 2$ nach rechts, Richtung
+des unbeschränkten Minimums, aber die aktive Schranke $\cred{h_2}$ blockiert
+jede weitere Bewegung. Genau diese blockierte Abstiegsrichtung bezahlt das
+Problem mit $\mu_2 > 0$.
+:::
+
+### Anwendung: Ridge und Lasso als beschränkte Optimierung
+
+Die regularisierte Regression aus [Kapitel 7](?k=07-kq) lässt sich auf zwei
+äquivalente Arten schreiben:
+
+$$
+\begin{aligned}
+\text{penalisiert:} \quad & \min_{\bbeta}\; \|\by - \bX\bbeta\|_2^2
++ \lambda \|\bbeta\|_p^p \\
+\text{beschränkt:} \quad & \min_{\bbeta}\; \|\by - \bX\bbeta\|_2^2
+\quad \text{unter} \quad \cred{\|\bbeta\|_p^p \le c},
+\end{aligned}
+$$
+
+mit $p = 2$ (Ridge) beziehungsweise $p = 1$ (Lasso).
+
+:::beispiel[13.5.10 (KKT-Stationaritaet fuer Ridge)]
+Für Ridge ($p = 2$) ist die Lagrange-Funktion der beschränkten Form
+
+$$
+\Lcal(\bbeta, \mu) = \|\by - \bX\bbeta\|_2^2 + \mu\,\bigl(\|\bbeta\|_2^2 - c\bigr),
+$$
+
+und die Stationarität liefert mit den Gradienten aus
+[Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2)
+
+$$
+\nabla_{\bbeta} \Lcal^\top
+= -2\bX^\top(\by - \bX\bbeta) + 2\mu\bbeta = \bnull
+\quad\implies\quad
+\wh\bbeta_{\text{Ridge}} = \bigl(\bX^\top\bX + \mu\bI\bigr)^{-1}\bX^\top\by .
+$$
+
+Das ist die Ridge-Lösung mit dem Multiplikator $\mu$ in der Rolle des
+Strafparameters: Zu jedem $\lambda > 0$ der penalisierten Form gehört ein
+$c > 0$ der beschränkten Form mit derselben Lösung, und umgekehrt. Für
+$\mu > 0$ ist $\bX^\top\bX + \mu\bI$ symmetrisch positiv definit, das System
+also eindeutig lösbar ([Abschnitt 5.4](?k=05-lgs#sec-5.4)), auch wenn
+$\bX$ keinen vollen Rang hat.
+:::
+
+:::bemerkung[13.5.11 (Kreis gegen Raute: warum Lasso Nullen erzeugt)]
+Geometrisch minimieren beide Verfahren dieselben elliptischen Höhenlinien
+des Kleinste-Quadrate-Verlusts, nur über verschiedenen zulässigen Bereichen:
+Ridge über der Kreisscheibe $\|\bbeta\|_2^2 \le c$, Lasso über der Raute
+$|\beta_1| + |\beta_2| \le c$. Die Lösung liegt jeweils dort, wo die
+wachsende Ellipse den Bereich zuerst berührt. Ein Kreis wird fast immer an
+einem glatten Randpunkt mit zwei Koordinaten ungleich null berührt. Die Raute
+dagegen streckt ihre Ecken auf die Achsen hinaus, und Ecken berühren zuerst:
+Dort ist eine Koordinate exakt null. Das ist der geometrische Grund für die
+Sparsity des Lasso; formal steckt dahinter das Subdifferential der
+Betragsfunktion ([Abschnitt 12.4](?k=12-konvexitaet#sec-12.4)).
+
+<RidgeLassoGeometrie />
+:::
+
+:::satz[13.5.12 (KKT und Konvexitaet)]
+Sind $f$ und alle $h_j$ konvex und alle $g_i$ affin, dann sind die
+KKT-Bedingungen nicht nur notwendig, sondern auch *hinreichend* für globale
+Optimalität.
+:::
+
+Für konvexe Probleme ist ein KKT-Punkt also bereits ein globales Optimum,
+und viele statistische Probleme sind konvex: Kleinste Quadrate, Ridge,
+Lasso, Maximum Likelihood in Exponentialfamilien
+([Abschnitt 12.5](?k=12-konvexitaet#sec-12.5)). Bei nicht-konvexen
+Problemen wie neuronalen Netzen liefern die KKT-Bedingungen dagegen nur
+Kandidaten, unter denen auch lokale Optima und Sattelpunkte sind
+([Abschnitt 13.2](#sec-13.2)).
+
+*Vertiefung: Heath behandelt die beschränkte Optimierung in §6.2.2 und
+§6.2.3 (Lagrange-Multiplikatoren, hinreichende Bedingungen) sowie §6.7
+(Verfahren für Probleme mit Nebenbedingungen); die konvexe Theorie samt
+KKT-Dualität entwickeln Boyd und Vandenberghe, Convex Optimization,
+Kapitel 5.*

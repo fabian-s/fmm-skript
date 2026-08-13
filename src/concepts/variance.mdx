@@ -1,0 +1,26 @@
+export const title = "Varianz";
+
+{/* Konzept-Tooltip: Varianz, Streuung, Verschiebungssatz. */}
+
+Die *Varianz* misst, wie stark eine Zufallsvariable $X$ um ihren
+:k[Erwartungswert]{#expected-value} streut: Sie ist der erwartete
+quadrierte Abstand vom Mittel,
+
+$$
+\operatorname{Var}(X) = \E\bigl[(X - \E[X])^2\bigr]
+= \E[X^2] - (\E[X])^2 .
+$$
+
+Die zweite Form ist der Verschiebungssatz. Aus ihm liest man ab, dass die
+Varianz nie negativ ist, denn $\E[X^2] \ge (\E[X])^2$ gilt nach der
+Jensen-Ungleichung für die :k[konvexe]{#convex-function} Funktion
+$x \mapsto x^2$.
+
+Ein Zahlenbeispiel: Ein fairer Münzwurf mit Werten $0$ und $1$ hat
+$\E[X] = \tfrac12$ und $\E[X^2] = \tfrac12$, also
+$\operatorname{Var}(X) = \tfrac12 - \tfrac14 = \tfrac14$.
+
+Die Quadratwurzel der Varianz ist die Standardabweichung; sie trägt wieder
+die Einheit von $X$. Beim Skalieren gilt
+$\operatorname{Var}(aX + b) = a^2 \operatorname{Var}(X)$: Verschieben
+ändert die Streuung nicht, Strecken geht quadratisch ein.
