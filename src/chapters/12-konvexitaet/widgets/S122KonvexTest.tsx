@@ -313,6 +313,8 @@ export function KonvexTest() {
         drinbleibt. Blau ist die Menge, grün die Strecke zwischen den gewählten Punkten x und y, rot
         das Stück, das die Menge verlässt; die orangen Punkte des Dreiecks sind seine Extrempunkte.
         Ein Klick setzt abwechselnd x und y, die Koordinaten rasten auf Schritte von 0,05 ein.
+        Liegt einer der beiden Punkte außerhalb der Menge, bleibt die Strecke grau: Über solche
+        Paare sagt Definition 12.2.1 nichts, und ein Herausragen widerlegt dort nichts.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {MENGEN.map((m) => (
@@ -405,8 +407,8 @@ export function KonvexTest() {
                     y1={py(a[1])}
                     x2={px(b[0])}
                     y2={py(b[1])}
-                    stroke={s.drin ? GRUEN : ROT}
-                    strokeWidth={s.drin ? 2.2 : 3}
+                    stroke={beideDrin ? (s.drin ? GRUEN : ROT) : NEUTRAL}
+                    strokeWidth={beideDrin && !s.drin ? 3 : 2.2}
                   />
                 );
               })}
@@ -468,8 +470,8 @@ export function KonvexTest() {
         lässt sich nicht anklicken, und für das Argument zählt ohnehin nur das Loch in der Mitte.
         Beachten wir die Asymmetrie zwischen den beiden Antworten. Ein einziges Paar mit
         heraushängender Strecke widerlegt die Konvexität, während noch so viele gelungene Versuche
-        sie nicht beweisen. Dafür brauchen wir die Rechnungen aus dem Selbsttest und aus
-        Beispiel 12.2.4.
+        sie nicht beweisen. Dafür brauchen wir die Rechnungen aus dem Selbsttest (Kreisscheibe,
+        Parabelmenge) und aus Beispiel 12.2.12 (Dreieck als Schnitt dreier Halbräume).
       </p>
     </div>
   );

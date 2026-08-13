@@ -119,7 +119,7 @@ export function JensenExplorer() {
       ? {
           titel: "Gleichheit: das ganze Gewicht liegt auf einer Stützstelle",
           farbe: ORANGE,
-          text: "Ein Gewicht ist 1, die beiden anderen sind 0. Dann steht auf beiden Seiten derselbe Wert, die Ungleichung ist mit Gleichheit erfüllt. Genauso verhält es sich, wenn die Funktion affin ist: Dort gilt Jensen in beide Richtungen.",
+          text: "Ein Gewicht ist 1, die beiden anderen sind 0. Dann steht auf beiden Seiten derselbe Wert, die Ungleichung ist mit Gleichheit erfüllt. Das ist der eine Gleichheitsfall, den wir hier einstellen können; der andere wäre eine affine Funktion, für die Jensen in beide Richtungen gilt, und keine der drei Auswahlmöglichkeiten ist affin.",
         }
       : fkt.konvex
         ? {
@@ -130,7 +130,7 @@ export function JensenExplorer() {
         : {
             titel: "Konkave Gegenprobe: die Ungleichung dreht sich um",
             farbe: ROT,
-            text: `Für die konkave Wurzel liegt der Sehnenzug unter der Kurve: ${fmt(rechts)} ist kleiner als ${fmt(links)}. Das ist kein Widerspruch zum Satz, sondern seine Spiegelung: Mit f ist −f konkav, und die Ungleichung kehrt sich mit dem Vorzeichen um.`,
+            text: `Für die konkave Wurzel liegt der Sehnenzug unter der Kurve: ${fmt(rechts)} ist kleiner als ${fmt(links)}. Das ist kein Widerspruch zum Satz, sondern seine Spiegelung: −√x ist konvex, für diese Funktion gilt die Jensen-Ungleichung, und Multiplikation mit −1 dreht das Zeichen um.`,
           };
 
   return (

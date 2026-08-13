@@ -28,7 +28,7 @@ Funktionen auf $\cblue{\Xcal}$ konvex:
 3. das punktweise :k[Supremum]{#supremum} $f(\bx) = \sup_i f_i(\bx)$, sofern dieser Wert an
    jeder Stelle endlich ist; bei endlich vielen Funktionen ist das das Maximum
    $\max_i f_i(\bx)$;
-4. der punktweise :k[Grenzwert]{#limit} $f(\bx) = \lim_{n \to \infty} f_n(\bx)$, sofern dieser
+4. der punktweise :k[Grenzwert]{#limit} $f(\bx) = \lim_{k \to \infty} f_k(\bx)$, sofern dieser
    Grenzwert für jedes $\bx \in \cblue{\Xcal}$ existiert.
 :::
 
@@ -61,24 +61,24 @@ $\cblue{\Xcal}$ liegt, und rechnen die Folien-Kette nach:
 $$
 \begin{aligned}
 f(\cgreen{\bz})
-&= \lim_{n \to \infty} f_n(\cgreen{\bz})
-= \limsup_{n \to \infty} f_n(\cgreen{\bz}) \\
-&\le \limsup_{n \to \infty} \left[\lambda f_n(\bx) + (1-\lambda) f_n(\by)\right] \\
-&\le \lambda \limsup_{n \to \infty} f_n(\bx)
- + (1-\lambda) \limsup_{n \to \infty} f_n(\by) \\
+&= \lim_{k \to \infty} f_k(\cgreen{\bz})
+= \limsup_{k \to \infty} f_k(\cgreen{\bz}) \\
+&\le \limsup_{k \to \infty} \left[\lambda f_k(\bx) + (1-\lambda) f_k(\by)\right] \\
+&\le \lambda \limsup_{k \to \infty} f_k(\bx)
+ + (1-\lambda) \limsup_{k \to \infty} f_k(\by) \\
 &= \lambda f(\bx) + (1-\lambda) f(\by) .
 \end{aligned}
 $$
 
-::why[Zeile 1: $f$ ist als Grenzwert definiert, und eine konvergente Folge hat Limes und Limes superior gemeinsam. Zeile 2: jedes einzelne $f_n$ ist konvex, und der Limes superior ist monoton, aus $a_n \le b_n$ folgt also $\limsup a_n \le \limsup b_n$. Zeile 3: Subadditivität des Limes superior, zusammen mit $\lambda, 1-\lambda \ge 0$. Zeile 4: beide Folgen konvergieren nach Voraussetzung, ihr Limes superior ist also ihr Grenzwert]
+::why[Zeile 1: $f$ ist als Grenzwert definiert, und eine konvergente Folge hat Limes und Limes superior gemeinsam. Zeile 2: jedes einzelne $f_k$ ist konvex, und der Limes superior ist monoton, aus $a_k \le b_k$ folgt also $\limsup a_k \le \limsup b_k$. Zeile 3: Subadditivität des Limes superior, zusammen mit $\lambda, 1-\lambda \ge 0$. Zeile 4: beide Folgen konvergieren nach Voraussetzung, ihr Limes superior ist also ihr Grenzwert]
 :::
 
 :::schritt
-Weil hier alle drei Folgen konvergieren, käme man auch mit den gewöhnlichen Grenzwertregeln
+Weil hier alle drei Folgen konvergieren, kämen wir auch mit den gewöhnlichen Grenzwertregeln
 aus. Der Umweg über den Limes superior kostet nichts und ist robuster: Er existiert immer,
 notfalls mit dem Wert $+\infty$, und braucht die Konvergenz erst in der letzten Zeile.
 
-::why[dieselbe Kette zeigt damit ohne Zusatzarbeit: Ist $\limsup_n f_n$ überall endlich, so ist auch diese Funktion konvex, ganz ohne Konvergenzannahme]
+::why[dieselbe Kette zeigt damit ohne Zusatzarbeit: Ist $\limsup_k f_k$ überall endlich, so ist auch diese Funktion konvex, ganz ohne Konvergenzannahme]
 :::
 
 ::::
@@ -183,11 +183,11 @@ werden noch endlich sein. Der Beweis oben zeigt die Aussage für das Supremum, u
 Fassung, die trägt; nur der Fall endlich vieler Funktionen darf ohne weiteres Maximum heißen.
 Der Zusatz „sofern endlich" ist dabei keine Formalie: Für $f_i(x) = i\,x^2$ ist das Supremum in
 jedem $x \neq 0$ gleich $+\infty$, und über eine Funktion mit dem Wert $+\infty$ redet
-Definition 12.2.1 nicht.
+Definition 12.3.6 nicht, die konvexe Funktionen mit Werten in $\R$ erklärt.
 
 Regel (4) erhält die Konvexität, nicht aber die Glattheit. Die Funktionen
-$f_n(x) = \left|x\right|^{1+1/n}$ sind konvex und in jedem Punkt differenzierbar, auch in
-$x = 0$ mit $f_n'(0) = 0$. Punktweise streben sie gegen $\left|x\right|$, und der Grenzwert hat
+$f_k(x) = \left|x\right|^{1+1/k}$ sind konvex und in jedem Punkt differenzierbar, auch in
+$x = 0$ mit $f_k'(0) = 0$. Punktweise streben sie gegen $\left|x\right|$, und der Grenzwert hat
 im Nullpunkt einen Knick. Aus einer Folge glatter konvexer Funktionen kann also eine konvexe
 Funktion ohne Ableitung werden. Das ist einer der Gründe, warum wir am Ende dieses Abschnitts
 einen Ersatz für die Tangente brauchen.
@@ -195,32 +195,38 @@ einen Ersatz für die Tangente brauchen.
 
 :::beispiel[12.4.5 (Zielfunktionen aus Bausteinen)]
 Die Regeln erledigen Fälle, die aus der Definition heraus mühsam wären. Wir sammeln vier
-Beispiele ein, deren Bausteine wir schon kennen: :k[Normen]{#norm} und quadratische Funktionen
-mit positiv semidefinitem $\bQ$ sind konvex ([Abschnitt 12.3](#sec-12.3)), affine Funktionen
-ebenfalls, und zwar zugleich konkav.
+Beispiele ein, deren Bausteine wir schon kennen: :k[Normen]{#norm} sind konvex, quadratische
+Funktionen mit positiv semidefinitem symmetrischen Anteil ebenfalls, und affine Funktionen sind
+sogar zugleich konvex und konkav (alles [Abschnitt 12.3](#sec-12.3)).
 
 *Ridge-Regression.* Die Zielfunktion
 $f(\bw) = \left\|\bA\bw - \by\right\|^2 + \lambda\left\|\bw\right\|^2$ ist eine Summe zweier
 konvexer Funktionen, der zweite Summand zusätzlich mit dem Faktor $\lambda \ge 0$ versehen.
 Regeln (1) und (2) geben die Konvexität, ohne dass wir eine einzige Ungleichung nachrechnen.
-Abgeleitet haben wir dieselbe Funktion in
-[Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2).
+Beispiel 12.3.16 ist denselben Weg noch über die quadratische Form gegangen und hat dabei mehr
+herausgeholt, nämlich strikte Konvexität für $\lambda > 0$; die Regeln allein liefern das
+nicht. Ihr Vorteil zeigt sich beim nächsten Punkt.
 
 *LASSO.* Ersetzen wir den Strafterm durch $\lambda\left\|\bw\right\|_1$, ändert sich am
-Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm. Die Zielfunktion bleibt konvex, ist
+Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm. Eine quadratische Form steht jetzt
+nirgends mehr, Satz 12.3.12 greift also nicht. Die Zielfunktion bleibt trotzdem konvex, ist
 aber an den Stellen mit $w_j = 0$ nicht differenzierbar.
 
 *Hinge-Verlust und Support Vector Machines.* Der Verlust $\ell(u) = \max\{0,\, 1 - u\}$ ist das
 Maximum zweier affiner Funktionen, nach Regel (3) also konvex. Setzen wir
-$u = y_i\,\bx_i^\top\bbeta$ ein, so bleibt jeder Summand eine konvexe Funktion von $\bbeta$,
-und die Summe über die Beobachtungen ist nach Regel (1) wieder konvex.
+$u = y_i\,\bx_i^\top\bbeta$ ein, so steht dort
+$\max\{0,\, 1 - y_i\,\bx_i^\top\bbeta\}$, wieder ein Maximum zweier affiner Funktionen, diesmal
+in $\bbeta$. Regel (3) greift also unmittelbar, und die Summe über die Beobachtungen ist nach
+Regel (1) wieder konvex. Den Umweg über eine Regel für Verkettungen brauchen wir nicht.
 
 *Vom empirischen zum theoretischen Risiko.* Ist $\btheta \mapsto \ell(\btheta; \bz)$ für jede
 Beobachtung konvex, so ist das empirische Risiko
 $R_n(\btheta) = \tfrac{1}{n}\sum_{i=1}^n \ell(\btheta; \bz_i)$ als nichtnegative
-Linearkombination konvex. Nach dem Gesetz der großen Zahlen strebt es punktweise gegen das
-theoretische Risiko $R(\btheta) = \E[\ell(\btheta; \bZ)]$, und Regel (4) überträgt die
-Konvexität auf den Grenzwert.
+Linearkombination konvex. Nach dem Gesetz der großen Zahlen strebt es für jedes feste
+$\btheta$ fast sicher gegen das theoretische Risiko $R(\btheta) = \E[\ell(\btheta; \bZ)]$, und
+Regel (4) überträgt die Konvexität auf den Grenzwert. In der Sehnenungleichung kommen immer nur
+drei Stellen gleichzeitig vor, deshalb genügt die punktweise Konvergenz: Der Durchschnitt von
+drei Ereignissen der Wahrscheinlichkeit $1$ hat wieder Wahrscheinlichkeit $1$.
 :::
 
 ### Die Jensen-Ungleichung
@@ -339,10 +345,12 @@ Mischung, grün die Mischung der Funktionswerte.
 <JensenExplorer />
 
 Das grüne Dreieck ist die konvexe Hülle der drei Punkte auf dem Graphen. Bei konvexem $f$ liegt
-es vollständig über der Kurve, und der grüne Punkt kann den orangen nie unterbieten. Für
+es nie unter der Kurve, seine Ecken berühren sie ja. Der grüne Punkt kann den orangen deshalb
+nie unterbieten. Für
 $f(x) = x^2$ und gleiche Gewichte stehen $3{,}3611$ gegen $4{,}9167$, die Lücke beträgt
-$1{,}5556$. Diese Zahl ist genau die gewichtete Varianz der Stützstellen, wie in
-Beispiel 12.4.8 ausgerechnet. Bei $f(x) = e^x$ wächst die Lücke auf $6{,}8273$, weil die
+$1{,}5556$. Das ist genau die gewichtete Varianz der drei Stützstellen, denn für $x \mapsto x^2$
+ist die Jensen-Lücke nach Beispiel 12.4.8 die Differenz
+$\E[X^2] - \left(\E[X]\right)^2$. Bei $f(x) = e^x$ wächst die Lücke auf $6{,}8273$, weil die
 Krümmung dort viel stärker zunimmt. Die dritte Wahl ist eine Gegenprobe: $\sqrt{x}$ ist konkav,
 und prompt tauschen die beiden Markierungen die Plätze, $1{,}2676$ gegen $1{,}3540$. Wer alle
 Gewichte bis auf eines auf null schiebt, erzeugt den Gleichheitsfall.
@@ -542,10 +550,11 @@ zeigt, dass die zweite Ableitung im semidefiniten Fall nichts entscheidet.
 :::
 
 :::beispiel[12.4.11 (Quadratische Funktionen, mit dem Kriterium nachgerechnet)]
-In [Abschnitt 12.3](#sec-12.3) steht die quadratische Funktion
-$f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ in der Liste der konvexen Beispiele, mit der
-Bedingung, dass $\bQ$ positiv semidefinit ist. Satz 12.4.9 liefert den Beweis in zwei Zeilen
-und zeigt zugleich, wie die Bedingung genau lauten muss.
+Satz 12.3.12 hat für die quadratische Funktion
+$f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ schon gezeigt: Ist der symmetrische Anteil
+$\bQ_{\mathrm{sym}} = \tfrac12(\bQ + \bQ^\top)$ positiv semidefinit, so ist $f$ konvex. Bewiesen
+haben wir das damals über den Sehnendefekt. Satz 12.4.9 liefert denselben Schluss in zwei
+Zeilen und obendrein die Umkehrung, macht die Bedingung also zu einem *genau dann, wenn*.
 Den Gradienten der quadratischen Form kennen wir aus
 [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2), und noch einmal ableiten gibt die
 Hesse-Matrix:
@@ -560,13 +569,26 @@ Die Hesse-Matrix ist konstant, und nach (3) ist $f$ genau dann konvex, wenn
 $\bQ + \bQ^\top \succeq 0$ gilt. Für symmetrisches $\bQ$ steht dort $2\bQ$, und die Bedingung
 ist wörtlich $\bQ \succeq 0$.
 
-Für unsymmetrisches $\bQ$ zählt dagegen nur der symmetrische Anteil. Ein Beispiel dazu:
-$\bQ = \bigl(\begin{smallmatrix} 2 & 3 \\ 0 & 1\end{smallmatrix}\bigr)$ hat die Eigenwerte $2$
-und $1$, beide positiv, sieht also harmlos aus. Es ist aber
+Bemerkung 12.3.13 hat eine Matrix gezeigt, die trotz fehlender Symmetrie eine strikt konvexe
+Funktion erzeugt. Die andere Richtung ist ebenso lehrreich: $\bQ$ kann lauter positive
+Eigenwerte haben und die Funktion trotzdem nicht konvex sein. Für
+$\bQ = \bigl(\begin{smallmatrix} 2 & 3 \\ 0 & 1\end{smallmatrix}\bigr)$ stehen auf der
+Diagonalen der Dreiecksmatrix die Eigenwerte $2$ und $1$, beide positiv. Es ist aber
 $\bQ + \bQ^\top = \bigl(\begin{smallmatrix} 4 & 3 \\ 3 & 2\end{smallmatrix}\bigr)$ mit den
-Eigenwerten $6{,}162$ und $\cred{-0{,}162}$, und die zugehörige Funktion ist nicht konvex: Für
-$\bx = (-1{,}5;\ 1{,}5)^\top$, $\by = (1{,}5;\ -1{,}5)^\top$ und $\lambda = \tfrac12$ liegt der
-Funktionswert des Mittelpunktes über dem Mittel der Funktionswerte.
+Eigenwerten $6{,}162$ und $\cred{-0{,}162}$, und die zugehörige Funktion ist nicht konvex. Wir
+brauchen dafür eine Richtung, in der der symmetrische Anteil negativ wird, und zum Eigenwert
+$-0{,}162$ gehört ungefähr die Richtung $\bd = (2;\ -3)^\top$, denn
+$\bd^\top(\bQ + \bQ^\top)\bd = 16 - 36 + 18 = \cred{-2}$. Wir setzen also
+$\bx = (1;\ -1{,}5)^\top$ und $\by = -\bx$, dazu $\bb = \bnull$ und $a = 0$. Mit
+$\lambda = \tfrac12$ ist der Mittelpunkt $\bnull$, und dort steht $f(\bnull) = 0$ gegen den
+Mittelwert $\tfrac12 f(\bx) + \tfrac12 f(\by) = \cred{-0{,}25}$. Die Sehne verläuft unter dem
+Graphen, die Konvexitätsungleichung ist verletzt.
+
+Bei der Wahl der Richtung ist Vorsicht geboten. Die ähnlich aussehende Richtung
+$\bd = (1;\ -1)^\top$ liefert $\bd^\top(\bQ+\bQ^\top)\bd = 4 - 6 + 2 = 0$ und damit exakt
+Gleichheit; sie zeigt gar nichts. Bei einem einzigen negativen Eigenwert bilden die
+brauchbaren Richtungen nur einen Kegel um den zugehörigen Eigenvektor herum, und der Rand
+dieses Kegels sind genau die Richtungen mit Defekt null.
 :::
 
 :::beispiel[12.4.12 (Logistische Regression ist ein konvexes Problem)]
@@ -589,7 +611,8 @@ $$
 
 Jeder Summand ist positiv semidefinit, denn
 $\bh^\top\bx_i\bx_i^\top\bh = (\bx_i^\top\bh)^2 \ge 0$, und der Vorfaktor
-$\pi_i(1-\pi_i)$ liegt strikt zwischen $0$ und $\tfrac14$. Eine Summe positiv semidefiniter
+$\pi_i(1-\pi_i)$ ist wegen $\pi_i \in (0,1)$ positiv; sein größter Wert $\tfrac14$ wird bei
+$\pi_i = \tfrac12$ angenommen, also genau dann, wenn $\bx_i^\top\bbeta = 0$ ist. Eine Summe positiv semidefiniter
 Matrizen ist wieder positiv semidefinit, also ist $\bH_\ell(\bbeta) \succeq 0$ an jeder Stelle,
 und nach Satz 12.4.9 ist $\ell$ konvex. Die Log-Likelihood selbst ist damit konkav, und ihre
 Maximierung ist ein konvexes Problem.
@@ -651,7 +674,7 @@ null rutscht.
 ### Stützgeraden und Subgradienten
 
 Aussage (2) von Satz 12.4.9 ist eine bemerkenswerte Eigenschaft: Eine konvexe Funktion liegt
-überall über ihrer Tangentialebene. Was aber, wenn es keine Tangente gibt? Der Betrag hat im
+nirgends unter ihrer Tangentialebene. Was aber, wenn es keine Tangente gibt? Der Betrag hat im
 Nullpunkt keine, der LASSO-Strafterm ebenfalls nicht, und nach Bemerkung 12.4.4 kann selbst der
 Grenzwert glatter konvexer Funktionen einen Knick bekommen. Es zeigt sich, dass die *Existenz*
 einer Stützgeraden erhalten bleibt, auch wenn die Ableitung fehlt.
@@ -671,10 +694,12 @@ $\partial f(\corange{\bx})$ geschrieben.
 :::
 
 Ungleichung ($12.4.3$) ist ($12.4.2$) mit $\bv^\top$ anstelle des Gradienten. Sie sagt, dass
-die affine Funktion $\by \mapsto f(\corange{\bx}) + \bv^\top(\by - \corange{\bx})$ ganz unter
-dem Graphen von $f$ verläuft und ihn in $\corange{\bx}$ berührt. Ist $f$ in einem inneren Punkt
-$\corange{\bx}$ differenzierbar, so ist $\nabla f(\corange{\bx})^\top$ nach ($12.4.2$) ein
-solcher Vektor, und dann ist er auch der einzige. Am Knick dagegen gibt es viele, wie
+die affine Funktion $\by \mapsto f(\corange{\bx}) + \bv^\top(\by - \corange{\bx})$ nirgends
+über dem Graphen von $f$ verläuft und ihn in $\corange{\bx}$ berührt. Ist $f$ in einem inneren
+Punkt $\corange{\bx}$ differenzierbar, so ist $\nabla f(\corange{\bx})^\top$ ein solcher
+Vektor, und dann ist er auch der einzige. Die Schritte 1 und 2 im Beweis von Satz 12.4.9
+brauchen dafür nur Differenzierbarkeit in genau diesem einen Punkt, nicht die
+$\Ccal^2$-Voraussetzung des Satzes. Am Knick dagegen gibt es viele, wie
 Beispiel 12.4.16 zeigt.
 
 :::satz[12.4.15 (Existenz von Subgradienten im Inneren)]
@@ -751,17 +776,20 @@ mit $y - \corange{x} < 0$ dreht das Ungleichheitszeichen um, und wieder steht ($
 
 :::schritt
 Für $n > 1$ liefert dasselbe Argument in jeder einzelnen Richtung eine Steigung, aber noch
-keinen Vektor $\bv$, der alle Richtungen gleichzeitig bedient. Diesen Schritt erledigt eine
+keinen Vektor $\bv$, der alle Richtungen gleichzeitig bedient. Die Folie behauptet, die
+Aussage folge aus dem Beweisteil (i) $\Rightarrow$ (ii) ohne Grenzübergang; das trifft nur den
+Fall $n = 1$, den wir gerade erledigt haben. Den Rest erledigt eine
 Trennungsaussage: Der *Epigraph*
-$\epi f = \{(\by, r) \colon \by \in \cblue{\Xcal},\ r \ge f(\by)\} \subseteq \R^{n+1}$ ist
-konvex, und $(\corange{\bx}, f(\corange{\bx}))$ ist ein Randpunkt. Eine stützende
-:k[Hyperebene]{#hyperplane} in diesem Randpunkt, also eine, die $\epi f$ ganz auf einer Seite
-lässt, hat wegen $\corange{\bx} \in \interior(\cblue{\Xcal})$ eine nichtverschwindende
+$\cblue{\epi(f)} = \{(\by, r) \colon \by \in \cblue{\Xcal},\ r \ge f(\by)\} \subseteq \R^{n+1}$
+aus Definition 12.3.5 ist konvex, und $(\corange{\bx}, f(\corange{\bx}))$ ist ein Randpunkt.
+Eine stützende :k[Hyperebene]{#hyperplane} in diesem Randpunkt, also eine, die
+$\cblue{\epi(f)}$ ganz auf einer Seite lässt, hat wegen
+$\corange{\bx} \in \interior(\cblue{\Xcal})$ eine nichtverschwindende
 letzte Koordinate; nach Division durch diese Koordinate steht ($12.4.3$)
 da. Die Trennungsaussage selbst beweisen wir hier nicht, sie lässt sich aus dem
 Projektionssatz in [Abschnitt 12.3](#sec-12.3) gewinnen.
 
-::why[dass der Epigraph konvex ist, ist die Definition konvexer Funktionen aus Abschnitt 12.3; läge $\corange{\bx}$ auf dem Rand von $\cblue{\Xcal}$, könnte die stützende Hyperebene senkrecht stehen, und die Division wäre nicht möglich. Genau daran scheitert Bemerkung 12.4.17]
+::why[dass der Epigraph konvex ist, ist Definition 12.3.6, die konvexe Funktionen genau darüber erklärt; läge $\corange{\bx}$ auf dem Rand von $\cblue{\Xcal}$, könnte die stützende Hyperebene senkrecht stehen, und die Division wäre nicht möglich. Genau daran scheitert Bemerkung 12.4.17]
 :::
 
 ::::
@@ -783,7 +811,7 @@ mindestens eine gibt; eindeutig ist sie an einem Knick gerade nicht.
 
 Diese Vielfalt hat eine praktische Kehrseite, die den LASSO erklärt. Für die eindimensionale
 Zielfunktion $g(w) = \tfrac12(w - z)^2 + \lambda\left|w\right|$ mit $\lambda > 0$ ist
-$\bnull \in \partial g(w^\star)$ die Optimalitätsbedingung, und sie führt auf die
+$0 \in \partial g(w^\star)$ die Optimalitätsbedingung, und sie führt auf die
 Schwellenwertregel
 
 $$
@@ -818,10 +846,12 @@ Algorithmisch sind Subgradienten die Eintrittskarte in die nichtdifferenzierbare
 Wo der Gradient fehlt, tritt ein beliebiger Subgradient an seine Stelle, und Verfahren wie der
 :k[Gradientenabstieg]{#gradient-descent} bleiben in ihrer Subgradienten-Fassung anwendbar. Die
 Folien nennen als Anwendungen den LASSO und die Quantilregression, deren Verlustfunktion
-$\rho_\tau(u) = u\left(\tau - \mathbb{1}\{u < 0\}\right)$ genau wie der Betrag einen Knick in
+$\rho_\tau(u) = u\left(\tau - \ind\{u < 0\}\right)$ genau wie der Betrag einen Knick in
 $u = 0$ hat und für $\tau = \tfrac12$ bis auf den Faktor $\tfrac12$ mit ihm übereinstimmt. In
-beiden Fällen ist die Zielfunktion konvex, aber nicht differenzierbar. Wie daraus konkrete
-Verfahren werden, ist Thema von [Kapitel 13](?k=13-optim#sec-13.1).
+beiden Fällen ist die Zielfunktion konvex, aber nicht differenzierbar.
+[Kapitel 13](?k=13-optim#sec-13.1) entwickelt die Verfahren für den differenzierbaren Fall,
+vom Gradientenabstieg bis zu Newton und seinen Verwandten; die Subgradienten-Varianten selbst
+gehören nicht mehr zum Stoff dieses Kurses, brauchen aber genau das Werkzeug von hier.
 :::
 
 ### Selbsttest

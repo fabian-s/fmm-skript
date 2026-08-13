@@ -3,7 +3,7 @@ import { Slider } from "../../../lib";
 
 /**
  * §13.3: Gradientenabstieg auf f(x) = (x − 2)² + 1, dem Beispiel der Folie
- * „Beispiel Gradientenabstieg: Schritt für Schritt“ (13-optim.Rmd Z. 481–497).
+ * „Beispiel Gradientenabstieg: Schritt für Schritt“ (13-optim.Rmd Z. 484–499).
  * Eigenbau; nichts davon ist aus einer Buch-App portiert.
  *
  * Die Schrittweite γ ist frei einstellbar, und weil hier f'' ≡ 2 ist, liegen
@@ -108,7 +108,7 @@ export function GdStepper1D() {
   let statusFarbe = ACHSE;
   if (Math.abs(gamma - 1 / L) < eps) {
     status =
-      "γ = 1/L = 0,5 trifft das Minimum in einem einzigen Schritt: der Faktor 1 − γf'' ist genau null. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren macht.";
+      "γ = 1/L = 0,5 trifft das Minimum in einem einzigen Schritt: der Faktor 1 − γf″ ist genau null. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren macht.";
     statusFarbe = GRUEN;
   } else if (gamma < 1 / L) {
     status = `γ < 1/L: der Faktor 1 − γf″ = ${fmt(
@@ -247,7 +247,7 @@ export function GdStepper1D() {
             )}
             {!imBild && (
               <text x={W / 2} y={H / 2} fontSize="11" fill={ROT} textAnchor="middle">
-                x⁽ᵏ⁾ liegt ausserhalb des Fensters
+                x⁽ᵏ⁾ liegt außerhalb des Fensters
               </text>
             )}
           </svg>

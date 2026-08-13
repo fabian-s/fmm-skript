@@ -55,8 +55,10 @@ und bei der Parabelunterseite finden wir dagegen schnell ein Paar, dessen Streck
 Der vorbereitete Knopf setzt beim Ring die Punkte $(1{,}1;\ 0)^\top$ und $(0;\ 1{,}1)^\top$; die
 Strecke zwischen ihnen liegt für $\lambda$ zwischen $0{,}380$ und $0{,}620$ im Loch, ihr
 Mittelpunkt hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und unterschreitet damit den Innenradius
-$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Beide Mengen
-kommen gleich im Selbsttest wieder vor, dort mit Rechnung statt mit Mausklicks.
+$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Die Kreisscheibe
+und die Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung statt mit
+Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
+anklickbar wäre.
 :::
 
 Die Definition spricht nur über zwei Punkte. Gemeint ist aber mehr, und der folgende Satz holt
@@ -209,8 +211,8 @@ kein Zufall, sie hängt daran, dass $x \mapsto x^2$ eine konvexe Funktion ist, u
 
 :::beispiel[12.2.4 (Offener Ball)]
 Der offene Ball $\cblue{\Xcal} = \{\bx \in V\colon \left\|\bx\right\| < r\}$ ist ebenfalls
-konvex. Für $\lambda \in \{0, 1\}$ ist nichts zu zeigen. Für $\lambda \in (0,1)$ sind beide
-Gewichte echt positiv, und die Abschätzung aus dem Selbsttest wird strikt:
+konvex. Sei $\lambda \in [0,1]$. Mindestens eines der beiden Gewichte $\lambda$ und $1-\lambda$
+ist echt positiv, und schon deshalb wird die Abschätzung aus dem Selbsttest strikt:
 
 $$
 \left\|\cgreen{\lambda\bx + (1-\lambda)\by}\right\|
@@ -218,8 +220,11 @@ $$
 < \lambda r + (1-\lambda) r = r .
 $$
 
-Der Grund für die Fallunterscheidung ist die zweite Zeile: Aus $\left\|\bx\right\| < r$ folgt
-$\lambda\left\|\bx\right\| < \lambda r$ nur, solange $\lambda > 0$ ist.
+Die zweite Zeile verdient einen zweiten Blick. Aus $\left\|\bx\right\| < r$ folgt
+$\lambda\left\|\bx\right\| < \lambda r$ nur, solange $\lambda > 0$ ist; für $\lambda = 0$
+trägt der zweite Summand die strikte Ungleichung. Eine Fallunterscheidung brauchen wir
+deshalb nicht, wohl aber die Beobachtung, dass die beiden Gewichte nie gleichzeitig
+verschwinden.
 :::
 
 Der nächste Begriff beschreibt die Ecken einer konvexen Menge. In
@@ -243,8 +248,11 @@ stets $\bu = \bw = \corange{\bz}$ folgt.
 
 Ein Extrempunkt liegt also auf keiner Strecke, die ganz in der Menge verläuft und ihn im Inneren
 trifft. Der offene Ball aus Beispiel 12.2.4 hat deshalb gar keinen Extrempunkt: Jeder seiner
-Punkte ist Mittelpunkt zweier anderer Punkte des Balls. Beim geschlossenen Ball dagegen ist
-jeder Randpunkt extrem.
+Punkte ist Mittelpunkt zweier anderer Punkte des Balls. Beim geschlossenen *euklidischen* Ball
+dagegen ist jeder Randpunkt extrem. Auf die Norm kommt es dabei an: Der Einheitsball der
+$\infty$-Norm im $\R^2$ ist das Quadrat $[-1,1]^2$, und dessen Randpunkt $(1, 0)^\top$ ist der
+Mittelpunkt von $(1, -\tfrac12)^\top$ und $(1, \tfrac12)^\top$, die beide dazugehören. Extrem
+sind dort nur die vier Ecken.
 
 :::beispiel[12.2.6 (Der Simplex)]
 Der *Simplex*
@@ -268,11 +276,14 @@ $\corange{\be_1}, \dots, \corange{\be_N}$. Dass $\corange{\be_1}$ extrem ist, si
 $\corange{\be_1} = \lambda\bu + (1-\lambda)\bw$ mit $\bu, \bw \in \cblue{\Delta^N}$ und
 $\lambda \in (0,1)$, so ist für jedes $i \ge 2$ die Zahl $\lambda u_i + (1-\lambda) w_i = 0$ eine
 Summe zweier nichtnegativer Terme mit positiven Vorfaktoren, also $u_i = w_i = 0$. Weil sich die
-Komponenten zu eins addieren, bleibt $u_1 = w_1 = 1$. Umgekehrt ist jeder Punkt $\bx$ mit zwei
-positiven Komponenten $x_j, x_k > 0$ kein Extrempunkt: Für hinreichend kleines $\varepsilon > 0$
+Komponenten zu eins addieren, bleibt $u_1 = w_1 = 1$; für die übrigen $\corange{\be_i}$ läuft das
+Argument genauso. Umgekehrt ist jeder Punkt $\bx$ mit zwei *verschiedenen* positiven Komponenten
+$x_j, x_k > 0$, $j \neq k$, kein Extrempunkt: Für hinreichend kleines $\varepsilon > 0$
 liegen $\bx \pm \varepsilon(\be_j - \be_k)$ beide in $\cblue{\Delta^N}$, denn die Summe der
 Komponenten ändert sich nicht und alle bleiben nichtnegativ, und $\bx$ ist ihr Mittelpunkt.
-Damit ist $\cblue{\Delta^N} = \conv\{\corange{\be_1}, \dots, \corange{\be_N}\}$.
+Dass die Ecken den Simplex auch aufspannen, sieht man ohne Umweg: Jedes $\bx \in \cblue{\Delta^N}$
+ist $\bx = \sum_{i=1}^N x_i \corange{\be_i}$, und die $x_i$ sind gerade nichtnegative Gewichte
+mit Summe eins. Also ist $\cblue{\Delta^N} = \conv\{\corange{\be_1}, \dots, \corange{\be_N}\}$.
 
 *Geometrie.* $\cblue{\Delta^2}$ ist die Strecke von $(1,0)^\top$ nach $(0,1)^\top$,
 $\cblue{\Delta^3}$ das Dreieck mit den Ecken $\corange{\be_1}, \corange{\be_2}, \corange{\be_3}$
@@ -401,8 +412,10 @@ Fall.
 
 Die konvexe Menge, die hier gemeint ist, ist also $\cblue{\Pcal_n}$, der Kegel der
 semidefiniten Matrizen. Die positiv definiten Matrizen bilden übrigens ebenfalls eine konvexe
-Menge, mit demselben Beweis und strikten Ungleichungen; sie ist gerade das Innere von
-$\cblue{\Pcal_n}$.
+Menge, mit demselben Beweis und strikten Ungleichungen; sie ist das Innere von
+$\cblue{\Pcal_n}$ *innerhalb des Raums der symmetrischen Matrizen*. Im vollen
+$\R^{n \times n}$ hätte $\cblue{\Pcal_n}$ dagegen gar kein Inneres, denn die Forderung
+$\bA = \bA^\top$ sperrt sie in einen echten Untervektorraum.
 :::
 
 ### Operationen, die Konvexität erhalten
@@ -412,18 +425,18 @@ wenige Grundbausteine als konvex nachzuweisen und dann Regeln zu haben, die aus 
 neue konvexe Mengen machen. Vier solche Regeln stellen die Folien zusammen.
 
 :::satz[12.2.10 (Konvexitätserhaltung)]
-Seien $\cblue{\Xcal}, \cblue{\Xcal_1}, \cblue{\Xcal_2}, \dots$ konvexe Mengen. Dann sind auch
-die folgenden Mengen konvex:
+Sei $\cblue{\Xcal}$ konvex und sei $(\cblue{\Xcal_i})_{i \in I}$ eine Familie konvexer Mengen
+über einer beliebigen Indexmenge $I$. Dann sind auch die folgenden Mengen konvex:
 
-1. *Schnitt:* $\displaystyle \cblue{\Scal} = \bigcap_{i \in I} \cblue{\Xcal_i}$ für eine
-   beliebige Indexmenge $I$, wobei alle $\cblue{\Xcal_i}$ im selben Vektorraum liegen;
+1. *Schnitt:* $\displaystyle \cblue{\Scal} = \bigcap_{i \in I} \cblue{\Xcal_i}$, sofern alle
+   $\cblue{\Xcal_i}$ im selben Vektorraum liegen;
 2. *Kartesisches Produkt:* $\cblue{\Xcal_1} \times \cdots \times \cblue{\Xcal_k}$, hier dürfen
    die Faktoren in verschiedenen Vektorräumen leben, und das Produkt trägt die
    komponentenweisen Verknüpfungen;
 3. *Bild unter einer affinen Abbildung:* Für $\cblue{\Xcal} \subseteq \R^n$ und
    $f\colon \R^n \to \R^m$, $f(\bx) = \bA\bx + \bb$, ist
    $f(\cblue{\Xcal}) = \{\by = f(\bx)\colon \bx \in \cblue{\Xcal}\}$ konvex;
-4. *Summe:* $\cblue{\Xcal_1} \oplus \cblue{\Xcal_2} := \{\bx_1 + \bx_2\colon \bx_1 \in \cblue{\Xcal_1}, \bx_2 \in \cblue{\Xcal_2}\}$.
+4. *Summe:* $\cblue{\Xcal_1} \oplus \cblue{\Xcal_2} := \{\bx_1 + \bx_2\colon \bx_1 \in \cblue{\Xcal_1}, \bx_2 \in \cblue{\Xcal_2}\}$ für $\cblue{\Xcal_1}, \cblue{\Xcal_2} \subseteq \R^n$.
 :::
 
 ::::beweis
@@ -513,9 +526,9 @@ $$
 \cblue{\Xcal_3} = \{(x,y)\colon y \ge 0\} .
 $$
 
-Jede von ihnen ist ein :k[Halbraum]{#hyperplane}, also von der Form
-$\{\bz\colon \ba^\top\bz \le \beta\}$; für $\cblue{\Xcal_2}$ etwa mit $\ba = (-1, 0)^\top$ und
-$\beta = 0$. Jeder Halbraum ist konvex:
+Jede von ihnen ist ein *Halbraum*, also eine der beiden Seiten einer
+:k[Hyperebene]{#hyperplane} und damit von der Form $\{\bz\colon \ba^\top\bz \le \beta\}$; für
+$\cblue{\Xcal_2}$ etwa mit $\ba = (-1, 0)^\top$ und $\beta = 0$. Jeder Halbraum ist konvex:
 
 $$
 \ba^\top\left(\cgreen{\lambda\bz_1 + (1-\lambda)\bz_2}\right)
@@ -622,7 +635,7 @@ $$
 = \argmax_{\bx \in \cblue{\Xcal}} \ \bv^\top\bx .
 $$
 
-Die Folie schreibt an dieser Stelle $\bx^\star = \max_{\bx} \sum_i v_i x_i$. Das Maximum ist
+Die Folie schreibt an dieser Stelle $\bx^\star = \max_{\bx \in \cblue{\Xcal}} \sum_{i=1}^n v_i x_i$. Das Maximum ist
 aber der erreichte *Wert* und nicht die Stelle, an der er angenommen wird; gemeint ist das
 Argmax, und mehrdeutig ist es obendrein, weshalb dort ein Elementzeichen steht.
 
@@ -656,11 +669,11 @@ also ist das Maximum über die Hülle höchstens $M$.
 :::
 
 :::schritt
-Sei $\cblue{\Xcal}_M := \{\bx \in \cblue{\Xcal}\colon \bv^\top\bx = M\}$ die Menge der
-Maximierer und $\Fcal := \{\bz \in \conv(\cblue{\Xcal})\colon \bv^\top\bz = M\}$. Wir zeigen
-$\Fcal = \conv(\cblue{\Xcal}_M)$. Von rechts nach links rechnen wir direkt nach: Für
-$\bz = \sum_i w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal}_M$ ist
-$\bv^\top\bz = \sum_i w_i M = M$. Für die andere Richtung sei $\bz = \sum_i w_i\bx_i \in \Fcal$
+Sei $\cblue{\Xcal_M} := \{\bx \in \cblue{\Xcal}\colon \bv^\top\bx = M\}$ die Menge der
+Maximierer und $\cblue{\Fcal} := \{\bz \in \conv(\cblue{\Xcal})\colon \bv^\top\bz = M\}$. Wir zeigen
+$\cblue{\Fcal} = \conv(\cblue{\Xcal_M})$. Von rechts nach links rechnen wir direkt nach: Für
+$\bz = \sum_i w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal_M}$ ist
+$\bv^\top\bz = \sum_i w_i M = M$. Für die andere Richtung sei $\bz = \sum_i w_i\bx_i \in \cblue{\Fcal}$
 mit $\bx_i \in \cblue{\Xcal}$ und $w_i > 0$. Aus
 $\sum_i w_i (M - \bv^\top\bx_i) = M - \bv^\top\bz = 0$ und
 $M - \bv^\top\bx_i \ge 0$ folgt $\bv^\top\bx_i = M$ für jedes dieser $i$.
@@ -669,12 +682,12 @@ $M - \bv^\top\bx_i \ge 0$ folgt $\bv^\top\bx_i = M$ für jedes dieser $i$.
 :::
 
 :::schritt
-Unter den endlich vielen Punkten von $\cblue{\Xcal}_M$ wählen wir einen mit größter
+Unter den endlich vielen Punkten von $\cblue{\Xcal_M}$ wählen wir einen mit größter
 euklidischer Norm und nennen ihn $\corange{\bx^\star}$. Er maximiert die Norm sogar über ganz
-$\conv(\cblue{\Xcal}_M)$, denn
+$\conv(\cblue{\Xcal_M})$, denn
 $\left\|\sum_i w_i\bx_i\right\| \le \sum_i w_i \left\|\bx_i\right\| \le \max_i \left\|\bx_i\right\|$.
 Nun sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
-$\bu, \bw \in \conv(\cblue{\Xcal}_M)$ und $\lambda \in (0,1)$. Ausmultiplizieren liefert die
+$\bu, \bw \in \conv(\cblue{\Xcal_M})$ und $\lambda \in (0,1)$. Ausmultiplizieren liefert die
 Identität
 
 $$ {#eq-12.2.2}
@@ -687,7 +700,7 @@ Die linke Seite ist höchstens null, weil $\left\|\bu\right\|$ und $\left\|\bw\r
 höchstens $\left\|\corange{\bx^\star}\right\|$ sind. Die rechte Seite ist mindestens null. Also
 sind beide null, und wegen $\lambda(1-\lambda) > 0$ folgt $\bu = \bw$ und damit
 $\bu = \bw = \corange{\bx^\star}$. Der Punkt $\corange{\bx^\star}$ ist somit Extrempunkt von
-$\conv(\cblue{\Xcal}_M)$.
+$\conv(\cblue{\Xcal_M})$.
 
 ::why[($12.2.2$) entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$]
 :::
@@ -696,9 +709,9 @@ $\conv(\cblue{\Xcal}_M)$.
 *Zu 2.* Wir zeigen, dass $\corange{\bx^\star}$ sogar Extrempunkt von $\conv(\cblue{\Xcal})$ ist.
 Sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
 $\bu, \bw \in \conv(\cblue{\Xcal})$ und $\lambda \in (0,1)$. Dann ist
-$M = \lambda\,\bv^\top\bu + (1-\lambda)\,\bv^\top\bw$, und beide Summanden sind nach Schritt 1
-höchstens $M$. Also ist $\bv^\top\bu = \bv^\top\bw = M$, das heißt
-$\bu, \bw \in \Fcal = \conv(\cblue{\Xcal}_M)$. Nach Schritt 3 folgt
+$M = \lambda\,\bv^\top\bu + (1-\lambda)\,\bv^\top\bw$, und nach Schritt 1 sind $\bv^\top\bu$ und
+$\bv^\top\bw$ beide höchstens $M$. Also ist $\bv^\top\bu = \bv^\top\bw = M$, das heißt
+$\bu, \bw \in \cblue{\Fcal} = \conv(\cblue{\Xcal_M})$. Nach Schritt 3 folgt
 $\bu = \bw = \corange{\bx^\star}$.
 
 ::why[dasselbe Durchschnittsargument wie in Schritt 2, diesmal mit nur zwei Summanden]
@@ -740,10 +753,11 @@ selbst in $\cblue{\Xcal}$. Die Zielwerte dort sind $0$, $30$ und $32$. Nach Satz
 $\corange{\bx^\star} = \corange{(0,4)}$ mit dem Wert $32$ eine Lösung, und wir haben dafür drei
 Punkte geprüft statt neunzehn.
 
-Lehrreich ist der Zweitplatzierte. Der Punkt $\cred{(3,2)}$ liegt auf dem Rand von
-$\cblue{\Xcal}$ und erreicht den Wert $31$, ist aber kein Extrempunkt: Er ist genau der
-Mittelpunkt von $\corange{(6,0)}$ und $\corange{(0,4)}$. Wer nur die Ecken absucht, übersieht
-ihn und verliert dadurch nichts.
+Lehrreich ist der Zweitplatzierte. Der Punkt $\cred{(3,2)}$ schöpft das Budget voll aus
+($2 \cdot 3 + 3 \cdot 2 = 12$) und erreicht den Wert $31$; er liegt damit auf der Kante von
+$\conv(\cblue{\Xcal})$ zwischen $\corange{(6,0)}$ und $\corange{(0,4)}$. Ein Extrempunkt ist er
+trotzdem nicht, denn er ist genau deren Mittelpunkt. Wer nur die Ecken absucht, übersieht ihn
+und verliert dadurch nichts.
 :::
 
 :::bemerkung[12.2.16 (Was der Satz leistet und was nicht)]
@@ -767,11 +781,12 @@ die Ecken des zugehörigen Ungleichungssystems zufällig ganzzahlig sind. Für a
 Teilmengen von $\N^n$ ist $\conv(\cblue{\Xcal})$ dagegen selbst schwer zu bestimmen, und genau
 darin liegt die Schwierigkeit der ganzzahligen Optimierung. Ist umgekehrt die zulässige Menge
 von vornherein ein Polyeder wie in Beispiel 12.2.12, so ist die Suche über die Ecken die
-Grundidee der linearen Programmierung; darauf kommen wir in
-[Abschnitt 13.5](?k=13-optim#sec-13.5) zurück.
+Grundidee der linearen Programmierung. Dieses Verfahren behandelt der Kurs nicht;
+[Abschnitt 13.5](?k=13-optim#sec-13.5) geht die Optimierung unter Nebenbedingungen stattdessen
+über Lagrange-Multiplikatoren und die Karush-Kuhn-Tucker-Bedingungen an.
 :::
 
-*Vertiefung: Boyd und Vandenberghe, Convex Optimization, Kapitel 2 behandelt dieselben Themen
+*Vertiefung: Boyd und Vandenberghe, Convex Optimization, §2.2 und §2.3 behandeln dieselben Themen
 ausführlicher, mit §2.1 zu affinen und konvexen Mengen, §2.2 zu den wichtigen Beispielen
 einschließlich Simplex und semidefinitem Kegel und §2.3 zu den Operationen, die Konvexität
 erhalten.*

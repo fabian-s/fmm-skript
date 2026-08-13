@@ -62,8 +62,9 @@ Später im Kapitel kommen der :k[Gradient]{#gradient} und
 Beginnen wir mit dem Baustein, aus dem alles Weitere entsteht.
 
 :::definition[12.1.1 (Konvexkombination)]
-Sei $V$ ein Vektorraum und $\Xcal = \{\bx_1, \dots, \bx_k\} \subset V$. Wir nennen $\bx$ eine
-*Konvexkombination* (convex combination) von Vektoren in $\Xcal$, falls es Koeffizienten
+Sei $V$ ein Vektorraum und $\Xcal = \{\bx_1, \dots, \bx_k\} \subset V$. Wir nennen
+$\cgreen{\bx}$ eine *Konvexkombination* (convex combination) von Vektoren in $\Xcal$,
+falls es Koeffizienten
 $\cgreen{w_1}, \dots, \cgreen{w_k} \ge 0$ gibt mit
 
 $$
@@ -245,10 +246,11 @@ von Punkten aus $\Xcal$ ein und sortiert um: Es entsteht wieder eine Konvexkombi
 Punkten aus $\Xcal$, und die Folienfassung greift. Für die andere Richtung lösen wir eine
 nichttriviale Darstellung nach $\corange{\bx}$ auf und erhalten $\corange{\bx}$ als
 Konvexkombination der *übrigen* Punkte. Mindestens zwei von ihnen tragen dann positives
-Gewicht, und spalten wir einen davon ab, so liegt $\corange{\bx}$ im Inneren einer Strecke
-innerhalb von $\cblue{\conv(\Xcal)}$. Dasselbe Argument zeigt nebenbei, dass Punkte aus
-$\cblue{\conv(\Xcal)} \setminus \Xcal$ in der Literaturfassung von vornherein ausscheiden. Im
-Dreiecksbeispiel unten sind es die drei Ecken.
+Gewicht: Ein einzelner Punkt mit Gewicht $1$ wäre $\corange{\bx}$ selbst, und der kommt unter
+den übrigen nicht vor. Spalten wir einen davon ab, so liegt $\corange{\bx}$ im Inneren
+einer Strecke innerhalb von $\cblue{\conv(\Xcal)}$. Dasselbe Argument zeigt nebenbei, dass
+Punkte aus $\cblue{\conv(\Xcal)} \setminus \Xcal$ in der Literaturfassung von vornherein
+ausscheiden; im Dreiecksbeispiel unten bleiben deshalb genau die drei Ecken übrig.
 :::
 
 :::bemerkung[12.1.9 (Die kleinste konvexe Obermenge)]
@@ -337,8 +339,9 @@ der Gesamtfläche $2$. Das Widget rechnet diese Probe live mit.
 :::
 
 :::vertiefung[Konvexkombinationen zum Schieben]
-Die Folien zeigen an dieser Stelle zwei Bilder, eines für das Liniensegment und eines für die
-konvexe Hülle. Ein einziges Widget deckt beides ab, wenn wir die Gewichte verstellbar machen.
+Für das Liniensegment haben die Folien ein Bild, für das Dreieck keines. Ein einziges Widget
+deckt beide Fälle ab, wenn wir die Gewichte verstellbar machen: Steht ein Gewicht auf null,
+bleibt genau die Strecke aus Satz 12.1.4 übrig.
 
 <KonvexkombinationsExplorer />
 

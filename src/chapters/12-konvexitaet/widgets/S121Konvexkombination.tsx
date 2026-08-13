@@ -4,11 +4,12 @@ import { Slider, niceTicks } from "../../../lib";
 /**
  * §12.1: Konvexkombinations-Explorer (Eigenbau).
  *
- * Ersetzt die beiden Folienbilder konvexkombinationen-2.png (Liniensegment)
- * und convex-hull.png (Dreieck als konvexe Hülle) der Folien 12-konvexitaet.
- * Gezeigt wird das Folienbeispiel Z. 136-155: die Ecken
- * x1 = (0,0), x2 = (2,0), x3 = (1,2) und alle Konvexkombinationen
- * x = w1 x1 + w2 x2 + w3 x3.
+ * Ersetzt das Folienbild konvexkombinationen-2.png (Liniensegment mit
+ * x = w x1 + (1-w) x2, Folien 12-konvexitaet Z. 113) und bebildert zugleich
+ * das Dreiecksbeispiel Z. 136-155, zu dem die Folien gar keine Grafik haben:
+ * die Ecken x1 = (0,0), x2 = (2,0), x3 = (1,2) und alle Konvexkombinationen
+ * x = w1 x1 + w2 x2 + w3 x3. Die Punktwolke convex-hull.png (Z. 130) ersetzt
+ * dagegen das Schwesterwidget S121Huelle.
  *
  * Die drei Regler geben unnormierte Gewichte; das Widget teilt durch ihre
  * Summe und erfüllt so die Nebenbedingung sum w_i = 1. Steht die Summe auf

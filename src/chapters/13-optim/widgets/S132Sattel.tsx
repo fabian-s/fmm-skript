@@ -153,7 +153,8 @@ export function SattelpunktWidget() {
         Die Höhenlinien von f(x, y) = x² − y² sind Hyperbeln, das Niveau 0 zerfällt in die
         beiden Geraden y = ±x (dick). Durchgezogen sind die positiven Niveaus, gestrichelt die
         negativen. Wir ziehen den blauen Punkt oder stellen ihn mit den Reglern ein; orange
-        zeigt die Suchrichtung −∇f, violett sitzt der stationäre Punkt (0; 0). Die grüne
+        zeigt die Suchrichtung −∇f (die Pfeillänge ist nur ein Anhalt, den Betrag nennt der
+        Kasten unten), violett sitzt der stationäre Punkt (0; 0). Die grüne
         x-Achse ist die Richtung, in der dort ein Minimum liegt, die rote y-Achse die, in der
         ein Maximum liegt.
       </p>
@@ -326,15 +327,12 @@ export function SattelpunktWidget() {
           Hesse-Matrix <span className="font-mono">H = (2 0; 0 −2)</span>, überall dieselbe;
           Eigenwerte <span className="font-mono">λ₁ = 2</span> zur x-Richtung und{" "}
           <span className="font-mono">λ₂ = −2</span> zur y-Richtung, also{" "}
-          <span className="font-semibold" style={{ color: VIOLETT }}>
-            indefinit
-          </span>
-          .
+          <span className="font-semibold">indefinit</span>.
         </p>
         <p>{lage}</p>
         {newtonGenutzt && (
           <p>
-            Der Newton-Schritt hat den Punkt in einem Zug nach (0; 0) gesetzt. Das ist kein
+            Ein Newton-Schritt landet auf (0; 0), und zwar von jedem Startpunkt aus. Das ist kein
             Zufall: f ist quadratisch, seine Taylornäherung zweiten Grades also exakt, und der
             einzige stationäre Punkt dieser Näherung ist der Sattel. Newton sucht kritische
             Punkte, nicht Minima.
@@ -343,8 +341,7 @@ export function SattelpunktWidget() {
         {zeigeBahn && verlaesstFenster && (
           <p>
             Die gestrichelte Bahn verlässt das gezeigte Fenster; im Bild endet sie am Rand,
-            gerechnet wird sie weiter. Nach {SCHRITTE} Schritten steht sie bei ({fmt(ende[0], 3)};{" "}
-            {fmt(ende[1], 3)}).
+            gerechnet wird sie weiter bis zu dem Endpunkt, den die Zeile darüber nennt.
           </p>
         )}
       </div>

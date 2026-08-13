@@ -152,7 +152,7 @@ export function BisektionStepper() {
   }
 
   const schritteVorhergesagt = Math.ceil(Math.log2((auf.b0 - auf.a0) / tol));
-  const mitte = (a + b) / 2;
+  const mitte = a + (b - a) / 2;
   const naechste = auf.nullstellen.reduce(
     (best, r) => (Math.abs(r - mitte) < Math.abs(best - mitte) ? r : best),
     auf.nullstellen[0],

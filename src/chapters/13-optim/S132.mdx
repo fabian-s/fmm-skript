@@ -46,7 +46,7 @@ Gilt jeweils die strikte Ungleichung für $\bx \neq \cgreen{\bx^\star}$, so hei�
 Minimum *strikt*.
 :::
 
-Das Problem selbst hat [Abschnitt 13.1](#sec-13.1) schon aufgeschrieben, dort mit
+Das Problem ($13.2.1$) hat [Abschnitt 13.1](#sec-13.1) schon aufgeschrieben, dort mit
 $S$ für die zulässige Menge. Wir schreiben hier $\Xcal$, weil der Buchstabe $S$ in
 den Sätzen unten für den offenen Definitionsbereich gebraucht wird. Neu ist die
 Unterscheidung zwischen lokal und global, und um die dreht sich der ganze
@@ -57,8 +57,11 @@ genommen die Menge aller Minimierer; wie die Folien schreiben wir
 $\cgreen{\bx^\star}$ für ein Element daraus, sofern überhaupt eines existiert.
 Zweitens meint „unbeschränkte Optimierung" die Optimierung ohne
 Nebenbedingungen, also $\Xcal = \R^n$, und nicht etwa eine unbeschränkte Funktion.
-Nebenbedingungen behandelt [Abschnitt 13.5](#sec-13.5); bis dahin ist
-$\Xcal = \R^n$.
+Die Sätze zur Konvexität unten formulieren wir trotzdem für eine allgemeine
+zulässige Menge, weil gerade dort sichtbar wird, was $\Xcal$ beiträgt; die
+Verfahren der [Abschnitte 13.3](#sec-13.3) und [13.4](#sec-13.4) arbeiten dann
+durchweg mit $\Xcal = \R^n$, und wie Nebenbedingungen die Bedingungen ändern,
+klärt [Abschnitt 13.5](#sec-13.5).
 
 :::bemerkung[13.2.2 (Maximieren ist Minimieren)]
 Ein Maximierungsproblem müssen wir nicht getrennt behandeln. Die Folien halten das
@@ -71,18 +74,19 @@ $$
 $$
 
 Die Werte kippen im Vorzeichen, die Argumente bleiben dieselben; die zweite
-Gleichung stand schon in [Abschnitt 13.1](#sec-13.1). Deshalb bauen alle
+Gleichung stand schon in [Abschnitt 13.1](#sec-13.1). Deshalb sind die gängigen
 Bibliotheken Minimierer, und deshalb heißt die Zielfunktion der
-Maximum-Likelihood-Schätzung in jeder Software die *negative*
+Maximum-Likelihood-Schätzung dort in aller Regel die *negative*
 :k[Log-Likelihood]{#likelihood}. Wir formulieren im Folgenden alles für Minima.
 :::
 
 ### Die Bedingung erster Ordnung
 
-Aus [Kapitel 11](?k=11-ableitungen-2#sec-11.3) kennen wir den Zusammenhang
-zwischen Ableitung und Extremum bereits. Für die Optimierung ist er der
-Ausgangspunkt jedes Verfahrens, deshalb steht er hier noch einmal, und diesmal mit
-Beweis.
+[Abschnitt 13.1](#sec-13.1) hat die Bedingung schon benutzt, und
+[Kapitel 11](?k=11-ableitungen-2#sec-11.3) hat um kritische Punkte herum das
+Hesse-Kriterium gebaut. Bewiesen haben wir die Bedingung selbst an keiner der
+beiden Stellen. Für die Optimierung ist sie der Ausgangspunkt jedes Verfahrens,
+deshalb holen wir den Beweis hier nach.
 
 :::satz[13.2.3 (Notwendige Bedingung erster Ordnung)]
 Seien $S \subseteq \R^n$ offen, $f\colon S \to \R$ und $\cgreen{\bx^\star} \in S$
@@ -115,11 +119,11 @@ lokales Minimum.
 
 :::schritt
 $g$ ist in $t = 0$ differenzierbar mit $g'(0) = \corange{\nabla f(\cgreen{\bx^\star})}\,\bh$.
-Nun schauen wir den Differenzenquotienten von zwei Seiten an. Für $t > 0$ ist
-$(g(t) - g(0))/t \ge 0$, weil der Zähler nicht negativ ist; im Grenzwert folgt
-$g'(0) \ge 0$. Für $t < 0$ dreht der Nenner das Vorzeichen um, wir erhalten
-$(g(t) - g(0))/t \le 0$ und im Grenzwert $g'(0) \le 0$. Beides zusammen ergibt
-$g'(0) = 0$.
+Nun schauen wir den Differenzenquotienten von zwei Seiten an. Für hinreichend
+kleine $t > 0$ ist $(g(t) - g(0))/t \ge 0$, weil der Zähler nicht negativ ist; im
+Grenzwert folgt $g'(0) \ge 0$. Für hinreichend kleine $t < 0$ dreht der Nenner das
+Vorzeichen um, wir erhalten $(g(t) - g(0))/t \le 0$ und im Grenzwert
+$g'(0) \le 0$. Beides zusammen ergibt $g'(0) = 0$.
 
 ::why[Der Wert der Ableitung ist die Richtungsableitung aus [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2); die Kettenregel auf die affine Abbildung $t \mapsto \bx^\star + t\bh$ angewandt gibt genau $\nabla f(\bx^\star)\bh$]
 :::
@@ -146,7 +150,12 @@ Zwei Warnungen gehören sofort dazu. Die Bedingung ist *notwendig*, nicht
 hinreichend: Jedes lokale Minimum ist stationär, aber ein stationärer Punkt kann
 ebenso ein Maximum oder ein Sattelpunkt sein. Und sie gilt nur im *Inneren*.
 Liegt das Minimum auf dem Rand der zulässigen Menge, so darf der Gradient dort
-sehr wohl von null verschieden sein, er darf nur nicht ins Innere zeigen. Genau
+sehr wohl von null verschieden sein. Verboten ist dann nur noch eine zulässige
+Abstiegsrichtung: Für jede Richtung $\bd$, die von $\cgreen{\bx^\star}$ aus in
+$\Xcal$ hineinführt, muss $\corange{\nabla f(\cgreen{\bx^\star})}\,\bd \ge 0$
+gelten, der *negative* Gradient darf also nicht ins Innere zeigen. Bei
+$f(x) = x$ auf $\Xcal = [0, 1]$ etwa liegt das Minimum in $0$ mit $f'(0) = 1$: Der
+Gradient zeigt dort sogar ins Innere, der negative Gradient dagegen hinaus. Genau
 davon handelt [Abschnitt 13.5](#sec-13.5).
 
 :::bemerkung[13.2.5 (Optimieren heißt Gleichungen lösen)]
@@ -160,8 +169,8 @@ $$
 
 eine :k[Fixpunktabbildung]{#fixed-point-iteration}, deren Fixpunkte genau die
 stationären Punkte von $f$ sind, denn $\Phi(\bx) = \bx$ gilt für $\gamma \neq 0$
-genau dann, wenn $\corange{\nabla f(\bx)} = \bnull^\top$ ist. Die zugehörige
-Fixpunktiteration $\cblue{\bx^{(k+1)}} = \Phi(\cblue{\bx^{(k)}})$ ist der
+genau dann, wenn $\corange{\nabla f(\bx)} = \bnull^\top$ ist. Die zu ($13.2.3$)
+gehörige Fixpunktiteration $\cblue{\bx^{(k+1)}} = \Phi(\cblue{\bx^{(k)}})$ ist der
 :k[Gradientenabstieg]{#gradient-descent} aus [Abschnitt 13.3](#sec-13.3).
 
 Analytisch lösen lässt sich ($13.2.2$) nur in Sonderfällen. Einer davon ist
@@ -368,8 +377,9 @@ Kleinste-Quadrate-Problem herauskommt, und bei der logistischen Regression aus
 nicht: Die Log-Likelihood einer :k[Mischverteilung]{#gaussian-mixture-model} ist
 nicht konkav, und solche Modelle sind der Standardfall für mehrere lokale Optima.
 
-*Hinge-Loss.* Die Support-Vector-Machine minimiert
-$L(y, \wh{y}) = \max(0,\, 1 - y\wh{y})$. Als punktweises Maximum zweier affiner
+*Hinge-Loss.* Die Support-Vector-Machine summiert über die Daten den
+*Hinge-Verlust* $L(y, \wh{y}) = \max(0,\, 1 - y\wh{y})$ und addiert einen
+Strafterm. Als punktweises Maximum zweier affiner
 Funktionen ist der Hinge-Loss konvex
 ([Kapitel 12](?k=12-konvexitaet#sec-12.4)), aber weder strikt konvex noch überall
 differenzierbar: Für $y\wh{y} \ge 1$ ist er konstant null, und bei $y\wh{y} = 1$ hat
@@ -389,7 +399,8 @@ wenn sie also sowohl positive als auch negative
 :k[Eigenwerte]{#eigenvalue-eigenvector} hat.
 :::
 
-Nach Satz 11.3.9 ist ein solcher Punkt weder ein lokales Minimum noch ein lokales
+Ist $f$ zweimal stetig differenzierbar, wie es Satz 11.3.9 verlangt, so ist ein
+solcher Punkt weder ein lokales Minimum noch ein lokales
 Maximum: In jeder Umgebung liegen Punkte mit größerem und Punkte mit kleinerem
 Funktionswert. Die Umkehrung gilt nicht. Ein stationärer Punkt kann auch dann
 weder Minimum noch Maximum sein, wenn die Hesse-Matrix semidefinit ist, wie
@@ -487,26 +498,27 @@ $$ {#eq-13.2.5}
 \cblue{y^{(k+1)}} = (1 + 2\gamma)\,\cblue{y^{(k)}} .
 $$
 
-Für $0 < \gamma < \tfrac12$ schrumpft die erste Komponente, die zweite wächst in
-jedem Schritt um den Faktor $\cred{1 + 2\gamma} > 1$. Nur wer exakt auf der
+Für $0 < \gamma < \tfrac12$ schrumpft nach ($13.2.5$) die erste Komponente, die
+zweite wächst in jedem Schritt um den Faktor $\cred{1 + 2\gamma} > 1$. Nur wer exakt auf der
 $x$-Achse startet, also mit $y^{(0)} = 0$, landet im Sattel. Diese Startmenge ist
 eine Gerade im $\R^2$ und hat das Volumen null. In der Praxis genügt schon
 Rundungsrauschen, um sie zu verfehlen, und der stochastische Gradientenabstieg
 aus [Abschnitt 13.4](#sec-13.4) bringt sein eigenes Rauschen mit.
 
-*In hohen Dimensionen ist der Sattel der Normalfall.* Ein lokales Minimum
-verlangt, dass *alle* $n$ Eigenwerte von $\corange{\bH_f}$ positiv sind. Ein
-Sattelpunkt verlangt nur, dass *ein einziger* Eigenwert aus der Reihe tanzt. Die
-Münzwurf-Faustregel aus [Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) beziffert
-den Unterschied: Wären die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte
-ein Minimum die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum
-$2^{1-n}$; für $n = 100$ sind das $7{,}9 \cdot 10^{-31}$ und
-$1{,}6 \cdot 10^{-30}$. Die Eigenwerte einer Hesse-Matrix sind keine unabhängigen
-Münzwürfe, die Rechnung ist deshalb nur eine Faustregel, aber Modelle aus der
-Zufallsmatrixtheorie liefern dasselbe Bild. Wer in einem
-:k[neuronalen Netz]{#neural-network} mit Millionen Parametern hängenbleibt, hängt
-also fast nie in einem schlechten lokalen Minimum, sondern an einem Sattel. Nach
-Verfahren, die dort wieder herauskommen, fragen die
+*In hohen Dimensionen ist der Sattel der Normalfall.* Solange kein Eigenwert von
+$\corange{\bH_f}$ null ist, entscheidet allein das Vorzeichenmuster: Ein Minimum
+verlangt dann, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt
+genügt schon *ein einziger*, der aus der Reihe tanzt. (Ein Eigenwert null lässt
+beide Fälle offen, dazu Bemerkung 13.2.14.) Die Münzwurf-Faustregel aus
+[Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) beziffert den Unterschied: Wären
+die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte ein Minimum die
+Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$; für $n = 100$ sind
+das $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$. Unabhängig sind die
+Vorzeichen natürlich nicht, die Zahlen taugen also nur als Größenordnung; genauere
+Modelle aus der Zufallsmatrixtheorie ändern am Bild aber nichts. Für ein
+:k[neuronales Netz]{#neural-network} mit Millionen Parametern heißt das: Wo ein
+Verfahren stehenbleibt, ist fast immer ein Sattel und fast nie ein schlechtes
+lokales Minimum. Nach Verfahren, die dort wieder herauskommen, fragen die
 [Abschnitte 13.3](#sec-13.3) und [13.4](#sec-13.4).
 :::
 
@@ -620,10 +632,13 @@ $f(\by) \ge f(\cgreen{\bx^\star})$ für alle $\by$ stehen. Jeder stationäre Pun
 einer konvexen Funktion ist also bereits ein globales Minimum, was Satz 13.2.6 von
 der anderen Seite bestätigt.
 
-Für die Praxis heißt das: Bei einem konvexen Problem dürfen wir aufhören, sobald
-der Gradient klein genug ist. Bei einem nicht-konvexen Problem heißt ein kleiner
-Gradient nur, dass wir irgendwo stationär stehen, und die Tabelle sagt, welche
-drei Möglichkeiten das offenlässt.
+Für die Praxis heißt das: Bei einem konvexen Problem sagt ein *verschwindender*
+Gradient schon alles, wir stehen dann im globalen Minimum. Ein bloß *kleiner*
+Gradient garantiert das nicht von selbst; wie viel er wert ist, hängt an der
+Krümmung, und darauf kommt [Abschnitt 13.3](#sec-13.3) mit den Abbruchkriterien
+zurück. Bei einem nicht-konvexen Problem heißt ein kleiner Gradient ohnehin nur,
+dass wir irgendwo stationär stehen, und die Tabelle sagt, welche drei
+Möglichkeiten das offenlässt.
 :::
 
 ### Selbsttest
@@ -695,8 +710,9 @@ $1 + 2\gamma$ vergrößert.
 :::frage{wahr}
 In hohen Dimensionen sind stationäre Punkte typischerweise Sattelpunkte.
 
-Ein Minimum verlangt, dass alle $n$ Eigenwerte der Hesse-Matrix positiv sind, ein
-Sattelpunkt nur einen einzigen mit abweichendem Vorzeichen. Die
+Ist kein Eigenwert der Hesse-Matrix null, so verlangt ein Minimum, dass alle $n$
+positiv sind; für einen Sattelpunkt genügt ein einziger mit abweichendem
+Vorzeichen. Die
 Münzwurf-Faustregel gibt $2^{-n}$ für ein Minimum und $2^{1-n}$ für irgendein
 Extremum, bei $n = 100$ also $7{,}9 \cdot 10^{-31}$ beziehungsweise
 $1{,}6 \cdot 10^{-30}$. Die Vorzeichen sind in Wahrheit nicht unabhängig, das Bild

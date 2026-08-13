@@ -164,22 +164,26 @@ export function FixpunktSpirale() {
 
   let status: string;
   if (rho >= 1) {
-    const gewachsen = abstand > start;
+    // Bei rho = 1 exakt bleibt der Abstand stehen; ein Promille Toleranz haelt
+    // Rundungsdrift aus dem Wachstums-Zweig heraus.
+    const gewachsen = abstand > 1.001 * start;
     status =
       `ρ = ${fmt(rho)} ist nicht kleiner als 1, damit sagt Satz 13.1.16 nichts mehr zu. Nach ` +
       `${nSchritte} Schritten steht der Abstand zum Fixpunkt bei ${fmtE(abstand)}, gestartet sind ` +
       `wir bei ${fmt(start)}. ` +
       (gewachsen
-        ? `Der Fehler wächst also, und zwar in jedem Schritt um denselben Faktor. `
-        : `Gewachsen ist er nicht, geschrumpft aber ebenso wenig: Bei ρ = 1 lässt die Iteration den ` +
-          `Fehler in mindestens einer Richtung unverändert groß, statt ihn zu vergrößern. `) +
-      `Zusammen läuft die Iteration erst für γ < ${fmt(sys.gammaMax)}.`;
-  } else if (Math.abs(gamma - sys.gammaOpt) < 0.011) {
+        ? `Der Fehler wächst also, und der Zuwachs pro Schritt nähert sich dem Faktor ρ. `
+        : `Gewachsen ist er nicht: Bei ρ = 1 hält die Iteration den Fehler in mindestens einer ` +
+          `Richtung genau fest, und weiter als bis dorthin kommt sie nicht. `) +
+      `Zusammen läuft die Iteration nur für γ < ${fmt(sys.gammaMax)}.`;
+  } else if (Math.abs(gamma - sys.gammaOpt) < 0.011 && rho <= 1.05 * sys.rhoOpt) {
     status =
-      `Das ist ungefähr die beste Schrittweite für dieses System: γ ≈ ${fmt(sys.gammaOpt)} drückt ρ ` +
-      `auf ${fmt(rho)}, und nach ${nSchritte} Schritten ist der Abstand von ${fmt(start)} auf ` +
-      `${fmtE(abstand)} gefallen. Nach links wie nach rechts wird es schlechter, in die eine ` +
-      `Richtung wegen zu kleiner Schritte, in die andere wegen des Überschießens.`;
+      `Das ist ungefähr die beste Schrittweite für dieses System: ρ = ${fmt(rho)} liegt höchstens ` +
+      `fünf Prozent über dem erreichbaren Minimum ${fmt(sys.rhoOpt)}, das bei ` +
+      `γ* ≈ ${fmt(sys.gammaOpt)} steht. Nach ${nSchritte} Schritten ist der Abstand von ` +
+      `${fmt(start)} auf ${fmtE(abstand)} gefallen. Weiter weg von γ* wird es in beide ` +
+      `Richtungen schlechter, nach links wegen zu kleiner Schritte, nach rechts wegen des ` +
+      `Überschießens.`;
   } else if (gamma < sys.gammaOpt) {
     status =
       `ρ = ${fmt(rho)} < 1, die Folge läuft also zusammen, aber gemächlich: Nach ${nSchritte} Schritten ` +

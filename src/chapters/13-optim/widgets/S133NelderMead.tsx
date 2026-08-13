@@ -14,11 +14,17 @@ import { useMemo, useState } from "react";
  * vom schlechtesten Punkt durch den Schwerpunkt ist die Suchrichtung dieses
  * Verfahrens, also orange. Rot warnt, wenn der Simplex nur noch schrumpft.
  *
- * Nachgerechnet (node, check-math-s133.mjs) für f(x) = (1 − x₁)² + 5(x₂ − x₁²)²
- * ab dem festen Startsimplex: alle Ecken bleiben in x₁ ∈ [−1,50; 1,02] und
- * x₂ ∈ [−0,38; 2,50], das Fenster [−2, 2] × [−1, 3] schneidet also nichts ab;
- * in 80 Schritten fallen 20 Reflexionen, 4 Expansionen und 56 Kontraktionen an,
- * der beste Funktionswert unterschreitet bei Schritt 40 erstmals 10⁻⁶.
+ * Nachgerechnet (node, check-math-s133.mjs, rev133nm.mjs) für
+ * f(x) = (1 − x₁)² + 5(x₂ − x₁²)²:
+ *  - Startsimplex „Tal von oben“ (Voreinstellung): alle Ecken bleiben in
+ *    x₁ ∈ [−1,50; 1,02] und x₂ ∈ [−0,38; 2,50], das Fenster [−2, 2] × [−1, 3]
+ *    schneidet also nichts ab; nach 40 Schritten stehen 13 Reflexionen,
+ *    4 Expansionen, 23 Kontraktionen und KEIN Schrumpfschritt, und genau bei
+ *    Schritt 40 unterschreitet der beste Funktionswert erstmals 10⁻⁶
+ *    (nach 80 Schritten: 20 / 4 / 56 / 0).
+ *  - Startsimplex „flach von links“: Schrumpfschritt bei Schritt 4 (best f
+ *    dort noch 0,55), Ecken in x₁ ∈ [−1,50; 1,02], x₂ ∈ [0,05; 1,10]; erst
+ *    dieser Start macht den vierten Zug überhaupt sichtbar (Review 13.3).
  */
 
 const BLAU = "#0072B2"; // Simplex und seine Ecken (die Iterierten)
@@ -57,15 +63,30 @@ function fmtE(v: number): string {
 
 const nmF = ([x, y]: V2): number => (1 - x) ** 2 + 5 * (y - x * x) ** 2;
 
-const NM_START: V2[] = [
-  [-1.5, 2.5],
-  [-0.7, 2.6],
-  [-1.3, 1.8],
+/** Zwei Startsimplizes: der zweite erzwingt früh einen Schrumpfschritt. */
+const STARTS: { name: string; sim: V2[] }[] = [
+  {
+    name: "Tal von oben",
+    sim: [
+      [-1.5, 2.5],
+      [-0.7, 2.6],
+      [-1.3, 1.8],
+    ],
+  },
+  {
+    name: "flach von links",
+    sim: [
+      [-1.5, 0.5],
+      [-0.9, 0.5],
+      [-1.5, 1.1],
+    ],
+  },
 ];
+const NM_START: V2[] = STARTS[0].sim;
 
 type Zug = "Reflexion" | "Expansion" | "Kontraktion" | "Schrumpfen" | "–";
 
-function nmStep(sim: V2[]): { next: V2[]; move: Zug } {
+function nmStep(sim: V2[]): { next: V2[]; move: Exclude<Zug, "–"> } {
   const s = sim.map((p) => ({ p, v: nmF(p) })).sort((a, b) => a.v - b.v);
   const [b1, b2, w] = s;
   const cen: V2 = [(b1.p[0] + b2.p[0]) / 2, (b1.p[1] + b2.p[1]) / 2];
@@ -99,12 +120,23 @@ const YD: V2 = [-1, 3];
 const px = (x: number) => ((x - XD[0]) / (XD[1] - XD[0])) * W;
 const py = (y: number) => H - ((y - YD[0]) / (YD[1] - YD[0])) * H;
 
+type Zaehler = Record<Exclude<Zug, "–">, number>;
+const LEER: Zaehler = { Reflexion: 0, Expansion: 0, Kontraktion: 0, Schrumpfen: 0 };
+
 export function NelderMeadSimplex() {
-  const [state, setState] = useState<{ sim: V2[]; hist: V2[][]; move: Zug; k: number }>({
+  const [start, setStart] = useState(0);
+  const [state, setState] = useState<{
+    sim: V2[];
+    hist: V2[][];
+    move: Zug;
+    k: number;
+    zaehler: Zaehler;
+  }>({
     sim: NM_START,
     hist: [],
     move: "–",
     k: 0,
+    zaehler: { ...LEER },
   });
 
   // Statischer Hintergrund: diskrete Bänder von log f, einmal berechnet.
@@ -141,15 +173,20 @@ export function NelderMeadSimplex() {
       let sim = st.sim;
       let move = st.move;
       const hist = [...st.hist];
+      const zaehler = { ...st.zaehler };
       for (let i = 0; i < m; i++) {
         hist.push(sim);
         const r = nmStep(sim);
         sim = r.next;
         move = r.move;
+        zaehler[r.move] += 1;
       }
-      return { sim, hist: hist.slice(-14), move, k: st.k + m };
+      return { sim, hist: hist.slice(-14), move, k: st.k + m, zaehler };
     });
-  const zuruecksetzen = () => setState({ sim: NM_START, hist: [], move: "–", k: 0 });
+  const zuruecksetzen = (i = start) => {
+    setStart(i);
+    setState({ sim: STARTS[i].sim, hist: [], move: "–", k: 0, zaehler: { ...LEER } });
+  };
 
   const ecken = state.sim.map((p) => ({ p, v: nmF(p) })).sort((a, b) => a.v - b.v);
   const dreieck = (sim: V2[]) =>
@@ -176,9 +213,6 @@ export function NelderMeadSimplex() {
   if (state.k === 0) {
     status =
       "Startsimplex gesetzt. Ein Klick auf „Schritt“ wirft die schlechteste Ecke weg und probiert den Punkt auf der anderen Seite des Schwerpunkts.";
-  } else if (ecken[0].v < 1e-6) {
-    status = `Der beste Eckpunkt liegt bei f = ${fmtE(ecken[0].v)}, das Verfahren ist im Minimum angekommen.`;
-    statusFarbe = GRUEN;
   } else if (state.move === "Schrumpfen") {
     status =
       "Weder Reflexion noch Kontraktion haben geholfen, der ganze Simplex zieht sich zur besten Ecke zusammen. Das kostet n neue Auswertungen und bringt keinen neuen besten Wert.";
@@ -195,6 +229,12 @@ export function NelderMeadSimplex() {
     status =
       "Die gespiegelte Ecke ist besser als die zweitschlechteste und wird übernommen; der Simplex kippt über den Schwerpunkt hinweg.";
     statusFarbe = BLAU;
+  }
+  if (state.k > 0 && ecken[0].v < 1e-6) {
+    status = `Der beste Eckpunkt liegt bei f = ${fmtE(
+      ecken[0].v
+    )}, das Verfahren ist im Minimum angekommen. Letzter Zug: ${state.move}.`;
+    statusFarbe = GRUEN;
   }
 
   return (
@@ -258,8 +298,9 @@ export function NelderMeadSimplex() {
         </div>
         <div className="min-w-60 grow">
           <p className="mb-2 text-sm">
-            Testfunktion f(x₁, x₂) = (1 − x₁)² + 5(x₂ − x₁²)², ein gekrümmtes Tal mit
-            Minimum in (1; 1). Das Verfahren sieht nur Funktionswerte, nie eine Ableitung.
+            Minimiert wird f(x₁, x₂) = (1 − x₁)² + 5(x₂ − x₁²)². Die Talsohle ist die
+            Parabel x₂ = x₁², das Minimum liegt in (1; 1) mit f = 0. Ausgewertet wird nur f
+            selbst, verglichen werden nur Funktionswerte.
           </p>
           <div className="flex flex-wrap gap-2">
             <button
@@ -275,15 +316,36 @@ export function NelderMeadSimplex() {
               Schritt ×5
             </button>
             <button
-              onClick={zuruecksetzen}
+              onClick={() => zuruecksetzen()}
               className="rounded bg-slate-500 px-3 py-1 text-sm font-semibold text-white hover:bg-slate-400"
             >
               Zurücksetzen
             </button>
           </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+            <span className="text-slate-500 dark:text-slate-400">Startsimplex:</span>
+            {STARTS.map((s, i) => (
+              <button
+                key={s.name}
+                onClick={() => zuruecksetzen(i)}
+                className={`rounded px-2 py-1 text-xs font-semibold ${
+                  i === start
+                    ? "bg-sky-700 text-white"
+                    : "bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-600 dark:text-slate-100"
+                }`}
+              >
+                {s.name}
+              </button>
+            ))}
+          </div>
           <div className="mt-2 space-y-1 font-mono text-xs">
             <p>
               Schritt {state.k}, letzter Zug: {state.move}
+            </p>
+            <p>
+              Reflexionen {state.zaehler.Reflexion}, Expansionen {state.zaehler.Expansion},
+              Kontraktionen {state.zaehler.Kontraktion}, Schrumpfschritte{" "}
+              {state.zaehler.Schrumpfen}
             </p>
             {ecken.map((v, i) => (
               <p key={i}>
@@ -303,8 +365,11 @@ export function NelderMeadSimplex() {
             Der orange Strahl zeigt, wo der nächste Versuchspunkt landet: gespiegelt an der
             Mitte der beiden besseren Ecken. Fällt der Wert dort unter alles Bisherige, geht
             es in derselben Richtung noch weiter; hilft die Spiegelung gar nicht, rückt der
-            neue Punkt näher heran. Beobachten wir, wie der Simplex sich erst lang zieht, um
-            das Tal hinabzulaufen, und am Ende zu einem Punkt zusammenfällt.
+            neue Punkt näher heran. Der Zähler oben zeigt, wie ungleich sich die vier Züge
+            verteilen: Aus dem oberen Startsimplex stehen nach vierzig Schritten 13
+            Reflexionen, 4 Expansionen und 23 Kontraktionen, aber kein einziger
+            Schrumpfschritt. Wer den vierten Zug sehen will, startet flach von links; dort
+            fällt er im vierten Schritt.
           </p>
         </div>
       </div>

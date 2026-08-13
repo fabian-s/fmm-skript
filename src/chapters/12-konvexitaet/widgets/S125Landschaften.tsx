@@ -12,9 +12,9 @@ import { LabeledPlot, Slider } from "../../../lib";
  * Panels und Statuszweige sind neu geschrieben; die beiden konvexen
  * Landschaften (Plateau, Schuessel) gibt es dort nicht.
  *
- * Farbcode Kapitel 12: blau der Funktionsgraph, gruen Startpunkt und
- * Iterationsweg, orange das globale Minimum, rot das nur lokale Minimum
- * und ein Endpunkt, der dort landet.
+ * Farbcode Kapitel 12: blau der Funktionsgraph, gruen der Startpunkt,
+ * orange das globale Minimum, rot das nur lokale Minimum; die
+ * Zwischenstationen der Iteration bleiben neutral grau.
  *
  * Kein Zufall: alle Zustaende haengen allein am Startwert-Regler.
  *
@@ -33,9 +33,10 @@ import { LabeledPlot, Slider } from "../../../lib";
  */
 
 const BLAU = "#0072B2"; // Funktionsgraph
-const GRUEN = "#009E73"; // Startpunkt und Iterationsweg
+const GRUEN = "#009E73"; // Startpunkt
 const ORANGE = "#E69F00"; // globales Minimum
 const ROT = "#D55E00"; // nur lokales Minimum
+const GRAU = "#94a3b8"; // Zwischenstationen der Iteration
 
 /* ---------------------------------------------------------------- */
 /* Die drei Landschaften                                             */
@@ -129,8 +130,9 @@ export function Landschaften() {
     <div className="space-y-3">
       <p className="max-w-prose text-sm">
         Drei Landschaften über demselben Bereich von −2,2 bis 2,2. Blau ist der Graph, orange
-        markiert ein globales Minimum, rot ein Minimum, das nur lokal ist. Die senkrechten
-        Achsen sind pro Tafel eigens skaliert, verglichen wird die Form.
+        markiert ein globales Minimum, rot ein Minimum, das nur lokal ist. Die beiden linken
+        Tafeln teilen sich eine Werteachse, die rechte reicht bis 14,8; verglichen wird die
+        Form, nicht die Höhe.
       </p>
       <div className="flex flex-wrap gap-5">
         {panels.map((p) => (
@@ -163,20 +165,40 @@ const SCHRITTE = 300;
 /** dieselbe Auswahl gezeigter Iterierter wie in der Vorlage */
 const GEZEIGT = [0, 1, 2, 3, 4, 5, 6, 8, 10, 13, 17, 22, 30, 40, 60, 100, 200, 300];
 
-export function AbstiegsBecken() {
-  const [x0, setX0] = useState(-0.4);
-
-  const bahn: number[] = [x0];
+/** Gradientenabstieg von x0 aus; liefert die ganze Bahn. */
+function abstieg(x0: number): number[] {
+  const bahn = [x0];
   let xk = x0;
-  let bisRuhe = SCHRITTE;
   for (let i = 0; i < SCHRITTE; i++) {
-    if (bisRuhe === SCHRITTE && Math.abs(dwp(xk)) < 1e-4) bisRuhe = i;
     xk -= ETA * dwp(xk);
     bahn.push(xk);
   }
+  return bahn;
+}
+
+/** Landet der Lauf von x0 aus im tiefen Tal? */
+function imTiefenTal(x0: number): boolean {
+  const b = abstieg(x0);
+  return Math.abs(b[b.length - 1] - DW_GLOB.x) < 0.1;
+}
+
+export function AbstiegsBecken() {
+  const [x0, setX0] = useState(-0.4);
+
+  const bahn = abstieg(x0);
+  let bisRuhe = SCHRITTE;
+  for (let i = 0; i < SCHRITTE; i++) {
+    if (Math.abs(dwp(bahn[i])) < 1e-4) {
+      bisRuhe = i;
+      break;
+    }
+  }
   const xEnde = bahn[bahn.length - 1];
   const global = Math.abs(xEnde - DW_GLOB.x) < 0.1;
-  const nahAmHoecker = Math.abs(x0 - DW_HOECKER) < 0.02;
+  // Nur dort melden, wo EIN Reglerschritt das Tal wirklich wechselt.
+  const nahAmHoecker =
+    (x0 + 0.01 <= X_HI && imTiefenTal(x0 + 0.01) !== global) ||
+    (x0 - 0.01 >= X_LO && imTiefenTal(x0 - 0.01) !== global);
 
   const status = global
     ? {
@@ -187,16 +209,16 @@ export function AbstiegsBecken() {
     : {
         titel: "im flachen Tal hängengeblieben",
         farbe: ROT,
-        text: `Der Startpunkt liegt links der Wasserscheide. Das Verfahren kommt bei ${fmt(DW_LOK.x)} zur Ruhe, dort ist der Wert ${fmt(DW_LOK.f)} und damit um ${fmt(DW_LOK.f - DW_GLOB.f)} zu hoch. Der Gradient verschwindet trotzdem, das Abbruchkriterium ist erfüllt.`,
+        text: `Der Startpunkt liegt links der Wasserscheide. Das Verfahren kommt bei ${fmt(DW_LOK.x)} zur Ruhe, dort ist der Wert ${fmt(DW_LOK.f)} und damit um ${fmt(DW_LOK.f - DW_GLOB.f)} zu hoch. Die Ableitung verschwindet trotzdem, das Abbruchkriterium meldet Erfolg.`,
       };
 
   return (
     <div className="space-y-3">
       <p className="max-w-prose text-sm">
         Wir laufen auf der Doppelmulde bergab: xₖ₊₁ = xₖ − η f′(xₖ) mit η = 0,02 und 300
-        Schritten. Grün ist der Startpunkt samt Iterationsweg, orange das globale, rot das nur
-        lokale Minimum. Verschieben wir den Start, so entscheidet sich, welches Tal die Folge
-        einfängt.
+        Schritten. Grün ist der Startpunkt, grau sind ausgewählte Zwischenstationen, orange das
+        globale und rot das nur lokale Minimum. Am Regler stellen wir den Startwert ein und
+        lesen unten ab, wo die Folge zur Ruhe kommt.
       </p>
       <Slider
         label="Startpunkt x₀"
@@ -213,7 +235,7 @@ export function AbstiegsBecken() {
           yLabel="f(x)"
           series={[{ f: dw, color: BLAU }]}
           markers={[
-            ...GEZEIGT.slice(1).map((k) => ({ x: bahn[k], y: dw(bahn[k]), color: "#94a3b8" })),
+            ...GEZEIGT.slice(1).map((k) => ({ x: bahn[k], y: dw(bahn[k]), color: GRAU })),
             { x: DW_LOK.x, y: DW_LOK.f, color: ROT },
             { x: DW_GLOB.x, y: DW_GLOB.f, color: ORANGE },
             { x: x0, y: dw(x0), color: GRUEN },
@@ -252,17 +274,18 @@ export function AbstiegsBecken() {
           </p>
           {nahAmHoecker && (
             <p className="max-w-prose">
-              Hier steht der Regler dicht an der Wasserscheide. Sie liegt auf dem Höcker bei
-              −0,1699, also genau zwischen den Rasterwerten −0,17 und −0,16: Ein Schritt des
-              Reglers wechselt das Tal, obwohl sich am Startwert kaum etwas ändert.
+              Hier steht der Regler unmittelbar an der Wasserscheide. Sie liegt auf dem Höcker
+              bei −0,1699 und damit zwischen den Rasterwerten −0,17 und −0,16: Ein einziger
+              Schritt des Reglers wechselt das Tal, obwohl sich am Startwert kaum etwas ändert.
             </p>
           )}
           <p className="max-w-prose text-slate-500 dark:text-slate-400">
-            <Punkt farbe={GRUEN} text="Start und Weg" />, <Punkt farbe={ORANGE} text="globales Minimum" />
-            , <Punkt farbe={ROT} text="lokales Minimum" />. Das Verfahren wertet nur f und f′
-            an der aktuellen Stelle aus. Es kann deshalb gar nicht bemerken, dass es hinter dem
-            Höcker noch tiefer geht. Bei einer konvexen Landschaft entfällt die Frage: Dort
-            gibt es keinen zweiten Talboden.
+            <Punkt farbe={GRUEN} text="Startpunkt" />, <Punkt farbe={GRAU} text="Zwischenstationen" />
+            , <Punkt farbe={ORANGE} text="globales Minimum" />,{" "}
+            <Punkt farbe={ROT} text="lokales Minimum" />. In die Iteration gehen nur f und f′ an
+            der jeweils aktuellen Stelle ein. Was jenseits des Höckers liegt, taucht in dieser
+            Rechnung gar nicht auf. Bei einer konvexen Landschaft macht das nichts, denn dort
+            gibt es nur einen Talboden.
           </p>
         </div>
       </div>

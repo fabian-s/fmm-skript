@@ -130,8 +130,8 @@ zweielementige Menge $\cred{\{-1, +1\}} \subseteq \R$ mit $\bx = 0$: zwei nächs
 also habe eine Minimierungsfolge einen Grenzwert in der Menge. Konvergieren muss so eine Folge
 aber erst einmal, und das ist die eigentliche Arbeit. In endlicher Dimension besorgt es
 Bolzano-Weierstraß, wie oben. Der Satz gilt auch in unendlichdimensionalen Räumen, dort
-allerdings nur, wenn der Raum *vollständig* ist. Der Beweis läuft dann anders: Man zeigt mit
-der Parallelogrammgleichung, dass jede Minimierungsfolge eine Cauchy-Folge ist. Dieselbe
+allerdings nur, wenn der Raum *vollständig* ist. Der Beweis läuft dann anders: Mit der
+Parallelogrammgleichung sehen wir, dass jede Minimierungsfolge eine Cauchy-Folge ist. Dieselbe
 Rechnung wie in Schritt 5 taucht dort wieder auf, denn die Identität
 $\left\|\bx - \tfrac{1}{2}(\ba+\bb)\right\|^2 = \tfrac{1}{2}\left\|\bx-\ba\right\|^2 + \tfrac{1}{2}\left\|\bx-\bb\right\|^2 - \tfrac{1}{4}\left\|\ba-\bb\right\|^2$
 ist nichts anderes als die Parallelogrammgleichung.
@@ -152,8 +152,8 @@ war.
 
 :::satz[12.3.3 (Kriterium des stumpfen Winkels)]
 Seien $\cblue{\Xcal} \subseteq V$ nichtleer und konvex, $\bx \in V$ und
-$\corange{\wh{\bx}} \in \cblue{\Xcal}$. Dann ist $\corange{\wh{\bx}}$ genau dann die Projektion
-von $\bx$ auf $\cblue{\Xcal}$, wenn
+$\corange{\wh{\bx}} \in \cblue{\Xcal}$. Dann hat $\corange{\wh{\bx}}$ genau dann unter allen
+Punkten von $\cblue{\Xcal}$ den kleinsten Abstand zu $\bx$, wenn
 
 $$ {#eq-12.3.3}
 \left\langle \bx - \corange{\wh{\bx}},\ \by - \corange{\wh{\bx}} \right\rangle \le 0
@@ -203,13 +203,23 @@ verschwindet.
 
 ::::
 
-Geometrisch sagt ($12.3.3$): Der Vektor von der Projektion zu $\bx$ und der Vektor von der
-Projektion zu einem beliebigen weiteren Punkt $\by \neq \corange{\wh{\bx}}$ der Menge
-schließen einen Winkel von mindestens $90^\circ$ ein. Die ganze Menge liegt also auf einer
-Seite der Geraden (im $\R^n$: der :k[Hyperebene]{#hyperplane}) durch $\corange{\wh{\bx}}$, die
-senkrecht auf $\bx - \corange{\wh{\bx}}$ steht.
+Abgeschlossenheit und endliche Dimension braucht dieses Kriterium nicht. Es sagt allerdings
+auch nichts darüber, ob ein nächstgelegener Punkt existiert; es erkennt ihn nur, wenn es ihn
+gibt. Die Eindeutigkeit fällt dagegen ab: Erfüllen $\corange{\wh{\bx}_1}$ und
+$\corange{\wh{\bx}_2}$ beide ($12.3.3$), so setzen wir einmal $\by = \corange{\wh{\bx}_2}$ und
+einmal $\by = \corange{\wh{\bx}_1}$ ein und addieren die beiden Ungleichungen. Übrig bleibt
+$\left\|\corange{\wh{\bx}_2} - \corange{\wh{\bx}_1}\right\|^2 \le 0$.
 
-Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird daraus Gleichheit. Mit
+Geometrisch sagt ($12.3.3$) für $\bx \notin \cblue{\Xcal}$: Der Vektor von der Projektion zu
+$\bx$ und der Vektor von der Projektion zu einem beliebigen weiteren Punkt
+$\by \neq \corange{\wh{\bx}}$ der Menge schließen einen Winkel von mindestens $90^\circ$ ein.
+Die ganze Menge liegt also auf einer Seite der Geraden (im $\R^n$: der
+:k[Hyperebene]{#hyperplane}) durch $\corange{\wh{\bx}}$, die senkrecht auf
+$\bx - \corange{\wh{\bx}}$ steht. Liegt $\bx$ dagegen selbst in $\cblue{\Xcal}$, so ist
+$\bx - \corange{\wh{\bx}} = \bnull$ und von einem Winkel keine Rede mehr.
+
+Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird aus ($12.3.3$) eine
+Gleichung. Mit
 $\by = \corange{\wh{\bx}} \pm \bu$ für beliebiges $\bu \in \Ucal$ liefert ($12.3.3$) nämlich
 $\pm\langle \bx - \corange{\wh{\bx}}, \bu\rangle \le 0$, also
 $\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann wirklich senkrecht
@@ -246,7 +256,8 @@ wir laufen also entlang der Normalenrichtung gerade so weit, bis die Nebenbeding
 Gleichheit erfüllt ist. Liegt $\bx$ schon im Halbraum, passiert nichts.
 
 Für ein Dreieck oder ein Polyeder gibt es keine solche Formel mehr. Dort rechnen wir die
-Projektion auf jede Seitenfläche aus und nehmen die beste; das tut auch das Widget unten.
+Projektion auf jede Seite einzeln aus, jeweils auf diese Seite beschränkt, und nehmen die
+beste; Ecken sind damit von selbst abgedeckt. Genau so rechnet das Widget unten.
 :::
 
 :::vertiefung[Die Projektion zum Ziehen]
@@ -365,10 +376,12 @@ Punkten hängt der Graph durch. Konvexe Funktionen sind nach oben geöffnet.
 
 Aus derselben Ungleichung entstehen zwei weitere Begriffe. Wir nennen $f$ *konkav* (concave), wenn $-f$ konvex ist; für
 konkave Funktionen dreht sich in ($12.3.4$) das Ungleichheitszeichen um, die Sehne liegt nie
-über dem Graphen. Und wir nennen $f$ *streng konvex* (strictly convex), wenn in ($12.3.4$) für
-$\bx \neq \by$ und $\lambda \in (0,1)$ sogar die strikte Ungleichung gilt. Streng konvexe
+über dem Graphen. Und wir nennen $f$ *strikt konvex* (strictly convex), wenn in ($12.3.4$) für
+$\bx \neq \by$ und $\lambda \in (0,1)$ sogar die strikte Ungleichung gilt. Die Folien benutzen
+dafür beide gebräuchlichen Namen, in der Ridge-Zeile „streng konvex" und in der späteren
+Definition „strikt konvex"; das Skript bleibt einheitlich bei strikt. Strikt konvexe
 Funktionen dürfen also keine geraden Stücke haben. Warum das wichtig ist, sehen wir in
-[Abschnitt 12.5](#sec-12.5): Konvexität macht jedes lokale Minimum global, strenge Konvexität
+[Abschnitt 12.5](#sec-12.5): Konvexität macht jedes lokale Minimum global, strikte Konvexität
 macht das Minimum eindeutig.
 :::
 
@@ -382,17 +395,21 @@ Blau ist jeweils der Graph, rot markiert die Stellen, an denen er über der Sehn
 Sehne selbst ist grün, solange sie nirgends unterschritten wird, und sonst rot. Bei der
 konkaven Funktion ist das ganze Zwischenstück rot, bei der Doppelmulde rechts nur ein Teil
 davon. Beides widerlegt Konvexität, konkav ist von den vier Funktionen aber nur die zweite.
+In der dritten Tafel liegen beide Endpunkte rechts vom Knick des Betrags. Dort verdeckt die
+grüne Sehne den blauen Graphen vollständig, denn auf diesem Ast steht in ($12.3.4$)
+Gleichheit; genau darin unterscheiden sich konvex und strikt konvex. Die Parabel links kennt
+diesen Fall nicht, sie bleibt zwischen ihren Endpunkten überall echt unter der Sehne.
 
-Der Test wird erst interessant, wenn wir die Endpunkte selbst wählen dürfen.
+Wählen wir die Endpunkte selbst, wird aus der Tafel ein Werkzeug.
 
 <SehnenTest />
 
-Beim Betrag lohnt es sich, beide Endpunkte auf dieselbe Seite der Null zu legen: Dann fällt die
-Sehne mit dem Graphen zusammen, in ($12.3.4$) steht Gleichheit, und wir sehen den Unterschied
-zwischen konvex und streng konvex. Bei der Doppelmulde dagegen findet sich immer ein Paar, das
-die Ungleichung verletzt. Nachweis und Widerlegung sind hier ebenso ungleich schwer wie bei
-den Mengen in Bemerkung 12.2.2: Ein einziges schlechtes Paar erledigt die Konvexität, während
-noch so viele gelungene Proben sie nicht beweisen.
+Nachweis und Widerlegung sind dabei ebenso ungleich schwer wie bei den Mengen in
+Bemerkung 12.2.2: Ein einziges schlechtes Paar erledigt die Konvexität, während noch so viele
+gelungene Proben sie nicht beweisen. Die Doppelmulde führt beides vor. In der Voreinstellung
+$x = -1{,}55$ und $y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die
+Sache entschieden. Rücken wir dagegen beide Endpunkte in denselben Talgrund, etwa auf
+$x = -1{,}8$ und $y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts.
 :::
 
 ### Nachweis von Hand: der Betrag
@@ -434,7 +451,7 @@ Satz 12.3.15 gleich für jede Norm ein.
 
 ::::
 
-Der Betrag ist konvex, aber nicht streng konvex: Für $x, y > 0$ steht in der Rechnung
+Der Betrag ist konvex, aber nicht strikt konvex: Für $x, y > 0$ steht in der Rechnung
 durchgehend Gleichheit. Und er zeigt noch etwas: Konvexe Funktionen dürfen Knicke haben, sie
 müssen nicht differenzierbar sein. Die Ableitungskriterien, die
 [Abschnitt 12.4](#sec-12.4) bringt, sind deshalb bequem, aber nicht die Definition.
@@ -449,7 +466,7 @@ Die affine Funktion $f\colon \R \to \R$, $f(x) = ax + b$ mit $a, b \in \R$, ist 
 In ($12.3.4$) steht hier sogar Gleichheit:
 $a(\lambda x + (1-\lambda)y) + b = \lambda(ax+b) + (1-\lambda)(ay+b)$, weil sich die beiden
 $b$-Anteile wegen $\lambda + (1-\lambda) = 1$ zu einem einzigen $b$ zusammensetzen. Damit ist
-$f$ konvex und zugleich konkav, aber für kein $a$ streng konvex.
+$f$ konvex und zugleich konkav, aber für kein $a$ strikt konvex.
 :::
 
 :::frage{wahr}
@@ -458,7 +475,7 @@ Die Funktion $f\colon \R \to \R$, $f(x) = x^4$, ist konvex.
 Sie ist es, und zwar streng. Ein Beweis in einer Zeile folgt in
 [Abschnitt 12.4](#sec-12.4) aus $f''(x) = 12x^2 \ge 0$. Dass die zweite Ableitung im Nullpunkt
 verschwindet, schadet dabei nicht: Die Sehnenungleichung verlangt nichts über Ableitungen, und
-die Funktion ist auch über den Nullpunkt hinweg streng konvex.
+die Funktion ist auch über den Nullpunkt hinweg strikt konvex.
 :::
 
 :::frage{falsch}
@@ -472,7 +489,7 @@ Ungleichung erfüllt, also ist $\sqrt{\cdot}$ konkav im Sinne von Bemerkung 12.3
 :::frage{wahr}
 Die Exponentialfunktion $f\colon \R \to \R$, $f(x) = e^x$, ist konvex.
 
-Sogar streng konvex. Nebenbei ist die Exponentialfunktion das Standardbeispiel dafür, dass
+Sogar strikt konvex. Nebenbei ist die Exponentialfunktion das Standardbeispiel dafür, dass
 Konvexität allein noch kein Minimum liefert: $e^x > 0$ für alle $x$, das Infimum $0$ wird nie
 angenommen.
 :::
@@ -525,7 +542,7 @@ $$
 
 Ist der symmetrische Anteil $\bQ_{\mathrm{sym}} := \tfrac{1}{2}(\bQ + \bQ^\top)$ positiv
 semidefinit, so ist $f$ konvex. Ist $\bQ_{\mathrm{sym}}$ sogar positiv definit, so ist $f$
-streng konvex.
+strikt konvex.
 :::
 
 ::::beweis
@@ -572,7 +589,7 @@ $$
 $$
 
 ist $\bQ_{\mathrm{sym}} = \bI$, die Funktion $f(\bx) = \bx^\top\bQ\bx = x_1^2 + x_2^2$ also
-streng konvex, obwohl $\bQ$ selbst nicht symmetrisch und damit nach Definition 12.2.7 nicht
+strikt konvex, obwohl $\bQ$ selbst nicht symmetrisch und damit nach Definition 12.2.7 nicht
 einmal ein Kandidat für „positiv semidefinit" ist. In der Praxis ist das harmlos, weil wir
 $\bQ$ ohnehin symmetrisch wählen; es kostet nichts, das dazuzusagen.
 :::
@@ -587,7 +604,7 @@ $$
 $$
 
 $\bQ$ ist symmetrisch mit den :k[Eigenwerten]{#eigenvalue-eigenvector} $2$ und $1$, also positiv
-definit. Nach Satz 12.3.12 ist $f$ streng konvex. Auswerten an der Stelle
+definit. Nach Satz 12.3.12 ist $f$ strikt konvex. Auswerten an der Stelle
 $\bx = (1, 2)^\top$:
 
 $$
@@ -600,7 +617,7 @@ f(\bx) &= \begin{pmatrix} 1 & 2 \end{pmatrix}\begin{pmatrix} 2 & 0 \\ 0 & 1 \end
 $$
 
 Weil $\bQ$ hier diagonal ist, lässt sich $f$ auch als
-$2x_1^2 + x_2^2 + x_1 - 2x_2 + 3$ schreiben, und daran sieht man die strenge Konvexität ohne
+$2x_1^2 + x_2^2 + x_1 - 2x_2 + 3$ schreiben, und daran sehen wir die strikte Konvexität ohne
 Matrixrechnung: eine Summe zweier nach oben geöffneter Parabeln plus einer affinen Funktion.
 :::
 
@@ -635,10 +652,10 @@ Halbnormen, und für $n = 1$ ist er wörtlich der aus Beispiel 12.3.10.
 
 ::::
 
-Streng konvex ist keine dieser Normen. Liegen $\bx$ und $\by$ auf demselben Strahl durch den
+Strikt konvex ist keine dieser Normen. Liegen $\bx$ und $\by$ auf demselben Strahl durch den
 Ursprung, so steht in Schritt 1 überall Gleichheit. Für das *Quadrat* der euklidischen Norm
 sieht es anders aus: $f(\bx) = \left\|\bx\right\|_2^2 = \bx^\top\bI\bx$ ist nach
-Satz 12.3.12 streng konvex, weil $\bI$ positiv definit ist. Und diese Funktion ist es, die uns
+Satz 12.3.12 strikt konvex, weil $\bI$ positiv definit ist. Und diese Funktion ist es, die uns
 in der Statistik ständig begegnet.
 
 :::beispiel[12.3.16 (Kleinste Quadrate und Ridge)]
@@ -662,7 +679,7 @@ Nach Satz 12.3.12 ist der Kleinste-Quadrate-Verlust deshalb immer konvex, ganz g
 Daten aussehen. Das ist der Grund, warum wir uns in [Kapitel 7](?k=07-kq#sec-7.1) nie um
 lokale Minima kümmern mussten.
 
-Streng konvex ist er dagegen nur bei vollem Spaltenrang. Hat $\bA$ zwei gleiche Spalten, etwa
+Strikt konvex ist er dagegen nur bei vollem Spaltenrang. Hat $\bA$ zwei gleiche Spalten, etwa
 
 $$
 \bA = \begin{pmatrix} 1 & 1 \\ 2 & 2 \\ 3 & 3 \end{pmatrix} ,
@@ -682,7 +699,7 @@ $$
 
 und für $\lambda > 0$ ist $\bA^\top\bA + \lambda\bI$ positiv definit:
 $\bw^\top(\bA^\top\bA + \lambda\bI)\bw = \left\|\bA\bw\right\|^2 + \lambda\left\|\bw\right\|^2 > 0$
-für $\bw \neq \bnull$. Nach Satz 12.3.12 ist $f_\lambda$ also streng konvex, und die Lösung ist
+für $\bw \neq \bnull$. Nach Satz 12.3.12 ist $f_\lambda$ also strikt konvex, und die Lösung ist
 eindeutig, auch bei rangdefizientem $\bA$. Die Rechnung dazu, samt Gradient, steht in
 [Beispiel 11.2.7](?k=11-ableitungen-2#sec-11.2).
 :::
@@ -694,23 +711,32 @@ $f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ ist die
 $\bH_f = \bQ + \bQ^\top = 2\bQ_{\mathrm{sym}}$, und ihre Eigenwerte messen die Krümmung in den
 Hauptrichtungen ([Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3)). Für eine allgemeine zweimal
 stetig differenzierbare Funktion gilt dasselbe lokal, weil die Taylorentwicklung zweiter
-Ordnung genau eine solche Quadrik ist. Zwei Beobachtungen der Folien schließen daran an.
+Ordnung genau eine solche Quadrik ist. Die Folien hängen daran eine Reihe von Beobachtungen,
+die wir der Reihe nach durchgehen.
 
-Liegen die Eigenwerte weit auseinander, ist die Konditionszahl
-$\kappa = \lambda_{\max}/\lambda_{\min}$ aus
-[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) also groß, so krümmt sich $f$ in einer Richtung
-stark und in einer anderen kaum. Die Höhenlinien sind lang gestreckte Ellipsen, und Verfahren,
-die dem Gradienten folgen, laufen im Zickzack durch das Tal statt hindurch
-([Abschnitt 13.3](?k=13-optim#sec-13.3)).
+Liegen die Eigenwerte weit auseinander, so krümmt sich $f$ in einer Richtung stark und in einer
+anderen kaum. Für positiv definites $\bH_f$ misst das die Konditionszahl
+$\kappa_2(\bH_f) = \lambda_{\max}/\lambda_{\min}$, die für symmetrische Matrizen genau die aus
+[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) ist. Die Höhenlinien sind dann lang gestreckte
+Ellipsen, und Verfahren, die dem Gradienten folgen, laufen im Zick-Zack durch das Tal statt
+hindurch ([Abschnitt 13.3](?k=13-optim#sec-13.3)).
 
 Eigenwerte nahe null bedeuten flache Richtungen: Dort ändert sich der Zielwert kaum, und die
-Lösung ist schlecht bestimmt. In der Statistik ist das keine Randnotiz, denn die negative
+Lösung ist schlecht bestimmt. Negative Eigenwerte treten bei konvexem $f$ gar nicht erst auf;
+wo sie auftauchen, kippt die Funktion in einer Richtung nach unten weg, und wir stehen an einer
+Kuppe oder einem Sattel. In der Statistik ist das keine Randnotiz, denn die negative
 Hesse-Matrix der Log-Likelihood ist die beobachtete Fisher-Information, aus der die
 Standardfehler kommen. Flache Richtungen heißen breite Konfidenzintervalle. Ein Strafterm wie
 in Beispiel 12.3.16 hebt alle Eigenwerte um $\lambda$ an und drückt damit sowohl die
-Konditionszahl als auch die Varianz der Schätzung, erkauft das aber mit einer Verzerrung. Wie
-sich Konvexität und Krümmung genau zueinander verhalten, klärt
-[Abschnitt 12.4](#sec-12.4).
+Konditionszahl als auch die Varianz der Schätzung, erkauft das aber mit einer Verzerrung. Das
+rangdefiziente $\bA^\top\bA$ von dort hat die Eigenwerte $28$ und $0$, die Konditionszahl ist
+also unendlich; mit $\lambda = 1$ stehen dort $29$ und $1$, und $\kappa_2$ fällt auf $29$.
+
+Auch die Optimierung liest das Spektrum mit. Newton-Verfahren mit Liniensuche oder mit
+Vertrauensbereich bemessen ihre Schrittweite daran, und im Deep Learning werden die Eigenwerte
+gelegentlich von Hand gestutzt, um das Training zu stabilisieren; beides steht am Rand der
+Folien und gehört in [Abschnitt 13.4](?k=13-optim#sec-13.4). Wie sich Konvexität und Krümmung
+genau zueinander verhalten, klärt [Abschnitt 12.4](#sec-12.4).
 :::
 
 *Vertiefung: Boyd und Vandenberghe, Convex Optimization, Kapitel 3 führt konvexe Funktionen

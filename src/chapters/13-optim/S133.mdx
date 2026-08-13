@@ -34,8 +34,8 @@ Knicken oder auf Simulationsergebnissen; dafür brauchen sie viele Iterationen.
 Höhere Ordnung bringt schnellere Konvergenz, macht aber jeden einzelnen Schritt
 teurer, und die Hesse-Matrix hat $n^2$ Einträge. In der Praxis greifen wir oft
 zu einem Kompromiss, den superlinearen Quasi-Newton-Verfahren wie BFGS, die eine
-Näherung der Hesse-Matrix aus den bereits berechneten Gradienten aufbauen
-([Abschnitt 13.4](#sec-13.4)).
+Näherung der inversen Hesse-Matrix aus den bereits berechneten Gradienten
+aufbauen ([Abschnitt 13.4](#sec-13.4)).
 
 Dieser Abschnitt behandelt die ersten beiden Zeilen: ein Verfahren nullter
 Ordnung als robusten Notnagel und den Gradientenabstieg als das
@@ -61,7 +61,9 @@ Wiederhole, bis der Simplex klein genug ist:
    beste und $\cblue{\bx_{(n+1)}}$ die schlechteste. Bilde den Schwerpunkt
    $\cblue{\bc}$ der $n$ besten Ecken.
 2. *Reflexion.* Spiegle die schlechteste Ecke am Schwerpunkt,
-   $\corange{\bx_r} = \cblue{\bc} + (\cblue{\bc} - \cblue{\bx_{(n+1)}})$.
+   $\corange{\bx_r} = \cblue{\bc} + (\cblue{\bc} - \cblue{\bx_{(n+1)}})$. Ist
+   $f(\corange{\bx_r})$ besser als die zweitschlechteste Ecke, aber nicht besser
+   als die beste, so übernimm $\corange{\bx_r}$ und beginne von vorn.
 3. *Expansion.* Ist $f(\corange{\bx_r})$ besser als alles Bisherige, so gehe in
    derselben Richtung noch weiter,
    $\corange{\bx_e} = \cblue{\bc} + 2(\cblue{\bc} - \cblue{\bx_{(n+1)}})$, und
@@ -97,7 +99,7 @@ Ecken; pro Iteration fallen also $O(n)$ Auswertungen an
 nötig. In hoher Dimension wird beides zum Problem.
 
 *Garantien.* Es gibt keinen allgemeinen Konvergenzsatz. Schlimmer noch, es sind
-streng konvexe Funktionen bekannt, auf denen das Verfahren gegen einen Punkt
+strikt konvexe Funktionen bekannt, auf denen das Verfahren gegen einen Punkt
 läuft, der gar kein stationärer Punkt ist (McKinnon 1998). In der Praxis wird
 Nelder-Mead deshalb gern als robuste Startpunktsuche vor einem
 gradientenbasierten Verfahren eingesetzt.
@@ -121,17 +123,23 @@ Optionen durch.
 
 :::vertiefung[Der Simplex bei der Arbeit]
 Die Vorlesung zeigt ein Standbild des Verfahrens. Hier läuft es Schritt für
-Schritt, auf einem gekrümmten Tal mit Minimum in $(1; 1)$. Der orange Strahl
-markiert jeweils den nächsten Versuchspunkt, und die Statuszeile sagt, welcher
-der vier Züge gerade gefallen ist.
+Schritt, auf der Testfunktion $f(\bx) = (1-x_1)^2 + 5(x_2 - x_1^2)^2$ mit Minimum
+in $\cgreen{(1; 1)}$. Der orange Strahl markiert jeweils den nächsten
+Versuchspunkt, und die Statuszeile sagt, welcher der vier Züge gerade gefallen
+ist; der Zähler daneben hält mit, wie oft jeder Zug schon vorkam.
 
-Zwei Dinge lohnen die Aufmerksamkeit. Erstens braucht das Verfahren aus der
-Voreinstellung vierzig Schritte, bis der beste Eckpunkt einen Funktionswert unter
-$10^{-6}$ erreicht, und in diesen vierzig Schritten fallen $23$ Kontraktionen,
-aber nur $13$ Reflexionen und $4$ Expansionen an. Zweitens sehen wir dem Simplex
-an, wo er ist:
-Im geraden Stück des Tals zieht er sich in Laufrichtung lang, in der Kurve klappt
-er um. Genau diese Anpassung an die lokale Geometrie ersetzt hier die Ableitung.
+Zwei Dinge lohnen die Aufmerksamkeit. Erstens braucht das Verfahren aus dem
+voreingestellten Simplex vierzig Schritte, bis der beste Eckpunkt einen
+Funktionswert unter $10^{-6}$ erreicht, und der Zähler steht dann auf $23$
+Kontraktionen, $13$ Reflexionen und $4$ Expansionen. Ein Schrumpfschritt kommt
+auf diesem Weg überhaupt nicht vor; er ist der teuerste der vier Züge, und der
+zweite Startsimplex führt ihn im vierten Schritt vor. Zweitens verrät die Form
+des Simplex, wo er steht: Auf den geraden Stücken des Tals wird er lang und dünn
+und legt sich in Laufrichtung, wobei seine längste Kante nur wenige Grad von der
+Talrichtung abweicht; in der Biegung um $x_1 \approx 0$ schrumpft er auf ein
+fast gleichseitiges Dreieck zusammen und dreht sich dort in die neue Richtung.
+Diese Anpassung an die lokale Geometrie ist es, die hier die fehlende Ableitung
+ersetzt.
 
 Eine sehr sehenswerte Animation derselben Züge, mit einstellbaren Parametern und
 mehreren Testfunktionen, liegt unter
@@ -167,7 +175,8 @@ heißt $\gamma$ *Lernrate* (learning rate), und das Verfahren selbst heißt
 :k[Gradientenabstieg]{#gradient-descent} (gradient descent).
 
 :::bemerkung[13.3.5 (Drei Lesarten desselben Schritts)]
-*Steilster Abstieg.* Unter allen Richtungen $\bd$ mit $\left\|\bd\right\| = 1$
+*Steilster Abstieg.* Sei $\corange{\nabla f(\bx)} \neq \bnull^\top$. Unter allen
+Richtungen $\bd$ mit $\left\|\bd\right\| = 1$
 macht $\bd = -\corange{\nabla f(\bx)^\top}/\left\|\corange{\nabla f(\bx)}\right\|$
 die Richtungsableitung $\corange{\nabla f(\bx)}\bd$ so klein wie möglich; das ist
 der Gleichheitsfall der
@@ -184,7 +193,7 @@ hinreichend kleinen $\gamma$ tatsächlich. Die Folie schreibt an dieser Stelle,
 für konvexes $f$ sei $-\corange{\nabla f(\bx)}$ „immer eine Abstiegsrichtung hin
 zum globalen Minimum". Beide Zusätze sind zu großzügig: Abstiegsrichtung ist sie
 auch ohne Konvexität, solange der Gradient nicht verschwindet, und *hin zum*
-Minimum zeigt sie im Allgemeinen gerade nicht, wie das Zick-Zack-Bild weiter
+Minimum zeigt sie im Allgemeinen gerade nicht, wie das Zickzack-Bild weiter
 unten vorführt. Was die :k[Konvexität]{#convex-function} aus
 [Kapitel 12](?k=12-konvexitaet#sec-12.3) beisteuert, ist etwas anderes und
 Wichtigeres: Sie sorgt dafür, dass jeder stationäre Punkt schon ein globales
@@ -261,7 +270,7 @@ $1 - \gamma L$:
   richtige Richtung startet.
 
 Im Beispiel 13.3.6 ist $L = 2$, also $1/L = 0{,}5$ und $2/L = 1$; mit
-$\gamma = 0{,}6$ landen wir im vierten Fall und lesen $1 - 0{,}6\cdot 2 =
+$\gamma = 0{,}6$ landen wir im dritten Fall und lesen $1 - 0{,}6\cdot 2 =
 -0{,}2$ ab. Das ist das Dilemma der Schrittweite in Reinform, dem wir schon bei
 der Fixpunktiteration in [Abschnitt 13.1](#sec-13.1) begegnet sind: klein genug
 für Konvergenz, groß genug für Tempo. Nur wird es im $\R^n$ noch unangenehmer,
@@ -378,9 +387,15 @@ L = \sup_{\bx} \left\|\corange{\bH_f(\bx)}\right\|_2
 $$
 
 denn für :k[symmetrische]{#symmetric-matrix} Matrizen ist die
-:k[Spektralnorm]{#matrix-norm} nach dem :k[Spektralsatz]{#spectral-theorem} der
-betragsgrößte :k[Eigenwert]{#eigenvalue-eigenvector}
-([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
+:k[Spektralnorm]{#matrix-norm} der betragsgrößte
+:k[Eigenwert]{#eigenvalue-eigenvector}. Satz 3.3.7 in
+[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) berechnet
+$\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$; für symmetrisches
+$\bA$ ist $\bA^\top\bA = \bA^2$, und der :k[Spektralsatz]{#spectral-theorem}
+gibt dieser Matrix die Eigenwerte $\lambda_i^2$, also
+$\left\|\bA\right\|_2 = \max_i \left|\lambda_i(\bA)\right|$. Dieselbe
+Umrechnung steckt hinter der Formel für $\kappa_2$ symmetrischer Matrizen in
+[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5).
 
 Die Folie schreibt an dieser Stelle $L = \sup_{\bx} \lambda_{\max}(\corange{\bH_f(\bx)})$
 und unterschlägt den Betrag. Das geht nur gut, solange $f$ konvex ist, denn dann
@@ -418,7 +433,7 @@ Zwei Feinheiten sind der Formulierung wert. Erstens misst ($13.3.4$) den
 Fehler im *Funktionswert*, nicht den Abstand zu $\cgreen{\bx^\star}$; die beiden
 können weit auseinanderliegen, wie Bemerkung 13.3.17 gleich beziffert. Zweitens setzt der Satz voraus, dass ein
 Minimierer überhaupt existiert. Für $f(x) = \sqrt{1 + x^2} - x$ ist alles andere
-erfüllt, denn $f'' (x)= (1+x^2)^{-3/2} \le 1$ macht $f$ konvex mit $L = 1$; das
+erfüllt, denn $f''(x) = (1+x^2)^{-3/2} \le 1$ macht $f$ konvex mit $L = 1$; das
 Infimum $0$ wird aber nirgends angenommen, und der Gradientenabstieg läuft brav,
 aber ergebnislos nach rechts.
 :::
@@ -431,7 +446,7 @@ Eine zweimal stetig differenzierbare Funktion $f\colon \R^n \to \R$ heißt
 *stark konvex* ($\mu$-strongly convex) mit Parameter $\mu > 0$, falls
 
 $$
-\corange{\bH_f(\bx)} - \mu \bI \succeq \bnull
+\corange{\bH_f(\bx)} - \mu \bI \succeq 0
 \qquad \text{für alle } \bx ,
 $$
 
@@ -466,6 +481,13 @@ $k \sim \log(1/\varepsilon)$: Jede weitere Dezimalstelle kostet nicht mehr das
 Zehnfache, sondern denselben festen Zuschlag. Das ist derselbe Unterschied wie
 zwischen linearer und exponentieller Fehlerreduktion in
 [Abschnitt 13.1](#sec-13.1).
+
+Die Existenz von $\cgreen{\bx^\star}$ muss dieser Satz nicht mehr eigens
+voraussetzen. Starke Konvexität legt unter $f$ an jeder Stelle eine Parabel mit
+Krümmung $\mu > 0$, und eine solche Parabel wächst in jeder Richtung über alle
+Grenzen; ein Minimum wird also angenommen, und weil $f$ dann auch strikt konvex
+ist, gibt es nur dieses eine
+([Abschnitt 12.5](?k=12-konvexitaet#sec-12.5)).
 
 Die Folie nennt nur die zweite Fassung und lässt offen, für welche Schrittweite
 sie gilt. Das ist eine echte Lücke, denn mit einem sehr kleinen $\gamma$ bleibt
@@ -509,11 +531,13 @@ Krümmungen über den ganzen Definitionsbereich hinweg.
 Wie teuer ein großes $\kappa_f$ ist, lässt sich beziffern. Aus $\rho^k \le
 10^{-1}$ folgt $k \ge \ln 10 / (-\ln \rho)$, und weil $-\ln(1 - 1/\kappa_f)
 \approx 1/\kappa_f$ ist, wächst diese Zahl ungefähr proportional zu $\kappa_f$:
-Für $\kappa_f = 10$ kostet eine Dezimalstelle rund $21{,}9$ Schritte, für
-$\kappa_f = 20$ schon $44{,}9$, für $\kappa_f = 100$ ganze $229{,}1$. Geometrisch
+Nach dieser Schranke kostet eine Dezimalstelle bei $\kappa_f = 10$ rund
+$21{,}9$ Schritte, bei $\kappa_f = 20$ schon $44{,}9$ und bei $\kappa_f = 100$
+ganze $229{,}1$. Geometrisch
 heißt großes $\kappa_f$, dass die :k[Höhenlinien]{#level-sets} lange, schmale
-Ellipsen sind, und in solchen Canyons läuft der Gradientenabstieg im Zick-Zack:
-Er steht quer zum Tal, statt es entlangzulaufen.
+Ellipsen sind; bei einer Quadrik gilt das überall, sonst in der Nähe eines
+Minimums, wo die Hesse-Matrix positiv definit ist. In solchen Canyons läuft der
+Gradientenabstieg im Zickzack: Er steht quer zum Tal, statt es entlangzulaufen.
 :::
 
 Warum das so ist, lässt sich auf einer Quadrik vollständig ausrechnen. Der
@@ -625,7 +649,7 @@ wie $\rho^k$" liest, liest zu viel hinein.
 
 *Mit $\gamma = 0{,}18$* dagegen sind die Faktoren $0{,}82$ und $-0{,}8$: Die
 steile Richtung wechselt in jedem Schritt das Vorzeichen, die flache kriecht.
-Das ist das Zick-Zack aus Bemerkung 13.3.14, und der Grund steht daneben: Die
+Das ist das Zickzack aus Bemerkung 13.3.14, und der Grund steht daneben: Die
 Schrittweite ist an die *steilste* Richtung gebunden, denn dort droht
 Divergenz; vorankommen müssen wir aber in der *flachsten*.
 
@@ -633,7 +657,7 @@ Divergenz; vorankommen müssen wir aber in der *flachsten*.
 Werten, ohne kleiner zu werden, und darüber läuft sie davon.
 :::
 
-:::vertiefung[Zick-Zack im Canyon]
+:::vertiefung[Zickzack im Canyon]
 Die obere Tafel zeigt die Höhenlinien von
 $f(\bx) = \tfrac{1}{2}(x_1^2 + \kappa\,x_2^2)$ und den Weg der Iterierten, die
 untere den Verlauf von $\cblue{f(\bx^{(k)})} - \cgreen{f(\bx^\star)}$ auf
@@ -645,7 +669,7 @@ negative Gradient zeigt direkt auf das Minimum, und mit einem halben Anteil ist
 das Verfahren nach einem Schritt fertig. Bei $\kappa = 10$ und einem halben
 Anteil, also $\gamma = 1/L$, lesen wir die Zahlen aus Beispiel 13.3.16 ab: Der
 gemessene Quotient steht auf $0{,}81$, während die gestrichelte Schranke mit
-$0{,}9$ fällt. Und bei einem Anteil um $0{,}9$ entsteht das Zick-Zack. Die
+$0{,}9$ fällt. Und bei einem Anteil um $0{,}9$ entsteht das Zickzack. Die
 Schranke wird dann gar nicht mehr gezeichnet, denn Satz 13.3.13 setzt
 $\gamma \le 1/L$ voraus und sagt jenseits davon nichts.
 
@@ -737,11 +761,14 @@ $\corange{\bd} = -\corange{\nabla f(\bx^{(k)})^\top}$ ist
 
 $$
 \corange{\nabla f\bigl(\bx^{(k)}\bigr)}\,\corange{\bd}
-= -\left\|\corange{\nabla f\bigl(\bx^{(k)}\bigr)}\right\|^2 \le 0 ,
+= -\left\|\corange{\nabla f\bigl(\bx^{(k)}\bigr)}\right\|^2 < 0
+\qquad\text{für } \corange{\nabla f\bigl(\bx^{(k)}\bigr)} \neq \bnull^\top ,
 $$
 
 der Zusatzterm $c\,\gamma\,\corange{\nabla f(\bx^{(k)})}\corange{\bd}$ auf der
-rechten Seite von ($13.3.7$) ist also *negativ*. Die rechte Seite liegt damit
+rechten Seite von ($13.3.7$) ist also *negativ*. Verschwindet der Gradient, gibt
+es überhaupt keine Suchrichtung mehr, und die Abbruchkriterien haben längst
+gegriffen. Die rechte Seite liegt damit
 unter dem alten Funktionswert, und darauf zielt die Bedingung: Der
 Funktionswert muss nicht bloß sinken, sondern um einen Betrag sinken, der
 proportional zu $\gamma$ und zum Quadrat der Gradientennorm ist. Wo es steil
@@ -789,7 +816,9 @@ darauf auf.
 Statt der Vorlesungsgrafik hier die drei Kurven zum Selberschieben: der Schnitt
 $\varphi(\gamma)$ in Violett, die Tangente in Orange und die Armijo-Gerade
 gestrichelt in Grau. Die roten Punkte sind verworfene Probeschritte, der blaue
-ist der akzeptierte.
+ist der akzeptierte. Als Zielfunktion dient die Quadrik
+$f(\bx) = \tfrac12 x_1^2 + \tfrac52 x_2^2$ mit $\kappa_f = 5$, als Suchrichtung
+wie immer $\corange{\bd} = -\corange{\nabla f(\bx)^\top}$.
 
 Der Regler für $c$ beginnt bewusst weit über dem Praxiswert $10^{-4}$, weil die
 graue Gerade sonst auf der Höhe $\varphi(0)$ klebt und nichts zu sehen wäre. Wer
@@ -866,18 +895,19 @@ Kosten pro Iteration, sondern wegen der Zahl der Iterationen (Bemerkung 13.3.3).
 :::
 
 :::frage{wahr}
-Verdoppeln wir $\kappa_f$, so brauchen wir für dieselbe Genauigkeit ungefähr
-doppelt so viele Schritte.
+Verdoppeln wir $\kappa_f$, so verdoppelt sich ungefähr die Schrittzahl, die
+Satz 13.3.13 für dieselbe Genauigkeit garantiert.
 
-Die Zahl der Schritte je Dezimalstelle ist $\ln 10/(-\ln\rho)$ mit
+Die garantierte Zahl der Schritte je Dezimalstelle ist $\ln 10/(-\ln\rho)$ mit
 $\rho = 1 - 1/\kappa_f$, und wegen $-\ln(1 - 1/\kappa_f) \approx 1/\kappa_f$
 wächst sie näherungsweise linear in $\kappa_f$: $21{,}9$ bei $\kappa_f = 10$,
 $44{,}9$ bei $20$, $229{,}1$ bei $100$ und $459{,}4$ bei $200$
-(Bemerkung 13.3.14).
+(Bemerkung 13.3.14). Der tatsächliche Verlauf darf schneller sein, wie
+Beispiel 13.3.16 vorführt, langsamer aber nicht.
 :::
 
 ::::
 
 *Vertiefung: Heath §6.5.1 behandelt die direkten Suchverfahren einschließlich
-Nelder-Mead, §6.5.2 den steilsten Abstieg samt Zick-Zack-Bild, und die
+Nelder-Mead, §6.5.2 den steilsten Abstieg samt Zickzack-Bild, und die
 eindimensionalen Verfahren hinter der Liniensuche stehen in §6.4.*

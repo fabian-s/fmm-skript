@@ -24,6 +24,11 @@ import { Slider } from "../../../lib";
  * γ* = 1/3 mit φ = 6,667. Mit c = 10⁻⁴ und ρ = 0,5 wird γ = 1 verworfen und
  * γ = 0,5 nach einer Halbierung akzeptiert; mit c = 0,3 sind zwei Halbierungen
  * nötig (γ = 0,25, φ = 7,1875).
+ *
+ * Review 13.3: alle 74 970 Reglerzustände durchgespielt (x₁, x₂, c, ρ auf dem
+ * jeweiligen Raster). Höchstzahl der Verkleinerungen 16, der „erfolglos“-Zweig
+ * ist also unerreichbar und bleibt reine Absicherung; γ* liegt in jedem
+ * Zustand unter GMAX = 1,2, die senkrechte Hilfslinie fehlt nie.
  */
 
 const BLAU = "#0072B2"; // akzeptierter Schritt
@@ -168,7 +173,7 @@ export function ArmijoWidget() {
             {/* der Schnitt selbst */}
             <polyline points={pfad(phi)} fill="none" stroke={VIOLETT} strokeWidth={2} />
 
-            {versuche.slice(0, 12).map((t, i) => (
+            {versuche.slice(0, 24).map((t, i) => (
               <g key={i}>
                 <circle cx={ax(t)} cy={ay(Math.min(phi(t), yhi))} r={4} fill={ROT} />
                 <line
@@ -214,9 +219,9 @@ export function ArmijoWidget() {
             </text>
           </svg>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Dünn gestrichelt senkrecht: der exakte Minimierer γ* der Liniensuche. Die
-            Armijo-Bedingung verlangt ihn nicht, sie verlangt nur, unter der grauen Geraden zu
-            bleiben.
+            Die dünne senkrechte Linie steht auf γ*, dem Tiefpunkt des Schnitts. Ihn zu
+            treffen wäre die exakte Liniensuche; die Armijo-Bedingung verlangt weniger,
+            nämlich nur, unter der grauen Geraden zu landen.
           </p>
         </div>
 
@@ -226,12 +231,15 @@ export function ArmijoWidget() {
           <Slider label="Abstiegsanteil c" value={c} onChange={setC} min={0.05} max={0.5} step={0.05} />
           <Slider label="Verkleinerungsfaktor ρ" value={rho} onChange={setRho} min={0.1} max={0.9} step={0.1} />
           <div className="mt-2 space-y-1 font-mono text-xs">
+            <p>f(x) = ½x₁² + 2,5x₂², ∇f(x) = (x₁; 5x₂), also μ = 1, L = 5, κ_f = 5</p>
             <p>
               x = ({fmt(x1, 2)}; {fmt(x2, 2)}), ∇f(x) = ({fmt(g[0], 2)}; {fmt(g[1], 2)}), d = −∇f(x)ᵀ
             </p>
             <p>
-              φ(0) = {fmt(phi0)}, φ′(0) = ∇f(x)d = {fmt(steigung)} (negativ, sonst wäre d keine
-              Abstiegsrichtung)
+              φ(0) = {fmt(phi0)}, φ′(0) = ∇f(x)d = {fmt(steigung)}
+              {gg < 1e-12
+                ? " (null, weil der Gradient verschwindet)"
+                : " (negativ, sonst wäre d keine Abstiegsrichtung)"}
             </p>
             <p>
               geprüfte Schrittweiten: {folge}

@@ -31,8 +31,11 @@ import { Slider } from "../../../lib";
  * (sqrt(kappa)-1)/(sqrt(kappa)+1) statt (kappa-1)/(kappa+1).
  *
  * Farbrollen (Farbcode Kapitel 13): blau die Iterierten des gewöhnlichen
- * Gradientenabstiegs, violett (im Kapitel sonst unbelegt) die Iterierten mit
- * Momentum, grün das Minimum, rot die Divergenzwarnung.
+ * Gradientenabstiegs, violett die Iterierten mit Momentum, grün das Minimum,
+ * rot die Divergenzwarnung. Violett gehört nicht zum Kapitel-Farbcode und
+ * trägt in den Kapitel-13-Widgets je nach Tafel eine andere Nebenrolle
+ * (Graph von f in S131/S133, stationärer Punkt in S132); die Rolle steht
+ * deshalb in der Legende UND in der Vertiefungszeile.
  *
  * Alles ist deterministisch; kein Math.random.
  */
@@ -148,10 +151,26 @@ export function MomentumVergleich() {
   const randOhne = Math.abs(rel - 2) <= 1e-9;
   const instabilMit = rel > grenzeMit + 1e-9;
   const schwung = alpha < 1 ? 1 / (1 - alpha) : Infinity;
-  const wechsel = rel > 1; // in der steilen Richtung kippt das Vorzeichen
+  // Ob in der steilen Richtung wirklich gependelt wird, entscheidet die Bahn
+  // und nicht die Schrittweite allein: Ohne Momentum kippt x2 genau ab
+  // gamma*L > 1 das Vorzeichen, MIT Momentum schwingt die Bahn auch darunter,
+  // weil das Gedaechtnis ueber den Talboden hinausträgt.
+  const zaehleWechsel = (pts: V2[]) => {
+    let w = 0;
+    for (let i = 1; i < pts.length; i++) if (pts[i][1] * pts[i - 1][1] < 0) w++;
+    return w;
+  };
+  const wechselOhne = zaehleWechsel(ohne) > 0;
+  const wechselMit = zaehleWechsel(mit) > 0;
 
   let status: string;
-  if (instabilMit) {
+  if (alpha === 0) {
+    status = `Mit α = 0 ist der Schwung abgeschaltet: Algorithmus 13.4.13 fällt auf den gewöhnlichen Gradientenabstieg zurück, beide Wege sind derselbe, und die violette Kurve liegt genau auf der blauen. ${
+      instabilOhne
+        ? `Mit γ·L = ${fmt(rel)} über der gemeinsamen Grenze 2 laufen deshalb auch beide davon.`
+        : "Schieben wir α nach oben, trennen sich die beiden Wege."
+    }`;
+  } else if (instabilMit) {
     status = `Beide Verfahren laufen davon: γ·L = ${fmt(rel)} liegt über der Stabilitätsgrenze 2 des Gradientenabstiegs und über 2(1 + α) = ${fmt(grenzeMit)} für Heavy-Ball. In der steilen Richtung wächst der Fehler dann in jedem Schritt.`;
   } else if (instabilOhne) {
     status = `Der gewöhnliche Gradientenabstieg divergiert hier, denn γ·L = ${fmt(rel)} liegt über 2. Momentum bleibt stabil, seine Grenze ist 2(1 + α) = ${fmt(grenzeMit)}: Der Schwung erlaubt also nicht nur glattere, sondern auch grössere Schritte.`;
@@ -159,10 +178,16 @@ export function MomentumVergleich() {
     status = `Genau an der Grenze γ·L = 2 springt der Gradientenabstieg in der steilen Richtung zwischen zwei Werten hin und her, ohne kleiner zu werden. Momentum bleibt darunter (Grenze 2(1 + α) = ${fmt(grenzeMit)}) und kommt voran.`;
   } else if (bisMit !== null && bisOhne !== null && bisMit < bisOhne) {
     status = `Momentum braucht ${bisMit} Schritte bis f ≤ 10⁻⁶·f(x⁽⁰⁾), der reine Gradientenabstieg ${bisOhne}. ${
-      wechsel
-        ? `Zwei Wirkungen stecken darin: In der flachen Richtung zeigen die Gradienten immer in dieselbe Richtung und summieren sich auf das 1/(1 − α) = ${fmt(schwung, 1)}-fache eines Einzelschritts auf; in der steilen Richtung wechselt der Gradient wegen γ·L > 1 das Vorzeichen, und die Mittelung dämpft das Hin und Her.`
-        : `Bei dieser Schrittweite schwingt noch nichts: Der Gewinn kommt allein daher, dass sich die gleichgerichteten Gradienten der flachen Richtung auf das 1/(1 − α) = ${fmt(schwung, 1)}-fache eines Einzelschritts aufsummieren.`
+      wechselOhne
+        ? `Zwei Wirkungen stecken darin: In der flachen Richtung zeigen die Gradienten immer in dieselbe Richtung und summieren sich auf das 1/(1 − α) = ${fmt(schwung, 1)}-fache eines Einzelschritts auf; in der steilen Richtung wechselt schon der blaue Weg wegen γ·L > 1 das Vorzeichen, und die Mittelung dämpft dieses Hin und Her.`
+        : `Der Gewinn kommt hier allein aus der flachen Richtung: Dort zeigen die Gradienten immer gleich, und ihre Beiträge summieren sich auf das 1/(1 − α) = ${fmt(schwung, 1)}-fache eines Einzelschritts auf. ${
+            wechselMit
+              ? "Der blaue Weg pendelt bei dieser Schrittweite gar nicht; dass der violette quer zum Tal trotzdem hin und her schwingt, ist der Preis des Gedächtnisses und nicht seine Wirkung."
+              : "Quer zum Tal pendelt hier keiner der beiden Wege."
+          }`
     }`;
+  } else if (bisMit !== null && bisOhne !== null && bisMit === bisOhne) {
+    status = `Hier nimmt sich beides nichts: Beide Verfahren brauchen ${bisMit} Schritte bis f ≤ 10⁻⁶·f(x⁽⁰⁾). Bei κ = ${fmt(kappa, 0)} wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)} die beste Wahl.`;
   } else if (bisMit !== null && bisOhne !== null) {
     status = `Hier schadet das Momentum: ${bisMit} Schritte gegen ${bisOhne} ohne. Bei κ = ${fmt(kappa, 0)} ist α = ${fmt(alpha)} zu viel des Guten, die Iterierten schiessen über das Tal hinaus; rechnerisch optimal wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)}. Der Standardwert 0,9 stammt aus dem Deep Learning, wo die Konditionszahl um Grössenordnungen höher liegt.`;
   } else if (bisMit !== null) {

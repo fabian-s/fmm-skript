@@ -17,10 +17,15 @@ import { Slider, niceTicks } from "../../../lib";
  * Farbcode Kapitel 12: Epigraph/Funktionsgraph blau, Sehne und
  * Konvexkombinationen grün, Verletzungen rot, ausgezeichnete Punkte orange.
  *
- * Per node nachgerechnet (Scratchpad check-math-s123.mjs): die Sehnenprobe
- * über 200000 Zufallspaare bestätigt konvex für 0,6x²+0,3, |x|, 0,5x+1 und
- * e^x, konkav für 2−0,6x² und 0,5x+1; x⁴−3x²−x+3 ist weder das eine noch
- * das andere.
+ * Per node nachgerechnet (Scratchpad rev123-widget.mjs, rev123-fix.mjs) für
+ * genau die vier hier angebotenen Kurven: 0,6x²+0,3 besteht die Sehnenprobe
+ * auf jedem Paar mit strikter Ungleichung im Inneren; |x| besteht sie mit
+ * Gleichheit, sobald beide Endpunkte auf demselben Ast liegen; 2−0,6x²
+ * verletzt sie auf jedem Paar (Panel: Rotanteil 99,9 %); x⁴−3x²−x+3 ist
+ * weder konvex noch konkav (Panel a=−1,6/b=1,3: Verletzung 1,738 auf 63,6 %
+ * der Strecke, Voreinstellung des Tests a=−1,55/b=1,25: 1,891, dagegen
+ * a=−1,8/b=−0,9: 0). Wendepunkte der Doppelmulde bei ±1/√2, deshalb bestehen
+ * nur Paare innerhalb eines der beiden konvexen Äste.
  */
 
 const BLAU = "#0072B2"; // Graph und Epigraph
@@ -67,7 +72,7 @@ const KURVEN: Kurve[] = [
   },
   {
     id: "parabel",
-    name: "streng konvex",
+    name: "strikt konvex",
     formel: "f(x) = 0,6x² + 0,3",
     f: (x) => 0.6 * x * x + 0.3,
     yBereich: [-0.2, 3],
@@ -298,46 +303,55 @@ export function SehnenTest() {
   const rechts = lambda * fa + (1 - lambda) * fb;
 
   let groessteVerletzung = 0;
+  let groessteAbweichung = 0;
   for (let i = 0; i <= 400; i++) {
     const x = a + ((b - a) * i) / 400;
-    groessteVerletzung = Math.max(groessteVerletzung, f(x) - (fa + ((fb - fa) * (x - a)) / (b - a)));
+    const abw = f(x) - (fa + ((fb - fa) * (x - a)) / (b - a));
+    groessteVerletzung = Math.max(groessteVerletzung, abw);
+    groessteAbweichung = Math.max(groessteAbweichung, Math.abs(abw));
   }
   const verletzt = groessteVerletzung > 1e-9;
+  // Sehne und Graph fallen zusammen: dann steht in (12.3.4) Gleichheit.
+  // Nicht am aktuellen λ ablesen, dort ist bei λ = 0 oder λ = 1 immer Gleichheit.
+  const sehneAufGraph = groessteAbweichung < 1e-12;
 
   let status: { farbe: string; kopf: string; text: string };
-  if (verletzt) {
+  if (verletzt && kurve.id === "konkav") {
+    status = {
+      farbe: ROT,
+      kopf: "Der Graph liegt über der ganzen Sehne",
+      text: `An seiner dicksten Stelle misst der rote Streifen ${fmt(
+        groessteVerletzung,
+        3,
+      )}. So geht es dieser Funktion bei jedem Paar, (12.3.4) ist also nirgends erfüllt. Mit umgedrehtem Zeichen stimmt die Ungleichung dafür immer, und genau so ist konkav erklärt (Bemerkung 12.3.9): −f ist konvex.`,
+    };
+  } else if (verletzt) {
     status = {
       farbe: ROT,
       kopf: "Sehne unterschritten",
-      text: `Zwischen x und y ragt der Graph um bis zu ${fmt(
+      text: `An seiner dicksten Stelle misst der rote Streifen ${fmt(
         groessteVerletzung,
         3,
-      )} über die Sehne (rote Fläche). Für diese beiden Punkte ist die Ungleichung aus Satz 12.3.8 also verletzt, und ein einziges solches Paar genügt: f ist nicht konvex.`,
+      )}. Dort steht in (12.3.4) das falsche Zeichen. Weil Satz 12.3.8 die Ungleichung für alle Paare fordert, ist die Frage damit entschieden: f ist nicht konvex.`,
+    };
+  } else if (sehneAufGraph) {
+    status = {
+      farbe: GRUEN,
+      kopf: "Sehne und Graph fallen zusammen",
+      text: `Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab und in (12.3.4) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung nicht: Der Betrag ist konvex, aber nicht strikt konvex.`,
     };
   } else if (kurve.id === "doppelmulde") {
     status = {
       farbe: ORANGE,
-      kopf: "Dieses Paar besteht den Test",
-      text: `Auf der ganzen Strecke bleibt der Graph unter der Sehne. Das beweist nichts, denn die Definition verlangt alle Paare. Schieben wir x über die linke Mulde hinaus, kippt der Befund.`,
-    };
-  } else if (kurve.id === "konkav") {
-    status = {
-      farbe: GRUEN,
-      kopf: "Sehne liegt unter dem Graphen",
-      text: `Hier ist die Ungleichung mit umgedrehtem Zeichen erfüllt: Die Sehne bleibt unter dem Graphen, und zwar für jedes Paar. So ist konkav erklärt (Bemerkung 12.3.9), gleichbedeutend damit, dass −f konvex ist.`,
-    };
-  } else if (kurve.id === "betrag" && Math.abs(links - rechts) < 1e-12) {
-    status = {
-      farbe: GRUEN,
-      kopf: "Gleichheit auf der ganzen Strecke",
-      text: `x und y liegen auf demselben Ast, dort ist f linear und die Sehne fällt mit dem Graphen zusammen: In der Ungleichung steht Gleichheit. Der Betrag ist deshalb konvex, aber nicht streng konvex.`,
+      kopf: "Dieses Paar besteht die Probe",
+      text: `Zwischen x und y bleibt der Graph unter der Sehne. Bewiesen ist damit nichts, denn (12.3.4) fordert alle Paare, und diese Funktion fällt anderswo durch: in der Voreinstellung x = −1,55 und y = 1,25 um 1,891.`,
     };
   } else {
     status = {
       farbe: GRUEN,
       kopf: "Sehne liegt über dem Graphen",
-      text: `Auf der ganzen Strecke bleibt der Graph unter der Sehne, und das gelingt bei dieser Funktion für jedes Paar${
-        kurve.id === "parabel" ? " sogar mit strikter Ungleichung im Inneren" : ""
+      text: `Zwischen x und y bleibt der Graph unter der Sehne, und bei dieser Funktion gelingt das für jedes Paar${
+        kurve.id === "parabel" ? ", im Inneren sogar mit strikter Ungleichung" : ""
       }.`,
     };
   }
@@ -345,10 +359,11 @@ export function SehnenTest() {
   return (
     <div className="space-y-3">
       <p className="max-w-prose text-sm">
-        Die Definition prüft alle Punktpaare und alle Mischungen. Ziehen wir also die beiden
-        Endpunkte über den Graphen und schieben wir λ: Der blaue Punkt zeigt den Funktionswert
-        f(λx + (1−λ)y), der grüne den Wert λf(x) + (1−λ)f(y) auf der Sehne. Rot füllt sich, wo
-        der Graph über der Sehne liegt.
+        Satz 12.3.8 fordert (12.3.4) für jedes Punktepaar und jedes λ. Drei dieser Größen können
+        wir hier von Hand einstellen: Die weißen Griffe sitzen auf x und y, der dritte Regler
+        wählt λ. Auf der senkrechten Sonde markiert der blaue Punkt f(λx + (1−λ)y), also die
+        linke Seite der Ungleichung, der grüne den Sehnenwert λf(x) + (1−λ)f(y), also die
+        rechte. Steigt der Graph irgendwo über die Sehne, füllt sich die Fläche dazwischen rot.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {KURVEN.map((k) => (
@@ -460,8 +475,8 @@ export function SehnenTest() {
           </table>
           <p style={{ color: links <= rechts + 1e-12 ? GRUEN : ROT }}>
             {links <= rechts + 1e-12
-              ? "Bei diesem λ ist die Ungleichung erfüllt."
-              : "Bei diesem λ ist die Ungleichung verletzt."}
+              ? "An dieser Zwischenstelle stimmt (12.3.4)."
+              : "An dieser Zwischenstelle steht in (12.3.4) das falsche Zeichen."}
           </p>
           <p className="font-semibold" style={{ color: status.farbe }}>
             {status.kopf}
@@ -476,10 +491,13 @@ export function SehnenTest() {
 /* ------------------------------------------------------- statische Tafeln */
 
 export function KonvexKonkavPanels() {
+  // Die Endpunkte sind so gewählt, dass jede Tafel ihre Pointe zeigt: beim
+  // Betrag müssen beide auf demselben Ast liegen, sonst steht dort echte
+  // Ungleichung und die Tafel ist von der Parabel nicht zu unterscheiden.
   const tafeln: { id: string; a: number; b: number; titel: string }[] = [
     { id: "parabel", a: -1.4, b: 1.5, titel: "konvex" },
     { id: "konkav", a: -1.4, b: 1.5, titel: "konkav" },
-    { id: "betrag", a: -1.5, b: 1.5, titel: "konvex, nicht streng" },
+    { id: "betrag", a: 0.2, b: 1.7, titel: "konvex, nicht streng" },
     { id: "doppelmulde", a: -1.6, b: 1.3, titel: "weder noch" },
   ];
   return (

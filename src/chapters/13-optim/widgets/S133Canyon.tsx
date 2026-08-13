@@ -3,7 +3,7 @@ import { Slider } from "../../../lib";
 
 /**
  * §13.3: Gradientenabstieg mit FESTER Schrittweite auf der Quadrik
- * f(x) = ½(x₁² + κ x₂²) – die Zick-Zack-Folie „Konvergenz von Gradient
+ * f(x) = ½(x₁² + κ x₂²), also die Zickzack-Folie „Konvergenz von Gradient
  * Descent“ (13-optim.Rmd Z. 575–592) samt der auskommentierten Kondition-Notiz
  * Z. 594–614.
  *
@@ -25,6 +25,12 @@ import { Slider } from "../../../lib";
  * x₂-Faktoren: γ = 0,15 → −0,5; 0,18 → −0,8; 0,2 = 2/L → −1; 0,21 → −1,1.
  * Die Schranke (1 − γμ)^k wurde für γ = 0,02/0,05/0,1 über 40 Schritte und für
  * 300 zufällige vierdimensionale SPD-Quadriken mit γ = 1/L bestätigt.
+ *
+ * Review 13.3: alle 1078 Reglerzustände (κ 1…25 in Schritten von 0,5, Anteil
+ * 0,05…1,10 in Schritten von 0,05) durchgespielt. Der Zickzack-Zweig feuerte
+ * dabei auch für κ = 1 (9 Zustände, dort gibt es gar keine zwei Richtungen)
+ * und für κ = 1,5 mit γ ≥ 1/μ (5 Zustände, wo auch die flache Richtung
+ * überschießt); beide Fälle haben jetzt eigene Zweige.
  */
 
 const BLAU = "#0072B2"; // Iterierte, Fehlerkurve
@@ -123,18 +129,45 @@ export function CanyonWidget() {
     status =
       "γ = 2/L ist die Grenze: in der steilen Richtung pendelt die Iteration zwischen zwei Werten, ohne kleiner zu werden.";
     statusFarbe = ROT;
-  } else if (Math.abs(faktor2) < 1e-12 && kappa === 1) {
-    status =
-      "Bei κ = 1 sind die Höhenlinien Kreise, μ und L fallen zusammen, und der negative Gradient zeigt direkt auf das Minimum: mit γ = 1/L ist das Verfahren nach einem einzigen Schritt fertig.";
-    statusFarbe = GRUEN;
+  } else if (kappa === 1) {
+    // Isotroper Fall: es gibt keine steile und keine flache Richtung, beide
+    // Komponenten tragen denselben Faktor, und ein Zickzack kann es nicht geben.
+    if (Math.abs(faktor2) < 1e-12) {
+      status =
+        "Bei κ = 1 sind die Höhenlinien Kreise, μ und L fallen zusammen, und der negative Gradient zeigt direkt auf das Minimum: mit γ = 1/L ist das Verfahren nach einem einzigen Schritt fertig.";
+      statusFarbe = GRUEN;
+    } else {
+      status = `Bei κ = 1 sind die Höhenlinien Kreise: beide Komponenten tragen denselben Faktor ${fmt(
+        faktor1,
+        3
+      )}, die Iterierten laufen also auf der Geraden durch Startpunkt und Minimum${
+        faktor1 < 0 ? " und springen dabei in jedem Schritt über das Minimum hinweg" : ""
+      }. Ein Zickzack gibt es hier nicht, dafür braucht es zwei verschiedene Krümmungen.`;
+      statusFarbe = BLAU;
+    }
   } else if (Math.abs(faktor2) < 1e-12) {
     status = `γ = 1/L trifft die steile Richtung exakt: x₂ ist nach einem Schritt null, danach fällt f in jedem Schritt auf das ${fmt(
       faktor1 ** 2,
       3
     )}-fache, also schneller als die Schranke ρ = ${fmt(rho, 3)} des Satzes.`;
     statusFarbe = GRUEN;
+  } else if (Math.abs(faktor1) < 1e-12) {
+    status = `γ = 1/μ trifft die FLACHE Richtung exakt: x₁ ist nach einem Schritt null. In der steilen Richtung springt der Fehler dagegen mit Faktor ${fmt(
+      faktor2,
+      3
+    )} hin und her. Der Satz deckt diese Schrittweite nicht ab, sie liegt über 1/L.`;
+    statusFarbe = BLAU;
+  } else if (faktor1 < 0) {
+    status = `γ ist so groß, dass beide Richtungen über das Minimum hinausschießen: die flache mit Faktor ${fmt(
+      faktor1,
+      3
+    )}, die steile mit ${fmt(
+      faktor2,
+      3
+    )}. Konvergent bleibt es nur, weil beide Beträge unter 1 liegen.`;
+    statusFarbe = BLAU;
   } else if (faktor2 < 0) {
-    status = `Zick-Zack: in der steilen Richtung wechselt der Fehler mit Faktor ${fmt(
+    status = `Zickzack: in der steilen Richtung wechselt der Fehler mit Faktor ${fmt(
       faktor2,
       2
     )} das Vorzeichen, in der flachen Richtung schrumpft er nur mit ${fmt(
@@ -315,8 +348,8 @@ export function CanyonWidget() {
             Vielfachen von 2/L geeicht, damit die drei Schwellen unabhängig von κ an
             derselben Stelle liegen: bei einem halben Anteil steht γ = 1/L, bei einem ganzen
             die Divergenzgrenze. Die gestrichelte Gerade in der unteren Tafel ist eine obere
-            Schranke, keine Vorhersage; der gemessene Verlauf liegt darunter, und bei
-            γ = 1/L um genau einen Faktor (1 − μ/L) je Schritt.
+            Schranke, keine Vorhersage; der gemessene Verlauf liegt darunter, bei γ = 1/L und
+            κ &gt; 1 ab dem zweiten Schritt um genau den Faktor (1 − μ/L) je Schritt.
           </p>
         </div>
       </div>

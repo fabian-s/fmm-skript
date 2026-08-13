@@ -11,10 +11,14 @@ nebeneinanderzulegen.
 
 Aus [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) kommt der
 :k[Gradient]{#gradient} $\corange{\nabla f(\bx)}$ einer Funktion
-$f\colon \R^n \to \R$. Er zeigt in die Richtung des steilsten Anstiegs, genauer
-gesagt tut das sein Transponiertes, denn in der Konvention dieses Kurses ist der
-Gradient ein Zeilenvektor. Die Folie unterschlägt das Transponierte; eine
-Richtung im $\R^n$ ist aber eine Spalte. Aus
+$f\colon \R^n \to \R$. Wo er nicht verschwindet, zeigt er in die Richtung des
+steilsten Anstiegs, genauer gesagt tut das sein Transponiertes, denn in der
+Konvention dieses Kurses ist der Gradient ein Zeilenvektor. Die Folie
+unterschlägt das Transponierte; eine Richtung im $\R^n$ ist aber eine Spalte.
+Auch die Voraussetzung $\corange{\nabla f(\bx)} \neq \bnull^\top$ von
+Satz 10.2.4 fehlt dort, und sie ist hier wichtig: In einem kritischen Punkt gibt
+es keine ausgezeichnete Anstiegsrichtung mehr, und kritische Punkte sind im Rest
+des Kapitels unser Ziel. Aus
 [Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) kommt die
 :k[Hesse-Matrix]{#hessian-matrix} $\corange{\bH_f(\bx)}$ der zweiten
 Ableitungen, die die Krümmung misst. Und aus
@@ -23,7 +27,8 @@ Funktionen, die später darüber entscheidet, ob ein gefundenes Minimum auch das
 globale ist.
 
 Dazu zwei Bausteine aus der Grundvorlesung. *Notwendig* für ein Extremum einer
-differenzierbaren Funktion ist $\corange{f'(x^\star)} = 0$ beziehungsweise
+differenzierbaren Funktion in einem inneren Punkt des Definitionsbereichs ist
+$\corange{f'(x^\star)} = 0$ beziehungsweise
 $\corange{\nabla f(\bx^\star)} = \bnull^\top$. *Hinreichend* für ein Minimum ist
 das zusammen mit $\corange{f''(x^\star)} > 0$, im Mehrdimensionalen mit einer
 :k[positiv definiten]{#positive-definite} Hesse-Matrix. Die Folie führt die
@@ -94,18 +99,21 @@ $\argmax_{\bx} \cblue{f(\bx)} = \argmin_{\bx} \bigl(-\cblue{f(\bx)}\bigr)$. Wir
 reden deshalb ab jetzt nur noch über Minima.
 
 Wichtiger ist der zweite Zusammenhang. Ist $\cblue{f}$ differenzierbar, so muss
-in einem Minimum $\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ gelten.
+im Minimum eines *unbeschränkten* Problems
+$\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ gelten; welche Bedingung
+an die Stelle tritt, sobald Nebenbedingungen im Spiel sind, klärt
+[Abschnitt 13.5](#sec-13.5).
 Das ist ein nichtlineares Gleichungssystem für die Funktion
 $\bx \mapsto \corange{\nabla f(\bx)}^\top$ von $\R^n$ nach $\R^n$. Wer Nullstellen
 suchen kann, kann also auch kritische Punkte suchen, und umgekehrt taucht jedes
-Verfahren dieses Abschnitts im Rest des Kapitels wieder auf. Aus genau diesem
-Grund steht die Nullstellensuche am Anfang.
+Verfahren dieses Abschnitts im Rest des Kapitels wieder auf. Deshalb steht die
+Nullstellensuche am Anfang.
 
 Alle drei Probleme lösen wir *iterativ*: Wir starten irgendwo und bauen eine
 Folge $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die
 hoffentlich gegen $\cgreen{\bx^\star}$ läuft. Dieselbe Bauform kennen wir schon
-von der Potenzmethode und den Splitting-Verfahren aus
-[Kapitel 8](?k=08-la-misc#sec-8.3).
+von der [Potenzmethode](?k=08-la-misc#sec-8.1) und den
+[Splitting-Verfahren](?k=08-la-misc#sec-8.3) aus Kapitel 8.
 :::
 
 ### Warum Optimierung?
@@ -154,10 +162,13 @@ $$
 \quad \text{so dass} \quad \cred{\left\|\bbeta\right\|_p \le c} ,
 $$
 
-und darin sitzt die geometrische Anschauung: Wir suchen den Punkt der
-:k[Niveaumenge]{#level-sets} des Kleinste-Quadrate-Verlusts, der gerade noch in
-die $p$-Norm-Kugel vom Radius $\cred{c}$ passt. Bei $p = 1$ hat diese
-Kugel Ecken auf den Achsen, und deshalb setzt Lasso Koeffizienten exakt auf null.
+und darin sitzt die geometrische Anschauung. Verletzt der KQ-Schätzer die
+Nebenbedingung, so blasen wir die :k[Niveaumengen]{#level-sets} des
+Kleinste-Quadrate-Verlusts um ihn herum so lange auf, bis eine von ihnen die
+$p$-Norm-Kugel vom Radius $\cred{c}$ gerade berührt; der Berührpunkt ist die
+Lösung. Bei $p = 1$ hat diese Kugel Ecken auf den Achsen, und an einer Ecke
+kommt die wachsende Niveaumenge besonders leicht zuerst an; deshalb setzt Lasso
+Koeffizienten exakt auf null.
 
 Zwei Feinheiten, die die Folie offenlässt. Erstens sind die beiden Schreibweisen
 zwar äquivalent, aber die Übersetzung zwischen $\lambda$ und $\cred{c}$ hängt von
@@ -166,9 +177,10 @@ schreibt die Folie den Strafterm für beide Fälle als $\lambda\left\|\bbeta\rig
 Die übliche Ridge-Regression bestraft die *quadrierte* Norm,
 $\lambda\left\|\bbeta\right\|_2^2$, und nur damit ergibt sich die geschlossene
 Lösung $\wh{\bbeta} = (\bX^\top\bX + \lambda\bI_p)^{-1}\bX^\top\by$ aus
-Beispiel 11.2.7 in [Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2). Die unquadrierte Fassung ist ein
-anderes, ebenfalls konvexes Problem. In der Nebenbedingungsform spielt der
-Unterschied keine Rolle, weil $\left\|\bbeta\right\|_2 \le c$ und
+Beispiel 11.2.7 in [Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2). Die
+unquadrierte Fassung ist ein anderes, ebenfalls konvexes Problem. In der
+Nebenbedingungsform spielt der Unterschied keine Rolle, weil
+$\left\|\bbeta\right\|_2 \le c$ und
 $\left\|\bbeta\right\|_2^2 \le c^2$ dieselbe Menge beschreiben.
 :::
 
@@ -205,7 +217,7 @@ Ist $f$ streng monoton, so hat $f(x) = 0$ höchstens eine Lösung.
 Streng monotone Funktionen sind injektiv: Aus $x_1 < x_2$ folgt
 $f(x_1) \neq f(x_2)$. Der Wert $0$ wird also höchstens einmal angenommen. Für die
 Existenz sagt das nichts, dafür brauchen wir Stetigkeit und einen
-Vorzeichenwechsel, und genau diese Aufteilung steckt im folgenden Satz.
+Vorzeichenwechsel. Diese Aufteilung steckt im folgenden Satz.
 :::
 
 ::::
@@ -281,16 +293,17 @@ Solange $\cblue{b} - \cblue{a} > \epsilon$:
 2. Haben $\cblue{f(a)}$ und $\corange{f(m)}$ dasselbe Vorzeichen, so setze
    $\cblue{a} \leftarrow \corange{m}$, andernfalls $\cblue{b} \leftarrow \corange{m}$.
 
-Als Näherung geben wir die Mitte $(\cblue{a} + \cblue{b})/2$ des Endintervalls
-zurück.
+Als Näherung geben wir die Mitte $\cblue{a} + (\cblue{b} - \cblue{a})/2$ des
+Endintervalls zurück.
 :::
 
 Das $\epsilon$ ist hier die gewünschte Genauigkeit, nicht die Maschinengenauigkeit
 aus [Kapitel 4](?k=04-fehler#sec-4.1). Wie viele Schritte kostet uns das?
 
 :::satz[13.1.8 (Schrittzahl der Bisektion)]
-Unter den Voraussetzungen von Algorithmus 13.1.7 gilt: Nach $k$ Durchläufen hat
-das Intervall die Länge $(b - a)/2^k$, und es enthält weiterhin eine Nullstelle
+Es gelten die Voraussetzungen von Algorithmus 13.1.7, und das Startintervall sei
+noch zu grob, $b - a > \epsilon$. Dann hat das Intervall nach $k$ Durchläufen die
+Länge $(b - a)/2^k$, und es enthält weiterhin eine Nullstelle
 von $f$. Die Schleife bricht nach genau
 
 $$
@@ -308,11 +321,11 @@ $\left|\cgreen{x^\star} - \cblue{\wh x}\right| \le \epsilon/2$.
 das Intervall nach $k$ Durchläufen. Haben $\cblue{f(a_{k-1})}$ und
 $\corange{f(m)}$ dasselbe Vorzeichen, so hat $\corange{f(m)}$ das andere
 Vorzeichen als $\cblue{f(b_{k-1})}$, und der Wechsel sitzt in
-$[\corange{m}, \cblue{b_{k-1}}]$; genau diese Hälfte behalten wir. Andernfalls
+$[\corange{m}, \cblue{b_{k-1}}]$; diese Hälfte behalten wir. Andernfalls
 sitzt er in $[\cblue{a_{k-1}}, \corange{m}]$, und wir behalten diese. In beiden
 Fällen gilt weiter $\cblue{f(a_k)} \cdot \cblue{f(b_k)} \le 0$.
 
-::why[genau das leistet die Fallunterscheidung des Algorithmus. Gleichheit tritt nur im Ausnahmefall $\corange{f(m)} = 0$ ein: Dann haben die beiden Werte nicht dasselbe Vorzeichen, es wird $b \leftarrow m$ gesetzt, und die Nullstelle sitzt von da an genau auf dem rechten Rand]
+::why[das leistet die Fallunterscheidung des Algorithmus. Gleichheit tritt nur im Ausnahmefall $\corange{f(m)} = 0$ ein: Dann haben die beiden Werte nicht dasselbe Vorzeichen, es wird $b \leftarrow m$ gesetzt, und die Nullstelle sitzt anschließend auf dem rechten Rand]
 :::
 
 :::schritt
@@ -396,13 +409,19 @@ der Meldung ab, dass es das Objekt nicht gibt. Zweitens ist der Rückgabewert de
 Endintervalls. Statt der garantierten Genauigkeit $\epsilon/2$ aus Satz 13.1.8
 bleibt so nur $\epsilon$, ein voller Halbierungsschritt verschenkt.
 
-Zwei weitere Kleinigkeiten lohnen sich. Der Mittelpunkt sollte als
-$a + (b-a)/2$ statt als $(a+b)/2$ gebildet werden: In gerundeter Arithmetik liegt
-die erste Form immer im Intervall, und die Summe $a + b$ kann für sehr große
-Werte überlaufen ([Kapitel 4](?k=04-fehler#sec-4.1)). Und statt das Produkt
-$f(a)\cdot f(m)$ zu bilden, das bei winzigen oder riesigen Funktionswerten
-unter- oder überläuft, vergleichen wir besser die Vorzeichen direkt. So sieht die
-robuste Fassung aus:
+Zwei weitere Kleinigkeiten sind Fließkomma-Handwerk aus
+[Kapitel 4](?k=04-fehler#sec-4.1). Die erste betrifft den Mittelpunkt. Haben $a$
+und $b$ dasselbe Vorzeichen, so ist $a + (b-a)/2$ die verlässlichere Formel: Die
+Differenz $b - a$ ist dann betragsmäßig höchstens so groß wie der größere der
+beiden Endpunkte, ihre Hälfte erst recht, und der Ausdruck bleibt auch gerundet
+zwischen $a$ und $b$. Die Summe $a + b$ dagegen ist ein Zwischenergebnis, das
+größer sein kann als beide Endpunkte, und sie kann überlaufen, obwohl die Mitte
+selbst darstellbar wäre. Die zweite betrifft den Vorzeichentest. Nahe der
+Nullstelle sind $f(a)$ und $f(m)$ beide winzig; ihr Produkt unterläuft dann auf
+null, und die Abfrage $f(a)\cdot f(m) < 0$ meldet fälschlich „kein Wechsel".
+Vergleichen wir stattdessen die Vorzeichen, so stehen im Produkt nur noch
+$\pm 1$, und dort kann nichts mehr unterlaufen. So sieht die robuste Fassung
+aus:
 
 ```r
 bisect <- function(f, a, b, eps) {
@@ -501,8 +520,8 @@ Schranke fällt.
 
 Geometrisch ist $\cblue{x^{(k+1)}}$ der Schnittpunkt der Tangente an $f$ im
 Punkt $\bigl(\cblue{x^{(k)}}, \cblue{f(x^{(k)})}\bigr)$ mit der $x$-Achse. Der
-Bruch in ($13.1.1$) sagt das noch einmal in Zahlen: Wir teilen die Höhe, die wir
-überwinden müssen, durch die Steigung, mit der wir fallen.
+Bruch in ($13.1.1$) sagt das noch einmal in Zahlen: Wir teilen die Höhe, die
+abzubauen ist, durch die Rate, mit der die Tangente sie abbaut.
 
 :::beispiel[13.1.12 (Die Wurzel aus zwei)]
 Wir bleiben bei $\cblue{f(x) = x^2 - 2}$ mit $\corange{f'(x) = 2x}$ und
@@ -545,7 +564,10 @@ $$
 mit einer Konstanten $C$, die von $f$ abhängt. Bei einer einfachen Nullstelle
 ist $C = \left|f''(\cgreen{x^\star})\right| / \bigl(2\left|f'(\cgreen{x^\star})\right|\bigr)$,
 für unser Beispiel also $2/(2 \cdot 2\sqrt 2) = 0{,}354$, genau der beobachtete
-Wert. Praktisch heißt quadratische Konvergenz: Sobald wir nah genug dran sind,
+Wert. Auf $C$ kommt es an: Die Folie kürzt die Aussage zu „der Fehler quadriert
+sich pro Schritt" ab, und das stimmt schon in unserem eigenen Beispiel nicht,
+denn $e_0^2 = 0{,}343$ steht gegen $e_1 = 0{,}086$. Praktisch heißt
+quadratische Konvergenz: Sobald wir nah genug dran sind,
 verdoppelt jeder Schritt die Zahl der richtigen Stellen, und wenige Schritte
 genügen bis zur Maschinengenauigkeit.
 
@@ -586,7 +608,8 @@ praxistauglichen aus.
 Für $f\colon \R^n \to \R^n$ tritt in ($13.1.1$) an die Stelle der Division die
 Lösung des linearen Systems
 $\corange{\bJ_f(\bx^{(k)})}\,\bd = -\cblue{f(\bx^{(k)})}$ mit der
-Jacobimatrix aus [Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3). Das ist teuer:
+Jacobimatrix aus [Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3); die nächste
+Iterierte ist dann $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \bd$. Das ist teuer:
 pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung. Die einfachste
 Alternative ersetzt die Ableitung deshalb durch eine feste Zahl.
 
@@ -780,9 +803,9 @@ Hier steht $\kappa = \lambda_{\max}/\lambda_{\min}$ für die
 :k[Konditionszahl]{#condition-number} aus
 [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5). Schlechte Kondition heißt also
 wörtlich langsame Konvergenz: Bei $\kappa = 10$ ist selbst die beste Rate noch
-$9/11 = 0{,}818$. Und wer die optimale Schrittweite verdoppelt, landet stets
-jenseits der Divergenzgrenze, denn $4/(\lambda_{\min} + \lambda_{\max}) >
-2/\lambda_{\max}$, sobald $\lambda_{\min} < \lambda_{\max}$ ist.
+$9/11 = 0{,}818$. Und wer die optimale Schrittweite verdoppelt, landet stets auf
+oder jenseits der Divergenzgrenze, denn $4/(\lambda_{\min} + \lambda_{\max}) \ge
+2/\lambda_{\max}$ mit Gleichheit nur für $\lambda_{\min} = \lambda_{\max}$.
 
 Im Eindimensionalen ist die beste Wahl besonders sprechend. Dort drückt
 $\corange{\gamma^\star} = 1/\corange{f'(x^\star)}$ die Rate auf
@@ -791,8 +814,8 @@ Newton-Verfahren mit eingefrorener Ableitung; der Fehler fällt dann sogar
 quadratisch. Für $f(x) = x^2 - 2$ etwa läuft er von $\cblue{x^{(0)}} = 2$ aus
 über $0{,}121$, $5{,}2 \cdot 10^{-3}$, $9{,}6 \cdot 10^{-6}$ und
 $3{,}2 \cdot 10^{-11}$. Der Haken ist offensichtlich: Wir müssten
-$\corange{f'(x^\star)}$ schon kennen. Genau das rechnet Newton in jedem Schritt
-neu aus, und dafür zahlt es mit einer Ableitungsauswertung pro Schritt.
+$\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die Ableitung
+in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung pro Schritt.
 
 In der Praxis behelfen wir uns mit einer Folge $\corange{\gamma_k} \to 0$: am
 Anfang große Schritte, später kleine. Wie sich das systematisch anstellen lässt,
@@ -838,8 +861,9 @@ Das Bisektionsverfahren braucht die Ableitung von $f$.
 Es braucht nur Funktionswerte, genauer sogar nur deren Vorzeichen, und einen
 Startbereich mit Vorzeichenwechsel. Das ist seine große Stärke: Es funktioniert
 für nicht differenzierbare, nur numerisch auswertbare oder schlicht hässliche
-Funktionen, und es kann nach Satz 13.1.8 nicht divergieren. Bezahlt wird das mit
-Tempo.
+Funktionen, und es kann nach Satz 13.1.8 nicht divergieren. Dafür kostet jede
+weitere gültige Dezimalstelle rund $3{,}3$ Schritte, während Newton in der Nähe
+der Nullstelle ihre Zahl verdoppelt.
 :::
 
 :::frage{wahr}

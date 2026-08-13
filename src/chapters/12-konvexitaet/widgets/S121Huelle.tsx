@@ -226,8 +226,7 @@ export function KonvexeHuellePunktwolke() {
         11 und 12 fällt jeweils ein alter Eckpunkt heraus, während der neue nachrückt: Die Anzahl
         bleibt dabei stehen, die Zusammensetzung ändert sich. Bei k = 14 tragen nur sieben der
         vierzehn Punkte die Hülle; die anderen sieben liegen darin, ohne etwas beizusteuern.
-        Genau deshalb ist die Liste der Extrempunkte die sparsame Beschreibung einer solchen
-        Menge.
+        Die Liste der Extrempunkte ist deshalb die sparsame Beschreibung einer solchen Menge.
       </p>
     </div>
   );

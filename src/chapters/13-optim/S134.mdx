@@ -12,12 +12,15 @@ und läuft dann bergab. Wie weit er laufen darf, sagt ihm niemand, deshalb die
 Schrittweite $\corange{\gamma}$ und deshalb der Zickzack in engen Tälern.
 
 Die :k[Taylorentwicklung]{#taylor-theorem} liefert die nächstbessere Näherung
-gratis. Nach
-Korollar 11.4.9 aus [Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4) gilt für zweimal
-stetig differenzierbares $f$
+gratis. Satz 11.4.7 aus [Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4) gibt sie für
+$f \in \Ccal^2$, also für zweimal stetig differenzierbares $f$, mit einem Restterm
+$o(\left\|\bh\right\|^2)$. Korollar 11.4.9 schreibt dieselbe Zeile für
+$f\colon \R^n \to \R$ in Gradient und Hesse-Matrix aus, verlangt dafür aber
+$f \in \Ccal^3$, weil es gleich noch eine Ordnung weiter geht. Uns genügt die
+Ordnung zwei:
 
 $$ {#eq-13.4.1}
-\cblue{f(\bx + \bh)} \approx \cgreen{T_2(\bh)} = \cblue{f(\bx)}
+\cblue{f(\bx + \bh)} \approx \corange{T_2(\bh)} = \cblue{f(\bx)}
 + \corange{\nabla f(\bx)}\,\bh
 + \tfrac{1}{2}\,\bh^\top \corange{\bH_f(\bx)}\,\bh .
 $$
@@ -68,8 +71,8 @@ Startpunkt $\cblue{\bx^{(0)}}$. Für $k = 0, 1, 2, \dots$ wiederhole:
 
 :::bemerkung[13.4.2 (Was der Schritt voraussetzt und wie wir ihn rechnen)]
 *Die Hesse-Matrix muss invertierbar sein.* Sonst hat die quadratische Näherung
-entweder keinen oder gleich eine ganze Gerade kritischer Punkte, und ($13.4.2$)
-steht nicht einmal auf dem Papier. Die Folie notiert dazu, bei konvexem $f$ sei
+entweder gar keinen kritischen Punkt oder gleich einen ganzen affinen Unterraum
+davon, und ($13.4.2$) steht nicht einmal auf dem Papier. Die Folie notiert dazu, bei konvexem $f$ sei
 $\corange{\bH_f} \succ 0$. Das ist zu stark: Konvexität liefert nur positive
 *Semi*definitheit ([Abschnitt 12.4](?k=12-konvexitaet#sec-12.4)), und selbst strikte
 Konvexität reicht nicht, wie $f(x) = x^4$ im Nullpunkt zeigt. Gebraucht wird eine
@@ -120,7 +123,8 @@ $$
 
 also $\bJ_{\corange{\bg}} = \corange{\bH_f}$: Die Ableitung des Gradienten ist die
 Hesse-Matrix, das ist ihre Definition (Definition 11.3.3). Der mehrdimensionale
-Newton-Raphson-Schritt aus [Abschnitt 13.1](#sec-13.1) lautet damit
+Newton-Raphson-Schritt aus [Abschnitt 13.1](#sec-13.1) lautet damit (so hatte ihn
+Bemerkung 13.1.14 schon einmal aufgeschrieben)
 
 $$
 \cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}}
@@ -136,8 +140,11 @@ schlechte Startpunkte, und der Ärger, wenn die Ableitung im Nenner verschwindet
 ### Wie schnell das geht
 
 Die Folien zeigen an dieser Stelle zwei gezeichnete Tafeln mit einer Parabel, die
-sich Schritt für Schritt an ein Minimum bei $\cgreen{x^\star} = 2$ heranarbeitet.
-Rechnen wir das lieber an einer Funktion nach, die wir kennen.
+sich Schritt für Schritt an ein Minimum bei $\cgreen{x^\star} = 2$ heranarbeitet, und
+lesen aus der zweiten Tafel den Wert $x^{(2)} \approx 2{,}44$ ab. Die zugehörige
+Funktion steht nirgends im Quelltext, nur die fertige Grafik; nachrechnen lässt sich
+diese Zahl also nicht. Rechnen wir es lieber an einer Funktion nach, deren Vorschrift
+wir kennen.
 
 :::beispiel[13.4.4 (Newton auf einer nicht-quadratischen Funktion)]
 Wir minimieren
@@ -202,16 +209,20 @@ Die Tafel zeigt, was ($13.4.1$) meint. Orange liegt das quadratische Modell am
 aktuellen Punkt, sein Scheitel ist die nächste Iterierte, und die blauen Punkte
 zeigen, wohin die Reise geht. Voreingestellt ist Beispiel 13.4.4 mit
 $\cblue{x^{(0)}} = 1$, sodass sich die Zahlen der Tabelle direkt wiederfinden lassen.
-Schieben wir den Startpunkt über $4$ hinaus, so verlässt der erste Schritt den
-Definitionsbereich.
+Ab $\cblue{x^{(0)}} = 4$ verlässt der erste Schritt den Definitionsbereich, wie am
+Ende von Beispiel 13.4.4 gerechnet.
 
 Der zweite Menüpunkt ist die nicht-konvexe Funktion aus Bemerkung 13.4.5. Drei
 Startpunkte lohnen den Klick: $-2$ führt in das *lokale* Minimum bei $-1$, $2{,}5$ in
 das globale bei $2$, und $0{,}5$ landet in einem einzigen Schritt exakt auf dem
 lokalen Maximum bei $0$. Bei $x \approx 1{,}215$ und $x \approx -0{,}549$
 verschwindet die zweite Ableitung; genau treffen wir diese Stellen mit dem Regler
-nicht, aber in ihrer Nähe wird der Schritt sehr lang, und die Iteration braucht
-danach zehn und mehr Schritte, um sich wieder zu fangen.
+nicht, aber in ihrer Nähe wird der Schritt sehr lang. Am lehrreichsten ist
+$\cblue{x^{(0)}} = 1{,}2$: Dort ist $\corange{f''} = -0{,}08$, der erste Schritt
+springt nach $\cred{-25{,}2}$, und insgesamt $14$ Schritte später steht die Iteration
+im *lokalen* Minimum bei $-1$. Der Startpunkt liegt zwischen dem lokalen Maximum bei
+$0$ und dem globalen Minimum bei $2$, und zwar näher am Minimum, doch der Lauf endet
+trotzdem im linken Tal.
 
 <NewtonParabelLab />
 :::
@@ -274,8 +285,10 @@ $$
 
 Ein Schritt, und wir stehen exakt im Minimum. Auch das ist kein Zufall: Für eine
 quadratische Funktion ist die Näherung ($13.4.1$) exakt (Bemerkung 11.4.10), der
-Scheitel der Parabel *ist* das Minimum. Newton löst quadratische Probleme in einem
-Zug, gleichgültig, wo wir starten.
+Scheitel der Parabel *ist* der kritische Punkt der Funktion selbst. Ist die
+Hesse-Matrix dabei positiv definit, so ist dieser Punkt das Minimum, und Newton löst
+das Problem in einem Zug, gleichgültig, wo wir starten. Ist sie es nicht, so trifft
+derselbe eine Schritt eben den Sattel oder das Maximum (Bemerkung 13.4.5).
 :::
 
 :::bemerkung[13.4.7 (Warum Newton die Kondition nicht spürt)]
@@ -296,6 +309,11 @@ und übrig bleibt genau das Bild des alten Schrittes. Newton ist also gegen line
 Koordinatenwechsel unempfindlich, und schlechte Kondition ist nichts anderes als ein
 ungünstig gewähltes Koordinatensystem. Der Gradientenschritt hat diese Eigenschaft
 nicht: Bei ihm bleibt der Faktor $\bA^\top$ stehen.
+
+Gemeint ist damit die Zahl der Schritte, nicht die Rechnung darin. Numerisch bleibt
+die Kondition sehr wohl spürbar: Das lineare System aus Bemerkung 13.4.2 wird mit
+$\kappa(\corange{\bH_f})$ schlechter konditioniert, und der gelöste Schritt trägt
+diesen Fehler weiter ([Abschnitt 4.2](?k=04-fehler#sec-4.2)).
 
 Bezahlt wird das an anderer Stelle. Ein Newton-Schritt braucht die
 $n(n+1)/2$ zweiten Ableitungen, ihren Speicher der Größenordnung $n^2$ und eine
@@ -327,10 +345,19 @@ Schritten geschätzt wird und die Schrittweite $\corange{\gamma_k}$ aus einer
 Liniensuche stammt ([Abschnitt 13.3](#sec-13.3)).
 :::
 
+Die Folie lässt $\corange{\gamma_k}$ in dieser Vorschrift weg und kündigt zwei Folien
+vorher an, BFGS führe die Liniensuche automatisch mit. Beides zusammen geht nicht:
+Ohne Schrittweite ist der erste Schritt aus $\corange{\bB_0} = \bI$ ein ungebremster
+Gradientenschritt, und der kann den Funktionswert erhöhen. Das Widget weiter unten
+führt genau das vor.
+
 Der Unterschied zu ($13.4.2$) ist die Matrix. Newton setzt dort die exakte inverse
 Hesse-Matrix ein und zahlt jedes Mal :k[$O(n^3)$]{#big-o-notation}; ($13.4.3$)
 benutzt eine Näherung, die
-schon da ist, und kostet nur noch eine Matrix-Vektor-Multiplikation.
+schon da ist, und kostet nur noch eine Matrix-Vektor-Multiplikation. Wie diese
+Näherung gebaut wird, unterscheidet die Verfahren der Familie: Häufig ist
+$\corange{\bB_k}$ eine Diagonalmatrix oder eine Einheitsmatrix plus eine Korrektur
+kleinen Ranges, weil beides sich billig speichern und anwenden lässt.
 
 Bleibt die Frage, woher $\corange{\bB_k}$ kommt. Fangen wir in einer Dimension an.
 Dort ist die zweite Ableitung die Ableitung der ersten, und die schätzen wir wie
@@ -357,7 +384,10 @@ $$ {#eq-13.4.4}
 $$
 
 In einer Dimension ist das genau der Differenzenquotient von eben, nur auf den Kopf
-gestellt: $b = s/y$ statt $f'' \approx y/s$. Im $\R^n$ ist ($13.4.4$) ein System aus
+gestellt: $b = s/y$ statt $f'' \approx y/s$. Die Folie stellt beide Fassungen
+unmittelbar untereinander und nennt beide „Sekantenbedingung", ohne den Kehrwert zu
+erwähnen; wer das überliest, hält $\corange{\bB_k}$ für eine Näherung der
+Hesse-Matrix statt ihrer Inversen. Im $\R^n$ ist ($13.4.4$) ein System aus
 $n$ Gleichungen für die $n(n+1)/2$ Einträge einer symmetrischen Matrix, also weit
 unterbestimmt. Die verbleibende Freiheit nutzen wir, um $\corange{\bB_{k+1}}$
 möglichst wenig von $\corange{\bB_k}$ abweichen zu lassen. Die bekannteste Wahl ist
@@ -381,6 +411,19 @@ das *BFGS-Update*, benannt nach Broyden, Fletcher, Goldfarb und Shanno.
 Die Fußnote der Folie schreibt „Shannon" und meint damit vermutlich den
 Informationstheoretiker Claude Shannon. Der vierte Namensgeber ist aber David
 Shanno, der die Formel 1970 unabhängig von den drei anderen veröffentlicht hat.
+
+Der Nenner von $\rho_k$ hat eine anschauliche Bedeutung, die die Folie in Klammern
+mitgibt. Auf einer Quadrik mit Hesse-Matrix $\corange{\bH}$ ist
+$\corange{\by_k} = \corange{\bH}\cblue{\bs_k}$, also
+
+$$
+\frac{\corange{\by_k}^\top \cblue{\bs_k}}{\cblue{\bs_k}^\top \cblue{\bs_k}}
+= \frac{\cblue{\bs_k}^\top \corange{\bH}\, \cblue{\bs_k}}{\cblue{\bs_k}^\top \cblue{\bs_k}} ,
+$$
+
+und das ist die Krümmung in Richtung $\cblue{\bs_k}$. Die Krümmungsbedingung
+$\corange{\by_k}^\top \cblue{\bs_k} > 0$ aus Bemerkung 13.4.11 sagt damit schlicht:
+Entlang des gerade gegangenen Schrittes ist $\cblue{f}$ nach oben gekrümmt.
 
 Der Ausdruck ($13.4.5$) sieht schlimmer aus, als er ist. Beide Klammern sind
 Einheitsmatrizen plus eine Rang-1-Störung, der letzte Summand ist ebenfalls vom
@@ -441,8 +484,10 @@ $$
 $\corange{\bB_{k+1}}$ nach ($13.4.5$) auch. Ist $\corange{\bB_k}$ zusätzlich positiv
 definit und gilt die Krümmungsbedingung
 $\corange{\by_k}^\top \cblue{\bs_k} > 0$, so bleibt auch die Definitheit erhalten.
-Das ist wichtig, denn nur dann zeigt
-$-\corange{\bB_k}\corange{\nabla f(\bx^{(k)})^\top}$ überhaupt bergab. Erzwingen
+Das ist wichtig, denn positiv definites $\corange{\bB_k}$ garantiert
+$\corange{\nabla f}\,\corange{\bB_k}\corange{\nabla f^\top} > 0$ und damit, dass
+$-\corange{\bB_k}\corange{\nabla f(\bx^{(k)})^\top}$ bergab zeigt, und zwar für jeden
+Gradienten, der auftreten kann. Erzwingen
 lässt sich die Krümmungsbedingung durch eine Liniensuche, die neben dem
 Abstiegskriterium aus [Abschnitt 13.3](#sec-13.3) auch eine Bedingung an die
 Steigung im neuen Punkt stellt.
@@ -468,18 +513,23 @@ Zahlen einigen Hunderttausend gegenüber, also drei Größenordnungen weniger.
 :::vertiefung[BFGS Schritt für Schritt]
 Wir sehen dem Verfahren beim Lernen zu. Minimiert wird die Quadrik
 $\cblue{f(\bx)} = 0{,}5\,x_1^2 + 2{,}5\,x_2^2$ mit der Hesse-Matrix
-$\diag(1; 5)$, gestartet wird bei $(5; 1)$ mit $\corange{\bB_0} = \bI$. Der erste
-Schritt ist deshalb ein reiner Gradientenschritt.
+$\diag(1; 5)$, gestartet wird bei $(5; 1)$ mit $\corange{\bB_0} = \bI$. Über die
+Krümmung weiß das Verfahren zu diesem Zeitpunkt nichts, der erste Schritt ist also
+ein reiner Gradientenschritt.
 
-Mit $\corange{\gamma_k} = 1$ schießt dieser erste Schritt über das Tal hinaus,
-$\cblue{f}$ steigt von $15$ auf $40$. Danach fängt sich das Verfahren, und
-$\corange{\bB_k}$ nähert sich der inversen Hesse-Matrix $\diag(1; 0{,}2)$ an, ohne
-sie zu erreichen. Setzen wir das Häkchen für die exakte Schrittweite, so steht die
-Iteration nach *zwei* Schritten exakt im Minimum, und $\corange{\bB_2}$ ist dann
-genau $\diag(1; 0{,}2)$: Auf einer Quadrik im $\R^n$ ist BFGS mit exakter
-Liniensuche nach höchstens $n$ Schritten fertig. Die letzte Zeile des Ablesefelds
-zeigt außerdem, dass die Sekantenbedingung in jedem Schritt bis auf Rundungsfehler
-erfüllt ist, wie Satz 13.4.10 es verspricht.
+Die letzte Zeile des Ablesefelds prüft in jedem Schritt die Sekantenbedingung nach:
+Das Residuum $\left\|\corange{\bB_k\by} - \cblue{\bs}\right\|$ bleibt auf
+Rundungsfehlerniveau, wie Satz 13.4.10 es verspricht. Was dagegen frei ist, ist die
+Schrittweite, und daran hängt das Verhalten. Lassen wir $\corange{\gamma_k} = 1$
+stehen, so ist der erste Schritt zu lang, $\cblue{f}$ steigt von $15$ auf $40$, und
+das Verfahren braucht danach mehrere Schritte, um sich zu fangen; $\corange{\bB_k}$
+sammelt dabei Krümmung ein, bleibt von $\diag(1; 0{,}2)$ aber sichtbar entfernt.
+Setzen wir das Häkchen für die exakte Schrittweite, so liefert jeder Schritt eine
+Sekantenbedingung für eine neue Richtung, und im $\R^2$ sind nach zwei Schritten
+alle Richtungen vergeben: Die Iterierte sitzt im Minimum, und $\corange{\bB_2}$
+stimmt auf allen gezeigten Stellen mit $\diag(1; 0{,}2)$ überein. Auf einer Quadrik
+im $\R^n$ ist BFGS mit exakter Liniensuche deshalb nach höchstens $n$ Schritten
+fertig.
 
 <BfgsStepper />
 :::
@@ -515,7 +565,8 @@ haben dieselbe Bauform
 $$
 \cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} - \corange{\bM_k}\,\corange{\nabla f(\bx^{(k)})^\top} ,
 \qquad
-\corange{\bM_k} \in \bigl\{\corange{\gamma}\bI,\ \corange{\bB_k},\ \corange{\bH_f(\bx^{(k)})^{-1}}\bigr\} ,
+\corange{\bM_k} \in \bigl\{\corange{\gamma}\bI,\ \corange{\gamma_k}\corange{\bB_k},\
+\corange{\bH_f(\bx^{(k)})^{-1}}\bigr\} ,
 $$
 
 sind also allesamt Fixpunktiterationen für $\corange{\nabla f(\bx)} = \bnull^\top$
@@ -529,8 +580,9 @@ Gradientenabstieg die Grundlage der Optimierer für
 :k[neuronale Netze]{#neural-network}, BFGS der
 Standardkompromiss für mittelgroße glatte Probleme, und Newton steckt in der
 :k[Likelihood]{#likelihood}-Inferenz: Das Fisher-Scoring für verallgemeinerte lineare Modelle ist ein
-Newton-Verfahren mit erwarteter statt beobachteter Hesse-Matrix
-(Bemerkung 11.4.13), und auch das Boosting-Verfahren XGBoost baut seine Bäume aus
+Newton-Verfahren mit erwarteter statt beobachteter Hesse-Matrix und läuft dort unter
+dem Namen *iterativ gewichtete kleinste Quadrate* (IWLS oder IRLS, Bemerkung 11.4.13);
+auch das Boosting-Verfahren XGBoost baut seine Bäume aus
 Gradient und zweiter Ableitung. In `R` ist zu beachten, dass `optim()` ohne weitere
 Angabe stets Nelder-Mead benutzt; BFGS bekommen wir mit `method = "BFGS"`, und ein
 mitgelieferter Gradient ändert die Methode nicht von selbst. Die Einzelheiten dazu
@@ -555,7 +607,8 @@ dieselbe Richtung und addieren sich auf.
 :::algorithmus[13.4.13 (Gradientenabstieg mit Heavy-Ball-Momentum)]
 Gegeben seien $f\colon \R^n \to \R$ stetig differenzierbar, ein Startpunkt
 $\cblue{\bx^{(0)}}$, eine Schrittweite $\corange{\gamma} > 0$ und ein
-Momentumparameter $\alpha \in [0, 1)$. Setze $\bv^{(0)} = \bnull$ und für
+Momentumparameter $\alpha \in [0, 1)$. Setze die *Geschwindigkeit*
+$\bv^{(0)} = \bnull$, die im Folgenden die bisherigen Schritte aufsammelt, und für
 $k = 0, 1, 2, \dots$
 
 $$ {#eq-13.4.6}
@@ -605,7 +658,7 @@ als den reinen Gradientenabstieg. Das Widget führt beides vor.
 Satz. Für allgemeine glatte, strikt konvexe Funktionen ist sie es nicht: Es gibt
 Beispiele, auf denen Heavy-Ball mit den für Quadriken optimalen Parametern in einen
 Zyklus läuft und gar nicht konvergiert. Die eng verwandte Variante von Nesterov
-trägt dort eine bewiesene Schranke. Die Folienzeile „bei streng konvexen Funktionen
+trägt dort eine bewiesene Schranke. Die Folienzeile „bei strikt konvexen Funktionen
 beschleunigt Momentum die Konvergenz signifikant" ist also als Faustregel zu lesen,
 nicht als Theorem.
 
@@ -652,9 +705,11 @@ $$ {#eq-13.4.7}
 $$
 
 wobei $L$ den Fehler einer einzelnen Vorhersage misst und $N$ die Zahl der
-Beobachtungen ist. Das Kleinste-Quadrate-Problem, die negative Log-Likelihood und
-der Kreuzentropie-Verlust sind alle von dieser Gestalt
-([Abschnitt 13.1](#sec-13.1)).
+Beobachtungen ist. Beispiel 13.1.4 hat diese Gestalt schon aufgestellt, und
+Beispiel 13.2.9 rechnet mit dem Kleinste-Quadrate-Verlust und der negativen
+Log-Likelihood zwei ihrer Vertreter durch. Auch der Kreuzentropie-Verlust gehört
+dazu: Er ist die negative Log-Likelihood eines Bernoulli-Modells, also der Verlust
+der logistischen Regression.
 
 Der Gradient erbt die Summe:
 
@@ -724,11 +779,14 @@ unabhängig von der Datenmenge. Dafür ist die Richtung nur im Mittel richtig. D
 Iterierten laufen nicht mehr glatt bergab, sondern zappeln; in der Nähe des Minimums
 bleibt bei fester Schrittweite ein Rauschband, das nicht kleiner wird.
 
-*Mini-Batches.* In der Praxis ziehen wir nicht eine Beobachtung, sondern $n$ davon
-und mitteln deren Gradienten. Der Schätzer bleibt unverzerrt, und bei unabhängigen
-Ziehungen fällt seine Varianz auf den $n$-ten Teil, die Standardabweichung also auf
-den $\sqrt n$-ten. Das ist die entscheidende Buchführung: Der Aufwand wächst linear in
-$n$, die Genauigkeit nur mit $\sqrt n$. Ein Stapel von $32$ statt einer einzelnen
+*Mini-Batches.* In der Praxis ziehen wir nicht eine Beobachtung, sondern einen ganzen
+Stapel von $b$ Stück und mitteln deren Gradienten; an die Stelle des einzelnen
+Summanden in ($13.4.8$) tritt dann dieses Mittel. Auf der Folie heißt die
+Stapelgröße $n$; wir schreiben $b$, weil $n$ in diesem Abschnitt schon die Zahl der
+Parameter ist. Der Schätzer bleibt unverzerrt, und bei unabhängigen
+Ziehungen fällt seine Varianz auf den $b$-ten Teil, die Standardabweichung also auf
+den $\sqrt b$-ten. Das ist die entscheidende Buchführung: Der Aufwand wächst linear in
+$b$, die Genauigkeit nur mit $\sqrt b$. Ein Stapel von $32$ statt einer einzelnen
 Beobachtung kostet das $32$-fache und drückt das Rauschen nur um den Faktor
 $5{,}7$. Übliche Größen liegen zwischen $32$ und $256$, und diese Wahl folgt
 weniger der Statistik als der Hardware, die viele gleichartige Rechnungen
@@ -840,9 +898,9 @@ Die Folie lässt offen, worüber gemittelt wird.
 
 ::::
 
-*Vertiefung: Heath §6.5 behandelt Gradientenabstieg und Newton-Verfahren für die
-unbeschränkte Optimierung, §6.5.4 die Quasi-Newton- und Sekanten-Updates samt BFGS,
-und §5.6 die Newton-Verfahren für nichtlineare Gleichungssysteme, aus denen sie
-hervorgehen. Zum stochastischen Gradientenabstieg und seinen Varianten führt der
+*Vertiefung: Heath §6.5.3 behandelt das Newton-Verfahren für die unbeschränkte
+Optimierung, §6.5.4 die Quasi-Newton-Verfahren im Überblick und §6.5.5 die
+Sekanten-Updates samt BFGS; §5.6 zeigt die Newton-Verfahren für nichtlineare
+Gleichungssysteme, aus denen sie hervorgehen. Zum stochastischen Gradientenabstieg und seinen Varianten führt der
 MSc-Kurs [Optimization for ML](https://slds-lmu.github.io/website_optimization/)
 weiter.*

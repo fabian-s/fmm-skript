@@ -21,10 +21,13 @@ import { niceTicks } from "../../../lib";
  * Farbcode Kapitel 12: Menge blau, Projektion und Abstandsstrecke orange
  * (ausgezeichneter Punkt), Testpunkte der Menge grün.
  *
- * Per node nachgerechnet (Scratchpad check-proj-s123.mjs): über je 200000
- * Zufallslagen ist <x − x̂, y − x̂> ≤ 0 für alle y der Menge (größter Wert
- * exakt 0), und kein Punkt der Menge unterbietet den Abstand d. Beispiel im
- * Text: x = (1,6; 1,2) hat ‖x‖ = 2, Projektion (0,8; 0,6), d = 1.
+ * Per node nachgerechnet (Scratchpad rev123-proj.mjs) über ALLE 15842 mit dem
+ * 0,05-Raster erreichbaren Lagen von x, je Menge: max ⟨x − x̂, y − x̂⟩ über
+ * die abgetasteten Randpunkte bleibt ≤ 1,4e−15 (rechnerisch null, angenommen
+ * in y = x̂), und kein Randpunkt unterbietet d um mehr als 4,5e−16. Gegenprobe
+ * mit je 400000 gleichverteilten Punkten der vollen Menge: keiner liegt näher
+ * an x als x̂. Beispiel im Text: x = (1,6; 1,2) hat ‖x‖ = 2, Projektion
+ * (0,8; 0,6), d = 1; das ist zugleich die Voreinstellung „x nach außen".
  */
 
 const BLAU = "#0072B2"; // die konvexe Menge

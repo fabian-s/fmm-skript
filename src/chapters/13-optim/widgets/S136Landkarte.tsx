@@ -10,15 +10,22 @@ import { M } from "../../../lib";
  * Startpunkte enden in verschiedenen Minima; genau das meint "falsche
  * Konvergenz" bei optim().
  *
- * Per node verifiziert: Start (-1; -0,5) endet im globalen Minimum (0; 0)
- * mit f = 0, Startpunkte (-1; 1) und (1,2; 0,8) enden im lokalen Minimum
- * (0; 1,036) mit f = 0,108. Alles deterministisch, kein Math.random.
- * Farbcode Kapitel 13: Trajektorie blau, Endpunkt gruen, Startpunkt orange.
+ * Per node verifiziert (rev136-b/-c.mjs): die drei Voreinstellungen sind die
+ * Startpunkte der Folien. (-1; -0,5) endet im globalen Minimum (0; 0) mit
+ * f = 0, (-1; 1) im oberen lokalen Minimum (0; 1,0357) und (-0,5; -1) im
+ * unteren (0; -1,0357), beide mit f = 0,108456. Ueber alle 321x321
+ * anklickbaren Startpunkte gibt es genau diese drei Grenzwerte, der Pfad
+ * verlaesst das Fenster nie, und f(Ende) ist entweder 0 oder 0,1085 - die
+ * Schwelle 0,01 im Statustext trennt also sauber. Kein Math.random.
+ * Farbcode Kapitel 13: Trajektorie blau, Endpunkt (Grenzwert) gruen,
+ * Startpunkt violett (freie Farbe; orange ist im Kapitel den Gradienten-
+ * und Suchrichtungen vorbehalten). Die Hoehenskala bleibt neutral grau,
+ * damit sie nicht mit dem Blau der Iterierten kollidiert.
  */
 
 const BLAU = "#0072B2";
 const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
+const VIOLETT = "#9E57D5";
 
 const f = (x1: number, x2: number) => {
   const u = x1 * x1 + Math.sin(3 * x2);
@@ -57,20 +64,17 @@ const sy = (y: number) => (1 - (y + LIM) / (2 * LIM)) * W;
 export function OptimLandkarte() {
   const [start, setStart] = useState<[number, number]>([-1, -0.5]);
   const raster = useMemo(() => {
-    let fmax = 0;
     const werte: number[][] = [];
     for (let i = 0; i < N; i++) {
       const zeile: number[] = [];
       for (let j = 0; j < N; j++) {
         const x1 = -LIM + ((j + 0.5) / N) * 2 * LIM;
         const x2 = LIM - ((i + 0.5) / N) * 2 * LIM;
-        const v = f(x1, x2);
-        zeile.push(v);
-        if (v > fmax) fmax = v;
+        zeile.push(f(x1, x2));
       }
       werte.push(zeile);
     }
-    return { werte, fmax };
+    return werte;
   }, []);
   const lauf = useMemo(() => abstieg(start), [start]);
 
@@ -86,11 +90,11 @@ export function OptimLandkarte() {
     <div className="my-2">
       <p className="mb-2 text-sm">
         Helle Flächen liegen tief, dunkle hoch. Ein Klick in die Karte setzt
-        den Startpunkt (orange), von dort läuft Gradientenabstieg mit dem
-        korrekten analytischen Gradienten in <M>{"3000"}</M> Schritten
-        (<M>{"\\gamma = 0{,}05"}</M>, blaue Spur) bis zum Endpunkt (grün).
+        den Startpunkt (violett), von dort läuft Gradientenabstieg mit dem
+        korrekten analytischen Gradienten über <M>{"3000"}</M> Schritte
+        (<M>{"\\gamma = 0{,}05"}</M>, blaue Spur) bis zum Grenzwert (grün).
         Das globale Minimum liegt bei <M>{"(0;\\ 0)"}</M> mit{" "}
-        <M>{"f = 0"}</M>; daneben gibt es lokale Mulden, etwa bei{" "}
+        <M>{"f = 0"}</M>; daneben gibt es zwei lokale Mulden bei{" "}
         <M>{"(0;\\ \\pm 1{,}04)"}</M> mit <M>{"f \\approx 0{,}11"}</M>. Wo wir
         starten, entscheidet, wo wir ankommen.
       </p>
@@ -99,7 +103,7 @@ export function OptimLandkarte() {
           [
             [-1, -0.5],
             [-1, 1],
-            [1.2, 0.8],
+            [-0.5, -1],
           ] as [number, number][]
         ).map((p) => (
           <button
@@ -119,8 +123,10 @@ export function OptimLandkarte() {
           onClick={klick}
           className="cursor-crosshair rounded border border-slate-300"
         >
-          {raster.werte.map((zeile, i) =>
+          {raster.map((zeile, i) =>
             zeile.map((v, j) => {
+              // f reicht im Fenster bis 3,09; oberhalb von 2,2 wird die
+              // Skala abgeschnitten, sonst verschwinden die flachen Mulden.
               const t = Math.min(1, v / 2.2);
               const hell = Math.round(248 - t * 130);
               return (
@@ -130,7 +136,7 @@ export function OptimLandkarte() {
                   y={i * zelle}
                   width={zelle + 0.5}
                   height={zelle + 0.5}
-                  fill={`rgb(${hell - 14}, ${hell}, 255)`}
+                  fill={`rgb(${hell}, ${hell}, ${hell})`}
                 />
               );
             }),
@@ -141,7 +147,7 @@ export function OptimLandkarte() {
             stroke={BLAU}
             strokeWidth={2}
           />
-          <circle cx={sx(start[0])} cy={sy(start[1])} r={5} fill={ORANGE} />
+          <circle cx={sx(start[0])} cy={sy(start[1])} r={5} fill={VIOLETT} />
           <circle
             cx={sx(lauf.ende[0])}
             cy={sy(lauf.ende[1])}
@@ -159,8 +165,8 @@ export function OptimLandkarte() {
           <p className="mt-1 font-mono text-xs">f(Ende) = {fmt(lauf.fEnde, 4)}</p>
           <p className="mt-2 text-xs" style={{ color: "#64748b" }}>
             {lauf.fEnde < 0.01
-              ? "Das ist das globale Minimum."
-              : "Das ist ein lokales Minimum, nicht das globale. Ein anderer Startpunkt findet einen tieferen Wert."}
+              ? "Hier sind wir im globalen Minimum gelandet."
+              : "Hier sind wir in einem lokalen Minimum gelandet, nicht im globalen. Von einem anderen Startpunkt aus finden wir einen tieferen Wert."}
           </p>
         </div>
       </div>

@@ -111,7 +111,12 @@ const BEISPIELE = [KONVEX, NICHTKONVEX];
 
 type Ausgang = "konvergiert" | "flach" | "undefiniert" | "weg" | "maxIter";
 
-/** Newton-Iteration für f′ = 0; bricht bei singulärer Krümmung ab. */
+/**
+ * Newton-Iteration für f′ = 0; bricht bei singulärer Krümmung ab. Über beide
+ * Reglerraster (44 bzw. 101 Zustände) treten nur die Ausgänge "konvergiert"
+ * und "undefiniert" auf; "flach", "weg" und "maxIter" sind reiner
+ * Rechenschutz und bekommen deshalb nur je eine kurze Zeile.
+ */
 function newtonLauf(b: Beispiel, x0: number): { xs: number[]; ausgang: Ausgang } {
   const xs = [x0];
   let x = x0;
@@ -179,15 +184,19 @@ export function NewtonParabelLab() {
   const globalesMin = b.kritisch.find((k) => k.global)!;
   const fehler = xs.map((x) => Math.abs(x - (getroffen ? getroffen.x : globalesMin.x)));
 
+  // Wird der erste Schritt sehr lang, so ist f″ am Startpunkt fast null. Auf
+  // dem Reglerraster ist das bei x0 = −0,55 (f″ = 0,0075) und x0 = 1,20
+  // (f″ = −0,08) der Fall; exakt null wird f″ dort nie, deshalb ist der
+  // "flach"-Ausgang unten reiner Rechenschutz und der Hinweis hängt am Sprung.
+  const fastFlach = scheitel !== null && Number.isFinite(scheitel) && Math.abs(scheitel - x0) > 20;
+
   let urteil: string;
   if (ausgang === "flach") {
-    urteil =
-      "An dieser Stelle verschwindet f″. Die Parabel aus Algorithmus 13.4.1 hat dann keinen tiefsten Punkt mehr, den wir ansteuern könnten, und die Division im Newton-Schritt ist nicht ausführbar. Das ist der eindimensionale Fall der Voraussetzung, dass die Hesse-Matrix invertierbar sein muss.";
+    urteil = "Hier verschwindet f″, die Division im Newton-Schritt ist also nicht ausführbar.";
   } else if (ausgang === "undefiniert") {
     urteil = `Nach ${xs.length - 1} Schritt${xs.length === 2 ? "" : "en"} steht die Iteration bei x = ${fmt(ziel, 3)}, und dort ist f gar nicht mehr erklärt. Newton konvergiert nur lokal: Weit vom Ziel entfernt taugt die Parabel nicht als Modell, und der Schritt kann überall hin zeigen.`;
   } else if (ausgang === "weg") {
-    urteil =
-      "Die Iterierten laufen davon. Ist die Krümmung an der aktuellen Stelle fast null, so wird der Schritt beliebig lang, und das Modell hat mit der Funktion nichts mehr zu tun.";
+    urteil = "Die Iterierten laufen davon; die Rechnung bricht hier ab.";
   } else if (xs.length === 1) {
     urteil = `Hier ist der Gradient schon null, die Iteration steht also von Anfang an still. ${
       getroffen && getroffen.art === "max"
@@ -202,6 +211,10 @@ export function NewtonParabelLab() {
     urteil = `Die Iteration erreicht das globale Minimum x⋆ = ${fmt(globalesMin.x, 2)} in ${xs.length - 1} Schritten. In der Nähe des Ziels zeigt die Fehlerspalte die quadratische Konvergenz: Der Quotient eₖ/eₖ₋₁² bleibt beschränkt, die Zahl der richtigen Stellen verdoppelt sich also grob von Schritt zu Schritt. Weiter draußen kann es dagegen dauern, bis die Iteration überhaupt in diese Nähe kommt.`;
   } else {
     urteil = `Nach ${xs.length - 1} Schritten steht die Iteration bei x = ${fmt(ziel, 4)} und ist noch nicht zur Ruhe gekommen.`;
+  }
+
+  if (fastFlach && scheitel !== null) {
+    urteil += ` Am Startpunkt ist f″ = ${fmt(h0, 4)} beinahe null: Die Parabel ist dort fast eine Gerade, ihr Scheitel liegt entsprechend weit draußen, und der erste Schritt springt gleich nach x = ${fmt(scheitel, 1)}. Von dort muss sich die Iteration erst wieder heranarbeiten. Das ist der eindimensionale Fall der Voraussetzung, dass die Hesse-Matrix invertierbar sein muss: Fast singulär genügt schon, um den Schritt unbrauchbar zu machen.`;
   }
 
   const zeigeModell = modell && Number.isFinite(g0) && Number.isFinite(h0);

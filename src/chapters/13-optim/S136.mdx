@@ -5,8 +5,9 @@ import { OptimLandkarte } from "./widgets/S136Landkarte";
 Zum Abschluss übersetzen wir die Verfahren dieses Kapitels in R-Aufrufe. Die
 beiden Arbeitspferde sind `optimize()` für univariate und `optim()` für
 multivariate Zielfunktionen. Die Ausgaben der Aufrufe drucken wir hier nicht
-ab, sondern rechnen alles im Widget selbst nach; was R meldet, lässt sich
-damit Punkt für Punkt vorhersagen.
+ab; stattdessen rechnen wir die Beispielfunktion im Widget selbst nach. Das
+Widget läuft mit Gradientenabstieg und nicht mit den Verfahren aus `optim()`,
+es zeigt also die Landschaft und ihre Mulden, nicht den Iterationsweg von R.
 
 ### Univariat: optimize
 
@@ -15,21 +16,30 @@ f <- function(x) (x - 3)^2
 optimize(f, interval = c(0, 10))
 ```
 
-Der Aufruf sucht das Minimum von $f$ auf dem Intervall $[0, 10]$ und findet
-es bis auf Toleranz beim analytischen Minimum $\cgreen{x^\star = 3}$ mit
-$f(x^\star) = 0$.
+Der Aufruf sucht das Minimum von $f$ auf dem Intervall $[0, 10]$. Das
+analytische Minimum ist $\cgreen{x^\star = 3}$ mit $f(x^\star) = 0$, und
+weiter als bis auf das voreingestellte `tol` kommt der Aufruf nicht heran:
+Es steht auf `.Machine$double.eps^0.25`, also auf rund $1{,}2\cdot 10^{-4}$.
 
 :::bemerkung[13.6.1 (Golden Section Search)]
-Intern verwendet `optimize()` die *Golden Section Search*, eine Verwandte
-der :k[Bisektion]{#bisection} aus [Abschnitt 13.1](#sec-13.1): Statt eines
+Im Kern verwendet `optimize()` die *Golden Section Search*, eine Verwandte
+der Bisektion aus [Abschnitt 13.1](#sec-13.1): Statt eines
 Vorzeichenwechsels von $f$ schachtelt sie ein Minimum ein. Dazu hält sie
 zwei innere Testpunkte, die das Intervall im Verhältnis des goldenen
 Schnitts teilen; in jedem Schritt fällt das Teilintervall weg, das das
 Minimum nicht enthalten kann, und ein einziger neuer Funktionswert genügt,
 weil der andere Testpunkt wiederverwendet wird. Das Intervall schrumpft pro
-Schritt um den Faktor $0{,}618$, ganz ohne Ableitungen; verlässlich ist das
+Schritt auf das $0{,}618$-fache, ganz ohne Ableitungen; verlässlich ist das
 für *unimodale* Funktionen, also solche mit genau einer Talsohle im
 Startintervall.
+
+Die Folie nennt nur diesen Baustein. Tatsächlich kombiniert `optimize()` ihn
+mit einer parabolischen Interpolation: Solange sich die drei zuletzt
+berechneten Punkte gutartig verhalten, springt der nächste Testpunkt in den
+Scheitel der Parabel durch sie, und erst wenn dieser Sprung aus dem
+eingeschachtelten Intervall führt oder zu wenig einbringt, greift wieder der
+goldene Schnitt. Die Einschachtelung bleibt dabei erhalten, der Aufruf ist
+also nie schlechter als die reine Golden Section Search.
 :::
 
 ### Multivariat: optim
@@ -43,9 +53,11 @@ $$
 
 deren erster Term entlang der Kurven $x_1^2 + \sin 3x_2 = 0$ verschwindet
 und deren Regularisierungsterme die Werte zum Ursprung hin senken. Sie hat
-das globale Minimum $\cgreen{\bx^\star = (0;\ 0)}$ mit $f(\bx^\star) = 0$
-und daneben lokale Mulden, etwa bei $(0;\ \pm 1{,}04)$ mit
-$f \approx 0{,}11$ (per Gradientenabstieg nachgerechnet, siehe Widget).
+das globale Minimum $\cgreen{\bx^\star = (0;\ 0)}$ mit $f(\bx^\star) = 0$,
+und im Fenster des Widgets liegen daneben genau zwei lokale Mulden, bei
+$(0;\ \pm 1{,}04)$ mit $f \approx 0{,}11$. Die Regularisierung verschiebt
+sie leicht: Der erste Term verschwindet bei $x_2 = \pm\pi/3 = \pm 1{,}047$,
+die Talsohle liegt bei $\pm 1{,}036$.
 
 ```r
 f <- function(x) log1p((x[1]^2 + sin(3*x[2]))^2) +
@@ -58,15 +70,27 @@ Ohne `method`-Argument verwendet `optim()` das ableitungsfreie
 :k[Nelder-Mead-Verfahren]{#nelder-mead} aus
 [Abschnitt 13.3](#sec-13.3); mit `method = "BFGS"` das
 Quasi-Newton-Verfahren aus [Abschnitt 13.4](#sec-13.4), dessen Gradienten
-es mangels `gr`-Argument per finiter Differenzen schätzt. Von diesem
-Startpunkt aus landen beide im globalen Minimum.
+es mangels `gr`-Argument per finiter Differenzen schätzt. Ein über `gr`
+mitgeliefertes Gradientenfeld wechselt die Methode übrigens nicht von
+selbst; Nelder-Mead bleibt die Voreinstellung, bis `method` etwas anderes
+sagt. Von diesem Startpunkt aus landen beide Verfahren im globalen Minimum.
 
 :::bemerkung[13.6.2 (Falsche Konvergenz, und keiner warnt)]
-Zwei Fallen zeigt schon dieses kleine Beispiel.
+Zwei Fallen zeigt schon dieses kleine Beispiel. Die Folien führen sie an
+drei Aufrufen vor:
 
-*Lokale Minima.* Vom Startpunkt $(-1;\ 1)$ aus läuft die Optimierung in die
-lokale Mulde bei $(0;\ 1{,}04)$ und meldet Konvergenz, obwohl der gefundene
-Wert $f \approx 0{,}11$ über dem globalen Minimum $0$ liegt. Der
+```r
+optim(c(-1, 1), f)                                # Nelder-Mead
+optim(c(-0.5, -1), f, method = "BFGS")            # BFGS
+optim(c(-1, -0.5), f, control = list(maxit = 50)) # abgeschnitten
+```
+
+*Lokale Minima.* Die Beispielfunktion hat neben dem globalen Minimum zwei
+spiegelbildliche Mulden bei $(0;\ \pm 1{,}04)$. Vom Startpunkt $(-1;\ 1)$
+aus liegt die obere davon im Weg, von $(-0{,}5;\ -1)$ aus die untere; der
+Gradientenabstieg im Widget landet von beiden Startpunkten genau dort. Das
+Verfahren meldet dann Konvergenz, obwohl der gefundene Wert
+$f \approx 0{,}11$ über dem globalen Minimum $0$ liegt. Der
 `convergence`-Code von `optim()` sagt nur, dass das *Verfahren* zum
 Stillstand kam, nicht, dass das Ergebnis global optimal ist
 ([Abschnitt 13.2](#sec-13.2)).
@@ -81,9 +105,12 @@ prüfen heißt hier: den Rückgabewert lesen, nicht auf `warnings()` warten
 
 :::vertiefung[Die Landkarte zur Beispielfunktion]
 Das Widget zeichnet die Funktion aus ($13.6.1$) als Karte und lässt uns den
-Startpunkt setzen. Die drei Voreinstellungen entsprechen den Startpunkten
-der Folien: Von $(-1;\ -0{,}5)$ aus geht es ins globale Minimum, von
-$(-1;\ 1)$ und $(1{,}2;\ 0{,}8)$ aus in die lokale Mulde.
+Startpunkt setzen. Die drei Voreinstellungen sind die Startpunkte der
+Folien: Von $(-1;\ -0{,}5)$ aus geht es ins globale Minimum, von
+$(-1;\ 1)$ in die obere und von $(-0{,}5;\ -1)$ in die untere Mulde. Weil
+das Widget mit Gradientenabstieg rechnet, sind das die Einzugsgebiete
+*dieses* Verfahrens; Nelder-Mead und BFGS laufen andere Wege und können
+deshalb an anderen Startpunkten umkippen als die blaue Spur.
 
 <OptimLandkarte />
 :::
@@ -91,18 +118,19 @@ $(-1;\ 1)$ und $(1{,}2;\ 0{,}8)$ aus in die lokale Mulde.
 ### Der analytische Gradient
 
 Wer den Gradienten kennt, sollte ihn `optim()` übergeben: Finite Differenzen
-kosten pro Gradient $n$ zusätzliche Funktionsauswertungen und bringen
-Rundungsfehler mit ([Kapitel 4](?k=04-fehler)); der analytische Gradient ist
-schneller und genauer.
+kosten pro Gradient zusätzliche Funktionsauswertungen, bei einseitigen
+Differenzen $n$ und bei zentralen $2n$, und sie bringen Rundungsfehler mit
+([Kapitel 4](?k=04-fehler#sec-4.1)); der analytische Gradient ist schneller
+und genauer.
 
-:::beispiel[13.6.3 (Kettenregel fuer die Beispielfunktion)]
+:::beispiel[13.6.3 (Kettenregel für die Beispielfunktion)]
 Mit $u(\bx) = x_1^2 + \sin 3x_2$ ist $f = \log(1 + u^2) + 0{,}1x_1^2 +
 0{,}1x_2^2$, und die :k[Kettenregel]{#chain-rule}
 ([Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2)) liefert wegen
 $\tfrac{d}{du}\log(1 + u^2) = \tfrac{2u}{1 + u^2}$:
 
 $$
-\nabla f(\bx) = \left(
+\corange{\nabla f(\bx)} = \left(
 \frac{4 x_1 u}{1 + u^2} + 0{,}2\,x_1 ,\quad
 \frac{6 \cos(3x_2)\, u}{1 + u^2} + 0{,}2\,x_2
 \right) .
@@ -127,18 +155,32 @@ optim(c(-1, 0.5), f, gr = grad_f, method = "L-BFGS-B",
 :::
 
 :::bemerkung[13.6.4 (Der Klammerfehler im Folien-Gradienten)]
-Der R-Code der Folien berechnet den inneren Faktor als
-`1 / (1 + (x[1]^2 + sin(3*x[2])))^2`, also $1/(1 + u)^2$. Richtig ist
-$2u/(1 + u^2)$; neben dem fehlenden Faktor $2u$ steht das Quadrat an der
-falschen Stelle, denn `^` bindet in R stärker als `/`. Am Startpunkt
+Der R-Code der Folien baut denselben Gradienten aus zwei Stücken zusammen:
+die äußere Ableitung als Hilfsgröße `log1p_dx`, die inneren Ableitungen
+$4x_1u$ beziehungsweise $6\cos(3x_2)\,u$ davor. Der Bauplan stimmt, und
+gebraucht wird dafür $1/(1 + u^2)$. Die Folie schreibt aber
+
+```r
+log1p_dx <- 1 / (1 + (x[1]^2 + sin(3*x[2])))^2   # = 1/(1 + u)^2
+```
+
+Das Quadrat steht an der falschen Stelle: nicht $u$ wird quadriert, sondern
+die ganze Klammer $1 + u$. Eine schließende Klammer zu früh, mehr ist es
+nicht, und weil `^` in R stärker bindet als `/`, greift das Quadrat auch
+wirklich auf $(1 + u)$ und nicht auf den Bruch. Am Startpunkt
 $(-1;\ -0{,}5)$ fällt das kaum auf, weil dort zufällig $u \approx 0{,}0025$
-winzig ist und beide Ausdrücke fast $1$ ergeben. Am Punkt $(1;\ 0{,}5)$
-liefert der Folien-Code dagegen $(1{,}09;\ 0{,}19)$ statt des korrekten
-Gradienten $(1{,}80;\ 0{,}27)$, den der numerische Differenzenquotient
-bestätigt. Ein falscher Gradient bremst BFGS bestenfalls; schlimmstenfalls
-konvergiert es an eine Stelle, die gar kein kritischer Punkt ist. Der
-Differenzenquotienten-Vergleich aus [Kapitel 10](?k=10-ableitungen-1#sec-10.4)
-ist die Standardprobe für jeden von Hand abgeleiteten Gradienten.
+winzig ist und beide Ausdrücke fast $1$ ergeben ($0{,}9950$ gegen
+$0{,}99999$). Am Punkt $(1;\ 0{,}5)$ mit $u \approx 2{,}00$ liefert der
+Folien-Code dagegen $(1{,}09;\ 0{,}19)$ statt des korrekten Gradienten
+$(1{,}80;\ 0{,}27)$, den der numerische Differenzenquotient bestätigt.
+Setzen wir allein die Klammer richtig, stimmen beide Komponenten wieder.
+
+Ein falscher Gradient bremst BFGS bestenfalls; schlimmstenfalls konvergiert
+es an eine Stelle, die gar kein kritischer Punkt ist, denn abgebrochen wird
+nach dem *gemeldeten* Gradienten. Der Vergleich mit dem zentralen
+Differenzenquotienten aus
+[Kapitel 10](?k=10-ableitungen-1#sec-10.4) ist die Standardprobe für jeden
+von Hand abgeleiteten Gradienten.
 :::
 
 ### Wann welches Verfahren
@@ -150,28 +192,38 @@ Wrap-up-Folie:
 | --- | --- |
 | Nelder-Mead | Keine Ableitungen, niedrige Dimension ($n \le 10$) |
 | Gradientenabstieg | Große Probleme, einfache Implementierung |
-| Quasi-Newton (BFGS) | Mittlere Probleme, guter Kompromiss (Default mit Gradient) |
+| Quasi-Newton (BFGS) | Mittlere Probleme, guter Kompromiss |
 | Newton | Kleine Probleme, schnelle Konvergenz nötig |
 | Momentum | Gradientenabstieg bei schlecht konditionierten Problemen |
 | SGD | Sehr große Datensätze und hohe Dimension |
 | Lagrange/KKT | Nebenbedingungen |
 
+Die Folie hängt an die BFGS-Zeile ein „Default!". Das gilt für viele
+Optimierungsbibliotheken, für `optim()` aber nicht: Dort ist Nelder-Mead die
+Voreinstellung, und daran ändert auch ein über `gr` übergebener Gradient
+nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfordern.
+
 ### Was bleibt
 
 :::bemerkung[13.6.5 (Kernkonzepte des Kapitels)]
-1. **Nichtlineare Gleichungen** lösen wir iterativ: Bisektion halbiert
-   verlässlich, Newton-Raphson quadriert den Fehler, die Fixpunktiteration
-   trägt beide Ideen ins Multivariate ([Abschnitt 13.1](#sec-13.1)).
+1. **Nichtlineare Gleichungen** lösen wir iterativ: Die Bisektion halbiert
+   verlässlich, aber langsam; Newton-Raphson konvergiert lokal quadratisch,
+   $e_{k+1} \approx C\,e_k^2$ mit einer Konstanten $C$, die von $f$ abhängt,
+   und überträgt sich wörtlich ins Multivariate. Wo die Jacobimatrix pro
+   Schritt zu teuer wird, ersetzt die Fixpunktiteration sie durch eine
+   feste Schrittweite ([Abschnitt 13.1](#sec-13.1)).
 2. **Optimalität** heißt stationär plus Krümmungsbedingung; ohne Konvexität
    drohen lokale Minima und vor allem Sattelpunkte
    ([Abschnitt 13.2](#sec-13.2)).
 3. **Gradientenabstieg** lebt von der Schrittweite: Konvergenzraten
-   $O(1/k)$ beziehungsweise linear mit $\rho = 1 - \mu/L$, und die
+   $O(1/k)$ beziehungsweise linear mit $\rho = 1 - \gamma\mu$, für
+   $\gamma = 1/L$ also $\rho = 1 - \mu/L$, und die
    :k[Kondition]{#condition-number} $\kappa_f = L/\mu$ bestimmt das
    Zickzack ([Abschnitt 13.3](#sec-13.3)).
 4. **Newton und Quasi-Newton** kaufen mit Krümmungsinformation schnellere
    Konvergenz; BFGS approximiert die Hesse-Inverse aus Gradienten, SGD
-   ersetzt den Gradienten durch eine unverzerrte Stichprobe
+   ersetzt den Gradienten durch den einer zufällig gezogenen Beobachtung,
+   der im Mittel über diese Ziehung der gesuchte ist
    ([Abschnitt 13.4](#sec-13.4)).
 5. **Nebenbedingungen** behandeln Lagrange-Multiplikatoren und die
    KKT-Bedingungen; Ridge und Lasso sind die statistischen Musterbeispiele
@@ -205,7 +257,7 @@ $L = 2$ ([Abschnitt 13.3](#sec-13.3)).
 :::
 
 :::frage{wahr}
-Auf einer streng konvexen quadratischen Funktion findet das
+Auf einer strikt konvexen quadratischen Funktion findet das
 Newton-Verfahren das Minimum in einem einzigen Schritt, unabhängig vom
 Startpunkt.
 
@@ -237,11 +289,11 @@ Beispiel 13.5.9 gilt genau das für die untere Schranke.
 Weil $-\nabla f$ die Richtung des steilsten Abstiegs ist, verkleinert
 jeder Gradientenabstiegs-Schritt den Funktionswert.
 
-Die Richtung stimmt, aber die Schrittweite kann den Abstieg
-überschießen: Auf $f(x) = x^2$ mit $\gamma = 1$ gilt $x^{(k+1)} = -x^{(k)}$
-und der Funktionswert bleibt exakt gleich, mit $\gamma > 1$ wächst er.
-Genau dagegen sichert die Armijo-Bedingung aus
-[Abschnitt 13.3](#sec-13.3) ab.
+Die Richtung stimmt, solange $\nabla f \neq \bnull^\top$ ist, aber die
+Schrittweite kann den Abstieg überschießen: Auf $f(x) = x^2$ mit
+$\gamma = 1$ gilt $x^{(k+1)} = -x^{(k)}$ und der Funktionswert bleibt exakt
+gleich, mit $\gamma > 1$ wächst er. Genau dagegen sichert die
+Armijo-Bedingung aus [Abschnitt 13.3](#sec-13.3) ab.
 :::
 
 ::::

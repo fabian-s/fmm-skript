@@ -21,8 +21,8 @@ import { Slider } from "../../../lib";
  * Per node nachgerechnet (check-math-s134.mjs):
  *  - Einheitsschritt alpha = 1: (5; 1) -> (0; -4) -> (-2,222; 0,444) ->
  *    (0,816; 0,082) -> ...; f springt im ersten Schritt von 15 auf 40 und
- *    faellt danach; B_6 = [1,011 0,001; 0,001 0,200], also nahe, aber nicht
- *    gleich H^{-1}.
+ *    faellt danach; B_6 = [1,0110 0,0013; 0,0013 0,2002], also nahe, aber
+ *    nicht gleich H^{-1} (Frobeniusabstand 0,0111; bei k = 8 noch 0,0005).
  *  - exakte Schrittweite: alpha_0 = 1/3, alpha_1 = 0,6; nach ZWEI Schritten
  *    steht die Iteration exakt im Minimum und B_2 = diag(1; 0,2) = H^{-1}.
  *  - Die Sekantenbedingung B_{k+1} y = s ist in jedem Schritt bis auf
@@ -165,7 +165,7 @@ export function BfgsStepper() {
     status =
       "Der erste Schritt geht zu weit: f wächst von 15 auf 40, obwohl die Richtung bergab zeigte. Am Update liegt das nicht, sondern an der Länge α = 1, die niemand geprüft hat. Deshalb kommt BFGS in der Praxis nie ohne Schrittweitensuche (Häkchen setzen).";
   } else {
-    status = `Nach ${kk} Schritten steht f bei ${fmt(f(z.x), 4)}. Die Näherung B_${kk} hat inzwischen Krümmungsinformation gesammelt, liegt von diag(1; 0,2) aber immer noch ${fmt(abstandInvers, 3)} entfernt (Frobeniusnorm). Das stört nicht weiter, denn für den Schritt zählt nur, ob die Richtung taugt.`;
+    status = `Nach ${kk === 1 ? "einem Schritt" : `${kk} Schritten`} steht f bei ${fmt(f(z.x), 4)}. Die Näherung B_${kk} hat inzwischen Krümmungsinformation gesammelt, liegt von diag(1; 0,2) aber immer noch ${fmt(abstandInvers, 3)} entfernt (Frobeniusnorm). Das stört nicht weiter, denn für den Schritt zählt nur, ob die Richtung taugt.`;
   }
 
   return (
