@@ -413,6 +413,133 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   (Kapitel 12 existiert noch nicht).
 - Kapitel 11.5 (Zusammenfassung) schlank.
 
+## KAPITEL 12 (Foliensatz 12-konvexitaet) — Bauauftrag 2026-08-13
+
+- `src/chapters/12-konvexitaet/`, S121–S125 als `.mdx`; Anker `#sec-12.1` …
+  `#sec-12.5`, Labels „12.k.n"; Regeln wie Kapitel 5/6/8/9/10/11 (sinngemäß).
+- Quelle: `/workspace/fmm-lmu/slides/12-konvexitaet.Rmd` (Quiz-Lösungen und
+  ganze Beispielfolien in HTML-Kommentaren — ausformulieren).
+- Farbcode Kapitel 12: konvexe/zulässige Mengen blau (`\cblue`),
+  Verbindungsstrecken/Konvexkombinationen grün (`\cgreen`), Gegenbeispiele/
+  Verletzungen rot (`\cred`), ausgezeichnete Punkte (Extrempunkte,
+  Projektionen, Minima) orange (`\corange`) — in Text UND Widget-SVGs.
+- BILDER: konvexkombinationen-2.png, convex-hull/-set.png, epigraph.png,
+  projektionstheorem*.pdf, konvexitaet-convex-panels/-surfaces.pdf — NICHTS
+  übernehmen; eigene Widgets/SVG bauen.
+- Widget-Recycling aus `/workspace/heath-upload/heath-ch5-6/src/sections/`
+  (S61.tsx): ChordWidget (Sehnen-Definition → 12.3), ConvexityPanels
+  (konvex/konkav → 12.3), DescentBasinWidget/DoubleWellFigure
+  (Landschaften → 12.5), CoerciveWidget optional. Nur CODE 1:1, ALLE Texte
+  deutsch NEU. Eigenbau: Konvexkombinations-Explorer (12.1, Gewichte-Slider
+  im Dreieck, Schwerpunkt), Konvexe-Mengen-Test (12.2), Projektions-Widget
+  (12.3), Epigraph-Skizze (12.3).
+- Folienfehler (korrigieren + registrieren):
+  1. Z. 622 (Beweis (ii)⟹(iii)): Vor $t^2\bh^\top\bH_f\bh$ fehlt der Faktor
+     $\tfrac12$ — die Gleichungskette ist so falsch (Taylor liefert
+     $\tfrac{t^2}{2}\bh^\top\bH\bh$); Schluss bleibt richtig, Beweis im
+     Skript korrekt führen.
+  2. Z. 640 (Spektrum-Folie): $f(\bx+\bh) \approx f(\bx) + \tfrac12\bh^\top\bH\bh$
+     lässt den Gradiententerm weg — nur an kritischen Punkten richtig;
+     $\nabla f(\bx)\bh$ ergänzen.
+  3. Z. 255: „Kovarianzmatrizen sind SPD" — allgemein falsch: stets PSD,
+     SPD nur ohne lineare Degeneration.
+  4. Z. 465/468 Typos: $\bb \in \R^b$ (richtig $\R^n$); $\bQ \in \R^{m\times n}$
+     (richtig $n \times n$); „$b \in \R$" (gemeint $a \in \R$). Präzisierung:
+     Konvexität hängt nur vom symmetrischen Teil $(\bQ+\bQ^\top)/2$ ab.
+  5. Z. 539 (Beweis (ii)): „$(1-\lambda)f(\by)$" muss $f_1(\by)$ heißen.
+  6. Z. 267 Terminologie: „Äußeres Produkt" meint das KARTESISCHE Produkt —
+     Kollision mit Kapitel 9 ($\bv\otimes\bw$); im Skript „kartesisches
+     Produkt" schreiben, Folien-Wortwahl anmerken.
+  7. Präzisierungen: Subgradienten-Existenz braucht $\bx$ im Inneren von
+     $\Xcal$; Projektionstheorem-Skizze: „Orthogonalität liefert" auf der
+     Folie ist unbegründet — sauber über $g(\lambda) = \|\bx - (\hat\bx_1 +
+     \lambda(\hat\bx_2-\hat\bx_1))\|^2$ mit $g(0)=g(1)=d^2$ argumentieren
+     (oder Parallelogrammgleichung); Existenz braucht Vollständigkeit
+     (endliche Dimension reicht — sagen); PSD-Definition mit symmetrischem A.
+- Verifizierte Zahlen (node, 2026-08-13): Schwerpunkt $(1, 2/3)$ ✓;
+  Sphären-Mittelpunkt $\|(0{,}5;0{,}5)\| = 1/\sqrt2$ ✓; Quiz Mengen: konvex
+  sind 1, 2, 4 (Lösung im Kommentar Z. 187–201); Quiz Funktionen: konvex
+  sind 1, 2, 4 (Kommentar Z. 458); auskommentiertes Quadrik-Beispiel
+  Z. 482–498: $f(1,2) = 6$ ✓ — ausformulieren.
+- Querbezüge: Hesse/Definitheit → `?k=11-ableitungen-2#sec-11.3`,
+  Sattel-Widget → `?k=10-ableitungen-1#sec-10.2`, Normen →
+  `?k=03-matrix-spur-norm`, KQ/Ridge → `?k=07-kq`, Projektion/KQ-Geometrie →
+  `?k=07-kq#sec-7.1`; Ausblick 12.5 → `?k=13-optim#sec-13.1` (Scaffold
+  existiert — Kapitel 13 entsteht PARALLEL: NUR Abschnittslinks, KEINE
+  nummerierten 13.x.y-Zitate). Jensen → Tooltips expected-value/variance.
+- Kapitel 12.5 mit Selbsttest über das ganze Kapitel (Muster S105/S115).
+
+## KAPITEL 13 (Foliensatz 13-optim) — Bauauftrag 2026-08-13
+
+- `src/chapters/13-optim/`, S131–S136 als `.mdx` (SECHS Abschnitte); Anker
+  `#sec-13.1` … `#sec-13.6`, Labels „13.k.n"; Regeln wie bisher.
+- Quelle: `/workspace/fmm-lmu/slides/13-optim.Rmd` (Quiz-Lösungen, ein
+  detaillierter Projektions-/Eindeutigkeits-Exkurs Z. 254–311 und das
+  GD-vs-Newton-Beispiel Z. 723–741 in HTML-Kommentaren — ausformulieren).
+- Farbcode Kapitel 13: Iterierte/Trajektorien blau (`\cblue`),
+  Optimum/Grenzwert grün (`\cgreen`), Gradienten-/Suchrichtungen orange
+  (`\corange`), Nebenbedingungen/Divergenz-Warnungen rot (`\cred`).
+- BILDER: alle optim-*.pdf/bisect-32-Grafiken NICHT übernehmen — Widgets.
+  Externe Links BEHALTEN: Nelder-Mead-Demo (alexdowad.github.io),
+  hauseigene Shiny-App gradient-descent-shiny, MSc-Kurs-Link (slds-lmu).
+- Widget-Recycling aus `/workspace/heath-upload/heath-ch5-6/src/sections/
+  widgets/`: S55Widgets (BisectionWidget → 13.1), S56Widgets
+  (FixedPointSpiralWidget → 13.1; NewtonSystemWidget, DampedNewtonWidget →
+  13.4), S623Widgets (HessianConditioningWidget/FlatValleyWidget →
+  Zickzack/Kondition 13.3), S65Widgets (NelderMeadWidget, LineSearchWidget →
+  13.3; SteepestNewtonRace, TrustRegionWidget → 13.4), S654Widgets
+  (BfgsStepperWidget → 13.4), S64Widgets (GoldenSectionLab → 13.6,
+  NewtonBasinLab → 13.4), S67Widgets (optional 13.5). Nur CODE 1:1, ALLE
+  Texte deutsch NEU. Lagrange/KKT-Geometrie (13.5) als Eigenbau
+  (Höhenlinien + Nebenbedingung + Gradientenpfeile).
+- R-HINWEIS: Rscript ist NICHT verfügbar und die optim()/optimize()-Outputs
+  stehen NICHT im Quelltext — KEINE Outputs erfinden. R-Code als Fence
+  zeigen, Ergebnisse qualitativ beschreiben; die Beispielfunktion
+  $f = \log(1+(x_1^2+\sin 3x_2)^2) + 0{,}1x_1^2 + 0{,}1x_2^2$ in einem
+  eigenen JS-Widget nachbauen (Konturen + Startpunkt-Wahl zeigt lokale
+  Minima / falsche Konvergenz live).
+- Folienfehler (korrigieren + registrieren; numerisch belegt 2026-08-13):
+  1. Z. 1108–1112 (grad_f im R-Code): Klammerfehler — `1/(1 + u)^2` statt
+     `1/(1 + u^2)` mit $u = x_1^2+\sin(3x_2)$; an $(1; 0{,}5)$ liefert die
+     Folie $(1{,}09; 0{,}19)$ statt korrekt $(1{,}80; 0{,}27)$ (numerischer
+     Gradient bestätigt). Im Skript korrigierten Gradienten zeigen.
+  2. Z. 760 Fußnote: „Broyden-Fletcher-Goldfarb-**Shannon**" — der vierte
+     Namensgeber ist David **Shanno**.
+  3. Z. 136–142 bisect(): `mid` existiert nur nach mindestens einem
+     Schleifendurchlauf (b−a ≤ eps beim Start ⟹ Fehler); Rückgabe ist der
+     letzte Mittelpunkt, nicht die Mitte des Endintervalls — robuste
+     Fassung im Skript, Verhalten anmerken.
+  4. Z. 672: $\nabla_h[\dots] = \nabla f(\bx)^\top + \bH\bh \overset{!}{=}
+     \bnull^\top$ mischt Spalten- und Zeilenkonvention — sauber wie in
+     Kapitel 11 führen ($\nabla T_2 = \nabla f + \bh^\top\bH$ als Zeile).
+  5. Z. 922: „$\exists \lambda \in \R/\{0\}$" — Notation falsch
+     ($\R\setminus\{0\}$) UND $\lambda = 0$ zu Unrecht ausgeschlossen
+     (liegt das unbeschränkte Optimum auf der NB, ist $\lambda = 0$).
+  6. Z. 545 Präzisierung: Für Lipschitz-∇ braucht es die SPEKTRALNORM
+     $\sup_x \|\bH_f(\bx)\|_2 = \sup \max_i |\lambda_i|$ — „$\sup
+     \lambda_{\max}$" reicht nur bei konvexem $f$.
+  7. Newton-Intuition Z. 715: „$x^{(2)} \approx 2{,}44$" gehört zu einer
+     unbekannten Figuren-Funktion — NICHT übernehmen; eigenes
+     Newton-Beispiel konstruieren und mit node verifizieren.
+- Verifizierte Zahlen (node, 2026-08-13): GD-Beispiel $4{,}5 \to 1{,}5 \to
+  2{,}1 \to 1{,}98$ ✓; Quiz $\bx^{(1)} = (2; 1{,}5)$ ✓ (Antwort 1); GD auf
+  $x^2$ ($\gamma=0{,}4$): $0{,}8/0{,}16/0{,}032$, Newton in 1 Schritt exakt ✓;
+  Lagrange-Beispiel $x^\star=y^\star=\tfrac12$, $\lambda^\star=-1$,
+  $f^\star=\tfrac12$ ✓; KKT-Beispiel $x^\star=2$, $\mu_2=2$ ✓;
+  GD-Quadrik diag(1,10), $\gamma=1/L$: beobachtete f-Rate $(1-\mu/L)^2 =
+  0{,}81$ pro Schritt — SCHNELLER als die Schranke $\rho = 0{,}9$ des
+  Satzes (obere Schranke, nicht exakt — nicht „genau $\rho^k$" schreiben).
+- Querbezüge: Konvexität → `?k=12-konvexitaet` (entsteht PARALLEL: NUR
+  Abschnittslinks ?k=12-konvexitaet#sec-12.x, KEINE nummerierten
+  12.x.y-Zitate!); Fixpunktiteration/Splitting → `?k=08-la-misc#sec-8.3`;
+  Newton/Taylor → `?k=11-ableitungen-2#sec-11.4`; Hesse/Sattel →
+  `?k=11-ableitungen-2#sec-11.3`; Kondition → `?k=04-fehler`; KQ/Ridge →
+  `?k=07-kq`; Bisektion↔Binärsuche → `?k=02-algos`. Heath-Zitate (z. B.
+  „Heath, Ch. 6.2.3" auf der Folie) als Literaturangabe übernehmen —
+  Heath Kapitel 5 (nichtlineare Gleichungen) und 6 (Optimierung) passen
+  als Abschluss-Literaturhinweise.
+- Kapitel 13.6 mit Selbsttest über das ganze Kapitel.
+
 ## Lessons (einzeilig anhängen; Neuestes zuletzt)
 
 - \cb*-Farbmakros sind in src/fmm-macros.ts math-sicher überschrieben
