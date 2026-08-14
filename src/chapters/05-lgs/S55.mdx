@@ -15,7 +15,7 @@ liegen in den Voraussetzungen, im Aufwand und in der
 | geeignet für | jede invertierbare Matrix | [SPD-Matrizen](#sec-5.4) |
 | Pivotierung | für die Stabilität nötig | nicht nötig |
 | Aufwand | rund $n^3/3$ Multiplikationen | rund $n^3/6$, also halb so viel |
-| scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | nur bei extrem schlechter Kondition |
+| scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | in exakter Arithmetik bei nicht-SPD-Matrizen; numerisch eventuell nahe der Semidefinitheitsgrenze |
 
 Die Stabilität der LU-Zerlegung entscheidet sich am Pivot. Tritt ein
 Pivotelement $\cred{m_{kk}} \approx 0$ auf, macht die Division die
@@ -36,13 +36,13 @@ Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann, mit der
 :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
 konditioniert, liegt das am Problem, nicht am Algorithmus.
 
-Die Cholesky-Zerlegung braucht diesen Schutz nicht. Für SPD-Matrizen ist
-sie von Natur aus stabil, ganz ohne Pivotierung. Sie versagt nur, wenn
-$\bA$ extrem schlecht konditioniert ist: Erst dann können
-:k[Rundungsfehler]{#rounding-error} unter einer Wurzel eine negative Zahl
-entstehen lassen, wo die exakte Rechnung ein positives Ergebnis hätte. Der
-Abbruch meldet damit zugleich, dass $\bA$ numerisch nicht mehr positiv
-definit ist. Für nur *semi*definite Matrizen springt die pivotierte
+Die Cholesky-Zerlegung braucht für eine SPD-Matrix keine Pivotierung und ist
+rückwärtsstabil. In exakter Arithmetik läuft sie für jede SPD-Matrix durch und
+scheitert für Matrizen, die nicht positiv definit sind. In Gleitkommaarithmetik kann
+eine Matrix nahe der Grenze zur Semidefinitheit wegen Daten- oder Rundungsfehlern als
+nicht positiv definit erscheinen. Ein Abbruch ist daher ein Diagnosehinweis, aber
+kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für nur
+*semi*definite Matrizen springt die pivotierte
 Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
 ([Abschnitt 5.4](#sec-5.4)).
 
@@ -51,15 +51,16 @@ Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
   Matrix, mit partieller Pivotierung stabil genug für den Alltag.
 - **Cholesky** ist für SPD-Matrizen die erste Wahl: etwa doppelt so
   schnell, ohne Pivotierung stabil und in der Statistik ständig gefragt,
-  weil Kovarianz-, Gram- und Hesse-Matrizen genau diese Struktur tragen.
+  weil positive definite Kovarianz- und Gram-Matrizen diese Struktur tragen.
+  Hesse-Matrizen sind nur unter zusätzlichen Krümmungsannahmen positiv definit.
 :::
 
 ### Was wir mitnehmen
 
 Drei Botschaften bleiben:
 
-- **Invertiere niemals eine Matrix!** Wo in einer Formel $\bA^{-1}\bb$
-  steht, lösen wir in der Implementierung das LGS $\bA\bx = \bb$
+- **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel $\bA^{-1}\bb$
+  steht, lösen wir in der Implementierung direkt das LGS $\bA\bx = \bb$
   (Bemerkung 5.2.1 in [Abschnitt 5.2](#sec-5.2)).
 - Die **LU-Zerlegung** $\bP\bA = \bL\bU$ ist die Gauß-Elimination in
   Matrixform: einmal zerlegen für $O(n^3)$, danach kostet jede weitere

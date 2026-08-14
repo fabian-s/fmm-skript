@@ -33,25 +33,28 @@ Ergebnisvektor von links nach rechts auf und gewinnen jeden neuen Eintrag durch 
 Addition aus den beiden zuletzt berechneten. Als Verkettung elementarer Schritte
 (:k[Komposition]{#function-composition} von Funktionen) aufgeschrieben:
 
-:::algorithmus[2.2.2 (Fibonacci, iterativ)]
+:::algorithmus[2.2.2 (Fibonacci, schleifenbasiert)]
 $$
-\wt{f} : \N \to \N_0^n, \qquad \wt{f}(n) = \left(\wt{f}_n \circ \cdots \circ \wt{f}_3 \circ \wt{f}_2 \circ \wt{f}_1\right)(n)
+f : \N \longrightarrow \bigcup_{n\ge 1}\N_0^n,
+\qquad f(n)=(x_1,\ldots,x_n).
 $$
 
-mit den elementaren Schritten
+Für $n\ge 1$ setzt der Algorithmus $x_1=0$, für $n\ge2$ zusätzlich
+$x_2=1$, und führt dann aus:
 
-$$
-\wt{f}_1(n) = 0, \qquad \wt{f}_2(x) = (x, 1), \qquad \wt{f}_{i+1}(x_1, \dots, x_i) = \left(x_1, \dots, x_i,\ \corange{\cblue{x_i} + \cgreen{x_{i-1}}}\right) \quad (i \ge 2).
-$$
+```text
+für i = 2, ..., n-1:
+    x[i+1] = x[i] + x[i-1]
+gib (x[1], ..., x[n]) zurück
+```
 :::
 
-Lesen wir die Verkettung wie immer von rechts nach links: $\wt{f}_1$ ignoriert den Input
-und setzt den Startwert $x_1 = 0$; $\wt{f}_2$ hängt $x_2 = 1$ an; jeder weitere Schritt
-$\wt{f}_{i+1}$ hängt an das bisher berechnete Tupel die Summe aus dem
+Jeder Schleifendurchlauf hängt an das bisher berechnete Tupel die Summe aus dem
 $\cblue{\text{letzten}}$ und dem $\cgreen{\text{vorletzten}}$ Element als
-$\corange{\text{neues Element}}$ an. Nach dem letzten Schritt $\wt{f}_n$ steht das
-vollständige Ergebnis da. (Kleine Korrektur gegenüber den Folien: Da $x_1 = 0$ ist, leben
-die Outputs in $\N_0^n$, nicht in $\N^n$.)
+$\corange{\text{neues Element}}$ an. Nach dem letzten Durchlauf steht das vollständige
+Ergebnis da. Der Zielraum hängt von der Eingabe $n$ ab; deshalb schreiben wir oben die
+disjunkte Vereinigung der möglichen Vektorräume statt des formal unzulässigen
+$\N_0^n$ als festen Zielraum.
 
 :::beispiel[2.2.3 (Die ersten 6 Fibonacci-Zahlen)]
 Berechnen wir $\wt{f}(6)$ Schritt für Schritt. Die Farben verfolgen die Rollen aus
@@ -136,11 +139,14 @@ Toleranzlevel ab, bevor die exakte Lösung erreicht ist. Hier gibt es nichts zu
 approximieren: Nach $n$ Schritten steht das exakte Ergebnis fest.
 :::
 
-:::frage{wahr}
-Der Algorithmus ist *iterativ*.
+:::frage{falsch}
+Der Algorithmus ist *numerisch iterativ*.
 
-Dieselbe Vorschrift („hänge die Summe der letzten beiden Elemente an") wird für
-$i = 2, \dots, n-1$ immer wieder ausgeführt. Genau das meint *iterativ*.
+Er enthält zwar eine Schleife, erzeugt aber keine Folge von Näherungen mit einem
+Abbruchkriterium: Nach einer vorab durch $n$ festgelegten Zahl von Schritten steht das
+exakte Ergebnis fest. In der numerischen Terminologie ist er daher *direkt*. Die häufige
+Bezeichnung „iterative Fibonacci-Variante" meint hier nur die schleifenbasierte
+Implementierung im Gegensatz zur Rekursion.
 :::
 
 :::frage{falsch}
@@ -154,25 +160,19 @@ Aufruf mit demselben $n$ exakt dasselbe Ergebnis.
 
 ### 2.2.4 Algorithmenarten in ML und Statistik
 
-Der Fibonacci-Algorithmus ist also exakt *und* iterativ. Die vier Arten schließen sich
-nicht gegenseitig aus. Wie verteilen sich die Algorithmen, mit denen wir in Statistik und
-Machine Learning tatsächlich arbeiten, auf diese Kategorien?
+Der Fibonacci-Algorithmus ist also exakt, direkt und deterministisch. Diese drei Angaben
+liegen auf den unabhängigen Achsen aus [Abschnitt 2.1](#sec-2.1). Wie verteilen sich die
+Algorithmen, mit denen wir in Statistik und Machine Learning tatsächlich arbeiten, auf
+diese Achsen?
 
 :::beispiel[2.2.4 (Algorithmenarten in ML und Statistik)]
-- **Exakt/direkt:** die Lösung :k[linearer Gleichungssysteme]{#linear-system} per
-  :k[Gauß-Elimination]{#gaussian-elimination} (dazu später im Kurs viel mehr) oder die
-  :k[Matrixmultiplikation]{#matrix-multiplication}: nach endlich vielen, vorab bekannten
-  Schritten steht das exakte Ergebnis fest.
-- **Approximativ:** Monte-Carlo-Integration, die Integrale durch Stichprobenmittel
-  schätzt (ein Integral ist ein :k[Erwartungswert]{#expected-value}, und den schätzen
-  Statistiker/innen mit Stichproben); das Training
-  :k[neuronaler Netze]{#neural-network}, das nur bis zu einem Toleranzlevel optimiert.
-- **Iterativ:** der :k[Gradientenabstieg]{#gradient-descent} im Machine Learning und das
-  :k[Newton-Verfahren]{#newtons-method} zum Nullstellenfinden: dieselbe
-  Update-Vorschrift wird wiederholt, bis das Ergebnis gut genug ist.
-- **Probabilistisch:** randomisierte Quicksort-Varianten (das Pivot-Element wird zufällig
-  gewählt) und MCMC-Verfahren in der Bayesianischen Statistik, die die gesuchte
-  Verteilung durch Zufallspfade erkunden.
+- **Exakt vs. approximativ:** Matrixmultiplikation und Gauß-Elimination sind in exakter
+  Arithmetik exakt; Monte-Carlo-Integration und vorzeitig beendete Optimierung liefern
+  Approximationen.
+- **Direkt vs. numerisch iterativ:** Gauß-Elimination ist direkt. Gradientenabstieg und
+  Newton-Verfahren erzeugen Näherungsfolgen und stoppen nach einem Abbruchkriterium.
+- **Deterministisch vs. randomisiert:** Klassische Matrixmultiplikation ist
+  deterministisch; randomisierte Quicksort-Varianten und MCMC verwenden Zufall.
 :::
 
 In der Praxis treten die Arten meist kombiniert auf: Das Training eines neuronalen Netzes
@@ -203,7 +203,8 @@ Diese drei Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Reg
 Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um solche
 Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst einmal
 präzise messen. Das ist das Thema des [nächsten Abschnitts](#sec-2.3). Wie wir „möglichst
-exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 3.
+exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 4;
+Kapitel 3 stellt dafür zunächst Normen als Fehlermaße bereit.
 
 *Vertiefung: Heath §1.1 (Näherungen und Fehlerquellen im wissenschaftlichen Rechnen);
 Cormen, Leiserson, Rivest & Stein, _Introduction to Algorithms_, der Klassiker zu Entwurf

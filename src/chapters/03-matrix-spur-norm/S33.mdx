@@ -31,14 +31,14 @@ $$
 $$
 :::
 
-Der Quotient
-$R_{\bA}(\bx) = \left\| \bA\bx \right\|_V / \left\| \bx \right\|_V$
-heißt *Rayleigh-Quotient*: Er gibt an, um welchen Faktor $\bA$
+Der *Normquotient*
+$s_{\bA}(\bx) = \left\| \bA\bx \right\|_V / \left\| \bx \right\|_V$
+gibt an, um welchen Faktor $\bA$
 den Vektor $\bx$ streckt. Eine große Operatornorm bedeutet also: Es
 gibt mindestens eine Richtung, in der $\bA$ stark streckt. Eine kleine
 Operatornorm bedeutet: $\bA$ staucht jeden Vektor (oder lässt ihn
 höchstens schwach wachsen). Die zweite Gleichheit in der Definition gilt, weil
-der Rayleigh-Quotient skaleninvariant ist: Ersetzen wir $\bx$ durch
+der Normquotient skaleninvariant ist: Ersetzen wir $\bx$ durch
 $c\,\bx$ mit $c \neq 0$, kürzt sich $|c|$ heraus.
 Wir dürfen uns deshalb auf Vektoren der Länge 1 beschränken.
 
@@ -216,7 +216,7 @@ $$
   $$
 
   Insbesondere ist $\left\| \bQ \right\|_2 = 1$: Jeder
-  Rayleigh-Quotient ist exakt 1.
+  Normquotient ist exakt 1.
 - $\bQ^{-1} = \bQ^\top$. Die
   :k[Inverse]{#matrix-inverse} ist gratis: Statt
   eines Gleichungssystems genügt Transponieren.
@@ -230,10 +230,9 @@ $$
   also ebenfalls Spektralnorm 1. Für die
   :k[Konditionszahl]{#condition-number} folgt
   $\kappa_2(\bQ) = \left\| \bQ \right\|_2 \left\| \bQ^{-1} \right\|_2 = 1$:
-  Multiplikation mit $\bQ$ oder
-  $\bQ^{-1}$ ist immer gut konditioniert und verschlechtert die
-  Stabilität von Algorithmen nicht. Das ist der Grund, warum orthogonale
-  Transformationen das Arbeitspferd der numerischen linearen Algebra sind
+  Multiplikation mit $\bQ$ oder $\bQ^{-1}$ verstärkt relative Störungen in der
+  $2$-Norm nicht. Stabil implementierte orthogonale Transformationen sind deshalb
+  ein Arbeitspferd der numerischen linearen Algebra
   (mehr dazu bei der QR-Zerlegung in Kapitel 7).
 - Produkte bleiben orthogonal: Sind $\bQ_1, \dots, \bQ_k$
   orthogonal, dann auch $\bQ = \bQ_1 \cdots \bQ_k$. Warum? Weil
@@ -390,13 +389,13 @@ $\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
   <SelbsttestFrage q={<>Wahr oder falsch: Für jede Orthogonalmatrix <M>{"\\bQ"}</M> gilt <M>{"\\left\\| \\bQ \\right\\|_2 = 1"}</M>.</>}>
     Wahr. Wegen
     $\left\| \bQ\bx \right\|_2 = \left\| \bx \right\|_2$
-    (Bemerkung 3.3.6) ist jeder Rayleigh-Quotient gleich 1, also auch das
+    (Bemerkung 3.3.6) ist jeder Normquotient gleich 1, also auch das
     Maximum. Geometrisch: Eine Drehung oder Spiegelung streckt nichts, der
     Einheitskreis bleibt ein Einheitskreis.
   </SelbsttestFrage>
   <SelbsttestFrage q={<>Warum gilt <M>{"\\left\\| \\bI_n \\right\\| = 1"}</M> für <em>jede</em> Operatornorm, egal welche Vektornorm wir zugrunde legen?</>}>
     Weil $\bI_n\bx = \bx$ für alle $\bx$: Der
-    Rayleigh-Quotient ist konstant
+    Normquotient ist konstant
     $\left\| \bx \right\| / \left\| \bx \right\| = 1$, also
     ist auch sein Maximum 1. Elementweise Normen wie die Frobenius-Norm haben
     diese Eigenschaft nicht; deshalb haben wir die Operatornormen

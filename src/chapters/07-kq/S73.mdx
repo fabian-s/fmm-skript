@@ -110,7 +110,7 @@ kq_solve <- function(A, b) {
 sondern der Ansatz selbst:
 
 :::bemerkung[7.3.3 (Merkregel)]
-<p className="font-semibold text-rose-600 dark:text-rose-400">Invertiere niemals eine Matrix!</p>
+<p className="font-semibold text-rose-600 dark:text-rose-400">Für ein LGS keine explizite Inverse bilden!</p>
 
 Die Formel $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ ist ein
 *mathematisches* Objekt, keine Rechenvorschrift. Numerisch lösen wir stattdessen
@@ -122,10 +122,12 @@ Zerlegung der Matrix.
 Warum ist das explizite Invertieren so schlecht? Erstens ist es teurer: Die Inverse zu
 berechnen heißt, $n$ lineare Gleichungssysteme zu lösen (eines pro Spalte von
 $\bI$), obwohl wir nur die Lösung zu *einer* rechten Seite brauchen.
-Zweitens ist es ungenauer: Jeder Eintrag der berechneten Inversen trägt eigene
-:k[Rundungsfehler]{#rounding-error}, die sich bei der
-anschließenden Multiplikation weiter verstärken; eine Zerlegung mit Substitution löst
-dasselbe System direkter und stabiler. Und drittens zerstört die Inverse Struktur:
+Zweitens bringt die anschließende Multiplikation zusätzliche
+:k[Rundungsfehler]{#rounding-error}, ohne für eine einzelne rechte Seite einen
+Genauigkeitsvorteil zu bieten; eine stabile Zerlegung mit Substitution löst dasselbe
+System direkter. Das heißt nicht, dass das Berechnen einer Inversen grundsätzlich
+instabil wäre – nur, dass sie hier das falsche Zwischenprodukt ist. Drittens kann die
+Inverse Struktur zerstören:
 Die Inverse einer
 :k[dünnbesetzten]{#sparse-matrix} Matrix ist typischerweise
 voll besetzt. Genau wie beim

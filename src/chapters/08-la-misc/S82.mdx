@@ -105,9 +105,10 @@ $$
 \bSigma = \frac{1}{n-1}\,\bX^\top\bX \in \R^{p \times p} .
 $$
 
-Ihre Eigenvektoren sind die *Hauptkomponenten*, die Richtungen maximaler
-Varianz in $\R^p$, und die zugehörigen Eigenwerte geben an, wie viel
-Varianz jede Richtung erklärt. In der Praxis rechnen wir noch schneller
+Ihre Eigenvektoren sind die *Hauptrichtungen* oder *Loading-Vektoren* in
+$\R^p$; die zugehörigen Eigenwerte geben an, wie viel Varianz jede Richtung
+erklärt. Die eigentlichen Hauptkomponenten-*Scores* der Beobachtungen sind
+$\bX\bv_j$. In der Praxis rechnen wir noch schneller
 direkt mit der [Singulärwertzerlegung](?k=06-svd#sec-6.2) von $\bX$, ohne
 $\bX^\top\bX$ je zu bilden (warum das auch numerisch klüger ist, haben wir
 in [Kapitel 6](?k=06-svd#sec-6.5) gesehen).
@@ -116,10 +117,12 @@ in [Kapitel 6](?k=06-svd#sec-6.5) gesehen).
 Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen
 (Gen-Expression, Bildanalyse), gebraucht werden aber fast immer nur die
 $k$ größten Eigenwerte mit $k \ll p$. Die
-[Lanczos-Iteration](#sec-8.1) liefert genau diese in $O(k p^2)$
-Operationen statt $O(p^3)$ für alle. Bei $p = 100\,000$ und $k = 10$ ist
-das ein Faktor $p/k = 10\,000$: aus Tagen werden Sekunden. Warum wir
-$\bSigma$ dabei besser gar nicht erst aufstellen, steckt in derselben Zahl:
+[Lanczos-Iteration](#sec-8.1) kann genau diese approximieren. Arbeitet sie
+direkt mit $\bX$, kostet ein Matrix-Vektor-Paar
+$O(\operatorname{nnz}(\bX))$; hinzu kommen Orthogonalisierung und eine von
+Spektrallücken und Toleranz abhängige Iterationszahl. Ein pauschaler Faktor
+$p/k$ folgt daraus nicht. Warum wir $\bSigma$ besser gar nicht erst aufstellen,
+zeigt dennoch ihre Größe:
 $100\,000^2 = 10^{10}$ Einträge sind in doppelter Genauigkeit rund
 $80$ Gigabyte. In R übernimmt das zum Beispiel `irlba::irlba()` (iterativ)
 oder `irlba::svdr()` (iterativ und probabilistisch, ein Vorgeschmack auf
@@ -183,8 +186,8 @@ Rekonstruktionen nebeneinander. Zum Selbst-Ausprobieren: das
 | Methode | Komplexität / Iteration | Anwendung | Output |
 | --- | --- | --- | --- |
 | Potenzmethode | $O(\operatorname{nnz}(\bA))$ | größter Eigenwert/-vektor | 1 Eigenpaar |
-| (shifted) QR | $O(\operatorname{nnz}(\bA))$ bis $O(n^3)$ | alle Eigenwerte | $n$ Eigenwerte |
-| Lanczos | $O(m\operatorname{nnz}(\bA) + m^2)$ für $m$ Eigenwerte | wenige Extremal-Eigenwerte, *sparse* $\bA$ | $m \ll n$ Eigenpaare |
+| (shifted) QR | einmalig $O(n^3)$; danach $O(n^2)$ je Hessenberg-Sweep | alle Eigenwerte | $n$ Eigenwerte |
+| Lanczos | $O(m\operatorname{nnz}(\bA)+nm^2)$ für $m$ Schritte mit voller Reorthogonalisierung | wenige Extremal-Eigenwerte, *sparse* $\bA$ | bis zu $m \ll n$ Eigenpaare |
 
 Dabei zählt $\operatorname{nnz}(\cdot)$ die Nicht-Null-Einträge. Zur
 Einordnung: Die [Potenzmethode](#sec-8.1) konvergiert mit der Rate

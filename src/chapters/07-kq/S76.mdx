@@ -185,10 +185,12 @@ also nicht. Singuläre und rangdefiziente Probleme behandelt er automatisch, wie
 Beispiel 7.6.2 vorgeführt hat. Formel (7.6.1) ist zudem eine *explizite Konstruktion*
 der Lösung: Sobald die SVD vorliegt, ist kein Gleichungssystem mehr zu lösen, nur noch
 Matrix-Vektor-Produkte auszuwerten. Er hat eine klare geometrische Interpretation (Projektion auf
-$\col(\bA)$ plus Minimal-Norm-Auswahl). Und für $\rang(\bA) < n$
-wirkt die Minimal-Norm-Eigenschaft aus Satz 7.6.1 wie eine eingebaute
-*Regularisierung*: Unter unendlich vielen Lösungen wählt die Pseudoinverse
-reproduzierbar die „kleinste“ aus.
+$\col(\bA)$ plus Minimal-Norm-Auswahl). Für $\rang(\bA) < n$ wählt die
+Pseudoinverse unter unendlich vielen Lösungen reproduzierbar die „kleinste“ aus.
+Das regularisiert exakt unidentifizierte Nullraumanteile, aber *keine* kleinen
+positiven Singulärwerte: Die untrunkierte Pseudoinverse verstärkt diese gerade
+mit $1/\sigma_i$. Gegen einen Fast-Rangdefekt helfen erst Verfahren wie
+truncated SVD oder Tikhonov-Regularisierung.
 
 <h3 id="sec-7.6-vergleich">Praktischer Methodenvergleich</h3>
 
