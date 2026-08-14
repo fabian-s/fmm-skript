@@ -384,8 +384,11 @@ Interpolationsverfahren unterscheiden sich im Wesentlichen durch die Wahl des
 Basissystems, und manche Systeme sind erheblich brauchbarer als andere. Vier
 Kriterien geben den Fahrplan für den Rest des Kapitels vor.
 
-- *Kondition.* Wie stark verstärkt $\bB$ Fehler in den Daten? Die
-  :k[Konditionszahl]{#condition-number} $\kappa(\bB)$ beschränkt das
+- *Kondition.* Wie empfindlich reagieren die berechneten Koeffizienten auf
+  Störungen der Daten? Für eine quadratische invertierbare Matrix kontrolliert
+  $\|\bB^{-1}\|$ die absolute Verstärkung einer Störung der rechten Seite;
+  die :k[Konditionszahl]{#condition-number} $\kappa(\bB)$ liefert die übliche
+  relative Störungsabschätzung
   ([Abschnitt 4.2](?k=04-fehler#sec-4.2)). Bei der Monombasis wächst sie mit
   $K$ dramatisch, und das ist ihr Hauptproblem
   ([Abschnitt 14.3](#sec-14.3)).

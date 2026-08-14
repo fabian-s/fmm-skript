@@ -452,6 +452,8 @@ a <- solve(B, y)
 
 xnew <- seq(0, 1, length = 100)
 Bnew <- splines::bs(xnew, knots = attr(B, "knots"),
+                    Boundary.knots = attr(B, "Boundary.knots"),
+                    degree = attr(B, "degree"),
                     intercept = TRUE)
 fhat <- Bnew %*% a
 ```
@@ -460,9 +462,10 @@ Die erste Hälfte ist der Algorithmus aus [Abschnitt 14.2](#sec-14.2) in
 drei Zeilen: Basis auswerten,
 System lösen, fertig. Die zweite Hälfte wertet den Interpolanten an neuen
 Stellen aus, und dabei steckt die eigentliche Fußangel: Die neue Basismatrix
-muss zu *denselben* Knoten gehören wie die alte. Deshalb wird `attr(B,
-"knots")` weitergereicht, statt `bs()` die Knoten aus `xnew` neu bestimmen zu
-lassen.
+muss zu *derselben* Basis gehören wie die alte. Deshalb werden innere Knoten,
+Randknoten und Grad weitergereicht, statt `bs()` Teile davon aus `xnew` neu
+bestimmen zu lassen. Am sichersten erledigt das bei einem angepassten Modell
+die zugehörige `predict()`-Methode.
 :::
 
 ### Warum B-Splines? Kondition und Aufwand
@@ -564,18 +567,24 @@ kleine Abweichung in den Funktionswerten sagt für sich genommen noch nichts
 :::
 
 :::bemerkung[14.4.17 (Was die Lokalität praktisch bedeutet)]
-Der lokale Träger ist der Grund, warum B-Splines in der Praxis benutzt werden.
-Verschieben wir einen einzigen Messwert, so trifft das nur die wenigen
-Basisfunktionen in seiner Umgebung mit voller Wucht; weiter entfernt stirbt
-die Änderung geometrisch ab. Ein globales Polynom verhält sich umgekehrt.
+Der lokale Träger ist ein Hauptgrund, warum B-Splines in der Praxis benutzt
+werden. Verschieben wir einen einzigen Messwert, so ändert sich zunächst nur
+die entsprechende rechte Seite; die zugehörige Zeile der Basismatrix enthält
+nur die wenigen Basisfunktionen in seiner Umgebung. Die Lösung des
+Gleichungssystems koppelt diese Koeffizienten allerdings weiter: Die Inverse
+einer Bandmatrix ist im Allgemeinen dicht. Für gut konditionierte, reguläre
+Bandsysteme fällt ihr Einfluss typischerweise schnell und häufig geometrisch
+mit dem Abstand ab, aber der kompakte Träger allein garantiert weder einen
+universellen Faktor noch exakte Abschottung. Ein globales Polynom verhält sich
+im Vergleich meist deutlich weniger lokal.
 [Abschnitt 14.3](#sec-14.3) hat den Verstärkungsfaktor dort schon beziffert:
 Die Störung eines einzigen Werts wirkt über das ganze Intervall und schlägt
 am weitesten dort aus, wo gar nichts passiert ist.
 
-Ganz auf null fällt die Änderung der Koeffizienten allerdings nicht. Das
-System koppelt sie über das Band, und wir rechnen unten nach, dass sich je
-Knotenabstand ungefähr ein Viertel der Änderung überträgt. Die Lokalität ist
-eine Frage der Größenordnung, keine exakte Abschottung.
+Im konkreten gleichmäßigen Beispiel unten rechnen wir nach, dass sich je
+Knotenabstand ungefähr ein Viertel der Änderung überträgt. Das ist ein
+Messwert dieses Systems, keine allgemeine B-Spline-Konstante. Die Lokalität
+ist eine Frage der Größenordnung, keine exakte Abschottung.
 :::
 
 :::vertiefung[Ein Datenpunkt wandert]

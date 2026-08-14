@@ -8,7 +8,8 @@ offen, und es ist die einzige, die in der Praxis wirklich zu beantworten ist:
 Wie groß soll $K$ sein? Zwei Kräfte ziehen in entgegengesetzte Richtungen. Zu
 wenige Basisfunktionen können $f$ gar nicht darstellen, zu viele lassen den
 Schätzer dem Rauschen hinterherlaufen. Dieser Abschnitt macht aus dieser
-Intuition zwei Sätze und rechnet aus, wo das Optimum liegt.
+Intuition zwei Sätze und zeigt anschließend an einem asymptotischen
+Balance-Modell, wie eine theoretische Wahl von $K$ aussehen kann.
 
 :::bemerkung[15.4.1 (Modell, Designmatrix, Schätzer)]
 Wir sammeln die Bezeichnungen aus [Abschnitt 15.3](#sec-15.3), mit denen wir
@@ -287,21 +288,27 @@ ist die :k[Varianz]{#variance}, der letzte ist deterministisch.
 ::::
 
 Setzen wir Satz 15.4.2 und Satz 15.4.4 in ($15.4.6$) ein und mitteln über die
-Entwurfsstellen, so steht die zentrale Bilanz dieses Abschnitts da:
+Entwurfsstellen, so erhalten wir unter den Voraussetzungen von Satz 15.4.2
+für eine Konstante $C_1>0$ die zentrale *Obergrenze* dieses Abschnitts:
 
 $$ {#eq-15.4.7}
 \frac{1}{n}\sumin \E\Bigl[\bigl(\cgreen{\wh{f}(x_i)} - f(x_i)\bigr)^2\Bigr]
-= \underbrace{O(K^{-8})}_{\cred{\text{Bias}^2}}
+\;\le\;
+\underbrace{C_1K^{-8}}_{\cred{\text{obere Schranke für Bias}^2}}
 + \underbrace{\frac{\sigma^2 K}{n}}_{\text{Varianz}} .
 $$
 
-Der erste Term fällt mit wachsendem $K$ rasant, der zweite wächst linear. Ein
-Minimum dazwischen ist unvermeidlich.
+Die Schranke für den ersten Term fällt mit wachsendem $K$ rasant, der zweite
+Term wächst exakt linear. Damit besitzt die *rechte Seite* ein Minimum
+dazwischen. Der tatsächliche Bias darf unter seiner Schranke liegen oder bei
+nicht geschachtelten Räumen schwanken; aus ($15.4.7$) allein folgt daher noch
+kein tatsächliches MSE-Minimum an derselben Stelle.
 
-:::bemerkung[15.4.7 (Die theoretisch optimale Knotenzahl)]
-Ersetzen wir die :k[Landau-Symbole]{#big-o-notation} in ($15.4.7$) durch
-Konstanten, so ist $g(K) = c_1 K^{-8} + c_2 K/n$ zu minimieren. Ableiten und
-Nullsetzen gibt
+:::bemerkung[15.4.7 (Heuristisches Balance-Modell für die Knotenzahl)]
+Nehmen wir stärker an, dass der quadrierte Bias in dem interessierenden
+Bereich tatsächlich wie $c_1K^{-8}$ mit $c_1>0$ verläuft, statt nur nach oben
+so beschränkt zu sein, erhalten wir das Proxy-Kriterium
+$g(K) = c_1 K^{-8} + c_2 K/n$. Ableiten und Nullsetzen gibt
 
 $$
 g'(K) = -8 c_1 K^{-9} + \frac{c_2}{n} \overset{!}{=} 0
@@ -316,16 +323,19 @@ c_1 (K^\star)^{-8} \sim n^{-8/9}, \qquad
 \frac{c_2 K^\star}{n} \sim n^{1/9 - 1} = n^{-8/9} .
 $$
 
-Die Folien nennen beides: $K \sim n^{1/9}$ und
-$\MSE = O(n^{-8/9})$. Der Exponent $1/9$ entsteht dabei aus $8 + 1$, also aus
-der Bias-Ordnung plus dem linearen Varianzterm.
+Unter dieser zusätzlichen Äquivalenzannahme ergeben sich also
+$K^\star \asymp n^{1/9}$ und eine Proxy-Rate $n^{-8/9}$. Der Exponent $1/9$
+entsteht aus $8 + 1$, also aus der angenommenen Bias-Ordnung plus dem linearen
+Varianzterm. Als rigorose Optimalitäts- oder Minimax-Aussage bräuchte die Rate
+zusätzlich eine passende untere Schranke und genaue Annahmen an Funktionsklasse,
+Design und Folge der Ansatzräume.
 
-Aus derselben Rechnung fällt eine Aussage ab, die man dem MSE-Minimum nicht
+Aus derselben Proxy-Rechnung fällt eine Aussage ab, die man dem Minimum nicht
 ansieht. Setzen wir $8 c_1 (K^\star)^{-9} = c_2/n$ in die beiden Summanden
 ein, so ist $c_1 (K^\star)^{-8} = \tfrac{1}{8}\, c_2 K^\star/n$: Der
-quadrierte Bias trägt im Optimum genau ein Neuntel des MSE, die Varianz die
-übrigen acht Neuntel. Das Optimum liegt also nicht dort, wo beide Anteile
-gleich groß sind, sondern tief im varianzdominierten Bereich.
+quadrierte Bias trägt im Optimum dieses Modells genau ein Neuntel der Summe,
+die Varianz die übrigen acht Neuntel. Das ist keine allgemeine Eigenschaft
+des tatsächlichen MSE; sie gilt nur für die angenommene Potenzform.
 
 Der Zusatz auf der Folie, das sei eine *rein asymptotische* Ordnung, verdient
 mehr als eine Fußnote. Mit Konstante $1$ liefert die Formel für $n = 100$ den
@@ -333,9 +343,10 @@ Wert $K^\star = 1{,}67$, für $n = 10^6$ noch $4{,}64$ und selbst für
 $n = 10^9$ erst $10$. Niemand approximiert eine schwingende Funktion mit
 zwei Basisfunktionen. Was fehlt, ist der Faktor $(8c_1/c_2)^{1/9}$, und der
 hängt an der vierten Ableitung von $f$ und an $\sigma$. Im Beispiel unten
-finden wir bei $n = 100$ das Optimum bei $K = 12$, die versteckte Konstante
-ist dort also rund $7$. Merken lässt sich aus der Formel die *Rate*
-$n^{-8/9}$, nicht die Zahl.
+finden wir bei $n = 100$ das Optimum bei $K = 12$; an diesen einen Lauf würde
+das Proxy-Modell also einen Vorfaktor von rund $7$ anpassen. Merken lässt sich
+aus der heuristischen Formel vor allem der Balance-Exponent, nicht eine
+konkrete Knotenzahl oder eine Garantie für jeden $f$.
 :::
 
 ### Ein numerisches Beispiel
@@ -362,11 +373,12 @@ Drei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
 $\sigma^2 K/n$ aus Satz 15.4.4 in jeder Zeile auf höchstens zwei Prozent genau;
 die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
 liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
-das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt im
-Minimum der Bias nur noch $11$ Prozent zum MSE bei, genau das Neuntel aus
-Bemerkung 15.4.7. Das Optimum liegt also nicht dort, wo beide Anteile gleich
-groß sind, sondern dort, wo eine weitere Basisfunktion mehr Varianz kostet,
-als sie an Bias einspart.
+das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt beim
+simulierten Minimum der Bias nur noch $11$ Prozent zum MSE bei. Das stimmt
+hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells aus Bemerkung
+15.4.7 überein, ist aber keine theoretisch erzwungene Übereinstimmung. Das
+diskrete Optimum liegt dort, wo der nächste zulässige Schritt mehr Varianz
+kostet, als er in dieser Simulation an Bias einspart.
 :::
 
 :::bemerkung[15.4.9 (Der Bias fällt nicht monoton)]
@@ -432,9 +444,11 @@ dazwischen liegt das Optimum.
 
 Die ganze bisherige Rechnung hat einen Haken, den die Folien deutlich
 benennen: Wir kennen $f$ nicht. Bias und MSE sind damit nicht ausrechenbar,
-sondern nur die Residuen. Und die werden mit wachsendem $K$ immer kleiner, bis
-bei $K = n$ jeder Datenpunkt exakt getroffen ist. Die Anpassungsgüte an den
-eigenen Daten taugt also gerade nicht als Kriterium.
+sondern nur die Residuen. In geschachtelten Räumen werden sie mit wachsendem
+$K$ immer kleiner, bis ein vollrangiger Fall mit $K=n$ jeden Datenpunkt exakt
+trifft; bei wandernden Knoten dürfen einzelne Schritte davon abweichen
+(Bemerkung 15.3.11). Der allgemeine Trend bleibt: Trainingsanpassung belohnt
+Flexibilität, nicht Vorhersagegüte. Als Auswahlkriterium taugt sie daher nicht.
 
 :::bemerkung[15.4.11 (Drei Auswege)]
 1. *Kreuzvalidierung.* Wir halten einen Teil der Daten zurück, passen auf dem
@@ -459,11 +473,18 @@ $$ {#eq-15.4.8}
 $$
 
 der *GCV-Kriteriumswert*. Gewählt wird das $K$, das ihn minimiert.
+
+Hier ist der Schätzer ein unbestrafter KQ-Fit mit vollem Spaltenrang, sodass
+$\tr(\bH)=K$ gilt. Für einen allgemeinen linearen Glätter steht im Nenner die
+effektive Freiheitsgradzahl $\tr(\bH)$ anstelle von $K$.
 :::
 
 :::bemerkung[15.4.13 (Warum der Nenner nötig ist)]
-Der Zähler allein fällt monoton in $K$ und wäre nutzlos. Der Nenner sorgt für
-den Gegendruck, und er kommt nicht aus der Luft. Für einen linearen Schätzer
+Bei geschachtelten Modellräumen fällt der Zähler monoton in $K$ und wäre als
+Auswahlkriterium nutzlos. Bei den hier verwendeten, mit $K$ wandernden
+Quantilsknoten kann er einzelne Male steigen (Bemerkung 15.3.11), bevorzugt
+im Trend aber weiterhin unnötig flexible Trainingsfits. Der Nenner sorgt für
+den nötigen Gegendruck, und er kommt nicht aus der Luft. Für einen linearen Schätzer
 $\cgreen{\wh{\by}} = \bH\cblue{\by}$ lässt sich das Residuum, das
 beim Weglassen des $i$-ten Punktes entstünde, ohne erneute Anpassung
 ausrechnen: Es ist $(\cblue{y_i} - \cgreen{\wh{f}(x_i)})/(1 - H_{ii})$, was
@@ -473,6 +494,11 @@ Kreuzvalidierung, die jeden Punkt einmal weglässt, wird damit zu einer
 einzigen Formel. Ersetzt man darin alle $H_{ii}$ durch ihren Mittelwert
 $\tr(\bH)/n$, so steht ($15.4.8$) da, denn nach Bemerkung 15.4.5 ist
 $\tr(\bH) = K$.
+
+Die Leave-one-out-Identität hält dabei die Designmatrix und damit die Basis
+fest. Würden wir nach dem Weglassen jedes Punkts auch quantilbasierte Knoten
+neu bestimmen, entstünde ein anderes Verfahren, für das die Formel nicht
+exakt dieselbe Kreuzvalidierung berechnet.
 
 Die Faustregel dahinter ist einfach: Je näher $K$ an $n$ rückt, desto stärker
 bläst der Nenner den beobachteten Fehler auf, weil ein Schätzer mit vielen
@@ -557,14 +583,15 @@ gilt nur ($15.4.4$), und dort steht $\corange{\bphi(x)}$ im Ausdruck.
 :::
 
 :::frage{falsch}
-Im Minimum des MSE sind quadrierter Bias und Varianz gleich groß.
+Im Minimum des MSE sind quadrierter Bias und Varianz allgemein gleich groß.
 
-Gleich groß sind im Optimum die *Änderungsraten*, nicht die Beiträge:
-$g'(K^\star) = 0$ heißt, dass ein weiterer Schritt genauso viel Varianz kostet,
-wie er an Bias spart. Das Modell aus Bemerkung 15.4.7 sagt sogar
-einen festen Anteil voraus: Im Optimum trägt der quadrierte Bias ein Neuntel
-des MSE, also $11{,}1$ Prozent. In Beispiel 15.4.8 messen wir bei $K = 12$
-einen Anteil von $11{,}1$ Prozent.
+Schon im glatten Proxy-Modell sind am Optimum die *Änderungsraten*, nicht die
+Beiträge gleich: $g'(K^\star)=0$ heißt, dass eine infinitesimale Verfeinerung
+genauso viel Varianz kostet, wie sie an Bias spart. Für die spezielle Form
+$c_1K^{-8}+c_2K/n$ trägt der Bias dort ein Neuntel der Summe. Das ist eine
+Eigenschaft dieses Modells, keine allgemeine MSE-Identität. In Beispiel
+15.4.8 liegt der simulierte Anteil bei $K=12$ zufällig ebenfalls nahe
+$11{,}1$ Prozent.
 :::
 
 :::frage{wahr}

@@ -18,7 +18,7 @@ import { M, Slider } from "../../../lib";
  *  - g(x) = 0,06 sin(5 pi x) verschwindet an allen Knoten 0; 0,2; ...; 1
  *    (numerisch < 1e-16), die gruene Kurve der mittleren Tafel interpoliert
  *    also exakt.
- *  - RMS-Abstand der Punkte zur gruenen Kurve ist exakt sigma (weil die
+ *  - RMS-Abstand der Punkte zur wahren Funktion ist exakt sigma (weil die
  *    z_i auf RMS 1 normiert sind).
  *
  * Farbcode Kapitel 14: Daten blau, Schaetzer/Interpolant gruen,
@@ -122,7 +122,7 @@ export function DreiProbleme() {
   return (
     <div className="my-2">
       <div className="flex flex-wrap items-start justify-center gap-4">
-        <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\approx 0"}>
+        <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline
             points={kurve((x) => f(x) + 0.045 * Math.sin(4 * Math.PI * x + 1))}
@@ -138,8 +138,8 @@ export function DreiProbleme() {
             <circle key={x} cx={sx(x)} cy={sy(f(x))} r={3.5} fill={DATEN} />
           ))}
         </Tafel>
-        <Tafel titel="Glättung" formula={"y_i = \\wh{f}(x_i) + \\eps_i \\ \\ \\forall i"}>
-          <polyline points={kurve(f)} fill="none" stroke={SCHAETZER} strokeWidth={2} />
+        <Tafel titel="Glättung" formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}>
+          <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           {XOBS.map((x, i) => (
             <line
               key={`r${x}`}
@@ -157,13 +157,14 @@ export function DreiProbleme() {
         </Tafel>
       </div>
       <p className="mt-2 text-sm">
-        Grau gestrichelt läuft in den ersten beiden Tafeln die Funktion <M>{"f"}</M>, die wir treffen
+        Grau gestrichelt läuft die Funktion <M>{"f"}</M>, die wir treffen
         wollen, grün unser <M>{"\\wh{f}"}</M>, blau die Datenpunkte. Links darf{" "}
         <M>{"\\wh{f}"}</M> überall ein
         wenig danebenliegen, muss aber nirgends genau treffen. In der Mitte ist es umgekehrt: An den
         sechs Knoten sitzt <M>{"\\wh{f}"}</M> exakt auf den Daten, dazwischen weicht es sichtbar von{" "}
-        <M>{"f"}</M> ab. Rechts streuen die Beobachtungen um die grüne Kurve, die roten Strecken sind
-        die Fehler <M>{"\\eps_i"}</M>.
+        <M>{"f"}</M> ab. Rechts streuen die Beobachtungen um die unbekannte wahre Funktion
+        <M>{"f"}</M>; die roten Strecken sind die Fehler <M>{"\\eps_i"}</M>. Eine aus diesen Punkten
+        geschätzte grüne Kurve ist dort bewusst noch nicht eingezeichnet.
       </p>
       <Slider
         label="σ (Rauschen)"
@@ -176,10 +177,10 @@ export function DreiProbleme() {
       />
       <p className="mt-1 text-sm">
         {rms === 0 ? (
-          "Bei σ = 0 liegen alle zwölf Punkte exakt auf der grünen Kurve, alle Residuen sind null: Die Glättungsaufgabe ist zur Interpolationsaufgabe zusammengefallen."
+          "Bei σ = 0 liegen alle zwölf Punkte exakt auf der wahren Funktion. Dann sind die Funktionswerte rauschfrei und dürfen interpoliert werden."
         ) : (
           <>
-            Mittlerer Abstand der Punkte zur grünen Kurve (quadratisches Mittel):{" "}
+            Mittlerer Abstand der Punkte zur wahren Funktion (quadratisches Mittel):{" "}
             <span className="font-mono">{fmt(rms, 3)}</span>, der größte Einzelabstand{" "}
             <span className="font-mono" style={{ color: FEHLER }}>
               {fmt(groesster.d, 3)}
