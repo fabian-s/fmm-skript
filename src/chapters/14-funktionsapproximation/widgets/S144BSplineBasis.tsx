@@ -1,0 +1,177 @@
+import { useMemo, useState } from "react";
+import { LabeledPlot, M, Slider } from "../../../lib";
+import {
+  NEUTRAL,
+  ORANGE,
+  bsplRand,
+  fmt,
+  knotenvektor,
+} from "./S144BSpline";
+
+/**
+ * B-Spline-Basis zum Gitter 0, 1, ..., 5 mit Gradregler (§14.4).
+ *
+ * Portiert aus /workspace/interactive/interactive/heath-ch7/src/sections/S743.tsx
+ * (BasisExplorer): uebernommen sind der Aufbau der Serienliste mit einer
+ * hervorgehobenen und abgeblendeten uebrigen Kurven, die Summenkurve als
+ * eigene Serie, das Abschneiden knapp vor dem rechten Rand und die
+ * Sondenauswertung. Die Knotenfolge ist der KORRIGIERTE offene Knotenvektor
+ * aus Bemerkung 14.4.9 (das Buch arbeitet mit einer unendlichen Knotenkette),
+ * saemtliche Texte sind neu.
+ *
+ * Nachgerechnet (node, 2026-08-13): Laenge des Knotenvektors m + 2q + 1,
+ * Anzahl Basisfunktionen m + q; die Summe aller B_k weicht auf [0, 5) fuer
+ * q = 0, 1, 2, 3 um hoechstens 4,4e-16 von 1 ab; der numerisch bestimmte
+ * Traeger stimmt bei jedem k mit [tau_k, tau_{k+q+1}] ueberein.
+ */
+
+const GITTER = [0, 1, 2, 3, 4, 5];
+const RECHTER_RAND = 5;
+
+export function BSplineBasis() {
+  const [qRoh, setQ] = useState(3);
+  const [kRoh, setK] = useState(4);
+  const [xStern, setXStern] = useState(2.4);
+  const [zeigeSumme, setZeigeSumme] = useState(true);
+
+  const q = Math.round(qRoh);
+  const tau = useMemo(() => knotenvektor(GITTER, q), [q]);
+  const K = tau.length - q - 1;
+  const k = Math.min(Math.round(kRoh), K);
+
+  const serien = useMemo(() => {
+    const s = Array.from({ length: K }, (_, j) => ({
+      f: (x: number) => bsplRand(tau, j, q, x, RECHTER_RAND),
+      color: j === k - 1 ? ORANGE : "#94a3b8",
+    }));
+    if (zeigeSumme) {
+      s.push({
+        f: (x: number) => {
+          let acc = 0;
+          for (let j = 0; j < K; j++) acc += bsplRand(tau, j, q, x, RECHTER_RAND);
+          return acc;
+        },
+        color: NEUTRAL,
+        dash: [6, 4],
+      } as (typeof s)[number]);
+    }
+    return s;
+  }, [tau, q, K, k, zeigeSumme]);
+
+  const wert = bsplRand(tau, k - 1, q, xStern, RECHTER_RAND);
+  let summe = 0;
+  for (let j = 0; j < K; j++) summe += bsplRand(tau, j, q, xStern, RECHTER_RAND);
+  let aktiv = 0;
+  for (let j = 0; j < K; j++) {
+    if (bsplRand(tau, j, q, xStern, RECHTER_RAND) > 1e-12) aktiv++;
+  }
+
+  return (
+    <div className="my-2">
+      <p className="mb-2 text-sm">
+        Das Gitter ist <M>{"\\xi_0 = 0 < \\xi_1 = 1 < \\dots < \\xi_5 = 5"}</M>,
+        also <M>{"m = 5"}</M>. Zu jedem Grad entsteht daraus ein anderer offener
+        Knotenvektor, und mit ihm eine andere Anzahl von Basisfunktionen. Orange
+        ist die gerade betrachtete, grau sind die übrigen, gestrichelt ihre
+        Summe.
+      </p>
+
+      <div className="mb-2 grid max-w-2xl gap-x-8 sm:grid-cols-2">
+        <Slider label="Grad q" value={qRoh} onChange={setQ} min={0} max={3} step={1} fmt={(v) => `${Math.round(v)}`} />
+        <Slider
+          label="hervorgehoben k"
+          value={k}
+          onChange={setK}
+          min={1}
+          max={K}
+          step={1}
+          fmt={(v) => `${Math.round(v)}`}
+        />
+        <Slider
+          label="Stelle x*"
+          value={xStern}
+          onChange={setXStern}
+          min={0}
+          max={5}
+          step={0.05}
+          fmt={(v) => fmt(v, 2)}
+        />
+        <label className="my-1 flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={zeigeSumme}
+            onChange={(e) => setZeigeSumme(e.target.checked)}
+          />
+          <span>Summe aller Basisfunktionen zeigen</span>
+        </label>
+      </div>
+
+      <div className="mb-2 text-sm">
+        <p>
+          <M>{`m + 2q + 1 = ${GITTER.length - 1 + 2 * q + 1}`}</M> Knoten:{" "}
+          <span className="font-mono" style={{ color: ORANGE }}>
+            ({tau.map((t) => fmt(t, 0)).join("; ")})
+          </span>
+        </p>
+        <p>
+          daraus <M>{`m + q = ${K}`}</M> Basisfunktionen vom Grad{" "}
+          <M>{`q = ${q}`}</M>.
+        </p>
+      </div>
+
+      <LabeledPlot
+        xLabel="x"
+        yLabel=""
+        series={serien}
+        markers={[
+          ...tau.map((t) => ({ x: t, y: 0, color: ORANGE })),
+          { x: xStern, y: wert, color: ORANGE },
+        ]}
+        xDomain={[-0.2, 5.2]}
+        yDomain={[0, 1.12]}
+        width={480}
+        height={230}
+      />
+
+      <div className="mt-2 text-sm">
+        <p>
+          Träger der hervorgehobenen Funktion:{" "}
+          <M>{`[\\tau_{${k}}, \\tau_{${k + q + 1}}] = [${fmt(tau[k - 1], 0)}, ${fmt(
+            tau[k + q],
+            0,
+          )}]`}</M>
+          , also{" "}
+          {tau[k + q] - tau[k - 1] === 1
+            ? "ein Gitterintervall"
+            : `${fmt(tau[k + q] - tau[k - 1], 0)} Gitterintervalle`}
+          .
+        </p>
+        <p className="mt-1">
+          An der Stelle <M>{`x^* = ${fmt(xStern, 2)}`}</M>:{" "}
+          <M>{`B_{${k}}^{(${q})}(x^*) = `}</M>
+          <span className="font-mono" style={{ color: ORANGE }}>
+            {fmt(wert, 4)}
+          </span>
+          , Summe aller <span className="font-mono">{fmt(summe, 4)}</span>, davon{" "}
+          <span className="font-mono">{aktiv}</span> von {K} Funktionen ungleich
+          null.
+        </p>
+        <p className="mt-2 max-w-[34rem]">
+          Ziehen wir den Gradregler langsam hoch, sehen wir der Rekursion beim
+          Arbeiten zu: Treppenstufe, Dach, Glocke. Dabei behalten wir zwei
+          Zahlen im Blick. Die erste ist der Träger, gemessen in
+          Gitterintervallen; er wächst je Grad um eines. Die zweite ist die
+          Zahl der an einer Stelle beteiligten Funktionen, hier{" "}
+          <M>{`q + 1 = ${q + 1}`}</M>; sie legt fest, wie breit das Band der
+          Systemmatrix ausfällt. Die gestrichelte Summe rührt sich bei alldem
+          nicht vom Fleck.
+        </p>
+        <p className="mt-1 max-w-[34rem] text-xs text-slate-500 dark:text-slate-400">
+          Am rechten Rand werten wir eine Winzigkeit links von{" "}
+          <M>{"\\xi_5"}</M> aus. Die Indikatorfunktion vom Grad null ist rechts
+          halboffen, sonst wären an dieser einen Stelle alle Basisfunktionen null.
+        </p>
+      </div>
+    </div>
+  );
+}
