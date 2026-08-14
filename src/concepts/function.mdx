@@ -1,0 +1,28 @@
+export const title = "Funktion";
+
+import { FunctionWidget } from "./widgets/FunctionWidget";
+
+{/* Concept tooltip: function (input→output assignment, f: R^D → R notation). */}
+
+Eine *Funktion* ist eine Vorschrift, die jeder zulässigen
+Eingabe genau eine Ausgabe zuordnet. Stellen wir sie uns als
+verlässliche Maschine vor: gleiche Eingabe rein, gleiche Ausgabe raus,
+jedes Mal. Die Notation $f: \R^D \to \R$ sagt: Die Eingaben
+sind :k[Vektoren]{#vector} $\bx$
+mit $D$ reellen Einträgen, und jede Ausgabe
+$f(\bx)$ ist eine einzelne reelle Zahl. Die Menge der
+zulässigen Eingaben und die Menge, in der die Ausgaben leben, sind
+:k[Definitions- und Wertebereich]{#domain-codomain}
+der Funktion.
+
+Der einfachste Fall ist $D = 1$: zum Beispiel
+$f: \R \to \R$ mit
+
+$$
+f(x) = x^2, \qquad f(3) = 9 .
+$$
+
+Im maschinellen Lernen sind die Eingaben typischerweise Datenpunkte,
+und die Funktion verknüpft sie mit Zielgrößen oder Scores.
+
+<FunctionWidget />

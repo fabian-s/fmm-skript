@@ -1,0 +1,33 @@
+export const title = "Glatte Funktion (C^∞)";
+
+import { SmoothPlot } from "./widgets/SmoothFunctionWidget";
+
+{/* Konzept-Tooltip: glatte (C-unendlich) Funktionen. */}
+
+Eine :k[Funktion]{#function} heißt
+*glatt* (smooth), geschrieben $f \in C^{\infty}$,
+wenn wir sie so oft ableiten können, wie wir wollen:
+$f', f'', f''', \dots$ existieren alle, und jede dieser
+Ableitungen ist
+:k[stetig]{#continuity}. Anschaulich: Der
+Graph hat weder Knicke noch Sprünge, und die Graphen aller
+Ableitungen auch nicht.
+
+Allgemeiner bezeichnet $C^k$ die Funktionen, die mindestens
+$k$-mal
+:k[differenzierbar]{#differentiability} sind
+mit stetiger $k$-ter Ableitung; $C^{\infty}$ heißt
+„liegt in $C^k$ für jedes $k$&ldquo;. Polynome,
+$e^x$, $\sin$ und $\cos$ sind alle glatt.
+Ein Gegenbeispiel ist $f(x) = |x|$: Wegen des Knicks bei
+$x = 0$ existiert $f'(0)$ gar nicht; es
+scheitert also schon an der ersten Ableitung.
+
+Glattheit brauchen wir für Taylor-Reihen: Um eine hinzuschreiben,
+benötigen wir *alle* Ableitungen $f^{(k)}(x_0)$, die
+Definition setzt also $f \in C^{\infty}$ voraus.
+
+<div className="mt-2 rounded bg-slate-700/60 p-2">
+  <SmoothPlot />
+  <div className="mt-1 text-xs">Blau: $x^2/2$ (glatt). Rot gestrichelt: $|x|$. Der Knick bei 0 lässt schon die erste Ableitung scheitern.</div>
+</div>

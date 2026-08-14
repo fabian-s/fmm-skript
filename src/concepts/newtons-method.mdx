@@ -1,0 +1,30 @@
+export const title = "Newton-Verfahren";
+
+import { NewtonWidget } from "./widgets/NewtonsMethodWidget";
+
+{/* Concept-Tooltip: Newton-Verfahren: Optimierung über lokale quadratische Modelle. */}
+
+Das Newton-Verfahren ist ein :k[Optimierungs]{#optimization}-Algorithmus, der
+die Krümmung ausnutzt: Statt wie das
+:k[Gradientenverfahren]{#gradient-descent} nur bergab zu laufen, ersetzt es die
+Zielfunktion nahe dem aktuellen Punkt durch die Parabel mit demselben Wert,
+derselben Steigung und derselben Krümmung (das Taylor-Polynom zweiter Ordnung,
+vgl. MML §5.1) und springt direkt zum Minimum dieser Parabel. In einer
+Variablen löst der Sprung die Frage, wo die Steigung des Modells Null wird, und
+liefert das Update
+
+$$
+x_{t+1} = x_t - \frac{f'(x_t)}{f''(x_t)} .
+$$
+
+Für eine Funktion vieler Parameter wird aus der ersten Ableitung der
+:k[Gradient]{#gradient} und aus der zweiten Ableitung die
+:k[Hesse-Matrix]{#hessian-matrix} $\bH$; das Update multipliziert den
+Gradienten also mit der :k[Inversen]{#matrix-inverse} der Hesse-Matrix:
+$\btheta_{t+1} = \btheta_t - \bH^{-1} \nabla f(\btheta_t)^\top$. Das ist der
+klassische Grund, warum sich zweite Ableitungen lohnen (vgl. MML §5.7): Nahe
+einem Minimum ist das quadratische Modell ausgezeichnet, und das
+Newton-Verfahren braucht typischerweise weit weniger Schritte als das
+Gradientenverfahren.
+
+<NewtonWidget />

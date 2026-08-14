@@ -1,0 +1,127 @@
+::quelle[Folien 05-lgs, „Vergleich: LU und Cholesky" und „Wrap-up".]
+
+Zum Abschluss stellen wir die beiden Zerlegungen dieses Kapitels
+nebeneinander. Beide lösen $\bA\bx = \bb$ nach demselben Plan: einmal
+zerlegen, dann pro rechter Seite zwei
+:k[Dreieckssysteme]{#triangular-solve} substituieren. Die Unterschiede
+liegen in den Voraussetzungen, im Aufwand und in der
+[Stabilität](?k=04-fehler#sec-4.3).
+
+### LU und Cholesky im Vergleich
+
+|  | [LU-Zerlegung](#sec-5.3) | [Cholesky-Zerlegung](#sec-5.4) |
+| --- | --- | --- |
+| Zerlegung | $\bP\bA = \bL\bU$ | $\bA = \bL\bL^\top$ |
+| geeignet für | jede invertierbare Matrix | [SPD-Matrizen](#sec-5.4) |
+| Pivotierung | für die Stabilität nötig | nicht nötig |
+| Aufwand | rund $n^3/3$ Multiplikationen | rund $n^3/6$, also halb so viel |
+| scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | in exakter Arithmetik bei nicht-SPD-Matrizen; numerisch eventuell nahe der Semidefinitheitsgrenze |
+
+Die Stabilität der LU-Zerlegung entscheidet sich am Pivot. Tritt ein
+Pivotelement $\cred{m_{kk}} \approx 0$ auf, macht die Division die
+Multiplikatoren riesig, und Rundungsfehler übertönen die eigentlichen
+Daten ([Abschnitt 5.3](#sec-5.3)). Partielle Pivotierung hält alle
+Multiplikatoren im Betrag bei höchstens 1. Ein Stabilitätsbeweis ist das
+noch nicht: Jeder Eliminationsschritt darf den betragsgrößten Eintrag der
+Arbeitsmatrix verdoppeln, im schlimmsten Fall wächst er also exponentiell.
+Matrizen, die das wirklich ausreizen, sind allerdings mühsame
+Konstruktionen; in der Praxis bleibt das Wachstum harmlos, und die
+pivotierte LU-Zerlegung gilt als stabil
+([Higham, 2020](https://nhigham.com/2020/07/14/what-is-the-growth-factor-for-gaussian-elimination/)).
+Perfekte Genauigkeit bekommen wir auch damit nicht: Selbst ein stabiler
+Algorithmus liefert nur eine Näherung, deren relativer Fehler in der
+Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann, mit der
+[Konditionszahl](?k=04-fehler#sec-4.2) $\corange{\kappa(\bA)}$ aus
+[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) und der
+:k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
+konditioniert, liegt das am Problem, nicht am Algorithmus.
+
+Die Cholesky-Zerlegung braucht für eine SPD-Matrix keine Pivotierung und ist
+rückwärtsstabil. In exakter Arithmetik läuft sie für jede SPD-Matrix durch und
+scheitert für Matrizen, die nicht positiv definit sind. In Gleitkommaarithmetik kann
+eine Matrix nahe der Grenze zur Semidefinitheit wegen Daten- oder Rundungsfehlern als
+nicht positiv definit erscheinen. Ein Abbruch ist daher ein Diagnosehinweis, aber
+kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für nur
+*semi*definite Matrizen springt die pivotierte
+Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
+([Abschnitt 5.4](#sec-5.4)).
+
+:::bemerkung[5.5.1 (Fazit)]
+- **LU** ist der Universallöser: einsetzbar für jede invertierbare
+  Matrix, mit partieller Pivotierung stabil genug für den Alltag.
+- **Cholesky** ist für SPD-Matrizen die erste Wahl: etwa doppelt so
+  schnell, ohne Pivotierung stabil und in der Statistik ständig gefragt,
+  weil positive definite Kovarianz- und Gram-Matrizen diese Struktur tragen.
+  Hesse-Matrizen sind nur unter zusätzlichen Krümmungsannahmen positiv definit.
+:::
+
+### Was wir mitnehmen
+
+Drei Botschaften bleiben:
+
+- **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel $\bA^{-1}\bb$
+  steht, lösen wir in der Implementierung direkt das LGS $\bA\bx = \bb$
+  (Bemerkung 5.2.1 in [Abschnitt 5.2](#sec-5.2)).
+- Die **LU-Zerlegung** $\bP\bA = \bL\bU$ ist die Gauß-Elimination in
+  Matrixform: einmal zerlegen für $O(n^3)$, danach kostet jede weitere
+  rechte Seite nur noch $O(n^2)$.
+- Die **Cholesky-Zerlegung** $\bA = \bL\bL^\top$ nutzt Symmetrie und
+  Definitheit aus, halbiert den Aufwand und liefert nebenbei das Werkzeug,
+  mit dem wir korrelierte Zufallsvektoren simulieren
+  ([Abschnitt 5.4](#sec-5.4)).
+
+In [Kapitel 6](?k=06-svd#sec-6.1) lernen wir mit der
+:k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) die
+vielseitigste aller Matrixzerlegungen kennen; sie funktioniert für
+beliebige, auch nicht quadratische Matrizen.
+
+### Selbsttest
+
+Prüfen wir die Kernaussagen des Kapitels.
+
+::::quiz
+
+:::frage{falsch}
+Um $\bA\bx = \bb$ numerisch zu lösen, berechnen wir am besten zuerst
+$\bA^{-1}$ und bilden dann das Produkt $\bA^{-1}\bb$.
+
+Das explizite Invertieren löst versteckt $n$ Gleichungssysteme statt
+einem. Die Größenordnung $O(n^3)$ bleibt dabei zwar erhalten, weil eine
+Zerlegung für alle $n$ rechten Seiten reicht, doch der Umweg kostet ein
+Mehrfaches an Rechenzeit und stapelt zusätzliche Rundungsfehler auf. Wir
+lösen stattdessen direkt das LGS (Bemerkung 5.2.1).
+:::
+
+:::frage{wahr}
+Liegt $\bP\bA = \bL\bU$ einmal vor, kostet jede weitere rechte Seite
+$\bb$ nur noch $O(n^2)$ Operationen.
+
+Pro rechter Seite fallen eine Vorwärts- und eine Rückwärtssubstitution
+an, zusammen rund $n^2$ Multiplikationen (Satz 5.3.10); die teure
+Zerlegung hängt nicht von $\bb$ ab.
+:::
+
+:::frage{falsch}
+Jede invertierbare Matrix $\bA$ besitzt eine Zerlegung $\bA = \bL\bU$.
+
+Schon die Vertauschungsmatrix
+$\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ startet mit dem Pivot
+$\cred{0}$ und hat keine LU-Zerlegung (Beispiel 5.3.6). Mit
+Zeilenvertauschungen existiert aber immer $\bP\bA = \bL\bU$
+(Satz 5.3.5).
+:::
+
+:::frage{wahr}
+Für eine SPD-Matrix ist die Cholesky-Zerlegung etwa doppelt so schnell
+wie die LU-Zerlegung und kommt ohne Pivotierung aus.
+
+Wegen $\bU = \bL^\top$ muss nur ein Faktor berechnet und gespeichert
+werden, rund $n^3/6$ statt $n^3/3$ Multiplikationen; und die positive
+Definitheit garantiert positive Pivots, sodass kein Tauschen nötig ist
+([Abschnitt 5.4](#sec-5.4)).
+:::
+
+::::
+
+*Vertiefung: Heath §2.4 (LU-Zerlegung, Pivotierung, Stabilität) und §2.5
+(SPD-Systeme und Cholesky).*

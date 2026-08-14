@@ -1,0 +1,944 @@
+import { BisektionStepper } from "./widgets/S131Bisektion";
+import { FixpunktSpirale } from "./widgets/S131Fixpunkt";
+
+::quelle[Folien 13-optim, von „Verwendete Vorkenntnisse" bis zur zweiten Folie „Fixpunktiteration erster Ordnung"; das auskommentierte Quiz zur Lösbarkeit ist mitverarbeitet.]
+
+### Was wir mitbringen
+
+Der zweite Block des Kurses, *Analysis und Optimierung*, läuft auf dieses Kapitel
+zu. Alles, was wir dafür brauchen, steht schon da, und es lohnt sich, es kurz
+nebeneinanderzulegen.
+
+Aus [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) kommt der
+:k[Gradient]{#gradient} $\corange{\nabla f(\bx)}$ einer Funktion
+$f\colon \R^n \to \R$. Wo er nicht verschwindet, zeigt er in die Richtung des
+steilsten Anstiegs, genauer gesagt tut das sein Transponiertes, denn in der
+Konvention dieses Kurses ist der Gradient ein Zeilenvektor. Die Folie
+unterschlägt das Transponierte; eine Richtung im $\R^n$ ist aber eine Spalte.
+Auch die Voraussetzung $\corange{\nabla f(\bx)} \neq \bnull^\top$ von
+Satz 10.2.4 fehlt dort, und sie ist hier wichtig: In einem kritischen Punkt gibt
+es keine ausgezeichnete Anstiegsrichtung mehr, und kritische Punkte sind im Rest
+des Kapitels unser Ziel. Aus
+[Abschnitt 11.3](?k=11-ableitungen-2#sec-11.3) kommt die
+:k[Hesse-Matrix]{#hessian-matrix} $\corange{\bH_f(\bx)}$ der zweiten
+Ableitungen, die die Krümmung misst. Und aus
+[Kapitel 12](?k=12-konvexitaet#sec-12.3) kommt die Konvexität von Mengen und
+Funktionen, die später darüber entscheidet, ob ein gefundenes Minimum auch das
+globale ist.
+
+Dazu zwei Bausteine aus der Grundvorlesung. *Notwendig* für ein Extremum einer
+differenzierbaren Funktion in einem inneren Punkt des Definitionsbereichs ist
+$\corange{f'(x^\star)} = 0$ beziehungsweise
+$\corange{\nabla f(\bx^\star)} = \bnull^\top$. *Hinreichend* für ein Minimum ist
+das zusammen mit $\corange{f''(x^\star)} > 0$, im Mehrdimensionalen mit einer
+:k[positiv definiten]{#positive-definite} Hesse-Matrix. Die Folie führt die
+hinreichende Bedingung als eigenen Punkt auf; ohne die notwendige Bedingung
+daneben sagt sie nichts, denn eine positive Krümmung allein macht aus einem
+beliebigen Punkt kein Minimum.
+
+Der Farbcode dieses Kapitels: blau die Iterierten $\cblue{\bx^{(k)}}$ und die
+Wege, die sie zurücklegen, grün das Ziel $\cgreen{\bx^\star}$, orange die
+Ableitungsobjekte und die aus ihnen gebauten Schritte, rot die Nebenbedingungen
+und die Warnzeichen für Divergenz.
+
+### Drei Sorten von Problemen
+
+Der Rest des Kapitels behandelt drei Fragestellungen, die enger zusammengehören,
+als sie zunächst aussehen.
+
+:::definition[13.1.1 (Nichtlineares Gleichungssystem)]
+Sei $f\colon \R^n \to \R^m$. Ein *nichtlineares Gleichungssystem* ist die
+Aufgabe, ein $\cgreen{\bx^\star} \in \R^n$ zu finden mit
+
+$$
+f(\cgreen{\bx^\star}) = \bnull .
+$$
+
+Für $n = m = 1$ sprechen wir von einer *Nullstelle* (root) von $f$.
+:::
+
+Der Zusatz „nichtlinear" grenzt gegen [Kapitel 5](?k=05-lgs#sec-5.1) ab: Ist $f$
+affin, also $f(\bx) = \bA\bx - \bb$, so ist das ein
+:k[lineares Gleichungssystem]{#linear-system}, und dafür haben wir fertige
+Zerlegungen. Sobald $f$ krumm ist, gibt es keine Formel mehr, die uns die Lösung
+in endlich vielen Schritten hinstellt.
+
+:::definition[13.1.2 (Unbeschränktes und beschränktes Optimierungsproblem)]
+Sei $f\colon \R^n \to \R$. Ein *unbeschränktes Optimierungsproblem*
+(unconstrained optimization) ist die Aufgabe
+
+$$
+\cgreen{\bx^\star} \in \argmin_{\bx \in \R^n} \cblue{f(\bx)}
+\qquad \text{beziehungsweise} \qquad
+\cgreen{\bx^\star} \in \argmax_{\bx \in \R^n} \cblue{f(\bx)} .
+$$
+
+Ein *beschränktes Optimierungsproblem* (constrained optimization) schränkt die
+Suche auf eine Menge $\cred{S} \subseteq \R^n$ ein,
+
+$$
+\cgreen{\bx^\star} \in \argmin_{\bx \in \cred{S}} \cblue{f(\bx)} ,
+$$
+
+wobei die *Nebenbedingungen* typischerweise selbst durch Funktionen beschrieben
+werden:
+
+$$
+\cred{S} = \{\bx \in \R^n \colon \cred{g_i(\bx)} = 0,\ i = 1, \dots, m\}
+\qquad \text{oder} \qquad
+\cred{S} = \{\bx \in \R^n \colon \cred{h_j(\bx)} \le 0,\ j = 1, \dots, p\}
+$$
+
+oder eine Kombination aus beidem. Die Funktion $\cblue{f}$ heißt
+:k[Zielfunktion]{#objective-function}.
+
+„Beschränkt“ bedeutet hier *mit Nebenbedingungen* und nicht, dass $S$ eine
+beschränkte Menge sein muss. Eindeutiger ist deshalb auch die Bezeichnung
+*Optimierung mit Nebenbedingungen*.
+:::
+
+:::bemerkung[13.1.3 (Zwei Probleme, ein Werkzeugkasten)]
+Maximieren und Minimieren sind dieselbe Aufgabe, denn
+$\argmax_{\bx} \cblue{f(\bx)} = \argmin_{\bx} \bigl(-\cblue{f(\bx)}\bigr)$. Wir
+reden deshalb ab jetzt nur noch über Minima.
+
+Wichtiger ist der zweite Zusammenhang. Ist $\cblue{f}$ differenzierbar, so muss
+im Minimum eines *unbeschränkten* Problems
+$\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ gelten; welche Bedingung
+an die Stelle tritt, sobald Nebenbedingungen im Spiel sind, klärt
+[Abschnitt 13.5](#sec-13.5).
+Das ist ein nichtlineares Gleichungssystem für die Funktion
+$\bx \mapsto \corange{\nabla f(\bx)}^\top$ von $\R^n$ nach $\R^n$. Wer Nullstellen
+suchen kann, kann also auch kritische Punkte suchen, und umgekehrt taucht jedes
+Verfahren dieses Abschnitts im Rest des Kapitels wieder auf. Deshalb steht die
+Nullstellensuche am Anfang.
+
+Alle drei Probleme lösen wir *iterativ*: Wir starten irgendwo und bauen eine
+Folge $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die
+hoffentlich gegen $\cgreen{\bx^\star}$ läuft. Dieselbe Bauform kennen wir schon
+von der [Potenzmethode](?k=08-la-misc#sec-8.1) und den
+[Splitting-Verfahren](?k=08-la-misc#sec-8.3) aus Kapitel 8.
+:::
+
+### Warum Optimierung?
+
+:::beispiel[13.1.4 (Optimierungsprobleme in Statistik und maschinellem Lernen)]
+Ein erstaunlich großer Teil beider Fächer besteht daraus, ein Minimum zu suchen.
+
+*Maximum-Likelihood-Schätzung.* Für unabhängige, identisch verteilte
+Beobachtungen $y_1, \dots, y_n$ mit Dichte $f_Y(y \mid \btheta)$ ist der
+:k[ML-Schätzer]{#likelihood}
+
+$$
+\wh{\btheta}_{\mathrm{ML}}
+= \argmax_{\btheta} \sum_{i=1}^{n} \log f_Y(y_i \mid \btheta) .
+$$
+
+Nur in Lehrbuchfällen wie der Normalverteilung lässt sich das nach $\btheta$
+auflösen; sonst bleibt die Iteration.
+
+*Überwachtes Lernen.* Mit einer Verlustfunktion $L(y, \wh y)$ und Vorhersagen
+$\wh y_i := p_{\btheta}(\bx_i)$ aus Merkmalen $\bx_i$ lautet die Aufgabe
+
+$$
+\wh{\btheta} = \argmin_{\btheta} \sum_{i=1}^{n} L\bigl(y_i, p_{\btheta}(\bx_i)\bigr) .
+$$
+
+Für die :k[lineare Regression]{#linear-regression} mit quadratischem Verlust ist
+das $\wh{\bbeta} = \argmin_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2$, und
+dieses eine Problem konnten wir in [Kapitel 7](?k=07-kq#sec-7.1) noch geschlossen
+lösen. Steht bei $p_{\btheta}$ dagegen ein
+:k[neuronales Netz]{#neural-network}, so ist $\btheta$ hochdimensional, die
+Zielfunktion nicht konvex, und es bleibt nur die Iteration.
+
+*Regularisierte Regression.* Ridge und Lasso hängen einen Strafterm an:
+
+$$
+\wh{\bbeta} = \argmin_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2
++ \lambda \left\|\bbeta\right\|_p ,
+\qquad p = 2 \ \text{(Ridge)}, \quad p = 1 \ \text{(Lasso)} .
+$$
+
+Dieselbe Aufgabe lässt sich als beschränktes Problem schreiben,
+
+$$
+\argmin_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2
+\quad \text{so dass} \quad \cred{\left\|\bbeta\right\|_p \le c} ,
+$$
+
+und darin sitzt die geometrische Anschauung. Verletzt der KQ-Schätzer die
+Nebenbedingung, so blasen wir die :k[Niveaumengen]{#level-sets} des
+Kleinste-Quadrate-Verlusts um ihn herum so lange auf, bis eine von ihnen die
+$p$-Norm-Kugel vom Radius $\cred{c}$ gerade berührt; der Berührpunkt ist die
+Lösung. Bei $p = 1$ hat diese Kugel Ecken auf den Achsen, und an einer Ecke
+kommt die wachsende Niveaumenge besonders leicht zuerst an; deshalb setzt Lasso
+Koeffizienten exakt auf null.
+
+Zwei Feinheiten, die die Folie offenlässt. Erstens lässt sich bei den konvexen
+Ridge- und Lasso-Problemen zu einer penalisierten Lösung ein Budget $\cred c$
+wählen, das dieselbe Lösung liefert. Umgekehrt entspricht eine bindende
+Nebenbedingung unter den üblichen Regularitätsbedingungen einem Multiplikator
+$\lambda>0$; ist sie inaktiv, gehört dazu $\lambda=0$. Die Zuordnung hängt von
+den Daten ab und muss nicht eindeutig sein; eine allgemeine Umrechnungsformel
+gibt es nicht. Zweitens
+schreibt die Folie den Strafterm für beide Fälle als $\lambda\left\|\bbeta\right\|_p$.
+Die übliche Ridge-Regression bestraft die *quadrierte* Norm,
+$\lambda\left\|\bbeta\right\|_2^2$, und nur damit ergibt sich die geschlossene
+Lösung $\wh{\bbeta} = (\bX^\top\bX + \lambda\bI_p)^{-1}\bX^\top\by$ aus
+Beispiel 11.2.7 in [Abschnitt 11.2](?k=11-ableitungen-2#sec-11.2). Die
+unquadrierte Fassung ist ein anderes, ebenfalls konvexes Problem. In der
+Nebenbedingungsform spielt der Unterschied keine Rolle, weil
+$\left\|\bbeta\right\|_2 \le c$ und
+$\left\|\bbeta\right\|_2^2 \le c^2$ dieselbe Menge beschreiben.
+:::
+
+### Wann hat $f(x) = 0$ überhaupt eine Lösung?
+
+Bevor wir ein Verfahren bauen, sollten wir wissen, wonach wir suchen. Sei
+$[a, b] \subset \R$ und $f\colon [a, b] \to \R$; gesucht sind Lösungen von
+$f(x) = 0$. Welche der folgenden Aussagen stimmen?
+
+::::quiz
+
+:::frage{falsch}
+Ist $f$ stetig, so hat $f(x) = 0$ genau eine Lösung.
+
+Stetigkeit allein liefert weder Existenz noch Eindeutigkeit. Die konstante
+Funktion $f \equiv 1$ ist stetig und hat gar keine Nullstelle, die konstante
+Funktion $f \equiv 0$ ist stetig und hat lauter Nullstellen. Was Stetigkeit
+beiträgt, ist erst in Verbindung mit einem Vorzeichenwechsel etwas wert.
+:::
+
+:::frage{falsch}
+Gilt $f(a) < 0$ und $f(b) > 0$, so hat $f(x) = 0$ mindestens eine Lösung.
+
+Das wäre der :k[Zwischenwertsatz]{#intermediate-value-theorem}, aber der
+verlangt Stetigkeit, und die steht in der Voraussetzung nicht. Ein
+Gegenbeispiel ist die Sprungfunktion auf $[-1, 1]$ mit $f(x) = -1$ für $x < 0$
+und $f(x) = 1$ für $x \ge 0$: Die Vorzeichen an den Rändern wechseln, eine
+Nullstelle gibt es nicht.
+:::
+
+:::frage{wahr}
+Ist $f$ streng monoton, so hat $f(x) = 0$ höchstens eine Lösung.
+
+Streng monotone Funktionen sind injektiv: Aus $x_1 < x_2$ folgt
+$f(x_1) \neq f(x_2)$. Der Wert $0$ wird also höchstens einmal angenommen. Für die
+Existenz sagt das nichts, dafür brauchen wir Stetigkeit und einen
+Vorzeichenwechsel. Diese Aufteilung steckt im folgenden Satz.
+:::
+
+::::
+
+:::satz[13.1.5 (Existenz und Eindeutigkeit einer Nullstelle)]
+Sei $f\colon [a, b] \to \R$ streng monoton und stetig mit
+$\cblue{f(a)} \cdot \cblue{f(b)} \le 0$. Dann hat die Gleichung $f(x) = 0$ genau
+eine Lösung $\cgreen{x^\star} \in [a, b]$.
+:::
+
+::::beweis
+
+:::schritt
+*Höchstens eine Lösung.* Sind $x_1 < x_2$ zwei Punkte aus $[a, b]$, so ist
+$f(x_1) \neq f(x_2)$, weil $f$ streng monoton ist. Der Wert $0$ kann also
+höchstens an einer Stelle angenommen werden.
+
+::why[strenge Monotonie heißt: $x_1 < x_2$ erzwingt $f(x_1) < f(x_2)$ (steigend) oder $f(x_1) > f(x_2)$ (fallend), in beiden Fällen ungleiche Werte]
+:::
+
+:::schritt
+*Der Randfall.* Ist $\cblue{f(a)} \cdot \cblue{f(b)} = 0$, so ist
+$\cblue{f(a)} = 0$ oder $\cblue{f(b)} = 0$, und wir sind bereits fertig: Die
+Nullstelle liegt am Rand.
+
+::why[ein Produkt reeller Zahlen ist genau dann null, wenn einer der Faktoren null ist]
+:::
+
+:::schritt
+*Der interessante Fall.* Sei nun $\cblue{f(a)} \cdot \cblue{f(b)} < 0$, die
+beiden Randwerte haben also verschiedene Vorzeichen. Ohne Beschränkung der
+Allgemeinheit nehmen wir $\cblue{f(a)} < 0 < \cblue{f(b)}$ an.
+
+::why[im anderen Fall betrachten wir $-f$; diese Funktion ist ebenfalls stetig und streng monoton und hat genau dieselben Nullstellen]
+:::
+
+:::schritt
+*Existenz.* Weil $f$ stetig ist, liefert der
+:k[Zwischenwertsatz]{#intermediate-value-theorem} zu jedem Wert zwischen
+$\cblue{f(a)}$ und $\cblue{f(b)}$ eine Urbildstelle, insbesondere zum Wert $0$.
+Es gibt also ein $\cgreen{x^\star} \in (a, b)$ mit $f(\cgreen{x^\star}) = 0$.
+Zusammen mit Schritt 1 ist diese Lösung eindeutig.
+
+::why[der Zwischenwertsatz gilt für stetige Funktionen auf einem Intervall; ohne Stetigkeit ist er falsch, wie die Sprungfunktion aus dem Quiz zeigt]
+:::
+
+::::
+
+:::bemerkung[13.1.6 (Hinreichend, aber nicht notwendig)]
+Der Satz gibt eine Garantie, keine Charakterisierung. Die Funktion
+$f(x) = x^2 - 1$ auf $[-2, 2]$ ist weder monoton noch wechselt sie das
+Vorzeichen zwischen den Rändern, und trotzdem hat sie dort zwei Nullstellen. Die
+Bedingungen des Satzes sind also *hinreichend*, aber nicht *notwendig*.
+
+Praktisch heißt das: Findet ein Verfahren keine Nullstelle, so ist damit nicht
+gesagt, dass es keine gibt. Umgekehrt liefert ein Vorzeichenwechsel plus
+Stetigkeit eine belastbare Zusage, und darauf baut das erste Verfahren auf.
+:::
+
+### Das Bisektionsverfahren
+
+Die Idee ist so einfach, dass sie fast keine Erklärung braucht. Wir kennen ein
+Intervall, in dem eine Nullstelle stecken muss, weil $f$ an den Rändern das
+Vorzeichen wechselt. Wir halbieren es, schauen nach, in welcher Hälfte der
+Vorzeichenwechsel geblieben ist, und werfen die andere weg.
+
+:::algorithmus[13.1.7 (Bisektionsverfahren)]
+Gegeben seien eine stetige Funktion $f\colon \R \to \R$, zwei Punkte $a < b$ mit
+$\cblue{f(a)} \cdot \cblue{f(b)} < 0$ und eine Zielgenauigkeit $\epsilon > 0$.
+Solange $\cblue{b} - \cblue{a} > \epsilon$:
+
+1. Setze $\corange{m} = \cblue{a} + (\cblue{b} - \cblue{a})/2$.
+2. Haben $\cblue{f(a)}$ und $\corange{f(m)}$ dasselbe Vorzeichen, so setze
+   $\cblue{a} \leftarrow \corange{m}$, andernfalls $\cblue{b} \leftarrow \corange{m}$.
+
+Als Näherung geben wir die Mitte $\cblue{a} + (\cblue{b} - \cblue{a})/2$ des
+Endintervalls zurück.
+:::
+
+Das $\epsilon$ ist hier die gewünschte Genauigkeit, nicht die Maschinengenauigkeit
+aus [Kapitel 4](?k=04-fehler#sec-4.1). Wie viele Schritte kostet uns das?
+
+:::satz[13.1.8 (Schrittzahl der Bisektion)]
+Es gelten die Voraussetzungen von Algorithmus 13.1.7, und das Startintervall sei
+noch zu grob, $b - a > \epsilon$. Dann hat das Intervall nach $k$ Durchläufen die
+Länge $(b - a)/2^k$, und es enthält weiterhin eine Nullstelle
+von $f$. Die Schleife bricht nach genau
+
+$$
+k = \left\lceil \log_2\left(\frac{b - a}{\epsilon}\right) \right\rceil
+$$
+
+Durchläufen ab, und die zurückgegebene Intervallmitte $\cblue{\wh x}$ erfüllt
+$\left|\cgreen{x^\star} - \cblue{\wh x}\right| \le \epsilon/2$.
+:::
+
+::::beweis
+
+:::schritt
+*Der Vorzeichenwechsel überlebt.* Schreiben wir $[\cblue{a_k}, \cblue{b_k}]$ für
+das Intervall nach $k$ Durchläufen. Haben $\cblue{f(a_{k-1})}$ und
+$\corange{f(m)}$ dasselbe Vorzeichen, so hat $\corange{f(m)}$ das andere
+Vorzeichen als $\cblue{f(b_{k-1})}$, und der Wechsel sitzt in
+$[\corange{m}, \cblue{b_{k-1}}]$; diese Hälfte behalten wir. Andernfalls
+sitzt er in $[\cblue{a_{k-1}}, \corange{m}]$, und wir behalten diese. In beiden
+Fällen gilt weiter $\cblue{f(a_k)} \cdot \cblue{f(b_k)} \le 0$.
+
+::why[das leistet die Fallunterscheidung des Algorithmus. Gleichheit tritt nur im Ausnahmefall $\corange{f(m)} = 0$ ein: Dann haben die beiden Werte nicht dasselbe Vorzeichen, es wird $b \leftarrow m$ gesetzt, und die Nullstelle sitzt anschließend auf dem rechten Rand]
+:::
+
+:::schritt
+*Es gibt immer noch eine Nullstelle.* Auf $[\cblue{a_k}, \cblue{b_k}]$ ist $f$
+stetig, und die Randwerte haben verschiedene Vorzeichen oder einer von ihnen ist
+null. Im ersten Fall liefert der
+:k[Zwischenwertsatz]{#intermediate-value-theorem} eine Nullstelle
+$\cgreen{x^\star}$ im Inneren, im zweiten liegt sie auf dem Rand. Monotonie
+brauchen wir dafür nicht; nur für die Eindeutigkeit wäre sie nötig.
+
+::why[das sind die Schritte 2 und 4 des Beweises von Satz 13.1.5, angewandt auf das kleinere Intervall]
+:::
+
+:::schritt
+*Die Länge halbiert sich.* Der Mittelpunkt teilt das Intervall in zwei gleich
+lange Hälften, also ist $\cblue{b_k} - \cblue{a_k} = (\cblue{b_{k-1}} -
+\cblue{a_{k-1}})/2$ und per Induktion
+$\cblue{b_k} - \cblue{a_k} = (b - a)/2^k$.
+
+::why[Induktionsanfang $k = 0$ ist das Startintervall selbst]
+:::
+
+:::schritt
+*Die Abbruchbedingung.* Die Schleife läuft, solange
+$\cblue{b_k} - \cblue{a_k} > \epsilon$ ist. Sie endet also beim kleinsten $k$ mit
+
+$$
+\frac{b - a}{2^k} \le \epsilon
+\quad \Longleftrightarrow \quad
+2^k \ge \frac{b - a}{\epsilon}
+\quad \Longleftrightarrow \quad
+k \ge \log_2\left(\frac{b - a}{\epsilon}\right) ,
+$$
+
+und die kleinste solche ganze Zahl ist die aufgerundete rechte Seite.
+
+::why[der Logarithmus zur Basis $2$ ist streng monoton wachsend, die Äquivalenzen bleiben also erhalten]
+:::
+
+:::schritt
+*Die Fehlerschranke.* Die Nullstelle $\cgreen{x^\star}$ liegt nach Schritt 2 im
+Endintervall, und von dessen Mitte $\cblue{\wh x}$ ist jeder Punkt des Intervalls
+höchstens eine halbe Intervalllänge entfernt. Also ist
+
+$$
+\left|\cgreen{x^\star} - \cblue{\wh x}\right|
+\le \frac{\cblue{b_k} - \cblue{a_k}}{2} \le \frac{\epsilon}{2} .
+$$
+
+::why[hier zahlt sich die Rückgabe der Intervallmitte aus; ein Randpunkt des Endintervalls hätte nur die Schranke $\epsilon$]
+:::
+
+::::
+
+Ein Beispiel, das uns durch den Rest des Abschnitts begleitet: Für
+$f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$, und
+$\epsilon = 10^{-6}$ ist $\log_2(10^6) = 19{,}93$, also brauchen wir $20$
+Schritte, und das Endintervall hat die Länge $2^{-20} = 9{,}54 \cdot 10^{-7}$. Die Bisektion gewinnt pro Schritt genau
+ein Bit, also $\log_{10} 2 \approx 0{,}301$ Dezimalstellen; für eine weitere
+gültige Stelle brauchen wir rund $3{,}3$ Schritte. Das ist zuverlässig und
+langsam.
+
+:::bemerkung[13.1.9 (Der Code der Vorlesung, robust gemacht)]
+Die Folie zeigt diese Implementierung:
+
+```r
+bisect <- function(f, a, b, eps) {
+  while (b - a > eps) {
+    mid <- (a + b) / 2
+    if (f(a) * f(mid) < 0) b <- mid else a <- mid
+  }
+  return(mid)
+}
+```
+
+Die Idee stimmt, die Ausführung hat zwei Löcher. Erstens entsteht `mid` erst im
+Schleifenrumpf. Rufen wir die Funktion mit einem Intervall auf, das die Toleranz
+schon erfüllt, läuft der Rumpf kein einziges Mal, und `return(mid)` bricht mit
+der Meldung ab, dass es das Objekt nicht gibt. Zweitens ist der Rückgabewert der
+*letzte Mittelpunkt*, und der ist nach der Zuweisung immer ein Randpunkt des
+Endintervalls. Statt der garantierten Genauigkeit $\epsilon/2$ aus Satz 13.1.8
+bleibt so nur $\epsilon$, ein voller Halbierungsschritt verschenkt.
+
+Zwei weitere Kleinigkeiten sind Fließkomma-Handwerk aus
+[Kapitel 4](?k=04-fehler#sec-4.1). Die erste betrifft den Mittelpunkt. Haben $a$
+und $b$ dasselbe Vorzeichen, so ist $a + (b-a)/2$ die verlässlichere Formel: Die
+Differenz $b - a$ ist dann betragsmäßig höchstens so groß wie der größere der
+beiden Endpunkte, ihre Hälfte erst recht, und der Ausdruck bleibt auch gerundet
+zwischen $a$ und $b$. Die Summe $a + b$ dagegen ist ein Zwischenergebnis, das
+größer sein kann als beide Endpunkte, und sie kann überlaufen, obwohl die Mitte
+selbst darstellbar wäre. Die zweite betrifft den Vorzeichentest. Nahe der
+Nullstelle sind $f(a)$ und $f(m)$ beide winzig; ihr Produkt unterläuft dann auf
+null, und die Abfrage $f(a)\cdot f(m) < 0$ meldet fälschlich „kein Wechsel".
+Vergleichen wir stattdessen die Vorzeichen, so stehen im Produkt nur noch
+$\pm 1$, und dort kann nichts mehr unterlaufen. So sieht die robuste Fassung
+aus:
+
+```r
+bisect <- function(f, a, b, eps) {
+  fa <- f(a); fb <- f(b)
+  stopifnot(is.finite(fa), is.finite(fb), sign(fa) * sign(fb) < 0)
+  while (b - a > eps) {
+    mid <- a + (b - a) / 2          # bleibt auch gerundet in [a, b]
+    fmid <- f(mid)
+    if (fmid == 0) return(mid)      # exakt getroffen
+    if (sign(fa) * sign(fmid) < 0) {
+      b <- mid
+    } else {
+      a <- mid; fa <- fmid          # f(a) nur neu auswerten, wenn a sich bewegt
+    }
+  }
+  a + (b - a) / 2                   # Mitte des Endintervalls
+}
+```
+
+Der Aufruf `stopifnot` macht aus einer stillschweigenden Voraussetzung eine
+geprüfte, und das Zwischenspeichern von `fa` halbiert die Zahl der
+Funktionsauswertungen. Bei einer Zielfunktion, deren Auswertung eine Minute
+dauert, ist das kein Schönheitsfehler.
+:::
+
+:::bemerkung[13.1.10 (Umkehrfunktionen, Binärsuche und die Grenze des Verfahrens)]
+*Umkehrfunktionen auswerten.* Suchen wir $f^{-1}(y)$ für ein gegebenes $y$, so
+lösen wir einfach $f(x) - y = 0$. Für die Statistik ist der wichtigste Fall die
+Quantilfunktion: Ist $F$ eine stetige, streng wachsende Verteilungsfunktion, so
+ist das $p$-Quantil die Lösung von $F(x) - p = 0$. Satz 13.1.5 ist hier wörtlich
+anwendbar, und genau so berechnen viele Programmbibliotheken Quantile, für die es
+keine geschlossene Formel gibt.
+
+*Verwandtschaft zur Binärsuche.* Die Bisektion halbiert in jedem Schritt den
+Suchbereich, wie die binäre Suche in einer sortierten Liste. Auch der Aufwand ist
+derselbe, nämlich :k[logarithmisch]{#big-o-notation} in der geforderten
+Auflösung ([Abschnitt 2.3](?k=02-algos#sec-2.3)). Der Vorzeichenwechsel
+übernimmt dabei die Rolle des Größenvergleichs: Er sagt uns, in welcher Hälfte
+weiterzusuchen ist.
+
+*Und die Grenze.* Beide Verfahren leben davon, dass $\R$ angeordnet ist. Im
+$\R^n$ ist es das nicht: Ein „Vorzeichenwechsel" eines vektorwertigen $f$ ist gar
+nicht definiert, und ein Gebiet lässt sich nicht so halbieren, dass eine
+Nullstelle nachweislich in einer Hälfte bleibt. Deshalb eignet sich die Bisektion
+nur für univariate Funktionen; für $n > 1$ brauchen wir andere Ideen, und die
+einfachste davon steht am Ende dieses Abschnitts.
+:::
+
+:::vertiefung[Halbieren, Schritt für Schritt]
+Voreingestellt ist $f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$.
+Die Tabelle daneben protokolliert den Intervall-Verlauf. Mit dem Toleranzregler
+lässt sich die Vorhersage aus Satz 13.1.8 nachprüfen: Der Statustext nennt nach
+dem letzten Schritt die gebrauchte und die vorhergesagte Zahl.
+
+Der zweite Menüpunkt zeigt, was der Satz *nicht* verspricht. Die Funktion
+$f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$ drei Nullstellen, nämlich bei
+$-1{,}879385$, $0{,}347296$ und $1{,}532089$. Das Verfahren findet eine davon,
+und welche, entscheidet schon der erste Mittelpunkt. Für die Eindeutigkeit
+bräuchten wir die strenge Monotonie aus Satz 13.1.5, und die fehlt hier.
+
+<BisektionStepper />
+:::
+
+### Das Newton-Raphson-Verfahren
+
+Die Bisektion benutzt von $f$ nur das Vorzeichen. Ist $f$ differenzierbar,
+verschenken wir damit Information: Die Ableitung sagt uns nicht nur, auf welcher
+Seite die Nullstelle liegt, sondern auch ungefähr wie weit.
+
+Der Ansatz ist die Taylorentwicklung erster Ordnung aus
+[Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4). Um die aktuelle Stelle
+$\cblue{x^{(k)}}$ herum ersetzen wir $f$ durch seine
+:k[Tangente]{#tangent-line} und verlangen von dieser, dass sie null wird:
+
+$$
+\cblue{f(x)} \approx \cblue{f(x^{(k)})} + \corange{f'(x^{(k)})}\bigl(x - \cblue{x^{(k)}}\bigr)
+\overset{!}{=} 0 .
+$$
+
+Das ist eine lineare Gleichung in $x$, und sie lässt sich hinschreiben, solange
+$\corange{f'(x^{(k)})} \neq 0$ ist. Auflösen liefert die nächste Iterierte.
+
+:::algorithmus[13.1.11 (Newton-Raphson-Verfahren für Nullstellen)]
+Gegeben seien eine differenzierbare Funktion $f\colon \R \to \R$ und ein
+Startwert $\cblue{x^{(0)}}$. Für $k = 0, 1, 2, \dots$ setze
+
+$$ {#eq-13.1.1}
+\cblue{x^{(k+1)}} = \cblue{x^{(k)}} - \frac{\cblue{f(x^{(k)})}}{\corange{f'(x^{(k)})}} ,
+$$
+
+solange $\corange{f'(x^{(k)})} \neq 0$ ist, und brich ab, sobald
+$\left|\cblue{f(x^{(k)})}\right|$ oder die Schrittlänge
+$\left|\cblue{x^{(k+1)}} - \cblue{x^{(k)}}\right|$ unter eine vorgegebene
+Schranke fällt.
+:::
+
+Geometrisch ist $\cblue{x^{(k+1)}}$ der Schnittpunkt der Tangente an $f$ im
+Punkt $\bigl(\cblue{x^{(k)}}, \cblue{f(x^{(k)})}\bigr)$ mit der $x$-Achse. Der
+Bruch in ($13.1.1$) sagt das noch einmal in Zahlen: Wir teilen die Höhe, die
+abzubauen ist, durch die Rate, mit der die Tangente sie abbaut.
+
+:::beispiel[13.1.12 (Die Wurzel aus zwei)]
+Wir bleiben bei $\cblue{f(x) = x^2 - 2}$ mit $\corange{f'(x) = 2x}$ und
+$\cgreen{x^\star} = \sqrt 2 = 1{,}41421356$. Die Vorschrift ($13.1.1$) wird zu
+
+$$
+\cblue{x^{(k+1)}} = \cblue{x^{(k)}} - \frac{\cblue{(x^{(k)})^2 - 2}}{\corange{2x^{(k)}}}
+= \frac{1}{2}\left(\cblue{x^{(k)}} + \frac{2}{\cblue{x^{(k)}}}\right) ,
+$$
+
+also gerade dem Heron-Verfahren, das seit der Antike Wurzeln zieht. Von
+$\cblue{x^{(0)}} = 2$ aus laufen die Iterierten so:
+
+$$
+\begin{array}{c|l|l|l}
+k & \cblue{x^{(k)}} & e_k := \left|\cblue{x^{(k)}} - \cgreen{x^\star}\right| & e_k / e_{k-1}^2 \\ \hline
+0 & 2{,}000000000000 & 5{,}86 \cdot 10^{-1} & \text{-} \\
+1 & 1{,}500000000000 & 8{,}58 \cdot 10^{-2} & 0{,}250 \\
+2 & 1{,}416666666667 & 2{,}45 \cdot 10^{-3} & 0{,}333 \\
+3 & 1{,}414215686275 & 2{,}12 \cdot 10^{-6} & 0{,}353 \\
+4 & 1{,}414213562375 & 1{,}59 \cdot 10^{-12} & 0{,}354
+\end{array}
+$$
+
+Die letzte Spalte pendelt sich bei $1/(2\cgreen{x^\star}) = 0{,}3536$ ein. Die
+Zahl der gültigen Dezimalstellen läuft dabei über $0{,}2$, $1{,}1$, $2{,}6$,
+$5{,}7$ und $11{,}8$: Sie verdoppelt sich in jedem Schritt grob. Zum Vergleich
+brauchte die Bisektion auf demselben Intervall $20$ Schritte für sechs Stellen.
+:::
+
+:::bemerkung[13.1.13 (Quadratische Konvergenz)]
+Was wir in der letzten Spalte gesehen haben, ist *quadratische Konvergenz*
+(:k[Konvergenzordnung]{#rate-of-convergence}): Der Fehler des nächsten Schrittes
+verhält sich wie das Quadrat des aktuellen,
+
+$$
+e_{k+1} \approx C \cdot e_k^2 ,
+$$
+
+mit einer Konstanten $C$, die von $f$ abhängt. Ist $f$ in einer Umgebung einer
+einfachen Nullstelle zweimal stetig differenzierbar, so ist asymptotisch
+$C = \left|f''(\cgreen{x^\star})\right| / \bigl(2\left|f'(\cgreen{x^\star})\right|\bigr)$,
+für unser Beispiel also $2/(2 \cdot 2\sqrt 2) = 0{,}354$, genau der beobachtete
+Wert. Auf $C$ kommt es an: Die Folie kürzt die Aussage zu „der Fehler quadriert
+sich pro Schritt" ab, und das stimmt schon in unserem eigenen Beispiel nicht,
+denn $e_0^2 = 0{,}343$ steht gegen $e_1 = 0{,}086$. Praktisch heißt
+quadratische Konvergenz: Sobald wir nah genug dran sind,
+verdoppelt jeder Schritt die Zahl der richtigen Stellen, und wenige Schritte
+genügen bis zur Maschinengenauigkeit.
+
+Der Preis dafür steht im Kleingedruckten. Erstens braucht das Verfahren die
+Ableitung, die Bisektion kam mit Funktionswerten aus. Zweitens gilt die Aussage
+nur *lokal*: Weit weg vom Ziel kann die Tangente irgendwohin zeigen, und die
+Iteration läuft dann davon. Drittens muss die Nullstelle einfach und $f'$ hinreichend
+glatt sein; eine lokal Lipschitz-stetige Ableitung ist eine übliche hinreichende Annahme.
+Ist $\corange{f'(\cgreen{x^\star})} = 0$, so bricht die Konvergenz auf lineare
+Geschwindigkeit ein, und unterwegs kann ein $\corange{f'(x^{(k)})} = 0$ den
+Schritt ganz undefiniert machen. Die Bisektion hat keinen dieser Vorbehalte,
+dafür braucht sie für dieselbe Genauigkeit ein Vielfaches an Schritten. In der
+Praxis kombinieren wir beides: erst klammern, dann Newton. Wir kommen in
+[Abschnitt 13.4](#sec-13.4) darauf zurück.
+:::
+
+:::bemerkung[13.1.14 (Von der Nullstelle zum Minimum)]
+Jetzt schließt sich der Kreis zu Bemerkung 13.1.3. Suchen wir das Minimum einer
+differenzierbaren Funktion $\cblue{f}$, so suchen wir eine Nullstelle von
+$\corange{\nabla f}$. Wenden wir ($13.1.1$) auf diese Funktion an, so steht im
+Nenner die Ableitung des Gradienten, also die Hesse-Matrix:
+
+$$
+\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}}
+- \Bigl(\corange{\nabla f(\bx^{(k)})}\, \corange{\bH_f(\bx^{(k)})^{-1}}\Bigr)^\top .
+$$
+
+Das ist wörtlich Algorithmus 11.4.11 aus
+[Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4). Newton für
+$\min_{\bx} \cblue{f(\bx)}$ *ist* Newton-Raphson für
+$\corange{\nabla f(\bx)} = \bnull^\top$, und das Transponierte steht da, weil
+der Gradient in unserer Konvention eine Zeile ist. In
+[Abschnitt 13.4](#sec-13.4) bauen wir dieses Verfahren zu einem
+praxistauglichen aus.
+:::
+
+### Fixpunktiteration erster Ordnung
+
+Für $f\colon \R^n \to \R^n$ tritt in ($13.1.1$) an die Stelle der Division die
+Lösung des linearen Systems
+$\corange{\bJ_f(\bx^{(k)})}\,\bd = -\cblue{f(\bx^{(k)})}$ mit der
+Jacobimatrix aus [Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3); die nächste
+Iterierte ist dann $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \bd$. Das ist teuer:
+pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung. Die einfachste
+Alternative ersetzt die Ableitung deshalb durch eine feste Zahl.
+
+:::algorithmus[13.1.15 (Fixpunktiteration erster Ordnung)]
+Gegeben seien $f\colon \R^n \to \R^n$, ein Startpunkt $\cblue{\bx^{(0)}}$ und
+eine Schrittweite $\corange{\gamma} > 0$. Für $k = 1, 2, \dots$ setze
+
+$$ {#eq-13.1.2}
+\cblue{\bx^{(k)}} = \cblue{\bx^{(k-1)}} - \corange{\gamma\, f(\bx^{(k-1)})} .
+$$
+:::
+
+Der Name kommt daher, dass ($13.1.2$) eine
+:k[Fixpunktiteration]{#fixed-point-iteration} $\bx \mapsto g(\bx)$ für
+$g(\bx) := \bx - \corange{\gamma} f(\bx)$ ist: Wegen $\corange{\gamma} \neq 0$
+gilt $g(\cgreen{\bx^\star}) = \cgreen{\bx^\star}$ genau dann, wenn
+$f(\cgreen{\bx^\star}) = \bnull$ ist. Fixpunkte von $g$ und Nullstellen von $f$
+sind dasselbe.
+
+Für affines $f(\bx) = \bA\bx - \bb$ ist ($13.1.2$) übrigens wörtlich das
+Richardson-Verfahren aus [Abschnitt 8.3](?k=08-la-misc#sec-8.3), und die dortige
+Konvergenzbedingung ist der Spezialfall des folgenden Satzes.
+
+:::satz[13.1.16 (Konvergenzrate der Fixpunktiteration)]
+Sei $f\colon \R^n \to \R^n$ in einer Umgebung von $\cgreen{\bx^\star}$
+differenzierbar mit $f(\cgreen{\bx^\star}) = \bnull$, und sei
+
+$$ {#eq-13.1.3}
+\corange{\rho} := \left\|\bI_n - \corange{\gamma\,\bJ_f(\cgreen{\bx^\star})}\right\| < 1
+$$
+
+für eine :k[induzierte Matrixnorm]{#matrix-norm}. Dann gibt es zu jedem
+$\rho' \in (\corange{\rho}, 1)$ ein $\delta > 0$, sodass für jeden Startpunkt mit
+$\left\|\cblue{\bx^{(0)}} - \cgreen{\bx^\star}\right\| \le \delta$ die Iteration
+($13.1.2$) gegen $\cgreen{\bx^\star}$ konvergiert, und zwar mit
+
+$$
+\left\|\cblue{\bx^{(k)}} - \cgreen{\bx^\star}\right\|
+\le (\rho')^k \left\|\cblue{\bx^{(0)}} - \cgreen{\bx^\star}\right\|
+= O\bigl((\rho')^k\bigr) .
+$$
+
+Ist $f$ affin, so gilt die Schranke mit $\corange{\rho}$ selbst und für jeden
+Startpunkt.
+:::
+
+::::beweis
+
+:::schritt
+*Die Fehlerrekursion.* Schreiben wir $\be_k := \cblue{\bx^{(k)}} -
+\cgreen{\bx^\star}$. Weil $f$ in $\cgreen{\bx^\star}$ differenzierbar ist und
+dort verschwindet, gilt
+
+$$
+f(\cblue{\bx^{(k-1)}}) = \underbrace{f(\cgreen{\bx^\star})}_{= \bnull}
++ \corange{\bJ_f(\cgreen{\bx^\star})}\,\be_{k-1} + r(\be_{k-1}) ,
+\qquad \left\|r(\bh)\right\| = o(\left\|\bh\right\|) .
+$$
+
+Einsetzen in ($13.1.2$) und Abziehen von $\cgreen{\bx^\star}$ auf beiden Seiten
+liefert
+
+$$
+\be_k = \bigl(\bI_n - \corange{\gamma\,\bJ_f(\cgreen{\bx^\star})}\bigr)\be_{k-1}
+- \corange{\gamma}\, r(\be_{k-1}) .
+$$
+
+::why[das ist Definition 10.1.5, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Folie ersetzt diesen Schritt durch ein Ungefährzeichen und lässt den Restterm unter den Tisch fallen]
+:::
+
+:::schritt
+*Normen anlegen.* Dreiecksungleichung und die Verträglichkeit der induzierten
+Norm aus [Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) geben
+
+$$
+\left\|\be_k\right\| \le \corange{\rho}\left\|\be_{k-1}\right\|
++ \corange{\gamma}\left\|r(\be_{k-1})\right\| .
+$$
+
+::why[$\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ für jede induzierte Matrixnorm; genau bis hierher kommt auch die Folie]
+:::
+
+:::schritt
+*Den Restterm einsammeln.* Sei $\rho' \in (\corange{\rho}, 1)$ beliebig. Weil
+$\left\|r(\bh)\right\| / \left\|\bh\right\| \to 0$ für $\bh \to \bnull$, gibt es
+ein $\delta > 0$ mit
+
+$$
+\corange{\gamma}\left\|r(\bh)\right\| \le (\rho' - \corange{\rho})\left\|\bh\right\|
+\qquad \text{für alle } \left\|\bh\right\| \le \delta .
+$$
+
+Für $\left\|\be_{k-1}\right\| \le \delta$ folgt damit
+$\left\|\be_k\right\| \le \rho' \left\|\be_{k-1}\right\|$.
+
+::why[genau hier wird die Aussage lokal: Die Abschätzung gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt. Je näher $\rho'$ an $\rho$ liegt, desto kleiner darf $\delta$ ausfallen]
+:::
+
+:::schritt
+*Induktion.* Ist $\left\|\be_0\right\| \le \delta$, so ist
+$\left\|\be_1\right\| \le \rho'\left\|\be_0\right\| \le \delta$, und dasselbe
+Argument greift erneut. Per Induktion bleibt die ganze Folge in der Kugel und es
+gilt $\left\|\be_k\right\| \le (\rho')^k \left\|\be_0\right\|$. Wegen
+$\rho' < 1$ konvergiert die rechte Seite gegen null.
+
+::why[$\rho' < 1$ sorgt dafür, dass die Kugel nie verlassen wird; ohne diese Beobachtung wäre die Induktion nicht abgeschlossen]
+:::
+
+:::schritt
+*Der affine Fall.* Ist $f(\bx) = \bA\bx - \bb$, so ist
+$\corange{\bJ_f} = \bA$ konstant und $r \equiv \bnull$. Schritt 2 gibt dann
+direkt $\left\|\be_k\right\| \le \corange{\rho}\left\|\be_{k-1}\right\|$, ohne
+Einschränkung an den Startpunkt.
+
+::why[eine affine Abbildung ist ihre eigene lineare Näherung, der Restterm entfällt]
+:::
+
+::::
+
+Die Folie schreibt am Ende dieser Rechnung $\left\|\cblue{\bx^{(k)}} -
+\cgreen{\bx^\star}\right\| = O(\corange{\rho}^k)$. Das trifft den Kern, verschweigt
+aber, dass die Aussage nur in der Nähe von $\cgreen{\bx^\star}$ gilt und dass der
+Restterm im nichtaffinen Fall die Rate um ein beliebig kleines Stück verwässert.
+
+:::bemerkung[13.1.17 (Was die Monotonie-Annahme leistet)]
+Die Folie verlangt, dass $f$ „monoton steigend" ist. Im Eindimensionalen ist das
+klar: $f$ wachsend heißt $\corange{f'(x^\star)} \ge 0$. Ist die Ableitung dort
+sogar strikt positiv, so ist
+$\corange{\rho} = \left|1 - \corange{\gamma f'(x^\star)}\right| < 1$ für jedes
+$0 < \corange{\gamma} < 2/\corange{f'(x^\star)}$; bei
+$\corange{f'(x^\star)} = 0$ dagegen ist $\corange{\rho} = 1$, gleichgültig
+welches $\corange{\gamma}$ wir wählen. Ohne die Monotonie kann schon das
+*Vorzeichen* des Schrittes falsch sein: Ist $f$ fallend, so treibt uns
+($13.1.2$) mit positivem $\corange{\gamma}$ von der Nullstelle weg. Das Gegenmittel
+steht auf der Folie und ist wohlfeil: Wir arbeiten mit $-f$, das dieselben
+Nullstellen hat.
+
+Für $n > 1$ lässt die Folie offen, was „monoton steigend" bedeuten soll, denn im
+$\R^n$ gibt es keine Anordnung. Der übliche Begriff ist der eines *monotonen
+Operators*, $\left\langle f(\bx) - f(\by),\, \bx - \by\right\rangle \ge 0$ für
+alle $\bx, \by$; für differenzierbares $f$ heißt das, dass
+$\corange{\bJ_f} + \corange{\bJ_f}^\top$ positiv semidefinit ist. Ist dieser
+symmetrische Anteil in $\cgreen{\bx^\star}$ sogar positiv definit, so liefert die
+Abschätzung
+
+$$
+\left\|\bI_n - \corange{\gamma \bJ_f}\right\|_2^2
+\le 1 - \corange{\gamma}\,\lambda_{\min}\bigl(\corange{\bJ_f} + \corange{\bJ_f}^\top\bigr)
++ \corange{\gamma}^2 \left\|\corange{\bJ_f}\right\|_2^2
+$$
+
+ein $\corange{\rho} < 1$ für alle
+$0 < \corange{\gamma} < \lambda_{\min}(\corange{\bJ_f} +
+\corange{\bJ_f}^\top)/\left\|\corange{\bJ_f}\right\|_2^2$. Die Monotonie sichert
+also die *Existenz* einer brauchbaren Schrittweite, sie nennt uns aber keine.
+Und die Schranke ist nur hinreichend: Für
+$\corange{\bJ_f} = \bigl(\begin{smallmatrix} 1 & -2 \\ 2 & 1\end{smallmatrix}\bigr)$
+liefert sie $\corange{\gamma} < 0{,}4$ und trifft die wahre Grenze exakt, für
+$\corange{\bJ_f} = \diag(1, 10)$ liefert sie $\corange{\gamma} < 0{,}02$, während
+in Wahrheit noch bis $\corange{\gamma} = 0{,}2$ alles gutgeht.
+:::
+
+:::bemerkung[13.1.18 (Das Dilemma der Schrittweite)]
+Die Vor- und Nachteile des Verfahrens hängen an einer einzigen Zahl. Positiv:
+Es ist denkbar simpel, funktioniert für multivariates $f$ und braucht keine
+Jacobimatrix, sondern nur Funktionsauswertungen; bei gutartigem $f$, also kleinem
+$\corange{\rho}$, ist es zudem schnell. Negativ: Die Schrittweite
+$\corange{\gamma}$ muss passen.
+
+*Zu klein* heißt langsam. Mit $\corange{\rho}$ nahe bei $1$ schrumpft der Fehler
+pro Schritt kaum, und wir brauchen $\log(10)/(-\log\corange{\rho})$ Schritte je
+Dezimalstelle. *Zu groß* heißt, dass der Schritt über die Nullstelle hinausschießt
+und dabei größer wird als der Fehler, den er beheben sollte. Dann ist
+$\cred{\rho \ge 1}$, und Satz 13.1.16 sagt nichts mehr zu.
+
+Wie eng das Fenster ist, lässt sich im symmetrisch positiv definiten Fall exakt
+angeben. Hat $\corange{\bJ_f(\bx^\star)}$ die Eigenwerte
+$0 < \lambda_{\min} \le \dots \le \lambda_{\max}$, so ist
+
+$$
+\corange{\gamma^\star} = \frac{2}{\lambda_{\min} + \lambda_{\max}}
+\qquad \text{mit} \qquad
+\corange{\rho} = \frac{\lambda_{\max} - \lambda_{\min}}{\lambda_{\max} + \lambda_{\min}}
+= \frac{\kappa - 1}{\kappa + 1}
+$$
+
+die beste Wahl. Für $\cred{\gamma > 2/\lambda_{\max}}$ wächst der Fehler entlang
+des Eigenvektors zu $\lambda_{\max}$, die Iteration läuft also von jedem
+Startpunkt aus auseinander, dessen Fehler in dieser Richtung einen Anteil hat.
+Hier steht $\kappa = \lambda_{\max}/\lambda_{\min}$ für die
+:k[Konditionszahl]{#condition-number} aus
+[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5). Schlechte Kondition heißt also
+wörtlich langsame Konvergenz: Bei $\kappa = 10$ ist selbst die beste Rate noch
+$9/11 = 0{,}818$. Und wer die optimale Schrittweite verdoppelt, landet stets auf
+oder jenseits der Divergenzgrenze, denn $4/(\lambda_{\min} + \lambda_{\max}) \ge
+2/\lambda_{\max}$ mit Gleichheit nur für $\lambda_{\min} = \lambda_{\max}$.
+
+Im Eindimensionalen ist die beste Wahl besonders sprechend. Dort drückt
+$\corange{\gamma^\star} = 1/\corange{f'(x^\star)}$ die Rate auf
+$\corange{\rho} = 0$, und die Iteration ist nichts anderes als das
+Newton-Verfahren mit eingefrorener Ableitung; der Fehler fällt dann sogar
+quadratisch. Für $f(x) = x^2 - 2$ etwa läuft er von $\cblue{x^{(0)}} = 2$ aus
+über $0{,}121$, $5{,}2 \cdot 10^{-3}$, $9{,}6 \cdot 10^{-6}$ und
+$3{,}2 \cdot 10^{-11}$. Der Haken ist offensichtlich: Wir müssten
+$\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die Ableitung
+in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung pro Schritt.
+
+In der Praxis wählen wir $\corange{\gamma_k}$ adaptiv, etwa durch eine
+Liniensuche: Ein zu großer Vorschlag wird verkleinert, bis er genügend Fortschritt
+liefert. Die akzeptierten Schrittweiten müssen dabei nicht gegen null gehen.
+Folgen mit $\corange{\gamma_k}\to0$ spielen später beim stochastischen
+Gradientenabstieg eine eigene Rolle und brauchen dort zusätzliche Bedingungen.
+Die deterministische Schrittweitensteuerung behandelt
+[Abschnitt 13.3](#sec-13.3).
+:::
+
+:::vertiefung[Die Schrittweite als Regler]
+Alle drei Beispiele sind affin, $f(\bx) = \bA(\bx - \cgreen{\bx^\star})$ mit
+$\cgreen{\bx^\star} = \bnull$. Damit ist die Jacobimatrix überall $\bA$, und
+$\corange{\rho} = \left\|\bI - \corange{\gamma}\bA\right\|_2$ ist nach Schritt 5
+des Beweises eine echte Schranke ohne Restterm.
+
+Das erste System ist symmetrisch mit Eigenwerten $4{,}618$ und $2{,}382$; die
+Voreinstellung $\corange{\gamma} = 0{,}25$ ist genau die aus dem
+Richardson-Beispiel in [Abschnitt 8.3](?k=08-la-misc#sec-8.3) und liefert
+dieselbe Rate $0{,}4045$. Beim zweiten System sind die Eigenwerte komplex, und
+der Weg wird zur Spirale: Der Drehanteil lässt sich durch keine Schrittweite
+wegregeln, weshalb hier selbst im Optimum nur $2/\sqrt 5 = 0{,}894$ herausspringt.
+Das dritte System hat Kondition $10$ und führt Bemerkung 13.1.18 vor. Bei
+$\corange{\gamma} = 0{,}25$ divergiert es bereits; erst unterhalb von
+$\corange{\gamma} = 0{,}2$ läuft es zusammen, und die beste Rate bleibt $9/11$.
+Sehenswert ist dabei das Zickzack: Die steile Richtung überschießt, während die
+flache kaum vorankommt. Dasselbe Bild begegnet uns beim Gradientenabstieg in
+[Abschnitt 13.3](#sec-13.3) wieder.
+
+<FixpunktSpirale />
+:::
+
+Damit ist der Werkzeugkasten für Nullstellen beisammen. Für die Optimierung ist
+allerdings gerade die Voraussetzung heikel, die Bemerkung 13.1.17 gebraucht hat:
+Der Gradient einer beliebigen Zielfunktion ist im Allgemeinen nicht monoton, und
+ohne diese Annahme trägt die Vorschrift ($13.1.2$) keine Garantie mehr.
+[Abschnitt 13.2](#sec-13.2) setzt deshalb neu an und fragt zuerst, was ein
+Minimum überhaupt auszeichnet.
+
+### Selbsttest
+
+::::quiz
+
+:::frage{falsch}
+Das Bisektionsverfahren braucht die Ableitung von $f$.
+
+Es braucht nur Funktionswerte, genauer sogar nur deren Vorzeichen, und einen
+Startbereich mit Vorzeichenwechsel. Das ist seine große Stärke: Es funktioniert
+für nicht differenzierbare, nur numerisch auswertbare oder schlicht hässliche
+Funktionen, und es kann nach Satz 13.1.8 nicht divergieren. Dafür kostet jede
+weitere gültige Dezimalstelle rund $3{,}3$ Schritte, während Newton in der Nähe
+der Nullstelle ihre Zahl verdoppelt.
+:::
+
+:::frage{wahr}
+Eine zusätzliche gültige Dezimalstelle kostet die Bisektion rund $3{,}3$
+Schritte.
+
+Jeder Schritt halbiert die Intervalllänge, gewinnt also genau ein Bit oder
+$\log_{10} 2 \approx 0{,}301$ Dezimalstellen. Für eine ganze Stelle brauchen wir
+$1/\log_{10} 2 = 3{,}32$ Schritte. Nach Satz 13.1.8 sind das für
+$[1, 2]$ und $\epsilon = 10^{-6}$ zusammen $20$ Durchläufe.
+:::
+
+:::frage{falsch}
+Das Newton-Raphson-Verfahren konvergiert quadratisch, gleichgültig wo wir starten
+und welche Nullstelle wir suchen.
+
+Beides ist zu viel versprochen. Quadratisch wird es erst in der Nähe der
+Nullstelle, und nur wenn diese einfach ist, also
+$\corange{f'(x^\star)} \neq 0$ gilt. Bei einer mehrfachen Nullstelle sinkt die
+Ordnung auf $1$, und weit weg vom Ziel kann die Tangente die Iteration beliebig
+weit forttragen (Bemerkung 13.1.13).
+:::
+
+:::frage{wahr}
+Für $f(\bx) = \bA\bx - \bb$ ist die Fixpunktiteration ($13.1.2$) genau das
+Richardson-Verfahren aus Kapitel 8.
+
+Einsetzen gibt $\bx^{(k)} = \bx^{(k-1)} - \gamma(\bA\bx^{(k-1)} - \bb)$, also die
+Korrektur des Residuums mit fester Schrittweite. Die dortige Konvergenzbedingung
+$\left\|\bI - \gamma\bA\right\| < 1$ ist wörtlich ($13.1.3$), und weil $f$ affin
+ist, greift Schritt 5 des Beweises von Satz 13.1.16: Die Schranke gilt für jeden
+Startpunkt.
+:::
+
+:::frage{falsch}
+Ist $\rho = \left\|\bI_n - \gamma\bJ_f(\bx^\star)\right\| < 1$, so konvergiert
+die Fixpunktiteration von jedem Startpunkt aus gegen $\bx^\star$.
+
+Satz 13.1.16 ist eine *lokale* Aussage: Die Schranke aus Schritt 3 gilt nur in
+einer Kugel um $\bx^\star$, deren Radius wir nicht kennen. Weiter draußen taugt
+die lineare Näherung nichts mehr, und die Iteration kann zu einer anderen
+Nullstelle laufen oder ganz davonlaufen. Nur im affinen Fall verschwindet der
+Restterm und die Aussage wird global.
+:::
+
+:::frage{wahr}
+Verdoppeln wir im symmetrisch positiv definiten Fall die optimale Schrittweite,
+so ist die Konvergenzgarantie verloren.
+
+Die optimale Wahl ist $\gamma^\star = 2/(\lambda_{\min} + \lambda_{\max})$,
+divergiert wird ab $2/\lambda_{\max}$. Wegen
+$4/(\lambda_{\min} + \lambda_{\max}) \ge 2/\lambda_{\max}$ liegt das Doppelte
+immer auf oder jenseits der Grenze, mit Gleichheit nur für
+$\lambda_{\min} = \lambda_{\max}$. Bei $\bA = \diag(1, 10)$ etwa ist
+$\gamma^\star = 2/11 = 0{,}18$ und die Grenze $0{,}2$; das Doppelte $0{,}36$
+liegt weit darüber.
+:::
+
+::::
+
+*Vertiefung: Heath §5.1 ordnet Existenz, Eindeutigkeit und Konvergenzraten von
+Nullstellenproblemen ein, §5.5 behandelt Bisektion, Fixpunktiteration und Newton
+im Eindimensionalen, §5.6 die Systeme. Heath Kapitel 6 ist der Optimierung
+gewidmet und trägt die folgenden Abschnitte dieses Kapitels.*

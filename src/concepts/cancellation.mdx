@@ -1,0 +1,30 @@
+export const title = "Auslöschung";
+
+import { DigitWidget } from "./widgets/CancellationWidget";
+
+*Auslöschung* (catastrophic cancellation) passiert, wenn wir zwei fast gleich
+große :k[Gleitkommazahlen]{#floating-point} voneinander abziehen: Ihre
+gemeinsamen führenden Ziffern heben sich exakt weg, und übrig bleiben nur die
+hinteren Ziffern – genau die, die von früheren
+:k[Rundungsfehlern]{#rounding-error} verseucht sind. Die Subtraktion selbst ist
+dabei exakt; sie *erzeugt* keinen Fehler, sondern *verstärkt* die schon
+vorhandenen: Der relative Fehler wächst ungefähr um den Faktor
+
+$$
+\frac{|a|}{|a - b|} \gg 1 \qquad \text{für } a \approx b.
+$$
+
+Stimmen $a$ und $b$ in $k$ führenden Ziffern überein, verlieren wir etwa $k$
+der rund 16 signifikanten Dezimalstellen, die uns die
+:k[Maschinengenauigkeit]{#machine-epsilon} lässt. Klassisches Beispiel aus den
+Folien: Die Varianz-„Formel" $\tfrac{1}{n}\sum_i x_i^2 - \bar{x}^2$ subtrahiert
+für Daten um $10^9$ zwei Zahlen der Größe $10^{18}$; das Ergebnis kann sogar
+negativ werden.
+
+Die Kur ist nie „genauer rechnen", sondern *umformen*, sodass keine fast
+gleichen Zahlen subtrahiert werden. In diesem Kapitel: Beim
+Householder-Vektor $v_1 = a_1 - \alpha$ wählen wir das Vorzeichen
+$\alpha = -\sign(a_1)\,\|\ba\|_2$, damit aus der gefährlichen Subtraktion eine
+harmlose Addition gleicher Vorzeichen wird.
+
+<DigitWidget />

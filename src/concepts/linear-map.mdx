@@ -1,0 +1,29 @@
+export const title = "Lineare Abbildung";
+
+import { LinearMapWidget } from "./widgets/LinearMapWidget";
+
+{/* Concept tooltip: lineare Abbildung (Matrix als lineare Transformation). */}
+
+Eine lineare Abbildung (linear map) ist eine
+:k[Funktion]{#function}
+$\Phi : \R^n \to \R^m$, die Addition und Skalierung von
+:k[Vektoren]{#vector} respektiert:
+
+$$
+\Phi(\bx + \by) = \Phi(\bx) + \Phi(\by), \qquad \Phi(\lambda \bx) = \lambda\, \Phi(\bx) .
+$$
+
+Jede solche Abbildung ist die
+:k[Multiplikation]{#matrix-multiplication}
+mit einer :k[Matrix]{#matrix},
+$\Phi(\bx) = \bA\bx$, und die Matrix lässt sich leicht
+ablesen: Spalte $j$ von $\bA$ ist das Bild des
+$j$-ten Standardbasisvektors. Das ist der Trick hinter der
+Aufgabe, die Einheitsquadrat-zu-Parallelogramm-Transformation zu
+identifizieren (vgl. MML Abb. 5.5): Wir schauen, wo $(1,0)$
+und $(0,1)$ landen. Diese beiden Bilder, als Spalten
+geschrieben, sind schon die ganze Abbildung. Linearität heißt außerdem:
+Der Ursprung bleibt liegen, und gleichmäßig verteilte Gitterlinien
+bleiben gleichmäßig verteilt: kein Verbiegen, kein Verschieben.
+
+<LinearMapWidget />

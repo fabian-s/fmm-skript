@@ -1,0 +1,39 @@
+export const title = "Supremum & Infimum";
+
+import { SupWidget } from "./widgets/SupremumWidget";
+
+{/* Konzept-Tooltip: Supremum (und Infimum): kleinste obere Schranke, wird evtl. nie angenommen. */}
+
+Das Supremum einer Menge von Zahlen ist ihre *kleinste obere
+Schranke* (least upper bound): die kleinste Zahl, die immer noch
+$\geq$ jedem Element der Menge ist. Hat die Menge ein
+größtes Element, dann *ist* das Supremum einfach dieses
+Maximum. Der Witz des neuen Begriffs ist, dass ein Supremum
+auch dann existieren kann, wenn ein Maximum fehlt. Die
+:k[Folge]{#sequence} der Werte
+$1 - \tfrac{1}{n}$, also
+$0, \tfrac{1}{2}, \tfrac{2}{3}, \tfrac{3}{4}, \dots$, hat
+kein größtes Element (jedes wird vom nächsten übertroffen), aber
+$1$ beschränkt sie alle und nichts Kleineres tut das:
+
+$$
+\sup_{n \in \N} \left( 1 - \tfrac{1}{n} \right) = 1, \qquad \text{aber } \max_n \left( 1 - \tfrac{1}{n} \right) \text{ existiert nicht.}
+$$
+
+Für eine :k[Funktion]{#function} meint
+$\sup_x f(x)$ das Supremum aller Werte $f(x)$,
+die Höhe, der sich der Graph nähert, selbst wenn kein
+einzelnes $x$ sie je annimmt (dafür brauchen wir keinen
+:k[Grenzwert]{#limit}-Apparat, nur
+Schranken). Das Spiegelbild ist das *Infimum*, die größte
+untere Schranke, mit
+$\inf_x f(x) = -\sup_x \left( -f(x) \right)$. Genau diese
+Robustheit ist der Grund, warum etwa die Definition der konvexen
+Konjugierten (vgl. MML §7.3.3) ein Supremum verwendet: Für eine
+geknickte Funktion wie $f(x) = |x|$ gibt es keine
+Ableitungsbedingung, um eine Maximalstelle zu finden, und für manche
+Steigungen existiert gar keine Maximalstelle; das Supremum ist
+trotzdem in jedem Fall eine wohldefinierte Zahl (oder
+$+\infty$).
+
+<SupWidget />

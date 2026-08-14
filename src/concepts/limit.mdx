@@ -1,0 +1,31 @@
+export const title = "Grenzwert";
+
+import { LimitWidget } from "./widgets/LimitWidget";
+
+{/* Concept tooltip: Grenzwert (die Notation h -> 0 beim Differenzenquotienten). */}
+
+Die Grenzwert-Notation (limit) $\lim_{h \to 0} g(h) = L$
+fragt: Auf welchen Wert steuert $g(h)$ zu, wenn wir
+$h$ beliebig klein machen (ohne jemals genau 0 zu erreichen)?
+Entscheidend: $g$ muss *an* der Stelle
+$h = 0$ gar nicht definiert sein; nur das Verhalten in der
+Nähe zählt. Genau das rettet den Differenzenquotienten (vgl. MML
+Definition 5.2): Direktes Einsetzen von $h = 0$ ergäbe das
+sinnlose $0/0$, aber der Grenzwert der Werte für schrumpfendes
+$h$ kann trotzdem existieren. Konkret für
+$f(x) = x^2$ an der Stelle $x_0 = 1$:
+
+$$
+\frac{(1+h)^2 - 1}{h} = \frac{2h + h^2}{h} = 2 + h \;\xrightarrow{\;h \to 0\;}\; 2.
+$$
+
+Formal ist das dieselbe Idee wie die
+:k[Konvergenz]{#convergence} einer
+:k[Folge]{#sequence}: Auf *jedem* Weg,
+auf dem wir $h$ gegen 0 schrumpfen lassen (etwa
+$h = 0.1, 0.01, 0.001, \dots$ oder von der negativen Seite),
+müssen sich die Werte $g(h)$ derselben Zahl $L$
+annähern; liefern verschiedene Wege verschiedene Werte, existiert der
+Grenzwert nicht.
+
+<LimitWidget />

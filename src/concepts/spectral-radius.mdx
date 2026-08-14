@@ -1,0 +1,38 @@
+export const title = "Spektralradius";
+
+import { PowerSpiralWidget } from "./widgets/SpectralRadiusWidget";
+
+{/*
+ * Konzept-Tooltip: Spektralradius: größter Eigenwert-Betrag; entscheidet,
+ * ob Matrixpotenzen (und stationäre Iterationen) schrumpfen oder explodieren.
+ * Kanonische id, geteilt mit den internen Apps.
+ */}
+
+Der *Spektralradius* (spectral radius) einer quadratischen
+:k[Matrix]{#matrix} $\bA$ ist die
+Größe ihres betragsgrößten
+:k[Eigenwerts]{#eigenvalue-eigenvector}:
+
+$$
+\rho(\bA) = \max\{\, |\lambda| : \lambda \text{ ist Eigenwert von } \bA \,\}.
+$$
+
+Da reelle Matrizen auch
+:k[komplexe]{#complex-numbers} Eigenwerte
+haben können, meint $|\lambda|$ hier den Betrag einer
+komplexen Zahl. Beispiel: Für
+$\bA = \begin{bmatrix} 0.5 & 0.3 \\ 0 & 0.8 \end{bmatrix}$
+sind die Eigenwerte $0.5$ und $0.8$, also
+$\rho(\bA) = 0.8$.
+
+Warum das wichtig ist: Wiederholtes Multiplizieren mit $\bA$
+streckt jede Eigenrichtung pro Schritt um ihren Eigenwert. Die
+Potenzen $\bA^k$ schrumpfen also genau dann gegen Null, wenn
+$\rho(\bA) < 1$ gilt, und irgendwann dominiert die am
+langsamsten schrumpfende Richtung: Fehler klingen ungefähr wie
+$\rho^k$ ab. Das macht
+$\rho(\bG(\bx^*)) < 1$ zum natürlichen mehrdimensionalen
+Ersatz für die skalare Bedingung $|g'(x^*)| < 1$ bei der
+Fixpunkt-Iteration für Gleichungssysteme.
+
+<PowerSpiralWidget />

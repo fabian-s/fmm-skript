@@ -1,0 +1,25 @@
+export const title = "Zielfunktion (objective function)";
+
+import { ObjectiveWidget } from "./widgets/ObjectiveFunctionWidget";
+
+{/* Konzept-Tooltip: Zielfunktion: die Größe, die beim Trainieren optimiert wird. */}
+
+Eine *Zielfunktion* (engl. *objective function*)
+verdichtet die Frage „Wie gut ist dieses Modell gerade?“ zu einer
+einzigen Zahl: Sie ist eine
+:k[Funktion]{#function}
+$L(\btheta)$ der Modellparameter
+$\btheta$, und Trainieren heißt, sie zu
+:k[optimieren]{#optimization}. Misst die
+Zahl einen Fehler, minimieren wir sie (dann heißt sie oft
+Verlust- oder Kostenfunktion); misst sie, wie gut die Parameter die
+Daten erklären (etwa eine
+:k[Likelihood]{#likelihood}), maximieren
+wir sie. Ein Klassiker ist die quadratische Fehlerfunktion der
+:k[linearen Regression]{#linear-regression}:
+
+$$
+L(\btheta) = \sum_{i=1}^{n} \left( y_i - f_{\btheta}(x_i) \right)^2 .
+$$
+
+<ObjectiveWidget />

@@ -1,0 +1,278 @@
+::quelle[Folien 11-ableitungen-II, Abschnitt „Wrap-up".]
+
+[Kapitel 10](?k=10-ableitungen-1#sec-10.1) hat geklärt, was eine Ableitung ist.
+Dieses Kapitel hat geklärt, wie wir mit ihr rechnen. Vier Bausteine sind dabei
+entstanden, und alle vier gehen auf dieselbe Gleichung zurück, auf die lineare
+Approximation ($11.1.1$). Sammeln wir ein, was bleiben soll.
+
+### Die Kernkonzepte
+
+:::bemerkung[11.5.1 (Vier Bausteine, die bleiben)]
+1. **Eigenschaften: Stetigkeit und Linearität**
+   ([Abschnitt 11.1](#sec-11.1)). Ist $f$ in $\bx$ differenzierbar, so ist $f$
+   dort auch :k[stetig]{#continuity} (Satz 11.1.2). Die Umkehrung ist falsch,
+   und der Knick von $\left|x\right|$ ist das Standardbeispiel dafür
+   (Beispiel 11.1.3, Bemerkung 11.1.4). Die zweite Eigenschaft gehört nicht
+   einer einzelnen Funktion, sondern der Zuordnung
+   $f \mapsto \cgreen{D_{\bx} f}$: Sie ist linear (Satz 11.1.5). In den fünf
+   Formaten aus Kapitel 10 heißt das jeweils dasselbe: Das zuständige
+   Ableitungsobjekt, von der gewöhnlichen Ableitung bis zur Ableitung nach einer
+   Matrix, wird eintragsweise addiert und skaliert (Bemerkung 11.1.6).
+
+2. **Rechenregeln: Produkt- und Kettenregel**
+   ([Abschnitt 11.2](#sec-11.2)). Die Produktregel gilt für jede beschränkte
+   bilineare Multiplikation $\inner{\cdot, \cdot}$ (Definition 11.2.1,
+   Satz 11.2.3), also für Skalarprodukt, Matrixprodukt und Spurausdrücke
+   gleichermaßen. Die Kettenregel ist ohne Koordinaten schlicht eine
+   :k[Verkettung]{#function-composition},
+   $\cgreen{D_{\bx}(g \circ f)} = \cgreen{D_{\by} g} \circ \cgreen{D_{\bx} f}$
+   (Satz 11.2.8); in Koordinaten wird daraus das Matrixprodukt der
+   Jacobimatrizen aus Satz 10.3.9. Beide Regeln zusammen liefern den Gradienten
+   der Ridge-Regression (Beispiel 11.2.7) und den des logistischen Verlusts,
+   $\corange{\nabla\ell(\bbeta)} = (\wh{y} - y)\bx^\top$ (Beispiel 11.2.10,
+   Bemerkung 11.2.11).
+
+3. **Ableitungen höheren Grades** ([Abschnitt 11.3](#sec-11.3)). Die $j$-te
+   Ableitung ist die lineare Näherung an die Änderung der $(j-1)$-ten
+   (Definition 11.3.1, Bemerkung 11.3.2). Für $f \in \Ccal^2$ mit
+   $f\colon \R^n \to \R$ ist die zweite Stufe die
+   :k[Hesse-Matrix]{#hessian-matrix} $\corange{\bH_f(\bx)}$
+   (Definition 11.3.3), und es gilt
+   $\cgreen{D^2_{\bx} f(\bh_1, \bh_2)} = \bh_1^\top \corange{\bH_f(\bx)}\bh_2$
+   (Satz 11.3.6). Stetige zweite partielle Ableitungen machen sie
+   :k[symmetrisch]{#symmetric-matrix} (Satz 11.3.4). In einem *kritischen* Punkt
+   entscheidet ihre Definitheit über striktes lokales Minimum, striktes lokales
+   Maximum und Sattelpunkt (Satz 11.3.9); ist sie semidefinit, aber nicht
+   definit, so bleibt der Punkt unbestimmt (Bemerkung 11.3.10). Auf einer offenen,
+   konvexen Menge ist positive Semidefinitheit überall gleichbedeutend mit
+   :k[Konvexität]{#convexity} (Satz 11.3.11). In der Statistik ist der
+   Erwartungswert der negativen Hesse-Matrix der Log-Likelihood die
+   Fisher-Information (Definition 11.3.14). Ab der dritten Stufe verlassen wir
+   die Matrixsprache, dort stehen :k[Tensoren]{#tensor} (Bemerkung 11.3.8,
+   Satz 11.3.17).
+
+4. **Taylorapproximation** ([Abschnitt 11.4](#sec-11.4)). Das
+   :k[Taylorpolynom]{#taylor-theorem} schmiegt sich in einem Punkt bis zur
+   $k$-ten Ableitung an (Definition 11.4.1), und für den Fehler gibt es zwei
+   Fassungen: das Lagrange-Restglied ($11.4.3$) mit einer Zwischenstelle, das
+   $(k+1)$-mal stetige Differenzierbarkeit verlangt, und die Ordnungsaussage
+   $\cred{o(\left|h\right|^k)}$ (Satz 11.4.2). Dieselbe Aussage gilt für
+   Abbildungen aus einem normierten Vektorraum in einen Banachraum und $k$-mal
+   *stetig* differenzierbares $f$, wenn wir den
+   ganzen Summanden $\cgreen{f^{(j)}(x)}\,h^j$ durch
+   $\cgreen{D^j_{\bx} f(\bh, \dots, \bh)}$ ersetzen (Satz 11.4.7). Die
+   Integralform des Restglieds und die Operatornorm tragen dabei die
+   Gleichmäßigkeit über alle Richtungen (Bemerkung 11.4.8). Für
+   $f\colon \R^n \to \R$ stehen in den ersten beiden Ordnungen Gradient und
+   Hesse-Matrix (Korollar 11.4.9), geometrisch Tangentialebene und Quadrik
+   (Bemerkung 11.4.10). Wer den stationären Punkt der Quadrik bestimmt, erhält den
+   Newton-Schritt; ein Minimum ist er bei positiver Hesse-Matrix
+   (Algorithmus 11.4.11, Bemerkung 11.4.12).
+:::
+
+Die meisten Beweise dieses Kapitels folgen demselben Muster. Wir setzen die
+Definition für jeden Baustein einzeln ein, sortieren die entstehenden Terme nach
+Bauart und zeigen, dass alles außerhalb des Kandidaten
+$\cred{o(\left\|\bh\right\|)}$ ist. So entstehen Satz 11.1.5, die Produktregel,
+die Kettenregel und die Hesse-Formel in Satz 11.3.6. Satz 11.1.2 kommt mit
+weniger aus, denn dort gibt es gar keinen Kandidaten: Wir schätzen beide
+Zusatzterme nach oben ab und lassen $\bh$ gegen null gehen. Das Rechnen
+mit Landau-Symbolen ist deshalb kein Beiwerk, sondern das eigentliche
+Handwerkszeug (Bemerkung 11.1.1). Weisen wir den Kandidaten zusätzlich als
+linear und beschränkt nach, so ist Definition 10.1.5 erfüllt, und mehr braucht
+es für Produkt- und Kettenregel nicht. Zweimal kommt ein Zusatzargument dazu, im
+letzten Schritt zu Satz 11.1.5 und in Schritt 4 zu Satz 11.3.6: Zwei lineare
+Abbildungen, die sich nur um $\cred{o(\left\|\bh\right\|)}$ unterscheiden, sind
+gleich. Aus dem Muster fallen der Satz von Schwarz und die eindimensionale
+Taylorentwicklung heraus, denn beide brauchen einen
+:k[Mittelwertsatz]{#mean-value-theorem}; der allgemeine Satz 11.4.7 verwendet
+statt einer skalaren Zwischenstelle die Integralform des Restglieds.
+
+### Heute gelernt
+
+| Abschnitt | Thema | Was bleibt |
+| --- | --- | --- |
+| [11.1](#sec-11.1) | Stetigkeit und Linearität | Differenzierbar zieht stetig nach sich, nicht umgekehrt; die Ableitungsoperation $f \mapsto \cgreen{D_{\bx} f}$ ist linear, in jedem der fünf Formate aus Kapitel 10 |
+| [11.2](#sec-11.2) | Produkt- und Kettenregel | Produktregel für jede beschränkte bilineare Multiplikation $\inner{\cdot, \cdot}$; Kettenregel als Verkettung $\cgreen{D_{\by} g} \circ \cgreen{D_{\bx} f}$, in Koordinaten ein Matrixprodukt |
+| [11.3](#sec-11.3) | Ableitungen höheren Grades | $\cgreen{D^j_{\bx} f}$ als multilineare Abbildung; Hesse-Matrix $\corange{\bH_f(\bx)}$, Satz von Schwarz, Definitheit im kritischen Punkt trennt lokales Minimum, Maximum und Sattel, entscheidet aber nichts, wenn sie semidefinit und nicht definit ist |
+| [11.4](#sec-11.4) | Taylorapproximation | $\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \corange{\nabla f(\bx)}\bh + \tfrac{1}{2}\bh^\top \corange{\bH_f(\bx)}\bh + \cred{r(\bh)}$ mit einem Rest, der schneller verschwindet als die letzte mitgenommene Potenz; Newton bestimmt den stationären Punkt der Quadrik |
+
+Zwei Dinge nehmen wir mit. Erstens ein Regelwerk, mit dem sich zusammengesetzte
+Ausdrücke ableiten lassen, ohne jedes Mal zur Definition zurückzukehren.
+Zweitens die Taylorapproximation, die das Ableiten von der ersten Ordnung löst
+und damit erst zum Werkzeug der Optimierung und der Asymptotik macht.
+
+### Nächste Vorlesung
+
+Offen geblieben ist eine Frage, die in diesem Kapitel zweimal aufgetaucht ist,
+ohne dass wir sie beantwortet hätten: Wann ist ein lokaler Befund auch ein
+globaler? Satz 11.3.11 verknüpft die :k[Konvexität]{#convexity} mit der positiven
+Semidefinitheit der Hesse-Matrix, zieht daraus aber keinen Schluss über globale
+Minima. Und Bemerkung 11.4.12 nennt als ersten Vorbehalt des Newton-Verfahrens,
+dass ein kritischer Punkt eben noch kein Minimum ist.
+
+Für :k[konvexe Funktionen]{#convex-function} lautet die Antwort „immer", und das ändert die Lage
+grundlegend. Jeder kritische Punkt ist dann ein globales Minimum, Sattelpunkte
+gibt es keine, und ein Abstiegsverfahren kann nirgends an der falschen Stelle
+hängenbleiben. Damit bekommen :k[Optimierungsverfahren]{#optimization} Garantien
+statt Faustregeln. Die [nächste Vorlesung](?k=12-konvexitaet#sec-12.1) nimmt
+sich die Konvexität deshalb als eigenes Thema vor.
+
+### Selbsttest
+
+Acht Aussagen aus allen vier Abschnitten. Welche stimmen?
+
+::::quiz
+
+:::frage{falsch}
+Existieren in $\bx$ alle :k[partiellen Ableitungen]{#partial-derivative} von
+$f\colon \R^n \to \R$, so ist $f$ dort differenzierbar.
+
+Die Existenz der partiellen Ableitungen sagt nur etwas über die Koordinatenrichtungen
+aus. Für
+
+$$
+f(\bx) = \frac{x_1 x_2}{x_1^2 + x_2^2} \ \ \text{für } \bx \neq \bnull ,
+\qquad f(\bnull) = 0
+$$
+
+verschwindet $f$ auf beiden Achsen, also existieren im Nullpunkt beide partiellen
+Ableitungen und sind $0$. Auf der Diagonalen $x_1 = x_2 = t$ ist $f$ dagegen
+konstant $0{,}5$ und auf $x_2 = -x_1$ konstant $-0{,}5$, für jedes noch so kleine
+$t \neq 0$. Damit ist $f$ in $\bnull$ nicht einmal stetig und nach der
+Kontraposition von Satz 11.1.2 erst recht nicht differenzierbar
+(Bemerkung 11.1.4). Sind die partiellen Ableitungen dagegen *stetig*, so ist $f$
+differenzierbar; davon lebt Schritt 3 im Beweis zu Satz 11.3.6.
+:::
+
+:::frage{wahr}
+Für in $\bx$ differenzierbare $f, g\colon \R^n \to \R$ gilt
+$\corange{\nabla (f g)(\bx)} = \cblue{g(\bx)}\,\corange{\nabla f(\bx)} + \cblue{f(\bx)}\,\corange{\nabla g(\bx)}$.
+
+Das ist Satz 11.2.3 mit der Multiplikation zweier Zahlen als bilinearer
+Abbildung, die wegen $\left|uv\right| = \left|u\right|\left|v\right|$ die
+Schranke $K = 1$ hat (Bemerkung 11.2.2, Punkt 2 mit $m = 1$). Beide Summanden sind Zeilenvektoren,
+skaliert mit einer Zahl. Zahlenprobe mit $\cblue{f(\bx)} = x_1^2 + x_2$ und
+$\cblue{g(\bx)} = e^{x_1}x_2$ an der Stelle $\bx = (0{,}4;\ -0{,}7)^\top$: Dort
+ist $\cblue{f} = -0{,}54$ und $\cblue{g} = -1{,}0443$, und beide Wege liefern
+$\corange{\nabla(fg)} = (-0{,}2715;\ -1{,}8499)$.
+:::
+
+:::frage{falsch}
+Für $\bF\colon \R \to \R^{n \times n}$ und $g\colon \R^{n\times n} \to \R$ ist
+$\partial (g \circ \bF)(x) / \partial x$ das Matrixprodukt
+$\corange{\left(\partial g(\bY)/\partial \bY\right)^\top}\,\corange{\partial \bF(x)/\partial x}$
+an der Stelle $\bY = \cblue{\bF(x)}$.
+
+Links steht eine Zahl, rechts eine Matrix. Es fehlt die
+:k[Spur]{#trace}: Nach der fünften Bauform in Beispiel 11.2.9 ist die Ableitung
+$\tr\bigl(\corange{(\partial g/\partial \bY)^\top}\,\corange{\partial \bF(x)/\partial x}\bigr)$,
+denn die Fréchet-Ableitung einer
+skalaren Funktion mit Matrixargument wirkt über das Frobenius-Skalarprodukt
+(Bemerkung 10.4.8). Nachgerechnet mit
+$\cblue{g(\bY)} = \left\|\bY\right\|_F^2$ und
+$\cblue{\bF(x)} = \bigl(\begin{smallmatrix} x & 1 \\ 0 & e^x\end{smallmatrix}\bigr)$:
+Direkt ist $\cblue{g(\bF(x))} = x^2 + 1 + e^{2x}$ mit Ableitung $2x + 2e^{2x}$,
+bei $x = 0{,}3$ also $4{,}2442$. Das Matrixprodukt ist dort
+$\bigl(\begin{smallmatrix} 0{,}6 & 0 \\ 2 & 3{,}6442 \end{smallmatrix}\bigr)$,
+und erst seine Spur ergibt $4{,}2442$.
+:::
+
+:::frage{falsch}
+Der Satz von Schwarz gilt für jede Funktion, deren zweite partielle Ableitungen
+existieren.
+
+Er verlangt zusätzlich deren Stetigkeit, also $f \in \Ccal^2$ (Satz 11.3.4). So
+steht er auch auf der Folie; nur ihre Definition der Hesse-Matrix begnügt sich
+mit „differenzierbar", was schon für die Einträge nicht reicht
+(Definition 11.3.3). Das Standardgegenbeispiel ist
+
+$$
+f(\bx) = \frac{x_1 x_2 \left(x_1^2 - x_2^2\right)}{x_1^2 + x_2^2}
+\ \ \text{für } \bx \neq \bnull , \qquad f(\bnull) = 0 .
+$$
+
+Auf den Achsen lässt sich alles ausrechnen: $\partial f(0, x_2)/\partial x_1 = -x_2$
+und $\partial f(x_1, 0)/\partial x_2 = x_1$. Einmal mehr abgeleitet ergibt das im
+Nullpunkt die beiden Werte $-1$ und $+1$, je nach Reihenfolge. Die Hesse-Matrix
+ist dort also nicht symmetrisch, und alles, was auf ihrer Symmetrie aufbaut, von
+Satz 11.3.6 bis zum Spektralsatz-Argument in Satz 11.3.9, steht ohne Stetigkeit
+in der Luft.
+:::
+
+:::frage{wahr}
+Ist $\bx^*$ ein kritischer Punkt von $f \in \Ccal^2(S)$ mit $S \subseteq \R^2$
+offen und gilt $\det \corange{\bH_f(\bx^*)} < 0$, so ist $\bx^*$ ein
+Sattelpunkt.
+
+Die Determinante ist das Produkt der beiden Eigenwerte, und die sind reell, weil
+$\corange{\bH_f(\bx^*)}$ nach Satz 11.3.4 symmetrisch ist. Ein negatives Produkt
+lässt nur eine Möglichkeit: ein positiver und ein negativer Eigenwert, also eine
+indefinite Hesse-Matrix und damit Satz 11.3.9(3). Beispiel ist die Funktion
+$f(\bx) = x_1^2 + 3x_1x_2 + 2x_2^2$ aus dem Gradientenfeld-Widget in
+[Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) mit
+$\corange{\bH_f} = \bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4\end{smallmatrix}\bigr)$,
+Determinante $-1$ und Eigenwerten $3 \pm \sqrt{10}$, also $6{,}162$ und
+$-0{,}162$. Ab $n = 3$ trägt das Vorzeichen der Determinante nicht mehr:
+$\diag(-1,-1,-1)$ hat ebenfalls Determinante $-1$, ist aber negativ definit und
+zeigt ein Maximum an.
+:::
+
+:::frage{falsch}
+Weil der Restterm der quadratischen Näherung $\cred{o(\left\|\bh\right\|^2)}$
+ist, fällt er beim Halbieren von $\bh$ höchstens auf ein Viertel.
+
+Eine $o$-Aussage beschreibt einen Grenzwert und verspricht über einzelne Schritte
+gar nichts. Schon im Eindimensionalen: Die Funktion
+$\cred{r(h)} = h^3\bigl(2 + \sin(1/h)\bigr)$
+erfüllt $\left|\cred{r(h)}\right|/h^2 \le 3\left|h\right| \to 0$, ist also
+$\cred{o(\left|h\right|^2)}$. Bei $h = 0{,}095$ steht trotzdem
+$\left|\cred{r(h/2)}\right| / \left|\cred{r(h)}\right| = 0{,}317$. Die Faustregel
+„ein Achtel", die das Widget in [Abschnitt 11.4](#sec-11.4) misst, stützt sich
+nicht auf die $o$-Aussage, sondern auf das Lagrange-Restglied ($11.4.3$) mit
+beschränkter dritter Ableitung.
+:::
+
+:::frage{wahr}
+Für $\cblue{f(\bx)} = \tfrac{1}{2}\bx^\top\bA\bx - \bb^\top\bx$ mit symmetrischem,
+:k[positiv definitem]{#positive-definite} $\bA$ landet der Newton-Schritt
+($11.4.7$) aus jedem Startpunkt in der Lösung des
+:k[Gleichungssystems]{#linear-system} $\bA\bx = \bb$.
+
+Nach Beispiel 11.2.5 mit $\bA = \bA^\top$, Satz 10.3.4(3) für den linearen Term
+und der Linearität aus Satz 11.1.5 ist
+$\corange{\nabla f(\bx)} = \bx^\top\bA - \bb^\top$, und
+$\corange{\bH_f(\bx)} = \bA$ ist konstant. Eingesetzt in ($11.4.7$) gibt das
+$\bx^{(1)} = \bx^{(0)} - \bA^{-1}\bigl(\bA\bx^{(0)} - \bb\bigr) = \bA^{-1}\bb$,
+unabhängig vom Start. Zahlenprobe mit
+$\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3\end{smallmatrix}\bigr)$ und
+$\bb = (1, 2)^\top$: Von $(5, -4)^\top$, von $\bnull$ und von
+$(-13{,}7;\ 8{,}2)^\top$ aus steht nach einem Schritt jeweils exakt
+$(0{,}2;\ 0{,}6)^\top$ da. Der Grund ist Bemerkung 11.4.10: Bei einer
+quadratischen Funktion ist $\cgreen{T_2} = \cblue{f}$, das Verfahren minimiert
+also die Funktion selbst. Gerechnet wird der Schritt als Gleichungssystem und
+nicht über die Inverse, bei positiv definitem $\bA$ per Cholesky-Zerlegung
+([Abschnitt 5.4](?k=05-lgs#sec-5.4)).
+:::
+
+:::frage{wahr}
+Ist $f \in \Ccal^2(S)$ auf einer offenen, konvexen Menge $S$ konvex, so ist jeder
+kritische Punkt von $f$ ein globales Minimum auf $S$.
+
+Nach Satz 11.3.11 ist $\corange{\bH_f(\bx)} \succeq 0$ für alle $\bx \in S$. Sei
+$\bx^*$ kritisch und $\by \in S$ beliebig. Weil $S$ konvex ist, liegt die
+Strecke dazwischen ganz in $S$, und wir betrachten
+$\varphi(t) := \cblue{f(\bx^* + t(\by - \bx^*))}$ für $t \in [0,1]$. Die
+Kettenregel gibt $\varphi'(0) = \corange{\nabla f(\bx^*)}(\by - \bx^*) = 0$ und
+$\varphi''(t) = (\by - \bx^*)^\top \corange{\bH_f\bigl(\bx^* + t(\by - \bx^*)\bigr)} (\by - \bx^*) \ge 0$. Also ist
+$\varphi'$ nichtfallend und ab $t = 0$ nichtnegativ, damit
+$\varphi(1) \ge \varphi(0)$, und das heißt
+$\cblue{f(\by)} \ge \cblue{f(\bx^*)}$. Sattelpunkte kann es aus demselben Grund
+nicht geben. Darauf beruht der Ausblick auf die nächste Vorlesung.
+:::
+
+::::
+
+*Vertiefung: Die Konvexität und die Verfahren, die auf ihr aufbauen, behandelt
+MML §7.3; der Gradientenabstieg aus [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2)
+steht dort in §7.1 daneben.*

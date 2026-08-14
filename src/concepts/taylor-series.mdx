@@ -1,0 +1,34 @@
+export const title = "Taylor-Reihe";
+
+import { TaylorWidget } from "./widgets/TaylorSeriesWidget";
+
+{/* Konzept-Tooltip: Taylor-Reihe: lokale Polynom-Näherung um einen Punkt. */}
+
+Eine Taylor-Reihe (Taylor series) nähert eine glatte Funktion in der
+Nähe eines einzelnen Punktes $a$ durch ein Polynom an, das
+ausschließlich aus dem Verhalten der Funktion *an* diesem
+Punkt gebaut ist: ihrem Wert, ihrer Steigung, ihrer Krümmung und so
+weiter. Die abgeschnittene Reihe vom Grad $n$ ist das
+eindeutige Polynom, dessen Wert und erste $n$
+:k[Ableitungen]{#derivative} an der Stelle
+$a$ alle mit denen von $f$ übereinstimmen:
+
+$$
+f(x) \approx f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n.
+$$
+
+Schneiden wir schon nach dem linearen Term ab, erhalten wir die
+:k[Tangente]{#tangent-line}; jeder weitere
+Term (der mehr
+:k[Glattheit]{#differentiability} von
+$f$ verlangt) biegt das Polynom so zurecht, dass es sich
+über einen breiteren Bereich an die Kurve schmiegt. Kleines Beispiel:
+Für $f(x) = \sin(x)$ um $a = 0$ lautet das
+Polynom vom Grad 3 $x - x^3/6$; an der Stelle
+$x = 0.5$ liefert es $0.47917$ gegenüber dem wahren
+Wert $\sin(0.5) = 0.47943$. Weil alle Information aus einem
+einzigen Punkt stammt, können wir die abgeschnittene Taylor-Reihe als
+Extremfall der Interpolation auffassen: als ihren
+Ein-Punkt-Grenzfall (vgl. Heath §7.3.5).
+
+<TaylorWidget />

@@ -1,0 +1,28 @@
+export const title = "Nullstellen von Polynomen";
+
+import { RootsWidget } from "./widgets/PolynomialRootsWidget";
+
+{/* Konzept-Tooltip: Nullstellen von Polynomen: Fundamentalsatz der Algebra. */}
+
+Eine *Nullstelle* (engl. *root*) eines Polynoms $p$ ist eine Zahl $x$ mit
+$p(x) = 0$. Der *Fundamentalsatz der Algebra* sagt: Ein Polynom vom Grad $n$
+hat *genau* $n$ Nullstellen, sofern wir sie in den
+:k[komplexen Zahlen]{#complex-numbers} zählen und mehrfache Nullstellen mit
+ihrer *Vielfachheit* mitzählen. Gleichwertig formuliert: $p$ zerfällt
+vollständig in Linearfaktoren:
+
+$$
+p(x) = c\,(x - r_1)(x - r_2) \cdots (x - r_n).
+$$
+
+Kleines Beispiel: $x^3 - 6x^2 + 11x - 6 = (x-1)(x-2)(x-3)$ hat die drei
+Nullstellen $1, 2, 3$; dagegen hat $(x-2)^2 = x^2 - 4x + 4$ die einzige
+Nullstelle $2$ mit Vielfachheit zwei, und $x^2 + 1$ hat gar keine reelle
+Nullstelle, sondern das komplexe Paar $\pm i$. Sind alle Koeffizienten reell,
+treten komplexe Nullstellen stets in konjugierten Paaren $a \pm bi$ auf.
+
+Diese Abzählung garantiert, dass jede $n \times n$-:k[Matrix]{#matrix} genau
+$n$ Eigenwerte besitzt (mit Vielfachheiten gezählt): Sie sind die Nullstellen
+ihres charakteristischen Polynoms vom Grad $n$.
+
+<RootsWidget />

@@ -1,0 +1,29 @@
+export const title = "Rangsatz";
+
+import { DimensionBudgetWidget } from "./widgets/RankNullityTheoremWidget";
+
+{/* Konzept-Tooltip: Rangsatz (rank–nullity theorem). */}
+
+Für eine :k[lineare Abbildung]{#linear-map} $\Phi: \R^n \to \R^m$
+(gleichwertig: eine $m \times n$-:k[Matrix]{#matrix} $\bA$) ist der *Rangsatz*
+(rank–nullity theorem, vgl. MML Theorem 2.24) ein Erhaltungssatz für
+:k[Dimensionen]{#dimension}:
+
+$$
+\dim\big(\ker(\Phi)\big) \;+\; \rang(\bA) \;=\; n.
+$$
+
+Von den $n$ Dimensionen, die der Eingangsraum anbietet, drückt die Abbildung
+$\dim(\ker)$ davon auf null zusammen (den :k[Kern]{#kernel}), und jede nicht
+zusammengedrückte Dimension taucht im :k[Bild]{#image} auf, dessen Dimension
+der :k[Rang]{#rank} ist. Keine entsteht neu, keine geht verloren. Kleines
+Beispiel: $\bA = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{pmatrix}$ hat
+Rang 2 (die ersten beiden Spalten sind unabhängig, die dritte ist ihre
+Summe), also muss der Kern eine Gerade sein: Tatsächlich spannt
+$(1, 1, -1)^\top$ ihn auf, und $1 + 2 = 3$ geht auf. Der Rangsatz treibt
+außerdem Beweise durch Abzählen an: Im Eckart-Young-Argument zur SVD (vgl.
+MML §4.5) zwingt er zwei :k[Untervektorräume]{#subspace} dazu, sich in einem
+Vektor ungleich null zu überlappen: allein die Dimensionen schließen einen
+leeren Schnitt aus, und das liefert den Widerspruch.
+
+<DimensionBudgetWidget />

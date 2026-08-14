@@ -1,0 +1,28 @@
+export const title = "Summenzeichen (Σ)";
+
+{/* Konzept-Tooltip: Summenzeichen (Sigma-Notation) und Indexverschiebung. */}
+
+Das Symbol $\sum$ (großes Sigma) ist eine Kurzschreibweise
+für „addiere diese Terme auf&ldquo;. In $\sum_{i=1}^{3} i^2$
+durchläuft der Zähler $i$ die Werte $1, 2, 3$, und
+für jeden Wert addieren wir den Term $i^2$:
+
+$$
+\sum_{i=1}^{3} i^2 = 1^2 + 2^2 + 3^2 = 14.
+$$
+
+Welcher Buchstabe als Zähler dient, ist egal ($i$,
+$k$, $n$ sind alle in Ordnung), und der
+Startwert muss nicht $1$ sein; Summen über
+Polynomkoeffizienten beginnen oft bei $i = 0$.
+
+Eine *Indexverschiebung* (index shift) schreibt dieselbe Summe
+mit einem anderen Zählbereich. Ist zum Beispiel der Term für
+$i = 0$ zufällig Null, dürfen wir ihn einfach weglassen und
+bei $i = 1$ starten. Allgemeiner macht die Substitution
+$j = i - 1$ aus $\sum_{i=1}^{n} a_i$ die Summe
+$\sum_{j=0}^{n-1} a_{j+1}$: es werden exakt dieselben
+Terme addiert, nur die Buchführung ändert sich. Ist die obere Grenze
+$\infty$, hat die Summe unendlich viele Terme und wird zu
+einer
+:k[unendlichen Reihe]{#infinite-series}.

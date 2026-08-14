@@ -1,0 +1,39 @@
+export const title = "Gleitkommazahl";
+
+import { ToyFloatLine } from "./widgets/FloatingPointWidget";
+
+{/*
+ * Concept tooltip: floating-point number, how computers store real numbers
+ * with a fixed number of significant binary digits (mantissa + exponent).
+ */}
+
+Ein Computer kann die meisten reellen Zahlen nicht exakt speichern:
+er behält nur eine feste Anzahl signifikanter Binärziffern. Eine
+*Gleitkommazahl* (engl. *floating-point number*) wird
+wie in wissenschaftlicher Notation zur Basis 2 geschrieben: ein
+Vorzeichen, eine *Mantisse* mit den signifikanten Ziffern und
+ein *Exponent*, der das Binärkomma verschiebt,
+
+$$
+x = \pm\, (1.b_1 b_2 \ldots b_t)_2 \times 2^{e},
+$$
+
+wobei die $b_i$ Bits sind und $t$ durch das Format
+festgelegt ist (die übliche doppelte Genauigkeit hat
+$t = 52$). Zum Beispiel passt
+$3.25 = (1.101)_2 \times 2^{1}$ exakt, aber $0.1$
+hat eine unendlich periodische Binärdarstellung und muss nach
+$t$ Bits abgeschnitten werden; gespeichert wird nur eine
+darstellbare Zahl in der Nähe.
+
+Weil es nur endlich viele Ziffernmuster gibt, bilden die darstellbaren
+Zahlen ein diskretes Gitter auf der reellen Achse, dessen Lücken
+proportional zur Größe der Zahlen wachsen: Nahe $1$ ist die
+Lücke das
+:k[Maschinen-Epsilon]{#machine-epsilon}
+$2^{-t}$, nahe $1000$ ist sie etwa tausendmal
+breiter. Jede Eingabe und jedes Rechenergebnis wird auf den nächsten
+Gitterpunkt gerundet – die Quelle der
+:k[Rundungsfehler]{#rounding-error}.
+
+<ToyFloatLine />

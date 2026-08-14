@@ -1,0 +1,27 @@
+export const title = "Gradient";
+
+import { GradientWidget } from "./widgets/GradientWidget";
+
+Die :k[Ableitung]{#derivative}
+$f'(x)$ einer Funktion in einer Variablen kennen wir. Für
+eine Funktion mehrerer Variablen, $\phi: \R^n \to \R$,
+übernimmt der *Gradient* diese Rolle: Er ist der
+:k[Vektor]{#vector}, der alle
+:k[partiellen Ableitungen]{#partial-derivative}
+einsammelt,
+
+$$
+\nabla \phi(\bx) = \left( \frac{\partial \phi(\bx)}{\partial x_1}, \ldots, \frac{\partial \phi(\bx)}{\partial x_n} \right)^T .
+$$
+
+Zum Beispiel hat $\phi(\bx) = x_1^2 + 2x_2^2$ den
+Gradienten $\nabla \phi(\bx) = (2x_1,\, 4x_2)^T$.
+Geometrisch zeigt der Gradient in die Richtung des steilsten Anstiegs
+von $\phi$, und seine Länge sagt, wie steil es dort bergauf
+geht. So wie $f'(x) = 0$ am Boden eines eindimensionalen Tals
+gilt, kann ein glattes $\phi$ ein Minimum nur dort haben, wo
+$\nabla \phi(\bx) = \bzero$ ist: jede
+Aufwärtsrichtung ist erloschen. Den Gradienten der Quadratsumme null
+zu setzen ist genau die Herleitung der Normalengleichungen.
+
+<GradientWidget />

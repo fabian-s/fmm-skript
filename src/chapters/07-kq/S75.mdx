@@ -1,0 +1,425 @@
+import { GivensWidget, HouseholderWidget, AusloeschungWidget } from "./widgets/S75Local";
+
+{/*
+  §7.5 Konstruktion von Q: Givens-Rotationen und Householder-Spiegelungen.
+  Quelle: Folien 07-kq.Rmd, Abschnitt „Konstruktion von Q" (Z. 415–503).
+  Widget-Code recycelt aus interactive/heath-ch3 (§3.5), Labels deutsch.
+  MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
+*/}
+
+::quelle[Folien: 07-kq, Abschnitt „Konstruktion von $\bQ$&ldquo;.]
+
+In [Abschnitt 7.4](#sec-7.4) haben wir gesehen: Sobald eine QR-Zerlegung von $\bA$
+vorliegt, schrumpft das Kleinste-Quadrate-Problem auf ein Dreieckssystem
+$\bR\,\wh{\bx} = \bc_1$ zusammen. Offen blieb die entscheidende Frage: Wie finden wir die
+:k[Orthogonalmatrix]{#orthogonal-matrix} $\bQ$ überhaupt? Das holen wir jetzt nach.
+
+Die Strategie kennen wir im Kern schon vom
+:k[Gauß-Verfahren]{#gaussian-elimination}: Wir gehen von links nach rechts durch die
+Spalten von $\bA$ und entfernen die Einträge unter der Diagonalen, diesmal aber durch
+Multiplikation mit Orthogonalmatrizen $\bQ_k$. Warum ausgerechnet orthogonal? Weil solche
+Matrizen die :k[euklidische Norm]{#euclidean-norm} jedes Vektors erhalten; das
+Kleinste-Quadrate-Kriterium bleibt unter ihnen also unverändert, wie wir in Abschnitt 7.4
+ausgenutzt haben. Die beiden gängigsten Bausteine für die $\bQ_k$ sind die
+*Givens-Rotation* und die *Householder-Spiegelung* (engl. *Householder reflection*). Beide
+schauen wir uns nun im Detail an.
+
+<h3 id="sec-7.5-aufgabe">Die Eliminationsaufgabe</h3>
+
+Formulieren wir zuerst präzise, was ein einzelner Eliminationsschritt leisten muss. Sei
+$\ba \in \R^n$ beliebig. Wir suchen eine Orthogonalmatrix $\bQ_k$, sodass in $\bQ_k\ba$
+
+- die ersten $k-1$ Komponenten unberührt bleiben,
+- die letzten $n-k$ Komponenten $0$ sind:
+
+$$
+\bQ_k\,\ba = \begin{pmatrix} a_1 \\ \vdots \\ a_{k-1} \\ \alpha \\ 0 \\ \vdots \\ 0 \end{pmatrix}.
+$$
+
+Der Wert $\alpha$ ist dabei nicht frei wählbar: Orthogonale Abbildungen erhalten Normen,
+also muss die gesamte „Länge" des hinteren Teilvektors $(a_k, \ldots, a_n)^\top$ in der
+$k$-ten Komponente landen. Es genügt deshalb, das Problem für diesen Teilvektor zu lösen.
+Damit sind wir beim Kernproblem dieses Abschnitts angekommen: Gegeben $\ba$, finde ein
+orthogonales $\bQ$ mit
+
+$$
+\bQ\ba = \alpha\,\be_1 = \alpha \begin{pmatrix} 1 \\ 0 \\ \vdots \\ 0 \end{pmatrix}, \qquad \alpha = \pm\left\|\ba\right\|_2.
+$$
+
+Für $n = 2$ und $k = 1$ ist die Intuition ein Bild wert: Wir müssen $\ba$ längentreu auf
+die erste Koordinatenachse bringen. Dafür gibt es genau zwei natürliche Bewegungen:
+
+- **Givens:** wir *drehen* $\ba$ auf $\alpha\,\be_1$ (eine :k[Rotation]{#rotation-matrix}),
+- **Householder:** wir *spiegeln* $\ba$ auf $\alpha\,\be_1$ (eine :k[Spiegelung]{#reflection}; mehr dazu auch in der Übung).
+
+<h3 id="sec-7.5-givens">Givens-Rotationen</h3>
+
+Beginnen wir mit der Drehung. Aus der linearen Algebra kennen wir die
+:k[Drehmatrix]{#rotation-matrix} der Ebene. Drehungen sind orthogonal und damit genau die
+Art von Transformation, die wir suchen.
+
+:::definition[7.5.1 (Givens-Rotation)]
+Seien $c, s \in \R$ mit $c^2 + s^2 = 1$. Dann heißt
+
+$$
+\bG = \begin{pmatrix} c & s \\ -s & c \end{pmatrix}
+$$
+
+*Givens-Rotation*. Wegen $\bG^\top\bG = (c^2 + s^2)\,\bI = \bI$ ist jede solche Matrix
+orthogonal; $c$ und $s$ spielen die Rolle von Kosinus und Sinus des Drehwinkels.
+:::
+
+Wie müssen wir $c$ und $s$ wählen, damit die Drehung $\ba$ auf die erste Koordinatenachse
+bringt? Das folgende Resultat gibt die Antwort, und die Herleitung ist erfreulich kurz.
+
+:::satz[7.5.2 (Wahl von c und s)]
+Sei $\ba = (a_1, a_2)^\top \neq \bnull$. Mit
+
+$$
+c = \frac{a_1}{\sqrt{a_1^2 + a_2^2}}, \qquad s = \frac{a_2}{\sqrt{a_1^2 + a_2^2}}
+$$
+
+gilt $\bG\ba = \begin{pmatrix} \alpha \\ 0 \end{pmatrix} \text{ mit } \alpha = \left\|\ba\right\|_2.$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\bG\ba = \begin{pmatrix} c\,\cblue{a_1} + s\,\cred{a_2} \\ -s\,\cblue{a_1} + c\,\cred{a_2} \end{pmatrix} \overset{!}{=} \begin{pmatrix} \corange{\alpha} \\ 0 \end{pmatrix}
+$$
+
+::why[Matrixprodukt ausschreiben; die zweite Komponente soll verschwinden]
+:::
+
+:::schritt
+$$
+r := \sqrt{\cblue{a_1}^2 + \cred{a_2}^2} = \left\|\ba\right\|_2 > 0, \qquad c := \frac{\cblue{a_1}}{r}, \quad s := \frac{\cred{a_2}}{r}
+$$
+
+::why[Ansatz aus dem Satz; wegen $c^2 + s^2 = (\cblue{a_1}^2 + \cred{a_2}^2)/r^2 = 1$ ist $\bG$ tatsächlich eine Givens-Rotation]
+:::
+
+:::schritt
+$$
+-s\,\cblue{a_1} + c\,\cred{a_2} = \frac{-\cred{a_2}\,\cblue{a_1} + \cblue{a_1}\,\cred{a_2}}{r} = 0
+$$
+
+::why[einsetzen; die zweite Komponente verschwindet wie gefordert]
+:::
+
+:::schritt
+$$
+c\,\cblue{a_1} + s\,\cred{a_2} = \frac{\cblue{a_1}^2 + \cred{a_2}^2}{r} = r = \left\|\ba\right\|_2 = \corange{\alpha}
+$$
+
+::why[einsetzen; Definition von $r$]
+:::
+
+::::
+
+Dass $\alpha = \left\|\ba\right\|_2$ herauskommt, ist kein Zufall: Eine Orthogonalmatrix
+kann die Norm gar nicht ändern. Und noch eine Beobachtung: Um $\bG$ aufzustellen, mussten
+wir den Drehwinkel nie ausrechnen; $c$ und $s$ ergeben sich unmittelbar aus $a_1$ und
+$a_2$, ganz ohne Trigonometrie.
+
+:::beispiel[7.5.3 (Givens-Rotation)]
+Wir eliminieren die zweite Komponente von $\ba = (\cblue{4}, \cred{3})^\top$. Zuerst die
+Norm:
+
+$$
+r = \sqrt{\cblue{4}^2 + \cred{3}^2} = \sqrt{16 + 9} = \sqrt{25} = \corange{5}.
+$$
+
+Damit sind Kosinus und Sinus festgelegt:
+
+$$
+c = \frac{\cblue{4}}{\corange{5}} = 0{,}8, \qquad s = \frac{\cred{3}}{\corange{5}} = 0{,}6.
+$$
+
+Anwenden und nachrechnen:
+
+$$
+\bG\ba = \begin{pmatrix} 0{,}8 & 0{,}6 \\ -0{,}6 & 0{,}8 \end{pmatrix} \begin{pmatrix} \cblue{4} \\ \cred{3} \end{pmatrix} = \begin{pmatrix} 0{,}8 \cdot \cblue{4} + 0{,}6 \cdot \cred{3} \\ -0{,}6 \cdot \cblue{4} + 0{,}8 \cdot \cred{3} \end{pmatrix} = \begin{pmatrix} 3{,}2 + 1{,}8 \\ -2{,}4 + 2{,}4 \end{pmatrix} = \begin{pmatrix} \corange{5} \\ 0 \end{pmatrix}.
+$$
+
+In der zweiten Komponente steht die gewünschte Null, und wegen
+$\left\|\bG\ba\right\|_2 = \corange{5} = \left\|\ba\right\|_2$ hat die Rotation die Länge
+nicht angetastet, für eine Orthogonalmatrix keine Überraschung.
+:::
+
+:::vertiefung[Givens-Rotation zum Ausprobieren]
+<GivensWidget />
+:::
+
+Das Rezept trägt weiter als $\R^2$: Auch in $\R^n$ können wir damit jede einzelne
+Komponente eines Vektors zu Null machen. Dazu suchen wir uns neben der zu eliminierenden
+Komponente $j$ eine Partnerkomponente $i$ aus und bestimmen $c$ und $s$ nach Satz 7.5.2 aus
+den beiden Einträgen $a_i$ und $a_j$. Anschließend setzen wir die $2 \times 2$-Rotation in
+die Zeilen und Spalten $i$ und $j$ einer :k[Einheitsmatrix]{#identity-matrix} ein. Für
+$n = 5$, $i = 3$ und $j = 5$ entsteht so
+
+$$
+\begin{pmatrix} 1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & c & 0 & s \\ 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & -s & 0 & c \end{pmatrix} \begin{pmatrix} a_1 \\ a_2 \\ a_3 \\ a_4 \\ a_5 \end{pmatrix} = \begin{pmatrix} a_1 \\ a_2 \\ \alpha \\ a_4 \\ 0 \end{pmatrix}.
+$$
+
+Alle übrigen Komponenten bleiben unberührt, genau wie es unsere Eliminationsaufgabe
+verlangt. Pro Rotation gewinnen wir allerdings nur eine einzige Null. Eine ganze Spalte
+räumen wir deshalb mit einer Folge solcher Rotationen leer. Dabei ist nur auf die
+Reihenfolge zu achten: Schon erzeugte Nullen dürfen von den nachfolgenden Rotationen nicht
+wieder mit Werten gefüllt werden.
+
+:::bemerkung[7.5.4 (Wann Givens?)]
+Eine Givens-Rotation fasst genau zwei Zeilen an; alle anderen Einträge der Matrix bleiben
+exakt so, wie sie sind. Deshalb greifen wir zu Givens, wenn wir gezielt einzelne Nullen
+erzeugen wollen: bei :k[dünnbesetzten]{#sparse-matrix} Matrizen, deren viele Nullen wir
+nicht zerstören möchten, oder wenn eine bestehende QR-Zerlegung nur um eine neue Datenzeile
+ergänzt werden soll. Der Preis: Eliminieren wir so eine voll besetzte Matrix komplett,
+fällt etwa das Anderthalbfache der Rechenoperationen des Householder-Zugangs an, den wir
+uns als Nächstes ansehen.
+:::
+
+<h3 id="sec-7.5-householder">Householder-Spiegelungen</h3>
+
+Eine Rotation erledigt eine Null pro Schritt. Wollen wir *alle* Einträge unter der
+Diagonalen einer Spalte in einem einzigen Schlag eliminieren, brauchen wir ein anderes
+Werkzeug: Statt $\ba$ auf $\alpha\,\be_1$ zu drehen, :k[spiegeln]{#reflection} wir es an
+einer geschickt gewählten :k[Hyperebene]{#hyperplane}.
+
+:::definition[7.5.5 (Householder-Spiegelung)]
+Sei $\bv \in \R^n$, $\bv \neq \bnull$. Die Matrix
+
+$$
+\bH = \bI - 2\,\frac{\bv\bv^\top}{\bv^\top\bv}
+$$
+
+heißt *Householder-Spiegelung* (engl. *Householder reflection*, *elementary reflector*) mit
+Spiegelvektor $\bv$.
+:::
+
+Warum „Spiegelung"? Der Baustein $\bP = \bv\bv^\top / (\bv^\top\bv)$, ein skaliertes
+:k[dyadisches Produkt]{#outer-product}, ist die orthogonale
+:k[Projektion]{#projection} auf die Gerade $\spann(\bv)$ (:k[lineare Hülle]{#span} von
+$\bv$). Entsprechend projiziert $\bI - \bP$ auf die Hyperebene $\spann(\bv)^\perp$, das
+:k[orthogonale Komplement]{#orthogonal-complement}. $\bH = \bI - 2\bP$ geht doppelt so
+weit: Es zieht von $\ba$ den $\bv$-Anteil gleich *zweimal* ab und landet damit auf der
+anderen Seite der Hyperebene; $\spann(\bv)^\perp$ ist der Spiegel.
+
+:::satz[7.5.6 (Symmetrie und Orthogonalität)]
+Jede Householder-Spiegelung $\bH$ ist :k[symmetrisch]{#symmetric-matrix} und orthogonal:
+
+$$
+\bH^\top = \bH, \qquad \bH^\top\bH = \bH^2 = \bI.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\bP := \frac{\bv\bv^\top}{\bv^\top\bv} \quimpl \bP^\top = \bP
+$$
+
+::why[$(\bv\bv^\top)^\top = (\bv^\top)^\top\bv^\top = \bv\bv^\top$ (:k[Transponieren]{#transpose} eines Produkts)]
+:::
+
+:::schritt
+$$
+\bP^2 = \frac{\bv\,(\bv^\top\bv)\,\bv^\top}{(\bv^\top\bv)^2} = \frac{\bv\bv^\top}{\bv^\top\bv} = \bP
+$$
+
+::why[$\bv^\top\bv$ ist ein Skalar (:k[Skalarprodukt]{#dot-product}) und lässt sich kürzen: $\bP$ ist eine Projektion]
+:::
+
+:::schritt
+$$
+\bH^\top = (\bI - 2\bP)^\top = \bI - 2\bP^\top = \bI - 2\bP = \bH
+$$
+
+::why[Linearität des Transponierens und Schritt 1]
+:::
+
+:::schritt
+$$
+\bH^\top\bH = \bH^2 = (\bI - 2\bP)^2 = \bI - 4\bP + 4\bP^2 = \bI
+$$
+
+::why[ausmultiplizieren; Schritt 2 ($\bP^2 = \bP$)]
+:::
+
+::::
+
+$\bH$ ist also orthogonal und selbstinvers: Eine Spiegelung, zweimal ausgeführt, ist die
+Identität. Bleibt die Frage, *welchen* Spiegelvektor $\bv$ wir wählen müssen, damit $\ba$
+auf $\alpha\,\be_1$ landet. Die Antwort kann man aus dem geometrischen Bild ablesen: Der
+Spiegel muss den Winkel zwischen $\ba$ und dem Ziel halbieren, also muss $\bv$ in Richtung
+der Differenz $\ba - \alpha\,\be_1$ zeigen. Rechnen wir nach, dass diese Wahl tatsächlich
+funktioniert.
+
+:::satz[7.5.7 (Wahl des Spiegelvektors)]
+Sei $\ba \in \R^n$ und $\alpha = \pm\left\|\ba\right\|_2$ so, dass
+$\bv = \ba - \alpha\,\be_1 \neq \bnull$. Dann gilt für die Householder-Spiegelung $\bH$ mit
+Spiegelvektor $\bv$:
+
+$$
+\bH\ba = \alpha\,\be_1.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\cbred{\bv}^\top\ba = (\ba - \alpha\,\be_1)^\top\ba = \ba^\top\ba - \alpha\,\be_1^\top\ba = \corange{\left\|\ba\right\|_2^2 - \alpha\,a_1}
+$$
+
+::why[ausmultiplizieren; $\be_1^\top\ba = a_1$ und $\ba^\top\ba = \left\|\ba\right\|_2^2$]
+:::
+
+:::schritt
+$$
+\cbred{\bv}^\top\cbred{\bv} = \left\|\ba\right\|_2^2 - 2\alpha\,a_1 + \alpha^2 = 2\left(\corange{\left\|\ba\right\|_2^2 - \alpha\,a_1}\right)
+$$
+
+::why[binomisch ausmultiplizieren; $\alpha^2 = \left\|\ba\right\|_2^2$, weil $\alpha = \pm\left\|\ba\right\|_2$]
+:::
+
+:::schritt
+$$
+2\,\frac{\cbred{\bv}^\top\ba}{\cbred{\bv}^\top\cbred{\bv}} = \frac{2\left(\corange{\left\|\ba\right\|_2^2 - \alpha\,a_1}\right)}{2\left(\corange{\left\|\ba\right\|_2^2 - \alpha\,a_1}\right)} = 1
+$$
+
+::why[Schritte 1 und 2 einsetzen; wegen $\bv \neq \bnull$ ist der Nenner nicht 0]
+:::
+
+:::schritt
+$$
+\bH\ba = \ba - 2\,\cbred{\bv}\,\frac{\cbred{\bv}^\top\ba}{\cbred{\bv}^\top\cbred{\bv}} = \ba - \cbred{\bv} = \ba - (\ba - \alpha\,\be_1) = \alpha\,\be_1
+$$
+
+::why[Definition 7.5.5 anwenden; Schritt 3; $\cbred{\bv}$ einsetzen]
+:::
+
+::::
+
+Bemerkenswert: Der komplette Bruch kollabiert zu $1$, und übrig bleibt schlicht
+$\ba - \bv$. Ein Zahlenbeispiel macht das greifbar.
+
+:::beispiel[7.5.8 (Householder-Spiegelung)]
+Wir suchen die Householder-Spiegelung, die in $\ba = (1, 2, 2)^\top$ alle Komponenten außer
+der ersten eliminiert. Zunächst die Norm:
+
+$$
+\left\|\ba\right\|_2 = \sqrt{1^2 + 2^2 + 2^2} = \sqrt{9} = 3.
+$$
+
+Da $a_1 = 1 > 0$, wählen wir $\alpha = -3$ (warum das negative Vorzeichen die richtige Wahl
+ist, klärt Bemerkung 7.5.9). Der Spiegelvektor ist dann
+
+$$
+\cbred{\bv} = \ba - \alpha\,\be_1 = \begin{pmatrix} 1 \\ 2 \\ 2 \end{pmatrix} + 3\begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} \cred{4} \\ \cred{2} \\ \cred{2} \end{pmatrix}.
+$$
+
+Die beiden Skalarprodukte aus dem Beweis von Satz 7.5.7:
+
+$$
+\cbred{\bv}^\top\ba = \cred{4} \cdot 1 + \cred{2} \cdot 2 + \cred{2} \cdot 2 = 12, \qquad \cbred{\bv}^\top\cbred{\bv} = \cred{4}^2 + \cred{2}^2 + \cred{2}^2 = 24.
+$$
+
+Wie vom Satz versprochen ist $2 \cdot \tfrac{12}{24} = 1$, also
+
+$$
+\bH\ba = \ba - \cbred{\bv} = \begin{pmatrix} 1 - \cred{4} \\ 2 - \cred{2} \\ 2 - \cred{2} \end{pmatrix} = \begin{pmatrix} -3 \\ 0 \\ 0 \end{pmatrix} = \alpha\,\be_1.
+$$
+
+Zur Kontrolle stellen wir $\bH$ einmal explizit auf:
+
+$$
+\bH = \bI - \tfrac{2}{24}\,\cbred{\bv}\cbred{\bv}^\top = \bI - \tfrac{1}{12}\begin{pmatrix} 16 & 8 & 8 \\ 8 & 4 & 4 \\ 8 & 4 & 4 \end{pmatrix} = \begin{pmatrix} -\tfrac{1}{3} & -\tfrac{2}{3} & -\tfrac{2}{3} \\[2pt] -\tfrac{2}{3} & \tfrac{2}{3} & -\tfrac{1}{3} \\[2pt] -\tfrac{2}{3} & -\tfrac{1}{3} & \tfrac{2}{3} \end{pmatrix}.
+$$
+
+Nachrechnen bestätigt $\bH\ba = (-3, 0, 0)^\top$: Die erste Zeile liefert etwa
+$-\tfrac{1}{3} \cdot 1 - \tfrac{2}{3} \cdot 2 - \tfrac{2}{3} \cdot 2 = -\tfrac{9}{3} = -3$, und natürlich gilt
+$\left\|\bH\ba\right\|_2 = 3 = \left\|\ba\right\|_2$. Beide Komponenten unterhalb der
+ersten sind mit *einer einzigen* Spiegelung verschwunden.
+:::
+
+:::vertiefung[die Spiegelung Schritt für Schritt: warum H = I − 2P]
+<HouseholderWidget />
+:::
+
+:::bemerkung[7.5.9 (Vorzeichenwahl)]
+In exakter Arithmetik funktionieren beide Vorzeichen von
+$\alpha = \pm\left\|\ba\right\|_2$, es gibt schließlich zwei Spiegelebenen, die $\ba$ auf
+die Achse bringen. Numerisch sind sie *nicht* gleichwertig: Die erste Komponente des
+Spiegelvektors ist $v_1 = a_1 - \alpha$. Hat $\alpha$ dasselbe Vorzeichen wie $a_1$ und
+dominiert $a_1$ die Norm, subtrahieren wir zwei fast gleiche Zahlen; es droht
+:k[Auslöschung]{#cancellation} der führenden Ziffern, und der winzige Rest besteht fast nur
+noch aus Rundungsfehlern. Deshalb wählt man
+
+$$
+\alpha = -\sign(a_1)\left\|\ba\right\|_2,
+$$
+
+denn dann ist $v_1 = a_1 + \sign(a_1)\left\|\ba\right\|_2$ eine Addition von Zahlen
+gleichen Vorzeichens und damit immer gutartig. Geometrisch heißt das: Wir spiegeln stets
+auf das Ziel, das *weiter* von $\ba$ entfernt liegt.
+:::
+
+:::vertiefung[warum das Vorzeichen von α zählt: Auslöschung, live]
+<AusloeschungWidget />
+:::
+
+:::bemerkung[7.5.10 (Aufwand)]
+In der Praxis stellt niemand $\bH$ als Matrix auf. Für einen beliebigen Vektor $\bu$ gilt
+
+$$
+\bH\bu = \bu - \left(2\,\frac{\bv^\top\bu}{\bv^\top\bv}\right)\bv,
+$$
+
+also genügen zwei Skalarprodukte und eine Vektor-Aktualisierung: $\Ocal(n)$ Operationen
+statt $\Ocal(n^2)$ für das explizite Matrix-Vektor-Produkt
+(:k[Landau-Notation]{#big-o-notation}). Genauso wird $\bQ$ selbst nie explizit gebildet:
+Man speichert nur die Spiegelvektoren $\bv_k$ (bzw. bei Givens die Paare $(c, s)$) und
+wendet sie bei Bedarf nacheinander an.
+:::
+
+<h3 id="sec-7.5-aufbau">Von den Bausteinen zur QR-Zerlegung</h3>
+
+Setzen wir die Teile zusammen. Im $k$-ten Eliminationsschritt betrachten wir vom aktuellen
+Zwischenprodukt die $k$-te Spalte ab der Diagonalen, also den Teilvektor
+$\ba = (a_{kk}, \ldots, a_{mk})^\top$. Dazu konstruieren wir nach Satz 7.5.7 eine
+Spiegelung $\wt{\bH}_k$ mit $\wt{\bH}_k\ba = \alpha\,\be_1$ (oder eine Kette von
+Givens-Rotationen mit derselben Wirkung) und betten sie ein:
+
+$$
+\bQ_k = \begin{pmatrix} \bI_{k-1} & \bnull \\ \bnull & \wt{\bH}_k \end{pmatrix}.
+$$
+
+$\bQ_k$ ist orthogonal, lässt die ersten $k-1$ Zeilen unberührt und macht in Spalte $k$
+alle Einträge unter der Diagonalen zu Null. Entscheidend: Die schon fertigen Spalten
+$1, \ldots, k-1$ bleiben fertig. Warum? Unterhalb der Diagonalen stehen dort bereits
+Nullen, und $\bQ_k$ verändert nur die Zeilen $k, \ldots, m$; auf diesem Nullblock wirkt
+$\wt{\bH}_k$ als $\wt{\bH}_k\bnull = \bnull$. Nach $p = \min(n, m-1)$ Schritten ist
+:k[obere Dreiecksgestalt]{#triangular-matrix} erreicht:
+
+$$
+\bQ_p \cdots \bQ_1\,\bA = \begin{pmatrix} \bR \\ \bnull \end{pmatrix} \quimpl \bQ^\top = \bQ_p \cdots \bQ_1, \qquad \bA = \bQ \begin{pmatrix} \bR \\ \bnull \end{pmatrix}.
+$$
+
+Das Produkt von Orthogonalmatrizen ist wieder orthogonal, also ist
+$\bQ = \bQ_1^\top \cdots \bQ_p^\top$ tatsächlich die gesuchte Orthogonalmatrix, und wir
+haben eine QR-Zerlegung im Sinne von [Abschnitt 7.4](#sec-7.4) konstruiert. Für das
+Kleinste-Quadrate-Problem wenden wir dieselben $\bQ_k$ parallel auf $\bb$ an und lösen
+anschließend $\bR\,\wh{\bx} = \bc_1$ per :k[Rücksubstitution]{#triangular-solve}.
+
+Als Faustregel zum Mitnehmen: Für voll besetzte Matrizen ist **Householder** die
+Standardwahl: weniger Operationen pro Spalte, hervorragende numerische Stabilität; genau so
+arbeiten die QR-Löser der gängigen Software (etwa hinter `lm()` in R). **Givens** spielt
+seine Stärke aus, wenn :k[Dünnbesetztheit]{#sparse-matrix} (sparsity) erhalten bleiben soll
+oder nur einzelne Einträge zu eliminieren sind. Im Vergleich zu den
+[Normalengleichungen](#sec-7.3) vermeiden beide Zugänge das Quadrieren der
+:k[Konditionszahl]{#condition-number}. Dazu mehr im Methodenvergleich in
+[Abschnitt 7.6](#sec-7.6).
+
+<p className="border-t border-slate-200 pt-3 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300"><b>Vertiefung:</b> Heath §3.5.1 (Householder-Transformationen) und §3.5.2 (Givens-Rotationen); Methodenvergleich in Heath §3.7; zur Rolle orthogonaler Projektionen im Kleinste-Quadrate-Kontext auch MML §3.8.</p>

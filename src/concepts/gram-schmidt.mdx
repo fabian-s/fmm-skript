@@ -1,0 +1,30 @@
+export const title = "Gram–Schmidt-Orthogonalisierung";
+
+import { GsWidget } from "./widgets/GramSchmidtWidget";
+
+Das Gram–Schmidt-Verfahren (vgl. MML §3.8.3) ist ein Rezept, das jede
+:k[linear unabhängige]{#linear-independence}
+Menge von :k[Vektoren]{#vector} in eine
+paarweise :k[orthogonale]{#orthogonality}
+Menge mit demselben
+:k[Spann]{#span} verwandelt. Wir behalten den
+ersten Vektor; von jedem weiteren ziehen wir seine
+:k[Projektion]{#projection} auf alles bisher
+Behaltene ab, sodass nur der senkrechte Anteil übrig bleibt:
+
+$$
+\bu_1 = \bv_1, \qquad \bu_2 = \bv_2 - \frac{\bv_2^{\top}\bu_1}{\bu_1^{\top}\bu_1}\, \bu_1, \quad \dots
+$$
+
+Kleines Beispiel: Für $\bv_1 = (2, 0)^{\top}$ und
+$\bv_2 = (1, 1)^{\top}$ ist der Koeffizient
+$2/4 = 1/2$, also
+$\bu_2 = (1,1)^{\top} - (1, 0)^{\top} = (0, 1)^{\top}$,
+orthogonal zu $\bv_1$, wie versprochen. Teilen wir jedes
+$\bu_i$ noch durch seine
+:k[Norm]{#norm}, wird aus dem Ergebnis eine
+:k[Orthonormalbasis]{#orthonormal-basis}. So
+werden zum Beispiel orthogonale Eigenvektoren innerhalb eines
+Eigenraums konstruiert (vgl. MML §4.2).
+
+<GsWidget />

@@ -1,0 +1,26 @@
+export const title = "Differenzierbarkeit & Glattheitsklassen";
+
+import { SmoothnessWidget } from "./widgets/DifferentiabilityWidget";
+
+Eine Funktion ist an einer Stelle *differenzierbar*, wenn sie
+dort eine wohldefinierte
+:k[Ableitung]{#derivative} besitzt.
+Anschaulich: Die Kurve hat eine eindeutige
+:k[Tangente]{#tangent-line} und keinen Knick
+oder keine Ecke. Differenzierbarkeit ist eine stärkere Eigenschaft
+als :k[Stetigkeit]{#continuity}: Jede
+differenzierbare Funktion ist stetig, aber $f(x) = |x|$ ist
+überall stetig und trotzdem bei $x = 0$ nicht
+differenzierbar: dort hat ihr Graph eine Ecke.
+
+Daraus entsteht eine Leiter von *Glattheitsklassen*:
+$C^0$ heißt bloß stetig, $C^1$ heißt, die erste
+Ableitung existiert und ist selbst stetig, $C^2$ verlangt
+dasselbe für die zweite Ableitung, und so weiter; jede Stufe
+verbietet eine weitere Art von Rauheit. Wenn wir von einem
+Interpolanten einen bestimmten Glattheitsgrad verlangen, fordern wir
+genau die Zugehörigkeit zu einer dieser Klassen; kubische Splines
+sind gerade so konstruiert, dass sie exakt $C^2$ sind
+(vgl. Heath §7.1, §7.4).
+
+<SmoothnessWidget />

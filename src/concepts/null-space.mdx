@@ -1,0 +1,36 @@
+export const title = "Nullraum (Kern)";
+
+import { NullSpaceWidget } from "./widgets/NullSpaceWidget";
+
+Der *Nullraum* (auch *Kern*, engl. *null space*
+oder *kernel*) einer
+:k[Matrix]{#matrix}
+$\bA$ ist die Menge aller Vektoren, die
+$\bA$ auf den Nullvektor schickt, in
+:k[Mengenschreibweise]{#set-builder-notation}:
+
+$$
+\operatorname{null}(\bA) = \{\, \bz : \bA\bz = \bzero \,\}.
+$$
+
+Er ist immer ein
+:k[Unterraum]{#subspace}: Der Nullvektor
+liegt darin, und Summen und Vielfache von Lösungen von
+$\bA\bz = \bzero$ lösen die Gleichung ebenfalls. Ein
+Mini-Beispiel: Für
+$\bA = \begin{pmatrix}1 & 1\\ 1 & 1\end{pmatrix}$
+erfüllt der Vektor $\bz = (1,-1)^T$ die Gleichung
+$\bA\bz = \bzero$, und der Nullraum ist genau der
+:k[Spann]{#span} dieses einen Vektors. Ganz
+allgemein addieren sich die
+:k[Dimensionen]{#dimension} auf:
+:k[Rang]{#rank}$(\bA)$ + dim null$(\bA) = n$, die Anzahl der Spalten.
+
+Eine zentrale Tatsache (vgl. Heath §3.4.5): Das
+:k[orthogonale Komplement]{#orthogonal-complement}
+von span$(\bA)$ ist der Nullraum von
+$\bA^T$. Warum? Ein Vektor steht genau dann senkrecht auf
+allen Spalten von $\bA$, wenn
+$\bA^T$ ihn auf Null abbildet.
+
+<NullSpaceWidget />

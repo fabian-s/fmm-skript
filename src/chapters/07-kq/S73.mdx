@@ -1,0 +1,352 @@
+import { S73KreuzproduktWidget } from "./widgets/S73KreuzproduktWidget";
+import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
+
+{/*
+  Abschnitt 7.3: Normalengleichungen und Cholesky-Zerlegung.
+  Quelle: Folien 07-kq.Rmd, Block „Lösungsverfahren" (Frage-Folien,
+  Cholesky-Zerlegung, Alternative Lösungswege). Prosa eigenständig aus den
+  Folien formuliert; Widget-Code aus der internen heath-ch3-App recycelt.
+  MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
+*/}
+
+::quelle[Folien: 07-kq, „Lösungsverfahren".]
+
+Aus [Abschnitt 7.1](#sec-7.1) wissen wir, dass das
+:k[Kleinste-Quadrate-Problem]{#linear-least-squares} für
+$\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$ die eindeutige
+Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt. Das ist eine
+Formel – aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste und
+einfachste Lösungsverfahren: Wir leiten die Normalengleichungen her, lösen sie mit der
+:k[Cholesky-Zerlegung]{#cholesky-factorization} und sehen dann,
+warum dieser bequeme Weg numerisch seinen Preis hat. Das motiviert am Ende des Abschnitts
+die orthogonalen Transformationen, die uns im Rest des Kapitels beschäftigen werden.
+
+### 7.3.1 Die Normalengleichungen
+
+Beginnen wir mit der Herleitung. Die
+:k[Normalengleichungen]{#normal-equations} haben wir in
+[Abschnitt 7.1](#sec-7.1) bereits benutzt; jetzt zeigen
+wir, warum sie das KQ-Problem charakterisieren. Die Idee ist rein analytisch: Die
+Zielfunktion ist eine nach oben geöffnete
+:k[quadratische Form]{#quadratic-form} in $\bx$, also
+finden wir ihr Minimum, indem wir den
+:k[Gradienten]{#gradient} null setzen.
+
+:::satz[7.3.1 (Normalengleichungen)]
+Sei $\bA \in \R^{m \times n}$ und $\bb \in \R^m$. Ein Vektor
+$\wh{\bx} \in \R^n$ minimiert
+$g(\bx) = \left\| \bA\bx - \bb \right\|_2^2$ genau dann, wenn er die
+*Normalengleichungen*
+
+$$
+\cbred{\bA^\top\bA}\,\wh{\bx} = \cgreen{\bA^\top\bb}
+$$
+
+erfüllt.
+:::
+
+::::beweis
+
+:::schritt
+$$
+g(\bx) = (\bA\bx - \bb)^\top(\bA\bx - \bb) = \bx^\top\cbred{\bA^\top\bA}\,\bx - 2\,\bx^\top\cgreen{\bA^\top\bb} + \bb^\top\bb
+$$
+
+::why[Skalarprodukt ausmultiplizieren; $(\bA\bx)^\top\bb = \bx^\top\bA^\top\bb$ (:k[Transponierregeln]{#transpose})]
+:::
+
+:::schritt
+$$
+\nabla g(\bx) = 2\,\cbred{\bA^\top\bA}\,\bx - 2\,\cgreen{\bA^\top\bb}
+$$
+
+::why[$\nabla_{\bx}\left(\bx^\top\bM\bx\right) = 2\bM\bx$ für symmetrisches $\bM$ und $\nabla_{\bx}\left(\bx^\top\bc\right) = \bc$; $\cbred{\bA^\top\bA}$ ist symmetrisch]
+:::
+
+:::schritt
+$$
+\nabla g(\wh{\bx}) = \bnull \quequiv \cbred{\bA^\top\bA}\,\wh{\bx} = \cgreen{\bA^\top\bb}
+$$
+
+::why[notwendige Bedingung erster Ordnung für ein Minimum der differenzierbaren Funktion $g$]
+:::
+
+:::schritt
+Die Bedingung ist auch hinreichend: Jede Lösung der Normalengleichungen ist ein globales
+Minimum von $g$.
+
+::why[Hessematrix $\nabla^2 g = 2\,\cbred{\bA^\top\bA}$ ist positiv semidefinit, also ist $g$ :k[konvex]{#convex-function} und jeder stationäre Punkt ein globales Minimum]
+:::
+
+::::
+
+:::bemerkung[7.3.2 (Geometrische Deutung)]
+Schreiben wir die Normalengleichungen als
+$\bA^\top(\bb - \bA\wh{\bx}) = \bA^\top\wh{\br} = \bnull$, so sagen
+sie: Das Residuum $\wh{\br} = \bb - \bA\wh{\bx}$ steht
+:k[senkrecht]{#orthogonality} auf allen Spalten von
+$\bA$. Das ist genau die
+:k[Projektions]{#projection}-Sicht aus
+[Abschnitt 7.1](#sec-7.1): $\bA\wh{\bx}$
+ist der Punkt in $\col(\bA)$, der $\bb$ am nächsten liegt; daher
+der Name *Normal*gleichungen.
+:::
+
+### 7.3.2 Warum wir niemals invertieren
+
+Wie berechnen wir $\wh{\bx}$ nun konkret? Betrachten wir dazu eine kleine
+Programmieraufgabe von den Folien. Gegeben ist eine R-Funktion, die die Lösungsformel
+$\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ wörtlich umsetzt: Sie
+bildet also erst die :k[Inverse]{#matrix-inverse} von
+$\bA^\top\bA$ und multipliziert dann:
+
+```r
+kq_solve <- function(A, b) {
+  solve(t(A) %*% A) %*% t(A) %*% b
+}
+```
+
+*Aufgabe: Finde den Fehler in der Funktion.* Der Fehler ist kein Tippfehler,
+sondern der Ansatz selbst:
+
+:::bemerkung[7.3.3 (Merkregel)]
+<p className="font-semibold text-rose-600 dark:text-rose-400">Für ein LGS keine explizite Inverse bilden!</p>
+
+Die Formel $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ ist ein
+*mathematisches* Objekt, keine Rechenvorschrift. Numerisch lösen wir stattdessen
+das lineare Gleichungssystem
+$(\bA^\top\bA)\,\wh{\bx} = \bA^\top\bb$, mit einer geeigneten
+Zerlegung der Matrix.
+:::
+
+Warum ist das explizite Invertieren so schlecht? Erstens ist es teurer: Die Inverse zu
+berechnen heißt, $n$ lineare Gleichungssysteme zu lösen (eines pro Spalte von
+$\bI$), obwohl wir nur die Lösung zu *einer* rechten Seite brauchen.
+Zweitens bringt die anschließende Multiplikation zusätzliche
+:k[Rundungsfehler]{#rounding-error}, ohne für eine einzelne rechte Seite einen
+Genauigkeitsvorteil zu bieten; eine stabile Zerlegung mit Substitution löst dasselbe
+System direkter. Das heißt nicht, dass das Berechnen einer Inversen grundsätzlich
+instabil wäre – nur, dass sie hier das falsche Zwischenprodukt ist. Drittens kann die
+Inverse Struktur zerstören:
+Die Inverse einer
+:k[dünnbesetzten]{#sparse-matrix} Matrix ist typischerweise
+voll besetzt. Genau wie beim
+:k[Gauß-Verfahren]{#gaussian-elimination} mit seiner
+:k[LR-Zerlegung]{#lu-decomposition} gilt also: Zerlegen und
+substituieren statt invertieren.
+
+### 7.3.3 Das Cholesky-Verfahren
+
+Welche Zerlegung passt zu $\bA^\top\bA$? Die Matrix hat eine besondere
+Struktur, die wir ausnutzen können:
+
+:::lemma[7.3.4]
+Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$. Dann ist
+$\bA^\top\bA \in \R^{n \times n}$
+:k[symmetrisch]{#symmetric-matrix} und
+:k[positiv definit]{#positive-definite}.
+:::
+
+::::beweis
+
+:::schritt
+$$
+(\bA^\top\bA)^\top = \bA^\top(\bA^\top)^\top = \bA^\top\bA
+$$
+
+::why[Rechenregeln fürs Transponieren: $(\bB\bC)^\top = \bC^\top\bB^\top$]
+:::
+
+:::schritt
+$$
+\bx^\top(\bA^\top\bA)\bx = (\bA\bx)^\top(\bA\bx) = \left\| \bA\bx \right\|_2^2 \ge 0 \quad \text{für alle } \bx \in \R^n
+$$
+
+::why[Definition der :k[euklidischen Norm]{#euclidean-norm}]
+:::
+
+:::schritt
+$$
+\left\| \bA\bx \right\|_2^2 = 0 \quequiv \bA\bx = \bnull \quequiv \bx = \bnull
+$$
+
+::why[$\rang(\bA) = n$: Die Spalten von $\bA$ sind linear unabhängig, der :k[Kern]{#kernel} ist also trivial]
+:::
+
+::::
+
+Symmetrisch positiv definit, kurz *SPD* (engl. *symmetric positive
+definite*): das ist genau die Klasse von Matrizen, für die die
+:k[Cholesky-Zerlegung]{#cholesky-factorization}
+$\bM = \bL\bL^\top$ mit einer unteren
+:k[Dreiecksmatrix]{#triangular-matrix} $\bL$
+existiert. Damit zerfällt das KQ-Problem in eine Kette einfacher Teilschritte:
+
+:::algorithmus[7.3.5 (Cholesky-Verfahren für das KQ-Problem)]
+1. Berechne $\cbred{\bM} = \bA^\top\bA$ und
+   $\cbgreen{\bc} = \bA^\top\bb$.
+2. Berechne die Cholesky-Zerlegung $\cbred{\bM} = \cborange{\bL}\cborange{\bL}^\top$.
+3. Löse $\cborange{\bL}\,\cbpurp{\by} = \cbgreen{\bc}$ durch
+   :k[Vorwärtssubstitution]{#triangular-solve}.
+4. Löse $\cborange{\bL}^\top\cblue{\wh{\bx}} = \cbpurp{\by}$ durch
+   Rückwärtssubstitution.
+:::
+
+Schritt 1 ersetzt das $m \times n$-Ausgangsproblem durch ein quadratisches
+$n \times n$-Gleichungssystem. Die Schritte 2–4 lösen dieses System dann so,
+wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren, denn
+Dreieckssysteme können wir direkt auflösen. Rechnen wir das einmal vollständig durch.
+
+:::beispiel[7.3.6]
+Wie im Wohnungspreis-Beispiel 7.1.8 aus
+[Abschnitt 7.1](#sec-7.1) fitten wir eine
+:k[Regressionsgerade]{#linear-regression}
+$y = \beta_0 + \beta_1 x$, diesmal mit bewusst kleinen Zahlen, durch die
+drei Punkte $(1, 2),\ (2, 3),\ (3, 5)$:
+
+$$
+\bA = \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 2 \\ 3 \\ 5 \end{pmatrix}.
+$$
+
+Dabei landen die $x$-Werte $1, 2, 3$ der Datenpunkte in der
+*zweiten* Spalte von $\bA$ (die Einser-Spalte davor gehört zum
+Achsenabschnitt $\beta_0$), und die $y$-Werte
+$2, 3, 5$ bilden den Vektor $\bb$.
+
+**Schritt 1:** $\cbred{\bM}$ und $\cbgreen{\bc}$
+aufstellen.
+
+$$
+\cbred{\bM} = \bA^\top\bA = \begin{pmatrix} 1 & 1 & 1 \\ 1 & 2 & 3 \end{pmatrix} \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix} = \cbred{\begin{pmatrix} 3 & 6 \\ 6 & 14 \end{pmatrix}}, \qquad \cbgreen{\bc} = \bA^\top\bb = \cbgreen{\begin{pmatrix} 10 \\ 23 \end{pmatrix}}.
+$$
+
+**Schritt 2:** Cholesky-Zerlegung
+$\cbred{\bM} = \cborange{\bL}\cborange{\bL}^\top$. Für
+$2 \times 2$ lauten die Formeln
+$\corange{\ell_{11}} = \sqrt{\cred{m_{11}}}$,
+$\corange{\ell_{21}} = \cred{m_{21}}/\corange{\ell_{11}}$,
+$\corange{\ell_{22}} = \sqrt{\cred{m_{22}} - \corange{\ell_{21}}^2}$:
+
+$$
+\corange{\ell_{11}} = \sqrt{\cred{3}}, \qquad \corange{\ell_{21}} = \frac{\cred{6}}{\sqrt{3}} = 2\sqrt{3}, \qquad \corange{\ell_{22}} = \sqrt{\cred{14} - \left(2\sqrt{3}\right)^2} = \sqrt{2},
+$$
+
+$$
+\text{also} \quad \cborange{\bL} = \cborange{\begin{pmatrix} \sqrt{3} & 0 \\ 2\sqrt{3} & \sqrt{2} \end{pmatrix}}.
+$$
+
+**Schritt 3:** Vorwärtssubstitution
+$\cborange{\bL}\,\cbpurp{\by} = \cbgreen{\bc}$, Zeile für Zeile von
+oben.
+
+$$
+\cpurp{y_1} = \frac{\cgreen{10}}{\corange{\sqrt{3}}} = \frac{10}{\sqrt{3}}, \qquad \cpurp{y_2} = \frac{\cgreen{23} - \corange{2\sqrt{3}} \cdot \cpurp{\tfrac{10}{\sqrt{3}}}}{\corange{\sqrt{2}}} = \frac{23 - 20}{\sqrt{2}} = \frac{3}{\sqrt{2}}.
+$$
+
+**Schritt 4:** Rückwärtssubstitution
+$\cborange{\bL}^\top\cblue{\wh{\bx}} = \cbpurp{\by}$, Zeile für Zeile
+von unten.
+
+$$
+\cblue{x_2} = \frac{\cpurp{3/\sqrt{2}}}{\corange{\sqrt{2}}} = \frac{3}{2}, \qquad \cblue{x_1} = \frac{\cpurp{\tfrac{10}{\sqrt{3}}} - \corange{2\sqrt{3}} \cdot \cblue{\tfrac{3}{2}}}{\corange{\sqrt{3}}} = \frac{10}{3} - 3 = \frac{1}{3}.
+$$
+
+Die KQ-Lösung ist also
+$\cblue{\wh{\bx}} = \left(\tfrac{1}{3}, \tfrac{3}{2}\right)^\top$, die
+Regressionsgerade $\wh{y} = \tfrac{1}{3} + \tfrac{3}{2}\,x$. Probe mit den
+Normalengleichungen:
+
+$$
+\cbred{\bM}\,\cblue{\wh{\bx}} = \begin{pmatrix} 3 \cdot \tfrac{1}{3} + 6 \cdot \tfrac{3}{2} \\ 6 \cdot \tfrac{1}{3} + 14 \cdot \tfrac{3}{2} \end{pmatrix} = \begin{pmatrix} 10 \\ 23 \end{pmatrix} = \cbgreen{\bc}. \quad \checkmark
+$$
+
+Auch die geometrische Deutung aus Bemerkung 7.3.2 können wir nachprüfen: Das Residuum
+$\wh{\br} = \bb - \bA\cblue{\wh{\bx}} = \left(\tfrac{1}{6}, -\tfrac{1}{3}, \tfrac{1}{6}\right)^\top$
+erfüllt $\bA^\top\wh{\br} = \bnull$: Es steht senkrecht auf beiden
+Spalten von $\bA$.
+:::
+
+### 7.3.4 Effizient, aber möglicherweise instabil
+
+Das Cholesky-Verfahren ist effizient: Ab Schritt 2 rechnen wir nur noch mit der kleinen
+$n \times n$-Matrix $\bA^\top\bA$ statt mit der
+$m \times n$-Matrix $\bA$, und die Cholesky-Zerlegung nutzt deren
+Symmetrie aus und kostet nur etwa halb so viel wie eine LR-Zerlegung. Für gut
+konditionierte Probleme ist das Verfahren in der Praxis brauchbar. Es hat aber einen
+eingebauten Schwachpunkt, und der liegt ausgerechnet im allerersten Schritt.
+
+:::bemerkung[7.3.7 (Stabilität des Cholesky-Verfahrens)]
+- Fehler, die beim Aufstellen von $\bA^\top\bA$ passieren, beeinflussen
+  alle folgenden Schritte; kein späterer Schritt kann sie reparieren.
+- Man kann zeigen: Der relative algorithmische Fehler ist bestenfalls
+  $O\!\left(\kappa_2(\bA)^2\right)$.
+- Zum Vergleich: Die Best-Case-:k[Kondition]{#condition-number}
+  des KQ-Problems selbst ist $O\!\left(\kappa_2(\bA)\right)$
+  ([Abschnitt 7.2](#sec-7.2)).
+:::
+
+Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit $\bA^\top\bA$, und
+deren Konditionszahl ist
+$\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, denn die Singulärwerte von
+$\bA^\top\bA$ sind die Quadrate der Singulärwerte von $\bA$. Diese
+quadrierte Kondition erben alle weiteren Schritte, ganz gleich, wie empfindlich das
+eigentliche KQ-Problem ist. Besonders ärgerlich ist das im günstigsten Fall: Bei kleinem
+Residuum gilt $\kappa \approx \kappa_2(\bA)$, der Algorithmus verstärkt
+Fehler aber trotzdem mit $\kappa_2(\bA)^2$. Er ist also deutlich
+fehleranfälliger, als die Kondition des Problems erzwingt. Genau solche Verfahren nennen
+wir *instabil*. Es gibt noch einen zweiten Effekt, den die Konditionszahl allein
+gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
+:k[Gleitkommaarithmetik]{#floating-point} kann Information
+über die Spalten von $\bA$ verloren gehen. Im Extremfall macht ein einziger
+Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
+
+:::vertiefung[Informationsverlust beim Bilden von AᵀA, live im Browser]
+<S73KreuzproduktWidget />
+:::
+
+### 7.3.5 Alternative Lösungswege: orthogonale Transformationen
+
+Wir würden $\bA^\top\bA$ also gerne ganz vermeiden und direkt auf
+$\bA$ operieren. Erinnern wir uns an die Ausgangsform des Problems:
+
+$$
+\wh{\bx} = \argmin_{\bx} \left\| \bA\bx - \bb \right\|_2.
+$$
+
+Die Idee: Wir transformieren das Problem mit einer Matrix $\bQ$ zu einem
+„einfacheren" Problem $\bQ\bA\bx \approx \bQ\bb$, ohne die Lösung zu
+ändern. Wann ändert sich die Lösung nicht? Wenn die Zielfunktion für *jedes*
+$\bx$ denselben Wert behält, das Transformieren also alle Normen unangetastet
+lässt. Genau das leisten
+:k[Orthogonalmatrizen]{#orthogonal-matrix}
+($\bQ^\top\bQ = \bI$, ausführlich in
+[Abschnitt 7.4](#sec-7.4)), denn für diese gilt
+
+$$
+\left\| \bQ\bA\bx - \bQ\bb \right\|_2 = \left\| \bQ(\bA\bx - \bb) \right\|_2 = \left\| \bA\bx - \bb \right\|_2.
+$$
+
+Die erste Gleichheit ist nur Ausklammern; die zweite ist die Norminvarianz:
+$\left\| \bQ\bv \right\|_2^2 = \bv^\top\bQ^\top\bQ\bv = \bv^\top\bv = \left\| \bv \right\|_2^2$
+für jeden Vektor $\bv$. Jedes $\bx$ liefert im transformierten
+Problem also exakt denselben Zielfunktionswert wie im ursprünglichen. Insbesondere
+stimmen die Minimierer überein.
+
+Vorsicht: Nicht jede Transformation, die ein System „einfacher" macht, ist hier erlaubt.
+Das :k[Gauß-Verfahren]{#gaussian-elimination} etwa bringt
+$\bA$ zwar auf Dreiecksform, aber seine Eliminationsschritte sind Scherungen:
+Sie verzerren Längen und würden den Minimierer verschieben. Für KQ-Probleme brauchen wir
+die norm-erhaltenden Transformationen:
+:k[Drehungen]{#rotation-matrix} und
+:k[Spiegelungen]{#reflection}. Wie wir mit ihnen
+$\bQ\bA$ gezielt auf Dreiecksform bringen (die
+*QR-Zerlegung*), ist das Thema der
+[nächsten Abschnitte](#sec-7.4).
+
+:::vertiefung[Drehungen und Spiegelungen erhalten Längen, Scherungen nicht]
+<S73NormerhaltungWidget />
+:::
+
+*Vertiefung: Heath §3.4 (Normalengleichungen, Cholesky-Verfahren, orthogonale
+Transformationen); Heath §3.2 zur Herleitung; MML §7.1 für den Gradientenblick auf
+Optimierungsprobleme.*

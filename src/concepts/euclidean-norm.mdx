@@ -1,0 +1,29 @@
+export const title = "Euklidische Norm (2-Norm)";
+
+import { NormBallsWidget } from "./widgets/EuclideanNormWidget";
+
+Eine Norm ordnet einem
+:k[Vektor]{#vector} eine einzelne
+nichtnegative Zahl zu, die misst, wie „groß" er ist. Die
+*euklidische Norm* (engl. *Euclidean norm*), geschrieben
+$\|\bx\|_2$, ist die gewöhnliche geometrische Länge aus dem
+Satz des Pythagoras, erweitert auf $n$ Komponenten:
+
+$$
+\|\bx\|_2 = \sqrt{x_1^2 + x_2^2 + \cdots + x_n^2} = \sqrt{\bx^T \bx} .
+$$
+
+Zum Beispiel hat $\bx = [3, 4]^T$ die Norm
+$\|\bx\|_2 = \sqrt{9 + 16} = 5$. Der letzte Ausdruck zeigt
+die besondere Verbindung zum
+:k[Skalarprodukt]{#dot-product}: Das Quadrat
+der 2-Norm ist einfach $\bx^T\bx$. Deshalb ist das
+Minimieren einer Summe quadrierter Residuen genau das Minimieren einer
+2-Norm. Es gibt auch andere Normen, die manchmal natürlicher sind: Die
+1-Norm $\|\bx\|_1 = \sum_i |x_i|$ addiert Absolutbeträge,
+und die ∞-Norm $\|\bx\|_\infty = \max_i |x_i|$ nimmt nur
+die betragsgrößte Komponente. Welche Norm wir wählen, ändert, was
+„beste Anpassung" bedeutet; die Kleinste-Quadrate-Methode ist per
+Definition die Wahl der 2-Norm.
+
+<NormBallsWidget />

@@ -1,0 +1,34 @@
+export const title = "Abgeschlossene und beschränkte Menge";
+
+import { EndpointWidget } from "./widgets/ClosedBoundedSetWidget";
+
+{/*
+ * Konzept-Tooltip: abgeschlossene und beschränkte (kompakte) Menge, die
+ * Voraussetzung des Satzes vom Minimum und Maximum (Existenz globaler
+ * Minima).
+ */}
+
+Zwei getrennte Bedingungen an eine Menge $S \subseteq \R^n$. *Beschränkt*
+(bounded) heißt: $S$ passt in eine Kugel mit endlichem Radius,
+$\|\bx\| \le R$ für alle $\bx \in S$, gemessen mit der
+:k[euklidischen Norm]{#euclidean-norm}. Keine Punkte entkommen ins Unendliche.
+*Abgeschlossen* (closed) heißt: $S$ enthält alle seine Randpunkte. Wann immer
+sich Punkte aus $S$ auf einen Grenzwert zubewegen, gehört auch dieser
+Grenzwert zu $S$. Das Intervall $[0, 1]$ ist abgeschlossen; $(0, 1)$ nicht,
+denn seine Punkte nähern sich $0$ und $1$, ohne dass eine der beiden Zahlen zur
+Menge gehört.
+
+Zusammen (eine abgeschlossene und beschränkte Menge heißt *kompakt*, compact)
+kaufen uns die beiden Bedingungen die fundamentale Existenzgarantie (Satz vom
+Minimum und Maximum): eine :k[stetige]{#continuity} Funktion auf einer
+nichtleeren abgeschlossenen und beschränkten Menge nimmt einen größten und
+einen kleinsten Wert an: das globale Minimum existiert wirklich, es wird nicht
+nur angenähert. Lassen wir eine der Bedingungen fallen, stirbt die Garantie:
+$f(x) = x$ auf $(0, 1]$ hat keinen Minimierer (nicht abgeschlossen), und auf
+ganz $\R$ gar kein Minimum (nicht beschränkt).
+
+$$
+\text{abgeschlossen + beschränkt + } f \text{ stetig} \;\implies\; \min_{\bx \in S} f(\bx) \text{ wird angenommen.}
+$$
+
+<EndpointWidget />

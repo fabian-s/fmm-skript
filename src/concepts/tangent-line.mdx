@@ -1,0 +1,26 @@
+export const title = "Tangente";
+
+import { ZoomWidget } from "./widgets/TangentLineWidget";
+
+{/* Konzept-Tooltip: Tangente: lokale lineare Näherung, mit Zoom. */}
+
+Die Tangente an eine Kurve in einem Punkt ist die Gerade, die die
+Kurve dort berührt und exakt dieselbe Steigung hat wie die Kurve an
+dieser Stelle, nämlich die
+:k[Ableitung]{#derivative}
+$f'(a)$. Ihre Gleichung lautet
+
+$$
+y = f(a) + f'(a)\,(x - a).
+$$
+
+Für $f(x) = x^2$ an der Stelle $a = 1$ ist das
+$y = 1 + 2(x-1) = 2x - 1$. Was die Tangente so nützlich
+macht: Nahe $x = a$ ist sie ein hervorragender Ersatz für
+die Kurve selbst: sie ist die *lokale lineare
+Näherung* (local linear approximation). Das ist der handfeste
+geometrische Grund, warum Methoden für lineare Probleme so weit
+tragen: Nahe genug an jedem interessanten Punkt verhält sich eine
+glatte nichtlineare Funktion wie ihre Tangente.
+
+<ZoomWidget />

@@ -1,0 +1,31 @@
+export const title = "Singulärwertzerlegung (SVD)";
+
+import { SvdWidget } from "./widgets/SingularValueDecompositionWidget";
+
+Die *Singulärwertzerlegung* (singular value decomposition, SVD) zerlegt eine
+beliebige :k[Matrix]{#matrix} in „Drehen–Strecken–Drehen": Für jedes
+$\bA \in \R^{m \times n}$ existieren
+:k[orthogonale Matrizen]{#orthogonal-matrix}
+$\bU \in \R^{m \times m}$, $\bV \in \R^{n \times n}$ und eine
+„:k[Diagonalmatrix]{#diagonal-matrix}" $\bSigma \in \R^{m \times n}$ mit
+
+$$
+\bA = \bU\bSigma\bV^\top, \qquad \bSigma = \diag(\sigma_1, \ldots, \sigma_{\min(m,n)}), \quad \sigma_1 \ge \sigma_2 \ge \cdots \ge 0.
+$$
+
+Die *Singulärwerte* $\sigma_i$ sind die Wurzeln der
+:k[Eigenwerte]{#eigenvalue-eigenvector} von
+$\bA^\top\bA$; die Anzahl der Singulärwerte ungleich Null ist genau der
+:k[Rang]{#rank} $r$ von $\bA$. Lassen wir
+die Nullanteile weg, bleibt die *reduzierte SVD*
+$\bA = \bU_r\bSigma_r\bV_r^\top$ mit $\bSigma_r \in \R^{r \times r}$
+regulär, die Grundlage für die Pseudoinverse $\bA\pinv$.
+
+Anschaulich bildet $\bA$ die Einheitskugel auf ein Ellipsoid mit Halbachsen
+$\sigma_1, \ldots, \sigma_r$ ab. Deshalb ist
+$\|\bA\|_2 = \sigma_{\max}$ und
+$\corange{\kappa_2(\bA)} = \sigma_{\max}/\sigma_{\min}$ die
+:k[Konditionszahl]{#condition-number}: Eine fast singuläre
+Matrix hat ein winziges $\sigma_{\min}$ und ein nadelförmiges Ellipsoid.
+
+<SvdWidget />

@@ -1,0 +1,877 @@
+import { PotenzmethodenStepper } from "./widgets/S81Potenz";
+import { QrIterationsDemo } from "./widgets/S81QR";
+
+::quelle[Folien 08-la-misc, von „Verwendete Vorkenntnisse" bis zu den Bemerkungen über Kondition und Laufzeit.]
+
+Die numerische lineare Algebra ist ein großes Feld, und bislang haben wir vor
+allem eine ihrer Kernideen ausgereizt: die *Matrixzerlegung*. LU, Cholesky, QR
+und die SVD lösen ihr Problem, indem sie die Matrix in Faktoren mit handlicher
+Struktur schreiben und die eigentliche Rechnung in diesen Faktoren erledigen.
+In diesem Kapitel kommen zwei weitere Kernideen dazu:
+
+- *Iterative Methoden* erzeugen eine Folge von Näherungen und brechen ab,
+  sobald eine davon genau genug ist. Sie tauschen Genauigkeit gegen Laufzeit.
+- *Probabilistische Methoden* ersetzen ein großes Problem durch ein kleineres,
+  dessen Lösung der gesuchten mit hoher Wahrscheinlichkeit sehr nahe kommt.
+
+An beiden wird aktiv geforscht. Dieser Abschnitt und
+[Abschnitt 8.2](#sec-8.2) behandeln die iterative Idee am Eigenwertproblem,
+[Abschnitt 8.3](#sec-8.3) an linearen Gleichungssystemen; die probabilistische
+Idee kommt in [Abschnitt 8.4](#sec-8.4) an die Reihe.
+
+### Was wir mitbringen
+
+Dieses Kapitel greift auf fast alles zurück, was wir bisher aufgebaut haben:
+
+- die [Komplexitätsanalyse](?k=02-algos#sec-2.4) mit der
+  :k[$O$-Notation]{#big-o-notation},
+- [Kondition](?k=04-fehler#sec-4.2) und [Stabilität](?k=04-fehler#sec-4.3),
+- :k[Orthogonalmatrizen]{#orthogonal-matrix}
+  ([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)) und die
+  [Spektralnorm](?k=03-matrix-spur-norm#sec-3.3) $\left\|\cdot\right\|_2$,
+- [lineare Gleichungssysteme](?k=05-lgs#sec-5.2) samt ihrer direkten
+  Lösungsverfahren und die [QR-Zerlegung](?k=07-kq#sec-7.4).
+
+Dazu kommt Grundwissen aus der linearen Algebra:
+:k[Eigenwerte und Eigenvektoren]{#eigenvalue-eigenvector} und
+:k[Ähnlichkeitstransformationen]{#similar-matrices} $\bB = \bQ\bA\bQ^{-1}$.
+Aus der Analysis brauchen wir die :k[Konvergenz von Folgen]{#convergence} und
+die :k[geometrische Reihe]{#geometric-series} $\sum_k p^k$ für $|p| < 1$, aus
+der Wahrscheinlichkeitsrechnung Zufallsvektoren, Letztere aber erst in
+[Abschnitt 8.4](#sec-8.4).
+
+### Eigenwerte ohne charakteristisches Polynom
+
+Gesucht sind Paare aus Eigenwert und Eigenvektor, also $\lambda$ und
+$\bv \neq \bnull$ mit $\bA\bv = \lambda\bv$. Ein direktes Verfahren dafür
+kennen wir aus der linearen Algebra: die Nullstellen des charakteristischen
+Polynoms $\det(\bA - \lambda\bI) = 0$. Als Algorithmus taugt dieser Weg
+allerdings wenig.
+
+:::bemerkung[8.1.1 (Warum das charakteristische Polynom kein Algorithmus ist)]
+Für eine $n \times n$-Matrix hat das
+:k[charakteristische Polynom]{#characteristic-polynomial} den Grad $n$. Daran
+hängen gleich drei Probleme:
+
+1. Ab $n \geq 5$ gibt es keine allgemeine Lösungsformel für
+   :k[Polynomnullstellen]{#polynomial-roots} mehr. Wir müssten die Nullstellen
+   also ohnehin iterativ suchen und hätten nichts gewonnen.
+2. Der Umweg über die Koeffizienten ist numerisch instabil: Winzige Störungen
+   der Koeffizienten können die Nullstellen weit verschieben, das Problem ist
+   also [schlecht konditioniert](?k=04-fehler#sec-4.2).
+3. Er ist teuer. Schon das Aufstellen der Koeffizienten kostet $O(n^4)$ oder
+   mehr, während wir für eine ganze Matrixzerlegung mit $O(n^3)$ auskommen.
+:::
+
+Bleiben wir also bei den Verfahren der numerischen linearen Algebra. Auch dort
+gibt es direkte Methoden, doch spätestens in drei Situationen wollen wir lieber
+iterieren:
+
+- bei großen Matrizen ($n > 1000$), wo schon $O(n^3)$ wehtut,
+- bei :k[dünnbesetzten Matrizen]{#sparse-matrix}, deren Struktur direkte
+  Verfahren zerstören, weil sie die Nullen mit Zwischenergebnissen auffüllen,
+- wenn wir gar nicht alle Eigenwerte brauchen, sondern nur wenige, etwa die
+  $k \ll n$ größten.
+
+Iterative Verfahren spielen hier ihre Stärken aus. Sie kommen oft mit
+:k[Matrix-Vektor-Produkten]{#matrix-vector-product} als einziger Operation an
+$\bA$ aus, nutzen also die Dünnbesetztheit unverändert weiter, und der
+Kompromiss zwischen Genauigkeit und Laufzeit ist über die Abbruchbedingung
+steuerbar.
+
+### Die Potenzmethode
+
+Das einfachste iterative Verfahren ist zugleich das anschaulichste. Die
+*Potenzmethode* (power iteration, nach von Mises) berechnet den betragsgrößten
+Eigenwert $\cgreen{\lambda_1}$ und einen zugehörigen Eigenvektor
+$\cgreen{\bv_1}$, vorausgesetzt, dieser Eigenwert ist von den übrigen getrennt.
+Die Idee besteht aus einer einzigen Zeile: Wir wenden $\bA$ immer wieder an und
+normieren nach jedem Schritt.
+
+:::algorithmus[8.1.2 (Potenzmethode)]
+Gegeben seien $\bA \in \R^{n \times n}$ und ein Startvektor
+$\cblue{\bx^{(0)}} \neq \bnull$.
+
+1. Normiere den Start:
+   $\cblue{\bx^{(0)}} \leftarrow \cblue{\bx^{(0)}}/\left\|\cblue{\bx^{(0)}}\right\|$.
+2. Für $k = 1, 2, \dots$:
+   1. $\by = \bA\,\cblue{\bx^{(k-1)}}$,
+   2. $\cblue{\lambda^{(k)}} = \left\|\by\right\|$,
+   3. $\cblue{\bx^{(k)}} = \by / \cblue{\lambda^{(k)}}$.
+3. Brich ab, sobald das Residuum
+   $\cred{\left\|\bA\,\cblue{\bx^{(k)}} - \cblue{\lambda^{(k)}}\,\cblue{\bx^{(k)}}\right\|}$
+   klein genug ist.
+:::
+
+Pro Schritt fällt genau ein Matrix-Vektor-Produkt an. Für eine volle Matrix
+kostet das $O(n^2)$, für eine dünnbesetzte nur so viel, wie sie Einträge
+ungleich null hat. Zerlegt wird nichts, umgeformt wird nichts, $\bA$ selbst
+bleibt unangetastet.
+
+:::bemerkung[8.1.3 (Zwei Schätzungen für den Eigenwert)]
+Die Folien geben die Eigenwertschätzung als Quotient
+$\left\|\bA\bx^{(k)}\right\| / \left\|\bA\bx^{(k-1)}\right\|$ an. Diese Form
+gehört zur *unnormierten* Iteration $\bz^{(k)} = \bA\bz^{(k-1)}$: Dort wächst
+die Länge in jedem Schritt um ungefähr den Faktor $|\lambda_1|$, und der
+Quotient $\left\|\bz^{(k)}\right\|/\left\|\bz^{(k-1)}\right\|$ strebt gegen
+$|\lambda_1|$. Normieren wir dagegen wie in Algorithmus 8.1.2 nach jedem
+Schritt, so haben Zähler und Nenner denselben Grenzwert und der Quotient läuft
+gegen $1$. Mit Normierung lautet die Schätzung schlicht
+$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$.
+
+Eine Länge kann kein Vorzeichen liefern, diese Schätzung konvergiert also gegen
+$|\cgreen{\lambda_1}|$. Wer das Vorzeichen mitnehmen will, verwendet den
+*Rayleigh-Quotienten*
+
+$$
+\cblue{\rho^{(k)}} = \frac{\cblue{\bx^{(k)}}^\top \bA\, \cblue{\bx^{(k)}}}{\cblue{\bx^{(k)}}^\top \cblue{\bx^{(k)}}}
+= \cblue{\bx^{(k)}}^\top \bA\, \cblue{\bx^{(k)}} ,
+$$
+
+wobei der Nenner wegen der Normierung gleich $1$ ist. Für
+:k[symmetrische]{#symmetric-matrix} $\bA$ ist er die bessere Wahl. Beide
+Schätzungen sind dort quadratische Ausdrücke im Winkel zwischen
+$\cblue{\bx^{(k)}}$ und $\cgreen{\bv_1}$, ihr Fehler fällt also mit
+$\corange{(\lambda_2/\lambda_1)}^{2k}$ und damit doppelt so schnell wie der
+Winkel selbst; der Rayleigh-Quotient liegt dabei um einen konstanten Faktor
+näher dran und bringt das Vorzeichen mit. Ist $\bA$ nicht symmetrisch, stehen
+die Eigenvektoren nicht mehr senkrecht aufeinander und beide Schätzungen sind
+nur noch linear genau.
+
+Ein Wort noch zum Abbruchkriterium aus Algorithmus 8.1.2: Auch dort gehört
+$\cblue{\rho^{(k)}}$ hin, sobald $\cgreen{\lambda_1}$ negativ sein kann. Für
+$\cgreen{\lambda_1} < 0$ wechselt $\cblue{\bx^{(k)}}$ nämlich in jedem Schritt
+das Vorzeichen, und das Residuum mit
+$\cblue{\lambda^{(k)}} = |\cgreen{\lambda_1}|$ bliebe bei ungefähr
+$2|\cgreen{\lambda_1}|$ hängen, statt gegen null zu gehen.
+:::
+
+Warum funktioniert das? Weil jede Anwendung von $\bA$ die Komponente in
+Richtung $\cgreen{\bv_1}$ stärker verstärkt als alle anderen.
+
+:::satz[8.1.4 (Konvergenz der Potenzmethode)]
+Sei $\bA \in \R^{n \times n}$ diagonalisierbar mit einer Basis aus normierten
+Eigenvektoren $\bv_1, \dots, \bv_n$ und Eigenwerten
+$|\cgreen{\lambda_1}| > |\lambda_2| \geq \cdots \geq |\lambda_n|$. Der
+Startvektor habe die Darstellung $\bx^{(0)} = \sum_{i=1}^n c_i \bv_i$ mit
+$c_1 \neq 0$. Dann gilt für die Iterierten aus Algorithmus 8.1.2
+
+$$
+\cblue{\bx^{(k)}} = \pm\cgreen{\bv_1} + \cred{\br_k}
+\quad\text{mit}\quad
+\left\|\cred{\br_k}\right\| \leq C \left(\corange{\left|\tfrac{\lambda_2}{\lambda_1}\right|}\right)^k
+\quad\text{für alle hinreichend großen } k
+$$
+
+und einer von $k$ unabhängigen Konstanten $C$, sowie
+$\cblue{\lambda^{(k)}} \to |\cgreen{\lambda_1}|$. Für
+$\cgreen{\lambda_1} > 0$ ist das Vorzeichen dabei für alle $k$ dasselbe, für
+$\cgreen{\lambda_1} < 0$ wechselt es in jedem Schritt.
+:::
+
+::::beweis
+
+:::schritt
+Wegen $\bA\bv_i = \lambda_i\bv_i$ ist $\bA^k\bv_i = \lambda_i^k\bv_i$. Die
+Basisdarstellung des Startvektors überträgt sich damit auf jede Potenz von
+$\bA$:
+
+$$
+\bA^k \bx^{(0)} = \sum_{i=1}^n c_i \lambda_i^k \bv_i .
+$$
+
+::why[Induktion über $k$: aus $\bA^{k}\bv_i = \lambda_i^{k}\bv_i$ folgt $\bA^{k+1}\bv_i = \bA(\lambda_i^{k}\bv_i) = \lambda_i^{k}\bA\bv_i = \lambda_i^{k+1}\bv_i$; anschließend die Linearität von $\bA^k$]
+:::
+
+:::schritt
+Jetzt klammern wir den größten Faktor aus:
+
+$$ {#eq-8.1.1}
+\bA^k \bx^{(0)}
+= \cgreen{\lambda_1}^k \Biggl( c_1 \cgreen{\bv_1}
++ \underbrace{\sum_{i=2}^n c_i \Bigl(\corange{\tfrac{\lambda_i}{\lambda_1}}\Bigr)^k \bv_i}_{=\ \cred{\bs_k}} \Biggr) .
+$$
+
+::why[$\lambda_i^k = \lambda_1^k (\lambda_i/\lambda_1)^k$; das geht, weil $|\lambda_1| > |\lambda_2| \ge 0$ und damit $\lambda_1 \neq 0$ ist]
+:::
+
+:::schritt
+Der rote Restterm verschwindet, und zwar mit einer geometrischen Rate:
+
+$$
+\left\|\cred{\bs_k}\right\|
+\leq \sum_{i=2}^n |c_i| \left(\corange{\left|\tfrac{\lambda_i}{\lambda_1}\right|}\right)^k
+\leq \Bigl(\sum_{i=2}^n |c_i|\Bigr) \left(\corange{\left|\tfrac{\lambda_2}{\lambda_1}\right|}\right)^k
+\longrightarrow 0 .
+$$
+
+Übrig bleibt in der Klammer von ($8.1.1$) nur $c_1\cgreen{\bv_1}$. Das ist die
+Intuition hinter der Methode: Jede Anwendung von $\bA$ dämpft die
+$i$-te Komponente gegenüber der ersten um den Faktor
+$\corange{|\lambda_i/\lambda_1|} < 1$.
+
+::why[Dreiecksungleichung und $\left\|\bv_i\right\| = 1$; danach $|\lambda_i| \leq |\lambda_2|$ für alle $i \geq 2$. Die Potenzen einer Zahl mit Betrag kleiner als $1$ bilden eine Nullfolge]
+:::
+
+:::schritt
+Die Normierung in Algorithmus 8.1.2 ändert an der *Richtung* nichts. Per
+Induktion gilt
+
+$$
+\cblue{\bx^{(k)}} = \frac{\bA^k \bx^{(0)}}{\left\|\bA^k \bx^{(0)}\right\|} .
+$$
+
+::why[für $k = 1$ ist das die Vorschrift selbst; und ist $\bx^{(k-1)}$ das normierte $\bA^{k-1}\bx^{(0)}$, so ist $\bA\bx^{(k-1)}$ ein positives Vielfaches von $\bA^{k}\bx^{(0)}$, und Normieren löscht diesen Faktor wieder aus]
+:::
+
+:::schritt
+Einsetzen von ($8.1.1$) liefert die Behauptung: Mit
+$\bw_k = c_1\cgreen{\bv_1} + \cred{\bs_k}$ ist
+
+$$
+\cblue{\bx^{(k)}}
+= \frac{\cgreen{\lambda_1}^k \bw_k}{\left|\cgreen{\lambda_1}\right|^k \left\|\bw_k\right\|}
+= \sign(\cgreen{\lambda_1})^k \cdot \frac{\bw_k}{\left\|\bw_k\right\|}
+\longrightarrow \pm \cgreen{\bv_1} ,
+$$
+
+denn $\bw_k \to c_1\cgreen{\bv_1}$ und $c_1 \neq 0$. Das verbleibende
+Vorzeichen ist das von $c_1$, multipliziert mit
+$\sign(\cgreen{\lambda_1})^k$. Weil der Fehler in $\bw_k$ nach
+Schritt 3 wie $\corange{|\lambda_2/\lambda_1|}^k$ fällt, tut es der Fehler des
+normierten Vektors ebenso. Für die Eigenwertschätzung folgt schließlich
+
+$$
+\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|
+\longrightarrow \left\|\bA(\pm\cgreen{\bv_1})\right\| = |\cgreen{\lambda_1}| .
+$$
+
+::why[Normieren ist stetig, solange der Nenner nicht gegen null geht, und $\left\|\bw_k\right\| \to |c_1| > 0$]
+:::
+
+::::
+
+Rechnen wir das an der Matrix der Folien durch.
+
+:::beispiel[8.1.5 (Potenzmethode an einer 2×2-Matrix)]
+Sei
+
+$$
+\bA = \begin{pmatrix} 5 & -2 \\ -2 & 8 \end{pmatrix} .
+$$
+
+Das charakteristische Polynom ist
+
+$$
+\det(\bA - \lambda\bI) = (5-\lambda)(8-\lambda) - 4 = \lambda^2 - 13\lambda + 36
+= (\lambda - 9)(\lambda - 4) ,
+$$
+
+also $\cgreen{\lambda_1} = 9$ und $\lambda_2 = 4$. Die Eigenvektoren lesen wir
+aus $(\bA - \lambda\bI)\bv = \bnull$ mit $\bv = (a, b)^\top$ ab: Für
+$\lambda = 9$ heißt die erste Zeile $-4a - 2b = 0$, also $b = -2a$; für
+$\lambda = 4$ heißt sie $a - 2b = 0$, also $a = 2b$. Normiert ergibt das
+
+$$
+\cgreen{\bv_1} = \tfrac{1}{\sqrt{5}}\begin{pmatrix} -1 \\ 2 \end{pmatrix}
+\approx \begin{pmatrix} -0{,}447 \\ 0{,}894 \end{pmatrix} ,
+\qquad
+\bv_2 = \tfrac{1}{\sqrt{5}}\begin{pmatrix} 2 \\ 1 \end{pmatrix} .
+$$
+
+Die beiden stehen senkrecht aufeinander, wie es der
+:k[Spektralsatz]{#spectral-theorem} für symmetrische Matrizen verlangt. Die zu
+erwartende Konvergenzrate ist $\corange{\lambda_2/\lambda_1} = 4/9 \approx
+\corange{0{,}444}$.
+
+Wir starten mit $\bx^{(0)} = (2;\ 1{,}3)^\top$. Weil die Eigenvektoren eine
+Orthonormalbasis bilden, sind die Koeffizienten der Basisdarstellung einfach
+die Skalarprodukte:
+
+$$
+c_1 = \cgreen{\bv_1}^\top\bx^{(0)} = \frac{-2 + 2{,}6}{\sqrt{5}} \approx 0{,}268 ,
+\qquad
+c_2 = \bv_2^\top\bx^{(0)} = \frac{4 + 1{,}3}{\sqrt{5}} \approx 2{,}370 .
+$$
+
+Der Start liegt also fast in Richtung $\bv_2$, und $c_1$ ist knapp neunmal
+kleiner als $c_2$. Nach ($8.1.1$) muss die Iteration diesen Rückstand erst
+aufholen, und genau das zeigen die ersten Schritte:
+
+$$
+\begin{array}{c|c|c|c|c}
+k & \cblue{\bx^{(k)}} & \cblue{\lambda^{(k)}} & \cblue{\rho^{(k)}} & \cred{\sin \angle(\bx^{(k)}, \bv_1)} \\ \hline
+0 & (0{,}838;\ 0{,}545) & \text{–} & 4{,}063 & 0{,}994 \\
+1 & (0{,}756;\ 0{,}654) & 4{,}102 & 4{,}305 & 0{,}969 \\
+2 & (0{,}554;\ 0{,}833) & 4{,}468 & 5{,}236 & 0{,}868 \\
+3 & (0{,}195;\ 0{,}981) & 5{,}663 & 7{,}122 & 0{,}613 \\
+4 & (-0{,}131;\ 0{,}991) & 7{,}523 & 8{,}469 & 0{,}326 \\
+5 & (-0{,}307;\ 0{,}952) & 8{,}608 & 8{,}885 & 0{,}151 \\
+6 & (-0{,}385;\ 0{,}923) & 8{,}917 & 8{,}977 & 0{,}068 \\
+8 & (-0{,}435;\ 0{,}900) & 8{,}997 & 8{,}999 & 0{,}013 \\
+10 & (-0{,}445;\ 0{,}896) & 9{,}000 & 9{,}000 & 0{,}003
+\end{array}
+$$
+
+Drei Beobachtungen. Erstens dauert es vier Schritte, bis die Iterierte
+überhaupt in den richtigen Quadranten wandert; solange dominiert der
+$\bv_2$-Anteil. Zweitens schrumpft der Winkel zur grünen Richtung ab dann in
+jedem Schritt um ungefähr $\corange{0{,}444}$, die Rate aus Satz 8.1.4:
+$0{,}151/0{,}326 \approx 0{,}46$ und $0{,}068/0{,}151 \approx 0{,}45$.
+Drittens sind beide Eigenwertschätzungen schneller am Ziel als die Richtung:
+Ihr Fehler fällt pro Schritt um ungefähr
+$\corange{(\lambda_2/\lambda_1)^2} \approx 0{,}198$, also quadratisch in der
+Rate. Von $k = 8$ auf $k = 10$ geht der Fehler des Rayleigh-Quotienten von
+$-9{,}0 \cdot 10^{-4}$ auf $-3{,}5 \cdot 10^{-5}$ zurück, der Fehler der
+Normschätzung von $-3{,}3 \cdot 10^{-3}$ auf $-1{,}3 \cdot 10^{-4}$. Der
+Rayleigh-Quotient ist also nicht schneller, aber asymptotisch um den
+Faktor $3{,}7$ genauer.
+:::
+
+:::bemerkung[8.1.6 (Wann die Potenzmethode versagt)]
+Zwei Voraussetzungen von Satz 8.1.4 sind verletzbar, und beide Male bricht die
+Konvergenz zusammen.
+
+**Kein Anteil in Richtung $\cgreen{\bv_1}$.** Ist $c_1 = 0$, so fehlt in
+($8.1.1$) der grüne Term. Die Iteration läuft dann gegen die Eigenrichtung mit
+dem größten Eigenwert, der im Startvektor überhaupt vertreten ist. Für symmetrisches $\bA$
+sind die Eigenvektoren orthogonal, dort heißt $c_1 = \cgreen{\bv_1}^\top\bx^{(0)} = 0$
+also schlicht: Der Startvektor steht senkrecht auf dem gesuchten Eigenvektor.
+In Beispiel 8.1.5 trifft das auf $\bx^{(0)} = c\,\bv_2$ zu. Dann ist
+$\bA\bx^{(0)} = 4\,\bx^{(0)}$, die normierte Iterierte bleibt für immer stehen,
+und beide Schätzungen liefern hartnäckig $4$ statt $9$. In der Praxis ist das
+weniger dramatisch, als es klingt: Ein zufällig gewählter Startvektor erfüllt
+$c_1 \neq 0$ mit Wahrscheinlichkeit $1$, und Rundungsfehler schmuggeln beim
+Rechnen ohnehin einen kleinen $\cgreen{\bv_1}$-Anteil hinein, den die Iteration
+dann geduldig aufbläst.
+
+**Kein separierter größter Eigenwert.** Gilt $|\lambda_1| = |\lambda_2|$, etwa
+bei $\lambda_2 = -\lambda_1$ oder bei einem komplexen Eigenwertpaar, so ist die
+Rate $\corange{|\lambda_2/\lambda_1|} = 1$ und nichts konvergiert mehr. Und
+selbst wenn die beiden nur *nahe* beieinanderliegen, wird die Methode quälend
+langsam. Beide Male brauchen wir andere Verfahren.
+:::
+
+:::vertiefung[Die Potenzmethode Schritt für Schritt]
+Das Widget ersetzt die Abbildung der Folien. Wir sehen den Einheitskreis,
+darauf die Iterierten in Blau, dazu die beiden Eigenrichtungen der Matrix aus
+Beispiel 8.1.5. Der Startvektor lässt sich frei einstellen; die Knöpfe
+darunter setzen die drei interessanten Fälle: das Beispiel des Texts, den
+Versagensfall $\bx^{(0)} = c\,\bv_2$ aus Bemerkung 8.1.6 und den Volltreffer
+$\bx^{(0)} = c\,\cgreen{\bv_1}$, bei dem die Iteration von Anfang an am Ziel
+steht.
+Die Tabelle führt beide Eigenwertschätzungen und den Abstand zur grünen
+Richtung mit.
+
+<PotenzmethodenStepper />
+:::
+
+### Ähnliche Matrizen als Werkzeug
+
+Die Potenzmethode liefert einen Eigenwert. Wollen wir alle, brauchen wir eine
+andere Idee: Wir überführen $\bA$ in eine Matrix $\bB$, der wir die Eigenwerte
+ansehen können, ohne sie dabei zu verändern. Genau das leisten
+Ähnlichkeitstransformationen.
+
+:::satz[8.1.7 (Ähnliche Matrizen haben dieselben Eigenwerte)]
+Sei $\bB = \bQ\bA\bQ^{-1}$ mit invertierbarem $\bQ \in \R^{n \times n}$, also
+$\bB$ :k[ähnlich]{#similar-matrices} zu $\bA$. Dann gilt:
+
+1. $\bA$ und $\bB$ haben dasselbe charakteristische Polynom, insbesondere
+   dieselben Eigenwerte mit denselben Vielfachheiten, dieselbe
+   :k[Determinante]{#determinant} und dieselbe :k[Spur]{#trace}.
+2. Ist $\by$ Eigenvektor von $\bB$ zum Eigenwert $\lambda$, so ist
+   $\bx = \bQ^{-1}\by$ Eigenvektor von $\bA$ zum selben Eigenwert.
+:::
+
+::::beweis
+
+:::schritt
+Zu (2): Aus $\bB\by = \lambda\by$ wird durch Einsetzen der Definition von
+$\bB$
+
+$$
+\bQ\bA\bQ^{-1}\by = \lambda\by
+\;\implies\;
+\bA\bQ^{-1}\by = \lambda\bQ^{-1}\by
+\;\implies\;
+\bA\bx = \lambda\bx .
+$$
+
+::why[Multiplikation von links mit $\bQ^{-1}$; und $\bx = \bQ^{-1}\by \neq \bnull$, weil $\bQ^{-1}$ invertierbar ist und $\by \neq \bnull$]
+:::
+
+:::schritt
+Zu (1): Wir schieben $\bI = \bQ\bQ^{-1}$ in den zweiten Summanden und
+verwenden die Multiplikativität der Determinante:
+
+$$
+\det(\bB - \lambda\bI)
+= \det\bigl(\bQ(\bA - \lambda\bI)\bQ^{-1}\bigr)
+= \det(\bQ)\det(\bA - \lambda\bI)\det(\bQ)^{-1}
+= \det(\bA - \lambda\bI) .
+$$
+
+Beide Matrizen haben also dasselbe charakteristische Polynom und damit
+dieselben Eigenwerte samt Vielfachheiten.
+
+::why[$\bQ\bA\bQ^{-1} - \lambda\bQ\bI\bQ^{-1} = \bQ(\bA - \lambda\bI)\bQ^{-1}$, und $\det(\bQ)^{-1} = \det(\bQ^{-1})$ ist wegen der Invertierbarkeit definiert]
+:::
+
+:::schritt
+Für $\lambda = 0$ liefert das $\det(\bB) = \det(\bA)$. Die Gleichheit der
+Spuren steht schon in
+[Abschnitt 3.1](?k=03-matrix-spur-norm#sec-3.1): Die Spur ist zyklisch, also
+$\tr(\bQ\bA\bQ^{-1}) = \tr(\bA\bQ^{-1}\bQ) = \tr(\bA)$.
+
+::why[alternativ über das charakteristische Polynom: Spur und Determinante sind bis aufs Vorzeichen zwei seiner Koeffizienten, und die stimmen nach Schritt 2 überein]
+:::
+
+::::
+
+Besonders bequem wird es, wenn $\bB$ diagonal ist: Dann stehen die Eigenwerte
+einfach da.
+
+:::beispiel[8.1.8 (Diagonalisierung durch eine Orthogonalmatrix)]
+Wir bleiben bei $\bA$ aus Beispiel 8.1.5 und wählen
+
+$$
+\bQ = \frac{1}{\sqrt{5}} \begin{pmatrix} 2 & 1 \\ 1 & -2 \end{pmatrix}
+\qquad\text{mit}\qquad
+\bQ^\top\bQ = \bI .
+$$
+
+$\bQ$ ist orthogonal, also ist $\bQ^{-1} = \bQ^\top$ und die
+Ähnlichkeitstransformation $\bB = \bQ\bA\bQ^\top$ kommt ohne jede Inversion
+aus. Rechnen wir sie in zwei Etappen aus. Zuerst
+
+$$
+\bA\bQ^\top = \frac{1}{\sqrt{5}} \begin{pmatrix} 5 & -2 \\ -2 & 8 \end{pmatrix}
+\begin{pmatrix} 2 & 1 \\ 1 & -2 \end{pmatrix}
+= \frac{1}{\sqrt{5}} \begin{pmatrix} 8 & 9 \\ 4 & -18 \end{pmatrix} ,
+$$
+
+denn etwa der Eintrag links oben ist $5 \cdot 2 + (-2) \cdot 1 = 8$. Dann
+
+$$
+\bB = \bQ\bigl(\bA\bQ^\top\bigr)
+= \frac{1}{5} \begin{pmatrix} 2 & 1 \\ 1 & -2 \end{pmatrix}
+\begin{pmatrix} 8 & 9 \\ 4 & -18 \end{pmatrix}
+= \frac{1}{5} \begin{pmatrix} 20 & 0 \\ 0 & 45 \end{pmatrix}
+= \begin{pmatrix} \cgreen{4} & 0 \\ 0 & \cgreen{9} \end{pmatrix} .
+$$
+
+Die beiden Nullen sind kein Zufall: Die Zeilen von $\bQ$ sind gerade die
+Eigenvektoren von $\bA$. Auf der Diagonalen stehen deshalb die Eigenwerte, und
+sie stimmen mit den Nullstellen des charakteristischen Polynoms aus
+Beispiel 8.1.5 überein.
+
+**Zur Reihenfolge.** Auf der Diagonalen steht $(4, 9)$ und nicht $(9, 4)$. Das
+ist keine Eigenschaft von $\bA$, sondern eine der Spaltenwahl von $\bQ^\top$:
+Die erste Spalte von $\bQ^\top$ ist $\bv_2$, die zweite ist $-\cgreen{\bv_1}$,
+und in dieser Reihenfolge landen die zugehörigen Eigenwerte auf der Diagonalen.
+Hätten wir die Spalten getauscht, stünde dort $(9, 4)$. Wir bleiben im ganzen
+Kapitel bei der absteigenden Sortierung $\cgreen{\lambda_1} = 9 \geq \lambda_2 = 4$,
+so wie bei der Potenzmethode.
+
+Auch Satz 8.1.7(2) lässt sich hier ablesen: $\by = \be_2$ ist Eigenvektor von
+$\bB$ zum Eigenwert $9$, und
+$\bx = \bQ^{-1}\be_2 = \bQ^\top\be_2 = \tfrac{1}{\sqrt{5}}(1, -2)^\top = -\cgreen{\bv_1}$
+ist tatsächlich Eigenvektor von $\bA$ zu demselben Eigenwert.
+:::
+
+:::bemerkung[8.1.9 (Welche Zielgestalt, welches Verfahren)]
+Beispiel 8.1.8 hat geschummelt: Wir kannten die Eigenvektoren schon und haben
+$\bQ$ daraus gebaut. Ein Algorithmus muss ein passendes $\bQ$ erst finden, und
+zwar iterativ. Er erzeugt eine Folge $\bB^{(k)}$ von zu $\bA$ ähnlichen
+Matrizen, die einer Zielgestalt immer näher kommt. Welche Zielgestalt, das
+unterscheidet die Verfahren:
+
+- Die *QR-Iteration* strebt eine obere :k[Dreiecksmatrix]{#triangular-matrix}
+  an, die *Schur-Zerlegung*; auf ihrer Diagonalen stehen die Eigenwerte.
+  Analog gibt es LU- und Cholesky-Iterationen.
+- Die *Lanczos-Iteration* strebt eine Tridiagonalmatrix an, also
+  $b_{ij} = 0$ für $|i - j| > 1$, und lässt sich auf die wichtigsten
+  Eigenwerte einschränken. Für große dünnbesetzte Matrizen ist sie deutlich
+  effizienter.
+
+In der Praxis kommen zu beiden noch numerische Kniffe hinzu, die sie stabil und
+schnell genug machen: *Shifted QR* und *Implicitly Restarted Lanczos*.
+:::
+
+### Die QR-Iteration
+
+Die QR-Iteration ist von verblüffender Schlichtheit. Wir zerlegen die aktuelle
+Matrix in $\bQ\bR$ und multiplizieren die beiden Faktoren in der falschen
+Reihenfolge wieder zusammen.
+
+:::algorithmus[8.1.10 (QR-Iteration)]
+Gegeben sei $\bA \in \R^{n \times n}$.
+
+1. Starte mit $\bA^{(0)} = \bA$.
+2. Für $k = 1, 2, \dots$:
+   1. Berechne die [QR-Zerlegung](?k=07-kq#sec-7.4)
+      $\bA^{(k-1)} = \bQ^{(k)}\bR^{(k)}$.
+   2. Setze
+      $\cblue{\bA^{(k)}} = \bR^{(k)}\bQ^{(k)}$.
+:::
+
+Der zweite Schritt sieht willkürlich aus, ist aber genau die
+Ähnlichkeitstransformation aus dem letzten Abschnitt. Wegen
+$\bR^{(k)} = (\bQ^{(k)})^\top\bA^{(k-1)}$ ist nämlich
+
+$$
+\cblue{\bA^{(k)}} = \bR^{(k)}\bQ^{(k)} = (\bQ^{(k)})^\top \bA^{(k-1)} \bQ^{(k)} .
+$$
+
+:::satz[8.1.11 (Die Iterierten sind ähnlich zu A)]
+Mit $\bQ_k := \bQ^{(1)}\bQ^{(2)}\cdots\bQ^{(k)}$ gilt für die Iterierten aus
+Algorithmus 8.1.10
+
+$$ {#eq-8.1.2}
+\cblue{\bA^{(k)}} = \bQ_k^\top\, \bA\, \bQ_k .
+$$
+
+Insbesondere ist jedes $\cblue{\bA^{(k)}}$ ähnlich zu $\bA$ und hat nach
+Satz 8.1.7 dieselben Eigenwerte.
+:::
+
+::::beweis
+
+:::schritt
+Jedes $\bQ^{(j)}$ ist orthogonal, also ist auch das Produkt $\bQ_k$
+orthogonal und es gilt $\bQ_k^{-1} = \bQ_k^\top$.
+
+::why[Produkte von Orthogonalmatrizen sind orthogonal: $(\bQ\bP)^\top(\bQ\bP) = \bP^\top\bQ^\top\bQ\bP = \bP^\top\bP = \bI$]
+:::
+
+:::schritt
+Die Behauptung folgt per Induktion. Für $k = 1$ ist
+$\bA^{(1)} = (\bQ^{(1)})^\top\bA\bQ^{(1)} = \bQ_1^\top\bA\bQ_1$. Gilt sie für
+$k - 1$, so ist
+
+$$
+\cblue{\bA^{(k)}} = (\bQ^{(k)})^\top \bA^{(k-1)} \bQ^{(k)}
+= (\bQ^{(k)})^\top \bQ_{k-1}^\top\, \bA\, \bQ_{k-1} \bQ^{(k)}
+= \bQ_k^\top\, \bA\, \bQ_k .
+$$
+
+::why[$\bQ_{k-1}\bQ^{(k)} = \bQ_k$ nach Definition, und $(\bQ_{k-1}\bQ^{(k)})^\top = (\bQ^{(k)})^\top\bQ_{k-1}^\top$]
+:::
+
+::::
+
+Damit ist klar, dass die Iteration nichts kaputt macht. Warum sie aber
+überhaupt irgendwohin läuft, verrät erst der folgende Satz. Er ist der
+eigentliche Grund, warum das Verfahren funktioniert.
+
+:::satz[8.1.12 (Die QR-Iteration zerlegt die Potenzen von A)]
+Mit $\bQ_k := \bQ^{(1)}\bQ^{(2)}\cdots\bQ^{(k)}$ und
+$\bR_k := \bR^{(k)}\bR^{(k-1)}\cdots\bR^{(1)}$ gilt für alle $k \geq 1$
+
+$$ {#eq-8.1.3}
+\bA^k = \bQ_k \bR_k .
+$$
+
+Die $k$-te Iterierte trägt also, versteckt in ihren Faktoren, die
+QR-Zerlegung der $k$-ten Potenz von $\bA$.
+:::
+
+::::beweis
+
+:::schritt
+*Induktionsanfang* $k = 1$: Der erste Schritt zerlegt
+$\bA = \bA^{(0)} = \bQ^{(1)}\bR^{(1)} = \bQ_1\bR_1$.
+
+::why[für $k = 1$ sind $\bQ_1 = \bQ^{(1)}$ und $\bR_1 = \bR^{(1)}$ genau die Faktoren des ersten Iterationsschritts]
+:::
+
+:::schritt
+Wir notieren die Rechenregel, die den Schritt trägt. Für jedes $i$ ist
+$\bA^{(i)} = \bR^{(i)}\bQ^{(i)}$ nach Algorithmus 8.1.10 und
+$\bA^{(i)} = \bQ^{(i+1)}\bR^{(i+1)}$ nach der Zerlegung im nächsten Schritt,
+also
+
+$$
+\bR^{(i)}\bQ^{(i)} = \bQ^{(i+1)}\bR^{(i+1)} . \qquad (\star)
+$$
+
+::why[dieselbe Matrix $\bA^{(i)}$, einmal als Ergebnis von Schritt $i$ und einmal als Eingang von Schritt $i+1$ gelesen]
+:::
+
+:::schritt
+*Induktionsschritt* $k \to k+1$: Wir setzen die Induktionsvoraussetzung ein
+und schieben dann $k$-mal $(\star)$ von links nach rechts durch das Produkt.
+
+$$
+\begin{aligned}
+\bA^{k+1} &= \bA\,\bA^k = \bigl(\bQ^{(1)}\bR^{(1)}\bigr)\bigl(\bQ_k\bR_k\bigr) \\
+&= \bQ^{(1)}\underbrace{\bigl(\bR^{(1)}\bQ^{(1)}\bigr)}_{= \,\bQ^{(2)}\bR^{(2)}}
+   \bQ^{(2)}\cdots\bQ^{(k)}\,\bR^{(k)}\cdots\bR^{(1)} \\
+&= \bQ^{(1)}\bQ^{(2)}\underbrace{\bigl(\bR^{(2)}\bQ^{(2)}\bigr)}_{= \,\bQ^{(3)}\bR^{(3)}}
+   \bQ^{(3)}\cdots\bQ^{(k)}\,\bR^{(k)}\cdots\bR^{(1)} \\
+&= \cdots = \bQ^{(1)}\bQ^{(2)}\cdots\bQ^{(k+1)}\,\bR^{(k+1)}\bR^{(k)}\cdots\bR^{(1)} \\
+&= \bQ_{k+1}\bR_{k+1} .
+\end{aligned}
+$$
+
+::why[in der zweiten Zeile ist $\bQ_k\bR_k$ ausgeschrieben; jede Anwendung von $(\star)$ tauscht ein $\bR^{(i)}\bQ^{(i)}$ gegen $\bQ^{(i+1)}\bR^{(i+1)}$ und schiebt so ein weiteres $\bQ$ nach vorn]
+:::
+
+::::
+
+:::bemerkung[8.1.13 (Die QR-Iteration ist eine simultane Potenzmethode)]
+Gleichung ($8.1.3$) macht das Verfahren durchschaubar. Bei der üblichen
+Normierung mit positiven Diagonaleinträgen in $\bR$ ist die QR-Zerlegung
+gerade das :k[Gram-Schmidt-Verfahren]{#gram-schmidt} auf den Spalten. Die
+Spalten von $\bQ_k$ sind demnach die orthonormalisierten Versionen von
+
+$$
+\bA^k\be_1, \quad \bA^k\be_2, \quad \dots, \quad \bA^k\be_n .
+$$
+
+Jede einzelne dieser Spalten ist eine unnormierte Iterierte der Potenzmethode,
+gestartet in einem Einheitsvektor. Die QR-Iteration ist also eine *simultane*
+Potenzmethode auf allen $n$ Einheitsvektoren zugleich, mit einer
+Orthonormalisierung nach jedem Schritt. Diese Orthonormalisierung ist der ganze
+Trick: Ohne sie würden alle $n$ Spalten in dieselbe Richtung
+$\cgreen{\bv_1}$ kippen und die Information über die übrigen Eigenrichtungen
+ginge verloren.
+:::
+
+:::bemerkung[8.1.14 (Wogegen die QR-Iteration konvergiert)]
+Bei der Konvergenz ist Vorsicht geboten, denn sie gilt nicht ohne
+Voraussetzungen. Ein Gegenbeispiel liefert die Drehung um $90^\circ$,
+$\bA = \bigl(\begin{smallmatrix} 0 & -1 \\ 1 & 0 \end{smallmatrix}\bigr)$: Hier
+ist $\bQ^{(1)} = \bA$ und $\bR^{(1)} = \bI$, also $\bA^{(1)} = \bA$, und die
+Iteration steht für immer still. Ihre Eigenwerte $\pm i$ sind komplex und
+betragsgleich.
+
+Sind dagegen alle Eigenwerte reell und betragsmäßig getrennt,
+
+$$
+|\lambda_1| > |\lambda_2| > \cdots > |\lambda_n| > 0 ,
+$$
+
+so konvergiert $\cblue{\bA^{(k)}}$ gegen eine obere Dreiecksmatrix mit den
+Eigenwerten auf der Diagonalen. Das ist die *Schur-Zerlegung* von $\bA$. Die
+Einträge unterhalb der Diagonalen fallen dabei linear, der Eintrag an der
+Stelle $(i, j)$ mit $i > j$ wie $\corange{|\lambda_i/\lambda_j|}^k$; die
+langsamste dieser Raten gehört zum engsten Paar benachbarter Eigenwerte.
+
+Dass die Eigenwerte dort auch absteigend nach Betrag erscheinen, ist der
+Regelfall, aber nicht selbstverständlich. Nötig ist dafür eine technische
+Zusatzbedingung: Schreiben wir die Eigenvektoren, absteigend nach dem Betrag
+ihres Eigenwerts sortiert, als Spalten einer Matrix $\bX$, so muss $\bX^{-1}$
+eine [LU-Zerlegung](?k=05-lgs#sec-5.3) ohne Zeilentausch besitzen. Ein
+Gegenbeispiel ist schnell gefunden: Für $\bA = \diag(1, 2)$ liefert
+Gram-Schmidt $\bQ^{(1)} = \bI$ und $\bR^{(1)} = \bA$, es rührt sich also gar
+nichts, und die Diagonale bleibt aufsteigend sortiert. Das ist kein
+Sonderfall der Diagonalmatrix: Ist $\bA$ schon obere Dreiecksmatrix mit
+Diagonaleinträgen ungleich null, so ist $\bQ^{(1)} = \diag(\sign(a_{ii}))$ und
+$\cblue{\bA^{(1)}} = \bQ^{(1)}\bA\bQ^{(1)}$ trägt dieselbe Diagonale wie
+$\bA$. Die QR-Iteration sortiert also nicht um; sie erzeugt die Reihenfolge
+nur dort, wo sie die Dreiecksgestalt selbst herstellt.
+
+Ist $\bA$ zusätzlich **symmetrisch**, so ist wegen ($8.1.2$) auch jedes
+$\cblue{\bA^{(k)}} = \bQ_k^\top\bA\bQ_k$ symmetrisch, und eine symmetrische
+obere Dreiecksmatrix ist diagonal. In diesem Fall gilt außerdem
+$\bA = \cgreen{\bV}\bLambda\cgreen{\bV}^\top$ mit orthogonalem $\cgreen{\bV}$
+aus Eigenvektoren, und mit $\bQ_k \to \cgreen{\bV}$ folgt
+
+$$
+\bQ_k^\top\bA\bQ_k \longrightarrow \cgreen{\bV}^\top\bA\cgreen{\bV}
+= \cgreen{\bV}^\top\cgreen{\bV}\bLambda\cgreen{\bV}^\top\cgreen{\bV} = \bLambda .
+$$
+
+Diese Rechnung steht so auf den Folien, und sie hängt ganz am
+:k[Spektralsatz]{#spectral-theorem}: Nur für symmetrisches $\bA$ gibt es die
+Zerlegung $\bA = \cgreen{\bV}\bLambda\cgreen{\bV}^\top$ mit *orthogonalem*
+$\cgreen{\bV}$, und nur deshalb kürzt sich $\cgreen{\bV}^\top\cgreen{\bV}$ in
+der Kette zweimal zur Einheitsmatrix weg. Im allgemeinen Fall ist der Grenzwert
+von $\bQ_k$ der Orthogonalfaktor der Schur-Zerlegung, und von dessen Spalten
+ist nur die erste ein Eigenvektor. Die übrigen Eigenvektoren rechnen wir uns
+dort aus der Dreiecksmatrix zurück.
+:::
+
+:::beispiel[8.1.15 (QR-Iteration an der Beispielmatrix)]
+Wir nehmen wieder $\bA = \bigl(\begin{smallmatrix} 5 & -2 \\ -2 & 8 \end{smallmatrix}\bigr)$
+und rechnen den ersten Schritt von Hand. Gram-Schmidt auf den Spalten
+$\ba_1 = (5, -2)^\top$ und $\ba_2 = (-2, 8)^\top$ liefert
+
+$$
+r_{11} = \left\|\ba_1\right\| = \sqrt{29} , \qquad
+\bq_1 = \tfrac{1}{\sqrt{29}}\begin{pmatrix} 5 \\ -2 \end{pmatrix} , \qquad
+r_{12} = \bq_1^\top\ba_2 = \frac{-10 - 16}{\sqrt{29}} = \frac{-26}{\sqrt{29}} ,
+$$
+
+und nach Abzug der Projektion bleibt
+$\bw = \ba_2 - r_{12}\bq_1 = \tfrac{36}{29}(2, 5)^\top$ mit
+$r_{22} = \left\|\bw\right\| = 36/\sqrt{29}$. Zusammen also
+
+$$
+\bQ^{(1)} = \frac{1}{\sqrt{29}}\begin{pmatrix} 5 & 2 \\ -2 & 5 \end{pmatrix} ,
+\qquad
+\bR^{(1)} = \frac{1}{\sqrt{29}}\begin{pmatrix} 29 & -26 \\ 0 & 36 \end{pmatrix} .
+$$
+
+Eine schnelle Probe: $r_{11} r_{22} = \sqrt{29} \cdot 36/\sqrt{29} = 36 = \det(\bA)$.
+Nun die Vertauschung:
+
+$$
+\cblue{\bA^{(1)}} = \bR^{(1)}\bQ^{(1)}
+= \frac{1}{29}\begin{pmatrix} 29 & -26 \\ 0 & 36 \end{pmatrix}
+\begin{pmatrix} 5 & 2 \\ -2 & 5 \end{pmatrix}
+= \frac{1}{29}\begin{pmatrix} 197 & -72 \\ -72 & 180 \end{pmatrix}
+\approx \begin{pmatrix} 6{,}793 & -2{,}483 \\ -2{,}483 & 6{,}207 \end{pmatrix} .
+$$
+
+Spur und Determinante sind unverändert $13$ und $36$: Satz 8.1.11 macht
+$\cblue{\bA^{(1)}}$ ähnlich zu $\bA$, und Satz 8.1.7(1) hält beide Größen unter
+Ähnlichkeit fest. Weiter iteriert ergibt sich (die Matrizen bleiben symmetrisch, also
+genügen drei Zahlen pro Zeile):
+
+$$
+\begin{array}{c|c|c|c|c}
+k & \cgreen{a^{(k)}_{11}} & \cred{a^{(k)}_{21}} & \cgreen{a^{(k)}_{22}} & \corange{\text{Schrumpffaktor}} \\ \hline
+0 & 5{,}000 & -2{,}000 & 8{,}000 & \text{–} \\
+1 & 6{,}793 & -2{,}483 & 6{,}207 & 1{,}241 \\
+2 & 8{,}325 & -1{,}709 & 4{,}675 & 0{,}688 \\
+3 & 8{,}850 & -0{,}852 & 4{,}150 & 0{,}498 \\
+4 & 8{,}970 & -0{,}388 & 4{,}030 & 0{,}455 \\
+5 & 8{,}994 & -0{,}173 & 4{,}006 & 0{,}447 \\
+6 & 8{,}999 & -0{,}077 & 4{,}001 & 0{,}445 \\
+9 & 9{,}000 & -0{,}007 & 4{,}000 & 0{,}444
+\end{array}
+$$
+
+Die Diagonale läuft auf $(\cgreen{9}, \cgreen{4})$ zu, absteigend nach Betrag,
+und der rote Eintrag unter der Diagonalen verschwindet. Sein Schrumpffaktor
+nähert sich $\corange{|\lambda_2/\lambda_1|} = \corange{0{,}444}$ an, derselben
+Rate wie bei der Potenzmethode; im ersten Schritt wächst er sogar noch, die
+Rate ist eben eine asymptotische Aussage. Das aufgesammelte Produkt
+$\bQ_9$ hat die Spalten $(0{,}448;\ -0{,}894)^\top$ und
+$(0{,}894;\ 0{,}448)^\top$, also $-\cgreen{\bv_1}$ und $\bv_2$ bis auf
+Rundung. Ein Vergleich mit Beispiel 8.1.8 lohnt sich: Dort haben wir dieselbe
+Diagonalisierung in einem Schritt hingeschrieben, weil wir die Eigenvektoren
+schon kannten. Die QR-Iteration findet sie selbst.
+:::
+
+:::vertiefung[Die QR-Iteration zum Durchklicken]
+Auch dieses Widget ersetzt eine Abbildung der Folien. Links stehen die
+Einträge von $\bA^{(k)}$, dazu die Faktoren des letzten Schritts und das
+aufgesammelte Produkt $\bQ_k$; rechts fällt der Betrag der Nebendiagonalen auf
+logarithmischer Skala, wo lineare Konvergenz als Gerade erscheint. Neben der
+Beispielmatrix lohnen sich zwei weitere Eingaben: die unsymmetrische Matrix
+$\bigl(\begin{smallmatrix} 2 & 3 \\ 1 & 4 \end{smallmatrix}\bigr)$, bei der der
+Grenzwert dreieckig und nicht diagonal ist, und die Drehung aus
+Bemerkung 8.1.14, bei der gar nichts passiert.
+
+<QrIterationsDemo />
+:::
+
+### Kondition und Aufwand
+
+:::bemerkung[8.1.16 (Kondition von Eigenwertproblemen)]
+Wie [gut konditioniert](?k=04-fehler#sec-4.2) ein Eigenwertproblem ist, hängt
+stark von der Matrix ab.
+
+- *Eigenwerte* sind gut konditioniert, wenn $\bA$ nahezu symmetrisch ist. Für
+  exakt symmetrische Matrizen verschiebt eine ebenfalls symmetrische Störung
+  $\bDelta$ jeden Eigenwert um höchstens $\left\|\bDelta\right\|_2$. Bei stark
+  unsymmetrischen Matrizen gibt es keine solche Schranke.
+- *Eigenvektoren* sind schlecht konditioniert, wenn Eigenwerte nahe
+  beieinanderliegen. Der Grenzfall macht klar, warum: Bei
+  $\lambda_i = \lambda_j$ spannen die zugehörigen Eigenvektoren eine ganze
+  Ebene auf, in der jede Richtung gleich gut ist. Liegen die Eigenwerte nur
+  nahe beieinander, ist die Richtung fast beliebig, und eine kleine Störung
+  dreht sie weit.
+
+Das passt zu dem, was wir an beiden Verfahren gesehen haben: Die Rate
+$\corange{|\lambda_2/\lambda_1|}$ geht gegen $1$, sobald sich die Eigenwerte
+nähern. Schlechte Kondition und langsame Konvergenz haben hier dieselbe
+Ursache.
+:::
+
+:::bemerkung[8.1.17 (Aufwand)]
+Der praktische QR-Eigenwertalgorithmus reduziert eine volle Matrix einmalig in
+$O(n^3)$ auf Hessenbergform. Danach kostet ein QR-Sweep $O(n^2)$; bei einer
+symmetrischen Matrix reduziert man zunächst auf Tridiagonalform, sodass ein
+impliziter Sweep sogar $O(n)$ kostet. Wie viele Sweeps nötig sind, hängt von
+Shifts, Deflation und Eigenwertverteilung ab. Ein Schritt der
+Potenzmethode ist mit einem Matrix-Vektor-Produkt dagegen konkurrenzlos
+billig, liefert aber eben auch nur einen Eigenwert.
+
+Für große dünnbesetzte Matrizen führt die Lanczos-Iteration aus
+Bemerkung 8.1.9 schneller zum Ziel. Iterative
+:k[SVD]{#singular-value-decomposition}-Verfahren nach demselben Muster, etwa
+die Lanczos-Bidiagonalisierung im R-Paket `irlba`, liefern die $k$ größten
+Singulärwerte, ohne die Matrix je vollständig zu zerlegen
+([Abschnitt 6.5](?k=06-svd#sec-6.5)). Was sich mit der Potenzmethode allein
+alles anstellen lässt, sehen wir in [Abschnitt 8.2](#sec-8.2) am
+PageRank-Algorithmus.
+:::
+
+### Selbsttest
+
+::::quiz
+
+:::frage{falsch}
+Für $\bx^{(0)} = c\,\bv_1$ mit $c \neq 0$ versagt die Potenzmethode.
+
+Im Gegenteil, das ist der bequemste aller Startvektoren: Er hat
+$c_1 = c \neq 0$, und die Iteration ist bereits im ersten Schritt am Ziel, denn
+$\bA\bv_1 = \lambda_1\bv_1$ ändert die Richtung nicht.
+:::
+
+:::frage{wahr}
+Für $\bx^{(0)} = c\,\bv_2$ mit $c \neq 0$ versagt die Potenzmethode.
+
+Hier ist $c_1 = 0$, in ($8.1.1$) fehlt also der Term mit $\bv_1$. Bei
+symmetrischem $\bA$ heißt das anschaulich: Der Startvektor steht senkrecht auf
+dem gesuchten Eigenvektor. Die Iterierte bleibt in Richtung $\bv_2$ stehen und
+die Schätzung liefert $\lambda_2$ statt $\lambda_1$ (Bemerkung 8.1.6).
+:::
+
+:::frage{falsch}
+Für $\bx^{(0)} = c\,(\bv_1 + \bv_2)$ mit $c \neq 0$ versagt die Potenzmethode.
+
+Dieser Start hat $c_1 = c \neq 0$, damit ist die Voraussetzung von Satz 8.1.4
+erfüllt. Die Methode konvergiert mit der üblichen Rate
+$|\lambda_2/\lambda_1|$.
+:::
+
+:::frage{wahr}
+Ähnliche Matrizen haben dasselbe charakteristische Polynom.
+
+Das ist Satz 8.1.7(1), bewiesen über
+$\det(\bQ(\bA - \lambda\bI)\bQ^{-1}) = \det(\bA - \lambda\bI)$. Daraus folgen
+gleiche Eigenwerte samt Vielfachheiten und damit auch gleiche Spur und
+Determinante. Die Eigen*vektoren* sind dagegen verschieden, sie gehen über
+$\bx = \bQ^{-1}\by$ auseinander hervor.
+:::
+
+:::frage{falsch}
+Die QR-Iteration konvergiert für jede reelle Matrix gegen eine obere
+Dreiecksmatrix.
+
+Die Drehung um $90^\circ$ ist ein Gegenbeispiel: Dort ist $\bQ^{(1)} = \bA$
+und $\bR^{(1)} = \bI$, die Iteration bleibt also für immer bei $\bA$ stehen
+(Bemerkung 8.1.14). Ihre Eigenwerte $\pm i$ sind komplex und betragsgleich. Für
+die Konvergenz gegen die Schur-Form brauchen wir reelle, betragsmäßig
+getrennte Eigenwerte.
+:::
+
+:::frage{falsch}
+Ein Schritt der Potenzmethode kostet $O(n^3)$ Operationen.
+
+Ein Schritt besteht aus einem Matrix-Vektor-Produkt und einer Normierung, das
+sind $O(n^2)$ Operationen für eine volle Matrix und noch weniger für eine
+dünnbesetzte. $O(n^3)$ kostet dagegen jede einzelne QR-Iteration, weil dort in
+jedem Schritt eine ganze Matrix zerlegt wird (Bemerkung 8.1.17).
+:::
+
+::::
+
+*Vertiefung: Heath §4.5 zu Potenzmethode, Ähnlichkeitstransformationen und
+QR-Iteration.*

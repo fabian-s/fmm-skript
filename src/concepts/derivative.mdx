@@ -1,0 +1,23 @@
+export const title = "Ableitung";
+
+import { SecantWidget } from "./widgets/DerivativeWidget";
+
+Die Ableitung $f'(a)$ misst, wie schnell sich eine Funktion
+an der einzelnen Stelle $x = a$ ändert: sie ist die
+Steigung des Graphen *genau dort*. Um sie zu fassen, berechnen
+wir die Steigung der Geraden durch zwei nahe Punkte des Graphen,
+$\tfrac{f(a+h) - f(a)}{h}$, und lassen dann den zweiten
+Punkt auf den ersten zuwandern ($h \to 0$). Für
+$f(x) = x^2$ an der Stelle $a = 1$ ergibt das
+$f'(1) = 2$: Nahe $x = 1$ hebt ein winziges
+Anheben von $x$ den Wert $f(x)$ um ungefähr das
+Doppelte davon an.
+
+Das ist der Schlüssel zu gekrümmten Problemen: Weil die Ableitung die
+Steigung der :k[Tangente]{#tangent-line}
+liefert, sieht jede glatte Kurve wie eine Gerade aus, wenn wir nur
+nah genug herangehen; ein komplizierter nichtlinearer
+Zusammenhang lässt sich also lokal durch einen einfachen linearen
+ersetzen.
+
+<SecantWidget />

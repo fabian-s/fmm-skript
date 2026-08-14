@@ -1,0 +1,42 @@
+export const title = "QR-Zerlegung";
+
+import { GramSchmidtWidget } from "./widgets/QrFactorizationWidget";
+
+{/* Konzept-Tooltip: QR-Zerlegung: Gram-Schmidt-Sicht und Kleinste Quadrate. */}
+
+Die *QR-Zerlegung* (QR factorization) spaltet eine Matrix auf in
+$\bA = \bQ\bR$, wobei $\bQ$ eine :k[orthogonale Matrix]{#orthogonal-matrix}
+ist und $\bR$ eine :k[obere Dreiecksmatrix]{#triangular-matrix}. Die Idee
+dahinter ist Gram-Schmidt: Wir bauen eine
+:k[Orthonormalbasis]{#orthonormal-basis} für den von den Spalten von $\bA$
+aufgespannten Raum, und $\bR$ hält das Rezept fest, wie sich jede
+ursprüngliche Spalte aus diesen Basisvektoren zusammensetzt. Eine kleine
+Instanz:
+
+$$
+\underbrace{\begin{bmatrix} 3 & -1 \\ 4 & 7 \end{bmatrix}}_{\bA} = \underbrace{\begin{bmatrix} 0.6 & -0.8 \\ 0.8 & 0.6 \end{bmatrix}}_{\bQ} \underbrace{\begin{bmatrix} 5 & 5 \\ 0 & 5 \end{bmatrix}}_{\bR}.
+$$
+
+Ihr Gewinn für das
+:k[lineare Kleinste-Quadrate-Problem]{#linear-least-squares}: Multiplikation
+eines Vektors mit $\bQ^{\mathsf T}$ ändert seine
+:k[euklidische Länge]{#euclidean-norm} nie, also
+
+$$
+\left\| \bb - \bA\bx \right\|_2 = \left\| \bQ^{\mathsf T}\bb - \bR\bx \right\|_2 ,
+$$
+
+und für eine hohe $m \times n$-Matrix sind die unteren $m - n$ Zeilen von
+$\bR$ null: Der Minimierer kommt aus einem einzigen billigen
+:k[Lösen eines Dreieckssystems]{#triangular-solve} mit dem oberen
+$n \times n$-Block, und die unbeeinflussbaren unteren Einträge von
+$\bQ^{\mathsf T}\bb$ liefern die Residuennorm gratis dazu. Weil
+$\bA^{\mathsf T}\bA$ nie gebildet wird, wird auch die
+:k[Konditionszahl]{#condition-number} nicht quadriert, der entscheidende
+Genauigkeitsvorteil gegenüber den
+:k[Normalengleichungen]{#normal-equations}. Produktionsreife Software
+berechnet $\bQ$ mit Householder-:k[Spiegelungen]{#reflection} oder
+Givens-:k[Rotationen]{#rotation-matrix}, die numerisch robuster sind als das
+Lehrbuch-Gram-Schmidt.
+
+<GramSchmidtWidget />

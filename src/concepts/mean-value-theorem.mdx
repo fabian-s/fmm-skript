@@ -1,0 +1,31 @@
+export const title = "Mittelwertsatz";
+
+import { MvtWidget } from "./widgets/MeanValueTheoremWidget";
+
+{/*
+ * Concept-Tooltip: Mittelwertsatz: irgendwo stimmt die momentane Steigung
+ * mit der durchschnittlichen Steigung überein.
+ */}
+
+Ist $f$ auf $[a, b]$ :k[stetig]{#continuity} und dazwischen
+:k[differenzierbar]{#differentiability}, dann stimmt irgendwo in $(a, b)$ die
+momentane Steigung mit der durchschnittlichen Steigung über das ganze Intervall
+überein. Das ist der *Mittelwertsatz* (engl. *mean value theorem*): Es gibt
+einen Punkt $\xi \in (a, b)$ mit
+
+$$
+f(b) - f(a) = f'(\xi)\,(b - a).
+$$
+
+Blitzer-Intuition: Wenn eine 100&nbsp;km lange Fahrt genau eine Stunde gedauert
+hat, dann zeigte der Tacho in irgendeinem Moment genau 100&nbsp;km/h; die
+:k[Tangente]{#tangent-line} ist an einem inneren Punkt parallel zur Sekante.
+Der Haken: Der Satz garantiert nur, dass so ein $\xi$ existiert, er verrät aber
+nicht, wo es liegt.
+
+So nutzt ihn das Konvergenzargument für Fixpunkt-Iterationen: Schreiben wir
+$g(x_k) - g(x^*) = g'(\theta_k)(x_k - x^*)$ für ein unbekanntes $\theta_k$
+zwischen $x_k$ und $x^*$, dann wird ein Iterationsschritt zu einer exakten
+Aussage darüber, wie der Fehler schrumpft, ohne $\theta_k$ je zu lokalisieren.
+
+<MvtWidget />

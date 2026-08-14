@@ -1,0 +1,856 @@
+import { KroneckerRechner } from "./widgets/S93Kronecker";
+import { SeparierbareKovarianzDemo } from "./widgets/S93Kovarianz";
+
+::quelle[Folien 09-tensoren, Abschnitt „Produkt von Tensoren".]
+
+Aus zwei Vektoren eine Zahl zu machen, ist uns vertraut: Das leistet das
+Skalarprodukt. In diesem Abschnitt gehen wir in die Gegenrichtung und bauen aus
+zwei Objekten ein größeres. Aus zwei Vektoren wird eine Matrix, aus zwei
+Matrizen ein Tensor der Stufe $4$ oder, anders angeordnet, eine sehr große
+Matrix. Alle drei Konstruktionen schreiben wir mit demselben Zeichen $\otimes$.
+Der Umgang mit dieser Doppelbelegung gehört zum Thema.
+
+### Das äußere Produkt
+
+:::definition[9.3.1 (Äußeres Produkt)]
+Das *äußere Produkt* (outer product) zweier Vektoren $\cblue{\bv} \in \R^m$ und
+$\cgreen{\bw} \in \R^n$ ist die Matrix
+
+$$ {#eq-9.3.1}
+\cblue{\bv} \otimes \cgreen{\bw} := \cblue{\bv}\,\cgreen{\bw}^\top
+= \begin{pmatrix}
+\corange{v_1 w_1} & \cdots & \corange{v_1 w_n} \\
+\vdots & & \vdots \\
+\corange{v_m w_1} & \cdots & \corange{v_m w_n}
+\end{pmatrix} \in \R^{m \times n} ,
+$$
+
+also die Matrix mit den Einträgen
+$(\cblue{\bv} \otimes \cgreen{\bw})_{ij} = \corange{v_i w_j}$.
+:::
+
+:::bemerkung[9.3.2 (Inneres und äußeres Produkt)]
+Das Skalarprodukt heißt auch *inneres Produkt* (inner product), und der
+Namensvetter macht den Unterschied deutlich. Nebeneinandergestellt sind die
+beiden Abbildungen
+
+$$
+\inner{\cdot, \cdot}\colon \R^n \times \R^n \to \R ,
+\qquad \inner{\cblue{\bv}, \cgreen{\bw}} = \cblue{\bv}^\top\cgreen{\bw} ,
+$$
+
+$$
+\otimes\colon \R^m \times \R^n \to \R^{m \times n} ,
+\qquad \cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\,\cgreen{\bw}^\top .
+$$
+
+Drei Unterschiede lohnen einen Blick. Das innere Produkt verlangt zwei Vektoren
+gleicher Länge, das äußere verträgt beliebige Längen. Beim inneren Produkt
+steht das Transponat links, beim äußeren rechts. Und heraus kommt einmal eine
+einzige Zahl, einmal eine ganze Matrix aus $mn$ Zahlen.
+
+Wer sich die Formeln nicht merken mag, zählt die Formate ab: In
+$\cblue{\bv}^\top\cgreen{\bw}$ multiplizieren wir $(1 \times n)$ mit
+$(n \times 1)$, die langen Dimensionen treffen sich innen und verschwinden. In
+$\cblue{\bv}\,\cgreen{\bw}^\top$ multiplizieren wir $(m \times 1)$ mit
+$(1 \times n)$, die langen Dimensionen stehen außen und bleiben stehen.
+:::
+
+:::beispiel[9.3.3 (Äußeres Produkt zweier Vektoren)]
+Für
+
+$$
+\cblue{\bv} = \begin{pmatrix} \cblue{1} \\ \cblue{2} \end{pmatrix} \in \R^2
+\qquad\text{und}\qquad
+\cgreen{\bw} = \begin{pmatrix} \cgreen{-2} \\ \cgreen{3} \\ \cgreen{-11} \end{pmatrix} \in \R^3
+$$
+
+ist
+
+$$
+\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\,\cgreen{\bw}^\top
+= \begin{pmatrix} \cblue{1} \\ \cblue{2} \end{pmatrix}
+  \begin{pmatrix} \cgreen{-2} & \cgreen{3} & \cgreen{-11} \end{pmatrix}
+= \begin{pmatrix}
+\corange{-2} & \corange{3} & \corange{-11} \\
+\corange{-4} & \corange{6} & \corange{-22}
+\end{pmatrix} \in \R^{2 \times 3} .
+$$
+
+Die zweite Zeile ist das Doppelte der ersten, denn $\cblue{v_2} = 2\cblue{v_1}$.
+Genauso ist jede Spalte ein Vielfaches von $\cblue{\bv} = (1, 2)^\top$. Das ist
+kein Zufall dieses Beispiels, sondern die Regel.
+:::
+
+### Eine Rang-1-Matrix und was sie tut
+
+:::satz[9.3.4 (Eigenschaften des äußeren Produkts)]
+Seien $\cblue{\bv} \in \R^m$ und $\cgreen{\bw} \in \R^n$ beide vom Nullvektor
+verschieden, und sei $\bM = \cblue{\bv} \otimes \cgreen{\bw}$. Dann gilt:
+
+1. Die $j$-te Spalte von $\bM$ ist $\cgreen{w_j}\,\cblue{\bv}$, die $i$-te Zeile
+   ist $\cblue{v_i}\,\cgreen{\bw}^\top$.
+2. Für alle $\bx \in \R^n$ ist
+   $\bM\bx = \cblue{\bv}\,\inner{\cgreen{\bw}, \bx}$.
+3. $\col(\bM) = \spann\{\cblue{\bv}\}$, das :k[Bild]{#image} ist also
+   eindimensional, und $\rang(\bM) = 1$.
+4. Der :k[Kern]{#kernel} ist
+   $\operatorname{Kern}(\bM) = \{\bx \in \R^n : \cgreen{\bw}^\top\bx = 0\}$, also
+   die :k[Hyperebene]{#hyperplane} durch den Ursprung senkrecht zu
+   $\cgreen{\bw}$; sie hat die Dimension $n - 1$.
+:::
+
+::::beweis
+
+:::schritt
+Zu (1): Nach ($9.3.1$) steht an der Stelle $(i,j)$ der Eintrag
+$\corange{v_i w_j}$. Halten wir $j$ fest und lassen $i$ laufen, so lesen wir die
+$j$-te Spalte ab, und in jedem ihrer Einträge steckt derselbe Faktor
+$\cgreen{w_j}$:
+
+$$
+\bM_{\cdot, j} = \begin{pmatrix} \corange{v_1 w_j} \\ \vdots \\ \corange{v_m w_j} \end{pmatrix}
+= \cgreen{w_j} \begin{pmatrix} \cblue{v_1} \\ \vdots \\ \cblue{v_m} \end{pmatrix}
+= \cgreen{w_j}\,\cblue{\bv} .
+$$
+
+Für die Zeilen läuft die Rechnung genauso, mit $\cblue{v_i}$ als gemeinsamem
+Faktor.
+
+::why[Ausklammern eines gemeinsamen Faktors, Eintrag für Eintrag]
+:::
+
+:::schritt
+Zu (2): Wir setzen die Definition ein und klammern anders:
+
+$$
+\bM\bx = \bigl(\cblue{\bv}\,\cgreen{\bw}^\top\bigr)\bx
+= \cblue{\bv}\,\bigl(\cgreen{\bw}^\top\bx\bigr)
+= \cblue{\bv}\,\inner{\cgreen{\bw}, \bx} .
+$$
+
+Das Matrixprodukt sagt uns damit, was diese lineare Abbildung tut: Sie misst
+$\bx$ gegen $\cgreen{\bw}$ und trägt das Ergebnis als Vielfaches von
+$\cblue{\bv}$ ab.
+
+::why[Assoziativität des Matrixprodukts; $\cgreen{\bw}^\top\bx$ ist eine $1 \times 1$-Matrix, also eine Zahl, und Zahlen dürfen wir vor den Vektor ziehen]
+:::
+
+:::schritt
+Zu (3): Nach Schritt 2 ist jedes Bild ein Vielfaches von $\cblue{\bv}$, also
+$\col(\bM) \subseteq \spann\{\cblue{\bv}\}$. Umgekehrt erreichen wir jedes
+Vielfache: Für $\bx = t\,\cgreen{\bw}/\left\|\cgreen{\bw}\right\|^2$ ist
+$\inner{\cgreen{\bw}, \bx} = t$ und damit $\bM\bx = t\,\cblue{\bv}$. Wegen
+$\cblue{\bv} \neq \bnull$ hat dieser Bildraum die Dimension $1$.
+
+::why[hier brauchen wir $\cgreen{\bw} \neq \bnull$, sonst ist die Division nicht erlaubt und $\bM$ die Nullmatrix; der :k[Rang]{#rank} ist die Dimension des Bildes]
+:::
+
+:::schritt
+Zu (4): Nach Schritt 2 gilt $\bM\bx = \bnull$ genau dann, wenn
+$\inner{\cgreen{\bw}, \bx}\,\cblue{\bv} = \bnull$ ist, und wegen
+$\cblue{\bv} \neq \bnull$ genau dann, wenn $\cgreen{\bw}^\top\bx = 0$ ist. Das
+ist die Menge aller zu $\cgreen{\bw}$ orthogonalen Vektoren. Die Probe liefert
+der Rangsatz: $1 + (n-1) = n$.
+
+::why[ein Vielfaches $c\,\cblue{\bv}$ ist genau dann der Nullvektor, wenn $c = 0$ ist; der :k[Rangsatz]{#rank-nullity-theorem} verlangt $\rang(\bM) + \dim\operatorname{Kern}(\bM) = n$]
+:::
+
+::::
+
+Damit ist das äußere Produkt der Prototyp einer Rang-1-Matrix. Es gilt sogar die
+Umkehrung: Jede Matrix vom Rang $1$ lässt sich als $\cblue{\bv} \otimes
+\cgreen{\bw}$ schreiben, denn hat ihr Spaltenraum die Dimension $1$, so ist jede
+Spalte ein Vielfaches eines festen $\cblue{\bv}$, und die Vielfachen sammeln wir
+in $\cgreen{\bw}$.
+
+### Wo äußere Produkte auftauchen
+
+:::bemerkung[9.3.5 (Die SVD als Summe äußerer Produkte)]
+In [Abschnitt 6.4](?k=06-svd#sec-6.4) haben wir die Singulärwertzerlegung
+ausmultipliziert und für $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ die
+Summenform
+
+$$
+\bA = \bU_r\bSigma_r\bV_r^\top
+= \sum_{i=1}^{r} \corange{\sigma_i}\, \cblue{\bu_i} \otimes \cgreen{\bv_i}
+$$
+
+erhalten (Satz 6.4.2; dort noch als $\bu_i\bv_i^\top$ geschrieben). Jetzt lesen
+wir sie mit Satz 9.3.4: Jeder Summand ist eine Rang-1-Matrix, ihr Bild ist die
+Gerade $\spann\{\cblue{\bu_i}\}$, und $\corange{\sigma_i}$ sagt, wie stark
+dieser Anteil zählt. Die SVD zerlegt eine Matrix also in $r$ denkbar einfache Bausteine.
+Brechen wir die Summe nach $k$ Termen ab, entsteht die beste
+:k[Rang-k-Approximation]{#low-rank-approximation}, wie der Satz von
+Eckart, Young und Mirsky in Abschnitt 6.4 zeigt.
+:::
+
+:::bemerkung[9.3.6 (Kovarianzmatrizen sind Mittel äußerer Produkte)]
+Sei $\bx$ ein Zufallsvektor im $\R^n$ mit Erwartungswert $\bmu = \E[\bx]$. Die
+:k[Kovarianzmatrix]{#covariance-matrix} ist definiert als
+
+$$
+\cov(\bx) = \E\bigl[(\bx - \bmu) \otimes (\bx - \bmu)\bigr] ,
+$$
+
+also als Erwartungswert eines äußeren Produkts, gebildet Eintrag für Eintrag.
+Ausmultiplizieren und die Linearität des :k[Erwartungswerts]{#expected-value}
+liefern die Verschiebungsformel
+
+$$
+\cov(\bx) = \E[\bx \otimes \bx] - \bmu \otimes \bmu
+= \E[\bx \otimes \bx] - \E[\bx] \otimes \E[\bx] ,
+$$
+
+denn $\E[\bx \otimes \bmu] = \bmu \otimes \bmu = \E[\bmu \otimes \bx]$, und von
+den drei gleichen Termen bleibt einer mit negativem Vorzeichen übrig. Die Formel
+ist die mehrdimensionale Fassung von
+$\var(X) = \E[X^2] - \E[X]^2$; numerisch ist sie aus demselben Grund heikel wie
+dort, siehe die :k[Auslöschung]{#cancellation} in
+[Abschnitt 2.1](?k=02-algos#sec-2.1).
+
+Für jede einzelne Realisierung ist $(\bx - \bmu) \otimes (\bx - \bmu)$ nach
+Satz 9.3.4 eine Rang-1-Matrix. Die Kovarianzmatrix mittelt solche Bausteine, und
+erst dieses Mitteln über viele Richtungen macht sie im Regelfall zu einer Matrix
+von vollem Rang. Dieselbe Bauweise hat die empirische Kovarianzmatrix aus $N$
+Beobachtungen $\bx_1, \dots, \bx_N \in \R^n$,
+
+$$
+\wh{\bSigma} = \frac{1}{N-1}\sum_{i=1}^{N} (\bx_i - \bar{\bx}) \otimes (\bx_i - \bar{\bx}) ;
+$$
+
+hier steht die Summe der Rang-1-Bausteine offen da. Die zentrierten Vektoren
+$\bx_i - \bar{\bx}$ summieren sich zu null, spannen also höchstens einen
+$(N-1)$-dimensionalen Raum auf. Alle Spalten von $\wh{\bSigma}$ liegen darin,
+und damit ist $\rang(\wh{\bSigma}) \le N - 1$: Bei weniger Beobachtungen als
+Dimensionen ist die Schätzung stets singulär.
+:::
+
+:::bemerkung[9.3.7 (Attention: Skalarprodukte in Massen)]
+Der Aufmerksamkeitsmechanismus (attention) moderner Sprachmodelle rechnet mit
+drei Matrizen: $\bQ \in \R^{n_q \times d_k}$ mit den Anfragen (queries)
+$\bq_i^\top$ in den Zeilen, $\bK \in \R^{n_k \times d_k}$ mit den Schlüsseln
+(keys) $\bk_j^\top$ und $\bV \in \R^{n_k \times d_v}$ mit den Werten (values).
+Die übliche Form lautet
+
+$$
+\text{Attention}(\bQ, \bK, \bV)
+= \softmax\!\left(\frac{\bQ\bK^\top}{\sqrt{d_k}}\right)\bV ,
+$$
+
+wobei $\softmax$ zeilenweise wirkt und das Ergebnis in $\R^{n_q \times d_v}$
+liegt. Der interessante Faktor ist $\bQ\bK^\top$:
+Sein Eintrag $(i,j)$ ist das innere Produkt $\inner{\bq_i, \bk_j}$, das Modell
+vergleicht also jede Anfrage mit jedem Schlüssel. Als ganze Matrix ist derselbe
+Ausdruck eine Summe äußerer Produkte, diesmal über die $d_k$ Spalten,
+
+$$
+\bQ\bK^\top = \sum_{l=1}^{d_k} \bq^{(l)} \otimes \bk^{(l)} ,
+$$
+
+mit $\bq^{(l)}$ und $\bk^{(l)}$ als $l$-ten Spalten von $\bQ$ und $\bK$. Der
+Rang der *Scorematrix* $\bQ\bK^\top$ ist damit höchstens $d_k$, und weil $d_k$
+in der Praxis viel kleiner ist als die Zahl der Zeilen, steckt in den Scores eine
+Zerlegung von niedrigem Rang, genau wie bei der SVD. Diese Aussage gilt vor der
+Softmax-Transformation: Softmax ist nicht linear und erhält die Rangschranke im
+Allgemeinen nicht, die Matrix der Attention-Gewichte kann also vollen Rang haben.
+:::
+
+### Das Tensorprodukt
+
+Das äußere Produkt macht aus zwei Vektoren eine Matrix, aus zwei Objekten der
+Stufe $1$ also eines der Stufe $2$. Diese Idee lässt sich auf beliebige Stufen
+übertragen, und die Vorschrift bleibt dieselbe: Jeder Eintrag des einen Tensors
+wird mit jedem Eintrag des anderen multipliziert.
+
+:::definition[9.3.8 (Tensorprodukt)]
+Seien $\cblue{A} \in \R^{m_1 \times \cdots \times m_p}$ ein Tensor der Stufe $p$
+und $\cgreen{B} \in \R^{n_1 \times \cdots \times n_q}$ einer der Stufe $q$. Ihr
+*Tensorprodukt* ist der Tensor
+$\cblue{A} \otimes \cgreen{B} = C \in \R^{m_1 \times \cdots \times m_p \times n_1 \times \cdots \times n_q}$
+der Stufe $p + q$ mit den Einträgen
+
+$$ {#eq-9.3.2}
+\corange{c_{i_1, \dots, i_p, j_1, \dots, j_q}}
+= \cblue{a_{i_1, \dots, i_p}} \cdot \cgreen{b_{j_1, \dots, j_q}} ,
+$$
+
+für alle $1 \le i_r \le m_r$ und $1 \le j_s \le n_s$. Das Tensorprodukt ist also
+eine Abbildung
+
+$$
+\otimes\colon \R^{m_1 \times \cdots \times m_p} \times \R^{n_1 \times \cdots \times n_q}
+\to \R^{m_1 \times \cdots \times m_p \times n_1 \times \cdots \times n_q} .
+$$
+:::
+
+:::bemerkung[9.3.9 (Stufen addieren sich, Einträge multiplizieren sich)]
+Der Ergebnistensor hat $p + q$ Indexpositionen, seine ersten $p$ Indizes kommen
+von $\cblue{A}$, die letzten $q$ von $\cgreen{B}$. Gezählt werden dabei
+
+$$
+(m_1 \cdots m_p) \cdot (n_1 \cdots n_q)
+$$
+
+Einträge, denn jeder Eintrag von $\cblue{A}$ trifft genau einmal auf jeden
+Eintrag von $\cgreen{B}$.
+
+Für $p = q = 1$ sind beide Faktoren Vektoren, und ($9.3.2$) wird zu
+$\corange{c_{i,j}} = \cblue{a_i}\cgreen{b_j}$. Das ist Wort für Wort
+Definition 9.3.1: Das äußere Produkt ist das Tensorprodukt zweier Tensoren der
+Stufe $1$. Im Bild aus [Abschnitt 9.2](#sec-9.2) heißt das: Zwei Vektoren
+spannen ein Gitter von Produkten auf, drei Vektoren einen Quader, und jede
+weitere Stufe legt eine Achse dazu.
+:::
+
+:::satz[9.3.10 (Das Tensorprodukt ist bilinear)]
+Für Tensoren $A, A'$ desselben Formats, $B, B'$ desselben Formats und
+$c \in \R$ gilt
+
+$$
+(A + A') \otimes B = A \otimes B + A' \otimes B ,
+\qquad (cA) \otimes B = c\,(A \otimes B) ,
+$$
+
+und ebenso im zweiten Argument. Außerdem ist das Tensorprodukt assoziativ: Für
+einen dritten Tensor $D$ beliebigen Formats gilt
+$(A \otimes B) \otimes D = A \otimes (B \otimes D)$.
+:::
+
+::::beweis
+
+:::schritt
+Alle Aussagen sind Gleichungen zwischen Tensoren, und zwei Tensoren sind genau
+dann gleich, wenn sie an jeder Indexstelle übereinstimmen. An der Stelle
+$(i_1, \dots, i_p, j_1, \dots, j_q)$ steht links
+
+$$
+(a_{i_1, \dots, i_p} + a'_{i_1, \dots, i_p})\, b_{j_1, \dots, j_q}
+= a_{i_1, \dots, i_p} b_{j_1, \dots, j_q} + a'_{i_1, \dots, i_p} b_{j_1, \dots, j_q} ,
+$$
+
+und rechts steht dieselbe Summe. Die Homogenität und die beiden Aussagen im
+zweiten Argument gehen genauso, ebenso die Assoziativität.
+
+::why[Distributivität, Kommutativität und Assoziativität der Multiplikation in $\R$, Stelle für Stelle angewandt]
+:::
+
+:::schritt
+Halten wir fest, was das bedeutet: Das Tensorprodukt ist in jedem seiner beiden
+Argumente linear, also eine bilineare Abbildung im Sinn von
+Definition 9.1.1 ([Abschnitt 9.1](#sec-9.1)). Es ist damit selbst ein Beispiel
+für den Gegenstand dieses Kapitels.
+
+::why[Bilinearität ist der Fall $n = 2$ der Multilinearität]
+:::
+
+::::
+
+:::beispiel[9.3.11 (Tensorprodukt dreier Vektoren)]
+Wir nehmen
+
+$$
+\cblue{\bu} = \begin{pmatrix} \cblue{1} \\ \cblue{2} \end{pmatrix} ,
+\qquad
+\cgreen{\bv} = \begin{pmatrix} \cgreen{3} \\ \cgreen{5} \end{pmatrix} ,
+\qquad
+\cpurp{\bw} = \begin{pmatrix} \cpurp{7} \\ \cpurp{11} \end{pmatrix} ,
+$$
+
+alle drei im $\R^2$. Das Tensorprodukt
+$T = \cblue{\bu} \otimes \cgreen{\bv} \otimes \cpurp{\bw} \in \R^{2 \times 2 \times 2}$
+hat nach ($9.3.2$) die Einträge
+$\corange{T_{i,j,k}} = \cblue{u_i}\,\cgreen{v_j}\,\cpurp{w_k}$. Die Klammerung
+brauchen wir dank Satz 9.3.10 nicht zu notieren. Rechnen wir alle acht Einträge
+aus, geordnet nach der dritten Indexposition:
+
+$$
+\begin{aligned}
+\text{Scheibe } k = 1 \;(\cpurp{w_1} = \cpurp{7})\colon \quad
+&\corange{T_{1,1,1}} = \cblue{1} \cdot \cgreen{3} \cdot \cpurp{7} = \corange{21} , &
+&\corange{T_{1,2,1}} = \cblue{1} \cdot \cgreen{5} \cdot \cpurp{7} = \corange{35} , \\
+&\corange{T_{2,1,1}} = \cblue{2} \cdot \cgreen{3} \cdot \cpurp{7} = \corange{42} , &
+&\corange{T_{2,2,1}} = \cblue{2} \cdot \cgreen{5} \cdot \cpurp{7} = \corange{70} , \\[4pt]
+\text{Scheibe } k = 2 \;(\cpurp{w_2} = \cpurp{11})\colon \quad
+&\corange{T_{1,1,2}} = \cblue{1} \cdot \cgreen{3} \cdot \cpurp{11} = \corange{33} , &
+&\corange{T_{1,2,2}} = \cblue{1} \cdot \cgreen{5} \cdot \cpurp{11} = \corange{55} , \\
+&\corange{T_{2,1,2}} = \cblue{2} \cdot \cgreen{3} \cdot \cpurp{11} = \corange{66} , &
+&\corange{T_{2,2,2}} = \cblue{2} \cdot \cgreen{5} \cdot \cpurp{11} = \corange{110} .
+\end{aligned}
+$$
+
+Als Scheiben geschrieben, wie im Viewer aus [Abschnitt 9.2](#sec-9.2):
+
+$$
+T_{\cdot,\cdot,1} = \begin{pmatrix} \corange{21} & \corange{35} \\ \corange{42} & \corange{70} \end{pmatrix} ,
+\qquad
+T_{\cdot,\cdot,2} = \begin{pmatrix} \corange{33} & \corange{55} \\ \corange{66} & \corange{110} \end{pmatrix} .
+$$
+
+Beide Scheiben sind Vielfache derselben Matrix, nämlich
+
+$$
+T_{\cdot,\cdot,k} = \cpurp{w_k} \cdot (\cblue{\bu} \otimes \cgreen{\bv}) ,
+\qquad
+\cblue{\bu} \otimes \cgreen{\bv} = \begin{pmatrix} \corange{3} & \corange{5} \\ \corange{6} & \corange{10} \end{pmatrix} .
+$$
+
+Nach Satz 9.3.4 hat $\cblue{\bu} \otimes \cgreen{\bv}$ den Rang $1$, und das
+Vielfache mit $\cpurp{w_k} \neq 0$ ändert daran nichts: Jede Scheibe dieses
+Stufe-3-Tensors ist eine Rang-1-Matrix. Tensoren der Form
+$\cblue{\bu} \otimes \cgreen{\bv} \otimes \cpurp{\bw}$ mit Faktoren
+$\neq \bnull$ heißen deshalb *Rang-1-Tensoren*. Jeder Stufe-3-Tensor ist eine
+Summe solcher Bausteine, denn
+schon die Basistensoren $\bE^{(i,j,k)}$ aus dem Beweis von Satz 9.2.5
+([Abschnitt 9.2](#sec-9.2)) sind welche: Es ist
+$\bE^{(i,j,k)} = \be_i \otimes \be_j \otimes \be_k$. Die Analogie zur SVD hat
+aber eine Grenze. Für Matrizen liefert Bemerkung 9.3.5 die Bausteine mit
+orthogonalen Faktoren, der Größe nach geordnet und mit einem Verfahren
+berechenbar. Ab Stufe $3$ ist das im Allgemeinen nicht mehr zu haben, und schon
+die kleinste Anzahl nötiger Summanden ist schwer zu bestimmen.
+:::
+
+### Das Kroneckerprodukt
+
+Für Matrizen gibt es eine zweite Lesart des Produkts, die statt eines Tensors
+der Stufe $4$ wieder eine Matrix liefert. Sie ist überall dort im Einsatz, wo
+mit Matrizen weitergerechnet werden soll.
+
+:::definition[9.3.12 (Kroneckerprodukt)]
+Das *Kroneckerprodukt* zweier Matrizen $\cblue{\bA} \in \R^{m \times n}$ und
+$\cgreen{\bB} \in \R^{p \times q}$ ist die Blockmatrix
+
+$$
+\cblue{\bA} \otimes \cgreen{\bB} = \begin{pmatrix}
+\cblue{a_{11}}\cgreen{\bB} & \cdots & \cblue{a_{1n}}\cgreen{\bB} \\
+\vdots & & \vdots \\
+\cblue{a_{m1}}\cgreen{\bB} & \cdots & \cblue{a_{mn}}\cgreen{\bB}
+\end{pmatrix} \in \R^{mp \times nq} .
+$$
+
+Sie besteht aus $m \cdot n$ Blöcken der Größe $p \times q$; der Block an der
+Stelle $(i_1, i_2)$ ist die mit $\cblue{a_{i_1 i_2}}$ skalierte Kopie von
+$\cgreen{\bB}$.
+:::
+
+:::bemerkung[9.3.13 (Ein Zeichen, zwei Bedeutungen)]
+Für zwei Matrizen $\cblue{\bA} \in \R^{m \times n}$ und
+$\cgreen{\bB} \in \R^{p \times q}$ steht $\otimes$ jetzt für zwei verschiedene
+Dinge, und beide sind gebräuchlich:
+
+- Das *Tensorprodukt* nach Definition 9.3.8 liefert einen Tensor der Stufe $4$,
+  $C \in \R^{m \times n \times p \times q}$ mit
+  $\corange{c_{i_1, i_2, j_1, j_2}} = \cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}}$.
+- Das *Kroneckerprodukt* nach Definition 9.3.12 liefert eine Matrix
+  $\bD \in \R^{mp \times nq}$ mit
+
+  $$ {#eq-9.3.3}
+  \corange{d_{(i_1 - 1)p + j_1,\; (i_2 - 1)q + j_2}} = \cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}} .
+  $$
+
+Dieselben $mnpq$ Zahlen, verschieden angeordnet: $\bD$ ist die *abgeflachte*
+Fassung von $C$. Die Indexformel ($9.3.3$) sagt genau, wie abgeflacht wird. Der
+Zeilenindex läuft in $m$ Gruppen zu je $p$ Zeilen; die Gruppe wählt $i_1$, die
+Position innerhalb der Gruppe wählt $j_1$. Für die Spalten gilt dasselbe mit
+$i_2$ und $j_2$. Der Index des ersten Faktors läuft also langsam, der des
+zweiten schnell.
+
+Welche der beiden Bedeutungen gemeint ist, verrät in der Praxis das Format des
+Ergebnisses. An Vektoren lässt sich das Abflachen gut ablesen. Fassen wir
+$\cblue{\bv} \in \R^{m}$ und $\cgreen{\bw} \in \R^{n}$ als $(m \times 1)$- und
+$(n \times 1)$-Matrizen auf, so ist ihr Kroneckerprodukt der Vektor der Länge
+$mn$, der die Zeilen des äußeren Produkts hintereinanderhängt. Steht der zweite
+Faktor dagegen als Zeilenvektor da, kommt das äußere Produkt selbst heraus:
+
+$$
+\begin{pmatrix} 1 \\ 2 \end{pmatrix} \otimes \begin{pmatrix} 3 \\ 5 \\ 7 \end{pmatrix}
+= \begin{pmatrix} \corange{3} & \corange{5} & \corange{7} & \corange{6} & \corange{10} & \corange{14} \end{pmatrix}^\top ,
+\qquad
+\begin{pmatrix} 1 \\ 2 \end{pmatrix} \otimes \begin{pmatrix} 3 & 5 & 7 \end{pmatrix}
+= \begin{pmatrix} \corange{3} & \corange{5} & \corange{7} \\ \corange{6} & \corange{10} & \corange{14} \end{pmatrix} .
+$$
+:::
+
+:::beispiel[9.3.14 (Kroneckerprodukt zweier kleiner Matrizen)]
+Für
+
+$$
+\cblue{\bA} = \begin{pmatrix} \cblue{1} & \cblue{0} \\ \cblue{2} & \cblue{5} \end{pmatrix} ,
+\qquad
+\cgreen{\bB} = \begin{pmatrix}
+\cgreen{3} & \cgreen{0} & \cgreen{0} \\
+\cgreen{0} & \cgreen{2} & \cgreen{0} \\
+\cgreen{-1} & \cgreen{0} & \cgreen{-1}
+\end{pmatrix}
+$$
+
+ist $\cblue{\bA} \otimes \cgreen{\bB} \in \R^{6 \times 6}$, denn
+$2 \cdot 3 = 6$ Zeilen und ebenso viele Spalten. Blockweise notiert und dann
+ausgeschrieben:
+
+$$
+\cblue{\bA} \otimes \cgreen{\bB}
+= \begin{pmatrix}
+\cblue{1} \cdot \cgreen{\bB} & \cblue{0} \cdot \cgreen{\bB} \\
+\cblue{2} \cdot \cgreen{\bB} & \cblue{5} \cdot \cgreen{\bB}
+\end{pmatrix}
+= \begin{pmatrix}
+\corange{3} & \corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{0} \\
+\corange{0} & \corange{2} & \corange{0} & \corange{0} & \corange{0} & \corange{0} \\
+\corange{-1} & \corange{0} & \corange{-1} & \corange{0} & \corange{0} & \corange{0} \\
+\corange{6} & \corange{0} & \corange{0} & \corange{15} & \corange{0} & \corange{0} \\
+\corange{0} & \corange{4} & \corange{0} & \corange{0} & \corange{10} & \corange{0} \\
+\corange{-2} & \corange{0} & \corange{-2} & \corange{-5} & \corange{0} & \corange{-5}
+\end{pmatrix} .
+$$
+
+Der Block oben rechts ist die Nullmatrix, weil $\cblue{a_{12}} = \cblue{0}$ ist.
+Die Struktur von $\cgreen{\bB}$ wiederholt sich in jedem der drei übrigen
+Blöcke, nur mit unterschiedlichem Vorfaktor.
+:::
+
+:::bemerkung[9.3.15 (Transponieren und Reihenfolge)]
+Zwei Regeln sind im Umgang mit dem Kroneckerprodukt nützlich, und die erste
+davon ist bequem:
+
+$$
+\bigl(\cblue{\bA} \otimes \cgreen{\bB}\bigr)^\top
+= \cblue{\bA}^\top \otimes \cgreen{\bB}^\top .
+$$
+
+Transponieren zieht also in beide Faktoren hinein, ohne ihre Reihenfolge zu
+vertauschen. Der Nachweis ist ein Blick auf ($9.3.3$): Auf beiden Seiten steht
+an der Stelle mit Zeilenindex $(i_2 - 1)q + j_2$ und Spaltenindex
+$(i_1 - 1)p + j_1$ der Eintrag $\cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}}$. Für
+$\cblue{\bA}$ und $\cgreen{\bB}$ aus Beispiel 9.3.14 lässt sich das direkt
+ablesen: Beide Seiten sind
+
+$$
+\begin{pmatrix}
+\corange{3} & \corange{0} & \corange{-1} & \corange{6} & \corange{0} & \corange{-2} \\
+\corange{0} & \corange{2} & \corange{0} & \corange{0} & \corange{4} & \corange{0} \\
+\corange{0} & \corange{0} & \corange{-1} & \corange{0} & \corange{0} & \corange{-2} \\
+\corange{0} & \corange{0} & \corange{0} & \corange{15} & \corange{0} & \corange{-5} \\
+\corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{10} & \corange{0} \\
+\corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{-5}
+\end{pmatrix} .
+$$
+
+Die zweite Regel ist eine Warnung: Das Kroneckerprodukt ist **nicht
+kommutativ**, im Allgemeinen also
+
+$$
+\cblue{\bA} \otimes \cgreen{\bB} \neq \cgreen{\bB} \otimes \cblue{\bA} .
+$$
+
+Beide Produkte haben zwar dasselbe Format $mp \times nq$ und enthalten dieselben
+$mnpq$ Zahlen, aber an anderen Stellen. Für die Matrizen aus Beispiel 9.3.14
+steht an der Stelle $(2,1)$ in $\cblue{\bA} \otimes \cgreen{\bB}$ eine
+$\corange{0}$, in $\cgreen{\bB} \otimes \cblue{\bA}$ dagegen eine $\cred{6}$:
+Dort ist der erste Block $\cgreen{3}\,\cblue{\bA}$, und dessen zweite Zeile
+beginnt mit $\cgreen{3} \cdot \cblue{2}$.
+:::
+
+:::vertiefung[Kroneckerprodukte selbst ausrechnen]
+Der Rechner zeigt beide Faktoren und das Produkt in Blockdarstellung. Der erste
+Knopf vertauscht die Reihenfolge und macht Bemerkung 9.3.15 sichtbar: Die
+Zahlenmenge bleibt, die Anordnung nicht. Der zweite Knopf transponiert beide
+Faktoren; der Readout darunter vergleicht das Ergebnis Eintrag für Eintrag mit
+der Transponierten des ursprünglichen Produkts. Voreingestellt sind die Matrizen
+aus Beispiel 9.3.14. Lohnend ist auch eine Einheitsmatrix als zweiter Faktor:
+Dann steht die Anordnung aus Beispiel 9.3.16 auf dem Schirm, und ein Druck auf
+den ersten Knopf macht daraus die Blockdiagonalform aus Beispiel 9.3.17.
+
+<KroneckerRechner />
+:::
+
+### Blockstrukturen aus Kroneckerprodukten
+
+Setzen wir eine :k[Einheitsmatrix]{#identity-matrix} als einen der beiden
+Faktoren ein, entstehen Muster, die in der Statistik ständig vorkommen. Auf
+welcher Seite sie steht, macht dabei den ganzen Unterschied.
+
+:::beispiel[9.3.16 (S ⊗ I_n verteilt die Einträge)]
+Sei $\cblue{\bS} \in \R^{p \times p}$ mit den Einträgen $\cblue{s_{ij}}$. Dann
+ist jeder Block von $\cblue{\bS} \otimes \cgreen{\bI_n}$ eine Diagonalmatrix:
+
+$$
+\cblue{\bS} \otimes \cgreen{\bI_n} = \begin{pmatrix}
+\cblue{s_{11}}\cgreen{\bI_n} & \cdots & \cblue{s_{1p}}\cgreen{\bI_n} \\
+\vdots & & \vdots \\
+\cblue{s_{p1}}\cgreen{\bI_n} & \cdots & \cblue{s_{pp}}\cgreen{\bI_n}
+\end{pmatrix} \in \R^{np \times np} .
+$$
+
+Jeder Eintrag $\cblue{s_{ij}}$ taucht $n$-mal auf, nämlich an den Stellen
+$\bigl((i-1)n + k,\; (j-1)n + k\bigr)$ für $k = 1, \dots, n$; alle übrigen
+Einträge sind null. Für $p = n = 2$ und
+$\cblue{\bS} = \bigl(\begin{smallmatrix} \cblue{1} & \cblue{2} \\ \cblue{3} & \cblue{4} \end{smallmatrix}\bigr)$
+sieht das so aus:
+
+$$
+\cblue{\bS} \otimes \cgreen{\bI_2} = \begin{pmatrix}
+\corange{1} & \corange{0} & \corange{2} & \corange{0} \\
+\corange{0} & \corange{1} & \corange{0} & \corange{2} \\
+\corange{3} & \corange{0} & \corange{4} & \corange{0} \\
+\corange{0} & \corange{3} & \corange{0} & \corange{4}
+\end{pmatrix} .
+$$
+
+Gelesen als Kovarianzstruktur heißt das: Die $np$ Koordinaten zerfallen in $p$
+Gruppen zu je $n$ Stück, und gekoppelt sind immer nur gleiche Positionen
+verschiedener Gruppen, mit der Stärke $\cblue{s_{ij}}$. Es liegen also $n$
+unabhängige Kopien der $\cblue{\bS}$-Struktur ineinandergeschoben.
+:::
+
+:::beispiel[9.3.17 (I_n ⊗ S ist blockdiagonal)]
+Vertauschen wir die Reihenfolge, wird aus demselben Paar eine
+Blockdiagonalmatrix. Die Farben bleiben an ihren Matrizen, $\cblue{\bS}$ steht
+jetzt also innen:
+
+$$
+\cgreen{\bI_n} \otimes \cblue{\bS} = \begin{pmatrix}
+\cblue{\bS} & & & \\
+& \cblue{\bS} & & \\
+& & \ddots & \\
+& & & \cblue{\bS}
+\end{pmatrix} \in \R^{np \times np} ,
+$$
+
+mit $n$ Kopien von $\cblue{\bS} \in \R^{p \times p}$ auf der Diagonalen und
+Nullen sonst. In der Statistik ist das die Kovarianzmatrix eines Vektors, der
+aus $n$ voneinander unabhängigen Blöcken besteht, die alle dieselbe
+Kovarianzmatrix $\cblue{\bS}$ haben; ein typischer Fall sind $n$ Personen mit
+je $p$ Messungen. Der Vergleich mit Beispiel 9.3.16 zeigt die
+Nicht-Kommutativität von der anschaulichen Seite: Dieselben zwei Faktoren
+ergeben einmal eine blockdiagonale und einmal eine über die ganze Matrix
+verteilte Struktur.
+:::
+
+### Anwendung: separierbare Kovarianz
+
+Beobachten wir dieselbe Größe an $m$ Orten zu $n$ Zeitpunkten, so haben wir
+$mn$ Messwerte, und ihre Kovarianzmatrix hat das Format $mn \times mn$. Schon
+bei $m = 10$ Orten und $n = 50$ Zeitpunkten sind das $500 \times 500$ Einträge,
+weit mehr, als sich aus überschaubaren Datenmengen schätzen lässt. Das
+Kroneckerprodukt liefert eine sparsame Modellannahme.
+
+:::definition[9.3.18 (Separierbare Kovarianz)]
+Die Kovarianzmatrix $\bSigma \in \R^{mn \times mn}$ der Beobachtungen heißt
+*separierbar*, wenn sie sich als
+
+$$ {#eq-9.3.4}
+\bSigma = \cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
+$$
+
+schreiben lässt, mit der Kovarianzmatrix $\cblue{\bSigma_T} \in \R^{n \times n}$
+zwischen den Zeitpunkten und der Kovarianzmatrix
+$\cgreen{\bSigma_S} \in \R^{m \times m}$ zwischen den Orten.
+
+Dabei müssen wir sagen, wie die $mn$ Beobachtungen angeordnet sind. Nach
+Bemerkung 9.3.13 läuft der Index des ersten Faktors langsam und der des zweiten
+schnell. Zu ($9.3.4$) gehört also die Anordnung, in der die Zeit langsam und der
+Ort schnell läuft: erst alle Orte zum ersten Zeitpunkt, dann alle Orte zum
+zweiten Zeitpunkt und so weiter.
+:::
+
+:::beispiel[9.3.19 (Zwei Orte, zwei Zeitpunkte)]
+Für $m = 2$ Orte und $n = 2$ Zeitpunkte seien
+
+$$
+\cblue{\bSigma_T} = \begin{pmatrix} \cblue{1{,}0} & \cblue{0{,}8} \\ \cblue{0{,}8} & \cblue{1{,}0} \end{pmatrix} ,
+\qquad
+\cgreen{\bSigma_S} = \begin{pmatrix} \cgreen{2{,}0} & \cgreen{0{,}5} \\ \cgreen{0{,}5} & \cgreen{2{,}0} \end{pmatrix} .
+$$
+
+Dann ist
+
+$$
+\bSigma = \cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
+= \begin{pmatrix}
+\cblue{1{,}0} \cdot \cgreen{\bSigma_S} & \cblue{0{,}8} \cdot \cgreen{\bSigma_S} \\
+\cblue{0{,}8} \cdot \cgreen{\bSigma_S} & \cblue{1{,}0} \cdot \cgreen{\bSigma_S}
+\end{pmatrix}
+= \begin{pmatrix}
+\corange{2{,}0} & \corange{0{,}5} & \corange{1{,}6} & \corange{0{,}4} \\
+\corange{0{,}5} & \corange{2{,}0} & \corange{0{,}4} & \corange{1{,}6} \\
+\corange{1{,}6} & \corange{0{,}4} & \corange{2{,}0} & \corange{0{,}5} \\
+\corange{0{,}4} & \corange{1{,}6} & \corange{0{,}5} & \corange{2{,}0}
+\end{pmatrix} \in \R^{4 \times 4} .
+$$
+
+Die vier Beobachtungen stehen in der Reihenfolge (Ort 1, Zeit 1), (Ort 2,
+Zeit 1), (Ort 1, Zeit 2), (Ort 2, Zeit 2). Damit lesen wir die erste Zeile ab:
+
+| Eintrag | verbindet | Wert | Herkunft |
+| --- | --- | --- | --- |
+| $(1,1)$ | Ort 1, Zeit 1 mit sich selbst | $2{,}0$ | $\cblue{1{,}0} \cdot \cgreen{2{,}0}$, eine Varianz |
+| $(1,2)$ | zwei Orte, gleiche Zeit | $0{,}5$ | $\cblue{1{,}0} \cdot \cgreen{0{,}5}$ |
+| $(1,3)$ | gleicher Ort, zwei Zeiten | $1{,}6$ | $\cblue{0{,}8} \cdot \cgreen{2{,}0}$ |
+| $(1,4)$ | anderer Ort, andere Zeit | $0{,}4$ | $\cblue{0{,}8} \cdot \cgreen{0{,}5}$ |
+
+Noch klarer wird die Struktur in Korrelationen. Zwei Beobachtungen am selben Ort
+zu verschiedenen Zeiten sind mit $1{,}6/2{,}0 = 0{,}8$ korreliert, zwei
+Beobachtungen zur selben Zeit an verschiedenen Orten mit
+$0{,}5/2{,}0 = 0{,}25$, und unterscheiden sich beide Merkmale, so ist die
+Korrelation das Produkt $0{,}8 \cdot 0{,}25 = 0{,}2$. Separierbarkeit heißt
+genau das: Die Korrelation zerfällt in einen zeitlichen und einen räumlichen
+Anteil, die sich nicht gegenseitig beeinflussen.
+:::
+
+:::bemerkung[9.3.20 (Was die Annahme spart und was sie kostet)]
+Eine beliebige Kovarianzmatrix ist symmetrisch, hat also
+$\tfrac{mn(mn+1)}{2}$ freie Einträge. Die separierbare Form braucht nur die
+Einträge der beiden Faktoren,
+
+$$
+\frac{m(m+1)}{2} + \frac{n(n+1)}{2} .
+$$
+
+Für $m = n = 2$ stehen $10$ Parametern also $6$ gegenüber, für $m = 10$ Orte und
+$n = 50$ Zeitpunkte sind es $125\,250$ gegen $1\,330$. Genau genommen ist die
+Zerlegung ($9.3.4$) nicht eindeutig: Wegen
+$\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
+= (c\,\cblue{\bSigma_T}) \otimes (c^{-1}\cgreen{\bSigma_S})$
+für jedes $c > 0$ lässt sich ein Skalenfaktor zwischen den Kovarianzfaktoren
+verschieben. Identifizierbar ist deshalb ein Parameter weniger, im Beispiel also
+$5$ statt $6$.
+
+Dass $\bSigma$ überhaupt eine Kovarianzmatrix sein kann, sichert eine weitere
+Rechenregel: Die Eigenwerte von $\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}$
+sind die Produkte $\lambda_i\mu_j$ der Eigenwerte beider Faktoren, denn mit
+Eigenvektoren $\ba$ und $\bb$ ist
+
+$$
+\bigl(\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}\bigr)(\ba \otimes \bb)
+= (\cblue{\bSigma_T}\ba) \otimes (\cgreen{\bSigma_S}\bb)
+= \lambda_i\mu_j\,(\ba \otimes \bb) ,
+$$
+
+wobei $\ba \otimes \bb$ das Kroneckerprodukt der beiden Spaltenvektoren ist. Die
+mittlere Gleichung ist die Regel
+$(\bA \otimes \bB)(\bC \otimes \bD) = (\bA\bC) \otimes (\bB\bD)$, die sich
+ebenfalls an ($9.3.3$) ablesen lässt. Beide Faktoren sind als Kovarianzmatrizen
+:k[symmetrisch]{#symmetric-matrix}, haben nach dem
+:k[Spektralsatz]{#spectral-theorem} also je eine Orthonormalbasis aus
+Eigenvektoren. Laufen $\ba$ und $\bb$ durch diese beiden Basen, so bilden die
+$mn$ Vektoren $\ba \otimes \bb$ eine Basis des $\R^{mn}$; damit sind das bereits
+alle Eigenwerte. Ist also jeder Faktor
+:k[positiv definit]{#positive-definite}, so ist es auch $\bSigma$. In
+Beispiel 9.3.19 hat $\cblue{\bSigma_T}$ die Eigenwerte
+$\cblue{1{,}8}$ und $\cblue{0{,}2}$, $\cgreen{\bSigma_S}$ die Eigenwerte
+$\cgreen{2{,}5}$ und $\cgreen{1{,}5}$; die vier Produkte
+$\corange{4{,}5}$, $\corange{2{,}7}$, $\corange{0{,}5}$ und $\corange{0{,}3}$
+sind die Eigenwerte von $\bSigma$. Ihre Summe ist $8$, die Spur von $\bSigma$,
+und ihr Produkt ist $1{,}8225$, die Determinante von $\bSigma$.
+
+Bezahlt wird die Sparsamkeit mit einer echten Einschränkung. Separierbarkeit
+verbietet, dass sich das räumliche Muster über die Zeit ändert. Ein Wetterfeld,
+dessen Zusammenhänge morgens anders aussehen als abends, lässt sich so nicht
+beschreiben.
+:::
+
+:::vertiefung[Separierbare Kovarianz zum Schieben]
+Die beiden Schieber für die Korrelationen steuern die Faktoren, rechts entsteht
+daraus $\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}$. Ein Klick auf eine Zelle
+sagt, welche zwei Beobachtungen sie verbindet und aus welchen beiden Faktoren
+ihr Wert entsteht. Voreingestellt ist Beispiel 9.3.19. Zwei Einstellungen sind
+lehrreich: $\rho_T = 0$ macht die Zeitpunkte unkorreliert, und die Matrix wird
+blockdiagonal wie in Beispiel 9.3.17; ein negatives $\rho_S$ dreht das Vorzeichen
+der Nebendiagonalen in jedem Block um, ohne die Blockstruktur anzutasten.
+
+<SeparierbareKovarianzDemo />
+:::
+
+### Selbsttest
+
+::::quiz
+
+:::frage{falsch}
+Das äußere Produkt $\bv \otimes \bw$ ist nur für Vektoren gleicher Länge
+definiert.
+
+Das gilt für das innere Produkt. Das äußere Produkt
+$\bv \otimes \bw = \bv\bw^\top$ verlangt keine Übereinstimmung: Für
+$\bv \in \R^m$ und $\bw \in \R^n$ entsteht eine $m \times n$-Matrix
+(Definition 9.3.1, Bemerkung 9.3.2). In Beispiel 9.3.3 sind die Längen $2$ und
+$3$.
+:::
+
+:::frage{wahr}
+Für $\bv, \bw \neq \bnull$ bildet $\bx \mapsto (\bv \otimes \bw)\bx$ den ganzen
+$\R^n$ auf die Gerade $\spann\{\bv\}$ ab, und der Kern ist die Hyperebene
+senkrecht zu $\bw$.
+
+Das ist Satz 9.3.4: Es gilt $(\bv \otimes \bw)\bx = \bv\inner{\bw, \bx}$, das
+Bild besteht also aus Vielfachen von $\bv$, und der Kern besteht aus allen
+$\bx$ mit $\bw^\top\bx = 0$. Rang $1$ plus Kerndimension $n-1$ ergibt $n$, wie
+der Rangsatz es verlangt.
+:::
+
+:::frage{falsch}
+Die beiden Scheiben $T_{\cdot,\cdot,1}$ und $T_{\cdot,\cdot,2}$ des Tensors
+$T = \bu \otimes \bv \otimes \bw \in \R^{2 \times 2 \times 2}$ sind linear
+unabhängig voneinander.
+
+Beide sind Vielfache derselben Rang-1-Matrix,
+$T_{\cdot,\cdot,k} = w_k\,(\bu \otimes \bv)$, also linear abhängig. In
+Beispiel 9.3.11 ist die zweite Scheibe das $11/7$-fache der ersten. Tensoren
+dieser Bauart heißen gerade deshalb Rang-1-Tensoren.
+:::
+
+:::frage{falsch}
+Das Kroneckerprodukt zweier Matrizen $\bA \in \R^{m \times n}$ und
+$\bB \in \R^{p \times q}$ ist ein Tensor der Stufe $4$.
+
+Der Stufe-4-Tensor ist das *Tensorprodukt* nach Definition 9.3.8. Das
+Kroneckerprodukt ordnet dieselben $mnpq$ Zahlen nach der Indexformel ($9.3.3$)
+in einer Matrix aus $\R^{mp \times nq}$ an, ist also die abgeflachte Fassung
+davon (Bemerkung 9.3.13).
+:::
+
+:::frage{falsch}
+Es gilt $\bA \otimes \bB = \bB \otimes \bA$, denn beide Produkte enthalten
+dieselben Zahlen.
+
+Dieselben Zahlen stehen an verschiedenen Stellen. In Beispiel 9.3.14 ist der
+Eintrag $(2,1)$ von $\bA \otimes \bB$ gleich $0$, der von $\bB \otimes \bA$
+dagegen $6$ (Bemerkung 9.3.15). Die Formate stimmen zwar überein, die Matrizen
+nicht.
+:::
+
+:::frage{wahr}
+Es gilt $(\bA \otimes \bB)^\top = \bA^\top \otimes \bB^\top$.
+
+Transponieren zieht in beide Faktoren hinein, ohne ihre Reihenfolge zu
+vertauschen; die Indexformel ($9.3.3$) zeigt es unmittelbar
+(Bemerkung 9.3.15). Vorsicht bei der Analogie zum Matrixprodukt: Dort dreht
+sich die Reihenfolge um, hier nicht.
+:::
+
+:::frage{wahr}
+Die Matrix $\bI_n \otimes \bS$ mit $\bS \in \R^{p \times p}$ ist
+blockdiagonal mit $n$ Kopien von $\bS$.
+
+Der Block an der Stelle $(i,j)$ ist $\delta_{ij}\bS$, außerhalb der Diagonalen
+steht also die Nullmatrix (Beispiel 9.3.17). In der umgekehrten Reihenfolge
+entsteht dagegen $\bS \otimes \bI_n$, dessen Einträge über die ganze Matrix
+verteilt sind (Beispiel 9.3.16).
+:::
+
+:::frage{wahr}
+Für $m = 2$ Orte und $n = 2$ Zeitpunkte hat eine separierbare Kovarianzmatrix
+$6$ Parameter statt der $10$ einer beliebigen symmetrischen $4 \times 4$-Matrix.
+
+Es ist $\tfrac{mn(mn+1)}{2} = \tfrac{4 \cdot 5}{2} = 10$ gegen
+$\tfrac{m(m+1)}{2} + \tfrac{n(n+1)}{2} = 3 + 3 = 6$ (Bemerkung 9.3.20).
+Identifizierbar sind davon $5$, weil sich ein Skalenfaktor zwischen den beiden
+Faktoren verschieben lässt.
+:::
+
+::::
+
+*Vertiefung: vgl. MML §4.5 für die Summendarstellung einer Matrix aus
+Rang-1-Bausteinen, auf der Bemerkung 9.3.5 aufsetzt; die Rechenregeln des
+Kroneckerprodukts sammelt Kapitel 2 von Magnus und Neudecker, _Matrix
+Differential Calculus with Applications in Statistics and Econometrics_.*

@@ -1,0 +1,32 @@
+export const title = "Lineare Hülle (Span)";
+
+import { SpanWidget } from "./widgets/SpanWidget";
+
+Die *lineare Hülle* (span) einer Sammlung von
+:k[Vektoren]{#vector} ist die Menge
+*alles dessen, was wir aus ihnen bauen können*: durch
+:k[Linearkombinationen]{#linear-combination},
+also jedes mögliche Skalieren und Addieren. Für eine
+:k[Matrix]{#matrix} $\bA$ lässt
+sich die lineare Hülle ihrer Spalten in
+:k[Mengenschreibweise]{#set-builder-notation}
+schreiben als
+
+$$
+\operatorname{span}(\bA) = \{ \bA\bx : \bx \in \R^n \},
+$$
+
+die Menge aller
+:k[Produkte]{#matrix-vector-product}
+$\bA\bx$, wenn $\bx$ ganz
+:k[$\R^n$]{#real-coordinate-space}
+durchläuft. Geometrisch ist eine lineare Hülle immer „flach&ldquo; und
+enthält immer den Ursprung: Ein Vektor ungleich Null spannt eine
+Gerade auf, zwei
+:k[unabhängige]{#linear-independence}
+Vektoren eine Ebene, und so weiter. „$\bb$ liegt in
+$\operatorname{span}(\bA)$&ldquo; heißt genau: Das
+Gleichungssystem $\bA\bx = \bb$ hat eine Lösung (vgl.
+Heath §2.1).
+
+<SpanWidget />

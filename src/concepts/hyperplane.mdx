@@ -1,0 +1,32 @@
+export const title = "Hyperebene";
+
+import { OneEquationWidget } from "./widgets/HyperplaneWidget";
+
+{/* Konzept-Tooltip: Hyperebene, das n-dimensionale Gegenstück zu Gerade/Ebene. */}
+
+Betrachten wir eine lineare Gleichung in zwei Unbekannten, etwa
+$x_1 + 2x_2 = 3$. Die Paare $(x_1, x_2)$, die sie
+erfüllen, bilden eine Gerade in der Ebene. Bei drei Unbekannten wird
+eine Gleichung wie $x_1 + x_2 + x_3 = 1$ von einer ganzen
+flachen Punktschicht erfüllt – einer Ebene, die im Raum schwebt.
+Eine *Hyperebene* (hyperplane) ist dieselbe Idee, fortgesetzt in
+den
+:k[$\R^n$]{#real-coordinate-space}
+für beliebiges $n$: die Menge aller Punkte, die eine einzige
+lineare Gleichung erfüllen,
+
+$$
+a_1 x_1 + a_2 x_2 + \cdots + a_n x_n = b.
+$$
+
+Sie ist vollkommen flach und hat
+:k[Dimension]{#dimension} $n-1$,
+eins weniger als der umgebende Raum, genauso wie eine Gerade
+(Dimension 1) in der Ebene (Dimension 2) liegt. Diese eine verlorene
+Dimension ist der „Preis“ einer Gleichung: Eine lineare Bedingung
+festzulegen kostet einen Freiheitsgrad. Deshalb steuert im
+geometrischen Bild eines linearen Gleichungssystems jede Gleichung eine
+Hyperebene bei, und die Lösungen des gesamten Systems sind genau die
+Punkte, in denen sich alle diese Hyperebenen schneiden.
+
+<OneEquationWidget />

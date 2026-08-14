@@ -1,0 +1,364 @@
+import { DreiProbleme } from "./widgets/S141DreiProbleme";
+import { VierInterpolanten } from "./widgets/S141Interpolanten";
+
+::quelle[Folien 14-funktionsapproximation, „Verwendete Vorkenntnisse" bis „Unendlich viele Lösungen: Beispiel".]
+
+Mit diesem Kapitel beginnt der dritte Block des Kurses
+([Abschnitt 1.1](?k=01-intro#sec-1.1)). Die Aufgabe klingt zunächst harmlos:
+Gegeben sind $n$ Datenpunkte $\cblue{(x_1, y_1), \dots, (x_n, y_n)}$ mit
+paarweise verschiedenen $x_i$, gesucht ist eine Funktion $\cgreen{\wh{f}}$,
+die zu ihnen passt. Manchmal stammen die Punkte gar nicht aus einer Messung,
+sondern sind Auswertungen einer bekannten Funktion $f$, die zu teuer ist, um
+sie an beliebig vielen Stellen auszurechnen.
+
+„Passt" lässt sich allerdings auf sehr verschiedene Weisen verlangen, und die
+Folien stellen deshalb gleich drei Varianten nebeneinander. Der Rechenweg
+bleibt dabei der aus den bisherigen Kapiteln: Am Ende steht wieder ein
+lineares Gleichungssystem, neu ist nur, dass die Unbekannten darin die
+Koeffizienten einer Funktion sind.
+
+### Vorkenntnisse
+
+Der Abschnitt führt kaum eigene Technik ein, greift dafür aber auf mehrere
+frühere Kapitel zurück.
+
+- Lineare Gleichungssysteme $\bB\ba = \by$ und ihre Lösbarkeit
+  ([Abschnitt 5.2](?k=05-lgs#sec-5.2)). Jede Interpolationsaufgabe dieses
+  Kapitels endet in einem solchen System.
+- Die :k[Konditionszahl]{#condition-number} einer Matrix als Maß dafür, wie
+  stark sich Daten- und Rundungsfehler verstärken
+  ([Abschnitt 4.2](?k=04-fehler#sec-4.2) und
+  [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)). Sie entscheidet ab
+  [Abschnitt 14.3](#sec-14.3) darüber, welches Basissystem brauchbar ist.
+- :k[Basen]{#basis} und :k[lineare Unabhängigkeit]{#linear-independence},
+  diesmal in einem :k[Vektorraum]{#vector-space}, dessen Elemente Funktionen
+  sind.
+- :k[Polynome]{#polynomial} samt Polynomgrad und Monombasis,
+  :k[Stetigkeit]{#continuity} und
+  :k[Differenzierbarkeit]{#differentiability}, außerdem stückweise definierte
+  Funktionen.
+- :k[Normen]{#norm} ([Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2)), hier
+  vor allem die *Supremumsnorm* einer Funktion: Für $g$ auf $[a, b]$ ist
+  $\|g\|_\infty = \sup_{x \in [a,b]} |g(x)|$, bei stetigem $g$ auf einem
+  abgeschlossenen Intervall also der größte Betrag, den $g$ dort annimmt.
+
+### Drei Varianten desselben Wunsches
+
+Alle drei Aufgaben liefern am Ende ein $\cgreen{\wh{f}}$, verlangen aber sehr
+Verschiedenes von ihm.
+
+:::definition[14.1.1 (Approximationsproblem)]
+Gegeben seien eine Funktion $f$ auf $[a, b]$, eine Norm $\|\cdot\|$ auf
+einem Funktionenraum, der $f$ enthält, und eine vorgegebene, einfacher
+handhabbare Klasse $\mathcal A$ von Funktionen. Gesucht ist ein
+$\cgreen{\wh{f}} \in \mathcal A$, das den Abstand zu $f$ minimiert oder dem
+bestmöglichen Abstand wenigstens nahekommt:
+
+$$
+\left\| f - \cgreen{\wh{f}} \right\|
+\approx \inf_{g \in \mathcal A} \left\| f-g \right\| .
+$$
+
+Die Bedingung ist global: $\cgreen{\wh{f}}$ soll $f$ überall auf $[a, b]$
+nahekommen, muss es aber an keiner einzigen Stelle exakt treffen. Existiert
+ein Minimierer, steht in der Anzeige exakt ein Gleichheitszeichen.
+:::
+
+:::definition[14.1.2 (Interpolationsproblem)]
+Gegeben seien Datenpunkte $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit
+paarweise verschiedenen $x_i$. Gesucht ist ein $\cgreen{\wh{f}}$ mit
+
+$$ {#eq-14.1.1}
+\cgreen{\wh{f}(x_i)} = \cblue{y_i}, \qquad i = 1, \dots, n .
+$$
+
+Jede Funktion mit dieser Eigenschaft heißt *Interpolant* (interpolant) der
+Daten, die $x_i$ heißen *Stützstellen* (nodes). Die Bedingung ist punktweise
+und exakt: An den $n$ Stützstellen ist nichts erlaubt außer Treffen, zwischen
+ihnen alles.
+:::
+
+:::definition[14.1.3 (Glättungsproblem)]
+Gegeben seien Datenpunkte $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, die aus
+einer unbekannten Funktion $f$ und Fehlern entstanden sind:
+
+$$
+\cblue{y_i} = f(x_i) + \cred{\eps_i}, \qquad i = 1, \dots, n .
+$$
+
+Gesucht ist eine Schätzung $\cgreen{\wh{f}}$ von $f$, die das Signal trifft,
+statt jeden beobachteten Fehler mitzuzeichnen. Die $\cred{\eps_i}$ sind in
+aller Regel Zufallsvariablen; die Residuen
+$\cblue{y_i}-\cgreen{\wh{f}(x_i)}$ sind dagegen aus den Daten berechenbare
+Abweichungen und nicht mit den unbeobachteten Fehlern gleichzusetzen.
+:::
+
+:::bemerkung[14.1.4 (Daten oder Funktion?)]
+Die Einführungsfolie schreibt die Interpolationsbedingung als
+$f(x_i) = \cgreen{\wh{f}(x_i)}$, alle späteren Folien als
+$\cblue{y_i} = \cgreen{\wh{f}(x_i)}$. Beides meint dasselbe, solange die Daten
+rauschfrei sind, also $\cblue{y_i} = f(x_i)$ gilt. Der Unterschied wird erst
+bei der Glättung wichtig: Dort ist $f$ unbekannt und nur die verrauschten
+$\cblue{y_i}$ liegen vor, weshalb die Bedingung $\cgreen{\wh{f}(x_i)} = f(x_i)$
+gar nicht überprüfbar wäre. Wir schreiben deshalb durchgehend
+$\cblue{y_i}$ und sagen dazu, ob $\cblue{y_i} = f(x_i)$ gelten soll.
+:::
+
+:::vertiefung[Die drei Aufgaben nebeneinander]
+Die drei Tafeln zeigen dieselbe Ausgangslage unter den drei Forderungen.
+Schieben wir den Regler für das Rauschen ganz nach links, geht die
+Glättungsaufgabe in die Interpolationsaufgabe über.
+
+<DreiProbleme />
+:::
+
+### Wie die drei Aufgaben zusammenhängen
+
+:::bemerkung[14.1.5 (Approximation über Interpolation)]
+Ein wichtiger Weg zu einer Approximation führt über Interpolation: Statt die
+Norm $\|f - \cgreen{\wh{f}}\|$ direkt über einem Funktionenraum zu minimieren,
+werten wir $f$ an endlich vielen Stellen $x_i$ aus und interpolieren die so
+entstandenen Paare $\cblue{(x_i, f(x_i))}$. Damit ist das konkrete
+Approximationsverfahren auf ein Interpolationsproblem zurückgeführt, und aus
+dessen Bedingung ($14.1.1$) wird in [Abschnitt 14.2](#sec-14.2) ein lineares
+Gleichungssystem. Andere Verfahren minimieren eine Norm tatsächlich direkt,
+etwa Kleinste Quadrate oder eine Minimax-Approximation. Sind die Auswertungen
+fehlerbehaftet, tritt an die Stelle der Interpolation ein Glättungsproblem.
+
+Von den drei Varianten ist die Glättung die schwierigste: Sie muss zusätzlich
+entscheiden, welcher Teil der Daten Signal und welcher Rauschen ist, und dafür
+braucht es ein stochastisches Modell für die $\cred{\eps_i}$. Dieses Kapitel
+behandelt deshalb die Interpolation; die Glättung folgt in
+[Abschnitt 15.3](?k=15-funktionsapproximation-2#sec-15.3).
+:::
+
+### Wozu wir das brauchen
+
+Die Folien nennen drei klassische Anlässe. Erstens die glatte Kurve durch eine
+Punktwolke, etwa für eine Grafik. Zweitens der Wunsch, eine teure Funktion
+schneller auszuwerten: Wenn $f(x) = \int_0^x g(y)\,\mathrm{d}y$ oder
+$f(x) = g^{-1}(x)$ jedes Mal ein numerisches Verfahren erfordert, ist es
+billiger, $f$ an wenigen Stellen zu bestimmen und dazwischen zu interpolieren.
+Drittens Ableitungen und Integrale von $f$: Ein Polynom oder ein Spline lässt
+sich exakt differenzieren und integrieren, und wir nehmen das Ergebnis als
+Näherung für $f'$ beziehungsweise für $\int f$. Auf diesem Umweg beruhen die
+klassischen Verfahren der numerischen Differentiation und Integration, die
+dieser Kurs nicht weiter verfolgt.
+
+:::bemerkung[14.1.6 (Interpolation im maschinellen Lernen, und was nur so aussieht)]
+Zwei der Anwendungen auf der Folie sind Interpolation im Sinn von
+Definition 14.1.2:
+
+- *Computergrafik.* Wird ein Bild gedreht oder skaliert, liegen die neuen
+  Pixelmittelpunkte zwischen den alten. Bilineare und bikubische Verfahren
+  legen eine Funktion durch die umliegenden Pixelwerte und werten sie an der
+  neuen Stelle aus.
+- *Zeitreihen.* Fehlende Werte in Sensor- oder Finanzdaten werden aufgefüllt,
+  indem eine Kurve durch die vorhandenen Messzeitpunkte gelegt wird.
+
+Zwei weitere sind Analogien, und die Folie kennzeichnet sie nicht als solche:
+
+- *Latent-Space-Interpolation* in VAEs und GANs interpoliert linear zwischen
+  zwei Codes, $\bz(t) = (1-t)\bz_0 + t\bz_1$. Das ist Interpolation im
+  Argumentraum mit $n = 2$ Stützstellen. Über das erzeugte Bild sagt sie
+  nichts: Ob der Übergang glatt aussieht, hängt am Decoder, nicht an einer
+  Interpolationsbedingung.
+- *Positional Encodings* wie RoPE werten feste Sinus- und
+  Kosinusfunktionen an den Token-Positionen aus. Eine Bedingung der Form
+  $\cgreen{\wh{f}(x_i)} = \cblue{y_i}$ kommt darin nicht vor; gemeinsam ist
+  mit unserem Thema nur der Baukasten aus Sinusfunktionen. Interpolation im
+  engen Sinn taucht dort erst auf, wenn ein trainiertes Modell auf längere
+  Kontexte umskaliert wird.
+
+Ein echter Grenzfall ist die Idee, die feste Aktivierungsfunktion eines
+neuronalen Netzes durch eine lernbare, spline-basierte zu ersetzen
+(*Kolmogorow-Arnold-Netze*, auf der Folie auskommentiert). Die Splines aus
+[Abschnitt 14.4](#sec-14.4) sind dort das Modell selbst; ihre Koeffizienten
+werden allerdings trainiert und nicht aus Interpolationsbedingungen bestimmt.
+:::
+
+### Warum die Interpolationsbedingung zu wenig ist
+
+Interpolation stellt $n$ Gleichungen an eine Funktion. Eine Funktion hat
+unendlich viele Freiheitsgrade, und deshalb bleibt nach diesen $n$ Gleichungen
+sehr viel offen. Wie viel, zeigt schon das kleinste sinnvolle Beispiel.
+
+:::beispiel[14.1.7 (Vier Interpolanten durch drei Punkte)]
+Betrachten wir die $n = 3$ Punkte $\cblue{(0, 1)}$, $\cblue{(1, 2)}$,
+$\cblue{(2, 5)}$. Die folgenden vier Funktionen interpolieren sie alle:
+
+$$
+\begin{aligned}
+\cgreen{\wh{f}_1(x)} &= 1 + x^2 , \\
+\cgreen{\wh{f}_2(x)} &= \begin{cases} x + 1 & x \in [0, 1] \\ 3x - 1 & x \in [1, 2] \end{cases} , \\
+\cgreen{\wh{f}_3(x)} &= x^3 - 2x^2 + 2x + 1 , \\
+\cgreen{\wh{f}_4(x)} &= 1 + x^2 + 0{,}5 \sin(2\pi x) .
+\end{aligned}
+$$
+
+Die Probe ist in allen vier Fällen eine Zeile. Für $\cgreen{\wh{f}_1}$ etwa
+ist $1 + 0 = 1$, $1 + 1 = 2$ und $1 + 4 = 5$. Für $\cgreen{\wh{f}_3}$ rechnen
+wir $0 - 0 + 0 + 1 = 1$, $1 - 2 + 2 + 1 = 2$ und $8 - 8 + 4 + 1 = 5$. Bei
+$\cgreen{\wh{f}_4}$ genügt der Hinweis, dass $\sin(2\pi x)$ an jeder ganzen
+Zahl verschwindet, und $\cgreen{\wh{f}_2}$ ist auf beiden Teilintervallen die
+Gerade durch die jeweiligen Endpunkte.
+
+Zwischen den Stützstellen sehen die vier Funktionen dagegen völlig
+verschieden aus. Bei $x = 1{,}3$ liefern sie $2{,}69$, $2{,}90$, $2{,}42$ und
+$3{,}17$; die höchste und die niedrigste trennt dort $0{,}75$. Viel weiter
+gehen sie auf $[0, 2]$ nirgends auseinander, die größte Spanne beträgt
+$0{,}7499$ und wird bei $x \approx 1{,}288$ erreicht.
+:::
+
+:::vertiefung[Vier Interpolanten, ein Datensatz]
+Alle vier Kurven tragen dieselbe Farbe, weil sie dieselbe Rolle spielen. Der
+Regler wandert über das Intervall und zeigt, wie weit die eingeschalteten
+Interpolanten an der jeweiligen Stelle auseinanderliegen.
+
+<VierInterpolanten />
+:::
+
+Vier Beispiele sind noch kein Argument. Der folgende Satz beschreibt die
+gesamte Lösungsmenge und macht damit klar, dass es nicht bei vieren bleibt.
+
+:::satz[14.1.8 (Gestalt aller Interpolanten)]
+Seien Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, gegeben und sei
+$\cgreen{p}$ irgendein Interpolant dieser Daten. Dann ist eine Funktion
+$\cgreen{\wh{f}}$ genau dann ebenfalls ein Interpolant, wenn sie sich
+schreiben lässt als
+
+$$ {#eq-14.1.2}
+\cgreen{\wh{f}} = \cgreen{p} + g
+\qquad \text{mit} \qquad
+g(x_i) = 0 \quad \text{für } i = 1, \dots, n .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Sei zunächst $g$ eine Funktion mit $g(x_i) = 0$ für alle $i$. Dann gilt für
+jedes $i$
+
+$$
+(\cgreen{p} + g)(x_i) = \cgreen{p(x_i)} + g(x_i) = \cblue{y_i} + 0 = \cblue{y_i} ,
+$$
+
+also interpoliert $\cgreen{p} + g$ die Daten.
+
+::why[Funktionen werden punktweise addiert, und $\cgreen{p}$ ist nach Voraussetzung ein Interpolant]
+:::
+
+:::schritt
+Sei umgekehrt $\cgreen{\wh{f}}$ ein Interpolant. Wir setzen
+$g := \cgreen{\wh{f}} - \cgreen{p}$ und erhalten für jedes $i$
+
+$$
+g(x_i) = \cgreen{\wh{f}(x_i)} - \cgreen{p(x_i)} = \cblue{y_i} - \cblue{y_i} = 0 .
+$$
+
+Mit diesem $g$ ist $\cgreen{\wh{f}} = \cgreen{p} + g$ von der Form ($14.1.2$).
+
+::why[beide Funktionen erfüllen die Interpolationsbedingung ($14.1.1$) an derselben Stelle $x_i$]
+:::
+
+::::
+
+:::bemerkung[14.1.9 (Unendlich viele Lösungen)]
+Die Menge der Funktionen $g$ mit $g(x_i) = 0$ für alle $i$ ist ein
+Untervektorraum des Funktionenraums, und er ist unendlichdimensional: Für
+jedes Polynom $q$ liegt $q(x) \prod_{i=1}^n (x - x_i)$ darin, und diese
+Produkte sind für verschiedene Grade von $q$ linear unabhängig. Schon der
+Spezialfall $g_c(x) = c \prod_{i=1}^n (x - x_i)$ liefert für jedes
+$c \in \R$ einen weiteren Interpolanten. Damit hat das Interpolationsproblem
+aus Definition 14.1.2 stets unendlich viele Lösungen, sobald wir
+$\cgreen{\wh{f}}$ nicht weiter einschränken.
+
+Die drei Zusatzfunktionen aus Beispiel 14.1.7 sind genau von dieser Bauart.
+Mit $\cgreen{p} = \cgreen{\wh{f}_1}$ ist
+
+$$
+\cgreen{\wh{f}_3} - \cgreen{p} = x(x-1)(x-2),
+\qquad
+\cgreen{\wh{f}_4} - \cgreen{p} = 0{,}5\sin(2\pi x),
+$$
+
+und beide verschwinden an $0$, $1$ und $2$; das erste ist gerade $g_1$ von
+oben, das zweite eine Sinusschwingung, die zufällig an denselben Stellen
+Nullstellen hat. Auch die stückweise lineare Differenz
+$\cgreen{\wh{f}_2} - \cgreen{p}$ verschwindet dort, sie lautet $x(1-x)$ auf
+$[0,1]$ und $-(x-1)(x-2)$ auf $[1,2]$. Die Folie zeigt die vier Kurven, ohne
+diesen gemeinsamen Bauplan zu nennen.
+:::
+
+Interpolation allein legt also nichts fest. Wir müssen die Auswahl
+einschränken, und zwar so, dass genau so viele Freiheitsgrade übrig bleiben,
+wie wir Datenpunkte haben. Das leisten *Basissysteme*: Wir wählen $K$
+Basisfunktionen und lassen nur noch Linearkombinationen aus ihnen zu. Aus der
+Interpolationsbedingung wird dann ein lineares Gleichungssystem in den $K$
+Koeffizienten ([Abschnitt 14.2](#sec-14.2)), und die Wahl der Basis entscheidet
+über alles Weitere: über Eindeutigkeit ([Abschnitt 14.3](#sec-14.3)), über die
+Kondition des Systems und über die Frage, ob eine lokale Datenänderung die
+Kurve global verbiegt ([Abschnitt 14.4](#sec-14.4)).
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Zu Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise verschiedenen
+$x_i$ gibt es unendlich viele Funktionen $\cgreen{\wh{f}}$ mit
+$\cgreen{\wh{f}(x_i)} = \cblue{y_i}$ für alle $i$.
+
+Das ist Bemerkung 14.1.9. Ist $\cgreen{p}$ ein Interpolant, so ist nach
+Satz 14.1.8 auch $\cgreen{p} + c \prod_i (x - x_i)$ für jedes $c \in \R$ einer,
+und verschiedene $c$ liefern verschiedene Funktionen.
+:::
+
+:::frage{falsch}
+Aus $\cgreen{\wh{f}(x_i)} = \cblue{y_i}$ für $i = 1, \dots, n$ folgt
+$\left\|f - \cgreen{\wh{f}}\right\| \approx 0$.
+
+Die Interpolationsbedingung sagt über die Stellen zwischen den Stützstellen
+nichts. In Beispiel 14.1.7 erfüllen alle vier Funktionen dieselben drei
+Bedingungen und liegen bei $x = 1{,}3$ trotzdem $0{,}75$ auseinander; höchstens
+eine von ihnen kann einem gegebenen $f$ nahekommen. Wie groß der Abstand
+tatsächlich wird, klärt erst eine Fehlerabschätzung für eine konkrete
+Funktionenklasse.
+:::
+
+:::frage{wahr}
+Beschränken wir $\cgreen{\wh{f}}$ auf Polynome vom Grad höchstens $n-1$, so hat
+das Interpolationsproblem bei paarweise verschiedenen $x_i$ genau eine Lösung.
+
+Das ist der Eindeutigkeitssatz der Polynominterpolation aus
+[Abschnitt 14.3](#sec-14.3). Ohne den Zusatz „vom Grad höchstens $n-1$" wäre
+die Aussage falsch, und die Folie lässt ihn im Quiz weg; so gelesen widerspräche
+sie der ersten Aussage dieses Selbsttests.
+:::
+
+:::frage{falsch}
+Beim Glättungsproblem verlangen wir wie bei der Interpolation, dass
+$\cgreen{\wh{f}}$ durch alle Datenpunkte läuft.
+
+Definition 14.1.3 lässt die Residuen $\cred{\eps_i} = \cblue{y_i} -
+\cgreen{\wh{f}(x_i)}$ ausdrücklich zu. Bei verrauschten Daten wäre eine Kurve
+durch alle Punkte die falsche Antwort, weil sie das Rauschen mit abbildet. Im
+Widget der ersten Vertiefung fallen die beiden Aufgaben nur für $\sigma = 0$
+zusammen.
+:::
+
+:::frage{falsch}
+Ein Interpolant muss ein Polynom sein.
+
+Definition 14.1.2 verlangt nur die $n$ Gleichungen an den Stützstellen.
+$\cgreen{\wh{f}_2}$ aus Beispiel 14.1.7 ist stückweise linear und an $x = 1$
+nicht differenzierbar, $\cgreen{\wh{f}_4}$ enthält einen Sinusterm; beide
+interpolieren. Polynome sind eine besonders bequeme Wahl, keine Vorschrift.
+:::
+
+::::
+
+*Vertiefung: Heath, Scientific Computing, Kapitel 7 (Interpolation), führt in
+§7.1 dieselbe Aufgabenstellung ein und diskutiert, nach welchen Kriterien eine
+Funktionenklasse für die Interpolation ausgewählt wird.*

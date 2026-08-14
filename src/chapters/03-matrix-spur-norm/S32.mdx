@@ -1,0 +1,255 @@
+import { S32NormBallWidget } from "./widgets/S32NormBallWidget";
+import { S32VecNormWidget } from "./widgets/S32VecNormWidget";
+
+{/*
+  Abschnitt 3.2 – Matrixnormen: Definition und Beispiele.
+  Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Matrixnormen - Definition
+  und Beispiele". Prosa eigenständig aus den Folien formuliert; der
+  Einheitskugel-Widget-Code ist aus der internen heath-ch2-App recycelt.
+  MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
+*/}
+
+::quelle[Folien: 03-matrix-spur-norm, „Matrixnormen – Definition und Beispiele".]
+
+In [Abschnitt 3.1](#sec-3.1) haben wir mit der
+Frobenius-Norm bereits eine erste Möglichkeit kennengelernt, die „Größe" einer Matrix in
+einer einzigen Zahl zusammenzufassen. In diesem Abschnitt gehen wir das Thema
+grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm überhaupt ist,
+konstruieren eine ganze Familie von Beispielen und entdecken dann, dass diese
+naheliegenden Normen einen blinden Fleck haben. Das motiviert die Operatornormen des
+[nächsten Abschnitts](#sec-3.3).
+
+### 3.2.1 Warum Matrixnormen?
+
+Für Vektoren sind :k[Normen]{#norm} unser wichtigstes
+Messinstrument: Sie machen aus einem Fehler*vektor* eine Fehler*größe*,
+mit der wir rechnen und argumentieren können. Dasselbe brauchen wir für Matrizen, und
+zwar aus vier konkreten Anlässen:
+
+- die „Größe" einer Matrix messen, analog zur Länge eines Vektors;
+- *Fehler* quantifizieren: Wie weit liegt eine mit
+  :k[Rundungsfehlern]{#rounding-error} gespeicherte oder
+  näherungsweise berechnete Matrix von der exakten entfernt?
+- *Konvergenz* von Algorithmen analysieren: Iterative Verfahren erzeugen Folgen
+  von Matrizen oder Vektoren, und die Aussage „$\bA_k \to \bA$" braucht ein
+  Abstandsmaß (:k[Konvergenz]{#convergence});
+- die *Konditionierung* von Problemen verstehen: Die
+  :k[Konditionszahl]{#condition-number} einer Matrix wird
+  über Matrixnormen definiert.
+
+Frischen wir zunächst das Vorwissen auf. Für Vektoren kennen wir neben der
+:k[euklidischen Norm]{#euclidean-norm} $\|\bx\|_2$ die ganze Familie der $p$-Normen, und ihr
+„Aussehen" lässt sich am besten über ihre Einheitskugeln
+$\{\bx : \|\bx\|_p = 1\}$ vergleichen: Raute, Kreis, Quadrat.
+
+:::vertiefung[Auffrischung: die Einheitskugeln der p-Normen – interaktiv]
+<S32NormBallWidget />
+:::
+
+### 3.2.2 Die Axiome
+
+Was macht eine Funktion auf Matrizen zu einer „Norm"? Dieselben drei Forderungen, die
+wir schon von Vektornormen kennen:
+
+:::definition[3.2.1 (Matrixnorm)]
+Eine Funktion $\|\cdot\| : \R^{m \times n} \to [0, \infty)$ heißt
+*Matrixnorm*, wenn für alle $\bA, \bB \in \R^{m \times n}$ und
+$c \in \R$ gilt:
+
+1. *Definitheit*: $\|\bA\| = 0 \iff \bA = \bnull$
+2. *absolute Homogenität*: $\|c\bA\| = |c| \cdot \|\bA\|$
+3. *Dreiecksungleichung*: $\|\bA + \bB\| \le \|\bA\| + \|\bB\|$
+:::
+
+:::bemerkung[3.2.2]
+Das sind exakt die Axiome einer Vektornorm, und das ist kein Zufall: Die Menge
+$\R^{m \times n}$ ist ein
+:k[Vektorraum]{#vector-space} (der Dimension
+$mn$), und eine Matrixnorm ist schlicht eine Norm auf diesem Raum.
+Umgekehrt ist jede Vektornorm eine Matrixnorm auf dem Raum
+$\R^{n \times 1}$ der einspaltigen Matrizen. Was eine Matrixnorm über
+diese Grundaxiome hinaus leisten *sollte* (etwa gut mit dem Matrixprodukt
+zusammenzuspielen), untersuchen wir in
+[Abschnitt 3.5](#sec-3.5).
+:::
+
+### 3.2.3 Matrixnormen durch Vektorisierung
+
+Wie kommen wir am schnellsten an Matrixnormen? Mit einem einfachen Rezept: Wir rollen
+die Matrix zu einem langen Vektor aus und wenden darauf eine Vektornorm an, die wir
+schon kennen.
+
+:::definition[3.2.3 (Vektorisierung)]
+Die *Vektorisierung* einer Matrix $\bA \in \R^{m \times n}$
+stapelt ihre Spalten zu einem Vektor der Länge $mn$:
+
+$$
+\vec(\bA) = \left(a_{11}, \ldots, a_{m1},\; a_{12}, \ldots, a_{m2},\; \ldots,\; a_{1n}, \ldots, a_{mn}\right)^\top \in \R^{mn}.
+$$
+:::
+
+Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen, denn die
+Vektorisierung sortiert die Einträge ja nur um:
+
+:::satz[3.2.4]
+Ist $\|\cdot\|$ eine Vektornorm auf $\R^{mn}$, so ist
+
+$$
+\bA \mapsto \left\| \vec(\bA) \right\|
+$$
+
+eine Matrixnorm auf $\R^{m \times n}$.
+:::
+
+::::beweis
+
+:::schritt
+Die Abbildung $\vec : \R^{m \times n} \to \R^{mn}$ ist
+:k[linear]{#linear-map} und bijektiv:
+
+$$
+\begin{gathered} \vec(\bA + \bB) = \vec(\bA) + \vec(\bB), \qquad \vec(c\bA) = c \, \vec(\bA), \\ \vec(\bA) = \bnull \quequiv \bA = \bnull. \end{gathered}
+$$
+
+::why[$\vec$ sortiert die Einträge nur um: Jeder Eintrag von $\bA$ landet an genau einer Position des langen Vektors, Addition und Skalarmultiplikation wirken eintragsweise]
+:::
+
+:::schritt
+$$
+\left\| \vec(\bA) \right\| = 0 \quequiv \vec(\bA) = \bnull \quequiv \bA = \bnull.
+$$
+
+::why[Definitheit der Vektornorm auf $\R^{mn}$, dann die letzte Äquivalenz aus dem vorigen Schritt]
+:::
+
+:::schritt
+$$
+\left\| \vec(c\bA) \right\| = \left\| c \, \vec(\bA) \right\| = |c| \cdot \left\| \vec(\bA) \right\|.
+$$
+
+::why[erst Linearität von $\vec$, dann absolute Homogenität der Vektornorm]
+:::
+
+:::schritt
+$$
+\left\| \vec(\bA + \bB) \right\| = \left\| \vec(\bA) + \vec(\bB) \right\| \le \left\| \vec(\bA) \right\| + \left\| \vec(\bB) \right\|.
+$$
+
+::why[erst Additivität von $\vec$, dann Dreiecksungleichung der Vektornorm]
+:::
+
+::::
+
+Die drei wichtigsten Vertreter dieser Bauart entstehen aus den drei vertrauten
+Vektornormen:
+
+:::beispiel[3.2.5 (Vektorisierungsnormen)]
+- *Frobenius-Norm* (aus der $2$-Norm):
+
+  $$
+  \cblue{\left\| \bA \right\|_F} = \left\| \vec(\bA) \right\|_2 = \sqrt{\sum_{i,j} a_{ij}^2}
+  $$
+
+  Das stimmt mit der Definition aus
+  [Abschnitt 3.1](#sec-3.1) überein, wo wir außerdem
+  $\cblue{\left\| \bA \right\|_F} = \sqrt{\tr(\bA^\top\bA)}$
+  gezeigt haben.
+
+- *Summennorm* (aus der $1$-Norm):
+
+  $$
+  \corange{\left\| \bA \right\|_S} = \left\| \vec(\bA) \right\|_1 = \sum_{i,j} \left| a_{ij} \right|
+  $$
+
+- *Maximumsnorm* (aus der $\infty$-Norm):
+
+  $$
+  \cpurp{\left\| \bA \right\|_M} = \left\| \vec(\bA) \right\|_\infty = \max_{i,j} \left| a_{ij} \right|
+  $$
+:::
+
+:::vertiefung[Frobenius-, Summen- und Maximumsnorm: live nachgerechnet]
+<S32VecNormWidget />
+:::
+
+### 3.2.4 Was elementweise Normen nicht sehen
+
+Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Trotzdem
+haben sie einen konzeptionellen Haken: Sie behandeln die Matrix wie einen langen
+Vektor; jede Umordnung der Einträge lässt die Norm unverändert. Eine Matrix ist aber
+mehr als eine Tabelle von Zahlen: Sie repräsentiert die
+:k[lineare Abbildung]{#linear-transformation}
+$\bx \mapsto \bA\bx$, und von dieser Abbildung wissen die elementweisen
+Normen nichts. Ihnen fehlt damit auch eine direkte geometrische Interpretation: Was
+genau $\left\| \bA \right\|_F = 5$ über die Wirkung von $\bA$
+auf Vektoren aussagt, bleibt unklar. Wie drastisch das schiefgehen kann, zeigt das
+folgende Beispiel von den Folien.
+
+:::beispiel[3.2.6 (Gleiche Frobenius-Norm, völlig verschiedene Abbildungen)]
+Betrachten wir die drei Matrizen
+
+$$
+\cred{\bA_1} = \cred{\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}}, \qquad \cblue{\bA_2} = \cblue{\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}}, \qquad \cgreen{\bA_3} = \cgreen{\begin{pmatrix} \sqrt{2} & 0 \\ 0 & 0 \end{pmatrix}}.
+$$
+
+Ihre Frobenius-Normen rechnen wir direkt aus:
+
+$$
+\left\| \cred{\bA_1} \right\|_F = \sqrt{\cred{1}^2 + 0^2 + 0^2 + \cred{1}^2} = \sqrt{2}, \qquad \left\| \cblue{\bA_2} \right\|_F = \sqrt{0^2 + \cblue{1}^2 + \cblue{1}^2 + 0^2} = \sqrt{2},
+$$
+
+$$
+\left\| \cgreen{\bA_3} \right\|_F = \sqrt{\left(\cgreen{\sqrt{2}}\right)^2 + 0^2 + 0^2 + 0^2} = \sqrt{2}.
+$$
+
+Alle drei Matrizen haben also *dieselbe* Frobenius-Norm
+$\sqrt{2}$. Als Abbildungen könnten sie kaum unterschiedlicher sein.
+Verfolgen wir den Vektor $\bx = (1, 0)^\top$:
+
+- $\cred{\bA_1}\bx = \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \bx$:
+  Die :k[Identität]{#identity-matrix} lässt
+  *jeden* Vektor unverändert.
+- $\cblue{\bA_2}\bx = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$: Die
+  :k[Permutationsmatrix]{#permutation-matrix}
+  $\cblue{\bA_2}$ vertauscht die beiden Koordinaten. Geometrisch ist das
+  eine :k[Spiegelung]{#reflection} an der
+  Winkelhalbierenden $x_2 = x_1$ (keine Drehung: es gilt
+  $\det \cblue{\bA_2} = -1$, siehe
+  :k[Determinante]{#determinant}).
+- $\cgreen{\bA_3}\bx = \begin{pmatrix} \sqrt{2} \\ 0 \end{pmatrix}$:
+  $\cgreen{\bA_3}$ streckt die erste Koordinate um den Faktor
+  $\sqrt{2}$ und löscht die zweite komplett:
+  $\cgreen{\bA_3}(0,1)^\top = \bnull$. Diese Matrix ist singulär (nicht
+  :k[invertierbar]{#matrix-inverse}); sie kollabiert die
+  ganze Ebene auf die $x_1$-Achse.
+
+Zwei längentreue Abbildungen und eine, die eine ganze Dimension vernichtet – und die
+Frobenius-Norm kann sie nicht auseinanderhalten.
+:::
+
+Dasselbe Problem zeigt sich aus einer zweiten Richtung, wenn wir die Dimension wachsen
+lassen:
+
+:::beispiel[3.2.7 (Identität in wachsender Dimension)]
+Für die Identitätsmatrix $\bI_n \in \R^{n \times n}$ (mit $n$
+Einsen auf der Diagonale und sonst Nullen) liefern die drei Vektorisierungsnormen
+
+$$
+\cblue{\left\| \bI_n \right\|_F} = \sqrt{\underbrace{1 + \cdots + 1}_{n}} = \cblue{\sqrt{n}}, \qquad \corange{\left\| \bI_n \right\|_S} = \corange{n}, \qquad \cpurp{\left\| \bI_n \right\|_M} = \cpurp{1}.
+$$
+
+Die Abbildung $\bx \mapsto \bI_n\bx = \bx$ ändert überhaupt nichts,
+trotzdem wachsen Frobenius- und Summennorm mit $n$ über alle Grenzen.
+:::
+
+Eine Norm, die die Matrix als *Abbildung* misst, sollte der Identität den Wert
+$1$ geben, unabhängig von der Dimension. Die Maximumsnorm trifft diesen Wert
+hier zwar zufällig, bleibt aber genauso blind für das, was
+$\bA$ mit Vektoren *tut* (im
+:k[Matrix-Vektor-Produkt]{#matrix-vector-product}
+$\bA\bx$). Die Lösung sind *Operatornormen*, die die Transformation
+$\bx \mapsto \bA\bx$ direkt vermessen: Wie stark kann $\bA$
+einen Vektor höchstens verlängern? Ihnen widmen wir den
+[nächsten Abschnitt](#sec-3.3).
+
+*Vertiefung: Heath §2.3.*

@@ -1,0 +1,29 @@
+export const title = "Logarithmus";
+
+import { LogPlot } from "./widgets/LogarithmWidget";
+
+{/* Concept-Tooltip: Logarithmus (Umkehrung des Potenzierens, Basen, Basiswechsel). */}
+
+Der Logarithmus macht das Potenzieren rückgängig:
+$\log_b(x)$ beantwortet die Frage „$b$ hoch was
+ergibt $x$?“ Also $\log_2(8) = 3$, weil
+$2^3 = 8$. Die gebräuchlichsten Basen sind $2$
+(Bits, Informationstheorie), $10$ und die Eulersche Zahl
+$e \approx 2{,}718$, deren Logarithmus wir $\ln$
+schreiben. Alle Logarithmen sind zueinander proportional. Das sagt
+die Basiswechsel-Regel, mit der wir auch $\log_2$
+differenzieren können:
+
+$$
+\log_2(x) = \frac{\ln x}{\ln 2} \qquad \Longrightarrow \qquad \frac{\mathrm{d}}{\mathrm{d}x} \log_2(x) = \frac{1}{x \ln 2} .
+$$
+
+Seine wichtigste algebraische Superkraft: er verwandelt Produkte in
+Summen, $\log(ab) = \log(a) + \log(b)$ – der Grund, warum
+Log-Likelihoods und Entropien (etwa Ausdrücke der Form
+$x \log_2 x$) so angenehm zu differenzieren sind. Vorsicht:
+$\log_b(x)$ ist nur für $x > 0$ definiert, und er
+wächst sehr langsam: eine Verdopplung von $x$ erhöht
+$\log_2(x)$ nur um eine Einheit.
+
+<LogPlot />

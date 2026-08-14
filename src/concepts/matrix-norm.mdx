@@ -1,0 +1,29 @@
+export const title = "Matrixnorm (natürliche/induzierte Norm)";
+
+import { NormWidget } from "./widgets/MatrixNormWidget";
+
+Wie „groß" ist eine Matrix? Für Fehlerabschätzungen wollen wir nicht die
+Einträge messen, sondern die *Wirkung* von $\bA$ als lineare Abbildung. Die von
+einer :k[Vektornorm]{#norm} *induzierte* (oder *natürliche*, auch *Operator-*)
+Norm misst genau das, die maximale Streckung eines Vektors:
+
+$$
+\|\bA\| := \max_{\bx \neq \bnull} \frac{\|\bA\bx\|}{\|\bx\|} = \max_{\|\bx\| = 1} \|\bA\bx\|.
+$$
+
+Direkt aus der Definition folgt die Abschätzung, die wir in Beweisen ständig
+benutzen: $\|\bA\bv\| \le \|\bA\| \, \|\bv\|$ für alle $\bv$ (Verträglichkeit
+mit der Vektornorm), und daraus die *Submultiplikativität*
+$\|\bA\bB\| \le \|\bA\| \, \|\bB\|$. Beide kontrollieren, wie stark sich Fehler
+durch Matrixprodukte fortpflanzen.
+
+Der wichtigste Spezialfall ist die von der
+:k[euklidischen Norm]{#euclidean-norm} induzierte *2-Norm* (Spektralnorm):
+$\|\bA\|_2 = \sigma_{\max}(\bA)$, der größte Singulärwert aus der
+:k[SVD]{#singular-value-decomposition}. Eine
+:k[orthogonale Matrix]{#orthogonal-matrix} streckt nichts: $\|\bQ\|_2 = 1$. Aus
+$\|\bA\|$ und $\|\bA^{-1}\|$ zusammengesetzt entsteht die
+:k[Konditionszahl]{#condition-number}
+$\kappa(\bA) = \|\bA\| \, \|\bA^{-1}\|$.
+
+<NormWidget />

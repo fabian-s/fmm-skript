@@ -1,0 +1,317 @@
+import { SelbsttestFrage } from "./widgets/S34Local";
+import { S34SchattenWidget } from "./widgets/S34SchattenWidget";
+
+{/*
+  Abschnitt 3.4 – Schattennormen.
+  Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Schattennormen" (Definition
+  über Singulärwerte, Spezialfälle Nuklear-/Frobenius-/Spektralnorm, unitäre
+  Invarianz, Frobenius-Spur-Verbindung). Prosa eigenständig formuliert.
+  MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
+*/}
+
+::quelle[Folien: 03-matrix-spur-norm, „Schattennormen".]
+
+Wir kennen inzwischen zwei Rezepte für Matrixnormen. Die elementweisen Normen aus
+[Abschnitt 3.2](#sec-3.2) behandeln die Matrix als
+Zahlenhaufen und verlieren dabei jede Information über die Transformation, die sie
+beschreibt. Die Operatornormen aus
+[Abschnitt 3.3](#sec-3.3) messen die Transformation
+direkt, aber nur ihre *stärkste* Streckung. Eine Matrix streckt verschiedene
+Richtungen jedoch verschieden stark, und diese vollständige Streckungsinformation
+steckt in *allen*
+:k[Eigenwerten]{#eigenvalue-eigenvector} von
+$\bA^\top\bA$, nicht nur im größten. Die dritte Normfamilie dieses
+Kapitels nutzt sie alle.
+
+### 3.4.1 Von Eigenwerten zu Singulärwerten
+
+Erinnern wir uns an den Satz über die Spektralnorm aus
+[Abschnitt 3.3](#sec-3.3): Dort war
+$\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$. Die
+Matrix $\bA^\top\bA$ ist
+:k[symmetrisch]{#symmetric-matrix}, ihre Eigenwerte sind also
+reell und sogar nie negativ, denn
+$\bx^\top\bA^\top\bA\bx = \left\| \bA\bx \right\|_2^2 \geq 0$
+für alle $\bx$ (die Matrix ist
+:k[positiv semidefinit]{#positive-definite}). Wir dürfen
+daher aus allen Eigenwerten die Wurzel ziehen:
+
+$$
+\sigma_i := \sqrt{\lambda_i}, \qquad \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0 \text{ Eigenwerte von } \bA^\top\bA.
+$$
+
+Diese Zahlen $\sigma_1 \geq \cdots \geq \sigma_n \geq 0$ heißen die
+*Singulärwerte* (singular values) von $\bA$. Geometrisch sind sie die
+Halbachsenlängen der Ellipse, in die $\bA$ die Einheitssphäre abbildet:
+$\sigma_1$ ist die stärkste Streckung (die Spektralnorm!),
+$\sigma_n$ die schwächste. Systematisch entwickeln wir das später mit der
+:k[Singulärwertzerlegung]{#singular-value-decomposition};
+hier genügt uns: Der Vektor $(\sigma_1, \ldots, \sigma_n)$ ist der
+vollständige „Streckungs-Fingerabdruck" der Transformation. Auf diesen Vektor wenden
+wir jetzt eine :k[Vektornorm]{#norm} an:
+
+:::definition[3.4.1 (Schatten-p-Norm)]
+Sei $\bA \in \R^{m \times n}$, und sei
+$\blambda = (\lambda_1, \ldots, \lambda_n)$ der Vektor der Eigenwerte
+von $\bA^\top\bA$. Die *Schatten-p-Norm* von $\bA$ ist
+für $1 \leq p < \infty$
+
+$$
+\left\| \bA \right\|_{S,p} := \left\| \blambda^{1/2} \right\|_p = \left( \sum_{i=1}^n \lambda_i^{p/2} \right)^{1/p} = \left( \sum_{i=1}^n \sigma_i^p \right)^{1/p}
+$$
+
+und für $p = \infty$
+
+$$
+\left\| \bA \right\|_{S,\infty} := \max_{1 \leq i \leq n} \sigma_i = \sigma_1.
+$$
+:::
+
+:::bemerkung[3.4.2]
+- Das Bauprinzip ist dasselbe wie bei der Vektorisierung in
+  [Abschnitt 3.2](#sec-3.2): „Wende eine
+  Vektor-p-Norm an." Nur wenden wir sie nicht auf die rohen Einträge
+  $\vec(\bA)$ an, sondern auf den Singulärwertvektor, also auf die
+  geometrische Wirkung der Matrix statt auf ihre Zahlen.
+- Der Fall $p = \infty$ fügt sich nahtlos ein: Wie bei Vektornormen ist
+  die Maximumsnorm der Grenzwert der $p$-Normen für
+  $p \to \infty$.
+- Schatten-p-Normen erfüllen tatsächlich alle drei Normaxiome aus
+  [Abschnitt 3.2](#sec-3.2). Definitheit und
+  absolute Homogenität lassen sich direkt nachrechnen; die Dreiecksungleichung ist
+  überraschend knifflig, wir verzichten hier auf den Beweis.
+:::
+
+### 3.4.2 Die drei wichtigen Spezialfälle
+
+Drei Werte von $p$ liefern genau die Normen, die in der Praxis dominieren,
+und zwei davon kennen wir schon. Der Schlüssel zum überraschendsten Fall ist die
+Verbindung zwischen Frobenius-Norm und
+[Spur](#sec-3.1):
+
+:::satz[3.4.3 (Frobenius-Norm und Spur)]
+Für $\bA \in \R^{m \times n}$ mit
+:k[Rang]{#rank} $r$ und Eigenwerten
+$\lambda_1 \geq \cdots \geq \lambda_r > 0$ von
+$\bA^\top\bA$ (alle übrigen sind null) gilt
+
+$$
+\cblue{\left\| \bA \right\|_F^2} = \cred{\tr\left(\bA^\top\bA\right)} = \cgreen{\sum_{i=1}^r \lambda_i}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+\cred{\tr\left(\bA^\top\bA\right)} = \sum_{j=1}^n \left(\bA^\top\bA\right)_{jj} = \sum_{j=1}^n \sum_{i=1}^m a_{ij}^2 = \cblue{\left\| \bA \right\|_F^2}
+$$
+
+::why[Der Diagonaleintrag $(\bA^\top\bA)_{jj}$ ist das Skalarprodukt der $j$-ten Spalte von $\bA$ mit sich selbst, also $\sum_{i=1}^m a_{ij}^2$; Aufsummieren über alle $j$ ergibt die Summe aller quadrierten Einträge, genau die quadrierte Frobenius-Norm aus [Abschnitt 3.2](#sec-3.2)]
+:::
+
+:::schritt
+$$
+\cred{\tr\left(\bA^\top\bA\right)} = \tr\left(\bP\bLambda\bP^\top\right) = \tr\left(\bLambda\bP^\top\bP\right) = \tr(\bLambda) = \cgreen{\sum_{i=1}^r \lambda_i}
+$$
+
+::why[Spektralzerlegung $\bA^\top\bA = \bP\bLambda\bP^\top$ mit :k[orthogonalem]{#orthogonal-matrix} $\bP$ und $\bLambda = \diag(\lambda_1, \ldots, \lambda_r, 0, \ldots, 0)$; dann Zyklizität der Spur aus [Abschnitt 3.1](#sec-3.1) und $\bP^\top\bP = \bI$]
+:::
+
+::::
+
+Damit fallen die Spezialfälle wie reife Früchte:
+
+:::korollar[3.4.4 (Spezialfälle der Schatten-p-Norm)]
+- $p = \infty$:
+  $\left\| \bA \right\|_{S,\infty} = \sigma_1 = \sqrt{\lambda_{\max}} = \left\| \bA \right\|_2$,
+  die **Spektralnorm** aus
+  [Abschnitt 3.3](#sec-3.3).
+- $p = 2$:
+  $\left\| \bA \right\|_{S,2} = \left(\sum_{i} \lambda_i\right)^{1/2} = \sqrt{\tr\left(\bA^\top\bA\right)} = \left\| \bA \right\|_F$,
+  die **Frobenius-Norm** (nach Satz 3.4.3).
+- $p = 1$:
+  $\left\| \bA \right\|_{S,1} = \sum_{i=1}^r \sigma_i =: \left\| \bA \right\|_*$,
+  die *Nuklearnorm* (nuclear norm), für uns neu.
+:::
+
+Der Fall $p = 2$ ist eine echte Überraschung. Die Frobenius-Norm hatten wir
+in [Abschnitt 3.2](#sec-3.2) als elementweise Norm
+eingeführt, als Musterbeispiel einer Norm, die von der Transformation nichts weiß.
+Jetzt stellt sich heraus: Sie ist zugleich eine Schatten-Norm, also vollständig durch
+die Singulärwerte bestimmt. Sie weiß mehr über die Transformation, als ihre Definition
+vermuten lässt. Das erklärt auch im Nachhinein das Beispiel aus Abschnitt 3.2, in dem
+drei völlig verschiedene Transformationen dieselbe Frobenius-Norm hatten: Ihre
+quadrierten Singulärwerte summierten sich jeweils zu $2$.
+
+:::bemerkung[3.4.5 (Nuklearnorm und Niedrigrang-Probleme)]
+Warum eine dritte Norm, wenn wir schon zwei haben? Der
+:k[Rang]{#rank} von $\bA$ ist die Anzahl der
+Singulärwerte $\sigma_i > 0$. Rang-Minimierung ist ein kombinatorisch
+schwieriges Problem; die Nuklearnorm $\sum_i \sigma_i$ ist dagegen
+konvex und wird klein, wenn viele Singulärwerte (nahezu) verschwinden. Sie dient
+deshalb in Statistik und maschinellem Lernen als gutmütiger Ersatz für den Rang,
+etwa bei der
+:k[Niedrigrang-Approximation]{#low-rank-approximation}
+und beim Vervollständigen von Matrizen mit fehlenden Einträgen
+(Empfehlungssysteme).
+:::
+
+Rechnen wir die drei Normen einmal konkret aus, und zwar für die Matrix, deren
+Streckung wir in [Abschnitt 3.3](#sec-3.3)
+visualisiert haben.
+
+:::beispiel[3.4.6]
+Sei
+$\bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix}$. Zuerst die
+Eigenwerte von $\bA^\top\bA$:
+
+$$
+\bA^\top\bA = \begin{pmatrix} 2 & 0 \\ 1 & 1 \end{pmatrix}\begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix} = \begin{pmatrix} 4 & 2 \\ 2 & 2 \end{pmatrix},
+$$
+
+$$
+\det\left(\bA^\top\bA - \lambda\bI\right) = (4 - \lambda)(2 - \lambda) - 4 = \lambda^2 - 6\lambda + 4 \overset{!}{=} 0
+$$
+
+$$
+\quimpl \cred{\lambda_1} = 3 + \sqrt{5} \approx 5{,}236, \qquad \cblue{\lambda_2} = 3 - \sqrt{5} \approx 0{,}764.
+$$
+
+Die Singulärwerte sind die Wurzeln daraus:
+
+$$
+\cred{\sigma_1} = \sqrt{3 + \sqrt{5}} \approx 2{,}288, \qquad \cblue{\sigma_2} = \sqrt{3 - \sqrt{5}} \approx 0{,}874.
+$$
+
+**Spektralnorm** ($p = \infty$): der größte Singulärwert,
+
+$$
+\left\| \bA \right\|_{S,\infty} = \cred{\sigma_1} \approx 2{,}288.
+$$
+
+**Frobenius-Norm** ($p = 2$): über die Singulärwerte und,
+zur Probe, <span style={{ color: "#009E73" }}>elementweise</span>, beides muss
+nach Korollar 3.4.4 dasselbe ergeben:
+
+$$
+\left\| \bA \right\|_{S,2} = \sqrt{\cred{\lambda_1} + \cblue{\lambda_2}} = \sqrt{6}, \qquad \cgreen{\sqrt{2^2 + 1^2 + 0^2 + 1^2}} = \sqrt{6} \approx 2{,}449. \quad \checkmark
+$$
+
+**Nuklearnorm** ($p = 1$): die Summe
+$\cred{\sigma_1} + \cblue{\sigma_2} \approx 3{,}162$, hier sogar mit
+geschlossener Form, denn
+
+$$
+\left(\cred{\sigma_1} + \cblue{\sigma_2}\right)^2 = \cred{\lambda_1} + \cblue{\lambda_2} + 2\sqrt{\cred{\lambda_1}\cblue{\lambda_2}} = 6 + 2\sqrt{\det\left(\bA^\top\bA\right)} = 6 + 2\sqrt{4} = 10,
+$$
+
+$$
+\text{also} \quad \left\| \bA \right\|_{S,1} = \sqrt{10} \approx 3{,}162.
+$$
+
+Dabei haben wir benutzt, dass das Produkt der Eigenwerte die
+:k[Determinante]{#determinant} ist:
+$\cred{\lambda_1}\cblue{\lambda_2} = \det\left(\bA^\top\bA\right) = 4 \cdot 2 - 2 \cdot 2 = 4$.
+In R genügt für die Singulärwerte ein Einzeiler:
+
+```r
+A <- matrix(c(2, 0, 1, 1), 2, 2)
+sqrt(eigen(crossprod(A))$values)
+#> [1] 2.288246 0.874032
+```
+:::
+
+### 3.4.3 Unitäre Invarianz
+
+Was macht die Schatten-Familie so besonders? Drehen wir eine Matrix (genauer:
+multiplizieren wir sie mit einer
+:k[Orthogonalmatrix]{#orthogonal-matrix}), dann ändern
+sich ihre Einträge komplett. Elementweise Normen wie Summen- oder Maximumsnorm ändern
+sich mit. Die Streckungswirkung der Transformation bleibt aber dieselbe, nur die
+Richtungen rotieren. Da Schattennormen ausschließlich von den Streckungsfaktoren
+abhängen, dürfen sie sich nicht ändern – und das lässt sich beweisen:
+
+:::satz[3.4.7 (Unitäre Invarianz)]
+Seien $\bP \in \R^{m \times m}$ und $\bQ \in \R^{n \times n}$
+orthogonal. Dann gilt für alle $\bA \in \R^{m \times n}$ und alle
+$p \in [1, \infty]$:
+
+$$
+\left\| \bP\bA\bQ \right\|_{S,p} = \left\| \bA \right\|_{S,p}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+(\bP\bA\bQ)^\top(\bP\bA\bQ) = \bQ^\top\bA^\top\bP^\top\bP\bA\bQ = \bQ^\top\left(\bA^\top\bA\right)\bQ
+$$
+
+::why[:k[Transponierregel]{#transpose} $(\bB\bC)^\top = \bC^\top\bB^\top$ und Orthogonalität $\bP^\top\bP = \bI$]
+:::
+
+:::schritt
+$(\bP\bA\bQ)^\top(\bP\bA\bQ)$ und $\bA^\top\bA$ haben
+dieselben Eigenwerte $\lambda_1, \ldots, \lambda_n$.
+
+::why[$\bQ^\top = \bQ^{-1}$, also ist $\bQ^\top\left(\bA^\top\bA\right)\bQ$ :k[ähnlich]{#similar-matrices} zu $\bA^\top\bA$, und ähnliche Matrizen haben dasselbe charakteristische Polynom: $\det\left(\bQ^\top\bM\bQ - \lambda\bI\right) = \det\left(\bQ^\top(\bM - \lambda\bI)\bQ\right) = \det(\bM - \lambda\bI)$]
+:::
+
+:::schritt
+Also haben $\bP\bA\bQ$ und $\bA$ dieselben Singulärwerte
+und damit dieselbe Schatten-p-Norm, für jedes $p$ gleichzeitig.
+
+::why[Schatten-p-Normen hängen nach Definition 3.4.1 nur vom Eigenwertvektor $\blambda$ ab]
+:::
+
+::::
+
+Eine bemerkenswerte Konsequenz für die Frobenius-Norm: Ihrer elementweisen Definition
+sieht man die Invarianz
+$\left\| \bP\bA\bQ \right\|_F = \left\| \bA \right\|_F$
+überhaupt nicht an; erst der Umweg über Korollar 3.4.4 macht sie offensichtlich. Für
+Summen- und Maximumsnorm gilt nichts dergleichen.
+
+:::bemerkung[3.4.8 (Namensgeber und Anwendung)]
+- Benannt sind die Normen nach dem Mathematiker *Robert Schatten*
+  (1911–1977), der sie im Kontext unendlichdimensionaler Operatoren untersuchte.
+- Die unitäre Invarianz macht Schattennormen zum Werkzeug der Wahl für
+  *Approximationsprobleme*: Wie gut eine Matrix eine andere approximiert,
+  sollte nicht davon abhängen, in welchem (orthogonalen) Koordinatensystem wir die
+  Daten aufschreiben. Messen wir Approximationsfehler in einer Schatten-Norm, ist
+  genau das garantiert. Darauf kommen wir bei der Niedrigrang-Approximation
+  zurück.
+:::
+
+:::vertiefung[Singulärwerte und Schattennormen einer 2×2-Matrix: live]
+<S34SchattenWidget />
+:::
+
+### Selbsttest
+
+<ul className="max-w-prose list-disc space-y-3 pl-5">
+  <SelbsttestFrage q={<>Sei <M>{"\\bQ \\in \\R^{n \\times n}"}</M> orthogonal. Was sind die Singulärwerte von <M>{"\\bQ"}</M>, und damit ihre Spektral-, Frobenius- und Nuklearnorm?</>}>
+    Wegen $\bQ^\top\bQ = \bI$ sind alle Eigenwerte von
+    $\bQ^\top\bQ$ gleich $1$, also
+    $\sigma_1 = \cdots = \sigma_n = 1$. Damit ist
+    $\left\| \bQ \right\|_{S,\infty} = 1$,
+    $\left\| \bQ \right\|_{S,2} = \sqrt{n}$ und
+    $\left\| \bQ \right\|_{S,1} = n$. Das passt zu
+    [Abschnitt 3.2](#sec-3.2): Auch dort war
+    $\left\| \bI_n \right\|_F = \sqrt{n}$; nur die Spektralnorm
+    honoriert, dass eine Orthogonalmatrix „nichts streckt".
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Warum kann man die Nuklearnorm als „weiche" Version des Rangs auffassen?</>}>
+    Der Rang ist die *Anzahl* der Singulärwerte $\sigma_i > 0$,
+    eine Zählgröße, die springt, sobald ein Singulärwert exakt null wird, und die
+    sich deshalb schlecht optimieren lässt. Die Nuklearnorm
+    $\sum_i \sigma_i$ ersetzt das Zählen durch Summieren: Sie ist als Norm
+    konvex und wird genau dann klein, wenn viele Singulärwerte nahe null liegen,
+    also wenn die Matrix „fast niedrigen Rang" hat.
+  </SelbsttestFrage>
+</ul>
+
+*Vertiefung: MML §4.5 (SVD-Bezug: dort werden die Singulärwerte, auf denen die
+Schattennormen aufbauen, über die Singulärwertzerlegung systematisch entwickelt).*

@@ -1,0 +1,306 @@
+::quelle[Folien 14-funktionsapproximation, „Wrap-up" und „Ausblick".]
+
+Am Anfang dieses Kapitels stand ein Wunsch, der sich in einem Satz sagen
+lässt: eine Funktion finden, die zu gegebenen Daten passt. Am Ende steht ein
+lineares Gleichungssystem, dessen Matrix wir uns selbst aussuchen dürfen. Alles
+Interessante entscheidet sich bei dieser Wahl, und deshalb ist dieses Kapitel
+weniger eine Sammlung von Formeln als eine Reihe von Entscheidungen samt ihren
+Folgen.
+
+### Was bleibt
+
+:::bemerkung[14.5.1 (Kernkonzepte des Kapitels)]
+1. **Drei Aufgaben, ein Rechenweg.** Approximation misst global in einer
+   :k[Norm]{#norm},
+   Interpolation verlangt punktweise exakte Treffer, Glättung lässt Residuen
+   zu, weil die Daten Rauschen tragen. Einen wichtigen Zugang zur ersten
+   Aufgabe erhalten wir über die zweite, indem wir $f$ an endlich vielen
+   Stellen auswerten und interpolieren; andere Verfahren minimieren den
+   Approximationsfehler direkt
+   ([Abschnitt 14.1](#sec-14.1)). Die Interpolationsbedingung allein legt
+   dabei nichts fest: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
+   $g$ mit $g(x_i) = 0$ ist auch $\cgreen{p} + g$ einer, und solche $g$ gibt
+   es unendlich viele (Satz 14.1.8).
+2. **Die Basisdarstellung macht daraus ein Gleichungssystem.** Wir wählen
+   $K$ Basisfunktionen $\corange{\phi_1}, \dots, \corange{\phi_K}$, setzen
+   $\cgreen{\wh{f}} = \sum_k a_k \corange{\phi_k}$ an und erhalten
+   $\bB\ba = \cblue{\by}$ mit $B_{ik} = \corange{\phi_k(x_i)}$: eine Zeile je
+   Datenpunkt, eine Spalte je Basisfunktion
+   ([Abschnitt 14.2](#sec-14.2)). Die Matrix hängt nur von den Stellen und
+   der Basis ab, nicht von den Messwerten.
+3. **Polynome sind theoretisch schön und numerisch heikel.** Durch $n$ Punkte
+   läuft genau ein Polynom vom Grad höchstens $n-1$
+   ([Abschnitt 14.3](#sec-14.3)). Die Monombasis erkauft das mit einer
+   :k[Kondition]{#condition-number}, die exponentiell wächst, mit einer
+   Störung, die im ganzen Intervall wirkt, und mit dem
+   <span style={{ color: "#D55E00" }}>Runge-Phänomen</span>: Selbst bei
+   beliebig oft differenzierbarem $f$ muss die Folge der Interpolanten an
+   gleichmäßig verteilten Knoten nicht konvergieren.
+4. **Splines halten den Grad klein und die Wirkung lokal.** Statt eines
+   Polynoms hohen Grades nehmen wir viele Polynome vom festen Grad $q$ und
+   kleben sie $\Ccal^{q-1}$-glatt aneinander; der Raum $\Scal_q$ hat die
+   Dimension $m + q$ ([Abschnitt 14.4](#sec-14.4)). Die B-Spline-Basis dazu
+   hat lokale Träger, macht $\bB$ zu einer
+   :k[dünn besetzten]{#sparse-matrix} Bandmatrix und senkt den Aufwand von
+   $O(N^3)$ auf $O(N q^2)$.
+:::
+
+### Die beiden Ansatzräume nebeneinander
+
+Die Bilanz des Kapitels lässt sich an den zwei Systemen ablesen, die wir
+durchgerechnet haben. Die Konditionszahlen gehören zu $20$ Datenpunkten in
+$[0, 1]$ (Bemerkung 14.4.13), der Verstärkungsfaktor in der letzten Zeile zu
+$n = 10$ Stützstellen (Bemerkung 14.3.14).
+
+| Frage | globales Polynom | kubischer Spline |
+|:--|:--|:--|
+| Ansatzraum | Polynome vom Grad höchstens $n-1$ | $\Scal_3$ zum Knotengitter |
+| Dimension | $n$ | $m + 3$ |
+| Eindeutigkeit | genau ein Interpolant (Satz 14.3.5) | erst mit zwei Randbedingungen (Bemerkung 14.4.6) |
+| Kondition von $\bB$ | $\kappa_1 = 4{,}4 \cdot 10^{16}$ | $\kappa_1 = 37$ |
+| Struktur von $\bB$ | voll besetzt | Bandmatrix, höchstens $q+1$ Einträge je Zeile |
+| Aufwand | $O(n^3)$ | $O(N q^2)$, also linear in $N$ |
+| ein Messwert wackelt | wirkt global, Faktor bis $4{,}03$ | im Widget: schneller Abfall auf gut ein Viertel je Knotenabstand |
+
+:::bemerkung[14.5.2 (Drei Stellschrauben, drei Wirkungen)]
+Wer die Tabelle sortiert, findet drei Entscheidungen mit klar getrennten
+Folgen, und das ist die kürzeste Fassung des Kapitels.
+
+- Der *Ansatzraum* bestimmt den Interpolanten. Polynome vom Grad höchstens
+  $n-1$ und kubische Splines liefern verschiedene Kurven durch dieselben
+  Punkte.
+- Das *Basissystem* bestimmt Koeffizienten, Kondition und Rechenweg, aber
+  nicht die Kurve. Monombasis und Newton-Basis spannen denselben Raum auf und
+  ergeben dieselbe Funktion (Beispiel 14.2.12); orthogonalisierte Basen
+  ändern an ihr nichts und an der Kondition alles (Bemerkung 14.3.12).
+- Die *Knotenwahl* bestimmt, wie gut der Interpolant zwischen den Daten
+  liegt. Bei frei wählbaren Stellen zähmen Chebyshev-Knoten das
+  Runge-Phänomen (Bemerkung 14.3.17); bei gemessenen Daten liegen die Stellen
+  fest, und dann bleibt nur der Wechsel des Ansatzraums.
+:::
+
+### Ausblick: mehrdimensionale Interpolation
+
+Bisher lief das Argument $x$ über ein Intervall. Sind die Stellen Punkte im
+$\R^p$, etwa Ort und Zeit, so brauchen wir Basisfunktionen mehrerer
+Variablen. Der nächstliegende Weg baut sie aus univariaten zusammen.
+
+:::bemerkung[14.5.3 (Tensor-Produkt-Basen und ihr Preis)]
+Sind $\corange{\phi_1}, \dots, \corange{\phi_{K_1}}$ Basisfunktionen in $x_1$
+und $\corange{\psi_1}, \dots, \corange{\psi_{K_2}}$ solche in $x_2$, so
+setzen wir
+
+$$ {#eq-14.5.1}
+\corange{\varphi_{kl}(x_1, x_2)} = \corange{\phi_k(x_1)} \cdot \corange{\psi_l(x_2)} .
+$$
+
+Das sind $K_1 K_2$ Funktionen, und sie spannen gerade das Tensorprodukt der
+beiden Ansatzräume auf. Genau diese Konstruktion haben wir in
+[Abschnitt 9.4](?k=09-tensoren#sec-9.4) am Beispiel der bivariaten Polynome
+gesehen, mit der Basis $1, x, y, xy$ für den einfachsten Fall. Mit
+B-Splines in jeder Richtung heißen die Produkte *Tensor-Produkt-Splines*; sie
+erben die Bandstruktur richtungsweise und werden für Flächen über einem
+Rechteckgitter benutzt.
+
+Der Preis steht schon in ($14.5.1$). Bei $K$ Basisfunktionen je Richtung und
+$p$ Variablen sind es $K^p$ Koeffizienten. Für $K = 10$ heißt das $100$ bei
+$p = 2$, $10\,000$ bei $p = 4$ und $100\,000$ bei $p = 5$, und ebenso viele
+Datenpunkte müssten wir mindestens haben, um sie zu bestimmen. Das ist der
+*Fluch der Dimensionalität* aus [Abschnitt 9.4](?k=09-tensoren#sec-9.4), hier
+in seiner Funktionenraum-Fassung.
+
+Für verstreute Punkte ohne Gitter sind *radiale Basisfunktionen* die übliche
+Antwort. Sie hängen nur vom Abstand zu einem Zentrum ab,
+$\corange{\phi_k(\bx)} = \rho(\left\| \bx - \bc_k \right\|)$, etwa mit
+$\rho(r) = \exp(-r^2 / (2h^2))$, und brauchen daher kein Gitter, sondern nur
+die Zentren. Dafür ist ihre Basismatrix im Allgemeinen voll besetzt, und die
+Lokalität aus [Abschnitt 14.4](#sec-14.4) ist dahin, solange wir nicht
+eigens Kerne mit beschränktem Träger wählen.
+:::
+
+### Ausblick: Glättung mit Regularisierung
+
+Die zweite Fortsetzung nimmt die Aufgabe wieder auf, die
+[Abschnitt 14.1](#sec-14.1) beiseitegelegt hat. Verrauschte Daten will
+niemand exakt treffen, und trotzdem soll die Kurve flexibel bleiben. Der
+gängige Weg legt sehr viele Knoten und bremst die Koeffizienten anschließend
+ein. Bei den *P-Splines* geschieht das über einen Strafterm auf den
+Differenzen benachbarter B-Spline-Koeffizienten, etwa
+
+$$
+\sum_{i=1}^n \bigl(\cblue{y_i} - \cgreen{\wh{f}(x_i)}\bigr)^2
++ \lambda \sum_{k} \left(a_k - 2a_{k+1} + a_{k+2}\right)^2 ,
+$$
+
+also nach demselben Muster wie bei der Ridge-Regression in
+[Abschnitt 13.5](?k=13-optim#sec-13.5): Anpassung plus Strafe,
+abgewogen über einen Parameter $\lambda$. Zwei kleine Knoten wären starr,
+viele Knoten mit Strafterm sind flexibel und trotzdem glatt.
+
+Von dort ist es ein kurzer Schritt zu den *generalisierten additiven
+Modellen*, die einen Prädiktor als Summe glatter Funktionen einzelner
+Kovariablen ansetzen, $\sum_j f_j(x_j)$, und jede dieser Funktionen mit einer
+Spline-Basis samt Strafterm darstellen. Der Fluch der Dimensionalität aus
+Bemerkung 14.5.3 ist damit umgangen, allerdings um den Preis einer Annahme:
+Wechselwirkungen zwischen den Kovariablen müssen eigens hineingebaut werden.
+Diese Modellklasse ist das Thema der Vorlesung *Statistik V: Konzepte
+Statistischer Modellierung*; in `R` steht sie im Paket `mgcv`.
+
+### Ausblick: Splines im maschinellen Lernen
+
+Zwei aktuelle Verwendungen nennen die Folien, und beide benutzen Splines als
+Modellbaustein, nicht als Interpolationsverfahren.
+
+*Kolmogorow-Arnold-Netze* ersetzen die feste Aktivierungsfunktion eines
+neuronalen Netzes durch eine lernbare, stückweise polynomiale Funktion. Die
+Gewichte des Netzes sind dann B-Spline-Koeffizienten, bestimmt werden sie
+allerdings durch Training und nicht aus Interpolationsbedingungen
+(Bemerkung 14.1.6).
+
+*Normalizing Flows* bauen eine komplizierte Wahrscheinlichkeitsverteilung aus
+einer einfachen auf, indem sie eine invertierbare Abbildung dazwischenschalten.
+Die Dichte der transformierten Größe enthält den Betrag der
+:k[Determinante]{#determinant} ihrer Jacobimatrix
+([Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3)), und deshalb muss die
+Abbildung zweierlei können: sich invertieren und ihre Determinante billig
+ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten
+beides: Strikte Monotonie zusammen mit passenden Randbedingungen macht die
+eindimensionale Abbildung bijektiv, und ihre Ableitung steht stückweise sofort
+da. Eine nur nicht fallende Funktion könnte konstante Stücke besitzen und wäre
+dort nicht invertierbar. In modernen Flows werden häufig monotone rationale
+quadratische Splines verwendet.
+
+### Wie es weitergeht
+
+Die nächste Vorlesung nimmt den Faden bei der Glättung auf
+([Kapitel 15](?k=15-funktionsapproximation-2#sec-15.1)). Vier Fragen stehen
+dort an. Warum ist ausgerechnet der natürliche kubische Spline unter allen
+glatten Interpolanten ausgezeichnet
+([Abschnitt 15.1](?k=15-funktionsapproximation-2#sec-15.1))? Wie schnell
+fällt der Fehler, wenn wir das Gitter verfeinern, und was hat
+Satz 14.4.15 damit zu tun
+([Abschnitt 15.2](?k=15-funktionsapproximation-2#sec-15.2))? Wie wird aus der
+Interpolation eine Regression, wenn die Daten Rauschen tragen
+([Abschnitt 15.3](?k=15-funktionsapproximation-2#sec-15.3))? Und wie wählen
+wir die Zahl der Basisfunktionen, wenn zu wenige die Struktur verfehlen und zu
+viele das Rauschen mitzeichnen
+([Abschnitt 15.4](?k=15-funktionsapproximation-2#sec-15.4))? Die letzte Frage
+ist der Bias-Varianz-Kompromiss, und sie ist die statistische Fortsetzung
+genau der Abwägung, die dieses Kapitel numerisch geführt hat.
+
+### Selbsttest
+
+Acht Aussagen quer durch das Kapitel.
+
+::::quiz
+
+:::frage{falsch}
+Damit der Interpolant zu $n$ Datenpunkten eindeutig ist, genügt es, genau
+$K = n$ Basisfunktionen zu wählen.
+
+Die Zahl allein reicht nicht, $\bB$ muss auch invertierbar sein. Mit
+$\corange{\phi_1(x)} = 1$, $\corange{\phi_2(x)} = x$ und
+$\corange{\phi_3(x)} = 1 + x$ und den Stellen $0$, $1$, $2$ ist die dritte
+Spalte die Summe der ersten beiden, also $\det \bB = 0$ (Satz 14.2.4,
+Bemerkung 14.2.5). Mit der Monombasis dagegen, also mit Polynomen vom Grad
+höchstens $n-1$, steht dort die Vandermonde-Matrix mit $\det \bB = 2$, und
+Satz 14.3.5 sichert die Eindeutigkeit.
+:::
+
+:::frage{wahr}
+Es gibt :k[beliebig oft differenzierbare]{#smooth-function} Funktionen, für
+die der größte Fehler
+der Interpolation an gleichmäßig verteilten Knoten über alle Grenzen wächst,
+obwohl der Fehler an den Knoten selbst stets null ist.
+
+Das ist Runges Funktion $f(x) = 1/(1 + 25x^2)$ auf $[-1, 1]$
+(Beispiel 14.3.15). Nachgerechnet steigt der größte Fehler von $0{,}44$ bei
+$n = 5$ über $7{,}2$ bei $n = 15$ auf $257$ bei $n = 25$, während die
+Interpolationsbedingung an jedem einzelnen Knoten exakt erfüllt bleibt.
+Interpolation sagt eben nur etwas über die Stützstellen aus.
+:::
+
+:::frage{falsch}
+Interpolieren wir an den $m+1$ Knoten eines Gitters mit einem kubischen
+Spline, so ist das Gleichungssystem quadratisch.
+
+$\bB$ hat $m+1$ Zeilen, aber $\dim \Scal_3 = m + 3$ Spalten
+(Satz 14.4.4). Bei $m = 10$ Teilintervallen stehen $11$ Gleichungen gegen
+$13$ Unbekannte, es fehlen also genau zwei Bedingungen. Sie kommen aus den
+Randbedingungen, im Standardfall den natürlichen mit $s''(a) = s''(b) = 0$
+(Bemerkung 14.4.6).
+:::
+
+:::frage{wahr}
+In der Basismatrix zu kubischen B-Splines stehen in jeder Zeile höchstens
+vier Einträge ungleich null.
+
+An jeder Stelle sind höchstens $q + 1 = 4$ der Basisfunktionen von null
+verschieden, denn $\corange{B_k^{(q)}}$ verschwindet außerhalb von
+$[\corange{\tau_k}, \corange{\tau_{k+q+1}}]$ (Satz 14.4.11). Für $20$
+Stützstellen und $20$ kubische B-Splines haben wir das nachgezählt: nirgends
+mehr als vier, an den Rändern weniger. Daraus wird die Bandstruktur und mit
+ihr der Aufwand $O(N q^2)$ statt $O(N^3)$, bei $N = 1000$ und $q = 3$ ein
+Verhältnis von $N^2/q^2 \approx 111\,000$ (Bemerkung 14.4.14).
+:::
+
+:::frage{wahr}
+Zwei verschiedene Basen desselben Ansatzraums liefern denselben
+Interpolanten, können aber Basismatrizen sehr unterschiedlicher Kondition
+haben.
+
+Der Ansatzraum bestimmt die Kurve, die Basis nur die Koeffizienten: Monom-
+und Newton-Basis geben beide $\cgreen{\wh{f}(x)} = 1 + x^2$, einmal mit
+$\cgreen{\ba = (1,0,1)^\top}$ und einmal mit
+$\cgreen{\ba = (1,1,1)^\top}$ (Beispiel 14.2.12). An der Kondition ändert
+ein solcher Wechsel dagegen sehr viel, bei $n = 20$ gleichmäßig verteilten
+Stellen um zwölf Zehnerpotenzen (Bemerkung 14.3.12).
+:::
+
+:::frage{falsch}
+Der Übergang von der Monombasis zu den kubischen B-Splines ist ein
+Basiswechsel im Sinn der vorigen Aussage, der Interpolant bleibt also
+derselbe.
+
+Hier wechselt nicht die Basis, sondern der Ansatzraum. Die $n$ Monome
+spannen die Polynome vom Grad höchstens $n-1$ auf, die $m+q$ kubischen
+B-Splines den Spline-Raum $\Scal_3$, und für $n > 4$ ist das eine ganz andere
+Menge von Funktionen. Entsprechend verschieden sehen die Kurven aus: Im
+Störungs-Widget von [Abschnitt 14.4](#sec-14.4) liegen links ein Polynom vom
+Grad $8$ und rechts ein stückweise kubischer Spline durch dieselben neun
+Punkte.
+:::
+
+:::frage{wahr}
+Zu jeder stetigen Funktion $f$ auf $[a,b]$ und jeder Genauigkeit
+$\varepsilon > 0$ gibt es ein Gitter, auf dem bereits ein stückweise linearer
+Spline $\cgreen{s}$ mit
+$\left\| f - \cgreen{s} \right\|_\infty < \varepsilon$ existiert.
+
+Das ist Satz 14.4.15, Punkt 1, im Fall $q = 1$; dort ist er nichts anderes
+als die gleichmäßige Stetigkeit von $f$ auf einem abgeschlossenen Intervall.
+Bemerkenswert ist der Gegensatz zum Runge-Phänomen: Der Weg über wachsenden
+Polynomgrad kann scheitern, der Weg über feinere Gitter bei festem Grad nicht.
+:::
+
+:::frage{falsch}
+Bei der Spline-Interpolation wächst mit jedem zusätzlichen Datenpunkt der
+Grad des Interpolanten.
+
+Der Grad $q$ ist fest gewählt, meist $q = 3$. Was mit den Daten wächst, ist
+die Zahl der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
+(Satz 14.4.4). Genau darin liegt der Unterschied zur Polynominterpolation,
+bei der der Ansatzraum für $n$ Punkte Polynome bis zum Grad $n-1$ zulässt
+(Satz 14.3.5). Das tatsächliche Interpolationspolynom darf kleineren Grad
+haben. Am wachsenden maximalen Grad hängt, dass die Oszillationen aus
+[Abschnitt 14.3](#sec-14.3) ausbleiben.
+:::
+
+::::
+
+*Vertiefung: Heath, Scientific Computing, Kapitel 7 fasst Interpolation und
+stückweise polynomiale Interpolation samt Übungsaufgaben zusammen; die
+Ausblicke dieses Abschnitts führen darüber hinaus zu P. Eilers und B. Marx,
+Flexible Smoothing with B-splines and Penalties (Statistical Science 11, 1996)
+für die P-Splines und zu S. Wood, Generalized Additive Models: An Introduction
+with R (2. Auflage 2017) für die additiven Modelle samt `mgcv`.*

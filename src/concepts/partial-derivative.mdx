@@ -1,0 +1,34 @@
+export const title = "Partielle Ableitung";
+
+import { PartialDerivativeWidget } from "./widgets/PartialDerivativeWidget";
+
+{/* Konzept-Tooltip: partielle Ableitung: Schnittkurve einfrieren und ableiten. */}
+
+Eine *partielle Ableitung* (partial derivative) beantwortet die
+Frage: Wie schnell ändert sich eine Funktion mehrerer Variablen, wenn
+wir an *einer* Variablen wackeln und alle anderen festhalten?
+Frieren wir die übrigen Variablen ein, wird $f$ zu einer
+gewöhnlichen Funktion einer Variablen, und wir nehmen deren übliche
+:k[Ableitung]{#derivative}:
+
+$$
+\frac{\partial f}{\partial x_i} = \text{Ableitung von } f \text{ entlang der } x_i\text{-Richtung, alle anderen Variablen festgehalten.}
+$$
+
+Kleines Beispiel: Für $f(x, y) = x^2 + xy$ behandeln wir
+$y$ wie eine Konstante und erhalten
+$\partial f / \partial x = 2x + y$; behandeln wir umgekehrt
+$x$ als Konstante, ergibt sich
+$\partial f / \partial y = x$. Anschaulich ist
+$\partial f / \partial x_i$ die Steigung der
+:k[Tangente]{#tangent-line} an die Kurve, die
+entsteht, wenn wir die Fläche von $f$ entlang der
+$x_i$-Richtung aufschneiden. Sammeln wir alle $n$
+partiellen Ableitungen von $\phi(\bx)$ in einem Vektor,
+erhalten wir den
+:k[Gradienten]{#gradient}, genau das Objekt,
+das man bei der Kleinste-Quadrate-Herleitung gleich null setzt,
+Komponente $\partial \phi(\bx) / \partial x_i$ für
+Komponente (vgl. Heath §3.2).
+
+<PartialDerivativeWidget />

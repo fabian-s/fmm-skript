@@ -1,0 +1,37 @@
+export const title = "Bild (einer linearen Abbildung)";
+
+import { ImageWidget } from "./widgets/ImageWidget";
+
+{/* Konzept-Tooltip: Bild (Spaltenraum) einer linearen Abbildung. */}
+
+Das *Bild* (image, range) einer
+:k[linearen Abbildung]{#linear-map}
+$\bx \mapsto \bA\bx$ ist die Menge aller Ausgaben, die die
+Abbildung tatsächlich erzeugen kann:
+
+$$
+\operatorname{Im}(\bA) = \{ \bA\bx : \bx \in \R^n \}.
+$$
+
+Da $\bA\bx$ genau eine
+:k[Linearkombination]{#linear-combination}
+der Spalten der :k[Matrix]{#matrix} ist, ist
+das Bild der :k[Spann]{#span} der Spalten,
+daher der alternative Name *Spaltenraum* (column space).
+Es ist immer ein
+:k[Unterraum]{#subspace} des Zielraums, und
+seine :k[Dimension]{#dimension} ist genau der
+:k[Rang]{#rank} von $\bA$. Ein
+:k[lineares Gleichungssystem]{#linear-system}
+$\bA\bx = \bb$ ist genau dann lösbar, wenn
+$\bb$ im Bild liegt. Bild und
+:k[Kern]{#kernel} stehen im Tausch
+zueinander: Nach dem
+:k[Rangsatz]{#rank-nullity-theorem} fehlen
+dem Bild genau die Dimensionen, die an den Kern verloren gehen. Zum
+Beispiel zeigen bei
+$\bA = \begin{pmatrix} 1 & 2 \\ 0.5 & 1 \end{pmatrix}$
+beide Spalten entlang $(1, 0.5)^\top$, das Bild ist also nur
+diese eine Gerade. Probieren wir es aus:
+
+<ImageWidget />

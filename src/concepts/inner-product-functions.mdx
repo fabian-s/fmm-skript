@@ -1,0 +1,28 @@
+export const title = "Skalarprodukt von Funktionen";
+
+import { InnerProductWidget } from "./widgets/InnerProductFunctionsWidget";
+
+{/* Konzept-Tooltip: Skalarprodukt von Funktionen, das Integral-Gegenstück zum Skalarprodukt von Vektoren. */}
+
+Das :k[Skalarprodukt]{#dot-product} zweier
+Vektoren multipliziert zueinander passende Komponenten und summiert
+sie auf. Funktionen auf einem Intervall können wir genauso behandeln.
+Stellen wir uns $p(t)$ und $q(t)$ als
+„Vektoren“ mit einer Komponente pro Punkt $t$ vor;
+nur wird aus der Summe über unendlich viele Punkte ein Integral:
+
+$$
+\langle p, q \rangle = \int_a^b p(t)\, q(t)\, w(t)\, dt,
+$$
+
+wobei die feste Gewichtsfunktion $w(t) \ge 0$ manche
+Bereiche des Intervalls stärker zählen lässt als andere. Die gesamte
+geometrische Sprache überträgt sich dann: Zwei Funktionen sind
+:k[orthogonal]{#orthogonality}, wenn
+$\langle p, q \rangle = 0$. Kleines Beispiel: Auf
+$[-1, 1]$ mit $w(t) \equiv 1$ ist
+$\langle 1, t \rangle = \int_{-1}^{1} t \, dt = 0$, die
+konstante Funktion und $t$ sind also orthogonal, der
+erste Schritt beim Aufbau orthogonaler Polynome (vgl. Heath §7.3.4).
+
+<InnerProductWidget />

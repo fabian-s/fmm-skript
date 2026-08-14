@@ -1,0 +1,42 @@
+export const title = "Gauß-Elimination";
+
+import { EliminationWidget } from "./widgets/GaussianEliminationWidget";
+
+Die *Gauß-Elimination* (engl. *Gaussian elimination*)
+ist die systematische Version dessen, was wir beim Lösen von
+Gleichungssystemen von Hand tun: Wir ziehen ein passendes Vielfaches
+einer Gleichung von einer anderen ab, damit eine Variable
+verschwindet. Spalte für Spalte werden Vielfache der aktuellen
+*Pivotzeile* von den Zeilen darunter abgezogen, bis unterhalb
+der Diagonale nur noch Nullen stehen und die
+:k[Matrix]{#matrix} eine
+:k[obere Dreiecksmatrix]{#triangular-matrix}
+ist. Danach erledigt
+:k[Rückwärtseinsetzen]{#triangular-solve}
+den Rest. In der Praxis werden zusätzlich Zeilen getauscht (*Pivotisierung*), damit stets durch einen sicher großen Eintrag
+dividiert wird; die Division durch ein winziges Pivotelement
+verstärkt
+:k[Rundungsfehler]{#rounding-error}.
+Notieren wir nebenbei die verwendeten Multiplikatoren, erhalten wir
+die :k[LU-Zerlegung]{#lu-decomposition}
+gratis dazu.
+
+<EliminationWidget />
+
+Ein Vorbehalt ist hier wichtig. Zeilenoperationen lassen sich als
+Multiplikation mit einer regulären Matrix $\bM$ schreiben:
+Sie erhalten die *Lösungen* von $\bA\bx = \bb$,
+verändern aber die
+:k[euklidische Norm]{#euclidean-norm} von
+Vektoren,
+
+$$
+\|\bM\bv\|_2 \ne \|\bv\|_2 \text{ im Allgemeinen.}
+$$
+
+Ein Kleinste-Quadrate-Problem verlangt aber die
+*kleinste Residuumsnorm*, nicht eine exakte Lösung; eine
+Transformation mit $\bM$ ändert deshalb im Allgemeinen,
+welches $\bx$ gewinnt (vgl. Heath §3.4.3). Darum
+triangularisiert man dort stattdessen mit
+:k[orthogonalen Matrizen]{#orthogonal-matrix}, die die 2-Norm unangetastet lassen (vgl. Heath §3.5).

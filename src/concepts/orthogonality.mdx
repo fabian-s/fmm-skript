@@ -1,0 +1,27 @@
+export const title = "Orthogonalität";
+
+import { PythagorasWidget } from "./widgets/OrthogonalityWidget";
+
+Zwei :k[Vektoren]{#vector} heißen
+*orthogonal* (also: senkrecht), wenn sie sich im rechten
+Winkel treffen. Der algebraische Test benutzt das
+:k[Skalarprodukt]{#dot-product}:
+
+$$
+\bx \perp \by \quad \Longleftrightarrow \quad \bx^T \by = 0 .
+$$
+
+Zum Beispiel sind $[1, 2]^T$ und $[-2, 1]^T$
+orthogonal, denn $1 \cdot (-2) + 2 \cdot 1 = 0$. Rechte
+Winkel lassen Rechnungen mit der
+:k[2-Norm]{#euclidean-norm} sauber
+zerfallen: Der Satz des Pythagoras
+$\|\bx + \by\|_2^2 = \|\bx\|_2^2 + \|\by\|_2^2$
+gilt exakt für orthogonale Vektoren. Deshalb zieht sich das Konzept
+durch die ganze Kleinste-Quadrate-Theorie: An der Lösung steht das
+Residuum orthogonal auf dem
+:k[Spann]{#span} des Modells (vgl. Heath
+§3.2), und die zuverlässigsten Algorithmen bauen das Problem aus
+paarweise orthogonalen Richtungen neu auf (vgl. Heath §3.5).
+
+<PythagorasWidget />

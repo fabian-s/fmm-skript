@@ -1,0 +1,34 @@
+export const title = "Unendliche Reihe";
+
+import { PartialSumBar } from "./widgets/InfiniteSeriesWidget";
+
+{/* Konzept-Tooltip: unendliche Reihen und Partialsummen. */}
+
+Eine *unendliche Reihe* (infinite series) entsteht, wenn eine
+:k[Summation]{#summation-notation} niemals
+aufhört: eine Summe $\sum_{k=0}^{\infty} a_k$ mit unendlich
+vielen Summanden, einem für jedes Glied einer
+:k[Folge]{#sequence}
+$a_0, a_1, a_2, \dots$
+
+Unendlich viele Zahlen können wir nie wirklich addieren, also wird die
+Summe über *Partialsummen*
+$S_n = a_0 + a_1 + \cdots + a_n$ definiert: Die Reihe hat den
+Wert $S$, wenn die Partialsummen als
+:k[Grenzwert]{#limit} gegen $S$
+:k[konvergieren]{#convergence}. Ein
+klassisches Beispiel ist die
+:k[geometrische Reihe]{#geometric-series}
+
+$$
+\sum_{k=0}^{\infty} \left(\tfrac{1}{2}\right)^k = 1 + \tfrac{1}{2} + \tfrac{1}{4} + \tfrac{1}{8} + \cdots = 2,
+$$
+
+bei der jeder weitere Summand die Hälfte der verbleibenden Lücke zur
+$2$ schließt. Schauen wir unten zu, wie sich der Balken
+füllt. Nicht jede Reihe verhält sich so brav:
+$1 + 1 + 1 + \cdots$ wächst über alle Grenzen und hat darum
+keinen Wert. Taylorreihen sind genau solche Objekte: eine unendliche
+Summe von Polynomtermen.
+
+<PartialSumBar />

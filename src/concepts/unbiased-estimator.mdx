@@ -1,0 +1,32 @@
+export const title = "Erwartungstreuer Schätzer";
+
+import { DartboardWidget } from "./widgets/UnbiasedEstimatorWidget";
+
+{/* Konzept-Tooltip: erwartungstreuer Schätzer: im Mittel richtig, E[θ̂] = θ. */}
+
+Ein Schätzer $\hat{\theta}$ ist ein Rezept, das aus einer
+zufälligen Stichprobe eine Schätzung für eine unbekannte Größe
+$\theta$ macht. Weil die Daten zufällig sind, ist es auch
+die Schätzung. Der Schätzer heißt *erwartungstreu* (engl.
+*unbiased*), wenn sein
+:k[Erwartungswert]{#expected-value} über
+wiederholte Stichproben die Wahrheit exakt trifft:
+
+$$
+\E\big[\hat{\theta}\big] = \theta .
+$$
+
+Kleines Beispiel: Das Stichprobenmittel
+$\bar{X} = \tfrac{1}{n}(X_1 + \dots + X_n)$ ist
+erwartungstreu für den Populationsmittelwert $\mu$; jedes
+einzelne $\bar{X}$ liegt daneben, aber es gibt keine
+systematische Drift in eine Richtung. Erwartungstreu heißt
+*nicht* präzise: Ein erwartungstreuer Schätzer kann sehr
+verrauscht sein. Genau diese Eigenschaft lässt das stochastische
+Gradientenverfahren (stochastic gradient descent, vgl. MML §7.1.3)
+funktionieren: Der mittlere Gradient über ein zufälliges Mini-Batch
+ist eine erwartungstreue Schätzung des Gradienten über alle Daten.
+Im Mittel zeigt also jeder verrauschte Schritt in die richtige
+Richtung.
+
+<DartboardWidget />

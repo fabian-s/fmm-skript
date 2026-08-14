@@ -1,0 +1,380 @@
+import { KappaRechner, SgdLernratenDemo } from "./widgets/S43Widgets";
+import { SelbsttestFrage } from "./widgets/S43Local";
+
+{/*
+  §4.3 Stabilität von Algorithmen.
+  Quelle: Folien 04-fehler.Rmd, Block „Stabilität von Algorithmen"
+  (Zeilen 298–396): Fehlerzerlegung wiederaufgegriffen, Definition stabil,
+  Beispiel SGD, Satz zur Stabilität zusammengesetzter Algorithmen mit
+  Beweis, Beispiel Stabilität der Varianz. Prosa eigenständig aus den
+  Folien formuliert; alle Rechnungen (κ_rel-Formel, R-Ausgaben) verifiziert.
+*/}
+
+::quelle[Grundlage: Folien 04-fehler, „Stabilität von Algorithmen".]
+
+Erinnern wir uns an die Fehlerzerlegung aus [Abschnitt 4.1](#sec-4.1): Wenn wir ein
+Problem $f$ mit einem Algorithmus $\wt{f}$ auf einem fehlerbehafteten Input
+$\wt{\bx}$ lösen, zerfällt der Gesamtfehler in zwei Teile:
+
+$$
+\text{Gesamtfehler} = \wt{f}(\wt{\bx}) - f(\bx) = \underbrace{\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}}_{\text{Fehler im Algorithmus}} + \underbrace{\corange{f(\wt{\bx}) - f(\bx)}}_{\text{Folgefehler aus Input}}
+$$
+
+Den $\corange{\text{zweiten Summanden}}$ haben wir in [Abschnitt 4.2](#sec-4.2)
+untersucht: Er hängt nur vom Problem ab, nicht vom Algorithmus, und die
+:k[Konditionszahl]{#condition-number} sagt uns, wie stark
+er den unvermeidbaren Inputfehler verstärkt. Jetzt nehmen wir uns den
+$\cred{\text{ersten Summanden}}$ vor: den Fehler, den der Algorithmus
+*selbst* hinzufügt: durch
+:k[Rundungsfehler]{#rounding-error} in jeder einzelnen
+:k[Gleitkomma]{#floating-point}-Operation, durch
+abgebrochene Reihen, durch geschätzte Zwischengrößen. Dieser Anteil hängt nicht vom
+Inputfehler ab; er entsteht, selbst wenn der Input exakt ist. Ganz analog zur
+Kondition geben wir ihm einen Namen:
+
+:::definition[4.3.1 (Vorwärts- und Rückwärtsstabilität)]
+Sei $f$ ein Problem, $\wt f$ ein Gleitkomma-Algorithmus und
+$\wh{\by}=\wt f(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
+Für $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ heißen
+
+$$
+\eta_{vor}=\frac{\|\wh{\by}-f(\bx)\|}{\|f(\bx)\|}
+$$
+
+der *relative Vorwärtsfehler* und
+
+$$
+\eta_{rück}=\inf\left\{
+\frac{\|\bDelta\bx\|}{\|\bx\|}:\ \wh{\by}=f(\bx+\bDelta\bx)
+\right\}
+$$
+
+der *relative Rückwärtsfehler*. Der Algorithmus heißt *rückwärtsstabil*, wenn
+$\eta_{rück}=O(u)$ ist, wobei $u$ die Rundungseinheit bezeichnet. Er heißt
+*vorwärtsstabil*, wenn sein Vorwärtsfehler bis auf moderate Faktoren nicht größer
+ist als der durch Kondition und Rundung erwartbare Fehler,
+$\eta_{vor}=O(\kappa_{rel}(f,\bx)u)$.
+:::
+
+Die Konstanten in den $O$-Aussagen dürfen von Dimension und Algorithmus abhängen,
+sollen aber nicht durch eine vermeidbare numerische Katastrophe riesig werden.
+Rückwärtsstabilität bedeutet besonders anschaulich: Das berechnete Ergebnis ist die
+exakte Lösung eines nur geringfügig gestörten Problems. Zusammen mit der Kondition
+liefert das typischerweise eine Vorwärtsfehlerschranke. Wichtig ist die Arbeitsteilung:
+Die
+*Kondition* ist eine Eigenschaft des *Problems*, die wir nicht wählen
+können. Die *Stabilität* ist eine Eigenschaft des *Algorithmus*, und
+den wählen wir sehr wohl. Deshalb lohnt sich dieser Abschnitt: Für dasselbe
+Problem können zwei mathematisch äquivalente Rechenwege dramatisch unterschiedlich
+stabil sein.
+
+### Eine verwandte Idee aus dem maschinellen Lernen: SGD
+
+Das nächste Beispiel illustriert die *dynamische* Stabilität einer Iteration. Es ist
+eine nützliche Analogie, aber nicht dasselbe wie die eben definierte numerische
+Vorwärts- oder Rückwärtsstabilität.
+
+:::beispiel[4.3.2 (Stochastic Gradient Descent)]
+Beim Training von Machine-Learning-Modellen minimieren wir eine
+:k[Verlustfunktion]{#objective-function}
+$L(\theta)$ mit dem
+:k[Gradientenabstieg]{#gradient-descent} in seiner
+stochastischen Variante (SGD):
+
+$$
+\theta_{k+1} = \theta_k - \alpha\, \wh{\nabla} L(\theta_k),
+$$
+
+wobei $\wh{\nabla} L(\theta_k)$ nur eine *Schätzung* des
+:k[Gradienten]{#gradient} ist (berechnet auf einem
+zufälligen Teil der Daten, in endlicher Gleitkomma-Genauigkeit) und
+$\alpha > 0$ die *Lernrate* (learning rate).
+
+- Eine relativ zur Krümmung von $L$ hinreichend kleine Lernrate kann Fehler in
+  bestimmten Richtungen dämpfen und unter geeigneten Annahmen Konvergenz ermöglichen.
+- Eine zu große Lernrate kann Iterierte oszillieren oder divergieren lassen.
+  Zahlenwerte wie $0{,}001$ oder $1$ sind ohne Skalierung und Krümmung des konkreten
+  Problems nicht allgemein als „klein" oder „groß" einzuordnen.
+
+Die Lernrate beeinflusst also die Stabilität der Iterationsdynamik. Ob SGD
+konvergiert und wogegen, hängt zusätzlich von Annahmen an $L$, an die
+Gradientenschätzung und an den Lernratenplan ab.
+:::
+
+Praktische Techniken adressieren unterschiedliche Mechanismen: *Gradient Clipping*
+begrenzt große Updates, Lernratenpläne steuern die Iterationsdynamik, und Verfahren
+für *Mixed Precision Training* schützen besonders empfindliche Rechenschritte vor
+Rundungsproblemen. Diese Maßnahmen sind nicht untereinander austauschbar.
+
+:::vertiefung[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
+<SgdLernratenDemo />
+:::
+
+### Zusammengesetzte Algorithmen: die wichtigste Erkenntnis
+
+Praktisch jeder Algorithmus ist eine Kette von Teilschritten. Was passiert mit den
+Fehlern der frühen Schritte, wenn spätere Schritte darauf aufbauen? Das folgende
+Resultat verknüpft die Stabilität eines zusammengesetzten Algorithmus mit der
+*Kondition seiner Teilschritte*. Es ist die wichtigste Erkenntnis dieses
+Abschnitts. Wir betrachten dazu ein Problem, das als
+:k[Verkettung]{#function-composition} zweier Teilprobleme
+geschrieben ist.
+
+:::satz[4.3.3 (Fehlerfortpflanzung in einer Komposition)]
+Sei $f=h\circ g$, $\by=g(\bx)\ne\bnull$ und
+$\wt{\by}=\wt g(\bx)$. Wir setzen $h(\by)\ne\bnull$ voraus und definieren
+
+$$
+\eta_g=\frac{\|\wt{\by}-\by\|}{\|\by\|},\qquad
+\eta_h=\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\wt{\by})\|}.
+$$
+
+Ist $h$ in $\by$ stetig und $\wt{\by}\to\by$, dann gilt in erster Ordnung
+
+$$
+\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\le \bigl(1+o(1)\bigr)\eta_h
++\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)\eta_g.
+$$
+:::
+
+Der erste Term ist der relative algorithmische Fehler des zweiten Schritts am
+tatsächlich übergebenen Input. Der zweite Term ist der Fehler des ersten Schritts,
+verstärkt durch die lokale Kondition des zweiten Problems. Die $o(1)$-Terme machen
+explizit, dass dies eine asymptotische Aussage für verschwindende Zwischenfehler ist,
+keine exakte Ungleichung für beliebig große Störungen.
+
+::::beweis
+
+:::schritt
+Durch Addieren und Subtrahieren von $h(\wt{\by})$ sowie die
+Dreiecksungleichung erhalten wir exakt
+
+$$
+\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\le
+\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\by)\|}
++\frac{\|h(\wt{\by})-h(\by)\|}{\|h(\by)\|}.
+$$
+:::
+
+:::schritt
+Stetigkeit und $h(\by)\ne\bnull$ liefern
+$\|h(\wt{\by})\|/\|h(\by)\|=1+o(1)$. Daher ist der erste Summand
+gleich $\bigl(1+o(1)\bigr)\eta_h$.
+:::
+
+:::schritt
+Nach Definition der relativen Konditionszahl ist der zweite Summand entlang
+$\wt{\by}\to\by$ höchstens
+
+$$
+\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)
+\frac{\|\wt{\by}-\by\|}{\|\by\|}
+=\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)\eta_g.
+$$
+:::
+
+::::
+
+:::bemerkung[4.3.4 (Was folgt daraus – und was nicht?)]
+Ein schlecht konditionierter später Teilschritt kann Fehler aus früheren Schritten
+stark verstärken. Daraus folgt aber keine allgemeine Regel, schlecht konditionierte
+Operationen einfach „nach vorn" zu verschieben: Eine Umordnung verändert
+Zwischengrößen, Rundungsfehler und oft auch die relevanten Konditionen. Verlässlichere
+Strategien sind, das Teilproblem umzuformulieren, große beinahe gleiche
+Zwischengrößen zu vermeiden und eine rückwärtsstabile Implementierung zu verwenden.
+:::
+
+### Anwendung: Stabilität der Varianzberechnung
+
+Wenden wir den Satz auf ein Beispiel an, das wir aus
+[Abschnitt 2.1](?k=02-algos#sec-2.1)
+schon kennen. Dort haben wir *beobachtet*, dass die Verschiebungsformel für
+die Varianz katastrophal versagen kann. Jetzt können wir *erklären*, warum,
+und zwar quantitativ.
+
+:::beispiel[4.3.5 (Zwei Algorithmen für die Varianz)]
+**Problem:** Berechne die Stichprobenvarianz
+$f(\bx) = \frac{1}{n} \sumin \left(x_i - \bar{x}\right)^2$.
+
+**Algorithmen:** Wir vergleichen die zweistufige Rechnung (erst
+zentrieren, dann quadrieren) mit der Verschiebungsformel:
+
+$$
+\wt{f}_1(\bx) = \frac{1}{n} \sumin \left(x_i - \bar{x}\right)^2, \qquad \wt{f}_2(\bx) = \cred{\left(\frac{1}{n} \sumin x_i^2\right)} - \cblue{\bar{x}^2}.
+$$
+
+Mathematisch sind beide identisch. Als Rechenvorschriften sind sie es nicht:
+$\wt{f}_2$ ist eine Verkettung $\wt{f}_2 = \wt{h} \circ \wt{g}$
+im Sinne von Satz 4.3.3. Der erste Schritt $g$ berechnet das Paar
+
+$$
+g(\bx) = (\cred{a}, \cblue{b}) \quad \text{mit} \quad \cred{a} = \frac{1}{n} \sumin x_i^2 \quad \text{und} \quad \cblue{b} = \bar{x}^2,
+$$
+
+und der *letzte* Schritt bildet die Differenz
+$h(\cred{a}, \cblue{b}) = \cred{a} - \cblue{b}$.
+:::
+
+Nach Satz 4.3.3 müssen wir also die Kondition des letzten Schritts an der
+Übergabestelle untersuchen. Rechnen wir sie aus.
+
+:::lemma[4.3.6 (Kondition der Differenz)]
+Für $h(\cred{a}, \cblue{b}) = \cred{a} - \cblue{b}$ gilt bezüglich
+der :k[euklidischen Norm]{#euclidean-norm}
+
+$$
+\kappa_{rel}\bigl(h, (\cred{a}, \cblue{b})\bigr) = \sqrt{2}\, \frac{\sqrt{\cred{a}^2 + \cblue{b}^2}}{\left|\cred{a} - \cblue{b}\right|}.
+$$
+:::
+
+::::beweis
+
+:::schritt
+$$
+h(\wt{a}, \wt{b}) - h(\cred{a}, \cblue{b}) = (\wt{a} - \cred{a}) - (\wt{b} - \cblue{b}) = \begin{pmatrix} 1 \\ -1 \end{pmatrix}^\top \begin{pmatrix} \wt{a} - \cred{a} \\ \wt{b} - \cblue{b} \end{pmatrix}
+$$
+
+::why[$h$ ist linear: Die Differenz zweier Funktionswerte ist $h$, angewandt auf die Differenz der Inputs, geschrieben als Skalarprodukt mit dem Vektor $(1, -1)^\top$]
+:::
+
+:::schritt
+$$
+\left| h(\wt{a}, \wt{b}) - h(\cred{a}, \cblue{b}) \right| \le \sqrt{2}\, \left\| \begin{pmatrix} \wt{a} - \cred{a} \\ \wt{b} - \cblue{b} \end{pmatrix} \right\|_2
+$$
+
+::why[:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} mit $\left\| (1, -1)^\top \right\|_2 = \sqrt{2}$; für Störungen proportional zu $(1, -1)^\top$ gilt Gleichheit, die Schranke wird also angenommen; $\sqrt{2}$ ist die *kleinste* solche Konstante und damit $\kappa_{abs} = \sqrt{2}$]
+:::
+
+:::schritt
+$$
+\frac{\left| h(\wt{a}, \wt{b}) - h(\cred{a}, \cblue{b}) \right|}{\left|\cred{a} - \cblue{b}\right|} \le \underbrace{\sqrt{2}\, \frac{\sqrt{\cred{a}^2 + \cblue{b}^2}}{\left|\cred{a} - \cblue{b}\right|}}_{=\, \corange{\kappa_{rel}}} \cdot \frac{\left\| (\wt{a} - \cred{a},\; \wt{b} - \cblue{b})^\top \right\|_2}{\sqrt{\cred{a}^2 + \cblue{b}^2}}
+$$
+
+::why[Definition der relativen Konditionszahl ([Abschnitt 4.2](#sec-4.2)): beide Seiten durch $|h(\cred{a}, \cblue{b})| = |\cred{a} - \cblue{b}|$ teilen und mit der Inputnorm $\left\| (\cred{a}, \cblue{b})^\top \right\|_2 = \sqrt{\cred{a}^2 + \cblue{b}^2}$ erweitern]
+:::
+
+::::
+
+Die Formel sagt präzise, wann es gefährlich wird: Sind $\cred{a}$ und
+$\cblue{b}$ *groß*, liegen aber *nah beieinander*
+($\cred{a} \approx \cblue{b}$), dann ist der Zähler riesig und der
+Nenner winzig: $\corange{\kappa_{rel}}$ explodiert, und der letzte
+Schritt verstärkt *alle* vorangegangenen Fehler mit diesem Faktor. Genau das
+passiert bei der Varianz von Daten mit großem Mittelwert: Für
+$x_i = c + z_i$ mit Verschiebung $c$ und Varianz $1$ ist
+$\cred{a} \approx c^2 + 1$ und $\cblue{b} \approx c^2$,
+während die Differenz (die Varianz) bei $1$ bleibt. Damit wächst
+
+$$
+\corange{\kappa_{rel}} \approx \sqrt{2}\, \frac{\sqrt{2}\, c^2}{1} = 2c^2
+$$
+
+*quadratisch* in der Verschiebung. Das ist die
+:k[katastrophale Auslöschung]{#cancellation} aus
+[Abschnitt 2.1](?k=02-algos#sec-2.1).
+Dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
+die Formel kippt. Und die Merkregel 4.3.4 erklärt, warum $\wt{f}_1$
+so viel besser dasteht: Auch $\wt{f}_1$ subtrahiert fast gleich große
+Zahlen ($x_i - \bar{x}$ mit $x_i \approx \bar{x} \approx c$),
+aber dieser schlecht konditionierte Schritt kommt *zuerst* und arbeitet auf
+Zahlen der Größenordnung $c$. Bei $\wt{f}_2$ kommt die
+Subtraktion ganz am *Ende*, nach dem Quadrieren, auf Zahlen der
+Größenordnung $c^2$. Der Verstärkungsfaktor ist $\sim c^2$
+statt $\sim c$, und er trifft alle vorher akkumulierten Rundungsfehler.
+
+:::beispiel[4.3.7 (Die Instabilität in R)]
+Das Zahlenexperiment von den Folien: $n = 1000$ standardnormalverteilte
+Werte, um $c = 10^{10}$ verschoben. Die wahre Varianz ist $1$.
+
+```r
+set.seed(5)
+x <- rnorm(10^3, mean = 0, sd = 1) + 10^10
+mean((x - mean(x))^2)
+#> [1] 1.023151
+mean(x^2) - mean(x)^2
+#> [1] 16384
+```
+
+Die zweistufige Rechnung $\wt{f}_1$ liefert $1{,}023$, eine
+völlig plausible Stichprobenvarianz. Die Verschiebungsformel $\wt{f}_2$
+liefert $16384$: um mehr als vier Größenordnungen daneben. Passt das zu
+unserer Analyse? Mit $c = 10^{10}$ ist
+$\corange{\kappa_{rel}} \approx 2c^2 = 2 \cdot 10^{20}$; die
+Zwischenergebnisse $\cred{a}, \cblue{b} \approx 10^{20}$ tragen
+relative Rundungsfehler der Größenordnung
+:k[$\eps \approx 2{,}2 \cdot 10^{-16}$]{#machine-epsilon}, also erwarten wir
+relative Fehler im Ergebnis bis etwa
+$\corange{\kappa_{rel}} \cdot \eps \approx 4 \cdot 10^{4}$.
+Beobachtet: $16384/1{,}02 \approx 1{,}6 \cdot 10^4$. Die
+Größenordnung stimmt.
+
+Ein hübsches Detail: $16384 = 2^{14}$ ist genau der Abstand zweier
+benachbarter Maschinenzahlen in der Größenordnung $10^{20}$. Was die
+Verschiebungsformel als „Varianz" ausgibt, ist hier also schlicht ein einzelner
+Rundungsschritt der Zwischenergebnisse – mit den Daten hat diese Zahl nichts
+mehr zu tun.
+:::
+
+:::vertiefung[Wie schlimm wird es? Der κ-Rechner für den letzten Schritt]
+<KappaRechner />
+:::
+
+### Selbsttest
+
+Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
+
+<ol className="max-w-prose list-decimal space-y-3 pl-5">
+  <SelbsttestFrage
+    q={
+      <>
+        Sei <M>{"f = h \\circ g"}</M>, und <M>{"h"}</M> sei an der Stelle{" "}
+        <M>{"g(\\bx)"}</M> schlecht konditioniert. Ist der Algorithmus{" "}
+        <M>{"\\wt{f} = \\wt{h} \\circ \\wt{g}"}</M> dann zwangsläufig instabil?
+      </>
+    }
+  >
+    Nein. Satz 4.3.3 liefert eine lokale *obere Schranke*: Die schlechte
+    Kondition von $h$ kann ungünstig gerichtete Fehler von $\wt{g}$ stark
+    verstärken. Ist $\wt{g}$ (nahezu) exakt oder liegt sein Fehler in einer
+    wenig empfindlichen Richtung, kann der resultierende Fehler trotzdem klein
+    bleiben. Eine schlecht konditionierte Zwischenstelle ist deshalb ein Indiz,
+    kein Beweis für Instabilität.
+  </SelbsttestFrage>
+  <SelbsttestFrage
+    q={
+      <>
+        Auch <M>{"\\wt{f}_1"}</M> subtrahiert fast gleich große Zahlen (
+        <M>{"x_i - \\bar{x}"}</M> mit <M>{"x_i \\approx \\bar{x}"}</M>). Warum ist{" "}
+        <M>{"\\wt{f}_1"}</M> trotzdem viel stabiler als <M>{"\\wt{f}_2"}</M>?
+      </>
+    }
+  >
+    Entscheidend ist nicht allein die Position der Subtraktion. $\wt{f}_1$
+    bildet direkt die Abweichungen und arbeitet danach mit deren Quadraten.
+    $\wt{f}_2$ bildet dagegen zunächst zwei Aggregate der Größenordnung $c^2$
+    und versucht, ihre kleine Differenz als Varianz zurückzugewinnen; deren
+    Information kann schon in den Rundungen der großen Aggregate verschwunden
+    sein. Die Zentrierung vermeidet genau diese großen, beinahe gleichen
+    Zwischenwerte.
+  </SelbsttestFrage>
+  <SelbsttestFrage
+    q={
+      <>
+        Beim Training eines neuronalen Netzes beginnt der Verlust nach wenigen
+        Epochen zu oszillieren und wächst dann über alle Grenzen. Welche
+        Stellschraube prüfen wir zuerst, und warum?
+      </>
+    }
+  >
+    Die Lernrate $\alpha$. Oszillation mit wachsender Amplitude ist das
+    Signaturverhalten eines instabilen Iterationsverfahrens: Der
+    Verstärkungsfaktor pro Schritt liegt über $1$, jeder Schritt bläht
+    die Fehler des geschätzten Gradienten weiter auf. Eine kleinere Lernrate
+    (oder Gradient Clipping) drückt den Faktor wieder unter $1$. In der
+    SGD-Demo oben lässt sich der Umschlag direkt beobachten.
+  </SelbsttestFrage>
+</ol>
+
+*Vertiefung: Heath §1.2.7 (Stabilität und Genauigkeit).*

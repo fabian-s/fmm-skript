@@ -1,0 +1,24 @@
+export const title = "Stetigkeit";
+
+import { JumpWidget } from "./widgets/ContinuityWidget";
+
+Eine Funktion ist *stetig* (continuous), wenn ihr Graph keine
+Sprünge oder Löcher hat; salopp: wir können ihn zeichnen, ohne
+den Stift abzusetzen. Präzise: $f$ ist stetig in einem Punkt
+$x = a$, wenn die Werte $f(x)$ beliebig nahe an
+$f(a)$ herankommen, sobald $x$ nur nahe genug an
+$a$ liegt; kleine Änderungen der Eingabe verursachen dann nur
+kleine Änderungen der Ausgabe. Zum Beispiel ist
+$f(x) = x^2$ überall stetig, während eine Treppenfunktion wie
+eine Porto-Preistabelle an bestimmten Stellen springt und dort
+unstetig ist.
+
+Warum das hier zählt: eine stetige Funktion trägt unendlich viel
+Information (einen Wert für jeden Punkt eines Intervalls), und doch
+will die Interpolation sie durch endlich viele Zahlen festnageln
+(vgl. Heath §7.1). Stetigkeit ist genau das, was diese Hoffnung
+vernünftig macht: benachbarte Eingaben haben benachbarte Ausgaben,
+also schränkt schon eine Tabelle von Stützwerten die Funktion
+dazwischen ein.
+
+<JumpWidget />

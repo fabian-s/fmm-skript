@@ -1,0 +1,21 @@
+export const title = "Norm";
+
+import { NormWidget } from "./widgets/NormWidget";
+
+Die *Norm* $\|\bx\|$ misst die Länge eines :k[Vektors]{#vector}. Die
+Standard-Variante (die euklidische Norm) zieht die Wurzel aus dem
+:k[Skalarprodukt]{#dot-product} des Vektors mit sich selbst, also Pythagoras in
+beliebig vielen Dimensionen:
+
+$$
+\|\bx\| = \sqrt{\bx^{\top}\bx} = \sqrt{x_1^2 + \cdots + x_n^2}, \qquad \left\| \begin{bmatrix} 3 \\ 4 \end{bmatrix} \right\| = \sqrt{9 + 16} = 5.
+$$
+
+Drei Regeln charakterisieren eine Norm: Sie ist positiv, außer wenn $\bx$ der
+Nullvektor ist; Skalierung gehorcht $\|\alpha\bx\| = |\alpha| \|\bx\|$; und
+Umwege lohnen sich nie ($\|\bx+\by\| \leq \|\bx\| + \|\by\|$). Teilen wir einen
+Vektor (ungleich Null) durch seine Norm, *normieren* wir ihn auf Länge $1$. So
+lässt sich zum Beispiel der PageRank-Eigenvektor auf einen eindeutigen
+Repräsentanten mit $\|\bx^*\| = 1$ festlegen (vgl. MML §4.2).
+
+<NormWidget />

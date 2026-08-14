@@ -1,0 +1,32 @@
+export const title = "Cholesky-Zerlegung";
+
+import { CholeskyWidget } from "./widgets/CholeskyWidget";
+
+Die *Cholesky-Zerlegung* (Cholesky factorization) schreibt eine
+:k[symmetrische]{#symmetric-matrix} :k[positiv definite]{#positive-definite}
+Matrix als Produkt
+
+$$
+\bA = \bL\bL^T
+$$
+
+mit einer unteren :k[Dreiecksmatrix]{#triangular-matrix} $\bL$, einer Art
+„Quadratwurzel“ der Matrix. Sie ist die SPD-Spezialisierung der
+:k[LU-Zerlegung]{#lu-decomposition} aus der
+:k[Gauß-Elimination]{#gaussian-elimination}: dank Symmetrie muss nur ein Faktor
+berechnet werden (etwa der halbe Aufwand und Speicher, grob $n^3/6$
+Multiplikationen), und positive Definitheit garantiert, dass der Algorithmus
+nie pivotisieren muss und nie die Wurzel aus einer negativen Zahl zieht. Ein
+kleines Beispiel:
+
+$$
+\begin{bmatrix} 4 & 2 \\ 2 & 3 \end{bmatrix} = \begin{bmatrix} 2 & 0 \\ 1 & \sqrt{2} \end{bmatrix} \begin{bmatrix} 2 & 1 \\ 0 & \sqrt{2} \end{bmatrix}.
+$$
+
+Ist $\bL$ einmal bekannt, kostet das Lösen von $\bA\bx = \bb$ nur noch zwei
+billige :k[Dreieckssysteme]{#triangular-solve}: erst $\bL\by = \bb$, dann
+$\bL^T\bx = \by$. Genau so lassen sich die Normalengleichungen
+$\bA^T\bA\,\bx = \bA^T\bb$ lösen, unter Wiederverwendung der
+Cholesky-Zerlegung (vgl. Heath Bsp. 2.21 und Bsp. 3.3).
+
+<CholeskyWidget />

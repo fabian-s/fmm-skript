@@ -1,0 +1,34 @@
+export const title = "Orthogonales Komplement";
+
+import { ComplementWidget } from "./widgets/OrthogonalComplementWidget";
+
+Das *orthogonale Komplement* (engl.
+*orthogonal complement*) eines
+:k[Unterraums]{#subspace}
+$S \subseteq \R^n$, geschrieben $S^\perp$,
+sammelt alle Vektoren ein, die
+:k[orthogonal]{#orthogonality} zu
+*ganz* $S$ stehen:
+
+$$
+S^\perp = \left\{ \bv \in \R^n : \bv^T \bs = 0 \text{ für alle } \bs \in S \right\} .
+$$
+
+Ist $S$ eine Ursprungsgerade in
+$\R^2$, dann ist $S^\perp$ die dazu senkrechte
+Gerade; für eine Ebene in $\R^3$ ist es die Normalengerade,
+und die :k[Dimensionen]{#dimension}
+addieren sich immer zu $n$ auf. Der Gewinn ist eine
+eindeutige Zerlegung: Jeder Vektor spaltet sich auf als
+$\bb = \bp + \br$ mit $\bp \in S$ und
+$\br \in S^\perp$. Genau diese Aufspaltung berechnet die
+Kleinste-Quadrate-Methode: Der Projektor $\bP$ (vgl. Heath
+§3.2) erzeugt das Stück in
+$S = \mathrm{span}(\bA)$, sein Gegenstück
+$\bI - \bP$ das Stück in $S^\perp$, und das
+Residuum landet in
+$\mathrm{span}(\bA)^\perp$, und das ist dieselbe Menge
+wie der :k[Nullraum]{#null-space} von
+$\bA^T$.
+
+<ComplementWidget />

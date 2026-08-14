@@ -13,18 +13,64 @@
  *
  * Der ERSTE Block einer Frage ist die Aussage, alles Weitere die Erklärung.
  * Ersetzt die bisher pro Kapitel kopierten QuizWidget-Varianten.
+ *
+ * Alle sichtbaren UI-Texte sind lokalisierbar (Muster wie beim
+ * TooltipProvider): Defaults sind DEUTSCH, eine anderssprachige App setzt
+ * eigene Labels per <QuizLabelsProvider labels={…}> um den Baum oder per
+ * labels-Prop an einem einzelnen <Quiz>.
  */
 import { Children, createContext, useContext, useId, useState, type ReactNode } from "react";
+
+export interface QuizLabels {
+  /** Beschriftung des „wahr"-Knopfs */
+  true: string;
+  /** Beschriftung des „falsch"-Knopfs */
+  false: string;
+  /** Feedback bei richtiger Antwort */
+  correct: string;
+  /** Feedback bei falscher Antwort; bekommt gesagt, ob die Aussage wahr ist */
+  incorrect: (statementIsTrue: boolean) => string;
+}
+
+const DEFAULT_LABELS: QuizLabels = {
+  true: "wahr",
+  false: "falsch",
+  correct: "Richtig!",
+  incorrect: (statementIsTrue) =>
+    `Leider nein, die Aussage ist ${statementIsTrue ? "wahr" : "falsch"}.`,
+};
+
+const LabelCtx = createContext<Partial<QuizLabels>>({});
+
+/** Setzt Quiz-Labels app-weit (z. B. um App.tsx gelegt). */
+export function QuizLabelsProvider({
+  children,
+  labels,
+}: {
+  children: ReactNode;
+  labels: Partial<QuizLabels>;
+}) {
+  return <LabelCtx.Provider value={labels}>{children}</LabelCtx.Provider>;
+}
 
 interface QuizApi {
   /** Antwort einer Frage; null = noch nicht beantwortet */
   answer: (key: string) => boolean | null;
   pick: (key: string, v: boolean) => void;
+  /** fertig gemergte Labels für die <Frage>-Kinder */
+  labels: QuizLabels;
 }
 
 const Ctx = createContext<QuizApi | null>(null);
 
-export function Quiz({ children }: { children: ReactNode }) {
+export function Quiz({
+  children,
+  labels,
+}: {
+  children: ReactNode;
+  labels?: Partial<QuizLabels>;
+}) {
+  const inherited = useContext(LabelCtx);
   const [chosen, setChosen] = useState<Record<string, boolean>>({});
   // Schlüssel ist die von React vergebene useId der jeweiligen <Frage>, nicht
   // eine im Render hochgezählte Nummer: ein später montierendes <Frage>
@@ -32,6 +78,7 @@ export function Quiz({ children }: { children: ReactNode }) {
   const api: QuizApi = {
     answer: (k) => (k in chosen ? chosen[k] : null),
     pick: (k, v) => setChosen((c) => ({ ...c, [k]: v })),
+    labels: { ...DEFAULT_LABELS, ...inherited, ...labels },
   };
   return (
     <Ctx.Provider value={api}>
@@ -45,6 +92,7 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
   const labelId = useId();
   const key = labelId;
   if (!api) throw new Error("<Frage> darf nur in <Quiz> stehen");
+  const L = api.labels;
 
   const items = Children.toArray(children);
   const statement = items[0];
@@ -79,7 +127,7 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
               }`}
               onClick={() => api.pick(key, v)}
             >
-              {v ? "wahr" : "falsch"}
+              {v ? L.true : L.false}
             </button>
           ))}
         </span>
@@ -93,7 +141,7 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
           }`}
         >
           <span className="font-medium">
-            {correct ? "Richtig! " : `Leider nein, die Aussage ist ${wahr ? "wahr" : "falsch"}. `}
+            {correct ? L.correct : L.incorrect(wahr)}{" "}
           </span>
           <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">
             {expl}

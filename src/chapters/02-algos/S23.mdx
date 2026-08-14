@@ -1,0 +1,309 @@
+import { S23FlopWidget, S23GrowthWidget, S23KonstantenWidget } from "./widgets/S23Aufwand";
+import { SelfTest } from "./widgets/S23Local";
+
+::quelle[Folien: 02-algos, „Aufwand und Komplexität".]
+
+In [Abschnitt 2.2](#sec-2.2) haben wir gesehen, dass zwei Algorithmen dasselbe Problem
+lösen und sich dabei dramatisch unterschiedlich anfühlen können: Der Aufruf-Zähler der
+naiven Fibonacci-Rekursion explodiert schon für kleine $n$, die iterative Variante ist
+sofort fertig. „Fühlt sich langsam an" ist aber kein mathematischer Begriff. In diesem
+Abschnitt machen wir daraus eine Größe, die wir *zählen* können (den Aufwand eines
+Algorithmus), und lernen dann, wie man Aufwände sinnvoll vergleicht: nicht über exakte
+Zahlen, sondern über ihr *Skalierungsverhalten*, die Komplexität.
+
+### 2.3.1 Zeit- und Speicheraufwand
+
+Was kostet ein Algorithmus? Der Computer führt ihn letztlich als Folge
+*elementarer Rechenoperationen* aus: Additionen, Subtraktionen, Multiplikationen und
+Divisionen von :k[Gleitkommazahlen]{#floating-point}. Jede dieser Operationen kostet
+ungefähr gleich viel Zeit, also ist ihre *Anzahl* ein gutes Maß für die Laufzeit.
+Genauso können wir zählen, wie viele Zahlen der Algorithmus unterwegs im Speicher
+halten muss.
+
+:::definition[2.3.1 (Zeit- und Speicheraufwand)]
+Ein Algorithmus werde durch elementare Rechenoperationen
+$f_i \in \lbrace +, -, \cdot, / \rbrace$ ausgeführt.
+
+- Der *Zeitaufwand* des Algorithmus ist die Anzahl dieser elementaren Operationen.
+  Höherer Zeitaufwand bedeutet (ungefähr) längere Laufzeit.
+- Der *Speicheraufwand* ist (in etwa) die Anzahl der gespeicherten und
+  zwischengespeicherten Zahlen. Höherer Speicheraufwand bedeutet mehr benötigten
+  Speicherplatz.
+:::
+
+Elementare Gleitkomma-Operationen heißen in der Numerik-Literatur auch *FLOPs*
+(engl. *floating point operations*); „der Algorithmus braucht $2nd$ FLOPs" ist also nur
+eine kompakte Sprechweise für unseren Zeitaufwand. Der Zusatz „ungefähr" in der
+Definition ist übrigens Absicht: Reale Laufzeiten hängen auch von Speicherzugriffen,
+Zwischenspeichern (Caches) und Parallelisierung ab. Für den Vergleich von Algorithmen
+ist das Zählen der Operationen trotzdem das richtige Werkzeug, wie wir gleich sehen
+werden.
+
+### 2.3.2 Beispiel: Matrix-Vektor-Multiplikation
+
+Zählen wir das an einem Arbeitspferd der Statistik konkret durch: dem
+:k[Matrix-Vektor-Produkt]{#matrix-vector-product} $\by = \bA\bx$. Es steckt in jeder
+Vorhersage eines linearen Modells und in jeder Schicht eines neuronalen Netzes. Sein
+Aufwand ist also alles andere als eine akademische Frage. Wir verfolgen die
+:k[Matrix]{#matrix} $\cbred{\bA}$ in Rot und den :k[Vektor]{#vector} $\cblue{\bx}$ in
+Blau durch die Rechnung; das Ergebnis $\cbgreen{\by}$ erscheint in Grün.
+
+:::beispiel[2.3.2 (Matrix-Vektor-Multiplikation)]
+Berechne $\by = \bA\bx$ für $\bA \in \R^{3 \times 2}$, $\bx \in \R^2$, konkret
+
+$$
+\cbred{\bA} = \cbred{\begin{pmatrix} 1 & 2 \\ 3 & 4 \\ 5 & 6 \end{pmatrix}}, \qquad \cblue{\bx} = \cblue{\begin{pmatrix} 7 \\ 8 \end{pmatrix}}.
+$$
+
+Jede Komponente von $\cbgreen{\by}$ ist das Skalarprodukt einer Zeile von
+$\cbred{\bA}$ mit $\cblue{\bx}$:
+
+$$
+\begin{aligned} \cgreen{y_1} &= \cred{1} \cdot \cblue{7} + \cred{2} \cdot \cblue{8} = 7 + 16 = \cgreen{23} && \text{(2 Mult., 1 Add.)} \\ \cgreen{y_2} &= \cred{3} \cdot \cblue{7} + \cred{4} \cdot \cblue{8} = 21 + 32 = \cgreen{53} && \text{(2 Mult., 1 Add.)} \\ \cgreen{y_3} &= \cred{5} \cdot \cblue{7} + \cred{6} \cdot \cblue{8} = 35 + 48 = \cgreen{83} && \text{(2 Mult., 1 Add.)} \end{aligned}
+$$
+
+- *Zeitaufwand:* $3 \cdot 2 = 6$ Multiplikationen und $3 \cdot 1 = 3$ Additionen,
+  zusammen $9$ Operationen.
+- *Speicheraufwand:* $6$ Zahlen für $\cbred{\bA}$, $2$ für $\cblue{\bx}$, $3$ für
+  $\cbgreen{\by}$, zusammen $11$ Zahlen.
+:::
+
+Das Muster aus dem Beispiel verallgemeinert sich direkt auf beliebige Dimensionen:
+
+:::satz[2.3.3 (Aufwand der Matrix-Vektor-Multiplikation)]
+Sei $\bA \in \R^{n \times d}$ und $\bx \in \R^d$. Die Berechnung von $\by = \bA\bx$ hat
+
+- Zeitaufwand $nd$ Multiplikationen $+\; n(d-1)$ Additionen $= n(2d - 1) \approx 2nd$
+  Operationen,
+- Speicheraufwand $nd + d + n$ Zahlen (für $\bA$, $\bx$ und $\by$).
+:::
+
+::::beweis
+
+:::schritt
+$$
+\cgreen{y_i} = \sum_{j=1}^{d} \cred{a_{ij}}\, \cblue{x_j}, \qquad i = 1, \ldots, n
+$$
+
+::why[Definition des :k[Matrix-Vektor-Produkts]{#matrix-vector-product}, komponentenweise in :k[Summenschreibweise]{#summation-notation}]
+:::
+
+:::schritt
+Jede Komponente $\cgreen{y_i}$ kostet $d$ Multiplikationen und $d - 1$ Additionen.
+
+::why[$d$ Produkte $\cred{a_{ij}}\,\cblue{x_j}$; um $d$ Summanden aufzuaddieren, braucht es $d - 1$ Additionen]
+:::
+
+:::schritt
+$$
+n \cdot d + n \cdot (d - 1) = n(2d - 1) = 2nd - n \approx 2nd
+$$
+
+::why[$n$ Komponenten $\cgreen{y_1}, \ldots, \cgreen{y_n}$, jede gleich teuer; für großes $d$ ist der Term $-n$ gegenüber $2nd$ vernachlässigbar]
+:::
+
+:::schritt
+Der Speicheraufwand ist $nd + d + n$ Zahlen.
+
+::why[die Eingaben $\bA$ ($nd$ Einträge) und $\bx$ ($d$ Einträge) müssen vorliegen, das Ergebnis $\by$ ($n$ Einträge) wird gespeichert; die laufende Summe für $\cgreen{y_i}$ kann direkt im Eintrag $y_i$ akkumuliert werden]
+:::
+
+::::
+
+Die Faustregel lautet also: *Matrix-Vektor kostet* $\approx 2nd$ *Operationen*, je zwei
+pro Matrixeintrag, eine Multiplikation und eine Addition. Dieselbe Zählung funktioniert
+für die :k[Matrix-Matrix-Multiplikation]{#matrix-multiplication} $\bC = \bA\bB$ mit
+$\bB \in \R^{d \times m}$: Sie besteht aus $m$ Matrix-Vektor-Produkten (eines pro Spalte
+von $\bB$), kostet also $\approx 2ndm$ Operationen. Im folgenden Widget können wir beide
+Zähler mit den Dimensionen mitlaufen lassen.
+
+:::vertiefung[FLOP-Zähler: Was kosten Matrix-Vektor- und Matrix-Matrix-Produkt?]
+<S23FlopWidget />
+:::
+
+<h3 id="sec-2.3-quiz">Selbsttest: Operationen und Speicher zählen</h3>
+
+Zeit für einen Selbsttest. Versuchen wir uns an den beiden Quizfragen aus der Vorlesung.
+Gegeben sind $\bA \in \R^{n \times d}$ und $\bx, \by \in \R^d$, und wir wollen
+
+$$
+\bz = f(\bA, \bx, \by) = \bA(\bx - \by) = \sum_{i=1}^{d} (x_i - y_i)\, \bA_{\cdot i}
+$$
+
+berechnen, also eine :k[Linearkombination]{#linear-combination} der Spalten
+$\bA_{\cdot i}$ von $\bA$. Der Algorithmus (auf den Folien als R-Schleife über die
+Spalten notiert) arbeitet die Summe spaltenweise ab:
+
+:::algorithmus[2.3.4 (Spaltenweise Auswertung)]
+1. Initialisiere $\bz = \bnull \in \R^n$.
+2. Für $i = 1, \ldots, d$: berechne den Skalar $(x_i - y_i)$ und aktualisiere
+   $\bz \leftarrow \bz + (x_i - y_i) \cdot \bA_{\cdot i}$.
+:::
+
+<SelfTest
+  frage={
+    <p>
+      <strong>Quiz 1.</strong> Wie viele elementare Rechenoperationen benötigt
+      Algorithmus 2.3.4?
+    </p>
+  }
+  optionen={[
+    <M>{"2n + d"}</M>,
+    <M>{"2dn + d"}</M>,
+    <M>{"dn^2"}</M>,
+    <M>{"2(n + d)"}</M>,
+  ]}
+  richtig={1}
+  loesung={
+    <>
+      <p>
+        Der Zeitaufwand ist <M>{"2nd + d"}</M> Operationen. Zählen wir eine Iteration{" "}
+        <M>{"i \\in \\lbrace 1, \\ldots, d \\rbrace"}</M> der Schleife durch:
+      </p>
+      <ol className="list-decimal space-y-1 pl-5">
+        <li>
+          <em>Subtraktion:</em> <M>{"(x_i - y_i)"}</M>, das ist <M>{"1"}</M> Operation.
+        </li>
+        <li>
+          <em>Skalierung:</em> <M>{"(x_i - y_i) \\cdot \\bA_{\\cdot i}"}</M>; der
+          Skalar trifft jeden der <M>{"n"}</M> Einträge der Spalte, also{" "}
+          <M>{"n"}</M> Multiplikationen.
+        </li>
+        <li>
+          <em>Aktualisierung:</em> <M>{"\\bz \\leftarrow \\bz + \\ldots"}</M>, also{" "}
+          <M>{"n"}</M> Additionen, eine pro Eintrag.
+        </li>
+      </ol>
+      <p>
+        Pro Iteration sind das <M>{"1 + n + n = 2n + 1"}</M> Operationen, und die
+        Schleife läuft <M>{"d"}</M>-mal:
+      </p>
+      <MD>{"d \\cdot (2n + 1) = 2nd + d."}</MD>
+      <p>
+        Zum Vergleich: Das ist bis auf den kleinen Term <M>{"+\\,d"}</M> dasselbe{" "}
+        <M>{"\\approx 2nd"}</M> wie beim gewöhnlichen Matrix-Vektor-Produkt aus Satz
+        2.3.3 – kein Wunder, denn es <em>ist</em> ein Matrix-Vektor-Produkt, nur
+        spaltenweise organisiert.
+      </p>
+    </>
+  }
+/>
+
+<SelfTest
+  frage={
+    <p>
+      <strong>Quiz 2.</strong> Für wie viele Gleitkommazahlen braucht Algorithmus 2.3.4
+      Speicherplatz?
+    </p>
+  }
+  optionen={[
+    <M>{"3n + d"}</M>,
+    <M>{"4nd"}</M>,
+    <M>{"2(n + d)"}</M>,
+    <M>{"n + nd + 2d"}</M>,
+  ]}
+  richtig={3}
+  loesung={
+    <>
+      <p>Wir zählen einfach alle Objekte, die im Speicher liegen müssen:</p>
+      <ul className="list-disc space-y-1 pl-5">
+        <li>
+          das Ergebnis <M>{"\\bz \\in \\R^n"}</M>: <M>{"n"}</M> Zahlen,
+        </li>
+        <li>
+          die Matrix <M>{"\\bA \\in \\R^{n \\times d}"}</M>: <M>{"nd"}</M> Zahlen,
+        </li>
+        <li>
+          die Vektoren <M>{"\\bx, \\by \\in \\R^d"}</M>: je <M>{"d"}</M>, zusammen{" "}
+          <M>{"2d"}</M> Zahlen.
+        </li>
+      </ul>
+      <p>
+        Insgesamt also <M>{"n + nd + 2d"}</M> Gleitkommazahlen. (Streng genommen kommt
+        noch der eine Skalar <M>{"(x_i - y_i)"}</M> als Zwischenergebnis dazu; solche
+        konstanten Zusatzterme spielen keine Rolle, wie der nächste Unterabschnitt
+        zeigt.)
+      </p>
+    </>
+  }
+/>
+
+### 2.3.3 Komplexität: Wie skaliert der Aufwand?
+
+Beim Nachrechnen der Quizfragen ist vielleicht aufgefallen: Ob nun $2nd + d$ oder
+$2nd - n$ oder $2nd$ herauskommt, hängt von Buchhaltungsdetails ab: zählt man die
+Initialisierung mit? Das Zwischenergebnis? Solche Details sind für den Vergleich von
+Algorithmen unwichtig. Die *exakte* Anzahl an Operationen und gespeicherten Zahlen
+interessiert uns nicht. Was uns interessiert, ist, *wie der Aufwand mit der Größe des
+Problems wächst*: Was passiert, wenn wir statt $1000$ Datenpunkten $10\,000$ haben?
+Statt $10$ Kovariablen $1000$?
+
+:::definition[2.3.5 (Komplexität)]
+Wie der Zeit- bzw. Speicheraufwand eines Algorithmus mit der Größe des Problems
+*skaliert*, nennen wir die *Laufzeitkomplexität* bzw. *Speicherkomplexität* des
+Algorithmus.
+:::
+
+:::beispiel[2.3.6]
+Ein Algorithmus benötige $4n^3 + 16n^2 + 239$ Operationen. Für großes $n$ ist
+$16n^2 + 239$ gegenüber $4n^3$ vernachlässigbar: Bei $n = 100$ steuert der kubische
+Term $4 \cdot 10^6$ Operationen bei, die restlichen Terme nur $160\,239$, rund
+$4\,\%$ des Gesamtaufwands. Bei $n = 1000$ sind es nur noch $0{,}4\,\%$. Der
+Algorithmus *skaliert* also wie $4n^3$; seine Komplexität ist von
+*kubischer Ordnung*, und wir schreiben kurz: „$O(n^3)$".
+:::
+
+Die Schreibweise $O(n^3)$ lässt dabei bewusst auch den Vorfaktor $4$ weg; es zählt
+allein die *Ordnung* des Wachstums. Was genau hinter dem großen $O$ steckt, definieren
+wir sauber in [Abschnitt 2.4](#sec-2.4); hier genügt uns die Lesart „wächst höchstens
+wie".
+
+### 2.3.4 Komplexitätsklassen
+
+Die wichtigsten Wachstumsordnungen haben Namen, und es lohnt sich, für jede ein Gefühl
+zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand, wenn
+sich die Problemgröße verdoppelt?*
+
+:::bemerkung[2.3.7 (Interpretation der Komplexitätsklassen)]
+Die Aussagen über Verdopplung gelten für *scharfe* Wachstumsordnungen
+$\Theta(g(n))$: Sowohl $T(n)=O(g(n))$ als auch $g(n)=O(T(n))$ gilt. Ein einzelnes
+$O(g(n))$ ist dagegen nur eine obere Schranke und erlaubt auch langsameres Wachstum.
+
+- $\Theta(1)$ *(konstant)*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
+- $\Theta(\log n)$ *(logarithmisch)*: Verdoppelt sich $n$, kommt im Modell
+  $c\log_2 n$ ein konstanter Aufwand hinzu, denn
+  $\log_2(2n) = \log_2(n) + 1$ (:k[Logarithmus]{#logarithm}).
+- $\Theta(n)$ *(linear)*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
+- $\Theta(n^2)$ *(quadratisch)*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
+- $\Theta(2^n)$ *(exponentiell)*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
+  Operationen, denn $2^{2n} = \left(2^n\right)^2$. Schon ein einziger Schritt
+  $n \to n + 1$ *verdoppelt* den Aufwand.
+:::
+
+Algorithmen mit scharf exponentieller Laufzeit sind damit schon für moderate
+Problemgrößen häufig praktisch unbrauchbar. Genau das passiert bei der naiven Fibonacci-Rekursion aus
+[Abschnitt 2.2](#sec-2.2) passiert, wie wir in [Abschnitt 2.5](#sec-2.5) genau
+nachrechnen werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
+zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe Satz 2.3.3
+mit $d = n$) und $O(n^3)$ (Matrix-Zerlegungen, Matrix-Matrix-Produkte).
+
+:::vertiefung[Wachstumsraten-Plot: die Komplexitätsklassen im Vergleich]
+<S23GrowthWidget />
+:::
+
+:::bemerkung[2.3.8 (Vorsicht: Konstanten!)]
+Die $O(\cdot)$-Notation ignoriert konstante Faktoren und Terme niedrigerer Ordnung. Ein
+Algorithmus mit $1000n + 10\,000$ Operationen ist $O(n)$, aber trotzdem *langsamer* als
+ein $O(n^2)$-Algorithmus mit $n^2$ Operationen, solange $n^2 < 1000n + 10\,000$ gilt,
+und das ist für alle $n \le 1009$ der Fall! Bei $n = 100$ etwa stehen $110\,000$
+Operationen gegen nur $10\,000$. Die Komplexitätsklasse sagt, wer für
+*hinreichend große* Probleme gewinnt – nicht, wer bei *unserem konkreten* Problem
+gewinnt.
+:::
+
+:::vertiefung[Konstanten-Demo: O(n) mit großen Konstanten gegen O(n²)]
+<S23KonstantenWidget />
+:::
+
+*Vertiefung: Heath §1.1 (Kosten und Genauigkeit wissenschaftlichen Rechnens);
+Heath §2.4.5 (Operationen zählen am Beispiel des Gauß-Verfahrens).*

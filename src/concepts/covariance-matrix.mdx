@@ -1,0 +1,37 @@
+export const title = "Kovarianzmatrix";
+
+import { CovScatterWidget } from "./widgets/CovarianceMatrixWidget";
+
+Für einen zufälligen :k[Vektor]{#vector}
+$\bx = (x_1, \dotsc, x_n)^\top$ ist die Kovarianzmatrix
+$\bSigma$ die $n \times n$
+:k[Matrix]{#matrix} mit Eintrag
+$\operatorname{Cov}(x_i, x_j)$ an Position
+$(i, j)$. Reine Buchhaltung für die Varianzen und
+Kovarianzen aus Statistik I: Auf der Diagonalen stehen die Varianzen
+der einzelnen Koordinaten, und jeder Nebendiagonal-Eintrag hält fest,
+wie stark sich ein Koordinatenpaar gemeinsam bewegt. Ein winziges
+Beispiel:
+
+$$
+\bSigma = \begin{pmatrix} 1 & 0.8 \\ 0.8 & 1 \end{pmatrix}
+$$
+
+besagt: Beide Koordinaten haben Varianz $1$ und sind stark
+positiv gekoppelt. Wegen
+$\operatorname{Cov}(x_i, x_j) = \operatorname{Cov}(x_j, x_i)$
+ist $\bSigma$ stets
+:k[symmetrisch]{#symmetric-matrix}, und weil
+$\ba^\top \bSigma\, \ba = \operatorname{Var}(\ba^\top \bx) \geq 0$
+für jedes $\ba$ gilt, ist sie außerdem
+:k[positiv semidefinit]{#positive-definite}
+(positiv definit, außer die Verteilung ist in eine
+niedrigerdimensionale Ebene plattgedrückt). Das ist genau, was die
+Cholesky-Zerlegung braucht (vgl. MML §4.3): Wir faktorisieren
+$\bSigma = \bL\bL^\top$, schicken billiges unabhängiges
+standardnormalverteiltes Rauschen $\bz$ durch
+$\bL$, und $\bL\bz$ hat exakt die Kovarianz
+$\bSigma$ – der Standardweg, um aus einer multivariaten
+Normalverteilung zu ziehen.
+
+<CovScatterWidget />

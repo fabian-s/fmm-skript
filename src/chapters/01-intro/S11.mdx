@@ -1,0 +1,199 @@
+import { SelbsttestFrage, KursLandkarte } from "./widgets/S11Widgets";
+
+::quelle[Folien: 01-intro, „Motivation" bis „Selbsttest".]
+
+Statistik war einmal Papier-und-Bleistift-Arbeit an kleinen Tabellen. Heute ist sie
+(genau wie das maschinelle Lernen) durch und durch *computational*: Jedes Modell,
+das wir fitten, jede Prognose, die wir berechnen, entsteht durch einen Algorithmus auf
+einem Rechner. In diesem Kurs lernen wir die mathematischen Konzepte, mit denen wir
+solche Algorithmen entwickeln, verstehen und beurteilen können. Es geht also nicht um
+neue Statistik, sondern um die Frage: *Wie rechnet man das eigentlich – schnell,
+sparsam und zuverlässig?*
+
+### Warum Numerik?
+
+Ein Beispiel zeigt, warum die Formeln aus den Statistik-Vorlesungen allein nicht
+reichen. Wir wollen ein
+:k[lineares Regressionsmodell]{#linear-regression} mit
+$p = 10\,000$ Merkmalen auf $n = 100\,000$ Beobachtungen trainieren,
+also das :k[Kleinste-Quadrate-Problem]{#linear-least-squares}
+
+$$
+\min_{\bbeta \in \R^p} \left\| \bX\bbeta - \by \right\|_2^2
+$$
+
+lösen. Die Theorie liefert die Formel
+$\wh{\bbeta} = (\bX^\top\bX)^{-1}\bX^\top\by$. Wer sie wörtlich in
+den Rechner tippt, erlebt gleich drei Überraschungen. Erstens die *Kondition*: Die
+Matrix $\bX^\top\bX$ kann so empfindlich sein, dass winzige
+:k[Rundungsfehler]{#rounding-error} das Ergebnis komplett
+verfälschen. Zweitens die *Komplexität*: Das
+:k[Invertieren]{#matrix-inverse} kostet
+:k[$O(p^3)$]{#big-o-notation} Rechenoperationen, für
+$p = 10\,000$ rund $10^{12}$ Gleitkommaoperationen. Drittens der
+*Speicher*: $\bX^\top\bX$ ist eine
+$p \times p$-Matrix und belegt allein schon etwa 800 MB. Bessere Wege (die
+:k[QR-Zerlegung]{#qr-factorization}, die
+:k[Singulärwertzerlegung]{#singular-value-decomposition},
+iterative Verfahren) sind genau der Stoff dieses Kurses.
+
+Wie dramatisch das erste Problem werden kann, zeigt schon ein
+:k[Gleichungssystem]{#linear-system} mit zwei Unbekannten:
+
+:::beispiel[1.1.1 (Ein schlecht konditioniertes Problem)]
+Wir lösen $\bA\bx = \bb$ mit
+
+$$
+\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1{,}0001 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 2 \\ 2{,}0001 \end{pmatrix}.
+$$
+
+Subtrahieren wir die erste Zeile von der zweiten, bleibt
+$0{,}0001\,x_2 = 0{,}0001$, also $x_2 = 1$ und damit
+$x_1 = 1$: Die exakte Lösung ist
+$\cblue{\bx} = \cblue{(1, 1)^\top}$. Nun stören wir die rechte Seite
+minimal (etwa so, wie es ein Rundungsfehler täte) im zweiten Eintrag:
+
+$$
+\cred{\wt{\bb}} = \begin{pmatrix} 2 \\ \cred{2{,}0002} \end{pmatrix} \quimpl 0{,}0001\,x_2 = \cred{0{,}0002} \quimpl \cred{\wt{\bx}} = \cred{\begin{pmatrix} 0 \\ 2 \end{pmatrix}}.
+$$
+
+Die winzige Störung wird bei der Division durch $0{,}0001$ massiv verstärkt:
+Aus $\cblue{x_2 = 1}$ wird $\cred{\wt{x}_2 = 2}$, aus
+$\cblue{x_1 = 1}$ wird $\cred{\wt{x}_1 = 0}$ – ein Fehler von
+100 % in der Lösung, ausgelöst durch einen Datenfehler von 0,005 %. Solche Probleme
+heißen *schlecht konditioniert*; die
+:k[Konditionszahl]{#condition-number} misst das präzise und
+begleitet uns durch das ganze erste Drittel des Kurses.
+:::
+
+### Die drei Themenblöcke
+
+Der Kurs besteht aus drei Blöcken, die aufeinander aufbauen. Der erste Block,
+*Numerische Lineare Algebra*, klärt zunächst, was einen guten Algorithmus
+ausmacht (Kondition, Stabilität, Komplexität), und entwickelt dann Matrix-Zerlegungen,
+mit denen wir Gleichungssysteme und KQ-Probleme $\bA\bx \approx \bb$
+zuverlässig lösen, statt naiv zu invertieren.
+
+Der zweite Block, *Analysis und Optimierung*, verallgemeinert die
+:k[Ableitung]{#derivative} auf Funktionen mit Vektor-, Matrix-
+und Tensor-Argumenten. Wozu? Beim Training
+:k[neuronaler Netze]{#neural-network} müssen wir
+Verlustfunktionen wie
+$L(\bW) = \tfrac{1}{2}\left\| \bX\bW - \bY \right\|_F^2$ nach einer
+ganzen Matrix $\bW$ ableiten. Naiv wären das so viele einzelne
+:k[partielle Ableitungen]{#partial-derivative}, wie
+$\bW$ Einträge hat, bei $1000 \times 10$ schon
+$10\,000$; der
+Matrix-Kalkül liefert stattdessen eine einzige Zeile,
+$\partial L / \partial \bW = \bX^\top(\bX\bW - \bY)$, und die ist auch
+noch effizient implementierbar. Darauf setzt die numerische Optimierung auf:
+:k[Gradientenverfahren]{#gradient-descent} und ihre
+Verwandten finden Minima von Funktionen, die nicht
+:k[konvex]{#convex-function}, hochdimensional (GPT-3:
+$1{,}75 \cdot 10^{11}$ Parameter!) und nur häppchenweise auswertbar sind.
+
+Der dritte Block, *Funktionsapproximation*, fragt: Wie ersetzen wir eine
+komplizierte Funktion durch eine einfache, mit der sich gut rechnen lässt? Das
+klassische Werkzeug ist die
+:k[Taylor-Approximation]{#taylor-series}: Schon
+$e^x \approx 1 + x + \tfrac{x^2}{2}$ liefert bei $x = 0{,}5$ den
+Wert $1{,}625$ statt $e^{0{,}5} = 1{,}6487\ldots$, ein relativer
+Fehler von unter 2 %. Später kommen flexiblere Bausteine wie Splines dazu, mit denen
+die Statistik glatte Funktionen aus Daten schätzt.
+
+:::vertiefung[Die drei Blöcke als Landkarte]
+<KursLandkarte />
+
+<p className="mt-2 max-w-prose text-sm">
+  Die Blöcke bauen aufeinander auf: Die lineare Algebra liefert die Rechenkerne (jeder
+  Newton-Schritt löst ein Gleichungssystem), die Analysis liefert Gradienten und lokale
+  Modelle für die Optimierung, und die Funktionsapproximation nutzt beides, um aus
+  Daten glatte Funktionen zu machen.
+</p>
+:::
+
+### Wie dieses Skript funktioniert
+
+Drei Elemente helfen beim Lesen. *Erstens:* Gestrichelt unterstrichene Begriffe
+wie :k[Eigenwerte]{#eigenvalue-eigenvector} öffnen Tooltips,
+die das nötige Vorwissen auffrischen, oft mit weiteren Links darin, sodass wir uns bei
+Bedarf bis zu den Grundlagen durchhangeln können. *Zweitens:* Ausklappbare
+„Vertiefung"-Boxen (wie die Landkarte oben) enthalten Exkurse und interaktive Widgets
+zum Selbst-Ausprobieren; für den roten Faden sind sie optional. *Drittens:*
+Beweise sind als Stepper gebaut: Wir decken sie Schritt für Schritt auf, und jeder
+Schritt trägt seine Begründung. Am Ende jedes Abschnitts verweist eine
+„Vertiefung:"-Zeile auf Literatur zum Weiterlesen.
+
+### Selbsttest: Reicht das Vorwissen?
+
+Der Kurs setzt Lineare Algebra I, Analysis I und etwas R-Programmierung voraus. Die
+folgenden Fragen sollten wir (zumindest nach kurzem Nachdenken) beantworten können.
+Wer hängt, klappt die Lösung auf und frischt das Thema per Tooltip auf; sehr zu
+empfehlen ist außerdem, die geometrische Intuition mit den Videos von
+*3blue1brown* („Essence of Linear Algebra") aufzubauen.
+
+**Lineare Algebra:**
+
+<ol className="max-w-prose list-decimal space-y-3 pl-5">
+  <SelbsttestFrage q={<>Was ist der Rang einer Matrix? Wie berechnen wir ihn?</>}>
+    Der :k[Rang]{#rank} ist die Anzahl linear unabhängiger
+    Spalten (gleichwertig: Zeilen), also die Dimension des
+    :k[Bildes]{#image} der zugehörigen Abbildung. Von Hand
+    berechnen wir ihn z. B. per
+    :k[Gauß-Elimination]{#gaussian-elimination}: Rang = Anzahl
+    der Nichtnullzeilen in der Stufenform.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Was bedeutet es, dass eine Matrix <M>{"\\bA"}</M> invertierbar ist?</>}>
+    Es gibt eine Matrix $\bA^{-1}$ mit
+    $\bA\bA^{-1} = \bA^{-1}\bA = \bI$
+    (:k[Inverse]{#matrix-inverse}). Das setzt voraus, dass
+    $\bA$ quadratisch ist und vollen Rang hat; gleichwertig: $0$ ist
+    kein Eigenwert, und $\bA\bx = \bb$ hat für jedes $\bb$ genau
+    eine Lösung.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Was sind Eigenwerte und Eigenvektoren? Wie finden wir sie?</>}>
+    Ein :k[Eigenvektor]{#eigenvalue-eigenvector}
+    $\bv \neq \bnull$ mit Eigenwert $\lambda$ erfüllt
+    $\bA\bv = \lambda\bv$: Die Matrix skaliert $\bv$ nur, statt
+    seine Richtung zu ändern. Von Hand finden wir Eigenwerte als Nullstellen des
+    charakteristischen Polynoms $\det(\bA - \lambda\bI) = 0$; am Rechner mit
+    numerischen Verfahren.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Was bedeutet das Matrix-Vektor-Produkt <M>{"\\bA\\bx"}</M> geometrisch?</>}>
+    $\bA\bx$ wendet die
+    :k[lineare Abbildung]{#linear-map} $\bA$ auf den
+    Vektor $\bx$ an
+    (:k[Matrix-Vektor-Produkt]{#matrix-vector-product}): Je
+    nach $\bA$ wird $\bx$ gestreckt, gedreht, gespiegelt, geschert
+    oder in einen Unterraum projiziert.
+  </SelbsttestFrage>
+</ol>
+
+**Analysis:**
+
+<ol className="max-w-prose list-decimal space-y-3 pl-5">
+  <SelbsttestFrage q={<>Was bedeutet es, dass eine Funktion <M>{"f: \\R \\to \\R"}</M> stetig ist?</>}>
+    Kleine Änderungen im Argument führen zu kleinen Änderungen im Funktionswert
+    (:k[Stetigkeit]{#continuity}). Formal: Zu jedem
+    $\eps > 0$ gibt es ein $\delta > 0$, sodass
+    $|x - x_0| < \delta$ stets $|f(x) - f(x_0)| < \eps$ erzwingt.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Was ist die Ableitung <M>{"f'(x_0)"}</M> geometrisch?</>}>
+    Die Steigung der :k[Tangente]{#tangent-line} an den Graphen
+    von $f$ im Punkt $x_0$, also die momentane Änderungsrate von
+    $f$ an dieser Stelle (:k[Ableitung]{#derivative}).
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Was unterscheidet ein lokales von einem globalen Minimum?</>}>
+    Ein lokales Minimum $x_0$ erfüllt $f(x_0) \leq f(x)$ nur für alle
+    $x$ in einer :k[Umgebung]{#neighborhood} von
+    $x_0$; ein globales Minimum für *alle* $x$ im
+    Definitionsbereich.
+    Bei nichtkonvexen Problemen können :k[Abstiegsverfahren]{#gradient-descent}
+    an lokalen Minima oder anderen stationären Punkten enden. Bei konvexen
+    Zielfunktionen ist dagegen jedes lokale Minimum bereits global.
+  </SelbsttestFrage>
+</ol>
+
+*Vertiefung: Heath §1 (wissenschaftliches Rechnen: Näherungen, Fehler, Kondition im
+Überblick); MML, Vorwort und Teil I als Panorama der Mathematik hinter dem maschinellen
+Lernen.*

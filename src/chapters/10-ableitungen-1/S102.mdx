@@ -1,0 +1,506 @@
+import { Gradientenfeld, AbstiegStepper } from "./widgets/S102Gradient";
+
+::quelle[Folien 10-ableitungen-I, „Wichtige Spezialfälle" bis „Anwendung: Gradient Descent".]
+
+In [Abschnitt 10.1](#sec-10.1) haben wir das Ableiten so weit gefasst, dass es in jedem
+normierten Raum funktioniert. Der Preis dafür ist Abstraktheit: Die Ableitung ist dort eine
+lineare Abbildung, kein Objekt, mit dem wir rechnen könnten. Für jede Kombination von Ein-
+und Ausgabeformat brauchen wir deshalb eine konkrete Gestalt, in der diese lineare Abbildung
+steckt, also eine Zahl, einen Vektor oder eine Matrix.
+
+### Fahrplan durch die Spezialfälle
+
+Alle Ableitungen, die wir aus der Analysis kennen, sind Spezialfälle der Fréchet-Ableitung.
+Neu und für die Statistik wichtig sind die Fälle, in denen Skalare, Vektoren oder Matrizen
+als Eingabe oder als Ausgabe auftreten. Die Folien ordnen sie in einer Tabelle an, und diese
+Tabelle ist zugleich der Fahrplan für die nächsten drei Abschnitte.
+
+| Eingabe ↓ / Ausgabe → | Skalar $y$ | Vektor $\by$ | Matrix $\bY$ |
+| --- | --- | --- | --- |
+| Skalar $x$ | $\dfrac{dy}{dx}$ | $\dfrac{d\by}{dx}$ | $\dfrac{d\bY}{dx}$ |
+| Vektor $\bx$ | $\dfrac{\partial y}{\partial \bx}$ | $\dfrac{\partial \by}{\partial \bx}$ | |
+| Matrix $\bX$ | $\dfrac{\partial y}{\partial \bX}$ | | |
+
+Die Einträge lesen sich so:
+
+- Skalar zu Skalar ist die gewöhnliche Ableitung aus [Abschnitt 10.1](#sec-10.1).
+- Vektor zu Skalar ist der Fall dieses Abschnitts. Das zugehörige Objekt heißt *Gradient*.
+- Vektor zu Vektor führt auf die Jacobimatrix in [Abschnitt 10.3](#sec-10.3); der Fall Skalar
+  zu Vektor steckt dort als Sonderfall mit einer einzigen Eingabevariablen drin.
+- Skalar zu Matrix und Matrix zu Skalar behandelt [Abschnitt 10.4](#sec-10.4).
+- Die drei leeren Zellen lassen wir aus. Ob wir eine Matrix nach einem Vektor ableiten,
+  einen Vektor nach einer Matrix oder eine Matrix nach einer Matrix: In allen drei Fällen
+  bräuchten wir ein Objekt mit mindestens drei Indexpositionen, also einen
+  :k[Tensor]{#tensor} ([Kapitel 9](?k=09-tensoren#sec-9.2)). Wir kommen in
+  [Abschnitt 10.5](#sec-10.5) kurz darauf zurück.
+
+### Der Gradient
+
+Der wichtigste Fall in der Statistik ist der zweite: Eine Verlust- oder
+:k[Zielfunktion]{#objective-function} bewertet ein ganzes Bündel von Parametern und gibt
+dafür eine einzige Zahl zurück. Wie leiten wir nach einem ganzen Bündel ab? Die Analysis
+geht es Koordinate für Koordinate durch: Sie friert alle bis auf eine ein und leitet die
+übrig bleibende Funktion einer Variablen ganz gewöhnlich ab. Jede solche
+:k[partielle Ableitung]{#partial-derivative} misst die Steigung von $f$ entlang einer
+Koordinatenachse, und der Gradient ist die Liste dieser $n$ Steigungen.
+
+:::definition[10.2.1 (Gradient)]
+Sei $f\colon \R^n \to \R$ eine in $\bx \in \R^n$
+:k[differenzierbare]{#differentiability} Funktion. Der *Gradient* (gradient) von $f$ in
+$\bx$ ist der Zeilenvektor der partiellen Ableitungen,
+
+$$
+\frac{\partial f(\bx)}{\partial \bx} = \corange{\nabla f(\bx)}
+= \left(\frac{\partial f(\bx)}{\partial x_1}, \dots, \frac{\partial f(\bx)}{\partial x_n}\right)
+\in \R^{1 \times n} .
+$$
+:::
+
+Dass dieser Zeilenvektor wirklich die Ableitung im Sinne von
+[Abschnitt 10.1](#sec-10.1) ist, kostet ein kurzes Argument. Die Formate passen jedenfalls:
+Das Produkt einer $1 \times n$-Zeile mit einer $n \times 1$-Spalte ist eine Zahl, und
+$\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist in $\bh$ linear. Dass es genau diese lineare
+Abbildung sein muss, sehen wir, indem wir $\bh = t\,\be_j$ mit dem $j$-ten Einheitsvektor
+$\be_j$ einsetzen und durch $t$ teilen: Links steht dann der Differenzenquotient von $f$ in
+Richtung der $j$-ten Koordinate, rechts $\cgreen{D_{\bx} f(\be_j)}$ plus ein Term, der mit
+$t \to 0$ verschwindet. Der Grenzwert links ist $\partial f(\bx)/\partial x_j$, also ist
+$\cgreen{D_{\bx} f(\be_j)}$ genau die $j$-te partielle Ableitung. Eine lineare Abbildung ist
+durch ihre Werte auf den $n$ Koordinatenrichtungen schon festgelegt, es bleibt also keine
+andere Wahl. (Lemma 10.3.3 in [Abschnitt 10.3](#sec-10.3) führt dasselbe Argument für
+beliebige Ausgabeformate aus.) Die lineare Approximation lautet damit
+
+$$ {#eq-10.2.1}
+\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{D_{\bx} f(\bh)} + \cred{o(\left\|\bh\right\|)}
+\qquad \text{mit} \qquad
+\cgreen{D_{\bx} f(\bh)} = \corange{\nabla f(\bx)}\,\bh .
+$$
+
+Der Restterm $\cred{o(\left\|\bh\right\|)}$ ist dabei wie immer in der
+:k[Landau-Notation]{#big-o-notation} zu lesen: Er schrumpft schneller als $\left\|\bh\right\|$
+selbst, wenn $\bh$ gegen null geht. Anschaulich ist
+$\cgreen{\bh \mapsto f(\bx) + \nabla f(\bx)\bh}$ für $n = 2$ eine Ebene, die den Graphen von
+$f$ im Punkt $(\bx, f(\bx))$ berührt, also die Tangentialebene. Sie übernimmt die Rolle, die
+für $n = 1$ die Tangente an den Funktionsgraphen spielt.
+
+:::bemerkung[10.2.2 (Zeilenvektor, nicht Spaltenvektor)]
+Die Folien halten in einer Anmerkung fest, dass $\nabla f$ vielerorts als *Spalten*vektor
+definiert wird und die Zeilenform für uns die praktischere ist. Wofür genau, zeigt sich
+erst in den nächsten Abschnitten, deshalb hier vorab die zwei Stellen.
+
+Die Jacobimatrix aus [Abschnitt 10.3](#sec-10.3) hat für $f\colon \R^n \to \R^m$ das Format
+$m \times n$, im Fall $m = 1$ also $\R^{1 \times n}$. In der Zeilenkonvention sind Gradient
+und Jacobimatrix damit dasselbe Objekt, und wir müssen die beiden Fälle weder unterscheiden
+noch ineinander umrechnen. In der Kettenregel dürfen wir die Faktoren außerdem in der
+Reihenfolge hinschreiben, in der die Funktionen hintereinander ausgeführt werden; in der
+Spaltenkonvention kehrt sich diese Reihenfolge um und die Faktoren tragen Transponierte.
+
+Bezahlen müssen wir dafür an einer anderen Stelle. Wo der Gradient als Punkt oder als
+Schritt im $\R^n$ auftritt, etwa in einem Optimierungsverfahren, steht der
+:k[transponierte]{#transpose} Gradient. Genau das passiert weiter unten im
+Gradientenabstieg.
+:::
+
+### Was der Gradient über $f$ verrät
+
+Die Definition zählt nur die Steigungen entlang der $n$ Koordinatenachsen auf. Sie sagt
+scheinbar nichts über schräge Richtungen. Tatsächlich steckt darin schon die vollständige
+Information, und ($10.2.1$) liefert sie uns.
+
+:::definition[10.2.3 (Richtungsableitung)]
+Sei $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$. Die *Richtungsableitung* von $f$ in $\bx$
+in Richtung $\bd$ ist die Ableitung der eindimensionalen Funktion $t \mapsto f(\bx + t\bd)$
+an der Stelle $t = 0$. Setzen wir $\bh = t\bd$ in ($10.2.1$) ein, so ist sie gerade
+$\corange{\nabla f(\bx)}\bd$, denn
+
+$$ {#eq-10.2.2}
+\cblue{f(\bx + t\bd)} = \cblue{f(\bx)} + \cgreen{t\,\corange{\nabla f(\bx)}\bd} + \cred{o(|t|)} .
+$$
+:::
+
+Aus $\left\|\bd\right\|_2 = 1$ folgt $\left\|t\bd\right\|_2 = |t|$, deshalb steht rechts
+$\cred{o(|t|)}$. Wir kennen die Steigung von $f$ also in *jeder* Richtung, sobald wir den
+Gradienten kennen. Die Norm legt dabei fest, was ein gleich großer Schritt ist;
+im Folgenden verwenden wir die euklidische Norm. Unter allen so normierten
+Richtungen gibt es eine beste.
+
+:::satz[10.2.4 (Richtung des stärksten Anstiegs)]
+Sei $f$ in $\bx$ differenzierbar mit $\corange{\nabla f(\bx)} \neq \bnull$. Dann gilt für
+alle $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$
+
+$$
+-\left\|\corange{\nabla f(\bx)}\right\|_2 \;\leq\; \corange{\nabla f(\bx)}\bd \;\leq\;
+\left\|\corange{\nabla f(\bx)}\right\|_2 ,
+$$
+
+und die obere Schranke wird genau für
+
+$$
+\bd^\ast = \frac{\corange{\nabla f(\bx)^\top}}{\left\|\corange{\nabla f(\bx)}\right\|_2}
+$$
+
+angenommen, die untere für $-\bd^\ast$. Der transponierte Gradient zeigt also in die
+Richtung des stärksten Anstiegs, der negative in die des stärksten Abstiegs, und
+$\left\|\corange{\nabla f(\bx)}\right\|_2$ ist die Steigung in dieser Richtung.
+:::
+
+::::beweis
+
+:::schritt
+Das Produkt aus Zeile und Spalte ist ein Skalarprodukt: Mit $\bg = \corange{\nabla f(\bx)^\top}
+\in \R^n$ ist $\corange{\nabla f(\bx)}\bd = \bg^\top\bd$. Die
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} liefert
+
+$$
+\left|\bg^\top\bd\right| \leq \left\|\bg\right\|_2 \left\|\bd\right\|_2 = \left\|\bg\right\|_2 ,
+$$
+
+also beide Schranken auf einmal.
+
+::why[$\left\|\bd\right\|_2 = 1$; die :k[euklidische Norm]{#euclidean-norm} von $\bg$ ist dieselbe wie die des Zeilenvektors $\nabla f(\bx)$]
+:::
+
+:::schritt
+Gleichheit gilt in Cauchy-Schwarz genau dann, wenn $\bd$ ein Vielfaches von $\bg$ ist, also
+$\bd = c\,\bg$ mit $c \in \R$. Aus $\left\|\bd\right\|_2 = 1$ folgt
+$|c| = 1/\left\|\bg\right\|_2$. Das positive Vorzeichen gibt
+
+$$
+\bg^\top\bd^\ast = \frac{\bg^\top\bg}{\left\|\bg\right\|_2}
+= \frac{\left\|\bg\right\|_2^2}{\left\|\bg\right\|_2} = \left\|\bg\right\|_2 ,
+$$
+
+das negative den Wert $-\left\|\bg\right\|_2$.
+
+::why[hier wird $\corange{\nabla f(\bx)} \neq \bnull$ gebraucht: sonst dürften wir nicht durch $\left\|\bg\right\|_2$ teilen, und alle Richtungsableitungen wären null]
+:::
+
+::::
+
+:::bemerkung[10.2.5 (Der Gradient steht senkrecht auf der Höhenlinie)]
+Interessant ist auch das andere Extrem. Für Richtungen $\bd$ mit
+$\corange{\nabla f(\bx)}\bd = 0$ verschwindet in ($10.2.2$) der lineare Term, und $f$ ändert
+sich in erster Ordnung überhaupt nicht. Solche Richtungen stehen senkrecht auf
+$\corange{\nabla f(\bx)^\top}$. Ist $f$ in einer Umgebung von $\bx$ stetig differenzierbar
+und $\corange{\nabla f(\bx)} \neq \bnull$, so sind sie genau die Tangentialrichtungen der
+:k[Niveaumenge]{#level-sets} $\{\by \in \R^n : f(\by) = f(\bx)\}$ durch $\bx$; diese ist
+dort nach dem Satz über implizite Funktionen eine glatte Kurve oder Fläche, für $n = 2$ also
+die Höhenlinie durch $\bx$. Verschwindet der Gradient dagegen, kann die Niveaumenge eine
+Ecke haben, und ein Beispiel dafür folgt gleich.
+
+Beide Beobachtungen zusammen ergeben das vertraute Bild einer Landkarte: Der Gradient steht
+senkrecht auf der Höhenlinie und zeigt bergauf, und je enger die Höhenlinien beieinander
+liegen, desto größer ist $\left\|\corange{\nabla f(\bx)}\right\|_2$.
+:::
+
+### Eine quadratische Funktion als Beispiel
+
+:::beispiel[10.2.6 (Gradient einer quadratischen Funktion)]
+Wir betrachten $f\colon \R^2 \to \R$ mit
+
+$$
+\cblue{f(\bx)} = x_1^2 + 3x_1x_2 + 2x_2^2 .
+$$
+
+**Schritt 1: partielle Ableitungen.** Beim Ableiten nach $x_1$ ist $x_2$ eine Konstante und
+umgekehrt:
+
+$$
+\frac{\partial f(\bx)}{\partial x_1} = 2x_1 + 3x_2 ,
+\qquad\qquad
+\frac{\partial f(\bx)}{\partial x_2} = 3x_1 + 4x_2 .
+$$
+
+**Schritt 2: als Zeile zusammensetzen.**
+
+$$
+\corange{\nabla f(\bx)} = \begin{pmatrix} 2x_1 + 3x_2 & 3x_1 + 4x_2 \end{pmatrix} \in \R^{1 \times 2} .
+$$
+
+Beachten wir das Format: $\nabla f$ bildet $\R^2$ nicht nach $\R^2$ ab, sondern nach
+$\R^{1 \times 2}$.
+
+**Probe an einer Stelle.** In $\bx = (1, 1)^\top$ ist $\cblue{f(\bx)} = 6$ und
+$\corange{\nabla f(\bx)} = (5, 7)$. Für $\bh = (0{,}1;\, 0{,}1)^\top$ sagt ($10.2.1$)
+
+$$
+\cblue{f(\bx + \bh)} \approx \cblue{6} + \cgreen{5 \cdot 0{,}1 + 7 \cdot 0{,}1} = 7{,}2 ,
+\qquad\text{tatsächlich}\qquad
+\cblue{f(1{,}1;\, 1{,}1)} = 7{,}26 .
+$$
+
+Der Restterm ist $\cred{0{,}06}$. Weil $f$ quadratisch ist, können wir ihn sogar exakt
+angeben: Ausmultiplizieren von $f(\bx + \bh)$ liefert
+$\cred{h_1^2 + 3h_1h_2 + 2h_2^2}$, also einen Ausdruck, der quadratisch in $\bh$ ist.
+Halbieren wir $\bh$, so viertelt er sich, während $\left\|\bh\right\|$ nur halb so groß
+wird:
+
+| $\bh$ | Länge von $\bh$ | Restterm | Restterm geteilt durch die Länge |
+| --- | --- | --- | --- |
+| $(0{,}1;\, 0{,}1)$ | $0{,}1414$ | $0{,}06$ | $0{,}424$ |
+| $(0{,}05;\, 0{,}05)$ | $0{,}0707$ | $0{,}015$ | $0{,}212$ |
+| $(0{,}01;\, 0{,}01)$ | $0{,}0141$ | $0{,}0006$ | $0{,}042$ |
+
+Die letzte Spalte geht gegen null, und das ist genau die Aussage
+$\cred{o(\left\|\bh\right\|)}$.
+:::
+
+:::vertiefung[Höhenlinien, Gradientenpfeil und lineare Näherung]
+Die Folien zeigen an dieser Stelle gerenderte Bilder eines Funktionsgraphen mit
+Gradientenpfeil und Tangentialebene. Das Widget macht dasselbe interaktiv und in der Ebene:
+Links liegen die Höhenlinien mit dem orangen Gradientenpfeil am gewählten Punkt, rechts steht
+der Schnitt von $f$ entlang des Strahls in die violett gezeichnete Richtung $\bd$, zusammen
+mit der linearen Näherung aus ($10.2.2$). Die grüne Gerade rechts ist genau der Schnitt der
+Tangentialebene entlang dieser Richtung. Drei Beobachtungen lohnen sich: Der orange Pfeil steht immer
+senkrecht auf der blau gestrichelten Tangente an die Höhenlinie (Bemerkung 10.2.5), die
+Richtungsableitung wird maximal, wenn $\bd$ in Gradientenrichtung zeigt (Satz 10.2.4), und
+die grüne Gerade schmiegt sich bei $t = 0$ an die blaue Kurve, weicht daneben aber ab. Der
+zweite Knopf schaltet auf eine nicht quadratische Funktion um, deren Höhenlinien sich krümmen;
+alle drei Aussagen gelten dort unverändert, weil sie punktweise formuliert sind.
+
+<Gradientenfeld />
+:::
+
+### Zwei Gradienten zum Auswendiglernen
+
+Zwei Funktionen tauchen in der Statistik so oft auf, dass sich ihre Gradienten einzuprägen
+lohnt: die lineare Funktion und die :k[quadratische Form]{#quadratic-form}.
+
+:::beispiel[10.2.7 (Gradient einer linearen Funktion)]
+Seien $\ba, \bx \in \R^n$ und $f(\bx) = \ba^\top\bx$. Was ist $\corange{\nabla f(\bx)}$?
+Bevor wir weiterlesen, lohnt sich der eigene Versuch.
+
+<details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
+<summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
+<div className="space-y-2 pt-2">
+
+Ausgeschrieben ist $f(\bx) = \sumin a_i x_i$. In dieser Summe kommt $x_k$ in genau einem
+Summanden vor, nämlich in $a_k x_k$, und dort linear. Also
+
+$$
+\frac{\partial f(\bx)}{\partial x_k} = a_k
+\qquad\text{und damit}\qquad
+\corange{\nabla f(\bx)} = (a_1, \dots, a_n) = \corange{\ba^\top} .
+$$
+
+Der Gradient hängt hier nicht von $\bx$ ab. Das muss so sein: $f$ ist selbst schon linear,
+die lineare Approximation ist also $f$ selbst, und der Restterm in ($10.2.1$) ist exakt
+null.
+
+</div>
+</details>
+:::
+
+:::satz[10.2.8 (Gradient der quadratischen Form)]
+Sei $\bA \in \R^{n \times n}$ :k[symmetrisch]{#symmetric-matrix} und
+$f\colon \R^n \to \R$ mit $f(\bx) = \bx^\top\bA\bx$. Dann gilt
+
+$$ {#eq-10.2.3}
+\corange{\nabla f(\bx)} = 2\bx^\top\bA .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Wir schreiben die quadratische Form als Doppelsumme aus:
+
+$$
+f(\bx) = \sumin \sumjn x_i\, a_{ij}\, x_j .
+$$
+
+::why[der $i$-te Eintrag von $\bA\bx$ ist $\sum_j a_{ij}x_j$, und $\bx^\top(\bA\bx)$ summiert diese Einträge mit den Gewichten $x_i$]
+:::
+
+:::schritt
+Jetzt leiten wir nach $x_k$ ab. Die Variable $x_k$ kommt in zwei Sorten von Summanden vor:
+einmal als linker Faktor ($i = k$), einmal als rechter ($j = k$). Die Produktregel liefert
+
+$$
+\frac{\partial f(\bx)}{\partial x_k} = \sumin x_i\, a_{ik} + \sumjn a_{kj}\, x_j .
+$$
+
+::why[der Summand mit $i = j = k$ enthält $x_k$ zweimal; die Produktregel gibt dort $2a_{kk}x_k$, also je einen Beitrag $a_{kk}x_k$ an beide Summen]
+:::
+
+:::schritt
+Erst hier geht die Symmetrie ein. Aus $a_{ik} = a_{ki}$ folgt, dass beide Summen dasselbe
+sind:
+
+$$
+\frac{\partial f(\bx)}{\partial x_k} = \sumin a_{ki}\, x_i + \sumjn a_{kj}\, x_j
+= 2 \sumin a_{ki}\, x_i = 2\,(\bA\bx)_k .
+$$
+
+::why[die zweite Summe ist bis auf den Namen des Laufindex die erste]
+:::
+
+:::schritt
+Der Gradient sammelt diese $n$ Zahlen als Zeile ein, also
+
+$$
+\corange{\nabla f(\bx)} = 2\,(\bA\bx)^\top = 2\,\bx^\top\bA^\top = 2\,\bx^\top\bA .
+$$
+
+::why[$(\bA\bx)^\top = \bx^\top\bA^\top$, und noch einmal $\bA^\top = \bA$]
+:::
+
+::::
+
+:::bemerkung[10.2.9 (Drei Nachträge zu Satz 10.2.8)]
+**Der Spezialfall $\bA = \bI$.** Dann ist $f(\bx) = \bx^\top\bx = \left\|\bx\right\|_2^2$ und
+($10.2.3$) wird zu $\corange{\nabla f(\bx)} = 2\bx^\top$. Das ist die mehrdimensionale
+Fassung von $(x^2)' = 2x$.
+
+**Ohne Symmetrie stimmt die Formel nicht.** Schritt 3 des Beweises braucht
+$a_{ik} = a_{ki}$. Allgemein liefern die ersten beiden Schritte
+
+$$
+\corange{\nabla (\bx^\top\bA\bx)} = \bx^\top\bigl(\bA + \bA^\top\bigr) ,
+$$
+
+was für symmetrisches $\bA$ wieder ($10.2.3$) ergibt. Ein Gegenbeispiel ist
+$\bA = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ mit
+$f(\bx) = x_1x_2$: Hier ist $\corange{\nabla f(\bx)} = (x_2, x_1)$, während
+$2\bx^\top\bA = (0, 2x_1)$ etwas ganz anderes ist. In $\bx = (1,1)^\top$ steht $(1,1)$ gegen
+$(0,2)$.
+
+**Beispiel 10.2.6 ist ein Sonderfall.** Mit
+$\bA = \bigl(\begin{smallmatrix} 1 & 3/2 \\ 3/2 & 2 \end{smallmatrix}\bigr)$ ist
+$\bx^\top\bA\bx = x_1^2 + 3x_1x_2 + 2x_2^2$, und ($10.2.3$) gibt
+
+$$
+2\bx^\top\bA = \begin{pmatrix} 2x_1 + 3x_2 & 3x_1 + 4x_2 \end{pmatrix} ,
+$$
+
+also genau den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist
+allerdings *nicht* :k[positiv definit]{#positive-definite}, denn ihre Determinante ist
+$1 \cdot 2 - (3/2)^2 = -1/4 < 0$. Die Matrix der zweiten partiellen Ableitungen, die
+:k[Hesse-Matrix]{#hessian-matrix} $2\bA = \bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4
+\end{smallmatrix}\bigr)$, hat entsprechend die Determinante $-1$ und die Eigenwerte
+$3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$. Im Nullpunkt hat $f$ deshalb kein Minimum,
+sondern einen Sattel: In der einen Eigenrichtung steigt $f$, in der anderen fällt es. Im
+Widget oben kreuzen sich dort die beiden Geraden zum Niveau $0$.
+:::
+
+### Anwendung: Gradientenabstieg
+
+Warum interessieren wir uns überhaupt für die Richtung des stärksten Anstiegs? Weil das
+Standardwerkzeug der :k[Optimierung]{#optimization} in hohen Dimensionen genau darauf beruht.
+Gesucht sind Parameter $\btheta \in \R^p$, die eine Verlustfunktion $L(\btheta)$ klein
+machen, etwa den mittleren quadratischen Fehler eines Modells. Für $p$ in der Größenordnung
+von Millionen ist an eine geschlossene Lösung nicht zu denken, wohl aber an kleine Schritte
+bergab.
+
+:::algorithmus[10.2.10 (Gradientenabstieg)]
+Gegeben eine differenzierbare Verlustfunktion $L\colon \R^p \to \R$, ein Startwert
+$\btheta^{(0)}$ und eine Lernrate $\alpha > 0$. Für $t = 0, 1, 2, \dots$ iteriere
+
+$$ {#eq-10.2.4}
+\btheta^{(t+1)} = \btheta^{(t)} - \alpha\, \corange{\nabla L\bigl(\btheta^{(t)}\bigr)^\top} .
+$$
+
+Abgebrochen wird, wenn sich $\btheta$ kaum noch ändert oder der Gradient klein genug ist.
+:::
+
+Nach Satz 10.2.4 zeigt $-\corange{\nabla L(\btheta)^\top}$ in die Richtung des stärksten
+Abstiegs. Der Algorithmus läuft also in jedem Schritt in die aktuell steilste Richtung
+bergab, und zwar um die Länge $\alpha\left\|\corange{\nabla L(\btheta^{(t)})}\right\|$.
+Dass er damit tatsächlich am Ziel ankommt, hängt an $\alpha$ und an der Gestalt von $L$; das
+:k[Gradientenverfahren]{#gradient-descent} und seine Varianten sind die Grundlage für das
+Training :k[neuronaler Netze]{#neural-network} und für komplexe Regressionsmodelle.
+
+:::bemerkung[10.2.11 (Warum in Gleichung 10.2.4 ein Transponiertes steht)]
+Das $^\top$ in ($10.2.4$) ist keine Kosmetik, sondern eine Formatfrage. Die Parameter
+$\btheta^{(t)}$ bilden einen Spaltenvektor in $\R^p$, der Gradient
+$\corange{\nabla L(\btheta^{(t)})}$ nach Definition 10.2.1 dagegen eine Zeile in
+$\R^{1 \times p}$. Eine Zeile von einer Spalte abzuziehen ist nicht definiert. Erst
+$\corange{\nabla L(\btheta^{(t)})^\top} \in \R^p$ passt zum Rest der Gleichung. Wer den
+Gradienten von vornherein als Spalte definiert, spart hier das $^\top$ und handelt es sich
+dafür in der Kettenregel wieder ein (Bemerkung 10.2.2).
+:::
+
+:::vertiefung[Gradientenabstieg auf einer konvexen quadratischen Funktion]
+Zum Ausprobieren nehmen wir nicht die Funktion aus Beispiel 10.2.6, denn deren Sattel wäre
+für ein Abstiegsverfahren eine Falle: Entlang der Eigenrichtung zum negativen Eigenwert der
+Hesse-Matrix wächst der Abstand zum Sattel bei jeder Lernrate. Stattdessen minimieren wir
+$L(\btheta) = \tfrac{1}{2}\btheta^\top\bA\btheta$ mit der symmetrischen und positiv
+definiten Matrix
+$\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3 \end{smallmatrix}\bigr)$, deren Eigenwerte
+$(5 \pm \sqrt{5})/2$, also $3{,}618$ und $1{,}382$, beide positiv sind. Nach Satz 10.2.8 und
+der Linearität des Ableitens ist $\corange{\nabla L(\btheta)} = \btheta^\top\bA$, der Schritt
+also $-\alpha\bA\btheta$.
+
+Der Regler für $\alpha$ führt drei Regime vor: Kleine Lernraten kriechen. Die Wahl
+$\alpha = 2/(\lambda_{\min} + \lambda_{\max}) = 0{,}4$ ist hier optimal und drückt den
+Abstand zum Minimum je Schritt auf das $0{,}447$-fache. Und für
+$\alpha > 2/\lambda_{\max} \approx 0{,}553$ wächst er stattdessen, die Iterierten laufen
+davon.
+
+<AbstiegStepper />
+:::
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Ist $f\colon \R^n \to \R$ in $\bx$ differenzierbar, so ist $\nabla f(\bx)$ ein Zeilenvektor
+in $\R^{1 \times n}$, und $\bh \mapsto \nabla f(\bx)\bh$ ist die Fréchet-Ableitung von $f$
+in $\bx$.
+
+Das ist Definition 10.2.1 zusammen mit ($10.2.1$). Das Produkt aus einer $1 \times n$-Zeile
+und einer $n \times 1$-Spalte ist eine Zahl, und die Abbildung ist linear in $\bh$.
+:::
+
+:::frage{falsch}
+Für $f(\bx) = \ba^\top\bx$ hängt der Gradient von der Stelle $\bx$ ab.
+
+Er ist konstant gleich $\ba^\top$ (Beispiel 10.2.7). Das ist kein Zufall: $f$ ist selbst
+linear, also ist die beste lineare Näherung $f$ selbst, und der Restterm in ($10.2.1$)
+verschwindet exakt.
+:::
+
+:::frage{falsch}
+Für jede Matrix $\bA \in \R^{n \times n}$ gilt $\nabla\bigl(\bx^\top\bA\bx\bigr) = 2\bx^\top\bA$.
+
+Satz 10.2.8 verlangt Symmetrie, und die wird im dritten Beweisschritt gebraucht. Allgemein
+gilt $\nabla(\bx^\top\bA\bx) = \bx^\top(\bA + \bA^\top)$. Für
+$\bA = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ ist
+$f(\bx) = x_1x_2$ mit $\nabla f(\bx) = (x_2, x_1)$, während $2\bx^\top\bA = (0, 2x_1)$ ist.
+In $\bx = (1,1)^\top$ steht $(1,1)$ gegen $(0,2)$.
+:::
+
+:::frage{wahr}
+Sei $\nabla f(\bx) \neq \bnull$. Unter allen Richtungen $\bd$ mit
+$\left\|\bd\right\|_2 = 1$ ist die Richtungsableitung $\nabla f(\bx)\bd$ genau dann maximal,
+wenn $\bd$ in Richtung $\nabla f(\bx)^\top$ zeigt, und ihr Maximalwert ist
+$\left\|\nabla f(\bx)\right\|_2$.
+
+Das ist Satz 10.2.4, bewiesen mit dem Gleichheitsfall der Cauchy-Schwarz-Ungleichung. Ohne
+die Voraussetzung $\nabla f(\bx) \neq \bnull$ wäre nichts zu holen: Dann sind alle
+Richtungsableitungen null, und keine Richtung zeichnet sich aus.
+:::
+
+:::frage{falsch}
+Das $^\top$ im Update $\btheta - \alpha \nabla L(\btheta)^\top$ ist reine Schreibweise und
+darf weggelassen werden.
+
+Ohne das $^\top$ passen die Formate nicht: $\btheta$ ist eine Spalte in $\R^p$, der Gradient
+eine Zeile in $\R^{1 \times p}$, und die Differenz wäre nicht definiert
+(Bemerkung 10.2.11).
+:::
+
+:::frage{falsch}
+Verschwindet der Gradient in einem Punkt, so liegt dort ein Minimum von $f$.
+
+Ein verschwindender Gradient sagt nur, dass die lineare Näherung flach ist. Für
+$f(\bx) = x_1^2 + 3x_1x_2 + 2x_2^2$ aus Beispiel 10.2.6 ist $\nabla f(\bnull) = (0,0)$,
+und der Nullpunkt ist ein Sattel: Die Hesse-Matrix hat die Eigenwerte $6{,}162$ und
+$-0{,}162$, also einen positiven und einen negativen (Bemerkung 10.2.9). Entlang der einen
+Eigenrichtung steigt $f$, entlang der anderen fällt es.
+:::
+
+::::
+
+*Vertiefung: MML §5.2 (partielle Ableitungen und Gradient); für den Gradientenabstieg
+MML §7.1.*

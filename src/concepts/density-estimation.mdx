@@ -1,0 +1,20 @@
+export const title = "Dichteschätzung";
+
+import { DensityWidget } from "./widgets/DensityEstimationWidget";
+
+*Dichteschätzung* (density estimation) bedeutet: Wir
+rekonstruieren die Wahrscheinlichkeitsdichte einer Zufallsgröße aus
+einer Stichprobe $x_1, \dots, x_N$ beobachteter Werte.
+Gesucht ist eine
+:k[Funktion]{#function} $p(x)$, die
+groß ist, wo sich Datenpunkte häufen, und klein, wo sie selten sind.
+Das Histogramm aus Statistik I ist die gröbste Variante; glatter wird
+es, wenn wir eine parametrische Familie wählen (zum Beispiel ein
+:k[Gaußsches Mischmodell]{#gaussian-mixture-model}) und deren Parameter so einstellen, dass die
+:k[Likelihood]{#likelihood} der beobachteten
+Stichprobe maximal wird. Dieser Einstellschritt ist ein numerisches
+:k[Optimierungsproblem]{#optimization}; so
+motiviert die Dichteschätzung die Differentialrechnung, die wir dafür
+brauchen.
+
+<DensityWidget />

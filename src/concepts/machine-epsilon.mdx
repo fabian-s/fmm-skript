@@ -1,0 +1,38 @@
+export const title = "Maschinengenauigkeit (machine epsilon)";
+
+import { FloatGapWidget } from "./widgets/MachineEpsilonWidget";
+
+Computer speichern reelle Zahlen als
+:k[Gleitkommazahlen]{#floating-point} mit
+einer festen Anzahl signifikanter Stellen. Zwischen zwei benachbarten
+darstellbaren Zahlen klafft also immer eine Lücke. Die
+*Maschinengenauigkeit* (engl. *machine epsilon*)
+$\varepsilon_{\text{mach}}$ ist die Größe dieser Lücke
+direkt neben der 1: der Abstand von $1$ zur nächstgrößeren
+darstellbaren Zahl. Im üblichen Format mit doppelter Genauigkeit gilt
+
+$$
+\varepsilon_{\text{mach}} = 2^{-52} \approx 2{,}2 \times 10^{-16},
+$$
+
+also etwa 16 signifikante Dezimalstellen. Eine beliebige reelle Zahl
+$x$ zu speichern heißt, sie auf den nächsten darstellbaren
+Wert zu runden. Das verursacht einen *relativen* Fehler von
+höchstens etwa $\varepsilon_{\text{mach}}$, die
+grundlegende Auflösungsgrenze hinter jedem
+:k[Rundungsfehler]{#rounding-error}.
+Konkrete Konsequenz: In doppelter Genauigkeit ergibt die Summe
+$1 + 10^{-17}$ exakt $1$, denn das wahre Ergebnis
+liegt innerhalb der Lücke und wird wieder heruntergerundet.
+
+Die Größe
+$\sqrt{\varepsilon_{\text{mach}}} \approx 10^{-8}$ taucht
+immer dann auf, wenn ein Effekt der Größe $\varepsilon^2$
+gegen einen der Größe $\varepsilon$ abgewogen wird: Wählen
+wir $\varepsilon$ nahe
+$\sqrt{\varepsilon_{\text{mach}}}$, fällt
+$\varepsilon^2$ gerade unter die Auflösung der Arithmetik.
+Genau nach diesem Prinzip wählt man z.&nbsp;B. Störungs- und
+Schrittweiten in numerischen Verfahren.
+
+<FloatGapWidget />

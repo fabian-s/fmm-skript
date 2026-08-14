@@ -1,0 +1,58 @@
+export const title = "Normalengleichungen";
+
+import { ProjectionWidget } from "./widgets/NormalEquationsWidget";
+
+{/*
+ * Konzept-Tooltip: Normalengleichungen (Stoff aus Heath §3.2).
+ */}
+
+Wie lösen wir ein
+:k[lineares Kleinste-Quadrate-Problem]{#linear-least-squares}
+eigentlich konkret? Die quadrierte Residuenlänge
+$\phi(\bx) = \| \bb - \bA\bx \|_2^2$
+ist eine glatte Schüssel in $\bx$, an ihrem Minimum muss
+also der :k[Gradient]{#gradient}
+verschwinden. Wir berechnen
+$\nabla \phi(\bx) = 2\bA^{T}(\bA\bx - \bb)$
+und setzen ihn auf Null; das liefert die
+*Normalengleichungen* (engl. *normal equations*):
+
+$$
+\bA^{T} \bA \, \bx = \bA^{T} \bb,
+$$
+
+ein quadratisches $n \times n$-System, obwohl
+$\bA$ selbst hoch und schmal ist. Der Name kommt aus der
+Geometrie: Umgestellt zu
+$\bA^{T}\br = \bzero$ besagt das System, dass das Residuum
+:k[orthogonal]{#orthogonality} („normal“) zu
+jeder Spalte von $\bA$ stehen muss. Das beste
+$\bA\bx$ ist der Fußpunkt des Lots von
+$\bb$ auf den :k[Spann]{#span} der
+Spalten. Für das Beispiel einer Ausgleichsgeraden durch drei
+Datenpunkte (vgl. Heath Kap. 3) ergibt sich, mit den
+:k[transponierten]{#transpose} Faktoren
+ausmultipliziert:
+
+$$
+\begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 11 \end{bmatrix} \quad\Rightarrow\quad \bx = \begin{bmatrix} 2/3 \\ 1/2 \end{bmatrix}.
+$$
+
+Die Matrix $\bA^{T}\bA$ ist
+:k[symmetrisch]{#symmetric-matrix} und
+:k[positiv definit]{#positive-definite},
+sobald die Spalten von $\bA$
+:k[linear unabhängig]{#linear-independence}
+sind; die
+:k[Cholesky-Zerlegung]{#cholesky-factorization}
+löst das System dann effizient. Der Haken: Die
+:k[Konditionszahl]{#condition-number} von
+$\bA^{T}\bA$ ist das *Quadrat* von
+$\operatorname{cond}(\bA)$. Das Aufstellen von
+$\bA^{T}\bA$ kann
+:k[Rundungsfehler]{#rounding-error} also
+kräftig verstärken. Eine
+:k[QR-Zerlegung]{#qr-factorization} von
+$\bA$ umgeht dieses Problem.
+
+<ProjectionWidget />

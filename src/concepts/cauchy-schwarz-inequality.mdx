@@ -1,0 +1,26 @@
+export const title = "Cauchy-Schwarz-Ungleichung";
+
+import { AngleWidget } from "./widgets/CauchySchwarzWidget";
+
+{/* Konzept-Tooltip: Cauchy-Schwarz-Ungleichung. */}
+
+Für zwei beliebige :k[Vektoren]{#vector} kann das
+:k[Skalarprodukt]{#dot-product} das Produkt der Längen nie übertreffen:
+
+$$
+\left| \bx^\top \by \right| \;\leq\; \lVert \bx \rVert \, \lVert \by \rVert,
+$$
+
+mit Gleichheit genau dann, wenn ein Vektor ein Vielfaches des anderen ist
+(vgl. MML Gl. (3.17)). In der Ebene ist das schlicht Trigonometrie: wegen
+$\bx^\top\by = \lVert\bx\rVert\,\lVert\by\rVert \cos\omega$ für den Winkel
+$\omega$ zwischen den Vektoren und $|\cos\omega| \leq 1$ ist die Schranke
+automatisch erfüllt. Kurzer Check mit $\bx = (1, 2)^\top$,
+$\by = (3, 4)^\top$: $|\bx^\top\by| = 11 \leq \sqrt{5} \cdot 5 \approx 11.18$,
+fast scharf, weil die beiden Vektoren in fast dieselbe Richtung zeigen.
+Dieselbe Ungleichung gilt für *jedes* Skalarprodukt und die davon induzierte
+:k[Norm]{#norm}, etwa für Matrizen mit dem Spur-Skalarprodukt
+$\langle \bA, \bB \rangle = \operatorname{tr}(\bA^\top\bB)$. Das ist die
+Version, die im Beweis von Eckart–Young benutzt wird (vgl. MML Ungl. (4.99)).
+
+<AngleWidget />

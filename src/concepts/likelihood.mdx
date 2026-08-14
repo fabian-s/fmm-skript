@@ -1,0 +1,30 @@
+export const title = "Likelihood";
+
+import { LikelihoodWidget } from "./widgets/LikelihoodWidget";
+
+{/* Concept tooltip: Likelihood (wie wahrscheinlich sind die Daten unter den Parametern). */}
+
+Die Likelihood misst, wie wahrscheinlich die beobachteten Daten wären,
+wenn die Parameter einen bestimmten Wert hätten. Die Daten stehen fest
+(sie wurden ja gemessen), und wir lesen die Likelihood als
+:k[Funktion]{#function} der Parameter
+$\btheta$: Parameter, unter denen die Daten wahrscheinlich
+sind, bekommen eine hohe Likelihood. Beispiel: Eine Münze mit
+unbekannter Kopf-Wahrscheinlichkeit $p$ zeigt bei 10
+unabhängigen Würfen 7-mal Kopf; eine bestimmte solche Wurffolge hat die
+Wahrscheinlichkeit
+
+$$
+L(p) = p^{7} (1 - p)^{3} ,
+$$
+
+und die ist am größten bei $p = 0.7$. Wählen wir die
+Parameter, die die Likelihood
+:k[maximieren]{#optimization}, heißt das
+Maximum-Likelihood-Schätzung. Sie ist die
+:k[Zielfunktion]{#objective-function} hinter
+vielen Standardverfahren, auch hinter der
+:k[linearen Regression]{#linear-regression}
+mit normalverteilten Fehlern.
+
+<LikelihoodWidget />

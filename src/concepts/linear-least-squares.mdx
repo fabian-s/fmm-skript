@@ -1,0 +1,44 @@
+export const title = "Lineares Kleinste-Quadrate-Problem";
+
+import { LsFitWidget } from "./widgets/LinearLeastSquaresWidget";
+
+{/*
+ * Concept tooltip: lineares Kleinste-Quadrate-Problem (vgl. Heath Kap. 3).
+ */}
+
+Nehmen wir ein lineares Gleichungssystem mit mehr Gleichungen als
+Unbekannten: $\bA\bx \cong \bb$ mit einer
+$m \times n$-:k[Matrix]{#matrix},
+$m > n$. Typischerweise erfüllt kein $\bx$ alle
+$m$ Gleichungen exakt, also begnügen wir uns mit dem besten
+Kompromiss: Wir wählen $\bx$ so, dass das *Residuum*
+$\br = \bb - \bA\bx$ in der
+:k[euklidischen Norm]{#euclidean-norm} so
+kurz wie möglich wird:
+
+$$
+\min_{\bx} \; \left\| \bb - \bA\bx \right\|_2^2 .
+$$
+
+Das ist die Methode der *kleinsten Quadrate* (least squares),
+und sie ist *linear*, weil die unbekannten Parameter linear
+eingehen, als
+:k[Linearkombination]{#linear-combination}
+der Spalten von $\bA$; die Daten selbst dürfen durch
+beliebige Funktionen eingehen. Eine Gerade
+$y \approx x_1 + x_2 t$ an die drei Punkte
+$(1,1), (2,2), (3,2)$ anzupassen bedeutet
+
+$$
+\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \cong \begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}, \qquad \text{Lösung } \; \bx = \begin{bmatrix} 2/3 \\ 1/2 \end{bmatrix}.
+$$
+
+Weil die Zielfunktion eine glatte Schüssel ist (siehe
+:k[Konvexität]{#convexity}), lässt sich der
+Minimierer direkt berechnen: über die
+:k[Normalengleichungen]{#normal-equations}
+oder, genauer, über eine
+:k[QR-Zerlegung]{#qr-factorization} von
+$\bA$.
+
+<LsFitWidget />

@@ -1,0 +1,30 @@
+export const title = "Komposition von Funktionen";
+
+import { CompositionPipeline } from "./widgets/FunctionCompositionWidget";
+
+{/* Concept tooltip: function composition g ∘ f. */}
+
+Zwei :k[Funktionen]{#function} zu
+*komponieren* (engl. *function composition*) heißt, sie
+nacheinander auszuführen: Erst wenden wir $f$ auf
+$x$ an, dann stecken wir das Ergebnis in $g$. Die
+Verkettung schreiben wir $g \circ f$ (lies: „g nach f"):
+
+$$
+(g \circ f)(x) = g(f(x)), \qquad x \mapsto f(x) \mapsto g(f(x)).
+$$
+
+Die Reihenfolge zählt: $g \circ f$ und
+$f \circ g$ sind in der Regel verschiedene Funktionen. Damit
+die Kette Sinn ergibt, müssen die Ausgaben von $f$ im
+:k[Definitionsbereich]{#domain-codomain} von
+$g$ liegen.
+
+Kleines Beispiel: Mit $f(x) = x + 1$ und
+$g(y) = y^2$ ist die Verkettung
+$(g \circ f)(x) = (x + 1)^2$, bei $x = 2$ also:
+$2 \mapsto 3 \mapsto 9$. Eine komplizierte Funktion als
+solche Kette einfacher Schritte zu erkennen ist genau das, was die
+Kettenregel beim Ableiten ausnutzt.
+
+<CompositionPipeline />
