@@ -1,3 +1,480 @@
-::quelle[Folien 15-funktionsapproximation-II.]
+import { SkalierungTensorGam } from "./widgets/S155Skalierung";
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 15, siehe KONVENTIONEN.md).*
+::quelle[Folien 15-funktionsapproximation-II, „Multivariate Funktionsapproximation" bis „Wrap-up".]
+
+Alles, was wir bisher gerechnet haben, spielte auf einem Intervall: eine
+Variable, Knoten darauf, eine Kurve. Reale Datensätze bringen mehr als eine
+Kovariable mit. Dieser Abschnitt überträgt den Basisansatz auf
+$f\colon \R^p \to \R$. Die Übertragung selbst gelingt mühelos, sie ist eine
+Anwendung des Tensorprodukts aus
+[Abschnitt 9.4](?k=09-tensoren#sec-9.4). Bezahlen müssen wir sie mit einem
+Aufwand, der in $p$ exponentiell wächst, und mit dem Abschnitt endet der Kurs.
+
+### Tensor-Produkt-Basen
+
+Eine Basis für Funktionen mehrerer Variablen bauen wir nicht neu, sondern aus
+den univariaten Bausteinen zusammen, die wir schon haben. Aus $K$
+Basisfunktionen pro Variable entstehen alle möglichen Produkte.
+
+:::definition[15.5.1 (Tensor-Produkt-Basis)]
+Seien $\corange{\phi_1}, \dots, \corange{\phi_K}$ Basisfunktionen auf $\R$,
+etwa die B-Splines aus
+[Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4). Die zugehörige
+*Tensor-Produkt-Basis* für $p$ Variablen besteht aus den $K^p$ Produkten
+
+$$
+\corange{\phi_{j_1}(x_1)} \times \cdots \times \corange{\phi_{j_p}(x_p)},
+\qquad j_1, \dots, j_p \in \{1, \dots, K\} ,
+$$
+
+und der Ansatz für $f\colon \R^p \to \R$ lautet
+
+$$ {#eq-15.5.1}
+\cgreen{\wh{f}(\bx)}
+= \sum_{j_1 = 1}^{K} \cdots \sum_{j_p = 1}^{K} a_{j_1, \dots, j_p}
+\bigl(\corange{\phi_{j_1}(x_1)} \times \cdots \times \corange{\phi_{j_p}(x_p)}\bigr)
+$$
+
+mit dem Koeffizienten-:k[Tensor]{#tensor}
+
+$$
+\bA = \bigl(a_{j_1, \dots, j_p}\bigr)_{j_i = 1, \dots, K,\; i = 1, \dots, p}
+\in \R^{K \times \cdots \times K} .
+$$
+:::
+
+:::bemerkung[15.5.2 (Was Kapitel 9 dazu schon gesagt hat)]
+Die Konstruktion ist genau das Tensorprodukt von Funktionenräumen aus
+[Abschnitt 9.4](?k=09-tensoren#sec-9.4). Dort haben wir gesehen, dass die
+Produkte von Basiselementen wieder eine Basis bilden und dass sich die
+:k[Dimensionen]{#dimension} dabei multiplizieren, für $p$ Faktoren also
+$K \cdot K \cdots K = K^p$. Für Polynome vom Grad höchstens $d$ in jeder
+Variablen stand dort die Zahl $(d+1)^k$, und der Name für das, was daraus
+folgt, fiel ebenfalls schon: *Fluch der Dimensionalität* (curse of
+dimensionality).
+
+Anschaulich legen wir ein Gitter über den $p$-dimensionalen Raum. In jeder
+Variablen sitzen $K$ Basisfunktionen mit ihren Knoten, und jede
+Basisfunktion des Produkts gehört zu einer Zelle dieses Gitters. Der Ansatz
+ist bequem, weil wir für jede Variable dieselben eindimensionalen Bausteine
+verwenden können, und teuer, weil das Gitter mit jeder Variablen um einen
+Faktor $K$ wächst.
+:::
+
+:::bemerkung[15.5.3 (Es bleibt ein lineares Kleinste-Quadrate-Problem)]
+Der Ansatz ($15.5.1$) ist linear in den Koeffizienten, und daran ändert die
+Tensorschreibweise nichts. Nummerieren wir die $K^p$ Indexkombinationen
+$(j_1, \dots, j_p)$ durch, so wird aus $\bA$ ein Vektor
+$\cgreen{\ba} \in \R^{K^p}$, und mit der Designmatrix
+$\corange{\bB} \in \R^{n \times K^p}$, deren Zeilen die $K^p$ Produkte an der
+Beobachtungsstelle $\cblue{\bx_i}$ enthalten, steht wieder
+
+$$
+\min_{\cgreen{\ba}} \left\| \cblue{\by} - \corange{\bB}\,\cgreen{\ba} \right\|_2^2
+$$
+
+da: dasselbe Problem wie in Satz 15.3.5, nur mit mehr Spalten. Gelöst wird es
+mit denselben Mitteln, über die
+:k[Normalengleichungen]{#normal-equations} oder besser über eine
+QR-Zerlegung ([Abschnitt 7.4](?k=07-kq#sec-7.4)).
+
+Die Spaltenzahl ist die schlechte Nachricht. Vollen Spaltenrang kann
+$\corange{\bB}$ nur haben, wenn $n \ge K^p$ ist, und das ist eine harte
+Schranke: Mit $K = 10$ Basisfunktionen je Variable und $p = 5$ Kovariablen
+brauchen wir mindestens $100\,000$ Beobachtungen, bevor die Anpassung
+überhaupt eindeutig ist.
+:::
+
+### Der Fluch der Dimensionalität
+
+Drei Größen wachsen exponentiell in $p$, und jede für sich reicht aus, um den
+vollen Tensoransatz jenseits weniger Variablen unbrauchbar zu machen: der
+Speicher für $\bA$, der Aufwand einer Auswertung und die Datenmenge, die für
+eine feste Genauigkeit nötig ist.
+
+:::beispiel[15.5.4 (Zehn Basisfunktionen je Variable)]
+Wir rechnen mit $K = 10$ und speichern jeden Koeffizienten als
+:k[Gleitkommazahl]{#floating-point} doppelter Genauigkeit, also mit $8$ Byte
+([Abschnitt 4.1](?k=04-fehler#sec-4.1)).
+
+| Dimension $p$ | Koeffizienten $K^p$ | Speicher |
+|:---|---:|---:|
+| $1$ | $10$ | $80$ Bytes |
+| $2$ | $100$ | $800$ Bytes |
+| $3$ | $1000$ | $8$ kB |
+| $5$ | $100\,000$ | $800$ kB |
+| $10$ | $10^{10}$ | $\cred{80}$ GB |
+
+Bis $p = 3$ ist der Koeffizienten-Tensor ein Nichts, bei $p = 5$ noch
+handlich, bei $p = 10$ passt er auf keinen üblichen Arbeitsspeicher. Die
+Speicherangaben verwenden dezimale Präfixe, $1$ kB sind also $1000$ Bytes;
+binär gerechnet sind die $8 \cdot 10^{10}$ Bytes der letzten Zeile
+$74{,}5$ GiB. Der Sprung von $p = 5$ auf $p = 10$ ist ein Faktor $10^5$,
+und der kommt allein daher, dass fünf weitere Variablen dazukommen.
+:::
+
+Der statistische Preis ist derselbe. Er lässt sich mit dem, was wir in
+[Abschnitt 15.4](#sec-15.4) gerechnet haben, direkt hinschreiben.
+
+:::satz[15.5.5 (Mittlerer quadratischer Fehler im Multivariaten)]
+Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\epsilon_i}$ an $n$
+festen Stellen mit unkorrelierten, homoskedastischen Fehlern und passen
+($15.5.1$) mit kubischen Spline-Bausteinen auf einem gleichmäßigen Gitter an.
+Hat $\corange{\bB}$ vollen Spaltenrang $K^p$ und sind die vierten partiellen
+Ableitungen von $f$ beschränkt, so gilt für den an den Entwurfsstellen
+gemittelten Fehler
+
+$$ {#eq-15.5.2}
+\MSE(\cgreen{\wh{f}})
+= \underbrace{O(K^{-8})}_{\cred{\text{Bias}^2}}
++ \underbrace{\frac{\sigma^2 K^p}{n}}_{\text{Varianz}} ,
+$$
+
+und für das $K^\star \sim n^{1/(8+p)}$, das diese Summe minimiert,
+
+$$ {#eq-15.5.3}
+\MSE(\cgreen{\wh{f}}) = O\bigl(n^{-8/(8+p)}\bigr) .
+$$
+:::
+
+::::beweis
+
+:::schritt
+Der Varianzterm ist Satz 15.4.4, wörtlich. Dessen Beweis benutzt vom
+Schätzer nur, dass er die Kleinste-Quadrate-Anpassung an eine Designmatrix
+mit vollem Spaltenrang ist; wie viele Spalten sie hat und wie ihre Einträge
+zustande kommen, geht nicht ein. Hier sind es $K^p$ Spalten, also ist die
+gemittelte Varianz $\sigma^2 K^p / n$.
+
+::why[am Ende des Beweises steht $\tr(\bI_{K^p}) = K^p$ statt $\tr(\bI_K) = K$]
+:::
+
+:::schritt
+Für den Bias zählen wir die Gitterweite. In jeder Variablen liegen $K$
+Basisfunktionen auf einem festen Intervall, also ist
+$\corange{h} = O(1/K)$ wie im univariaten Fall. Die
+Tensorprodukt-Approximation erbt von den kubischen Stücken die Ordnung
+$O(\corange{h}^4)$, quadriert also $O(K^{-8})$.
+
+::why[Satz 15.4.2 mit derselben Rechnung; gebraucht werden dafür die vierten Ableitungen von $f$, hier die partiellen in jeder Variablen]
+:::
+
+:::schritt
+Zu minimieren ist damit $g(K) = c_1 K^{-8} + c_2 K^p / n$ mit Konstanten
+$c_1, c_2 > 0$. Ableiten und Nullsetzen gibt
+
+$$
+g'(K) = -8 c_1 K^{-9} + \frac{c_2\, p\, K^{p-1}}{n} \overset{!}{=} 0
+\quad\Longrightarrow\quad
+K^{8+p} = \frac{8 c_1 n}{c_2\, p} ,
+$$
+
+also $K^\star \sim n^{1/(8+p)}$.
+
+::why[Multiplikation mit $K^9 n/(c_2 p)$ sammelt alle $K$-Potenzen auf einer Seite; $g$ fällt für kleine und wächst für große $K$, die einzige positive Nullstelle ist also das Minimum]
+:::
+
+:::schritt
+Einsetzen von $K^\star$ in beide Summanden liefert
+
+$$
+c_1 (K^\star)^{-8} \sim n^{-8/(8+p)},
+\qquad
+\frac{c_2 (K^\star)^p}{n} \sim n^{p/(8+p) - 1} = n^{-8/(8+p)} ,
+$$
+
+und damit ($15.5.3$).
+
+::why[$p/(8+p) - 1 = (p - 8 - p)/(8+p) = -8/(8+p)$]
+:::
+
+::::
+
+:::bemerkung[15.5.6 (Wie viele Daten die Rate verlangt)]
+Gleichung ($15.5.3$) gilt bei optimal gewähltem $K$, nicht für jedes $K$; die
+Folien sagen das inzwischen ausdrücklich, und wichtig ist es, weil die Summe
+in ($15.5.2$) für schlecht gewähltes $K$ beliebig groß werden kann.
+
+Lesen wir die Rate von der anderen Seite, so sehen wir, was sie kostet. Wie
+groß muss $n$ sein, damit der MSE unter eine Schranke $\varepsilon$ fällt?
+Aus $n^{-8/(8+p)} \le \varepsilon$ folgt $n \ge \varepsilon^{-(8+p)/8}$, für
+$\varepsilon = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
+
+| Dimension $p$ | Rate | $n$ für MSE $\le 0{,}01$ | Folienwert |
+|:---|---:|---:|---:|
+| $1$ | $n^{-8/9}$ | $10^{2{,}25} \approx 178$ | $10^{2}$ |
+| $2$ | $n^{-8/10} = n^{-0{,}8}$ | $10^{2{,}5} \approx 316$ | $10^{2{,}5}$ |
+| $5$ | $n^{-8/13}$ | $10^{3{,}25} \approx 1778$ | $10^{4}$ |
+| $10$ | $n^{-8/18}$ | $10^{4{,}5} \approx 31\,623$ | $10^{5}$ |
+
+Die dritte Spalte ist unsere eigene Rechnung mit versteckter Konstante $1$,
+die vierte zitiert die Folien. Deren Fußnote nennt die Werte *illustrativ*,
+und so sind sie auch zu lesen: Die entscheidenden Konstanten hängen am
+Problem, nicht an der Rate, und in Bemerkung 15.4.7 haben wir für $p = 1$
+gesehen, wie weit die versteckte Konstante die Zahl verschieben kann. Als
+Zahlen genommen streuen die Folienwerte in beide Richtungen: Bei $p = 1$
+liefert $n = 10^2$ mit derselben Konstanten $1$ noch $\MSE = 0{,}0167$,
+reicht also nicht ganz, während $10^4$ und $10^5$ bei $p = 5$ und $p = 10$
+deutlich mehr sind als nötig.
+
+Die Botschaft der Spalte bleibt davon unberührt, und sie steckt im Exponenten
+$(8+p)/4$. Jede weitere Variable multipliziert die nötige Datenmenge mit
+$10^{1/4} \approx 1{,}78$, bei schärferer Genauigkeitsforderung mit noch mehr:
+für $\varepsilon = 10^{-4}$ mit $\varepsilon^{-1/8} \approx 3{,}16$ je
+Dimension. Der Datenhunger wächst also exponentiell in $p$, ganz so wie der
+Speicherbedarf.
+:::
+
+:::bemerkung[15.5.7 (Auch die Auswertung kostet)]
+Die Folien nennen für eine einzelne Auswertung von $\cgreen{\wh{f}}$ den
+Aufwand $O(K^p)$, und das ist die ehrliche Zahl für eine Basis ohne besondere
+Struktur: Die Summe in ($15.5.1$) hat $K^p$ Summanden.
+
+Mit B-Splines wird es besser, denn die haben kompakten Träger
+([Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)). An einer festen
+Stelle $x$ sind von den $K$ Basisfunktionen einer Variablen höchstens $q+1$
+von null verschieden, bei kubischen also vier. Im Produkt bleiben damit
+höchstens $(q+1)^p$ Summanden übrig, für $p = 10$ und $q = 3$ noch
+$4^{10} = 1\,048\,576$ statt $10^{10}$. Das ist eine Ersparnis um fünf
+Größenordnungen und ändert nichts am Grundproblem: $4^p$ wächst exponentiell
+wie $10^p$, nur mit kleinerer Basis. Gespeichert werden müssen die $K^p$
+Koeffizienten ohnehin alle.
+:::
+
+### Additive Modelle statt voller Produkte
+
+Der Ausweg ist keine bessere Numerik, sondern eine Annahme über $f$. Wenn wir
+darauf verzichten, beliebige Wechselwirkungen zwischen den Variablen
+darzustellen, schrumpft der Ansatzraum dramatisch.
+
+:::definition[15.5.8 (Generalisiertes additives Modell)]
+Ein *generalisiertes additives Modell* (GAM) setzt statt des vollen
+Tensorprodukts eine Summe univariater Funktionen an:
+
+$$ {#eq-15.5.4}
+\cgreen{\wh{f}(\bx)} = \beta_0 + \sum_{i=1}^{p} \cgreen{f_i(x_i)} ,
+$$
+
+wobei jede Komponente $\cgreen{f_i}$ in einem eigenen $K$-dimensionalen
+Ansatzraum liegt, etwa dem der kubischen Splines aus
+[Abschnitt 15.3](#sec-15.3).
+:::
+
+:::bemerkung[15.5.9 (Der Gewinn, und was er kostet)]
+*Skalierbar.* Statt $K^p$ Koeffizienten sind es $pK + 1$, also $O(pK)$ statt
+$O(K^p)$. Für $p = 10$ und $K = 10$ stehen $101$ Koeffizienten gegen
+$10^{10}$, ein Faktor von rund $10^8$. Aus dem Wachstum in $p$ wird ein
+lineares.
+
+Die Folien schreiben $pK$, und um diese Zahl sauber zu bekommen, räumen wir
+kurz auf: Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
+$\beta_0$, dafür ist jede Komponente nur bis auf eine additive Konstante
+bestimmt, denn eine Konstante ließe sich von $\cgreen{f_1}$ nach
+$\cgreen{f_2}$ verschieben, ohne ($15.5.4$) zu ändern. Üblich ist deshalb eine
+Zentrierungsbedingung an jede Komponente, etwa dass sich ihre Werte an den
+Beobachtungsstellen zu null summieren; dann bleiben $p(K-1) + 1$ frei wählbare
+Koeffizienten. Die Größenordnung $pK$ stimmt, die Buchführung ist ein wenig
+feiner.
+
+*Interpretierbar.* Jede Komponente ist eine Funktion einer einzigen Variablen
+und lässt sich als Kurve zeichnen. Den Effekt einer Kovariablen können wir
+also ansehen; beim vollen Tensorprodukt ist er nur gemeinsam mit allen
+anderen Variablen definiert.
+
+*Der Preis.* Wechselwirkungen fallen weg. Ein GAM kann nicht darstellen, dass
+die Wirkung von $x_1$ vom Wert von $x_2$ abhängt. Wo einzelne solche
+Wechselwirkungen gebraucht werden, nehmen wir sie gezielt als
+Tensorprodukt-Term für zwei oder drei Variablen dazu und behalten für den Rest
+die additive Struktur. In R ist `mgcv::gam()` die Standardadresse, mit
+automatischer Wahl der Glättungsparameter über die Kriterien aus
+[Abschnitt 15.4](#sec-15.4).
+:::
+
+:::vertiefung[Zwei Kurven auf logarithmischer Achse]
+Das Widget stellt die beiden Zählungen nebeneinander. Orange die $K^p$
+Koeffizienten des vollen Tensorprodukts, grün die $pK+1$ des additiven
+Modells, beides über der Dimension $p$ und mit logarithmischer senkrechter
+Achse. Der Tensoransatz ist dort eine Gerade, das additive Modell eine flach
+liegende Kurve.
+
+Der zweite Regler ändert $K$. Er verschiebt die grüne Kurve kaum und kippt die
+orange Gerade steiler oder flacher: Bei einer Geraden im logarithmischen Bild
+sitzt $K$ in der Steigung. Die Tafel daneben rechnet Speicherbedarf,
+Mindestzahl an Beobachtungen und die Konvergenzrate zum eingestellten Zustand
+mit.
+
+<SkalierungTensorGam />
+:::
+
+:::bemerkung[15.5.10 (Warum das mehr ist als eine Notlösung)]
+Die Additivität sieht nach einem bloßen Verzicht aus. Ist $f$ tatsächlich
+additiv, so ist sie mehr als das: Die einzelnen Komponenten lassen
+sich dann mit derselben Rate schätzen wie eine univariate Funktion, die
+Dimension geht nur noch in die Konstante ein. Aus $n^{-8/(8+p)}$ wird wieder
+$n^{-8/9}$, und der Fluch der Dimensionalität ist nicht bekämpft, sondern
+umgangen. Dass das geht, ist ein Satz von C. J. Stone (1985), und er ist der
+Grund, warum additive Modelle in der Statistik so verbreitet sind.
+:::
+
+### Ausblick
+
+Drei Fragen hat dieses Kapitel nur angerissen, und jede füllt eine eigene
+Vorlesung: die theoretische Analyse statistischer Verfahren, die Eigenschaften
+von Parameterschätzern und die Funktionsapproximation über das hier Gezeigte
+hinaus. Die Folien verweisen dafür auf die Vorlesungen von Thomas Nagler,
+*Statistical Learning Theory* im Master und *Mathematical Statistics* für
+Bachelor und Master. Additive Modelle und ihre Verwandten behandelt die
+Vorlesung *Statistik V: Konzepte statistischer Modellierung* im Bachelor.
+
+### Finito
+
+Damit endet der Kurs. Begonnen haben wir mit der Frage, warum Rechnen mit
+endlicher Genauigkeit überhaupt schiefgehen kann, und mit dem Handwerkszeug
+dagegen: Kondition, Stabilität, Aufwandsanalyse. Darauf baute die numerische
+lineare Algebra auf, von der Elimination über die Zerlegungen bis zur
+Singulärwertzerlegung, und darauf wiederum die Analysis mehrerer
+Veränderlicher mit Ableitungen, Konvexität und Optimierung. Die letzten beiden
+Kapitel haben alles zusammengeführt: Eine Spline-Anpassung ist ein
+Kleinste-Quadrate-Problem, ihre Lösung ein Zerlegungsverfahren, ihre Güte
+eine Frage von Approximationsordnung und Kondition, und ihre Modellwahl ein
+Optimierungsproblem.
+
+:::bemerkung[15.5.11 (Kernkonzepte des Kapitels)]
+1. **Minimale Krümmung.** Unter allen $\Ccal^2$-Funktionen, die die Daten
+   interpolieren, minimiert der *natürliche* kubische Spline
+   $J(f) = \int (f'')^2 \dx$. Getragen wird der Beweis von den
+   natürlichen Randbedingungen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$; die
+   dritte Ableitung darf an den Knoten springen
+   ([Abschnitt 15.1](#sec-15.1)).
+2. **Approximationsordnung.** Für $f \in \Ccal^4$ ist der Fehler des
+   interpolierenden kubischen Splines durch
+   $C \corange{h}^4 \max_x \left| f^{(4)}(x) \right|$ beschränkt, mit
+   passenden Randbedingungen sogar mit $C = 5/384$: Halbierte Gitterweite
+   heißt Schranke durch $16$. Die Ordnung hängt am Grad und an der
+   Glattheit, stückweise linear liefert nur $\corange{h}^2$
+   ([Abschnitt 15.2](#sec-15.2)).
+3. **Glättung statt Interpolation.** Mit $K < n$ Basisfunktionen wird aus der
+   Interpolation ein Kleinste-Quadrate-Problem
+   $\min_{\ba} \left\| \cblue{\by} - \corange{\bB}\ba \right\|_2^2$. Der
+   zweite Weg ist $K = n$ mit einem Strafterm $\lambda \int (g'')^2 \dx$,
+   also ein Glättungsspline ([Abschnitt 15.3](#sec-15.3)).
+4. **Bias-Varianz.** Der quadrierte Bias fällt wie $O(K^{-8})$, die
+   gemittelte Varianz ist exakt $\sigma^2 K/n$. Das Optimum liegt bei
+   $K \sim n^{1/9}$ und liefert $\MSE = O(n^{-8/9})$; weil $f$ unbekannt
+   ist, wird $K$ in der Praxis über Kreuzvalidierung, AIC, BIC oder GCV
+   gewählt ([Abschnitt 15.4](#sec-15.4)).
+5. **Fluch der Dimensionalität.** Die Tensor-Produkt-Basis braucht $K^p$
+   Koeffizienten und erreicht nur noch $O(n^{-8/(8+p)})$. Additive Modelle
+   ersetzen das Produkt durch eine Summe, kommen mit $O(pK)$ Koeffizienten
+   aus und sind zusätzlich interpretierbar.
+:::
+
+### Selbsttest zum Kapitel
+
+Acht Aussagen quer durch Kapitel 15.
+
+::::quiz
+
+:::frage{falsch}
+Unter allen Funktionen, die die Punkte $(\cblue{x_i}, \cblue{y_i})$
+interpolieren, minimiert der natürliche kubische Spline
+$J(f) = \int_a^b (f'')^2 \dx$.
+
+Ohne Glattheitsforderung ist die Aussage falsch. Der Polygonzug durch die
+Punkte ist zwischen den Knoten linear, hat dort also $f'' = 0$ und käme damit
+auf $J = 0$; in Beispiel 15.1.8 stünde das gegen $J(\cgreen{s}) = 6$. An den
+Knoten selbst existiert seine zweite Ableitung nicht, $J$ ist für ihn streng
+genommen undefiniert. Satz 15.1.4 vergleicht deshalb nur
+$\Ccal^2$-Interpolanten, und unter denen gewinnt der natürliche Spline.
+:::
+
+:::frage{wahr}
+Verdoppeln wir die Zahl der gleichmäßig verteilten Knoten, so fällt die
+Fehlerschranke für kubische Spline-Interpolation auf ein Sechzehntel, die für
+stückweise lineare Interpolation dagegen nur auf ein Viertel.
+
+In ($15.2.1$) steht $\corange{h}^4$, in Satz 15.2.5 steht $\corange{h}^2$, und
+halbiertes $\corange{h}$ gibt die Faktoren $2^4 = 16$ beziehungsweise
+$2^2 = 4$. Gemessen bestätigen unsere Rechnungen zu $\sin(2\pi x)$ beides:
+$18{,}8$, $16{,}9$ und $16{,}2$ im kubischen Fall gegen $2{,}99$, $3{,}73$
+und $3{,}93$ im linearen.
+:::
+
+:::frage{falsch}
+Interpolation und Glättung sind zwei verschiedene Verfahren; die Interpolation
+fällt nicht unter den Kleinste-Quadrate-Ansatz dieses Kapitels.
+
+Beide unterscheiden sich nur in einer Zahl. Mit $K = n$ Basisfunktionen und
+invertierbarer Designmatrix ist die Kleinste-Quadrate-Lösung
+$\cgreen{\wh\ba} = \corange{\bB}^{-1}\cblue{\by}$, die Residuenquadratsumme
+null und jeder Punkt exakt getroffen; mit $K < n$ wird daraus Glättung
+(Definition 15.3.8). Interpolation ist also der Randfall, und ein guter
+Schätzer ist sie nicht: Sie übernimmt die Fehler $\cred{\epsilon_i}$
+punktweise.
+:::
+
+:::frage{falsch}
+Mit wachsendem $K$ fällt der quadrierte Bias monoton und die Varianz wächst
+monoton.
+
+Die zweite Hälfte stimmt exakt: Die gemittelte Varianz ist $\sigma^2 K/n$
+(Satz 15.4.4), sie wächst also linear. Für den Bias gibt Satz 15.4.2 nur die
+obere Schranke $O(K^{-8})$, und die verlangt keine Monotonie. In unserer
+Simulation steigt der quadrierte Bias von $0{,}0344$ bei $K = 8$ auf
+$0{,}1174$ bei $K = 9$, weil die inneren Knoten dort gerade auf die
+Nullstellen von $\sin(3x)$ fallen.
+:::
+
+:::frage{wahr}
+Im univariaten Fall ist die MSE-optimale Knotenzahl von der Ordnung
+$n^{1/9}$, und der zugehörige MSE fällt wie $n^{-8/9}$.
+
+Minimiert wird $c_1K^{-8} + c_2K/n$; Ableiten gibt $K^\star \sim n^{1/9}$,
+Einsetzen beide Male $n^{-8/9}$ (Bemerkung 15.4.7). Der Exponent $1/9$ ist der
+Spezialfall $p = 1$ von $1/(8+p)$ aus Satz 15.5.5. Praktisch brauchbar ist die
+Zahl nur mit ihrer Konstanten: Für $n = 100$ liefert die Formel mit Konstante
+$1$ ein $K^\star$ von $1{,}67$, während in Beispiel 15.4.8 der MSE bei
+$K = 12$ am kleinsten ist.
+:::
+
+:::frage{falsch}
+Bei $p = 10$ Kovariablen und $K = 10$ Basisfunktionen je Variable ist der
+Koeffizienten-Tensor mit rund $80$ MB noch gut zu handhaben.
+
+Es sind $10^{10}$ Koeffizienten, und mit $8$ Byte je Zahl macht das
+$8 \cdot 10^{10}$ Bytes, also $80$ GB und nicht $80$ MB (Beispiel 15.5.4).
+Dazu kämen mindestens ebenso viele Beobachtungen, damit die Designmatrix
+vollen Spaltenrang haben kann. Genau daran scheitert der volle Tensoransatz in
+hohen Dimensionen.
+:::
+
+:::frage{wahr}
+Ein additives Modell mit $p$ Variablen und $K$ Basisfunktionen je Komponente
+hat eine Koeffizientenzahl der Ordnung $pK$, wächst also nur linear in $p$.
+
+Das ist ($15.5.4$): $pK$ Komponenten-Koeffizienten plus Achsenabschnitt, nach
+Zentrierung $p(K-1)+1$ frei wählbare. Für $p = 10$ und $K = 10$ sind das
+$101$ statt $10^{10}$. Bezahlt wird der Gewinn mit den Wechselwirkungen, die
+der Ansatz nicht darstellen kann (Bemerkung 15.5.9).
+:::
+
+:::frage{falsch}
+Die Rate $O(n^{-8/(8+p)})$ ist eine obere Schranke für den MSE, gleich welches
+$K$ wir wählen.
+
+Sie gilt nur für $K \sim n^{1/(8+p)}$. In ($15.5.2$) steht eine Summe aus
+einem in $K$ fallenden und einem in $K$ wachsenden Term, und beide können den
+MSE beliebig groß machen: $K$ zu klein heißt viel Bias, $K$ zu groß heißt
+viel Varianz. Das externe Folien-Review hat genau diese Verkürzung
+angemerkt.
+:::
+
+::::
+
+*Vertiefung: Heath behandelt Splines und ihre Approximationseigenschaften in
+Kapitel 7. Tensorprodukt-Splines und additive Modelle samt `mgcv` entwickelt
+S. N. Wood, Generalized Additive Models: An Introduction with R, 2. Auflage
+2017; die Rate additiver Schätzer geht auf C. J. Stone, Additive regression
+and other nonparametric models, Annals of Statistics 13 (1985), 689–705,
+zurück. Der Begriff „Fluch der Dimensionalität" stammt von R. Bellman,
+Dynamic Programming, 1957.*

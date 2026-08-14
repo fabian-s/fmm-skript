@@ -1,3 +1,601 @@
-::quelle[Folien 14-funktionsapproximation.]
+import { MonombasisFigur, VandermondeKondition } from "./widgets/S143Monombasis";
+import { RungeExplorer } from "./widgets/S143Runge";
 
-*Dieser Abschnitt entsteht gerade (Bauauftrag Kapitel 14, siehe KONVENTIONEN.md).*
+::quelle[Folien 14-funktionsapproximation, „Fundamentalsatz der Algebra" bis „Das Runge-Phänomen".]
+
+[Abschnitt 14.2](#sec-14.2) hat das Interpolationsproblem auf das lineare
+Gleichungssystem $\bB\ba = \cblue{\by}$ zurückgeführt. Damit ist die Wahl des
+Ansatzraums die eigentliche Entscheidung, und die naheliegendste ist zugleich
+die älteste: Polynome, aufgeschrieben in der Monombasis. Dieser Abschnitt
+zeigt beide Seiten dieser Wahl. Theoretisch ist der Fall erledigt, und zwar
+so schön, wie man es sich nur wünschen kann: Durch $n$ Punkte läuft genau ein
+Polynom vom Grad höchstens $n-1$. Numerisch dagegen sammelt derselbe Ansatz
+drei Probleme ein, eine katastrophal konditionierte Matrix, eine global
+instabile Lösung und ein Konvergenzverhalten, das an einem harmlos
+aussehenden Beispiel spektakulär versagt.
+
+### Wie viele Nullstellen ein Polynom haben kann
+
+Die Eindeutigkeit hängt an einer einzigen Aussage über Nullstellen, und die
+kommt aus der Algebra.
+
+:::satz[14.3.1 (Fundamentalsatz der Algebra)]
+Jedes :k[Polynom]{#polynomial}
+$p(x) = a_n x^n + \dots + a_1 x + a_0$ mit $a_n \neq 0$ und $n \ge 1$ hat
+mindestens eine :k[Nullstelle]{#polynomial-roots} in $\C$.
+
+Gleichwertig dazu: Jedes Polynom vom Grad $n$ hat in $\C$ genau $n$
+Nullstellen, wenn wir sie mit Vielfachheit zählen.
+:::
+
+Beide Fassungen gehen durch Polynomdivision auseinander hervor. Ist $x_0$
+eine Nullstelle von $p$, so lässt sich der Linearfaktor abspalten,
+$p(x) = (x - x_0)\, q(x)$ mit $\deg q = n - 1$, und auf $q$ wenden wir
+dieselbe Überlegung an. Nach $n$ Schritten ist $p$ vollständig in
+Linearfaktoren zerlegt. Wir brauchen den Satz allerdings gar nicht in dieser
+Stärke, sondern nur seine Kehrseite.
+
+:::korollar[14.3.2 (Zu viele Nullstellen erzwingen das Nullpolynom)]
+Sei $p$ ein Polynom vom Grad höchstens $n-1$ mit $n$ paarweise verschiedenen
+Nullstellen. Dann ist $p$ das Nullpolynom, es gilt also $p(x) = 0$ für
+*alle* $x$.
+:::
+
+::::beweis
+
+:::schritt
+Nehmen wir an, $p$ sei nicht das Nullpolynom. Dann besitzt $p$ einen Grad
+$d$ mit $0 \le d \le n-1$ und einen führenden Koeffizienten $a_d \neq 0$.
+
+::why[der Grad eines Polynoms ist der größte Index mit $a_d \neq 0$; nur das Nullpolynom hat gar keinen solchen Index]
+:::
+
+:::schritt
+Im Fall $d = 0$ ist $p$ die konstante Funktion $a_0 \neq 0$ und hat
+überhaupt keine Nullstelle. Das widerspricht der Voraussetzung, denn
+$n \ge 1$.
+:::
+
+:::schritt
+Im Fall $d \ge 1$ hat $p$ nach Satz 14.3.1 mit Vielfachheit gezählt genau
+$d$ Nullstellen in $\C$, also höchstens $d \le n-1$ verschiedene. Auch das
+widerspricht der Voraussetzung von $n$ verschiedenen Nullstellen.
+
+::why[verschiedene Nullstellen zählen mindestens einfach, ihre Anzahl ist also höchstens die Zahl der mit Vielfachheit gezählten]
+:::
+
+:::schritt
+Beide Fälle sind unmöglich, die Annahme fällt. Also ist $p$ das Nullpolynom.
+:::
+
+::::
+
+:::beispiel[14.3.3 (Drei Nullstellen bei Grad höchstens zwei)]
+Ein Polynom vom Grad höchstens $2$ hat höchstens zwei verschiedene
+Nullstellen; das kennen wir von der Parabel. Finden wir also ein solches
+Polynom mit drei Nullstellen, etwa $p(-1) = p(0) = p(1) = 0$, so bleibt nur
+ein Schluss: $p$ ist das Nullpolynom, und dann ist auch $p(7) = 0$ und
+$p(10^6) = 0$. Aus drei Nullstellen wird eine Aussage über die gesamte reelle
+Achse, und genau diese Hebelwirkung brauchen wir gleich.
+:::
+
+### Genau ein Polynom durch n Punkte
+
+Wir halten zuerst den Ansatzraum und seine Basismatrix fest. Beides kennen
+wir schon aus Beispiel 14.2.6, hier bekommen sie ihre Namen.
+
+:::definition[14.3.4 (Monombasis und Vandermonde-Matrix)]
+Die $n$ Funktionen
+
+$$
+\corange{\phi_1(x)} = 1, \quad
+\corange{\phi_2(x)} = x, \quad \dots, \quad
+\corange{\phi_n(x)} = x^{n-1}
+$$
+
+heißen *Monombasis* (monomial basis). Sie sind
+:k[linear unabhängig]{#linear-independence} und spannen den Ansatzraum
+$\Fcal_n$ aller Polynome vom Grad höchstens $n-1$ auf, der damit die
+Dimension $n$ hat.
+
+Die zugehörige Basismatrix aus Satz 14.2.8 zu Stellen $x_1, \dots, x_n$
+heißt *Vandermonde-Matrix*:
+
+$$
+\bB = \begin{pmatrix}
+\corange{1} & \corange{x_1} & \corange{x_1^2} & \cdots & \corange{x_1^{n-1}} \\
+\corange{1} & \corange{x_2} & \corange{x_2^2} & \cdots & \corange{x_2^{n-1}} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+\corange{1} & \corange{x_n} & \corange{x_n^2} & \cdots & \corange{x_n^{n-1}}
+\end{pmatrix} \in \R^{n \times n} .
+$$
+:::
+
+Dass die Monome linear unabhängig sind, ist Korollar 14.3.2 in anderer
+Verpackung: Verschwindet $\sum_{k=1}^n a_k x^{k-1}$ für alle $x$, so hat
+dieses Polynom vom Grad höchstens $n-1$ unendlich viele Nullstellen, ist also
+das Nullpolynom, und damit sind alle $a_k$ null.
+
+:::satz[14.3.5 (Existenz und Eindeutigkeit der Polynominterpolation)]
+Zu $n$ Paaren $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise
+verschiedenen $x_i$ gibt es *genau ein* Polynom $\cgreen{p}$ vom Grad
+*höchstens* $n-1$ mit
+
+$$
+\cgreen{p(x_i)} = \cblue{y_i}
+\qquad \text{für } i = 1, \dots, n .
+$$
+
+Gleichbedeutend damit ist: Die Vandermonde-Matrix zu paarweise verschiedenen
+Stellen ist invertierbar.
+:::
+
+::::beweis
+
+:::schritt
+*Eindeutigkeit.* Seien $\cgreen{p}$ und $\cgreen{q}$ zwei Polynome vom Grad
+höchstens $n-1$, die beide interpolieren. Für ihre Differenz gilt an jeder
+Stelle
+
+$$
+(\cgreen{p} - \cgreen{q})(x_i)
+= \cgreen{p(x_i)} - \cgreen{q(x_i)}
+= \cblue{y_i} - \cblue{y_i} = 0 .
+$$
+
+::why[beide erfüllen dieselbe Interpolationsbedingung an derselben Stelle]
+:::
+
+:::schritt
+Damit hat $\cgreen{p} - \cgreen{q}$ mindestens $n$ verschiedene Nullstellen,
+obwohl der Grad höchstens $n-1$ ist. Nach Korollar 14.3.2 ist die Differenz
+das Nullpolynom, also $\cgreen{p} = \cgreen{q}$.
+
+::why[die Differenz zweier Polynome vom Grad höchstens $n-1$ hat wieder Grad höchstens $n-1$]
+:::
+
+:::schritt
+*Invertierbarkeit von $\bB$.* Sei $\ba \in \R^n$ mit $\bB\ba = \bnull$. Nach
+Satz 14.2.8 heißt das: Das Polynom $\sum_{k=1}^n a_k x^{k-1}$ verschwindet an
+allen $n$ Stellen. Korollar 14.3.2 macht daraus das Nullpolynom, und weil die
+Monome linear unabhängig sind, folgt $\ba = \bnull$.
+
+::why[$\bB\ba$ ist der Vektor der Werte dieses Polynoms an den Stellen $x_1, \dots, x_n$]
+:::
+
+:::schritt
+$\bB$ ist quadratisch und hat nur den trivialen
+:k[Kern]{#kernel}, ist also invertierbar
+([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Damit besitzt $\bB\ba = \cblue{\by}$
+für jede rechte Seite genau eine Lösung, und das ist die *Existenz*: Zu jedem
+Datenvektor gehört ein interpolierendes Polynom, nämlich
+$\cgreen{p} = \sum_{k=1}^n a_k \corange{\phi_k}$.
+:::
+
+::::
+
+:::bemerkung[14.3.6 (Die Vandermonde-Determinante)]
+Die Invertierbarkeit lässt sich auch direkt ablesen. Für die
+Vandermonde-Matrix gilt
+
+$$
+\det \bB = \prod_{1 \le i < j \le n} (x_j - x_i),
+$$
+
+ein Produkt, das genau dann von null verschieden ist, wenn alle Stellen
+paarweise verschieden sind. Für $\bx = (0, 1, 2, 4, 5)^\top$ etwa ist
+$\det \bB = 2880$, wie eine Elimination bestätigt. Man beachte, wie
+harmlos diese Determinante aussieht und wie wenig sie über die Numerik sagt:
+Rücken zwei Stellen nahe zusammen, wird das Produkt winzig, ohne dass wir der
+Matrix das ansehen müssten.
+:::
+
+### Höchstens, nicht genau
+
+:::bemerkung[14.3.7 (Ein häufiges Missverständnis)]
+Satz 14.3.5 verspricht genau ein Polynom vom Grad *höchstens* $n-1$. Er
+verspricht nicht den Grad *genau* $n-1$. Der führende Koeffizient darf null
+sein, und wenn die Daten schon auf einem Polynom kleineren Grades liegen, ist
+er es auch. Der Ansatzraum $\Fcal_n$ enthält diese Polynome ja ebenfalls.
+:::
+
+:::beispiel[14.3.8 (Drei Punkte auf einer Geraden)]
+Für die $n = 3$ Punkte $\cblue{(0,0)}$, $\cblue{(1,1)}$, $\cblue{(2,2)}$
+lautet das System aus Satz 14.2.8
+
+$$
+\begin{pmatrix}
+\corange{1} & \corange{0} & \corange{0} \\
+\corange{1} & \corange{1} & \corange{1} \\
+\corange{1} & \corange{2} & \corange{4}
+\end{pmatrix}
+\begin{pmatrix} a_1 \\ a_2 \\ a_3 \end{pmatrix}
+= \begin{pmatrix} \cblue{0} \\ \cblue{1} \\ \cblue{2} \end{pmatrix},
+\qquad \text{Lösung} \quad
+\cgreen{\ba} = (0, 1, 0)^\top .
+$$
+
+Das eindeutige Polynom vom Grad höchstens $2$ ist also
+
+$$
+\cgreen{p(x)} = \cgreen{0} \cdot x^2 + 1 \cdot x + 0 = x,
+$$
+
+eine Gerade und damit vom Grad $1$. Die Eindeutigkeit gilt trotzdem: Ein
+zweites Polynom vom Grad höchstens $2$ durch dieselben drei Punkte gibt es
+nicht.
+:::
+
+### Der Rechenweg und sein Preis
+
+:::algorithmus[14.3.9 (Polynominterpolation in der Monombasis)]
+Gegeben seien Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise
+verschiedenen $x_i$.
+
+1. *Vandermonde-Matrix aufstellen:* $B_{ik} = x_i^{k-1}$.
+2. *System lösen:* $\bB\ba = \cblue{\by}$ mit
+   :k[Gauß-Elimination]{#gaussian-elimination}
+   ([Abschnitt 5.2](?k=05-lgs#sec-5.2)), Aufwand $O(n^3)$.
+3. *Auswerten:* $\cgreen{p(x)} = \sum_{k=1}^n a_k x^{k-1}$ an den
+   gewünschten Stellen.
+:::
+
+In `R` sind das wenige Zeilen. Die Folien zeigen sie für $n = 10$ Stellen im
+Intervall $[0, 1]$; die Funktion `f` liefert dabei die Werte, die
+interpoliert werden sollen.
+
+```r
+x <- seq(0, 1, length = 10)
+y <- f(x)
+
+B <- outer(x, 0:9, "^")  # Vandermonde-Matrix: cbind(1, x, x^2, ...)
+a <- solve(B, y)
+
+xnew <- seq(0, 1, length = 100)
+fhat <- outer(xnew, 0:9, "^") %*% a
+
+ggplot() + geom_point(aes(x, y)) + geom_line(aes(xnew, fhat))
+```
+
+`outer(x, 0:9, "^")` baut genau die Matrix aus Definition 14.3.4, `solve`
+ruft die Elimination auf, und die letzte Auswertung ist wieder ein
+Matrix-Vektor-Produkt, diesmal mit einem feinen Auswertungsgitter. So weit,
+so unauffällig. Nur ist dieses $10 \times 10$-System bereits so schlecht
+konditioniert, dass von den rund $16$ verlässlichen Dezimalstellen der
+doppelten Genauigkeit etwa sieben verloren gehen. Warum, klärt der nächste
+Abschnitt.
+
+### Problem 1: die Kondition der Monombasis
+
+:::bemerkung[14.3.10 (Warum die Spalten fast parallel werden)]
+Die $k$-te Spalte der Vandermonde-Matrix ist der Vektor
+
+$$
+\bb_k = \bigl(x_1^{k-1}, x_2^{k-1}, \dots, x_n^{k-1}\bigr)^\top .
+$$
+
+Für wachsendes $k$ unterscheiden sich diese Vektoren immer weniger in ihrer
+*Richtung*. Auf $[0, 1]$ drückt jedes weitere Potenzieren die Einträge gegen
+null, den größten aber gar nicht, denn er gehört zu $x_n = 1$. Damit
+konzentriert sich jeder dieser Vektoren mehr und mehr auf seine letzten
+Komponenten, und alle zeigen am Ende in dieselbe Richtung.
+Bei $n = 10$ gleichmäßig verteilten Stellen in $[0, 1]$ schließen
+$\bb_1$ und $\bb_2$ noch einen Winkel von $32{,}6^\circ$ ein,
+$\bb_5$ und $\bb_6$ nur noch $5{,}5^\circ$, und $\bb_9$ und $\bb_{10}$
+gerade einmal $2{,}7^\circ$.
+
+Fast parallele Spalten heißen: fast :k[linear abhängig]{#linear-independence},
+also eine Matrix, die einer singulären sehr nahe kommt. Genau das misst die
+:k[Konditionszahl]{#condition-number} $\kappa(\bB)$
+([Abschnitt 4.2](?k=04-fehler#sec-4.2)), und sie wächst hier dramatisch.
+:::
+
+:::beispiel[14.3.11 (Konditionszahlen, der Größenordnung nach)]
+Wir interpolieren an $n$ gleichmäßig verteilten Stellen in $[0, 1]$ durch ein
+Polynom vom Grad $n-1$ und sehen uns die Konditionszahl der Vandermonde-Matrix an.
+
+| $n$ | Polynomgrad | $\kappa_2(\bB)$ | $\kappa_\infty(\bB)$ |
+|:---:|:---:|:---:|:---:|
+| 5 | 4 | $6{,}9 \cdot 10^{2}$ | $1{,}7 \cdot 10^{3}$ |
+| 10 | 9 | $1{,}5 \cdot 10^{7}$ | $4{,}8 \cdot 10^{7}$ |
+| 15 | 14 | $4{,}0 \cdot 10^{11}$ | $1{,}6 \cdot 10^{12}$ |
+| 20 | 19 | $1{,}1 \cdot 10^{16}$ | $4{,}9 \cdot 10^{16}$ |
+
+Die Werte sind *illustrativ* und als Größenordnungen zu lesen. Sie hängen von
+der verwendeten :k[Norm]{#matrix-norm} ab, wie der Vergleich der beiden
+Spalten zeigt, und ebenso von der Lage der Stellen: Dieselbe Rechnung auf
+$[-1, 1]$ statt auf $[0, 1]$ liefert bei $n = 20$ nur noch
+$\kappa_2 \approx 2{,}7 \cdot 10^{8}$. Die Folien geben die Reihe
+$10^3, 10^8, 10^{12}, 10^{16}$ an; das trifft die Größenordnungen, wobei der
+zweite Wert etwas großzügig aufgerundet ist.
+
+Entscheidend ist der Trend, und der ist in jeder Norm derselbe: exponentielles
+Wachstum. Die Faustregel aus [Abschnitt 4.2](?k=04-fehler#sec-4.2) beschränkt
+den relativen Fehler der berechneten Koeffizienten der Größenordnung nach
+durch $\kappa(\bB) \cdot \eps$ mit
+$\eps \approx 2{,}2 \cdot 10^{-16}$
+(:k[Maschinengenauigkeit]{#machine-epsilon},
+[Abschnitt 4.1](?k=04-fehler#sec-4.1)). Bei
+$n = 10$ steht dort $\cred{3 \cdot 10^{-9}}$, bei $n = 15$ schon
+$\cred{10^{-4}}$, und bei $n = 20$ ist die Schranke mit $\cred{2}$ größer als
+die gesuchten Zahlen selbst: Von der Lösung bleibt rechnerisch nichts
+Verlässliches übrig.
+:::
+
+:::bemerkung[14.3.12 (Der Ausweg: orthogonalisierte Basen)]
+Die schlechte Kondition ist eine Eigenschaft der *Basis*, nicht des
+Ansatzraums. Nach [Abschnitt 14.2](#sec-14.2) ändert ein Basiswechsel den
+Interpolanten nicht, nur die Koeffizienten und den Rechenweg. Wählen wir
+Basisfunktionen, die sich weniger ähneln, wird die Basismatrix besser
+konditioniert. Klassisch sind dafür die *orthogonalen Polynome*
+(Legendre, Chebyshev, Hermite), die bezüglich eines Skalarprodukts von
+Funktionen :k[orthogonal]{#orthogonality} sind. An denselben
+gleichmäßig verteilten Stellen wie oben liefern die Chebyshev-Polynome
+$\kappa_2 \approx 2{,}2$ statt $6{,}9 \cdot 10^2$ bei $n = 5$ und
+$\kappa_2 \approx 4{,}8 \cdot 10^3$ statt $1{,}1 \cdot 10^{16}$ bei
+$n = 20$, ein Gewinn von zwölf Zehnerpotenzen.
+
+Noch weiter geht `R` mit `poly(x, 3)` anstelle von `cbind(1, x, x^2, x^3)`.
+Dieser Aufruf orthogonalisiert die Spalten bezüglich der *gegebenen* Stellen,
+im Kern also eine :k[QR-Zerlegung]{#qr-factorization}
+([Abschnitt 7.4](?k=07-kq#sec-7.4)) der Vandermonde-Matrix. Danach stehen die
+Spalten exakt senkrecht aufeinander, und die Konditionszahl fällt auf
+$\sqrt{n}$; normieren wir zusätzlich die erste Spalte, sogar auf $1$.
+:::
+
+:::vertiefung[Die Monombasis und ihre Kondition]
+Zuerst die Basisfunktionen selbst. Auf $[0, 1]$ liegen die Monome
+$1, x, x^2, \dots, x^7$ dicht beieinander und werden mit wachsendem $k$ immer
+ähnlicher, nämlich fast überall null mit einem steilen Anstieg kurz vor $1$.
+
+<MonombasisFigur />
+
+Diese Ähnlichkeit ist es, die das Gleichungssystem verdirbt. Der Regler zieht
+die Zahl der Stellen hoch, die Schalter wechseln zwischen drei Basissystemen
+desselben Ansatzraums.
+
+<VandermondeKondition />
+:::
+
+### Problem 2: Stabilität und Lokalität
+
+Die zweite Schwäche zeigt sich, wenn wir an den Daten wackeln. Ändern wir
+einen einzigen Messwert, so ändert sich der Interpolant im gesamten
+Intervall, und keineswegs am stärksten dort, wo wir gewackelt haben.
+
+:::satz[14.3.13 (Wie sich eine Datenänderung fortpflanzt)]
+Seien $\cgreen{p}$ das interpolierende Polynom vom Grad höchstens $n-1$ zu
+den Daten $\cblue{(x_i, y_i)}$ und $\cgreen{\wt{p}}$ das interpolierende
+Polynom zu denselben Daten, bei denen nur $\cblue{y_j}$ um $\cred{\delta}$
+verändert wurde. Dann gilt
+
+$$
+\cgreen{\wt{p}} - \cgreen{p} = \cred{\delta} \cdot \ell_j,
+$$
+
+wobei $\ell_j$ das eindeutige Polynom vom Grad höchstens $n-1$ mit
+$\ell_j(x_j) = 1$ und $\ell_j(x_i) = 0$ für $i \neq j$ ist.
+:::
+
+::::beweis
+
+:::schritt
+Die Differenz $\cgreen{\wt{p}} - \cgreen{p}$ ist ein Polynom vom Grad
+höchstens $n-1$, und an den Stellen nimmt sie die Werte
+$0, \dots, 0, \cred{\delta}, 0, \dots, 0$ an, mit $\cred{\delta}$ an der
+$j$-ten Position.
+
+::why[beide Polynome interpolieren dieselben Daten bis auf den $j$-ten Wert, ihre Differenz interpoliert also die Differenz der Daten]
+:::
+
+:::schritt
+Dieselben Werte hat $\cred{\delta} \cdot \ell_j$, und auch dieses Polynom hat
+Grad höchstens $n-1$. Nach der Eindeutigkeit in Satz 14.3.5 sind beide
+Polynome gleich.
+:::
+
+::::
+
+:::bemerkung[14.3.14 (Was das in Zahlen heißt)]
+Die Polynome $\ell_j$ heißen *Lagrange-Grundpolynome*, und Satz 14.3.13 sagt:
+Der Ausschlag einer Datenänderung ist überall dort groß, wo $|\ell_j|$ groß
+ist. Rechnen wir das für $n = 10$ gleichmäßig verteilte Stellen in $[0, 1]$
+aus und heben den fünften Wert bei $x_5 = 4/9 \approx 0{,}444$ um
+$\cred{\delta} = 0{,}1$ an, so verschiebt sich der Interpolant um bis zu
+$\cred{0{,}40}$, das Vierfache der Störung. Erreicht wird dieses Maximum bei
+$x \approx 0{,}035$, also am *anderen Ende* des Intervalls. Der größte solche
+Verstärkungsfaktor liegt bei diesen zehn Stellen bei $4{,}03$ und gehört zu
+den beiden mittleren, $x_5$ und $x_6$.
+
+Wie schlimm es werden kann, hängt an der Zahl der Stellen. Stören wir alle
+Werte gleichzeitig um höchstens $\cred{\delta}$, so ändert sich der
+Interpolant um höchstens $\Lambda_n \cdot \cred{\delta}$ mit
+$\Lambda_n = \max_x \sum_{j=1}^n |\ell_j(x)|$, und diese Schranke wird bei
+passend gewählten Vorzeichen auch angenommen. Für gleichmäßig verteilte
+Stellen wächst diese Zahl rasant, nämlich auf $2{,}2$ bei $n = 5$, $17{,}9$ bei $n = 10$,
+$283$ bei $n = 15$ und $5890$ bei $n = 20$. Für die Chebyshev-Knoten, die uns
+gleich wieder begegnen, bleibt sie im selben Bereich zwischen $2{,}0$ und
+$2{,}9$.
+
+Damit sind beide Vorwürfe der Folie beziffert. Die Methode ist *instabil*,
+weil kleine Datenänderungen groß herauskommen, und sie ist *nicht lokal*,
+weil jedes $\ell_j$ auf dem ganzen Intervall von null verschieden ist. Beides
+ist kein Malheur der Monombasis, sondern eine Eigenschaft globaler
+Polynome: $\ell_j$ hängt allein vom Ansatzraum ab. Abhilfe schaffen erst
+Basisfunktionen, die außerhalb eines kleinen Bereichs verschwinden
+([Abschnitt 14.4](#sec-14.4)).
+:::
+
+### Das Runge-Phänomen
+
+Bleibt die Frage, ob wenigstens der Interpolant selbst besser wird, wenn wir
+mehr Stützstellen nehmen. Bei einer beliebig oft differenzierbaren Funktion
+sollte man das erwarten. Carl Runge hat 1901 gezeigt, dass die Erwartung
+trügt.
+
+:::beispiel[14.3.15 (Runge 1901)]
+Wir interpolieren
+
+$$
+f(x) = \frac{1}{1 + 25x^2}
+\qquad \text{auf } [-1, 1]
+$$
+
+an $n$ gleichmäßig verteilten Knoten durch das Polynom $\cgreen{p_{n-1}}$ vom
+Grad $n-1$. Die Funktion $f$ ist so gutartig, wie man es sich wünschen kann,
+sie ist :k[beliebig oft differenzierbar]{#smooth-function}, also
+$f \in \Ccal^\infty$, und beschränkt durch $1$.
+
+Trotzdem konvergieren die Interpolanten nicht gleichmäßig gegen $f$. Der
+Fehler $\left\|f - \cgreen{p_{n-1}}\right\|_\infty = \max_{x \in [-1,1]}
+\left|f(x) - \cgreen{p_{n-1}(x)}\right|$ wächst über alle Grenzen, und zwar
+durch immer heftigere <span style={{ color: "#D55E00" }}>Oszillationen</span> nahe den
+Intervallenden. In der Mitte passt sich das Polynom dabei immer besser an.
+:::
+
+:::bemerkung[14.3.16 (Divergenz schon, aber nicht monoton)]
+Die Folie schreibt kurz
+$\left\|f - p_n\right\|_\infty \to \infty$ für $n \to \infty$, wobei ihr
+$p_n$ unser $\cgreen{p_{n-1}}$ meint. Der Grenzwert stimmt, die Formulierung
+legt aber nahe, dass jeder zusätzliche Knoten die Lage verschlimmert. Das ist
+nicht so. Nachgerechnet ergeben sich für gleichmäßig verteilte Knoten diese
+größten Fehler:
+
+| $n$ Knoten | Polynomgrad | größter Fehler | Stelle des Maximums |
+|:---:|:---:|:---:|:---:|
+| 5 | 4 | $0{,}44$ | $x \approx \pm 0{,}80$ |
+| 10 | 9 | $0{,}30$ | $x \approx \pm 0{,}93$ |
+| 15 | 14 | $7{,}2$ | $x \approx \pm 0{,}96$ |
+| 20 | 19 | $8{,}6$ | $x \approx \pm 0{,}97$ |
+
+Von $n = 5$ auf $n = 10$ *fällt* der Fehler. Erst danach dreht die Folge
+nach oben, und dann sehr entschlossen: bei $n = 25$ steht dort bereits
+$257$. Die Aussage lautet also präzise, dass der Fehler asymptotisch
+unbeschränkt wächst, nicht dass er in jedem Schritt zunimmt. Zugleich zeigt
+die letzte Spalte, wo das Unheil sitzt: Das Fehlermaximum wandert mit
+wachsendem $n$ immer näher an die Ränder $\pm 1$.
+:::
+
+:::bemerkung[14.3.17 (Ein Ausweg: die Knoten anders legen)]
+Am Ansatzraum liegt es nicht, und an der Basis auch nicht: Satz 14.3.5 gibt
+zu jeder Knotenwahl dasselbe eindeutige Polynom her. Es liegt an den
+*Knoten*. Legen wir sie an den Rändern dichter, statt sie gleichmäßig zu
+verteilen, verschwindet das Problem. Die übliche Wahl sind die
+*Chebyshev-Knoten*
+
+$$
+\cblue{x_i} = \cos\!\left(\frac{(2i-1)\pi}{2n}\right),
+\qquad i = 1, \dots, n,
+$$
+
+die Nullstellen des $n$-ten Chebyshev-Polynoms. Für Runges Funktion sinkt der
+größte Fehler damit auf $0{,}047$ bei $n = 15$ und $0{,}038$ bei $n = 20$,
+gegen $7{,}2$ und $8{,}6$ oben, und er fällt weiter: $1{,}3 \cdot 10^{-5}$ bei
+$n = 60$. Ehrlicherweise gehört dazu, dass dieser Gewinn asymptotisch ist. Bei
+$n = 4$, $6$ und $8$ Knoten schneiden die gleichmäßig verteilten Knoten sogar
+etwas besser ab.
+
+Der Weg über die Knotenwahl setzt allerdings voraus, dass wir die Stellen
+frei wählen dürfen. Bei gemessenen Daten liegen sie fest, und dann hilft nur
+ein anderer Ansatzraum.
+:::
+
+:::vertiefung[Runges Funktion, zwei Knotenfamilien]
+Der Regler bestimmt die Zahl der Knoten, die Schalter die Knotenfamilie. Die
+rechte Tafel führt beide Fehlerverläufe auf logarithmischer Achse mit, sodass
+sich Zickzack und Trend zugleich ablesen lassen.
+
+<RungeExplorer />
+:::
+
+Damit ist die Bilanz der Polynominterpolation gemischt. Der Satz von der
+Existenz und Eindeutigkeit ist so sauber, wie ein Satz nur sein kann. Der
+praktische Nutzen des globalen Polynoms hoher Ordnung ist trotzdem gering: Es
+rechnet sich schlecht, es reagiert auf jeden Messwert im ganzen Intervall,
+und es konvergiert nicht einmal für harmlose Funktionen. Die Folien ziehen
+daraus den Schluss, der den Rest des Kapitels trägt. Statt eines globalen
+Polynoms hohen Grades nehmen wir viele Polynome kleinen Grades, jedes nur auf
+einem kurzen Stück gültig, und kleben sie glatt aneinander. Das sind die
+*Splines* aus [Abschnitt 14.4](#sec-14.4).
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Durch $n$ Punkte mit paarweise verschiedenen $x_i$ läuft genau ein Polynom
+vom Grad höchstens $n-1$.
+
+Das ist Satz 14.3.5. Die Eindeutigkeit folgt aus Korollar 14.3.2 über die
+Differenz zweier Interpolanten, die Existenz aus der Invertierbarkeit der
+Vandermonde-Matrix.
+:::
+
+:::frage{falsch}
+Das interpolierende Polynom durch $n$ Punkte hat den Grad genau $n-1$.
+
+Es hat Grad *höchstens* $n-1$. Für die drei Punkte
+$\cblue{(0,0)}$, $\cblue{(1,1)}$, $\cblue{(2,2)}$ liefert das System die
+Koeffizienten $\cgreen{(0, 1, 0)^\top}$, das Polynom ist also
+$\cgreen{p(x)} = x$ und damit vom Grad $1$ (Beispiel 14.3.8).
+:::
+
+:::frage{falsch}
+Ein Polynom vom Grad höchstens $5$ mit sechs verschiedenen Nullstellen kann
+noch von null verschiedene Werte annehmen.
+
+Nach Korollar 14.3.2 ist es das Nullpolynom, nimmt also überall den Wert null
+an. Ein Polynom vom Grad $d \ge 1$ hat mit Vielfachheit gezählt genau $d$
+Nullstellen, ein konstantes Polynom ungleich null gar keine; sechs
+verschiedene Nullstellen bei Grad höchstens $5$ sind in beiden Fällen zu
+viele.
+:::
+
+:::frage{wahr}
+Die Vandermonde-Matrix ist zu paarweise verschiedenen Stellen stets
+invertierbar und kann trotzdem numerisch unbrauchbar sein.
+
+Invertierbarkeit ist eine Ja-Nein-Frage, Kondition eine Frage des Ausmaßes.
+Bei $n = 20$ gleichmäßig verteilten Stellen in $[0, 1]$ ist
+$\det \bB \neq 0$, aber $\kappa_2(\bB) \approx 10^{16}$, und damit ist die
+Schranke $\kappa \cdot \eps$ für den relativen Fehler von der Größe $1$
+(Beispiel 14.3.11).
+:::
+
+:::frage{falsch}
+Bei äquidistanten Knoten wird der Fehler $\max|f - \cgreen{p_{n-1}}|$ für
+Runges Funktion mit jedem zusätzlichen Knoten größer.
+
+Er wächst asymptotisch über alle Grenzen, aber nicht monoton: von $n = 5$ auf
+$n = 10$ fällt er von $0{,}44$ auf $0{,}30$ (Bemerkung 14.3.16). Erst danach
+setzt das Wachstum durch, mit $7{,}2$ bei $n = 15$ und $8{,}6$ bei $n = 20$.
+:::
+
+:::frage{falsch}
+Wechseln wir von der Monombasis zu den Chebyshev-Polynomen, so verschwindet
+bei gleichmäßig verteilten Knoten auch das Runge-Phänomen.
+
+Der Basiswechsel bessert die Kondition des Gleichungssystems, mehr nicht.
+Nach Satz 14.3.5 gehört zu den Daten dasselbe eindeutige Polynom, gleich in
+welcher Basis wir es aufschreiben, also auch derselbe Fehler. Gegen die
+Oszillationen hilft nur, die Knoten anders zu legen oder den Ansatzraum zu
+wechseln (Bemerkung 14.3.17).
+:::
+
+:::frage{wahr}
+Heben wir bei fester Knotenmenge einen einzigen Wert $\cblue{y_j}$ um
+$\cred{\delta}$ an, so ändert sich der Interpolant an jeder Stelle $x$ um
+$\cred{\delta}\,\ell_j(x)$.
+
+So steht es in Satz 14.3.13, und der Beweis ist die Eindeutigkeit aus
+Satz 14.3.5. Weil $\ell_j$ nur an den anderen Knoten verschwindet, wirkt die
+Änderung im gesamten Intervall, bei $n = 10$ mit einem Faktor bis $4{,}03$
+und am stärksten fern von $x_j$ (Bemerkung 14.3.14).
+:::
+
+::::
+
+*Vertiefung: Heath, Scientific Computing, §7.3.1 (Monombasis und
+Vandermonde-Matrix), §7.3.4 (orthogonale Polynome) und §7.3.5 (Interpolation
+stetiger Funktionen mit Runge-Phänomen und Chebyshev-Knoten); die
+Lagrange-Grundpolynome aus Satz 14.3.13 stehen dort in §7.3.2.*

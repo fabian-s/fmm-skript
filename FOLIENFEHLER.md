@@ -1621,6 +1621,322 @@ Lesson-Zeile ein.
   zeigt Code, diese Spalte die Grafik). Reine Quelltext-Altlast, kein
   Inhaltsfehler. *Im Skript ersetzt das Widget die Grafik.*
 
+## 14-funktionsapproximation
+
+- **Z. 63/66/69 („Einführung")**: Die drei Problemvarianten mischen die
+  Datenlagen. Die Interpolationsbedingung steht dort als f(x_i) = f̂(x_i),
+  alle späteren Folien (Z. 98, 172) schreiben y_i = f̂(x_i). Ohne den Zusatz
+  „rauschfrei, also y_i = f(x_i)" verwischt das die Grenze zwischen
+  Interpolation und Glättung (externes Review 14, Punkt 4).
+  *Skript Bemerkung 14.1.4 klärt beide Schreibweisen; §14.1 arbeitet
+  durchgehend mit (x_i, y_i).*
+- **Z. 86–91 („Anwendungen in ML und Data Science")**: Latent-Space-
+  Interpolation und Positional Encodings (RoPE) stehen unkommentiert neben
+  echten Interpolationsanwendungen. Positional Encodings werten feste Sinus-
+  und Kosinusfunktionen an den Token-Positionen aus, eine Bedingung
+  f̂(x_i) = y_i kommt darin nicht vor (externes Review 14, Punkt 13).
+  *Skript Bemerkung 14.1.6 trennt die zwei echten Anwendungen von den zwei
+  Analogien und ordnet die auskommentierte KAN-Zeile (Z. 92) ein.*
+- **Z. 88**: Tippfehler „beim Reformatierung/Rotation von Bildern" (richtig:
+  „bei der Reformatierung"). *Im Skript ausformuliert.*
+- **Z. 108–112 (Quiz)**: Die Musterlösung markiert Aussage 1 und Aussage 3
+  als wahr, wörtlich gelesen widersprechen sie einander (unendlich viele
+  Lösungen gegen Eindeutigkeit bei paarweise verschiedenen x_i). Aussage 3
+  stimmt nur mit der stillschweigenden Einschränkung auf einen festen
+  n-dimensionalen Ansatzraum, etwa Polynome vom Grad höchstens n−1
+  (Folie Z. 261). Dazu Tippfehler in Z. 108: „Es gibt unendliche viele
+  Funktionen" (richtig: „unendlich viele").
+  *Skript-Selbsttest 14.1 nimmt die Einschränkung in die Aussage auf und
+  benennt den Widerspruch.*
+- **Z. 114–148 („Unendlich viele Lösungen: Beispiel")**: Die Folie zeigt vier
+  Interpolanten, nennt aber ihren gemeinsamen Bauplan nicht: Mit jedem
+  Interpolanten p und jeder Funktion g mit g(x_i) = 0 ist auch p + g einer
+  (externes Review 14, Punkt 12). *Skript Satz 14.1.8 samt Beweis;
+  Bemerkung 14.1.9 rechnet die drei Differenzen des Beispiels aus:
+  x(x−1)(x−2), 0,5 sin(2πx) und die stückweise quadratische Differenz zu
+  f̂_2.*
+
+- **Z. 255 (Fundamentalsatz, Beispiel)**: Das Beispiel benutzt n für den GRAD
+  („Ein quadratisches Polynom (n = 2)"), während die Folgerung drei Zeilen
+  darüber n für die Zahl der Nullstellen benutzt (Grad ≤ n−1 mit n
+  verschiedenen Nullstellen). In der Lesart der Folgerung ist das Beispiel
+  der Fall n = 3. *Skript Beispiel 14.3.3 kommt ohne das zweite n aus.*
+- **Z. 274 („Polynominterpolation", Monomialbasis)**: „Alle Polynome
+  (n−1)-ten Grades können durch die Monomialbasis erzeugt werden" muss
+  „höchstens (n−1)-ten Grades" heißen, sonst fehlen dem Ansatzraum gerade die
+  Polynome kleineren Grades. Es ist genau die Unterscheidung, auf der die
+  übernächste Folie (Z. 284) besteht. *Skript Definition 14.3.4 schreibt
+  „höchstens", Bemerkung 14.3.7 und Beispiel 14.3.8 führen den Fall vor.*
+- **Z. 332–339 („Kondition: Numerisches Beispiel")**: Die Tabelle nennt
+  κ(B) ≈ 10³/10⁸/10¹²/10¹⁶ ohne Norm und ohne Angabe zur Knotenlage
+  (externes Review 14, Punkt 11). Eigene Rechnung für n äquidistante Stellen
+  in [0,1] (node, κ über die explizit berechnete Inverse):
+  κ₂ = 6,9·10² / 1,5·10⁷ / 4,0·10¹¹ / 1,1·10¹⁶ und
+  κ_∞ = 1,7·10³ / 4,8·10⁷ / 1,6·10¹² / 4,9·10¹⁶; dieselben Stellen auf
+  [−1,1] gerechnet drücken κ₂ bei n = 20 auf 2,7·10⁸. Der Trend
+  (exponentielles Wachstum) stimmt in jeder Norm, der Folienwert für n = 10
+  ist großzügig aufgerundet. *Skript Beispiel 14.3.11 kennzeichnet die Reihe
+  ausdrücklich als Größenordnungen, nennt beide Normen und die
+  Knotenabhängigkeit.*
+- **Z. 358/361 („Das Runge-Phänomen")**: Zwei Befunde. (a) Die Folie
+  interpoliert „mit n äquidistanten Knoten durch p_n"; bei n Knoten ist der
+  Grad n−1, wie die Folie Z. 261 selbst festhält. (b) „‖f − p_n‖_∞ → ∞ für
+  n → ∞" stimmt im Limes, legt aber monotones Wachstum nahe (externes
+  Review 14, Punkt 6). Nachgerechnet (node, Maximum über 2001 Gitterpunkte
+  auf [−1,1]): 0,44 (n = 5), 0,30 (n = 10), 7,2 (n = 15), 8,6 (n = 20),
+  257 (n = 25). Von n = 5 auf n = 10 FÄLLT der Fehler, und die Folge
+  zickzackt zwischen geraden und ungeraden Knotenzahlen; die Fehlermaxima
+  wandern dabei an den Rand (|x| ≈ 0,80 / 0,93 / 0,96 / 0,97). Chebyshev-
+  Knoten drücken denselben Fehler auf 0,047 (n = 15) und 0,038 (n = 20).
+  *Skript Beispiel 14.3.15 mit p_{n−1}, Bemerkung 14.3.16 mit der Tabelle
+  der verifizierten Werte, Bemerkung 14.3.17 mit den Chebyshev-Knoten
+  (Review-Punkt 6).*
+- **Z. 380–392 („Def.: Polynom-Spline")**: „mit Polynomen q-ten Grades p_k"
+  meint Grad HÖCHSTENS q (externes Review 14, Punkt 2). Wörtlich gelesen
+  wäre nicht einmal die Nullfunktion ein Spline und die Menge kein
+  Vektorraum. Ausserdem ist die Forderung s ∈ C^{q−1} Teil der Definition
+  und keine Folgerung; für q = 0 bedeutet C^{−1} keine Stetigkeitsforderung.
+  *Skript Definition 14.4.1 mit „höchstens q", Bemerkung 14.4.2 mit beiden
+  Präzisierungen und dem Fall q = 0.*
+- **Z. 403–411 und Z. 413–421 (Quiz-Folien) sowie Z. 423 („Warum m + q
+  Parameter?")**: Die Zählung gilt nur für einfache innere Knoten und
+  maximale Glattheit C^{q−1}; die Folie führt die Annahme mit, das Quiz
+  darüber nicht (externes Review 14, Punkt 3). Ausserdem setzt das blosse
+  Abziehen der (m−1)q Bedingungen deren lineare Unabhängigkeit voraus.
+  Nachgerechnet (node): m(q+1) − (m−1)q = m+q, Folienbeispiel 20 − 12 = 8 ✓.
+  *Skript Satz 14.4.4 beweist die Dimension m+q über die Basis der
+  abgeschnittenen Potenzen; Bemerkung 14.4.5 führt die Folien-Abzählung als
+  Gegenprobe und nennt beide Annahmen.*
+- **Z. 450–454 („Randbedingungen für kubische Splines", Tabelle)**: Die
+  periodische Zeile nennt s(a) = s(b) und s'(a) = s'(b). Das sind keine zwei
+  brauchbaren Zusatzbedingungen: Bei periodischen Daten (y_0 = y_m) folgt
+  s(a) = s(b) schon aus den Interpolationsbedingungen, bei nicht
+  periodischen Daten widerspricht die Forderung ihnen. Nachgerechnet (node,
+  q = 3, m = 4, 16 Unbekannte): mit {s(a)=s(b), s'(a)=s'(b)} hat die Matrix
+  nur Rang 15 (ein Freiheitsgrad bleibt), mit {s'(a)=s'(b), s''(a)=s''(b)}
+  ist sie regulär; bei y_0 ≠ y_m wird das System singulär.
+  *Skript Bemerkung 14.4.6 setzt s'(a)=s'(b) und s''(a)=s''(b) und benennt
+  den Befund.*
+- **Z. 493–496 („B-Splines", Cox-de-Boor-Rekursion)**: Die erweiterte
+  Knotenfolge ist doppelt fehlerhaft (externes Review 14, Punkt 1; auf der
+  Folie nur halb repariert). (a) Die Indexbereiche überlappen: „τ_{q+1+i} =
+  ξ_i" und „τ_{m+1} = … = τ_n = ξ_m" kollidieren, für q = 3, m = 5 bekäme
+  τ_6 sowohl ξ_2 als auch ξ_5. (b) Die Folge ist zu kurz: n = m+q Knoten
+  reichen nicht, die Rekursion greift für k = m+q auf τ_{k+q+1} = τ_{m+2q+1}
+  zu. Der offene Knotenvektor zu m+q Basisfunktionen vom Grad q braucht
+  m + 2q + 1 Knoten (τ_1 = … = τ_{q+1} = ξ_0; τ_{q+1+i} = ξ_i für
+  i = 1, …, m−1; τ_{m+q+1} = … = τ_{m+2q+1} = ξ_m); für q = 3, m = 17 sind
+  das 24 statt 20. (c) Der erste Nenner der Rekursion steht als
+  ξ_{k+q} − τ_k, richtig ist τ_{k+q} − τ_k. Nachgerechnet (node): mit der
+  korrigierten Folge summieren sich die m+q Basisfunktionen für q = 0,1,2,3
+  auf [ξ_0, ξ_m) bis auf 4,4·10^−16 zu eins, und der numerisch bestimmte
+  Träger von B_k stimmt mit [τ_k, τ_{k+q+1}] überein.
+  *Skript Definition 14.4.8 mit der korrigierten Fassung, Bemerkung 14.4.9
+  mit dem Befund, Beispiel 14.4.10 rechnet q = 1 vollständig aus.*
+- **Z. 518–524 („Numerische Stabilität & Effizienz", Konditionstabelle)**:
+  Die beiden Werte κ ≈ 10^16 und κ ≈ 10^2 stehen ohne Norm und ohne
+  Knotenangabe da (externes Review 14, Punkt 11). Eigene Rechnung für 20
+  äquidistante Punkte in [0,1]: die Vandermonde-Matrix hat in exakter
+  rationaler Arithmetik κ_1 = 4,4·10^16, die kubische
+  B-Spline-Kollokationsmatrix mit 20 Basisfunktionen (m = 17) κ_1 = 37, also
+  Grössenordnung 10^1 bis 10^2 je nach Knotenwahl. Der Abstand sind gut
+  fünfzehn Grössenordnungen, nicht vierzehn.
+  *Skript Bemerkung 14.4.13 kennzeichnet die Tabelle als illustrativ und
+  nennt die eigenen Werte.*
+- **Z. 529–530 („LGS-Lösung in O(n q²) statt O(n³)")**: n bezeichnet auf
+  denselben Folien die Zahl der Datenpunkte, hier aber die Systemgrösse
+  (externes Review 14, Punkt 7). Die Speedup-Angabe „Faktor ≈ 100 000" für
+  n = 1000, q = 3 ist als Grössenordnung richtig: n²/q² = 10^6/9 ≈ 111 000
+  (node), verglichen werden allerdings Operationszahlen, keine Laufzeiten.
+  *Skript Bemerkung 14.4.14 schreibt N für die Systemgrösse und sagt beides
+  dazu.*
+- **Z. 544 („Eigenschaften", Punkt 3)**: „Die Ableitungen bzw. das
+  Integral eines Splines approximieren auch die Ableitungen bzw. das
+  Integral der zu approximierenden Funktion" steht ohne Voraussetzung. Für
+  das Integral folgt es direkt aus ‖f − s‖_∞ < ε, für die Ableitungen
+  braucht es Glattheit von f, und die Konvergenz ist um eine Ordnung
+  langsamer. *Skript Bemerkung 14.4.16.*
+- **Z. 555–556 („Eigenschaften II", Punkt 5)**: Der Träger steht dort als
+  [τ_k, τ_{k+q+1}] und ist damit korrekt (frühere Fassung mit ξ, externes
+  Review 14, Punkt 9, ist repariert); die Aussage gilt allerdings nur mit
+  der Knotenfolge aus (b) oben, die die Folie nicht liefert.
+  *Skript Satz 14.4.11.*
+
+## 15-funktionsapproximation-II
+
+- **Z. 61 („Splines")**: Die Erinnerung definiert einen Spline als Funktion,
+  „die Polynome an den Punkten ξ₁, …, ξ_{m−1} zusammensetzt" — die
+  Glattheitsforderung (C^{q−1} an den Knoten) fehlt. Ohne sie wäre jede
+  stückweise konstante Treppenfunktion ein kubischer Spline.
+  *Skript Bemerkung 15.1.2 nimmt die Glattheit in die Beschreibung auf.*
+- **Z. 93–95 (Krümmungssatz, Beweis)**: Die Zusatzforderung
+  h″(a) = h″(b) = 0 an die Differenz h = g − s ist überflüssig und im
+  Allgemeinen falsch: Wegen s″(a) = 0 ist h″(a) = g″(a), und ein beliebiger
+  C²-Interpolant g hat dort keinen Grund zu verschwinden. Wer sie ernst
+  nimmt, beweist den Satz nur für eine echte Teilmenge der Konkurrenten.
+  Gebraucht wird allein s″(a) = s″(b) = 0 (natürlicher Spline).
+  *Skript Satz 15.1.4 und Bemerkung 15.1.5 kommen ohne die Forderung aus.*
+- **Z. 116 (Beweisende)**: „Gleichheit nur für h ≡ 0" ist nur behauptet. Die
+  Kette braucht ∫(h″)² = 0 ⟹ h″ ≡ 0 (Stetigkeit des Integranden) ⟹ h affin
+  ⟹ h ≡ 0, und der letzte Schritt braucht n ≥ 2 Stützstellen; bei n = 1 ist
+  jede Gerade durch den Punkt ein Minimierer. *Skript: siebter Beweisschritt
+  zu Satz 15.1.4, dazu Korollar 15.1.6 (Eindeutigkeit) und Bemerkung 15.1.5.*
+- **Z. 79 (Satzkopf)**: Die Punkte liegen „in [a, b] × ℝ", ohne Ordnung,
+  ohne paarweise Verschiedenheit und ohne a = x₁, x_n = b. Der Beweis
+  summiert aber über die Knotenintervalle und setzt das Ergebnis mit dem
+  Randterm an a und b gleich, was nur mit den äußersten Knoten als
+  Intervallenden aufgeht. *Skript Satz 15.1.4 fordert
+  a = x₁ < … < x_n = b; Bemerkung 15.1.5 leitet den allgemeinen Fall über
+  die lineare Fortsetzung außerhalb von [x₁, x_n] her.*
+- **Z. 102 (Beweis, Indizes)**: „Auf jedem Intervall [x_{i−1}, x_i]" nennt
+  den Laufbereich nicht; bei Punkten x₁, …, x_n existiert x₀ nicht, i läuft
+  von 2 bis n (dieselbe Sorte Lücke, die das externe Review als Punkt 3A für
+  den Approximationssatz anmerkt). *Skript summiert explizit über
+  i = 2, …, n.*
+- **Z. 68/72 (Terminologie, Präzisierung)**: „Minimale Krümmung" meint
+  ∫|f″|², nicht das Integral der geometrischen Krümmung
+  κ = |f″|/(1+(f′)²)^{3/2}; die beiden fallen nur für flache Kurven mit
+  |f′| ≪ 1 zusammen. Der Name ist eingebürgert, die Näherung sollte aber
+  benannt werden (so bei Deuflhard/Hohmann, Numerische Mathematik 1, §7.4).
+  *Skript sagt es im Absatz nach Definition 15.1.3.*
+
+- **Z. 162–164 („Funktionenräume")**: „Wähle Basisfunktionen φ_1, …, φ_K" und
+  der Schluss „Jedes f ∈ F_K ist durch K Koeffizienten eindeutig bestimmt"
+  setzen die lineare Unabhängigkeit der φ_k stillschweigend voraus. In der
+  Leserichtung Koeffizienten → Funktion ist die Zeile immer richtig; die
+  gemeinte Gegenrichtung (und damit dim F_K = K) gilt nur für linear
+  unabhängige φ_k. Gegenbeispiel: φ = (1, x, 1+x) hat K = 3, aber F_3 sind
+  die Polynome vom Grad höchstens 1 mit Dimension 2, und f(x) = 1+x besitzt
+  dort unendlich viele Koeffizientenvektoren, darunter (1,1,0) und (0,0,1).
+  Nebenbefund in Z. 163: Die Mengenklammer beschreibt mit „f(x) = Σ a_k φ_k(x)"
+  Funktionswerte, gemeint sind die Funktionen selbst.
+  *Skript Satz 14.2.4 (Koordinatenabbildung bijektiv genau bei linearer
+  Unabhängigkeit) samt Beweis und Bemerkung 14.2.5 mit diesem Gegenbeispiel.*
+
+- **Z. 210 (Approximationssatz, Konstante)**: „z. B. C = 5/384 für natürliche
+  Splines" schreibt die scharfe Konstante dem falschen Spline zu. 5/384 ist die
+  Hall-Meyer-Schranke für den *vollständigen* kubischen Spline
+  (s′(a) = f′(a), s′(b) = f′(b)); der natürliche Spline erfüllt sie nur, wenn
+  zusätzlich f″(a) = f″(b) = 0 gilt. Sonst ist er am Rand nur O(h²) genau.
+  Zwei eigene Gegenrechnungen (node): für f(x) = e^x auf [0,1] fällt sein
+  Maximalfehler beim Halbieren von h nur auf ein Viertel (2,08·10⁻³ / 5,21·10⁻⁴
+  / 1,30·10⁻⁴ / 3,26·10⁻⁵ bei n = 8/16/32/64, Fehlerspitze wandert gegen den
+  rechten Rand), und für f(x) = x³ ist die rechte Seite der Schranke null
+  (f⁽⁴⁾ ≡ 0), der natürliche Spline auf vier Teilintervallen weicht aber um
+  0,018 ab. Die Satzaussage selbst („es GIBT einen kubischen Spline") bleibt
+  richtig, weil x³ sein eigener Interpolant ist. *Skript Satz 15.2.2 sagt „mit
+  passenden Randbedingungen", Bemerkung 15.2.4 führt beide Gegenrechnungen vor.*
+- **Z. 234 (Beobachtung zur Tabelle)**: „Halbierung von h ⟹ Fehler wird
+  2⁴ = 16-mal kleiner" gilt exakt nur für die SCHRANKE. Eigene Messung
+  (natürlicher Spline, sin(2πx), Maximum über 200 001 Rasterpunkte): die
+  Faktoren sind 18,78 / 16,89 / 16,23 und laufen von oben auf 16 zu; die
+  Schranke wird dabei nur zu 25 / 22 / 20 / 20 % ausgeschöpft. *Skript
+  Beispiel 15.2.7 und Bemerkung 15.2.8 trennen Schranke und Messung.*
+- **Z. 200 gegen Z. 205 (Notation)**: Die Einleitung misst die Gitterweite an
+  den Knoten ξ_k, der Satz eine Zeile später an der Partition x_0 < … < x_n.
+  Beides meint dasselbe Gitter, die Doppelbenennung ist aber genau der
+  Notationsdrift, den das externe Review als Punkt 9 anmerkt (x für Daten,
+  ξ für Knoten). *Skript führt in Definition 15.2.1 nur die Partition
+  x_0 < … < x_n.*
+- **Z. 243 (Wrap-up, Tippfehler)**: „Approximationfehler O(h⁴)" — es fehlt das
+  Fugen-s (Approximationsfehler). *Im Skript korrekt.*
+- **Z. 350–352 (Beispiel, abgedruckter R-Code)**: Der gezeigte Block ruft
+  `bs(x_new, knots = attr(B, "knots"), intercept = TRUE)` ohne
+  `Boundary.knots` auf. Ohne dieses Argument setzt `bs()` die Randknoten auf
+  den Bereich des NEUEN Gitters (hier [0, 2π]), während `B` sie auf range(x)
+  gesetzt hat; die beiden Basen sind dann verschieden und `B_new %*% a_hat`
+  mischt Koeffizienten der einen mit Funktionen der anderen. Der ausführende
+  Chunk (Z. 326–328) übergibt `Boundary.knots` korrekt, der abgedruckte Code
+  nicht — die vom externen Review (Punkt 4) angemahnte Reparatur ist also nur
+  zur Hälfte angekommen (der falsche Argumentname `Boundary` ist behoben).
+  *Skript zeigt die vollständige Fassung, Bemerkung 15.3.15 erklärt den
+  Unterschied.*
+- **Z. 257–258 gegen Z. 266–267 (Problemstellung)**: „Finde Funktion f̂ mit
+  kleinem Fehler Σ(y_i − f̂(x_i))²" nennt keinen Suchraum. Über alle
+  Funktionen ist das Minimum null und wird von JEDEM Interpolanten angenommen
+  (unendlich viele, siehe 14-funktionsapproximation), die Aufgabe ist so also
+  entartet. Die Gleichung min_{f̂} Σ(…)² = min_a ‖y − Ba‖² eine Folie später
+  gilt entsprechend nur, wenn das linke Minimum über F_K läuft. *Skript
+  Bemerkung 15.3.3 sagt es und nennt die beiden Auswege (kleiner Ansatzraum
+  oder Strafterm), Satz 15.3.5 minimiert ausdrücklich über F_K.*
+- **Z. 282–283/289 (Interpolation als K = n)**: „Interpolation: K = n" und
+  „passt alle Datenpunkte exakt an: f̂(x_i) = y_i ∀i" gelten nur, wenn die
+  Designmatrix invertierbar ist. Bei B-Splines ist das die Bedingung von
+  Schoenberg und Whitney und nicht selbstverständlich: Mit den 50 Datenpunkten
+  des Skript-Widgets und GLEICHMÄSSIGEN Knoten auf [0, 2π] hat B schon bei
+  K = 35 keinen vollen Spaltenrang mehr (Cholesky von BᵀB bricht ab, sieben
+  der 32 Knotenintervalle sind leer), obwohl jede Basisfunktion mindestens
+  einen Datenpunkt im Träger hat; mit Quantilsknoten hält die Bedingung bis
+  K = n. *Skript Bemerkung 15.3.7 mit beiden Rechnungen.*
+
+- **Z. 387–388 und Z. 399 (Varianz- und MSE-Ordnung)**: Beide Zeilen schreiben
+  die Rate PUNKTWEISE auf (var[f̂(x)] = O(K/n) bzw.
+  E[(f̂(x) − f(x))²] = O(K⁻⁸ + K/n)). Als Aussage über den an den
+  Entwurfsstellen GEMITTELTEN Fehler ist sie richtig und sogar exakt: Für
+  einen KQ-Schätzer mit Designmatrix von vollem Spaltenrang ist
+  (1/n)Σᵢ var[f̂(xᵢ)] = σ²K/n (Spur der Hutmatrix = K). Punktweise gilt sie
+  nicht; eigene Rechnung im Folien-Setup (f(x) = sin(3x), n = 100, σ = 0,3):
+  bei K = 40 ist die über ein feines Gitter auf [0, 2π] gemittelte Varianz
+  5,04 statt 0,036, weil der Schätzer zwischen den Datenpunkten und an den
+  Rändern viel stärker schwingt. Ebenfalls ungenannt bleibt die Voraussetzung,
+  dass B vollen Spaltenrang hat (sonst existiert B⁺y zwar, aber nicht die
+  benutzte Kovarianzform). *Skript Satz 15.4.4 beweist die exakte gemittelte
+  Fassung, Bemerkung 15.4.5 nennt den punktweisen Vorbehalt samt Gegenzahl.*
+- **Z. 413–417 (Beispieltabelle, Var-Spalte)**: Die drei Varianzwerte 0,02 /
+  0,05 / 0,12 passen zu σ·K/n statt zu σ²·K/n: 0,3·5/100 = 0,015,
+  0,3·15/100 = 0,045 und 0,3·40/100 = 0,12 ergeben gerundet genau die
+  gedruckten Zahlen, während mit σ² = 0,09 dort 0,00 / 0,01 / 0,04 stehen
+  müssten (eigene Simulation mit demselben Setup: 0,0044 / 0,0135 / 0,0358,
+  jeweils auf zwei Prozent an σ²K/n). Die Bias-Spalte ist dagegen plausibel
+  (0,42 gegen eigene 0,41 bei K = 5). Nachvollziehbar sind die Werte nicht:
+  `resources/bias-variance-example.R` erzeugt nur die Abbildung daneben, die
+  Tabelle steht ohne Quelle im Foliensatz. *Skript Beispiel 15.4.8 rechnet
+  eigene Werte, Bemerkung 15.4.10 kennzeichnet die Folienzahlen als Zitat und
+  führt den σ-gegen-σ²-Befund vor.*
+- **Z. 425 (Interpretation, Tippfehler)**: „K = 15: Balanciert Bias and
+  Varianz" — englisches „and" statt „und". *Im Skript korrekt.*
+- **Z. 371 (Typografie)**: „Für kleinen Bias müssen wir also $\bK$ möglichst
+  groß wählen" setzt die Basisfunktionszahl fett ($\bK$ ist das Makro für den
+  Vektor K), obwohl K überall sonst im Foliensatz ein Skalar in normaler
+  Schrift ist. *Skript schreibt durchgehend K.*
+- **Z. 359/373/391/405 (Überschriften)**: Vier aufeinanderfolgende Folien
+  heißen „Bias-variance Trade-off", „Bias-Varianz Trade-off",
+  „Bias-variance Trade-off" und „Bias-Varianz: Beispiel" — die
+  Sprachmischung und die Groß-/Kleinschreibung wechseln von Folie zu Folie.
+  *Skript nutzt durchgehend „Bias-Varianz".*
+
+- **Z. 497–502 (Konvergenztabelle, Ungenauigkeit)**: Die Spalte „n für
+  MSE ≤ 0.01" ist mit der Rate der Nachbarspalte nicht konsistent gerundet.
+  Aus n^(−8/(8+p)) ≤ 0,01 folgt bei versteckter Konstante 1 exakt
+  n ≥ 10^((8+p)/4), also 10^2,25 ≈ 178 / 10^2,5 ≈ 316 / 10^3,25 ≈ 1778 /
+  10^4,5 ≈ 31 623 für p = 1/2/5/10, während die Folie 10^2 / 10^2,5 / 10^4 /
+  10^5 nennt: bei p = 1 zu klein (n = 10^2 liefert MSE = 0,0167 > 0,01), bei
+  p = 5 und p = 10 um rund eine halbe Größenordnung zu groß, bei p = 2 exakt.
+  Die nach dem externen Review (Punkt 7) ergänzte Fußnote „illustrative Werte"
+  deckt das ab. *Skript Bemerkung 15.5.6 druckt beide Spalten nebeneinander,
+  übernimmt die Fußnote und rechnet die eigenen Werte nach.*
+- **Z. 481–487 (Speichertabelle, Einheiten/Typografie)**: „8 KB" und „800 KB"
+  meinen 8000 bzw. 800 000 Bytes, also dezimale Präfixe (kB); mit dem binären
+  KB/KiB wären es 7,81 bzw. 781 KiB, und die 80 GB der letzten Zeile sind
+  binär 74,5 GiB. Dieselbe Tabelle setzt die Tausendertrennung englisch
+  („1,000", „100,000"). Die Zahlen selbst stimmen (10^10 · 8 B = 80 GB).
+  *Skript Beispiel 15.5.4 nennt die Präfix-Konvention und den binären Wert.*
+- **Z. 519/524 (GAM-Parameterzahl, Präzisierung)**: „pK Koeffizienten" zählt
+  den Achsenabschnitt β₀ aus der Formel derselben Zeile nicht mit und
+  übergeht, dass die Komponenten f_i ohne Zentrierungsbedingung nur bis auf
+  additive Konstanten bestimmt sind; genau sind es pK + 1 Koeffizienten
+  beziehungsweise p(K−1) + 1 frei wählbare. Die Größenordnung O(pK) bleibt
+  richtig. *Skript Bemerkung 15.5.9 rechnet die Buchführung vor.*
+- **Z. 469 (Auswertungsaufwand, Präzisierung)**: „f̂ auswerten kostet O(K^p)"
+  gilt für eine Basis ohne Trägerstruktur. Mit den B-Splines desselben
+  Foliensatzes sind an einer festen Stelle je Variable höchstens q+1
+  Basisfunktionen von null verschieden, pro Auswertung bleiben also nur
+  (q+1)^p Summanden: für p = 10 und q = 3 sind das 4^10 = 1 048 576 statt
+  10^10. Exponentiell in p ist beides. *Skript Bemerkung 15.5.7.*
+- **Z. 536 (Typografie)**: „in Thomas Nagler's Vorlesungen" verwendet den
+  englischen Apostroph-Genitiv; deutsch „Thomas Naglers Vorlesungen".
+  *Im Skript korrekt.*
+
 ## Verwandtes (nicht Folien, aber Quellmaterial)
 
 - **heath-ch3-App (privat)**: Die AᵀA-Kollaps-Schwelle „k ≈ 7,9" im
