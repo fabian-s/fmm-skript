@@ -249,9 +249,11 @@ $$
 $$
 
 mit $\bq^{(l)}$ und $\bk^{(l)}$ als $l$-ten Spalten von $\bQ$ und $\bK$. Der
-Rang von $\bQ\bK^\top$ ist damit höchstens $d_k$, und weil $d_k$ in der Praxis
-viel kleiner ist als die Zahl der Zeilen, steckt hinter der riesigen
-Aufmerksamkeitsmatrix eine Zerlegung von niedrigem Rang, genau wie bei der SVD.
+Rang der *Scorematrix* $\bQ\bK^\top$ ist damit höchstens $d_k$, und weil $d_k$
+in der Praxis viel kleiner ist als die Zahl der Zeilen, steckt in den Scores eine
+Zerlegung von niedrigem Rang, genau wie bei der SVD. Diese Aussage gilt vor der
+Softmax-Transformation: Softmax ist nicht linear und erhält die Rangschranke im
+Allgemeinen nicht, die Matrix der Attention-Gewichte kann also vollen Rang haben.
 :::
 
 ### Das Tensorprodukt
@@ -710,7 +712,7 @@ $n = 50$ Zeitpunkte sind es $125\,250$ gegen $1\,330$. Genau genommen ist die
 Zerlegung ($9.3.4$) nicht eindeutig: Wegen
 $\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
 = (c\,\cblue{\bSigma_T}) \otimes (c^{-1}\cgreen{\bSigma_S})$
-für jedes $c \neq 0$ lässt sich ein Skalenfaktor zwischen den Faktoren
+für jedes $c > 0$ lässt sich ein Skalenfaktor zwischen den Kovarianzfaktoren
 verschieben. Identifizierbar ist deshalb ein Parameter weniger, im Beispiel also
 $5$ statt $6$.
 

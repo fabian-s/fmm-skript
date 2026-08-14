@@ -13,8 +13,10 @@ Folgen.
 1. **Drei Aufgaben, ein Rechenweg.** Approximation misst global in einer
    :k[Norm]{#norm},
    Interpolation verlangt punktweise exakte Treffer, Glättung lässt Residuen
-   zu, weil die Daten Rauschen tragen. In der Praxis führen wir die erste auf
-   die zweite zurück, indem wir $f$ an endlich vielen Stellen auswerten
+   zu, weil die Daten Rauschen tragen. Einen wichtigen Zugang zur ersten
+   Aufgabe erhalten wir über die zweite, indem wir $f$ an endlich vielen
+   Stellen auswerten und interpolieren; andere Verfahren minimieren den
+   Approximationsfehler direkt
    ([Abschnitt 14.1](#sec-14.1)). Die Interpolationsbedingung allein legt
    dabei nichts fest: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
    $g$ mit $g(x_i) = 0$ ist auch $\cgreen{p} + g$ einer, und solche $g$ gibt
@@ -58,7 +60,7 @@ $n = 10$ Stützstellen (Bemerkung 14.3.14).
 | Kondition von $\bB$ | $\kappa_1 = 4{,}4 \cdot 10^{16}$ | $\kappa_1 = 37$ |
 | Struktur von $\bB$ | voll besetzt | Bandmatrix, höchstens $q+1$ Einträge je Zeile |
 | Aufwand | $O(n^3)$ | $O(N q^2)$, also linear in $N$ |
-| ein Messwert wackelt | wirkt global, Faktor bis $4{,}03$ | klingt je Knotenabstand auf gut ein Viertel ab |
+| ein Messwert wackelt | wirkt global, Faktor bis $4{,}03$ | im Widget: schneller Abfall auf gut ein Viertel je Knotenabstand |
 
 :::bemerkung[14.5.2 (Drei Stellschrauben, drei Wirkungen)]
 Wer die Tabelle sortiert, findet drei Entscheidungen mit klar getrennten
@@ -161,9 +163,12 @@ Die Dichte der transformierten Größe enthält den Betrag der
 :k[Determinante]{#determinant} ihrer Jacobimatrix
 ([Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3)), und deshalb muss die
 Abbildung zweierlei können: sich invertieren und ihre Determinante billig
-ausrechnen lassen. Monotone Splines leisten beides. Sie sind auf jedem Stück
-ein kleines Polynom, monoton also invertierbar, und ihre Ableitung steht
-stückweise sofort da.
+ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten
+beides: Strikte Monotonie zusammen mit passenden Randbedingungen macht die
+eindimensionale Abbildung bijektiv, und ihre Ableitung steht stückweise sofort
+da. Eine nur nicht fallende Funktion könnte konstante Stücke besitzen und wäre
+dort nicht invertierbar. In modernen Flows werden häufig monotone rationale
+quadratische Splines verwendet.
 
 ### Wie es weitergeht
 
@@ -285,8 +290,9 @@ Grad des Interpolanten.
 Der Grad $q$ ist fest gewählt, meist $q = 3$. Was mit den Daten wächst, ist
 die Zahl der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
 (Satz 14.4.4). Genau darin liegt der Unterschied zur Polynominterpolation,
-bei der $n$ Punkte den Grad auf $n-1$ hochtreiben (Satz 14.3.5), und genau
-daran hängt, dass die Oszillationen aus
+bei der der Ansatzraum für $n$ Punkte Polynome bis zum Grad $n-1$ zulässt
+(Satz 14.3.5). Das tatsächliche Interpolationspolynom darf kleineren Grad
+haben. Am wachsenden maximalen Grad hängt, dass die Oszillationen aus
 [Abschnitt 14.3](#sec-14.3) ausbleiben.
 :::
 

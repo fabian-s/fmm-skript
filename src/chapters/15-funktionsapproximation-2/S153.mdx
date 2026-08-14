@@ -23,7 +23,7 @@ $$ {#eq-15.3.1}
 $$
 
 mit einer unbekannten Funktion $f$ und Zufallsfehlern
-$\cred{\eps_1}, \dots, \cred{\eps_n}$, die $\iid$ sind und
+$\cred{\eps_1}, \dots, \cred{\eps_n}$, die
 
 $$
 \E\left[\cred{\eps_i} \mid x_i\right] = 0
@@ -48,9 +48,10 @@ ganze Aufgabe.
    Konstanten $c$ liefert das Paar $(g + c,\ \cred{\eps} - c)$ dieselben
    Beobachtungen wie $(g, \cred{\eps})$. Erst die Forderung, dass der Fehler im
    Mittel verschwindet, macht aus ($15.3.1$) eine Aussage über $f$.
-3. Über die Streuung der $\cred{\eps_i}$ sagt die Annahme noch nichts. Für
-   diesen Abschnitt brauchen wir auch nichts; die Varianz $\sigma^2$ kommt erst
-   ins Spiel, wenn wir den Fehler der Schätzung zerlegen
+3. Über Abhängigkeit und Streuung der $\cred{\eps_i}$ sagt die Annahme noch
+   nichts. Für die algebraische KQ-Herleitung dieses Abschnitts brauchen wir
+   beides nicht; Unkorreliertheit und die gemeinsame Varianz $\sigma^2$ kommen
+   erst ins Spiel, wenn wir den Fehler der Schätzung zerlegen
    ([Abschnitt 15.4](#sec-15.4)).
 :::
 
@@ -70,8 +71,10 @@ einzelnen Differenzen $\cred{r_i} = \cblue{y_i} - \cgreen{\wh f(x_i)}$ heißen
 Suchten wir das Minimum von ($15.3.2$) unter *allen* Funktionen, wäre die
 Antwort langweilig und nutzlos: Das Minimum ist null, und angenommen wird es von
 jedem Interpolanten der Daten. Davon gibt es unendlich viele
-([Abschnitt 14.1](?k=14-funktionsapproximation#sec-14.1)), und keiner von ihnen
-schätzt $f$ gut, weil sie alle jedes $\cred{\eps_i}$ mitnehmen.
+([Abschnitt 14.1](?k=14-funktionsapproximation#sec-14.1)). Alle übernehmen an
+den Datenstellen jedes $\cred{\eps_i}$; die Trainings-RSS kann dabei zwischen
+einem brauchbaren und einem beliebig schlechten Verlauf zwischen den Punkten
+nicht unterscheiden.
 
 Die Zielfunktion allein legt also nichts fest. Zwei Auswege gibt es, und beide
 kommen in diesem Abschnitt vor:
@@ -233,12 +236,21 @@ ist $\bB^\top\bB$ dünn besetzt und die Zerlegung billig
 Vollen Spaltenrang bekommen wir nicht geschenkt. Notwendig ist $K \le n$, aber
 das reicht nicht: Die Basisfunktionen müssen auch *auf den Daten* linear
 unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen. Der
-zuständige Satz von Schoenberg und Whitney sagt für B-Splines vom Grad $q$ mit
-erweitertem Knotenvektor $\corange{\tau}$ (die Bauart aus
-[Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)): $\bB$ hat genau dann vollen Spaltenrang, wenn es
-Indizes $i_1 < \dots < i_K$ gibt mit
-$\corange{\tau_k} < x_{i_k} < \corange{\tau_{k+q+1}}$ für alle $k$, wenn also
-jede Basisfunktion einen eigenen Datenpunkt in ihrem Träger belegen kann.
+zuständige Satz von Schoenberg und Whitney lässt sich für B-Splines vom Grad
+$q$ mit erweitertem Knotenvektor $\corange{\tau}$ so lesen: Es müssen sich
+Indizes $i_1 < \dots < i_K$ finden, sodass die jeweils zugeordnete
+Basisfunktion am eigenen Datenpunkt positiv ist,
+
+$$
+\corange{B_k^{(q)}(x_{i_k})} > 0, \qquad k=1,\dots,K.
+$$
+
+Im Inneren des Knotengebiets ist das gleichbedeutend mit
+$\corange{\tau_k} < x_{i_k} < \corange{\tau_{k+q+1}}$. Bei einem offenen,
+an den Rändern geklemmten Knotenvektor gehören die positiven Randwerte der
+ersten und letzten Basisfunktion ausdrücklich dazu. Anschaulich muss jede
+Basisfunktion also einen eigenen, passend geordneten Datenpunkt belegen
+können.
 
 Die naheliegende Abschwächung „jede Basisfunktion sieht mindestens einen
 Datenpunkt" genügt dafür nicht. Unsere eigene Rechnung mit den $50$ Punkten des
@@ -256,17 +268,32 @@ tut.
 Der Rahmen aus Satz 15.3.5 deckt beide Aufgaben ab. Unterschieden werden sie
 allein durch die Größe des Ansatzraums.
 
-:::definition[15.3.8 (Interpolation und Glättung)]
-Im Ansatz $\cgreen{\wh f} = \sum_{k=1}^K a_k \corange{\phi_k}$ heißt der Fall
+:::definition[15.3.8 (Interpolation und Glättung im Basisansatz)]
+Eine Anpassung *interpoliert* die Daten, wenn ihre Residuen verschwinden,
+also wenn
 
-- $K = n$ *Interpolation*: genauso viele Freiheitsgrade wie Datenpunkte,
-- $K < n$ *Glättung* (smoothing): weniger Freiheitsgrade als Datenpunkte.
+$$
+\bB\wh\ba = \cblue{\by}
+\qquad\text{beziehungsweise}\qquad
+\cgreen{\wh f(x_i)}=\cblue{y_i}\quad\text{für alle }i
+$$
+
+gilt. Bei einer *Glättung* dürfen Residuen verbleiben, damit die Schätzung
+nicht jede beobachtete Schwankung übernehmen muss.
+
+Für eine unbestrafte Anpassung sind $K=n$ und invertierbares $\bB$ der
+klassische Interpolationsfall. Ein vollrangiger Ansatz mit $K<n$ ist das
+klassische Regressions- oder Glättungsregime: Er kann nicht jeden beliebigen
+Datenvektor interpolieren. Die Zahlen $K$ und $n$ allein definieren die beiden
+Begriffe jedoch nicht; entscheidend sind Rang, konkrete rechte Seite und ein
+möglicher Strafterm.
 :::
 
 Bei $K = n$ ist $\bB$ quadratisch. Ist sie zusätzlich invertierbar, so hat
 ($15.3.4$) die Lösung $\wh\ba = \bB^{-1}\cblue{\by}$, das Residuum ist der
 Nullvektor, und $\cgreen{\wh f}$ trifft jeden Datenpunkt exakt. Bei $K < n$ ist
-das System überbestimmt, und im Allgemeinen bleibt ein Rest.
+das System überbestimmt; genau dann bleibt ein Rest, wenn
+$\cblue{\by}\notin\operatorname{Bild}(\bB)$ gilt.
 
 :::bemerkung[15.3.9 (Warum Interpolation das Rauschen erbt)]
 Warum ist das exakte Treffen schlecht? Setzen wir ($15.3.1$) in die
@@ -286,11 +313,14 @@ ihre Fehler in verschiedene Richtungen, muss die Kurve dazwischen steil werden.
 Modelliert eine Schätzung auf diese Weise den Zufallsanteil der Daten mit,
 spricht die Statistik von :k[Überanpassung]{#overfitting}.
 
-Bei $K < n$ ist das nicht mehr möglich. Jeder Koeffizient wird aus
-mehreren Beobachtungen bestimmt, und in dieser Mittelung hebt sich ein Teil der
-Fehler auf. Der Preis dafür steht auf der anderen Seite: Ein kleiner
-Ansatzraum enthält $f$ vielleicht gar nicht. Wie sich beides gegeneinander
-verrechnet, ist das Thema von [Abschnitt 15.4](#sec-15.4).
+Bei vollem Spaltenrang und $K < n$ ist ein exakter Fit nicht mehr für jeden
+Datenvektor möglich; bei generischen verrauschten Daten bleibt ein Rest. Jeder
+Koeffizient wird dann aus mehreren Beobachtungen bestimmt, und in dieser
+Mittelung hebt sich ein Teil der Fehler auf. Ausnahmsweise kann auch ein
+kleiner Raum exakt interpolieren, nämlich wenn $\cblue{\by}$ zufällig in
+$\operatorname{Bild}(\bB)$ liegt. Der Preis des kleinen Ansatzraums steht auf
+der anderen Seite: Er enthält $f$ vielleicht gar nicht. Wie sich beides
+gegeneinander verrechnet, ist das Thema von [Abschnitt 15.4](#sec-15.4).
 :::
 
 :::beispiel[15.3.10 (Fünfzig verrauschte Punkte)]
@@ -314,9 +344,12 @@ gerechnet:
 | $20$ | $2{,}460$ | $0{,}286$ | $0{,}269$ | $2{,}223$ |
 | $40$ | $0{,}557$ | $0{,}236$ | $1{,}908$ | $8{,}574$ |
 
-Dabei ist $\wh\sigma = \sqrt{\operatorname{RSS}/(n-K)}$ die übliche Schätzung
-der Fehlerstreuung, und „Abstand zu $f$" ist die Wurzel aus dem mittleren
-quadrierten Abstand
+Dabei ist $\wh\sigma = \sqrt{\operatorname{RSS}/(n-K)}$ der übliche
+Residualstandardfehler. Als Schätzung von $\sigma$ ist er bei vollem Rang,
+unkorrelierten homoskedastischen Fehlern und korrekt spezifiziertem
+Mittelwertmodell gerechtfertigt; fehlt $f$ im Ansatzraum, enthält er
+zusätzlich Lack-of-fit.
+„Abstand zu $f$" ist die Wurzel aus dem mittleren quadrierten Abstand
 
 $$
 \frac{1}{2\pi}\int_0^{2\pi} \left( \cgreen{\wh f(x)} - f(x) \right)^2 \dx .
@@ -389,15 +422,18 @@ Maß für Unruhe, das dort den natürlichen kubischen Spline ausgezeichnet hat.
 Drei Beobachtungen ordnen das Kriterium ein.
 
 1. *Der Minimierer ist wieder ein Spline.* Für $\lambda > 0$ und mindestens zwei
-   verschiedene Stellen $x_i$ ist der Minimierer von ($15.3.5$) über
+   verschiedene Beobachtungsstellen ist der Minimierer von ($15.3.5$) über
    $\Ccal^2[a, b]$ ein natürlicher kubischer Spline mit Knoten in *allen*
-   Datenpunkten. Das ist der Satz von Schoenberg und Reinsch, den wir hier nicht
-   beweisen; Green und Silverman führen ihn in Kapitel 2 vor. Die Zahl der
-   Knoten ist damit $K = n$, und trotzdem entsteht keine Interpolation.
+   verschiedenen Datenpunkten. Das ist der Satz von Schoenberg und Reinsch, den wir hier nicht
+   beweisen; Green und Silverman führen ihn in Kapitel 2 vor. Bei paarweise
+   verschiedenen $x_i$ hat der daraus entstehende natürliche Spline-Raum
+   Dimension $K=n$, und trotzdem entsteht für $\lambda>0$ keine Interpolation.
 2. *Die beiden Grenzfälle sind vertraut.* Für $\lambda \to 0$ verschwindet die
-   Strafe. Übrig bleiben die Interpolanten, und unter ihnen wählt der Strafterm
-   im Grenzwert den mit der kleinsten Krümmung, also den natürlichen kubischen
-   Spline aus Satz 15.1.4. Für $\lambda \to \infty$ wird jede Kandidatin mit
+   Strafe. Bei paarweise verschiedenen Datenstellen bleiben im Grenzwert die
+   Interpolanten, und unter ihnen wählt der Strafterm den mit der kleinsten
+   Krümmung, also den natürlichen kubischen Spline aus Satz 15.1.4. Bei
+   wiederholten Stellen mit verschiedenen Beobachtungen kann es dagegen keinen
+   Interpolanten aller Einzelwerte geben. Für $\lambda \to \infty$ wird jede Kandidatin mit
    $J(g) > 0$ unbezahlbar; übrig bleiben die Funktionen mit $g'' \equiv 0$, also
    die Geraden, und unter ihnen die
    :k[Kleinste-Quadrate-Gerade]{#linear-regression}. Der Glättungsparameter

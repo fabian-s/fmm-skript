@@ -205,12 +205,14 @@ export function RidgeLassoGeometrie() {
         Beide Tafeln zeigen dieselben KQ-Höhenlinien (grau, Minimum im violetten
         Punkt „KQ") über ihrem zulässigen Bereich (rot). Violett hervorgehoben
         ist die niedrigste erreichbare Höhenlinie, der grüne Punkt darauf ist
-        die beschränkte Lösung. Schieben wir das Budget <M>{"c"}</M> nach unten,
+        die beschränkte Lösung. Der Regler steuert den Radius <M>{"r"}</M> beider
+        Mengen; beim quadrierten Ridge-Budget aus dem Text gilt also
+        <M>{"c=r^2"}</M>. Schieben wir <M>{"r"}</M> nach unten,
         wandert die Ridge-Lösung glatt über den Kreisrand, während die
-        Lasso-Lösung für <M>{"c \\le 1{,}30"}</M> in der Ecke{" "}
-        <M>{"(c;\\ 0)"}</M> sitzt und dort <M>{"\\beta_2 = 0"}</M> exakt
+        Lasso-Lösung für <M>{"r \\le 1{,}30"}</M> in der Ecke{" "}
+        <M>{"(r;\\ 0)"}</M> sitzt und dort <M>{"\\beta_2 = 0"}</M> exakt
         abschaltet; die genaue Schwelle liegt bei <M>{"1{,}3429"}</M>. Nach oben
-        verschwindet der Zwang ganz: Sobald das Budget den KQ-Schätzer selbst
+        verschwindet der Zwang ganz: Sobald der Radius den KQ-Schätzer selbst
         zulässt, also ab{" "}
         <M>{"\\left\\|\\wh{\\bbeta}\\right\\|_2 \\approx 1{,}84"}</M> (Ridge)
         beziehungsweise <M>{"\\left\\|\\wh{\\bbeta}\\right\\|_1 = 2{,}50"}</M>{" "}
@@ -218,7 +220,7 @@ export function RidgeLassoGeometrie() {
       </p>
       <div className="mb-2 flex items-center gap-3 text-sm">
         <span>
-          Budget <M>{"c"}</M>:
+          Radius <M>{"r"}</M>:
         </span>
         <input
           type="range"
@@ -232,8 +234,8 @@ export function RidgeLassoGeometrie() {
         <span className="font-mono text-xs">{fmt(c)}</span>
       </div>
       <div className="flex flex-wrap gap-5">
-        <Panel art="kreis" c={c} titel="Ridge: ‖β‖₂ ≤ c" />
-        <Panel art="raute" c={c} titel="Lasso: |β₁| + |β₂| ≤ c" />
+        <Panel art="kreis" c={c} titel="Ridge: ‖β‖₂ ≤ r" />
+        <Panel art="raute" c={c} titel="Lasso: |β₁| + |β₂| ≤ r" />
       </div>
     </div>
   );

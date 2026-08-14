@@ -10,7 +10,8 @@ die kleinste Krümmung ([Abschnitt 15.1](#sec-15.1)). Dazu kam die Zusage, dass
 ein hinreichend feines Knotengitter jede
 :k[stetige Funktion]{#continuous-function} beliebig genau einfängt. Diese Zusage
 nennt kein Tempo. Sie sagt weder, wie viele Knoten wir brauchen, noch was wir
-gewinnen, wenn wir die Knotenzahl verdoppeln. Genau das holen wir jetzt nach.
+gewinnen, wenn wir die Zahl der Teilintervalle verdoppeln. Genau das holen wir
+jetzt nach.
 
 ### Gitterweite und Fehlerschranke
 
@@ -87,13 +88,14 @@ genauer. Ein Knoten mehr nützt nichts, solange eine Lücke bleibt.
 
 :::bemerkung[15.2.4 (Welcher Spline die Konstante trägt)]
 Satz 15.2.2 behauptet die Existenz eines kubischen Splines, nicht die Güte
-eines bestimmten. Das ist keine Spitzfindigkeit. Die scharfe Konstante
-$\tfrac{5}{384}$ gehört zum *vollständigen* kubischen Spline, der an den
-Rändern die Ableitungen von $f$ übernimmt, also $s'(a) = f'(a)$ und
-$s'(b) = f'(b)$ erfüllt. Die Folien schreiben sie dem natürlichen Spline zu,
-der stattdessen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ verlangt. Passen diese
-Randwerte nicht zu $f''(a)$ und $f''(b)$, so ist der natürliche Spline am Rand
-schlechter, und sein maximaler Fehler fällt global nur wie $\corange{h}^2$.
+eines beliebigen Randabschlusses. Das ist keine Spitzfindigkeit. Die scharfe
+Konstante $\tfrac{5}{384}$ gilt etwa für den *vollständigen* kubischen Spline,
+der $s'(a) = f'(a)$ und $s'(b) = f'(b)$ erfüllt, sowie für die passende
+Randbedingung zweiter Ordnung $s''(a)=f''(a)$ und $s''(b)=f''(b)$. Die Folien
+schreiben sie pauschal dem natürlichen Spline zu, der stattdessen
+$\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ verlangt. Passen diese Randwerte nicht
+zu $f''(a)$ und $f''(b)$, so ist der natürliche Spline am Rand schlechter,
+und sein maximaler Fehler fällt global nur wie $\corange{h}^2$.
 
 Zwei eigene Rechnungen zeigen das. Für $f(x) = e^x$ auf $[0, 1]$ ist
 $f''(0) = 1 \neq 0$, und der maximale Fehler des natürlichen Splines sinkt beim
@@ -318,9 +320,12 @@ bemerkenswert gut bestückt.
 3. *Minimale Krümmung.* Unter allen Interpolanten aus $\Ccal^2$ macht der
    natürliche kubische Spline $\int_a^b \left| f''(x) \right|^2 dx$ am
    kleinsten ([Abschnitt 15.1](#sec-15.1)).
-4. *Approximationsfehler $O(h^4)$.* Das ist Satz 15.2.2: Wer die Knotenzahl
-   verdoppelt, gewinnt rund den Faktor $16$ an Genauigkeit, ohne den
-   Polynomgrad anzurühren.
+4. *Approximationsfehler $O(h^4)$ bei passenden Randbedingungen.* Das ist
+   Satz 15.2.2: Verdoppeln wir auf einem gleichmäßigen Gitter die Zahl der
+   Teilintervalle, halbiert sich $h$, und die Schranke fällt um den Faktor
+   $16$, ohne dass wir den Polynomgrad anrühren. Für einen natürlichen Spline
+   ohne passende Randkrümmung gilt diese globale Ordnung im Allgemeinen nicht
+   (Bemerkung 15.2.4).
 :::
 
 Alle vier Punkte gelten für *Interpolation*, also für Daten ohne Rauschen. Genau

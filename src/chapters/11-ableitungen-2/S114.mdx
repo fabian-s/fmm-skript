@@ -16,11 +16,12 @@ quadratische Näherung, eine kubische, und so fort. Das Ergebnis heißt
 Werkzeuge des ganzen Kurses.
 
 Zwei Verwendungen laufen durch dieses Skript. Erstens rechnen wir mit dem
-:k[Polynom]{#polynomial} statt mit $f$, weil Polynome sich ableiten, integrieren und
-minimieren lassen, ohne dass wir über $f$ mehr wissen müssen als ein paar
+:k[Polynom]{#polynomial} statt mit $f$, weil sich seine Ableitungen und kritischen
+Punkte leichter bestimmen lassen, ohne dass wir über $f$ mehr wissen müssen als ein paar
 Ableitungen an einer einzigen Stelle. Der Newton-Schritt am Ende dieses Abschnitts
-macht davon Gebrauch: Minimiert wird die quadratische Näherung, nicht die
-Funktion. Zweitens sind Taylorentwicklungen das Standardwerkzeug der Konvergenz-
+macht davon Gebrauch: Bestimmt wird der stationäre Punkt der quadratischen Näherung;
+bei positiver Hesse-Matrix ist er deren Minimum. Zweitens sind Taylorentwicklungen
+das Standardwerkzeug der Konvergenz-
 und Asymptotikanalyse.
 Die asymptotische Normalität des Maximum-Likelihood-Schätzers etwa entsteht, indem
 wir die Score-Funktion um den wahren Parameter entwickeln; wir kommen in
@@ -49,7 +50,9 @@ $$ {#eq-11.4.1}
 + \frac{1}{k!}\cgreen{f^{(k)}(x)}h^k
 $$
 
-heißt *Taylorpolynom* $k$-ten Grades von $f$ im *Entwicklungspunkt* $x$.
+heißt *Taylorpolynom der Ordnung $k$* von $f$ im *Entwicklungspunkt* $x$. Sein
+Grad ist höchstens $k$ und kann kleiner sein, wenn die höchsten Koeffizienten
+verschwinden.
 :::
 
 Wir lesen $\cgreen{T_k}$ als Funktion des Zuwachses $h$ bei festgehaltenem
@@ -180,7 +183,8 @@ und das heißt gerade $\cblue{f(x+h)} - \cgreen{T_k(h)} = \cred{o(\left|h\right|
 wir $f^{(k+1)}$ abschätzen können. Die Fassung ($11.4.2$) mit
 $\cred{o(\left|h\right|^k)}$ sagt nur etwas über das Verhalten für $h \to 0$, dafür
 kommt sie mit weniger Voraussetzungen aus. Für die Folien und für uns ist die
-$o$-Fassung die Arbeitsform, weil sie sich wörtlich auf normierte Räume überträgt.
+$o$-Fassung die Arbeitsform, weil sie sich auf normierte Vektorräume mit
+vollständigem Zielraum überträgt.
 
 *Warum $\left|h\right|^k$ und nicht $\left|h\right|^{k+1}$.* Der Rest ist nach
 ($11.4.3$) von der Größenordnung $\left|h\right|^{k+1}$, also sogar noch kleiner,
@@ -303,127 +307,100 @@ Zuwachs $\bh$ ein, so entsteht der passende Ersatz für den Term
 $f^{(j)}(x)h^j$.
 
 :::satz[11.4.7 (Taylorentwicklung II)]
-Seien $V$ und $W$ normierte Räume und $f\colon V \to W$ $k$-mal
-Fréchet-differenzierbar im Sinne von Definition 11.3.1, wobei die Zuordnung
-$\bx \mapsto \cgreen{D^k_{\bx} f}$ stetig sei; wie in
-[Abschnitt 11.3](#sec-11.3) schreiben wir dafür kurz $f \in \Ccal^k$. Dann gilt
-für $\bh \to \bnull$
+Seien $V$ ein normierter Vektorraum, $W$ ein Banachraum, $U\subseteq V$ offen,
+$k\ge 1$ und $f\colon U \to W$ in einer Umgebung von $\bx\in U$ $k$-mal
+stetig Fréchet-differenzierbar; kurz $f\in\Ccal^k$. Dann gibt es einen Rest
+$\cred{r_k(\bh)}\in W$ mit
 
 $$ {#eq-11.4.5}
 \cblue{f(\bx + \bh)} = \cblue{f(\bx)}
 + \sum_{j = 1}^{k} \frac{1}{j!}\,\cgreen{D_{\bx}^j f(\underbrace{\bh, \dots, \bh}_{j\text{-mal}})}
-+ \cred{o\bigl(\left\|\bh\right\|^k\bigr)} .
++ \cred{r_k(\bh)},
+\qquad
+\frac{\left\|\cred{r_k(\bh)}\right\|}{\left\|\bh\right\|^k}\longrightarrow0
+\quad\text{für }\bh\to\bnull .
 $$
 :::
 
 ::::beweis
 
 :::schritt
-Halten wir $\bx$ fest. Für $\bh = \bnull$ steht auf beiden Seiten $\cblue{f(\bx)}$,
-die Aussage ist also trivial; sei $\bh \neq \bnull$. Wir zerlegen den Zuwachs in
-Länge und Richtung,
+Für hinreichend kleines $\bh$ liegt die Strecke von $\bx$ nach $\bx+\bh$ in
+$U$. Wir laufen sie mit einer Funktion einer reellen Variablen ab:
 
 $$
-s := \left\|\bh\right\| > 0 , \qquad \bu := \bh / s
-\quad\text{mit } \left\|\bu\right\| = 1 , \qquad \bh = s\,\bu ,
+\psi\colon [0,1]\to W,\qquad \psi(t):=\cblue{f(\bx+t\bh)}.
 $$
 
-und laufen die Strecke von $\bx$ nach $\bx + \bh$ mit einer Funktion einer
-einzigen reellen Variablen ab:
-
-$$
-\psi\colon \R_{\ge 0} \to W , \qquad \psi(w) := \cblue{f(\bx + w\,\bu)} .
-$$
-
-::why[Damit ist $\psi(0) = f(\bx)$ und $\psi(s) = f(\bx + \bh)$: Die ganze Frage ist auf eine Gerade durch $\bx$ zurückgeführt]
+::why[Damit ist $\psi(0)=f(\bx)$ und $\psi(1)=f(\bx+\bh)$: Die ganze Frage ist auf die Verbindungsstrecke zurückgeführt]
 :::
 
 :::schritt
 Die Kettenregel aus Satz 11.2.8 liefert die Ableitungen von $\psi$. Die innere
-Abbildung $w \mapsto \bx + w\bu$ ist affin mit Ableitung $\bu$, also ist
-$\psi'(w) = \cgreen{D_{\bx + w\bu} f(\bu)}$. Jedes weitere Ableiten setzt ein
-$\bu$ mehr ein:
+Abbildung $t\mapsto\bx+t\bh$ ist affin mit Ableitung $\bh$, also setzt jedes
+weitere Ableiten ein $\bh$ mehr ein:
 
 $$
-\psi^{(j)}(w) = \cgreen{D_{\bx + w\bu}^j f(\underbrace{\bu, \dots, \bu}_{j\text{-mal}})} .
+\psi^{(j)}(t)=\cgreen{D^j_{\bx+t\bh}f(\underbrace{\bh,\dots,\bh}_{j\text{-mal}})}.
 $$
 
-::why[Induktiv: $w \mapsto D^{j}_{\bx + w\bu} f(\bu, \dots, \bu)$ ist die Verkettung der affinen Abbildung mit der stetig differenzierbaren Abbildung $\by \mapsto D_\by^j f(\bu, \dots, \bu)$, und deren Ableitung ist $D^{j+1}$, ausgewertet an einem weiteren $\bu$]
+::why[Induktiv: $t\mapsto D^j_{\bx+t\bh}f(\bh,\dots,\bh)$ ist wieder eine Verkettung, deren Ableitung $D^{j+1}$ an einem zusätzlichen $\bh$ auswertet]
 :::
 
 :::schritt
-Auf $\psi$ wenden wir Satz 11.4.2 an, entwickelt um $w = 0$ und ausgewertet bei
-$w = s$:
+Für eine $W$-wertige $\Ccal^k$-Kurve gilt die Taylorformel mit Integralrest:
 
 $$
-\psi(s) = \sum_{j=0}^{k} \frac{s^j}{j!}\,\psi^{(j)}(0) + \cred{o(s^k)}
-\qquad \text{für } s \to 0 .
+\psi(1)=\sum_{j=0}^{k-1}\frac{1}{j!}\psi^{(j)}(0)
++\frac{1}{(k-1)!}\int_0^1(1-t)^{k-1}\psi^{(k)}(t)\,dt.
 $$
 
-Mit Schritt 1 und 2 ist das
+Wir addieren und subtrahieren $\psi^{(k)}(0)$ im Integral. Weil
+$\int_0^1(1-t)^{k-1}\,dt=1/k$, entsteht daraus genau der fehlende Summand
+$\psi^{(k)}(0)/k!$ und der Rest
 
 $$
-\cblue{f(\bx + \bh)} = \cblue{f(\bx)}
-+ \sum_{j=1}^{k} \frac{s^j}{j!}\,\cgreen{D_{\bx}^j f(\bu, \dots, \bu)} + \cred{o(s^k)} .
+\cred{r_k(\bh)}=\frac{1}{(k-1)!}\int_0^1(1-t)^{k-1}
+\bigl(\cgreen{D^k_{\bx+t\bh}f}-\cgreen{D^k_{\bx}f}\bigr)
+(\bh,\dots,\bh)\,dt.
 $$
 
-::why[$f$ ist $k$-mal stetig differenzierbar, also ist $\psi$ es auch; für $W = \R^m$ wenden wir Satz 11.4.2 auf jede Komponente einzeln an. Zwei Dinge bleiben dabei offen: Satz 11.4.2 verlangt in der Fassung ($11.4.2$) eine Ableitung mehr, als $f \in \Ccal^k$ hergibt, und der Restterm hängt hier noch von der Richtung $\bu$ ab. Beides räumt Bemerkung 11.4.8 aus, und zwar mit demselben Argument]
+::why[Das Integral ist für stetige Kurven in einem Banachraum definiert; in endlichdimensionalen Zielräumen wird einfach komponentenweise integriert]
 :::
 
 :::schritt
-Zuletzt bringen wir die Richtung $\bu$ wieder zum Zuwachs $\bh$ zurück. Weil
-$\cgreen{D_{\bx}^j f}$ in jedem seiner $j$ Argumente linear ist, dürfen wir aus
-jedem Argument den Faktor $1/s$ herausziehen:
+Für kleines $s>0$ mit $\{\bz:\left\|\bz-\bx\right\|\le s\}\subseteq U$ setzen wir
 
 $$
-\cgreen{D_{\bx}^j f(\bu, \dots, \bu)}
-= \cgreen{D_{\bx}^j f\Bigl(\frac{\bh}{s}, \dots, \frac{\bh}{s}\Bigr)}
-= \frac{1}{s^j}\,\cgreen{D_{\bx}^j f(\bh, \dots, \bh)} .
+\omega(s):=\sup_{\left\|\bz-\bx\right\|\le s}
+\left\|\cgreen{D^k_{\bz}f}-\cgreen{D^k_{\bx}f}\right\|_{\mathrm{op}}.
 $$
 
-Die Faktoren $s^j$ kürzen sich damit weg, und wegen $s = \left\|\bh\right\|$ ist
-$\cred{o(s^k)} = \cred{o(\left\|\bh\right\|^k)}$. Das ist ($11.4.5$).
+Die Stetigkeit von $D^kf$ in $\bx$ liefert $\omega(s)\to0$. Mit der Operatornorm
+und der Dreiecksungleichung für Integrale folgt
 
-::why[$j$-mal Homogenität anwenden, einmal je Argument, gibt den Faktor $(1/s)^j$]
+$$
+\left\|\cred{r_k(\bh)}\right\|
+\le \frac{\omega(\left\|\bh\right\|)}{k!}\left\|\bh\right\|^k.
+$$
+
+Nach Division durch $\left\|\bh\right\|^k$ geht die rechte Seite gegen null.
+Das beweist ($11.4.5$).
+
+::why[Die Operatornorm schätzt den Integranden gleichzeitig für jede Richtung ab; das Integral der Gewichtsfunktion liefert den Faktor $1/k$]
 :::
 
 ::::
 
-:::bemerkung[11.4.8 (Die Feinheit in der Skizze)]
-Zwei Punkte verdienen mehr, als die Folienzeile hergibt. Erstens liefert Schritt 3
-für *jede feste Richtung* $\bu$ einen Restterm, der schneller als $s^k$
-verschwindet. Die Behauptung ($11.4.5$) ist stärker: Sie verlangt, dass der Rest
-gleichmäßig über alle Richtungen klein wird, denn $\bh \to \bnull$ darf die Richtung
-dabei beliebig wechseln. Eine richtungsweise Aussage allein genügt nicht, sonst
-könnte sich die Konvergenz von Richtung zu Richtung beliebig verlangsamen. Zweitens
-ist Satz 11.4.2 für $(k+1)$-mal stetig differenzierbares $f$ formuliert, während
-hier nur $f \in \Ccal^k$ zur Verfügung steht.
-
-Beides erledigt ein und dieselbe Rechnung, und sie kommt mit $\Ccal^k$ aus. Wir
-wenden das Lagrange-Restglied ($11.4.3$) aus dem Beweis von Satz 11.4.2 auf $\psi$
-mit der Ordnung $k-1$ an, wofür $\psi \in \Ccal^{k}$ genügt (für $W = \R^m$ wieder
-komponentenweise wie in Schritt 3). Ziehen wir davon noch den $j = k$-Summanden
-ab, so lässt sich der Rest der Entwicklung bis zur Ordnung $k$ als
-
-$$
-\frac{s^k}{k!}\Bigl(\psi^{(k)}(\theta) - \psi^{(k)}(0)\Bigr)
-= \frac{s^k}{k!}\,\bigl(\cgreen{D^{k}_{\bx + \theta\bu} f} - \cgreen{D^{k}_{\bx} f}\bigr)(\bu, \dots, \bu)
-$$
-
-mit einem $\theta$ zwischen $0$ und $s$ schreiben. Wegen
-$\left\|\bu\right\| = 1$ ist der Betrag davon höchstens
-
-$$
-\frac{s^k}{k!}\,\omega(s) ,
-\qquad
-\omega(s) := \sup_{\left\|\bz - \bx\right\| \le s}
-\left\|\cgreen{D^{k}_{\bz} f} - \cgreen{D^{k}_{\bx} f}\right\| .
-$$
-
-In $\omega(s)$ kommt $\bu$ nicht mehr vor, die Schranke gilt also für alle
-Richtungen zugleich, und $\omega(s) \to 0$ für $s \to 0$, weil
-$\bx \mapsto \cgreen{D_{\bx}^k f}$ stetig ist. Das ist der Grund, warum die
-Voraussetzung $f \in \Ccal^k$ und nicht bloß „$k$-mal differenzierbar" lautet.
+:::bemerkung[11.4.8 (Warum hier die Integralform steht)]
+Das Lagrange-Restglied aus Satz 11.4.2 besitzt eine Zwischenstelle $\xi$ und ist
+ein skalares Resultat. Für eine vektorwertige Funktion können verschiedene
+Komponenten verschiedene Zwischenstellen benötigen; in einem allgemeinen
+Banachraum gibt es gar keine komponentenweise Formulierung. Die Integralform
+umgeht dieses Problem und liefert zusammen mit der Operatornorm unmittelbar eine
+Schranke, die für alle Richtungen zugleich gilt. Genau deshalb reicht
+$f\in\Ccal^k$, während das Restglied trotzdem
+$\cred{o(\left\|\bh\right\|^k)}$ ist.
 :::
 
 ### Gradient, Hesse-Matrix und die ersten drei Ordnungen
@@ -487,7 +464,9 @@ $\cgreen{T_1}$ ist die *Tangentialebene* an den Graphen von $f$ im Punkt
 $(\bx, \cblue{f(\bx)})$; solange $\corange{\nabla f(\bx)} \neq \bnull^\top$ ist,
 sind ihre :k[Höhenlinien]{#level-sets} parallele Geraden senkrecht zum Gradienten
 ([Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2)), im kritischen Punkt dagegen ist
-$\cgreen{T_1}$ konstant und hat gar keine. Der
+$\cgreen{T_1}$ konstant. Seine Niveaumenge zum konstanten Wert ist dann der ganze
+Definitionsraum, alle anderen sind leer; reguläre Höhenlinien mit einer ausgezeichneten
+Gradientenrichtung gibt es nicht. Der
 Graph von $\cgreen{T_2}$ ist eine Quadrik, und ihre Höhenlinien verraten die
 Definitheit der Hesse-Matrix: Ellipsen bei definiter, Hyperbeln bei indefiniter
 Hesse-Matrix. Damit ist der Anschluss an
@@ -533,15 +512,15 @@ Flächen im Raum zeigt.
 
 ### Anwendung: das Newton-Raphson-Verfahren
 
-Gesucht ist ein Minimum,
-$\bx^* = \argmin_{\bx} \cblue{f(\bx)}$, für eine zweimal stetig differenzierbare
-Funktion $f\colon \R^n \to \R$. Direkt lösen können wir das im Allgemeinen nicht.
-Für eine quadratische Funktion dagegen schon: Dort ist die Bedingung
-„Gradient gleich null" ein lineares Gleichungssystem, und lineare
+Gesucht ist ein lokales Minimum, sofern eines existiert, für eine zweimal stetig
+differenzierbare Funktion $f\colon \R^n \to \R$. Direkt lösen können wir das im
+Allgemeinen nicht. Für eine quadratische Funktion mit positiv definiter Hesse-Matrix
+dagegen schon: Dort ist die Bedingung „Gradient gleich null" ein lineares Gleichungssystem,
+und lineare
 Gleichungssysteme lösen wir seit [Kapitel 5](?k=05-lgs#sec-5.1). Die Idee des
 Verfahrens des :k[Newton-Raphson]{#newtons-method} ist deshalb, an der aktuellen
 Stelle $\bx^{(k)}$ die quadratische Näherung aus Korollar 11.4.9 hinzulegen und
-diese zu minimieren:
+ihren stationären Punkt zu bestimmen:
 
 $$
 \cblue{f(\bx)} \approx \cgreen{T_2(\bx)} = \cblue{f(\bx^{(k)})}
@@ -569,8 +548,8 @@ $$
 $$
 
 Der letzte Schritt setzt voraus, dass $\corange{\bH_f(\bx^{(k)})}$ invertierbar
-ist; sonst hat $\cgreen{T_2}$ entweder gar keinen oder gleich eine ganze Gerade von
-kritischen Punkten. Ansonsten sind beide Seiten Zeilenvektoren, wie es die
+ist; sonst hat $\cgreen{T_2}$ entweder gar keinen kritischen Punkt oder einen affinen
+Lösungsraum positiver Dimension. Ansonsten sind beide Seiten Zeilenvektoren, wie es die
 Konvention aus
 [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) verlangt. Transponieren bringt uns
 zurück zu Spalten, und damit steht das Verfahren da.
@@ -596,10 +575,12 @@ $\corange{\bH_f(\bx^{(k)})}$ invertierbar ist:
 *Der Schritt sucht kritische Punkte, keine Minima.* Konstruiert wurde ($11.4.7$)
 als Nullstelle von $\corange{\nabla T_2}$. Ein solcher Punkt ist ein Minimum der
 Näherung nur dann, wenn $\corange{\bH_f(\bx^{(k)})}$
-:k[positiv definit]{#positive-definite} ist; bei indefiniter Hesse-Matrix läuft das
-Verfahren genauso zielstrebig in einen Sattelpunkt, bei negativ definiter in ein
-Maximum. Das Hesse-Kriterium aus Satz 11.3.9 ist also kein Beiwerk, sondern
-gehört zum Verfahren dazu. Praktische Varianten erzwingen deshalb
+:k[positiv definit]{#positive-definite} ist. Bei indefiniter beziehungsweise negativ
+definiter Hesse-Matrix ist der stationäre Punkt des lokalen quadratischen Modells ein
+Sattel beziehungsweise Maximum, und der Schritt muss keine Abstiegsrichtung sein. Das
+klassische Newton-Verfahren sucht Nullstellen des Gradienten und kann deshalb je nach
+Startpunkt zu Minima, Maxima oder Sattelpunkten konvergieren. Praktische Varianten erzwingen
+deshalb
 Definitheit, etwa indem sie ein Vielfaches der Einheitsmatrix addieren.
 
 *Die Inverse ist eine Schreibweise, keine Rechenanweisung.* In ($11.4.7$) steht
@@ -695,9 +676,9 @@ Ist $f$ ein Polynom zweiten Grades, so gilt $T_2 = f$ überall, nicht nur
 näherungsweise.
 
 Alle Ableitungen ab der dritten sind null, also verschwindet das Restglied
-($11.4.3$) für $k = 2$ identisch. Der Newton-Schritt trifft auf einer solchen
-Funktion das Minimum deshalb in einem Zug, wie das Widget im zweiten Menüpunkt
-vorführt.
+($11.4.3$) für $k = 2$ identisch. Bei invertierbarer Hesse-Matrix trifft der
+Newton-Schritt deshalb den eindeutigen kritischen Punkt in einem Zug. Ein Minimum
+ist dieser nur bei positiver Definitheit, wie im zweiten Menüpunkt des Widgets.
 :::
 
 :::frage{falsch}

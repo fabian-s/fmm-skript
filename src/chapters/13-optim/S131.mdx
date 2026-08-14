@@ -68,16 +68,16 @@ Sei $f\colon \R^n \to \R$. Ein *unbeschränktes Optimierungsproblem*
 (unconstrained optimization) ist die Aufgabe
 
 $$
-\cgreen{\bx^\star} = \argmin_{\bx \in \R^n} \cblue{f(\bx)}
+\cgreen{\bx^\star} \in \argmin_{\bx \in \R^n} \cblue{f(\bx)}
 \qquad \text{beziehungsweise} \qquad
-\cgreen{\bx^\star} = \argmax_{\bx \in \R^n} \cblue{f(\bx)} .
+\cgreen{\bx^\star} \in \argmax_{\bx \in \R^n} \cblue{f(\bx)} .
 $$
 
 Ein *beschränktes Optimierungsproblem* (constrained optimization) schränkt die
 Suche auf eine Menge $\cred{S} \subseteq \R^n$ ein,
 
 $$
-\cgreen{\bx^\star} = \argmin_{\bx \in \cred{S}} \cblue{f(\bx)} ,
+\cgreen{\bx^\star} \in \argmin_{\bx \in \cred{S}} \cblue{f(\bx)} ,
 $$
 
 wobei die *Nebenbedingungen* typischerweise selbst durch Funktionen beschrieben
@@ -91,6 +91,10 @@ $$
 
 oder eine Kombination aus beidem. Die Funktion $\cblue{f}$ heißt
 :k[Zielfunktion]{#objective-function}.
+
+„Beschränkt“ bedeutet hier *mit Nebenbedingungen* und nicht, dass $S$ eine
+beschränkte Menge sein muss. Eindeutiger ist deshalb auch die Bezeichnung
+*Optimierung mit Nebenbedingungen*.
 :::
 
 :::bemerkung[13.1.3 (Zwei Probleme, ein Werkzeugkasten)]
@@ -170,9 +174,13 @@ Lösung. Bei $p = 1$ hat diese Kugel Ecken auf den Achsen, und an einer Ecke
 kommt die wachsende Niveaumenge besonders leicht zuerst an; deshalb setzt Lasso
 Koeffizienten exakt auf null.
 
-Zwei Feinheiten, die die Folie offenlässt. Erstens sind die beiden Schreibweisen
-zwar äquivalent, aber die Übersetzung zwischen $\lambda$ und $\cred{c}$ hängt von
-den Daten ab; es gibt keine Formel, die das eine ins andere umrechnet. Zweitens
+Zwei Feinheiten, die die Folie offenlässt. Erstens lässt sich bei den konvexen
+Ridge- und Lasso-Problemen zu einer penalisierten Lösung ein Budget $\cred c$
+wählen, das dieselbe Lösung liefert. Umgekehrt entspricht eine bindende
+Nebenbedingung unter den üblichen Regularitätsbedingungen einem Multiplikator
+$\lambda>0$; ist sie inaktiv, gehört dazu $\lambda=0$. Die Zuordnung hängt von
+den Daten ab und muss nicht eindeutig sein; eine allgemeine Umrechnungsformel
+gibt es nicht. Zweitens
 schreibt die Folie den Strafterm für beide Fälle als $\lambda\left\|\bbeta\right\|_p$.
 Die übliche Ridge-Regression bestraft die *quadrierte* Norm,
 $\lambda\left\|\bbeta\right\|_2^2$, und nur damit ergibt sich die geschlossene
@@ -561,8 +569,9 @@ $$
 e_{k+1} \approx C \cdot e_k^2 ,
 $$
 
-mit einer Konstanten $C$, die von $f$ abhängt. Bei einer einfachen Nullstelle
-ist $C = \left|f''(\cgreen{x^\star})\right| / \bigl(2\left|f'(\cgreen{x^\star})\right|\bigr)$,
+mit einer Konstanten $C$, die von $f$ abhängt. Ist $f$ in einer Umgebung einer
+einfachen Nullstelle zweimal stetig differenzierbar, so ist asymptotisch
+$C = \left|f''(\cgreen{x^\star})\right| / \bigl(2\left|f'(\cgreen{x^\star})\right|\bigr)$,
 für unser Beispiel also $2/(2 \cdot 2\sqrt 2) = 0{,}354$, genau der beobachtete
 Wert. Auf $C$ kommt es an: Die Folie kürzt die Aussage zu „der Fehler quadriert
 sich pro Schritt" ab, und das stimmt schon in unserem eigenen Beispiel nicht,
@@ -574,7 +583,8 @@ genügen bis zur Maschinengenauigkeit.
 Der Preis dafür steht im Kleingedruckten. Erstens braucht das Verfahren die
 Ableitung, die Bisektion kam mit Funktionswerten aus. Zweitens gilt die Aussage
 nur *lokal*: Weit weg vom Ziel kann die Tangente irgendwohin zeigen, und die
-Iteration läuft dann davon. Drittens muss die Nullstelle einfach sein.
+Iteration läuft dann davon. Drittens muss die Nullstelle einfach und $f'$ hinreichend
+glatt sein; eine lokal Lipschitz-stetige Ableitung ist eine übliche hinreichende Annahme.
 Ist $\corange{f'(\cgreen{x^\star})} = 0$, so bricht die Konvergenz auf lineare
 Geschwindigkeit ein, und unterwegs kann ein $\corange{f'(x^{(k)})} = 0$ den
 Schritt ganz undefiniert machen. Die Bisektion hat keinen dieser Vorbehalte,
@@ -817,9 +827,13 @@ $3{,}2 \cdot 10^{-11}$. Der Haken ist offensichtlich: Wir müssten
 $\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die Ableitung
 in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung pro Schritt.
 
-In der Praxis behelfen wir uns mit einer Folge $\corange{\gamma_k} \to 0$: am
-Anfang große Schritte, später kleine. Wie sich das systematisch anstellen lässt,
-ist das Thema der Schrittweitensteuerung in [Abschnitt 13.3](#sec-13.3).
+In der Praxis wählen wir $\corange{\gamma_k}$ adaptiv, etwa durch eine
+Liniensuche: Ein zu großer Vorschlag wird verkleinert, bis er genügend Fortschritt
+liefert. Die akzeptierten Schrittweiten müssen dabei nicht gegen null gehen.
+Folgen mit $\corange{\gamma_k}\to0$ spielen später beim stochastischen
+Gradientenabstieg eine eigene Rolle und brauchen dort zusätzliche Bedingungen.
+Die deterministische Schrittweitensteuerung behandelt
+[Abschnitt 13.3](#sec-13.3).
 :::
 
 :::vertiefung[Die Schrittweite als Regler]

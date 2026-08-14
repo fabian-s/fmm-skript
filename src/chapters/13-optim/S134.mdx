@@ -133,8 +133,10 @@ $$
 $$
 
 und das ist ($13.4.2$). Alles, was wir über Newton-Raphson wissen, gilt deshalb hier
-weiter: die quadratische Konvergenz in der Nähe der Lösung, die Empfindlichkeit gegen
-schlechte Startpunkte, und der Ärger, wenn die Ableitung im Nenner verschwindet.
+weiter: Unter ausreichender lokaler Glattheit, etwa einer lokal Lipschitz-stetigen
+Hesse-Matrix, erhalten wir quadratische Konvergenz in der Nähe einer Lösung mit
+invertierbarer Hesse-Matrix. Es bleiben die Empfindlichkeit gegen schlechte
+Startpunkte und der Ärger, wenn die Ableitung im Nenner verschwindet.
 :::
 
 ### Wie schnell das geht
@@ -247,11 +249,16 @@ Der Schritt läuft dann genauso zielstrebig dorthin, wie er sonst ins Minimum l�
 ([Abschnitt 13.2](#sec-13.2)). Im Widget genügt der Startpunkt $\cred{0{,}5}$, um
 das vorzuführen.
 
-Praktische Fassungen des Verfahrens reparieren beides von Hand: Sie addieren ein
-Vielfaches der Einheitsmatrix, bis $\corange{\bH_f} + \mu\bI$ positiv definit ist,
-oder begrenzen die Schrittlänge (Trust-Region), oder dämpfen den Schritt mit einer
-Liniensuche wie in [Abschnitt 13.3](#sec-13.3). Für sehr kleines Vertrauen in das
-Modell geht die gedämpfte Fassung in den Gradientenabstieg über.
+Praktische Fassungen des Verfahrens sorgen deshalb zunächst für einen
+Abstiegsschritt: Sie addieren ein Vielfaches der Einheitsmatrix, bis
+$\corange{\bH_f} + \mu\bI$ positiv definit ist, begrenzen die Schrittlänge
+(Trust-Region) oder dämpfen den Schritt mit einer Liniensuche wie in
+[Abschnitt 13.3](#sec-13.3). Das hilft gegen Schritte zu Sattelpunkten oder Maxima
+und verbessert die Konvergenz aus entfernten Startpunkten. Welches von mehreren
+lokalen Minima gefunden wird, repariert es nicht; ein globales Optimum ist bei
+nicht-konvexem $f$ weiterhin nicht garantiert. Für sehr kleines Vertrauen in das
+quadratische Modell geht die modifizierte Richtung in Richtung des negativen
+Gradienten über.
 :::
 
 ### Newton gegen Gradientenabstieg
@@ -543,7 +550,7 @@ Probleme vergleicht. Die Folie stellt sie in einer Tabelle nebeneinander:
 |---|---|---|---|---|
 | Ordnung | nullte | erste | dazwischen | zweite |
 | braucht | nur $\cblue{f}$ | $\corange{\nabla f}$ | $\corange{\nabla f}$ | $\corange{\nabla f}$, $\corange{\bH_f}$ |
-| Aufwand je Schritt | $O(n)$ | $O(n)$ | $O(n^2)$ | $O(n^3)$ |
+| lineare Algebra je Schritt | $O(n)$ | $O(n)$ | $O(n^2)$ | $O(n^3)$ |
 | Konvergenz | keine Garantie | linear | superlinear | lokal quadratisch |
 | Schrittweite | automatisch | kritisch ($\corange{\gamma}$) | Liniensuche | automatisch |
 | Skalierbarkeit | schlecht ($n \lesssim 10$) | sehr gut | gut | schlecht |
@@ -555,7 +562,8 @@ Risiko über $N$ Beobachtungen kostet schon ein einziger Gradient $O(N)$, und ge
 davon handelt der letzte Unterabschnitt.
 
 *Die Konvergenzspalte ist asymptotisch und lokal.* Die quadratische Rate von Newton
-gilt in der Nähe eines Minimums mit invertierbarer Hesse-Matrix, die lineare Rate
+gilt in der Nähe eines Minimums mit invertierbarer und lokal hinreichend glatter
+Hesse-Matrix, die lineare Rate
 des Gradientenabstiegs unter den Voraussetzungen aus
 [Abschnitt 13.3](#sec-13.3). Über das Verhalten weit vom Ziel sagt die Zeile nichts.
 
@@ -833,12 +841,15 @@ $\corange{f'} = 0$ gilt (Bemerkung 13.4.5).
 :::
 
 :::frage{wahr}
-Auf einer quadratischen Funktion trifft Newton das Minimum in einem Schritt, ganz
-gleich, wie schlecht konditioniert sie ist und wo wir starten.
+Auf einer strikt konvexen quadratischen Funktion trifft Newton das Minimum in
+einem Schritt, ganz gleich, wie schlecht konditioniert sie ist und wo wir starten.
 
-Für ein Polynom zweiten Grades ist die Näherung ($13.4.1$) exakt, der Scheitel der
-Parabel also das Minimum selbst (Bemerkung 11.4.10). Beispiel 13.4.6 rechnet das
-vor: $4 - 8/2 = 0$. Der Gradientenabstieg schafft das im Allgemeinen nicht, seine
+Für ein Polynom zweiten Grades ist die Näherung ($13.4.1$) exakt. Ist seine
+Hesse-Matrix positiv definit, ist der Scheitel das eindeutige Minimum selbst
+(Bemerkung 11.4.10). Beispiel 13.4.6 rechnet das vor: $4 - 8/2 = 0$. Bei
+negativ definiter Hesse-Matrix träfe Newton stattdessen ein Maximum, bei
+indefiniter einen Sattel, und bei singulärer wäre der angegebene Schritt nicht
+definiert. Der Gradientenabstieg schafft den Treffer im Allgemeinen nicht, seine
 Schrittzahl hängt an der Kondition. In einer Dimension gibt es allerdings eine
 Ausnahme: Mit $\corange{\gamma} = 1/\corange{f''}$ trifft auch er sofort, und genau
 diese Schrittweite ist der Newton-Schritt.

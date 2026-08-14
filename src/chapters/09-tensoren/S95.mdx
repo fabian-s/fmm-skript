@@ -191,7 +191,9 @@ Speicher und Rechenzeit: Ausgeschrieben hat die Systemmatrix $mnpq$ Einträge.
 Praktisch nutzen wir deshalb die Struktur, statt sie auszumultiplizieren. Sind
 $\cblue{\bA}$ und $\cgreen{\bB}$ quadratisch und invertierbar, so liefert
 $\bX = \cblue{\bA^{-1}}\bC\,\cgreen{\bB^{-1}}$ die Lösung allein aus den beiden
-kleinen Faktoren. Nach demselben Muster arbeiten die separierbaren
+kleinen Faktoren. Das ist eine symbolische Identität; numerisch bilden wir die
+Inversen nicht explizit, sondern lösen nacheinander lineare Systeme mit
+$\cblue{\bA}$ und $\cgreen{\bB^\top}$. Nach demselben Muster arbeiten die separierbaren
 Kovarianzmatrizen aus [Abschnitt 9.3](#sec-9.3): Dort lesen wir die Eigenwerte
 von $\bSigma$ als Produkte der Eigenwerte beider Faktoren ab, ohne $\bSigma$ je
 aufzustellen (Bemerkung 9.3.20).

@@ -107,7 +107,7 @@ scheinbar nichts über schräge Richtungen. Tatsächlich steckt darin schon die 
 Information, und ($10.2.1$) liefert sie uns.
 
 :::definition[10.2.3 (Richtungsableitung)]
-Sei $\bd \in \R^n$ mit $\left\|\bd\right\| = 1$. Die *Richtungsableitung* von $f$ in $\bx$
+Sei $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$. Die *Richtungsableitung* von $f$ in $\bx$
 in Richtung $\bd$ ist die Ableitung der eindimensionalen Funktion $t \mapsto f(\bx + t\bd)$
 an der Stelle $t = 0$. Setzen wir $\bh = t\bd$ in ($10.2.1$) ein, so ist sie gerade
 $\corange{\nabla f(\bx)}\bd$, denn
@@ -117,28 +117,30 @@ $$ {#eq-10.2.2}
 $$
 :::
 
-Aus $\left\|\bd\right\| = 1$ folgt $\left\|t\bd\right\| = |t|$, deshalb steht rechts
+Aus $\left\|\bd\right\|_2 = 1$ folgt $\left\|t\bd\right\|_2 = |t|$, deshalb steht rechts
 $\cred{o(|t|)}$. Wir kennen die Steigung von $f$ also in *jeder* Richtung, sobald wir den
-Gradienten kennen. Und unter allen Richtungen gibt es eine beste.
+Gradienten kennen. Die Norm legt dabei fest, was ein gleich großer Schritt ist;
+im Folgenden verwenden wir die euklidische Norm. Unter allen so normierten
+Richtungen gibt es eine beste.
 
 :::satz[10.2.4 (Richtung des stärksten Anstiegs)]
 Sei $f$ in $\bx$ differenzierbar mit $\corange{\nabla f(\bx)} \neq \bnull$. Dann gilt für
-alle $\bd \in \R^n$ mit $\left\|\bd\right\| = 1$
+alle $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$
 
 $$
--\left\|\corange{\nabla f(\bx)}\right\| \;\leq\; \corange{\nabla f(\bx)}\bd \;\leq\;
-\left\|\corange{\nabla f(\bx)}\right\| ,
+-\left\|\corange{\nabla f(\bx)}\right\|_2 \;\leq\; \corange{\nabla f(\bx)}\bd \;\leq\;
+\left\|\corange{\nabla f(\bx)}\right\|_2 ,
 $$
 
 und die obere Schranke wird genau für
 
 $$
-\bd^\ast = \frac{\corange{\nabla f(\bx)^\top}}{\left\|\corange{\nabla f(\bx)}\right\|}
+\bd^\ast = \frac{\corange{\nabla f(\bx)^\top}}{\left\|\corange{\nabla f(\bx)}\right\|_2}
 $$
 
 angenommen, die untere für $-\bd^\ast$. Der transponierte Gradient zeigt also in die
 Richtung des stärksten Anstiegs, der negative in die des stärksten Abstiegs, und
-$\left\|\corange{\nabla f(\bx)}\right\|$ ist die Steigung in dieser Richtung.
+$\left\|\corange{\nabla f(\bx)}\right\|_2$ ist die Steigung in dieser Richtung.
 :::
 
 ::::beweis
@@ -149,27 +151,27 @@ Das Produkt aus Zeile und Spalte ist ein Skalarprodukt: Mit $\bg = \corange{\nab
 :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} liefert
 
 $$
-\left|\bg^\top\bd\right| \leq \left\|\bg\right\| \left\|\bd\right\| = \left\|\bg\right\| ,
+\left|\bg^\top\bd\right| \leq \left\|\bg\right\|_2 \left\|\bd\right\|_2 = \left\|\bg\right\|_2 ,
 $$
 
 also beide Schranken auf einmal.
 
-::why[$\left\|\bd\right\| = 1$; die :k[euklidische Norm]{#euclidean-norm} von $\bg$ ist dieselbe wie die des Zeilenvektors $\nabla f(\bx)$]
+::why[$\left\|\bd\right\|_2 = 1$; die :k[euklidische Norm]{#euclidean-norm} von $\bg$ ist dieselbe wie die des Zeilenvektors $\nabla f(\bx)$]
 :::
 
 :::schritt
 Gleichheit gilt in Cauchy-Schwarz genau dann, wenn $\bd$ ein Vielfaches von $\bg$ ist, also
-$\bd = c\,\bg$ mit $c \in \R$. Aus $\left\|\bd\right\| = 1$ folgt
-$|c| = 1/\left\|\bg\right\|$. Das positive Vorzeichen gibt
+$\bd = c\,\bg$ mit $c \in \R$. Aus $\left\|\bd\right\|_2 = 1$ folgt
+$|c| = 1/\left\|\bg\right\|_2$. Das positive Vorzeichen gibt
 
 $$
-\bg^\top\bd^\ast = \frac{\bg^\top\bg}{\left\|\bg\right\|}
-= \frac{\left\|\bg\right\|^2}{\left\|\bg\right\|} = \left\|\bg\right\| ,
+\bg^\top\bd^\ast = \frac{\bg^\top\bg}{\left\|\bg\right\|_2}
+= \frac{\left\|\bg\right\|_2^2}{\left\|\bg\right\|_2} = \left\|\bg\right\|_2 ,
 $$
 
-das negative den Wert $-\left\|\bg\right\|$.
+das negative den Wert $-\left\|\bg\right\|_2$.
 
-::why[hier wird $\corange{\nabla f(\bx)} \neq \bnull$ gebraucht: sonst dürften wir nicht durch $\left\|\bg\right\|$ teilen, und alle Richtungsableitungen wären null]
+::why[hier wird $\corange{\nabla f(\bx)} \neq \bnull$ gebraucht: sonst dürften wir nicht durch $\left\|\bg\right\|_2$ teilen, und alle Richtungsableitungen wären null]
 :::
 
 ::::
@@ -187,7 +189,7 @@ Ecke haben, und ein Beispiel dafür folgt gleich.
 
 Beide Beobachtungen zusammen ergeben das vertraute Bild einer Landkarte: Der Gradient steht
 senkrecht auf der Höhenlinie und zeigt bergauf, und je enger die Höhenlinien beieinander
-liegen, desto größer ist $\left\|\corange{\nabla f(\bx)}\right\|$.
+liegen, desto größer ist $\left\|\corange{\nabla f(\bx)}\right\|_2$.
 :::
 
 ### Eine quadratische Funktion als Beispiel
@@ -470,9 +472,9 @@ In $\bx = (1,1)^\top$ steht $(1,1)$ gegen $(0,2)$.
 
 :::frage{wahr}
 Sei $\nabla f(\bx) \neq \bnull$. Unter allen Richtungen $\bd$ mit
-$\left\|\bd\right\| = 1$ ist die Richtungsableitung $\nabla f(\bx)\bd$ genau dann maximal,
+$\left\|\bd\right\|_2 = 1$ ist die Richtungsableitung $\nabla f(\bx)\bd$ genau dann maximal,
 wenn $\bd$ in Richtung $\nabla f(\bx)^\top$ zeigt, und ihr Maximalwert ist
-$\left\|\nabla f(\bx)\right\|$.
+$\left\|\nabla f(\bx)\right\|_2$.
 
 Das ist Satz 10.2.4, bewiesen mit dem Gleichheitsfall der Cauchy-Schwarz-Ungleichung. Ohne
 die Voraussetzung $\nabla f(\bx) \neq \bnull$ wäre nichts zu holen: Dann sind alle
