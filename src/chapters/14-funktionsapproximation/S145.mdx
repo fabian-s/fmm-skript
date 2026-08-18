@@ -13,8 +13,10 @@ Folgen.
 1. **Drei Aufgaben, ein Rechenweg.** Approximation misst global in einer
    :k[Norm]{#norm},
    Interpolation verlangt punktweise exakte Treffer, Glättung lässt Residuen
-   zu, weil die Daten Rauschen tragen. In der Praxis führen wir die erste auf
-   die zweite zurück, indem wir $f$ an endlich vielen Stellen auswerten
+   zu, weil die Daten Rauschen tragen. Einen wichtigen Zugang zur ersten
+   Aufgabe erhalten wir über die zweite, indem wir $f$ an endlich vielen
+   Stellen auswerten und interpolieren; andere Verfahren minimieren den
+   Approximationsfehler stattdessen direkt
    ([Abschnitt 14.1](#sec-14.1)). Die Interpolationsbedingung bindet dabei
    allein die Werte an den $n$ Stellen, über die Funktion dazwischen sagt sie
    nichts: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
@@ -180,9 +182,12 @@ Die Dichte der transformierten Größe enthält den Betrag der
 :k[Determinante]{#determinant} ihrer Jacobimatrix
 ([Abschnitt 10.3](?k=10-ableitungen-1#sec-10.3)), und deshalb muss die
 Abbildung zweierlei können: sich invertieren und ihre Determinante billig
-ausrechnen lassen. Monotone Splines leisten beides. Sie sind auf jedem Stück
-ein kleines Polynom, monoton also invertierbar, und ihre Ableitung steht
-stückweise sofort da.
+ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten
+beides: Strikte Monotonie zusammen mit passenden Randbedingungen macht die
+eindimensionale Abbildung bijektiv, und ihre Ableitung steht stückweise sofort
+da. Eine nur nicht fallende Funktion könnte konstante Stücke besitzen und wäre
+dort nicht invertierbar. In modernen Flows werden häufig monotone rationale
+quadratische Splines verwendet.
 
 ### Wie es weitergeht
 

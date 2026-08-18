@@ -349,12 +349,15 @@ denselben Stellen liefern die Chebyshev-Polynome $\kappa_2 \approx 2{,}2$ bei
 $n = 5$ und $4{,}8 \cdot 10^3$ bei $n = 20$. Gegenüber der Monombasis auf
 $[0, 1]$ sind das zusammen zwölf Zehnerpotenzen.
 
-Noch weiter geht `R` mit `poly(x, 3)` anstelle von `cbind(1, x, x^2, x^3)`.
-Dieser Aufruf orthogonalisiert die Spalten bezüglich der *gegebenen* Stellen,
-im Kern also eine :k[QR-Zerlegung]{#qr-factorization}
-([Abschnitt 7.4](?k=07-kq#sec-7.4)) der Vandermonde-Matrix. Danach stehen die
-Spalten exakt senkrecht aufeinander, und die Konditionszahl fällt auf
-$\sqrt{n}$; normieren wir zusätzlich die erste Spalte, sogar auf $1$.
+Noch weiter geht `R` mit `poly(x, 3)` anstelle der drei nichtkonstanten
+Spalten `cbind(x, x^2, x^3)`. Der Aufruf erzeugt bezüglich der *gegebenen*
+Stellen orthonormale Spalten, im Kern über eine stabile
+Orthogonalisierung der Vandermonde-Spalten. `poly(x, 3)` allein hat deshalb
+in der 2-Norm Konditionszahl $1$. Ergänzen wir für ein Regressionsmodell die
+unnormierte konstante Spalte, also `cbind(1, poly(x, 3))`, stehen weiterhin
+alle Spalten senkrecht aufeinander, aber ihre Längen sind $\sqrt n,1,1,1$;
+die Konditionszahl ist dann $\sqrt n$. Normieren wir auch die erste Spalte,
+fällt sie wieder auf $1$.
 :::
 
 :::vertiefung[Die Monombasis und ihre Kondition]

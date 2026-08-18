@@ -281,9 +281,10 @@ wir wissen, wie sich der Wert ändert, wenn wir an einem einzelnen Eintrag drehe
 dann auch die Definition.
 
 :::definition[10.4.7 (Ableitung nach einer Matrix)]
-Sei $f\colon \R^{m \times n} \to \R$ und $\bX = (x_{ij}) \in \R^{m \times n}$. Existieren
-alle :k[partiellen Ableitungen]{#partial-derivative} von $f$ nach den Einträgen von $\bX$, so
-heißt
+Sei $f\colon \R^{m \times n} \to \R$ an der Stelle
+$\bX = (x_{ij}) \in \R^{m \times n}$ Fréchet-differenzierbar. Dann existieren
+alle :k[partiellen Ableitungen]{#partial-derivative} nach den Einträgen von $\bX$,
+und die Matrix
 
 $$ {#eq-10.4.6}
 \corange{\frac{\partial f(\bX)}{\partial \bX}} = \begin{pmatrix}
@@ -293,7 +294,8 @@ $$ {#eq-10.4.6}
 \end{pmatrix} \in \R^{m \times n}
 $$
 
-die *Ableitung von $f$ nach $\bX$*. Für differenzierbares $f$ gilt dann
+heißt die *Ableitung von $f$ nach $\bX$* oder *Gradientenmatrix*. Sie stellt die
+Fréchet-Ableitung dar:
 
 $$ {#eq-10.4.7}
 \cblue{f(\bX + \bH)} = \cblue{f(\bX)} + \cgreen{D_{\bX} f(\bH)} + \cred{o(\left\|\bH\right\|)}
@@ -487,6 +489,13 @@ $$
 mit $k \ll \min(m, n)$. Statt $m \cdot n$ Zahlen sind dann nur noch $k(m+n)$ zu bestimmen, und
 die Lücken lesen wir am Produkt $\bU\bV^\top$ einfach ab.
 
+Niedriger Rang allein garantiert allerdings noch keine eindeutige Ergänzung.
+Auch Zahl und Lage der beobachteten Einträge müssen genügend Information über
+Zeilen- und Spaltenstruktur liefern; in Anwendungen kommen deshalb Annahmen an
+das Beobachtungsmuster und häufig Regularisierung hinzu. Das folgende Verfahren
+liefert Vorhersagen unter dem gewählten Rangmodell, nicht automatisch die einzig
+möglichen fehlenden Werte.
+
 Bei vollständig beobachtetem $\bY$ wäre das Problem gelöst: Nach dem Satz von Eckart und
 Young ([Abschnitt 6.4](?k=06-svd#sec-6.4)) liefert die abgeschnittene
 Singulärwertzerlegung die beste Rang-$k$-Approximation. Fehlende Einträge machen diese Tür
@@ -591,13 +600,15 @@ Für $t = 0, 1, 2, \dots$:
 3. Abbruch, sobald sich $L$ kaum noch ändert oder eine Schrittzahl erreicht ist.
 
 **Ausgabe:** $\wh{\bY} = \bU\bV^\top$; an den Positionen außerhalb von $\Omega$ stehen die
-gesuchten Vorhersagen.
+vom Rangmodell und vom Optimierungslauf gelieferten Vorhersagen.
 :::
 
 Das Pluszeichen in Schritt 2 ist kein Tippfehler: Wir gehen gegen den Gradienten, und der
 trägt nach ($10.4.14$) bereits ein Minus. Zwei Warnungen gehören dazu. Erstens ist $L$ in
-$(\bU, \bV)$ nicht konvex, das Produkt $\bU\bV^\top$ ist ja quadratisch in den Unbekannten;
-der Abstieg findet also nur ein lokales Minimum, und der Startpunkt entscheidet mit. Zweitens
+$(\bU, \bV)$ nicht konvex, das Produkt $\bU\bV^\top$ ist ja quadratisch in den Unbekannten.
+Gradientenabstieg hat deshalb keine allgemeine Garantie für ein globales Minimum: Je nach
+Startpunkt und Lernrate kann er zu einem lokalen oder globalen Minimum beziehungsweise einem
+anderen stationären Punkt konvergieren, oszillieren oder divergieren. Zweitens
 ist die Zerlegung nie eindeutig, denn für jede invertierbare $\bT \in \R^{k \times k}$ ist
 $(\bU\bT)(\bV\bT^{-\top})^\top = \bU\bV^\top$. Für die Vorhersage stört das nicht, wohl aber
 für jede Interpretation der Spalten von $\bU$ und $\bV$.

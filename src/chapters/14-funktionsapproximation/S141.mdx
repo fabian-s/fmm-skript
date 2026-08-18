@@ -48,16 +48,20 @@ Alle drei Aufgaben liefern am Ende ein $\cgreen{\wh{f}}$, verlangen aber sehr
 Verschiedenes von ihm.
 
 :::definition[14.1.1 (Approximationsproblem)]
-Gegeben seien eine Funktion $f$ auf $[a, b]$ und eine Norm $\|\cdot\|$ auf
-einem Funktionenraum, der $f$ enthält. Gesucht ist ein $\cgreen{\wh{f}}$ aus
-einer vorgegebenen, einfacher handhabbaren Klasse von Funktionen mit
+Gegeben seien eine Funktion $f$ auf $[a, b]$, eine Norm $\|\cdot\|$ auf
+einem Funktionenraum, der $f$ enthält, und eine vorgegebene, einfacher
+handhabbare Klasse $\mathcal A$ von Funktionen. Gesucht ist ein
+$\cgreen{\wh{f}} \in \mathcal A$, das den Abstand zu $f$ minimiert oder dem
+bestmöglichen Abstand wenigstens nahekommt:
 
 $$
-\left\| f - \cgreen{\wh{f}} \right\| \approx 0 .
+\left\| f - \cgreen{\wh{f}} \right\|
+\approx \inf_{g \in \mathcal A} \left\| f-g \right\| .
 $$
 
 Die Bedingung ist global: $\cgreen{\wh{f}}$ soll $f$ überall auf $[a, b]$
-nahekommen, muss es aber an keiner einzigen Stelle exakt treffen.
+nahekommen, muss es aber an keiner einzigen Stelle exakt treffen. Existiert
+ein Minimierer, steht in der Anzeige exakt ein Gleichheitszeichen.
 :::
 
 :::definition[14.1.2 (Interpolationsproblem)]
@@ -86,10 +90,13 @@ $$
 \cblue{y_i} = f(x_i) + \cred{\eps_i}, \qquad i = 1, \dots, n .
 $$
 
-Gesucht ist ein $\cgreen{\wh{f}}$, das $f$ trifft und die Fehler
-$\cred{\eps_i}$ gerade nicht mitzeichnet. Die $\cred{\eps_i}$ sind in aller
-Regel Zufallsvariablen; welche Annahmen wir über sie brauchen, damit das
-gelingen kann, klärt
+Gesucht ist eine Schätzung $\cgreen{\wh{f}}$ von $f$, die das Signal trifft,
+statt jeden beobachteten Fehler mitzuzeichnen. Die $\cred{\eps_i}$ sind in
+aller Regel Zufallsvariablen; die Residuen
+$\cblue{y_i}-\cgreen{\wh{f}(x_i)}$ sind dagegen aus den Daten berechenbare
+Abweichungen und nicht mit den unbeobachteten Fehlern gleichzusetzen. Welche
+Annahmen wir über die $\cred{\eps_i}$ brauchen, damit die Trennung von Signal
+und Fehler gelingen kann, klärt
 [Abschnitt 15.3](?k=15-funktionsapproximation-2#sec-15.3).
 :::
 
@@ -127,14 +134,15 @@ auf $f$, und die Schätzung der rechten Tafel trifft alle zwölf.
 ### Wie die drei Aufgaben zusammenhängen
 
 :::bemerkung[14.1.5 (Approximation über Interpolation)]
-Ein Approximationsproblem lösen wir in der Praxis fast nie direkt. Statt die
-Norm $\|f - \cgreen{\wh{f}}\|$ über einem Funktionenraum zu minimieren, werten
-wir $f$ an endlich vielen Stellen $x_i$ aus und interpolieren die so
-entstandenen Paare $\cblue{(x_i, f(x_i))}$. Damit ist ein
-Approximationsproblem auf ein Interpolationsproblem zurückgeführt, und aus
+Ein wichtiger Weg zu einer Approximation führt über Interpolation: Statt die
+Norm $\|f - \cgreen{\wh{f}}\|$ direkt über einem Funktionenraum zu minimieren,
+werten wir $f$ an endlich vielen Stellen $x_i$ aus und interpolieren die so
+entstandenen Paare $\cblue{(x_i, f(x_i))}$. Damit ist das konkrete
+Approximationsverfahren auf ein Interpolationsproblem zurückgeführt, und aus
 dessen Bedingung ($14.1.1$) wird in [Abschnitt 14.2](#sec-14.2) ein lineares
-Gleichungssystem. Sind die Auswertungen fehlerbehaftet, tritt an dieselbe
-Stelle ein Glättungsproblem.
+Gleichungssystem. Andere Verfahren minimieren eine Norm tatsächlich direkt,
+etwa Kleinste Quadrate oder eine Minimax-Approximation. Sind die Auswertungen
+fehlerbehaftet, tritt an die Stelle der Interpolation ein Glättungsproblem.
 
 Von den drei Varianten ist die Glättung die schwierigste: Sie muss zusätzlich
 entscheiden, welcher Teil der Daten Signal und welcher Rauschen ist, und dafür

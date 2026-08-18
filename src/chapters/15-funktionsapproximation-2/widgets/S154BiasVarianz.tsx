@@ -354,7 +354,7 @@ export function BiasVarianzExplorer() {
       `${kopf} Vom MSE trägt der Bias hier nur noch ${fmt(anteilBias * 100, 1)} %, die Varianz ` +
       `${fmt(anteilVar * 100, 1)} %. Das Optimum liegt also nicht dort, wo beide Anteile gleich ` +
       `groß sind, sondern dort, wo eine weitere Verfeinerung mehr Varianz kostet als sie an Bias ` +
-      `spart.${lauf.K === daten.besteK ? " Bemerkung 15.4.7 sagt für den Bias-Anteil im Optimum ein Neuntel voraus, also 11,1 %." : ""} ` +
+      `spart.${lauf.K === daten.besteK ? " Das liegt hier zufällig nahe beim Ein-Neuntel-Verhältnis des Proxy-Modells aus Bemerkung 15.4.7; allgemein erzwingt die Theorie diesen Anteil nicht." : ""} ` +
       `Innerhalb von zehn Prozent gleichwertig sind ${plateauText}. ${varAbgleich}`;
   } else if (lauf.K < daten.besteK && anteilBias > 0.5) {
     status =

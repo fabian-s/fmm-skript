@@ -15,13 +15,32 @@ $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\cgreen{\bw}^\top$. Die Menge
 aller dieser Produkte ist als Vektorraum unbrauchbar, denn sie ist nicht unter
 Addition abgeschlossen: Die Summe zweier Matrizen vom :k[Rang]{#rank} $1$ hat im
 Allgemeinen den Rang $2$. Der kleinste Vektorraum, der alle Produkte enthält,
-ist ihre :k[lineare Hülle]{#span}. Genau die nimmt die Definition.
+ist ihre :k[lineare Hülle]{#span}. Das erklärt, wie der Raum erzeugt wird. Damit
+er unabhängig von einer zufällig gewählten bilinearen Abbildung wirklich *das*
+Tensorprodukt ist, gehört noch eine charakteristische Eigenschaft dazu.
 
 :::definition[9.4.1 (Tensorprodukt von Vektorräumen)]
-Seien $V$ und $W$ :k[Vektorräume]{#vector-space} und sei
-$(\cblue{\bv}, \cgreen{\bw}) \mapsto \cblue{\bv} \otimes \cgreen{\bw}$ eine
-bilineare Abbildung. Das *Tensorprodukt* (tensor product) von $V$ und $W$ ist
-der Vektorraum
+Seien $V$ und $W$ :k[Vektorräume]{#vector-space}. Ein *Tensorprodukt* (tensor
+product) von $V$ und $W$ besteht aus einem Vektorraum $V \otimes W$ und einer
+bilinearen Abbildung
+
+$$
+\otimes\colon V \times W \to V \otimes W,
+\qquad (\cblue{\bv},\cgreen{\bw}) \mapsto
+\cblue{\bv}\otimes\cgreen{\bw},
+$$
+
+mit folgender universeller Eigenschaft: Zu jedem Vektorraum $Z$ und jeder
+bilinearen Abbildung $f\colon V\times W\to Z$ gibt es genau eine lineare
+Abbildung $\wt{f}\colon V\otimes W\to Z$ mit
+
+$$
+f(\cblue{\bv},\cgreen{\bw})
+=\wt{f}(\cblue{\bv}\otimes\cgreen{\bw})
+\qquad\text{für alle }\cblue{\bv}\in V,\ \cgreen{\bw}\in W.
+$$
+
+Der Raum wird von den Bildern dieser Abbildung erzeugt:
 
 $$ {#eq-9.4.1}
 V \otimes W = \spann\bigl\{\cblue{\bv} \otimes \cgreen{\bw} :
@@ -66,26 +85,19 @@ ein einzelnes Produkt. Deshalb steht in ($9.4.1$) der Spann und nicht die Menge
 der Produkte.
 :::
 
-:::bemerkung[9.4.3 (Die universelle Eigenschaft)]
-Vom Tensorprodukt verlangen wir eine Eigenschaft, die seine Rolle in der
-Mathematik erklärt: Jede bilineare Abbildung $f\colon V \times W \to Z$ soll sich
-eindeutig über $\otimes$ faktorisieren. Es gibt also genau eine
-:k[lineare Abbildung]{#linear-map} $\wt{f}\colon V \otimes W \to Z$ mit
+:::bemerkung[9.4.3 (Warum die universelle Eigenschaft entscheidend ist)]
+Das Tensorprodukt *linearisiert* bilineare Abbildungen: Statt $f$ auf Paaren
+auszuwerten, wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren an.
+Der Spann allein würde dazu nicht genügen. Nähmen wir etwa als bilineare
+Abbildung die Nullabbildung, wäre ihr Bildspann nur der Nullraum und könnte die
+übrigen bilinearen Abbildungen nicht darstellen.
 
-$$
-f(\cblue{\bv}, \cgreen{\bw}) = \wt{f}(\cblue{\bv} \otimes \cgreen{\bw})
-\qquad\text{für alle } \cblue{\bv} \in V,\ \cgreen{\bw} \in W .
-$$
-
-Das Tensorprodukt *linearisiert* bilineare Abbildungen, und in diesem Sinn ist
-es die natürliche Konstruktion dafür. Wir vertiefen das hier nicht, halten aber
-zwei Dinge für Definition 9.4.1 fest. Erstens ist diese Faktorisierung eine
-Forderung an $\otimes$ und keine Folgerung aus ($9.4.1$): Einen Spann können wir
-zu jeder bilinearen Abbildung bilden, doch erst die universelle Eigenschaft legt
-das Paar aus $\otimes$ und $V \otimes W$ bis auf Isomorphie fest. Zweitens sagt
-jeweils der Zusammenhang, welche bilineare Abbildung gemeint ist; in den
-folgenden Beispielen ist es das äußere Produkt beziehungsweise das punktweise
-Produkt von Funktionen.
+Tensorprodukte existieren und sind durch die universelle Eigenschaft bis auf
+einen eindeutigen Isomorphismus festgelegt, der die elementaren Tensoren
+respektiert. Deshalb dürfen wir mit einer bequemen konkreten Realisierung
+arbeiten. In den folgenden Beispielen sind das Matrizen beziehungsweise
+Funktionen; die universelle Eigenschaft stellt sicher, dass damit dieselbe
+abstrakte Konstruktion gemeint ist.
 :::
 
 ### Zwei Beispiele mit Zahlentupeln
@@ -112,8 +124,22 @@ Jede Matrix $\corange{\bA} \in \R^{m \times n}$ schreibt sich als
 $\corange{\bA} = \sum_{i=1}^m \sum_{j=1}^n \corange{a_{ij}} \bE_{ij}$, liegt also
 im Spann der Produkte.
 
-Zusammen ist $\R^m \otimes \R^n = \R^{m \times n}$, und nach Satz 9.2.5 hat
-dieser Raum die :k[Dimension]{#dimension} $mn$.
+Auch die universelle Eigenschaft gilt. Ist
+$f\colon\R^m\times\R^n\to Z$ bilinear, definieren wir
+
+$$
+\wt{f}(\bA):=\sum_{i=1}^m\sum_{j=1}^n a_{ij}f(\be_i,\be_j).
+$$
+
+Diese Abbildung ist linear, und für
+$\bv\bw^\top=\sum_{ij}v_iw_j\bE_{ij}$ liefert die Bilinearität
+$\wt{f}(\bv\bw^\top)=f(\bv,\bw)$. Eindeutigkeit folgt, weil die Matrizen
+$\bE_{ij}$ den Raum aufspannen und ihr Bild durch
+$\wt{f}(\bE_{ij})=f(\be_i,\be_j)$ festgelegt ist.
+
+Damit ist $\R^m \otimes \R^n = \R^{m \times n}$ eine konkrete Realisierung des
+Tensorprodukts, und nach Satz 9.2.5 hat dieser Raum die
+:k[Dimension]{#dimension} $mn$.
 :::
 
 :::beispiel[9.4.5 (Drei Faktoren)]
@@ -303,25 +329,23 @@ gilt die Darstellung ($9.4.2$).
 :::
 
 :::schritt
-**Lineare Unabhängigkeit.** Wir rechnen sie im Modell $V = \R^m$, $W = \R^n$ mit
-dem äußeren Produkt nach; für den allgemeinen Rahmen sorgt Bemerkung 9.4.10 über
-die universelle Eigenschaft. Sei
-$\sum_{i} \sum_{j} \corange{c_{ij}}\, \cblue{\bv_i}\cgreen{\bw_j}^\top = \bnull$.
-Stellen wir die Basisvektoren als Spalten zusammen,
-$\cblue{\bP} = (\cblue{\bv_1} \mid \cdots \mid \cblue{\bv_m}) \in \R^{m \times m}$
-und
-$\cgreen{\bQ} = (\cgreen{\bw_1} \mid \cdots \mid \cgreen{\bw_n}) \in \R^{n \times n}$,
-so ist die linke Seite genau $\cblue{\bP}\,\corange{\bC}\,\cgreen{\bQ}^\top$ mit
-$\corange{\bC} = (\corange{c_{ij}})$. Beide Basismatrizen sind invertierbar, also
-folgt
+**Lineare Unabhängigkeit.** Sei
+$\sum_i\sum_j \corange{c_{ij}}\,
+\cblue{\bv_i}\otimes\cgreen{\bw_j}=\bnull$. Zu festen Indizes $(k,l)$ ist
 
 $$
-\corange{\bC} = \cblue{\bP}^{-1}\, \bnull \,\bigl(\cgreen{\bQ}^\top\bigr)^{-1} = \bnull ,
+(\cblue{\bv},\cgreen{\bw})\longmapsto
+a_k(\cblue{\bv})\,b_l(\cgreen{\bw})
 $$
 
-alle $\corange{c_{ij}}$ verschwinden.
+bilinear, wobei $a_k$ und $b_l$ die $k$-te beziehungsweise $l$-te
+Koordinatenfunktion in den beiden Basen sind. Nach Definition 9.4.1 gibt es dazu
+eine lineare Abbildung auf $V\otimes W$. Sie schickt
+$\cblue{\bv_i}\otimes\cgreen{\bw_j}$ auf $1$, falls $(i,j)=(k,l)$, und sonst
+auf $0$. Wenden wir sie auf die verschwindende Summe an, erhalten wir
+$\corange{c_{kl}}=0$. Da $(k,l)$ beliebig war, verschwinden alle Koeffizienten.
 
-::why[eintragsweise ist $\bigl(\cblue{\bP}\corange{\bC}\cgreen{\bQ}^\top\bigr)_{ab} = \sum_{i}\sum_{j} \cblue{P_{ai}}\,\corange{c_{ij}}\,\cgreen{Q_{bj}}$, und das ist der Eintrag $(a,b)$ der Summe; eine Basis des $\R^m$ als Spalten ergibt eine :k[invertierbare Matrix]{#inverse-matrix}]
+::why[die universelle Eigenschaft macht aus jeder bilinearen Koordinatenabbildung genau eine lineare Abbildung auf dem Tensorproduktraum]
 :::
 
 :::schritt
@@ -333,23 +357,13 @@ genau ein Element, also $mn$ Stück.
 
 ::::
 
-:::bemerkung[9.4.10 (Zwei Feinheiten)]
-Zum einen sind die Koeffizienten in ($9.4.2$) beliebig. Bei einem elementaren
+:::bemerkung[9.4.10 (Eine Feinheit)]
+Die Koeffizienten in ($9.4.2$) sind beliebig. Bei einem elementaren
 Tensor haben sie nach Schritt 1 des Beweises die besondere Form
 $\corange{c_{ij}} = a_i b_j$, bei einem allgemeinen Element von $V \otimes W$
 gerade nicht. In Beispiel 9.4.6 ist die Koeffizientenmatrix bezüglich der
 Standardbasen $\corange{\bC} = \bI_2$, und $\bI_2$ lässt sich nicht als
 $\ba\bb^\top$ schreiben.
-
-Zum anderen haben wir die lineare Unabhängigkeit im konkreten Modell
-nachgerechnet. Im allgemeinen Rahmen leistet das die universelle Eigenschaft aus
-Bemerkung 9.4.3: Zu festen Indizes $(k,l)$ ist
-$(\cblue{\bv}, \cgreen{\bw}) \mapsto a_k(\cblue{\bv})\, b_l(\cgreen{\bw})$
-bilinear, wobei $a_k$ und $b_l$ die $k$-te beziehungsweise $l$-te
-Koordinatenfunktion bezüglich der beiden Basen sind. Die zugehörige lineare
-Abbildung auf $V \otimes W$ schickt $\cblue{\bv_i} \otimes \cgreen{\bw_j}$ auf
-$1$ für $(i,j) = (k,l)$ und sonst auf $0$. Wenden wir sie auf eine
-verschwindende Linearkombination an, bleibt $\corange{c_{kl}} = 0$ übrig.
 :::
 
 ### Tensorproduktbasen für Funktionen
@@ -376,7 +390,12 @@ Das Produkt zweier univariater Funktionen ist also eine Funktion auf dem Quadrat
 $[0,1]^2$, und die Zuordnung $(\cblue{f}, \cgreen{g}) \mapsto \cblue{f} \otimes \cgreen{g}$
 ist bilinear: Ein Skalar vor $\cblue{f}$ landet vor dem Produkt, ebenso einer vor
 $\cgreen{g}$, und Summen im ersten oder zweiten Argument ziehen sich punktweise
-auseinander. Damit greift Definition 9.4.1.
+auseinander. Nach der universellen Eigenschaft induziert sie eine lineare
+Abbildung vom abstrakten Tensorprodukt in den Raum der Funktionen auf
+$[0,1]^2$. Für die folgenden Polynomräume ist diese Abbildung injektiv: Die
+Funktionen $1$, $x$, $y$ und $xy$ sind durch Koeffizientenvergleich linear
+unabhängig. Wir dürfen das Tensorprodukt deshalb mit seinem konkreten Bild
+identifizieren.
 
 Eine Notationsverabredung brauchen wir noch. Wir benennen Funktionen nach dem
 Ausdruck, den sie liefern, und schreiben die Variable des ersten Faktors als $x$,

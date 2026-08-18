@@ -14,7 +14,7 @@ import { useMemo, useState } from "react";
  * Nachgerechnet (node, check-s155.mjs):
  *   K = 10, p = 10:  10^10 Koeffizienten, 10^10 * 8 B = 80 GB (74,5 GiB)
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
- *   additiv p = 10:  101 Koeffizienten, 808 Bytes
+ *   additiv p = 10:  91 freie Parameter nach Zentrierung, 728 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
  *
  * Achtung fuer spaetere Aenderungen: py() normiert mit loMax = log10(K^10),
@@ -118,14 +118,14 @@ export function SkalierungTensorGam() {
       : speicherTensor < 1e6
         ? `Mit p = ${p} und K = ${K} kostet die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Das passt noch bequem in den Speicher, und wir brauchen mindestens ebenso viele Beobachtungen, damit die Designmatrix vollen Spaltenrang haben kann.`
         : speicherTensor < 1e9
-          ? `Mit p = ${p} und K = ${K} sind es ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Der Speicher reicht noch, die geforderten ${fmtAnzahl(aktuell.tensor)} Beobachtungen sind in den meisten Anwendungen aber schon die härtere Schranke. Das additive Modell käme mit ${fmtAnzahl(aktuell.additiv)} Koeffizienten aus.`
-          : `Mit p = ${p} und K = ${K} verlangt die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten, also ${fmtSpeicher(speicherTensor)} allein für den Koeffizienten-Tensor. Praktikabel ist das nicht mehr; das additive Modell braucht an derselben Stelle ${fmtAnzahl(aktuell.additiv)} Koeffizienten (${fmtSpeicher(aktuell.additiv * BYTE_PRO_KOEFFIZIENT)}).`;
+          ? `Mit p = ${p} und K = ${K} sind es ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Der Speicher reicht noch, die geforderten ${fmtAnzahl(aktuell.tensor)} Beobachtungen sind in den meisten Anwendungen aber schon die härtere Schranke. Das additive Modell käme nach Zentrierung mit ${fmtAnzahl(aktuell.zentriert)} freien Parametern aus.`
+          : `Mit p = ${p} und K = ${K} verlangt die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten, also ${fmtSpeicher(speicherTensor)} allein für den Koeffizienten-Tensor. Praktikabel ist das nicht mehr; das additive Modell braucht nach Zentrierung nur ${fmtAnzahl(aktuell.zentriert)} freie Parameter (${fmtSpeicher(aktuell.zentriert * BYTE_PRO_KOEFFIZIENT)}).`;
 
   return (
     <div className="space-y-3">
       <p className="max-w-prose text-sm">
         Orange die volle Tensor-Produkt-Basis mit K<sup>p</sup> Koeffizienten, grün das additive
-        Modell mit p · K + 1 Koeffizienten. Die senkrechte Achse ist logarithmisch; eine Gerade
+        Modell mit p · (K − 1) + 1 freien Parametern nach Zentrierung. Die senkrechte Achse ist logarithmisch; eine Gerade
         darin bedeutet exponentielles Wachstum. Alle Zahlen rechnet dieses Widget selbst.
       </p>
 
@@ -238,7 +238,7 @@ export function SkalierungTensorGam() {
             </thead>
             <tbody>
               <tr>
-                <td className="px-2 py-0.5 text-left">Koeffizienten</td>
+                <td className="px-2 py-0.5 text-left">Zahl im Modell</td>
                 <td className="px-2 py-0.5">{fmtAnzahl(aktuell.tensor)}</td>
                 <td className="px-2 py-0.5">{fmtAnzahl(aktuell.additiv)}</td>
               </tr>
@@ -255,13 +255,13 @@ export function SkalierungTensorGam() {
                 <td className="px-2 py-0.5">{fmtAnzahl(aktuell.zentriert)}</td>
               </tr>
               <tr>
-                <td className="px-2 py-0.5 text-left">Rate des Tensoransatzes</td>
+                <td className="px-2 py-0.5 text-left">balancierte MSE-Obergrenze</td>
                 <td className="px-2 py-0.5" colSpan={2}>
                   n<sup>−{komma(rate, 3)}</sup> = n<sup>−8/{8 + p}</sup>
                 </td>
               </tr>
               <tr>
-                <td className="px-2 py-0.5 text-left">n für MSE ≤ 0,01</td>
+                <td className="px-2 py-0.5 text-left">Proxy-n (Konstante 1)</td>
                 <td className="px-2 py-0.5" colSpan={2}>
                   {fmtAnzahl(nFuerZiel)}
                 </td>

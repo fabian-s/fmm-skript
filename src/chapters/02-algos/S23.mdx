@@ -265,18 +265,23 @@ zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand,
 sich die Problemgröße verdoppelt?*
 
 :::bemerkung[2.3.7 (Interpretation der Komplexitätsklassen)]
-- $O(1)$ *(konstant)*: Die Anzahl der Operationen ist unabhängig von $n$.
-- $O(\log n)$ *(logarithmisch)*: Verdoppelt sich $n$, kommt (nur!) eine Operation
-  hinzu, denn $\log_2(2n) = \log_2(n) + 1$ (:k[Logarithmus]{#logarithm}).
-- $O(n)$ *(linear)*: Verdoppelt sich $n$, verdoppeln sich die Operationen.
-- $O(n^2)$ *(quadratisch)*: Verdoppelt sich $n$, vervierfachen sich die Operationen.
-- $O(2^n)$ *(exponentiell)*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
+Die Aussagen über Verdopplung gelten für *scharfe* Wachstumsordnungen
+$\Theta(g(n))$: Sowohl $T(n)=O(g(n))$ als auch $g(n)=O(T(n))$ gilt. Ein einzelnes
+$O(g(n))$ ist dagegen nur eine obere Schranke und erlaubt auch langsameres Wachstum.
+
+- $\Theta(1)$ *(konstant)*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
+- $\Theta(\log n)$ *(logarithmisch)*: Verdoppelt sich $n$, kommt im Modell
+  $c\log_2 n$ ein konstanter Aufwand hinzu, denn
+  $\log_2(2n) = \log_2(n) + 1$ (:k[Logarithmus]{#logarithm}).
+- $\Theta(n)$ *(linear)*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
+- $\Theta(n^2)$ *(quadratisch)*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
+- $\Theta(2^n)$ *(exponentiell)*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
   Operationen, denn $2^{2n} = \left(2^n\right)^2$. Schon ein einziger Schritt
   $n \to n + 1$ *verdoppelt* den Aufwand.
 :::
 
-Exponentielle Algorithmen sind damit für alle nicht winzigen Probleme praktisch
-unbrauchbar. Genau das ist der naiven Fibonacci-Rekursion aus
+Algorithmen mit scharf exponentieller Laufzeit sind damit schon für moderate
+Problemgrößen häufig praktisch unbrauchbar. Genau das passiert bei der naiven Fibonacci-Rekursion aus
 [Abschnitt 2.2](#sec-2.2) passiert, wie wir in [Abschnitt 2.5](#sec-2.5) genau
 nachrechnen werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
 zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe Satz 2.3.3

@@ -32,7 +32,7 @@ begegnet; hier brauchen wir den Fall zweier Argumente und zusätzlich eine
 Größenschranke.
 
 :::definition[11.2.1 (Beschränkte bilineare Abbildung)]
-Seien $\E_1$, $\E_2$ und $\mathbb{B}$ normierte Räume. Eine Abbildung
+Seien $\E_1$, $\E_2$ und $\mathbb{B}$ normierte Vektorräume. Eine Abbildung
 $\inner{\cdot, \cdot}\colon \E_1 \times \E_2 \to \mathbb{B}$ heißt *bilinear*,
 wenn sie in jedem Argument linear ist, wenn also für alle
 $u, u_1, u_2 \in \E_1$, $v, v_1, v_2 \in \E_2$ und $c_1, c_2 \in \R$
@@ -85,7 +85,7 @@ Damit ist der Rahmen gesteckt, und die Regel selbst sieht aus wie die aus der
 Schule.
 
 :::satz[11.2.3 (Produktregel)]
-Seien $\D$, $\E_1$, $\E_2$ und $\mathbb{B}$ normierte Räume,
+Seien $\D$, $\E_1$, $\E_2$ und $\mathbb{B}$ normierte Vektorräume,
 $\inner{\cdot,\cdot}\colon \E_1 \times \E_2 \to \mathbb{B}$ beschränkt bilinear
 und $f\colon \D \to \E_1$, $g\colon \D \to \E_2$ in $\bx \in \D$
 differenzierbar. Dann ist auch
@@ -368,10 +368,12 @@ Nullsetzen führt auf $(\bX^\top\bX + \lambda\bI_p)\bbeta = \bX^\top\by$, also
 auf die Normalengleichungen aus
 [Abschnitt 7.3](?k=07-kq#sec-7.3) mit einem Zuschlag auf der Diagonalen. Der
 Zuschlag ist der eigentliche Gewinn: Ohne vollen Spaltenrang von $\bX$ ist
-$\bX^\top\bX$ nur positiv semidefinit und damit singulär,
+$\bX^\top\bX$ nur positiv semidefinit und singulär,
 $\bX^\top\bX + \lambda\bI_p$ dagegen für $\lambda > 0$ stets
 :k[positiv definit]{#positive-definite} und invertierbar. Das gestrafte System
-ist also immer lösbar, das ungestrafte nur bei vollem Spaltenrang.
+ist deshalb stets *eindeutig* lösbar. Die ungestraften Normalengleichungen sind
+auch bei Rangdefizienz konsistent und besitzen Lösungen, diese sind dann aber
+nicht eindeutig; vollen Spaltenrang brauchen wir nur für ihre Eindeutigkeit.
 
 Ein Zahlenbeispiel zur Kontrolle. Mit
 
@@ -405,7 +407,7 @@ Koordinaten wird sie noch einfacher, weil dann nicht einmal mehr ein
 Matrixprodukt dasteht, sondern schlicht eine Hintereinanderausführung.
 
 :::satz[11.2.8 (Kettenregel)]
-Seien $\D_1$, $\D_2$, $\D_3$ normierte Räume, $f\colon \D_1 \to \D_2$ in
+Seien $\D_1$, $\D_2$, $\D_3$ normierte Vektorräume, $f\colon \D_1 \to \D_2$ in
 $\bx \in \D_1$ differenzierbar und $g\colon \D_2 \to \D_3$ in
 $\by = f(\bx) \in \D_2$ differenzierbar. Dann ist die
 :k[Verkettung]{#function-composition} $g \circ f$ in $\bx$ differenzierbar mit

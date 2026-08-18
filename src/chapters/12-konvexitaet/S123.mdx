@@ -284,7 +284,8 @@ Funktion auf die Konvexität einer Menge zurück. Diese Menge ist alles, was üb
 liegt.
 
 :::definition[12.3.5 (Epigraph)]
-Der *Epigraph* (epigraph) einer Funktion $f\colon \Xcal \to \R$ ist die Menge
+Seien $\Xcal\subseteq\R^n$ und $f\colon \Xcal \to \R$. Der *Epigraph*
+(epigraph) von $f$ ist die Menge
 
 $$
 \cblue{\epi(f)} := \left\{(\bx, t) \in \Xcal \times \R\colon t \ge f(\bx)\right\} .
@@ -299,7 +300,8 @@ eingeschlossen. Die Punkte darunter gehören nicht dazu.
 
 :::definition[12.3.6 (Konvexe Funktion)]
 Eine Funktion $f\colon \Xcal \to \R$ heißt *konvex* (convex), falls ihr Epigraph
-$\cblue{\epi(f)}$ eine konvexe Teilmenge von $\Xcal \times \R$ ist.
+$\cblue{\epi(f)}$ eine konvexe Teilmenge des Umgebungsraums
+$\R^n \times \R$ ist.
 :::
 
 :::bemerkung[12.3.7 (Der Definitionsbereich muss mitspielen)]
@@ -727,8 +729,9 @@ wo sie auftauchen, kippt die Funktion in einer Richtung nach unten weg, und wir 
 Kuppe oder einem Sattel. In der Statistik ist das keine Randnotiz, denn die negative
 Hesse-Matrix der Log-Likelihood ist die beobachtete Fisher-Information, aus der die
 Standardfehler kommen. Flache Richtungen heißen breite Konfidenzintervalle. Ein Strafterm wie
-in Beispiel 12.3.16 hebt alle Eigenwerte um $\lambda$ an und drückt damit sowohl die
-Konditionszahl als auch die Varianz der Schätzung, erkauft das aber mit einer Verzerrung. Das
+in Beispiel 12.3.16 hebt alle Eigenwerte um $\lambda$ an und drückt damit die
+Konditionszahl. Im üblichen linearen Modell senkt Ridge gegenüber Kleinsten Quadraten außerdem
+die Varianz in den Singulärrichtungen, erkauft das aber mit einer Verzerrung. Das
 rangdefiziente $\bA^\top\bA$ von dort hat die Eigenwerte $28$ und $0$, die Konditionszahl ist
 also unendlich; mit $\lambda = 1$ stehen dort $29$ und $1$, und $\kappa_2$ fällt auf $29$.
 

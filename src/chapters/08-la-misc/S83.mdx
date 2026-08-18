@@ -308,7 +308,9 @@ Startfehler. Für $\eps > 0$ ist
 $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|_2 \le \eps$ garantiert, sobald
 
 $$ {#eq-8.3.4}
-k \ge \left\lceil \frac{\log(\cred{e_0}/\eps)}{-\log \corange{\rho}} \right\rceil .
+k \ge \max\left\{0,\left\lceil
+\frac{\log(\cred{e_0}/\eps)}{-\log \corange{\rho}}
+\right\rceil\right\}.
 $$
 
 Insbesondere ist $k = O(\log(1/\eps))$.
@@ -343,8 +345,8 @@ $$
 :::
 
 :::schritt
-Das kleinste ganzzahlige $k$ mit dieser Eigenschaft ist die Aufrundung, also
-($8.3.4$). Wegen
+Falls $\eps\ge \cred{e_0}$, genügt bereits $k=0$; andernfalls ist das kleinste
+ganzzahlige $k$ die Aufrundung. Beides zusammen ergibt ($8.3.4$). Wegen
 $\log(\cred{e_0}/\eps) = \log \cred{e_0} + \log(1/\eps)$ hängt die Schrittzahl
 von der geforderten Genauigkeit nur über $\log(1/\eps)$ ab; der Startfehler und
 der Faktor $1/(-\log \corange{\rho})$ sind Konstanten. Damit ist
@@ -380,22 +382,29 @@ grobe, billige Näherungen der Inversen.
 :::
 
 :::algorithmus[8.3.8 (Drei klassische Wahlen von C)]
-Alle drei kosten pro Schritt $O(n^2)$:
+Für eine dichte Matrix kosten alle drei pro Schritt $O(n^2)$. Die folgenden
+Angaben definieren zunächst nur die Iterationen; Konvergenz braucht jeweils
+zusätzliche Voraussetzungen:
 
-1. *Richardson-Iteration:* $\bC = \gamma\bI_n$ für ein hinreichend kleines
-   $\gamma > 0$. Die Korrektur ist ein skaliertes Residuum, zusätzlicher
-   Aufwand $O(n)$.
+1. *Richardson-Iteration:* $\bC = \gamma\bI_n$. Ist $\bA$ SPD, so garantiert
+   $0<\gamma<2/\lambda_{\max}(\bA)$ Konvergenz. Für eine beliebige Matrix
+   existiert nicht notwendig ein geeignetes positives $\gamma$.
 2. *Jacobi-Iteration:*
    $\bC = \diag(\bA_{11}, \dots, \bA_{nn})^{-1}$, die Inverse der
-   :k[Diagonalen]{#diagonal-matrix} von $\bA$. Die Korrektur teilt jede
+   :k[Diagonalen]{#diagonal-matrix} von $\bA$. Dafür müssen alle
+   Diagonaleinträge von null verschieden sein. Die Korrektur teilt jede
    Residuumskomponente durch das zugehörige Diagonalelement, zusätzlicher
-   Aufwand $n$ Divisionen.
+   Aufwand $n$ Divisionen. Konvergenz gilt, wenn der Spektralradius der
+   Iterationsmatrix kleiner als $1$ ist; strikte Diagonaldominanz ist eine
+   verbreitete hinreichende Bedingung.
 3. *Gauss-Seidel-Iteration:* $\bC^{-1}$ ist das untere
    :k[Dreieck]{#triangular-matrix} von $\bA$, also die Diagonale samt allem
    darunter. Invertiert wird nichts: Die Korrektur
    $\bd = \bC\,\cred{\br^{(k)}}$ ist die Lösung des Dreieckssystems
    $\bC^{-1}\bd = \cred{\br^{(k)}}$, und die liefert die
    :k[Vorwärtssubstitution]{#triangular-solve} in $O(n^2)$ Operationen.
+   Auch hier müssen die Diagonaleinträge ungleich null sein. Konvergenz ist
+   eine zusätzliche Eigenschaft; für SPD-Matrizen ist sie garantiert.
 :::
 
 Alle drei nehmen einen leicht zugänglichen Teil von $\bA$ und tun so, als wäre
@@ -438,21 +447,24 @@ schon ab dem ersten Schritt gilt.
 :::
 
 :::bemerkung[8.3.10 (Gesamtaufwand)]
-Setzen wir beides zusammen, den Aufwand $O(n^2)$ pro Schritt aus dem Selbsttest
-und die Schrittzahl $O(\log(1/\eps))$ aus Korollar 8.3.6, so kostet eine Lösung
-mit Genauigkeit $\eps$
+Sei $c_{Schritt}$ der Aufwand einer Iteration und
+$\corange{\rho}=\|\bI-\bC\bA\|_2<1$. Dann liefert Korollar 8.3.6 den Aufwand
 
 $$
-O\bigl(n^2 \log(1/\eps)\bigr)
+O\!\left(
+c_{Schritt}\,
+\max\left\{1,\frac{\log(\cred{e_0}/\eps)}{-\log\corange{\rho}}\right\}
+\right).
 $$
 
-Operationen. Die direkten Verfahren aus
-[Kapitel 5](?k=05-lgs#sec-5.3) und [Kapitel 7](?k=07-kq#sec-7.4) brauchen
-dagegen $O(n^3)$, und zwar ohne Wahlmöglichkeit. Die Iteration spart also einen
-ganzen Faktor $n$ und bezahlt dafür mit dem Faktor $\log(1/\eps)$, der selbst
-bei zehn geforderten Dezimalstellen klein bleibt. Bei dünnbesetztem $\bA$ wächst
-der Vorsprung weiter, denn dann kostet ein Schritt nur
-$O(\operatorname{nnz}(\bA))$ statt $O(n^2)$.
+Nur wenn $\corange{\rho}\le\rho_0<1$ unabhängig von der Problemgröße bleibt,
+vereinfacht sich das bei dichter $\bA$ zu
+$O(n^2\log(\cred{e_0}/\eps))$. In Problemfolgen nähert sich $\rho$ häufig der
+$1$; dann wächst die Iterationszahl mit $n$ und der Kondition. Deshalb spart ein
+iteratives Verfahren nicht automatisch einen Faktor $n$. Präconditionierung soll
+gerade $\rho$ von $1$ fernhalten. Bei dünnbesetztem $\bA$ kann ein Schritt
+$O(\operatorname{nnz}(\bA))$ kosten, während direkte Löser bei Band- oder anderer
+Struktur ebenfalls deutlich billiger als $O(n^3)$ sein können.
 :::
 
 ### Ein Beispiel Schritt für Schritt

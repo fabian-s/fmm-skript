@@ -17,22 +17,25 @@ den univariaten Bausteinen zusammen, die wir schon haben. Aus $K$
 Basisfunktionen pro Variable entstehen alle möglichen Produkte.
 
 :::definition[15.5.1 (Tensor-Produkt-Basis)]
-Seien $\corange{\phi_1}, \dots, \corange{\phi_K}$ Basisfunktionen auf $\R$,
-etwa die B-Splines aus
+Für jede Variable $x_r$ sei ein $K$-dimensionaler Funktionenraum auf einem
+Intervall $I_r$ mit Basis
+$\corange{\phi_{r1}}, \dots, \corange{\phi_{rK}}$ gegeben, etwa ein
+B-Spline-Raum aus
 [Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4). Die zugehörige
-*Tensor-Produkt-Basis* für $p$ Variablen besteht aus den $K^p$ Produkten
+*Tensor-Produkt-Basis* auf $I_1\times\dots\times I_p$ besteht aus den $K^p$
+Produkten
 
 $$
-\corange{\phi_{j_1}(x_1)} \times \cdots \times \corange{\phi_{j_p}(x_p)},
+\corange{\phi_{1j_1}(x_1)} \times \cdots \times \corange{\phi_{pj_p}(x_p)},
 \qquad j_1, \dots, j_p \in \{1, \dots, K\} ,
 $$
 
-und der Ansatz für $f\colon \R^p \to \R$ lautet
+und der Ansatz für $f\colon I_1\times\dots\times I_p \to \R$ lautet
 
 $$ {#eq-15.5.1}
 \cgreen{\wh{f}(\bx)}
 = \sum_{j_1 = 1}^{K} \cdots \sum_{j_p = 1}^{K} a_{j_1, \dots, j_p}
-\bigl(\corange{\phi_{j_1}(x_1)} \times \cdots \times \corange{\phi_{j_p}(x_p)}\bigr)
+\bigl(\corange{\phi_{1j_1}(x_1)} \times \cdots \times \corange{\phi_{pj_p}(x_p)}\bigr)
 $$
 
 mit dem Koeffizienten-:k[Tensor]{#tensor}
@@ -121,21 +124,25 @@ $10\,000$ nötig, bevor die Anpassung eindeutig ist.
 Der statistische Preis ist derselbe. Er lässt sich mit dem, was wir in
 [Abschnitt 15.4](#sec-15.4) gerechnet haben, direkt hinschreiben.
 
-:::satz[15.5.5 (Mittlerer quadratischer Fehler im Multivariaten)]
+:::satz[15.5.5 (Eine MSE-Obergrenze im Multivariaten)]
 Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\eps_i}$ an $n$
-festen Stellen mit unkorrelierten, homoskedastischen Fehlern und passen
+festen Stellen mit unkorrelierten, homoskedastischen Fehlern vom Mittelwert
+null und passen
 ($15.5.1$) mit kubischen Spline-Bausteinen auf einem gleichmäßigen Gitter an.
-Hat $\corange{\bB}$ vollen Spaltenrang $K^p$ und sind die vierten partiellen
-Ableitungen von $f$ beschränkt, so gilt für den an den Entwurfsstellen
-gemittelten Fehler
+Hat $\corange{\bB}$ vollen Spaltenrang $K^p$ und besitzt die verwendete
+Tensorprodukt-Splinefolge für $f$ eine gleichmäßige Approximationsschranke
+$\inf_{s\in\Fcal_K}\|f-s\|_\infty\le C K^{-4}$ — etwa unter den üblichen
+Glattheitsannahmen an die partiellen Ableitungen vierter Ordnung —, so gilt
+für den an den Entwurfsstellen gemittelten Fehler
 
 $$ {#eq-15.5.2}
 \MSE(\cgreen{\wh{f}})
-= \underbrace{O(K^{-8})}_{\cred{\text{Bias}^2}}
-+ \underbrace{\frac{\sigma^2 K^p}{n}}_{\text{Varianz}} ,
+\;\le\; \underbrace{C_1K^{-8}}_{\cred{\text{Bias}^2\text{-Schranke}}}
++ \underbrace{\frac{\sigma^2 K^p}{n}}_{\text{Varianz}}
 $$
 
-und für das $K^\star \sim n^{1/(8+p)}$, das diese Summe minimiert,
+mit einer Konstante $C_1>0$. Die Wahl
+$K\asymp n^{1/(8+p)}$ balanciert die rechte Seite und liefert die Garantie
 
 $$ {#eq-15.5.3}
 \MSE(\cgreen{\wh{f}}) = O\bigl(n^{-8/(8+p)}\bigr) .
@@ -155,37 +162,18 @@ gemittelte Varianz $\sigma^2 K^p / n$.
 :::
 
 :::schritt
-Für den Bias zählen wir die Gitterweite. In jeder Variablen liegen $K$
-Basisfunktionen auf einem festen Intervall, also ist
-$\corange{h} = O(1/K)$ wie im univariaten Fall. Der Rest läuft wie in
-Satz 15.4.2: Der Kleinste-Quadrate-Fit an die rauschfreien Werte ist an den
-Entwurfsstellen höchstens so schlecht wie jede andere Funktion des
-Ansatzraums, und im Ansatzraum liegt der Tensorprodukt-Interpolant von $f$.
+Für den Bias verwenden wir die im Satz ausdrücklich vorausgesetzte
+Tensorprodukt-Approximation. Der rauschfreie KQ-Fit ist an den
+Entwurfsstellen mindestens so gut wie dieser Vergleichsspline, also ist der
+gemittelte quadrierte Bias höchstens $C_1K^{-8}$.
 
-::why[Schritt 2 jenes Beweises benutzt nur die Optimalität der Kleinste-Quadrate-Lösung; wie viele Spalten die Designmatrix hat, geht auch dort nicht ein]
+::why[dieselbe Vergleichsrechnung wie in Satz 15.4.2; die genaue Herleitung der Tensorprodukt-Schranke gehört zur mehrdimensionalen Approximationstheorie und wird hier als Voraussetzung sichtbar gemacht]
 :::
 
 :::schritt
-Der Fehler dieses Interpolanten ist noch von der Ordnung $\corange{h}^4$.
-Wir bauen ihn aus den univariaten Interpolationsoperatoren
-$P_1, \dots, P_p$, einem je Variable, und setzen $T_0 = \mathrm{Id}$ sowie
-$T_i = P_1 \cdots P_i$; der Tensorprodukt-Interpolant ist $T_p f$. Dann ist
-
-$$
-f - T_p f = \sum_{i=1}^{p} T_{i-1}\bigl(f - P_i f\bigr) .
-$$
-
-Der Faktor $f - P_i f$ ist nach Satz 15.2.2 von der Ordnung $\corange{h}^4$,
-und die $T_{i-1}$ sind in der Maximumsnorm gleichmäßig in $\corange{h}$
-beschränkt; damit gilt die Ordnung für jeden Summanden und für die Summe der
-$p$ Stück. Quadriert steht $O(\corange{h}^8) = O(K^{-8})$ da.
-
-::why[Die Summe teleskopiert zu $T_0 f - T_p f$; Satz 15.2.2 braucht in der $i$-ten Variablen die vierte Ableitung, also gerade die beschränkten vierten partiellen Ableitungen der Voraussetzung. Die gleichmäßige Beschränktheit der Interpolationsoperatoren ist die einzige Zutat aus der Spline-Theorie, die wir hier nicht selbst beweisen]
-:::
-
-:::schritt
-Zu minimieren ist damit $g(K) = c_1 K^{-8} + c_2 K^p / n$ mit Konstanten
-$c_1, c_2 > 0$. Ableiten und Nullsetzen gibt
+Wir minimieren nun die bewiesene Obergrenze
+$g(K) = c_1 K^{-8} + c_2 K^p / n$ mit Konstanten $c_1, c_2 > 0$. Ableiten
+und Nullsetzen gibt
 
 $$
 g'(K) = -8 c_1 K^{-9} + \frac{c_2\, p\, K^{p-1}}{n} \overset{!}{=} 0
@@ -214,41 +202,67 @@ und damit ($15.5.3$).
 
 ::::
 
-Aus der Optimalitätsbedingung fällt nebenbei ab, wie sich der Fehler im
-Optimum aufteilt. Setzen wir $8 c_1 (K^\star)^{-9} = c_2\, p\, (K^\star)^{p-1}/n$
-in die beiden Summanden ein, so ist
-$c_1 (K^\star)^{-8} = \tfrac{p}{8}\, c_2 (K^\star)^p / n$: Der quadrierte Bias
-trägt den Anteil $p/(8+p)$ am MSE. Für $p = 1$ ist das genau das Neuntel aus
-Bemerkung 15.4.7, für $p = 10$ schon mehr als die Hälfte. Mit der Dimension
-wandert das Gewicht also vom Rauschen zur Approximation.
+:::vertiefung[Woher die Tensorprodukt-Schranke kommt]
+Die im Satz vorausgesetzte Approximationsschranke $C K^{-4}$ fällt nicht vom
+Himmel; sie lässt sich auf den univariaten Satz 15.2.2 zurückführen. In jeder
+Variablen liegen $K$ Basisfunktionen auf einem festen Intervall, die
+Gitterweite ist also $\corange{h} = O(1/K)$. Aus den univariaten
+Interpolationsoperatoren $P_1, \dots, P_p$, einem je Variable, bauen wir die
+Produkte $T_0 = \mathrm{Id}$ und $T_i = P_1 \cdots P_i$; der
+Tensorprodukt-Interpolant von $f$ ist $T_p f$, und die Summe
 
-:::bemerkung[15.5.6 (Wie viele Daten die Rate verlangt)]
-Gleichung ($15.5.3$) gilt bei optimal gewähltem $K$, nicht für jedes $K$; die
-Folien sagen das inzwischen ausdrücklich, und wichtig ist es, weil die Summe
-in ($15.5.2$) für schlecht gewähltes $K$ beliebig groß werden kann.
+$$
+f - T_p f = \sum_{i=1}^{p} T_{i-1}\bigl(f - P_i f\bigr)
+$$
 
-Lesen wir die Rate von der anderen Seite, so sehen wir, was sie kostet. Wie
-groß muss $n$ sein, damit der MSE unter eine Schranke $\delta$ fällt? Aus
+teleskopiert. Der Faktor $f - P_i f$ ist nach Satz 15.2.2 von der Ordnung
+$\corange{h}^4$; er braucht in der $i$-ten Variablen gerade die beschränkten
+vierten partiellen Ableitungen. Die $T_{i-1}$ sind in der Maximumsnorm
+gleichmäßig in $\corange{h}$ beschränkt, also gilt die Ordnung für jeden der
+$p$ Summanden und für ihre Summe; das ist die behauptete Schranke der
+Ordnung $K^{-4}$ für den Abstand von $f$ zum Ansatzraum. Die gleichmäßige
+Beschränktheit der Interpolationsoperatoren ist die einzige Zutat aus der
+Spline-Theorie, die wir hier nicht selbst beweisen.
+:::
+
+Aus der Optimalitätsbedingung der Proxy-Rechnung fällt nebenbei ab, wie sich
+die beiden Schranken im Ausgleich aufteilen. Setzen wir
+$8 c_1 (K^\star)^{-9} = c_2\, p\, (K^\star)^{p-1}/n$ in die beiden Summanden
+ein, so ist $c_1 (K^\star)^{-8} = \tfrac{p}{8}\, c_2 (K^\star)^p / n$: Die
+Bias-Schranke trägt den Anteil $p/(8+p)$ an der Obergrenze. Für $p = 1$ ist
+das genau das Neuntel aus Bemerkung 15.4.7, für $p = 10$ schon mehr als die
+Hälfte. Mit der Dimension wandert das Gewicht also vom Rauschen zur
+Approximation.
+
+:::bemerkung[15.5.6 (Was die Rate über Datenmengen sagt)]
+Gleichung ($15.5.3$) ist eine Obergrenze bei einer Wahl
+$K\asymp n^{1/(8+p)}$, nicht der Fehler für jedes $K$. Sie beschreibt eine
+garantierte Balance der beiden Schranken; dass diese Wahl den tatsächlichen
+MSE minimiert, würde zusätzliche untere Schranken verlangen.
+
+Als grobe Planungsheuristik setzen wir die in der $\mathcal O$-Notation
+verborgene Konstante gleich eins. Welches $n$ legt diese Proxy-Rechnung nahe,
+damit der MSE unter eine Schranke $\delta$ fällt? Aus
 $n^{-8/(8+p)} \le \delta$ folgt $n \ge \delta^{-(8+p)/8}$, für
 $\delta = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
 
-| Dimension $p$ | Rate | $n$ für MSE $\le 0{,}01$ | Folienwert |
+| Dimension $p$ | Rate | Proxy-$n$ bei Konstante $1$ | Folienwert |
 |:---|---:|---:|---:|
 | $1$ | $n^{-8/9}$ | $10^{2{,}25} \approx 178$ | $10^{2}$ |
 | $2$ | $n^{-8/10} = n^{-0{,}8}$ | $10^{2{,}5} \approx 316$ | $10^{2{,}5}$ |
 | $5$ | $n^{-8/13}$ | $10^{3{,}25} \approx 1778$ | $10^{4}$ |
 | $10$ | $n^{-8/18}$ | $10^{4{,}5} \approx 31\,623$ | $10^{5}$ |
 
-Die dritte Spalte ist unsere eigene Rechnung mit versteckter Konstante $1$,
-die vierte zitiert die Folien. Deren Fußnote nennt die Werte *illustrativ*,
-und so sind sie auch zu lesen. Auf der Folie steht die Fußnote allerdings an
-der Ratenspalte, obwohl die Raten exakt sind: Unsicher ist allein die
-$n$-Spalte, denn die entscheidenden Konstanten stecken im Problem und nicht
-in der Rate. Bemerkung 15.4.7 hat für $p = 1$ vorgeführt, wie weit sie die
-Zahl verschieben können. Als Zahlen genommen streuen die Folienwerte in beide
-Richtungen: Bei $p = 1$ liefert $n = 10^2$ mit derselben Konstanten $1$ noch
-$\MSE = 0{,}0167$, reicht also nicht ganz, während $10^4$ und $10^5$ bei
-$p = 5$ und $p = 10$ deutlich mehr sind als nötig.
+Die dritte Spalte ist eine reine Orientierung, die die versteckte Konstante
+gleich $1$ setzt. Sie ist keine garantierte Stichprobenplanung. Die vierte
+Spalte zitiert die Folien. Deren Fußnote nennt die Werte *illustrativ*,
+und so sind sie auch zu lesen: Die entscheidenden Konstanten hängen am
+Problem, nicht an der Rate, und in Bemerkung 15.4.7 haben wir für $p = 1$
+gesehen, wie weit die versteckte Konstante die Zahl verschieben kann. Als
+Zahlen genommen streuen die Folienwerte in beide Richtungen: Bei $p = 1$
+liefert $n = 10^2$ mit derselben Konstanten $1$ noch $\MSE = 0{,}0167$,
+reicht also nicht ganz, während $10^4$ und $10^5$ bei $p = 5$ und $p = 10$
+deutlich mehr sind als nötig.
 
 Die Botschaft der Spalte bleibt davon unberührt, und sie steckt im Exponenten
 $(8+p)/4$. Jede weitere Variable multipliziert die nötige Datenmenge mit
@@ -279,9 +293,9 @@ Der Ausweg ist keine bessere Numerik, sondern eine Annahme über $f$. Wenn wir
 darauf verzichten, beliebige Wechselwirkungen zwischen den Variablen
 darzustellen, schrumpft der Ansatzraum dramatisch.
 
-:::definition[15.5.8 (Generalisiertes additives Modell)]
-Ein *generalisiertes additives Modell* (GAM) setzt statt des vollen
-Tensorprodukts eine Summe univariater Funktionen an:
+:::definition[15.5.8 (Additives Modell)]
+Ein *additives Regressionsmodell* setzt statt des vollen Tensorprodukts eine
+Summe univariater Funktionen an:
 
 $$ {#eq-15.5.4}
 \cgreen{\wh{f}(\bx)} = \beta_0 + \sum_{i=1}^{p} \cgreen{f_i(x_i)} ,
@@ -290,13 +304,25 @@ $$
 wobei jede Komponente $\cgreen{f_i}$ in einem eigenen $K$-dimensionalen
 Ansatzraum liegt, etwa dem der kubischen Splines aus
 [Abschnitt 15.3](#sec-15.3).
+
+Ein *generalisiertes additives Modell* (GAM) erweitert diese Form wie ein
+generalisiertes lineares Modell um eine Verteilung für $Y\mid X$ und eine
+Linkfunktion $g$:
+
+$$
+g\!\left(\E[Y\mid X=\bx]\right)
+= \beta_0 + \sum_{i=1}^p f_i(x_i).
+$$
+
+Für Gaußfehler und die Identitätslink ist das genau das additive Modell oben.
 :::
 
 :::bemerkung[15.5.9 (Der Gewinn, und was er kostet)]
-*Skalierbar.* Statt $K^p$ Koeffizienten sind es $pK + 1$, also $O(pK)$ statt
-$O(K^p)$. Für $p = 10$ und $K = 10$ stehen $101$ Koeffizienten gegen
-$10^{10}$, ein Faktor von rund $10^8$. Aus dem Wachstum in $p$ wird ein
-lineares.
+*Skalierbar.* In der rohen Darstellung stehen $pK+1$ Koeffizienten statt
+$K^p$. Nach den nötigen Zentrierungsbedingungen sind davon
+$p(K-1)+1=O(pK)$ frei wählbar. Für $p=10$ und $K=10$ sind das $91$ freie
+Parameter gegen $10^{10}$, ein Faktor von gut $10^8$. Aus dem Wachstum in
+$p$ wird ein lineares.
 
 Die Folien schreiben $pK$, und um diese Zahl sauber zu bekommen, räumen wir
 kurz auf: Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
@@ -324,10 +350,10 @@ automatischer Wahl der Glättungsparameter über die Kriterien aus
 
 :::vertiefung[Zwei Kurven auf logarithmischer Achse]
 Das Widget stellt die beiden Zählungen nebeneinander. Orange die $K^p$
-Koeffizienten des vollen Tensorprodukts, grün die $pK+1$ des additiven
-Modells, beides über der Dimension $p$ und mit logarithmischer senkrechter
-Achse. Der Tensoransatz ist dort eine Gerade, das additive Modell eine flach
-liegende Kurve.
+Koeffizienten des vollen Tensorprodukts, grün die $p(K-1)+1$ freien Parameter
+des zentrierten additiven Modells, beides über der Dimension $p$ und mit
+logarithmischer senkrechter Achse. Der Tensoransatz ist dort eine Gerade, das
+additive Modell eine flach liegende Kurve.
 
 Der zweite Regler ändert $K$. Die orange Gerade rührt sich dabei nicht vom
 Fleck, denn die Achse wächst mit: Ihr oberer Rand ist immer $K^{10}$, und die
@@ -346,12 +372,15 @@ Koeffizienten, nicht die $pK+1$ der Zeile darüber.
 
 :::bemerkung[15.5.10 (Warum das mehr ist als eine Notlösung)]
 Die Additivität sieht nach einem bloßen Verzicht aus. Ist $f$ tatsächlich
-additiv, so ist sie mehr als das: Die einzelnen Komponenten lassen
-sich dann mit derselben Rate schätzen wie eine univariate Funktion, die
-Dimension geht nur noch in die Konstante ein. Aus $n^{-8/(8+p)}$ wird wieder
-$n^{-8/9}$, und der Fluch der Dimensionalität ist nicht bekämpft, sondern
-umgangen. Dass das geht, ist ein Satz von C. J. Stone (1985), und er ist der
-Grund, warum additive Modelle in der Statistik so verbreitet sind.
+additiv und bleibt $p$ fest, so ist sie mehr als das: Unter den üblichen
+Regularitäts- und Designannahmen lassen sich die einzelnen Komponenten mit
+derselben eindimensionalen Rate schätzen wie eine univariate Funktion; $p$
+geht dann in die Konstante ein. Für vierfach glatte Komponenten wird aus der
+vollen Rate $n^{-8/(8+p)}$ wieder die univariate Rate $n^{-8/9}$. Der Fluch
+der Dimensionalität ist damit nicht bekämpft, sondern durch eine
+Strukturannahme umgangen. Entsprechende Optimalitätsresultate gehen auf
+C. J. Stone (1985) zurück und sind ein Grund, warum additive Modelle in der
+Statistik so verbreitet sind.
 :::
 
 ### Ausblick
@@ -395,18 +424,23 @@ Optimierungsproblem.
    heißt Schranke durch $16$. Die Ordnung hängt am Grad und an der
    Glattheit, stückweise linear liefert nur $\corange{h}^2$
    ([Abschnitt 15.2](#sec-15.2)).
-3. **Glättung statt Interpolation.** Mit $K < n$ Basisfunktionen wird aus der
-   Interpolation ein Kleinste-Quadrate-Problem
+3. **Glättung statt Interpolation.** Mit einem vollrangigen kleinen
+   Ansatzraum, typischerweise $K<n$, wird die Anpassung zu einem
+   Kleinste-Quadrate-Problem
    $\min_{\ba} \left\| \cblue{\by} - \corange{\bB}\ba \right\|_2^2$. Der
-   zweite Weg ist $K = n$ mit einem Strafterm $\lambda \int (g'')^2 \dx$,
-   also ein Glättungsspline ([Abschnitt 15.3](#sec-15.3)).
-4. **Bias-Varianz.** Der quadrierte Bias fällt wie $O(K^{-8})$, und bei
-   vollem Spaltenrang ist die gemittelte Varianz exakt $\sigma^2 K/n$. Das
-   Optimum liegt bei $K \sim n^{1/9}$ und liefert $\MSE = O(n^{-8/9})$; weil
-   $f$ unbekannt ist, wird $K$ in der Praxis über Kreuzvalidierung, AIC, BIC
-   oder GCV gewählt ([Abschnitt 15.4](#sec-15.4)).
+   zweite Weg benutzt einen großen, bis zu datengroßen Raum mit einem
+   Strafterm $\lambda \int (g'')^2 \dx$, also einen Glättungsspline
+   ([Abschnitt 15.3](#sec-15.3)). Nicht $K$ allein, sondern Residuen und
+   Strafterm entscheiden zwischen Interpolation und Glättung.
+4. **Bias-Varianz.** Der gemittelte quadrierte Bias besitzt unter den
+   genannten Glattheitsannahmen eine obere Schranke $C_1K^{-8}$, die
+   gemittelte Varianz ist exakt $\sigma^2 K/n$. Unter der stärkeren
+   Proxy-Annahme $\mathrm{Bias}^2\asymp c_1K^{-8}$ balanciert
+   $K\asymp n^{1/9}$ beide Terme und liefert die Rate $n^{-8/9}$. In der
+   Praxis wird $K$ über Kreuzvalidierung, AIC, BIC oder GCV gewählt
+   ([Abschnitt 15.4](#sec-15.4)).
 5. **Fluch der Dimensionalität.** Die Tensor-Produkt-Basis braucht $K^p$
-   Koeffizienten und erreicht, wieder bei optimal gewähltem $K$, nur noch
+   Koeffizienten. Das Ausbalancieren der gezeigten MSE-Obergrenze liefert
    $O(n^{-8/(8+p)})$. Additive Modelle ersetzen das Produkt durch eine Summe,
    kommen mit $O(pK)$ Koeffizienten aus und sind zusätzlich interpretierbar.
 :::
@@ -431,13 +465,15 @@ $\Ccal^2$-Interpolanten, und unter denen gewinnt der natürliche Spline.
 :::
 
 :::frage{wahr}
-Verdoppeln wir die Zahl der gleichmäßig verteilten Knoten, so fällt die
+Verdoppeln wir die Zahl der Teilintervalle eines gleichmäßigen Gitters, so fällt die
 Fehlerschranke für kubische Spline-Interpolation auf ein Sechzehntel, die für
 stückweise lineare Interpolation dagegen nur auf ein Viertel.
 
 In ($15.2.1$) steht $\corange{h}^4$, in Satz 15.2.5 steht $\corange{h}^2$, und
-halbiertes $\corange{h}$ gibt die Faktoren $2^4 = 16$ beziehungsweise
-$2^2 = 4$. Gemessen bestätigen unsere Rechnungen zu $\sin(2\pi x)$ beides:
+die verdoppelte Teilintervallzahl halbiert $\corange h$. Bei $N$ Knoten gehen
+wir dafür auf $2N-1$ Knoten, wie in der Folge $5,9,17,33$. Halbiertes
+$\corange h$ gibt die Faktoren $2^4=16$ beziehungsweise $2^2=4$. Gemessen
+bestätigen unsere Rechnungen zu $\sin(2\pi x)$ beides:
 $18{,}8$, $16{,}9$ und $16{,}2$ im kubischen Fall gegen $2{,}99$, $3{,}73$
 und $3{,}93$ im linearen.
 :::
@@ -446,12 +482,13 @@ und $3{,}93$ im linearen.
 Interpolation und Glättung sind zwei verschiedene Verfahren; die Interpolation
 fällt nicht unter den Kleinste-Quadrate-Ansatz dieses Kapitels.
 
-Beide unterscheiden sich nur in einer Zahl. Mit $K = n$ Basisfunktionen und
-invertierbarer Designmatrix ist die Kleinste-Quadrate-Lösung
+Interpolation ist der Spezialfall des KQ-Ansatzes mit verschwindenden
+Residuen. Mit $K = n$ Basisfunktionen und invertierbarer Designmatrix ist die Kleinste-Quadrate-Lösung
 $\cgreen{\wh\ba} = \corange{\bB}^{-1}\cblue{\by}$, die Residuenquadratsumme
-null und jeder Punkt exakt getroffen; mit $K < n$ wird daraus Glättung
-(Definition 15.3.8). Interpolation ist also der Randfall, und ein guter
-Schätzer ist sie nicht: Sie übernimmt die Fehler $\cred{\eps_i}$
+null und jeder Punkt exakt getroffen. Ein kleiner vollrangiger Raum mit
+$K<n$ lässt für generische Daten Residuen stehen; ein großer Raum kann durch
+einen Strafterm ebenfalls glätten (Definition 15.3.8). Ein interpolierender
+Schätzer übernimmt die Fehler $\cred{\eps_i}$ an den Datenstellen
 punktweise.
 :::
 
@@ -467,16 +504,17 @@ $0{,}1174$ bei $K = 9$, weil die inneren Knoten dort gerade auf die
 Nullstellen von $\sin(3x)$ fallen.
 :::
 
-:::frage{wahr}
-Im univariaten Fall ist die MSE-optimale Knotenzahl von der Ordnung
-$n^{1/9}$, und der zugehörige MSE fällt wie $n^{-8/9}$.
+:::frage{falsch}
+Allein aus der Bias-Obergrenze folgt, dass die tatsächlich MSE-optimale
+Knotenzahl von der Ordnung $n^{1/9}$ ist.
 
-Minimiert wird $c_1K^{-8} + c_2K/n$; Ableiten gibt $K^\star \sim n^{1/9}$,
-Einsetzen beide Male $n^{-8/9}$ (Bemerkung 15.4.7). Der Exponent $1/9$ ist der
-Spezialfall $p = 1$ von $1/(8+p)$ aus Satz 15.5.5. Praktisch brauchbar ist die
-Zahl nur mit ihrer Konstanten: Für $n = 100$ liefert die Formel mit Konstante
-$1$ ein $K^\star$ von $1{,}67$, während in Beispiel 15.4.8 der MSE bei
-$K = 12$ am kleinsten ist.
+Bewiesen ist nur $\mathrm{Bias}^2\le C_1K^{-8}$. Minimieren wir die daraus
+entstehende Obergrenze oder nehmen stärker
+$\mathrm{Bias}^2\asymp c_1K^{-8}$ an, erhalten wir
+$K\asymp n^{1/9}$ und die Garantie beziehungsweise Proxy-Rate $n^{-8/9}$
+(Bemerkung 15.4.7). Für eine Aussage über das tatsächliche oder minimax-
+optimale $K$ braucht es zusätzlich eine passende untere Schranke und genaue
+Annahmen an Funktionsklasse und Design.
 :::
 
 :::frage{falsch}
@@ -496,7 +534,7 @@ hat eine Koeffizientenzahl der Ordnung $pK$, wächst also nur linear in $p$.
 
 Das ist ($15.5.4$): $pK$ Komponenten-Koeffizienten plus Achsenabschnitt, nach
 Zentrierung $p(K-1)+1$ frei wählbare. Für $p = 10$ und $K = 10$ sind das
-$101$ statt $10^{10}$. Bezahlt wird der Gewinn mit den Wechselwirkungen, die
+$91$ freie Parameter statt $10^{10}$. Bezahlt wird der Gewinn mit den Wechselwirkungen, die
 der Ansatz nicht darstellen kann (Bemerkung 15.5.9).
 :::
 
@@ -504,11 +542,11 @@ der Ansatz nicht darstellen kann (Bemerkung 15.5.9).
 Die Rate $O(n^{-8/(8+p)})$ ist eine obere Schranke für den MSE, gleich welches
 $K$ wir wählen.
 
-Sie gilt nur für $K \sim n^{1/(8+p)}$. In ($15.5.2$) steht eine Summe aus
-einem in $K$ fallenden und einem in $K$ wachsenden Term, und beide können den
-MSE beliebig groß machen: $K$ zu klein heißt viel Bias, $K$ zu groß heißt
-viel Varianz. Das externe Folien-Review hat genau diese Verkürzung
-angemerkt.
+Sie ist die Garantie aus der ausbalancierten Obergrenze und gilt für eine Wahl
+$K\asymp n^{1/(8+p)}$ unter den Voraussetzungen von Satz 15.5.5. Für ein
+beliebiges $K$ steht nur die zweigliedrige Schranke ($15.5.2$) zur Verfügung:
+$K$ zu klein lässt eine große Bias-Schranke, $K$ zu groß macht die Varianz
+groß.
 :::
 
 ::::

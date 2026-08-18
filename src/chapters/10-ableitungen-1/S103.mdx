@@ -438,8 +438,10 @@ Biases, und rechnet typischerweise
 $f_k(\bz_{k-1}) = \sigma_k\bigl(\bW_k(\btheta_k)\,\bz_{k-1}\bigr)$ mit einer
 Gewichtsmatrix $\bW_k$ und einer komponentenweise wirkenden
 Aktivierungsfunktion $\sigma_k$. Eine
-:k[Verlustfunktion]{#objective-function} $L(\wh{\by}; \btheta)$ misst, wie gut
-die Vorhersagen sind. Zum Trainieren brauchen wir für jede Schicht die
+:k[Verlustfunktion]{#objective-function} $L(\wh{\by},\by)$ misst anhand des
+Zielwerts $\by$, wie gut die Vorhersagen sind; in der folgenden Formel hängt sie
+bei festem $\wh{\by}$ nicht noch einmal direkt von den Parametern ab. Zum
+Trainieren brauchen wir für jede Schicht die
 Ableitung $\partial L / \partial \btheta_k$, denn genau die verlangt der
 :k[Gradientenabstieg]{#gradient-descent} aus Algorithmus 10.2.10.
 
@@ -465,6 +467,11 @@ Zeilen wie $\bz_j$ Komponenten und so viele Spalten wie $\bz_{j-1}$. Der letzte
 Faktor leitet die Schicht $k$ nach ihren *eigenen* Parametern ab, nicht nach
 ihrer Eingabe. Am Ende steht eine Zeile mit so vielen Einträgen, wie $\btheta_k$
 Parameter hat.
+
+Enthält der Gesamtverlust zusätzlich einen direkten Parameterterm, etwa eine
+Regularisierung $R(\btheta)$, kommt dessen Gradient additiv hinzu:
+$\partial(L+R)/\partial\btheta_k$ ist die Kette aus ($10.3.3$) plus
+$\partial R/\partial\btheta_k$.
 :::
 
 :::bemerkung[10.3.11 (Wo die Kette aufhört)]
@@ -517,12 +524,16 @@ $$
 = \begin{pmatrix} 0 & 0 \\ 2 & 1 \end{pmatrix} .
 $$
 
-Vorsicht an den Schaltstellen: Ist $(\bW_k\bz_{k-1})_i = 0$, etwa für
-$\bz = (1;\ 1)^\top$ mit $\bW\bz = (0;\ 3)^\top$, dann hat $\max(0, \cdot)$ dort
-einen Knick und ist nicht differenzierbar (Bemerkung 10.1.2). Formel ($10.3.4$)
-gilt also nur abseits dieser Stellen. In der Praxis wird die Ableitung dort per
-Verabredung auf null gesetzt, und das funktioniert gut: Die Knickstellen bilden
-eine Nullmenge, exakt getroffen werden sie so gut wie nie.
+Vorsicht an den Schaltstellen: Ist $(\bW_k\bz_{k-1})_i = 0$ und die $i$-te Zeile
+von $\bW_k$ nicht der Nullvektor, etwa für $\bz = (1;\ 1)^\top$ mit
+$\bW\bz = (0;\ 3)^\top$, dann hat diese Ausgabekomponente dort einen Knick und
+der Layer ist nicht differenzierbar (Bemerkung 10.1.2). Eine Nullzeile ist die
+Ausnahme: Dann ist die betreffende Komponente konstant null und damit
+differenzierbar. In der Praxis wird an einem echten Knick meist per Verabredung
+die Ableitung null verwendet. Bei festen von null verschiedenen Zeilen und
+kontinuierlich verteilten Eingaben bilden die Schalthyperebenen eine Nullmenge;
+bei diskreten Daten oder Nullgewichten können sie dagegen durchaus exakt
+getroffen werden.
 :::
 
 :::bemerkung[10.3.13 (Wie die Kette ausgewertet wird)]
@@ -624,13 +635,15 @@ $\partial f_k(\bz_{k-1}; \btheta_k) / \partial \btheta_k$
 :::
 
 :::frage{wahr}
-Ein ReLU-Layer $f(\bz) = \max(\bnull, \bW\bz)$ ist an Stellen mit
-$(\bW\bz)_i = 0$ nicht differenzierbar.
+Ein ReLU-Layer $f(\bz) = \max(\bnull, \bW\bz)$ ist an einer Stelle mit
+$(\bW\bz)_i = 0$ nicht differenzierbar, sofern die $i$-te Zeile von $\bW$ nicht
+der Nullvektor ist.
 
 Dort hat $\max(0, \cdot)$ einen Knick, links und rechts ergeben sich
 verschiedene Steigungen (Bemerkung 10.1.2). Formel ($10.3.4$) gilt deshalb nur
-abseits dieser Stellen; in der Praxis wird die Ableitung dort auf null gesetzt
-(Beispiel 10.3.12).
+abseits echter Schalthyperebenen; in der Praxis wird dort meist die Ableitung
+null verwendet. Bei einer Nullzeile wäre die Komponente dagegen konstant null
+und differenzierbar (Beispiel 10.3.12).
 :::
 
 :::frage{falsch}

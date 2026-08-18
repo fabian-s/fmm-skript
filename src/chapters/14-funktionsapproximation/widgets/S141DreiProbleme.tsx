@@ -176,7 +176,7 @@ export function DreiProbleme() {
   return (
     <div className="my-2">
       <div className="flex flex-wrap items-start justify-center gap-4">
-        <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\approx 0"}>
+        <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline
             points={kurve((x) => f(x) + 0.045 * Math.sin(4 * Math.PI * x + 1))}

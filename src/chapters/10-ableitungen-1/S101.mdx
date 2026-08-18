@@ -91,11 +91,12 @@ für $h < 0$ dagegen $-h/h = -1$. Von rechts kommend messen wir also die
 Steigung $1$, von links die Steigung $-1$, und zwar für *jedes* $h$, nicht erst
 im Grenzwert. Der Grenzwert in ($10.1.1$) existiert damit nicht, $f$ ist in
 $x = 0$ nicht differenzierbar. Anschaulich lässt sich an einen Knick keine
-eindeutige Tangente anlegen. Das Problem sind dabei nicht zu wenige Kandidaten,
-sondern zu viele: Jede Gerade $y = m x$ mit $-1 \le m \le 1$ läuft durch den
-Punkt $(0, 0)$ und steigt sonst nirgends über den Graphen, denn
-$m x \le \left|x\right|$ für alle $x$; für $m = \pm 1$ fällt sie auf einer Seite
-sogar mit ihm zusammen. Stetig ist die Betragsfunktion trotzdem,
+eindeutige Tangente anlegen. Die verschiedenen einseitigen Sekantensteigungen
+zeigen bereits, warum. Daneben gibt es für jedes $-1 \le m \le 1$ eine Gerade
+$y = m x$, die den Graphen von unten stützt, denn $m x \le \left|x\right|$ für
+alle $x$. Das sind *Stützgeraden*, keine Tangenten im Sinn der Ableitung; ihre
+Steigungen werden in der konvexen Optimierung später als Subgradienten
+bezeichnet. Stetig ist die Betragsfunktion trotzdem,
 Knicke sind also kein Widerspruch zur :k[Stetigkeit]{#continuity}.
 :::
 
@@ -245,13 +246,16 @@ Die folgende Definition geht auf Maurice Fréchet zurück. Sie reicht für alle
 endlich-dimensionalen Räume und für einige unendlich-dimensionale.
 
 :::definition[10.1.5 (Fréchet-Ableitung)]
-Seien $\D$ und $\E$ zwei normierte Räume und $f\colon \D \to \E$. Wir nennen $f$
-an der Stelle $x \in \D$ *(Fréchet-)differenzierbar*, falls eine beschränkte
-lineare Abbildung $\cgreen{D_x f}\colon \D \to \E$ existiert, sodass
+Seien $\D$ und $\E$ zwei normierte Vektorräume und $f\colon \D \to \E$. Wir
+nennen $f$ an der Stelle $x \in \D$ *(Fréchet-)differenzierbar*, falls eine
+beschränkte lineare Abbildung $\cgreen{D_x f}\colon \D \to \E$ und ein Restterm
+$\cred{r(h)} \in \E$ existieren, sodass
 
 $$ {#eq-10.1.2}
-\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{o(\left\|h\right\|)}
-\qquad \text{für } h \to 0 .
+\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{r(h)}
+\qquad\text{und}\qquad
+\lim_{h\to0,\,h\ne0}
+\frac{\left\|\cred{r(h)}\right\|_{\E}}{\left\|h\right\|_{\D}}=0 .
 $$
 
 Die Abbildung $\cgreen{D_x f}$ heißt dann *Fréchet-Ableitung* von $f$ an der
@@ -262,6 +266,9 @@ Die Folien schreiben $\D$ und $\E$ für die beiden Räume, und wir übernehmen d
 mit dem Erwartungswert hat das $\E$ hier nichts zu tun. Auch die beiden
 Normstriche in ($10.1.2$) meinen zwei verschiedene Dinge: $\left\|h\right\|$ ist
 die Norm auf $\D$, der Restterm wird dagegen in der Norm auf $\E$ gemessen.
+Die häufige Kurzschreibweise $\cred{r(h)}=\cred{o(\left\|h\right\|)}$ meint genau
+die Grenzwertbedingung in ($10.1.2$): Das $o$ ist kein Skalar, den wir zu $f(x)$
+addieren, sondern beschreibt die Größe des $\E$-wertigen Restes.
 
 :::bemerkung[10.1.6 (Wie die Definition zu lesen ist)]
 Vier Punkte, die in der knappen Formulierung leicht untergehen.
