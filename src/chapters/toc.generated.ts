@@ -11,6 +11,7 @@ export interface TocSection {
 export const tocSections: Record<string, TocSection[]> = {
   "01-intro": [
     { id: "1.1", title: "Worum geht es in diesem Kurs?" },
+    { id: "1.2", title: "Landkarte des Kurses" },
   ],
   "02-algos": [
     { id: "2.1", title: "Numerische Probleme und Algorithmen" },
