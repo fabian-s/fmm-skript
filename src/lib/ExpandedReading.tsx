@@ -8,10 +8,10 @@ import { useState, type ReactNode } from "react";
 export function ExpandedReading({ title, children }: { title: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="my-4 rounded-lg border border-amber-300 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-950/30">
+    <div data-deep className="my-5 overflow-hidden rounded-lg border border-amber-600/30 bg-amber-50/60 dark:border-amber-400/25 dark:bg-amber-950/25">
       <button
         type="button"
-        className="flex w-full items-center gap-2 px-4 py-2 text-left font-medium text-amber-900 dark:text-amber-200"
+        className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left font-display text-[15px] font-semibold text-amber-900 hover:bg-amber-600/5 dark:text-amber-100 dark:hover:bg-amber-400/5"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >
@@ -21,10 +21,16 @@ export function ExpandedReading({ title, children }: { title: string; children: 
         >
           ▶
         </span>
-        <span className="text-amber-600 dark:text-amber-400">Vertiefung:</span> {title}
+        <span
+          data-deep-label
+          className="rounded-full bg-amber-600/10 px-2.5 py-0.5 text-[11.5px] font-semibold uppercase tracking-wider text-amber-800 dark:bg-amber-400/15 dark:text-amber-200"
+        >
+          Vertiefung
+        </span>{" "}
+        {title}
       </button>
       {/* keep mounted when closed so widget state (sliders etc.) survives */}
-      <div hidden={!open} className="border-t border-amber-200 px-4 py-3 dark:border-amber-800">
+      <div hidden={!open} className="border-t border-amber-600/20 px-4 py-3 dark:border-amber-400/20">
         {children}
       </div>
     </div>

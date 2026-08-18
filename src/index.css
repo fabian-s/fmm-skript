@@ -1,11 +1,59 @@
 @import "tailwindcss";
 
+/* Schriften liegen im Bundle, nicht bei Google: die Seite lädt nichts von
+   fremden Servern nach (Datenschutz), und offline funktioniert sie auch. */
+@import "@fontsource-variable/libre-franklin/index.css";
+@import "@fontsource-variable/source-sans-3/index.css";
+
+/*
+ * Entwurf „Handbuch": Grotesk-Paar, weißer Textgrund, kühlgraue Navigation,
+ * Petrol als einziger Akzent. Der Akzent überschreibt Tailwinds `sky`-Skala,
+ * damit alle bestehenden sky-Klassen (Links, Definitionsboxen, Knöpfe) ohne
+ * Einzelanpassung mitziehen.
+ */
+@theme {
+  --font-sans: "Source Sans 3 Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Libre Franklin Variable", var(--font-sans);
+
+  --color-sky-50: #f0f9fc;
+  --color-sky-100: #dcf0f7;
+  --color-sky-200: #bce0ec;
+  --color-sky-300: #8ecbdd;
+  --color-sky-400: #55adc8;
+  --color-sky-500: #2b8fac;
+  --color-sky-600: #0f7490;
+  --color-sky-700: #0e6078;
+  --color-sky-800: #124e61;
+  --color-sky-900: #134151;
+  --color-sky-950: #0a2936;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, summary, kbd {
+    font-family: var(--font-display);
+  }
+  h1, h2 {
+    letter-spacing: -0.02em;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition-duration: 0.01ms !important; }
+}
+
 body {
-  @apply bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100;
+  @apply bg-white text-slate-900 dark:bg-slate-900 dark:text-slate-100;
 }
 
 /* MathJax display equations shouldn't overflow narrow tooltips */
@@ -28,20 +76,23 @@ mjx-container > svg {
  * Schicht spiegelt nur die betroffenen Bibliotheksfarben in ihre dunklen
  * Gegenstücke; die sieben anderen Apps behalten ihre Komponenten unverändert.
  */
-.concept-body .border-sky-500 { background-color: rgb(8 47 73 / 0.4) !important; }
-.concept-body :is(.border-violet-500, .border-violet-400) { background-color: rgb(46 16 101 / 0.4) !important; }
-.concept-body .border-emerald-500 { background-color: rgb(2 44 34 / 0.4) !important; }
-.concept-body .border-amber-500 { background-color: rgb(69 26 3 / 0.3) !important; }
-.concept-body .border-slate-400 { background-color: rgb(30 41 59 / 0.4) !important; }
+.concept-body [data-env="Definition"] { background-color: rgb(8 47 73 / 0.45) !important; border-color: rgb(125 211 252 / 0.28) !important; }
+.concept-body [data-env="Theorem"] { background-color: rgb(46 16 101 / 0.45) !important; border-color: rgb(196 181 253 / 0.28) !important; }
+.concept-body [data-env="Beispiel"] { background-color: rgb(2 44 34 / 0.5) !important; border-color: rgb(110 231 183 / 0.28) !important; }
+.concept-body [data-env="Bemerkung"] { background-color: rgb(30 41 59 / 0.5) !important; border-color: rgb(148 163 184 / 0.3) !important; }
+.concept-body [data-env="Algorithmus"] { background-color: rgb(69 26 3 / 0.4) !important; border-color: rgb(252 211 77 / 0.28) !important; }
+.concept-body [data-env="Definition"] [data-env-label] { color: #7dd3fc !important; background-color: rgb(125 211 252 / 0.15) !important; }
+.concept-body [data-env="Theorem"] [data-env-label] { color: #c4b5fd !important; background-color: rgb(196 181 253 / 0.15) !important; }
+.concept-body [data-env="Beispiel"] [data-env-label] { color: #6ee7b7 !important; background-color: rgb(110 231 183 / 0.15) !important; }
+.concept-body [data-env="Bemerkung"] [data-env-label] { color: #cbd5e1 !important; background-color: rgb(148 163 184 / 0.18) !important; }
+.concept-body [data-env="Algorithmus"] [data-env-label] { color: #fcd34d !important; background-color: rgb(252 211 77 / 0.15) !important; }
+.concept-body [data-deep] { background-color: rgb(69 26 3 / 0.35) !important; border-color: rgb(252 211 77 / 0.25) !important; }
+.concept-body [data-deep] button { color: #fde68a !important; }
+.concept-body [data-deep-label] { color: #fcd34d !important; background-color: rgb(252 211 77 / 0.15) !important; }
 .concept-body .border-l-4.border-slate-300 {
   border-color: #475569 !important;
   background-color: rgb(30 41 59 / 0.3) !important;
 }
-.concept-body .border-amber-300 {
-  border-color: #b45309 !important;
-  background-color: rgb(69 26 3 / 0.3) !important;
-}
-.concept-body .border-amber-200 { border-color: #92400e !important; }
 .concept-body .text-amber-900 { color: #fde68a !important; }
 .concept-body .text-amber-600 { color: #fbbf24 !important; }
 .concept-body .border-slate-200 { border-color: #334155 !important; }
