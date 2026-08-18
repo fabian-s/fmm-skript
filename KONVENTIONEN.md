@@ -194,8 +194,9 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Kapitel 5 wird als ERSTES Kapitel in MDX geschrieben: `S51.mdx` …
   `S55.mdx` in `src/chapters/05-lgs/` (Registry nutzt `mdxSection`; nur
   der Orchestrator editiert `index.ts`). Autorenformat: MDX-Direktiven
-  (Muster: `src/chapters/mdx-lab/SLab.mdx`, Konzept-Muster:
-  `src/concepts/mdx-probe.mdx`); Quiz als `::::quiz` /
+  (Muster: `src/chapters/06-svd/S62.mdx` — das urspruengliche Muster
+  `mdx-lab/SLab.mdx` ist am 2026-08-18 mit den Werkstattseiten entfallen;
+  Konzept-Muster: `src/concepts/mdx-probe.mdx`); Quiz als `::::quiz` /
   `:::frage{wahr|falsch}`; Mathe mit EINFACHEN Backslashes ($\bA\bx=\bb$),
   Kursmakros direkt. Nach dem Schreiben: `npm run typecheck:mdx &&
   npm run test:mdx`.
