@@ -111,13 +111,18 @@ Speicherangaben verwenden dezimale Präfixe, $1$ kB sind also $1000$ Bytes;
 binär gerechnet sind die $8 \cdot 10^{10}$ Bytes der letzten Zeile
 $74{,}5$ GiB. Der Sprung von $p = 5$ auf $p = 10$ ist ein Faktor $10^5$,
 und der kommt allein daher, dass fünf weitere Variablen dazukommen.
+
+Die Folien nennen den vollen Tensoransatz schon ab $p > 3$ unpraktikabel. Am
+Speicher liegt das bei $K = 10$ nicht, denn $p = 4$ kostet erst $80$ kB. Es
+liegt an den Beobachtungen aus Bemerkung 15.5.3: Schon bei $p = 4$ sind
+$10\,000$ nötig, bevor die Anpassung eindeutig ist.
 :::
 
 Der statistische Preis ist derselbe. Er lässt sich mit dem, was wir in
 [Abschnitt 15.4](#sec-15.4) gerechnet haben, direkt hinschreiben.
 
 :::satz[15.5.5 (Mittlerer quadratischer Fehler im Multivariaten)]
-Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\epsilon_i}$ an $n$
+Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\eps_i}$ an $n$
 festen Stellen mit unkorrelierten, homoskedastischen Fehlern und passen
 ($15.5.1$) mit kubischen Spline-Bausteinen auf einem gleichmäßigen Gitter an.
 Hat $\corange{\bB}$ vollen Spaltenrang $K^p$ und sind die vierten partiellen
@@ -152,11 +157,30 @@ gemittelte Varianz $\sigma^2 K^p / n$.
 :::schritt
 Für den Bias zählen wir die Gitterweite. In jeder Variablen liegen $K$
 Basisfunktionen auf einem festen Intervall, also ist
-$\corange{h} = O(1/K)$ wie im univariaten Fall. Die
-Tensorprodukt-Approximation erbt von den kubischen Stücken die Ordnung
-$O(\corange{h}^4)$, quadriert also $O(K^{-8})$.
+$\corange{h} = O(1/K)$ wie im univariaten Fall. Der Rest läuft wie in
+Satz 15.4.2: Der Kleinste-Quadrate-Fit an die rauschfreien Werte ist an den
+Entwurfsstellen höchstens so schlecht wie jede andere Funktion des
+Ansatzraums, und im Ansatzraum liegt der Tensorprodukt-Interpolant von $f$.
 
-::why[Satz 15.4.2 mit derselben Rechnung; gebraucht werden dafür die vierten Ableitungen von $f$, hier die partiellen in jeder Variablen]
+::why[Schritt 2 jenes Beweises benutzt nur die Optimalität der Kleinste-Quadrate-Lösung; wie viele Spalten die Designmatrix hat, geht auch dort nicht ein]
+:::
+
+:::schritt
+Der Fehler dieses Interpolanten ist noch von der Ordnung $\corange{h}^4$.
+Wir bauen ihn aus den univariaten Interpolationsoperatoren
+$P_1, \dots, P_p$, einem je Variable, und setzen $T_0 = \mathrm{Id}$ sowie
+$T_i = P_1 \cdots P_i$; der Tensorprodukt-Interpolant ist $T_p f$. Dann ist
+
+$$
+f - T_p f = \sum_{i=1}^{p} T_{i-1}\bigl(f - P_i f\bigr) .
+$$
+
+Der Faktor $f - P_i f$ ist nach Satz 15.2.2 von der Ordnung $\corange{h}^4$,
+und die $T_{i-1}$ sind in der Maximumsnorm gleichmäßig in $\corange{h}$
+beschränkt; damit gilt die Ordnung für jeden Summanden und für die Summe der
+$p$ Stück. Quadriert steht $O(\corange{h}^8) = O(K^{-8})$ da.
+
+::why[Die Summe teleskopiert zu $T_0 f - T_p f$; Satz 15.2.2 braucht in der $i$-ten Variablen die vierte Ableitung, also gerade die beschränkten vierten partiellen Ableitungen der Voraussetzung. Die gleichmäßige Beschränktheit der Interpolationsoperatoren ist die einzige Zutat aus der Spline-Theorie, die wir hier nicht selbst beweisen]
 :::
 
 :::schritt
@@ -190,15 +214,23 @@ und damit ($15.5.3$).
 
 ::::
 
+Aus der Optimalitätsbedingung fällt nebenbei ab, wie sich der Fehler im
+Optimum aufteilt. Setzen wir $8 c_1 (K^\star)^{-9} = c_2\, p\, (K^\star)^{p-1}/n$
+in die beiden Summanden ein, so ist
+$c_1 (K^\star)^{-8} = \tfrac{p}{8}\, c_2 (K^\star)^p / n$: Der quadrierte Bias
+trägt den Anteil $p/(8+p)$ am MSE. Für $p = 1$ ist das genau das Neuntel aus
+Bemerkung 15.4.7, für $p = 10$ schon mehr als die Hälfte. Mit der Dimension
+wandert das Gewicht also vom Rauschen zur Approximation.
+
 :::bemerkung[15.5.6 (Wie viele Daten die Rate verlangt)]
 Gleichung ($15.5.3$) gilt bei optimal gewähltem $K$, nicht für jedes $K$; die
 Folien sagen das inzwischen ausdrücklich, und wichtig ist es, weil die Summe
 in ($15.5.2$) für schlecht gewähltes $K$ beliebig groß werden kann.
 
 Lesen wir die Rate von der anderen Seite, so sehen wir, was sie kostet. Wie
-groß muss $n$ sein, damit der MSE unter eine Schranke $\varepsilon$ fällt?
-Aus $n^{-8/(8+p)} \le \varepsilon$ folgt $n \ge \varepsilon^{-(8+p)/8}$, für
-$\varepsilon = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
+groß muss $n$ sein, damit der MSE unter eine Schranke $\delta$ fällt? Aus
+$n^{-8/(8+p)} \le \delta$ folgt $n \ge \delta^{-(8+p)/8}$, für
+$\delta = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
 
 | Dimension $p$ | Rate | $n$ für MSE $\le 0{,}01$ | Folienwert |
 |:---|---:|---:|---:|
@@ -209,20 +241,20 @@ $\varepsilon = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
 
 Die dritte Spalte ist unsere eigene Rechnung mit versteckter Konstante $1$,
 die vierte zitiert die Folien. Deren Fußnote nennt die Werte *illustrativ*,
-und so sind sie auch zu lesen: Die entscheidenden Konstanten hängen am
-Problem, nicht an der Rate, und in Bemerkung 15.4.7 haben wir für $p = 1$
-gesehen, wie weit die versteckte Konstante die Zahl verschieben kann. Als
-Zahlen genommen streuen die Folienwerte in beide Richtungen: Bei $p = 1$
-liefert $n = 10^2$ mit derselben Konstanten $1$ noch $\MSE = 0{,}0167$,
-reicht also nicht ganz, während $10^4$ und $10^5$ bei $p = 5$ und $p = 10$
-deutlich mehr sind als nötig.
+und so sind sie auch zu lesen. Auf der Folie steht die Fußnote allerdings an
+der Ratenspalte, obwohl die Raten exakt sind: Unsicher ist allein die
+$n$-Spalte, denn die entscheidenden Konstanten stecken im Problem und nicht
+in der Rate. Bemerkung 15.4.7 hat für $p = 1$ vorgeführt, wie weit sie die
+Zahl verschieben können. Als Zahlen genommen streuen die Folienwerte in beide
+Richtungen: Bei $p = 1$ liefert $n = 10^2$ mit derselben Konstanten $1$ noch
+$\MSE = 0{,}0167$, reicht also nicht ganz, während $10^4$ und $10^5$ bei
+$p = 5$ und $p = 10$ deutlich mehr sind als nötig.
 
 Die Botschaft der Spalte bleibt davon unberührt, und sie steckt im Exponenten
 $(8+p)/4$. Jede weitere Variable multipliziert die nötige Datenmenge mit
 $10^{1/4} \approx 1{,}78$, bei schärferer Genauigkeitsforderung mit noch mehr:
-für $\varepsilon = 10^{-4}$ mit $\varepsilon^{-1/8} \approx 3{,}16$ je
-Dimension. Der Datenhunger wächst also exponentiell in $p$, ganz so wie der
-Speicherbedarf.
+für $\delta = 10^{-4}$ mit $\delta^{-1/8} \approx 3{,}16$ je Dimension. Der
+Datenhunger wächst also exponentiell in $p$, ganz so wie der Speicherbedarf.
 :::
 
 :::bemerkung[15.5.7 (Auch die Auswertung kostet)]
@@ -235,10 +267,10 @@ Mit B-Splines wird es besser, denn die haben kompakten Träger
 Stelle $x$ sind von den $K$ Basisfunktionen einer Variablen höchstens $q+1$
 von null verschieden, bei kubischen also vier. Im Produkt bleiben damit
 höchstens $(q+1)^p$ Summanden übrig, für $p = 10$ und $q = 3$ noch
-$4^{10} = 1\,048\,576$ statt $10^{10}$. Das ist eine Ersparnis um fünf
-Größenordnungen und ändert nichts am Grundproblem: $4^p$ wächst exponentiell
-wie $10^p$, nur mit kleinerer Basis. Gespeichert werden müssen die $K^p$
-Koeffizienten ohnehin alle.
+$4^{10} = 1\,048\,576$ statt $10^{10}$. Das ist ein Faktor von rund $9500$,
+also knapp vier Größenordnungen, und es ändert nichts am Grundproblem: $4^p$
+wächst exponentiell wie $10^p$, nur mit kleinerer Basis. Gespeichert werden
+müssen die $K^p$ Koeffizienten ohnehin alle.
 :::
 
 ### Additive Modelle statt voller Produkte
@@ -297,11 +329,17 @@ Modells, beides über der Dimension $p$ und mit logarithmischer senkrechter
 Achse. Der Tensoransatz ist dort eine Gerade, das additive Modell eine flach
 liegende Kurve.
 
-Der zweite Regler ändert $K$. Er verschiebt die grüne Kurve kaum und kippt die
-orange Gerade steiler oder flacher: Bei einer Geraden im logarithmischen Bild
-sitzt $K$ in der Steigung. Die Tafel daneben rechnet Speicherbedarf,
-Mindestzahl an Beobachtungen und die Konvergenzrate zum eingestellten Zustand
-mit.
+Der zweite Regler ändert $K$. Die orange Gerade rührt sich dabei nicht vom
+Fleck, denn die Achse wächst mit: Ihr oberer Rand ist immer $K^{10}$, und die
+Gerade läuft stets von einem Zehntel der Höhe bis nach ganz oben. Ablesen
+lässt sich der Unterschied an der Beschriftung, die bei $K = 4$ bis $10^6$
+reicht und bei $K = 20$ bis $10^{12}$, und am Abstand zur grünen Kurve: Die
+sinkt ab, weil $pK+1$ mit $K$ nur linear wächst, während $K^p$ eine Potenz
+gewinnt. Die Tafel daneben rechnet Speicherbedarf, Mindestzahl an
+Beobachtungen, Konvergenzrate und die für $\MSE \le 0{,}01$ nötige Datenmenge
+zum eingestellten Zustand mit. In der additiven Spalte zählt die Zeile
+„Beobachtungen mindestens" die nach Zentrierung frei wählbaren $p(K-1)+1$
+Koeffizienten, nicht die $pK+1$ der Zeile darüber.
 
 <SkalierungTensorGam />
 :::
@@ -328,13 +366,16 @@ Vorlesung *Statistik V: Konzepte statistischer Modellierung* im Bachelor.
 
 ### Finito
 
-Damit endet der Kurs. Begonnen haben wir mit der Frage, warum Rechnen mit
-endlicher Genauigkeit überhaupt schiefgehen kann, und mit dem Handwerkszeug
-dagegen: Kondition, Stabilität, Aufwandsanalyse. Darauf baute die numerische
-lineare Algebra auf, von der Elimination über die Zerlegungen bis zur
-Singulärwertzerlegung, und darauf wiederum die Analysis mehrerer
-Veränderlicher mit Ableitungen, Konvexität und Optimierung. Die letzten beiden
-Kapitel haben alles zusammengeführt: Eine Spline-Anpassung ist ein
+Damit endet der Kurs. [Abschnitt 1.1](?k=01-intro#sec-1.1) hat ihn in drei
+Blöcke geteilt, und alle drei sind abgearbeitet. Der erste, *Numerische
+lineare Algebra*, begann mit der Frage, warum Rechnen mit endlicher
+Genauigkeit überhaupt schiefgehen kann, und mit dem Handwerkszeug dagegen:
+Kondition, Stabilität, Aufwandsanalyse. Darauf folgten die Zerlegungen, von
+der Elimination bis zur Singulärwertzerlegung. Der zweite Block, *Analysis
+und Optimierung*, verallgemeinerte die Ableitung auf Vektoren, Matrizen und
+Tensoren und baute darauf Konvexität und die Verfahren zur Minimierung. Der
+dritte ist die Funktionsapproximation dieser beiden letzten Kapitel, und in
+ihm läuft alles zusammen: Eine Spline-Anpassung ist ein
 Kleinste-Quadrate-Problem, ihre Lösung ein Zerlegungsverfahren, ihre Güte
 eine Frage von Approximationsordnung und Kondition, und ihre Modellwahl ein
 Optimierungsproblem.
@@ -348,8 +389,9 @@ Optimierungsproblem.
    ([Abschnitt 15.1](#sec-15.1)).
 2. **Approximationsordnung.** Für $f \in \Ccal^4$ ist der Fehler des
    interpolierenden kubischen Splines durch
-   $C \corange{h}^4 \max_x \left| f^{(4)}(x) \right|$ beschränkt, mit
-   passenden Randbedingungen sogar mit $C = 5/384$: Halbierte Gitterweite
+   $C \corange{h}^4 \max_x \left| f^{(4)}(x) \right|$ beschränkt, für den
+   *vollständigen* Spline mit $\cgreen{s'(a)} = f'(a)$ und
+   $\cgreen{s'(b)} = f'(b)$ sogar mit $C = 5/384$: Halbierte Gitterweite
    heißt Schranke durch $16$. Die Ordnung hängt am Grad und an der
    Glattheit, stückweise linear liefert nur $\corange{h}^2$
    ([Abschnitt 15.2](#sec-15.2)).
@@ -358,15 +400,15 @@ Optimierungsproblem.
    $\min_{\ba} \left\| \cblue{\by} - \corange{\bB}\ba \right\|_2^2$. Der
    zweite Weg ist $K = n$ mit einem Strafterm $\lambda \int (g'')^2 \dx$,
    also ein Glättungsspline ([Abschnitt 15.3](#sec-15.3)).
-4. **Bias-Varianz.** Der quadrierte Bias fällt wie $O(K^{-8})$, die
-   gemittelte Varianz ist exakt $\sigma^2 K/n$. Das Optimum liegt bei
-   $K \sim n^{1/9}$ und liefert $\MSE = O(n^{-8/9})$; weil $f$ unbekannt
-   ist, wird $K$ in der Praxis über Kreuzvalidierung, AIC, BIC oder GCV
-   gewählt ([Abschnitt 15.4](#sec-15.4)).
+4. **Bias-Varianz.** Der quadrierte Bias fällt wie $O(K^{-8})$, und bei
+   vollem Spaltenrang ist die gemittelte Varianz exakt $\sigma^2 K/n$. Das
+   Optimum liegt bei $K \sim n^{1/9}$ und liefert $\MSE = O(n^{-8/9})$; weil
+   $f$ unbekannt ist, wird $K$ in der Praxis über Kreuzvalidierung, AIC, BIC
+   oder GCV gewählt ([Abschnitt 15.4](#sec-15.4)).
 5. **Fluch der Dimensionalität.** Die Tensor-Produkt-Basis braucht $K^p$
-   Koeffizienten und erreicht nur noch $O(n^{-8/(8+p)})$. Additive Modelle
-   ersetzen das Produkt durch eine Summe, kommen mit $O(pK)$ Koeffizienten
-   aus und sind zusätzlich interpretierbar.
+   Koeffizienten und erreicht, wieder bei optimal gewähltem $K$, nur noch
+   $O(n^{-8/(8+p)})$. Additive Modelle ersetzen das Produkt durch eine Summe,
+   kommen mit $O(pK)$ Koeffizienten aus und sind zusätzlich interpretierbar.
 :::
 
 ### Selbsttest zum Kapitel
@@ -409,7 +451,7 @@ invertierbarer Designmatrix ist die Kleinste-Quadrate-Lösung
 $\cgreen{\wh\ba} = \corange{\bB}^{-1}\cblue{\by}$, die Residuenquadratsumme
 null und jeder Punkt exakt getroffen; mit $K < n$ wird daraus Glättung
 (Definition 15.3.8). Interpolation ist also der Randfall, und ein guter
-Schätzer ist sie nicht: Sie übernimmt die Fehler $\cred{\epsilon_i}$
+Schätzer ist sie nicht: Sie übernimmt die Fehler $\cred{\eps_i}$
 punktweise.
 :::
 
@@ -471,8 +513,7 @@ angemerkt.
 
 ::::
 
-*Vertiefung: Heath behandelt Splines und ihre Approximationseigenschaften in
-Kapitel 7. Tensorprodukt-Splines und additive Modelle samt `mgcv` entwickelt
+*Vertiefung: Tensorprodukt-Splines und additive Modelle samt `mgcv` entwickelt
 S. N. Wood, Generalized Additive Models: An Introduction with R, 2. Auflage
 2017; die Rate additiver Schätzer geht auf C. J. Stone, Additive regression
 and other nonparametric models, Annals of Statistics 13 (1985), 689–705,

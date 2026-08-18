@@ -13,9 +13,10 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  * Knoten x = 0, 1, 2 bleiben fest, damit B fest bleibt.
  *
  * Geschlossene Loesungsformeln (per node gegen eine Gauss-Elimination mit
- * Spaltenpivotierung ueber ALLE 13^3 = 2197 Reglerzustaende geprueft,
- * groesster Fehler 3,6e-15; dabei zugleich bestaetigt, dass beide Basen an
- * jeder Stelle DIESELBE Funktion liefern):
+ * Spaltenpivotierung ueber ALLE 13^3 = 2197 Reglerzustaende geprueft: in
+ * beiden Basen stimmen sie EXAKT ueberein, Abweichung 0; die beiden Basen
+ * liefern punktweise dieselbe Funktion, groesste Differenz 5,3e-15 auf dem
+ * 0,005-Raster ueber [-0,2; 2,2]):
  *   Monom:  a1 = y1, a3 = (y1 - 2 y2 + y3)/2, a2 = y2 - y1 - a3
  *   Newton: a1 = y1, a2 = y2 - y1, a3 = (y1 - 2 y2 + y3)/2
  * Voreinstellung y = (1, 2, 5): a = (1, 0, 1) bzw. (1, 1, 1), beide Male
@@ -107,7 +108,8 @@ export function BasisRechner() {
         nur die rechte Seite <M>{"\\by"}</M> wandert mit. Der Schalter wechselt
         das Basissystem, ohne den Ansatzraum zu ändern: Beide Basen spannen die
         Polynome vom Grad höchstens 2 auf, die grüne Kurve springt beim Wechsel
-        deshalb nicht, nur die Koeffizienten <M>{"\\ba"}</M> tun es.
+        deshalb nicht; ändern darf sich allein der Koeffizientenvektor{" "}
+        <M>{"\\ba"}</M>.
       </p>
 
       <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
@@ -236,7 +238,7 @@ export function BasisRechner() {
           <p className="mt-1 max-w-[20rem]">
             {gerade
               ? "Der quadratische Baustein hat Gewicht a₃ = 0. Der Interpolant ist eine Gerade, obwohl wir im Raum der Polynome vom Grad höchstens 2 gesucht haben."
-              : `Alle drei Bausteine tragen bei; das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}.`}
+              : `Der quadratische Baustein trägt mit dem Gewicht a₃ = ${fmt(a[2])}; die grüne Kurve ist deshalb echt gekrümmt und keine Gerade.`}
           </p>
         </div>
       </div>

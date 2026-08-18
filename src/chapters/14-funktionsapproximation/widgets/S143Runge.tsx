@@ -10,6 +10,16 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  * und der Aufbau des RungeExplorerWidget). ALLE Texte, Beschriftungen,
  * Statuszeilen und Zahlformate sind fuer dieses Skript neu geschrieben
  * (App-Prosa ist buchadaptiert und im oeffentlichen Repo verboten).
+ * Review 14.3 (2026-08-14): Einleitung, Schluss-Absatz und der Hinweis auf
+ * den beschnittenen Ausschnitt waren noch eingedeutschte Quell-Captions und
+ * sind aus dem Kapiteltext heraus neu formuliert; die Aussage ueber gerade
+ * Knotenzahlen gilt erst ab n = 6 (bei n = 4 ist der Fehler 0,707 gegen
+ * 0,646 bei n = 3) und traegt jetzt diese Einschraenkung. Ebenfalls Review:
+ * "Grad n-1" ist bei GERADEM n falsch - f ist gerade, die Knoten liegen
+ * symmetrisch, also ist der Interpolant gerade und sein fuehrender
+ * Koeffizient null (node: a_{n-1} = -4,7e-17 / -2,3e-16 / -3,1e-13 fuer
+ * n = 4 / 6 / 10 gegen max|a| = 0,29 / 1,7 / 45); die Readouts sagen daher
+ * "Grad hoechstens".
  *
  * Verifiziert mit node (check-s143.mjs / check2-s143.mjs, 2026-08-13),
  * max|f - p| auf [-1,1] bei n Knoten:
@@ -133,7 +143,7 @@ export function RungeExplorer() {
 
   const amRand = Math.abs(ort) > 0.7;
   const wo = amRand ? "also nahe am Rand" : "also im mittleren Bereich";
-  const kopf = `${modus === "cheb" ? "Chebyshev-Knoten" : "Äquidistante Knoten"}, Grad ${n - 1}: größter Abstand ${fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)} bei x = ${fmt(ort, 2)}, ${wo}.`;
+  const kopf = `${modus === "cheb" ? "Chebyshev-Knoten" : "Äquidistante Knoten"}, Grad höchstens ${n - 1}: größter Abstand ${fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)} bei x = ${fmt(ort, 2)}, ${wo}.`;
   const status =
     modus === "cheb"
       ? `${kopf} Zu den Rändern hin liegen die Knoten dichter, und dort bleibt die Kurve ruhig.`
@@ -153,13 +163,14 @@ export function RungeExplorer() {
   return (
     <div className="my-2 text-sm">
       <p className="mb-2">
-        Der Interpolant <M>{"p_{n-1}"}</M> (grün) läuft durch die{" "}
-        <M>{"n"}</M> blauen Stützpunkte auf dem Graphen von{" "}
-        <M>{"f(x) = 1/(1+25x^2)"}</M> (grau). Schieben wir <M>{"n"}</M> mit
-        äquidistanten Knoten nach oben, so wird die Anpassung in der Mitte
-        immer besser, während die Ausschläge nahe <M>{"\\pm 1"}</M> aus dem
-        Ruder laufen. Mit Chebyshev-Knoten fällt derselbe Gradanstieg den
-        Fehler überall.
+        Grau steht Runges Funktion <M>{"f(x) = 1/(1+25x^2)"}</M>, blau die{" "}
+        <M>{"n"}</M> Stützpunkte darauf und grün das Polynom{" "}
+        <M>{"p_{n-1}"}</M>, das Satz 14.3.5 dazu liefert. Der Regler bestimmt,
+        wie viele Stützpunkte wir setzen, die Schalter, wo sie liegen. Damit
+        lassen sich die beiden Behauptungen aus Bemerkung 14.3.16 und
+        Bemerkung 14.3.17 nachprüfen: dass der Fehler nicht bei jedem Schritt
+        wächst, und dass die Knotenlage darüber entscheidet, ob er am Ende
+        überhaupt wächst.
       </p>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -213,7 +224,7 @@ export function RungeExplorer() {
             Grau die Funktion <M>{"f"}</M>, blau die Stützpunkte, grün der
             Interpolant.
             {beschnitten
-              ? " Der Interpolant verlässt am Rand das gezeichnete Fenster."
+              ? " Am Rand läuft der Interpolant aus dem Ausschnitt heraus; der Fehler unten misst trotzdem über das ganze Intervall."
               : ""}
           </p>
         </div>
@@ -241,7 +252,7 @@ export function RungeExplorer() {
       </div>
 
       <p className="font-mono text-xs">
-        n = {n}, Grad {n - 1}, {modus === "aequi" ? "äquidistant" : "Chebyshev"}: max|f − p| ≈{" "}
+        n = {n}, Grad ≤ {n - 1}, {modus === "aequi" ? "äquidistant" : "Chebyshev"}: max|f − p| ≈{" "}
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
       <p className="mt-1">
@@ -249,15 +260,16 @@ export function RungeExplorer() {
         {vergleich}
       </p>
       <p className="mt-1">
-        Die rechte Tafel zeigt beide Verläufe auf logarithmischer Achse. Die
-        äquidistante Kurve dreht nach oben, zickzackt dabei aber kräftig:
-        gerade Knotenzahlen schneiden hier besser ab als die benachbarten
-        ungeraden, und von <M>{"n = 5"}</M> auf <M>{"n = 10"}</M> fällt der
-        Fehler sogar. Divergenz heißt also nicht, dass jeder einzelne Schritt
-        schlechter wird. Die Chebyshev-Kurve läuft dagegen stetig nach unten,
-        bei <M>{"n = 4, 6, 8"}</M> liegt sie sogar über der anderen: Ihr Gewinn
-        ist ein Versprechen für große <M>{"n"}</M>, kein Sieg in jedem
-        Einzelfall.
+        An der äquidistanten Kurve rechts lassen sich zwei Dinge zugleich
+        ablesen. Ihr Trend zeigt nach oben, das ist die Divergenz aus
+        Bemerkung 14.3.16. Sie sägt dabei aber kräftig: Ab{" "}
+        <M>{"n = 6"}</M> liegt jede gerade Knotenzahl unter beiden ungeraden
+        Nachbarn, und zwischen <M>{"n = 5"}</M> und <M>{"n = 10"}</M> sinkt
+        der Fehler von 0,438 auf 0,300. Unbeschränktes Wachstum heißt eben
+        nicht Wachstum in jedem Schritt. Die Chebyshev-Kurve sinkt im Trend,
+        liegt bei <M>{"n = 4"}</M>, <M>{"6"}</M> und <M>{"8"}</M> aber über
+        der anderen. Ihr Vorteil ist eine Aussage über große <M>{"n"}</M>,
+        keine Garantie für jeden einzelnen Vergleich.
       </p>
     </div>
   );

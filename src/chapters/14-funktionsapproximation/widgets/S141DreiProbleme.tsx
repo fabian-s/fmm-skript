@@ -11,19 +11,26 @@ import { M, Slider } from "../../../lib";
  * eingebetteten Vektor (kein Math.random im Render). z_i ist auf Mittelwert
  * 0 und Streuung 1 normiert, das Rausch-Niveau sigma skaliert es.
  *
- * Verifiziert (node, gen-noise-s141.mjs):
+ * Verifiziert (node, gen-noise-s141.mjs, rev141b/c.mjs):
  *  - f(x) = 0,5 + 0,28 sin(2 pi x - 0,9) laeuft auf [0,1] zwischen 0,220
  *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,956] und
  *    damit im Bildausschnitt.
  *  - g(x) = 0,06 sin(5 pi x) verschwindet an allen Knoten 0; 0,2; ...; 1
  *    (numerisch < 1e-16), die gruene Kurve der mittleren Tafel interpoliert
  *    also exakt.
- *  - RMS-Abstand der Punkte zur gruenen Kurve ist exakt sigma (weil die
- *    z_i auf RMS 1 normiert sind).
+ *  - RMS-Abstand der Punkte zu f ist sigma bis auf 1e-4 relativ (die z_i
+ *    haben Mittelwert 8,3e-5 und quadratisches Mittel 1,000084).
+ *  - f liegt im Spann der drei Basisfunktionen 1, sin(2 pi x), cos(2 pi x)
+ *    (Koeffizienten 0,5; 0,17405; -0,21933), die KQ-Schaetzung der dritten
+ *    Tafel trifft f bei sigma = 0 deshalb exakt; bei sigma = 0,07 bzw. 0,12
+ *    liegt ihr groesster Abstand zu f bei 0,057 bzw. 0,098, und sie bleibt
+ *    im Bildausschnitt (0,214 bis 0,786).
+ *  - Der groesste Abstand ist |da| + sqrt(db^2 + dc^2) mit den
+ *    Koeffizientendifferenzen, weil ueber [0,1] eine volle Periode laeuft.
  *
  * Farbcode Kapitel 14: Daten blau, Schaetzer/Interpolant gruen,
- * Problemzone (hier die Residuen) rot; die unbekannte wahre Funktion f
- * bleibt neutral grau.
+ * Fehler rot; die unbekannte wahre Funktion f bleibt in allen drei Tafeln
+ * neutral grau.
  */
 
 const DATEN = "#0072B2";
@@ -53,6 +60,49 @@ const g = (x: number) => 0.06 * Math.sin(5 * Math.PI * x);
 /** Beobachtungsstellen und fester Rauschvektor der Glaettungstafel. */
 const XOBS = [0.042, 0.125, 0.208, 0.292, 0.375, 0.458, 0.542, 0.625, 0.708, 0.792, 0.875, 0.958];
 const ZOBS = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
+
+/** Basis der Glaettungstafel; f liegt in ihrem Spann. */
+const phi = (x: number) => [1, Math.sin(2 * Math.PI * x), Math.cos(2 * Math.PI * x)];
+const WAHRE_KOEF = [0.5, 0.28 * Math.cos(0.9), -0.28 * Math.sin(0.9)];
+
+/** 3x3-System mit Teilpivotierung loesen (Kapitel 5). */
+function loese3(A: number[][], b: number[]): number[] {
+  const M = A.map((zeile, i) => [...zeile, b[i]]);
+  for (let k = 0; k < 3; k++) {
+    let p = k;
+    for (let i = k + 1; i < 3; i++) if (Math.abs(M[i][k]) > Math.abs(M[p][k])) p = i;
+    [M[k], M[p]] = [M[p], M[k]];
+    for (let i = k + 1; i < 3; i++) {
+      const m = M[i][k] / M[k][k];
+      for (let j = k; j < 4; j++) M[i][j] -= m * M[k][j];
+    }
+  }
+  const c = [0, 0, 0];
+  for (let i = 2; i >= 0; i--) {
+    let s = M[i][3];
+    for (let j = i + 1; j < 3; j++) s -= M[i][j] * c[j];
+    c[i] = s / M[i][i];
+  }
+  return c;
+}
+
+/** Kleinste-Quadrate-Anpassung der drei Basisfunktionen an die Punkte. */
+function kqFit(y: number[]): number[] {
+  const A = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ];
+  const b = [0, 0, 0];
+  XOBS.forEach((x, i) => {
+    const p = phi(x);
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) A[r][c] += p[r] * p[c];
+      b[r] += p[r] * y[i];
+    }
+  });
+  return loese3(A, b);
+}
 
 const fmt = (v: number, d = 2) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
 
@@ -119,6 +169,10 @@ export function DreiProbleme() {
     (best, y, i) => (Math.abs(y - f(XOBS[i])) > best.d ? { d: Math.abs(y - f(XOBS[i])), x: XOBS[i] } : best),
     { d: 0, x: 0 },
   );
+  const koef = kqFit(yObs);
+  const fhut = (x: number) => koef[0] + koef[1] * Math.sin(2 * Math.PI * x) + koef[2] * Math.cos(2 * Math.PI * x);
+  const abstand =
+    Math.abs(koef[0] - WAHRE_KOEF[0]) + Math.hypot(koef[1] - WAHRE_KOEF[1], koef[2] - WAHRE_KOEF[2]);
   return (
     <div className="my-2">
       <div className="flex flex-wrap items-start justify-center gap-4">
@@ -138,8 +192,8 @@ export function DreiProbleme() {
             <circle key={x} cx={sx(x)} cy={sy(f(x))} r={3.5} fill={DATEN} />
           ))}
         </Tafel>
-        <Tafel titel="Glättung" formula={"y_i = \\wh{f}(x_i) + \\eps_i \\ \\ \\forall i"}>
-          <polyline points={kurve(f)} fill="none" stroke={SCHAETZER} strokeWidth={2} />
+        <Tafel titel="Glättung" formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}>
+          <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           {XOBS.map((x, i) => (
             <line
               key={`r${x}`}
@@ -151,19 +205,22 @@ export function DreiProbleme() {
               strokeWidth={1.5}
             />
           ))}
+          <polyline points={kurve(fhut)} fill="none" stroke={SCHAETZER} strokeWidth={2} />
           {XOBS.map((x, i) => (
             <circle key={x} cx={sx(x)} cy={sy(yObs[i])} r={3.5} fill={DATEN} />
           ))}
         </Tafel>
       </div>
       <p className="mt-2 text-sm">
-        Grau gestrichelt läuft in den ersten beiden Tafeln die Funktion <M>{"f"}</M>, die wir treffen
+        Grau gestrichelt läuft in allen drei Tafeln dieselbe Funktion <M>{"f"}</M>, die wir treffen
         wollen, grün unser <M>{"\\wh{f}"}</M>, blau die Datenpunkte. Links darf{" "}
         <M>{"\\wh{f}"}</M> überall ein
         wenig danebenliegen, muss aber nirgends genau treffen. In der Mitte ist es umgekehrt: An den
         sechs Knoten sitzt <M>{"\\wh{f}"}</M> exakt auf den Daten, dazwischen weicht es sichtbar von{" "}
-        <M>{"f"}</M> ab. Rechts streuen die Beobachtungen um die grüne Kurve, die roten Strecken sind
-        die Fehler <M>{"\\eps_i"}</M>.
+        <M>{"f"}</M> ab. Rechts streuen die Beobachtungen um <M>{"f"}</M>, die roten Strecken sind
+        die Fehler <M>{"\\eps_i"}</M>; das grüne <M>{"\\wh{f}"}</M> entsteht dort als
+        Kleinste-Quadrate-Anpassung der drei Funktionen <M>{"1"}</M>, <M>{"\\sin(2\\pi x)"}</M> und{" "}
+        <M>{"\\cos(2\\pi x)"}</M> an die zwölf Punkte.
       </p>
       <Slider
         label="σ (Rauschen)"
@@ -176,17 +233,25 @@ export function DreiProbleme() {
       />
       <p className="mt-1 text-sm">
         {rms === 0 ? (
-          "Bei σ = 0 liegen alle zwölf Punkte exakt auf der grünen Kurve, alle Residuen sind null: Die Glättungsaufgabe ist zur Interpolationsaufgabe zusammengefallen."
+          <>
+            Bei σ = 0 verschwinden alle zwölf Fehler, die Punkte liegen exakt auf{" "}
+            <M>{"f"}</M>, und die grüne Schätzung trifft <M>{"f"}</M> genau: Die Glättungsaufgabe
+            ist zur Interpolationsaufgabe zusammengefallen.
+          </>
         ) : (
           <>
-            Mittlerer Abstand der Punkte zur grünen Kurve (quadratisches Mittel):{" "}
-            <span className="font-mono">{fmt(rms, 3)}</span>, der größte Einzelabstand{" "}
+            Die Fehler <M>{"\\eps_i"}</M> messen im quadratischen Mittel{" "}
+            <span className="font-mono">{fmt(rms, 3)}</span>, der größte einzelne{" "}
             <span className="font-mono" style={{ color: FEHLER }}>
               {fmt(groesster.d, 3)}
             </span>{" "}
-            bei <span className="font-mono">x = {fmt(groesster.x, 3)}</span>. Solange σ &gt; 0 ist,
-            wäre eine Kurve durch alle Punkte die falsche Antwort, denn sie würde das Rauschen
-            mitzeichnen.
+            bei <span className="font-mono">x = {fmt(groesster.x, 3)}</span>. Die grüne Schätzung
+            bleibt trotzdem überall höchstens{" "}
+            <span className="font-mono" style={{ color: SCHAETZER }}>
+              {fmt(abstand, 3)}
+            </span>{" "}
+            von <M>{"f"}</M> entfernt. Eine Kurve durch alle zwölf Punkte hätte dagegen jeden roten
+            Ausschlag mitgezeichnet.
           </>
         )}
       </p>

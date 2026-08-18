@@ -152,10 +152,19 @@ steht $\corange{h}^2$ statt $\corange{h}^4$ (Satz 15.2.5), bei einer
 einziges breites Teilintervall verdirbt die Gitterweite unabhängig davon, wie
 fein der Rest liegt (Definition 15.2.1).
 
-Was die Folien in der Kurzform $\max_x |f(x) - \cgreen{\wh{f}(x)}| = O(\corange{h}^4)$
-schreiben, ist die punktweise Fassung ohne Rauschen. Satz 15.4.2 mittelt
-stattdessen über die Entwurfsstellen und quadriert; das ist die Größe,
+Was die Folien in der Kurzform
+$\max_x |f(x) - \cgreen{\wh{f}(x)}| = O(\corange{h}^4) = O(K^{-4})$
+schreiben, ist die punktweise Fassung ohne Rauschen. Wir mitteln stattdessen
+über die Entwurfsstellen und quadrieren; das ist die Größe,
 die gleich in den MSE eingeht, und sie erbt die Ordnung $O(K^{-8})$.
+
+Der Unterschied ist nicht bloß Geschmack. Die Schranke aus Satz 15.2.2 gehört
+dem *interpolierenden* Spline, und für $K < n$ ist $\cgreen{\wh{f}}$ gerade
+kein Interpolant. In der Supremumsnorm folgt aus der einen Aussage die andere
+nicht ohne Weiteres; gebraucht wird dafür, dass die Projektion auf den
+Splineraum auch in der Supremumsnorm beschränkt bleibt. An den
+Entwurfsstellen gemittelt dagegen liefert die Kleinste-Quadrate-Optimalität
+den Vergleich in einer Zeile, und genau so führt ihn Schritt 4 des Beweises.
 :::
 
 ### Varianz: der Preis für zu viele Basisfunktionen
@@ -242,10 +251,12 @@ Regression mit $K$ Basisfunktionen ist sie schlicht $K$.
 
 Vorsicht bei der punktweisen Lesart. Formel ($15.4.5$) mittelt, ($15.4.4$)
 nicht. An einer Stelle, in deren Nähe kaum Daten liegen, kann
-$\var[\cgreen{\wh{f}(x)}]$ um Größenordnungen darüber liegen. Werten wir
-($15.4.4$) im Beispiel unten nicht an den $100$ Entwurfsstellen aus, sondern
-auf einem gleichmäßigen Gitter über $[0, 2\pi]$, so ist die mittlere Varianz
-bei $K = 40$ nicht $0{,}036$, sondern $5{,}04$: Zwischen den Datenpunkten und
+$\var[\cgreen{\wh{f}(x)}]$ um Größenordnungen darüber liegen. Mitteln wir
+($15.4.4$) im Beispiel unten nicht über die $100$ Entwurfsstellen, sondern
+über das ganze Intervall $[0, 2\pi]$, so ergibt sich bei $K = 40$ nicht
+$0{,}036$, sondern $3{,}91$, mehr als das Hundertfache. Am rechten Rand $x = 2\pi$
+selbst, jenseits der letzten Entwurfsstelle bei $6{,}25$, erreicht ($15.4.4$)
+sogar $135{,}7$: Zwischen den Datenpunkten und
 an den Rändern schwingt der Schätzer weit stärker als dort, wo er angepasst
 wurde. Die Folien schreiben die Ordnung punktweise auf; als
 Aussage über den gemittelten Fehler ist sie richtig, als Aussage über jedes
@@ -320,8 +331,8 @@ Die Folien nennen beides: $K \sim n^{1/9}$ und
 $\MSE = O(n^{-8/9})$. Der Exponent $1/9$ entsteht dabei aus $8 + 1$, also aus
 der Bias-Ordnung plus dem linearen Varianzterm.
 
-Aus derselben Rechnung fällt eine Aussage ab, die man dem MSE-Minimum nicht
-ansieht. Setzen wir $8 c_1 (K^\star)^{-9} = c_2/n$ in die beiden Summanden
+Aus derselben Rechnung fällt eine Aussage ab, die dem MSE-Minimum nicht
+anzusehen ist. Setzen wir $8 c_1 (K^\star)^{-9} = c_2/n$ in die beiden Summanden
 ein, so ist $c_1 (K^\star)^{-8} = \tfrac{1}{8}\, c_2 K^\star/n$: Der
 quadrierte Bias trägt im Optimum genau ein Neuntel des MSE, die Varianz die
 übrigen acht Neuntel. Das Optimum liegt also nicht dort, wo beide Anteile
@@ -342,7 +353,10 @@ $n^{-8/9}$, nicht die Zahl.
 
 :::beispiel[15.4.8 (Bias und Varianz beim Sinusbeispiel)]
 Wir übernehmen das Setup der Folie: $f(x) = \sin(3x)$ auf $[0, 2\pi]$,
-$n = 100$ feste Stellen, $\sigma = 0{,}3$. Die Stellen ziehen wir einmal aus
+$n = 100$ feste Stellen, $\sigma = 0{,}3$. Das ist ein anderer Datensatz als
+in [Abschnitt 15.3](#sec-15.3), wo $f(x) = \sin(x) + \tfrac12 \sin(2x)$ an
+$n = 50$ Stellen steht; die Folien führen für die Bias-Varianz-Rechnung ein
+eigenes Beispiel, und wir folgen ihm. Die Stellen ziehen wir einmal aus
 einer Gleichverteilung und behalten sie bei; anschließend simulieren wir
 $200$ Datensätze, passen jeweils einen kubischen Regressionsspline mit $K$
 Basisfunktionen an und schätzen daraus Bias, Varianz und MSE an den
@@ -362,11 +376,10 @@ Drei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
 $\sigma^2 K/n$ aus Satz 15.4.4 in jeder Zeile auf höchstens zwei Prozent genau;
 die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
 liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
-das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt im
+das $34{,}5$-fache davon, bei $K = 40$ knapp das Dreifache. Drittens trägt im
 Minimum der Bias nur noch $11$ Prozent zum MSE bei, genau das Neuntel aus
-Bemerkung 15.4.7. Das Optimum liegt also nicht dort, wo beide Anteile gleich
-groß sind, sondern dort, wo eine weitere Basisfunktion mehr Varianz kostet,
-als sie an Bias einspart.
+Bemerkung 15.4.7. Die Anteilsvorhersage trifft damit auf die erste
+Nachkommastelle: $11{,}1$ gegen $11{,}1$ Prozent.
 :::
 
 :::bemerkung[15.4.9 (Der Bias fällt nicht monoton)]
@@ -389,17 +402,22 @@ die vorhergesagten $16$ liefen.
 Das Widget rechnet die Tabelle live nach und zeigt zugleich, woher die beiden
 Anteile kommen. Links stehen die Daten einer einzelnen Ziehung in Blau, die
 wahre Funktion violett gestrichelt, die inneren Knoten als orange Marken auf
-der Achse und in Grün die Schätzer der ersten zwölf Wiederholungen samt ihrem
-Mittelwert.
+der Achse und in Grün die Schätzer der ersten zwölf Wiederholungen; die dicke
+grüne Kurve ist der Mittelwert über alle $200$.
 
 Bei kleinem $K$ liegen die zwölf Kurven fast übereinander und verfehlen $f$
-alle in dieselbe Richtung: viel Bias, kaum Varianz. Bei $K = 40$ liegt der
-Mittelwert der Kurven weiter auf $f$, doch die einzelnen Kurven fächern weit
-auf, jede folgt ihrem eigenen Rauschen. Die Balken rechts zeigen die Anteile
+alle in dieselbe Richtung: viel Bias, kaum Varianz. Bei $K = 40$ liegt die
+Mittelwertkurve weiter auf $f$, doch die einzelnen Kurven fächern weit
+auf, jede folgt ihrem eigenen Rauschen; ab $K = 30$ laufen sie sogar aus dem
+Bild, zuerst am rechten Rand und ab $K = 35$ auch in der größten Datenlücke
+zwischen $3{,}16$ und $3{,}60$, also genau dort, wo Bemerkung 15.4.5 die
+punktweise Varianz explodieren sieht. Die Balken rechts zeigen die Anteile
 am MSE, die Tafel darunter den Verlauf aller drei Größen über $K$
 auf logarithmischer Skala. Dort ist der Knick gut zu sehen: Der rote Bias
-stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue Summe
-hat ihr Minimum dazwischen.
+stürzt über gut drei Zehnerpotenzen ab, mit dem Ausreißer bei $K = 9$ aus
+Bemerkung 15.4.9 und einem flachen Auslauf, sobald er unter das Rauschen der
+Simulation fällt; die grüne Varianz steigt langsam und stetig, und die graue
+Summe hat ihr Minimum dazwischen.
 
 Alle Zufallszahlen stammen aus einem festen Startwert. Es ist bei jedem
 Aufruf dieselbe Simulation, und die Zahlen im Widget stimmen mit denen der
@@ -426,14 +444,23 @@ $0{,}01$ und $0{,}04$ verlangt. Die
 Interpretation der Folie bleibt davon unberührt: $K = 5$ ist zu starr und
 büßt am Bias, $K = 40$ folgt dem Rauschen und büßt an der Varianz, und
 dazwischen liegt das Optimum.
+
+Das Etikett *optimal* an der mittleren Zeile lesen wir dabei als Anschauung,
+nicht als Ergebnis einer Suche. In unserer Simulation desselben Setups liegt
+das MSE-Minimum bei $K = 12$; $K = 15$ kostet $0{,}0136$ und damit rund
+$13$ Prozent mehr. Innerhalb von zehn Prozent gleichwertig sind $K = 12$ bis
+$14$, und der ganze flache Bereich dazwischen ist die eigentliche Botschaft:
+Ein paar Basisfunktionen mehr oder weniger machen nahe am Optimum wenig aus,
+weit davon entfernt dagegen den Faktor $34{,}5$.
 :::
 
 ### Wie wählt man $K$ in der Praxis?
 
 Die ganze bisherige Rechnung hat einen Haken, den die Folien deutlich
 benennen: Wir kennen $f$ nicht. Bias und MSE sind damit nicht ausrechenbar,
-sondern nur die Residuen. Und die werden mit wachsendem $K$ immer kleiner, bis
-bei $K = n$ jeder Datenpunkt exakt getroffen ist. Die Anpassungsgüte an den
+sondern nur die Residuen. Und die werden mit wachsendem $K$ tendenziell immer
+kleiner, bis bei $K = n$ jeder Datenpunkt exakt getroffen ist, sofern $\bB$ dann
+invertierbar ist ([Abschnitt 15.3](#sec-15.3)). Die Anpassungsgüte an den
 eigenen Daten taugt also gerade nicht als Kriterium.
 
 :::bemerkung[15.4.11 (Drei Auswege)]
@@ -462,15 +489,21 @@ der *GCV-Kriteriumswert*. Gewählt wird das $K$, das ihn minimiert.
 :::
 
 :::bemerkung[15.4.13 (Warum der Nenner nötig ist)]
-Der Zähler allein fällt monoton in $K$ und wäre nutzlos. Der Nenner sorgt für
+Der Zähler allein wäre nutzlos: Vergrößern wir den Ansatzraum, so kann die
+Residuenquadratsumme nur fallen. Bei gleichmäßigen Knoten wandern die Knoten
+mit $K$, die Ansatzräume liegen dann nicht ineinander, und
+$\mathrm{RSS}_K$ fällt bloß im Trend statt monoton; in unserem Datensatz
+steigt sie in $13$ von $36$ Schritten, am deutlichsten von $K = 8$ auf
+$K = 9$. Dem Trend nach unten hat der Zähler aber nichts entgegenzusetzen.
+Der Nenner sorgt für
 den Gegendruck, und er kommt nicht aus der Luft. Für einen linearen Schätzer
 $\cgreen{\wh{\by}} = \bH\cblue{\by}$ lässt sich das Residuum, das
 beim Weglassen des $i$-ten Punktes entstünde, ohne erneute Anpassung
 ausrechnen: Es ist $(\cblue{y_i} - \cgreen{\wh{f}(x_i)})/(1 - H_{ii})$, was
-man mit der
-:k[Sherman-Morrison-Formel]{#sherman-morrison-formula} nachrechnet. Die
+sich mit der
+:k[Sherman-Morrison-Formel]{#sherman-morrison-formula} nachrechnen lässt. Die
 Kreuzvalidierung, die jeden Punkt einmal weglässt, wird damit zu einer
-einzigen Formel. Ersetzt man darin alle $H_{ii}$ durch ihren Mittelwert
+einzigen Formel. Ersetzen wir darin alle $H_{ii}$ durch ihren Mittelwert
 $\tr(\bH)/n$, so steht ($15.4.8$) da, denn nach Bemerkung 15.4.5 ist
 $\tr(\bH) = K$.
 
@@ -486,7 +519,7 @@ Minimum liegt bei $K = 10$ mit $\mathrm{GCV} = 0{,}0895$; AIC und BIC in den
 Formen aus Bemerkung 15.4.11 wählen dasselbe $K$.
 
 Der wahre MSE ist bei $K = 12$ am kleinsten. Mit $K = 10$ zahlen wir
-$0{,}0157$ statt $0{,}0120$, also rund $30$ Prozent Aufschlag. Für ein
+$0{,}0156$ statt $0{,}0120$, also rund $30$ Prozent Aufschlag. Für ein
 Kriterium, das $f$ überhaupt nicht kennt und mit einer einzigen Ziehung
 auskommt, ist das ein gutes Ergebnis, und es zeigt zugleich die Grenze: Die
 Kriterien schätzen den Fehler, sie kennen ihn nicht. Auf einer anderen
@@ -494,8 +527,8 @@ Ziehung fällt die Wahl anders aus.
 :::
 
 :::bemerkung[15.4.15 (Der praktische Ausweg: groß wählen und bestrafen)]
-In der Anwendung wird $K$ meist gar nicht feinjustiert. Man wählt es
-großzügig, sodass der Bias sicher klein ist, und steuert die Glattheit
+In der Anwendung wird $K$ meist gar nicht feinjustiert. Wir wählen es
+großzügig, sodass der Bias sicher klein ist, und steuern die Glattheit
 stattdessen über einen Strafterm. Das führt auf *P-Splines* und weiter auf
 additive Modelle; in R ist `mgcv::gam()` die Standardadresse dafür.
 
@@ -503,7 +536,7 @@ Der Vorteil ist mehr als Bequemlichkeit. Die Knotenzahl ist eine ganze Zahl,
 der Strafparameter dagegen stufenlos, und ein stufenloser Regler lässt sich
 mit denselben Kriterien viel feiner einstellen. Formal ist der Übergang
 derselbe wie bei der Ridge-Regression: statt die Zahl der Parameter zu
-begrenzen, bestraft man ihre Größe
+begrenzen, bestrafen wir ihre Größe
 ([Abschnitt 13.5](?k=13-optim#sec-13.5)). Auch die effektiven Freiheitsgrade
 $\tr(\bH)$ aus Bemerkung 15.4.5 bleiben brauchbar; sie sind dann
 keine ganze Zahl mehr, sondern rutschen mit wachsendem Strafparameter stetig
@@ -551,9 +584,10 @@ Dann ist auch die Varianz an jeder einzelnen Stelle $x$ gleich $\sigma^2 K/n$.
 
 Gemittelt wird über die $n$ Entwurfsstellen, und dort ist die Aussage exakt.
 Zwischen den Datenpunkten und an den Rändern kann die Varianz weit darüber
-liegen: Bei $K = 40$ misst unsere Simulation über ein feines Gitter auf
-$[0, 2\pi]$ eine mittlere Varianz von $5{,}04$ statt $0{,}036$. Punktweise
-gilt nur ($15.4.4$), und dort steht $\corange{\bphi(x)}$ im Ausdruck.
+liegen: Bei $K = 40$ liefert ($15.4.4$), über das ganze Intervall $[0, 2\pi]$
+gemittelt, $3{,}91$ statt $0{,}036$, und am rechten Rand sogar $135{,}7$.
+Punktweise gilt nur ($15.4.4$), und dort steht $\corange{\bphi(x)}$ im
+Ausdruck.
 :::
 
 :::frage{falsch}

@@ -52,8 +52,9 @@ $$ {#eq-15.2.1}
 \;\le\; C \cdot \corange{h}^4 \cdot \max_{x \in [a, b]} \left| f^{(4)}(x) \right|
 $$
 
-erfüllt, mit einer kleinen Konstanten $C$. Für kubische Splines mit passenden
-Randbedingungen gilt sie mit $C = \tfrac{5}{384}$.
+erfüllt, mit einer kleinen Konstanten $C$. Für den *vollständigen* kubischen
+Spline, der zusätzlich $\cgreen{s'(a)} = f'(a)$ und $\cgreen{s'(b)} = f'(b)$
+erfüllt, gilt sie mit $C = \tfrac{5}{384}$.
 :::
 
 Die Voraussetzung $f \in \Ccal^4[a, b]$ verlangt vier stetige Ableitungen,
@@ -69,12 +70,19 @@ Seite der Schranke hat drei Faktoren, und jeder erzählt etwas anderes.
    $\left| f^{(4)} \right|$, desto kleiner die Schranke; je glatter also $f$
    ist, desto weniger Knoten kostet dieselbe Genauigkeit. Für ein
    :k[Polynom]{#polynomial} vom Grad höchstens drei steht rechts sogar null.
-3. Beide Faktoren sind Maxima über das *ganze* Intervall. Rechnet man lokal,
-   so steht in der Abschätzung für ein Teilintervall dessen eigene Länge neben
-   dem dortigen Maximum von $\left| f^{(4)} \right|$. Das ist der Grund, das
-   Gitter dort zu verdichten, wo $f$ stark gekrümmt ist und schwingt, und es
-   dort auszudünnen, wo $f$ fast gerade verläuft. Für den einfachsten Fall
-   führen wir diese lokale Rechnung gleich in Satz 15.2.5 vor.
+3. Beide Faktoren sind Maxima über das *ganze* Intervall. Lokalisieren lässt
+   sich das sauber bei der stückweise linearen Interpolation: Dort steht in der
+   Abschätzung für ein Teilintervall dessen eigene Länge neben dem dortigen
+   Maximum der zweiten Ableitung, und wir führen die Rechnung gleich als
+   Satz 15.2.5 vor. Bei kubischen Splines koppelt das Gleichungssystem die
+   Stücke, eine ebenso saubere lokale Schranke gibt es dort nicht. Der Einfluss
+   entfernter Daten klingt aber rasch ab: Heben wir einen Wert an, so überträgt
+   sich je Knotenabstand nur der Faktor $2 - \sqrt{3} \approx 0{,}27$ auf die
+   Nachbarstücke (eigene Rechnung; dieselbe Größenordnung misst
+   [Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4) an der B-Spline-Basis).
+   Deshalb bleibt der Ratschlag richtig, das Gitter dort zu verdichten, wo $f$
+   stark gekrümmt ist und schwingt, und es dort auszudünnen, wo $f$ fast gerade
+   verläuft.
 :::
 
 Wie ernst Punkt 3 gemeint ist, zeigt eine kleine Rechnung mit
@@ -88,10 +96,9 @@ genauer. Ein Knoten mehr nützt nichts, solange eine Lücke bleibt.
 :::bemerkung[15.2.4 (Welcher Spline die Konstante trägt)]
 Satz 15.2.2 behauptet die Existenz eines kubischen Splines, nicht die Güte
 eines bestimmten. Das ist keine Spitzfindigkeit. Die scharfe Konstante
-$\tfrac{5}{384}$ gehört zum *vollständigen* kubischen Spline, der an den
-Rändern die Ableitungen von $f$ übernimmt, also $s'(a) = f'(a)$ und
-$s'(b) = f'(b)$ erfüllt. Die Folien schreiben sie dem natürlichen Spline zu,
-der stattdessen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ verlangt. Passen diese
+$\tfrac{5}{384}$ gehört zum vollständigen Spline, der an den Rändern die
+Ableitungen von $f$ übernimmt. Die Folien schreiben sie dem natürlichen Spline
+zu, der stattdessen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ verlangt. Passen diese
 Randwerte nicht zu $f''(a)$ und $f''(b)$, so ist der natürliche Spline am Rand
 schlechter, und sein maximaler Fehler fällt global nur wie $\corange{h}^2$.
 
@@ -266,18 +273,23 @@ gemessene Fehler gehört zu genau einer Funktion auf genau einem Gitter. Aus dem
 Faktor $16$ wird deshalb keine Gleichung, sondern eine Aussage über die
 Größenordnung, die wir in :k[Landau-Notation]{#big-o-notation} als
 $\cred{\left\| f - s \right\|_\infty} = O(\corange{h}^4)$ schreiben. Wir sagen
-dazu, der Fehler sei *von vierter Ordnung* in $\corange{h}$; das ist dieselbe
-Sprechweise wie bei der :k[Konvergenzordnung]{#rate-of-convergence} iterativer
-Verfahren, nur läuft hier kein Iterationszähler, sondern die Gitterweite gegen
-null. Unsere Messung liegt konsequent unter der Schranke, und die Faktoren
+dazu, der Fehler sei *von vierter Ordnung* in $\corange{h}$. Das Wort *Ordnung*
+meint dabei etwas anderes als bei der
+:k[Konvergenzordnung]{#rate-of-convergence} iterativer Verfahren: Dort sitzt der
+Exponent in der Fehlerrekursion $e_{k+1} \le C \, e_k^p$, hier an der
+Gitterweite. In die Sprache der Iterationen übersetzt wäre unsere Halbierung
+lineare Konvergenz mit dem Faktor $\tfrac{1}{16}$, nicht Ordnung vier.
+Unsere Messung liegt konsequent unter der Schranke, und die Faktoren
 nähern sich der $16$ erst mit feiner werdendem Gitter. Wer eine Rechnung „mit
 Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas falsch wäre.
 :::
 
 :::vertiefung[Vier Gitter an einem Regler]
 Das Widget rechnet die Tabelle live nach und zeigt zusätzlich, wo der Fehler
-sitzt. Beim gröbsten Gitter ist die Abweichung noch mit bloßem Auge zu sehen,
-danach trennt nur noch das untere Bild die beiden Kurven. Dort ist eine zweite
+sitzt. Im oberen Bild liegen die beiden Kurven schon beim gröbsten Gitter
+praktisch übereinander: $0{,}02$ Abweichung sind dort kaum mehr als ein
+Bildpunkt. Sichtbar wird der Fehler erst im unteren Bild, das die Differenz
+allein zeichnet und seine Skala mitzieht. Dort ist eine zweite
 Beobachtung ablesbar: Der Fehler verschwindet an den Knoten und hat in jedem
 Teilintervall einen Bauch, doch die Bäuche sind verschieden hoch. Bei $17$
 Knoten misst der kleinste $1{,}4 \cdot 10^{-5}$ und der größte
@@ -289,8 +301,13 @@ Bemerkung 15.2.3 am lebenden Objekt.
 Die halblogarithmische Tafel rechts legt Messung und Schranke übereinander.
 Beide Linien fallen fast parallel, die gemessene bei den groben Gittern etwas
 steiler, weil dort die Faktoren noch über $16$ liegen. Der senkrechte Abstand
-zwischen den Linien ist der Sicherheitsabstand, den die Konstante
-$\tfrac{5}{384}$ einbaut.
+zwischen den Linien ist der Sicherheitsabstand der Schranke, und er läuft gegen
+einen festen Wert: Rechnen wir über die vier Gitter hinaus weiter, so nähert
+sich das Verhältnis von gemessenem Fehler zu Schranke dem Wert $\tfrac{1}{5}$
+(bei $n = 64$ messen wir $0{,}2002$, bei $n = 256$ noch $0{,}2000$). Für unser
+$f$ verhält sich der Fehler also wie $\tfrac{1}{384} \corange{h}^4 M_4$, und die
+$5$ im Zähler von $\tfrac{5}{384}$ ist genau der Aufschlag, den die Schranke für
+den ungünstigsten Fall einbaut.
 
 <SplineKonvergenz />
 :::
@@ -304,7 +321,7 @@ bemerkenswert gut bestückt.
 1. *Effiziente Berechnung.* In der B-Spline-Basis führt die Interpolation auf
    ein Gleichungssystem mit Bandstruktur
    ([Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)), und Bandstruktur
-   ist genau die Sorte Struktur, die den Aufwand drückt (Bemerkung 5.3.11 in
+   ist die Sorte Struktur, die den Aufwand drückt (Bemerkung 5.3.11 in
    [Abschnitt 5.3](?k=05-lgs#sec-5.3)). Der natürliche kubische Spline dieses
    Abschnitts ist das kleinste Beispiel dafür: Seine zweiten Ableitungen an den
    Knoten lösen ein *tridiagonales* System, und weil die Elimination dessen
@@ -312,19 +329,27 @@ bemerkenswert gut bestückt.
    das Widget oben.
 2. *Stabilität und Lokalität.* B-Splines haben kompakten Träger, jede
    Basisfunktion lebt also nur über wenigen Teilintervallen. Eine Änderung an
-   einem Datenpunkt wirkt lokal, und die Basis ist weit besser konditioniert als
-   die Monombasis ([Abschnitt 14.3](?k=14-funktionsapproximation#sec-14.3),
-   Kondition in [Abschnitt 4.2](?k=04-fehler#sec-4.2)).
+   einem Datenpunkt wirkt deshalb im Wesentlichen lokal. Ganz auf null fällt
+   ihr Einfluss nicht, denn das Gleichungssystem koppelt die Koeffizienten; er
+   klingt aber je Knotenabstand auf rund ein Viertel ab
+   ([Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)). Dazu ist die
+   Basis weit besser konditioniert als die Monombasis
+   ([Abschnitt 14.3](?k=14-funktionsapproximation#sec-14.3), Kondition in
+   [Abschnitt 4.2](?k=04-fehler#sec-4.2)).
 3. *Minimale Krümmung.* Unter allen Interpolanten aus $\Ccal^2$ macht der
-   natürliche kubische Spline $\int_a^b \left| f''(x) \right|^2 dx$ am
-   kleinsten ([Abschnitt 15.1](#sec-15.1)).
+   *natürliche* kubische Spline $\int_a^b \left| f''(x) \right|^2 dx$ am
+   kleinsten, und er ist der einzige, der das tut (Satz 15.1.4 und
+   Korollar 15.1.6 in [Abschnitt 15.1](#sec-15.1)). Die Zusammenfassungsfolie
+   lässt das „natürlich" weg; ohne die Randbedingung stimmt die Aussage nicht.
 4. *Approximationsfehler $O(h^4)$.* Das ist Satz 15.2.2: Wer die Knotenzahl
    verdoppelt, gewinnt rund den Faktor $16$ an Genauigkeit, ohne den
    Polynomgrad anzurühren.
 :::
 
-Alle vier Punkte gelten für *Interpolation*, also für Daten ohne Rauschen. Genau
-diese Voraussetzung fällt im nächsten Abschnitt weg. Sobald die $y_i$ eine
+Die letzten beiden Punkte gehören der *Interpolation*, also Daten ohne Rauschen;
+die ersten beiden sind Eigenschaften der Basis und tragen ebenso das
+Regressionsproblem des nächsten Abschnitts. Und die Voraussetzung rauschfreier
+Daten fällt dort nun weg. Sobald die $y_i$ eine
 Zufallskomponente tragen, ist es nicht mehr wünschenswert, sie exakt zu treffen,
 und aus dem Interpolationsproblem wird ein Glättungsproblem
 ([Abschnitt 15.3](#sec-15.3)).
@@ -392,7 +417,7 @@ $O(\corange{h}^2)$.
 
 :::frage{wahr}
 Bei stückweise linearer Interpolation bringt eine Halbierung der Gitterweite
-nur den Faktor $4$.
+nur rund den Faktor $4$.
 
 Satz 15.2.5 gibt die Schranke $\corange{h}^2/8 \cdot \max \left| f'' \right|$,
 und $\corange{h}^2$ viertelt sich beim Halbieren. Für $\sin(2\pi x)$ messen wir

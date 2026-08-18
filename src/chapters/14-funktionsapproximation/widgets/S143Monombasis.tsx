@@ -11,6 +11,13 @@ import { M, Slider } from "../../../lib";
  * buchadaptiert und im oeffentlichen Repo verboten); zusaetzlich eine dritte
  * Kurve (Chebyshev-Polynome als Basis) und die Winkel-Readouts, die es in
  * der Quelle nicht gibt.
+ * Review 14.3 (2026-08-14): Der Einleitungsabsatz und die vier Statuszweige
+ * lagen noch nahe an den Quell-Captions ("digits at risk") und sind neu
+ * formuliert; die Zweige melden jetzt die Faustregel kappa_2 * eps aus
+ * Beispiel 14.3.11 statt einer eigenen Stellen-Buchhaltung. Ausserdem
+ * hiessen die drei Schalter faelschlich "drei Basissysteme desselben
+ * Ansatzraums" - die ersten beiden unterscheiden sich im INTERVALL der
+ * Stellen, nur der dritte in der Basis.
  *
  * Verifiziert mit node (check-s143.mjs / check3-s143.mjs, 2026-08-13),
  * n aequidistante Stellen, kappa_2 ueber die explizit berechnete Inverse:
@@ -178,6 +185,24 @@ function fmt(v: number, d = 1): string {
   if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
   return v.toFixed(d).replace(".", ",").replace(/^-/, "−");
 }
+
+/** Schranke kappa * eps: nahe 1 ausgeschrieben, sonst wissenschaftlich. */
+function fmtSchranke(v: number): string {
+  if (Number.isNaN(v)) return "undefiniert";
+  if (!Number.isFinite(v)) return "∞";
+  if (v >= 1) return v.toFixed(1).replace(".", ",");
+  if (v >= 0.01) return v.toFixed(2).replace(".", ",");
+  let e = Math.floor(Math.log10(v));
+  let m = v / 10 ** e;
+  if (m >= 9.95) {
+    m /= 10;
+    e += 1;
+  }
+  return `${m.toFixed(1).replace(".", ",")} · 10^${String(e).replace("-", "−")}`;
+}
+
+/** Maschinengenauigkeit der doppelten Genauigkeit (Abschnitt 4.1). */
+const EPS = 2.220446049250313e-16;
 
 /* ------------------------------------------------------------------ */
 /* Bild 1: die ersten acht Monome auf [0, 1]                            */
@@ -396,31 +421,33 @@ export function VandermondeKondition() {
   const k = KAPPA[aktiv][idx];
   const kMonom = KAPPA.monom01[idx];
   const verlorene = Number.isFinite(k) ? Math.min(16, Math.log10(k)) : 16;
+  const schranke = Number.isFinite(k) ? k * EPS : Infinity;
   const winkelErst = spaltenwinkel(n, 0);
   const winkelLetzt = n >= 3 ? spaltenwinkel(n, n - 2) : NaN;
   const name = BASEN.find((b) => b.id === aktiv)!.name;
 
   const status =
     n < 3
-      ? `Mit ${n} Stellen ist die Basismatrix winzig, und alle drei Systeme sind unbedenklich.`
-      : verlorene >= 15.5
-        ? `${name}: Bei ${n} Stellen frisst die Konditionszahl rechnerisch alle rund 16 Stellen, die doppelte Genauigkeit hergibt. Das gelöste System hat mit dem gemeinten nichts mehr zu tun.`
+      ? `Bei ${n} Stellen ist die Matrix so klein, dass alle drei Systeme unbedenklich bleiben.`
+      : schranke >= 1
+        ? `${name}: Die Faustregel aus Beispiel 14.3.11 beschränkt den relativen Fehler der ausgerechneten Koeffizienten durch κ₂ · ε ≈ ${fmtSchranke(schranke)}. Eine Schranke oberhalb von 1 sagt nichts mehr; von den ${n} Koeffizienten bleibt rechnerisch keine gültige Stelle.`
         : verlorene >= 6
-          ? `${name}: Von den rund 16 sicheren Dezimalstellen sind bei ${n} Stellen etwa ${fmt(verlorene, 1)} in Gefahr, es bleiben ungefähr ${fmt(16 - verlorene, 1)} übrig. Das ist keine Kleinigkeit mehr.`
-          : `${name}: Bei ${n} Stellen sind rund ${fmt(verlorene, 1)} der etwa 16 sicheren Dezimalstellen in Gefahr, das ist noch harmlos.`;
+          ? `${name}: Als Schranke für den relativen Koeffizientenfehler steht hier κ₂ · ε ≈ ${fmtSchranke(schranke)}. Von den rund 16 Dezimalstellen der doppelten Genauigkeit sind damit ${fmt(verlorene, 1)} aufgezehrt und ${fmt(16 - verlorene, 1)} übrig.`
+          : `${name}: Die Schranke κ₂ · ε ≈ ${fmtSchranke(schranke)} kostet erst ${fmt(verlorene, 1)} der rund 16 Dezimalstellen, die doppelte Genauigkeit hergibt.`;
 
   return (
     <div className="my-2 text-sm">
       <p className="mb-2">
-        Zu <M>{"n"}</M> gleichmäßig verteilten Stellen bauen wir die
-        <M>{"\\,n \\times n"}</M>-Basismatrix <M>{"\\bB"}</M> und schätzen ihre
-        Konditionszahl <M>{"\\kappa_2(\\bB)"}</M> über die explizit berechnete
-        Inverse. Drei Basissysteme desselben Ansatzraums stehen zur Wahl. Die
-        senkrechte Achse ist logarithmisch: Beide Monom-Kurven sind ungefähr
-        Geraden, ihre Konditionszahl wächst also exponentiell in <M>{"n"}</M>.
-        Verschieben und Skalieren auf <M>{"[-1, 1]"}</M> drückt nur die
-        Steigung, die Chebyshev-Polynome drücken sie noch einmal deutlich
-        stärker.
+        Zu <M>{"n"}</M> gleichmäßig verteilten Stellen entsteht die
+        <M>{"\\,n \\times n"}</M>-Basismatrix <M>{"\\bB"}</M> aus
+        Satz 14.2.8; daneben steht ihre Konditionszahl{" "}
+        <M>{"\\kappa_2(\\bB)"}</M>, ausgerechnet über die Inverse. Die ersten
+        beiden Schalter halten die Monombasis fest und verlegen nur das
+        Intervall, in dem die Stellen liegen; der dritte tauscht bei festem
+        Intervall die Basis. Auf der logarithmischen Achse bedeutet eine
+        Gerade exponentielles Wachstum, und beide Monom-Kurven sind welche.
+        Das Verlegen nach <M>{"[-1, 1]"}</M> senkt bloß ihre Steigung, erst
+        die Chebyshev-Polynome knicken sie deutlich ab.
       </p>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -469,7 +496,7 @@ export function VandermondeKondition() {
       <KonditionsChart n={n} aktiv={aktiv} />
 
       <p className="mt-2 font-mono text-xs">
-        n = {n}, Polynomgrad {n - 1}: κ₂ ≈ {fmtKappa(k)}
+        n = {n}, Grad ≤ {n - 1}: κ₂ ≈ {fmtKappa(k)}
       </p>
       <p className="mt-1">{status}</p>
       {n >= 3 ? (
@@ -489,8 +516,9 @@ export function VandermondeKondition() {
           ) : (
             <>
               {" "}
-              Sie steht bei diesem <M>{"n"}</M> bei κ₂ ≈ {fmtKappa(kMonom)},
-              das gewählte System bei κ₂ ≈ {fmtKappa(k)}.
+              Die Monombasis auf <M>{"[0, 1]"}</M> kommt bei diesem{" "}
+              <M>{"n"}</M> auf κ₂ ≈ {fmtKappa(kMonom)}, das gewählte System auf
+              κ₂ ≈ {fmtKappa(k)}.
             </>
           )}
         </p>

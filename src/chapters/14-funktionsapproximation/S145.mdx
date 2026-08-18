@@ -15,8 +15,9 @@ Folgen.
    Interpolation verlangt punktweise exakte Treffer, Glättung lässt Residuen
    zu, weil die Daten Rauschen tragen. In der Praxis führen wir die erste auf
    die zweite zurück, indem wir $f$ an endlich vielen Stellen auswerten
-   ([Abschnitt 14.1](#sec-14.1)). Die Interpolationsbedingung allein legt
-   dabei nichts fest: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
+   ([Abschnitt 14.1](#sec-14.1)). Die Interpolationsbedingung bindet dabei
+   allein die Werte an den $n$ Stellen, über die Funktion dazwischen sagt sie
+   nichts: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
    $g$ mit $g(x_i) = 0$ ist auch $\cgreen{p} + g$ einer, und solche $g$ gibt
    es unendlich viele (Satz 14.1.8).
 2. **Die Basisdarstellung macht daraus ein Gleichungssystem.** Wir wählen
@@ -27,20 +28,30 @@ Folgen.
    ([Abschnitt 14.2](#sec-14.2)). Die Matrix hängt nur von den Stellen und
    der Basis ab, nicht von den Messwerten.
 3. **Polynome sind theoretisch schön und numerisch heikel.** Durch $n$ Punkte
-   läuft genau ein Polynom vom Grad höchstens $n-1$
-   ([Abschnitt 14.3](#sec-14.3)). Die Monombasis erkauft das mit einer
-   :k[Kondition]{#condition-number}, die exponentiell wächst, mit einer
-   Störung, die im ganzen Intervall wirkt, und mit dem
-   <span style={{ color: "#D55E00" }}>Runge-Phänomen</span>: Selbst bei
-   beliebig oft differenzierbarem $f$ muss die Folge der Interpolanten an
-   gleichmäßig verteilten Knoten nicht konvergieren.
+   mit paarweise verschiedenen Stellen läuft genau ein Polynom vom Grad
+   höchstens $n-1$ (Satz 14.3.5,
+   [Abschnitt 14.3](#sec-14.3)). Heikel wird es aus zwei ganz verschiedenen
+   Gründen. Der erste liegt in der Basis: Die Monombasis liefert eine
+   :k[Kondition]{#condition-number}, die exponentiell wächst
+   (Beispiel 14.3.11), und ein zu Intervall und Stellen passender
+   Basiswechsel behebt das (Bemerkung 14.3.12).
+   Der zweite liegt im Ansatzraum: Eine einzelne Datenänderung wirkt im
+   ganzen Intervall (Bemerkung 14.3.14), und beim
+   <span style={{ color: "#D55E00" }}>Runge-Phänomen</span> muss die Folge
+   der Interpolanten an gleichmäßig verteilten Knoten selbst bei beliebig oft
+   differenzierbarem $f$ nicht konvergieren. Dagegen hilft kein
+   Basiswechsel, sondern nur eine andere Knotenwahl (Bemerkung 14.3.17) oder
+   ein anderer Ansatzraum.
 4. **Splines halten den Grad klein und die Wirkung lokal.** Statt eines
-   Polynoms hohen Grades nehmen wir viele Polynome vom festen Grad $q$ und
+   Polynoms hohen Grades nehmen wir bei fest gewähltem $q$ viele Polynome vom
+   Grad höchstens $q$ (Bemerkung 14.4.2) und
    kleben sie $\Ccal^{q-1}$-glatt aneinander; der Raum $\Scal_q$ hat die
    Dimension $m + q$ ([Abschnitt 14.4](#sec-14.4)). Die B-Spline-Basis dazu
    hat lokale Träger, macht $\bB$ zu einer
-   :k[dünn besetzten]{#sparse-matrix} Bandmatrix und senkt den Aufwand von
-   $O(N^3)$ auf $O(N q^2)$.
+   :k[dünn besetzten]{#sparse-matrix} Bandmatrix, hält die Kondition bei
+   $\kappa_1 = 37$ statt $10^{16}$ (Bemerkung 14.4.13) und senkt den Aufwand
+   für ein System der Größe $N$ von $O(N^3)$ auf $O(N q^2)$
+   (Bemerkung 14.4.14).
 :::
 
 ### Die beiden Ansatzräume nebeneinander
@@ -48,7 +59,9 @@ Folgen.
 Die Bilanz des Kapitels lässt sich an den zwei Systemen ablesen, die wir
 durchgerechnet haben. Die Konditionszahlen gehören zu $20$ Datenpunkten in
 $[0, 1]$ (Bemerkung 14.4.13), der Verstärkungsfaktor in der letzten Zeile zu
-$n = 10$ Stützstellen (Bemerkung 14.3.14).
+$n = 10$ Stützstellen (Bemerkung 14.3.14) und das Abklingen der
+Spline-Koeffizienten zum Störungsbeispiel mit neun Punkten aus
+[Abschnitt 14.4](#sec-14.4).
 
 | Frage | globales Polynom | kubischer Spline |
 |:--|:--|:--|
@@ -57,14 +70,15 @@ $n = 10$ Stützstellen (Bemerkung 14.3.14).
 | Eindeutigkeit | genau ein Interpolant (Satz 14.3.5) | erst mit zwei Randbedingungen (Bemerkung 14.4.6) |
 | Kondition von $\bB$ | $\kappa_1 = 4{,}4 \cdot 10^{16}$ | $\kappa_1 = 37$ |
 | Struktur von $\bB$ | voll besetzt | Bandmatrix, höchstens $q+1$ Einträge je Zeile |
-| Aufwand | $O(n^3)$ | $O(N q^2)$, also linear in $N$ |
-| ein Messwert wackelt | wirkt global, Faktor bis $4{,}03$ | klingt je Knotenabstand auf gut ein Viertel ab |
+| Aufwand | $O(n^3)$ | $O(N q^2)$ mit $N = m+3$, also linear in $N$ |
+| ein Messwert wackelt | der Interpolant ändert sich im ganzen Intervall, um bis zum $4{,}03$-fachen der Störung | der Interpolant ändert sich nur in der Umgebung; die Koeffizienten klingen je Knotenabstand auf gut ein Viertel ab |
 
 :::bemerkung[14.5.2 (Drei Stellschrauben, drei Wirkungen)]
 Wer die Tabelle sortiert, findet drei Entscheidungen mit klar getrennten
 Folgen, und das ist die kürzeste Fassung des Kapitels.
 
-- Der *Ansatzraum* bestimmt den Interpolanten. Polynome vom Grad höchstens
+- Der *Ansatzraum* bestimmt den Interpolanten, sofern das System überhaupt
+  eindeutig lösbar ist. Polynome vom Grad höchstens
   $n-1$ und kubische Splines liefern verschiedene Kurven durch dieselben
   Punkte.
 - Das *Basissystem* bestimmt Koeffizienten, Kondition und Rechenweg, aber
@@ -106,6 +120,9 @@ $p = 2$, $10\,000$ bei $p = 4$ und $100\,000$ bei $p = 5$, und ebenso viele
 Datenpunkte müssten wir mindestens haben, um sie zu bestimmen. Das ist der
 *Fluch der Dimensionalität* aus [Abschnitt 9.4](?k=09-tensoren#sec-9.4), hier
 in seiner Funktionenraum-Fassung.
+[Abschnitt 15.5](?k=15-funktionsapproximation-2#sec-15.5) nimmt genau diese
+Konstruktion wieder auf und beziffert, wie schnell die nötige Datenmenge mit
+der Zahl der Variablen wächst.
 
 Für verstreute Punkte ohne Gitter sind *radiale Basisfunktionen* die übliche
 Antwort. Sie hängen nur vom Abstand zu einem Zentrum ab,
@@ -132,7 +149,7 @@ $$
 
 also nach demselben Muster wie bei der Ridge-Regression in
 [Abschnitt 13.5](?k=13-optim#sec-13.5): Anpassung plus Strafe,
-abgewogen über einen Parameter $\lambda$. Zwei kleine Knoten wären starr,
+abgewogen über einen Parameter $\lambda$. Zu wenige Knoten wären starr,
 viele Knoten mit Strafterm sind flexibel und trotzdem glatt.
 
 Von dort ist es ein kurzer Schritt zu den *generalisierten additiven
@@ -141,8 +158,10 @@ Kovariablen ansetzen, $\sum_j f_j(x_j)$, und jede dieser Funktionen mit einer
 Spline-Basis samt Strafterm darstellen. Der Fluch der Dimensionalität aus
 Bemerkung 14.5.3 ist damit umgangen, allerdings um den Preis einer Annahme:
 Wechselwirkungen zwischen den Kovariablen müssen eigens hineingebaut werden.
-Diese Modellklasse ist das Thema der Vorlesung *Statistik V: Konzepte
-Statistischer Modellierung*; in `R` steht sie im Paket `mgcv`.
+Ausgerechnet wird dieser Handel in
+[Abschnitt 15.5](?k=15-funktionsapproximation-2#sec-15.5); darüber hinaus ist
+die Modellklasse das Thema der Vorlesung *Statistik V: Konzepte
+Statistischer Modellierung*, und in `R` steht sie im Paket `mgcv`.
 
 ### Ausblick: Splines im maschinellen Lernen
 
@@ -209,10 +228,12 @@ der Interpolation an gleichmäßig verteilten Knoten über alle Grenzen wächst,
 obwohl der Fehler an den Knoten selbst stets null ist.
 
 Das ist Runges Funktion $f(x) = 1/(1 + 25x^2)$ auf $[-1, 1]$
-(Beispiel 14.3.15). Nachgerechnet steigt der größte Fehler von $0{,}44$ bei
-$n = 5$ über $7{,}2$ bei $n = 15$ auf $257$ bei $n = 25$, während die
+(Beispiel 14.3.15). Nachgerechnet steht der größte Fehler bei $0{,}44$ für
+$n = 5$, bei $7{,}2$ für $n = 15$ und bei $257$ für $n = 25$, während die
 Interpolationsbedingung an jedem einzelnen Knoten exakt erfüllt bleibt.
-Interpolation sagt eben nur etwas über die Stützstellen aus.
+Dass er dabei nicht in jedem Schritt zunimmt, hält Bemerkung 14.3.16 fest:
+Von $n = 5$ auf $n = 10$ fällt er zunächst auf $0{,}30$. Unbeschränkt wächst
+er trotzdem, und Interpolation sagt eben nur etwas über die Stützstellen aus.
 :::
 
 :::frage{falsch}
@@ -247,9 +268,14 @@ haben.
 Der Ansatzraum bestimmt die Kurve, die Basis nur die Koeffizienten: Monom-
 und Newton-Basis geben beide $\cgreen{\wh{f}(x)} = 1 + x^2$, einmal mit
 $\cgreen{\ba = (1,0,1)^\top}$ und einmal mit
-$\cgreen{\ba = (1,1,1)^\top}$ (Beispiel 14.2.12). An der Kondition ändert
-ein solcher Wechsel dagegen sehr viel, bei $n = 20$ gleichmäßig verteilten
-Stellen um zwölf Zehnerpotenzen (Bemerkung 14.3.12).
+$\cgreen{\ba = (1,1,1)^\top}$ (Beispiel 14.2.12). An der Kondition kann ein
+Basiswechsel dagegen sehr viel ändern: An denselben $n = 20$ gleichmäßig
+verteilten Stellen in $[-1, 1]$ fällt $\kappa_2$ von $2{,}7 \cdot 10^{8}$ für
+die Monome auf $4{,}8 \cdot 10^{3}$ für die Chebyshev-Polynome, also um rund
+fünf Zehnerpotenzen. Die zwölf Zehnerpotenzen gegenüber
+$\kappa_2 \approx 1{,}1 \cdot 10^{16}$ kommen erst zusammen mit der Verlegung
+des Intervalls von $[0, 1]$ nach $[-1, 1]$ zustande (Bemerkung 14.3.12); der
+Wechsel zur Newton-Basis gewinnt an denselben Stellen in $[0, 1]$ knapp drei.
 :::
 
 :::frage{falsch}
@@ -259,8 +285,11 @@ derselbe.
 
 Hier wechselt nicht die Basis, sondern der Ansatzraum. Die $n$ Monome
 spannen die Polynome vom Grad höchstens $n-1$ auf, die $m+q$ kubischen
-B-Splines den Spline-Raum $\Scal_3$, und für $n > 4$ ist das eine ganz andere
-Menge von Funktionen. Entsprechend verschieden sehen die Kurven aus: Im
+B-Splines den Spline-Raum $\Scal_3$. Selbst bei gleicher Dimension, also
+$m + 3 = n$, ist das für $n > 4$ eine ganz andere Menge von Funktionen; nur
+für $n = 4$ fallen beide zusammen, weil ein Gitter aus einem einzigen
+Teilintervall gerade die kubischen Polynome liefert. Entsprechend verschieden
+sehen die Kurven aus: Im
 Störungs-Widget von [Abschnitt 14.4](#sec-14.4) liegen links ein Polynom vom
 Grad $8$ und rechts ein stückweise kubischer Spline durch dieselben neun
 Punkte.
@@ -285,9 +314,11 @@ Grad des Interpolanten.
 Der Grad $q$ ist fest gewählt, meist $q = 3$. Was mit den Daten wächst, ist
 die Zahl der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
 (Satz 14.4.4). Genau darin liegt der Unterschied zur Polynominterpolation,
-bei der $n$ Punkte den Grad auf $n-1$ hochtreiben (Satz 14.3.5), und genau
-daran hängt, dass die Oszillationen aus
-[Abschnitt 14.3](#sec-14.3) ausbleiben.
+bei der jeder weitere Punkt den Ansatzraum um eine Dimension und die
+Gradschranke $n-1$ um eins hebt; erreicht wird diese Schranke nicht in
+jedem Fall (Satz 14.3.5, Bemerkung 14.3.7). Weil der Grad bei Splines eben
+nicht mitwächst, bleiben die Oszillationen aus
+[Abschnitt 14.3](#sec-14.3) aus.
 :::
 
 ::::

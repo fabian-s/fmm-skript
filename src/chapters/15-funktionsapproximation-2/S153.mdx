@@ -43,14 +43,16 @@ ganze Aufgabe.
 1. Sie sagt, dass die Beobachtungen an jeder Stelle *um* $f(x_i)$ herum streuen
    und nicht systematisch daneben. Anders gesagt ist $f(x)$ der
    bedingte :k[Erwartungswert]{#expected-value} $\E[\cblue{y} \mid x]$, und
-   $\cred{\eps_i}$ ist reine Streuung.
+   $\cred{\eps_i}$ ist reine Streuung. Bei fest gewählten Stellen $x_i$ steht
+   dort schlicht $\E[\cred{\eps_i}] = 0$; die bedingte Schreibweise der Folie
+   deckt zusätzlich den Fall zufällig gezogener Stellen ab.
 2. Ohne sie wäre $f$ überhaupt nicht bestimmt. Zu jeder Funktion $g$ und jeder
    Konstanten $c$ liefert das Paar $(g + c,\ \cred{\eps} - c)$ dieselben
    Beobachtungen wie $(g, \cred{\eps})$. Erst die Forderung, dass der Fehler im
    Mittel verschwindet, macht aus ($15.3.1$) eine Aussage über $f$.
-3. Über die Streuung der $\cred{\eps_i}$ sagt die Annahme noch nichts. Für
-   diesen Abschnitt brauchen wir auch nichts; die Varianz $\sigma^2$ kommt erst
-   ins Spiel, wenn wir den Fehler der Schätzung zerlegen
+3. Über die Streuung der $\cred{\eps_i}$ sagt die Annahme noch nichts, und für
+   diesen Abschnitt brauchen wir darüber auch nichts zu wissen. Die Varianz
+   $\sigma^2$ kommt erst ins Spiel, wenn wir den Fehler der Schätzung zerlegen
    ([Abschnitt 15.4](#sec-15.4)).
 :::
 
@@ -89,8 +91,10 @@ Den ersten Weg kennen wir schon aus der Interpolation
 viele Funktionen fest und lassen nur deren Linearkombinationen zu.
 
 :::definition[15.3.4 (Ansatzraum und Designmatrix)]
-Seien $\corange{\phi_1}, \dots, \corange{\phi_K}$ fest gewählte Funktionen auf
-$[a, b]$, die *Basisfunktionen*, und sei
+Seien $\corange{\phi_1}, \dots, \corange{\phi_K}$ fest gewählte, linear
+unabhängige Funktionen auf $[a, b]$, die *Basisfunktionen* (ohne die
+Unabhängigkeit wäre der Ansatzraum kleiner als $K$-dimensional,
+[Abschnitt 14.2](?k=14-funktionsapproximation#sec-14.2)), und sei
 
 $$
 \Fcal_K := \left\{ \textstyle\sum_{k=1}^{K} a_k \corange{\phi_k}
@@ -222,11 +226,14 @@ darum `qr.solve`.
 Für B-Splines ist der Schaden allerdings begrenzt, denn sie sind gut
 konditioniert. Für den Datensatz unseres Widgets messen wir
 $\kappa_2(\bB) \approx 5{,}6$ bei $K = 10$ und $\kappa_2(\bB) \approx 65$ bei
-$K = 40$. Die Monombasis derselben Größenordnung liegt viele Zehnerpotenzen
-darüber ([Abschnitt 14.3](?k=14-funktionsapproximation#sec-14.3)). Dazu kommt
-die Bandstruktur: Jede Basisfunktion lebt nur über wenigen Teilintervallen, also
-ist $\bB^\top\bB$ dünn besetzt und die Zerlegung billig
-([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
+$K = 40$. Die Monombasis $1, x, \dots, x^{K-1}$ an denselben $50$ Stellen kommt
+dagegen schon bei $K = 10$ auf $2 \cdot 10^9$ und bei $K = 20$ auf
+$7 \cdot 10^{20}$, ganz wie in
+[Abschnitt 14.3](?k=14-funktionsapproximation#sec-14.3). Dazu kommt die
+Bandstruktur: Zwei kubische B-Splines überlappen nur, wenn ihre Indizes
+höchstens $q = 3$ auseinanderliegen, also verschwindet $(\bB^\top\bB)_{jk}$ für
+$|j - k| > 3$. Bei $K = 40$ sind so nur $268$ der $1600$ Einträge besetzt, und
+die Zerlegung wird billig ([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
 :::
 
 :::bemerkung[15.3.7 (Wann die Designmatrix vollen Spaltenrang hat)]
@@ -235,7 +242,8 @@ das reicht nicht: Die Basisfunktionen müssen auch *auf den Daten* linear
 unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen. Der
 zuständige Satz von Schoenberg und Whitney sagt für B-Splines vom Grad $q$ mit
 erweitertem Knotenvektor $\corange{\tau}$ (die Bauart aus
-[Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)): $\bB$ hat genau dann vollen Spaltenrang, wenn es
+[Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4)): $\bB$ hat genau dann
+vollen Spaltenrang, wenn es
 Indizes $i_1 < \dots < i_K$ gibt mit
 $\corange{\tau_k} < x_{i_k} < \corange{\tau_{k+q+1}}$ für alle $k$, wenn also
 jede Basisfunktion einen eigenen Datenpunkt in ihrem Träger belegen kann.
@@ -244,11 +252,16 @@ Die naheliegende Abschwächung „jede Basisfunktion sieht mindestens einen
 Datenpunkt" genügt dafür nicht. Unsere eigene Rechnung mit den $50$ Punkten des
 Widgets, aber *gleichmäßigen* Knoten auf $[0, 2\pi]$, zeigt es: Bei $K = 35$ hat
 jede der $35$ Basisfunktionen mindestens einen Datenpunkt im Träger, und
-trotzdem bricht die Cholesky-Zerlegung von $\bB^\top\bB$ ab, weil sieben der
-$32$ Knotenintervalle leer bleiben und die Bedingung damit verletzt ist.
-Mit Knoten auf den Quantilen der $x_i$ hält die Bedingung dagegen bis $K = n$.
-Das Widget legt seine Knoten deshalb auf Quantile, wie es auch `splines::bs()`
-tut.
+trotzdem bricht die Cholesky-Zerlegung von $\bB^\top\bB$ beim dreizehnten Pivot
+ab, denn $\bB$ hat nur Rang $34$. Der Grund ist eine Datenlücke: Im Bereich
+$[1{,}18;\, 2{,}55]$ liegen nur drei Beobachtungen, während gleich vier
+Basisfunktionen ihren ganzen Träger dort haben. Vier Funktionen können sich
+nicht drei Punkte teilen, und genau das verbietet die Bedingung. Dass sieben
+der $32$ Knotenintervalle leer bleiben, wäre als Begründung übrigens zu wenig:
+Bei $K = 33$ und $K = 34$ sind es ebenso viele, und dort hat $\bB$ vollen
+Spaltenrang. Mit Knoten auf den Quantilen der $x_i$ hält die Bedingung bis
+$K = n$. Das Widget legt seine inneren Knoten deshalb auf Quantile, wie es auch
+`splines::bs()` tut.
 :::
 
 ### Interpolation und Glättung sind derselbe Rahmen
@@ -327,6 +340,14 @@ nicht, denn sie brauchen $f$. Und sie laufen auseinander: Von $K = 10$ auf
 $K = 40$ fällt die Residuenquadratsumme auf weniger als ein Fünftel, während der
 Abstand zur wahren Funktion auf das Zweiundzwanzigfache steigt. Am besten trifft
 in unserem Lauf $K = 11$ mit einem Abstand von $0{,}072$.
+
+Die letzte Spalte will dabei vorsichtig gelesen werden. Bis $K = 29$ wird das
+Maximum immer an einem der beiden Intervallenden angenommen, wo überhaupt keine
+Daten mehr liegen: Der erste Messpunkt sitzt bei $x = 0{,}05$, der letzte bei
+$x = 6{,}26$, dort extrapoliert die Kurve also. Innerhalb des Datenbereichs
+lauten dieselben vier Werte $0{,}454$, $0{,}400$, $0{,}837$ und $8{,}574$. Erst
+so verhält sich die Spalte wie erwartet: Von $K = 4$ auf $K = 10$ fällt die
+größte Abweichung, danach wächst sie.
 :::
 
 :::bemerkung[15.3.11 (Die Residuen fallen nicht immer)]
@@ -351,12 +372,15 @@ gerade der Raum der kubischen Polynome, und die Kurve ist zu starr, um beide
 Wellen von $f$ mitzunehmen. Zwischen $K = 6$ und $K = 15$ liegt sie sauber im
 Rauschband; $\wh\sigma$ bewegt sich dort zwischen $0{,}278$ und $0{,}306$, also
 dicht an der wahren Streuung $0{,}3$. Ab $K = 16$ beginnen die Ausschläge, und
-von $K = 30$ an verlässt die Kurve bei den meisten Reglerstellungen das
-Bildfenster, ohne dass die Residuen davon noch viel besser würden.
+von $K = 30$ an schießt die Kurve bei den meisten Reglerstellungen über den
+oberen Bildrand hinaus. Die Residuenquadratsumme fällt dabei durchaus weiter,
+von $1{,}67$ bei $K = 30$ auf $0{,}56$ bei $K = 40$; pro Freiheitsgrad
+gerechnet ist aber fast nichts gewonnen, denn $\wh\sigma$ geht nur von
+$0{,}289$ auf $0{,}236$ zurück.
 
 Die rot gezeichneten Residuen zeigen dasselbe von der anderen Seite: Sie werden
-im Mittel kürzer, während die grüne Kurve immer weniger mit der violetten zu tun
-hat.
+insgesamt kürzer, wenn auch nicht bei jedem einzelnen Schritt, während die
+grüne Kurve immer weniger mit der violetten zu tun hat.
 
 <SplineGlaettung />
 :::
@@ -397,7 +421,8 @@ Drei Beobachtungen ordnen das Kriterium ein.
 2. *Die beiden Grenzfälle sind vertraut.* Für $\lambda \to 0$ verschwindet die
    Strafe. Übrig bleiben die Interpolanten, und unter ihnen wählt der Strafterm
    im Grenzwert den mit der kleinsten Krümmung, also den natürlichen kubischen
-   Spline aus Satz 15.1.4. Für $\lambda \to \infty$ wird jede Kandidatin mit
+   Spline aus Satz 15.1.4, der nach Korollar 15.1.6 der einzige Minimierer
+   ist. Für $\lambda \to \infty$ wird jede Kandidatin mit
    $J(g) > 0$ unbezahlbar; übrig bleiben die Funktionen mit $g'' \equiv 0$, also
    die Geraden, und unter ihnen die
    :k[Kleinste-Quadrate-Gerade]{#linear-regression}. Der Glättungsparameter
@@ -430,11 +455,15 @@ Mit $\bP = \bI$ steht dort wortwörtlich die Ridge-Regression aus
 [Abschnitt 13.5](?k=13-optim#sec-13.5), und der Rechentrick ist derselbe: Der
 Zuschlag macht das System auch dann eindeutig lösbar, wenn $\bB$ keinen vollen
 Spaltenrang hat. Beim Krümmungs-Strafterm ist $\bP$ allerdings nur positiv
-semidefinit, denn affine Funktionen haben Strafe null. Positiv definit wird
-$\bB^\top\bB + \lambda\bP$ dann, sobald keine affine Funktion an allen
-Datenstellen verschwindet, wofür zwei verschiedene $x_i$ genügen. Der
-Unterschied zu Ridge liegt in der Bedeutung: Dort werden *große* Koeffizienten
-bestraft, hier *unruhige* Funktionen.
+semidefinit, denn affine Funktionen haben Strafe null. Für $\lambda > 0$ wird
+$\bB^\top\bB + \lambda\bP$ trotzdem positiv definit. Es ist nämlich
+$\ba^\top(\bB^\top\bB + \lambda\bP)\ba = \left\|\bB\ba\right\|_2^2 + \lambda\ba^\top\bP\ba$,
+beides nichtnegativ.
+Verschwinden beide Summanden, so ist $\cgreen{\wh f}$ affin und an allen
+Datenstellen null, bei zwei verschiedenen $x_i$ also die Nullfunktion, und mit
+linear unabhängigen $\corange{\phi_k}$ heißt das $\ba = \bnull$. Der Unterschied zu
+Ridge liegt in der Bedeutung: Dort werden *große* Koeffizienten bestraft, hier
+*unruhige* Funktionen.
 
 Auf dieser Konstruktion stehen die additiven Modelle, mit denen in der Statistik
 tatsächlich gearbeitet wird; in R rechnet sie `mgcv::gam()`. Wie $\lambda$
@@ -459,8 +488,8 @@ Abstand zu $f$, und der ist bei einer glatten Schätzung kleiner. Beispiel
 
 ### Beispiel: Glättung in R
 
-Der ganze Abschnitt passt in acht Zeilen R. Die Folie zeigt sie für den
-Datensatz aus Beispiel 15.3.10:
+Der ganze Abschnitt passt in acht Zeilen R. Die Folie zeigt sie für ein Setup
+wie in Beispiel 15.3.10, allerdings mit ihrer eigenen Ziehung:
 
 ```r
 B <- splines::bs(x, df = 10, intercept = TRUE)   # n x 10 Designmatrix
@@ -487,9 +516,13 @@ Drei Details lohnen den zweiten Blick.
   werden Knoten und Randknoten von `B` übernommen. Ohne diese Übergabe wäre die
   Basis eine andere, und die Koeffizienten `a_hat` würden zu ihr nicht passen.
 
-:::bemerkung[15.3.15 (Ein Argument fehlt auf der Folie)]
-Der abgedruckte Codeblock der Folie ruft `bs(x_new, knots = attr(B, "knots"),
-intercept = TRUE)` ohne `Boundary.knots` auf. Fehlt dieses Argument, so setzt
+:::bemerkung[15.3.15 (Der abgedruckte Folien-Code ist so nicht lauffähig)]
+Zwei Kleinigkeiten trennen den Codeblock der Folie von der Fassung oben. Die
+harmlose zuerst: Er ruft `bs()` ohne den Namensraum `splines::` und ohne ein
+vorangehendes `library(splines)` auf, bricht abgetippt also sofort ab. Die
+zweite ist die interessante. Der abgedruckte Block ruft `bs(x_new,
+knots = attr(B, "knots"), intercept = TRUE)` ohne `Boundary.knots` auf.
+Fehlt dieses Argument, so setzt
 `bs()` die Randknoten auf den Wertebereich des *neuen* Gitters, hier also auf
 $[0, 2\pi]$, während `B` sie auf den Bereich der Daten gesetzt hat. Die beiden
 Basen sind dann verschieden, und `B_new %*% a_hat` mischt Koeffizienten der

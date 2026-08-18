@@ -43,7 +43,15 @@ Die Menge aller solchen Funktionen bezeichnen wir mit $\Scal_q$.
 :::
 
 :::bemerkung[14.4.2 (Was in dieser Definition steckt)]
-Drei Punkte lohnen einen zweiten Blick.
+Vier Punkte lohnen einen zweiten Blick.
+
+*Knoten heißt ab hier etwas Engeres.* Bis hierher war *Knoten* ein zweiter
+Name für die Stützstellen $\cblue{x_i}$ aus Definition 14.1.2. In diesem
+Abschnitt bezeichnet das Wort das Gitter $\corange{\xi_i}$, an dem die
+Polynomstücke zusammenstoßen. Beide fallen hier zusammen, weil wir an den
+Gitterpunkten selbst interpolieren; sobald weniger Basisfunktionen als Daten
+im Spiel sind, tun sie es nicht mehr
+([Abschnitt 15.3](?k=15-funktionsapproximation-2#sec-15.3)).
 
 *Grad höchstens $q$.* Die Folien schreiben „Polynome $q$-ten Grades"; gemeint
 ist stets „vom Grad höchstens $q$". Sonst wäre nicht einmal die Nullfunktion
@@ -52,8 +60,8 @@ ein Spline, und $\Scal_q$ wäre kein Vektorraum.
 *Die Glattheit ist eine Forderung, kein Geschenk.* Eine stückweise durch
 Polynome vom Grad höchstens $q$ definierte Funktion ist von sich aus gar
 nichts: Sie darf an jedem Knoten springen. Erst Bedingung 2 macht sie zum
-Spline. $\Ccal^{q-1}$ ist dabei die *größtmögliche* Glattheit, die man
-verlangen kann, ohne den Spline zu einem einzigen globalen Polynom zu
+Spline. $\Ccal^{q-1}$ ist dabei die *größtmögliche* Glattheit, die sich
+verlangen lässt, ohne den Spline zu einem einzigen globalen Polynom zu
 zwingen. Fordern wir nämlich zusätzlich, dass auch die $q$-te Ableitung
 stetig ist, so stimmen benachbarte Polynome in allen Ableitungen überein und
 sind damit gleich.
@@ -351,9 +359,10 @@ $\corange{\xi_5}$. Zum anderen ist die Folge zu kurz: Die Rekursion
 ($14.4.3$) greift für $k = m+q$ auf $\corange{\tau_{k+q+1}} = \corange{\tau_{m+2q+1}}$
 zu, es braucht also $m + 2q + 1$ Knoten und nicht $m + q$. Für $q = 3$ und
 $m = 17$ sind das $24$ statt $20$. Wir rechnen im Skript durchgehend mit der
-Fassung ($14.4.2$); auch die Nenner in ($14.4.3$) stehen dort konsequent in
-$\corange{\tau}$, während die Folie an einer Stelle
-$\corange{\xi_{k+q}} - \corange{\tau_k}$ schreibt.
+Fassung ($14.4.2$). Die Rekursionsformel selbst schreibt die aktuelle Folie
+korrekt in $\corange{\tau}$; eine frühere Fassung mischte dort noch
+$\corange{\xi}$ und $\corange{\tau}$, was das externe Review moniert hatte
+und was inzwischen repariert ist.
 :::
 
 :::beispiel[14.4.10 (Grad 1: die Hutfunktionen)]
@@ -576,6 +585,18 @@ Ganz auf null fällt die Änderung der Koeffizienten allerdings nicht. Das
 System koppelt sie über das Band, und wir rechnen unten nach, dass sich je
 Knotenabstand ungefähr ein Viertel der Änderung überträgt. Die Lokalität ist
 eine Frage der Größenordnung, keine exakte Abschottung.
+
+Bei gleichmäßigem Gitter lässt sich dieses Viertel sogar exakt angeben. An
+einem inneren Knoten stehen in der Kollokationszeile die drei Werte
+$\tfrac{1}{6}, \tfrac{2}{3}, \tfrac{1}{6}$, das Band trägt also das Muster
+$1, 4, 1$. Eine geometrisch abklingende Lösung $r^k$ der zugehörigen
+homogenen Gleichung erfüllt $r^2 + 4r + 1 = 0$, und deren betragskleinere
+Wurzel ist $-(2 - \sqrt{3})$ mit $2 - \sqrt{3} = 0{,}2679$. Das Vorzeichen
+wechselt also von Koeffizient zu Koeffizient, und der Betrag fällt auf gut
+ein Viertel. Genau diesen Faktor messen wir unten am ersten Schritt; weiter
+außen ziehen ihn die beiden Randzeilen auf $0{,}267$ und $0{,}250$.
+[Abschnitt 15.2](?k=15-funktionsapproximation-2#sec-15.2) kommt über das
+Momentensystem des natürlichen Splines auf dieselbe Zahl.
 :::
 
 :::vertiefung[Ein Datenpunkt wandert]

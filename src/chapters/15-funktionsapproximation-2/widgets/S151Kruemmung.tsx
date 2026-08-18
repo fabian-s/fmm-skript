@@ -192,7 +192,9 @@ export function KruemmungsVergleich() {
       <p className="max-w-prose text-sm">
         Blau sind die drei Datenpunkte, orange die Knoten, grün der natürliche kubische Spline s,
         rot der Vergleichsinterpolant g_t = s + t·(p − s). Bei t = 1 ist das genau die Parabel
-        p(x) = −x² + 2x. Die Integrale rechnet das Widget mit der Simpson-Regel auf beiden
+        p(x) = −x² + 2x. In der zweiten Ansicht stehen die zweiten Ableitungen s″ und g_t″; dort
+        entfallen die blauen Punkte, denn interpoliert werden die Funktionswerte und nicht die
+        Krümmungen. Die Integrale rechnet das Widget mit der Simpson-Regel auf beiden
         Teilintervallen aus.
       </p>
 
@@ -292,10 +294,10 @@ export function KruemmungsVergleich() {
 
           <g fontSize={10}>
             <text x={W - PAD.r - 8} y={PAD.t + 14} textAnchor="end" fill={GRUEN}>
-              Spline s
+              {ansicht.sLegende}
             </text>
             <text x={W - PAD.r - 8} y={PAD.t + 27} textAnchor="end" fill={ROT}>
-              g_t
+              {ansicht.gLegende}
             </text>
           </g>
         </svg>
@@ -324,7 +326,7 @@ export function KruemmungsVergleich() {
                 </td>
               </tr>
               <tr className="font-semibold">
-                <td className="px-2 py-0.5 text-left">Überschuss ∫(h″)²</td>
+                <td className="px-2 py-0.5 text-left">Überschuss J(g_t) − J(s)</td>
                 <td className="px-2 py-0.5">{fmt(Jg - Js)}</td>
               </tr>
             </tbody>

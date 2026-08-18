@@ -11,7 +11,7 @@ Abschnitt räumt das auf. Die Idee ist in einem Satz gesagt: Wir suchen den
 Interpolanten nicht mehr unter allen Funktionen, sondern nur noch in einem
 kleinen, endlichdimensionalen Ansatzraum. Aus der Suche nach einer Funktion
 wird damit die Suche nach endlich vielen Zahlen, und dafür haben wir seit
-[Kapitel 5](?k=05-lgs#sec-5.1) das Werkzeug.
+[Kapitel 5](?k=05-lgs#sec-5.2) das Werkzeug.
 
 ### Funktionen als Vektoren
 
@@ -56,8 +56,8 @@ $$
 ist linear, denn Summe und Vielfaches sind punktweise erklärt. Die
 Interpolanten der Daten $\cblue{\by}$ sind genau die Urbilder von
 $\cblue{\by}$ unter $E$, und die Gestalt einer solchen Urbildmenge kennen wir
-von linearen Gleichungssystemen: eine spezielle Lösung plus der
-:k[Kern]{#kernel} ([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Das ist die Aussage
+von :k[linearen Gleichungssystemen]{#linear-system}: eine spezielle Lösung
+plus der :k[Kern]{#kernel}. Das ist die Aussage
 aus [Abschnitt 14.1](#sec-14.1) in anderer Sprache, denn
 
 $$
@@ -229,7 +229,7 @@ Datenpunkt, eine Spalte je Basisfunktion*. Drei Beobachtungen dazu.
   lässt sich wiederverwenden ([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
 - Für $n = K$ ist $\bB$ quadratisch. Das System ist genau dann für jede rechte
   Seite eindeutig lösbar, wenn $\bB$ invertierbar ist
-  ([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Das ist der Normalfall der
+  ([Abschnitt 5.2](?k=05-lgs#sec-5.2)). Das ist der Normalfall der
   Interpolation, und die folgenden Abschnitte drehen sich um die Frage, wie
   gut diese Matrix konditioniert ist.
 - Für $n > K$ haben wir mehr Bedingungen als Unbekannte. Ein exakter
@@ -360,10 +360,12 @@ höchstens $2$ mit drei Nullstellen ist aber das Nullpolynom, wie
 [Abschnitt 14.3](#sec-14.3) allgemein festhält.
 :::
 
-Der Ansatzraum bestimmt also den Interpolanten, das Basissystem nur seine
-Koeffizienten und den Rechenweg dorthin. Für die Numerik ist der Rechenweg
-allerdings alles andere als gleichgültig: Ein Dreieckssystem kostet
-$O(K^2)$ Operationen, die volle Elimination $O(K^3)$
+Welche Interpolanten es überhaupt gibt, hängt also allein am Ansatzraum; das
+Basissystem bestimmt nur ihre Koeffizienten und den Rechenweg dorthin. Für die
+Numerik ist der Rechenweg allerdings alles andere als gleichgültig: Ein
+Dreieckssystem kostet $O(K^2)$ Operationen
+([Abschnitt 5.2](?k=05-lgs#sec-5.2)), eine volle Elimination samt
+anschließender Substitution $O(K^3)$
 ([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
 
 :::vertiefung[Zwei Basen, ein Interpolant]
@@ -371,7 +373,7 @@ Der Rechner führt beide Beispiele vor. Der Schalter wechselt das
 Basissystem, die Regler verschieben die drei Messwerte. Beobachten lässt sich
 dabei alles, worauf es in diesem Abschnitt ankommt: Die Matrix bleibt beim
 Schieben stehen, weil sie nur von den Stellen und der Basis abhängt; die
-Koeffizienten springen beim Basiswechsel, die grüne Kurve nicht; und die
+Koeffizienten dürfen beim Basiswechsel springen, die grüne Kurve nicht; und die
 orangen Bausteine $a_k \corange{\phi_k}$ summieren sich punktweise zu genau
 dieser Kurve.
 
@@ -397,11 +399,13 @@ Kriterien geben den Fahrplan für den Rest des Kapitels vor.
 - *Lokalität.* Ist jede Basisfunktion nur auf einem kleinen Teilintervall von
   null verschieden, so hat $\bB$ viele Nullen und wird zur Bandmatrix. Genau
   das leisten die B-Splines aus [Abschnitt 14.4](#sec-14.4).
-- *Effiziente Lösbarkeit.* Aus der Struktur von $\bB$ wird Rechenzeit:
-  Dreiecks- und Bandmatrizen lassen sich mit einem Aufwand lösen, der linear
-  in der Zahl der Unbekannten wächst, statt kubisch
+- *Effiziente Lösbarkeit.* Aus der Struktur von $\bB$ wird Rechenzeit: Eine
+  volle Elimination kostet $O(K^3)$ Operationen, ein Dreieckssystem noch
+  $O(K^2)$, und bei einer Bandmatrix fester Bandbreite wächst der Aufwand nur
+  noch linear in der Zahl der Unbekannten
   ([Abschnitt 5.3](?k=05-lgs#sec-5.3),
-  [Abschnitt 2.4](?k=02-algos#sec-2.4)).
+  [Abschnitt 2.4](?k=02-algos#sec-2.4)); die Zahlen dazu rechnet
+  [Abschnitt 14.4](#sec-14.4) aus.
 
 ### Selbsttest
 
@@ -431,10 +435,11 @@ Sobald wir uns auf einen endlichdimensionalen Ansatzraum $\Fcal_K$
 beschränken, ist der Interpolant eindeutig.
 
 Die Einschränkung allein genügt nicht. Suchen wir zu unseren drei Punkten in
-den Polynomen vom Grad höchstens $3$, also mit $K = 4 > 3 = n$, so hat das
-System mehr Unbekannte als Gleichungen und weiterhin unendlich viele
-Lösungen; der kubische Interpolant aus [Abschnitt 14.1](#sec-14.1) ist eine
-davon.
+den Polynomen vom Grad höchstens $3$, also mit $K = 4 > 3 = n$, so hat $\bB$
+mehr Spalten als Zeilen und damit einen nichttrivialen Kern. Lösbar bleibt
+das System trotzdem, denn $\cgreen{1 + x^2}$ liegt auch in diesem
+Ansatzraum. Beides zusammen ergibt wieder unendlich viele Lösungen; der
+kubische Interpolant aus [Abschnitt 14.1](#sec-14.1) ist eine davon.
 Genau eine Lösung für jede rechte Seite gibt es erst, wenn $\bB$ quadratisch
 und invertierbar ist.
 :::

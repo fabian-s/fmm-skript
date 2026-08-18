@@ -31,6 +31,11 @@ import { useMemo, useState } from "react";
  *   K = 12: Bias^2 0,0013  Var 0,0107 (Theorie 0,0108)  MSE 0,0120  (Minimum)
  *   K = 15: Bias^2 0,0001  Var 0,0135 (Theorie 0,0135)  MSE 0,0136
  *   K = 40: Bias^2 0,0001  Var 0,0358 (Theorie 0,0360)  MSE 0,0360
+ *
+ * Nachgeprueft im Review 15.4: Bias^2 + Varianz = MSE auf 2e-16 in jeder
+ * Zeile; ueber [0, 2pi] statt ueber die Entwurfsstellen gemittelt betraegt
+ * die Varianz bei K = 40 dagegen 3,91 (am rechten Rand punktweise 135,7),
+ * und ab K = 30 laufen einzelne Probenkurven dort aus dem Bildausschnitt.
  */
 
 const BLAU = "#0072B2";
@@ -51,6 +56,8 @@ const Q = 3;
 const K_MIN = 4;
 const K_MAX = 40;
 const PROBEN = 12;
+/** halbe Höhe des linken Bildausschnitts */
+const Y_MAX = 2.2;
 
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
@@ -268,17 +275,21 @@ export function BiasVarianzExplorer() {
         for (let k = 0; k < lauf.K; k++) v += a[k] * b[k];
         return v;
       });
+    const proben = lauf.proben.map(werte);
+    let ausbruch = 0;
+    for (const ys of proben) for (const v of ys) ausbruch = Math.max(ausbruch, Math.abs(v));
     return {
       gx,
-      proben: lauf.proben.map(werte),
+      proben,
       mittel: werte(lauf.mittel),
+      ausbruch,
     };
   }, [lauf]);
 
   const px = (x: number) =>
     PAD_A.l + ((x - A) / (B_END - A)) * (W_A - PAD_A.l - PAD_A.r);
   const py = (y: number) =>
-    PAD_A.t + ((2.2 - y) / 4.4) * (H_A - PAD_A.t - PAD_A.b);
+    PAD_A.t + ((Y_MAX - y) / (2 * Y_MAX)) * (H_A - PAD_A.t - PAD_A.b);
   const pfad = (ys: number[]) =>
     kurven.gx
       .map((x, i) => `${i === 0 ? "M" : "L"}${px(x).toFixed(1)} ${py(ys[i]).toFixed(1)}`)
@@ -325,6 +336,12 @@ export function BiasVarianzExplorer() {
   const varAbgleich =
     `Für die gemittelte Varianz sagt Satz 15.4.4 exakt σ²K/n = ${fmt(theorieVar)} voraus; ` +
     `unsere ${R} Wiederholungen schätzen ${fmt(lauf.varianz)}.`;
+  const randHinweis =
+    kurven.ausbruch > Y_MAX
+      ? ` Die einzelnen Kurven verlassen dabei den Bildausschnitt (Spitze bei ` +
+        `${fmt(kurven.ausbruch, 1)}, abgeschnitten bei ${fmt(Y_MAX, 1)}): Wo kaum Daten liegen, ` +
+        `explodiert die punktweise Varianz aus Bemerkung 15.4.5.`
+      : "";
 
   let status: string;
   if (!(vielfaches > 1.1)) {
@@ -354,9 +371,10 @@ export function BiasVarianzExplorer() {
   } else {
     status =
       `K = ${lauf.K}: Die Varianz trägt ${fmt(anteilVar * 100, 1)} % des MSE. Die zwölf Kurven links ` +
-      `fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt. ` +
+      `fächern auf, jede folgt ihrem eigenen Rauschen, während die dicke Mittelwertkurve über alle ` +
+      `${R} Wiederholungen weiter auf f liegt. ` +
       `${vielfaches >= 2 ? "Das ist deutliche Überanpassung" : "Hier beginnt die Überanpassung"}: ` +
-      `Der MSE ist das ${fmt(vielfaches, 1)}-fache des Minimums bei K = ${daten.besteK}. ` +
+      `Der MSE ist das ${fmt(vielfaches, 1)}-fache des Minimums bei K = ${daten.besteK}.${randHinweis} ` +
       `${varAbgleich}`;
   }
 
@@ -365,9 +383,11 @@ export function BiasVarianzExplorer() {
       <p className="max-w-prose text-sm">
         Setup wie auf der Folie: f(x) = sin(3x) auf [0, 2π] in Violett, n = 100 feste
         Stellen, σ = 0,3. Blau die Daten einer einzelnen Ziehung, orange die inneren Knoten,
-        grün die Schätzer aus den ersten zwölf von {R} Wiederholungen samt ihrem Mittelwert
-        (dick). Alle Zahlen rechnet dieses Widget selbst; die Zufallszahlen stammen aus einem
-        festen Startwert, es ist also bei jedem Aufruf dieselbe Simulation.
+        grün die Schätzer der ersten zwölf Wiederholungen; die dicke grüne Kurve ist der
+        Mittelwert über alle {R}. Der Ausschnitt reicht von −2,2 bis 2,2; ab K = 30 laufen
+        einzelne Kurven darüber hinaus, zuerst am rechten Rand. Alle Zahlen rechnet dieses Widget
+        selbst; die Zufallszahlen stammen aus einem festen Startwert, es ist also bei jedem
+        Aufruf dieselbe Simulation.
       </p>
 
       <label className="my-1 flex items-center gap-3 text-sm">

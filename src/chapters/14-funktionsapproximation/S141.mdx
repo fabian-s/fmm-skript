@@ -33,7 +33,7 @@ frühere Kapitel zurück.
 - :k[Basen]{#basis} und :k[lineare Unabhängigkeit]{#linear-independence},
   diesmal in einem :k[Vektorraum]{#vector-space}, dessen Elemente Funktionen
   sind.
-- :k[Polynome]{#polynomial} samt Polynomgrad und Monombasis,
+- :k[Polynome]{#polynomial} samt Polynomgrad, Monombasis und Ableitungen,
   :k[Stetigkeit]{#continuity} und
   :k[Differenzierbarkeit]{#differentiability}, außerdem stückweise definierte
   Funktionen.
@@ -69,23 +69,28 @@ $$ {#eq-14.1.1}
 $$
 
 Jede Funktion mit dieser Eigenschaft heißt *Interpolant* (interpolant) der
-Daten, die $x_i$ heißen *Stützstellen* (nodes). Die Bedingung ist punktweise
-und exakt: An den $n$ Stützstellen ist nichts erlaubt außer Treffen, zwischen
-ihnen alles.
+Daten, die $x_i$ heißen *Stützstellen* (nodes). Die Folien und die Literatur
+sagen dafür meist *Knoten*, und in den folgenden Abschnitten benutzen wir
+beide Wörter gleichbedeutend. Nur in [Abschnitt 14.4](#sec-14.4) bekommt
+*Knoten* eine engere Bedeutung: Dort ist es das Gitter, an dem die
+Spline-Stücke zusammenstoßen. Die Bedingung ist punktweise und exakt: An den
+$n$ Stützstellen ist nichts erlaubt außer Treffen, zwischen ihnen alles.
 :::
 
 :::definition[14.1.3 (Glättungsproblem)]
 Gegeben seien Datenpunkte $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, von denen
-wir annehmen, dass sie mit Fehlern behaftet sind:
+wir annehmen, dass sie aus einer unbekannten Funktion $f$ mit Fehlern
+entstanden sind:
 
 $$
-\cblue{y_i} = \cgreen{\wh{f}(x_i)} + \cred{\eps_i}, \qquad i = 1, \dots, n .
+\cblue{y_i} = f(x_i) + \cred{\eps_i}, \qquad i = 1, \dots, n .
 $$
 
-Gesucht ist ein $\cgreen{\wh{f}}$, das die Daten bis auf die Fehler
-$\cred{\eps_i}$ erklärt. Die $\cred{\eps_i}$ sind in aller Regel
-Zufallsvariablen, und $\cgreen{\wh{f}}$ soll das Signal treffen, nicht das
-Rauschen mitzeichnen.
+Gesucht ist ein $\cgreen{\wh{f}}$, das $f$ trifft und die Fehler
+$\cred{\eps_i}$ gerade nicht mitzeichnet. Die $\cred{\eps_i}$ sind in aller
+Regel Zufallsvariablen; welche Annahmen wir über sie brauchen, damit das
+gelingen kann, klärt
+[Abschnitt 15.3](?k=15-funktionsapproximation-2#sec-15.3).
 :::
 
 :::bemerkung[14.1.4 (Daten oder Funktion?)]
@@ -97,12 +102,24 @@ bei der Glättung wichtig: Dort ist $f$ unbekannt und nur die verrauschten
 $\cblue{y_i}$ liegen vor, weshalb die Bedingung $\cgreen{\wh{f}(x_i)} = f(x_i)$
 gar nicht überprüfbar wäre. Wir schreiben deshalb durchgehend
 $\cblue{y_i}$ und sagen dazu, ob $\cblue{y_i} = f(x_i)$ gelten soll.
+
+In der Glättungsvariante schreibt dieselbe Folie
+$\cblue{y_i} = \cgreen{\wh{f}(x_i)} + \cred{\eps_i}$ und setzt damit den
+gesuchten Schätzer in eine Annahme über die Herkunft der Daten ein. Wörtlich
+gelesen fordert das nichts: Zu jeder Funktion $\cgreen{\wh{f}}$ lassen sich
+die Abweichungen $\cblue{y_i} - \cgreen{\wh{f}(x_i)}$ hinschreiben und
+$\cred{\eps_i}$ nennen. Gemeint ist die Annahme über die Datenerzeugung, und
+die betrifft die unbekannte Funktion $f$; der Foliensatz des nächsten
+Kapitels schreibt sie genau so. Die Differenzen $\cblue{y_i} - \cgreen{\wh{f}(x_i)}$
+heißen dagegen *Residuen*, und die beiden auseinanderzuhalten ist der ganze
+Punkt der Glättung.
 :::
 
 :::vertiefung[Die drei Aufgaben nebeneinander]
-Die drei Tafeln zeigen dieselbe Ausgangslage unter den drei Forderungen.
+Die drei Tafeln zeigen dieselbe Funktion $f$ unter den drei Forderungen.
 Schieben wir den Regler für das Rauschen ganz nach links, geht die
-Glättungsaufgabe in die Interpolationsaufgabe über.
+Glättungsaufgabe in die Interpolationsaufgabe über: Die Punkte liegen dann
+auf $f$, und die Schätzung der rechten Tafel trifft alle zwölf.
 
 <DreiProbleme />
 :::
@@ -264,8 +281,10 @@ Untervektorraum des Funktionenraums, und er ist unendlichdimensional: Für
 jedes Polynom $q$ liegt $q(x) \prod_{i=1}^n (x - x_i)$ darin, und diese
 Produkte sind für verschiedene Grade von $q$ linear unabhängig. Schon der
 Spezialfall $g_c(x) = c \prod_{i=1}^n (x - x_i)$ liefert für jedes
-$c \in \R$ einen weiteren Interpolanten. Damit hat das Interpolationsproblem
-aus Definition 14.1.2 stets unendlich viele Lösungen, sobald wir
+$c \in \R$ einen Interpolanten $\cgreen{p} + g_c$, und verschiedene $c$
+liefern verschiedene Funktionen, weil $g_c$ außerhalb der $n$ Stützstellen
+nirgends verschwindet. Damit hat das Interpolationsproblem aus
+Definition 14.1.2 stets unendlich viele Lösungen, sobald wir
 $\cgreen{\wh{f}}$ nicht weiter einschränken.
 
 Die drei Zusatzfunktionen aus Beispiel 14.1.7 sind genau von dieser Bauart.
@@ -279,10 +298,12 @@ $$
 
 und beide verschwinden an $0$, $1$ und $2$; das erste ist gerade $g_1$ von
 oben, das zweite eine Sinusschwingung, die zufällig an denselben Stellen
-Nullstellen hat. Auch die stückweise lineare Differenz
-$\cgreen{\wh{f}_2} - \cgreen{p}$ verschwindet dort, sie lautet $x(1-x)$ auf
-$[0,1]$ und $-(x-1)(x-2)$ auf $[1,2]$. Die Folie zeigt die vier Kurven, ohne
-diesen gemeinsamen Bauplan zu nennen.
+Nullstellen hat. Auch die Differenz $\cgreen{\wh{f}_2} - \cgreen{p}$
+verschwindet dort. Sie ist stückweise *quadratisch*, obwohl
+$\cgreen{\wh{f}_2}$ stückweise linear ist, denn abgezogen wird die Parabel
+$\cgreen{p}$: Auf $[0,1]$ ist sie $(x+1) - (1+x^2) = x(1-x)$, auf $[1,2]$
+entsprechend $(3x-1) - (1+x^2) = -(x-1)(x-2)$. Die Folie zeigt die vier
+Kurven, ohne diesen gemeinsamen Bauplan zu nennen.
 :::
 
 Interpolation allein legt also nichts fest. Wir müssen die Auswahl
@@ -315,8 +336,10 @@ $\left\|f - \cgreen{\wh{f}}\right\| \approx 0$.
 
 Die Interpolationsbedingung sagt über die Stellen zwischen den Stützstellen
 nichts. In Beispiel 14.1.7 erfüllen alle vier Funktionen dieselben drei
-Bedingungen und liegen bei $x = 1{,}3$ trotzdem $0{,}75$ auseinander; höchstens
-eine von ihnen kann einem gegebenen $f$ nahekommen. Wie groß der Abstand
+Bedingungen und liegen bei $x = 1{,}3$ trotzdem $0{,}75$ auseinander; zu einem
+gegebenen $f$ kann dort deshalb höchstens eine von ihnen näher als $0{,}37$
+liegen, denn sonst wären zwei von ihnen weniger als $0{,}75$ voneinander
+entfernt. Wie groß der Abstand
 tatsächlich wird, klärt erst eine Fehlerabschätzung für eine konkrete
 Funktionenklasse.
 :::
@@ -335,11 +358,11 @@ sie der ersten Aussage dieses Selbsttests.
 Beim Glättungsproblem verlangen wir wie bei der Interpolation, dass
 $\cgreen{\wh{f}}$ durch alle Datenpunkte läuft.
 
-Definition 14.1.3 lässt die Residuen $\cred{\eps_i} = \cblue{y_i} -
-\cgreen{\wh{f}(x_i)}$ ausdrücklich zu. Bei verrauschten Daten wäre eine Kurve
-durch alle Punkte die falsche Antwort, weil sie das Rauschen mit abbildet. Im
-Widget der ersten Vertiefung fallen die beiden Aufgaben nur für $\sigma = 0$
-zusammen.
+Definition 14.1.3 verlangt gerade nicht, dass $\cgreen{\wh{f}}$ die Punkte
+trifft: Residuen $\cblue{y_i} - \cgreen{\wh{f}(x_i)}$ sind ausdrücklich
+erlaubt. Bei verrauschten Daten wäre eine Kurve durch alle Punkte die falsche
+Antwort, weil sie die Fehler $\cred{\eps_i}$ mit abbildet. Im Widget der
+ersten Vertiefung fallen die beiden Aufgaben nur für $\sigma = 0$ zusammen.
 :::
 
 :::frage{falsch}

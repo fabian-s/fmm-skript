@@ -56,11 +56,13 @@ $\corange{\xi_1 < \dots < \xi_{m-1}}$ zusammen, den *Knoten* (knots). Auf
 jedem der $m$ Teilintervalle steht ein Polynom vom Grad höchstens $q$, und an
 den Knoten passen die Stücke bis zur $(q-1)$-ten Ableitung zusammen. Ein
 kubischer Spline ($q = 3$) ist demnach eine $\Ccal^2$-Funktion: Wert, erste
-und zweite Ableitung gehen ohne Sprung über die Knoten. Die Folien stellen
-dazu drei Bilder nebeneinander, denselben Datensatz mit $q = 0$, $q = 1$ und
-$q = 3$: eine Treppe mit Sprüngen, einen Polygonzug mit Knicken und eine
-Kurve, der man die Stückelung nicht mehr ansieht. Genau der dritte Fall ist
-der Standard, und dieser Abschnitt sagt, warum.
+und zweite Ableitung gehen ohne Sprung über die Knoten. Für $q = 0$ verlangt
+dieselbe Regel gar nichts, denn eine $(-1)$-te Ableitung gibt es nicht; die
+Stücke dürfen dort also springen. Die Folien stellen dazu drei Bilder
+nebeneinander, denselben Datensatz mit $q = 0$, $q = 1$ und $q = 3$: eine
+Treppe mit Sprüngen, einen Polygonzug mit Knicken und eine Kurve, der sich die
+Stückelung nicht mehr ansehen lässt. Genau der dritte Fall ist der Standard,
+und dieser Abschnitt sagt, warum.
 
 Ein Wort zur Benennung, weil im Satz weiter unten andere Buchstaben stehen:
 $\corange{\xi_1}, \dots, \corange{\xi_{m-1}}$ sind hier nur die *inneren*
@@ -73,8 +75,8 @@ Die Folien sagen an dieser Stelle nur „setzt Polynome zusammen". Die
 Glattheitsforderung gehört zur Definition dazu, sonst wäre jede stückweise
 konstante Treppenfunktion ein kubischer Spline.
 [Abschnitt 14.4](?k=14-funktionsapproximation#sec-14.4) führt das aus,
-einschließlich der B-Spline-Basis, mit der man solche Funktionen praktisch
-darstellt.
+einschließlich der B-Spline-Basis, mit der sich solche Funktionen praktisch
+darstellen lassen.
 :::
 
 ### Krümmung als Zielgröße
@@ -114,8 +116,8 @@ Gleichungen, genau wie bei den Kleinsten Quadraten in
 Damit lässt sich die Ausgangsfrage präzise stellen. Gegeben sind Punkte, gesucht
 ist unter allen $\Ccal^2$-Funktionen, die durch diese Punkte laufen, die mit
 dem kleinsten $J$. Interpolanten gibt es unendlich viele
-([Abschnitt 14.1](?k=14-funktionsapproximation#sec-14.1)), das Minimum
-dagegen ist eindeutig, und es hat einen Namen.
+([Abschnitt 14.1](?k=14-funktionsapproximation#sec-14.1)), der Minimierer
+dagegen ist eindeutig, und er hat einen Namen.
 
 :::satz[15.1.4 (Kubische Splines haben minimale Krümmung)]
 Seien $n \ge 2$ und
@@ -177,10 +179,10 @@ Zu zeigen bleibt, dass der mittlere Term verschwindet.
 :::
 
 :::schritt
-Auf jedem einzelnen Knotenintervall $[\corange{x_{i-1}}, \corange{x_i}]$ ist
-$\cgreen{s}$ ein Polynom vom Grad höchstens $3$, dort also beliebig oft
-differenzierbar. Deshalb zerlegen wir das mittlere Integral und integrieren
-auf jedem Stück zweimal partiell:
+Auf jedem einzelnen Knotenintervall $[\corange{x_{i-1}}, \corange{x_i}]$ mit
+$i = 2, \dots, n$ ist $\cgreen{s}$ ein Polynom vom Grad höchstens $3$, dort
+also beliebig oft differenzierbar. Deshalb zerlegen wir das mittlere Integral
+und integrieren auf jedem Stück zweimal partiell:
 
 $$
 \int_{x_{i-1}}^{x_i} \cgreen{s''}\, \cred{h''} \dx
@@ -257,11 +259,16 @@ sich, die drei Zutaten getrennt zu benennen.
    $\cgreen{s''}$ *und* von $\cred{h'}$ über die Knoten hinweg. Beides ist
    vorhanden: $\cgreen{s}$ ist als kubischer Spline in $\Ccal^2$, und
    $\cred{h}$ ist es nach Voraussetzung an $\cred{g}$. Wäre $\cred{g}$ nur
-   stückweise glatt mit Knick, bräche der Schritt zusammen.
+   stückweise glatt mit Knick, bräche der Schritt zusammen. Die Folie fasst
+   diesen Punkt mit dem nächsten in eine einzige Gleichungskette und begründet
+   nur, warum die Ränder wegfallen; dass sich die inneren Beiträge
+   wegheben, bleibt dort unerwähnt.
 2. Die dritte Ableitung $\cgreen{s^{(3)}}$ darf an den Knoten dagegen
    springen, und sie tut es im Allgemeinen auch. Gerettet wird der Term
    allein durch $\cred{h(x_i)} = 0$: Der Sprung wird mit null multipliziert.
-   Genau deshalb müssen die Knoten des Splines die Datenpunkte sein.
+   Genau deshalb müssen die Knoten des Splines die Datenpunkte sein. Auch das
+   steht auf der Folie nicht im Satzkopf, der von $\cgreen{s}$ nur verlangt,
+   ein natürlicher kubischer Spline durch die Punkte zu sein.
 3. Für den letzten Rest $[\cgreen{s''}\cred{h'}]_a^b$ hilft kein
    Verschwinden von $\cred{h}$ mehr, denn dort steht $\cred{h'}$. Die
    natürliche Bedingung $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ macht ihn
@@ -293,7 +300,7 @@ $a = \corange{x_1}$ und $\corange{x_n} = b$. Auf der Folie dürfen die Punkte
 irgendwo in $[a,b]$ liegen, der Beweis summiert dann aber über die Knotenintervalle
 und setzt das Ergebnis mit einem Randterm an $a$ und $b$ gleich. Das geht nur
 auf, wenn die äußersten Knoten die Intervallenden sind. Liegen die Daten echt
-im Inneren, setzt man den Spline außerhalb linear fort: Dort ist
+im Inneren, setzen wir den Spline außerhalb linear fort: Dort ist
 $\cgreen{s''} = 0$, $J(\cgreen{s})$ bleibt also unverändert, und wegen
 $\int_a^b (\cred{g''})^2 \dx \ge \int_{x_1}^{x_n} (\cred{g''})^2 \dx$
 überträgt sich die Ungleichung auf das größere Intervall.
@@ -322,9 +329,9 @@ Summe: $2(n-1) + 2(n-2) + 2 = 4(n-1)$, also genauso viele Gleichungen wie
 Unbekannte. Für $n = 5$ etwa sind es $16$ auf beiden Seiten.
 
 Abzählen allein ist noch kein Existenzbeweis, denn gleich viele Gleichungen
-wie Unbekannte heißt nicht, dass die Matrix regulär ist. Das sieht man
-aber, wenn man die $4(n-1)$ Koeffizienten zugunsten der *Momente*
-$M_i := \cgreen{s''(x_i)}$ eliminiert. Mit den Abständen
+wie Unbekannte heißt nicht, dass die Matrix regulär ist. Das sehen wir
+aber, sobald wir die $4(n-1)$ Koeffizienten zugunsten der *Momente*
+$M_i := \cgreen{s''(x_i)}$ eliminieren. Mit den Knotenabständen
 $\corange{h_i} := \corange{x_{i+1}} - \corange{x_i}$ bleibt für jeden inneren
 Knoten $i = 2, \dots, n-1$ genau eine Gleichung übrig,
 
@@ -337,13 +344,15 @@ $$
 $$
 
 dazu $M_1 = M_n = 0$ aus der natürlichen Randbedingung. Das ist ein
-tridiagonales System in $n-2$ Unbekannten, und sein Diagonaleintrag ist mit
-$2(\corange{h_{i-1}} + \corange{h_i})$ doppelt so groß wie die Summe der
-beiden Nebeneinträge. Damit ist es strikt diagonaldominant, also regulär: Der
+tridiagonales System in $n-2$ Unbekannten, und sein Diagonaleintrag
+$2(\corange{h_{i-1}} + \corange{h_i})$ ist doppelt so groß wie die Summe
+$\corange{h_{i-1}} + \corange{h_i}$ der beiden Nebeneinträge; in der ersten
+und der letzten Zeile fällt einer davon sogar weg, weil $M_1$ und $M_n$ schon
+feststehen. Damit ist das System strikt diagonaldominant, also regulär: Der
 natürliche kubische Spline existiert und ist eindeutig. Zugleich ist es ein
 Bandsystem, wie es [Abschnitt 5.3](?k=05-lgs#sec-5.3) als ausnutzbare
 Sonderstruktur aufführt: Die Elimination verlässt das Band nie, der Aufwand
-wächst also nur linear in $n$ statt kubisch. Genau deshalb bleiben Splines
+wächst also nur linear in $n$ statt kubisch. Deshalb bleiben Splines
 auch bei vielen Punkten billig. Für die drei Punkte aus Beispiel 15.1.8 bleibt
 davon die einzelne Gleichung $4M_2 = -12$ mit $M_2 = -3$, und das ist genau
 das $\cgreen{s''(1)} = -3$, das wir dort ausrechnen.
@@ -524,5 +533,5 @@ zu „Gleichheit nur für $\cred{h} \equiv 0$".
 (Interpolation), Abschnitt 7.4.2 ein und rechnet dort denselben
 Drei-Punkte-Fall mit acht Bedingungen vor. Die Minimaleigenschaft selbst
 steht als Satz 7.57 bei Deuflhard und Hohmann, Numerische Mathematik 1,
-Abschnitt 7.4; dort findet sich auch die Rechtfertigung, warum man statt der
-geometrischen Krümmung deren Näherung $f''$ integriert.*
+Abschnitt 7.4; dort findet sich auch die Rechtfertigung dafür, statt der
+geometrischen Krümmung deren Näherung $f''$ zu integrieren.*

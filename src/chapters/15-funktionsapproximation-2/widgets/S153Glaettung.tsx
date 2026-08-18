@@ -25,12 +25,19 @@ import { useMemo, useState } from "react";
  *   K = 11  RSS 3,151  sigmahat 0,284  RMS 0,0724 (bester Wert im Bereich)
  *   K = 20  RSS 2,460  sigmahat 0,286  RMS 0,2692  max 2,223
  *   K = 40  RSS 0,557  sigmahat 0,236  RMS 1,9078  max 8,574
- *   Basis: max |sum_k N_k(x) - 1| = 4,4e-16, keine negativen Werte.
+ *   Basis: max |sum_k N_k(x) - 1| = 5,6e-16 ueber 4001 Punkte und
+ *   K = 4/7/10/20/35/40, keine negativen Werte.
  *   Empirische sd der gezogenen Fehler: 0,2662 (wahres sigma = 0,3).
  * Alle 37 Reglerzustaende durchgespielt (check-s153-widget.mjs): die vier
  * Statuszweige sind mit 2 / 10 / 16 / 9 Zustaenden alle erreichbar; der
  * Singulaer-Zweig ist reiner Rechenschutz und feuert bei Quantilknoten im
  * Bereich K = 4..40 nie.
+ * Review 15.3 (2026-08-14, rev153-*.mjs am ausgelieferten Kern): kappa_2(B) =
+ * 5,62 (K = 10) / 65,0 (K = 40); B^T B hat Bandbreite 3. In ALLEN neun
+ * Fenster-Zustaenden laeuft die Kurve nur nach OBEN heraus (kleinster Wert
+ * -2,12 bei K = 40), der Statustext verzweigt deshalb nach Seiten. Bis
+ * K = 29 sitzt max |fhat - f| stets an einem Intervallende, also ausserhalb
+ * des Datenbereichs [0,050; 6,257].
  */
 
 const BLAU = "#0072B2";
@@ -296,27 +303,35 @@ export function SplineGlaettung() {
   } else if (K <= 5) {
     const raum =
       K === 4
-        ? "ist genau der Raum der kubischen Polynome, innere Knoten gibt es keine"
-        : `lässt mit ${innere.length} innerem Knoten kaum mehr zu`;
+        ? "ist der Ansatzraum genau der Raum der kubischen Polynome, innere Knoten gibt es keine"
+        : `lässt der Ansatzraum mit ${innere.length} innerem Knoten kaum mehr zu`;
     status =
-      `K = ${K} ${raum}. Die Kurve ist zu starr für f und verfehlt die Extrema systematisch: ` +
+      `Bei K = ${K} ${raum}. Die Kurve ist zu starr für f und verfehlt die Extrema systematisch: ` +
       `im quadratischen Mittel um ${fmt(fit.rms)}, an der schlimmsten Stelle x = ` +
       `${fmt(fit.argMax, 2)} um ${fmt(fit.maxAbw, 2)}. Auch die Residuen sind entsprechend groß, ` +
       `RSS = ${fmt(fit.rss, 2)} und damit σ̂ = ${fmt(fit.sigmaHut)} statt der wahren 0,3. Was hier ` +
       `übrig bleibt, ist kein Rauschen, sondern nicht erklärte Struktur.`;
   } else if (verlaesstFenster) {
+    const obenRaus = fit.maxWert > Y_FENSTER;
+    const untenRaus = fit.minWert < -Y_FENSTER;
+    const richtung =
+      obenRaus && untenRaus
+        ? `bis ${fmt(fit.maxWert, 1)} nach oben und ${fmt(fit.minWert, 1)} nach unten aus dem Bild`
+        : obenRaus
+          ? `bis ${fmt(fit.maxWert, 1)} nach oben aus dem Bild (nach unten bleibt sie bei ${fmt(fit.minWert, 1)})`
+          : `bis ${fmt(fit.minWert, 1)} nach unten aus dem Bild (nach oben bleibt sie bei ${fmt(fit.maxWert, 1)})`;
     status =
       `K = ${K} bei n = 50 Datenpunkten: Der Fit hat nur noch ${N - K} Freiheitsgrade übrig. ` +
       `Die Residuenquadratsumme ist mit ${fmt(fit.rss, 2)} klein, die geschätzte Kurve läuft aber ` +
-      `bis ${fmt(fit.maxWert, 1)} nach oben und ${fmt(fit.minWert, 1)} nach unten und verlässt damit ` +
-      `das Bild; wo sie draußen ist, bricht der grüne Zug ab. Vom wahren f ist sie im quadratischen ` +
+      `${richtung}; wo sie draußen ist, bricht der grüne Zug ab. Vom wahren f ist sie im quadratischen ` +
       `Mittel ${fmt(fit.rms)} entfernt, an der schlimmsten Stelle x = ${fmt(fit.argMax, 2)} um ` +
       `${fmt(fit.maxAbw, 2)}. Das ist Überanpassung in Reinform: Die Kurve jagt einzelne Punkte, ` +
       `und zwischen zwei eng benachbarten x-Werten mit verschiedenem Rauschen muss sie steil werden.`;
   } else if (fit.rms > 0.18) {
     status =
-      `K = ${K}: Zwischen den Datenpunkten schlägt die Kurve aus. Die Residuenquadratsumme ist auf ` +
-      `${fmt(fit.rss, 2)} gefallen, der Abstand zum wahren f dagegen auf ${fmt(fit.rms)} gestiegen ` +
+      `K = ${K}: Zwischen den Datenpunkten schlägt die Kurve aus. Die Residuenquadratsumme ist mit ` +
+      `${fmt(fit.rss, 2)} kleiner als im gut angepassten Bereich, der Abstand zum wahren f mit ` +
+      `${fmt(fit.rms)} dagegen deutlich größer ` +
       `(größte Abweichung ${fmt(fit.maxAbw, 2)} bei x = ${fmt(fit.argMax, 2)}). Die Anpassung an die ` +
       `Daten wird also besser, die Schätzung von f schlechter. Nur den ersten der beiden Werte ` +
       `könnten wir an echten Daten überhaupt ausrechnen.`;
@@ -505,11 +520,11 @@ export function SplineGlaettung() {
                   <td className="px-2 py-1">{fmt(fit.sigmaHut)}</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 text-left">‖f̂ − f‖ im Mittel</td>
+                  <td className="px-2 py-1 text-left">Abstand zu f im Mittel</td>
                   <td className="px-2 py-1">{fmt(fit.rms, 4)}</td>
                 </tr>
                 <tr>
-                  <td className="px-2 py-1 text-left">max |f̂ − f|</td>
+                  <td className="px-2 py-1 text-left">größte Abweichung von f</td>
                   <td className="px-2 py-1">{fmt(fit.maxAbw, 3)}</td>
                 </tr>
               </tbody>
@@ -518,9 +533,9 @@ export function SplineGlaettung() {
           <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
             Die beiden unteren Zeilen sind an echten Daten nicht ausrechenbar: Sie brauchen f, und f
             ist gerade das Unbekannte. Ausrechenbar ist allein die RSS, und die zeigt in die falsche
-            Richtung, sobald K groß wird. Der größte Abstand sitzt bei kleinem K meist an einem der
-            beiden Ränder, wo die Schätzung die wenigsten Daten hinter sich hat: Der erste Datenpunkt
-            liegt bei x = 0,05, der letzte bei x = 6,26.
+            Richtung, sobald K groß wird. Bis K = 29 sitzt die größte Abweichung stets an einem der
+            beiden Intervallenden, wo die Kurve über den Datenbereich hinausläuft: Der erste
+            Datenpunkt liegt bei x = 0,05, der letzte bei x = 6,26.
           </p>
         </div>
       </div>

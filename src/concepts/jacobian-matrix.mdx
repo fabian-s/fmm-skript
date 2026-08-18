@@ -1,0 +1,44 @@
+export const title = "Jacobimatrix";
+
+{/* Konzept-Tooltip: Jacobimatrix als Ableitung einer vektorwertigen Funktion. */}
+
+Für $f: \R^n \to \R^m$ gibt es keine einzelne Ableitungszahl mehr. An ihre
+Stelle tritt die *Jacobimatrix* (Jacobian matrix): Sie sammelt alle
+:k[partiellen Ableitungen]{#partial-derivative} der $m$ Komponenten nach den
+$n$ Variablen ein,
+
+$$
+\bJ_f(\bx) = \begin{pmatrix}
+\frac{\partial f_1(\bx)}{\partial x_1} & \cdots & \frac{\partial f_1(\bx)}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_m(\bx)}{\partial x_1} & \cdots & \frac{\partial f_m(\bx)}{\partial x_n}
+\end{pmatrix} \in \R^{m \times n} .
+$$
+
+In der $i$-ten Zeile steht der :k[Gradient]{#gradient} der $i$-ten Komponente,
+als Zeilenvektor geschrieben. Das Format merkt man sich am besten über die
+Bildräume: so viele Zeilen wie Zielkoordinaten, so viele Spalten wie
+Argumente. Für $m = 1$ ist die Jacobimatrix also der transponierte Gradient,
+für $n = m = 1$ schlicht die :k[Ableitung]{#derivative} $f'(x)$.
+
+Der Sinn dahinter ist immer derselbe: Die Jacobimatrix ist die
+:k[lineare Abbildung]{#linear-map}, die $f$ in der Nähe von $\bx$ am besten
+annähert. Genau das meint
+:k[Differenzierbarkeit]{#differentiability} im Mehrdimensionalen,
+
+$$
+f(\bx + \bh) = f(\bx) + \bJ_f(\bx)\,\bh + r(\bh),
+\qquad \frac{\|r(\bh)\|}{\|\bh\|} \to 0 \text{ für } \bh \to \bnull .
+$$
+
+Ein Beispiel: $f(x_1, x_2) = (x_1 x_2,\; x_1 + x_2^2)^\top$ hat
+
+$$
+\bJ_f(\bx) = \begin{pmatrix} x_2 & x_1 \\ 1 & 2x_2 \end{pmatrix},
+$$
+
+an der Stelle $\bx = (1, 2)^\top$ also $\begin{pmatrix} 2 & 1 \\ 1 & 4\end{pmatrix}$.
+
+Weil die beste lineare Näherung einer Verkettung die Verkettung der
+Näherungen ist, wird aus dem Produkt der Ableitungen in der
+:k[Kettenregel]{#chain-rule} ein Matrixprodukt von Jacobimatrizen.

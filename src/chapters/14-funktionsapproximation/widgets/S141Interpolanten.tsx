@@ -36,16 +36,15 @@ const f4 = (x: number) => 1 + x * x + 0.5 * Math.sin(2 * Math.PI * x);
 
 interface Kandidat {
   name: string;
-  formel: string;
   f: (x: number) => number;
   dash: number[];
 }
 
 const KANDIDATEN: Kandidat[] = [
-  { name: "Parabel", formel: "\\wh{f}_1(x) = 1 + x^2", f: f1, dash: [] },
-  { name: "stückweise linear", formel: "\\wh{f}_2", f: f2, dash: [7, 4] },
-  { name: "kubisch", formel: "\\wh{f}_3(x) = x^3 - 2x^2 + 2x + 1", f: f3, dash: [2, 3] },
-  { name: "vogelwild", formel: "\\wh{f}_4(x) = 1 + x^2 + 0{,}5\\sin(2\\pi x)", f: f4, dash: [10, 3, 2, 3] },
+  { name: "Parabel", f: f1, dash: [] },
+  { name: "stückweise linear", f: f2, dash: [7, 4] },
+  { name: "kubisch", f: f3, dash: [2, 3] },
+  { name: "vogelwild", f: f4, dash: [10, 3, 2, 3] },
 ];
 
 const fmt = (v: number, d = 2) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");

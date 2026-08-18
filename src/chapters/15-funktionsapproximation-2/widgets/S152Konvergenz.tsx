@@ -20,7 +20,13 @@ import { niceTicks } from "../../../lib";
  *   9 Knoten  h = 0,125    Schranke 0,00495    Fehler 0,0010661   Faktor 18,78
  *  17 Knoten  h = 0,0625   Schranke 0,000310   Fehler 0,000063121 Faktor 16,89
  *  33 Knoten  h = 0,03125  Schranke 0,0000194  Fehler 0,0000038893 Faktor 16,23
- * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
+ * Auf die drei angezeigten geltenden Ziffern sind die Werte ab 2001 Abtast-
+ * punkten stabil (bei 33 Knoten weicht die vierte Ziffer bis 8001 noch ab,
+ * Grenzwert 0,0000038893); das Widget nimmt 8001.
+ *
+ * Symmetrie: sin(2 pi (1-x)) = -sin(2 pi x), und die Knoten liegen symmetrisch,
+ * also ist |f - s| spiegelsymmetrisch zu x = 1/2 (numerisch bis 9e-16). Die
+ * Fehlerspitze tritt deshalb immer als Paar auf; der Statustext sagt das.
  */
 
 const GRUEN = "#009E73";
@@ -226,10 +232,12 @@ export function SplineKonvergenz() {
     status =
       `Das gröbste Gitter hat ${zeile.knoten} Knoten, also die Gitterweite h = ${fmtH(zeile.h)}. ` +
       `Satz 15.2.2 erlaubt damit einen Fehler von bis zu C·h⁴·M₄ = ${fmtE(zeile.schranke)}; gemessen ` +
-      `haben wir ${fmtE(zeile.fehler)} an der Stelle x = ${fmt(zeile.argmax, 4)}, also ` +
-      `${fmt(verhaeltnis * 100, 1)} % der Schranke. Schon hier liegt der Spline sichtbar nah an f, ` +
-      `und die Abweichung ist im oberen Bild kaum vom Strich zu unterscheiden. Schieben wir den ` +
-      `Regler nach rechts, um die Gitterweite zu halbieren.`;
+      `haben wir ${fmtE(zeile.fehler)}, also ${fmt(verhaeltnis * 100, 1)} % der Schranke. Die ` +
+      `Fehlerspitze liegt bei x = ${fmt(zeile.argmax, 4)} und spiegelbildlich bei ` +
+      `x = ${fmt(1 - zeile.argmax, 4)}: f ist punktsymmetrisch zu (0,5; 0), und die Knoten liegen ` +
+      `symmetrisch, also ist auch |f − s| spiegelsymmetrisch. Schon hier liegt der Spline so nah ` +
+      `an f, dass die Abweichung im oberen Bild kaum vom Strich zu unterscheiden ist. Schieben wir ` +
+      `den Regler nach rechts, um die Gitterweite zu halbieren.`;
   } else {
     const lage =
       Math.abs(faktor - 16) <= 1.2
@@ -243,7 +251,8 @@ export function SplineKonvergenz() {
       `${fmt(1 / faktor, 4)}-fache. Das ist ein Faktor ${fmt(faktor, 2)}. Der Exponent vier ` +
       `verspricht 2⁴ = 16: ${lage}. Die Schranke selbst fällt exakt auf ein Sechzehntel, von ` +
       `${fmtE(vorher.schranke)} auf ${fmtE(zeile.schranke)}; ausgeschöpft ist sie zu ` +
-      `${fmt(verhaeltnis * 100, 1)} %. Der größte Fehler sitzt jetzt bei x = ${fmt(zeile.argmax, 4)}.`;
+      `${fmt(verhaeltnis * 100, 1)} %. Die Fehlerspitze sitzt jetzt bei x = ${fmt(zeile.argmax, 4)} ` +
+      `und, wie immer hier, spiegelbildlich bei x = ${fmt(1 - zeile.argmax, 4)}.`;
   }
 
   return (
@@ -455,7 +464,10 @@ export function SplineKonvergenz() {
                 <circle cx={kx(i)} cy={ky(Math.log10(z.fehler))} r={i === idx ? 4 : 2.5} fill={ROT} />
               </g>
             ))}
-            <text x={PK.l + 6} y={PK.t + 11} fontSize={9} fill={ROT}>
+            {/* rechts oben statt links oben: am linken Rand liegt der
+                Schrankenpunkt des groebsten Gitters auf der Textgrundlinie
+                (y = 22,6 gegen 23), rechts fallen beide Linien weit darunter */}
+            <text x={WK - PK.r - 6} y={PK.t + 11} textAnchor="end" fontSize={9} fill={ROT}>
               Schranke (gestrichelt), Fehler (voll)
             </text>
           </svg>

@@ -25,7 +25,7 @@ import {
  * Folienabbildungen interp-poly-2 und interp-spline-2.
  *
  * Nachgerechnet (node, 2026-08-13) fuer die Voreinstellung (Punkt 5 bei
- * x = 4, delta = 1): max |Delta| beim Spline 1,000 und beim Polynom 2,320;
+ * 5. Punkt bei x = 5, delta = 1): max |Delta| beim Spline 1,000 und beim Polynom 2,320;
  * weiter als zwei Knoten entfernt 0,037 gegen 2,320. Die
  * Koeffizientenaenderungen fallen mit rund Faktor 3,7 je Knotenabstand
  * (1,732 / 0,464 / 0,124 / 0,031 / 0,010). Die Kollokationsmatrix hat je

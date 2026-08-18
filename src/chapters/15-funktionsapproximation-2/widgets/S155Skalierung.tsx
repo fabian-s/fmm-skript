@@ -16,6 +16,11 @@ import { useMemo, useState } from "react";
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
  *   additiv p = 10:  101 Koeffizienten, 808 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
+ *
+ * Achtung fuer spaetere Aenderungen: py() normiert mit loMax = log10(K^10),
+ * die orange Gerade liegt deshalb fuer JEDES K auf denselben Bildpunkten
+ * (log10(K^q)/loMax = q/10). Nur die Achsenbeschriftung und die relative Lage
+ * der gruenen Kurve haengen an K; die Vertiefung in S155.mdx sagt das so.
  */
 
 const GRUEN = "#009E73";
@@ -81,7 +86,13 @@ export function SkalierungTensorGam() {
   const daten = useMemo(() => {
     const zeilen = [];
     for (let q = 1; q <= P_MAX; q++) {
-      zeilen.push({ p: q, tensor: Math.pow(K, q), additiv: q * K + 1 });
+      zeilen.push({
+        p: q,
+        tensor: Math.pow(K, q),
+        additiv: q * K + 1,
+        // nach Zentrierung jeder Komponente frei waehlbar (Bemerkung 15.5.9)
+        zentriert: q * (K - 1) + 1,
+      });
     }
     return zeilen;
   }, [K]);
@@ -103,7 +114,7 @@ export function SkalierungTensorGam() {
   const speicherTensor = aktuell.tensor * BYTE_PRO_KOEFFIZIENT;
   const status =
     p === 1
-      ? `Bei p = 1 gibt es nichts zu vergleichen: ${fmtAnzahl(aktuell.tensor)} gegen ${fmtAnzahl(aktuell.additiv)} Koeffizienten, beide Ansätze sind dieselbe univariate Anpassung. Der Fluch beginnt erst mit der zweiten Variablen.`
+      ? `Bei p = 1 gibt es nichts zu vergleichen: ${fmtAnzahl(aktuell.tensor)} gegen ${fmtAnzahl(aktuell.additiv)} Koeffizienten, und der eine Unterschied ist der Achsenabschnitt, den eine B-Spline-Basis wegen der Zerlegung der Eins ohnehin schon enthält. Beide Ansätze sind dieselbe univariate Anpassung; der Fluch beginnt erst mit der zweiten Variablen.`
       : speicherTensor < 1e6
         ? `Mit p = ${p} und K = ${K} kostet die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Das passt noch bequem in den Speicher, und wir brauchen mindestens ebenso viele Beobachtungen, damit die Designmatrix vollen Spaltenrang haben kann.`
         : speicherTensor < 1e9
@@ -241,7 +252,7 @@ export function SkalierungTensorGam() {
               <tr>
                 <td className="px-2 py-0.5 text-left">Beobachtungen mindestens</td>
                 <td className="px-2 py-0.5">{fmtAnzahl(aktuell.tensor)}</td>
-                <td className="px-2 py-0.5">{fmtAnzahl(aktuell.additiv)}</td>
+                <td className="px-2 py-0.5">{fmtAnzahl(aktuell.zentriert)}</td>
               </tr>
               <tr>
                 <td className="px-2 py-0.5 text-left">Rate des Tensoransatzes</td>
