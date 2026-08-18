@@ -65,11 +65,9 @@ export default function App() {
     };
   }, [navOpen]);
 
-  // Vor/Zurück bleibt im Skript — die Werkstatt-Seiten hängen nicht in der Reihe.
-  const reihe = chapters.filter((c) => c.num !== null);
-  const here = reihe.indexOf(entry);
-  const prev = here > 0 ? reihe[here - 1] : undefined;
-  const next = here >= 0 ? reihe[here + 1] : undefined;
+  const here = chapters.indexOf(entry);
+  const prev = chapters[here - 1];
+  const next = chapters[here + 1];
   const activeTitle = toc.find((s) => s.id === activeSection);
 
   return (
@@ -129,11 +127,9 @@ export default function App() {
 
           <main id="inhalt" className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
             <header className="mb-10 border-b border-slate-300 pb-6 dark:border-slate-700">
-              {entry.num !== null && (
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-400">
-                  Kapitel {entry.num}
-                </p>
-              )}
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-400">
+                Kapitel {entry.num}
+              </p>
               <h1 className="mt-1 text-[2.1rem] font-bold tracking-tight text-balance">
                 {entry.title}
               </h1>

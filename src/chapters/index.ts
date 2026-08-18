@@ -21,8 +21,8 @@ export interface ChapterModule {
 
 export interface ChapterEntry {
   id: string; // ?k= value, kebab-case
-  /** Kapitelnummer für Navigation und Überschrift; null für Werkstatt-Seiten. */
-  num: number | null;
+  /** Kapitelnummer für Navigation und Überschrift. */
+  num: number;
   title: string; // Titel OHNE "Kap. N ·" — die Nummer setzt die Navigation
   deck?: string; // corresponding slide deck, e.g. "07-kq"
   load: () => Promise<{ default: ChapterModule }>;
@@ -30,7 +30,7 @@ export interface ChapterEntry {
 
 /** Beschriftung für Fließtext und Seitentitel, z. B. "Kap. 3 · Spur & Matrixnormen". */
 export function chapterLabel(c: ChapterEntry): string {
-  return c.num === null ? c.title : `Kap. ${c.num} \u00b7 ${c.title}`;
+  return `Kap. ${c.num} \u00b7 ${c.title}`;
 }
 
 export const chapters: ChapterEntry[] = [
@@ -138,19 +138,5 @@ export const chapters: ChapterEntry[] = [
     title: "Funktionsapproximation II",
     deck: "15-funktionsapproximation-II",
     load: () => import("./15-funktionsapproximation-2"),
-  },
-  {
-    id: "mdx-lab",
-    num: null,
-    title: "MDX-Syntaxlabor",
-    deck: "02-algos",
-    load: () => import("./mdx-lab"),
-  },
-  {
-    id: "demo",
-    num: null,
-    title: "Makro- und Farb-Demo",
-    deck: "07-kq",
-    load: () => import("./demo"),
   },
 ];

@@ -336,7 +336,7 @@ for (const [name, [tsx, mdx, equal]] of Object.entries(INVENTORY)) {
 const typeEntries = Object.entries(TYPE_REJECT).map(([name, [source]]) => ({
   name,
   source,
-  path: path.join(ROOT, "src/chapters/mdx-lab", `fixture-${name.replace(/\s+/g, "-")}.mdx`),
+  path: path.join(ROOT, "src/chapters", `fixture-${name.replace(/\s+/g, "-")}.mdx`),
 }));
 try {
   const diagnostics = await typecheckMdxSources(typeEntries);

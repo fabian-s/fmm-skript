@@ -20,8 +20,8 @@ import type { ComponentType, ReactNode } from "react";
  * Seitentypografie. Am Modulanfang EINMAL aufrufen, damit die
  * Komponenten-Identität stabil bleibt:
  *
- *     import SLabBody from "./SLab.mdx";
- *     const SLab = mdxSection(SLabBody);
+ *     import S31Body from "./S31.mdx";
+ *     const S31 = mdxSection(S31Body);
  */
 export function mdxSection(Body: ComponentType): ComponentType {
   return function MdxSection() {

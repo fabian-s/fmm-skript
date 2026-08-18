@@ -112,10 +112,4 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "15.4", title: "Bias-Varianz und Modellwahl" },
     { id: "15.5", title: "Multivariat und Zusammenfassung" },
   ],
-  "mdx-lab": [
-    { id: "99.1", title: "MDX-Syntaxlabor" },
-  ],
-  "demo": [
-    { id: "Demo", title: "Makro- und Farb-Demo (Folien 07-kq)" },
-  ],
 };

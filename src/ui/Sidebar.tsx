@@ -43,9 +43,6 @@ export function Sidebar({
       box.scrollTop = bottom - box.clientHeight + 8;
   }, [activeSection, current.id]);
 
-  const werkstatt = chapters.filter((c) => c.num === null);
-  const skript = chapters.filter((c) => c.num !== null);
-
   const item = (c: ChapterEntry) => {
     const here = c.id === current.id;
     const sections = tocSections[c.id] ?? [];
@@ -68,7 +65,7 @@ export function Sidebar({
                 "tabular-nums " + (here ? "" : "text-slate-400 dark:text-slate-500")
               }
             >
-              {c.num ?? "·"}
+              {c.num}
             </span>
             <span className="min-w-0">{c.title}</span>
           </a>
@@ -174,11 +171,7 @@ export function Sidebar({
 
         <div ref={scroller} className="flex-1 overflow-y-auto overscroll-contain px-2 py-3 font-display">
           <nav aria-label="Inhaltsverzeichnis">
-            <ul className="flex flex-col gap-0.5">{skript.map(item)}</ul>
-            <p className="mt-5 px-2 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-              Werkstatt
-            </p>
-            <ul className="flex flex-col gap-0.5">{werkstatt.map(item)}</ul>
+            <ul className="flex flex-col gap-0.5">{chapters.map(item)}</ul>
           </nav>
         </div>
       </aside>
