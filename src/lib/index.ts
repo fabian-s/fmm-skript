@@ -14,5 +14,7 @@ export type { Vec2 } from "./widgets/TransformCanvas";
 export { Plot } from "./widgets/Plot";
 export type { Series } from "./widgets/Plot";
 export { LabeledPlot, LabeledTransformCanvas, niceTicks, sigmaMax, maxAbsCoord } from "./widgets/Axes";
+export { ConceptFlow } from "./widgets/ConceptFlow";
+export type { FlowNode, FlowEdge, FlowGroup } from "./widgets/ConceptFlow";
 export { Proof, PStep, ProofLabelsProvider } from "./Proof";
 export type { ProofLabels } from "./Proof";

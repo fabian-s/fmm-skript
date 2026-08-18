@@ -1,0 +1,119 @@
+import { KursKarte } from "./widgets/S12Landkarte";
+
+::quelle[Konzeptkarte des Kurses (conceptmap.qmd aus dem Vorlesungs-Repo), an die Kapitelzählung des Skripts angepasst.]
+
+Die fünfzehn Kapitel dieses Skripts sind zum Durchlesen von vorne nach hinten
+gebaut — aber sie hängen enger zusammen, als eine lineare Reihenfolge zeigen
+kann. Manche Kapitel sind Fundament für fast alles Spätere (die Normen aus
+Kapitel 3, die Fehleranalyse aus Kapitel 4), andere greifen weit voraus oder
+zurück: Die Funktionsapproximation in Teil 3 etwa braucht kein einziges
+Ergebnis aus Teil 2, dafür umso mehr aus Teil 1. Die folgende Karte macht
+diese Struktur sichtbar. Die Kästen sind die Kapitel in Lesereihenfolge, die
+Bögen sind Abhängigkeiten über Nachbarkapitel hinweg: Wer ein Kapitel
+antippt, sieht hervorgehoben, worauf es aufbaut und wohin es führt — nützlich
+vor dem Lesen (*was sollte ich parat haben?*) genauso wie bei der
+Prüfungsvorbereitung (*wofür brauche ich das noch?*).
+
+<KursKarte />
+
+### Die drei Teile des Kurses
+
+**Teil 1 — Numerische lineare Algebra (Kapitel 2–9).** Die Leitfrage: *Wie
+lassen sich Probleme der linearen Algebra auf dem Rechner effizient und genau
+lösen?* [Kapitel 2](?k=02-algos) stellt dafür die Sprache bereit — was ein
+numerisches Problem, ein Algorithmus und sein Aufwand in
+:k[Landau-Notation]{#big-o-notation} ist. [Kapitel 3](?k=03-matrix-spur-norm)
+liefert die Messwerkzeuge (Spur und :k[Matrixnormen]{#matrix-norm}),
+[Kapitel 4](?k=04-fehler) die zentrale Unterscheidung des ganzen Kurses:
+*Kondition* ist eine Eigenschaft des Problems, *Stabilität* eine Eigenschaft
+des Algorithmus — nur an letzterer können wir drehen. Darauf bauen die
+Rechenkerne auf: [Kapitel 5](?k=05-lgs) löst Gleichungssysteme über
+Zerlegungen (:k[LU]{#lu-decomposition} und
+:k[Cholesky]{#cholesky-factorization}) statt über die goldene Regel des
+Kurses zu verstoßen — *niemals eine Matrix invertieren!* —,
+[Kapitel 6](?k=06-svd) entwickelt mit der
+:k[Singulärwertzerlegung]{#singular-value-decomposition} die wichtigste
+Matrixzerlegung der angewandten Mathematik, und [Kapitel 7](?k=07-kq)
+vergleicht drei Lösungswege für das
+:k[Kleinste-Quadrate-Problem]{#linear-least-squares} — Normalengleichungen,
+:k[QR]{#qr-factorization}, SVD — nach genau den Kriterien aus Kapitel 4.
+[Kapitel 8](?k=08-la-misc) tauscht dann Exaktheit gegen Geschwindigkeit
+(Iteration und Zufall, von der Potenzmethode bis zum Matrix-Sketching), und
+[Kapitel 9](?k=09-tensoren) baut mit :k[Tensoren]{#tensor} und
+Tensorprodukten multivariate Strukturen aus univariaten Bausteinen.
+
+**Teil 2 — Analysis & Optimierung (Kapitel 10–13).** Die Leitfrage: *Wie
+differenziert und optimiert man Funktionen jenseits des Eindimensionalen?*
+[Kapitel 10](?k=10-ableitungen-1) verallgemeinert die Ableitung nach dem
+Prinzip „Ableitung = lineare Approximation" auf Vektoren und Matrizen
+(:k[Gradient]{#gradient}, Jacobi-Matrix), [Kapitel 11](?k=11-ableitungen-2)
+ergänzt Rechenregeln, :k[Hesse-Matrix]{#hessian-matrix} und
+:k[Taylor-Entwicklung]{#taylor-series} — und leitet nebenbei die
+:k[Normalengleichungen]{#normal-equations} aus Kapitel 7 per Matrixkalkül
+her. [Kapitel 12](?k=12-konvexitaet) behandelt
+:k[Konvexität]{#convexity} als das Versprechen, das lokale Verfahren
+global macht: Bei konvexen Zielfunktionen ist jedes lokale Minimum bereits
+das globale. [Kapitel 13](?k=13-optim) setzt darauf die Verfahren, sortiert
+nach der Ordnung der verwendeten Ableitungen: Nelder-Mead (nullte),
+:k[Gradientenabstieg]{#gradient-descent} mit Line Search und SGD (erste),
+:k[Newton]{#newtons-method} und Quasi-Newton (zweite), dazu Optimierung
+unter Nebenbedingungen. Eine feinere Karte dieses Teils — von der
+Fréchet-Ableitung bis zu den KKT-Bedingungen — steht am Anfang von
+[Kapitel 10](?k=10-ableitungen-1#sec-10.1).
+
+**Teil 3 — Funktionsapproximation (Kapitel 14–15).** Die Leitfrage: *Wie
+ersetzen wir eine komplizierte Funktion durch eine einfache, mit der sich gut
+rechnen lässt?* [Kapitel 14](?k=14-funktionsapproximation) überträgt die
+Idee der :k[Basis]{#basis} aus dem $\R^n$ auf Funktionenräume, stellt
+Funktionen als Linearkombination $\wh{f} = \sum_k a_k \phi_k$ von
+Basisfunktionen dar — die Koeffizienten liefert wieder ein Gleichungssystem
+oder ein KQ-Problem — und erklärt, warum Polynominterpolation scheitert
+(Runge-Phänomen) und B-Splines funktionieren.
+[Kapitel 15](?k=15-funktionsapproximation-2) macht daraus Statistik: Glättung
+verrauschter Daten als Regressionsproblem, die Bias-Varianz-Abwägung bei der
+Wahl der Basisgröße und der Fluch der Dimension im Multivariaten, dem
+additive Modelle (GAMs) entkommen. Dieser Teil setzt Teil 2 *nicht* voraus —
+seine Anker liegen in den Kapiteln 1, 4, 5, 7 und 9; die feinere Karte dazu
+steht am Anfang von [Kapitel 14](?k=14-funktionsapproximation#sec-14.1).
+
+### Was sich durch den ganzen Kurs zieht
+
+Vier Themen tauchen in allen drei Teilen wieder auf; sie sind das eigentliche
+Gerüst des Kurses.
+
+**Stabilität.** Wähle Algorithmen, die Fehler nicht verstärken. Die
+:k[Konditionszahl]{#condition-number} des Problems ist uns vorgegeben, die
+Stabilität des Algorithmus nicht — deshalb Zerlegungen statt Inversion,
+:k[orthogonale Matrizen]{#orthogonal-matrix} (perfekt konditioniert,
+$\kappa = 1$) wo immer möglich, und schlecht konditionierte Schritte so früh
+wie möglich.
+
+**Rechenaufwand.** Ein kleines Einmaleins der Komplexitäten, das sich
+einzuprägen lohnt: Vektoroperationen $O(n)$,
+:k[Matrix-Vektor-Produkte]{#matrix-vector-product} $O(n^2)$,
+Matrixzerlegungen $O(n^3)$, iterative Verfahren
+$O(n^2 \log(1/\eps))$ — und als Warnung der Fluch der Dimension mit
+$O(K^p)$.
+
+**Matrixzerlegungen.** Das Werkzeugregal von Teil 1, auf das alles Spätere
+zurückgreift:
+
+| Zerlegung | Form | Kapitel | typischer Einsatz |
+| --- | --- | --- | --- |
+| LU | $\bA = \bL\bU$ | [5](?k=05-lgs) | allgemeine Gleichungssysteme |
+| Cholesky | $\bA = \bL\bL^\top$ | [5](?k=05-lgs) | SPD-Matrizen, Simulation aus $\Ncal(\bnull, \bSigma)$ |
+| QR | $\bA = \bQ\bR$ | [7](?k=07-kq) | Kleinste Quadrate, stabil |
+| SVD | $\bA = \bU\bSigma\bV^\top$ | [6](?k=06-svd) | universell: Rang, Pseudoinverse, Approximation |
+
+**Von exakt zu approximativ.** Die Problemklassen des Kurses bilden eine
+Treppe wachsender Allgemeinheit — und abnehmender Garantien: lineare Probleme
+haben exakte Lösungen per Zerlegung; Kleinste Quadrate lösen wir als
+Projektion; nichtlineare Gleichungen nur noch iterativ (Newton); allgemeine
+Optimierung mit Gradientenverfahren, die lokal suchen; erst
+:k[Konvexität]{#convexity} gibt globale Garantien zurück; und die
+Funktionsapproximation handelt schließlich Genauigkeit gegen Aufwand.
+
+*Vertiefung: Trefethen & Bau, „Numerical Linear Algebra" (Teil 1); Boyd &
+Vandenberghe, „Convex Optimization" (Teil 2); Hastie, Tibshirani & Friedman,
+„The Elements of Statistical Learning" (Teil 3); die 3blue1brown-Videoreihe
+„Essence of Linear Algebra" für die geometrische Intuition.*
