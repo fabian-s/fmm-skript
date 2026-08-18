@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Welcher Abschnitt steht gerade im Lesefeld? Ergebnis ist die
@@ -13,11 +13,16 @@ import { useEffect, useState } from "react";
  */
 export function useActiveSection(ids: string[], ready: boolean): string | null {
   const [active, setActive] = useState<string | null>(null);
+  // Der Listener feuert pro Bildwiederholung; ohne diesen Merker schickte er
+  // jedes Mal denselben Wert in den State und stieße ein Rendern des ganzen
+  // Kapitels an, nur damit React ihn gleich wieder verwirft.
+  const zuletzt = useRef<string | null>(null);
   // Abhängigkeit als String: das Array wird bei jedem Render neu gebaut.
   const key = ids.join("|");
 
   useEffect(() => {
     if (!ready || ids.length === 0) return;
+    zuletzt.current = null;
     let frame = 0;
 
     const compute = () => {
@@ -34,7 +39,10 @@ export function useActiveSection(ids: string[], ready: boolean): string | null {
       // wenn dessen Anfang noch unter der Lesezeile steht (kurzes Kapitelende).
       const atEnd =
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
-      setActive(atEnd ? ids[ids.length - 1] : current);
+      const next = atEnd ? ids[ids.length - 1] : current;
+      if (next === zuletzt.current) return;
+      zuletzt.current = next;
+      setActive(next);
     };
 
     const schedule = () => {

@@ -14,6 +14,9 @@ import { tocSections } from "../chapters/toc.generated";
  * Auf schmalen Fenstern liegt dieselbe Liste als Schublade über der Seite
  * (`open`), auf breiten steht sie fest in der linken Spalte.
  */
+/** Ab dieser Breite steht die Navigation fest — dasselbe Maß wie Tailwinds `lg:`. */
+const DESKTOP = "(min-width: 64rem)";
+
 export function Sidebar({
   current,
   activeSection,
@@ -27,8 +30,17 @@ export function Sidebar({
 }) {
   // Fremde Kapitel lassen sich aufklappen, ohne sie zu öffnen.
   const [unfolded, setUnfolded] = useState<string[]>([]);
+  // Breite Fenster zeigen die Liste dauerhaft, schmale nur als Schublade.
+  const [breit, setBreit] = useState(() => window.matchMedia(DESKTOP).matches);
   const scroller = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP);
+    const folge = () => setBreit(mq.matches);
+    mq.addEventListener("change", folge);
+    return () => mq.removeEventListener("change", folge);
+  }, []);
 
   // Den markierten Eintrag im Blick behalten — aber nur die Liste scrollen,
   // nie die Seite: scrollIntoView() würde beides bewegen.
@@ -125,6 +137,8 @@ export function Sidebar({
     );
   };
 
+  const zu = !breit && !open;
+
   return (
     <>
       {/* Abdunkelung hinter der Schublade — nur schmale Fenster */}
@@ -137,6 +151,10 @@ export function Sidebar({
       )}
       <aside
         id="kapitelnavigation"
+        // Die geschlossene Schublade steht nur per translate-x außerhalb des
+        // Bildes — ohne `inert` blieben ihre Links im Tab-Lauf und für
+        // Screenreader erreichbar, obwohl die Navigation „zu" ist.
+        {...(zu ? ({ inert: "", "aria-hidden": true } as Record<string, unknown>) : {})}
         className={
           "fixed inset-y-0 left-0 z-40 flex w-[17.5rem] flex-col border-r border-slate-300 " +
           "bg-slate-50 transition-transform duration-200 dark:border-slate-800 dark:bg-slate-950 " +
