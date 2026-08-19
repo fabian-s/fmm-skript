@@ -1,4 +1,5 @@
 import { PagerankDemo } from "./widgets/S82Pagerank";
+import { PcaDirectionDemo } from "./widgets/S82Pca";
 
 ::quelle[Folien 08-la-misc, „Anwendung: Google PageRank" bis „Iterative Eigenwertverfahren: Vergleich".]
 
@@ -113,6 +114,27 @@ $\bX\bv_j$. In der Praxis rechnen wir noch schneller
 direkt mit der [Singulärwertzerlegung](?k=06-svd#sec-6.2) von $\bX$, ohne
 $\bX^\top\bX$ je zu bilden (warum das auch numerisch klüger ist, haben wir
 in [Kapitel 6](?k=06-svd#sec-6.5) gesehen).
+
+:::vertiefung[PCA: Welche Richtung erklärt am meisten?]
+Die Kovarianzmatrix gibt eine Formel vor. Aber wie sieht die dazugehörige
+Richtung in einer Punktwolke aus? Drehen wir eine Projektion durch die Daten.
+
+<PcaDirectionDemo />
+
+Wie das Widget zeigt, macht die Richtung mit der längsten blauen Projektion
+die Streuung maximal. Der Eigenvektor von $\bSigma$ ist somit die Achse, auf
+der die Daten am stärksten auseinanderliegen.
+:::
+
+::::quiz
+:::zahlfrage{loesung=4.43 toleranz=0.05}
+Stellen wir im PCA-Widget die blaue Richtung auf die grün gestrichelte Achse:
+Wie groß ist die dort angezeigte maximale Projektionsvarianz ungefähr?
+
+Die Anzeige erreicht dort den ersten Eigenwert von $\bSigma$, also ungefähr
+$4{,}43$. In jeder anderen Richtung ist $\bv^\top\bSigma\bv$ kleiner.
+:::
+::::
 
 :::bemerkung[8.2.2 (Warum iterativ? Die Lanczos-Abkürzung)]
 Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen

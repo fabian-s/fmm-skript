@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { fmtDe } from "../../../lib";
 
 /**
  * Gemeinsame Bausteine der Kapitel-5-Stepper (LU, Rückwärtssubstitution,
@@ -17,7 +18,7 @@ export function fmtNum(v: number): string {
   if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
   let r = Math.round(v * 1000) / 1000;
   if (Object.is(r, -0)) r = 0;
-  return String(r).replace("-", "−").replace(".", ",");
+  return fmtDe(r, 3);
 }
 
 const SUBS = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];

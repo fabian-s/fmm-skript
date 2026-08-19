@@ -1,5 +1,5 @@
 import { useMemo, useState, type CSSProperties } from "react";
-import { MatrixInput } from "../../../lib";
+import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { backSub, MatTable, WidgetLabel } from "./shared";
 
 /**
@@ -8,14 +8,13 @@ import { backSub, MatTable, WidgetLabel } from "./shared";
  * Text (FMM-Palette): blau = aktuelle Zeile, grün = fertige x-Einträge,
  * rot = Diagonalelement (Pivot), durch das dividiert wird.
  *
- * Tabellen-Renderer und Substitutions-Tracer sind aus dem LUStepper der
- * privaten heath-ch2-App portiert (nur Code; alle Texte neu); sie liegen
- * gemeinsam mit den anderen Kapitel-5-Steppern in shared.tsx.
+ * Einsicht: Rückwärtseinsetzen bestimmt die Komponenten von unten nach oben.
+ * Farbrollen: Pivot rot, aktuelle Zeile blau, fertige Lösung grün.
+ * Provenienz: Trace-Struktur aus heath-ch2 (nur Code), sichtbare Texte neu.
+ * Zahlen: x=(2;1;2), 3 Divisionen und 9 Operationen in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const RED = "#D55E00";
+const { blau: BLUE, gruen: GREEN, rot: RED } = FMM_COLORS;
 
 /** Der Stepper: Standardbeispiel ist das 3×3-System aus dem Text (x = (2,1,2)). */
 export function RueckSubStepper() {
@@ -53,17 +52,7 @@ export function RueckSubStepper() {
 
   return (
     <div>
-      <p className="text-sm">
-        Lösen wir das gestaffelte System <span className="font-mono">Ux = c</span> von unten
-        nach oben. Jeder Klick berechnet eine weitere Unbekannte: die{" "}
-        <span style={{ color: BLUE, fontWeight: 600 }}>blaue Zeile</span> ist dran, ihr{" "}
-        <span style={{ color: RED, fontWeight: 600 }}>rotes Diagonalelement</span> ist der
-        Divisor, und schon berechnete Komponenten erscheinen{" "}
-        <span style={{ color: GREEN, fontWeight: 600 }}>grün</span>. Die Einträge von{" "}
-        <span className="font-mono">U</span> und <span className="font-mono">c</span> lassen
-        sich editieren (unterhalb der Diagonalen bleibt alles null); mit einer Null auf der
-        Diagonalen sehen wir den singulären Fall.
-      </p>
+      <Aufgabe>Schieben wir den Regler bis zur letzten Zeile und verfolgen die Divisionen.</Aufgabe>
       <div className="my-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 text-sm">
           U =
@@ -86,34 +75,7 @@ export function RueckSubStepper() {
           />
         </div>
       </div>
-      <div className="my-2 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
-          onClick={() => setT((v) => Math.max(0, v - 1))}
-          disabled={shown === 0}
-        >
-          ◀ zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 bg-slate-100 px-3 py-1 text-sm font-medium disabled:opacity-40 dark:bg-slate-800"
-          onClick={() => setT((v) => Math.min(maxT, v + 1))}
-          disabled={shown >= maxT}
-        >
-          nächste Unbekannte ▶
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm"
-          onClick={() => setT(0)}
-        >
-          zurücksetzen
-        </button>
-        <span className="text-sm" style={{ color: "#64748b" }}>
-          {shown} von {n} Komponenten bekannt
-        </span>
-      </div>
+      <Stepper step={shown} setStep={setT} max={maxT} narration={`${shown} von ${n} Komponenten bekannt`} />
       <div className="my-3 flex flex-wrap items-start gap-5">
         <WidgetLabel label="U | c">
           <MatTable m={aug} cellClass={augClass} cellStyle={augStyle} />
@@ -130,21 +92,15 @@ export function RueckSubStepper() {
             </div>
           )}
           {trace.failRow >= 0 && shown >= maxT && (
-            <p className="mt-2 text-sm" style={{ color: RED }}>
+            <Verdikt kind="fail" className="mt-2">
               Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile
               ist 0, und Formel (5.2.1) verlangt, genau dadurch zu teilen. Bei einer
               Dreiecksmatrix entscheidet allein die Diagonale über die Invertierbarkeit;
               mit einer Null dort verliert das System seine eindeutige Lösung.
-            </p>
+            </Verdikt>
           )}
           {trace.failRow < 0 && shown === maxT && maxT > 0 && (
-            <p className="mt-2 text-sm">
-              Alle Komponenten stehen. Zählen wir nach: Zeile i setzt n−i bekannte Werte
-              ein (je eine Multiplikation und Subtraktion) und teilt einmal durch ihr
-              Diagonalelement – macht n(n−1)/2 Multiplikationen, ebenso viele
-              Subtraktionen und n Divisionen, zusammen exakt n² Operationen: das O(n²)
-              aus dem Quiz.
-            </p>
+            <Verdikt kind="ok" className="mt-2">Alle Komponenten stehen. Formel (5.2.1) benötigt hier drei Divisionen; allgemein summieren sich Multiplikationen, Subtraktionen und Divisionen zu n² Operationen, also O(n²).</Verdikt>
           )}
         </div>
       </div>

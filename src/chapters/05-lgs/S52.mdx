@@ -104,18 +104,25 @@ beginnt aber mit einem Nullpivot. Auch ein von null verschiedenes, jedoch sehr k
 Pivot kann in Gleitkommaarithmetik problematisch sein; genau deshalb wählen wir den
 größten verfügbaren Betrag.
 
-:::vertiefung[Rückwärtssubstitution Schritt für Schritt]
-Probieren wir Formel ($5.2.1$) an einem kleinen System aus. Das
-voreingestellte Beispiel hat die Lösung $\bx = (2, 1, 2)^\top$.
+Die Formel ($5.2.1$) bestimmt die Komponenten von unten nach oben. Wie viele
+Divisionen braucht das voreingestellte 3×3-System?
 
 <RueckSubStepper />
-:::
+
+Wie das Widget zeigt, ist pro Zeile genau eine Division nötig. Die vielen
+Einsetzungen machen den Gesamtaufwand trotzdem quadratisch.
 
 Wie teuer ist die zweite Phase? Prüfen wir die vier Antwortmöglichkeiten
 einzeln (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
 [Abschnitt 2.4](?k=02-algos#sec-2.4)).
 
 ::::quiz
+
+:::zahlfrage{loesung=3 toleranz=0}
+Wie viele Divisionen hat das voreingestellte Rückwärtseinsetzen im Widget?
+
+Eine pro Diagonalzeile, also drei.
+:::
 
 :::frage{falsch}
 Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(1)$.

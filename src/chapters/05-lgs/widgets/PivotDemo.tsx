@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * Kleine-Pivots-Demo für §5.3 (Pivotierung): dasselbe 2×2-System wird in
  * echter IEEE-Doppelgenauigkeit einmal ohne und einmal mit Zeilentausch
  * gelöst; der Regler steuert die Pivotgröße ε. Rechenweg aus dem
  * SmallPivotLab der privaten heath-ch2-App portiert (nur Code; alle Texte
- * neu). Rot markiert das problematische Pivot (FMM-Palette).
+ * Einsicht: Ein kleiner Pivot verstärkt Rundungsfehler, Zeilentausch verhindert das.
+ * Farbrollen: Pivot/Fehler rot, stabile Lösung grün, sonst neutral.
+ * Provenienz: Rechenweg aus heath-ch2 (nur Code), sichtbare Texte neu.
+ * Zahlen: Kosten-/Float64-Grenzen in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const RED = "#D55E00";
-const GREEN = "#009E73";
+const { rot: RED, gruen: GREEN } = FMM_COLORS;
 
 function fmt(v: number): string {
   if (Number.isNaN(v)) return "NaN";
@@ -18,7 +20,7 @@ function fmt(v: number): string {
   if (v === 0) return "0";
   const a = Math.abs(v);
   if (a >= 1e5 || a < 1e-3) return v.toExponential(1).replace("-", "−").replace(".", ",");
-  return String(Number(v.toPrecision(4))).replace("-", "−").replace(".", ",");
+  return fmtDe(Number(v.toPrecision(4)), 4);
 }
 
 export function PivotVergleich() {
@@ -57,6 +59,7 @@ export function PivotVergleich() {
 
   return (
     <div className="text-sm">
+      <Aufgabe>Schieben wir ε nach unten und vergleichen die beiden Fehlerzeilen.</Aufgabe>
       <p className="mb-2">
         Testsystem ist{" "}
         <M>{"\\begin{pmatrix} \\cred{\\epsilon} & 1 \\\\ 1 & 1 \\end{pmatrix} \\bx = \\begin{pmatrix} 1+\\epsilon \\\\ 2 \\end{pmatrix}"}</M>{" "}
@@ -90,11 +93,11 @@ export function PivotVergleich() {
           {row("mit Zeilentausch (Pivot 1)", x1p, x2p, errP)}
         </tbody>
       </table>
-      <p className="mt-2 text-xs">
+      <Verdikt kind={absorbed ? "fail" : errN < 1e-4 ? "ok" : "warn"} className="mt-2">
         Gerechnet wird dabei <M>{"u_{22} = \\text{fl}(1 - 1/\\epsilon) ="}</M>{" "}
         <span className="font-mono">{fmt(u22)}</span>
         {absorbed ? (
-          <span className="ml-1" style={{ color: RED, fontWeight: 600 }}>
+          <span className="ml-1">
             , exakt −1/ε: Die Subtraktion hat die 1 restlos geschluckt. In der Zerlegung steckt
             der Eintrag a₂₂ = 1 damit gar nicht mehr, und L·U reproduziert A nicht.
           </span>
@@ -105,13 +108,7 @@ export function PivotVergleich() {
             {Math.max(0, Math.round(-Math.log10(Math.max(errN, 1e-17))))} Stellen.
           </span>
         )}
-      </p>
-      <p className="mt-1 text-xs" style={{ color: "#64748b" }}>
-        Schieben wir ε nach unten, kostet uns das ungefähr eine Stelle pro Zehnerpotenz: Bei
-        ε = 1e−8 ist rund die Hälfte der 16 verfügbaren Stellen von x₁ dahin, ab ε ≈ 1e−16
-        bleibt davon nichts Brauchbares übrig. Die getauschte Variante hält über den ganzen
-        Reglerbereich volle Genauigkeit; der Tausch selbst kostet nur einen Vergleich.
-      </p>
+      </Verdikt>
     </div>
   );
 }

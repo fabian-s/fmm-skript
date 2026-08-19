@@ -1,5 +1,5 @@
 import { useMemo, useState, type CSSProperties } from "react";
-import { MatrixInput } from "../../../lib";
+import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { fmtNum, MatTable, sub, WidgetLabel } from "./shared";
 
 /**
@@ -9,14 +9,13 @@ import { fmtNum, MatTable, sub, WidgetLabel } from "./shared";
  * der gerade verglichen wird, blau = der Eintrag von L, nach dem wir
  * auflösen, grün = fertige L-Einträge.
  *
- * Tabellen-Renderer und Formatter folgen dem Muster des LUStepper aus der
- * privaten heath-ch2-App (nur Code-Struktur; alle Texte neu geschrieben)
- * und liegen gemeinsam mit den anderen Kapitel-5-Steppern in shared.tsx.
+ * Einsicht: Cholesky bestimmt L spaltenweise und scheitert an einer nicht-SPD-Matrix.
+ * Farbrollen: A-Eintrag/Pivot rot, gesuchter Eintrag blau, fertige L-Einträge grün.
+ * Provenienz: Trace-Muster aus heath-ch2 (nur Code), sichtbare Texte neu.
+ * Zahlen: Standardmatrix L=(2,0,0;1,3,0;−1,1,2), Rest 0 in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const RED = "#D55E00";
+const { blau: BLUE, gruen: GREEN, rot: RED } = FMM_COLORS;
 
 interface CholStep {
   i: number; // Zeile des L-Eintrags (0-basiert)
@@ -139,7 +138,8 @@ export function CholeskyStepper() {
 
   return (
     <div>
-      <p className="text-sm">
+      <Aufgabe>Schieben wir durch die sechs Einträge von L und probieren danach eine nicht-SPD-Matrix.</Aufgabe>
+      <p className="sr-only">
         Bauen wir <span className="font-mono">L</span> per Koeffizientenvergleich auf,
         spaltenweise von links oben nach rechts unten. In jedem Schritt vergleichen wir den{" "}
         <span style={{ color: RED, fontWeight: 600 }}>rot markierten Eintrag von A</span> mit
@@ -162,7 +162,8 @@ export function CholeskyStepper() {
           />
         </div>
       </div>
-      <div className="my-2 flex flex-wrap items-center gap-2">
+      <Stepper step={shown} setStep={setT} max={maxT} narration={`${shown} von ${maxT} Einträgen berechnet`} />
+      <div className="hidden my-2 flex flex-wrap items-center gap-2">
         <button
           type="button"
           className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
@@ -206,16 +207,14 @@ export function CholeskyStepper() {
             </div>
           )}
           {failedNow && trace.fail && (
-            <p className="mt-2 text-sm" style={{ color: RED }}>
-              {trace.fail.msg}
-            </p>
+            <Verdikt kind="fail" className="mt-2">{trace.fail.msg} Satz 5.4.2 ist hier nicht anwendbar.</Verdikt>
           )}
           {done && resid !== null && (
-            <p className="mt-2 text-sm">
+            <Verdikt kind="ok" className="mt-2">
               Fertig: alle {maxT} Gleichungen des Koeffizientenvergleichs sind abgearbeitet,
               jede enthielt genau eine neue Unbekannte. Probe: max |A − L·Lᵀ| ={" "}
               <span className="font-mono">{fmtNum(resid)}</span>.
-            </p>
+            </Verdikt>
           )}
         </div>
       </div>

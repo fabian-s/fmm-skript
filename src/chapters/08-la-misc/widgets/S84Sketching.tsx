@@ -1,15 +1,19 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, Slider, Verdikt, fmtDe, mulberry32, randn, useSeed } from "../../../lib";
 import type { Series } from "../../../lib";
 
 /**
- * §8.4: Sketching-Demo (Eigenbau, kein portiertes Widget).
+ * Einsicht: Eine einzelne Gauss-Skizze schwankt, und ihre typische
+ * Distanzabweichung fällt nur mit 1/sqrt(2m).
+ * Farbrollen Kapitel 8: Originaldaten grün, Skizze blau, Distanzfehler rot,
+ * Winkelabweichung violett, Faustregel/Rate orange.
+ * Provenienz: Eigenbau, keine portierte Prosa; Zufall über useSeed/mulberry32.
  *
  * Zwei FESTE Vektoren x, y aus R^200 (unten eingebettet, einmalig mit einem
  * LCG als Unif(0,1)-Stichprobe gezogen und auf drei Stellen gerundet) werden
  * mit einer Gauss-Sketchmatrix S in den R^m geschickt. Die Matrix kommt aus
  * einem seeded PRNG (mulberry32 + Box-Muller); im Render steckt KEIN
- * Math.random, der Knopf „neu ziehen" zaehlt nur einen Seed-Zaehler hoch.
+ * unseeded Zufall; der Knopf „neu ziehen" erhöht nur den Seed-Zähler.
  *
  * Die Zeilen von S werden EINMAL je Ziehung gezogen; der Slider m benutzt die
  * ersten m davon (Skalierung 1/sqrt(m)). Dadurch ist die Kurve im Plot EIN
@@ -22,13 +26,10 @@ import type { Series } from "../../../lib";
  * Abweichung ist damit 9,97 % bei m = 50 und 7,06 % bei m = 100, also
  * praktisch die Faustregel 1/sqrt(2m) (10,00 % bzw. 7,07 %). Das Band
  * +-1/sqrt(2m) faengt rund 68 % der Ziehungen (4000 Ziehungen: 68,2 %).
+ * Verifiziert in scratchpad/verify-08-la-misc/check-widgets.mjs, 2026-08-19.
  */
 
-const GREEN = "#009E73"; // Originalgroessen x, y
-const BLUE = "#0072B2"; // Skizze Sx, Sy
-const RED = "#D55E00"; // Abweichung im Abstand
-const ORANGE = "#E69F00"; // Faustregel +-1/sqrt(2m)
-const PURPLE = "#9E57D5"; // Abweichung im Winkel
+const { gruen: GREEN, blau: BLUE, rot: RED, orange: ORANGE, violett: PURPLE, grau: GREY } = FMM_COLORS;
 
 const X: number[] = [
   0.791, 0.486, 0.999, 0.080, 0.216, 0.082, 0.885, 0.405, 0.088, 0.313,
@@ -92,35 +93,6 @@ const DIFF = X.map((v, i) => v - Y[i]);
 const DIST = Math.sqrt(dot(DIFF, DIFF));
 const WINKEL = Math.acos(dot(X, Y) / (NORM_X * NORM_Y));
 
-/** mulberry32: kleiner, deterministischer PRNG (ein 32-Bit-Zustand). */
-function mulberry32(a: number): () => number {
-  let s = a | 0;
-  return () => {
-    s = (s + 0x6d2b79f5) | 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/** Box-Muller: aus zwei Gleichverteilten zwei Standardnormale. */
-function normalFactory(rng: () => number): () => number {
-  let spare: number | null = null;
-  return () => {
-    if (spare !== null) {
-      const v = spare;
-      spare = null;
-      return v;
-    }
-    let u = 0;
-    while (u <= 1e-12) u = rng();
-    const v = rng();
-    const r = Math.sqrt(-2 * Math.log(u));
-    spare = r * Math.sin(2 * Math.PI * v);
-    return r * Math.cos(2 * Math.PI * v);
-  };
-}
-
 interface Zeile {
   m: number;
   dist: number;
@@ -131,7 +103,7 @@ interface Zeile {
 
 /** Zieht MMAX Zeilen und wertet alle Praefixe m = 1, ..., MMAX aus. */
 function ziehung(seed: number): Zeile[] {
-  const g = normalFactory(mulberry32(seed));
+  const g = mulberry32(seed);
   const out: Zeile[] = [];
   let sxx = 0;
   let syy = 0;
@@ -141,7 +113,7 @@ function ziehung(seed: number): Zeile[] {
     let ax = 0;
     let ay = 0;
     for (let j = 0; j < N; j++) {
-      const e = g();
+      const e = randn(g);
       ax += e * X[j];
       ay += e * Y[j];
     }
@@ -164,11 +136,7 @@ function ziehung(seed: number): Zeile[] {
 }
 
 /** Deutsche Dezimalzahl; undefiniert (–) und unendlich (∞) bleiben getrennt. */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  return v.toFixed(d).replace(".", ",").replace(/^-/, "−");
-}
+const fmt = fmtDe;
 
 /** Vorzeichenbehaftete Prozentangabe, damit Stauchung und Streckung sichtbar sind. */
 function fmtPct(v: number): string {
@@ -180,9 +148,10 @@ const grad = (rad: number) => (rad * 180) / Math.PI;
 
 export function SketchingDemo() {
   const [m, setM] = useState(25);
-  const [zieher, setZieher] = useState(0);
+  const [zeigeFaustregel, setZeigeFaustregel] = useState(false);
+  const { seed, neueStichprobe, setSeed } = useSeed(SEED0);
 
-  const zeilen = useMemo(() => ziehung(SEED0 + zieher * 7919), [zieher]);
+  const zeilen = useMemo(() => ziehung(seed), [seed]);
   const jetzt = zeilen[m - 1];
   const band = 100 / Math.sqrt(2 * m);
 
@@ -203,26 +172,15 @@ export function SketchingDemo() {
       ...sichtbar.map((z) => ({ x: z.m, y: z.winkelAbw, color: PURPLE })),
     ];
     const series: Series[] = [
-      { f: (v: number) => (v > 0 ? 100 / Math.sqrt(2 * v) : NaN), color: ORANGE, dash: [6, 4] },
-      { f: (v: number) => (v > 0 ? -100 / Math.sqrt(2 * v) : NaN), color: ORANGE, dash: [6, 4] },
-      { f: () => 0, color: "#94a3b8" },
+      ...(zeigeFaustregel ? [{ f: (v: number) => (v > 0 ? 100 / Math.sqrt(2 * v) : NaN), color: ORANGE, dash: [6, 4], label: "Faustregel" }, { f: (v: number) => (v > 0 ? -100 / Math.sqrt(2 * v) : NaN), color: ORANGE, dash: [6, 4] }] : []),
+      { f: () => 0, color: GREY, label: "keine Abweichung" },
     ];
     return { series, markers, yDomain: [-hi, hi] as [number, number] };
-  }, [zeilen, m]);
+  }, [zeilen, m, zeigeFaustregel]);
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Wir arbeiten mit zwei festen Vektoren x, y aus dem R<sup>200</sup> (Komponenten
-        gleichverteilt aus [0, 1], einmal gezogen und fest eingebaut) und schicken sie mit
-        einer Gauss-Sketchmatrix S in den R<sup>m</sup>. Der Slider steuert m, der Knopf
-        zieht eine neue Matrix. Im Plot steht die relative Abweichung in Prozent:{" "}
-        <span style={{ color: RED }}>Abstand</span> und{" "}
-        <span style={{ color: PURPLE }}>Winkel</span>, dazu als{" "}
-        <span style={{ color: ORANGE }}>orange gestrichelte Kurven</span> die Faustregel
-        ±1/√(2m) für die typische Schwankung des Abstands. Der beschriftete Marker gehört
-        zum eingestellten m; Ausreißer bei sehr kleinem m laufen aus dem Bild.
-      </p>
+      <Aufgabe>Verändern wir m und ziehen wir mehrere Skizzen derselben beiden Vektoren.</Aufgabe>
       <Slider
         label="m (Zeilen von S)"
         value={m}
@@ -236,19 +194,20 @@ export function SketchingDemo() {
         <button
           type="button"
           className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setZieher((v) => v + 1)}
+          onClick={neueStichprobe}
         >
           neue Sketchmatrix ziehen
         </button>
         <button
           type="button"
           className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 disabled:opacity-40 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setZieher(0)}
-          disabled={zieher === 0}
+          onClick={() => setSeed(SEED0)}
+          disabled={seed === SEED0}
         >
           zurücksetzen
         </button>
-        <span className="font-mono">Ziehung Nr. {zieher + 1}</span>
+        <span className="font-mono">Seed {seed}</span>
+        <button type="button" className="rounded border border-slate-300 px-3 py-1 dark:border-slate-600" aria-pressed={zeigeFaustregel} onClick={() => setZeigeFaustregel((v) => !v)}>{zeigeFaustregel ? "Faustregel ausblenden" : "Faustregel einblenden"}</button>
       </div>
       <LabeledPlot
         xLabel="m"
@@ -260,7 +219,7 @@ export function SketchingDemo() {
         width={460}
         height={260}
       />
-      <div className="max-w-prose space-y-1 rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
+      <div className="max-w-prose space-y-1 text-sm">
         <p className="font-mono">
           n = {N}, m = {m}, Kompression {fmt(N / m, 1)}×
         </p>
@@ -292,32 +251,8 @@ export function SketchingDemo() {
             {fmtPct(jetzt.winkelAbw)}
           </span>
         </p>
-        <p>
-          Faustregel für die Schwankung des Abstands:{" "}
-          <span className="font-mono" style={{ color: ORANGE }}>
-            ±1/√(2m) = ±{fmt(band, 2)} %
-          </span>
-          .{" "}
-          {Math.abs(jetzt.distAbw) <= band
-            ? "Diese Ziehung liegt im Band, wie rund zwei von drei Ziehungen."
-            : "Diese Ziehung liegt außerhalb des Bandes; das passiert etwa jeder dritten Ziehung."}
-        </p>
       </div>
-      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-300">
-        Drei Beobachtungen lohnen sich. Erstens: Bei kleinem m schwanken beide Größen
-        wild, und zwar in beide Richtungen. Zweitens: Die Verzerrung schrumpft nur wie
-        1/√m. Zehnmal genauer heißt deshalb hundertmal mehr Zeilen, und dieselbe
-        Wurzel steckt in ε = √(K/δm) aus Satz 8.4.6. Das orange Band ist aber nicht
-        dieses ε: Es zeigt die typische Schwankung der Länge, während ε eine Schranke
-        für das Längenquadrat ist, die nur mit Wahrscheinlichkeit 1 − δ hält.
-        Drittens: Die Zeilen von S
-        werden je Ziehung EINMAL gezogen, und größere m benutzen die ersten m davon. Der
-        Marker-Pfad ist deshalb ein zusammenhängender Weg und keine Folge unabhängiger
-        Experimente; wer unabhängige Wiederholungen sehen will, zieht bei festem m mehrfach
-        neu. Und ein Wort zur Größenordnung: Mit n = 200 ist selbst m = 100 kaum eine
-        Kompression. Interessant wird Sketching erst, wenn n in die Tausende geht, die
-        Verzerrung aber weiter nur an m hängt.
-      </p>
+      <Verdikt kind={Math.abs(jetzt.distAbw) <= band ? "ok" : "warn"}>{zeigeFaustregel ? <>Die Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}; das Band ±{fmt(band, 2)} % aus der Faustregel enthält diese Ziehung {Math.abs(jetzt.distAbw) <= band ? "noch" : "nicht"}. Satz 8.4.6 erklärt die verwandte Wurzelrate der Garantie.</> : <>Die aktuelle Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}. Blenden wir die Faustregel ein, um sie mit der typischen Größenordnung zu vergleichen.</>}</Verdikt>
     </div>
   );
 }

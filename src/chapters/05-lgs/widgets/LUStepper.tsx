@@ -1,5 +1,5 @@
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
-import { MatrixInput } from "../../../lib";
+import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { backSub, fmtNum, MatTable, sub, WidgetLabel } from "./shared";
 
 /**
@@ -7,14 +7,13 @@ import { backSub, fmtNum, MatTable, sub, WidgetLabel } from "./shared";
  * wachsen die Nullen unter der Diagonalen, die Multiplikatoren wandern in L,
  * und aus b wird nebenbei y. Am Ende löst Rückwärtssubstitution Ux = y.
  *
- * Ablauf-/Trace-Code aus dem LUStepper der privaten heath-ch2-App portiert
- * (nur Code; alle Texte neu). Farbcode wie im Kapiteltext (FMM-Palette):
- * rot = Pivot, blau = aktuelle Zeile/Multiplikator, grün = Ergebnis-/L-Einträge.
+ * Einsicht: Jeder eliminierte Eintrag wird als Multiplikator in L gespeichert.
+ * Farbrollen: Pivot rot, aktuelle Zeile/Multiplikator blau, U-Nullen und L grün.
+ * Provenienz: Ablauf-/Trace-Code aus heath-ch2 (nur Code), sichtbare Texte neu.
+ * Zahlen: Standardbeispiel L·U=A in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const RED = "#D55E00";
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
+const { rot: RED, blau: BLUE, gruen: GREEN } = FMM_COLORS;
 
 type Phase = "init" | "mult" | "apply" | "fail" | "done";
 
@@ -195,12 +194,7 @@ export function LUZerlegungStepper() {
 
   return (
     <div>
-      <p className="text-sm">
-        Links läuft das erweiterte System, rechts die Buchhaltung: Was im Arbeitssystem zu
-        einer Null wird, taucht in <span className="font-mono">L</span> als Multiplikator
-        wieder auf. Matrix und rechte Seite sind editierbar, jede Änderung setzt den Ablauf
-        auf den Anfang zurück.
-      </p>
+      <Aufgabe>Schieben wir durch die Phasen und vergleichen jede neue Null mit dem Eintrag in L.</Aufgabe>
       <div className="my-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 text-sm">
           A =
@@ -211,34 +205,7 @@ export function LUZerlegungStepper() {
           <MatrixInput value={b0} onChange={(m) => { setB0(m); setStep(0); }} step={1} />
         </div>
       </div>
-      <div className="my-2 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
-          onClick={() => setStep((v) => Math.max(0, v - 1))}
-          disabled={step === 0}
-        >
-          ◀ zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 bg-slate-100 px-3 py-1 text-sm font-medium disabled:opacity-40 dark:bg-slate-800"
-          onClick={() => setStep((v) => Math.min(last, v + 1))}
-          disabled={step >= last}
-        >
-          nächster Schritt ▶
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm"
-          onClick={() => setStep(0)}
-        >
-          zurücksetzen
-        </button>
-        <span className="text-sm" style={{ color: "#64748b" }}>
-          Schritt {Math.min(step, last) + 1} von {last + 1}
-        </span>
-      </div>
+      <Stepper step={Math.min(step, last)} setStep={setStep} max={last} narration={`Phase ${Math.min(step, last) + 1} von ${last + 1}`} />
       <div className="my-3 flex flex-wrap items-start gap-5">
         <WidgetLabel label={s.phase === "done" ? "U | y  (fertig)" : "Arbeitsmatrix | b"}>
           <MatTable m={aug} cellClass={augClass} cellStyle={augStyle} />
@@ -252,7 +219,7 @@ export function LUZerlegungStepper() {
           <MatTable m={s.L} cellStyle={lStyle} />
         </WidgetLabel>
       </div>
-      <p className="text-sm">{phaseText[s.phase]}</p>
+      <Verdikt kind={s.phase === "fail" ? "fail" : s.phase === "done" ? "ok" : "neutral"}>{phaseText[s.phase]}</Verdikt>
       {s.lines.length > 0 && (
         <div className="mt-2 rounded bg-slate-100 p-2 font-mono text-xs leading-5 dark:bg-slate-800">
           {s.lines.map((l) => (
@@ -261,7 +228,7 @@ export function LUZerlegungStepper() {
         </div>
       )}
       {s.phase === "done" && doneX && (
-        <p className="mt-2 text-sm">
+        <Verdikt kind={doneX.failRow >= 0 ? "fail" : "ok"} className="mt-2">
           {doneX.failRow >= 0 ? (
             <>
               In Zeile {doneX.failRow + 1} von <span className="font-mono">U</span> steht eine
@@ -278,7 +245,7 @@ export function LUZerlegungStepper() {
               <span className="font-mono">{fmtNum(luErr ?? 0)}</span>.
             </>
           )}
-        </p>
+        </Verdikt>
       )}
     </div>
   );
