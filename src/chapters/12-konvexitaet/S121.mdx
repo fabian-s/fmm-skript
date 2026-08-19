@@ -1,5 +1,5 @@
 import { KonvexkombinationsExplorer } from "./widgets/S121Konvexkombination";
-import { KonvexeHuellePunktwolke } from "./widgets/S121Huelle";
+import { HuellenSchaetzung } from "./widgets/S121Huelle";
 
 ::quelle[Folien 12-konvexitaet, Vorkenntnisse und Einführung sowie der Abschnitt Konvexkombinationen bis zum Dreiecksbeispiel in der Ebene.]
 
@@ -268,13 +268,17 @@ daraus folgt per Induktion die Abgeschlossenheit unter Konvexkombinationen von $
 
 :::vertiefung[Wie eine Punktwolke ihre Hülle aufspannt]
 Das Bild der Folie zeigt eine Punktwolke mit ihrer konvexen Hülle. Wir bauen es nach und
-lassen die Wolke wachsen. Interessant ist dabei weniger die Hülle selbst als die Buchführung
-über die Extrempunkte: Ihre Liste wächst nicht einfach an, denn hinzukommende Punkte schließen
-alte Ecken ein und werfen sie wieder heraus. In unserer Wolke rückt jedes Mal genau ein Punkt
-nach, sodass die Anzahl stehen bleibt und sich nur die Zusammensetzung ändert. Fallen kann sie
-ebenfalls, nämlich sobald ein einziger neuer Punkt gleich zwei alte Ecken einschließt.
+lassen die Wolke wachsen. Die Hülle selbst kann dabei nur größer werden. Aber gilt das auch
+für die Liste ihrer Extrempunkte?
 
-<KonvexeHuellePunktwolke />
+<HuellenSchaetzung />
+
+Wie das Widget zeigt, wächst die Fläche monoton, die Liste der Extrempunkte dagegen nicht:
+Bei $k = 5, 6, 8, 9, 10, 11$ und $12$ fällt jeweils eine alte Ecke heraus, während der neue
+Punkt nachrückt. Die Anzahl bleibt dabei stehen und nur die Zusammensetzung ändert sich;
+fallen kann sie ebenfalls, nämlich sobald ein einziger neuer Punkt gleich zwei alte Ecken
+einschließt. Am Ende tragen sieben der vierzehn Punkte die ganze Hülle. Genau das meint
+Bemerkung 12.1.8: Extrempunkt zu sein ist keine Eigenschaft des Punktes, sondern der Menge.
 
 Der grüne Punkt ist der Mittelwert der freigeschalteten Punkte, also die Konvexkombination
 mit lauter Gewichten $\tfrac{1}{k}$ aus Bemerkung 12.1.2. Er liegt immer in der blauen
@@ -340,10 +344,15 @@ der Gesamtfläche $2$. Das Widget rechnet diese Probe live mit.
 
 :::vertiefung[Konvexkombinationen zum Schieben]
 Für das Liniensegment haben die Folien ein Bild, für das Dreieck keines. Ein einziges Widget
-deckt beide Fälle ab, wenn wir die Gewichte verstellbar machen: Steht ein Gewicht auf null,
-bleibt genau die Strecke aus Satz 12.1.4 übrig.
+deckt beide Fälle ab, wenn wir den Punkt selbst bewegen dürfen. Zwei Fragen lassen sich daran
+klären: Welche Punkte der Ebene sind überhaupt Konvexkombinationen der drei Ecken, und woran
+sehen wir den Gewichten an, ob der Punkt im Inneren, auf einer Kante oder in einer Ecke liegt?
 
 <KonvexkombinationsExplorer />
+
+Der grüne Punkt verlässt das Dreieck nie: Negative Gewichte sind nicht zugelassen, und genau
+diese Nichtnegativität hält ihn drinnen. Jede Kante entsteht, sobald ein Gewicht null wird:
+Übrig bleibt die Konvexkombination zweier Ecken, also nach Satz 12.1.4 ihr Liniensegment.
 
 Die drei Regler geben unnormierte Werte; geteilt wird durch ihre Summe, damit
 $\cgreen{w_1} + \cgreen{w_2} + \cgreen{w_3} = 1$ gilt. Nur eine Reglerstellung ist verboten,
@@ -439,6 +448,16 @@ Beides ist zu eng gelesen. $N$ steht mit in der Mengenklammer und darf von Punkt
 verschieden ausfallen, und $\Xcal$ selbst darf ohne Weiteres unendlich sein; nur jede
 einzelne Kombination benutzt endlich viele Punkte (Bemerkung 12.1.6). Für endliches $\Xcal$
 mit $k$ Elementen reicht dagegen immer $N = k$, weil Gewichte $0$ erlaubt sind.
+:::
+
+:::zahlfrage{loesung=7 toleranz=0}
+Schieben wir im Hüllen-Widget den Regler ganz nach rechts, also auf $k = 14$. Wie viele der
+vierzehn Punkte sind dann noch Extrempunkte?
+
+Sieben. Die anderen sieben liegen im Inneren der Hülle und lassen sich als Konvexkombination
+der Ecken schreiben; sie steuern zur Hülle nichts bei. Genau darin liegt der Nutzen der
+Extrempunkte: Sie sind die sparsame Beschreibung einer konvexen Menge. Die Hülle hat dann die
+Fläche $7{,}46$, und keiner der sieben inneren Punkte könnte sie vergrößern.
 :::
 
 ::::

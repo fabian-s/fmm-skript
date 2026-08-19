@@ -262,7 +262,8 @@ beste; Ecken sind damit von selbst abgedeckt. Genau so rechnet das Widget unten.
 
 :::vertiefung[Die Projektion zum Ziehen]
 Die Folien zeigen an dieser Stelle zwei Skizzen. Wir bauen sie nach und machen den Punkt
-beweglich.
+beweglich. Zwei Fragen lassen sich damit klären: Wandert $\corange{\wh{\bx}}$ immer mit,
+wenn wir $\bx$ bewegen, und wo liegt der nächste Punkt, wenn $\bx$ hinter einer Ecke steht?
 
 <ProjektionsWidget />
 
@@ -387,7 +388,6 @@ Funktionen dürfen also keine geraden Stücke haben. Warum das wichtig ist, sehe
 macht das Minimum eindeutig.
 :::
 
-:::vertiefung[Die Sehnenprobe]
 Die Folien stellen konvex und konkav in einer Bildtafel gegenüber. Wir bauen die Tafel nach und
 hängen einen beweglichen Test daran.
 
@@ -402,17 +402,21 @@ grüne Sehne den blauen Graphen vollständig, denn auf diesem Ast steht in ($12.
 Gleichheit; genau darin unterscheiden sich konvex und strikt konvex. Die Parabel links kennt
 diesen Fall nicht, sie bleibt zwischen ihren Endpunkten überall echt unter der Sehne.
 
-Wählen wir die Endpunkte selbst, wird aus der Tafel ein Werkzeug.
+Wählen wir die Endpunkte selbst, wird aus der Tafel ein Werkzeug. Wie viele Paare müssen wir
+prüfen, um Konvexität zu widerlegen, und wie viele, um sie zu beweisen?
 
 <SehnenTest />
 
-Nachweis und Widerlegung sind dabei ebenso ungleich schwer wie bei den Mengen in
-Bemerkung 12.2.2: Ein einziges schlechtes Paar erledigt die Konvexität, während noch so viele
-gelungene Proben sie nicht beweisen. Die Doppelmulde führt beides vor. In der Voreinstellung
-$x = -1{,}55$ und $y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die
-Sache entschieden. Rücken wir dagegen beide Endpunkte in denselben Talgrund, etwa auf
-$x = -1{,}8$ und $y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts.
-:::
+Nachweis und Widerlegung sind ebenso ungleich schwer wie bei den Mengen in Bemerkung 12.2.2:
+Ein einziges schlechtes Paar erledigt die Konvexität, während noch so viele gelungene Proben
+sie nicht beweisen. Die Doppelmulde führt beides vor. In der Voreinstellung $x = -1{,}55$ und
+$y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die Sache entschieden.
+Rücken wir dagegen beide Endpunkte in denselben Talgrund, etwa auf $x = -1{,}8$ und
+$y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts. Über das
+Reglerraster gerechnet bestehen $1110$ der $3081$ Paare, und nur die Hälfte davon liegt ganz
+in einem der beiden konvexen Äste; die Probe kann also auch über den Höcker hinweg gelingen.
+Beim Betrag deckt die grüne Sehne den Graphen bei $1482$ Paaren vollständig ab, dort steht in
+($12.3.4$) Gleichheit, und genau daran unterscheiden sich konvex und strikt konvex.
 
 ### Nachweis von Hand: der Betrag
 
@@ -513,6 +517,17 @@ die Menge *unter* dem Graphen konvex ist. Für $f(x) = -x^2$ etwa ist der Epigra
 über einer nach unten geöffneten Parabel, und die Verbindungsstrecke zwischen $(-1,-1)$ und
 $(1,-1)$ läuft durch $(0,-1)$, was wegen $-1 < f(0) = 0$ nicht im Epigraphen liegt. Konvex ist
 der Epigraph einer konkaven Funktion nur, wenn sie affin ist.
+:::
+
+:::zahlfrage{loesung=1.891 toleranz=0.02}
+Wählen wir im Sehnentest die Doppelmulde in ihrer Voreinstellung $x = -1{,}55$, $y = 1{,}25$.
+Wie dick ist der rote Streifen an seiner stärksten Stelle, also wie weit ragt der Graph über
+die Sehne?
+
+Um $1{,}891$. Das ist die größte Verletzung von ($12.3.4$) auf diesem Paar, und mehr braucht
+es nicht: Satz 12.3.8 fordert die Ungleichung für alle Paare, ein einziges Gegenbeispiel
+entscheidet die Frage. Zum Vergleich: Auf dem Paar $x = -1{,}8$, $y = -0{,}9$ bleibt der
+Streifen leer, bewiesen ist damit aber nichts.
 :::
 
 ::::

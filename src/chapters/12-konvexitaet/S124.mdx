@@ -340,7 +340,8 @@ Jensen-Lücke misst hier direkt die Streuung.
 Der Satz sagt, dass zwei Zahlen in einer bestimmten Reihenfolge stehen. Sehen wir sie uns an.
 Drei feste Stützstellen bekommen einstellbare Gewichte, und das Widget zeichnet beide Seiten
 von ($12.4.1$) über derselben Stelle $\cgreen{\sum_i w_i x_i}$: orange den Funktionswert der
-Mischung, grün die Mischung der Funktionswerte.
+Mischung, grün die Mischung der Funktionswerte. Wie groß ist der Abstand zwischen beiden, und
+bei welcher Reglerstellung verschwindet er?
 
 <JensenExplorer />
 
@@ -352,8 +353,9 @@ $1{,}5556$. Das ist genau die gewichtete Varianz der drei Stützstellen, denn f�
 ist die Jensen-Lücke nach Beispiel 12.4.8 die Differenz
 $\E[X^2] - \left(\E[X]\right)^2$. Bei $f(x) = e^x$ wächst die Lücke auf $6{,}8273$, weil die
 Krümmung dort viel stärker zunimmt. Die dritte Wahl ist eine Gegenprobe: $\sqrt{x}$ ist konkav,
-und prompt tauschen die beiden Markierungen die Plätze, $1{,}2676$ gegen $1{,}3540$. Wer alle
-Gewichte bis auf eines auf null schiebt, erzeugt den Gleichheitsfall.
+und prompt tauschen die beiden Markierungen die Plätze, $1{,}2676$ gegen $1{,}3540$. Und wer
+alles Gewicht auf eine einzige Stützstelle schiebt, erzeugt den Gleichheitsfall: Dann steht
+auf beiden Seiten derselbe Wert, so wie bei einer Zufallsvariablen mit Varianz $0$.
 :::
 
 ### Konvexität an der Ableitung ablesen
@@ -929,6 +931,16 @@ und in $x = 0$ gibt es keinen Subgradienten: Für $v = -c$ mit $c > 0$ unterschr
 $f(y) - v\,y$ bei $y = 1/(4c^2)$ den Wert null, und $v \ge 0$ scheitert schon an $y = 1$. Die
 Folie sagt „für jedes $\bx \in \Xcal$" und lässt die Einschränkung weg
 (Bemerkung 12.4.17).
+:::
+
+:::zahlfrage{loesung=1.5556 toleranz=0.01}
+Stellen wir im Jensen-Widget $f(x) = x^2$ und gleiche Gewichte ein. Wie groß ist die Differenz
+zwischen der grünen und der orangen Markierung?
+
+$1{,}5556$, nämlich $4{,}9167 - 3{,}3611$. Diese Lücke ist die gewichtete Varianz der drei
+Stützstellen $0{,}5$, $1{,}5$ und $3{,}5$ um ihren Mittelwert $\tfrac{11}{6} = 1{,}8333$
+(Beispiel 12.4.8). Sie verschwindet genau dann, wenn alles Gewicht auf einer Stützstelle
+liegt; für die konkave Wurzel wechselt sie das Vorzeichen.
 :::
 
 ::::

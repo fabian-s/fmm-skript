@@ -1,55 +1,70 @@
 import { useState } from "react";
-import type { PointerEvent as ReactPointerEvent, ReactNode } from "react";
-import { niceTicks } from "../../../lib";
+import type { ReactNode } from "react";
+import {
+  Aufgabe,
+  DragHandle,
+  FMM_COLORS,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  clamp,
+  fmtDe,
+  fmtTick,
+  niceTicks,
+  useDrag,
+} from "../../../lib";
 
 /**
  * §12.2: Konvexitäts-Test (Eigenbau).
  *
+ * DIE EINE EINSICHT: Ein einziges Punktepaar, dessen Verbindungsstrecke
+ * heraushängt, widerlegt die Konvexität — während noch so viele gelungene
+ * Proben sie nicht beweisen (Definition 12.2.1, Bemerkung 12.2.2).
+ *
  * Vier Mengen im R^2 stehen zur Wahl (Kreisscheibe, Kreisring, Dreieck als
- * Schnitt dreier Halbräume, Unterseite der Parabel y <= x^2). Zwei Klicks
- * setzen die Punkte x und y, das Widget zeichnet die Verbindungsstrecke
+ * Schnitt dreier Halbräume, Unterseite der Parabel z2 <= z1^2). Beide Punkte
+ * sind ziehbar (Muster 2); die vier Regler sind der Doppelpfad und stellen
+ * dieselben Koordinaten ein. Das Widget zeichnet die Strecke
  * {lambda x + (1-lambda) y} und meldet, ob sie die Menge verlässt.
  *
- * Ersetzt die beiden Folienbilder convex-set.png / nonconvex-set.png
- * (12-konvexitaet.Rmd Z. 167-172), die im öffentlichen Repo nicht verwendet
- * werden dürfen. Der Aufbau (Achsenraster aus niceTicks, Klick-zu-Welt-
- * Umrechnung, Rasterung auf 0,05) folgt dem Muster von
- * 10-ableitungen-1/widgets/S102Gradient.tsx; Mengen, Auswertung, Farbrollen
- * und sämtliche Texte sind für diesen Abschnitt neu.
+ * Ersetzt die Folienbilder convex-set.png / nonconvex-set.png
+ * (12-konvexitaet.Rmd Z. 167–172).
  *
- * Farbcode Kapitel 12: Menge blau, Verbindungsstrecke grün, der Teil der
- * Strecke außerhalb der Menge rot, Extrempunkte orange.
+ * FARBROLLEN (Kapitel 12): Menge blau, Verbindungsstrecke und gewählte Punkte
+ * grün, das Stück außerhalb der Menge rot, Extrempunkte orange, Hinweise ohne
+ * Rolle neutralgrau.
  *
- * Per node nachgerechnet (Scratchpad check-math-s122.mjs):
- * Kreisring 0,8 <= ||z|| <= 1,2 mit x = (1,1; 0), y = (0; 1,1): die Strecke
- * liegt für lambda in (0,380; 0,620) im Loch, ihr Mittelpunkt hat die Norm
- * 1,1/sqrt(2) = 0,7778 < 0,8; Parabelmenge mit x = (-1; 1), y = (1; 1):
- * z(lambda) = (1-2*lambda; 1) liegt für JEDES lambda in (0,1) außerhalb,
- * weil 1 <= (1-2*lambda)^2 nur für lambda <= 0 oder lambda >= 1 gilt.
+ * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Achsen/Zahlformat/Farben aus
+ * `src/lib/widgets/util.ts`.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
+ * check-s122-mengen.mjs, 2026-08-19): Kreisring 0,8 ≤ ‖z‖ ≤ 1,2 mit
+ * x = (1,1; 0) und y = (0; 1,1) liegt für λ zwischen 0,380 und 0,620 im Loch,
+ * der Mittelpunkt hat die Norm 1,1/√2 = 0,7778 < 0,8; die Parabelmenge mit
+ * x = (−1; 1) und y = (1; 1) liegt für JEDES λ in (0, 1) außerhalb. Über je
+ * 200 000 geseedete Zufallspaare aus der Menge verlässt die Strecke bei
+ * Kreisscheibe und Dreieck kein einziges Mal die Menge, beim Ring in 60,5 %
+ * und bei der Parabelunterseite in 12,9 % der Fälle. Die Startlage
+ * x = (1,1; 0), y = (0,85; 0,75) liegt ganz im Ring: sie besteht die Probe,
+ * ohne etwas zu beweisen.
  */
 
-const BLAU = "#0072B2"; // die Menge selbst
-const GRUEN = "#009E73"; // Verbindungsstrecke, gewählte Punkte
-const ROT = "#D55E00"; // Stück der Strecke außerhalb der Menge
-const ORANGE = "#E69F00"; // Extrempunkte
-const NEUTRAL = "#64748b"; // Hinweise ohne Farbrolle im Kapitel-Farbcode
+const BLAU = FMM_COLORS.blau; // die Menge selbst
+const GRUEN = FMM_COLORS.gruen; // Verbindungsstrecke, gewählte Punkte
+const ROT = FMM_COLORS.rot; // Stück der Strecke außerhalb der Menge
+const ORANGE = FMM_COLORS.orange; // Extrempunkte
+const NEUTRAL = FMM_COLORS.grau; // Hinweise ohne Farbrolle im Kapitel-Farbcode
 
 const HALB = 1.4;
 const SIZE = 300;
 const PAD_L = 30;
-const PAD_B = 18;
+const PAD_B = 30;
 const PAD_R = 10;
+const VB_W = PAD_L + SIZE + PAD_R;
+const VB_H = SIZE + PAD_B;
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
-
-const punktText = (p: Punkt) => `(${fmt(p[0])}; ${fmt(p[1])})`;
+const punktText = (p: Punkt) => `(${fmtDe(p[0])}; ${fmtDe(p[1])})`;
 
 type Punkt = [number, number];
 
@@ -59,6 +74,8 @@ type Menge = {
   formel: string;
   /** Liegt z in der Menge? */
   drin: (z: Punkt) => boolean;
+  /** ist die Menge konvex? (per node geprüft, s. Kopfkommentar) */
+  konvex: boolean;
   /** blaue Fläche im Pixelraum */
   flaeche: (px: (x: number) => number, py: (y: number) => number) => ReactNode;
   /** Extrempunkte, soweit es endlich viele sind */
@@ -82,8 +99,15 @@ const MENGEN: Menge[] = [
     name: "Kreisscheibe",
     formel: "{ z : ‖z‖ ≤ 1,2 }",
     drin: (z) => Math.hypot(z[0], z[1]) <= 1.2 + 1e-12,
+    konvex: true,
     flaeche: (px, py) => (
-      <path d={kreisPfad(px, py, 1.2)} fill={BLAU} fillOpacity={0.16} stroke={BLAU} strokeWidth={1.4} />
+      <path
+        d={kreisPfad(px, py, 1.2)}
+        fill={BLAU}
+        fillOpacity={0.16}
+        stroke={BLAU}
+        strokeWidth={1.4}
+      />
     ),
     paar: [
       [-1, 0.5],
@@ -99,6 +123,7 @@ const MENGEN: Menge[] = [
       const n = Math.hypot(z[0], z[1]);
       return n >= 0.8 - 1e-12 && n <= 1.2 + 1e-12;
     },
+    konvex: false,
     flaeche: (px, py) => (
       <path
         d={`${kreisPfad(px, py, 1.2)} ${kreisPfad(px, py, 0.8)}`}
@@ -120,6 +145,7 @@ const MENGEN: Menge[] = [
     name: "Dreieck",
     formel: "{ z : z₁ ≥ 0, z₂ ≥ 0, z₁ + z₂ ≤ 1 }",
     drin: (z) => z[0] >= -1e-12 && z[1] >= -1e-12 && z[0] + z[1] <= 1 + 1e-12,
+    konvex: true,
     flaeche: (px, py) => (
       <polygon
         points={`${px(0)},${py(0)} ${px(1)},${py(0)} ${px(0)},${py(1)}`}
@@ -145,6 +171,7 @@ const MENGEN: Menge[] = [
     name: "Parabelunterseite",
     formel: "{ z : z₂ ≤ z₁² }",
     drin: (z) => z[1] <= z[0] * z[0] + 1e-12,
+    konvex: false,
     flaeche: (px, py) => {
       const n = 80;
       const oben: string[] = [];
@@ -226,32 +253,25 @@ function analysiere(menge: Menge, x: Punkt, y: Punkt, n = 600): Befund {
 /* ------------------------------------------------------------- Komponente */
 
 export function KonvexTest() {
-  const [mengeId, setMengeId] = useState(MENGEN[0].id);
-  const [x, setX] = useState<Punkt>(MENGEN[0].paar[0]);
-  const [y, setY] = useState<Punkt>(MENGEN[0].paar[1]);
-  const [naechster, setNaechster] = useState<"x" | "y">("x");
+  // Startlage: der Kreisring mit einem Paar, das die Probe BESTEHT — die
+  // Auflösung (das Gegenbeispiel) liegt hinter dem Knopf, nicht im Default.
+  const [mengeId, setMengeId] = useState(MENGEN[1].id);
+  const [x, setX] = useState<Punkt>([1.1, 0]);
+  const [y, setY] = useState<Punkt>([0.85, 0.75]);
 
   const menge = MENGEN.find((m) => m.id === mengeId) ?? MENGEN[0];
 
   const px = (v: number) => PAD_L + ((v + HALB) / (2 * HALB)) * SIZE;
   const py = (v: number) => SIZE - ((v + HALB) / (2 * HALB)) * SIZE;
 
-  const greifen = (e: ReactPointerEvent<SVGSVGElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    const sx = (e.clientX - r.left) * ((PAD_L + SIZE + PAD_R) / r.width);
-    const sy = (e.clientY - r.top) * ((SIZE + PAD_B) / r.height);
-    const wx = -HALB + ((sx - PAD_L) / SIZE) * 2 * HALB;
-    const wy = -HALB + ((SIZE - sy) / SIZE) * 2 * HALB;
-    const klemm = (v: number) => Math.min(HALB, Math.max(-HALB, v));
-    const p: Punkt = [Math.round(klemm(wx) * 20) / 20, Math.round(klemm(wy) * 20) / 20];
-    if (naechster === "x") {
-      setX(p);
-      setNaechster("y");
-    } else {
-      setY(p);
-      setNaechster("x");
-    }
-  };
+  const zieh = useDrag<"x" | "y">({
+    feld: { x0: PAD_L, y0: 0, w: SIZE, h: SIZE },
+    welt: { x0: -HALB, x1: HALB, y0: -HALB, y1: HALB },
+    snap: 0.05,
+    clamp: ([a, b]) => [clamp(a, -HALB, HALB), clamp(b, -HALB, HALB)],
+    greifPosition: (id) => (id === "x" ? x : y),
+    onDrag: (p, id) => (id === "x" ? setX(p) : setY(p)),
+  });
 
   const xDrin = menge.drin(x);
   const yDrin = menge.drin(y);
@@ -263,108 +283,76 @@ export function KonvexTest() {
     setMengeId(id);
     setX(m.paar[0]);
     setY(m.paar[1]);
-    setNaechster("x");
   };
 
   const gleich = x[0] === y[0] && x[1] === y[1];
-
-  let status: { farbe: string; kopf: string; text: string };
-  if (!beideDrin) {
-    const welche = !xDrin && !yDrin ? "Beide Punkte liegen" : !xDrin ? "Der Punkt x liegt" : "Der Punkt y liegt";
-    status = {
-      farbe: NEUTRAL,
-      kopf: "Voraussetzung nicht erfüllt",
-      text: `${welche} außerhalb der Menge. Definition 12.2.1 verlangt x, y ∈ 𝒳 und sagt über andere Paare nichts. Setzen wir den Punkt neu, oder greifen wir zum vorbereiteten Paar.`,
-    };
-  } else if (gleich) {
-    status = {
-      farbe: NEUTRAL,
-      kopf: "Beide Punkte fallen zusammen",
-      text: `x und y stehen auf derselben Stelle, die Strecke schrumpft zu einem Punkt. Für x = y ist λ·x + (1−λ)·y = x, die Bedingung aus Definition 12.2.1 also erfüllt, ohne dass wir etwas über die Menge erfahren. Setzen wir y an eine andere Stelle.`,
-    };
-  } else if (befund.anteil === 0) {
-    status = {
-      farbe: GRUEN,
-      kopf: "Strecke bleibt drin",
-      text: `Für alle abgetasteten λ liegt z(λ) = λ·x + (1−λ)·y in der Menge. Dieses eine Paar beweist noch nichts, aber ${
-        menge.id === "scheibe" || menge.id === "dreieck"
-          ? "hier gelingt kein Gegenbeispiel: die Menge ist konvex."
-          : "hier lohnt die Suche, denn diese Menge ist nicht konvex."
-      }`,
-    };
-  } else {
-    status = {
-      farbe: ROT,
-      kopf: "Strecke verlässt die Menge",
-      text: `Für λ echt zwischen ${fmt(befund.von, 3)} und ${fmt(befund.bis, 3)} liegt z(λ) = λ·x + (1−λ)·y außerhalb, das sind ${fmt(
-        100 * befund.anteil,
-        1,
-      )} % der abgetasteten Strecke. Damit ist die Bedingung aus Definition 12.2.1 verletzt und die Menge nicht konvex.`,
-    };
-  }
-
   const zAt = (l: number): Punkt => [l * x[0] + (1 - l) * y[0], l * x[1] + (1 - l) * y[1]];
   const mitte = zAt(0.5);
 
+  const koordinate = (
+    label: string,
+    wert: number,
+    setzen: (v: number) => void,
+    farbe: string,
+  ) => (
+    <Slider
+      label={label}
+      value={wert}
+      onChange={(v) => setzen(Math.round(v * 20) / 20)}
+      min={-HALB}
+      max={HALB}
+      step={0.05}
+      accent={farbe}
+      fmt={(v) => fmtDe(v)}
+    />
+  );
+
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Wir wählen eine Menge, klicken zwei Punkte hinein und sehen nach, ob die Verbindungsstrecke
-        drinbleibt. Blau ist die Menge, grün die Strecke zwischen den gewählten Punkten x und y, rot
-        das Stück, das die Menge verlässt; die orangen Punkte des Dreiecks sind seine Extrempunkte.
-        Ein Klick setzt abwechselnd x und y, die Koordinaten rasten auf Schritte von 0,05 ein.
-        Liegt einer der beiden Punkte außerhalb der Menge, bleibt die Strecke grau: Über solche
-        Paare sagt Definition 12.2.1 nichts, und ein Herausragen widerlegt dort nichts.
-      </p>
+      <Aufgabe>
+        Ziehen wir x und y so, dass die grüne Strecke die blaue Menge verlässt.
+      </Aufgabe>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {MENGEN.map((m) => (
           <button
             key={m.id}
             type="button"
-            className={`rounded border px-3 py-1 ${
-              m.id === mengeId
-                ? "border-sky-600 bg-sky-50 dark:bg-sky-900/40"
-                : "border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-            }`}
+            aria-pressed={m.id === mengeId}
+            className={m.id === mengeId ? W_BUTTON_AKTIV : W_BUTTON}
             onClick={() => mengenWahl(m.id)}
           >
             {m.name}
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap items-center gap-2 text-sm">
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => {
-            setX(menge.paar[0]);
-            setY(menge.paar[1]);
-            setNaechster("x");
-          }}
-        >
-          {menge.paarName}
-        </button>
-        <span className="text-slate-500 dark:text-slate-400">
-          nächster Klick setzt {naechster === "x" ? "x" : "y"}
-        </span>
-      </div>
 
-      <div className="flex flex-wrap gap-4">
-        <div className="inline-block shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
-          <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
-            z₂ ↑
-          </div>
+      <div className="flex flex-wrap items-start gap-4">
+        <div className="min-w-0 grow basis-[300px]">
           <svg
-            width={PAD_L + SIZE + PAD_R}
-            height={SIZE + PAD_B}
-            className="cursor-crosshair rounded border border-slate-300 bg-white dark:border-slate-600"
-            onPointerDown={greifen}
+            width={VB_W}
+            height={VB_H}
+            viewBox={`0 0 ${VB_W} ${VB_H}`}
+            className="max-w-full h-auto rounded"
+            role="img"
+            aria-label={`Die Menge ${menge.name} mit zwei Punkten x und y; die Verbindungsstrecke ${
+              !beideDrin ? "wird nicht geprüft" : befund.anteil > 0 ? "verlässt die Menge" : "bleibt in der Menge"
+            }.`}
+            {...zieh.svgProps}
           >
             <defs>
               <clipPath id="s122-clip">
                 <rect x={PAD_L} y={0} width={SIZE} height={SIZE} />
               </clipPath>
             </defs>
+            <rect
+              x={0.5}
+              y={0.5}
+              width={VB_W - 1}
+              height={VB_H - 1}
+              rx={4}
+              fill="var(--w-bg, #ffffff)"
+              stroke="var(--w-border, #cbd5e1)"
+            />
             {niceTicks(-HALB, HALB).map((t) => (
               <g key={`y${t}`}>
                 <line
@@ -372,11 +360,17 @@ export function KonvexTest() {
                   x2={PAD_L + SIZE}
                   y1={py(t)}
                   y2={py(t)}
-                  stroke="#e2e8f0"
+                  stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
                   strokeWidth={t === 0 ? 1.2 : 0.6}
                 />
-                <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
-                  {fmt(t, Math.abs(t) >= 1 || t === 0 ? 0 : 1)}
+                <text
+                  x={PAD_L - 4}
+                  y={py(t) + 3}
+                  textAnchor="end"
+                  fill="var(--w-muted, #64748b)"
+                  fontSize={10}
+                >
+                  {fmtTick(t, 0.5)}
                 </text>
               </g>
             ))}
@@ -387,11 +381,17 @@ export function KonvexTest() {
                   y2={SIZE}
                   x1={px(t)}
                   x2={px(t)}
-                  stroke="#e2e8f0"
+                  stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
                   strokeWidth={t === 0 ? 1.2 : 0.6}
                 />
-                <text x={px(t)} y={SIZE + 12} textAnchor="middle" fill="#64748b" fontSize={10}>
-                  {fmt(t, Math.abs(t) >= 1 || t === 0 ? 0 : 1)}
+                <text
+                  x={px(t)}
+                  y={SIZE + 12}
+                  textAnchor="middle"
+                  fill="var(--w-muted, #64748b)"
+                  fontSize={10}
+                >
+                  {fmtTick(t, 0.5)}
                 </text>
               </g>
             ))}
@@ -415,22 +415,57 @@ export function KonvexTest() {
               {(menge.extrem ?? []).map((e, i) => (
                 <circle key={`e${i}`} cx={px(e[0])} cy={py(e[1])} r={4} fill={ORANGE} />
               ))}
-              <circle cx={px(x[0])} cy={py(x[1])} r={5} fill={xDrin ? GRUEN : "#ffffff"} stroke={GRUEN} strokeWidth={2} />
-              <circle cx={px(y[0])} cy={py(y[1])} r={5} fill={yDrin ? GRUEN : "#ffffff"} stroke={GRUEN} strokeWidth={2} />
-              <text x={px(x[0]) + 8} y={py(x[1]) - 6} fill={GRUEN} fontSize={12}>
-                x
-              </text>
-              <text x={px(y[0]) + 8} y={py(y[1]) - 6} fill={GRUEN} fontSize={12}>
-                y
-              </text>
+              <DragHandle
+                x={px(x[0])}
+                y={py(x[1])}
+                r={5}
+                farbe={GRUEN}
+                fuellung={xDrin ? GRUEN : "var(--w-bg, #ffffff)"}
+                aktiv={zieh.dragging === "x"}
+                label="x"
+                {...zieh.handleProps("x")}
+              />
+              <DragHandle
+                x={px(y[0])}
+                y={py(y[1])}
+                r={5}
+                farbe={GRUEN}
+                fuellung={yDrin ? GRUEN : "var(--w-bg, #ffffff)"}
+                aktiv={zieh.dragging === "y"}
+                label="y"
+                {...zieh.handleProps("y")}
+              />
             </g>
+            <text x={PAD_L + 4} y={12} fill="var(--w-muted, #64748b)" fontSize={10}>
+              z₂ ↑
+            </text>
+            <text
+              x={PAD_L + SIZE / 2}
+              y={SIZE + 26}
+              textAnchor="middle"
+              fill="var(--w-muted, #64748b)"
+              fontSize={10}
+            >
+              z₁ →
+            </text>
           </svg>
-          <div className="mt-0.5 text-center text-[11px]" style={{ width: PAD_L + SIZE }}>
-            z₁ →
-          </div>
         </div>
 
-        <div className="min-w-[15rem] grow space-y-2 text-sm">
+        <div className="min-w-[15rem] grow basis-[15rem] space-y-1 text-sm">
+          <button
+            type="button"
+            className={W_BUTTON}
+            onClick={() => {
+              setX(menge.paar[0]);
+              setY(menge.paar[1]);
+            }}
+          >
+            {menge.paarName}
+          </button>
+          {koordinate("x₁", x[0], (v) => setX([v, x[1]]), GRUEN)}
+          {koordinate("x₂", x[1], (v) => setX([x[0], v]), GRUEN)}
+          {koordinate("y₁", y[0], (v) => setY([v, y[1]]), GRUEN)}
+          {koordinate("y₂", y[1], (v) => setY([y[0], v]), GRUEN)}
           <table className="text-sm">
             <tbody>
               <tr>
@@ -459,19 +494,44 @@ export function KonvexTest() {
               </tr>
             </tbody>
           </table>
-          <p className="font-semibold" style={{ color: status.farbe }}>
-            {status.kopf}
-          </p>
-          <p className="max-w-prose">{status.text}</p>
         </div>
       </div>
+
+      {!beideDrin ? (
+        <Verdikt kind="neutral" titel="Voraussetzung nicht erfüllt.">
+          {!xDrin && !yDrin
+            ? "Beide Punkte liegen"
+            : !xDrin
+              ? "Der Punkt x liegt"
+              : "Der Punkt y liegt"}{" "}
+          außerhalb der Menge. Definition 12.2.1 verlangt x, y ∈ 𝒳 und sagt über andere Paare
+          nichts; ein Herausragen widerlegt hier also nichts. Ziehen wir den Punkt zurück, oder
+          greifen wir zum vorbereiteten Paar.
+        </Verdikt>
+      ) : gleich ? (
+        <Verdikt kind="neutral" titel="Beide Punkte fallen zusammen.">
+          Die Strecke schrumpft zu einem Punkt. Für x = y ist λ·x + (1−λ)·y = x, die Bedingung
+          aus Definition 12.2.1 also erfüllt, ohne dass wir etwas über die Menge erfahren. Ziehen
+          wir y an eine andere Stelle.
+        </Verdikt>
+      ) : befund.anteil > 0 ? (
+        <Verdikt kind="fail" titel="Geschafft: die Strecke verlässt die Menge.">
+          Für λ echt zwischen {fmtDe(befund.von, 3)} und {fmtDe(befund.bis, 3)} liegt
+          z(λ) = λ·x + (1−λ)·y außerhalb, das sind {fmtDe(100 * befund.anteil, 1)} % der
+          abgetasteten Strecke. Damit ist die Bedingung aus Definition 12.2.1 verletzt, und
+          dieses eine Paar entscheidet die Frage: {menge.name} ist nicht konvex.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="warn" titel="Dieses Paar besteht die Probe.">
+          Für alle abgetasteten λ bleibt z(λ) = λ·x + (1−λ)·y in der Menge. Entschieden ist damit
+          nichts, denn Definition 12.2.1 fordert <em>alle</em> Paare. Genau darin liegt die
+          Asymmetrie aus Bemerkung 12.2.2: Widerlegen kostet ein Beispiel, Beweisen eine Rechnung
+          über alle Paare. Ziehen wir x und y weiter auseinander.
+        </Verdikt>
+      )}
       <p className="max-w-prose text-xs text-slate-500 dark:text-slate-400">
         Der Kreisring vertritt hier die Einheitssphäre aus dem Selbsttest: Eine Kurve ohne Dicke
-        lässt sich nicht anklicken, und für das Argument zählt ohnehin nur das Loch in der Mitte.
-        Beachten wir die Asymmetrie zwischen den beiden Antworten. Ein einziges Paar mit
-        heraushängender Strecke widerlegt die Konvexität, während noch so viele gelungene Versuche
-        sie nicht beweisen. Dafür brauchen wir die Rechnungen aus dem Selbsttest (Kreisscheibe,
-        Parabelmenge) und aus Beispiel 12.2.12 (Dreieck als Schnitt dreier Halbräume).
+        lässt sich nicht treffen, und für das Argument zählt ohnehin nur das Loch in der Mitte.
       </p>
     </div>
   );

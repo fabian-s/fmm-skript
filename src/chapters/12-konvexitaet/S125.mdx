@@ -1,4 +1,4 @@
-import { Landschaften, AbstiegsBecken } from "./widgets/S125Landschaften";
+import { Landschaften, AbstiegsBeckenSchaetzung } from "./widgets/S125Landschaften";
 
 ::quelle[Folien 12-konvexitaet, von „Konvexe Funktionen in der Optimierung" bis „Wrap-up"; die Folie „Optimierungslandschaften" ist als Widget nachgebaut.]
 
@@ -292,11 +292,14 @@ bei $\beta = 1{,}18$.
 
 ### Optimierungslandschaften
 
-Die Folien stellen den Unterschied als Bildtafel mit drei Flächen nebeneinander. Wir bauen
-ihn in einer Variablen nach, weil sich dort alles einzeichnen lässt, worauf es ankommt, und
-hängen den entscheidenden Test gleich daran.
+Die Folien stellen den Unterschied als Bildtafel mit drei Flächen nebeneinander. Wir bauen ihn
+in einer Variablen nach, weil sich dort alles einzeichnen lässt, worauf es ankommt: erst die
+drei Fälle als Tafel, danach ein Verfahren, das in einem von ihnen scheitert.
 
-:::vertiefung[Drei Landschaften und ein Abstieg]
+:::vertiefung[Drei Landschaften nebeneinander]
+Woran sehen wir einer Landschaft an, welcher der drei Fälle vorliegt? Die Antwort steckt nicht
+im Verlauf des Graphen, sondern in der Menge der Minimalstellen.
+
 <Landschaften />
 
 Die mittlere Tafel ist der Fall, den Satz 12.5.5 abdeckt: strikt konvex, also höchstens eine
@@ -307,21 +310,27 @@ strikt konvex. Ihre Minimalstellen bilden das ganze Intervall von $-0{,}8$ bis $
 das ist eine konvexe Menge, wie Satz 12.5.3 es verlangt. Rechts ist die Konvexität verletzt,
 und damit fällt die ganze Theorie dieses Abschnitts weg: Zwei kritische Punkte tragen dort
 positive Krümmung, nur einer von beiden ist global.
+:::
 
 Was das für ein Verfahren bedeutet, sehen wir am besten, indem wir eines laufen lassen. Wir
 nehmen das einfachste, den :k[Gradientenabstieg]{#gradient-descent} aus
 [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2), der wiederholt ein Stück in Richtung des
-stärksten Abstiegs geht.
+stärksten Abstiegs geht. Auf der Doppelmulde entscheidet allein der Startwert, in welchem Tal
+er endet. Wo genau verläuft die Grenze zwischen den beiden Einzugsgebieten?
 
-<AbstiegsBecken />
+:::vertiefung[Ein Abstieg auf der Doppelmulde]
+Der Startwert lässt sich Schritt für Schritt verschieben; die Tafel zeigt jedes Mal die
+ausgewählten Zwischenstationen und den Punkt, an dem die Folge zur Ruhe kommt.
 
-Welches Tal die Folge erreicht, hängt allein vom Startwert ab. Der Höcker bei $-0{,}1699$
-trennt die beiden Einzugsbereiche, und über das ganze Reglerraster kippt das Ergebnis genau
-einmal, nämlich zwischen $-0{,}17$ und $-0{,}16$. Am Endpunkt selbst ist der Unterschied nicht
-abzulesen: In beiden Tälern verschwindet die Ableitung, in beiden ist die Krümmung positiv, in
-beiden meldet jedes Abbruchkriterium Erfolg. Wer ein nicht-konvexes Problem rechnet, muss
-deshalb mehrere Startwerte durchprobieren und die Ergebnisse hinterher vergleichen. Bei einer
-konvexen Zielfunktion erübrigt sich das: Nach Satz 12.5.1 ist jeder Punkt mit verschwindendem
+<AbstiegsBeckenSchaetzung />
+
+Wie das Widget zeigt, trennt der Höcker bei $-0{,}1699$ die beiden Einzugsbereiche, und über
+das ganze Reglerraster kippt das Ergebnis genau einmal, nämlich zwischen $-0{,}17$ und
+$-0{,}16$. Am Endpunkt selbst ist der Unterschied nicht abzulesen: In beiden Tälern
+verschwindet die Ableitung, in beiden ist die Krümmung positiv, in beiden meldet jedes
+Abbruchkriterium Erfolg. Wer ein nicht-konvexes Problem rechnet, muss deshalb mehrere
+Startwerte durchprobieren und die Ergebnisse hinterher vergleichen. Bei einer konvexen
+Zielfunktion erübrigt sich das: Nach Satz 12.5.1 ist jeder Punkt mit verschwindendem
 Gradienten schon das Ziel.
 :::
 
@@ -579,6 +588,16 @@ zwischen den beiden Lösungen in der Lösungsmenge, und alle Punkte darauf haben
 Zielwert. Zwei bloße Softwareausgaben wären dagegen noch kein Beweis: Zuerst sind
 Konvergenzstatus und Optimalitätsresiduum zu prüfen. Bei nicht-konvexen Verfahren wie
 $k$-means wäre selbst erfüllte lokale Optimalität kein globales Gütesiegel (Bemerkung 12.5.7).
+:::
+
+:::frage{wahr}
+Im Abstiegs-Widget landet ein Lauf, der bei $x_0 = -0{,}16$ startet, im tiefen Tal rechts.
+
+Er landet dort, obwohl er weit links vom tiefen Tal beginnt. Die Wasserscheide ist der Höcker
+bei $-0{,}1699$, und $-0{,}16$ liegt knapp rechts davon; der negative Gradient zeigt dort nach
+rechts, und die Folge rollt über den ganzen Höcker hinweg bis $1{,}30084$. Ein Start bei
+$-0{,}17$ endet dagegen bei $-1{,}13090$. Ein Reglerschritt von $0{,}01$ entscheidet also über
+einen Zielwert, der um $2{,}44$ auseinanderliegt.
 :::
 
 ::::
