@@ -1,20 +1,48 @@
 import { useMemo, useState } from "react";
-import { Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  Slider,
+  Stepper,
+  Verdikt,
+  W_MUTED,
+  W_PANEL,
+  fmtInt,
+} from "../../../lib";
 
 /**
- * Fibonacci-Stepper: der iterative Algorithmus aus den Folien (02-algos,
- * "Fibonacci: Schrittweise Berechnung") Schritt für Schritt, daneben die
- * naive Rekursion mit Aufruf- und Additionszähler. Foreshadowing für die
- * Komplexitätsanalyse in Abschnitt 2.5.
+ * §2.2: Der iterative Fibonacci-Algorithmus 2.2.2 Schritt für Schritt, daneben
+ * die naive Rekursion mit Aufruf- und Additionszähler.
  *
- * Farbcodierung wie im Text (FMM-Palette): blau = letztes Element,
- * grün = vorletztes Element, orange = neu berechnete Summe.
+ * DIE EINE EINSICHT: Die Iteration rechnet jede Zahl genau einmal, die
+ * Rekursion rechnet dieselben Teilaufgaben immer wieder — und zwar nicht ein
+ * paarmal, sondern so oft, dass die Schere schon bei einstelligem k aufgeht.
+ *
+ * FARBROLLEN (Kapitel 2, s. S21Demos.tsx): rot = die teure Variante (naive
+ * Rekursion). Innerhalb der Iterationstafel gelten zusätzlich die
+ * Elementrollen aus Algorithmus 2.2.2, wie sie auch die Prosa setzt:
+ * blau = letztes Element, grün = vorletztes Element, orange = neue Summe.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * 2026-08-19). Zählung in der Kapitelkonvention x_1 = 0, x_2 = 1; die
+ * Rekursion für x_k macht C(k) = 1 + C(k−1) + C(k−2) Aufrufe und
+ * A(k) = 1 + A(k−1) + A(k−2) Additionen, C(1) = C(2) = 1, A(1) = A(2) = 0:
+ *   k  =  3    5    8    10    12     15
+ *   C  =  3    9   41   109   287   1219
+ *   A  =  1    4   20    54   143    609
+ *   Iteration: k − 2 Additionen, also 1, 3, 6, 8, 10, 13.
+ * Häufigkeiten im Aufrufbaum von x_8: x_1 8-mal, x_2 13-mal, x_3 8-mal,
+ * x_4 5-mal, x_5 3-mal, x_6 2-mal, x_7 und x_8 je einmal (im Baum von x_5:
+ * x_1 2-mal, x_2 3-mal, x_3 2-mal).
+ *
+ * Provenienz: eigenständig implementiert. Die vier Schaltknöpfe der
+ * Vorfassung sind 2026-08-19 durch den scrubbaren Lib-<Stepper> ersetzt.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const ORANGE = "#E69F00";
-const RED = "#D55E00";
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
+const ROT = FMM_COLORS.rot;
 
 const N_MAX = 15;
 
@@ -58,7 +86,7 @@ function callCounts(k: number): number[] {
 
 /** Pastellton pro Argument j: gleiche Teilbäume bekommen dieselbe Farbe. */
 function shade(j: number): string {
-  const base = [GREEN, BLUE, ORANGE, "#9E57D5", RED];
+  const base = [GRUEN, BLAU, ORANGE, FMM_COLORS.violett, ROT];
   return base[j % base.length] + "2e";
 }
 
@@ -83,7 +111,7 @@ function CallTree({ j }: { j: number }) {
 
 export function FibonacciStepper() {
   const [n, setN] = useState(8);
-  const [kRaw, setKRaw] = useState(1);
+  const [kRaw, setKRaw] = useState(5);
   const k = Math.min(kRaw, n);
 
   const seq = useMemo(() => fibSeq(N_MAX), []);
@@ -95,43 +123,51 @@ export function FibonacciStepper() {
   for (let j = k - 2; j >= 1; j--) {
     if (counts[j] > 1) duplicates.push({ j, c: counts[j] });
   }
+  const faktor = iterAdds > 0 ? adds[k] / iterAdds : 0;
+  // Fürs Verdikt zählt der auffälligste Mehrfachaufruf, nicht der erste.
+  const oefter = duplicates.reduce<{ j: number; c: number } | null>(
+    (best, d) => (best === null || d.c > best.c ? d : best),
+    null
+  );
+
+  const narration =
+    k >= 3 ? (
+      <>
+        Schritt {k}: hänge{" "}
+        <span style={{ color: ORANGE, fontWeight: 600 }}>{seq[k - 1]}</span> ={" "}
+        <span style={{ color: BLAU, fontWeight: 600 }}>{seq[k - 2]}</span> +{" "}
+        <span style={{ color: GRUEN, fontWeight: 600 }}>{seq[k - 3]}</span> an, eine einzige
+        Addition.
+      </>
+    ) : k === 1 ? (
+      <>Schritt 1: Startwert 0 setzen, noch keine Addition.</>
+    ) : (
+      <>Schritt 2: die 1 anhängen, noch keine Addition.</>
+    );
 
   return (
     <div className="space-y-3 text-sm">
-      <Slider
-        label="n (Ziel)"
-        value={n}
-        onChange={(v) => setN(Math.round(v))}
-        min={3}
-        max={N_MAX}
-        step={1}
-        fmt={(v) => String(Math.round(v))}
-      />
-      <div className="flex flex-wrap items-center gap-2">
-        <span>
-          Schritt <strong>{k}</strong> von {n}:
-        </span>
-        {[
-          { label: "◀ zurück", to: Math.max(1, k - 1), off: k <= 1 },
-          { label: "Schritt ▶", to: Math.min(n, k + 1), off: k >= n },
-          { label: "bis zum Ende ▶▶", to: n, off: k >= n },
-          { label: "zurücksetzen", to: 1, off: k <= 1 },
-        ].map((b) => (
-          <button
-            key={b.label}
-            type="button"
-            disabled={b.off}
-            className="rounded bg-slate-200 px-2 py-1 text-xs font-medium enabled:hover:bg-slate-300 disabled:opacity-40 dark:bg-slate-700 dark:enabled:hover:bg-slate-600"
-            onClick={() => setKRaw(b.to)}
-          >
-            {b.label}
-          </button>
-        ))}
+      <Aufgabe>
+        Scrubben wir den Schrittregler nach rechts und vergleichen die beiden Zähler unter den
+        Tafeln.
+      </Aufgabe>
+
+      <div className="max-w-md">
+        <Slider
+          label="n (Ziel)"
+          value={n}
+          onChange={(v) => setN(Math.round(v))}
+          min={3}
+          max={N_MAX}
+          step={1}
+          fmt={(v) => String(Math.round(v))}
+        />
       </div>
+      <Stepper step={k} setStep={setKRaw} min={1} max={n} narration={narration} />
 
       <div className="grid gap-3 md:grid-cols-2">
         {/* iterativ */}
-        <div className="rounded border border-slate-200 p-3 dark:border-slate-700">
+        <div className={`p-3 ${W_PANEL}`}>
           <p className="mb-2 font-semibold">Iterativ (Algorithmus 2.2.2)</p>
           <div className="mb-2 flex flex-wrap gap-1">
             {seq.slice(0, k).map((v, i) => {
@@ -139,7 +175,7 @@ export function FibonacciStepper() {
               const isNew = k >= 3 && idx === k;
               const isLast = k >= 3 && idx === k - 1;
               const isPrev = k >= 3 && idx === k - 2;
-              const color = isNew ? ORANGE : isLast ? BLUE : isPrev ? GREEN : undefined;
+              const color = isNew ? ORANGE : isLast ? BLAU : isPrev ? GRUEN : undefined;
               return (
                 <span
                   key={idx}
@@ -147,7 +183,7 @@ export function FibonacciStepper() {
                   style={
                     color
                       ? { borderColor: color, color, fontWeight: 600 }
-                      : { borderColor: "#94a3b8" }
+                      : { borderColor: "var(--w-border)" }
                   }
                   title={`x${idx}`}
                 >
@@ -156,40 +192,23 @@ export function FibonacciStepper() {
               );
             })}
           </div>
-          {k >= 3 ? (
-            <p className="text-xs text-slate-600 dark:text-slate-300">
-              Schritt {k}: hänge{" "}
-              <span style={{ color: ORANGE, fontWeight: 600 }}>{seq[k - 1]}</span> ={" "}
-              <span style={{ color: BLUE, fontWeight: 600 }}>{seq[k - 2]}</span> +{" "}
-              <span style={{ color: GREEN, fontWeight: 600 }}>{seq[k - 3]}</span> an, eine
-              einzige Addition.
-            </p>
-          ) : (
-            <p className="text-xs text-slate-600 dark:text-slate-300">
-              {k === 1 ? "Startwert 0 setzen, noch keine Addition." : "1 anhängen, noch keine Addition."}
-            </p>
-          )}
-          <p className="mt-2 font-mono text-xs">
+          <p className="font-mono text-xs">
             elementare Schritte: {k} &nbsp;|&nbsp; Additionen insgesamt:{" "}
-            <strong>{iterAdds}</strong>
+            <strong style={{ color: BLAU }}>{iterAdds}</strong>
           </p>
         </div>
 
         {/* naiv rekursiv */}
-        <div className="rounded border border-slate-200 p-3 dark:border-slate-700">
+        <div className={`p-3 ${W_PANEL}`}>
           <p className="mb-2 font-semibold">
             Naive Rekursion: nur x<sub>{k}</sub>
           </p>
-          <p className="mb-2 text-xs text-slate-600 dark:text-slate-300">
-            Direkt nach Definition: berechne x<sub>{k}</sub> aus x<sub>{k - 1}</sub> und x
-            <sub>{k - 2}</sub>, jeweils wieder rekursiv, ohne Zwischenergebnisse zu speichern.
-          </p>
           <p className="font-mono text-xs">
-            Funktionsaufrufe: <strong style={{ color: RED }}>{calls[k]}</strong> &nbsp;|&nbsp;
-            Additionen: <strong style={{ color: RED }}>{adds[k]}</strong>
+            Funktionsaufrufe: <strong style={{ color: ROT }}>{fmtInt(calls[k])}</strong>{" "}
+            &nbsp;|&nbsp; Additionen: <strong style={{ color: ROT }}>{fmtInt(adds[k])}</strong>
           </p>
           {duplicates.length > 0 && (
-            <p className="mt-2 text-xs text-slate-600 dark:text-slate-300">
+            <p className={`mt-2 text-xs ${W_MUTED}`}>
               Mehrfach berechnet:{" "}
               {duplicates.slice(0, 4).map((d, i) => (
                 <span key={d.j}>
@@ -202,36 +221,56 @@ export function FibonacciStepper() {
         </div>
       </div>
 
-      {k >= 3 && (
-        <p className="text-xs">
-          Bilanz bei Schritt {k}: Die Iteration hat <em>alle</em> Zahlen x<sub>1</sub>, …, x
-          <sub>{k}</sub> mit <strong>{iterAdds}</strong>{" "}
-          {iterAdds === 1 ? "Addition" : "Additionen"} berechnet; die naive Rekursion braucht für
-          die <em>eine</em> Zahl x<sub>{k}</sub> schon{" "}
-          <strong style={{ color: RED }}>{adds[k]}</strong>{" "}
-          {adds[k] === 1 ? "Addition" : "Additionen"} und{" "}
-          <strong style={{ color: RED }}>{calls[k]}</strong> Aufrufe. Wie schnell diese Schere
-          aufgeht, analysieren wir in{" "}
-          <a className="underline" href="#sec-2.5">
-            Abschnitt 2.5
-          </a>
-          .
-        </p>
-      )}
-
       {k <= 8 ? (
-        <div className="overflow-x-auto rounded border border-slate-200 p-2 dark:border-slate-700">
-          <p className="mb-1 text-xs text-slate-500 dark:text-slate-400">
+        <div className={`overflow-x-auto p-2 ${W_PANEL}`}>
+          <p className={`mb-1 text-xs ${W_MUTED}`}>
             Aufrufbaum der naiven Rekursion für x<sub>{k}</sub>; gleiche Farbe = identische,
-            mehrfach ausgeführte Teilrechnung:
+            mehrfach ausgeführte Teilrechnung.
           </p>
           <CallTree j={k} />
         </div>
       ) : (
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          (Der Aufrufbaum hat jetzt {calls[k]} Knoten; zum Anzeigen Schritt ≤ 8 wählen.)
+        <p className={`text-xs ${W_MUTED}`}>
+          (Der Aufrufbaum hat jetzt {fmtInt(calls[k])} Knoten; zum Anzeigen Schritt ≤ 8
+          wählen.)
         </p>
       )}
+
+      <Verdikt kind={k < 3 ? "neutral" : faktor >= 3 ? "fail" : "warn"}>
+        {k < 3 ? (
+          <>
+            Noch ist nichts passiert: Beide Varianten setzen nur den Startwert. Der Unterschied
+            entsteht erst, sobald etwas addiert wird.
+          </>
+        ) : (
+          <>
+            Bei Schritt {k} hat die Iteration <em>alle</em> Zahlen x<sub>1</sub> bis x
+            <sub>{k}</sub> mit{" "}
+            <strong style={{ color: BLAU }}>
+              {iterAdds} {iterAdds === 1 ? "Addition" : "Additionen"}
+            </strong>{" "}
+            berechnet; die naive Rekursion braucht für die <em>eine</em> Zahl x<sub>{k}</sub>{" "}
+            schon{" "}
+            <strong style={{ color: ROT }}>
+              {fmtInt(adds[k])} {adds[k] === 1 ? "Addition" : "Additionen"}
+            </strong>{" "}
+            und {fmtInt(calls[k])} Aufrufe
+            {faktor >= 2 ? <>, also das {fmtInt(Math.round(faktor))}-fache</> : null}.
+            {oefter && (
+              <>
+                {" "}
+                Der Grund steht im Aufrufbaum: x<sub>{oefter.j}</sub> wird {oefter.c}-mal von
+                vorn berechnet, weil die Rekursion nichts aufbewahrt.
+              </>
+            )}{" "}
+            Wie schnell diese Schere aufgeht, rechnen wir in{" "}
+            <a className="underline" href="#sec-2.5">
+              Abschnitt 2.5
+            </a>{" "}
+            nach.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }

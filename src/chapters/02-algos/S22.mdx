@@ -1,4 +1,5 @@
 import { FibonacciStepper } from "./widgets/FibonacciStepper";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien: 02-algos, „Beispiel: Fibonacci-Zahlen" bis „Gute Algorithmen".]
 
@@ -106,13 +107,23 @@ Definition 2.2.1 legt nämlich noch einen zweiten, verführerisch eleganten Weg 
 $x_n$ zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$
 auf, ohne Zwischenergebnisse zu speichern. Das liefert dieselben Zahlen, aber zu einem
 absurden Preis: Beide Teilaufrufe berechnen große Teile der Folge unabhängig voneinander
-noch einmal, und deren Teilaufrufe wieder. Das folgende Widget stellt beide Varianten
-nebeneinander; die genaue Analyse, *wie* schnell die naive Rekursion explodiert, folgt in
-[Abschnitt 2.5](#sec-2.5).
+noch einmal, und deren Teilaufrufe wieder. Wie oft ist „noch einmal" – zweimal, fünfmal,
+zwanzigmal? Das ist keine Geschmacksfrage, sondern eine Zählaufgabe.
 
-:::vertiefung[Fibonacci-Stepper: Iteration gegen naive Rekursion, mit Zählern]
+<Schaetzfrage
+  frage="Beim Ziel x₈: wie oft rechnet die naive Rekursion die Zahl x₃ von vorn aus?"
+  loesung={8}
+  toleranz={0}
+  einheit="mal"
+>
 <FibonacciStepper />
-:::
+</Schaetzfrage>
+
+Der Stepper zählt es aus. Bis $x_8$ kommt die Iteration mit sechs Additionen aus und hat
+dabei *alle* acht Zahlen berechnet; die Rekursion braucht für die *eine* Zahl $x_8$ schon
+$20$ Additionen und $41$ Aufrufe, weil sie $x_3$ achtmal und $x_2$ dreizehnmal von vorn
+ausrechnet. Bis $x_{15}$ sind es $609$ Additionen gegen $13$. Die genaue Analyse, *wie*
+schnell die naive Rekursion explodiert, folgt in [Abschnitt 2.5](#sec-2.5).
 
 ### 2.2.3 Selbsttest
 
@@ -154,6 +165,13 @@ Der Algorithmus ist *probabilistisch*.
 
 Es kommt kein Zufall vor: Der Algorithmus ist deterministisch und liefert bei jedem
 Aufruf mit demselben $n$ exakt dasselbe Ergebnis.
+:::
+
+:::zahlfrage{loesung=54 toleranz=0}
+Wie viele Additionen braucht die naive Rekursion im Stepper oben für die Zahl $x_{10}$?
+
+Der Zähler steht bei Ziel $n = 10$ und Schritt $10$ auf $54$; die Iteration kommt für
+dieselben zehn Zahlen mit $8$ Additionen aus.
 :::
 
 ::::

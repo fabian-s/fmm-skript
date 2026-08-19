@@ -259,16 +259,21 @@ $$
 \log n \,,\quad n \,,\quad n \log n \,,\quad n^2 \,,\quad n^3 \,,\quad 2^n.
 $$
 
-Wie drastisch sich diese Klassen unterscheiden (und ab welchem $n$ ein
-schneller wachsender Term jeden noch so großen Vorfaktor überholt), zeigt das folgende
-Widget. Der :k[Logarithmus]{#logarithm}-Trick der log-Skala
-macht dabei aus $2^n$ eine Gerade.
+Wie drastisch unterscheiden sich diese Klassen tatsächlich, und ab welchem $n$ überholt ein
+schneller wachsender Term jeden noch so großen Vorfaktor? Der Explorer unten lässt beides
+ausprobieren; der :k[Logarithmus]{#logarithm}-Trick der log-Skala macht dabei aus $2^n$ eine
+Gerade.
 
 :::vertiefung[Wachstumsraten-Explorer: wer dominiert wen, und ab wann?]
-<p className="mb-3 max-w-prose text-sm">Wählen Sie Komplexitätsklassen aus und vergleichen Sie sie auf linearer und logarithmischer Skala. Der Schieberegler für den Vorfaktor $c$ skaliert die $n^2$-Kurve: Selbst $c = 1000$ verschiebt nur den Schnittpunkt mit $2^n$ und $n^3$ nach rechts – gewinnen kann der langsamer wachsende Term nie. Das ist die praktische Bedeutung von $n^2 = o(n^3)$: Vorfaktoren sind auf lange Sicht bedeutungslos.</p>
-
 <S24WachstumWidget />
 :::
+
+Die Antwort auf das „ab wann" fällt ernüchternd aus. Ohne Vorfaktor überholt $2^n$ die
+Kurve $n^2$ endgültig ab $n = 5$; mit dem tausendfachen Vorfaktor $c = 1000$ erst ab
+$n = 19$. Vierzehn Schritte, mehr kauft der Faktor $1000$ nicht. Bei den polynomialen
+Klassen ist es genauso durchsichtig: $n^3 > c\,n^2$ gilt schlicht ab $n > c$. Das ist die
+praktische Bedeutung von $c\,n^2 = O(n^2)$ und $n^2 = o(n^3)$: Vorfaktoren verschieben die
+Schwelle, die Reihenfolge drehen sie nie um.
 
 ### 2.4.5 Selbsttest
 
@@ -303,6 +308,35 @@ Auch $n^{-3} + n^{-2} = o(1)$ wäre richtig (die Folge ist eine Nullfolge),
 aber $O(n^{-2})$ ist die schärfere Aussage: Sie sagt nicht nur *dass*,
 sondern *wie schnell* die Folge verschwindet.
 </SelfTest>
+
+::::quiz
+
+:::zahlfrage{loesung=15 toleranz=0}
+Setzen wir im Explorer oben den Vorfaktor auf $c = 100$ und schalten $c \cdot n^2$ und
+$2^n$ an: Ab welchem $n$ gilt endgültig $2^n > c \cdot n^2$?
+
+Das Verdikt des Widgets nennt die Schwelle; nachrechnen lässt sie sich auch von Hand:
+$2^{14} = 16\,384$ liegt noch unter $100 \cdot 14^2 = 19\,600$, aber
+$2^{15} = 32\,768$ liegt über $100 \cdot 15^2 = 22\,500$, und danach zieht die
+Exponentialfunktion endgültig davon.
+:::
+
+:::frage{falsch}
+Aus $a_n = O(b_n)$ folgt $b_n = O(a_n)$.
+
+Das Gleichheitszeichen in $a_n = O(b_n)$ ist ein Notationsmissbrauch, die Beziehung ist
+nicht symmetrisch (Bemerkung 2.4.2): $5n = O(n^2)$ gilt, $n^2 = O(5n)$ nicht.
+:::
+
+:::frage{wahr}
+Gilt $a_n = o(b_n)$, so gilt auch $a_n = O(b_n)$.
+
+Konvergiert der Quotient gegen $0$, so ist er insbesondere beschränkt. Klein-o ist die
+stärkere Aussage; die scharfe Beschreibung im Sinne von Bemerkung 2.4.4 ist aber meist
+eine andere Vergleichsfolge.
+:::
+
+::::
 
 Damit haben wir das Handwerkszeug beisammen. Im
 [nächsten Abschnitt](#sec-2.5) setzen wir es ein, um

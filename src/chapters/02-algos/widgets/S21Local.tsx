@@ -1,90 +1,133 @@
-/**
- * Lokale Begleitkomponente für Abschnitt 2.1 (aus der TSX-Fassung von S21
- * portiert, MDX-Migration 2026-08-11; Rendering unverändert).
- *
- * Selbsttest „Was gibt R aus?" zu den vier R-Ausdrücken der Folien: Code
- * sichtbar, Ausgabe und Erklärung klappen per Knopf auf. Das ist kein
- * wahr/falsch-Quiz und deshalb nicht als ::::quiz-Direktive abbildbar.
- */
-import { useState, type ReactNode } from "react";
-import { ConceptLink, M } from "../../../lib";
+import type { ReactNode } from "react";
+import { ConceptLink, M, Schaetzfrage, W_MUTED } from "../../../lib";
 
-const RTEST: { code: string; antwort: string; expl: ReactNode }[] = [
+/**
+ * §2.1: Selbsttest „Was gibt R aus?" zu den vier R-Ausdrücken der Folien.
+ *
+ * DIE EINE EINSICHT: Vier Ausdrücke, die auf dem Papier offensichtlich
+ * aussehen, liefern in Gleitkommaarithmetik drei Überraschungen — und man
+ * merkt sich das nur, wenn man vorher getippt hat.
+ *
+ * Muster 1 (predict-then-reveal) über die Lib-Komponente <Schaetzfrage>:
+ * erst eine Antwort wählen, dann die R-Ausgabe aufdecken. Die Vorfassung
+ * (2026-08-11) zeigte nur einen „Lösung anzeigen"-Knopf ohne Tipp.
+ *
+ * FARBROLLEN: keine; die Tafel ist reiner Text.
+ *
+ * VERIFIZIERTE ZAHLEN (Rscript --vanilla, 2026-08-19, protokolliert in
+ * scratchpad/verify-02-algos/check-rselbsttest.mjs):
+ *   1.0 - 1.0              → 0
+ *   1.0 - 0.9 - 0.1        → -2.775558e-17
+ *   100 * 0.58 == 58       → FALSE   (100 * 0.58 = 57,999999999999992895)
+ *   sum(x) - sum(rev(x))   → -262144 = −2^18, mit x = seq(1, 2e16, length = 1e5)
+ * Der vierte Wert ist eine R-Ausgabe: R summiert intern in erweiterter
+ * Genauigkeit, dieselbe Schleife in JS liefert 0. Die Größenordnung stimmt
+ * in beiden Fällen — bei Zwischensummen um 10^21 ist der Abstand
+ * benachbarter Maschinenzahlen 131072 = 2^17.
+ */
+
+interface RFrage {
+  code: string;
+  ausgabe: string;
+  optionen: { id: string; text: string }[];
+  loesung: string;
+  expl: ReactNode;
+}
+
+const RTEST: RFrage[] = [
   {
     code: "1.0 - 1.0",
-    antwort: "0",
+    ausgabe: "0",
+    optionen: [
+      { id: "null", text: "genau 0" },
+      { id: "nicht", text: "etwas knapp neben 0" },
+    ],
+    loesung: "null",
     expl: (
       <>
-        Hier passiert nichts Böses: <M>{"1{,}0"}</M> ist als Maschinenzahl exakt
-        darstellbar, die Differenz ist exakt <M>{"0"}</M>. Entwarnung – aber nur hier.
+        Hier passiert nichts Böses: <M>{"1{,}0"}</M> ist als Maschinenzahl exakt darstellbar,
+        die Differenz ist exakt <M>{"0"}</M>. Entwarnung, aber nur hier.
       </>
     ),
   },
   {
     code: "1.0 - 0.9 - 0.1",
-    antwort: "-2.775558e-17",
+    ausgabe: "-2.775558e-17",
+    optionen: [
+      { id: "null", text: "genau 0" },
+      { id: "nicht", text: "etwas knapp neben 0" },
+    ],
+    loesung: "nicht",
     expl: (
       <>
-        Nicht <M>{"0"}</M>! Weder <M>{"0{,}9"}</M> noch <M>{"0{,}1"}</M> besitzen eine
-        endliche Binärdarstellung; gespeichert werden gerundete Näherungen, und deren
-        Rundungsreste bleiben nach der Subtraktion übrig. Das Ergebnis liegt in der
-        Größenordnung der <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink>{" "}
+        Weder <M>{"0{,}9"}</M> noch <M>{"0{,}1"}</M> besitzen eine endliche
+        Binärdarstellung; gespeichert werden gerundete Näherungen, und deren Rundungsreste
+        bleiben nach der Subtraktion übrig. Das Ergebnis liegt in der Größenordnung der{" "}
+        <ConceptLink id="machine-epsilon">Maschinengenauigkeit</ConceptLink>{" "}
         (<M>{"\\approx 2^{-52} \\approx 2{,}2 \\cdot 10^{-16}"}</M>).
       </>
     ),
   },
   {
     code: "100 * 0.58 == 58",
-    antwort: "FALSE",
+    ausgabe: "FALSE",
+    optionen: [
+      { id: "true", text: "TRUE" },
+      { id: "false", text: "FALSE" },
+    ],
+    loesung: "false",
     expl: (
       <>
-        Auch <M>{"0{,}58"}</M> ist nicht exakt darstellbar: Gespeichert wird eine Zahl
-        knapp daneben, und <M>{"100 \\cdot 0{,}58"}</M> ergibt{" "}
-        <M>{"57{,}99999999999999\\ldots"}</M> statt <M>{"58"}</M>. Merkregel: Gleitkommazahlen
-        niemals mit <code>==</code> auf exakte Gleichheit testen.
+        Auch <M>{"0{,}58"}</M> ist nicht exakt darstellbar: Gespeichert wird eine Zahl knapp
+        daneben, und <M>{"100 \\cdot 0{,}58"}</M> ergibt <M>{"57{,}99999999999999\\ldots"}</M>{" "}
+        statt <M>{"58"}</M>. Merkregel: Gleitkommazahlen niemals mit <code>==</code> auf exakte
+        Gleichheit testen.
       </>
     ),
   },
   {
     code: "x <- seq(1, 2e16, length = 10^5)\nsum(x) - sum(rev(x))",
-    antwort: "-262144",
+    ausgabe: "-262144",
+    optionen: [
+      { id: "null", text: "genau 0" },
+      { id: "klein", text: "eine winzige Zahl" },
+      { id: "gross", text: "eine sechsstellige Zahl" },
+    ],
+    loesung: "gross",
     expl: (
       <>
-        Dieselben <M>{"10^5"}</M> Zahlen, nur in umgekehrter Reihenfolge summiert, und
-        die beiden Summen unterscheiden sich um <M>{"262144 = 2^{18}"}</M>. Bei
-        Zwischensummen der Größenordnung <M>{"10^{21}"}</M> liegen benachbarte
-        Maschinenzahlen über <M>{"10^{5}"}</M> auseinander; welche Summanden dabei
-        „unter die Räder kommen", hängt von der Reihenfolge ab.
+        Dieselben <M>{"10^5"}</M> Zahlen, nur in umgekehrter Reihenfolge summiert, und die
+        beiden Summen unterscheiden sich um <M>{"262144 = 2^{18}"}</M>. Bei Zwischensummen der
+        Größenordnung <M>{"10^{21}"}</M> liegen benachbarte Maschinenzahlen über{" "}
+        <M>{"10^{5}"}</M> auseinander; welche Summanden dabei unter die Räder kommen, hängt von
+        der Reihenfolge ab.
       </>
     ),
   },
 ];
 
-/** Selbsttest zu den vier R-Ausdrücken; jede Lösung einzeln aufklappbar. */
+/** Selbsttest zu den vier R-Ausdrücken: erst tippen, dann die Ausgabe aufdecken. */
 export function RSelbsttest() {
-  const [offen, setOffen] = useState<boolean[]>(RTEST.map(() => false));
-  const toggle = (i: number) => setOffen((o) => o.map((v, j) => (i === j ? !v : v)));
   return (
-    <div className="my-4 max-w-prose space-y-3">
-      {RTEST.map((q, i) => (
-        <div key={i} className="rounded border border-slate-200 p-3 dark:border-slate-700">
+    <div className="my-4 max-w-prose space-y-4">
+      {RTEST.map((q) => (
+        <Schaetzfrage
+          key={q.code}
+          variante="auswahl"
+          frage="Was gibt R aus?"
+          optionen={q.optionen}
+          loesung={q.loesung}
+          verdeckt={
+            <div className="space-y-1 text-sm">
+              <p className="font-mono font-semibold">{`## [1] ${q.ausgabe}`}</p>
+              <p className={W_MUTED}>{q.expl}</p>
+            </div>
+          }
+        >
           <pre className="overflow-x-auto rounded bg-slate-200/70 p-2 font-mono text-sm dark:bg-slate-900/60">
             <code>{q.code}</code>
           </pre>
-          <button
-            type="button"
-            className="mt-2 rounded bg-slate-200 px-2 py-1 text-xs font-medium hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600"
-            onClick={() => toggle(i)}
-          >
-            {offen[i] ? "Lösung verbergen" : "Lösung anzeigen"}
-          </button>
-          {offen[i] && (
-            <div className="mt-2 text-sm">
-              <p className="font-mono font-semibold">{"## [1] " + q.antwort}</p>
-              <p className="mt-1 text-slate-600 dark:text-slate-300">{q.expl}</p>
-            </div>
-          )}
-        </div>
+        </Schaetzfrage>
       ))}
     </div>
   );
