@@ -1,3 +1,4 @@
+import { Schaetzfrage } from "../../lib";
 import { SattelpunktWidget } from "./widgets/S132Sattel";
 
 ::quelle[Folien 13-optim, Block „Optimierung": von „Das Optimierungsproblem" bis „Optimalitätsbedingungen: Zusammenfassung". Der auskommentierte Exkurs zu Projektionstheorem und Eindeutigkeit ist mitverarbeitet.]
@@ -452,26 +453,39 @@ sind Hyperbeln, die in $x$-Richtung öffnen, die negativen Hyperbeln öffnen in
 $y$-Richtung.
 :::
 
-:::vertiefung[Der Sattel zum Anfassen]
+Damit ist die Lage beschrieben. Offen ist die praktisch entscheidende Frage:
+Kann ein Verfahren an so einem Punkt hängenbleiben?
+
 Statt der Folienabbildung zeichnen wir die Höhenlinien selbst und hängen zwei
-Verfahren daran. Der blaue Punkt lässt sich ziehen oder mit den Reglern setzen.
+Verfahren daran. Drei Voreinstellungen sind die drei Experimente, die sich lohnen:
+der gewöhnliche Start, der Sonderfall auf der grünen Achse und ein schräger Start
+für den Newton-Knopf.
 
-Drei Experimente lohnen sich. Erstens der Knopf für den Newton-Schritt: Er landet
-von jedem Startpunkt aus in einem einzigen Schritt exakt im Sattel, denn $f$ ist
-quadratisch und seine Näherung zweiter Ordnung damit exakt. Zweitens der
-Gradientenabstieg mit voreingestelltem $\gamma = 0{,}25$. Aus $(1{,}5;\, 0{,}4)$
-läuft er über $(0{,}75;\, 0{,}6)$, $(0{,}375;\, 0{,}9)$ und $(0{,}1875;\, 1{,}35)$
-und steht nach acht Schritten bei $(0{,}006;\, 10{,}252)$: Die erste Komponente
-fällt gegen null, die zweite läuft davon und verlässt dabei das gezeichnete
-Fenster. Drittens der Sonderfall $y = 0$, den der Regler exakt trifft. Dort bleibt
-die zweite Komponente in jedem Schritt null, und die Iterierten kriechen in den
-Sattel hinein: Aus $x = 1{,}5$ stehen sie nach acht Schritten bei $0{,}0059$, und
-weiter geht es mit $1{,}5 \cdot (1-2\gamma)^k$ gegen null. Dieser eine Startstrahl
-ist die Ausnahme, und Bemerkung 13.2.12 sagt, warum sie in der Praxis keine Rolle
-spielt.
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Von welchen Startpunkten aus läuft der <em>Gradientenabstieg</em> in den Sattelpunkt?</>}
+  optionen={[
+    { id: "alle", text: "von fast allen" },
+    { id: "achse", text: "nur von der grünen Achse aus" },
+    { id: "keiner", text: "von keinem" },
+  ]}
+  loesung="achse"
+  verdeckt={<>Die Voreinstellung „Startstrahl <M>{"y = 0"}</M>" trifft genau diesen Fall.</>}
+>
+  <SattelpunktWidget />
+</Schaetzfrage>
 
-<SattelpunktWidget />
-:::
+Wie das Widget zeigt, gehen die beiden Verfahren gegensätzlich mit dem Sattel um.
+Der Newton-Knopf landet von jedem Startpunkt aus in einem einzigen Schritt exakt
+in $\cpurp{\bx^\star}$, denn $f$ ist quadratisch und seine Näherung zweiter
+Ordnung damit exakt. Der Gradientenabstieg dagegen entkommt: Mit
+$\gamma = 0{,}25$ läuft er aus $(1{,}5;\, 0{,}4)$ über $(0{,}75;\, 0{,}6)$,
+$(0{,}375;\, 0{,}9)$ und $(0{,}1875;\, 1{,}35)$ und steht nach acht Schritten bei
+$(0{,}0059;\, 10{,}25)$ – die erste Komponente fällt gegen null, die zweite läuft
+davon. Nur auf dem Startstrahl $y = 0$ kriecht auch er hinein: Dort bleibt die
+zweite Komponente in jedem Schritt null, und aus $x = 1{,}5$ stehen die Iterierten
+nach acht Schritten bei $0{,}0059$, nach zwanzig bei $1{,}4 \cdot 10^{-6}$.
+Warum diese Ausnahme in der Praxis keine Rolle spielt, sagt Bemerkung 13.2.12.
 
 :::bemerkung[13.2.12 (Was Sattelpunkte für die Verfahren bedeuten)]
 *Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method} aus
@@ -714,6 +728,17 @@ Bemerkung 13.2.12 zeigt. Der Schritt sucht eine Nullstelle des Gradienten, und e
 Sattelpunkt ist eine. Der Gradientenabstieg entkommt dagegen, weil er die
 Komponente in der Richtung mit negativem Eigenwert in jedem Schritt um den Faktor
 $1 + 2\gamma$ vergrößert.
+:::
+
+:::zahlfrage{loesung=1.5 toleranz=0.05}
+Mit welchem Faktor wächst im Widget die $y$-Komponente des Gradientenabstiegs pro
+Schritt, wenn $\gamma = 0{,}25$ eingestellt ist?
+
+Die Iteration lautet $y^{(k+1)} = y^{(k)} - \gamma \cdot (-2y^{(k)}) =
+(1 + 2\gamma)\,y^{(k)}$, mit $\gamma = 0{,}25$ also der Faktor $1{,}5$. Die
+Ablesetafel des Widgets nennt ihn direkt; in der $x$-Richtung steht daneben
+$\left|1 - 2\gamma\right| = 0{,}5$. Diese Gegenläufigkeit ist der ganze Grund,
+warum der Abstieg dem Sattel entkommt.
 :::
 
 :::frage{wahr}

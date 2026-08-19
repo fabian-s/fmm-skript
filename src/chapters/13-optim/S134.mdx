@@ -1,3 +1,4 @@
+import { Schaetzfrage } from "../../lib";
 import { NewtonParabelLab } from "./widgets/S134Newton";
 import { BfgsStepper } from "./widgets/S134Bfgs";
 import { MomentumVergleich } from "./widgets/S134Momentum";
@@ -210,24 +211,40 @@ nicht erklärt ist.
 Die Tafel zeigt, was ($13.4.1$) meint. Orange liegt das quadratische Modell am
 aktuellen Punkt, sein Scheitel ist die nächste Iterierte, und die blauen Punkte
 zeigen, wohin die Reise geht. Voreingestellt ist Beispiel 13.4.4 mit
-$\cblue{x^{(0)}} = 1$, sodass sich die Zahlen der Tabelle direkt wiederfinden lassen.
-Ab $\cblue{x^{(0)}} = 4$ verlässt der erste Schritt den Definitionsbereich, wie am
-Ende von Beispiel 13.4.4 gerechnet.
+$\cblue{x^{(0)}} = 1$, sodass sich die Zahlen der Tabelle direkt wiederfinden
+lassen; der zweite Menüpunkt ist die nicht-konvexe Funktion aus
+Bemerkung 13.4.5.
 
-Der zweite Menüpunkt ist die nicht-konvexe Funktion aus Bemerkung 13.4.5. Drei
-Startpunkte lohnen den Klick: $-2$ führt in das *lokale* Minimum bei $-1$, $2{,}5$ in
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Wo landet Newton auf der nicht-konvexen Funktion, wenn wir bei <M>{"x^{(0)} = 0{,}5"}</M> starten?</>}
+  optionen={[
+    { id: "min-lokal", text: "im lokalen Minimum bei −1" },
+    { id: "max", text: "im lokalen Maximum bei 0" },
+    { id: "min-global", text: "im globalen Minimum bei 2" },
+  ]}
+  loesung="max"
+  verdeckt={<>Der zweite Menüpunkt und der Startpunktregler zeigen es in einem einzigen Schritt.</>}
+>
+  <NewtonParabelLab />
+</Schaetzfrage>
+:::
+
+Wie das Widget zeigt, hängt alles am Startpunkt. Auf der konvexen Funktion
+verlässt der erste Schritt ab $\cblue{x^{(0)}} = 4$ den Definitionsbereich, wie
+am Ende von Beispiel 13.4.4 gerechnet. Auf der nicht-konvexen lohnen drei
+Startpunkte den Vergleich: $-2$ führt in das *lokale* Minimum bei $-1$, $2{,}5$ in
 das globale bei $2$, und $0{,}5$ landet in einem einzigen Schritt exakt auf dem
-lokalen Maximum bei $0$. Bei $x \approx 1{,}215$ und $x \approx -0{,}549$
+lokalen Maximum bei $0$ – dort ist $\corange{f'} = -1{,}125$ und
+$\corange{f''} = -2{,}25$, die Modellparabel öffnet also nach unten, und ihr
+Scheitel ist ein Hochpunkt. Bei $x \approx 1{,}215$ und $x \approx -0{,}549$
 verschwindet die zweite Ableitung; genau treffen wir diese Stellen mit dem Regler
 nicht, aber in ihrer Nähe wird der Schritt sehr lang. Am lehrreichsten ist
 $\cblue{x^{(0)}} = 1{,}2$: Dort ist $\corange{f''} = -0{,}08$, der erste Schritt
-springt nach $\cred{-25{,}2}$, und insgesamt $14$ Schritte später steht die Iteration
-im *lokalen* Minimum bei $-1$. Der Startpunkt liegt zwischen dem lokalen Maximum bei
-$0$ und dem globalen Minimum bei $2$, und zwar näher am Minimum, doch der Lauf endet
-trotzdem im linken Tal.
-
-<NewtonParabelLab />
-:::
+springt nach $\cred{-25{,}2}$, und $14$ Schritte später steht die Iteration im
+*lokalen* Minimum bei $-1$. Der Startpunkt liegt zwischen dem lokalen Maximum bei
+$0$ und dem globalen Minimum bei $2$, und zwar näher am Minimum, doch der Lauf
+endet trotzdem im linken Tal.
 
 :::bemerkung[13.4.5 (Newton bei nicht-konvexen Funktionen)]
 Was ($13.4.2$) sucht, sind Nullstellen des Gradienten, nicht Minima. Bei einer
@@ -524,22 +541,25 @@ $\diag(1; 5)$, gestartet wird bei $(5; 1)$ mit $\corange{\bB_0} = \bI$. Über di
 Krümmung weiß das Verfahren zu diesem Zeitpunkt nichts, der erste Schritt ist also
 ein reiner Gradientenschritt.
 
-Die letzte Zeile des Ablesefelds prüft in jedem Schritt die Sekantenbedingung nach:
-Das Residuum $\left\|\corange{\bB_k\by} - \cblue{\bs}\right\|$ bleibt auf
-Rundungsfehlerniveau, wie Satz 13.4.10 es verspricht. Was dagegen frei ist, ist die
-Schrittweite, und daran hängt das Verhalten. Lassen wir $\corange{\gamma_k} = 1$
-stehen, so ist der erste Schritt zu lang, $\cblue{f}$ steigt von $15$ auf $40$, und
-das Verfahren braucht danach mehrere Schritte, um sich zu fangen; $\corange{\bB_k}$
-sammelt dabei Krümmung ein, bleibt von $\diag(1; 0{,}2)$ aber sichtbar entfernt.
-Setzen wir das Häkchen für die exakte Schrittweite, so liefert jeder Schritt eine
-Sekantenbedingung für eine neue Richtung, und im $\R^2$ sind nach zwei Schritten
-alle Richtungen vergeben: Die Iterierte sitzt im Minimum, und $\corange{\bB_2}$
-stimmt auf allen gezeigten Stellen mit $\diag(1; 0{,}2)$ überein. Auf einer Quadrik
-im $\R^n$ ist BFGS mit exakter Liniensuche deshalb nach höchstens $n$ Schritten
-fertig.
+Die letzte Zeile des Ablesefelds prüft in jedem Schritt die Sekantenbedingung
+nach. Offen bleibt, was die Schrittweite damit zu tun hat.
 
 <BfgsStepper />
 :::
+
+Wie das Widget zeigt, bleibt das Residuum
+$\left\|\corange{\bB_k\by} - \cblue{\bs}\right\|$ in jedem Schritt auf
+Rundungsfehlerniveau, wie Satz 13.4.10 es verspricht. Frei ist dagegen die
+Schrittweite, und daran hängt das Verhalten. Lassen wir $\corange{\gamma_k} = 1$
+stehen, so ist der erste Schritt zu lang, $\cblue{f}$ steigt von $15$ auf $40$, und
+das Verfahren braucht danach mehrere Schritte, um sich zu fangen; $\corange{\bB_k}$
+sammelt dabei Krümmung ein, bleibt von $\diag(1; 0{,}2)$ aber sichtbar entfernt
+(nach sechs Schritten noch $0{,}011$ in der Frobeniusnorm). Setzen wir das Häkchen
+für die exakte Schrittweite, so liefert jeder Schritt eine Sekantenbedingung für
+eine neue Richtung, und im $\R^2$ sind nach zwei Schritten alle Richtungen
+vergeben: Die Iterierte sitzt im Minimum, und $\corange{\bB_2}$ stimmt auf allen
+gezeigten Stellen mit $\diag(1; 0{,}2)$ überein. Auf einer Quadrik im $\R^n$ ist
+BFGS mit exakter Liniensuche deshalb nach höchstens $n$ Schritten fertig.
 
 ### Vier Verfahren nebeneinander
 
@@ -685,21 +705,37 @@ ohne und violett mit Momentum. Die Schrittweite geben wir als Vielfaches von $1/
 an, damit die beiden Stabilitätsgrenzen $2$ und $2(1+\alpha)$ am Regler ablesbar
 bleiben.
 
-In der Voreinstellung ($\kappa = 25$, $\corange{\gamma} L = 1$, $\alpha = 0{,}9$)
-braucht der Abstieg mit Schwung $103$ Schritte für einen Faktor $10^{-6}$ im
-Funktionswert, der Abstieg ohne $161$. Drei Experimente lohnen sich. Erstens
-$\kappa = 5$: Dort dreht sich das Ergebnis um, $106$ Schritte mit gegen $31$ ohne
-Momentum. Zweitens $\kappa = 100$: Dort schafft es der reine Gradientenabstieg in
-$400$ Schritten nicht, Momentum braucht $121$. Drittens
-$\corange{\gamma} L = 2{,}5$: Der blaue Weg explodiert, der violette bleibt stabil,
-denn seine Grenze liegt bei $2 \cdot 1{,}9 = 3{,}8$.
+Drei Voreinstellungen decken die Fallunterscheidung ab: gut, mittel und schlecht
+konditioniert, jeweils mit dem Standardwert $\alpha = 0{,}9$.
+
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Hilft der Standardwert <M>{"\\alpha = 0{,}9"}</M> bei einer <em>gut</em> konditionierten Quadrik, etwa <M>{"\\kappa = 5"}</M>?</>}
+  optionen={[
+    { id: "ja", text: "ja, er spart Schritte" },
+    { id: "nein", text: "nein, er kostet Schritte" },
+    { id: "egal", text: "er ändert nichts" },
+  ]}
+  loesung="nein"
+  verdeckt={<>Die Ablesezeile zählt beide Verfahren mit.</>}
+>
+  <MomentumVergleich />
+</Schaetzfrage>
 
 Zur Vorlesung gehört außerdem eine
 [Shiny-App](https://fabian-s.shinyapps.io/gradient-descent-shiny/), die
 Gradientenabstieg und Momentum auf weiteren Landschaften zeigt.
-
-<MomentumVergleich />
 :::
+
+Wie das Widget zeigt, hängt der Nutzen des Schwungs allein an der Kondition. Bei
+$\kappa = 5$ dreht sich das Ergebnis sogar um: $106$ Schritte mit gegen $31$ ohne
+Momentum. Bei $\kappa = 25$ steht es $103$ zu $161$, bei $\kappa = 100$ dann $121$
+zu $608$ – je schlechter die Kondition, desto größer der Gewinn. Und bei
+$\corange{\gamma} L = 2{,}5$ explodiert der blaue Weg, während der violette stabil
+bleibt: Seine Grenze liegt bei $2 \cdot 1{,}9 = 3{,}8$. Der Standardwert $0{,}9$
+stammt aus dem Deep Learning, wo die Konditionszahlen um Größenordnungen höher
+liegen als in unseren Beispielen; auf einem gut konditionierten Problem ist er
+schlicht zu viel des Guten.
 
 ### Stochastischer Gradientenabstieg
 
@@ -895,6 +931,17 @@ Die *Varianz* fällt auf ein Zweiunddreißigstel, die Standardabweichung also nu
 den Faktor $\sqrt{32} \approx 5{,}7$. Genau deshalb sind Mini-Batches ein Kompromiss
 und keine Lösung: Der Aufwand wächst linear, die Genauigkeit mit der Wurzel
 (Bemerkung 13.4.17).
+:::
+
+:::zahlfrage{loesung=31 toleranz=5 einheit="Schritte"}
+Wie viele Schritte braucht der reine Gradientenabstieg im Momentum-Widget bei
+$\kappa = 5$ und $\corange{\gamma} L = 1$ für einen Faktor $10^{-6}$ im
+Funktionswert?
+
+Es sind $31$. Der Abstieg *mit* Momentum ($\alpha = 0{,}9$) braucht dafür $106$,
+also mehr als dreimal so viele. Bei guter Kondition schadet der Schwung, weil die
+Iterierten über das Tal hinausschießen; erst bei $\kappa = 100$ dreht sich das
+Verhältnis auf $121$ gegen $608$ (Bemerkung 13.4.14).
 :::
 
 :::frage{wahr}

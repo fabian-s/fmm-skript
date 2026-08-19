@@ -1,31 +1,35 @@
-import { useState } from "react";
-import { Slider } from "../../../lib";
+import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Stepper, Verdikt } from "../../../lib";
 
 /**
- * §13.3: Gradientenabstieg auf f(x) = (x − 2)² + 1, dem Beispiel der Folie
- * „Beispiel Gradientenabstieg: Schritt für Schritt“ (13-optim.Rmd Z. 484–499).
- * Eigenbau; nichts davon ist aus einer Buch-App portiert.
+ * §13.3 — DIE EINE EINSICHT: Beim Gradientenabstieg auf einer Parabel
+ * entscheidet allein der Faktor |1 − γf″| über alles. Unterhalb von 1/L nähern
+ * sich die Iterierten von einer Seite, bei 1/L sitzt der erste Schritt exakt im
+ * Minimum, zwischen 1/L und 2/L springen sie hin und her, bei 2/L pendeln sie
+ * für immer, darüber laufen sie davon.
  *
- * Die Schrittweite γ ist frei einstellbar, und weil hier f'' ≡ 2 ist, liegen
- * die drei Schwellen exakt auf dem Reglerraster: 1/L = 0,5 (Treffer in einem
- * Schritt), 2/L = 1 (Dauerpendeln), darüber Divergenz. Der Fehler erfüllt
- * exakt x^(k) − 2 = (1 − 2γ)^k (x^(0) − 2).
+ * Eigenbau zur Folie „Beispiel Gradientenabstieg: Schritt für Schritt"
+ * (13-optim.Rmd Z. 484–499); nichts davon ist aus einer Buch-App portiert.
+ * Der Zustand wird deterministisch aus der Schrittnummer gerechnet (Muster
+ * S134Bfgs), der Verlauf ist deshalb scrubbar und rückwärts begehbar.
  *
  * Farbrollen nach dem Kapitel-13-Code: Iterierte blau, das Minimum grün, der
- * Schritt −γ f'(x^(k)) und die Tangente orange, Divergenzwarnung rot; der
- * Graph von f trägt das im Kapitel freie Violett (wie in S131Bisektion).
+ * Schritt −γf′(x⁽ᵏ⁾) und die Tangente orange, Divergenzwarnung rot; der Graph
+ * von f trägt das im Kapitel freie Violett (wie in S131Bisektion).
  *
- * Nachgerechnet (node, check-math-s133.mjs): γ = 0,6 ab x^(0) = 4,5 liefert
- * 4,5 → 1,5 → 2,1 → 1,98 → 2,004 → 1,9992 mit den Fehlern 2,5 / −0,5 / 0,1 /
- * −0,02 / 0,004 / −0,0008, Faktor also −0,2 = 1 − 2·0,6. Für γ = 0,2/0,4/0,5/
- * 0,9/1,0/1,1 sind die Faktoren 0,6 / 0,2 / 0 / −0,8 / −1 / −1,2.
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs, 2026-08-19):
+ *  - f(x) = (x − 2)² + 1, f″ ≡ 2 = L, also 1/L = 0,5 und 2/L = 1.
+ *  - γ = 0,6 ab x⁽⁰⁾ = 4,5: 4,5 → 1,5 → 2,1 → 1,98 → 2,004 → 1,9992 mit den
+ *    Fehlern 2,5 / −0,5 / 0,1 / −0,02 / 0,004 / −0,0008, Faktor also −0,2.
+ *  - Faktoren 1 − 2γ für γ = 0,2 / 0,4 / 0,5 / 0,6 / 0,9 / 1,0 / 1,1:
+ *    0,600 / 0,200 / 0,000 / −0,200 / −0,800 / −1,000 / −1,200.
  */
 
-const BLAU = "#0072B2"; // Iterierte
-const GRUEN = "#009E73"; // Minimum
-const ORANGE = "#E69F00"; // Schritt und Tangente
-const ROT = "#D55E00"; // Divergenzwarnung
-const VIOLETT = "#9E57D5"; // Graph von f
+const BLAU = FMM_COLORS.blau; // Iterierte
+const GRUEN = FMM_COLORS.gruen; // Minimum
+const ORANGE = FMM_COLORS.orange; // Schritt und Tangente
+const ROT = FMM_COLORS.rot; // Divergenzwarnung
+const VIOLETT = FMM_COLORS.violett; // Graph von f
 const ACHSE = "#64748b";
 
 const f = (x: number) => (x - 2) ** 2 + 1;
@@ -42,50 +46,53 @@ const XMIN = -2.5;
 const XMAX = 6.5;
 const YMIN = 0;
 const YMAX = 22;
+const K_MAX = 12;
 
 const px = (x: number) => PAD_L + ((x - XMIN) / (XMAX - XMIN)) * (W - PAD_L - PAD_R);
 const py = (y: number) => H - PAD_B - ((y - YMIN) / (YMAX - YMIN)) * (H - PAD_B - PAD_T);
 const clampX = (x: number) => Math.max(XMIN, Math.min(XMAX, x));
 const clampY = (y: number) => Math.max(YMIN, Math.min(YMAX, y));
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 4): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  if (Math.abs(v) >= 1e5)
+const fmt = (v: number, d = 4): string => {
+  if (Math.abs(v) >= 1e5 && Number.isFinite(v)) {
     return v
       .toExponential(2)
       .replace(".", ",")
       .replace("e+", " · 10^")
       .replace("e-", " · 10^−")
       .replace(/^-/, "−");
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+  }
+  return fmtDe(v, d);
+};
 
 export function GdStepper1D() {
   const [gamma, setGamma] = useState(0.6);
   const [x0, setX0] = useState(4.5);
   const [k, setK] = useState(0);
 
-  // Die ganze Bahn wird aus den Reglern neu gerechnet, es gibt keinen
-  // versteckten Zustand ausser der Schrittzahl.
-  const bahn: number[] = [x0];
-  for (let i = 0; i < k; i++) {
-    const x = bahn[bahn.length - 1];
-    const next = x - gamma * df(x);
-    bahn.push(Number.isFinite(next) ? next : next > 0 ? 1e308 : -1e308);
-  }
+  // Die ganze Bahn wird deterministisch aus den Reglern und k gerechnet; es
+  // gibt keinen versteckten Zustand, deshalb ist der Regler scrubbar.
+  const bahn = useMemo(() => {
+    const b: number[] = [x0];
+    for (let i = 0; i < k; i++) {
+      const x = b[b.length - 1];
+      const next = x - gamma * df(x);
+      b.push(Number.isFinite(next) ? next : next > 0 ? 1e308 : -1e308);
+    }
+    return b;
+  }, [x0, gamma, k]);
   const x = bahn[bahn.length - 1];
   const faktor = 1 - gamma * L;
 
-  const kurve: string[] = [];
-  for (let i = 0; i <= 240; i++) {
-    const xx = XMIN + ((XMAX - XMIN) * i) / 240;
-    const yy = f(xx);
-    if (yy <= YMAX) kurve.push(`${px(xx).toFixed(1)},${py(yy).toFixed(1)}`);
-  }
+  const kurve = useMemo(() => {
+    const pts: string[] = [];
+    for (let i = 0; i <= 240; i++) {
+      const xx = XMIN + ((XMAX - XMIN) * i) / 240;
+      const yy = f(xx);
+      if (yy <= YMAX) pts.push(`${px(xx).toFixed(1)},${py(yy).toFixed(1)}`);
+    }
+    return pts.join(" ");
+  }, []);
 
   const xt = [-2, 0, 2, 4, 6];
   const yt = [5, 10, 15, 20];
@@ -99,53 +106,56 @@ export function GdStepper1D() {
   const naechste = x - gamma * df(x);
   const imBild = Math.abs(x) < 1e6 && f(x) <= YMAX;
 
-  const tabelle = bahn
-    .map((v, i) => ({ i, v, g: df(v), fv: f(v), e: v - 2 }))
-    .slice(-7);
+  const tabelle = bahn.map((v, i) => ({ i, v, g: df(v), fv: f(v), e: v - 2 })).slice(-7);
 
   const eps = 1e-9;
+  let art: "ok" | "warn" | "fail" | "neutral";
+  let titel: string;
   let status: string;
-  let statusFarbe = ACHSE;
   if (Math.abs(gamma - 1 / L) < eps) {
+    art = "ok";
+    titel = "γ = 1/L trifft in einem Schritt";
     status =
-      "γ = 1/L = 0,5 trifft das Minimum in einem einzigen Schritt: der Faktor 1 − γf″ ist genau null. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren macht.";
-    statusFarbe = GRUEN;
+      "Der Faktor 1 − γf″ ist genau null, der erste Schritt landet exakt im Minimum x* = 2. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren aus Algorithmus 13.4.1 macht: γ = 1/f″ ist die inverse Krümmung.";
   } else if (gamma < 1 / L) {
-    status = `γ < 1/L: der Faktor 1 − γf″ = ${fmt(
-      faktor,
-      2
-    )} ist positiv, der Fehler behält sein Vorzeichen und schrumpft in jedem Schritt auf das ${fmt(
-      faktor,
-      2
-    )}-fache. Die Iterierten nähern sich von einer Seite, dafür langsam.`;
-    statusFarbe = BLAU;
+    art = "neutral";
+    titel = "γ < 1/L: einseitige Annäherung";
+    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist positiv. Der Fehler behält also sein Vorzeichen und schrumpft in jedem Schritt auf das ${fmt(faktor, 2)}-fache: Die Iterierten nähern sich von einer Seite, dafür langsam. Das ist der erste Fall von Bemerkung 13.3.7, und Satz 13.3.13 deckt genau diesen Bereich ab, denn er verlangt γ ≤ 1/L.`;
   } else if (gamma < 2 / L - eps) {
-    status = `1/L < γ < 2/L: der Faktor 1 − γf″ = ${fmt(
-      faktor,
-      2
-    )} ist negativ, die Iterierten springen also über das Minimum hinweg. Weil sein Betrag unter 1 liegt, wird der Sprung trotzdem in jedem Schritt kleiner.`;
-    statusFarbe = BLAU;
+    art = "neutral";
+    titel = "1/L < γ < 2/L: Überschießen, aber konvergent";
+    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist negativ, die Iterierten springen also in jedem Schritt über das Minimum hinweg. Weil sein Betrag unter 1 liegt, wird der Sprung trotzdem kleiner. Das ist der dritte Fall von Bemerkung 13.3.7: Die Garantie von Satz 13.3.13 gilt hier nicht mehr, gut geht es trotzdem.`;
   } else if (Math.abs(gamma - 2 / L) < eps) {
+    art = "warn";
+    titel = "γ = 2/L ist die Grenze";
     status =
-      "γ = 2/L = 1 ist die Grenze: der Fehler wechselt nur noch das Vorzeichen und behält seinen Betrag. Die Iteration pendelt für immer zwischen zwei Punkten, ohne je näher zu kommen.";
-    statusFarbe = ROT;
+      "Der Fehler wechselt nur noch das Vorzeichen und behält seinen Betrag. Die Iteration pendelt für immer zwischen zwei Punkten, ohne je näher zu kommen. Beliebig oft in die richtige Richtung zu laufen genügt eben nicht, wenn die Schrittlänge nicht dazu passt.";
   } else {
-    status = `γ > 2/L: der Betrag des Faktors ist ${fmt(
-      Math.abs(faktor),
-      2
-    )} > 1, jeder Schritt vergrößert den Fehler. Die Folge läuft davon, obwohl sie in jedem einzelnen Schritt in die richtige Richtung startet.`;
-    statusFarbe = ROT;
+    art = "fail";
+    titel = "γ > 2/L: Divergenz";
+    status = `Der Betrag des Faktors ist ${fmt(Math.abs(faktor), 2)} > 1, jeder Schritt vergrößert den Fehler. Die Folge läuft davon, obwohl jeder einzelne Schritt in die richtige Richtung startet und der Funktionswert am Startpunkt kleiner wird.`;
   }
 
+  const narration =
+    k === 0
+      ? `Ausgangslage: x⁽⁰⁾ = ${fmt(x0, 2)}, Fehler ${fmt(x0 - 2, 4)}.`
+      : `Schritt ${k}: x⁽${k}⁾ = ${fmt(x, 4)}, Fehler ${fmt(x - 2, 4)} = ${fmt(faktor, 2)} · (Fehler davor).`;
+
   return (
-    <div className="my-3 rounded bg-white p-3 dark:bg-slate-800/60">
+    <div className="my-3 space-y-3 rounded bg-white p-3 dark:bg-slate-800/60">
+      <Aufgabe>
+        Schieben wir γ nach oben, bis der Fehler in der Tabelle das Vorzeichen wechselt, und
+        dann weiter, bis er wächst.
+      </Aufgabe>
       <div className="flex flex-wrap items-start gap-4">
         <div className="inline-block">
           <svg
             viewBox={`0 0 ${W} ${H}`}
             width={W}
             height={H}
-            className="max-w-full overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
+            role="img"
+            aria-label={`Der Graph von f(x) = (x − 2)² + 1 mit den ersten ${k} Iterierten des Gradientenabstiegs bei γ = ${fmt(gamma, 2)}.`}
+            className="max-w-full h-auto overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <line x1={PAD_L} y1={py(0)} x2={W - PAD_R} y2={py(0)} stroke={ACHSE} strokeWidth={1} />
             <line x1={px(0)} y1={PAD_T} x2={px(0)} y2={H - PAD_B} stroke={ACHSE} strokeWidth={1} />
@@ -172,7 +182,7 @@ export function GdStepper1D() {
               f(x)
             </text>
 
-            <polyline points={kurve.join(" ")} fill="none" stroke={VIOLETT} strokeWidth={2} />
+            <polyline points={kurve} fill="none" stroke={VIOLETT} strokeWidth={2} />
 
             {/* Minimum */}
             <circle cx={px(2)} cy={py(1)} r={5} fill="none" stroke={GRUEN} strokeWidth={2} />
@@ -202,7 +212,7 @@ export function GdStepper1D() {
                   fill={BLAU}
                   opacity={i === bahn.length - 1 ? 1 : 0.55}
                 />
-              ) : null
+              ) : null,
             )}
 
             {imBild && (
@@ -254,32 +264,27 @@ export function GdStepper1D() {
         </div>
 
         <div className="min-w-60 grow">
-          <Slider label="Schrittweite γ" value={gamma} onChange={setGamma} min={0.05} max={1.2} step={0.05} />
-          <Slider label="Startwert x⁽⁰⁾" value={x0} onChange={setX0} min={0.5} max={5} step={0.25} />
-          <div className="mt-2 flex flex-wrap gap-2">
-            <button
-              onClick={() => setK((v) => v + 1)}
-              className="rounded bg-sky-700 px-3 py-1 text-sm font-semibold text-white hover:bg-sky-600"
-            >
-              Schritt
-            </button>
-            <button
-              onClick={() => setK((v) => v + 5)}
-              className="rounded bg-sky-700 px-3 py-1 text-sm font-semibold text-white hover:bg-sky-600"
-            >
-              Schritt ×5
-            </button>
-            <button
-              onClick={() => setK(0)}
-              className="rounded bg-slate-500 px-3 py-1 text-sm font-semibold text-white hover:bg-slate-400"
-            >
-              Zurücksetzen
-            </button>
-          </div>
+          <Slider
+            label="Schrittweite γ"
+            value={gamma}
+            onChange={setGamma}
+            min={0.05}
+            max={1.2}
+            step={0.05}
+            accent={ORANGE}
+          />
+          <Slider
+            label="Startwert x⁽⁰⁾"
+            value={x0}
+            onChange={setX0}
+            min={0.5}
+            max={5}
+            step={0.25}
+            accent={BLAU}
+          />
+          <Stepper step={k} setStep={setK} max={K_MAX} narration={narration} />
           <div className="mt-2 font-mono text-xs">
-            <p>
-              f(x) = (x − 2)² + 1, f′(x) = 2x − 4, L = f″ = 2, also 1/L = 0,5 und 2/L = 1
-            </p>
+            <p>f(x) = (x − 2)² + 1, f′(x) = 2x − 4, L = f″ = 2, also 1/L = 0,5 und 2/L = 1</p>
             <p>Fehlerfaktor 1 − γf″ = {fmt(faktor, 2)}</p>
             <table className="mt-1 w-full text-right">
               <thead>
@@ -304,18 +309,11 @@ export function GdStepper1D() {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-sm font-semibold" style={{ color: statusFarbe }}>
-            {status}
-          </p>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Der orange Balken auf der x-Achse ist der Schritt −γ f′(x⁽ᵏ⁾); die orange
-            Gerade darüber ist die Tangente, aus deren Steigung er gebaut wird. In der
-            Voreinstellung γ = 0,6 und x⁽⁰⁾ = 4,5 lesen wir die Zahlen aus dem
-            Rechenbeispiel des Abschnitts ab. Schieben wir γ nach oben, bis der Fehler das
-            Vorzeichen wechselt, und weiter, bis er wächst.
-          </p>
         </div>
       </div>
+      <Verdikt kind={art} titel={titel}>
+        {status}
+      </Verdikt>
     </div>
   );
 }

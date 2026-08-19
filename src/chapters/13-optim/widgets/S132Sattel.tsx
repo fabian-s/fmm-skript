@@ -1,53 +1,65 @@
-import { useState, type PointerEvent as ReactPointerEvent } from "react";
-import { LabeledPlot, Slider } from "../../../lib";
-import type { Series } from "../../../lib";
+import { useMemo, useState } from "react";
+import {
+  Aufgabe,
+  clamp,
+  DragHandle,
+  FMM_COLORS,
+  fmtDe as fmt,
+  LabeledPlot,
+  Slider,
+  Surface3D,
+  useDrag,
+  Verdikt,
+  ViewControls,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+} from "../../../lib";
+import type { Kurve3D, Punkt3D, Series, Sicht3D, Vec3 } from "../../../lib";
 
 /**
- * §13.2: Sattelpunkt-Widget (Eigenbau) zur Folie „Sattelpunkte" bzw.
- * „Sattelpunkte: Analyse" (13-optim.Rmd Z. 329-357). Es ersetzt die Grafik
- * resources/optim-saddle-point.pdf.
+ * §13.2 — DIE EINE EINSICHT: Ein Newton-Schritt läuft in den Sattelpunkt
+ * HINEIN, der Gradientenabstieg entkommt ihm — außer auf dem einen Startstrahl
+ * y = 0, auf dem er selbst hineinläuft.
  *
- * Gezeigt wird f(x, y) = x^2 - y^2 als Höhenlinienbild. Die Höhenlinien sind
- * hier keine Marching-Squares-Näherung, sondern exakt gezeichnete Hyperbeln:
- * f = c > 0 ist x = ±sqrt(c + y^2), f = c < 0 ist y = ±sqrt(-c + x^2), und
- * f = 0 sind die beiden Geraden y = ±x.
+ * Eigenbau zur Folie „Sattelpunkte" bzw. „Sattelpunkte: Analyse"
+ * (13-optim.Rmd Z. 329–357); ersetzt resources/optim-saddle-point.pdf. Der
+ * Höhenlinien-Code zeichnet die Hyperbeln von f(x, y) = x² − y² exakt:
+ * f = c > 0 ist x = ±√(c + y²), f = c < 0 ist y = ±√(−c + x²), f = 0 sind die
+ * beiden Geraden y = ±x. Kein portierter Code, kein Math.random.
  *
- * Der Punkt lässt sich ziehen oder mit den beiden Reglern setzen; abgelesen
- * werden Gradient, Hesse-Matrix und deren Eigenwerte. Dazu zwei Verfahren aus
- * dem Kapitel: ein Newton-Schritt landet von jedem Startpunkt aus exakt im
- * Sattel, während der Gradientenabstieg die x-Komponente mit |1 - 2*gamma|
- * dämpft und die y-Komponente mit 1 + 2*gamma aufbläst.
+ * Drei Tafeln, verlinkt (Muster 3): links die tot lesbare Höhenlinientafel mit
+ * dem ziehbaren Punkt (alle Zahlen stehen in ihrem Verdikt), in der Mitte
+ * dieselbe Funktion als Fläche (`Surface3D`, D7) mit derselben Bahn und
+ * demselben Punkt, rechts die beiden Achsenschnitte als Parabeln. Die 3D-Tafel
+ * behauptet keine eigenen Zahlen.
  *
  * Farbrollen (Farbcode Kapitel 13): blau die Iterierten des Abstiegs, orange
- * die Suchrichtung -grad f, grün die x-Achse (in dieser Richtung liegt ein
- * Minimum, dorthin läuft der Abstieg), rot die y-Achse (Maximumsrichtung, in
- * der die Iterierten davonlaufen). Violett ist im Kapitel unbelegt und
- * markiert deshalb den stationären Punkt selbst.
+ * die Suchrichtung −∇f, grün die x-Achse (Minimumsrichtung, dorthin läuft der
+ * Abstieg), rot die y-Achse (Maximumsrichtung, dort laufen die Iterierten
+ * davon), violett der stationäre Punkt — die im Kapitel freie Farbe, hier mit
+ * genau dieser Rolle.
  *
- * Alles ist deterministisch: feste Gitterweiten, kein Math.random.
- *
- * Per node nachgerechnet (Prüfskript check-math-s132.mjs): grad f = (2x, -2y)
- * und H = diag(2, -2) gegen zentrale Differenzen; Newton aus (1,7; -0,9) und
- * (-3; 2,5) liefert beide Male exakt (0; 0); Abstieg mit gamma = 0,25 aus
- * (1,5; 0,4) läuft über (0,75; 0,6), (0,375; 0,9), (0,1875; 1,35) und steht
- * nach acht Schritten bei (0,00586; 10,2516); aus (1,5; 0) dagegen nach
- * 20 Schritten bei (1,43e-6; 0).
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s132.mjs, 2026-08-19;
+ * ältere Prüfung check-math-s132.mjs bestätigt):
+ *  - ∇f = (2x, −2y) und H = diag(2, −2) gegen zentrale Differenzen (in
+ *    (1,7; −0,9): numerisch (3,400000; 1,800000) = analytisch).
+ *  - Ein Newton-Schritt liefert aus JEDEM Punkt exakt (0; 0), denn
+ *    a − 2a/2 = 0 und b − (−2b)/(−2) = 0.
+ *  - Abstieg mit γ = 0,25 hat die Faktoren 0,500 (x) und 1,500 (y). Ab
+ *    (1,5; 0,4): (0,75; 0,60), (0,375; 0,90), (0,1875; 1,35), nach acht
+ *    Schritten (5,8594·10⁻³; 10,2516). Ab (1,5; 0) nach acht Schritten
+ *    (5,8594·10⁻³; 0), nach zwanzig (1,431·10⁻⁶; 0).
+ *  - γ = 0,45: Faktoren 0,100 / 1,900, nach acht Schritten (1,5·10⁻⁸; 67,93).
+ *    γ = 0,05: Faktoren 0,900 / 1,100, nach acht Schritten (0,6457; 0,8574).
+ *  - γ = 0,5 macht den x-Faktor exakt null (ein Schritt genügt), der y-Faktor
+ *    steht dann bei 2,000.
  */
 
-const BLAU = "#0072B2"; // Iterierte des Gradientenabstiegs
-const GRUEN = "#009E73"; // x-Achse: Richtung, in der ein Minimum liegt
-const ROT = "#D55E00"; // y-Achse: Richtung, in der f nach unten wegläuft
-const ORANGE = "#E69F00"; // Suchrichtung -grad f
-const VIOLETT = "#9E57D5"; // stationärer Punkt
-
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const BLAU = FMM_COLORS.blau; // Iterierte des Gradientenabstiegs
+const GRUEN = FMM_COLORS.gruen; // x-Achse: Richtung, in der ein Minimum liegt
+const ROT = FMM_COLORS.rot; // y-Achse: Richtung, in der f nach unten wegläuft
+const ORANGE = FMM_COLORS.orange; // Suchrichtung −∇f
+const VIOLETT = FMM_COLORS.violett; // stationärer Punkt
 
 const HALB = 2;
 const SIZE = 300;
@@ -85,11 +97,22 @@ function ast(c: number, vorzeichen: 1 | -1): string {
 const NIVEAUS_POS = [0.5, 1, 2, 3];
 const NIVEAUS_NEG = [-0.5, -1, -2, -3];
 
+/**
+ * Die drei Voreinstellungen sind die drei Experimente des Abschnitts: der
+ * gewöhnliche Start, der Sonderfall auf der Minimumsachse und ein Start, von
+ * dem aus der Newton-Schritt gezeigt wird.
+ */
+const VOREINSTELLUNGEN: { name: string; x: number; y: number; gamma: number; bahn: boolean }[] = [
+  { name: "Abstieg entkommt", x: 1.5, y: 0.4, gamma: 0.25, bahn: true },
+  { name: "Startstrahl y = 0", x: 1.5, y: 0, gamma: 0.25, bahn: true },
+  { name: "Newton von schräg", x: 1.7, y: -0.9, gamma: 0.25, bahn: false },
+];
+
 export function SattelpunktWidget() {
   const [x, setX] = useState(1.5);
   const [y, setY] = useState(0.4);
   const [gamma, setGamma] = useState(0.25);
-  const [zeigeBahn, setZeigeBahn] = useState(false);
+  const [zeigeBahn, setZeigeBahn] = useState(true);
   const [newtonGenutzt, setNewtonGenutzt] = useState(false);
 
   const runden = (v: number) => Math.round(v * 20) / 20;
@@ -99,29 +122,33 @@ export function SattelpunktWidget() {
     setNewtonGenutzt(false);
   };
 
+  const zieh = useDrag<"p">({
+    feld: { x0: PAD_L, y0: 0, w: SIZE, h: SIZE },
+    welt: { x0: -HALB, x1: HALB, y0: -HALB, y1: HALB },
+    clamp: ([a, b]) => [clamp(a, -HALB, HALB), clamp(b, -HALB, HALB)],
+    snap: 0.05,
+    greifPosition: () => [x, y],
+    onDrag: ([a, b]) => setzen(a, b),
+  });
+
   const gx = 2 * x;
   const gy = -2 * y;
   const gnorm = Math.hypot(gx, gy);
   const wert = f(x, y);
 
-  // Gradientenabstieg von (x, y) aus: x_{k+1} = (1-2g) x_k, y_{k+1} = (1+2g) y_k
-  const bahn: [number, number][] = [[x, y]];
-  for (let k = 0; k < SCHRITTE; k++) {
-    const [bx, by] = bahn[k];
-    bahn.push([bx - gamma * 2 * bx, by - gamma * -2 * by]);
-  }
+  // Gradientenabstieg von (x, y) aus: x_{k+1} = (1−2γ)x_k, y_{k+1} = (1+2γ)y_k
+  const bahn = useMemo(() => {
+    const b: [number, number][] = [[x, y]];
+    for (let k = 0; k < SCHRITTE; k++) {
+      const [bx, by] = b[k];
+      b.push([bx * (1 - 2 * gamma), by * (1 + 2 * gamma)]);
+    }
+    return b;
+  }, [x, y, gamma]);
   const ende = bahn[SCHRITTE];
   const verlaesstFenster = bahn.some(([bx, by]) => Math.abs(bx) > HALB || Math.abs(by) > HALB);
 
-  const greifen = (e: ReactPointerEvent<SVGSVGElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    const sx = (e.clientX - r.left) * ((PAD_L + SIZE + PAD_R) / r.width);
-    const sy = (e.clientY - r.top) * ((SIZE + PAD_B) / r.height);
-    const klemm = (v: number) => Math.min(HALB, Math.max(-HALB, v));
-    setzen(klemm(-HALB + ((sx - PAD_L) / SIZE) * 2 * HALB), klemm(-HALB + ((SIZE - sy) / SIZE) * 2 * HALB));
-  };
-
-  // Suchrichtung -grad f, auf eine gut sichtbare Länge skaliert
+  // Suchrichtung −∇f, auf eine gut sichtbare Länge skaliert
   const pfeilLaenge = gnorm > 1e-9 ? Math.min(0.9, 0.25 + 0.15 * gnorm) : 0;
   const pfeilZiel: [number, number] =
     gnorm > 1e-9 ? [x - (gx / gnorm) * pfeilLaenge, y - (gy / gnorm) * pfeilLaenge] : [x, y];
@@ -129,86 +156,118 @@ export function SattelpunktWidget() {
   const eps = 1e-9;
   const aufAchseX = Math.abs(y) < eps;
   const aufAchseY = Math.abs(x) < eps;
+  const faktorX = Math.abs(1 - 2 * gamma);
+  const faktorY = 1 + 2 * gamma;
 
-  let lage: string;
-  if (aufAchseX && aufAchseY) {
-    lage =
-      "Wir stehen im stationären Punkt selbst: der Gradient ist null, es gibt also keinen Pfeil und der Abstieg bleibt stehen, wo er ist. Trotzdem liegt hier weder ein Minimum noch ein Maximum. In jeder Umgebung gibt es Punkte auf der grünen Achse mit größerem und Punkte auf der roten Achse mit kleinerem Funktionswert.";
-  } else if (aufAchseX) {
-    lage = `Wir stehen auf der grünen Achse, also in der Richtung, in der f ein Minimum hat. Der Gradient zeigt hier nur in x-Richtung, und der Abstieg bleibt auf der Achse: nach ${SCHRITTE} Schritten steht er bei x = ${fmt(ende[0], 4)}, y bleibt exakt 0. Nur dieser eine Startstrahl führt in den Sattel.`;
-  } else if (aufAchseY) {
-    lage = `Wir stehen auf der roten Achse, in der Maximumsrichtung. Der Gradient zeigt nur in y-Richtung, und weil f dort nach unten geöffnet ist, wächst |y| in jedem Schritt um den Faktor ${fmt(1 + 2 * gamma)}: nach ${SCHRITTE} Schritten ist y = ${fmt(ende[1], 3)}.`;
-  } else {
-    lage = `Beide Komponenten sind besetzt. Der Abstieg drückt x mit dem Faktor ${fmt(Math.abs(1 - 2 * gamma))} pro Schritt gegen null und bläst y mit dem Faktor ${fmt(1 + 2 * gamma)} auf; nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}).`;
-  }
+  /* ------------------------------------------------- Verdikt: vier Zweige */
+
+  let art: "stationaer" | "strahl" | "achseY" | "entkommt";
+  if (aufAchseX && aufAchseY) art = "stationaer";
+  else if (aufAchseX) art = "strahl";
+  else if (aufAchseY) art = "achseY";
+  else art = "entkommt";
+
+  const verdikt: Record<typeof art, { kind: "neutral" | "ok" | "warn" | "fail"; titel: string; text: string }> = {
+    stationaer: {
+      kind: "neutral",
+      titel: "im stationären Punkt",
+      text: `Der Gradient ist null, es gibt also keinen Pfeil, und jedes Verfahren bleibt stehen, wo es steht. Trotzdem liegt hier weder ein Minimum noch ein Maximum: In jeder noch so kleinen Umgebung gibt es Punkte auf der grünen Achse mit größerem und Punkte auf der roten Achse mit kleinerem Funktionswert. Genau das meint Bemerkung 13.2.12 mit „Sattelpunkt".`,
+    },
+    strahl: {
+      kind: "warn",
+      titel: "der Sonderfall y = 0",
+      text: `Auf der grünen Achse zeigt der Gradient nur in x-Richtung, und der Abstieg bleibt auf der Achse: y bleibt exakt null, x schrumpft mit dem Faktor ${fmt(faktorX)} pro Schritt und steht nach ${SCHRITTE} Schritten bei ${fmt(ende[0], 4)}. Hier läuft also auch der Gradientenabstieg in den Sattelpunkt hinein. Dieser eine Startstrahl ist die Ausnahme: Er hat in der Ebene Maß null, weshalb ihn ein zufälliger Startpunkt mit Wahrscheinlichkeit null trifft.`,
+    },
+    achseY: {
+      kind: "fail",
+      titel: "auf der Maximumsachse",
+      text: `Auf der roten Achse ist f nach unten geöffnet, und der Abstieg folgt genau dieser Richtung: |y| wächst in jedem Schritt um den Faktor ${fmt(faktorY)} und steht nach ${SCHRITTE} Schritten bei ${fmt(ende[1], 3)}. Der Funktionswert fällt dabei zwar in jedem Schritt, nur eben ins Bodenlose. Ein Minimum findet das Verfahren so nie.`,
+    },
+    entkommt: {
+      kind: "ok",
+      titel: "der Abstieg entkommt",
+      text: `Beide Komponenten sind besetzt, und der Abstieg behandelt sie gegenläufig: x drückt er mit dem Faktor ${fmt(faktorX)} pro Schritt gegen null, y bläst er mit dem Faktor ${fmt(faktorY)} auf. Nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}), also praktisch auf der roten Achse und weit weg vom Sattel. Der Gradientenabstieg bleibt an einem Sattelpunkt nicht hängen (Bemerkung 13.2.12); dass er dabei überhaupt nichts findet, ist eine andere Geschichte.`,
+    },
+  };
+  const status = verdikt[art];
 
   const schnitte: Series[] = [
-    { f: (t: number) => t * t, color: GRUEN },
-    { f: (t: number) => -t * t, color: ROT },
+    { f: (t: number) => t * t, color: GRUEN, label: "f(t, 0) = t²" },
+    { f: (t: number) => -t * t, color: ROT, label: "f(0, t) = −t²" },
   ];
+
+  /* --------------------------------------------- verlinkte 3D-Tafel (D7) */
+
+  const [sicht, setSicht] = useState<Sicht3D>({ azimuth: 40, elevation: 24 });
+  const flaeche = useMemo(
+    () => ({ f, nx: 30, ny: 30, color: BLAU, opacity: 0.82, wire: true }),
+    [],
+  );
+  const punkte3d = useMemo((): Punkt3D[] => {
+    const ps: Punkt3D[] = [
+      { p: [0, 0, 0] as Vec3, color: VIOLETT, r: 4.5, label: "x*", onTop: true },
+      { p: [x, y, f(x, y)] as Vec3, color: BLAU, r: 4.5, onTop: true },
+    ];
+    return ps;
+  }, [x, y]);
+  // Dieselbe Bahn wie links, auf die Fläche gehoben; abgeschnitten am Fenster.
+  const kurven3d = useMemo((): Kurve3D[] => {
+    if (!zeigeBahn) return [];
+    const pts = bahn
+      .filter(([bx, by]) => Math.abs(bx) <= HALB && Math.abs(by) <= HALB)
+      .map(([bx, by]) => [bx, by, f(bx, by)] as Vec3);
+    return pts.length > 1 ? [{ pts, color: BLAU, width: 2, dash: "4 3", onTop: true }] : [];
+  }, [bahn, zeigeBahn]);
+  const GESTALT: Record<typeof art, string> = {
+    stationaer: "der Punkt sitzt genau im Sattel",
+    strahl: "der Punkt sitzt auf dem aufsteigenden Grat",
+    achseY: "der Punkt sitzt auf dem abfallenden Grat",
+    entkommt: "der Punkt sitzt auf einer der Flanken",
+  };
+
+  const knopf = (aktiv: boolean) => (aktiv ? W_BUTTON_AKTIV : W_BUTTON);
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Die Höhenlinien von f(x, y) = x² − y² sind Hyperbeln, das Niveau 0 zerfällt in die
-        beiden Geraden y = ±x (dick). Durchgezogen sind die positiven Niveaus, gestrichelt die
-        negativen. Wir ziehen den blauen Punkt oder stellen ihn mit den Reglern ein; orange
-        zeigt die Suchrichtung −∇f (die Pfeillänge ist nur ein Anhalt, den Betrag nennt der
-        Kasten unten), violett sitzt der stationäre Punkt (0; 0). Die grüne
-        x-Achse ist die Richtung, in der dort ein Minimum liegt, die rote y-Achse die, in der
-        ein Maximum liegt.
-      </p>
-      <Slider label="x" value={x} onChange={(v) => setzen(v, y)} min={-2} max={2} step={0.05} fmt={(v) => fmt(v)} />
-      <Slider label="y" value={y} onChange={(v) => setzen(x, v)} min={-2} max={2} step={0.05} fmt={(v) => fmt(v)} />
-      <Slider
-        label="γ (Schrittweite)"
-        value={gamma}
-        onChange={(v) => setGamma(Math.round(v * 20) / 20)}
-        min={0.05}
-        max={0.45}
-        step={0.05}
-        fmt={(v) => fmt(v)}
-      />
+      <Aufgabe>
+        Ziehen wir den blauen Punkt über die Fläche und lassen den Abstieg laufen: Von welchen
+        Startpunkten aus landet er im Sattel?
+      </Aufgabe>
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setZeigeBahn((b) => !b)}
-        >
-          {zeigeBahn ? "Abstieg ausblenden" : "Gradientenabstieg zeigen"}
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => {
-            setX(0);
-            setY(0);
-            setNewtonGenutzt(true);
-          }}
-        >
-          ein Newton-Schritt
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setzen(1.5, 0.4)}
-        >
-          zurücksetzen
-        </button>
+        {VOREINSTELLUNGEN.map((v) => {
+          const aktiv = x === v.x && y === v.y && gamma === v.gamma;
+          return (
+            <button
+              key={v.name}
+              type="button"
+              aria-pressed={aktiv}
+              className={knopf(aktiv)}
+              onClick={() => {
+                setX(v.x);
+                setY(v.y);
+                setGamma(v.gamma);
+                setZeigeBahn(v.bahn);
+                setNewtonGenutzt(false);
+              }}
+            >
+              {v.name}
+            </button>
+          );
+        })}
       </div>
       <div className="flex flex-wrap gap-4">
-        <div className="inline-block shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+        <div className="inline-block min-w-0 max-w-full select-none text-[10px] text-slate-500 dark:text-slate-400">
           <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
             y ↑
           </div>
           <svg
+            viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
             width={PAD_L + SIZE + PAD_R}
             height={SIZE + PAD_B}
-            className="cursor-crosshair rounded border border-slate-300 bg-white dark:border-slate-600"
-            onPointerDown={greifen}
-            onPointerMove={(e) => {
-              if (e.buttons === 1) greifen(e);
-            }}
+            role="img"
+            aria-label={`Höhenlinien von f(x, y) = x² − y² mit dem Punkt (${fmt(x)}; ${fmt(y)}); ${GESTALT[art]}.`}
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            {...zieh.svgProps}
           >
             <defs>
               <clipPath id="s132-clip">
@@ -282,17 +341,50 @@ export function SattelpunktWidget() {
                 />
               )}
               <circle cx={px(0)} cy={py(0)} r={7} fill="none" stroke={VIOLETT} strokeWidth={2} />
-              <circle cx={px(x)} cy={py(y)} r={5} fill={BLAU} />
+              <DragHandle
+                x={px(x)}
+                y={py(y)}
+                farbe={BLAU}
+                r={5}
+                aktiv={zieh.dragging === "p"}
+                {...zieh.handleProps("p")}
+              />
             </g>
           </svg>
           <div className="text-center text-[11px]" style={{ paddingLeft: PAD_L }}>
             x →
           </div>
         </div>
+        <div className="min-w-0 max-w-full">
+          <Surface3D
+            size={280}
+            xDomain={[-HALB, HALB]}
+            yDomain={[-HALB, HALB]}
+            zDomain={[-4, 4]}
+            surface={flaeche}
+            contours={[...NIVEAUS_NEG, 0, ...NIVEAUS_POS]}
+            contourColor={BLAU}
+            points={punkte3d}
+            curves={kurven3d}
+            labels={{ x: "x", y: "y", z: "f" }}
+            azimuth={sicht.azimuth}
+            elevation={sicht.elevation}
+            onViewChange={setSicht}
+            ariaLabel={`Die Sattelfläche f(x, y) = x² − y² über der Ebene; ${GESTALT[art]}.`}
+          />
+          <div className="mt-1 max-w-[280px]">
+            <ViewControls value={sicht} onChange={setSicht} />
+          </div>
+          <p className="mt-1 max-w-[280px] text-xs text-slate-600 dark:text-slate-300">
+            Dieselbe Funktion als Fläche. Der violette Punkt ist derselbe stationäre Punkt, der
+            blaue derselbe wie links, die gestrichelte blaue Kurve dieselbe Bahn, nur auf die
+            Fläche gehoben. Ziehen dreht die Ansicht.
+          </p>
+        </div>
         <div>
           <LabeledPlot
             xLabel="t"
-            yLabel="f(t)"
+            yLabel="f"
             series={schnitte}
             xDomain={[-2, 2]}
             yDomain={[-4, 4]}
@@ -303,13 +395,45 @@ export function SattelpunktWidget() {
               { x: y, y: -y * y, color: ROT },
             ]}
           />
-          <p className="mt-1 max-w-[330px] text-xs text-slate-600 dark:text-slate-300">
-            Dieselbe Funktion, aber nur auf den beiden Achsen: grün f(t, 0) = t² mit dem
-            Minimum in t = 0, rot f(0, t) = −t² mit dem Maximum dort. Die beiden Marken
-            sitzen bei t = x beziehungsweise t = y. Ein und derselbe Punkt ist also für die
-            eine Richtung der tiefste und für die andere der höchste der Gegend.
+          <p className="mt-1 max-w-[300px] text-xs text-slate-600 dark:text-slate-300">
+            Dieselbe Funktion, aber nur auf den beiden Achsen: grün mit dem Minimum in t = 0,
+            rot mit dem Maximum dort. Die beiden Marken sitzen bei t = x beziehungsweise
+            t = y. Ein und derselbe Punkt ist für die eine Richtung der tiefste und für die
+            andere der höchste der Gegend.
           </p>
         </div>
+      </div>
+      <Slider label="x" value={x} onChange={(v) => setzen(v, y)} min={-2} max={2} step={0.05} accent={BLAU} />
+      <Slider label="y" value={y} onChange={(v) => setzen(x, v)} min={-2} max={2} step={0.05} accent={BLAU} />
+      <Slider
+        label="γ (Schrittweite)"
+        value={gamma}
+        onChange={(v) => setGamma(Math.round(v * 20) / 20)}
+        min={0.05}
+        max={0.45}
+        step={0.05}
+        accent={ORANGE}
+      />
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        <button
+          type="button"
+          aria-pressed={zeigeBahn}
+          className={knopf(zeigeBahn)}
+          onClick={() => setZeigeBahn((b) => !b)}
+        >
+          {zeigeBahn ? "Abstieg ausblenden" : "Gradientenabstieg zeigen"}
+        </button>
+        <button
+          type="button"
+          className={W_BUTTON}
+          onClick={() => {
+            setX(0);
+            setY(0);
+            setNewtonGenutzt(true);
+          }}
+        >
+          ein Newton-Schritt
+        </button>
       </div>
       <div className="max-w-prose space-y-1 rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
         <p>
@@ -329,22 +453,30 @@ export function SattelpunktWidget() {
           <span className="font-mono">λ₂ = −2</span> zur y-Richtung, also{" "}
           <span className="font-semibold">indefinit</span>.
         </p>
-        <p>{lage}</p>
+        <p>
+          Abstiegsfaktoren pro Schritt: <span className="font-mono">|1 − 2γ| = {fmt(faktorX)}</span> in
+          x-Richtung, <span className="font-mono">1 + 2γ = {fmt(faktorY)}</span> in y-Richtung.
+        </p>
+      </div>
+      <Verdikt kind={status.kind} titel={status.titel}>
+        {status.text}
         {newtonGenutzt && (
-          <p>
-            Ein Newton-Schritt landet auf (0; 0), und zwar von jedem Startpunkt aus. Das ist kein
-            Zufall: f ist quadratisch, seine Taylornäherung zweiten Grades also exakt, und der
-            einzige stationäre Punkt dieser Näherung ist der Sattel. Newton sucht kritische
-            Punkte, nicht Minima.
-          </p>
+          <>
+            {" "}
+            Der Newton-Schritt hat gerade auf (0; 0) gezeigt, und zwar von jedem Startpunkt aus:
+            f ist quadratisch, seine Taylornäherung zweiten Grades also exakt, und der einzige
+            stationäre Punkt dieser Näherung ist der Sattel. Newton sucht Nullstellen des
+            Gradienten, nicht Minima.
+          </>
         )}
         {zeigeBahn && verlaesstFenster && (
-          <p>
-            Die gestrichelte Bahn verlässt das gezeigte Fenster; im Bild endet sie am Rand,
-            gerechnet wird sie weiter bis zu dem Endpunkt, den die Zeile darüber nennt.
-          </p>
+          <>
+            {" "}
+            Die gestrichelte Bahn verlässt das gezeigte Fenster; gerechnet wird sie weiter bis zu
+            dem Endpunkt, den dieses Verdikt nennt.
+          </>
         )}
-      </div>
+      </Verdikt>
     </div>
   );
 }

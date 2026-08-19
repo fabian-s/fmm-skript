@@ -1,3 +1,4 @@
+import { Schaetzfrage } from "../../lib";
 import { LagrangeGeometrie } from "./widgets/S135Lagrange";
 import { RidgeLassoGeometrie } from "./widgets/S135RidgeLasso";
 
@@ -140,17 +141,31 @@ $\corange{\nabla g} = (1, 1)$, und das Vorzeichen von $\lambda^\star$ ist
 negativ. Bei Gleichungsnebenbedingungen ist das erlaubt.
 :::
 
+Woran erkennen wir am Bild, dass ein Punkt der Geraden optimal ist? Probieren wir
+es aus.
+
 :::vertiefung[Höhenlinien, Gerade und zwei Pfeile]
-Das Widget zeigt das Beispiel live: die Höhenlinien von $f$ in Grau, die
-gerade erreichte violett, die Nebenbedingung in Rot, an einem verschiebbaren
-Punkt auf der Geraden die beiden Gradienten in Orange. Nur im Optimum sind
-die Pfeile parallel, und nur dort liefern die beiden Stationaritätsgleichungen
-denselben Multiplikator. Die beiden Ungleichungs-Modi nehmen die folgenden
-KKT-Bedingungen vorweg: Einmal bindet die Nebenbedingung mit $\mu > 0$, einmal
-ist sie inaktiv mit $\mu = 0$.
+Das Widget zeigt das Beispiel live: die Höhenlinien von $f$ in Grau, die gerade
+erreichte violett, die Nebenbedingung in Rot, an einem verschiebbaren Punkt auf
+der Geraden die beiden Gradienten in Orange. Daneben steht dieselbe Funktion als
+Fläche, auf die die Nebenbedingung als rote Kurve gehoben ist. Die drei Knöpfe
+wechseln zwischen der Gleichung und den beiden Ungleichungen.
 
 <LagrangeGeometrie />
 :::
+
+Wie das Widget zeigt, ist es die *Parallelität* der beiden Pfeile: Nur an einer
+Stelle der Geraden decken sie sich, und nur dort liefern beide
+Stationaritätsgleichungen denselben Multiplikator, nämlich
+$\lambda^\star = -1$ im Punkt $(0{,}5;\, 0{,}5)$ mit $f^\star = 0{,}5$. Überall
+sonst ist die Richtungsableitung entlang der Geraden von null verschieden, und die
+Höhenlinie schneidet die Gerade in zwei Punkten, statt sie zu berühren. Auf der
+Fläche daneben heißt dasselbe: Das beschränkte Problem ist die Suche nach dem
+tiefsten Punkt der roten Kurve. Die beiden Ungleichungs-Modi nehmen die folgenden
+KKT-Bedingungen vorweg. Bei $x + y \ge 1$ zeigen die Pfeile im Optimum
+gegeneinander, $\mu = 1 > 0$, die Nebenbedingung bindet; bei $x + y \le 1$ würde
+jeder Randpunkt $\mu < 0$ verlangen, kein Randpunkt ist also KKT-Punkt, und
+stattdessen gewinnt das unbeschränkte Minimum $(0;\, 0)$ mit $\mu = 0$.
 
 ### Ungleichungen: die KKT-Bedingungen
 
@@ -294,8 +309,30 @@ Es zeigt $\|\bbeta\|_2\le r$ und $\|\bbeta\|_1\le r$. Für Ridge entspricht das
 dem Budget $c=r^2$ in der Formel oben, für Lasso $c=r$. Die zulässigen Mengen
 sind dieselben; nur die Parametrisierung unterscheidet sich.
 
-<RidgeLassoGeometrie />
+<Schaetzfrage
+  variante="bereich"
+  frage={<>Bis zu welchem Radius <M>{"r"}</M> bleibt die Lasso-Lösung in der Ecke, setzt also <M>{"\\beta_2"}</M> exakt auf null?</>}
+  loesung={1.342857}
+  toleranz={0.15}
+  min={0.4}
+  max={2.6}
+  schritt={0.05}
+  start={1.5}
+  einheit="r"
+  verdeckt={<>Der Ecken-Vermerk in der rechten Tafel verschwindet an dieser Schwelle.</>}
+>
+  <RidgeLassoGeometrie />
+</Schaetzfrage>
 :::
+
+Wie das Widget zeigt, liegt die Eckenschwelle bei $r = 1{,}3429$. Darunter steht
+die Lasso-Lösung exakt auf $(r;\, 0)$, darüber rutscht sie auf eine Kante der
+Raute, und beide Koordinaten sind wieder besetzt. Die Ridge-Lösung wandert
+dagegen über den ganzen Bereich glatt am Kreisrand entlang und wird nie exakt
+null. Nach oben verschwindet der Zwang schließlich ganz: Ab
+$\|\wh{\bbeta}\|_2 = 1{,}8358$ ist die Ridge-Nebenbedingung inaktiv, ab
+$\|\wh{\bbeta}\|_1 = 2{,}5$ die des Lasso, und in beiden Fällen erzwingt die
+Komplementarität aus Satz 13.5.7 dann $\mu = 0$.
 
 :::satz[13.5.12 (KKT und Konvexität)]
 Sind $f$ und alle $h_j$ konvex und alle $g_i$ affin, so ist jeder zulässige
@@ -406,6 +443,17 @@ zulässige Punkt $\cgreen{x^\star = 0}$ ist damit das Optimum, und trotzdem
 scheitert die Stationarität $1 + \mu \cdot 2x^\star = 0$ an jedem
 $\mu \ge 0$. Für die notwendige Richtung braucht es eine
 Regularitätsbedingung.
+:::
+
+:::zahlfrage{loesung=1.34 toleranz=0.15}
+Ab welchem Radius $r$ verlässt die Lasso-Lösung im Widget die Ecke, hat also
+beide Koordinaten von null verschieden?
+
+Die Schwelle liegt bei $r = 1{,}3429$. Bis dorthin ist die Ecke $(r;\, 0)$ der
+Punkt der Raute mit dem kleinsten Verlust, darüber ein Punkt im Innern einer
+Kante. Der Ridge-Kreis hat keine Ecken und liefert deshalb bei keinem Radius
+eine exakte Null. Genau das ist der geometrische Grund für die Sparsity des
+Lasso (Bemerkung 13.5.11).
 :::
 
 :::frage{wahr}

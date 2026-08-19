@@ -1,4 +1,6 @@
+import { Schaetzfrage } from "../../lib";
 import { BisektionStepper } from "./widgets/S131Bisektion";
+import { NewtonNullstelle } from "./widgets/S131Newton";
 import { FixpunktSpirale } from "./widgets/S131Fixpunkt";
 
 ::quelle[Folien 13-optim, von „Verwendete Vorkenntnisse" bis zur zweiten Folie „Fixpunktiteration erster Ordnung"; das auskommentierte Quiz zur Lösbarkeit ist mitverarbeitet.]
@@ -478,20 +480,40 @@ nur für univariate Funktionen; für $n > 1$ brauchen wir andere Ideen, und die
 einfachste davon steht am Ende dieses Abschnitts.
 :::
 
+Zwei Fragen bleiben offen. Wie viele Halbierungen kostet eine vorgegebene
+Genauigkeit wirklich, und was passiert, wenn im Startintervall mehr als eine
+Nullstelle liegt? Beides lässt sich am Verfahren selbst ablesen.
+
 :::vertiefung[Halbieren, Schritt für Schritt]
-Voreingestellt ist $f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$.
-Die Tabelle daneben protokolliert den Intervall-Verlauf. Mit dem Toleranzregler
-lässt sich die Vorhersage aus Satz 13.1.8 nachprüfen: Der Statustext nennt nach
-dem letzten Schritt die gebrauchte und die vorhergesagte Zahl.
+Voreingestellt ist $f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$;
+die Tabelle daneben protokolliert den Intervall-Verlauf. Der zweite Menüpunkt
+wechselt zu $f(x) = x^3 - 3x + 1$ auf $[-2, 2]$, wo die Voraussetzung von
+Satz 13.1.5 verletzt ist.
+
+<Schaetzfrage
+  frage={<>Wie viele Halbierungen braucht die Bisektion auf <M>{"[1, 2]"}</M>, bis das Intervall kürzer ist als <M>{"\\epsilon = 10^{-6}"}</M>?</>}
+  loesung={20}
+  toleranz={2}
+  einheit="Schritte"
+  verdeckt={<>Satz 13.1.8 sagt <M>{"\\lceil \\log_2((b-a)/\\epsilon)\\rceil = 20"}</M> voraus, und das ist keine Schätzung, sondern die exakte Zahl.</>}
+>
+  <BisektionStepper />
+</Schaetzfrage>
+:::
+
+Wie das Widget zeigt, trifft die Schranke aus Satz 13.1.8 exakt: $10$ Schritte
+für $\epsilon = 10^{-3}$, $20$ für $10^{-6}$, $34$ für $10^{-10}$. Umgerechnet
+kostet jede weitere gültige Dezimalstelle $1/\log_{10} 2 = 3{,}32$ Schritte,
+denn jeder Schritt gewinnt genau ein Bit.
 
 Der zweite Menüpunkt zeigt, was der Satz *nicht* verspricht. Die Funktion
 $f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$ drei Nullstellen, nämlich bei
 $-1{,}879385$, $0{,}347296$ und $1{,}532089$. Das Verfahren findet eine davon,
-und welche, entscheidet schon der erste Mittelpunkt. Für die Eindeutigkeit
-bräuchten wir die strenge Monotonie aus Satz 13.1.5, und die fehlt hier.
-
-<BisektionStepper />
-:::
+und welche, entscheidet schon der erste Mittelpunkt: Weil $f(0) = 1$ dasselbe
+Vorzeichen trägt wie $f(2) = 3$, fliegt die rechte Hälfte samt zwei Nullstellen
+im ersten Schritt hinaus, und die Iteration läuft gegen die linke. Für die
+Eindeutigkeit bräuchten wir die strenge Monotonie aus Satz 13.1.5, und die fehlt
+hier.
 
 ### Das Newton-Raphson-Verfahren
 
@@ -592,6 +614,45 @@ dafür braucht sie für dieselbe Genauigkeit ein Vielfaches an Schritten. In der
 Praxis kombinieren wir beides: erst klammern, dann Newton. Wir kommen in
 [Abschnitt 13.4](#sec-13.4) darauf zurück.
 :::
+
+Das Kleingedruckte klingt harmlos. Wie schlimm wird es tatsächlich, wenn die
+Tangente flach liegt?
+
+:::vertiefung[Die Tangente als Wegweiser]
+Die Tafel zeigt Algorithmus 13.1.11 Schritt für Schritt: violett der Graph von
+$f$, orange die Tangente im aktuellen Punkt, und wo sie die $x$-Achse trifft,
+sitzt die nächste blaue Iterierte. Der Startpunkt lässt sich auf der Achse
+ziehen oder mit dem Regler setzen; die gestrichelten roten Senkrechten im
+zweiten Beispiel markieren die Stellen mit $\corange{f'} = 0$.
+
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Die dritte Funktion, <M>{"f(x) = \\arctan x"}</M>, hat genau EINE Nullstelle. Findet Newton sie von jedem Startpunkt aus?</>}
+  optionen={[
+    { id: "ja", text: "ja, es gibt ja nur eine" },
+    { id: "nein", text: "nein, ab einem gewissen Abstand nicht mehr" },
+  ]}
+  loesung="nein"
+  verdeckt={<>Die Schwelle liegt bei <M>{"|x^{(0)}| = 1{,}3917"}</M>.</>}
+>
+  <NewtonNullstelle />
+</Schaetzfrage>
+:::
+
+Wie das Widget zeigt, ist der Preis kein theoretischer. Auf $f(x) = x^2 - 2$
+läuft alles glatt: Die Fehlerspalte fällt über
+$4{,}1 \cdot 10^{-1}$, $8{,}6 \cdot 10^{-2}$, $2{,}5 \cdot 10^{-3}$,
+$2{,}1 \cdot 10^{-6}$ auf $1{,}6 \cdot 10^{-12}$, und der Quotient
+$e_{k+1}/e_k^2$ pendelt sich bei $0{,}3536$ ein. Auf $f(x) = x^3 - 3x + 1$
+dagegen entscheidet der Startpunkt, welche der drei Nullstellen wir finden, und
+in der Nähe von $x = 1$ wird es unangenehm: Bei $\cblue{x^{(0)}} = 1{,}05$ ist
+$\corange{f'} = 0{,}31$, der erste Schritt springt nach $4{,}28$, und der Lauf
+braucht zehn Schritte statt fünf. Am deutlichsten ist die dritte Funktion. Der
+Arkustangens hat genau eine Nullstelle, nämlich $0$, aber die Kurve flacht nach
+außen ab. Ab $\left|\cblue{x^{(0)}}\right| > 1{,}3917$ überholt jeder Schritt
+den vorigen, und die Iterierten $1{,}5 \to -1{,}694 \to 2{,}321 \to -5{,}114
+\to 32{,}30 \to -1575{,}3$ laufen auseinander. Die Bisektion hätte hier ohne
+Weiteres funktioniert; sie ist eben langsam, aber nicht zu überlisten.
 
 :::bemerkung[13.1.14 (Von der Nullstelle zum Minimum)]
 Jetzt schließt sich der Kreis zu Bemerkung 13.1.3. Suchen wir das Minimum einer
@@ -836,27 +897,42 @@ Die deterministische Schrittweitensteuerung behandelt
 [Abschnitt 13.3](#sec-13.3).
 :::
 
+Bleibt die Frage, wie weit uns diese Schranke trägt. Sie hängt an einer einzigen
+Zahl, und die lässt sich für drei kleine Systeme durchspielen: Ab welcher
+Schrittweite kippt die Iteration?
+
 :::vertiefung[Die Schrittweite als Regler]
 Alle drei Beispiele sind affin, $f(\bx) = \bA(\bx - \cgreen{\bx^\star})$ mit
 $\cgreen{\bx^\star} = \bnull$. Damit ist die Jacobimatrix überall $\bA$, und
 $\corange{\rho} = \left\|\bI - \corange{\gamma}\bA\right\|_2$ ist nach Schritt 5
 des Beweises eine echte Schranke ohne Restterm.
 
-Das erste System ist symmetrisch mit Eigenwerten $4{,}618$ und $2{,}382$; die
-Voreinstellung $\corange{\gamma} = 0{,}25$ ist genau die aus dem
-Richardson-Beispiel in [Abschnitt 8.3](?k=08-la-misc#sec-8.3) und liefert
-dieselbe Rate $0{,}4045$. Beim zweiten System sind die Eigenwerte komplex, und
-der Weg wird zur Spirale: Der Drehanteil lässt sich durch keine Schrittweite
-wegregeln, weshalb hier selbst im Optimum nur $2/\sqrt 5 = 0{,}894$ herausspringt.
-Das dritte System hat Kondition $10$ und führt Bemerkung 13.1.18 vor. Bei
-$\corange{\gamma} = 0{,}25$ divergiert es bereits; erst unterhalb von
-$\corange{\gamma} = 0{,}2$ läuft es zusammen, und die beste Rate bleibt $9/11$.
+<Schaetzfrage
+  frage={<>Das dritte System hat <M>{"\\bA = \\diag(1, 10)"}</M>, also Kondition <M>{"10"}</M>. Ab welchem <M>{"\\gamma"}</M> divergiert es?</>}
+  loesung={0.2}
+  toleranz={0.03}
+  einheit="γ"
+  verdeckt={<>Die Grenze liegt bei <M>{"2/\\lambda_{\\max} = 0{,}2"}</M>, das beste erreichbare <M>{"\\rho"}</M> bei <M>{"9/11 = 0{,}818"}</M>.</>}
+>
+  <FixpunktSpirale />
+</Schaetzfrage>
+:::
+
+Wie das Widget zeigt, entscheidet allein $\corange{\rho}$, und die drei Systeme
+liefern drei verschiedene Geschichten. Das erste ist symmetrisch mit Eigenwerten
+$4{,}618$ und $2{,}382$; die Voreinstellung $\corange{\gamma} = 0{,}25$ ist genau
+die aus dem Richardson-Beispiel in
+[Abschnitt 8.3](?k=08-la-misc#sec-8.3) und liefert dieselbe Rate $0{,}4045$, das
+Optimum liegt bei $\corange{\gamma^\star} = 2/7$ mit $\corange{\rho} = 0{,}319$.
+Beim zweiten sind die Eigenwerte komplex, und der Weg wird zur Spirale: Der
+Drehanteil lässt sich durch keine Schrittweite wegregeln, weshalb selbst im
+Optimum nur $2/\sqrt 5 = 0{,}894$ herausspringt. Das dritte führt
+Bemerkung 13.1.18 vor. Bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$,
+die Iteration also längst divergent; erst unterhalb von
+$\corange{\gamma} = 0{,}2$ läuft sie zusammen, und die beste Rate bleibt $9/11$.
 Sehenswert ist dabei das Zickzack: Die steile Richtung überschießt, während die
 flache kaum vorankommt. Dasselbe Bild begegnet uns beim Gradientenabstieg in
 [Abschnitt 13.3](#sec-13.3) wieder.
-
-<FixpunktSpirale />
-:::
 
 Damit ist der Werkzeugkasten für Nullstellen beisammen. Für die Optimierung ist
 allerdings gerade die Voraussetzung heikel, die Bemerkung 13.1.17 gebraucht hat:
@@ -888,6 +964,17 @@ Jeder Schritt halbiert die Intervalllänge, gewinnt also genau ein Bit oder
 $\log_{10} 2 \approx 0{,}301$ Dezimalstellen. Für eine ganze Stelle brauchen wir
 $1/\log_{10} 2 = 3{,}32$ Schritte. Nach Satz 13.1.8 sind das für
 $[1, 2]$ und $\epsilon = 10^{-6}$ zusammen $20$ Durchläufe.
+:::
+
+:::zahlfrage{loesung=1.39 toleranz=0.06}
+Ab welchem $\left|x^{(0)}\right|$ läuft Newton auf $f(x) = \arctan x$
+auseinander?
+
+Die Schwelle liegt bei $1{,}3917$; sie löst $\arctan(\xi)(1+\xi^2) = 2\xi$.
+Darunter zieht sich das Pendeln zusammen, darüber wächst es. Dass es überhaupt
+eine solche Schwelle gibt, obwohl die Funktion nur eine einzige Nullstelle hat,
+ist die Pointe von Bemerkung 13.1.13: Quadratische Konvergenz ist eine *lokale*
+Aussage, und wie groß die Umgebung ist, sagt sie nicht.
 :::
 
 :::frage{falsch}

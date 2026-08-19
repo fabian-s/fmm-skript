@@ -1,8 +1,13 @@
 import { useMemo, useState } from "react";
-import { M } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
 
 /**
- * Ridge gegen Lasso als beschränkte Optimierung (§13.5): dieselben
+ * §13.5 — DIE EINE EINSICHT: Die Lasso-Raute hat ECKEN auf den Achsen, der
+ * Ridge-Kreis nicht. Deshalb sitzt die Lasso-Lösung für kleine Budgets exakt in
+ * einer Ecke und setzt einen Koeffizienten auf null, während die Ridge-Lösung
+ * glatt über den Kreisrand wandert und nie exakt null wird.
+ *
+ * Ridge gegen Lasso als beschränkte Optimierung: dieselben
  * elliptischen KQ-Höhenlinien, einmal über der Kreisscheibe ||b||_2 <= c,
  * einmal über der Raute |b1|+|b2| <= c. Die Lösung ist der Punkt des
  * zulässigen Bereichs mit kleinstem Verlust; beim Lasso landet sie für
@@ -13,15 +18,15 @@ import { M } from "../../../lib";
  * feine deterministische Randsuche (kein Math.random); die vier Ecken der
  * Raute liegen exakt im Suchraster, ein Eckentreffer ist deshalb exakt.
  *
- * Per node verifiziert (rev135-ridgelasso.mjs, rev135-ecke.mjs):
- *  - c = 1 gibt Ridge (0,889; 0,458) mit f = 1,584 und Lasso exakt (1; 0);
- *    die exakte Ridge-Loesung ist (0,889059; 0,457792), die Randsuche trifft
- *    sie auf 4e-4 genau.
- *  - Die Lasso-Ecke (c; 0) ist optimal fuer c <= 1,342857, auf dem
- *    Reglerraster also bis c = 1,30 (bei c = 1,35 liegt die exakte Loesung
- *    schon bei (1,3444; 0,0056), die Ecke also NICHT mehr).
- *  - Die Nebenbedingung ist inaktiv ab c >= 1,835756 (Ridge, ||m||_2) bzw.
- *    c >= 2,5 (Lasso, |m_1| + |m_2|); dort ist die Loesung der KQ-Punkt.
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s135.mjs, 2026-08-19;
+ * aeltere Pruefungen rev135-ridgelasso.mjs, rev135-ecke.mjs bestaetigt):
+ *  - c = 1 gibt Ridge (0,8891; 0,4578) mit f = 1,5837 und Lasso exakt (1; 0)
+ *    mit f = 2,1780.
+ *  - Die Lasso-Ecke (c; 0) ist optimal fuer c <= 1,342857 (bisektiert), auf
+ *    dem Reglerraster also bis c = 1,30; bei c = 1,35 liegt die Loesung schon
+ *    bei (1,3444; 0,0056), die Ecke also NICHT mehr.
+ *  - Die Nebenbedingung ist inaktiv ab c >= 1,835756 = ||m||_2 (Ridge) bzw.
+ *    c >= 2,500000 = ||m||_1 (Lasso); dort ist die Loesung der KQ-Punkt.
  *
  * Farbcode Kapitel 13: Höhenlinienschar grau wie in S133/S134, die
  * erreichte Höhenlinie und der KQ-Punkt violett, zulässiger Bereich rot,
@@ -35,9 +40,14 @@ const A = [
 const MITTE = [1.6, 0.9];
 
 const HILFS = "#94a3b8"; // Höhenlinienschar
-const VIOLETT = "#9E57D5"; // erreichte Höhenlinie und KQ-Punkt
-const GRUEN = "#009E73"; // beschränkte Lösung
-const ROT = "#D55E00"; // zulässiger Bereich
+const VIOLETT = FMM_COLORS.violett; // erreichte Höhenlinie und KQ-Punkt
+const GRUEN = FMM_COLORS.gruen; // beschränkte Lösung
+const ROT = FMM_COLORS.rot; // zulässiger Bereich
+
+/** Verifizierte Schwellen, siehe Kopfkommentar. */
+const ECKE_BIS = 1.342857;
+const RIDGE_INAKTIV_AB = 1.835756;
+const LASSO_INAKTIV_AB = 2.5;
 
 const fq = (p: [number, number]) => {
   const d = [p[0] - MITTE[0], p[1] - MITTE[1]];
@@ -47,8 +57,7 @@ const fq = (p: [number, number]) => {
   );
 };
 
-const fmt = (v: number, d = 2) =>
-  v.toFixed(d).replace(".", ",").replace(/^-/, "−");
+const fmt = (v: number, d = 2) => fmtDe(v, d);
 
 /** Randpunkte des zulässigen Bereichs, Kreis oder Raute vom Radius c. */
 function randpunkte(art: "kreis" | "raute", c: number): [number, number][] {
@@ -164,9 +173,12 @@ function Panel({
     <div>
       <p className="mb-1 text-center text-sm font-medium">{titel}</p>
       <svg
+        viewBox={`0 0 ${W} ${W}`}
         width={W}
         height={W}
-        className="rounded border border-slate-300 bg-white dark:border-slate-600"
+        role="img"
+        aria-label={`${titel}: KQ-Höhenlinien über dem zulässigen Bereich, die Lösung liegt bei (${fmt(sol.p[0])}; ${fmt(sol.p[1])}).`}
+        className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
       >
         <line x1={sx(-1.6)} y1={syy(0)} x2={sx(2)} y2={syy(0)} stroke="#cbd5e1" />
         <line x1={sx(0)} y1={syy(-1.6)} x2={sx(0)} y2={syy(2)} stroke="#cbd5e1" />
@@ -199,44 +211,48 @@ function Panel({
 /** Ridge-Kreis gegen Lasso-Raute mit gemeinsamem Radius-Slider. */
 export function RidgeLassoGeometrie() {
   const [c, setC] = useState(1.0);
+
+  const ridge = useMemo(() => loesung("kreis", c), [c]);
+  const lasso = useMemo(() => loesung("raute", c), [c]);
+  const inEcke = c <= 1.3 + 1e-9;
+
+  let art: "neutral" | "ok" | "warn";
+  let titel: string;
+  let text: string;
+  if (inEcke) {
+    art = "ok";
+    titel = "Lasso sitzt in der Ecke";
+    text = `Bei r = ${fmt(c)} liegt die Lasso-Lösung exakt auf (${fmt(c)}; 0): β₂ ist nicht klein, sondern null. Die Ridge-Lösung (${fmt(ridge.p[0])}; ${fmt(ridge.p[1])}) hat dagegen zwei von null verschiedene Koeffizienten. Der Unterschied steckt allein in der Form des zulässigen Bereichs: Die Raute hat Ecken auf den Achsen, der Kreis nicht. Die Ecke bleibt optimal bis r = ${fmt(ECKE_BIS, 4)}.`;
+  } else if (lasso.aktiv) {
+    art = "neutral";
+    titel = "beide Lösungen liegen auf dem Rand";
+    text = `Über der Eckenschwelle ${fmt(ECKE_BIS, 4)} rutscht die Lasso-Lösung von der Ecke auf eine Kante der Raute: (${fmt(lasso.p[0])}; ${fmt(lasso.p[1])}) statt (r; 0). Beide Nebenbedingungen binden noch, beide Multiplikatoren sind nach Satz 13.5.7 positiv, und die Höhenlinie berührt in beiden Tafeln den Rand. Der Sparsamkeitseffekt des Lasso ist damit weg.`;
+  } else {
+    art = "warn";
+    titel = "die Nebenbedingung ist inaktiv";
+    text = `Der Radius lässt den KQ-Schätzer selbst zu. Damit ist das Budget kein Zwang mehr: Die Lösung ist der KQ-Punkt, die Komplementarität aus Satz 13.5.7 erzwingt μ = 0, und die Schätzung wird nicht mehr geschrumpft. Die Schwellen liegen bei ‖β̂‖₂ = ${fmt(RIDGE_INAKTIV_AB, 4)} für Ridge und ‖β̂‖₁ = ${fmt(LASSO_INAKTIV_AB, 4)} für Lasso.`;
+  }
+
   return (
-    <div className="my-2">
-      <p className="mb-2 text-sm">
-        Beide Tafeln zeigen dieselben KQ-Höhenlinien (grau, Minimum im violetten
-        Punkt „KQ") über ihrem zulässigen Bereich (rot). Violett hervorgehoben
-        ist die niedrigste erreichbare Höhenlinie, der grüne Punkt darauf ist
-        die beschränkte Lösung. Der Regler steuert den Radius <M>{"r"}</M> beider
-        Mengen; beim quadrierten Ridge-Budget aus dem Text gilt also
-        <M>{"c=r^2"}</M>. Schieben wir <M>{"r"}</M> nach unten,
-        wandert die Ridge-Lösung glatt über den Kreisrand, während die
-        Lasso-Lösung für <M>{"r \\le 1{,}30"}</M> in der Ecke{" "}
-        <M>{"(r;\\ 0)"}</M> sitzt und dort <M>{"\\beta_2 = 0"}</M> exakt
-        abschaltet; die genaue Schwelle liegt bei <M>{"1{,}3429"}</M>. Nach oben
-        verschwindet der Zwang ganz: Sobald der Radius den KQ-Schätzer selbst
-        zulässt, also ab{" "}
-        <M>{"\\left\\|\\wh{\\bbeta}\\right\\|_2 \\approx 1{,}84"}</M> (Ridge)
-        beziehungsweise <M>{"\\left\\|\\wh{\\bbeta}\\right\\|_1 = 2{,}50"}</M>{" "}
-        (Lasso), ist die Nebenbedingung inaktiv und ihr Multiplikator null.
-      </p>
-      <div className="mb-2 flex items-center gap-3 text-sm">
-        <span>
-          Radius <M>{"r"}</M>:
-        </span>
-        <input
-          type="range"
-          min={0.4}
-          max={2.6}
-          step={0.05}
-          value={c}
-          onChange={(e) => setC(Number(e.target.value))}
-          className="w-48"
-        />
-        <span className="font-mono text-xs">{fmt(c)}</span>
-      </div>
+    <div className="my-2 space-y-3">
+      <Aufgabe>
+        Schieben wir das Budget nach unten und achten auf β₂ in der rechten Tafel: Wann wird es
+        exakt null?
+      </Aufgabe>
       <div className="flex flex-wrap gap-5">
         <Panel art="kreis" c={c} titel="Ridge: ‖β‖₂ ≤ r" />
         <Panel art="raute" c={c} titel="Lasso: |β₁| + |β₂| ≤ r" />
       </div>
+      <Slider label="Radius r" value={c} onChange={setC} min={0.4} max={2.6} step={0.05} accent={ROT} />
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
+        Beide Tafeln zeigen dieselben KQ-Höhenlinien (grau, Minimum im violetten Punkt „KQ") über
+        ihrem zulässigen Bereich (rot). Violett hervorgehoben ist die niedrigste erreichbare
+        Höhenlinie, der grüne Punkt darauf ist die beschränkte Lösung. Der Regler steuert den
+        Radius r beider Mengen; beim quadrierten Ridge-Budget des Textes ist also c = r².
+      </p>
+      <Verdikt kind={art} titel={titel}>
+        {text}
+      </Verdikt>
     </div>
   );
 }

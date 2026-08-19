@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 
 /**
- * §13.3: Backtracking-Liniensuche nach Armijo als Ersatz für die Folien-Grafik
+ * §13.3 — DIE EINE EINSICHT: Die Armijo-Gerade trennt zulässige von
+ * unzulässigen Schrittweiten, und die Halbierungsfolge γ = 1, ρ, ρ², … stößt
+ * schon nach ein bis zwei Versuchen auf eine zulässige. Wie streng die
+ * Forderung ist, steuert allein der Abstiegsanteil c.
+ *
+ * Ersatz für die Folien-Grafik
  * resources/optim-armijo-viz.pdf (13-optim.Rmd Z. 633–657).
  *
  * Widget-CODE (die eindimensionale Schnitt-Tafel φ(γ) = f(x + γd) mit
@@ -18,23 +23,25 @@ import { Slider } from "../../../lib";
  * Kapitel freie Violett, die Armijo-Gerade als reine Abnahmeschranke bleibt
  * neutral grau.
  *
- * Nachgerechnet (node, check-math-s133.mjs / -s133b.mjs) für
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs, 2026-08-19;
+ * ältere Prüfungen check-math-s133.mjs / -s133b.mjs bestätigt) für
  * f(x) = ½x₁² + 2,5x₂² in x = (5; 1): ∇f = (5; 5), d = (−5; −5),
  * ∇f(x)d = −50, φ(0) = 15, φ(1) = 40, φ(0,5) = 8,75, exakter Minimierer
  * γ* = 1/3 mit φ = 6,667. Mit c = 10⁻⁴ und ρ = 0,5 wird γ = 1 verworfen und
  * γ = 0,5 nach einer Halbierung akzeptiert; mit c = 0,3 sind zwei Halbierungen
  * nötig (γ = 0,25, φ = 7,1875).
  *
- * Review 13.3: alle 74 970 Reglerzustände durchgespielt (x₁, x₂, c, ρ auf dem
- * jeweiligen Raster). Höchstzahl der Verkleinerungen 16, der „erfolglos“-Zweig
- * ist also unerreichbar und bleibt reine Absicherung; γ* liegt in jedem
- * Zustand unter GMAX = 1,2, die senkrechte Hilfslinie fehlt nie.
+ * Review 13.3, erneut geprüft 2026-08-19: alle Reglerzustände (x₁, x₂, c, ρ auf
+ * dem jeweiligen Raster) durchgespielt. Höchstzahl der Verkleinerungen 16 (bei
+ * x = (−1,75; −2), c = 0,5, ρ = 0,9); der „erfolglos"-Zweig ist damit
+ * unerreichbar und bleibt reine Absicherung. γ* liegt in jedem Zustand unter
+ * GMAX = 1,2, die senkrechte Hilfslinie fehlt nie.
  */
 
-const BLAU = "#0072B2"; // akzeptierter Schritt
-const ROT = "#D55E00"; // verworfene Probeschritte
-const ORANGE = "#E69F00"; // Tangente, also die Gradienteninformation
-const VIOLETT = "#9E57D5"; // Graph von φ
+const BLAU = FMM_COLORS.blau; // akzeptierter Schritt
+const ROT = FMM_COLORS.rot; // verworfene Probeschritte
+const ORANGE = FMM_COLORS.orange; // Tangente, also die Gradienteninformation
+const VIOLETT = FMM_COLORS.violett; // Graph von φ
 const ACHSE = "#64748b";
 const HILFS = "#94a3b8";
 
@@ -44,14 +51,17 @@ const KRUEMMUNG = 5; // f(x) = ½x₁² + (κ/2)x₂²
 const f = ([a, b]: V2) => 0.5 * a * a + 0.5 * KRUEMMUNG * b * b;
 const grad = ([a, b]: V2): V2 => [a, KRUEMMUNG * b];
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
+
+/**
+ * Zwei Voreinstellungen: der Praxiswert für c (dann fällt die Armijo-Gerade
+ * fast mit der Waagerechten zusammen) und der Lehrbuchwert, mit dem die
+ * Forderung sichtbar steiler wird und eine Halbierung mehr kostet.
+ */
+const VOREINSTELLUNGEN: { name: string; x1: number; x2: number; c: number; rho: number }[] = [
+  { name: "c = 0,05: Praxis", x1: 5, x2: 1, c: 0.05, rho: 0.5 },
+  { name: "c = 0,3: Lehrbuch", x1: 5, x2: 1, c: 0.3, rho: 0.5 },
+];
 
 const W = 430;
 const H = 250;
@@ -110,38 +120,70 @@ export function ArmijoWidget() {
       .map((t) => `${ax(t).toFixed(1)},${ay(fn(t)).toFixed(1)}`)
       .join(" ");
 
+  let art: "neutral" | "ok" | "warn" | "fail";
+  let titel: string;
   let status: string;
-  let statusFarbe = ACHSE;
   if (gg < 1e-12) {
+    art = "neutral";
+    titel = "kein Gradient, keine Suchrichtung";
     status =
       "Der Gradient verschwindet, es gibt keine Suchrichtung. Die Liniensuche hat hier nichts zu tun; die Abbruchkriterien haben längst gegriffen.";
-    statusFarbe = ACHSE;
   } else if (!erfolgreich) {
+    art = "fail";
+    titel = "abgebrochen";
     status = `Auch nach ${MAX_VERSUCHE} Verkleinerungen ist die Bedingung nicht erfüllt; hier bricht das Widget ab. Am Verfahren liegt das nicht, denn für hinreichend kleine γ ist die Bedingung stets erfüllbar.`;
-    statusFarbe = ROT;
   } else if (n === 0) {
+    art = "ok";
+    titel = "der volle Schritt genügt";
     status = `Der volle Schritt γ = 1 wird sofort angenommen: φ(1) = ${fmt(
       phi(1)
-    )} liegt bereits unter der Schranke ${fmt(armijo(1))}.`;
-    statusFarbe = BLAU;
+    )} liegt bereits unter der Schranke ${fmt(armijo(1))}. Bedingung (13.3.7) aus Algorithmus 13.3.18 ist also schon beim ersten Versuch erfüllt.`;
   } else {
+    art = "ok";
+    titel = n === 1 ? "eine Halbierung genügt" : `${n} Halbierungen`;
     status = `${
       n === 1 ? "Eine Verkleinerung genügt" : `${n} Verkleinerungen genügen`
     }: γ = ${fmt(akzeptiert, 4)} drückt den Funktionswert von ${fmt(phi0)} auf ${fmt(
       phi(akzeptiert)
-    )}, gefordert war höchstens ${fmt(armijo(akzeptiert))}.`;
-    statusFarbe = BLAU;
+    )}, gefordert war nach (13.3.7) höchstens ${fmt(armijo(akzeptiert))}. Der exakte Minimierer läge bei γ* = ${fmt(gStern, 4)}; ihn zu suchen wäre teurer als der gewonnene Fortschritt wert ist.`;
   }
 
   return (
-    <div className="my-3 rounded bg-white p-3 dark:bg-slate-800/60">
+    <div className="my-3 space-y-3 rounded bg-white p-3 dark:bg-slate-800/60">
+      <Aufgabe>
+        Drehen wir c hoch, bis die graue Gerade so steil steht, dass die erste Halbierung nicht
+        mehr genügt.
+      </Aufgabe>
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        {VOREINSTELLUNGEN.map((v) => {
+          const aktiv = x1 === v.x1 && x2 === v.x2 && Math.abs(c - v.c) < 1e-9 && Math.abs(rho - v.rho) < 1e-9;
+          return (
+            <button
+              key={v.name}
+              type="button"
+              aria-pressed={aktiv}
+              className={aktiv ? W_BUTTON_AKTIV : W_BUTTON}
+              onClick={() => {
+                setX1(v.x1);
+                setX2(v.x2);
+                setC(v.c);
+                setRho(v.rho);
+              }}
+            >
+              {v.name}
+            </button>
+          );
+        })}
+      </div>
       <div className="flex flex-wrap items-start gap-4">
         <div className="inline-block">
           <svg
             viewBox={`0 0 ${W} ${H}`}
             width={W}
             height={H}
-            className="max-w-full overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
+            role="img"
+            aria-label={`Der Schnitt φ(γ) = f(x + γd) mit der Armijo-Geraden und den ${versuche.length} verworfenen Probeschritten.`}
+            className="max-w-full h-auto overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <line x1={PL} y1={ay(0)} x2={W - PR} y2={ay(0)} stroke={HILFS} />
             <line x1={PL} y1={PT} x2={PL} y2={H - PB} stroke={HILFS} />
@@ -228,7 +270,7 @@ export function ArmijoWidget() {
         <div className="min-w-60 grow">
           <Slider label="x₁" value={x1} onChange={setX1} min={-6} max={6} step={0.25} />
           <Slider label="x₂" value={x2} onChange={setX2} min={-2} max={2} step={0.25} />
-          <Slider label="Abstiegsanteil c" value={c} onChange={setC} min={0.05} max={0.5} step={0.05} />
+          <Slider label="Abstiegsanteil c" value={c} onChange={setC} min={0.05} max={0.5} step={0.05} accent={ACHSE} />
           <Slider label="Verkleinerungsfaktor ρ" value={rho} onChange={setRho} min={0.1} max={0.9} step={0.1} />
           <div className="mt-2 space-y-1 font-mono text-xs">
             <p>f(x) = ½x₁² + 2,5x₂², ∇f(x) = (x₁; 5x₂), also μ = 1, L = 5, κ_f = 5</p>
@@ -249,18 +291,15 @@ export function ArmijoWidget() {
               exakter Minimierer γ* = {fmt(gStern, 4)} mit φ(γ*) = {fmt(phi(gStern))}
             </p>
           </div>
-          <p className="mt-2 text-sm font-semibold" style={{ color: statusFarbe }}>
-            {status}
-          </p>
           <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Der Regler für c steht bewusst weit über dem Praxiswert 10⁻⁴; nur so ist die
-            graue Armijo-Gerade von der waagerechten Höhe φ(0) zu unterscheiden. In der
-            Praxis liegt sie fast auf dieser Höhe, und die Bedingung heißt dann kaum mehr als
-            „der Funktionswert muss wirklich sinken“. Je größer c, desto steiler die
-            Forderung und desto mehr Verkleinerungen sind nötig.
+            Der Regler für c beginnt bei 0,05 und damit weit über dem Praxiswert 10⁻⁴; nur so ist
+            die graue Armijo-Gerade von der waagerechten Höhe φ(0) zu unterscheiden.
           </p>
         </div>
       </div>
+      <Verdikt kind={art} titel={titel}>
+        {status}
+      </Verdikt>
     </div>
   );
 }
