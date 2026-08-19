@@ -18,3 +18,4 @@ export { ConceptFlow } from "./widgets/ConceptFlow";
 export type { FlowNode, FlowEdge, FlowGroup } from "./widgets/ConceptFlow";
 export { Proof, PStep, ProofLabelsProvider } from "./Proof";
 export type { ProofLabels } from "./Proof";
+export { FMM_COLORS, fmtDe, fmtInt, clamp, mulberry32, randn, useSeed, fmtTick } from "./widgets/util";
