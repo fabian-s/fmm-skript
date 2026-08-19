@@ -149,7 +149,9 @@ export function TransformCanvas({
   const zeigeReadout = readout ?? interaktiv;
 
   // ---- Geometrie ---------------------------------------------------------
-  const inner = Math.max(60, size - PAD_L - PAD_R);
+  // `size` ist wie bisher die Zeichenfläche; Achsenrand kommt dazu (Gesamtbreite size + 36,
+  // genau der Platz, den früher LabeledFrame um den Canvas legte).
+  const inner = Math.max(60, size);
   const W = PAD_L + inner + PAD_R;
   const H = PAD_T + inner + PAD_B;
   const s = inner / (2 * worldHalf);
@@ -229,7 +231,8 @@ export function TransformCanvas({
       pts.push(`${px.toFixed(2)},${py.toFixed(2)}`);
     }
     return pts.join(" ");
-  }, [m, toPx]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [m[0][0], m[0][1], m[1][0], m[1][1], toPx]);
 
   const spalten: [number, number][] = [
     [m[0][0], m[1][0]],
@@ -321,12 +324,12 @@ export function TransformCanvas({
       className="h-auto max-w-full select-none"
       role="img"
       aria-label={beschriftung}
-      style={interaktiv ? zieh.svgProps.style : undefined}
+      style={interaktiv && zieh.dragging !== null ? { touchAction: "none" } : undefined}
       onPointerMove={(e) => {
         if (interaktiv) zieh.svgProps.onPointerMove(e);
         if (zeigeReadout && !zieh.dragging) {
           const p = zeigerWelt(e.clientX, e.clientY);
-          if (p) setHover(p);
+          if (p) setHover([clamp(p[0], -worldHalf, worldHalf), clamp(p[1], -worldHalf, worldHalf)]);
         }
       }}
       onPointerUp={zieh.svgProps.onPointerUp}
@@ -495,7 +498,7 @@ export function TransformCanvas({
             fillOpacity={0.75}
             style={{ fontSize: 9, fontFamily: "ui-monospace, monospace" }}
           >
-            {fmtTick(t)}
+            {fmtTick(t, ticks.length > 1 ? ticks[1] - ticks[0] : undefined)}
           </text>
           <text
             x={PAD_L - 4}
@@ -505,7 +508,7 @@ export function TransformCanvas({
             fillOpacity={0.75}
             style={{ fontSize: 9, fontFamily: "ui-monospace, monospace" }}
           >
-            {fmtTick(t)}
+            {fmtTick(t, ticks.length > 1 ? ticks[1] - ticks[0] : undefined)}
           </text>
         </g>
       ))}
@@ -561,7 +564,7 @@ export function TransformCanvas({
 
       {/* Readout */}
       {zeigeReadout && hover && hoverBild && (
-        <g>
+        <g style={{ pointerEvents: "none" }}>
           <rect
             x={PAD_L + 2}
             y={PAD_T + 2}

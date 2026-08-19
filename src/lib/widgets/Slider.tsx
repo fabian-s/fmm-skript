@@ -56,7 +56,7 @@ export function Slider({
         <input
           id={inputId}
           type="range"
-          className="min-w-0 grow"
+          className="min-w-0 grow accent-sky-600"
           min={min}
           max={max}
           step={step}

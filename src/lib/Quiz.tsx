@@ -21,6 +21,7 @@
  */
 import { Children, createContext, useContext, useId, useState, type ReactNode } from "react";
 import { fmtDe } from "./widgets/util";
+import { W_INPUT, W_MUTED } from "./widgets/surface";
 
 export interface QuizLabels {
   /** Beschriftung des „wahr"-Knopfs */
@@ -196,7 +197,7 @@ export function Zahlfrage({
   const deviation = answer === null ? null : Math.abs(answer - loesung);
   const correct = deviation !== null && deviation <= toleranz;
   const unit = einheit ? ` ${einheit}` : "";
-  const precision = Math.max(2, String(toleranz).split(".")[1]?.length ?? 0);
+  const precision = Math.max(2, Math.min(10, toleranz > 0 ? Math.ceil(-Math.log10(toleranz)) : 2));
 
   return (
     <div role="group" aria-labelledby={labelId} className="rounded border border-slate-200 p-3 dark:border-slate-700">
@@ -217,9 +218,9 @@ export function Zahlfrage({
             }
           }}
           aria-label={einheit ? `Antwort in ${einheit}` : "Numerische Antwort"}
-          className="w-28 rounded border border-slate-300 bg-white px-2 py-1 font-mono text-sm tabular-nums dark:border-slate-600 dark:bg-slate-800"
+          className={`w-28 font-mono tabular-nums ${W_INPUT}`}
         />
-        {einheit ? <span className="text-sm text-slate-600 dark:text-slate-300">{einheit}</span> : null}
+        {einheit ? <span className={`text-sm ${W_MUTED}`}>{einheit}</span> : null}
         <button
           type="button"
           className="rounded bg-slate-700 px-2 py-1 text-xs font-medium text-white hover:bg-slate-600"

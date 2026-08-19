@@ -182,12 +182,15 @@ export function Plot({
   return (
     <svg
       viewBox={`0 0 ${safeWidth} ${safeHeight}`}
-      className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
+      width={safeWidth}
+      height={safeHeight}
+      className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600 [.w-dark_&]:border-slate-600"
       role="img"
       aria-label={ariaLabel}
       onPointerMove={setPointerReadout}
       onPointerDown={setPointerReadout}
       onPointerLeave={() => readout && setHoverX(null)}
+      onPointerCancel={() => readout && setHoverX(null)}
     >
       <rect width={safeWidth} height={safeHeight} fill="var(--w-bg)" />
       {validDomain && <>
@@ -253,12 +256,13 @@ export function Plot({
           })()}
         </g>
         <g fill="var(--w-text)" fontSize="10" fontFamily="ui-monospace, SFMono-Regular, monospace" aria-hidden="true">
-          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={safeHeight - (xLabel ? 15 : 5)} textAnchor="middle">{fmtTick(t)}</text>; })}
-          {yTicks.map((t) => { const [, y] = toPx(x0, t); return <text key={`yt-${t}`} x={left - 4} y={y + 3} textAnchor="end">{fmtTick(t)}</text>; })}
+          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={safeHeight - (xLabel ? 15 : 5)} textAnchor="middle">{fmtTick(t, xTicks.length > 1 ? xTicks[1] - xTicks[0] : undefined)}</text>; })}
+          {yTicks.map((t) => { const [, y] = toPx(x0, t); return <text key={`yt-${t}`} x={left - 4} y={y + 3} textAnchor="end">{fmtTick(t, yTicks.length > 1 ? yTicks[1] - yTicks[0] : undefined)}</text>; })}
           {xLabel && <text x={(left + plotRight) / 2} y={safeHeight - 3} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif">{xLabel}</text>}
           {yLabel && <text x="10" y={(top + plotBottom) / 2} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif" transform={`rotate(-90 10 ${(top + plotBottom) / 2})`}>{yLabel}</text>}
         </g>
         {legendItems.length > 0 && <g aria-hidden="true" fontSize="10" fontFamily="ui-sans-serif, sans-serif">
+          {!legendBelow && <rect x={plotRight - estimatedLegendWidth - 8} y={top + 1} width={estimatedLegendWidth + 7} height={legendItems.length * 13 + 3} fill="var(--w-bg)" fillOpacity={0.88} rx={2} />}
           {legendItems.map((item, i) => {
             const y = legendBelow ? plotBottom + 10 + i * 13 : top + 10 + i * 13;
             const x = legendBelow ? left + 4 : plotRight - estimatedLegendWidth - 4;

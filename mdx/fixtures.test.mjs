@@ -53,6 +53,10 @@ const ACCEPT = {
     `::::quiz\n\n:::zahlfrage{loesung=0.433 toleranz=0.01 einheit="Sekunden"}\nWie groß ist der Wert?\n\nDas Widget zeigt 0,433 Sekunden.\n:::\n\n::::`,
     `<Zahlfrage loesung={0.433} toleranz={0.01} einheit="Sekunden">`,
   ],
+  "numeric quiz (German comma, unicode minus)": [
+    `::::quiz\n\n:::zahlfrage{loesung="−0,433" toleranz="0,01"}\nWie groß?\n\nErklärung.\n:::\n\n::::`,
+    `<Zahlfrage loesung={-0.433} toleranz={0.01}>`,
+  ],
   "numeric quiz (English alias)": [
     `::::quiz\n\n:::numquestion{answer=1.5 tol=0.1}\nWhat is the value?\n\nExplanation.\n:::\n\n::::`,
     `<Zahlfrage loesung={1.5} toleranz={0.1}>`,
@@ -134,6 +138,10 @@ const REJECT = {
   "numeric question without solution": [
     `::::quiz\n\n:::zahlfrage{toleranz=0.1}\nA.\n\nB.\n:::\n\n::::`,
     `loesung`,
+  ],
+  "numeric question without tolerance": [
+    `::::quiz\n\n:::zahlfrage{loesung=1}\nA.\n\nB.\n:::\n\n::::`,
+    `toleranz`,
   ],
   "numeric question negative tolerance": [
     `::::quiz\n\n:::zahlfrage{loesung=1 toleranz=-0.1}\nA.\n\nB.\n:::\n\n::::`,

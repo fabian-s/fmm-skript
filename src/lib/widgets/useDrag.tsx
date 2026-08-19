@@ -190,6 +190,7 @@ export function useDrag<Id extends string = string>(opt: UseDragOptionen<Id>): D
   } = opt;
 
   const aktivRef = useRef<Id | null>(null);
+  const zeigerRef = useRef<number | null>(null); // pointerId des aktiven Drags (zweiter Finger wird ignoriert)
   const versatzRef = useRef<Punkt>([0, 0]);
   const [dragging, setDragging] = useState<Id | null>(null);
 
@@ -210,10 +211,12 @@ export function useDrag<Id extends string = string>(opt: UseDragOptionen<Id>): D
     return clamp ? clamp(q, id) : q;
   };
 
-  const beenden = () => {
+  const beenden = (e?: ReactPointerEvent<SVGElement>) => {
     const id = aktivRef.current;
     if (id === null) return;
+    if (e && zeigerRef.current !== null && e.pointerId !== zeigerRef.current) return;
     aktivRef.current = null;
+    zeigerRef.current = null;
     versatzRef.current = [0, 0];
     setDragging(null);
     onEnd?.(id);
@@ -221,7 +224,9 @@ export function useDrag<Id extends string = string>(opt: UseDragOptionen<Id>): D
 
   const starten = (id: Id, e: ReactPointerEvent<SVGElement>, sofortSetzen: boolean) => {
     if (disabled) return;
+    if (aktivRef.current !== null && zeigerRef.current !== null && e.pointerId !== zeigerRef.current) return;
     const p = abbilden(e);
+    zeigerRef.current = e.pointerId;
     try {
       (e.currentTarget as unknown as Element).setPointerCapture(e.pointerId);
     } catch {
@@ -254,6 +259,7 @@ export function useDrag<Id extends string = string>(opt: UseDragOptionen<Id>): D
       onPointerMove: (e) => {
         const id = aktivRef.current;
         if (id === null) return;
+        if (zeigerRef.current !== null && e.pointerId !== zeigerRef.current) return;
         const p = abbilden(e);
         if (p) onDrag(aufbereiten(p, id), id);
       },
@@ -261,7 +267,9 @@ export function useDrag<Id extends string = string>(opt: UseDragOptionen<Id>): D
       onPointerLeave: beenden,
       onPointerCancel: beenden,
       onLostPointerCapture: beenden,
-      style: { touchAction: "none" },
+      // KEIN touch-action:none auf dem ganzen SVG: das wäre eine Scroll-Falle auf dem
+      // Handy. Griffe (handleProps) und Flächen-Griffe (surfaceProps) setzen es selbst.
+      style: {},
     },
   };
 }

@@ -40,13 +40,19 @@ function useAnimatedArray(ziel: number[], ms: number, easing: Easing): number[] 
   const [wert, setWert] = useState<number[]>(ziel);
   const wertRef = useRef<number[]>(ziel);
   const zielRef = useRef<number[]>(ziel);
-  zielRef.current = ziel;
+  const easingRef = useRef<Easing>(easing);
+  const msRef = useRef<number>(ms);
+  easingRef.current = easing;
+  msRef.current = ms;
   const rafRef = useRef<number | null>(null);
   const schluessel = ziel.join("|");
 
   useEffect(() => {
+    zielRef.current = ziel;
     const z = zielRef.current;
     const von = wertRef.current;
+    const ms = msRef.current;
+    const easing = easingRef.current;
     const sofort = ms <= 0 || von.length !== z.length || reduzierteBewegung();
     if (sofort) {
       wertRef.current = z;
@@ -71,7 +77,7 @@ function useAnimatedArray(ziel: number[], ms: number, easing: Easing): number[] 
     };
     // schluessel steht für den Inhalt von ziel (Array-Identität wechselt pro Render)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schluessel, ms, easing]);
+  }, [schluessel]);
 
   return wert;
 }

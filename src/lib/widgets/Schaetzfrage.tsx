@@ -125,7 +125,7 @@ export function Schaetzfrage({
   /** Startwert des Reglers; Default ist die Mitte von [min, max] */
   start?: number;
   /** eigenes Verdikt statt des Standardabgleichs (gern ein <Verdikt> zurückgeben) */
-  auswertung?: (guess: Schaetzwert | null, loesung: Schaetzwert) => ReactNode;
+  auswertung?: (guess: Schaetzwert, loesung: Schaetzwert) => ReactNode;
   /** erscheint erst nach dem Auflösen (Marke, Zusatztafel, Zahlenreihe) */
   verdeckt?: ReactNode;
   labels?: Partial<SchaetzfrageLabels>;
@@ -138,7 +138,7 @@ export function Schaetzfrage({
   const startwert = start ?? (min + max) / 2;
   const [phase, setPhase] = useState<SchaetzPhase>("tippen");
   const [guess, setGuess] = useState<Schaetzwert | null>(
-    variante === "bereich" ? startwert : null,
+    null, // auch bei "bereich": erst eine echte Bewegung zählt als Schätzung
   );
   // Zahlenfeld hält einen STRING (craft.md): sonst werden "" und "−" zu 0 und
   // negative oder halbfertige Eingaben lassen sich gar nicht tippen.
@@ -148,7 +148,7 @@ export function Schaetzfrage({
   const zustand: SchaetzZustand = { phase, aufgeloest, guess, setGuess };
 
   const zahlAus = (s: string): number | null => {
-    const v = Number(s.trim().replace(",", ".").replace("−", "-"));
+    const v = Number(s.trim().replace(/,/g, ".").replace(/−/g, "-"));
     return s.trim() !== "" && Number.isFinite(v) ? v : null;
   };
 
@@ -158,7 +158,7 @@ export function Schaetzfrage({
   };
   const zuruecksetzen = () => {
     setPhase("tippen");
-    setGuess(variante === "bereich" ? startwert : null);
+    setGuess(null);
     setText("");
   };
 
@@ -262,7 +262,7 @@ export function Schaetzfrage({
   let ergebnis: ReactNode = null;
   if (aufgeloest) {
     if (auswertung) {
-      ergebnis = auswertung(guess, loesung);
+      ergebnis = guess === null ? null : auswertung(guess, loesung);
     } else if (getroffen === null) {
       ergebnis = (
         <Verdikt kind="neutral">

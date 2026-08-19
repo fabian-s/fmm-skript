@@ -25,7 +25,12 @@ type MatrixInputProps = {
   scrub?: boolean;
 };
 
-const displayNumber = (value: number) => String(value).replace(".", ",").replace(/^-/, "−");
+/** Anzeige: kurze Dezimaldarstellung (Gleitkommarauschen 1,2000000000000002 wird weggerundet). */
+const displayNumber = (value: number) => {
+  if (!Number.isFinite(value)) return "";
+  const r = Number(value.toFixed(10));
+  return String(Object.is(r, -0) ? 0 : r).replace(".", ",").replace(/^-/, "−");
+};
 const draftsFor = (value: number[][]) => value.map((row) => row.map(displayNumber));
 
 function parseDraft(draft: string): number | null {
@@ -140,10 +145,18 @@ export function MatrixInput({
               onPointerMove={(event) => {
                 const drag = dragging.current;
                 if (!drag || drag.i !== i || drag.j !== j) return;
-                const next = commit(i, j, drag.value + Math.round((event.clientX - drag.x) / 4) * step);
+                const roh = drag.value + Math.round((event.clientX - drag.x) / 4) * step;
+                const dez = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
+                const next = commit(i, j, Number(roh.toFixed(Math.min(10, dez))));
                 setDrafts((current) => current.map((r, ri) => r.map((v, rj) => (ri === i && rj === j ? displayNumber(next) : v))));
               }}
               onPointerUp={() => {
+                dragging.current = null;
+              }}
+              onPointerCancel={() => {
+                dragging.current = null;
+              }}
+              onLostPointerCapture={() => {
                 dragging.current = null;
               }}
               step={step}

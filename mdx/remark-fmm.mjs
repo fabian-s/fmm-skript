@@ -409,8 +409,13 @@ export default function remarkFmm(options = {}) {
           );
       }
       if (name === "zahlfrage") {
-        const loesung = Number(String(a.loesung ?? "").replace(/,/g, "."));
-        const toleranz = Number(String(a.toleranz ?? "").replace(/,/g, "."));
+        const numAttr = (v) => {
+          const t = String(v ?? "").trim().replace(/,/g, ".").replace(/−/g, "-");
+          // nur echte Dezimalzahlen (kein 0x1A, kein 1.000 als Tausender)
+          return /^[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?$/.test(t) ? Number(t) : NaN;
+        };
+        const loesung = numAttr(a.loesung);
+        const toleranz = numAttr(a.toleranz);
         if (!Number.isFinite(loesung))
           fail(node, `:::zahlfrage braucht eine endliche {loesung=…}`, "remark-fmm:zahlfrage-loesung");
         if (!Number.isFinite(toleranz) || toleranz < 0)
@@ -516,8 +521,8 @@ export default function remarkFmm(options = {}) {
         return;
       }
       if (name === "zahlfrage") {
-        const loesung = Number(String(a.loesung).replace(/,/g, "."));
-        const toleranz = Number(String(a.toleranz).replace(/,/g, "."));
+        const loesung = Number(String(a.loesung).trim().replace(/,/g, ".").replace(/−/g, "-"));
+        const toleranz = Number(String(a.toleranz).trim().replace(/,/g, ".").replace(/−/g, "-"));
         const attrs = [
           attrExpr("loesung", String(loesung)),
           attrExpr("toleranz", String(toleranz)),
