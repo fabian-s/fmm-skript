@@ -1,31 +1,47 @@
 import { useState, type ReactNode } from "react";
-import { MatrixInput } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  MatrixInput,
+  Stepper,
+  Verdikt,
+  W_BUTTON,
+  fmtDe,
+} from "../../../lib";
+import { EllipseImRaum } from "./S62Raum";
 
 /**
- * Singulärwert-Rechner für §6.2: die Rechnung des Abschnitts an einer
- * editierbaren 3×2-Matrix, Schritt für Schritt: AᵀA, charakteristisches
- * Polynom, Eigenwerte, Singulärwerte, rechte und linke Singulärvektoren.
- * Voreingestellt ist das Beispiel aus dem Text.
+ * DIE EINE EINSICHT: Der Weg AᵀA → charakteristisches Polynom → Eigenwerte →
+ * Singulärwerte → v → u ist an jeder 3×2-Matrix derselbe; die Vorzeichenwahl
+ * bei den v_i ändert U und V, nicht aber A = UΣVᵀ (Bemerkung 6.2.10).
  *
- * Der 2×2-Eigenlöser (Winkelformel für symmetrische Matrizen) ist aus der
- * privaten mml-ch4-App portiert (widgets/svdMath.ts: svd2x2); Aufbau, alle
- * Beschriftungen und die Farbgebung sind neu und folgen dem Kapitel-Farbcode:
- * orange = Singulärwerte, blau = rechte, grün = linke Singulärvektoren.
+ * FARBROLLEN (Kapitel 6): orange = Singulärwerte σ, blau = rechte
+ * Singulärvektoren v, grün = linke Singulärvektoren u, grau = Nebenrechnung
+ * und Proben. Rot bleibt Rest- und Fehlertermen vorbehalten.
+ *
+ * PROVENIENZ: Der 2×2-Eigenlöser (Winkelformel für symmetrische Matrizen)
+ * stammt aus der privaten mml-ch4-App (widgets/svdMath.ts: svd2x2); Aufbau,
+ * Schrittsteuerung (lib-`Stepper`) und sämtliche Texte sind neu.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * 2026-08-19) für die Voreinstellung A = (1 2; 2 1; 1 0):
+ *   AᵀA = (6 4; 4 5), Spur 11, det 14; λ₁ = 9,531, λ₂ = 1,469;
+ *   σ₁ = 3,087, σ₂ = 1,212, σ₁/σ₂ = 2,547;
+ *   v₁ = (−0,750; −0,662), v₂ = (0,662; −0,750);
+ *   Av₁ = (−2,073; −2,161; −0,750), u₁ = (−0,672; −0,700; −0,243),
+ *   u₂ = (−0,691; 0,474; 0,546); u₁ᵀu₂ = 0 und ‖u_i‖ = 1 auf 1e−12 genau;
+ *   max |UΣVᵀ − A| = 2,2e−16.
+ * Der Text von Beispiel 6.2.9 rechnet mit gerundeten v_i weiter und schreibt
+ * deshalb −2,074 statt −2,073; das Widget rechnet mit voller Genauigkeit.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const ORANGE = "#E69F00";
-const GREY = "#64748b";
+const BLUE = FMM_COLORS.blau;
+const GREEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
+const GREY = FMM_COLORS.grau;
 
-/** 3 Dezimalen, deutsches Komma, kein −0; NaN und ±∞ getrennt ausgewiesen. */
-function fmt(v: number): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Math.round(v * 1000) / 1000;
-  if (Object.is(r, -0)) r = 0;
-  return r.toFixed(3).replace("-", "−").replace(".", ",");
-}
+/** 3 Dezimalen, deutsches Komma (fmtDe aus der lib). */
+const fmt = (v: number) => fmtDe(v, 3);
 
 /** ganze Zahlen ohne Nachkommastellen, sonst wie fmt (für Zwischenterme) */
 function fmtKurz(v: number): string {
@@ -100,6 +116,18 @@ export function SingulaerwertRechner() {
 
   const rang = sig.filter((s) => s > 1e-9).length;
   const kappa = sig[1] > 1e-9 ? sig[0] / sig[1] : sig[0] > 1e-9 ? Infinity : NaN;
+
+  // Selbstkontrolle: A aus den Faktoren zurückrechnen, größte Abweichung merken
+  let rest = 0;
+  for (let i = 0; i < A.length; i++)
+    for (let j = 0; j < 2; j++) {
+      let val = 0;
+      for (let k = 0; k < 2; k++) {
+        const uk = u[k];
+        if (uk) val += sig[k] * uk[i] * v[k][j];
+      }
+      rest = Math.max(rest, Math.abs(val - (A[i][j] || 0)));
+    }
 
   const flip = (i: number) =>
     setSgn((s) => (i === 0 ? [-s[0], s[1]] : [s[0], -s[1]]) as [number, number]);
@@ -199,14 +227,14 @@ export function SingulaerwertRechner() {
           <div className="my-1 flex flex-wrap items-center gap-2 text-sm">
             <button
               type="button"
-              className="rounded border border-slate-400 px-2 py-0.5 text-xs"
+              className={W_BUTTON}
               onClick={() => flip(0)}
             >
               Vorzeichen von v₁ umdrehen
             </button>
             <button
               type="button"
-              className="rounded border border-slate-400 px-2 py-0.5 text-xs"
+              className={W_BUTTON}
               onClick={() => flip(1)}
             >
               Vorzeichen von v₂ umdrehen
@@ -258,38 +286,21 @@ export function SingulaerwertRechner() {
 
   return (
     <div>
-      <p className="text-sm">
-        Rechnen wir Singulärwerte und Singulärvektoren einer 3×2-Matrix von Hand nach,
-        Schritt für Schritt. Voreingestellt ist die Matrix aus dem Beispiel des Abschnitts;
-        jede andere Eingabe rechnet das Widget genauso durch. Interessant sind besonders
-        Matrizen mit linear abhängigen Spalten, etwa beide Spalten gleich: dann fällt σ₂ auf
-        null.
-      </p>
+      <Aufgabe>
+        Gehen wir die sechs Schritte durch und tragen wir danach eine eigene Matrix ein, etwa
+        eine mit zwei gleichen Spalten.
+      </Aufgabe>
       <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
         <span>A =</span>
         <MatrixInput value={A} onChange={setA} step={1} />
       </div>
-      <div className="my-2 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
-          onClick={() => setT((x) => Math.max(1, x - 1))}
-          disabled={shown <= 1}
-        >
-          ◀ zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 bg-slate-100 px-3 py-1 text-sm font-medium disabled:opacity-40 dark:bg-slate-800"
-          onClick={() => setT((x) => Math.min(maxT, x + 1))}
-          disabled={shown >= maxT}
-        >
-          nächster Schritt ▶
-        </button>
-        <span className="text-sm" style={{ color: GREY }}>
-          Schritt {shown} von {maxT}
-        </span>
-      </div>
+      <Stepper
+        step={shown}
+        setStep={setT}
+        min={1}
+        max={maxT}
+        narration={schritte[shown - 1]?.titel}
+      />
       <div className="space-y-3">
         {schritte.slice(0, shown).map((s) => (
           <div key={s.titel} className="rounded border border-slate-300 p-2 dark:border-slate-600">
@@ -298,6 +309,31 @@ export function SingulaerwertRechner() {
           </div>
         ))}
       </div>
+
+      {shown >= maxT ? (
+        rang === 0 ? (
+          <Verdikt kind="warn" titel="Nullmatrix:">
+            Beide Singulärwerte sind null, es gibt keine Bildrichtung und keine linken
+            Singulärvektoren. Die Formel u_i = Av_i/σ_i aus (6.2.2) ist hier nicht anwendbar.
+          </Verdikt>
+        ) : rang === 1 ? (
+          <Verdikt kind="warn" titel="Rang 1:">
+            σ₂ = {fmt(sig[1])} verschwindet, die Spalten von A sind linear abhängig. Nach
+            Satz 6.2.11 ist v₂ eine Basis des Kerns, und u₂ liefert die Formel nicht mehr; erst
+            die volle Zerlegung ergänzt eine passende Richtung. Der Rang ist {rang}.
+          </Verdikt>
+        ) : (
+          <Verdikt kind="ok" titel="Probe bestanden:">
+            Beide Vorzeichenwahlen sind gleich richtig: Dreht sich v_i, so dreht sich nach
+            (6.2.2) auch u_i, und A = UΣVᵀ bleibt unverändert (Bemerkung 6.2.10). Der größte
+            Abstand zwischen der zurückgerechneten Matrix σ₁u₁v₁ᵀ + σ₂u₂v₂ᵀ und A beträgt hier{" "}
+            {rest.toExponential(1).replace(".", ",").replace("-", "−")}, also nichts als
+            Rundung. Die Proben bestätigen außerdem Satz 6.2.8: u₁ᵀu₂ = {fmt(dot(u1 ?? [], u2 ?? []))}.
+          </Verdikt>
+        )
+      ) : null}
+
+      <EllipseImRaum A={A} v={v} u={u} sig={sig} />
     </div>
   );
 }

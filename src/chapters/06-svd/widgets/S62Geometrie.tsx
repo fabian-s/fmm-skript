@@ -1,22 +1,48 @@
 import { useState } from "react";
-import { LabeledTransformCanvas, MatrixInput, maxAbsCoord, sigmaMax } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  MatrixInput,
+  TransformCanvas,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  fmtDe,
+  maxAbsCoord,
+  sigmaMax,
+} from "../../../lib";
 
 /**
- * SVD-Geometrie-Explorer für §6.2: eine editierbare 2×2-Matrix A wird live in
- * A = UΣVᵀ zerlegt, und die vier Tafeln zeigen den Weg des Einheitskreises
- * durch die drei Teilschritte (Vᵀ, Σ, U).
+ * DIE EINE EINSICHT: Jede lineare Abbildung der Ebene ist Drehen, Strecken,
+ * Drehen, und vier Tafeln nebeneinander zeigen denselben Kreis vor Vᵀ, nach Vᵀ,
+ * nach ΣVᵀ und nach UΣVᵀ = A (Muster 4: Vergleich statt Umschalter).
  *
- * Rechenkern und Tafel-Aufbau sind aus der privaten mml-ch4-App portiert
- * (widgets/svdMath.ts: svd2x2; widgets/SvdStages2x2.tsx: Panel-Kette);
- * alle sichtbaren Texte, Beschriftungen und die Farbgebung sind neu und
- * folgen dem Kapitel-Farbcode: blau = rechte Singulärvektoren, orange =
- * Singulärwerte, grün = linke Singulärvektoren.
+ * FARBROLLEN (Kapitel 6): blau = rechte Singulärvektoren v und was aus ihnen
+ * wird, orange = Streckung um σ₁ und σ₂, grün = linke Singulärvektoren u,
+ * grau = Nebenangaben. Rot bleibt Rest- und Fehlertermen vorbehalten.
+ *
+ * PROVENIENZ: Rechenkern und Tafelkette sind aus der privaten mml-ch4-App
+ * portiert (widgets/svdMath.ts: svd2x2; widgets/SvdStages2x2.tsx); alle
+ * sichtbaren Texte, die Presets und die Farbgebung sind neu.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * 2026-08-19): Voreinstellung A = (2 1; 0 1) hat σ₁ = 2,2882 = √(3+√5),
+ * σ₂ = 0,8740 = √(3−√5), σ₁/σ₂ = 2,618, v₁ = (0,851; 0,526);
+ * Presets: Drehung (0 −1; 1 0) σ₁ = σ₂ = 1; gleiche Spalten (1 1; 1 1)
+ * σ₁ = 2, σ₂ = 0; Scherung (1 1,5; 0 1) σ₁ = 2, σ₂ = 0,5.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const ORANGE = "#E69F00";
-const GREY = "#64748b";
+const BLUE = FMM_COLORS.blau;
+const GREEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
+const GREY = FMM_COLORS.grau;
+
+const PRESETS: { id: string; name: string; A: number[][] }[] = [
+  { id: "beispiel", name: "Beispiel aus Kapitel 3", A: [[2, 1], [0, 1]] },
+  { id: "drehung", name: "Drehmatrix", A: [[0, -1], [1, 0]] },
+  { id: "scherung", name: "Scherung", A: [[1, 1.5], [0, 1]] },
+  { id: "gleich", name: "zwei gleiche Spalten", A: [[1, 1], [1, 1]] },
+];
 
 type Mat2 = [[number, number], [number, number]];
 
@@ -53,23 +79,15 @@ function svd2x2(A: Mat2): Svd2 {
   return { v1, v2, u1, u2, s1, s2 };
 }
 
-/** 3 Dezimalen, deutsches Komma, kein −0; NaN und ±∞ getrennt ausgewiesen. */
-function fmt(v: number): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Math.round(v * 1000) / 1000;
-  if (Object.is(r, -0)) r = 0;
-  return r.toFixed(3).replace("-", "−").replace(".", ",");
-}
+/** 3 Dezimalen, deutsches Komma (fmtDe aus der lib). */
+const fmt = (v: number) => fmtDe(v, 3);
 
 const vecStr = (v: [number, number]) => `(${fmt(v[0])}, ${fmt(v[1])})`;
 
 export function SvdGeometrieExplorer() {
   // voreingestellt die 2×2-Matrix aus Kapitel 3 (σ₁ ≈ 2,288, σ₂ ≈ 0,874)
-  const [raw, setRaw] = useState<number[][]>([
-    [2, 1],
-    [0, 1],
-  ]);
+  const [raw, setRaw] = useState<number[][]>(PRESETS[0].A);
+  const [preset, setPreset] = useState("beispiel");
   const A: Mat2 = [
     [raw[0][0] || 0, raw[0][1] || 0],
     [raw[1][0] || 0, raw[1][1] || 0],
@@ -155,20 +173,22 @@ export function SvdGeometrieExplorer() {
 
   return (
     <div>
-      <p className="text-sm">
-        Die drei Etappen der Merkregel stehen hier nebeneinander. Gestrichelt sehen wir in
-        jeder Tafel den Einheitskreis, durchgezogen sein aktuelles Bild; die Pfeile tragen den
-        Namen, den sie an der jeweiligen Station haben. Der Farbcode ist der des Kapitels:{" "}
-        <span style={{ color: BLUE, fontWeight: 600 }}>blau</span> die rechten Singulärvektoren
-        und was aus ihnen wird, <span style={{ color: ORANGE, fontWeight: 600 }}>orange</span>{" "}
-        die Streckung um σ₁ und σ₂,{" "}
+      <Aufgabe>
+        Wählen wir eine Matrix und verfolgen wir denselben Kreis über die vier Tafeln;{" "}
+        <span style={{ color: BLUE, fontWeight: 600 }}>blau</span> die rechten,{" "}
         <span style={{ color: GREEN, fontWeight: 600 }}>grün</span> die linken
-        Singulärvektoren. Ändern wir die Matrix, wandern Achsenrichtungen und Streckungen
-        sofort mit.
-      </p>
+        Singulärvektoren, <span style={{ color: ORANGE, fontWeight: 600 }}>orange</span> die
+        Streckung.
+      </Aufgabe>
       <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
         <span>A =</span>
-        <MatrixInput value={raw} onChange={setRaw} />
+        <MatrixInput
+          value={raw}
+          onChange={(m) => {
+            setPreset("frei");
+            setRaw(m);
+          }}
+        />
         <span className="font-mono text-xs" style={{ color: ORANGE }}>
           σ₁ = {fmt(s1)}, σ₂ = {fmt(s2)}
         </span>
@@ -176,16 +196,34 @@ export function SvdGeometrieExplorer() {
           σ₁/σ₂ = {fmt(kappa)}
         </span>
       </div>
+      <div className="my-2 flex flex-wrap items-center gap-2">
+        {PRESETS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            className={preset === p.id ? W_BUTTON_AKTIV : W_BUTTON}
+            aria-pressed={preset === p.id}
+            onClick={() => {
+              setPreset(p.id);
+              setRaw(p.A);
+            }}
+          >
+            {p.name}
+          </button>
+        ))}
+      </div>
       <div className="mx-auto grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2">
         {panels.map((p) => (
           <figure key={p.key} className="m-0">
-            <LabeledTransformCanvas
+            <TransformCanvas
               matrix={p.m}
               vectors={p.vecs}
               size={190}
               worldHalf={half}
+              transitionMs={250}
               xLabel="x₁"
               yLabel="x₂"
+              ariaLabel={`${p.titel}; σ₁ = ${fmt(s1)}, σ₂ = ${fmt(s2)}.`}
             />
             <figcaption className="mt-1 text-xs" style={{ color: GREY }}>
               {p.titel}
@@ -204,17 +242,36 @@ export function SvdGeometrieExplorer() {
           größter Abstand zwischen UΣVᵀ und A: {fmt(rest)}
         </div>
       </div>
-      <p className="mt-2 text-sm" style={{ color: GREY }}>
-        {s1 < 1e-9
-          ? "Beide Singulärwerte sind null: die Nullmatrix schickt jeden Vektor in den Ursprung, vom Kreis bleibt ein Punkt."
-          : s2 < 1e-9
-            ? "σ₂ = 0: die Matrix drückt eine ganze Richtung auf null, aus dem Kreis wird eine Strecke. Das Verhältnis σ₁/σ₂ ist dann nicht mehr endlich, die Matrix ist singulär."
-            : s1 / s2 > 5
-              ? `σ₁/σ₂ = ${fmt(kappa)}: die Ellipse ist stark in die Länge gezogen, die Matrix wirkt in den beiden Richtungen sehr unterschiedlich.`
-              : s1 / s2 > 1.5
-                ? `σ₁/σ₂ = ${fmt(kappa)}: eine deutlich erkennbare Ellipse, Haupt- und Nebenachse unterscheiden sich klar.`
-                : `σ₁/σ₂ = ${fmt(kappa)}: die Ellipse ist fast ein Kreis, die Matrix streckt alle Richtungen ähnlich stark.`}
-      </p>
+      {s1 < 1e-9 ? (
+        <Verdikt kind="warn" titel="Nullmatrix:">
+          Beide Singulärwerte sind null. Die Abbildung schickt jeden Vektor in den Ursprung,
+          vom Kreis bleibt ein Punkt, und Station 2 löscht alles aus.
+        </Verdikt>
+      ) : s2 < 1e-9 ? (
+        <Verdikt kind="warn" titel="Singulär:">
+          σ₂ = 0: Station 2 drückt eine ganze Richtung auf null, aus dem Kreis wird eine
+          Strecke. Das Verhältnis σ₁/σ₂ ist nicht mehr endlich, der Rang ist 1 (Satz 6.2.11),
+          und die letzte Drehung legt die Strecke nur noch in ihre Endlage.
+        </Verdikt>
+      ) : s1 / s2 > 5 ? (
+        <Verdikt kind="warn" titel="Stark verzerrt:">
+          σ₁/σ₂ = {fmt(kappa)}: Die Ellipse ist weit in die Länge gezogen, die Abbildung wirkt
+          in den beiden Richtungen sehr unterschiedlich. Genau dieses Verhältnis ist die
+          Konditionszahl κ₂(A) aus Abschnitt 3.5.
+        </Verdikt>
+      ) : s1 / s2 > 1.5 ? (
+        <Verdikt kind="neutral">
+          σ₁/σ₂ = {fmt(kappa)}: eine deutlich erkennbare Ellipse. Station 1 dreht v₁ und v₂ auf
+          die Achsen, Station 2 streckt um {fmt(s1)} und {fmt(s2)}, Station 3 dreht in die
+          Endlage; zusammen ist das Bemerkung 6.2.15.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="ok" titel="Fast winkeltreu:">
+          σ₁/σ₂ = {fmt(kappa)}: Die Ellipse ist beinahe ein Kreis, alle Richtungen werden
+          ähnlich stark gestreckt. Bei σ₁ = σ₂ hat Station 2 nichts zu tun, und A ist ein
+          Vielfaches einer Orthogonalmatrix.
+        </Verdikt>
+      )}
     </div>
   );
 }

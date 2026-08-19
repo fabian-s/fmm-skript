@@ -1,41 +1,56 @@
 import { useState } from "react";
 import {
-  LabeledPlot,
-  LabeledTransformCanvas,
+  Aufgabe,
+  FMM_COLORS,
   M,
   MatrixInput,
+  Plot,
+  Schaetzfrage,
   Slider,
+  TransformCanvas,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  fmtDe,
   sigmaMax,
+  type Mat2,
 } from "../../../lib";
 
 /**
- * Einheitskreis → Ellipse: Wie lang ist das Bild eines Einheitsvektors, und
- * in welcher Richtung wird am stärksten gestreckt?
+ * DIE EINE EINSICHT: Auf dem Einheitskreis hat die Streckung ‖Ax(θ)‖ ein
+ * Maximum und ein Minimum, sie liegen genau 90° auseinander, und die beiden
+ * Bildvektoren stehen wieder senkrecht aufeinander. Das ist das Muster, aus dem
+ * in §6.2 die Singulärwertzerlegung wird.
  *
- * Rechenkern (sigmaMin, maxStreckRichtung) 1:1 aus dem Operatornorm-Widget
- * von Kapitel 3 (03-matrix-spur-norm/widgets/S33OperatornormWidget.tsx), der
- * Rest aus den lib-Primitiven LabeledTransformCanvas + LabeledPlot. Aus den
- * internen SVD-Widgets (mml-ch4) ist hier nichts übernommen: Sie zeigen
- * statische 3D-Perspektivfiguren bzw. die schon fertige Zerlegung.
- * Sämtliche Beschriftungen und Statustexte eigenständig formuliert.
+ * Der Leser tippt den Winkel der stärksten Streckung, bevor das Widget die
+ * Extremrichtungen und die σ-Werte zeigt (Muster 1, predict-then-reveal): vor
+ * dem Auflösen stehen im Widget keine Zahlen, die die Antwort verraten.
+ *
+ * FARBROLLEN (Kapitel 6): orange = Streckfaktoren σ (Kurve, Extremmarken),
+ * blau = rechte Singulärrichtungen v im Urbild, grün = deren Bilder Av,
+ * grau = das laufende x, violett = sein Bild Ax. Rot bleibt im Kapitel den
+ * Rest- und Fehlertermen vorbehalten und kommt hier nicht vor.
+ *
+ * PROVENIENZ: sigmaMin/maxStreckRichtung stammen aus dem Operatornorm-Widget
+ * von Kapitel 3 (03-matrix-spur-norm/widgets/S33OperatornormWidget.tsx); Tafeln
+ * und Kurve kommen aus den lib-Bausteinen TransformCanvas v2 und Plot v2. Aus
+ * den internen SVD-Widgets (mml-ch4) ist nichts übernommen. Alle Texte sind
+ * eigenständig formuliert.
  *
  * Die Folie zeigt eine Abbildung von R^3 nach R^2; deren Bild der
- * Einheitssphäre ist die AUSGEFÜLLTE Ellipse (Folienfehler-Register).
- * Hier steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei
- * singulärem A zu einer Strecke entartet. Die Aussage über die Hauptachsen
- * ist dieselbe, nur ohne Perspektivzeichnung.
+ * Einheitssphäre ist die AUSGEFÜLLTE Ellipse (Folienfehler-Register). Hier
+ * steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei singulärem
+ * A zu einer Strecke entartet.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * 2026-08-19), Voreinstellung A = (2 1; 0 1):
+ *   σ₁ = 2,2882 = √(3+√5) bei θ* = 31,72°, σ₂ = 0,8740 = √(3−√5) bei 121,72°
+ *   (Rasterlauf über 3,6 Mio. Winkel bestätigt Lage und Wert beider Extrema),
+ *   v₁ = (0,851; 0,526), v₂ = (−0,526; 0,851), u₁·u₂ = 0 (< 1e−12),
+ *   σ₁/σ₂ = 2,618.
+ * Presets: Drehung (0,6 −0,8; 0,8 0,6) σ = 1 und 1; singulär (1 2; 2 4)
+ *   σ₁ = 5, σ₂ = 0 bei θ* = 63,43°; Diagonal (2 0; 0 0,5) σ = 2 und 0,5.
  */
-
-type Mat2 = [[number, number], [number, number]];
-
-// FMM-Palette: Orange bleibt den Streckfaktoren vorbehalten (Kurve, Extrem-
-// marker), Blau den rechten und Grün den linken Singulärrichtungen; das
-// laufende Paar x / Ax ist grau bzw. violett.
-const GRAU = "#64748b";
-const ORANGE = "#E69F00";
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const VIOLETT = "#9E57D5";
 
 /** kleinste Streckung: kleinster Singulärwert einer 2x2-Matrix */
 function sigmaMin(m: Mat2): number {
@@ -66,20 +81,17 @@ function winkelGrad(v: [number, number]): number {
   return ((g % 360) + 360) % 360;
 }
 
-/** Zahlenausgabe: unbestimmte Werte und Unendlich sauber trennen */
-function fmt(x: number, stellen = 3): string {
-  if (Number.isNaN(x)) return "nicht definiert";
-  if (!Number.isFinite(x)) return "∞";
-  return x.toFixed(stellen).replace(".", ",");
-}
+const PRESETS: { id: string; name: string; A: number[][] }[] = [
+  { id: "beispiel", name: "Beispiel 6.1.2", A: [[2, 1], [0, 1]] },
+  { id: "drehung", name: "Drehung", A: [[0.6, -0.8], [0.8, 0.6]] },
+  { id: "diagonal", name: "Strecken und Stauchen", A: [[2, 0], [0, 0.5]] },
+  { id: "singulaer", name: "singulär", A: [[1, 2], [2, 4]] },
+];
 
 export function EinheitskreisEllipse() {
-  const [Aroh, setAroh] = useState<number[][]>([
-    [2, 1],
-    [0, 1],
-  ]);
+  const [Aroh, setAroh] = useState<number[][]>(PRESETS[0].A);
   const [theta, setTheta] = useState(20);
-  const [zeigeExtreme, setZeigeExtreme] = useState(false);
+  const [preset, setPreset] = useState("beispiel");
 
   const A: Mat2 = [
     [Aroh[0][0] || 0, Aroh[0][1] || 0],
@@ -107,118 +119,200 @@ export function EinheitskreisEllipse() {
   const AxSenk = bild(xSenk);
   const thetaStern = winkelGrad(xStern);
   const thetaSenk = winkelGrad(xSenk);
+  const skalarprodukt = AxStern[0] * AxSenk[0] + AxStern[1] * AxSenk[1];
 
   const worldHalf = Math.max(2.4, 1.25 * smax);
   const yMax = Math.max(1, 1.15 * smax);
 
-  const pfeile = [
-    { v: x, color: GRAU, label: "x" },
-    { v: Ax, color: VIOLETT, label: "Ax" },
-  ];
-  if (zeigeExtreme) {
-    pfeile.push(
-      { v: xStern, color: BLAU, label: "x*" },
-      { v: xSenk, color: BLAU, label: "x⊥" },
-      { v: AxStern, color: GRUEN, label: "Ax*" },
-      { v: AxSenk, color: GRUEN, label: "Ax⊥" }
-    );
-  }
+  const setzePreset = (p: (typeof PRESETS)[number]) => {
+    setPreset(p.id);
+    setAroh(p.A);
+  };
+  const setzeMatrix = (m: number[][]) => {
+    setPreset("frei");
+    setAroh(m);
+  };
 
-  const marker = [
-    { x: thetaStern, y: smax, color: ORANGE, label: "max" },
-    { x: (thetaStern + 180) % 360, y: smax, color: ORANGE },
-    { x: thetaSenk, y: smin, color: ORANGE, label: "min" },
-    { x: (thetaSenk + 180) % 360, y: smin, color: ORANGE },
-    { x: theta, y: nAx, color: VIOLETT },
-  ];
+  const entartet = smin < 1e-9;
+  const isotrop = !entartet && smax / smin < 1.02;
 
   return (
     <div className="text-sm">
-      <p className="my-2">
-        Links läuft der Einheitsvektor <M>{"\\bx"}</M> (grau) auf dem Einheitskreis, sein
-        Bild <M>{"\\bA\\bx"}</M> (violett) läuft dabei auf der Bildellipse. Rechts steht
-        dieselbe Bewegung als Kurve: Wir tragen die Länge <M>{"\\left\\| \\bA\\bx \\right\\|"}</M>{" "}
-        über dem Winkel <M>{"\\theta"}</M> auf, der violette Punkt ist die aktuelle
-        Stellung. Suchen wir zuerst von Hand das Maximum, bevor wir uns die
-        Extremrichtungen einblenden lassen. Diese zeigen dann die beiden ausgezeichneten
-        Urbildrichtungen in Blau und ihre Bilder in Grün; orange bleibt den
-        Streckfaktoren vorbehalten.
-      </p>
-      <div className="my-3 flex flex-wrap items-center gap-4">
-        <div className="flex items-center gap-2">
-          <M>{"\\bA ="}</M>
-          <MatrixInput value={Aroh} onChange={setAroh} />
-        </div>
-        <label className="flex items-center gap-1.5">
-          <input
-            type="checkbox"
-            className="accent-sky-600"
-            checked={zeigeExtreme}
-            onChange={(e) => setZeigeExtreme(e.target.checked)}
-          />
-          Extremrichtungen einblenden
-        </label>
-      </div>
-      <Slider
-        label="Winkel θ (°)"
-        value={theta}
-        onChange={setTheta}
+      <Schaetzfrage
+        frage={
+          <>
+            Bei welchem Winkel <M>{"\\theta"}</M> wird <M>{"\\bx"}</M> am stärksten gestreckt?
+          </>
+        }
+        loesung={thetaStern}
+        toleranz={5}
+        einheit="°"
+        fmt={(v) => fmtDe(v, 1)}
         min={0}
         max={360}
-        step={1}
-        fmt={(g) => g.toFixed(0) + "°"}
-      />
-      <div className="my-2 flex flex-wrap items-start gap-4">
-        <LabeledTransformCanvas
-          matrix={A}
-          showGrid={false}
-          showUnitCircle
-          size={260}
-          worldHalf={worldHalf}
-          vectors={pfeile}
-        />
-        <LabeledPlot
-          xLabel="θ in Grad"
-          yLabel="‖Ax(θ)‖"
-          xDomain={[0, 360]}
-          yDomain={[0, yMax]}
-          width={280}
-          height={230}
-          series={[
-            { f: laenge, color: ORANGE },
-            { f: () => smax, color: GRAU, dash: [4, 4] },
-            { f: () => smin, color: GRAU, dash: [4, 4] },
-          ]}
-          markers={marker}
-        />
-        <div className="min-w-56 grow">
-          <div className="rounded bg-slate-100 p-2 font-mono text-xs dark:bg-slate-800">
-            ‖x‖ = 1 (fest)
-            <br />
-            <span className="font-semibold text-amber-700 dark:text-amber-400">
-              ‖Ax(θ)‖ = {fmt(nAx)} bei θ = {theta.toFixed(0)}°
-            </span>
-            <br />
-            größte Streckung = {fmt(smax)} bei θ = {fmt(thetaStern, 1)}°
-            <br />
-            kleinste Streckung = {fmt(smin)} bei θ = {fmt(thetaSenk, 1)}°
-          </div>
-          <p className="mt-2">
-            Die Kurve hat Periode <M>{"180^\\circ"}</M>: Ein halber Umlauf führt von{" "}
-            <M>{"\\bx"}</M> zu <M>{"-\\bx"}</M>, und das Bild wechselt dabei nur das
-            Vorzeichen. Das Maximum der Kurve ist die längste Halbachse der Ellipse, das
-            Minimum die kürzeste, und die beiden zugehörigen Richtungen{" "}
-            <M>{"\\bx^*"}</M> und <M>{"\\bx^\\perp"}</M> stehen im Urbild wie im Bild
-            senkrecht aufeinander. Das ist kein Zufall dieser Matrix:
-            Probieren wir eine Drehung wie{" "}
-            <M>{"\\begin{pmatrix} 0{,}6 & -0{,}8 \\\\ 0{,}8 & 0{,}6 \\end{pmatrix}"}</M>{" "}
-            (die Kurve wird flach, alle Richtungen werden gleich behandelt) oder eine
-            singuläre Matrix wie{" "}
-            <M>{"\\begin{pmatrix} 1 & 2 \\\\ 2 & 4 \\end{pmatrix}"}</M> (die Ellipse fällt
-            zu einer Strecke zusammen, die kleinste Streckung ist 0).
-          </p>
-        </div>
-      </div>
+        auswertung={(getippt) => {
+          const g = typeof getippt === "number" ? getippt : NaN;
+          if (isotrop) {
+            return (
+              <Verdikt kind="ok" titel="Trickfrage:">
+                Bei dieser Matrix ist jede Richtung eine Maximalstelle, alle werden um{" "}
+                {fmtDe(smax, 3)} gestreckt. Die Frage nach dem Winkel hat hier keine eindeutige
+                Antwort.
+              </Verdikt>
+            );
+          }
+          // Das Maximum tritt zweimal auf, bei θ* und bei θ* + 180°: beide gelten
+          const abw = Math.min(
+            ...[-360, -180, 0, 180, 360].map((v) => Math.abs(g - thetaStern + v)),
+          );
+          return (
+            <Verdikt kind={abw <= 5 ? "ok" : "warn"}>
+              {abw <= 5 ? "Gut geschätzt. " : "Daneben. "}
+              Das Maximum liegt bei {fmtDe(thetaStern, 1)}° und, weil die Kurve die Periode
+              180° hat, ein zweites Mal bei {fmtDe((thetaStern + 180) % 360, 1)}°; beide
+              Antworten sind richtig. Die Abweichung des Tipps beträgt {fmtDe(abw, 1)}°.
+            </Verdikt>
+          );
+        }}
+      >
+        {({ aufgeloest }) => (
+          <>
+            <Aufgabe>
+              Ziehen wir die graue Spitze auf dem Einheitskreis herum (oder schieben wir{" "}
+              <M>{"\\theta"}</M>) und suchen wir die Stellung mit dem längsten violetten
+              Bildpfeil.
+            </Aufgabe>
+
+            <div className="my-2 grid gap-4 sm:grid-cols-2">
+              <TransformCanvas
+                matrix={A}
+                showGrid={false}
+                showUnitCircle
+                size={250}
+                worldHalf={worldHalf}
+                transitionMs={250}
+                readout={false}
+                ariaLabel={`Einheitskreis und seine Bildellipse unter A; der laufende Einheitsvektor steht bei ${fmtDe(theta, 0)} Grad, sein Bild hat die Länge ${fmtDe(nAx, 2)}.`}
+                vectors={[
+                  {
+                    v: x,
+                    color: FMM_COLORS.grau,
+                    label: "x",
+                    draggable: true,
+                    dragConstraint: "unitCircle",
+                  },
+                  { v: Ax, color: FMM_COLORS.violett, label: "Ax" },
+                  ...(aufgeloest
+                    ? [
+                        { v: xStern, color: FMM_COLORS.blau, label: "v₁" },
+                        { v: xSenk, color: FMM_COLORS.blau, label: "v₂" },
+                        { v: AxStern, color: FMM_COLORS.gruen, label: "Av₁" },
+                        { v: AxSenk, color: FMM_COLORS.gruen, label: "Av₂" },
+                      ]
+                    : []),
+                ]}
+                onVectorChange={(i, v) => {
+                  if (i === 0) setTheta(winkelGrad(v as [number, number]));
+                }}
+              />
+              <Plot
+                xLabel="θ in Grad"
+                yLabel="‖Ax(θ)‖"
+                xDomain={[0, 360]}
+                yDomain={[0, yMax]}
+                width={300}
+                height={230}
+                ariaLabel={`Länge des Bildvektors über dem Winkel; aktuell ${fmtDe(nAx, 2)} bei ${fmtDe(theta, 0)} Grad.`}
+                series={[
+                  { f: laenge, color: FMM_COLORS.orange, label: "‖Ax(θ)‖" },
+                  ...(aufgeloest
+                    ? [
+                        { f: () => smax, color: FMM_COLORS.grau, dash: [4, 4], label: "σ₁" },
+                        { f: () => smin, color: FMM_COLORS.grau, dash: [4, 4], label: "σ₂" },
+                      ]
+                    : []),
+                ]}
+                markers={[
+                  { x: theta, y: nAx, color: FMM_COLORS.violett },
+                  ...(aufgeloest
+                    ? [
+                        { x: thetaStern, y: smax, color: FMM_COLORS.orange },
+                        { x: (thetaStern + 180) % 360, y: smax, color: FMM_COLORS.orange },
+                        { x: thetaSenk, y: smin, color: FMM_COLORS.orange },
+                        { x: (thetaSenk + 180) % 360, y: smin, color: FMM_COLORS.orange },
+                      ]
+                    : []),
+                ]}
+              />
+            </div>
+
+            <Slider
+              label="Winkel θ"
+              value={theta}
+              onChange={setTheta}
+              min={0}
+              max={360}
+              step={1}
+              unit="°"
+              accent={FMM_COLORS.grau}
+              fmt={(g) => fmtDe(g, 0)}
+            />
+
+            <div className="my-2 flex flex-wrap items-center gap-3">
+              <span className="flex items-center gap-2">
+                <M>{"\\bA ="}</M>
+                <MatrixInput value={Aroh} onChange={setzeMatrix} />
+              </span>
+              {PRESETS.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  className={preset === p.id ? W_BUTTON_AKTIV : W_BUTTON}
+                  aria-pressed={preset === p.id}
+                  onClick={() => setzePreset(p)}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+
+            <p className="my-1 font-mono text-xs">
+              ‖x‖ = 1, ‖Ax(θ)‖ = {fmtDe(nAx, 3)} bei θ = {fmtDe(theta, 0)}°
+            </p>
+
+            {!aufgeloest ? (
+              <Verdikt kind="neutral">
+                Die Kurve wiederholt sich nach <M>{"180^\\circ"}</M>: Ein halber Umlauf ersetzt{" "}
+                <M>{"\\bx"}</M> durch <M>{"-\\bx"}</M>, und das Bild wechselt dabei nur das
+                Vorzeichen. Ihr Höchstpunkt ist die längste Halbachse der Ellipse.
+              </Verdikt>
+            ) : entartet ? (
+              <Verdikt kind="warn" titel="Entartet:">
+                Die kleinste Streckung ist {fmtDe(smin, 3)}: Eine ganze Richtung wird auf null
+                gedrückt, aus dem Kreis wird eine Strecke statt einer Ellipse, und die Kurve
+                berührt zweimal die Nulllinie. Die längste Halbachse misst weiterhin{" "}
+                {fmtDe(smax, 3)}. Eine Matrix mit kleinstem Singulärwert null ist singulär
+                (Abschnitt 6.1).
+              </Verdikt>
+            ) : isotrop ? (
+              <Verdikt kind="ok" titel="Alle Richtungen gleich:">
+                Größte und kleinste Streckung fallen mit {fmtDe(smax, 3)} zusammen, die Kurve ist
+                flach. Aus dem Kreis wird wieder ein Kreis, und jede Richtung ist Maximalstelle.
+                Das passiert genau für Vielfache einer Orthogonalmatrix; die Maximalstelle in
+                (6.1.2) ist dann nicht eindeutig.
+              </Verdikt>
+            ) : (
+              <Verdikt kind="neutral">
+                Das Maximum ist {fmtDe(smax, 3)} bei {fmtDe(thetaStern, 1)}°, das Minimum{" "}
+                {fmtDe(smin, 3)} bei {fmtDe(thetaSenk, 1)}°, und die beiden Stellen liegen exakt{" "}
+                <M>{"90^\\circ"}</M> auseinander. Auch die zugehörigen Bilder stehen senkrecht
+                aufeinander: Ihr Skalarprodukt ist {fmtDe(skalarprodukt, 3)}. Genau dieses Muster
+                zerlegt Abschnitt 6.2 in <M>{"\\bA = \\bU\\bSigma\\bV^\\top"}</M>.
+              </Verdikt>
+            )}
+          </>
+        )}
+      </Schaetzfrage>
     </div>
   );
 }

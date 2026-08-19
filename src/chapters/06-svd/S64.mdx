@@ -363,20 +363,23 @@ $k \leq 287$.
    das Bild wird bei Bedarf daraus zurückgerechnet.
 :::
 
-:::vertiefung[Rang-k-Approximation zum Anfassen]
-Die Folien führen die Idee an einem Porträtfoto mit den Rängen $5$, $20$, $50$
-und $200$ vor. Ein echtes Foto scheidet für ein öffentliches Skript aus
-Rechtegründen aus, also rechnen wir mit einem synthetisch erzeugten
-Graustufenbild; als Matrix verhält es sich genauso. Der Schieber gibt $k$ vor.
-Die beiden Kurven sind die Fehlerformeln aus ($6.4.4$), an diesem Bild live
-ausgewertet, und die dritte Tafel zeigt die Differenz $\bA - \bA_k$ als Bild.
+Wie viele Rang-1-Terme braucht ein Bild eigentlich? Die Folien führen das an
+einem Porträtfoto mit den Rängen $5$, $20$, $50$ und $200$ vor. Ein echtes Foto
+scheidet für ein öffentliches Skript aus Rechtegründen aus, also rechnen wir mit
+einem synthetisch erzeugten Graustufenbild; als Matrix verhält es sich genauso.
+Der Schieber gibt $k$ vor, die dritte Tafel zeigt die Differenz
+$\cred{\bA - \bA_k}$ als Bild, und die beiden Kurven sind die Fehlerformeln aus
+($6.4.4$), an diesem Bild ausgewertet.
 
 <RangKExplorer />
 
-Wer lieber mit echten Fotos spielt, findet unter
-[shinyapps.io](https://fabian-s.shinyapps.io/truncatedSVD-shiny/) eine
-Shiny-App zur abgeschnittenen SVD.
-:::
+Der Knick im Balkenbild ist die eigentliche Auskunft. Vor ihm steckt in jedem
+weiteren Summanden noch Struktur der Vorlage, hinter ihm fast nur noch deren
+Rauschen, und der Fehler sinkt entsprechend zäh. Wo genau er liegt, hängt am
+Bild und nicht am Verfahren: Das ist Bemerkung 6.4.7 an einem konkreten
+Spektrum. Wer lieber mit echten Fotos spielt, findet unter
+[shinyapps.io](https://fabian-s.shinyapps.io/truncatedSVD-shiny/) eine Shiny-App
+zur abgeschnittenen SVD.
 
 ### Anwendung: Empfehlungssysteme
 
@@ -442,12 +445,19 @@ Achsen summiert.
 :::
 
 :::vertiefung[Rang-k-Glättung einer Bewertungsmatrix]
-Das Widget rechnet Beispiel 6.4.10 durch. Halten wir eine bekannte Bewertung
-zurück, wird sie zur Testgröße: Wir sehen dann, wie nah die Vorhersage am
-tatsächlichen Wert liegt. Der Vergleich der drei Auffüllregeln zeigt außerdem,
-wie viel von dem, was am Ende herauskommt, wir selbst hineingesteckt haben.
+Wie gut trifft dieses Verfahren eine Bewertung, die es nicht kennt? Das Widget
+rechnet Beispiel 6.4.10 durch und lässt uns eine bekannte Bewertung
+zurückhalten; sie wird damit zur Testgröße. Der Vergleich der drei Auffüllregeln
+zeigt zusätzlich, wie stark die Vorhersage an Schritt 1 von Algorithmus 6.4.11
+hängt.
 
 <EmpfehlungsExplorer />
+
+Wer zwei oder drei Bewertungen zurückhält, sieht den Einwand aus
+Bemerkung 6.4.13 in Zahlen: Die Abweichung auf den zurückgehaltenen Feldern ist
+größer als der RMSE auf den benutzten, und sie ändert sich spürbar, wenn wir die
+Auffüllregel wechseln. Das Modell bewertet zu einem guten Teil unsere eigene
+Vorannahme.
 :::
 
 :::bemerkung[6.4.13 (Stärken, Schwächen, Ausblick)]
@@ -570,6 +580,32 @@ nicht: Sie existiert für jede Matrix.
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=98.59 toleranz=0.2}
+Stellen wir im Rang-k-Explorer oben $k = 2$ ein. Wie viel Prozent der Energie
+$\sum_i \corange{\sigma_i}^2$ stecken dann schon in $\bA_2$?
+
+$98{,}59\,\%$. Die ersten beiden Singulärwerte des Testbilds sind
+$\corange{26{,}475}$ und $\corange{6{,}060}$, alle übrigen zusammen tragen nur
+noch den Rest bei. Trotzdem sieht die Rekonstruktion bei $k = 2$ noch sichtbar
+falsch aus: Der Energie-Anteil misst Quadrate und wird deshalb schon von den
+großflächigen Helligkeiten fast ausgeschöpft, während die feinen Kanten in den
+kleinen $\corange{\sigma_i}$ stecken. Ein Kriterium allein reicht für die Wahl
+von $k$ nicht (Bemerkung 6.4.6).
+:::
+
+:::zahlfrage{loesung=1.8 toleranz=0.3}
+Halten wir im Empfehlungs-Widget Adas Bewertung für „Sternenstaub" zurück, also
+die $5$ links oben, und setzen wir $k = 2$ bei Auffüllung mit dem Filmmittel.
+Welche Vorhersage steht danach in diesem Feld?
+
+Rund $1{,}8$, bei einem wahren Wert von $5$. Der Grund ist Schritt 1 von
+Algorithmus 6.4.11: Ohne Adas Bewertung sinkt das Mittel der Spalte
+„Sternenstaub" von $3{,}5$ auf $2{,}0$, und dieser selbst gesetzte Wert
+bestimmt die Vorhersage fast allein. Bei elf bekannten Bewertungen sagt das
+Ergebnis mehr über die Füllregel als über Ada; genau das ist der Einwand aus
+Bemerkung 6.4.13.
+:::
 
 :::frage{falsch}
 Die Spektralnorm $\left\| \bA \right\|_2$ ist der betragsgrößte Eigenwert von
