@@ -148,8 +148,12 @@ $\left\|\bG\ba\right\|_2 = \corange{5} = \left\|\ba\right\|_2$ hat die Rotation 
 nicht angetastet, für eine Orthogonalmatrix keine Überraschung.
 :::
 
-:::vertiefung[Givens-Rotation zum Ausprobieren]
+:::vertiefung[Wo landet Ga, wenn wir a im Bild herumziehen?]
+<p className="mb-2 text-sm">Satz 7.5.2 bestimmt $c$ und $s$ allein aus den beiden Komponenten von $\ba$. Sehen wir nach, was das geometrisch bedeutet: Wohin schickt $\bG$ den Vektor, und wohin das Koordinatengitter?</p>
+
 <GivensWidget />
+
+<p className="mt-2 text-sm">Wie das Widget zeigt, landet $\bG\ba$ für jedes $\ba \neq \bnull$ auf der ersten Koordinatenachse, und zwar stets in der Höhe $\alpha = \left\|\ba\right\|_2$. Das Gitter im Hintergrund wird dabei nur gedreht, nirgends gestreckt oder gestaucht. Beachtenswert ist auch, was *nicht* passiert: Der angezeigte Winkel $\theta$ wird nirgends gebraucht. $c$ und $s$ ergeben sich unmittelbar aus $a_1$ und $a_2$, ganz ohne Trigonometrie – für die Numerik ein spürbarer Vorteil.</p>
 :::
 
 Das Rezept trägt weiter als $\R^2$: Auch in $\R^n$ können wir damit jede einzelne
@@ -344,8 +348,12 @@ $\left\|\bH\ba\right\|_2 = 3 = \left\|\ba\right\|_2$. Beide Komponenten unterhal
 ersten sind mit *einer einzigen* Spiegelung verschwunden.
 :::
 
-:::vertiefung[die Spiegelung Schritt für Schritt: warum H = I − 2P]
+:::vertiefung[Warum wird der v-Anteil zweimal abgezogen?]
+<p className="mb-2 text-sm">In $\bH = \bI - 2\bP$ steckt der Faktor 2, und der ist keine Kosmetik. Zerlegen wir die Spiegelung in ihre beiden Hälften: Der Wanderpunkt $\bw(t) = \ba - t\,\bv\,\frac{\bv^\top\ba}{\bv^\top\bv}$ startet bei $t = 0$ in $\ba$. Wo liegt er bei $t = 1$, und was ist dort mit seiner Länge?</p>
+
 <HouseholderWidget />
+
+<p className="mt-2 text-sm">Wie das Widget zeigt, liegt $\bw(1)$ auf der Spiegelgeraden – die Zeile $\bv^\top\bw(t)$ steht dort auf 0 –, ist aber echt kürzer als $\ba$: bei Richtung $130^\circ$ etwa 0,845 statt 2. Einmal den $\bv$-Anteil abzuziehen ergibt die *Projektion*, und eine Projektion ist keine Orthogonalmatrix; sie würde die Zielfunktion des KQ-Problems verändern. Erst der doppelte Schritt bei $t = 2$ bringt die volle Länge zurück und landet exakt auf $\alpha\,\be_1$. Das ist Satz 7.5.6 in geometrischer Form: $\bH^2 = \bI$.</p>
 :::
 
 :::bemerkung[7.5.9 (Vorzeichenwahl)]
@@ -366,8 +374,12 @@ gleichen Vorzeichens und damit immer gutartig. Geometrisch heißt das: Wir spieg
 auf das Ziel, das *weiter* von $\ba$ entfernt liegt.
 :::
 
-:::vertiefung[warum das Vorzeichen von α zählt: Auslöschung, live]
+:::vertiefung[Zwei Vorzeichen für α – probieren wir beide]
+<p className="mb-2 text-sm">In exakter Arithmetik sind die beiden Vorzeichen gleichwertig. Testen wir das an $\ba = (1, \delta)^\top$ mit kleinem $\delta$, gerechnet in einer nachgestellten Gleitkommaarithmetik, die nach jeder Operation auf $t$ signifikante Stellen rundet. Wie viele Ziffern von $v_1 = a_1 - \alpha$ überleben in den beiden Fällen?</p>
+
 <AusloeschungWidget />
+
+<p className="mt-2 text-sm">Wie das Experiment zeigt, frisst die Subtraktion in der oberen Zeile alle führenden Ziffern auf; was von $v_1$ übrig bleibt, ist im Wesentlichen der Rundungsfehler von $\left\|\ba\right\|_2 \approx 1 + \delta^2/2$. Ist $\delta^2$ so klein, dass es in $t$ Stellen gar nicht mehr sichtbar ist, wird $v_1$ sogar zu exakt 0 gerundet: Bei $\delta = 10^{-3}$ und $t = 4$ passiert das bereits, die daraus gebaute „Spiegelung" verfehlt ihr Ziel dann um $10^{-3}$ statt um $2{,}5\cdot 10^{-10}$. In der unteren Zeile werden dagegen zwei positive Zahlen addiert, und dabei geht keine einzige Ziffer verloren. Geometrisch gesprochen: Die sichere Wahl spiegelt auf das Ziel, das von $\ba$ *weiter entfernt* liegt.</p>
 :::
 
 :::bemerkung[7.5.10 (Aufwand)]
@@ -421,5 +433,46 @@ oder nur einzelne Einträge zu eliminieren sind. Im Vergleich zu den
 [Normalengleichungen](#sec-7.3) vermeiden beide Zugänge das Quadrieren der
 :k[Konditionszahl]{#condition-number}. Dazu mehr im Methodenvergleich in
 [Abschnitt 7.6](#sec-7.6).
+
+<h3 id="sec-7.5-quiz">Selbsttest</h3>
+
+::::quiz
+
+:::zahlfrage{loesung=0.6 toleranz=0.02}
+Stellen wir im Givens-Widget $\ba = (4, 3)^\top$ ein. Welchen Wert zeigt es für $s$?
+
+Nach Satz 7.5.2 ist $r = \sqrt{16 + 9} = 5$, also $c = 4/5 = 0{,}8$ und
+$s = 3/5 = 0{,}6$. Das Ergebnis ist $\bG\ba = (5, 0)^\top$: die Länge bleibt, die zweite
+Komponente wird null.
+:::
+
+:::frage{falsch}
+Bei $t = 1$ ist im Householder-Widget schon die halbe Arbeit getan, denn $\bw(1)$ hat
+dieselbe Länge wie $\ba$.
+
+$\bw(1)$ liegt zwar auf der Spiegelgeraden, ist aber echt kürzer als $\ba$ – die
+Ablesezeile $\left\|\bw(t)\right\|_2$ zeigt es. Die Projektion allein ist keine
+Orthogonalmatrix; erst der doppelte Schritt bringt die Länge zurück.
+:::
+
+:::frage{wahr}
+Eine Givens-Rotation erzeugt pro Anwendung genau eine Null, eine Householder-Spiegelung
+räumt eine ganze Spalte auf einmal leer.
+
+Genau darin liegt die Arbeitsteilung: Givens fasst nur zwei Zeilen an und erhält deshalb
+:k[Dünnbesetztheit]{#sparse-matrix}, Householder ist für voll besetzte Matrizen billiger
+(Bemerkung 7.5.4).
+:::
+
+:::frage{wahr}
+$\alpha = -\sign(a_1)\left\|\ba\right\|_2$ ist die numerisch sichere Wahl, weil dann
+$v_1$ aus einer Addition gleicher Vorzeichen entsteht.
+
+Dann ist $v_1 = a_1 + \sign(a_1)\left\|\ba\right\|_2$, und bei einer Addition zweier
+Zahlen gleichen Vorzeichens kann keine :k[Auslöschung]{#cancellation} auftreten
+(Bemerkung 7.5.9).
+:::
+
+::::
 
 <p className="border-t border-slate-200 pt-3 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300"><b>Vertiefung:</b> Heath §3.5.1 (Householder-Transformationen) und §3.5.2 (Givens-Rotationen); Methodenvergleich in Heath §3.7; zur Rolle orthogonaler Projektionen im Kleinste-Quadrate-Kontext auch MML §3.8.</p>

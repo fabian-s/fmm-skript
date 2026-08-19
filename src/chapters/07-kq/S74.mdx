@@ -96,8 +96,12 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 [Abschnitt 7.5](#sec-7.5) aus.
 :::
 
-:::vertiefung[Orthogonalmatrizen als Drehungen und Spiegelungen, live]
+:::vertiefung[Woran erkennt man Drehung und Spiegelung?]
+<p className="mb-2 text-sm">Jede Orthogonalmatrix in $\R^{2 \times 2}$ ist eine :k[Drehung]{#rotation-matrix} oder eine :k[Spiegelung]{#reflection} – zwei Typen, mehr gibt es nicht. Welche Größe unterscheidet sie, und welche bleibt in beiden Fällen gleich?</p>
+
 <OrthoWidget />
+
+<p className="mt-2 text-sm">Wie das Widget zeigt, unterscheidet die Determinante: $+1$ für Drehungen, $-1$ für Spiegelungen. Alles Übrige bleibt sich gleich – das hellblaue Bild des Einheitskreises ist wieder der Einheitskreis, $\left\|\bQ\bx\right\|_2 = \left\|\bx\right\|_2 = 2{,}2361$, und $\kappa_2(\bQ) = 1$. Für die Numerik ist der Typ daher gleichgültig; beide Sorten sind gleich gut geeignet, und wir werden von beiden Gebrauch machen.</p>
 :::
 
 ### Die QR-Zerlegung
@@ -207,19 +211,27 @@ $\ba_1 = R_{11}\,\cbred{\bq_1}, \quad \cblue{\ba_2} = \cgreen{R_{12}}\,\cbred{\b
 Dass $\bR$ eine obere Dreiecksmatrix ist, ist kein Zufall, sondern die Struktur des
 Verfahrens: die $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
 
-:::vertiefung[ein Gram-Schmidt-Schritt zum Anfassen]
+:::vertiefung[Was bleibt von a₂ übrig, wenn es fast auf a₁ liegt?]
+<p className="mb-2 text-sm">Sehen wir uns den zweiten Schritt genauer an. Nach Abzug der Projektion bleibt von $\ba_2$ nur der zu $\cgreen{\bq_1}$ senkrechte Anteil übrig, und genau den normieren wir anschließend. Wie viel ist das noch, wenn die beiden Spalten fast dieselbe Richtung haben?</p>
+
 <GramSchmidtWidget />
+
+<p className="mt-2 text-sm">Wie das Widget zeigt, ist der senkrechte Anteil $\left\|\wt{\bq}_2\right\|_2 = \left\|\ba_2\right\|_2 \sin\angle(\ba_1, \ba_2)$: Bei $8^\circ$ zwischen den Spalten bleiben von der Länge 2,2 gerade noch 0,306 übrig, bei $2^\circ$ nur 0,077. Wir teilen also durch eine immer kleinere Zahl – und multiplizieren damit alles hoch, was an Rundungsfehlern in der Differenz $\ba_2 - R_{12}\cgreen{\bq_1}$ steckt.</p>
 :::
 
 Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
 klassische Verfahren heikel. Sind zwei Spalten fast
 :k[linear abhängig]{#linear-independence}, ist das Residuum nach der Projektion winzig,
 und beim Normieren blasen wir :k[Rundungsfehler]{#rounding-error} massiv auf: die
-berechneten $\bq_k$ verlieren ihre Orthogonalität. Wie dramatisch das wird und wie wenig
-es braucht, um es zu reparieren, zeigt das folgende Experiment.
+berechneten $\bq_k$ verlieren ihre Orthogonalität. Wie dramatisch das wird, messen wir am
+besten selbst.
 
-:::vertiefung[wie Gram-Schmidt numerisch zerbricht (und wie man es repariert)]
+:::vertiefung[Wie schnell zerbricht Gram-Schmidt – und wie repariert man es?]
 <CgsVsMgsWidget />
+
+<p className="mt-2 text-sm">Wie das Experiment zeigt, laufen die drei Zeilen weit auseinander. Der Orthogonalitätsverlust des *klassischen* Verfahrens wächst etwa wie $\corange{\kappa_2(\bA)}^2 \, \eps_{\text{mach}}$: bei $p = 4$ sind es $2{,}3\cdot 10^{-9}$, bei $p = 6$ schon $5{,}1\cdot 10^{-5}$, und bei $p = 8$ bleibt mit $0{,}5$ von der Orthogonalität nichts übrig. Die *modifizierte* Variante zieht jede Projektion sofort vom bereits aktualisierten Restvektor ab statt von der Originalspalte; ihr Fehler wächst nur wie $\corange{\kappa_2(\bA)} \, \eps_{\text{mach}}$ und liegt bei $p = 8$ noch bei $7{,}1\cdot 10^{-9}$. Und wer volle Genauigkeit braucht, orthogonalisiert einfach ein zweites Mal nach: Ein einziger Extra-Durchlauf drückt beide Varianten auf Maschinengenauigkeit („twice is enough").</p>
+
+<p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in [Abschnitt 7.3](#sec-7.3) – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::
 
 ### Warum die QR-Zerlegung das KQ-Problem löst
@@ -301,6 +313,48 @@ Beispiel geliefert, ist aber, wie oben gesehen, numerisch fragil. In
 [Abschnitt 7.5](#sec-7.5) konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
 spaltenweise aus einfachen orthogonalen Bausteinen: Givens-Rotationen und
 Householder-Spiegelungen.
+
+### Selbsttest
+
+::::quiz
+
+:::zahlfrage{loesung=0.306 toleranz=0.03}
+Stellen wir im Gram-Schmidt-Widget die beiden Spalten auf einen Winkel von $8^\circ$ ein
+(etwa $\varphi_1 = 120^\circ$, $\varphi_2 = 112^\circ$) bei $\left\|\ba_2\right\|_2 = 2{,}2$.
+Wie lang ist der senkrechte Anteil $\left\|\wt{\bq}_2\right\|_2$?
+
+Der senkrechte Anteil ist $\left\|\ba_2\right\|_2\sin(8^\circ) = 2{,}2 \cdot 0{,}1392
+= 0{,}306$, also knapp 14 % der ursprünglichen Länge. Diesen Rest teilen wir anschließend
+durch seine eigene Länge – mitsamt aller Rundungsfehler, die in ihm stecken.
+:::
+
+:::frage{wahr}
+$\bR$ ist genau deshalb eine obere Dreiecksmatrix, weil die $k$-te Spalte von $\bA$ nur die
+ersten $k$ Orthonormalvektoren braucht.
+
+Das ist die Struktur des Verfahrens: $\bq_k$ entsteht erst aus $\ba_k$, kann also in
+$\ba_1, \dots, \ba_{k-1}$ gar nicht vorkommen. Alle Einträge unterhalb der Diagonalen
+sind deshalb null.
+:::
+
+:::frage{falsch}
+Klassisches und modifiziertes Gram-Schmidt rechnen mathematisch Verschiedenes aus.
+
+In exakter Arithmetik liefern beide dasselbe $\bQ$ und dasselbe $\bR$; sie unterscheiden
+sich nur in der Reihenfolge der Operationen. Erst in Gleitkommaarithmetik trennen sich die
+Wege, und zwar um den Faktor $\corange{\kappa_2(\bA)}$ im Fehler.
+:::
+
+:::frage{wahr}
+Aus dem Beweis von Satz 7.4.7 lässt sich die minimale Residuumsnorm ablesen, ohne
+$\wh{\bx}$ überhaupt einzusetzen.
+
+Der Beweis zerlegt die Zielfunktion in $\left\|\cbred{\bR\bx - \bc_1}\right\|_2^2 +
+\left\|\cblue{\bc_2}\right\|_2^2$; der erste Term wird exakt null, also ist das Minimum
+gerade $\left\|\cblue{\bc_2}\right\|_2$. Das fällt bei der QR-Zerlegung gratis ab.
+:::
+
+::::
 
 *Vertiefung: Heath §3.5 (Orthogonalisierungsverfahren, QR-Zerlegung, Gram-Schmidt);
 MML §3.8 (Orthonormalbasen) und MML §9.2 für die KQ-Perspektive der linearen

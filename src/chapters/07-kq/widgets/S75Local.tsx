@@ -1,15 +1,55 @@
 /**
- * Lokale Hilfskomponenten aus der TSX-Fassung von §7.5 (MDX-Migration
- * 2026-08-11; Rendering unverändert übernommen, Namen beibehalten).
- * Widget-Code recycelt aus interactive/heath-ch3 (§3.5), Labels deutsch.
+ * Widgets für §7.5 „Konstruktion von Q: Givens und Householder".
+ *
+ * DIE EINE EINSICHT je Widget:
+ *   GivensWidget – Eine einzige Drehung schiebt (a₁, a₂) auf die erste Achse;
+ *     c und s liest man dabei direkt aus den beiden Komponenten ab, ganz ohne
+ *     Trigonometrie (Satz 7.5.2).
+ *   HouseholderWidget – H = I − 2P spiegelt, weil der v-Anteil zweimal
+ *     abgezogen wird: einmal landet man auf dem Spiegel, zweimal dahinter.
+ *   AusloeschungWidget – Das falsche Vorzeichen von α löscht die führenden
+ *     Ziffern von v₁ aus, und die daraus gebaute „Spiegelung" trifft ihr Ziel
+ *     nicht mehr (Bemerkung 7.5.9).
+ *
+ * FARBROLLEN Kapitel 7 (durchgehend): der gegebene Vektor a blau (die Eingabe
+ * der Transformation), das Ergebnis Ga bzw. Ha grün, der abgezogene v-Anteil
+ * rot (er ist der Term, den die Auslöschung zerstört), die Projektion auf die
+ * Spiegelgerade violett (das „Residuum" dieses Schrittes), Spiegelgeraden und
+ * Achsen neutral grau.
+ *
+ * PROVENIENZ: SVG-/Rechengerüst aus der internen App interactive/heath-ch3
+ * (§3.5) portiert; Ziehgriffe, Verdikte und alle Texte für dieses Skript neu.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s75.mjs, 2026-08-19):
+ *   Givens: a = (4,3)ᵀ ⇒ r = 5, c = 0,8, s = 0,6, Ga = (5; 4,4e−16), θ = 36,870°;
+ *   a = (−3,4)ᵀ ⇒ c = −0,6, s = 0,8, Ga = (5; 4,4e−16); c² + s² = 1 exakt.
+ *   Householder mit ‖a‖ = 2: 2·vᵀa/vᵀv = 1,000000000 in allen geprüften Fällen;
+ *   bei a-Richtung 130° und α = +2 ist w(0) = a, ‖w(1)‖ = 0,845237 mit
+ *   vᵀw(1) = −1,3e−15 (also auf dem Spiegel), ‖w(2)‖ = 2 und
+ *   ‖Ha − αe₁‖ = 9,9e−16. Die Projektion verkürzt also, erst der doppelte
+ *   Schritt bringt die Länge zurück.
+ *   Auslöschung (a = (1, δ)ᵀ, t-stellige Arithmetik): δ = 10⁻³, t = 4 ⇒ die
+ *   ungünstige Wahl liefert v₁ = 0 (0 korrekte Ziffern) und ‖Ha − αe₁‖ = 1,0e−3,
+ *   die sichere Wahl v₁ = 2,000 (4 korrekte Ziffern) und 2,5e−10.
+ *   δ = 10⁻¹, t = 4 ⇒ 2,6 gegen 4,0 korrekte Ziffern (6,2e−7 gegen 2,5e−4).
+ *   v₁ wird exakt zu 0 gerundet ab δ ≤ 10^(−1,5) (t = 4), 10^(−2,5) (t = 6),
+ *   10^(−3,5) (t = 8).
  */
 import { useId, useState } from "react";
 import {
+  Aufgabe,
+  DragHandle,
+  FMM_COLORS,
   LabeledTransformCanvas,
   M,
   MD,
-  maxAbsCoord,
   Slider,
+  Verdikt,
+  clamp,
+  fmtDe,
+  maxAbsCoord,
+  useDrag,
+  type DragApi,
   type Vec2,
 } from "../../../lib";
 
@@ -23,7 +63,7 @@ const dot2 = (a: V2, b: V2) => a[0] * b[0] + a[1] * b[1];
 function fmt(x: number): string {
   if (Math.abs(x) < 5e-10) return "0";
   if (Math.abs(x - Math.round(x)) < 5e-10) return String(Math.round(x));
-  return x.toFixed(4);
+  return fmtDe(x, 4);
 }
 
 /* -------------------------------------------- Widget 1: Givens, live */
@@ -42,82 +82,101 @@ export function GivensWidget() {
   const theta = (Math.atan2(a2, a1) * 180) / Math.PI;
   const wh = Math.max(2, maxAbsCoord([a1, a2], [r, 0])) * 1.25;
   const vecs: Vec2[] = [
-    { v: [a1, a2], color: "#0072B2", label: "a" }, // FMM-blau
-    { v: [r, 0], color: "#E69F00", label: "Ga" }, // FMM-orange (= α)
+    { v: [a1, a2], color: FMM_COLORS.blau, label: "a", draggable: true },
+    { v: [r, 0], color: FMM_COLORS.gruen, label: "Ga" },
   ];
   return (
-    <div className="my-2 rounded bg-slate-100 p-3 dark:bg-slate-800/60">
-      <p className="my-2 text-sm">
-        Stellen wir die beiden Komponenten von <M>{"\\ba"}</M> ein. Daraus berechnet das
-        Widget <M>{"c"}</M> und <M>{"s"}</M> wie in Satz 7.5.2 und wendet die Rotation an:
-        blau ist <M>{"\\ba"}</M>, orange das Ergebnis <M>{"\\bG\\ba"}</M>. Es landet stets
-        auf der ersten Koordinatenachse, mit Länge{" "}
-        <M>{"\\alpha = \\left\\|\\ba\\right\\|_2"}</M>. Im Hintergrund sehen wir, wohin{" "}
-        <M>{"\\bG"}</M> das Koordinatengitter schickt: Alles wird nur gedreht, nichts
-        gestreckt oder gestaucht.
-      </p>
-      <Slider label="a₁" value={a1} onChange={setA1} min={-5} max={5} step={0.1} />
-      <Slider label="a₂" value={a2} onChange={setA2} min={-5} max={5} step={0.1} />
+    <div className="my-2">
+      <Aufgabe>
+        Ziehen wir die Spitze von <M>{"\\ba"}</M> im Bild herum (oder nehmen die beiden Regler):{" "}
+        <M>{"\\bG\\ba"}</M> landet immer auf der ersten Achse.
+      </Aufgabe>
+      <LabeledTransformCanvas
+        matrix={G}
+        vectors={vecs}
+        worldHalf={wh}
+        size={280}
+        showUnitCircle
+        onVectorChange={(i, v) => {
+          if (i !== 0) return;
+          setA1(Math.round(v[0] * 10) / 10);
+          setA2(Math.round(v[1] * 10) / 10);
+        }}
+        ariaLabel={`Der Vektor a und sein Bild Ga unter der Givens-Rotation; Ga liegt auf der ersten Koordinatenachse und hat die Länge ${fmtDe(r, 3)}.`}
+      />
+      <div className="mt-2">
+        <Slider label="a₁" value={a1} onChange={setA1} min={-5} max={5} step={0.1} accent={FMM_COLORS.blau} fmt={(v) => fmtDe(v, 1)} />
+        <Slider label="a₂" value={a2} onChange={setA2} min={-5} max={5} step={0.1} accent={FMM_COLORS.blau} fmt={(v) => fmtDe(v, 1)} />
+      </div>
       {degeneriert ? (
-        <p className="my-2 text-sm italic">
-          <M>{"\\ba = \\bnull"}</M>: hier gibt es nichts zu drehen; jedes Paar mit{" "}
-          <M>{"c^2 + s^2 = 1"}</M> funktioniert, wir nehmen <M>{"\\bG = \\bI"}</M>.
-        </p>
+        <Verdikt kind="warn" titel="Nichts zu drehen:">
+          <M>{"\\ba = \\bnull"}</M> – hier gibt es keine ausgezeichnete Drehung; jedes Paar mit{" "}
+          <M>{"c^2 + s^2 = 1"}</M> tut es, üblich ist <M>{"\\bG = \\bI"}</M>. Satz 7.5.2 setzt
+          deshalb <M>{"\\ba \\neq \\bnull"}</M> voraus.
+        </Verdikt>
       ) : (
-        <div className="my-2 text-sm">
-          <MD>
-            {`c = ${c.toFixed(4)}, \\quad s = ${s.toFixed(4)}, \\quad \\alpha = ${r.toFixed(
-              4
-            )}, \\quad \\theta \\approx ${theta.toFixed(2)}^{\\circ}`}
-          </MD>
-          <MD>
-            {`\\bG = \\begin{pmatrix} ${c.toFixed(4)} & ${s.toFixed(4)} \\\\ ${(-s).toFixed(
-              4
-            )} & ${c.toFixed(4)} \\end{pmatrix}, \\qquad \\bG\\ba = \\begin{pmatrix} ${r.toFixed(
-              4
-            )} \\\\ 0 \\end{pmatrix}`}
-          </MD>
-        </div>
+        <>
+          <div className="my-2 text-sm">
+            <MD>
+              {`c = ${fmtMath(c)}, \\quad s = ${fmtMath(s)}, \\quad \\alpha = ${fmtMath(r)}, \\quad \\theta \\approx ${fmtMath(theta, 2)}^{\\circ}`}
+            </MD>
+            <MD>
+              {`\\bG = \\begin{pmatrix} ${fmtMath(c)} & ${fmtMath(s)} \\\\ ${fmtMath(-s)} & ${fmtMath(c)} \\end{pmatrix}, \\qquad \\bG\\ba = \\begin{pmatrix} ${fmtMath(r)} \\\\ 0 \\end{pmatrix}`}
+            </MD>
+          </div>
+          <Verdikt kind="ok" titel="Zweite Komponente auf null:">
+            Satz 7.5.2 liefert <M>{`c = a_1/r = ${fmtMath(c)}`}</M> und{" "}
+            <M>{`s = a_2/r = ${fmtMath(s)}`}</M>, und damit ist{" "}
+            <M>{"\\bG\\ba = (\\alpha, 0)^\\top"}</M> mit{" "}
+            <M>{`\\alpha = \\left\\|\\ba\\right\\|_2 = ${fmtMath(r)}`}</M>. Die Länge musste
+            herauskommen, denn <M>{"\\bG"}</M> ist orthogonal (Lemma 7.4.2 (ii)). Der angezeigte
+            Winkel <M>{`\\theta \\approx ${fmtMath(theta, 2)}^{\\circ}`}</M> dient nur der
+            Anschauung; in die Formeln geht er nirgends ein.
+          </Verdikt>
+        </>
       )}
-      <LabeledTransformCanvas matrix={G} vectors={vecs} worldHalf={wh} showUnitCircle />
-      <p className="my-2 text-sm">
-        Der angezeigte Winkel <M>{"\\theta"}</M> dient nur unserer Anschauung; in die
-        Formeln für <M>{"c"}</M> und <M>{"s"}</M> geht er an keiner Stelle ein.
-      </p>
     </div>
   );
+}
+
+/** Deutsche Dezimalzahl für MathJax-Literale. */
+function fmtMath(v: number, d = 4): string {
+  return fmtDe(v, d).replace(",", "{,}").replace("−", "-");
 }
 
 /* --------------------------- Widget 2: Householder-Spiegelung, geometrisch */
 
 const FARBEN = {
-  a: "#0072B2", // FMM-blau: der gegebene Vektor a
-  p: "#D55E00", // FMM-rot: v-Anteil v(vᵀa/vᵀv), rot wie \cbred{v} im Text
-  proj: "#9E57D5", // FMM-violett: Projektion auf die Spiegelgerade
-  refl: "#009E73", // FMM-grün: Ha bzw. Wanderpunkt w(t)
-  spiegel: "#475569",
-  spiegelAndere: "#cbd5e1",
+  a: FMM_COLORS.blau, // der gegebene Vektor a
+  p: FMM_COLORS.rot, // v-Anteil v(vᵀa/vᵀv) – der Term, den die Auslöschung trifft
+  proj: FMM_COLORS.violett, // Projektion auf die Spiegelgerade
+  refl: FMM_COLORS.gruen, // Ha bzw. Wanderpunkt w(t)
+  spiegel: FMM_COLORS.grau, // gewählte Spiegelgerade (neutral)
+  spiegelAndere: FMM_COLORS.hellgrau, // die des anderen Vorzeichens
 };
+
+const HSIZE = 340;
+const HHALF = 2.8;
 
 /**
  * 2D-Geometrie von Ha: Vektor a, gewählte Spiegelgerade span(v)⊥, Anteil von
  * a längs v, Projektion auf die Spiegelgerade und Spiegelung. `t`
  * interpoliert a − t·v(vᵀa/vᵀv): t=1 Projektion, t=2 Spiegelung.
- * (SVG-Code portiert aus der internen Heath-App, Labels deutsch.)
  */
 function SpiegelungSVG({
   a,
   sign,
   t,
-  size = 340,
+  zieh,
 }: {
   a: V2;
   sign: 1 | -1;
   t: number;
-  size?: number;
+  zieh: DragApi<"a">;
 }) {
   const uid = useId();
-  const half = 2.8;
+  const size = HSIZE;
+  const half = HHALF;
   const s = size / (2 * half);
   const px = (v: V2): V2 => [size / 2 + v[0] * s, size / 2 - v[1] * s];
 
@@ -167,6 +226,7 @@ function SpiegelungSVG({
         stroke={color}
         strokeWidth={2}
         markerEnd={`url(#pf-${uid}-${color.slice(1)})`}
+        pointerEvents="none"
       />
     );
   };
@@ -180,6 +240,7 @@ function SpiegelungSVG({
         fontSize="12"
         fontStyle="italic"
         fill={color}
+        pointerEvents="none"
       >
         {text}
       </text>
@@ -192,47 +253,37 @@ function SpiegelungSVG({
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      className="rounded border border-slate-300 bg-white dark:border-slate-600"
+      className="h-auto max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+      role="img"
+      aria-label={`Die Spiegelung von a an der Geraden senkrecht zu v; der Wanderpunkt steht bei t = ${fmtDe(t, 2)}.`}
+      {...zieh.svgProps}
     >
       <defs>
         {farben.map((col) => (
-          <marker
-            key={col}
-            id={`pf-${uid}-${col.slice(1)}`}
-            markerWidth="8"
-            markerHeight="8"
-            refX="6"
-            refY="3"
-            orient="auto"
-          >
+          <marker key={col} id={`pf-${uid}-${col.slice(1)}`} markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
             <path d="M0,0 L6,3 L0,6 z" fill={col} />
           </marker>
         ))}
       </defs>
       {/* Achsen */}
-      <line x1={0} y1={size / 2} x2={size} y2={size / 2} stroke="#e2e8f0" />
-      <line x1={size / 2} y1={0} x2={size / 2} y2={size} stroke="#e2e8f0" />
-      <text x={size - 16} y={size / 2 - 5} fontSize="11" fill="#94a3b8">
+      <line x1={0} y1={size / 2} x2={size} y2={size / 2} stroke="var(--w-grid, #e2e8f0)" />
+      <line x1={size / 2} y1={0} x2={size / 2} y2={size} stroke="var(--w-grid, #e2e8f0)" />
+      <text x={size - 16} y={size / 2 - 5} fontSize="11" fill="var(--w-axis, #94a3b8)">
         x₁
       </text>
-      <text x={size / 2 + 5} y={14} fontSize="11" fill="#94a3b8">
+      <text x={size / 2 + 5} y={14} fontSize="11" fill="var(--w-axis, #94a3b8)">
         x₂
       </text>
       {/* die beiden winkelhalbierenden Spiegelgeraden */}
       {line(d2, FARBEN.spiegelAndere, "3 4")}
       {line(d1, FARBEN.spiegel, "5 4", "span(v)⊥")}
       {/* Weg a → Projektion → Spiegelung, senkrecht zur Spiegelgeraden */}
-      <polyline
-        points={`${px(a)} ${px(proj)} ${px(refl)}`}
-        fill="none"
-        stroke="#94a3b8"
-        strokeDasharray="2 3"
-      />
+      <polyline points={`${px(a)} ${px(proj)} ${px(refl)}`} fill="none" stroke="var(--w-axis, #94a3b8)" strokeDasharray="2 3" />
       {/* Zielpunkte auf der Achse */}
-      <circle cx={px([norm, 0])[0]} cy={px([norm, 0])[1]} r={3.5} fill="#334155" />
-      <circle cx={px([-norm, 0])[0]} cy={px([-norm, 0])[1]} r={3.5} fill="#334155" />
-      {label([norm, 0], "+‖a‖₂e₁", "#334155", -8, 16)}
-      {label([-norm, 0], "−‖a‖₂e₁", "#334155", -24, 16)}
+      <circle cx={px([norm, 0])[0]} cy={px([norm, 0])[1]} r={3.5} fill="var(--w-text, #334155)" />
+      <circle cx={px([-norm, 0])[0]} cy={px([-norm, 0])[1]} r={3.5} fill="var(--w-text, #334155)" />
+      {label([norm, 0], "+‖a‖₂e₁", "var(--w-text, #334155)", -8, 16)}
+      {label([-norm, 0], "−‖a‖₂e₁", "var(--w-text, #334155)", -24, 16)}
       {/* Vektoren */}
       {arrow(a, FARBEN.a)}
       {vv > 1e-12 && arrow(p, FARBEN.p)}
@@ -245,21 +296,17 @@ function SpiegelungSVG({
         label(refl, "Ha = αe₁", FARBEN.refl, -16, 26)
       ) : (
         <g>
-          <circle cx={px(w)[0]} cy={px(w)[1]} r={5} fill={FARBEN.refl} />
+          <circle cx={px(w)[0]} cy={px(w)[1]} r={5} fill={FARBEN.refl} pointerEvents="none" />
           {label(w, "w(t)", FARBEN.refl, 8, -8)}
         </g>
       )}
+      <DragHandle x={px(a)[0]} y={px(a)[1]} r={5} farbe={FARBEN.a} aktiv={zieh.dragging === "a"} {...zieh.handleProps("a")} />
     </svg>
   );
 }
 
 function Swatch({ color }: { color: string }) {
-  return (
-    <span
-      className="mr-1 inline-block h-2.5 w-2.5 rounded-sm align-middle"
-      style={{ background: color }}
-    />
-  );
+  return <span className="mr-1 inline-block h-2.5 w-2.5 rounded-sm align-middle" style={{ background: color }} />;
 }
 
 export function HouseholderWidget() {
@@ -275,62 +322,45 @@ export function HouseholderWidget() {
   const w = sub(a, scl(v, t * c));
   const nw = Math.hypot(w[0], w[1]);
   const sicher: 1 | -1 = a[0] < 0 ? 1 : -1;
-  const phase =
-    t < 0.05
-      ? "w(0) = a: wir stehen noch am Ausgangsvektor."
-      : Math.abs(t - 1) < 0.05
-        ? "w(1) = (I − P)a ist die Projektion: der Wanderpunkt liegt jetzt auf der Spiegelgeraden."
-        : t >= 1.95
-          ? "w(2) = (I − 2P)a = Ha: die Spiegelung ist komplett, die Norm wieder da."
-          : t < 1
-            ? "der v-Anteil schrumpft, Richtung Spiegelgerade …"
-            : "hinter der Spiegelgeraden, gleich ist die x₁-Achse erreicht …";
+
+  /** a bleibt auf dem Kreis vom Radius 2; nur die Richtung ist ziehbar. */
+  const zieh = useDrag<"a">({
+    feld: { x0: 0, y0: 0, w: HSIZE, h: HSIZE },
+    welt: { x0: -HHALF, x1: HHALF, y0: -HHALF, y1: HHALF },
+    onDrag: ([px, py]) => {
+      const g = (Math.atan2(py, px) * 180) / Math.PI;
+      setDeg(clamp(Math.round(g), 10, 170));
+    },
+  });
+
   return (
-    <div className="my-2 rounded bg-slate-100 p-3 dark:bg-slate-800/60">
-      <p className="my-2 text-sm">
-        Der Regler <M>{"t"}</M> zerlegt die Spiegelung in ihre zwei Hälften: Der Wanderpunkt{" "}
-        <M>{"\\bw(t) = \\ba - t\\,\\bv\\,\\frac{\\bv^\\top\\ba}{\\bv^\\top\\bv}"}</M> startet
-        bei <M>{"t = 0"}</M> in <M>{"\\ba"}</M>, erreicht bei <M>{"t = 1"}</M> die
-        Spiegelgerade (einmal den <M>{"\\bv"}</M>-Anteil abziehen: die Projektion) und bei{" "}
-        <M>{"t = 2"}</M> den gespiegelten Punkt (zweimal abziehen). Über die Knöpfe legen wir
-        das Vorzeichen von <M>{"\\alpha"}</M> fest, und damit, an welcher der beiden
-        Spiegelgeraden gespiegelt wird.
-      </p>
+    <div className="my-2">
+      <Aufgabe>
+        Schieben wir <M>{"t"}</M> von 0 nach 2 und ziehen zwischendurch <M>{"\\ba"}</M> im Bild
+        herum; der Knopf wechselt die Spiegelgerade.
+      </Aufgabe>
       <div className="flex flex-wrap items-start gap-4">
-        <SpiegelungSVG a={a} sign={sign} t={t} />
-        <div className="min-w-56 grow text-sm">
-          <Slider
-            label="Richtung von a (°)"
-            value={deg}
-            onChange={setDeg}
-            min={10}
-            max={170}
-            step={1}
-            fmt={(x) => `${x.toFixed(0)}°`}
-          />
-          <div className="my-2 flex items-center gap-2">
-            <span className="w-28 shrink-0 text-right">Spiegel / Vorzeichen:</span>
+        <SpiegelungSVG a={a} sign={sign} t={t} zieh={zieh} />
+        <div className="min-w-56 grow basis-64 text-sm">
+          <Slider label="Richtung von a (°)" value={deg} onChange={setDeg} min={10} max={170} step={1} accent={FARBEN.a} fmt={(x) => `${fmtDe(x, 0)}°`} />
+          <div className="my-2 flex flex-wrap items-center gap-2">
+            <span className="shrink-0 text-right">Spiegel / Vorzeichen:</span>
             {([1, -1] as const).map((sg) => (
               <button
                 key={sg}
                 type="button"
                 onClick={() => setSign(sg)}
+                aria-pressed={sign === sg}
                 className={`rounded border px-2 py-0.5 text-xs ${
-                  sign === sg
-                    ? "border-sky-600 bg-sky-100 dark:bg-sky-900"
-                    : "border-slate-300 dark:border-slate-600"
+                  sign === sg ? "border-sky-600 bg-sky-100 dark:bg-sky-900" : "border-slate-300 dark:border-slate-600"
                 }`}
               >
-                <M>
-                  {sg === 1
-                    ? "\\alpha = +\\left\\|\\ba\\right\\|_2"
-                    : "\\alpha = -\\left\\|\\ba\\right\\|_2"}
-                </M>
+                <M>{sg === 1 ? "\\alpha = +\\left\\|\\ba\\right\\|_2" : "\\alpha = -\\left\\|\\ba\\right\\|_2"}</M>
               </button>
             ))}
           </div>
-          <Slider label="t" value={t} onChange={setT} min={0} max={2} step={0.01} />
-          <div className="rounded bg-slate-200/70 p-2 font-mono text-xs dark:bg-slate-900/60">
+          <Slider label="t" value={t} onChange={setT} min={0} max={2} step={0.01} accent={FARBEN.refl} fmt={(x) => fmtDe(x, 2)} />
+          <div className="rounded bg-slate-200/70 p-2 font-mono text-xs tabular-nums dark:bg-slate-900/60">
             <div>
               a = ({fmt(a[0])}, {fmt(a[1])}), ‖a‖₂ = 2
             </div>
@@ -341,12 +371,7 @@ export function HouseholderWidget() {
               w(t) = ({fmt(w[0])}, {fmt(w[1])}), ‖w(t)‖₂ = {fmt(nw)}
             </div>
             <div>vᵀw(t) = {fmt(dot2(v, w))}</div>
-            <div className="mt-1 text-emerald-700 dark:text-emerald-400">
-              numerisch sichere Wahl hier: α = {sicher === 1 ? "+" : "−"}‖a‖₂ (das weiter
-              entfernte Ziel, längeres v)
-            </div>
           </div>
-          <p className="mt-2 text-sm">{phase}</p>
           <ul className="mt-2 space-y-0.5 text-xs">
             <li>
               <Swatch color={FARBEN.a} />
@@ -354,8 +379,8 @@ export function HouseholderWidget() {
             </li>
             <li>
               <Swatch color={FARBEN.p} />
-              <M>{"\\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Anteil von <M>{"\\ba"}</M>{" "}
-              längs <M>{"\\bv"}</M>
+              <M>{"\\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Anteil von <M>{"\\ba"}</M> längs{" "}
+              <M>{"\\bv"}</M>
             </li>
             <li>
               <Swatch color={FARBEN.proj} />
@@ -371,20 +396,40 @@ export function HouseholderWidget() {
               <Swatch color={FARBEN.spiegel} />
               gewählte Spiegelgerade <M>{"\\spann(\\bv)^\\perp"}</M>;{" "}
               <Swatch color={FARBEN.spiegelAndere} />
-              die Spiegelgerade des anderen Vorzeichens
+              die des anderen Vorzeichens
             </li>
           </ul>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Der Zahlenzustand verrät dabei ein wichtiges Detail: Für{" "}
-            <M>{"0 < t < 2"}</M> ist <M>{"\\left\\|\\bw(t)\\right\\|_2"}</M> echt kleiner als{" "}
-            <M>{"\\left\\|\\ba\\right\\|_2"}</M>. Die Projektion allein (<M>{"t = 1"}</M>)
-            verkürzt den Vektor also und ist keine Orthogonalmatrix; erst der doppelte
-            Schritt bringt die volle Länge zurück. Und dass <M>{"\\bw(1)"}</M> wirklich auf
-            der Spiegelgeraden liegt, zeigt die Zeile <M>{"\\bv^\\top\\bw(t)"}</M>: bei{" "}
-            <M>{"t = 1"}</M> steht dort 0.
-          </p>
         </div>
       </div>
+      {t < 0.05 ? (
+        <Verdikt kind="neutral" className="mt-2" titel="Ausgangslage:">
+          <M>{"\\bw(0) = \\ba"}</M> – noch ist nichts abgezogen. Der rote Pfeil zeigt, wie viel
+          von <M>{"\\ba"}</M> längs <M>{"\\bv"}</M> liegt; das ist der Anteil, um den es geht.
+        </Verdikt>
+      ) : Math.abs(t - 1) < 0.05 ? (
+        <Verdikt kind="warn" className="mt-2" titel="Halbzeit: die Projektion:">
+          <M>{"\\bw(1) = (\\bI - \\bP)\\ba"}</M> liegt auf der Spiegelgeraden, erkennbar an{" "}
+          <M>{"\\bv^\\top\\bw = "}</M> <span className="font-mono">{fmt(dot2(v, w))}</span>. Aber{" "}
+          <M>{"\\left\\|\\bw(1)\\right\\|_2"}</M> = <span className="font-mono">{fmt(nw)}</span>{" "}
+          ist echt kleiner als <M>{"\\left\\|\\ba\\right\\|_2 = 2"}</M>: Eine Projektion verkürzt,
+          sie ist keine Orthogonalmatrix und für unseren Zweck unbrauchbar.
+        </Verdikt>
+      ) : t >= 1.95 ? (
+        <Verdikt kind="ok" className="mt-2" titel="Fertig gespiegelt:">
+          <M>{"\\bw(2) = (\\bI - 2\\bP)\\ba = \\bH\\ba = \\alpha\\,\\be_1"}</M>, und die Länge ist
+          mit <span className="font-mono">{fmt(nw)}</span> wieder da – Satz 7.5.6 in Aktion:{" "}
+          <M>{"\\bH^2 = \\bI"}</M>. Numerisch sicher ist hier die Wahl{" "}
+          <M>{sicher === 1 ? "\\alpha = +\\left\\|\\ba\\right\\|_2" : "\\alpha = -\\left\\|\\ba\\right\\|_2"}</M>
+          , also das von <M>{"\\ba"}</M> weiter entfernte Ziel (Bemerkung 7.5.9); das nächste
+          Widget zeigt, was die andere Wahl anrichtet.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="neutral" className="mt-2" titel="Unterwegs:">
+          <M>{"\\left\\|\\bw(t)\\right\\|_2"}</M> = <span className="font-mono">{fmt(nw)}</span>{" "}
+          liegt unter 2. Für <M>{"0 < t < 2"}</M> ist der Wanderpunkt stets kürzer als{" "}
+          <M>{"\\ba"}</M>; erst der volle doppelte Schritt bringt die Länge zurück.
+        </Verdikt>
+      )}
     </div>
   );
 }
@@ -418,11 +463,16 @@ export function AusloeschungWidget() {
   const fehlerSchlecht = haFehler(v1Schlecht, nrmExakt);
   const fehlerGut = haFehler(v1Gut, -nrmExakt);
 
-  const korrekteZiffern = (comp: number, exakt: number): string => {
+  const korrekteZiffernZahl = (comp: number, exakt: number): number => {
     const rel = Math.abs(comp - exakt) / Math.abs(exakt);
-    if (rel === 0) return `alle ${stellen}`;
-    const d = Math.max(0, Math.min(stellen, -Math.log10(rel)));
-    return d.toFixed(1);
+    if (rel === 0) return stellen;
+    return Math.max(0, Math.min(stellen, -Math.log10(rel)));
+  };
+  const zifSchlecht = korrekteZiffernZahl(v1Schlecht, v1SchlechtExakt);
+  const zifGut = korrekteZiffernZahl(v1Gut, v1GutExakt);
+  const korrekteZiffern = (comp: number, exakt: number): string => {
+    const d = korrekteZiffernZahl(comp, exakt);
+    return d === stellen ? `alle ${stellen}` : fmtDe(d, 1);
   };
 
   const zeile = (
@@ -431,15 +481,9 @@ export function AusloeschungWidget() {
     v1: number,
     v1Exakt: number,
     fehler: number,
-    schlecht: boolean
+    schlecht: boolean,
   ) => (
-    <tr
-      className={
-        schlecht
-          ? "bg-rose-50 dark:bg-rose-950/40"
-          : "bg-emerald-50 dark:bg-emerald-950/30"
-      }
-    >
+    <tr className={schlecht ? "bg-rose-50 dark:bg-rose-950/40" : "bg-emerald-50 dark:bg-emerald-950/30"}>
       <td className="px-2 py-1">{name}</td>
       <td className="px-2 py-1 font-mono">{alphaS}</td>
       <td className="px-2 py-1 font-mono">{v1.toExponential(Math.min(stellen - 1, 6))}</td>
@@ -452,35 +496,13 @@ export function AusloeschungWidget() {
   );
 
   return (
-    <div className="my-2 rounded bg-slate-100 p-3 text-sm dark:bg-slate-800/60">
-      <p className="mb-2">
-        Als Testvektor dient <M>{"\\ba = (1, \\delta)^\\top"}</M> mit kleinem{" "}
-        <M>{"\\delta"}</M>; gerechnet wird in einer nachgestellten Gleitkommaarithmetik, die
-        nach jeder Operation auf <M>{"t"}</M> signifikante Stellen rundet. Es ist{" "}
-        <M>{"\\left\\|\\ba\\right\\|_2 = \\sqrt{1 + \\delta^2} \\approx 1"}</M>: Bei der
-        ungünstigen Wahl <M>{"\\alpha = +\\left\\|\\ba\\right\\|_2"}</M> (gleiches Vorzeichen
-        wie <M>{"a_1"}</M>) entsteht <M>{"v_1 = 1 - \\left\\|\\ba\\right\\|_2"}</M> als
-        Differenz zweier fast identischer Zahlen, genau der Auslöschungs-Fall aus Bemerkung
-        7.5.9. Die sichere Wahl <M>{"\\alpha = -\\left\\|\\ba\\right\\|_2"}</M> vermeidet das.
-      </p>
-      <Slider
-        label="δ"
-        value={logd}
-        onChange={setLogd}
-        min={-7}
-        max={-1}
-        step={0.5}
-        fmt={(x) => `1e${x.toFixed(1)}`}
-      />
-      <Slider
-        label="Stellen t"
-        value={stellen}
-        onChange={setStellen}
-        min={2}
-        max={10}
-        step={1}
-        fmt={(x) => x.toFixed(0)}
-      />
+    <div className="my-2 text-sm">
+      <Aufgabe>
+        Stellen wir <M>{"\\delta"}</M> klein und die Stellenzahl <M>{"t"}</M> niedrig und
+        vergleichen die beiden Zeilen Spalte für Spalte.
+      </Aufgabe>
+      <Slider label="δ" value={logd} onChange={setLogd} min={-7} max={-1} step={0.5} fmt={(x) => `10^${fmtDe(x, 1)}`} />
+      <Slider label="Stellen t" value={stellen} onChange={setStellen} min={2} max={10} step={1} fmt={(x) => fmtDe(x, 0)} />
       <div className="my-2 overflow-x-auto">
         <table className="min-w-full border-collapse text-xs">
           <thead>
@@ -499,17 +521,35 @@ export function AusloeschungWidget() {
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-slate-500 dark:text-slate-400">
-        In der oberen Zeile frisst die Subtraktion alle führenden Ziffern auf; was von{" "}
-        <M>{"v_1"}</M> übrig bleibt, ist im Wesentlichen der Rundungsfehler von{" "}
-        <M>{"\\left\\|\\ba\\right\\|_2 \\approx 1 + \\delta^2/2"}</M>. Ist <M>{"\\delta^2"}</M>{" "}
-        so klein, dass es in <M>{"t"}</M> Stellen gar nicht mehr sichtbar ist, wird{" "}
-        <M>{"v_1"}</M> sogar zu exakt 0 gerundet; die daraus gebaute „Spiegelung" hat mit der
-        gesuchten dann nichts mehr zu tun (letzte Spalte!). In der unteren Zeile werden dagegen
-        zwei positive Zahlen addiert; dabei geht keine einzige Ziffer verloren. Geometrisch
-        gesprochen: Die sichere Wahl spiegelt auf das Ziel <M>{"\\alpha\\,\\be_1"}</M>, das von{" "}
-        <M>{"\\ba"}</M> <em>weiter entfernt</em> liegt.
-      </p>
+      {v1Schlecht === 0 ? (
+        <Verdikt kind="fail" titel="Nichts bleibt übrig:">
+          In <M>{`t = ${stellen}`}</M> Stellen ist <M>{"\\delta^2"}</M> gar nicht mehr sichtbar,
+          also wird <M>{"v_1 = 1 - \\left\\|\\ba\\right\\|_2"}</M> zu exakt 0 gerundet. Der
+          Spiegelvektor verschwindet, und die daraus gebaute „Spiegelung" verfehlt ihr Ziel um{" "}
+          <span className="font-mono">{fehlerSchlecht.toExponential(1)}</span>. Die sichere Wahl
+          addiert stattdessen zwei positive Zahlen: <span className="font-mono">{fmtDe(zifGut, 1)}</span>{" "}
+          korrekte Ziffern und Restfehler <span className="font-mono">{fehlerGut.toExponential(1)}</span>{" "}
+          (Bemerkung 7.5.9).
+        </Verdikt>
+      ) : zifSchlecht < zifGut - 0.5 ? (
+        <Verdikt kind="warn" titel="Führende Ziffern verloren:">
+          Die Subtraktion zweier fast gleicher Zahlen lässt von{" "}
+          <M>{"v_1"}</M> nur <span className="font-mono">{fmtDe(zifSchlecht, 1)}</span> der{" "}
+          <M>{`${stellen}`}</M> Ziffern übrig, die sichere Wahl behält{" "}
+          <span className="font-mono">{fmtDe(zifGut, 1)}</span>. In der letzten Spalte schlägt das
+          durch: <span className="font-mono">{fehlerSchlecht.toExponential(1)}</span> gegen{" "}
+          <span className="font-mono">{fehlerGut.toExponential(1)}</span> – ein Faktor{" "}
+          <span className="font-mono">{(fehlerSchlecht / fehlerGut).toExponential(1)}</span>.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="ok" titel="Hier ist noch alles harmlos:">
+          Mit <M>{`\\delta = 10^{${fmtMath(logd, 1)}}`}</M> und{" "}
+          <M>{`t = ${stellen}`}</M> Stellen sind <M>{"1"}</M> und{" "}
+          <M>{"\\left\\|\\ba\\right\\|_2"}</M> noch gut unterscheidbar, beide Wahlen liefern{" "}
+          brauchbare Werte. Schieben wir <M>{"\\delta"}</M> nach unten oder{" "}
+          <M>{"t"}</M> herunter, kippt die obere Zeile.
+        </Verdikt>
+      )}
     </div>
   );
 }
