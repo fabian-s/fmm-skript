@@ -507,7 +507,7 @@ function ConceptWindow({ entry, depth }: { entry: Entry; depth: number }) {
       className={[
         // constant border WIDTH: switching widths would shift the rendered
         // bounds away from the cached hit-test rect
-        "fixed max-w-md rounded-lg border-2 bg-slate-800 text-slate-100 shadow-xl text-sm leading-relaxed",
+        "w-dark fixed max-w-md rounded-lg border-2 bg-slate-800 text-slate-100 shadow-xl text-sm leading-relaxed",
         entry.pinned ? "border-amber-400 shadow-2xl" : "border-slate-500",
       ].join(" ")}
       style={{

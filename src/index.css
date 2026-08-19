@@ -106,3 +106,24 @@ mjx-container > svg {
 .concept-body .text-red-700 { color: #f87171 !important; }
 .concept-body [data-concept-link] { color: #7dd3fc !important; }
 .concept-body [data-concept-link]:hover { background-color: rgb(12 74 110 / 0.4) !important; }
+
+/* Widget-Oberflächen (Lib-SVGs lesen diese Variablen; das dunkle Tooltip-Panel
+   überschreibt sie, sodass Plot/TransformCanvas/Surface3D ohne Props passen). */
+:root {
+  --w-bg: #ffffff;
+  --w-grid: #e2e8f0;
+  --w-grid-strong: #cbd5e1;
+  --w-axis: #64748b;
+  --w-text: #334155;
+  --w-muted: #94a3b8;
+  --w-border: #cbd5e1;
+}
+.w-dark, [data-widget-surface="dark"] {
+  --w-bg: #1e293b;
+  --w-grid: #334155;
+  --w-grid-strong: #475569;
+  --w-axis: #94a3b8;
+  --w-text: #e2e8f0;
+  --w-muted: #94a3b8;
+  --w-border: #475569;
+}

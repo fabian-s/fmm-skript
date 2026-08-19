@@ -13,40 +13,8 @@ import type { ReactNode } from "react";
 import { Plot, type Series } from "./Plot";
 import { TransformCanvas, type Vec2 } from "./TransformCanvas";
 
-/** "Nice" tick positions covering [a, b]. */
-export function niceTicks(a: number, b: number, target = 5): number[] {
-  if (!(b > a)) return [];
-  const raw = (b - a) / target;
-  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-  const norm = raw / mag;
-  const step = mag * (norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10);
-  const ticks: number[] = [];
-  for (let t = Math.ceil(a / step) * step; t <= b + step * 1e-6; t += step) {
-    ticks.push(Math.abs(t) < step * 1e-6 ? 0 : t);
-  }
-  return ticks;
-}
-
-function fmtTick(t: number): string {
-  const a = Math.abs(t);
-  if (a >= 100 || Number.isInteger(t)) return String(Math.round(t));
-  return a >= 10 ? t.toFixed(0) : a >= 1 ? t.toFixed(1).replace(/\.0$/, "") : t.toFixed(2).replace(/0$/, "");
-}
-
-/** Largest singular value of a 2x2 matrix (how far the unit circle is stretched). */
-export function sigmaMax(m: [[number, number], [number, number]]): number {
-  const [[a, b], [c, d]] = m;
-  const T = a * a + b * b + c * c + d * d;
-  const det = a * d - b * c;
-  return Math.sqrt((T + Math.sqrt(Math.max(0, T * T - 4 * det * det))) / 2);
-}
-
-/** Largest |coordinate| over a list of 2-vectors. */
-export function maxAbsCoord(...vs: [number, number][]): number {
-  let m = 0;
-  for (const [x, y] of vs) m = Math.max(m, Math.abs(x), Math.abs(y));
-  return m;
-}
+export { niceTicks, sigmaMax, maxAbsCoord } from "./util";
+import { niceTicks, fmtTick } from "./util";
 
 const PAD_L = 34; // room for y tick labels
 const PAD_B = 16; // room for x tick labels
