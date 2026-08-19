@@ -1,6 +1,6 @@
 export const title = "Ableitung";
 
-import { SecantWidget } from "./widgets/DerivativeWidget";
+import { SecantWidget } from "./widgets/SecantLineWidget";
 
 Die Ableitung $f'(a)$ misst, wie schnell sich eine Funktion
 an der einzelnen Stelle $x = a$ ändert: sie ist die
@@ -20,4 +20,10 @@ nah genug herangehen; ein komplizierter nichtlinearer
 Zusammenhang lässt sich also lokal durch einen einfachen linearen
 ersetzen.
 
-<SecantWidget />
+Wie nah muss der zweite Punkt heran, bevor die Sekante die Tangente ersetzen
+darf?
+
+<SecantWidget variante="ableitung" />
+
+Der Abstand der beiden Steigungen schrumpft im Gleichschritt mit $h$; deshalb
+ist der Grenzwert kein Kunstgriff, sondern der einzig mögliche Wert.

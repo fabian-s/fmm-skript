@@ -1,6 +1,6 @@
 export const title = "Gram–Schmidt-Orthogonalisierung";
 
-import { GsWidget } from "./widgets/GramSchmidtWidget";
+import { GramSchmidtWidget } from "./widgets/QrFactorizationWidget";
 
 Das Gram–Schmidt-Verfahren (vgl. MML §3.8.3) ist ein Rezept, das jede
 :k[linear unabhängige]{#linear-independence}
@@ -27,4 +27,9 @@ $\bu_i$ noch durch seine
 werden zum Beispiel orthogonale Eigenvektoren innerhalb eines
 Eigenraums konstruiert (vgl. MML §4.2).
 
-<GsWidget />
+Wie viel bleibt vom zweiten Vektor übrig, wenn wir seinen Schatten abziehen?
+
+<GramSchmidtWidget zeigeR={false} />
+
+Der Rest steht immer senkrecht auf dem ersten Vektor, seine Länge hängt aber
+davon ab, wie schief die beiden zueinander stehen.

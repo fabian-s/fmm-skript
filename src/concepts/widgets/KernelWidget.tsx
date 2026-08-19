@@ -1,35 +1,106 @@
+/**
+ * Konzept-Widget `kernel` (Kern / Nullraum).
+ *
+ * DIE EINE EINSICHT: Der Kern ist keine einzelne Richtung, sondern eine ganze
+ * Gerade — und man findet sie nicht durch Rechnen, sondern daran, dass die
+ * Ausgabe verschwindet. Genau diese Richtung ist die, die A nicht mehr
+ * unterscheiden kann.
+ *
+ * FARBROLLEN: rot = der Eingabevektor v, den wir ziehen; blau = seine Ausgabe
+ * Av; orange = die Kerngerade span{(2, −1)}, auf der Av verschwindet.
+ *
+ * PROVENIENZ: Aufbau aus dem Vorgängerwidget (Stand 2026-08-18); Achsen,
+ * Ziehen und der Unterraum als Gerade kommen aus der Lib-`TransformCanvas`.
+ * Texte neu geschrieben.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
+ * 2026-08-19), A = [[1, 2], [0,5, 1]]: det A = 0, A·(2, −1) = (0, 0) exakt.
+ * Die Kernrichtung liegt bei −26,57° (bzw. 153,43°). Das Bild ist die Gerade
+ * span{(1; 0,5)}; nach dem Rangsatz ist mit Rang 1 die Kerndimension
+ * 2 − 1 = 1, die Gerade ist also der ganze Kern.
+ */
 import { useState } from "react";
-import { Slider, TransformCanvas } from "../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  Slider,
+  TransformCanvas,
+  Verdikt,
+  fmtDe,
+} from "../../lib";
 
-const KER_ANGLE = Math.atan2(-1, 2); // kernel direction of A = [[1,2],[0.5,1]]
+const A: [[number, number], [number, number]] = [
+  [1, 2],
+  [0.5, 1],
+];
+const KERN: [number, number] = [2, -1];
 
 export function KernelWidget() {
-  const [th, setTh] = useState(0.8);
-  const v: [number, number] = [1.5 * Math.cos(th), 1.5 * Math.sin(th)];
-  // A v for A = [[1,2],[0.5,1]] (rank 1, kernel = span{(2,-1)})
-  const Av: [number, number] = [v[0] + 2 * v[1], 0.5 * v[0] + v[1]];
-  const inKernel = Math.abs(Math.sin(th - KER_ANGLE)) < 0.03;
+  const [v, setV] = useState<[number, number]>([1.5 * Math.cos(0.8), 1.5 * Math.sin(0.8)]);
+  const Av: [number, number] = [A[0][0] * v[0] + A[0][1] * v[1], A[1][0] * v[0] + A[1][1] * v[1]];
+  const rest = Math.hypot(Av[0], Av[1]);
+  const winkel = Math.atan2(v[1], v[0]);
+  const radius = Math.hypot(v[0], v[1]);
+  const imKern = rest < 0.08;
+
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Richtung von v" value={th} onChange={setTh} min={-Math.PI / 2} max={Math.PI / 2} />
+      <Aufgabe>Drehen wir v, bis der blaue Pfeil verschwindet.</Aufgabe>
       <TransformCanvas
-        matrix={[
-          [1, 2],
-          [0.5, 1],
-        ]}
+        matrix={A}
         showGrid={false}
-        size={260}
-        worldHalf={3}
+        showUnitCircle={false}
+        size={280}
+        worldHalf={3.2}
+        xLabel="x₁"
+        yLabel="x₂"
         vectors={[
-          { v, color: "#dc2626", label: "v" },
-          { v: Av, color: "#0284c7", label: "Av" },
+          { v, color: FMM_COLORS.rot, label: "v", draggable: true },
+          { v: Av, color: FMM_COLORS.blau, label: "Av" },
         ]}
+        onVectorChange={(_i, nv) => setV([nv[0], nv[1]])}
+        lines={[{ dir: KERN, color: FMM_COLORS.orange, label: "Kern(A)", dash: true }]}
+        ariaLabel={`Der Eingabevektor v und sein Bild Av mit der Länge ${fmtDe(rest, 2)}; die Kerngerade verläuft in Richtung (2, −1).`}
       />
-      <p className="mt-1 text-xs">
-        {inKernel
-          ? "v zeigt entlang (2, −1): Av = 0, v liegt im Kern."
-          : "Av ≠ 0, dieses v liegt also nicht im Kern. Richten wir v entlang (2, −1) aus, verschwindet Av."}
+      <Slider
+        label="Richtung von v"
+        value={winkel}
+        onChange={(w) => setV([radius * Math.cos(w), radius * Math.sin(w)])}
+        min={-Math.PI}
+        max={Math.PI}
+        step={0.005}
+        accent={FMM_COLORS.rot}
+      />
+      <Slider
+        label="Länge von v"
+        value={radius}
+        onChange={(r) => setV([r * Math.cos(winkel), r * Math.sin(winkel)])}
+        min={0.2}
+        max={3}
+        step={0.05}
+        accent={FMM_COLORS.rot}
+      />
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+        <span style={{ color: FMM_COLORS.rot }}>▮</span> Eingabe v ·{" "}
+        <span style={{ color: FMM_COLORS.blau }}>▮</span> Ausgabe Av ·{" "}
+        <span style={{ color: FMM_COLORS.orange }}>▮</span> Kerngerade
       </p>
+      <Verdikt kind={imKern ? "ok" : "neutral"}>
+        {imKern ? (
+          <>
+            ‖Av‖ = {fmtDe(rest, 3)}: v liegt auf der orangen Geraden, also im Kern. Und nicht nur
+            dieses eine v – jedes Vielfache von (2, −1) wird auf null geschickt, der Kern ist die
+            ganze Gerade. Mit Rang 1 bleibt nach dem Rangsatz genau 2 − 1 = 1 Dimension für ihn
+            übrig.
+          </>
+        ) : (
+          <>
+            ‖Av‖ = {fmtDe(rest, 2)} ist nicht null, dieses v liegt also nicht im Kern. Die
+            gesuchte Richtung ist die, in der sich die beiden Spalten von A gerade wegheben:
+            1·2 + 2·(−1) = 0.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }
