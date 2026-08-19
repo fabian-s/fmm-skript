@@ -285,9 +285,20 @@ Summen- und Maximumsnorm gilt nichts dergleichen.
   zurück.
 :::
 
-:::vertiefung[Singulärwerte und Schattennormen einer 2×2-Matrix: live]
+Satz 3.4.7 ist damit bewiesen, aber noch nicht wirklich geglaubt. Eine Drehung schreibt ja
+jeden einzelnen Eintrag der Matrix um. Welche der Zahlen, die wir aus einer Matrix ablesen
+können, überstehen das unverändert, und welche wandern mit?
+
+:::vertiefung[Was überlebt eine Drehung? Schattennormen gegen elementweise Normen]
 <S34SchattenWidget />
 :::
+
+Die Antwort teilt unsere Normen sauber in zwei Lager. Ellipse, Halbachsen und alles, was
+aus ihnen gebaut ist – Spektral-, Frobenius- und Nuklearnorm – stehen still, während die
+Einträge von $\bQ_\theta\bA$ munter durchwechseln; die Abweichung, die das Widget über den
+durchfahrenen Drehbereich meldet, ist reines Rundungsrauschen in der Größenordnung
+$10^{-16}$. Summen- und Maximumsnorm dagegen bewegen sich sichtbar mit. Sie sind eben
+elementweise definiert, und die Einträge sind genau das, was eine Drehung ändert.
 
 ### Selbsttest
 
@@ -312,6 +323,33 @@ Summen- und Maximumsnorm gilt nichts dergleichen.
     also wenn die Matrix „fast niedrigen Rang" hat.
   </SelbsttestFrage>
 </ul>
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::zahlfrage{loesung=3.162 toleranz=0.01}
+Drehen wir im Schattennorm-Widget den Regler von $0^\circ$ auf $90^\circ$ (die Matrix
+bleibt die aus Beispiel 3.4.6). Welchen Wert zeigt es dann für die Nuklearnorm
+$\left\|\bQ_\theta\bA\right\|_{S,1}$?
+
+$3{,}162 = \sqrt{10} = \sigma_1 + \sigma_2$, denselben Wert wie bei $0^\circ$. Alle vier
+Einträge der Matrix sind unterwegs andere geworden, die Singulärwerte nicht: Das ist
+Satz 3.4.7 an einer konkreten Zahl.
+:::
+
+:::frage{falsch}
+Weil die Drehung eine Isometrie ist, bleibt im Widget jede der angezeigten Normen konstant.
+
+Konstant bleiben nur die Schattennormen, die aus den Singulärwerten gebaut sind. Summen- und
+Maximumsnorm lesen die Einträge ab und wandern mit; bei $\theta = 45^\circ$ etwa steigt die
+Summennorm von $4{,}000$ auf $4{,}243$. Satz 3.4.7 gilt für Schattennormen, nicht für alle
+Matrixnormen.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: MML §4.5 (SVD-Bezug: dort werden die Singulärwerte, auf denen die
 Schattennormen aufbauen, über die Singulärwertzerlegung systematisch entwickelt).*
