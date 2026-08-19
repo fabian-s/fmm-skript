@@ -43,52 +43,64 @@ export function S73NormerhaltungWidget() {
 
   // Zusatz-Zeichnung: Winkelbogen θ zwischen v und Mv (Drehung) bzw.
   // gestrichelte Spiegelachse mit Winkelbogen φ zur x1-Achse (Spiegelung)
-  const annotate = useCallback(
-    (ctx: CanvasRenderingContext2D, toPx: (x: number, y: number) => [number, number]) => {
-      const arc = (a0: number, a1: number, r: number) => {
-        ctx.beginPath();
+  const overlay = useCallback(
+    (toPx: (x: number, y: number) => [number, number]) => {
+      const bogen = (a0: number, a1: number, r: number) => {
+        const pts: string[] = [];
         const n = 40;
         for (let i = 0; i <= n; i++) {
           const t = a0 + ((a1 - a0) * i) / n;
           const [px, py] = toPx(r * Math.cos(t), r * Math.sin(t));
-          i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+          pts.push(`${px.toFixed(2)},${py.toFixed(2)}`);
         }
-        ctx.stroke();
+        return pts.join(" ");
       };
-      ctx.save();
-      ctx.strokeStyle = "#475569";
-      ctx.fillStyle = "#475569";
-      ctx.lineWidth = 1.5;
-      ctx.font = "13px sans-serif";
+      const GRAU = "#475569";
       if (modus === "drehung") {
         const a0 = Math.atan2(v[1], v[0]);
         const a1 = a0 + (theta * Math.PI) / 180;
-        const r = 0.55;
-        arc(a0, a1, r);
         const mid = (a0 + a1) / 2;
         const [lx, ly] = toPx(0.8 * Math.cos(mid), 0.8 * Math.sin(mid));
-        ctx.fillText("θ", lx - 4, ly + 4);
-      } else if (modus === "spiegelung") {
+        return (
+          <g>
+            <polyline points={bogen(a0, a1, 0.55)} fill="none" stroke={GRAU} strokeWidth={1.5} />
+            <text x={lx - 4} y={ly + 4} fill={GRAU} style={{ fontSize: 13 }}>
+              θ
+            </text>
+          </g>
+        );
+      }
+      if (modus === "spiegelung") {
         const t = (phi * Math.PI) / 180;
         const L = worldHalf * 0.95;
         const [p1x, p1y] = toPx(-L * Math.cos(t), -L * Math.sin(t));
         const [p2x, p2y] = toPx(L * Math.cos(t), L * Math.sin(t));
-        ctx.setLineDash([6, 5]);
-        ctx.beginPath();
-        ctx.moveTo(p1x, p1y);
-        ctx.lineTo(p2x, p2y);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        if (Math.abs(phi) > 4) arc(0, t, 0.7);
         const [lx, ly] = toPx(0.95 * Math.cos(t / 2), 0.95 * Math.sin(t / 2));
-        ctx.fillText("φ", lx - 4, ly + 4);
         const [ax, ay] = toPx(L * 0.82 * Math.cos(t), L * 0.82 * Math.sin(t));
-        ctx.font = "11px sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText("Spiegelachse", ax - 4, ay - 8);
-        ctx.textAlign = "left";
+        return (
+          <g>
+            <line
+              x1={p1x}
+              y1={p1y}
+              x2={p2x}
+              y2={p2y}
+              stroke={GRAU}
+              strokeWidth={1.5}
+              strokeDasharray="6 5"
+            />
+            {Math.abs(phi) > 4 && (
+              <polyline points={bogen(0, t, 0.7)} fill="none" stroke={GRAU} strokeWidth={1.5} />
+            )}
+            <text x={lx - 4} y={ly + 4} fill={GRAU} style={{ fontSize: 13 }}>
+              φ
+            </text>
+            <text x={ax - 4} y={ay - 8} textAnchor="end" fill={GRAU} style={{ fontSize: 11 }}>
+              Spiegelachse
+            </text>
+          </g>
+        );
       }
-      ctx.restore();
+      return null;
     },
     [modus, theta, phi, worldHalf, v]
   );
@@ -135,7 +147,7 @@ export function S73NormerhaltungWidget() {
           showUnitCircle
           size={300}
           worldHalf={worldHalf}
-          annotate={annotate}
+          overlay={overlay}
         />
         <div className="min-w-48 space-y-2">
           <MD>{`\\bM = \\begin{pmatrix} ${Q[0][0].toFixed(2)} & ${Q[0][1].toFixed(2)} \\\\ ${Q[1][0].toFixed(2)} & ${Q[1][1].toFixed(2)} \\end{pmatrix}`}</MD>

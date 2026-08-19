@@ -20,6 +20,7 @@
  * labels-Prop an einem einzelnen <Quiz>.
  */
 import { Children, createContext, useContext, useId, useState, type ReactNode } from "react";
+import { fmtDe } from "./widgets/util";
 
 export interface QuizLabels {
   /** Beschriftung des „wahr"-Knopfs */
@@ -30,6 +31,14 @@ export interface QuizLabels {
   correct: string;
   /** Feedback bei falscher Antwort; bekommt gesagt, ob die Aussage wahr ist */
   incorrect: (statementIsTrue: boolean) => string;
+  /** Beschriftung des Prüfen-Knopfs einer Zahlenfrage. */
+  check: string;
+  /** Rückmeldung für eine richtige Zahlenfrage. */
+  numericCorrect: (deviation: string) => string;
+  /** Rückmeldung für eine falsche Zahlenfrage. */
+  numericIncorrect: (answer: string) => string;
+  /** Rückmeldung, wenn die Eingabe keine endliche Zahl ist. */
+  numericInvalid: string;
 }
 
 const DEFAULT_LABELS: QuizLabels = {
@@ -38,6 +47,10 @@ const DEFAULT_LABELS: QuizLabels = {
   correct: "Richtig!",
   incorrect: (statementIsTrue) =>
     `Leider nein, die Aussage ist ${statementIsTrue ? "wahr" : "falsch"}.`,
+  check: "Prüfen",
+  numericCorrect: (deviation) => `richtig (Abweichung ${deviation})`,
+  numericIncorrect: (answer) => `nicht ganz: ${answer} liegt außerhalb der Toleranz`,
+  numericInvalid: "Bitte eine Zahl eingeben.",
 };
 
 const LabelCtx = createContext<Partial<QuizLabels>>({});
@@ -146,6 +159,92 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
           <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">
             {expl}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Zahlenfrage für Selbsttests, deren Lösung aus einem Widget abgelesen wird.
+ * Der erste Kindblock ist die Frage, weitere Blöcke erscheinen erst nach
+ * „Prüfen" als Erklärung.
+ */
+export function Zahlfrage({
+  loesung,
+  toleranz,
+  einheit,
+  children,
+}: {
+  loesung: number;
+  toleranz: number;
+  einheit?: string;
+  children: ReactNode;
+}) {
+  const api = useContext(Ctx);
+  const labelId = useId();
+  const [draft, setDraft] = useState("");
+  const [checked, setChecked] = useState(false);
+  const [answer, setAnswer] = useState<number | null>(null);
+  if (!api) throw new Error("<Zahlfrage> darf nur in <Quiz> stehen");
+  const L = api.labels;
+  const items = Children.toArray(children);
+  const question = items[0];
+  const expl = items.slice(1);
+  const parsed = Number(draft.trim().replace(/,/g, ".").replace(/−/g, "-"));
+  const valid = draft.trim() !== "" && Number.isFinite(parsed);
+  const deviation = answer === null ? null : Math.abs(answer - loesung);
+  const correct = deviation !== null && deviation <= toleranz;
+  const unit = einheit ? ` ${einheit}` : "";
+  const precision = Math.max(2, String(toleranz).split(".")[1]?.length ?? 0);
+
+  return (
+    <div role="group" aria-labelledby={labelId} className="rounded border border-slate-200 p-3 dark:border-slate-700">
+      <div id={labelId} className="[&>p]:m-0">{question}</div>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <input
+          type="text"
+          inputMode="decimal"
+          value={draft}
+          onChange={(event) => {
+            setDraft(event.target.value);
+            setChecked(false);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              setAnswer(valid ? parsed : null);
+              setChecked(true);
+            }
+          }}
+          aria-label={einheit ? `Antwort in ${einheit}` : "Numerische Antwort"}
+          className="w-28 rounded border border-slate-300 bg-white px-2 py-1 font-mono text-sm tabular-nums dark:border-slate-600 dark:bg-slate-800"
+        />
+        {einheit ? <span className="text-sm text-slate-600 dark:text-slate-300">{einheit}</span> : null}
+        <button
+          type="button"
+          className="rounded bg-slate-700 px-2 py-1 text-xs font-medium text-white hover:bg-slate-600"
+          onClick={() => {
+            setAnswer(valid ? parsed : null);
+            setChecked(true);
+          }}
+        >
+          {L.check}
+        </button>
+      </div>
+      {checked && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`mt-2 text-sm ${correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}`}
+        >
+          <span className="font-medium">
+            {!valid
+              ? L.numericInvalid
+              : correct
+                ? L.numericCorrect(`${fmtDe(deviation!, precision)}${unit}`)
+                : L.numericIncorrect(`${fmtDe(answer!, precision)}${unit}`)}
+          </span>
+          <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">{expl}</div>
         </div>
       )}
     </div>

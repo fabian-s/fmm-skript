@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LabeledTransformCanvas, M, MatrixInput, sigmaMax } from "../../../lib";
+import { FMM_COLORS, LabeledTransformCanvas, M, MatrixInput, sigmaMax } from "../../../lib";
 
 /**
  * Operatornorm-Widget: Bild des Einheitskreises unter x ↦ Ax (Ellipse),
@@ -62,20 +62,22 @@ export function S33OperatornormWidget() {
     m[1][0] * xStar[0] + m[1][1] * xStar[1],
   ];
   const worldHalf = Math.max(2.4, 1.25 * smax);
-  const annotate = (
-    ctx: CanvasRenderingContext2D,
-    toPx: (x: number, y: number) => [number, number]
-  ) => {
-    if (!(smax > 1e-9)) return;
+  // Zusatz-Zeichnung: gestrichelter Kreis mit Radius ‖A‖₂ = σmax
+  const overlay = (toPx: (x: number, y: number) => [number, number]) => {
+    if (!(smax > 1e-9)) return null;
     const [cx, cy] = toPx(0, 0);
     const [ex] = toPx(smax, 0);
-    ctx.strokeStyle = "#0072B2";
-    ctx.setLineDash([3, 4]);
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, ex - cx, 0, 2 * Math.PI);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={ex - cx}
+        fill="none"
+        stroke={FMM_COLORS.blau}
+        strokeWidth={1.2}
+        strokeDasharray="3 4"
+      />
+    );
   };
   return (
     <div>
@@ -103,7 +105,7 @@ export function S33OperatornormWidget() {
             { v: xStar, color: "#64748b", label: "x*" },
             { v: AxStar, color: "#0072B2", label: "Ax*" },
           ]}
-          annotate={annotate}
+          overlay={overlay}
         />
         <div className="min-w-52 grow text-sm">
           <div className="rounded bg-slate-100 p-2 font-mono text-xs dark:bg-slate-800">
