@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, Slider, niceTicks } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, Slider, Stepper, Verdikt, fmtDe, niceTicks } from "../../../lib";
 import type { Series } from "../../../lib";
 
 /**
@@ -11,14 +11,13 @@ import type { Series } from "../../../lib";
  * Fehlerkurve auf log10-Skala gegen die Vorhersage rho^k (orange, als
  * Serien-FUNKTION, damit sie auch bei Divergenz eine Gerade bleibt).
  *
- * Alle Zahlen sind exakt nachgerechnet: x = (1/11, 7/11),
- * eig(A) = (7 ± sqrt(5))/2, rho(gamma) = max_i |1 - gamma*lambda_i|.
+ * Einsicht: Die Richardson-Iteration kippt genau dann, wenn die Rate rho über 1 steigt.
+ * Farbrollen: Iterierte blau, Lösung grün, Residuum/Fehler rot, Rate orange.
+ * Provenienz: Eigenbau; keine portierte Prosa. Zahlen verifiziert in
+ * verify-08-la-misc/check-widgets.mjs am 2026-08-19.
  */
 
-const GREEN = "#009E73"; // wahre Lösung x
-const BLUE = "#0072B2"; // Iterierte x^(k)
-const RED = "#D55E00"; // Residuum und Fehler
-const ORANGE = "#E69F00"; // Konvergenzrate rho
+const { gruen: GREEN, blau: BLUE, rot: RED, orange: ORANGE } = FMM_COLORS;
 
 const A: [[number, number], [number, number]] = [
   [4, 1],
@@ -28,8 +27,6 @@ const RHS: [number, number] = [1, 2];
 const XSTAR: [number, number] = [1 / 11, 7 / 11];
 const LMAX = (7 + Math.sqrt(5)) / 2; // ≈ 4,618
 const LMIN = (7 - Math.sqrt(5)) / 2; // ≈ 2,382
-const GAMMA_OPT = 2 / (LMIN + LMAX); // = 2/7 ≈ 0,2857
-const GAMMA_GRENZ = 2 / LMAX; // ≈ 0,4331
 const KMAX = 12;
 
 function residuum(x: [number, number]): [number, number] {
@@ -58,11 +55,7 @@ function sup(k: number): string {
 }
 
 /** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  return v.toFixed(d).replace(".", ",").replace(/^-/, "−");
-}
+const fmt = fmtDe;
 
 const PAD_L = 30;
 const PAD_B = 16;
@@ -236,16 +229,7 @@ export function RichardsonStepper() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Links wandern die Iterierten <span style={{ color: BLUE }}>x⁽ᵏ⁾</span> durch die
-        Ebene, der grüne Kreis markiert die wahre Lösung x = (1/11, 7/11). Der rote Pfeil
-        ist der Korrekturschritt γ·r⁽ᵏ⁾, der beim nächsten Klick ausgeführt wird: Er zeigt
-        in Richtung des Residuums. Rechts steht der Fehler auf logarithmischer Skala, dazu
-        in Orange die Schranke ρᵏ·‖x⁽⁰⁾ − x‖ aus Satz 8.3.5. Auf dieser Skala ist sie eine
-        Gerade, und ihre Steigung ist log₁₀ ρ. Läuft die Iteration davon,
-        bleibt der linke Ausschnitt auf die Lösung zentriert, und die Iterierten verlassen
-        ihn nach und nach.
-      </p>
+      <Aufgabe>Wählen wir eine Schrittweite, schätzen die Kippgrenze und verfolgen dann die Fehlerkurve.</Aufgabe>
       <Slider
         label="γ (Schrittweite)"
         value={gamma}
@@ -255,32 +239,7 @@ export function RichardsonStepper() {
         step={0.005}
         fmt={(v) => fmt(v, 3)}
       />
-      <div className="flex flex-wrap items-center gap-2 text-sm">
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 disabled:opacity-40 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setK((v) => Math.max(0, v - 1))}
-          disabled={k === 0}
-        >
-          ← Schritt zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 disabled:opacity-40 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setK((v) => Math.min(KMAX, v + 1))}
-          disabled={k === KMAX}
-        >
-          Schritt vorwärts →
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-          onClick={() => setK(0)}
-        >
-          zurücksetzen
-        </button>
-        <span className="font-mono">k = {k}</span>
-      </div>
+      <Stepper step={k} setStep={setK} max={KMAX} narration="Ein Schritt wendet die aktuelle Residuumskorrektur an." />
       <div className="flex flex-wrap gap-4">
         <EbenenPanel
           punkte={schritte.slice(0, k + 1).map((s) => s.x)}
@@ -297,7 +256,7 @@ export function RichardsonStepper() {
           height={288}
         />
       </div>
-      <div className="max-w-prose space-y-1 rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
+      <div className="max-w-prose space-y-1 text-sm">
         <p>
           <span className="font-mono">
             x⁽{sup(k)}⁾ = ({fmt(jetzt.x[0], 4)}; {fmt(jetzt.x[1], 4)})
@@ -318,23 +277,14 @@ export function RichardsonStepper() {
             ρ = {fmt(rho, 3)}
           </span>
         </p>
-        <p>
+        <Verdikt kind={rho < 0.999 ? "ok" : rho <= 1.001 ? "warn" : "fail"}>
           {rho < 0.999
             ? `ρ < 1: Satz 8.3.5 greift, und der Fehler fällt auf Dauer je Schritt auf etwa das ${fmt(rho, 2)}-fache.`
             : rho <= 1.001
               ? "ρ ≈ 1: der Grenzfall. Die Schranke des Satzes verspricht nichts mehr, die Iterierten kommen kaum noch voran."
               : `ρ > 1: die Voraussetzung von Satz 8.3.5 ist verletzt, und hier läuft die Iteration tatsächlich davon (auf Dauer das ${fmt(rho, 2)}-fache je Schritt).`}
-        </p>
+        </Verdikt>
       </div>
-      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-300">
-        Drei Einstellungen lohnen sich: γ = 0,25 ist die Wahl aus Beispiel 8.3.11 mit
-        ρ ≈ 0,405. Um γ ≈ 0,285 herum wird ρ am kleinsten, denn dort liegen
-        1 − γλ<sub>min</sub> und 1 − γλ<sub>max</sub> betragsgleich um die Null verteilt;
-        das Optimum ist γ = 2/7 ≈ {fmt(GAMMA_OPT, 3)} mit ρ = √5/7 ≈ 0,319. Jenseits von
-        γ = {fmt(GAMMA_GRENZ, 3)} = 2/λ<sub>max</sub> steigt ρ über 1, und aus der Korrektur
-        wird eine Übersteuerung: Die Iterierten springen mit wachsender
-        Amplitude um die Lösung herum.
-      </p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { M } from "../../../lib";
+import { Aufgabe, FMM_COLORS, M, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * PageRank-Mini-Netz für §8.2: Potenz-Iteration x, Ax, A²x, … auf einem
@@ -8,7 +8,9 @@ import { M } from "../../../lib";
  * der privaten mml-ch4-App portiert (PageRankWidget.tsx). Sämtliche Texte
  * sind aus §8.2 heraus neu formuliert (Review 8.2: die erste Fassung war
  * eingedeutschte App-Prosa). Farbcode Kapitel 8: Iterierte blau,
- * Grenzwert grün.
+ * Einsicht: Wiederholtes Anwenden der Linkmatrix führt zur stationären Verteilung.
+ * Farbrollen: Iterierte blau, Grenzwert grün, Fehler rot. Provenienz: Rechenidee
+ * aus mml-ch4 portiert, Prosa neu; Zahlen: check-widgets.mjs, 2026-08-19.
  */
 
 // Mini-Netz: a→b, a→c, b→c, c→a, c→d, d→a.
@@ -24,11 +26,10 @@ const START = [0.25, 0.25, 0.25, 0.25];
 // exakter stationärer Vektor (Eigenvektor zu λ = 1), von Hand nachgerechnet
 const STAR = [1 / 3, 1 / 6, 1 / 3, 1 / 6];
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
+const { blau: BLUE, gruen: GREEN } = FMM_COLORS;
 
 /** deutsche Dezimalzahl mit Minuszeichen U+2212, wie in den Nachbar-Widgets */
-const fmt = (v: number, d = 3) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
+const fmt = fmtDe;
 
 const step = (x: number[]) => T.map((row) => row.reduce((s, v, j) => s + v * x[j], 0));
 
@@ -82,7 +83,8 @@ export function PagerankDemo() {
 
   return (
     <div className="my-2">
-      <p className="mb-2 text-sm">
+      <Aufgabe>Wenden wir die Linkmatrix an und vergleichen die vier Scores nach jedem Schritt.</Aufgabe>
+      <p className="mb-2 text-sm sr-only">
         Vier Seiten, sechs Links. Spalte <M>{"j"}</M> von <M>{"\\bA"}</M> hält fest,
         wie Seite <M>{"j"}</M> ihren Score weitergibt: zu gleichen Teilen an jede
         Seite, auf die sie zeigt. Jede Spalte summiert sich damit zu <M>{"1"}</M>,
@@ -168,7 +170,7 @@ export function PagerankDemo() {
               </div>
             </div>
           ))}
-          <p className="mt-2 text-xs" style={{ color: "#64748b" }}>
+          <Verdikt kind={converged ? "ok" : "neutral"}>
             Iteration {iter}
             {converged ? (
               <>
@@ -186,7 +188,7 @@ export function PagerankDemo() {
                 pendeln um ihre Grenzwerte.
               </>
             )}
-          </p>
+          </Verdikt>
         </div>
       </div>
     </div>

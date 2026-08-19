@@ -267,14 +267,7 @@ spaltenweise Vektorisierung einen Namen und eine Rechenregel.
 :::
 
 :::vertiefung[Ein Stufe-3-Tensor, Scheibe für Scheibe]
-Einen Stapel Matrizen sehen wir leichter, als wir ihn beschreiben. Links steht der
-Stapel, isometrisch angedeutet, rechts die gewählte Scheibe als ausgeschriebene
-Matrix; die Achsen sind mit $i$, $j$ und $k$ beschriftet. Der Umschalter auf
-Stufe $2$ lässt genau eine Scheibe übrig und macht den Größenunterschied
-sichtbar: $4 \cdot 4 = 16$ Zahlen gegen $4 \cdot 4 \cdot 4 = 64$ im Stapel.
-Der zweite Modus greift den Anwendungen gleich im Anschluss vor. Dort ist der
-Stapel ein Farbbild von $8 \times 8$ Pixeln, und die drei Scheiben sind seine
-Farbkanäle.
+Wie verändert eine zusätzliche Indexposition die Darstellung eines Zahlenfelds?
 
 <TensorScheibenViewer />
 :::
@@ -283,6 +276,12 @@ Farbkanäle.
 
 Bis hierher ist ein Tensor ein Buchhaltungsobjekt. Warum er einen eigenen Namen
 und inzwischen sogar eigene Rechenwerke bekommt, zeigt der Blick auf Bilddaten.
+
+:::vertiefung[Farbbild als Kanäle]
+Welche Scheibe eines Farbbilds trägt welche Information?
+
+<TensorScheibenViewer bild />
+:::
 
 :::beispiel[9.2.7 (Ein Farbbild als Tensor der Stufe 3)]
 Ein Graustufenbild speichert je Bildpunkt eine einzige Zahl, die Helligkeit. Eine
@@ -391,6 +390,14 @@ Lernen ist diese Hardware keine Randnotiz, sondern eine Voraussetzung.
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=64 toleranz=0}
+Wie viele Einträge zeigt der Zahlen-Stapel des Widgets bei vier Scheiben einer
+$4\times4$-Matrix?
+
+Die zusätzliche Indexposition multipliziert die Zahl der Einträge mit der Zahl
+der Scheiben.
+:::
 
 :::frage{wahr}
 Setzen wir im Darstellungssatz $k = 1$, so ist die Koeffizientenansammlung eine

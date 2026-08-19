@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, MatrixInput } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, MatrixInput, Stepper, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * QR-Iterations-Demo für §8.1 (ersetzt die Folien-Abbildung
@@ -9,15 +9,12 @@ import { LabeledPlot, MatrixInput } from "../../../lib";
  *
  * Eigenbau (mml-ch4 hat keine QR-Iteration; CharPolyExplorer/EigenExplorer
  * rechnen nur mit dem charakteristischen Polynom). Farbcode wie im Kapitel:
- * grün = Grenzwerte auf der Diagonalen und Eigenvektoren, rot = Nebendiagonale
- * als Residuum, orange = Konvergenzrate.
+ * Einsicht: QR-Iteration macht die Nebendiagonale klein und legt Eigenwerte frei.
+ * Farbrollen: Schritt blau, Grenzwert grün, Residuum rot, Rate orange.
+ * Provenienz: Eigenbau; Zahlen verifiziert in check-widgets.mjs, 2026-08-19.
  */
 
-const BLUE = "#0072B2";
-const GREEN = "#009E73";
-const ORANGE = "#E69F00";
-const RED = "#D55E00";
-const GREY = "#64748b";
+const { blau: BLUE, gruen: GREEN, orange: ORANGE, rot: RED, grau: GREY } = FMM_COLORS;
 
 const KMAX = 20;
 
@@ -71,13 +68,7 @@ function iterate(A0: Mat): Stufe[] {
 }
 
 /** 3 Nachkommastellen, deutsches Komma, kein −0; NaN und ±∞ getrennt. */
-function fmt(v: number): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Math.round(v * 1000) / 1000;
-  if (Object.is(r, -0)) r = 0;
-  return r.toFixed(3).replace("-", "−").replace(".", ",");
-}
+const fmt = (v: number) => fmtDe(v, 3);
 
 /** Eigenwerte einer 2×2-Matrix; bei negativer Diskriminante komplex. */
 function eigen2(M: Mat): { reell: boolean; l1: number; l2: number; im: number } {
@@ -173,11 +164,7 @@ export function QrIterationsDemo() {
 
   return (
     <div>
-      <p className="text-sm">
-        Ein Schritt der QR-Iteration zerlegt die aktuelle Matrix in Q und R und multipliziert
-        die beiden in umgekehrter Reihenfolge wieder zusammen. Voreingestellt ist die
-        Beispielmatrix des Abschnitts; jede andere 2×2-Eingabe rechnet das Widget genauso durch.
-      </p>
+      <Aufgabe>Wählen wir eine Matrix und verfolgen wir, ob der rote Eintrag unter der Diagonale verschwindet.</Aufgabe>
       <div className="my-3 flex flex-wrap items-center gap-3 text-sm">
         <span>A =</span>
         <MatrixInput value={A0} onChange={setzen} step={1} />
@@ -218,7 +205,8 @@ export function QrIterationsDemo() {
           Drehung um 90°
         </button>
       </div>
-      <div className="my-2 flex flex-wrap items-center gap-2">
+      <div className="my-2">
+        {/*
         <button
           type="button"
           className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
@@ -235,9 +223,8 @@ export function QrIterationsDemo() {
         >
           nächster Schritt ▶
         </button>
-        <span className="text-sm" style={{ color: GREY }}>
-          Iteration k = {kk} von {maxK}
-        </span>
+        */}
+        <Stepper step={kk} setStep={setK} max={maxK} narration="Ein QR-Schritt vertauscht RQ nach der Zerlegung A = QR." />
       </div>
 
       <div className="my-2 flex flex-wrap items-start gap-6">
@@ -318,7 +305,7 @@ export function QrIterationsDemo() {
         </div>
       </div>
 
-      <p className="text-sm" style={{ color: GREY }}>
+      <Verdikt kind={!ew.reell || Math.abs(rate - 1) < 1e-9 ? "warn" : offJetzt < 1e-9 ? "ok" : "neutral"}>
         {!ew.reell
           ? "Diese Matrix hat komplexe Eigenwerte gleichen Betrags. Eine reelle obere Dreiecksmatrix müsste die Eigenwerte auf der Diagonalen zeigen, also reelle Eigenwerte haben. Die Iteration kann deshalb nicht konvergieren: Q ist hier die Drehung selbst, R die Einheitsmatrix, und A⁽ᵏ⁾ bleibt stehen, wo es war."
           : Math.abs(rate - 1) < 1e-9
@@ -328,7 +315,7 @@ export function QrIterationsDemo() {
                 ? `Die Nebendiagonale ist auf Rechengenauigkeit verschwunden: A⁽ᵏ⁾ ist diagonal, auf der Diagonalen stehen die Eigenwerte. ${reihenfolge} Weil A symmetrisch ist, sind die Spalten von Q_k jetzt Eigenvektoren, bis aufs Vorzeichen.`
                 : `Die Nebendiagonale ist auf Rechengenauigkeit verschwunden: A⁽ᵏ⁾ ist obere Dreiecksmatrix mit den Eigenwerten auf der Diagonalen. ${reihenfolge} Der Eintrag rechts oben bleibt stehen, denn eine unsymmetrische Matrix wird nur dreieckig, nicht diagonal.`
               : "Der rote Eintrag schrumpft in jedem Schritt ungefähr um den Faktor |λ₂/λ₁|, die Diagonale wandert dabei auf die Eigenwerte zu. Klicken wir uns weiter, bis der Schrumpffaktor die vorhergesagte Rate trifft."}
-      </p>
+      </Verdikt>
     </div>
   );
 }

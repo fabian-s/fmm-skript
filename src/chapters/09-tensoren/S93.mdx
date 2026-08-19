@@ -1,5 +1,6 @@
 import { KroneckerRechner } from "./widgets/S93Kronecker";
 import { SeparierbareKovarianzDemo } from "./widgets/S93Kovarianz";
+import { RangEinsExplorer } from "./widgets/S93RangEins";
 
 ::quelle[Folien 09-tensoren, Abschnitt „Produkt von Tensoren".]
 
@@ -83,6 +84,12 @@ kein Zufall dieses Beispiels, sondern die Regel.
 :::
 
 ### Eine Rang-1-Matrix und was sie tut
+
+Was bleibt von einem Vektor übrig, wenn wir ihn mit einer Rang-1-Matrix multiplizieren?
+
+:::vertiefung[Ein Bildraum als Gerade]
+<RangEinsExplorer />
+:::
 
 :::satz[9.3.4 (Eigenschaften des äußeren Produkts)]
 Seien $\cblue{\bv} \in \R^m$ und $\cgreen{\bw} \in \R^n$ beide vom Nullvektor
@@ -765,6 +772,13 @@ der Nebendiagonalen in jedem Block um, ohne die Blockstruktur anzutasten.
 ### Selbsttest
 
 ::::quiz
+
+:::frage{wahr}
+Im Rang-1-Widget wird jeder Bildvektor ein Vielfaches von $\bv$.
+
+Der orange Pfeil liegt stets auf derselben Geraden. Das ist die Bildaussage aus
+Satz 9.3.4.
+:::
 
 :::frage{falsch}
 Das äußere Produkt $\bv \otimes \bw$ ist nur für Vektoren gleicher Länge

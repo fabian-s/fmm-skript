@@ -77,21 +77,22 @@ $\corange{0{,}85}^{50} \approx 3 \cdot 10^{-4}$. Insgesamt $O(n)$ statt
 $O(n^3)$: Dieser Unterschied macht eine Websuche überhaupt erst möglich.
 
 :::vertiefung[PageRank auf einem Vier-Seiten-Netz]
-Im Kleinen lässt sich das komplette Verfahren ansehen: vier Seiten, sechs
-Links, und die Potenz-Iteration aus [Abschnitt 8.1](#sec-8.1) läuft auf der
-spaltenstochastischen Link-Matrix. Normieren müssen wir dabei nicht. Startet
-die Iteration mit Scores der Summe $1$, so hält die Spaltensumme $1$ diese
-Summe in jedem Schritt fest, und die Vorschrift ist schlicht
-$\bx^{(k)} = \bA\bx^{(k-1)}$. Der stationäre Vektor
-$\bx^* = (\tfrac{1}{3}, \tfrac{1}{6}, \tfrac{1}{3}, \tfrac{1}{6})^\top$
-lässt sich von Hand nachprüfen: etwa
-$x_a^* = \tfrac{1}{2}x_c^* + x_d^* = \tfrac{1}{6} + \tfrac{1}{6} = \tfrac{1}{3}$.
-Vom gleichverteilten Start aus halbiert sich der Abstand zu $\bx^*$ in jedem
-Schritt exakt, und die Scores pendeln dabei um ihre Grenzwerte, statt sich
-von einer Seite anzunähern.
+Welche Seite erhält langfristig den größten Score? Verfolgen wir dafür die
+Potenziteration auf dem kleinen Netz.
 
 <PagerankDemo />
+
+Wie das Widget zeigt, bleibt die Summe der Scores erhalten; der angezeigte
+Fixvektor erfüllt $\bA\bx^*=\bx^*$ und ist damit der PageRank.
 :::
+
+::::quiz
+:::frage{wahr}
+Im PageRank-Widget bleibt die Summe der vier Scores bei jedem Schritt gleich.
+
+Die Linkmatrix ist spaltenstochastisch. Daher erhält die Iteration die Summe.
+:::
+::::
 
 ### Hauptkomponentenanalyse (PCA)
 
