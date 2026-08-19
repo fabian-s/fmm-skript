@@ -1,4 +1,5 @@
 import { KruemmungsVergleich } from "./widgets/S151Kruemmung";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 15-funktionsapproximation-II, „Verwendete Vorkenntnisse" bis „Minimale Krümmung: Beispiel".]
 
@@ -449,7 +450,11 @@ $\cred{p''}$. Die Farben tragen dieselben Rollen wie im Text: blau die Daten,
 orange die Knoten, grün der Spline als Lösung des Minimierungsproblems, rot
 die Abweichung $\cred{h}$ und mit ihr jeder Konkurrent $g_t$.
 
+Welche Mischung hat nach unserer Vermutung die kleinste Krümmungsenergie?
+
+<Schaetzfrage frage="Bei welchem t wird die Krümmungsenergie minimal?" loesung={0} toleranz={0.05} einheit="t">
 <KruemmungsVergleich />
+</Schaetzfrage>
 :::
 
 Bemerkenswert an Satz 15.1.4 ist, was er *nicht* sagt. Über die
@@ -461,6 +466,12 @@ Sie ist der Gegenstand von [Abschnitt 15.2](#sec-15.2).
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=0 toleranz=0.05}
+Welchen Wert von $t$ zeigt das Widget als Minimum von $J(g_t)$?
+
+Bei $t=0$ fällt der rote Abweichungsterm weg; der natürliche Spline erreicht damit das Minimum.
+:::
 
 :::frage{falsch}
 Jeder kubische Spline, der die Punkte interpoliert, minimiert das

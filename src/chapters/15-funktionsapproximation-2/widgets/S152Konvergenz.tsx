@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { niceTicks } from "../../../lib";
+import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
 
 /**
  * §15.2: Konvergenz des natuerlichen kubischen Spline-Interpolanten.
@@ -14,7 +14,7 @@ import { niceTicks } from "../../../lib";
  * Fehler und Schranke rot; die wahre Funktion f traegt das im Kapitel freie
  * Violett (Rolle steht in der Widget-Einleitung).
  *
- * Nachgerechnet (node, check-s152-widget.mjs), f(x) = sin(2 pi x) auf [0, 1],
+ * Verifiziert (node, verify-15-funktionsapproximation-2/s152.mjs, 2026-08-19), f(x) = sin(2 pi x) auf [0, 1],
  * C = 5/384, max|f^(4)| = (2 pi)^4 = 1558,5455:
  *   5 Knoten  h = 0,25     Schranke 0,0793     Fehler 0,020017
  *   9 Knoten  h = 0,125    Schranke 0,00495    Fehler 0,0010661   Faktor 18,78
@@ -23,10 +23,7 @@ import { niceTicks } from "../../../lib";
  * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
  */
 
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const VIOLETT = "#9E57D5";
+const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT } = FMM_COLORS;
 const ACHSE = "#64748b";
 const RAHMEN = "#cbd5e1";
 
@@ -248,28 +245,9 @@ export function SplineKonvergenz() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Violett ist die Funktion f(x) = sin(2πx), grün der natürliche kubische Spline s durch die
-        orangen Knoten, rot die Differenz f − s im unteren Bild. Alle Zahlen rechnet dieses Widget
-        selbst: den Spline über das tridiagonale System der Momente, den Fehler als Maximum über
-        8001 Abtastpunkte.
-      </p>
+      <Aufgabe>Wählen wir ein Gitter und vergleichen die beiden aufeinanderfolgenden Fehler.</Aufgabe>
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-28 shrink-0 text-right">Knoten</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={0}
-          max={KNOTENZAHLEN.length - 1}
-          step={1}
-          value={idx}
-          onChange={(e) => setIdx(Number(e.target.value))}
-        />
-        <span className="w-24 shrink-0 font-mono text-xs">
-          {zeile.knoten} (h = {fmtH(zeile.h)})
-        </span>
-      </label>
+      <Slider label="Knoten" min={0} max={KNOTENZAHLEN.length - 1} step={1} value={idx} onChange={setIdx} fmt={(v) => `${KNOTENZAHLEN[v]} (h = ${fmtH(zeilen[v].h)})`} accent={ORANGE} />
 
       <div className="flex flex-wrap gap-4">
         <div>
@@ -492,7 +470,7 @@ export function SplineKonvergenz() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={idx === 0 ? "neutral" : "ok"}>{status}</Verdikt>
     </div>
   );
 }

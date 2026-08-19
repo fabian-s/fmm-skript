@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LabeledPlot, M, Slider, type Series } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt, type Series } from "../../../lib";
 
 /**
  * Vier Interpolanten durch dieselben drei Punkte (§14.1). Ersetzt das
@@ -11,7 +11,8 @@ import { LabeledPlot, M, Slider, type Series } from "../../../lib";
  * ManyInterpolantsWidget aus heath-ch7/src/sections/S71.tsx; die Funktionen,
  * der Regler, die Auswertung und saemtliche Texte sind eigene Arbeit.
  *
- * Verifiziert (node, check-math-s141.mjs):
+ * Verifiziert (node, verify-14-funktionsapproximation/verify-values.mjs,
+ * 2026-08-19; detailliert check-math-s141.mjs):
  *  - alle vier Funktionen treffen (0,1), (1,2), (2,5) exakt;
  *  - f2 - f1, f3 - f1 und f4 - f1 verschwinden an genau diesen drei Stellen
  *    (f3 - f1 = x(x-1)(x-2), f4 - f1 = 0,5 sin(2 pi x));
@@ -88,6 +89,7 @@ export function VierInterpolanten() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Schätzen wir zuerst die größte Spanne und schieben dann x* zwischen zwei Stützstellen.</Aufgabe>
       <div className="mb-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
         {KANDIDATEN.map((k, i) => (
           <label key={k.name} className="flex items-center gap-1">
@@ -139,35 +141,11 @@ export function VierInterpolanten() {
               })}
             </tbody>
           </table>
-          <p className="mt-2">
-            {werte.length < 2 ? (
-              "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven."
-            ) : aufKnoten ? (
-              <>
-                <span style={{ color: ROT }}>Spanne 0</span>: <M>{"x^{\\ast}"}</M> ist eine
-                Stützstelle, dort sind alle Interpolanten gleich.
-              </>
-            ) : (
-              <>
-                Spanne der eingeschalteten Kurven bei <M>{"x^{\\ast}"}</M>:{" "}
-                <span className="font-mono" style={{ color: ROT }}>
-                  {fmt(spanne)}
-                </span>
-                . Die beiden roten Punkte im Bild markieren sie.
-              </>
-            )}
-          </p>
+          <Verdikt kind={werte.length < 2 ? "warn" : aufKnoten ? "ok" : "fail"}>
+            {werte.length < 2 ? "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven." : aufKnoten ? <>Spanne 0: <M>{"x^{\\ast}"}</M> ist eine Stützstelle, dort sind alle Interpolanten gleich.</> : <>Die Spanne bei <M>{"x^{\\ast}"}</M> beträgt <span className="font-mono">{fmt(spanne)}</span>; die roten Punkte markieren sie. Nach Satz 14.1.8 bleiben alle Kurven an den Stützstellen gebunden, dazwischen nicht.</>}
+          </Verdikt>
         </div>
       </div>
-      <p className="mt-2 text-sm">
-        Alle vier Kurven laufen durch die drei blauen Punkte, deshalb tragen sie dieselbe Farbe und
-        unterscheiden sich nur in der Strichelung. Schieben wir <M>{"x^{\\ast}"}</M> von Stützstelle
-        zu Stützstelle, fällt die rote Spanne jedes Mal auf null und wächst dazwischen wieder an; ihr
-        größter Wert auf <M>{"[0, 2]"}</M> ist <M>{"0{,}7499"}</M> bei{" "}
-        <M>{"x \\approx 1{,}288"}</M>, auf dem Raster des Reglers erreichbar bei{" "}
-        <M>{"x^{\\ast} = 1{,}30"}</M>. Die Interpolationsbedingung sagt über die Zwischenwerte
-        nichts.
-      </p>
     </div>
   );
 }

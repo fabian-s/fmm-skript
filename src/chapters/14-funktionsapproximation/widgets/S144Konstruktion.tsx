@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
 import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
 
 /**
@@ -137,6 +137,7 @@ export function SplineKonstruktion() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Messwert und vergleichen die beiden Randbedingungen.</Aufgabe>
       <p className="mb-2 text-sm">
         Wir halten die vier Stellen <M>{"\\xi_0 = 0, \\dots, \\xi_3 = 3"}</M> fest
         und verschieben die vier Messwerte. Das Widget baut die zwölf Zeilen genau

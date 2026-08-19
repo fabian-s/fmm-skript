@@ -1,6 +1,7 @@
 import { DreiProbleme } from "./widgets/S141DreiProbleme";
 import { TeilDreiKarte } from "./widgets/S141Konzeptkarte";
 import { VierInterpolanten } from "./widgets/S141Interpolanten";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 14-funktionsapproximation, „Verwendete Vorkenntnisse" bis „Unendlich viele Lösungen: Beispiel".]
 
@@ -112,9 +113,7 @@ $\cblue{y_i}$ und sagen dazu, ob $\cblue{y_i} = f(x_i)$ gelten soll.
 :::
 
 :::vertiefung[Die drei Aufgaben nebeneinander]
-Die drei Tafeln zeigen dieselbe Ausgangslage unter den drei Forderungen.
-Schieben wir den Regler für das Rauschen ganz nach links, geht die
-Glättungsaufgabe in die Interpolationsaufgabe über.
+Wann wird aus Glättung wieder Interpolation? Wir variieren dafür nur das Rauschen.
 
 <DreiProbleme />
 :::
@@ -218,11 +217,13 @@ $0{,}7499$ und wird bei $x \approx 1{,}288$ erreicht.
 :::
 
 :::vertiefung[Vier Interpolanten, ein Datensatz]
-Alle vier Kurven tragen dieselbe Farbe, weil sie dieselbe Rolle spielen. Der
-Regler wandert über das Intervall und zeigt, wie weit die eingeschalteten
-Interpolanten an der jeweiligen Stelle auseinanderliegen.
+Wie weit können vier Interpolanten, die dieselben drei Punkte treffen, zwischen zwei Stützstellen auseinanderliegen?
 
-<VierInterpolanten />
+<Schaetzfrage frage="Schätzen wir die größte Spanne auf [0, 2]." loesung={0.75} toleranz={0.08} einheit="">
+  <VierInterpolanten />
+</Schaetzfrage>
+
+Wie das Widget zeigt, liegt die größte Spanne bei etwa $0{,}75$; Satz 14.1.8 erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
 :::
 
 Vier Beispiele sind noch kein Argument. Der folgende Satz beschreibt die

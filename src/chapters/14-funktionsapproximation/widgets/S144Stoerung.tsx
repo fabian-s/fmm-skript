@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
 import {
   BLAU,
   GRUEN,
@@ -161,6 +161,7 @@ export function StoerungVergleich() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Datenpunkt und vergleichen die Fernwirkung beider Interpolanten.</Aufgabe>
       <p className="mb-2 text-sm">
         Neun Datenpunkte, einer davon lässt sich verschieben. Beide Tafeln zeigen
         denselben Vorgang mit verschiedenen Ansatzräumen: links das

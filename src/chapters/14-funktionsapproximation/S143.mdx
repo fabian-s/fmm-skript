@@ -1,5 +1,6 @@
 import { MonombasisFigur, VandermondeKondition } from "./widgets/S143Monombasis";
 import { RungeExplorer } from "./widgets/S143Runge";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 14-funktionsapproximation, „Fundamentalsatz der Algebra" bis „Das Runge-Phänomen".]
 
@@ -347,9 +348,7 @@ fällt sie wieder auf $1$.
 :::
 
 :::vertiefung[Die Monombasis und ihre Kondition]
-Zuerst die Basisfunktionen selbst. Auf $[0, 1]$ liegen die Monome
-$1, x, x^2, \dots, x^7$ dicht beieinander und werden mit wachsendem $k$ immer
-ähnlicher, nämlich fast überall null mit einem steilen Anstieg kurz vor $1$.
+Warum sind die Spalten einer Vandermonde-Matrix auf $[0,1]$ fast parallel? Die erste Tafel macht die Ursache sichtbar.
 
 <MonombasisFigur />
 
@@ -504,11 +503,13 @@ ein anderer Ansatzraum.
 :::
 
 :::vertiefung[Runges Funktion, zwei Knotenfamilien]
-Der Regler bestimmt die Zahl der Knoten, die Schalter die Knotenfamilie. Die
-rechte Tafel führt beide Fehlerverläufe auf logarithmischer Achse mit, sodass
-sich Zickzack und Trend zugleich ablesen lassen.
+Fällt der Fehler bei äquidistanten Knoten von $n=5$ auf $n=10$, oder steigt er schon dort?
 
-<RungeExplorer />
+<Schaetzfrage variante="auswahl" frage="Welche Richtung nimmt der Fehler von n = 5 auf n = 10 bei äquidistanten Knoten?" loesung="faellt" optionen={[{id: "faellt", text: "Er fällt"}, {id: "steigt", text: "Er steigt"}]}>
+  <RungeExplorer />
+</Schaetzfrage>
+
+Der Vergleich zeigt den nichtmonotonen Start: Der Fehler fällt von $0{,}44$ auf $0{,}30$, bevor die Randoszillationen dominieren.
 :::
 
 Damit ist die Bilanz der Polynominterpolation gemischt. Der Satz von der

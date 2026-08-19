@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
 
 /**
  * Basisdarstellungs-Rechner (§14.2, Eigenbau).
@@ -100,6 +100,7 @@ export function BasisRechner() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Messwert und wechseln dann die Basis.</Aufgabe>
       <p className="mb-2 text-sm">
         Wir halten die Knoten <M>{"x_1 = 0,\\ x_2 = 1,\\ x_3 = 2"}</M> fest und
         verschieben die drei Messwerte. Die Matrix <M>{"\\bB"}</M> hängt nur von

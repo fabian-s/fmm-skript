@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { M, Slider } from "../../../lib";
+import { Aufgabe, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * Die drei Problemvarianten aus §14.1 als drei Tafeln nebeneinander
@@ -121,6 +121,7 @@ export function DreiProbleme() {
   );
   return (
     <div className="my-2">
+      <Aufgabe>Schieben wir das Rauschen auf null und vergleichen die drei Aufgaben.</Aufgabe>
       <div className="flex flex-wrap items-start justify-center gap-4">
         <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
@@ -175,7 +176,7 @@ export function DreiProbleme() {
         step={0.005}
         fmt={(v) => fmt(v, 3)}
       />
-      <p className="mt-1 text-sm">
+      <Verdikt className="mt-1" kind={sigma === 0 ? "ok" : "warn"}>
         {rms === 0 ? (
           "Bei σ = 0 liegen alle zwölf Punkte exakt auf der wahren Funktion. Dann sind die Funktionswerte rauschfrei und dürfen interpoliert werden."
         ) : (
@@ -190,7 +191,7 @@ export function DreiProbleme() {
             mitzeichnen.
           </>
         )}
-      </p>
+      </Verdikt>
     </div>
   );
 }

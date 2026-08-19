@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * §14.3: Das Runge-Phaenomen, aequidistante gegen Chebyshev-Knoten.
@@ -11,7 +11,8 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  * Statuszeilen und Zahlformate sind fuer dieses Skript neu geschrieben
  * (App-Prosa ist buchadaptiert und im oeffentlichen Repo verboten).
  *
- * Verifiziert mit node (check-s143.mjs / check2-s143.mjs, 2026-08-13),
+ * Verifiziert mit node (verify-14-funktionsapproximation/verify-values.mjs,
+ * 2026-08-19; detaillierter Scan check-s143.mjs / check2-s143.mjs, 2026-08-13),
  * max|f - p| auf [-1,1] bei n Knoten:
  *   n =  5: aequidistant 0,4384 (bei x = -0,795) | Chebyshev 0,4020
  *   n = 10: 0,3003 (x = -0,927) | 0,2692
@@ -152,15 +153,7 @@ export function RungeExplorer() {
 
   return (
     <div className="my-2 text-sm">
-      <p className="mb-2">
-        Der Interpolant <M>{"p_{n-1}"}</M> (grün) läuft durch die{" "}
-        <M>{"n"}</M> blauen Stützpunkte auf dem Graphen von{" "}
-        <M>{"f(x) = 1/(1+25x^2)"}</M> (grau). Schieben wir <M>{"n"}</M> mit
-        äquidistanten Knoten nach oben, so wird die Anpassung in der Mitte
-        immer besser, während die Ausschläge nahe <M>{"\\pm 1"}</M> aus dem
-        Ruder laufen. Mit Chebyshev-Knoten fällt derselbe Gradanstieg den
-        Fehler überall.
-      </p>
+      <Aufgabe>Wählen wir eine Knotenfamilie und verändern die Knotenzahl; erst dann lesen wir den Fehler ab.</Aufgabe>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
         {(
@@ -244,21 +237,9 @@ export function RungeExplorer() {
         n = {n}, Grad {n - 1}, {modus === "aequi" ? "äquidistant" : "Chebyshev"}: max|f − p| ≈{" "}
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
-      <p className="mt-1">
-        {status}
-        {vergleich}
-      </p>
-      <p className="mt-1">
-        Die rechte Tafel zeigt beide Verläufe auf logarithmischer Achse. Die
-        äquidistante Kurve dreht nach oben, zickzackt dabei aber kräftig:
-        gerade Knotenzahlen schneiden hier besser ab als die benachbarten
-        ungeraden, und von <M>{"n = 5"}</M> auf <M>{"n = 10"}</M> fällt der
-        Fehler sogar. Divergenz heißt also nicht, dass jeder einzelne Schritt
-        schlechter wird. Die Chebyshev-Kurve läuft dagegen stetig nach unten,
-        bei <M>{"n = 4, 6, 8"}</M> liegt sie sogar über der anderen: Ihr Gewinn
-        ist ein Versprechen für große <M>{"n"}</M>, kein Sieg in jedem
-        Einzelfall.
-      </p>
+      <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? "ok" : "warn"}>
+        {status}{vergleich} Das illustriert Bemerkung 14.3.16: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
+      </Verdikt>
     </div>
   );
 }

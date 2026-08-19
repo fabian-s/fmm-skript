@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { ORANGE, VIOLETT, bspl, fmt } from "./S144BSpline";
 
 /**
@@ -48,12 +48,7 @@ export function CoxDeBoorSchritt() {
 
   return (
     <div className="my-2">
-      <p className="mb-2 text-sm">
-        Die Rekursion setzt <M>{`B_{3}^{(${q})}`}</M> aus den beiden
-        Nachbarfunktionen vom Grad <M>{`${q - 1}`}</M> zusammen. Violett die
-        beiden Bausteine (durchgezogen der linke, gepunktet der rechte), grau
-        gestrichelt die zwei Gewichtsrampen, orange das Ergebnis.
-      </p>
+      <Aufgabe>Verschieben wir x* und lesen die beiden gewichteten Beiträge ab.</Aufgabe>
 
       <div className="mb-2 grid max-w-2xl gap-x-8 sm:grid-cols-2">
         <Slider
@@ -113,21 +108,9 @@ export function CoxDeBoorSchritt() {
         height={230}
       />
 
-      <p className="mt-2 max-w-[34rem] text-sm">
-        Die Formel oben liest sich als Rezept, das Bild liest sich schneller.
-        Zwei Bausteine niedrigeren Grades werden gewichtet addiert, und die
-        Gewichte sind gerade so gebaut, dass jedes über dem Träger seines
-        Bausteins von null auf eins läuft (oder umgekehrt). Drei Folgerungen
-        stecken darin. Die Gewichte sind dort, wo ihr Baustein positiv ist,
-        selbst nichtnegativ, also bleibt auch das Ergebnis nichtnegativ. Der
-        Träger reicht so weit wie die Vereinigung der beiden Bausteinträger,
-        das ist ein Gitterintervall mehr. Und weil ein Polynom vom Grad{" "}
-        <M>{`${q - 1}`}</M> mit einer linearen Funktion multipliziert wird,
-        steigt der Grad um eins. Die Glattheit{" "}
-        <M>{`\\Ccal^{${q - 1}}`}</M> kommt hinzu, weil sich die Sprünge der{" "}
-        {ORDNUNG[q - 1]} Ableitungen der beiden Summanden an jedem Knoten
-        aufheben.
-      </p>
+      <Verdikt kind="ok">
+        Beide Rampen gewichten nichtnegative Nachbarfunktionen. Deshalb bleibt <M>{`B_3^{(${q})}`}</M> nichtnegativ; sein Träger wächst um ein Intervall und die Glattheit reicht bis zur {ORDNUNG[q - 1]} Ableitung (14.4.3).
+      </Verdikt>
     </div>
   );
 }
