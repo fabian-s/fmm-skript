@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, Slider, niceTicks } from "../../../lib";
-import type { Series } from "../../../lib";
+import { FMM_COLORS, LabeledPlot, Slider, Surface3D, ViewControls, fmtDe as fmt, niceTicks } from "../../../lib";
+import type { Series, Sicht3D, Vec3 } from "../../../lib";
 
 /**
  * §11.3: Hesse-Definitheits-Widget (Eigenbau).
@@ -16,6 +16,18 @@ import type { Series } from "../../../lib";
  * Konturen, Hauptachsen = Eigenvektoren, Krümmung = Eigenwerte. Dieses
  * Beispiel liegt als Voreinstellung auf dem ersten Knopf (lambda = (2, 8),
  * phi = 0, denn 1/2 x^T diag(2,8) x = x1^2 + 4 x2^2).
+ *
+ * Die drei Tafeln zeigen dasselbe f und sind verlinkt (Muster 3, verbundene
+ * Darstellungen): links die Höhenlinien mit den Hauptachsen (die tot lesbare
+ * Hauptdarstellung, alle Zahlen stehen im Verdikt darunter), in der Mitte
+ * dieselbe Funktion als Fläche über der Ebene (`Surface3D`, D7) mit denselben
+ * Höhenlinien auf dem Boden, denselben orangen Hauptachsen und demselben
+ * violetten kritischen Punkt, rechts die beiden Parabeln der Hauptachsen-
+ * schnitte. Die 3D-Tafel behauptet keine eigenen Zahlen.
+ *
+ * Vier Voreinstellungen = die vier Zweige von Satz 11.3.9 samt Grenzfall,
+ * mit didaktischem Namen und der Gestalt der Fläche: Minimum (Schale),
+ * Sattel, Maximum (Kuppel), Rinne (halbdefinit).
  *
  * Der Höhenlinien-Code (Marching Squares, Achsenraster aus niceTicks) folgt
  * dem Muster von 10-ableitungen-1/widgets/S102Gradient.tsx; alle Texte,
@@ -33,20 +45,21 @@ import type { Series } from "../../../lib";
  * H(−2, −5, 60°) = (−4,25 1,299; 1,299 −2,75) mit Spur −7, det 10;
  * f(t v_i) = 1/2 lambda_i t^2 auf acht Stellen (t = 1,7: 4,335 bzw. −1,445);
  * Halbachsen der Niveaumenge f = 4 im Folienbeispiel: 2 und 1.
+ *
+ * Die vier Voreinstellungen zusätzlich geprüft mit
+ * scratchpad/check-s113-presets.mjs (2026-08-19): die Eigenwerte werden aus H
+ * zurückgerechnet und treffen die Reglerwerte auf 1e−12, die Klassifikation
+ * stimmt in allen vier Fällen, Spur = λ₁ + λ₂ und det = λ₁·λ₂ ebenfalls
+ * (10/16, 2/−3, −7/10, 3/0). Wertebereich auf dem gezeigten Fenster
+ * [−2,4; 2,4]²: 0 bis 28,8 (Schale), −4,32 bis 15,74 (Sattel), −27,64 bis 0
+ * (Kuppel), 0 bis 14,19 (Rinne) — das ist der Höhenbereich der 3D-Tafel.
+ * Die Projektion der 3D-Tafel selbst ist in
+ * scratchpad/check-surface3d.mjs (2026-08-19) geprüft.
  */
 
-const BLAU = "#0072B2"; // Funktion, Höhenlinien
-const VIOLETT = "#9E57D5"; // kritischer Punkt x* und seine Klassifikation
-const ORANGE = "#E69F00"; // Hesse-Objekte: Eigenwerte, Hauptachsen
-
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const BLAU = FMM_COLORS.blau; // Funktion, Höhenlinien, Fläche
+const VIOLETT = FMM_COLORS.violett; // kritischer Punkt x* und seine Klassifikation
+const ORANGE = FMM_COLORS.orange; // Hesse-Objekte: Eigenwerte, Hauptachsen
 
 /* ----------------------------------------------------------- Höhenlinien */
 
@@ -123,12 +136,26 @@ function hesse(l1: number, l2: number, phi: number): [[number, number], [number,
   ];
 }
 
-const VOREINSTELLUNGEN: { name: string; l1: number; l2: number; grad: number }[] = [
-  { name: "Folienbeispiel x₁² + 4x₂²", l1: 2, l2: 8, grad: 0 },
-  { name: "Sattel", l1: 3, l2: -1, grad: 30 },
-  { name: "Maximum", l1: -2, l2: -5, grad: 60 },
-  { name: "halbdefinit", l1: 3, l2: 0, grad: 20 },
+/**
+ * Die vier Fälle als Knöpfe: jeder Knopf ist ein Zweig der Fallunterscheidung
+ * aus Satz 11.3.9, das Label nennt den Fall und die Gestalt der Fläche.
+ * Zahlen (Spur, Determinante, Eigenwerte) stehen nur im Verdikt.
+ */
+const VOREINSTELLUNGEN: { name: string; titel: string; l1: number; l2: number; grad: number }[] = [
+  { name: "Minimum (Schale)", titel: "Folienbeispiel f(x) = x₁² + 4x₂²", l1: 2, l2: 8, grad: 0 },
+  { name: "Sattel", titel: "ein Eigenwert positiv, einer negativ", l1: 3, l2: -1, grad: 30 },
+  { name: "Maximum (Kuppel)", titel: "beide Eigenwerte negativ", l1: -2, l2: -5, grad: 60 },
+  { name: "Rinne (halbdefinit)", titel: "ein Eigenwert genau null", l1: 3, l2: 0, grad: 20 },
 ];
+
+/** Gestalt der Fläche je Klassifikation, für Legende und aria-label. */
+const GESTALT: Record<string, string> = {
+  minimum: "eine nach oben offene Schale",
+  maximum: "eine Kuppel",
+  sattel: "eine Sattelfläche",
+  halb: "eine Rinne mit waagerechtem Boden",
+  null: "eine waagerechte Ebene",
+};
 
 export function HesseDefinitheit() {
   const [l1, setL1] = useState(2);
@@ -176,6 +203,21 @@ export function HesseDefinitheit() {
       vmax: m,
     };
   }, [f, l1, l2]);
+
+  // Wertebereich auf dem Fenster; er legt den Höhenbereich der 3D-Tafel und
+  // damit die Höhe des Bodens fest, auf dem Höhenlinien und Pfeile liegen.
+  const [zLo, zHi] = useMemo((): [number, number] => {
+    let lo = Infinity;
+    let hi = -Infinity;
+    for (let i = 0; i <= 40; i++) {
+      for (let j = 0; j <= 40; j++) {
+        const w = f(-HALB + (i * HALB) / 20, -HALB + (j * HALB) / 20);
+        lo = Math.min(lo, w);
+        hi = Math.max(hi, w);
+      }
+    }
+    return hi - lo < 1e-9 ? [-1, 1] : [lo, hi];
+  }, [f]);
 
   const px = (x: number) => PAD_L + ((x + HALB) / (2 * HALB)) * SIZE;
   const py = (y: number) => SIZE - ((y + HALB) / (2 * HALB)) * SIZE;
@@ -250,6 +292,29 @@ export function HesseDefinitheit() {
   };
   const status = klassifikation[artDesPunktes];
 
+  /* --------------------------------------------- verlinkte 3D-Tafel (D7) */
+  const [sicht, setSicht] = useState<Sicht3D>({ azimuth: 38, elevation: 26 });
+  const flaeche = useMemo(() => ({ f, nx: 28, ny: 28, color: BLAU, opacity: 0.85, wire: true }), [f]);
+  const punkte3d = useMemo(
+    () => [{ p: [0, 0, 0] as Vec3, color: VIOLETT, r: 4, label: "x*", onTop: true }],
+    [],
+  );
+  // Dieselben Hauptachsen wie links, auf den Boden der Tafel gelegt. `onTop`,
+  // weil eine Fläche über dem ganzen Fenster den Boden sonst vollständig
+  // verdeckt (die Schale liegt mit ihrem Tiefpunkt selbst auf dem Boden).
+  const pfeile3d = useMemo(
+    () => [
+      { from: [0, 0, zLo] as Vec3, to: [1.7 * Math.cos(phi), 1.7 * Math.sin(phi), zLo] as Vec3, color: ORANGE, label: "v₁", onTop: true },
+      { from: [0, 0, zLo] as Vec3, to: [-1.7 * Math.sin(phi), 1.7 * Math.cos(phi), zLo] as Vec3, color: ORANGE, label: "v₂", onTop: true },
+    ],
+    [phi, zLo],
+  );
+  // Dieselben Niveaus wie in der Höhenlinientafel links.
+  const kontur3d = useMemo(
+    () => [...niveausNeg, ...(nullNiveau ? [0] : []), ...niveausPos],
+    [niveausNeg, nullNiveau, niveausPos],
+  );
+
   const gleicheEw = Math.abs(l1 - l2) < 1e-9 && Math.abs(l1) > eps;
 
   return (
@@ -262,20 +327,29 @@ export function HesseDefinitheit() {
         Eigenbasis ein; blau sind die Höhenlinien von f, orange die Hauptachsen v₁ und v₂.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        {VOREINSTELLUNGEN.map((v) => (
-          <button
-            key={v.name}
-            type="button"
-            className="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-            onClick={() => {
-              setL1(v.l1);
-              setL2(v.l2);
-              setGrad(v.grad);
-            }}
-          >
-            {v.name}
-          </button>
-        ))}
+        {VOREINSTELLUNGEN.map((v) => {
+          const aktiv = l1 === v.l1 && l2 === v.l2 && grad === v.grad;
+          return (
+            <button
+              key={v.name}
+              type="button"
+              title={v.titel}
+              aria-pressed={aktiv}
+              className={
+                aktiv
+                  ? "rounded border border-sky-600 bg-sky-50 px-3 py-1 font-medium text-sky-900 dark:border-sky-400 dark:bg-sky-900/40 dark:text-sky-100"
+                  : "rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
+              }
+              onClick={() => {
+                setL1(v.l1);
+                setL2(v.l2);
+                setGrad(v.grad);
+              }}
+            >
+              {v.name}
+            </button>
+          );
+        })}
       </div>
       <Slider
         label="λ₁ (Achse v₁)"
@@ -310,9 +384,10 @@ export function HesseDefinitheit() {
             x₂ ↑
           </div>
           <svg
+            viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
             width={PAD_L + SIZE + PAD_R}
             height={SIZE + PAD_B}
-            className="rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <defs>
               <clipPath id="s113-clip">
@@ -399,6 +474,33 @@ export function HesseDefinitheit() {
           <div className="text-center text-[11px]" style={{ paddingLeft: PAD_L }}>
             x₁ →
           </div>
+        </div>
+        <div className="shrink-0">
+          <Surface3D
+            size={280}
+            xDomain={[-HALB, HALB]}
+            yDomain={[-HALB, HALB]}
+            zDomain={[zLo, zHi]}
+            surface={flaeche}
+            contours={kontur3d}
+            contourColor={BLAU}
+            points={punkte3d}
+            arrows={pfeile3d}
+            dropLines
+            labels={{ x: "x₁", y: "x₂", z: "f" }}
+            azimuth={sicht.azimuth}
+            elevation={sicht.elevation}
+            onViewChange={setSicht}
+            ariaLabel={`Die Funktion f als Fläche über der x₁-x₂-Ebene; im aktuellen Zustand ${GESTALT[artDesPunktes]}.`}
+          />
+          <div className="mt-1 max-w-[280px]">
+            <ViewControls value={sicht} onChange={setSicht} />
+          </div>
+          <p className="mt-1 max-w-[280px] text-xs text-slate-600 dark:text-slate-300">
+            Dieselbe Funktion als Fläche: {GESTALT[artDesPunktes]}. Auf dem Boden liegen die
+            Höhenlinien der linken Tafel, die orangen Pfeile sind dieselben Hauptachsen, der
+            violette Punkt ist derselbe kritische Punkt. Ziehen dreht die Ansicht.
+          </p>
         </div>
         <div>
           <LabeledPlot
