@@ -260,17 +260,26 @@ sich gegen das $\det(\bSigma)$ aus ($10.4.4$). Das ist eine der meistbenutzten F
 Statistik.
 :::
 
+Stimmen diese drei Formeln wirklich, oder merken wir uns nur Muster? Eine Probe ist
+schnell gemacht: Wir werten $\bF$ numerisch an $x \pm 10^{-5}$ aus und stellen den
+Differenzenquotienten neben den Formelwert.
+
 :::vertiefung[Die drei Identitäten gegen numerische Ableitungen halten]
-Die numerische Spalte im Widget kennt keine der Formeln. Sie wertet $\bF$ an
-$x \pm 10^{-5}$ aus und bildet den zentralen Differenzenquotienten; die Formelspalte rechnet
-mit Satz 10.4.4. Drei Beispiele stehen zur Wahl: die Diagonalmatrix aus Beispiel 10.4.5, eine
-Matrix, in der jeder Eintrag anders von $x$ abhängt (einer gar nicht), und eine Drehmatrix. Die Drehmatrix
-lohnt einen zweiten Blick, denn ihre Determinante ist konstant $1$. Die Jacobi-Formel muss
-dann null liefern, und das geht nur, wenn $\tr[\bF^{-1}\, \partial \bF/\partial x]$
-verschwindet. Bei der Diagonalmatrix zeigt der Schieber außerdem die Lücke bei $x = 0$.
+Die numerische Spalte kennt keine der Formeln, die Formelspalte rechnet mit Satz 10.4.4.
+Drei Beispiele stehen zur Wahl: die Diagonalmatrix aus Beispiel 10.4.5, eine Matrix, in der
+jeder Eintrag anders von $x$ abhängt (einer gar nicht), und eine Drehmatrix.
 
 <IdentitaetenSkalarMatrix />
 :::
+
+Im Widget halten alle drei Identitäten über den ganzen Reglerbereich stand; die
+größte Abweichung liegt in der Spur- und der Determinantenzeile unter $10^{-9}$ und ist der
+Abbruchfehler des Differenzenquotienten, nicht ein Fehler der Formel. Zwei Stellen lohnen
+einen zweiten Blick. Die Drehmatrix hat die konstante Determinante $1$, also muss die
+Jacobi-Formel null liefern, und das geht nur, wenn
+$\tr[\bF^{-1}\, \partial \bF/\partial x]$ verschwindet. Und bei der Diagonalmatrix zeigt
+der Schieber die Lücke bei $x = 0$: Dort ist $\bF$ singulär, die Determinanten- und die
+Inversenformel setzen aber beide $\bF^{-1}$ voraus. Die Spur-Identität gilt auch dort.
 
 ### Matrix zu Skalar
 
@@ -456,18 +465,26 @@ $\cred{r(\bH)} = \left\|\bH\right\|_F^2$, und dieser Ausdruck verschwindet im Ve
 $\left\|\bH\right\|_F$ wie verlangt.
 :::
 
+Was sagt ein einzelner Eintrag der Gradientenmatrix konkret aus, etwa der an der Stelle
+$(2,3)$? Die Antwort steckt in Bemerkung 10.4.8: Lenken wir nur in Richtung $\bE_{ij}$ aus,
+so schrumpft die Summe über alle Einträge auf einen einzigen Summanden zusammen. Das lässt
+sich anstupsen.
+
 :::vertiefung[Auslenkung in Richtung einer einzelnen Koordinate]
-In Bemerkung 10.4.8 ist die Summe über alle Einträge auf einen einzigen Summanden
-zusammengeschrumpft, sobald wir nur in Richtung $\bE_{ij}$ auslenken. Diesen Sonderfall
-rechnet das Widget nach: Es erhöht den gewählten Eintrag um $h$, wertet $f$ an der so
-veränderten Matrix aus und stellt die tatsächliche Änderung neben
-$h \cdot \partial f(\bX)/\partial x_{ij}$. Die untere Zeile trennt die endliche Änderung
-zusätzlich in den grünen Ableitungsterm und den roten Rest. Für die beiden linearen
-Funktionen bleibt der Rest exakt null; bei $\left\|\bX\right\|_F^2$ ist er exakt $h^2$ und
-damit ein sichtbares Beispiel für ein $\cred{o(\left|h\right|)}$.
+Wir fassen eine Zelle von $\bX$ an und ziehen sie um $h$ nach oben oder unten. Das Widget
+wertet $f$ an der so veränderten Matrix aus und stellt die tatsächliche Änderung neben
+$h \cdot \partial f(\bX)/\partial x_{ij}$; die Zeile darunter trennt sie in den grünen
+Ableitungsterm und den roten Rest.
 
 <AnstupsWidget />
 :::
+
+Wie das Widget zeigt, ist der Eintrag $(i,j)$ der Gradientenmatrix genau die Rate, mit der
+$f$ auf einen Stups an dieser Stelle reagiert. Für die beiden in $\bX$ linearen Funktionen
+bleibt der Rest exakt null, die lineare Vorhersage ist dort also nicht nur eine Näherung.
+Bei $\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: sichtbar von null verschieden,
+aber schneller fallend als $h$ selbst, und damit ein Musterbeispiel für ein
+$\cred{o(\left|h\right|)}$.
 
 ### Anwendung: Matrixzerlegung und Matrix Completion
 
@@ -616,21 +633,28 @@ für jede Interpretation der Spalten von $\bU$ und $\bV$.
 Anwendungen dieses Musters gibt es reichlich: Imputation fehlender Werte, Empfehlungssysteme
 und kollaboratives Filtern arbeiten alle nach demselben Rezept.
 
+Damit stellt sich die Frage, die über den praktischen Wert des Verfahrens entscheidet: Wenn
+zwei Modelle den Verlust auf den beobachteten Einträgen beide auf null drücken, sagen sie
+dann auch dasselbe für die Lücken voraus?
+
 :::vertiefung[Matrix Completion an einer 2×3-Matrix]
 Vier von sechs Einträgen sind beobachtet, zwei sind Lücken. Das Widget führt
-Algorithmus 10.4.13 schrittweise aus und zeigt dabei alle Zwischengrößen: das Residuum
-$\bP_\Omega \odot (\bY - \bU\bV^\top)$ in Rot, die beiden Gradienten in Orange und die
-Vorhersagen für die Lücken in Grün. Mit $k = 1$ liegen die Grenzwerte bei $2{,}5$ und
-$2{,}4$, und diese Werte lassen sich von Hand nachrechnen: Aus $u_1v_1 = 5$, $u_1v_2 = 3$ und
-$u_2v_1 = 4$ folgen die Verhältnisse, und $u_2v_3 = 2$ legt den Rest fest. Mit $k = 2$ fällt
-der Verlust ebenso auf null, die Lücken landen aber woanders, weil zehn Parameter auf vier
-Beobachtungen treffen. Größerer Rang heißt also nicht bessere Rekonstruktion. Wer die
-Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein Pendeln des Verlusts zwischen zwei
-Werten, und jenseits von etwa $\alpha = 0{,}25$ laufen die Einträge davon: Am oberen Ende des
-Schiebers ist $L$ nach vierzehn Schritten keine Zahl mehr.
+Algorithmus 10.4.13 für $k = 1$ und $k = 2$ nebeneinander aus, mit derselben Lernrate, und
+zeigt alle Zwischengrößen: das Residuum $\bP_\Omega \odot (\bY - \bU\bV^\top)$ in Rot,
+die beiden Gradienten in Orange und die Vorhersagen für die Lücken in Grün.
 
 <MatrixCompletionDemo />
 :::
+
+Der Verlust fällt im Widget bei beiden Rängen auf null, die Vorhersagen laufen
+aber auseinander: $k = 1$ landet bei $y_{13} = 2{,}5$ und $y_{22} = 2{,}4$, $k = 2$ bei
+$1{,}583$ und $0{,}909$. Die Rang-1-Werte lassen sich von Hand nachrechnen: Aus
+$u_1v_1 = 5$, $u_1v_2 = 3$ und $u_2v_1 = 4$ folgen die Verhältnisse, und $u_2v_3 = 2$ legt
+den Rest fest. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die
+Vorhersage läuft, entscheidet dann der Startpunkt. Größerer Rang heißt also nicht bessere
+Rekonstruktion. Und wer die Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein
+Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ ein Davonlaufen der Einträge:
+Am oberen Ende des Schiebers ist $L$ nach wenigen Schritten keine Zahl mehr.
 
 ### Selbsttest
 
@@ -690,6 +714,23 @@ Ein größeres $k$ senkt den Verlust auf den beobachteten Feldern, über die Lü
 dagegen nichts. Im Widget passt $k = 2$ die vier Beobachtungen mit zehn Parametern exakt an,
 und die beiden Vorhersagen hängen dann nur noch am Startpunkt. Genau deshalb steht am Anfang
 die Annahme, dass die gesuchte Matrix kleinen Rang hat.
+:::
+
+:::zahlfrage{loesung=1,583 toleranz=0,03}
+Im Completion-Widget: Wir lassen beide Modelle mit $\alpha = 0{,}05$ so lange laufen, bis
+der Verlust bei beiden praktisch null ist. Welchen Wert sagt das Rang-2-Modell für die Lücke
+$y_{13}$ voraus?
+
+$1{,}583$, während das Rang-1-Modell $2{,}5$ vorhersagt. Beide erreichen denselben Verlust
+null auf den vier beobachteten Einträgen; über die Lücken sagt der Verlust nichts.
+:::
+
+:::zahlfrage{loesung=0,16 toleranz=0,005}
+Im Anstups-Widget: Wir wählen $f(\bX) = \left\|\bX\right\|_F^2$ und stupsen einen Eintrag
+um $h = 0{,}4$ an. Wie groß ist der rote Restterm?
+
+Exakt $h^2 = 0{,}16$, unabhängig davon, welchen Eintrag wir anfassen: Der quadratische Term
+in $(x_{ij} + h)^2 = x_{ij}^2 + 2x_{ij}h + h^2$ ist der ganze Rest.
 :::
 
 ::::

@@ -1,4 +1,4 @@
-import { Gradientenfeld, AbstiegStepper } from "./widgets/S102Gradient";
+import { Gradientenfeld, RichtungsWidget, AbstiegStepper } from "./widgets/S102Gradient";
 
 ::quelle[Folien 10-ableitungen-I, „Wichtige Spezialfälle" bis „Anwendung: Gradient Descent".]
 
@@ -244,21 +244,44 @@ Die letzte Spalte geht gegen null, und das ist genau die Aussage
 $\cred{o(\left\|\bh\right\|)}$.
 :::
 
-:::vertiefung[Höhenlinien, Gradientenpfeil und lineare Näherung]
-Die Folien zeigen an dieser Stelle gerenderte Bilder eines Funktionsgraphen mit
-Gradientenpfeil und Tangentialebene. Das Widget macht dasselbe interaktiv und in der Ebene:
-Links liegen die Höhenlinien mit dem orangen Gradientenpfeil am gewählten Punkt, rechts steht
-der Schnitt von $f$ entlang des Strahls in die violett gezeichnete Richtung $\bd$, zusammen
-mit der linearen Näherung aus ($10.2.2$). Die grüne Gerade rechts ist genau der Schnitt der
-Tangentialebene entlang dieser Richtung. Drei Beobachtungen lohnen sich: Der orange Pfeil steht immer
-senkrecht auf der blau gestrichelten Tangente an die Höhenlinie (Bemerkung 10.2.5), die
-Richtungsableitung wird maximal, wenn $\bd$ in Gradientenrichtung zeigt (Satz 10.2.4), und
-die grüne Gerade schmiegt sich bei $t = 0$ an die blaue Kurve, weicht daneben aber ab. Der
-zweite Knopf schaltet auf eine nicht quadratische Funktion um, deren Höhenlinien sich krümmen;
-alle drei Aussagen gelten dort unverändert, weil sie punktweise formuliert sind.
+Bemerkung 10.2.5 behauptet etwas Geometrisches über einen Vektor aus lauter partiellen
+Ableitungen: Er steht senkrecht auf der Höhenlinie. Das lässt sich nachsehen, statt es zu
+glauben.
 
 <Gradientenfeld />
+
+Zwei Tafeln zeigen denselben Zustand: links die Höhenlinien mit dem orangen Gradientpfeil am
+gewählten Punkt, rechts dieselbe Funktion als Fläche über der Ebene, mit der grünen
+Tangentialebene aus ($10.2.2$) und demselben Gradientpfeil auf dem Boden.
+
+Im Widget steht der orange Pfeil an jeder Stelle senkrecht auf der blau gestrichelten
+Tangente an die Höhenlinie, und er wird lang, wo die Höhenlinien dicht liegen.
+Der zweite Knopf schaltet auf eine nicht quadratische Funktion um, deren Höhenlinien sich
+krümmen; die Aussage gilt dort unverändert, weil sie punktweise formuliert ist. Im Nullpunkt
+der quadratischen Funktion verschwindet der Gradient ganz, und dann zeichnet sich gar keine
+Richtung mehr aus: Das ist die Stelle, an der die Höhenlinie zum Niveau $0$ aus zwei sich
+kreuzenden Geraden besteht.
+
+Damit bleibt die zweite Behauptung, die von Satz 10.2.4: keine Richtung steigt steiler an
+als der Gradient. Und gleich die Anschlussfrage: Wie viel vom maximalen Anstieg bleibt
+übrig, wenn wir schräg dazu laufen?
+
+:::vertiefung[Der Kompass der Richtungen]
+Der Kompass zeigt für jede Richtung $\bd$, wie stark $f$ in diese Richtung ansteigt: Der
+Abstand der blauen Kurve vom Mittelpunkt ist $\corange{\nabla f(\bx)}\bd$, gemessen am
+Maximum. Rechts steht der Schnitt von $f$ entlang des Strahls $\bx + t\bd$ samt der linearen
+Näherung aus ($10.2.2$).
+
+<RichtungsWidget />
 :::
+
+Wie das Widget zeigt, ist die blaue Kurve ein Kreis, der den Mittelpunkt berührt, und das ist
+genau der Graph von $\theta \mapsto \left\|\corange{\nabla f(\bx)}\right\|_2\cos\theta$
+in Polarkoordinaten. Ihr weitester Punkt liegt in Gradientenrichtung, dort erreicht die
+Richtungsableitung ihr Maximum $\left\|\corange{\nabla f(\bx)}\right\|_2$ (Satz 10.2.4).
+Senkrecht dazu, also längs der Höhenlinie, ist sie null. Dazwischen zählt allein der Kosinus
+des eingeschlossenen Winkels: $60^\circ$ neben dem Gradienten bleiben noch $50\,\%$ übrig.
+Rechts sieht man dieselbe Aussage als Steigung der grünen Geraden bei $t = 0$.
 
 ### Zwei Gradienten zum Auswendiglernen
 
@@ -419,25 +442,33 @@ Gradienten von vornherein als Spalte definiert, spart hier das $^\top$ und hande
 dafür in der Kettenregel wieder ein (Bemerkung 10.2.2).
 :::
 
+Die Lernrate $\alpha$ ist der einzige freie Parameter des Verfahrens. Gibt es eine beste
+Wahl, und woran erkennt man sie? Beim Abstieg in der Ebene schrumpft der Abstand zum Minimum
+in jeder Eigenrichtung von $\bA$ mit einem eigenen Faktor; die langsamere der beiden
+bestimmt das Tempo.
+
 :::vertiefung[Gradientenabstieg auf einer konvexen quadratischen Funktion]
 Zum Ausprobieren nehmen wir nicht die Funktion aus Beispiel 10.2.6, denn deren Sattel wäre
-für ein Abstiegsverfahren eine Falle: Entlang der Eigenrichtung zum negativen Eigenwert der
-Hesse-Matrix wächst der Abstand zum Sattel bei jeder Lernrate. Stattdessen minimieren wir
+für ein Abstiegsverfahren eine Falle. Stattdessen minimieren wir
 $L(\btheta) = \tfrac{1}{2}\btheta^\top\bA\btheta$ mit der symmetrischen und positiv
 definiten Matrix
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3 \end{smallmatrix}\bigr)$, deren Eigenwerte
-$(5 \pm \sqrt{5})/2$, also $3{,}618$ und $1{,}382$, beide positiv sind. Nach Satz 10.2.8 und
-der Linearität des Ableitens ist $\corange{\nabla L(\btheta)} = \btheta^\top\bA$, der Schritt
-also $-\alpha\bA\btheta$.
-
-Der Regler für $\alpha$ führt drei Regime vor: Kleine Lernraten kriechen. Die Wahl
-$\alpha = 2/(\lambda_{\min} + \lambda_{\max}) = 0{,}4$ ist hier optimal und drückt den
-Abstand zum Minimum je Schritt auf das $0{,}447$-fache. Und für
-$\alpha > 2/\lambda_{\max} \approx 0{,}553$ wächst er stattdessen, die Iterierten laufen
-davon.
+$(5 \pm \sqrt{5})/2$ beide positiv sind. Nach Satz 10.2.8 und der Linearität des Ableitens
+ist $\corange{\nabla L(\btheta)} = \btheta^\top\bA$, der Schritt also $-\alpha\bA\btheta$.
 
 <AbstiegStepper />
 :::
+
+Über den Erfolg entscheidet im Widget allein die Rate
+$\rho(\alpha) = \max_i \left|1 - \alpha\lambda_i\right|$, und der Verlust
+fällt je Schritt höchstens auf das $\rho(\alpha)^2$-fache. Klein wird dieses Maximum genau
+dort, wo die beiden Eigenrichtungen gleich schnell schrumpfen, also bei
+$\alpha = 2/(\lambda_{\min} + \lambda_{\max}) = 0{,}4$ mit
+$\rho = \sqrt{5}/5 \approx 0{,}447$; kleinere Lernraten kriechen, und ab
+$\alpha = 2/\lambda_{\max} \approx 0{,}553$ ist $\rho \geq 1$, die Iterierten laufen davon.
+Für die Funktion aus Beispiel 10.2.6 gäbe es dagegen gar kein brauchbares $\alpha$: Ihre
+Hesse-Matrix hat den negativen Eigenwert $-0{,}162$, und entlang dieser Eigenrichtung wächst
+der Abstand zum Sattel bei jeder Lernrate.
 
 ### Selbsttest
 
@@ -498,6 +529,23 @@ $f(\bx) = x_1^2 + 3x_1x_2 + 2x_2^2$ aus Beispiel 10.2.6 ist $\nabla f(\bnull) = 
 und der Nullpunkt ist ein Sattel: Die Hesse-Matrix hat die Eigenwerte $6{,}162$ und
 $-0{,}162$, also einen positiven und einen negativen (Bemerkung 10.2.9). Entlang der einen
 Eigenrichtung steigt $f$, entlang der anderen fällt es.
+:::
+
+:::zahlfrage{loesung=50 toleranz=2 einheit="Prozent"}
+Im Kompass-Widget: Wir setzen $\bd$ mit dem Knopf „d 60° daneben“ und lesen im Verdikt den
+Anteil am maximalen Anstieg ab. Wie viel Prozent sind es?
+
+Nach Satz 10.2.4 ist $\nabla f(\bx)\bd = \left\|\nabla f(\bx)\right\|_2 \cos\theta$, hier
+also $\cos 60^\circ = 0{,}5$, und zwar an jeder Stelle, an der der Gradient nicht verschwindet.
+:::
+
+:::zahlfrage{loesung=0,4 toleranz=0,03}
+Bei welcher Lernrate $\alpha$ ist die Rate $\rho(\alpha) = \max_i\left|1-\alpha\lambda_i\right|$
+des Abstiegs-Widgets am kleinsten?
+
+Bei $\alpha = 2/(\lambda_{\min}+\lambda_{\max}) = 2/5 = 0{,}4$. Dort schneiden sich die
+beiden Kurven $\left|1-\alpha\lambda_{\min}\right|$ und $\left|1-\alpha\lambda_{\max}\right|$,
+beide Eigenrichtungen schrumpfen mit demselben Faktor $\sqrt5/5 \approx 0{,}447$.
 :::
 
 ::::

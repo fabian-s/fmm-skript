@@ -220,26 +220,32 @@ wollen, ist nicht die Zahl $f'(x)$, sondern die lineare Abbildung
 $\cgreen{D_x f}$.
 :::
 
-:::vertiefung[Sekante, Tangente und der Restterm zum Anfassen]
-Die Tafel zeigt drei Funktionen. Bei $f(x) = x^2$ und $f(x) = x^3/3 - x + 1$
-läuft die durchgezogene violette Sekante beim Verkleinern von $h$ sichtbar in
-die grüne Tangente hinein, und der rote Balken über $x+h$ schrumpft mit. Der interessante
-Wert ist der letzte Readout, der *relative* Fehler
-$\left|\cred{r(h)}\right|/\left|h\right|$: Er ist genau der Abstand zwischen
-Sekanten- und Tangentensteigung und geht nach Satz 10.1.3(2) gegen null. Bei
-$f(x) = x^2$ steht dort sogar exakt $\left|h\right|$, was Beispiel 10.1.7 gleich
-nachrechnet.
+Zwei Fragen bleiben offen. Wie schnell verschwindet der Restterm, wenn wir $h$
+verkleinern? Und was geht schief, wenn die Funktion an der betrachteten Stelle
+einen Knick hat? Beides lässt sich an drei Beispielkurven ausprobieren.
 
-Die dritte Funktion ist die Betragsfunktion aus Bemerkung 10.1.2. Schieben wir
-$x$ auf $0$, so trennen sich die beiden Sekanten und bleiben getrennt, wie klein
-$h$ auch wird. Lehrreich ist auch eine Stelle knapp neben dem Knick: Solange
+:::vertiefung[Sekante, Tangente und der Restterm zum Anfassen]
+Zur Wahl stehen zwei glatte Funktionen und die Betragsfunktion aus
+Bemerkung 10.1.2. Der rote Balken über $x+h$ ist der Restterm $\cred{r(h)}$, der
+letzte Readout darunter der *relative* Fehler
+$\left|\cred{r(h)}\right|/\left|h\right|$.
+
+<SekanteTangenteWidget />
+:::
+
+Wie das Widget zeigt, ist dieser relative Fehler genau der Abstand zwischen
+Sekanten- und Tangentensteigung, und nach Satz 10.1.3(2) geht er gegen null. Bei
+$f(x) = x^2$ steht dort sogar exakt $\left|h\right|$, denn der Restterm ist $h^2$;
+Beispiel 10.1.7 rechnet das gleich nach. Halbieren wir die Schrittweite, so
+fällt der Restterm auf ein Viertel und der relative Fehler auf die Hälfte.
+
+Die Betragsfunktion zeigt die Kehrseite. Schieben wir $x$ auf $0$, so trennen
+sich die beiden Sekanten und bleiben getrennt, wie klein $h$ auch wird.
+Lehrreich ist auch eine Stelle knapp neben dem Knick: Solange
 $\left|x\right| < h$ ist, liegt der Knick noch im Fenster, und genau eine der
 beiden Sekanten läuft über ihn hinweg und misst etwas anderes als die Ableitung
 (welche das ist, hängt am Vorzeichen von $x$). Erst für kleinere $h$ sieht sie
 nur noch das glatte Stück. Lineare Approximation ist eine lokale Angelegenheit.
-
-<SekanteTangenteWidget />
-:::
 
 ### Der allgemeine Ableitungsbegriff
 
@@ -439,6 +445,17 @@ Linear ist nur die Abhängigkeit von $h$. Wie $D_x f$ von der Stelle $x$ abhäng
 lässt Definition 10.1.5 offen, und schon $f(x) = x^2$ zeigt den Unterschied:
 $D_x f(h) = 2xh$ ist linear in $h$, die Zuordnung $x \mapsto D_x f$ ist es
 zufällig ebenfalls, bei $f(x) = x^3$ mit $D_x f(h) = 3x^2h$ dagegen nicht mehr.
+:::
+
+:::zahlfrage{loesung=0,6 toleranz=0,02}
+Im Widget: Wir wählen $f(x) = x^2$ und stellen $x = 0{,}60$ und $h = 0{,}60$ ein.
+Welchen Wert zeigt der Readout für den relativen Fehler
+$\left|r(h)\right|/\left|h\right|$?
+
+Der Restterm ist $r(h) = h^2 = 0{,}36$, also
+$\left|r(h)\right|/\left|h\right| = \left|h\right| = 0{,}6$. Dasselbe steht als
+Abstand zwischen der Sekantensteigung $1{,}8$ und der Tangentensteigung $1{,}2$
+in der Readout-Liste.
 :::
 
 ::::

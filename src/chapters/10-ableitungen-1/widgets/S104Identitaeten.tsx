@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe as fmt } from "../../../lib";
+import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
 
 /**
  * §10.4, erster Teil (Skalar zu Matrix): die drei Identitäten aus Satz 10.4.4
@@ -11,27 +12,31 @@ import { Slider } from "../../../lib";
  * Übernommen ist nur dieses Rechenmuster (zentrale Differenz mit eps = 1e-5,
  * Formelwert daneben); Funktionsauswahl, Aufbau und sämtliche Texte sind neu.
  *
- * Nachgerechnet (node, check-math-s104.mjs): für F(x) = (x 1; x^2 3x) stimmen
- * alle drei Identitäten auf 1e-9 mit den zentralen Differenzen überein; für
- * F = diag(x, 2x) liefern beide Wege 4x; für die Drehmatrix ist det F = 1 und
- * damit tr(F^-1 F') = 0.
+ * EINE EINSICHT: Die drei Identitäten aus Satz 10.4.4 sind keine Merkregeln,
+ * sondern nachprüfbare Aussagen — die numerische Spalte kennt keine der
+ * Formeln und trifft sie trotzdem.
+ *
+ * FARBROLLEN (Kapitel 10): Funktion und Funktionswerte blau, Vorhersage der
+ * Identität grün (die „lineare Approximation" dieses Abschnitts), Abweichung
+ * rot, das Ableitungsobjekt ∂F/∂x orange.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
+ * check-s101-s104.mjs, 2026-08-19): über den ganzen Reglerbereich in Schritten
+ * von 0,1 (Stellen mit |det F| < 0,05 ausgenommen) betragen die größten
+ * Abweichungen zwischen Formel und zentraler Differenz
+ *   diag(x, 2x): Spur 6,4e-11, det 5,1e-11, Inverse 6,3e-8;
+ *   (x 1; x² 3x): Spur 2,6e-11, det 1,3e-10, Inverse 6,3e-7;
+ *   Drehmatrix:  Spur 3,7e-11, det 5,6e-12, Inverse 2,0e-11.
+ * det F = 2x² für beide ersten Beispiele, Ableitung 4x (bei x = 1 also 4);
+ * die Drehmatrix hat det F = 1 konstant und tr(F⁻¹F′) = 0 exakt.
  */
 
-const BLAU = "#0072B2"; // Funktion, Funktionswerte
-const GRUEN = "#009E73"; // Vorhersage der Identität
-const ROT = "#D55E00"; // Abweichung
-const ORANGE = "#E69F00"; // Ableitungsobjekt dF/dx
+const BLAU = FMM_COLORS.blau; // Funktion, Funktionswerte
+const GRUEN = FMM_COLORS.gruen; // Vorhersage der Identität
+const ROT = FMM_COLORS.rot; // Abweichung
+const ORANGE = FMM_COLORS.orange; // Ableitungsobjekt dF/dx
 
 type Mat = number[][];
-
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
 
 function det2(A: Mat): number {
   return A[0][0] * A[1][1] - A[0][1] * A[1][0];
@@ -222,18 +227,13 @@ export function IdentitaetenSkalarMatrix() {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span className="text-xs" style={{ color: "#64748b" }}>
-          F(x) wählen:
-        </span>
+        <span className={`text-xs ${W_MUTED}`}>F(x) wählen:</span>
         {BEISPIELE.map((b, i) => (
           <button
             key={b.name}
             type="button"
-            className={`rounded border px-3 py-1 text-sm ${
-              i === wahl
-                ? "border-slate-500 bg-slate-100 font-semibold dark:bg-slate-700"
-                : "border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-            }`}
+            aria-pressed={i === wahl}
+            className={i === wahl ? W_BUTTON_AKTIV : W_BUTTON}
             onClick={() => {
               setWahl(i);
               setX(BEISPIELE[i].x0);
@@ -243,9 +243,13 @@ export function IdentitaetenSkalarMatrix() {
           </button>
         ))}
       </div>
-      <p className="max-w-prose text-sm">
+      <p className={`max-w-prose text-sm ${W_MUTED}`}>
         <span className="font-mono">{bsp.tex}</span>. {bsp.hinweis}
       </p>
+      <Aufgabe>
+        Schieben wir x durch den ganzen Bereich und achten auf die letzte Spalte: Wo weicht
+        die Formel von der numerischen Ableitung ab, und warum?
+      </Aufgabe>
       <Slider
         label="x"
         value={x}
@@ -306,36 +310,30 @@ export function IdentitaetenSkalarMatrix() {
           </p>
         </>
       )}
-      <div className="max-w-prose space-y-1 rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
-        <p>
-          <span className="font-mono">det F(x) = {fmt(d, 4)}</span>
-          {singulaer ? (
-            <>
-              {". "}
-              <span style={{ color: ROT }}>
-                F(x) ist hier singulär. Die Determinantenformel und die Inversenformel setzen
-                beide F(x)⁻¹ voraus und liefern deshalb keinen Wert; die Spur-Identität gilt
-                dagegen weiter.
-              </span>
-            </>
-          ) : (
-            <>
-              , tr(F⁻¹ ∂F/∂x) ={" "}
-              <span className="font-mono">{fmt(spur(mul(inv2(F), Fp)), 4)}</span>. Beide Faktoren
-              zusammen ergeben die Ableitung der Determinante.
-            </>
-          )}
-        </p>
-        <p>
-          Die numerische Spalte kennt keine der Formeln: Wir werten F an{" "}
-          <span className="font-mono">x ± 10⁻⁵</span> aus und bilden den zentralen
-          Differenzenquotienten. Dass beide Spalten übereinstimmen, ist deshalb eine echte Probe
-          und keine Umformung derselben Rechnung. Ein winziger Rest bleibt trotzdem: In der
-          Spur- und der Determinantenzeile liegt er über den ganzen Schieberbereich unter
-          10⁻⁹, meist um 10⁻¹¹. Das ist der Abbruchfehler des Differenzenquotienten, weit
-          unter den angezeigten Stellen.
-        </p>
-      </div>
+      <Verdikt kind={singulaer ? "warn" : "ok"}>
+        <span className="font-mono">det F(x) = {fmt(d, 4)}</span>
+        {singulaer ? (
+          <>
+            {". "}
+            F(x) ist hier singulär. Die Determinantenformel und die Inversenformel setzen
+            beide F(x)⁻¹ voraus und liefern deshalb keinen Wert; die Spur-Identität aus
+            Satz 10.4.4(1) gilt dagegen weiter, denn sie braucht nur die Linearität der Spur.
+          </>
+        ) : (
+          <>
+            , tr(F⁻¹ ∂F/∂x) ={" "}
+            <span className="font-mono">{fmt(spur(mul(inv2(F), Fp)), 4)}</span>. Beide Faktoren
+            zusammen ergeben die Ableitung der Determinante, wie Satz 10.4.4(2) es behauptet.
+            Die numerische Spalte kennt keine der Formeln: Wir werten F an{" "}
+            <span className="font-mono">x ± 10⁻⁵</span> aus und bilden den zentralen
+            Differenzenquotienten. Dass beide Spalten übereinstimmen, ist deshalb eine echte
+            Probe und keine Umformung derselben Rechnung. Ein winziger Rest bleibt: in der
+            Spur- und der Determinantenzeile liegt er über den ganzen Reglerbereich unter
+            10⁻⁹, meist um 10⁻¹¹, also der Abbruchfehler des Differenzenquotienten, weit unter
+            den angezeigten Stellen.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }
