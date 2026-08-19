@@ -1,12 +1,26 @@
 import { useMemo, useState } from "react";
-import { Slider, niceTicks } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  Schaetzfrage,
+  Slider,
+  Stepper,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  W_MUTED,
+  fmtDe,
+  fmtTick,
+  niceTicks,
+} from "../../../lib";
 import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
 
 /**
- * §11.4: Newton-Raphson-Verfahren als Stepper. Jeder Klick führt genau den
- * Schritt aus Algorithmus 11.4.11 aus; die Tabelle zeigt Iterierte, Gradient,
- * Fehler und den Quotienten Fehler_k / Fehler_{k-1}^2, an dem sich die
- * quadratische Konvergenz ablesen lässt.
+ * §11.4: Die EINE Einsicht — Newton konvergiert quadratisch: der Quotient
+ * e_k/e_{k-1}² bleibt beschränkt (hier strebt er gegen 1/(2x*) = 0,5), die Zahl
+ * der gültigen Stellen verdoppelt sich also je Schritt. Das Verfahren steht als
+ * scrubbarer Stepper (Muster 7): der Schrittindex ist ein Regler, und der
+ * Zustand wird deterministisch aus ihm gerechnet, Zurückgehen inklusive.
  *
  * Eigenbau, kein portierter Code; die Höhenlinien kommen aus S114Kontur.ts.
  * Alles ist deterministisch: zwei fest verdrahtete Funktionen, Startpunkt per
@@ -27,15 +41,25 @@ import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
  *   Minimum.
  * - f(x) = 2x1² + 2x1x2 + 3x2² − 4x1 − 6x2 hat das Minimum (0,6; 0,8) mit
  *   f = −3,6; von jedem Startpunkt trifft der erste Schritt es exakt.
+ *
+ * Nachgerechnet (scratchpad/verify-11-ableitungen-2/check-s114.mjs,
+ * 2026-08-19): Der Lauf ab (2; 1,5) unterschreitet den Fehler 10⁻¹⁰ zum ersten
+ * Mal in Schritt 5 (e_5 = 1,1e−15, e_4 = 4,6e−8) — das ist die Antwort der
+ * Schätzfrage. Die Quotienten e_k/e_{k-1}² lauten 0,0769 / 0,4000 / 0,4878 /
+ * 0,4998 und streben gegen 1/(2x*) = 0,5. Auf der Quadrik steht der Gradient
+ * nach EINEM Schritt exakt auf null, das Minimum ist (0,6; 0,8) mit f = −3,6.
+ * Ein Start mit x1 = −2 landet auf (−1; 0), dem Sattelpunkt.
+ *
+ * Farbrollen Kapitel 11: Funktion blau, Ziel (Minimum bzw. kritischer Punkt)
+ * grün, Iterierte und Ableitungsobjekte orange, Fehler rot.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ROT = "#D55E00";
-const ORANGE = "#E69F00";
-const ACHSE = "#64748b";
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ROT = FMM_COLORS.rot;
+const ORANGE = FMM_COLORS.orange;
 
-interface Aufgabe {
+interface NewtonAufgabe {
   id: string;
   label: string;
   f: (a: number, b: number) => number;
@@ -46,7 +70,7 @@ interface Aufgabe {
   ziel: (a0: number) => [number, number] | null;
 }
 
-const AUFGABEN: Aufgabe[] = [
+const AUFGABEN: NewtonAufgabe[] = [
   {
     id: "kubisch",
     label: "x₁³/3 − x₁ + x₂²/2",
@@ -81,14 +105,7 @@ const PAD_L = 26;
 const PAD_B = 16;
 const MAX_SCHRITTE = 6;
 
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
 
 /** wissenschaftliche Notation mit deutschem Komma, für die Fehlerspalte */
 function fmtE(v: number): string {
@@ -175,23 +192,36 @@ export function NewtonStepper() {
     return alle;
   }, [aufgabe]);
 
+  const ticks = niceTicks(D[0], D[1]);
+  const dTick = ticks.length > 1 ? ticks[1] - ticks[0] : undefined;
+
+  const k = sichtbar.length - 1;
+  const narration =
+    k === 0
+      ? `Ausgangslage: x₀ = (${fmt(aktuell.x[0], 3)}; ${fmt(aktuell.x[1], 3)}), ‖∇f‖ = ${fmtE(aktuell.gradNorm)}.`
+      : `Schritt ${k}: x_${k} = (${fmt(aktuell.x[0], 6)}; ${fmt(aktuell.x[1], 6)}), ‖∇f‖ = ${fmtE(aktuell.gradNorm)}, Abstand zum Ziel ${fmtE(aktuell.fehler)}.`;
+
+  let art: "neutral" | "ok" | "warn" = "neutral";
   let status: string;
   if (aktuell.singulaer) {
+    art = "warn";
     status =
       `Bei x₁ = 0 ist die Hesse-Matrix diag(0, 1) und damit nicht invertierbar: Der Newton-Schritt ` +
       `aus Algorithmus 11.4.11 verlangt H⁻¹ und ist hier gar nicht definiert. Das Taylorpolynom T₂ ` +
       `entartet in dieser Richtung zu einer Geraden, die kein Minimum hat. Ein Stück am Startregler ` +
       `genügt, um wieder in den regulären Fall zu kommen.`;
   } else if (aufgabe.quadratisch) {
+    art = schritte === 0 ? "neutral" : "ok";
     status =
       schritte === 0
         ? `Auf einer Quadrik stimmt T₂ mit f überein. Der erste Schritt minimiert also nicht eine ` +
-          `Näherung, sondern f selbst, und muss deshalb exakt im Minimum landen. Klicken wir einmal.`
+          `Näherung, sondern f selbst, und muss deshalb exakt im Minimum landen. Ein Schritt am Regler genügt.`
         : `Wie angekündigt: EIN Schritt, und der Gradient ist bis auf Rundungsfehler null ` +
-          `(‖∇f‖ = ${fmtE(aktuell.gradNorm)}). Weitere Klicks bewegen nichts mehr. Das Minimum liegt ` +
+          `(‖∇f‖ = ${fmtE(aktuell.gradNorm)}). Weitere Schritte bewegen nichts mehr. Das Minimum liegt ` +
           `bei (0,6; 0,8) mit f = −3,6, und die Hesse-Matrix (4, 2; 2, 6) ist mit Determinante 20 und ` +
           `positiver Spur positiv definit, es ist also wirklich ein Minimum.`;
   } else if (ziel && ziel[0] < 0) {
+    art = "warn";
     status =
       `Der Start liegt links der Null, und die Iteration läuft gegen (−1; 0). Dort ist der Gradient ` +
       `null, die Hesse-Matrix diag(−2, 1) aber indefinit: ein Sattelpunkt. Newton sucht Nullstellen ` +
@@ -203,6 +233,7 @@ export function NewtonStepper() {
       `ändert nichts mehr, und die Fehlerspalte bleibt bei 0. Der Quotient eₖ/eₖ₋₁² ist hier ` +
       `0/0 und deshalb leer. Ein Stück am Startregler, und die Iteration bekommt etwas zu tun.`;
   } else if (aktuell.fehler === 0) {
+    art = "ok";
     status =
       `Die Iteration ist am Ziel: Der Abstand zum Minimum (1; 0) ist auf null gefallen, weiter ` +
       `als bis zur Maschinengenauigkeit kommt keine Rechnung. Der Quotient eₖ/eₖ₋₁² in der ` +
@@ -212,9 +243,10 @@ export function NewtonStepper() {
     status =
       `Der Startpunkt liegt rechts der Null, das Ziel ist das Minimum (1; 0). Sehenswert ist der ` +
       `erste Schritt: In der x₂-Richtung ist f quadratisch, dort trifft Newton sofort exakt; in der ` +
-      `x₁-Richtung braucht er mehrere Anläufe. Klicken wir Schritt für Schritt und beobachten ` +
-      `dabei die Fehlerspalte.`;
+      `x₁-Richtung braucht er mehrere Anläufe. Fahren wir den Regler Schritt für Schritt ` +
+      `hoch und beobachten dabei die Fehlerspalte.`;
   } else {
+    art = schritte === 0 ? "neutral" : "ok";
     const letzte = sichtbar.length - 1;
     const vorletzte = sichtbar[letzte - 1];
     const q = vorletzte.fehler > 0 ? aktuell.fehler / vorletzte.fehler ** 2 : NaN;
@@ -232,26 +264,23 @@ export function NewtonStepper() {
       `Stellen verdoppelt sich pro Schritt, sobald wir nahe genug am Ziel sind. ${ersteZeile}`;
   }
 
-  const knopf = (aktiv: boolean) =>
-    `rounded border px-2 py-1 text-sm ${
-      aktiv
-        ? "border-slate-500 bg-slate-200 font-semibold dark:bg-slate-700"
-        : "border-slate-300 dark:border-slate-600"
-    }`;
-
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Blau sind die Höhenlinien von f, orange der Weg der Newton-Iterierten, grün der Punkt, den
-        die Iteration ansteuert. Jeder Klick auf „Schritt“ führt genau eine Zeile von
-        Algorithmus 11.4.11 aus.
+      <Aufgabe>
+        Fahren wir den Schrittregler von 0 bis 6 durch und beobachten dabei die letzte Spalte der
+        Tabelle.
+      </Aufgabe>
+      <p className={`max-w-prose text-xs ${W_MUTED}`}>
+        Blau: die Höhenlinien von f. Orange: der Weg der Iterierten. Grün: der Punkt, den die
+        Iteration ansteuert. Ein Schritt des Reglers ist genau eine Zeile von Algorithmus 11.4.11.
       </p>
       <div className="flex flex-wrap gap-2">
         {AUFGABEN.map((a) => (
           <button
             key={a.id}
             type="button"
-            className={knopf(a.id === id)}
+            aria-pressed={a.id === id}
+            className={a.id === id ? W_BUTTON_AKTIV : W_BUTTON}
             onClick={() => {
               setId(a.id);
               setSchritte(0);
@@ -285,43 +314,41 @@ export function NewtonStepper() {
         step={0.25}
         fmt={(v) => fmt(v, 2)}
       />
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={knopf(false)}
-          onClick={() => setSchritte((s) => Math.min(s + 1, bahn.length - 1))}
-        >
-          Schritt
-        </button>
-        <button type="button" className={knopf(false)} onClick={() => setSchritte(0)}>
-          Zurücksetzen
-        </button>
-      </div>
+      <Stepper
+        step={Math.min(schritte, bahn.length - 1)}
+        setStep={setSchritte}
+        max={bahn.length - 1}
+        narration={narration}
+      />
 
       <div className="flex flex-wrap gap-4">
-        <div className="inline-block shrink-0 select-none text-[10px] text-slate-500">
+        <div className={`select-none text-[10px] ${W_MUTED}`}>
           <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
             x₂ ↑
           </div>
           <svg
+            viewBox={`0 0 ${PAD_L + W + 6} ${W + PAD_B}`}
             width={PAD_L + W + 6}
             height={W + PAD_B}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            role="img"
+            aria-label={`Höhenlinien von f mit dem Weg der Newton-Iterierten bis Schritt ${sichtbar.length - 1}; das Ziel ist grün markiert.`}
+            className="h-auto max-w-full rounded border"
+            style={{ background: "var(--w-bg)", borderColor: "var(--w-border)" }}
           >
-            {niceTicks(D[0], D[1]).map((t) => (
+            {ticks.map((t) => (
               <g key={`t${t}`}>
-                <line x1={PAD_L} x2={PAD_L + W} y1={py(t)} y2={py(t)} stroke="#e2e8f0" strokeWidth={0.6} />
-                <line y1={0} y2={W} x1={px(t)} x2={px(t)} stroke="#e2e8f0" strokeWidth={0.6} />
-                <text x={PAD_L - 3} y={py(t) + 3} textAnchor="end" fill={ACHSE} fontSize={9}>
-                  {String(t).replace("-", "−")}
+                <line x1={PAD_L} x2={PAD_L + W} y1={py(t)} y2={py(t)} stroke="var(--w-grid)" strokeWidth={0.6} />
+                <line y1={0} y2={W} x1={px(t)} x2={px(t)} stroke="var(--w-grid)" strokeWidth={0.6} />
+                <text x={PAD_L - 3} y={py(t) + 3} textAnchor="end" fill="var(--w-text)" fontSize={9}>
+                  {fmtTick(t, dTick)}
                 </text>
-                <text x={px(t)} y={W + 11} textAnchor="middle" fill={ACHSE} fontSize={9}>
-                  {String(t).replace("-", "−")}
+                <text x={px(t)} y={W + 11} textAnchor="middle" fill="var(--w-text)" fontSize={9}>
+                  {fmtTick(t, dTick)}
                 </text>
               </g>
             ))}
-            <line x1={PAD_L} x2={PAD_L + W} y1={py(0)} y2={py(0)} stroke={ACHSE} strokeWidth={1} />
-            <line y1={0} y2={W} x1={px(0)} x2={px(0)} stroke={ACHSE} strokeWidth={1} />
+            <line x1={PAD_L} x2={PAD_L + W} y1={py(0)} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1} />
+            <line y1={0} y2={W} x1={px(0)} x2={px(0)} stroke="var(--w-axis)" strokeWidth={1} />
             <path d={pfad(linien)} fill="none" stroke={BLAU} strokeWidth={1.3} />
             {ziel && <circle cx={px(ziel[0])} cy={py(ziel[1])} r={5} fill="none" stroke={GRUEN} strokeWidth={2.4} />}
             {sichtbar.slice(1).map((p, i) => (
@@ -398,7 +425,32 @@ export function NewtonStepper() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm">{status}</p>
+      <Verdikt kind={art}>{status}</Verdikt>
     </div>
+  );
+}
+
+/**
+ * Der Abschnitts-Baustein: erst tippen, dann schrittweise nachrechnen.
+ * Verifiziert (check-s114.mjs, 2026-08-19): ab Schritt 5 liegt der Abstand zum
+ * Minimum unter 10⁻¹⁰.
+ */
+export function NewtonSchaetzung() {
+  return (
+    <Schaetzfrage
+      frage="Vom Startpunkt (2; 1,5) aus: Nach wie vielen Newton-Schritten liegt der Abstand zum Minimum unter 10⁻¹⁰?"
+      loesung={5}
+      toleranz={0}
+      einheit="Schritte"
+      fmt={(v) => fmtDe(v, 0)}
+      verdeckt={
+        <p className="max-w-prose text-sm">
+          Nach fünf Schritten, und der letzte davon ist ein Sprung über sieben Größenordnungen: Der
+          Abstand fällt von 4,6·10⁻⁸ auf 1,1·10⁻¹⁵. So sieht quadratische Konvergenz in Zahlen aus.
+        </p>
+      }
+    >
+      <NewtonStepper />
+    </Schaetzfrage>
   );
 }

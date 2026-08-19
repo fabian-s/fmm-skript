@@ -1,6 +1,6 @@
-import { TaylorOrdnungWidget } from "./widgets/S114Taylor1D";
-import { Taylor2DWidget } from "./widgets/S114Taylor2D";
-import { NewtonStepper } from "./widgets/S114Newton";
+import { TaylorOrdnungSchaetzung } from "./widgets/S114Taylor1D";
+import { Taylor2DSchaetzung } from "./widgets/S114Taylor2D";
+import { NewtonSchaetzung } from "./widgets/S114Newton";
 
 ::quelle[Folien 11-ableitungen-II, von „Taylorentwicklung: univariate Funktionen" bis zur Anwendung „Newton-Raphson-Verfahren"; das auskommentierte Zahlenbeispiel zu $e^x$ und die drei R-Tafeln sind mitverarbeitet.]
 
@@ -278,24 +278,31 @@ $e^{0{,}5} - 1{,}5 = e^{\xi}\cdot 0{,}25/2$ folgt $\xi = 0{,}1738$, und das lieg
 wie versprochen zwischen $0$ und $0{,}5$.
 :::
 
+Beispiel 11.4.6 hat den Fehler an einer einzigen Stelle für drei Ordnungen
+ausgerechnet. Lohnt sich der Sprung von $T_2$ auf $T_3$ überhaupt, und gilt der
+Gewinn auch weit weg vom Entwicklungspunkt?
+
 :::vertiefung[Die drei Tafeln der Vorlesung an einem Regler]
 Die Vorlesung zeigt drei Bilder derselben Funktion mit $T_1$, $T_2$ und $T_3$.
 Hier hängen sie an einem Regler, dazu kommt ein zweiter für die Stelle, an der wir
-den Fehler ablesen. Voreingestellt ist $x = 0{,}5$, sodass sich die Zahlen aus
-Beispiel 11.4.6 direkt wiederfinden lassen.
+den Fehler ablesen. Voreingestellt ist $x = 0{,}5$, also genau die Stelle aus
+Beispiel 11.4.6.
 
-Zwei Beobachtungen lohnen den Aufwand. Erstens wandert die Stelle, an der grün und
-blau auseinanderlaufen, mit jeder Ordnung weiter nach außen, aber der linke Rand
-bleibt hartnäckig: Für $x \to -\infty$ geht $e^x$ gegen null, jedes Taylorpolynom
-positiven Grades dagegen gegen $+\infty$ oder $-\infty$, je nach Parität seines
-Grades. Zweitens fällt der Fehler
-nahe am Entwicklungspunkt viel schneller als weit draußen, und der Statustext
-vergleicht den gemessenen Gewinn mit dem Faustwert $\left|x\right|/(k+1)$ aus dem
-Restglied. Weit links taugt dieser Faustwert nicht mehr: Bei $k = 1$ und
-$x = -3$ wächst der Fehler von $0{,}950$ auf $2{,}050$, statt zu fallen.
-
-<TaylorOrdnungWidget />
+<TaylorOrdnungSchaetzung />
 :::
+
+Wie das Widget zeigt, ist der Gewinn nahe am Entwicklungspunkt beträchtlich: Bei
+$x = 0{,}5$ fällt der Fehler von $T_2$ auf $T_3$ um den Faktor $8{,}2$, von $T_3$
+auf $T_4$ sogar um $10{,}2$. Weiter draußen kippt das Bild. Die Stelle, an der
+grün und blau auseinanderlaufen, wandert mit jeder Ordnung nach außen, aber der
+linke Rand bleibt hartnäckig: Für $x \to -\infty$ geht $e^x$ gegen null, jedes
+Taylorpolynom positiven Grades dagegen gegen $+\infty$ oder $-\infty$, je nach
+Parität seines Grades. Bei $x = -3$ wächst der Fehler beim Schritt von $T_0$ auf
+$T_1$ deshalb von $0{,}950$ auf $2{,}050$, statt zu fallen, und auch $T_2$ liegt
+mit $2{,}450$ noch darüber. Der Faustwert $\left|x\right|/(k+1)$ aus dem Restglied
+beschreibt eben das Verhalten für kleine $\left|x\right|$; solange $\left|x\right|$
+groß gegen $k+1$ ist, gewinnt zunächst die Potenz. Das ist Bemerkung 11.4.5 in
+Zahlen.
 
 ### Der allgemeine Fall
 
@@ -484,31 +491,40 @@ $\cgreen{T_2} = \cblue{f}$ gilt exakt, an jeder Stelle und für jedes $\bh$. Auf
 dieser Beobachtung beruht das Verfahren im nächsten Unterabschnitt.
 :::
 
-:::vertiefung[Tangentialebene und Quadrik im Höhenlinienbild]
-Statt der Flächen zeichnen wir die Höhenlinien, und zwar die von $f$ und die des
-Taylorpolynoms im selben Fenster und auf denselben Niveaus. Die Umschaltung
-zwischen $\cgreen{T_1}$ und $\cgreen{T_2}$ zeigt den Unterschied sofort: Die
-Tangentialebene liefert parallele Geraden, die Quadrik krümmt sich mit.
+Korollar 11.4.9 macht eine quantitative Aussage: Der Restterm von $\cgreen{T_1}$
+wächst wie $\left\|\bh\right\|^2$, der von $\cgreen{T_2}$ wie
+$\left\|\bh\right\|^3$. Halbieren wir also den Abstand zum Entwicklungspunkt, um
+welchen Faktor fällt dann der Fehler?
 
-Der Zahlenwert im Statustext ist der eigentliche Punkt der Übung. Wir messen den
-größten Fehler auf einem Kreis mit Radius $r$ um den Entwicklungspunkt und
-vergleichen ihn mit dem auf dem halb so großen Kreis. Für $\cgreen{T_1}$ steht dort
-ungefähr $4$, für $\cgreen{T_2}$ ungefähr $8$, wie es Korollar 11.4.9 nahelegt:
-Der erste Restterm wächst wie $\left\|\bh\right\|^2$, der zweite wie
-$\left\|\bh\right\|^3$. Die Faustzahlen setzen allerdings voraus, dass der
-jeweils führende Restterm nicht selbst verschwindet. An einer Stelle, an der die
-Hesse-Matrix nahezu null ist, springt der $\cgreen{T_1}$-Quotient deshalb auf
-etwa $8$, und im Zentrum der Glockenfunktion, wo alle dritten Ableitungen
-verschwinden, steht beim $\cgreen{T_2}$ ungefähr $16$. Auf der Quadrik im dritten
-Menüpunkt fällt der $\cgreen{T_2}$-Fehler auf Rundungsniveau, dort ist die
-Näherung exakt.
+:::vertiefung[Tangentialebene und Quadrik im Höhenlinienbild]
+Statt nur der Flächen zeichnen wir die Höhenlinien, und zwar die von $f$ und die
+des Taylorpolynoms im selben Fenster und auf denselben Niveaus; daneben steht
+dieselbe Lage im Raum. Gemessen wird der größte Fehler auf einem Kreis mit Radius
+$r$ um den Entwicklungspunkt, im Vergleich zu dem auf dem halb so großen Kreis.
+In der Raumtafel ist dieser Fehler der senkrechte Abstand zwischen dem blauen und
+dem grünen Ring.
 
 Zur Vorlesung gehört außerdem eine
 [Shiny-App](https://fabian-s.shinyapps.io/taylor-approx/), die dieselbe Idee mit
 Flächen im Raum zeigt.
 
-<Taylor2DWidget />
+<Taylor2DSchaetzung />
 :::
+
+Wie das Widget zeigt, trifft die Vorhersage: In der Voreinstellung fällt der
+Fehler von $\cgreen{T_1}$ beim Halbieren des Radius von $0{,}2672$ auf $0{,}0616$,
+also um den Faktor $4{,}34$, und der von $\cgreen{T_2}$ von $0{,}0837$ auf
+$0{,}0104$, um den Faktor $8{,}07$. Die Umschaltung zwischen den beiden Ordnungen
+zeigt zugleich den strukturellen Unterschied: Die Tangentialebene liefert
+parallele Geraden als Höhenlinien, die Quadrik krümmt sich mit.
+
+Die Faustzahlen $4$ und $8$ setzen allerdings voraus, dass der jeweils führende
+Restterm nicht selbst verschwindet. An einer Stelle, an der die Hesse-Matrix
+nahezu null ist, springt der $\cgreen{T_1}$-Quotient deshalb auf etwa $8$, und im
+Zentrum der Glockenfunktion, wo alle dritten Ableitungen verschwinden, steht beim
+$\cgreen{T_2}$ ungefähr $16$. Auf der Quadrik im dritten Menüpunkt fällt der
+$\cgreen{T_2}$-Fehler auf Rundungsniveau: Dort ist die Näherung exakt, und genau
+darauf beruht der eine exakte Newton-Schritt im nächsten Unterabschnitt.
 
 ### Anwendung: das Newton-Raphson-Verfahren
 
@@ -622,27 +638,40 @@ $\corange{\bI_1(\btheta)}$ einer einzelnen Beobachtung. Der Restterm aus ($11.4.
 dabei das, was die Argumentation auf eine asymptotische festlegt.
 :::
 
+Wie schnell ist „quadratisch konvergent" in Zahlen? Rechnen wir das Verfahren
+Schritt für Schritt mit und schauen, wie viele Schritte es bis zur
+Maschinengenauigkeit braucht.
+
 :::vertiefung[Newton Schritt für Schritt]
 Die Tafel zeigt die Höhenlinien, den Weg der Iterierten und eine Tabelle mit
 Gradientennorm, Fehler und dem Quotienten $e_k / e_{k-1}^2$. Bleibt dieser
 Quotient beschränkt, so wird der Fehler in jedem Schritt im Wesentlichen
 quadriert; das ist die *quadratische Konvergenz*, die Newton so beliebt macht
-(:k[Konvergenzordnung]{#rate-of-convergence}).
+(:k[Konvergenzordnung]{#rate-of-convergence}). Der Schrittregler lässt sich
+vor- und zurückfahren, ohne dass die Iteration neu startet.
 
-Voreingestellt ist $f(\bx) = x_1^3/3 - x_1 + x_2^2/2$ mit Start $(2; 1{,}5)$. In
-der $x_2$-Richtung ist $f$ quadratisch, dort sitzt der erste Schritt sofort exakt.
-In der $x_1$-Richtung läuft die Iteration über $1{,}25$, $1{,}025$,
-$1{,}00030$ und $1{,}00000005$ gegen $1$; die Fehlerspalte zeigt dazu $0{,}25$,
-$0{,}025$, $3{,}05\cdot 10^{-4}$ und $4{,}65\cdot 10^{-8}$. Der Fehler wird von
-Schritt zu Schritt also im Wesentlichen quadriert und dann halbiert: Der Quotient
-$e_k/e_{k-1}^2$ läuft über $0{,}400$ und $0{,}488$ gegen
-$1/(2x_1^*) = 0{,}5$. Zwei Experimente lohnen sich: Ein Startpunkt mit $x_1 < 0$ führt in den
-Sattelpunkt $(-1; 0)$ statt ins Minimum, und bei $x_1 = 0$ ist die Hesse-Matrix
-singulär, der Schritt also gar nicht definiert. Der zweite Menüpunkt ist die
-Quadrik aus Bemerkung 11.4.10, dort ist nach einem einzigen Schritt Schluss.
+Voreingestellt ist $f(\bx) = x_1^3/3 - x_1 + x_2^2/2$ mit Start $(2; 1{,}5)$.
+Drei Versuche lohnen sich: ein Startpunkt mit $x_1 < 0$, ein Startpunkt mit
+$x_1 = 0$, und der zweite Menüpunkt, die Quadrik aus Bemerkung 11.4.10.
 
-<NewtonStepper />
+<NewtonSchaetzung />
 :::
+
+Wie das Widget zeigt, sitzt der erste Schritt in der $x_2$-Richtung sofort exakt,
+denn dort ist $f$ quadratisch. In der $x_1$-Richtung läuft die Iteration über
+$1{,}25$, $1{,}025$, $1{,}00030$ und $1{,}00000005$ gegen $1$; die Fehlerspalte
+zeigt dazu $0{,}25$, $0{,}025$, $3{,}05\cdot 10^{-4}$ und $4{,}65\cdot 10^{-8}$,
+und im fünften Schritt steht $1{,}1\cdot 10^{-15}$. Fünf Schritte für fünfzehn
+Stellen: Der Fehler wird von Schritt zu Schritt im Wesentlichen quadriert und dann
+halbiert, der Quotient $e_k/e_{k-1}^2$ läuft über $0{,}400$ und $0{,}488$ gegen
+$1/(2x_1^*) = 0{,}5$.
+
+Die drei Versuche zeigen ebenso schnell die Grenzen. Ein Start mit $x_1 < 0$ führt
+in den Sattelpunkt $(-1; 0)$ statt ins Minimum, denn Newton sucht kritische Punkte
+und unterscheidet sie nicht (Bemerkung 11.4.12). Bei $x_1 = 0$ ist die Hesse-Matrix
+$\diag(0, 1)$ singulär und der Schritt gar nicht definiert. Auf der Quadrik
+dagegen ist nach einem einzigen Schritt Schluss, weil $\cgreen{T_2}$ dort mit $f$
+übereinstimmt.
 
 ### Selbsttest
 
@@ -712,6 +741,16 @@ Kleinheit gleichmäßig über alle Richtungen, während die Entwicklung von $\ps
 zunächst nur für eine feste Richtung $\bu$ gilt. Getragen wird der Schluss von der
 Stetigkeit der $k$-ten Ableitung: Ihre Norm deckt alle Richtungen zugleich ab
 (Bemerkung 11.4.8).
+:::
+
+:::zahlfrage{loesung=5 toleranz=0}
+Fahren wir den Schrittregler im Newton-Widget von der Voreinstellung aus hoch. In welchem
+Schritt unterschreitet der Abstand zum Minimum zum ersten Mal $10^{-10}$?
+
+In Schritt $5$. Die Fehlerspalte fällt von $4{,}65\cdot 10^{-8}$ auf
+$1{,}1\cdot 10^{-15}$, überspringt also sieben Größenordnungen auf einmal. Das ist
+quadratische Konvergenz in Zahlen: Sobald der Fehler klein genug ist, verdoppelt sich die
+Zahl der gültigen Stellen mit jedem Schritt.
 :::
 
 ::::

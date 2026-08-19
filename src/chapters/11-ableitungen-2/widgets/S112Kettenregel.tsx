@@ -1,8 +1,20 @@
 import { useState } from "react";
-import { Slider, niceTicks } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  W_MUTED,
+  fmtDe,
+  fmtTick,
+  niceTicks,
+} from "../../../lib";
 
 /**
- * §11.2: Die Kettenregel als Produkt zweier Raten.
+ * §11.2: Die EINE Einsicht — die Kettenregel ist das Produkt zweier Raten, und
+ * dieses Produkt kann zahm bleiben, obwohl beide Faktoren aus dem Ruder laufen.
  *
  * Rechenkern (Regler für x, Pipeline-Kästen für innere und äußere Funktion,
  * Readouts der beiden Faktoren und ihres Produkts, Tangente im Plot,
@@ -10,19 +22,31 @@ import { Slider, niceTicks } from "../../../lib";
  * /workspace/interactive/interactive/mml-ch5-1/src/sections/S51.tsx
  * (ChainRuleWidget); die SVG-Tafel mit eigenen Achsen, Ticks und Clip-Bereich
  * folgt dem Muster von 10-ableitungen-1/widgets/S101Sekante.tsx. Menü und
- * Statuslogik sind neu; die Texte wurden im Review 11.2 Satz für Satz gegen
+ * Verdiktlogik sind neu; die Texte wurden im Review 11.2 Satz für Satz gegen
  * die Quelldatei gelegt und aus Satz 11.2.8 heraus neu formuliert.
  *
- * Farben nach dem Kapitel-11-Code: Funktion und Funktionswerte blau,
- * Ableitungsterme und Linearisierung grün.
+ * Farbrollen Kapitel 11 (= Kapitel 10): Funktion und Funktionswerte blau,
+ * Ableitungsterme und Tangente grün. Rot (Restterm) und Orange
+ * (Ableitungsobjekte) kommen hier nicht vor.
  *
  * Deterministisch: drei fest verdrahtete Verkettungen, kein Zufall.
+ *
+ * Verifizierte Zahlen (scratchpad/verify-11-ableitungen-2/check-s112.mjs,
+ * 2026-08-19), jeweils an der Startstelle der Voreinstellung und gegen einen
+ * zentralen Differenzenquotienten mit ε = 10⁻⁶ geprüft:
+ *   (2x+1)⁴ bei x = 0,3: f(x) = 1,6, h(x) = 6,5536, f′ = 2,
+ *     g′(f(x)) = 16,384, Produkt 32,768 (Abweichung 8·10⁻¹⁰);
+ *   √(x²) bei x = 0,6: f′ = 1,2, g′ = 0,8333, Produkt exakt 1 — und für
+ *     jedes x ≠ 0 exakt sign(x) (auf 12 Stellen für x = ±0,05 … ±1,5);
+ *   σ(3x−1) bei x = 0,3: f(x) = −0,1, h(x) = 0,475021, f′ = 3,
+ *     g′(f(x)) = 0,249376, Produkt 0,748128 (Abweichung 1,4·10⁻¹¹).
+ * Bei x = 0 ist g′(0) = 1/(2·0) unendlich, während der zentrale
+ * Differenzenquotient von |x| in 0 den Wert 0 meldet — eine numerische
+ * Ableitung merkt von selbst nicht, dass es gar keine gibt.
  */
 
-const BLAU = "#0072B2"; // Funktion, Funktionswerte
-const GRUEN = "#009E73"; // Ableitungsterme, Tangente
-const ACHSE = "#64748b";
-const GITTER = "#cbd5e1";
+const BLAU = FMM_COLORS.blau; // Funktion, Funktionswerte
+const GRUEN = FMM_COLORS.gruen; // Ableitungsterme, Tangente
 
 const sigma = (t: number) => 1 / (1 + Math.exp(-t));
 
@@ -106,18 +130,11 @@ const W = 340;
 const H = 230;
 const PAD_L = 36;
 const PAD_B = 18;
+const PAD_R = 8;
 const N_SAMPLES = 320;
 const EPS = 1e-6;
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (NaN) von unendlich. */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
 
 export function KettenregelWidget() {
   const [wahlId, setWahlId] = useState("potenz");
@@ -157,30 +174,39 @@ export function KettenregelWidget() {
       }
     : null;
 
-  let status: string;
+  const yTicks = niceTicks(wahl.y0, wahl.y1);
+  const xTicks = niceTicks(wahl.x0, wahl.x1);
+  const dY = yTicks.length > 1 ? yTicks[1] - yTicks[0] : undefined;
+  const dX = xTicks.length > 1 ? xTicks[1] - xTicks[0] : undefined;
+
+  let art: "neutral" | "ok" | "warn" = "neutral";
+  let verdikt: string;
   if (!brauchbar) {
-    status =
-      `An der Stelle x = ${fmt(x, 2)} ist f(x) = ${fmt(u, 2)}, und dort ist die äußere Funktion ` +
-      `g(u) = √u gar nicht differenzierbar: g′(u) = 1/(2√u) wächst über jede Grenze. Die Kettenregel ` +
-      `verlangt Differenzierbarkeit von g an der Stelle u = f(x), also greift sie hier nicht. Die ` +
-      `verkettete Funktion h(x) = |x| hat an dieser Stelle den Knick aus Abschnitt 10.1, das Produkt ` +
-      `aus ∞ und 0 ist keine Zahl. Die Gegenprobe meldet trotzdem eine Zahl: Der zentrale ` +
-      `Differenzenquotient mittelt über beide Seiten des Knicks und liefert 0. Eine numerische ` +
-      `Ableitung merkt von selbst nicht, dass es gar keine gibt.`;
+    art = "warn";
+    verdikt =
+      `Hier greift Satz 11.2.8 nicht: An der Stelle x = ${fmt(x, 2)} ist f(x) = ${fmt(u, 2)}, und die ` +
+      `äußere Funktion g(u) = √u ist in u = 0 nicht differenzierbar, denn g′(u) = 1/(2√u) wächst über ` +
+      `jede Grenze. Die verkettete Funktion h(x) = |x| trägt an dieser Stelle den Knick aus ` +
+      `Abschnitt 10.1, und das Produkt aus ∞ und 0 ist keine Zahl. Die Gegenprobe meldet trotzdem ` +
+      `einen Wert: Der zentrale Differenzenquotient mittelt über beide Seiten des Knicks und liefert 0. ` +
+      `Eine numerische Ableitung merkt von selbst nicht, dass es gar keine gibt.`;
   } else if (wahl.id === "wurzel") {
-    status =
+    art = "ok";
+    verdikt =
       `Zwei Faktoren, die beide aus dem Ruder laufen, und trotzdem ein zahmes Produkt: die äußere Rate ` +
       `g′(f(x)) = 1/(2|x|) = ${fmt(aeussere, 3)} wächst zum Nullpunkt hin unbeschränkt, die innere Rate ` +
       `f′(x) = 2x = ${fmt(innere, 3)} schrumpft dorthin gegen null. Ihr Produkt ist für jedes x ≠ 0 ` +
       `exakt ${fmt(kette, 0)}, also das Vorzeichen von x, wie es sich für die Ableitung von |x| gehört.`;
   } else if (wahl.id === "logistisch") {
-    status =
+    art = "ok";
+    verdikt =
       `Die äußere Rate ist hier σ′(u) = σ(u)(1 − σ(u)) = ${fmt(aeussere, 4)}: Sie ist am größten, wo ` +
       `σ den Wert 0,5 annimmt, und wird an beiden Enden winzig. Die innere Rate bleibt konstant bei ` +
-      `${fmt(innere, 0)}. Das Produkt ${fmt(kette, 4)} ist die Steigung der grünen Tangente. Dieselbe ` +
-      `Rechnung steckt im Gradienten der logistischen Regression weiter unten.`;
+      `${fmt(innere, 0)}. Ihr Produkt ${fmt(kette, 4)} ist nach Satz 11.2.8 die Steigung der grünen ` +
+      `Tangente. Dieselbe Rechnung steckt im Gradienten der logistischen Regression weiter unten.`;
   } else {
-    status =
+    art = "ok";
+    verdikt =
       `Beide Stationen sind an dieser Stelle lineare Abbildungen mit je einer Zahl als Faktor: die ` +
       `innere mit f′(x) = ${fmt(innere, 2)}, die äußere mit g′(f(x)) = ${fmt(aeussere, 3)}. Satz 11.2.8 ` +
       `schaltet die beiden hintereinander, und für Multiplikationen mit Zahlen heißt das schlicht ` +
@@ -188,38 +214,34 @@ export function KettenregelWidget() {
       `landet auf mehreren Stellen beim selben Wert.`;
   }
 
-  const knopf = (aktiv: boolean) =>
-    `rounded border px-2 py-1 text-sm ${
-      aktiv
-        ? "border-slate-500 bg-slate-200 font-semibold dark:bg-slate-700"
-        : "border-slate-300 dark:border-slate-600"
-    }`;
-
-  const kasten = "rounded border border-slate-400 px-3 py-2 text-center text-sm dark:border-slate-500";
+  const kasten =
+    "rounded border border-slate-400 px-3 py-2 text-center text-sm dark:border-slate-500 [.w-dark_&]:border-slate-500";
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Die Kästen zeigen den Weg von x über den Zwischenwert f(x) zum Endwert h(x) = g(f(x)). Blau
-        sind die Funktionswerte, grün die beiden Ableitungen und die Tangente an h an der gewählten
-        Stelle. Der letzte Readout rechnet die Ableitung ohne die Kettenregel nach, über einen
-        zentralen Differenzenquotienten mit Schrittweite 10⁻⁶.
-      </p>
+      <Aufgabe>
+        Wählen wir eine Verkettung, schieben x und vergleichen das Produkt der beiden Raten mit der
+        Gegenprobe darunter.
+      </Aufgabe>
 
       <div className="flex flex-wrap gap-2">
-        {VERKETTUNGEN.map((v) => (
-          <button
-            key={v.id}
-            type="button"
-            className={knopf(v.id === wahlId)}
-            onClick={() => {
-              setWahlId(v.id);
-              setX(v.start);
-            }}
-          >
-            {v.label}
-          </button>
-        ))}
+        {VERKETTUNGEN.map((v) => {
+          const aktiv = v.id === wahlId;
+          return (
+            <button
+              key={v.id}
+              type="button"
+              aria-pressed={aktiv}
+              className={aktiv ? W_BUTTON_AKTIV : W_BUTTON}
+              onClick={() => {
+                setWahlId(v.id);
+                setX(v.start);
+              }}
+            >
+              {v.label}
+            </button>
+          );
+        })}
       </div>
 
       <Slider
@@ -246,47 +268,51 @@ export function KettenregelWidget() {
         </div>
       </div>
 
-      <div className="inline-block shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+      <div className={`select-none text-[10px] ${W_MUTED}`}>
         <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
           h(x) ↑
         </div>
         <svg
-          width={PAD_L + W + 8}
+          viewBox={`0 0 ${PAD_L + W + PAD_R} ${H + PAD_B}`}
+          width={PAD_L + W + PAD_R}
           height={H + PAD_B}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          role="img"
+          aria-label={`Der Graph von ${wahl.label} in Blau mit der grünen Tangente an der Stelle x = ${fmt(x, 2)}.`}
+          className="h-auto max-w-full rounded border"
+          style={{ background: "var(--w-bg)", borderColor: "var(--w-border)" }}
         >
           <defs>
             <clipPath id="s112-kette-clip">
               <rect x={PAD_L} y={0} width={W} height={H} />
             </clipPath>
           </defs>
-          {niceTicks(wahl.y0, wahl.y1).map((t) => (
+          {yTicks.map((t) => (
             <g key={`y${t}`}>
               <line
                 x1={PAD_L}
                 x2={PAD_L + W}
                 y1={py(t)}
                 y2={py(t)}
-                stroke={t === 0 ? ACHSE : GITTER}
+                stroke={t === 0 ? "var(--w-axis)" : "var(--w-grid)"}
                 strokeWidth={t === 0 ? 1.2 : 0.6}
               />
-              <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill={ACHSE} fontSize={10}>
-                {fmt(t, Math.abs(t) >= 1 || t === 0 ? 0 : 1)}
+              <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="var(--w-text)" fontSize={10}>
+                {fmtTick(t, dY)}
               </text>
             </g>
           ))}
-          {niceTicks(wahl.x0, wahl.x1).map((t) => (
+          {xTicks.map((t) => (
             <g key={`x${t}`}>
               <line
                 y1={0}
                 y2={H}
                 x1={px(t)}
                 x2={px(t)}
-                stroke={t === 0 ? ACHSE : GITTER}
+                stroke={t === 0 ? "var(--w-axis)" : "var(--w-grid)"}
                 strokeWidth={t === 0 ? 1.2 : 0.6}
               />
-              <text x={px(t)} y={H + 12} textAnchor="middle" fill={ACHSE} fontSize={10}>
-                {fmt(t, Math.abs(t) >= 1 || t === 0 ? 0 : 1)}
+              <text x={px(t)} y={H + 12} textAnchor="middle" fill="var(--w-text)" fontSize={10}>
+                {fmtTick(t, dX)}
               </text>
             </g>
           ))}
@@ -307,7 +333,7 @@ export function KettenregelWidget() {
               y1={py(hx)}
               x2={px(x)}
               y2={py(wahl.y0)}
-              stroke={ACHSE}
+              stroke="var(--w-axis)"
               strokeWidth={0.8}
               strokeDasharray="2 3"
             />
@@ -328,7 +354,7 @@ export function KettenregelWidget() {
         <div>Gegenprobe (h(x+ε) − h(x−ε))/(2ε) = {fmt(numerisch, 4)}</div>
       </div>
 
-      <p className="max-w-prose text-sm">{status}</p>
+      <Verdikt kind={art}>{verdikt}</Verdikt>
     </div>
   );
 }

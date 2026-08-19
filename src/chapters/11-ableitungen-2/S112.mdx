@@ -559,26 +559,35 @@ $\cgreen{D_{\bY} g(\bH)} = \tr\bigl((\partial g/\partial\bY)^\top\bH\bigr)$.
 Eingesetzt wird die Richtung $\bH = \partial\bF(x)/\partial x$.
 :::
 
+Zwei der drei Voreinstellungen sind harmlos. Bei der dritten,
+$h(x) = \sqrt{x^2}$, laufen beide Faktoren aus dem Ruder: Die äußere Rate wächst
+zum Nullpunkt hin über jede Grenze, die innere geht dorthin gegen null. Was
+kommt dann heraus, und was passiert bei $x = 0$ selbst?
+
 :::vertiefung[Warum im Eindimensionalen ein Produkt herauskommt]
 Satz 11.2.8 verkettet zwei lineare Abbildungen. Ist $\D_1 = \D_2 = \D_3 = \R$,
 so ist jede lineare Abbildung eine Multiplikation mit einer Zahl, und das
 Hintereinanderausführen zweier Multiplikationen ist die Multiplikation der
 beiden Zahlen. Deshalb steht in ($11.2.4$) dort, wo sonst eine Verkettung oder
 ein Matrixprodukt stünde, schlicht ein Produkt zweier Steigungen. Die Tafel
-führt beide Zahlen einzeln vor.
-
-Die zweite Menüwahl $h(x) = \sqrt{x^2}$ ist die interessanteste. Für $x \neq 0$
-ist sie harmlos, obwohl beide Faktoren aus dem Ruder laufen: Die äußere Rate
-$1/(2\left|x\right|)$ wächst zum Nullpunkt hin über jede Grenze, die innere Rate
-$2x$ geht dorthin gegen null, und ihr Produkt bleibt exakt das Vorzeichen von
-$x$. Bei $x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die
-Wurzel an der Stelle $u = f(0) = 0$ nicht differenzierbar ist. Übrig bleibt der
-Knick von $\left|x\right|$ aus
-[Abschnitt 10.1](?k=10-ableitungen-1#sec-10.1). Beispiel 11.2.12 wird genau
-diesen Vorbehalt für die euklidische Norm brauchen.
+führt beide Zahlen einzeln vor und rechnet die Ableitung zur Kontrolle noch
+einmal ohne die Kettenregel nach, über einen zentralen Differenzenquotienten
+mit Schrittweite $10^{-6}$.
 
 <KettenregelWidget />
 :::
+
+Wie das Widget zeigt, bleibt das Produkt bei $h(x) = \sqrt{x^2}$ zahm, obwohl
+beide Faktoren es nicht sind: Für jedes $x \neq 0$ ist
+$\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$ exakt das
+Vorzeichen von $x$, wie es sich für die Ableitung von $\left|x\right|$ gehört.
+Bei $x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die Wurzel
+an der Stelle $u = f(0) = 0$ nicht differenzierbar ist; übrig bleibt der Knick
+aus [Abschnitt 10.1](?k=10-ableitungen-1#sec-10.1), und das Produkt aus $\infty$
+und $0$ ist keine Zahl. Bemerkenswert ist, dass die numerische Gegenprobe im
+Widget davon nichts merkt und brav $0$ meldet: Der zentrale Differenzenquotient
+mittelt über beide Seiten des Knicks. Beispiel 11.2.12 wird genau diesen
+Vorbehalt für die euklidische Norm brauchen.
 
 ### Anwendung: Logistische Regression
 
@@ -693,6 +702,10 @@ bei den Normalengleichungen in
 Zeile auflösen, weil $\wh{\by}$ nichtlinear von $\bbeta$ abhängt.
 :::
 
+Wie weit kann eine einzelne Beobachtung den Parameter reißen, wenn das Modell
+maximal danebenliegt? Und was bleibt vom Gradienten übrig, wenn das Merkmal
+selbst null ist?
+
 :::vertiefung[Der Gradient am Regler: eine Beobachtung, ein Merkmal]
 Die Tafel zeigt den einfachsten denkbaren Fall, ein Merkmal und einen Parameter.
 Links wandert der Punkt auf der Sigmoidkurve, wenn wir $\beta$ verschieben; der
@@ -700,15 +713,20 @@ orange Balken ist der Fehler $\wh{y} - y$. Rechts steht der Verlust als Funktion
 von $\beta$, die grüne Tangente hat die Steigung aus ($11.2.6$), und der orange
 Pfeil zeigt, wohin ein Abstiegsschritt mit Schrittweite $0{,}5$ führt.
 
-Zwei Zustände lohnen den Versuch. Schalten wir auf $y = 0$ und schieben $\beta$
-nach oben, so wird das Modell selbstbewusst falsch, der Gradient nähert sich
-seiner Obergrenze $\left|x\right|$ und der Schritt fällt groß aus. Stellen wir
-umgekehrt $x = 0$ ein, so ist die Verlustkurve waagerecht: Ein Merkmal, das
-immer null ist, trägt keine Information, und der Gradient verschwindet für jedes
-$\beta$.
-
 <LogistikWidget />
 :::
+
+Wie das Widget zeigt, steht in beiden Klassen derselbe Ausdruck. Schalten wir auf
+$y = 0$ und schieben $\beta$ nach oben, so wird das Modell selbstbewusst falsch,
+der Gradient nähert sich seiner Obergrenze $\left|x\right|$, erreicht sie aber
+nie: Das ist die zweite Konsequenz aus Bemerkung 11.2.11, und im Widget lässt sie
+sich am Fehlerbalken ablesen, der nie über die Höhe $1$ hinauskommt. Stellen wir
+umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte Gerade auf der
+Höhe $\log 2 = 0{,}693147$: Ein Merkmal, das immer null ist, trägt keine
+Information, und der Gradient verschwindet für jedes $\beta$. Vor allem aber
+bestätigt die numerische Gegenprobe in beiden Klassen die Formel ($11.2.6$) und
+damit die Korrektur an der Folie – dort steht für $y = 0$ ein Minuszeichen zu
+viel.
 
 ### Übung: Gradient der euklidischen Norm
 
@@ -839,6 +857,27 @@ Wir teilen einen Vektor durch seine eigene Länge, das Ergebnis hat Länge $1$.
 Anschaulich heißt das: Der Abstand zum Ursprung wächst in radialer Richtung mit
 Rate $1$, und keine Richtung ist besser. In $\bx = \bnull$ existiert der Gradient
 nicht (Beispiel 11.2.12).
+:::
+
+:::zahlfrage{loesung=32.768 toleranz=0.01}
+Im Kettenregel-Widget steht die erste Voreinstellung $h(x) = (2x+1)^4$ mit
+$x = 0{,}3$. Welchen Wert hat dort $h'(x)$?
+
+$32{,}768$. Die innere Rate ist $\cgreen{f'(x)} = 2$, die äußere
+$\cgreen{g'(f(x))} = 4\cdot 1{,}6^3 = 16{,}384$, und Satz 11.2.8 multipliziert
+beide. Die numerische Gegenprobe im Widget landet auf demselben Wert; sie weicht
+erst in der zehnten Stelle ab.
+:::
+
+:::zahlfrage{loesung=0.693147 toleranz=0.002}
+Stellen wir im Logistik-Widget das Merkmal auf $x = 0$. Auf welcher Höhe liegt
+die Verlustkurve dann?
+
+Bei $\log 2 = 0{,}693147$, und zwar für jedes $\beta$. Mit $x = 0$ ist der Score
+$t = \beta x$ konstant null, also $\wh{y} = \sigma(0) = 0{,}5$ und
+$\ell = -\log 0{,}5 = \log 2$. Der Gradient $(\wh y - y)x$ verschwindet
+entsprechend, unabhängig von der Klasse: Ein Merkmal ohne Variation trägt keine
+Information über $\beta$.
 :::
 
 ::::

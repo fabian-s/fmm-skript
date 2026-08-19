@@ -1,5 +1,21 @@
 import { useMemo, useState } from "react";
-import { FMM_COLORS, LabeledPlot, Slider, Surface3D, ViewControls, fmtDe as fmt, niceTicks } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  LabeledPlot,
+  Schaetzfrage,
+  Slider,
+  Surface3D,
+  Verdikt,
+  ViewControls,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  W_MUTED,
+  W_PANEL,
+  fmtDe as fmt,
+  fmtTick,
+  niceTicks,
+} from "../../../lib";
 import type { Series, Sicht3D, Vec3 } from "../../../lib";
 
 /**
@@ -55,6 +71,15 @@ import type { Series, Sicht3D, Vec3 } from "../../../lib";
  * (Kuppel), 0 bis 14,19 (Rinne) — das ist der Höhenbereich der 3D-Tafel.
  * Die Projektion der 3D-Tafel selbst ist in
  * scratchpad/check-surface3d.mjs (2026-08-19) geprüft.
+ *
+ * Nachtrag zur Schätzfrage (scratchpad/verify-11-ableitungen-2/check-s113.mjs,
+ * 2026-08-19): Ziehen wir λ₂ von 8 auf 0, so ist H = diag(2, 0) singulär, f auf
+ * dem ganzen Fenster nichtnegativ (kleinster Wert 0) und entlang der Achse v₂
+ * konstant null — der Nullpunkt bleibt also ein Minimum, aber kein STRIKTES,
+ * und Satz 11.3.9 entscheidet den Fall nicht mehr. Zur Gegenprobe im
+ * semidefiniten Grenzfall: x⁴, −x⁴ und x³ haben in 0 alle die zweite Ableitung
+ * null und dort ein Minimum, ein Maximum beziehungsweise keins von beidem
+ * (Bemerkung 11.3.10).
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion, Höhenlinien, Fläche
@@ -263,34 +288,39 @@ export function HesseDefinitheit() {
   const abAchse = l1 > 0 ? "v₂" : "v₁";
   const abLambda = l1 > 0 ? l2 : l1;
 
-  const klassifikation: Record<string, { titel: string; farbe: string; text: string }> = {
+  const klassifikation: Record<string, { titel: string; text: string }> = {
     minimum: {
       titel: "positiv definit",
-      farbe: VIOLETT,
       text: `Beide Regler stehen über null. Damit ist die quadratische Form hᵀH h für jedes h ≠ 0 positiv, und Satz 11.3.9(1) macht x* = 0 zu einem strikten lokalen Minimum. Wie steil es vom Nullpunkt weg bergauf geht, hängt an der Richtung: am flachsten mit Krümmung ${fmt(Math.min(l1, l2))}, am steilsten mit ${fmt(Math.max(l1, l2))}.`,
     },
     maximum: {
       titel: "negativ definit",
-      farbe: VIOLETT,
       text: `Beide Regler stehen unter null, also ist hᵀH h für jedes h ≠ 0 negativ, und Satz 11.3.9(2) liefert ein striktes lokales Maximum. Am Bild der Höhenlinien ändert das nichts; was sich umkehrt, sind die Zahlen an ihnen, denn nach außen hin wird f kleiner statt größer.`,
     },
     sattel: {
       titel: "indefinit",
-      farbe: VIOLETT,
       text: `Die beiden Regler tragen verschiedene Vorzeichen, H ist also indefinit, und Satz 11.3.9(3) meldet einen Sattelpunkt. Das rechte Schaubild zeigt, was das bedeutet: Entlang ${aufAchse} geht es mit Krümmung ${fmt(aufLambda)} bergauf, entlang ${abAchse} mit ${fmt(abLambda)} bergab, in jeder Umgebung von x* = 0 liegen also Werte über und unter f(0) = 0. Das dick gezeichnete Niveau 0 zerfällt dabei in zwei sich kreuzende Geraden.`,
     },
     halb: {
       titel: "semidefinit, nicht definit",
-      farbe: VIOLETT,
       text: `Ein Regler steht auf null, damit ist det H = λ₁·λ₂ = 0 und H singulär. Entlang der zugehörigen Hauptachse bleibt f konstant bei 0, die Höhenlinien werden zu Parallelen, und statt eines isolierten kritischen Punktes liegt eine ganze Gerade davon vor. Für unser rein quadratisches f ist der Nullpunkt deshalb weiterhin ein ${Math.max(l1, l2) > eps ? "Minimum" : "Maximum"}, nur eben kein striktes. Bei allgemeinen Funktionen ist in diesem Grenzfall gar nichts mehr entschieden, wie Bemerkung 11.3.10 an x⁴, −x⁴ und x³ vorführt.`,
     },
     null: {
       titel: "H = 0",
-      farbe: VIOLETT,
       text: "Beide Regler stehen auf null, H ist die Nullmatrix und f ≡ 0. Höhenlinien gibt es dann keine zu zeichnen, und kritisch ist nicht nur der Nullpunkt, sondern jede Stelle der Ebene.",
     },
   };
   const status = klassifikation[artDesPunktes];
+  // ok = Satz 11.3.9 entscheidet, warn = entschieden, aber kein Extremum,
+  // fail = das Kriterium entscheidet gar nichts mehr (semidefiniter Grenzfall).
+  const verdiktArt: "ok" | "warn" | "fail" | "neutral" =
+    artDesPunktes === "minimum" || artDesPunktes === "maximum"
+      ? "ok"
+      : artDesPunktes === "sattel"
+        ? "warn"
+        : artDesPunktes === "null"
+          ? "neutral"
+          : "fail";
 
   /* --------------------------------------------- verlinkte 3D-Tafel (D7) */
   const [sicht, setSicht] = useState<Sicht3D>({ azimuth: 38, elevation: 26 });
@@ -316,15 +346,17 @@ export function HesseDefinitheit() {
   );
 
   const gleicheEw = Math.abs(l1 - l2) < 1e-9 && Math.abs(l1) > eps;
+  const ticks = niceTicks(-HALB, HALB);
+  const dTick = ticks.length > 1 ? ticks[1] - ticks[0] : undefined;
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Wir bauen die Hesse-Matrix aus ihren Eigenwerten: H = R(φ)·diag(λ₁, λ₂)·R(φ)ᵀ mit der
-        Drehung R(φ), und dazu die quadratische Funktion f(x) = ½·xᵀH x. Ihr kritischer Punkt
-        ist x* = 0 (violett), und ihre eigene Hesse-Matrix ist überall H, die Krümmung also an
-        jeder Stelle dieselbe. Die Regler stellen die beiden Eigenwerte und die Lage der
-        Eigenbasis ein; blau sind die Höhenlinien von f, orange die Hauptachsen v₁ und v₂.
+      <Aufgabe>
+        Gehen wir die vier Voreinstellungen durch und ziehen danach λ₂ langsam durch die Null.
+      </Aufgabe>
+      <p className={`max-w-prose text-xs ${W_MUTED}`}>
+        Blau: Höhenlinien von f(x) = ½·xᵀH x und die Fläche darüber. Orange: die Eigenwerte λ₁, λ₂
+        und die Hauptachsen v₁, v₂. Violett: der kritische Punkt x* = 0.
       </p>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {VOREINSTELLUNGEN.map((v) => {
@@ -335,11 +367,7 @@ export function HesseDefinitheit() {
               type="button"
               title={v.titel}
               aria-pressed={aktiv}
-              className={
-                aktiv
-                  ? "rounded border border-sky-600 bg-sky-50 px-3 py-1 font-medium text-sky-900 dark:border-sky-400 dark:bg-sky-900/40 dark:text-sky-100"
-                  : "rounded border border-slate-300 px-3 py-1 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-              }
+              className={aktiv ? W_BUTTON_AKTIV : W_BUTTON}
               onClick={() => {
                 setL1(v.l1);
                 setL2(v.l2);
@@ -379,7 +407,7 @@ export function HesseDefinitheit() {
         fmt={(v) => `${fmt(v, 0)}°`}
       />
       <div className="flex flex-wrap gap-4">
-        <div className="inline-block shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+        <div className={`select-none text-[10px] ${W_MUTED}`}>
           <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
             x₂ ↑
           </div>
@@ -387,7 +415,10 @@ export function HesseDefinitheit() {
             viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
             width={PAD_L + SIZE + PAD_R}
             height={SIZE + PAD_B}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            role="img"
+            aria-label={`Höhenlinien von f mit den orangen Hauptachsen; im aktuellen Zustand ${GESTALT[artDesPunktes]}.`}
+            className="h-auto max-w-full rounded border"
+            style={{ background: "var(--w-bg)", borderColor: "var(--w-border)" }}
           >
             <defs>
               <clipPath id="s113-clip">
@@ -397,29 +428,29 @@ export function HesseDefinitheit() {
                 <path d="M0,0 L7,3 L0,6 z" fill={ORANGE} />
               </marker>
             </defs>
-            {niceTicks(-HALB, HALB).map((t) => (
+            {ticks.map((t) => (
               <g key={`y${t}`}>
                 <line
                   x1={PAD_L}
                   x2={PAD_L + SIZE}
                   y1={py(t)}
                   y2={py(t)}
-                  stroke="#e2e8f0"
+                  stroke="var(--w-grid)"
                   strokeWidth={t === 0 ? 1.2 : 0.6}
                 />
-                <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
-                  {fmt(t, 0)}
+                <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="var(--w-text)" fontSize={10}>
+                  {fmtTick(t, dTick)}
                 </text>
                 <line
                   y1={0}
                   y2={SIZE}
                   x1={px(t)}
                   x2={px(t)}
-                  stroke="#e2e8f0"
+                  stroke="var(--w-grid)"
                   strokeWidth={t === 0 ? 1.2 : 0.6}
                 />
-                <text x={px(t)} y={SIZE + 12} textAnchor="middle" fill="#64748b" fontSize={10}>
-                  {fmt(t, 0)}
+                <text x={px(t)} y={SIZE + 12} textAnchor="middle" fill="var(--w-text)" fontSize={10}>
+                  {fmtTick(t, dTick)}
                 </text>
               </g>
             ))}
@@ -459,7 +490,7 @@ export function HesseDefinitheit() {
                     textAnchor="middle"
                     fill={ORANGE}
                     fontSize={12}
-                    stroke="#ffffff"
+                    stroke="var(--w-bg)"
                     strokeWidth={2.5}
                     paintOrder="stroke"
                   >
@@ -496,7 +527,7 @@ export function HesseDefinitheit() {
           <div className="mt-1 max-w-[280px]">
             <ViewControls value={sicht} onChange={setSicht} />
           </div>
-          <p className="mt-1 max-w-[280px] text-xs text-slate-600 dark:text-slate-300">
+          <p className={`mt-1 max-w-[280px] text-xs ${W_MUTED}`}>
             Dieselbe Funktion als Fläche: {GESTALT[artDesPunktes]}. Auf dem Boden liegen die
             Höhenlinien der linken Tafel, die orangen Pfeile sind dieselben Hauptachsen, der
             violette Punkt ist derselbe kritische Punkt. Ziehen dreht die Ansicht.
@@ -512,7 +543,7 @@ export function HesseDefinitheit() {
             width={300}
             height={300}
           />
-          <p className="mt-1 max-w-[330px] text-xs text-slate-600 dark:text-slate-300">
+          <p className={`mt-1 max-w-[330px] text-xs ${W_MUTED}`}>
             Die Funktion entlang der beiden Hauptachsen: durchgezogen f(t·v₁) = ½λ₁t²,
             gestrichelt f(t·v₂) = ½λ₂t². Beide Kurven sind Parabeln, und ihre zweite Ableitung
             ist genau der zugehörige Eigenwert. Wo eine der beiden nach unten öffnet, kann im
@@ -520,7 +551,7 @@ export function HesseDefinitheit() {
           </p>
         </div>
       </div>
-      <div className="max-w-prose space-y-1 rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
+      <div className={`max-w-prose space-y-1 p-3 text-sm ${W_PANEL}`}>
         <p>
           <span className="font-mono" style={{ color: ORANGE }}>
             H = ({fmt(H[0][0])} {fmt(H[0][1])}; {fmt(H[1][0])} {fmt(H[1][1])})
@@ -538,12 +569,6 @@ export function HesseDefinitheit() {
             v₁ = ({fmt(v1[0])}; {fmt(v1[1])}), v₂ = ({fmt(v2[0])}; {fmt(v2[1])})
           </span>
         </p>
-        <p>
-          <span className="font-semibold" style={{ color: status.farbe }}>
-            {status.titel}.
-          </span>{" "}
-          {status.text}
-        </p>
         {gleicheEw && (
           <p>
             Beide Eigenwerte sind gleich, H ist ein Vielfaches der Einheitsmatrix. Dann ist jede
@@ -559,15 +584,39 @@ export function HesseDefinitheit() {
           </p>
         )}
       </div>
-      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-300">
-        Drei Beobachtungen lohnen sich. Erstens läuft die längere Halbachse jeder Ellipse
-        entlang des <em>kleineren</em> Eigenwertes: Beim Folienbeispiel λ = (2, 8) ist das
-        Niveau f = 4 die Ellipse mit den Halbachsen 2 und 1, das Verhältnis ist √(λ₂/λ₁) = 2.
-        Zweitens drehen sich mit φ die Höhenlinien und die Pfeile gemeinsam, während Spur und
-        Determinante unverändert bleiben; die Eigenwerte hängen nicht davon ab, wie wir das
-        Koordinatensystem legen. Drittens gehören die dicht liegenden Höhenlinien zur steilen
-        Achse: Je größer der Eigenwert, desto schneller wächst f in dieser Richtung.
-      </p>
+      <Verdikt kind={verdiktArt} titel={`${status.titel}.`}>
+        {status.text}
+      </Verdikt>
     </div>
+  );
+}
+
+/**
+ * Der Abschnitts-Baustein: erst tippen, dann schieben. Die Schätzfrage zielt auf
+ * den Grenzfall, den Satz 11.3.9 gerade nicht mehr entscheidet.
+ */
+export function HesseSchaetzung() {
+  return (
+    <Schaetzfrage
+      frage="Wir starten beim Folienbeispiel und ziehen λ₂ auf genau 0. Bleibt der Nullpunkt ein Minimum?"
+      variante="auswahl"
+      loesung="nichtstrikt"
+      optionen={[
+        { id: "strikt", text: "ja, weiterhin ein striktes Minimum" },
+        { id: "nichtstrikt", text: "ja, aber kein striktes mehr" },
+        { id: "sattel", text: "nein, es wird ein Sattel" },
+      ]}
+      verdeckt={
+        <p className="max-w-prose text-sm">
+          Mit λ₂ = 0 ist H = diag(2, 0) singulär. Entlang der Achse v₂ bleibt f konstant null,
+          statt eines einzelnen kritischen Punktes liegt dort eine ganze Gerade davon. Für dieses
+          rein quadratische f ist der Nullpunkt weiterhin ein Minimum, nur eben kein striktes; für
+          allgemeine Funktionen entscheidet der semidefinite Fall gar nichts mehr (Bemerkung
+          11.3.10).
+        </p>
+      }
+    >
+      <HesseDefinitheit />
+    </Schaetzfrage>
   );
 }
