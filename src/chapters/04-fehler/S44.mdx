@@ -86,7 +86,7 @@ $\wt{f}$ durch
 stabiler Algorithmus für ein schlecht konditioniertes Problem liefert also trotzdem
 ungenaue Ergebnisse, aber nicht ungenauer, als das Problem es erzwingt.
 
-:::bemerkung[4.4.1 (Merkregel)]
+:::bemerkung[4.4.1 (Faustregel, mit der Einschränkung aus Bemerkung 4.3.4)]
 <p className="font-semibold">Schlecht konditionierte Teilschritte möglichst früh ausführen!</p>
 
 Warum? Nach der Fehlerfortpflanzungs-Schranke aus
@@ -98,6 +98,11 @@ nur den unvermeidbaren Inputfehler. Genau das haben wir am Varianz-Beispiel gese
 Die Verschiebungsformel hebt sich die schlecht konditionierte Subtraktion (Stichwort
 :k[Auslöschung]{#cancellation}) bis zum Schluss auf, die
 Zwei-Pass-Formel zieht sie vor und ist deshalb stabil.
+
+Vorsicht: Das ist eine Faustregel, kein Satz. Eine Umordnung verändert auch die
+Zwischengrößen und damit die Konditionen selbst; verlässlicher ist es, das Teilproblem
+umzuformulieren und große, beinahe gleiche Zwischenwerte gar nicht erst entstehen zu lassen
+(Bemerkung 4.3.4).
 :::
 
 ### Wie geht es weiter?
@@ -108,5 +113,49 @@ Statistik an: die numerische Lösung
 $\bA\bx = \bb$. Die Konditionszahl $\kappa(\bA)$ sagt uns dann,
 wie genau die Lösung überhaupt sein *kann* – und die Stabilitätsanalyse, welche
 Lösungsverfahren diese Genauigkeit auch wirklich erreichen.
+
+### Selbsttest zum Kapitel
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{wahr}
+Ein stabiler Algorithmus für ein schlecht konditioniertes Problem liefert im Allgemeinen
+ungenaue Ergebnisse.
+
+Die Stabilität begrenzt nur den roten Term der Zerlegung, den der Algorithmus selbst
+beisteuert. Den orangen Term erzwingt das Problem: Ist es schlecht konditioniert, verstärkt es
+den unvermeidbaren Inputfehler, und daran ändert kein Algorithmus etwas. Die richtige Erwartung
+lautet: nicht ungenauer, als das Problem es erzwingt.
+:::
+
+:::frage{falsch}
+Die Konditionszahl $\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
+ist die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$.
+
+Sie ist die *obere Schranke* dafür (Satz 4.2.6). Die tatsächliche relative Kondition
+$\left\| \bA^{-1} \right\| \left\| \bx \right\| / \left\| \bA^{-1}\bx \right\|$
+hängt von der rechten Seite ab und kann bis auf $1$ hinunterreichen. Weil die
+Schranke für ungünstige $\bx$ aber angenommen wird, ist sie die richtige Zahl,
+solange wir die rechte Seite nicht kennen.
+:::
+
+:::zahlfrage{loesung=82 toleranz=1.5}
+Im Widget zur Kondition eines Gleichungssystems ([Abschnitt 4.2](#sec-4.2)) ist die
+Voreinstellung „schlecht konditioniert" gewählt. Welchen Wert zeigt der Readout für die
+Schranke $\kappa(\bA)$?
+
+Rund 82. Die Matrix ist
+$\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1{,}05 \end{pmatrix}$ mit den Singulärwerten
+$\sigma_{\max} \approx 2{,}025$ und $\sigma_{\min} \approx 0{,}0247$,
+also $\kappa_2(\bA) = \sigma_{\max}/\sigma_{\min} \approx 82{,}0$
+(Bemerkung 4.2.7). Für die Voreinstellung der rechten Seite wird diese Schranke fast exakt
+angenommen.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §1.2.*

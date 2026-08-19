@@ -106,9 +106,24 @@ begrenzt große Updates, Lernratenpläne steuern die Iterationsdynamik, und Verf
 für *Mixed Precision Training* schützen besonders empfindliche Rechenschritte vor
 Rundungsproblemen. Diese Maßnahmen sind nicht untereinander austauschbar.
 
+Wie deutlich ist dieser Umschlag? Machen wir das Modell so klein, dass wir es ganz überblicken:
+$L(\theta) = \theta^2$ mit exaktem Gradienten $2\theta$, Start bei
+$\theta_0 = 2{,}5$. Ab welcher Lernrate laufen die Iterierten nicht mehr auf das
+Minimum zu, sondern davon weg?
+
 :::vertiefung[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
 <SgdLernratenDemo />
 :::
+
+Die Rechnung dahinter passt in eine Zeile. Ohne Rauschen ist
+$\theta_{k+1} = \theta_k - \alpha \cdot 2\theta_k = (1 - 2\alpha)\,\theta_k$,
+der Abstand zum Minimum wird in jedem Schritt also mit
+$\corange{\rho(\alpha) = |1 - 2\alpha|}$ multipliziert. Das erklärt alle vier
+Regime auf einmal: monotone Konvergenz für $\alpha < 0{,}5$, ein einziger Schritt
+bei $\alpha = 0{,}5$, Oszillation mit schrumpfender Amplitude für
+$0{,}5 < \alpha < 1$, und ab $\alpha > 1$ Divergenz. Die Schwelle ist
+keine Eigenschaft von SGD, sondern der Krümmung von $L$: Für
+$L(\theta) = \tfrac{c}{2}\theta^2$ läge sie bei $\alpha = 2/c$.
 
 ### Zusammengesetzte Algorithmen: die wichtigste Erkenntnis
 
@@ -317,9 +332,21 @@ Rundungsschritt der Zwischenergebnisse – mit den Daten hat diese Zahl nichts
 mehr zu tun.
 :::
 
+Bei $c = 10^{10}$ ging alles verloren. Aber wo genau liegt die Grenze? Anders
+gefragt: Ab welcher Verschiebung $c$ frisst die Kondition des letzten Schritts die
+16 Dezimalstellen doppelter Genauigkeit auf?
+
 :::vertiefung[Wie schlimm wird es? Der κ-Rechner für den letzten Schritt]
 <KappaRechner />
 :::
+
+Der Rechner macht die Faustregel aus Bemerkung 4.2.4 zur Ablesehilfe:
+$\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
+$c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ genau 16, und
+darüber bleibt nichts mehr übrig. Das deckt sich mit Beispiel 4.3.7: Bei
+$c = 10^{10}$ liegt der erwartete relative Fehler bei
+$\corange{\kappa_{rel}} \cdot \eps \approx 4 \cdot 10^4$, und genau in dieser
+Größenordnung landet die Verschiebungsformel auch.
 
 ### Selbsttest
 
@@ -376,5 +403,36 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
     SGD-Demo oben lässt sich der Umschlag direkt beobachten.
   </SelbsttestFrage>
 </ol>
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::zahlfrage{loesung=10.3 toleranz=0.2}
+Stellen wir im κ-Rechner den Modus „an Verschiebung $c$ gekoppelt" und den
+Exponenten $k = 5$ ein. Wie viele Dezimalstellen gehen laut Rechner verloren?
+
+Rund 10,3. Mit $\cred{a} = c^2 + 1$ und $\cblue{b} = c^2$ bei
+$c = 10^5$ ist
+$\corange{\kappa_{rel}} = \sqrt{2}\,\sqrt{a^2 + b^2} \approx 2c^2 = 2 \cdot 10^{10}$,
+also $\log_{10} \corange{\kappa_{rel}} \approx 10{,}3$. Von den etwa 16 Stellen
+doppelter Genauigkeit bleiben knapp 6 übrig, die Verschiebungsformel liefert hier noch eine
+Zahl, aber nur noch mit einer Handvoll gültiger Stellen.
+:::
+
+:::zahlfrage{loesung=1 toleranz=0.05}
+In der SGD-Demo: Bei welcher Lernrate $\alpha > 0{,}5$ springen die Iterierten mit
+konstanter Amplitude um das Minimum, ohne näher zu kommen oder wegzulaufen?
+
+Bei $\alpha = 1$. Dort ist $|1 - 2\alpha| = 1$, also
+$\theta_{k+1} = -\theta_k$: Die Iterierten pendeln zwischen
+$2{,}5$ und $-2{,}5$. Die zweite Lösung von
+$|1 - 2\alpha| = 1$ ist $\alpha = 0$, und dort passiert
+schlicht gar nichts.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §1.2.7 (Stabilität und Genauigkeit).*
