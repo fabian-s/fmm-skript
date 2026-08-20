@@ -1,3 +1,98 @@
 /** Einsicht: Bild und Zielbereich sind verschieden; ein Urbild kann mehrere Elemente haben. Farben: Blau = Domain, Rot = Bild. Provenienz: neu; keine Zahlenclaims (2026-08-20, FA). */
-import {useState} from "react"; import {Aufgabe,FMM_COLORS,Verdikt,W_PANEL,W_TEXT} from "../../lib";
-export function MappingDiagram(){const [hot,setHot]=useState<string|null>(null),items=[['−2',45,45],['0',85,125],['2',125,45]] as const;return <div className={`mt-2 p-2 ${W_PANEL}`}><Aufgabe>Fahren wir über eine Eingabe oder Ausgabe und verfolgen wir ihren Pfeil.</Aufgabe><svg viewBox="0 0 280 170" className="max-w-full h-auto" role="img" aria-label="Zuordnung von drei Eingaben in Definitionsbereich und Bild."><defs><marker id="dc-arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0L6,3L0,6z" fill="var(--w-axis)"/></marker></defs><ellipse cx="65" cy="85" rx="45" ry="65" fill={FMM_COLORS.blau} opacity=".2" stroke={FMM_COLORS.blau}/><ellipse cx="215" cy="85" rx="45" ry="65" fill="none" stroke="var(--w-axis)"/><ellipse cx="215" cy="85" rx="26" ry="52" fill={FMM_COLORS.rot} opacity=".16" stroke={FMM_COLORS.rot}/><text x="15" y="20" fill="var(--w-text)" fontSize="11">Definitionsbereich</text><text x="180" y="20" fill="var(--w-text)" fontSize="11">Zielbereich</text><text x="207" y="162" fill={FMM_COLORS.rot} fontSize="11">Bild</text>{items.map(([label,y,target])=>{const active=hot===label||hot===String(target);return <g key={label} onPointerEnter={()=>setHot(label)} onPointerLeave={()=>setHot(null)}><line x1="80" y1={y} x2="190" y2={target} stroke={active?FMM_COLORS.orange:"var(--w-axis)"} strokeWidth={active?3:1.3} markerEnd="url(#dc-arrowhead)"/><text x="60" y={y+4} textAnchor="middle" fill="var(--w-text)" fontSize="13">{label}</text></g>})}<text x="212" y="49" textAnchor="middle" fill="var(--w-text)">4</text><text x="212" y="129" textAnchor="middle" fill="var(--w-text)">0</text><text x="237" y="90" fill="var(--w-muted)">−1</text></svg><p className={`text-xs ${W_TEXT}`}>Blau: Definitionsbereich; Rot: tatsächlich getroffenes Bild.</p><Verdikt kind="neutral">Zwei Eingaben können dasselbe Bild-Element haben; −1 gehört zwar zum Zielbereich, aber nicht zum Bild von x².</Verdikt></div>}
+import { useState } from "react";
+import { Aufgabe, FMM_COLORS, Verdikt, W_PANEL, W_TEXT } from "../../lib";
+export function MappingDiagram() {
+  const [hot, setHot] = useState<string | null>(null),
+    items = [
+      ["−2", 45, 45],
+      ["0", 85, 125],
+      ["2", 125, 45],
+    ] as const;
+  return (
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
+      <Aufgabe>Fahren wir über eine Eingabe oder Ausgabe und verfolgen wir ihren Pfeil.</Aufgabe>
+      <svg
+        viewBox="0 0 280 170"
+        className="max-w-full h-auto"
+        role="img"
+        aria-label="Zuordnung von drei Eingaben in Definitionsbereich und Bild."
+      >
+        <defs>
+          <marker
+            id="dc-arrowhead"
+            markerWidth="8"
+            markerHeight="8"
+            refX="6"
+            refY="3"
+            orient="auto"
+          >
+            <path d="M0,0L6,3L0,6z" fill="var(--w-axis)" />
+          </marker>
+        </defs>
+        <ellipse
+          cx="65"
+          cy="85"
+          rx="45"
+          ry="65"
+          fill={FMM_COLORS.blau}
+          opacity=".2"
+          stroke={FMM_COLORS.blau}
+        />
+        <ellipse cx="215" cy="85" rx="45" ry="65" fill="none" stroke="var(--w-axis)" />
+        <ellipse
+          cx="215"
+          cy="85"
+          rx="26"
+          ry="52"
+          fill={FMM_COLORS.rot}
+          opacity=".16"
+          stroke={FMM_COLORS.rot}
+        />
+        <text x="15" y="20" fill="var(--w-text)" fontSize="11">
+          Definitionsbereich
+        </text>
+        <text x="180" y="20" fill="var(--w-text)" fontSize="11">
+          Zielbereich
+        </text>
+        <text x="207" y="162" fill={FMM_COLORS.rot} fontSize="11">
+          Bild
+        </text>
+        {items.map(([label, y, target]) => {
+          const active = hot === label || hot === String(target);
+          return (
+            <g key={label} onPointerEnter={() => setHot(label)} onPointerLeave={() => setHot(null)}>
+              <line
+                x1="80"
+                y1={y}
+                x2="190"
+                y2={target}
+                stroke={active ? FMM_COLORS.orange : "var(--w-axis)"}
+                strokeWidth={active ? 3 : 1.3}
+                markerEnd="url(#dc-arrowhead)"
+              />
+              <text x="60" y={y + 4} textAnchor="middle" fill="var(--w-text)" fontSize="13">
+                {label}
+              </text>
+            </g>
+          );
+        })}
+        <text x="212" y="49" textAnchor="middle" fill="var(--w-text)">
+          4
+        </text>
+        <text x="212" y="129" textAnchor="middle" fill="var(--w-text)">
+          0
+        </text>
+        <text x="237" y="90" fill="var(--w-muted)">
+          −1
+        </text>
+      </svg>
+      <p className={`text-xs ${W_TEXT}`}>
+        Blau: Definitionsbereich; Rot: tatsächlich getroffenes Bild.
+      </p>
+      <Verdikt kind="neutral">
+        Zwei Eingaben können dasselbe Bild-Element haben; −1 gehört zwar zum Zielbereich, aber nicht
+        zum Bild von x².
+      </Verdikt>
+    </div>
+  );
+}

@@ -1,4 +1,37 @@
 /** Insight: one chosen input has exactly one output. Colors: blue graph and selected input. Provenance: original; no verdict numbers, 2026-08-19. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
-export function FunctionWidget(){const[x,setX]=useState(1.2);const y=x*x;return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Wählen wir eine Eingabe und verfolgen wir ihr Lot zum einzigen Funktionswert.</Aufgabe><Plot series={[{f:t=>t*t,color:FMM_COLORS.blau,label:"f(x)=x²"}]} xDomain={[-2.2,2.2]} yDomain={[-1,4.5]} xLabel="x" yLabel="f(x)" readout markers={[{x,y,color:FMM_COLORS.blau,label:"f(x)"}]} vlines={[{at:x,color:FMM_COLORS.grau,dash:[3,3]}]} hlines={[{at:y,color:FMM_COLORS.grau,dash:[3,3]}]}/><Slider label="Eingabe x" value={x} onChange={setX} min={-2} max={2} step={.01} accent={FMM_COLORS.blau}/><Verdikt kind="ok">x = {fmtDe(x,2)} führt zu genau einer Ausgabe, nämlich f(x) = {fmtDe(y,2)}.</Verdikt></div>}
+export function FunctionWidget() {
+  const [x, setX] = useState(1.2);
+  const y = x * x;
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>
+        Wählen wir eine Eingabe und verfolgen wir ihr Lot zum einzigen Funktionswert.
+      </Aufgabe>
+      <Plot
+        series={[{ f: (t) => t * t, color: FMM_COLORS.blau, label: "f(x)=x²" }]}
+        xDomain={[-2.2, 2.2]}
+        yDomain={[-1, 4.5]}
+        xLabel="x"
+        yLabel="f(x)"
+        readout
+        markers={[{ x, y, color: FMM_COLORS.blau, label: "f(x)" }]}
+        vlines={[{ at: x, color: FMM_COLORS.grau, dash: [3, 3] }]}
+        hlines={[{ at: y, color: FMM_COLORS.grau, dash: [3, 3] }]}
+      />
+      <Slider
+        label="Eingabe x"
+        value={x}
+        onChange={setX}
+        min={-2}
+        max={2}
+        step={0.01}
+        accent={FMM_COLORS.blau}
+      />
+      <Verdikt kind="ok">
+        x = {fmtDe(x, 2)} führt zu genau einer Ausgabe, nämlich f(x) = {fmtDe(y, 2)}.
+      </Verdikt>
+    </div>
+  );
+}

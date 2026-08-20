@@ -1,4 +1,43 @@
 /** Einsicht: Die geometrische Reihe konvergiert genau für |r|<1. Farben: blau = Partialsummen, rot = Grenzwert. Provenienz: Eigenbau. Verifiziert: S_15(0,5)=1,999969; r=1,1 wächst, verify-konzepte-C6/geometric-series.mjs (2026-08-19). */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe } from "../../lib";
-export function GeometricSumWidget(){const [r,setR]=useState(.5);let s=0;const sums=Array.from({length:16},(_,k)=>(s+=r**k));const conv=Math.abs(r)<1;const lo=Math.min(0,...sums,conv?1/(1-r):0)-.3,hi=Math.max(1,...sums,conv?1/(1-r):0)+.3;const y=(v:number)=>140-(v-lo)/(hi-lo)*120;return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Schieben wir r über 1 hinaus und beobachten wir die Partialsummen.</Aufgabe><svg viewBox="0 0 280 150" className="max-w-full h-auto" role="img" aria-label="Partialsummen einer geometrischen Reihe.">{conv&&<line x1="0" y1={y(1/(1-r))} x2="280" y2={y(1/(1-r))} stroke={FMM_COLORS.rot} strokeDasharray="4 3"/>}{sums.map((v,k)=><circle key={k} cx={12+k*17} cy={y(v)} r="3" fill={FMM_COLORS.blau}/>)}</svg><Slider label="Quotient r" value={r} onChange={setR} min={-1.2} max={1.2} step={.05}/><Verdikt kind={conv?"ok":"fail"}>{conv?`|r|=${fmtDe(Math.abs(r),2)}<1: Sₙ nähert sich ${fmtDe(1/(1-r),3)}.`:`|r|=${fmtDe(Math.abs(r),2)}≥1: Die Terme klingen nicht ab; die Reihe divergiert.`}</Verdikt></div>}
+export function GeometricSumWidget() {
+  const [r, setR] = useState(0.5);
+  let s = 0;
+  const sums = Array.from({ length: 16 }, (_, k) => (s += r ** k));
+  const conv = Math.abs(r) < 1;
+  const lo = Math.min(0, ...sums, conv ? 1 / (1 - r) : 0) - 0.3,
+    hi = Math.max(1, ...sums, conv ? 1 / (1 - r) : 0) + 0.3;
+  const y = (v: number) => 140 - ((v - lo) / (hi - lo)) * 120;
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>Schieben wir r über 1 hinaus und beobachten wir die Partialsummen.</Aufgabe>
+      <svg
+        viewBox="0 0 280 150"
+        className="max-w-full h-auto"
+        role="img"
+        aria-label="Partialsummen einer geometrischen Reihe."
+      >
+        {conv && (
+          <line
+            x1="0"
+            y1={y(1 / (1 - r))}
+            x2="280"
+            y2={y(1 / (1 - r))}
+            stroke={FMM_COLORS.rot}
+            strokeDasharray="4 3"
+          />
+        )}
+        {sums.map((v, k) => (
+          <circle key={k} cx={12 + k * 17} cy={y(v)} r="3" fill={FMM_COLORS.blau} />
+        ))}
+      </svg>
+      <Slider label="Quotient r" value={r} onChange={setR} min={-1.2} max={1.2} step={0.05} />
+      <Verdikt kind={conv ? "ok" : "fail"}>
+        {conv
+          ? `|r|=${fmtDe(Math.abs(r), 2)}<1: Sₙ nähert sich ${fmtDe(1 / (1 - r), 3)}.`
+          : `|r|=${fmtDe(Math.abs(r), 2)}≥1: Die Terme klingen nicht ab; die Reihe divergiert.`}
+      </Verdikt>
+    </div>
+  );
+}

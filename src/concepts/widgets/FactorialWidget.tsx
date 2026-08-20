@@ -1,3 +1,57 @@
 /** Einsicht: k! wächst multiplikativ; eine Log-Achse macht die Staffelung lesbar. Farben: Blau = Werte. Provenienz: neu; Tabellenwerte direkt aus Produktdefinition (2026-08-20, FA). */
-import {Aufgabe,FMM_COLORS,Verdikt,W_PANEL,W_TEXT} from "../../lib"; const rows=[1,1,2,6,24,120,720];
-export function FactorialTable(){const W=280,H=100,x=(i:number)=>20+i*40,y=(v:number)=>82-Math.log10(v)/3*65;return <div className={`mt-2 p-2 ${W_PANEL}`}><Aufgabe>Vergleichen wir Tabelle und Logarithmus-Plot für die ersten Fakultäten.</Aufgabe><table className={`text-xs ${W_TEXT}`}><tbody><tr><th>k</th>{rows.map((_,i)=><td className="px-2" key={i}>{i}</td>)}</tr><tr><th>k!</th>{rows.map((v,i)=><td className="px-2" key={i}>{v}</td>)}</tr></tbody></table><svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto" role="img" aria-label="Logarithmischer Miniplot der Fakultäten."><line x1="15" y1="82" x2="270" y2="82" stroke="var(--w-axis)"/><text x="15" y="12" fill="var(--w-muted)" fontSize="10">log₁₀(k!)</text>{rows.map((v,i)=><g key={i}><circle cx={x(i)} cy={y(v)} r="3" fill={FMM_COLORS.blau}/><text x={x(i)} y="95" textAnchor="middle" fill="var(--w-muted)" fontSize="9">{i}</text></g>)}</svg><p className={`text-xs ${W_TEXT}`}>Blau: k! auf logarithmischer Höhe.</p><Verdikt kind="warn">Schon die Log-Achse steigt schnell: Jeder weitere Faktor vergrößert den Wert deutlich.</Verdikt></div>}
+import { Aufgabe, FMM_COLORS, Verdikt, W_PANEL, W_TEXT } from "../../lib";
+const rows = [1, 1, 2, 6, 24, 120, 720];
+export function FactorialTable() {
+  const W = 280,
+    H = 100,
+    x = (i: number) => 20 + i * 40,
+    y = (v: number) => 82 - (Math.log10(v) / 3) * 65;
+  return (
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
+      <Aufgabe>Vergleichen wir Tabelle und Logarithmus-Plot für die ersten Fakultäten.</Aufgabe>
+      <table className={`text-xs ${W_TEXT}`}>
+        <tbody>
+          <tr>
+            <th>k</th>
+            {rows.map((_, i) => (
+              <td className="px-2" key={i}>
+                {i}
+              </td>
+            ))}
+          </tr>
+          <tr>
+            <th>k!</th>
+            {rows.map((v, i) => (
+              <td className="px-2" key={i}>
+                {v}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="max-w-full h-auto"
+        role="img"
+        aria-label="Logarithmischer Miniplot der Fakultäten."
+      >
+        <line x1="15" y1="82" x2="270" y2="82" stroke="var(--w-axis)" />
+        <text x="15" y="12" fill="var(--w-muted)" fontSize="10">
+          log₁₀(k!)
+        </text>
+        {rows.map((v, i) => (
+          <g key={i}>
+            <circle cx={x(i)} cy={y(v)} r="3" fill={FMM_COLORS.blau} />
+            <text x={x(i)} y="95" textAnchor="middle" fill="var(--w-muted)" fontSize="9">
+              {i}
+            </text>
+          </g>
+        ))}
+      </svg>
+      <p className={`text-xs ${W_TEXT}`}>Blau: k! auf logarithmischer Höhe.</p>
+      <Verdikt kind="warn">
+        Schon die Log-Achse steigt schnell: Jeder weitere Faktor vergrößert den Wert deutlich.
+      </Verdikt>
+    </div>
+  );
+}

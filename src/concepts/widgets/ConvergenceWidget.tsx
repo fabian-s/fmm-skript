@@ -1,3 +1,50 @@
 /** Einsicht: Nach N(ε) liegen alle Folgenglieder im ε-Band. Farben: Grün = Band, Orange = frühere Ausreißer. Provenienz: neu. Verifikation: verify/FA/check-numbers.mjs (2026-08-20): N=floor(log ε/log .75)+1. */
-import {useState} from "react"; import {Aufgabe,FMM_COLORS,fmtDe,Slider,Verdikt,W_PANEL,W_TEXT} from "../../lib";
-export function ToleranceBandWidget(){const [eps,setEps]=useState(.3),W=280,H=150,y=(v:number)=>H-10-v/2*(H-20),x=(n:number)=>12+(n-1)/23*(W-24),need=Math.floor(Math.log(eps)/Math.log(.75))+1,dots=Array.from({length:24},(_,i)=>{const n=i+1,a=1+(-.75)**n;return{n,a,inside:Math.abs(a-1)<eps}});return <div className={`mt-2 p-2 ${W_PANEL}`}><Aufgabe>Verkleinern wir ε und lesen wir den ersten dauerhaft sicheren Index ab.</Aufgabe><svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto" role="img" aria-label="Folge mit Toleranzband um den Grenzwert eins."><rect y={y(1+eps)} width={W} height={y(1-eps)-y(1+eps)} fill={FMM_COLORS.gruen} opacity=".2"/><line x1="0" y1={y(1)} x2={W} y2={y(1)} stroke={FMM_COLORS.gruen} strokeDasharray="4 3"/>{dots.map(d=><circle key={d.n} cx={x(d.n)} cy={y(d.a)} r="3.5" fill={d.inside?FMM_COLORS.gruen:FMM_COLORS.orange}/>)}</svg><p className={`text-xs ${W_TEXT}`}>Grün: im Band; Orange: noch außerhalb.</p><Slider label="Toleranz ε" value={eps} onChange={setEps} min={.05} max={.6} step={.01}/><Verdikt kind="ok">N(ε) = {need}: Ab n = {need} gilt |aₙ − 1| &lt; {fmtDe(eps,2)} für alle späteren Glieder.</Verdikt></div>}
+import { useState } from "react";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_PANEL, W_TEXT } from "../../lib";
+export function ToleranceBandWidget() {
+  const [eps, setEps] = useState(0.3),
+    W = 280,
+    H = 150,
+    y = (v: number) => H - 10 - (v / 2) * (H - 20),
+    x = (n: number) => 12 + ((n - 1) / 23) * (W - 24),
+    need = Math.floor(Math.log(eps) / Math.log(0.75)) + 1,
+    dots = Array.from({ length: 24 }, (_, i) => {
+      const n = i + 1,
+        a = 1 + (-0.75) ** n;
+      return { n, a, inside: Math.abs(a - 1) < eps };
+    });
+  return (
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
+      <Aufgabe>Verkleinern wir ε und lesen wir den ersten dauerhaft sicheren Index ab.</Aufgabe>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="max-w-full h-auto"
+        role="img"
+        aria-label="Folge mit Toleranzband um den Grenzwert eins."
+      >
+        <rect
+          y={y(1 + eps)}
+          width={W}
+          height={y(1 - eps) - y(1 + eps)}
+          fill={FMM_COLORS.gruen}
+          opacity=".2"
+        />
+        <line x1="0" y1={y(1)} x2={W} y2={y(1)} stroke={FMM_COLORS.gruen} strokeDasharray="4 3" />
+        {dots.map((d) => (
+          <circle
+            key={d.n}
+            cx={x(d.n)}
+            cy={y(d.a)}
+            r="3.5"
+            fill={d.inside ? FMM_COLORS.gruen : FMM_COLORS.orange}
+          />
+        ))}
+      </svg>
+      <p className={`text-xs ${W_TEXT}`}>Grün: im Band; Orange: noch außerhalb.</p>
+      <Slider label="Toleranz ε" value={eps} onChange={setEps} min={0.05} max={0.6} step={0.01} />
+      <Verdikt kind="ok">
+        N(ε) = {need}: Ab n = {need} gilt |aₙ − 1| &lt; {fmtDe(eps, 2)} für alle späteren Glieder.
+      </Verdikt>
+    </div>
+  );
+}

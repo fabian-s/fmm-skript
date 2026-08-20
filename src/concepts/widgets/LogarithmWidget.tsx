@@ -1,2 +1,25 @@
 /** Insight: logarithms differ only by scale and share x=1 as zero. Colors: red log₂, blue ln, green log₁₀. Provenance: original. No verdict numbers, 2026-08-19. */
-import{Aufgabe,FMM_COLORS,Plot,Verdikt}from"../../lib";export function LogPlot(){return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Vergleichen wir die drei Basen am gemeinsamen Nullpunkt und für große x.</Aufgabe><Plot series={[{f:x=>x>0?Math.log2(x):NaN,color:FMM_COLORS.rot,label:"log₂ x"},{f:x=>x>0?Math.log(x):NaN,color:FMM_COLORS.blau,label:"ln x"},{f:x=>x>0?Math.log10(x):NaN,color:FMM_COLORS.gruen,label:"log₁₀ x"}]} xDomain={[0,8]} yDomain={[-3,3.3]} xLabel="x" yLabel="Logarithmus" readout markers={[{x:1,y:0,label:"gemeinsamer Nullpunkt"}]}/><Verdikt kind="neutral">Alle drei Kurven gehen durch (1, 0); die Basis ändert nur die vertikale Skala.</Verdikt></div>}
+import { Aufgabe, FMM_COLORS, Plot, Verdikt } from "../../lib";
+export function LogPlot() {
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>Vergleichen wir die drei Basen am gemeinsamen Nullpunkt und für große x.</Aufgabe>
+      <Plot
+        series={[
+          { f: (x) => (x > 0 ? Math.log2(x) : NaN), color: FMM_COLORS.rot, label: "log₂ x" },
+          { f: (x) => (x > 0 ? Math.log(x) : NaN), color: FMM_COLORS.blau, label: "ln x" },
+          { f: (x) => (x > 0 ? Math.log10(x) : NaN), color: FMM_COLORS.gruen, label: "log₁₀ x" },
+        ]}
+        xDomain={[0, 8]}
+        yDomain={[-3, 3.3]}
+        xLabel="x"
+        yLabel="Logarithmus"
+        readout
+        markers={[{ x: 1, y: 0, label: "gemeinsamer Nullpunkt" }]}
+      />
+      <Verdikt kind="neutral">
+        Alle drei Kurven gehen durch (1, 0); die Basis ändert nur die vertikale Skala.
+      </Verdikt>
+    </div>
+  );
+}

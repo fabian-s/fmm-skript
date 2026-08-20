@@ -19,12 +19,62 @@ export function GradientDescentWidget() {
   const path = useMemo(() => pathFor(gamma, step), [gamma, step]);
   const theta = path[path.length - 1];
   const factor = Math.abs(1 - 2 * gamma);
-  const verdict = factor < 1 ? "Die Beträge der Iterierten schrumpfen; der Pfad nähert sich dem Minimum bei 0." : factor === 1 ? "Die Iterierten werden nicht kleiner. Diese Schrittweite konvergiert nicht." : "Die Beträge wachsen. Der nächste Schritt entfernt sich weiter vom Minimum.";
-  return <div className="mt-2 rounded bg-slate-700/60 p-2">
-    <Aufgabe>Wählen wir eine Schrittweite und verfolgen wir den Pfad Schritt für Schritt.</Aufgabe>
-    <Plot series={[{ f: loss, label: "L(θ)", color: FMM_COLORS.blau }]} xDomain={[-3, 3]} yDomain={[0, 7]} xLabel="θ" yLabel="L(θ)" readout ariaLabel="Quadratische Zielfunktion mit Gradientenpfad" polylines={[{ pts: path.map((x) => [x, loss(x)] as [number, number]), color: FMM_COLORS.orange, label: "Pfad" }]} markers={path.map((x, i) => ({ x, y: loss(x), color: i === step ? FMM_COLORS.rot : FMM_COLORS.orange, r: i === step ? 4 : 2.5 }))} />
-    <Slider label="Schrittweite γ" value={gamma} onChange={(v) => { setGamma(v); setStep(0); }} min={0.05} max={1.15} step={0.05} accent={FMM_COLORS.orange} />
-    <Stepper step={step} setStep={setStep} max={12} narration={<>θ<sub>{step}</sub> = {fmtDe(theta, 3)}</>} />
-    <Verdikt kind={factor < 1 ? "ok" : "warn"}>{verdict}</Verdikt>
-  </div>;
+  const verdict =
+    factor < 1
+      ? "Die Beträge der Iterierten schrumpfen; der Pfad nähert sich dem Minimum bei 0."
+      : factor === 1
+        ? "Die Iterierten werden nicht kleiner. Diese Schrittweite konvergiert nicht."
+        : "Die Beträge wachsen. Der nächste Schritt entfernt sich weiter vom Minimum.";
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>
+        Wählen wir eine Schrittweite und verfolgen wir den Pfad Schritt für Schritt.
+      </Aufgabe>
+      <Plot
+        series={[{ f: loss, label: "L(θ)", color: FMM_COLORS.blau }]}
+        xDomain={[-3, 3]}
+        yDomain={[0, 7]}
+        xLabel="θ"
+        yLabel="L(θ)"
+        readout
+        ariaLabel="Quadratische Zielfunktion mit Gradientenpfad"
+        polylines={[
+          {
+            pts: path.map((x) => [x, loss(x)] as [number, number]),
+            color: FMM_COLORS.orange,
+            label: "Pfad",
+          },
+        ]}
+        markers={path.map((x, i) => ({
+          x,
+          y: loss(x),
+          color: i === step ? FMM_COLORS.rot : FMM_COLORS.orange,
+          r: i === step ? 4 : 2.5,
+        }))}
+      />
+      <Slider
+        label="Schrittweite γ"
+        value={gamma}
+        onChange={(v) => {
+          setGamma(v);
+          setStep(0);
+        }}
+        min={0.05}
+        max={1.15}
+        step={0.05}
+        accent={FMM_COLORS.orange}
+      />
+      <Stepper
+        step={step}
+        setStep={setStep}
+        max={12}
+        narration={
+          <>
+            θ<sub>{step}</sub> = {fmtDe(theta, 3)}
+          </>
+        }
+      />
+      <Verdikt kind={factor < 1 ? "ok" : "warn"}>{verdict}</Verdikt>
+    </div>
+  );
 }

@@ -1,3 +1,60 @@
 /** Insight: residual segments make least squares a visible minimization task. Colors: blue fit, orange residuals, green success. Provenance: original. Optimum a=.9,b=.28,SSE=.148 verified in verify-konzepte-C4b/linear-regression.mjs, 2026-08-19. */
-import{useState}from"react";import{Aufgabe,FMM_COLORS,Plot,Slider,Verdikt,fmtDe}from"../../lib";const d:[number,number][]=[[-2,-1.4],[-1,-.9],[0,.4],[1,1],[2,2.3]];
-export function RegressionWidget(){const[a,setA]=useState(.3);const[b,setB]=useState(1);const s=d.reduce((z,[x,y])=>z+(y-a*x-b)**2,0);const ok=s<.25;return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Finden wir eine Gerade mit Fehlerquadratsumme unter 0,25.</Aufgabe><Plot series={[{f:x=>a*x+b,color:FMM_COLORS.blau,label:"Gerade"}]} xDomain={[-3,3]} yDomain={[-3,3]} xLabel="x" yLabel="y" readout markers={d.map(([x,y])=>({x,y,color:FMM_COLORS.orange,label:"Daten"}))} polylines={d.map(([x,y])=>({pts:[[x,y],[x,a*x+b]],color:FMM_COLORS.orange,dash:[3,2]}))}/><Slider label="Steigung a" value={a} onChange={setA} min={-1} max={2} step={.01} accent={FMM_COLORS.blau}/><Slider label="Abschnitt b" value={b} onChange={setB} min={-2} max={2} step={.01}/><Verdikt kind={ok?"ok":"neutral"}>{ok?<>Geschafft: SSE = {fmtDe(s,3)}. Die kleinsten Quadrate belohnen kurze vertikale Residuen.</>:<>SSE = {fmtDe(s,3)}. Die orangefarbenen Strecken zeigen, welche Fehler noch dominieren.</>}</Verdikt></div>}
+import { useState } from "react";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+const d: [number, number][] = [
+  [-2, -1.4],
+  [-1, -0.9],
+  [0, 0.4],
+  [1, 1],
+  [2, 2.3],
+];
+export function RegressionWidget() {
+  const [a, setA] = useState(0.3);
+  const [b, setB] = useState(1);
+  const s = d.reduce((z, [x, y]) => z + (y - a * x - b) ** 2, 0);
+  const ok = s < 0.25;
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>Finden wir eine Gerade mit Fehlerquadratsumme unter 0,25.</Aufgabe>
+      <Plot
+        series={[{ f: (x) => a * x + b, color: FMM_COLORS.blau, label: "Gerade" }]}
+        xDomain={[-3, 3]}
+        yDomain={[-3, 3]}
+        xLabel="x"
+        yLabel="y"
+        readout
+        markers={d.map(([x, y]) => ({ x, y, color: FMM_COLORS.orange, label: "Daten" }))}
+        polylines={d.map(([x, y]) => ({
+          pts: [
+            [x, y],
+            [x, a * x + b],
+          ],
+          color: FMM_COLORS.orange,
+          dash: [3, 2],
+        }))}
+      />
+      <Slider
+        label="Steigung a"
+        value={a}
+        onChange={setA}
+        min={-1}
+        max={2}
+        step={0.01}
+        accent={FMM_COLORS.blau}
+      />
+      <Slider label="Abschnitt b" value={b} onChange={setB} min={-2} max={2} step={0.01} />
+      <Verdikt kind={ok ? "ok" : "neutral"}>
+        {ok ? (
+          <>
+            Geschafft: SSE = {fmtDe(s, 3)}. Die kleinsten Quadrate belohnen kurze vertikale
+            Residuen.
+          </>
+        ) : (
+          <>
+            SSE = {fmtDe(s, 3)}. Die orangefarbenen Strecken zeigen, welche Fehler noch dominieren.
+          </>
+        )}
+      </Verdikt>
+    </div>
+  );
+}

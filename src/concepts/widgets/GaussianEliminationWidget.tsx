@@ -1,6 +1,61 @@
 /** Einsicht: Jede Eliminationsoperation räumt eine Pivotspalte. Farben: orange = geänderte Zeile, grün = neue Null. Provenienz: Eigenbau. Zahlen: 4/2=2, 2/2=1, -3/3=-1, verify-konzepte-C6/elimination.mjs (2026-08-19). */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Stepper, Verdikt } from "../../lib";
-const mats=[[[2,1,1],[4,5,1],[2,-2,0]],[[2,1,1],[0,3,-1],[0,-3,-1]],[[2,1,1],[0,3,-1],[0,0,-2]]];
-const text=["1. Pivot in Spalte 1 wählen.","2. Z₂ ← Z₂ − 2Z₁ und Z₃ ← Z₃ − Z₁.","3. Z₃ ← Z₃ + Z₂; die Dreiecksform ist erreicht."];
-export function EliminationWidget(){const [step,setStep]=useState(0);return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Gehen wir die nummerierten Zeilenoperationen vor und zurück.</Aufgabe><div className="my-2 inline-grid grid-cols-3 gap-x-4 rounded border-x-2 border-slate-500 px-3 py-2 font-mono text-sm">{mats[step].flatMap((row,i)=>row.map((v,j)=><span key={`${i}-${j}`} className={step>0&&((step===1&&i>0)||(step===2&&i===2))?"font-bold":""} style={{color:v===0&&step>0?FMM_COLORS.gruen:step>0?FMM_COLORS.orange:"var(--w-text)"}}>{v}</span>))}</div><Stepper step={step} setStep={setStep} max={2} narration={text[step]}/><Verdikt kind={step===2?"ok":"neutral"}>{step===2?"Die Einträge unter der Diagonale sind null; jetzt folgt Rückwärtseinsetzen.":"Der nächste Schritt erzeugt Nullen unter dem Pivot."}</Verdikt></div>}
+const mats = [
+  [
+    [2, 1, 1],
+    [4, 5, 1],
+    [2, -2, 0],
+  ],
+  [
+    [2, 1, 1],
+    [0, 3, -1],
+    [0, -3, -1],
+  ],
+  [
+    [2, 1, 1],
+    [0, 3, -1],
+    [0, 0, -2],
+  ],
+];
+const text = [
+  "1. Pivot in Spalte 1 wählen.",
+  "2. Z₂ ← Z₂ − 2Z₁ und Z₃ ← Z₃ − Z₁.",
+  "3. Z₃ ← Z₃ + Z₂; die Dreiecksform ist erreicht.",
+];
+export function EliminationWidget() {
+  const [step, setStep] = useState(0);
+  return (
+    <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>Gehen wir die nummerierten Zeilenoperationen vor und zurück.</Aufgabe>
+      <div className="my-2 inline-grid grid-cols-3 gap-x-4 rounded border-x-2 border-slate-500 px-3 py-2 font-mono text-sm">
+        {mats[step].flatMap((row, i) =>
+          row.map((v, j) => (
+            <span
+              key={`${i}-${j}`}
+              className={
+                step > 0 && ((step === 1 && i > 0) || (step === 2 && i === 2)) ? "font-bold" : ""
+              }
+              style={{
+                color:
+                  v === 0 && step > 0
+                    ? FMM_COLORS.gruen
+                    : step > 0
+                      ? FMM_COLORS.orange
+                      : "var(--w-text)",
+              }}
+            >
+              {v}
+            </span>
+          )),
+        )}
+      </div>
+      <Stepper step={step} setStep={setStep} max={2} narration={text[step]} />
+      <Verdikt kind={step === 2 ? "ok" : "neutral"}>
+        {step === 2
+          ? "Die Einträge unter der Diagonale sind null; jetzt folgt Rückwärtseinsetzen."
+          : "Der nächste Schritt erzeugt Nullen unter dem Pivot."}
+      </Verdikt>
+    </div>
+  );
+}
