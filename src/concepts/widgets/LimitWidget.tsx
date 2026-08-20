@@ -18,7 +18,7 @@ export function LimitWidget() {
         yLabel="g(h)"
         readout
         markers={[
-          { x: h, y: g(h), color: FMM_COLORS.blau, label: "aktuell" },
+          { x: h, y: g(h), color: FMM_COLORS.blau },
           { x: 0, y: 2, color: FMM_COLORS.gruen, label: "offener Punkt" },
         ]}
         hlines={[{ at: 2, color: FMM_COLORS.gruen, dash: [4, 3], label: "Grenzwert" }]}

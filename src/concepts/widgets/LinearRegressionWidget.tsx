@@ -23,7 +23,14 @@ export function RegressionWidget() {
         xLabel="x"
         yLabel="y"
         readout
-        markers={d.map(([x, y]) => ({ x, y, color: FMM_COLORS.orange, label: "Daten" }))}
+        markers={d.map(([x, y], i) => ({
+          x,
+          y,
+          color: FMM_COLORS.orange,
+          // Nur ein Label: fünffaches „Daten" war Rauschen, und das Label des
+          // Punkts (2; 2,3) kollidierte mit der Legende (VIS-1 2026-08-20).
+          label: i === 0 ? "Daten" : undefined,
+        }))}
         polylines={d.map(([x, y]) => ({
           pts: [
             [x, y],

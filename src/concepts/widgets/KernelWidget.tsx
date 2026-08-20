@@ -33,7 +33,10 @@ const A: [[number, number], [number, number]] = [
   [1, 2],
   [0.5, 1],
 ];
-const KERN: [number, number] = [2, -1];
+// Richtung (−2, 1) statt (2, −1): dieselbe Gerade, aber die Beschriftung
+// „Kern(A)" landet dadurch links oben IM Bild statt am rechten Rand, wo die
+// schließende Klammer abgeschnitten wurde (visuelle Abnahme 2026-08-20).
+const KERN: [number, number] = [-2, 1];
 
 export function KernelWidget() {
   const [v, setV] = useState<[number, number]>([1.5 * Math.cos(0.8), 1.5 * Math.sin(0.8)]);

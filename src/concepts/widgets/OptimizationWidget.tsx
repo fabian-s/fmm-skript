@@ -2,8 +2,12 @@
  * Konzept-Widget `optimization`.
  *
  * DIE EINE EINSICHT: Ein bisher bester Versuch ist noch kein globales Minimum.
- * FARBROLLEN: blau = Zielfunktion, rot = aktueller Versuch, grün = bester Fund.
- * PROVENIENZ: Neu; Schätzfrage aus der gemeinsamen Widget-Lib.
+ * FARBROLLEN: blau = Zielfunktion, rot = aktueller Versuch, grün = bester Fund
+ * (Marke „Rekord"; der rote Versuch erscheint nur, wenn er vom Rekord abweicht,
+ * sonst überdruckten sich beide Labels).
+ * PROVENIENZ: Neu; Schätzfrage aus der gemeinsamen Widget-Lib. VIS-1 2026-08-20:
+ * Start θ = 1,2 statt 1,6 — bei 1,6 lag die Startmarke exakt unter der Legende
+ * und war unsichtbar.
  * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, bestätigt
  * das globale Minimum L(−1,035558) = −0,305428 auf [−1,8; 1,8].
  */
@@ -13,8 +17,8 @@ import { Aufgabe, FMM_COLORS, Plot, Schaetzfrage, Slider, Verdikt, fmtDe } from 
 const loss = (x: number) => (x * x - 1) ** 2 + 0.3 * x;
 
 export function OptimizationWidget() {
-  const [theta, setTheta] = useState(1.6);
-  const [best, setBest] = useState({ x: 1.6, y: loss(1.6) });
+  const [theta, setTheta] = useState(1.2);
+  const [best, setBest] = useState({ x: 1.2, y: loss(1.2) });
 
   const choose = (x: number) => {
     setTheta(x);
@@ -36,8 +40,10 @@ export function OptimizationWidget() {
           yLabel="L(θ)"
           readout
           markers={[
-            { x: theta, y: loss(theta), color: FMM_COLORS.rot, label: "Versuch" },
-            { x: best.x, y: best.y, color: FMM_COLORS.gruen, label: "bisher bester" },
+            ...(best.x === theta
+              ? []
+              : [{ x: theta, y: loss(theta), color: FMM_COLORS.rot, label: "Versuch" }]),
+            { x: best.x, y: best.y, color: FMM_COLORS.gruen, label: "Rekord" },
           ]}
           ariaLabel="Zielfunktion mit aktuellem und bestem Versuch."
         />

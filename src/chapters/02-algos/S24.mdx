@@ -16,7 +16,7 @@ ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also ei
 Notation, die genau das Wachstumsverhalten festhält und alles Unwesentliche wegwirft.
 Das leisten die *Landau-Symbole* (engl. *big-O notation*).
 
-### 2.4.1 Klein-o, Groß-O und Theta
+### 2.4.1 Klein-o und Groß-O
 
 Die Idee: Wir vergleichen den Aufwand $a_n$ mit einer möglichst einfachen
 Vergleichsfolge $b_n$ (etwa $n^2$ oder $2^n$), indem wir den
@@ -43,19 +43,15 @@ ungleich null ist.
   \limsup_{n \to \infty} \left\vert \frac{a_n}{b_n} \right\vert < \infty.
   $$
 
-- $a_n=\Theta(b_n)$ („$a_n$ *ist Theta von* $b_n$"), wenn gleichzeitig
-  $a_n=O(b_n)$ und $b_n=O(a_n)$ gilt.
 :::
 
-Die Interpretation der beiden Symbole:
+Die Interpretation der Symbole:
 
 - $a_n = o(b_n)$: $a_n$ wächst *langsamer* als $b_n$;
   gegenüber $b_n$ wird $a_n$ vernachlässigbar klein.
 - $a_n = O(b_n)$: $a_n$ wächst *höchstens so schnell* wie
   $b_n$; die Vergleichsfolge $b_n$ ist gegenüber $a_n$ nicht
   vernachlässigbar.
-- $a_n=\Theta(b_n)$: Beide Folgen haben bis auf konstante Faktoren dieselbe
-  Wachstumsordnung. Das ist die passende Notation für eine scharfe Ordnung.
 
 :::bemerkung[2.4.2 (Zwei Feinheiten der Definition)]
 *Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
@@ -107,13 +103,21 @@ Der Quotient wächst über jede Schranke hinaus; $\cred{n^2}$ wächst echt
 schneller als $\cblue{n}$.
 :::
 
-:::bemerkung[2.4.4 (Scharfe Schranken)]
-Meist suchen wir eine möglichst *einfache* Vergleichsfolge $b_n$,
-sodass $a_n = \Theta(b_n)$ gilt: eine Schranke, die das Wachstum von oben
-und unten bis auf konstante Faktoren trifft. Für $3n^2 + 5n$ ist das
-$b_n = n^2$: Der Quotient konvergiert gegen $3 \neq 0$. Zwar wäre
-auch $3n^2 + 5n = O(n^3)$ formal korrekt, aber wertlos grob, so wie „die
-Fahrt dauert höchstens drei Wochen" für eine Zugfahrt nach Berlin.
+:::vertiefung[Warum manchmal Theta?]
+Groß-O ist absichtlich nur eine obere Schranke. Daher heißt „ein
+$O(n^2)$-Algorithmus" nicht, dass seine Laufzeit tatsächlich quadratisch ist.
+Ein Sortierverfahren mit Laufzeit $O(n \log n)$ ist nämlich automatisch auch
+$O(n^2)$, weil $n \log n$ für große $n$ höchstens so groß wie $n^2$ ist. Die
+zweite Aussage ist richtig, unterscheidet das Verfahren aber nicht von einem
+tatsächlich quadratischen Verfahren.
+
+Wollen wir die Ordnung von beiden Seiten festlegen, verwenden wir
+$a_n = \Theta(b_n)$. Das bedeutet zugleich $a_n = O(b_n)$ und
+$b_n = O(a_n)$: Bis auf konstante Faktoren wachsen beide Folgen gleich schnell.
+Für $3n^2 + 5n$ gilt also $\Theta(n^2)$; $O(n^3)$ wäre zwar ebenfalls wahr,
+aber als Beschreibung zu grob. Im Hauptstrang genügt uns meist die obere
+Schranke $O$, weil sie für Laufzeit- und Fehlerabschätzungen bereits die
+entscheidende Garantie liefert.
 :::
 
 ### 2.4.3 Rechenregeln
@@ -283,8 +287,8 @@ dann die Lösung aufklappen.
 <SelfTest nr={1} frage={<M>{"2n = O(n^2)"}</M>}>
 **Wahr.**
 $\lim_{n \to \infty} \frac{2n}{n^2} = \lim_{n \to \infty} \frac{2}{n} = 0 < \infty$;
-es gilt sogar die stärkere Aussage $2n = o(n^2)$. Die *scharfe*
-Schranke im Sinne von Bemerkung 2.4.4 wäre $2n = O(n)$.
+es gilt sogar die stärkere Aussage $2n = o(n^2)$. Die informativere obere
+Schranke ist $2n = O(n)$.
 </SelfTest>
 
 <SelfTest nr={2} frage={<M>{"7/n = o(1)"}</M>}>
@@ -332,8 +336,8 @@ nicht symmetrisch (Bemerkung 2.4.2): $5n = O(n^2)$ gilt, $n^2 = O(5n)$ nicht.
 Gilt $a_n = o(b_n)$, so gilt auch $a_n = O(b_n)$.
 
 Konvergiert der Quotient gegen $0$, so ist er insbesondere beschränkt. Klein-o ist die
-stärkere Aussage; die scharfe Beschreibung im Sinne von Bemerkung 2.4.4 ist aber meist
-eine andere Vergleichsfolge.
+stärkere Aussage; eine informative obere Schranke kann aber eine andere
+Vergleichsfolge verwenden.
 :::
 
 ::::
@@ -346,4 +350,4 @@ einem drastischen Ergebnis.
 
 *Vertiefung: Heath §1.1 (Aufwand und Genauigkeit numerischer Verfahren); Cormen,
 Leiserson, Rivest & Stein, _Introduction to Algorithms_, Kap. 3
-(asymptotische Notation, dort auch $\Theta$ und $\Omega$).*
+(asymptotische Notation, einschließlich scharfer Schranken).*

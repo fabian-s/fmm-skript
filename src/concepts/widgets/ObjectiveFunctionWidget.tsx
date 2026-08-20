@@ -27,14 +27,23 @@ export function ObjectiveWidget() {
           series={[{ f: (x) => a * x, color: FMM_COLORS.blau, label: "y=ax" }]}
           xDomain={[-2.5, 2.5]}
           yDomain={[-3, 3]}
+          width={240}
+          height={190}
           xLabel="x"
           yLabel="y"
-          markers={d.map(([x, y]) => ({ x, y, color: FMM_COLORS.orange, label: "Daten" }))}
+          markers={d.map(([x, y], i) => ({
+            x,
+            y,
+            color: FMM_COLORS.orange,
+            label: i === 0 ? "Daten" : undefined,
+          }))}
         />
         <Plot
           series={[{ f: loss, color: FMM_COLORS.blau, label: "L(a)" }]}
           xDomain={[-0.5, 2.5]}
           yDomain={[0, 6]}
+          width={240}
+          height={190}
           xLabel="a"
           yLabel="L(a)"
           readout

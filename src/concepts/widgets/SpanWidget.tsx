@@ -105,19 +105,6 @@ export function SpanWidget({ variante = "span" }: { variante?: "span" | "unterra
       <Aufgabe>
         Ziehen wir den roten Punkt und versuchen wir, damit w zu treffen.
       </Aufgabe>
-      <div className="my-1 flex flex-wrap gap-1 text-xs">
-        {modi.map((m) => (
-          <button
-            key={m.id}
-            type="button"
-            aria-pressed={m.id === modus}
-            className={m.id === modus ? W_BUTTON_AKTIV : W_BUTTON}
-            onClick={() => setModus(m.id)}
-          >
-            {m.name}
-          </button>
-        ))}
-      </div>
       <LabeledTransformCanvas
         matrix={IDENT}
         showGrid={false}
@@ -159,6 +146,19 @@ export function SpanWidget({ variante = "span" }: { variante?: "span" | "unterra
         }}
         ariaLabel={`Die erreichbare Menge ist ${modus === "ebene" ? "die ganze Ebene" : modus === "verschoben" ? "eine Gerade, die nicht durch den Ursprung geht" : "eine Gerade durch den Ursprung"}; der gezogene Punkt liegt bei (${fmtDe(punkt[0], 2)}; ${fmtDe(punkt[1], 2)}).`}
       />
+      <div className="my-1 flex flex-wrap gap-1 text-xs">
+        {modi.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            aria-pressed={m.id === modus}
+            className={m.id === modus ? W_BUTTON_AKTIV : W_BUTTON}
+            onClick={() => setModus(m.id)}
+          >
+            {m.name}
+          </button>
+        ))}
+      </div>
       <Slider label="c₁" value={c1} onChange={setC1} min={-2.5} max={2.5} step={0.05} accent={FMM_COLORS.violett} />
       {modus === "ebene" && (
         <Slider label="c₂" value={c2} onChange={setC2} min={-2.5} max={2.5} step={0.05} accent={FMM_COLORS.violett} />

@@ -131,7 +131,8 @@ export function CompositionWidget() {
       <Verdikt kind={schritt === 2 ? (gleich ? "warn" : "fail") : "neutral"}>
         {schritt < 2 ? (
           <>
-            Noch fehlt ein Schritt. Das Produkt fasst beide zusammen: der Eintrag in Zeile i,
+            {schritt === 0 ? "Beide Schritte stehen noch aus." : "Noch fehlt ein Schritt."} Das
+            Produkt fasst beide zusammen: der Eintrag in Zeile i,
             Spalte j ist das Skalarprodukt von Zeile i der linken mit Spalte j der rechten Matrix.
           </>
         ) : (

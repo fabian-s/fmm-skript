@@ -58,7 +58,7 @@ export function ProjektionsmatrixWidget() {
           { v: px, color: FMM_COLORS.orange, label: "Px" },
         ]}
         onVectorChange={(_i, v) => setX([v[0], v[1]])}
-        lines={[{ dir: [c, s], color: FMM_COLORS.blau, label: "Gerade" }]}
+        lines={[{ dir: [c, s], color: FMM_COLORS.blau }]}
         overlay={(toPx) => {
           const [xa, ya] = toPx(x[0], x[1]);
           const [xb, yb] = toPx(px[0], px[1]);

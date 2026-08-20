@@ -1,13 +1,23 @@
 /**
- * Insight: slope is signed vertical change per one horizontal unit. Colors: blue line, orange slope triangle.
- * Provenance: original; formula and shown values verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * DIE EINE EINSICHT: Die Steigung a ist der gerichtete Höhenunterschied pro
+ * Schritt der Breite 1; ihr Vorzeichen entscheidet über Auf- oder Abstieg.
+ *
+ * FARBROLLEN: blau = Gerade y = ax; orange = waagerechter Einheitsschritt
+ * und sein Höhenunterschied.
+ *
+ * PROVENIENZ: Eigenbau (2026-08-20).
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/HDR2/SlopeWidget.mjs,
+ * 2026-08-20): Beim Startwert a = 1,5 führt der Schritt von (0, 0) nach
+ * (1, 1,5). Für a = −1,5 endet derselbe Schritt bei (1, −1,5); für a = 0
+ * bleibt er bei (1, 0). Damit stimmen die drei Verdiktfälle mit y = ax überein.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, W_PANEL, fmtDe } from "../../lib";
 export function SlopeWidget() {
   const [a, setA] = useState(1.5);
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Verändern wir die Gerade und lesen wir das Steigungsdreieck für einen Schritt nach rechts.
       </Aufgabe>

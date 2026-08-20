@@ -1,15 +1,26 @@
 /**
- * Insight: values can approach an upper bound without attaining it. Colors: blue function, red upper bound.
- * Provenance: original. f(x)=x/(1+x)<1 and f(99)=0,99 verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * DIE EINE EINSICHT: Funktionswerte können sich einer oberen Schranke
+ * beliebig nähern, ohne sie anzunehmen; die Schranke ist dann ein Supremum,
+ * aber kein Maximum.
+ *
+ * FARBROLLEN: blau = f(x) und der gewählte Funktionswert; rot = die obere
+ * Schranke 1.
+ *
+ * PROVENIENZ: Eigenbau (2026-08-20).
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/HDR2/SupremumWidget.mjs,
+ * 2026-08-20): f(4) = 0,800; f(99) = 0,990; f(99,5) = 0,99005 > 0,99.
+ * Für jedes x ≥ 0 gilt f(x) < 1, während der Regler bis x = 110 den Wert
+ * f(110) = 0,99099 erreicht.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, W_PANEL, fmtDe } from "../../lib";
 export function SupWidget() {
   const [x, setX] = useState(4);
   const y = x / (1 + x);
   const hit = y > 0.99;
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Schieben wir x nach rechts: kommen wir über 0,99, ohne die obere Schranke zu berühren?
       </Aufgabe>

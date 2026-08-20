@@ -1,11 +1,22 @@
 /**
- * Insight: a visible corner prevents differentiability, hence smoothness. Colors: blue smooth curve, red kink.
- * Provenance: original; no numerical verdict claims; reviewed by `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * DIE EINE EINSICHT: Ein Knick verhindert schon die erste Ableitung und
+ * schließt damit Glattheit aus, während ein Polynom glatt bleibt.
+ *
+ * FARBROLLEN: blau = die glatte Vergleichsfunktion x²/2; rot = |x| und sein
+ * Knick.
+ *
+ * PROVENIENZ: Eigenbau (2026-08-20); statische Vergleichsfigur, weil die
+ * sichtbaren einseitigen Steigungen die vollständige Einsicht tragen.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/HDR2/SmoothFunctionWidget.mjs,
+ * 2026-08-20): Für x²/2 ist f′(x) = x und insbesondere f′(0) = 0. Für |x|
+ * sind die einseitigen Steigungen bei 0 gleich −1 und 1, also verschieden;
+ * daher ist |x| bei 0 nicht differenzierbar.
  */
-import { Aufgabe, FMM_COLORS, Plot, Verdikt } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Verdikt, W_PANEL } from "../../lib";
 export function SmoothPlot() {
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Vergleichen wir den glatten Graphen mit dem vergrößert markierten Knick bei null.
       </Aufgabe>

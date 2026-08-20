@@ -48,8 +48,6 @@ export function JumpWidget() {
       <Aufgabe>
         Verkleinern wir das Fenster δ um x = 1 und beobachten wir, was aus der Ausgabespanne wird.
       </Aufgabe>
-      <Slider label="Sprunghöhe c" value={c} onChange={setC} min={-1.5} max={1.5} step={0.05} accent={FMM_COLORS.rot} />
-      <Slider label="Fensterbreite δ" value={delta} onChange={setDelta} min={0.02} max={1} step={0.01} accent={FMM_COLORS.orange} />
       <Plot
         series={[
           { f: links, color: FMM_COLORS.blau, label: "f(x) für x < 1" },
@@ -75,6 +73,8 @@ export function JumpWidget() {
         ]}
         ariaLabel={`Graph mit Sprunghöhe ${fmtDe(c, 2)} bei x gleich 1; im Fenster der Breite ${fmtDe(2 * delta, 2)} beträgt die Ausgabespanne ${fmtDe(spanne, 3)}.`}
       />
+      <Slider label="Sprunghöhe c" value={c} onChange={setC} min={-1.5} max={1.5} step={0.05} accent={FMM_COLORS.rot} />
+      <Slider label="Fensterbreite δ" value={delta} onChange={setDelta} min={0.02} max={1} step={0.01} accent={FMM_COLORS.orange} />
       <Verdikt kind={stetig ? "ok" : "fail"}>
         Eingabefenster {fmtDe(2 * delta, 2)} breit, Ausgabespanne {fmtDe(spanne, 3)}.{" "}
         {stetig

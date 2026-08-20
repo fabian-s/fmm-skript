@@ -180,19 +180,6 @@ export function HessianWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Verstellen wir die beiden Krümmungen und achten darauf, wann eine Richtung flach wird.</Aufgabe>
-      <div className="my-1 flex flex-wrap gap-1">
-        {PRESETS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            aria-pressed={Math.abs(a - p.a) < 1e-9 && Math.abs(b - p.b) < 1e-9}
-            className={`${Math.abs(a - p.a) < 1e-9 && Math.abs(b - p.b) < 1e-9 ? W_BUTTON_AKTIV : W_BUTTON} text-xs`}
-            onClick={() => setzePreset(p)}
-          >
-            {p.name}
-          </button>
-        ))}
-      </div>
       <Plot
         xLabel="t"
         yLabel="Schnitt durch q"
@@ -207,6 +194,19 @@ export function HessianWidget() {
           { f: (t) => b * t * t, color: FMM_COLORS.violett, dash: [5, 4], label: "q(0, t)" },
         ]}
       />
+      <div className="my-1 flex flex-wrap gap-1">
+        {PRESETS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            aria-pressed={Math.abs(a - p.a) < 1e-9 && Math.abs(b - p.b) < 1e-9}
+            className={`${Math.abs(a - p.a) < 1e-9 && Math.abs(b - p.b) < 1e-9 ? W_BUTTON_AKTIV : W_BUTTON} text-xs`}
+            onClick={() => setzePreset(p)}
+          >
+            {p.name}
+          </button>
+        ))}
+      </div>
       <Slider label="a (Krümmung in x)" value={a} onChange={setA} min={-2} max={2} step={0.1} accent={FMM_COLORS.blau} />
       <Slider label="b (Krümmung in y)" value={b} onChange={setB} min={-2} max={2} step={0.1} accent={FMM_COLORS.violett} />
       <p className={`my-1 font-mono text-xs ${W_MUTED}`}>

@@ -1,17 +1,26 @@
 /**
- * Insight: a direction on the unit circle selects the curvature of a quadratic form.
- * Colors: blue direction/parabola, orange symmetric-part hint. Provenance: original.
- * q(φ)=2c²+cs+s² verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * DIE EINE EINSICHT: Eine Richtung u auf dem Einheitskreis bestimmt die
+ * Krümmung q(tu) = q(u)t² der quadratischen Form in genau dieser Richtung.
+ *
+ * FARBROLLEN: blau = gewählte Richtung u und ihre Parabel; grau =
+ * Einheitskreis als Menge aller Richtungen.
+ *
+ * PROVENIENZ: Eigenbau (2026-08-20).
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/HDR2/QuadraticFormWidget.mjs,
+ * 2026-08-20): Für B = ((2, 1), (0, 1)) ist q(u) = 2c² + cs + s². Die
+ * Krümmungen auf dem Einheitskreis liegen zwischen (3 − √2)/2 = 0,7929 und
+ * (3 + √2)/2 = 2,2071; bei φ = 0,50 ist q(u) = 2,1909.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, W_PANEL, fmtDe } from "../../lib";
 const q = (p: number) => 2 * Math.cos(p) ** 2 + Math.cos(p) * Math.sin(p) + Math.sin(p) ** 2;
 export function QuadFormWidget() {
   const [phi, setPhi] = useState(0.5);
   const z = q(phi),
     u: [number, number] = [Math.cos(phi), Math.sin(phi)];
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Drehen wir die Richtung auf dem Einheitskreis und vergleichen wir die zugehörige Parabel.
       </Aufgabe>

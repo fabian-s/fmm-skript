@@ -26,7 +26,10 @@ import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 
 export function JumpBreaksIvtWidget() {
-  const [c, setC] = useState(0.7);
+  // Voreinstellung c = 0,3 statt 0,7: die Aufgabe sagt „verfolgen wir die rote
+  // Nullstelle" — dafür muss x* am Anfang sichtbar sein (bei c = 0,7 startete
+  // das Widget bereits im Zustand ohne Nullstelle; visuelle Abnahme 2026-08-20).
+  const [c, setC] = useState(0.3);
   const links = (x: number) => (x < 1 ? 0.5 * x * x - 1 : NaN);
   const rechts = (x: number) => (x >= 1 ? 0.5 * x * x - 1 + c : NaN);
   const hatNullstelle = c <= 0.5 + 1e-12;
@@ -38,7 +41,9 @@ export function JumpBreaksIvtWidget() {
       <Plot
         xLabel="x"
         yLabel="f(x)"
-        xDomain={[-0.2, 2.2]}
+        // rechts Luft bis 2,75, damit die Beschriftung „f(2) > 0" am Punkt
+        // (2; 1 + c) nicht vom Plotrahmen abgeschnitten wird (Abnahme 2026-08-20)
+        xDomain={[-0.2, 2.75]}
         yDomain={[-1.6, 2.6]}
         width={320}
         height={220}

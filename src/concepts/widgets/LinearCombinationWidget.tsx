@@ -117,6 +117,7 @@ export function MixWidget() {
         min={-2}
         max={2}
         step={1 / 30}
+        fmt={(v) => fmtDe(v, 2)}
         accent={FMM_COLORS.blau}
       />
       <Slider
@@ -126,6 +127,7 @@ export function MixWidget() {
         min={-2}
         max={2}
         step={1 / 30}
+        fmt={(v) => fmtDe(v, 2)}
         accent={FMM_COLORS.gruen}
       />
       <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>

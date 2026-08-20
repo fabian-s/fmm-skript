@@ -225,7 +225,7 @@ export function InvertierbarkeitWidget() {
 
       <Verdikt kind={entartet ? "warn" : kappa > 20 ? "neutral" : "ok"}>
         {entartet
-          ? `Zwei verschiedene Eingaben, ein einziges Bild: x und x′ liegen ${fmtDe(abstandEin, 2)} auseinander und landen beide auf demselben Punkt. Welchen der beiden sollte eine Inverse zurückgeben? Es gibt keinen Rückweg — und genau das misst det A = 0.`
+          ? `Zwei verschiedene Eingaben, ein einziges Bild: x und x′ liegen ${fmtDe(abstandEin, 2)} auseinander und landen beide auf demselben Punkt. Welchen der beiden sollte eine Inverse zurückgeben? Es gibt keinen Rückweg, und genau das misst det A = 0.`
           : kappa > 20
             ? `Die beiden Bildpunkte liegen nur noch ${fmtDe(abstandAus, 3)} auseinander und sind im Bild kaum zu unterscheiden. Ein Rückweg verstärkt Fehler in dieser Richtung um den Faktor ${fmtDe(verstaerkung, 1)}; κ = ${fmtDe(kappa, 1)} beschreibt die maximale Fehlerverstärkung. A bleibt invertierbar, aber Messfehler im Bild werden sichtbar empfindlich verstärkt.`
             : `Verschiedene Eingaben, verschiedene Bilder: aus ${fmtDe(abstandEin, 2)} Abstand werden ${fmtDe(abstandAus, 2)}. Der Rückweg ist eindeutig und stabil (κ = ${fmtDe(kappa, 2)}), A ist invertierbar.`}

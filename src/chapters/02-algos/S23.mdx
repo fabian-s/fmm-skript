@@ -272,22 +272,22 @@ zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand,
 sich die Problemgröße verdoppelt?*
 
 :::bemerkung[2.3.7 (Interpretation der Komplexitätsklassen)]
-Die Aussagen über Verdopplung gelten für *scharfe* Wachstumsordnungen
-$\Theta(g(n))$: Sowohl $T(n)=O(g(n))$ als auch $g(n)=O(T(n))$ gilt. Ein einzelnes
-$O(g(n))$ ist dagegen nur eine obere Schranke und erlaubt auch langsameres Wachstum.
+Die folgenden Namen beschreiben das typische Wachstum eines Aufwands. Sie helfen
+uns, die Größenordnungen einzuordnen; eine formale obere Schranke schreiben wir
+später mit $O$.
 
-- $\Theta(1)$ *(konstant)*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
-- $\Theta(\log n)$ *(logarithmisch)*: Verdoppelt sich $n$, kommt im Modell
+- *Konstant*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
+- *Logarithmisch*: Verdoppelt sich $n$, kommt im Modell
   $c\log_2 n$ ein konstanter Aufwand hinzu, denn
   $\log_2(2n) = \log_2(n) + 1$ (:k[Logarithmus]{#logarithm}).
-- $\Theta(n)$ *(linear)*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
-- $\Theta(n^2)$ *(quadratisch)*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
-- $\Theta(2^n)$ *(exponentiell)*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
+- *Linear*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
+- *Quadratisch*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
+- *Exponentiell*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
   Operationen, denn $2^{2n} = \left(2^n\right)^2$. Schon ein einziger Schritt
   $n \to n + 1$ *verdoppelt* den Aufwand.
 :::
 
-Algorithmen mit scharf exponentieller Laufzeit sind damit schon für moderate
+Algorithmen mit exponentieller Laufzeit sind damit schon für moderate
 Problemgrößen häufig praktisch unbrauchbar. So steht es um die naive Fibonacci-Rekursion
 aus [Abschnitt 2.2](#sec-2.2), wie wir in [Abschnitt 2.5](#sec-2.5) genau nachrechnen
 werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist

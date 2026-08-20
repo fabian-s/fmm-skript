@@ -1,15 +1,27 @@
 /**
- * Insight: the cosine value is the tangent slope of sine. Colors: blue sine/tangent, orange cosine.
- * Provenance: original; values and verdict thresholds verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * DIE EINE EINSICHT: Der Kosinuswert ist an jeder Stelle die
+ * Tangentensteigung des Sinus und bestimmt damit, ob der Sinus dort steigt,
+ * fällt oder fast waagerecht verläuft.
+ *
+ * FARBROLLEN: blau = Sinus und seine Tangente; orange = Kosinuswert als
+ * ablesbare Tangentensteigung.
+ *
+ * PROVENIENZ: Eigenbau (2026-08-20).
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/HDR2/SineCosineWidget.mjs,
+ * 2026-08-20): sin(0) = 0 und cos(0) = 1. Beim mit Schrittweite 0,05
+ * erreichbaren x = 1,55 ist cos(x) = 0,0208 und damit kleiner als die
+ * Verdiktgrenze 0,08; bei x = 1,45 ist cos(x) = 0,1205 und sie wird nicht
+ * erreicht.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, W_PANEL, fmtDe } from "../../lib";
 export function SinCosExplorer() {
   const [x, setX] = useState(0);
   const s = Math.sin(x),
     c = Math.cos(x);
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Verschieben wir x und vergleichen wir den Kosinuswert mit der Tangente an den Sinus.
       </Aufgabe>

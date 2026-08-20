@@ -77,19 +77,6 @@ export function SmoothnessWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Vergleichen wir die drei Beispiele und achten darauf, welche Kurve zuerst reißt.</Aufgabe>
-      <div className="my-1 flex flex-wrap gap-1">
-        {BEISPIELE.map((e, i) => (
-          <button
-            key={e.name}
-            type="button"
-            aria-pressed={i === idx}
-            className={`${i === idx ? W_BUTTON_AKTIV : W_BUTTON} font-mono text-xs`}
-            onClick={() => setIdx(i)}
-          >
-            f(x) = {e.name}
-          </button>
-        ))}
-      </div>
       <Plot
         xLabel="x"
         yLabel="f, f′, f″"
@@ -105,6 +92,19 @@ export function SmoothnessWidget() {
           { f: bsp.d2f, color: FMM_COLORS.orange, dash: [2, 3], label: "f″" },
         ]}
       />
+      <div className="my-1 flex flex-wrap gap-1">
+        {BEISPIELE.map((e, i) => (
+          <button
+            key={e.name}
+            type="button"
+            aria-pressed={i === idx}
+            className={`${i === idx ? W_BUTTON_AKTIV : W_BUTTON} font-mono text-xs`}
+            onClick={() => setIdx(i)}
+          >
+            f(x) = {e.name}
+          </button>
+        ))}
+      </div>
       <Verdikt kind={bsp.art} titel={bsp.klasse}>
         {bsp.urteil}
       </Verdikt>

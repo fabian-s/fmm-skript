@@ -48,15 +48,6 @@ export function SecantWidget({
       <Aufgabe>
         Schieben wir Q an P heran und verfolgen wir dabei die Sekantensteigung.
       </Aufgabe>
-      <Slider
-        label="Abstand h"
-        value={h}
-        onChange={setH}
-        min={0.05}
-        max={2}
-        step={0.01}
-        accent={FMM_COLORS.rot}
-      />
       <Plot
         series={[
           { f, color: FMM_COLORS.blau, label: "f(x) = x²" },
@@ -76,6 +67,15 @@ export function SecantWidget({
           { x: X0 + h, y: f(X0 + h), color: FMM_COLORS.rot, label: "Q" },
         ]}
         ariaLabel={`Parabel mit der Sekante durch P bei x = 1 und Q bei x = ${fmtDe(X0 + h, 2)}; die Sekantensteigung ist ${fmtDe(steigung, 2)}.`}
+      />
+      <Slider
+        label="Abstand h"
+        value={h}
+        onChange={setH}
+        min={0.05}
+        max={2}
+        step={0.01}
+        accent={FMM_COLORS.rot}
       />
       <Verdikt kind={abstand < 0.1 ? "ok" : "neutral"}>
         Sekantensteigung = {fmtDe(steigung, 3)} = 2 + h, also genau um {fmtDe(abstand, 3)} von

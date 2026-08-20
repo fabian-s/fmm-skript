@@ -32,7 +32,11 @@ import {
 } from "../../lib";
 
 export function BasisWidget() {
-  const [th, setTh] = useState(0.5);
+  // Voreinstellung θ = 1,0 statt 0,5: bei 0,5 lag b₁ fast auf x (Suchaufgabe
+  // praktisch vorgelöst, b₁-Pfeil unter x verdeckt); bei 1,0 ist das Gitter
+  // sichtbar gedreht, x hat zwei deutliche Koordinaten (1,92; −1,14), und die
+  // Aufgabe bleibt offen (visuelle Abnahme 2026-08-20).
+  const [th, setTh] = useState(1.0);
   const [x, setX] = useState<[number, number]>([2, 1]);
 
   const c = Math.cos(th);

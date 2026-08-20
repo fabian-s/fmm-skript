@@ -66,7 +66,7 @@ export function NewtonWidget() {
         step={k}
         setStep={setK}
         max={Math.min(6, xs.length - 1)}
-        narration={`x_${k} = ${fmtDe(x, 4)}`}
+        narration={`x${"₀₁₂₃₄₅₆₇₈₉"[k] ?? `_${k}`} = ${fmtDe(x, 4)}`}
       />
       <div className="my-1 overflow-x-auto text-xs">
         <table>
