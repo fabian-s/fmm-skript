@@ -214,87 +214,91 @@ export function EmpfehlungsExplorer() {
           <p className="mb-1 text-center text-sm font-medium">
             Bewertungen <M>{"\\bR"}</M> ({anzahlBeobachtet} von {ZEILEN * SPALTEN} bekannt)
           </p>
-          <table className="border-collapse">
-            <thead>
-              <tr>
-                <th />
-                {FILME.map((f) => (
-                  <Kopf key={f}>{f}</Kopf>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {R0.map((row, i) => (
-                <tr key={NUTZER[i]}>
-                  <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
-                    {NUTZER[i]}
-                  </td>
-                  {row.map((v, j) => (
-                    <td key={j} className="p-0">
-                      <button
-                        type="button"
-                        onClick={() => umschalten(i, j)}
-                        disabled={v === null}
-                        title={
-                          v === null
-                            ? "nie bewertet"
-                            : versteckt[i][j]
-                              ? "zurückgehalten; klicken, um sie wieder zu verwenden"
-                              : "klicken, um diese Bewertung zurückzuhalten"
-                        }
-                        className="h-9 w-20 border border-slate-300 text-center font-mono text-xs disabled:cursor-default dark:border-slate-600"
-                        style={{
-                          backgroundColor: beobachtet(i, j) ? zellFarbe(v as number) : "transparent",
-                          outline: versteckt[i][j] ? `2px dashed ${ROT}` : undefined,
-                          outlineOffset: "-3px",
-                        }}
-                      >
-                        {beobachtet(i, j) ? (v as number).toFixed(0) : "?"}
-                      </button>
-                    </td>
+          <div className="overflow-x-auto">
+            <table className="border-collapse">
+              <thead>
+                <tr>
+                  <th />
+                  {FILME.map((f) => (
+                    <Kopf key={f}>{f}</Kopf>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {R0.map((row, i) => (
+                  <tr key={NUTZER[i]}>
+                    <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
+                      {NUTZER[i]}
+                    </td>
+                    {row.map((v, j) => (
+                      <td key={j} className="p-0">
+                        <button
+                          type="button"
+                          onClick={() => umschalten(i, j)}
+                          disabled={v === null}
+                          title={
+                            v === null
+                              ? "nie bewertet"
+                              : versteckt[i][j]
+                                ? "zurückgehalten; klicken, um sie wieder zu verwenden"
+                                : "klicken, um diese Bewertung zurückzuhalten"
+                          }
+                          className="h-9 w-20 border border-slate-300 text-center font-mono text-xs disabled:cursor-default dark:border-slate-600"
+                          style={{
+                            backgroundColor: beobachtet(i, j) ? zellFarbe(v as number) : "transparent",
+                            outline: versteckt[i][j] ? `2px dashed ${ROT}` : undefined,
+                            outlineOffset: "-3px",
+                          }}
+                        >
+                          {beobachtet(i, j) ? (v as number).toFixed(0) : "?"}
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div>
           <p className="mb-1 text-center text-sm font-medium">
             Rang-{k}-Rekonstruktion <M>{`\\bR_{${k}}`}</M>
           </p>
-          <table className="border-collapse">
-            <thead>
-              <tr>
-                <th />
-                {FILME.map((f) => (
-                  <Kopf key={f}>{f}</Kopf>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Rk.map((row, i) => (
-                <tr key={NUTZER[i]}>
-                  <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
-                    {NUTZER[i]}
-                  </td>
-                  {row.map((v, j) => (
-                    <td
-                      key={j}
-                      className="h-9 w-20 border border-slate-300 text-center font-mono text-xs dark:border-slate-600"
-                      style={{
-                        backgroundColor: zellFarbe(v),
-                        outline: beobachtet(i, j) ? undefined : `2px dashed ${GRAU}`,
-                        outlineOffset: "-3px",
-                      }}
-                    >
-                      {fmt(v, 1)}
-                    </td>
+          <div className="overflow-x-auto">
+            <table className="border-collapse">
+              <thead>
+                <tr>
+                  <th />
+                  {FILME.map((f) => (
+                    <Kopf key={f}>{f}</Kopf>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {Rk.map((row, i) => (
+                  <tr key={NUTZER[i]}>
+                    <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
+                      {NUTZER[i]}
+                    </td>
+                    {row.map((v, j) => (
+                      <td
+                        key={j}
+                        className="h-9 w-20 border border-slate-300 text-center font-mono text-xs dark:border-slate-600"
+                        style={{
+                          backgroundColor: zellFarbe(v),
+                          outline: beobachtet(i, j) ? undefined : `2px dashed ${GRAU}`,
+                          outlineOffset: "-3px",
+                        }}
+                      >
+                        {fmt(v, 1)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="mt-1 max-w-xs text-xs" style={{ color: GRAU }}>
             Gestrichelt umrandet sind die Felder, die das Modell selbst ergänzt hat.
           </p>
