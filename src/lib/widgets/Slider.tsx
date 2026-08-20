@@ -8,13 +8,7 @@
  * keine Verdiktzahlen (2026-08-19).
  */
 import { useId } from "react";
-import { fmtDe } from "./util";
-
-function decimalsFromStep(step: number) {
-  const text = String(step).toLowerCase();
-  if (text.includes("e-")) return Number(text.split("e-")[1]);
-  return (text.split(".")[1] ?? "").length;
-}
+import { decimalsFromStep, fmtDe } from "./util";
 
 export function Slider({
   label,

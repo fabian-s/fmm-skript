@@ -40,6 +40,32 @@ export function fmtInt(v: number): string {
 
 export const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
+/**
+ * Sinnvolle Zahl von Nachkommastellen für einen Regler-Schritt.
+ *
+ * Binär dargestellte Brüche wie 1 / 30 dürfen den Readout nicht mit den
+ * Artefakten von String(step) aufblasen. Vier Stellen reichen für einen
+ * lesbaren Reglerwert; feinere Darstellungen geben Aufrufer explizit mit
+ * `fmt` an.
+ */
+export function decimalsFromStep(step: number): number {
+  if (!(step > 0) || !Number.isFinite(step)) return 2;
+  let decimals = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
+  while (decimals < 4 && Math.abs(step * 10 ** decimals - Math.round(step * 10 ** decimals)) > 1e-9) {
+    decimals += 1;
+  }
+  return Math.min(decimals, 4);
+}
+
+/** Platzierung eines SVG-Labels auf der vom Ursprung abgewandten Seite. */
+export function labelPlacement(x: number, originX: number, gap = 6): { x: number; textAnchor: "start" | "end" } {
+  const linksVomUrsprung = x > originX;
+  return {
+    x: x + (linksVomUrsprung ? -gap : gap),
+    textAnchor: linksVomUrsprung ? "end" : "start",
+  };
+}
+
 /** Deterministischer Zufallsgenerator (mulberry32). */
 export function mulberry32(seed: number): () => number {
   let a = seed | 0;

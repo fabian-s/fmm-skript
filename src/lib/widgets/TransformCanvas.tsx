@@ -36,7 +36,7 @@
  * monoton mit ease(0)=0, ease(0,5)=0,5, ease(1)=1.
  */
 import { useCallback, useId, useMemo, useRef, useState, type ReactNode } from "react";
-import { FMM_COLORS, clamp, fmtDe, fmtTick, niceTicks } from "./util";
+import { FMM_COLORS, clamp, fmtDe, fmtTick, labelPlacement, niceTicks } from "./util";
 import { DragHandle, svgWorldMapper, useDrag, type Punkt } from "./useDrag";
 import { useAnimatedMatrix } from "./useAnimatedValue";
 
@@ -57,6 +57,8 @@ export interface SubspaceLine {
   dir: [number, number];
   color?: string;
   label?: string;
+  /** Position des Labels entlang der Geraden; ohne Angabe wird die freiere Seite gewählt. */
+  labelT?: number;
   dash?: boolean | number[];
 }
 
@@ -237,6 +239,10 @@ export function TransformCanvas({
   const spalten: [number, number][] = [
     [m[0][0], m[1][0]],
     [m[0][1], m[1][1]],
+  ];
+  const beschriftetePfeilspitzen = [
+    ...vectors.filter((v) => v.label).map((v) => toPx(v.v[0], v.v[1])),
+    ...(columnsDraggable ? spalten.map((v) => toPx(v[0], v[1])) : []),
   ];
 
   // ---- aria --------------------------------------------------------------
@@ -423,7 +429,15 @@ export function TransformCanvas({
           const L = 3 * worldHalf;
           const a = toPx((l.dir[0] / n) * -L, (l.dir[1] / n) * -L);
           const b = toPx((l.dir[0] / n) * L, (l.dir[1] / n) * L);
-          const lp = toPx((l.dir[0] / n) * worldHalf * 0.78, (l.dir[1] / n) * worldHalf * 0.78);
+          const labelT = l.labelT ?? [-0.78, 0.78].reduce((best, candidate) => {
+            const point = toPx((l.dir[0] / n) * worldHalf * candidate, (l.dir[1] / n) * worldHalf * candidate);
+            const distance = Math.min(...beschriftetePfeilspitzen.map(([x, y]) => Math.hypot(point[0] - x, point[1] - y)), Infinity);
+            const bestPoint = toPx((l.dir[0] / n) * worldHalf * best, (l.dir[1] / n) * worldHalf * best);
+            const bestDistance = Math.min(...beschriftetePfeilspitzen.map(([x, y]) => Math.hypot(bestPoint[0] - x, bestPoint[1] - y)), Infinity);
+            return distance > bestDistance ? candidate : best;
+          }, 0.78);
+          const lp = toPx((l.dir[0] / n) * worldHalf * labelT, (l.dir[1] / n) * worldHalf * labelT);
+          const label = labelPlacement(lp[0], ox);
           return (
             <g key={`l${i}`}>
               <line
@@ -437,8 +451,9 @@ export function TransformCanvas({
               />
               {l.label ? (
                 <text
-                  x={lp[0] + 6}
+                  x={label.x}
                   y={lp[1] - 5}
+                  textAnchor={label.textAnchor}
                   fill={l.color ?? FMM_COLORS.violett}
                   style={{ fontSize: 12 }}
                 >

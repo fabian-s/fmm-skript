@@ -10,7 +10,7 @@
  * (therefore none need a scratchpad verification; 2026-08-19).
  */
 import { useId, useMemo, useState, type PointerEvent } from "react";
-import { FMM_COLORS, fmtDe, fmtTick, niceTicks } from "./util";
+import { FMM_COLORS, fmtDe, fmtTick, labelPlacement, niceTicks } from "./util";
 
 export interface Series {
   /** Function to sample at 400 equally spaced x-values. */
@@ -228,6 +228,14 @@ export function Plot({
             return <line x1={x} x2={x} y1={top} y2={plotBottom} stroke="var(--w-axis)" strokeWidth="1.5" />;
           })()}
         </g>
+        {legendItems.length > 0 && <g aria-hidden="true" fontSize="10" fontFamily="ui-sans-serif, sans-serif">
+          {!legendBelow && <rect x={plotRight - estimatedLegendWidth - 8} y={top + 1} width={estimatedLegendWidth + 7} height={legendItems.length * 13 + 3} fill="var(--w-bg)" fillOpacity={0.88} rx={2} />}
+          {legendItems.map((item, i) => {
+            const y = legendBelow ? plotBottom + 24 + i * 13 : top + 10 + i * 13;
+            const x = legendBelow ? left + 4 : plotRight - estimatedLegendWidth - 4;
+            return <g key={`legend-${i}`}><line x1={x} x2={x + 15} y1={y - 3} y2={y - 3} stroke={item.color} strokeWidth="2" strokeDasharray={dashArray(item.dash)} /><text x={x + 19} y={y} fill="var(--w-text)">{item.label}</text></g>;
+          })}
+        </g>}
         <g clipPath={`url(#${clipId})`} aria-hidden="true">
           {hlines.map((line, i) => {
             const [, y] = toPx(x0, line.at);
@@ -258,7 +266,8 @@ export function Plot({
           {polylines.map((line, i) => <path key={`poly-${i}`} d={pathForSegments(line.pts, toPx)} fill="none" stroke={line.color ?? PALETTE[(series.length + i) % PALETTE.length]} strokeWidth="2" strokeDasharray={dashArray(line.dash)} />)}
           {allPoints.map((point, i) => {
             const [x, y] = toPx(point.x, point.y);
-            return <g key={`point-${i}`}><circle cx={x} cy={y} r={point.r ?? 4} fill={point.color ?? FMM_COLORS.rot} />{point.label && <text x={x + (point.r ?? 4) + 3} y={y - 5} fill="var(--w-text)" fontSize="11">{point.label}</text>}</g>;
+            const label = labelPlacement(x, (left + plotRight) / 2, (point.r ?? 4) + 3);
+            return <g key={`point-${i}`}><circle cx={x} cy={y} r={point.r ?? 4} fill={point.color ?? FMM_COLORS.rot} />{point.label && <text x={label.x} y={y - 5} textAnchor={label.textAnchor} fill="var(--w-text)" fontSize="11">{point.label}</text>}</g>;
           })}
           {hoverX !== null && (() => {
             const [x] = toPx(hoverX, y0);
@@ -275,16 +284,6 @@ export function Plot({
             return <text x={x} y={y} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif" transform={`rotate(-90 ${x} ${y})`}>{yLabel}</text>;
           })()}
         </g>
-        {legendItems.length > 0 && <g aria-hidden="true" fontSize="10" fontFamily="ui-sans-serif, sans-serif">
-          {!legendBelow && <rect x={plotRight - estimatedLegendWidth - 8} y={top + 1} width={estimatedLegendWidth + 7} height={legendItems.length * 13 + 3} fill="var(--w-bg)" fillOpacity={0.88} rx={2} />}
-          {legendItems.map((item, i) => {
-            // Unter dem Plot sitzen zuerst die x-Tick-Labels (plotBottom + 12),
-            // die Legende beginnt darunter — sonst reisst sie die Ticks von ihrer Achse ab.
-            const y = legendBelow ? plotBottom + 24 + i * 13 : top + 10 + i * 13;
-            const x = legendBelow ? left + 4 : plotRight - estimatedLegendWidth - 4;
-            return <g key={`legend-${i}`}><line x1={x} x2={x + 15} y1={y - 3} y2={y - 3} stroke={item.color} strokeWidth="2" strokeDasharray={dashArray(item.dash)} /><text x={x + 19} y={y} fill="var(--w-text)">{item.label}</text></g>;
-          })}
-        </g>}
         {hoverX !== null && <g aria-hidden="true">
           <rect x={readoutX} y={readoutY} width="100" height={readoutHeight} rx="2" fill="var(--w-bg)" stroke="var(--w-axis)" fillOpacity="0.94" />
           <text x={readoutX + 5} y={readoutY + 12} fill="var(--w-text)" fontSize="10" fontFamily="ui-monospace, SFMono-Regular, monospace">x = {fmtDe(hoverX)}</text>
