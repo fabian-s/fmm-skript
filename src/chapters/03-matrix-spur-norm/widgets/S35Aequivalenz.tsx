@@ -36,8 +36,7 @@ import {
  * PROVENIENZ: Neubau 2026-08-19 (die „Fehlende Widgets"-Liste des
  * Kapitel-Surveys, Punkt 1).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): Für A = diag(σ₁, σ₂) ist ‖A‖₂ = σ₁,
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für A = diag(σ₁, σ₂) ist ‖A‖₂ = σ₁,
  * ‖A‖_F = √(σ₁²+σ₂²) und ‖A‖_* = σ₁+σ₂. Der Quotient ‖A‖_F/‖A‖₂ läuft von 1
  * (σ₂ = 0, Rang 1) bis √2 = 1,414214 (σ₁ = σ₂); die Voreinstellung
  * σ = (1,6; 0,8) liefert ‖A‖_F = 1,788854 und den Quotienten 1,118034.

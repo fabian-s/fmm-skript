@@ -36,8 +36,7 @@ import {
  *
  * Kein Zufall: alle Zustaende haengen allein am Startwert-Regler.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s125-landschaften.mjs, 2026-08-19; zuvor check-math-s125.mjs):
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19; zuvor check-math-s125.mjs):
  *   Doppelmulde f(x) = x^4 - 3x^2 - x + 3, f'(x) = 4x^3 - 6x - 1.
  *   kritische Punkte  -1,1309 (f = 1,9298; f'' = 9,35)
  *                     -0,1699 (f = 3,0841; f'' = -5,65, Hoecker)

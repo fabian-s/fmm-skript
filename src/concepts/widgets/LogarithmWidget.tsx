@@ -3,7 +3,7 @@
  * DIE EINE EINSICHT: Die Basis ändert die vertikale Skala, nicht Nullpunkt
  * oder Monotonie des Logarithmus. FARBROLLEN: rot = log₂, blau = ln,
  * grün = log₁₀. PROVENIENZ: Originalwidget, um einen ablesbaren Punkt ergänzt.
- * Zahlen durch scratchpad/verify/QA-L1/check-qa-l1.mjs, 2026-08-20,
+ * Zahlen durch scripts/verify/QA-L1/check-qa-l1.mjs, 2026-08-20,
  * verifiziert: bei x=8 sind log₂(x)=3, ln(x)=2,079442 und log₁₀(x)=0,903090;
  * bei x=1 sind alle drei Werte 0.
  */

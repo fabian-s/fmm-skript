@@ -14,7 +14,7 @@
  * private `MatDisplay`-Kopie ist durch die Lib-`MatrixDisplay` ersetzt.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20;
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20;
  * Erstprüfung 2026-08-19), Voreinstellung A = [[2, 1], [4, 5]]:
  *   l₂₁ = 4/2 = 2, L = [[1, 0], [2, 1]], U = [[2, 1], [0, 3]],
  *   LU = [[2, 1], [4, 5]] = A exakt, det A = 6 = u₁₁·u₂₂.

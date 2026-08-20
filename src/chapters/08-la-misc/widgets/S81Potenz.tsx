@@ -7,7 +7,7 @@ import { Aufgabe, FMM_COLORS, Slider, Stepper, TransformCanvas, Verdikt, fmtDe }
  * Farbrollen Kapitel 8: Iterierte blau, Grenz-Eigenvektor grün, Rate orange,
  * Winkel-/Richtungsfehler rot, Hilfsrichtungen grau.
  * Provenienz: Eigenbau, keine portierte Prosa. Zahlen sind in
- * scratchpad/verify-08-la-misc/check-widgets.mjs am 2026-08-19 verifiziert.
+ * historische Prüfung, Skript nicht mehr vorhanden am 2026-08-19 verifiziert.
  */
 
 type Vec = [number, number];

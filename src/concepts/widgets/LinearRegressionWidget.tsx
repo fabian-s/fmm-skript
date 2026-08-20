@@ -1,4 +1,4 @@
-/** Einsicht: Residuen machen kleinste Quadrate als sichtbare Minimierungsaufgabe verständlich. Farben: blau Gerade, orange Residuen, grün Erfolg. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearRegressionWidget.mjs, 2026-08-20): Die Daten haben das Kleinste-Quadrate-Optimum a = 0,93, b = 0,28, SSE = 0,179; die Aufgaben-Schranke SSE < 0,25 ist damit erreichbar. */
+/** Einsicht: Residuen machen kleinste Quadrate als sichtbare Minimierungsaufgabe verständlich. Farben: blau Gerade, orange Residuen, grün Erfolg. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/LinearRegressionWidget.mjs, 2026-08-20): Die Daten haben das Kleinste-Quadrate-Optimum a = 0,93, b = 0,28, SSE = 0,179; die Aufgaben-Schranke SSE < 0,25 ist damit erreichbar. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const d: [number, number][] = [

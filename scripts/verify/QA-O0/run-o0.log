@@ -1,0 +1,33 @@
+1 BinomialCoefficient: choose(5,2)=10, choose(6,3)=20, Pascal-Rekursion Zeilen 0..7 OK
+2 BinomialTheorem: Koeffizienten = choose(n,i) für n=1..7, linearer Term n·x^(n−1)·h OK
+  relative Abweichung der Verstärkung von 10^k je k: -2.22e-16, -3.89e-15, -7.57e-14, -4.35e-13, 1.22e-11, -1.14e-10, -1.14e-10, -1.91e-9 (Auslöschung in der Rechnung selbst)
+3 Cancellation: Verstärkung = 10^k exakt für k=1..8; gemeinsame Zeichen (inkl. "1,") = 2,3,4,5,6,7,8,9
+4 CauchySchwarz: Schranke ‖x‖‖y‖ = 3.5200000000000005; |cos ω| > 0,999 nur bei ω = 0.00, 0.02, 0.04, 3.10, 3.12, 3.14
+5 Cholesky: A=[4 2;2 3] → L=[2 0;1 √2], Eigenwerte 5.5616/1.4384, LLᵀ=A OK
+  Reglerraster: 179032 positiv definite Tripel, davon 15854 (8.9 %) mit Halbachse > MAX_R = 80 px, also ausserhalb der Zeichenflaeche; Maximum 3986063156 px bei a=0.9, b=-0.9, c=0.9
+6 Convergence: N(ε)-Formel für alle 56 Reglerwerte korrekt; N(0,05)=11, N(0,6)=2; nur 24 Punkte gezeichnet, N max 11
+7 Convexity 0,6x²+0,3: 3081 Paare, 0 verletzen (max 0.0000), 0 liegen exakt auf der Sehne
+7 Convexity |x|: 3081 Paare, 0 verletzen (max 0.0000), 1482 liegen exakt auf der Sehne
+7 Convexity 2−0,6x²: 3081 Paare, 3081 verletzen (max 2.4000), 0 liegen exakt auf der Sehne
+7 Convexity x⁴−3x²−x+3: 3081 Paare, 1971 verletzen (max 2.2464), 0 liegen exakt auf der Sehne
+  Preset Parabel (a=-1.2, b=1.5): maxÜber=0.0000, maxAbs=1.0935
+  Preset Betrag (a=-1.6, b=-0.4): maxÜber=0.0000, maxAbs=0.0000
+  Preset Doppelmulde (a=-1.55, b=1.25): maxÜber=1.8912, maxAbs=1.8912
+  Preset Konkav (a=-1.4, b=1.4): maxÜber=1.1760, maxAbs=1.1760
+8 CovarianceMatrix: Eigenwerte 1±|ρ| ⇒ Halbachsen √(1±|ρ|), Hauptachse bei ±45° OK
+9 Factorial: 0!..6! = 1, 1, 2, 6, 24, 120, 720; log₁₀ = 0.000, 0.000, 0.301, 0.778, 1.380, 2.079, 2.857 (max 2.857 < 3, Achsenskala /3 passt)
+10 FloatingPoint: Striche 9/17/33/65/129 = 4·2^t+1; max. rel. Rundungsfehler 2.000e-1, 1.111e-1, 5.882e-2, 3.030e-2, 1.538e-2, Schranke 2^-(t+1) überall eingehalten
+  RANDFALL x=8: binade=3 ⇒ behauptete Lücke 2, tatsächlicher Nachbarabstand unter 8 ist 1 — Verdikt stimmt bei x=8 nicht
+11 FunctionComposition: der orange Punkt im g-Plot sitzt bei X(f(x)); für x = 2.1…3.0 liegt er rechts vom Achsenende 122 (bei x=3 bei X=141.0, viewBox nur 130 breit)
+12 GaussianElimination: Multiplikatoren 4/2=2, 2/2=1, −3/3=−1; Endmatrix [2 1 1; 0 3 −1; 0 0 −2] OK
+13 GeometricSeries: S₁₅(0,5) = 1.999969 = 2−2⁻¹⁵, Grenzwert 1/(1−r) = 2; S₁₅(1,2) = 87.442 (divergent); r=1 und r=−1 sind auf dem 0,05-Raster erreichbar
+14 Gradient: ∇φ=(2x₁,4x₂) numerisch bestätigt; Höhenlinien-Halbachsen √v und √(v/2) OK; D_uφ=0 bei θ=2.498
+  RANDFALL: im Ursprung ist ∇φ=0, dann ist D_uφ=0 für JEDES θ — die „tangential“-Meldung wäre dort irreführend
+15 InfiniteSeries: Σ_{k=0}^{n} 2^-k = 2 − 2^-n für n=1..12 OK (das sind n+1 Summanden, nicht n)
+  RANDFALL n=12: die Rest-Beschriftung startet bei x = 284.0 in einem 280 breiten viewBox — sie liegt außerhalb
+16 LevelSets: φ=(x²+λy²)/2, ∇φ=(x,λy); Punkt liegt exakt auf der Höhenlinie und ∇φ⟂Tangente für λ∈{0,4;1;1,55;2,5}, 32 Winkel
+17 LowRank: Σσᵢ² = 143.1564; behaltene Energie in % je k = 69.85, 95.00, 99.37, 99.93, 100.00, 100.00
+  k=2 liegt bei 95.001 % und damit knapp ÜBER der 95-%-Schwelle des Verdikts
+18 LuDecomposition: l₂₁=2, L=[1 0;2 1], U=[2 1;0 3], LU=A exakt, det A = u₁₁·u₂₂ = 6 OK
+
+ALLE ASSERTIONS BESTANDEN

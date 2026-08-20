@@ -15,7 +15,7 @@
  * Gerade kommen aus der Lib-`TransformCanvas`, Fläche und Texte sind neu; das
  * Urteil trägt jetzt Zeichen und Wort über `Verdikt`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearIndependenceWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/LinearIndependenceWidget.mjs,
  * 2026-08-20), a = (2; 1); Parallelogrammfläche = |a₁b₂ − a₂b₁| = |2b₂ − b₁|:
  *   b = (−1; 1,5) : Fläche 4,00  unabhängig  (Voreinstellung)
  *   b = (4; 2)    : Fläche 0     abhängig, b = 2a

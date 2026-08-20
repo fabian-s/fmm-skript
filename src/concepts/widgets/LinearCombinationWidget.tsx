@@ -14,7 +14,7 @@
  * Aufgabe. Ziehen und Achsen aus der Lib-`TransformCanvas`; Zielpunkt,
  * Parallelogramm der Anteile und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-A/eigenvalue-and-linear-combination.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/AUDIT-A/eigenvalue-and-linear-combination.mjs,
  * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), v₁ = (2; 1),
  * v₂ = (−1; 1), det[v₁ v₂] = 3:
  *   Ziel (1; 3)   ⇒ c₁ = 4/3,  c₂ = 5/3    (im Reglerbereich [−2; 2])
@@ -23,7 +23,7 @@
  *   Voreinstellung c₁ = 1, c₂ = 0,5 ⇒ Mischung (1,5; 1,5)
  * Die Rückrechnung c₁v₁ + c₂v₂ trifft die Ziele exakt (Abweichung 0).
  */
-// QA-L1-Nachprüfung: alle Zahlen oben durch verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
+// QA-L1-Nachprüfung: alle Zahlen oben durch scripts/verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
 import { useState } from "react";
 import {
   Aufgabe,

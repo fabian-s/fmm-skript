@@ -31,8 +31,7 @@ import {
  * PROVENIENZ: Eigenbau (2026-08-05); neu sind Aufgabenzeile, Invarianzmessung
  * und Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): Für A = (2 1; 0 1) ist σ₁ = 2,288246,
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für A = (2 1; 0 1) ist σ₁ = 2,288246,
  * σ₂ = 0,874032, ‖A‖_F = 2,449490 = √6 und ‖A‖_{S,1} = 3,162278 = √10
  * (Beispiel 3.4.6). Über θ ∈ [0°, 360°] in 1°-Schritten beträgt die größte
  * Abweichung von σ₁, σ₂ und ‖·‖_F 8,88e−16, also reines Rundungsrauschen;

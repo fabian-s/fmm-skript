@@ -21,7 +21,7 @@
  * Ziehgriffe (useDrag/DragHandle), Verdikte und sämtliche Texte sind für
  * dieses Skript neu. Prosa niemals aus der Quell-App übernommen.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s71.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   Regressionsdaten (12 Punkte): KQ-Lösung β̂ = (36,686075; 4,415469),
  *   SSR(β̂) = 714,1240; Gegenprobe über die Normalengleichungen stimmt auf
  *   2,8e−14, Σrᵢ = 2,8e−14 und Σxᵢrᵢ = −2,7e−12 (Orthogonalität).

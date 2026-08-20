@@ -17,7 +17,7 @@
  * Doppelpfad.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/LinearTransformationWidget.mjs,
+ * scripts/verify/REV1/LinearTransformationWidget.mjs,
  * 2026-08-20):
  *   Drehung   [[0,8; −0,6], [0,6; 0,8]] det = 1,00, σmax = σmin = 1, Spalten
  *             orthonormal, Drehwinkel 36,87°

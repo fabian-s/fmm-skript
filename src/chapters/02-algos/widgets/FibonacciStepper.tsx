@@ -23,7 +23,7 @@ import {
  * Elementrollen aus Algorithmus 2.2.2, wie sie auch die Prosa setzt:
  * blau = letztes Element, grün = vorletztes Element, orange = neue Summe.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19). Zählung in der Kapitelkonvention x_1 = 0, x_2 = 1; die
  * Rekursion für x_k macht C(k) = 1 + C(k−1) + C(k−2) Aufrufe und
  * A(k) = 1 + A(k−1) + A(k−2) Additionen, C(1) = C(2) = 1, A(1) = A(2) = 0:

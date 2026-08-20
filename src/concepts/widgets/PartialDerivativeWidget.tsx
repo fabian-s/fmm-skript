@@ -16,7 +16,7 @@
  * Schnittebene (`Surface3D`, Bauart wie S113Hesse in Kapitel 11). Der
  * erklärende Schlussabsatz steht jetzt in partial-derivative.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20): für f(x,y) = x² + xy ist ∂f/∂x = 2x + y und ∂f/∂y = x, gegen
  * zentrale Differenzen gegengerechnet: (x₀,y₀) = (0,8; 1) → 2,600000;
  * (−1; 1) → −1,000000; (0,8; −2) → −0,400000; (0; 0) → 0. Der Funktionswert

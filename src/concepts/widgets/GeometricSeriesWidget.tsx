@@ -12,7 +12,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   S₁₅(0,5) = Σ_{k=0}^{15} 0,5^k = 2 − 2⁻¹⁵ = 1,999969…, Grenzwert 1/(1−r) = 2.
  *   S₁₅(1,2) = (1,2¹⁶ − 1)/0,2 = 87,442 — der Divergenzfall ist auf dem
  *   0,05-Raster erreichbar, ebenso r = 1 und r = −1 (beide divergent).

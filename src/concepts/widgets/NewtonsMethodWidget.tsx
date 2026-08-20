@@ -2,7 +2,7 @@
  * DIE EINE EINSICHT: Newton-Schritte minimieren das lokale quadratische Modell
  * und werden nahe dem Minimum rasch genauer. FARBROLLEN: blau = f, rot =
  * lokales Modell, orange = Iterierte. PROVENIENZ: neu.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
  * x₀ = 2,5 und die Folge 1,72; 1,259340; 1,049741; 1,002320; 1,000005 sowie f(1) = 0,25.
  */
 import { useMemo, useState } from "react";

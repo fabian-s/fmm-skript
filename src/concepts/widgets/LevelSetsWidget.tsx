@@ -12,7 +12,7 @@
  * PROVENIENZ: eigener Aufbau; Ziehen über `useDrag` aus der Lib (der Punkt
  * bleibt dabei per Winkelparametrisierung auf der Höhenlinie).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   φ(x) = (x₁² + λx₂²)/2, ∇φ = (x₁, λx₂). Der parametrisierte Punkt
  *   (√(2L)·cos θ, √(2L/λ)·sin θ) liegt für λ ∈ {0,4; 1; 1,55; 2,5} und 32 Winkel
  *   exakt auf φ = L = 0,5, und ∇φᵀt = 0 für die Tangente t = (−∂₂φ, ∂₁φ).

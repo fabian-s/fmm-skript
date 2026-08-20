@@ -42,7 +42,7 @@ import {
  * R-Ausgaben des Folien-Chunks zitiert nur der Fließtext (Lesson: R-Output
  * nicht in JS-Widgets spiegeln).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-04-fehler/check-kap04.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19):
  *   SGD auf L(θ) = θ², θ₀ = 2,5: θ_{k+1} = θ_k (1 − 2α), also ρ = |1 − 2α|.
  *   ρ(0,25) = 0,5; ρ(0,45) = 0,1; ρ(0,5) = 0 (schnellste Konvergenz, ein
@@ -53,7 +53,7 @@ import {
  *   (|a − b| = 1 analytisch gesetzt): k = 2 ⇒ 2,0001 · 10⁴ (log₁₀ = 4,301);
  *   k = 5 ⇒ 2,0 · 10¹⁰ (log₁₀ = 10,301); k = 8 ⇒ 2,0 · 10¹⁶ (log₁₀ = 16,301);
  *   k = 10 ⇒ 2,0 · 10²⁰ (log₁₀ = 20,301). Frei a = 2000, b = 1999:
- *   R2-Nachprüfung: verify/R2/check-s43-claims.mjs, 2026-08-20.
+ *   R2-Nachprüfung: scripts/verify/R2/check-s43-claims.mjs, 2026-08-20.
  *   κ_rel = 3999,0 (log₁₀ = 3,602). Beispiel 4.3.7: κ_rel · ε ≈ 4,4 · 10⁴,
  *   beobachtet 16384/1,023151 = 1,60 · 10⁴, und 2¹⁴ = 16384.
  */
@@ -409,7 +409,7 @@ export function KappaRechner() {
         sind mehr, als die Zwischengrößen überhaupt tragen.
       </Verdikt>
     );
-  } else if (verlust >= 2) {
+  } else if (verlust >= 1) {
     verdikt = (
       <Verdikt kind="warn" titel="Stellen gehen verloren.">
         Der letzte Schritt verstärkt alle bis dahin angesammelten relativen Fehler etwa um{" "}

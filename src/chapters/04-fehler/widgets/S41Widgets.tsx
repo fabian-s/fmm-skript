@@ -41,7 +41,7 @@ import {
  * will, muss zuerst die Formeln umfärben.
  *
  * ── VERIFIZIERTE ZAHLEN ─────────────────────────────────────────────────────
- * node, scratchpad/verify-04-fehler/check-kap04.mjs, 2026-08-19:
+ * node, historische Prüfung, Skript nicht mehr vorhanden, 2026-08-19:
  *   Beispiel 4.1.4: Δ = (0,2; 0,3), ‖Δ‖₂ = 0,36056, ‖v‖₂ = 5,
  *   δ = 0,072111 = 7,2111 %, ‖ṽ‖₂ = 5,36004; Lemma-4.1.3-Band
  *   [4,63944; 5,36056] enthält ‖ṽ‖₂ (Abstand zur oberen Schranke 0,00052).

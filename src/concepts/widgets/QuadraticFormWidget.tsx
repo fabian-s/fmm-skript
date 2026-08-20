@@ -1,7 +1,7 @@
 /**
  * Insight: a direction on the unit circle selects the curvature of a quadratic form.
  * Colors: blue direction/parabola, orange symmetric-part hint. Provenance: original.
- * q(φ)=2c²+cs+s² verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * q(φ)=2c²+cs+s² verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

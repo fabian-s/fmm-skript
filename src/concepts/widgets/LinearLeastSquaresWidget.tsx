@@ -19,7 +19,7 @@
  * Predict-then-reveal-Ablauf nutzt `Schaetzfrage`, die Reststrecken und das
  * bisher beste SSR machen die Zielfunktion vor der Auflösung ablesbar.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-C/check-linear-ls-rate.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/AUDIT-C/check-linear-ls-rate.mjs,
  * 2026-08-20): A = [[1,1],[1,2],[1,3]], b = (1,2,2); Normalengleichungen
  * AᵀA = [[3,6],[6,14]], Aᵀb = (5,11); Lösung x = (2/3, 1/2) = (0,666667;
  * 0,500000) mit SSR = 0,166667 = 1/6 und Residuen (−1/6, 1/3, −1/6). Eine
@@ -28,7 +28,7 @@
  * Der Startzustand (1,60; 0,05) hat die Residuen (−0,65; 0,30; 0,25) und
  * SSR = 0,575000; er ist so gewählt, dass alle drei Reststrecken sichtbar sind.
  */
-// QA-L1-Nachprüfung: alle Zahlen oben durch verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
+// QA-L1-Nachprüfung: alle Zahlen oben durch scripts/verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Schaetzfrage, Slider, Verdikt, fmtDe } from "../../lib";
 

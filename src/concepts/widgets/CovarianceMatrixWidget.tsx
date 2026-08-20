@@ -12,7 +12,7 @@
  * PROVENIENZ: eigener Aufbau; Zufallszahlen deterministisch über die
  * Lib-Bausteine `mulberry32` (Seed 42) und `randn` — kein Math.random.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   Für Σ = [[1, ρ], [ρ, 1]] sind die Eigenwerte 1 ± |ρ| mit den Eigenrichtungen
  *   (1, ±1)/√2, die Halbachsen der 1σ-Ellipse also √(1 ± |ρ|) unter ±45°.
  *   Das Produkt der Halbachsen ist √(1 − ρ²) = √det Σ.

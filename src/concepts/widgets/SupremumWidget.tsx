@@ -1,6 +1,6 @@
 /**
  * Insight: values can approach an upper bound without attaining it. Colors: blue function, red upper bound.
- * Provenance: original. f(x)=x/(1+x)<1 and f(99)=0,99 verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * Provenance: original. f(x)=x/(1+x)<1 and f(99)=0,99 verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

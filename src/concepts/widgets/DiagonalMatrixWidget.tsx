@@ -14,7 +14,7 @@
  * Drag frei, in `onVectorChange` auf die Achse projiziert), Verdikt für die
  * Sonderfälle d = 0 und d < 0.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19):
  *   D = diag(2; 0,5)  : De₁ = (2; 0), De₂ = (0; 0,5), det = 1,00 – die
  *                       Streckung der einen Achse hebt die Stauchung der

@@ -2,7 +2,7 @@
  * DIE EINE EINSICHT: Dieselbe Steigung bewegt gleichzeitig die Regressionsgerade
  * und ihren Punkt auf der Verlustkurve. FARBROLLEN: blau = Modell und Verlust,
  * orange = Daten und aktueller Parameter. PROVENIENZ: neu.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
  * für a = 1 den Wert L(a) = 0,0925 und die im Widget verwendete MSE-Formel.
  */
 import { useState } from "react";

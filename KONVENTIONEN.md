@@ -16,6 +16,10 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 
 ## Technik (identisch zur interactive-textbook-Bibliothek)
 
+- Zahlenprüfungen liegen dauerhaft unter `scripts/verify/`. `npm run verify:numbers`
+  führt alle Prüfscripte aus; Header-Verweise müssen auf diese Repository-Pfade
+  zeigen, niemals auf ein temporäres Scratchpad.
+
 - `<ConceptLink id="kebab-id">Text</ConceptLink>` — Tooltip-Link;
   Module in `src/concepts/*.tsx` registrieren sich selbst (import.meta.glob).
 - `<M>/<MD>` Mathe (Backslashes in TSX doppelt escapen!), `<Eq tag>` NUR

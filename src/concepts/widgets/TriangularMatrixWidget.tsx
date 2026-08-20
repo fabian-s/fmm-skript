@@ -17,7 +17,7 @@
  * nebeneinander, keine Koordinatenbilder. Achsen mit Ticks gibt es deshalb
  * nicht; Zeilen- und Spaltenindex sind die Rasterposition selbst.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * eine 5×5-Dreiecksmatrix hat n(n+1)/2 = 15 frei besetzbare Einträge und
  * n² − 15 = 10 erzwungene Nullen.
  */

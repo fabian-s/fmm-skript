@@ -2,7 +2,7 @@
  * DIE EINE EINSICHT: Die Wahrscheinlichkeit verschiebt den Erwartungswert über die Gewinnschwelle.
  * FARBROLLEN: blau = Erwartungswert; rot = Gewinnschwelle. PROVENIENZ: Originalwidget.
  * VERIFIZIERTE ZAHLEN: E[X] = 12p − 2 und die Schwelle p = 1/6, node,
- * scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ * scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, M, Plot, Slider, Verdikt, fmtDe } from "../../lib";

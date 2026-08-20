@@ -13,7 +13,7 @@
  * f″, Legende und Achsen aus `Plot` v2 sowie das Verdikt statt der
  * Spoiler-Notiz über der Grafik.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): d/dx x|x| = 2|x|; die zweite Ableitung von x·|x| ist +2 für
  * x > 0 und −2 für x < 0 und existiert bei 0 nicht. Für sin gilt bei x = 1:
  * f = 0,841471, f′ = 0,540302, f″ = −0,841471.

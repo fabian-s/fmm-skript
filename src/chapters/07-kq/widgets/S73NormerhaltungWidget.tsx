@@ -15,7 +15,7 @@
  * PROVENIENZ: Berechnungs- und Overlay-Code aus der internen App
  * interactive/heath-ch3 portiert; Texte für dieses Skript neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s73.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   v = (1,5; 1,0)ᵀ mit ‖v‖₂ = 1,802776. Drehungen um 0°, 40°, 90°, 180° und
  *   Spiegelungen an Achsen mit φ = 0°, 25°, 45° liefern ‖Qv‖₂ = 1,802775637732
  *   auf zwölf Stellen; det = +1 bzw. −1.

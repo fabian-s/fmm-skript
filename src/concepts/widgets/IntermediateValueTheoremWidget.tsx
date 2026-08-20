@@ -15,7 +15,7 @@
  * sind die gezeichnete Sprunglücke, das Verdikt und die Aufgabenzeile. Die
  * erklärende Einleitung steht jetzt in intermediate-value-theorem.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/IntermediateValueTheoremWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/IntermediateValueTheoremWidget.mjs,
  * 2026-08-20): f(x) = x²/2 − 1 für x < 1, plus Sprung c ab x = 1. Es gilt
  * immer f(0) = −1 und f(2) = 1 + c > 0; der linke Grenzwert bei x = 1 ist
  * −0,5. Nullstelle x* = √(2(1 − c)) existiert genau für c ≤ 0,5; c = 0 →

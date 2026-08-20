@@ -1,7 +1,7 @@
 /**
  * DIE EINE EINSICHT: Koeffizienten gewichten die Potenzbausteine eines Polynoms.
  * FARBROLLEN: blau = Summe, orange = regelbare Koeffizienten. PROVENIENZ: neu.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft die
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft die
  * Potenzsumme; der Verdiktwert p(1) ist jeweils die Summe der vier Reglerwerte.
  */
 import { useState } from "react";

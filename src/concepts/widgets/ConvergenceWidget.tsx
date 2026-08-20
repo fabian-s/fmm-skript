@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20),
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20),
  * Folge aₙ = 1 + (−0,75)ⁿ mit Grenzwert 1:
  *   N(ε) = ⌊ln ε / ln 0,75⌋ + 1 stimmt für alle 56 Reglerwerte ε = 0,05 … 0,60
  *   mit dem kleinsten N überein, ab dem |aₙ − 1| < ε für alle n ≥ N gilt

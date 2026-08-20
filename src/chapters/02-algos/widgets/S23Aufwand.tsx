@@ -37,7 +37,7 @@ import {
  * gezeigte Klasse. Im FLOP-Zähler: blau das Matrix-Vektor-Produkt (linear in
  * jeder Dimension), orange das Matrix-Matrix-Produkt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19):
  *   FLOPs bei n = d = m = 100: Matrix-Vektor 10 000 Multiplikationen +
  *     9 900 Additionen = 19 900 (Näherung 2nd = 20 000), Speicher 10 200;

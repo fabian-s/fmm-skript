@@ -20,7 +20,7 @@
  * PROVENIENZ: SVG-/Rechengerüst aus der internen App interactive/heath-ch3
  * (§3.5) portiert; Ziehgriffe, Verdikte und alle Texte für dieses Skript neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s75.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   Givens: a = (4,3)ᵀ ⇒ r = 5, c = 0,8, s = 0,6, Ga = (5; 4,4e−16), θ = 36,870°;
  *   a = (−3,4)ᵀ ⇒ c = −0,6, s = 0,8, Ga = (5; 4,4e−16); c² + s² = 1 exakt.
  *   Householder mit ‖a‖ = 2: 2·vᵀa/vᵀv = 1,000000000 in allen geprüften Fällen;

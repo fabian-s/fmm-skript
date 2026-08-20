@@ -10,7 +10,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20),
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20),
  * Spektrum σ = (10; 6; 2,5; 0,9; 0,3; 0,08):
  *   Σσᵢ² = 143,1564. Behaltene Energie je k in Prozent:
  *   k=1 → 69,85; k=2 → 95,00 (genau 95,001, knapp über der Verdikt-Schwelle);

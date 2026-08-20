@@ -12,7 +12,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   ‖x‖ = 2,2 und ‖y‖ = 1,6 ⇒ Schranke ‖x‖‖y‖ = 3,52.
  *   |xᵀy| = 3,52·|cos ω|; auf dem Reglerraster (Schritt 0,02) ist |cos ω| > 0,999
  *   nur bei ω = 0; 0,02; 0,04 und 3,10; 3,12; 3,14 — das Erkennungsfenster

@@ -10,14 +10,14 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   Die im Widget benutzte Rekursion für den Binomialkoeffizienten stimmt für
  *   n = 1 … 7 und alle i mit n!/(i!(n−i)!) überein; der Koeffizient bei i = 1
  *   ist stets n.
  * FEHLERKORREKTUR 2026-08-20 (Re-Audit QA-O0): Der Term stand vorher in
  * \cbblue{…}. Dieses Makro existiert NICHT (src/fmm-macros.ts kennt nur
  * \cblue); MathJax hat den Makronamen als mtext-Knoten in die Formel gesetzt
- * statt einzufärben — nachgewiesen in verify/QA-O0/check-cbblue.mjs.
+ * statt einzufärben — nachgewiesen in scripts/verify/QA-O0/check-cbblue.mjs.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, MD, Slider, Verdikt, W_PANEL, W_TEXT } from "../../lib";

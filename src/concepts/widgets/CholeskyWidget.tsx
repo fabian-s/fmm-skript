@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   Voreinstellung A = [4 2; 2 3] ⇒ L = [2 0; 1 √2] mit √2 = 1,41…; LLᵀ = A
  *   exakt (elementweise per Assertion), Eigenwerte 5,5616 und 1,4384.
  *   Die Halbachsen von xᵀAx = 1 sind 1/√λ.

@@ -1,6 +1,6 @@
 /**
  * Insight: the cosine value is the tangent slope of sine. Colors: blue sine/tangent, orange cosine.
- * Provenance: original; values and verdict thresholds verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * Provenance: original; values and verdict thresholds verified in `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

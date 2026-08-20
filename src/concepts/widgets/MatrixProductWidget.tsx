@@ -13,7 +13,7 @@
  * (Stand 2026-08-18); Schrittfolge über den Lib-`Stepper`, weicher Übergang
  * über `transitionMs` der Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), B = [[1, s], [0, 1]], A = [[k, 0], [0, 1]], x = (1, 1):
  *   k = 1,5, s = 0,8: Bx = (1,8; 1), A(Bx) = (2,7; 1) = (AB)x,
  *                     AB = [[1,5; 1,2], [0, 1]], BA = [[1,5; 0,8], [0, 1]];

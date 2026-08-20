@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau; Ziehen über `useDrag` aus der Lib.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  * Voreinstellung x = (1,8; 1,1) hat ‖x‖₂ = √(1,8² + 1,1²) = 2,1095…, also
  * gerundet 2,11; der rote Pfeil hat Länge 1 in jedem erreichbaren Zustand
  * außer im abgefangenen Nullfall ‖x‖₂ ≤ 0,05.

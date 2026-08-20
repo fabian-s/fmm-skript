@@ -23,7 +23,7 @@ import { EllipseImRaum } from "./S62Raum";
  * stammt aus der privaten mml-ch4-App (widgets/svdMath.ts: svd2x2); Aufbau,
  * Schrittsteuerung (lib-`Stepper`) und sämtliche Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19) für die Voreinstellung A = (1 2; 2 1; 1 0):
  *   AᵀA = (6 4; 4 5), Spur 11, det 14; λ₁ = 9,531, λ₂ = 1,469;
  *   σ₁ = 3,087, σ₂ = 1,212, σ₁/σ₂ = 2,547;

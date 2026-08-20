@@ -42,7 +42,7 @@ import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
  * - f(x) = 2x1² + 2x1x2 + 3x2² − 4x1 − 6x2 hat das Minimum (0,6; 0,8) mit
  *   f = −3,6; von jedem Startpunkt trifft der erste Schritt es exakt.
  *
- * Nachgerechnet (scratchpad/verify-11-ableitungen-2/check-s114.mjs,
+ * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19): Der Lauf ab (2; 1,5) unterschreitet den Fehler 10⁻¹⁰ zum ersten
  * Mal in Schritt 5 (e_5 = 1,1e−15, e_4 = 4,6e−8) — das ist die Antwort der
  * Schätzfrage. Die Quotienten e_k/e_{k-1}² lauten 0,0769 / 0,4000 / 0,4878 /

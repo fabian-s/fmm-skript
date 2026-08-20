@@ -25,8 +25,7 @@ import { W_MUTED } from "../../../lib/widgets/surface";
  * S102/S103). Rot (Restterm) und Gruen (Linearisierung) kommen hier nicht vor;
  * die Warnung an der Knickstelle traegt das <Verdikt kind="warn">.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s101-s104.mjs, 2026-08-19), bei x1 = 1:
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, bei x1 = 1:
  * a1 = (-1; 2,5), z1 = (0; 2,5), yhat = -2,5, L = 6,125, dL/dyhat = -3,5,
  * dL/dz1 = (-7, 3,5), dL/da1 = (0, 3,5), dL/dW2 = (0, -8,75),
  * dL/dW1 = (0 0; 3,5 7) - beide Parametergradienten stimmen mit zentralen

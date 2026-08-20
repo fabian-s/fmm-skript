@@ -17,7 +17,7 @@ import { FMM_COLORS } from "../../../lib";
  * Beispielfunktionen an der Stelle 0, keine Auswertung, kein Zufall, kein
  * Zeitverhalten. Die einzigen Zahlen im Bild sind die einseitigen
  * Differenzenquotienten ±1 von |x| aus Beispiel 11.1.3, nachgerechnet in
- * scratchpad/verify-11-ableitungen-2/check-s111.mjs (2026-08-19): für h = 0,5,
+ * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19): für h = 0,5,
  * 0,01 und 10⁻⁸ steht rechts exakt +1 und links exakt −1.
  *
  * Farbrollen Kapitel 11 (= Kapitel 10): Blau steht für die Funktion und ihre

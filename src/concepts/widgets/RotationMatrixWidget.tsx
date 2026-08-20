@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `rotation-matrix` (Triage C3: KEEP + Direktmanipulation).
  *
  * DIE EINE EINSICHT: Eine Drehmatrix ist nichts anderes als die Angabe, wohin
@@ -16,7 +16,7 @@
  * 2026-08-18); Ziehen, Achsen und Ticks kommen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/RotationMatrixWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/RotationMatrixWidget.mjs,
  * 2026-08-20), Default θ = 35°:
  *   cos θ = 0,8192, sin θ = 0,5736; det Q = 1 (auf 1e−12);
  *   Qe₁ = (0,8192; 0,5736), Qe₂ = (−0,5736; 0,8192), Qe₁ᵀQe₂ = 0 (auf 1e−12),

@@ -14,7 +14,7 @@
  * (`columnsDraggable`). Texte neu geschrieben. Dieses Widget ist die
  * Referenz für den Spalten-Drag in der Konzeptschicht.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearMapWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/LinearMapWidget.mjs,
  * 2026-08-20), Voreinstellung A = [[1, −0,5], [0,5, 1]]:
  * Ae₁ = (1; 0,5), Ae₂ = (−0,5; 1), det A = 1,2500. Die Spalten sind also
  * exakt die beiden Pfeile, und det A ist der Flächenfaktor des von ihnen

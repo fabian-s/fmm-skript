@@ -22,9 +22,6 @@ import { TransformCanvas } from "./TransformCanvas";
 
 export { niceTicks, sigmaMax, maxAbsCoord } from "./util";
 
-const PAD_L = 34; // room for y tick labels
-const PAD_B = 16; // room for x tick labels
-
 /**
  * Durchreichender Alias: Plot v2 zeichnet Achsen, Ticks und Achsennamen selbst
  * im SVG; `tickClass` bleibt im Typ und wird ignoriert.

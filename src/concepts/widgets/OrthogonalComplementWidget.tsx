@@ -17,7 +17,7 @@
  * (Stand 2026-08-18); Geraden, Ziehen und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), u = (2, 1), Default b = (0,5; 2):
  *   t = uᵀb/uᵀu = 0,6, p = (1,2; 0,6), r = (−0,7; 1,4);
  *   rᵀu = 0 (auf 1e−12), ‖p‖ = 1,3416, ‖r‖ = 1,5652;

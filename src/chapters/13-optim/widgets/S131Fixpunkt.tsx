@@ -19,7 +19,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV }
  * Alles ist linear: f(x) = A(x - x*), also J_f = A ueberall und
  * rho = ||I - gamma A||_2 exakt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s131.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * aeltere Pruefung check-fix-s131.mjs bestaetigt; gamma-Raster 1e-4):
  * - A = (4 1; 1 3): Eigenwerte 4,618034 / 2,381966, gamma_opt = 2/7 mit
  *   rho = sqrt(5)/7 = 0,3194, Divergenz ab gamma > 2/lambda_max = 0,4331;

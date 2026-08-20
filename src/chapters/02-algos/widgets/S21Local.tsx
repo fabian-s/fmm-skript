@@ -15,7 +15,7 @@ import { ConceptLink, M, Schaetzfrage, W_MUTED } from "../../../lib";
  * FARBROLLEN: keine; die Tafel ist reiner Text.
  *
  * VERIFIZIERTE ZAHLEN (Rscript --vanilla, 2026-08-19, protokolliert in
- * scratchpad/verify-02-algos/check-rselbsttest.mjs):
+ * historische Prüfung, Skript nicht mehr vorhanden):
  *   1.0 - 1.0              → 0
  *   1.0 - 0.9 - 0.1        → -2.775558e-17
  *   100 * 0.58 == 58       → FALSE   (100 * 0.58 = 57,999999999999992895)

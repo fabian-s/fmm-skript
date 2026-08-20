@@ -15,7 +15,7 @@
  * Das Widget zeigt Matrizen und einen Vektor als Formel, kein Koordinatenbild;
  * Achsen mit Ticks gibt es hier nichts zu beschriften.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * mit x = (5 | 7 | 9) liefern die sechs Permutationen die Bilder (5,7,9),
  * (5,9,7), (7,5,9), (7,9,5), (9,5,7), (9,7,5) — genau eine davon, P1, ist die
  * Identität und lässt die Reihenfolge unverändert; alle sechs sind orthogonal

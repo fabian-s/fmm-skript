@@ -23,7 +23,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
  * Beispiel ist die Quadrik f(x) = 0,5 x1^2 + 2,5 x2^2 (Hesse diag(1; 5),
  * kappa = 5, H^{-1} = diag(1; 0,2)) mit Start (5; 1) und B_0 = I.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s134.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * aeltere Pruefung check-math-s134.mjs bestaetigt):
  *  - Einheitsschritt alpha = 1: (5; 1) -> (0; -4) -> (-2,222; 0,444) ->
  *    (0,816; 0,082) -> ...; f springt im ersten Schritt von 15 auf 40 und

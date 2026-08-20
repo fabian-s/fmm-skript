@@ -13,7 +13,7 @@
  * 2026-08-20); Achsen mit Ticks und Achsennamen, der Ortsvektor und das
  * zustandsabhängige Verdikt sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * Startpunkt x = (0,9 | 0,6) hat ‖x‖₁ = 1,50, ‖x‖₂ = √1,17 = 1,08 und
  * ‖x‖∞ = 0,90. Er liegt also außerhalb der 1- und der 2-Kugel, aber innerhalb
  * der ∞-Kugel; nachgerechnet ist ebenfalls die für alle x geltende Ordnung

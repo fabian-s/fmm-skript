@@ -46,8 +46,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  *   violett — das vom Leser gewaehlte Fenster: Quadrat und Punkt x0
  *             (dieselbe Rolle wie die frei gewaehlte Richtung d in S102)
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s103-jacobi.mjs, 2026-08-19). Alle vier Voreinstellungen: die
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen. Alle vier Voreinstellungen: die
  * analytische Jacobimatrix trifft die zentralen Differenzen auf 1,5e-10.
  *   Trigwelle, x0 = (1,2; 0,6): f(x0) = (1,6660; 0,9377),
  *     J = (1 0,36236; -0,73739 1), det J = 1,26720;

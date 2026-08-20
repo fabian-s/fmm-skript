@@ -37,7 +37,7 @@ import {
  * Quadrate bzw. x, blau das Quadrat des Mittels bzw. y. Grün bleibt in beiden
  * Fällen die gesuchte Größe (22,5 bzw. die 1).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19; naive Summation in IEEE-Doppelpräzision):
  *   Varianz, x_i ∈ {4,7,13,16} + 10^k, wahrer Wert 22,5 —
  *     k ≤ 7: exakt 22,5 · k = 8: 22 · k = 9: −128 · k = 10: 16384 ·

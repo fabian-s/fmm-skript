@@ -17,7 +17,7 @@ import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
  *   additiv p = 10:  91 freie Parameter nach Zentrierung, 728 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { gruen: GRUEN, orange: ORANGE, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;

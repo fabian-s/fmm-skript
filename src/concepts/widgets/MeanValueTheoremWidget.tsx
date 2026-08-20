@@ -15,7 +15,7 @@
  * erklärende Absatz steht jetzt in mean-value-theorem.mdx.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MeanValueTheoremWidget.mjs,
+ * scripts/verify/REV1/MeanValueTheoremWidget.mjs,
  * 2026-08-20): für f(x) = x³/3 − x ist die Sekantensteigung
  * m = (a² + ab + b²)/3 − 1 (numerisch gegengerechnet) und f′(x) = x² − 1, also
  * ξ = ±√(m + 1). Startzustand a = −2, b = 1,6: m = 0,120000, ξ = ±1,058301.

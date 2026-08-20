@@ -14,7 +14,7 @@
  * (Stand 2026-08-19); Achsen mit Ticks, Themenfarben und die Anordnung
  * Regler-unter-Grafik sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * a = (2 | 1), b = (1 | 2) ⇒ x* = aᵀb/aᵀa = 4/5 = 0,8 exakt; entlang der Geraden
  * gilt aᵀr(x) = 5·(0,8 − x), im Startzustand x = 0,3 also aᵀr = 2,50. Das
  * kleinste Residuum hat Länge ‖r(x*)‖ = 3/√5 = 1,3416.

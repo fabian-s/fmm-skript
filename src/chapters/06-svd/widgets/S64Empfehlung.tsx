@@ -26,7 +26,7 @@ import { energieAnteil, jacobiSVD, rankK, type Mat } from "./S64Numerik";
  * widgets/MovieRatings.tsx ist nichts übernommen. Die Daten stammen von der
  * Folie, Nutzer- und Filmnamen sind frei erfunden, alle Texte neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19) für die Bewertungsmatrix aus Beispiel 6.4.10, aufgefüllt mit den
  * Spaltenmitteln 3,5 · 3 · 2,5 · 3,5 · 4,5 (Gesamtmittel 3,364, 11 bekannte
  * Einträge):
@@ -34,7 +34,7 @@ import { energieAnteil, jacobiSVD, rankK, type Mat } from "./S64Numerik";
  *   Energie-Anteil 94,0 % (k=1), 97,2 % (k=2), 99,9 % (k=3);
  *   RMSE auf den 11 bekannten Bewertungen 1,143 (k=1), 0,735 (k=2), 0,108 (k=3);
  *   Vorhersage für Ada bei „Nachtzug" 3,07 (k=1), 3,34 (k=2), 3,02 (k=3).
- * Zurückgehaltene Bewertung (scratchpad/verify-06-svd/verify-empfehlung-test.mjs,
+ * Zurückgehaltene Bewertung (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19): Ada bei „Sternenstaub" (wahr 5) wird zu 1,744 (k=1), 1,793 (k=2),
  * 1,950 (k=3) vorhergesagt, weil das Spaltenmittel ohne diese Bewertung von 3,5
  * auf 2,0 fällt.

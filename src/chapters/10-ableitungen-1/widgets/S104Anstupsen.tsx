@@ -31,8 +31,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  * FARBROLLEN (Kapitel 10): Funktionswerte blau, linearer Ableitungsterm grün,
  * Restterm rot, Gradientenmatrix orange, die vom Leser gewählte Zelle violett.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s101-s104.mjs, 2026-08-19), an der Startmatrix X = (1 0 2; −1 2 1):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, an der Startmatrix X = (1 0 2; −1 2 1):
  *   f(X) = aᵀXb = 2 mit ∂f/∂X = abᵀ = (2 1 3; −4 −2 −6);
  *   f(X) = ‖X‖_F² = 11 mit ∂f/∂X = 2X = (2 0 4; −2 4 2);
  *   f(X) = tr(AᵀX) = −4 mit ∂f/∂X = A = (1 0 −2; 3 1 0);

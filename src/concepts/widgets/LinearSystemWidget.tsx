@@ -6,7 +6,7 @@
  * FARBROLLEN: blau = erste Gleichung, rot = zweite Gleichung, grün = Schnitt.
  * PROVENIENZ: Neufassung des statischen Vorgängers; die dritte Konstante d
  * macht alle drei Fälle erreichbar. Zahlen durch
- * scratchpad/verify/QA-L1/check-qa-l1.mjs, 2026-08-20, verifiziert:
+ * scripts/verify/QA-L1/check-qa-l1.mjs, 2026-08-20, verifiziert:
  * (a,b,d)=(1,−1,1) liefert (1,6;0,6), (2,3,1) keine und (2,3,5)
  * unendlich viele Lösungen. Die Cramer-Formel ist
  * x=(5b−3d)/(2b−3a), y=(2d−5a)/(2b−3a).

@@ -13,7 +13,7 @@
  * Ziehen und der Unterraum als Gerade kommen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/KernelWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/KernelWidget.mjs,
  * 2026-08-20), A = [[1, 2], [0,5, 1]]: det A = 0, A·(2, −1) = (0, 0) exakt.
  * Die Kernrichtung liegt bei −26,57° (bzw. 153,43°). Das Bild ist die Gerade
  * span{(1; 0,5)}; nach dem Rangsatz ist mit Rang 1 die Kerndimension

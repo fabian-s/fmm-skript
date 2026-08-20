@@ -2,7 +2,7 @@
  * DIE EINE EINSICHT: Bandbreite balanciert lokale Struktur gegen Glättung.
  * FARBROLLEN: blau = Kernschätzung; grau = Daten. PROVENIENZ: Originalwidget.
  * VERIFIZIERTE ZAHLEN: Die fest codierte Stichprobe hat 13 Werte; node,
- * scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ * scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

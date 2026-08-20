@@ -30,8 +30,7 @@ import {
  * PROVENIENZ: Eigenbau; Achsenraster, Zahlformat und Farbwerte kommen aus
  * `src/lib/widgets/util.ts`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s121-huelle.mjs, 2026-08-19): Eine alte Ecke fällt bei
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Eine alte Ecke fällt bei
  * k = 5, 6, 8, 9, 10, 11 und 12 heraus; (1,5; 1,4) verliert seine Ecke bei
  * k = 5. Extrempunktzahlen 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 7 für
  * k = 3 … 14, Fläche wächst monoton von 0,44 auf 7,46.

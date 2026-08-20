@@ -16,7 +16,7 @@
  * meldete früher fälschlich „Sattel"), das Höhenlinienbild und die verlinkte
  * 3D-Tafel (`Surface3D`, Bauart wie S113Hesse in Kapitel 11).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): für q(x,y) = a x² + b y² ist H = diag(2a, 2b) konstant, die
  * Eigenwerte sind 2a und 2b. Proben: (a,b) = (1; 0,6) → 2,000 / 1,200,
  * positiv definit; (−1; −0,6) → −2,000 / −1,200, negativ definit;

@@ -1,7 +1,9 @@
 /**
- * Konzept-Widget für `convexity` UND `convex-function` (Dublettenauflösung D6,
- * 2026-08-19; das frühere ConvexFunctionWidget ist entfallen — es prüfte nur
- * den Mittelpunkt und meldete für die Doppelmulde fälschlich „konvex").
+ * Konzept-Widget für `convexity` (Dublettenauflösung D6: das frühere
+ * ConvexFunctionWidget entfiel am 2026-08-19 — es prüfte nur den Mittelpunkt
+ * und meldete für die Doppelmulde fälschlich „konvex"; das Modul
+ * `convex-function` entfiel am 2026-08-20, seine zehn Links zeigen jetzt auf
+ * `convexity`).
  *
  * DIE EINE EINSICHT: Konvexität ist eine Aussage über JEDES Punktepaar. Ein
  * einziges Paar, dessen Sehne unter den Graphen taucht, widerlegt sie; ein
@@ -16,7 +18,7 @@
  * src/chapters/12-konvexitaet/widgets/S123Sehne.tsx (SehnenSVG/SehnenTest);
  * das Ziehen läuft über `useDrag` aus der Lib. Alle Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20
  * unabhängig nachgerechnet; Erstprüfung 2026-08-19), je Kurve über alle 3081
  * Paare des 0,05-Rasters mit b − a ≥ 0,15:
  *   0,6x² + 0,3   → 0 Verletzungen, nie Gleichheit (strikt konvex)

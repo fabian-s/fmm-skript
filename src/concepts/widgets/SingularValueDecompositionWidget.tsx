@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `singular-value-decomposition` (Triage C3: REWORK —
  * die drei Schritte Vᵀ, Σ, U einzeln zuschaltbar, mit Übergang).
  *
@@ -19,7 +19,7 @@
  * der Lib-`Stepper`, Übergang und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/SingularValueDecompositionWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/SingularValueDecompositionWidget.mjs,
  * 2026-08-20), V = R(α), U = R(β), Σ = diag(σ₁, σ₂):
  *   Default α = 0,5, β = 0,8, σ₁ = 1,8, σ₂ = 0,6:
  *     A = ((1,3069; 0,2235), (0,9328; 0,9859)), det A = 1,08 = σ₁σ₂;

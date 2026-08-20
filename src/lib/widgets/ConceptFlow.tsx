@@ -72,6 +72,14 @@ export function ConceptFlow({
 
   const byId = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
   const color = useMemo(() => new Map(groups.map((g) => [g.key, g.color])), [groups]);
+  const validEdges = useMemo(() => {
+    const valid = edges.filter((e) => byId.has(e.from) && byId.has(e.to));
+    if (import.meta.env?.DEV && valid.length !== edges.length) {
+      const invalid = edges.filter((e) => !byId.has(e.from) || !byId.has(e.to));
+      console.warn("[ConceptFlow] Kanten mit unbekanntem Knoten ignoriert", invalid);
+    }
+    return valid;
+  }, [edges, byId]);
 
   const size = (n: FlowNode) => ({
     w: n.w ?? 168,
@@ -98,7 +106,7 @@ export function ConceptFlow({
       const node = end === "s" ? e.from : e.to;
       return `${node}|${end}|${kind}`;
     };
-    for (const e of edges) {
+    for (const e of validEdges) {
       for (const end of ["s", "t"] as const) {
         const k = keyOf(e, end);
         buckets.set(k, [...(buckets.get(k) ?? []), e]);
@@ -117,14 +125,14 @@ export function ConceptFlow({
         return ka.y - kb.y || ka.x - kb.x;
       });
       sorted.forEach((e, i) => {
-        shift.set(`${edges.indexOf(e)}|${k.split("|")[1]}`, (i - (sorted.length - 1) / 2) * 13);
+        shift.set(`${validEdges.indexOf(e)}|${k.split("|")[1]}`, (i - (sorted.length - 1) / 2) * 13);
       });
     }
     return shift;
-  }, [edges, byId]);
+  }, [validEdges, byId]);
 
   const paths = useMemo(() => {
-    return edges.map((e, i) => {
+    return validEdges.map((e, i) => {
       const s = byId.get(e.from)!;
       const t = byId.get(e.to)!;
       const ss = size(s);
@@ -161,14 +169,14 @@ export function ConceptFlow({
         tip: `M ${tx} ${ty} l -4.5 -9 l 9 0 Z`,
       };
     });
-  }, [edges, byId, anchorShift]);
+  }, [validEdges, byId, anchorShift]);
 
   const neighbors = useMemo(() => {
     if (!active) return null;
     const set = new Set([active]);
     const pre: string[] = [];
     const post: string[] = [];
-    for (const e of edges) {
+    for (const e of validEdges) {
       if (e.to === active) {
         set.add(e.from);
         pre.push(e.from);
@@ -179,10 +187,11 @@ export function ConceptFlow({
       }
     }
     return { set, pre, post };
-  }, [active, edges]);
+  }, [active, validEdges]);
 
   const nodeName = (id: string) => {
-    const n = byId.get(id)!;
+    const n = byId.get(id);
+    if (!n) return id;
     if (n.name) return n.name;
     return n.badge ? `${n.badge} · ${n.label.join(" ")}` : n.label.join(" ");
   };
@@ -220,7 +229,7 @@ export function ConceptFlow({
       >
         {paths.map(({ e, d, tip }, i) => {
           const on = active !== null && (e.from === active || e.to === active);
-          const col = color.get(byId.get(e.from)!.group) ?? "currentColor";
+          const col = color.get(byId.get(e.from)?.group ?? "") ?? "currentColor";
           return (
             <g
               key={i}
@@ -303,7 +312,7 @@ export function ConceptFlow({
               )}
               {n.label.map((line, i) => (
                 <text
-                  key={line}
+                  key={`${n.id}-${i}`}
                   x={n.badge ? n.x - w / 2 + 40 : n.x}
                   y={lineY0 + i * (n.kicker ? 16 : 17) + 4.5}
                   textAnchor={n.badge ? "start" : "middle"}

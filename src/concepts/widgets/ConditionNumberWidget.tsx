@@ -16,7 +16,7 @@
  * (Lib-`TransformCanvas`, `dragConstraint: "unitCircle"`), der logarithmische
  * ε-Regler und das dreistufige Verdikt mit Bezug auf Satz 4.2.6.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19), A = [[1, 1], [1, 1+ε]], det A = ε:
  *   ε = 1     : σmax = 2,6180  σmin = 0,381966  cond = 6,85   (0,84 Stellen)
  *   ε = 0,3   : σmax = 2,1612  σmin = 0,138813  cond = 15,57  (1,19 Stellen)

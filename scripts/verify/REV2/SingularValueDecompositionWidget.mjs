@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+const close = (actual, expected, tolerance = 1e-4) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} ≉ ${expected}`);
+const mul = (a,b) => [[a[0][0]*b[0][0]+a[0][1]*b[1][0],a[0][0]*b[0][1]+a[0][1]*b[1][1]],[a[1][0]*b[0][0]+a[1][1]*b[1][0],a[1][0]*b[0][1]+a[1][1]*b[1][1]]];
+const rotation = a => [[Math.cos(a),-Math.sin(a)],[Math.sin(a),Math.cos(a)]];
+const decomposition = (alpha,beta,s1,s2) => mul(mul(rotation(beta), [[s1,0],[0,s2]]), [[Math.cos(alpha),Math.sin(alpha)],[-Math.sin(alpha),Math.cos(alpha)]]);
+const det = a => a[0][0]*a[1][1]-a[0][1]*a[1][0];
+let a = decomposition(.5,.8,1.8,.6); const defaultA = a; close(a[0][0],1.3069); close(a[0][1],.2235); close(a[1][0],.9328); close(a[1][1],.9859); close(det(a),1.08); close(1.8/.6,3);
+a = decomposition(1.1,-.4,2.4,.15); close(det(a),.36); close(2.4/.15,16);
+a = decomposition(.5,.8,1.8,0); close(det(a),0,1e-12);
+const v1 = [Math.cos(.5),Math.sin(.5)], v2 = [-Math.sin(.5),Math.cos(.5)]; close(Math.hypot(...v1),1); close(v1[0]*v2[0]+v1[1]*v2[1],0,1e-12);
+const av1 = [defaultA[0][0]*v1[0]+defaultA[0][1]*v1[1],defaultA[1][0]*v1[0]+defaultA[1][1]*v1[1]]; close(Math.hypot(...av1),1.8);
+const av2 = [defaultA[0][0]*v2[0]+defaultA[0][1]*v2[1],defaultA[1][0]*v2[0]+defaultA[1][1]*v2[1]]; close(Math.hypot(...av2),.6);
+console.log("SingularValueDecompositionWidget: verified");

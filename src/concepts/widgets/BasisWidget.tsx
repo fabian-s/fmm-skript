@@ -14,7 +14,7 @@
  * gezeichnet hat). Legende und Achsen kommen jetzt aus `Plot` v2; neu sind die
  * Zielkurve, die Aufgabe und das Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): Zielpolynom 0,6 + 0,9t − 0,5t²; Startzustand (1; 0,5; −0,8)
  * hat max|f − Ziel| = 1,600 auf [−2,2] (angenommen am rechten Rand t = 2);
  * Differenz d(t) = 0,4 − 0,4t − 0,3t². Wertebereich der Zielkurve auf [−2,2]:

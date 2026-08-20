@@ -25,7 +25,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV }
  * Stabilitätsbereich sichtbar bleibt: GD divergiert ab gamma*L > 2,
  * Heavy-Ball erst ab gamma*L > 2(1 + alpha).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s134.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * aeltere Pruefungen check-math-s134.mjs, check2-s134.mjs bestaetigt),
  * Schritte bis f <= 1e-6 f0 bei gamma = 1/L:
  *   c =   5: GD  31, Momentum(0,9) 106

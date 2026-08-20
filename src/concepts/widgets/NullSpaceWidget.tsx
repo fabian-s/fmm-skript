@@ -16,7 +16,7 @@
  * Pfeil. Ziehen, Achsen und Geraden kommen aus der Lib-`TransformCanvas`,
  * Suchlogik und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), A = [[1, 1], [1, 1]], v auf dem Einheitskreis:
  *     0°: Av = (1; 1),         ‖Av‖ = 1,4142
  *    45°: Av = (1,414; 1,414), ‖Av‖ = 2      (stärkste Streckung)

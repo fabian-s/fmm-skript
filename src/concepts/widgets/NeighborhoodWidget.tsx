@@ -14,7 +14,7 @@
  * (Stand 2026-08-19); Achsen mit Ticks, Themenfarben, Aufgabe und Verdikt sind
  * neu. Der erklärende Absatz steht jetzt in neighborhood.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * f(x) = x⁴/4 + x³/3 − x² hat die kritischen Stellen −2, 0, 1; f(1) = −5/12 =
  * −0,416667 (lokales Minimum), f(0) = 0 (lokales Maximum), f(−2) = −8/3
  * (globales Minimum). Links von x* fällt f erstmals bei x = (−5+√10)/3 =

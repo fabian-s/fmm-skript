@@ -15,7 +15,7 @@
  * und die Gerade kommen aus der Lib-`TransformCanvas`. Texte neu.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/ProjectionWidget.mjs,
+ * scripts/verify/REV1/ProjectionWidget.mjs,
  * 2026-08-20), P = bbᵀ mit b = (cos θ, sin θ), x = (2; 1,4):
  *   θ = 0,5   → Px = (2,1293; 1,1633)
  *   θ = 0     → Px = (2; 0)      (die zweite Koordinate wird verworfen)

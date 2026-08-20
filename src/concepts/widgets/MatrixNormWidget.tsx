@@ -17,7 +17,7 @@
  * neu.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MatrixNormWidget.mjs,
+ * scripts/verify/REV1/MatrixNormWidget.mjs,
  * 2026-08-20). Die Spektralnorm wird unabhängig als größte Eigenwertwurzel
  * von AᵀA berechnet; |Av₁| ist dieses Maximum:
  *   A = [[1; 0,8], [0,2; 1,4]] : ‖A‖₂ = 1,775448, v₁ = (0,4553; 0,8904),

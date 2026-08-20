@@ -12,7 +12,7 @@
  * Zeilenfaktoren neben der Matrix und das Verdikt sind neu.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/OuterProductWidget.mjs,
+ * scripts/verify/REV1/OuterProductWidget.mjs,
  * 2026-08-20), Voreinstellung u = (1, 2, 3), v = (4, 5):
  *   uvᵀ = [[4, 5], [8, 10], [12, 15]] (wie auf der Konzeptseite);
  *   Zeile 2 ist genau das 2-fache von Zeile 1, Zeile 3 das 3-fache;

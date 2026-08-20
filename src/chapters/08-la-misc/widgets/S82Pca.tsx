@@ -7,7 +7,7 @@ import { Aufgabe, DragHandle, FMM_COLORS, Slider, Verdikt, fmtDe, useDrag } from
  * Farbrollen Kapitel 8: aktuelle Richtung blau, Maximierer/Eigenvektor grün,
  * Projektionen grau, Rest zur Richtung rot.
  * Provenienz: Eigenbau. Die Daten sind fest eingebettet; Kovarianz, Eigenwerte
- * und Winkel sind in scratchpad/verify-08-la-misc/check-widgets.mjs am
+ * und Winkel sind in historische Prüfung, Skript nicht mehr vorhanden am
  * 2026-08-19 verifiziert.
  */
 

@@ -12,7 +12,7 @@
  * Ziehen und die Gerade als Unterraum kommen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/ImageWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/ImageWidget.mjs,
  * 2026-08-20), A = [[1, 2], [0,5, 1]]: det A = 0; Ae₁ = (1; 0,5),
  * Ae₂ = (2; 1) = 2·Ae₁, beide Spalten liegen also auf derselben Geraden;
  * A·(2, −1) = (0, 0). Über 12 566 Eingaberichtungen auf dem Kreis mit

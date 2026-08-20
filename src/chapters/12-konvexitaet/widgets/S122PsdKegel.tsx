@@ -45,8 +45,7 @@ import type { Ebene3D, Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
  * PROVENIENZ: Eigenbau für dieses Skript; Ziehen über `useDrag`, 3D über
  * `Surface3D` (Referenz-Aufrufer 11-ableitungen-2/widgets/S113Hesse.tsx).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s122-psd.mjs, 2026-08-19): Eigenwerte der fünf Voreinstellungen
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Eigenwerte der fünf Voreinstellungen
  * (Spur je 2 bzw. −2): Einheitsmatrix (1; 1), Rang 1 mit b = 1 (0; 2),
  * indefinit mit b = 2 (−1; 3), Nullzeile a = 2, c = 0 (0; 2), negativ definit
  * (−1; −1). Die Äquivalenz „a ≥ 0, c ≥ 0, ac ≥ b² ⇔ λ_min ≥ 0" wurde auf

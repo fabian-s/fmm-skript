@@ -31,7 +31,7 @@ import {
  * Tangente als Suchrichtung orange, Divergenzwarnung rot; der Graph von f
  * trägt das im Kapitel freie Violett (wie in S131Bisektion und S133GdStepper).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s131newton.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19):
  *  - f(x) = x² − 2 ab x⁽⁰⁾ = 1: 1 → 1,5 → 1,4166666667 → 1,4142156863 →
  *    1,4142135624 mit den Fehlern 4,142·10⁻¹ / 8,579·10⁻² / 2,453·10⁻³ /

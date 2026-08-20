@@ -38,7 +38,7 @@ import {
  * PROVENIENZ: Eigenbau (Fassung 2026-08-05, hier auf Direktmanipulation,
  * Voreinstellungen und <Verdikt> umgebaut).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-04-fehler/check-kap04.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19):
  *   Kehrwert, Voreinstellung x = 0,6 und ε = −0,45: x̃ = 0,15, relativer
  *   Inputfehler 75 %, relativer Outputfehler 300 %, Verstärkung 4 = x/|x+ε|.
@@ -48,7 +48,7 @@ import {
  *   Summe: κ_rel(1,2; −0,85) = 5,9419 (‖x‖₂ = 1,47054, Summe 0,35);
  *   κ_rel(1,4; 1,4) = 1; κ_rel(1,5; −1,45) = 59,008 (2 verlorene Stellen);
  *   κ_rel(1,5; −1,5) = ∞; κ_abs = √2 = 1,41421.
- *   R2-Nachprüfung: verify/R2/check-s42-claims.mjs, 2026-08-20.
+ *   R2-Nachprüfung: scripts/verify/R2/check-s42-claims.mjs, 2026-08-20.
  */
 
 const COL = {
@@ -134,10 +134,17 @@ export function KehrwertWidget() {
       Ohne Störung gibt es keinen Fehlerquotienten: <M>{"0/0"}</M> ist nicht definiert. Schieben
       wir <M>{"\\eps"}</M> ein Stück von null weg oder ziehen wir den roten Punkt auf der Achse.
     </Verdikt>
-  ) : !(amp >= 1.5) ? (
+  ) : amp < 0.8 ? (
+    <Verdikt kind="ok" titel="Der Outputfehler wird gedämpft.">
+      Der relative Outputfehler ({fmtPct(relOut)}) ist kleiner als der relative Inputfehler
+      ({fmtPct(relIn)}); der Faktor beträgt {fmtDe(amp, 2)}. Das ist kein Widerspruch zur
+      Konditionszahl <M>{"\\kappa_{rel} = 1"}</M>: Sie beschreibt den Grenzfall
+      <M>{"\\eps \\to 0"}</M>, während die gewählte Störung dafür nicht klein ist.
+    </Verdikt>
+  ) : Math.abs(amp - 1) < 0.2 ? (
     <Verdikt kind="ok" titel="Verstärkung nahe 1.">
-      Der relative Outputfehler ({fmtPct(relOut)}) ist kaum größer als der relative Inputfehler
-      ({fmtPct(relIn)}); die Verstärkung liegt bei {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Das passt zu Beispiel 4.2.5: Für
+      Der relative Outputfehler ({fmtPct(relOut)}) liegt nahe beim relativen Inputfehler
+      ({fmtPct(relIn)}); die Verstärkung liegt bei {fmtDe(amp, 2)}. Das passt zu Beispiel 4.2.5: Für
       kleine <M>{"\\eps/x"}</M> ist der Kehrwert relativ gemessen harmlos,{" "}
       <M>{"\\kappa_{rel} = 1"}</M>, und das gilt an <em>jeder</em> Stelle{" "}
       <M>{"x > 0"}</M>, auch bei <M>{"x = 10^{-17}"}</M>.

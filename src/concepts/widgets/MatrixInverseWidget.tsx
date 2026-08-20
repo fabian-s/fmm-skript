@@ -23,7 +23,7 @@
  * zusammen; bei t = 1 hat A den Rang 1 und der Kern ist span(e₂), unabhängig
  * vom Preset (per node geprüft: A(1)·e₂ = (0, 0) für alle vier Presets).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/inverse-matrix/check.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/inverse-matrix/check.mjs,
  * 2026-08-20); d = 0,9 ist der feste Abstand der beiden Testpunkte entlang e₂:
  *   Drehung 40°   t=0    det= 1,0000  σ=(1,0000; 1,0000)  κ=1,00    |Ax'−Ax|=0,9000
  *                 t=0,9  det= 0,1000  σ=(1,0000; 0,1000)  κ=10,00   |Ax'−Ax|=0,0900
@@ -227,7 +227,7 @@ export function InvertierbarkeitWidget() {
         {entartet
           ? `Zwei verschiedene Eingaben, ein einziges Bild: x und x′ liegen ${fmtDe(abstandEin, 2)} auseinander und landen beide auf demselben Punkt. Welchen der beiden sollte eine Inverse zurückgeben? Es gibt keinen Rückweg — und genau das misst det A = 0.`
           : kappa > 20
-            ? `Die beiden Bildpunkte liegen nur noch ${fmtDe(abstandAus, 3)} auseinander. Ein Rückweg müsste diesen Abstand um den Faktor ${fmtDe(verstaerkung, 1)} wieder aufblasen — und mit ihm jeden Messfehler im Bild. A ist noch invertierbar, aber die Inverse ist nicht mehr zu gebrauchen (κ = ${fmtDe(kappa, 1)}).`
+            ? `Die beiden Bildpunkte liegen nur noch ${fmtDe(abstandAus, 3)} auseinander und sind im Bild kaum zu unterscheiden. Ein Rückweg verstärkt Fehler in dieser Richtung um den Faktor ${fmtDe(verstaerkung, 1)}; κ = ${fmtDe(kappa, 1)} beschreibt die maximale Fehlerverstärkung. A bleibt invertierbar, aber Messfehler im Bild werden sichtbar empfindlich verstärkt.`
             : `Verschiedene Eingaben, verschiedene Bilder: aus ${fmtDe(abstandEin, 2)} Abstand werden ${fmtDe(abstandAus, 2)}. Der Rückweg ist eindeutig und stabil (κ = ${fmtDe(kappa, 2)}), A ist invertierbar.`}
       </Verdikt>
     </div>

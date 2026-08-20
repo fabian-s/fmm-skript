@@ -39,7 +39,7 @@ import type { Kurve3D, Punkt3D, Series, Sicht3D, Vec3 } from "../../../lib";
  * davon), violett der stationäre Punkt — die im Kapitel freie Farbe, hier mit
  * genau dieser Rolle.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s132.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * ältere Prüfung check-math-s132.mjs bestätigt):
  *  - ∇f = (2x, −2y) und H = diag(2, −2) gegen zentrale Differenzen (in
  *    (1,7; −0,9): numerisch (3,400000; 1,800000) = analytisch).

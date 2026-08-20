@@ -83,7 +83,7 @@ export function MatrixInput({
 }: MatrixInputProps) {
   const [drafts, setDrafts] = useState(() => draftsFor(value));
   const activeCell = useRef<string | null>(null);
-  const dragging = useRef<{ i: number; j: number; x: number; value: number } | null>(null);
+  const dragging = useRef<{ i: number; j: number; x: number; value: number; scrubbing: boolean } | null>(null);
   const shape = value.map((row) => row.length).join(",");
 
   // Externe Änderungen (etwa ein Preset) werden übernommen. Der gerade
@@ -139,12 +139,23 @@ export function MatrixInput({
               }}
               onPointerDown={(event) => {
                 if (!scrub) return;
-                event.currentTarget.setPointerCapture(event.pointerId);
-                dragging.current = { i, j, x: event.clientX, value: entry };
+                dragging.current = { i, j, x: event.clientX, value: entry, scrubbing: false };
               }}
               onPointerMove={(event) => {
                 const drag = dragging.current;
                 if (!drag || drag.i !== i || drag.j !== j) return;
+                // Ein Klick bleibt ein normaler Texteingabe-Klick: Erst nach
+                // einer klaren Horizontalbewegung beginnen wir zu scrubben.
+                if (!drag.scrubbing) {
+                  if (Math.abs(event.clientX - drag.x) < 5) return;
+                  drag.scrubbing = true;
+                  try {
+                    event.currentTarget.setPointerCapture(event.pointerId);
+                  } catch {
+                    // Ein verlorener Pointer bleibt eine normale Texteingabe.
+                    return;
+                  }
+                }
                 const roh = drag.value + Math.round((event.clientX - drag.x) / 4) * step;
                 const dez = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
                 const next = commit(i, j, Number(roh.toFixed(Math.min(10, dez))));
@@ -159,16 +170,12 @@ export function MatrixInput({
               onLostPointerCapture={() => {
                 dragging.current = null;
               }}
-              step={step}
-              min={min}
-              max={max}
               className="w-full rounded border px-1 py-0.5 text-center font-mono text-xs tabular-nums"
               style={{
                 backgroundColor: "var(--w-bg)",
                 borderColor: "var(--w-border)",
                 color: "var(--w-text)",
                 cursor: scrub ? "ew-resize" : undefined,
-                touchAction: scrub ? "none" : undefined,
               }}
             />
           );

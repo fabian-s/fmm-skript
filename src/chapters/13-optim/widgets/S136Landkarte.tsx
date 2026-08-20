@@ -31,7 +31,7 @@ import {
  * und Suchrichtungen vorbehalten). Die Höhenskala bleibt neutral grau, damit
  * sie nicht mit dem Blau der Iterierten kollidiert.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s135.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * ältere Prüfungen rev136-b.mjs, rev136-c.mjs bestätigt):
  *  - Die drei Voreinstellungen sind die Startpunkte der Folien. (−1; −0,5)
  *    endet im globalen Minimum (0; 0) mit f = 0, (−1; 1) im oberen lokalen

@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20),
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20),
  * a = 1,23456789 und b = a·(1 − 10⁻ᵏ):
  *   |a|/|a−b| = 10^k, auf ganze Zahlen gerundet exakt für k = 1 … 8 (die
  *   Rechnung selbst weicht wegen Auslöschung um bis zu 1,9·10⁻⁹ relativ ab).

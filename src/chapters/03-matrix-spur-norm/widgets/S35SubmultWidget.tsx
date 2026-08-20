@@ -18,8 +18,7 @@
  * PROVENIENZ: Eigenbau (2026-08-05); neu sind der geseedete Zufall, der
  * Quotientenbalken, das Verdikt und die Schätzfrage.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): Für die Einsermatrix A = B = (1 1; 1 1) ist
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für die Einsermatrix A = B = (1 1; 1 1) ist
  * AB = (2 2; 2 2); Spektral-, Spalten-, Zeilensummen-, Frobenius- und
  * Nuklearnorm liefern alle den Quotienten genau 1 (Schranke scharf), die
  * Maximumsnorm dagegen 2 (Beispiel 3.5.6). Über die 40 Seeds des Würfelknopfs
@@ -319,8 +318,8 @@ export function S35SubmultWidget() {
       ]}
       verdeckt={
         <p className="max-w-prose text-sm">
-          Die Normwahl steht jetzt auf der Maximumsnorm, die Matrizen sind die Einsermatrix aus
-          Beispiel 3.5.6.
+          Die Normwahl steht jetzt auf der Maximumsnorm. Mit der Schaltfläche können wir die
+          Einsermatrix aus Beispiel 3.5.6 einstellen.
         </p>
       }
       onAufloesen={() => setNormKey("max")}

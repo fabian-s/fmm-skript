@@ -105,7 +105,7 @@ export function LUKostenPlot() {
             jedes Mal neu: {fmtVal(cNeu)}
           </p>
           <p className="font-mono text-xs">Ersparnisfaktor: {faktor.toFixed(1).replace(".", ",")}×</p>
-          <Verdikt kind="neutral">Bei J = 50 beträgt die Ersparnis aktuell {faktor.toFixed(1).replace(".", ",")}×; die Auflösung ordnet den Schwellenwert ein.</Verdikt>
+          <Verdikt kind="neutral">Bei J = {J} beträgt die Ersparnis aktuell {faktor.toFixed(1).replace(".", ",")}×; die Auflösung ordnet den Schwellenwert ein.</Verdikt>
         </div>
       </div>
       </div>

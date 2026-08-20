@@ -16,7 +16,7 @@
  * FARBROLLEN: blau = R = 2 Ω; orange = R = 4 Ω; graue Punkte = abgelesene
  * Spannung bei i = 1,5 A.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20): bei i = 1,5 A ist V = 3,0 V (R = 2 Ω) bzw. V = 6,0 V
  * (R = 4 Ω); das Verhältnis der Steigungen ist exakt 2.
  */

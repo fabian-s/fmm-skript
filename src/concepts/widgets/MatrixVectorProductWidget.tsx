@@ -4,7 +4,7 @@
  * DIE EINE EINSICHT: Ax ist die gewichtete Summe der Spalten von A.
  * FARBROLLEN: rot = x₁a₁, grün = x₂a₂, blau = ihre Summe Ax.
  * PROVENIENZ: Neuaufbau auf `LabeledTransformCanvas`; alle Texte sind neu.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, bestätigt
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, bestätigt
  * für A = [[1, 2], [3, 4]] und x = (2; 1): Ax = (4; 10).
  */
 import { useState } from "react";

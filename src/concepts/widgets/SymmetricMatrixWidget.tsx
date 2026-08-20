@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `symmetric-matrix` (Triage C3: KEEP + Verdikt für
  * „Streckung vs. Spiegelung"; dazu x als Suchaufgabe ziehbar).
  *
@@ -17,7 +17,7 @@
  * dem Vorgängerwidget (Stand 2026-08-18); Ziehen, Ellipse und Achsen aus der
  * Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/SymmetricMatrixWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/SymmetricMatrixWidget.mjs,
  * 2026-08-20), A = ((2, c), (c, 1)), λ = (3 ± √(1+4c²))/2:
  *   c = 0: λ₁ = 2, λ₂ = 1, det A = 2;
  *   c = 1 (Default): λ₁ = 2,618, λ₂ = 0,382, det A = 1, Spur 3,

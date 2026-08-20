@@ -26,7 +26,7 @@ import type { Series } from "../../../lib";
  * Rot ist damit im ganzen Kapitel „das Teuerste": die naive Rekursion in
  * §2.2/§2.5 und die Klasse O(2ⁿ) hier.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19): kleinstes n, ab dem endgültig 2^n > c·n² gilt —
  *   c = 1 → 5 · c = 10 → 10 · c = 100 → 15 · c = 178 → 16 · c = 316 → 17 ·
  *   c = 1000 → 19.

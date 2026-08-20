@@ -16,7 +16,7 @@
  * (Stand 2026-08-18); Ziehen und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), w = (2, 1), ‖w‖² = 5:
  *   θ = 40° (Default): c₁ = 2,1749, c₂ = −0,5195, c₁² + c₂² = 5;
  *   θ = 26,5651°: c₂ = 0 und c₁ = ‖w‖ = 2,2361 — dort liegt w auf q₁;

@@ -25,7 +25,7 @@ import {
  * portiert (widgets/svdMath.ts: svd2x2; widgets/SvdStages2x2.tsx); alle
  * sichtbaren Texte, die Presets und die Farbgebung sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19): Voreinstellung A = (2 1; 0 1) hat σ₁ = 2,2882 = √(3+√5),
  * σ₂ = 0,8740 = √(3−√5), σ₁/σ₂ = 2,618, v₁ = (0,851; 0,526);
  * Presets: Drehung (0 −1; 1 0) σ₁ = σ₂ = 1; gleiche Spalten (1 1; 1 1)

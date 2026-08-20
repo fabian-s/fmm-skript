@@ -20,8 +20,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  * Identität grün (die „lineare Approximation" dieses Abschnitts), Abweichung
  * rot, das Ableitungsobjekt ∂F/∂x orange.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s101-s104.mjs, 2026-08-19): über den ganzen Reglerbereich in Schritten
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: über den ganzen Reglerbereich in Schritten
  * von 0,1 (Stellen mit |det F| < 0,05 ausgenommen) betragen die größten
  * Abweichungen zwischen Formel und zentraler Differenz
  *   diag(x, 2x): Spur 6,4e-11, det 5,1e-11, Inverse 6,3e-8;

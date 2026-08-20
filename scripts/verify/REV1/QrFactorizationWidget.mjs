@@ -1,0 +1,7 @@
+import assert from "node:assert/strict";
+const close=(actual,expected,tolerance=1e-4)=>assert.ok(Math.abs(actual-expected)<=tolerance,`${actual} ≠ ${expected}`);
+const a1=[1.5,2], norm=Math.hypot(...a1), q1=a1.map(x=>x/norm), qr=theta=>{const a2=[2*Math.cos(theta),2*Math.sin(theta)],r12=q1[0]*a2[0]+q1[1]*a2[1],u=[a2[0]-r12*q1[0],a2[1]-r12*q1[1]],r22=Math.hypot(...u),q2=r22>1e-9?[u[0]/r22,u[1]/r22]:[-q1[1],q1[0]];return {a2,r12,r22,q2}};
+close(norm,2.5); close(q1[0],.6); close(q1[1],.8); let q=qr(2.2); close(q.a2[0],-1.177); close(q.a2[1],1.617); close(q.r12,.5874); close(q.r22,1.9118); q=qr(Math.atan2(2,1.5)+Math.PI/2);close(q.r12,0);close(q.r22,2);q=qr(Math.atan2(2,1.5));close(q.r12,2);close(q.r22,0);close(qr(Math.atan2(2,1.5)+.05).r22,.1,5e-5);close(Math.asin(.15/2)*180/Math.PI,4.30,.01);
+const Q=[[.6,-.8],[.8,.6]],R=[[5,5],[0,5]],QR=Q.map(row=>R[0].map((_,j)=>row[0]*R[0][j]+row[1]*R[1][j]));assert.deepEqual(QR,[[3,-1],[4,7]]);const u2=[1,1], projected=[1,0], remainder=u2.map((x,i)=>x-projected[i]);assert.deepEqual(remainder,[0,1]);
+let maxDot=0,maxNormError=0;for(let i=0;i<=6283;i++){const z=qr(i/1000),d=Math.abs(q1[0]*z.q2[0]+q1[1]*z.q2[1]);maxDot=Math.max(maxDot,d);maxNormError=Math.max(maxNormError,Math.abs(Math.hypot(...z.q2)-1));close(Math.abs(a1[0]*z.a2[1]-a1[1]*z.a2[0]),norm*z.r22,1e-12);}assert.ok(maxDot<=5.9e-13,`${maxDot} exceeds 5.9e-13`);assert.ok(maxNormError<=2.3e-16,`${maxNormError} exceeds 2.3e-16`);
+console.log("QrFactorizationWidget: verified");

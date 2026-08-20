@@ -31,7 +31,7 @@ import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen (die drei Stuecke
  * unterscheiden sich durch die Strichelung, nicht durch die Farbe), Knoten
  * orange.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const KNOTEN = [0, 1, 2, 3];

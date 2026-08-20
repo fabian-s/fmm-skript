@@ -8,6 +8,14 @@
  * unabhängig gescannt; insbesondere 0,4384→0,3003 ist nicht monoton und
  * die in der Tabelle genannten Randmaxima werden geprüft.
  * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * NACHTRAG (n-abhängiges Chebyshev-Verdikt): Bei n = 5 ist der
+ * Chebyshev-Fehler 0,402 kaum kleiner als der äquidistante 0,438, bei
+ * geradem n ≤ 10 sogar größer oder fast gleich (n=4: 0,750 vs 0,707;
+ * n=6: 0,556 vs 0,433; n=8: 0,392 vs 0,247; n=10: 0,269 vs 0,300).
+ * Das Verdikt lobt Chebyshev deshalb nur, wenn fehler < 0,2 UND
+ * fehler < 0,5·äquidistant (erfüllt für n = 9 und n ≥ 11), sonst neutral.
+ * Unabhängig (direkte Lagrange-Form statt baryzentrisch) geprüft mit
+ * scripts/verify/FIX-VERDACHT/check-s143-cheb.mjs, 2026-08-20.
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
@@ -35,7 +43,7 @@ import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../l
  *
  * Farbcode Kapitel 14: Stuetzpunkte blau, Interpolant gruen, Fehler und
  * Problemzonen rot, die wahre Funktion neutral (wie in S141DreiProbleme).
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: BLAU, gruen: GRUEN, rot: ROT, grau: WAHR } = FMM_COLORS;
@@ -144,9 +152,17 @@ export function RungeExplorer() {
   const amRand = Math.abs(ort) > 0.7;
   const wo = amRand ? "also nahe am Rand" : "also im mittleren Bereich";
   const kopf = `${modus === "cheb" ? "Chebyshev-Knoten" : "Äquidistante Knoten"}, Grad ${n - 1}: größter Abstand ${fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)} bei x = ${fmt(ort, 2)}, ${wo}.`;
+  // Fehler der äquidistanten Knoten bei DEMSELBEN n: erst der Vergleich
+  // rechtfertigt ein Lob der Chebyshev-Knoten. Bei kleinem n ist ihr Fehler
+  // kaum kleiner (n = 5: 0,402 gegen 0,438), bei geradem n ≤ 8 sogar größer
+  // (kein Knoten in der Mitte); klar vorn liegen sie erst ab n ≈ 9.
+  const aequiHier = 10 ** LOG_AEQUI[n - N_MIN];
+  const chebLohnt = fehler < 0.5 * aequiHier && fehler < 0.2;
   const status =
     modus === "cheb"
-      ? `${kopf} Zu den Rändern hin liegen die Knoten dichter, und dort bleibt die Kurve ruhig.`
+      ? chebLohnt
+        ? `${kopf} Zu den Rändern hin liegen die Knoten dichter, und dort bleibt die Kurve ruhig; äquidistante Knoten lägen hier bei ${fmt(aequiHier)}.`
+        : `${kopf} Zu den Rändern hin liegen die Knoten dichter, aber der größte Abstand ist ${fehler <= aequiHier ? "kaum kleiner" : "sogar größer"} als mit äquidistanten Knoten (${fmt(aequiHier)}). Der Vorsprung zeigt sich erst bei größerem n.`
       : fehler > 1
         ? `${kopf} In der Mitte passt der Interpolant gut, an den Enden schlägt er weit aus.`
         : amRand
@@ -246,7 +262,7 @@ export function RungeExplorer() {
         n = {n}, Grad {n - 1}, {modus === "aequi" ? "äquidistant" : "Chebyshev"}: max|f − p| ≈{" "}
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
-      <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? "ok" : "warn"}>
+      <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? (chebLohnt ? "ok" : "neutral") : "warn"}>
         {status}{vergleich} Das illustriert Bemerkung 14.3.16: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
       </Verdikt>
     </div>

@@ -18,7 +18,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
  * feine deterministische Randsuche (kein Math.random); die vier Ecken der
  * Raute liegen exakt im Suchraster, ein Eckentreffer ist deshalb exakt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s135.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * aeltere Pruefungen rev135-ridgelasso.mjs, rev135-ecke.mjs bestaetigt):
  *  - c = 1 gibt Ridge (0,8891; 0,4578) mit f = 1,5837 und Lasso exakt (1; 0)
  *    mit f = 2,1780.

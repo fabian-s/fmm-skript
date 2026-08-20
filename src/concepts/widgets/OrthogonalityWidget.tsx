@@ -19,7 +19,7 @@
  * Vorgängerwidget (Stand 2026-08-18); Quadratkonstruktion neu, Achsen und
  * Ziehen aus der Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), u = (1,2; 0,6), ‖v‖ ∈ [0,4; 1,2]:
  *   ‖u‖² = 1,8; Richtung von u = 26,565°;
  *   Default (60°, ‖v‖ = 1): uᵀv = 1,1196, ‖u‖²+‖v‖² = 2,8,

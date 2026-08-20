@@ -1,7 +1,7 @@
 /**
  * DIE EINE EINSICHT: Mehr Taylor-Terme nähern cos(x) auf einem sichtbar breiteren
  * Intervall an. FARBROLLEN: blau = Partialsumme, grau = Referenz. PROVENIENZ: neu.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
  * T₈(0) = 1 und T₈(1) = cos(1) bis 3·10⁻¹⁴.
  */
 import { useState } from "react";

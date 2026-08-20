@@ -39,8 +39,7 @@ import type { Kurve3D, Sicht3D, Vec3 } from "../../../lib";
  * heath-ch2-App (S23.tsx) recycelt; Beschriftungen, Verdikt, Drag und die
  * 3D-Tafel sind für dieses Skript neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): Ausgangszustand x = (−1,2; 0,9):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Ausgangszustand x = (−1,2; 0,9):
  * ‖x‖ = 2,1 (p = 1), 1,5 (p = 2), 1,2 (p = ∞); ‖(−1,6; 1,2)‖ = 2,8 / 2,0 /
  * 1,6; für p = 0,5 ist ‖e₁ + e₂‖_p = 2^(1/p) = 4 > 2 = ‖e₁‖_p + ‖e₂‖_p,
  * die Dreiecksungleichung fällt also. Volumina der Einheitskugeln im R³:

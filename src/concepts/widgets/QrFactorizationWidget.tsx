@@ -21,7 +21,7 @@
  * entfallenen GramSchmidtWidget; Ziehen und Achsen aus der Lib. Texte neu.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/QrFactorizationWidget.mjs,
+ * scripts/verify/REV1/QrFactorizationWidget.mjs,
  * 2026-08-20), a₁ = (1,5; 2), ‖a₂‖ = 2:
  *   r₁₁ = ‖a₁‖ = 2,5 und q₁ = (0,6; 0,8) exakt;
  *   Voreinstellung θ = 2,2: a₂ = (−1,177; 1,617), r₁₂ = 0,5874, r₂₂ = 1,9118;

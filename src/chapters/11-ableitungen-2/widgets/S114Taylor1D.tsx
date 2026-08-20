@@ -30,7 +30,7 @@ import {
  * T_1/T_2/T_3 liefern bei x = 0,5 die Werte 1,5 / 1,625 / 1,645833 und damit
  * die Fehler 0,148721 / 0,023721 / 0,002888 aus Beispiel 11.4.6.
  *
- * Nachgerechnet (scratchpad/verify-11-ableitungen-2/check-s114.mjs,
+ * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19): Die Fehlerquotienten bei x = 0,5 sind 4,362 (T_0 -> T_1),
  * 6,270 (T_1 -> T_2), 8,214 (T_2 -> T_3) und 10,177 (T_3 -> T_4) — daher die
  * Schätzfrage mit der Antwort „Faktor 8". Größter Fehler auf [-1, 1] bzw.

@@ -7,9 +7,13 @@
  * Zweierpotenz, während der *relative* Abstand konstant 2^-t bleibt. Deshalb
  * kostet Runden immer denselben relativen Preis, egal wie groß die Zahl ist.
  *
- * VARIANTEN: `variante="gesamt"` (floating-point) zeigt den ganzen Strahl;
- * `variante="epsilon"` (machine-epsilon) hebt zusätzlich die Lücke direkt
- * rechts von 1 hervor — sie ist die Maschinengenauigkeit.
+ * VARIANTEN: `variante="gesamt"` (floating-point) zeigt den ganzen Strahl
+ * [0,5; 8] über alle vier Binaden. `variante="epsilon"` (machine-epsilon)
+ * zoomt auf das Fenster [1 − ε, 1 + ε] (an den Strahlrändern gekappt) und
+ * hebt die Lücke direkt rechts von 1 orange hervor — sie ist die
+ * Maschinengenauigkeit. Im Zoom füllt die ε-Lücke die halbe Fensterbreite,
+ * und der Sprung der Gitterweite an
+ * der 1 (links ε/2, rechts ε) wird zur Hauptsache des Bildes.
  *
  * FARBROLLEN: blau = Gitter der darstellbaren Zahlen; rot = die exakte Zahl x,
  * die wir ziehen; orange = ihr gerundetes Bild fl(x) und die hervorgehobene
@@ -19,7 +23,7 @@
  * Vorgängerwidgets FloatingPointWidget/MachineEpsilonWidget (Stand
  * 2026-08-18); Ziehen über `useDrag` aus der Lib, Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20;
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20;
  * Erstprüfung 2026-08-19), Spielzeugsystem mit e ∈ {−1,0,1,2}:
  *   Striche: t=1 → 9, t=2 → 17, t=3 → 33, t=4 → 65, t=5 → 129 (= 4·2^t + 1).
  *   Lücke rechts von 1 = 2^-t (0,5 / 0,25 / 0,125 / 0,0625 / 0,03125),
@@ -31,6 +35,16 @@
  *   0,015625) wird in jedem Fall eingehalten.
  *   Doppelte Genauigkeit zum Vergleich: 2^-52 = 2,220446049250313e−16
  *   = Number.EPSILON, 1 + 2^-53 === 1, √(2^-52) ≈ 1,49e−8.
+ *
+ * VERIFIZIERTE ZAHLEN ZUM ZOOM (node,
+ * scripts/verify/FIX-DUBLETTEN/check-zoom.mjs, 2026-08-20): Fenster der
+ * Variante epsilon je t = 1…5: [0,5; 1,5] · [0,75; 1,25] · [0,875; 1,125] ·
+ * [0,9375; 1,0625] · [0,96875; 1,03125], darin 4/6/4/4/4 Gitterstriche, die 1
+ * immer dabei. Die Gitterweite springt an der 1 von ε/2 auf ε (für jedes t
+ * exakt). Die ε-Lücke füllt 50,0 % der
+ * Fensterbreite, im Gesamtstrahl dagegen nur 6,7 / 3,3 / 1,7 / 0,8 / 0,4 %
+ * — bei t = 5 wären das rund 1 px. Die Voreinstellung x = 1,1875 liegt im
+ * Startfenster (t = 2).
  *
  * KORREKTUR 2026-08-20 (Re-Audit QA-O0): Am Reglermaximum x = 8 = 2³ lieferte
  * Math.floor(log2 x) die Binade 3 und das Verdikt behauptete einen
@@ -60,6 +74,21 @@ const X_MIN = 0.5;
 const X_MAX = 8;
 const EXPONENTEN = [-1, 0, 1, 2];
 
+/**
+ * Sichtfenster der Variante: der ganze Strahl, oder ein Ausschnitt um die 1,
+ * dessen Breite mit ε mitschrumpft (am Strahlrand gekappt).
+ */
+function fenster(variante: "gesamt" | "epsilon", t: number): [number, number] {
+  if (variante === "gesamt") return [X_MIN, X_MAX];
+  const eps = 2 ** -t;
+  return [Math.max(X_MIN, 1 - eps), Math.min(X_MAX, 1 + eps)];
+}
+
+/** Achsenmarke ohne überflüssige Nullen: „0,5", „1", „1,125". */
+function marke(v: number): string {
+  return fmtDe(v, 3).replace(/0+$/, "").replace(/,$/, "");
+}
+
 /** Alle darstellbaren Zahlen des Spielzeugsystems, aufsteigend. */
 function gitter(t: number): number[] {
   const werte: number[] = [];
@@ -83,10 +112,21 @@ export function ToyFloatLine({
   variante?: "gesamt" | "epsilon";
 }) {
   const [t, setT] = useState(2);
-  const [x, setX] = useState(variante === "epsilon" ? 1.3 : 5.4);
+  const [x, setX] = useState(variante === "epsilon" ? 1.1875 : 5.4);
 
   const werte = useMemo(() => gitter(t), [t]);
-  const px = (v: number) => PAD_L + ((v - X_MIN) / (X_MAX - X_MIN)) * (BREITE - PAD_L - PAD_R);
+  const [xMin, xMax] = useMemo(() => fenster(variante, t), [variante, t]);
+  const px = (v: number) => PAD_L + ((v - xMin) / (xMax - xMin)) * (BREITE - PAD_L - PAD_R);
+  // Nur das Sichtfenster wird gezeichnet; gerundet wird gegen das volle Gitter.
+  const sichtbar = werte.filter((v) => v >= xMin - 1e-12 && v <= xMax + 1e-12);
+  const marken = variante === "epsilon" ? [xMin, 1, xMax] : [0.5, 1, 2, 4, 8];
+
+  // Beim Wechsel der Mantissenbits schrumpft das Zoomfenster: x mitziehen.
+  const setzeT = (neu: number) => {
+    setT(neu);
+    const [lo, hi] = fenster(variante, neu);
+    setX((alt) => clamp(alt, lo, hi));
+  };
 
   const fl = runde(werte, x);
   const relFehler = Math.abs(x - fl) / x;
@@ -102,8 +142,8 @@ export function ToyFloatLine({
 
   const zieh = useDrag<"x">({
     feld: { x0: PAD_L, y0: 0, w: BREITE - PAD_L - PAD_R, h: HOEHE },
-    welt: { x0: X_MIN, x1: X_MAX, y0: 0, y1: 1 },
-    clamp: ([wx]) => [clamp(wx, X_MIN, X_MAX), 0],
+    welt: { x0: xMin, x1: xMax, y0: 0, y1: 1 },
+    clamp: ([wx]) => [clamp(wx, xMin, xMax), 0],
     onDrag: ([wx]) => setX(wx),
     cursor: "ew-resize",
   });
@@ -122,7 +162,7 @@ export function ToyFloatLine({
         height={HOEHE}
         className="mt-1 h-auto max-w-full rounded"
         role="img"
-        aria-label={`Zahlenstrahl der darstellbaren Zahlen eines Spielzeugsystems mit ${t} Mantissenbits; x = ${fmtDe(x, 3)} wird auf ${fmtDe(fl, 3)} gerundet.`}
+        aria-label={`Zahlenstrahl der darstellbaren Zahlen eines Spielzeugsystems mit ${t} Mantissenbits, Ausschnitt von ${marke(xMin)} bis ${marke(xMax)}; x = ${fmtDe(x, 3)} wird auf ${fmtDe(fl, 3)} gerundet.`}
         {...zieh.svgProps}
       >
         <rect
@@ -149,14 +189,14 @@ export function ToyFloatLine({
         )}
 
         <line
-          x1={px(X_MIN)}
+          x1={px(xMin)}
           y1={ACHSE_Y}
-          x2={px(X_MAX)}
+          x2={px(xMax)}
           y2={ACHSE_Y}
           stroke="var(--w-axis)"
           strokeWidth={1}
         />
-        {werte.map((v, i) => (
+        {sichtbar.map((v, i) => (
           <line
             key={i}
             x1={px(v)}
@@ -167,7 +207,7 @@ export function ToyFloatLine({
             strokeWidth={1.3}
           />
         ))}
-        {[0.5, 1, 2, 4, 8].map((v) => (
+        {marken.map((v) => (
           <g key={`p${v}`}>
             <line
               x1={px(v)}
@@ -184,7 +224,7 @@ export function ToyFloatLine({
               fontSize={10}
               fill="var(--w-muted)"
             >
-              {fmtDe(v, v < 1 ? 1 : 0)}
+              {marke(v)}
             </text>
           </g>
         ))}
@@ -237,8 +277,24 @@ export function ToyFloatLine({
         />
       </svg>
 
-      <Slider label="x" value={x} onChange={setX} min={X_MIN} max={X_MAX} step={0.001} accent={FMM_COLORS.rot} />
-      <Slider label="Mantissenbits t" value={t} onChange={setT} min={1} max={5} step={1} fmt={(v) => fmtDe(v, 0)} />
+      <Slider
+        label="x"
+        value={x}
+        onChange={setX}
+        min={xMin}
+        max={xMax}
+        step={0.001}
+        accent={FMM_COLORS.rot}
+      />
+      <Slider
+        label="Mantissenbits t"
+        value={t}
+        onChange={setzeT}
+        min={1}
+        max={5}
+        step={1}
+        fmt={(v) => fmtDe(v, 0)}
+      />
 
       <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> darstellbare Zahlen ·{" "}

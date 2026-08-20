@@ -25,7 +25,7 @@ import {
  * werden 2×2-Geometrie und 3D-Perspektive gezeichnet, kein Blockschema);
  * Aufbau, Farben und sämtliche Texte sind eigenes Material.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19): Speicherbilanz m² + n² + min(m,n) gegen r(m + n + 1) gegen mn:
  * Voreinstellung m = 5, n = 4, r = 2: 45 gegen 20 gegen 20;
  * Preset r = 1: 45 gegen 10; Preset m = n = r = 4: 36 gegen 36 gegen 16;

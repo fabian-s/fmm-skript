@@ -21,7 +21,7 @@ import { Aufgabe, FMM_COLORS, fmtDe as fmt, niceTicks, Slider, Verdikt } from ".
  * - J(s) = 3 + 3 = 6, J(p) = 4 * 2 = 8, Kreuzterm exakt 0.
  * - J(g_t) = 6 + 2t^2 (Simpson trifft die Formel ueber den ganzen
  *   Reglerbereich auf 1e-9 genau).
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;

@@ -146,22 +146,21 @@ export function Frage({ wahr, children }: { wahr: boolean; children: ReactNode }
           ))}
         </span>
       </div>
-      {answered && (
-        <div
-          role="status"
-          aria-live="polite"
-          className={`mt-2 text-sm ${
-            correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"
-          }`}
-        >
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={answered ? `mt-2 text-sm ${correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}` : "sr-only"}
+      >
+        {answered && <>
           <span className="font-medium">
             {correct ? L.correct : L.incorrect(wahr)}{" "}
           </span>
           <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">
             {expl}
           </div>
-        </div>
-      )}
+        </>}
+      </div>
     </div>
   );
 }
@@ -213,7 +212,8 @@ export function Zahlfrage({
           }}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
-              setAnswer(valid ? parsed : null);
+              if (!valid) return;
+              setAnswer(parsed);
               setChecked(true);
             }
           }}
@@ -223,21 +223,25 @@ export function Zahlfrage({
         {einheit ? <span className={`text-sm ${W_MUTED}`}>{einheit}</span> : null}
         <button
           type="button"
-          className="rounded bg-slate-700 px-2 py-1 text-xs font-medium text-white hover:bg-slate-600"
+          disabled={!valid}
+          aria-disabled={!valid}
+          className="rounded bg-slate-700 px-2 py-1 text-xs font-medium text-white hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
-            setAnswer(valid ? parsed : null);
+            if (!valid) return;
+            setAnswer(parsed);
             setChecked(true);
           }}
         >
           {L.check}
         </button>
       </div>
-      {checked && (
-        <div
-          role="status"
-          aria-live="polite"
-          className={`mt-2 text-sm ${correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}`}
-        >
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={checked ? `mt-2 text-sm ${correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}` : "sr-only"}
+      >
+        {checked && <>
           <span className="font-medium">
             {!valid
               ? L.numericInvalid
@@ -246,8 +250,8 @@ export function Zahlfrage({
                 : L.numericIncorrect(`${fmtDe(answer!, precision)}${unit}`)}
           </span>
           <div className="text-slate-600 dark:text-slate-300 [&>p]:my-1">{expl}</div>
-        </div>
-      )}
+        </>}
+      </div>
     </div>
   );
 }

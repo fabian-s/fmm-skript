@@ -1,7 +1,7 @@
 /**
  * DIE EINE EINSICHT: Gewichte, Abstand und Breite bestimmen die sichtbare Gestalt einer Mischung.
  * FARBROLLEN: blau = Mischdichte; grün/rot = Komponenten. PROVENIENZ: Originalwidget.
- * VERIFIZIERTE ZAHLEN: Gaußdichte ist normiert; node, scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ * VERIFIZIERTE ZAHLEN: Gaußdichte ist normiert; node, scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt } from "../../lib";

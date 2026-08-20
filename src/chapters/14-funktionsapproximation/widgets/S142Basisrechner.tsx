@@ -37,7 +37,7 @@ import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe } from "../
  *
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen, Basisfunktionen
  * orange.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE } = FMM_COLORS;

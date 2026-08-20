@@ -10,7 +10,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   Σ_{k=0}^{n} 2⁻ᵏ = 2 − 2⁻ⁿ, geprüft für n = 1 … 12; das Restglied ist also
  *   exakt Rₙ = 2⁻ⁿ. Das sind n+1 Summanden, weshalb der Regler „Index n“ heißt
  *   und nicht „Summanden n“.

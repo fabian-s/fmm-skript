@@ -38,8 +38,7 @@ import {
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Achsen/Zahlformat/Farben aus
  * `src/lib/widgets/util.ts`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s123-projektion.mjs, 2026-08-19): über alle 7921 mit dem 0,05-Raster
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: über alle 7921 mit dem 0,05-Raster
  * erreichbaren Lagen von x und je 3600 abgetastete Randpunkte bleibt
  * max ⟨x − x̂, y − x̂⟩ ≤ 1,4e−15 (rechnerisch null, angenommen in y = x̂) und
  * kein Randpunkt unterbietet d um mehr als 4,5e−16; von je 400 000

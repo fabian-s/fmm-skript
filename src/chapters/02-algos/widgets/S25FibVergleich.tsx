@@ -28,7 +28,7 @@ import type { Series } from "../../../lib";
  * Rekursion, wie \cred im Text), blau = die günstige (Iteration, wie \cblue).
  * Punkte sind gezählte Werte, gestrichelte Linien sind Vorhersagen.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19; T(n) = 1 + T(n−1) + T(n−2), T(0) = T(1) = 1, exakt per BigInt
  * gegengerechnet über T(n) = 2F(n+1) − 1):
  *   T(20) = 21 891 · T(30) = 2 692 537 · T(50) = 40 730 022 147 ·

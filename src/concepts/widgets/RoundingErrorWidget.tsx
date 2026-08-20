@@ -19,7 +19,7 @@
  * k = 6, wo tatsächlich zwölf Stellen verloren gehen, meldete sie umgekehrt
  * „stimmen überein". Gemessen wird jetzt gegen die stabile Auswertung.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * korrekte Stellen der naiven Formel, gegen die stabile Auswertung gerechnet,
  * für k = 1 … 9: 13,9 · 12,5 · 10,8 · 8,3 · 7,1 · 4,1 · 3,1 · 0 · 0. Sie fallen
  * monoton; bei k = 8 liefert die naive Formel exakt 0, also keine einzige

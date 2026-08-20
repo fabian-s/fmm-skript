@@ -15,7 +15,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   0! … 6! = 1, 1, 2, 6, 24, 120, 720 (Produktdefinition, per Assertion).
  *   log₁₀ davon = 0; 0; 0,301; 0,778; 1,380; 2,079; 2,857 — der letzte Wert
  *   liegt unter 3, die y-Achse [0; 3] deckt also alle Punkte ab.

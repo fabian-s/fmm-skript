@@ -19,7 +19,7 @@
  * Es ist ein Schema, kein Koordinatenbild: die Indizes stehen als Ziffern am
  * Raster, Achsen mit Ticks gäbe es hier nichts zu beschriften.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * der Stapel hat 3·3·3 = 27 Zellen, jede mit einer Adresse (i, j, k) aus
  * {1, 2, 3}³.
  */

@@ -14,7 +14,7 @@
  * `fmtDe` aus der Lib ersetzt. Texte neu geschrieben.
  *
  * VERIFIZIERTE ZAHLEN (node,
- * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MatrixMultiplicationWidget.mjs,
+ * scripts/verify/REV1/MatrixMultiplicationWidget.mjs,
  * 2026-08-20), Voreinstellung A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]:
  *   c₁₁ = 1·5 + 2·7 = 19, c₁₂ = 1·6 + 2·8 = 22,
  *   c₂₁ = 3·5 + 4·7 = 43, c₂₂ = 3·6 + 4·8 = 50,

@@ -10,7 +10,7 @@
  *
  * PROVENIENZ: eigener Aufbau; Schrittsteuerung über `Stepper` aus der Lib.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20),
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20),
  * A = [2 1 1; 4 5 1; 2 −2 0]:
  *   Schritt 1: m₂₁ = 4/2 = 2, m₃₁ = 2/2 = 1 → [2 1 1; 0 3 −1; 0 −3 −1].
  *   Schritt 2: m₃₂ = −3/3 = −1 → [2 1 1; 0 3 −1; 0 0 −2].

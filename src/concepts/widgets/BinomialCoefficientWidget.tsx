@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   choose(5,2) = 10, choose(6,3) = 20; die Rekursion
  *   C(r,c) = C(r−1,c−1) + C(r−1,c) ist für ALLE inneren Einträge der
  *   gezeichneten Zeilen 0 … 7 per Assertion nachgerechnet.

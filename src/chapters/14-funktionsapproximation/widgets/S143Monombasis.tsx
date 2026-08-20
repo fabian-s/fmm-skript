@@ -32,7 +32,7 @@ import { Aufgabe, FMM_COLORS, M, Slider, Verdikt } from "../../../lib";
  *   (b_1, b_2) 32,55 Grad, (b_5, b_6) 5,47 Grad, (b_9, b_10) 2,72 Grad.
  *
  * Farbcode Kapitel 14: Basisfunktionen orange, Problemzonen rot.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { orange: ORANGE, rot: ROT, grau: NEUTRAL } = FMM_COLORS;

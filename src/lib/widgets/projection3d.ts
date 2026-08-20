@@ -22,7 +22,7 @@
  * weil die Bibliothek nicht aus einem Kapitel importieren darf.
  *
  * Alles ist deterministisch und frei von Zufall (kein Math.random).
- * Per node geprüft: scratchpad/check-surface3d.mjs, 2026-08-19 (Kamerabasis
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen (Kamerabasis
  * orthonormal und rechtshändig für 96 Winkelpaare; Projektion der acht
  * Würfelecken bei (Azimut 35°, Höhe 25°) gegen die Handrechnung; Normalen der
  * Fläche z = ½(2x² + 8y²) gegen den analytischen Gradienten auf 1e−6).

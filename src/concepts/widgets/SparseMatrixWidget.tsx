@@ -16,7 +16,7 @@
  * und Spaltenindex, und die stehen bereits als Rasterposition da. Ticks mit
  * Zahlen hätten hier nichts zu beschriften, deshalb bleibt die Tafel achsenlos.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * für n = 12 hat eine Bandmatrix der Bandbreite b genau n(2b+1) − b(b+1)
  * Nichtnull-Einträge, also 12 / 34 / 54 / 72 / 88 / 102 für b = 0 … 5 gegenüber
  * 144 Zahlen bei dichter Ablage. b = 1 (Tridiagonal) speichert damit 34 statt

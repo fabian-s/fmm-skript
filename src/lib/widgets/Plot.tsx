@@ -125,7 +125,9 @@ export function Plot({
   const labelPx = (t: string) => t.length * 6.2;
   const lastX = xTicks.length ? fmtTick(xTicks[xTicks.length - 1], xStep) : "";
   const widestY = yTicks.reduce((w, t) => Math.max(w, labelPx(fmtTick(t, yStep))), 0);
-  const left = Math.max(34, Math.ceil(widestY) + 8);
+  // Die gedrehte y-Achsenbeschriftung braucht links neben den Tick-Texten
+  // eigenen Platz; sonst überlappt sie lange deutsche Dezimalzahlen.
+  const left = Math.max(34, Math.ceil(widestY) + 8 + (yLabel ? 14 : 0));
   const right = Math.max(8, Math.ceil(labelPx(lastX) / 2) + 3);
   const top = 10;
   const legendItems = [
@@ -137,7 +139,7 @@ export function Plot({
   const estimatedLegendWidth = Math.max(0, ...legendItems.map((item) => 22 + item.label.length * 6));
   const legendBelow = legendItems.length > 2 || estimatedLegendWidth > (safeWidth - left - right) * 0.52;
   const legendExtra = legendBelow ? legendItems.length * 13 + 3 : 0;
-  const bottom = (xLabel ? 28 : 18) + legendExtra;
+  const bottom = (xLabel ? 28 : 18) + (legendBelow ? legendExtra + 10 : 0);
   const plotRight = Math.max(left + 1, safeWidth - right);
   const plotBottom = Math.max(top + 1, safeHeight - bottom);
   const plotWidth = plotRight - left;
@@ -264,15 +266,21 @@ export function Plot({
           })()}
         </g>
         <g fill="var(--w-text)" fontSize="10" fontFamily="ui-monospace, SFMono-Regular, monospace" aria-hidden="true">
-          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={safeHeight - (xLabel ? 15 : 5)} textAnchor="middle">{fmtTick(t, xStep)}</text>; })}
+          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={plotBottom + 12} textAnchor="middle">{fmtTick(t, xStep)}</text>; })}
           {yTicks.map((t) => { const [, y] = toPx(x0, t); return <text key={`yt-${t}`} x={left - 4} y={y + 3} textAnchor="end">{fmtTick(t, yStep)}</text>; })}
           {xLabel && <text x={(left + plotRight) / 2} y={safeHeight - 3} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif">{xLabel}</text>}
-          {yLabel && <text x="10" y={(top + plotBottom) / 2} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif" transform={`rotate(-90 10 ${(top + plotBottom) / 2})`}>{yLabel}</text>}
+          {yLabel && (() => {
+            const x = Math.max(10, left - widestY - 12);
+            const y = (top + plotBottom) / 2;
+            return <text x={x} y={y} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif" transform={`rotate(-90 ${x} ${y})`}>{yLabel}</text>;
+          })()}
         </g>
         {legendItems.length > 0 && <g aria-hidden="true" fontSize="10" fontFamily="ui-sans-serif, sans-serif">
           {!legendBelow && <rect x={plotRight - estimatedLegendWidth - 8} y={top + 1} width={estimatedLegendWidth + 7} height={legendItems.length * 13 + 3} fill="var(--w-bg)" fillOpacity={0.88} rx={2} />}
           {legendItems.map((item, i) => {
-            const y = legendBelow ? plotBottom + 10 + i * 13 : top + 10 + i * 13;
+            // Unter dem Plot sitzen zuerst die x-Tick-Labels (plotBottom + 12),
+            // die Legende beginnt darunter — sonst reisst sie die Ticks von ihrer Achse ab.
+            const y = legendBelow ? plotBottom + 24 + i * 13 : top + 10 + i * 13;
             const x = legendBelow ? left + 4 : plotRight - estimatedLegendWidth - 4;
             return <g key={`legend-${i}`}><line x1={x} x2={x + 15} y1={y - 3} y2={y - 3} stroke={item.color} strokeWidth="2" strokeDasharray={dashArray(item.dash)} /><text x={x + 19} y={y} fill="var(--w-text)">{item.label}</text></g>;
           })}

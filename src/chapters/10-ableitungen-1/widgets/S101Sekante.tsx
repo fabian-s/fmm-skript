@@ -35,8 +35,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  *
  * Alles ist deterministisch: drei fest verdrahtete Funktionen, kein Zufall.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s101-s104.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   f(x) = x²: r(h) = h² exakt (auf einem 61×200-Raster bis 1,7e-15), also
  *     |r(h)|/|h| = |h|; bei x = 0,6 und h = 0,6 ist die rechte Sekante 1,8,
  *     die Tangente 1,2, r(h) = 0,36; bei h = 0,3 ist r = 0,09, bei h = 0,15

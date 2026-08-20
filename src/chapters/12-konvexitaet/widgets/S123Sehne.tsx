@@ -36,8 +36,7 @@ import {
  * FARBROLLEN (Kapitel 12): Epigraph/Funktionsgraph blau, Sehne und
  * Konvexkombinationen grün, Verletzungen rot, ausgezeichnete Punkte orange.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s123-sehne.mjs, 2026-08-19; zuvor rev123-widget.mjs), über alle 3081
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19; zuvor rev123-widget.mjs), über alle 3081
  * Paare des 0,05-Rasters mit y − x ≥ 0,15 je Kurve: 0,6x²+0,3 besteht die
  * Sehnenprobe auf JEDEM Paar und deckt den Graphen nie (strikt konvex);
  * |x| besteht ebenfalls jedes Paar, bei 1482 davon fällt die Sehne mit dem

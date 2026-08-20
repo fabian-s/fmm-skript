@@ -11,7 +11,7 @@
  * Ticks und Achsennamen, Themenfarben, Aufgabe und Verdikt sind neu. Der
  * erklärende Absatz steht jetzt in sequence.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * a_n = 1/n für n = 1 … 20 ist streng monoton fallend und durchweg positiv;
  * a_1 = 1, a_20 = 0,05, und erstmals unter 0,1 fällt die Folge bei n = 11.
  */

@@ -4,7 +4,7 @@
  * DIE EINE EINSICHT: Ein bisher bester Versuch ist noch kein globales Minimum.
  * FARBROLLEN: blau = Zielfunktion, rot = aktueller Versuch, grün = bester Fund.
  * PROVENIENZ: Neu; Schätzfrage aus der gemeinsamen Widget-Lib.
- * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, bestätigt
+ * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, bestätigt
  * das globale Minimum L(−1,035558) = −0,305428 auf [−1,8; 1,8].
  */
 import { useState } from "react";

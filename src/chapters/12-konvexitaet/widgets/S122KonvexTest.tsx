@@ -38,8 +38,7 @@ import {
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Achsen/Zahlformat/Farben aus
  * `src/lib/widgets/util.ts`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s122-mengen.mjs, 2026-08-19): Kreisring 0,8 ≤ ‖z‖ ≤ 1,2 mit
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Kreisring 0,8 ≤ ‖z‖ ≤ 1,2 mit
  * x = (1,1; 0) und y = (0; 1,1) liegt für λ zwischen 0,380 und 0,620 im Loch,
  * der Mittelpunkt hat die Norm 1,1/√2 = 0,7778 < 0,8; die Parabelmenge mit
  * x = (−1; 1) und y = (1; 1) liegt für JEDES λ in (0, 1) außerhalb. Über je

@@ -16,7 +16,7 @@
  * Spoiler. Ziehen auf dem Einheitskreis und Achsen kommen aus der
  * Lib-`TransformCanvas`, Suchlogik und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), A = [[2, 1], [1, 2]],
  * Spur 4, det 3, also λ = 3 und λ = 1:
  *   45°/225° : Av = ±(2,121; 2,121), Kreuzprodukt 0, vᵀAv = 3, ‖Av‖ = 3
@@ -24,7 +24,7 @@
  * Es gilt exakt (Abweichung ≤ 8,9e−16) Kreuzprodukt(θ) = cos 2θ und
  * vᵀAv = 2 + sin 2θ. Mit dem Fangfenster |cos 2θ| < 0,08 rastet die Erkennung
  * in den Bereichen 42,75°–47,25°, 132,75°–137,25° und ihren Gegenrichtungen
- * ein, also ±2,25° um jede Eigenrichtung.
+ * ein, also etwa ±2,29° um jede Eigenrichtung.
  */
 import { useState } from "react";
 import {

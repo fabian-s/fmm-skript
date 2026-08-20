@@ -19,7 +19,7 @@
  * Achsen sind der einzige verlässliche Weg, Lagen abzulesen; Abstände dürfen
  * nicht über die Achsen hinweg verglichen werden.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TraceWidget.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/TraceWidget.mjs, 2026-08-20):
  *   A = [[3, 1], [1, 3]] (Voreinstellung): tr = 6, det = 8, λ₁ = 4, λ₂ = 2,
  *       Summe 6, Produkt 8 — dieselben Werte wie auf der Konzeptseite;
  *   A = [[0, −1], [1, 0]]: tr = 0, det = 1, λ = ±i, Summe 0, |λ|² = 1;

@@ -86,13 +86,23 @@ export function niceTicks(a: number, b: number, target = 5): number[] {
  */
 export function fmtTick(t: number, step?: number): string {
   if (step !== undefined && step > 0) {
-    const d = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
+    // Nicht die Zehnerpotenz der Schrittweite zaehlt, sondern wie viele Stellen
+    // die Schrittweite SELBST braucht: bei step = 0,25 liefert -log10 nur eine
+    // Stelle und 0,25 wuerde als "0,3" beschriftet. Also so lange erhoehen, bis
+    // step * 10^d (nahezu) ganzzahlig ist.
+    let d = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
+    while (d < 8 && Math.abs(step * 10 ** d - Math.round(step * 10 ** d)) > 1e-9) d += 1;
     return fmtDe(t, Math.min(d, 8));
   }
   const a = Math.abs(t);
   if (t === 0) return "0";
   if (a >= 100 || Number.isInteger(t)) return fmtInt(t);
-  if (a < 0.005) return fmtDe(Number(t.toPrecision(2)), Math.min(8, Math.ceil(-Math.log10(a)) + 1));
+  if (a < 0.005) {
+    const rounded = Number(t.toPrecision(2));
+    let d = 0;
+    while (d < 8 && Math.abs(rounded * 10 ** d - Math.round(rounded * 10 ** d)) > 1e-9) d += 1;
+    return fmtDe(rounded, d);
+  }
   const s = a >= 10 ? t.toFixed(0) : a >= 1 ? t.toFixed(1).replace(/\.0$/, "") : t.toFixed(2).replace(/0$/, "");
   return s.replace(".", ",").replace(/^-/, "−");
 }

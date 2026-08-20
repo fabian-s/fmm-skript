@@ -32,7 +32,7 @@ import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
  *   K = 12: Bias^2 0,0013  Var 0,0107 (Theorie 0,0108)  MSE 0,0120  (Minimum)
  *   K = 15: Bias^2 0,0001  Var 0,0135 (Theorie 0,0135)  MSE 0,0136
  *   K = 40: Bias^2 0,0001  Var 0,0358 (Theorie 0,0360)  MSE 0,0360
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: GRAU, hellgrau: RAHMEN } = FMM_COLORS;

@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `taylor-series` (Gruppe C, KEEP + Politur 2026-08-19).
  *
  * DIE EINE EINSICHT: Ein höherer Grad verbreitert nur das Fenster, in dem das
@@ -18,7 +18,7 @@
  * gemessene Breite des Übereinstimmungsfensters und das Verdikt. Der
  * erklärende Absatz steht in taylor-series.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TaylorSeriesWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/TaylorSeriesWidget.mjs,
  * 2026-08-20): |sin π − p_n(π)| = 3,142 (n = 1), 2,026 (n = 3), 5,240·10⁻¹
  * (n = 5), 7,522·10⁻² (n = 7), 6,925·10⁻³ (n = 9), 4,452·10⁻⁴ (n = 11),
  * 2,114·10⁻⁵ (n = 13); bei x = 2π dagegen 6,283 / 3,506·10¹ / 4,655·10¹ /

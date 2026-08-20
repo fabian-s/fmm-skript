@@ -15,7 +15,7 @@
  * Es ist eine Formeltafel, kein Koordinatenbild; Achsen mit Ticks gäbe es hier
  * nichts zu beschriften.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * für U = [[2,1,1],[0,3,−1],[0,0,2]] und b = (7 | 3 | 6) liefert die
  * Rückwärtssubstitution x₃ = 3, x₂ = 2, x₁ = 1, also x = (1 | 2 | 3) exakt.
  * Der Aufwand ist n(n−1) Multiplikationen und Subtraktionen plus n Divisionen,

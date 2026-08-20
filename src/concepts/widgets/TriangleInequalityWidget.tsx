@@ -18,7 +18,7 @@
  * obere Schranke und damit der Maßstab. Achsen mit Ticks gäbe es hier nichts zu
  * beschriften.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * mit ‖a‖ = 2 und ‖b‖ = 1,3 gilt ‖a+b‖ = √(‖a‖² + ‖b‖² + 2‖a‖‖b‖cos ω); der
  * Wert fällt monoton von 3,30 bei ω = 0 (obere Schranke, Gleichheit) über 2,99
  * im Startzustand ω = 0,9 und 2,39 bei ω = π/2 bis 0,70 bei ω = π (untere

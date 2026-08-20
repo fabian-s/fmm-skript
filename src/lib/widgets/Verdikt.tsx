@@ -20,7 +20,7 @@
  * wenn ein Kapitel Rot für einen Fehlerterm benutzt, bleibt der Kasten
  * trotzdem lesbar, weil die Farbe nur Zeichen und Kante einfärbt.
  */
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { FMM_COLORS } from "./util";
 import { W_PANEL, W_TEXT } from "./surface";
 
@@ -70,10 +70,16 @@ export function Verdikt({
 }) {
   const wort = { ...DEFAULT_LABELS, ...labels }[kind];
   const farbe = FARBE[kind];
+  // Die Live-Region muss vor ihrer Nachricht existieren. Der sichtbare Kasten
+  // bleibt davon unabhängig sofort vollständig gerendert.
+  const [meldung, setMeldung] = useState<ReactNode>(null);
+  useEffect(() => setMeldung(<>{wort}: {titel} {children}</>), [wort, titel, children]);
   return (
-    <div
-      role="status"
-      aria-live="polite"
+    <>
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {meldung}
+      </div>
+      <div
       className={`max-w-prose p-3 pl-4 text-sm ${W_PANEL} ${W_TEXT} ${className}`}
       // Der Farbbalken links ist ein inset-Schatten, KEINE border: im
       // Tooltip-Panel überschreibt `.concept-body .border-slate-200` in
@@ -94,6 +100,7 @@ export function Verdikt({
           Kante und das Zeichen. */}
       {titel && <strong className="mr-1">{titel}</strong>}
       {children}
-    </div>
+      </div>
+    </>
   );
 }

@@ -36,8 +36,7 @@ import {
  * PROVENIENZ: Eigenbau; Farben, Zahlformat und Achsen aus
  * `src/lib/widgets/util.ts`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s124-jensen.mjs, 2026-08-19): gleiche Gewichte geben x̄ = 11/6 =
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: gleiche Gewichte geben x̄ = 11/6 =
  * 1,8333; x²: 3,3611 gegen 4,9167 (Lücke 1,5556 = gewichtete Varianz);
  * eˣ: 6,2547 gegen 13,0820 (Lücke 6,8273); √x: 1,3540 gegen 1,2676, also
  * umgekehrtes Vorzeichen (Lücke −0,0864). Für w = (0,2; 0,3; 0,5): x̄ = 2,3,

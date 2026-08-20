@@ -22,7 +22,7 @@
  * interactive/heath-ch3 (S33Sensitivity.tsx) portiert; Ziehgriffe, 3D-Tafel,
  * Verdikte und sämtliche Texte sind für dieses Skript neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s72.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   3D-Konfiguration: col(A) = span{(1,0,0,45)ᵀ, (0,1,−0,35)ᵀ},
  *   b = (0,75; 0,9; 1,35)ᵀ ⇒ x̂ = (1,200849; 0,549340),
  *   ŷ = (1,200849; 0,549340; 0,348113), r = (−0,450849; 0,350660; 1,001887);
@@ -450,8 +450,8 @@ export function WinkelWidget() {
         <Verdikt kind="warn" className="mt-2" titel="Die Schranke ist scharf:">
           <M>{"\\cblue{\\Delta\\bb}"}</M> zeigt (bis aufs Vorzeichen) längs{" "}
           <M>{"\\col(\\bA)"}</M>, und die beobachtete relative Änderung{" "}
-          <span className="font-mono">{fmtDe(observed, 4)}</span> trifft die Schranke aus Satz
-          7.2.3 exakt: <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
+          <span className="font-mono">{fmtDe(observed, 4)}</span> erreicht die Schranke aus Satz
+          7.2.3 praktisch: <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
           <M>{"\\corange{\\kappa_2(\\bA)} = 1"}</M> steckt der ganze Verstärkungsfaktor im Winkel,{" "}
           <M>{`1/\\cos(\\theta) = ${mathDe(1 / Math.cos(th), 2)}`}</M>.
         </Verdikt>

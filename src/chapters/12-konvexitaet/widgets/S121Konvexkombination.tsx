@@ -38,8 +38,7 @@ import {
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Farben/Zahlformat aus
  * `src/lib/widgets/util.ts`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-12-konvexitaet/
- * check-s121-dreieck.mjs, 2026-08-19): Dreiecksfläche 2; Schwerpunkt (1; 2/3)
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Dreiecksfläche 2; Schwerpunkt (1; 2/3)
  * mit w = (1/3; 1/3; 1/3); w = (1/2; 1/4; 1/4) gibt (0,75; 0,5);
  * w = (1/4; 1/4; 1/2) gibt (1; 1). Baryzentrische Gewichte und Flächenanteile
  * stimmen auf 5,6e−17 überein; über ein 401×401-Raster summieren sich die drei

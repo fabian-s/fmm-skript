@@ -11,7 +11,7 @@
  *
  * PROVENIENZ: eigener Aufbau; Ziehen über `useDrag` aus der Lib.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  *   φ(x) = x₁² + 2x₂², ∇φ = (2x₁, 4x₂) — numerisch gegen zentrale Differenzen
  *   an drei Punkten geprüft. Die Höhenlinie φ = v ist die Ellipse mit den
  *   Halbachsen √v und √(v/2); gezeichnet sind v ∈ {0,5; 1; 2; 3}.

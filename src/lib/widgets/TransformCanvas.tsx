@@ -27,7 +27,7 @@
  * aus ./useDrag (`useDrag`, `DragHandle`), die Matrix-Transition aus
  * ./useAnimatedValue (`useAnimatedMatrix`).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-transformcanvas.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  * toPx/toWorld sind Inverse (max. Abweichung 2,7e−15 über 3200 Punkte);
  * max‖Ax‖ über dem Einheitskreis = sigmaMax(A) (Diff ≤ 6,5e−10 für fünf
  * Testmatrizen) — das rechtfertigt das Fenster-Idiom
@@ -333,7 +333,10 @@ export function TransformCanvas({
         }
       }}
       onPointerUp={zieh.svgProps.onPointerUp}
-      onPointerCancel={zieh.svgProps.onPointerCancel}
+      onPointerCancel={() => {
+        zieh.svgProps.onPointerCancel();
+        setHover(null);
+      }}
       onLostPointerCapture={zieh.svgProps.onLostPointerCapture}
       onPointerLeave={() => {
         zieh.svgProps.onPointerLeave();

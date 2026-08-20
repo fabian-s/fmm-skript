@@ -18,7 +18,7 @@
  * FARBROLLEN: rot markiert die doppelt ausgeführte Teilrechnung (Kapitelrolle
  * „das Teure", s. S21Demos.tsx).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-02-algos/check-02-algos.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19): Der Baum von fib_rek(5) hat T(5) = 15 Knoten; F_5 und F_4
  * kommen je einmal vor, F_3 zweimal, F_2 dreimal, F_1 fünfmal, F_0 dreimal
  * (1 + 1 + 2 + 3 + 5 + 3 = 15).

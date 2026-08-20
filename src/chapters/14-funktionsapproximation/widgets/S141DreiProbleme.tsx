@@ -36,7 +36,7 @@ import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
  * Farbcode Kapitel 14: Daten blau, Schaetzer/Interpolant gruen,
  * Problemzone (hier die Residuen) rot; die unbekannte wahre Funktion f
  * bleibt neutral grau.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: DATEN, gruen: SCHAETZER, rot: FEHLER, grau: WAHR, hellgrau: RAHMEN } = FMM_COLORS;

@@ -55,8 +55,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  *   orange  — Gradient (Pfeil, Zahlen, Rate ρ)
  *   violett — die frei gewählte Richtung d bzw. der gewählte Punkt
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s102-gradient.mjs, 2026-08-19); alle Gradienten gegen zentrale
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen; alle Gradienten gegen zentrale
  * Differenzen geprüft:
  *   f(x) = x₁² + 3x₁x₂ + 2x₂², ∇f = (2x₁+3x₂, 3x₁+4x₂);
  *     f(1,1) = 6, ∇f(1,1) = (5, 7), ‖∇f(1,1)‖ = √74 = 8,602325;

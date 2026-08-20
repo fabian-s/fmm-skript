@@ -15,7 +15,7 @@
  * 2026-08-18); Ziehen, Kreisbild und Matrix-Übergang aus der
  * Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20), v = (2, 1), ‖v‖ = 2,2361:
  *   Drehung θ = 30°: Qv = (1,2321; 1,866), ‖Qv‖ = 2,2361, det Q = 1;
  *   Spiegelung θ = 30°: Qv = (2,2321; 0,134), ‖Qv‖ = 2,2361, det Q = −1,

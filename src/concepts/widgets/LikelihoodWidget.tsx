@@ -1,4 +1,4 @@
-/** Einsicht: Die Daten legen die Lage des Likelihood-Maximums fest. Farben: blau Likelihood, rot Schätzung. Provenienz: neu mit Schaetzfrage. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LikelihoodWidget.mjs, 2026-08-20): für h = 7, n = 10 ist p̂ = 0,7, L(0,7) = 0,0022235661 und die relative Likelihood dort 1; für jedes h = 0,…,10 maximiert p̂ = h/10 die Binomial-Likelihood. */
+/** Einsicht: Die Daten legen die Lage des Likelihood-Maximums fest. Farben: blau Likelihood, rot Schätzung. Provenienz: neu mit Schaetzfrage. VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/LikelihoodWidget.mjs, 2026-08-20): für h = 7, n = 10 ist p̂ = 0,7, L(0,7) = 0,0022235661 und die relative Likelihood dort 1; für jedes h = 0,…,10 maximiert p̂ = h/10 die Binomial-Likelihood. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Schaetzfrage, Slider, Verdikt, fmtDe } from "../../lib";
 export function LikelihoodWidget() {

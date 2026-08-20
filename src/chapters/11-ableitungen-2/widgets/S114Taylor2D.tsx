@@ -49,7 +49,7 @@ import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
  * drei Funktionen stimmen an mehreren Stellen bis auf 1e-5 mit zentralen
  * Differenzen überein.
  *
- * Nachgerechnet (scratchpad/verify-11-ableitungen-2/check-s114.mjs,
+ * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19): In der Voreinstellung (0,75; −1,25) mit r = 0,8 fällt der größte
  * Fehler auf dem Kreis beim Halbieren des Radius
  *   für T₁ auf ein 4,341- (sin+cos), 3,990- (Glocke) bzw. exakt 4,000-faches

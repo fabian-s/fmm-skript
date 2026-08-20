@@ -42,7 +42,7 @@ import {
  * steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei singulärem
  * A zu einer Strecke entartet.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19), Voreinstellung A = (2 1; 0 1):
  *   σ₁ = 2,2882 = √(3+√5) bei θ* = 31,72°, σ₂ = 0,8740 = √(3−√5) bei 121,72°
  *   (Rasterlauf über 3,6 Mio. Winkel bestätigt Lage und Wert beider Extrema),

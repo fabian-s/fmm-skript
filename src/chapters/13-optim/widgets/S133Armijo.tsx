@@ -23,7 +23,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV }
  * Kapitel freie Violett, die Armijo-Gerade als reine Abnahmeschranke bleibt
  * neutral grau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * ältere Prüfungen check-math-s133.mjs / -s133b.mjs bestätigt) für
  * f(x) = ½x₁² + 2,5x₂² in x = (5; 1): ∇f = (5; 5), d = (−5; −5),
  * ∇f(x)d = −50, φ(0) = 15, φ(1) = 40, φ(0,5) = 8,75, exakter Minimierer

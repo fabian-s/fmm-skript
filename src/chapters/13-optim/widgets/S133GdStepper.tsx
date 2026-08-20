@@ -17,7 +17,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Slider, Stepper, Verdikt } from "../../../l
  * Schritt −γf′(x⁽ᵏ⁾) und die Tangente orange, Divergenzwarnung rot; der Graph
  * von f trägt das im Kapitel freie Violett (wie in S131Bisektion).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *  - f(x) = (x − 2)² + 1, f″ ≡ 2 = L, also 1/L = 0,5 und 2/L = 1.
  *  - γ = 0,6 ab x⁽⁰⁾ = 4,5: 4,5 → 1,5 → 2,1 → 1,98 → 2,004 → 1,9992 mit den
  *    Fehlern 2,5 / −0,5 / 0,1 / −0,02 / 0,004 / −0,0008, Faktor also −0,2.

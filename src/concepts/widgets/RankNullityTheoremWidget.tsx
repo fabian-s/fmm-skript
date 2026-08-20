@@ -18,7 +18,7 @@
  * Anzahl der Dimensionen, und die steht als Zahl an jedem Balkenblock. Achsen
  * mit Ticks hätten hier nichts zu beschriften.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * Für die Beispielmatrix A = [[1, 0, 1], [0, 1, 1]] sind die ersten beiden
  * Spalten unabhängig und die dritte ist ihre Summe, also rg(A) = 2; der Vektor
  * (1 | 1 | −1) liegt im Kern (A·(1,1,−1)ᵀ = 0), also dim Kern(A) = 1, und

@@ -31,7 +31,7 @@ import {
  *
  * Deterministisch: drei fest verdrahtete Verkettungen, kein Zufall.
  *
- * Verifizierte Zahlen (scratchpad/verify-11-ableitungen-2/check-s112.mjs,
+ * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19), jeweils an der Startstelle der Voreinstellung und gegen einen
  * zentralen Differenzenquotienten mit ε = 10⁻⁶ geprüft:
  *   (2x+1)⁴ bei x = 0,3: f(x) = 1,6, h(x) = 6,5536, f′ = 2,

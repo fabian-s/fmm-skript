@@ -27,7 +27,7 @@ import {
  *
  * Deterministisch: keine Zufallszahlen, alle Kurven aus geschlossenen Formeln.
  *
- * Verifizierte Zahlen (scratchpad/verify-11-ableitungen-2/check-s112.mjs,
+ * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19). Der geschlossene Gradient (ŷ − y)·x stimmt in BEIDEN Klassen
  * mit dem zentralen Differenzenquotienten (ε = 10⁻⁶) überein, Abweichung
  * höchstens 6·10⁻¹¹; geprüfte Stellen (β; x) = (0,5; 1,5), (−1,2; 1,5),

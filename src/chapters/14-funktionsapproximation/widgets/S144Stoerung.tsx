@@ -42,7 +42,7 @@ import {
  * Koeffizientenaenderungen fallen mit rund Faktor 3,7 je Knotenabstand
  * (1,732 / 0,464 / 0,124 / 0,031 / 0,010). Die Kollokationsmatrix hat je
  * Zeile hoechstens q + 1 = 4 Eintraege ungleich null.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const XS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -272,8 +272,10 @@ export function StoerungVergleich() {
         um sehr wenig.
       </p>
 
-      <Verdikt kind={fernS < fernP ? "ok" : "warn"}>
-        {fernS < fernP
+      <Verdikt kind={delta === 0 ? "neutral" : fernS < fernP ? "ok" : "warn"}>
+        {delta === 0
+          ? "Ohne Verschiebung bleiben beide Interpolanten unverändert; es gibt daher keine Fernwirkung zu vergleichen."
+          : fernS < fernP
           ? `Fern vom verschobenen Punkt bleibt die Spline-Änderung mit ${fmt(fernS, 3)} kleiner als die Polynom-Änderung mit ${fmt(fernP, 3)}. Das macht die Lokalität der B-Spline-Darstellung sichtbar.`
           : "In diesem Zustand ist die Fernwirkung nicht kleiner; wir prüfen die gewählte Verschiebung und das betrachtete Gebiet."}
       </Verdikt>

@@ -62,7 +62,7 @@ import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
  * nach dem tiefsten Punkt DIESER Kurve. Die 3D-Tafel behauptet keine eigenen
  * Zahlen; alle Zahlen stehen in der Ablesetafel und im Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s135.mjs, 2026-08-19;
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
  * aeltere Pruefung rev135-zahlen.mjs bestaetigt):
  *  - Auf der Geraden ist f(t, 1-t) = t^2 + (1-t)^2 minimal bei t = 0,500000
  *    mit f = 0,500000; das Kreuzprodukt von grad f = (2t, 2(1-t)) mit (1, 1)

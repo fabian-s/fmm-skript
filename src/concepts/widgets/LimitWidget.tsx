@@ -1,4 +1,4 @@
-/** Einsicht: Der Differenzenquotient strebt gegen 2, obwohl sein Wert bei h = 0 undefiniert ist. Farben: blau Quotient, grün Grenzwert. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LimitWidget.mjs, 2026-08-20): g(h) = ((1+h)²−1)/h = 2+h für h ≠ 0; g(0,01) = 2,01 und g(−0,01) = 1,99. */
+/** Einsicht: Der Differenzenquotient strebt gegen 2, obwohl sein Wert bei h = 0 undefiniert ist. Farben: blau Quotient, grün Grenzwert. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/LimitWidget.mjs, 2026-08-20): g(h) = ((1+h)²−1)/h = 2+h für h ≠ 0; g(0,01) = 2,01 und g(−0,01) = 1,99. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function LimitWidget() {

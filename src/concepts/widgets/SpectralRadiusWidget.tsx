@@ -13,7 +13,7 @@
  * Tafeln, Themenfarben, deutsches Zahlformat und die Anordnung
  * Regler-unter-Grafik sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * G = s·Rot(θ) hat die Eigenwerte s·e^{±iθ}, also ρ(G) = s exakt, und damit
  * ‖xₖ‖ = s^k·‖x₀‖ unabhängig von θ — für s ∈ {0,6; 0,85; 1; 1,1} und
  * θ ∈ {0; 0,55; 1,5} auf 1e−9 nachgerechnet. Mit x₀ = (1 | 0,4), also

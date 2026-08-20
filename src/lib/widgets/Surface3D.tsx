@@ -60,7 +60,7 @@
  *
  * Provenienz: Eigenbau für dieses Skript (Phase-A-Lib, 2026-08-19); Rechenkern
  * und Höhenlinien in `projection3d.ts`, dort auch die per node geprüften Werte
- * (scratchpad/check-surface3d.mjs, 2026-08-19).
+ * (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die genannten Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19).
  */
 import { useCallback, useId, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { Slider } from "./Slider";
@@ -510,13 +510,17 @@ export function Surface3D({
   // Zeigerpositionen in WELTKOORDINATEN um und ist damit für Griff- und
   // Flächen-Drags gedacht. Eine Kameradrehung braucht dagegen die DIFFERENZ
   // zweier Zeigerpositionen in Pixeln. Das Rezept ist identisch
-  // (setPointerCapture, touch-action nur auf dem SVG), der Dualpfad steht
+  // (setPointerCapture, touch-action mit vertikalem Scrollen), der Dualpfad steht
   // als <ViewControls> daneben.
   const zieht = useRef<{ x: number; y: number } | null>(null);
 
   const zeigerAb = (e: ReactPointerEvent<SVGSVGElement>) => {
     if (!interactive) return;
-    (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // Einige Browser verweigern Capture für bereits abgebrochene Touch-Pointer.
+    }
     zieht.current = { x: e.clientX, y: e.clientY };
   };
   const zeigerBewegt = (e: ReactPointerEvent<SVGSVGElement>) => {
@@ -556,7 +560,7 @@ export function Surface3D({
       width={W}
       height={H}
       className={`max-w-full h-auto select-none ${className ?? ""}`}
-      style={{ touchAction: interactive ? "none" : undefined, cursor: interactive ? "grab" : undefined }}
+      style={{ touchAction: interactive ? "pan-y" : undefined, cursor: interactive ? "grab" : undefined }}
       role="img"
       aria-label={ariaLabel}
       onPointerDown={zeigerAb}

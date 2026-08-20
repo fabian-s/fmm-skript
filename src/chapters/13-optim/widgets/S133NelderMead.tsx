@@ -20,7 +20,7 @@ import { Aufgabe, FMM_COLORS, fmtDe, Stepper, Verdikt, W_BUTTON, W_BUTTON_AKTIV 
  * vom schlechtesten Punkt durch den Schwerpunkt ist die Suchrichtung dieses
  * Verfahrens, also orange. Rot warnt, wenn der Simplex nur noch schrumpft.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs, 2026-08-19)
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen
  * für f(x) = (1 − x₁)² + 5(x₂ − x₁²)² mit Minimum (1; 1), f = 0:
  *  - Startsimplex „Tal von oben" (Voreinstellung): nach 40 Schritten
  *    13 Reflexionen, 4 Expansionen, 23 Kontraktionen, 0 Schrumpfschritte, und

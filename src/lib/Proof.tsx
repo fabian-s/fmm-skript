@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { Children, createContext, isValidElement, useContext, useState, type ReactNode } from "react";
 
 /**
  * Annotierter, schrittweise aufdeckbarer Beweis.
@@ -8,9 +8,11 @@ import { createContext, useContext, useState, type ReactNode } from "react";
  *     <PStep> ...Zeile ohne Annotation... </PStep>
  *   </Proof>
  *
- * Standardansicht: kompletter Beweis mit allen Begründungen. Der Knopf
- * „Schritt für Schritt" blendet alles aus und deckt die Schritte einzeln
- * auf — für den Einsatz als Selbsttest beim Nacharbeiten.
+ * Standardansicht: NUR DER ERSTE SCHRITT. Der Leser deckt mit „nächster
+ * Schritt" nacheinander auf; der Knopf „kompletten Beweis zeigen" springt zur
+ * Gesamtansicht (und wieder zurück). Ein Beweis, der sofort vollständig
+ * dasteht, wird überflogen statt nachvollzogen — deshalb ist das Steppen der
+ * Default (geändert 2026-08-20).
  *
  * Alle sichtbaren UI-Texte sind lokalisierbar (Muster wie beim
  * TooltipProvider): Defaults sind DEUTSCH, eine anderssprachige App setzt
@@ -67,7 +69,7 @@ export function Proof({
 }) {
   const inherited = useContext(LabelCtx);
   const L: ProofLabels = { ...DEFAULT_LABELS, ...inherited, ...labels };
-  const steps = (Array.isArray(children) ? children : [children]).flat().filter(Boolean) as {
+  const steps = Children.toArray(children).filter(isValidElement) as {
     props: { children: ReactNode; why?: ReactNode };
   }[];
   // null = alle Schritte sichtbar; sonst Anzahl aufgedeckter Schritte.

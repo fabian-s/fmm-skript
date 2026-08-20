@@ -21,7 +21,7 @@ import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
  *  17 Knoten  h = 0,0625   Schranke 0,000310   Fehler 0,000063121 Faktor 16,89
  *  33 Knoten  h = 0,03125  Schranke 0,0000194  Fehler 0,0000038893 Faktor 16,23
  * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;

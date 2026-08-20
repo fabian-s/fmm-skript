@@ -63,16 +63,16 @@ import type { Series, Sicht3D, Vec3 } from "../../../lib";
  * Halbachsen der Niveaumenge f = 4 im Folienbeispiel: 2 und 1.
  *
  * Die vier Voreinstellungen zusätzlich geprüft mit
- * scratchpad/check-s113-presets.mjs (2026-08-19): die Eigenwerte werden aus H
+ * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19): die Eigenwerte werden aus H
  * zurückgerechnet und treffen die Reglerwerte auf 1e−12, die Klassifikation
  * stimmt in allen vier Fällen, Spur = λ₁ + λ₂ und det = λ₁·λ₂ ebenfalls
  * (10/16, 2/−3, −7/10, 3/0). Wertebereich auf dem gezeigten Fenster
  * [−2,4; 2,4]²: 0 bis 28,8 (Schale), −4,32 bis 15,74 (Sattel), −27,64 bis 0
  * (Kuppel), 0 bis 14,19 (Rinne) — das ist der Höhenbereich der 3D-Tafel.
  * Die Projektion der 3D-Tafel selbst ist in
- * scratchpad/check-surface3d.mjs (2026-08-19) geprüft.
+ * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19) geprüft.
  *
- * Nachtrag zur Schätzfrage (scratchpad/verify-11-ableitungen-2/check-s113.mjs,
+ * Nachtrag zur Schätzfrage (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19): Ziehen wir λ₂ von 8 auf 0, so ist H = diag(2, 0) singulär, f auf
  * dem ganzen Fenster nichtnegativ (kleinster Wert 0) und entlang der Achse v₂
  * konstant null — der Nullpunkt bleibt also ein Minimum, aber kein STRIKTES,

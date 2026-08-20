@@ -1,6 +1,7 @@
 /**
- * Konzept-Widget für `dot-product` UND `inner-product` (Dublettenauflösung D6,
- * 2026-08-19; das frühere InnerProductWidget ist entfallen).
+ * Konzept-Widget für `dot-product` (Dublettenauflösung D6: das frühere
+ * InnerProductWidget entfiel am 2026-08-19, das Modul `inner-product` am
+ * 2026-08-20 — seine fünf Links zeigen jetzt auf `dot-product`).
  *
  * DIE EINE EINSICHT: xᵀy ist keine abstrakte Zahl, sondern eine Länge mal eine
  * Länge — ‖x‖ mal der Länge des Schattens, den y auf die Richtung von x wirft.
@@ -15,7 +16,7 @@
  * InnerProductWidget (Stand 2026-08-18); Ziehen und Achsen kommen aus der
  * Lib-`TransformCanvas`, die Projektionsdarstellung und alle Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-20; zusätzlich der Projektions-Test), x = (2, 1), ‖x‖ = √5 = 2,2360679775:
  *   y parallel zu x (26,57°, ‖y‖ = 2): xᵀy = 4,4721, Schattenlänge 2,0000, cos = 1
  *   y senkrecht (116,57°):             xᵀy = 0,0000, Schattenlänge 0,0000, cos = 0

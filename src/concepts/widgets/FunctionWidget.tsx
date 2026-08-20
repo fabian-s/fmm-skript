@@ -1,7 +1,7 @@
 /**
  * DIE EINE EINSICHT: Jede gewählte Eingabe besitzt genau eine Ausgabe.
  * FARBROLLEN: blau = Graph und gewählter Punkt; grau = Zuordnungslote. PROVENIENZ: Originalwidget.
- * VERIFIZIERTE ZAHLEN: f(1,2) = 1,44, node, scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ * VERIFIZIERTE ZAHLEN: f(1,2) = 1,44, node, scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

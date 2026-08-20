@@ -16,7 +16,7 @@
  * Polygonzug; Achsen kommen aus `Plot` v2. Die Einleitung steht in
  * hyperplane.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/HyperplaneWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/HyperplaneWidget.mjs,
  * 2026-08-20): a = (1,1), b = 1 → ‖a‖ = 1,414214, Abstand zum Ursprung
  * 0,707107, Lotfußpunkt (0,5; 0,5), Steigung −1, Achsenabschnitt 1.
  * a = (1,0), b = 1,5 → senkrechte Gerade x₁ = 1,5, Abstand 1,5.

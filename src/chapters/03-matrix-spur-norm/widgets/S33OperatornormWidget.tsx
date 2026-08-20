@@ -41,8 +41,7 @@ import type { Mat2 } from "../../../lib";
  * der Lib-Komponente TransformCanvas v2. Texte, Presets, Streckfaktorkurve
  * und Verdikt sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   (2 1; 0 1)        σ = 2,288246 / 0,874032, κ = 2,618, ‖A‖₁ = 2, ‖A‖∞ = 3
  *   (0,6 −0,8; 0,8 0,6) σ = 1 / 1 (Drehung), ‖A‖₁ = ‖A‖∞ = 1,4, ‖A‖_F = 1,4142
  *   (20 10; 0 10)     σ = 22,882456 / 8,740320 – exakt das Zehnfache von Zeile 1

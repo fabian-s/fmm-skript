@@ -38,8 +38,7 @@ import {
  * am charakteristischen Polynom λ² − tr λ + det) stammt aus der Vorfassung
  * dieses Widgets (2026-08-05), Rahmen und Zeichnung sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): Voreinstellungen (2 −1; 0 3): tr 5, det 6,
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Voreinstellungen (2 −1; 0 3): tr 5, det 6,
  * λ = 3 und 2; (2 1; 1 3): tr 5, det 5, λ = 3,618 und 1,382; (0 −1; 1 0):
  * tr 0, det 1, λ = ±i; (2 1; 0 2): tr 4, det 4, doppelter Eigenwert 2 mit
  * nur einer Eigenrichtung. In allen vier Fällen ist λ₁ + λ₂ − tr = 0 auf

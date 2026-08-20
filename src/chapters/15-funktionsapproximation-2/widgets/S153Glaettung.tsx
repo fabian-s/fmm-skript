@@ -32,7 +32,7 @@ import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
  * Statuszweige sind mit 2 / 10 / 16 / 9 Zustaenden alle erreichbar; der
  * Singulaer-Zweig ist reiner Rechenschutz und feuert bei Quantilknoten im
  * Bereich K = 4..40 nie.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;

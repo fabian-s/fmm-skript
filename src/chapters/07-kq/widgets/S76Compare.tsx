@@ -22,7 +22,7 @@
  * interactive/heath-ch3 (S37Compare) portiert; Schätzfrage, Verdikte und alle
  * Texte für dieses Skript neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s76.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   ε_mach = 2,2204e−16, 1/√ε = 6,711e7 (log₁₀ = 7,827), 1/ε = 4,504e15
  *   (log₁₀ = 15,654) – daher die Abbruchschwellen 8 bzw. 15,65 im Code.
  *   Aufwand: W_QR/W_NE = (r − 1/3)/(r/2 + 1/6) mit r = m/n; Grenzwerte exakt

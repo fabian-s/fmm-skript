@@ -28,8 +28,7 @@ import {
  * PROVENIENZ: Eigenbau (Vorfassung 2026-08-05); neu sind Voreinstellung,
  * Permutationsknopf und Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-03-matrix-spur-norm/
- * check-kap03.mjs, 2026-08-19): A₁ = I, A₂ = Vertauschung und A₃ = diag(√2, 0)
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: A₁ = I, A₂ = Vertauschung und A₃ = diag(√2, 0)
  * haben alle ‖A‖_F = 1,414214 = √2; ihre Summennormen sind 2, 2 und 1,414214,
  * ihre Maximumsnormen 1, 1 und 1,414214. Die Beispielmatrix (1 −2; 3 4) hat
  * ‖·‖_F = 5,477226 = √30, ‖·‖_S = 10, ‖·‖_M = 4.

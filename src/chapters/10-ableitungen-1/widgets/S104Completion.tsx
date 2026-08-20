@@ -29,8 +29,7 @@ import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface"
  * für die Lücken grün (das ist der Ausgabeteil des Modells), Residuen rot,
  * Gradienten orange, das Rang-2-Modell im Vergleichsplot violett.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-10-ableitungen-1/
- * check-s101-s104.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   k = 1, α = 0,05: L₀ = 18,8373, L(20) = 1,689e−4, L(200) = 1,233e−24,
  *     L(300) = 2,983e−30; Vorhersagen y₁₃ = 2,5 und y₂₂ = 2,4 (die exakte
  *     Rang-1-Antwort 2·5/4 bzw. 3·4/5);

@@ -36,7 +36,7 @@ import {
  * (Referenzaufrufer 11-ableitungen-2/widgets/S113Hesse.tsx) und
  * TransformCanvas v2. Kein übernommener Code, alle Texte neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-06-svd/verify-kap06.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19) für die Voreinstellung A = (1 2; 2 1; 1 0):
  *   σ₁ = 3,0873, σ₂ = 1,2120; u₁ = (−0,672; −0,700; −0,243),
  *   u₂ = (−0,691; 0,474; 0,546); u₁ᵀu₂ = 0 (< 1e−12), ‖u₁‖ = ‖u₂‖ = 1;

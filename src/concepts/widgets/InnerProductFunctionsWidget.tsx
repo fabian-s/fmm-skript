@@ -13,7 +13,7 @@
  * die gefüllten Flächen (`fill` in `Plot` v2), `aria-pressed` auf den Knöpfen,
  * die getrennt ausgewiesene positive und negative Fläche und das Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/InnerProductFunctionsWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/InnerProductFunctionsWidget.mjs,
  * 2026-08-20; Simpson mit 2000 Teilintervallen, exakte Werte in Klammern):
  * ⟨1,1⟩ = 2,000000 (2), ⟨t,t⟩ = 0,666667 (2/3), ⟨P₂,P₂⟩ = 0,400000 (2/5);
  * alle gemischten Paare sind 0. Die Teilflächen: ⟨1,t⟩ ± 0,500000,

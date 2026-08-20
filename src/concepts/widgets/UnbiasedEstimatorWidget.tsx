@@ -15,7 +15,7 @@
  * Mittelwertkreuze, die Themenfarben und das Verdikt sind neu. Der erklärende
  * Absatz steht jetzt in unbiased-estimator.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O1/check-o1.mjs, 2026-08-20),
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20),
  * beide in Bildpunkten relativ zum Zentrum gerechnet: linke Wolke Mittel
  * (0,3 | 1,0), Abstand zum Ziel 1,04 px, Streuung um das eigene Mittel 18,4 px;
  * rechte Wolke Mittel (16,5 | −12,5), Abstand 20,7 px, Streuung 4,0 px. Die

@@ -26,7 +26,7 @@ import type { Series } from "../../../lib";
  * Abweichung ist damit 9,97 % bei m = 50 und 7,06 % bei m = 100, also
  * praktisch die Faustregel 1/sqrt(2m) (10,00 % bzw. 7,07 %). Das Band
  * +-1/sqrt(2m) faengt rund 68 % der Ziehungen (4000 Ziehungen: 68,2 %).
- * Verifiziert in scratchpad/verify-08-la-misc/check-widgets.mjs, 2026-08-19.
+ * Verifiziert in historische Prüfung, Skript nicht mehr vorhanden, 2026-08-19.
  */
 
 const { gruen: GREEN, blau: BLUE, rot: RED, orange: ORANGE, violett: PURPLE, grau: GREY } = FMM_COLORS;

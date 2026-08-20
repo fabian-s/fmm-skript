@@ -40,7 +40,7 @@ import {
  * geschlossenen Form über A^T A (dasselbe Muster wie in `lib/widgets/util.ts`,
  * Funktion sigmaMax), hier für beide Werte ausgeschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-04-fehler/check-kap04.mjs,
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
  * 2026-08-19), jeweils σ_max, σ_min und κ₂ = σ_max/σ_min:
  *   Drehung um 30°: 1, 1, κ₂ = 1.
  *   (2 0; 0 0,8): 2, 0,8, κ₂ = 2,5.

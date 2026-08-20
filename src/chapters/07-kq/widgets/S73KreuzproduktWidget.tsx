@@ -15,7 +15,7 @@
  * PROVENIENZ: Berechnungsgerüst aus der internen App interactive/heath-ch3
  * portiert; sämtliche Texte für dieses Skript neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s73.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   fl(1 + ε²) = 1 genau ab ε ≤ 2^−26,5 = 1,0537·10⁻⁸, also ab k = 7,9773
  *   (Bisektion in k über die echte IEEE-Addition: 7,977295 – Übereinstimmung
  *   mit 2^−26,5 auf vier Stellen). Bei k = 7 bleibt fl(1+ε²)−1 = 9,992·10⁻¹⁵,

@@ -17,7 +17,7 @@
  * verletzenden Richtungen, das Verdikt und die 3D-Tafel (`Surface3D`, Bauart
  * wie S113Hesse in Kapitel 11).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20): für A = [[2, c], [c, 2]] gilt xᵀAx = 2 + c·sin(2θ) auf dem
  * Einheitskreis; Eigenwerte 2 ± c zu den Eigenvektoren (1,1)/√2 und
  * (1,−1)/√2. Numerisch über 20000 Richtungen: c = 0 → min q = 2,000;

@@ -43,7 +43,7 @@ import {
  * Deterministisch: drei fest verdrahtete Funktionen, kein Zufall, keine
  * Animationsschleife.
  *
- * Verifizierte Zahlen (scratchpad/verify-11-ableitungen-2/check-s111.mjs,
+ * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
  * 2026-08-19), analytisch und numerisch übereinstimmend:
  *   f(x) = x²:  D(w) = w für JEDE Stelle x₀ — halbe Fensterbreite halbiert,
  *               Abweichung halbiert (Quotient 2,0000 auf allen Stufen);

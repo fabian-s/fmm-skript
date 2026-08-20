@@ -20,7 +20,7 @@
  * interactive/heath-ch3 portiert (Labels deutsch); Ziehgriffe, Schätzfrage,
  * Verdikte und alle Texte für dieses Skript neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-07-kq/s74.mjs, 2026-08-19):
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
  *   OrthoWidget: x = (2,1)ᵀ mit ‖x‖₂ = 2,236068; für θ = 35° liefert die
  *   Drehung Qx = (1,0647; 1,9663) und die Spiegelung Qx = (2,2119; 0,3280),
  *   beide mit ‖Qx‖₂ = 2,236067977500 (zwölf Stellen) und det = ±1.

@@ -10,7 +10,7 @@
  *
  * PROVENIENZ: eigener Aufbau.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
  * f(x)=x+1 bildet den Reglerbereich [−3; 3] auf [−2; 4] ab, deshalb läuft die
  * t-Achse des g-Bildes über [−2; 4] und nicht wie früher über [−3; 3] — sonst
  * verließ der orange Punkt ab x = 2,1 die Zeichenfläche. g(t)=t² erreicht auf

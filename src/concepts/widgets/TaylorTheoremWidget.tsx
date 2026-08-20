@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `taylor-theorem` (Gruppe C, REPLACE 2026-08-19).
  *
  * DIE EINE EINSICHT: Der Satz von Taylor liefert nicht nur ein Polynom,
@@ -20,7 +20,7 @@
  * Reihenauswertung bleibt, das neue Diagramm zeichnet aus dem
  * Lagrange-Restglied die garantierte obere und untere Bandgrenze.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TaylorTheoremWidget.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV2/TaylorTheoremWidget.mjs,
  * 2026-08-20), |R_n(t)| gegen die Schranke |t|ⁿ⁺¹/(n+1)!:
  *   n = 1: t = 0,5 → 2,057·10⁻² gegen 1,250·10⁻¹ (16,5 %); t = 1 → 1,585·10⁻¹
  *          gegen 5,000·10⁻¹; t = 2 → 1,091 gegen 2,000; t = 3 → 2,859 gegen 4,500

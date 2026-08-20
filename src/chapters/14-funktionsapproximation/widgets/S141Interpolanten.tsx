@@ -32,7 +32,7 @@ import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe, type PlotP
  * Farbcode Kapitel 14: Daten blau, Interpolanten gruen (unterschieden durch
  * die Strichelung, nicht durch die Farbe), die Spanne bei x* rot, weil sie
  * das Problem markiert: Interpolation legt nur die Stuetzstellen fest.
- * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { blau: DATEN, gruen: GRUEN, rot: ROT } = FMM_COLORS;

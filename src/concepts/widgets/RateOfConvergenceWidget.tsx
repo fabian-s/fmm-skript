@@ -1,5 +1,5 @@
 /**
- * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ * QA-L3-Nachprüfung: `scripts/verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `rate-of-convergence` (Gruppe C, KEEP + Politur 2026-08-19).
  *
  * DIE EINE EINSICHT: Lineare Konvergenz kauft pro Schritt eine feste Zahl
@@ -17,7 +17,7 @@
  * (samt Verweis auf die Maschinengenauigkeit) steht in
  * rate-of-convergence.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-C/check-linear-ls-rate.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/AUDIT-C/check-linear-ls-rate.mjs,
  * 2026-08-20): Start e₀ = 10⁻¹. Linear mit C = 0,1 → 1,000 Stellen je Schritt,
  * 15 Schritte bis 10⁻¹⁶; C = 0,5 → 0,301 Stellen, 50 Schritte; C = 0,9 →
  * 0,046 Stellen, 328 Schritte. Quadratisch: log₁₀e_k = −2^k, also

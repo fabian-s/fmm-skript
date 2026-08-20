@@ -64,6 +64,7 @@ export function Slider({
           list={listId}
           disabled={disabled}
           aria-label={ariaLabel}
+          aria-valuetext={`${format(value)}${unit ? ` ${unit}` : ""}`}
           style={accent ? { accentColor: accent } : undefined}
           onChange={(event) => onChange(Number(event.target.value))}
         />

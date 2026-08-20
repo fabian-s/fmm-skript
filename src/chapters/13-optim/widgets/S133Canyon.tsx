@@ -36,7 +36,7 @@ import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
  * Quadrik selbst (Höhenlinien und 3D-Fläche), damit die blaue Bahn auf ihr
  * sichtbar bleibt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs und
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen und
  * s133b.mjs, 2026-08-19; ältere Prüfung check-math-s133.mjs bestätigt):
  *  - Schritte, bis f auf ein Millionstel des Startwerts gefallen ist, bei
  *    γ = 1/L: κ = 1 → 1, κ = 10 → 64, κ = 100 → 608; bei γ = 0,9·(2/L), also

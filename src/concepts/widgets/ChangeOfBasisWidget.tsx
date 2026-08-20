@@ -13,7 +13,7 @@
  * mitgedrehte Gitter zeichnet jetzt die Lib-`TransformCanvas` (Matrix = die
  * Basismatrix S), Ziehen und Achsen ebenfalls. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19), x = (2, 1) an einer gedrehten Orthonormalbasis gemessen:
  *   θ = 0        → (2,0000; 1,0000)
  *   θ = 0,4636   → (2,2361; 0,0000)   (b₁ zeigt genau auf x)
