@@ -106,7 +106,7 @@ export function Proof({
           className="my-2 rounded bg-sky-600 px-3 py-1 text-sm font-medium text-white hover:bg-sky-500"
           onClick={() => setShown(visible + 1)}
         >
-          {L.nextStep} ({visible}/{steps.length})
+          {L.nextStep} ({visible + 1}/{steps.length})
         </button>
       )}
       {visible === steps.length && qed && (

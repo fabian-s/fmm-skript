@@ -269,7 +269,13 @@ export function Surface3D({
 
   /* ------------------------------------------------- Höhenbereich und Maß */
   const [z0, z1] = useMemo((): [number, number] => {
-    if (zDomain) return [zDomain[0], zDomain[1]];
+    // Auch ein AUSDRUECKLICH uebergebener Bereich kann entartet sein (konstante
+    // Flaeche); ungeschuetzt teilt die Hoehenskala dann durch null und alle
+    // Polygone werden NaN. Der Auto-Pfad unten faengt das schon ab.
+    if (zDomain)
+      return zDomain[1] - zDomain[0] < 1e-9
+        ? [zDomain[0] - 1, zDomain[1] + 1]
+        : [zDomain[0], zDomain[1]];
     let lo = Infinity;
     let hi = -Infinity;
     if (gitter && Number.isFinite(gitter.min)) {
@@ -512,7 +518,14 @@ export function Surface3D({
   // zweier Zeigerpositionen in Pixeln. Das Rezept ist identisch
   // (setPointerCapture, touch-action mit vertikalem Scrollen), der Dualpfad steht
   // als <ViewControls> daneben.
-  const zieht = useRef<{ x: number; y: number } | null>(null);
+  // Der Blickwinkel wird IM REF mitgefuehrt, nicht aus `sicht` gelesen: bei
+  // einem 40x40-Gitter kommen mehrere pointermove-Events auf ein Rendern, und
+  // gegen das dann veraltete `sicht` gerechnet gehen Drehungen verloren
+  // (gemessen: von -180 Grad blieben bei 5 Events pro Commit nur -36 Grad uebrig).
+  // Ein funktionales setState hilft hier NICHT, weil Surface3D auch
+  // KONTROLLIERT betrieben wird (S94Tensorbasis, S92Scheiben) — dort ist der
+  // Prop genauso veraltet.
+  const zieht = useRef<{ x: number; y: number; az: number; el: number } | null>(null);
 
   const zeigerAb = (e: ReactPointerEvent<SVGSVGElement>) => {
     if (!interactive) return;
@@ -521,18 +534,19 @@ export function Surface3D({
     } catch {
       // Einige Browser verweigern Capture für bereits abgebrochene Touch-Pointer.
     }
-    zieht.current = { x: e.clientX, y: e.clientY };
+    zieht.current = { x: e.clientX, y: e.clientY, az: sicht.azimuth, el: sicht.elevation };
   };
   const zeigerBewegt = (e: ReactPointerEvent<SVGSVGElement>) => {
     if (!zieht.current) return;
     const dx = e.clientX - zieht.current.x;
     const dy = e.clientY - zieht.current.y;
     if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
-    zieht.current = { x: e.clientX, y: e.clientY };
-    setzeSicht({
-      azimuth: Math.round(sicht.azimuth - dx * 0.6),
-      elevation: Math.round(sicht.elevation + dy * 0.5),
-    });
+    // ungerundet akkumulieren, erst zur Anzeige runden: sonst verliert ein
+    // langsamer 1-px-Zug bei jedem Event den Nachkommaanteil.
+    const az = zieht.current.az - dx * 0.6;
+    const el = clamp(zieht.current.el + dy * 0.5, 2, 88);
+    zieht.current = { x: e.clientX, y: e.clientY, az, el };
+    setzeSicht({ azimuth: Math.round(az), elevation: Math.round(el) });
   };
   const zeigerAuf = () => {
     zieht.current = null;
