@@ -196,7 +196,7 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   der Orchestrator editiert `index.ts`). Autorenformat: MDX-Direktiven
   (Muster: `src/chapters/06-svd/S62.mdx` — das urspruengliche Muster
   `mdx-lab/SLab.mdx` ist am 2026-08-18 mit den Werkstattseiten entfallen;
-  Konzept-Muster: `src/concepts/mdx-probe.mdx`); Quiz als `::::quiz` /
+  Konzept-Muster: `src/concepts/inverse-matrix.mdx`); Quiz als `::::quiz` /
   `:::frage{wahr|falsch}`; Mathe mit EINFACHEN Backslashes ($\bA\bx=\bb$),
   Kursmakros direkt. Nach dem Schreiben: `npm run typecheck:mdx &&
   npm run test:mdx`.
