@@ -27,7 +27,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   MatrixInput,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   maxAbsCoord,
@@ -55,7 +55,7 @@ export function DetWidget() {
         Ziehen wir die Spalten, bis das orange Parallelogramm in sich
         zusammenfällt.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={m}
         size={280}
         worldHalf={worldHalf}

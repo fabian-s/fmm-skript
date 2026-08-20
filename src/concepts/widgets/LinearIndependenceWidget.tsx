@@ -29,7 +29,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   clamp,
   fmtDe,
@@ -57,7 +57,7 @@ export function IndependenceWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Ziehen wir b auf die gestrichelte Gerade durch a.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={IDENT}
         size={280}
         worldHalf={half}

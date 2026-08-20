@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { M, Slider } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../lib";
 
 export function TensorStackWidget() {
   const [layer, setLayer] = useState(1);
@@ -11,16 +11,9 @@ export function TensorStackWidget() {
   const h = gridSize + 2 * off + 20;
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Schicht k" value={layer} onChange={setLayer} min={1} max={3} step={1} />
-      <div className="mb-1 text-xs">
-        Ein 3 × 3 × 3-Tensor, gezeichnet als drei gestapelte
-        3 × 3-Matrizen; Schicht <M>{`k = ${k}`}</M> (hervorgehoben) enthält
-        die Einträge <M>{`a_{ij${k}}`}</M>.
-      </div>
+      <Aufgabe>Wählen wir eine Schicht und zeigen auf ihre Zellen.</Aufgabe><Slider label="Schicht k" value={layer} onChange={setLayer} min={1} max={3} step={1} />
       <svg
-        width={w}
-        height={h}
-        className="rounded border border-slate-300 bg-white dark:border-slate-600"
+        viewBox={`0 0 ${w} ${h}`} className="max-w-full h-auto rounded border" role="img" aria-label={`Tensor mit hervorgehobener Schicht ${k}`}
       >
         {[3, 2, 1].map((l) => {
           const dx = 10 + (l - 1) * off;
@@ -37,8 +30,9 @@ export function TensorStackWidget() {
                     width={cell - 2}
                     height={cell - 2}
                     rx={3}
-                    fill={active ? "#0284c7" : "#e2e8f0"}
-                    stroke={active ? "#075985" : "#94a3b8"}
+                    fill={active ? FMM_COLORS.blau : "var(--w-grid)"}
+                    stroke={active ? FMM_COLORS.blau : "var(--w-muted)"}
+                    onPointerEnter={(e) => e.currentTarget.setAttribute("aria-label", `a_${i + 1},${j + 1},${l}`)}
                     opacity={active ? 0.95 : 0.8}
                   />
                 ))
@@ -47,6 +41,7 @@ export function TensorStackWidget() {
           );
         })}
       </svg>
+      <Verdikt>Die hervorgehobene Zelle in Schicht {k} trägt die drei Adressbestandteile (i, j, {k}).</Verdikt>
     </div>
   );
 }

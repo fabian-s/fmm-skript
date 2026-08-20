@@ -29,3 +29,8 @@ export function TriPattern({ lower, caption }: { lower: boolean; caption: string
     </div>
   );
 }
+
+/** EINSICHT: Die Nullseite bestimmt die Einsetzrichtung. FARBEN: blau frei, neutral null. PROVENIENZ: neu. */
+export function TriangularMatrixWidget() {
+  return <div className="mt-2 flex flex-wrap justify-center gap-6 rounded bg-slate-700/60 p-3"><TriPattern lower={false} caption="obere Dreiecksmatrix" /><TriPattern lower caption="untere Dreiecksmatrix" /></div>;
+}

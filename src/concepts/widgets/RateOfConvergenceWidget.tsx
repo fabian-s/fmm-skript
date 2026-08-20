@@ -16,8 +16,8 @@
  * (samt Verweis auf die Maschinengenauigkeit) steht in
  * rate-of-convergence.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): Start e₀ = 10⁻¹. Linear mit C = 0,1 → 1,000 Stellen je Schritt,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-C/check-linear-ls-rate.mjs,
+ * 2026-08-20): Start e₀ = 10⁻¹. Linear mit C = 0,1 → 1,000 Stellen je Schritt,
  * 15 Schritte bis 10⁻¹⁶; C = 0,5 → 0,301 Stellen, 50 Schritte; C = 0,9 →
  * 0,046 Stellen, 328 Schritte. Quadratisch: log₁₀e_k = −2^k, also
  * −1, −2, −4, −8, −16 — vier Schritte bis 10⁻¹⁶.

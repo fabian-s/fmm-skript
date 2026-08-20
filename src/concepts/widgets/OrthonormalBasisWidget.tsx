@@ -25,7 +25,7 @@
  *   die Rekonstruktion c₁q₁ + c₂q₂ trifft w auf 1e−10.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Slider, TransformCanvas, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, LabeledTransformCanvas, Verdikt, fmtDe } from "../../lib";
 
 const HALB = 2.6;
 
@@ -45,7 +45,7 @@ export function OrthonormalBasisWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Drehen wir die Basis, bis w nur noch eine einzige Koordinate hat.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={[
           [1, 0],
           [0, 1],

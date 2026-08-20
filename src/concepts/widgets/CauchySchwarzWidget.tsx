@@ -1,67 +1,12 @@
-/** Widget zum Konzept-Tooltip „Cauchy-Schwarz-Ungleichung": Winkel und Balkenvergleich. */
+/**
+ * Einsicht: Das Skalarprodukt erreicht die Längen-Schranke nur bei parallelen Richtungen.
+ * Farben: Blau = |xᵀy|, Grau = ||x||||y||. Provenienz: neu.
+ * Verifikation: verify/FA/check-numbers.mjs (2026-08-20): |cos ω|=1 nur bei 0, π.
+ */
 import { useState } from "react";
-import { M, Slider } from "../../lib";
-
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_PANEL, W_TEXT } from "../../lib";
 export function AngleWidget() {
-  const [phi, setPhi] = useState(0.5);
-  const nx = 2.2; // |x|
-  const ny = 1.6; // |y|
-  const alpha = 0.35; // Richtung von x
-  const w = 280;
-  const h = 190;
-  const cx = w / 2;
-  const cy = h / 2 + 20;
-  const s = 42;
-  const px: [number, number] = [cx + s * nx * Math.cos(alpha), cy - s * nx * Math.sin(alpha)];
-  const py: [number, number] = [
-    cx + s * ny * Math.cos(alpha + phi),
-    cy - s * ny * Math.sin(alpha + phi),
-  ];
-  const dot = nx * ny * Math.cos(phi);
-  const bound = nx * ny;
-  const barW = 150;
-  return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider
-        label="Winkel ω"
-        value={phi}
-        onChange={setPhi}
-        min={0}
-        max={Math.PI}
-        step={0.02}
-        fmt={(t) => `${((t * 180) / Math.PI).toFixed(0)}°`}
-      />
-      <svg width={w} height={h} className="rounded bg-slate-900/60">
-        <line x1={cx} y1={cy} x2={px[0]} y2={px[1]} stroke="#38bdf8" strokeWidth={2.5} />
-        <line x1={cx} y1={cy} x2={py[0]} y2={py[1]} stroke="#f472b6" strokeWidth={2.5} />
-        <text x={px[0] + 4} y={px[1]} fill="#38bdf8" fontSize={13}>
-          x
-        </text>
-        <text x={py[0] + 4} y={py[1]} fill="#f472b6" fontSize={13}>
-          y
-        </text>
-        {/* Vergleichsbalken */}
-        <text x={10} y={20} fill="#e2e8f0" fontSize={11}>
-          |x·y| = {Math.abs(dot).toFixed(2)}
-        </text>
-        <rect
-          x={100}
-          y={12}
-          width={(barW * Math.abs(dot)) / bound}
-          height={9}
-          fill="#38bdf8"
-        />
-        <text x={10} y={38} fill="#e2e8f0" fontSize={11}>
-          ‖x‖·‖y‖ = {bound.toFixed(2)}
-        </text>
-        <rect x={100} y={30} width={barW} height={9} fill="#94a3b8" />
-      </svg>
-      <p className="mt-1 text-xs opacity-80">
-        Der blaue Balken <M>{"|\\bx^\\top\\by|"}</M> wächst nie über den grauen
-        Balken <M>{"\\lVert\\bx\\rVert \\, \\lVert\\by\\rVert"}</M> hinaus;
-        gleich groß sind sie genau bei Winkel <M>{"0^\\circ"}</M> oder{" "}
-        <M>{"180^\\circ"}</M>, also wenn die Vektoren parallel sind.
-      </p>
-    </div>
-  );
+ const [phi,setPhi]=useState(.5); const nx=2.2,ny=1.6,bound=nx*ny,dot=Math.abs(bound*Math.cos(phi)), equal=phi<.03||Math.abs(phi-Math.PI)<.03; const W=280,H=190,cx=140,cy=138,s=42;
+ const p=(r:number,a:number):[number,number]=>[cx+s*r*Math.cos(a),cy-s*r*Math.sin(a)]; const x=p(nx,.35),y=p(ny,.35+phi);
+ return <div className={`mt-2 p-2 ${W_PANEL}`}><Aufgabe>Drehen wir y, bis beide Balken dieselbe Länge haben.</Aufgabe><svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto" role="img" aria-label="Zwei Vektoren und der Vergleich von Skalarprodukt und Längenprodukt."><line x1={cx} y1={cy} x2={x[0]} y2={x[1]} stroke={FMM_COLORS.blau} strokeWidth="3"/><line x1={cx} y1={cy} x2={y[0]} y2={y[1]} stroke={FMM_COLORS.violett} strokeWidth="3"/><text x={10} y={20} fill="var(--w-text)" fontSize="11">|xᵀy| = {fmtDe(dot,2)}</text><rect x={100} y={12} width={150*dot/bound} height={10} fill={FMM_COLORS.blau}/><text x={10} y={42} fill="var(--w-text)" fontSize="11">||x||||y|| = {fmtDe(bound,2)}</text><rect x={100} y={34} width="150" height="10" fill="var(--w-muted)"/></svg><p className={`text-xs ${W_TEXT}`}>Blau: Skalarprodukt; Grau: Schranke.</p><Slider label="Winkel ω" value={phi} onChange={setPhi} min={0} max={Math.PI} step={.02} fmt={v=>`${fmtDe(v*180/Math.PI,0)}°`}/><Verdikt kind={equal?"ok":"neutral"}>{equal ? "Gleichheit erkannt: Die Vektoren sind parallel oder antiparallel." : "Die blaue Länge bleibt unter der grauen Schranke; nur Parallelität kann die Lücke schließen."}</Verdikt></div>;
 }

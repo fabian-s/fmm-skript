@@ -15,8 +15,12 @@
  * (und die Datenpunkte, an denen sie hängen, in grau); grün (gestrichelt) =
  * die KQ-Gerade, sichtbar erst nach dem Auflösen.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): A = [[1,1],[1,2],[1,3]], b = (1,2,2); Normalengleichungen
+ * PROVENIENZ: Regressionsbeispiel und Regler aus der Vorfassung; der
+ * Predict-then-reveal-Ablauf nutzt `Schaetzfrage`, die Reststrecken und das
+ * bisher beste SSR machen die Zielfunktion vor der Auflösung ablesbar.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-C/check-linear-ls-rate.mjs,
+ * 2026-08-20): A = [[1,1],[1,2],[1,3]], b = (1,2,2); Normalengleichungen
  * AᵀA = [[3,6],[6,14]], Aᵀb = (5,11); Lösung x = (2/3, 1/2) = (0,666667;
  * 0,500000) mit SSR = 0,166667 = 1/6 und Residuen (−1/6, 1/3, −1/6). Eine
  * Rastersuche über [−1,2] × [−0,5;1,5] mit Schrittweite 0,005 findet als
@@ -59,6 +63,7 @@ function LsTafel({ aufgeloest }: { aufgeloest: boolean }) {
         yDomain={yDom}
         width={320}
         height={220}
+        readout
         ariaLabel={`Gerade mit Achsenabschnitt ${fmtDe(c0, 2)} und Steigung ${fmtDe(c1, 2)}; Quadratsumme ${fmtDe(ssr, 3)}.`}
         series={[
           { f: gerade, color: FMM_COLORS.blau, label: "unsere Gerade" },

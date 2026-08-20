@@ -31,7 +31,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   W_BUTTON,
   W_BUTTON_AKTIV,
@@ -78,7 +78,7 @@ export function SymmetricWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Drehen wir x auf dem Kreis, bis Ax wieder genau auf x zeigt.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={A}
         showGrid={false}
         size={290}

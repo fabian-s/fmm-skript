@@ -1,84 +1,8 @@
+/** Einsicht: Verschiedene Normen haben verschiedene Einheitskugeln. Farben: Orange=1-, Blau=2-, Violett=∞-Norm. Provenienz: neu; keine Zahlenclaims (2026-08-20, FA). */
 import { useState } from "react";
-import { Slider } from "../../lib";
-
-function ArrowG({
-  x2,
-  y2,
-  cx,
-  cy,
-  color,
-  label,
-}: {
-  x2: number;
-  y2: number;
-  cx: number;
-  cy: number;
-  color: string;
-  label?: string;
-}) {
-  const ang = Math.atan2(y2 - cy, x2 - cx);
-  const hx = (a: number) => x2 - 9 * Math.cos(ang + a);
-  const hy = (a: number) => y2 - 9 * Math.sin(ang + a);
-  return (
-    <g stroke={color} fill={color}>
-      <line x1={cx} y1={cy} x2={x2} y2={y2} strokeWidth={2.2} />
-      <polygon
-        points={`${x2},${y2} ${hx(-0.4)},${hy(-0.4)} ${hx(0.4)},${hy(0.4)}`}
-        stroke="none"
-      />
-      {label && (
-        <text x={x2 + 5} y={y2 - 5} stroke="none" fontSize={12}>
-          {label}
-        </text>
-      )}
-    </g>
-  );
-}
-
+import { Aufgabe, clamp, FMM_COLORS, fmtDe, Slider, useDrag, DragHandle, Verdikt, W_BUTTON, W_BUTTON_AKTIV, W_PANEL, W_TEXT } from "../../lib";
 export function NormWidget() {
-  const [x1, setX1] = useState(1.8);
-  const [x2, setX2] = useState(1.1);
-  const size = 260;
-  const half = 2.6;
-  const px = (x: number) => size / 2 + (x * size) / (2 * half);
-  const py = (y: number) => size / 2 - (y * size) / (2 * half);
-  const n = Math.hypot(x1, x2);
-  return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="x₁" value={x1} onChange={setX1} min={-2.5} max={2.5} />
-      <Slider label="x₂" value={x2} onChange={setX2} min={-2.5} max={2.5} />
-      <svg
-        width={size}
-        height={size}
-        className="rounded border border-slate-300 bg-white"
-      >
-        <line x1={0} y1={py(0)} x2={size} y2={py(0)} stroke="#94a3b8" />
-        <line x1={px(0)} y1={0} x2={px(0)} y2={size} stroke="#94a3b8" />
-        <circle
-          cx={px(0)}
-          cy={py(0)}
-          r={size / (2 * half)}
-          fill="none"
-          stroke="#64748b"
-          strokeDasharray="4 3"
-        />
-        {n > 0.05 && (
-          <ArrowG
-            cx={px(0)}
-            cy={py(0)}
-            x2={px(x1 / n)}
-            y2={py(x2 / n)}
-            color="#dc2626"
-            label="x/‖x‖"
-          />
-        )}
-        <ArrowG cx={px(0)} cy={py(0)} x2={px(x1)} y2={py(x2)} color="#0284c7" label="x" />
-      </svg>
-      <p className="mt-1 text-xs">
-        ‖x‖ = {n.toFixed(2)}. Teilen wir durch die Norm, landet x auf dem
-        gestrichelten Einheitskreis (rot); die Richtung bleibt dabei
-        unverändert.
-      </p>
-    </div>
-  );
+ const [p,setP]=useState<[number,number]>([.9,.6]); const [active,setActive]=useState<1|2|3>(2); const W=260,half=1.7,px=(v:number)=>(v+half)/(2*half)*W,py=(v:number)=>W-(v+half)/(2*half)*W;
+ const n=[Math.abs(p[0])+Math.abs(p[1]),Math.hypot(...p),Math.max(Math.abs(p[0]),Math.abs(p[1]))]; const drag=useDrag<"p">({feld:{x0:0,y0:0,w:W,h:W},welt:{x0:-half,x1:half,y0:-half,y1:half},greifPosition:()=>p,clamp:q=>[clamp(q[0],-1.5,1.5),clamp(q[1],-1.5,1.5)],onDrag:q=>setP(q)}); const colors=[FMM_COLORS.orange,FMM_COLORS.blau,FMM_COLORS.violett];
+ return <div className={`mt-2 p-2 ${W_PANEL}`}><Aufgabe>Ziehen wir x und wählen wir eine Norm, deren Einheitskugel wir hervorheben.</Aufgabe><svg {...drag.svgProps} viewBox={`0 0 ${W} ${W}`} className="max-w-full h-auto" role="img" aria-label="Einheitskugeln der Eins-, Zwei- und Unendlichnorm."><line x1="0" y1={py(0)} x2={W} y2={py(0)} stroke="var(--w-axis)"/><line x1={px(0)} y1="0" x2={px(0)} y2={W} stroke="var(--w-axis)"/><polygon points={`${px(1)},${py(0)} ${px(0)},${py(1)} ${px(-1)},${py(0)} ${px(0)},${py(-1)}`} fill="none" stroke={colors[0]} strokeWidth={active===1?3:1.5}/><circle cx={px(0)} cy={py(0)} r={px(1)-px(0)} fill="none" stroke={colors[1]} strokeWidth={active===2?3:1.5}/><rect x={px(-1)} y={py(1)} width={px(1)-px(-1)} height={py(-1)-py(1)} fill="none" stroke={colors[2]} strokeWidth={active===3?3:1.5}/><DragHandle x={px(p[0])} y={py(p[1])} farbe={FMM_COLORS.blau} aktiv={drag.dragging==="p"} {...drag.handleProps("p")}/></svg><p className={`text-xs ${W_TEXT}`}>Orange: 1-Norm; Blau: 2-Norm; Violett: ∞-Norm.</p><div className="flex flex-wrap gap-1">{([1,2,3] as const).map(i=><button key={i} className={active===i?W_BUTTON_AKTIV:W_BUTTON} aria-pressed={active===i} onClick={()=>setActive(i)}>||x||{i===3?"∞":i}</button>)}</div><Slider label="x₁" value={p[0]} onChange={v=>setP([v,p[1]])} min={-1.5} max={1.5} step={.1}/><Slider label="x₂" value={p[1]} onChange={v=>setP([p[0],v])} min={-1.5} max={1.5} step={.1}/><Verdikt kind="neutral">Für den Punkt gilt ||x||{active===3?"∞":active} = {fmtDe(n[active-1],2)}. Die unterschiedliche Kugelform kodiert unterschiedliche Längenbegriffe.</Verdikt></div>;
 }

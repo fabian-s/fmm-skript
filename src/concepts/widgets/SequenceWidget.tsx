@@ -1,4 +1,4 @@
-/** Punktplot von a_n = 1/n: ein Punkt pro Index, immer dichter an 0. */
+/** EINSICHT: Die Indexreihenfolge einer Folge ist sichtbar. FARBEN: blau Glieder, rot Grenzwert. PROVENIENZ: neu. */
 export function SequenceDots() {
   const W = 280;
   const H = 120;
@@ -11,18 +11,18 @@ export function SequenceDots() {
   });
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <svg width={W} height={H} className="rounded bg-white">
+      <svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto rounded" role="img" aria-label="Punktfolge eins durch n mit Grenzwert null">
         <line
           x1={8}
           y1={yOf(0)}
           x2={W - 4}
           y2={yOf(0)}
-          stroke="#dc2626"
+          stroke="#D55E00"
           strokeWidth={1.5}
           strokeDasharray="4 3"
         />
         {dots.map((d) => (
-          <circle key={d.n} cx={xOf(d.n)} cy={yOf(d.a)} r={3.5} fill="#0284c7" />
+          <circle key={d.n} cx={xOf(d.n)} cy={yOf(d.a)} r={3.5} fill="#0072B2" />
         ))}
       </svg>
       <p className="mt-1 text-xs text-slate-300">

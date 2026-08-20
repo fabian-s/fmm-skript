@@ -38,7 +38,7 @@ import {
   FMM_COLORS,
   Slider,
   Stepper,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   type Mat2,
@@ -113,7 +113,7 @@ export function SvdWidget() {
       <Aufgabe>
         Gehen wir die drei Schritte durch und achten darauf, wann sich der Kreis verformt.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={M}
         transitionMs={400}
         size={280}

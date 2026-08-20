@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { M, MD } from "../../lib";
+import { Aufgabe, MD, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../lib";
 
 const PERMS: number[][] = [
   [0, 1, 2],
@@ -20,18 +20,10 @@ export function PermWidget() {
   const Px = p.map((pi) => X[pi]);
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
-      <button
-        className="rounded bg-slate-600 px-2 py-1 text-xs hover:bg-slate-500"
-        onClick={() => setK((k + 1) % PERMS.length)}
-      >
-        nächste Permutation ({k + 1}/{PERMS.length})
-      </button>
+      <Aufgabe>Wählen wir eine der sechs möglichen Umordnungen.</Aufgabe>
+      <div className="flex flex-wrap gap-1" role="group" aria-label="Permutation wählen">{PERMS.map((_, i) => <button type="button" key={i} aria-pressed={k === i} onClick={() => setK(i)} className={k === i ? W_BUTTON_AKTIV : W_BUTTON}>P{i + 1}</button>)}</div>
       <MD>{`\\bP = \\begin{pmatrix} ${rows} \\end{pmatrix}, \\qquad \\bP \\begin{pmatrix} 5 \\\\ 7 \\\\ 9 \\end{pmatrix} = \\begin{pmatrix} ${Px.join(" \\\\ ")} \\end{pmatrix}`}</MD>
-      <p className="mt-1 text-xs opacity-80">
-        Jede der sechs 3×3-Permutationsmatrizen ordnet die Einträge von{" "}
-        <M>{"(5,7,9)^T"}</M> auf eine andere Weise um; kein Eintrag wird je
-        verändert, nur verschoben.
-      </p>
+      <Verdikt>Die Einträge bleiben 5, 7 und 9; P{k + 1} verändert ausschließlich ihre Reihenfolge.</Verdikt>
     </div>
   );
 }

@@ -32,7 +32,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   type Mat2,
@@ -73,7 +73,7 @@ export function NullSpaceWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Drehen wir v, bis sein Bild im Ursprung verschwindet.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={A}
         size={280}
         worldHalf={3.2}

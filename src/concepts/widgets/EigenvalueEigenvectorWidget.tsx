@@ -16,8 +16,9 @@
  * Spoiler. Ziehen auf dem Einheitskreis und Achsen kommen aus der
  * Lib-`TransformCanvas`, Suchlogik und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA2.mjs,
- * 2026-08-19), A = [[2, 1], [1, 2]], Spur 4, det 3, also λ = 3 und λ = 1:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-A/eigenvalue-and-linear-combination.mjs,
+ * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), A = [[2, 1], [1, 2]],
+ * Spur 4, det 3, also λ = 3 und λ = 1:
  *   45°/225° : Av = ±(2,121; 2,121), Kreuzprodukt 0, vᵀAv = 3, ‖Av‖ = 3
  *   135°/315°: Av = ∓(0,707; −0,707), Kreuzprodukt 0, vᵀAv = 1, ‖Av‖ = 1
  * Es gilt exakt (Abweichung ≤ 8,9e−16) Kreuzprodukt(θ) = cos 2θ und
@@ -30,7 +31,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   type Mat2,
@@ -83,7 +84,7 @@ export function EigenWidget() {
         Drehen wir v, bis der blaue Pfeil genau auf dem roten liegt: es gibt
         zwei solche Richtungen.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={A}
         size={280}
         worldHalf={3.2}

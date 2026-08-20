@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { M, Slider } from "../../lib";
+import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../lib";
 
+/** EINSICHT: Das kürzeste Residuum steht senkrecht auf dem Bildraum. FARBEN: blau b, orange Projektion, rot Residuum, grün rechter Winkel. PROVENIENZ: neu. VERIFIZIERT: verify/FB/verify-numbers.mjs, 2026-08-20 (x*=4/5). */
 /**
  * Projection picture for a one-column A: slide the point x·a along span{a}
  * and watch the residual b − x·a become perpendicular exactly at the
@@ -34,12 +35,11 @@ export function ProjectionWidget() {
   const showAngle = Math.abs(aTr) < 0.08;
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Koeffizient x" value={x} onChange={setX} min={-0.3} max={1.6} step={0.01} />
+      <Aufgabe>Schieben wir x, bis der grüne rechte Winkel erscheint.</Aufgabe><Slider label="Koeffizient x" value={x} onChange={setX} min={-0.3} max={1.6} step={0.01} />
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        width={W}
-        height={H}
-        className="max-w-full rounded border border-slate-500 bg-white"
+        className="max-w-full h-auto rounded border"
+        role="img" aria-label="Projektion von b auf den Spann der Spalte a"
       >
         {/* axes */}
         <line x1={px(X0)} y1={py(0)} x2={px(X1)} y2={py(0)} stroke="#cbd5e1" strokeWidth={1} />
@@ -88,15 +88,7 @@ export function ProjectionWidget() {
           x·a
         </text>
       </svg>
-      <p className="mt-1 text-xs">
-        <M>{`\\ba^{T}\\br = ${aTr.toFixed(2)}`}</M>,{" "}
-        <M>{`\\|\\br\\|_2 = ${rNorm.toFixed(3)}`}</M>. Das Residuum ist genau
-        dort am kürzesten, wo es senkrecht auf span&#123;<M>{"\\ba"}</M>&#125;
-        steht, nämlich bei{" "}
-        <M>{`x = \\ba^{T}\\bb / \\ba^{T}\\ba = ${opt.toFixed(1)}`}</M>.{" "}
-        Schieben wir den Regler dorthin, erscheint die grüne
-        Rechte-Winkel-Markierung.
-      </p>
+      <Verdikt kind={showAngle ? "ok" : "neutral"}>{showAngle ? `Treffer: aᵀr = ${fmtDe(aTr)}. Erst jetzt lesen wir den Lösungskoeffizienten x* = ${fmtDe(opt, 1)} ab.` : `aᵀr = ${fmtDe(aTr)}; erst bei null ist das Residuum orthogonal zu span{a}.`}</Verdikt>
     </div>
   );
 }

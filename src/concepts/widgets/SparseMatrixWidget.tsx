@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Slider } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe } from "../../lib";
 
 const N = 12;
 
@@ -17,14 +17,15 @@ export function SpyWidget() {
   }
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
-      <Slider label="Bandbreite" value={band} onChange={setBand} min={0} max={5} step={1} />
+      <Aufgabe>Verändern wir die Bandbreite und vergleichen die Speicherzahlen.</Aufgabe><Slider label="Bandbreite" value={band} onChange={setBand} min={0} max={5} step={1} />
       <div className="my-1 font-mono text-xs">
         Nichtnull-Einträge: {count} von {N * N} ({((100 * count) / (N * N)).toFixed(0)}%)
+        <br />dünn: {count}; dicht: {N * N} Zahlen
       </div>
       <svg
-        width={N * cell + 2}
-        height={N * cell + 2}
-        className="rounded border border-slate-500 bg-white"
+        viewBox={`0 0 ${N * cell + 2} ${N * cell + 2}`}
+        className="max-w-full h-auto rounded border"
+        role="img" aria-label="Besetzungsmuster einer Bandmatrix"
       >
         {cells.map(({ i, j, nz }) => (
           <rect
@@ -33,17 +34,11 @@ export function SpyWidget() {
             y={1 + i * cell}
             width={cell - 1}
             height={cell - 1}
-            fill={nz ? "#0284c7" : "#f1f5f9"}
+            fill={nz ? FMM_COLORS.blau : "var(--w-bg)"}
           />
         ))}
       </svg>
-      <p className="mt-1 text-xs opacity-80">
-        Besetzungsmuster (spy plot) einer 12×12-Bandmatrix: blau =
-        Nichtnull-Eintrag (Zeile i, Spalte j), grau = Null, die wir gar nicht
-        erst speichern müssen. Bandbreite 1 ergibt eine{" "}
-        <em>Tridiagonalmatrix</em>: nur {3 * N - 2} von {N * N}{" "}
-        Einträgen können ungleich Null sein.
-      </p>
+      <Verdikt kind={band <= 1 ? "ok" : "neutral"}>{band === 1 ? `Bandbreite 1 ergibt eine Tridiagonalmatrix mit ${count} Nichtnull-Einträgen.` : `Bei Bandbreite ${band} brauchen wir ${count} statt ${N * N} Speicherplätze; für große n wächst das wie O(nb) statt O(n²).`}</Verdikt>
     </div>
   );
 }

@@ -31,7 +31,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   sigmaMax,
@@ -83,7 +83,7 @@ export function LinearMapWidget() {
         Vergleichen wir die vier Grundtypen und suchen, was allen gemeinsam
         bleibt.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={m}
         size={280}
         worldHalf={Math.max(3.2, 1.2 * s1)}

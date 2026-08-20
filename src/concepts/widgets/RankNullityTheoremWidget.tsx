@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { M, Slider } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../lib";
 
 export function DimensionBudgetWidget() {
-  const n = 4;
+  const n = 3;
   const [r, setR] = useState(2);
   const w = 280;
   const barH = 26;
   const seg = (w - 20) / n;
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider
+      <Aufgabe>Verschieben wir das Dimensionsbudget derselben Beispielmatrix A.</Aufgabe><Slider
         label="Rang r"
         value={r}
         onChange={(v) => setR(Math.round(v))}
@@ -27,11 +27,11 @@ export function DimensionBudgetWidget() {
             width={seg - 3}
             height={barH}
             rx={3}
-            fill={i < r ? "#38bdf8" : "#f472b6"}
+            fill={i < r ? FMM_COLORS.blau : FMM_COLORS.violett}
           />
         ))}
         <text x={10} y={12} fill="#e2e8f0" fontSize={11}>
-          n = {n} Eingangsdimensionen
+          A: ℝ³ → ℝ², n = {n}
         </text>
         <text x={10} y={60} fill="#38bdf8" fontSize={11}>
           überleben: rg = {r}
@@ -40,11 +40,7 @@ export function DimensionBudgetWidget() {
           plattgedrückt: dim Kern = {n - r}
         </text>
       </svg>
-      <p className="mt-1 text-xs opacity-80">
-        Ein festes Budget von <M>{"n = 4"}</M> Eingangsdimensionen für eine
-        Abbildung <M>{"\\R^4 \\to \\R^m"}</M>: Was der Rang gewinnt, verliert
-        der Kern; die beiden summieren sich immer zu 4.
-      </p>
+      <Verdikt>Für A = ((1, 0, 1), (0, 1, 1)) gilt tatsächlich Rang(A) = 2 und dim Ker(A) = 1; jedes gedachte Budget erfüllt Rang + Kerndimension = 3.</Verdikt>
     </div>
   );
 }

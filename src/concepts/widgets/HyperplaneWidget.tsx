@@ -65,13 +65,13 @@ export function OneEquationWidget() {
         width={300}
         height={296}
         ariaLabel={`Lösungsmenge von ${fmtDe(a1, 1)} x₁ + ${fmtDe(a2, 1)} x₂ = ${fmtDe(b, 1)} mit Normalenvektor.`}
-        series={Math.abs(a2) > 1e-9 ? [{ f: (x) => (b - a1 * x) / a2, color: FMM_COLORS.blau }] : []}
-        vlines={Math.abs(a2) <= 1e-9 && Math.abs(a1) > 1e-9 ? [{ at: b / a1, color: FMM_COLORS.blau }] : []}
+        series={Math.abs(a2) > 1e-9 ? [{ f: (x) => (b - a1 * x) / a2, color: FMM_COLORS.blau, label: "Lösungsgerade" }] : []}
+        vlines={Math.abs(a2) <= 1e-9 && Math.abs(a1) > 1e-9 ? [{ at: b / a1, color: FMM_COLORS.blau, label: "Lösungsgerade" }] : []}
         polylines={
           entartet
             ? []
             : [
-                { pts: pfeil, color: FMM_COLORS.orange },
+                { pts: pfeil, color: FMM_COLORS.orange, label: "Normalenvektor a" },
                 {
                   pts: spitze(pfeil[1][0], pfeil[1][1], a1 / norm, a2 / norm),
                   color: FMM_COLORS.orange,

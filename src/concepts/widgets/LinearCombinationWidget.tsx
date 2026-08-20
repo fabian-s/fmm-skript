@@ -14,9 +14,10 @@
  * Aufgabe. Ziehen und Achsen aus der Lib-`TransformCanvas`; Zielpunkt,
  * Parallelogramm der Anteile und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA2.mjs,
- * 2026-08-19), v₁ = (2; 1), v₂ = (−1; 1), det[v₁ v₂] = 3:
- *   Ziel (3; 0)   ⇒ c₁ = 1,    c₂ = −1     (im Reglerbereich)
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-A/eigenvalue-and-linear-combination.mjs,
+ * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), v₁ = (2; 1),
+ * v₂ = (−1; 1), det[v₁ v₂] = 3:
+ *   Ziel (1; 3)   ⇒ c₁ = 4/3,  c₂ = 5/3    (im Reglerbereich [−2; 2])
  *   Ziel (1; 2)   ⇒ c₁ = 1,    c₂ = 1
  *   Ziel (5; 1)   ⇒ c₁ = 2,    c₂ = −1     (außerhalb des Reglerbereichs)
  *   Voreinstellung c₁ = 1, c₂ = 0,5 ⇒ Mischung (1,5; 1,5)
@@ -27,7 +28,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   clamp,
   fmtDe,
@@ -41,7 +42,7 @@ const IDENT: [[number, number], [number, number]] = [
 const V1: [number, number] = [2, 1];
 const V2: [number, number] = [-1, 1];
 const DET = V1[0] * V2[1] - V2[0] * V1[1]; // = 3
-const ZIEL: [number, number] = [3, 0];
+const ZIEL: [number, number] = [1, 3];
 
 export function MixWidget() {
   // Voreinstellung (1; 0,5): die Mischung liegt sichtbar zwischen v₁ und v₂,
@@ -59,14 +60,14 @@ export function MixWidget() {
 
   /** Ziehen der Mischung: die Gewichte sind die Koordinaten in der Basis v₁, v₂. */
   const zieheMix = (p: [number, number]) => {
-    setC1(clamp((p[0] * V2[1] - p[1] * V2[0]) / DET, -1.5, 1.5));
-    setC2(clamp((V1[0] * p[1] - V1[1] * p[0]) / DET, -1.5, 1.5));
+    setC1(clamp((p[0] * V2[1] - p[1] * V2[0]) / DET, -2, 2));
+    setC2(clamp((V1[0] * p[1] - V1[1] * p[0]) / DET, -2, 2));
   };
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Aufgabe>Treffen wir mit der Mischung den orangen Ring bei (3; 0).</Aufgabe>
-      <TransformCanvas
+      <Aufgabe>Treffen wir mit der Mischung den orangen Ring bei (1; 3).</Aufgabe>
+      <LabeledTransformCanvas
         matrix={IDENT}
         size={280}
         worldHalf={half}
@@ -110,8 +111,8 @@ export function MixWidget() {
         label="c₁"
         value={c1}
         onChange={setC1}
-        min={-1.5}
-        max={1.5}
+        min={-2}
+        max={2}
         step={0.1}
         accent={FMM_COLORS.blau}
       />
@@ -119,8 +120,8 @@ export function MixWidget() {
         label="c₂"
         value={c2}
         onChange={setC2}
-        min={-1.5}
-        max={1.5}
+        min={-2}
+        max={2}
         step={0.1}
         accent={FMM_COLORS.gruen}
       />
@@ -134,7 +135,7 @@ export function MixWidget() {
         {fmtDe(c1, 1)}·(2; 1) + {fmtDe(c2, 1)}·(−1; 1) = ({fmtDe(mix[0], 2)};{" "}
         {fmtDe(mix[1], 2)}).{" "}
         {getroffen
-          ? "Getroffen, mit c₁ = 1 und c₂ = −1: ein negatives Gewicht heißt einfach, dass v₂ rückwärts eingesetzt wird. Diese beiden Zahlen sind genau die Lösung des Gleichungssystems mit den Spalten v₁ und v₂."
+          ? "Getroffen, mit c₁ = 4/3 und c₂ = 5/3. Diese beiden Zahlen sind genau die Lösung des Gleichungssystems mit den Spalten v₁ und v₂."
           : "Noch daneben. Das gestrichelte Parallelogramm zeigt die beiden Anteile: der blaue Anteil c₁v₁ und der grüne Anteil c₂v₂ ergeben zusammen die Spitze der roten Mischung."}
       </Verdikt>
     </div>

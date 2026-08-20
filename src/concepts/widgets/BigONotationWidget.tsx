@@ -68,21 +68,22 @@ export function RemainderWidget() {
       <Verdikt kind={haelt ? "ok" : "fail"}>
         {haelt ? (
           <>
-            Mit C = {fmtDe(C, 2)} bleibt das Restglied im ganzen Fenster unter C·t². Nötig ist
-            dafür mindestens C = e − 2 = 0,72; die Schranke wird am rechten Rand t = 1 knapp.
+            C = {fmtDe(C, 2)} reicht auf [−1, 1]: Das Restglied bleibt überall unter C·t².
+            Der kleinste passende Wert ist C = e − 2 = 0,72; am rechten Rand t = 1 wird die
+            Schranke knapp.
           </>
         ) : nurAussen ? (
           <>
-            Nahe null hält die Schranke, aber ab |t| = {fmtDe(kleinstesT, 2)} bricht sie; am
-            schlimmsten bei t = {fmtDe(t, 2)}, dort liegt das Restglied um {fmtDe(ueber, 3)} über
-            C·t². Für die O-Notation reicht das trotzdem: sie verlangt die Schranke nur für
-            hinreichend kleine t.
+            C = {fmtDe(C, 2)} reicht nicht auf [−1, 1]: Die erste Verletzung liegt bei
+            |t| = {fmtDe(kleinstesT, 2)}, am stärksten ist sie bei t = {fmtDe(t, 2)} mit
+            {fmtDe(ueber, 3)} über C·t². Für die O-Notation kann dieselbe Konstante dennoch in
+            einem kleineren Fenster um null reichen.
           </>
         ) : (
           <>
-            Diese Konstante ist selbst nahe null zu klein: bei t = {fmtDe(t, 2)} liegt das
-            Restglied um {fmtDe(ueber, 3)} über C·t². Unter C = 0,5 kann keine Wahl von t klein
-            genug sein, denn der Quotient strebt für t → 0 gegen 1/2.
+            C = {fmtDe(C, 2)} reicht nicht auf [−1, 1] und ist sogar nahe null zu klein: bei
+            t = {fmtDe(t, 2)} liegt das Restglied um {fmtDe(ueber, 3)} über C·t². Unter C = 0,5
+            kann kein noch so kleines Fenster helfen, denn der Quotient strebt für t → 0 gegen 1/2.
           </>
         )}
       </Verdikt>

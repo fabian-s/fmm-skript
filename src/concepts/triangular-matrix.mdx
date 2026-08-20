@@ -1,6 +1,6 @@
 export const title = "Dreiecksmatrix";
 
-import { TriPattern } from "./widgets/TriangularMatrixWidget";
+import { TriangularMatrixWidget } from "./widgets/TriangularMatrixWidget";
 
 Eine quadratische :k[Matrix]{#matrix} heißt
 *Dreiecksmatrix* (engl. *triangular matrix*), wenn alles
@@ -28,6 +28,8 @@ deshalb konstruiert das QR-Verfahren (vgl. Heath §3.5) eine
 $\bQ$ gerade so, dass
 $\bQ^T \bA$ obere Dreiecksform bekommt.
 
-<div className="mt-2 flex flex-wrap justify-center gap-6 rounded bg-slate-700/60 p-3"><TriPattern lower={false} caption="obere Dreiecksmatrix" /><TriPattern lower={true} caption="untere Dreiecksmatrix" /></div>
+Welche Seite der Diagonale muss für die jeweilige Dreiecksform verschwinden?
 
-<p className="mt-1 text-xs opacity-80">Nullmuster einer 5&times;5-Dreiecksmatrix: &lowast; markiert Einträge, die beliebig sein dürfen (auch null), die grauen Zellen müssen null sein.</p>
+<TriangularMatrixWidget />
+
+Das Nullmuster zeigt zugleich, warum oberes und unteres Dreieckssystem in entgegengesetzter Richtung eingesetzt werden.

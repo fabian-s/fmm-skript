@@ -31,7 +31,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   W_BUTTON,
   W_BUTTON_AKTIV,
@@ -73,7 +73,7 @@ export function ReflectionWidget() {
       <Aufgabe>
         Ziehen wir a herum und suchen die Richtungen, die die Spiegelung unverändert lässt.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={M}
         transitionMs={250}
         showGrid

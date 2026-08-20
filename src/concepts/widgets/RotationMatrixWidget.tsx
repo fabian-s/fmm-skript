@@ -27,7 +27,7 @@ import {
   FMM_COLORS,
   MD,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
 } from "../../lib";
@@ -53,7 +53,7 @@ export function RotationWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Ziehen wir den roten Pfeil Qe₁ auf dem Kreis herum.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={[
           [c, -s],
           [s, c],

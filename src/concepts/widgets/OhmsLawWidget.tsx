@@ -18,11 +18,12 @@
  * 2026-08-19): bei i = 1,5 A ist V = 3,0 V (R = 2 Ω) bzw. V = 6,0 V
  * (R = 4 Ω); das Verhältnis der Steigungen ist exakt 2.
  */
-import { FMM_COLORS, Plot, W_MUTED } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Verdikt } from "../../lib";
 
 export function OhmWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>Vergleichen wir die beiden Steigungen bei derselben Stromstärke.</Aufgabe>
       <Plot
         xLabel="Stromstärke i (A)"
         yLabel="Spannung V (V)"
@@ -41,9 +42,10 @@ export function OhmWidget() {
         ]}
         vlines={[{ at: 1.5, color: FMM_COLORS.grau, dash: [4, 4] }]}
       />
-      <p className={`mt-1 text-xs ${W_MUTED}`}>
-        Bei derselben Stromstärke 1,5 A fällt am doppelten Widerstand die doppelte Spannung ab.
-      </p>
+      <Verdikt kind="neutral">
+        Bei i = 1,5 A liefert R = 2 Ω die Spannung 3 V und R = 4 Ω die Spannung 6 V. Der doppelte
+        Widerstand verdoppelt also die Steigung der Ursprungsgeraden.
+      </Verdikt>
     </div>
   );
 }

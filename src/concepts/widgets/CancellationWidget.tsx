@@ -1,48 +1,19 @@
+/**
+ * Einsicht: Auslöschung macht vorhandene relative Fehler um etwa 10^k größer.
+ * Farben: Rot gestrichen = verlorene Ziffern, Grün = verbleibende Information. Provenienz: neu.
+ * Verifikation: verify/FA/check-numbers.mjs (2026-08-20): |a|/|a-b|=10^k.
+ */
 import { useState } from "react";
-import { M, Slider } from "../../lib";
-
-/** Ziffernbild der Auslöschung: gemeinsame führende Ziffern heben sich weg. */
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_PANEL, W_TEXT } from "../../lib";
 export function DigitWidget() {
-  const [k, setK] = useState(4);
-  const a = 1.23456789;
-  const b = a * (1 - Math.pow(10, -k)); // teilt ~k führende Ziffern mit a
-  const d = a - b;
-  const sa = a.toFixed(10);
-  const sb = b.toFixed(10);
-  let p = 0;
-  while (p < sa.length && sa[p] === sb[p]) p++;
+  const [k, setK] = useState(4); const a = 1.23456789; const b = a * (1 - 10 ** -k); const d = a - b;
+  const sa = fmtDe(a, 10); const sb = fmtDe(b, 10); let p = 0; while (p < sa.length && sa[p] === sb[p]) p++;
   const factor = Math.abs(a / d);
-  return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
-      <Slider
-        label="gemeinsame Ziffern k"
-        value={k}
-        onChange={setK}
-        min={1}
-        max={8}
-        step={1}
-        fmt={(v) => v.toFixed(0)}
-      />
-      <div className="font-mono text-xs leading-5">
-        <div>
-          a &nbsp;= <span className="text-red-400 line-through">{sa.slice(0, p)}</span>
-          <span className="text-emerald-400">{sa.slice(p)}</span>
-        </div>
-        <div>
-          b &nbsp;= <span className="text-red-400 line-through">{sb.slice(0, p)}</span>
-          <span className="text-emerald-400">{sb.slice(p)}</span>
-        </div>
-        <div>
-          a−b = {d.toExponential(3)} &nbsp;&nbsp;(Verstärkungsfaktor ≈ {factor.toExponential(1)})
-        </div>
-      </div>
-      <p className="mt-1 text-xs opacity-80">
-        Die durchgestrichenen führenden Ziffern sind in <M>{"a"}</M> und <M>{"b"}</M> identisch
-        und heben sich bei der Subtraktion exakt weg; nur der grüne Rest trägt Information.
-        Tragen <M>{"a"}</M> und <M>{"b"}</M> je einen relativen Rundungsfehler{" "}
-        <M>{"\\approx \\eps_{\\text{mach}}"}</M>, dann trägt <M>{"a - b"}</M> ungefähr den{" "}
-        <M>{"|a| / |a - b| \\approx 10^{k}"}</M>-fachen relativen Fehler.
-      </p>
-    </div>
-  );
+  return <div className={`mt-2 p-2 ${W_PANEL}`}>
+    <Aufgabe>Erhöhen wir die gemeinsamen führenden Ziffern und vergleichen wir den Rest.</Aufgabe>
+    <div className={`font-mono text-xs leading-5 ${W_TEXT}`}><div>a = <s style={{ color: FMM_COLORS.rot }}>{sa.slice(0,p)}</s><span style={{ color: FMM_COLORS.gruen }}>{sa.slice(p)}</span></div><div>b = <s style={{ color: FMM_COLORS.rot }}>{sb.slice(0,p)}</s><span style={{ color: FMM_COLORS.gruen }}>{sb.slice(p)}</span></div><div>a−b = {fmtDe(d, Math.min(10, k + 2))}</div></div>
+    <p className={`mt-1 text-xs ${W_TEXT}`}>Rot: weggefallene Ziffern; Grün: der Rest.</p>
+    <Slider label="gemeinsame Ziffern k" value={k} onChange={setK} min={1} max={8} step={1} />
+    <Verdikt kind="warn">Die Verstärkung beträgt etwa {fmtDe(factor, 0)} = 10^{k}. Bereits vorhandene relative Fehler dominieren deshalb den kleinen Rest.</Verdikt>
+  </div>;
 }

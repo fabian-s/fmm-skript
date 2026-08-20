@@ -26,7 +26,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   maxAbsCoord,
@@ -56,7 +56,7 @@ export function ComplexPlaneWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Ziehen wir z herum und behalten den blauen Pfeil im Auge.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={MAL_I}
         size={280}
         worldHalf={half}

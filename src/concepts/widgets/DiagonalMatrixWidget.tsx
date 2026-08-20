@@ -27,7 +27,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   clamp,
   fmtDe,
@@ -54,7 +54,7 @@ export function DiagWidget() {
         Ziehen wir die beiden Achsenbilder und achten darauf, was mit den
         Gitterlinien passiert.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={D}
         size={280}
         worldHalf={3.4}

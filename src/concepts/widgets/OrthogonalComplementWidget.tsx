@@ -25,7 +25,7 @@
  *   normierte Richtung von S⊥: (−0,4472; 0,8944).
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Slider, TransformCanvas, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, LabeledTransformCanvas, Verdikt, fmtDe } from "../../lib";
 
 const U: [number, number] = [2, 1];
 const UU = U[0] * U[0] + U[1] * U[1];
@@ -47,7 +47,7 @@ export function ComplementWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Ziehen wir b umher und beobachten, was mit den beiden Anteilen passiert.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={[
           [1, 0],
           [0, 1],

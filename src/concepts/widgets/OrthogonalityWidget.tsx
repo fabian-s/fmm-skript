@@ -32,7 +32,7 @@
  *     3,4971, deshalb worldHalf = 3,6.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Slider, TransformCanvas, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, LabeledTransformCanvas, Verdikt, fmtDe } from "../../lib";
 
 const U: [number, number] = [1.2, 0.6];
 const NU2 = U[0] * U[0] + U[1] * U[1];
@@ -75,7 +75,7 @@ export function PythagorasWidget() {
       <Aufgabe>
         Ziehen wir die Spitze von u+v, bis die beiden kleinen Quadrate zusammen genau das große füllen.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={[
           [1, 0],
           [0, 1],

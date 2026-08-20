@@ -33,7 +33,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   sigmaMax,
@@ -74,7 +74,7 @@ export function CondWidget() {
         Ziehen wir x auf dem Kreis herum und suchen die Richtung, in der Ax am
         kürzesten wird.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={A}
         size={280}
         worldHalf={worldHalf}

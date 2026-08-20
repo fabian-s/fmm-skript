@@ -31,7 +31,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   MatrixInput,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   sigmaMax,
@@ -76,7 +76,7 @@ export function NormWidget() {
       <Aufgabe>
         Ziehen wir an den Spalten und beobachten die orange Halbachse.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={A}
         size={280}
         worldHalf={worldHalf}

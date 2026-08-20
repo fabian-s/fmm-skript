@@ -1,4 +1,4 @@
-/** Static SVG sketch of a small feed-forward neural network (3-4-2). */
+/** EINSICHT: Schichten verbinden Eingaben mit Ausgaben. FARBEN: blau Eingabe, grau verborgen, rot Ausgabe. PROVENIENZ: neu. */
 export function NetworkDiagram() {
   const layers = [3, 4, 2];
   const xs = [45, 140, 235];
@@ -21,10 +21,9 @@ export function NetworkDiagram() {
 
   return (
     <svg
-      width={280}
-      height={H + 24}
+      role="img" aria-label="Neuronales Netz mit Eingabe-, verborgener und Ausgabeschicht"
       viewBox={`0 0 280 ${H + 24}`}
-      className="mt-2 rounded border border-slate-300 bg-white dark:border-slate-600"
+      className="mt-2 max-w-full h-auto rounded border"
     >
       {edges.map((e, k) => (
         <line
@@ -33,7 +32,7 @@ export function NetworkDiagram() {
           y1={e.y1}
           x2={e.x2}
           y2={e.y2}
-          stroke="#94a3b8"
+          stroke="var(--w-muted)"
           strokeWidth={1}
         />
       ))}
@@ -44,17 +43,17 @@ export function NetworkDiagram() {
             cx={xs[l]}
             cy={yFor(n, i)}
             r={9}
-            fill={l === 0 ? "#0284c7" : l === layers.length - 1 ? "#dc2626" : "#64748b"}
+            fill={l === 0 ? "#0072B2" : l === layers.length - 1 ? "#D55E00" : "var(--w-muted)"}
           />
         )),
       )}
-      <text x={xs[0]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[0]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         Eingabe
       </text>
-      <text x={xs[1]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[1]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         verborgene Schicht
       </text>
-      <text x={xs[2]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[2]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         Ausgabe
       </text>
     </svg>

@@ -15,6 +15,10 @@
  * (gepunktet) = die beiden Ränder des garantierten Bandes p_n ± Schranke;
  * grauer Strich = die Auswertungsstelle t₀.
  *
+ * PROVENIENZ: Ersetzt die frühere Dublette zu `taylor-series`: Die
+ * Reihenauswertung bleibt, das neue Diagramm zeichnet aus dem
+ * Lagrange-Restglied die garantierte obere und untere Bandgrenze.
+ *
  * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
  * 2026-08-19), |R_n(t)| gegen die Schranke |t|ⁿ⁺¹/(n+1)!:
  *   n = 1: t = 0,5 → 2,057·10⁻² gegen 1,250·10⁻¹ (16,5 %); t = 1 → 1,585·10⁻¹

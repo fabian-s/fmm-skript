@@ -29,7 +29,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   W_BUTTON,
   W_BUTTON_AKTIV,
@@ -63,7 +63,7 @@ export function OrthogonalMatrixWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Ziehen wir v und vergleichen die beiden Längen unter der Tafel.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={Q}
         transitionMs={250}
         size={250}
