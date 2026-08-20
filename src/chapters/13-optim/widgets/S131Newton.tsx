@@ -249,7 +249,7 @@ export function NewtonNullstelle() {
   } else if (b.id === "arctan" && Math.abs(x0) > ARCTAN_SCHWELLE) {
     art = "fail";
     titel = "die Folge läuft auseinander";
-    text = `Bei arctan flacht die Kurve nach außen ab, die Tangente wird also immer flacher und ihr Schnittpunkt mit der Achse immer weiter entfernt. Ab |x⁽⁰⁾| > ${fmt(ARCTAN_SCHWELLE, 4)} überholt jeder Schritt den vorigen: Aus ${fmt(x0, 2)} wird ${fmt(bahn[1] ?? NaN, 4)}, dann ${fmt(bahn[2] ?? NaN, 4)}, und die Beträge wachsen. Es gibt hier nur EINE Nullstelle, und trotzdem findet Newton sie nicht — genau die Warnung von Bemerkung 13.1.13: Die quadratische Konvergenz ist eine LOKALE Aussage.`;
+    text = `Bei arctan flacht die Kurve nach außen ab, die Tangente wird also immer flacher und ihr Schnittpunkt mit der Achse immer weiter entfernt. Ab |x⁽⁰⁾| > ${fmt(ARCTAN_SCHWELLE, 4)} überholt jeder Schritt den vorigen: Aus ${fmt(x0, 2)} wird ${fmt(bahn[1] ?? NaN, 4)}, dann ${fmt(bahn[2] ?? NaN, 4)}, und die Beträge wachsen. Es gibt hier nur EINE Nullstelle, und trotzdem findet Newton sie nicht, genau die Warnung von Bemerkung 13.1.13: Die quadratische Konvergenz ist eine LOKALE Aussage.`;
     // „Flach" heißt hier wirklich flach: ein weiter Sprung allein genügt nicht,
     // sonst behauptet der Zweig bei x^(0) = 3 auf x² − 2 eine kleine Ableitung,
     // obwohl f' = 6 ist.

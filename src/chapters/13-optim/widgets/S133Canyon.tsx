@@ -32,7 +32,9 @@ import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
  *
  * Farbrollen nach dem Kapitel-13-Code: Iterierte und Fehlerkurve blau, das
  * Minimum grün, Divergenzwarnungen rot. Die Schranke des Satzes ist keine
- * Größe des Farbcodes und bleibt neutral grau gestrichelt.
+ * Größe des Farbcodes und bleibt neutral grau gestrichelt; ebenso die
+ * Quadrik selbst (Höhenlinien und 3D-Fläche), damit die blaue Bahn auf ihr
+ * sichtbar bleibt.
  *
  * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-13-optim/s133.mjs und
  * s133b.mjs, 2026-08-19; ältere Prüfung check-math-s133.mjs bestätigt):
@@ -59,6 +61,7 @@ import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
 const BLAU = FMM_COLORS.blau; // Iterierte, Fehlerkurve
 const GRUEN = FMM_COLORS.gruen; // Minimum
 const ROT = FMM_COLORS.rot; // Divergenz
+const GRAU = FMM_COLORS.grau; // die Quadrik selbst (Flaeche, Hoehenlinien)
 const ACHSE = "#64748b";
 const HILFS = "#94a3b8";
 
@@ -209,7 +212,9 @@ export function CanyonWidget() {
   const [sicht, setSicht] = useState<Sicht3D>({ azimuth: 32, elevation: 22 });
   const YHALB = 1.6;
   const flaeche = useMemo(
-    () => ({ f: (a: number, b: number) => f([a, b]), nx: 32, ny: 26, color: BLAU, opacity: 0.82, wire: true }),
+    // Die Flaeche bleibt neutral grau: Blau gehoert in diesem Kapitel den
+    // Iterierten, und eine blaue Bahn auf blauer Flaeche ist unsichtbar.
+    () => ({ f: (a: number, b: number) => f([a, b]), nx: 32, ny: 26, color: GRAU, opacity: 0.8, wire: true }),
     [f],
   );
   const kurve3d = useMemo((): Kurve3D[] => {

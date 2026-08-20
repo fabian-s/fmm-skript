@@ -128,6 +128,30 @@ export function OptimLandkarte() {
     : `Von (${fmt(start[0])}; ${fmt(start[1])}) aus läuft der Abstieg nach (${fmt(lauf.ende[0])}; ${fmt(lauf.ende[1], 4)}) mit f = ${fmt(lauf.fEnde, 4)}. Dort ist der Gradient null und die Hesse-Matrix positiv definit, es ist also ein sauberes lokales Minimum, nur liegt das globale bei (0; 0) mit f = 0 um ${fmt(lauf.fEnde, 4)} tiefer. Genau das meint Bemerkung 13.6.2 mit „falscher Konvergenz": Das Verfahren hat nichts falsch gemacht, es hat nur nicht gefunden, was wir suchen. Abhilfe schafft keine bessere Schrittweite, sondern nur ein anderer Startpunkt.`;
 
   const zelle = W / N;
+  // Die 96x96 Kacheln haengen nur am (konstanten) Wertegitter: einmal bauen,
+  // sonst rechnet React bei jedem Ziehschritt 9216 <rect> neu durch.
+  const heatmap = useMemo(
+    () =>
+      raster.map((zeile, i) =>
+        zeile.map((v, j) => {
+          // f reicht im Fenster bis 3,09; oberhalb von 2,2 wird die
+          // Skala abgeschnitten, sonst verschwinden die flachen Mulden.
+          const t = Math.min(1, v / 2.2);
+          const hell = Math.round(248 - t * 130);
+          return (
+            <rect
+              key={i * N + j}
+              x={j * zelle}
+              y={i * zelle}
+              width={zelle + 0.5}
+              height={zelle + 0.5}
+              fill={`rgb(${hell}, ${hell}, ${hell})`}
+            />
+          );
+        }),
+      ),
+    [raster, zelle],
+  );
   return (
     <div className="my-2 space-y-3">
       <Aufgabe>
@@ -161,24 +185,7 @@ export function OptimLandkarte() {
           {...zieh.svgProps}
           {...zieh.surfaceProps("p")}
         >
-          {raster.map((zeile, i) =>
-            zeile.map((v, j) => {
-              // f reicht im Fenster bis 3,09; oberhalb von 2,2 wird die
-              // Skala abgeschnitten, sonst verschwinden die flachen Mulden.
-              const t = Math.min(1, v / 2.2);
-              const hell = Math.round(248 - t * 130);
-              return (
-                <rect
-                  key={i * N + j}
-                  x={j * zelle}
-                  y={i * zelle}
-                  width={zelle + 0.5}
-                  height={zelle + 0.5}
-                  fill={`rgb(${hell}, ${hell}, ${hell})`}
-                />
-              );
-            }),
-          )}
+          {heatmap}
           <polyline
             points={lauf.pfad.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ")}
             fill="none"
