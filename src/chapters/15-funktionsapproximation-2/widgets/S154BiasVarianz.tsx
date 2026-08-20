@@ -32,12 +32,11 @@ import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
  *   K = 12: Bias^2 0,0013  Var 0,0107 (Theorie 0,0108)  MSE 0,0120  (Minimum)
  *   K = 15: Bias^2 0,0001  Var 0,0135 (Theorie 0,0135)  MSE 0,0136
  *   K = 40: Bias^2 0,0001  Var 0,0358 (Theorie 0,0360)  MSE 0,0360
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT } = FMM_COLORS;
-const GRAU = "#475569";
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: GRAU, hellgrau: RAHMEN } = FMM_COLORS;
+const ACHSE = GRAU;
 
 const A = 0;
 const B_END = 2 * Math.PI;
@@ -354,10 +353,8 @@ export function BiasVarianzExplorer() {
 
       <div className="flex flex-wrap gap-4">
         <svg
-          width={W_A}
-          height={H_A}
           viewBox={`0 0 ${W_A} ${H_A}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <clipPath id="s154-clip">
             <rect
@@ -458,10 +455,8 @@ export function BiasVarianzExplorer() {
 
         <div className="grow space-y-2">
           <svg
-            width={W_B}
-            height={H_B}
             viewBox={`0 0 ${W_B} ${H_B}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <text x={8} y={16} fontSize={10} fill={ACHSE}>
               Anteile am MSE bei K = {lauf.K}
@@ -496,7 +491,7 @@ export function BiasVarianzExplorer() {
                 height={13}
                 fill={GRUEN}
               />
-              <text x={bx + 4} y={94} fontSize={9} fill="#ffffff">
+              <text x={bx + 4} y={94} fontSize={9} fill="var(--w-bg)">
                 {fmt(lauf.mse)}
               </text>
             </g>
@@ -506,10 +501,8 @@ export function BiasVarianzExplorer() {
           </svg>
 
           <svg
-            width={W_C}
-            height={H_C}
             viewBox={`0 0 ${W_C} ${H_C}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD_C.l}

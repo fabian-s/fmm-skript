@@ -190,7 +190,6 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
         <div className="min-w-0">
           <svg
             viewBox={`0 0 ${SIZE} ${SIZE}`}
-            width={SIZE}
             className="max-w-full h-auto rounded"
             role="img"
             aria-label={`Einheitskugel der p-Norm in der Ebene, aktuell ein ${gestalt}; der Vektor x hat die Norm ${fmtDe(nx, 2)}.`}

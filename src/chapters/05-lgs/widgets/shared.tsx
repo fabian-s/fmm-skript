@@ -60,7 +60,7 @@ export function MatTable({
 export function WidgetLabel({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-xs font-medium" style={{ color: "#64748b" }}>
+      <span className="text-xs font-medium" style={{ color: "var(--w-muted)" }}>
         {label}
       </span>
       {children}

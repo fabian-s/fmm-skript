@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * Basisdarstellungs-Rechner (§14.2, Eigenbau).
@@ -27,11 +27,10 @@ import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
  *
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen, Basisfunktionen
  * orange.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE } = FMM_COLORS;
 
 const KNOTEN = [0, 1, 2];
 
@@ -63,11 +62,7 @@ const BASEN: Record<BasisId, Basis> = {
 };
 
 /** Deutsche Zahlformatierung; undefinierte Werte von unendlichen trennen. */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "undefiniert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  return v.toFixed(d).replace(".", ",").replace(/^-/, "−");
-}
+const fmt = fmtDe;
 
 export function BasisRechner() {
   const [basisId, setBasisId] = useState<BasisId>("monom");
@@ -241,6 +236,11 @@ export function BasisRechner() {
           </p>
         </div>
       </div>
+      <Verdikt kind={dreiecksform ? "ok" : "neutral"}>
+        {dreiecksform
+          ? "In der Newton-Basis ist B untere Dreiecksmatrix. Wir bestimmen die Koeffizienten daher nacheinander; die grüne Kurve bleibt dabei unverändert."
+          : "Die Monombasis beschreibt denselben Ansatzraum, aber B ist nicht dreieckig. Die Koeffizienten ändern sich beim Basiswechsel, nicht der Interpolant."}
+      </Verdikt>
     </div>
   );
 }

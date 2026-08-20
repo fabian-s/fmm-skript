@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Aufgabe, LabeledPlot, M, Slider, Verdikt, type Series } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe, type PlotPoint, type Series } from "../../../lib";
 
 /**
  * Vier Interpolanten durch dieselben drei Punkte (§14.1). Ersetzt das
@@ -21,11 +21,10 @@ import { Aufgabe, LabeledPlot, M, Slider, Verdikt, type Series } from "../../../
  * Farbcode Kapitel 14: Daten blau, Interpolanten gruen (unterschieden durch
  * die Strichelung, nicht durch die Farbe), die Spanne bei x* rot, weil sie
  * das Problem markiert: Interpolation legt nur die Stuetzstellen fest.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const DATEN = "#0072B2";
-const GRUEN = "#009E73";
-const ROT = "#D55E00";
+const { blau: DATEN, gruen: GRUEN, rot: ROT } = FMM_COLORS;
 
 const X = [0, 1, 2];
 const Y = [1, 2, 5];
@@ -49,12 +48,12 @@ const KANDIDATEN: Kandidat[] = [
   { name: "vogelwild", formel: "\\wh{f}_4(x) = 1 + x^2 + 0{,}5\\sin(2\\pi x)", f: f4, dash: [10, 3, 2, 3] },
 ];
 
-const fmt = (v: number, d = 2) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
+const fmt = fmtDe;
 
 /** Kleines Strichmuster als Legendensymbol. */
 function Muster({ dash }: { dash: number[] }) {
   return (
-    <svg width={30} height={10} className="shrink-0">
+    <svg viewBox="0 0 30 10" className="h-auto max-w-full shrink-0">
       <line
         x1={1}
         y1={5}
@@ -81,7 +80,7 @@ export function VierInterpolanten() {
   const spanne = werte.length >= 2 ? hoch - tief : NaN;
   const aufKnoten = X.some((x) => Math.abs(x - xStern) < 1e-9);
 
-  const markers = X.map((x, i) => ({ x, y: Y[i], color: DATEN }));
+  const markers: PlotPoint[] = X.map((x, i) => ({ x, y: Y[i], color: DATEN }));
   if (Number.isFinite(spanne) && spanne > 1e-9) {
     markers.push({ x: xStern, y: tief, color: ROT });
     markers.push({ x: xStern, y: hoch, color: ROT });

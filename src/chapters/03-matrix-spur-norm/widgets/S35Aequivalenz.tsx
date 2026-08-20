@@ -149,7 +149,6 @@ export function S35AequivalenzWidget() {
         <div className="min-w-0">
           <svg
             viewBox={`0 0 ${SIZE} ${SIZE}`}
-            width={SIZE}
             className="max-w-full h-auto rounded"
             role="img"
             aria-label={`Die Singulärwerte als Punkt im zulässigen Keil; der Quotient aus Frobenius- und Spektralnorm beträgt ${fmtDe(quotient, 3)}.`}
@@ -246,7 +245,6 @@ export function S35AequivalenzWidget() {
             </div>
             <svg
               viewBox={`0 0 ${BAL_W} 30`}
-              width={BAL_W}
               className="max-w-full h-auto"
               role="img"
               aria-label={`Der Quotient liegt bei ${fmtDe(quotient, 2)} auf der Skala von 1 bis Wurzel 2.`}

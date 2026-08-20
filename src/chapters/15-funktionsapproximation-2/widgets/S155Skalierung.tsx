@@ -17,11 +17,10 @@ import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
  *   additiv p = 10:  91 freie Parameter nach Zentrierung, 728 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const { gruen: GRUEN, orange: ORANGE } = FMM_COLORS;
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { gruen: GRUEN, orange: ORANGE, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const P_MAX = 10;
 const BYTE_PRO_KOEFFIZIENT = 8;
@@ -120,10 +119,8 @@ export function SkalierungTensorGam() {
 
       <div className="flex flex-wrap gap-4">
         <svg
-          width={W}
-          height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <rect
             x={PAD.l}

@@ -153,7 +153,7 @@ nicht angetastet, für eine Orthogonalmatrix keine Überraschung.
 
 <GivensWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, landet $\bG\ba$ für jedes $\ba \neq \bnull$ auf der ersten Koordinatenachse, und zwar stets in der Höhe $\alpha = \left\|\ba\right\|_2$. Das Gitter im Hintergrund wird dabei nur gedreht, nirgends gestreckt oder gestaucht. Beachtenswert ist auch, was *nicht* passiert: Der angezeigte Winkel $\theta$ wird nirgends gebraucht. $c$ und $s$ ergeben sich unmittelbar aus $a_1$ und $a_2$, ganz ohne Trigonometrie – für die Numerik ein spürbarer Vorteil.</p>
+<p className="mt-2 text-sm">Das Widget verknüpft die Givens-Koeffizienten mit einer längenerhaltenden Drehung auf die Achse.</p>
 :::
 
 Das Rezept trägt weiter als $\R^2$: Auch in $\R^n$ können wir damit jede einzelne
@@ -353,7 +353,7 @@ ersten sind mit *einer einzigen* Spiegelung verschwunden.
 
 <HouseholderWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, liegt $\bw(1)$ auf der Spiegelgeraden – die Zeile $\bv^\top\bw(t)$ steht dort auf 0 –, ist aber echt kürzer als $\ba$: bei Richtung $130^\circ$ etwa 0,845 statt 2. Einmal den $\bv$-Anteil abzuziehen ergibt die *Projektion*, und eine Projektion ist keine Orthogonalmatrix; sie würde die Zielfunktion des KQ-Problems verändern. Erst der doppelte Schritt bei $t = 2$ bringt die volle Länge zurück und landet exakt auf $\alpha\,\be_1$. Das ist Satz 7.5.6 in geometrischer Form: $\bH^2 = \bI$.</p>
+<p className="mt-2 text-sm">Das Widget trennt die Projektion auf die Spiegelgerade von der vollständigen Householder-Spiegelung.</p>
 :::
 
 :::bemerkung[7.5.9 (Vorzeichenwahl)]
@@ -379,7 +379,7 @@ auf das Ziel, das *weiter* von $\ba$ entfernt liegt.
 
 <AusloeschungWidget />
 
-<p className="mt-2 text-sm">Wie das Experiment zeigt, frisst die Subtraktion in der oberen Zeile alle führenden Ziffern auf; was von $v_1$ übrig bleibt, ist im Wesentlichen der Rundungsfehler von $\left\|\ba\right\|_2 \approx 1 + \delta^2/2$. Ist $\delta^2$ so klein, dass es in $t$ Stellen gar nicht mehr sichtbar ist, wird $v_1$ sogar zu exakt 0 gerundet: Bei $\delta = 10^{-3}$ und $t = 4$ passiert das bereits, die daraus gebaute „Spiegelung" verfehlt ihr Ziel dann um $10^{-3}$ statt um $2{,}5\cdot 10^{-10}$. In der unteren Zeile werden dagegen zwei positive Zahlen addiert, und dabei geht keine einzige Ziffer verloren. Geometrisch gesprochen: Die sichere Wahl spiegelt auf das Ziel, das von $\ba$ *weiter entfernt* liegt.</p>
+<p className="mt-2 text-sm">Das Widget zeigt, wie die Wahl des Vorzeichens die Auslöschung beim Aufbau der Spiegelung beeinflusst.</p>
 :::
 
 :::bemerkung[7.5.10 (Aufwand)]

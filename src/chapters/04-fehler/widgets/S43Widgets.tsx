@@ -53,6 +53,7 @@ import {
  *   (|a − b| = 1 analytisch gesetzt): k = 2 ⇒ 2,0001 · 10⁴ (log₁₀ = 4,301);
  *   k = 5 ⇒ 2,0 · 10¹⁰ (log₁₀ = 10,301); k = 8 ⇒ 2,0 · 10¹⁶ (log₁₀ = 16,301);
  *   k = 10 ⇒ 2,0 · 10²⁰ (log₁₀ = 20,301). Frei a = 2000, b = 1999:
+ *   R2-Nachprüfung: verify/R2/check-s43-claims.mjs, 2026-08-20.
  *   κ_rel = 3999,0 (log₁₀ = 3,602). Beispiel 4.3.7: κ_rel · ε ≈ 4,4 · 10⁴,
  *   beobachtet 16384/1,023151 = 1,60 · 10⁴, und 2¹⁴ = 16384.
  */
@@ -142,14 +143,16 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
   const verdikt =
     diverged || rho > 1 ? (
       <Verdikt kind="fail" titel="Divergent.">
-        Jeder Schritt vergrößert den Abstand zum Minimum; die Iterierten verlassen den Plot nach{" "}
-        {thetas.length - 1} Schritten. Das ist das Signaturverhalten aus Beispiel 4.3.2: Eine zu
-        große Lernrate lässt die Iterationsdynamik instabil werden.
+        Ohne Rauschen wird der Abstand in jedem Schritt mit {fmtDe(rho, 2)} vergrößert; die
+        Iterierten verlassen hier nach {thetas.length - 1} Schritten den Plot. Rauschen ändert
+        einzelne Schritte, aber nicht die Instabilität des Verstärkungsfaktors. Das ist das
+        Signaturverhalten aus Beispiel 4.3.2.
       </Verdikt>
     ) : grenzfall ? (
       <Verdikt kind="warn" titel="Grenzfall.">
-        Die Iterierten springen mit konstanter Amplitude um das Minimum, weder Konvergenz noch
-        Divergenz: <M>{"|\\theta_k|"}</M> bleibt bei {fmtDe(Math.abs(letzte), 2)}.
+        Ohne Rauschen springen die Iterierten mit konstanter Amplitude um das Minimum, weder
+        Konvergenz noch Divergenz: <M>{"|\\theta_k|"}</M> bleibt bei {fmtDe(Math.abs(letzte), 2)}.
+        {sigma > 0 && " Mit Rauschen kommt zusätzlich ein zufälliger Schritt hinzu; eine Konvergenz zum Minimum gibt es dann erst recht nicht."}
       </Verdikt>
     ) : alpha > 0.5 ? (
       <Verdikt kind="ok" titel="Oszillierend, aber konvergent.">
@@ -174,27 +177,25 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
       </Aufgabe>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        width={W}
-        height={H}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
         aria-label={`Parabel L(theta) = theta Quadrat mit dem Pfad der Iterierten bei Lernrate ${fmtDe(alpha, 2)}; der Pfad ist derzeit ${diverged || rho > 1 ? "divergent" : grenzfall ? "am Grenzfall" : alpha > 0.5 ? "oszillierend konvergent" : "monoton konvergent"}.`}
       >
-        <rect x={0} y={0} width={W} height={H} fill="var(--w-bg, #ffffff)" />
-        <line x1={px(X0)} y1={py(0)} x2={px(X1)} y2={py(0)} stroke="var(--w-axis, #94a3b8)" strokeWidth={1} />
+        <rect x={0} y={0} width={W} height={H} fill="var(--w-bg)" />
+        <line x1={px(X0)} y1={py(0)} x2={px(X1)} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1} />
         {[-3, -2, -1, 1, 2, 3].map((t) => (
           <g key={t}>
-            <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis, #94a3b8)" />
-            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={10} fill="var(--w-muted, #64748b)">
+            <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis)" />
+            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={10} fill="var(--w-muted)">
               {t}
             </text>
           </g>
         ))}
-        <text x={px(X1) - 6} y={py(0) - 6} textAnchor="end" fontSize={11} fill="var(--w-muted, #64748b)">
+        <text x={px(X1) - 6} y={py(0) - 6} textAnchor="end" fontSize={11} fill="var(--w-muted)">
           θ
         </text>
-        <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(Y1)} stroke="var(--w-grid-strong, #94a3b8)" strokeDasharray="4 3" strokeWidth={1} />
-        <text x={px(0) + 5} y={py(Y1) + 12} fontSize={10} fill="var(--w-muted, #64748b)">
+        <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(Y1)} stroke="var(--w-grid-strong)" strokeDasharray="4 3" strokeWidth={1} />
+        <text x={px(0) + 5} y={py(Y1) + 12} fontSize={10} fill="var(--w-muted)">
           θ* = 0
         </text>
         <polyline points={parabel} fill="none" stroke={FMM.blau} strokeWidth={2} />
@@ -207,7 +208,7 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
           .map((t, i) => (
             <circle key={i} cx={px(t)} cy={py(t * t)} r={3} fill={farbe} fillOpacity={0.9} />
           ))}
-        <text x={px(THETA0) + 6} y={py(THETA0 * THETA0) - 6} fontSize={10} fill="var(--w-muted, #64748b)">
+        <text x={px(THETA0) + 6} y={py(THETA0 * THETA0) - 6} fontSize={10} fill="var(--w-muted)">
           θ₀
         </text>
       </svg>
@@ -264,10 +265,10 @@ function RhoKurve() {
   }).join(" ");
   return (
     <div className="space-y-1">
-      <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} className="max-w-full h-auto" role="img" aria-label="Der Verstärkungsfaktor Betrag von 1 minus 2 alpha als Funktion der Lernrate; er unterschreitet 1 zwischen alpha gleich 0 und alpha gleich 1.">
-        <rect x={0} y={0} width={w} height={h} fill="var(--w-bg, #ffffff)" />
-        <line x1={34} y1={ay(0)} x2={w - 8} y2={ay(0)} stroke="var(--w-axis, #64748b)" />
-        <line x1={34} y1={12} x2={34} y2={ay(0)} stroke="var(--w-axis, #64748b)" />
+      <svg viewBox={`0 0 ${w} ${h}`} className="max-w-full h-auto" role="img" aria-label="Der Verstärkungsfaktor Betrag von 1 minus 2 alpha als Funktion der Lernrate; er unterschreitet 1 zwischen alpha gleich 0 und alpha gleich 1.">
+        <rect x={0} y={0} width={w} height={h} fill="var(--w-bg)" />
+        <line x1={34} y1={ay(0)} x2={w - 8} y2={ay(0)} stroke="var(--w-axis)" />
+        <line x1={34} y1={12} x2={34} y2={ay(0)} stroke="var(--w-axis)" />
         <line x1={34} y1={ay(1)} x2={w - 8} y2={ay(1)} stroke={FMM.rot} strokeDasharray="5 4" />
         <text x={w - 10} y={ay(1) - 4} textAnchor="end" fontSize={10} fill={FMM.rot}>
           ρ = 1
@@ -276,18 +277,18 @@ function RhoKurve() {
         <polyline points={kurve} fill="none" stroke={FMM.orange} strokeWidth={2} />
         {[0, 0.5, 1].map((a) => (
           <g key={a}>
-            <text x={ax(a)} y={ay(0) + 13} textAnchor="middle" fontSize={10} fill="var(--w-muted, #64748b)">
+            <text x={ax(a)} y={ay(0) + 13} textAnchor="middle" fontSize={10} fill="var(--w-muted)">
               {fmtDe(a, 1)}
             </text>
           </g>
         ))}
-        <text x={w - 8} y={ay(0) + 13} textAnchor="end" fontSize={10} fill="var(--w-muted, #64748b)">
+        <text x={w - 8} y={ay(0) + 13} textAnchor="end" fontSize={10} fill="var(--w-muted)">
           α
         </text>
-        <text x={6} y={ay(1) + 4} fontSize={10} fill="var(--w-muted, #64748b)">
+        <text x={6} y={ay(1) + 4} fontSize={10} fill="var(--w-muted)">
           1
         </text>
-        <text x={6} y={ay(0) + 4} fontSize={10} fill="var(--w-muted, #64748b)">
+        <text x={6} y={ay(0) + 4} fontSize={10} fill="var(--w-muted)">
           0
         </text>
       </svg>

@@ -48,6 +48,7 @@ import {
  *   Summe: κ_rel(1,2; −0,85) = 5,9419 (‖x‖₂ = 1,47054, Summe 0,35);
  *   κ_rel(1,4; 1,4) = 1; κ_rel(1,5; −1,45) = 59,008 (2 verlorene Stellen);
  *   κ_rel(1,5; −1,5) = ∞; κ_abs = √2 = 1,41421.
+ *   R2-Nachprüfung: verify/R2/check-s42-claims.mjs, 2026-08-20.
  */
 
 const COL = {
@@ -62,17 +63,6 @@ function hoch(e: number): string {
   const z = "\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079";
   return (e < 0 ? "\u207b" : "") + String(Math.abs(e)).split("").map((d) => z[Number(d)]).join("");
 }
-
-/** Deutsche Zahl; „–" für undefiniert (NaN), „∞" für unendlich. */
-const fmt = (v: number): string => {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return "∞";
-  const a = Math.abs(v);
-  if (a === 0) return "0";
-  if (a >= 0.01 && a < 10000) return fmtDe(v, a >= 100 ? 1 : a >= 1 ? 2 : 3);
-  const e = Math.floor(Math.log10(a));
-  return `${fmtDe(v / 10 ** e, 2)} · 10${hoch(e)}`;
-};
 
 const fmtPct = (v: number): string => (Number.isFinite(v) ? `${fmtDe(100 * v, 1)} %` : "–");
 
@@ -147,7 +137,7 @@ export function KehrwertWidget() {
   ) : !(amp >= 1.5) ? (
     <Verdikt kind="ok" titel="Verstärkung nahe 1.">
       Der relative Outputfehler ({fmtPct(relOut)}) ist kaum größer als der relative Inputfehler
-      ({fmtPct(relIn)}); die Verstärkung liegt bei {fmt(amp)}. Das passt zu Beispiel 4.2.5: Für
+      ({fmtPct(relIn)}); die Verstärkung liegt bei {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Das passt zu Beispiel 4.2.5: Für
       kleine <M>{"\\eps/x"}</M> ist der Kehrwert relativ gemessen harmlos,{" "}
       <M>{"\\kappa_{rel} = 1"}</M>, und das gilt an <em>jeder</em> Stelle{" "}
       <M>{"x > 0"}</M>, auch bei <M>{"x = 10^{-17}"}</M>.
@@ -155,7 +145,7 @@ export function KehrwertWidget() {
   ) : (
     <Verdikt kind="warn" titel="Der Faktor x/|x + ε| schlägt zu.">
       Aus {fmtPct(relIn)} Inputfehler werden {fmtPct(relOut)} Outputfehler, Verstärkung{" "}
-      {fmt(amp)}. Der Faktor ist <M>{"|x| / |x + \\eps|"}</M> aus Beispiel 4.2.1, und er wächst
+      {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Der Faktor ist <M>{"|x| / |x + \\eps|"}</M> aus Beispiel 4.2.1, und er wächst
       über alle Grenzen, sobald <M>{"\\wt{x}"}</M> die Polstelle erreicht. Die Konditionszahl{" "}
       <M>{"\\kappa_{rel} = 1"}</M> aus Bemerkung 4.2.3 widerspricht dem nicht: Sie beschreibt
       nur den Grenzfall <M>{"\\eps \\to 0"}</M>, und hier ist <M>{"\\eps"}</M> relativ zu{" "}
@@ -171,40 +161,38 @@ export function KehrwertWidget() {
       </Aufgabe>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        width={W}
-        height={H}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
-        aria-label={`Graph von f(x) = 1 durch x mit dem Punkt x, dem gestörten Punkt x plus epsilon und den Fehlerintervallen auf beiden Achsen; die Verstärkung beträgt derzeit ${fmt(amp)}.`}
+        aria-label={`Graph von f(x) = 1 durch x mit dem Punkt x, dem gestörten Punkt x plus epsilon und den Fehlerintervallen auf beiden Achsen; die Verstärkung beträgt derzeit ${Number.isFinite(amp) ? fmtDe(amp, 2) : "unendlich"}.`}
         {...zieh.svgProps}
       >
-        <rect x={0} y={0} width={W} height={H} fill="var(--w-bg, #ffffff)" />
+        <rect x={0} y={0} width={W} height={H} fill="var(--w-bg)" />
         {/* Achsen */}
-        <line x1={L} y1={sy(0)} x2={W - R} y2={sy(0)} stroke="var(--w-axis, #64748b)" strokeWidth={1.2} />
-        <line x1={sx(0)} y1={T} x2={sx(0)} y2={sy(0)} stroke="var(--w-axis, #64748b)" strokeWidth={1.2} />
+        <line x1={L} y1={sy(0)} x2={W - R} y2={sy(0)} stroke="var(--w-axis)" strokeWidth={1.2} />
+        <line x1={sx(0)} y1={T} x2={sx(0)} y2={sy(0)} stroke="var(--w-axis)" strokeWidth={1.2} />
         {[1, 2, 3].map((t) => (
           <g key={`xt${t}`}>
-            <line x1={sx(t)} y1={sy(0)} x2={sx(t)} y2={sy(0) + 4} stroke="var(--w-axis, #64748b)" />
-            <text x={sx(t)} y={sy(0) + 16} textAnchor="middle" fill="var(--w-muted, #64748b)" fontSize={11}>
+            <line x1={sx(t)} y1={sy(0)} x2={sx(t)} y2={sy(0) + 4} stroke="var(--w-axis)" />
+            <text x={sx(t)} y={sy(0) + 16} textAnchor="middle" fill="var(--w-muted)" fontSize={11}>
               {t}
             </text>
           </g>
         ))}
         {[2, 4, 6, 8, 10].map((t) => (
           <g key={`yt${t}`}>
-            <line x1={sx(0) - 4} y1={sy(t)} x2={sx(0)} y2={sy(t)} stroke="var(--w-axis, #64748b)" />
-            <text x={sx(0) - 7} y={sy(t) + 4} textAnchor="end" fill="var(--w-muted, #64748b)" fontSize={11}>
+            <line x1={sx(0) - 4} y1={sy(t)} x2={sx(0)} y2={sy(t)} stroke="var(--w-axis)" />
+            <text x={sx(0) - 7} y={sy(t) + 4} textAnchor="end" fill="var(--w-muted)" fontSize={11}>
               {t}
             </text>
           </g>
         ))}
-        <text x={W - R - 2} y={sy(0) - 6} textAnchor="end" fill="var(--w-muted, #64748b)" fontSize={12} fontStyle="italic">
+        <text x={W - R - 2} y={sy(0) - 6} textAnchor="end" fill="var(--w-muted)" fontSize={12} fontStyle="italic">
           x
         </text>
-        <text x={sx(0) + 8} y={T + 12} fill="var(--w-muted, #64748b)" fontSize={12} fontStyle="italic">
+        <text x={sx(0) + 8} y={T + 12} fill="var(--w-muted)" fontSize={12} fontStyle="italic">
           f(x) = 1/x
         </text>
-        <polyline points={curve} fill="none" stroke="var(--w-axis, #64748b)" strokeWidth={1.8} />
+        <polyline points={curve} fill="none" stroke="var(--w-axis)" strokeWidth={1.8} />
 
         {/* Inputfehler auf der x-Achse (rot) */}
         <line
@@ -295,12 +283,12 @@ export function KehrwertWidget() {
       <Slider label="Störung ε" value={eps} onChange={setEps} min={-0.55} max={0.55} step={0.005} accent={COL.pert} />
 
       <div className={`p-2 text-sm ${W_PANEL}`}>
-        <Readout label="x̃ = x + ε" value={fmt(xt)} color={COL.pert} />
-        <Readout label="f(x) = 1/x" value={fmt(fx)} color={COL.x} />
-        <Readout label="f(x̃) = 1/x̃" value={valid ? fmt(fxt) : "–"} />
+        <Readout label="x̃ = x + ε" value={fmtDe(xt, 2)} color={COL.pert} />
+        <Readout label="f(x) = 1/x" value={fmtDe(fx, 2)} color={COL.x} />
+        <Readout label="f(x̃) = 1/x̃" value={valid ? fmtDe(fxt, 2) : "–"} />
         <Readout label="rel. Inputfehler |ε|/|x|" value={fmtPct(relIn)} color={COL.pert} />
         <Readout label="rel. Outputfehler" value={fmtPct(relOut)} color={COL.out} />
-        <Readout label="Verstärkung x/|x + ε|" value={fmt(amp)} color={COL.amp} />
+        <Readout label="Verstärkung x/|x + ε|" value={Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"} color={COL.amp} />
       </div>
       {verdikt}
       <p className={`max-w-prose text-xs ${W_MUTED}`}>
@@ -380,14 +368,14 @@ export function SummenKonditionWidget() {
     </Verdikt>
   ) : kappa < 3 ? (
     <Verdikt kind="ok" titel="Gut konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {fmt(kappa)}: relative Inputfehler werden höchstens um diesen
+      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: relative Inputfehler werden höchstens um diesen
       Faktor verstärkt. Auf der grünen Diagonalen <M>{"x_2 = x_1"}</M> wird der Bestwert{" "}
       <M>{"\\kappa_{rel} = 1"}</M> angenommen (Beispiel 4.2.8). Besser geht es nicht, denn{" "}
       <M>{"\\kappa_{abs} = \\sqrt{2}"}</M> und <M>{"\\left\\| \\bx \\right\\|_2 / |x_1 + x_2| = 1/\\sqrt{2}"}</M>.
     </Verdikt>
   ) : kappa < 50 ? (
     <Verdikt kind="warn" titel="Mäßig konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {fmt(kappa)}. Nach der Faustregel aus Bemerkung 4.2.4 verlieren
+      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}. Nach der Faustregel aus Bemerkung 4.2.4 verlieren
       wir bis zu {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle" : "Dezimalstellen"} gegenüber der
       Genauigkeit des Inputs. Die Karte ist entlang jedes Strahls durch den Ursprung einfarbig: Nur die{" "}
@@ -395,7 +383,7 @@ export function SummenKonditionWidget() {
     </Verdikt>
   ) : (
     <Verdikt kind="fail" titel="Schlecht konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {fmt(kappa)}: rund {Math.ceil(Math.log10(kappa))}{" "}
+      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: rund {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle geht" : "Dezimalstellen gehen"} verloren. Nahe der Antidiagonalen löschen sich <M>{"x_1"}</M> und{" "}
       <M>{"x_2"}</M> fast aus. Das ist dieselbe Auslöschung wie in Abschnitt 2.1, hier aber als
       Aussage über das <em>Problem</em> „addiere zwei Zahlen", nicht über einen Algorithmus.
@@ -410,11 +398,9 @@ export function SummenKonditionWidget() {
       </Aufgabe>
       <svg
         viewBox={`0 0 ${KS} ${KS}`}
-        width={KS}
-        height={KS}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
-        aria-label={`Karte der relativen Konditionszahl der Summe x1 plus x2 über der Ebene; entlang der Antidiagonalen explodiert sie. Der Punkt liegt bei (${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)}) mit kappa gleich ${fmt(kappa)}.`}
+        aria-label={`Karte der relativen Konditionszahl der Summe x1 plus x2 über der Ebene; entlang der Antidiagonalen explodiert sie. Der Punkt liegt bei (${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)}) mit kappa gleich ${Number.isFinite(kappa) ? fmtDe(kappa, 2) : "unendlich"}.`}
         {...zieh.svgProps}
         {...zieh.surfaceProps("p")}
       >
@@ -430,13 +416,13 @@ export function SummenKonditionWidget() {
           x₂
         </text>
         {/* Weißer Halo darunter: Rot auf dem dunkelroten Band der Karte wäre sonst unsichtbar. */}
-        <line x1={kx(-HALF)} y1={ky(HALF)} x2={kx(HALF)} y2={ky(-HALF)} stroke="#ffffff" strokeWidth={4} strokeOpacity={0.85} />
+        <line x1={kx(-HALF)} y1={ky(HALF)} x2={kx(HALF)} y2={ky(-HALF)} stroke="var(--w-bg)" strokeWidth={4} strokeOpacity={0.85} />
         <line x1={kx(-HALF)} y1={ky(HALF)} x2={kx(HALF)} y2={ky(-HALF)} stroke={COL.pert} strokeWidth={1.8} strokeDasharray="6 4" />
-        <text x={kx(-1.92)} y={ky(0.55)} fill={COL.pert} fontSize={11} fontWeight={600} stroke="#ffffff" strokeWidth={2.6} paintOrder="stroke">
+        <text x={kx(-1.92)} y={ky(0.55)} fill={COL.pert} fontSize={11} fontWeight={600} stroke="var(--w-bg)" strokeWidth={2.6} paintOrder="stroke">
           x₁ + x₂ = 0
         </text>
         <line x1={kx(-HALF)} y1={ky(-HALF)} x2={kx(HALF)} y2={ky(HALF)} stroke={COL.out} strokeWidth={1.4} strokeDasharray="3 4" />
-        <text x={kx(1.35)} y={ky(1.7)} fill={COL.out} fontSize={11} fontWeight={600} stroke="#ffffff" strokeWidth={2.6} paintOrder="stroke">
+        <text x={kx(1.35)} y={ky(1.7)} fill={COL.out} fontSize={11} fontWeight={600} stroke="var(--w-bg)" strokeWidth={2.6} paintOrder="stroke">
           κ = 1
         </text>
         <line x1={kx(0)} y1={ky(0)} x2={kx(p[0])} y2={ky(p[1])} stroke={COL.x} strokeWidth={1.5} strokeDasharray="2 3" pointerEvents="none" />
@@ -462,10 +448,10 @@ export function SummenKonditionWidget() {
 
       <div className={`p-2 text-sm ${W_PANEL}`}>
         <Readout label="x = (x₁, x₂)" value={`(${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)})`} color={COL.x} />
-        <Readout label="f(x) = x₁ + x₂" value={fmt(summe)} />
-        <Readout label="‖x‖₂" value={fmt(nrm)} />
+        <Readout label="f(x) = x₁ + x₂" value={fmtDe(summe, 2)} />
+        <Readout label="‖x‖₂" value={fmtDe(nrm, 2)} />
         <Readout label="κ_abs = √2" value={fmtDe(Math.SQRT2, 3)} />
-        <Readout label="κ_rel = √2 · ‖x‖₂ / |x₁ + x₂|" value={fmt(kappa)} color={COL.amp} />
+        <Readout label="κ_rel = √2 · ‖x‖₂ / |x₁ + x₂|" value={Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"} color={COL.amp} />
       </div>
       {verdikt}
       <p className={`max-w-prose text-xs ${W_MUTED}`}>

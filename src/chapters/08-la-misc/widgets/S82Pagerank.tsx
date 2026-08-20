@@ -105,7 +105,7 @@ export function PagerankDemo() {
         >
           <defs>
             <marker id="arrPR8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-              <path d="M0,0 L7,3 L0,6 z" fill="#64748b" />
+              <path d="M0,0 L7,3 L0,6 z" fill="var(--w-muted)" />
             </marker>
           </defs>
           {EDGES.map((e, k) => (
@@ -113,7 +113,7 @@ export function PagerankDemo() {
               key={k}
               d={edgePath(e)}
               fill="none"
-              stroke="#64748b"
+              stroke="var(--w-muted)"
               strokeWidth={1.5}
               markerEnd="url(#arrPR8)"
             />
@@ -123,7 +123,7 @@ export function PagerankDemo() {
             return (
               <g key={i}>
                 <circle cx={px} cy={py} r={r} fill={converged ? GREEN : BLUE} opacity={0.75} />
-                <text x={px} y={py + 4} fontSize={13} textAnchor="middle" fill="#fff" fontStyle="italic">
+                <text x={px} y={py + 4} fontSize={13} textAnchor="middle" fill="white" fontStyle="italic">
                   {NAMES[i]}
                 </text>
               </g>

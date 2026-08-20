@@ -12,7 +12,7 @@ export { MatrixInput } from "./widgets/MatrixInput";
 export { TransformCanvas } from "./widgets/TransformCanvas";
 export type { Vec2 } from "./widgets/TransformCanvas";
 export { Plot } from "./widgets/Plot";
-export type { Series } from "./widgets/Plot";
+export type { PlotPoint, Series } from "./widgets/Plot";
 export { LabeledPlot, LabeledTransformCanvas, niceTicks, sigmaMax, maxAbsCoord } from "./widgets/Axes";
 export { ConceptFlow } from "./widgets/ConceptFlow";
 export type { FlowNode, FlowEdge, FlowGroup } from "./widgets/ConceptFlow";

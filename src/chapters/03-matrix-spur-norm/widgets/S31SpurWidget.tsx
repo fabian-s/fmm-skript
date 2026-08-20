@@ -160,7 +160,6 @@ export function S31SpurWidget() {
         <div className="min-w-0">
           <svg
             viewBox={`0 0 ${SIZE} ${HOEHE}`}
-            width={SIZE}
             className="max-w-full h-auto rounded"
             style={{ background: "var(--w-bg)", border: "1px solid var(--w-border)" }}
             role="img"

@@ -21,10 +21,10 @@ import { Aufgabe, FMM_COLORS, fmtDe as fmt, niceTicks, Slider, Verdikt } from ".
  * - J(s) = 3 + 3 = 6, J(p) = 4 * 2 = 8, Kreuzterm exakt 0.
  * - J(g_t) = 6 + 2t^2 (Simpson trifft die Formel ueber den ganzen
  *   Reglerbereich auf 1e-9 genau).
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT } = FMM_COLORS;
-const ACHSE = "#64748b";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const DATEN: Array<[number, number]> = [
   [0, 0],
@@ -202,10 +202,8 @@ export function KruemmungsVergleich() {
 
       <div className="flex flex-wrap items-start gap-4">
         <svg
-          width={W}
-          height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -213,7 +211,7 @@ export function KruemmungsVergleich() {
             width={W - PAD.l - PAD.r}
             height={H - PAD.t - PAD.b}
             fill="none"
-            stroke="#cbd5e1"
+            stroke={RAHMEN}
             strokeWidth={0.8}
           />
           {niceTicks(xd[0], xd[1]).map((v) => (

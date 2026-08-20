@@ -43,6 +43,7 @@ import {
  * Bei x = 0 ist g′(0) = 1/(2·0) unendlich, während der zentrale
  * Differenzenquotient von |x| in 0 den Wert 0 meldet — eine numerische
  * Ableitung merkt von selbst nicht, dass es gar keine gibt.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion, Funktionswerte
@@ -274,8 +275,6 @@ export function KettenregelWidget() {
         </div>
         <svg
           viewBox={`0 0 ${PAD_L + W + PAD_R} ${H + PAD_B}`}
-          width={PAD_L + W + PAD_R}
-          height={H + PAD_B}
           role="img"
           aria-label={`Der Graph von ${wahl.label} in Blau mit der grünen Tangente an der Stelle x = ${fmt(x, 2)}.`}
           className="h-auto max-w-full rounded border"

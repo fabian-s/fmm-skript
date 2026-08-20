@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * §14.3: Das Runge-Phaenomen, aequidistante gegen Chebyshev-Knoten.
@@ -24,12 +24,10 @@ import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
  *
  * Farbcode Kapitel 14: Stuetzpunkte blau, Interpolant gruen, Fehler und
  * Problemzonen rot, die wahre Funktion neutral (wie in S141DreiProbleme).
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ROT = "#D55E00";
-const WAHR = "#64748b";
+const { blau: BLAU, gruen: GRUEN, rot: ROT, grau: WAHR } = FMM_COLORS;
 
 /* ------------------------------------------------------------------ */
 /* Numerik                                                             */

@@ -245,7 +245,6 @@ export function SubmultRechner({
               </div>
               <svg
                 viewBox="0 0 200 22"
-                width={200}
                 className="max-w-full h-auto"
                 role="img"
                 aria-label={`Quotient ${fmtDe(ratio, 2)}; die Schranke 1 liegt in der Mitte des Balkens.`}

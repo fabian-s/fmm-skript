@@ -32,11 +32,10 @@ import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
  * Statuszweige sind mit 2 / 10 / 16 / 9 Zustaenden alle erreichbar; der
  * Singulaer-Zweig ist reiner Rechenschutz und feuert bei Quantilknoten im
  * Bereich K = 4..40 nie.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT } = FMM_COLORS;
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const N = 50;
 const SIGMA = 0.3;
@@ -327,10 +326,8 @@ export function SplineGlaettung() {
       <div className="flex flex-wrap gap-4">
         <div>
           <svg
-            width={W}
-            height={H}
             viewBox={`0 0 ${W} ${H}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -411,10 +408,8 @@ export function SplineGlaettung() {
           </svg>
 
           <svg
-            width={W}
-            height={H_BASIS}
             viewBox={`0 0 ${W} ${H_BASIS}`}
-            className="mt-2 max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <line
               x1={PAD.l}

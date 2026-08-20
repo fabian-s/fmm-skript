@@ -205,28 +205,28 @@ export function RegressionWidget() {
           </clipPath>
         </defs>
         {/* Achsen */}
-        <line x1={RML} y1={rpy(0)} x2={RW - RMR} y2={rpy(0)} stroke="var(--w-axis, #94a3b8)" />
-        <line x1={rpx(0)} y1={RMT} x2={rpx(0)} y2={RH - RMB} stroke="var(--w-axis, #94a3b8)" />
+        <line x1={RML} y1={rpy(0)} x2={RW - RMR} y2={rpy(0)} stroke="var(--w-axis)" />
+        <line x1={rpx(0)} y1={RMT} x2={rpx(0)} y2={RH - RMB} stroke="var(--w-axis)" />
         {xTicks.map((t) => (
           <g key={`x${t}`}>
-            <line x1={rpx(t)} y1={rpy(0)} x2={rpx(t)} y2={rpy(0) + 4} stroke="var(--w-axis, #94a3b8)" />
-            <text x={rpx(t)} y={RH - 8} textAnchor="middle" fontSize={10} fill="var(--w-muted, #64748b)">
+            <line x1={rpx(t)} y1={rpy(0)} x2={rpx(t)} y2={rpy(0) + 4} stroke="var(--w-axis)" />
+            <text x={rpx(t)} y={RH - 8} textAnchor="middle" fontSize={10} fill="var(--w-muted)">
               {t}
             </text>
           </g>
         ))}
         {yTicks.map((y) => (
           <g key={`y${y}`}>
-            <line x1={rpx(0) - 4} y1={rpy(y)} x2={rpx(0)} y2={rpy(y)} stroke="var(--w-axis, #94a3b8)" />
-            <text x={RML - 7} y={rpy(y) + 3} textAnchor="end" fontSize={10} fill="var(--w-muted, #64748b)">
+            <line x1={rpx(0) - 4} y1={rpy(y)} x2={rpx(0)} y2={rpy(y)} stroke="var(--w-axis)" />
+            <text x={RML - 7} y={rpy(y) + 3} textAnchor="end" fontSize={10} fill="var(--w-muted)">
               {y}
             </text>
           </g>
         ))}
-        <text x={RW - RMR - 4} y={rpy(0) - 6} textAnchor="end" fontSize={11} fill="var(--w-muted, #64748b)">
+        <text x={RW - RMR - 4} y={rpy(0) - 6} textAnchor="end" fontSize={11} fill="var(--w-muted)">
           Fläche x (m²)
         </text>
-        <text x={RML + 8} y={RMT + 10} fontSize={11} fill="var(--w-muted, #64748b)">
+        <text x={RML + 8} y={RMT + 10} fontSize={11} fill="var(--w-muted)">
           Preis y (Tsd. €)
         </text>
         <g clipPath="url(#s71-reg-clip)">
@@ -422,20 +422,20 @@ export function ProjektionWidget() {
             {...zieh.svgProps}
           >
             {/* Achsen mit ganzzahligen Ticks */}
-            <line x1={psx(-0.6)} y1={psy(0)} x2={psx(4.2)} y2={psy(0)} stroke="var(--w-grid, #cbd5e1)" />
-            <line x1={psx(0)} y1={psy(-1.2)} x2={psx(0)} y2={psy(2.6)} stroke="var(--w-grid, #cbd5e1)" />
+            <line x1={psx(-0.6)} y1={psy(0)} x2={psx(4.2)} y2={psy(0)} stroke="var(--w-grid)" />
+            <line x1={psx(0)} y1={psy(-1.2)} x2={psx(0)} y2={psy(2.6)} stroke="var(--w-grid)" />
             {[1, 2, 3, 4].map((t) => (
               <g key={`x${t}`}>
-                <line x1={psx(t)} y1={psy(0) - 3} x2={psx(t)} y2={psy(0) + 3} stroke="var(--w-axis, #94a3b8)" />
-                <text x={psx(t)} y={psy(0) + 13} textAnchor="middle" fill="var(--w-muted, #64748b)">
+                <line x1={psx(t)} y1={psy(0) - 3} x2={psx(t)} y2={psy(0) + 3} stroke="var(--w-axis)" />
+                <text x={psx(t)} y={psy(0) + 13} textAnchor="middle" fill="var(--w-muted)">
                   {t}
                 </text>
               </g>
             ))}
             {[-1, 1, 2].map((t) => (
               <g key={`y${t}`}>
-                <line x1={psx(0) - 3} y1={psy(t)} x2={psx(0) + 3} y2={psy(t)} stroke="var(--w-axis, #94a3b8)" />
-                <text x={psx(0) - 6} y={psy(t) + 3} textAnchor="end" fill="var(--w-muted, #64748b)">
+                <line x1={psx(0) - 3} y1={psy(t)} x2={psx(0) + 3} y2={psy(t)} stroke="var(--w-axis)" />
+                <text x={psx(0) - 6} y={psy(t) + 3} textAnchor="end" fill="var(--w-muted)">
                   {t}
                 </text>
               </g>
@@ -446,10 +446,10 @@ export function ProjektionWidget() {
               y1={psy(-0.18)}
               x2={psx(4.14)}
               y2={psy(1.38)}
-              stroke="var(--w-axis, #94a3b8)"
+              stroke="var(--w-axis)"
               strokeWidth={1.5}
             />
-            <text x={psx(3.35)} y={psy(1.35)} fill="var(--w-muted, #64748b)" fontSize="11">
+            <text x={psx(3.35)} y={psy(1.35)} fill="var(--w-muted)" fontSize="11">
               col(𝑨)
             </text>
             {/* Zielpunkt b̂ = Projektion von b */}
@@ -462,7 +462,7 @@ export function ProjektionWidget() {
               <polyline
                 points={`${psx(q1[0])},${psy(q1[1])} ${psx(q2[0])},${psy(q2[1])} ${psx(q3[0])},${psy(q3[1])}`}
                 fill="none"
-                stroke="var(--w-text, #475569)"
+                stroke="var(--w-text)"
                 strokeWidth={1.3}
               />
             )}

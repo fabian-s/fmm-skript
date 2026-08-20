@@ -44,7 +44,7 @@ export function BSplineBasis() {
   const serien = useMemo(() => {
     const s = Array.from({ length: K }, (_, j) => ({
       f: (x: number) => bsplRand(tau, j, q, x, RECHTER_RAND),
-      color: j === k - 1 ? ORANGE : "#94a3b8",
+      color: j === k - 1 ? ORANGE : NEUTRAL,
     }));
     if (zeigeSumme) {
       s.push({

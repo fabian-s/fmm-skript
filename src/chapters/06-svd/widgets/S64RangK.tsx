@@ -220,7 +220,7 @@ export function RangKExplorer() {
                 className="w-2.5 rounded-t"
                 style={{
                   height: `${Math.max(2, (s / sMax) * 100)}%`,
-                  backgroundColor: i < k ? ORANGE : "#cbd5e1",
+                  backgroundColor: i < k ? ORANGE : "var(--w-grid-strong)",
                 }}
               />
             ))}

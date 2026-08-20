@@ -266,24 +266,24 @@ function SpiegelungSVG({
         ))}
       </defs>
       {/* Achsen */}
-      <line x1={0} y1={size / 2} x2={size} y2={size / 2} stroke="var(--w-grid, #e2e8f0)" />
-      <line x1={size / 2} y1={0} x2={size / 2} y2={size} stroke="var(--w-grid, #e2e8f0)" />
-      <text x={size - 16} y={size / 2 - 5} fontSize="11" fill="var(--w-axis, #94a3b8)">
+      <line x1={0} y1={size / 2} x2={size} y2={size / 2} stroke="var(--w-grid)" />
+      <line x1={size / 2} y1={0} x2={size} y2={size} stroke="var(--w-grid)" />
+      <text x={size - 16} y={size / 2 - 5} fontSize="11" fill="var(--w-axis)">
         x₁
       </text>
-      <text x={size / 2 + 5} y={14} fontSize="11" fill="var(--w-axis, #94a3b8)">
+      <text x={size / 2 + 5} y={14} fontSize="11" fill="var(--w-axis)">
         x₂
       </text>
       {/* die beiden winkelhalbierenden Spiegelgeraden */}
       {line(d2, FARBEN.spiegelAndere, "3 4")}
       {line(d1, FARBEN.spiegel, "5 4", "span(v)⊥")}
       {/* Weg a → Projektion → Spiegelung, senkrecht zur Spiegelgeraden */}
-      <polyline points={`${px(a)} ${px(proj)} ${px(refl)}`} fill="none" stroke="var(--w-axis, #94a3b8)" strokeDasharray="2 3" />
+      <polyline points={`${px(a)} ${px(proj)} ${px(refl)}`} fill="none" stroke="var(--w-axis)" strokeDasharray="2 3" />
       {/* Zielpunkte auf der Achse */}
-      <circle cx={px([norm, 0])[0]} cy={px([norm, 0])[1]} r={3.5} fill="var(--w-text, #334155)" />
-      <circle cx={px([-norm, 0])[0]} cy={px([-norm, 0])[1]} r={3.5} fill="var(--w-text, #334155)" />
-      {label([norm, 0], "+‖a‖₂e₁", "var(--w-text, #334155)", -8, 16)}
-      {label([-norm, 0], "−‖a‖₂e₁", "var(--w-text, #334155)", -24, 16)}
+      <circle cx={px([norm, 0])[0]} cy={px([norm, 0])[1]} r={3.5} fill="var(--w-text)" />
+      <circle cx={px([-norm, 0])[0]} cy={px([-norm, 0])[1]} r={3.5} fill="var(--w-text)" />
+      {label([norm, 0], "+‖a‖₂e₁", "var(--w-text)", -8, 16)}
+      {label([-norm, 0], "−‖a‖₂e₁", "var(--w-text)", -24, 16)}
       {/* Vektoren */}
       {arrow(a, FARBEN.a)}
       {vv > 1e-12 && arrow(p, FARBEN.p)}

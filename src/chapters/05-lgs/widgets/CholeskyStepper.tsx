@@ -187,7 +187,7 @@ export function CholeskyStepper() {
         >
           zurücksetzen
         </button>
-        <span className="text-sm" style={{ color: "#64748b" }}>
+        <span className="text-sm" style={{ color: "var(--w-muted)" }}>
           {shown} von {maxT} Einträgen berechnet
         </span>
       </div>

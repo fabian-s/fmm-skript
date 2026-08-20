@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
-import { ORANGE, VIOLETT, bspl, fmt } from "./S144BSpline";
+import { NEUTRAL, ORANGE, VIOLETT, bspl, fmt } from "./S144BSpline";
 
 /**
  * Anatomie eines Cox-de-Boor-Schritts (§14.4).
@@ -35,8 +35,8 @@ export function CoxDeBoorSchritt() {
   const serien = [
     { f: (x: number) => bspl(TAU, K0, q - 1, x), color: VIOLETT, dash: [] },
     { f: (x: number) => bspl(TAU, K0 + 1, q - 1, x), color: VIOLETT, dash: [2, 3] },
-    { f: rampeLinks, color: "#94a3b8", dash: [6, 4] },
-    { f: rampeRechts, color: "#94a3b8", dash: [6, 4] },
+    { f: rampeLinks, color: NEUTRAL, dash: [6, 4] },
+    { f: rampeRechts, color: NEUTRAL, dash: [6, 4] },
     { f: (x: number) => bspl(TAU, K0, q, x), color: ORANGE, dash: [] },
   ];
 

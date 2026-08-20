@@ -101,7 +101,7 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 
 <OrthoWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, unterscheidet die Determinante: $+1$ für Drehungen, $-1$ für Spiegelungen. Alles Übrige bleibt sich gleich – das hellblaue Bild des Einheitskreises ist wieder der Einheitskreis, $\left\|\bQ\bx\right\|_2 = \left\|\bx\right\|_2 = 2{,}2361$, und $\kappa_2(\bQ) = 1$. Für die Numerik ist der Typ daher gleichgültig; beide Sorten sind gleich gut geeignet, und wir werden von beiden Gebrauch machen.</p>
+<p className="mt-2 text-sm">Das Widget verbindet die Determinante mit dem Typ der orthogonalen Abbildung und ihrer Normerhaltung.</p>
 :::
 
 ### Die QR-Zerlegung
@@ -216,7 +216,7 @@ Verfahrens: die $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalve
 
 <GramSchmidtWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, ist der senkrechte Anteil $\left\|\wt{\bq}_2\right\|_2 = \left\|\ba_2\right\|_2 \sin\angle(\ba_1, \ba_2)$: Bei $8^\circ$ zwischen den Spalten bleiben von der Länge 2,2 gerade noch 0,306 übrig, bei $2^\circ$ nur 0,077. Wir teilen also durch eine immer kleinere Zahl – und multiplizieren damit alles hoch, was an Rundungsfehlern in der Differenz $\ba_2 - R_{12}\cgreen{\bq_1}$ steckt.</p>
+<p className="mt-2 text-sm">Das Widget verbindet den Winkel der Spalten mit der Größe des zu normierenden Restvektors.</p>
 :::
 
 Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
@@ -229,7 +229,7 @@ besten selbst.
 :::vertiefung[Wie schnell zerbricht Gram-Schmidt – und wie repariert man es?]
 <CgsVsMgsWidget />
 
-<p className="mt-2 text-sm">Wie das Experiment zeigt, laufen die drei Zeilen weit auseinander. Der Orthogonalitätsverlust des *klassischen* Verfahrens wächst etwa wie $\corange{\kappa_2(\bA)}^2 \, \eps_{\text{mach}}$: bei $p = 4$ sind es $2{,}3\cdot 10^{-9}$, bei $p = 6$ schon $5{,}1\cdot 10^{-5}$, und bei $p = 8$ bleibt mit $0{,}5$ von der Orthogonalität nichts übrig. Die *modifizierte* Variante zieht jede Projektion sofort vom bereits aktualisierten Restvektor ab statt von der Originalspalte; ihr Fehler wächst nur wie $\corange{\kappa_2(\bA)} \, \eps_{\text{mach}}$ und liegt bei $p = 8$ noch bei $7{,}1\cdot 10^{-9}$. Und wer volle Genauigkeit braucht, orthogonalisiert einfach ein zweites Mal nach: Ein einziger Extra-Durchlauf drückt beide Varianten auf Maschinengenauigkeit („twice is enough").</p>
+<p className="mt-2 text-sm">Das Widget vergleicht den Orthogonalitätsverlust der drei Gram-Schmidt-Varianten.</p>
 
 <p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in [Abschnitt 7.3](#sec-7.3) – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::

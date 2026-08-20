@@ -60,6 +60,7 @@ import {
  * genau w (also 1; 0,5; 0,25; … 0,000244), bei |x| auf jeder Stufe 1,00000 und
  * bei √|x| 1; 1,414; 2; 2,828; 4; … 64 — dasselbe Skript, Abschnitt
  * „Zoomleiter".
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion
@@ -272,8 +273,6 @@ export function ZoomWidget() {
 
       <svg
         viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
-        width={PAD_L + SIZE + PAD_R}
-        height={SIZE + PAD_B}
         role="img"
         aria-label={`${kurve.label} im Fenster der halben Breite ${fmt(w, 4)} um x₀ = ${fmt(x0, 2)}; die Abweichung von der Geraden beträgt das ${fmt(dRel, 3)}-fache davon.`}
         className="h-auto max-w-full rounded border"

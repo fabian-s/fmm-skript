@@ -94,7 +94,7 @@ export function S73NormerhaltungWidget() {
         }
         return pts.join(" ");
       };
-      const GRAU = "var(--w-text, #475569)";
+      const GRAU = "var(--w-text)";
       if (modus === "drehung") {
         const a0 = Math.atan2(v[1], v[0]);
         const a1 = a0 + (theta * Math.PI) / 180;

@@ -21,11 +21,10 @@ import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
  *  17 Knoten  h = 0,0625   Schranke 0,000310   Fehler 0,000063121 Faktor 16,89
  *  33 Knoten  h = 0,03125  Schranke 0,0000194  Fehler 0,0000038893 Faktor 16,23
  * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT } = FMM_COLORS;
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const KNOTENZAHLEN = [5, 9, 17, 33];
 const C_SPLINE = 5 / 384;
@@ -252,10 +251,8 @@ export function SplineKonvergenz() {
       <div className="flex flex-wrap gap-4">
         <div>
           <svg
-            width={W}
-            height={H_KURVE}
             viewBox={`0 0 ${W} ${H_KURVE}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -325,10 +322,8 @@ export function SplineKonvergenz() {
           </svg>
 
           <svg
-            width={W}
-            height={H_FEHLER}
             viewBox={`0 0 ${W} ${H_FEHLER}`}
-            className="mt-2 max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -392,10 +387,8 @@ export function SplineKonvergenz() {
 
         <div className="grow space-y-2">
           <svg
-            width={WK}
-            height={HK}
             viewBox={`0 0 ${WK} ${HK}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PK.l}

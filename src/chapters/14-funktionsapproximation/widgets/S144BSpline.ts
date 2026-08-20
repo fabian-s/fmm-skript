@@ -13,22 +13,18 @@
  * fest verdrahtet sind nur Gitter und Daten.
  */
 
+import { FMM_COLORS, fmtDe } from "../../../lib";
+
 /** Farbcode Kapitel 14. */
-export const BLAU = "#0072B2"; // Daten, Stuetzpunkte
-export const GRUEN = "#009E73"; // Interpolant
-export const ORANGE = "#E69F00"; // Basisfunktionen, Knoten
-export const ROT = "#D55E00"; // Problemzonen
-export const VIOLETT = "#9E57D5"; // im Kapitel sonst unbelegt
-export const NEUTRAL = "#64748b"; // hell und dunkel lesbar
+export const BLAU = FMM_COLORS.blau; // Daten, Stuetzpunkte
+export const GRUEN = FMM_COLORS.gruen; // Interpolant
+export const ORANGE = FMM_COLORS.orange; // Basisfunktionen, Knoten
+export const ROT = FMM_COLORS.rot; // Problemzonen
+export const VIOLETT = FMM_COLORS.violett; // im Kapitel sonst unbelegt
+export const NEUTRAL = FMM_COLORS.grau; // hell und dunkel lesbar
 
 /** Deutsche Zahlformatierung; undefinierte Werte von unendlichen trennen. */
-export function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "undefiniert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const nullen = (0).toFixed(d);
-  return (s === "-" + nullen ? nullen : s).replace(".", ",").replace(/^-/, "−");
-}
+export const fmt = fmtDe;
 
 /**
  * Offener Knotenvektor zum Gitter xi = (xi_0, ..., xi_m) und Grad q:

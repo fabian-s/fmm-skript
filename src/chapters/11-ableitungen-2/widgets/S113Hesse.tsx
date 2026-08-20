@@ -80,6 +80,7 @@ import type { Series, Sicht3D, Vec3 } from "../../../lib";
  * semidefiniten Grenzfall: x⁴, −x⁴ und x³ haben in 0 alle die zweite Ableitung
  * null und dort ein Minimum, ein Maximum beziehungsweise keins von beidem
  * (Bemerkung 11.3.10).
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion, Höhenlinien, Fläche
@@ -413,8 +414,6 @@ export function HesseDefinitheit() {
           </div>
           <svg
             viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
-            width={PAD_L + SIZE + PAD_R}
-            height={SIZE + PAD_B}
             role="img"
             aria-label={`Höhenlinien von f mit den orangen Hauptachsen; im aktuellen Zustand ${GESTALT[artDesPunktes]}.`}
             className="h-auto max-w-full rounded border"
@@ -540,8 +539,6 @@ export function HesseDefinitheit() {
             series={serien}
             xDomain={[-2, 2]}
             yDomain={[-yGrenze, yGrenze]}
-            width={300}
-            height={300}
           />
           <p className={`mt-1 max-w-[330px] text-xs ${W_MUTED}`}>
             Die Funktion entlang der beiden Hauptachsen: durchgezogen f(t·v₁) = ½λ₁t²,

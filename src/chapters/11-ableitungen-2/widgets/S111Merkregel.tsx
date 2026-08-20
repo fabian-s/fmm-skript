@@ -24,6 +24,7 @@ import { FMM_COLORS } from "../../../lib";
  * Werte, und Stetigkeit ist eine Aussage über Funktionswerte; Grün steht für
  * den Ableitungsterm, und Differenzierbarkeit ist die Existenz genau dieses
  * Terms.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Stetigkeit (Aussage über Funktionswerte)
@@ -91,8 +92,6 @@ function Vorschau({ fall }: { fall: Fall }) {
     <figure className="m-0">
       <svg
         viewBox={`0 0 ${S} ${S}`}
-        width={S}
-        height={S}
         role="img"
         aria-label={`Der Graph von ${fall.bildTitel} in der Nähe von null.`}
         className="h-auto max-w-full rounded border"

@@ -125,10 +125,10 @@ function EbenenPanel({
               x2={PAD_L + SIZE}
               y1={py(t)}
               y2={py(t)}
-              stroke="#cbd5e1"
+              stroke="var(--w-grid-strong)"
               strokeWidth={t === 0 ? 1.4 : 0.6}
             />
-            <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
+            <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fill="var(--w-muted)" fontSize={10}>
               {fmt(t, Math.abs(t) >= 1 ? 0 : 1)}
             </text>
           </g>
@@ -140,10 +140,10 @@ function EbenenPanel({
               y2={SIZE}
               x1={px(t)}
               x2={px(t)}
-              stroke="#cbd5e1"
+              stroke="var(--w-grid-strong)"
               strokeWidth={t === 0 ? 1.4 : 0.6}
             />
-            <text x={px(t)} y={SIZE + 12} textAnchor="middle" fill="#64748b" fontSize={10}>
+            <text x={px(t)} y={SIZE + 12} textAnchor="middle" fill="var(--w-muted)" fontSize={10}>
               {fmt(t, Math.abs(t) >= 1 ? 0 : 1)}
             </text>
           </g>

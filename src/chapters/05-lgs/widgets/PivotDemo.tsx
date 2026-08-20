@@ -81,7 +81,7 @@ export function PivotVergleich() {
       />
       <table className="mt-2">
         <thead>
-          <tr className="text-left text-xs" style={{ color: "#64748b" }}>
+          <tr className="text-left text-xs" style={{ color: "var(--w-muted)" }}>
             <th className="pr-3 font-medium">Strategie</th>
             <th className="pr-3 text-right font-medium">x₁</th>
             <th className="pr-3 text-right font-medium">x₂</th>

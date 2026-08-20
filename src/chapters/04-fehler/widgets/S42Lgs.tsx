@@ -119,20 +119,20 @@ function Achsen({ r, px, py, namen }: { r: number; px: (v: number) => number; py
   const step = ticks.length > 1 ? ticks[1] - ticks[0] : undefined;
   return (
     <g pointerEvents="none">
-      <line x1={px(-r)} y1={py(0)} x2={px(r)} y2={py(0)} stroke="var(--w-axis, #64748b)" strokeWidth={1.1} />
-      <line x1={px(0)} y1={py(-r)} x2={px(0)} y2={py(r)} stroke="var(--w-axis, #64748b)" strokeWidth={1.1} />
+      <line x1={px(-r)} y1={py(0)} x2={px(r)} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1.1} />
+      <line x1={px(0)} y1={py(-r)} x2={px(0)} y2={py(r)} stroke="var(--w-axis)" strokeWidth={1.1} />
       {ticks.map((t) => (
         <g key={t}>
-          <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis, #64748b)" />
-          <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={9} fill="var(--w-muted, #64748b)">
+          <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis)" />
+          <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
             {fmtTick(t, step)}
           </text>
         </g>
       ))}
-      <text x={px(r) - 2} y={py(0) - 6} textAnchor="end" fontSize={10} fontStyle="italic" fill="var(--w-muted, #64748b)">
+      <text x={px(r) - 2} y={py(0) - 6} textAnchor="end" fontSize={10} fontStyle="italic" fill="var(--w-muted)">
         {namen[0]}
       </text>
-      <text x={px(0) + 5} y={py(r) + 11} fontSize={10} fontStyle="italic" fill="var(--w-muted, #64748b)">
+      <text x={px(0) + 5} y={py(r) + 11} fontSize={10} fontStyle="italic" fill="var(--w-muted)">
         {namen[1]}
       </text>
     </g>
@@ -261,14 +261,12 @@ export function LgsKonditionWidget() {
           </p>
           <svg
             viewBox={`0 0 ${S} ${S}`}
-            width={S}
-            height={S}
             className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
             role="img"
             aria-label={`Inputebene mit der rechten Seite x bei (${fmtDe(x[0], 2)}; ${fmtDe(x[1], 2)}) und einem roten Kreis der plausiblen Inputs.`}
             {...zieh.svgProps}
           >
-            <rect x={0} y={0} width={S} height={S} fill="var(--w-bg, #ffffff)" />
+            <rect x={0} y={0} width={S} height={S} fill="var(--w-bg)" />
             <Achsen r={XR} px={pxIn} py={pyIn} namen={["x₁", "x₂"]} />
             <circle
               cx={pxIn(x[0])}
@@ -294,13 +292,11 @@ export function LgsKonditionWidget() {
           </p>
           <svg
             viewBox={`0 0 ${S} ${S}`}
-            width={S}
-            height={S}
             className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
             role="img"
             aria-label={`Lösungsebene mit y gleich A hoch minus eins mal x bei (${fmtDe(y[0], 2)}; ${fmtDe(y[1], 2)}) und der Bildellipse des Störkreises.`}
           >
-            <rect x={0} y={0} width={S} height={S} fill="var(--w-bg, #ffffff)" />
+            <rect x={0} y={0} width={S} height={S} fill="var(--w-bg)" />
             <Achsen r={rOut} px={pxOut} py={pyOut} namen={["y₁", "y₂"]} />
             <polygon
               points={ellipse.map(([a, b]) => `${pxOut(a).toFixed(1)},${pyOut(b).toFixed(1)}`).join(" ")}

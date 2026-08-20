@@ -250,7 +250,7 @@ export function GramSchmidtWidget() {
           y1={lineEnd2[1]}
           x2={lineEnd1[0]}
           y2={lineEnd1[1]}
-          stroke="var(--w-grid, #e2e8f0)"
+          stroke="var(--w-grid)"
           strokeWidth={1.5}
         />
         {!kollinear && (
@@ -261,7 +261,7 @@ export function GramSchmidtWidget() {
               y1={gpx(a2)[1]}
               x2={gpx(proj)[0]}
               y2={gpx(proj)[1]}
-              stroke="var(--w-axis, #94a3b8)"
+              stroke="var(--w-axis)"
               strokeWidth={1.2}
               strokeDasharray="4 4"
             />
@@ -270,14 +270,14 @@ export function GramSchmidtWidget() {
               y1={gpx(res)[1]}
               x2={gpx(a2)[0]}
               y2={gpx(a2)[1]}
-              stroke="var(--w-axis, #94a3b8)"
+              stroke="var(--w-axis)"
               strokeWidth={1.2}
               strokeDasharray="4 4"
             />
             <polygon
               points={[c0, c1, c2, c3].map((p) => gpx(p).join(",")).join(" ")}
               fill="none"
-              stroke="var(--w-axis, #94a3b8)"
+              stroke="var(--w-axis)"
               strokeWidth={1}
             />
           </>

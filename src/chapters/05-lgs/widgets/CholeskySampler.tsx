@@ -14,7 +14,7 @@ import { fmtNum, MatTable, WidgetLabel } from "./shared";
  */
 
 const GREEN = FMM_COLORS.gruen;
-const GREY = "#64748b"; // lesbar auf hellem Canvas und dunkler Seite
+const GREY = FMM_COLORS.grau;
 
 /** 200 feste Standardnormal-Punkte (Box-Muller, fester Seed) */
 const ZPTS: [number, number][] = (() => {
@@ -113,13 +113,13 @@ export function CholeskySampler() {
           height={H}
           viewBox={`0 0 ${W} ${H}`}
           className="max-w-full rounded bg-white"
-          style={{ border: "1px solid #cbd5e1" }}
+          style={{ border: "1px solid var(--w-border)" }}
           role="img"
           aria-label="Punktwolke z (grau) und ihr Bild y = Lz (grün)"
         >
           {/* Achsen durch den Ursprung */}
-          <line x1={sx(-w)} y1={sy(0)} x2={sx(w)} y2={sy(0)} stroke="#cbd5e1" strokeWidth={1} />
-          <line x1={sx(0)} y1={sy(-w)} x2={sx(0)} y2={sy(w)} stroke="#cbd5e1" strokeWidth={1} />
+          <line x1={sx(-w)} y1={sy(0)} x2={sx(w)} y2={sy(0)} stroke="var(--w-grid-strong)" strokeWidth={1} />
+          <line x1={sx(0)} y1={sy(-w)} x2={sx(0)} y2={sy(w)} stroke="var(--w-grid-strong)" strokeWidth={1} />
           {/* Ticks und Beschriftung */}
           {ticks.map((v) => (
             <g key={v}>

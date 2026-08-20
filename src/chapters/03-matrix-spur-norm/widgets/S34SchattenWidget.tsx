@@ -212,8 +212,6 @@ export function S34SchattenWidget() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="min-w-0">
           <svg
-            width={size}
-            height={size}
             viewBox={`0 0 ${size} ${size}`}
             className="max-w-full h-auto rounded"
             style={{ background: "var(--w-bg)", border: "1px solid var(--w-border)" }}

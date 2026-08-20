@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * §14.3: Monombasis und die Kondition der Vandermonde-Matrix.
@@ -22,11 +22,10 @@ import { M, Slider } from "../../../lib";
  *   (b_1, b_2) 32,55 Grad, (b_5, b_6) 5,47 Grad, (b_9, b_10) 2,72 Grad.
  *
  * Farbcode Kapitel 14: Basisfunktionen orange, Problemzonen rot.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const NEUTRAL = "#64748b";
+const { orange: ORANGE, rot: ROT, grau: NEUTRAL } = FMM_COLORS;
 
 /* ------------------------------------------------------------------ */
 /* Numerik                                                             */
@@ -213,8 +212,7 @@ export function MonombasisFigur() {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      width={W}
-      className="max-w-full"
+      className="max-w-full h-auto"
       role="img"
       aria-label="Die ersten acht Monome auf dem Einheitsintervall"
     >
@@ -304,8 +302,7 @@ function KonditionsChart({ n, aktiv }: { n: number; aktiv: BasisId }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      width={W}
-      className="max-w-full"
+      className="max-w-full h-auto"
       role="img"
       aria-label="Konditionszahl der Basismatrix gegen die Zahl der Stellen, logarithmische Achse"
     >
@@ -411,6 +408,7 @@ export function VandermondeKondition() {
 
   return (
     <div className="my-2 text-sm">
+      <Aufgabe>Vergleichen wir die drei Basen und erhöhen dann die Zahl der Stellen.</Aufgabe>
       <p className="mb-2">
         Zu <M>{"n"}</M> gleichmäßig verteilten Stellen bauen wir die
         <M>{"\\,n \\times n"}</M>-Basismatrix <M>{"\\bB"}</M> und schätzen ihre
@@ -471,7 +469,7 @@ export function VandermondeKondition() {
       <p className="mt-2 font-mono text-xs">
         n = {n}, Polynomgrad {n - 1}: κ₂ ≈ {fmtKappa(k)}
       </p>
-      <p className="mt-1">{status}</p>
+      <Verdikt kind={aktiv === "monom01" && n >= 15 ? "warn" : "neutral"}>{status}</Verdikt>
       {n >= 3 ? (
         <p className="mt-1">
           {aktiv === "monom01"

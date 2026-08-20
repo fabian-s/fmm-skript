@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import {
   BLAU,
   GRUEN,
@@ -30,6 +30,7 @@ import {
  * Koeffizientenaenderungen fallen mit rund Faktor 3,7 je Knotenabstand
  * (1,732 / 0,464 / 0,124 / 0,031 / 0,010). Die Kollokationsmatrix hat je
  * Zeile hoechstens q + 1 = 4 Eintraege ungleich null.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const XS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -147,7 +148,7 @@ export function StoerungVergleich() {
         xLabel="x"
         yLabel="y"
         series={[
-          { f: vorher, color: "#94a3b8", dash: [5, 4] },
+          { f: vorher, color: NEUTRAL, dash: [5, 4] },
           { f: nachher, color: GRUEN },
         ]}
         markers={marker}
@@ -258,6 +259,12 @@ export function StoerungVergleich() {
         abbrechen: Auch die äußersten Koeffizienten bewegen sich noch, nur eben
         um sehr wenig.
       </p>
+
+      <Verdikt kind={fernS < fernP ? "ok" : "warn"}>
+        {fernS < fernP
+          ? `Fern vom verschobenen Punkt bleibt die Spline-Änderung mit ${fmt(fernS, 3)} kleiner als die Polynom-Änderung mit ${fmt(fernP, 3)}. Das macht die Lokalität der B-Spline-Darstellung sichtbar.`
+          : "In diesem Zustand ist die Fernwirkung nicht kleiner; wir prüfen die gewählte Verschiebung und das betrachtete Gebiet."}
+      </Verdikt>
 
       <p className="mt-3 mb-1 text-sm font-semibold">Besetzungsmuster</p>
       <div className="flex flex-wrap items-start gap-8">

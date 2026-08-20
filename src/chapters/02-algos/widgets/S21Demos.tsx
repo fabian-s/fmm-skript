@@ -24,13 +24,13 @@ import {
  * zeigt genau diese zwei Zahlen auf einer gemeinsamen Größenordnungsachse.
  *
  * FARBROLLEN (Kapitel 2, einheitlich in allen Widgets):
- *   rot #D55E00     das teure/instabile Verfahren bzw. die teuerste
+ *   rot             das teure/instabile Verfahren bzw. die teuerste
  *                   Wachstumsklasse (naive Rekursion, O(2ⁿ)),
- *   blau #0072B2    das günstige Verfahren bzw. lineare Ordnung O(n),
- *   grün #009E73    die exakte Referenz (der Wert, der herauskommen soll)
+ *   blau            das günstige Verfahren bzw. lineare Ordnung O(n),
+ *   grün            die exakte Referenz (der Wert, der herauskommen soll)
  *                   bzw. die billigste Klasse O(log n),
- *   orange #E69F00  die Maschinenauflösung (ULP) bzw. quadratische Ordnung,
- *   violett #9E57D5 kubische Ordnung, grau: n·log n und neutrale Teile.
+ *   orange          die Maschinenauflösung (ULP) bzw. quadratische Ordnung,
+ *   violett         kubische Ordnung, grau: n·log n und neutrale Teile.
  * AUSNAHME §2.1 (bewusst, STYLE.md verlangt dieselbe Farbe für denselben
  * Teilausdruck in Text UND Widget): In der Wertetabelle tragen rot und blau
  * die Teilausdrucksrollen der Beispiele 2.1.3/2.1.4 — rot das Mittel der
@@ -155,8 +155,6 @@ function GroessenAchse({
   return (
     <svg
       viewBox={`0 0 ${B_W} ${B_H}`}
-      width={B_W}
-      height={B_H}
       className="h-auto max-w-full rounded border border-slate-300 dark:border-slate-600 [.w-dark_&]:border-slate-600"
       role="img"
       aria-label={ariaLabel}

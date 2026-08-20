@@ -37,6 +37,7 @@ import {
  * Verlust konstant log 2 = 0,693147 und der Gradient null. Damit sind die
  * beiden Folienfehler (vertauschte Klassen, falsches Vorzeichen für y = 0)
  * numerisch abgedeckt: In beiden Fällen steht (ŷ − y)·x.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktionswerte, Kurven
@@ -83,8 +84,6 @@ function Tafel({ titel, xLabel, x0, x1, y0, y1, clipId, ariaLabel, kinder }: Taf
       </div>
       <svg
         viewBox={`0 0 ${PAD_L + W + 8} ${H + PAD_B}`}
-        width={PAD_L + W + 8}
-        height={H + PAD_B}
         role="img"
         aria-label={ariaLabel}
         className="h-auto max-w-full rounded border"

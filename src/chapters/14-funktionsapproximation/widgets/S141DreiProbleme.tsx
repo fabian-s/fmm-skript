@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Aufgabe, M, Slider, Verdikt } from "../../../lib";
+import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * Die drei Problemvarianten aus §14.1 als drei Tafeln nebeneinander
@@ -24,12 +24,10 @@ import { Aufgabe, M, Slider, Verdikt } from "../../../lib";
  * Farbcode Kapitel 14: Daten blau, Schaetzer/Interpolant gruen,
  * Problemzone (hier die Residuen) rot; die unbekannte wahre Funktion f
  * bleibt neutral grau.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const DATEN = "#0072B2";
-const SCHAETZER = "#009E73";
-const FEHLER = "#D55E00";
-const WAHR = "#64748b";
+const { blau: DATEN, gruen: SCHAETZER, rot: FEHLER, grau: WAHR, hellgrau: RAHMEN } = FMM_COLORS;
 
 const W = 210;
 const H = 150;
@@ -54,7 +52,7 @@ const g = (x: number) => 0.06 * Math.sin(5 * Math.PI * x);
 const XOBS = [0.042, 0.125, 0.208, 0.292, 0.375, 0.458, 0.542, 0.625, 0.708, 0.792, 0.875, 0.958];
 const ZOBS = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
 
-const fmt = (v: number, d = 2) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
+const fmt = fmtDe;
 
 /** Polylinie einer Funktion ueber [0, 1] als SVG-points-String. */
 function kurve(fn: (x: number) => number): string {
@@ -71,8 +69,8 @@ function kurve(fn: (x: number) => number): string {
 function Achsen() {
   return (
     <g>
-      <line x1={sx(0)} y1={sy(0)} x2={sx(1)} y2={sy(0)} stroke="#cbd5e1" strokeWidth={1} />
-      <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={sy(1)} stroke="#cbd5e1" strokeWidth={1} />
+      <line x1={sx(0)} y1={sy(0)} x2={sx(1)} y2={sy(0)} stroke={RAHMEN} strokeWidth={1} />
+      <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={sy(1)} stroke={RAHMEN} strokeWidth={1} />
       <text x={sx(0)} y={H - 5} fontSize={9} fill={WAHR} textAnchor="middle">
         0
       </text>
@@ -99,7 +97,7 @@ function Tafel({ titel, formula, children }: { titel: string; formula: string; c
   return (
     <div>
       <p className="mb-1 text-center text-sm font-medium">{titel}</p>
-      <svg width={W} height={H} className="rounded border border-slate-300 bg-white dark:border-slate-600">
+      <svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600">
         <Achsen />
         {children}
       </svg>

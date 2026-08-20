@@ -239,18 +239,16 @@ export function FehlermassRechner() {
 
       <svg
         viewBox={`0 0 ${S} ${S}`}
-        width={S}
-        height={S}
         className="max-w-full h-auto"
         role="img"
         aria-label={`Die Ebene mit dem wahren Vektor v, seiner Näherung v-Schlange und dem Fehlerpfeil dazwischen; der relative Fehler beträgt ${fmtDe(100 * delta, 1)} Prozent.`}
         {...zieh.svgProps}
       >
-        <rect x={FX} y={FY} width={FW} height={FH} fill="var(--w-bg, #ffffff)" />
+        <rect x={FX} y={FY} width={FW} height={FH} fill="var(--w-bg)" />
         {gitter.map((t) => (
           <g key={`g${t}`}>
-            <line x1={px(t)} y1={FY} x2={px(t)} y2={FY + FH} stroke="var(--w-grid, #e2e8f0)" strokeWidth={1} />
-            <line x1={FX} y1={py(t)} x2={FX + FW} y2={py(t)} stroke="var(--w-grid, #e2e8f0)" strokeWidth={1} />
+            <line x1={px(t)} y1={FY} x2={px(t)} y2={FY + FH} stroke="var(--w-grid)" strokeWidth={1} />
+            <line x1={FX} y1={py(t)} x2={FX + FW} y2={py(t)} stroke="var(--w-grid)" strokeWidth={1} />
           </g>
         ))}
 
@@ -274,14 +272,14 @@ export function FehlermassRechner() {
         )}
 
         {/* Achsen */}
-        <line x1={FX} y1={py(0)} x2={FX + FW} y2={py(0)} stroke="var(--w-axis, #64748b)" strokeWidth={1.2} />
-        <line x1={px(0)} y1={FY} x2={px(0)} y2={FY + FH} stroke="var(--w-axis, #64748b)" strokeWidth={1.2} />
+        <line x1={FX} y1={py(0)} x2={FX + FW} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1.2} />
+        <line x1={px(0)} y1={FY} x2={px(0)} y2={FY + FH} stroke="var(--w-axis)" strokeWidth={1.2} />
         {gitter.filter((t) => t > 0).map((t) => (
           <g key={`t${t}`}>
-            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={10} fill="var(--w-muted, #64748b)">
+            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={10} fill="var(--w-muted)">
               {t}
             </text>
-            <text x={px(0) - 6} y={py(t) + 4} textAnchor="end" fontSize={10} fill="var(--w-muted, #64748b)">
+            <text x={px(0) - 6} y={py(t) + 4} textAnchor="end" fontSize={10} fill="var(--w-muted)">
               {t}
             </text>
           </g>

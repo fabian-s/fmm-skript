@@ -52,6 +52,7 @@ import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
  *
  * Farbrollen Kapitel 11: Funktion blau, Ziel (Minimum bzw. kritischer Punkt)
  * grün, Iterierte und Ableitungsobjekte orange, Fehler rot.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau;
@@ -328,8 +329,6 @@ export function NewtonStepper() {
           </div>
           <svg
             viewBox={`0 0 ${PAD_L + W + 6} ${W + PAD_B}`}
-            width={PAD_L + W + 6}
-            height={W + PAD_B}
             role="img"
             aria-label={`Höhenlinien von f mit dem Weg der Newton-Iterierten bis Schritt ${sichtbar.length - 1}; das Ziel ist grün markiert.`}
             className="h-auto max-w-full rounded border"

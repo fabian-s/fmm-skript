@@ -216,7 +216,7 @@ Praxis-Regeln der Folien zusammen:
 
 <CostWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, hängt der Faktor allein am Seitenverhältnis $m/n$, nicht an der absoluten Größe: Er startet bei $m = n$ exakt bei 1 und wächst monoton gegen 2. Bei $m = 5n$ sind es 1,75, bei $m = 10n$ schon 1,87. Mehr als den doppelten Aufwand zahlen wir für die bessere Stabilität also nie. Die SVD liegt noch einmal um eine Größenordnung darüber, bleibt aber in derselben Komplexitätsklasse.</p>
+<p className="mt-2 text-sm">Das Widget trennt die gemeinsamen Größenordnungen von den konstanten Kostenfaktoren der Verfahren.</p>
 :::
 
 :::vertiefung[Wie viele der 16 Stellen überleben?]
@@ -224,7 +224,7 @@ Praxis-Regeln der Folien zusammen:
 
 <AccuracyWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, gilt eine einfache Faustregel: Bei kleinem Residuum verlieren die Normalengleichungen rund $2\log_{10}\kappa_2(\bA)$ Stellen, QR nur $\log_{10}\kappa_2(\bA)$. Bei $\kappa_2(\bA) = 10^5$ sind das 5,7 gegen 10,6 Stellen; bei $\kappa_2(\bA) = 10^8$ bleibt den Normalengleichungen nichts mehr, während QR noch rechnet. Sobald aber $\left\|\br\right\|_2\kappa_2(\bA) > 1$ wird, verlieren *beide* Verfahren $2\log_{10}\kappa_2(\bA)$ Stellen – und das ist dann kein Vorwurf an den Algorithmus, sondern die Kondition des Problems selbst (Satz 7.2.4).</p>
+<p className="mt-2 text-sm">Das Widget verbindet Kondition und Residuum mit der erreichbaren Genauigkeit der drei Verfahren.</p>
 :::
 
 <h3 id="sec-7.6-zusammenfassung">Zusammenfassung: das Kapitel im Überblick</h3>
@@ -273,7 +273,7 @@ einen Kompromiss aus Geschwindigkeit und Stabilität.
 
 <MethodChooser />
 
-<p className="mt-2 text-sm">Wie der Automat zeigt, entscheidet vor allem die Kondition. Bei gutartigem, stark überbestimmtem Problem sind die Normalengleichungen völlig in Ordnung; sobald $\kappa_2(\bA)$ in die Nähe von $1/\sqrt{\eps}$ kommt, übernimmt QR, und bei (fast) rangdefizientem $\bA$ bleibt nur die SVD. Die Form von $\bA$ verschiebt lediglich den Preis, den wir für QR zahlen.</p>
+<p className="mt-2 text-sm">Das Widget ordnet die Methodenwahl nach Stabilität, Rang und Aufwand.</p>
 :::
 
 <h3 id="sec-7.6-quiz">Selbsttest</h3>

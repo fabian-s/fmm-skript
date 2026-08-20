@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
 
 /**
@@ -20,6 +20,7 @@ import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen (die drei Stuecke
  * unterscheiden sich durch die Strichelung, nicht durch die Farbe), Knoten
  * orange.
+ * R5-Nachprüfung: verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const KNOTEN = [0, 1, 2, 3];
@@ -276,6 +277,11 @@ export function SplineKonstruktion() {
           </p>
         </div>
       </div>
+      <Verdikt kind={maxSprung < 1e-9 ? "ok" : "warn"}>
+        {maxSprung < 1e-9
+          ? "Die drei Stücke schließen ohne sichtbaren Sprung aneinander an. Die zwölf Bedingungen bestimmen den Spline für die gewählte Randbedingung."
+          : "Die Rundung lässt einen Sprung erkennen; wir prüfen die Randwerte und die lineare Lösung erneut."}
+      </Verdikt>
     </div>
   );
 }

@@ -42,6 +42,7 @@ import {
  * Entwicklungspunkt: Auf dem Reglerraster wächst der Fehler beim Ordnungsschritt
  * für k = 1 ab x <= -1,60 und für k = 2 ab x <= -2,60 sogar (k = 1, x = -3:
  * 0,950 -> 2,050). Der Statustext verzweigt deshalb.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion und Funktionswerte
@@ -178,8 +179,6 @@ export function TaylorOrdnungWidget() {
         ]}
         xDomain={[X_MIN, X_MAX]}
         yDomain={[Y_MIN, Y_MAX]}
-        width={380}
-        height={260}
       />
 
       <div className="max-w-prose font-mono text-sm">

@@ -65,6 +65,7 @@ import { gitter, hoehenlinie, niveaus, type Segment } from "./S114Kontur";
  * 5,79 bis 15,98 (Extremfälle: H ≈ 0 bei sin+cos in (0; 1,55), und im Zentrum
  * der Glocke verschwinden alle dritten Ableitungen). Das Verdikt verzweigt
  * deshalb.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // f, Höhenlinien von f, Fläche
@@ -159,8 +160,6 @@ function Tafel({ titel, ariaLabel, children, svgProps }: TafelProps) {
       </div>
       <svg
         viewBox={`0 0 ${PAD_L + W + PAD_R} ${W + PAD_B}`}
-        width={PAD_L + W + PAD_R}
-        height={W + PAD_B}
         role="img"
         aria-label={ariaLabel}
         {...svgProps}

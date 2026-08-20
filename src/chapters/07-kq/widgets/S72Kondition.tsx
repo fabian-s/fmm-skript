@@ -59,9 +59,9 @@ import type { Sicht3D, Vec3 } from "../../../lib";
 
 const COL = {
   b: FMM_COLORS.rot,
-  bPert: "#e59a66", // aufgehelltes Rot: das gestörte b
+  bPert: FMM_COLORS.rot,
   y: FMM_COLORS.gruen,
-  yPert: "#5cc3a5", // aufgehelltes Grün: die gestörte Projektion
+  yPert: FMM_COLORS.gruen,
   r: FMM_COLORS.violett,
   pert: FMM_COLORS.blau,
   kappa: FMM_COLORS.orange,
@@ -213,7 +213,7 @@ export function FigKQGeometrie() {
             points="18,248 342,302 442,232 118,178"
             fill={FMM_COLORS.blau}
             fillOpacity={0.1}
-            stroke="var(--w-axis, #94a3b8)"
+            stroke="var(--w-axis)"
             strokeWidth={1}
           />
           <text x={46} y={250} fill={COL.neutral} fontSize={13} fontStyle="italic">
@@ -228,8 +228,8 @@ export function FigKQGeometrie() {
           {/* rechter Winkel am Fuß des Residuums (perspektivisch verzerrt) */}
           <polyline points="320,243 308.2,241.1 308.2,253.1" fill="none" stroke={COL.neutral} strokeWidth={1.2} />
           {/* Winkel θ zwischen ŷ und b */}
-          <polyline points={arcPts(O[0], O[1], 34, -0.165, 0.661)} fill="none" stroke="var(--w-text, #475569)" strokeWidth={1.4} />
-          <text x={184} y={216} fill="var(--w-text, #475569)" fontSize={13} fontStyle="italic">
+          <polyline points={arcPts(O[0], O[1], 34, -0.165, 0.661)} fill="none" stroke="var(--w-text)" strokeWidth={1.4} />
+          <text x={184} y={216} fill="var(--w-text)" fontSize={13} fontStyle="italic">
             θ
           </text>
         </svg>
@@ -357,18 +357,18 @@ export function WinkelWidget() {
           {...zieh.svgProps}
         >
           {/* blasse vertikale Achse */}
-          <line x1={wsx(0)} y1={wsy(WY1)} x2={wsx(0)} y2={wsy(-0.35)} stroke="var(--w-grid, #e2e8f0)" />
+          <line x1={wsx(0)} y1={wsy(WY1)} x2={wsx(0)} y2={wsy(-0.35)} stroke="var(--w-grid)" />
           {/* col(A) = horizontale Achse */}
           <line x1={wsx(WX0)} y1={wsy(0)} x2={wsx(1.55)} y2={wsy(0)} stroke={COL.neutral} strokeWidth={2.5} />
           <text x={wsx(1.53)} y={wsy(0) - 8} textAnchor="end" fill={COL.neutral} fontSize={12} fontStyle="italic">
             col(A)
           </text>
           {/* θ-Bogen */}
-          <polyline points={arcPts(wsx(0), wsy(0), 44, 0, th)} fill="none" stroke="var(--w-text, #475569)" strokeWidth={1.4} />
+          <polyline points={arcPts(wsx(0), wsy(0), 44, 0, th)} fill="none" stroke="var(--w-text)" strokeWidth={1.4} />
           <text
             x={wsx(0) + 58 * Math.cos(th / 2) - 4}
             y={wsy(0) - 58 * Math.sin(th / 2) + 4}
-            fill="var(--w-text, #475569)"
+            fill="var(--w-text)"
             fontSize={13}
             fontStyle="italic"
           >
