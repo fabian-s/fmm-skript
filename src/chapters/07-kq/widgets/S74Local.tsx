@@ -115,10 +115,11 @@ export function OrthoWidget() {
       />
       <div className="my-2 text-sm">
         <MD>
-          {`\\bQ = \\begin{pmatrix} ${Q[0][0].toFixed(3)} & ${Q[0][1].toFixed(3)} \\\\ ${Q[1][0].toFixed(3)} & ${Q[1][1].toFixed(3)} \\end{pmatrix}, \\quad \\bQ\\bx = \\begin{pmatrix} ${Qx[0].toFixed(3)} \\\\ ${Qx[1].toFixed(3)} \\end{pmatrix}, \\quad \\det \\bQ = ${det.toFixed(0)}`}
+          {`\\bQ = \\begin{pmatrix} ${Q[0][0].toFixed(3)} & ${Q[0][1].toFixed(3)} \\\\ ${Q[1][0].toFixed(3)} & ${Q[1][1].toFixed(3)} \\end{pmatrix}, \\quad \\det \\bQ = ${det.toFixed(0)}`}
         </MD>
+        <MD>{`\\bQ\\bx = \\begin{pmatrix} ${Qx[0].toFixed(3)} \\\\ ${Qx[1].toFixed(3)} \\end{pmatrix}`}</MD>
         <MD>
-          {`\\|\\bx\\|_2 = ${norm2(x).toFixed(4)} = \\|\\bQ\\bx\\|_2 = ${norm2(Qx).toFixed(4)}, \\qquad \\kappa_2(\\bQ) = 1`}
+          {`\\|\\bx\\|_2 = \\|\\bQ\\bx\\|_2 = ${norm2(Qx).toFixed(4)}, \\quad \\kappa_2(\\bQ) = 1`}
         </MD>
       </div>
       {det > 0 ? (
@@ -309,8 +310,9 @@ export function GramSchmidtWidget() {
       </div>
       <div className="my-2 text-sm">
         <MD>
-          {`\\cgreen{\\bq_1} = \\begin{pmatrix} ${q1[0].toFixed(4)} \\\\ ${q1[1].toFixed(4)} \\end{pmatrix}, \\quad R_{12} = \\cgreen{\\bq_1}^\\top \\ba_2 = ${gamma.toFixed(4)}, \\quad \\left\\| \\wt{\\bq}_2 \\right\\|_2 = ${nr.toFixed(4)}`}
+          {`\\cgreen{\\bq_1} = \\begin{pmatrix} ${q1[0].toFixed(4)} \\\\ ${q1[1].toFixed(4)} \\end{pmatrix}, \\quad R_{12} = \\cgreen{\\bq_1}^\\top \\ba_2 = ${gamma.toFixed(4)}`}
         </MD>
+        <MD>{`\\left\\| \\wt{\\bq}_2 \\right\\|_2 = ${nr.toFixed(4)}`}</MD>
         {!kollinear && (
           <MD>
             {`\\cgreen{\\bq_2} = \\begin{pmatrix} ${q2[0].toFixed(4)} \\\\ ${q2[1].toFixed(4)} \\end{pmatrix}, \\qquad \\cgreen{\\bq_1}^\\top \\cgreen{\\bq_2} = ${Math.abs(q1q2) < 1e-14 ? "0" : q1q2.toExponential(1)}`}

@@ -118,11 +118,13 @@ export function GivensWidget() {
         <>
           <div className="my-2 text-sm">
             <MD>
-              {`c = ${fmtMath(c)}, \\quad s = ${fmtMath(s)}, \\quad \\alpha = ${fmtMath(r)}, \\quad \\theta \\approx ${fmtMath(theta, 2)}^{\\circ}`}
+              {`c = ${fmtMath(c)}, \\quad s = ${fmtMath(s)}, \\quad \\alpha = ${fmtMath(r)}`}
             </MD>
+            <MD>{`\\theta \\approx ${fmtMath(theta, 2)}^{\\circ}`}</MD>
             <MD>
-              {`\\bG = \\begin{pmatrix} ${fmtMath(c)} & ${fmtMath(s)} \\\\ ${fmtMath(-s)} & ${fmtMath(c)} \\end{pmatrix}, \\qquad \\bG\\ba = \\begin{pmatrix} ${fmtMath(r)} \\\\ 0 \\end{pmatrix}`}
+              {`\\bG = \\begin{pmatrix} ${fmtMath(c)} & ${fmtMath(s)} \\\\ ${fmtMath(-s)} & ${fmtMath(c)} \\end{pmatrix}`}
             </MD>
+            <MD>{`\\bG\\ba = \\begin{pmatrix} ${fmtMath(r)} \\\\ 0 \\end{pmatrix}`}</MD>
           </div>
           <Verdikt kind="ok" titel="Zweite Komponente auf null:">
             Satz 7.5.2 liefert <M>{`c = a_1/r = ${fmtMath(c)}`}</M> und{" "}

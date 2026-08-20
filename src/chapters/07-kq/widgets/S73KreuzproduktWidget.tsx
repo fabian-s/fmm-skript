@@ -49,7 +49,8 @@ function KreuzproduktTafel() {
 
   return (
     <div className="text-sm">
-      <MD>{"\\bA = \\begin{pmatrix} 1 & 1 \\\\ \\eps & 0 \\\\ 0 & \\eps \\end{pmatrix} \\quimpl \\bA^\\top\\bA = \\begin{pmatrix} 1 + \\eps^2 & 1 \\\\ 1 & 1 + \\eps^2 \\end{pmatrix}."}</MD>
+      <MD>{"\\bA = \\begin{pmatrix} 1 & 1 \\\\ \\eps & 0 \\\\ 0 & \\eps \\end{pmatrix}"}</MD>
+      <MD>{"\\bA^\\top\\bA = \\begin{pmatrix} 1 + \\eps^2 & 1 \\\\ 1 & 1 + \\eps^2 \\end{pmatrix}."}</MD>
       <Aufgabe>
         Schieben wir <M>{"k"}</M> nach oben und beobachten den gespeicherten Diagonaleintrag{" "}
         <M>{"\\operatorname{fl}(1 + \\eps^2)"}</M>.
