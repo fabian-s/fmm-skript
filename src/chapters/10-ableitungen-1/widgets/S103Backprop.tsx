@@ -48,7 +48,7 @@ const paar = (a: number, b: number) => `(${fmt(a)}; ${fmt(b)})`;
 
 type Knoten = "x" | "a" | "z" | "y" | "L";
 
-const POS: Record<Knoten, number> = { x: 60, a: 210, z: 360, y: 510, L: 660 };
+const POS: Record<Knoten, number> = { x: 40, a: 160, z: 280, y: 400, L: 520 };
 const MITTE = 92;
 const BESCHRIFTUNG: Record<Knoten, string> = {
   x: "x",
@@ -76,8 +76,8 @@ function Graph({
   const R = 19;
   return (
     <svg
-      viewBox="0 0 720 190"
-      className="h-auto w-full max-w-[720px] rounded"
+      viewBox="0 0 560 190"
+      className="h-auto w-full max-w-[560px] rounded"
       role="img"
       aria-label="Rechengraph des kleinen Netzes: Eingabe, erste Schicht, ReLU, zweite Schicht und Verlust; unter den Knoten die Vorwärtswerte, darüber die Adjungierten."
       style={{ border: "1px solid var(--w-border, #cbd5e1)", background: "var(--w-bg, #ffffff)" }}
@@ -103,16 +103,16 @@ function Graph({
               markerEnd="url(#s103-bp-pfeil)"
             />
             <rect
-              x={cx - 36}
+              x={cx - 30}
               y={MITTE - 12}
-              width={72}
+              width={60}
               height={24}
               rx={4}
               fill="var(--w-grid, #e2e8f0)"
               stroke="var(--w-border, #94a3b8)"
               strokeWidth={1.1}
             />
-            <text x={cx} y={MITTE + 5} fontSize={12} fill="var(--w-text, #334155)" textAnchor="middle">
+            <text x={cx} y={MITTE + 5} fontSize={13} fill="var(--w-text, #334155)" textAnchor="middle">
               {label}
             </text>
           </g>
@@ -137,7 +137,7 @@ function Graph({
             <text
               x={cx}
               y={MITTE + 5}
-              fontSize={14}
+              fontSize={16}
               fill="var(--w-text, #334155)"
               textAnchor="middle"
               fontStyle="italic"
@@ -148,7 +148,7 @@ function Graph({
               <text
                 x={cx}
                 y={MITTE + R + 18}
-                fontSize={11}
+                fontSize={12}
                 fill={BLAU}
                 textAnchor="middle"
                 fontFamily="ui-monospace, monospace"
@@ -160,7 +160,7 @@ function Graph({
               <text
                 x={cx}
                 y={MITTE - R - 10}
-                fontSize={11}
+                fontSize={12}
                 fill={ORANGE}
                 textAnchor="middle"
                 fontFamily="ui-monospace, monospace"
@@ -171,10 +171,10 @@ function Graph({
           </g>
         );
       })}
-      <text x={8} y={16} fontSize={11} fill={ORANGE}>
+      <text x={8} y={16} fontSize={12} fill={ORANGE}>
         ∂L/∂(Knoten)
       </text>
-      <text x={8} y={184} fontSize={11} fill={BLAU}>
+      <text x={8} y={184} fontSize={12} fill={BLAU}>
         Werte
       </text>
     </svg>
