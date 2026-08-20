@@ -921,7 +921,7 @@ Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
      (`grep -rn "Theta" src/chapters/`). In den späteren Kapiteln genügt
      durchweg O.
 
-2. **Selbsttest am Ende von Abschnitt 1.2 entfernen.** `src/chapters/01-intro/S12.mdx`,
+2. **ERLEDIGT (2026-08-20): Selbsttest am Ende von Abschnitt 1.2 entfernt.** `src/chapters/01-intro/S12.mdx`,
    letzter Block: `### Selbsttest` mit einer `::::quiz`-Direktive (eine
    wahr/falsch-Frage zur Kurskarte). Ersatzlos streichen.
 
@@ -930,7 +930,10 @@ Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
    `S22.mdx`: startet derzeit nicht auf dem ersten Schritt. Anfangszustand auf
    Schritt 1 setzen, damit sofort etwas zu sehen ist.
 
-4. **Beweise standardmäßig schrittweise öffnen.** `src/lib/Proof.tsx`: der
+4. **ERLEDIGT (2026-08-20): Beweise öffnen jetzt schrittweise.**
+   `src/lib/Proof.tsx` startet mit `shown = 1`, `visible` ist auf `steps.length`
+   geklemmt, der Knopf schaltet zwischen Schritt-1-Ansicht und ganzem Beweis.
+   Ursprüngliche Notiz: der
    Zustand `shown === null` bedeutet heute "ganzer Beweis sichtbar" und ist der
    Default (`useState<number | null>(null)`, Z. 74; `visible = shown === null ?
    steps.length : shown`). Gewünscht ist die Umkehrung: mit dem ERSTEN Schritt

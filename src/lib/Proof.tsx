@@ -70,9 +70,11 @@ export function Proof({
   const steps = (Array.isArray(children) ? children : [children]).flat().filter(Boolean) as {
     props: { children: ReactNode; why?: ReactNode };
   }[];
-  // null = alle Schritte sichtbar; sonst Anzahl aufgedeckter Schritte
-  const [shown, setShown] = useState<number | null>(null);
-  const visible = shown === null ? steps.length : shown;
+  // null = alle Schritte sichtbar; sonst Anzahl aufgedeckter Schritte.
+  // Default ist das schrittweise Lesen ab dem ERSTEN Schritt: ein Beweis, der
+  // sofort vollstaendig dasteht, wird ueberflogen statt nachvollzogen.
+  const [shown, setShown] = useState<number | null>(1);
+  const visible = shown === null ? steps.length : Math.min(shown, steps.length);
 
   return (
     <div className="my-4 rounded-r-md border-l-4 border-slate-300 bg-slate-50/60 px-4 py-2 dark:border-slate-600 dark:bg-slate-800/30">
@@ -81,7 +83,7 @@ export function Proof({
         <button
           type="button"
           className="rounded bg-slate-200 px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
-          onClick={() => setShown(shown === null ? 0 : null)}
+          onClick={() => setShown(shown === null ? 1 : null)}
         >
           {shown === null ? L.stepByStep : L.showFullProof}
         </button>
