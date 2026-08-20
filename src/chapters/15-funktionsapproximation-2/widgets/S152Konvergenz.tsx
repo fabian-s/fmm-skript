@@ -251,6 +251,7 @@ export function SplineKonvergenz() {
       <div className="flex flex-wrap gap-4">
         <div>
           <svg
+            width={W}
             viewBox={`0 0 ${W} ${H_KURVE}`}
             className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
@@ -322,6 +323,7 @@ export function SplineKonvergenz() {
           </svg>
 
           <svg
+            width={W}
             viewBox={`0 0 ${W} ${H_FEHLER}`}
             className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
@@ -385,7 +387,7 @@ export function SplineKonvergenz() {
           </svg>
         </div>
 
-        <div className="grow space-y-2">
+        <div className="min-w-0 grow space-y-2">
           <svg
             viewBox={`0 0 ${WK} ${HK}`}
             className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"

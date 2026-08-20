@@ -326,6 +326,7 @@ export function SplineGlaettung() {
       <div className="flex flex-wrap gap-4">
         <div>
           <svg
+            width={W}
             viewBox={`0 0 ${W} ${H}`}
             className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
@@ -408,6 +409,7 @@ export function SplineGlaettung() {
           </svg>
 
           <svg
+            width={W}
             viewBox={`0 0 ${W} ${H_BASIS}`}
             className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
@@ -445,7 +447,7 @@ export function SplineGlaettung() {
           </svg>
         </div>
 
-        <div className="grow space-y-2">
+        <div className="min-w-0 grow space-y-2">
           <div className="overflow-x-auto rounded border border-slate-300 dark:border-slate-600">
             <table className="w-full text-right font-mono text-xs">
               <tbody>

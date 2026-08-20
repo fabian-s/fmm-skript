@@ -91,7 +91,7 @@ export function VierInterpolanten() {
       <Aufgabe>Schätzen wir zuerst die größte Spanne und schieben dann x* zwischen zwei Stützstellen.</Aufgabe>
       <div className="mb-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
         {KANDIDATEN.map((k, i) => (
-          <label key={k.name} className="flex items-center gap-1">
+          <label key={k.name} className="flex items-center gap-1 whitespace-nowrap">
             <input
               type="checkbox"
               checked={an[i]}
