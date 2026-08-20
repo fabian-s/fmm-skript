@@ -1,8 +1,53 @@
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe } from "../../../lib";
-/** Einsicht: Separierbarkeit zerlegt jeden Kovarianzeintrag in Zeit- und Ortsfaktor.
- * Farbrollen: Zeit blau, Ort grün, Produkt orange, negatives Produkt violett.
- * Provenienz: Eigenbau. Per node verifiziert: Eigenwerte 4,5; 2,7; 0,5; 0,3,
- * Summe 8 und Produkt 1,8225 (verify-09-tensoren/check-s93.mjs, 2026-08-19). */
-const {blau:B,gruen:G,orange:O,violett:V,grau:N}=FMM_COLORS;
-export function SeparierbareKovarianzDemo(){const [rt,setRt]=useState(.8),[rs,setRs]=useState(.25),[cell,setCell]=useState<[number,number]>([0,2]);const st=[[1,rt],[rt,1]],ss=[[2,2*rs],[2*rs,2]],idx=(i:number)=>[Math.floor(i/2),i%2] as const;const sig=Array.from({length:4},(_,i)=>Array.from({length:4},(_,j)=>st[idx(i)[0]][idx(j)[0]]*ss[idx(i)[1]][idx(j)[1]]));const [i,j]=cell,v=sig[i][j];return <div><Aufgabe>Wählen wir einen Fall und klicken wir dann auf einen Eintrag der großen Matrix.</Aufgabe><div className="flex flex-wrap gap-2 my-2">{[["Beispiel",.8,.25],["Zeiten unabhängig",0,.25],["Negative Orte",.8,-.5]].map(([name,a,c])=><button key={String(name)} type="button" className="rounded px-2 py-1 text-sm" onClick={()=>{setRt(a as number);setRs(c as number)}}>{String(name)}</button>)}</div><Slider label="Korrelation Zeit ρT" value={rt} onChange={setRt} min={-.9} max={.9} step={.05} accent={B}/><Slider label="Korrelation Ort ρS" value={rs} onChange={setRs} min={-.9} max={.9} step={.05} accent={G}/><div className="my-3 inline-grid gap-1" style={{gridTemplateColumns:"repeat(4,minmax(2.7rem,auto))"}}>{sig.flatMap((r,a)=>r.map((z,c)=><button key={`${a}-${c}`} type="button" onClick={()=>setCell([a,c])} className="rounded p-2 font-mono text-xs" style={{backgroundColor:z<0?`${V}33`:`${O}33`,outline:a===i&&c===j?`2px solid ${O}`:undefined}}>{fmtDe(z,2)}</button>))}</div><Verdikt kind={rt===0?"ok":"neutral"}>Der gewählte Eintrag zerfällt in {fmtDe(st[idx(i)[0]][idx(j)[0]],2)} · {fmtDe(ss[idx(i)[1]][idx(j)[1]],2)} = {fmtDe(v,2)}. {rt===0?"Die Zeitblöcke entkoppeln; die Matrix ist blockdiagonal wie in Beispiel 9.3.17.":"Diese Faktorisierung ist die Annahme aus Definition 9.3.18."}</Verdikt></div>}
+
+/**
+ * Einsicht: Eine separierbare Kovarianz ersetzt eine große mn×mn-Matrix durch
+ * zwei kleine Faktoren und spart damit Parameter und gespeicherte Einträge.
+ * Farbrollen: Zeitfaktor blau, Ortsfaktor grün, allgemeine Matrix orange,
+ * separierbare Darstellung violett. Provenienz: Eigenbau.
+ * Zahlen geprüft mit scripts/verify/KAP09/s93-kovarianz.mjs (2026-08-20):
+ * m=10,n=50: 125250 vs. 1330 freie Parameter, 250000 vs. 2600 Einträge.
+ */
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, violett: VIOLETT } = FMM_COLORS;
+
+export function SeparierbareKovarianzDemo() {
+  const [orte, setOrte] = useState(10);
+  const [zeiten, setZeiten] = useState(50);
+  const dimension = orte * zeiten;
+  const allgemein = (dimension * (dimension + 1)) / 2;
+  const separierbar = (orte * (orte + 1)) / 2 + (zeiten * (zeiten + 1)) / 2;
+  const allgemeinSpeicher = dimension ** 2;
+  const faktorSpeicher = orte ** 2 + zeiten ** 2;
+  const sparquote = 100 * (1 - separierbar / allgemein);
+  const gross = dimension >= 100;
+
+  return (
+    <div>
+      <Aufgabe>Verändern wir Orte und Zeitpunkte und vergleichen die beiden Modellgrößen.</Aufgabe>
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" role="img" aria-label="Vergleich einer allgemeinen und einer separierbaren Kovarianzmatrix.">
+        <div className="rounded border p-3" style={{ borderColor: ORANGE }}>
+          <div className="text-sm font-semibold">allgemein: Σ ∈ ℝ^{dimension}×{dimension}</div>
+          <div className="mt-2 font-mono text-2xl" style={{ color: ORANGE }}>{fmtDe(allgemein, 0)}</div>
+          <div className="text-sm">freie Parameter</div>
+          <div className="mt-2 font-mono text-sm">{fmtDe(allgemeinSpeicher, 0)} gespeicherte Einträge</div>
+        </div>
+        <div className="rounded border p-3" style={{ borderColor: VIOLETT }}>
+          <div className="text-sm font-semibold"><span style={{ color: BLAU }}>Σ_T</span> ⊗ <span style={{ color: GRUEN }}>Σ_S</span></div>
+          <div className="mt-2 font-mono text-2xl" style={{ color: VIOLETT }}>{fmtDe(separierbar, 0)}</div>
+          <div className="text-sm">freie Parameter in zwei Faktoren</div>
+          <div className="mt-2 font-mono text-sm">{fmtDe(faktorSpeicher, 0)} gespeicherte Einträge</div>
+        </div>
+      </div>
+      <div className="mt-3 max-w-md">
+        <Slider label="Orte m" value={orte} onChange={setOrte} min={2} max={50} step={1} accent={GRUEN} />
+        <Slider label="Zeitpunkte n" value={zeiten} onChange={setZeiten} min={2} max={50} step={1} accent={BLAU} />
+      </div>
+      <Verdikt kind={gross ? "ok" : "neutral"}>
+        {gross
+          ? `Für ${orte} Orte und ${zeiten} Zeitpunkte spart die separierbare Annahme ${fmtDe(sparquote, 1)} % der freien Parameter. Wir schätzen zwei Muster statt einer ${dimension}×${dimension}-Matrix.`
+          : `Bei ${orte}×${zeiten} Messwerten ist der Unterschied noch klein, aber schon sichtbar: ${fmtDe(allgemein, 0)} statt ${fmtDe(separierbar, 0)} freie Parameter. Mit wachsendem Gitter wächst der Vorteil quadratisch.`}
+      </Verdikt>
+    </div>
+  );
+}
