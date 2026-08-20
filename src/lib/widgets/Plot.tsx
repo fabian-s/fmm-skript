@@ -114,8 +114,19 @@ export function Plot({
   const [y0, y1] = yDomain;
   const safeWidth = Math.max(1, width);
   const safeHeight = Math.max(1, height);
-  const left = 34;
-  const right = 8;
+  const validDomain = x1 > x0 && y1 > y0;
+  const xTicks = validDomain ? niceTicks(x0, x1) : [];
+  const yTicks = validDomain ? niceTicks(y0, y1) : [];
+  const xStep = xTicks.length > 1 ? xTicks[1] - xTicks[0] : undefined;
+  const yStep = yTicks.length > 1 ? yTicks[1] - yTicks[0] : undefined;
+  // Reserve room for the actual tick labels: the last x label is centred on the
+  // right edge, the y labels are right-aligned against `left`. Too small a
+  // margin silently CLIPS them (SVG clips to its viewBox).
+  const labelPx = (t: string) => t.length * 6.2;
+  const lastX = xTicks.length ? fmtTick(xTicks[xTicks.length - 1], xStep) : "";
+  const widestY = yTicks.reduce((w, t) => Math.max(w, labelPx(fmtTick(t, yStep))), 0);
+  const left = Math.max(34, Math.ceil(widestY) + 8);
+  const right = Math.max(8, Math.ceil(labelPx(lastX) / 2) + 3);
   const top = 10;
   const legendItems = [
     ...series.flatMap((s, index) => s.label ? [{ label: s.label, color: s.color ?? PALETTE[index % PALETTE.length], dash: s.dash }] : []),
@@ -131,13 +142,10 @@ export function Plot({
   const plotBottom = Math.max(top + 1, safeHeight - bottom);
   const plotWidth = plotRight - left;
   const plotHeight = plotBottom - top;
-  const validDomain = x1 > x0 && y1 > y0;
   const toPx = (x: number, y: number): [number, number] => [
     left + ((x - x0) / (x1 - x0)) * plotWidth,
     plotBottom - ((y - y0) / (y1 - y0)) * plotHeight,
   ];
-  const xTicks = validDomain ? niceTicks(x0, x1) : [];
-  const yTicks = validDomain ? niceTicks(y0, y1) : [];
 
   const curveSegments = useMemo(() => series.map((s) => {
     const segments: [number, number][][] = [];
@@ -256,8 +264,8 @@ export function Plot({
           })()}
         </g>
         <g fill="var(--w-text)" fontSize="10" fontFamily="ui-monospace, SFMono-Regular, monospace" aria-hidden="true">
-          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={safeHeight - (xLabel ? 15 : 5)} textAnchor="middle">{fmtTick(t, xTicks.length > 1 ? xTicks[1] - xTicks[0] : undefined)}</text>; })}
-          {yTicks.map((t) => { const [, y] = toPx(x0, t); return <text key={`yt-${t}`} x={left - 4} y={y + 3} textAnchor="end">{fmtTick(t, yTicks.length > 1 ? yTicks[1] - yTicks[0] : undefined)}</text>; })}
+          {xTicks.map((t) => { const [x] = toPx(t, y0); return <text key={`xt-${t}`} x={x} y={safeHeight - (xLabel ? 15 : 5)} textAnchor="middle">{fmtTick(t, xStep)}</text>; })}
+          {yTicks.map((t) => { const [, y] = toPx(x0, t); return <text key={`yt-${t}`} x={left - 4} y={y + 3} textAnchor="end">{fmtTick(t, yStep)}</text>; })}
           {xLabel && <text x={(left + plotRight) / 2} y={safeHeight - 3} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif">{xLabel}</text>}
           {yLabel && <text x="10" y={(top + plotBottom) / 2} textAnchor="middle" fontFamily="ui-sans-serif, sans-serif" transform={`rotate(-90 10 ${(top + plotBottom) / 2})`}>{yLabel}</text>}
         </g>
