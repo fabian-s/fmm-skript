@@ -1,29 +1,4 @@
-import { useState } from "react";
-import { Plot, Slider } from "../../lib";
-
-const gauss = (x: number, mu: number, s: number) =>
-  Math.exp(-((x - mu) ** 2) / (2 * s * s)) / (s * Math.sqrt(2 * Math.PI));
-
-export function MixtureWidget() {
-  const [pi1, setPi1] = useState(0.5);
-  return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Gewicht π₁" value={pi1} onChange={setPi1} min={0} max={1} step={0.01} />
-      <Plot
-        series={[
-          { f: (x) => pi1 * gauss(x, -1.5, 0.6), dash: [5, 4], color: "#16a34a" },
-          { f: (x) => (1 - pi1) * gauss(x, 1, 0.9), dash: [5, 4], color: "#dc2626" },
-          { f: (x) => pi1 * gauss(x, -1.5, 0.6) + (1 - pi1) * gauss(x, 1, 0.9) },
-        ]}
-        xDomain={[-4, 4]}
-        yDomain={[0, 0.75]}
-        width={280}
-        height={180}
-      />
-      <p className="mt-1 text-xs text-slate-300">
-        Durchgezogen: Mischdichte. Gestrichelt: die beiden gewichteten
-        Gauß-Komponenten.
-      </p>
-    </div>
-  );
-}
+/** Insight: weights, locations and widths determine whether a mixture separates into two modes. Colors: blue mixture, green/red components. Provenance: original; no fixed verdict numbers, 2026-08-19. */
+import { useState } from "react"; import { Aufgabe,FMM_COLORS,Plot,Slider,Verdikt } from "../../lib";
+const g=(x:number,m:number,s:number)=>Math.exp(-((x-m)**2)/(2*s*s))/(s*Math.sqrt(2*Math.PI));
+export function MixtureWidget(){const[p,setP]=useState(.5);const[gap,setGap]=useState(2.5);const[s,setS]=useState(.7);const l=-gap/2,r=gap/2;const mix=(x:number)=>p*g(x,l,s)+(1-p)*g(x,r,s);const getrennt=gap>2*s&&p>.15&&p<.85;return <div className="mt-2 rounded bg-slate-700/60 p-2"><Aufgabe>Verändern wir Gewicht, Abstand und Breite der beiden Komponenten.</Aufgabe><Plot series={[{f:x=>p*g(x,l,s),color:FMM_COLORS.gruen,dash:[5,4],label:"Komponente 1"},{f:x=>(1-p)*g(x,r,s),color:FMM_COLORS.rot,dash:[5,4],label:"Komponente 2"},{f:mix,color:FMM_COLORS.blau,label:"Mischdichte"}]} xDomain={[-4,4]} yDomain={[0,1]} xLabel="x" yLabel="Dichte" readout/><Slider label="Gewicht π₁" value={p} onChange={setP} min={.05} max={.95} step={.01} accent={FMM_COLORS.gruen}/><Slider label="Abstand μ₂−μ₁" value={gap} onChange={setGap} min={.4} max={4} step={.1}/><Slider label="Breite σ" value={s} onChange={setS} min={.25} max={1.4} step={.05}/><Verdikt kind={getrennt?"ok":"neutral"}>{getrennt?"Die getrennten Komponenten machen zwei Hügel plausibel.":"Die Komponenten überlappen stark; die Mischung wirkt als ein breiter Hügel."}</Verdikt></div>}

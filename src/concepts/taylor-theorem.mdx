@@ -1,6 +1,6 @@
 export const title = "Satz von Taylor";
 
-import { TaylorWidget } from "./widgets/TaylorTheoremWidget";
+import { TaylorRestgliedWidget } from "./widgets/TaylorTheoremWidget";
 
 {/* Konzept-Tooltip: Satz von Taylor: lokale Polynom-Näherung mit kontrolliertem Restglied. */}
 
@@ -33,4 +33,10 @@ Lösung auf eine kleine Störung der Größe $t$ reagiert,
 behalten wir den linearen Term und stecken alles Übrige in
 $O(t^2)$.
 
-<TaylorWidget />
+Wie viel gibt die Schranke für das Restglied wirklich her?
+
+<TaylorRestgliedWidget />
+
+Sie ist großzügig: der tatsächliche Fehler bleibt deutlich darunter. Garantiert
+ist trotzdem nur die Schranke, und sie kommt ohne Kenntnis der Zwischenstelle
+$\xi$ aus.

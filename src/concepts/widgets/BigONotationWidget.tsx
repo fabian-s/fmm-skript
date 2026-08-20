@@ -1,33 +1,91 @@
-/** Widget zum Konzept-Tooltip „O-Notation": Restglied gegen Hüllkurve C·t². */
+/**
+ * Konzept-Widget `big-o-notation` (Gruppe C, POLISH 2026-08-19).
+ *
+ * DIE EINE EINSICHT: „O(t²)" ist keine Zauberformel, sondern eine Wette auf
+ * eine Konstante: erst wenn C groß genug ist, liegt das Restglied im ganzen
+ * Fenster unter C·t² — und für jedes zu kleine C zeigt das Bild genau, wo die
+ * Schranke bricht.
+ *
+ * FARBROLLEN: blau = Restglied |e^t − (1 + t)|; rot (gestrichelt) = Hüllkurve
+ * C·t²; roter Punkt = die Stelle der stärksten Verletzung.
+ *
+ * PROVENIENZ: Regler und Kurvenpaar aus der Vorfassung; neu sind Achsen und
+ * Legende aus `Plot` v2, die Aufgabenzeile und das Verdikt mit der
+ * Verletzungsstelle. Die erklärende Einleitung ist nach big-o-notation.mdx
+ * gewandert.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
+ * 2026-08-19): sup |e^t − (1+t)| / t² auf [−1,1] = e − 2 = 0,718282, am
+ * rechten Rand t = 1 angenommen; der Grenzwert für t → 0 ist 1/2; bei t = −1
+ * ist der Quotient 0,367879. Für C = 0,6 hält die Schranke bis t = 0,5236 und
+ * bricht danach; für C < 0,5 bricht sie schon beliebig nahe an 0.
+ */
 import { useState } from "react";
-import { M, Slider } from "../../lib";
-import { LabeledPlot } from "../../lib";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
+
+const rest = (t: number) => Math.abs(Math.exp(t) - (1 + t));
+
+/** Stärkste Verletzung von |e^t − (1+t)| ≤ C t² auf [−1, 1]. */
+function pruefe(C: number) {
+  let schlimmste = { t: 0, ueber: 0 };
+  let kleinstesT = Infinity;
+  for (let i = 0; i <= 2000; i++) {
+    const t = -1 + (2 * i) / 2000;
+    const ueber = rest(t) - C * t * t;
+    if (ueber > 1e-12) {
+      if (ueber > schlimmste.ueber) schlimmste = { t, ueber };
+      kleinstesT = Math.min(kleinstesT, Math.abs(t));
+    }
+  }
+  return { ...schlimmste, kleinstesT };
+}
 
 export function RemainderWidget() {
-  const [C, setC] = useState(1.0);
-  const remainder = (t: number) => Math.abs(Math.exp(t) - (1 + t));
+  const [C, setC] = useState(0.5);
+  const { t, ueber, kleinstesT } = pruefe(C);
+  const haelt = ueber <= 1e-12;
+  const nurAussen = !haelt && kleinstesT > 0.05;
+
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <p className="mb-1 text-sm">
-        Das Restglied <M>{"|e^t - (1 + t)|"}</M> (durchgezogen) im Vergleich
-        zur Hüllkurve <M>{"C\\,t^2"}</M> (gestrichelt). Nahe <M>{"t = 0"}</M>{" "}
-        fängt schon ein moderates <M>{"C"}</M> das Restglied ein; genau
-        diese Schranke behauptet <M>{"O(t^2)"}</M>.
-      </p>
-      <Slider label="C" value={C} onChange={setC} min={0} max={2} step={0.05} />
-      <LabeledPlot
+      <Aufgabe>Schieben wir C nach oben, bis die rote Hüllkurve das Restglied ganz einfängt.</Aufgabe>
+      <Plot
         xLabel="t"
         yLabel="Größe"
-        tickClass="text-slate-300"
-        series={[
-          { f: remainder },
-          { f: (t) => C * t * t, color: "#dc2626", dash: [5, 4] },
-        ]}
         xDomain={[-1, 1]}
-        yDomain={[0, 0.8]}
-        width={280}
-        height={180}
+        yDomain={[0, 0.9]}
+        width={320}
+        height={210}
+        readout
+        ariaLabel={`Restglied und Hüllkurve mit C = ${fmtDe(C, 2)}; die Schranke ${haelt ? "hält im ganzen Fenster" : `bricht bei t = ${fmtDe(t, 2)}`}.`}
+        series={[
+          { f: rest, color: FMM_COLORS.blau, label: "|e^t − (1+t)|" },
+          { f: (u) => C * u * u, color: FMM_COLORS.rot, dash: [5, 4], label: "C·t²" },
+        ]}
+        points={haelt ? [] : [{ x: t, y: rest(t), color: FMM_COLORS.rot, r: 4 }]}
       />
+      <Slider label="C" value={C} onChange={setC} min={0} max={1.2} step={0.02} accent={FMM_COLORS.rot} />
+      <Verdikt kind={haelt ? "ok" : "fail"}>
+        {haelt ? (
+          <>
+            Mit C = {fmtDe(C, 2)} bleibt das Restglied im ganzen Fenster unter C·t². Nötig ist
+            dafür mindestens C = e − 2 = 0,72; die Schranke wird am rechten Rand t = 1 knapp.
+          </>
+        ) : nurAussen ? (
+          <>
+            Nahe null hält die Schranke, aber ab |t| = {fmtDe(kleinstesT, 2)} bricht sie; am
+            schlimmsten bei t = {fmtDe(t, 2)}, dort liegt das Restglied um {fmtDe(ueber, 3)} über
+            C·t². Für die O-Notation reicht das trotzdem: sie verlangt die Schranke nur für
+            hinreichend kleine t.
+          </>
+        ) : (
+          <>
+            Diese Konstante ist selbst nahe null zu klein: bei t = {fmtDe(t, 2)} liegt das
+            Restglied um {fmtDe(ueber, 3)} über C·t². Unter C = 0,5 kann keine Wahl von t klein
+            genug sein, denn der Quotient strebt für t → 0 gegen 1/2.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }
