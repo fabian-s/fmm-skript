@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `rate-of-convergence` (Gruppe C, KEEP + Politur 2026-08-19).
  *
  * DIE EINE EINSICHT: Lineare Konvergenz kauft pro Schritt eine feste Zahl
@@ -61,11 +62,14 @@ export function RateWidget() {
         points={marken}
       />
       <Slider label="linearer Faktor C" value={c} onChange={setC} min={0.05} max={0.95} step={0.05} accent={FMM_COLORS.rot} />
-      <Verdikt kind="neutral">
-        Linear gewinnt jeder Schritt {fmtDe(stellenProSchritt, 2)} Stellen, bis 10⁻¹⁶ sind das{" "}
-        {fmtInt(schritteLinear)} Schritte. Quadratisch verdoppelt sich die Stellenzahl (1, 2, 4, 8,
-        16), der Boden ist nach {fmtInt(schritteQuadratisch)} Schritten erreicht – unabhängig
-        davon, wie gut C ist.
+      <Verdikt kind={c <= 0.2 ? "ok" : c >= 0.8 ? "warn" : "neutral"}>
+        {c <= 0.2 ? (
+          <>Mit C = {fmtDe(c, 2)} gewinnt die lineare Folge {fmtDe(stellenProSchritt, 2)} Stellen pro Schritt und erreicht den Boden nach {fmtInt(schritteLinear)} Schritten.</>
+        ) : c >= 0.8 ? (
+          <>Mit C = {fmtDe(c, 2)} gewinnt die lineare Folge nur {fmtDe(stellenProSchritt, 2)} Stellen pro Schritt und braucht {fmtInt(schritteLinear)} Schritte. Hier wird der Vorteil der quadratischen Folge besonders deutlich.</>
+        ) : (
+          <>Mit C = {fmtDe(c, 2)} gewinnt die lineare Folge {fmtDe(stellenProSchritt, 2)} Stellen pro Schritt und braucht {fmtInt(schritteLinear)} Schritte; die quadratische Folge erreicht den Boden nach {fmtInt(schritteQuadratisch)} Schritten.</>
+        )}
       </Verdikt>
     </div>
   );

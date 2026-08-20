@@ -1,3 +1,15 @@
+/**
+ * F1 — DIE EINE EINSICHT: Approximation, Interpolation und Glättung stellen
+ * verschiedene Forderungen an dieselben Funktionswerte.
+ * FARBROLLEN: Daten blau, Schätzer/Interpolant grün, Residuen rot, wahre
+ * Funktion neutral grau.
+ * PROVENIENZ: Eigenbau als Ersatz der drei Folienbilder; fester, deterministischer
+ * Rauschvektor.
+ * VERIFIZIERTE ZAHLEN: f liegt auf [0,1] in [0,220; 0,780]; g verschwindet an
+ * 0;0,2;…;1; bei sigma ≤ 0,12 liegen die 12 Beobachtungen in [0,180;0,957]
+ * und ihr RMS-Abstand ist sigma.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState, type ReactNode } from "react";
 import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
@@ -13,7 +25,7 @@ import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
  *
  * Verifiziert (node, gen-noise-s141.mjs):
  *  - f(x) = 0,5 + 0,28 sin(2 pi x - 0,9) laeuft auf [0,1] zwischen 0,220
- *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,956] und
+ *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,957] und
  *    damit im Bildausschnitt.
  *  - g(x) = 0,06 sin(5 pi x) verschwindet an allen Knoten 0; 0,2; ...; 1
  *    (numerisch < 1e-16), die gruene Kurve der mittleren Tafel interpoliert
@@ -50,7 +62,9 @@ const g = (x: number) => 0.06 * Math.sin(5 * Math.PI * x);
 
 /** Beobachtungsstellen und fester Rauschvektor der Glaettungstafel. */
 const XOBS = [0.042, 0.125, 0.208, 0.292, 0.375, 0.458, 0.542, 0.625, 0.708, 0.792, 0.875, 0.958];
-const ZOBS = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
+const ZOBS_ROH = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
+const Z_RMS = Math.sqrt(ZOBS_ROH.reduce((summe, z) => summe + z * z, 0) / ZOBS_ROH.length);
+const ZOBS = ZOBS_ROH.map((z) => z / Z_RMS);
 
 const fmt = fmtDe;
 

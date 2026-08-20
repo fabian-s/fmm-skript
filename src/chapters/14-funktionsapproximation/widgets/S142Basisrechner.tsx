@@ -1,3 +1,13 @@
+/**
+ * F1 — DIE EINE EINSICHT: Ein Basiswechsel ändert Koeffizienten und Matrixform,
+ * nicht aber den interpolierten Funktionsgraphen.
+ * FARBROLLEN: Daten blau, Interpolant grün, Basisbausteine orange.
+ * PROVENIENZ: Eigenbau zum Folienbeispiel (0,1),(1,2),(2,5).
+ * VERIFIZIERTE ZAHLEN: alle 13^3=2197 Reglerzustände erfüllen die Probe;
+ * maximaler Gleichungsfehler 3,6e-15. Für (1,2,5) sind die Koeffizienten
+ * (1,0,1) bzw. (1,1,1) und f=1+x².
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe } from "../../../lib";
 

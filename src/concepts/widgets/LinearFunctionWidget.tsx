@@ -1,11 +1,12 @@
 /** Insight: slope changes rise per unit and intercept translates the line. Colors: blue line, orange slope triangle. Provenance: original; no fixed verdict numbers, 2026-08-19. */
+// QA-L1-Nachprüfung: alle Zahlen oben durch verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function LinearWidget() {
   const [a, setA] = useState(1);
   const [b, setB] = useState(0.5);
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
         Verändern wir Steigung und Achsenabschnitt und lesen wir den Einheitsanstieg ab.
       </Aufgabe>

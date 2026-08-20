@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `taylor-theorem` (Gruppe C, REPLACE 2026-08-19).
  *
  * DIE EINE EINSICHT: Der Satz von Taylor liefert nicht nur ein Polynom,
@@ -19,16 +20,16 @@
  * Reihenauswertung bleibt, das neue Diagramm zeichnet aus dem
  * Lagrange-Restglied die garantierte obere und untere Bandgrenze.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19), |R_n(t)| gegen die Schranke |t|ⁿ⁺¹/(n+1)!:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TaylorTheoremWidget.mjs,
+ * 2026-08-20), |R_n(t)| gegen die Schranke |t|ⁿ⁺¹/(n+1)!:
  *   n = 1: t = 0,5 → 2,057·10⁻² gegen 1,250·10⁻¹ (16,5 %); t = 1 → 1,585·10⁻¹
  *          gegen 5,000·10⁻¹; t = 2 → 1,091 gegen 2,000; t = 3 → 2,859 gegen 4,500
  *   n = 3: t = 0,5 → 2,589·10⁻⁴ gegen 2,604·10⁻³; t = 1 → 8,138·10⁻³ gegen
  *          4,167·10⁻²; t = 2 → 2,426·10⁻¹ gegen 6,667·10⁻¹
  *   n = 5: t = 0,5 → 1,545·10⁻⁶ gegen 2,170·10⁻⁵; t = 1 → 1,957·10⁻⁴ gegen
  *          1,389·10⁻³; t = 2 → 2,404·10⁻² gegen 8,889·10⁻²
- * Die Schranke bleibt unter 0,05 für |t| < 0,3165 (n = 1), |t| < 1,047
- * (n = 3), |t| < 1,8175 (n = 5). Kontrollwert sin(0,1) − 0,1 = −1,666·10⁻⁴.
+ * Die Schranke bleibt unter 0,05 für |t| < 0,3162 (n = 1), |t| < 1,047
+ * (n = 3), |t| < 1,8171 (n = 5). Kontrollwert sin(0,1) − 0,1 = −1,666·10⁻⁴.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";

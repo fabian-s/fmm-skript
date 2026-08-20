@@ -12,8 +12,8 @@
  * Ziehen und die Gerade als Unterraum kommen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
- * 2026-08-19), A = [[1, 2], [0,5, 1]]: det A = 0; Ae₁ = (1; 0,5),
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/ImageWidget.mjs,
+ * 2026-08-20), A = [[1, 2], [0,5, 1]]: det A = 0; Ae₁ = (1; 0,5),
  * Ae₂ = (2; 1) = 2·Ae₁, beide Spalten liegen also auf derselben Geraden;
  * A·(2, −1) = (0, 0). Über 12 566 Eingaberichtungen auf dem Kreis mit
  * Radius 1,8 ist der Abstand von Av zur Geraden span{(1; 0,5)} exakt 0.
@@ -42,7 +42,7 @@ export function ImageWidget() {
   const radius = Math.hypot(v[0], v[1]);
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Ziehen wir v im Kreis herum und suchen wir eine Ausgabe abseits der blauen Geraden.</Aufgabe>
       <TransformCanvas
         matrix={A}
@@ -78,7 +78,7 @@ export function ImageWidget() {
         step={0.05}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Eingabe v ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Ausgabe Av und die Bildgerade
       </p>

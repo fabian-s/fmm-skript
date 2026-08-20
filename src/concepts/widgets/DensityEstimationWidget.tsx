@@ -1,4 +1,9 @@
-/** Einsicht: Bandbreite balanciert lokale Struktur gegen Glättung. Farben: blau Dichte, grau Daten. Provenienz: neu. Zahlen: keine festen Verdiktzahlen (2026-08-19). */
+/**
+ * DIE EINE EINSICHT: Bandbreite balanciert lokale Struktur gegen Glättung.
+ * FARBROLLEN: blau = Kernschätzung; grau = Daten. PROVENIENZ: Originalwidget.
+ * VERIFIZIERTE ZAHLEN: Die fest codierte Stichprobe hat 13 Werte; node,
+ * scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const data = [-1.9, -1.6, -1.4, -1.2, -1.1, -0.9, -0.6, 0.4, 0.7, 0.9, 1.2, 1.5, 1.9];

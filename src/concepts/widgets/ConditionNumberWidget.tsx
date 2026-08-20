@@ -16,7 +16,7 @@
  * (Lib-`TransformCanvas`, `dragConstraint: "unitCircle"`), der logarithmische
  * ε-Regler und das dreistufige Verdikt mit Bezug auf Satz 4.2.6.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA1.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19), A = [[1, 1], [1, 1+ε]], det A = ε:
  *   ε = 1     : σmax = 2,6180  σmin = 0,381966  cond = 6,85   (0,84 Stellen)
  *   ε = 0,3   : σmax = 2,1612  σmin = 0,138813  cond = 15,57  (1,19 Stellen)
@@ -108,7 +108,7 @@ export function CondWidget() {
         step={0.05}
         fmt={(v) => fmtDe(10 ** v, 10 ** v < 0.01 ? 4 : 3)}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         A = [[1; 1], [1; {fmtDe(1 + eps, 2)}]] · gestrichelt der Einheitskreis ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> seine Bildellipse
       </p>

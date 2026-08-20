@@ -1,3 +1,11 @@
+/**
+ * F1 — DIE EINE EINSICHT: Der Selbsttest fordert eine Entscheidung vor der
+ * Lösung.
+ * FARBROLLEN: Slate-Töne sind Oberfläche, ohne mathematische Codierung.
+ * PROVENIENZ: Eigene, aus S34 portierte MDX-Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import type { ReactNode } from "react";
 
 /**

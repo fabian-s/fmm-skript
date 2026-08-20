@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `secant-line` UND `derivative` (Dublettenauflösung D6,
  * 2026-08-19; das frühere DerivativeWidget ist entfallen).
  *
@@ -18,8 +19,8 @@
  * DerivativeWidget (Stand 2026-08-18) zusammengeführt; Achsen, Legende und
  * Ticks kommen aus der Lib-`Plot`-Komponente, alle Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-sekante.mjs,
- * 2026-08-19): f(x) = x², x₀ = 1, Sekantensteigung (f(1+h) − f(1))/h = 2 + h
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/SecantLineWidget.mjs,
+ * 2026-08-20): f(x) = x², x₀ = 1, Sekantensteigung (f(1+h) − f(1))/h = 2 + h
  * exakt; h = 2 → 4, h = 1 → 3, h = 0,5 → 2,5, h = 0,1 → 2,1, h = 0,05 → 2,05.
  * Der Abstand zur Tangentensteigung f′(1) = 2 ist in jedem Fall genau h.
  * Die Sekante durch x = 1 und x = 2 hat Steigung 3 (das Beispiel der

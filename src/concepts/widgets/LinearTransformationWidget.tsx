@@ -16,8 +16,9 @@
  * `columnsDraggable`) und das typabhängige Verdikt; die Regler bleiben als
  * Doppelpfad.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA3.mjs,
- * 2026-08-19):
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/LinearTransformationWidget.mjs,
+ * 2026-08-20):
  *   Drehung   [[0,8; −0,6], [0,6; 0,8]] det = 1,00, σmax = σmin = 1, Spalten
  *             orthonormal, Drehwinkel 36,87°
  *   Scherung  [[1; 0,8], [0; 1]]        det = 1,00, σmax = 1,477, σmin = 0,677
@@ -78,7 +79,7 @@ export function LinearMapWidget() {
   };
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
         Vergleichen wir die vier Grundtypen und suchen, was allen gemeinsam
         bleibt.
@@ -87,6 +88,8 @@ export function LinearMapWidget() {
         matrix={m}
         size={280}
         worldHalf={Math.max(3.2, 1.2 * s1)}
+        xLabel="x₁"
+        yLabel="x₂"
         transitionMs={uebergang}
         columnsDraggable
         onMatrixChange={(neu) => {
@@ -118,7 +121,7 @@ export function LinearMapWidget() {
       <Slider label="b" value={m[0][1]} onChange={(v) => setzeEintrag(0, 1, v)} min={-2} max={2} step={0.1} accent={FMM_COLORS.gruen} />
       <Slider label="c" value={m[1][0]} onChange={(v) => setzeEintrag(1, 0, v)} min={-2} max={2} step={0.1} accent={FMM_COLORS.rot} />
       <Slider label="d" value={m[1][1]} onChange={(v) => setzeEintrag(1, 1, v)} min={-2} max={2} step={0.1} accent={FMM_COLORS.gruen} />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         A = [[{fmtDe(m[0][0], 1)}; {fmtDe(m[0][1], 1)}], [{fmtDe(m[1][0], 1)};{" "}
         {fmtDe(m[1][1], 1)}]] ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Ae₁ (Spalte a, c) ·{" "}

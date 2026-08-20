@@ -1,3 +1,14 @@
+/**
+ * F1 — DIE EINE EINSICHT: Mehr äquidistante Knoten verbessern die globale
+ * Polynominterpolation nicht zuverlässig; Chebyshev-Knoten dämpfen Randfehler.
+ * FARBROLLEN: Stützpunkte blau, Interpolant grün, Fehler/Problemzonen rot,
+ * wahre Runge-Funktion neutral.
+ * PROVENIENZ: Rechen- und Layout-Code aus heath-ch7/S734 portiert; Texte neu.
+ * VERIFIZIERTE ZAHLEN: Die Fehlerreihen für n=5,10,15,20,30,40,60 werden
+ * unabhängig gescannt; insbesondere 0,4384→0,3003 ist nicht monoton und
+ * die in der Tabelle genannten Randmaxima werden geprüft.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 

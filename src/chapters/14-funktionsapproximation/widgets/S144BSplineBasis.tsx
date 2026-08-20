@@ -1,3 +1,13 @@
+/**
+ * F1 — DIE EINE EINSICHT: B-Splines haben lokalen Träger und bilden trotzdem
+ * an jeder inneren Stelle eine Partition der Eins.
+ * FARBROLLEN: ausgewählte Basisfunktion orange, übrige und Summenkurve neutral.
+ * PROVENIENZ: BasisExplorer aus heath-ch7/S743 portiert; offener Knotenvektor
+ * und Texte für Bemerkung 14.4.9 neu gefasst.
+ * VERIFIZIERTE ZAHLEN: Für q=0,1,2,3 stimmen Knotenlänge m+2q+1 und Zahl
+ * m+q; die maximale Summenabweichung auf [0,5) ist ≤4,4e-16.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { CoxDeBoorSchritt } from "./S144CoxDeBoor";

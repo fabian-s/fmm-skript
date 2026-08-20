@@ -23,6 +23,7 @@
  *   Voreinstellung c₁ = 1, c₂ = 0,5 ⇒ Mischung (1,5; 1,5)
  * Die Rückrechnung c₁v₁ + c₂v₂ trifft die Ziele exakt (Abweichung 0).
  */
+// QA-L1-Nachprüfung: alle Zahlen oben durch verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
 import { useState } from "react";
 import {
   Aufgabe,
@@ -65,12 +66,14 @@ export function MixWidget() {
   };
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Treffen wir mit der Mischung den orangen Ring bei (1; 3).</Aufgabe>
       <LabeledTransformCanvas
         matrix={IDENT}
         size={280}
         worldHalf={half}
+        xLabel="x₁"
+        yLabel="x₂"
         showGrid={false}
         showUnitCircle={false}
         vectors={[
@@ -113,7 +116,7 @@ export function MixWidget() {
         onChange={setC1}
         min={-2}
         max={2}
-        step={0.1}
+        step={1 / 30}
         accent={FMM_COLORS.blau}
       />
       <Slider
@@ -122,10 +125,10 @@ export function MixWidget() {
         onChange={setC2}
         min={-2}
         max={2}
-        step={0.1}
+        step={1 / 30}
         accent={FMM_COLORS.gruen}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> v₁ = (2; 1) ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> v₂ = (−1; 1) ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Mischung · orange: Ziel und

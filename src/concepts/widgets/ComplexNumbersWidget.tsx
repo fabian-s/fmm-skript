@@ -15,7 +15,7 @@
  * die Texte sind neu und der erklärende Absatz ist in `complex-numbers.mdx`
  * gewandert (Spoiler-Split).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA1.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19), Voreinstellung z = 2 + 1i:
  *   |z| = 2,2361, arg z = 26,57°, i·z = (−1; 2), z̄ = (2; −1), z·z̄ = 5 = |z|².
  * Über 3600 geprüfte z gilt exakt (Abweichung 0,0e0): zᵀ(i·z) = 0, also stehen
@@ -89,7 +89,7 @@ export function ComplexPlaneWidget() {
         step={0.1}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.rot }}>▮</span> z ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> i·z ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> z̄ · das blasse Gitter

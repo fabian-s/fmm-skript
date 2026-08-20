@@ -1,12 +1,12 @@
-/** Insight: the quotient approaches 2 although its value at h=0 is undefined. Colors: blue quotient, green limit band. Provenance: original. Formula g(h)=2+h verified in verify-konzepte-C4b/limit.mjs, 2026-08-19. */
+/** Einsicht: Der Differenzenquotient strebt gegen 2, obwohl sein Wert bei h = 0 undefiniert ist. Farben: blau Quotient, grün Grenzwert. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LimitWidget.mjs, 2026-08-20): g(h) = ((1+h)²−1)/h = 2+h für h ≠ 0; g(0,01) = 2,01 und g(−0,01) = 1,99. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function LimitWidget() {
   const [h, setH] = useState(1.2);
-  const g = (t: number) => (Math.abs(t) < 1e-9 ? NaN : 2 + t);
+  const g = (t: number) => (Math.abs(t) < 1e-9 ? NaN : ((1 + t) ** 2 - 1) / t);
   const near = Math.abs(h) < 0.1;
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
         Schieben wir h von beiden Seiten gegen null und beobachten wir den Differenzenquotienten.
       </Aufgabe>

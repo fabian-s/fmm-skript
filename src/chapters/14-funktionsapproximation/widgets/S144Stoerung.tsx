@@ -1,3 +1,15 @@
+/**
+ * F1 — DIE EINE EINSICHT: Eine B-Spline-Darstellung reagiert lokal auf einen
+ * verschobenen Datenwert, ein globales Interpolationspolynom nicht.
+ * FARBROLLEN: Daten blau, Spline grün, Knoten orange, globales Polynom/volle
+ * Vandermonde-Besetzung rot.
+ * PROVENIENZ: BandedLocality (S743) und newtonEval (S74) aus heath-ch7
+ * portiert; Daten, Kollokation und Texte neu; Ersatz zweier Folienbilder.
+ * VERIFIZIERTE ZAHLEN: bei Punkt 5, x=4, delta=1: max Änderungen 1,000/2,320,
+ * fern 0,037/2,320; Koeffizienten 1,732/0,464/0,124/0,031/0,010; q+1=4
+ * Nichtnullen je Kollokationszeile.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import {

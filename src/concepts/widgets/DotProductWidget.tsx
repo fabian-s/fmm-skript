@@ -15,8 +15,8 @@
  * InnerProductWidget (Stand 2026-08-18); Ziehen und Achsen kommen aus der
  * Lib-`TransformCanvas`, die Projektionsdarstellung und alle Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/
- * check-skalarprodukt.mjs, 2026-08-19), x = (2, 1), ‖x‖ = √5 = 2,2360679775:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * 2026-08-20; zusätzlich der Projektions-Test), x = (2, 1), ‖x‖ = √5 = 2,2360679775:
  *   y parallel zu x (26,57°, ‖y‖ = 2): xᵀy = 4,4721, Schattenlänge 2,0000, cos = 1
  *   y senkrecht (116,57°):             xᵀy = 0,0000, Schattenlänge 0,0000, cos = 0
  *   y entgegengesetzt (206,57°):       xᵀy = −4,4721, Schattenlänge −2,0000, cos = −1
@@ -29,7 +29,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
 } from "../../lib";
@@ -69,7 +69,7 @@ export function DotProductWidget() {
       <Aufgabe>
         Ziehen wir y, bis sein Schatten auf x verschwindet.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={IDENT}
         showGrid={false}
         showUnitCircle={false}
@@ -130,7 +130,7 @@ export function DotProductWidget() {
         step={0.05}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> x = (2, 1) ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> y ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> Schatten von y auf x

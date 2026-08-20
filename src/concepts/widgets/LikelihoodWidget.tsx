@@ -1,4 +1,4 @@
-/** Einsicht: Die Daten legen die Lage des Likelihood-Maximums fest. Farben: blau Likelihood, rot Schätzung. Provenienz: neu mit Schaetzfrage. Zahlen: p-hat=h/n, geprüft in verify-konzepte-C4/likelihood.mjs (2026-08-19). */
+/** Einsicht: Die Daten legen die Lage des Likelihood-Maximums fest. Farben: blau Likelihood, rot Schätzung. Provenienz: neu mit Schaetzfrage. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LikelihoodWidget.mjs, 2026-08-20): für h = 7, n = 10 ist p̂ = 0,7, L(0,7) = 0,0022235661 und die relative Likelihood dort 1; für jedes h = 0,…,10 maximiert p̂ = h/10 die Binomial-Likelihood. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Schaetzfrage, Slider, Verdikt, fmtDe } from "../../lib";
 export function LikelihoodWidget() {
@@ -8,19 +8,10 @@ export function LikelihoodWidget() {
   const peak = Math.pow(pHat, h) * Math.pow(1 - pHat, n - h);
   const L = (p: number) => (Math.pow(p, h) * Math.pow(1 - p, n - h)) / peak;
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
         Tippen wir zuerst die plausibelste Kopf-Wahrscheinlichkeit und lösen dann auf.
       </Aufgabe>
-      <Slider
-        label="Köpfe h"
-        value={h}
-        onChange={setH}
-        min={0}
-        max={10}
-        step={1}
-        fmt={(v) => fmtDe(v, 0)}
-      />
       <Schaetzfrage
         frage={`Welche Wahrscheinlichkeit passt zu ${h} Köpfen in ${n} Würfen?`}
         loesung={pHat}
@@ -40,6 +31,15 @@ export function LikelihoodWidget() {
           ariaLabel="Likelihood der Kopf-Wahrscheinlichkeit"
         />
       </Schaetzfrage>
+      <Slider
+        label="Köpfe h"
+        value={h}
+        onChange={setH}
+        min={0}
+        max={10}
+        step={1}
+        fmt={(v) => fmtDe(v, 0)}
+      />
       <Verdikt kind="ok">
         Nach der Auflösung liegt das Maximum bei p̂ = {fmtDe(pHat, 1)}; dort erklärt dieses Modell
         die beobachteten Daten am besten.

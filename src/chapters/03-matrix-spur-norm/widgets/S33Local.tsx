@@ -1,4 +1,12 @@
 /**
+ * F1 — DIE EINE EINSICHT: Selbst prüfen und erst dann aufdecken trennt Antwort
+ * und Begründung.
+ * FARBROLLEN: Slate-Töne sind Oberfläche, ohne mathematische Codierung.
+ * PROVENIENZ: Eigene, aus S33 portierte MDX-Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
+/**
  * Lokale Begleitkomponente für Abschnitt 3.3 (aus der TSX-Fassung von S33
  * portiert, MDX-Migration 2026-08-11; Rendering unverändert).
  *

@@ -1,4 +1,7 @@
-/** Insight: slope is signed vertical change per one horizontal unit. Colors: blue line, orange slope triangle. Provenance: original; no fixed verdict numbers, 2026-08-19. */
+/**
+ * Insight: slope is signed vertical change per one horizontal unit. Colors: blue line, orange slope triangle.
+ * Provenance: original; formula and shown values verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function SlopeWidget() {

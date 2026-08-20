@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `singular-value-decomposition` (Triage C3: REWORK —
  * die drei Schritte Vᵀ, Σ, U einzeln zuschaltbar, mit Übergang).
  *
@@ -18,8 +19,8 @@
  * der Lib-`Stepper`, Übergang und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/check-svd.mjs,
- * 2026-08-19), V = R(α), U = R(β), Σ = diag(σ₁, σ₂):
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/SingularValueDecompositionWidget.mjs,
+ * 2026-08-20), V = R(α), U = R(β), Σ = diag(σ₁, σ₂):
  *   Default α = 0,5, β = 0,8, σ₁ = 1,8, σ₂ = 0,6:
  *     A = ((1,3069; 0,2235), (0,9328; 0,9859)), det A = 1,08 = σ₁σ₂;
  *     numerisch max‖Ax‖ = 1,8 und min‖Ax‖ = 0,6 über dem Einheitskreis,
@@ -27,10 +28,9 @@
  *     Vᵀv₁ = e₁ und Vᵀv₂ = e₂ auf 1e−10; Av₁ = σ₁u₁ auf 1e−12;
  *   α = 1,1, β = −0,4, σ₁ = 2,4, σ₂ = 0,15: max‖Ax‖ = 2,4, min‖Ax‖ = 0,15,
  *     κ₂ = 16, det A = 0,36;
- *   σ₂ = 0: det A = 0, min‖Ax‖ = 0 (numerisch 2,8e−5 bei 200 000 Punkten),
- *     Rang 1;
- *   Vᵀ lässt jeden Punkt des Einheitskreises auf dem Kreis:
- *     max |‖Vᵀx‖ − 1| = 4,4e−16.
+ *   σ₂ = 0: det A = 0, min‖Ax‖ = 0, Rang 1;
+ *   Vᵀ lässt jeden Punkt des Einheitskreises auf dem Kreis (bis auf
+ *     Maschinenrundung).
  */
 import { useMemo, useState } from "react";
 import {
@@ -115,6 +115,8 @@ export function SvdWidget() {
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={M}
+        xLabel="x₁"
+        yLabel="x₂"
         transitionMs={400}
         size={280}
         worldHalf={halb}

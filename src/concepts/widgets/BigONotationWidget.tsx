@@ -14,7 +14,7 @@
  * Verletzungsstelle. Die erklärende Einleitung ist nach big-o-notation.mdx
  * gewandert.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): sup |e^t − (1+t)| / t² auf [−1,1] = e − 2 = 0,718282, am
  * rechten Rand t = 1 angenommen; der Grenzwert für t → 0 ist 1/2; bei t = −1
  * ist der Quotient 0,367879. Für C = 0,6 hält die Schranke bis t = 0,5236 und

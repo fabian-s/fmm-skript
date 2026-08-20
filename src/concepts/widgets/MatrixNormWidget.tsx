@@ -16,10 +16,10 @@
  * die eingezeichnete Halbachse, der rechte Singulärvektor und die Texte sind
  * neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA3.mjs,
- * 2026-08-19). Für jede Testmatrix stimmt ‖A‖₂ mit dem über 400 000
- * Kreispunkte numerisch gesuchten Maximum von ‖Ax‖ überein (Abweichung
- * ≤ 6,9e−12), und |Av₁| ist genau dieses Maximum:
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MatrixNormWidget.mjs,
+ * 2026-08-20). Die Spektralnorm wird unabhängig als größte Eigenwertwurzel
+ * von AᵀA berechnet; |Av₁| ist dieses Maximum:
  *   A = [[1; 0,8], [0,2; 1,4]] : ‖A‖₂ = 1,775448, v₁ = (0,4553; 0,8904),
  *                                Av₁ = (1,1675; 1,3376), Maximum bei 62,92°
  *   A = [[2; 0], [0; 0,5]]     : ‖A‖₂ = 2, v₁ = (1; 0)
@@ -72,7 +72,7 @@ export function NormWidget() {
   const nadel = s2 < 0.15 * s1;
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
         Ziehen wir an den Spalten und beobachten die orange Halbachse.
       </Aufgabe>
@@ -80,6 +80,8 @@ export function NormWidget() {
         matrix={A}
         size={280}
         worldHalf={worldHalf}
+        xLabel="x₁"
+        yLabel="x₂"
         showGrid={false}
         showUnitCircle
         columnsDraggable
@@ -114,7 +116,7 @@ export function NormWidget() {
           ]}
         />
       </div>
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         gestrichelt der Einheitskreis ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Bildellipse ·{" "}
         <span style={{ color: FMM_COLORS.violett }}>▮</span> längste Halbachse Av₁

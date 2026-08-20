@@ -13,8 +13,9 @@
  * Hervorhebung und die SVG-Tafel sind neu, die private `fmt`-Kopie ist durch
  * `fmtDe` aus der Lib ersetzt. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeE.mjs,
- * 2026-08-19), Voreinstellung A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]:
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MatrixMultiplicationWidget.mjs,
+ * 2026-08-20), Voreinstellung A = [[1, 2], [3, 4]], B = [[5, 6], [7, 8]]:
  *   c₁₁ = 1·5 + 2·7 = 19, c₁₂ = 1·6 + 2·8 = 22,
  *   c₂₁ = 3·5 + 4·7 = 43, c₂₂ = 3·6 + 4·8 = 50,
  * also C = [[19, 22], [43, 50]] — dieselbe Rechnung wie auf der Konzeptseite.
@@ -50,8 +51,8 @@ function Gitter({
       {hervor?.spalte !== undefined && (
         <rect x={x0 + hervor.spalte * ZW} y={9} width={ZW} height={2 * ZH} fill={farbe} fillOpacity={0.25} />
       )}
-      <line x1={x0 + 1} y1={9} x2={x0 + 1} y2={9 + 2 * ZH} stroke="var(--w-border, #cbd5e1)" strokeWidth={1.5} />
-      <line x1={x0 + 2 * ZW - 1} y1={9} x2={x0 + 2 * ZW - 1} y2={9 + 2 * ZH} stroke="var(--w-border, #cbd5e1)" strokeWidth={1.5} />
+      <line x1={x0 + 1} y1={9} x2={x0 + 1} y2={9 + 2 * ZH} stroke="var(--w-border)" strokeWidth={1.5} />
+      <line x1={x0 + 2 * ZW - 1} y1={9} x2={x0 + 2 * ZW - 1} y2={9 + 2 * ZH} stroke="var(--w-border)" strokeWidth={1.5} />
       {werte.map((zeile, i) =>
         zeile.map((v, j) => (
           <text
@@ -60,7 +61,7 @@ function Gitter({
             y={9 + i * ZH + ZH / 2 + 4}
             textAnchor="middle"
             fontSize={11}
-            fill="var(--w-text, #0f172a)"
+            fill="var(--w-text)"
             className="font-mono"
           >
             {zahl(v)}
@@ -94,18 +95,16 @@ export function ProductWidget() {
       <Aufgabe>Zeigen wir auf eine Zelle des Ergebnisses, um ihre Herkunft zu sehen.</Aufgabe>
       <svg
         viewBox={`0 0 ${BREITE} ${HOEHE}`}
-        width={BREITE}
-        height={HOEHE}
         className="mt-1 h-auto max-w-full"
         role="group"
         aria-label={`Matrixprodukt; hervorgehoben ist Zeile ${i + 1} von A, Spalte ${j + 1} von B und der Eintrag ${zahl(C[i][j])}.`}
       >
         <Gitter x0={xA} werte={A} hervor={{ zeile: i }} farbe={FMM_COLORS.blau} />
-        <text x={xA + 2 * ZW + LUECKE / 2} y={9 + ZH + 4} textAnchor="middle" fontSize={12} fill="var(--w-muted, #64748b)">
+        <text x={xA + 2 * ZW + LUECKE / 2} y={9 + ZH + 4} textAnchor="middle" fontSize={12} fill="var(--w-muted)">
           ×
         </text>
         <Gitter x0={xB} werte={B} hervor={{ spalte: j }} farbe={FMM_COLORS.gruen} />
-        <text x={xB + 2 * ZW + LUECKE / 2} y={9 + ZH + 4} textAnchor="middle" fontSize={12} fill="var(--w-muted, #64748b)">
+        <text x={xB + 2 * ZW + LUECKE / 2} y={9 + ZH + 4} textAnchor="middle" fontSize={12} fill="var(--w-muted)">
           =
         </text>
         <Gitter x0={xC} werte={C} farbe={FMM_COLORS.orange} />
@@ -138,7 +137,7 @@ export function ProductWidget() {
       </svg>
       <div className="mt-1 flex flex-wrap items-center gap-2">
         <MatrixInput value={A} onChange={setA} step={1} />
-        <span style={{ color: "var(--w-muted, #64748b)" }}>×</span>
+        <span style={{ color: "var(--w-muted)" }}>×</span>
         <MatrixInput value={B} onChange={setB} step={1} />
       </div>
       <Verdikt kind="neutral">

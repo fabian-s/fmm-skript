@@ -13,8 +13,8 @@
  * (Stand 2026-08-18); Schrittfolge über den Lib-`Stepper`, weicher Übergang
  * über `transitionMs` der Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
- * 2026-08-19), B = [[1, s], [0, 1]], A = [[k, 0], [0, 1]], x = (1, 1):
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), B = [[1, s], [0, 1]], A = [[k, 0], [0, 1]], x = (1, 1):
  *   k = 1,5, s = 0,8: Bx = (1,8; 1), A(Bx) = (2,7; 1) = (AB)x,
  *                     AB = [[1,5; 1,2], [0, 1]], BA = [[1,5; 0,8], [0, 1]];
  *   k = 0,6, s = −1,2: Bx = (−0,2; 1), A(Bx) = (−0,12; 1) = (AB)x,
@@ -92,6 +92,21 @@ export function CompositionWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Gehen wir die beiden Schritte durch und tauschen wir dann ihre Reihenfolge.</Aufgabe>
+      <TransformCanvas
+        matrix={aktuell}
+        size={280}
+        worldHalf={3.2}
+        xLabel="x₁"
+        yLabel="x₂"
+        transitionMs={250}
+        vectors={[
+          { v: xJetzt, color: FMM_COLORS.rot, label: "x" },
+          ...(schritt === 2 && !gleich
+            ? [{ v: xAndere, color: FMM_COLORS.orange, label: "andere Reihenfolge" }]
+            : []),
+        ]}
+        ariaLabel={`Das Gitter nach ${schritt} von 2 Schritten; der Testvektor x liegt bei (${fmtDe(xJetzt[0], 2)}; ${fmtDe(xJetzt[1], 2)}).`}
+      />
       <div className="my-1 flex flex-wrap gap-1 text-xs">
         <button
           type="button"
@@ -110,21 +125,6 @@ export function CompositionWidget() {
           erst A, dann B
         </button>
       </div>
-      <TransformCanvas
-        matrix={aktuell}
-        size={280}
-        worldHalf={3.2}
-        xLabel="x₁"
-        yLabel="x₂"
-        transitionMs={250}
-        vectors={[
-          { v: xJetzt, color: FMM_COLORS.rot, label: "x" },
-          ...(schritt === 2 && !gleich
-            ? [{ v: xAndere, color: FMM_COLORS.orange, label: "andere Reihenfolge" }]
-            : []),
-        ]}
-        ariaLabel={`Das Gitter nach ${schritt} von 2 Schritten; der Testvektor x liegt bei (${fmtDe(xJetzt[0], 2)}; ${fmtDe(xJetzt[1], 2)}).`}
-      />
       <Stepper step={schritt} setStep={setSchritt} max={2} narration={narration} />
       <Slider label="Scherung s (B)" value={s} onChange={setS} min={-1.5} max={1.5} step={0.05} />
       <Slider label="Streckung k (A)" value={k} onChange={setK} min={0.3} max={2} step={0.05} />

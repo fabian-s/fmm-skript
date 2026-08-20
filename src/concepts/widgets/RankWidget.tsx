@@ -13,8 +13,9 @@
  * kein Bild hatte; das Spaltenbild samt Ziehen kommt aus der
  * Lib-`TransformCanvas` (`columnsDraggable`). Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeE.mjs,
- * 2026-08-19): [[1, 2], [2, 4]] hat det 0 und Rang 1 (die zweite Spalte ist
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/RankWidget.mjs,
+ * 2026-08-20): [[1, 2], [2, 4]] hat det 0 und Rang 1 (die zweite Spalte ist
  * das Doppelte der ersten); [[1, 2], [2, 5]] hat det 1 und Rang 2; die
  * Nullmatrix hat Rang 0. Das sind genau die drei Fälle der Konzeptseite.
  */
@@ -23,7 +24,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   MatrixInput,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
   type Mat2,
@@ -46,7 +47,7 @@ export function RankWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
       <Aufgabe>Ziehen wir die zweite Spalte auf die erste und beobachten wir das Bild.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={m}
         size={260}
         worldHalf={5}

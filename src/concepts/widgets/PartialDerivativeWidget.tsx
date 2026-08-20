@@ -16,8 +16,8 @@
  * Schnittebene (`Surface3D`, Bauart wie S113Hesse in Kapitel 11). Der
  * erklärende Schlussabsatz steht jetzt in partial-derivative.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): für f(x,y) = x² + xy ist ∂f/∂x = 2x + y und ∂f/∂y = x, gegen
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20): für f(x,y) = x² + xy ist ∂f/∂x = 2x + y und ∂f/∂y = x, gegen
  * zentrale Differenzen gegengerechnet: (x₀,y₀) = (0,8; 1) → 2,600000;
  * (−1; 1) → −1,000000; (0,8; −2) → −0,400000; (0; 0) → 0. Der Funktionswert
  * im Startzustand ist f(0,8; 1) = 1,440000.
@@ -101,6 +101,8 @@ export function PartialDerivativeWidget() {
 
   const g = (x: number) => f(x, y0);
   const steigung = 2 * x0 + y0;
+  const steigt = steigung > 0.05;
+  const faellt = steigung < -0.05;
 
   // Fläche in Grau, damit die blaue Schnittkurve darauf sichtbar bleibt.
   const flaeche = useMemo(() => ({ f, nx: 26, ny: 26, color: FMM_COLORS.grau, opacity: 0.75, wire: true }), []);
@@ -174,11 +176,12 @@ export function PartialDerivativeWidget() {
           <ViewControls value={sicht} onChange={setSicht} />
         </div>
       </div>
-      <Verdikt kind="neutral">
-        Bei (x₀, y₀) = ({fmtDe(x0, 1)}; {fmtDe(y0, 1)}) hat die Schnittkurve die Steigung{" "}
-        {fmtDe(steigung, 2)}, und genau das ist ∂f/∂x = 2x + y an dieser Stelle. Die andere
-        partielle Ableitung ∂f/∂y = x wäre die Steigung der Kurve auf der dazu senkrechten
-        Schnittebene, hier {fmtDe(x0, 1)}.
+      <Verdikt kind={steigt ? "ok" : faellt ? "warn" : "neutral"}>
+        {steigt
+          ? `Bei (x₀, y₀) = (${fmtDe(x0, 1)}; ${fmtDe(y0, 1)}) steigt die Schnittkurve mit ${fmtDe(steigung, 2)}. Das ist ∂f/∂x = 2x + y an dieser Stelle.`
+          : faellt
+            ? `Bei (x₀, y₀) = (${fmtDe(x0, 1)}; ${fmtDe(y0, 1)}) fällt die Schnittkurve mit ${fmtDe(steigung, 2)}. Auch dieses Vorzeichen ist die partielle Ableitung ∂f/∂x.`
+            : `Hier ist die Schnittkurve waagerecht: ∂f/∂x = ${fmtDe(steigung, 2)}. Das betrifft nur die x-Richtung; ∂f/∂y bleibt davon getrennt.`}
       </Verdikt>
     </div>
   );

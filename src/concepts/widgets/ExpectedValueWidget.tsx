@@ -1,4 +1,9 @@
-/** Insight: a probability moves the expected payoff across zero. Colors: blue payoff, red break-even. Provenance: original. Numbers 1/6 and E=12p−2 verified algebraically in verify-konzepte-C4b/expected-value.mjs, 2026-08-19. */
+/**
+ * DIE EINE EINSICHT: Die Wahrscheinlichkeit verschiebt den Erwartungswert über die Gewinnschwelle.
+ * FARBROLLEN: blau = Erwartungswert; rot = Gewinnschwelle. PROVENIENZ: Originalwidget.
+ * VERIFIZIERTE ZAHLEN: E[X] = 12p − 2 und die Schwelle p = 1/6, node,
+ * scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, M, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function BetWidget() {

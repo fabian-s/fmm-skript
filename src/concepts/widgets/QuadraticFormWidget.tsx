@@ -1,4 +1,8 @@
-/** Insight: a direction on the unit circle selects the curvature of a quadratic form. Colors: blue direction/parabola, orange symmetric-part hint. Provenance: original. q(φ)=2c²+cs+s² verified in verify-konzepte-C4b/quadratic-form.mjs, 2026-08-19. */
+/**
+ * Insight: a direction on the unit circle selects the curvature of a quadratic form.
+ * Colors: blue direction/parabola, orange symmetric-part hint. Provenance: original.
+ * q(φ)=2c²+cs+s² verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const q = (p: number) => 2 * Math.cos(p) ** 2 + Math.cos(p) * Math.sin(p) + Math.sin(p) ** 2;
@@ -46,9 +50,14 @@ export function QuadFormWidget() {
         step={0.01}
         accent={FMM_COLORS.blau}
       />
-      <Verdikt kind="neutral">
-        In dieser Richtung ist q(tu) = {fmtDe(z, 2)} t². Dabei zählt nur der symmetrische Teil von
-        B.
+      <Verdikt kind={z < 1.1 ? "warn" : z > 2 ? "ok" : "neutral"}>
+        {z < 1.1 ? (
+          <>Diese Richtung ist flach: q(tu) = {fmtDe(z, 2)} t². Schon kleine Änderungen von t kosten hier wenig.</>
+        ) : z > 2 ? (
+          <>Diese Richtung ist steil: q(tu) = {fmtDe(z, 2)} t². Dieselbe Änderung von t lässt die Form hier stärker wachsen.</>
+        ) : (
+          <>In dieser Zwischenrichtung ist q(tu) = {fmtDe(z, 2)} t². Dabei zählt nur der symmetrische Teil von B.</>
+        )}
       </Verdikt>
     </div>
   );

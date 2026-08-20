@@ -14,7 +14,7 @@
  * Spalten-Drag, Achsen und Fläche kommen aus der Lib-`TransformCanvas`
  * (`columnsDraggable`, `overlay`); das Parallelogramm und die Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA1.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19):
  *   A = [[3, 1], [2, 2]] : det = 4     Flächenfaktor 4, Orientierung erhalten
  *   A = [[1, 2], [2, 4]] : det = 0     Kollaps auf eine Gerade
@@ -108,7 +108,7 @@ export function DetWidget() {
           ]}
         />
       </div>
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Ae₁ ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> Ae₂ ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> Bild des

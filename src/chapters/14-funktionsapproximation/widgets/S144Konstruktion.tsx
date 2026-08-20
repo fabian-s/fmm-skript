@@ -1,3 +1,14 @@
+/**
+ * F1 — DIE EINE EINSICHT: Interpolation, zwei Anschlussbedingungen je innerem
+ * Knoten und Randbedingungen bestimmen die drei kubischen Stücke zusammen.
+ * FARBROLLEN: Daten blau, Spline grün, innere Knoten orange, Gleichungen neutral.
+ * PROVENIENZ: SplineSystemWidget aus heath-ch7/S74 portiert; 12×12-Foliensystem
+ * und Texte neu.
+ * VERIFIZIERTE ZAHLEN: vier Punkte, drei kubische Stücke und 12 Bedingungen;
+ * für (0,1,0,-1) ergeben sich die drei im Kommentar dokumentierten Polynome
+ * und s(0..3)=0,1,0,-1 ohne Anschluss-Sprung.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";

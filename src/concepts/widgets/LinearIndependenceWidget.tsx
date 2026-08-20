@@ -15,8 +15,8 @@
  * Gerade kommen aus der Lib-`TransformCanvas`, Fläche und Texte sind neu; das
  * Urteil trägt jetzt Zeichen und Wort über `Verdikt`.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA2.mjs,
- * 2026-08-19), a = (2; 1); Parallelogrammfläche = |a₁b₂ − a₂b₁| = |2b₂ − b₁|:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearIndependenceWidget.mjs,
+ * 2026-08-20), a = (2; 1); Parallelogrammfläche = |a₁b₂ − a₂b₁| = |2b₂ − b₁|:
  *   b = (−1; 1,5) : Fläche 4,00  unabhängig  (Voreinstellung)
  *   b = (4; 2)    : Fläche 0     abhängig, b = 2a
  *   b = (1; 0,5)  : Fläche 0     abhängig, b = a/2
@@ -55,12 +55,14 @@ export function IndependenceWidget() {
   const half = Math.max(3.2, 1.3 * maxAbsCoord(A, b, [A[0] + b[0], A[1] + b[1]]));
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Ziehen wir b auf die gestrichelte Gerade durch a.</Aufgabe>
       <LabeledTransformCanvas
         matrix={IDENT}
         size={280}
         worldHalf={half}
+        xLabel="x₁"
+        yLabel="x₂"
         showGrid={false}
         showUnitCircle={false}
         lines={[{ dir: A, color: FMM_COLORS.grau, dash: true }]}
@@ -107,7 +109,7 @@ export function IndependenceWidget() {
         step={0.1}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> a = (2; 1) ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> b ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> aufgespanntes

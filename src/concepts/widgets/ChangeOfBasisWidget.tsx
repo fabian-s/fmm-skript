@@ -13,7 +13,7 @@
  * mitgedrehte Gitter zeichnet jetzt die Lib-`TransformCanvas` (Matrix = die
  * Basismatrix S), Ziehen und Achsen ebenfalls. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19), x = (2, 1) an einer gedrehten Orthonormalbasis gemessen:
  *   θ = 0        → (2,0000; 1,0000)
  *   θ = 0,4636   → (2,2361; 0,0000)   (b₁ zeigt genau auf x)
@@ -26,7 +26,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
 } from "../../lib";
@@ -48,7 +48,7 @@ export function BasisWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Drehen wir die Basis, bis x nur noch eine Koordinate hat.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={[
           [c, -s],
           [s, c],
@@ -81,7 +81,7 @@ export function BasisWidget() {
       <Slider label="Basis drehen: θ" value={th} onChange={setTh} min={0} max={1.5} step={0.01} accent={FMM_COLORS.blau} />
       <Slider label="x₁" value={x[0]} onChange={(v) => setX([v, x[1]])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
       <Slider label="x₂" value={x[1]} onChange={(v) => setX([x[0], v])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> neue Basis und ihr Gitter ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> x ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> Weg entlang b₁, dann b₂

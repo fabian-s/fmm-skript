@@ -16,9 +16,9 @@
  * src/chapters/12-konvexitaet/widgets/S123Sehne.tsx (SehnenSVG/SehnenTest);
  * das Ziehen läuft über `useDrag` aus der Lib. Alle Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/
- * check-konvexitaet.mjs, 2026-08-19), je Kurve über alle 3081 Paare des
- * 0,05-Rasters mit b − a ≥ 0,15:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20
+ * unabhängig nachgerechnet; Erstprüfung 2026-08-19), je Kurve über alle 3081
+ * Paare des 0,05-Rasters mit b − a ≥ 0,15:
  *   0,6x² + 0,3   → 0 Verletzungen, nie Gleichheit (strikt konvex)
  *   |x|           → 0 Verletzungen, bei 1482 Paaren fällt die Sehne mit dem
  *                   Graphen zusammen (konvex, nicht strikt)
@@ -40,6 +40,7 @@ import {
   Verdikt,
   W_BUTTON,
   W_BUTTON_AKTIV,
+  W_PANEL,
   clamp,
   fmtDe,
   fmtTick,
@@ -99,7 +100,7 @@ const B = 340;
 const H = 215;
 const PAD_L = 30;
 const PAD_R = 8;
-const PAD_T = 8;
+const PAD_T = 20;
 const PAD_B = 26;
 
 export function ChordWidget() {
@@ -165,7 +166,7 @@ export function ChordWidget() {
   const aufDerSehne = maxAbs < 1e-12;
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Ziehen wir die beiden Endpunkte über den Graphen und suchen wir eine Sehne, die
         unterschritten wird.
@@ -198,8 +199,8 @@ export function ChordWidget() {
           width={B - 1}
           height={H - 1}
           rx={4}
-          fill="var(--w-bg, #ffffff)"
-          stroke="var(--w-border, #cbd5e1)"
+          fill="var(--w-bg)"
+          stroke="var(--w-border)"
         />
         {(() => {
           const ticks = niceTicks(yBereich[0], yBereich[1], 4);
@@ -211,10 +212,10 @@ export function ChordWidget() {
                 x2={B - PAD_R}
                 y1={py(t)}
                 y2={py(t)}
-                stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
+                stroke={t === 0 ? "var(--w-grid-strong)" : "var(--w-grid)"}
                 strokeWidth={t === 0 ? 1.2 : 0.6}
               />
-              <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fontSize={9} fill="var(--w-muted, #64748b)">
+              <text x={PAD_L - 4} y={py(t) + 3} textAnchor="end" fontSize={9} fill="var(--w-muted)">
                 {fmtTick(t, schritt)}
               </text>
             </g>
@@ -227,16 +228,19 @@ export function ChordWidget() {
               x2={px(t)}
               y1={PAD_T}
               y2={H - PAD_B}
-              stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
+              stroke={t === 0 ? "var(--w-grid-strong)" : "var(--w-grid)"}
               strokeWidth={t === 0 ? 1.2 : 0.6}
             />
-            <text x={px(t)} y={H - PAD_B + 12} textAnchor="middle" fontSize={9} fill="var(--w-muted, #64748b)">
+            <text x={px(t)} y={H - PAD_B + 12} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
               {fmtTick(t, 1)}
             </text>
           </g>
         ))}
-        <text x={(B + PAD_L) / 2} y={H - 3} textAnchor="middle" fontSize={9} fill="var(--w-muted, #64748b)">
+        <text x={(B + PAD_L) / 2} y={H - 3} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
           x
+        </text>
+        <text x={PAD_L} y={PAD_T - 8} fontSize={9} fill="var(--w-muted)">
+          f(x)
         </text>
 
         {flecken.map((pts, i) => (
@@ -270,7 +274,7 @@ export function ChordWidget() {
       </svg>
       <Slider label="linker Punkt" value={a} onChange={(v) => setA(Math.min(v, b - 0.15))} min={-2} max={2} step={0.05} accent={GRUEN} />
       <Slider label="rechter Punkt" value={b} onChange={(v) => setB(Math.max(v, a + 0.15))} min={-2} max={2} step={0.05} accent={GRUEN} />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: BLAU }}>▮</span> {kurve.formel} ·{" "}
         <span style={{ color: verletzt ? ROT : GRUEN }}>▮</span> Sehne
       </p>

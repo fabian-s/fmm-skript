@@ -1,4 +1,7 @@
-/** Insight: a visible corner prevents differentiability, hence smoothness. Colors: blue smooth curve, red kink. Provenance: original; no numerical verdict claims, 2026-08-19. */
+/**
+ * Insight: a visible corner prevents differentiability, hence smoothness. Colors: blue smooth curve, red kink.
+ * Provenance: original; no numerical verdict claims; reviewed by `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ */
 import { Aufgabe, FMM_COLORS, Plot, Verdikt } from "../../lib";
 export function SmoothPlot() {
   return (

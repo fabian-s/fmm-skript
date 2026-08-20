@@ -1,4 +1,10 @@
-/** Insight: moving a regression line moves one linked point on its loss curve. Colors: blue line/loss, orange data/current parameter. Provenance: original. Minimum a=.99 verified in verify-konzepte-C4b/objective-function.mjs, 2026-08-19. */
+/**
+ * DIE EINE EINSICHT: Dieselbe Steigung bewegt gleichzeitig die Regressionsgerade
+ * und ihren Punkt auf der Verlustkurve. FARBROLLEN: blau = Modell und Verlust,
+ * orange = Daten und aktueller Parameter. PROVENIENZ: neu.
+ * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
+ * für a = 1 den Wert L(a) = 0,0925 und die im Widget verwendete MSE-Formel.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const d: [number, number][] = [

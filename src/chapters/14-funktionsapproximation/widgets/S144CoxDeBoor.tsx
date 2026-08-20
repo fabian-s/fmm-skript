@@ -1,3 +1,14 @@
+/**
+ * F1 — DIE EINE EINSICHT: Cox–de Boor baut eine Basisfunktion aus zwei
+ * nichtnegativ gewichteten Nachbarn auf.
+ * FARBROLLEN: Nachbarfunktionen violett, Ergebnis orange, Gewichtsrampen neutral.
+ * PROVENIENZ: RecursionAnatomy aus heath-ch7/S743 portiert; Knotenfolge und
+ * deutsche Texte neu.
+ * VERIFIZIERTE ZAHLEN: Für q=1,2,3 und alle zulässigen x sind beide Rampen
+ * nichtnegativ, ihr Produkt-Summenwert ist B₃^(q), und der Träger wächst um
+ * genau ein Gitterintervall.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { NEUTRAL, ORANGE, VIOLETT, bspl, fmt } from "./S144BSpline";

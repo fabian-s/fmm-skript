@@ -20,8 +20,9 @@
  * QrFactorizationWidget (Stand 2026-08-18), Schatten-Darstellung aus dem
  * entfallenen GramSchmidtWidget; Ziehen und Achsen aus der Lib. Texte neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-qr.mjs,
- * 2026-08-19), a₁ = (1,5; 2), ‖a₂‖ = 2:
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/QrFactorizationWidget.mjs,
+ * 2026-08-20), a₁ = (1,5; 2), ‖a₂‖ = 2:
  *   r₁₁ = ‖a₁‖ = 2,5 und q₁ = (0,6; 0,8) exakt;
  *   Voreinstellung θ = 2,2: a₂ = (−1,177; 1,617), r₁₂ = 0,5874, r₂₂ = 1,9118;
  *   a₂ senkrecht auf a₁ (θ = 2,4981): r₁₂ = 0, r₂₂ = 2;
@@ -30,7 +31,7 @@
  *   Es gilt r₂₂ = 2·|sin(Winkel zwischen a₁ und a₂)|, die Warnschwelle
  *   r₂₂ < 0,15 entspricht also einem Winkel unter 4,30°.
  *   |det[a₁ a₂]| = r₁₁·r₂₂ in allen geprüften Fällen.
- *   Über 6283 Winkel: max |q₁ᵀq₂| = 5,9e−13, max |‖q₂‖ − 1| = 2,2e−16.
+ *   Über 6283 Winkel: max |q₁ᵀq₂| = 5,9e−13, max |‖q₂‖ − 1| = 2,3e−16.
  */
 import { useState } from "react";
 import {
@@ -39,7 +40,7 @@ import {
   FMM_COLORS,
   M,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   fmtDe,
 } from "../../lib";
@@ -72,7 +73,7 @@ export function GramSchmidtWidget({ zeigeR = true }: { zeigeR?: boolean }) {
       <Aufgabe>
         Ziehen wir a₂ auf a₁ zu und beobachten wir, was vom Rest übrig bleibt.
       </Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={IDENT}
         showGrid={false}
         showUnitCircle

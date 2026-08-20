@@ -1,4 +1,22 @@
-/** EINSICHT: Schichten verbinden Eingaben mit Ausgaben. FARBEN: blau Eingabe, grau verborgen, rot Ausgabe. PROVENIENZ: neu. */
+import { FMM_COLORS } from "../../lib";
+
+/**
+ * Konzept-Widget `neural-network`.
+ *
+ * DIE EINE EINSICHT: Ein Netz ist eine Kette einfacher, vollverbundener
+ * Schichten — jede Kante ein Gewicht, jede Schicht eine Matrix.
+ *
+ * FARBROLLEN: blau = Eingabeschicht, neutral = verborgene Schicht,
+ * rot = Ausgabeschicht. Die Kanten bleiben neutral.
+ *
+ * PROVENIENZ: Layout aus der Vorfassung (Stand 2026-08-19); Kurspalette statt
+ * lokaler Hexwerte und der Themenrahmen sind neu.
+ *
+ * Es ist ein Schema, kein Koordinatenbild (Pattern 11): die Knotenpositionen
+ * bedeuten nichts Quantitatives, die Schichten sind unter der Figur benannt.
+ * Achsen mit Ticks wären hier sinnlos, deshalb hat die Figur keine.
+ * Zahlenbehauptungen macht sie keine.
+ */
 export function NetworkDiagram() {
   const layers = [3, 4, 2];
   const xs = [45, 140, 235];
@@ -23,7 +41,8 @@ export function NetworkDiagram() {
     <svg
       role="img" aria-label="Neuronales Netz mit Eingabe-, verborgener und Ausgabeschicht"
       viewBox={`0 0 280 ${H + 24}`}
-      className="mt-2 max-w-full h-auto rounded border"
+      className="mt-2 h-auto max-w-full rounded border"
+      style={{ borderColor: "var(--w-border)" }}
     >
       {edges.map((e, k) => (
         <line
@@ -43,7 +62,7 @@ export function NetworkDiagram() {
             cx={xs[l]}
             cy={yFor(n, i)}
             r={9}
-            fill={l === 0 ? "#0072B2" : l === layers.length - 1 ? "#D55E00" : "var(--w-muted)"}
+            fill={l === 0 ? FMM_COLORS.blau : l === layers.length - 1 ? FMM_COLORS.rot : "var(--w-muted)"}
           />
         )),
       )}

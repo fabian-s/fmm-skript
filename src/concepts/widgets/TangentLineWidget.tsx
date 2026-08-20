@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget `tangent-line` (Gruppe C, POLISH 2026-08-19).
  *
  * DIE EINE EINSICHT: „Lokal linear" ist keine Redensart, sondern eine
@@ -12,8 +13,8 @@
  * (max |f − Tangente| im Fenster), das Verdikt und die Aufgabenzeile. Die
  * Auflösung („wird ununterscheidbar") steht jetzt in tangent-line.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): mit halber Fensterbreite w ist max|x² − (2x − 1)| = w² exakt;
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TangentLineWidget.mjs,
+ * 2026-08-20): mit halber Fensterbreite w ist max|x² − (2x − 1)| = w² exakt;
  * gemessen w = 1,6 → 2,560; w = 0,8 → 0,640; w = 0,4 → 0,160; w = 0,2 →
  * 0,040; w = 0,1 → 0,010; w = 0,05 → 0,0025. Bezogen auf die Fensterhöhe
  * 4,4·w sinkt der Abstand von 36,4 % (Zoom 1×) auf 1,1 % (Zoom 32×).

@@ -1,3 +1,14 @@
+/**
+ * F1 — DIE EINE EINSICHT: Drei Stützwerte bestimmen keinen eindeutigen
+ * Interpolanten zwischen den Stützstellen.
+ * FARBROLLEN: Daten blau, alle Interpolanten grün (Strichelung trennt sie),
+ * Spanne rot.
+ * PROVENIENZ: Code-Idee aus heath-ch7/S71 portiert; Funktionen und Text sind
+ * eigene Arbeit; Ersatz der Folienabbildung interpolants-example.
+ * VERIFIZIERTE ZAHLEN: alle vier treffen (0,1),(1,2),(2,5); die maximale
+ * Vierer-Spanne auf [0,2] ist 0,7499 bei x=1,2884.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe, type PlotPoint, type Series } from "../../../lib";
 

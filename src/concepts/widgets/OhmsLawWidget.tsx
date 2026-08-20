@@ -10,12 +10,14 @@
  * (explorable-widgets: „interactivity isn't always needed"). Die eine
  * interessante Beobachtung — Verdopplung der Steigung — ist so ohne Klick
  * sichtbar.
+ * PROVENIENZ: Zweifach-Vergleich aus der Vorfassung; als statische Figur neu
+ * gesetzt, weil keine zusätzliche Interaktion eine weitere Einsicht erzeugt.
  *
  * FARBROLLEN: blau = R = 2 Ω; orange = R = 4 Ω; graue Punkte = abgelesene
  * Spannung bei i = 1,5 A.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): bei i = 1,5 A ist V = 3,0 V (R = 2 Ω) bzw. V = 6,0 V
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20): bei i = 1,5 A ist V = 3,0 V (R = 2 Ω) bzw. V = 6,0 V
  * (R = 4 Ω); das Verhältnis der Steigungen ist exakt 2.
  */
 import { Aufgabe, FMM_COLORS, Plot, Verdikt } from "../../lib";

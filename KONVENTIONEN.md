@@ -196,7 +196,7 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   der Orchestrator editiert `index.ts`). Autorenformat: MDX-Direktiven
   (Muster: `src/chapters/06-svd/S62.mdx` — das urspruengliche Muster
   `mdx-lab/SLab.mdx` ist am 2026-08-18 mit den Werkstattseiten entfallen;
-  Konzept-Muster: `src/concepts/inverse-matrix.mdx`); Quiz als `::::quiz` /
+  Konzept-Muster: `src/concepts/matrix-inverse.mdx`); Quiz als `::::quiz` /
   `:::frage{wahr|falsch}`; Mathe mit EINFACHEN Backslashes ($\bA\bx=\bb$),
   Kursmakros direkt. Nach dem Schreiben: `npm run typecheck:mdx &&
   npm run test:mdx`.
@@ -940,3 +940,14 @@ Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
    öffnen und den Leser wirklich durchsteppen lassen; "ganzen Beweis zeigen"
    bleibt als Knopf erhalten. Betrifft alle `::::beweis`-Direktiven im ganzen
    Skript, also zentral in der lib ändern, nicht pro Kapitel.
+
+- Die Konzepte `inverse-matrix` und `matrix-inverse` waren DUBLETTEN (zwei
+  Module, zwei Widgets, fast gleicher Titel: „Inverse Matrix" gegen „Inverse
+  einer Matrix"). Am 2026-08-20 auf `matrix-inverse` zusammengelegt — die
+  Entscheidung faellt ueber die EINGEHENDEN LINKS (25 gegen 3), nicht darueber,
+  welches Modul zuletzt bearbeitet wurde: fast haetten wir das gut verlinkte
+  behalten und das neue Widget im kaum erreichbaren Modul verrotten lassen.
+  Vor jedem Widget-Umbau also `grep -rn "{#<id>}" src/` zaehlen. Die alte
+  Namenskonvention (Datei nach der Konzept-id gespiegelt) hat die Dublette
+  beguenstigt, weil `InverseMatrixWidget.tsx` und `MatrixInverseWidget.tsx`
+  wie zwei verschiedene Dinge aussehen.

@@ -28,6 +28,7 @@
  * Der Startzustand (1,60; 0,05) hat die Residuen (−0,65; 0,30; 0,25) und
  * SSR = 0,575000; er ist so gewählt, dass alle drei Reststrecken sichtbar sind.
  */
+// QA-L1-Nachprüfung: alle Zahlen oben durch verify/QA-L1/check-qa-l1.mjs, 2026-08-20.
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Schaetzfrage, Slider, Verdikt, fmtDe } from "../../lib";
 
@@ -54,7 +55,7 @@ function LsTafel({ aufgeloest }: { aufgeloest: boolean }) {
   const yDom: [number, number] = [Math.min(...yAlle) - 0.4, Math.max(...yAlle) + 0.4];
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Legen wir die Gerade so, dass die roten Strecken zusammen möglichst kurz werden.</Aufgabe>
       <Plot
         xLabel="t"

@@ -13,8 +13,8 @@
  * die gefüllten Flächen (`fill` in `Plot` v2), `aria-pressed` auf den Knöpfen,
  * die getrennt ausgewiesene positive und negative Fläche und das Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19; Simpson mit 2000 Teilintervallen, exakte Werte in Klammern):
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/InnerProductFunctionsWidget.mjs,
+ * 2026-08-20; Simpson mit 2000 Teilintervallen, exakte Werte in Klammern):
  * ⟨1,1⟩ = 2,000000 (2), ⟨t,t⟩ = 0,666667 (2/3), ⟨P₂,P₂⟩ = 0,400000 (2/5);
  * alle gemischten Paare sind 0. Die Teilflächen: ⟨1,t⟩ ± 0,500000,
  * ⟨1,P₂⟩ ± 0,384900, ⟨t,P₂⟩ ± 0,208333.
@@ -66,12 +66,8 @@ export function InnerProductWidget() {
   );
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Suchen wir ein Paar, bei dem sich grüne und rote Fläche genau aufheben.</Aufgabe>
-      <div className="my-1 flex flex-col gap-1">
-        {auswahl("p", pi, setPi)}
-        {auswahl("q", qi, setQi)}
-      </div>
       <Plot
         xLabel="t"
         yLabel="p·q"
@@ -88,6 +84,10 @@ export function InnerProductWidget() {
           { f: (t) => (produkt(t) < 0 ? produkt(t) : NaN), color: FMM_COLORS.rot, fill: true, label: "p·q unter der Achse" },
         ]}
       />
+      <div className="my-1 flex flex-col gap-1">
+        {auswahl("p", pi, setPi)}
+        {auswahl("q", qi, setQi)}
+      </div>
       <Verdikt kind={orthogonal ? "ok" : "neutral"}>
         {orthogonal ? (
           <>

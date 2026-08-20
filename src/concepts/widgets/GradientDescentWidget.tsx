@@ -2,7 +2,7 @@
  * Einsicht: Die Schrittweite bestimmt, ob der vollständige Gradientenpfad
  * zum Minimum läuft, oszilliert oder wächst. Farben: blau Loss, rot aktuelle
  * Iterierte, orange Pfad. Provenienz: neu für Plot/Stepper v2. Zahlen: die
- * Faktoren 1−2γ wurden mit verify-konzepte-C4/gradient-descent.mjs (2026-08-19) geprüft.
+ * Faktoren 1−2γ wurden mit scratchpad/verify/QA-L0/verify-qa-l0.mjs (2026-08-20) geprüft.
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Stepper, Verdikt, fmtDe } from "../../lib";

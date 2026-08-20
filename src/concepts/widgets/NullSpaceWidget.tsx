@@ -16,8 +16,8 @@
  * Pfeil. Ziehen, Achsen und Geraden kommen aus der Lib-`TransformCanvas`,
  * Suchlogik und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA3.mjs,
- * 2026-08-19), A = [[1, 1], [1, 1]], v auf dem Einheitskreis:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), A = [[1, 1], [1, 1]], v auf dem Einheitskreis:
  *     0°: Av = (1; 1),         ‖Av‖ = 1,4142
  *    45°: Av = (1,414; 1,414), ‖Av‖ = 2      (stärkste Streckung)
  *   135°: Av = (0; 0),         ‖Av‖ = 0      (Kern)
@@ -96,7 +96,7 @@ export function NullSpaceWidget() {
         fmt={(x) => `${fmtDe(x, 0)}°`}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         A = [[1, 1], [1, 1]] ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> v ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Av, blau gestrichelt die

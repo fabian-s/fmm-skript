@@ -14,7 +14,7 @@
  * Drag frei, in `onVectorChange` auf die Achse projiziert), Verdikt für die
  * Sonderfälle d = 0 und d < 0.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C2/check-gruppeA1.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19):
  *   D = diag(2; 0,5)  : De₁ = (2; 0), De₂ = (0; 0,5), det = 1,00 – die
  *                       Streckung der einen Achse hebt die Stauchung der
@@ -86,7 +86,7 @@ export function DiagWidget() {
         step={0.1}
         accent={FMM_COLORS.gruen}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         D = diag({fmtDe(d1, 1)}; {fmtDe(d2, 1)}) ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> De₁ ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> De₂

@@ -1,4 +1,7 @@
-/** Insight: the cosine value is the tangent slope of sine. Colors: blue sine/tangent, orange cosine. Provenance: original; derivative identity is symbolic, no numeric verdict claims, 2026-08-19. */
+/**
+ * Insight: the cosine value is the tangent slope of sine. Colors: blue sine/tangent, orange cosine.
+ * Provenance: original; values and verdict thresholds verified in `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function SinCosExplorer() {
@@ -35,9 +38,12 @@ export function SinCosExplorer() {
         step={0.05}
         accent={FMM_COLORS.blau}
       />
-      <Verdikt kind="ok">
-        Bei x = {fmtDe(x, 2)} hat die Sinus-Tangente die Steigung {fmtDe(c, 2)}, also den
-        Kosinuswert.
+      <Verdikt kind={Math.abs(c) < 0.08 ? "neutral" : "ok"}>
+        {Math.abs(c) < 0.08 ? (
+          <>Bei x = {fmtDe(x, 2)} ist cos(x) = {fmtDe(c, 2)} fast null: Die Sinuskurve hat dort fast eine waagerechte Tangente.</>
+        ) : (
+          <>Bei x = {fmtDe(x, 2)} hat die Sinus-Tangente die Steigung {fmtDe(c, 2)}, also den Kosinuswert. Das Vorzeichen sagt, ob der Sinus dort steigt oder fällt.</>
+        )}
       </Verdikt>
     </div>
   );

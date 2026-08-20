@@ -1,4 +1,13 @@
 /**
+ * F1 — DIE EINE EINSICHT: Die Lösung eines Selbsttests folgt erst auf die
+ * eigene Entscheidung.
+ * FARBROLLEN: Slate-Töne strukturieren die Oberfläche; sie tragen keine
+ * mathematische Bedeutung.
+ * PROVENIENZ: Eigene, aus der TSX-Fassung von S24 portierte MDX-Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
+/**
  * Lokale Begleitkomponente für Abschnitt 2.4 (aus der TSX-Fassung von S24
  * portiert, MDX-Migration 2026-08-11; Rendering unverändert).
  *

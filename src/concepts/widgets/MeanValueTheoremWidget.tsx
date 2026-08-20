@@ -14,8 +14,9 @@
  * Lib (Rezept wie in ConvexityWidget), Regler bleiben als Doppelpfad. Der
  * erklärende Absatz steht jetzt in mean-value-theorem.mdx.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): für f(x) = x³/3 − x ist die Sekantensteigung
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/MeanValueTheoremWidget.mjs,
+ * 2026-08-20): für f(x) = x³/3 − x ist die Sekantensteigung
  * m = (a² + ab + b²)/3 − 1 (numerisch gegengerechnet) und f′(x) = x² − 1, also
  * ξ = ±√(m + 1). Startzustand a = −2, b = 1,6: m = 0,120000, ξ = ±1,058301.
  * Weitere Proben: a = −1,5 / b = 1,5 → m = −0,250000, ξ = ±0,866025;
@@ -40,7 +41,7 @@ const B = 330;
 const H = 220;
 const PAD_L = 30;
 const PAD_R = 8;
-const PAD_T = 8;
+const PAD_T = 22;
 const PAD_B = 26;
 const X0 = -2.7;
 const X1 = 2.7;
@@ -83,8 +84,6 @@ export function MvtWidget() {
       <Aufgabe>Ziehen wir die roten Endpunkte über den Graphen und suchen eine Lage ohne parallele Tangente.</Aufgabe>
       <svg
         viewBox={`0 0 ${B} ${H}`}
-        width={B}
-        height={H}
         className="h-auto max-w-full rounded"
         role="img"
         aria-label={`Sekante von ${fmtDe(a, 2)} nach ${fmtDe(b, 2)} mit Steigung ${fmtDe(m, 3)} und ${xis.length} paralleler Tangente(n).`}
@@ -123,6 +122,9 @@ export function MvtWidget() {
         ))}
         <text x={(B + PAD_L) / 2} y={H - 3} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
           x
+        </text>
+        <text x={PAD_L - 4} y={12} textAnchor="end" fontSize={9} fill="var(--w-muted)">
+          f
         </text>
         <polyline points={kurve} fill="none" stroke={FMM_COLORS.blau} strokeWidth={1.8} />
         {xis.map((xi) => (

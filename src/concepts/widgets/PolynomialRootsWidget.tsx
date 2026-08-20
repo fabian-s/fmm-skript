@@ -14,8 +14,8 @@
  * Aufgabenzeile und das Verdikt. Der Schlussabsatz ist nach
  * polynomial-roots.mdx gewandert.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
- * 2026-08-19): p(x) = x² + c hat für c = −2 die Nullstellen ±1,414214, für
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20): p(x) = x² + c hat für c = −2 die Nullstellen ±1,414214, für
  * c = −1 die Nullstellen ±1, für c = 0 eine doppelte bei 0, für c = 1 das Paar
  * ±1i und für c = 2 das Paar ±1,414214 i; der Scheitelwert ist stets p(0) = c.
  */

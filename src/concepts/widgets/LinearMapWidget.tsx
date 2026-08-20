@@ -14,8 +14,8 @@
  * (`columnsDraggable`). Texte neu geschrieben. Dieses Widget ist die
  * Referenz für den Spalten-Drag in der Konzeptschicht.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
- * 2026-08-19), Voreinstellung A = [[1, −0,5], [0,5, 1]]:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearMapWidget.mjs,
+ * 2026-08-20), Voreinstellung A = [[1, −0,5], [0,5, 1]]:
  * Ae₁ = (1; 0,5), Ae₂ = (−0,5; 1), det A = 1,2500. Die Spalten sind also
  * exakt die beiden Pfeile, und det A ist der Flächenfaktor des von ihnen
  * aufgespannten Parallelogramms.
@@ -40,7 +40,7 @@ export function LinearMapWidget() {
   const singulaer = Math.abs(det) < 0.02;
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Ziehen wir die Spitzen von Ae₁ und Ae₂ und lesen wir die Matrix mit.</Aufgabe>
       <TransformCanvas
         matrix={m}
@@ -64,7 +64,7 @@ export function LinearMapWidget() {
           ]}
         />
       </div>
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Ae₁ = erste Spalte ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> Ae₂ = zweite Spalte
       </p>

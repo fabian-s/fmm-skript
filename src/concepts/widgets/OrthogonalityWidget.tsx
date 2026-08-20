@@ -19,8 +19,8 @@
  * Vorgängerwidget (Stand 2026-08-18); Quadratkonstruktion neu, Achsen und
  * Ziehen aus der Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/fit-pythagoras.mjs,
- * 2026-08-19), u = (1,2; 0,6), ‖v‖ ∈ [0,4; 1,2]:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), u = (1,2; 0,6), ‖v‖ ∈ [0,4; 1,2]:
  *   ‖u‖² = 1,8; Richtung von u = 26,565°;
  *   Default (60°, ‖v‖ = 1): uᵀv = 1,1196, ‖u‖²+‖v‖² = 2,8,
  *     ‖u+v‖² = 5,0392, Differenz 2,2392 = 2uᵀv;
@@ -146,7 +146,7 @@ export function PythagorasWidget() {
       />
       <Slider label="Richtung von v (°)" value={deg} onChange={setDeg} min={0} max={360} step={0.5} accent={FMM_COLORS.rot} />
       <Slider label="Länge ‖v‖" value={laenge} onChange={setLaenge} min={LMIN} max={LMAX} step={0.01} accent={FMM_COLORS.rot} />
-      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
         {fmtDe(NU2)} + {fmtDe(nv2)} = {fmtDe(NU2 + nv2)} vs. {fmtDe(ns2)}
       </p>
       <Verdikt kind={ortho ? "ok" : "warn"}>

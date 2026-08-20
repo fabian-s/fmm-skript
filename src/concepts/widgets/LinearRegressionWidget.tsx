@@ -1,4 +1,4 @@
-/** Insight: residual segments make least squares a visible minimization task. Colors: blue fit, orange residuals, green success. Provenance: original. Optimum a=.9,b=.28,SSE=.148 verified in verify-konzepte-C4b/linear-regression.mjs, 2026-08-19. */
+/** Einsicht: Residuen machen kleinste Quadrate als sichtbare Minimierungsaufgabe verständlich. Farben: blau Gerade, orange Residuen, grün Erfolg. Provenienz: original. VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/LinearRegressionWidget.mjs, 2026-08-20): Die Daten haben das Kleinste-Quadrate-Optimum a = 0,93, b = 0,28, SSE = 0,179; die Aufgaben-Schranke SSE < 0,25 ist damit erreichbar. */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const d: [number, number][] = [
@@ -14,7 +14,7 @@ export function RegressionWidget() {
   const s = d.reduce((z, [x, y]) => z + (y - a * x - b) ** 2, 0);
   const ok = s < 0.25;
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Finden wir eine Gerade mit Fehlerquadratsumme unter 0,25.</Aufgabe>
       <Plot
         series={[{ f: (x) => a * x + b, color: FMM_COLORS.blau, label: "Gerade" }]}

@@ -1,4 +1,5 @@
 /**
+ * QA-L3-Nachprüfung: `verify/QA-L3/verify-widgets.mjs`, 2026-08-20.
  * Konzept-Widget für `span` UND `subspace` (Dublettenauflösung D6,
  * 2026-08-19; das frühere SubspaceWidget ist entfallen).
  *
@@ -18,8 +19,8 @@
  * SubspaceWidget (Stand 2026-08-18); Ziehen, Achsen und Unterraumgeraden
  * kommen aus der Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-span.mjs,
- * 2026-08-19), v₁ = (2, 1), v₂ = (−1, 1), w = (−1; 1,8), Aufhängepunkt der
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/SpanWidget.mjs,
+ * 2026-08-20), v₁ = (2, 1), v₂ = (−1, 1), w = (−1; 1,8), Aufhängepunkt der
  * verschobenen Geraden p = (0; 1,5):
  *   det[v₁ v₂] = 3, also sind v₁, v₂ eine Basis des R²;
  *   w = 0,2667·v₁ + 1,5333·v₂ (Probe: (−1; 1,8) auf 1e−6 genau);
@@ -34,7 +35,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   Slider,
-  TransformCanvas,
+  LabeledTransformCanvas,
   Verdikt,
   W_BUTTON,
   W_BUTTON_AKTIV,
@@ -117,7 +118,7 @@ export function SpanWidget({ variante = "span" }: { variante?: "span" | "unterra
           </button>
         ))}
       </div>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={IDENT}
         showGrid={false}
         showUnitCircle={false}

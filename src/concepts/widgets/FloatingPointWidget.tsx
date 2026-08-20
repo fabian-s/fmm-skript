@@ -19,8 +19,8 @@
  * Vorgängerwidgets FloatingPointWidget/MachineEpsilonWidget (Stand
  * 2026-08-18); Ziehen über `useDrag` aus der Lib, Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-toyfloat.mjs
- * und check-toyfloat-runden.mjs, 2026-08-19), Spielzeugsystem mit e ∈ {−1,0,1,2}:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20;
+ * Erstprüfung 2026-08-19), Spielzeugsystem mit e ∈ {−1,0,1,2}:
  *   Striche: t=1 → 9, t=2 → 17, t=3 → 33, t=4 → 65, t=5 → 129 (= 4·2^t + 1).
  *   Lücke rechts von 1 = 2^-t (0,5 / 0,25 / 0,125 / 0,0625 / 0,03125),
  *   Lücke rechts von 4 = 4·2^-t, Verhältnis exakt 4 für jedes t.
@@ -31,6 +31,12 @@
  *   0,015625) wird in jedem Fall eingehalten.
  *   Doppelte Genauigkeit zum Vergleich: 2^-52 = 2,220446049250313e−16
  *   = Number.EPSILON, 1 + 2^-53 === 1, √(2^-52) ≈ 1,49e−8.
+ *
+ * KORREKTUR 2026-08-20 (Re-Audit QA-O0): Am Reglermaximum x = 8 = 2³ lieferte
+ * Math.floor(log2 x) die Binade 3 und das Verdikt behauptete einen
+ * Nachbarabstand 8·2^-t. Oberhalb von 8 gibt es aber gar keine Gitterpunkte
+ * mehr; der tatsächliche Abstand unter 8 ist 4·2^-t. Die Binade ist jetzt auf
+ * den größten Exponenten gekappt.
  */
 import { useMemo, useState } from "react";
 import {
@@ -39,6 +45,7 @@ import {
   FMM_COLORS,
   Slider,
   Verdikt,
+  W_PANEL,
   clamp,
   fmtDe,
   useDrag,
@@ -86,7 +93,10 @@ export function ToyFloatLine({
   const schranke = 2 ** -(t + 1);
   const eps = 2 ** -t;
   // Binade, in der x liegt: [2^e, 2^{e+1}) — dort ist der Gitterabstand 2^e·2^-t.
-  const binade = Math.floor(Math.log2(x));
+  // Am rechten Rand (x = 8 = 2^3) endet das Gitter; dort gilt weiterhin der
+  // Abstand der letzten vollen Binade [4, 8), sonst behauptet das Verdikt eine
+  // Lücke, die im Bild gar nicht existiert.
+  const binade = Math.min(Math.floor(Math.log2(x)), EXPONENTEN[EXPONENTEN.length - 1]);
   const luecke = 2 ** binade * eps;
   const exakt = relFehler < 1e-12;
 
@@ -101,7 +111,7 @@ export function ToyFloatLine({
   const epsBand = variante === "epsilon" ? { von: 1, bis: 1 + eps } : null;
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
       <Aufgabe>
         Ziehen wir <span className="font-mono">x</span> über den Strahl und schauen wir, auf
         welchen Strich es gerundet wird.
@@ -121,8 +131,8 @@ export function ToyFloatLine({
           width={BREITE - 1}
           height={HOEHE - 1}
           rx={4}
-          fill="var(--w-bg, #ffffff)"
-          stroke="var(--w-border, #cbd5e1)"
+          fill="var(--w-bg)"
+          stroke="var(--w-border)"
         />
 
         {epsBand && (
@@ -143,7 +153,7 @@ export function ToyFloatLine({
           y1={ACHSE_Y}
           x2={px(X_MAX)}
           y2={ACHSE_Y}
-          stroke="var(--w-axis, #94a3b8)"
+          stroke="var(--w-axis)"
           strokeWidth={1}
         />
         {werte.map((v, i) => (
@@ -164,7 +174,7 @@ export function ToyFloatLine({
               y1={ACHSE_Y - 13}
               x2={px(v)}
               y2={ACHSE_Y + 13}
-              stroke="var(--w-grid-strong, #cbd5e1)"
+              stroke="var(--w-grid-strong)"
               strokeWidth={1}
             />
             <text
@@ -172,7 +182,7 @@ export function ToyFloatLine({
               y={ACHSE_Y + 26}
               textAnchor="middle"
               fontSize={10}
-              fill="var(--w-muted, #64748b)"
+              fill="var(--w-muted)"
             >
               {fmtDe(v, v < 1 ? 1 : 0)}
             </text>
@@ -230,7 +240,7 @@ export function ToyFloatLine({
       <Slider label="x" value={x} onChange={setX} min={X_MIN} max={X_MAX} step={0.001} accent={FMM_COLORS.rot} />
       <Slider label="Mantissenbits t" value={t} onChange={setT} min={1} max={5} step={1} fmt={(v) => fmtDe(v, 0)} />
 
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.blau }}>▮</span> darstellbare Zahlen ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> exaktes x ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> gerundetes fl(x)

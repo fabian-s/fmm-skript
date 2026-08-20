@@ -6,21 +6,31 @@
  * was danach übrig bleibt. Ist der Pivot null, gibt es nichts zu teilen, und
  * die Zerlegung existiert erst nach einem Zeilentausch.
  *
- * FARBROLLEN: orange = der Multiplikator l₂₁, der zugleich der eliminierende
- * Faktor in der Rechnung ist; rot = der Pivot, wenn er verschwindet.
+ * FARBROLLEN: orange = L und der Multiplikator l₂₁, der zugleich der
+ * eliminierende Faktor in der Rechnung ist; blau = U, das Ergebnis der
+ * Elimination.
  *
  * PROVENIENZ: Rechenkern aus dem Vorgängerwidget (Stand 2026-08-18); die
  * private `MatDisplay`-Kopie ist durch die Lib-`MatrixDisplay` ersetzt.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeE.mjs,
- * 2026-08-19), Voreinstellung A = [[2, 1], [4, 5]]:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20;
+ * Erstprüfung 2026-08-19), Voreinstellung A = [[2, 1], [4, 5]]:
  *   l₂₁ = 4/2 = 2, L = [[1, 0], [2, 1]], U = [[2, 1], [0, 3]],
  *   LU = [[2, 1], [4, 5]] = A exakt, det A = 6 = u₁₁·u₂₂.
  * Das ist dieselbe Zerlegung, die auf der Konzeptseite steht.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, MatrixDisplay, MatrixInput, Verdikt, fmtDe } from "../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  MatrixDisplay,
+  MatrixInput,
+  Verdikt,
+  W_PANEL,
+  W_TEXT,
+  fmtDe,
+} from "../../lib";
 
 export function LuWidget() {
   const [m, setM] = useState<number[][]>([
@@ -41,18 +51,35 @@ export function LuWidget() {
   const u22 = U[1][1];
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
+    <div className={`mt-2 p-2 text-sm ${W_PANEL}`}>
       <Aufgabe>Setzen wir den Eintrag links oben auf 0 und schauen wir, was die Elimination dann tut.</Aufgabe>
-      <div className="mt-1 flex flex-wrap items-center gap-2">
-        <MatrixInput value={m} onChange={setM} step={1} />
+      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span className="inline-flex items-center gap-1 font-mono text-xs">
+          A =
+          <MatrixInput value={m} onChange={setM} step={1} />
+        </span>
         {pivotOk && (
           <>
-            <span className="font-mono text-xs">=</span>
-            <MatrixDisplay value={L} />
-            <MatrixDisplay value={U} />
+            <span
+              className="inline-flex items-center gap-1 font-mono text-xs"
+              style={{ color: FMM_COLORS.orange }}
+            >
+              L =
+              <MatrixDisplay value={L} />
+            </span>
+            <span
+              className="inline-flex items-center gap-1 font-mono text-xs"
+              style={{ color: FMM_COLORS.blau }}
+            >
+              U =
+              <MatrixDisplay value={U} />
+            </span>
           </>
         )}
       </div>
+      <p className={`mt-1 text-xs ${W_TEXT}`}>
+        L trägt links unten den Multiplikator l₂₁, U das Ergebnis der Elimination.
+      </p>
       <Verdikt kind={pivotOk ? (Math.abs(u22) < 1e-9 ? "warn" : "ok") : "fail"}>
         {!pivotOk ? (
           <>

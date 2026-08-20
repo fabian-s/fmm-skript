@@ -16,8 +16,9 @@
  * 2026-08-18); Gerade, Ziehen und Matrix-Übergang kommen aus der
  * Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/check-ortho.mjs,
- * 2026-08-19), Achswinkel 30°, ‖a‖ = √5 = 2,2361:
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/ReflectionWidget.mjs,
+ * 2026-08-20), Achswinkel 30°, ‖a‖ = √5 = 2,2361:
  *   H = ((0,5; 0,866), (0,866; −0,5)), det H = −1 (auf 1e−12);
  *   Default a unter 90°, also a = (0; 2,2361): Ha = (1,9365; −1,118), das
  *     liegt unter −30°, und ‖Ha‖ = 2,2361; H(Ha) = a auf 1e−10, also H² = I;
@@ -75,6 +76,8 @@ export function ReflectionWidget() {
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={M}
+        xLabel="x₁"
+        yLabel="x₂"
         transitionMs={250}
         showGrid
         showUnitCircle={false}

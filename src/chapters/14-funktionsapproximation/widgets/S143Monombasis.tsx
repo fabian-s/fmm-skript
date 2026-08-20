@@ -1,3 +1,13 @@
+/**
+ * F1 — DIE EINE EINSICHT: Die Monombasis kann die Vandermonde-Matrix so
+ * schlecht konditionieren, dass dieselbe Polynomaufgabe rechnerisch kippt.
+ * FARBROLLEN: Basisfunktionen orange, schlecht konditionierte Problemzonen rot.
+ * PROVENIENZ: Rechen-/SVG-Code aus heath-ch7/S73 portiert; Texte und dritte
+ * Chebyshev-Vergleichsbasis sind eigene Arbeit.
+ * VERIFIZIERTE ZAHLEN: Für n=5,10,15,20 werden die dargestellten κ₂-Werte und
+ * für n=10 die Winkel 32,55°, 5,47°, 2,72° unabhängig nachgerechnet.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, M, Slider, Verdikt } from "../../../lib";
 

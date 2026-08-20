@@ -1,4 +1,21 @@
-/** Einsicht: Die Normalisierung x/||x||₂ behält die Richtung und setzt die Länge auf eins. Farben: Blau = x, Rot = normierter Vektor. Provenienz: neu; keine Zahlenclaims (2026-08-20, FA). */
+/**
+ * Konzept-Widget `euclidean-norm`.
+ *
+ * DIE EINE EINSICHT: Die Normalisierung x/‖x‖₂ lässt die Richtung unangetastet
+ * und setzt allein die Länge auf eins — der rote Pfeil landet deshalb für jedes
+ * x ≠ 0 auf demselben Einheitskreis.
+ *
+ * FARBROLLEN: blau = der gezogene Vektor x; rot = sein normiertes Bild
+ * x/‖x‖₂; Achsen, Ticks und der gestrichelte Einheitskreis kommen aus den
+ * Theme-Variablen (--w-axis / --w-grid / --w-muted).
+ *
+ * PROVENIENZ: eigener Aufbau; Ziehen über `useDrag` aus der Lib.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ * Voreinstellung x = (1,8; 1,1) hat ‖x‖₂ = √(1,8² + 1,1²) = 2,1095…, also
+ * gerundet 2,11; der rote Pfeil hat Länge 1 in jedem erreichbaren Zustand
+ * außer im abgefangenen Nullfall ‖x‖₂ ≤ 0,05.
+ */
 import { useState } from "react";
 import {
   Aufgabe,
@@ -37,8 +54,32 @@ export function NormBallsWidget() {
         role="img"
         aria-label="Vektor und seine Normalisierung auf dem Einheitskreis."
       >
+        {[-2, -1, 1, 2].map((t) => (
+          <g key={`t${t}`}>
+            <line x1={px(t)} y1={py(0) - 4} x2={px(t)} y2={py(0) + 4} stroke="var(--w-axis)" />
+            <text
+              x={px(t)}
+              y={py(0) + 15}
+              textAnchor="middle"
+              fontSize={9}
+              fill="var(--w-muted)"
+            >
+              {fmtDe(t, 0)}
+            </text>
+            <line x1={px(0) - 4} y1={py(t)} x2={px(0) + 4} y2={py(t)} stroke="var(--w-axis)" />
+            <text x={px(0) - 7} y={py(t) + 3} textAnchor="end" fontSize={9} fill="var(--w-muted)">
+              {fmtDe(t, 0)}
+            </text>
+          </g>
+        ))}
         <line x1="0" y1={py(0)} x2={W} y2={py(0)} stroke="var(--w-axis)" />
         <line x1={px(0)} y1="0" x2={px(0)} y2={W} stroke="var(--w-axis)" />
+        <text x={W - 4} y={py(0) - 6} textAnchor="end" fontSize={10} fill="var(--w-muted)">
+          x₁
+        </text>
+        <text x={px(0) + 6} y={11} fontSize={10} fill="var(--w-muted)">
+          x₂
+        </text>
         <circle
           cx={px(0)}
           cy={py(0)}
@@ -47,6 +88,15 @@ export function NormBallsWidget() {
           stroke="var(--w-muted)"
           strokeDasharray="4 3"
         />
+        <text
+          x={px(0) - (px(1) - px(0)) * 0.78}
+          y={py(0) - (px(1) - px(0)) * 0.78}
+          textAnchor="end"
+          fontSize={9}
+          fill="var(--w-muted)"
+        >
+          ‖x‖₂ = 1
+        </text>
         <line
           x1={px(0)}
           y1={py(0)}

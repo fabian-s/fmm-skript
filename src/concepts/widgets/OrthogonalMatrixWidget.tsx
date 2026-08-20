@@ -15,8 +15,8 @@
  * 2026-08-18); Ziehen, Kreisbild und Matrix-Übergang aus der
  * Lib-`TransformCanvas`. Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/check-ortho.mjs,
- * 2026-08-19), v = (2, 1), ‖v‖ = 2,2361:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), v = (2, 1), ‖v‖ = 2,2361:
  *   Drehung θ = 30°: Qv = (1,2321; 1,866), ‖Qv‖ = 2,2361, det Q = 1;
  *   Spiegelung θ = 30°: Qv = (2,2321; 0,134), ‖Qv‖ = 2,2361, det Q = −1,
  *     Spiegelachse bei 15° (die Hälfte von θ);
@@ -101,7 +101,7 @@ export function OrthogonalMatrixWidget() {
       <Slider label="Winkel θ (°)" value={deg} onChange={setDeg} min={0} max={360} step={1} accent={FMM_COLORS.blau} />
       <Slider label="v₁" value={v[0]} onChange={(x) => setV([x, v[1]])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
       <Slider label="v₂" value={v[1]} onChange={(y) => setV([v[0], y])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
-      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
         ‖v‖₂ = {fmtDe(nv, 3)} · ‖Qv‖₂ = {fmtDe(nQv, 3)}
       </p>
       <Verdikt kind={art === "drehung" ? "ok" : "warn"}>

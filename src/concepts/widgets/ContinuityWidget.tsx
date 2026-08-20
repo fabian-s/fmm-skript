@@ -16,8 +16,8 @@
  * ContinuityWidget (Stand 2026-08-18), Fenster-Idee aus dem entfallenen
  * ContinuousFunctionWidget; Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/
- * check-stetigkeit.mjs, 2026-08-19), f(x) = 0,5x² links, 0,5x² + c rechts,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
+ * 2026-08-20; zusätzlich der Spannen-Test), f(x) = 0,5x² links, 0,5x² + c rechts,
  * Ausgabespanne auf [1 − δ, 1 + δ] (20 001 Proben):
  *   c = 0:    δ = 1 → 2,000; 0,5 → 1,000; 0,2 → 0,400; 0,05 → 0,100; 0,01 → 0,020
  *   c = 0,5:  δ = 1 → 2,500; 0,5 → 1,500; 0,2 → 0,900; 0,05 → 0,600; 0,01 → 0,520

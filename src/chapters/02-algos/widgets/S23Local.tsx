@@ -1,3 +1,11 @@
+/**
+ * F1 — DIE EINE EINSICHT: Ein Selbsttest liefert erst nach einer eigenen Wahl
+ * gezieltes Feedback.
+ * FARBROLLEN: Grün = richtige, Rot = falsche gewählte Option; Slate = Oberfläche.
+ * PROVENIENZ: Eigene, aus der TSX-Fassung von S23 portierte MDX-Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState, type ReactNode } from "react";
 
 /**

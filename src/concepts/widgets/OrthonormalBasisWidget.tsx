@@ -16,8 +16,8 @@
  * (Stand 2026-08-18); Ziehen und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/check-ortho.mjs,
- * 2026-08-19), w = (2, 1), ‖w‖² = 5:
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), w = (2, 1), ‖w‖² = 5:
  *   θ = 40° (Default): c₁ = 2,1749, c₂ = −0,5195, c₁² + c₂² = 5;
  *   θ = 26,5651°: c₂ = 0 und c₁ = ‖w‖ = 2,2361 — dort liegt w auf q₁;
  *   θ = 0°: c₁ = 2, c₂ = 1; θ = 90°: c₁ = 1, c₂ = −2;
@@ -84,7 +84,7 @@ export function OrthonormalBasisWidget() {
       <Slider label="Drehung θ (°)" value={deg} onChange={setDeg} min={0} max={180} step={0.5} accent={FMM_COLORS.blau} />
       <Slider label="w₁" value={w[0]} onChange={(x) => setW([x, w[1]])} min={-2.4} max={2.4} step={0.05} accent={FMM_COLORS.rot} />
       <Slider label="w₂" value={w[1]} onChange={(y) => setW([w[0], y])} min={-2.4} max={2.4} step={0.05} accent={FMM_COLORS.rot} />
-      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
         c₁ = q₁ᵀw = {fmtDe(c1)} · c₂ = q₂ᵀw = {fmtDe(c2)}
       </p>
       <Verdikt kind={aufQ1 || aufQ2 ? "ok" : "neutral"}>

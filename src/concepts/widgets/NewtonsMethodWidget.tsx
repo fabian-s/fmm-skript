@@ -1,4 +1,10 @@
-/** Insight: Newton steps minimize the local quadratic model and converge rapidly near x=1. Colors: blue function, red local model, orange iterate. Provenance: original. Sequence from x₀=2.5 verified in verify-konzepte-C4b/newtons-method.mjs, 2026-08-19. */
+/**
+ * DIE EINE EINSICHT: Newton-Schritte minimieren das lokale quadratische Modell
+ * und werden nahe dem Minimum rasch genauer. FARBROLLEN: blau = f, rot =
+ * lokales Modell, orange = Iterierte. PROVENIENZ: neu.
+ * VERIFIZIERTE ZAHLEN: `verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
+ * x₀ = 2,5 und die Folge 1,72; 1,259340; 1,049741; 1,002320; 1,000005 sowie f(1) = 0,25.
+ */
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Stepper, Verdikt, fmtDe } from "../../lib";
 const f = (x: number) => x ** 4 / 4 - x + 1,

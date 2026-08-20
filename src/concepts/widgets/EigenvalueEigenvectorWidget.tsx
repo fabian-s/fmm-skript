@@ -16,7 +16,7 @@
  * Spoiler. Ziehen auf dem Einheitskreis und Achsen kommen aus der
  * Lib-`TransformCanvas`, Suchlogik und Texte sind neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/AUDIT-A/eigenvalue-and-linear-combination.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), A = [[2, 1], [1, 2]],
  * Spur 4, det 3, also λ = 3 und λ = 1:
  *   45°/225° : Av = ±(2,121; 2,121), Kreuzprodukt 0, vᵀAv = 3, ‖Av‖ = 3
@@ -107,7 +107,7 @@ export function EigenWidget() {
         fmt={(x) => `${fmtDe(x, 0)}°`}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         A = [[2, 1], [1, 2]] ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> v ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Av · gestrichelt: schon

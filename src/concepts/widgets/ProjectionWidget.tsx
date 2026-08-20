@@ -14,18 +14,19 @@
  * Namenskollision mit dem Widget zu den Normalengleichungen); Achsen, Ziehen
  * und die Gerade kommen aus der Lib-`TransformCanvas`. Texte neu.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
- * 2026-08-19), P = bbᵀ mit b = (cos θ, sin θ), x = (2; 1,4):
+ * VERIFIZIERTE ZAHLEN (node,
+ * /tmp/claude-1000/-home-fabians-lehre-FMM-fmm-lmu/3a8ca427-1db0-42e8-8398-15672016f929/scratchpad/verify/REV1/ProjectionWidget.mjs,
+ * 2026-08-20), P = bbᵀ mit b = (cos θ, sin θ), x = (2; 1,4):
  *   θ = 0,5   → Px = (2,1293; 1,1633)
  *   θ = 0     → Px = (2; 0)      (die zweite Koordinate wird verworfen)
  *   θ = π/2   → Px = (0; 1,4)
  * In allen drei Fällen ist P(Px) − Px exakt 0 (P ist idempotent), das Residuum
- * x − Px steht auf b senkrecht (Skalarprodukt ≤ 1,5e−16), det P = 0 und
+ * x − Px steht auf b senkrecht (Skalarprodukt ≤ 3,5e−16), det P = 0 und
  * tr P = 1,000000 — die Ebene wird auf eine Gerade, also auf Dimension 1,
  * zusammengedrückt.
  */
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Slider, TransformCanvas, Verdikt, fmtDe } from "../../lib";
+import { Aufgabe, FMM_COLORS, Slider, LabeledTransformCanvas, Verdikt, fmtDe } from "../../lib";
 
 export function ProjektionsmatrixWidget() {
   const [theta, setTheta] = useState(0.5);
@@ -45,7 +46,7 @@ export function ProjektionsmatrixWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>Ziehen wir x, bis das Lot verschwindet.</Aufgabe>
-      <TransformCanvas
+      <LabeledTransformCanvas
         matrix={P}
         size={280}
         worldHalf={3.2}

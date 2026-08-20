@@ -1,4 +1,8 @@
-/** Insight: one chosen input has exactly one output. Colors: blue graph and selected input. Provenance: original; no verdict numbers, 2026-08-19. */
+/**
+ * DIE EINE EINSICHT: Jede gewählte Eingabe besitzt genau eine Ausgabe.
+ * FARBROLLEN: blau = Graph und gewählter Punkt; grau = Zuordnungslote. PROVENIENZ: Originalwidget.
+ * VERIFIZIERTE ZAHLEN: f(1,2) = 1,44, node, scratchpad/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function FunctionWidget() {
@@ -29,8 +33,10 @@ export function FunctionWidget() {
         step={0.01}
         accent={FMM_COLORS.blau}
       />
-      <Verdikt kind="ok">
-        x = {fmtDe(x, 2)} führt zu genau einer Ausgabe, nämlich f(x) = {fmtDe(y, 2)}.
+      <Verdikt kind={x === 0 ? "neutral" : "ok"}>
+        {x === 0
+          ? "Auch am Scheitel gehört zur Eingabe 0 nur eine Ausgabe, nämlich f(0) = 0."
+          : `x = ${fmtDe(x, 2)} führt zu genau einer Ausgabe, nämlich f(x) = ${fmtDe(y, 2)}.`}
       </Verdikt>
     </div>
   );

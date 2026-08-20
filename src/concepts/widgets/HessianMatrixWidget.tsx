@@ -16,7 +16,7 @@
  * meldete früher fälschlich „Sattel"), das Höhenlinienbild und die verlinkte
  * 3D-Tafel (`Surface3D`, Bauart wie S113Hesse in Kapitel 11).
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C5/check-alle.mjs,
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): für q(x,y) = a x² + b y² ist H = diag(2a, 2b) konstant, die
  * Eigenwerte sind 2a und 2b. Proben: (a,b) = (1; 0,6) → 2,000 / 1,200,
  * positiv definit; (−1; −0,6) → −2,000 / −1,200, negativ definit;
@@ -137,6 +137,9 @@ function Hoehenlinien({ a, b }: { a: number; b: number }) {
       <text x={B2 - PAD_R - 4} y={H2 - PAD_B - 4} textAnchor="end" fontSize={9} fill="var(--w-muted)">
         x →
       </text>
+      <text x={11} y={PAD_T + 8} fontSize={9} fill="var(--w-muted)">
+        y
+      </text>
     </svg>
   );
 }
@@ -233,7 +236,7 @@ export function HessianWidget() {
           onViewChange={setSicht}
           ariaLabel={`Dieselbe quadratische Form als Fläche über der x-y-Ebene; im aktuellen Zustand ${art === "minimum" ? "eine Schüssel" : art === "maximum" ? "eine Kuppel" : art === "sattel" ? "ein Sattel" : "eine Rinne"}.`}
         />
-        <div className="mt-1 max-w-[280px]">
+        <div className="mt-1">
           <ViewControls value={sicht} onChange={setSicht} />
         </div>
       </div>

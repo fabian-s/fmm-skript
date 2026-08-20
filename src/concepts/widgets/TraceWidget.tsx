@@ -12,10 +12,14 @@
  *
  * PROVENIENZ: Rechenkern und Fallunterscheidung aus dem Vorgängerwidget (Stand
  * 2026-08-18); die Gaußebene, das Zahlformat (`fmtDe`) und das Verdikt sind
- * neu.
+ * neu, die Ticks auf der imaginären Achse aus dem Re-Audit QA-O1.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeE.mjs,
- * 2026-08-19):
+ * ACHTUNG: Die Tafel ist bewusst breiter als hoch (200 × 110), Re- und
+ * Im-Achse haben deshalb verschiedene Pixelmaßstäbe. Die Ticks auf beiden
+ * Achsen sind der einzige verlässliche Weg, Lagen abzulesen; Abstände dürfen
+ * nicht über die Achsen hinweg verglichen werden.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV2/TraceWidget.mjs, 2026-08-20):
  *   A = [[3, 1], [1, 3]] (Voreinstellung): tr = 6, det = 8, λ₁ = 4, λ₂ = 2,
  *       Summe 6, Produkt 8 — dieselben Werte wie auf der Konzeptseite;
  *   A = [[0, −1], [1, 0]]: tr = 0, det = 1, λ = ±i, Summe 0, |λ|² = 1;
@@ -58,8 +62,6 @@ export function TraceWidget() {
       </div>
       <svg
         viewBox={`0 0 ${B} ${H}`}
-        width={B}
-        height={H}
         className="mt-1 h-auto max-w-full rounded"
         role="img"
         aria-label={
@@ -68,13 +70,13 @@ export function TraceWidget() {
             : `Gaußebene mit dem komplexen Eigenwertpaar ${fmtDe(re, 2)} plus minus ${fmtDe(im, 2)} i.`
         }
       >
-        <rect x={0.5} y={0.5} width={B - 1} height={H - 1} rx={4} fill="var(--w-bg, #ffffff)" stroke="var(--w-border, #cbd5e1)" />
-        <line x1={8} y1={py(0)} x2={B - 8} y2={py(0)} stroke="var(--w-axis, #94a3b8)" strokeWidth={1} />
-        <line x1={px(0)} y1={8} x2={px(0)} y2={H - 8} stroke="var(--w-axis, #94a3b8)" strokeWidth={1} />
-        <text x={B - 10} y={py(0) - 4} textAnchor="end" fontSize={9} fill="var(--w-muted, #64748b)">
+        <rect x={0.5} y={0.5} width={B - 1} height={H - 1} rx={4} fill="var(--w-bg)" stroke="var(--w-border)" />
+        <line x1={8} y1={py(0)} x2={B - 8} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1} />
+        <line x1={px(0)} y1={8} x2={px(0)} y2={H - 8} stroke="var(--w-axis)" strokeWidth={1} />
+        <text x={B - 10} y={py(0) - 4} textAnchor="end" fontSize={9} fill="var(--w-muted)">
           Re
         </text>
-        <text x={px(0) + 4} y={12} fontSize={9} fill="var(--w-muted, #64748b)">
+        <text x={px(0) + 4} y={12} fontSize={9} fill="var(--w-muted)">
           Im
         </text>
         {/* Spur/2 als Mittelpunkt: die Eigenwerte liegen immer symmetrisch dazu */}
@@ -94,9 +96,19 @@ export function TraceWidget() {
           .filter((t) => Math.abs(t) > 1e-9 && Math.abs(t) < grenze * 0.95)
           .map((t) => (
             <g key={`re${t}`}>
-              <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis, #94a3b8)" strokeWidth={1} />
-              <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={9} fill="var(--w-muted, #64748b)">
+              <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="var(--w-axis)" strokeWidth={1} />
+              <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
                 {fmtTick(t)}
+              </text>
+            </g>
+          ))}
+        {niceTicks(-grenze, grenze, 4)
+          .filter((t) => Math.abs(t) > 1e-9 && Math.abs(t) < grenze * 0.8)
+          .map((t) => (
+            <g key={`im${t}`}>
+              <line x1={px(0) - 3} y1={py(t)} x2={px(0) + 3} y2={py(t)} stroke="var(--w-axis)" strokeWidth={1} />
+              <text x={px(0) - 6} y={py(t) + 3} textAnchor="end" fontSize={9} fill="var(--w-muted)">
+                {fmtTick(t)}i
               </text>
             </g>
           ))}

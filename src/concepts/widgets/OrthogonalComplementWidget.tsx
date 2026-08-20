@@ -17,8 +17,8 @@
  * (Stand 2026-08-18); Geraden, Ziehen und Achsen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C3/check-ortho.mjs,
- * 2026-08-19), u = (2, 1), Default b = (0,5; 2):
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/QA-L2/verify-qa-l2.mjs,
+ * 2026-08-20), u = (2, 1), Default b = (0,5; 2):
  *   t = uᵀb/uᵀu = 0,6, p = (1,2; 0,6), r = (−0,7; 1,4);
  *   rᵀu = 0 (auf 1e−12), ‖p‖ = 1,3416, ‖r‖ = 1,5652;
  *   ‖b‖² = 4,25 = ‖p‖² + ‖r‖²;
@@ -99,7 +99,7 @@ export function ComplementWidget() {
       />
       <Slider label="b₁" value={b[0]} onChange={(x) => setB([x, b[1]])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
       <Slider label="b₂" value={b[1]} onChange={(y) => setB([b[0], y])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
-      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
         p = ({fmtDe(p[0])}; {fmtDe(p[1])}) · r = ({fmtDe(r[0])}; {fmtDe(r[1])}) · rᵀu ={" "}
         {fmtDe(r[0] * U[0] + r[1] * U[1])}
       </p>

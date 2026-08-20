@@ -13,8 +13,8 @@
  * Ziehen und der Unterraum als Gerade kommen aus der Lib-`TransformCanvas`.
  * Texte neu geschrieben.
  *
- * VERIFIZIERTE ZAHLEN (node, scratchpad/verify-konzepte-C1/check-gruppeB.mjs,
- * 2026-08-19), A = [[1, 2], [0,5, 1]]: det A = 0, A·(2, −1) = (0, 0) exakt.
+ * VERIFIZIERTE ZAHLEN (node, scratchpad/verify/REV0/KernelWidget.mjs,
+ * 2026-08-20), A = [[1, 2], [0,5, 1]]: det A = 0, A·(2, −1) = (0, 0) exakt.
  * Die Kernrichtung liegt bei −26,57° (bzw. 153,43°). Das Bild ist die Gerade
  * span{(1; 0,5)}; nach dem Rangsatz ist mit Rang 1 die Kerndimension
  * 2 − 1 = 1, die Gerade ist also der ganze Kern.
@@ -44,7 +44,7 @@ export function KernelWidget() {
   const imKern = rest < 0.08;
 
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
+    <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>Drehen wir v, bis der blaue Pfeil verschwindet.</Aufgabe>
       <TransformCanvas
         matrix={A}
@@ -80,7 +80,7 @@ export function KernelWidget() {
         step={0.05}
         accent={FMM_COLORS.rot}
       />
-      <p className="mt-1 text-xs" style={{ color: "var(--w-muted, #64748b)" }}>
+      <p className="mt-1 text-xs" style={{ color: "var(--w-muted)" }}>
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Eingabe v ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Ausgabe Av ·{" "}
         <span style={{ color: FMM_COLORS.orange }}>▮</span> Kerngerade
