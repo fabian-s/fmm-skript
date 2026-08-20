@@ -244,7 +244,7 @@ export function SubmultRechner({
                 <span className="font-mono tabular-nums">{fmtDe(ratio, 3)}</span>
               </div>
               <svg
-                viewBox="0 0 200 22"
+                viewBox="0 0 200 26"
                 className="max-w-full h-auto"
                 role="img"
                 aria-label={`Quotient ${fmtDe(ratio, 2)}; die Schranke 1 liegt in der Mitte des Balkens.`}
@@ -258,7 +258,7 @@ export function SubmultRechner({
                   fill={holds ? GRUEN : ROT}
                   rx={2}
                 />
-                <line x1={100} y1={1} x2={100} y2={21} stroke="var(--w-text)" strokeWidth={1.5} />
+                <line x1={100} y1={1} x2={100} y2={25} stroke="var(--w-text)" strokeWidth={1.5} />
                 <text x={103} y={20} fontSize={9} fill="var(--w-muted)">
                   1
                 </text>

@@ -925,7 +925,7 @@ Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
    letzter Block: `### Selbsttest` mit einer `::::quiz`-Direktive (eine
    wahr/falsch-Frage zur Kurskarte). Ersatzlos streichen.
 
-3. **Fibonacci-Stepper in Abschnitt 2.2 auf Schritt 1 starten.**
+3. **ERLEDIGT (2026-08-20): Fibonacci-Stepper startet auf Schritt 1.**
    `src/chapters/02-algos/widgets/FibonacciStepper.tsx`, gemountet in
    `S22.mdx`: startet derzeit nicht auf dem ersten Schritt. Anfangszustand auf
    Schritt 1 setzen, damit sofort etwas zu sehen ist.

@@ -111,7 +111,7 @@ function CallTree({ j }: { j: number }) {
 
 export function FibonacciStepper() {
   const [n, setN] = useState(8);
-  const [kRaw, setKRaw] = useState(5);
+  const [kRaw, setKRaw] = useState(1);
   const k = Math.min(kRaw, n);
 
   const seq = useMemo(() => fibSeq(N_MAX), []);
