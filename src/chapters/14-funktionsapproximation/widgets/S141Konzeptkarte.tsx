@@ -1,10 +1,13 @@
-import { ConceptFlow, type FlowEdge, type FlowNode } from "../../../lib";
+import { ConceptFlow, FMM_COLORS, type FlowEdge, type FlowNode } from "../../../lib";
 
 /**
  * Konzeptkarte für Teil 3 (Funktionsapproximation), übernommen aus der
  * Konzeptkarte des Vorlesungs-Repos. Grün markiert sind die Anker aus den
  * Kapiteln 1–9, auf denen dieser Teil aufsetzt; Tensorproduktbasis und
  * TP-Designmatrix aus Kapitel 9 sind hier zu einem Knoten zusammengefasst.
+ * Einsicht: Die Konzepte von Teil 3 bilden zwei verknüpfte Kapitelstränge.
+ * Farbrollen: Anker grün, Kapitel 14 orange, Kapitel 15 violett. Eigene Karte;
+ * keine numerischen Behauptungen (R5, 2026-08-20).
  */
 
 const nodes: FlowNode[] = [
@@ -120,9 +123,9 @@ export function TeilDreiKarte() {
       nodes={nodes}
       edges={edges}
       groups={[
-        { key: "anker", label: "Anker aus Kapitel 1–9", color: "#059669" },
-        { key: "fa1", label: "Kap. 14 · Funktionsapproximation I", color: "#7c3aed" },
-        { key: "fa2", label: "Kap. 15 · Funktionsapproximation II", color: "#c026d3" },
+        { key: "anker", label: "Anker aus Kapitel 1–9", color: FMM_COLORS.gruen },
+        { key: "fa1", label: "Kap. 14 · Funktionsapproximation I", color: FMM_COLORS.orange },
+        { key: "fa2", label: "Kap. 15 · Funktionsapproximation II", color: FMM_COLORS.violett },
       ]}
       openLabel="Kapitel öffnen"
     />

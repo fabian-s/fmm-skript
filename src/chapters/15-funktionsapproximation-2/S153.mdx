@@ -1,4 +1,5 @@
 import { SplineGlaettung } from "./widgets/S153Glaettung";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 15-funktionsapproximation-II, „Das Problem" bis „Beispiel".]
 
@@ -391,7 +392,11 @@ Die rot gezeichneten Residuen zeigen dasselbe von der anderen Seite: Sie werden
 im Mittel kürzer, während die grüne Kurve immer weniger mit der violetten zu tun
 hat.
 
+Welche der drei voreingestellten Knotenzahlen dürfte die unbekannte wahre Funktion am besten treffen?
+
+<Schaetzfrage variante="auswahl" frage="Welcher der drei Fälle wirkt als Schätzer am plausibelsten?" loesung="passend" optionen={[{id: "starr", text: "K = 4"}, {id: "passend", text: "K = 11"}, {id: "flexibel", text: "K = 40"}]}>
 <SplineGlaettung />
+</Schaetzfrage>
 :::
 
 ### Der zweite Weg: strafen statt weglassen
@@ -543,6 +548,12 @@ deren Zahlen wir selbst nachgerechnet haben.
 ### Selbsttest
 
 ::::quiz
+
+:::frage{wahr}
+Im Glättungs-Widget kann $K=40$ eine kleinere RSS und zugleich eine schlechtere Annäherung an die wahre Funktion liefern.
+
+Die RSS misst nur die Anpassung an die verrauschten Daten. Bei großem $K$ folgt der Fit einzelnen Störungen und überanpasst.
+:::
 
 :::frage{falsch}
 Minimieren wir $\sum_i (\cblue{y_i} - \cgreen{\wh f(x_i)})^2$ über alle

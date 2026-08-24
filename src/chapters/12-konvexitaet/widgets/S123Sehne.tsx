@@ -1,48 +1,58 @@
-import { useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
-import { Slider, niceTicks } from "../../../lib";
+import { useState } from "react";
+import type { ReactNode } from "react";
+import {
+  Aufgabe,
+  DragHandle,
+  FMM_COLORS,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  clamp,
+  fmtDe,
+  fmtTick,
+  niceTicks,
+  useDrag,
+} from "../../../lib";
 
 /**
  * §12.3: Sehnentest, Konvex-vs-konkav-Tafeln und Epigraph-Skizze.
+ *
+ * DIE EINE EINSICHT: Ein einziges Paar mit Sehne unter dem Graphen widerlegt
+ * die Konvexität; Gleichheit auf einem geraden Stück trennt konvex von strikt
+ * konvex (Satz 12.3.8, Gleichung 12.3.4).
  *
  * Der SVG-Rechenkern (Kurve, Sehne, Verletzungsflächen als Polygonzüge,
  * ziehbare Endpunkte, λ-Sonde) ist aus dem privaten Kursmaterial
  * heath-ch5-6/src/sections/S61.tsx (ChordSVG, ConvexityPanels, ChordWidget)
  * portiert; Funktionsauswahl, Farbrollen, Achsenbeschriftung, Zahlformat und
- * sämtliche Texte sind für diesen Abschnitt neu geschrieben.
+ * sämtliche Texte sind für diesen Abschnitt neu geschrieben. Das Ziehen läuft
+ * seit 2026-08-19 über `useDrag` aus der Lib (kein touch-action auf dem ganzen
+ * SVG mehr, damit die Seite am Widget vorbeiscrollen kann).
  *
  * Die drei Bausteine ersetzen die Folienbilder epigraph.png und
  * konvexitaet-convex-panels.pdf (12-konvexitaet.Rmd Z. 405 bzw. 410).
  *
- * Farbcode Kapitel 12: Epigraph/Funktionsgraph blau, Sehne und
+ * FARBROLLEN (Kapitel 12): Epigraph/Funktionsgraph blau, Sehne und
  * Konvexkombinationen grün, Verletzungen rot, ausgezeichnete Punkte orange.
  *
- * Per node nachgerechnet (Scratchpad rev123-widget.mjs, rev123-fix.mjs) für
- * genau die vier hier angebotenen Kurven: 0,6x²+0,3 besteht die Sehnenprobe
- * auf jedem Paar mit strikter Ungleichung im Inneren; |x| besteht sie mit
- * Gleichheit, sobald beide Endpunkte auf demselben Ast liegen; 2−0,6x²
- * verletzt sie auf jedem Paar (Panel: Rotanteil 99,9 %); x⁴−3x²−x+3 ist
- * weder konvex noch konkav (Panel a=−1,6/b=1,3: Verletzung 1,738 auf 63,6 %
- * der Strecke, Voreinstellung des Tests a=−1,55/b=1,25: 1,891, dagegen
- * a=−1,8/b=−0,9: 0). Wendepunkte der Doppelmulde bei ±1/√2, deshalb bestehen
- * nur Paare innerhalb eines der beiden konvexen Äste.
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19; zuvor rev123-widget.mjs), über alle 3081
+ * Paare des 0,05-Rasters mit y − x ≥ 0,15 je Kurve: 0,6x²+0,3 besteht die
+ * Sehnenprobe auf JEDEM Paar und deckt den Graphen nie (strikt konvex);
+ * |x| besteht ebenfalls jedes Paar, bei 1482 davon fällt die Sehne mit dem
+ * Graphen zusammen (beide Endpunkte auf demselben Ast) — konvex, nicht
+ * strikt; 2−0,6x² verletzt (12.3.4) auf jedem der 3081 Paare, höchstens um
+ * 2,400; x⁴−3x²−x+3 verletzt auf 1971 Paaren (höchstens um 2,246) und besteht
+ * auf 1110, von denen nur 552 ganz in einem der beiden konvexen Äste liegen —
+ * die Probe kann also auch über den Höcker hinweg gelingen. Einzelwerte: die
+ * Voreinstellung x = −1,55 / y = 1,25 verletzt um 1,891, das Tafelpaar
+ * a = −1,6 / b = 1,3 um 1,738 auf 63,7 % der Strecke, und x = −1,8 / y = −0,9
+ * besteht exakt. Wendepunkte der Doppelmulde bei ±1/√2 = ±0,7071.
  */
 
-const BLAU = "#0072B2"; // Graph und Epigraph
-const GRUEN = "#009E73"; // Sehne, Konvexkombinationen
-const ROT = "#D55E00"; // Stellen, an denen der Graph über der Sehne liegt
-const ORANGE = "#E69F00"; // ausgezeichnete Punkte
-
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
-
-const klemm = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+const BLAU = FMM_COLORS.blau; // Graph und Epigraph
+const GRUEN = FMM_COLORS.gruen; // Sehne, Konvexkombinationen
+const ROT = FMM_COLORS.rot; // Stellen, an denen der Graph über der Sehne liegt
 
 type Kurve = {
   id: string;
@@ -88,6 +98,14 @@ const KURVEN: Kurve[] = [
   },
 ];
 
+/** Zeichenfläche der interaktiven Tafel (auch für die Weltumrechnung). */
+const B = 460;
+const H = 290;
+const PADL_T = 34;
+const PADR_T = 10;
+const PADT_T = 10;
+const PADB_T = 30;
+
 /**
  * Zeichnet Kurve, Sehne und die Stellen, an denen der Graph über der Sehne
  * liegt. Wird von den statischen Tafeln und vom interaktiven Test benutzt.
@@ -100,10 +118,9 @@ function SehnenSVG({
   breite,
   hoehe,
   lambda,
-  ziehbar = false,
   ticks = false,
   epigraph = false,
-  onZiehStart,
+  griff,
 }: {
   f: (x: number) => number;
   a: number;
@@ -112,15 +129,15 @@ function SehnenSVG({
   breite: number;
   hoehe: number;
   lambda?: number;
-  ziehbar?: boolean;
   ticks?: boolean;
   epigraph?: boolean;
-  onZiehStart?: (welcher: "a" | "b", e: ReactPointerEvent) => void;
+  /** Griff-Props aus useDrag; ohne sie ist die Tafel statisch. */
+  griff?: (welcher: "a" | "b") => ReactNode;
 }) {
-  const PADL = ticks ? 34 : 10;
-  const PADR = 10;
-  const PADT = 10;
-  const PADB = ticks ? 22 : 10;
+  const PADL = ticks ? PADL_T : 10;
+  const PADR = ticks ? PADR_T : 10;
+  const PADT = ticks ? PADT_T : 10;
+  const PADB = ticks ? PADB_T : 10;
   const pw = breite - PADL - PADR;
   const ph = hoehe - PADT - PADB;
   const [y0, y1] = yBereich;
@@ -170,6 +187,15 @@ function SehnenSVG({
 
   return (
     <>
+      <rect
+        x={0.5}
+        y={0.5}
+        width={breite - 1}
+        height={hoehe - 1}
+        rx={4}
+        fill="var(--w-bg, #ffffff)"
+        stroke="var(--w-border, #cbd5e1)"
+      />
       {ticks && (
         <>
           {niceTicks(y0, y1, 4).map((t) => (
@@ -179,11 +205,17 @@ function SehnenSVG({
                 x2={breite - PADR}
                 y1={py(t)}
                 y2={py(t)}
-                stroke="#e2e8f0"
+                stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
                 strokeWidth={t === 0 ? 1.2 : 0.6}
               />
-              <text x={PADL - 4} y={py(t) + 3} textAnchor="end" fill="#64748b" fontSize={10}>
-                {fmt(t, Number.isInteger(t) ? 0 : 1)}
+              <text
+                x={PADL - 4}
+                y={py(t) + 3}
+                textAnchor="end"
+                fill="var(--w-muted, #64748b)"
+                fontSize={10}
+              >
+                {fmtTick(t)}
               </text>
             </g>
           ))}
@@ -194,18 +226,31 @@ function SehnenSVG({
                 y2={hoehe - PADB}
                 x1={px(t)}
                 x2={px(t)}
-                stroke="#e2e8f0"
+                stroke={t === 0 ? "var(--w-grid-strong, #cbd5e1)" : "var(--w-grid, #e2e8f0)"}
                 strokeWidth={t === 0 ? 1.2 : 0.6}
               />
-              <text x={px(t)} y={hoehe - PADB + 13} textAnchor="middle" fill="#64748b" fontSize={10}>
-                {fmt(t, 0)}
+              <text
+                x={px(t)}
+                y={hoehe - PADB + 13}
+                textAnchor="middle"
+                fill="var(--w-muted, #64748b)"
+                fontSize={10}
+              >
+                {fmtTick(t, 1)}
               </text>
             </g>
           ))}
         </>
       )}
       {!ticks && y0 < 0 && y1 > 0 && (
-        <line x1={PADL} x2={breite - PADR} y1={py(0)} y2={py(0)} stroke="#e2e8f0" strokeWidth={1} />
+        <line
+          x1={PADL}
+          x2={breite - PADR}
+          y1={py(0)}
+          y2={py(0)}
+          stroke="var(--w-grid, #e2e8f0)"
+          strokeWidth={1}
+        />
       )}
 
       {epigraph && <polygon points={epiFlaeche} fill={BLAU} fillOpacity={0.14} />}
@@ -229,7 +274,7 @@ function SehnenSVG({
             y1={py(f(xl))}
             x2={px(xl)}
             y2={py(sehne(xl))}
-            stroke="#94a3b8"
+            stroke="var(--w-muted, #94a3b8)"
             strokeWidth={1.2}
             strokeDasharray="3 3"
           />
@@ -240,24 +285,18 @@ function SehnenSVG({
 
       {(["a", "b"] as const).map((welcher) => {
         const x = welcher === "a" ? a : b;
-        return (
-          <g key={welcher}>
-            <circle
-              cx={px(x)}
-              cy={py(f(x))}
-              r={ziehbar ? 7 : 3.5}
-              fill="#ffffff"
-              stroke={GRUEN}
-              strokeWidth={2}
-              style={ziehbar ? { cursor: "ew-resize", touchAction: "none" } : undefined}
-              onPointerDown={ziehbar && onZiehStart ? (e) => onZiehStart(welcher, e) : undefined}
-            />
-            {ziehbar && (
-              <text x={px(x) - 3} y={py(f(x)) - 12} fontSize={12} fill={GRUEN}>
-                {welcher === "a" ? "x" : "y"}
-              </text>
-            )}
-          </g>
+        return griff ? (
+          <g key={welcher}>{griff(welcher)}</g>
+        ) : (
+          <circle
+            key={welcher}
+            cx={px(x)}
+            cy={py(f(x))}
+            r={3.5}
+            fill="var(--w-bg, #ffffff)"
+            stroke={GRUEN}
+            strokeWidth={2}
+          />
         );
       })}
     </>
@@ -271,23 +310,22 @@ export function SehnenTest() {
   const [a, setA] = useState(KURVEN[0].start[0]);
   const [b, setB] = useState(KURVEN[0].start[1]);
   const [lambda, setLambda] = useState(0.5);
-  const svgRef = useRef<SVGSVGElement>(null);
-  const zieht = useRef<"a" | "b" | null>(null);
 
   const kurve = KURVEN.find((k) => k.id === kurveId) ?? KURVEN[0];
   const { f } = kurve;
 
-  const B = 460;
-  const H = 290;
-  const PADL = 34;
-  const PADR = 10;
+  const px = (x: number) => PADL_T + ((x + 2) / 4) * (B - PADL_T - PADR_T);
+  const py = (y: number) =>
+    PADT_T + (1 - (y - kurve.yBereich[0]) / (kurve.yBereich[1] - kurve.yBereich[0])) * (H - PADT_T - PADB_T);
 
-  const zurWelt = (clientX: number) => {
-    const r = svgRef.current?.getBoundingClientRect();
-    if (!r) return 0;
-    const sx = ((clientX - r.left) / r.width) * B;
-    return klemm(((sx - PADL) / (B - PADL - PADR)) * 4 - 2, -2, 2);
-  };
+  const zieh = useDrag<"a" | "b">({
+    feld: { x0: PADL_T, y0: PADT_T, w: B - PADL_T - PADR_T, h: H - PADT_T - PADB_T },
+    welt: { x0: -2, x1: 2, y0: kurve.yBereich[0], y1: kurve.yBereich[1] },
+    // nur die x-Koordinate zählt; die Endpunkte sitzen auf dem Graphen
+    clamp: ([x, y], id) => [id === "a" ? clamp(x, -2, b - 0.15) : clamp(x, a + 0.15, 2), y],
+    greifPosition: (id) => (id === "a" ? [a, f(a)] : [b, f(b)]),
+    onDrag: ([x], id) => (id === "a" ? setA(x) : setB(x)),
+  });
 
   const kurveWaehlen = (id: string) => {
     const k = KURVEN.find((c) => c.id === id) ?? KURVEN[0];
@@ -314,67 +352,24 @@ export function SehnenTest() {
   // Sehne und Graph fallen zusammen: dann steht in (12.3.4) Gleichheit.
   // Nicht am aktuellen λ ablesen, dort ist bei λ = 0 oder λ = 1 immer Gleichheit.
   const sehneAufGraph = groessteAbweichung < 1e-12;
-
-  let status: { farbe: string; kopf: string; text: string };
-  if (verletzt && kurve.id === "konkav") {
-    status = {
-      farbe: ROT,
-      kopf: "Der Graph liegt über der ganzen Sehne",
-      text: `An seiner dicksten Stelle misst der rote Streifen ${fmt(
-        groessteVerletzung,
-        3,
-      )}. So geht es dieser Funktion bei jedem Paar, (12.3.4) ist also nirgends erfüllt. Mit umgedrehtem Zeichen stimmt die Ungleichung dafür immer, und genau so ist konkav erklärt (Bemerkung 12.3.9): −f ist konvex.`,
-    };
-  } else if (verletzt) {
-    status = {
-      farbe: ROT,
-      kopf: "Sehne unterschritten",
-      text: `An seiner dicksten Stelle misst der rote Streifen ${fmt(
-        groessteVerletzung,
-        3,
-      )}. Dort steht in (12.3.4) das falsche Zeichen. Weil Satz 12.3.8 die Ungleichung für alle Paare fordert, ist die Frage damit entschieden: f ist nicht konvex.`,
-    };
-  } else if (sehneAufGraph) {
-    status = {
-      farbe: GRUEN,
-      kopf: "Sehne und Graph fallen zusammen",
-      text: `Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab und in (12.3.4) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung nicht: Der Betrag ist konvex, aber nicht strikt konvex.`,
-    };
-  } else if (kurve.id === "doppelmulde") {
-    status = {
-      farbe: ORANGE,
-      kopf: "Dieses Paar besteht die Probe",
-      text: `Zwischen x und y bleibt der Graph unter der Sehne. Bewiesen ist damit nichts, denn (12.3.4) fordert alle Paare, und diese Funktion fällt anderswo durch: in der Voreinstellung x = −1,55 und y = 1,25 um 1,891.`,
-    };
-  } else {
-    status = {
-      farbe: GRUEN,
-      kopf: "Sehne liegt über dem Graphen",
-      text: `Zwischen x und y bleibt der Graph unter der Sehne, und bei dieser Funktion gelingt das für jedes Paar${
-        kurve.id === "parabel" ? ", im Inneren sogar mit strikter Ungleichung" : ""
-      }.`,
-    };
-  }
+  // Wendepunkte der Doppelmulde bei ±1/sqrt(2): liegen beide Endpunkte in
+  // einem der beiden konvexen Äste? (Bestehen kann das Paar auch sonst.)
+  const WENDE = 1 / Math.SQRT2;
+  const imSelbenAst = b <= -WENDE || a >= WENDE;
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Satz 12.3.8 fordert (12.3.4) für jedes Punktepaar und jedes λ. Drei dieser Größen können
-        wir hier von Hand einstellen: Die weißen Griffe sitzen auf x und y, der dritte Regler
-        wählt λ. Auf der senkrechten Sonde markiert der blaue Punkt f(λx + (1−λ)y), also die
-        linke Seite der Ungleichung, der grüne den Sehnenwert λf(x) + (1−λ)f(y), also die
-        rechte. Steigt der Graph irgendwo über die Sehne, füllt sich die Fläche dazwischen rot.
-      </p>
+      <Aufgabe>
+        Ziehen wir x und y auf der Doppelmulde in denselben Talgrund, bis das Paar die Probe
+        besteht. Danach suchen wir eines, das sie sprengt.
+      </Aufgabe>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         {KURVEN.map((k) => (
           <button
             key={k.id}
             type="button"
-            className={`rounded border px-3 py-1 ${
-              k.id === kurveId
-                ? "border-sky-600 bg-sky-50 dark:bg-sky-900/40"
-                : "border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-            }`}
+            aria-pressed={k.id === kurveId}
+            className={k.id === kurveId ? W_BUTTON_AKTIV : W_BUTTON}
             onClick={() => kurveWaehlen(k.id)}
           >
             {k.name}
@@ -382,30 +377,18 @@ export function SehnenTest() {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-4">
-        <div className="shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
-          <div className="mb-0.5 text-[11px]" style={{ paddingLeft: 34 }}>
-            f(x) ↑
-          </div>
+      <div className="flex flex-wrap items-start gap-4">
+        <div className="min-w-0 grow basis-[320px]">
           <svg
-            ref={svgRef}
             width={B}
             height={H}
             viewBox={`0 0 ${B} ${H}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
-            style={{ touchAction: "none" }}
-            onPointerMove={(e) => {
-              if (!zieht.current) return;
-              const x = zurWelt(e.clientX);
-              if (zieht.current === "a") setA(Math.min(x, b - 0.15));
-              else setB(Math.max(x, a + 0.15));
-            }}
-            onPointerUp={() => {
-              zieht.current = null;
-            }}
-            onPointerLeave={() => {
-              zieht.current = null;
-            }}
+            className="max-w-full h-auto rounded"
+            role="img"
+            aria-label={`Der Graph von ${kurve.formel} mit der Sehne zwischen x und y; die Sehne wird ${
+              verletzt ? "unterschritten" : "nicht unterschritten"
+            }.`}
+            {...zieh.svgProps}
           >
             <SehnenSVG
               f={f}
@@ -415,20 +398,38 @@ export function SehnenTest() {
               breite={B}
               hoehe={H}
               lambda={lambda}
-              ziehbar
               ticks
-              onZiehStart={(welcher, e) => {
-                zieht.current = welcher;
-                (e.target as Element).setPointerCapture(e.pointerId);
+              griff={(welcher) => {
+                const x = welcher === "a" ? a : b;
+                return (
+                  <DragHandle
+                    x={px(x)}
+                    y={py(f(x))}
+                    r={4.5}
+                    farbe={GRUEN}
+                    aktiv={zieh.dragging === welcher}
+                    label={welcher === "a" ? "x" : "y"}
+                    {...zieh.handleProps(welcher)}
+                  />
+                );
               }}
             />
+            <text x={PADL_T} y={9} fill="var(--w-muted, #64748b)" fontSize={10}>
+              f(x) ↑
+            </text>
+            <text
+              x={(PADL_T + B - PADR_T) / 2}
+              y={H - 3}
+              textAnchor="middle"
+              fill="var(--w-muted, #64748b)"
+              fontSize={10}
+            >
+              x →
+            </text>
           </svg>
-          <div className="mt-0.5 text-center text-[11px]" style={{ width: B }}>
-            x →
-          </div>
         </div>
 
-        <div className="min-w-[15rem] grow space-y-2 text-sm">
+        <div className="min-w-[15rem] grow basis-[15rem] space-y-1 text-sm">
           <p className="font-mono text-xs" style={{ color: BLAU }}>
             {kurve.formel}
           </p>
@@ -439,7 +440,7 @@ export function SehnenTest() {
             min={-2}
             max={2}
             step={0.01}
-            fmt={(v) => fmt(v)}
+            accent={GRUEN}
           />
           <Slider
             label="y"
@@ -448,27 +449,27 @@ export function SehnenTest() {
             min={-2}
             max={2}
             step={0.01}
-            fmt={(v) => fmt(v)}
+            accent={GRUEN}
           />
-          <Slider label="λ" value={lambda} onChange={setLambda} min={0} max={1} step={0.01} fmt={(v) => fmt(v)} />
+          <Slider label="λ" value={lambda} onChange={setLambda} min={0} max={1} step={0.01} />
           <table className="text-sm">
             <tbody>
               <tr>
                 <td className="pr-3">λx + (1−λ)y</td>
                 <td className="font-mono text-xs" style={{ color: GRUEN }}>
-                  {fmt(xl, 3)}
+                  {fmtDe(xl, 3)}
                 </td>
               </tr>
               <tr>
                 <td className="pr-3">f(λx + (1−λ)y)</td>
                 <td className="font-mono text-xs" style={{ color: BLAU }}>
-                  {fmt(links, 3)}
+                  {fmtDe(links, 3)}
                 </td>
               </tr>
               <tr>
                 <td className="pr-3">λf(x) + (1−λ)f(y)</td>
                 <td className="font-mono text-xs" style={{ color: GRUEN }}>
-                  {fmt(rechts, 3)}
+                  {fmtDe(rechts, 3)}
                 </td>
               </tr>
             </tbody>
@@ -478,12 +479,45 @@ export function SehnenTest() {
               ? "An dieser Zwischenstelle stimmt (12.3.4)."
               : "An dieser Zwischenstelle steht in (12.3.4) das falsche Zeichen."}
           </p>
-          <p className="font-semibold" style={{ color: status.farbe }}>
-            {status.kopf}
-          </p>
-          <p className="max-w-prose">{status.text}</p>
         </div>
       </div>
+
+      {verletzt && kurve.id === "konkav" ? (
+        <Verdikt kind="fail" titel="Der Graph liegt über der ganzen Sehne.">
+          An seiner dicksten Stelle misst der rote Streifen {fmtDe(groessteVerletzung, 3)}. So
+          geht es dieser Funktion bei jedem Paar, (12.3.4) ist also nirgends erfüllt. Mit
+          umgedrehtem Zeichen stimmt die Ungleichung dafür immer, und genau so ist konkav erklärt
+          (Bemerkung 12.3.9): −f ist konvex.
+        </Verdikt>
+      ) : verletzt ? (
+        <Verdikt kind="fail" titel="Sehne unterschritten: die Frage ist entschieden.">
+          An seiner dicksten Stelle misst der rote Streifen {fmtDe(groessteVerletzung, 3)}. Dort
+          steht in (12.3.4) das falsche Zeichen. Weil Satz 12.3.8 die Ungleichung für alle Paare
+          fordert, genügt dieses eine Gegenbeispiel: f ist nicht konvex.
+        </Verdikt>
+      ) : sehneAufGraph ? (
+        <Verdikt kind="warn" titel="Sehne und Graph fallen zusammen.">
+          Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab
+          und in (12.3.4) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung
+          nicht: Der Betrag ist konvex, aber nicht strikt konvex (Definition 12.5.4).
+        </Verdikt>
+      ) : kurve.id === "doppelmulde" ? (
+        <Verdikt kind="ok" titel="Geschafft: dieses Paar besteht die Probe.">
+          Zwischen x und y bleibt der Graph unter der Sehne.{" "}
+          {imSelbenAst
+            ? "Beide Endpunkte liegen im selben konvexen Ast; die Wendepunkte sitzen bei ±0,7071."
+            : "Das Paar überspannt sogar den Höcker: die Sehne läuft dort schlicht hoch genug."}{" "}
+          Bewiesen ist damit nichts, denn (12.3.4) fordert alle Paare, und diese Funktion fällt
+          anderswo durch. Genau darin liegt die Asymmetrie: Widerlegen kostet ein Paar, Beweisen
+          eine Rechnung.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="ok" titel="Sehne liegt über dem Graphen.">
+          Zwischen x und y bleibt der Graph unter der Sehne, und bei dieser Funktion gelingt das
+          für jedes Paar
+          {kurve.id === "parabel" ? ", im Inneren sogar mit strikter Ungleichung" : ""}.
+        </Verdikt>
+      )}
     </div>
   );
 }
@@ -506,12 +540,14 @@ export function KonvexKonkavPanels() {
         {tafeln.map(({ id, a, b, titel }) => {
           const k = KURVEN.find((c) => c.id === id) ?? KURVEN[0];
           return (
-            <div key={id}>
+            <div key={id} className="min-w-0 basis-[190px]">
               <svg
                 width={190}
                 height={140}
                 viewBox="0 0 190 140"
-                className="rounded border border-slate-300 bg-white dark:border-slate-600"
+                className="max-w-full h-auto rounded"
+                role="img"
+                aria-label={`${titel}: ${k.formel} mit einer Sehne.`}
               >
                 <SehnenSVG f={k.f} a={a} b={b} yBereich={k.yBereich} breite={190} hoehe={140} />
               </svg>
@@ -537,7 +573,9 @@ export function EpigraphSkizze() {
         width={280}
         height={200}
         viewBox="0 0 280 200"
-        className="rounded border border-slate-300 bg-white dark:border-slate-600"
+        className="max-w-full h-auto rounded"
+        role="img"
+        aria-label="Der Epigraph von f(x) = 0,6x² + 0,3 als Fläche über dem Graphen, mit einer Sehne darin."
       >
         <SehnenSVG f={k.f} a={-1.3} b={1.6} yBereich={k.yBereich} breite={280} hoehe={200} epigraph />
         <text x={150} y={48} fontSize={12} fill={BLAU}>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { niceTicks } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe as fmt, niceTicks, Slider, Verdikt } from "../../../lib";
 
 /**
  * §15.1: Kruemmungsvergleich am Beispiel (0,0), (1,1), (2,0).
@@ -16,18 +16,15 @@ import { niceTicks } from "../../../lib";
  * Farbrollen nach dem Kapitel-15-Code: Daten blau, Schaetzer/Interpolant s
  * gruen, Knoten orange, Abweichung h und Vergleichsfunktion g_t rot.
  *
- * Nachgerechnet (node, check-math-s151.mjs):
+ * Verifiziert (node, verify-15-funktionsapproximation-2/s151.mjs, 2026-08-19):
  * - s ist C^2, natuerlich (s''(0) = s''(2) = 0) und interpoliert die Punkte.
  * - J(s) = 3 + 3 = 6, J(p) = 4 * 2 = 8, Kreuzterm exakt 0.
  * - J(g_t) = 6 + 2t^2 (Simpson trifft die Formel ueber den ganzen
  *   Reglerbereich auf 1e-9 genau).
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const ACHSE = "#64748b";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const DATEN: Array<[number, number]> = [
   [0, 0],
@@ -65,15 +62,6 @@ function funktional(t: number): number {
 const W = 430;
 const H = 260;
 const PAD = { l: 42, r: 12, t: 12, b: 28 };
-
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
 
 interface Ansicht {
   id: "kurven" | "kruemmung";
@@ -189,12 +177,7 @@ export function KruemmungsVergleich() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Blau sind die drei Datenpunkte, orange die Knoten, grün der natürliche kubische Spline s,
-        rot der Vergleichsinterpolant g_t = s + t·(p − s). Bei t = 1 ist das genau die Parabel
-        p(x) = −x² + 2x. Die Integrale rechnet das Widget mit der Simpson-Regel auf beiden
-        Teilintervallen aus.
-      </p>
+      <Aufgabe>Stellen wir zuerst eine Vermutung für die minimale Krümmung auf und verschieben dann t.</Aufgabe>
 
       <div className="flex flex-wrap gap-2">
         {ANSICHTEN.map((a) => (
@@ -215,26 +198,12 @@ export function KruemmungsVergleich() {
         </button>
       </div>
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-28 shrink-0 text-right">Mischung t</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={-1000}
-          max={2000}
-          step={50}
-          value={tPromille}
-          onChange={(e) => setTPromille(Number(e.target.value))}
-        />
-        <span className="w-16 shrink-0 font-mono text-xs">{fmt(t, 2)}</span>
-      </label>
+      <Slider label="Mischung t" min={-1000} max={2000} step={50} value={tPromille} onChange={setTPromille} fmt={(v) => fmt(v / 1000, 2)} accent={ROT} />
 
       <div className="flex flex-wrap items-start gap-4">
         <svg
-          width={W}
-          height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -242,7 +211,7 @@ export function KruemmungsVergleich() {
             width={W - PAD.l - PAD.r}
             height={H - PAD.t - PAD.b}
             fill="none"
-            stroke="#cbd5e1"
+            stroke={RAHMEN}
             strokeWidth={0.8}
           />
           {niceTicks(xd[0], xd[1]).map((v) => (
@@ -335,7 +304,7 @@ export function KruemmungsVergleich() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={Math.abs(t) < 0.001 ? "ok" : "warn"}>{status} Das bestätigt Satz 15.1.4.</Verdikt>
     </div>
   );
 }

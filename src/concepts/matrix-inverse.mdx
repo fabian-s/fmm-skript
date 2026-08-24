@@ -1,6 +1,6 @@
 export const title = "Inverse einer Matrix";
 
-import { InverseWidget } from "./widgets/MatrixInverseWidget";
+import { InvertierbarkeitWidget } from "./widgets/MatrixInverseWidget";
 
 Die *Inverse* einer quadratischen
 :k[Matrix]{#matrix} $\bA$ spielt
@@ -26,4 +26,13 @@ ist, die Matrix also *regulär* (nicht singulär) ist.
 Konkrete Probe:
 $\begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & -1 \\ -1 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, diese beiden Matrizen sind also zueinander invers.
 
-<InverseWidget />
+Woran scheitert die Umkehrung, wenn sie scheitert? Sehen wir uns an, was
+passiert, wenn eine Abbildung eine ganze Richtung zusammendrückt.
+
+<InvertierbarkeitWidget />
+
+Umkehrbar ist eine Abbildung also genau dann, wenn sie verschiedene Eingaben
+auch auf verschiedene Ausgaben schickt. Fällt eine Richtung in sich zusammen,
+teilen sich unendlich viele Urbilder ein Bild, und keine Matrix kann diese
+Entscheidung rückgängig machen; schon davor kündigt sich der Verlust an,
+indem die Inverse immer stärker verstärken müsste.

@@ -1,8 +1,22 @@
 import { useMemo, useState } from "react";
-import { niceTicks } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  fmtDe,
+  niceTicks,
+  fmtTick,
+  Slider,
+  Stepper,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+} from "../../../lib";
 
 /**
- * §13.1: Bisektionsverfahren als Stepper mit Intervall-Verlauf.
+ * §13.1 — DIE EINE EINSICHT: Die Bisektion halbiert die Klammer in jedem
+ * Schritt, deshalb ist ihre Schrittzahl nach Satz 13.1.8 exakt vorhersagbar —
+ * und ebenso, dass sie bei mehreren Nullstellen im Startintervall nicht sagen
+ * kann, welche sie findet: das entscheidet schon der erste Mittelpunkt.
  *
  * Widget-CODE (Rahmenrechnung mkRahmen/Achsen/fnPfad, Stepper-Knoepfe,
  * Intervalltabelle) portiert aus heath-ch5-6/src/sections/widgets/S55Widgets.tsx
@@ -13,18 +27,23 @@ import { niceTicks } from "../../../lib";
  * Nullstelle gruen, der gerade gepruefte Mittelpunkt orange; der Graph von f
  * traegt das im Kapitel freie Violett.
  *
- * Nachgerechnet (node, check-math-s131.mjs):
- * - f(x) = x^2 - 2 auf [1, 2], eps = 1e-6: genau 20 Schritte, Endintervall
- *   der Laenge 2^-20 = 9,5367e-7, Mitte 1,41421366 mit Fehler 9,50e-8.
- *   Erste Mittelpunkte 1,5 / 1,25 / 1,375 / 1,4375 / 1,40625.
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
+ * aeltere Pruefung check-math-s131.mjs bestaetigt):
+ * - f(x) = x^2 - 2 auf [1, 2]: eps = 1e-3 -> 10 Schritte, 1e-4 -> 14,
+ *   1e-6 -> 20, 1e-8 -> 27, 1e-10 -> 34; die Vorhersage ceil(log2((b-a)/eps))
+ *   trifft in allen fuenf Faellen exakt. Bei eps = 1e-6 hat das Endintervall
+ *   die Laenge 9,5367e-7 = 2^-20, seine Mitte 1,414213657 liegt 9,501e-8
+ *   neben sqrt(2).
+ * - Eine zusaetzliche Dezimalstelle kostet 1/log10(2) = 3,3219 Schritte.
  * - f(x) = x^3 - 3x + 1 hat DREI Nullstellen (-1,879385 / 0,347296 /
- *   1,532089); aus [-2, 2] laeuft die Bisektion gegen die linke.
+ *   1,532089); aus [-2, 2] laeuft die Bisektion in 22 Schritten gegen die
+ *   linke, denn f(0) = 1 hat dasselbe Vorzeichen wie f(2) = 3.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const VIOLETT = "#9E57D5";
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
+const VIOLETT = FMM_COLORS.violett;
 const ACHSE = "#64748b";
 
 interface Aufgabe {
@@ -66,14 +85,7 @@ const W = 430;
 const H = 250;
 const PAD = { l: 40, r: 12, t: 10, b: 26 };
 
-function fmt(v: number, d = 6): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
+const fmt = (v: number, d = 6) => fmtDe(v, d);
 
 const HOCH: Record<string, string> = {
   "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
@@ -151,6 +163,13 @@ export function BisektionStepper() {
     }
   }
 
+  // Achsen-Ticks samt Schrittweite: fmtTick braucht sie, sonst stehen
+  // Gleitkommareste wie 1,5999999999999999 an der Achse.
+  const xTicks = niceTicks(auf.xd[0], auf.xd[1]);
+  const yTicks = niceTicks(auf.yd[0], auf.yd[1]);
+  const xStep = xTicks.length > 1 ? xTicks[1] - xTicks[0] : 1;
+  const yStep = yTicks.length > 1 ? yTicks[1] - yTicks[0] : 1;
+
   const schritteVorhergesagt = Math.ceil(Math.log2((auf.b0 - auf.a0) / tol));
   const mitte = a + (b - a) / 2;
   const naechste = auf.nullstellen.reduce(
@@ -158,8 +177,12 @@ export function BisektionStepper() {
     auf.nullstellen[0],
   );
 
+  let art: "neutral" | "ok" | "warn" = "neutral";
+  let titel = `Klammer nach ${idx} ${idx === 1 ? "Halbierung" : "Halbierungen"}`;
   let status: string;
   if (fertig) {
+    art = "ok";
+    titel = "am Ziel";
     status =
       `Fertig nach ${zeilen.length - 1} Halbierungen. Satz 13.1.8 hatte ` +
       `⌈log₂((b − a)/ε)⌉ = ${schritteVorhergesagt} vorhergesagt, und das ist keine Schätzung, ` +
@@ -168,6 +191,8 @@ export function BisektionStepper() {
       `höchstens ${fmtE((b - a) / 2)}; tatsächlich sind es ${fmtE(Math.abs(mitte - naechste))} bis zur ` +
       `Nullstelle ${fmt(naechste)}.`;
   } else if (auf.id === "kubisch" && idx === 0) {
+    art = "warn";
+    titel = "drei Nullstellen, eine Klammer";
     status =
       `Das Startintervall [−2, 2] enthält drei Nullstellen: −1,879385, 0,347296 und 1,532089. ` +
       `Der Vorzeichenwechsel zwischen f(−2) = −1 und f(2) = 3 sagt nur, dass mindestens eine ` +
@@ -186,21 +211,20 @@ export function BisektionStepper() {
       `höchstens ${fmtE((b - a) / 4)} entfernt.`;
   }
 
-  const knopf = (aktiv: boolean) =>
-    `rounded border px-2 py-1 text-sm ${
-      aktiv
-        ? "border-slate-500 bg-slate-200 font-semibold dark:bg-slate-700"
-        : "border-slate-300 dark:border-slate-600"
-    }`;
+  const knopf = (aktiv: boolean) => (aktiv ? W_BUTTON_AKTIV : W_BUTTON);
 
   const tabelle = zeilen.slice(0, idx + 1);
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Violett ist der Graph von f, blau die aktuelle Klammer [a, b] auf der x-Achse, orange der
-        Mittelpunkt m, den dieser Schritt prüft, grün die gesuchte Nullstelle. Jeder Klick auf
-        „Schritt“ führt genau einen Durchlauf der Schleife aus Algorithmus 13.1.7 aus.
+      <Aufgabe>
+        Schieben wir den Schrittregler durch und vergleichen die gebrauchte Zahl der Halbierungen
+        mit der Vorhersage von Satz 13.1.8.
+      </Aufgabe>
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
+        Violett der Graph von f, blau die aktuelle Klammer [a, b] auf der x-Achse, orange der
+        Mittelpunkt m, den dieser Schritt prüft, grün die Nullstellen. Ein Schritt ist genau ein
+        Durchlauf der Schleife aus Algorithmus 13.1.7.
       </p>
       <div className="flex flex-wrap gap-2">
         {AUFGABEN.map((x) => (
@@ -217,48 +241,37 @@ export function BisektionStepper() {
           </button>
         ))}
       </div>
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-28 shrink-0 text-right">Toleranz ε</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={1}
-          max={10}
-          step={1}
-          value={exp}
-          onChange={(e) => {
-            setExp(Number(e.target.value));
-            setK(0);
-          }}
-        />
-        <span className="w-16 shrink-0 font-mono text-xs">10^−{exp}</span>
-      </label>
-      <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          className={knopf(false)}
-          onClick={() => setK((v) => Math.min(v + 1, zeilen.length - 1))}
-        >
-          Schritt
-        </button>
-        <button
-          type="button"
-          className={knopf(false)}
-          onClick={() => setK(zeilen.length - 1)}
-        >
-          Bis zum Ende
-        </button>
-        <button type="button" className={knopf(false)} onClick={() => setK(0)}>
-          Zurücksetzen
-        </button>
-      </div>
+      <Slider
+        label="Toleranz ε"
+        value={exp}
+        onChange={(v) => {
+          setExp(Math.round(v));
+          setK(0);
+        }}
+        min={1}
+        max={10}
+        step={1}
+        fmt={(v) => `10^−${Math.round(v)}`}
+      />
+      <Stepper
+        step={idx}
+        setStep={setK}
+        max={zeilen.length - 1}
+        narration={
+          fertig
+            ? `Endintervall [${fmt(a, 8)}; ${fmt(b, 8)}]`
+            : `Prüfpunkt m = ${fmt(m as number, 6)}`
+        }
+      />
 
       <div className="flex flex-wrap items-start gap-4">
         <svg
           width={W}
           height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          role="img"
+          aria-label={`Der Graph von f mit der Klammer [a, b] nach ${idx} Halbierungen und dem gerade geprüften Mittelpunkt.`}
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -269,7 +282,7 @@ export function BisektionStepper() {
             stroke="#cbd5e1"
             strokeWidth={0.8}
           />
-          {niceTicks(auf.xd[0], auf.xd[1]).map((t) => (
+          {xTicks.map((t) => (
             <g key={`x${t}`}>
               <line x1={px(t)} x2={px(t)} y1={H - PAD.b} y2={H - PAD.b + 3} stroke={ACHSE} />
               <text
@@ -279,15 +292,15 @@ export function BisektionStepper() {
                 fontSize={9}
                 fill={ACHSE}
               >
-                {String(t).replace("-", "−").replace(".", ",")}
+                {fmtTick(t, xStep)}
               </text>
             </g>
           ))}
-          {niceTicks(auf.yd[0], auf.yd[1]).map((t) => (
+          {yTicks.map((t) => (
             <g key={`y${t}`}>
               <line x1={PAD.l - 3} x2={PAD.l} y1={py(t)} y2={py(t)} stroke={ACHSE} />
               <text x={PAD.l - 5} y={py(t) + 3} textAnchor="end" fontSize={9} fill={ACHSE}>
-                {String(t).replace("-", "−").replace(".", ",")}
+                {fmtTick(t, yStep)}
               </text>
             </g>
           ))}
@@ -390,7 +403,9 @@ export function BisektionStepper() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={art} titel={titel}>
+        {status}
+      </Verdikt>
     </div>
   );
 }

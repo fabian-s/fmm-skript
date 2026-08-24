@@ -1,12 +1,16 @@
-import { ConceptFlow, type FlowEdge, type FlowNode } from "../../../lib";
+import { Aufgabe, ConceptFlow, FMM_COLORS, type FlowEdge, type FlowNode } from "../../../lib";
 import { chapters } from "../../index";
 
 /**
- * Kurskarte für Abschnitt 1.2: alle 15 Kapitel als Wirbelsäule von oben nach
- * unten (so liest man das Skript), Abhängigkeiten über Nachbarkapitel hinweg
- * als Bögen — Vorgriffe und Anker springen so ins Auge. Kanten und Teile
- * folgen der Konzeptkarte des Vorlesungs-Repos (conceptmap.qmd); die dortigen
- * Vorlesungen 13/14 bzw. 15/16 sind hier die Kapitel 13 bzw. 14/15.
+ * Einsicht: Ein angeklicktes Kapitel macht seine unmittelbaren Voraussetzungen
+ * und Folgen im Kursnetz sichtbar.
+ * Farbrollen: Grau = Vorwissen, Blau = Teil 1, Orange = Teil 2, Violett =
+ * Teil 3; die Farben gruppieren Kursabschnitte und sind keine Fehler- oder
+ * Lösungsfarben aus Beispiel 1.1.1.
+ * Provenienz: Kantenstruktur aus conceptmap.qmd des Vorlesungs-Repos,
+ * Darstellung mit der lokalen ConceptFlow-Komponente.
+ * Verifizierte Zahlen: 15 Kapitel, 3 Vorwissensknoten und 34 Abhängigkeiten
+ * in verify-01-intro/check-kurskarte.mjs, 2026-08-19.
  */
 
 // Kurztitel für die Kästen — der volle Titel steht in der Detailzeile.
@@ -87,17 +91,20 @@ const edges: FlowEdge[] = [
 
 export function KursKarte() {
   return (
-    <ConceptFlow
-      ariaLabel="Abhängigkeitskarte der 15 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
-      nodes={[...vorwissen, ...kapitel]}
-      edges={edges}
-      groups={[
-        { key: "vor", label: "Vorwissen", color: "#059669" },
-        { key: "teil1", label: "Teil 1 · Numerische lineare Algebra (Kap. 1–9)", color: "#0f7490" },
-        { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–13)", color: "#c2620b" },
-        { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 14–15)", color: "#7c3aed" },
-      ]}
-      openLabel="Kapitel öffnen"
-    />
+    <div>
+      <Aufgabe>Tippen wir ein Kapitel an und verfolgen wir seine direkten Voraussetzungen und Folgen.</Aufgabe>
+      <ConceptFlow
+        ariaLabel="Abhängigkeitskarte der 15 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
+        nodes={[...vorwissen, ...kapitel]}
+        edges={edges}
+        groups={[
+          { key: "vor", label: "Vorwissen", color: FMM_COLORS.grau },
+          { key: "teil1", label: "Teil 1 · Numerische lineare Algebra (Kap. 1–9)", color: FMM_COLORS.blau },
+          { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–13)", color: FMM_COLORS.orange },
+          { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 14–15)", color: FMM_COLORS.violett },
+        ]}
+        openLabel="Kapitel öffnen"
+      />
+    </div>
   );
 }

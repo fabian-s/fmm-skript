@@ -1,6 +1,5 @@
 import { SplineKonstruktion } from "./widgets/S144Konstruktion";
 import { BSplineBasis } from "./widgets/S144BSplineBasis";
-import { CoxDeBoorSchritt } from "./widgets/S144CoxDeBoor";
 import { StoerungVergleich } from "./widgets/S144Stoerung";
 
 ::quelle[Folien 14-funktionsapproximation, „Splines" bis „(B-)Splines: Eigenschaften II".]
@@ -415,30 +414,15 @@ das System $\bB\ba = \cblue{\by}$ auf und lösen es. Neu ist nur, wie gut sich
 dieses System benimmt.
 
 :::vertiefung[Die B-Spline-Basis erkunden]
-Der Gradregler baut zu einem festen Gitter jedes Mal die erweiterte
-Knotenfolge neu auf und wertet die Rekursion aus. Aus Treppenstufen werden
-Hüte, aus Hüten Glocken, und die Zahl der Basisfunktionen wächst mit jedem
-Grad um eins.
+Wie viele Basisfunktionen sind an einer Stelle aktiv, und wie entsteht ihre Form aus der Rekursion?
 
 <BSplineBasis />
 
 Die gestrichelte Summe liegt über dem ganzen Gitter konstant bei eins, obwohl
 die einzelnen Kurven ganz verschieden aussehen. Und an jeder Stelle sind
 höchstens $q+1$ Basisfunktionen von null verschieden: Das ist die Zahl, die
-gleich die Rechenzeit bestimmt.
-:::
-
-:::vertiefung[Ein Rekursionsschritt von innen]
-Ein Schritt der Cox-de-Boor-Rekursion ist eine Überblendung zwischen zwei
-Nachbarfunktionen niedrigeren Grades.
-
-<CoxDeBoorSchritt />
-
-Die linke Gewichtsrampe steigt von null auf eins, die rechte fällt von eins
-auf null; wo ihr Faktor positiv ist, liegen beide stets zwischen null und
-eins. Daraus folgt unmittelbar, dass das Ergebnis nirgends negativ wird,
-dass sein Träger genau ein Gitterintervall länger ist als der der Bausteine
-und dass der Grad um eins steigt.
+gleich die Rechenzeit bestimmt. Der aufgeklappte Rekursionsschritt zeigt die
+beiden Gewichtsrampen an derselben Idee und erklärt, warum der Grad um eins steigt.
 :::
 
 :::bemerkung[14.4.12 (B-Splines in R)]

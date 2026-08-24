@@ -1,22 +1,47 @@
 import { useState } from "react";
-import { Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  useAnimatedValue,
+} from "../../../lib";
 
 /**
- * Blockbild der reduzierten SVD für §6.3: A = U Σ Vᵀ mit den Partitionen
- * U = (U_r | U_{m−r}) und V = (V_r | V_{n−r}). Ein Klick auf einen Block sagt,
- * was er beiträgt und ob er die Reduktion überlebt; der Umschalter blendet
- * alles aus, was gegen einen Nullblock von Σ läuft.
+ * DIE EINE EINSICHT: Alles, was im Produkt UΣVᵀ auf einen Nullblock von Σ
+ * trifft, trägt nichts bei, deshalb darf die Zerlegung auf U_r, Σ_r und V_rᵀ
+ * schrumpfen, ohne dass sich A ändert (Satz 6.3.1).
  *
- * Aus der privaten mml-ch4-App war hier nichts zu holen (dort werden 2×2-
- * Geometrie und 3D-Perspektive gezeichnet, kein Blockschema): Aufbau, Farben
- * und sämtliche Texte sind eigenes Material, Farbcode wie im Kapitel
- * (grün = U, orange = Σ, blau = V).
+ * Der Umschalter ist ein diskreter Sprung und bekommt deshalb einen Übergang
+ * von 250 ms (Muster 12): sonst ist nicht zu sehen, WELCHE Blöcke verschwinden.
+ *
+ * FARBROLLEN (Kapitel 6): grün = U und seine Teilblöcke, orange = Σ,
+ * blau = V; grau = die Matrix A selbst und Nebenangaben. Rot bleibt Rest- und
+ * Fehlertermen vorbehalten und kommt hier nicht vor.
+ *
+ * PROVENIENZ: Aus der privaten mml-ch4-App war hier nichts zu holen (dort
+ * werden 2×2-Geometrie und 3D-Perspektive gezeichnet, kein Blockschema);
+ * Aufbau, Farben und sämtliche Texte sind eigenes Material.
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
+ * 2026-08-19): Speicherbilanz m² + n² + min(m,n) gegen r(m + n + 1) gegen mn:
+ * Voreinstellung m = 5, n = 4, r = 2: 45 gegen 20 gegen 20;
+ * Preset r = 1: 45 gegen 10; Preset m = n = r = 4: 36 gegen 36 gegen 16;
+ * das Beispiel aus dem Selbsttest (1000 × 50, r = 5): 1 002 550 gegen 5255.
  */
 
-const GREEN = "#009E73";
-const BLUE = "#0072B2";
-const ORANGE = "#E69F00";
-const GREY = "#64748b";
+const GREEN = FMM_COLORS.gruen;
+const BLUE = FMM_COLORS.blau;
+const ORANGE = FMM_COLORS.orange;
+const GREY = FMM_COLORS.grau;
+
+const PRESETS: { id: string; name: string; m: number; n: number; r: number }[] = [
+  { id: "klein", name: "r < min(m, n)", m: 5, n: 4, r: 2 },
+  { id: "rang1", name: "r = 1", m: 5, n: 4, r: 1 },
+  { id: "voll", name: "r = m = n", m: 4, n: 4, r: 4 },
+];
 
 const CELL = 22;
 
@@ -108,6 +133,9 @@ export function ReduzierteSvdBloecke() {
 
   const r = Math.max(1, Math.min(rRoh, m, n));
   const mid = (Math.max(m, n) * CELL) / 2; // gemeinsame Mittellinie aller Matrizen
+  // 0 = volle Zerlegung, 1 = reduziert; dazwischen fahren die Blöcke zusammen
+  const q = useAnimatedValue(reduziert ? 1 : 0, 250);
+  const zeigeVoll = q < 0.995;
 
   // Zahl der gespeicherten Einträge: volle Zerlegung (Σ nur als Diagonale)
   // gegen reduzierte Zerlegung.
@@ -184,14 +212,15 @@ export function ReduzierteSvdBloecke() {
 
   // Waagerechte Anordnung: A = U · Σ · Vᵀ, im reduzierten Modus mit den
   // geschrumpften Faktoren U_r · Σ_r · V_rᵀ.
+  const misch = (klein: number, gross: number) => (klein + (gross - klein) * (1 - q)) * CELL;
   const wA = n * CELL;
   const hA = m * CELL;
-  const wU = (reduziert ? r : m) * CELL;
+  const wU = misch(r, m);
   const hU = m * CELL;
-  const wS = (reduziert ? r : n) * CELL;
-  const hS = (reduziert ? r : m) * CELL;
+  const wS = misch(r, n);
+  const hS = misch(r, m);
   const wV = n * CELL;
-  const hV = (reduziert ? r : n) * CELL;
+  const hV = misch(r, n);
 
   const gap = 26;
   const xA = 4;
@@ -222,13 +251,26 @@ export function ReduzierteSvdBloecke() {
 
   return (
     <div>
-      <p className="text-sm">
-        Schauen wir nach, wie viel von der vollen Zerlegung überhaupt gebraucht wird.
-        Stellen wir Zeilenzahl, Spaltenzahl und Rang ein und klicken wir dann auf einen
-        Block: Darunter steht, was er beiträgt. Der Umschalter wirft alles heraus, was im
-        Produkt gegen einen Nullblock von{" "}
-        <span style={{ color: ORANGE, fontWeight: 600 }}>Σ</span> läuft.
-      </p>
+      <Aufgabe>
+        Klicken wir auf einen Block und schalten wir dann auf die reduzierte Zerlegung um.
+      </Aufgabe>
+      <div className="my-2 flex flex-wrap items-center gap-2">
+        {PRESETS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            className={m === p.m && n === p.n && r === p.r ? W_BUTTON_AKTIV : W_BUTTON}
+            aria-pressed={m === p.m && n === p.n && r === p.r}
+            onClick={() => {
+              setM(p.m);
+              setN(p.n);
+              setR(p.r);
+            }}
+          >
+            {p.name}
+          </button>
+        ))}
+      </div>
 
       <div className="my-3 max-w-md">
         <Slider
@@ -271,7 +313,8 @@ export function ReduzierteSvdBloecke() {
       <div className="my-2 flex flex-wrap items-center gap-3 text-sm">
         <button
           type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm"
+          className={W_BUTTON}
+          aria-pressed={reduziert}
           onClick={umschalten}
         >
           {reduziert ? "volle SVD zeigen" : "auf die reduzierte SVD schrumpfen"}
@@ -282,7 +325,14 @@ export function ReduzierteSvdBloecke() {
       </div>
 
       <div className="overflow-x-auto">
-        <svg width={breite} height={hoehe} viewBox={`0 0 ${breite} ${hoehe}`}>
+        <svg
+          width={breite}
+          height={hoehe}
+          viewBox={`0 0 ${breite} ${hoehe}`}
+          className="h-auto max-w-full"
+          role="img"
+          aria-label={`Blockschema der ${reduziert ? "reduzierten" : "vollen"} Singulärwertzerlegung einer ${m} mal ${n}-Matrix vom Rang ${r}.`}
+        >
           {/* A selbst, von der Reduktion unberührt */}
           <rect x={xA} y={yA} width={wA} height={hA} fill={GREY} fillOpacity={0.12} stroke={GREY} />
           <BlockLabel x={xA + wA / 2} y={yA + hA / 2 + 4} base="A" fill={GREY} />
@@ -292,18 +342,18 @@ export function ReduzierteSvdBloecke() {
 
           {/* U bzw. U_r */}
           <Block id="Ur" x={xU} y={yU} w={r * CELL} h={hU} farbe={GREEN} base="U" sub="r" />
-          {reduziert ? null : (
+          {zeigeVoll ? (
             <Block
               id="Umr"
               x={xU + r * CELL}
               y={yU}
-              w={(m - r) * CELL}
+              w={(m - r) * CELL * (1 - q)}
               h={hU}
               farbe={GREEN}
               base="U"
               sub="m−r"
             />
-          )}
+          ) : null}
           <Format
             x={xU + wU / 2}
             y={yFormat}
@@ -314,13 +364,13 @@ export function ReduzierteSvdBloecke() {
 
           {/* Σ bzw. Σ_r */}
           <Block id="Sr" x={xS} y={yS} w={r * CELL} h={r * CELL} farbe={ORANGE} base="Σ" sub="r" />
-          {reduziert ? null : (
+          {zeigeVoll ? (
             <>
               <Block
                 id="S0"
                 x={xS + r * CELL}
                 y={yS}
-                w={(n - r) * CELL}
+                w={(n - r) * CELL * (1 - q)}
                 h={r * CELL}
                 farbe={ORANGE}
                 base="0"
@@ -331,7 +381,7 @@ export function ReduzierteSvdBloecke() {
                 x={xS}
                 y={yS + r * CELL}
                 w={r * CELL}
-                h={(m - r) * CELL}
+                h={(m - r) * CELL * (1 - q)}
                 farbe={ORANGE}
                 base="0"
                 leer
@@ -340,14 +390,14 @@ export function ReduzierteSvdBloecke() {
                 id="S0"
                 x={xS + r * CELL}
                 y={yS + r * CELL}
-                w={(n - r) * CELL}
-                h={(m - r) * CELL}
+                w={(n - r) * CELL * (1 - q)}
+                h={(m - r) * CELL * (1 - q)}
                 farbe={ORANGE}
                 base="0"
                 leer
               />
             </>
-          )}
+          ) : null}
           <Format
             x={xS + wS / 2}
             y={yFormat}
@@ -368,19 +418,19 @@ export function ReduzierteSvdBloecke() {
             sub="r"
             hoch="T"
           />
-          {reduziert ? null : (
+          {zeigeVoll ? (
             <Block
               id="Vnr"
               x={xV}
               y={yV + r * CELL}
               w={n * CELL}
-              h={(n - r) * CELL}
+              h={(n - r) * CELL * (1 - q)}
               farbe={BLUE}
               base="V"
               sub="n−r"
               hoch="T"
             />
-          )}
+          ) : null}
           <Format
             x={xV + wV / 2}
             y={yFormat}
@@ -389,21 +439,20 @@ export function ReduzierteSvdBloecke() {
         </svg>
       </div>
 
-      <p className="mt-2 text-sm">
-        <span style={{ fontWeight: 600 }}>{sel.name}</span>
-        {sel.bleibt ? " (bleibt): " : " (fällt weg): "}
-        {sel.text}
-      </p>
-
-      <p className="mt-2 text-sm" style={{ color: GREY }}>
+      <Verdikt kind={sel.bleibt ? "ok" : "fail"} titel={`${sel.name}:`}>
+        {sel.bleibt
+          ? "Bleibt in der reduzierten Zerlegung. "
+          : "Fällt in der reduzierten Zerlegung weg. "}
+        {sel.text}{" "}
         {weg.length === 0
-          ? `Mit m = n = r = ${r} fällt nichts weg: U und V sind schon quadratisch, und Σ hat weder eine Nullzeile noch eine Nullspalte.`
-          : `Weg fallen ${weg.join(" und ")}; Σ schrumpft von ${m}×${n} auf ${r}×${r}.`}
-      </p>
+          ? `Mit m = n = r = ${r} fällt allerdings gar nichts weg: U und V sind schon quadratisch, und Σ hat weder eine Nullzeile noch eine Nullspalte, die Reduktion aus Satz 6.3.1 ist dann leer.`
+          : `Insgesamt fallen ${weg.join(" und ")} weg; Σ schrumpft von ${m}×${n} auf ${r}×${r}.`}
+      </Verdikt>
 
       <p className="mt-2 font-mono text-xs" style={{ color: GREY }}>
-        Gespeicherte Zahlen, volle Zerlegung: m² + n² + min(m, n) = {speicherVoll}; reduzierte
-        Zerlegung: r·(m + n + 1) = {speicherRed}; A selbst: m·n = {speicherA}
+        Gespeicherte Zahlen (Bemerkung 6.3.3), volle Zerlegung: m² + n² + min(m, n) ={" "}
+        {speicherVoll}; reduzierte Zerlegung: r·(m + n + 1) = {speicherRed}; A selbst: m·n ={" "}
+        {speicherA}
       </p>
     </div>
   );

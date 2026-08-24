@@ -76,10 +76,12 @@ geht $\sigma_{\min} \to 0$ und damit
 $\kappa_2(\bA) \to \infty$.
 :::
 
-:::vertiefung[Konditionszahl als Nähe zum Rangdefekt]
-<p className="mb-3 text-sm">Zwei Einheitsspalten im Winkel α zueinander: Je kleiner α, desto näher ist $\bA$ am Rangdefekt, und desto größer $\kappa_2(\bA)$. Ziehen Sie am Regler und beobachten Sie, wie das Bild des Einheitskreises kollabiert.</p>
+:::vertiefung[Wie schnell wächst κ₂(A), wenn die Spalten zusammenrücken?]
+<p className="mb-3 text-sm">Nehmen wir zwei Einheitsspalten im Winkel α zueinander. Für $\alpha \to 0$ werden sie linear abhängig, für $\alpha = 90^\circ$ stehen sie senkrecht. Dazwischen: Wie schnell wächst $\kappa_2(\bA)$, wenn wir α halbieren?</p>
 
 <FastRangdefektWidget />
+
+<p className="mt-3 text-sm">Das Widget zeigt die stetige Verschlechterung der Kondition auf dem Weg zum Rangdefekt.</p>
 :::
 
 ### Kondition bezüglich $\bb$
@@ -211,10 +213,12 @@ Bestimmung der Koeffizienten relativ empfindlich machen. Die exakte Empfindlichk
 hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums und von
 den Singulärrichtungen von $\bA$ ab.
 
-:::vertiefung[Störungen von b interaktiv]
-<p className="mb-3 text-sm">Das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\kappa_2(\bA) = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Verstellen Sie den Winkel θ und die Störung Δb, und beobachten Sie, wann die Schranke aus Satz 7.2.3 tatsächlich angenommen wird.</p>
+:::vertiefung[Wann ist die Schranke aus Satz 7.2.3 scharf?]
+<p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke tatsächlich angenommen – und bei welcher passiert gar nichts?</p>
 
 <WinkelWidget />
+
+<p className="mt-3 text-sm">Das Widget trennt den störenden Projektionsanteil vom Anteil, der im Residuum verbleibt.</p>
 :::
 
 ### Kondition bezüglich $\bA$
@@ -299,10 +303,54 @@ $$
 \bA = \begin{pmatrix} 1 & 1 \\ \eps & -\eps \\ 0 & 0 \end{pmatrix}, \quad \tilde{\bA} = \bA + \cblue{\bE} \text{ mit } \cblue{\bE} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \\ -\eps & \eps \end{pmatrix}, \quad \bb = \begin{pmatrix} 1 \\ 0 \\ b_3 \end{pmatrix}.
 $$
 
-<p className="mb-3 text-sm">Hier ist $\kappa_2(\bA) = 1/\eps$, und die relative Störung ist $\left\|\cblue{\bE}\right\|_2 / \left\|\bA\right\|_2 = \eps$. Die ungestörte Lösung ist stets $\wh{\bx} = (1/2,\, 1/2)^\top$, unabhängig von $\eps$ und $b_3$. Der Regler für $b_3$ steuert die Größe des Residuums und schaltet damit zwischen den beiden Regimen von Satz 7.2.4 um.</p>
+<p className="mb-3 text-sm">Hier ist $\corange{\kappa_2(\bA)} = 1/\eps$, und die relative Störung ist $\left\|\cblue{\bE}\right\|_2 / \left\|\bA\right\|_2 = \eps$. Die ungestörte Lösung ist stets $\wh{\bx} = (1/2,\, 1/2)^\top$, unabhängig von $\eps$ und $b_3$. Die Frage ist: Wie stark muss das Residuum sein, damit der quadrierte Term die Schranke übernimmt?</p>
 
 <KonditionsQuadrierungLab />
+
+<p className="mt-3 text-sm">Das Widget trennt das lineare vom quadrierten Konditionsregime der Problembeschreibung.</p>
 :::
+
+### Selbsttest
+
+::::quiz
+
+:::zahlfrage{loesung=9.51 toleranz=0.4}
+Stellen wir im Rangdefekt-Widget den Spaltenwinkel auf $\alpha = 12^\circ$. Welchen Wert
+zeigt es dann für $\corange{\kappa_2(\bA)}$?
+
+Für diese Matrizenfamilie ist $\corange{\kappa_2(\bA)} = \cot(\alpha/2)$, bei
+$\alpha = 12^\circ$ also $\cot(6^\circ) \approx 9{,}51$. Das entspricht knapp einer
+verlorenen Dezimalstelle: $\log_{10}(9{,}51) \approx 0{,}98$.
+:::
+
+:::frage{falsch}
+Eine Störung von $\bb$ senkrecht zu $\col(\bA)$ verändert $\wh{\bx}$ genauso stark wie
+eine gleich große Störung längs $\col(\bA)$.
+
+Sie verändert $\wh{\bx}$ gar nicht. Das Winkel-Widget zeigt es unmittelbar: bei
+$\varphi = 90^\circ$ bleibt $\Delta\wh{x} = 0$, die ganze Störung landet im Residuum.
+Ausgeschöpft wird von der Schranke aus Satz 7.2.3 der Anteil $\left|\cos(\varphi)\right|$.
+:::
+
+:::frage{wahr}
+Bei exakt lösbarem $\bA\bx = \bb$ reduziert sich die lokale Schranke aus Satz 7.2.4 auf
+$\corange{\kappa_2(\bA)}$.
+
+Exakt lösbar heißt $\cpurp{\br} = \bnull$, also $\tan(\theta) = 0$; der Term
+$\corange{\kappa_2(\bA)}^2\tan(\theta)$ verschwindet, und übrig bleibt genau
+$\corange{\kappa_2(\bA)}$ wie bei einem gewöhnlichen linearen Gleichungssystem.
+:::
+
+:::frage{falsch}
+Die Konditionszahl $\corange{\kappa_2(\bA)}$ hängt davon ab, mit welchem Verfahren wir das
+KQ-Problem lösen.
+
+Die Kondition ist eine Eigenschaft des Problems, nicht des Lösungswegs – genau das ist der
+Grund, warum wir sie vor den Algorithmen behandeln. Der Lösungsweg entscheidet nur, wie nah
+ein Verfahren an diese unvermeidbare Empfindlichkeit herankommt (Stabilität).
+:::
+
+::::
 
 *Vertiefung:* Heath §3.1–3.3, insbesondere §3.3 („Sensitivity
 and Conditioning") mit der vollständigen Störungsanalyse inklusive des

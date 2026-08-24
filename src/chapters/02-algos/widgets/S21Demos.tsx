@@ -1,178 +1,404 @@
-/**
- * Widgets für §2.1: Auslöschungs-Demo (Varianz-Verschiebungsformel bei
- * wachsender Verschiebung) und Assoziativitäts-Demo (Reihenfolge der
- * Gleitkomma-Addition). Beide rechnen live in IEEE-Doppelpräzision,
- * derselben Arithmetik, die auch R verwendet.
- */
 import { useState } from "react";
-import { M, Slider } from "../../../lib";
+import type { ReactNode } from "react";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  M,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  W_MUTED,
+  W_PANEL,
+  fmtDe,
+} from "../../../lib";
 
-/* FMM-Palette (identisch zu den \cb*-Makros in src/fmm-macros.ts) */
-const FMM = {
-  red: "#D55E00",
-  blue: "#0072B2",
-  green: "#009E73",
-  orange: "#E69F00",
-};
+/**
+ * §2.1: „Zwei Gesichter derselben Auslöschung" — die Varianz nach der
+ * Verschiebungsformel (Beispiel 2.1.3) und die Klammerung einer Summe
+ * (Beispiel 2.1.4) in EINEM Widget, mit gemeinsamem Exponenten k.
+ *
+ * DIE EINE EINSICHT: Beide Beispiele scheitern am selben Mechanismus. Sobald
+ * der Abstand benachbarter Maschinenzahlen an der Rechenstelle (die ULP)
+ * größer wird als die gesuchte Größe, ist die gesuchte Größe weg. Die Tafel
+ * zeigt genau diese zwei Zahlen auf einer gemeinsamen Größenordnungsachse.
+ *
+ * FARBROLLEN (Kapitel 2, einheitlich in allen Widgets):
+ *   rot             das teure/instabile Verfahren bzw. die teuerste
+ *                   Wachstumsklasse (naive Rekursion, O(2ⁿ)),
+ *   blau            das günstige Verfahren bzw. lineare Ordnung O(n),
+ *   grün            die exakte Referenz (der Wert, der herauskommen soll)
+ *                   bzw. die billigste Klasse O(log n),
+ *   orange          die Maschinenauflösung (ULP) bzw. quadratische Ordnung,
+ *   violett         kubische Ordnung, grau: n·log n und neutrale Teile.
+ * AUSNAHME §2.1 (bewusst, STYLE.md verlangt dieselbe Farbe für denselben
+ * Teilausdruck in Text UND Widget): In der Wertetabelle tragen rot und blau
+ * die Teilausdrucksrollen der Beispiele 2.1.3/2.1.4 — rot das Mittel der
+ * Quadrate bzw. x, blau das Quadrat des Mittels bzw. y. Grün bleibt in beiden
+ * Fällen die gesuchte Größe (22,5 bzw. die 1).
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
+ * 2026-08-19; naive Summation in IEEE-Doppelpräzision):
+ *   Varianz, x_i ∈ {4,7,13,16} + 10^k, wahrer Wert 22,5 —
+ *     k ≤ 7: exakt 22,5 · k = 8: 22 · k = 9: −128 · k = 10: 16384 ·
+ *     k = 11, 12, 14: 0 · k = 13: 17179869184.
+ *     ÜBERRASCHUNG, die wir offen zeigen: der Ausfall ist NICHT monoton. Ab
+ *     k = 8 ist das Ergebnis kaputt, aber es pendelt zwischen 0, positiven
+ *     Riesenwerten und negativen Werten — reiner Rundungszufall.
+ *     Die zweistufige Rechnung liefert für jedes k exakt 22,5.
+ *   Assoziativität, x = 10^k, y = −10^k, z = 1 —
+ *     bis k = 15 liefern beide Klammerungen 1, ab k = 16 liefert
+ *     x + (y + z) den Wert 0 (ULP bei 10^16 ist 2 > 1).
+ *     KORREKTUR gegenüber der Vorfassung: die kippte scheinbar bei k = 14,
+ *     der Bruch liegt tatsächlich bei k = 16.
+ *   ULP an der Rechenstelle: 10^18 → 128, 10^16 → 2, 10^15 → 0,125,
+ *     10^30 → 2^47 ≈ 1,4 · 10^14.
+ *
+ * Provenienz: eigenständig implementiert, kein Code aus den privaten
+ * Buch-Apps. Die Vorfassung bestand aus zwei getrennten Widgets
+ * (AusloeschungDemo, AssoziativDemo); zusammengelegt 2026-08-19.
+ */
 
-function mean(a: number[]): number {
+const ROT = FMM_COLORS.rot;
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
+
+type Modus = "varianz" | "assoziativ";
+
+const K_MAX = 20;
+
+function mittel(a: number[]): number {
   let s = 0;
   for (const v of a) s += v;
   return s / a.length;
 }
 
-/** Ganzzahl-/Dezimaldarstellung mit deutschen Tausenderpunkten. */
-function fmtDE(v: number): string {
-  return v.toLocaleString("de-DE", { maximumFractionDigits: 2 });
+/** Abstand benachbarter Maschinenzahlen bei |v| (Doppelpräzision, 52 Mantissenbits). */
+function ulp(v: number): number {
+  const a = Math.abs(v);
+  if (!(a > 0) || !Number.isFinite(a)) return 0;
+  return 2 ** (Math.floor(Math.log2(a)) - 52);
 }
 
-/** v als „m · 10^e" für TeX, deutsch formatiert. */
-function sciTex(v: number): string {
+const HOCH = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+/** Exponent als Hochzahl, mit echtem Minuszeichen. */
+function hoch(e: number): string {
+  const s = Math.abs(e)
+    .toString()
+    .split("")
+    .map((d) => HOCH[Number(d)])
+    .join("");
+  return e < 0 ? `⁻${s}` : s;
+}
+
+/** Zehnerpotenz-Kurzform, deutsch. */
+function sci(v: number): string {
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return `${fmtDe(v / 10 ** e, 1)} · 10${hoch(e)}`;
+}
+
+/**
+ * Zahl in der Wertetabelle: bis 10^21 mit allen Ziffern (nur so sieht man,
+ * dass zwei Riesenterme sich erst in den letzten Stellen unterscheiden),
+ * darüber und unterhalb von 10^-3 als Zehnerpotenz.
+ */
+function kompakt(v: number): string {
+  if (!Number.isFinite(v)) return "–";
   if (v === 0) return "0";
-  const ex = Math.floor(Math.log10(Math.abs(v)));
-  const man = v / 10 ** ex;
-  const manStr = man.toLocaleString("de-DE", { maximumFractionDigits: 1 }).replace(",", "{,}");
-  return `${manStr} \\cdot 10^{${ex}}`;
+  const a = Math.abs(v);
+  if (a >= 1e21 || a < 1e-3) return sci(v);
+  if (a >= 1e4) return v.toLocaleString("de-DE", { maximumFractionDigits: 1 }).replace(/^-/, "−");
+  const s = fmtDe(v, a >= 100 ? 1 : a >= 1 ? 2 : 4);
+  return s.includes(",") ? s.replace(/0+$/, "").replace(/,$/, "") : s;
+}
+
+/** Kurzform für Beschriftungen im SVG: nie mehr als ein paar Zeichen breit. */
+function kurz(v: number): string {
+  if (!Number.isFinite(v) || v === 0) return kompakt(v);
+  const a = Math.abs(v);
+  return a >= 1e4 || a < 1e-3 ? sci(v) : kompakt(v);
 }
 
 /* ------------------------------------------------------------------ */
-/* Auslöschungs-Demo: Varianz nach Verschiebungsformel                 */
+/* Größenordnungsachse: Auflösung gegen gesuchte Größe                 */
 /* ------------------------------------------------------------------ */
 
-export function AusloeschungDemo() {
-  const [k, setK] = useState(9);
-  const c = 10 ** k;
-  const x = [4, 7, 13, 16].map((v) => v + c);
-  const m = mean(x);
-  const zweistufig = mean(x.map((v) => (v - m) ** 2));
-  const sq = mean(x.map((v) => v * v)); // Mittel der Quadrate
-  const msq = m * m; // Quadrat des Mittels
-  const formel = sq - msq;
+const E_MIN = -18;
+const E_MAX = 22;
+const B_W = 460;
+const B_H = 104;
+const B_L = 10;
+const B_R = 10;
+const ACHSE_Y = 62;
 
-  let status: string;
-  let ok = false;
-  if (formel === 22.5) {
-    ok = true;
-    status =
-      "Beide Rechenwege liefern exakt 22,5. Die Rundungsfehler der beiden großen " +
-      "Terme bleiben noch deutlich unter deren wahrer Differenz 22,5; die " +
-      "Subtraktion verliert nichts Wesentliches.";
-  } else if (formel === 0) {
-    status =
-      "Totalausfall: Beide Terme werden auf dieselbe Maschinenzahl gerundet, die " +
-      "Differenz ist exakt 0. Die gesamte Information über die Streuung der Daten " +
-      "ist ausgelöscht.";
-  } else if (formel < 0) {
-    status =
-      "Eine negative Varianz! Die Rundungsfehler der beiden Terme sind inzwischen " +
-      "größer als ihre wahre Differenz 22,5: Das Vorzeichen des Ergebnisses ist " +
-      "reiner Rundungszufall.";
-  } else {
-    status =
-      "Das Ergebnis beginnt zu kippen: Von den führenden Ziffern der beiden Terme " +
-      "heben sich fast alle weg, übrig bleiben im Wesentlichen deren Rundungsfehler.";
-  }
+const xOf = (e: number) =>
+  B_L + ((Math.min(E_MAX, Math.max(E_MIN, e)) - E_MIN) / (E_MAX - E_MIN)) * (B_W - B_L - B_R);
 
+function GroessenAchse({
+  aufloesung,
+  ziel,
+  zielName,
+  ariaLabel,
+}: {
+  aufloesung: number;
+  ziel: number;
+  zielName: string;
+  ariaLabel: string;
+}) {
+  const eU = aufloesung > 0 ? Math.log10(aufloesung) : E_MIN;
+  const eZ = Math.log10(ziel);
+  const xU = xOf(eU);
+  const xZ = xOf(eZ);
+  const verloren = aufloesung > ziel;
+  const ticks = [-16, -8, 0, 8, 16];
   return (
-    <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Wir berechnen die Varianz der vier Werte{" "}
-        <M>{"x_i \\in \\{4, 7, 13, 16\\}"}</M>, verschoben um eine Konstante{" "}
-        <M>{"c = 10^k"}</M>. Die wahre Varianz ist unabhängig von <M>{"c"}</M> immer{" "}
-        <M>{"22{,}5"}</M>. Schieben wir <M>{"k"}</M> nach oben, sehen wir, wann
-        die Verschiebungsformel{" "}
-        <M>{"\\cred{\\tfrac{1}{n}\\sumin x_i^2} - \\cblue{\\bar{x}^2}"}</M> versagt:
-      </p>
-      <Slider label="Exponent k" value={k} onChange={setK} min={0} max={12} step={1} fmt={(v) => `c = 1e${v}`} />
-      <div className="overflow-x-auto rounded border border-slate-200 p-3 font-mono text-xs dark:border-slate-700 sm:text-sm">
-        <table className="w-full">
-          <tbody>
-            <tr>
-              <td className="pr-3 align-top">Mittel der Quadrate</td>
-              <td className="text-right" style={{ color: FMM.red }}>
-                {fmtDE(sq)}
-              </td>
-            </tr>
-            <tr>
-              <td className="pr-3 align-top">Quadrat des Mittels</td>
-              <td className="text-right" style={{ color: FMM.blue }}>
-                {fmtDE(msq)}
-              </td>
-            </tr>
-            <tr className="border-t border-slate-300 dark:border-slate-600">
-              <td className="pr-3 pt-1 align-top">Verschiebungsformel</td>
-              <td className="pt-1 text-right font-bold" style={{ color: ok ? FMM.green : FMM.orange }}>
-                {fmtDE(formel)}
-              </td>
-            </tr>
-            <tr>
-              <td className="pr-3 align-top">zweistufig (erst zentrieren)</td>
-              <td className="text-right" style={{ color: FMM.green }}>
-                {fmtDE(zweistufig)}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p className="max-w-prose text-sm text-slate-600 dark:text-slate-300">{status}</p>
-      <p className="max-w-prose text-sm text-slate-600 dark:text-slate-300">
-        Die zweistufige Rechnung <M>{"\\tfrac{1}{n}\\sumin (x_i - \\bar{x})^2"}</M>{" "}
-        bleibt dagegen für jedes <M>{"k"}</M> exakt: Sie subtrahiert <em>zuerst</em> und
-        quadriert dann die kleinen Abweichungen <M>{"-6, -3, 3, 6"}</M>; es treffen nie
-        zwei riesige, fast gleiche Zahlen aufeinander.
-      </p>
-      <p className="max-w-prose text-xs text-slate-500 dark:text-slate-400">
-        Übrigens: Die genauen Zahlenwerte hier können von der R-Ausgabe in Beispiel
-        2.1.3 abweichen (bei <M>{"k = 9"}</M> zeigt das Widget <M>{"-128"}</M> statt{" "}
-        <M>{"0"}</M>). Das Widget summiert naiv von vorne nach hinten, Rs{" "}
-        <code>mean()</code> hängt intern einen Korrekturschritt an. Beides ist
-        IEEE-Doppelpräzision, nur die Reihenfolge der Rundungen unterscheidet sich.
-        Dass schon <em>das</em> das Ergebnis ändert, ist selbst der beste Beleg für die
-        Kernbotschaft dieses Abschnitts.
-      </p>
-    </div>
+    <svg
+      viewBox={`0 0 ${B_W} ${B_H}`}
+      className="h-auto max-w-full rounded border border-slate-300 dark:border-slate-600 [.w-dark_&]:border-slate-600"
+      role="img"
+      aria-label={ariaLabel}
+    >
+      <rect width={B_W} height={B_H} fill="var(--w-bg)" />
+      {/* Verlustzone: alles rechts von der gesuchten Größe */}
+      {verloren && (
+        <rect x={xZ} y={ACHSE_Y - 10} width={Math.max(0, xU - xZ)} height={20} fill={ROT} fillOpacity={0.14} />
+      )}
+      <line x1={B_L} x2={B_W - B_R} y1={ACHSE_Y} y2={ACHSE_Y} stroke="var(--w-axis)" strokeWidth={1.5} />
+      <g fill="var(--w-muted)" fontSize={11} fontFamily="ui-monospace, SFMono-Regular, monospace" aria-hidden="true">
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={xOf(t)} x2={xOf(t)} y1={ACHSE_Y - 3} y2={ACHSE_Y + 3} stroke="var(--w-axis)" strokeWidth={1} />
+            <text x={xOf(t)} y={ACHSE_Y + 14} textAnchor="middle">
+              10{hoch(t)}
+            </text>
+          </g>
+        ))}
+      </g>
+      {/* gesuchte Größe (grün), Beschriftung unter der Achse */}
+      <line x1={xZ} x2={xZ} y1={ACHSE_Y} y2={B_H - 20} stroke={GRUEN} strokeWidth={2} />
+      <circle cx={xZ} cy={ACHSE_Y} r={4} fill={GRUEN} />
+      <text
+        x={Math.min(xZ, B_W - 110)}
+        y={B_H - 6}
+        fill={GRUEN}
+        fontSize={12}
+        fontFamily="ui-sans-serif, sans-serif"
+      >
+        gesucht: {zielName}
+      </text>
+      {/* Auflösung (orange), Beschriftung über der Achse */}
+      <line x1={xU} x2={xU} y1={16} y2={ACHSE_Y} stroke={ORANGE} strokeWidth={2} />
+      <circle cx={xU} cy={ACHSE_Y} r={4} fill={ORANGE} />
+      <text
+        x={Math.min(Math.max(xU - 50, 2), B_W - 150)}
+        y={12}
+        fill={ORANGE}
+        fontSize={12}
+        fontFamily="ui-sans-serif, sans-serif"
+      >
+        Auflösung hier: {kurz(aufloesung)}
+      </text>
+    </svg>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* Assoziativitäts-Demo: Klammerung der Gleitkomma-Addition            */
+/* Das Widget                                                          */
 /* ------------------------------------------------------------------ */
 
-export function AssoziativDemo() {
-  const [k, setK] = useState(14);
+export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Modus } = {}) {
+  const [modus, setModus] = useState<Modus>(startModus);
+  const [k, setK] = useState(6);
+
+  /* Varianz nach Verschiebungsformel */
+  const c = 10 ** k;
+  const daten = [4, 7, 13, 16].map((v) => v + c);
+  const mw = mittel(daten);
+  const zweistufig = mittel(daten.map((v) => (v - mw) ** 2));
+  const mittelQuadrate = mittel(daten.map((v) => v * v));
+  const quadratMittel = mw * mw;
+  const formel = mittelQuadrate - quadratMittel;
+
+  /* Assoziativität */
   const x = 10 ** k;
   const y = -(10 ** k);
-  const z = 1;
-  const links = x + y + z; // (x + y) + z
-  const rechts = x + (y + z);
-  const ulp = 2 ** (Math.floor(Math.log2(x)) - 52); // Abstand benachbarter Maschinenzahlen bei 10^k
+  const links = x + y + 1;
+  const rechts = x + (y + 1);
 
-  const kaputt = rechts !== links;
-  const status = kaputt
-    ? "Jetzt gehen die Klammerungen auseinander: Der Abstand benachbarter " +
-      "Maschinenzahlen bei 10^k ist inzwischen mindestens 2, also ist -10^k + 1 " +
-      "nicht mehr darstellbar und wird auf -10^k zurückgerundet; die 1 " +
-      "verschwindet spurlos, bevor x sie retten kann."
-    : "Noch stimmen beide Klammerungen überein: 1 ist groß genug gegenüber dem " +
-      "Abstand benachbarter Maschinenzahlen bei 10^k, die Zwischensumme y + z kann " +
-      "die 1 also noch festhalten.";
+  const istVarianz = modus === "varianz";
+  const aufloesung = istVarianz ? ulp(mittelQuadrate) : ulp(x);
+  const ziel = istVarianz ? 22.5 : 1;
+  const zielName = istVarianz ? "die Varianz 22,5" : "die 1";
+
+  /* Verdikt */
+  let art: "ok" | "warn" | "fail" = "ok";
+  let verdikt: ReactNode;
+  if (istVarianz) {
+    const abweichung = Math.abs(formel - 22.5);
+    if (formel === 22.5) {
+      art = "ok";
+      verdikt = (
+        <>
+          Beide Rechenwege liefern exakt <M>{"22{,}5"}</M>. Die Auflösung an der Rechenstelle
+          liegt noch weit unter der gesuchten Varianz, die Subtraktion verliert also nichts
+          Wesentliches (Beispiel 2.1.3).
+        </>
+      );
+    } else if (formel === 0) {
+      art = "fail";
+      verdikt = (
+        <>
+          Totalausfall: Beide Terme werden auf dieselbe Maschinenzahl gerundet, ihre Differenz
+          ist exakt <M>{"0"}</M>. Die gesamte Information über die Streuung ist ausgelöscht —
+          genau der Fall, den Beispiel 2.1.3 vorrechnet.
+        </>
+      );
+    } else if (formel < 0) {
+      art = "fail";
+      verdikt = (
+        <>
+          Eine negative Varianz ({kompakt(formel)}): Die Rundungsfehler der beiden Riesenterme
+          sind größer als deren wahre Differenz <M>{"22{,}5"}</M>, das Vorzeichen ist reiner
+          Rundungszufall (Beispiel 2.1.3).
+        </>
+      );
+    } else if (abweichung > 22.5) {
+      art = "fail";
+      verdikt = (
+        <>
+          Das Ergebnis ({kompakt(formel)}) ist um Größenordnungen daneben. Übrig geblieben sind
+          nur noch die Rundungsreste der beiden Terme; welcher Wert dabei herauskommt, ist
+          Zufall (Beispiel 2.1.3).
+        </>
+      );
+    } else {
+      art = "warn";
+      verdikt = (
+        <>
+          Das Ergebnis kippt gerade: {kompakt(formel)} statt <M>{"22{,}5"}</M>. Von den
+          führenden Ziffern der beiden Terme heben sich fast alle weg, und der Rest trägt
+          bereits einen sichtbaren Rundungsfehler.
+        </>
+      );
+    }
+  } else if (links === rechts) {
+    art = "ok";
+    verdikt = (
+      <>
+        Beide Klammerungen liefern <M>{"1"}</M>. Die <M>{"1"}</M> ist noch größer als der
+        Abstand benachbarter Maschinenzahlen bei <M>{`10^{${k}}`}</M>, die Zwischensumme{" "}
+        <M>{"y + z"}</M> kann sie also festhalten (Beispiel 2.1.4).
+      </>
+    );
+  } else {
+    art = "fail";
+    verdikt = (
+      <>
+        Die Klammerungen gehen auseinander: links <M>{"1"}</M>, rechts <M>{"0"}</M>. Bei{" "}
+        <M>{`10^{${k}}`}</M> liegen benachbarte Maschinenzahlen {kompakt(aufloesung)}{" "}
+        auseinander, <M>{"y + z"}</M> wird deshalb auf <M>{"y"}</M> zurückgerundet und die{" "}
+        <M>{"1"}</M> verschwindet spurlos (Beispiel 2.1.4).
+      </>
+    );
+  }
+
+  const zeilen: { name: string; wert: string; farbe?: string }[] = istVarianz
+    ? [
+        { name: "Mittel der Quadrate", wert: kompakt(mittelQuadrate), farbe: ROT },
+        { name: "Quadrat des Mittels", wert: kompakt(quadratMittel), farbe: BLAU },
+        { name: "Verschiebungsformel", wert: kompakt(formel) },
+        { name: "zweistufig", wert: kompakt(zweistufig), farbe: GRUEN },
+      ]
+    : [
+        { name: "(x + y) + z", wert: kompakt(links), farbe: GRUEN },
+        { name: "x + (y + z)", wert: kompakt(rechts) },
+        { name: "Zwischensumme y + z", wert: kompakt(y + 1), farbe: BLAU },
+        { name: "x = 10ᵏ", wert: kompakt(x), farbe: ROT },
+      ];
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Wir addieren <M>{"\\cred{x = 10^k}"}</M>, <M>{"\\cblue{y = -10^k}"}</M> und{" "}
-        <M>{"\\cgreen{z = 1}"}</M> in zwei Klammerungen. Mathematisch ist beides{" "}
-        <M>{"1"}</M>, in Gleitkommaarithmetik nicht immer:
-      </p>
-      <Slider label="Exponent k" value={k} onChange={setK} min={0} max={30} step={1} fmt={(v) => `10^${v}`} />
-      <div className="overflow-x-auto rounded border border-slate-200 p-3 text-sm dark:border-slate-700">
-        <M>{`(\\cred{x} + \\cblue{y}) + \\cgreen{z} = ${fmtDE(links)}, \\qquad \\cred{x} + (\\cblue{y} + \\cgreen{z}) = ${fmtDE(rechts)}`}</M>
+      <Aufgabe>
+        Schieben wir <M>{"k"}</M> nach oben und suchen die Stelle, an der die orange Auflösung
+        die grüne gesuchte Größe überholt.
+      </Aufgabe>
+
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Rechenweg">
+        {(
+          [
+            ["varianz", "Varianz (Beispiel 2.1.3)"],
+            ["assoziativ", "Assoziativität (Beispiel 2.1.4)"],
+          ] as [Modus, string][]
+        ).map(([id, text]) => (
+          <button
+            key={id}
+            type="button"
+            className={modus === id ? W_BUTTON_AKTIV : W_BUTTON}
+            aria-pressed={modus === id}
+            onClick={() => setModus(id)}
+          >
+            {text}
+          </button>
+        ))}
       </div>
-      <p className="max-w-prose text-sm text-slate-600 dark:text-slate-300">
-        Auflösung der Maschinenzahlen bei <M>{`10^{${k}}`}</M>: benachbarte darstellbare
-        Zahlen liegen dort etwa <M>{sciTex(ulp)}</M> auseinander.
-      </p>
-      <p className="max-w-prose text-sm text-slate-600 dark:text-slate-300">{status}</p>
+
+      <GroessenAchse
+        aufloesung={aufloesung}
+        ziel={ziel}
+        zielName={istVarianz ? "22,5" : "1"}
+        ariaLabel={
+          `Größenordnungsachse: die Auflösung an der Rechenstelle liegt bei ${kurz(aufloesung)}, ` +
+          `gesucht ist ${zielName}. ` +
+          (aufloesung > ziel
+            ? "Die Auflösung ist größer als die gesuchte Größe, das Ergebnis geht verloren."
+            : "Die Auflösung ist kleiner als die gesuchte Größe, das Ergebnis überlebt.")
+        }
+      />
+
+      <div className="max-w-md">
+        <Slider
+          label="Exponent k"
+          value={k}
+          onChange={(v) => setK(Math.round(v))}
+          min={0}
+          max={K_MAX}
+          step={1}
+          fmt={(v) => `10${hoch(Math.round(v))}`}
+        />
+      </div>
+
+      {/* Kein <table>: bei 390 px sollen Name und Wert untereinander rutschen,
+          statt dass der Wert aus einer breiten Tabelle herausscrollt. */}
+      <div className={`space-y-1 p-3 font-mono text-xs sm:text-sm ${W_PANEL}`}>
+        {zeilen.map((z, i) => (
+          <div
+            key={z.name}
+            className={`flex flex-wrap items-baseline justify-between gap-x-4 ${
+              i === 2 ? "border-t border-slate-300 pt-1 dark:border-slate-600" : ""
+            }`}
+          >
+            <span>{z.name}</span>
+            <span
+              className="tabular-nums [overflow-wrap:anywhere]"
+              style={z.farbe ? { color: z.farbe } : undefined}
+            >
+              {z.wert}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <Verdikt kind={art}>{verdikt}</Verdikt>
+
+      {istVarianz && (
+        <p className={`max-w-prose text-xs ${W_MUTED}`}>
+          Kleingedrucktes: Das Widget summiert naiv von vorne nach hinten, Rs{" "}
+          <code>mean()</code> hängt einen Korrekturschritt an. Deshalb steht hier bei{" "}
+          <M>{"k = 9"}</M> der Wert <M>{"-128"}</M>, wo Beispiel 2.1.3 die R-Ausgabe{" "}
+          <M>{"0"}</M> zitiert. Beides ist IEEE-Doppelpräzision.
+        </p>
+      )}
     </div>
   );
 }

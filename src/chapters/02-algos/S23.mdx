@@ -1,4 +1,4 @@
-import { S23FlopWidget, S23GrowthWidget, S23KonstantenWidget } from "./widgets/S23Aufwand";
+import { S23FlopWidget, S23WachstumsBild, S23KonstantenWidget } from "./widgets/S23Aufwand";
 import { SelfTest } from "./widgets/S23Local";
 
 ::quelle[Folien: 02-algos, „Aufwand und Komplexität".]
@@ -114,12 +114,19 @@ Die Faustregel lautet also: *Matrix-Vektor kostet* $\approx 2nd$ *Operationen*, 
 pro Matrixeintrag, eine Multiplikation und eine Addition. Dieselbe Zählung funktioniert
 für die :k[Matrix-Matrix-Multiplikation]{#matrix-multiplication} $\bC = \bA\bB$ mit
 $\bB \in \R^{d \times m}$: Sie besteht aus $m$ Matrix-Vektor-Produkten (eines pro Spalte
-von $\bB$), kostet also $\approx 2ndm$ Operationen. Im folgenden Widget können wir beide
-Zähler mit den Dimensionen mitlaufen lassen.
+von $\bB$), kostet also $\approx 2ndm$ Operationen. Damit stellt sich sofort die Frage, die
+uns den Rest des Kapitels beschäftigt: Was passiert mit diesen Zahlen, wenn das Problem
+größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der Aufwand?
 
 :::vertiefung[FLOP-Zähler: Was kosten Matrix-Vektor- und Matrix-Matrix-Produkt?]
 <S23FlopWidget />
 :::
+
+Der Zähler zeigt: Nein. Beim Matrix-Vektor-Produkt stecken zwei Dimensionen im Produkt
+$2nd$, also wird der Aufwand beim Verdoppeln aller Dimensionen viermal so groß; beim
+Matrix-Matrix-Produkt sind es drei Dimensionen und damit der Faktor acht. Der Speicher
+wächst dabei langsamer als die Rechenzeit. Diese Faktoren, nicht die absoluten Zahlen,
+sind das, was einen Algorithmus praktisch brauchbar oder unbrauchbar macht.
 
 <h3 id="sec-2.3-quiz">Selbsttest: Operationen und Speicher zählen</h3>
 
@@ -265,45 +272,92 @@ zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand,
 sich die Problemgröße verdoppelt?*
 
 :::bemerkung[2.3.7 (Interpretation der Komplexitätsklassen)]
-Die Aussagen über Verdopplung gelten für *scharfe* Wachstumsordnungen
-$\Theta(g(n))$: Sowohl $T(n)=O(g(n))$ als auch $g(n)=O(T(n))$ gilt. Ein einzelnes
-$O(g(n))$ ist dagegen nur eine obere Schranke und erlaubt auch langsameres Wachstum.
+Die folgenden Namen beschreiben das typische Wachstum eines Aufwands. Sie helfen
+uns, die Größenordnungen einzuordnen; eine formale obere Schranke schreiben wir
+später mit $O$.
 
-- $\Theta(1)$ *(konstant)*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
-- $\Theta(\log n)$ *(logarithmisch)*: Verdoppelt sich $n$, kommt im Modell
+- *Konstant*: Die Anzahl der Operationen bleibt von $n$ unabhängig.
+- *Logarithmisch*: Verdoppelt sich $n$, kommt im Modell
   $c\log_2 n$ ein konstanter Aufwand hinzu, denn
   $\log_2(2n) = \log_2(n) + 1$ (:k[Logarithmus]{#logarithm}).
-- $\Theta(n)$ *(linear)*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
-- $\Theta(n^2)$ *(quadratisch)*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
-- $\Theta(2^n)$ *(exponentiell)*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
+- *Linear*: Verdoppelt sich $n$, verdoppelt sich der führende Aufwand.
+- *Quadratisch*: Verdoppelt sich $n$, vervierfacht sich der führende Aufwand.
+- *Exponentiell*: Verdoppelt sich $n$, *quadriert* sich die Anzahl der
   Operationen, denn $2^{2n} = \left(2^n\right)^2$. Schon ein einziger Schritt
   $n \to n + 1$ *verdoppelt* den Aufwand.
 :::
 
-Algorithmen mit scharf exponentieller Laufzeit sind damit schon für moderate
-Problemgrößen häufig praktisch unbrauchbar. Genau das passiert bei der naiven Fibonacci-Rekursion aus
-[Abschnitt 2.2](#sec-2.2) passiert, wie wir in [Abschnitt 2.5](#sec-2.5) genau
-nachrechnen werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
+Algorithmen mit exponentieller Laufzeit sind damit schon für moderate
+Problemgrößen häufig praktisch unbrauchbar. So steht es um die naive Fibonacci-Rekursion
+aus [Abschnitt 2.2](#sec-2.2), wie wir in [Abschnitt 2.5](#sec-2.5) genau nachrechnen
+werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
 zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe Satz 2.3.3
 mit $d = n$) und $O(n^3)$ (Matrix-Zerlegungen, Matrix-Matrix-Produkte).
 
-:::vertiefung[Wachstumsraten-Plot: die Komplexitätsklassen im Vergleich]
-<S23GrowthWidget />
-:::
+Wie weit diese Klassen auseinanderliegen, zeigt schon ein Bild mit drei Kurven. Auf der
+linearen Skala links verlässt $2^n$ den Bildausschnitt bereits bei $n = 10$ als fast
+senkrechte Wand; alles andere liegt darunter platt am Boden. Erst die logarithmische Skala
+rechts macht die Klassen vergleichbar, und dort wird $2^n$ zu einer Geraden:
+
+<S23WachstumsBild />
+
+An dieser Geraden lässt sich der Preis exponentieller Verfahren ablesen. Bei $n = 200$
+braucht ein $O(2^n)$-Algorithmus rund $1{,}6 \cdot 10^{60}$ Operationen. Selbst ein
+Superrechner mit $10^{18}$ Operationen pro Sekunde rechnete daran $5 \cdot 10^{34}$ Jahre,
+und das Universum ist erst etwa $10^{10}$ Jahre alt. Wer feiner mit den Klassen spielen
+will (welche Klassen sichtbar sind, welcher Vorfaktor, welche Skala), findet den
+zugehörigen Explorer in [Abschnitt 2.4](#sec-2.4).
 
 :::bemerkung[2.3.8 (Vorsicht: Konstanten!)]
 Die $O(\cdot)$-Notation ignoriert konstante Faktoren und Terme niedrigerer Ordnung. Ein
 Algorithmus mit $1000n + 10\,000$ Operationen ist $O(n)$, aber trotzdem *langsamer* als
-ein $O(n^2)$-Algorithmus mit $n^2$ Operationen, solange $n^2 < 1000n + 10\,000$ gilt,
-und das ist für alle $n \le 1009$ der Fall! Bei $n = 100$ etwa stehen $110\,000$
-Operationen gegen nur $10\,000$. Die Komplexitätsklasse sagt, wer für
-*hinreichend große* Probleme gewinnt – nicht, wer bei *unserem konkreten* Problem
-gewinnt.
+ein $O(n^2)$-Algorithmus mit $n^2$ Operationen, solange $n^2 < 1000n + 10\,000$ gilt.
+Bei $n = 100$ etwa stehen $110\,000$ Operationen gegen nur $10\,000$. Die
+Komplexitätsklasse sagt, wer für *hinreichend große* Probleme gewinnt, nicht, wer bei
+*unserem konkreten* Problem gewinnt.
 :::
 
-:::vertiefung[Konstanten-Demo: O(n) mit großen Konstanten gegen O(n²)]
+Bis zu welcher Problemgröße gewinnt hier also der schlechtere Exponent? Die beiden Kurven
+unten sind bis $n = 300$ gezeichnet, und dort liegt die $O(n)$-Gerade noch weit oben.
+
 <S23KonstantenWidget />
+
+Der Schnittpunkt liegt bei $n \approx 1010$: Für jedes Problem mit höchstens $1009$
+Datenpunkten ist der $O(n^2)$-Algorithmus hier der langsamere. Erst rechts davon zahlt
+sich die bessere Klasse aus, dann allerdings unaufhaltsam, denn die Kurven entfernen sich
+immer weiter voneinander. Für die Praxis heißt das: Die Komplexitätsklasse entscheidet die
+Frage „welches Verfahren skaliert?", die Konstanten entscheiden die Frage „welches
+Verfahren nehme ich für meine Daten?".
+
+### Selbsttest: Aufwand und Ordnung
+
+::::quiz
+
+:::zahlfrage{loesung=1010 toleranz=5}
+Ab welchem $n$ ist der $n^2$-Algorithmus aus dem Widget oben schneller als der mit
+$1000n + 10\,000$ Operationen?
+
+Der Schnittpunkt liegt bei $n = 500 + \sqrt{260\,000} \approx 1009{,}9$. Für $n = 1009$
+stehen $1\,018\,081$ gegen $1\,019\,000$ Operationen, für $n = 1010$ dagegen
+$1\,020\,100$ gegen $1\,020\,000$.
 :::
+
+:::zahlfrage{loesung=8 toleranz=0}
+Um welchen Faktor wächst der Zeitaufwand des Matrix-Matrix-Produkts, wenn wir im
+FLOP-Zähler $n$, $d$ und $m$ gleichzeitig verdoppeln?
+
+In $2ndm$ stecken drei Dimensionen, also $2^3 = 8$. Beim Matrix-Vektor-Produkt sind es
+nur zwei Dimensionen und damit der Faktor $4$.
+:::
+
+:::frage{falsch}
+Ein $O(n)$-Algorithmus ist für jedes $n$ schneller als ein $O(n^2)$-Algorithmus.
+
+Die Landau-Notation ignoriert Vorfaktoren, und die können jede endliche Problemgröße
+dominieren (Bemerkung 2.3.8). Die Aussage gilt nur für *hinreichend große* $n$.
+:::
+
+::::
 
 *Vertiefung: Heath §1.1 (Kosten und Genauigkeit wissenschaftlichen Rechnens);
 Heath §2.4.5 (Operationen zählen am Beispiel des Gauß-Verfahrens).*

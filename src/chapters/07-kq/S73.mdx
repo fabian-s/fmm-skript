@@ -75,7 +75,7 @@ $$
 Die Bedingung ist auch hinreichend: Jede Lösung der Normalengleichungen ist ein globales
 Minimum von $g$.
 
-::why[Hessematrix $\nabla^2 g = 2\,\cbred{\bA^\top\bA}$ ist positiv semidefinit, also ist $g$ :k[konvex]{#convex-function} und jeder stationäre Punkt ein globales Minimum]
+::why[Hessematrix $\nabla^2 g = 2\,\cbred{\bA^\top\bA}$ ist positiv semidefinit, also ist $g$ :k[konvex]{#convexity} und jeder stationäre Punkt ein globales Minimum]
 :::
 
 ::::
@@ -300,9 +300,21 @@ gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
 über die Spalten von $\bA$ verloren gehen. Im Extremfall macht ein einziger
 Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
 
-:::vertiefung[Informationsverlust beim Bilden von AᵀA, live im Browser]
+Wie extrem das wird, sehen wir am besten an einer Matrix, bei der der ganze Unterschied zwischen
+den Spalten in einem einzigen kleinen Summanden steckt. Das folgende Widget führt die kritische
+Addition wirklich in der Gleitkommaarithmetik des Browsers aus; es rechnet also nicht nach,
+sondern rechnet.
+
 <S73KreuzproduktWidget />
-:::
+
+Wie das Widget zeigt, verliert $\operatorname{fl}(\bA^\top\bA)$ seinen Rang, sobald
+$\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}}
+\approx 1{,}05 \cdot 10^{-8}$. Vorher steht in der gespeicherten Matrix noch ein winziger
+Eigenwert, nachher zwei identische Spalten. Für $\bA$ selbst ist bei diesem $\eps$ dagegen
+überhaupt nichts passiert: Ihre Spalten unterscheiden sich nach wie vor in der zweiten und
+dritten Zeile, und ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts.
+Das ist mehr, als die Konditionszahl allein hergibt: Nicht nur die Fehlerverstärkung wird
+quadriert, es geht auch Information verloren, bevor überhaupt gerechnet wird.
 
 ### 7.3.5 Alternative Lösungswege: orthogonale Transformationen
 
@@ -343,9 +355,57 @@ $\bQ\bA$ gezielt auf Dreiecksform bringen (die
 *QR-Zerlegung*), ist das Thema der
 [nächsten Abschnitte](#sec-7.4).
 
-:::vertiefung[Drehungen und Spiegelungen erhalten Längen, Scherungen nicht]
+:::vertiefung[Welche Abbildungen erhalten Längen – und welche nicht?]
+<p className="mb-2 text-sm">Probieren wir die drei Kandidaten der Reihe nach durch: eine Drehung, eine Spiegelung und einen Eliminationsschritt des Gauß-Verfahrens. Zwei davon dürfen wir auf ein KQ-Problem loslassen, einer nicht.</p>
+
 <S73NormerhaltungWidget />
+
+<p className="mt-2 text-sm">Wie das Widget zeigt, bilden Drehung und Spiegelung den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse: Bei $m = 1{,}2$ wird aus $\left\|\bv\right\|_2 = 1{,}803$ ein $\left\|\bM\bv\right\|_2 = 3{,}176$, ein Faktor 1,76. Dass $\det \bM = 1$ bleibt, hilft nichts – Flächentreue ist eben nicht Längentreue. Genau deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
 :::
+
+### Selbsttest
+
+::::quiz
+
+:::zahlfrage{loesung=8 toleranz=0.7}
+Im Widget oben lässt sich $\eps = 10^{-k}$ einstellen. Ab welchem $k$ speichert der Rechner
+$\operatorname{fl}(1 + \eps^2)$ als glatte 1?
+
+Sobald $\eps^2$ unter $\eps_{\text{mach}} = 2^{-52}$ rutscht, verschwindet es in der
+Addition. Das passiert ab $\eps \le 2^{-26{,}5} \approx 1{,}05\cdot 10^{-8}$, also ab
+$k \approx 8$. Ab dort sind die beiden Spalten der gespeicherten Matrix identisch, ihr Rang
+ist 1, und die Cholesky-Zerlegung aus Algorithmus 7.3.5 bricht ab.
+:::
+
+:::frage{falsch}
+Das Cholesky-Verfahren ist instabil, weil die Cholesky-Zerlegung selbst ein schlecht
+konditionierter Rechenschritt ist.
+
+Die Cholesky-Zerlegung ist für SPD-Matrizen sogar ausgesprochen gutartig. Der Schaden
+entsteht bereits in Schritt 1: Mit $\bA^\top\bA$ arbeiten wir ab dann mit einer Matrix der
+Konditionszahl $\kappa_2(\bA)^2$, und kein späterer Schritt kann das reparieren
+(Bemerkung 7.3.7).
+:::
+
+:::frage{wahr}
+Der Eliminationsschritt des Gauß-Verfahrens darf auf ein KQ-Problem nicht angewandt werden,
+weil er die euklidische Norm ändert.
+
+Er ist eine Scherung; das Widget oben zeigt, wie aus dem Einheitskreis eine Ellipse wird.
+Damit ändert sich der Wert der Zielfunktion $\left\|\bA\bx - \bb\right\|_2$ und mit ihm
+der Minimierer. Orthogonalmatrizen lassen beides unangetastet.
+:::
+
+:::frage{falsch}
+Weil $\bA^\top\bA$ nur $n \times n$ groß ist, ist der Weg über die Normalengleichungen bei
+großem $m$ auch numerisch der beste.
+
+Klein ist er, schnell auch – aber die Verkleinerung ist genau der Schritt, der die
+Konditionszahl quadriert. Effizienz und Stabilität zeigen hier in verschiedene Richtungen;
+den Vergleich rechnen wir in [Abschnitt 7.6](#sec-7.6) aus.
+:::
+
+::::
 
 *Vertiefung: Heath §3.4 (Normalengleichungen, Cholesky-Verfahren, orthogonale
 Transformationen); Heath §3.2 zur Herleitung; MML §7.1 für den Gradientenblick auf

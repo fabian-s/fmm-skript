@@ -16,6 +16,10 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 
 ## Technik (identisch zur interactive-textbook-Bibliothek)
 
+- Zahlenprüfungen liegen dauerhaft unter `scripts/verify/`. `npm run verify:numbers`
+  führt alle Prüfscripte aus; Header-Verweise müssen auf diese Repository-Pfade
+  zeigen, niemals auf ein temporäres Scratchpad.
+
 - `<ConceptLink id="kebab-id">Text</ConceptLink>` — Tooltip-Link;
   Module in `src/concepts/*.tsx` registrieren sich selbst (import.meta.glob).
 - `<M>/<MD>` Mathe (Backslashes in TSX doppelt escapen!), `<Eq tag>` NUR
@@ -196,7 +200,7 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   der Orchestrator editiert `index.ts`). Autorenformat: MDX-Direktiven
   (Muster: `src/chapters/06-svd/S62.mdx` — das urspruengliche Muster
   `mdx-lab/SLab.mdx` ist am 2026-08-18 mit den Werkstattseiten entfallen;
-  Konzept-Muster: `src/concepts/mdx-probe.mdx`); Quiz als `::::quiz` /
+  Konzept-Muster: `src/concepts/matrix-inverse.mdx`); Quiz als `::::quiz` /
   `:::frage{wahr|falsch}`; Mathe mit EINFACHEN Backslashes ($\bA\bx=\bb$),
   Kursmakros direkt. Nach dem Schreiben: `npm run typecheck:mdx &&
   npm run test:mdx`.
@@ -904,3 +908,50 @@ Repos).
 - Kapitel 15.4: Fuenf Folienbefunde im Register (15-funktionsapproximation-II) - der ergiebigste ist die Var-Spalte der Beispieltabelle Z. 413-417, die zu sigma*K/n statt sigma^2*K/n passt (0,3*5/100 = 0,015 -> 0,02, 0,3*15/100 = 0,045 -> 0,05, 0,3*40/100 = 0,12, alle drei treffen die gedruckten Zahlen, waehrend sigma^2 = 0,09 die Werte 0,00/0,01/0,04 gaebe); die Tabelle hat ausserdem gar keine Quelle, resources/bias-variance-example.R erzeugt nur die Abbildung daneben. Dazu: Z. 387-388/399 schreiben Varianz- und MSE-Ordnung PUNKTWEISE, richtig ist die an den Entwurfsstellen GEMITTELTE Fassung, und die ist sogar exakt - fuer jeden KQ-Schaetzer mit vollem Spaltenrang gilt (1/n)sum_i var[fhat(x_i)] = sigma^2 K/n, weil die Spur der Hutmatrix K ist (per node auf acht Stellen fuer K = 4..40 bestaetigt); punktweise stimmt das nicht (eigene Rechnung: bei K = 40 ist die ueber ein feines Gitter gemittelte Varianz 5,04 statt 0,036). Der Bias laesst sich ebenso exakt fassen statt nur zu behaupten: E[fhat] = phi(x)^T B^+ f ist der rauschfreie Fit (Linearitaet), er ist damit sigma-unabhaengig, und ueber die KQ-Optimalitaet gegen den interpolierenden Spline aus Satz 15.2.2 (der im selben Ansatzraum liegt) faellt Bias^2 = O(K^-8) mit Beweis statt per Zitat. Schoene Pointe der Optimalitaetsrechnung: aus 8c1 K^-9 = c2/n folgt Bias^2 = (1/8)*Var, im Optimum traegt der Bias also GENAU ein Neuntel des MSE - unsere Simulation misst bei K = 12 11,1 %. Widget-Lehre: den Monte-Carlo-Mittelwert an den ENTWURFSSTELLEN nehmen, dann deckt sich der Readout mit dem Satz (Grid-Mittelung explodiert bei grossem K und passt zu keiner Formel des Abschnitts); der Bias faellt bei sin(3x) auf [0,2pi] NICHT monoton (K = 8: 0,0344 gegen K = 9: 0,1174, dort fallen die inneren Knoten genau auf die Nullstellen k*pi/3) - Ordnungsaussagen also nie als Schritt-fuer-Schritt-Verbesserung verkaufen. Statuszweige eines K-Reglers brauchen die Seite des Optimums als eigene Bedingung: eine reine Anteilsabfrage nannte K = 11 (links vom Minimum bei K = 12) „Ueberanpassung".
 - Kapitel 15.5: Fuenf Folienbefunde im Register (15-funktionsapproximation-II, Z. 455-554) - der groesste ist die Konvergenztabelle Z. 497-502, deren n-Spalte nicht zur Rate der Nachbarspalte passt: aus n^(-8/(8+p)) <= 0,01 folgt bei Konstante 1 exakt n >= 10^((8+p)/4), also 10^2,25 / 10^2,5 / 10^3,25 / 10^4,5 fuer p = 1/2/5/10, waehrend die Folie 10^2 / 10^2,5 / 10^4 / 10^5 nennt (bei p = 1 zu klein - 10^2 liefert MSE 0,0167 -, bei p = 5/10 rund eine halbe Groessenordnung zu gross, bei p = 2 exakt); die nach dem externen Review ergaenzte Fussnote 'illustrative Werte' deckt das ab und MUSS mit ins Skript, beide Spalten gehoeren nebeneinander. Weitere Befunde: Speichertabelle mit dezimalen Praefixen als 'KB' (80 GB = 74,5 GiB, Tausendertrennung englisch), 'pK Koeffizienten' fuer das GAM unterschlaegt beta_0 und die Identifizierbarkeit (genau pK+1 bzw. p(K-1)+1 nach Zentrierung), O(K^p) fuer eine Auswertung gilt nur ohne Traegerstruktur (mit B-Splines (q+1)^p, also 4^10 = 1 048 576 statt 10^10), und 'Thomas Nagler's Vorlesungen' ist ein englischer Apostroph-Genitiv. Der multivariate MSE-Satz faellt gratis aus Kapitel 15.4: Satz 15.4.4 braucht vom Schaetzer nur volle Spaltenzahl, also gemittelte Varianz sigma^2 K^p/n, und die Minimierung von c1 K^-8 + c2 K^p/n gibt K^(8+p) = 8c1 n/(c2 p) (numerisch bestaetigt fuer p=3, n=1e6: K* = 3,8387 gegen Rasterminimum 3,8385) samt Bias-Anteil p/(8+p) im Optimum - fuer p = 1 genau das Neuntel aus Bemerkung 15.4.7. Verifiziert (node, check-s155.mjs): 10^10 * 8 B = 80 GB = 74,5 GiB; n-Spalte wie oben; jede weitere Dimension multipliziert n mit 10^(1/4) = 1,78 (allgemein eps^(-1/8), bei eps = 1e-4 also 3,16); Tensor gegen GAM bei K = 10, p = 10: 10^10 gegen 101 Koeffizienten. Widget-Verifikation ohne Dev-Server wie in Lesson 15.2 (esbuild-Bundle + renderToStaticMarkup, Banner mit createRequire, sonst bricht react-dom/server am dynamischen require('stream')): alle 170 Reglerzustaende (p x K) ohne NaN/undefined/Infinity, und der Zahlenformatierer muss beim Abschneiden von Nachkommanullen den Punkt pruefen (naives replace(/\.?0+$/) macht aus '100' eine '1').
 - Kapitel 14.5: Die Wrap-up- und Ausblick-Folien (14-funktionsapproximation Z. 563-580) sind fehlerfrei, kein neuer Registereintrag; dafuer drei Punkte fuer kuenftige Zusammenfassungen. (1) Selbsttest-Aussagen gegen ALLE Fachabschnitte gegenlesen, bevor man sie schreibt: die naheliegenden Items (Grad hoechstens n-1, Interpolation sagt zwischen den Stuetzstellen nichts, m+q-Zaehlung, Runge nicht monoton, Lokalitaet ist nicht exakt) stehen schon in den Selbsttests von 14.1-14.4 - tragfaehig sind stattdessen Items, die zwei Abschnitte VERBINDEN: K = n Basisfunktionen genuegen ohne Invertierbarkeit nicht (phi = (1, x, 1+x) an 0/1/2 hat det B = 0 gegen det Vandermonde = 2), Basiswechsel gegen Ansatzraumwechsel (Monom -> Newton ist ersteres und aendert den Interpolanten nicht, Monom -> B-Spline ist letzteres), und stueckweise linear plus feines Gitter schafft, woran wachsender Polynomgrad scheitert (Satz 14.4.15 gegen Runge). (2) Auch die Zahlen einer Zusammenfassung selbst nachrechnen statt sie aus den Nachbarabschnitten abzuschreiben (per node bestaetigt): kappa_1 der Vandermonde-Matrix zu 20 aequidistanten Punkten in [0,1] kommt in double auf 4,2e16 (Bemerkung 14.4.13 nennt exakt 4,4e16), die kubische B-Spline-Kollokationsmatrix auf 37,2 mit hoechstens q+1 = 4 Eintraegen je Zeile (an den Raendern weniger, min 1); max|l_j| = 4,028 und Lebesgue-Konstante 17,8 bei n = 10; Runge 0,44/0,30/7,2/8,6/257 fuer n = 5/10/15/20/25; Tensorprodukt K^p = 100/10.000/100.000 fuer K = 10 und p = 2/4/5. (3) Der Folien-Ausblick nennt drei Themen, die verschiedene Behandlung brauchen: Tensor-Produkt-Splines bekommen den RUECKverweis auf ?k=09-tensoren#sec-9.4 (dort steht der Fluch der Dimensionalitaet schon, hier nur seine Funktionenraum-Fassung), P-Splines/GAM bleiben Prosa mit externem Verweis (Statistik V, mgcv, Eilers/Marx 1996, Wood 2017), und bei KANs/Normalizing Flows traegt nur die Modell-Lesart (Splines als Baustein, Koeffizienten trainiert), waehrend die Interpolations-Lesart falsch waere - Bemerkung 14.1.6 hat die Abgrenzung schon, die Zusammenfassung zitiert sie statt sie zu wiederholen. Zwei Konzept-Fallen dabei: eine id fuer Regularisierung/Ridge gibt es NICHT (Ridge also per ?k=13-optim#sec-13.5 verlinken), und der `tensor`-Tooltip meint das mehrdimensionale ARRAY, nicht das Tensorprodukt von Funktionenraeumen - dort keinen :k-Link setzen.
+
+## Offene To-dos (Nutzer, 2026-08-20)
+
+Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
+
+1. **ERLEDIGT (2026-08-20): Theta aus dem Hauptstrang nehmen (Kapitel 2).** Das Skript führte in
+   `02-algos` neben O und o auch Theta ein, die Folien tun das nicht.
+   - Theta in eine `:::vertiefung` verschieben und dort seine Relevanz besser
+     begründen (wofür braucht man die scharfe Schranke überhaupt — Abgrenzung
+     "höchstens" (O) gegen "genau von der Ordnung" (Theta), typischer
+     Fehlschluss "O(n²) heißt, es ist quadratisch").
+   - Erwähnungen von Theta in den späteren Kapiteln entfernen oder abschwächen.
+     Bestand am 2026-08-20: 66 Treffer in `02-algos`, je 2 in `06-svd`,
+     `07-kq`, `08-la-misc`, je 1 in `03-matrix-spur-norm` und `05-lgs`
+     (`grep -rn "Theta" src/chapters/`). In den späteren Kapiteln genügt
+     durchweg O.
+
+2. **ERLEDIGT (2026-08-20): Selbsttest am Ende von Abschnitt 1.2 entfernt.** `src/chapters/01-intro/S12.mdx`,
+   letzter Block: `### Selbsttest` mit einer `::::quiz`-Direktive (eine
+   wahr/falsch-Frage zur Kurskarte). Ersatzlos streichen.
+
+3. **ERLEDIGT (2026-08-20): Fibonacci-Stepper startet auf Schritt 1.**
+   `src/chapters/02-algos/widgets/FibonacciStepper.tsx`, gemountet in
+   `S22.mdx`: startet derzeit nicht auf dem ersten Schritt. Anfangszustand auf
+   Schritt 1 setzen, damit sofort etwas zu sehen ist.
+
+4. **ERLEDIGT (2026-08-20): Beweise öffnen jetzt schrittweise.**
+   `src/lib/Proof.tsx` startet mit `shown = 1`, `visible` ist auf `steps.length`
+   geklemmt, der Knopf schaltet zwischen Schritt-1-Ansicht und ganzem Beweis.
+   Ursprüngliche Notiz: der
+   Zustand `shown === null` bedeutet heute "ganzer Beweis sichtbar" und ist der
+   Default (`useState<number | null>(null)`, Z. 74; `visible = shown === null ?
+   steps.length : shown`). Gewünscht ist die Umkehrung: mit dem ERSTEN Schritt
+   öffnen und den Leser wirklich durchsteppen lassen; "ganzen Beweis zeigen"
+   bleibt als Knopf erhalten. Betrifft alle `::::beweis`-Direktiven im ganzen
+   Skript, also zentral in der lib ändern, nicht pro Kapitel.
+
+- Die Konzepte `inverse-matrix` und `matrix-inverse` waren DUBLETTEN (zwei
+  Module, zwei Widgets, fast gleicher Titel: „Inverse Matrix" gegen „Inverse
+  einer Matrix"). Am 2026-08-20 auf `matrix-inverse` zusammengelegt — die
+  Entscheidung faellt ueber die EINGEHENDEN LINKS (25 gegen 3), nicht darueber,
+  welches Modul zuletzt bearbeitet wurde: fast haetten wir das gut verlinkte
+  behalten und das neue Widget im kaum erreichbaren Modul verrotten lassen.
+  Vor jedem Widget-Umbau also `grep -rn "{#<id>}" src/` zaehlen. Die alte
+  Namenskonvention (Datei nach der Konzept-id gespiegelt) hat die Dublette
+  beguenstigt, weil `InverseMatrixWidget.tsx` und `MatrixInverseWidget.tsx`
+  wie zwei verschiedene Dinge aussehen.

@@ -340,14 +340,12 @@ Muster trägt weit über die LU-Zerlegung hinaus: Auch die QR-Zerlegung für
 Kleinste-Quadrate-Probleme ([Abschnitt 7.4](?k=07-kq#sec-7.4)) folgt ihm.
 :::
 
-:::vertiefung[Die Elimination im Zeitraffer]
-Voreingestellt ist das System aus den Beispielen 5.3.4 und 5.3.8; jeder
-Klick zeigt eine Phase der Elimination. Sehenswert ist auch der
-Problemfall: Setzen wir den Eintrag links oben auf 0, bricht die
-Elimination sofort ab, wie es Beispiel 5.3.6 im Kleinen vorführt.
+Welche Einträge speichert die LU-Zerlegung zusätzlich zur Arbeitsmatrix?
 
 <LUZerlegungStepper />
-:::
+
+Wie das Widget zeigt, werden die Multiplikatoren der Elimination in $\bL$
+gespeichert, während die Arbeitsmatrix zu $\bU$ wird.
 
 ### Pivotierung
 
@@ -373,7 +371,11 @@ Numerikbibliotheken pivotieren deshalb grundsätzlich, auch wenn kein Pivot
 exakt null ist.
 
 :::vertiefung[Kleine Pivots, große Fehler]
+Was verändert der Zeilentausch am Rundungsfehler eines kleinen Pivots?
+
 <PivotVergleich />
+
+Der Vergleich ordnet die Wirkung der Pivotierung an derselben Aufgabenfamilie ein.
 :::
 
 ### Komplexität
@@ -476,8 +478,22 @@ und rund $n^2$ für ein Substitutionspaar. Mit diesen Konstanten rechnet das
 folgende Widget:
 
 :::vertiefung[Einmal zerlegen oder jedes Mal neu?]
+Ab wann überwiegt der einmalige Aufwand der Zerlegung nicht mehr?
+
 <LUKostenPlot />
+
+Das Kostenbild stellt die wiederverwendete Zerlegung dem vollständigen Neubeginn gegenüber.
 :::
+
+::::quiz
+
+:::zahlfrage{loesung=2 toleranz=0}
+Ab wie vielen rechten Seiten ist die gespeicherte LU-Zerlegung im Kosten-Widget günstiger?
+
+Ab der zweiten rechten Seite fällt die Zerlegung nur einmal an.
+:::
+
+::::
 
 :::bemerkung[5.3.11 (Struktur ausnutzen)]
 Die Laufzeit lässt sich weiter drücken, wenn $\bA$ besondere Eigenschaften

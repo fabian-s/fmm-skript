@@ -1,4 +1,6 @@
 import { KehrwertWidget, SummenKonditionWidget } from "./widgets/S42Kondition";
+import { LgsKonditionWidget } from "./widgets/S42Lgs";
+import { Schaetzfrage } from "../../lib";
 import { SelfTest } from "./widgets/S42Local";
 
 {/*
@@ -68,9 +70,8 @@ $$
 \cgreen{\frac{\left| f(\wt{x}) - f(x) \right|}{\left| f(x) \right|}} = \frac{\left| \cred{\eps} \right|}{\left| x + \cred{\eps} \right|} = \corange{\frac{|x|}{\left| x + \cred{\eps} \right|}} \cdot \frac{\left| \cred{\eps} \right|}{|x|}.
 $$
 
-Der <span style={{ color: "#009E73" }}>relative Outputfehler</span> ist also der
-<span style={{ color: "#D55E00" }}>relative Inputfehler</span>, multipliziert mit dem
-<span style={{ color: "#E69F00" }}>Verstärkungsfaktor</span>
+Der *relative Outputfehler* ist also der *relative Inputfehler*, multipliziert mit dem
+*Verstärkungsfaktor*
 $\corange{|x| / |x + \cred{\eps}|}$. Für
 $\cred{\eps} \to -10^{-17}$ wächst dieser Faktor über alle Grenzen;
 insgesamt durchläuft der relative Outputfehler das gesamte Intervall
@@ -80,9 +81,41 @@ $x$ kann sie allerdings bis zu 100 % betragen. Diesen Unterschied schauen wir
 uns gleich noch genauer an.
 :::
 
+Wie schnell wächst dieser Verstärkungsfaktor eigentlich? Die Frage lässt sich schätzen, bevor
+wir sie ausrechnen: Steht der Input bei $x = 0{,}6$, wie weit müssen wir ihn dann
+stören, damit der relative Outputfehler zehnmal so groß wird wie der relative Inputfehler?
+
 :::vertiefung[Kondition-Spielwiese: der Kehrwert unter Störungen]
-<KehrwertWidget />
+<Schaetzfrage
+  frage={<>Wie groß muss die Störung <M>{"\\eps"}</M> bei <M>{"x = 0{,}6"}</M> sein, damit der relative Outputfehler zehnmal so groß ist wie der relative Inputfehler?</>}
+  variante="bereich"
+  loesung={-0.54}
+  toleranz={0.02}
+  einheit="ε"
+  min={-0.55}
+  max={0}
+  schritt={0.005}
+  start={-0.2}
+  fmt={(v) => v.toFixed(3).replace(".", ",").replace("-", "−")}
+  verdeckt={
+    <p className="max-w-prose text-sm">
+      Die Verstärkung ist <M>{"|x| / |x + \\eps|"}</M>. Zehnfach heißt
+      <M>{"|x + \\eps| = x/10 = 0{,}06"}</M>, also <M>{"\\eps = -0{,}54"}</M>: 90 % der Strecke
+      von <M>{"x"}</M> zur Polstelle.
+    </p>
+  }
+>
+  <KehrwertWidget />
+</Schaetzfrage>
 :::
+
+Das Widget zeigt beide Regime an einem Bild. Solange $\cred{\eps}$ klein gegenüber
+$x$ ist, sind roter und grüner Balken fast gleich lang, die Verstärkung liegt nahe
+$1$. Schieben wir $\wt{x}$ dagegen an die Polstelle, wächst der grüne
+Outputbalken über den Bildrand hinaus, während der rote Inputbalken kaum länger wird. Bei
+$x = 0{,}6$ und $\cred{\eps} = -0{,}54$ ist die Verstärkung genau
+$10$, bei $\cred{\eps} = -0{,}45$ (der Voreinstellung) ist sie
+$4$.
 
 ### 4.2.2 Konditionszahlen
 
@@ -268,6 +301,29 @@ $$
   $\bA^\top\bA$).
 :::
 
+Satz 4.2.6 hat zwei Aussagen, und die zweite ist die überraschende: Die relative Kondition
+hängt von der rechten Seite $\bx$ ab, aber die Schranke
+$\corange{\kappa(\bA)}$ wird für ungünstige $\bx$ auch wirklich
+angenommen. Sehen wir uns an, was das geometrisch heißt. Ein Kreis plausibler rechter Seiten um
+$\bx$ wird von $\bA^{-1}$ zu einer Ellipse verzogen; für welche
+$\bx$ ist diese Ellipse groß gemessen an $\left\| \bA^{-1}\bx \right\|$,
+und für welche nicht?
+
+<LgsKonditionWidget />
+
+Beide Tafeln zeigen dieselbe Störung, einmal vor und einmal nach dem Lösen. In der
+Voreinstellung ($\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1{,}05 \end{pmatrix}$,
+$\bx = (2;\ 2{,}05)^\top$, also $\by = (1;\ 1)^\top$) schöpft
+$\kappa_{rel}(f, \bx) \approx 82{,}0$ die Schranke
+$\corange{\kappa(\bA)} \approx 82{,}0$ zu 99,99 % aus: Aus 5 % Inputfehler werden
+410 % Outputfehler, aus dem kleinen roten Kreis links wird die lange Nadel rechts. Ziehen wir
+$\bx$ dagegen in Richtung $(1;\ -1)^\top$, fällt
+$\kappa_{rel}$ auf $1$, obwohl die Matrix dieselbe bleibt. Das ist der
+Unterschied zwischen der Kondition des *Problems an dieser Stelle* und der
+Worst-Case-Schranke $\corange{\kappa(\bA)}$: Letztere ist eine Eigenschaft von
+$\bA$ allein und deshalb die Zahl, die wir angeben, wenn wir die rechte Seite
+nicht kennen.
+
 <SelfTest
   frage={
     <>
@@ -352,13 +408,77 @@ nicht.
 </details>
 :::
 
+Die Antwort auf Teil 2 lässt sich auch als Landkarte über der Ebene lesen: Für welche Punkte
+$\bx$ ist die Summe gutmütig, für welche katastrophal, und wie schnell wechselt
+das eine ins andere?
+
 :::vertiefung[Kondition-Spielwiese: die Summe zweier Zahlen in der Ebene]
 <SummenKonditionWidget />
 :::
+
+Die Karte macht zwei Dinge sichtbar, die in der Formel stecken, aber leicht zu übersehen sind.
+Erstens ist sie entlang jedes Strahls durch den Ursprung einfarbig: Da Zähler und Nenner von
+$\corange{\kappa_{rel}}$ beide homogen vom Grad 1 in $\bx$ sind, zählt
+allein die *Richtung*. Zweitens liegt der ganze Ärger in einer beliebig dünnen
+Umgebung der Antidiagonalen: Bei $\bx = (1{,}5;\ -1{,}45)^\top$ ist
+$\corange{\kappa_{rel}} \approx 59$, also gut zwei verlorene Dezimalstellen; ein
+Schritt weiter auf $(1{,}5;\ -1{,}5)^\top$ und das Problem ist schlecht gestellt.
 
 Diese Rechnung ist mehr als eine Fingerübung: In
 [Abschnitt 4.3](#sec-4.3) wird genau die Kondition der
 Differenz zweier fast gleicher Zahlen erklären, warum die
 Verschiebungsformel für die Varianz numerisch scheitert.
+
+### Selbsttest
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{falsch}
+Ein schlecht konditioniertes Problem lässt sich durch einen besseren Algorithmus retten.
+
+Die Kondition ist eine Eigenschaft des Problems $f$ an der Stelle
+$\bx$, nicht der Rechenvorschrift. Ein Algorithmus sieht nur
+$\wt{\bx}$ und kann nicht wissen, welcher Punkt der ununterscheidbaren Menge
+$E$ der wahre Input war. Ein *stabiler* Algorithmus liefert trotzdem
+etwas: nämlich nicht mehr Fehler, als das Problem erzwingt.
+:::
+
+:::frage{falsch}
+Die absolute Konditionszahl von $f(x) = 1/x$ ist bei $x = 10^{-17}$
+riesig, also ist das Problem dort in jedem Sinn schlecht konditioniert.
+
+$\kappa_{abs} = 10^{34}$, aber $\kappa_{rel} = 1$ (Beispiel 4.2.5).
+Welche der beiden zählt, hängt davon ab, welche Fehlerart im Input unvermeidbar ist. Bei
+Gleitkommarechnung sind das *relative* Fehler, und die gibt der Kehrwert
+unverändert weiter.
+:::
+
+:::frage{wahr}
+Für dieselbe Matrix $\bA$ kann das Lösen von
+$\bA\by = \bx$ je nach rechter Seite gut oder schlecht konditioniert sein.
+
+Nach Satz 4.2.6 ist
+$\kappa_{rel} = \left\| \bA^{-1} \right\| \left\| \bx \right\| / \left\| \bA^{-1}\bx \right\|$,
+und dieser Quotient hängt von der Richtung von $\bx$ ab. Er schöpft die
+Schranke $\corange{\kappa(\bA)}$ nur für ungünstige rechte Seiten aus; im LGS-Widget
+sind das die Richtungen nahe 45°.
+:::
+
+:::zahlfrage{loesung=1 toleranz=0.05}
+Stellen wir im Widget zur Kondition der Summe die Voreinstellung „Diagonale" ein. Welchen Wert
+zeigt der Readout für $\kappa_{rel}$?
+
+Eins. Auf der Diagonalen $x_2 = x_1$ ist
+$\left\| \bx \right\|_2 = \sqrt{2}\,|x_1|$ und
+$|x_1 + x_2| = 2|x_1|$, also
+$\kappa_{rel} = \sqrt{2} \cdot \sqrt{2}\,|x_1| / (2|x_1|) = 1$. Besser als 1 geht
+nicht: Relative Inputfehler werden dort überhaupt nicht verstärkt.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §1.2.5–1.2.6 (Fehlerfortpflanzung, Sensitivität und Kondition).*

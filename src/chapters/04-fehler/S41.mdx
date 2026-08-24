@@ -207,9 +207,23 @@ und tatsächlich gilt
 $5 \cdot (1 - \corange{\delta_{\bv}}) \approx 4{,}6394 \le 5{,}3600 \le 5{,}3606 \approx 5 \cdot (1 + \corange{\delta_{\bv}})$.
 :::
 
-:::vertiefung[Fehlermaß-Rechner: v und ṽ selbst wählen]
+Wie viel Spielraum lässt eine Fehlerschranke eigentlich? Für den Vektor aus Beispiel 4.1.4
+bedeutet $\corange{\delta_{\bv}} \le 0{,}1$ nichts anderes als: Die Spitze von
+$\cblue{\wt{\bv}}$ darf höchstens um $0{,}1 \cdot \left\| \cgreen{\bv} \right\|_2$
+danebenliegen. Wie groß ist dieser Spielraum in der Ebene, und wie viel Information über
+$\left\| \cblue{\wt{\bv}} \right\|$ steckt am Ende in Lemma 4.1.3?
+
+:::vertiefung[Fehlermaß-Rechner: v und ṽ in der Ebene]
 <FehlermassRechner />
 :::
+
+Der Rechner übersetzt beide Fehlermaße in Geometrie. Der absolute Fehler
+$\cred{\bDelta_{\bv}}$ ist der rote Pfeil zwischen den beiden Spitzen, der relative Fehler
+misst dessen Länge an $\left\| \cgreen{\bv} \right\|_2$, und der gestrichelte Kreis um
+$\cgreen{\bv}$ hat den Radius $0{,}1 \cdot 5 = 0{,}5$: Solange die blaue Spitze darin liegt,
+ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist Lemma 4.1.3
+als Bild. Bei den 7,2 % aus Beispiel 4.1.4 ist er noch schmal, bei 40 % lässt er für
+$\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
 
 ### 4.1.3 Fehlerzerlegung
 
@@ -310,9 +324,19 @@ gegenüber $-3{,}1$). Hier würde sich also zuerst ein besserer Algorithmus
 lohnen (mehr Reihenglieder), nicht ein genauerer Input.
 :::
 
-:::vertiefung[Fehlerzerlegungs-Explorer: Abbruchordnung und Input-Genauigkeit selbst steuern]
+Bleibt das so? Den Algorithmusfehler drücken wir mit mehr Reihengliedern, den Folgefehler nur
+mit einem genaueren $\wt{\pi}$. Ab welcher Abbruchordnung ist der Algorithmus so gut, dass
+nicht mehr er, sondern der Input das Ergebnis begrenzt?
+
+:::vertiefung[Fehlerzerlegungs-Explorer: Abbruchordnung N und Input-Genauigkeit k]
 <FehlerzerlegungExplorer />
 :::
+
+Im Explorer kippt die Dominanz bei $\wt{\pi} = 3$ zwischen $N = 4$ und
+$N = 6$: Bis $N = 3$ ist der Algorithmusfehler mehr als doppelt so groß wie der
+Folgefehler, ab $N = 6$ ist es umgekehrt. Ab da kostet jedes weitere Reihenglied Rechenzeit,
+ohne den Gesamtfehler zu bewegen, denn der zweite Summand in (4.1.1) enthält
+$N$ überhaupt nicht. Wer den Fehler dann noch drücken will, muss am Input ansetzen.
 
 Damit haben wir das Vokabular beisammen: Fehler messen wir mit Normen (absolut oder
 relativ), und den Gesamtfehler eines berechneten Ergebnisses zerlegen wir in den
@@ -320,5 +344,56 @@ Algorithmus-Anteil und den Folgefehler aus dem Input. Die nächsten beiden Absch
 quantifizieren die zwei Anteile: Die *Kondition* eines Problems misst, wie stark
 Inputfehler im Ergebnis verstärkt werden; die *Stabilität* beurteilt, wie viel
 Fehler der Algorithmus selbst hinzufügt.
+
+### Selbsttest
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{falsch}
+Ein absoluter Fehler von $0{,}36$ ist ein kleiner Fehler.
+
+Ohne Bezugsgröße sagt der absolute Fehler nichts. In Beispiel 4.1.4 sind
+$0{,}36$ gemessen an $\left\| \cgreen{\bv} \right\|_2 = 5$ gerade
+7,2 %, bei einem Vektor der Länge $0{,}5$ wären dieselben
+$0{,}36$ ein relativer Fehler von über 70 %. Genau deshalb steht neben dem
+absoluten Fehler immer auch der relative.
+:::
+
+:::frage{wahr}
+Der absolute Fehler $\cred{\bDelta_{\bv}}$ trägt mehr Information als der relative Fehler
+$\corange{\delta_{\bv}}$.
+
+$\cred{\bDelta_{\bv}}$ ist ein Element von $V$ und sagt auch, in welche
+*Richtung* die Näherung danebenliegt; $\corange{\delta_{\bv}}$ ist eine einzelne
+nichtnegative Zahl (Definition 4.1.2). Aus $\cred{\bDelta_{\bv}}$ und
+$\cgreen{\bv}$ lässt sich $\corange{\delta_{\bv}}$ berechnen, umgekehrt nicht.
+:::
+
+:::frage{falsch}
+Mehr Reihenglieder in $\wt{f}$ verkleinern beide Anteile der Zerlegung (4.1.1).
+
+Nur den ersten. Der Folgefehler $\corange{f(\wt{\bx}) - f(\bx)}$ vergleicht das
+*ideale* Problem an zwei Inputs und weiß von $\wt{f}$ gar nichts
+(Bemerkung 4.1.5). Deshalb läuft der Gesamtfehler im Explorer gegen den Folgefehler und nicht
+gegen null.
+:::
+
+:::zahlfrage{loesung=0.5 toleranz=0.02}
+Ziehen wir im Fehlermaß-Rechner die blaue Spitze bei $\cgreen{\bv} = (3, 4)^\top$ genau auf
+den gestrichelten Kreis. Welchen Wert zeigt der Rechner dann für
+$\left\| \cred{\bDelta_{\bv}} \right\|_2$?
+
+Der gestrichelte Kreis hat den Radius $0{,}1 \cdot \left\| \cgreen{\bv} \right\|_2$, und
+$\left\| \cgreen{\bv} \right\|_2 = 5$. Auf dem Kreis ist also
+$\left\| \cred{\bDelta_{\bv}} \right\|_2 = 0{,}5$ und damit
+$\corange{\delta_{\bv}} = 0{,}5/5 = 10\,\%$: der Grenzfall der Fehlerschranke
+$\eps = 0{,}1$ aus Beispiel 4.1.4.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §1.2.*

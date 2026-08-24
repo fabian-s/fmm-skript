@@ -211,16 +211,20 @@ Praxis-Regeln der Folien zusammen:
   $O(mn^2 + n^3)$, aber die Konstanten unterscheiden sich deutlich.
 :::
 
-:::vertiefung[Was kostet welche Methode? (interaktiv)]
-<p className="mb-2 text-sm">Die $O$-Klasse ist bei allen drei Methoden gleich; entscheidend sind die Konstanten. Stellen wir $n$ und das Seitenverhältnis $m/n$ ein und vergleichen die ungefähren Operationszahlen. Die SVD-Konstante hängt vom Algorithmus ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).</p>
+:::vertiefung[Wie teuer ist Stabilität?]
+<p className="mb-2 text-sm">Die $O$-Klasse ist bei allen drei Methoden dieselbe; entscheidend sind die Konstanten. Um welchen Faktor ist QR teurer als die Normalengleichungen – und hängt dieser Faktor von der Problemgröße ab? Die SVD-Konstante hängt vom Algorithmus ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).</p>
 
 <CostWidget />
+
+<p className="mt-2 text-sm">Das Widget trennt die gemeinsamen Größenordnungen von den konstanten Kostenfaktoren der Verfahren.</p>
 :::
 
-:::vertiefung[Genauigkeit: wie viele korrekte Stellen? (interaktiv)]
-<p className="mb-2 text-sm">Der Rundungsfehler der Normalengleichungen wächst wie $\kappa_2(\bA)^2 \, \eps$, der von QR nur wie $\left(\kappa_2(\bA) + \left\|\br\right\|_2 \kappa_2(\bA)^2\right)\eps$ mit der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Verschieben wir Kondition und Residuumsnorm und beobachten, wann welche Methode ihre Stellen verliert.</p>
+:::vertiefung[Wie viele der 16 Stellen überleben?]
+<p className="mb-2 text-sm">In doppelter Genauigkeit stehen uns rund 16 Dezimalstellen zur Verfügung. Wie viele davon eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Bevor wir das Widget befragen, lohnt sich eine Schätzung.</p>
 
 <AccuracyWidget />
+
+<p className="mt-2 text-sm">Das Widget verbindet Kondition und Residuum mit der erreichbaren Genauigkeit der drei Verfahren.</p>
 :::
 
 <h3 id="sec-7.6-zusammenfassung">Zusammenfassung: das Kapitel im Überblick</h3>
@@ -264,11 +268,55 @@ Intuition, die Analysis die Normalengleichungen ($\nabla \left\| \bA\bx - \bb \r
 und die numerische lineare Algebra sagt uns, welchen Lösungsweg wir wählen sollten:
 einen Kompromiss aus Geschwindigkeit und Stabilität.
 
-:::vertiefung[Entscheidungshilfe: welche Methode wählen? (interaktiv)]
-<p className="mb-2 text-sm">Die Abwägungen des Kapitels als Daumenregel-Automat: Form von $\bA$, Kondition und Anspruch einstellen; die Empfehlung samt Begründung erscheint unten.</p>
+:::vertiefung[Welche Methode wählen wir wann?]
+<p className="mb-2 text-sm">Zum Schluss ein Sandkasten für alles zusammen: Form von $\bA$, Kondition und Anspruch lassen sich frei kombinieren. Welche der drei Einstellungen ändert die Empfehlung am häufigsten?</p>
 
 <MethodChooser />
+
+<p className="mt-2 text-sm">Das Widget ordnet die Methodenwahl nach Stabilität, Rang und Aufwand.</p>
 :::
+
+<h3 id="sec-7.6-quiz">Selbsttest</h3>
+
+::::quiz
+
+:::zahlfrage{loesung=1.87 toleranz=0.1}
+Stellen wir im Aufwands-Widget das Seitenverhältnis auf $m/n = 10$. Welchen Wert zeigt der
+Marker für $W(\text{QR}) / W(\text{NE})$?
+
+Mit $W_{\text{NE}} = mn^2/2 + n^3/6$ und $W_{\text{QR}} = mn^2 - n^3/3$ ist das Verhältnis
+$(r - 1/3)/(r/2 + 1/6)$ mit $r = m/n$, für $r = 10$ also $9{,}667/5{,}167 = 1{,}87$. Es
+hängt nur von $r$ ab, nicht von $n$ – beide Regler für $n$ ändern daran nichts.
+:::
+
+:::frage{falsch}
+Weil die SVD am stabilsten ist, sollte man KQ-Probleme grundsätzlich über die
+Pseudoinverse lösen.
+
+Robustheit hat ihren Preis: Die SVD kostet ein Vielfaches von QR (das Aufwands-Widget zeigt
+Faktoren um 7 bis 18). Für gut konditionierte Probleme ist dieser Aufwand nicht zu
+rechtfertigen; sinnvoll wird die SVD bei (fast) rangdefizientem $\bA$ (Bemerkung 7.6.3).
+:::
+
+:::frage{wahr}
+Die Pseudoinverse regularisiert exakt unidentifizierte Nullraumanteile, aber keine kleinen
+positiven Singulärwerte.
+
+Für $\sigma_i > 0$ steht in $\bSigma_r^{-1}$ der Faktor $1/\sigma_i$, und der wird bei
+kleinem $\sigma_i$ riesig. Gegen einen Fast-Rangdefekt helfen erst truncated SVD oder
+Tikhonov-Regularisierung.
+:::
+
+:::frage{wahr}
+Bei großem Residuum verlieren QR und Normalengleichungen ähnlich viele Stellen.
+
+Sobald $\left\|\br\right\|_2\kappa_2(\bA) > 1$ ist, dominiert der Term
+$\left\|\br\right\|_2\kappa_2(\bA)^2\eps$ auch den QR-Fehler. Das Genauigkeits-Widget
+zeigt es: Beide Balken schrumpfen dann gleichermaßen. Der Unterschied zwischen den
+Verfahren zeigt sich bei kleinem Residuum.
+:::
+
+::::
 
 Damit endet unser Rundgang durch die Kleinste-Quadrate-Verfahren. Im nächsten Kapitel
 wechseln wir die Perspektive: probabilistische Sichtweisen und iterative Methoden.

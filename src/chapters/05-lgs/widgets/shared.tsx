@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { fmtDe } from "../../../lib";
 
 /**
  * Gemeinsame Bausteine der Kapitel-5-Stepper (LU, Rückwärtssubstitution,
@@ -17,7 +18,7 @@ export function fmtNum(v: number): string {
   if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
   let r = Math.round(v * 1000) / 1000;
   if (Object.is(r, -0)) r = 0;
-  return String(r).replace("-", "−").replace(".", ",");
+  return fmtDe(r, 3);
 }
 
 const SUBS = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉"];
@@ -59,7 +60,7 @@ export function MatTable({
 export function WidgetLabel({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-xs font-medium" style={{ color: "#64748b" }}>
+      <span className="text-xs font-medium" style={{ color: "var(--w-muted)" }}>
         {label}
       </span>
       {children}

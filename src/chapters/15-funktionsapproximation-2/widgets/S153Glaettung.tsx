@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
 
 /**
  * §15.3: Glaettung mit einer kubischen B-Spline-Basis, Regler fuer K.
@@ -19,7 +20,7 @@ import { useMemo, useState } from "react";
  * Basis und Knoten orange, Residuen rot; die wahre Funktion f traegt das im
  * Kapitel freie Violett (Rolle steht in der Widget-Einleitung).
  *
- * Nachgerechnet (node, check-s153*.mjs), identischer Rechenkern:
+ * Verifiziert (node, verify-15-funktionsapproximation-2/s153.mjs, 2026-08-19), identischer Rechenkern:
  *   K =  4  RSS 6,421  sigmahat 0,374  RMS|fhat-f| 0,2471  max 0,467
  *   K = 10  RSS 3,084  sigmahat 0,278  RMS 0,0864  max 0,532
  *   K = 11  RSS 3,151  sigmahat 0,284  RMS 0,0724 (bester Wert im Bereich)
@@ -31,15 +32,10 @@ import { useMemo, useState } from "react";
  * Statuszweige sind mit 2 / 10 / 16 / 9 Zustaenden alle erreichbar; der
  * Singulaer-Zweig ist reiner Rechenschutz und feuert bei Quantilknoten im
  * Bereich K = 4..40 nie.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const VIOLETT = "#9E57D5";
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const N = 50;
 const SIGMA = 0.3;
@@ -51,18 +47,6 @@ const K_MAX = 40;
 const Y_FENSTER = 2.6;
 
 const fWahr = (x: number) => Math.sin(x) + 0.5 * Math.sin(2 * x);
-
-/** mulberry32: kleiner, deterministischer PRNG. Kein Math.random im Render. */
-function mulberry32(seed: number): () => number {
-  let a = seed;
-  return () => {
-    a |= 0;
-    a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 function zieheDaten(): { xs: number[]; ys: number[]; sdEps: number } {
   const r = mulberry32(SEED);
@@ -331,36 +315,20 @@ export function SplineGlaettung() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Blau sind die 50 Datenpunkte, violett die wahre Funktion f(x) = sin(x) + 0,5·sin(2x), grün
-        der Kleinste-Quadrate-Fit f̂ in der kubischen B-Spline-Basis, orange die Basisfunktionen und
-        ihre Knoten, rot die Residuen. Die Daten sind eine eigene Ziehung mit festem Startwert
-        (n = 50, σ = 0,3), keine Kopie der R-Grafik der Folie; alle Zahlen rechnet das Widget selbst.
-      </p>
+      <Aufgabe>Vergleichen wir die drei Fälle „zu starr“, „passend“ und „zu flexibel“.</Aufgabe>
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-40 shrink-0 text-right">Basisfunktionen K</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={K_MIN}
-          max={K_MAX}
-          step={1}
-          value={K}
-          onChange={(e) => setK(Number(e.target.value))}
-        />
-        <span className="w-32 shrink-0 font-mono text-xs">
-          {K} ({innere.length} innere Knoten)
-        </span>
-      </label>
+      <div className="flex flex-wrap gap-2">
+        {[{ k: 4, label: "zu starr" }, { k: 11, label: "passend" }, { k: 40, label: "zu flexibel" }].map(({ k, label }) => <button key={k} type="button" onClick={() => setK(k)} aria-pressed={K === k}>{label}</button>)}
+      </div>
+
+      <Slider label="Basisfunktionen K" min={K_MIN} max={K_MAX} step={1} value={K} onChange={setK} fmt={(v) => `${v} (${v - 4} innere Knoten)`} accent={ORANGE} />
 
       <div className="flex flex-wrap gap-4">
         <div>
           <svg
             width={W}
-            height={H}
             viewBox={`0 0 ${W} ${H}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -442,9 +410,8 @@ export function SplineGlaettung() {
 
           <svg
             width={W}
-            height={H_BASIS}
             viewBox={`0 0 ${W} ${H_BASIS}`}
-            className="mt-2 max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <line
               x1={PAD.l}
@@ -480,7 +447,7 @@ export function SplineGlaettung() {
           </svg>
         </div>
 
-        <div className="grow space-y-2">
+        <div className="min-w-0 grow space-y-2">
           <div className="overflow-x-auto rounded border border-slate-300 dark:border-slate-600">
             <table className="w-full text-right font-mono text-xs">
               <tbody>
@@ -525,7 +492,7 @@ export function SplineGlaettung() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={K < 7 || K > 15 ? "warn" : "ok"}>{status} Damit wird der Zielkonflikt aus Abschnitt 15.3 sichtbar.</Verdikt>
     </div>
   );
 }

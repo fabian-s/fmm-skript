@@ -1,4 +1,22 @@
-/** Static SVG sketch of a small feed-forward neural network (3-4-2). */
+import { FMM_COLORS } from "../../lib";
+
+/**
+ * Konzept-Widget `neural-network`.
+ *
+ * DIE EINE EINSICHT: Ein Netz ist eine Kette einfacher, vollverbundener
+ * Schichten — jede Kante ein Gewicht, jede Schicht eine Matrix.
+ *
+ * FARBROLLEN: blau = Eingabeschicht, neutral = verborgene Schicht,
+ * rot = Ausgabeschicht. Die Kanten bleiben neutral.
+ *
+ * PROVENIENZ: Layout aus der Vorfassung (Stand 2026-08-19); Kurspalette statt
+ * lokaler Hexwerte und der Themenrahmen sind neu.
+ *
+ * Es ist ein Schema, kein Koordinatenbild (Pattern 11): die Knotenpositionen
+ * bedeuten nichts Quantitatives, die Schichten sind unter der Figur benannt.
+ * Achsen mit Ticks wären hier sinnlos, deshalb hat die Figur keine.
+ * Zahlenbehauptungen macht sie keine.
+ */
 export function NetworkDiagram() {
   const layers = [3, 4, 2];
   const xs = [45, 140, 235];
@@ -21,10 +39,10 @@ export function NetworkDiagram() {
 
   return (
     <svg
-      width={280}
-      height={H + 24}
+      role="img" aria-label="Neuronales Netz mit Eingabe-, verborgener und Ausgabeschicht"
       viewBox={`0 0 280 ${H + 24}`}
-      className="mt-2 rounded border border-slate-300 bg-white dark:border-slate-600"
+      className="mt-2 h-auto max-w-full rounded border"
+      style={{ borderColor: "var(--w-border)" }}
     >
       {edges.map((e, k) => (
         <line
@@ -33,7 +51,7 @@ export function NetworkDiagram() {
           y1={e.y1}
           x2={e.x2}
           y2={e.y2}
-          stroke="#94a3b8"
+          stroke="var(--w-muted)"
           strokeWidth={1}
         />
       ))}
@@ -44,17 +62,17 @@ export function NetworkDiagram() {
             cx={xs[l]}
             cy={yFor(n, i)}
             r={9}
-            fill={l === 0 ? "#0284c7" : l === layers.length - 1 ? "#dc2626" : "#64748b"}
+            fill={l === 0 ? FMM_COLORS.blau : l === layers.length - 1 ? FMM_COLORS.rot : "var(--w-muted)"}
           />
         )),
       )}
-      <text x={xs[0]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[0]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         Eingabe
       </text>
-      <text x={xs[1]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[1]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         verborgene Schicht
       </text>
-      <text x={xs[2]} y={H + 16} textAnchor="middle" fontSize={11} fill="#475569">
+      <text x={xs[2]} y={H + 16} textAnchor="middle" fontSize={11} fill="var(--w-text)">
         Ausgabe
       </text>
     </svg>

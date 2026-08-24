@@ -1,57 +1,80 @@
-import { useState } from "react";
-import { M, Plot, Slider } from "../../lib";
+/**
+ * Einsicht: Die Schrittweite bestimmt, ob der vollständige Gradientenpfad
+ * zum Minimum läuft, oszilliert oder wächst. Farben: blau Loss, rot aktuelle
+ * Iterierte, orange Pfad. Provenienz: neu für Plot/Stepper v2. Zahlen: die
+ * Faktoren 1−2γ wurden mit scripts/verify/QA-L0/verify-qa-l0.mjs (2026-08-20) geprüft.
+ */
+import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Stepper, Verdikt, fmtDe } from "../../lib";
 
-const L = (t: number) => t * t;
-
+const loss = (x: number) => x * x;
+function pathFor(gamma: number, k: number) {
+  const out = [2.4];
+  for (let i = 0; i < k; i += 1) out.push(out[i] * (1 - 2 * gamma));
+  return out;
+}
 export function GradientDescentWidget() {
   const [gamma, setGamma] = useState(0.15);
-  const [path, setPath] = useState<number[]>([2.4]);
+  const [step, setStep] = useState(0);
+  const path = useMemo(() => pathFor(gamma, step), [gamma, step]);
   const theta = path[path.length - 1];
-  const step = () => {
-    // dL/dθ = 2θ, der Update-Schritt ist also θ ← θ − γ · 2θ.
-    setPath((p) => [...p, p[p.length - 1] * (1 - 2 * gamma)].slice(-9));
-  };
-  const reset = () => setPath([2.4]);
+  const factor = Math.abs(1 - 2 * gamma);
+  const verdict =
+    factor < 1
+      ? "Die Beträge der Iterierten schrumpfen; der Pfad nähert sich dem Minimum bei 0."
+      : factor === 1
+        ? "Die Iterierten werden nicht kleiner. Diese Schrittweite konvergiert nicht."
+        : "Die Beträge wachsen. Der nächste Schritt entfernt sich weiter vom Minimum.";
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Schrittweite γ" value={gamma} onChange={setGamma} min={0.05} max={1.15} step={0.05} />
-      <div className="mb-1 flex items-center gap-2">
-        <button
-          onClick={step}
-          className="rounded bg-sky-600 px-2 py-0.5 text-xs text-white hover:bg-sky-500"
-        >
-          einen Schritt gehen
-        </button>
-        <button
-          onClick={reset}
-          className="rounded bg-slate-500 px-2 py-0.5 text-xs text-white hover:bg-slate-400"
-        >
-          zurücksetzen
-        </button>
-        <span className="text-xs">
-          <M>{`\\theta = ${theta.toFixed(3)}`}</M>
-        </span>
-      </div>
-      <div className="mb-1 text-xs">
-        Kleines <M>{"\\gamma"}</M>: langsam, aber sicher. Bei{" "}
-        <M>{"\\gamma = 0.5"}</M>: ein perfekter Sprung. Jenseits von{" "}
-        <M>{"\\gamma \\approx 0.5"}</M> schießt das Verfahren über das Ziel
-        hinaus und zickzackt; ab <M>{"\\gamma = 1"}</M> explodieren die
-        Schritte.
-      </div>
+      <Aufgabe>
+        Wählen wir eine Schrittweite und verfolgen wir den Pfad Schritt für Schritt.
+      </Aufgabe>
       <Plot
-        series={[{ f: L }]}
+        series={[{ f: loss, label: "L(θ)", color: FMM_COLORS.blau }]}
         xDomain={[-3, 3]}
-        yDomain={[-0.6, 7]}
-        width={280}
-        height={180}
+        yDomain={[0, 7]}
+        xLabel="θ"
+        yLabel="L(θ)"
+        readout
+        ariaLabel="Quadratische Zielfunktion mit Gradientenpfad"
+        polylines={[
+          {
+            pts: path.map((x) => [x, loss(x)] as [number, number]),
+            color: FMM_COLORS.orange,
+            label: "Pfad",
+          },
+        ]}
         markers={path.map((x, i) => ({
           x,
-          y: L(x),
-          color: i === path.length - 1 ? "#dc2626" : "#f9a8a4",
-          label: i === path.length - 1 ? "θ" : undefined,
+          y: loss(x),
+          color: i === step ? FMM_COLORS.rot : FMM_COLORS.orange,
+          r: i === step ? 4 : 2.5,
         }))}
       />
+      <Slider
+        label="Schrittweite γ"
+        value={gamma}
+        onChange={(v) => {
+          setGamma(v);
+          setStep(0);
+        }}
+        min={0.05}
+        max={1.15}
+        step={0.05}
+        accent={FMM_COLORS.orange}
+      />
+      <Stepper
+        step={step}
+        setStep={setStep}
+        max={12}
+        narration={
+          <>
+            θ<sub>{step}</sub> = {fmtDe(theta, 3)}
+          </>
+        }
+      />
+      <Verdikt kind={factor < 1 ? "ok" : "warn"}>{verdict}</Verdikt>
     </div>
   );
 }

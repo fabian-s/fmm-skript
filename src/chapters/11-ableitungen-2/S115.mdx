@@ -111,7 +111,7 @@ Semidefinitheit der Hesse-Matrix, zieht daraus aber keinen Schluss über globale
 Minima. Und Bemerkung 11.4.12 nennt als ersten Vorbehalt des Newton-Verfahrens,
 dass ein kritischer Punkt eben noch kein Minimum ist.
 
-Für :k[konvexe Funktionen]{#convex-function} lautet die Antwort „immer", und das ändert die Lage
+Für :k[konvexe Funktionen]{#convexity} lautet die Antwort „immer", und das ändert die Lage
 grundlegend. Jeder kritische Punkt ist dann ein globales Minimum, Sattelpunkte
 gibt es keine, und ein Abstiegsverfahren kann nirgends an der falschen Stelle
 hängenbleiben. Damit bekommen :k[Optimierungsverfahren]{#optimization} Garantien
@@ -269,6 +269,21 @@ $\varphi'$ nichtfallend und ab $t = 0$ nichtnegativ, damit
 $\varphi(1) \ge \varphi(0)$, und das heißt
 $\cblue{f(\by)} \ge \cblue{f(\bx^*)}$. Sattelpunkte kann es aus demselben Grund
 nicht geben. Darauf beruht der Ausblick auf die nächste Vorlesung.
+:::
+
+:::zahlfrage{loesung=4 toleranz=0.001}
+Eine letzte Zahl aus zwei Widgets dieses Kapitels. Im Taylor-Widget für zwei Variablen
+halbieren wir den Messradius um den Entwicklungspunkt und lesen ab, um welchen Faktor der
+Fehler der Tangentialebene $\cgreen{T_1}$ fällt. Welcher Faktor ist das (auf ganze Zahlen
+gerundet)?
+
+Der Faktor $4$, gemessen $4{,}34$ in der Voreinstellung. Der Restterm von $\cgreen{T_1}$
+wächst nach Korollar 11.4.9 wie $\left\|\bh\right\|^2$, und $(1/2)^2 = 1/4$. Für
+$\cgreen{T_2}$ steht an derselben Stelle $8$, passend zu $\left\|\bh\right\|^3$. Dieselbe
+Rechnung im Eindimensionalen erklärt, warum das Lupen-Widget aus
+[Abschnitt 11.1](#sec-11.1) bei $\cblue{f(x) = x^2}$ eine Abweichung zeigt, die sich mit
+jeder Halbierung des Fensters halbiert: Dort steht $\cgreen{T_1}$ gegen einen Restterm der
+Ordnung $2$, gemessen aber in Fensterbreiten, also eine Potenz weniger.
 :::
 
 ::::

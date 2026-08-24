@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
 
 /**
  * §15.4: Bias-Varianz-Zerlegung eines Regressionssplines, per seeded
@@ -23,7 +24,7 @@ import { useMemo, useState } from "react";
  * orange, Bias rot; die wahre Funktion f traegt das im Kapitel freie Violett,
  * der MSE als Summe der beiden Anteile ein neutrales Grau.
  *
- * Nachgerechnet (node, check-s154-final.mjs): Spur der Hutmatrix ist fuer
+ * Verifiziert (node, verify-15-funktionsapproximation-2/s154.mjs, 2026-08-19): Spur der Hutmatrix ist fuer
  * alle K exakt K (auf acht Stellen), und die MC-Varianz trifft sigma^2 K/n:
  *   K =  5: Bias^2 0,4103  Var 0,0044 (Theorie 0,0045)  MSE 0,4147
  *   K =  8: Bias^2 0,0344  Var 0,0071 (Theorie 0,0072)  MSE 0,0415
@@ -31,16 +32,11 @@ import { useMemo, useState } from "react";
  *   K = 12: Bias^2 0,0013  Var 0,0107 (Theorie 0,0108)  MSE 0,0120  (Minimum)
  *   K = 15: Bias^2 0,0001  Var 0,0135 (Theorie 0,0135)  MSE 0,0136
  *   K = 40: Bias^2 0,0001  Var 0,0358 (Theorie 0,0360)  MSE 0,0360
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const VIOLETT = "#9E57D5";
-const GRAU = "#475569";
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: GRAU, hellgrau: RAHMEN } = FMM_COLORS;
+const ACHSE = GRAU;
 
 const A = 0;
 const B_END = 2 * Math.PI;
@@ -51,17 +47,6 @@ const Q = 3;
 const K_MIN = 4;
 const K_MAX = 40;
 const PROBEN = 12;
-
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return function () {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 const f = (x: number) => Math.sin(3 * x);
 
@@ -362,34 +347,14 @@ export function BiasVarianzExplorer() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Setup wie auf der Folie: f(x) = sin(3x) auf [0, 2π] in Violett, n = 100 feste
-        Stellen, σ = 0,3. Blau die Daten einer einzelnen Ziehung, orange die inneren Knoten,
-        grün die Schätzer aus den ersten zwölf von {R} Wiederholungen samt ihrem Mittelwert
-        (dick). Alle Zahlen rechnet dieses Widget selbst; die Zufallszahlen stammen aus einem
-        festen Startwert, es ist also bei jedem Aufruf dieselbe Simulation.
-      </p>
+      <Aufgabe>Schätzen wir erst die Knotenzahl mit kleinstem grauen MSE und prüfen sie dann.</Aufgabe>
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-40 shrink-0 text-right">Basisfunktionen K</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={K_MIN}
-          max={K_MAX}
-          step={1}
-          value={K}
-          onChange={(e) => setK(Number(e.target.value))}
-        />
-        <span className="w-10 shrink-0 font-mono text-xs">{lauf.K}</span>
-      </label>
+      <Slider label="Basisfunktionen K" min={K_MIN} max={K_MAX} step={1} value={K} onChange={setK} accent={ORANGE} />
 
       <div className="flex flex-wrap gap-4">
         <svg
-          width={W_A}
-          height={H_A}
           viewBox={`0 0 ${W_A} ${H_A}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <clipPath id="s154-clip">
             <rect
@@ -490,10 +455,8 @@ export function BiasVarianzExplorer() {
 
         <div className="grow space-y-2">
           <svg
-            width={W_B}
-            height={H_B}
             viewBox={`0 0 ${W_B} ${H_B}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <text x={8} y={16} fontSize={10} fill={ACHSE}>
               Anteile am MSE bei K = {lauf.K}
@@ -528,7 +491,7 @@ export function BiasVarianzExplorer() {
                 height={13}
                 fill={GRUEN}
               />
-              <text x={bx + 4} y={94} fontSize={9} fill="#ffffff">
+              <text x={bx + 4} y={94} fontSize={9} fill="var(--w-bg)">
                 {fmt(lauf.mse)}
               </text>
             </g>
@@ -538,10 +501,8 @@ export function BiasVarianzExplorer() {
           </svg>
 
           <svg
-            width={W_C}
-            height={H_C}
             viewBox={`0 0 ${W_C} ${H_C}`}
-            className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <rect
               x={PAD_C.l}
@@ -592,7 +553,7 @@ export function BiasVarianzExplorer() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={lauf.K === daten.besteK ? "ok" : "warn"}>{status}</Verdikt>
     </div>
   );
 }

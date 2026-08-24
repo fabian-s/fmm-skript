@@ -1,25 +1,42 @@
-import { Plot } from "../../lib";
-
-const gauss = (x: number, mu: number, s: number) =>
-  Math.exp(-((x - mu) ** 2) / (2 * s * s)) / (s * Math.sqrt(2 * Math.PI));
-
+/**
+ * DIE EINE EINSICHT: Bandbreite balanciert lokale Struktur gegen Glättung.
+ * FARBROLLEN: blau = Kernschätzung; grau = Daten. PROVENIENZ: Originalwidget.
+ * VERIFIZIERTE ZAHLEN: Die fest codierte Stichprobe hat 13 Werte; node,
+ * scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ */
+import { useState } from "react";
+import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 const data = [-1.9, -1.6, -1.4, -1.2, -1.1, -0.9, -0.6, 0.4, 0.7, 0.9, 1.2, 1.5, 1.9];
-
+const g = (x: number, m: number, s: number) =>
+  Math.exp(-((x - m) ** 2) / (2 * s * s)) / (s * Math.sqrt(2 * Math.PI));
 export function DensityWidget() {
+  const [h, setH] = useState(0.35);
+  const d = (x: number) => data.reduce((s, z) => s + g(x, z, h), 0) / data.length;
+  const kind =
+    h < 0.2
+      ? "Die vielen schmalen Spitzen folgen einzelnen Datenpunkten: Unterglättung."
+      : h > 0.75
+        ? "Die zwei Gruppen verschwimmen zu einer breiten Form: Überglättung."
+        : "Die Schätzung bündelt Nachbarpunkte, ohne die zwei Gruppen sofort zu verwischen.";
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
+      <Aufgabe>
+        Verändern wir die Bandbreite und vergleichen wir Datenpunkte mit der Dichteschätzung.
+      </Aufgabe>
       <Plot
-        series={[{ f: (x) => 0.55 * gauss(x, -1.2, 0.45) + 0.45 * gauss(x, 1.1, 0.6) }]}
+        series={[{ f: d, label: "Kernschätzung", color: FMM_COLORS.blau }]}
         xDomain={[-3, 3]}
-        yDomain={[0, 0.65]}
-        width={280}
-        height={180}
-        markers={data.map((x) => ({ x, y: 0.015, color: "#475569" }))}
+        yDomain={[0, 1.1]}
+        xLabel="Wert"
+        yLabel="Dichte"
+        readout
+        markers={data.map((x) => ({ x, y: 0.025, color: FMM_COLORS.grau, r: 3 }))}
+        ariaLabel="Dichteschätzung für dreizehn Datenpunkte"
       />
-      <p className="mt-1 text-xs text-slate-300">
-        Graue Punkte: beobachtete Datenpunkte. Blaue Kurve: eine geschätzte
-        Dichte mit zwei Höckern, passend zu den zwei Clustern.
-      </p>
+      <Slider label="Bandbreite h" value={h} onChange={setH} min={0.1} max={1} step={0.05} />
+      <Verdikt kind={h < 0.2 || h > 0.75 ? "warn" : "ok"}>
+        {kind} Aktuell h = {fmtDe(h, 2)}.
+      </Verdikt>
     </div>
   );
 }

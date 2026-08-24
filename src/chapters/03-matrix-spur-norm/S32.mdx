@@ -42,9 +42,18 @@ Frischen wir zunächst das Vorwissen auf. Für Vektoren kennen wir neben der
 „Aussehen" lässt sich am besten über ihre Einheitskugeln
 $\{\bx : \|\bx\|_p = 1\}$ vergleichen: Raute, Kreis, Quadrat.
 
-:::vertiefung[Auffrischung: die Einheitskugeln der p-Normen – interaktiv]
+Bevor wir weiterlesen, lohnt ein Blick auf diese Formen, und zwar auf die Frage, was sie mit
+der *Zahl* $\|\bx\|_p$ zu tun haben.
+
+:::vertiefung[Auffrischung: Was misst die Norm an der Einheitskugel?]
 <S32NormBallWidget />
 :::
+
+Die Norm eines Vektors ist damit ablesbar geworden: Sie ist der Faktor, mit dem wir die
+Einheitskugel aufblasen müssen, damit ihr Rand durch die Spitze von $\bx$ läuft. Für
+$p \ge 1$ ist diese Kugel konvex, und die Konvexität ist nichts anderes als die
+Dreiecksungleichung in geometrischer Gestalt. Diese Denkfigur nehmen wir mit: Auch bei
+Matrixnormen werden wir gleich fragen, welche Menge eine Norm zur „Einheitskugel" erklärt.
 
 ### 3.2.2 Die Axiome
 
@@ -168,9 +177,19 @@ Vektornormen:
   $$
 :::
 
-:::vertiefung[Frobenius-, Summen- und Maximumsnorm: live nachgerechnet]
+Diese drei Normen sind schnell hingeschrieben. Aber leisten sie auch, was wir von einem
+Größenmaß erwarten? Prüfen wir das an einer Frage, die wir gleich brauchen werden: Können
+zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei Normen
+denselben Wert haben?
+
+:::vertiefung[Frobenius-, Summen- und Maximumsnorm: was sehen sie, was nicht?]
 <S32VecNormWidget />
 :::
+
+Der Tauschknopf im Widget beantwortet die Frage: Verschieben wir die vier Einträge auf andere
+Plätze, bleibt jede der drei Zahlen stehen, während aus der Identität etwa eine singuläre
+Matrix wird. Alle drei Normen sehen nur die Multimenge der Einträge, nicht ihre Anordnung.
+Warum das ein echtes Problem ist, machen wir jetzt an einem Beispiel fest.
 
 ### 3.2.4 Was elementweise Normen nicht sehen
 
@@ -251,5 +270,43 @@ $\bA\bx$). Die Lösung sind *Operatornormen*, die die Transformation
 $\bx \mapsto \bA\bx$ direkt vermessen: Wie stark kann $\bA$
 einen Vektor höchstens verlängern? Ihnen widmen wir den
 [nächsten Abschnitt](#sec-3.3).
+
+### Selbsttest
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{wahr}
+Vertauschen wir zwei Einträge einer Matrix, so ändert sich keine der drei
+Vektorisierungsnormen.
+
+Alle drei entstehen als Vektornorm von $\vec(\bA)$, und die $1$-, $2$- und
+$\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab. Genau
+diese Blindheit führt in [Abschnitt 3.3](#sec-3.3) zu den Operatornormen.
+:::
+
+:::frage{falsch}
+Die $p$-Normen sind für jedes $p > 0$ definiert.
+
+Für $p < 1$ ist die Dreiecksungleichung verletzt: Im Widget beult sich die Einheitskugel
+nach innen, und für $p = 0{,}5$ ist
+$\left\|\be_1 + \be_2\right\|_p = 4 > 2 = \left\|\be_1\right\|_p + \left\|\be_2\right\|_p$.
+Das dritte Normaxiom (für Matrizen: Definition 3.2.1) verlangt daher $p \ge 1$.
+:::
+
+:::zahlfrage{loesung=1.2 toleranz=0.02}
+Setzen wir im Einheitskugel-Widget das Kästchen $p = \infty$ und die Regler auf
+$\bx = (-1{,}2;\, 0{,}9)$. Welchen Wert zeigt das Widget für $\|\bx\|_p$?
+
+$1{,}2$. Die Maximumsnorm nimmt den größten Betrag, hier $|-1{,}2| = 1{,}2$; die zweite
+Koordinate spielt keine Rolle. Zum Vergleich: $\|\bx\|_2 = 1{,}5$ und
+$\|\bx\|_1 = 2{,}1$. Die skalierte Kugel ist entsprechend ein Quadrat der halben
+Kantenlänge $1{,}2$, dessen Rand genau durch die Pfeilspitze läuft.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §2.3.*

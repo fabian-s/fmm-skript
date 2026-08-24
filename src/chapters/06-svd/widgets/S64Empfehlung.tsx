@@ -1,22 +1,48 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { M, Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  M,
+  Slider,
+  Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
+  fmtDe,
+} from "../../../lib";
 import { energieAnteil, jacobiSVD, rankK, type Mat } from "./S64Numerik";
 
 /**
- * Empfehlungssystem-Widget für §6.4: die dünn besetzte Bewertungsmatrix der
- * Folie, aufgefüllt nach wählbarer Regel, geglättet durch eine
- * Rang-k-Approximation, mit Vorhersagen für die fehlenden Einträge.
+ * DIE EINE EINSICHT: Ein zurückgehaltener Wert zeigt, wie viel von der
+ * Vorhersage aus den Daten stammt und wie viel bloß die Füllregel ist. Genau
+ * das ist der Einwand aus Bemerkung 6.4.13 gegen Algorithmus 6.4.11, hier zum
+ * Selbst-Nachprüfen (Muster 8: Aufgabe mit Erfolgskontrolle).
  *
- * Der Tabellen-/Heatmap-Renderer (MovieHeat) und der SVD-Kern sind aus der
+ * FARBROLLEN (Kapitel 6): orange = Singulärwerte σ, rot = Rest- und
+ * Fehlerterme (Abweichung der Vorhersage, Markierung zurückgehaltener Werte),
+ * blau = Sättigung der Bewertungszellen, grau = Nebenangaben.
+ *
+ * PROVENIENZ: Tabellen-/Heatmap-Renderer (MovieHeat) und SVD-Kern sind aus der
  * privaten mml-ch4-App portiert (widgets/S46Widgets.tsx, widgets/svd.ts); aus
  * widgets/MovieRatings.tsx ist nichts übernommen. Die Daten stammen von der
- * Folie, Nutzer- und Filmnamen sind frei erfunden, und alle Beschriftungen und
- * Statustexte sind neu geschrieben.
+ * Folie, Nutzer- und Filmnamen sind frei erfunden, alle Texte neu.
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
+ * 2026-08-19) für die Bewertungsmatrix aus Beispiel 6.4.10, aufgefüllt mit den
+ * Spaltenmitteln 3,5 · 3 · 2,5 · 3,5 · 4,5 (Gesamtmittel 3,364, 11 bekannte
+ * Einträge):
+ *   Singulärwerte der aufgefüllten Matrix 15,574 · 2,844 · 2,671 · 0,464 · 0,
+ *   Energie-Anteil 94,0 % (k=1), 97,2 % (k=2), 99,9 % (k=3);
+ *   RMSE auf den 11 bekannten Bewertungen 1,143 (k=1), 0,735 (k=2), 0,108 (k=3);
+ *   Vorhersage für Ada bei „Nachtzug" 3,07 (k=1), 3,34 (k=2), 3,02 (k=3).
+ * Zurückgehaltene Bewertung (historische Prüfung, Skript nicht mehr vorhanden,
+ * 2026-08-19): Ada bei „Sternenstaub" (wahr 5) wird zu 1,744 (k=1), 1,793 (k=2),
+ * 1,950 (k=3) vorhergesagt, weil das Spaltenmittel ohne diese Bewertung von 3,5
+ * auf 2,0 fällt.
  */
 
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const GRAU = "#64748b";
+const ORANGE = FMM_COLORS.orange;
+const ROT = FMM_COLORS.rot;
+const GRAU = FMM_COLORS.grau;
 
 const NUTZER = ["Ada", "Bruno", "Carla", "Deniz"];
 const FILME = ["Sternenstaub", "Nachtzug", "Tiefsee", "Bergsommer", "Kaltes Licht"];
@@ -47,13 +73,7 @@ const MODUS_SATZ: Record<Modus, string> = {
   gesamt: "dem Gesamtmittel",
 };
 
-function fmt(v: number, stellen = 2): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Number(v.toFixed(stellen));
-  if (Object.is(r, -0)) r = 0;
-  return r.toFixed(stellen).replace("-", "−").replace(".", ",");
-}
+const fmt = (v: number, stellen = 2) => fmtDe(v, stellen);
 
 const prozent = (v: number) => (Number.isFinite(v) ? `${fmt(100 * v, 1)} %` : fmt(v));
 
@@ -150,16 +170,10 @@ export function EmpfehlungsExplorer() {
 
   return (
     <div>
-      <p className="text-sm">
-        Vier Nutzer, fünf Filme, elf abgegebene Bewertungen: Das ist die Matrix der Folie, mit
-        erfundenen Namen versehen. Neun Einträge fehlen. Wir füllen sie zunächst grob auf,
-        zerlegen die aufgefüllte Matrix und behalten nur die <M>{"k"}</M> stärksten
-        Rang-1-Terme. Was dabei in den ehemals leeren Feldern steht, ist unsere Vorhersage.
-      </p>
-      <p className="mt-2 text-sm">
-        Klicken wir auf eine vorhandene Bewertung, halten wir sie zurück; das Modell rechnet dann
-        ohne sie, und wir können seine Vorhersage gegen den echten Wert halten.
-      </p>
+      <Aufgabe>
+        Klicken wir in der linken Tabelle auf eine Bewertung: Sie wird zurückgehalten, und wir
+        sehen, wie gut das Modell sie ohne diese Information trifft.
+      </Aufgabe>
 
       <div className="mt-3 max-w-md">
         <Slider
@@ -179,11 +193,8 @@ export function EmpfehlungsExplorer() {
           <button
             key={mo}
             type="button"
-            className={`rounded border px-2 py-0.5 text-xs ${
-              modus === mo
-                ? "border-slate-600 bg-slate-200 font-medium dark:bg-slate-700"
-                : "border-slate-400"
-            }`}
+            className={modus === mo ? W_BUTTON_AKTIV : W_BUTTON}
+            aria-pressed={modus === mo}
             onClick={() => setModus(mo)}
           >
             {MODUS_NAME[mo]}
@@ -191,7 +202,7 @@ export function EmpfehlungsExplorer() {
         ))}
         <button
           type="button"
-          className="rounded border border-slate-400 px-2 py-0.5 text-xs"
+          className={W_BUTTON}
           onClick={() => setVersteckt(R0.map((row) => row.map(() => false)))}
         >
           alle Bewertungen zurückholen
@@ -203,87 +214,91 @@ export function EmpfehlungsExplorer() {
           <p className="mb-1 text-center text-sm font-medium">
             Bewertungen <M>{"\\bR"}</M> ({anzahlBeobachtet} von {ZEILEN * SPALTEN} bekannt)
           </p>
-          <table className="border-collapse">
-            <thead>
-              <tr>
-                <th />
-                {FILME.map((f) => (
-                  <Kopf key={f}>{f}</Kopf>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {R0.map((row, i) => (
-                <tr key={NUTZER[i]}>
-                  <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
-                    {NUTZER[i]}
-                  </td>
-                  {row.map((v, j) => (
-                    <td key={j} className="p-0">
-                      <button
-                        type="button"
-                        onClick={() => umschalten(i, j)}
-                        disabled={v === null}
-                        title={
-                          v === null
-                            ? "nie bewertet"
-                            : versteckt[i][j]
-                              ? "zurückgehalten; klicken, um sie wieder zu verwenden"
-                              : "klicken, um diese Bewertung zurückzuhalten"
-                        }
-                        className="h-9 w-20 border border-slate-300 text-center font-mono text-xs disabled:cursor-default dark:border-slate-600"
-                        style={{
-                          backgroundColor: beobachtet(i, j) ? zellFarbe(v as number) : "transparent",
-                          outline: versteckt[i][j] ? `2px dashed ${ROT}` : undefined,
-                          outlineOffset: "-3px",
-                        }}
-                      >
-                        {beobachtet(i, j) ? (v as number).toFixed(0) : "?"}
-                      </button>
-                    </td>
+          <div className="overflow-x-auto">
+            <table className="border-collapse">
+              <thead>
+                <tr>
+                  <th />
+                  {FILME.map((f) => (
+                    <Kopf key={f}>{f}</Kopf>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {R0.map((row, i) => (
+                  <tr key={NUTZER[i]}>
+                    <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
+                      {NUTZER[i]}
+                    </td>
+                    {row.map((v, j) => (
+                      <td key={j} className="p-0">
+                        <button
+                          type="button"
+                          onClick={() => umschalten(i, j)}
+                          disabled={v === null}
+                          title={
+                            v === null
+                              ? "nie bewertet"
+                              : versteckt[i][j]
+                                ? "zurückgehalten; klicken, um sie wieder zu verwenden"
+                                : "klicken, um diese Bewertung zurückzuhalten"
+                          }
+                          className="h-9 w-20 border border-slate-300 text-center font-mono text-xs disabled:cursor-default dark:border-slate-600"
+                          style={{
+                            backgroundColor: beobachtet(i, j) ? zellFarbe(v as number) : "transparent",
+                            outline: versteckt[i][j] ? `2px dashed ${ROT}` : undefined,
+                            outlineOffset: "-3px",
+                          }}
+                        >
+                          {beobachtet(i, j) ? (v as number).toFixed(0) : "?"}
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div>
           <p className="mb-1 text-center text-sm font-medium">
             Rang-{k}-Rekonstruktion <M>{`\\bR_{${k}}`}</M>
           </p>
-          <table className="border-collapse">
-            <thead>
-              <tr>
-                <th />
-                {FILME.map((f) => (
-                  <Kopf key={f}>{f}</Kopf>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Rk.map((row, i) => (
-                <tr key={NUTZER[i]}>
-                  <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
-                    {NUTZER[i]}
-                  </td>
-                  {row.map((v, j) => (
-                    <td
-                      key={j}
-                      className="h-9 w-20 border border-slate-300 text-center font-mono text-xs dark:border-slate-600"
-                      style={{
-                        backgroundColor: zellFarbe(v),
-                        outline: beobachtet(i, j) ? undefined : `2px dashed ${GRAU}`,
-                        outlineOffset: "-3px",
-                      }}
-                    >
-                      {fmt(v, 1)}
-                    </td>
+          <div className="overflow-x-auto">
+            <table className="border-collapse">
+              <thead>
+                <tr>
+                  <th />
+                  {FILME.map((f) => (
+                    <Kopf key={f}>{f}</Kopf>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {Rk.map((row, i) => (
+                  <tr key={NUTZER[i]}>
+                    <td className="pr-2 text-right text-xs" style={{ color: GRAU }}>
+                      {NUTZER[i]}
+                    </td>
+                    {row.map((v, j) => (
+                      <td
+                        key={j}
+                        className="h-9 w-20 border border-slate-300 text-center font-mono text-xs dark:border-slate-600"
+                        style={{
+                          backgroundColor: zellFarbe(v),
+                          outline: beobachtet(i, j) ? undefined : `2px dashed ${GRAU}`,
+                          outlineOffset: "-3px",
+                        }}
+                      >
+                        {fmt(v, 1)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className="mt-1 max-w-xs text-xs" style={{ color: GRAU }}>
             Gestrichelt umrandet sind die Felder, die das Modell selbst ergänzt hat.
           </p>
@@ -315,26 +330,32 @@ export function EmpfehlungsExplorer() {
             ? "Bei k = 4 gibt die Zerlegung die aufgefüllte Matrix exakt zurück, samt der Mittelwerte, die wir selbst hineingeschrieben haben. Nützlich ist das nicht: Erst das Abschneiden macht aus dem Auffüllen eine Vorhersage."
             : "Kleines k glättet stark, großes k bildet auch die eigenen Füllwerte nach."}
         </p>
-        {tests.length > 0 ? (
-          <div>
-            <p className="font-medium">Zurückgehaltene Bewertungen:</p>
-            <ul className="list-disc space-y-0.5 pl-5">
-              {tests.map((t) => (
-                <li key={`${t.i}-${t.j}`}>
-                  {NUTZER[t.i]} bei „{FILME[t.j]}": vorhergesagt {fmt(t.hut, 1)}, tatsächlich{" "}
-                  {t.wahr}, Abweichung{" "}
-                  <span style={{ color: ROT }}>{fmt(Math.abs(t.hut - t.wahr), 1)}</span>.
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <p style={{ color: GRAU }}>
-            Noch ist keine Bewertung zurückgehalten. Klicken wir in der linken Tabelle auf eine
-            Zahl, sehen wir, wie gut das Modell sie ohne diese Information trifft.
-          </p>
-        )}
       </div>
+
+      {tests.length > 0 ? (
+        <Verdikt
+          kind={tests.every((t) => Math.abs(t.hut - t.wahr) < 1) ? "ok" : "warn"}
+          titel="Echter Test:"
+        >
+          <ul className="ml-4 list-disc space-y-0.5">
+            {tests.map((t) => (
+              <li key={`${t.i}-${t.j}`}>
+                {NUTZER[t.i]} bei „{FILME[t.j]}": vorhergesagt {fmt(t.hut, 1)}, tatsächlich{" "}
+                {t.wahr}, Abweichung{" "}
+                <span style={{ color: ROT }}>{fmt(Math.abs(t.hut - t.wahr), 1)}</span>.
+              </li>
+            ))}
+          </ul>
+          Diese Felder hat das Modell nicht gesehen; alles andere in seiner Vorhersage stammt
+          aus den übrigen Bewertungen und aus der Füllregel selbst (Bemerkung 6.4.13).
+        </Verdikt>
+      ) : (
+        <Verdikt kind="neutral">
+          Noch ist keine Bewertung zurückgehalten. Solange das Modell jede Zahl kennt, prüft der
+          RMSE nur, wie gut es die eigenen Eingaben nachbaut, und wächst mit kleinerem{" "}
+          <M>{"k"}</M> allein deshalb.
+        </Verdikt>
+      )}
     </div>
   );
 }

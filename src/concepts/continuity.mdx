@@ -8,10 +8,22 @@ den Stift abzusetzen. Präzise: $f$ ist stetig in einem Punkt
 $x = a$, wenn die Werte $f(x)$ beliebig nahe an
 $f(a)$ herankommen, sobald $x$ nur nahe genug an
 $a$ liegt; kleine Änderungen der Eingabe verursachen dann nur
-kleine Änderungen der Ausgabe. Zum Beispiel ist
-$f(x) = x^2$ überall stetig, während eine Treppenfunktion wie
-eine Porto-Preistabelle an bestimmten Stellen springt und dort
-unstetig ist.
+kleine Änderungen der Ausgabe. Vertraute Funktionen wie
+$f(x) = x^2$, $|x|$ und $\sin x$ sind überall stetig, während eine
+Treppenfunktion wie eine Porto-Preistabelle an bestimmten Stellen springt und
+dort unstetig ist.
+
+Stetigkeit ist auch das, was einem numerischen Ergebnis überhaupt Vertrauen
+verschafft. Könnte die Ausgabe springen, dann dürfte ein beliebig winziger
+Eingabefehler das Resultat stark verändern. Für Vektornormen liefert die
+umgekehrte :k[Dreiecksungleichung]{#triangle-inequality}
+
+$$
+\bigl|\, \|\bx\| - \|\by\| \,\bigr| \le \|\bx - \by\|
+$$
+
+sogar eine quantitative Fassung: Die Norm ändert sich höchstens um so viel wie
+die Störung selbst, ist also eine stetige Funktion ihres Vektorarguments.
 
 Warum das hier zählt: eine stetige Funktion trägt unendlich viel
 Information (einen Wert für jeden Punkt eines Intervalls), und doch
@@ -21,4 +33,9 @@ vernünftig macht: benachbarte Eingaben haben benachbarte Ausgaben,
 also schränkt schon eine Tabelle von Stützwerten die Funktion
 dazwischen ein.
 
+Sehen wir uns an, was der Sprung mit der Umgebung eines Punktes macht:
+
 <JumpWidget />
+
+Nur im sprungfreien Fall lässt sich die Funktion zwischen zwei Stützwerten
+einsperren; das ist der Grund, warum Interpolation Stetigkeit voraussetzt.

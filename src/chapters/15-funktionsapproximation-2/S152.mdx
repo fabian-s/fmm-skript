@@ -1,4 +1,5 @@
 import { SplineKonvergenz } from "./widgets/S152Konvergenz";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 15-funktionsapproximation-II, „Approximationseigenschaft" bis „Approximation: Zusammenfassung".]
 
@@ -8,7 +9,7 @@ zusammen und sind darum billig zu rechnen
 Interpolanten mit stetiger zweiter Ableitung hat der natürliche kubische Spline
 die kleinste Krümmung ([Abschnitt 15.1](#sec-15.1)). Dazu kam die Zusage, dass
 ein hinreichend feines Knotengitter jede
-:k[stetige Funktion]{#continuous-function} beliebig genau einfängt. Diese Zusage
+:k[stetige Funktion]{#continuity} beliebig genau einfängt. Diese Zusage
 nennt kein Tempo. Sie sagt weder, wie viele Knoten wir brauchen, noch was wir
 gewinnen, wenn wir die Zahl der Teilintervalle verdoppeln. Genau das holen wir
 jetzt nach.
@@ -294,7 +295,11 @@ steiler, weil dort die Faktoren noch über $16$ liegen. Der senkrechte Abstand
 zwischen den Linien ist der Sicherheitsabstand, den die Konstante
 $\tfrac{5}{384}$ einbaut.
 
+Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
+
+<Schaetzfrage frage="Schätzen wir den asymptotischen Faktor beim Halbieren von h." loesung={16} toleranz={1}>
 <SplineKonvergenz />
+</Schaetzfrage>
 :::
 
 ### Was Splines stark macht
@@ -337,6 +342,12 @@ und aus dem Interpolationsproblem wird ein Glättungsproblem
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=16 toleranz=1}
+Welcher Faktor ist die theoretische Zielgröße im Konvergenz-Widget?
+
+Die Schranke enthält $h^4$, deshalb liefert $h/2$ den Faktor $2^4=16$.
+:::
 
 :::frage{wahr}
 Halbieren wir die Gitterweite, so fällt die Schranke aus Satz 15.2.2 auf ein

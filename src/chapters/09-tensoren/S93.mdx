@@ -1,5 +1,6 @@
 import { KroneckerRechner } from "./widgets/S93Kronecker";
 import { SeparierbareKovarianzDemo } from "./widgets/S93Kovarianz";
+import { RangEinsExplorer } from "./widgets/S93RangEins";
 
 ::quelle[Folien 09-tensoren, Abschnitt „Produkt von Tensoren".]
 
@@ -83,6 +84,14 @@ kein Zufall dieses Beispiels, sondern die Regel.
 :::
 
 ### Eine Rang-1-Matrix und was sie tut
+
+Wie hängen die beiden Faktoren einer Rang-1-Matrix mit ihrem Kern und ihrem Bild zusammen?
+
+:::vertiefung[Ein Bildraum als Gerade]
+<RangEinsExplorer />
+:::
+
+Wie das Widget zeigt, bestimmt $\bv$ die Bildgerade und $\bw$ die dazu orthogonale Kernrichtung einer Rang-1-Matrix.
 
 :::satz[9.3.4 (Eigenschaften des äußeren Produkts)]
 Seien $\cblue{\bv} \in \R^m$ und $\cgreen{\bw} \in \R^n$ beide vom Nullvektor
@@ -553,16 +562,13 @@ beginnt mit $\cgreen{3} \cdot \cblue{2}$.
 
 :::vertiefung[Kroneckerprodukte selbst ausrechnen]
 Der Rechner zeigt beide Faktoren und das Produkt in Blockdarstellung. Der erste
-Knopf vertauscht die Reihenfolge und macht Bemerkung 9.3.15 sichtbar: Die
-Zahlenmenge bleibt, die Anordnung nicht. Der zweite Knopf transponiert beide
-Faktoren; der Readout darunter vergleicht das Ergebnis Eintrag für Eintrag mit
-der Transponierten des ursprünglichen Produkts. Voreingestellt sind die Matrizen
-aus Beispiel 9.3.14. Lohnend ist auch eine Einheitsmatrix als zweiter Faktor:
-Dann steht die Anordnung aus Beispiel 9.3.16 auf dem Schirm, und ein Druck auf
-den ersten Knopf macht daraus die Blockdiagonalform aus Beispiel 9.3.17.
+Warum steht in Satz 9.5.3 gerade $\cgreen{\bB^\top} \otimes \cblue{\bA}$ vor
+$\vec(\bX)$, und nicht dieselben Faktoren in der anderen Reihenfolge?
 
 <KroneckerRechner />
 :::
+
+Die Blockstruktur legt fest, welche gestapelten Spalten miteinander verrechnet werden; deshalb ist die Reihenfolge der Faktoren Teil der Rechenvorschrift.
 
 ### Blockstrukturen aus Kroneckerprodukten
 
@@ -751,20 +757,24 @@ beschreiben.
 :::
 
 :::vertiefung[Separierbare Kovarianz zum Schieben]
-Die beiden Schieber für die Korrelationen steuern die Faktoren, rechts entsteht
-daraus $\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}$. Ein Klick auf eine Zelle
-sagt, welche zwei Beobachtungen sie verbindet und aus welchen beiden Faktoren
-ihr Wert entsteht. Voreingestellt ist Beispiel 9.3.19. Zwei Einstellungen sind
-lehrreich: $\rho_T = 0$ macht die Zeitpunkte unkorreliert, und die Matrix wird
-blockdiagonal wie in Beispiel 9.3.17; ein negatives $\rho_S$ dreht das Vorzeichen
-der Nebendiagonalen in jedem Block um, ohne die Blockstruktur anzutasten.
+Wie groß ist der Unterschied zwischen dem Speichern einer allgemeinen
+Kovarianzmatrix und ihrer separierbaren Beschreibung für unser Messgitter?
 
 <SeparierbareKovarianzDemo />
 :::
 
+Die separierbare Kovarianz gewinnt ihre Sparsamkeit dadurch, dass Zeit- und Ortsstruktur in zwei Faktoren getrennt modelliert werden.
+
 ### Selbsttest
 
 ::::quiz
+
+:::frage{wahr}
+Im Rang-1-Widget wird jeder Bildvektor ein Vielfaches von $\bv$.
+
+Der orange Pfeil liegt stets auf derselben Geraden. Das ist die Bildaussage aus
+Satz 9.3.4.
+:::
 
 :::frage{falsch}
 Das äußere Produkt $\bv \otimes \bw$ ist nur für Vektoren gleicher Länge

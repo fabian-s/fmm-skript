@@ -1,27 +1,55 @@
+/**
+ * DIE EINE EINSICHT: Die Wahrscheinlichkeit verschiebt den Erwartungswert über die Gewinnschwelle.
+ * FARBROLLEN: blau = Erwartungswert; rot = Gewinnschwelle. PROVENIENZ: Originalwidget.
+ * VERIFIZIERTE ZAHLEN: E[X] = 12p − 2 und die Schwelle p = 1/6, node,
+ * scripts/verify/QA-L0/verify-qa-l0.mjs, 2026-08-20.
+ */
 import { useState } from "react";
-import { M, Plot, Slider } from "../../lib";
-
-/** Expected winnings of a simple bet as the win probability varies. */
+import { Aufgabe, FMM_COLORS, M, Plot, Slider, Verdikt, fmtDe } from "../../lib";
 export function BetWidget() {
-  const [p, setP] = useState(0.4);
-  const ev = 10 * p - 2 * (1 - p);
+  // Voreinstellung p = 0,10 (unter der Schwelle 1/6): die Aufgabe „verschieben,
+  // bis die Wette gerade nicht mehr verliert" wäre bei p = 0,4 (E[X] = 2,80)
+  // schon gelöst gewesen (visuelle Abnahme 2026-08-20).
+  const [p, setP] = useState(0.1);
+  const ev = 12 * p - 2;
+  const lohnt = ev >= 0;
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="Gewinnwahrsch. p" value={p} onChange={setP} min={0} max={1} step={0.01} />
-      <div className="mb-1 text-xs">
-        Eine Wette zahlt <M>{"+10"}</M> € mit Wahrscheinlichkeit <M>{"p"}</M>{" "}
-        und kostet sonst <M>{"2"}</M> €:{" "}
-        <M>{`\\E[X] = 10p - 2(1-p) = ${ev.toFixed(2)}`}</M> €. Ab{" "}
-        <M>{"p = 1/6"}</M> lohnt sie sich.
-      </div>
+      <Aufgabe>
+        Verschieben wir die Gewinnwahrscheinlichkeit bis die Wette gerade nicht mehr verliert.
+      </Aufgabe>
       <Plot
-        series={[{ f: (q) => 12 * q - 2 }]}
+        series={[{ f: (q) => 12 * q - 2, color: FMM_COLORS.blau, label: "E[X]" }]}
         xDomain={[0, 1]}
         yDomain={[-3, 11]}
-        width={280}
-        height={160}
-        markers={[{ x: p, y: ev, label: "E[X]" }]}
+        xLabel="p"
+        yLabel="E[X]"
+        readout
+        markers={[{ x: p, y: ev, color: FMM_COLORS.blau, label: "aktuell" }]}
+        hlines={[{ at: 0, color: FMM_COLORS.rot, dash: [5, 4], label: "Gewinnschwelle" }]}
+        ariaLabel="Erwartungswert einer Wette"
       />
+      <Slider
+        label="Gewinnwahrsch. p"
+        value={p}
+        onChange={setP}
+        min={0}
+        max={1}
+        step={0.01}
+        accent={FMM_COLORS.blau}
+      />
+      <Verdikt kind={lohnt ? "ok" : "warn"}>
+        {lohnt ? (
+          <>
+            Bei p = {fmtDe(p, 2)} ist E[X] = {fmtDe(ev, 2)} € nichtnegativ; die Wette lohnt sich.
+          </>
+        ) : (
+          <>
+            Bei p = {fmtDe(p, 2)} ist E[X] = {fmtDe(ev, 2)} € negativ. Noch gleicht der Gewinn den
+            Verlust nicht aus.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }

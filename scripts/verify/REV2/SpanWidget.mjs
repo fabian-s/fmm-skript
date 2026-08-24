@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+const close = (actual, expected, tolerance = 1e-4) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} ≉ ${expected}`);
+const v1 = [2, 1], v2 = [-1, 1], w = [-1, 1.8], p = [0, 1.5];
+const det = v1[0] * v2[1] - v1[1] * v2[0]; close(det, 3, 1e-12);
+const c1 = (w[0] * v2[1] - w[1] * v2[0]) / det, c2 = (v1[0] * w[1] - v1[1] * w[0]) / det;
+close(c1, 0.2667); close(c2, 1.5333); close(c1 * v1[0] + c2 * v2[0], -1, 1e-12); close(c1 * v1[1] + c2 * v2[1], 1.8, 1e-12);
+const t = (w[0] * v1[0] + w[1] * v1[1]) / 5; close(t, -0.04, 1e-12);
+close(Math.hypot(w[0] - t * v1[0], w[1] - t * v1[1]), 2.0572);
+close(Math.abs(p[0] * v1[1] - p[1] * v1[0]) / Math.hypot(...v1), 1.3416);
+close(0 + 2, 2); close(1.5 + 2.5, 4);
+console.log("SpanWidget: verified");

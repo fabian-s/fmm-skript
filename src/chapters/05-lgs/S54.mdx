@@ -1,5 +1,6 @@
 import { CholeskyStepper } from "./widgets/CholeskyStepper";
 import { CholeskySampler } from "./widgets/CholeskySampler";
+import { SpdRichtung } from "./widgets/SpdRichtung";
 
 ::quelle[Folien 05-lgs, „SPD-Matrizen" bis „Cholesky mit Pivotierung".]
 
@@ -31,6 +32,16 @@ $\bx^\top \bA \bx \geq 0$, und zwar für alle $\bx \in \R^n$, heißt $\bA$
 ausnehmen, denn $\bnull^\top \bA \bnull = 0$ erfüllt die Bedingung
 ohnehin. Der Unterschied zur Definitheit wirkt klein, entscheidet aber
 später darüber, ob die Cholesky-Zerlegung ohne Zusatztricks durchläuft.
+
+Eine Richtung kann positive Definitheit widerlegen, aber niemals allein
+beweisen. Finden wir im folgenden Test die Richtung, die den Gegenbeweis
+liefert.
+
+<SpdRichtung />
+
+Wie das Widget zeigt, genügt bei einer nicht-SPD-Matrix ein Vektor mit
+$\bx^\top\bA\bx \leq 0$. Für SPD muss die strikte Ungleichung dagegen für
+alle Richtungen gelten.
 
 Das Paradebeispiel liefert die Statistik selbst: Jede
 :k[Kovarianzmatrix]{#covariance-matrix} $\bSigma = \var(\bx)$ ist
@@ -271,14 +282,12 @@ $$
 Auf der Diagonalen steht also eine Wurzel, darunter eine Division durch
 den zuletzt berechneten Diagonaleintrag.
 
-:::vertiefung[Cholesky Schritt für Schritt an einer 3×3-Matrix]
-Ab $3 \times 3$ wird der Koeffizientenvergleich länger, folgt aber genau
-dem Muster von ($5.4.2$). Voreingestellt ist eine Matrix, deren Faktor
-$\bL$ ganzzahlig ausfällt; seine sechs Einträge entstehen nacheinander,
-Spalte für Spalte.
+Ab $3 \times 3$ entsteht pro Eintrag ein Rechenschritt. In welcher Reihenfolge
+füllt sich $\bL$?
 
 <CholeskyStepper />
-:::
+
+Das Widget macht die spaltenweise Konstruktion aus ($5.4.2$) nachvollziehbar.
 
 ### Anwendung: korrelierte Zufallsvektoren simulieren
 
@@ -348,6 +357,8 @@ noch ein Matrix-Vektor-Produkt.
 :::
 
 :::vertiefung[Wie L eine runde Punktwolke verformt]
+Welche Veränderung der Wolke erwarten wir, wenn $|\rho|$ fast eins wird?
+
 Im zweidimensionalen Fall lässt sich Satz 5.4.4 direkt ansehen. Aus
 $\sigma_1$, $\sigma_2$ und der Korrelation $\rho$ bauen wir
 
@@ -361,11 +372,24 @@ $$
 \bL = \begin{pmatrix} \cgreen{\sigma_1} & 0 \\ \cgreen{\rho\,\sigma_2} & \cgreen{\sigma_2\sqrt{1 - \rho^2}} \end{pmatrix} .
 $$
 
-Genau diese drei Einträge zeigt das Widget an, während es $\bL$ auf eine
-feste standardnormalverteilte Punktwolke anwendet.
-
 <CholeskySampler />
+
+Das Widget verknüpft den Cholesky-Faktor mit der Form der erzeugten Punktwolke.
 :::
+
+### Selbsttest
+
+::::quiz
+
+:::frage{wahr}
+Im SPD-Richtungs-Widget widerlegt eine Richtung mit $\bx^\top\bA\bx \leq 0$
+die positive Definitheit.
+
+Definition 5.4.1 verlangt strikte Positivität für alle von null verschiedenen
+Richtungen. Ein Gegenbeispiel genügt daher zum Widerlegen.
+:::
+
+::::
 
 ### Cholesky mit Pivotierung
 

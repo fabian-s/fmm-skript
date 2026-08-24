@@ -14,7 +14,10 @@ eindeutige Polynom, dessen Wert und erste $n$
 $a$ alle mit denen von $f$ übereinstimmen:
 
 $$
-f(x) \approx f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n.
+\begin{aligned}
+f(x) \approx {} & f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 \\
+& + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n.
+\end{aligned}
 $$
 
 Schneiden wir schon nach dem linearen Term ab, erhalten wir die
@@ -31,4 +34,9 @@ einzigen Punkt stammt, können wir die abgeschnittene Taylor-Reihe als
 Extremfall der Interpolation auffassen: als ihren
 Ein-Punkt-Grenzfall (vgl. Heath §7.3.5).
 
+Wie weit trägt diese Näherung, wenn wir den Grad erhöhen?
+
 <TaylorWidget />
+
+Jeder Term verbreitert das Fenster guter Übereinstimmung. Weit draußen bleibt das
+Polynom aber ein Polynom und läuft der Kurve davon.

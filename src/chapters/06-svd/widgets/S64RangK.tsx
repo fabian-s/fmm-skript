@@ -1,32 +1,53 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  M,
+  Plot,
+  Schaetzfrage,
+  Slider,
+  Verdikt,
+  fmtDe,
+} from "../../../lib";
 import { bildMitSVD, energieAnteil, frobenius, matSub, rankK, type Mat } from "./S64Numerik";
 
 /**
- * Rang-k-Approximations-Explorer für §6.4: Testbild, Rekonstruktion A_k,
- * Residuum A − A_k, Singulärwert-Balken, die beiden Fehlerkurven aus dem Satz
- * von Eckart und Young sowie Energie-Anteil und Speicherbilanz.
+ * DIE EINE EINSICHT: Der Singulärwert-Verlauf sagt, wie viele Rang-1-Terme ein
+ * Bild wirklich braucht. Hinter dem Knick des Spektrums steckt in A − A_k nur
+ * noch das Rauschen der Vorlage, und jeder weitere Term kauft fast nichts mehr.
  *
- * Der Bildrenderer und der SVD-Rechenkern sind aus der privaten mml-ch4-App
+ * Der Leser tippt diese Zahl, bevor das Widget sie im Verdikt bestätigt
+ * (Muster 1); vorher steht sie nirgends.
+ *
+ * FARBROLLEN (Kapitel 6): orange = Singulärwerte σ (Balken, Energiebalken),
+ * rot = Rest- und Fehlerterme (beide Fehlerkurven, Marken), grau = neutrale
+ * Beschriftung. Blau und Grün gehören im Kapitel den Singulärvektoren und
+ * kommen hier nicht vor.
+ *
+ * PROVENIENZ: Bildrenderer und SVD-Rechenkern sind aus der privaten mml-ch4-App
  * portiert (widgets/S46Widgets.tsx, widgets/svd.ts); Aufbau, Fehlerkurven,
- * Speicherbilanz und sämtliche Texte sind neu. Farbcode des Kapitels:
- * orange = Singulärwerte, rot = Rest- und Fehlerterme.
+ * Speicherbilanz und sämtliche Texte sind neu.
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
+ * 2026-08-19) für das synthetische Testbild (36 × 54, Rauschstärke 0,07):
+ *   σ₁…σ₆ = 26,475 · 6,060 · 3,008 · 0,561 · 0,497 · 0,417, ‖A‖_F = 27,353;
+ *   der Knick liegt bei k = 3: σ₄/σ₃ = 0,187 ist der stärkste Abfall des
+ *   Spektrums (die Nachbarquotienten sind 0,229, 0,496, 0,887, 0,838);
+ *   Energie-Anteil 93,68 % (k=1), 98,59 % (k=2), 99,80 % (k=3);
+ *   relativer Frobenius-Fehler 4,48 % (k=3) gegen 3,21 % (k=6);
+ *   Speicherbilanz: 36·54 = 1944 Zahlen, Kompression nur für k ≤ 21.
  */
 
-const ORANGE = "#E69F00";
-const ROT = "#D55E00";
-const GRAU = "#64748b";
+const ORANGE = FMM_COLORS.orange;
+const ROT = FMM_COLORS.rot;
+const GRAU = FMM_COLORS.grau;
 
 const KMAX = 24;
+/** Lage des Knicks im Spektrum des Testbilds (verifiziert, s. Kopfkommentar) */
+const KNICK = 3;
 
-/** deutsche Dezimaltrennung, kein −0; NaN und ±∞ getrennt ausgewiesen */
-function fmt(v: number, stellen = 3): string {
-  if (Number.isNaN(v)) return "nicht definiert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  let r = Number(v.toFixed(stellen));
-  if (Object.is(r, -0)) r = 0;
-  return r.toFixed(stellen).replace("-", "−").replace(".", ",");
-}
+/** deutsche Dezimaltrennung (fmtDe aus der lib) */
+const fmt = (v: number, stellen = 3) => fmtDe(v, stellen);
 
 const prozent = (v: number, stellen = 1) =>
   Number.isFinite(v) ? `${fmt(100 * v, stellen)} %` : fmt(v);
@@ -76,8 +97,8 @@ function GrauBild({
       ref={ref}
       width={n}
       height={m}
-      style={{ width: n * scale, height: m * scale, imageRendering: "pixelated" }}
-      className="rounded border border-slate-300 dark:border-slate-600"
+      style={{ width: n * scale, imageRendering: "pixelated" }}
+      className="h-auto max-w-full rounded border border-slate-300 dark:border-slate-600"
     />
   );
 }
@@ -136,26 +157,40 @@ export function RangKExplorer() {
   const sMax = balken[0];
 
   return (
-    <div>
-      <p className="text-sm">
-        Als Testmatrix dient ein künstlich erzeugtes Graustufenbild mit {m} Zeilen und {n}{" "}
-        Spalten: Himmel, Sonne, Boden, drei Torbögen, darüber ein feines Rauschen. Jeder Eintrag
-        kodiert eine Helligkeit, 0 steht für schwarz und 1 für weiß. Schieben wir{" "}
-        <M>{"k"}</M> nach oben, kommt in der Rekonstruktion je ein Summand{" "}
-        <M>{"\\sigma_i \\bu_i \\bv_i^\\top"}</M> hinzu.
-      </p>
+    <Schaetzfrage
+      frage={
+        <>
+          Wie viele Rang-1-Terme braucht dieses Bild, bis im Restbild nur noch das Rauschen der
+          Vorlage steht?
+        </>
+      }
+      loesung={KNICK}
+      toleranz={0.5}
+      einheit="Terme"
+      fmt={(v) => fmtDe(v, 0)}
+      min={1}
+      max={KMAX}
+    >
+      {({ aufgeloest }) => (
+        <div>
+          <Aufgabe>
+            Schieben wir <M>{"k"}</M> nach oben und achten wir auf die dritte Tafel: Ab wann
+            steht dort kein Gegenstand mehr, sondern nur noch Körnung?
+          </Aufgabe>
 
-      <div className="mt-3 max-w-md">
-        <Slider
-          label="Rang k"
-          value={k}
-          onChange={(v) => setK(Math.round(v))}
-          min={1}
-          max={KMAX}
-          step={1}
-          fmt={(v) => v.toFixed(0)}
-        />
-      </div>
+          <div className="mt-3 max-w-md">
+            <Slider
+              label="Rang k"
+              value={k}
+              onChange={(v) => setK(Math.round(v))}
+              min={1}
+              max={KMAX}
+              step={1}
+              accent={ORANGE}
+              marks={aufgeloest ? [KNICK] : undefined}
+              fmt={(v) => fmtDe(v, 0)}
+            />
+          </div>
 
       <div className="mt-3 flex flex-wrap items-start justify-center gap-4">
         <Tafel titel={<>Original <M>{"\\bA"}</M></>}>
@@ -185,7 +220,7 @@ export function RangKExplorer() {
                 className="w-2.5 rounded-t"
                 style={{
                   height: `${Math.max(2, (s / sMax) * 100)}%`,
-                  backgroundColor: i < k ? ORANGE : "#cbd5e1",
+                  backgroundColor: i < k ? ORANGE : "var(--w-grid-strong)",
                 }}
               />
             ))}
@@ -198,16 +233,17 @@ export function RangKExplorer() {
         </div>
 
         <div className="flex flex-col items-center gap-1">
-          <LabeledPlot
+          <Plot
             xLabel="Rang k"
             yLabel="Fehler"
             xDomain={[1, KMAX]}
             yDomain={[0, yMax]}
             width={330}
-            height={210}
+            height={230}
+            ariaLabel={`Fehler der Rang-k-Approximation über k; bei k = ${k} beträgt der Frobenius-Fehler ${fmt(frobFehler[k])}.`}
             series={[
-              { f: stetig(frobFehler), color: ROT },
-              { f: stetig(spektralFehler), color: ROT, dash: [5, 4] },
+              { f: stetig(frobFehler), color: ROT, label: "Frobenius-Fehler" },
+              { f: stetig(spektralFehler), color: ROT, dash: [5, 4], label: "Spektralnorm-Fehler" },
             ]}
             markers={[
               { x: k, y: frobFehler[k], color: ROT },
@@ -215,10 +251,8 @@ export function RangKExplorer() {
             ]}
           />
           <span className="max-w-[330px] text-center text-xs" style={{ color: GRAU }}>
-            Beide Fehlerkurven in <span style={{ color: ROT }}>Rot</span>: durchgezogen{" "}
-            <M>{"\\left\\| \\bA - \\bA_k \\right\\|_F"}</M>, gestrichelt{" "}
-            <M>{"\\left\\| \\bA - \\bA_k \\right\\|_2 = \\sigma_{k+1}"}</M>. Sinnvoll sind nur
-            ganzzahlige <M>{"k"}</M>; die Punkte sind der Übersicht halber verbunden.
+            Die beiden Fehlerformeln aus (6.4.4), an diesem Bild ausgewertet. Sinnvoll sind
+            nur ganzzahlige <M>{"k"}</M>; die Punkte sind der Übersicht halber verbunden.
           </span>
         </div>
       </div>
@@ -266,12 +300,6 @@ export function RangKExplorer() {
               : `Die Bilanz ist gekippt: Kompression gibt es hier nur bis k = ${grenze}.`}
           </li>
         </ul>
-        <p>
-          Die dritte Tafel zeigt, wo die Rekonstruktion danebenliegt. Mittelgrau heißt: kein
-          Unterschied; hell und dunkel markieren zu helle und zu dunkle Pixel. Bei{" "}
-          <M>{"k = 1"}</M> zeichnen sich dort noch die Torbögen ab, hinter dem Knick bei{" "}
-          <M>{"k = 3"}</M> bleibt im Wesentlichen das Rauschen der Vorlage übrig.
-        </p>
         {k < KMAX ? (
           <p>
             Wie viel ein weiterer Term überhaupt noch bringen kann, verrät der nächste graue
@@ -288,7 +316,41 @@ export function RangKExplorer() {
             hier höchstens {fmt(spektralFehler[KMAX] ** 2)}.
           </p>
         )}
-      </div>
-    </div>
+          </div>
+
+          {!aufgeloest ? (
+            <Verdikt kind="neutral">
+              Die dritte Tafel zeigt, wo die Rekonstruktion danebenliegt: Mittelgrau heißt kein
+              Unterschied, hell und dunkel markieren zu helle und zu dunkle Bildpunkte. Lesen
+              wir sie zusammen mit dem Balkenbild links, dann sehen wir, welcher Singulärwert
+              gerade welche Struktur nachträgt.
+            </Verdikt>
+          ) : k > grenze ? (
+            <Verdikt kind="warn" titel="Speicherbilanz gekippt:">
+              Bei <M>{`k = ${k}`}</M> legen wir mit {gespeichert} Zahlen mehr ab als das Bild
+              selbst hat ({voll}). Kompression gibt es hier nur bis <M>{`k = ${grenze}`}</M>;
+              als Glättung kann ein größeres <M>{"k"}</M> trotzdem sinnvoll sein.
+            </Verdikt>
+          ) : k < KNICK ? (
+            <Verdikt kind="fail" titel="Noch fehlt Struktur:">
+              In der dritten Tafel zeichnen sich noch Gegenstände ab, nicht nur Körnung: Der
+              nächste Singulärwert <M>{`\\sigma_{${k + 1}} = ${fmt(spektralFehler[k])}`}</M> ist
+              groß gegen seine Nachfolger, und genau er ist nach (6.4.4) der Fehler in der
+              Spektralnorm. Der Energie-Anteil liegt erst bei {prozent(energie, 2)}.
+            </Verdikt>
+          ) : (
+            <Verdikt kind="ok" titel="Hinter dem Knick:">
+              Ab <M>{`k = ${KNICK}`}</M> bleibt in der Differenz im Wesentlichen das Rauschen der
+              Vorlage übrig. Der Grund steht im Balkenbild: Nach{" "}
+              <M>{`\\sigma_{${KNICK}}`}</M> fällt das Spektrum um den Faktor{" "}
+              {fmt(svd.s[KNICK] / svd.s[KNICK - 1], 2)} ab, und die
+              ersten drei Terme tragen bereits {prozent(energieAnteil(svd.s, KNICK), 2)} der
+              Energie. Weitere Terme senken den Frobenius-Fehler nach (6.4.4) nur noch um
+              jeweils <M>{"\\sigma_{k+1}^2"}</M>, hier also um Bruchteile.
+            </Verdikt>
+          )}
+        </div>
+      )}
+    </Schaetzfrage>
   );
 }

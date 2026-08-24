@@ -188,8 +188,10 @@ function useLazyTypeset(ref: RefObject<Element | null>, tex: string) {
         // path (whose bounded retry loop covers late init) instead of
         // leaving it orphaned with raw TeX forever
         done();
-        queue.add(el);
-        schedule();
+        if (g === gen.current && el.isConnected) {
+          queue.add(el);
+          schedule();
+        }
         return;
       }
       return MJ.typesetPromise([tmp])

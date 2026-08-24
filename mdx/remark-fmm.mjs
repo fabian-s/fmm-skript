@@ -12,6 +12,7 @@
  *   ::::beweis / :::schritt    -> <Proof> / <PStep why={…}>
  *   ::why[…]                   -> das why-Prop des umgebenden :::schritt
  *   ::::quiz / :::frage{wahr}  -> <Quiz> / <Frage wahr>
+ *   ::::quiz / :::zahlfrage{loesung=0,433 toleranz=0,01} -> <Zahlfrage>
  *   ::quelle[…]                -> kleine graue Quellenzeile
  *   ### 2.2.1 Titel            -> <h3 id="sec-2.2.1">
  *
@@ -65,6 +66,7 @@ const DIRECTIVE_ALIAS = {
   proof: "beweis",
   step: "schritt",
   question: "frage",
+  numquestion: "zahlfrage",
   deepdive: "vertiefung",
   source: "quelle",
   c: "k",
@@ -85,6 +87,7 @@ const LIB = [
   "PStep",
   "Quiz",
   "Frage",
+  "Zahlfrage",
 ];
 
 /** erlaubte Attribute je Direktive (alles andere ist ein Fehler) */
@@ -96,6 +99,7 @@ const ALLOWED_ATTRS = {
   why: [],
   quiz: [],
   frage: ["wahr", "falsch", "true", "false"],
+  zahlfrage: ["loesung", "toleranz", "einheit"],
   quelle: [],
 };
 for (const name of Object.keys(ENV)) ALLOWED_ATTRS[name] = ["label"];
@@ -291,6 +295,16 @@ export default function remarkFmm(options = {}) {
           a[de] = a[en];
           delete a[en];
         }
+      if (node.name === "zahlfrage") {
+        if ("answer" in a && !("loesung" in a)) {
+          a.loesung = a.answer;
+          delete a.answer;
+        }
+        if ("tol" in a && !("toleranz" in a)) {
+          a.toleranz = a.tol;
+          delete a.tol;
+        }
+      }
     });
 
     /* ---- 1. Struktur prüfen, BEVOR irgendetwas umgebaut wird ------- */
@@ -305,7 +319,7 @@ export default function remarkFmm(options = {}) {
         (node.type === "textDirective" && name === "k") ||
         (node.type === "leafDirective" && (name === "quelle" || name === "why")) ||
         (node.type === "containerDirective" &&
-          (ENV[name] || ["vertiefung", "beweis", "schritt", "quiz", "frage"].includes(name)));
+          (ENV[name] || ["vertiefung", "beweis", "schritt", "quiz", "frage", "zahlfrage"].includes(name)));
       if (!known) {
         const sigil = node.type === "textDirective" ? ":" : node.type === "leafDirective" ? "::" : ":::";
         fail(node, `unbekannte Direktive ${sigil}${name}`, "remark-fmm:unknown-directive");
@@ -350,6 +364,8 @@ export default function remarkFmm(options = {}) {
         fail(node, `:::schritt darf nur direkt in ::::beweis stehen`, "remark-fmm:nesting");
       if (name === "frage" && parentName !== "quiz")
         fail(node, `:::frage darf nur direkt in ::::quiz stehen`, "remark-fmm:nesting");
+      if (name === "zahlfrage" && parentName !== "quiz")
+        fail(node, `:::zahlfrage darf nur direkt in ::::quiz stehen`, "remark-fmm:nesting");
       if (name === "why" && parentName !== "schritt")
         fail(node, `::why[…] darf nur direkt in :::schritt stehen`, "remark-fmm:nesting");
 
@@ -359,10 +375,10 @@ export default function remarkFmm(options = {}) {
             fail(c, `::::beweis darf nur :::schritt-Blöcke enthalten`, "remark-fmm:nesting");
       if (name === "quiz")
         for (const c of node.children ?? [])
-          if (!(c.type === "containerDirective" && c.name === "frage"))
+          if (!(c.type === "containerDirective" && ["frage", "zahlfrage"].includes(c.name)))
             fail(
               c,
-              `::::quiz darf nur :::frage-Blöcke enthalten — freier Text würde als ` +
+              `::::quiz darf nur :::frage- oder :::zahlfrage-Blöcke enthalten — freier Text würde als ` +
                 `Quizfrage gerendert`,
               "remark-fmm:nesting"
             );
@@ -391,6 +407,24 @@ export default function remarkFmm(options = {}) {
             `:::frage braucht nach der Aussage einen eigenen Erklärungsblock`,
             "remark-fmm:missing-explanation"
           );
+      }
+      if (name === "zahlfrage") {
+        const numAttr = (v) => {
+          const t = String(v ?? "").trim().replace(/,/g, ".").replace(/−/g, "-");
+          // nur echte Dezimalzahlen (kein 0x1A, kein 1.000 als Tausender)
+          return /^[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?$/.test(t) ? Number(t) : NaN;
+        };
+        const loesung = numAttr(a.loesung);
+        const toleranz = numAttr(a.toleranz);
+        if (!Number.isFinite(loesung))
+          fail(node, `:::zahlfrage braucht eine endliche {loesung=…}`, "remark-fmm:zahlfrage-loesung");
+        if (!Number.isFinite(toleranz) || toleranz < 0)
+          fail(node, `:::zahlfrage braucht eine nichtnegative endliche {toleranz=…}`, "remark-fmm:zahlfrage-toleranz");
+        const blocks = (node.children ?? []).filter(hasAuthoredContent);
+        if (blocks.length === 0)
+          fail(node, `:::zahlfrage ist leer — ergänze Frage und Erklärung`, "remark-fmm:empty-zahlfrage");
+        if (blocks.length === 1)
+          fail(node, `:::zahlfrage braucht nach der Frage einen eigenen Erklärungsblock`, "remark-fmm:missing-zahlfrage-explanation");
       }
     });
 
@@ -484,6 +518,17 @@ export default function remarkFmm(options = {}) {
           node.children,
           node
         );
+        return;
+      }
+      if (name === "zahlfrage") {
+        const loesung = Number(String(a.loesung).trim().replace(/,/g, ".").replace(/−/g, "-"));
+        const toleranz = Number(String(a.toleranz).trim().replace(/,/g, ".").replace(/−/g, "-"));
+        const attrs = [
+          attrExpr("loesung", String(loesung)),
+          attrExpr("toleranz", String(toleranz)),
+          ...(a.einheit ? [attr("einheit", a.einheit)] : []),
+        ];
+        parent.children[index] = el("Zahlfrage", attrs, node.children, node);
         return;
       }
     });

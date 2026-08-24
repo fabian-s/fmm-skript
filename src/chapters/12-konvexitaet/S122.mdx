@@ -1,4 +1,5 @@
 import { KonvexTest } from "./widgets/S122KonvexTest";
+import { PsdKegel } from "./widgets/S122PsdKegel";
 
 ::quelle[Folien 12-konvexitaet, von „Konvexe Mengen: Definition" bis „Konvexe Mengen: Anwendung"; die Quiz-Lösungen und die Beweisdetails aus den auskommentierten Folienblöcken sind mitverarbeitet.]
 
@@ -43,10 +44,10 @@ Nachweis dagegen müssen wir über *alle* Paare und alle $\lambda$ argumentieren
 wir eine Rechnung, keine Beispiele.
 :::
 
-:::vertiefung[Konvexität zum Anklicken]
 Die Folien zeigen an dieser Stelle zwei Bilder, eine konvexe und eine nicht konvexe Menge.
-Statt sie abzudrucken, machen wir daraus einen Test: Wir wählen eine Menge, setzen zwei Punkte
-hinein und schauen der Verbindungsstrecke zu.
+Statt sie abzudrucken, machen wir daraus einen Test. Vier Mengen stehen zur Wahl, zwei Punkte
+lassen sich frei hineinziehen: Bei welchen der vier finden wir ein Paar, dessen
+Verbindungsstrecke herausläuft, und wie schwer ist die Suche?
 
 <KonvexTest />
 
@@ -55,11 +56,12 @@ und bei der Parabelunterseite finden wir dagegen schnell ein Paar, dessen Streck
 Der vorbereitete Knopf setzt beim Ring die Punkte $(1{,}1;\ 0)^\top$ und $(0;\ 1{,}1)^\top$; die
 Strecke zwischen ihnen liegt für $\lambda$ zwischen $0{,}380$ und $0{,}620$ im Loch, ihr
 Mittelpunkt hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und unterschreitet damit den Innenradius
-$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Die Kreisscheibe
-und die Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung statt mit
-Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
+$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Wie leicht das
+fällt, hängt an der Menge: Greifen wir beide Punkte zufällig aus dem Ring, so scheitert die
+Strecke in gut $60\,\%$ der Fälle, bei der Parabelunterseite nur in etwa $13\,\%$. Die
+Kreisscheibe und die Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung
+statt mit Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
 anklickbar wäre.
-:::
 
 Die Definition spricht nur über zwei Punkte. Gemeint ist aber mehr, und der folgende Satz holt
 es nach. Die Folien benutzen ihn später stillschweigend, wenn sie über die konvexe Hülle
@@ -203,6 +205,16 @@ verlässt die Menge sogar für jedes $\lambda$ zwischen $0$ und $1$, wie das Wid
 Konvex wäre die Menge oberhalb der Parabel, $\{(x,y)\colon y \ge x^2\}$. Diese Umkehrung ist
 kein Zufall, sie hängt daran, dass $x \mapsto x^2$ eine konvexe Funktion ist, und wir kommen in
 [Abschnitt 12.3](#sec-12.3) darauf zurück.
+:::
+
+:::zahlfrage{loesung=0.38 toleranz=0.01}
+Setzen wir im Widget oben den Kreisring und drücken auf „Gegenbeispiel setzen". Ab welchem
+$\lambda$ verlässt die Strecke die Menge?
+
+Ab $\lambda \approx 0{,}380$, und sie kehrt bei $0{,}620$ zurück; dazwischen liegt sie im Loch.
+Der Mittelpunkt $\lambda = \tfrac12$ hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und
+unterschreitet den Innenradius $0{,}8$ am deutlichsten. Das Widget schärft diese Grenzen per
+Bisektion nach; für die Widerlegung genügt ohnehin ein einziges $\lambda$.
 :::
 
 ::::
@@ -418,6 +430,58 @@ $\cblue{\Pcal_n}$ *innerhalb des Raums der symmetrischen Matrizen*. Im vollen
 $\R^{n \times n}$ hätte $\cblue{\Pcal_n}$ dagegen gar kein Inneres, denn die Forderung
 $\bA = \bA^\top$ sperrt sie in einen echten Untervektorraum.
 :::
+
+Für $n = 2$ lässt sich $\cblue{\Pcal_2}$ vollständig hinzeichnen, denn eine symmetrische
+$2 \times 2$-Matrix besteht aus nur drei Zahlen: $a$, $b$ und $c$ in
+$\bA = \bigl(\begin{smallmatrix} a & b \\ b & c\end{smallmatrix}\bigr)$. Wie sieht die Menge
+der semidefiniten unter ihnen aus, und woran erkennen wir ihren Rand?
+
+:::vertiefung[Der Kegel zum Anfassen]
+Die Bedingung aus Definition 12.2.7 lässt sich für $n = 2$ in drei Ungleichungen übersetzen:
+$a \ge 0$, $c \ge 0$ und $ac \ge b^2$. Die linke Tafel zeigt davon den Schnitt bei festem $b$,
+die rechte die ganze Menge im Raum der drei Zahlen.
+
+<PsdKegel />
+
+Wie das Widget zeigt, ist $\cblue{\Pcal_2}$ ein Kegel mit gekrümmtem Rand. Kegel heißt: Mit
+$\bA$ gehört der ganze Halbstrahl $t\bA$, $t \ge 0$, dazu, denn alle drei Bedingungen sind
+homogen. Der Rand $ac = b^2$ besteht genau aus den semidefiniten Matrizen mit Determinante $0$,
+also denen vom Rang $1$ oder $0$; dort ist der kleinere Eigenwert gerade null. Innen liegen die
+positiv definiten Matrizen, außen die indefiniten und die negativ semidefiniten. Die drei
+Voreinstellungen mit Spur $2$ machen den Unterschied an Zahlen fest: Die Einheitsmatrix hat die
+Eigenwerte $1$ und $1$, die Rang-$1$-Matrix mit $b = 1$ die Eigenwerte $0$ und $2$, und mit
+$b = 2$ kippt es auf $-1$ und $3$. Satz 12.2.8 ist im Bild die Aussage, dass die Strecke zwischen zwei Punkten des Kegels nie
+unter die gekrümmte Randfläche taucht.
+
+Nebenbei fällt eine hübsche Beobachtung ab: Schneiden wir den Kegel mit der Ebene
+$a + c = 2$, so entsteht genau die Einheitskreisscheibe
+$\left(\tfrac{a-c}{2}\right)^2 + b^2 \le 1$. Alle Matrizen mit Spur $2$, die im Kegel liegen,
+sind also so angeordnet wie die Punkte einer Kreisscheibe.
+:::
+
+::::quiz
+
+:::zahlfrage{loesung=0 toleranz=0.001}
+Stellen wir im Kegel-Widget $a = c = 1$ und $b = 1$ ein. Wie groß ist der kleinere Eigenwert
+von $\bA$?
+
+Null. Für $\bA = \bigl(\begin{smallmatrix} 1 & 1 \\ 1 & 1\end{smallmatrix}\bigr)$ ist
+$\det \bA = 1 \cdot 1 - 1^2 = 0$, die Eigenwerte sind $0$ und $2$. Die Matrix ist semidefinit,
+aber nicht definit, und liegt deshalb auf dem Rand des Kegels. Genau diese Matrix taucht in
+Bemerkung 12.2.9 als Kovarianzmatrix von $(Z, Z)^\top$ wieder auf.
+:::
+
+:::frage{falsch}
+Weil $\cblue{\Pcal_2}$ ein Kegel ist, gehört mit $\bA$ auch $-\bA$ dazu.
+
+Ein Kegel im hier gemeinten Sinn ist unter Multiplikation mit *nichtnegativen* Skalaren
+abgeschlossen, nicht unter Vorzeichenwechsel. Im Widget liegt $-\bA$ im gespiegelten Kegel,
+und beide berühren sich nur in der Nullmatrix. Wäre $\cblue{\Pcal_2}$ unter $t < 0$
+abgeschlossen, so wäre die Menge ein Untervektorraum, und $\bx^\top\bA\bx \ge 0$ könnte
+nur für $\bA = \bnull$ gelten.
+:::
+
+::::
 
 ### Operationen, die Konvexität erhalten
 

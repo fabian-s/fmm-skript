@@ -111,15 +111,25 @@ dagegen von $\R^3$ in die Ebene ab, so wird eine ganze Richtung platt gedrückt,
 und aus der Einheitssphäre wird eine ausgefüllte Ellipse. An den Hauptachsen
 ändert das nichts.
 
-:::beispiel[6.1.2 (Der Einheitskreis wird zur Ellipse)]
-Nehmen wir die Matrix aus Beispiel 3.3.3,
+Bleiben wir konkret und nehmen wir die Matrix aus Beispiel 3.3.3,
 
 $$
 \bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix} .
 $$
 
-Aus [Kapitel 3](?k=03-matrix-spur-norm#sec-3.3) kennen wir ihre beiden
-Streckfaktoren bereits: $\corange{2{,}288} = \sqrt{3 + \sqrt{5}}$ ist die längste
+Welche Richtung streckt sie am stärksten, und um welchen Faktor? Das Widget
+schickt den ganzen Einheitskreis durch $\bA$ und trägt rechts die Länge des
+Bildvektors über dem Winkel auf. Die Folie zeichnet dazu eine Abbildung von
+$\R^3$ in die Ebene; wir bleiben beim $2 \times 2$-Fall, in dem Urbild und Bild
+in derselben Ebene liegen, und die Aussage ist dieselbe.
+
+<EinheitskreisEllipse />
+
+Das Widget verbindet die Extremrichtungen des Kreises mit den Halbachsen der Bildellipse.
+
+:::beispiel[6.1.2 (Der Einheitskreis wird zur Ellipse)]
+Aus [Kapitel 3](?k=03-matrix-spur-norm#sec-3.3) kennen wir die beiden
+Streckfaktoren von $\bA$ bereits: $\corange{2{,}288} = \sqrt{3 + \sqrt{5}}$ ist die längste
 Halbachse der Bildellipse, $\corange{0{,}874}$ die kürzeste. Am stärksten
 gestreckt wird die Richtung
 
@@ -149,15 +159,6 @@ $$
 Richtungen im Bild, dazwischen nur zwei Streckfaktoren: Dieses Muster schreiben
 wir in [Abschnitt 6.2](#sec-6.2) als Zerlegung auf. Woher $\cblue{\bx^*}$ kommt
 und warum die Bilder senkrecht bleiben, klärt sich dort ebenfalls.
-:::
-
-:::vertiefung[Einheitskreis, Ellipse und die stärkste Streckung]
-Das Widget zeigt das eben gerechnete Beispiel; jede andere
-$2 \times 2$-Matrix lässt sich eintragen. Die Folie zeichnet eine Abbildung von
-$\R^3$ in die Ebene, wir bleiben beim $2 \times 2$-Fall: Dort sehen wir Urbild
-und Bild in derselben Ebene, ohne Perspektive, und die Aussage ist dieselbe.
-
-<EinheitskreisEllipse />
 :::
 
 ### Die Grundidee
@@ -246,6 +247,20 @@ schreiben wir den Index dazu.
 Prüfen wir, ob die Motivation sitzt.
 
 ::::quiz
+
+:::zahlfrage{loesung=1.458 toleranz=0.02}
+Stellen wir im Widget oben das Preset „Strecken und Stauchen" ein, also
+$\bA = \bigl(\begin{smallmatrix} 2 & 0 \\ 0 & 0{,}5 \end{smallmatrix}\bigr)$, und
+schieben wir $\theta$ auf $45^\circ$. Wie lang ist dann der Bildvektor
+$\left\| \bA\bx \right\|$?
+
+Rund $1{,}458$. Der Einheitsvektor ist
+$\bx = (0{,}7071,\; 0{,}7071)^\top$, sein Bild $(1{,}4142,\; 0{,}3536)^\top$, und
+dessen Länge ist $\sqrt{2 + 0{,}125} = \sqrt{2{,}125} \approx 1{,}458$. Der Wert
+liegt zwischen $\corange{0{,}5}$ und $\corange{2}$, den beiden Streckfaktoren,
+und das ist kein Zufall: Auf dem Einheitskreis liegt $\left\| \bA\bx \right\|$
+immer zwischen kleinstem und größtem Singulärwert.
+:::
 
 :::frage{wahr}
 Für $\bA \in \R^{3 \times 2}$ ist die Frage nach Eigenwerten sinnlos, die Matrix

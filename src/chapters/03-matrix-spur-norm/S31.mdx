@@ -121,7 +121,7 @@ $$
 \tr(\bP\bA\bP^{-1}) = \tr\left((\bP\bA)\,\bP^{-1}\right) = \tr\left(\bP^{-1}(\bP\bA)\right) = \tr(\bA).
 $$
 
-::why[Eigenschaft 3, angewendet auf die beiden Faktoren $\bP\bA$ und $\bP^{-1}$; dann $\bP^{-1}\bP = \bI$ (:k[Inverse]{#inverse-matrix})]
+::why[Eigenschaft 3, angewendet auf die beiden Faktoren $\bP\bA$ und $\bP^{-1}$; dann $\bP^{-1}\bP = \bI$ (:k[Inverse]{#matrix-inverse})]
 :::
 
 ::::
@@ -233,9 +233,17 @@ bedeutet der Satz: Die Spur verrät uns die Summe aller Eigenwerte zum Preis von
 $n - 1$ Additionen. Die Eigenwerte selbst zu berechnen wäre um Größenordnungen
 teurer.
 
-:::vertiefung[Spur = Eigenwertsumme: live ausprobieren]
+Wie belastbar diese Aussage ist, merken wir erst, wenn wir an der Matrix rütteln. Verändern
+wir einen Eintrag *außerhalb* der Diagonale: Was macht das mit den beiden Eigenwerten, und
+was mit ihrer Summe?
+
 <S31SpurWidget />
-:::
+
+Die Eigenwerte reagieren empfindlich. Ein kleiner Nebendiagonaleintrag schiebt sie
+auseinander, lässt sie zusammenfallen oder hebt sie ganz aus der reellen Achse heraus; die
+Spur bemerkt davon nichts, weil sie nur die Diagonale abliest. Auch im komplexen Fall bleibt
+die Bilanz stehen: Die beiden Eigenwerte sind dann konjugiert, ihre Imaginärteile heben sich
+in der Summe weg, und übrig bleiben zwei gleiche Realteile, zusammen wieder die Spur.
 
 ### 3.1.4 Die Frobenius-Norm
 
@@ -313,5 +321,42 @@ allerdings das misst, was wir bei der Fehleranalyse wirklich brauchen (nämlich 
 eine Matrix Vektoren verzerren kann), ist eine andere Frage. Ihr gehen wir im
 [nächsten Abschnitt](#sec-3.2) nach, wo wir den Begriff
 der Matrixnorm systematisch entwickeln.
+
+### Selbsttest
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::frage{falsch}
+Die Spur einer Matrix ändert sich, wenn wir einen Eintrag außerhalb der Diagonale
+verändern.
+
+Die Spur summiert ausschließlich die Diagonalelemente (Definition 3.1.2). Die Eigenwerte
+ändern sich dabei sehr wohl, ihre Summe aber nicht.
+:::
+
+:::frage{wahr}
+Eine reelle Matrix mit komplexen Eigenwerten hat trotzdem eine reelle Spur.
+
+Komplexe Eigenwerte reeller Matrizen treten als konjugierte Paare $a \pm b\,i$ auf. In der
+Summe heben sich die Imaginärteile weg, und Satz 3.1.7 liefert eine reelle Zahl, wie es die
+Diagonalsumme verlangt.
+:::
+
+:::zahlfrage{loesung=4 toleranz=0.001}
+Stellen wir im Spur-Widget die Voreinstellung „defekt (Jordan)" ein. Welchen Wert zeigt die
+Summe der Eigenwerte?
+
+Vier. Die Voreinstellung ist $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 2 \end{smallmatrix}\bigr)$
+mit dem doppelten Eigenwert $2$. Satz 3.1.7 zählt Eigenwerte mit ihrer algebraischen
+Vielfachheit, die Summe ist also $2 + 2 = 4 = \tr(\bA)$ und nicht $2$. Die Matrix ist dabei
+nicht einmal diagonalisierbar; der Beweis aus dem Skript greift hier nicht, die Aussage gilt
+trotzdem.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §2; MML §4.1.*

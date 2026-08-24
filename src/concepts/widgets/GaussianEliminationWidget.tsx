@@ -1,7 +1,26 @@
+/**
+ * Konzept-Widget `gaussian-elimination`.
+ *
+ * DIE EINE EINSICHT: Jeder Eliminationsschritt räumt genau eine Pivotspalte,
+ * und er tut das mit EINEM Multiplikator je Zeile — mehr passiert nicht.
+ *
+ * FARBROLLEN: orange = die Einträge, die dieser Schritt gerade verändert hat;
+ * grün = die neu erzeugten Nullen; alle übrigen Einträge bleiben in der
+ * Textfarbe (--w-text), weil sie unangetastet geblieben sind.
+ *
+ * PROVENIENZ: eigener Aufbau; Schrittsteuerung über `Stepper` aus der Lib.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20),
+ * A = [2 1 1; 4 5 1; 2 −2 0]:
+ *   Schritt 1: m₂₁ = 4/2 = 2, m₃₁ = 2/2 = 1 → [2 1 1; 0 3 −1; 0 −3 −1].
+ *   Schritt 2: m₃₂ = −3/3 = −1 → [2 1 1; 0 3 −1; 0 0 −2].
+ * Alle drei Multiplikatoren und beide Zwischenmatrizen sind per Assertion
+ * nachgerechnet.
+ */
 import { useState } from "react";
-import { Slider } from "../../lib";
+import { Aufgabe, FMM_COLORS, Stepper, Verdikt, W_PANEL, W_TEXT } from "../../lib";
 
-const MATS: number[][][] = [
+const MATRIZEN = [
   [
     [2, 1, 1],
     [4, 5, 1],
@@ -19,55 +38,79 @@ const MATS: number[][][] = [
   ],
 ];
 
-// cells changed at each step ("i-j" keys); created zeros get the green color
-const CHANGED: Set<string>[] = [
-  new Set(),
-  new Set(["1-0", "1-1", "1-2", "2-0", "2-1", "2-2"]),
-  new Set(["2-1", "2-2"]),
-];
-const ZEROED: Set<string>[] = [new Set(), new Set(["1-0", "2-0"]), new Set(["2-1"])];
+/** Welche Zeilen hat der Schritt k gerade verändert? */
+const GEAENDERT: number[][] = [[], [1, 2], [2]];
 
-const CAPTIONS = [
-  "Start: Das Pivotelement ist die 2 in der linken oberen Ecke.",
-  "Schritt 1: Wir ziehen das 2-Fache von Zeile 1 von Zeile 2 ab und das 1-Fache von Zeile 1 von Zeile 3 (Multiplikatoren 4/2 = 2 und 2/2 = 1); Spalte 1 ist unterhalb des Pivots geräumt.",
-  "Schritt 2: Das nächste Pivotelement ist die 3; der Multiplikator ist \u22123/3 = \u22121, also wird Zeile 2 zu Zeile 3 addiert. Obere Dreiecksform erreicht.",
+const TEXTE = [
+  "1. Pivot in Spalte 1 wählen: a₁₁ = 2.",
+  "2. Z₂ ← Z₂ − 2·Z₁ und Z₃ ← Z₃ − 1·Z₁.",
+  "3. Z₃ ← Z₃ + 1·Z₂; die Dreiecksform ist erreicht.",
+];
+
+const MULTIPLIKATOREN: (string | null)[][] = [
+  [null, null, null],
+  [null, "·2", "·1"],
+  [null, null, "·(−1)"],
 ];
 
 export function EliminationWidget() {
   const [step, setStep] = useState(0);
-  const A = MATS[step];
+  const geaendert = GEAENDERT[step];
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
-      <Slider
-        label="Eliminationsschritt"
-        value={step}
-        onChange={setStep}
-        min={0}
-        max={2}
-        step={1}
-        fmt={(v) => v.toFixed(0)}
-      />
-      <div
-        className="inline-grid gap-1 rounded border-x-2 border-slate-500 px-2 py-1 font-mono text-xs"
-        style={{ gridTemplateColumns: "repeat(3, 2.2rem)" }}
-      >
-        {A.map((row, i) =>
-          row.map((v, j) => {
-            const key = `${i}-${j}`;
-            const cls = ZEROED[step].has(key)
-              ? "text-emerald-400 font-bold"
-              : CHANGED[step].has(key)
-                ? "text-amber-300"
-                : "";
-            return (
-              <span key={key} className={`text-center ${cls}`}>
-                {v}
-              </span>
-            );
-          })
-        )}
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
+      <Aufgabe>Gehen wir die nummerierten Zeilenoperationen vor und zurück.</Aufgabe>
+      <div className="my-2 flex items-center gap-2">
+        <div
+          className="inline-grid grid-cols-3 gap-x-4 rounded border-x-2 px-3 py-2 font-mono text-sm"
+          style={{ borderColor: "var(--w-border)" }}
+        >
+          {MATRIZEN[step].flatMap((zeile, i) =>
+            zeile.map((v, j) => {
+              const neu = geaendert.includes(i);
+              const farbe = neu
+                ? v === 0
+                  ? FMM_COLORS.gruen
+                  : FMM_COLORS.orange
+                : "var(--w-text)";
+              return (
+                <span key={`${i}-${j}`} className={neu ? "font-bold" : ""} style={{ color: farbe }}>
+                  {v}
+                </span>
+              );
+            }),
+          )}
+        </div>
+        <div className="grid gap-y-1 font-mono text-xs" style={{ color: FMM_COLORS.orange }}>
+          {MULTIPLIKATOREN[step].map((m, i) => (
+            <span key={i} className="leading-6">
+              {m ?? "\u00a0"}
+            </span>
+          ))}
+        </div>
       </div>
-      <p className="mt-1 text-xs opacity-80">{CAPTIONS[step]}</p>
+      <p className={`text-xs ${W_TEXT}`}>
+        Orange: die Einträge, die dieser Schritt verändert hat (rechts der benutzte
+        Multiplikator); Grün: die dabei erzeugten Nullen.
+      </p>
+      <Stepper step={step} setStep={setStep} max={2} narration={TEXTE[step]} />
+      <Verdikt kind={step === 2 ? "ok" : "neutral"}>
+        {step === 0 ? (
+          <>
+            Noch ist nichts passiert: der Pivot a₁₁ = 2 ist ungleich null, also können wir durch
+            ihn teilen und die beiden Multiplikatoren 4/2 und 2/2 bilden.
+          </>
+        ) : step === 1 ? (
+          <>
+            Die erste Spalte ist geräumt; dafür haben wir nur die Multiplikatoren 2 und 1
+            gebraucht. Der neue Pivot ist a₂₂ = 3, und darunter steht −3.
+          </>
+        ) : (
+          <>
+            Die Einträge unter der Diagonale sind null. Aus den drei Multiplikatoren 2, 1 und −1
+            wird die Matrix L; was hier steht, ist U. Jetzt folgt Rückwärtseinsetzen.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }

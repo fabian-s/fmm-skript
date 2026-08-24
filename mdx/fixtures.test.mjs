@@ -49,6 +49,18 @@ const ACCEPT = {
   "proof without qed": [`::::beweis{ohne-qed}\n\n:::schritt\nEins.\n:::\n\n::::`, `qed={false}`],
   quiz: [`::::quiz\n\n:::frage{wahr}\nAussage.\n\nErklärung.\n:::\n\n::::`, `wahr={true}`],
   "quiz false": [`::::quiz\n\n:::frage{falsch}\nAussage.\n\nErklärung.\n:::\n\n::::`, `wahr={false}`],
+  "numeric quiz (German)": [
+    `::::quiz\n\n:::zahlfrage{loesung=0.433 toleranz=0.01 einheit="Sekunden"}\nWie groß ist der Wert?\n\nDas Widget zeigt 0,433 Sekunden.\n:::\n\n::::`,
+    `<Zahlfrage loesung={0.433} toleranz={0.01} einheit="Sekunden">`,
+  ],
+  "numeric quiz (German comma, unicode minus)": [
+    `::::quiz\n\n:::zahlfrage{loesung="−0,433" toleranz="0,01"}\nWie groß?\n\nErklärung.\n:::\n\n::::`,
+    `<Zahlfrage loesung={-0.433} toleranz={0.01}>`,
+  ],
+  "numeric quiz (English alias)": [
+    `::::quiz\n\n:::numquestion{answer=1.5 tol=0.1}\nWhat is the value?\n\nExplanation.\n:::\n\n::::`,
+    `<Zahlfrage loesung={1.5} toleranz={0.1}>`,
+  ],
   "numbered heading gets id": [`### 2.2.1 Titel\n`, `id="sec-2.2.1"`],
   // ohne Nummer KEINE id — sonst kollidieren die vier „Selbsttest"-
   // Überschriften allein in Kapitel 3 auf id="selbsttest"
@@ -123,6 +135,18 @@ const REJECT = {
   "prose inside quiz": [`::::quiz\n\nEinleitung.\n\n:::frage{wahr}\nA.\n\nB.\n:::\n\n::::`, `nur :::frage`],
   "prose inside proof": [`::::beweis\n\nEinleitung.\n\n:::schritt\nEins.\n:::\n\n::::`, `nur :::schritt`],
   "frage without flag": [`::::quiz\n\n:::frage\nA.\n\nB.\n:::\n\n::::`, `genau eines von`],
+  "numeric question without solution": [
+    `::::quiz\n\n:::zahlfrage{toleranz=0.1}\nA.\n\nB.\n:::\n\n::::`,
+    `loesung`,
+  ],
+  "numeric question without tolerance": [
+    `::::quiz\n\n:::zahlfrage{loesung=1}\nA.\n\nB.\n:::\n\n::::`,
+    `toleranz`,
+  ],
+  "numeric question negative tolerance": [
+    `::::quiz\n\n:::zahlfrage{loesung=1 toleranz=-0.1}\nA.\n\nB.\n:::\n\n::::`,
+    `nichtnegative`,
+  ],
   "unknown attribute": [`:::satz[1.2]{foo=bar}\nInhalt.\n:::`, `kein erlaubtes Attribut`],
   "bad equation meta": [`$$ {#eq_2.3}\n\\bA\n$$`, `unverständliche Angabe`],
   "garbage equation meta": [`$$ garbage\n\\bA\n$$`, `unverständliche Angabe`],

@@ -23,7 +23,7 @@ wie wir es beim :k[Matrix-Vektor-Produkt]{#matrix-vector-product} in
 
 :::satz[2.5.1 (Komplexität der iterativen Variante)]
 Der iterative Fibonacci-Algorithmus berechnet die ersten $n$ Fibonacci-Zahlen mit
-Zeitkomplexität $\cblue{\Theta(n)}$ und Speicherkomplexität $\Theta(n)$.
+Zeitkomplexität $\cblue{O(n)}$ und Speicherkomplexität $O(n)$.
 :::
 
 ::::beweis
@@ -230,6 +230,20 @@ Aufrufe, also $O(n)$ Speicherzellen.
 
 ::::
 
+Damit steht die Ordnung fest, aber nicht die Basis: Zwischen $\sqrt{2}$ und $2$ ist viel
+Platz. Zählen wir die Aufrufe für wachsendes $n$ also einfach aus und tragen sie
+logarithmisch auf. Dann wird aus jedem exponentiellen Wachstum eine Gerade, und deren
+Steigung verrät die Basis.
+
+:::vertiefung[Gezählte Schritte gegen die Landau-Vorhersage]
+<S25FibVergleichWidget />
+:::
+
+Dass wir dafür die :k[logarithmische]{#logarithm} Skala brauchen, um beide Varianten
+überhaupt in ein gemeinsames Bild zu bekommen, ist selbst schon die halbe Pointe. Die
+Steigung der roten Punkte liegt dabei sichtbar unter $\log_{10} 2 \approx 0{,}301$. Woran
+liegt das?
+
 :::bemerkung[2.5.7 (Wie schlimm ist es wirklich?)]
 Zwischen unserer unteren Schranke (Basis $\sqrt{2} \approx 1{,}41$) und der oberen
 (Basis $2$) klafft noch eine Lücke: Die Folienangabe $O(2^n)$ ist eine korrekte obere
@@ -256,18 +270,18 @@ $\psi = 1 - \varphi \approx -0{,}618$. Weil $|\psi| < 1$ ist, stirbt der zweite 
 und es bleibt $F_{n+1} \approx \varphi^{n+1}/\sqrt{5}$, also
 
 $$
-\cred{T(n)} = \Theta\left(\varphi^n\right), \qquad \varphi \approx 1{,}618.
+\cred{T(n)} = O\left(\varphi^n\right), \qquad \varphi \approx 1{,}618.
 $$
 
 Das tatsächliche Wachstum hat also die Basis $\varphi$, sauber zwischen unseren Schranken
-$\sqrt{2}$ und $2$. Im Widget unten können wir das sehen: Auf der logarithmischen Skala
-liegen die gezählten Aufrufe exakt auf einer Geraden mit Steigung
-$\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren $2^n$-Geraden.
+$\sqrt{2}$ und $2$. Im Widget oben ist genau das zu sehen: Die gezählten Aufrufe liegen auf
+einer Geraden mit Steigung $\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren
+$2^n$-Geraden mit Steigung $\log_{10} 2 \approx 0{,}301$.
 :::
 
 ### 2.5.3 Der Vergleich: Ordnung schlägt Konstante
 
-Was bedeuten $\cblue{\Theta(n)}$ gegen $\cred{\Theta(\varphi^n)}$ in echten Zahlen? Setzen wir unsere
+Was bedeuten $\cblue{O(n)}$ gegen $\cred{O(\varphi^n)}$ in echten Zahlen? Setzen wir unsere
 gezählten Aufwände ein – iterativ $\cblue{4n - 6}$ Operationen (die additive Konstante $c$
 aus dem Beweis von Satz 2.5.1 lassen wir weg), naiv rekursiv
 $\cred{T(n) = 2F_{n+1} - 1}$ Aufrufe – und rechnen als grobes Modell mit $10^9$
@@ -288,13 +302,6 @@ Rechner verschiebt die $36\,000$ Jahre lediglich auf $36$ Jahre. Nur ein *besser
 Algorithmus* hilft, und die Landau-Notation ist das Instrument, mit dem wir „besser"
 präzise ausdrücken: *Die iterative Lösung ist dramatisch effizienter; sie liegt in einer
 anderen Komplexitätsklasse.*
-
-:::vertiefung[Gezählte Schritte gegen die Landau-Vorhersage, live]
-<S25FibVergleichWidget />
-:::
-
-Dass im Widget die :k[logarithmische]{#logarithm} Skala nötig ist, um beide Varianten
-überhaupt in ein gemeinsames Bild zu bekommen, ist dabei selbst schon die halbe Pointe.
 
 ### Selbsttest
 
@@ -337,6 +344,14 @@ $T(n) \ge 2^{\lfloor n/2 \rfloor} \ge \left(\sqrt{2}\right)^{n-1}$, geometrische
 mit Basis $\sqrt{2} > 1$. So haben wir die untere Schranke in Satz 2.5.6 bewiesen.
 :::
 
+:::zahlfrage{loesung=2 toleranz=0}
+Wie viele Jahre rechnet die naive Rekursion im Modell des Widgets oben bei $n = 80$?
+
+Der Ablesekasten des Widgets nennt bei $n = 80$ rund $7{,}6 \cdot 10^{16}$ Aufrufe; bei
+$10^9$ Schritten pro Sekunde sind das etwa $7{,}6 \cdot 10^7$ Sekunden, also gut zwei
+Jahre. Die Iteration braucht für dieselbe Zahl $314$ Operationen.
+:::
+
 ::::
 
 ### Zusammenfassung des Kapitels
@@ -349,8 +364,8 @@ Gute Algorithmen erkennen wir daran, dass sie mit wenig Laufzeit und Speicher au
 beides messen wir als Funktion der Problemgröße $n$ ([Abschnitt 2.3](#sec-2.3)) und
 beschreiben es nur noch durch seine Ordnung, mit Landau-Symbolen und ihren Rechenregeln
 ([Abschnitt 2.4](#sec-2.4)). Die Fibonacci-Fallstudie dieses Abschnitts hat gezeigt, wie
-viel diese komprimierte Sprache leistet: $\cblue{\Theta(n)}$ gegen
-$\cred{\Theta(\varphi^n)}$ ist der
+viel diese komprimierte Sprache leistet: $\cblue{O(n)}$ gegen
+$\cred{O(\varphi^n)}$ markiert den
 Unterschied zwischen „sofort fertig" und „Jahrtausende". Im nächsten Kapitel kommt die
 Sprache für Fehlermaße hinzu: Normen. Kapitel 4 nutzt sie dann, um Rundungsfehler,
 Kondition und Stabilität präzise zu behandeln.

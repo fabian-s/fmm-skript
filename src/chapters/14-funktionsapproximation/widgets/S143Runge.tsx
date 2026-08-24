@@ -1,5 +1,24 @@
+/**
+ * F1 — DIE EINE EINSICHT: Mehr äquidistante Knoten verbessern die globale
+ * Polynominterpolation nicht zuverlässig; Chebyshev-Knoten dämpfen Randfehler.
+ * FARBROLLEN: Stützpunkte blau, Interpolant grün, Fehler/Problemzonen rot,
+ * wahre Runge-Funktion neutral.
+ * PROVENIENZ: Rechen- und Layout-Code aus heath-ch7/S734 portiert; Texte neu.
+ * VERIFIZIERTE ZAHLEN: Die Fehlerreihen für n=5,10,15,20,30,40,60 werden
+ * unabhängig gescannt; insbesondere 0,4384→0,3003 ist nicht monoton und
+ * die in der Tabelle genannten Randmaxima werden geprüft.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * NACHTRAG (n-abhängiges Chebyshev-Verdikt): Bei n = 5 ist der
+ * Chebyshev-Fehler 0,402 kaum kleiner als der äquidistante 0,438, bei
+ * geradem n ≤ 10 sogar größer oder fast gleich (n=4: 0,750 vs 0,707;
+ * n=6: 0,556 vs 0,433; n=8: 0,392 vs 0,247; n=10: 0,269 vs 0,300).
+ * Das Verdikt lobt Chebyshev deshalb nur, wenn fehler < 0,2 UND
+ * fehler < 0,5·äquidistant (erfüllt für n = 9 und n ≥ 11), sonst neutral.
+ * Unabhängig (direkte Lagrange-Form statt baryzentrisch) geprüft mit
+ * scripts/verify/FIX-VERDACHT/check-s143-cheb.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 
 /**
  * §14.3: Das Runge-Phaenomen, aequidistante gegen Chebyshev-Knoten.
@@ -11,7 +30,8 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  * Statuszeilen und Zahlformate sind fuer dieses Skript neu geschrieben
  * (App-Prosa ist buchadaptiert und im oeffentlichen Repo verboten).
  *
- * Verifiziert mit node (check-s143.mjs / check2-s143.mjs, 2026-08-13),
+ * Verifiziert mit node (verify-14-funktionsapproximation/verify-values.mjs,
+ * 2026-08-19; detaillierter Scan check-s143.mjs / check2-s143.mjs, 2026-08-13),
  * max|f - p| auf [-1,1] bei n Knoten:
  *   n =  5: aequidistant 0,4384 (bei x = -0,795) | Chebyshev 0,4020
  *   n = 10: 0,3003 (x = -0,927) | 0,2692
@@ -23,12 +43,10 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  *
  * Farbcode Kapitel 14: Stuetzpunkte blau, Interpolant gruen, Fehler und
  * Problemzonen rot, die wahre Funktion neutral (wie in S141DreiProbleme).
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ROT = "#D55E00";
-const WAHR = "#64748b";
+const { blau: BLAU, gruen: GRUEN, rot: ROT, grau: WAHR } = FMM_COLORS;
 
 /* ------------------------------------------------------------------ */
 /* Numerik                                                             */
@@ -134,9 +152,17 @@ export function RungeExplorer() {
   const amRand = Math.abs(ort) > 0.7;
   const wo = amRand ? "also nahe am Rand" : "also im mittleren Bereich";
   const kopf = `${modus === "cheb" ? "Chebyshev-Knoten" : "Äquidistante Knoten"}, Grad ${n - 1}: größter Abstand ${fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)} bei x = ${fmt(ort, 2)}, ${wo}.`;
+  // Fehler der äquidistanten Knoten bei DEMSELBEN n: erst der Vergleich
+  // rechtfertigt ein Lob der Chebyshev-Knoten. Bei kleinem n ist ihr Fehler
+  // kaum kleiner (n = 5: 0,402 gegen 0,438), bei geradem n ≤ 8 sogar größer
+  // (kein Knoten in der Mitte); klar vorn liegen sie erst ab n ≈ 9.
+  const aequiHier = 10 ** LOG_AEQUI[n - N_MIN];
+  const chebLohnt = fehler < 0.5 * aequiHier && fehler < 0.2;
   const status =
     modus === "cheb"
-      ? `${kopf} Zu den Rändern hin liegen die Knoten dichter, und dort bleibt die Kurve ruhig.`
+      ? chebLohnt
+        ? `${kopf} Zu den Rändern hin liegen die Knoten dichter, und dort bleibt die Kurve ruhig; äquidistante Knoten lägen hier bei ${fmt(aequiHier)}.`
+        : `${kopf} Zu den Rändern hin liegen die Knoten dichter, aber der größte Abstand ist ${fehler <= aequiHier ? "kaum kleiner" : "sogar größer"} als mit äquidistanten Knoten (${fmt(aequiHier)}). Der Vorsprung zeigt sich erst bei größerem n.`
       : fehler > 1
         ? `${kopf} In der Mitte passt der Interpolant gut, an den Enden schlägt er weit aus.`
         : amRand
@@ -152,15 +178,7 @@ export function RungeExplorer() {
 
   return (
     <div className="my-2 text-sm">
-      <p className="mb-2">
-        Der Interpolant <M>{"p_{n-1}"}</M> (grün) läuft durch die{" "}
-        <M>{"n"}</M> blauen Stützpunkte auf dem Graphen von{" "}
-        <M>{"f(x) = 1/(1+25x^2)"}</M> (grau). Schieben wir <M>{"n"}</M> mit
-        äquidistanten Knoten nach oben, so wird die Anpassung in der Mitte
-        immer besser, während die Ausschläge nahe <M>{"\\pm 1"}</M> aus dem
-        Ruder laufen. Mit Chebyshev-Knoten fällt derselbe Gradanstieg den
-        Fehler überall.
-      </p>
+      <Aufgabe>Wählen wir eine Knotenfamilie und verändern die Knotenzahl; erst dann lesen wir den Fehler ab.</Aufgabe>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
         {(
@@ -244,21 +262,9 @@ export function RungeExplorer() {
         n = {n}, Grad {n - 1}, {modus === "aequi" ? "äquidistant" : "Chebyshev"}: max|f − p| ≈{" "}
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
-      <p className="mt-1">
-        {status}
-        {vergleich}
-      </p>
-      <p className="mt-1">
-        Die rechte Tafel zeigt beide Verläufe auf logarithmischer Achse. Die
-        äquidistante Kurve dreht nach oben, zickzackt dabei aber kräftig:
-        gerade Knotenzahlen schneiden hier besser ab als die benachbarten
-        ungeraden, und von <M>{"n = 5"}</M> auf <M>{"n = 10"}</M> fällt der
-        Fehler sogar. Divergenz heißt also nicht, dass jeder einzelne Schritt
-        schlechter wird. Die Chebyshev-Kurve läuft dagegen stetig nach unten,
-        bei <M>{"n = 4, 6, 8"}</M> liegt sie sogar über der anderen: Ihr Gewinn
-        ist ein Versprechen für große <M>{"n"}</M>, kein Sieg in jedem
-        Einzelfall.
-      </p>
+      <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? (chebLohnt ? "ok" : "neutral") : "warn"}>
+        {status}{vergleich} Das illustriert Bemerkung 14.3.16: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
+      </Verdikt>
     </div>
   );
 }

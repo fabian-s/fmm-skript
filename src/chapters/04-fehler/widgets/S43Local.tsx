@@ -1,4 +1,12 @@
 /**
+ * F1 — DIE EINE EINSICHT: Aufdecken nach einer eigenen Antwort macht den
+ * Selbsttest zu einer überprüfbaren Entscheidung.
+ * FARBROLLEN: Slate-Töne sind Oberfläche, ohne mathematische Codierung.
+ * PROVENIENZ: Eigene, aus S43 portierte MDX-Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
+/**
  * Lokale Hilfskomponente aus der TSX-Fassung von §4.3 (MDX-Migration
  * 2026-08-11; Rendering unverändert übernommen). Der ursprüngliche Name
  * „Frage" gehört der MDX-Autorenschicht und ist reserviert, deshalb heißt

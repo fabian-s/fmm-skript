@@ -1,3 +1,12 @@
+/**
+ * F1 — DIE EINE EINSICHT: Selbsttests machen aus einer gelesenen Aussage eine
+ * eigene Entscheidung; die aufklappbare Lösung trennt beides.
+ * FARBROLLEN: Grün bestätigt eine richtige Wahl, Rot kennzeichnet eine falsche;
+ * die übrigen Slate-Töne sind reine Oberfläche.
+ * PROVENIENZ: Eigene, bei der MDX-Migration aus S11 portierte Hilfskomponente.
+ * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import type { ReactNode } from "react";
 
 /**

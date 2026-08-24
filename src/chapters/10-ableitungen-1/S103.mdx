@@ -128,15 +128,19 @@ $j = 1, \dots, n$.
 
 ::::
 
+Welche Gestalt hat die Ableitung eigentlich, wenn wir Ein- und Ausgabedimension frei
+wählen? Die Übersichtstabelle aus [Abschnitt 10.2](#sec-10.2) listet vier Fälle auf;
+Definition 10.3.1 sagt, dass es immer derselbe Bauplan ist.
+
 :::vertiefung[Welche Gestalt hat die Ableitung?]
-Wie das Ableitungsobjekt aussieht, entscheiden allein $n$ und $m$: Für jede
-Ausgabekomponente entsteht eine Zeile, für jede Eingabevariable eine Spalte.
-Verstellen wir beide Regler, laufen wir die vier Skalar- und Vektor-Fälle der
-Übersichtstabelle aus [Abschnitt 10.2](#sec-10.2) ab, von der einzelnen Zahl
-über Zeile und Spalte bis zur vollen Matrix.
+Für jede Ausgabekomponente entsteht eine Zeile, für jede Eingabevariable eine Spalte.
 
 <JacobiFormWidget />
 :::
+
+Damit ist die Tabelle der Formate vollständig: Die einzelne Zahl, der Gradient als Zeile,
+die Spalte der Ableitungen einer Kurve und die volle Matrix sind vier Ansichten desselben
+Objekts, und welche wir sehen, entscheiden nur $n$ und $m$.
 
 ### Die Bausteine und ihre Jacobimatrizen
 
@@ -316,26 +320,32 @@ Wahrscheinlichkeitsrechnung ist genau dieser Faktor das, was beim
 Transformationssatz für Dichten den Ausgleich schafft.
 :::
 
-:::vertiefung[Gitter, Bild und Parallelogramm nebeneinander]
-Links liegt ein Gitter der halben Weite $r$ um $\bx_0$, rechts sein Bild unter
-$f$ (blau) und daneben das Bild der Linearisierung
-$\cblue{f(\bx_0)} + \corange{\bJ_f(\bx_0)}\bh$ (grün). Die roten Strecken in den
-vier Ecken sind der Restterm; die orangen Pfeile sind die Bilder der beiden
-halben Gitterachsen, also $r$ mal die Spalten von $\corange{\bJ_f(\bx_0)}$.
-
-Drei Beobachtungen lohnen den Regler. Erstens: Schieben wir $r$ nach unten,
-verschwindet der rote Abstand deutlich schneller als das Gitter selbst, und der
-angezeigte Quotient
-$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\|$ fällt mit. Zweitens: Bei der
-Abbildung „linear" bleibt dieser Quotient exakt null, so wie es
-Korollar 10.3.6 verlangt; die dort fest eingebaute Matrix ist gerade
-$\corange{\bJ_f(\bx_0)}$ aus Beispiel 10.3.7, also die Linearisierung des
-Quadrierens an der voreingestellten Stelle. Drittens nähert sich das Verhältnis
-der beiden Flächeninhalte für kleines $r$ dem Wert
-$\left|\det \corange{\bJ_f(\bx_0)}\right|$ aus Bemerkung 10.3.8.
+Wie schnell verschwindet der Unterschied zwischen dem krummen Bild und dem Parallelogramm,
+wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor aus
+Bemerkung 10.3.8 wirklich zu, oder gilt er nur im Grenzwert? Beides ist eine Frage an ein
+Bild, nicht an eine Formel.
 
 <LinearisierungsWidget />
-:::
+
+Links liegt ein regelmäßiges Gitter über dem ganzen Definitionsbereich, dazu das violette
+Fenster der halben Kantenlänge $h$ um $\bx_0$. In der Mitte steht das Bild desselben
+Gitters unter $f$, in der Lupe rechts das krumme Bild des Fensters (blau) gegen das
+Parallelogramm $\cblue{f(\bx_0)} + \corange{\bJ_f(\bx_0)}\bh$ (grün). Die roten Strecken
+in den vier Ecken sind der Restterm, die orangen Pfeile sind $h$ mal die Spalten von
+$\corange{\bJ_f(\bx_0)}$.
+
+Wie das Widget zeigt, fällt der rote Abstand beim Halbieren von $h$ auf ungefähr ein
+Viertel, während das Fenster nur halb so groß wird. Der Quotient
+$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\|$ halbiert sich also mit, und mehr
+verlangt ($10.3.1$) auch nicht. Bei der Voreinstellung „linear" bleibt der Restterm exakt
+null, so wie es Korollar 10.3.6 verlangt, und das Flächenverhältnis ist dort für jedes $h$
+exakt $\left|\det \corange{\bJ_f(\bx_0)}\right| = 1{,}65$. Bei den krummen Abbildungen
+nähert es sich diesem Wert erst für kleines $h$: Beim Quadrieren an der Stelle
+$\bx_0 = (1;\ 0{,}5)^\top$ steht bei $h = 0{,}3$ noch $5{,}24$ und bei $h = 0{,}075$
+bereits $5{,}015$, gegen den Grenzwert $5$ aus Bemerkung 10.3.8. Die Voreinstellung
+„Wirbel" ist der Sonderfall dazu: Dort ist $\det \corange{\bJ_f(\bx)} = 1$ an jeder
+Stelle, die Abbildung verschiebt Fläche also, ohne sie zu verändern, und trotzdem verbiegt
+sie das Gitter kräftig.
 
 ### Verkettung
 
@@ -568,26 +578,28 @@ deshalb die Gradienten *aller* Schichten, nicht nur den einer einzelnen.
 Millionen von Parametern trainieren.
 :::
 
-:::vertiefung[Vorwärts und rückwärts durch ein winziges Netz]
-Das Netz im Widget hat zwei Schichten: $\ba_1 = \bW_1\bx$, dann
-$\bz_1 = \max(\bnull, \ba_1)$, dann $\wh{y} = \bW_2\bz_1$ und schließlich
-$L = \tfrac12(\wh{y} - y)^2$ mit dem Zielwert $y = 1$. Beide Läufe der
-Schrittsteuerung sind übereinandergelegt: Unter den Knoten stehen blau die
-Zahlen, die der Vorwärtslauf einsetzt, über den Knoten orange die Ableitung von
-$L$ nach dem jeweiligen Knoten.
+Wo genau endet die Kette, wenn wir sie bis zu $\bW_1$ zurückverfolgen? Und was steht
+unterwegs eigentlich in den Zwischengrößen, Matrizen oder Zeilen? Am kleinsten möglichen
+Netz lässt sich das Schritt für Schritt nachzählen.
 
-Zwei Dinge lassen sich beobachten. Erstens bleibt jede Zwischengröße des
-Rückwärtslaufs eine Zeile, weil links immer die Zeile des vorigen Schritts
-steht und rechts eine Jacobimatrix, ganz wie in Bemerkung 10.3.13; erst der
-letzte Schritt ordnet das Ergebnis als Gewichtsmatrix an, denn $\bW_1$ ist keine
-Liste, sondern ein Rechteck. Zweitens endet die Kette für
-$\bW_1$ bei $\corange{\bJ_{f_2}(\bz_1)} = \bW_2$, und der letzte Faktor ist die
-Ableitung der ersten Schicht nach ihren eigenen Gewichten. Stellen wir den
-Regler auf $x_1 = 2$, so landen wir auf einer Knickstelle der Art aus
-Beispiel 10.3.12: Die erste Einheit steht dann exakt auf der Schwelle.
+:::vertiefung[Vorwärts und rückwärts durch ein winziges Netz]
+Das Netz hat zwei Schichten: $\ba_1 = \bW_1\bx$, dann
+$\bz_1 = \max(\bnull, \ba_1)$, dann $\wh{y} = \bW_2\bz_1$ und schließlich
+$L = \tfrac12(\wh{y} - y)^2$ mit dem Zielwert $y = 1$. Unter den Knoten stehen blau die
+Zahlen des Vorwärtslaufs, über den Knoten orange die Ableitung von $L$ nach dem jeweiligen
+Knoten.
 
 <BackpropWidget />
 :::
+
+Im Widget bleibt jede Zwischengröße des Rückwärtslaufs eine Zeile, weil links
+immer die Zeile des vorigen Schritts steht und rechts eine Jacobimatrix, ganz wie in
+Bemerkung 10.3.13; erst der letzte Schritt ordnet das Ergebnis als Gewichtsmatrix an, denn
+$\bW_1$ ist keine Liste, sondern ein Rechteck. Und die Kette für $\bW_1$ endet bei
+$\corange{\bJ_{f_2}(\bz_1)} = \bW_2$: Der letzte Faktor ist die Ableitung der ersten
+Schicht nach ihren eigenen Gewichten, nicht noch einmal $\bW_1$ (Bemerkung 10.3.11).
+Stellen wir den Regler auf $x_1 = 2$, so landen wir auf einer Knickstelle der Art aus
+Beispiel 10.3.12: Die erste Einheit steht dann exakt auf der Schwelle.
 
 ### Selbsttest
 
@@ -655,6 +667,25 @@ Bemerkung 10.3.13 kostet die Auswertung von links $1200$ und die von rechts
 $10\,500$ Multiplikationen. Weil $L$ skalar ist, bleibt von links jedes
 Zwischenergebnis eine Zeile; von rechts entstehen volle Matrizen. Genau diese
 Auswertungsreihenfolge ist die Backpropagation.
+:::
+
+:::zahlfrage{loesung=5 toleranz=0,05}
+Im Linearisierungs-Widget: Wir wählen die Voreinstellung „Quadrieren" und lassen $\bx_0$ auf
+$(1;\ 0{,}5)^\top$ stehen. Welchen Wert zeigt $\det \bJ_f(\bx_0)$?
+
+$\bJ_f(\bx) = \bigl(\begin{smallmatrix} 2x_1 & -2x_2 \\ 2x_2 & 2x_1\end{smallmatrix}\bigr)$
+hat die Determinante $4(x_1^2 + x_2^2)$, an der Stelle $(1;\ 0{,}5)^\top$ also $5$
+(Beispiel 10.3.7 und Bemerkung 10.3.8). Dasselbe steht als Grenzwert des
+Flächenverhältnisses im Verdikt.
+:::
+
+:::zahlfrage{loesung=4 toleranz=0,5}
+Um welchen Faktor fällt der Restterm $\left\|r(\bh)\right\|$ im Linearisierungs-Widget,
+wenn wir mit dem Knopf „h halbieren" die Kantenlänge des Fensters halbieren?
+
+Der Restterm fällt wie $\left\|\bh\right\|^2$, also auf ein Viertel. Bei der
+Voreinstellung „Quadrieren" ist das exakt so, bei den anderen krummen Abbildungen bis auf
+Terme höherer Ordnung.
 :::
 
 ::::

@@ -1,4 +1,5 @@
 import { RichardsonStepper } from "./widgets/S83Richardson";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 08-la-misc, Abschnitt „Iterative Lösungsverfahren".]
 
@@ -36,6 +37,14 @@ $$
 
 heißt *Residuum* (residual) von $\cblue{\bx^{(k)}}$.
 :::
+
+::::quiz
+:::frage{wahr}
+Zeigt das Richardson-Widget für eine Schrittweite eine Rate $\rho>1$, dann erfüllt diese Wahl die Konvergenzvoraussetzung von Satz 8.3.5 nicht.
+
+Die Kontraktionsschranke verlangt $\rho<1$.
+:::
+::::
 
 Das Residuum misst, wie weit die Näherung davon entfernt ist, die Gleichung zu
 erfüllen. Ist $\cred{\br^{(k)}} = \bnull$, so gilt
@@ -550,15 +559,18 @@ $(0{,}109,\; 0{,}609)^\top$; an der Aussage ändert das nichts.
 :::
 
 :::vertiefung[Richardson Schritt für Schritt, mit einstellbarem γ]
-Das Widget rechnet Beispiel 8.3.11 nach und lässt uns $\gamma$ verstellen.
-Bei $\gamma = 0{,}25$ sehen wir die Zahlen von oben. Schieben wir $\gamma$ über
-$2/\lambda_{\max}(\bA) \approx 0{,}433$, so wird $\corange{\rho} > 1$: Die
-Korrektur schießt über die Lösung hinaus, die Iterierten springen mit
-wachsender Amplitude um sie herum, und die Fehlerkurve steigt statt zu fallen.
-Satz 8.3.5 verliert dort seine Voraussetzung, und das Verfahren verliert seinen
-Zweck.
+Bei welcher Schrittweite kippt diese Iteration? Schätzen wir die Grenze, bevor
+wir den Verlauf untersuchen.
 
+<Schaetzfrage frage="Ab welchem γ beginnt diese Richardson-Iteration zu divergieren?" loesung={0.4330847293182009} toleranz={0.02} einheit="γ" min={0.05} max={0.55} schritt={0.005}>
 <RichardsonStepper />
+</Schaetzfrage>
+
+Die Auflösung verbindet die geschätzte Schwelle mit der Kontraktionsbedingung.
+
+Die Auflösung markiert die Grenze der Konvergenz. Satz 8.3.5 erklärt den
+Wechsel: Auf der einen Seite fällt der Fehler geometrisch, auf der anderen
+verfehlt die Iterationsmatrix die Kontraktionsbedingung.
 :::
 
 ### Einordnung

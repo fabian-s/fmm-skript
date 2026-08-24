@@ -1,4 +1,5 @@
 import { MerkregelDiagramm } from "./widgets/S111Merkregel";
+import { ZoomSchaetzung } from "./widgets/S111Zoom";
 
 ::quelle[Folien 11-ableitungen-II, von den verwendeten Vorkenntnissen bis zum Zahlenbeispiel zur Linearität der Ableitung.]
 
@@ -47,7 +48,7 @@ $(g \circ f)'(x) = g'(f(x))\, f'(x)$ für Funktionen einer Variablen voraus, daz
 :k[Taylorreihe]{#taylor-series}
 $f(x+h) = f(x) + f'(x)h + \tfrac{1}{2}f''(x)h^2 + \dots$. Aus der linearen Algebra
 brauchen wir bilineare und multilineare Abbildungen, insbesondere das
-:k[Skalarprodukt]{#inner-product} $\inner{\cdot, \cdot}$
+:k[Skalarprodukt]{#dot-product} $\inner{\cdot, \cdot}$
 ([Abschnitt 9.1](?k=09-tensoren#sec-9.1)), die
 :k[quadratischen Formen]{#quadratic-form} $\bx^\top\bA\bx$ und die
 :k[Komposition von Funktionen]{#function-composition}.
@@ -208,17 +209,42 @@ begegnet uns wieder, sobald wir in [Abschnitt 11.3](#sec-11.3) Ableitungen höhe
 verlangen: Jede Ableitungsstufe kostet eine Stufe Glattheit.
 :::
 
-:::vertiefung[Die Merkregel als Bild]
-Der grüne Bereich liegt vollständig im blauen, und das ist die ganze Aussage von
-Satz 11.1.2. Interessant ist der Ring dazwischen: Er ist nicht leer, und die
-Betragsfunktion aus Beispiel 11.1.3 wohnt darin. Gehen wir die drei Beispiele der Reihe
-nach durch, so lesen wir unter dem Bild jeweils ab, woran es liegt. Die Farben folgen dem
-Kapitel-Code: Blau gehört zur Funktion und ihren Werten, und Stetigkeit ist eine Aussage
-über Funktionswerte; Grün gehört zum Ableitungsterm, und Differenzierbarkeit ist die
-Existenz genau dieses Terms.
-
 <MerkregelDiagramm />
+
+*Die beiden Aussagen als Bild, alles an der Stelle $x_0 = 0$. Der grüne Bereich liegt
+vollständig im blauen; das ist Satz 11.1.2. Im Ring dazwischen wohnt die Betragsfunktion
+aus Beispiel 11.1.3, und dass dieser Ring nicht leer ist, verbietet die Umkehrung. Ganz
+außen steht die Sprungfunktion $H$, die in $0$ nicht einmal stetig ist und deshalb auch
+nicht differenzierbar sein kann. Die Farben folgen dem Kapitel-Code: Blau gehört zur
+Funktion und ihren Werten, und Stetigkeit ist eine Aussage über Funktionswerte; Grün
+gehört zum Ableitungsterm, und Differenzierbarkeit ist die Existenz genau dieses Terms.*
+
+Ein zweiter Blick auf denselben Sachverhalt lohnt sich, und er ist der anschaulichere.
+Differenzierbarkeit in $\bx$ heißt nach Definition 10.1.1, dass sich $f$ dort bis auf einen
+Rest der Ordnung $o(\left\|\bh\right\|)$ durch eine lineare Abbildung ersetzen lässt. Wenn
+das stimmt, muss der Graph unter einer starken Lupe aussehen wie eine Gerade. Was passiert
+also, wenn wir in eine Stelle hineinzoomen: Bei welcher der drei Funktionen wird die Kurve
+irgendwann gerade, und bei welcher nicht?
+
+:::vertiefung[Unter der Lupe: lokal linear oder nicht]
+Wir legen ein quadratisches Fenster um die Stelle $x_0$ und ziehen es zusammen. Beide Achsen
+werden dabei gleich gestaucht, das Bild zeigt also wirklich einen Zoom und keine gestreckte
+Fassung. Gemessen wird, wie weit die Kurve im Fenster von der Geraden abweicht, die durch die
+beiden Fensterränder läuft.
+
+<ZoomSchaetzung />
 :::
+
+Wie das Widget zeigt, verhalten sich die drei Funktionen an der Stelle $0$ grundverschieden.
+Bei $\cblue{f(x) = x^2}$ halbiert sich die Abweichung von der Geraden mit jeder Halbierung
+des Fensters; genau das besagt der Rest $o(\left\|\bh\right\|)$ in Definition 10.1.1. Bei
+$\cblue{f(x) = \left|x\right|}$ steht sie auf jeder Zoomstufe bei genau einem $w$;
+der Knick sieht auf der zwölften Zoomstufe genauso aus wie auf der nullten. Und bei
+$\cblue{f(x) = \sqrt{\left|x\right|}}$ wächst sie beim Hineinzoomen sogar, wie
+$1/\sqrt{w}$: Der Graph richtet sich immer steiler auf und verlässt das Fenster nach oben.
+Nichtdifferenzierbarkeit hat also mehr als eine Bauform, und keine davon verträgt sich mit
+einer Geraden. Verschieben wir dagegen $x_0$ von der $0$ weg, so wird auch der Betrag lokal
+linear: Die Ausnahme steckt in der Stelle, nicht in der Funktion.
 
 ### Die Ableitung ist linear
 
@@ -491,6 +517,18 @@ $\nabla\left[3f(\bx) - 2g(\bx)\right] = 3\nabla f(\bx) - 2\nabla g(\bx)$.
 Das ist Zeile 2 aus Bemerkung 11.1.6, also Satz 11.1.5 im Fall $\D = \R^n$, $\E = \R$ mit
 $c_1 = 3$ und $c_2 = -2$. Beispiel 11.1.7 rechnet genau diesen Fall durch und erhält an
 der Stelle $(1, -1)^\top$ den Gradienten $(4, -10)$.
+:::
+
+:::zahlfrage{loesung=1 toleranz=0.001}
+Stellen wir im Lupen-Widget $f(x) = \left|x\right|$ und $x_0 = 0$ ein und zoomen so weit
+hinein, wie der Regler reicht. Welchen Wert hat die angezeigte Abweichung von der Geraden
+dann, gemessen in Vielfachen der halben Fensterbreite $w$?
+
+Genau $1$, und zwar auf jeder einzelnen Zoomstufe. Die Sehne durch die beiden Fensterränder
+ist bei $x_0 = 0$ waagerecht und liegt auf der Höhe $w$, während die Kurve in der Mitte den
+Wert $0$ hat; die Abweichung ist also $w$ selbst, in Vielfachen von $w$ gerechnet $1$. Der Knick
+verschwindet unter keiner Lupe. Zum Vergleich: Bei $f(x) = x^2$ steht dort $w$ selbst, also
+eine Zahl, die mit jedem Zoomschritt kleiner wird.
 :::
 
 ::::

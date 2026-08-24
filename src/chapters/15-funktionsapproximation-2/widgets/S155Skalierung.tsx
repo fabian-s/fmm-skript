@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
 
 /**
  * §15.5: Wie die Zahl der Koeffizienten mit der Dimension waechst.
@@ -11,17 +12,15 @@ import { useMemo, useState } from "react";
  * Farbrollen nach dem Kapitel-15-Code: Basis/Koeffizienten orange, der
  * Schaetzer des additiven Modells gruen.
  *
- * Nachgerechnet (node, check-s155.mjs):
+ * Verifiziert (node, verify-15-funktionsapproximation-2/s155.mjs, 2026-08-19):
  *   K = 10, p = 10:  10^10 Koeffizienten, 10^10 * 8 B = 80 GB (74,5 GiB)
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
  *   additiv p = 10:  91 freie Parameter nach Zentrierung, 728 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
-const ACHSE = "#64748b";
-const RAHMEN = "#cbd5e1";
+const { gruen: GRUEN, orange: ORANGE, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
 const P_MAX = 10;
 const BYTE_PRO_KOEFFIZIENT = 8;
@@ -112,46 +111,16 @@ export function SkalierungTensorGam() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Orange die volle Tensor-Produkt-Basis mit K<sup>p</sup> Koeffizienten, grün das additive
-        Modell mit p · (K − 1) + 1 freien Parametern nach Zentrierung. Die senkrechte Achse ist logarithmisch; eine Gerade
-        darin bedeutet exponentielles Wachstum. Alle Zahlen rechnet dieses Widget selbst.
-      </p>
+      <Aufgabe>Stellen wir K und p ein und vergleichen die beiden Modellgrößen.</Aufgabe>
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-40 shrink-0 text-right">Dimension p</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={1}
-          max={P_MAX}
-          step={1}
-          value={p}
-          onChange={(e) => setP(Number(e.target.value))}
-        />
-        <span className="w-14 shrink-0 font-mono text-xs">{p}</span>
-      </label>
+      <Slider label="Dimension p" min={1} max={P_MAX} step={1} value={p} onChange={setP} accent={ORANGE} />
 
-      <label className="my-1 flex items-center gap-3 text-sm">
-        <span className="w-40 shrink-0 text-right">Basisfunktionen K je Variable</span>
-        <input
-          type="range"
-          className="grow accent-sky-600"
-          min={4}
-          max={20}
-          step={1}
-          value={K}
-          onChange={(e) => setK(Number(e.target.value))}
-        />
-        <span className="w-14 shrink-0 font-mono text-xs">{K}</span>
-      </label>
+      <Slider label="Basisfunktionen K je Variable" min={4} max={20} step={1} value={K} onChange={setK} accent={ORANGE} />
 
       <div className="flex flex-wrap gap-4">
         <svg
-          width={W}
-          height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -260,7 +229,7 @@ export function SkalierungTensorGam() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={p >= 6 ? "warn" : "neutral"}>{status} Das ordnet die Skalierung aus Satz 15.5.5 ein.</Verdikt>
     </div>
   );
 }

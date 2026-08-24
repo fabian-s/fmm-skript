@@ -1,5 +1,6 @@
-import { AusloeschungDemo, AssoziativDemo } from "./widgets/S21Demos";
+import { AusloeschungWidget } from "./widgets/S21Demos";
 import { RSelbsttest } from "./widgets/S21Local";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Grundlage: Folien 02-algos, Auftakt und „Numerische Probleme und Algorithmen".]
 
@@ -74,10 +75,10 @@ sondern an zwei prinzipiellen Beschränkungen jeder endlichen Maschine:
   Auswertung bricht irgendwo ab.
 :::
 
-Deshalb ist es wichtig, *wie* wir Dinge berechnen. Wie schlimm kann es
-schon sein? Testen Sie Ihre Intuition an vier kurzen R-Ausdrücken von den
-Folien. Überlegen Sie sich jeweils zuerst selbst eine Vorhersage, bevor Sie
-die Lösung aufklappen:
+Deshalb ist es wichtig, *wie* wir Dinge berechnen. Wie schlimm kann es schon
+sein? Prüfen wir unsere Intuition an vier kurzen R-Ausdrücken von den Folien.
+Tippen wir bei jedem zuerst, was herauskommt, und decken erst dann die Ausgabe
+auf:
 
 <RSelbsttest />
 
@@ -154,10 +155,6 @@ bleiben nur die (verrauschten) hinteren Stellen. Dieses Phänomen heißt
 numerischen Fallen.
 :::
 
-:::vertiefung[Auslöschung zum Nachspielen: Ab welcher Verschiebung kippt die Varianz-Formel?]
-<AusloeschungDemo />
-:::
-
 :::beispiel[2.1.4 (Verletzte Assoziativität)]
 Gleitkomma-Addition ist nicht assoziativ! Seien
 $\cred{x = 10^{30}}$, $\cblue{y = -10^{30}}$ und
@@ -188,9 +185,36 @@ Ergebnis. Das haben wir oben im Selbsttest bei
 ergeben dieselben $10^5$ Zahlen verschiedene Summen.
 :::
 
-:::vertiefung[Assoziativität zum Nachspielen: Wann verschluckt 10^k die 1?]
-<AssoziativDemo />
+Die beiden Beispiele sehen verschieden aus, aber sie scheitern am selben
+Mechanismus: An der Stelle, an der die Maschine rechnet, liegen benachbarte
+darstellbare Zahlen weiter auseinander als die Größe, die wir eigentlich
+suchen. Wie weit dürfen wir die Verschiebung treiben, bis es so weit ist?
+Das lässt sich nicht ansehen, das müssen wir ausprobieren.
+
+:::vertiefung[Zwei Gesichter derselben Auslöschung]
+<Schaetzfrage
+  variante="auswahl"
+  frage="Bei welcher Verschiebung c verliert die Verschiebungsformel die Varianz zum ersten Mal?"
+  optionen={[
+    { id: "e4", text: "c = 10⁴" },
+    { id: "e8", text: "c = 10⁸" },
+    { id: "e12", text: "c = 10¹²" },
+  ]}
+  loesung="e8"
+>
+<AusloeschungWidget />
+</Schaetzfrage>
 :::
+
+Die Tafel macht das Kriterium sichtbar. Solange die orange Auflösung links von
+der grünen Zielgröße steht, überlebt das Ergebnis; sobald sie rechts davon
+steht, ist es weg. Die Verschiebungsformel verliert schon bei $c = 10^8$ die
+erste Nachkommastelle ($22$ statt $22{,}5$) und ab $c = 10^9$ jede Information;
+die Klammerung der Summe hält bis $10^{15}$ und bricht bei $10^{16}$. Wer $k$ weiter nach
+oben schiebt, sieht auch, dass das Ergebnis danach nicht
+etwa gleichmäßig schlechter wird, sondern zwischen $0$, riesigen positiven und
+negativen Werten hin- und herspringt: Was übrig bleibt, ist reiner
+Rundungszufall.
 
 <h3 id="sec-2.1-algorithmen">Algorithmen</h3>
 
@@ -242,6 +266,41 @@ Im nächsten Abschnitt sehen wir an einem klassischen Beispiel (den
 Fibonacci-Zahlen), dass zwei exakte Algorithmen für dasselbe Problem sich im
 Rechenaufwand so drastisch unterscheiden können, dass der eine praktisch
 unbrauchbar ist.
+
+### Selbsttest
+
+::::quiz
+
+:::zahlfrage{loesung=16 toleranz=0}
+Ab welchem Exponenten $k$ liefern im Widget oben die beiden Klammerungen von
+$10^k + \left(-10^k\right) + 1$ verschiedene Ergebnisse?
+
+Bei $10^{15}$ liegen benachbarte Maschinenzahlen $0{,}125$ auseinander, die $1$
+überlebt also die Zwischensumme. Bei $10^{16}$ ist der Abstand bereits $2$, und
+$-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (Beispiel 2.1.4).
+:::
+
+:::frage{falsch}
+Die zweistufige Varianzformel $\frac{1}{n}\sumin (x_i - \bar{x})^2$ versagt
+bei genügend großer Verschiebung genauso wie die Verschiebungsformel.
+
+Sie liefert im Widget für jedes $k$ exakt $22{,}5$. Sie subtrahiert die großen
+Zahlen, *bevor* quadriert wird, und rechnet danach nur noch mit den kleinen
+Abweichungen $-6, -3, 3, 6$; zwei riesige, fast gleiche Zahlen treffen dabei
+nie aufeinander.
+:::
+
+:::frage{wahr}
+Ein Rundungsfehler pro Operation ist harmlos, gefährlich ist erst das
+Zusammenspiel vieler Operationen.
+
+Darum ging es in beiden Beispielen: Jede einzelne Rundung ist relativ
+winzig, aber eine Subtraktion fast gleich großer Zahlen macht aus diesem
+winzigen relativen Fehler einen riesigen relativen Fehler des Ergebnisses.
+:::
+
+::::
+
 
 *Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
 Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt

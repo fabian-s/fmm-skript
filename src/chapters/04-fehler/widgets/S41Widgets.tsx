@@ -1,32 +1,78 @@
-/**
- * Widgets für §4.1: Fehlerzerlegungs-Explorer (e^x über abgebrochene
- * Taylor-Reihe, Input π auf k Nachkommastellen gerundet) und
- * Fehlermaß-Rechner (Vektor v und Näherung ṽ editierbar, live Δ, ‖Δ‖₂, δ).
- * Alle Werte rechnet der Browser live in IEEE-Doppelpräzision nach.
- */
 import { useState } from "react";
-import { M, Slider } from "../../../lib";
+import {
+  Aufgabe,
+  DragHandle,
+  FMM_COLORS,
+  M,
+  Slider,
+  Verdikt,
+  W_INPUT,
+  W_MUTED,
+  W_PANEL,
+  clamp,
+  fmtDe,
+  useDrag,
+} from "../../../lib";
 
-/* FMM-Palette (identisch zu den \cb*-Makros in src/fmm-macros.ts) */
-const FMM = {
-  red: "#D55E00",
-  blue: "#0072B2",
-  green: "#009E73",
-  orange: "#E69F00",
-  purple: "#9E57D5",
-};
-/** Neutralton, lesbar auf hellem Canvas UND dunkler Seite. */
-const NEUTRAL = "#64748b";
+/**
+ * Widgets für §4.1 „Fehlermaße und Fehlerzerlegung".
+ *
+ * ── FARBROLLEN KAPITEL 4 ────────────────────────────────────────────────────
+ * Das Kapitel führt zwei Begriffswelten, und die Widgets folgen jeweils den
+ * FORMELN ihres Abschnitts (E1: dieselbe Farbe für denselben Teilausdruck in
+ * Text und Bild):
+ *
+ *   §4.1 Fehlerzerlegung (Def. 4.1.2, Gl. (4.1.1)):
+ *     grün    der wahre/exakte Wert (v, f(π))
+ *     blau    die berechnete Näherung (ṽ, π̃, f̃(π̃))
+ *     rot     der absolute Fehler Δ bzw. der Algorithmusfehler
+ *     orange  der relative Fehler δ bzw. der Folgefehler aus dem Input
+ *     violett der Gesamtfehler
+ *
+ *   §4.2/§4.3 Kondition und Stabilität (S42Kondition.tsx, S42Lgs.tsx,
+ *   S43Widgets.tsx):
+ *     blau    der ungestörte Input x, grün der Output bzw. die exakte Lösung,
+ *     rot     die Störung ε und der relative Inputfehler,
+ *     orange  die Verstärkung κ.
+ *
+ * Grün und Rot tragen damit in §4.1 und §4.2 verschiedene Rollen. Das ist
+ * bewusst und folgt der Farbgebung der Gleichungen im jeweiligen Abschnitt
+ * (siehe Gl. (4.1.1) gegen Beispiel 4.2.1); wer die Rollen vereinheitlichen
+ * will, muss zuerst die Formeln umfärben.
+ *
+ * ── VERIFIZIERTE ZAHLEN ─────────────────────────────────────────────────────
+ * node, historische Prüfung, Skript nicht mehr vorhanden, 2026-08-19:
+ *   Beispiel 4.1.4: Δ = (0,2; 0,3), ‖Δ‖₂ = 0,36056, ‖v‖₂ = 5,
+ *   δ = 0,072111 = 7,2111 %, ‖ṽ‖₂ = 5,36004; Lemma-4.1.3-Band
+ *   [4,63944; 5,36056] enthält ‖ṽ‖₂ (Abstand zur oberen Schranke 0,00052).
+ *   δ = 10 % entspricht ‖Δ‖ = 0,5, δ = 1 % entspricht ‖Δ‖ = 0,05.
+ *   Beispiel 4.1.6 (N = 2, k = 0): Algorithmusfehler −11,5855,
+ *   Folgefehler −3,05516, Gesamtfehler −14,6407; die Probe geht auf 0 auf.
+ *   Dominanzwechsel bei k = 0: bis N = 3 dominiert der Algorithmusfehler
+ *   (Faktor > 2), bei N = 4 und N = 5 sind beide Anteile vergleichbar, ab
+ *   N = 6 dominiert der Folgefehler (|algo|/|folge| = 0,22).
+ */
 
-/** Zahl deutsch formatiert; sehr kleine/große Werte in Zehnerpotenz-Schreibweise. */
-function fmtDE(v: number, sig = 4): string {
-  if (v === 0) return "0";
+const GRUEN = FMM_COLORS.gruen; // wahrer Wert v, f(π)
+const BLAU = FMM_COLORS.blau; // Näherung ṽ, π̃, f̃(π̃)
+const ROT = FMM_COLORS.rot; // absoluter Fehler Δ / Algorithmusfehler
+const ORANGE = FMM_COLORS.orange; // relativer Fehler δ / Folgefehler
+const VIOLETT = FMM_COLORS.violett; // Gesamtfehler
+
+/** Exponent als Unicode-Hochzahl: Widget-Text läuft nicht durch MathJax. */
+function hoch(e: number): string {
+  const z = "\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079";
+  return (e < 0 ? "\u207b" : "") + String(Math.abs(e)).split("").map((d) => z[Number(d)]).join("");
+}
+
+/** Deutsche Zahl; sehr kleine/große Werte als Mantisse · 10^Exponent. */
+function fmtWiss(v: number, d = 3): string {
+  if (!Number.isFinite(v)) return fmtDe(v, d);
   const a = Math.abs(v);
-  if (a >= 0.001 && a < 100000) {
-    return v.toLocaleString("de-DE", { maximumSignificantDigits: sig });
-  }
-  const [m, e] = v.toExponential(sig - 1).split("e");
-  return `${m.replace(".", ",")} · 10^${Number(e)}`;
+  if (a === 0) return "0";
+  if (a >= 0.001 && a < 100000) return fmtDe(v, Math.max(0, d - Math.max(0, Math.floor(Math.log10(a)))));
+  const e = Math.floor(Math.log10(a));
+  return `${fmtDe(v / 10 ** e, d - 1)} · 10${hoch(e)}`;
 }
 
 /** Abgebrochene Exponentialreihe: Summe von x^n/n! für n = 0, …, N. */
@@ -40,9 +86,320 @@ function taylorExp(x: number, N: number): number {
   return sum;
 }
 
-/* ------------------------------------------------------------------ */
-/* Fehlerzerlegungs-Explorer (Beispiel e^π)                            */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/* Fehlermaß-Rechner: v und ṽ als ziehbare Pfeile in der Ebene        */
+/* ================================================================== */
+
+/**
+ * DIE EINE EINSICHT: Der absolute Fehler ist ein Pfeil zwischen zwei Punkten,
+ * der relative Fehler misst diesen Pfeil an der Länge von v — und Lemma 4.1.3
+ * ist genau die Aussage, dass ṽ dann in einem Ring um den Ursprung liegt.
+ */
+
+const S = 320; // viewBox-Kantenlänge
+const FX = 36; // Zeichenfläche links
+const FY = 12; // Zeichenfläche oben
+const FW = S - FX - 12;
+const FH = S - FY - 30;
+const W0 = -0.7;
+const W1 = 5.6;
+const px = (wx: number) => FX + ((wx - W0) / (W1 - W0)) * FW;
+const py = (wy: number) => FY + FH - ((wy - W0) / (W1 - W0)) * FH;
+const skala = FW / (W1 - W0); // Weltlänge → Bildlänge
+
+/** Ein Pfeil vom Ursprung zu (x, y). */
+function Pfeil({ x, y, farbe, breite = 2 }: { x: number; y: number; farbe: string; breite?: number }) {
+  const L = Math.hypot(x, y);
+  if (L < 1e-9) return null;
+  const [ux, uy] = [x / L, y / L];
+  const spitzeL = Math.min(0.32, L * 0.5);
+  const bx = x - ux * spitzeL;
+  const by = y - uy * spitzeL;
+  const [qx, qy] = [-uy * spitzeL * 0.38, ux * spitzeL * 0.38];
+  return (
+    <g pointerEvents="none">
+      <line x1={px(0)} y1={py(0)} x2={px(bx)} y2={py(by)} stroke={farbe} strokeWidth={breite} />
+      <polygon
+        points={`${px(x)},${py(y)} ${px(bx + qx)},${py(by + qy)} ${px(bx - qx)},${py(by - qy)}`}
+        fill={farbe}
+      />
+    </g>
+  );
+}
+
+/**
+ * Zahlenfeld auf Modulebene (nicht in der Komponente definiert): eine im
+ * Render erzeugte Komponente wird bei jedem Tastendruck neu gemountet und
+ * verliert den Fokus.
+ */
+function Koordinatenfeld({ label, aria, roh, onRoh }: { label: string; aria: string; roh: string; onRoh: (s: string) => void }) {
+  return (
+    <label className="flex items-center gap-1.5 text-sm">
+      <span className={W_MUTED}>{label}</span>
+      <input
+        type="text"
+        inputMode="decimal"
+        aria-label={aria}
+        className={`w-20 text-right font-mono ${W_INPUT}`}
+        value={roh}
+        onChange={(e) => onRoh(e.target.value)}
+      />
+    </label>
+  );
+}
+
+export function FehlermassRechner() {
+  const [v, setV] = useState<[number, number]>([3, 4]);
+  const [vt, setVt] = useState<[number, number]>([3.2, 4.3]);
+  // Zahlenfelder halten Strings (craft.md): sonst lassen sich „−" und „0," nicht tippen.
+  const [text, setText] = useState<Record<string, string>>({});
+
+  const d: [number, number] = [vt[0] - v[0], vt[1] - v[1]];
+  const nd = Math.hypot(d[0], d[1]);
+  const nv = Math.hypot(v[0], v[1]);
+  const nvt = Math.hypot(vt[0], vt[1]);
+  const delta = nv > 0 ? nd / nv : NaN;
+  const unten = nv * (1 - delta);
+  const oben = nv * (1 + delta);
+  const tol = 0.1 * nv; // Radius des 10-%-Kreises um die Spitze von v
+
+  const halten = (p: [number, number]): [number, number] => [
+    clamp(p[0], W0 + 0.1, W1 - 0.1),
+    clamp(p[1], W0 + 0.1, W1 - 0.1),
+  ];
+  const zieh = useDrag<"v" | "vt">({
+    feld: { x0: FX, y0: FY, w: FW, h: FH },
+    welt: { x0: W0, x1: W1, y0: W0, y1: W1 },
+    clamp: (p) => halten(p as [number, number]),
+    greifPosition: (id) => (id === "v" ? v : vt),
+    onDrag: (p, id) => {
+      const q: [number, number] = [Math.round(p[0] * 100) / 100, Math.round(p[1] * 100) / 100];
+      setText({});
+      if (id === "v") setV(q);
+      else setVt(q);
+    },
+  });
+
+  const feld = (id: string, label: string, aria: string, wert: number, setzen: (n: number) => void) => (
+    <Koordinatenfeld
+      label={label}
+      aria={aria}
+      roh={text[id] ?? fmtDe(wert, 2)}
+      onRoh={(s) => {
+        setText((t) => ({ ...t, [id]: s }));
+        const n = Number(s.trim().replace(/,/g, ".").replace(/−/g, "-"));
+        if (s.trim() !== "" && Number.isFinite(n)) setzen(clamp(n, W0 + 0.1, W1 - 0.1));
+      }}
+    />
+  );
+
+  const gitter = [0, 1, 2, 3, 4, 5];
+
+  const verdikt =
+    nv < 0.2 ? (
+      <Verdikt kind="warn" titel="Grenzfall ‖v‖ → 0.">
+        Der absolute Fehler <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} bleibt
+        definiert, der relative nicht: Definition 4.1.2 verlangt{" "}
+        <M>{"\\left\\| \\bv \\right\\| \\neq 0"}</M>. Auch Lemma 4.1.3 sagt hier nichts mehr, denn
+        das Band um den Ursprung schrumpft mit <M>{"\\left\\| \\bv \\right\\|"}</M> auf einen Punkt.
+      </Verdikt>
+    ) : delta < 0.01 ? (
+      <Verdikt kind="ok" titel="Unter 1 %.">
+        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % liegt weit innerhalb des
+        gestrichelten Kreises. Lemma 4.1.3 klemmt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> =
+        {" "}
+        {fmtDe(nvt, 3)} damit zwischen {fmtDe(unten, 3)} und {fmtDe(oben, 3)}: ein Ring, der auf dem
+        Bild kaum noch Dicke hat.
+      </Verdikt>
+    ) : delta <= 0.1 ? (
+      <Verdikt kind="ok" titel="Innerhalb der 10-%-Toleranz.">
+        <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} ist höchstens{" "}
+        {fmtDe(tol, 3)} = 0,1 · <M>{"\\left\\| \\bv \\right\\|_2"}</M>, also{" "}
+        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % ≤ 10 %. Nach Lemma 4.1.3
+        liegt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> = {fmtDe(nvt, 3)} damit im orangen Band
+        [{fmtDe(unten, 3)}; {fmtDe(oben, 3)}], und die Spitze von <M>{"\\wt{\\bv}"}</M> tatsächlich
+        im Ring.
+      </Verdikt>
+    ) : (
+      <Verdikt kind="fail" titel="Toleranz gerissen.">
+        <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} übersteigt{" "}
+        {fmtDe(tol, 3)}, der relative Fehler ist {fmtDe(100 * delta, 1)} %. Der orange Ring aus
+        Lemma 4.1.3 ist entsprechend breit: <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> darf
+        irgendwo zwischen {fmtDe(unten, 3)} und {fmtDe(oben, 3)} liegen. Als Garantie über die
+        Länge von <M>{"\\wt{\\bv}"}</M> ist das fast nichts wert.
+      </Verdikt>
+    );
+
+  return (
+    <div className="my-3 space-y-2">
+      <Aufgabe>
+        Ziehen wir die blaue Spitze <M>{"\\wt{\\bv}"}</M>: Solange sie im gestrichelten Kreis um{" "}
+        <M>{"\\bv"}</M> bleibt, ist <M>{"\\corange{\\delta_{\\bv}}"}</M> höchstens 10 %.
+      </Aufgabe>
+
+      <svg
+        viewBox={`0 0 ${S} ${S}`}
+        className="max-w-full h-auto"
+        role="img"
+        aria-label={`Die Ebene mit dem wahren Vektor v, seiner Näherung v-Schlange und dem Fehlerpfeil dazwischen; der relative Fehler beträgt ${fmtDe(100 * delta, 1)} Prozent.`}
+        {...zieh.svgProps}
+      >
+        <rect x={FX} y={FY} width={FW} height={FH} fill="var(--w-bg)" />
+        {gitter.map((t) => (
+          <g key={`g${t}`}>
+            <line x1={px(t)} y1={FY} x2={px(t)} y2={FY + FH} stroke="var(--w-grid)" strokeWidth={1} />
+            <line x1={FX} y1={py(t)} x2={FX + FW} y2={py(t)} stroke="var(--w-grid)" strokeWidth={1} />
+          </g>
+        ))}
+
+        {/* Lemma-4.1.3-Band: alle Punkte mit Länge zwischen ‖v‖(1−δ) und ‖v‖(1+δ) */}
+        {nv > 0.2 && Number.isFinite(delta) && (
+          <path
+            d={
+              `M ${px(0) + oben * skala} ${py(0)} A ${oben * skala} ${oben * skala} 0 1 0 ${px(0) - oben * skala} ${py(0)}` +
+              ` A ${oben * skala} ${oben * skala} 0 1 0 ${px(0) + oben * skala} ${py(0)} Z` +
+              ` M ${px(0) + Math.max(unten, 0) * skala} ${py(0)} A ${Math.max(unten, 0) * skala} ${Math.max(unten, 0) * skala} 0 1 0 ${px(0) - Math.max(unten, 0) * skala} ${py(0)}` +
+              ` A ${Math.max(unten, 0) * skala} ${Math.max(unten, 0) * skala} 0 1 0 ${px(0) + Math.max(unten, 0) * skala} ${py(0)} Z`
+            }
+            fillRule="evenodd"
+            fill={ORANGE}
+            fillOpacity={0.16}
+            stroke={ORANGE}
+            strokeWidth={0.8}
+            strokeOpacity={0.7}
+            pointerEvents="none"
+          />
+        )}
+
+        {/* Achsen */}
+        <line x1={FX} y1={py(0)} x2={FX + FW} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1.2} />
+        <line x1={px(0)} y1={FY} x2={px(0)} y2={FY + FH} stroke="var(--w-axis)" strokeWidth={1.2} />
+        {gitter.filter((t) => t > 0).map((t) => (
+          <g key={`t${t}`}>
+            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={10} fill="var(--w-muted)">
+              {t}
+            </text>
+            <text x={px(0) - 6} y={py(t) + 4} textAnchor="end" fontSize={10} fill="var(--w-muted)">
+              {t}
+            </text>
+          </g>
+        ))}
+
+        {/* 10-%-Toleranzkreis um die Spitze von v */}
+        {nv > 0.2 && (
+          <circle
+            cx={px(v[0])}
+            cy={py(v[1])}
+            r={tol * skala}
+            fill="none"
+            stroke={ORANGE}
+            strokeWidth={1.4}
+            strokeDasharray="5 4"
+            pointerEvents="none"
+          />
+        )}
+
+        <Pfeil x={v[0]} y={v[1]} farbe={GRUEN} />
+        <Pfeil x={vt[0]} y={vt[1]} farbe={BLAU} />
+
+        {/* absoluter Fehler Δ als Pfeil von der Spitze von v zur Spitze von ṽ */}
+        {nd > 1e-6 && (
+          <g pointerEvents="none">
+            <line
+              x1={px(v[0])}
+              y1={py(v[1])}
+              x2={px(vt[0])}
+              y2={py(vt[1])}
+              stroke={ROT}
+              strokeWidth={2.4}
+            />
+            <text
+              x={px((v[0] + vt[0]) / 2) + 10}
+              y={py((v[1] + vt[1]) / 2)}
+              fontSize={12}
+              fontWeight={600}
+              fill={ROT}
+            >
+              Δ
+            </text>
+          </g>
+        )}
+
+        <text x={px(v[0]) - 8} y={py(v[1]) + 18} fontSize={12} fontWeight={600} fill={GRUEN} pointerEvents="none">
+          v
+        </text>
+        <text x={px(vt[0]) + 10} y={py(vt[1]) - 8} fontSize={12} fontWeight={600} fill={BLAU} pointerEvents="none">
+          ṽ
+        </text>
+
+        <DragHandle x={px(v[0])} y={py(v[1])} farbe={GRUEN} aktiv={zieh.dragging === "v"} {...zieh.handleProps("v")} />
+        <DragHandle x={px(vt[0])} y={py(vt[1])} farbe={BLAU} aktiv={zieh.dragging === "vt"} {...zieh.handleProps("vt")} />
+      </svg>
+
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <div className="flex items-center gap-2">
+          <span className="font-semibold" style={{ color: GRUEN }}>
+            v
+          </span>
+          {feld("v1", "₁", "v 1", v[0], (n) => setV([n, v[1]]))}
+          {feld("v2", "₂", "v 2", v[1], (n) => setV([v[0], n]))}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-semibold" style={{ color: BLAU }}>
+            ṽ
+          </span>
+          {feld("w1", "₁", "v Schlange 1", vt[0], (n) => setVt([n, vt[1]]))}
+          {feld("w2", "₂", "v Schlange 2", vt[1], (n) => setVt([vt[0], n]))}
+        </div>
+        <button
+          type="button"
+          className={`text-xs underline ${W_MUTED}`}
+          onClick={() => {
+            setText({});
+            setV([3, 4]);
+            setVt([3.2, 4.3]);
+          }}
+        >
+          zurück zu Beispiel 4.1.4
+        </button>
+      </div>
+
+      <div className={`grid gap-x-6 gap-y-0.5 p-3 font-mono text-xs sm:grid-cols-2 ${W_PANEL}`}>
+        <span style={{ color: ROT }}>
+          Δ = ṽ − v = ({fmtDe(d[0], 2)}; {fmtDe(d[1], 2)})
+        </span>
+        <span>
+          <span style={{ color: ROT }}>‖Δ‖₂</span> = {fmtDe(nd, 4)}
+        </span>
+        <span>
+          <span style={{ color: GRUEN }}>‖v‖₂</span> = {fmtDe(nv, 4)}
+          {"  "}
+          <span style={{ color: BLAU }}>‖ṽ‖₂</span> = {fmtDe(nvt, 4)}
+        </span>
+        <span>
+          <span style={{ color: ORANGE }}>δ</span> ={" "}
+          {nv > 0 ? `${fmtDe(delta, 4)} = ${fmtDe(100 * delta, 2)} %` : "nicht definiert"}
+        </span>
+        <span className="sm:col-span-2">
+          <span style={{ color: ORANGE }}>Lemma 4.1.3</span>: {fmtDe(unten, 4)} ≤ ‖ṽ‖₂ ={" "}
+          {fmtDe(nvt, 4)} ≤ {fmtDe(oben, 4)}
+        </span>
+      </div>
+
+      {verdikt}
+    </div>
+  );
+}
+
+/* ================================================================== */
+/* Fehlerzerlegungs-Explorer (Beispiel 4.1.6, e^π)                    */
+/* ================================================================== */
+
+/**
+ * DIE EINE EINSICHT: Der Gesamtfehler zerfällt in zwei Anteile mit getrennten
+ * Stellschrauben — mehr Reihenglieder drücken nur den roten Anteil, ein
+ * genauerer Input nur den orangen; wer am falschen dreht, ändert nichts.
+ */
 
 function FehlerBalken({
   label,
@@ -58,11 +415,11 @@ function FehlerBalken({
   const pct = Math.min(Math.abs(value) / vmax, 1) * 50;
   return (
     <div className="flex items-center gap-2 text-sm">
-      <span className="w-48 shrink-0 text-right" style={{ color }}>
+      <span className="w-44 shrink-0 text-right text-xs sm:w-52 sm:text-sm" style={{ color }}>
         {label}
       </span>
       <div className="relative h-5 grow overflow-hidden rounded bg-slate-200/70 dark:bg-slate-800/70">
-        <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: NEUTRAL }} />
+        <div className="absolute inset-y-0 left-1/2 w-px" style={{ backgroundColor: FMM_COLORS.grau }} />
         <div
           className="absolute bottom-1 top-1 rounded-sm"
           style={{
@@ -72,7 +429,7 @@ function FehlerBalken({
           }}
         />
       </div>
-      <span className="w-28 shrink-0 text-right font-mono text-xs">{fmtDE(value)}</span>
+      <span className="w-24 shrink-0 text-right font-mono text-xs">{fmtWiss(value)}</span>
     </div>
   );
 }
@@ -91,160 +448,84 @@ export function FehlerzerlegungExplorer() {
   const gesamt = fTilde - fWahr; // Gesamtfehler
   const vmax = Math.max(Math.abs(algoF), Math.abs(folgeF), Math.abs(gesamt), 1e-15);
 
-  let status: string;
-  if (N === 2 && k === 0) {
-    status =
-      "Das ist genau die Rechnung aus Beispiel 4.1.6: −11,586 + (−3,055) = −14,641. " +
-      "Der rote Algorithmusfehler dominiert deutlich. Probieren wir aus, was mehr " +
-      "Taylor-Terme bzw. ein genauerer Input ändern.";
-  } else if (Math.abs(algoF) > 2 * Math.abs(folgeF)) {
-    status =
-      "Zurzeit dominiert der rote Algorithmusfehler: Mehr Taylor-Terme (N erhöhen) " +
-      "helfen am meisten, ein genauerer Input allein brächte fast nichts.";
-  } else if (Math.abs(folgeF) > 2 * Math.abs(algoF)) {
-    status =
-      "Zurzeit dominiert der orange Folgefehler: Der Algorithmus ist genau genug, " +
-      "jetzt begrenzt die Qualität des Inputs das Ergebnis; kein noch so großes N " +
-      "kann das reparieren, nur ein genaueres π̃.";
-  } else {
-    status =
-      "Beide Anteile sind ähnlich groß: Hier lohnt es sich, an Algorithmus UND " +
-      "Input gleichzeitig zu arbeiten.";
-  }
+  const verdikt =
+    N === 2 && k === 0 ? (
+      <Verdikt kind="neutral" titel="Beispiel 4.1.6.">
+        Genau die Rechnung aus dem Text: {fmtDe(algoF, 3)} + ({fmtDe(folgeF, 3)}) ={" "}
+        {fmtDe(gesamt, 3)}. Der rote Algorithmusfehler ist fast viermal so groß wie der orange
+        Folgefehler.
+      </Verdikt>
+    ) : Math.abs(algoF) > 2 * Math.abs(folgeF) ? (
+      <Verdikt kind="warn" titel="Der Algorithmus dominiert.">
+        Der rote Anteil ist {fmtDe(Math.abs(algoF) / Math.abs(folgeF), 1)}-mal so groß wie der
+        orange. Nach der Zerlegung (4.1.1) hilft hier nur ein besserer Algorithmus (größeres{" "}
+        <M>{"N"}</M>); ein genauerer Input würde den Gesamtfehler kaum bewegen.
+      </Verdikt>
+    ) : Math.abs(folgeF) > 2 * Math.abs(algoF) ? (
+      <Verdikt kind="warn" titel="Der Input dominiert.">
+        Der orange Anteil ist {fmtDe(Math.abs(folgeF) / Math.abs(algoF), 1)}-mal so groß wie der
+        rote. Der Algorithmus ist genau genug; kein noch so großes <M>{"N"}</M> repariert das,
+        denn (4.1.1) lässt den zweiten Summanden davon unberührt. Nur ein genaueres{" "}
+        <M>{"\\wt{\\pi}"}</M> hilft.
+      </Verdikt>
+    ) : (
+      <Verdikt kind="ok" titel="Beide Anteile gleichauf.">
+        Roter und oranger Balken sind auf einen Faktor 2 gleich groß. Hier wäre es Verschwendung,
+        nur an einer der beiden Schrauben zu drehen: Der Gesamtfehler halbiert sich erst, wenn
+        beide Anteile kleiner werden.
+      </Verdikt>
+    );
 
   return (
-    <div className="my-3 max-w-2xl rounded border border-slate-300 p-3 dark:border-slate-600">
-      <p className="mb-2 text-sm">
-        Wir berechnen <M>{"f(\\pi) = e^{\\pi}"}</M> näherungsweise: als Algorithmus{" "}
-        <M>{"\\wt{f}"}</M> dient die nach dem Grad <M>{"N"}</M> abgebrochene Reihe{" "}
-        <M>{"\\wt{f}(x) = \\sum_{n=0}^{N} x^n/n!"}</M>, als Input <M>{"\\wt{\\pi}"}</M> der auf{" "}
-        <M>{"k"}</M> Nachkommastellen gerundete Wert von <M>{"\\pi"}</M>. Schieben wir die
-        Regler und beobachten, wie sich der Gesamtfehler auf die beiden Anteile aus der
-        Zerlegung (4.1.1) verteilt.
-      </p>
-      <Slider label="Abbruchordnung N" value={N} onChange={(v) => setN(Math.round(v))} min={0} max={10} step={1} fmt={(v) => String(Math.round(v))} />
-      <Slider label="Nachkommastellen k" value={k} onChange={(v) => setK(Math.round(v))} min={0} max={6} step={1} fmt={(v) => String(Math.round(v))} />
-      <div className="my-2 grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono text-xs sm:grid-cols-4">
+    <div className="my-3 space-y-2">
+      <Aufgabe>
+        Schieben wir <M>{"N"}</M> und <M>{"k"}</M> und suchen die Einstellung, bei der beide
+        Balken gleich lang sind.
+      </Aufgabe>
+      <Slider
+        label="Abbruchordnung N"
+        value={N}
+        onChange={(v) => setN(Math.round(v))}
+        min={0}
+        max={10}
+        step={1}
+        fmt={(v) => String(Math.round(v))}
+      />
+      <Slider
+        label="Nachkommastellen k"
+        value={k}
+        onChange={(v) => setK(Math.round(v))}
+        min={0}
+        max={6}
+        step={1}
+        fmt={(v) => String(Math.round(v))}
+      />
+      <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 font-mono text-xs sm:grid-cols-4">
         <span>
-          <span style={{ color: FMM.blue }}>π̃</span> = {xt.toLocaleString("de-DE", { minimumFractionDigits: k, maximumFractionDigits: k })}
+          <span style={{ color: BLAU }}>π̃</span> ={" "}
+          {xt.toLocaleString("de-DE", { minimumFractionDigits: k, maximumFractionDigits: k })}
         </span>
         <span>
-          <span style={{ color: FMM.blue }}>f̃(π̃)</span> = {fmtDE(fTilde, 6)}
+          <span style={{ color: BLAU }}>f̃(π̃)</span> = {fmtWiss(fTilde, 6)}
         </span>
         <span>
-          <span style={{ color: NEUTRAL }}>f(π̃) = e^π̃</span> = {fmtDE(fInput, 6)}
+          <span style={{ color: FMM_COLORS.grau }}>f(π̃)</span> = {fmtWiss(fInput, 6)}
         </span>
         <span>
-          <span style={{ color: FMM.green }}>f(π) = e^π</span> = {fmtDE(fWahr, 6)}
+          <span style={{ color: GRUEN }}>f(π)</span> = {fmtWiss(fWahr, 6)}
         </span>
       </div>
-      <div className="my-2 space-y-1">
-        <FehlerBalken label="Fehler im Algorithmus f̃(π̃) − f(π̃)" value={algoF} color={FMM.red} vmax={vmax} />
-        <FehlerBalken label="Folgefehler aus Input f(π̃) − f(π)" value={folgeF} color={FMM.orange} vmax={vmax} />
-        <FehlerBalken label="Gesamtfehler f̃(π̃) − f(π)" value={gesamt} color={FMM.purple} vmax={vmax} />
+      <div className="space-y-1">
+        <FehlerBalken label="Algorithmus f̃(π̃) − f(π̃)" value={algoF} color={ROT} vmax={vmax} />
+        <FehlerBalken label="Folgefehler f(π̃) − f(π)" value={folgeF} color={ORANGE} vmax={vmax} />
+        <FehlerBalken label="Gesamtfehler f̃(π̃) − f(π)" value={gesamt} color={VIOLETT} vmax={vmax} />
       </div>
-      <p className="text-xs" style={{ color: NEUTRAL }}>
-        Probe: <span style={{ color: FMM.red }}>{fmtDE(algoF)}</span> +{" "}
-        <span style={{ color: FMM.orange }}>{fmtDE(folgeF)}</span> ={" "}
-        <span style={{ color: FMM.purple }}>{fmtDE(algoF + folgeF)}</span>. Die Zerlegung geht
-        (bis auf Rundung in der Anzeige) exakt auf.
+      <p className={`text-xs ${W_MUTED}`}>
+        Probe zu (4.1.1): <span style={{ color: ROT }}>{fmtWiss(algoF)}</span> +{" "}
+        <span style={{ color: ORANGE }}>{fmtWiss(folgeF)}</span> ={" "}
+        <span style={{ color: VIOLETT }}>{fmtWiss(algoF + folgeF)}</span>.
       </p>
-      <p className="mt-1 text-sm">{status}</p>
-    </div>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Fehlermaß-Rechner (Vektoren in R²)                                  */
-/* ------------------------------------------------------------------ */
-
-function Feld({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (s: string) => void;
-}) {
-  return (
-    <input
-      aria-label={label}
-      className="w-20 rounded border border-slate-300 bg-white px-2 py-1 text-right font-mono text-sm dark:border-slate-600 dark:bg-slate-900"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  );
-}
-
-export function FehlermassRechner() {
-  const [v1, setV1] = useState("3");
-  const [v2, setV2] = useState("4");
-  const [w1, setW1] = useState("3,2");
-  const [w2, setW2] = useState("4,3");
-
-  const p = (s: string) => parseFloat(s.trim().replace(",", "."));
-  const a = [p(v1), p(v2)];
-  const b = [p(w1), p(w2)];
-  const ok = a.every(Number.isFinite) && b.every(Number.isFinite);
-
-  const d = ok ? [b[0] - a[0], b[1] - a[1]] : [NaN, NaN];
-  const nd = Math.hypot(d[0], d[1]);
-  const nv = Math.hypot(a[0], a[1]);
-  const delta = nv > 0 ? nd / nv : NaN;
-
-  return (
-    <div className="my-3 max-w-2xl rounded border border-slate-300 p-3 dark:border-slate-600">
-      <p className="mb-2 text-sm">
-        Ändern wir den wahren Vektor <M>{"\\cgreen{\\bv}"}</M> oder seine Näherung{" "}
-        <M>{"\\cblue{\\wt{\\bv}}"}</M> und beobachten, wie <M>{"\\cred{\\bDelta_{\\bv}}"}</M>,{" "}
-        <M>{"\\left\\| \\cred{\\bDelta_{\\bv}} \\right\\|_2"}</M> und{" "}
-        <M>{"\\corange{\\delta_{\\bv}}"}</M> reagieren. Die Voreinstellung ist Beispiel 4.1.4.
-      </p>
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold" style={{ color: FMM.green }}>
-            v =
-          </span>
-          <div className="flex flex-col gap-1">
-            <Feld label="v1" value={v1} onChange={setV1} />
-            <Feld label="v2" value={v2} onChange={setV2} />
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="font-semibold" style={{ color: FMM.blue }}>
-            ṽ =
-          </span>
-          <div className="flex flex-col gap-1">
-            <Feld label="ṽ1" value={w1} onChange={setW1} />
-            <Feld label="ṽ2" value={w2} onChange={setW2} />
-          </div>
-        </div>
-        {ok ? (
-          <div className="flex flex-col gap-0.5 font-mono text-xs">
-            <span style={{ color: FMM.red }}>
-              Δ = ṽ − v = ({fmtDE(d[0])}; {fmtDE(d[1])})
-            </span>
-            <span>
-              <span style={{ color: FMM.red }}>‖Δ‖₂</span> = {fmtDE(nd)}
-            </span>
-            <span>
-              <span style={{ color: FMM.green }}>‖v‖₂</span> = {fmtDE(nv)}
-            </span>
-            <span>
-              <span style={{ color: FMM.orange }}>δ</span> ={" "}
-              {nv > 0 ? `${fmtDE(delta)} ≈ ${fmtDE(delta * 100, 3)} %` : "nicht definiert (‖v‖₂ = 0)"}
-            </span>
-          </div>
-        ) : (
-          <span className="text-xs" style={{ color: NEUTRAL }}>
-            Bitte in alle vier Felder Zahlen eintragen (Dezimalkomma oder -punkt).
-          </span>
-        )}
-      </div>
-      <p className="mt-2 text-xs" style={{ color: NEUTRAL }}>
-        Vorsicht beim Grenzfall v = 0: Der absolute Fehler bleibt definiert, der relative nicht.
-      </p>
+      {verdikt}
     </div>
   );
 }

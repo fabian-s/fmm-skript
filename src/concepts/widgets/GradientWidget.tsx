@@ -1,95 +1,194 @@
-import { useState } from "react";
-import { Slider } from "../../lib";
-
 /**
- * Contour plot of φ(x) = x₁² + 2x₂² with a movable point and its gradient
- * arrow; the arrow is perpendicular to the contour and points uphill.
+ * Konzept-Widget `gradient`.
+ *
+ * DIE EINE EINSICHT: Der Gradient zeigt in die Richtung des stärksten Anstiegs
+ * und steht damit senkrecht auf der Höhenlinie durch den Punkt; jede andere
+ * Richtung u hat die kleinere Steigung D_uφ = ∇φᵀu.
+ *
+ * FARBROLLEN: blau = Höhenlinien von φ; rot = der Gradient ∇φ; grün = die
+ * gewählte Richtung u; orange = der gezogene Punkt. Achsen, Ticks und
+ * Beschriftungen aus den Theme-Variablen (--w-axis / --w-grid / --w-muted).
+ *
+ * PROVENIENZ: eigener Aufbau; Ziehen über `useDrag` aus der Lib.
+ *
+ * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20):
+ *   φ(x) = x₁² + 2x₂², ∇φ = (2x₁, 4x₂) — numerisch gegen zentrale Differenzen
+ *   an drei Punkten geprüft. Die Höhenlinie φ = v ist die Ellipse mit den
+ *   Halbachsen √v und √(v/2); gezeichnet sind v ∈ {0,5; 1; 2; 3}.
+ *   D_uφ = ∇φᵀu verschwindet genau tangential (Kontrollrechnung bei
+ *   x = (0,9; 0,6): θ = 2,498).
+ *   RANDFALL: im Ursprung ist ∇φ = 0, dann ist D_uφ = 0 für jedes θ — dieser
+ *   Fall bekommt ein eigenes Verdikt und wird nicht als „tangential“ gemeldet.
  */
+import { useState } from "react";
+import {
+  Aufgabe,
+  DragHandle,
+  FMM_COLORS,
+  fmtDe,
+  Slider,
+  useDrag,
+  Verdikt,
+  W_PANEL,
+  W_TEXT,
+} from "../../lib";
+
+const W = 280;
+const M = 26; // Rand fuer Ticks
+const S = 56; // Pixel pro Welteinheit
+
 export function GradientWidget() {
-  const [a, setA] = useState(0.9);
-  const [b, setB] = useState(0.6);
-  const g: [number, number] = [2 * a, 4 * b];
-  // world [-2,2]^2 mapped to a 240x240 viewBox with 10px padding
-  const S = 60; // px per world unit
-  const px = (x: number) => 130 + x * S;
-  const py = (y: number) => 130 - y * S;
-  const levels = [0.5, 1, 2, 3];
-  const arrowScale = 0.15;
-  const tip: [number, number] = [a + arrowScale * g[0], b + arrowScale * g[1]];
+  const [p, setP] = useState<[number, number]>([0.9, 0.6]);
+  const [theta, setTheta] = useState(0.7);
+  const mid = (W - M) / 2 + M / 2;
+  const px = (x: number) => mid + x * S;
+  const py = (y: number) => mid - y * S;
+  const g: [number, number] = [2 * p[0], 4 * p[1]];
+  const ng = Math.hypot(...g);
+  const u: [number, number] = [Math.cos(theta), Math.sin(theta)];
+  const d = g[0] * u[0] + g[1] * u[1];
+  const stationaer = ng < 0.08;
+  const tangential = !stationaer && Math.abs(d) < 0.08;
+  const drag = useDrag<"p">({
+    feld: { x0: mid - 1.9 * S, y0: mid - 1.9 * S, w: 3.8 * S, h: 3.8 * S },
+    welt: { x0: -1.9, x1: 1.9, y0: -1.9, y1: 1.9 },
+    clamp: ([x, y]) => [Math.max(-1.5, Math.min(1.5, x)), Math.max(-1.2, Math.min(1.2, y))],
+    onDrag: (q) => setP(q),
+    greifPosition: () => p,
+  });
   return (
-    <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Slider label="x₁" value={a} onChange={setA} min={-1.5} max={1.5} step={0.05} />
-      <Slider label="x₂" value={b} onChange={setB} min={-1.2} max={1.2} step={0.05} />
-      <p className="my-1 font-mono text-xs">
-        φ(x) = {(a * a + 2 * b * b).toFixed(2)}, ∇φ(x) = ({g[0].toFixed(2)},{" "}
-        {g[1].toFixed(2)})ᵀ
-      </p>
+    <div className={`mt-2 p-2 ${W_PANEL}`}>
+      <Aufgabe>Ziehen wir den Punkt und drehen wir die Richtung u.</Aufgabe>
       <svg
-        viewBox="0 0 260 260"
-        width={260}
-        height={260}
-        className="rounded border border-slate-600 bg-white"
+        viewBox={`0 0 ${W} ${W}`}
+        className="max-w-full h-auto"
+        role="img"
+        aria-label={`Höhenlinien von φ mit dem Gradienten und der Richtung u am Punkt (${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)}).`}
+        {...drag.svgProps}
       >
-        {/* axes */}
-        <line x1={px(-2)} y1={py(0)} x2={px(2)} y2={py(0)} stroke="#94a3b8" />
-        <line x1={px(0)} y1={py(-2)} x2={px(0)} y2={py(2)} stroke="#94a3b8" />
-        <text x={px(1.8)} y={py(0) - 5} fontSize={11} fill="#475569">
-          x₁
-        </text>
-        <text x={px(0) + 5} y={py(1.8)} fontSize={11} fill="#475569">
-          x₂
-        </text>
-        {[-2, -1, 1, 2].map((t) => (
-          <g key={t}>
-            <line x1={px(t)} y1={py(0) - 3} x2={px(t)} y2={py(0) + 3} stroke="#94a3b8" />
-            <text x={px(t) - 4} y={py(0) + 14} fontSize={9} fill="#64748b">
-              {t}
+        <defs>
+          <marker id="grad-spitze" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0L5,3L0,6z" fill={FMM_COLORS.rot} />
+          </marker>
+        </defs>
+        {[-1, 1].map((t) => (
+          <g key={`t${t}`}>
+            <line x1={px(t)} y1={py(0) - 4} x2={px(t)} y2={py(0) + 4} stroke="var(--w-axis)" />
+            <text x={px(t)} y={py(0) + 14} textAnchor="middle" fontSize={9} fill="var(--w-muted)">
+              {fmtDe(t, 0)}
+            </text>
+            <line x1={px(0) - 4} y1={py(t)} x2={px(0) + 4} y2={py(t)} stroke="var(--w-axis)" />
+            <text x={px(0) - 6} y={py(t) + 3} textAnchor="end" fontSize={9} fill="var(--w-muted)">
+              {fmtDe(t, 0)}
             </text>
           </g>
         ))}
-        {/* contours x² + 2y² = k are ellipses with semi-axes √k, √(k/2) */}
-        {levels.map((k) => (
-          <ellipse
-            key={k}
-            cx={px(0)}
-            cy={py(0)}
-            rx={Math.sqrt(k) * S}
-            ry={Math.sqrt(k / 2) * S}
-            fill="none"
-            stroke="#7dd3fc"
-            strokeWidth={1.5}
-          />
+        <line x1={M} y1={py(0)} x2={W - 4} y2={py(0)} stroke="var(--w-axis)" />
+        <line x1={px(0)} y1="4" x2={px(0)} y2={W - M} stroke="var(--w-axis)" />
+        <text x={W - 4} y={py(0) - 6} textAnchor="end" fontSize={10} fill="var(--w-muted)">
+          x₁
+        </text>
+        <text x={px(0) + 6} y={13} fontSize={10} fill="var(--w-muted)">
+          x₂
+        </text>
+        {[0.5, 1, 2, 3].map((v) => (
+          <g key={v}>
+            <ellipse
+              cx={px(0)}
+              cy={py(0)}
+              rx={Math.sqrt(v) * S}
+              ry={Math.sqrt(v / 2) * S}
+              fill="none"
+              stroke={FMM_COLORS.blau}
+              opacity=".55"
+            />
+            <text
+              x={px(Math.sqrt(v))}
+              y={py(0) - 5}
+              textAnchor="middle"
+              fontSize={8}
+              fill={FMM_COLORS.blau}
+            >
+              {fmtDe(v, 1)}
+            </text>
+          </g>
         ))}
-        {/* gradient arrow */}
-        <defs>
-          <marker
-            id="grad-arrowhead"
-            markerWidth="8"
-            markerHeight="8"
-            refX="6"
-            refY="3"
-            orient="auto"
-          >
-            <path d="M0,0 L6,3 L0,6 z" fill="#dc2626" />
-          </marker>
-        </defs>
         <line
-          x1={px(a)}
-          y1={py(b)}
-          x2={px(tip[0])}
-          y2={py(tip[1])}
-          stroke="#dc2626"
-          strokeWidth={2.5}
-          markerEnd="url(#grad-arrowhead)"
+          x1={px(p[0])}
+          y1={py(p[1])}
+          x2={px(p[0] + 0.7 * u[0])}
+          y2={py(p[1] + 0.7 * u[1])}
+          stroke={FMM_COLORS.gruen}
+          strokeWidth="2"
+          strokeDasharray="4 3"
         />
-        <circle cx={px(a)} cy={py(b)} r={4} fill="#f59e0b" />
+        <text
+          x={px(p[0] + 0.78 * u[0])}
+          y={py(p[1] + 0.78 * u[1]) + 3}
+          fontSize={10}
+          fill={FMM_COLORS.gruen}
+        >
+          u
+        </text>
+        {!stationaer && (
+          <line
+            x1={px(p[0])}
+            y1={py(p[1])}
+            x2={px(p[0] + 0.15 * g[0])}
+            y2={py(p[1] + 0.15 * g[1])}
+            stroke={FMM_COLORS.rot}
+            strokeWidth="3"
+            markerEnd="url(#grad-spitze)"
+          />
+        )}
+        <DragHandle
+          x={px(p[0])}
+          y={py(p[1])}
+          farbe={FMM_COLORS.orange}
+          aktiv={drag.dragging === "p"}
+          {...drag.handleProps("p")}
+        />
       </svg>
-      <p className="mt-1 text-xs text-slate-300">
-        Die blauen Kurven sind Höhenlinien von φ(x) = x₁² + 2x₂² (Niveaus 0.5,
-        1, 2, 3). Der rote Pfeil ∇φ = (2x₁, 4x₂)ᵀ kreuzt die Höhenlinie immer
-        im rechten Winkel und zeigt zu höheren Werten; im Minimum in der Mitte
-        schrumpft er auf null.
+      <p className={`text-xs ${W_TEXT}`}>
+        φ(x) = x₁² + 2x₂² · Blau: Höhenlinien (mit ihrem Wert); Rot: ∇φ; Grün: Richtung u;
+        Orange: der gezogene Punkt.
       </p>
+      <Slider
+        label="x₁"
+        value={p[0]}
+        onChange={(x) => setP([x, p[1]])}
+        min={-1.5}
+        max={1.5}
+        step={0.05}
+      />
+      <Slider
+        label="x₂"
+        value={p[1]}
+        onChange={(y) => setP([p[0], y])}
+        min={-1.2}
+        max={1.2}
+        step={0.05}
+      />
+      <Slider label="Richtung θ" value={theta} onChange={setTheta} min={0} max={6.28} step={0.02} />
+      <Verdikt kind={stationaer ? "warn" : tangential ? "ok" : "neutral"}>
+        {stationaer ? (
+          <>
+            Hier ist ∇φ = 0, der Punkt ist stationär. Dann verschwindet D<sub>u</sub>φ für jede
+            Richtung, und „steilster Anstieg“ ergibt keinen Sinn mehr — das ist genau die
+            Bedingung, die ein Minimum erfüllen muss.
+          </>
+        ) : tangential ? (
+          <>
+            D<sub>u</sub>φ = {fmtDe(d, 2)} ≈ 0: u liegt tangential zur Höhenlinie, entlang dieser
+            Richtung ändert sich φ lokal nicht. Der rote Pfeil steht senkrecht darauf.
+          </>
+        ) : (
+          <>
+            D<sub>u</sub>φ = {fmtDe(d, 2)}, der größtmögliche Wert ist ‖∇φ‖ = {fmtDe(ng, 2)} und
+            wird nur in der roten Gradientrichtung erreicht.
+          </>
+        )}
+      </Verdikt>
     </div>
   );
 }

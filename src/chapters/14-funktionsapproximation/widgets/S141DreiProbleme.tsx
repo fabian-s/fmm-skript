@@ -1,5 +1,17 @@
+/**
+ * F1 — DIE EINE EINSICHT: Approximation, Interpolation und Glättung stellen
+ * verschiedene Forderungen an dieselben Funktionswerte.
+ * FARBROLLEN: Daten blau, Schätzer/Interpolant grün, Residuen rot, wahre
+ * Funktion neutral grau.
+ * PROVENIENZ: Eigenbau als Ersatz der drei Folienbilder; fester, deterministischer
+ * Rauschvektor.
+ * VERIFIZIERTE ZAHLEN: f liegt auf [0,1] in [0,220; 0,780]; g verschwindet an
+ * 0;0,2;…;1; bei sigma ≤ 0,12 liegen die 12 Beobachtungen in [0,180;0,957]
+ * und ihr RMS-Abstand ist sigma.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState, type ReactNode } from "react";
-import { M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * Die drei Problemvarianten aus §14.1 als drei Tafeln nebeneinander
@@ -13,7 +25,7 @@ import { M, Slider } from "../../../lib";
  *
  * Verifiziert (node, gen-noise-s141.mjs):
  *  - f(x) = 0,5 + 0,28 sin(2 pi x - 0,9) laeuft auf [0,1] zwischen 0,220
- *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,956] und
+ *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,957] und
  *    damit im Bildausschnitt.
  *  - g(x) = 0,06 sin(5 pi x) verschwindet an allen Knoten 0; 0,2; ...; 1
  *    (numerisch < 1e-16), die gruene Kurve der mittleren Tafel interpoliert
@@ -24,12 +36,10 @@ import { M, Slider } from "../../../lib";
  * Farbcode Kapitel 14: Daten blau, Schaetzer/Interpolant gruen,
  * Problemzone (hier die Residuen) rot; die unbekannte wahre Funktion f
  * bleibt neutral grau.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const DATEN = "#0072B2";
-const SCHAETZER = "#009E73";
-const FEHLER = "#D55E00";
-const WAHR = "#64748b";
+const { blau: DATEN, gruen: SCHAETZER, rot: FEHLER, grau: WAHR, hellgrau: RAHMEN } = FMM_COLORS;
 
 const W = 210;
 const H = 150;
@@ -52,9 +62,11 @@ const g = (x: number) => 0.06 * Math.sin(5 * Math.PI * x);
 
 /** Beobachtungsstellen und fester Rauschvektor der Glaettungstafel. */
 const XOBS = [0.042, 0.125, 0.208, 0.292, 0.375, 0.458, 0.542, 0.625, 0.708, 0.792, 0.875, 0.958];
-const ZOBS = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
+const ZOBS_ROH = [-0.245, -0.912, -0.221, -2.183, 0.304, 1.66, 0.197, -0.441, 1.272, 1.185, -0.348, -0.267];
+const Z_RMS = Math.sqrt(ZOBS_ROH.reduce((summe, z) => summe + z * z, 0) / ZOBS_ROH.length);
+const ZOBS = ZOBS_ROH.map((z) => z / Z_RMS);
 
-const fmt = (v: number, d = 2) => v.toFixed(d).replace(".", ",").replace(/^-/, "−");
+const fmt = fmtDe;
 
 /** Polylinie einer Funktion ueber [0, 1] als SVG-points-String. */
 function kurve(fn: (x: number) => number): string {
@@ -71,8 +83,8 @@ function kurve(fn: (x: number) => number): string {
 function Achsen() {
   return (
     <g>
-      <line x1={sx(0)} y1={sy(0)} x2={sx(1)} y2={sy(0)} stroke="#cbd5e1" strokeWidth={1} />
-      <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={sy(1)} stroke="#cbd5e1" strokeWidth={1} />
+      <line x1={sx(0)} y1={sy(0)} x2={sx(1)} y2={sy(0)} stroke={RAHMEN} strokeWidth={1} />
+      <line x1={sx(0)} y1={sy(0)} x2={sx(0)} y2={sy(1)} stroke={RAHMEN} strokeWidth={1} />
       <text x={sx(0)} y={H - 5} fontSize={9} fill={WAHR} textAnchor="middle">
         0
       </text>
@@ -99,7 +111,7 @@ function Tafel({ titel, formula, children }: { titel: string; formula: string; c
   return (
     <div>
       <p className="mb-1 text-center text-sm font-medium">{titel}</p>
-      <svg width={W} height={H} className="rounded border border-slate-300 bg-white dark:border-slate-600">
+      <svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600">
         <Achsen />
         {children}
       </svg>
@@ -121,6 +133,7 @@ export function DreiProbleme() {
   );
   return (
     <div className="my-2">
+      <Aufgabe>Schieben wir das Rauschen auf null und vergleichen die drei Aufgaben.</Aufgabe>
       <div className="flex flex-wrap items-start justify-center gap-4">
         <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
@@ -175,7 +188,7 @@ export function DreiProbleme() {
         step={0.005}
         fmt={(v) => fmt(v, 3)}
       />
-      <p className="mt-1 text-sm">
+      <Verdikt className="mt-1" kind={sigma === 0 ? "ok" : "warn"}>
         {rms === 0 ? (
           "Bei σ = 0 liegen alle zwölf Punkte exakt auf der wahren Funktion. Dann sind die Funktionswerte rauschfrei und dürfen interpoliert werden."
         ) : (
@@ -190,7 +203,7 @@ export function DreiProbleme() {
             mitzeichnen.
           </>
         )}
-      </p>
+      </Verdikt>
     </div>
   );
 }

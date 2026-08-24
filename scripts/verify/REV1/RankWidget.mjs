@@ -1,0 +1,3 @@
+import assert from "node:assert/strict";
+const rank = (A) => { const rows=A.map(r=>r.slice()); let pivot=0; for(let col=0;col<2&&pivot<2;col++){const k=rows.findIndex((r,i)=>i>=pivot&&Math.abs(r[col])>1e-12);if(k<0)continue;[rows[pivot],rows[k]]=[rows[k],rows[pivot]];const d=rows[pivot][col];for(let j=col;j<2;j++)rows[pivot][j]/=d;for(let i=0;i<2;i++)if(i!==pivot){const q=rows[i][col];for(let j=col;j<2;j++)rows[i][j]-=q*rows[pivot][j];}pivot++;}return pivot;};
+const det=([[a,b],[c,d]])=>a*d-b*c; assert.equal(det([[1,2],[2,4]]),0); assert.equal(rank([[1,2],[2,4]]),1); assert.equal(det([[1,2],[2,5]]),1); assert.equal(rank([[1,2],[2,5]]),2); assert.equal(rank([[0,0],[0,0]]),0); console.log("RankWidget: verified");

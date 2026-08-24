@@ -1,6 +1,6 @@
 export const title = "Maschinengenauigkeit (machine epsilon)";
 
-import { FloatGapWidget } from "./widgets/MachineEpsilonWidget";
+import { ToyFloatLine } from "./widgets/FloatingPointWidget";
 
 Computer speichern reelle Zahlen als
 :k[Gleitkommazahlen]{#floating-point} mit
@@ -35,4 +35,11 @@ $\varepsilon^2$ gerade unter die Auflösung der Arithmetik.
 Genau nach diesem Prinzip wählt man z.&nbsp;B. Störungs- und
 Schrittweiten in numerischen Verfahren.
 
-<FloatGapWidget />
+Wie groß ist diese Lücke in einem Spielzeugsystem mit nur wenigen
+Mantissenbits, und was kostet uns das Runden dort relativ?
+
+<ToyFloatLine variante="epsilon" />
+
+Die orange Zone rechts von der 1 ist $\varepsilon$; links davon stehen die
+Striche halb so weit auseinander. Der relative Preis des Rundens bleibt dabei
+derselbe: er übersteigt nie die halbe Lücke.

@@ -1,17 +1,17 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { LabeledPlot, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, Schaetzfrage, Slider, Verdikt } from "../../../lib";
 import type { Series } from "../../../lib";
 
 /**
  * Kosten-Vergleich für §5.3 (Komplexität): J Gleichungssysteme mit derselben
  * Matrix lösen: einmal zerlegen und dann nur noch substituieren
  * (n³/3 + J·n²) gegen jedes Mal komplett neu eliminieren (J·(n³/3 + n²)).
- * Beide Kurven als Funktionen von J auf log₁₀-Skala; Farbcode: grün = mit
- * gespeicherter Zerlegung, rot = jedes Mal neu (FMM-Palette).
+ * Einsicht: Bei zwei rechten Seiten lohnt die gespeicherte Zerlegung bereits.
+ * Farbrollen: gespeicherte Zerlegung grün, Neuansatz rot, κ/Verstärkung orange unbenutzt.
+ * Provenienz: neu für dieses Skript. Zahlen: Schwelle J=2, Kostenformeln in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const GREEN = "#009E73";
-const RED = "#D55E00";
+const { gruen: GREEN, rot: RED } = FMM_COLORS;
 
 const J_MAX = 500;
 
@@ -57,19 +57,9 @@ export function LUKostenPlot() {
   }, [n]);
 
   return (
-    <div className="text-sm">
-      <p className="mb-2">
-        Wir lösen J Systeme mit derselben Matrix, gezählt in Multiplikationen: entweder{" "}
-        <span style={{ color: GREEN, fontWeight: 600 }}>
-          einmal zerlegen (n³/3) und pro rechter Seite nur substituieren (n²)
-        </span>{" "}
-        oder{" "}
-        <span style={{ color: RED, fontWeight: 600 }}>
-          für jede rechte Seite die komplette Elimination wiederholen
-        </span>
-        . Auf der log₁₀-Skala laufen beide Kurven für großes J parallel; der konstante
-        vertikale Abstand ist der Faktor, den die gespeicherte Zerlegung spart.
-      </p>
+    <Schaetzfrage frage="Bei wie vielen rechten Seiten lohnt sich das einmalige Zerlegen?" loesung={2} toleranz={0.5} min={1} max={10} schritt={1}>
+      <div className="text-sm">
+      <Aufgabe>Vergleichen wir die beiden Kostenkurven bei verschiedenen Werten von J.</Aufgabe>
       <div className="max-w-md">
         <Slider
           label="n"
@@ -115,14 +105,10 @@ export function LUKostenPlot() {
             jedes Mal neu: {fmtVal(cNeu)}
           </p>
           <p className="font-mono text-xs">Ersparnisfaktor: {faktor.toFixed(1).replace(".", ",")}×</p>
-          <p className="text-xs" style={{ color: "#64748b" }}>
-            Bei J = 1 sind beide Strategien gleich teuer; danach öffnet sich die Schere. Für
-            großes J nähert sich der Faktor dem Wert n/3 + 1 ≈{" "}
-            {Math.round(n / 3 + 1).toLocaleString("de-DE")}, dem Preisverhältnis zwischen
-            einer vollen Elimination und einem Substitutionspaar.
-          </p>
+          <Verdikt kind="neutral">Bei J = {J} beträgt die Ersparnis aktuell {faktor.toFixed(1).replace(".", ",")}×; die Auflösung ordnet den Schwellenwert ein.</Verdikt>
         </div>
       </div>
-    </div>
+      </div>
+    </Schaetzfrage>
   );
 }

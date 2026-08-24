@@ -1,3 +1,4 @@
+import { S35AequivalenzWidget } from "./widgets/S35Aequivalenz";
 import { S35SubmultWidget } from "./widgets/S35SubmultWidget";
 import { SelbsttestFrage } from "./widgets/S35Local";
 
@@ -117,6 +118,22 @@ summiert die „Gesamtmasse" aller Einträge, die Spektralnorm die maximale Stre
 Welche Norm die passende ist, entscheidet die Anwendung.
 :::
 
+Eine Frage bleibt offen: Sind die Konstanten in Beispiel 3.5.2 nur bequeme Abschätzungen,
+oder lässt sich der Faktor $\sqrt{\min(m,n)}$ noch drücken? Anders gefragt: Gibt es
+Matrizen, für die eine der beiden Ungleichungen mit Gleichheit steht? Weil alle drei
+beteiligten Normen nur von den Singulärwerten abhängen, können wir das für $2 \times 2$
+vollständig durchprobieren.
+
+:::vertiefung[Wie scharf sind die Äquivalenzkonstanten?]
+<S35AequivalenzWidget />
+:::
+
+Beide Enden der Kette werden angenommen, und zwar genau an den Rändern des zulässigen
+Bereichs: unten, wenn der zweite Singulärwert verschwindet, oben, wenn beide gleich sind.
+Dazwischen ist der Quotient echt kleiner als $\sqrt{2}$. Verbessern lässt sich die
+Konstante also nicht, und sie wird schlecht: Im $\R^{n \times n}$ steht dort
+$\sqrt{n}$, und für $\bA = \bI_n$ ist diese Schranke scharf.
+
 ### 3.5.2 Submultiplikativität
 
 Kommen wir zur zweiten Frage. Die Normaxiome aus
@@ -183,8 +200,19 @@ Auch alle Schatten-Normen aus
 [Abschnitt 3.4](#sec-3.4) (insbesondere die
 Frobenius-Norm und die Nuklearnorm) sind submultiplikativ. Der Beweis braucht
 Ungleichungen für Singulärwerte von Produkten, die wir hier nicht entwickeln; wir merken
-uns das Resultat. Nicht jede Matrixnorm ist aber submultiplikativ; das prominenteste
-Gegenbeispiel ist die Maximumsnorm:
+uns das Resultat.
+
+Damit sind die Operator- und die Schattennormen versorgt. Bleibt die Frage, ob wir uns die
+Ungleichung überhaupt merken müssen oder ob sie ohnehin für jede Matrixnorm gilt. Tippen wir
+zuerst, bevor wir weiterlesen.
+
+:::vertiefung[Gilt ‖AB‖ ≤ ‖A‖·‖B‖ für jede Matrixnorm?]
+<S35SubmultWidget />
+:::
+
+Es gibt sie, die Norm, die aus der Reihe tanzt, und es ist die elementweise Maximumsnorm.
+Schon das einfachste Paar bringt sie zu Fall, wie das Widget zeigt: die Einsermatrix mit
+sich selbst multipliziert. Rechnen wir diesen Fall von Hand nach.
 
 :::beispiel[3.5.6 (Die Maximumsnorm ist nicht submultiplikativ)]
 Betrachten wir die Einsermatrix
@@ -230,10 +258,6 @@ Normen mit dem :k[Spektralradius]{#spectral-radius}: Man kann
 zeigen, dass $\rho(\bA) \le \left\|\bA\right\|$ für jede
 submultiplikative Norm gilt: Jede solche Norm ist eine obere Schranke für die
 betragsgrößten Eigenwerte.
-
-:::vertiefung[Submultiplikativität ausprobieren: ‖AB‖ gegen ‖A‖·‖B‖]
-<S35SubmultWidget />
-:::
 
 ### 3.5.3 Verträglichkeit von Normen
 
@@ -498,5 +522,43 @@ Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
     geht es also nicht.
   </SelbsttestFrage>
 </ul>
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::zahlfrage{loesung=1.414 toleranz=0.005}
+Ziehen wir im Äquivalenz-Widget den Punkt auf die Winkelhalbierende $\sigma_1 = \sigma_2$.
+Welchen Quotienten $\left\|\bA\right\|_F / \left\|\bA\right\|_2$ zeigt es dann?
+
+$\sqrt{2} \approx 1{,}414$, unabhängig davon, wie weit außen auf der Winkelhalbierenden
+wir landen. Dort ist $\bA$ ein Vielfaches der Einheitsmatrix, und die rechte Ungleichung
+aus Beispiel 3.5.2 steht mit Gleichheit. Auf der waagerechten Achse dagegen ist der
+Quotient $1$.
+:::
+
+:::zahlfrage{loesung=2 toleranz=0.001}
+Stellen wir im Submultiplikativitäts-Widget die Einsermatrix für $\bA$ und $\bB$ ein und
+wählen wir die Maximumsnorm. Welchen Quotienten
+$\left\|\bA\bB\right\| / (\left\|\bA\right\| \cdot \left\|\bB\right\|)$ zeigt der Balken?
+
+$2$, also doppelt so viel wie erlaubt. Alle Einträge von $\bA\bB$ sind $2$, alle Einträge
+von $\bA$ und $\bB$ sind $1$: $2 / (1 \cdot 1) = 2$ (Beispiel 3.5.6). Schalten wir bei
+denselben Matrizen auf eine Operatornorm um, springt der Balken auf genau $1$ – dort ist
+die Schranke aus Satz 3.5.5 scharf, aber eben nicht verletzt.
+:::
+
+:::frage{falsch}
+Der Würfelknopf des Widgets zeigt bei jedem Klick andere Zufallsmatrizen, also sieht jeder
+Leser andere Beispiele.
+
+Die Zahlen kommen aus einem geseedeten Generator. Die Folge der Beispiele ist für alle
+Leser dieselbe, und über diese Folge bleibt der Quotient in jeder Operator- und
+Schattennorm unter $1$; nur die Maximumsnorm schießt darüber hinaus.
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §2.3.*

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
 import { fmtNum, MatTable, WidgetLabel } from "./shared";
 
 /**
@@ -8,23 +8,13 @@ import { fmtNum, MatTable, WidgetLabel } from "./shared";
  * z ~ N(0, I₂) (grau) wird durch y = Lz in die korrelierte Wolke (grün)
  * verformt; die grüne Ellipse ist das Bild des grauen Kreises mit Radius 2.
  * Farbcode wie im Kapitel: grün = Ergebnis der Zerlegung bzw. ihr Bild.
- * Neu geschrieben (kein passendes Widget in den privaten Apps).
+ * Einsicht: L formt unabhängige Punkte zu einer Wolke mit Kovarianz Σ.
+ * Farbrollen: Ergebnis/L und Bild grün, Referenzwolke neutral.
+ * Provenienz: neu für dieses Skript. Zahlen: LLᵀ=Σ und L₂₂=σ₂√(1−ρ²) in verify-05-lgs/verify.mjs, 2026-08-19.
  */
 
-const GREEN = "#009E73";
-const GREY = "#64748b"; // lesbar auf hellem Canvas und dunkler Seite
-
-/** deterministischer 32-Bit-Generator, damit die Punktwolke fest bleibt */
-function mulberry32(seed: number): () => number {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const GREEN = FMM_COLORS.gruen;
+const GREY = FMM_COLORS.grau;
 
 /** 200 feste Standardnormal-Punkte (Box-Muller, fester Seed) */
 const ZPTS: [number, number][] = (() => {
@@ -104,7 +94,8 @@ export function CholeskySampler() {
 
   return (
     <div>
-      <p className="text-sm">
+      <Aufgabe>Schieben wir ρ Richtung ±1 und beobachten, wie die grüne Wolke schmal wird.</Aufgabe>
+      <p className="sr-only">
         Wir halten 200 Punkte <span className="font-mono">z</span> aus der
         Standardnormalverteilung N(0, I₂) fest (grau, runde Wolke) und schauen, was die
         Abbildung <span className="font-mono">y = Lz</span> daraus macht (
@@ -122,13 +113,13 @@ export function CholeskySampler() {
           height={H}
           viewBox={`0 0 ${W} ${H}`}
           className="max-w-full rounded bg-white"
-          style={{ border: "1px solid #cbd5e1" }}
+          style={{ border: "1px solid var(--w-border)" }}
           role="img"
           aria-label="Punktwolke z (grau) und ihr Bild y = Lz (grün)"
         >
           {/* Achsen durch den Ursprung */}
-          <line x1={sx(-w)} y1={sy(0)} x2={sx(w)} y2={sy(0)} stroke="#cbd5e1" strokeWidth={1} />
-          <line x1={sx(0)} y1={sy(-w)} x2={sx(0)} y2={sy(w)} stroke="#cbd5e1" strokeWidth={1} />
+          <line x1={sx(-w)} y1={sy(0)} x2={sx(w)} y2={sy(0)} stroke="var(--w-grid-strong)" strokeWidth={1} />
+          <line x1={sx(0)} y1={sy(-w)} x2={sx(0)} y2={sy(w)} stroke="var(--w-grid-strong)" strokeWidth={1} />
           {/* Ticks und Beschriftung */}
           {ticks.map((v) => (
             <g key={v}>
@@ -192,11 +183,7 @@ export function CholeskySampler() {
             <br />
             Probe: max |LLᵀ − Σ| = {fmtNum(residual)}
           </div>
-          <p className="mt-2 text-xs" style={{ color: GREY }}>
-            Die erste Zeile von L skaliert nur (y₁ = σ₁z₁); die zweite mischt z₁ in y₂
-            hinein und erzeugt so die Korrelation. Weil die Punktwolke fest bleibt, sehen
-            wir ausschließlich den Effekt von L.
-          </p>
+          <Verdikt kind={Math.abs(rho) > 0.9 ? "warn" : Math.abs(rho) < 0.1 ? "neutral" : "ok"} className="mt-2">{Math.abs(rho) > 0.9 ? "L₂₂ wird klein; die Kovarianz ist fast singulär." : Math.abs(rho) < 0.1 ? "Die Wolke bleibt fast rund: die Korrelation ist nahe null." : "L erzeugt die sichtbare Scherung und Satz 5.4.4 garantiert die Kovarianz Σ."}</Verdikt>
         </div>
       </div>
     </div>

@@ -124,13 +124,14 @@ und in der Geodäsie (GPS-Positionsbestimmung gleicht widersprüchliche Distanzm
 aus). Wer KQ-Probleme schnell und stabil lösen kann, hat also einen Universalschlüssel
 in der Hand.
 
-:::vertiefung[Regressionsgerade von Hand anpassen]
-<p className="my-2">Jeder Punkt ist ein (fiktiver) Wohnungsverkauf: Fläche gegen Preis in Tsd. €. Die <span className="font-semibold" style={{ color: "#0072B2" }}>blaue Gerade</span> gehört zum aktuell eingestellten Parameterpaar $(\beta_0, \beta_1)$, jede <span className="font-semibold" style={{ color: "#9E57D5" }}>violette Strecke</span> zeigt ein Residuum $y_i - \beta_0 - \beta_1 x_i$. Probieren wir aus, wie klein wir die Summe der Residuen*quadrate* mit den beiden Reglern bekommen, und vergleichen dann mit der KQ-Geraden. Besser als sie kann keine Wahl von $(\beta_0, \beta_1)$ abschneiden, denn sie löst genau das Minimierungsproblem aus Definition 7.1.1.</p>
+Definition 7.1.1 verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommt man
+denn mit bloßem Augenmaß heran? Jeder Punkt im folgenden Bild ist ein (fiktiver) Wohnungsverkauf,
+Fläche gegen Preis in Tsd. €; die blaue Gerade gehört zum eingestellten Parameterpaar, jede
+violette Strecke ist ein Residuum $y_i - \beta_0 - \beta_1 x_i$.
 
 <RegressionWidget />
 
-<p className="my-2 text-sm">Auffällig ist auch, wie *empfindlich* das Kriterium auf große Residuen reagiert: Quadrieren bestraft einen doppelt so großen Fehler viermal so stark. Deshalb zieht die KQ-Gerade spürbar zu Ausreißern hin – ein statistischer Preis für die schöne Geometrie und die effizienten Algorithmen, die wir in diesem Kapitel entwickeln.</p>
-:::
+Das Widget verbindet die verstellte Regressionsgerade mit den quadratischen Residuen.
 
 <h3 id="sec-7.1-geometrie">Die Geometrie: Projektion auf den Spaltenraum</h3>
 
@@ -143,9 +144,13 @@ $\bA$. Das KQ-Problem fragt daher: Welcher Punkt des Unterraums
 $\col(\bA)$ liegt am nächsten an $\bb$? Aus der linearen Algebra
 wissen wir: der Fußpunkt des Lots, also die
 :k[orthogonale Projektion]{#projection} von $\bb$ auf
-$\col(\bA)$. Das folgende Resultat macht diese Anschauung präzise.
+$\col(\bA)$. Halten wir das Bild dazu fest: Links steht die Zeichnung, wie sie in jedem Buch
+über Kleinste Quadrate zu finden ist, rechts dieselbe Konfiguration im Raum, drehbar. Denn dass
+die linke Zeichnung so plausibel aussieht, liegt auch an der geschickt gewählten Blickrichtung.
 
 <FigKQGeometrie />
+
+Das folgende Resultat macht die Anschauung präzise.
 
 :::satz[7.1.4 (KQ-Lösung als Projektion)]
 Die Lösungsmenge des KQ-Problems zu $\bA$ und $\bb$ gleicht der
@@ -208,10 +213,12 @@ eindeutig, wenn die Spalten von $\bA$
 :k[linear unabhängig]{#linear-independence} sind. Dazu gleich
 mehr.
 
-:::vertiefung[Projektion und senkrechtes Residuum zum Anfassen]
-<p className="my-2">Verfolgen wir Satz 7.1.4 an einem Miniaturbeispiel: Der Regler schiebt den Kandidaten $\cblue{\bA\bx}$ den Spaltenraum entlang; daneben stehen $\left\| \cpurp{\br} \right\|_2^2$ und der Winkel zwischen $\ba$ und $\cpurp{\br}$. Das Minimum liegt exakt dort, wo das Residuum senkrecht steht und der Kandidat dabei die grün markierte Projektion $\cgreen{\wh{\bb}}$ trifft.</p>
+:::vertiefung[Wo genau steht das Residuum senkrecht?]
+<p className="my-2">Kleiner geht ein KQ-Problem nicht: $m = 2$, $n = 1$, die Matrix hat als einzige Spalte $\ba = (3, 1)^\top$, gesucht ist ein einzelner Skalar $x$, und $\col(\bA)$ ist die graue Ursprungsgerade. Für welches $x$ wird $\left\| \cpurp{\br} \right\|_2^2$ am kleinsten – und was ist dort mit dem Winkel los?</p>
 
 <ProjektionWidget />
+
+<p className="my-2 text-sm">Das Widget verbindet die Projektion auf den Spaltenraum mit dem senkrechten Residuum aus Satz 7.1.4.</p>
 :::
 
 <h3 id="sec-7.1-normalengleichungen">Normalengleichungen und eindeutige Lösung</h3>
@@ -269,7 +276,7 @@ $$
 :::bemerkung[7.1.6 (Analysis-Perspektive)]
 Dieselben Gleichungen liefert auch die Analysis, ganz ohne Geometrie: Die Zielfunktion
 $g(\bx) = \left\| \bA\bx - \bb \right\|_2^2 = \bx^\top\bA^\top\bA\bx - 2\,\bb^\top\bA\bx + \bb^\top\bb$
-ist eine :k[konvexe]{#convex-function}
+ist eine :k[konvexe]{#convexity}
 :k[quadratische Funktion]{#quadratic-form} mit
 :k[Gradient]{#gradient}
 
@@ -420,6 +427,17 @@ $V \subseteq \R^m$
 
 Wegen $\R^m = V \oplus V^\perp$ zerfällt jeder Vektor eindeutig in seine
 Anteile in $V$ und im orthogonalen Komplement $V^\perp$.
+:::
+
+:::zahlfrage{loesung=2.5 toleranz=0.05}
+Im Miniaturbeispiel oben ($\ba = (3,1)^\top$, $\bb = (1,2)^\top$) schieben wir den
+Kandidaten so weit, bis das Residuum senkrecht steht. Welchen Wert hat dort
+$\left\| \cpurp{\br} \right\|_2^2$?
+
+Der senkrechte Stand wird bei $x = 1/2$ erreicht, also
+$\cpurp{\br} = (1,2)^\top - \tfrac{1}{2}(3,1)^\top = (-0{,}5;\, 1{,}5)^\top$ und
+$\left\| \cpurp{\br} \right\|_2^2 = 0{,}25 + 2{,}25 = 2{,}5$. Das ist das Minimum
+aus Satz 7.1.4; jeder andere Kandidat liefert einen größeren Wert.
 :::
 
 ::::

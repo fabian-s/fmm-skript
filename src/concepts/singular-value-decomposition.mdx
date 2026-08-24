@@ -10,8 +10,10 @@ $\bU \in \R^{m \times m}$, $\bV \in \R^{n \times n}$ und eine
 „:k[Diagonalmatrix]{#diagonal-matrix}" $\bSigma \in \R^{m \times n}$ mit
 
 $$
-\bA = \bU\bSigma\bV^\top, \qquad \bSigma = \diag(\sigma_1, \ldots, \sigma_{\min(m,n)}), \quad \sigma_1 \ge \sigma_2 \ge \cdots \ge 0.
+\bA = \bU\bSigma\bV^\top, \qquad \bSigma = \diag(\sigma_1, \ldots, \sigma_{\min(m,n)})
 $$
+
+mit $\sigma_1 \ge \sigma_2 \ge \cdots \ge 0$.
 
 Die *Singulärwerte* $\sigma_i$ sind die Wurzeln der
 :k[Eigenwerte]{#eigenvalue-eigenvector} von
@@ -28,4 +30,11 @@ $\corange{\kappa_2(\bA)} = \sigma_{\max}/\sigma_{\min}$ die
 :k[Konditionszahl]{#condition-number}: Eine fast singuläre
 Matrix hat ein winziges $\sigma_{\min}$ und ein nadelförmiges Ellipsoid.
 
+Drei Faktoren, drei Schritte: Welcher davon verformt den Einheitskreis
+eigentlich, und was tun die beiden anderen?
+
 <SvdWidget />
+
+Nur $\bSigma$ verformt. Die beiden Drehungen sortieren lediglich, welche
+Richtung gestreckt wird und wohin das Ergebnis zeigt; deshalb stecken alle
+Längenverhältnisse einer Matrix in ihren Singulärwerten.

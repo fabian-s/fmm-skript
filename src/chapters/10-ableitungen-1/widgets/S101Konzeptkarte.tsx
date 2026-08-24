@@ -1,3 +1,14 @@
+/**
+ * F1 — DIE EINE EINSICHT: Ableitung, Krümmung, Konvexität und Optimierung
+ * bilden eine gerichtete Begriffslandkarte statt isolierter Kapitel.
+ * FARBROLLEN: Petrol = Kapitel 10, Violett = 11, Orange = 12, Pink = 13;
+ * Kanten bedeuten fachliche Abhängigkeit.
+ * PROVENIENZ: Layout aus der Konzeptkarte des Vorlesungs-Repos portiert,
+ * Begriffe und Verknüpfungen für dieses Skript zusammengestellt.
+ * VERIFIZIERTE ZAHLEN: 15 Knoten, 17 gerichtete Kanten und die Kapitelgruppen
+ * 10–13 werden unabhängig gezählt.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { ConceptFlow, type FlowEdge, type FlowNode } from "../../../lib";
 
 /**

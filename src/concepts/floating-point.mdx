@@ -21,7 +21,7 @@ $$
 wobei die $b_i$ Bits sind und $t$ durch das Format
 festgelegt ist (die übliche doppelte Genauigkeit hat
 $t = 52$). Zum Beispiel passt
-$3.25 = (1.101)_2 \times 2^{1}$ exakt, aber $0.1$
+$3{,}25 = (1{,}101)_2 \times 2^{1}$ exakt, aber $0{,}1$
 hat eine unendlich periodische Binärdarstellung und muss nach
 $t$ Bits abgeschnitten werden; gespeichert wird nur eine
 darstellbare Zahl in der Nähe.
@@ -36,4 +36,10 @@ breiter. Jede Eingabe und jedes Rechenergebnis wird auf den nächsten
 Gitterpunkt gerundet – die Quelle der
 :k[Rundungsfehler]{#rounding-error}.
 
+Sehen wir uns ein Spielzeugsystem an: Wie ändert sich das Gitter, wenn wir
+Mantissenbits hinzunehmen, und wo landet eine Zahl, die nicht darauf liegt?
+
 <ToyFloatLine />
+
+Am Strahl wird sichtbar, was die Formel oben verschweigt: die Striche stehen in
+jeder Binade doppelt so weit auseinander wie in der vorigen.

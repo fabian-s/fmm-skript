@@ -1,4 +1,5 @@
 import { SkalierungTensorGam } from "./widgets/S155Skalierung";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 15-funktionsapproximation-II, „Multivariate Funktionsapproximation" bis „Wrap-up".]
 
@@ -325,7 +326,11 @@ sitzt $K$ in der Steigung. Die Tafel daneben rechnet Speicherbedarf,
 Mindestzahl an Beobachtungen und die Konvergenzrate zum eingestellten Zustand
 mit.
 
+Wie groß vermuten wir den Speicherbedarf des vollen Tensorprodukts bei zehn Variablen und zehn Basisfunktionen?
+
+<Schaetzfrage frage="Schätzen wir den Speicherbedarf in GB für K = 10 und p = 10." loesung={80} toleranz={5} einheit="GB">
 <SkalierungTensorGam />
+</Schaetzfrage>
 :::
 
 :::bemerkung[15.5.10 (Warum das mehr ist als eine Notlösung)]
@@ -404,6 +409,12 @@ Optimierungsproblem.
 Acht Aussagen quer durch Kapitel 15.
 
 ::::quiz
+
+:::zahlfrage{loesung=80 toleranz=5}
+Wie viele GB benötigt das Tensorprodukt bei $K=p=10$ für seine Koeffizienten?
+
+$10^{10}$ Koeffizienten mal acht Byte sind $80$ GB.
+:::
 
 :::frage{falsch}
 Unter allen Funktionen, die die Punkte $(\cblue{x_i}, \cblue{y_i})$

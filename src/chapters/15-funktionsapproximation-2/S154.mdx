@@ -1,4 +1,5 @@
 import { BiasVarianzExplorer } from "./widgets/S154BiasVarianz";
+import { Schaetzfrage } from "../../lib";
 
 ::quelle[Folien 15-funktionsapproximation-II, „Bias-variance Trade-off" bis „Wie wählt man $K$ in der Praxis?".]
 
@@ -417,7 +418,11 @@ Alle Zufallszahlen stammen aus einem festen Startwert. Es ist bei jedem
 Aufruf dieselbe Simulation, und die Zahlen im Widget stimmen mit denen der
 Tabelle überein.
 
+Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum?
+
+<Schaetzfrage frage="Welche Knotenzahl minimiert in dieser festen Simulation den MSE?" loesung={12} toleranz={0.5} einheit="K">
 <BiasVarianzExplorer />
+</Schaetzfrage>
 :::
 
 :::bemerkung[15.4.10 (Die Tabelle der Folien)]
@@ -540,6 +545,12 @@ Grenzfall $K = n$ mit Strafterm.
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=12 toleranz=0.5}
+Welche Knotenzahl markiert das Widget als MSE-Minimum seiner festen Simulation?
+
+Die graue MSE-Kurve hat ihr Minimum bei $K=12$.
+:::
 
 :::frage{falsch}
 Je größer $K$, desto kleiner der Bias: Die Verzerrung fällt monoton.

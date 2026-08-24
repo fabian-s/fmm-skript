@@ -1,5 +1,17 @@
+/**
+ * F1 — DIE EINE EINSICHT: Eine B-Spline-Darstellung reagiert lokal auf einen
+ * verschobenen Datenwert, ein globales Interpolationspolynom nicht.
+ * FARBROLLEN: Daten blau, Spline grün, Knoten orange, globales Polynom/volle
+ * Vandermonde-Besetzung rot.
+ * PROVENIENZ: BandedLocality (S743) und newtonEval (S74) aus heath-ch7
+ * portiert; Daten, Kollokation und Texte neu; Ersatz zweier Folienbilder.
+ * VERIFIZIERTE ZAHLEN: bei Punkt 5, x=4, delta=1: max Änderungen 1,000/2,320,
+ * fern 0,037/2,320; Koeffizienten 1,732/0,464/0,124/0,031/0,010; q+1=4
+ * Nichtnullen je Kollokationszeile.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import {
   BLAU,
   GRUEN,
@@ -30,6 +42,7 @@ import {
  * Koeffizientenaenderungen fallen mit rund Faktor 3,7 je Knotenabstand
  * (1,732 / 0,464 / 0,124 / 0,031 / 0,010). Die Kollokationsmatrix hat je
  * Zeile hoechstens q + 1 = 4 Eintraege ungleich null.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const XS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -147,7 +160,7 @@ export function StoerungVergleich() {
         xLabel="x"
         yLabel="y"
         series={[
-          { f: vorher, color: "#94a3b8", dash: [5, 4] },
+          { f: vorher, color: NEUTRAL, dash: [5, 4] },
           { f: nachher, color: GRUEN },
         ]}
         markers={marker}
@@ -161,6 +174,7 @@ export function StoerungVergleich() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Datenpunkt und vergleichen die Fernwirkung beider Interpolanten.</Aufgabe>
       <p className="mb-2 text-sm">
         Neun Datenpunkte, einer davon lässt sich verschieben. Beide Tafeln zeigen
         denselben Vorgang mit verschiedenen Ansatzräumen: links das
@@ -257,6 +271,14 @@ export function StoerungVergleich() {
         abbrechen: Auch die äußersten Koeffizienten bewegen sich noch, nur eben
         um sehr wenig.
       </p>
+
+      <Verdikt kind={delta === 0 ? "neutral" : fernS < fernP ? "ok" : "warn"}>
+        {delta === 0
+          ? "Ohne Verschiebung bleiben beide Interpolanten unverändert; es gibt daher keine Fernwirkung zu vergleichen."
+          : fernS < fernP
+          ? `Fern vom verschobenen Punkt bleibt die Spline-Änderung mit ${fmt(fernS, 3)} kleiner als die Polynom-Änderung mit ${fmt(fernP, 3)}. Das macht die Lokalität der B-Spline-Darstellung sichtbar.`
+          : "In diesem Zustand ist die Fernwirkung nicht kleiner; wir prüfen die gewählte Verschiebung und das betrachtete Gebiet."}
+      </Verdikt>
 
       <p className="mt-3 mb-1 text-sm font-semibold">Besetzungsmuster</p>
       <div className="flex flex-wrap items-start gap-8">

@@ -251,6 +251,14 @@ $$
 
 ::::
 
+::::quiz
+:::zahlfrage{loesung=0.4444444444 toleranz=0.01}
+Welche Rate zeigt der Potenzmethoden-Stepper für die Beispielmatrix langfristig an?
+
+Der orange Wert nähert sich dem Verhältnis der beiden Eigenwertbeträge.
+:::
+::::
+
 Rechnen wir das an der Matrix der Folien durch.
 
 :::beispiel[8.1.5 (Potenzmethode an einer 2×2-Matrix)]
@@ -353,17 +361,12 @@ langsam. Beide Male brauchen wir andere Verfahren.
 :::
 
 :::vertiefung[Die Potenzmethode Schritt für Schritt]
-Das Widget ersetzt die Abbildung der Folien. Wir sehen den Einheitskreis,
-darauf die Iterierten in Blau, dazu die beiden Eigenrichtungen der Matrix aus
-Beispiel 8.1.5. Der Startvektor lässt sich frei einstellen; die Knöpfe
-darunter setzen die drei interessanten Fälle: das Beispiel des Texts, den
-Versagensfall $\bx^{(0)} = c\,\bv_2$ aus Bemerkung 8.1.6 und den Volltreffer
-$\bx^{(0)} = c\,\cgreen{\bv_1}$, bei dem die Iteration von Anfang an am Ziel
-steht.
-Die Tabelle führt beide Eigenwertschätzungen und den Abstand zur grünen
-Richtung mit.
+Was geschieht, wenn der Start genau auf der zweiten Eigenrichtung liegt?
+Ziehen wir den Start auf dem Einheitskreis und testen wir diese Vermutung.
 
 <PotenzmethodenStepper />
+
+Das Widget verbindet den Startanteil mit der Konvergenzbedingung aus Satz 8.1.4.
 :::
 
 ### Ähnliche Matrizen als Werkzeug
@@ -768,6 +771,8 @@ Grenzwert dreieckig und nicht diagonal ist, und die Drehung aus
 Bemerkung 8.1.14, bei der gar nichts passiert.
 
 <QrIterationsDemo />
+
+Das Widget macht die schrittweise Freilegung der Eigenwerte durch QR-Iteration sichtbar.
 :::
 
 ### Kondition und Aufwand

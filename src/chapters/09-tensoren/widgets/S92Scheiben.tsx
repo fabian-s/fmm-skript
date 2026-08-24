@@ -1,408 +1,197 @@
-import { useState } from "react";
-import { Slider } from "../../../lib";
+import { useMemo, useState } from "react";
+import { Aufgabe, FMM_COLORS, Slider, Surface3D, Verdikt, ViewControls, fmtInt } from "../../../lib";
+import type { Sicht3D } from "../../../lib";
 
 /**
- * Scheiben-Viewer für Tensoren der Stufe 2 und 3 (Skript §9.2).
- *
- * Der Stapel wird isometrisch angedeutet: jede Scheibe ist ein Gitter, die
- * Scheiben sind gegeneinander nach rechts oben versetzt, dünne Kanten
- * verbinden die Ecken der vordersten mit denen der hintersten Scheibe.
- * Slider oder Klick wählen den Scheibenindex k; daneben steht die gewählte
- * Scheibe als Matrix ausgedruckt.
- *
- * Eigenbau (Aufbau, Zahlen und alle Texte): die Abbildungen der Folien
- * stammen aus einem Buch und werden hier nicht übernommen. Farbcode wie im
- * Kapitel; kein Zufall zur Laufzeit, die Einträge sind fest eingebettet
- * bzw. aus einer deterministischen Formel berechnet.
+ * Einsicht: Die dritte Indexposition wählt eine vollständige Matrixscheibe;
+ * bei RGB-Bildern sind drei solche Scheiben gemeinsam ein Pixelbild.
+ * Farbrollen: aktive Tensor-Scheibe orange, Rot/Grün/Blau sind die RGB-Kanäle,
+ * neutrale Scheiben grau. Provenienz: Eigenbau.
+ * Verifizierte Zahlen: Der Zahlenstapel hat 4·4·4 = 64 Einträge; der Bildtensor
+ * hat 8·8·3 = 192 Einträge. Die Kanalwerte liegen in [0,255].
+ * Siehe scripts/verify/KAP09/s92-scheiben.mjs (2026-08-20).
  */
+const { blau: BLAU, gruen: GRUEN, rot: ROT, orange: ORANGE, grau: GRAU } = FMM_COLORS;
 
-const RED = "#D55E00";
-const GREEN = "#009E73";
-const BLUE = "#0072B2";
-const GREY = "#64748b";
-
-/** Fester 4×4×4-Tensor, gespeichert als ZAHLEN[k][i][j]. */
-const ZAHLEN: number[][][] = [
-  [
-    [-2, -5, -2, -4],
-    [8, 8, 2, 1],
-    [-6, 4, 6, -2],
-    [0, 5, 8, -5],
-  ],
-  [
-    [-2, 8, 9, -4],
-    [9, 5, 8, -4],
-    [-6, 2, 1, 1],
-    [0, 1, 4, 9],
-  ],
-  [
-    [-5, 6, 0, 1],
-    [-5, -5, 0, -3],
-    [-3, 9, 9, 3],
-    [6, 1, -5, 4],
-  ],
-  [
-    [7, -7, 0, -4],
-    [5, -1, -6, -3],
-    [-3, -3, -7, 4],
-    [-1, -3, 1, -1],
-  ],
+const SCHEIBEN = [
+  [[2, -1, 4, 0], [3, 1, -2, 5], [0, 4, 1, -3], [2, 0, 3, 1]],
+  [[-2, 3, 1, 4], [1, 5, 0, -1], [2, -4, 3, 0], [1, 2, -2, 4]],
+  [[4, 0, -3, 1], [2, 1, 5, -2], [-1, 3, 0, 2], [4, -2, 1, 3]],
+  [[0, 2, 1, -4], [3, -1, 4, 0], [2, 5, -2, 1], [-3, 0, 2, 4]],
 ];
 
-const N_BILD = 8;
+const kanalWert = (kanal: number, zeile: number, spalte: number) =>
+  (zeile * 29 + spalte * 17 + kanal * 53) % 256;
 
-/** Deterministisches Miniaturbild: Verlauf plus heller Fleck, BILD[k][i][j]. */
-const BILD: number[][][] = [0, 1, 2].map((k) =>
-  Array.from({ length: N_BILD }, (_, i) =>
-    Array.from({ length: N_BILD }, (_, j) => {
-      const fleck = i >= 2 && i <= 4 && j >= 4 && j <= 6;
-      let v: number;
-      if (k === 0) v = fleck ? 245 : 24 + 26 * j;
-      else if (k === 1) v = fleck ? 96 : 214 - 22 * i;
-      else v = fleck ? 40 : 70 + 18 * ((i + j) % 7);
-      return Math.max(0, Math.min(255, v));
-    })
-  )
-);
+const kanalMatrix = (kanal: number) =>
+  Array.from({ length: 8 }, (_, zeile) =>
+    Array.from({ length: 8 }, (_, spalte) => kanalWert(kanal, zeile, spalte))
+  );
 
-const KANAL = [
-  { name: "Rot", farbe: RED },
-  { name: "Grün", farbe: GREEN },
-  { name: "Blau", farbe: BLUE },
-];
-
-/** Pfeil mit Beschriftung für die Achsenlegende. */
-function Achse({
-  x1,
-  y1,
-  x2,
-  y2,
-  label,
-  lx,
-  ly,
-  gedreht = false,
+function MatrixZellen({
+  matrix,
+  farbe,
+  x = 0,
+  y = 0,
+  groesse,
+  intensiv = false,
+  onCellClick,
+  aktiv,
 }: {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  label: string;
-  lx: number;
-  ly: number;
-  /** Hochkant setzen: sonst läuft eine senkrechte Achsenbeschriftung links aus dem viewBox. */
-  gedreht?: boolean;
+  matrix: number[][];
+  farbe: string;
+  x?: number;
+  y?: number;
+  groesse: number;
+  intensiv?: boolean;
+  onCellClick?: (zeile: number, spalte: number) => void;
+  aktiv?: [number, number];
 }) {
+  const n = matrix.length;
+  const zelle = groesse / n;
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={GREY} strokeWidth={1} markerEnd="url(#s92pfeil)" />
-      <text
-        x={lx}
-        y={ly}
-        fontSize={11}
-        fill={GREY}
-        textAnchor="middle"
-        transform={gedreht ? `rotate(-90 ${lx} ${ly})` : undefined}
-      >
-        {label}
-      </text>
+      {matrix.map((zeile, i) =>
+        zeile.map((wert, j) => {
+          const ausgewaehlt = aktiv?.[0] === i && aktiv?.[1] === j;
+          const opacity = intensiv ? 0.08 + 0.82 * (wert / 255) : 0.18;
+          return (
+            <g key={`${i}-${j}`} onClick={() => onCellClick?.(i, j)} style={onCellClick ? { cursor: "pointer" } : undefined}>
+              <rect
+                x={x + j * zelle}
+                y={y + i * zelle}
+                width={zelle}
+                height={zelle}
+                fill={farbe}
+                fillOpacity={opacity}
+                stroke={ausgewaehlt ? "var(--w-text)" : "var(--w-border)"}
+                strokeWidth={ausgewaehlt ? 1.8 : 0.55}
+              />
+              <text
+                x={x + (j + 0.5) * zelle}
+                y={y + (i + 0.62) * zelle}
+                textAnchor="middle"
+                fontSize={n === 8 ? 8 : 11}
+                fill={intensiv && wert > 155 ? "var(--w-bg)" : "var(--w-text)"}
+              >
+                {fmtInt(wert)}
+              </text>
+            </g>
+          );
+        })
+      )}
     </g>
   );
 }
 
-/** Die gewählte Scheibe als ausgedruckte Matrix, mit Zeilen- und Spaltenindex. */
-function MatrixTafel({
-  werte,
-  farbe,
-  titel,
-}: {
-  werte: number[][];
-  farbe: string;
-  titel: string;
-}) {
-  const n = werte[0].length;
+function ZahlenTensor() {
+  const [k, setK] = useState(1);
+  const [sicht, setSicht] = useState<Sicht3D>({ azimuth: 38, elevation: 25 });
+  const matrix = SCHEIBEN[k - 1];
+  const flaeche = useMemo(
+    () => ({
+      // Stückweise konstante Höhe: jedes Plateau ist genau ein Matrixeintrag.
+      f: (x: number, y: number) => matrix[Math.min(3, Math.max(0, Math.floor(y)))][Math.min(3, Math.max(0, Math.floor(x)))],
+      nx: 20,
+      ny: 20,
+      color: ORANGE,
+      opacity: 0.78,
+      wire: true,
+    }),
+    [matrix]
+  );
+
   return (
     <div>
-      <div className="mb-1 text-xs" style={{ color: GREY }}>
-        {titel}
+      <Aufgabe>Wählen wir eine Scheibe und vergleichen wir ihre Matrixeinträge mit dem zugehörigen Höhenfeld.</Aufgabe>
+      <svg viewBox="0 0 310 314" className="max-w-full h-auto" role="img" aria-label={`Aufgefächerter Stapel aus vier beschrifteten Matrixscheiben; Scheibe ${k} ist ausgewählt.`}>
+        {[[1, 20, 26], [2, 170, 26], [3, 20, 174], [4, 170, 174]].map(([nummer, x, y]) => {
+          const aktiv = nummer === k;
+          return (
+            <g key={nummer} onClick={() => setK(nummer)} style={{ cursor: "pointer" }}>
+              <text x={x} y={y - 7} fill={aktiv ? ORANGE : "var(--w-muted)"} fontSize="12">k = {nummer}</text>
+              <rect x={x} y={y} width="120" height="120" fill="var(--w-bg)" stroke={aktiv ? ORANGE : GRAU} strokeWidth={aktiv ? 3 : 1} />
+              <MatrixZellen matrix={SCHEIBEN[nummer - 1]} farbe={aktiv ? ORANGE : GRAU} x={x} y={y} groesse={120} />
+            </g>
+          );
+        })}
+      </svg>
+      <div className="mt-3">
+        <Surface3D
+          size={300}
+          xDomain={[0, 4]}
+          yDomain={[0, 4]}
+          zDomain={[-4, 5]}
+          surface={flaeche}
+          azimuth={sicht.azimuth}
+          elevation={sicht.elevation}
+          onViewChange={setSicht}
+          labels={{ x: "j", y: "i", z: `Tᵢⱼ${k}` }}
+          ariaLabel={`Höhenfeld der ausgewählten Matrixscheibe k gleich ${k}.`}
+        />
       </div>
-      <div
-        className="inline-grid gap-x-2 rounded border border-slate-300 px-2 py-1.5 font-mono text-xs"
-        style={{ gridTemplateColumns: `repeat(${n + 1}, auto)`, backgroundColor: "#ffffff" }}
-      >
-        <span />
-        {Array.from({ length: n }, (_, j) => (
-          <span key={`kopf-${j}`} className="text-right" style={{ color: GREY }}>
-            j={j + 1}
-          </span>
-        ))}
-        {werte.flatMap((zeile, i) => [
-          <span key={`zeile-${i}`} className="pr-1 text-right" style={{ color: GREY }}>
-            i={i + 1}
-          </span>,
-          ...zeile.map((v, j) => (
-            <span key={`${i}-${j}`} className="text-right" style={{ color: farbe }}>
-              {v}
-            </span>
-          )),
-        ])}
+      <Slider label="Scheibe k" value={k} onChange={(wert) => setK(Math.round(wert))} min={1} max={4} step={1} accent={ORANGE} fmt={(wert) => String(Math.round(wert))} />
+      <ViewControls value={sicht} onChange={setSicht} />
+      <div className="mt-2 flex flex-wrap gap-x-4 text-xs" aria-label="Legende">
+        <span style={{ color: ORANGE }}>Orange: gewählte Scheibe und ihr Höhenfeld</span>
+        <span style={{ color: GRAU }}>Grau: übrige Scheiben</span>
       </div>
+      <Verdikt kind={k === 1 ? "neutral" : "ok"}>
+        {k === 1
+          ? "Für k = 1 sehen wir die erste Matrix des Stapels als Höhenfeld; jeder Eintrag bestimmt ein Plateau."
+          : `Für k = ${k} wechselt nicht nur das Etikett: Das Höhenfeld übernimmt genau die ${k}. Matrixscheibe.`}
+      </Verdikt>
     </div>
   );
 }
 
-export function TensorScheibenViewer() {
-  const [modus, setModus] = useState<"zahlen" | "bild">("zahlen");
-  const [stufe, setStufe] = useState(3);
-  const [kZahl, setKZahl] = useState(1);
-  const [kBild, setKBild] = useState(1);
-
-  const bild = modus === "bild";
-  const daten = bild ? BILD : ZAHLEN;
-  const n = bild ? N_BILD : 4;
-  const scheiben = bild ? 3 : stufe === 2 ? 1 : 4;
-  const kRoh = bild ? kBild : kZahl;
-  const k = Math.min(kRoh, scheiben);
-  const setK = bild ? setKBild : setKZahl;
-
-  const zelle = bild ? 15 : 26;
-  const gitter = n * zelle;
-  const dx = bild ? 30 : 26;
-  const dy = bild ? 18 : 16;
-  const padL = 46;
-  const padT = 30;
-  const tiefeX = (scheiben - 1) * dx;
-  const tiefeY = (scheiben - 1) * dy;
-  const breite = padL + tiefeX + gitter + 26;
-  const hoehe = padT + tiefeY + gitter + 34;
-
-  /** Ecke oben links der Scheibe s (1-basiert): k = 1 steht vorne unten. */
-  const ecke = (s: number) => ({ x: padL + (s - 1) * dx, y: padT + (scheiben - s) * dy });
-
-  const vorne = ecke(1);
-  const hinten = ecke(scheiben);
-
-  const eintraege = n * n * scheiben;
-  const farbeAktiv = bild ? KANAL[k - 1].farbe : RED;
-
-  /** Farbe einer Zelle: gewählte Scheibe farbig, die übrigen neutral grau. */
-  const fuellung = (s: number) => {
-    if (s !== k) return bild ? "#cbd5e1" : "#e2e8f0";
-    return bild ? KANAL[s - 1].farbe : RED;
-  };
-
-  /** Deckkraft trägt den Zahlenwert: je größer der Betrag, desto kräftiger. */
-  const deckkraft = (s: number, i: number, j: number) => {
-    const wert = daten[s - 1][i][j];
-    if (s !== k) return bild ? 0.3 : 0.5;
-    return bild ? 0.12 + 0.88 * (wert / 255) : 0.18 + 0.06 * Math.abs(wert);
-  };
+function FarbBild() {
+  const [pixel, setPixel] = useState<[number, number]>([3, 4]);
+  const kanaele = [kanalMatrix(0), kanalMatrix(1), kanalMatrix(2)];
+  const werte = kanaele.map((matrix) => matrix[pixel[0]][pixel[1]]);
+  const rgb = `rgb(${werte.join(", ")})`;
+  const namen = ["Rot", "Grün", "Blau"];
+  const farben = [ROT, GRUEN, BLAU];
 
   return (
     <div>
-      <p className="text-sm">
-        Stapeln wir Matrizen: Jede Scheibe ist ein Gitter aus Zahlen, der Stapel ist der
-        Tensor. Wählen wir mit dem Schieber oder per Klick eine Scheibe aus, dann steht sie
-        rechts als Matrix ausgeschrieben. Im zweiten Modus ist der Stapel ein winziges
-        Farbbild, und die drei Scheiben sind seine Farbkanäle.
-      </p>
-
-      <div className="my-3 flex flex-wrap items-center gap-2 text-sm">
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1"
-          onClick={() => setModus(bild ? "zahlen" : "bild")}
-        >
-          {bild ? "Zahlen-Tensor zeigen" : "Farbbild zeigen"}
-        </button>
-        {bild ? null : (
-          <button
-            type="button"
-            className="rounded border border-slate-400 px-3 py-1"
-            onClick={() => setStufe(stufe === 3 ? 2 : 3)}
-          >
-            {stufe === 3 ? "auf Stufe 2 (Matrix) zurückgehen" : "auf Stufe 3 (Tensor) gehen"}
-          </button>
-        )}
-      </div>
-
-      {scheiben > 1 ? (
-        <div className="my-2 max-w-md">
-          <Slider
-            label="Scheibe k"
-            value={k}
-            onChange={(v) => setK(Math.round(v))}
-            min={1}
-            max={scheiben}
-            step={1}
-            fmt={(v) => String(Math.round(v))}
-          />
-        </div>
-      ) : null}
-
-      <div className="flex flex-wrap items-start gap-6 overflow-x-auto">
-        <svg width={breite} height={hoehe} viewBox={`0 0 ${breite} ${hoehe}`}>
-          <defs>
-            <marker
-              id="s92pfeil"
-              markerWidth={7}
-              markerHeight={7}
-              refX={6}
-              refY={3}
-              orient="auto"
-            >
-              <path d="M0,0 L7,3 L0,6 z" fill={GREY} />
-            </marker>
-          </defs>
-
-          {/* Tiefenkanten von der vordersten zur hintersten Scheibe */}
-          {scheiben > 1
-            ? [
-                [0, 0],
-                [gitter, 0],
-                [0, gitter],
-                [gitter, gitter],
-              ].map(([ox, oy], idx) => (
-                <line
-                  key={idx}
-                  x1={vorne.x + ox}
-                  y1={vorne.y + oy}
-                  x2={hinten.x + ox}
-                  y2={hinten.y + oy}
-                  stroke={GREY}
-                  strokeWidth={0.8}
-                  strokeDasharray="3 3"
-                />
-              ))
-            : null}
-
-          {/* Scheiben von hinten nach vorne */}
-          {Array.from({ length: scheiben }, (_, idx) => scheiben - idx).map((s) => {
-            const { x, y } = ecke(s);
-            const aktiv = s === k;
-            return (
-              <g key={s} onClick={() => setK(s)} style={{ cursor: "pointer" }}>
-                <title>{bild ? `Kanal ${KANAL[s - 1].name}` : `Scheibe k = ${s}`}</title>
-                <rect
-                  x={x - 3}
-                  y={y - 3}
-                  width={gitter + 6}
-                  height={gitter + 6}
-                  fill="#ffffff"
-                  fillOpacity={aktiv ? 0.96 : 0.88}
-                  stroke={aktiv ? farbeAktiv : GREY}
-                  strokeWidth={aktiv ? 2.2 : 0.8}
-                />
-                {daten[s - 1].map((zeile, i) =>
-                  zeile.map((_, j) => (
-                    <rect
-                      key={`${i}-${j}`}
-                      x={x + j * zelle}
-                      y={y + i * zelle}
-                      width={zelle - 1.5}
-                      height={zelle - 1.5}
-                      fill={fuellung(s)}
-                      fillOpacity={deckkraft(s, i, j)}
-                      stroke={aktiv ? farbeAktiv : "#94a3b8"}
-                      strokeWidth={0.5}
-                    />
-                  ))
-                )}
-                <text
-                  x={x + gitter + 6}
-                  y={y - 6}
-                  fontSize={11}
-                  fill={aktiv ? farbeAktiv : GREY}
-                  fontWeight={aktiv ? 700 : 400}
-                >
-                  k={s}
-                </text>
-              </g>
-            );
-          })}
-
-          {/* Achsen am vorderen Gitter */}
-          <Achse
-            x1={vorne.x}
-            y1={vorne.y + gitter + 12}
-            x2={vorne.x + gitter}
-            y2={vorne.y + gitter + 12}
-            label="j (Spalte)"
-            lx={vorne.x + gitter / 2}
-            ly={vorne.y + gitter + 26}
-          />
-          <Achse
-            x1={vorne.x - 12}
-            y1={vorne.y}
-            x2={vorne.x - 12}
-            y2={vorne.y + gitter}
-            label="i (Zeile)"
-            lx={18}
-            ly={vorne.y + gitter / 2}
-            gedreht
-          />
-          {scheiben > 1 ? (
-            <Achse
-              x1={vorne.x + gitter / 2}
-              y1={vorne.y - 10}
-              x2={vorne.x + gitter / 2 + tiefeX}
-              y2={vorne.y - 10 - tiefeY}
-              label="k (Scheibe)"
-              lx={vorne.x + gitter / 2 + tiefeX / 2}
-              ly={vorne.y - 16 - tiefeY}
-            />
-          ) : null}
+      <Aufgabe>Klicken wir auf denselben Pixel in einer Kanalscheibe und lesen wir ab, welche drei Zahlen seine Farbe zusammensetzen.</Aufgabe>
+      <div className="overflow-x-auto pb-2">
+        <svg viewBox="0 0 610 180" className="max-w-full h-auto min-w-[610px]" role="img" aria-label="Rot-, Grün- und Blaukanal neben dem zusammengesetzten RGB-Bild.">
+          {kanaele.map((matrix, kanal) => (
+            <g key={namen[kanal]}>
+              <text x={kanal * 148 + 8} y="13" fill={farben[kanal]} fontSize="12">{namen[kanal]}-Kanal</text>
+              <MatrixZellen matrix={matrix} farbe={farben[kanal]} x={kanal * 148 + 8} y={22} groesse={136} intensiv aktiv={pixel} onCellClick={(i, j) => setPixel([i, j])} />
+            </g>
+          ))}
+          <g>
+            <text x="452" y="13" fill="var(--w-text)" fontSize="12">RGB-Bild</text>
+            {Array.from({ length: 8 }, (_, i) =>
+              Array.from({ length: 8 }, (_, j) => {
+                const rot = kanaele[0][i][j];
+                const gruen = kanaele[1][i][j];
+                const blau = kanaele[2][i][j];
+                const ausgewaehlt = pixel[0] === i && pixel[1] === j;
+                return <rect key={`${i}-${j}`} x={452 + j * 17} y={22 + i * 17} width="17" height="17" fill={`rgb(${rot}, ${gruen}, ${blau})`} stroke={ausgewaehlt ? "var(--w-text)" : "var(--w-border)"} strokeWidth={ausgewaehlt ? 1.8 : 0.55} />;
+              })
+            )}
+          </g>
         </svg>
-
-        <MatrixTafel
-          werte={daten[k - 1]}
-          farbe={farbeAktiv}
-          titel={
-            bild
-              ? `Kanal ${KANAL[k - 1].name} (k = ${k}), Intensitäten von 0 bis 255`
-              : scheiben === 1
-                ? "Die Matrix selbst"
-                : `Scheibe k = ${k}, also die Einträge a(i, j, ${k})`
-          }
-        />
-
-        {bild ? (
-          <div>
-            <div className="mb-1 text-xs" style={{ color: GREY }}>
-              Alle drei Kanäle übereinandergelegt
-            </div>
-            <svg width={N_BILD * 15} height={N_BILD * 15}>
-              {Array.from({ length: N_BILD }, (_, i) =>
-                Array.from({ length: N_BILD }, (_, j) => (
-                  <rect
-                    key={`${i}-${j}`}
-                    x={j * 15}
-                    y={i * 15}
-                    width={15}
-                    height={15}
-                    fill={`rgb(${BILD[0][i][j]}, ${BILD[1][i][j]}, ${BILD[2][i][j]})`}
-                  />
-                ))
-              )}
-            </svg>
-          </div>
-        ) : null}
       </div>
-
-      <p className="mt-3 text-sm" style={{ color: GREY }}>
-        Zustand: {bild ? "Farbbild" : "Zahlen-Tensor"}, Stufe {bild ? 3 : stufe},{" "}
-        {bild ? `${N_BILD} × ${N_BILD} × 3` : scheiben === 1 ? "4 × 4" : "4 × 4 × 4"} ={" "}
-        {eintraege} Einträge; gewählt ist{" "}
-        {bild ? `Kanal ${KANAL[k - 1].name} (k = ${k})` : scheiben === 1 ? "die einzige Ebene" : `k = ${k}`} mit{" "}
-        {n * n} Einträgen.
-      </p>
-
-      <p className="mt-1 text-sm" style={{ color: GREY }}>
-        {bild
-          ? "Jeder Kanal ist für sich eine Matrix von Intensitäten; erst zusammen ergeben die drei Zahlen an einer Pixelposition eine Farbe. Der orangefarbene Fleck sitzt in allen drei Kanälen an derselben Stelle, ist aber nur im Rotkanal heller als seine Umgebung, in Grün und Blau dunkler."
-          : scheiben === 1
-            ? "Eine Scheibe allein ist nichts anderes als eine Matrix: zwei Indizes, 16 Zahlen. Der Schritt zur Stufe 3 legt drei weitere davon dahinter."
-            : "Die nicht gewählten Scheiben sind blass gezeichnet, damit die Auswahl auch dann zu erkennen ist, wenn sie weiter hinten im Stapel liegt. Der Stapel hat viermal so viele Einträge wie eine einzelne Scheibe."}
-      </p>
+      <div className="mt-2 flex flex-wrap gap-x-4 text-xs" aria-label="Legende">
+        <span style={{ color: ROT }}>Rot: Intensität des Rotanteils</span>
+        <span style={{ color: GRUEN }}>Grün: Intensität des Grünanteils</span>
+        <span style={{ color: BLAU }}>Blau: Intensität des Blauanteils</span>
+      </div>
+      <Verdikt kind={Math.max(...werte) - Math.min(...werte) < 35 ? "neutral" : "ok"}>
+        {Math.max(...werte) - Math.min(...werte) < 35
+          ? `Pixel (${pixel[1] + 1}, ${pixel[0] + 1}) hat die fast ausgeglichenen Kanalwerte (${werte.join(", ")}); er erscheint daher annähernd grau.`
+          : `Pixel (${pixel[1] + 1}, ${pixel[0] + 1}) entsteht aus (${werte.join(", ")}); die unterschiedlichen Kanalwerte erzeugen sichtbar ${rgb}.`}
+      </Verdikt>
     </div>
   );
+}
+
+export function TensorScheibenViewer({ bild = false }: { bild?: boolean }) {
+  return bild ? <FarbBild /> : <ZahlenTensor />;
 }

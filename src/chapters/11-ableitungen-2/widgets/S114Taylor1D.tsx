@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { LabeledPlot, Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  LabeledPlot,
+  Schaetzfrage,
+  Slider,
+  Verdikt,
+  fmtDe,
+} from "../../../lib";
 
 /**
- * §11.4: Taylorpolynome von e^x um den Entwicklungspunkt 0, Ordnung per Regler.
+ * §11.4: Die EINE Einsicht — eine höhere Ordnung senkt den Fehler nahe am
+ * Entwicklungspunkt drastisch (bei x = 0,5 je Ordnung um mehr als das
+ * Vierfache), weit draußen dagegen NICHT monoton. Taylorpolynome von e^x um
+ * den Entwicklungspunkt 0, Ordnung per Regler.
  *
  * Rechenkern (Ordnungsregler, Auswertung des Taylorpolynoms, Plot aus Funktion
  * und Polynom, Readout des größten Fehlers im Fenster) portiert aus
@@ -19,30 +30,31 @@ import { LabeledPlot, Slider } from "../../../lib";
  * T_1/T_2/T_3 liefern bei x = 0,5 die Werte 1,5 / 1,625 / 1,645833 und damit
  * die Fehler 0,148721 / 0,023721 / 0,002888 aus Beispiel 11.4.6.
  *
+ * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
+ * 2026-08-19): Die Fehlerquotienten bei x = 0,5 sind 4,362 (T_0 -> T_1),
+ * 6,270 (T_1 -> T_2), 8,214 (T_2 -> T_3) und 10,177 (T_3 -> T_4) — daher die
+ * Schätzfrage mit der Antwort „Faktor 8". Größter Fehler auf [-1, 1] bzw.
+ * [-3, 3]: 0,7183/16,09 (k=1), 0,2183/11,59 (k=2), 0,0516/7,086 (k=3),
+ * 0,00995/3,711 (k=4). Am linken Rand ist der Fehler nicht monoton: bei
+ * x = -3 steht 0,950 (k=0), 2,050 (k=1), 2,450 (k=2), 2,050 (k=3).
+ *
  * Der Faustwert |x|/(k+1) für den Fehlerquotienten trägt nur nahe am
  * Entwicklungspunkt: Auf dem Reglerraster wächst der Fehler beim Ordnungsschritt
  * für k = 1 ab x <= -1,60 und für k = 2 ab x <= -2,60 sogar (k = 1, x = -3:
  * 0,950 -> 2,050). Der Statustext verzweigt deshalb.
+ * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2"; // Funktion und Funktionswerte
-const GRUEN = "#009E73"; // Taylorpolynom
-const ROT = "#D55E00"; // Fehler
+const BLAU = FMM_COLORS.blau; // Funktion und Funktionswerte
+const GRUEN = FMM_COLORS.gruen; // Taylorpolynom
+const ROT = FMM_COLORS.rot; // Fehler
 
 const X_MIN = -3;
 const X_MAX = 3;
 const Y_MIN = -5;
 const Y_MAX = 20;
 
-/** Deutsche Dezimalzahl; trennt undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 4): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
+const fmt = (v: number, d = 4) => fmtDe(v, d);
 
 /** T_k(x) für f = exp um den Entwicklungspunkt 0. */
 function taylorExp(k: number): (x: number) => number {
@@ -82,17 +94,21 @@ export function TaylorOrdnungWidget() {
   const maxNah = maxFehler(k, -1, 1);
   const maxWeit = maxFehler(k, X_MIN, X_MAX);
 
+  let art: "neutral" | "ok" | "warn" = "neutral";
   let status: string;
   if (k === 0) {
+    art = "neutral";
     status =
       `Die Ordnung 0 ist der Extremfall: T₀ ist die konstante Funktion 1, also der Funktionswert im ` +
       `Entwicklungspunkt selbst. Sie trifft e^x nur in x = 0 und sagt über die Steigung nichts aus. ` +
       `Ein Schritt am Ordnungsregler bringt die Tangente ins Spiel.`;
   } else if (Math.abs(x) < 1e-9) {
+    art = "neutral";
     status =
       `Im Entwicklungspunkt selbst stimmen alle Ordnungen überein: T_k(0) = 1 = e⁰, der Fehler ist null. ` +
       `Interessant wird es erst daneben, verschieben wir also den Regler für die Auswertungsstelle.`;
   } else if (fehler < 1e-14) {
+    art = "ok";
     status =
       `Bei dieser Ordnung ist der Abstand an der Stelle x = ${fmt(x, 2)} unter die Rechengenauigkeit ` +
       `gefallen; die Tafel zeigt zwei Kurven, die Maschine sieht nur noch eine. Weiter draußen, etwa ` +
@@ -103,6 +119,7 @@ export function TaylorOrdnungWidget() {
     const quotient = 1 / gewinn;
     const gewachsen = quotient > 1;
     const trifft = Math.abs(quotient - faust) <= 0.25 * faust;
+    art = gewachsen ? "warn" : "ok";
     const bilanz = gewachsen
       ? `der Schritt auf die Ordnung ${k} hat ihn also nicht gedrückt, sondern auf das ` +
         `${fmt(quotient, 3)}-fache wachsen lassen`
@@ -124,12 +141,10 @@ export function TaylorOrdnungWidget() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Blau ist f(x) = e^x, grün das Taylorpolynom T_k um den Entwicklungspunkt 0. Der Regler für
-        die Ordnung k schaltet zwischen den drei Tafeln der Vorlesung hin und her und geht darüber
-        hinaus; der zweite Regler wählt die Stelle, an der wir den Fehler ablesen. Voreingestellt
-        ist x = 0,5, also genau das Zahlenbeispiel aus Beispiel 11.4.6.
-      </p>
+      <Aufgabe>
+        Schieben wir die Ordnung k von 1 aufwärts und lesen den Fehler erst bei x = 0,5 ab, dann
+        bei x = −3.
+      </Aufgabe>
       <Slider
         label="k (Ordnung)"
         value={k}
@@ -153,17 +168,17 @@ export function TaylorOrdnungWidget() {
         xLabel="x"
         yLabel="y"
         series={[
-          { f: Math.exp, color: BLAU },
-          { f: T, color: GRUEN, dash: [6, 4] },
+          { f: Math.exp, color: BLAU, label: "f(x) = e^x" },
+          { f: T, color: GRUEN, dash: [6, 4], label: `T_${k}` },
         ]}
+        ariaLabel={`Die Exponentialfunktion in Blau und ihr Taylorpolynom der Ordnung ${k} in Grün; an der Stelle x = ${fmt(x, 2)} beträgt der Abstand ${fmt(fehler, 5)}.`}
+        readout
         markers={[
           { x, y: fx, color: BLAU },
           { x, y: tx, color: GRUEN },
         ]}
         xDomain={[X_MIN, X_MAX]}
         yDomain={[Y_MIN, Y_MAX]}
-        width={380}
-        height={260}
       />
 
       <div className="max-w-prose font-mono text-sm">
@@ -179,7 +194,35 @@ export function TaylorOrdnungWidget() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm">{status}</p>
+      <Verdikt kind={art}>{status}</Verdikt>
     </div>
+  );
+}
+
+/**
+ * Der Abschnitts-Baustein: erst tippen, dann schieben. Verifizierter Wert des
+ * Quotienten bei x = 0,5: 8,214 (check-s114.mjs, 2026-08-19).
+ */
+export function TaylorOrdnungSchaetzung() {
+  return (
+    <Schaetzfrage
+      frage="An der Stelle x = 0,5: Um welchen Faktor ist T₃ genauer als T₂?"
+      variante="auswahl"
+      loesung="acht"
+      optionen={[
+        { id: "zwei", text: "Faktor 2" },
+        { id: "fuenf", text: "Faktor 5" },
+        { id: "acht", text: "Faktor 8" },
+      ]}
+      verdeckt={
+        <p className="max-w-prose text-sm">
+          Gemessen sind es 8,2: Der Fehler fällt von 0,023721 auf 0,002888. Der Faustwert dahinter
+          ist |x|/(k+1) = 0,5/3 = 0,167, also ein Sechstel, und dass es etwas besser läuft, liegt
+          am Restglied aus Satz 11.4.2, in dem zusätzlich e^ξ mit ξ zwischen 0 und x steht.
+        </p>
+      }
+    >
+      <TaylorOrdnungWidget />
+    </Schaetzfrage>
   );
 }

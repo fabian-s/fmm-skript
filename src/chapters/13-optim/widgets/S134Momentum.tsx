@@ -1,8 +1,14 @@
 import { useMemo, useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 
 /**
- * §13.4: Vergleich Gradientenabstieg gegen Heavy-Ball-Momentum, Eigenbau zu
+ * §13.4 — DIE EINE EINSICHT: Momentum hilft erst bei SCHLECHTER Kondition und
+ * schadet bei guter. Der Standardwert alpha = 0,9 kostet bei kappa = 5 mehr als
+ * dreimal so viele Schritte wie der reine Gradientenabstieg und spart erst ab
+ * etwa kappa = 25 etwas ein; dafuer waechst die Stabilitaetsgrenze von 2 auf
+ * 2(1 + alpha).
+ *
+ * Vergleich Gradientenabstieg gegen Heavy-Ball-Momentum, Eigenbau zu
  * den Folien „Gradientenabstieg mit Momentum: Motivation", „Idee: Momentum",
  * „Heavy-Ball Momentum" und „Momentum: Visualisierung" (13-optim.Rmd
  * Z. 792-844). Es ersetzt die Grafiken resources/optim-zigzag-problem.pdf,
@@ -19,12 +25,13 @@ import { Slider } from "../../../lib";
  * Stabilitätsbereich sichtbar bleibt: GD divergiert ab gamma*L > 2,
  * Heavy-Ball erst ab gamma*L > 2(1 + alpha).
  *
- * Per node nachgerechnet (check-math-s134.mjs, check2-s134.mjs), Schritte bis
- * f <= 1e-6 f0 bei gamma = 1/L:
- *   c =   5: GD  31, Momentum(0,9) 106, optimal (alpha* = 0,146) 10
- *   c =  10: GD  64, Momentum(0,9) 103, optimal (alpha* = 0,270) 15
- *   c =  25: GD 161, Momentum(0,9) 103, optimal (alpha* = 0,444) 26
- *   c = 100: GD > 400, Momentum(0,9) 121, optimal (alpha* = 0,669) 58
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
+ * aeltere Pruefungen check-math-s134.mjs, check2-s134.mjs bestaetigt),
+ * Schritte bis f <= 1e-6 f0 bei gamma = 1/L:
+ *   c =   5: GD  31, Momentum(0,9) 106
+ *   c =  10: GD  64, Momentum(0,9) 103
+ *   c =  25: GD 161, Momentum(0,9) 103
+ *   c = 100: GD 608, Momentum(0,9) 121
  * alpha = 0,9 hilft also erst bei schlecht konditionierten Problemen und
  * schadet bei gut konditionierten; optimal sind alpha* = ((sqrt(kappa)-1) /
  * (sqrt(kappa)+1))^2 und gamma* = 4/(sqrt(L) + sqrt(mu))^2 mit der Rate
@@ -40,21 +47,26 @@ import { Slider } from "../../../lib";
  * Alles ist deterministisch; kein Math.random.
  */
 
-const BLAU = "#0072B2"; // Gradientenabstieg
-const VIOLETT = "#9E57D5"; // mit Momentum
-const GRUEN = "#009E73"; // Minimum
-const ROT = "#D55E00"; // Divergenz
+const BLAU = FMM_COLORS.blau; // Gradientenabstieg
+const VIOLETT = FMM_COLORS.violett; // mit Momentum
+const GRUEN = FMM_COLORS.gruen; // Minimum
+const ROT = FMM_COLORS.rot; // Divergenz
 
 type V2 = [number, number];
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const fmt = (v: number, d = 2) => fmtDe(v, d);
+
+/**
+ * Drei Voreinstellungen: gute, mittlere und schlechte Kondition, jeweils mit
+ * dem Deep-Learning-Standardwert alpha = 0,9 und gamma = 1/L. Sie SIND die
+ * Fallunterscheidung — bei kappa = 5 schadet der Schwung, bei kappa = 100
+ * hilft er deutlich.
+ */
+const VOREINSTELLUNGEN: { name: string; c: number; rel: number; alpha: number }[] = [
+  { name: "κ = 5: gut konditioniert", c: 5, rel: 1, alpha: 0.9 },
+  { name: "κ = 25: mittel", c: 25, rel: 1, alpha: 0.9 },
+  { name: "κ = 100: schlecht", c: 100, rel: 1, alpha: 0.9 },
+];
 
 const START: V2 = [5, 1];
 const ZEIGE = 60; // gezeichnete Schritte
@@ -163,20 +175,31 @@ export function MomentumVergleich() {
   const wechselOhne = zaehleWechsel(ohne) > 0;
   const wechselMit = zaehleWechsel(mit) > 0;
 
+  let art: "neutral" | "ok" | "warn" | "fail" = "neutral";
+  let titel = "Momentum gegen Gradientenabstieg";
   let status: string;
   if (alpha === 0) {
+    titel = "α = 0: kein Schwung";
     status = `Mit α = 0 ist der Schwung abgeschaltet: Algorithmus 13.4.13 fällt auf den gewöhnlichen Gradientenabstieg zurück, beide Wege sind derselbe, und die violette Kurve liegt genau auf der blauen. ${
       instabilOhne
         ? `Mit γ·L = ${fmt(rel)} über der gemeinsamen Grenze 2 laufen deshalb auch beide davon.`
         : "Schieben wir α nach oben, trennen sich die beiden Wege."
     }`;
   } else if (instabilMit) {
-    status = `Beide Verfahren laufen davon: γ·L = ${fmt(rel)} liegt über der Stabilitätsgrenze 2 des Gradientenabstiegs und über 2(1 + α) = ${fmt(grenzeMit)} für Heavy-Ball. In der steilen Richtung wächst der Fehler dann in jedem Schritt.`;
+    art = "fail";
+    titel = "beide divergieren";
+    status = `γ·L = ${fmt(rel)} liegt über der Stabilitätsgrenze 2 des Gradientenabstiegs und über 2(1 + α) = ${fmt(grenzeMit)} für Heavy-Ball. In der steilen Richtung wächst der Fehler dann in jedem Schritt.`;
   } else if (instabilOhne) {
+    art = "warn";
+    titel = "nur Momentum bleibt stabil";
     status = `Der gewöhnliche Gradientenabstieg divergiert hier, denn γ·L = ${fmt(rel)} liegt über 2. Momentum bleibt stabil, seine Grenze ist 2(1 + α) = ${fmt(grenzeMit)}: Der Schwung erlaubt also nicht nur glattere, sondern auch grössere Schritte.`;
   } else if (randOhne) {
+    art = "warn";
+    titel = "der Gradientenabstieg steht an der Grenze";
     status = `Genau an der Grenze γ·L = 2 springt der Gradientenabstieg in der steilen Richtung zwischen zwei Werten hin und her, ohne kleiner zu werden. Momentum bleibt darunter (Grenze 2(1 + α) = ${fmt(grenzeMit)}) und kommt voran.`;
   } else if (bisMit !== null && bisOhne !== null && bisMit < bisOhne) {
+    art = "ok";
+    titel = "hier hilft der Schwung";
     status = `Momentum braucht ${bisMit} Schritte bis f ≤ 10⁻⁶·f(x⁽⁰⁾), der reine Gradientenabstieg ${bisOhne}. ${
       wechselOhne
         ? `Zwei Wirkungen stecken darin: In der flachen Richtung zeigen die Gradienten immer in dieselbe Richtung und summieren sich auf das 1/(1 − α) = ${fmt(schwung, 1)}-fache eines Einzelschritts auf; in der steilen Richtung wechselt schon der blaue Weg wegen γ·L > 1 das Vorzeichen, und die Mittelung dämpft dieses Hin und Her.`
@@ -187,29 +210,62 @@ export function MomentumVergleich() {
           }`
     }`;
   } else if (bisMit !== null && bisOhne !== null && bisMit === bisOhne) {
+    titel = "Gleichstand";
     status = `Hier nimmt sich beides nichts: Beide Verfahren brauchen ${bisMit} Schritte bis f ≤ 10⁻⁶·f(x⁽⁰⁾). Bei κ = ${fmt(kappa, 0)} wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)} die beste Wahl.`;
   } else if (bisMit !== null && bisOhne !== null) {
+    art = "warn";
+    titel = "hier schadet der Schwung";
     status = `Hier schadet das Momentum: ${bisMit} Schritte gegen ${bisOhne} ohne. Bei κ = ${fmt(kappa, 0)} ist α = ${fmt(alpha)} zu viel des Guten, die Iterierten schiessen über das Tal hinaus; rechnerisch optimal wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)}. Der Standardwert 0,9 stammt aus dem Deep Learning, wo die Konditionszahl um Grössenordnungen höher liegt.`;
   } else if (bisMit !== null) {
+    art = "ok";
+    titel = "nur Momentum kommt an";
     status = `Momentum erreicht f ≤ 10⁻⁶·f(x⁽⁰⁾) nach ${bisMit} Schritten; der reine Gradientenabstieg schafft es in ${PRUEFE} Schritten nicht. Rechnerisch optimal wären hier α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)}.`;
   } else {
+    art = "warn";
+    titel = "keines der beiden kommt an";
     status = `Keines der beiden Verfahren erreicht f ≤ 10⁻⁶·f(x⁽⁰⁾) innerhalb von ${PRUEFE} Schritten. Bei κ = ${fmt(kappa, 0)} wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)} die beste Wahl.`;
   }
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
+      <Aufgabe>
+        Vergleichen wir die drei Konditionen bei festem α = 0,9: Ab wann überholt Violett das
+        Blau?
+      </Aufgabe>
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
         Modellproblem ist f(x) = ½(x₁² + c·x₂²) mit Start (5; 1); die Hesse-Matrix ist diag(1; c),
         die Konditionszahl also κ = c. Blau läuft der gewöhnliche Gradientenabstieg, violett
-        derselbe Abstieg mit Momentum. Die Schrittweite geben wir als Vielfaches von 1/L an,
-        damit die Stabilitätsgrenzen ablesbar bleiben.
+        derselbe Abstieg mit Momentum; die Schrittweite steht in Vielfachen von 1/L.
       </p>
+      <div className="flex flex-wrap items-center gap-2 text-sm">
+        {VOREINSTELLUNGEN.map((v) => {
+          const aktiv = c === v.c && Math.abs(rel - v.rel) < 1e-9 && Math.abs(alpha - v.alpha) < 1e-9;
+          return (
+            <button
+              key={v.name}
+              type="button"
+              aria-pressed={aktiv}
+              className={aktiv ? W_BUTTON_AKTIV : W_BUTTON}
+              onClick={() => {
+                setC(v.c);
+                setRel(v.rel);
+                setAlpha(v.alpha);
+              }}
+            >
+              {v.name}
+            </button>
+          );
+        })}
+      </div>
       <div className="flex flex-wrap gap-4">
-        <div className="shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+        <div className="min-w-0 max-w-full select-none text-[10px] text-slate-500 dark:text-slate-400">
           <svg
             viewBox={`0 0 ${W} ${HGT}`}
-            style={{ width: W, maxWidth: "100%" }}
-            className="rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={W}
+            height={HGT}
+            role="img"
+            aria-label={`Höhenlinien der Quadrik mit κ = ${fmt(kappa, 0)}; blau der Weg ohne, violett der Weg mit Momentum.`}
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <defs>
               <clipPath id="s134-mom-clip">
@@ -250,11 +306,14 @@ export function MomentumVergleich() {
             <span style={{ color: GRUEN }}>◯ Minimum</span>
           </div>
         </div>
-        <div className="shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+        <div className="min-w-0 max-w-full select-none text-[10px] text-slate-500 dark:text-slate-400">
           <svg
             viewBox={`0 0 ${CW} ${CH}`}
-            style={{ width: CW, maxWidth: "100%" }}
-            className="rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={CW}
+            height={CH}
+            role="img"
+            aria-label="Halblogarithmischer Verlauf des Funktionswerts über sechzig Schritte für beide Verfahren."
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             {yTicks.map((t) => (
               <g key={`y${t}`}>
@@ -310,8 +369,10 @@ export function MomentumVergleich() {
           <span style={{ color: BLAU }}>ohne {bisOhne === null ? `> ${PRUEFE}` : bisOhne}</span>,{" "}
           <span style={{ color: VIOLETT }}>mit {bisMit === null ? `> ${PRUEFE}` : bisMit}</span>
         </p>
-        <p style={{ color: instabilOhne || instabilMit ? ROT : undefined }}>{status}</p>
       </div>
+      <Verdikt kind={art} titel={titel}>
+        {status}
+      </Verdikt>
     </div>
   );
 }

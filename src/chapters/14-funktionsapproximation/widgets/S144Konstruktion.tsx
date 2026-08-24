@@ -1,5 +1,16 @@
+/**
+ * F1 — DIE EINE EINSICHT: Interpolation, zwei Anschlussbedingungen je innerem
+ * Knoten und Randbedingungen bestimmen die drei kubischen Stücke zusammen.
+ * FARBROLLEN: Daten blau, Spline grün, innere Knoten orange, Gleichungen neutral.
+ * PROVENIENZ: SplineSystemWidget aus heath-ch7/S74 portiert; 12×12-Foliensystem
+ * und Texte neu.
+ * VERIFIZIERTE ZAHLEN: vier Punkte, drei kubische Stücke und 12 Bedingungen;
+ * für (0,1,0,-1) ergeben sich die drei im Kommentar dokumentierten Polynome
+ * und s(0..3)=0,1,0,-1 ohne Anschluss-Sprung.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
 
 /**
@@ -20,6 +31,7 @@ import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S144BSpline";
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen (die drei Stuecke
  * unterscheiden sich durch die Strichelung, nicht durch die Farbe), Knoten
  * orange.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const KNOTEN = [0, 1, 2, 3];
@@ -137,6 +149,7 @@ export function SplineKonstruktion() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Messwert und vergleichen die beiden Randbedingungen.</Aufgabe>
       <p className="mb-2 text-sm">
         Wir halten die vier Stellen <M>{"\\xi_0 = 0, \\dots, \\xi_3 = 3"}</M> fest
         und verschieben die vier Messwerte. Das Widget baut die zwölf Zeilen genau
@@ -275,6 +288,11 @@ export function SplineKonstruktion() {
           </p>
         </div>
       </div>
+      <Verdikt kind={maxSprung < 1e-9 ? "ok" : "warn"}>
+        {maxSprung < 1e-9
+          ? "Die drei Stücke schließen ohne sichtbaren Sprung aneinander an. Die zwölf Bedingungen bestimmen den Spline für die gewählte Randbedingung."
+          : "Die Rundung lässt einen Sprung erkennen; wir prüfen die Randwerte und die lineare Lösung erneut."}
+      </Verdikt>
     </div>
   );
 }

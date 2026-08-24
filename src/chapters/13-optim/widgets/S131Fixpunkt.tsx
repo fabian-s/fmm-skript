@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 
 /**
- * §13.1: Fixpunktiteration x^(k) = x^(k-1) - gamma * f(x^(k-1)) in der Ebene.
+ * §13.1 — DIE EINE EINSICHT: Über die Fixpunktiteration entscheidet allein
+ * rho = ||I - gamma A||_2 < 1. Komplexe Eigenwerte erzwingen dabei eine
+ * Spirale, deren Drehanteil KEINE Schrittweite wegregeln kann, und eine
+ * schlechte Kondition drueckt das beste erreichbare rho dicht unter 1.
  *
  * Widget-CODE (Ebenen-Panel mit Achsenkreuz, Spiralpfad, abnehmende Deckkraft
  * der Iterierten, rho-Ablesung neben dem Bild) portiert aus
@@ -14,19 +17,23 @@ import { Slider } from "../../../lib";
  * gruen, Divergenzwarnung rot.
  *
  * Alles ist linear: f(x) = A(x - x*), also J_f = A ueberall und
- * rho = ||I - gamma A||_2 exakt. Nachgerechnet (node, check-fix-s131.mjs):
+ * rho = ||I - gamma A||_2 exakt.
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
+ * aeltere Pruefung check-fix-s131.mjs bestaetigt; gamma-Raster 1e-4):
  * - A = (4 1; 1 3): Eigenwerte 4,618034 / 2,381966, gamma_opt = 2/7 mit
  *   rho = sqrt(5)/7 = 0,3194, Divergenz ab gamma > 2/lambda_max = 0,4331;
  *   bei gamma = 0,25 ist rho = 0,4045 (dieselbe Zahl wie in §8.3).
  * - A = (1 -2; 2 1): Eigenwerte 1 +- 2i, rho(gamma) = sqrt((1-g)^2 + 4g^2),
  *   Minimum 2/sqrt(5) = 0,8944 bei gamma = 0,2, Divergenz ab gamma = 0,4.
  * - A = diag(1, 10): rho = max(|1-g|, |1-10g|), gamma_opt = 2/11 = 0,1818
- *   mit rho = 9/11 = 0,8182, Divergenz ab gamma = 0,2.
+ *   mit rho = 9/11 = 0,8182, Divergenz ab gamma = 0,2; bei gamma = 0,25 ist
+ *   rho = 1,5000, die Iteration also bereits divergent.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ROT = "#D55E00";
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ROT = FMM_COLORS.rot;
 const ACHSE = "#94a3b8";
 
 type M2 = [[number, number], [number, number]];
@@ -100,14 +107,7 @@ function spektralnorm(M: M2): number {
   return Math.sqrt(spur / 2 + Math.sqrt(Math.max(0, (spur * spur) / 4 - det)));
 }
 
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  return (Number(s) === 0 ? Math.abs(Number(s)).toFixed(d) : s)
-    .replace(".", ",")
-    .replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
 
 const HOCH: Record<string, string> = {
   "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴",
@@ -162,8 +162,12 @@ export function FixpunktSpirale() {
     (p) => Math.abs(p[0]) > R_SICHT || Math.abs(p[1]) > R_SICHT,
   );
 
+  let art: "neutral" | "ok" | "warn" | "fail";
+  let titel: string;
   let status: string;
   if (rho >= 1) {
+    art = "fail";
+    titel = "ρ ≥ 1: die Schranke trägt nicht mehr";
     // Bei rho = 1 exakt bleibt der Abstand stehen; ein Promille Toleranz haelt
     // Rundungsdrift aus dem Wachstums-Zweig heraus.
     const gewachsen = abstand > 1.001 * start;
@@ -177,6 +181,8 @@ export function FixpunktSpirale() {
           `Richtung genau fest, und weiter als bis dorthin kommt sie nicht. `) +
       `Zusammen läuft die Iteration nur für γ < ${fmt(sys.gammaMax)}.`;
   } else if (Math.abs(gamma - sys.gammaOpt) < 0.011 && rho <= 1.05 * sys.rhoOpt) {
+    art = "ok";
+    titel = "nahe der besten Schrittweite";
     status =
       `Das ist ungefähr die beste Schrittweite für dieses System: ρ = ${fmt(rho)} liegt höchstens ` +
       `fünf Prozent über dem erreichbaren Minimum ${fmt(sys.rhoOpt)}, das bei ` +
@@ -185,12 +191,16 @@ export function FixpunktSpirale() {
       `Richtungen schlechter, nach links wegen zu kleiner Schritte, nach rechts wegen des ` +
       `Überschießens.`;
   } else if (gamma < sys.gammaOpt) {
+    art = "neutral";
+    titel = "γ zu klein";
     status =
       `ρ = ${fmt(rho)} < 1, die Folge läuft also zusammen, aber gemächlich: Nach ${nSchritte} Schritten ` +
       `steht der Abstand bei ${fmtE(abstand)}, gestartet sind wir bei ${fmt(start)}. Jeder Schritt ` +
       `korrigiert nur einen Bruchteil γ des Residuums; das ist der Fall „γ zu klein“. Bis ` +
       `γ ≈ ${fmt(sys.gammaOpt)} lohnt sich jedes Stück nach rechts.`;
   } else {
+    art = "warn";
+    titel = "γ über der besten Wahl";
     status =
       `γ liegt bereits über der besten Wahl γ* ≈ ${fmt(sys.gammaOpt)}, und das kostet: ρ ist mit ` +
       `${fmt(rho)} wieder größer als das erreichbare Minimum ${fmt(sys.rhoOpt)}. Die Folge läuft ` +
@@ -198,22 +208,17 @@ export function FixpunktSpirale() {
       `von γ = ${fmt(sys.gammaMax)} kippt sie ganz.`;
   }
 
-  const knopf = (aktiv: boolean) =>
-    `rounded border px-2 py-1 text-sm ${
-      aktiv
-        ? "border-slate-500 bg-slate-200 font-semibold dark:bg-slate-700"
-        : "border-slate-300 dark:border-slate-600"
-    }`;
+  const knopf = (aktiv: boolean) => (aktiv ? W_BUTTON_AKTIV : W_BUTTON);
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Für ein affines f(x) = A(x − x*) hängt die Jacobimatrix nicht vom Ort ab, sie ist an
-        jeder Stelle A. Deshalb greift hier Schritt 5 des Beweises von Satz 13.1.16: Die Schranke
-        ‖x⁽ᵏ⁾ − x*‖ ≤ ρ‖x⁽ᵏ⁻¹⁾ − x*‖ mit ρ = ‖I − γA‖₂ trägt ohne Restterm und ab dem ersten
-        Schritt. Alle drei A sind so gewählt, dass I − γA normal ist, also fallen Spektralnorm und
-        größter Eigenwertbetrag zusammen. Blau ist der Weg der ersten 30 Schritte, grün der
-        Fixpunkt x* = 0.
+      <Aufgabe>
+        Schieben wir γ für jedes der drei Systeme nach oben, bis die Spirale nach außen läuft.
+      </Aufgabe>
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
+        Blau der Weg der ersten 30 Schritte, grün der Fixpunkt x* = 0. Alle drei A sind affin,
+        also ist ρ = ‖I − γA‖₂ nach Schritt 5 des Beweises von Satz 13.1.16 eine echte Schranke
+        ohne Restterm.
       </p>
       <div className="flex flex-wrap gap-2">
         {SYSTEME.map((s) => (
@@ -237,17 +242,19 @@ export function FixpunktSpirale() {
           width={W}
           height={W}
           viewBox={`0 0 ${W} ${W}`}
-          className="max-w-full overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
+          role="img"
+          aria-label={`Der Weg der Fixpunktiteration für ${sys.label} bei γ = ${fmt(gamma, 2)}; ρ = ${fmt(rho)}.`}
+          className="max-w-full h-auto overflow-hidden rounded border border-slate-300 bg-white dark:border-slate-600"
         >
           <line x1={0} y1={W / 2} x2={W} y2={W / 2} stroke={ACHSE} strokeWidth={0.8} />
           <line x1={W / 2} y1={0} x2={W / 2} y2={W} stroke={ACHSE} strokeWidth={0.8} />
           {[-2, -1, 1, 2].map((t) => (
             <g key={`t${t}`}>
               <text x={q(t)} y={W / 2 + 12} fontSize={9} fill={ACHSE} textAnchor="middle">
-                {String(t).replace("-", "−")}
+                {fmtDe(t, 0)}
               </text>
               <text x={W / 2 + 5} y={W - q(t) + 3} fontSize={9} fill={ACHSE}>
-                {String(t).replace("-", "−")}
+                {fmtDe(t, 0)}
               </text>
             </g>
           ))}
@@ -283,12 +290,6 @@ export function FixpunktSpirale() {
           <p className="font-mono text-xs">
             bestes γ ≈ {fmt(sys.gammaOpt)} · Divergenz ab γ &gt; {fmt(sys.gammaMax)}
           </p>
-          <p
-            className="pt-1 font-semibold"
-            style={{ color: rho < 1 ? GRUEN : ROT }}
-          >
-            {rho < 1 ? "ρ < 1: Satz 13.1.16 greift" : "ρ ≥ 1: die Schranke trägt nicht mehr"}
-          </p>
           {ausserhalb && (
             <p className="text-xs text-slate-600 dark:text-slate-400">
               Ein Teil des Weges liegt außerhalb des gezeigten Fensters [−2,4; 2,4]²; diese Punkte
@@ -298,7 +299,9 @@ export function FixpunktSpirale() {
         </div>
       </div>
 
-      <p className="max-w-prose text-sm text-slate-700 dark:text-slate-300">{status}</p>
+      <Verdikt kind={art} titel={titel}>
+        {status}
+      </Verdikt>
     </div>
   );
 }

@@ -8,7 +8,11 @@ Zahl, berechnet aus den Einträgen einer quadratischen
 die Matrix den Raum „plattdrückt“. Für eine $2 \times 2$-Matrix ist sie ein einfaches Kreuzmuster von Produkten:
 
 $$
-\det \begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc, \qquad \det \begin{pmatrix} 3 & 1 \\ 2 & 2 \end{pmatrix} = 3 \cdot 2 - 1 \cdot 2 = 4.
+\det \begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc,
+$$
+
+$$
+\det \begin{pmatrix} 3 & 1 \\ 2 & 2 \end{pmatrix} = 3 \cdot 2 - 1 \cdot 2 = 4.
 $$
 
 Geometrisch: Fassen wir die Matrix als
@@ -20,6 +24,11 @@ Abbildung quetscht die Ebene auf eine Gerade; keine Fläche
 $\det(\bA) \neq 0$ gleichwertig dazu, dass die Matrix
 eine :k[Inverse]{#matrix-inverse} besitzt.
 
-<p className="text-xs opacity-80">Ändern wir die Matrix und beobachten wir das Bild des Einheitsquadrats: Machen wir etwa eine Spalte zum Vielfachen der anderen.</p>
+Was genau passiert mit dem Einheitsquadrat, wenn eine Spalte zum Vielfachen
+der anderen wird?
 
 <DetWidget />
+
+Der Zusammenbruch des Parallelogramms und das Verschwinden der Determinante
+sind dasselbe Ereignis, von zwei Seiten betrachtet: geometrisch verliert das
+Bild seine Fläche, algebraisch verliert $\bA$ ihre Inverse.

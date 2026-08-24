@@ -1,4 +1,5 @@
 import { ReduzierteSvdBloecke } from "./widgets/S63Bloecke";
+import { PseudoinverseExplorer } from "./widgets/S63Pseudo";
 
 ::quelle[Folien 06-svd, „Reduzierte SVD: Motivation" bis „Eigenschaften der Pseudoinverse".]
 
@@ -207,14 +208,21 @@ Ausgangspunkt von [Abschnitt 6.4](#sec-6.4).
 :::
 
 :::vertiefung[Welche Blöcke fallen weg?]
-Das Widget zeichnet die volle Zerlegung als Blockschema und lässt die Formate
-frei einstellen. Ein Klick auf einen Block sagt, wozu er da ist; der Umschalter
-führt Satz 6.3.1 vor und wirft alles heraus, was auf einen Nullblock von
-$\corange{\bSigma}$ trifft. Die Zeile ganz unten zählt dazu die gespeicherten
-Zahlen aus Bemerkung 6.3.3 mit. Sehenswert ist der Fall $r = m = n$, in dem
-nichts wegfällt.
+Welche Teile der Zerlegung verschwinden beim Schrumpfen, und wie viel Speicher
+bringt das? Das Widget zeichnet die volle Zerlegung als Blockschema mit frei
+einstellbaren Formaten. Ein Klick auf einen Block sagt, wozu er da ist; der
+Umschalter führt Satz 6.3.1 vor und wirft alles heraus, was auf einen Nullblock
+von $\corange{\bSigma}$ trifft. Die Zeile ganz unten zählt die gespeicherten
+Zahlen aus Bemerkung 6.3.3 mit.
 
 <ReduzierteSvdBloecke />
+
+Zwei Fälle lohnen den Vergleich. Bei $r = 1$ bleibt von $\cgreen{\bU}$ eine
+einzige Spalte übrig, von $\corange{\bSigma}$ eine einzige Zahl, und der
+Speicherbedarf fällt unter den der Matrix selbst. Bei $r = m = n$ dagegen
+schrumpft nichts: $\cgreen{\bU}$ und $\cblue{\bV}$ sind schon quadratisch, und
+$\corange{\bSigma}$ hat weder Nullzeile noch Nullspalte. Die reduzierte
+Zerlegung ist dann die volle.
 :::
 
 ### Die Moore-Penrose-Pseudoinverse
@@ -593,7 +601,7 @@ $$
 $$
 
 löst deshalb das :k[Kleinste-Quadrate-Problem]{#linear-least-squares}
-$\min_{\bx} \left\|\cred{\bA\bx - \bb}\right\|$; der <span className="font-semibold" style={{ color: "#D55E00" }}>rote</span> Term ist das
+$\min_{\bx} \left\|\cred{\bA\bx - \bb}\right\|$; der <span className="font-semibold" style={{ color: "var(--w-text)" }}>rote</span> Term ist das
 Residuum, und kleiner als
 $\left\|\cred{\proj_{\col(\bA)}\bb - \bb}\right\|$ wird es nicht. Bei vollem
 Spaltenrang ist $\wh{\bx}$ nach ($6.3.6$) die vertraute Lösung der
@@ -604,9 +612,46 @@ alles in
 Lösungswege auftritt.
 :::
 
+:::vertiefung[Die kürzeste unter unendlich vielen Lösungen]
+Was heißt „die mit der kleinsten Norm" geometrisch? Das Widget stellt beide
+Räume nebeneinander: rechts den Bildraum mit $\bb$, dem Spaltenraum
+$\cgreen{\col(\bA)}$ und dem Residuum, links den Urbildraum
+mit der Menge aller Kleinste-Quadrate-Lösungen. Ist $\bA$ singulär, so ist
+diese Menge eine ganze Gerade.
+
+<PseudoinverseExplorer />
+
+Das Widget trennt die Menge gleich guter Lösungen von der zusätzlichen Wahl der kleinsten Norm.
+:::
+
 ### Selbsttest
 
 ::::quiz
+
+:::zahlfrage{loesung=20 toleranz=0.5}
+Stellen wir im Blockschema oben das Preset $r < \min(m, n)$ ein, also $m = 5$,
+$n = 4$, $r = 2$, und schalten wir auf die reduzierte Zerlegung um. Wie viele
+Zahlen speichert sie?
+
+$r \cdot (m + n + 1) = 2 \cdot 10 = 20$. Die volle Zerlegung braucht
+$m^2 + n^2 + \min(m,n) = 25 + 16 + 4 = 45$ Zahlen, die Matrix selbst
+$m \cdot n = 20$. Bei diesen Formaten lohnt die Reduktion gegenüber der vollen
+Zerlegung deutlich, gegenüber $\bA$ selbst aber noch gar nicht: Erst kleines $r$
+bei großem $m$ und $n$ spart wirklich (Bemerkung 6.3.3).
+:::
+
+:::zahlfrage{loesung=2.121 toleranz=0.02}
+Im Pseudoinversen-Widget steht voreingestellt
+$\bA = \bigl(\begin{smallmatrix} 1 & 1 \\ 1 & 1 \end{smallmatrix}\bigr)$ mit
+$\bb = (1,\; 5)^\top$. Wie groß ist die Norm $\left\| \bA\pinv\bb \right\|$ der
+Minimalnorm-Lösung?
+
+$\left\| \bA\pinv\bb \right\| = 2{,}121$. Es ist
+$\bA\pinv = \tfrac{1}{4}\bigl(\begin{smallmatrix} 1 & 1 \\ 1 & 1 \end{smallmatrix}\bigr)$,
+also $\bA\pinv\bb = (1{,}5,\; 1{,}5)^\top$ mit der Länge $1{,}5\sqrt{2}$. Jede
+andere Lösung liegt weiter außen: Bei $t = 1$ auf der Lösungsgeraden sind es
+schon $2{,}345$, während das Residuum unverändert $2{,}828$ bleibt.
+:::
 
 :::frage{falsch}
 In der reduzierten SVD $\bA = \bU_r\bSigma_r\bV_r^\top$ sind $\bU_r$ und

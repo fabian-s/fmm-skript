@@ -1,8 +1,14 @@
 import { useMemo, useState } from "react";
-import { niceTicks, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, niceTicks, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 
 /**
- * §13.4: Newton-Labor zu den Folien „Newton-Verfahren: Idee",
+ * §13.4 — DIE EINE EINSICHT: Newton springt in den Scheitel des quadratischen
+ * Modells. Bei konvexem f ist das das Minimum, und der Fehler quadriert sich in
+ * jedem Schritt; bei nicht-konvexem f kann derselbe Schritt im lokalen MAXIMUM
+ * landen oder aus dem Definitionsbereich springen — Newton sucht Nullstellen
+ * des Gradienten, nicht Minima.
+ *
+ * Newton-Labor zu den Folien „Newton-Verfahren: Idee",
  * „Newton-Verfahren: Geometrische Intuition" (zwei Tafeln) und „Newton für
  * nicht-konvexe Funktionen" (13-optim.Rmd Z. 660-721). Es ersetzt die
  * Grafiken resources/optim-newton-intuition.pdf, -iter2.pdf und
@@ -33,21 +39,26 @@ import { niceTicks, Slider } from "../../../lib";
  * geöffnet, Schritt undefiniert, Definitionsbereich verlassen).
  *
  * Alles ist deterministisch; kein Math.random.
+ *
+ * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ *  - f(x) = x − 2 ln x ab x⁽⁰⁾ = 1: 1 → 1,5 → 1,875 → 1,9921875 → 1,99996948
+ *    → 2,00000000 mit den Fehlern 1 / 0,5 / 0,125 / 7,8125e-3 / 3,0518e-5 /
+ *    4,66e-10 und dem Quotienten e_{k+1}/e_k² konstant 0,500000.
+ *  - Der Newton-Schritt ist dort x ↦ x(4 − x)/2; ab x⁽⁰⁾ = 4 wird er null oder
+ *    negativ (x⁽⁰⁾ = 4,5 → −1,125), also außerhalb des Definitionsbereichs.
+ *  - f(x) = x⁴/4 − x³/3 − x² + 2: f(−1) = 1,5833, f(0) = 2, f(2) = −0,6667;
+ *    f″ verschwindet bei −0,5486 und 1,2153. Startpunkte: −2 → −1 (lokales
+ *    Minimum, 7 Schritte), 0,5 → 0 (lokales MAXIMUM, EIN Schritt, weil
+ *    f′(0,5) = −1,125 und f″(0,5) = −2,25), 2,5 → 2 (globales Minimum,
+ *    5 Schritte), 3 → 2 (6 Schritte).
  */
 
-const BLAU = "#0072B2"; // Funktion und Iterierte
-const GRUEN = "#009E73"; // Minimum
-const ROT = "#D55E00"; // Warnungen
-const ORANGE = "#E69F00"; // quadratisches Modell und sein Scheitel
+const BLAU = FMM_COLORS.blau; // Funktion und Iterierte
+const GRUEN = FMM_COLORS.gruen; // Minimum
+const ROT = FMM_COLORS.rot; // Warnungen
+const ORANGE = FMM_COLORS.orange; // quadratisches Modell und sein Scheitel
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
 
 function fmtE(v: number): string {
   if (Number.isNaN(v)) return "–";
@@ -190,24 +201,40 @@ export function NewtonParabelLab() {
   // "flach"-Ausgang unten reiner Rechenschutz und der Hinweis hängt am Sprung.
   const fastFlach = scheitel !== null && Number.isFinite(scheitel) && Math.abs(scheitel - x0) > 20;
 
+  let art: "neutral" | "ok" | "warn" | "fail" = "neutral";
+  let titel = "Newton unterwegs";
   let urteil: string;
   if (ausgang === "flach") {
+    art = "fail";
+    titel = "Schritt nicht ausführbar";
     urteil = "Hier verschwindet f″, die Division im Newton-Schritt ist also nicht ausführbar.";
   } else if (ausgang === "undefiniert") {
+    art = "fail";
+    titel = "aus dem Definitionsbereich gesprungen";
     urteil = `Nach ${xs.length - 1} Schritt${xs.length === 2 ? "" : "en"} steht die Iteration bei x = ${fmt(ziel, 3)}, und dort ist f gar nicht mehr erklärt. Newton konvergiert nur lokal: Weit vom Ziel entfernt taugt die Parabel nicht als Modell, und der Schritt kann überall hin zeigen.`;
   } else if (ausgang === "weg") {
+    art = "fail";
+    titel = "davongelaufen";
     urteil = "Die Iterierten laufen davon; die Rechnung bricht hier ab.";
   } else if (xs.length === 1) {
+    art = getroffen && getroffen.art === "max" ? "fail" : "ok";
+    titel = "der Gradient ist schon null";
     urteil = `Hier ist der Gradient schon null, die Iteration steht also von Anfang an still. ${
       getroffen && getroffen.art === "max"
         ? "Allerdings in einem lokalen Maximum: Newton unterscheidet nicht, welche Sorte kritischer Punkt vor ihm liegt."
         : "Wir stehen bereits in einem Minimum."
     }`;
   } else if (getroffen && getroffen.art === "max") {
+    art = "fail";
+    titel = "im lokalen Maximum gelandet";
     urteil = `Nach ${xs.length - 1} Schritt${xs.length === 2 ? "" : "en"} bleibt die Iteration bei x = ${fmt(getroffen.x, 2)} stehen. Dort hat f ein lokales Maximum. Gesucht war ein Minimum, gefunden hat das Verfahren eine Nullstelle der Ableitung, und das ist beides. Verraten hätte es die Krümmung: Bei f″ < 0 öffnet sich die Parabel nach unten, ihr Scheitel ist der höchste und nicht der tiefste Punkt.`;
   } else if (getroffen && !getroffen.global) {
+    art = "warn";
+    titel = "nur ein lokales Minimum";
     urteil = `Die Iteration läuft in ${xs.length - 1} Schritten nach x = ${fmt(getroffen.x, 2)}. Dort liegt zwar ein lokales Minimum, aber nicht das globale: Bei x = ${fmt(globalesMin.x, 2)} ist f um ${fmt(b.f(getroffen.x) - b.f(globalesMin.x), 2)} kleiner. Welches Tal wir finden, entscheidet allein der Startpunkt.`;
   } else if (getroffen) {
+    art = "ok";
+    titel = "globales Minimum, quadratisch schnell";
     urteil = `Die Iteration erreicht das globale Minimum x⋆ = ${fmt(globalesMin.x, 2)} in ${xs.length - 1} Schritten. In der Nähe des Ziels zeigt die Fehlerspalte die quadratische Konvergenz: Der Quotient eₖ/eₖ₋₁² bleibt beschränkt, die Zahl der richtigen Stellen verdoppelt sich also grob von Schritt zu Schritt. Weiter draußen kann es dagegen dauern, bis die Iteration überhaupt in diese Nähe kommt.`;
   } else {
     urteil = `Nach ${xs.length - 1} Schritten steht die Iteration bei x = ${fmt(ziel, 4)} und ist noch nicht zur Ruhe gekommen.`;
@@ -221,22 +248,22 @@ export function NewtonParabelLab() {
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Blau die Funktion, orange die Parabel, mit der Algorithmus 13.4.1 an der aktuellen Stelle
-        rechnet. Wo diese Parabel ihren tiefsten Punkt hat, steht im nächsten Schritt die
-        Iterierte; die weiteren blauen Punkte zeigen, wie es danach weitergeht. Wir verschieben
-        den Startpunkt und sehen zu, wo die Iteration landet.
+      <Aufgabe>
+        Verschieben wir den Startpunkt über den nicht-konvexen Bereich und lesen ab, in welchem
+        kritischen Punkt Newton landet.
+      </Aufgabe>
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
+        Blau die Funktion und die Iterierten, orange die Parabel, mit der Algorithmus 13.4.1 an
+        der aktuellen Stelle rechnet, und ihr Scheitel: dort steht im nächsten Schritt die
+        Iterierte.
       </p>
       <div className="flex flex-wrap items-center gap-3 text-sm">
         {BEISPIELE.map((e, i) => (
           <button
             key={e.name}
             type="button"
-            className={`rounded border px-3 py-1 ${
-              i === wahl
-                ? "border-sky-600 bg-sky-50 dark:border-sky-400 dark:bg-sky-900/40"
-                : "border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700"
-            }`}
+            aria-pressed={i === wahl}
+            className={i === wahl ? W_BUTTON_AKTIV : W_BUTTON}
             onClick={() => {
               setWahl(i);
               setX0(BEISPIELE[i].start);
@@ -262,8 +289,11 @@ export function NewtonParabelLab() {
       <div className="overflow-x-auto">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          style={{ width: W, maxWidth: "100%" }}
-          className="rounded border border-slate-300 bg-white text-slate-500 dark:border-slate-600"
+          width={W}
+          height={H}
+          role="img"
+          aria-label={`Der Graph von f mit dem quadratischen Modell am Startpunkt x⁽⁰⁾ = ${fmt(x0, 2)} und den ersten Newton-Iterierten.`}
+          className="max-w-full h-auto rounded border border-slate-300 bg-white text-slate-500 dark:border-slate-600"
         >
           <defs>
             <clipPath id="s134-newton-clip">
@@ -401,8 +431,10 @@ export function NewtonParabelLab() {
             ))}
           </tbody>
         </table>
-        <p>{urteil}</p>
       </div>
+      <Verdikt kind={art} titel={titel}>
+        {urteil}
+      </Verdikt>
     </div>
   );
 }

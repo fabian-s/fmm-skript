@@ -1,8 +1,13 @@
 import { useMemo, useState } from "react";
-import { Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
 
 /**
- * §13.4: BFGS-Stepper zur Folie „BFGS-Verfahren" (13-optim.Rmd Z. 760-770).
+ * §13.4 — DIE EINE EINSICHT: B_k naehert sich der INVERSEN Hesse-Matrix an,
+ * ohne dass je eine zweite Ableitung ausgewertet wird. Mit exakter Liniensuche
+ * steht bei einer Quadrik im R^n nach n Schritten das Minimum UND B_n = H^{-1}
+ * exakt (Satz 13.4.10); mit alpha = 1 dagegen geht der erste Schritt zu weit.
+ *
+ * BFGS-Stepper zur Folie „BFGS-Verfahren" (13-optim.Rmd Z. 760-770).
  *
  * CODE-Vorlage: BfgsStepperWidget und der Höhenlinien-Plotter QuadPlane aus
  * heath-ch5-6/src/sections/widgets/S654Widgets.tsx (Iterationsschleife,
@@ -18,15 +23,17 @@ import { Slider } from "../../../lib";
  * Beispiel ist die Quadrik f(x) = 0,5 x1^2 + 2,5 x2^2 (Hesse diag(1; 5),
  * kappa = 5, H^{-1} = diag(1; 0,2)) mit Start (5; 1) und B_0 = I.
  *
- * Per node nachgerechnet (check-math-s134.mjs):
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
+ * aeltere Pruefung check-math-s134.mjs bestaetigt):
  *  - Einheitsschritt alpha = 1: (5; 1) -> (0; -4) -> (-2,222; 0,444) ->
  *    (0,816; 0,082) -> ...; f springt im ersten Schritt von 15 auf 40 und
- *    faellt danach; B_6 = [1,0110 0,0013; 0,0013 0,2002], also nahe, aber
- *    nicht gleich H^{-1} (Frobeniusabstand 0,0111; bei k = 8 noch 0,0005).
+ *    faellt danach (15 / 40 / 2,963 / 0,3499 / 0,0006 / ...); B_6 liegt
+ *    0,0112 von H^{-1} entfernt (Frobeniusnorm), B_8 noch 5,205e-4.
  *  - exakte Schrittweite: alpha_0 = 1/3, alpha_1 = 0,6; nach ZWEI Schritten
  *    steht die Iteration exakt im Minimum und B_2 = diag(1; 0,2) = H^{-1}.
  *  - Die Sekantenbedingung B_{k+1} y = s ist in jedem Schritt bis auf
- *    Rundungsfehler (< 1e-10) erfuellt.
+ *    Rundungsfehler erfuellt: groesstes Residuum 5,40e-15 (alpha = 1) bzw.
+ *    4,97e-16 (exakt).
  *
  * Farbrollen (Farbcode Kapitel 13): blau die Iterierten, orange Gradient und
  * die Naeherung B_k (Ableitungsobjekte), grün das Minimum.
@@ -34,21 +41,14 @@ import { Slider } from "../../../lib";
  * Alles ist deterministisch; kein Math.random.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
+const BLAU = FMM_COLORS.blau;
+const GRUEN = FMM_COLORS.gruen;
+const ORANGE = FMM_COLORS.orange;
 
 type V2 = [number, number];
 type M2 = [[number, number], [number, number]];
 
-/** Deutsche Dezimalzahl; unterscheidet undefiniert (–) von unendlich (∞). */
-function fmt(v: number, d = 3): string {
-  if (Number.isNaN(v)) return "–";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  const s = v.toFixed(d);
-  const t = Number(s) === 0 ? (0).toFixed(d) : s;
-  return t.replace(".", ",").replace(/^-/, "−");
-}
+const fmt = (v: number, d = 3) => fmtDe(v, d);
 
 function fmtE(v: number): string {
   if (Number.isNaN(v)) return "–";
@@ -154,27 +154,37 @@ export function BfgsStepper() {
 
   const abstandInvers = Math.hypot(z.B[0][0] - 1, z.B[0][1], z.B[1][0], z.B[1][1] - 1 / C2);
 
+  let art: "neutral" | "ok" | "warn" = "neutral";
+  let titel = `nach ${kk} Schritten`;
   let status: string;
   if (kk === 0) {
+    titel = "Ausgangslage B₀ = I";
     status =
       "Start bei B₀ = I. Der erste Schritt ist deshalb ein gewöhnlicher Gradientenschritt: Ohne Vorwissen über die Krümmung kann das Verfahren nichts Besseres tun.";
   } else if (exakt && kk >= 2) {
+    art = "ok";
+    titel = "nach n = 2 Schritten exakt";
     status =
-      "Nach zwei Schritten ist Schluss: Die Iterierte sitzt im Minimum, und B₂ stimmt auf allen gezeigten Stellen mit diag(1; 0,2) überein. Ein Zufall dieses Beispiels ist das nicht. Bei einer Quadrik im ℝⁿ liefern n Schritte mit exakter Liniensuche n Sekantenbedingungen für n unabhängige Richtungen, und mehr Information über eine konstante Krümmung gibt es nicht.";
+      "Die Iterierte sitzt im Minimum, und B₂ stimmt auf allen gezeigten Stellen mit diag(1; 0,2) = H⁻¹ überein. Ein Zufall dieses Beispiels ist das nicht, sondern genau die Aussage von Satz 13.4.10: Bei einer Quadrik im ℝⁿ liefern n Schritte mit exakter Liniensuche n Sekantenbedingungen für n unabhängige Richtungen, und mehr Information über eine konstante Krümmung gibt es nicht.";
   } else if (!exakt && kk === 1) {
+    art = "warn";
+    titel = "der erste Schritt geht zu weit";
     status =
-      "Der erste Schritt geht zu weit: f wächst von 15 auf 40, obwohl die Richtung bergab zeigte. Am Update liegt das nicht, sondern an der Länge α = 1, die niemand geprüft hat. Deshalb kommt BFGS in der Praxis nie ohne Schrittweitensuche (Häkchen setzen).";
+      "f wächst von 15 auf 40, obwohl die Richtung bergab zeigte. Am Update liegt das nicht, sondern an der Länge α = 1, die niemand geprüft hat. Deshalb kommt BFGS in der Praxis nie ohne Schrittweitensuche (Häkchen setzen); Satz 13.4.10 setzt sie ausdrücklich voraus.";
   } else {
     status = `Nach ${kk === 1 ? "einem Schritt" : `${kk} Schritten`} steht f bei ${fmt(f(z.x), 4)}. Die Näherung B_${kk} hat inzwischen Krümmungsinformation gesammelt, liegt von diag(1; 0,2) aber immer noch ${fmt(abstandInvers, 3)} entfernt (Frobeniusnorm). Das stört nicht weiter, denn für den Schritt zählt nur, ob die Richtung taugt.`;
   }
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
+      <Aufgabe>
+        Schieben wir den Schrittregler durch und vergleichen B_k mit H⁻¹: einmal mit, einmal
+        ohne exakte Schrittweite.
+      </Aufgabe>
+      <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
         Minimiert wird f(x) = 0,5 x₁² + 2,5 x₂², die Hesse-Matrix ist überall diag(1; 5). BFGS
         kennt sie nicht, sondern baut aus den beobachteten Gradientendifferenzen eine Näherung
-        B_k der inversen Hesse-Matrix auf. Wir schieben den Regler Schritt für Schritt weiter und
-        vergleichen B_k mit dem wahren Wert.
+        B_k der inversen Hesse-Matrix auf.
       </p>
       <label className="flex items-center gap-2 text-sm">
         <input
@@ -197,11 +207,14 @@ export function BfgsStepper() {
         fmt={(v) => String(Math.round(v))}
       />
       <div className="flex flex-wrap gap-4">
-        <div className="shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+        <div className="min-w-0 max-w-full select-none text-[10px] text-slate-500 dark:text-slate-400">
           <svg
             viewBox={`0 0 ${W} ${HGT}`}
-            style={{ width: W, maxWidth: "100%" }}
-            className="rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={W}
+            height={HGT}
+            role="img"
+            aria-label={`Höhenlinien der Quadrik mit den ersten ${kk} BFGS-Iterierten${exakt ? " bei exakter Schrittweite" : ""}.`}
+            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
           >
             <line x1={px(-mx)} y1={py(0)} x2={px(mx)} y2={py(0)} stroke="#cbd5e1" />
             <line x1={px(0)} y1={py(-my)} x2={px(0)} y2={py(my)} stroke="#cbd5e1" />
@@ -231,7 +244,15 @@ export function BfgsStepper() {
               strokeWidth={1.6}
             />
             {bisher.map((q, i) => (
-              <circle key={`i${i}`} cx={px(q[0])} cy={py(q[1])} r={i === kk ? 4.5 : 2.8} fill={BLAU} opacity={i === kk ? 1 : 0.65} />
+              <circle
+                key={`i${i}`}
+                cx={px(q[0])}
+                cy={py(q[1])}
+                r={i === kk ? 4.5 : 2.8}
+                fill={BLAU}
+                opacity={i === kk ? 1 : 0.65}
+                style={{ transition: "cx 250ms ease-in-out, cy 250ms ease-in-out" }}
+              />
             ))}
             <circle cx={px(0)} cy={py(0)} r={5} fill="none" stroke={GRUEN} strokeWidth={2} />
           </svg>
@@ -263,9 +284,9 @@ export function BfgsStepper() {
           )}
         </div>
       </div>
-      <p className="max-w-prose rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
+      <Verdikt kind={art} titel={titel}>
         {status}
-      </p>
+      </Verdikt>
     </div>
   );
 }

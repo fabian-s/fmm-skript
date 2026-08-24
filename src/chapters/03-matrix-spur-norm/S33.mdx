@@ -49,7 +49,7 @@ Wir dürfen uns deshalb auf Vektoren der Länge 1 beschränken.
   schreiben dafür dasselbe Symbol.
 - Warum dürfen wir „max" statt „sup" schreiben? Die Funktion
   $\bx \mapsto \left\| \bA\bx \right\|_V$ ist
-  :k[stetig]{#continuous-function}, und die
+  :k[stetig]{#continuity}, und die
   Einheitssphäre
   $\{\bx : \left\| \bx \right\|_V = 1\}$ ist eine
   :k[abgeschlossene und beschränkte Menge]{#closed-bounded-set}; das Maximum wird also tatsächlich angenommen.
@@ -99,9 +99,22 @@ Matrix begegnet uns in Beispiel 3.4.6 ([Abschnitt 3.4](#sec-3.4)) wieder. Dort
 berechnen wir ihre Schattennormen aus genau diesen Eigenwerten.
 :::
 
-:::vertiefung[Operatornorm zum Anfassen: der Einheitskreis unter A]
+Gerechnet haben wir das Maximum damit, gesehen haben wir es nicht. Die Definition läuft über
+*alle* Einheitsvektoren, ausprobieren können wir immer nur einen. Wie stark schwankt der
+Streckfaktor $\left\|\bA\bx\right\|_2$ überhaupt, wenn $\bx$ einmal ganz um den
+Einheitskreis wandert, und in welche Richtung muss $\bx$ zeigen, damit er sein Maximum
+erreicht?
+
 <S33OperatornormWidget />
-:::
+
+Der Streckfaktor pendelt, wie das Widget zeigt, zwischen den beiden Halbachsen der
+Bildellipse hin und her, und er tut das zweimal pro Umlauf: Die Kurve rechts hat zwei
+Hochpunkte, an denen die Ellipse den roten Kreis von innen berührt. Nur der obere Wert ist
+die Operatornorm. Die Richtung $\bx^*$, in der das passiert, ist keine der
+Koordinatenachsen, sondern liegt schief im Raum; welche Richtung es genau ist, klärt
+Satz 3.3.7 weiter unten. Und die beiden Sonderfälle sind schnell durchgespielt: Bei der
+Drehung ist die Kurve eine Waagrechte, jede Richtung ist Maximalrichtung; bei der singulären
+Matrix fällt die Kurve irgendwo auf null, ohne dass das Maximum davon etwas merkt.
 
 ### 3.3.2 Die wichtigsten Operatornormen
 
@@ -315,7 +328,7 @@ $$
 
 Die Interpretation: Der größte Eigenwert von $\bA^\top\bA$ ist die
 quadrierte maximale Streckung, und die Richtung der stärksten Streckung ist der
-zugehörige Eigenvektor, im Widget oben der graue Pfeil $\bx^*$. Noch
+zugehörige Eigenvektor, im Widget oben die rot gestrichelte Richtung $\bx^*$. Noch
 intuitiver wird das über die Singulärwerte von $\bA$ und die
 :k[Singulärwertzerlegung]{#singular-value-decomposition};
 dazu später mehr.
@@ -402,5 +415,34 @@ $\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
     eingeführt.
   </SelbsttestFrage>
 </ul>
+
+<div className="max-w-prose">
+
+::::quiz
+
+:::zahlfrage{loesung=22.882 toleranz=0.05}
+Stellen wir im Operatornorm-Widget die Voreinstellung „zehnfach" ein, also
+$\bA = \bigl(\begin{smallmatrix} 20 & 10 \\ 0 & 10 \end{smallmatrix}\bigr)$. Welchen Wert
+zeigt es für $\left\|\bA\right\|_2$?
+
+$22{,}882$, also genau das Zehnfache des Werts aus Beispiel 3.3.3. Das muss so sein:
+Multiplizieren wir eine Matrix mit $10$, so wird jedes Bild zehnmal so lang, und die
+absolute Homogenität aus Definition 3.2.1 liefert
+$\left\|10\,\bA\right\|_2 = 10 \left\|\bA\right\|_2$. Die Ellipse behält ihre Gestalt, die
+Maximalrichtung $\bx^*$ bleibt dieselbe, nur der Maßstab wächst.
+:::
+
+:::frage{falsch}
+Bei der Voreinstellung „singulär" zeigt das Widget die Operatornorm $0$, weil eine Richtung
+ganz platt gedrückt wird.
+
+Die Operatornorm ist ein *Maximum* über Richtungen, kein Minimum. Die Bildellipse entartet
+zu einer Strecke, ihre kurze Halbachse ist $\sigma_2 = 0$, die lange aber $2{,}5$ – und nur
+die ist $\left\|\bA\right\|_2$ (Definition 3.3.1).
+:::
+
+::::
+
+</div>
 
 *Vertiefung: Heath §2.3.2.*

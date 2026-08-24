@@ -1,3 +1,4 @@
+import { Schaetzfrage } from "../../lib";
 import { NelderMeadSimplex } from "./widgets/S133NelderMead";
 import { GdStepper1D } from "./widgets/S133GdStepper";
 import { CanyonWidget } from "./widgets/S133Canyon";
@@ -121,32 +122,48 @@ gradientenbasiertes `method` auch angeben; [Abschnitt 13.6](#sec-13.6) geht die
 Optionen durch.
 :::
 
+Vier Züge, aber wie oft fällt welcher? Das entscheidet über die Kosten des
+Verfahrens, denn die vier sind verschieden teuer. Sehen wir zu.
+
 :::vertiefung[Der Simplex bei der Arbeit]
 Die Vorlesung zeigt ein Standbild des Verfahrens. Hier läuft es Schritt für
 Schritt, auf der Testfunktion $f(\bx) = (1-x_1)^2 + 5(x_2 - x_1^2)^2$ mit Minimum
 in $\cgreen{(1; 1)}$. Der orange Strahl markiert jeweils den nächsten
-Versuchspunkt, und die Statuszeile sagt, welcher der vier Züge gerade gefallen
-ist; der Zähler daneben hält mit, wie oft jeder Zug schon vorkam.
+Versuchspunkt; der Schrittregler lässt sich vorwärts und rückwärts schieben, der
+Abspielknopf lässt den ganzen Lauf durchlaufen.
 
-Zwei Dinge lohnen die Aufmerksamkeit. Erstens braucht das Verfahren aus dem
-voreingestellten Simplex vierzig Schritte, bis der beste Eckpunkt einen
-Funktionswert unter $10^{-6}$ erreicht, und der Zähler steht dann auf $23$
-Kontraktionen, $13$ Reflexionen und $4$ Expansionen. Ein Schrumpfschritt kommt
-auf diesem Weg überhaupt nicht vor; er ist der teuerste der vier Züge, und der
-zweite Startsimplex führt ihn im vierten Schritt vor. Zweitens verrät die Form
-des Simplex, wo er steht: Auf den geraden Stücken des Tals wird er lang und dünn
-und legt sich in Laufrichtung, wobei seine längste Kante nur wenige Grad von der
-Talrichtung abweicht; in der Biegung um $x_1 \approx 0$ schrumpft er auf ein
-fast gleichseitiges Dreieck zusammen und dreht sich dort in die neue Richtung.
-Diese Anpassung an die lokale Geometrie ist es, die hier die fehlende Ableitung
-ersetzt.
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Welcher der vier Züge fällt auf dieser Testfunktion am häufigsten?</>}
+  optionen={[
+    { id: "reflexion", text: "Reflexion" },
+    { id: "expansion", text: "Expansion" },
+    { id: "kontraktion", text: "Kontraktion" },
+    { id: "schrumpfen", text: "Schrumpfen" },
+  ]}
+  loesung="kontraktion"
+  verdeckt={<>Der Zugzähler im Widget führt mit.</>}
+>
+  <NelderMeadSimplex />
+</Schaetzfrage>
 
 Eine sehr sehenswerte Animation derselben Züge, mit einstellbaren Parametern und
 mehreren Testfunktionen, liegt unter
 [alexdowad.github.io/visualizing-nelder-mead](https://alexdowad.github.io/visualizing-nelder-mead/).
-
-<NelderMeadSimplex />
 :::
+
+Im Widget verteilen sich die vier Züge sehr ungleich. Aus dem
+voreingestellten Simplex braucht das Verfahren vierzig Schritte, bis der beste
+Eckpunkt einen Funktionswert unter $10^{-6}$ erreicht, und der Zähler steht dann
+auf $23$ Kontraktionen, $13$ Reflexionen und $4$ Expansionen. Ein Schrumpfschritt
+kommt auf diesem Weg überhaupt nicht vor; er ist der teuerste der vier Züge, und
+erst der zweite Startsimplex führt ihn im vierten Schritt vor. Auch die Form des
+Simplex verrät, wo er steht: Auf den geraden Stücken des Tals wird er lang und
+dünn und legt sich in Laufrichtung, wobei seine längste Kante nur wenige Grad von
+der Talrichtung abweicht; in der Biegung um $x_1 \approx 0$ schrumpft er auf ein
+fast gleichseitiges Dreieck zusammen und dreht sich dort in die neue Richtung.
+Diese Anpassung an die lokale Geometrie ist es, die hier die fehlende Ableitung
+ersetzt.
 
 ### Der Gradientenabstieg
 
@@ -194,7 +211,7 @@ für konvexes $f$ sei $-\corange{\nabla f(\bx)}$ „immer eine Abstiegsrichtung 
 zum globalen Minimum". Beide Zusätze sind zu großzügig: Abstiegsrichtung ist sie
 auch ohne Konvexität, solange der Gradient nicht verschwindet, und *hin zum*
 Minimum zeigt sie im Allgemeinen gerade nicht, wie das Zickzack-Bild weiter
-unten vorführt. Was die :k[Konvexität]{#convex-function} aus
+unten vorführt. Was die :k[Konvexität]{#convexity} aus
 [Kapitel 12](?k=12-konvexitaet#sec-12.3) beisteuert, ist etwas anderes und
 Wichtigeres: Sie sorgt dafür, dass jeder stationäre Punkt schon ein globales
 Minimum ist ([Abschnitt 13.2](#sec-13.2)), das Verfahren also nirgends sonst
@@ -235,9 +252,28 @@ $-0{,}02$. Sie wechseln in jedem Schritt das Vorzeichen und schrumpfen dabei
 exakt auf ein Fünftel.
 :::
 
-Dass dort der Faktor $-0{,}2$ steht, ist kein Zufall, und es lohnt sich,
-den Grund einmal auszurechnen. Er erklärt das ganze Verhalten des Verfahrens auf
-einen Schlag.
+Dass dort der Faktor $-0{,}2$ steht, ist kein Zufall. Bevor wir den Grund
+ausrechnen, probieren wir die Schrittweite selbst aus: Welche Werte von $\gamma$
+führen ans Ziel, welche nicht?
+
+Die folgende Tafel zeigt das Beispiel 13.3.6 mit frei einstellbarem $\gamma$.
+Weil $f'' \equiv 2$ ist, liegen die beiden Schwellen direkt auf dem Reglerraster
+und lassen sich einzeln ansteuern; der Schrittregler läuft vorwärts wie
+rückwärts.
+
+<Schaetzfrage
+  frage={<>Ab welchem <M>{"\\gamma"}</M> läuft die Iteration davon, statt sich dem Minimum zu nähern?</>}
+  loesung={1}
+  toleranz={0.1}
+  einheit="γ"
+  verdeckt={<>Die Grenze ist <M>{"2/L"}</M>, hier also <M>{"\\gamma = 1"}</M>. Dort pendelt die Folge; darüber wächst der Fehler.</>}
+>
+  <GdStepper1D />
+</Schaetzfrage>
+
+Die Beobachtungen des Widgets ordnen sich zu einer vollständigen
+Fallunterscheidung, und die lohnt sich auszurechnen: Sie erklärt das ganze
+Verhalten des Verfahrens auf einen Schlag.
 
 :::bemerkung[13.3.7 (Zu klein, zu groß, gerade richtig)]
 Für eine Parabel $f(x) = \tfrac{L}{2}(x - \cgreen{x^\star})^2$ mit Krümmung
@@ -271,27 +307,16 @@ $1 - \gamma L$:
 
 Im Beispiel 13.3.6 ist $L = 2$, also $1/L = 0{,}5$ und $2/L = 1$; mit
 $\gamma = 0{,}6$ landen wir im dritten Fall und lesen $1 - 0{,}6\cdot 2 =
--0{,}2$ ab. Das ist das Dilemma der Schrittweite in Reinform, dem wir schon bei
+-0{,}2$ ab. Das sind genau die fünf Bilder, die das Widget oben liefert: bei
+$\gamma = 0{,}2$ die zähe einseitige Annäherung, bei $\gamma = 0{,}5$ der Treffer
+im ersten Schritt (es ist der Newton-Schritt aus
+[Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4)), bei $\gamma = 0{,}6$ die Zahlen
+der Tabelle, bei $\gamma = 1$ das ewige Pendeln und darüber die Flucht aus dem
+Bild. Das ist das Dilemma der Schrittweite in Reinform, dem wir schon bei
 der Fixpunktiteration in [Abschnitt 13.1](#sec-13.1) begegnet sind: klein genug
 für Konvergenz, groß genug für Tempo. Nur wird es im $\R^n$ noch unangenehmer,
 denn dort gibt es einen solchen Faktor je Krümmungsrichtung, und ein einziges
 $\gamma$ muss sie alle zugleich bedienen.
-:::
-
-:::vertiefung[Die Schrittweite am Regler]
-Die Tafel zeigt das Beispiel 13.3.6 mit frei einstellbarem $\gamma$. Weil
-$f'' \equiv 2$ ist, liegen die beiden Schwellen $1/L = 0{,}5$ und $2/L = 1$
-direkt auf dem Reglerraster und lassen sich einzeln ansteuern.
-
-Der Reihe nach: Bei $\gamma = 0{,}2$ nähert sich die Folge von rechts und
-braucht sichtbar lange. Bei $\gamma = 0{,}5$ ist nach einem einzigen Schritt
-Schluss, was bei einer Parabel kein Kunststück ist, weil dieser Schritt der
-Newton-Schritt aus [Abschnitt 11.4](?k=11-ableitungen-2#sec-11.4) ist. Bei
-$\gamma = 0{,}6$ stehen die Zahlen des Beispiels in der Tabelle. Ab
-$\gamma = 1$ bleibt der Fehler dem Betrag nach stehen, darüber wächst er, und die
-Punkte laufen aus dem Bild.
-
-<GdStepper1D />
 :::
 
 ### Zwischenfrage: ein Schritt im $\R^2$
@@ -663,24 +688,38 @@ Divergenz; vorankommen müssen wir aber in der *flachsten*.
 Werten, ohne kleiner zu werden, und darüber läuft sie davon.
 :::
 
+Wie teuer wird eine schlechte Kondition also wirklich? Das lässt sich zählen.
+
 :::vertiefung[Zickzack im Canyon]
 Die obere Tafel zeigt die Höhenlinien von
 $f(\bx) = \tfrac{1}{2}(x_1^2 + \kappa\,x_2^2)$ und den Weg der Iterierten, die
-untere den Verlauf von $\cblue{f(\bx^{(k)})} - \cgreen{f(\bx^\star)}$ auf
-logarithmischer Skala. Der Regler für $\gamma$ ist in Vielfachen von $2/L$
-geeicht, damit die Schwellen unabhängig von $\kappa$ an derselben Stelle liegen.
+mittlere den Verlauf von $\cblue{f(\bx^{(k)})} - \cgreen{f(\bx^\star)}$ auf
+logarithmischer Skala, daneben steht dieselbe Quadrik als Fläche. Der Regler für
+$\gamma$ ist in Vielfachen von $2/L$ geeicht, damit die Schwellen unabhängig von
+$\kappa$ an derselben Stelle liegen.
 
-Drei Experimente lohnen sich. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der
-negative Gradient zeigt direkt auf das Minimum, und mit einem halben Anteil ist
-das Verfahren nach einem Schritt fertig. Bei $\kappa = 10$ und einem halben
-Anteil, also $\gamma = 1/L$, lesen wir die Zahlen aus Beispiel 13.3.16 ab: Der
-gemessene Quotient steht auf $0{,}81$, während die gestrichelte Schranke mit
-$0{,}9$ fällt. Und bei einem Anteil um $0{,}9$ entsteht das Zickzack. Die
-Schranke wird dann gar nicht mehr gezeichnet, denn Satz 13.3.13 setzt
-$\gamma \le 1/L$ voraus und sagt jenseits davon nichts.
-
-<CanyonWidget />
+<Schaetzfrage
+  frage={<>Bei <M>{"\\kappa = 10"}</M> braucht der Abstieg in der Voreinstellung <M>{"35"}</M> Schritte, bis <M>{"f"}</M> auf ein Millionstel gefallen ist. Wie viele bei <M>{"\\kappa = 100"}</M>?</>}
+  loesung={336}
+  toleranz={80}
+  einheit="Schritte"
+  verdeckt={<>Der Aufwand wächst proportional zu <M>{"\\kappa"}</M>; die Ablesetafel des Widgets nennt die Zahl.</>}
+>
+  <CanyonWidget />
+</Schaetzfrage>
 :::
+
+Der Aufwand wächst im Widget ungefähr proportional zur Kondition: bei
+$\kappa = 10$ sind es $35$ Schritte bis zum Millionstel, bei $\kappa = 25$ schon
+$88$ und bei $\kappa = 100$ dann $336$. Drei Stellungen lohnen daneben den
+Vergleich. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der negative Gradient
+zeigt direkt auf das Minimum, und mit einem halben Anteil ist das Verfahren nach
+einem Schritt fertig. Bei $\kappa = 10$ und einem halben Anteil, also
+$\gamma = 1/L$, lesen wir die Zahlen aus Beispiel 13.3.16 ab: Der gemessene
+Quotient steht auf $0{,}81$, während die gestrichelte Schranke mit $0{,}9$ fällt.
+Und bei einem Anteil um $0{,}9$ entsteht das Zickzack; die Schranke wird dann gar
+nicht mehr gezeichnet, denn Satz 13.3.13 setzt $\gamma \le 1/L$ voraus und sagt
+jenseits davon nichts.
 
 ### Wann hören wir auf?
 
@@ -818,6 +857,9 @@ darüber aber dieselbe Backtracking-Schleife; [Abschnitt 13.4](#sec-13.4) baut
 darauf auf.
 :::
 
+Wie oft muss die Schleife also halbieren, bis sie fündig wird? Sehen wir am
+Schnitt nach.
+
 :::vertiefung[Die Armijo-Bedingung am Schnitt]
 Statt der Vorlesungsgrafik hier die drei Kurven zum Selberschieben: der Schnitt
 $\varphi(\gamma)$ in Violett, die Tangente in Orange und die Armijo-Gerade
@@ -826,17 +868,19 @@ ist der akzeptierte. Als Zielfunktion dient die Quadrik
 $f(\bx) = \tfrac12 x_1^2 + \tfrac52 x_2^2$ mit $\kappa_f = 5$, als Suchrichtung
 wie immer $\corange{\bd} = -\corange{\nabla f(\bx)^\top}$.
 
-Der Regler für $c$ beginnt bewusst weit über dem Praxiswert $10^{-4}$, weil die
-graue Gerade sonst auf der Höhe $\varphi(0)$ klebt und nichts zu sehen wäre. Wer
-ihn nach rechts schiebt, sieht die Forderung steiler werden und die Zahl der
-Verkleinerungen steigen; wer $\rho$ vergrößert, tastet sich in feineren Stufen
-heran und braucht dafür mehr Funktionsauswertungen. In der Voreinstellung wird
-$\gamma = 1$ verworfen und $\gamma = 0{,}5$ angenommen, obwohl der exakte
-Minimierer bei $\gamma^* = 1/3$ läge. Auch das gehört zur Idee: Der billige
-Kompromiss ist gut genug, weil ohnehin ein nächster Schritt folgt.
-
 <ArmijoWidget />
 :::
+
+Ein bis zwei Halbierungen genügen. In der Voreinstellung
+wird $\gamma = 1$ verworfen und $\gamma = 0{,}5$ angenommen, obwohl der exakte
+Minimierer bei $\gamma^\star = 1/3$ läge; mit dem Lehrbuchwert $c = 0{,}3$ ist
+eine zweite Halbierung nötig und $\gamma = 0{,}25$ wird angenommen. Auch das
+gehört zur Idee: Der billige Kompromiss ist gut genug, weil ohnehin ein nächster
+Schritt folgt. Wer $c$ nach rechts schiebt, sieht die Forderung steiler werden
+und die Zahl der Verkleinerungen steigen; wer $\rho$ vergrößert, tastet sich in
+feineren Stufen heran und braucht dafür mehr Funktionsauswertungen. Über alle
+Reglerstellungen hinweg sind höchstens $16$ Halbierungen nötig – die Schleife
+endet also nicht nur theoretisch, sondern auch schnell.
 
 ### Selbsttest
 
@@ -889,6 +933,29 @@ $\sup_{\bx}\max_i \left|\lambda_i\right|$. Bei konvexem $f$ fällt beides
 zusammen, weil die Hesse-Matrix dann positiv semidefinit ist; sonst nicht. Für
 $f(x) = -x^2$ ist die exakte Konstante $2$, während der größte Eigenwert $-2$
 beträgt (Bemerkung 13.3.9).
+:::
+
+:::zahlfrage{loesung=336 toleranz=80 einheit="Schritte"}
+Wie viele Schritte braucht der Gradientenabstieg im Canyon-Widget bei
+$\kappa = 100$ und der voreingestellten Schrittweite, bis $f$ auf ein Millionstel
+des Startwerts gefallen ist?
+
+Die Ablesetafel des Widgets nennt die Zahl: $336$. Bei $\kappa = 10$ sind es
+$35$, bei $\kappa = 25$ dann $88$ – der Aufwand wächst also ungefähr proportional
+zur Kondition, genau wie es Bemerkung 13.3.14 für die garantierte Schrittzahl
+vorhersagt.
+:::
+
+:::frage{wahr}
+Aus dem voreingestellten Simplex fällt im Nelder-Mead-Widget in vierzig Schritten
+kein einziger Schrumpfschritt.
+
+Der Zugzähler steht nach vierzig Schritten auf $13$ Reflexionen, $4$ Expansionen,
+$23$ Kontraktionen und null Schrumpfschritten. Der Schrumpfschritt ist der
+teuerste der vier Züge aus Algorithmus 13.3.2, und dass er hier gar nicht
+gebraucht wird, ist der Grund für die verhältnismäßig guten Kosten. Erst der
+zweite Startsimplex („flach von links") erzwingt ihn, und zwar im vierten
+Schritt.
 :::
 
 :::frage{falsch}

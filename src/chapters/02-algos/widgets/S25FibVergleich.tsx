@@ -1,20 +1,50 @@
 import { useMemo, useState } from "react";
-import { LabeledPlot, Slider } from "../../../lib";
+import {
+  Aufgabe,
+  FMM_COLORS,
+  LabeledPlot,
+  Schaetzfrage,
+  Slider,
+  Verdikt,
+  W_MUTED,
+  W_PANEL,
+} from "../../../lib";
 import type { Series } from "../../../lib";
 
 /**
- * §2.5: Gezählte Schrittzahlen der naiven vs. der iterativen
- * Fibonacci-Variante gegen die Landau-Vorhersage, auf log-Skala.
+ * §2.5: Gezählte Schrittzahlen der naiven gegen die iterative
+ * Fibonacci-Variante, verglichen mit den Landau-Vorhersagen, auf log-Skala.
  *
- * Punkte: exakte Zählungen (Aufrufzahl T(n) über die Rekurrenz
- * T(n) = 1 + T(n-1) + T(n-2); Operationszahl 4n - 6 der Iteration).
- * Linien: Landau-Vorhersagen c·2ⁿ, c·φⁿ und c·n, jeweils bei n = 10
- * an die gezählten Werte angeheftet.
+ * DIE EINE EINSICHT: Auf logarithmischer Skala wird exponentielles Wachstum
+ * zur Geraden, und die Steigung verrät die Basis. Die gezählten Aufrufe liegen
+ * auf der flacheren φ-Geraden, nicht auf der 2ⁿ-Geraden — die Folienschranke
+ * O(2ⁿ) ist korrekt, aber nicht scharf (Satz 2.5.6, Bemerkung 2.5.7).
+ *
+ * Muster 1: Die scharfe Vorhersage c·φⁿ war früher eine Checkbox und der
+ * Schlussabsatz stand offen darunter; seit 2026-08-19 ist beides die
+ * Auflösung einer <Schaetzfrage> („auf welcher Geraden liegen die Punkte?").
+ *
+ * FARBROLLEN (Kapitel 2, s. S21Demos.tsx): rot = die teure Variante (naive
+ * Rekursion, wie \cred im Text), blau = die günstige (Iteration, wie \cblue).
+ * Punkte sind gezählte Werte, gestrichelte Linien sind Vorhersagen.
+ *
+ * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
+ * 2026-08-19; T(n) = 1 + T(n−1) + T(n−2), T(0) = T(1) = 1, exakt per BigInt
+ * gegengerechnet über T(n) = 2F(n+1) − 1):
+ *   T(20) = 21 891 · T(30) = 2 692 537 · T(50) = 40 730 022 147 ·
+ *   T(80) = 75 778 124 746 287 811 · T(100) = 1 146 295 688 027 634 168 201.
+ *   Modellzeiten bei 10^9 Schritten/s: n = 30 → 2,7 ms, n = 50 → 41 s,
+ *   n = 80 → 2,4 Jahre, n = 100 → 36 320 Jahre.
+ *   Steigungen im log₁₀-Bild: log₁₀ 2 = 0,30103, log₁₀ φ = 0,208988,
+ *   φ = 1,6180340. Die Iteration zählt 4n − 6 Operationen.
+ *
+ * Provenienz: eigenständig implementiert, kein Code aus den privaten
+ * Buch-Apps.
  */
 
 const PHI = (1 + Math.sqrt(5)) / 2;
-const RED = "#D55E00"; // naive Rekursion (wie \cred im Text)
-const BLUE = "#0072B2"; // iterative Variante (wie \cblue im Text)
+const ROT = FMM_COLORS.rot; // naive Rekursion (wie \cred im Text)
+const BLAU = FMM_COLORS.blau; // iterative Variante (wie \cblue im Text)
 const N0 = 10; // Ankerpunkt für die Vorhersage-Konstanten
 
 const SUP = "⁰¹²³⁴⁵⁶⁷⁸⁹";
@@ -49,8 +79,34 @@ function fmtTime(ops: number): string {
 
 export function S25FibVergleichWidget() {
   const [nMax, setNMax] = useState(30);
-  const [showPhi, setShowPhi] = useState(true);
 
+  return (
+    <Schaetzfrage
+      variante="auswahl"
+      frage="Die roten Punkte liegen auf einer Geraden. Auf welcher? Erst tippen, dann auflösen."
+      optionen={[
+        { id: "quad", text: "auf der von n²" },
+        { id: "zwei", text: "auf der von 2ⁿ" },
+        { id: "phi", text: "auf einer dazwischen" },
+      ]}
+      loesung="phi"
+    >
+      {({ aufgeloest }) => (
+        <Tafel nMax={nMax} setNMax={setNMax} aufgeloest={aufgeloest} />
+      )}
+    </Schaetzfrage>
+  );
+}
+
+function Tafel({
+  nMax,
+  setNMax,
+  aufgeloest,
+}: {
+  nMax: number;
+  setNMax: (v: number) => void;
+  aufgeloest: boolean;
+}) {
   const { T, markers, series, yMax } = useMemo(() => {
     // Exakte Aufrufzahl der naiven Rekursion: T(n) = 1 + T(n-1) + T(n-2).
     const T: number[] = [1, 1];
@@ -68,33 +124,56 @@ export function S25FibVergleichWidget() {
     const markers: { x: number; y: number; color: string }[] = [];
     const step = nMax > 40 ? 2 : 1;
     for (let n = nMax; n >= 2; n -= step) {
-      markers.push({ x: n, y: Math.log10(T[n]), color: RED });
-      markers.push({ x: n, y: Math.log10(itOps(n)), color: BLUE });
+      markers.push({ x: n, y: Math.log10(T[n]), color: ROT });
+      markers.push({ x: n, y: Math.log10(itOps(n)), color: BLAU });
     }
 
     const series: Series[] = [
-      { f: (x) => a2 + x * L2, color: RED, dash: [7, 4] },
-      ...(showPhi ? [{ f: (x: number) => aPhi + x * LPHI, color: RED, dash: [2, 4] }] : []),
-      { f: (x) => (x > 0 ? Math.log10(c1 * x) : NaN), color: BLUE, dash: [7, 4] },
+      { f: (x) => a2 + x * L2, color: ROT, dash: [3, 4], label: "Schranke c · 2ⁿ" },
+      ...(aufgeloest
+        ? [
+            {
+              f: (x: number) => aPhi + x * LPHI,
+              color: ROT,
+              // lange Striche: die Geraden liegen unter den Punkten, kurze
+              // Striche wären dort unsichtbar.
+              dash: [12, 6],
+              label: "scharf: c · φⁿ",
+            },
+          ]
+        : []),
+      {
+        f: (x: number) => (x > 0 ? Math.log10(c1 * x) : NaN),
+        color: BLAU,
+        dash: [7, 4],
+        label: "Vorhersage c · n",
+      },
     ];
 
     const yMax = Math.max(a2 + nMax * L2, Math.log10(T[nMax])) + 0.5;
     return { T, markers, series, yMax };
-  }, [nMax, showPhi]);
+  }, [nMax, aufgeloest]);
 
   const naive = T[nMax];
   const iter = 4 * nMax - 6;
 
   return (
     <div className="space-y-3">
-      <p className="max-w-prose text-sm">
-        Die Punkte sind <em>exakt gezählte</em> Schrittzahlen: rot die Aufrufe der naiven
-        Rekursion, blau die Operationen der iterativen Variante. Die y-Achse zeigt den
-        Zehnerlogarithmus der Schrittzahl. Auf dieser Skala wird exponentielles Wachstum zu
-        einer Geraden, und die Steigung verrät die Basis. Die gestrichelten Linien sind die
-        Landau-Vorhersagen (bei <span className="font-mono">n = 10</span> an die Zählungen
-        angeheftet).
-      </p>
+      <Aufgabe>
+        Schieben wir <span className="font-mono">n</span> nach oben und vergleichen die roten
+        Punkte mit der gestrichelten Geraden über ihnen.
+      </Aufgabe>
+      <LabeledPlot
+        xLabel="n"
+        yLabel="log₁₀(Schritte)"
+        series={series}
+        markers={markers}
+        xDomain={[0, nMax + 1]}
+        yDomain={[0, yMax]}
+        width={440}
+        height={300}
+        ariaLabel={`Logarithmische Darstellung der gezählten Schrittzahlen bis n gleich ${nMax}; die roten Punkte der naiven Rekursion liegen auf einer Geraden unterhalb der gestrichelten 2-hoch-n-Geraden, die blauen Punkte der Iteration bleiben nahe der Grundlinie.`}
+      />
       <Slider
         label="n (Größe)"
         value={nMax}
@@ -104,57 +183,41 @@ export function S25FibVergleichWidget() {
         step={1}
         fmt={(v) => String(Math.round(v))}
       />
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          className="accent-sky-600"
-          checked={showPhi}
-          onChange={(e) => setShowPhi(e.target.checked)}
-        />
-        scharfe Vorhersage c·φⁿ (goldener Schnitt) einblenden
-      </label>
-      <LabeledPlot
-        xLabel="n"
-        yLabel="log₁₀(Schritte)"
-        series={series}
-        markers={markers}
-        xDomain={[0, nMax + 1]}
-        yDomain={[0, yMax]}
-        width={460}
-        height={300}
-      />
-      <div className="max-w-prose space-y-1 text-xs text-slate-600 dark:text-slate-300">
-        <p>
-          <span style={{ color: RED }}>●</span> naive Rekursion (gezählte Aufrufe) &ensp;
-          <span style={{ color: RED }}>– –</span> Schranke c·2ⁿ &ensp;
-          {showPhi && (
-            <>
-              <span style={{ color: RED }}>· ·</span> scharfe Vorhersage c·φⁿ &ensp;
-            </>
-          )}
-          <span style={{ color: BLUE }}>●</span> iterativ (gezählte Operationen) &ensp;
-          <span style={{ color: BLUE }}>– –</span> Vorhersage c·n
-        </p>
-      </div>
-      <div className="max-w-prose rounded border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/50">
+      <p className={`max-w-prose text-xs ${W_MUTED}`}>
+        <span style={{ color: ROT }}>●</span> gezählte Aufrufe der naiven Rekursion &ensp;
+        <span style={{ color: BLAU }}>●</span> gezählte Operationen der Iteration &ensp; gestrichelt:
+        die Landau-Vorhersagen, bei <span className="font-mono">n = 10</span> an die Zählungen
+        angeheftet.
+      </p>
+      <div className={`max-w-prose p-3 text-sm ${W_PANEL}`}>
         Bei <span className="font-mono">n = {nMax}</span>: naive Rekursion{" "}
-        <span className="font-semibold" style={{ color: RED }}>
+        <span className="font-semibold" style={{ color: ROT }}>
           {fmtCount(naive)}
         </span>{" "}
         Aufrufe (Modellrechnung bei 10⁹ Schritten/s: ≈ {fmtTime(naive)}), iterative Variante{" "}
-        <span className="font-semibold" style={{ color: BLUE }}>
+        <span className="font-semibold" style={{ color: BLAU }}>
           {fmtCount(iter)}
         </span>{" "}
         Operationen (≈ {fmtTime(iter)}).
       </div>
-      <p className="max-w-prose text-sm">
-        Zwei Beobachtungen: Die roten Punkte liegen exakt auf einer Geraden, aber auf der
-        flacheren mit Steigung log₁₀ φ ≈ 0,209, nicht auf der 2ⁿ-Geraden mit Steigung
-        log₁₀ 2 ≈ 0,301. Die Schranke O(2ⁿ) von den Folien ist also korrekt, aber nicht
-        scharf; das tatsächliche Wachstum hat die Basis φ ≈ 1,618 (siehe Vertiefung oben).
-        Die blauen Punkte dagegen bleiben auf der logarithmischen Skala fast am Boden:
-        lineares Wachstum ist hier praktisch unsichtbar.
-      </p>
+      {aufgeloest ? (
+        <Verdikt kind="warn">
+          Die roten Punkte liegen exakt auf einer Geraden, aber auf der flacheren mit Steigung{" "}
+          <span className="font-mono">log₁₀ φ ≈ 0,209</span>, nicht auf der 2ⁿ-Geraden mit
+          Steigung <span className="font-mono">log₁₀ 2 ≈ 0,301</span>. Die Schranke{" "}
+          <span className="font-mono">O(2ⁿ)</span> aus Satz 2.5.6 ist also korrekt, aber nicht
+          scharf; das tatsächliche Wachstum hat die Basis{" "}
+          <span className="font-mono">φ ≈ 1,618</span> (Bemerkung 2.5.7). Die blauen Punkte
+          bleiben auf dieser Skala fast am Boden: Lineares Wachstum ist hier praktisch
+          unsichtbar.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="neutral">
+          Beide Punktfolgen liegen sauber auf Geraden, die rote steigt deutlich steiler an. Sie
+          verläuft aber sichtbar flacher als die gestrichelte Schranke darüber, und der Abstand
+          zwischen beiden wächst mit <span className="font-mono">n</span>.
+        </Verdikt>
+      )}
     </div>
   );
 }

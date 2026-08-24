@@ -1,4 +1,4 @@
-import { HesseDefinitheit } from "./widgets/S113Hesse";
+import { HesseSchaetzung } from "./widgets/S113Hesse";
 
 ::quelle[Folien 11-ableitungen-II, von „Ableitungen höheren Grades" bis „Höhere Ableitungen für Vektor-zu-Vektor"; die auskommentierte Folie zur Hesse-Intuition ist mitverarbeitet.]
 
@@ -461,12 +461,10 @@ so folgt daraus nur, dass $\corange{\bH_f(\bx^*)}$ positiv *semi*definit ist. Di
 Ungleichung darf verloren gehen, wie $f(x) = x^4$ zeigt.
 :::
 
-:::vertiefung[Definitheit zum Anschauen: Ellipsen, Hyperbeln und der Sattel]
 Die Folien beschreiben an dieser Stelle ein Bild, das sie nicht zeigen: die Funktion
 $\cblue{f(\bx)} = x_1^2 + 4x_2^2$ mit ihren Höhenlinien. Wir bauen es nach und machen die
-Eigenwerte gleich verstellbar.
-
-Der Aufbau nutzt aus, dass sich jede symmetrische Matrix nach dem Spektralsatz als
+Eigenwerte gleich verstellbar. Der Aufbau nutzt aus, dass sich jede symmetrische Matrix
+nach dem Spektralsatz als
 $\corange{\bH} = \bR(\varphi)\diag(\corange{\lambda_1}, \corange{\lambda_2})\bR(\varphi)^\top$
 schreiben lässt, mit einer Drehung $\bR(\varphi)$. Wir stellen also nicht die Einträge von
 $\corange{\bH}$ ein, sondern gleich die Eigenwerte und die Lage der Eigenbasis. Zur
@@ -474,29 +472,35 @@ Funktion $\cblue{f(\bx)} = \tfrac{1}{2}\bx^\top\corange{\bH}\bx$ gehört dann an
 Stelle dieselbe Hesse-Matrix $\corange{\bH}$, und $\bnull$ ist ein kritischer Punkt von ihr,
 solange $\corange{\bH}$ invertierbar ist sogar der einzige.
 
-Das Folienbeispiel liegt auf dem ersten Knopf: $\corange{\lambda} = (2, 8)$ und
+Damit lässt sich Satz 11.3.9 abfahren wie eine Landkarte. Was passiert mit den Höhenlinien,
+wenn ein Eigenwert das Vorzeichen wechselt? Welche Achse gehört zur langen Halbachse einer
+Ellipse? Und was bleibt an der Grenze übrig, wenn ein Eigenwert genau auf null steht?
+
+<HesseSchaetzung />
+
+Wie das Widget zeigt, hängt die ganze Fallunterscheidung an den Vorzeichen der beiden
+Eigenwerte. Das Folienbeispiel liegt auf dem ersten Knopf: $\corange{\lambda} = (2, 8)$ und
 $\varphi = 0$ ergibt $\corange{\bH} = \diag(2,8)$ und damit
-$\cblue{f(\bx)} = x_1^2 + 4x_2^2$. Drei Dinge sind daran abzulesen. Die Höhenlinien sind
-Ellipsen um das Minimum in $\bnull$; das hängt an der Definitheit und geht gleich
-verloren. Ihre Hauptachsen liegen in Richtung der Eigenvektoren, hier also auf den
-Koordinatenachsen. Und die Krümmung entlang einer Hauptachse ist der zugehörige Eigenwert,
-denn
+$\cblue{f(\bx)} = x_1^2 + 4x_2^2$. Die Höhenlinien sind Ellipsen um das Minimum in
+$\bnull$; das hängt an der Definitheit und geht bei jedem Vorzeichenwechsel verloren. Ihre
+Hauptachsen liegen in Richtung der Eigenvektoren, hier also auf den Koordinatenachsen, und
+die Krümmung entlang einer Hauptachse ist der zugehörige Eigenwert, denn
 $\cblue{f(t\bv_i)} = \tfrac{1}{2}\corange{\lambda_i}t^2$. Die letzten beiden Beobachtungen
 gelten für jede symmetrische Hesse-Matrix, die erste nur im definiten Fall. Die lange
 Halbachse gehört dabei zum *kleinen* Eigenwert: Die Niveaumenge zum Wert $4$ hat die
-Halbachsen $2$ und $1$, und $2/1 = \sqrt{8/2}$.
+Halbachsen $2$ und $1$, und $2/1 = \sqrt{8/2}$. Der Regler $\varphi$ dreht Höhenlinien und
+Hauptachsen gemeinsam, lässt Spur und Determinante aber unberührt – die Eigenwerte hängen
+nicht davon ab, wie wir das Koordinatensystem legen.
 
 Schieben wir einen Eigenwert unter null, so zerfallen die Ellipsen in Hyperbeln, und das
 dick gezeichnete Niveau $0$ wird zu einem Geradenkreuz. Das ist der Sattel aus
-Satz 11.3.9(3). Dieselbe Situation kennen wir schon: Das Gradientenfeld-Widget in
+Satz 11.3.9(3), und in der Raumtafel daneben ist es die Sattelfläche. Dieselbe Situation
+kennen wir schon: Das Gradientenfeld-Widget in
 [Abschnitt 10.2](?k=10-ableitungen-1#sec-10.2) zeigt
 $\cblue{f(\bx)} = x_1^2 + 3x_1x_2 + 2x_2^2$ mit der Hesse-Matrix
 $\corange{\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4\end{smallmatrix}\bigr)}$, deren
 Eigenwerte $3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$, genau dieses Vorzeichenmuster
 haben.
-
-<HesseDefinitheit />
-:::
 
 ### Konvexität
 
@@ -513,7 +517,7 @@ f \text{ ist konvex auf } S
 $$
 :::
 
-Für eine :k[konvexe Funktion]{#convex-function} liegt die Verbindungsstrecke zwischen zwei
+Für eine :k[konvexe Funktion]{#convexity} liegt die Verbindungsstrecke zwischen zwei
 Punkten des Graphen nie unter dem Graphen. Satz 11.3.11 übersetzt das in eine punktweise
 Bedingung an die zweite Ableitung, und das ist der Grund, warum konvexe
 :k[Optimierungsprobleme]{#optimization} handhabbar sind: Jeder kritische Punkt ist dort
@@ -891,6 +895,18 @@ $1{,}6 \cdot 10^{-30}$. Das ist eine qualitative Motivation, keine Verteilungsau
 über reale Verlustlandschaften. Bei indefiniter Hesse-Matrix existiert eine Richtung
 negativer Krümmung, und Rauschen kann einem stochastischen Verfahren helfen, eine solche
 instabile Region zu verlassen; automatisch gelingt das nicht.
+:::
+
+:::zahlfrage{loesung=0 toleranz=0.001}
+Stellen wir im Definitheits-Widget die Voreinstellung „Rinne (halbdefinit)" ein. Welchen
+Wert hat dort $\det \corange{\bH}$?
+
+Null. Die Voreinstellung setzt $\corange{\lambda} = (3, 0)$, und wegen
+$\det\corange{\bH} = \corange{\lambda_1}\corange{\lambda_2}$ ist die Determinante damit
+null, die Matrix also singulär. Im Bild wird das zu Parallelen statt Ellipsen: Entlang der
+Hauptachse zum Eigenwert $0$ bleibt $\cblue{f}$ konstant, statt eines isolierten kritischen
+Punktes liegt dort eine ganze Gerade davon. Satz 11.3.9 greift in diesem Fall nicht mehr
+(Bemerkung 11.3.10).
 :::
 
 ::::

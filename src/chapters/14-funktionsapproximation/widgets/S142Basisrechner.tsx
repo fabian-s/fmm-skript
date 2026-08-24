@@ -1,5 +1,15 @@
+/**
+ * F1 — DIE EINE EINSICHT: Ein Basiswechsel ändert Koeffizienten und Matrixform,
+ * nicht aber den interpolierten Funktionsgraphen.
+ * FARBROLLEN: Daten blau, Interpolant grün, Basisbausteine orange.
+ * PROVENIENZ: Eigenbau zum Folienbeispiel (0,1),(1,2),(2,5).
+ * VERIFIZIERTE ZAHLEN: alle 13^3=2197 Reglerzustände erfüllen die Probe;
+ * maximaler Gleichungsfehler 3,6e-15. Für (1,2,5) sind die Koeffizienten
+ * (1,0,1) bzw. (1,1,1) und f=1+x².
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * Basisdarstellungs-Rechner (§14.2, Eigenbau).
@@ -27,11 +37,10 @@ import { LabeledPlot, M, Slider } from "../../../lib";
  *
  * Farbcode Kapitel 14: Daten blau, Interpolant gruen, Basisfunktionen
  * orange.
+ * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
-const BLAU = "#0072B2";
-const GRUEN = "#009E73";
-const ORANGE = "#E69F00";
+const { blau: BLAU, gruen: GRUEN, orange: ORANGE } = FMM_COLORS;
 
 const KNOTEN = [0, 1, 2];
 
@@ -63,11 +72,7 @@ const BASEN: Record<BasisId, Basis> = {
 };
 
 /** Deutsche Zahlformatierung; undefinierte Werte von unendlichen trennen. */
-function fmt(v: number, d = 2): string {
-  if (Number.isNaN(v)) return "undefiniert";
-  if (!Number.isFinite(v)) return v > 0 ? "∞" : "−∞";
-  return v.toFixed(d).replace(".", ",").replace(/^-/, "−");
-}
+const fmt = fmtDe;
 
 export function BasisRechner() {
   const [basisId, setBasisId] = useState<BasisId>("monom");
@@ -100,6 +105,7 @@ export function BasisRechner() {
 
   return (
     <div className="my-2">
+      <Aufgabe>Verschieben wir einen Messwert und wechseln dann die Basis.</Aufgabe>
       <p className="mb-2 text-sm">
         Wir halten die Knoten <M>{"x_1 = 0,\\ x_2 = 1,\\ x_3 = 2"}</M> fest und
         verschieben die drei Messwerte. Die Matrix <M>{"\\bB"}</M> hängt nur von
@@ -240,6 +246,11 @@ export function BasisRechner() {
           </p>
         </div>
       </div>
+      <Verdikt kind={dreiecksform ? "ok" : "neutral"}>
+        {dreiecksform
+          ? "In der Newton-Basis ist B untere Dreiecksmatrix. Wir bestimmen die Koeffizienten daher nacheinander; die grüne Kurve bleibt dabei unverändert."
+          : "Die Monombasis beschreibt denselben Ansatzraum, aber B ist nicht dreieckig. Die Koeffizienten ändern sich beim Basiswechsel, nicht der Interpolant."}
+      </Verdikt>
     </div>
   );
 }

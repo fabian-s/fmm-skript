@@ -1,3 +1,4 @@
+import { Schaetzfrage } from "../../lib";
 import { OptimLandkarte } from "./widgets/S136Landkarte";
 
 ::quelle[Folien 13-optim, „Optimierung in R" bis „Wrap-up: Optimierungsverfahren".]
@@ -106,17 +107,38 @@ prüfen heißt hier: den Rückgabewert lesen, nicht auf `warnings()` warten
 ([Abschnitt 13.3](#sec-13.3), Abbruchkriterien).
 :::
 
+Wie schlimm ist das in der Praxis? Probieren wir es an der Beispielfunktion
+selbst aus.
+
 :::vertiefung[Die Landkarte zur Beispielfunktion]
 Das Widget zeichnet die Funktion aus ($13.6.1$) als Karte und lässt uns den
-Startpunkt setzen. Die drei Voreinstellungen sind die Startpunkte der
-Folien: Von $(-1;\ -0{,}5)$ aus geht es ins globale Minimum, von
-$(-1;\ 1)$ in die obere und von $(-0{,}5;\ -1)$ in die untere Mulde. Weil
-das Widget mit Gradientenabstieg rechnet, sind das die Einzugsgebiete
-*dieses* Verfahrens; Nelder-Mead und BFGS laufen andere Wege und können
-deshalb an anderen Startpunkten umkippen als die blaue Spur.
+Startpunkt setzen, per Klick, per Zug oder über die beiden Regler. Weil das
+Widget mit Gradientenabstieg rechnet, sind das die Einzugsgebiete *dieses*
+Verfahrens; Nelder-Mead und BFGS laufen andere Wege und können deshalb an anderen
+Startpunkten umkippen als die blaue Spur.
 
-<OptimLandkarte />
+<Schaetzfrage
+  variante="auswahl"
+  frage={<>Wie viele verschiedene Grenzwerte findet der Gradientenabstieg auf diesem Ausschnitt?</>}
+  optionen={[
+    { id: "eins", text: "genau einen" },
+    { id: "drei", text: "drei" },
+    { id: "viele", text: "unübersichtlich viele" },
+  ]}
+  loesung="drei"
+  verdeckt={<>Es sind das globale Minimum <M>{"(0;\\ 0)"}</M> und zwei lokale Mulden bei <M>{"(0;\\ \\pm 1{,}04)"}</M>.</>}
+>
+  <OptimLandkarte />
+</Schaetzfrage>
 :::
+
+Wie das Widget zeigt, sind es genau drei. Von $(-1;\ -0{,}5)$ aus geht es ins
+globale Minimum $(0;\ 0)$ mit $f = 0$, von $(-1;\ 1)$ in die obere und von
+$(-0{,}5;\ -1)$ in die untere Mulde, beide bei $(0;\ \pm 1{,}0357)$ mit
+$f = 0{,}1085$. Alle drei Läufe enden ordnungsgemäß: Gradient null, Hesse-Matrix
+positiv definit, kein Warnhinweis. Nur zwei von dreien landen am falschen Ort,
+und von außen ist ihnen das nicht anzusehen. Deshalb hilft gegen falsche
+Konvergenz keine bessere Schrittweite, sondern nur ein zweiter Startpunkt.
 
 ### Der analytische Gradient
 
@@ -286,6 +308,16 @@ KKT-Multiplikator null.
 Das ist die Komplementarität $\mu_j h_j(\bx^\star) = 0$ aus
 Satz 13.5.7: Aus $h_j(\bx^\star) < 0$ folgt $\mu_j = 0$. In
 Beispiel 13.5.9 gilt genau das für die untere Schranke.
+:::
+
+:::zahlfrage{loesung=0.1085 toleranz=0.005}
+Welchen Funktionswert erreicht der Gradientenabstieg im Landkarten-Widget, wenn
+wir bei $(-1;\ 1)$ starten?
+
+Er landet in der oberen Mulde bei $(0;\ 1{,}0357)$ mit $f = 0{,}1085$. Das
+globale Minimum liegt bei $(0;\ 0)$ mit $f = 0$, also gut ein Zehntel tiefer.
+Beide Läufe enden mit verschwindendem Gradienten und ohne Warnung – genau das
+meint Bemerkung 13.6.2 mit „falscher Konvergenz".
 :::
 
 :::frage{falsch}

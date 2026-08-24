@@ -1,5 +1,16 @@
+/**
+ * F1 — DIE EINE EINSICHT: B-Splines haben lokalen Träger und bilden trotzdem
+ * an jeder inneren Stelle eine Partition der Eins.
+ * FARBROLLEN: ausgewählte Basisfunktion orange, übrige und Summenkurve neutral.
+ * PROVENIENZ: BasisExplorer aus heath-ch7/S743 portiert; offener Knotenvektor
+ * und Texte für Bemerkung 14.4.9 neu gefasst.
+ * VERIFIZIERTE ZAHLEN: Für q=0,1,2,3 stimmen Knotenlänge m+2q+1 und Zahl
+ * m+q; die maximale Summenabweichung auf [0,5) ist ≤4,4e-16.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ */
 import { useMemo, useState } from "react";
-import { LabeledPlot, M, Slider } from "../../../lib";
+import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
+import { CoxDeBoorSchritt } from "./S144CoxDeBoor";
 import {
   NEUTRAL,
   ORANGE,
@@ -19,7 +30,8 @@ import {
  * aus Bemerkung 14.4.9 (das Buch arbeitet mit einer unendlichen Knotenkette),
  * saemtliche Texte sind neu.
  *
- * Nachgerechnet (node, 2026-08-13): Laenge des Knotenvektors m + 2q + 1,
+ * Nachgerechnet (node, verify-14-funktionsapproximation/verify-values.mjs,
+ * 2026-08-19; detailliert 2026-08-13): Laenge des Knotenvektors m + 2q + 1,
  * Anzahl Basisfunktionen m + q; die Summe aller B_k weicht auf [0, 5) fuer
  * q = 0, 1, 2, 3 um hoechstens 4,4e-16 von 1 ab; der numerisch bestimmte
  * Traeger stimmt bei jedem k mit [tau_k, tau_{k+q+1}] ueberein.
@@ -42,7 +54,7 @@ export function BSplineBasis() {
   const serien = useMemo(() => {
     const s = Array.from({ length: K }, (_, j) => ({
       f: (x: number) => bsplRand(tau, j, q, x, RECHTER_RAND),
-      color: j === k - 1 ? ORANGE : "#94a3b8",
+      color: j === k - 1 ? ORANGE : NEUTRAL,
     }));
     if (zeigeSumme) {
       s.push({
@@ -68,13 +80,7 @@ export function BSplineBasis() {
 
   return (
     <div className="my-2">
-      <p className="mb-2 text-sm">
-        Das Gitter ist <M>{"\\xi_0 = 0 < \\xi_1 = 1 < \\dots < \\xi_5 = 5"}</M>,
-        also <M>{"m = 5"}</M>. Zu jedem Grad entsteht daraus ein anderer offener
-        Knotenvektor, und mit ihm eine andere Anzahl von Basisfunktionen. Orange
-        ist die gerade betrachtete, grau sind die übrigen, gestrichelt ihre
-        Summe.
-      </p>
+      <Aufgabe>Wählen wir Grad, Basisfunktion und Stelle; vergleichen wir dann ihren Träger mit dem Rekursionsschritt darunter.</Aufgabe>
 
       <div className="mb-2 grid max-w-2xl gap-x-8 sm:grid-cols-2">
         <Slider label="Grad q" value={qRoh} onChange={setQ} min={0} max={3} step={1} fmt={(v) => `${Math.round(v)}`} />
@@ -156,22 +162,14 @@ export function BSplineBasis() {
           <span className="font-mono">{aktiv}</span> von {K} Funktionen ungleich
           null.
         </p>
-        <p className="mt-2 max-w-[34rem]">
-          Ziehen wir den Gradregler langsam hoch, sehen wir der Rekursion beim
-          Arbeiten zu: Treppenstufe, Dach, Glocke. Dabei behalten wir zwei
-          Zahlen im Blick. Die erste ist der Träger, gemessen in
-          Gitterintervallen; er wächst je Grad um eines. Die zweite ist die
-          Zahl der an einer Stelle beteiligten Funktionen, hier{" "}
-          <M>{`q + 1 = ${q + 1}`}</M>; sie legt fest, wie breit das Band der
-          Systemmatrix ausfällt. Die gestrichelte Summe rührt sich bei alldem
-          nicht vom Fleck.
-        </p>
-        <p className="mt-1 max-w-[34rem] text-xs text-slate-500 dark:text-slate-400">
-          Am rechten Rand werten wir eine Winzigkeit links von{" "}
-          <M>{"\\xi_5"}</M> aus. Die Indikatorfunktion vom Grad null ist rechts
-          halboffen, sonst wären an dieser einen Stelle alle Basisfunktionen null.
-        </p>
+        <Verdikt kind={Math.abs(summe - 1) < 1e-10 ? "ok" : "warn"}>
+          Der Träger von <M>{`B_{${k}}^{(${q})}`}</M> ist genau <M>{`[\\tau_${k},\\tau_{${k + q + 1}}]`}</M>; an x* sind {aktiv} Funktionen aktiv. Ihre Summe ist {fmt(summe, 4)}, wie Bemerkung 14.4.9 vorhersagt.
+        </Verdikt>
       </div>
+      <details className="mt-3">
+        <summary className="cursor-pointer text-sm font-medium">Rekursionsschritt an einer Stelle</summary>
+        <CoxDeBoorSchritt />
+      </details>
     </div>
   );
 }
