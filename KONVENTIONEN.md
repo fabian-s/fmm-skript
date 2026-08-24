@@ -913,7 +913,7 @@ Repos).
 
 Nicht Teil des Widget-Overhauls; bewusst als Aufgaben notiert, nicht umgesetzt.
 
-1. **Theta aus dem Hauptstrang nehmen (Kapitel 2).** Das Skript führt in
+1. **ERLEDIGT (2026-08-20): Theta aus dem Hauptstrang nehmen (Kapitel 2).** Das Skript führte in
    `02-algos` neben O und o auch Theta ein, die Folien tun das nicht.
    - Theta in eine `:::vertiefung` verschieben und dort seine Relevanz besser
      begründen (wofür braucht man die scharfe Schranke überhaupt — Abgrenzung
