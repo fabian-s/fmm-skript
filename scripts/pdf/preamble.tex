@@ -1,0 +1,293 @@
+% ===================================================================
+% Preambel fuer die Druckfassung des FMM-Skripts.
+% Wird von scripts/pdf/mdx-to-latex.mjs in den Build-Ordner kopiert.
+% Engine: xelatex (defs-fmm.tex braucht \symbf aus unicode-math).
+% ===================================================================
+
+\usepackage[a4paper,inner=28mm,outer=30mm,top=25mm,bottom=30mm]{geometry}
+
+% amsmath/mathtools MUESSEN vor unicode-math geladen werden; amssymb darf
+% gar nicht mehr dazu (unicode-math bringt die Symbole selbst mit und
+% bricht sonst mit "Command \eth already defined" ab).
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amsthm}     % defs-fmm.tex: \tagqed braucht \qedhere
+\usepackage{centernot}  % defs-fmm.tex: \notimplies braucht \centernot
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Libertinus Serif}
+\setsansfont{Libertinus Sans}
+\setmonofont{Libertinus Mono}[Scale=MatchLowercase]
+\setmathfont{Libertinus Math}
+
+% shorthands=off ist NICHT optional: babel-german macht " zu einem aktiven
+% Zeichen, und die Quellen schliessen ihre „…"-Zitate mit einem geraden
+% ASCII-Anfuehrungszeichen. Aus „minimale Krümmung" ist … wird dann
+% „minimale Krümmungïst …" ("i -> ï), aus glatt" zu wird glattßu ("z -> ß):
+% ein stiller Textschaden mitten im Satz.
+\usepackage[ngerman,shorthands=off]{babel}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+% Gewichtete X-Spalte: \hsize-Faktoren muessen in Summe die Anzahl der
+% X-Spalten ergeben. Ohne das bekommt eine Spalte mit lauter "3.1" genauso
+% viel Platz wie eine mit drei Zeilen Fliesstext.
+% Das \hspace{0pt} ist kein Zierrat: im Flattersatz trennt TeX das ERSTE Wort
+% eines Absatzes sonst nicht, und genau die langen deutschen Komposita
+% ("Operatornormen") stehen in diesen Tabellen am Zellenanfang.
+\newcolumntype{W}[1]{>{\hsize=#1\hsize\raggedright\arraybackslash\hspace{0pt}}X}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{needspace}
+\usepackage[most]{tcolorbox}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage[hidelinks,unicode]{hyperref}
+
+% -------------------------------------------------------------------
+% Kursmakros. defs-fmm.tex laedt selbst dsfont und benutzt \symbf,
+% muss also NACH unicode-math kommen.
+% -------------------------------------------------------------------
+\input{defs-fmm.tex}
+
+% \left\| … \right\| ist im Skript allgegenwaertig; unicode-math setzt
+% \| sonst als Doppelstrich ohne Streckung.
+\providecommand{\eps}{\varepsilon}
+
+% Libertinus Math deckt die AMS-Quadrate nicht ab, und amssymb darf neben
+% unicode-math nicht geladen werden. Aus Linien gebaut haengen sie an nichts.
+\providecommand{\blacksquare}{\mathord{\rule[0.02ex]{0.62ex}{0.62ex}}}
+\providecommand{\square}{\mathord{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.4pt}%
+  \fbox{\rule{0pt}{0.62ex}\rule{0.62ex}{0pt}}}}
+
+% -------------------------------------------------------------------
+% Zu breite abgesetzte Formeln
+% -------------------------------------------------------------------
+% Im Web scrollt eine ueberlange Formel horizontal; auf Papier ragt sie
+% in den Rand — in einem Kasten sogar sichtbar ueber dessen Kante. Diese
+% Huelle misst die Formel und verkleinert sie NUR, wenn sie nicht passt.
+% Jede Verkleinerung landet als FMM-WIDE-MATH im Log, damit der Bericht
+% am Ende sagen kann, wie oft und wie stark eingegriffen wurde.
+\newsavebox{\fmmmathbox}
+\newcommand{\fmmfit}[1]{%
+  \sbox\fmmmathbox{$\displaystyle #1$}%
+  \ifdim\wd\fmmmathbox>\linewidth
+    \typeout{FMM-WIDE-MATH: \the\wd\fmmmathbox\space > \the\linewidth}%
+    \resizebox{\linewidth}{!}{\usebox\fmmmathbox}%
+  \else
+    \usebox\fmmmathbox
+  \fi
+}
+
+% -------------------------------------------------------------------
+% Farben
+% -------------------------------------------------------------------
+\definecolor{fmmblue}{HTML}{2563EB}
+\definecolor{fmmgreen}{HTML}{15803D}
+\definecolor{fmmamber}{HTML}{B45309}
+\definecolor{fmmviolet}{HTML}{6D28D9}
+\definecolor{fmmslate}{HTML}{475569}
+\definecolor{fmmgray}{HTML}{64748B}
+
+% Die Farbmakros aus defs-fmm.tex zeigen im Druck auf die gedeckten
+% Varianten — reines green/red/blue ist auf Papier kaum lesbar.
+\definecolor{fmmMarkGreen}{HTML}{15803D}
+\definecolor{fmmMarkRed}{HTML}{B91C1C}
+\definecolor{fmmMarkBlue}{HTML}{1D4ED8}
+\definecolor{fmmMarkOrange}{HTML}{C2410C}
+\definecolor{fmmMarkPurple}{HTML}{7E22CE}
+\renewcommand{\cgreen}[1]{{\textcolor{fmmMarkGreen}{#1}}}
+\renewcommand{\cred}[1]{{\textcolor{fmmMarkRed}{#1}}}
+\renewcommand{\cblue}[1]{{\textcolor{fmmMarkBlue}{#1}}}
+\renewcommand{\corange}[1]{{\textcolor{fmmMarkOrange}{#1}}}
+\renewcommand{\cpurp}[1]{{\textcolor{fmmMarkPurple}{#1}}}
+
+% Die \cb*-Varianten setzen in defs-fmm.tex \bfseries — das ist TEXTmodus
+% und bricht in einer Formel ab ("\bfseries invalid in math mode"). Im Web
+% faellt das nicht auf, weil MathJax den Schalter still ignoriert. Hier
+% muss es der Mathe-Fettschnitt sein.
+\renewcommand{\cb}[1]{{\symbf{#1}}}
+\renewcommand{\cbgreen}[1]{{\textcolor{fmmMarkGreen}{\symbf{#1}}}}
+\renewcommand{\cbred}[1]{{\textcolor{fmmMarkRed}{\symbf{#1}}}}
+\renewcommand{\cbpurp}[1]{{\textcolor{fmmMarkPurple}{\symbf{#1}}}}
+\renewcommand{\cborange}[1]{{\textcolor{fmmMarkOrange}{\symbf{#1}}}}
+
+% -------------------------------------------------------------------
+% Ueberschriften. Die Nummern stehen im Quelltext und werden woertlich
+% uebernommen (\section* + \addcontentsline), damit Querverweise im
+% Fliesstext ("Satz 3.1.4") garantiert stimmen.
+% -------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\bfseries}
+  {\color{fmmgray}\large Kapitel \thechapter}
+  {6pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{10pt}{28pt}
+
+\titleformat{\section}{\normalfont\sffamily\Large\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{20pt}{8pt}
+\titleformat{\subsection}{\normalfont\sffamily\large\bfseries\color{fmmslate}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{14pt}{5pt}
+\titleformat{\subsubsection}{\normalfont\sffamily\normalsize\bfseries\color{fmmslate}}{}{0pt}{}
+\titlespacing*{\subsubsection}{0pt}{11pt}{4pt}
+
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+
+% Kolumnentitel: "Kapitel 3 · Spur & Matrixnormen" links, Abschnitt rechts.
+% Die Abschnitte sind \section* (die Nummern stehen im Quelltext), setzen
+% also keine Marke — das erledigt ein \markright je Abschnitt im Dokument.
+\renewcommand{\chaptermark}[1]{\markboth{Kapitel \thechapter\ \textperiodcentered\ #1}{}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancyhead[LE]{\small\sffamily\color{fmmgray}\leftmark}
+\fancyhead[RO]{\small\sffamily\color{fmmgray}\rightmark}
+\fancyfoot[C]{\small\sffamily\color{fmmgray}\thepage}
+% ACHTUNG: `plain` NICHT per \fancypagestyle umdefinieren. Das darin uebliche
+% \fancyhf{} wirkt GLOBAL und loescht die Felder von `fancy` gleich mit —
+% sobald die erste Kapitelseite (die \thispagestyle{plain} setzt) gesetzt ist,
+% bleibt der Kolumnentitel im ganzen Buch leer. Das eingebaute `plain` aus
+% book.cls tut genau das Richtige und fasst fancyhdr nicht an.
+
+% -------------------------------------------------------------------
+% Satz-, Definitions-, Beispielumgebungen
+% Argumente: {Farbe}{Art}{Label}
+% -------------------------------------------------------------------
+% \emergencystretch in den Kaesten: das schmalere Satzbild bringt lange
+% deutsche Komposita sonst regelmaessig in Zeilen mit klaffenden Wortabstaenden.
+\newtcolorbox{fmmenv}[3]{%
+  breakable, enhanced, sharp corners,
+  boxrule=0pt, leftrule=2.2pt,
+  colback=#1!5!white, colframe=#1!75!black,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=9pt, after skip=9pt,
+  before upper={\emergencystretch=3em
+    \noindent\textbf{\sffamily\color{#1!75!black}#2~#3}\par\smallskip}%
+}
+
+% Vertiefung: bewusst anders — grau, gestrichelt, kleiner Satz.
+\newtcolorbox{fmmvertiefung}[1]{%
+  breakable, enhanced, sharp corners,
+  boxrule=0.5pt, colback=fmmslate!4!white, colframe=fmmslate!45!white,
+  borderline west={2.2pt}{0pt}{fmmslate!55!white, dashed},
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=9pt, after skip=9pt,
+  fontupper=\small,
+  before upper={\emergencystretch=3em
+    \noindent\textbf{\sffamily\color{fmmslate}Vertiefung:~#1}\par\smallskip}%
+}
+
+% Quellenzeile unter der Abschnittsueberschrift
+\newcommand{\fmmquelle}[1]{{\par\small\color{fmmgray}#1\par\addvspace{4pt}}}
+
+% Platzhalter fuer die interaktiven Widgets, die es im Druck nicht gibt.
+% Bewusst eine schmale Marke statt eines Kastens: sie soll die Stelle
+% markieren, nicht mit den Satz- und Beispielkaesten um Aufmerksamkeit
+% konkurrieren. Das Argument (der Komponentenname) bleibt ungenutzt — im
+% Druck ist er eine Implementierungsinterna ohne Nutzen fuer die Lesenden.
+\newcommand{\fmmwidget}[1]{%
+  \par\addvspace{9pt}%
+  \noindent\textcolor{fmmgray!40}{\rule{\linewidth}{0.4pt}}\par\vspace{-5pt}%
+  {\centering\small\sffamily\color{fmmgray}%
+   Interaktives Element — nur in der Web-Fassung\par}%
+  \vspace{-3pt}\noindent\textcolor{fmmgray!40}{\rule{\linewidth}{0.4pt}}%
+  \par\addvspace{9pt}%
+}
+
+% -------------------------------------------------------------------
+% Beweise mit Schritten und Begruendungen
+% -------------------------------------------------------------------
+% Eigenes QED-Zeichen: \square haengt an der Symbolabdeckung der Mathefont,
+% ein Rahmen aus Linien haengt an gar nichts.
+\newcommand{\fmmqed}{{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.4pt}%
+  \fbox{\rule{0pt}{0.62ex}\rule{0.62ex}{0pt}}}}
+
+\newenvironment{fmmproof}[1][qed]{%
+  \def\fmmproofqed{#1}%
+  \par\addvspace{7pt}%
+  \needspace{4\baselineskip}% "Beweis." darf nicht allein am Seitenfuss stehen
+  \noindent\textit{Beweis.}\nobreak\par\nobreak\vspace{-3pt}%
+  \begin{enumerate}[
+      label={\scriptsize\sffamily\color{fmmgray}(\arabic*)},
+      leftmargin=*, labelsep=0.7em, align=left,
+      topsep=4pt, itemsep=5pt, parsep=2pt]%
+}{%
+  \end{enumerate}%
+  \ifx\fmmproofqed\fmmnoqed\else\nobreak\hfill\fmmqed\par\fi
+  \addvspace{7pt}%
+}
+\def\fmmnoqed{noqed}
+
+% Begruendung eines Beweisschritts
+\newcommand{\fmmwhy}[1]{%
+  \par\vspace{2pt}%
+  \noindent{\footnotesize\color{fmmgray}\textit{#1}}\par%
+}
+
+% -------------------------------------------------------------------
+% Selbsttest
+% -------------------------------------------------------------------
+\newenvironment{fmmquiz}{%
+  \par\addvspace{6pt}%
+  \begin{enumerate}[
+      label={\scriptsize\sffamily\color{fmmgray}\arabic*.},
+      leftmargin=*, labelsep=0.7em, align=left,
+      topsep=3pt, itemsep=7pt, parsep=2pt]%
+}{%
+  \end{enumerate}\addvspace{6pt}%
+}
+\newcommand{\fmmantwort}[1]{%
+  \par\vspace{2pt}%
+  \noindent{\footnotesize\color{fmmslate}\textbf{\sffamily Antwort:}~#1}\par%
+}
+\newcommand{\fmmloesung}[1]{%
+  \par\vspace{2pt}%
+  \noindent{\footnotesize\color{fmmslate}\textbf{\sffamily Lösung:}~#1}\par%
+}
+
+% Aufklappbares "Lösung anzeigen" aus dem Web
+\newcommand{\fmmreveal}[1]{%
+  \par\vspace{2pt}\noindent{\small\color{fmmgray}\textbf{\sffamily #1}}\par\vspace{1pt}%
+}
+
+% -------------------------------------------------------------------
+% Codebloecke
+% -------------------------------------------------------------------
+% verbatim kann nicht umbrechen: eine lange R-Zeile ragt einfach in den
+% Rand. listings bricht um und markiert die Fortsetzung.
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  breaklines=true,
+  breakatwhitespace=false,
+  postbreak={\mbox{\textcolor{fmmgray}{$\hookrightarrow$}\space}},
+  columns=fullflexible,
+  keepspaces=true,
+  extendedchars=true,
+  showstringspaces=false,
+  frame=none,
+  backgroundcolor=\color{fmmslate!6},
+  xleftmargin=6pt,
+  xrightmargin=2pt,
+  framexleftmargin=6pt,
+  framexrightmargin=6pt,
+  aboveskip=8pt,
+  belowskip=8pt,
+}
+
+% -------------------------------------------------------------------
+% Kleinkram
+% -------------------------------------------------------------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\setlist{topsep=3pt, itemsep=2pt, parsep=2pt}
+\renewcommand{\arraystretch}{1.15}
+\emergencystretch=2em
+\hbadness=10000
+\vbadness=10000
+\clubpenalty=8000
+\widowpenalty=8000
+\raggedbottom
