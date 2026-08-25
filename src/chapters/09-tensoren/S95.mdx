@@ -51,7 +51,7 @@ das beides verbindet. Sammeln wir ein, was bleiben soll.
    dieselben Zahlen als Blockmatrix statt als Tensor der Stufe $4$
    (Definition 9.3.12, Bemerkung 9.3.13). Es trägt die Vektorisierung von
    Matrixgleichungen,
-   $\vec(\cblue{\bA}\bX\cgreen{\bB}) = (\cgreen{\bB^\top} \otimes \cblue{\bA})\vec(\bX)$
+   $\vec(\cblue{\bA}\bX\cgreen{\bB}) = (\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX)$
    (Satz 9.5.3), und in der Statistik die Kronecker-strukturierten
    :k[Kovarianzmatrizen]{#covariance-matrix} multivariater Verteilungen, von
    Zeitreihen und von raumzeitlichen Daten (Definition 9.3.18).
@@ -94,11 +94,11 @@ $\cgreen{\bB} \in \R^{q \times n}$. Dann gilt
 
 $$ {#eq-9.5.1}
 \vec\bigl(\cblue{\bA}\,\bX\,\cgreen{\bB}\bigr)
-= \bigl(\cgreen{\bB^\top} \otimes \cblue{\bA}\bigr)\,\vec(\bX) .
+= \bigl(\cgreen{\bB^\top} \kron \cblue{\bA}\bigr)\,\vec(\bX) .
 $$
 
 Im Kroneckerprodukt steht $\cgreen{\bB^\top}$ als erster und $\cblue{\bA}$ als
-zweiter Faktor; die Matrix $\cgreen{\bB^\top} \otimes \cblue{\bA}$ hat das
+zweiter Faktor; die Matrix $\cgreen{\bB^\top} \kron \cblue{\bA}$ hat das
 Format $nm \times qp$, passend zu $\vec(\bX) \in \R^{pq}$ und
 $\vec(\cblue{\bA}\bX\cgreen{\bB}) \in \R^{mn}$.
 :::
@@ -122,7 +122,7 @@ $$
 
 :::schritt
 Auf der rechten Seite von ($9.5.1$) zerlegen wir
-$\cgreen{\bB^\top} \otimes \cblue{\bA}$ nach Definition 9.3.12 in Blöcke der
+$\cgreen{\bB^\top} \kron \cblue{\bA}$ nach Definition 9.3.12 in Blöcke der
 Größe $m \times p$. Der Block an der Stelle $(j,k)$ ist
 $\bigl(\cgreen{\bB^\top}\bigr)_{jk}\,\cblue{\bA} = \cgreen{b_{kj}}\,\cblue{\bA}$,
 und der $k$-te Block von $\vec(\bX)$ ist $\bx_k$. Der $j$-te Block des Produkts
@@ -169,7 +169,7 @@ $\cgreen{\bB^\top} = \bigl(\begin{smallmatrix} \cgreen{1} & \cgreen{0} \\ \cgree
 ist
 
 $$
-\cgreen{\bB^\top} \otimes \cblue{\bA}
+\cgreen{\bB^\top} \kron \cblue{\bA}
 = \begin{pmatrix} \cgreen{1}\cdot\cblue{\bA} & \cgreen{0}\cdot\cblue{\bA} \\ \cgreen{1}\cdot\cblue{\bA} & \cgreen{2}\cdot\cblue{\bA} \end{pmatrix}
 = \begin{pmatrix}
 1 & 2 & 0 & 0 \\
@@ -183,19 +183,19 @@ $$
 
 und das Produkt der beiden ist
 $(\corange{5}, \corange{2}, \corange{17}, \corange{8})^\top$, wie versprochen.
-Auf die Reihenfolge kommt es dabei an: $\cblue{\bA} \otimes \cgreen{\bB^\top}$
+Auf die Reihenfolge kommt es dabei an: $\cblue{\bA} \kron \cgreen{\bB^\top}$
 liefert $(1, 17, 0, 6)^\top$ und damit etwas ganz anderes. Die Formatprobe
 schützt uns davor grundsätzlich nicht: Zeilen- und
 Spaltenzahl eines Kroneckerprodukts entstehen als Produkte der Zeilen- bzw.
 Spaltenzahlen beider Faktoren, und Produkte hängen nicht von der Reihenfolge ab.
-$\cgreen{\bB^\top} \otimes \cblue{\bA}$ und $\cblue{\bA} \otimes \cgreen{\bB^\top}$
+$\cgreen{\bB^\top} \kron \cblue{\bA}$ und $\cblue{\bA} \kron \cgreen{\bB^\top}$
 haben deshalb stets dasselbe Format, hier $4 \times 4$, und beide lassen sich
 mit $\vec(\bX)$ multiplizieren.
 :::
 
 Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit ($9.5.1$) ein gewöhnliches
 :k[lineares Gleichungssystem]{#linear-system}
-$(\cgreen{\bB^\top} \otimes \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$
+$(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$
 Gleichungen und $pq$ Unbekannten. Der Gewinn ist begrifflich, der Preis ist
 Speicher und Rechenzeit: Ausgeschrieben hat die Systemmatrix $mnpq$ Einträge.
 Praktisch nutzen wir deshalb die Struktur, statt sie auszumultiplizieren. Sind
@@ -214,7 +214,7 @@ aufzustellen (Bemerkung 9.3.20).
 | --- | --- | --- |
 | [9.1](#sec-9.1) | Multilineare Abbildungen | Linearität in jedem Argument einzeln; jede solche Abbildung ist durch eine Koeffizientenfamilie festgelegt (Satz 9.1.8) |
 | [9.2](#sec-9.2) | Tensoren | genau diese Koeffizientenfamilien; sie bilden für festes Format einen Vektorraum der Dimension $n_1 \cdots n_k$ (Satz 9.2.5) |
-| [9.3](#sec-9.3) | Produkte von Tensoren | äußeres Produkt, Tensorprodukt und Kroneckerprodukt unter einem Zeichen $\otimes$; separierbare Kovarianz als Anwendung |
+| [9.3](#sec-9.3) | Produkte von Tensoren | äußeres Produkt und Tensorprodukt als $\otimes$, Kroneckerprodukt als $\kron$ (in der Literatur alle drei als $\otimes$); separierbare Kovarianz als Anwendung |
 | [9.4](#sec-9.4) | Tensorprodukt von Vektorräumen | $V \otimes W$ als Spann elementarer Tensoren, Tensorproduktbasis, $\dim(V \otimes W) = \dim(V)\dim(W)$ |
 
 Offen geblieben ist der Bogen zur Approximation. Eine gute Basis für univariate
@@ -247,10 +247,10 @@ Das ist die Nicht-Kommutativität aus Bemerkung 9.3.15.
 
 :::frage{falsch}
 Mit spaltenweiser Vektorisierung gilt
-$\vec(\bA\bX\bB) = (\bA \otimes \bB^\top)\vec(\bX)$.
+$\vec(\bA\bX\bB) = (\bA \kron \bB^\top)\vec(\bX)$.
 
 Die Faktoren stehen vertauscht. Richtig ist
-$\vec(\bA\bX\bB) = (\bB^\top \otimes \bA)\vec(\bX)$ nach ($9.5.1$): Der
+$\vec(\bA\bX\bB) = (\bB^\top \kron \bA)\vec(\bX)$ nach ($9.5.1$): Der
 transponierte *rechte* Faktor steht im Kroneckerprodukt *links*. Die
 Formatprobe merkt den Tausch nie, denn beide Anordnungen führen auf dasselbe
 Format. In Beispiel 9.5.4 ist das $4 \times 4$, und die vertauschte Fassung

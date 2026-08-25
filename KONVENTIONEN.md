@@ -299,6 +299,12 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Kovarianzmatrizen → Tooltip covariance-matrix, Eigenwerte →
   `?k=08-la-misc`, Funktionsapproximation als Ausblick OHNE Link.
 - Kapitel 9.5 (Zusammenfassung) schlank.
+- NOTATION (Nachtrag 2026-08-25): `\otimes` steht NUR fuer aeusseres Produkt und
+  Tensorprodukt; das Kroneckerprodukt heisst `\kron` (= `\otimes_{\mathrm{K}}`,
+  aus `slides/defs-fmm.tex` ueber `scripts/gen-macros.mjs`). Definition 9.3.12 und
+  Bemerkung 9.3.13 fuehren das Zeichen ein und sagen, dass die Literatur beides
+  `\otimes` schreibt. In Widget-Labels und Beispieltiteln (kein MathJax) steht
+  `⊗_K` als Klartext, analog zum dort schon ueblichen `Σ_T`/`Bᵀ`.
 
 ## KAPITEL 10 (Foliensatz 10-ableitungen-I) — Bauauftrag 2026-08-12
 

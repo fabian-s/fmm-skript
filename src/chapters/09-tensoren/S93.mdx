@@ -8,8 +8,10 @@ Aus zwei Vektoren eine Zahl zu machen, ist uns vertraut: Das leistet das
 Skalarprodukt. In diesem Abschnitt gehen wir in die Gegenrichtung und bauen aus
 zwei Objekten ein größeres. Aus zwei Vektoren wird eine Matrix, aus zwei
 Matrizen ein Tensor der Stufe $4$ oder, anders angeordnet, eine sehr große
-Matrix. Alle drei Konstruktionen schreiben wir mit demselben Zeichen $\otimes$.
-Der Umgang mit dieser Doppelbelegung gehört zum Thema.
+Matrix. In der Literatur tragen alle drei Konstruktionen dasselbe Zeichen
+$\otimes$; der Umgang mit dieser Doppelbelegung gehört zum Thema. Wir behalten
+$\otimes$ dem äußeren Produkt und dem Tensorprodukt vor und schreiben die dritte
+Konstruktion, das Kroneckerprodukt, als $\kron$.
 
 ### Das äußere Produkt
 
@@ -430,7 +432,7 @@ Das *Kroneckerprodukt* zweier Matrizen $\cblue{\bA} \in \R^{m \times n}$ und
 $\cgreen{\bB} \in \R^{p \times q}$ ist die Blockmatrix
 
 $$
-\cblue{\bA} \otimes \cgreen{\bB} = \begin{pmatrix}
+\cblue{\bA} \kron \cgreen{\bB} = \begin{pmatrix}
 \cblue{a_{11}}\cgreen{\bB} & \cdots & \cblue{a_{1n}}\cgreen{\bB} \\
 \vdots & & \vdots \\
 \cblue{a_{m1}}\cgreen{\bB} & \cdots & \cblue{a_{mn}}\cgreen{\bB}
@@ -440,12 +442,15 @@ $$
 Sie besteht aus $m \cdot n$ Blöcken der Größe $p \times q$; der Block an der
 Stelle $(i_1, i_2)$ ist die mit $\cblue{a_{i_1 i_2}}$ skalierte Kopie von
 $\cgreen{\bB}$.
+
+Das tiefgestellte $\mathrm{K}$ in $\kron$ ist unsere Schreibweise; in der Literatur
+steht auch hier meist $\otimes$ (siehe Bemerkung 9.3.13).
 :::
 
-:::bemerkung[9.3.13 (Ein Zeichen, zwei Bedeutungen)]
+:::bemerkung[9.3.13 (Zwei Bedeutungen, zwei Zeichen)]
 Für zwei Matrizen $\cblue{\bA} \in \R^{m \times n}$ und
-$\cgreen{\bB} \in \R^{p \times q}$ steht $\otimes$ jetzt für zwei verschiedene
-Dinge, und beide sind gebräuchlich:
+$\cgreen{\bB} \in \R^{p \times q}$ sind jetzt zwei verschiedene Produkte erklärt,
+und beide sind gebräuchlich:
 
 - Das *Tensorprodukt* nach Definition 9.3.8 liefert einen Tensor der Stufe $4$,
   $C \in \R^{m \times n \times p \times q}$ mit
@@ -464,18 +469,23 @@ Position innerhalb der Gruppe wählt $j_1$. Für die Spalten gilt dasselbe mit
 $i_2$ und $j_2$. Der Index des ersten Faktors läuft also langsam, der des
 zweiten schnell.
 
-Welche der beiden Bedeutungen gemeint ist, verrät in der Praxis das Format des
-Ergebnisses. An Vektoren lässt sich das Abflachen gut ablesen. Fassen wir
+Beide Produkte mit demselben Zeichen $\otimes$ zu schreiben, ist verbreitet; welche
+Bedeutung gemeint ist, verrät dann das Format des Ergebnisses. Wir sparen uns diese
+Rückfrage und schreiben $\kron$, sobald das Kroneckerprodukt gemeint ist. Das Zeichen
+$\otimes$ bleibt dem äußeren Produkt und dem Tensorprodukt vorbehalten. Beim Lesen fremder Texte
+ist die Unterscheidung wieder Ihre Aufgabe.
+
+An Vektoren lässt sich das Abflachen gut ablesen. Fassen wir
 $\cblue{\bv} \in \R^{m}$ und $\cgreen{\bw} \in \R^{n}$ als $(m \times 1)$- und
 $(n \times 1)$-Matrizen auf, so ist ihr Kroneckerprodukt der Vektor der Länge
 $mn$, der die Zeilen des äußeren Produkts hintereinanderhängt. Steht der zweite
 Faktor dagegen als Zeilenvektor da, kommt das äußere Produkt selbst heraus:
 
 $$
-\begin{pmatrix} 1 \\ 2 \end{pmatrix} \otimes \begin{pmatrix} 3 \\ 5 \\ 7 \end{pmatrix}
+\begin{pmatrix} 1 \\ 2 \end{pmatrix} \kron \begin{pmatrix} 3 \\ 5 \\ 7 \end{pmatrix}
 = \begin{pmatrix} \corange{3} & \corange{5} & \corange{7} & \corange{6} & \corange{10} & \corange{14} \end{pmatrix}^\top ,
 \qquad
-\begin{pmatrix} 1 \\ 2 \end{pmatrix} \otimes \begin{pmatrix} 3 & 5 & 7 \end{pmatrix}
+\begin{pmatrix} 1 \\ 2 \end{pmatrix} \kron \begin{pmatrix} 3 & 5 & 7 \end{pmatrix}
 = \begin{pmatrix} \corange{3} & \corange{5} & \corange{7} \\ \corange{6} & \corange{10} & \corange{14} \end{pmatrix} .
 $$
 :::
@@ -493,12 +503,12 @@ $$
 \end{pmatrix}
 $$
 
-ist $\cblue{\bA} \otimes \cgreen{\bB} \in \R^{6 \times 6}$, denn
+ist $\cblue{\bA} \kron \cgreen{\bB} \in \R^{6 \times 6}$, denn
 $2 \cdot 3 = 6$ Zeilen und ebenso viele Spalten. Blockweise notiert und dann
 ausgeschrieben:
 
 $$
-\cblue{\bA} \otimes \cgreen{\bB}
+\cblue{\bA} \kron \cgreen{\bB}
 = \begin{pmatrix}
 \cblue{1} \cdot \cgreen{\bB} & \cblue{0} \cdot \cgreen{\bB} \\
 \cblue{2} \cdot \cgreen{\bB} & \cblue{5} \cdot \cgreen{\bB}
@@ -523,8 +533,8 @@ Zwei Regeln sind im Umgang mit dem Kroneckerprodukt nützlich, und die erste
 davon ist bequem:
 
 $$
-\bigl(\cblue{\bA} \otimes \cgreen{\bB}\bigr)^\top
-= \cblue{\bA}^\top \otimes \cgreen{\bB}^\top .
+\bigl(\cblue{\bA} \kron \cgreen{\bB}\bigr)^\top
+= \cblue{\bA}^\top \kron \cgreen{\bB}^\top .
 $$
 
 Transponieren zieht also in beide Faktoren hinein, ohne ihre Reihenfolge zu
@@ -549,20 +559,20 @@ Die zweite Regel ist eine Warnung: Das Kroneckerprodukt ist **nicht
 kommutativ**, im Allgemeinen also
 
 $$
-\cblue{\bA} \otimes \cgreen{\bB} \neq \cgreen{\bB} \otimes \cblue{\bA} .
+\cblue{\bA} \kron \cgreen{\bB} \neq \cgreen{\bB} \kron \cblue{\bA} .
 $$
 
 Beide Produkte haben zwar dasselbe Format $mp \times nq$ und enthalten dieselben
 $mnpq$ Zahlen, aber an anderen Stellen. Für die Matrizen aus Beispiel 9.3.14
-steht an der Stelle $(2,1)$ in $\cblue{\bA} \otimes \cgreen{\bB}$ eine
-$\corange{0}$, in $\cgreen{\bB} \otimes \cblue{\bA}$ dagegen eine $\cred{6}$:
+steht an der Stelle $(2,1)$ in $\cblue{\bA} \kron \cgreen{\bB}$ eine
+$\corange{0}$, in $\cgreen{\bB} \kron \cblue{\bA}$ dagegen eine $\cred{6}$:
 Dort ist der erste Block $\cgreen{3}\,\cblue{\bA}$, und dessen zweite Zeile
 beginnt mit $\cgreen{3} \cdot \cblue{2}$.
 :::
 
 :::vertiefung[Kroneckerprodukte selbst ausrechnen]
 Der Rechner zeigt beide Faktoren und das Produkt in Blockdarstellung. Der erste
-Warum steht in Satz 9.5.3 gerade $\cgreen{\bB^\top} \otimes \cblue{\bA}$ vor
+Warum steht in Satz 9.5.3 gerade $\cgreen{\bB^\top} \kron \cblue{\bA}$ vor
 $\vec(\bX)$, und nicht dieselben Faktoren in der anderen Reihenfolge?
 
 <KroneckerRechner />
@@ -576,12 +586,12 @@ Setzen wir eine :k[Einheitsmatrix]{#identity-matrix} als einen der beiden
 Faktoren ein, entstehen Muster, die in der Statistik ständig vorkommen. Auf
 welcher Seite sie steht, macht dabei den ganzen Unterschied.
 
-:::beispiel[9.3.16 (S ⊗ I_n verteilt die Einträge)]
+:::beispiel[9.3.16 (S ⊗_K I_n verteilt die Einträge)]
 Sei $\cblue{\bS} \in \R^{p \times p}$ mit den Einträgen $\cblue{s_{ij}}$. Dann
-ist jeder Block von $\cblue{\bS} \otimes \cgreen{\bI_n}$ eine Diagonalmatrix:
+ist jeder Block von $\cblue{\bS} \kron \cgreen{\bI_n}$ eine Diagonalmatrix:
 
 $$
-\cblue{\bS} \otimes \cgreen{\bI_n} = \begin{pmatrix}
+\cblue{\bS} \kron \cgreen{\bI_n} = \begin{pmatrix}
 \cblue{s_{11}}\cgreen{\bI_n} & \cdots & \cblue{s_{1p}}\cgreen{\bI_n} \\
 \vdots & & \vdots \\
 \cblue{s_{p1}}\cgreen{\bI_n} & \cdots & \cblue{s_{pp}}\cgreen{\bI_n}
@@ -595,7 +605,7 @@ $\cblue{\bS} = \bigl(\begin{smallmatrix} \cblue{1} & \cblue{2} \\ \cblue{3} & \c
 sieht das so aus:
 
 $$
-\cblue{\bS} \otimes \cgreen{\bI_2} = \begin{pmatrix}
+\cblue{\bS} \kron \cgreen{\bI_2} = \begin{pmatrix}
 \corange{1} & \corange{0} & \corange{2} & \corange{0} \\
 \corange{0} & \corange{1} & \corange{0} & \corange{2} \\
 \corange{3} & \corange{0} & \corange{4} & \corange{0} \\
@@ -609,13 +619,13 @@ verschiedener Gruppen, mit der Stärke $\cblue{s_{ij}}$. Es liegen also $n$
 unabhängige Kopien der $\cblue{\bS}$-Struktur ineinandergeschoben.
 :::
 
-:::beispiel[9.3.17 (I_n ⊗ S ist blockdiagonal)]
+:::beispiel[9.3.17 (I_n ⊗_K S ist blockdiagonal)]
 Vertauschen wir die Reihenfolge, wird aus demselben Paar eine
 Blockdiagonalmatrix. Die Farben bleiben an ihren Matrizen, $\cblue{\bS}$ steht
 jetzt also innen:
 
 $$
-\cgreen{\bI_n} \otimes \cblue{\bS} = \begin{pmatrix}
+\cgreen{\bI_n} \kron \cblue{\bS} = \begin{pmatrix}
 \cblue{\bS} & & & \\
 & \cblue{\bS} & & \\
 & & \ddots & \\
@@ -646,7 +656,7 @@ Die Kovarianzmatrix $\bSigma \in \R^{mn \times mn}$ der Beobachtungen heißt
 *separierbar*, wenn sie sich als
 
 $$ {#eq-9.3.4}
-\bSigma = \cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
+\bSigma = \cblue{\bSigma_T} \kron \cgreen{\bSigma_S}
 $$
 
 schreiben lässt, mit der Kovarianzmatrix $\cblue{\bSigma_T} \in \R^{n \times n}$
@@ -672,7 +682,7 @@ $$
 Dann ist
 
 $$
-\bSigma = \cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
+\bSigma = \cblue{\bSigma_T} \kron \cgreen{\bSigma_S}
 = \begin{pmatrix}
 \cblue{1{,}0} \cdot \cgreen{\bSigma_S} & \cblue{0{,}8} \cdot \cgreen{\bSigma_S} \\
 \cblue{0{,}8} \cdot \cgreen{\bSigma_S} & \cblue{1{,}0} \cdot \cgreen{\bSigma_S}
@@ -716,31 +726,31 @@ $$
 Für $m = n = 2$ stehen $10$ Parametern also $6$ gegenüber, für $m = 10$ Orte und
 $n = 50$ Zeitpunkte sind es $125\,250$ gegen $1\,330$. Genau genommen ist die
 Zerlegung ($9.3.4$) nicht eindeutig: Wegen
-$\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}
-= (c\,\cblue{\bSigma_T}) \otimes (c^{-1}\cgreen{\bSigma_S})$
+$\cblue{\bSigma_T} \kron \cgreen{\bSigma_S}
+= (c\,\cblue{\bSigma_T}) \kron (c^{-1}\cgreen{\bSigma_S})$
 für jedes $c > 0$ lässt sich ein Skalenfaktor zwischen den Kovarianzfaktoren
 verschieben. Identifizierbar ist deshalb ein Parameter weniger, im Beispiel also
 $5$ statt $6$.
 
 Dass $\bSigma$ überhaupt eine Kovarianzmatrix sein kann, sichert eine weitere
-Rechenregel: Die Eigenwerte von $\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}$
+Rechenregel: Die Eigenwerte von $\cblue{\bSigma_T} \kron \cgreen{\bSigma_S}$
 sind die Produkte $\lambda_i\mu_j$ der Eigenwerte beider Faktoren, denn mit
 Eigenvektoren $\ba$ und $\bb$ ist
 
 $$
-\bigl(\cblue{\bSigma_T} \otimes \cgreen{\bSigma_S}\bigr)(\ba \otimes \bb)
-= (\cblue{\bSigma_T}\ba) \otimes (\cgreen{\bSigma_S}\bb)
-= \lambda_i\mu_j\,(\ba \otimes \bb) ,
+\bigl(\cblue{\bSigma_T} \kron \cgreen{\bSigma_S}\bigr)(\ba \kron \bb)
+= (\cblue{\bSigma_T}\ba) \kron (\cgreen{\bSigma_S}\bb)
+= \lambda_i\mu_j\,(\ba \kron \bb) ,
 $$
 
-wobei $\ba \otimes \bb$ das Kroneckerprodukt der beiden Spaltenvektoren ist. Die
+wobei $\ba \kron \bb$ das Kroneckerprodukt der beiden Spaltenvektoren ist. Die
 mittlere Gleichung ist die Regel
-$(\bA \otimes \bB)(\bC \otimes \bD) = (\bA\bC) \otimes (\bB\bD)$, die sich
+$(\bA \kron \bB)(\bC \kron \bD) = (\bA\bC) \kron (\bB\bD)$, die sich
 ebenfalls an ($9.3.3$) ablesen lässt. Beide Faktoren sind als Kovarianzmatrizen
 :k[symmetrisch]{#symmetric-matrix}, haben nach dem
 :k[Spektralsatz]{#spectral-theorem} also je eine Orthonormalbasis aus
 Eigenvektoren. Laufen $\ba$ und $\bb$ durch diese beiden Basen, so bilden die
-$mn$ Vektoren $\ba \otimes \bb$ eine Basis des $\R^{mn}$; damit sind das bereits
+$mn$ Vektoren $\ba \kron \bb$ eine Basis des $\R^{mn}$; damit sind das bereits
 alle Eigenwerte. Ist also jeder Faktor
 :k[positiv definit]{#positive-definite}, so ist es auch $\bSigma$. In
 Beispiel 9.3.19 hat $\cblue{\bSigma_T}$ die Eigenwerte
@@ -820,17 +830,17 @@ davon (Bemerkung 9.3.13).
 :::
 
 :::frage{falsch}
-Es gilt $\bA \otimes \bB = \bB \otimes \bA$, denn beide Produkte enthalten
+Es gilt $\bA \kron \bB = \bB \kron \bA$, denn beide Produkte enthalten
 dieselben Zahlen.
 
 Dieselben Zahlen stehen an verschiedenen Stellen. In Beispiel 9.3.14 ist der
-Eintrag $(2,1)$ von $\bA \otimes \bB$ gleich $0$, der von $\bB \otimes \bA$
+Eintrag $(2,1)$ von $\bA \kron \bB$ gleich $0$, der von $\bB \kron \bA$
 dagegen $6$ (Bemerkung 9.3.15). Die Formate stimmen zwar überein, die Matrizen
 nicht.
 :::
 
 :::frage{wahr}
-Es gilt $(\bA \otimes \bB)^\top = \bA^\top \otimes \bB^\top$.
+Es gilt $(\bA \kron \bB)^\top = \bA^\top \kron \bB^\top$.
 
 Transponieren zieht in beide Faktoren hinein, ohne ihre Reihenfolge zu
 vertauschen; die Indexformel ($9.3.3$) zeigt es unmittelbar
@@ -839,12 +849,12 @@ sich die Reihenfolge um, hier nicht.
 :::
 
 :::frage{wahr}
-Die Matrix $\bI_n \otimes \bS$ mit $\bS \in \R^{p \times p}$ ist
+Die Matrix $\bI_n \kron \bS$ mit $\bS \in \R^{p \times p}$ ist
 blockdiagonal mit $n$ Kopien von $\bS$.
 
 Der Block an der Stelle $(i,j)$ ist $\delta_{ij}\bS$, außerhalb der Diagonalen
 steht also die Nullmatrix (Beispiel 9.3.17). In der umgekehrten Reihenfolge
-entsteht dagegen $\bS \otimes \bI_n$, dessen Einträge über die ganze Matrix
+entsteht dagegen $\bS \kron \bI_n$, dessen Einträge über die ganze Matrix
 verteilt sind (Beispiel 9.3.16).
 :::
 

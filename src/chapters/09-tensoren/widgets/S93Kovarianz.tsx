@@ -33,7 +33,7 @@ export function SeparierbareKovarianzDemo() {
           <div className="mt-2 font-mono text-sm">{fmtDe(allgemeinSpeicher, 0)} gespeicherte Einträge</div>
         </div>
         <div className="rounded border p-3" style={{ borderColor: VIOLETT }}>
-          <div className="text-sm font-semibold"><span style={{ color: BLAU }}>Σ_T</span> ⊗ <span style={{ color: GRUEN }}>Σ_S</span></div>
+          <div className="text-sm font-semibold"><span style={{ color: BLAU }}>Σ_T</span> ⊗_K <span style={{ color: GRUEN }}>Σ_S</span></div>
           <div className="mt-2 font-mono text-2xl" style={{ color: VIOLETT }}>{fmtDe(separierbar, 0)}</div>
           <div className="text-sm">freie Parameter in zwei Faktoren</div>
           <div className="mt-2 font-mono text-sm">{fmtDe(faktorSpeicher, 0)} gespeicherte Einträge</div>
