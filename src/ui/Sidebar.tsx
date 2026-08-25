@@ -192,6 +192,16 @@ export function Sidebar({
             <ul className="flex flex-col gap-0.5">{chapters.map(item)}</ul>
           </nav>
         </div>
+        <nav
+          aria-label="Kursmaterial zum Herunterladen"
+          className="border-t border-slate-200 px-4 py-3 text-xs dark:border-slate-800"
+        >
+          <ul className="flex flex-wrap gap-x-3 gap-y-1">
+            <li><a href="../#folien">Folien</a></li>
+            <li><a href="../downloads/fmm-skript.pdf">Skript-PDF</a></li>
+            <li><a href="../downloads/fmm-alle-folien.pdf">Folien-PDF</a></li>
+          </ul>
+        </nav>
       </aside>
     </>
   );
