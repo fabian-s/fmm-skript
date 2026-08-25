@@ -111,4 +111,4 @@ Drei Fallen:
 
 Ziehen im Bild dreht die Kamera (Dualpfad: `<ViewControls>`, zwei Regler +
 Rücksetzknopf). Gitter höchstens 40 × 40, keine Animationsschleife. Referenz-
-Aufrufer: `src/chapters/11-ableitungen-2/widgets/S113Hesse.tsx`.
+Aufrufer: `src/chapters/10-differentialrechnung/widgets/S107Hesse.tsx`.

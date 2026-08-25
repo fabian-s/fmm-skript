@@ -14,7 +14,7 @@
  * PROVENIENZ: Die beiden Achsenschnitte und der Dreiwege-Test stammen aus der
  * Vorfassung; neu sind der eigene Zweig für den entarteten Fall a·b = 0 (er
  * meldete früher fälschlich „Sattel"), das Höhenlinienbild und die verlinkte
- * 3D-Tafel (`Surface3D`, Bauart wie S113Hesse in Kapitel 11).
+ * 3D-Tafel (`Surface3D`, Bauart wie S107Hesse in Kapitel 10).
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19): für q(x,y) = a x² + b y² ist H = diag(2a, 2b) konstant, die

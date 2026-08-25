@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { TooltipProvider } from "./lib";
-import { chapterLabel, chapters, type ChapterModule } from "./chapters";
+import { chapterAliases, chapterLabel, chapters, sectionAlias, type ChapterModule } from "./chapters";
 import { tocSections } from "./chapters/toc.generated";
 import { Sidebar } from "./ui/Sidebar";
 import { useActiveSection } from "./ui/useActiveSection";
@@ -11,7 +11,8 @@ import.meta.glob("./concepts/*.tsx", { eager: true });
 import "./mdx/concepts-mdx";
 
 function currentChapterId(): string {
-  return new URLSearchParams(window.location.search).get("k") ?? chapters[0].id;
+  const k = new URLSearchParams(window.location.search).get("k") ?? chapters[0].id;
+  return chapterAliases[k] ?? k;
 }
 
 export default function App() {
@@ -48,9 +49,15 @@ export default function App() {
   // React die (lazy geladenen) Abschnitte eingefügt hat — nachholen.
   useEffect(() => {
     if (!mod) return;
-    const h = window.location.hash;
+    let h = decodeURIComponent(window.location.hash.slice(1));
     if (!h) return;
-    document.getElementById(decodeURIComponent(h.slice(1)))?.scrollIntoView();
+    // Alte Deep-Links (?k=<alte ID>#sec-K.k) auf die neuen Anker umbiegen.
+    const rawK = new URLSearchParams(window.location.search).get("k");
+    if (rawK && chapterAliases[rawK] && h.startsWith("sec-")) {
+      h = `sec-${sectionAlias(rawK, h.slice(4))}`;
+      history.replaceState(null, "", `?k=${chapterAliases[rawK]}#${h}`);
+    }
+    document.getElementById(h)?.scrollIntoView();
   }, [mod]);
 
   // Schublade: Esc schließt, offene Schublade friert die Seite dahinter ein.

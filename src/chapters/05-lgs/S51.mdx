@@ -1,5 +1,3 @@
-::quelle[Folien: 05-lgs, „Verwendete Vorkenntnisse" bis „Matrixmultiplikation".]
-
 Ab hier geht es um *numerische lineare Algebra*. Sie fragt, wie sich die
 Objekte und Operationen der linearen Algebra auf dem Rechner tatsächlich
 berechnen lassen, und zwar schnell und verlässlich. Auf dem Programm stehen
@@ -156,18 +154,19 @@ mit besserer Komplexität als $O(n^3)$. Der erste stammt von Strassen (1969):
 Er zerlegt beide Matrizen in vier Blöcke und kommt mit sieben statt acht
 Blockmultiplikationen aus. Rekursiv angewandt kostet das
 $O\bigl(n^{\log_2 7}\bigr)$ Operationen, also etwa $O(n^{2{,}8})$, denn
-$\log_2 7 \approx 2{,}807$. Der aktuelle Rekord von Alman und Williams
-(2020) liegt bei etwa $O(n^{2{,}37})$; wesentlich Besseres ist bislang nicht
-bekannt. Die Suche nach neuen Multiplikationsschemata geht weiter. 2022 hat
-etwa DeepMinds AlphaTensor per Reinforcement Learning bisher unbekannte
+$\log_2 7 \approx 2{,}807$. Seither wurde der Exponent in kleinen Schritten
+weiter gedrückt; der aktuelle Rekord liegt bei etwa $O(n^{2{,}37})$
+(Alman et al., 2024), und wesentlich Besseres ist bislang nicht bekannt.
+Die Suche nach neuen Multiplikationsschemata geht weiter. 2022 hat etwa
+DeepMinds AlphaTensor per Reinforcement Learning bisher unbekannte
 Varianten für kleine Matrixformate gefunden.
 
 :::bemerkung[5.1.2 (Warum wir trotzdem mit O(nmk) rechnen)]
 Die Landau-Notation versteckt konstante Faktoren, und bei den schnellen
 Multiplikationsalgorithmen sind diese Konstanten meist so groß, dass sich
 die bessere Ordnung erst bei riesigen Matrizen auszahlen würde. In der
-Praxis werden die Verfahren deshalb kaum verwendet. Wir rechnen in dieser
-Vorlesung der Einfachheit halber immer mit $O(nmk)$ für die Multiplikation
+Praxis werden die Verfahren deshalb kaum verwendet. Wir rechnen in diesem
+Skript der Einfachheit halber immer mit $O(nmk)$ für die Multiplikation
 und $O(nm)$ für die Addition.
 :::
 

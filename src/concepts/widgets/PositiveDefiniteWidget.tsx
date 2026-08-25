@@ -15,7 +15,7 @@
  * PROVENIENZ: Die Kurve q(θ) = 2 + c·sin(2θ) und der λ_min-Test stammen aus
  * der Vorfassung; neu sind die hervorgehobene Nulllinie, die Markierung der
  * verletzenden Richtungen, das Verdikt und die 3D-Tafel (`Surface3D`, Bauart
- * wie S113Hesse in Kapitel 11).
+ * wie S107Hesse in Kapitel 10).
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,
  * 2026-08-20): für A = [[2, c], [c, 2]] gilt xᵀAx = 2 + c·sin(2θ) auf dem

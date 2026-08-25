@@ -73,7 +73,7 @@ export function PotenzmethodenStepper() {
     />
     <Slider label="Winkel von x⁽⁰⁾" value={theta} onChange={(v) => { setTheta(v); setK(0); }} min={-180} max={180} step={1} unit="°" accent={FMM_COLORS.blau} />
     <div className="flex flex-wrap gap-2">
-      {[{ text: "Folienbeispiel", value: 33 }, { text: "Versagensfall v₂", value: toAngle(V2) }, { text: "Volltreffer v₁", value: toAngle(V1) }].map(({ text, value }) => <button key={text} type="button" className="rounded border border-slate-300 px-2 py-1 text-xs dark:border-slate-600" onClick={() => { setTheta(value); setK(0); }}>{text}</button>)}
+      {[{ text: "Beispiel aus dem Text", value: 33 }, { text: "Versagensfall v₂", value: toAngle(V2) }, { text: "Volltreffer v₁", value: toAngle(V1) }].map(({ text, value }) => <button key={text} type="button" className="rounded border border-slate-300 px-2 py-1 text-xs dark:border-slate-600" onClick={() => { setTheta(value); setK(0); }}>{text}</button>)}
     </div>
     <Stepper step={k} setStep={setK} max={KMAX} narration={`x⁽${k}⁾ = (${fmtDe(x[0], 3)}; ${fmtDe(x[1], 3)}), c₁ = ${fmtDe(c1, 3)}, c₂ = ${fmtDe(c2, 3)}.`} />
     <Verdikt kind={fails ? "warn" : hit ? "ok" : k > 0 ? "ok" : "neutral"}>{verdict}</Verdikt>

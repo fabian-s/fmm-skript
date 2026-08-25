@@ -5,8 +5,6 @@ import { S24WachstumWidget } from "./widgets/S24WachstumWidget";
     Quelle: Folien 02-algos.Rmd, Block „Landausymbole" bis „Quiz" (Z. 371–482).
     Prosa eigenständig aus den Folien formuliert; MDX-Migration 2026-08-11. */}
 
-::quelle[Folien: 02-algos, „Landausymbole" bis „Quiz".]
-
 In [Abschnitt 2.3](#sec-2.3) haben wir den Aufwand von
 Algorithmen gemessen, indem wir elementare Operationen gezählt haben. Das Ergebnis sind
 Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber unhandlich. Für den Vergleich
@@ -127,7 +125,7 @@ Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Praktisc
 vertragen sich die Landau-Symbole genau mit diesen beiden Operationen, so dass wir die
 Grenzwertrechnung nicht jedes Mal neu machen müssen:
 
-:::lemma[2.4.5 (Rechenregeln für Landau-Symbole)]
+:::lemma[2.4.4 (Rechenregeln für Landau-Symbole)]
 Seien $a_n, b_n > 0$ Vergleichsfolgen.
 
 1. Sei $\cred{f_n} = O(a_n)$ und $\cgreen{g_n} = O(b_n)$. Dann gilt
@@ -221,7 +219,7 @@ Sehen wir die Regeln im Einsatz. Wieder verfolgt $\cred{\text{Rot}}$ die
 Folge $\cred{f_n}$ und $\cgreen{\text{Grün}}$ die Folge
 $\cgreen{g_n}$.
 
-:::beispiel[2.4.6 (Addition und Multiplikation)]
+:::beispiel[2.4.5 (Addition und Multiplikation)]
 Gegeben seien $\cred{f_n} = 3n^2 = O(n^2)$ und
 $\cgreen{g_n} = 5n = O(n)$.
 
@@ -238,7 +236,7 @@ $$
 $$
 :::
 
-:::beispiel[2.4.7 (Vereinfachung eines Aufwandsausdrucks)]
+:::beispiel[2.4.6 (Vereinfachung eines Aufwandsausdrucks)]
 Ein Algorithmus benötige $\cred{4n^3} + 16n^2 + 239$ Operationen. Rot
 verfolgt jetzt den am schnellsten wachsenden Term:
 
@@ -302,7 +300,7 @@ Approximations- und Rundungsfehler klassifizieren.
 **Falsch.**
 $\lim_{n \to \infty} \frac{8n^3 + 7n^2 + n}{n} = \lim_{n \to \infty} \left(8n^2 + 7n + 1\right) = \infty$;
 der Quotient divergiert. Richtig wäre $O(n^3)$: der dominante Term
-entscheidet (Beispiel 2.4.7).
+entscheidet (Beispiel 2.4.6).
 </SelfTest>
 
 <SelfTest nr={4} frage={<M>{"n^{-3} + n^{-2} = O(n^{-2})"}</M>}>

@@ -12,8 +12,6 @@ import { SelfTest } from "./widgets/S42Local";
   sauber als Beweis aufgeschrieben.
 */}
 
-::quelle[Folien: 04-fehler, „Kondition".]
-
 In [Abschnitt 4.1](#sec-4.1) haben wir den Gesamtfehler
 einer numerischen Rechnung in zwei Teile zerlegt: den Fehler des Algorithmus selbst und
 den Folgefehler, der aus einem fehlerhaften Input entsteht. Um den zweiten Teil geht es
@@ -43,7 +41,7 @@ von $E$ der „wahre" Input war.
 
 ### 4.2.1 Ein Warnbeispiel: der Kehrwert
 
-Wie schlimm kann es werden? Ein bewusst extremes Beispiel von den Folien:
+Wie schlimm kann es werden? Ein bewusst extremes Beispiel:
 
 :::beispiel[4.2.1 (Kehrwert nahe null)]
 Sei $f(x) = x^{-1}$ mit Input $x = 10^{-17}$, und sei der gestörte
@@ -353,7 +351,7 @@ schwächster Streckung.
 
 ### 4.2.4 Aufgabe: die Kondition einer Summe
 
-Zum Abschluss eine Aufgabe von den Folien. Versuchen wir es erst selbst, bevor wir die
+Zum Abschluss eine Aufgabe. Versuchen wir es erst selbst, bevor wir die
 Lösung aufklappen. Sie sieht harmlos aus, trägt aber den Keim eines Phänomens in sich,
 das wir schon kennen.
 
@@ -380,10 +378,9 @@ $$
 
 mit Gleichheit genau dann, wenn $\cbred{\bh}$ parallel zu
 $\symbf{1} = (1, 1)^\top$ liegt. Solche beliebig kleinen Störungen
-gibt es, also ist die Schranke scharf:
-$\kappa_{abs} = \sqrt{2}$. (Die Folien notieren nur
-$\kappa_{abs} \le \sqrt{2}$; der Gleichheitsfall von Cauchy-Schwarz
-liefert sogar Gleichheit.) Da $f$ linear ist, tritt derselbe
+gibt es, also ist die Schranke scharf: Der Gleichheitsfall von Cauchy-Schwarz
+liefert hier nicht nur $\kappa_{abs} \le \sqrt{2}$, sondern
+$\kappa_{abs} = \sqrt{2}$. Da $f$ linear ist, tritt derselbe
 Gleichheitsfall auch beim relativen Fehlerquotienten auf, und wie im Beweis von
 Satz 4.2.6 folgt
 

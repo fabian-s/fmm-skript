@@ -2,12 +2,12 @@
  * useDrag — das gemeinsame Zeiger-Rezept für alle ziehbaren Objekte in Widgets.
  *
  * Provenienz: destilliert aus den sieben bestehenden Drag-Implementierungen,
- * maßgeblich `12-konvexitaet/widgets/S123Sehne.tsx` (setPointerCapture,
+ * maßgeblich `11-konvexitaet/widgets/S113Sehne.tsx` (setPointerCapture,
  * vergrößerter Trefferkreis unter dem sichtbaren Punkt, PointerLeave als
  * zweites Drag-Ende, Constraint-ε beim Klemmen) sowie der vierfach kopierten
- * Koordinatenumrechnung aus `10-ableitungen-1/widgets/S102Gradient.tsx`,
- * `12-konvexitaet/widgets/S122KonvexTest.tsx`, `13-optim/widgets/S132Sattel.tsx`
- * und `13-optim/widgets/S135Lagrange.tsx`.
+ * Koordinatenumrechnung aus `10-differentialrechnung/widgets/S102Gradient.tsx`,
+ * `11-konvexitaet/widgets/S112KonvexTest.tsx`, `12-optim/widgets/S122Sattel.tsx`
+ * und `12-optim/widgets/S125Lagrange.tsx`.
  *
  * Zwei Benutzungsarten:
  *

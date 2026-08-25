@@ -16,7 +16,7 @@
  * hin und ist der Sortierschlüssel des Malerverfahrens.
  *
  * Die Höhenlinien folgen dem Dreiecksverfahren aus
- * `src/chapters/11-ableitungen-2/widgets/S114Kontur.ts` (jede Gitterzelle wird
+ * `src/chapters/10-differentialrechnung/widgets/S108Kontur.ts` (jede Gitterzelle wird
  * in zwei Dreiecke zerlegt): anders als beim üblichen Marching-Squares gibt es
  * damit keine mehrdeutigen Sattelzellen. Der Code ist hier neu geschrieben,
  * weil die Bibliothek nicht aus einem Kapitel importieren darf.

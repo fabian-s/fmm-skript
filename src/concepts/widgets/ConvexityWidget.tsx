@@ -15,7 +15,7 @@
  *
  * PROVENIENZ: Der Rechenkern (Verletzungsflächen als Polygonzüge, ziehbare
  * Endpunkte auf dem Graphen, Kurvenauswahl) ist die kompakte Fassung von
- * src/chapters/12-konvexitaet/widgets/S123Sehne.tsx (SehnenSVG/SehnenTest);
+ * src/chapters/11-konvexitaet/widgets/S113Sehne.tsx (SehnenSVG/SehnenTest);
  * das Ziehen läuft über `useDrag` aus der Lib. Alle Texte sind neu.
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O0/check-o0.mjs, 2026-08-20

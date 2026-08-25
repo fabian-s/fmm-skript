@@ -3,6 +3,26 @@
 Lebendes Dokument; der Abschnitt **Lessons** am Ende überschreibt alles
 davor. Sprache und Ton: siehe STYLE.md (verbindlich).
 
+## Umstrukturierung 2026-08-25
+
+Die Kapitel wurden zusammengelegt; das Skript hat jetzt 13 Kapitel. Alles
+weiter unten in dieser Datei beschreibt den Stand davor und bleibt als
+Historie stehen.
+
+| alt | neu |
+| --- | --- |
+| 8 Numerische LA: Iteration & Zufall | 8 Numerische Lineare Algebra: Iteration & Zufall (nur ausgeschriebener Titel) |
+| 10 Differentialrechnung I + 11 Differentialrechnung II | 10 Differentialrechnung (10.1–10.9) |
+| 12 Konvexität | 11 Konvexität |
+| 13 Nichtlineare Gleichungen & Optimierung | 12 Nichtlineare Gleichungen & Optimierung |
+| 14 Funktionsapproximation I + 15 Funktionsapproximation II | 13 Funktionsapproximation (13.1–13.9) |
+
+Kapitel 1–7 und 9 bleiben unverändert. Die Registry `src/chapters/index.ts`
+listet die 13 Kapitel; alte Kapitel-IDs aus schon verlinkten URLs fängt
+`chapterAliases` in derselben Datei ab. Ab Kapitel 10 stimmt die
+Kapitelnummer nicht mehr mit der Foliensatz-Nummer überein – welche
+Foliensätze zu einem Kapitel gehören, steht im Feld `deck` der Registry.
+
 ## Mission
 
 Öffentliches interaktives Begleit-Skript (deutsch) zur LMU-Vorlesung

@@ -7,7 +7,7 @@
  * Play/Pause ist ein Zusatz für lange Läufe, nie der Default.
  *
  * Der Zustand gehört dem Aufrufer: das Widget rechnet seinen Zustand
- * deterministisch aus dem Schrittindex (Muster `13-optim/widgets/S134Bfgs.tsx`),
+ * deterministisch aus dem Schrittindex (Muster `12-optim/widgets/S124Bfgs.tsx`),
  * damit Scrubben und Rückwärtsgehen keinen Extra-Code brauchen.
  *
  *   const [k, setK] = useState(0);

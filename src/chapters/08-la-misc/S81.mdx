@@ -1,8 +1,6 @@
 import { PotenzmethodenStepper } from "./widgets/S81Potenz";
 import { QrIterationsDemo } from "./widgets/S81QR";
 
-::quelle[Folien 08-la-misc, von „Verwendete Vorkenntnisse" bis zu den Bemerkungen über Kondition und Laufzeit.]
-
 Die numerische lineare Algebra ist ein großes Feld, und bislang haben wir vor
 allem eine ihrer Kernideen ausgereizt: die *Matrixzerlegung*. LU, Cholesky, QR
 und die SVD lösen ihr Problem, indem sie die Matrix in Faktoren mit handlicher
@@ -109,14 +107,14 @@ ungleich null hat. Zerlegt wird nichts, umgeformt wird nichts, $\bA$ selbst
 bleibt unangetastet.
 
 :::bemerkung[8.1.3 (Zwei Schätzungen für den Eigenwert)]
-Die Folien geben die Eigenwertschätzung als Quotient
-$\left\|\bA\bx^{(k)}\right\| / \left\|\bA\bx^{(k-1)}\right\|$ an. Diese Form
-gehört zur *unnormierten* Iteration $\bz^{(k)} = \bA\bz^{(k-1)}$: Dort wächst
+Wie man den Eigenwert abliest, hängt daran, ob unterwegs normiert wird. Ohne
+Normierung, also für die rohe Iteration $\bz^{(k)} = \bA\bz^{(k-1)}$, wächst
 die Länge in jedem Schritt um ungefähr den Faktor $|\lambda_1|$, und der
 Quotient $\left\|\bz^{(k)}\right\|/\left\|\bz^{(k-1)}\right\|$ strebt gegen
 $|\lambda_1|$. Normieren wir dagegen wie in Algorithmus 8.1.2 nach jedem
-Schritt, so haben Zähler und Nenner denselben Grenzwert und der Quotient läuft
-gegen $1$. Mit Normierung lautet die Schätzung schlicht
+Schritt, so taugt derselbe Quotient nichts mehr: Zähler und Nenner haben
+denselben Grenzwert, er läuft also gegen $1$. Mit Normierung lautet die
+Schätzung schlicht
 $\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$.
 
 Eine Länge kann kein Vorzeichen liefern, diese Schätzung konvergiert also gegen
@@ -259,7 +257,7 @@ Der orange Wert nähert sich dem Verhältnis der beiden Eigenwertbeträge.
 :::
 ::::
 
-Rechnen wir das an der Matrix der Folien durch.
+Rechnen wir das an der Beispielmatrix durch.
 
 :::beispiel[8.1.5 (Potenzmethode an einer 2×2-Matrix)]
 Sei
@@ -687,7 +685,7 @@ $$
 = \cgreen{\bV}^\top\cgreen{\bV}\bLambda\cgreen{\bV}^\top\cgreen{\bV} = \bLambda .
 $$
 
-Diese Rechnung steht so auf den Folien, und sie hängt ganz am
+Diese Rechnung hängt ganz am
 :k[Spektralsatz]{#spectral-theorem}: Nur für symmetrisches $\bA$ gibt es die
 Zerlegung $\bA = \cgreen{\bV}\bLambda\cgreen{\bV}^\top$ mit *orthogonalem*
 $\cgreen{\bV}$, und nur deshalb kürzt sich $\cgreen{\bV}^\top\cgreen{\bV}$ in
@@ -761,8 +759,8 @@ schon kannten. Die QR-Iteration findet sie selbst.
 :::
 
 :::vertiefung[Die QR-Iteration zum Durchklicken]
-Auch dieses Widget ersetzt eine Abbildung der Folien. Links stehen die
-Einträge von $\bA^{(k)}$, dazu die Faktoren des letzten Schritts und das
+Links stehen die Einträge von $\bA^{(k)}$, dazu die Faktoren des letzten
+Schritts und das
 aufgesammelte Produkt $\bQ_k$; rechts fällt der Betrag der Nebendiagonalen auf
 logarithmischer Skala, wo lineare Konvergenz als Gerade erscheint. Neben der
 Beispielmatrix lohnen sich zwei weitere Eingaben: die unsymmetrische Matrix

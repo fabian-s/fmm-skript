@@ -45,7 +45,10 @@ Vorbild: das LinAlg-Skript von T. Nagler (fmm-lmu/literature/nagler-linalg-2026.
 ## Mathematischer Apparat
 
 - Nummerierte Environments wie im Vorbild: Definition x.y, Theorem x.y,
-  Beispiel x.y, Beweis. (Nummerierung: Kapitel = Foliensatz-Nummer.)
+  Beispiel x.y, Beweis. (Nummerierung: x = Kapitelnummer. Kapitel 1–9
+  entsprechen dem gleichnamigen Foliensatz; ab Kapitel 10 fasst ein Kapitel
+  mehrere Foliensätze zusammen, die Zuordnung steht im Feld `deck` der
+  Registry `src/chapters/index.ts`.)
 - Beweise: vollständig, aber schrittweise erzählt; jeder nichttriviale
   Schritt bekommt eine Begründung in Worten oder eine \expl{...}-Annotation.
 - Farbcodierung (FMM-Palette; \cbred, \cblue, \cgreen, \cborange, \cpurp):
@@ -56,8 +59,10 @@ Vorbild: das LinAlg-Skript von T. Nagler (fmm-lmu/literature/nagler-linalg-2026.
 
 ## Bezug zu Folien und Büchern
 
-- Struktur folgt den FOLIEN (Kapitel = Foliensatz), nicht den Büchern.
-  Jeder Abschnitt nennt die zugehörigen Folien („Folien 07-kq, S. 12–18").
+- Struktur folgt den FOLIEN, nicht den Büchern (Kapitel 1–9 je ein
+  Foliensatz, ab Kapitel 10 mehrere je Kapitel; siehe `deck` in der Registry).
+  Das Skript nennt die Folien NICHT (kein `::quelle`, keine „wie auf der
+  Folie"-Prosa): Es ist ein eigenständiger Text, Provenienz nur in Kommentaren.
 - Heath/MML dienen als fachliche Referenz für Tiefe und Beweise. PROSA IST
   IMMER EIGENSTÄNDIG FORMULIERT — niemals übersetzte Buchpassagen
   (Übersetzungen sind abgeleitete Werke!). Das Skript wird veröffentlicht.

@@ -7,10 +7,11 @@ import { chapters } from "../../index";
  * Farbrollen: Grau = Vorwissen, Blau = Teil 1, Orange = Teil 2, Violett =
  * Teil 3; die Farben gruppieren Kursabschnitte und sind keine Fehler- oder
  * Lösungsfarben aus Beispiel 1.1.1.
- * Provenienz: Kantenstruktur aus conceptmap.qmd des Vorlesungs-Repos,
- * Darstellung mit der lokalen ConceptFlow-Komponente.
- * Verifizierte Zahlen: 15 Kapitel, 3 Vorwissensknoten und 34 Abhängigkeiten
- * in verify-01-intro/check-kurskarte.mjs, 2026-08-19.
+ * Provenienz: Kantenstruktur aus conceptmap.qmd des Kurs-Repos, Darstellung
+ * mit der lokalen ConceptFlow-Komponente.
+ * Verifizierte Zahlen: 13 Kapitel (Anzahl kommt aus der Registry
+ * src/chapters/index.ts), 3 Vorwissensknoten und 30 Abhängigkeiten in der
+ * Kantenliste unten; Stand nach der Kapitelzusammenlegung, 2026-08-25.
  */
 
 // Kurztitel für die Kästen — der volle Titel steht in der Detailzeile.
@@ -22,23 +23,21 @@ const KURZ: Record<number, string> = {
   5: "Lineare Gleichungssysteme",
   6: "Singulärwertzerlegung",
   7: "Kleinste Quadrate",
-  8: "Iteration & Zufall",
+  8: "Numerische LA: Iteration & Zufall",
   9: "Tensoren & Tensorprodukte",
-  10: "Differentialrechnung I",
-  11: "Differentialrechnung II",
-  12: "Konvexität",
-  13: "Gleichungen & Optimierung",
-  14: "Funktionsapproximation I",
-  15: "Funktionsapproximation II",
+  10: "Differentialrechnung",
+  11: "Konvexität",
+  12: "Gleichungen & Optimierung",
+  13: "Funktionsapproximation",
 };
 
 const SPINE_X = 440;
 const TOP = 128;
 const STEP = 57;
-// Extra-Luft vor Kapitel 10 und 14: dort beginnt ein neuer Teil.
-const yOf = (num: number) => TOP + (num - 1) * STEP + (num >= 10 ? 18 : 0) + (num >= 14 ? 18 : 0);
+// Extra-Luft vor Kapitel 10 und 13: dort beginnt jeweils ein neuer Teil.
+const yOf = (num: number) => TOP + (num - 1) * STEP + (num >= 10 ? 18 : 0) + (num >= 13 ? 18 : 0);
 
-const teil = (num: number) => (num <= 9 ? "teil1" : num <= 13 ? "teil2" : "teil3");
+const teil = (num: number) => (num <= 9 ? "teil1" : num <= 12 ? "teil2" : "teil3");
 
 const kapitel: FlowNode[] = chapters.map((c) => ({
   id: String(c.num),
@@ -65,10 +64,9 @@ const edges: FlowEdge[] = [
   { from: "AN", to: "1" },
   { from: "R", to: "1" },
   { from: "AN", to: "10", side: "left" },
-  { from: "LA", to: "14", side: "left" },
-  // Lesereihenfolge (Kap. 14 setzt Teil 2 NICHT voraus — deshalb keine Kante 13→14)
-  ...Array.from({ length: 12 }, (_, i) => ({ from: String(i + 1), to: String(i + 2) })),
-  { from: "14", to: "15" },
+  { from: "LA", to: "13", side: "left" },
+  // Lesereihenfolge (Kap. 13 setzt Teil 2 nicht voraus, deshalb keine Kante 12→13)
+  ...Array.from({ length: 11 }, (_, i) => ({ from: String(i + 1), to: String(i + 2) })),
   // Vorgriffe innerhalb von Teil 1
   { from: "3", to: "5", side: "right" },
   { from: "3", to: "6", side: "right" },
@@ -79,14 +77,12 @@ const edges: FlowEdge[] = [
   { from: "6", to: "9", side: "right" },
   // Anker über Teilgrenzen hinweg
   { from: "3", to: "10", side: "left" },
-  { from: "4", to: "13", side: "left" },
+  { from: "4", to: "12", side: "left" },
+  { from: "10", to: "12", side: "right" },
   { from: "11", to: "13", side: "right" },
-  { from: "1", to: "14", side: "left" },
-  { from: "7", to: "14", side: "left" },
-  { from: "9", to: "14", side: "left" },
-  { from: "7", to: "15", side: "left" },
-  { from: "9", to: "15", side: "left" },
-  { from: "12", to: "15", side: "right" },
+  { from: "1", to: "13", side: "left" },
+  { from: "7", to: "13", side: "left" },
+  { from: "9", to: "13", side: "left" },
 ];
 
 export function KursKarte() {
@@ -94,14 +90,14 @@ export function KursKarte() {
     <div>
       <Aufgabe>Tippen wir ein Kapitel an und verfolgen wir seine direkten Voraussetzungen und Folgen.</Aufgabe>
       <ConceptFlow
-        ariaLabel="Abhängigkeitskarte der 15 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
+        ariaLabel="Abhängigkeitskarte der 13 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
         nodes={[...vorwissen, ...kapitel]}
         edges={edges}
         groups={[
           { key: "vor", label: "Vorwissen", color: FMM_COLORS.grau },
           { key: "teil1", label: "Teil 1 · Numerische lineare Algebra (Kap. 1–9)", color: FMM_COLORS.blau },
-          { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–13)", color: FMM_COLORS.orange },
-          { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 14–15)", color: FMM_COLORS.violett },
+          { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–12)", color: FMM_COLORS.orange },
+          { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 13)", color: FMM_COLORS.violett },
         ]}
         openLabel="Kapitel öffnen"
       />

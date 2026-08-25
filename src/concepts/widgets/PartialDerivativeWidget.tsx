@@ -13,7 +13,7 @@
  *
  * PROVENIENZ: Schnittkurve und Tangente aus der Vorfassung; neu sind das
  * Höhenlinienbild mit der Schnittgeraden und die 3D-Tafel mit derselben
- * Schnittebene (`Surface3D`, Bauart wie S113Hesse in Kapitel 11). Der
+ * Schnittebene (`Surface3D`, Bauart wie S107Hesse in Kapitel 10). Der
  * erklärende Schlussabsatz steht jetzt in partial-derivative.mdx.
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L2/verify-qa-l2.mjs,

@@ -1,8 +1,6 @@
 import { RichardsonStepper } from "./widgets/S83Richardson";
 import { Schaetzfrage } from "../../lib";
 
-::quelle[Folien 08-la-misc, Abschnitt „Iterative Lösungsverfahren".]
-
 Für :k[lineare Gleichungssysteme]{#linear-system} $\bA\bx = \bb$ und für
 Kleinste-Quadrate-Probleme kennen wir bisher nur *direkte* Verfahren. Die
 LU-Zerlegung aus [Abschnitt 5.3](?k=05-lgs#sec-5.3) und die QR-Zerlegung aus
@@ -546,18 +544,6 @@ sinken. Die beobachteten Quotienten $0{,}33$, $0{,}39$, $0{,}40$, $0{,}40$
 bestätigen das und nähern sich von unten der Vorhersage an.
 :::
 
-:::bemerkung[8.3.12 (Abweichung von den Folien)]
-Die Folie rechnet in ihrem letzten Schritt
-$\cblue{\bx^{(4)}} = (0{,}095,\; 0{,}628)^\top$ und dazu den Fehler $0{,}009$.
-Beides stimmt nicht: Aus $\cblue{\bx^{(3)}} = \tfrac{1}{64}(7, 39)^\top$ folgt
-exakt $\cblue{\bx^{(4)}} = \tfrac{1}{256}(25, 160)^\top
-\approx (0{,}098,\; 0{,}625)^\top$ mit Fehler $\cred{0{,}013}$. Wir rechnen
-oben mit den korrigierten Werten. Auch die Fehlerspalte der Folie ist
-abgeschnitten statt gerundet ($0{,}642$ statt $0{,}643$), und
-$\cblue{\bx^{(3)}}$ erscheint dort als $(0{,}109,\; 0{,}610)^\top$ statt
-$(0{,}109,\; 0{,}609)^\top$; an der Aussage ändert das nichts.
-:::
-
 :::vertiefung[Richardson Schritt für Schritt, mit einstellbarem γ]
 Bei welcher Schrittweite kippt diese Iteration? Schätzen wir die Grenze, bevor
 wir den Verlauf untersuchen.
@@ -575,7 +561,7 @@ verfehlt die Iterationsmatrix die Kontraktionsbedingung.
 
 ### Einordnung
 
-:::bemerkung[8.3.13 (Was iterative Verfahren leisten)]
+:::bemerkung[8.3.12 (Was iterative Verfahren leisten)]
 - Iterative Verfahren gibt es nicht nur für lineare Gleichungssysteme und für
   Eigenwertprobleme ([Abschnitt 8.1](#sec-8.1)), sondern ebenso für
   Kleinste-Quadrate-Probleme ([Kapitel 7](?k=07-kq#sec-7.1)).
@@ -604,6 +590,6 @@ Fehler. Das ist dieselbe Warnung wie bei der
 :k[Konditionszahl]{#condition-number} in
 [Abschnitt 4.2](?k=04-fehler#sec-4.2), diesmal als Abbruchkriterium.
 
-*Vertiefung: Heath §11.5 (iterative Verfahren für lineare Gleichungssysteme,
+*Vertiefung: Heath §10.9 (iterative Verfahren für lineare Gleichungssysteme,
 inklusive Jacobi, Gauss-Seidel und konjugierten Gradienten); für die
 Eigenwert-Iterationen aus [Abschnitt 8.1](#sec-8.1) siehe Heath §4.5.*

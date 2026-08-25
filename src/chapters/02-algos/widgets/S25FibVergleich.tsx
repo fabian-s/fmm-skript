@@ -17,7 +17,7 @@ import type { Series } from "../../../lib";
  *
  * DIE EINE EINSICHT: Auf logarithmischer Skala wird exponentielles Wachstum
  * zur Geraden, und die Steigung verrät die Basis. Die gezählten Aufrufe liegen
- * auf der flacheren φ-Geraden, nicht auf der 2ⁿ-Geraden — die Folienschranke
+ * auf der flacheren φ-Geraden, nicht auf der 2ⁿ-Geraden – die Schranke
  * O(2ⁿ) ist korrekt, aber nicht scharf (Satz 2.5.6, Bemerkung 2.5.7).
  *
  * Muster 1: Die scharfe Vorhersage c·φⁿ war früher eine Checkbox und der

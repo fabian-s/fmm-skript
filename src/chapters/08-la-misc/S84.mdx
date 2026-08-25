@@ -1,7 +1,5 @@
 import { SketchingDemo } from "./widgets/S84Sketching";
 
-::quelle[Folien 08-la-misc, Abschnitt „Probabilistische Methoden".]
-
 Die iterativen Verfahren der [Abschnitte 8.1](#sec-8.1) und
 [8.3](#sec-8.3) handeln Genauigkeit gegen Laufzeit: Wir brechen ab, sobald
 uns das Erreichte genügt. Dieser Abschnitt zieht einen anderen Hebel. Wir
@@ -163,7 +161,7 @@ ist nur, dass das Bild in $m$ statt in $n$ Dimensionen lebt.
 ### Ein Zahlenbeispiel
 
 :::beispiel[8.4.5 (Sketching zweier Vektoren mit 10 000 Komponenten)]
-Die Folien ziehen zwei beliebige Vektoren $\bx, \by \in \R^{10\,000}$ und eine
+Ziehen wir zwei beliebige Vektoren $\bx, \by \in \R^{10\,000}$ und eine
 Gauss-Sketchmatrix mit $m = 50$, also einen Faktor $200$ kleiner:
 
 ```r
@@ -186,19 +184,21 @@ c(angle(x, y), angle(Sx, Sy))
 
 Die Einträge sind unabhängig $\Ncal(0, 1/m)$-verteilt, eine Zeile $\bs_i$ hat
 also die Kovarianzstruktur $\E\left[\bs_i\bs_i^\top\right] = \bI_n/m$; diese
-Bedingung brauchen wir gleich. Berichtet wird für diesen Seed weniger als
-$1\,\%$ Abweichung im Abstand und weniger als $3\,\%$ im Winkel.
+Bedingung brauchen wir gleich. Für diesen Seed weicht der Abstand um rund
+$3\,\%$ ab, der Winkel um rund $1\,\%$ – und das, obwohl $99{,}5\,\%$ der
+Dimensionen wegfallen.
 
-Diese Zahlen sind eine glückliche Ziehung, und wie glücklich, lässt sich für
+Diese Zahlen sind eine gute Ziehung, und wie gut, lässt sich für
 eine Gauss-Skizze exakt beziffern. Ist $\bz \in \R^n$ fest, so sind die $m$
 Komponenten $\bs_i^\top\bz$ von $\bS\bz$ unabhängig
 $\Ncal(0, \left\|\bz\right\|^2/m)$-verteilt; damit ist
 $\left\|\bS\bz\right\|^2/\left\|\bz\right\|^2$ genau $\chi^2_m/m$-verteilt.
 Bei $m = 50$ hat die relative Abweichung des Abstands damit die
 Standardabweichung $9{,}97\,\%$, praktisch die Faustregel
-$1/\sqrt{2m} = 10\,\%$, und nur knapp $8\,\%$ aller Ziehungen landen unter
-der $1\,\%$-Marke. Das Verfahren funktioniert, aber einzelne Ziehungen
-streuen erheblich. Das Widget unten führt beides vor.
+$1/\sqrt{2m} = 10\,\%$; nur knapp ein Viertel aller Ziehungen bleibt unter
+der $3\,\%$-Marke, und nur knapp $8\,\%$ landen unter $1\,\%$. Das Verfahren
+funktioniert, aber einzelne Ziehungen streuen erheblich. Das Widget unten
+führt beides vor.
 :::
 
 :::vertiefung[Sketching mit verstellbarem m]
@@ -319,28 +319,25 @@ $1 - \delta$.
 
 ::::
 
-:::bemerkung[8.4.7 (Drei Abweichungen von der Folienfassung)]
-Die Folien formulieren denselben Satz etwas anders, und drei Stellen lohnen
-den genauen Blick.
+:::bemerkung[8.4.7 (Warum die Momentenbedingung an der Projektion ansetzt)]
+Die Varianz in Schritt 3 ließe sich auch bequemer abschätzen, nämlich über die
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
+$\left|\bs_i^\top\bv\right| \le \left\|\bs_i\right\|\left\|\bv\right\|$. Dann
+stünde in ($8.4.3$) die Länge der ganzen Zeile,
+$\E\left[\left\|\bs_i\right\|^4\right] \le K/m^2$. Das wäre richtig, aber
+unbrauchbar grob: Für $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
 
-1. **Die Momentenbedingung.** Dort steht
-   $\E\left[\left\|\bs_i\right\|^4\right] \le K/m^2$ statt ($8.4.3$). Diese
-   Bedingung passt nicht zum späteren Wert $K = 3$: Für
-   $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
-   $\E\left[\left\|\bs_i\right\|^4\right] = (n^2 + 2n)/m^2$, das zugehörige
-   $K$ wächst also wie $n^2$. Bei $n = 10\,000$ wäre $K \approx 10^8$ statt
-   $3$. Unsere Bedingung ($8.4.3$) ist dagegen für Gauss-Zeilen exakt mit
-   $K = 3$ erfüllt (Beispiel 8.4.11).
-2. **Der Weg dorthin.** Die Folien kommen von der einen zur anderen Größe
-   über die :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality},
-   $\left|\bs_i^\top\bv\right| \le \left\|\bs_i\right\|\left\|\bv\right\|$.
-   Das ist richtig, aber grob: Der Schritt verschenkt im Gauss-Fall den
-   Faktor $(n^2+2n)/3$. Wir schätzen die Varianz deshalb direkt über
-   $\E\left[\left(\bs_1^\top\bv\right)^4\right]$ ab.
-3. **Das benutzte Werkzeug.** Aus Erwartungswert und Varianz auf eine
-   Wahrscheinlichkeit zu schließen, ist die Tschebyscheff-Ungleichung. Sie
-   ist die Markov-Ungleichung, angewandt auf die quadrierte Abweichung; auf
-   den Folien steht nur „Markov".
+$$
+\E\left[\left\|\bs_i\right\|^4\right] = \frac{n^2 + 2n}{m^2} ,
+$$
+
+das zugehörige $K$ wüchse also wie $n^2$ – bei $n = 10\,000$ wäre
+$K \approx 10^8$ statt $3$, und die Schranke aus Satz 8.4.6 wäre wertlos. Der
+Unterschied ist gerade der verschenkte Faktor $(n^2+2n)/3$: Die Zeile $\bs_i$
+ist lang, ihre Projektion auf eine *feste* Richtung $\bv$ aber kurz, und nur
+diese Projektion geht in $\left\|\bS\bx\right\|^2$ ein. Bedingung ($8.4.3$)
+misst deshalb direkt $\E\left[\left(\bs_i^\top\bv\right)^4\right]$ und ist für
+Gauss-Zeilen mit $K = 3$ sogar mit Gleichheit erfüllt (Beispiel 8.4.11).
 :::
 
 :::bemerkung[8.4.8 (Von Quadraten zu Längen und Abständen)]
@@ -412,10 +409,11 @@ werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen. Damit ist auch
 die Winkelaussage aus Definition 8.4.4 gerechtfertigt.
 
 :::bemerkung[8.4.10 (Ein fester Vektor ist nicht jeder Vektor)]
-Auf den Folien steht „für alle $\bx \in \R^n$" *innerhalb* der
-Wahrscheinlichkeit. So stimmt die Aussage nicht: Unser Beweis fixiert $\bx$,
-bevor $\bS$ gezogen wird, und die Ausnahmemenge darf für jedes $\bx$ eine
-andere sein. Ein Gegenargument in einer Zeile: $\bS$ hat höchstens
+Das Wort „fest" in Satz 8.4.6 trägt Gewicht. Verschöbe man den Quantor „für
+alle $\bx \in \R^n$" *innerhalb* der Wahrscheinlichkeit, so wäre die Aussage
+schlicht falsch: Unser Beweis fixiert $\bx$, bevor $\bS$ gezogen wird, und die
+Ausnahmemenge darf für jedes $\bx$ eine andere sein. Ein Gegenargument in
+einer Zeile: $\bS$ hat höchstens
 :k[Rang]{#rank} $m < n$, besitzt also einen nichttrivialen
 :k[Kern]{#kernel}. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ ist
 ($8.4.4$) verletzt, ganz gleich wie $\bS$ ausgefallen ist.
@@ -432,8 +430,8 @@ gleichzeitig gut treffen.
 
 ### Drei Bauarten von Sketching-Matrizen
 
-Welche Verteilungen erfüllen ($8.4.2$) und ($8.4.3$)? Die Folien nennen drei,
-und alle drei lassen sich direkt nachrechnen.
+Welche Verteilungen erfüllen ($8.4.2$) und ($8.4.3$)? Drei Bauarten sind in
+der Praxis üblich, und alle drei lassen sich direkt nachrechnen.
 
 :::beispiel[8.4.11 (Gauss, Rademacher, Subsampling)]
 **Gauss.** $\bs_i \iid \Ncal(\bnull, \bI_n/m)$. Bedingung ($8.4.2$) ist die
@@ -487,12 +485,11 @@ $$
 1-\left(1-\frac1n\right)^m,
 $$
 
-nicht mit $m/n$. Subsampling taugt also, wenn die Information über
-viele Koordinaten verteilt ist, und versagt, wenn sie in wenigen sitzt. So
-ist die Folienbemerkung zu lesen, Subsampling sei „nur gut für spezielle
-Matrizen". Die Qualitätsspalte derselben Folien-Tabelle, „Gut (bei
-strukturierter $\bA$)", weist dagegen in die falsche Richtung: Verteilte
-Information ist der gute Fall, wenige dominante Koordinaten der schlechte.
+nicht mit $m/n$. Subsampling taugt also, wenn die Information über viele
+Koordinaten verteilt ist, und versagt, wenn sie in wenigen sitzt. Der
+Merksatz, Subsampling sei „nur gut für spezielle Daten", ist genau in dieser
+Richtung zu lesen: Verteilte Information ist der gute Fall, wenige dominante
+Koordinaten der schlechte.
 :::
 
 ### Anwendungen
@@ -566,33 +563,31 @@ gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$
 (Bemerkung 8.4.8). Der Speicher sinkt von $10\,000$ auf $6000$ Zahlen je
 Punkt, ein Faktor $n/m \approx 1{,}7$,
 und eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
-Operationen, ebenfalls ein Faktor $n/m$. Davon leben die Anwendungen, die
-die Folien nennen: die Suche nach nächsten Nachbarn und die Clusteranalyse
+Operationen, ebenfalls ein Faktor $n/m$. Davon leben die typischen
+Anwendungen: die Suche nach nächsten Nachbarn und die Clusteranalyse
 in hohen Dimensionen. Beide berühren die Daten fast nur über Abstände, und
 die bleiben unter der Skizze erhalten.
 
-Umgekehrt gelesen sagt ($8.4.5$), was $m = 600$ wirklich hergibt: bei
+Umgekehrt gelesen sagt ($8.4.5$) auch, was ein zehnmal kleineres
+$m = 600$ hergibt: bei
 $\delta = 0{,}05$ nur $\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
 und bei $\corange{\eps} = 0{,}1$ nur $\delta = 3/(600 \cdot 0{,}01) = 0{,}5$,
 also die Verlässlichkeit eines Münzwurfs.
 :::
 
-:::bemerkung[8.4.15 (Zur Rechnung auf den Folien)]
-Die Folie schreibt an dieser Stelle $3/(0{,}05 \cdot 0{,}01) = 600$; richtig
-sind $6000$. Damit fallen auch die beiden Folgerungen anders aus. Die
-Kompression ist $10\,000/6000 \approx 1{,}7$ und nicht $17$.
+:::bemerkung[8.4.15 (Zwei Nachträge zur Rechnung)]
+Zwei Nachträge zu dieser Rechnung. Der erste betrifft den Gewinn, und dabei
+lohnt der Blick darauf, was genau gerechnet wird: Eine einzelne euklidische
+Distanz kostet $O(n)$ Operationen, der Gewinn ist deshalb der Faktor
+$n/m \approx 1{,}7$ und nicht sein Quadrat. Quadratisch in der Dimension sind
+nur bestimmte Verfahren, etwa das Aufstellen einer
+:k[Kovarianzmatrix]{#covariance-matrix}, und nur dort schlägt $(n/m)^2$ zu
+Buche.
 
-Fragwürdig ist zudem die Angabe „Rechenzeit für Distanzberechnungen
-$O(n^2) \to O(m^2)$, Speed-up $\sim 280\times$". Eine einzelne euklidische
-Distanz kostet $O(n)$ Operationen, nicht $O(n^2)$; der Gewinn ist deshalb der
-Faktor $n/m$. Quadratisch in der Dimension sind nur bestimmte Verfahren, etwa
-das Aufstellen einer :k[Kovarianzmatrix]{#covariance-matrix}, und nur dort
-schlägt der Faktor $(n/m)^2$ zu Buche.
-
-Bleibt die Frage, warum in der Praxis trotzdem mit $m$ in der Größenordnung
-einiger hundert gearbeitet wird. Der Grund ist unser Werkzeug: Tschebyscheff
-benutzt nur zwei Momente und ist entsprechend grob. Wie grob, lässt sich für
-Gauss-Skizzen ausnahmsweise exakt sagen. Nach Beispiel 8.4.5 ist
+Der zweite betrifft das $m$ selbst: Warum wird in der Praxis trotzdem mit
+Werten in der Größenordnung einiger hundert gearbeitet? Der Grund ist unser
+Werkzeug: Tschebyscheff benutzt nur zwei Momente und ist entsprechend grob.
+Wie grob, lässt sich für Gauss-Skizzen ausnahmsweise exakt sagen. Nach Beispiel 8.4.5 ist
 $\left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$ dort $\chi^2_m/m$-verteilt,
 und deren Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und
 $\delta = 0{,}05$ nur $m = 768$ Zeilen. Tschebyscheff fordert das Achtfache.

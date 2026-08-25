@@ -1,8 +1,6 @@
 import { S25FibVergleichWidget } from "./widgets/S25FibVergleich";
 import { S25Aufrufbaum } from "./widgets/S25Aufrufbaum";
 
-::quelle[Folien: 02-algos, „Fibonacci: Komplexitätsanalyse" und „Wrap-up".]
-
 Jetzt wird geerntet. In [Abschnitt 2.2](#sec-2.2) haben wir zwei Algorithmen für
 dasselbe Problem kennengelernt (die ersten $n$ Fibonacci-Zahlen zu berechnen) und im
 Widget dort beobachtet, dass die rekursive Variante schon für moderate $n$ unangenehm
@@ -39,7 +37,7 @@ $$
 \text{Schleife: } (n-2) \cdot 3 \text{ Operationen.}
 $$
 
-::why[die Schleife durchläuft $i = 2, \dots, n-1$, das sind $(n-1) - 2 + 1 = n-2$ Durchläufe; pro Durchlauf zählen die Folien 2 Additionen und 1 Zuweisung; man könnte auch die Indexrechnungen $i+1$, $i-1$ mitzählen, für die Ordnung ist das egal (Bemerkung 2.5.2)]
+::why[die Schleife durchläuft $i = 2, \dots, n-1$, das sind $(n-1) - 2 + 1 = n-2$ Durchläufe; pro Durchlauf zählen wir 2 Additionen und 1 Zuweisung; man könnte auch die Indexrechnungen $i+1$, $i-1$ mitzählen, für die Ordnung ist das egal (Bemerkung 2.5.2)]
 :::
 
 :::schritt
@@ -73,7 +71,7 @@ $n$ Schritte. Die iterative Variante ist also ordnungsoptimal.
 Die zweite Variante aus [Abschnitt 2.2](#sec-2.2) übersetzt die mathematische Definition
 wörtlich in Code: Eine Funktion $\texttt{fib\_rek}(n)$ gibt für $n \le 1$ direkt $n$
 zurück und ruft sich sonst zweimal selbst auf, mit $n-1$ und $n-2$, und addiert die
-Ergebnisse. In R (auf den Folien heißt die Funktion $\texttt{fib\_recursive}$):
+Ergebnisse. In R:
 
 ```r
 fib_rek <- function(n) {
@@ -88,9 +86,9 @@ Das ist verführerisch elegant: der Code *ist* praktisch die Rekursionsformel. A
 Eleganz täuscht.
 
 :::bemerkung[2.5.3 (Was wird hier eigentlich berechnet?)]
-Zwei Feinheiten, die die Folien stillschweigend übergehen: Erstens berechnet
-$\texttt{fib\_rek}(n)$ nur eine *einzelne* Fibonacci-Zahl $F_n$ (mit der Zählung
-$F_0 = 0$, $F_1 = 1$, $F_n = F_{n-1} + F_{n-2}$), nicht den ganzen Vektor der ersten $n$
+Zwei Feinheiten sind dabei wichtig: Erstens berechnet $\texttt{fib\_rek}(n)$ nur eine
+*einzelne* Fibonacci-Zahl $F_n$ (mit der Zählung $F_0 = 0$, $F_1 = 1$,
+$F_n = F_{n-1} + F_{n-2}$), nicht den ganzen Vektor der ersten $n$
 Zahlen; in der Notation aus [Abschnitt 2.2](#sec-2.2) gilt $F_n = x_{n+1}$. Zweitens
 macht das den Vergleich nicht etwa unfair, sondern erst recht vernichtend: Die Rekursion
 braucht schon für *eine* Zahl exponentiell viele Schritte, während die Iteration *alle*
@@ -151,9 +149,9 @@ weiter. Die iterative Variante berechnet dagegen jede Zahl genau einmal, weil si
 Zwischenergebnisse im Vektor aufbewahrt.
 :::
 
-Jetzt die allgemeine Analyse. Die Folien argumentieren kurz und bündig: Jeder Aufruf
-erzeugt bis zu 2 weitere Aufrufe, diese wieder je 2, und so fort über bis zu $n$ Ebenen,
-insgesamt höchstens $1 + 2 + 4 + \dots + 2^n$ Aufrufe, also $O(2^n)$. Das folgende
+Jetzt die allgemeine Analyse. Kurz und bündig argumentiert: Jeder Aufruf erzeugt bis zu 2
+weitere Aufrufe, diese wieder je 2, und so fort über bis zu $n$ Ebenen, insgesamt
+höchstens $1 + 2 + 4 + \dots + 2^n$ Aufrufe, also $O(2^n)$. Das folgende
 Resultat macht dieses Argument präzise und ergänzt die Gegenrichtung: Das Wachstum ist
 auch wirklich exponentiell, nicht nur durch eine Exponentialfunktion beschränkt.
 
@@ -246,9 +244,9 @@ liegt das?
 
 :::bemerkung[2.5.7 (Wie schlimm ist es wirklich?)]
 Zwischen unserer unteren Schranke (Basis $\sqrt{2} \approx 1{,}41$) und der oberen
-(Basis $2$) klafft noch eine Lücke: Die Folienangabe $O(2^n)$ ist eine korrekte obere
-Schranke, aber nicht scharf. Der wahre Wachstumsfaktor liegt dazwischen und ist eine alte
-Bekannte: der goldene Schnitt $\varphi \approx 1{,}618$ (Vertiefung unten). Für das Urteil
+(Basis $2$) klafft noch eine Lücke: Die Schranke $O(2^n)$ ist zwar korrekt, aber nicht
+scharf. Der wahre Wachstumsfaktor liegt dazwischen und ist eine alte Bekannte: der
+goldene Schnitt $\varphi \approx 1{,}618$ (Vertiefung unten). Für das Urteil
 *„katastrophal langsam"* ist das aber einerlei: Jede Basis $q > 1$ bedeutet, dass eine um
 $1$ größere Eingabe den Aufwand um den *Faktor* $q$ vervielfacht.
 :::
@@ -356,7 +354,7 @@ Jahre. Die Iteration braucht für dieselbe Zahl $314$ Operationen.
 
 ### Zusammenfassung des Kapitels
 
-In diesem Kapitel haben wir den Grundwortschatz der Vorlesung aufgebaut: Ein *numerisches
+In diesem Kapitel haben wir den Grundwortschatz des Skripts aufgebaut: Ein *numerisches
 Problem* ist eine Abbildung $f$, die Eingabedaten $\bx$ eine gesuchte Lösung $f(\bx)$
 zuordnet, und ein *Algorithmus* ist eine endliche Folge elementarer Rechenschritte, die
 diese Lösung exakt oder näherungsweise berechnet ([Abschnitte 2.1](#sec-2.1)–[2.2](#sec-2.2)).

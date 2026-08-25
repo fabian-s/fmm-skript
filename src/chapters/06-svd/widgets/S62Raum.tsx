@@ -33,7 +33,7 @@ import {
  * grau = laufendes x, violett = sein Bild Ax.
  *
  * PROVENIENZ: eigener Aufbau auf den lib-Bausteinen Surface3D/ViewControls
- * (Referenzaufrufer 11-ableitungen-2/widgets/S113Hesse.tsx) und
+ * (Referenzaufrufer 10-differentialrechnung/widgets/S107Hesse.tsx) und
  * TransformCanvas v2. Kein übernommener Code, alle Texte neu.
  *
  * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,

@@ -1,8 +1,6 @@
 import { PagerankDemo } from "./widgets/S82Pagerank";
 import { PcaDirectionDemo } from "./widgets/S82Pca";
 
-::quelle[Folien 08-la-misc, „Anwendung: Google PageRank" bis „Iterative Eigenwertverfahren: Vergleich".]
-
 Warum lohnt sich der Aufwand aus [Abschnitt 8.1](#sec-8.1)? Weil einige der
 größten Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche,
 bei denen direkte Verfahren keine Chance haben. Drei Beispiele aus Suche,
@@ -151,7 +149,7 @@ oder `irlba::svdr()` (iterativ und probabilistisch, ein Vorgeschmack auf
 
 ### Approximative SVD in der Praxis
 
-Wie groß der Unterschied ist, zeigt ein Experiment aus der Vorlesung:
+Wie groß der Unterschied ist, zeigt ein Experiment:
 eine :k[Rang-k-Approximation]{#low-rank-approximation} an einem
 Graustufen-Foto (2500 × 3300 Pixel), einmal mit der vollen SVD und
 zweimal iterativ mit `irlba`:
@@ -196,8 +194,7 @@ Lösung. Fällt sie deutlich kleiner aus als die erste, kostet die Abkürzung
 nichts, was neben dem Approximationsfehler ins Gewicht fiele. Genau das ist
 zu erwarten: `irlba` rechnet dieselbe Rang-50-Zerlegung bis auf eine
 einstellbare Toleranz aus, während `svdr` bewusst etwas Genauigkeit gegen
-Tempo tauscht. Die Folien stellen dazu das Original und alle drei
-Rekonstruktionen nebeneinander. Zum Selbst-Ausprobieren: das
+Tempo tauscht. Zum Selbst-Ausprobieren: das
 [Rang-k-Widget in Kapitel 6](?k=06-svd#sec-6.4) und die
 [Shiny-App zur Bildkompression](https://fabian-s.shinyapps.io/truncatedSVD-shiny/).
 

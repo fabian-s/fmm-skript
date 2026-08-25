@@ -18,7 +18,7 @@ import type { Series } from "../../../lib";
  *
  * DIE EINE EINSICHT: Ein Vorfaktor verschiebt die Schwelle, an der die
  * schneller wachsende Klasse übernimmt, aber er dreht die Reihenfolge nie um.
- * Genau das besagt Lemma 2.4.5 (Regel 3) zusammen mit Beispiel 2.4.7.
+ * Genau das besagt Lemma 2.4.4 (Regel 3) zusammen mit Beispiel 2.4.6.
  *
  * FARBROLLEN (Kapitel 2, s. S21Demos.tsx) — die Klassenrampe geht von billig
  * nach teuer und wird in §2.3 und §2.4 identisch verwendet:
@@ -181,7 +181,7 @@ export function S24WachstumWidget() {
         <M>{`n = ${nStar - 1}`}</M> über <M>{"2^n"}</M>; ab <M>{`n = ${nStar}`}</M> gilt
         endgültig <M>{"2^n > c \\cdot n^2"}</M>. Der Vorfaktor verschiebt die Schwelle also
         nur, und selbst <M>{"c = 1000"}</M> kostet die Exponentialfunktion bloß 14 Schritte
-        (von <M>{"n = 5"}</M> auf <M>{"n = 19"}</M>). Nach Beispiel 2.4.7 verschwindet jeder
+        (von <M>{"n = 5"}</M> auf <M>{"n = 19"}</M>). Nach Beispiel 2.4.6 verschwindet jeder
         konstante Faktor in der Landau-Notation, deshalb ist <M>{"c \\cdot n^2 = O(n^2)"}</M>{" "}
         unabhängig von <M>{"c"}</M>.
       </>
@@ -192,7 +192,7 @@ export function S24WachstumWidget() {
       <>
         Hier stehen zwei polynomiale Klassen gegeneinander: <M>{"n^3 > c \\cdot n^2"}</M> gilt
         genau für <M>{`n > c = ${c}`}</M>. Auch hier entscheidet der Vorfaktor nur, <em>wo</em>{" "}
-        die Kurven sich kreuzen, nicht <em>ob</em> (Lemma 2.4.5, Regel 3, mit{" "}
+        die Kurven sich kreuzen, nicht <em>ob</em> (Lemma 2.4.4, Regel 3, mit{" "}
         <M>{"n^2 = O(n^3)"}</M>).
       </>
     );

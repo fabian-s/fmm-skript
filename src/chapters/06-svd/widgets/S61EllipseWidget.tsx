@@ -37,9 +37,8 @@ import {
  * den internen SVD-Widgets (mml-ch4) ist nichts übernommen. Alle Texte sind
  * eigenständig formuliert.
  *
- * Die Folie zeigt eine Abbildung von R^3 nach R^2; deren Bild der
- * Einheitssphäre ist die AUSGEFÜLLTE Ellipse (Folienfehler-Register). Hier
- * steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei singulärem
+ * Für eine Abbildung von R^3 nach R^2 wäre das Bild der Einheitssphäre die
+ * AUSGEFÜLLTE Ellipse. Hier steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei singulärem
  * A zu einer Strecke entartet.
  *
  * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,

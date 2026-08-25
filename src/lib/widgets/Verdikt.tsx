@@ -8,7 +8,7 @@
  *
  *   <Verdikt kind="fail">
  *     Für dieses Paar liegt die Sehne UNTER dem Graphen: (12.3) ist verletzt,
- *     also ist f nach Definition 12.2.1 nicht konvex.
+ *     also ist f nach Definition 11.2.1 nicht konvex.
  *   </Verdikt>
  *
  * Die Art wird nie nur über die Farbe transportiert (craft.md): jedes Verdikt

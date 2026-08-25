@@ -10,8 +10,8 @@ export interface TocSection {
 /** Abschnitte je Kapitel-ID, in Reihenfolge der Registry. */
 export const tocSections: Record<string, TocSection[]> = {
   "01-intro": [
-    { id: "1.1", title: "Worum geht es in diesem Kurs?" },
-    { id: "1.2", title: "Landkarte des Kurses" },
+    { id: "1.1", title: "Worum geht es in diesem Skript?" },
+    { id: "1.2", title: "Landkarte des Skripts" },
   ],
   "02-algos": [
     { id: "2.1", title: "Numerische Probleme und Algorithmen" },
@@ -70,47 +70,41 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "9.4", title: "Tensorprodukt von Vektorräumen" },
     { id: "9.5", title: "Zusammenfassung" },
   ],
-  "10-ableitungen-1": [
+  "10-differentialrechnung": [
     { id: "10.1", title: "Ableitung als lineare Approximation" },
     { id: "10.2", title: "Der Gradient: Vektor zu Skalar" },
     { id: "10.3", title: "Die Jacobimatrix: Vektor zu Vektor" },
     { id: "10.4", title: "Ableitungen mit Matrizen" },
-    { id: "10.5", title: "Zusammenfassung" },
+    { id: "10.5", title: "Stetigkeit und Linearität" },
+    { id: "10.6", title: "Produkt- und Kettenregel" },
+    { id: "10.7", title: "Ableitungen höheren Grades" },
+    { id: "10.8", title: "Taylorapproximation" },
+    { id: "10.9", title: "Zusammenfassung" },
   ],
-  "11-ableitungen-2": [
-    { id: "11.1", title: "Stetigkeit und Linearität" },
-    { id: "11.2", title: "Produkt- und Kettenregel" },
-    { id: "11.3", title: "Ableitungen höheren Grades" },
-    { id: "11.4", title: "Taylorapproximation" },
-    { id: "11.5", title: "Zusammenfassung" },
+  "11-konvexitaet": [
+    { id: "11.1", title: "Konvexkombinationen und konvexe Hülle" },
+    { id: "11.2", title: "Konvexe Mengen" },
+    { id: "11.3", title: "Projektion und konvexe Funktionen" },
+    { id: "11.4", title: "Eigenschaften konvexer Funktionen" },
+    { id: "11.5", title: "Konvexe Optimierung und Zusammenfassung" },
   ],
-  "12-konvexitaet": [
-    { id: "12.1", title: "Konvexkombinationen und konvexe Hülle" },
-    { id: "12.2", title: "Konvexe Mengen" },
-    { id: "12.3", title: "Projektion und konvexe Funktionen" },
-    { id: "12.4", title: "Eigenschaften konvexer Funktionen" },
-    { id: "12.5", title: "Konvexe Optimierung und Zusammenfassung" },
+  "12-optim": [
+    { id: "12.1", title: "Nichtlineare Gleichungen" },
+    { id: "12.2", title: "Optimalität und Sattelpunkte" },
+    { id: "12.3", title: "Nelder-Mead und Gradientenabstieg" },
+    { id: "12.4", title: "Newton, Quasi-Newton und SGD" },
+    { id: "12.5", title: "Beschränkte Optimierung" },
+    { id: "12.6", title: "Optimierung in R und Zusammenfassung" },
   ],
-  "13-optim": [
-    { id: "13.1", title: "Nichtlineare Gleichungen" },
-    { id: "13.2", title: "Optimalität und Sattelpunkte" },
-    { id: "13.3", title: "Nelder-Mead und Gradientenabstieg" },
-    { id: "13.4", title: "Newton, Quasi-Newton und SGD" },
-    { id: "13.5", title: "Beschränkte Optimierung" },
-    { id: "13.6", title: "Optimierung in R und Zusammenfassung" },
-  ],
-  "14-funktionsapproximation": [
-    { id: "14.1", title: "Approximation, Interpolation, Glättung" },
-    { id: "14.2", title: "Interpolation durch Basisdarstellung" },
-    { id: "14.3", title: "Polynominterpolation" },
-    { id: "14.4", title: "Splines und B-Splines" },
-    { id: "14.5", title: "Zusammenfassung" },
-  ],
-  "15-funktionsapproximation-2": [
-    { id: "15.1", title: "Minimale Krümmung" },
-    { id: "15.2", title: "Approximationsfehler" },
-    { id: "15.3", title: "Glättung und Regression" },
-    { id: "15.4", title: "Bias-Varianz und Modellwahl" },
-    { id: "15.5", title: "Multivariat und Zusammenfassung" },
+  "13-funktionsapproximation": [
+    { id: "13.1", title: "Approximation, Interpolation, Glättung" },
+    { id: "13.2", title: "Interpolation durch Basisdarstellung" },
+    { id: "13.3", title: "Polynominterpolation" },
+    { id: "13.4", title: "Splines und B-Splines" },
+    { id: "13.5", title: "Minimale Krümmung" },
+    { id: "13.6", title: "Approximationsfehler" },
+    { id: "13.7", title: "Glättung und Regression" },
+    { id: "13.8", title: "Bias-Varianz und Modellwahl" },
+    { id: "13.9", title: "Multivariat und Zusammenfassung" },
   ],
 };
