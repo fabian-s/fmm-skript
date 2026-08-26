@@ -465,6 +465,28 @@ In der Praxis begegnet uns die Konstruktion trotzdem überall:
   vollen Produktgitters.
 :::
 
+:::bemerkung[#kronecker-designmatrix-tensorprodukt-splines (Kronecker-Designmatrix für Tensorprodukt-Splines)]
+Seien $\bB_x \in \R^{n_x \times K_x}$ und
+$\bB_y \in \R^{n_y \times K_y}$ die Auswertungsmatrizen zweier univariater
+B-Spline-Basen. Für eine Koeffizientenmatrix
+$\bC \in \R^{K_x \times K_y}$ enthält
+$\bF = \bB_x\bC\bB_y^\top$ die Werte der Tensorprodukt-Spline-Fläche auf dem
+$n_x \times n_y$-Gitter. Der vec-Trick aus
+@satz:vektorisierung-eines-matrixprodukts liefert
+
+$$
+\vec(\bF) = \bigl(\bB_y \kron \bB_x\bigr)\vec(\bC).
+$$
+
+Die dichte Designmatrix $\bB_y \kron \bB_x$ hat das Format
+$(n_xn_y) \times (K_xK_y)$ und damit $n_xn_yK_xK_y$ Einträge. Die beiden
+Faktoren speichern nur $n_xK_x+n_yK_y$ Einträge. Wir werten daher
+$\bB_x\bC\bB_y^\top$ durch zwei kleine Matrixprodukte aus, statt die große
+Designmatrix aufzubauen. Das spart Speicher und meist auch Rechenzeit. In
+@kap:funktionsapproximation erscheint dieselbe Idee mit einer allgemeinen
+Designmatrix wieder.
+:::
+
 Tensorproduktbasen sind damit das Standardwerkzeug, sobald multivariate
 Funktionen approximiert werden sollen. Nötig ist dafür zunächst eine gute Basis
 für univariate Funktionen, etwa Legendre-Polynome, eine Fourierbasis oder

@@ -100,6 +100,7 @@ fibonacci <- function(n) {
 Eine Schleife, eine Addition pro Durchlauf, und jedes Zwischenergebnis wird genau einmal
 berechnet und dann wiederverwendet.
 
+:::interaktiv[Wie oft rechnet die Rekursion doppelt?]
 Dass hier *nichts doppelt* gerechnet wird, ist keine Selbstverständlichkeit. Die
 @definition:fibonacci-zahlen legt nämlich noch einen zweiten, verführerisch eleganten Weg nahe: Um
 $x_n$ zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$
@@ -122,6 +123,7 @@ dabei *alle* acht Zahlen berechnet; die Rekursion braucht für die *eine* Zahl $
 $20$ Additionen und $41$ Aufrufe, weil sie $x_3$ achtmal und $x_2$ dreizehnmal von vorn
 ausrechnet. Bis $x_{15}$ sind es $609$ Additionen gegen $13$. Die genaue Analyse, *wie*
 schnell die naive Rekursion explodiert, folgt in @sec:fibonacci-komplexitaet.
+:::
 
 ### Selbsttest :id[fibonacci-selbsttest]
 

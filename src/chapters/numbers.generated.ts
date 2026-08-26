@@ -117,6 +117,7 @@ export type NumKey =
   | "beispiel:gradient-einer-quadratischen-funktion"
   | "beispiel:gradient-und-hesse-matrix-einer"
   | "beispiel:gradientenabstieg-von-hand"
+  | "beispiel:hilbert-matrix-inverse-vs-loesen"
   | "beispiel:householder-spiegelung-beispiel"
   | "beispiel:i-n-k-s-ist-blockdiagonal"
   | "beispiel:identitaet-in-wachsender-dimension"
@@ -128,6 +129,7 @@ export type NumKey =
   | "beispiel:kettenregel-fuer-die-beispielfunktion"
   | "beispiel:kkt-stationaritaet-fuer-ridge"
   | "beispiel:kleinste-quadrate-und-ridge"
+  | "beispiel:komplexitaet-matrixmultiplikation"
   | "beispiel:konditionszahlen-der-groessenordnung"
   | "beispiel:konvexe-huelle-dreier-punkte"
   | "beispiel:kroneckerprodukt-zweier-kleiner-matrizen"
@@ -162,6 +164,7 @@ export type NumKey =
   | "beispiel:skalarprodukte-sind-bilinear"
   | "beispiel:sketching-zweier-vektoren-mit-10-000"
   | "beispiel:stochastic-gradient-descent"
+  | "beispiel:sylvester-gleichung-per-vec-trick"
   | "beispiel:taylorapproximation-der"
   | "beispiel:tensorprodukt-dreier-vektoren"
   | "beispiel:uebung-das-punktweise-maximum"
@@ -300,6 +303,7 @@ export type NumKey =
   | "bemerkung:kovarianzmatrizen-sind-mittel-aeusserer"
   | "bemerkung:kovarianzmatrizen-sind-semidefinit-nicht"
   | "bemerkung:kreis-gegen-raute-warum-lasso-nullen"
+  | "bemerkung:kronecker-designmatrix-tensorprodukt-splines"
   | "bemerkung:linearisierung-wie-die-definition-zu-lesen-ist"
   | "bemerkung:lipschitz-stetiger-gradient-und-die"
   | "bemerkung:maximieren-ist-minimieren"
@@ -969,7 +973,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "algorithmus:empfehlungen-ueber-eine-rang-k": ["6.4.11", "Algorithmus 6.4.11"],
   "algorithmus:fibonacci-schleifenbasiert": ["2.2.2", "Algorithmus 2.2.2"],
   "algorithmus:fixpunktiteration-erster-ordnung": ["12.1.15", "Algorithmus 12.1.15"],
-  "algorithmus:gauss-elimination-mit-partieller": ["5.2.2", "Algorithmus 5.2.2"],
+  "algorithmus:gauss-elimination-mit-partieller": ["5.2.3", "Algorithmus 5.2.3"],
   "algorithmus:gradient-gradientenabstieg": ["10.2.10", "Algorithmus 10.2.10"],
   "algorithmus:gradientenabstieg-fuer-matrix-completion": ["10.4.13", "Algorithmus 10.4.13"],
   "algorithmus:gradientenabstieg-mit-heavy-ball": ["12.4.13", "Algorithmus 12.4.13"],
@@ -1041,7 +1045,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:ein-bild-mit-659-512-pixeln": ["6.4.8", "Beispiel 6.4.8"],
   "beispiel:ein-dreieck-als-schnitt-dreier": ["11.2.12", "Beispiel 11.2.12"],
   "beispiel:ein-farbbild-als-tensor-der-stufe-3": ["9.2.7", "Beispiel 9.2.7"],
-  "beispiel:ein-schlecht-konditioniertes-problem": ["1.1.1", "Beispiel 1.1.1"],
+  "beispiel:ein-schlecht-konditioniertes-problem": ["1.1.2", "Beispiel 1.1.2"],
   "beispiel:ein-stapel-bilder-als-tensor-der-stufe-4": ["9.2.8", "Beispiel 9.2.8"],
   "beispiel:ein-zug-statt-vieler": ["12.4.6", "Beispiel 12.4.6"],
   "beispiel:eine-bilineare-abbildung-auf-r2-mal-r2": ["9.2.2", "Beispiel 9.2.2"],
@@ -1070,6 +1074,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:gradient-einer-quadratischen-funktion": ["10.2.6", "Beispiel 10.2.6"],
   "beispiel:gradient-und-hesse-matrix-einer": ["10.7.7", "Beispiel 10.7.7"],
   "beispiel:gradientenabstieg-von-hand": ["12.3.6", "Beispiel 12.3.6"],
+  "beispiel:hilbert-matrix-inverse-vs-loesen": ["5.2.2", "Beispiel 5.2.2"],
   "beispiel:householder-spiegelung-beispiel": ["7.5.8", "Beispiel 7.5.8"],
   "beispiel:i-n-k-s-ist-blockdiagonal": ["9.3.16", "Beispiel 9.3.16"],
   "beispiel:identitaet-in-wachsender-dimension": ["3.2.7", "Beispiel 3.2.7"],
@@ -1081,6 +1086,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:kettenregel-fuer-die-beispielfunktion": ["12.6.3", "Beispiel 12.6.3"],
   "beispiel:kkt-stationaritaet-fuer-ridge": ["12.5.10", "Beispiel 12.5.10"],
   "beispiel:kleinste-quadrate-und-ridge": ["11.3.16", "Beispiel 11.3.16"],
+  "beispiel:komplexitaet-matrixmultiplikation": ["1.1.1", "Beispiel 1.1.1"],
   "beispiel:konditionszahlen-der-groessenordnung": ["13.3.10", "Beispiel 13.3.10"],
   "beispiel:konvexe-huelle-dreier-punkte": ["11.1.10", "Beispiel 11.1.10"],
   "beispiel:kroneckerprodukt-zweier-kleiner-matrizen": ["9.3.13", "Beispiel 9.3.13"],
@@ -1115,6 +1121,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:skalarprodukte-sind-bilinear": ["9.1.5", "Beispiel 9.1.5"],
   "beispiel:sketching-zweier-vektoren-mit-10-000": ["8.4.5", "Beispiel 8.4.5"],
   "beispiel:stochastic-gradient-descent": ["4.3.2", "Beispiel 4.3.2"],
+  "beispiel:sylvester-gleichung-per-vec-trick": ["9.5.5", "Beispiel 9.5.5"],
   "beispiel:taylorapproximation-der": ["10.8.6", "Beispiel 10.8.6"],
   "beispiel:tensorprodukt-dreier-vektoren": ["9.3.10", "Beispiel 9.3.10"],
   "beispiel:uebung-das-punktweise-maximum": ["11.4.3", "Beispiel 11.4.3"],
@@ -1253,6 +1260,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:kovarianzmatrizen-sind-mittel-aeusserer": ["9.3.6", "Bemerkung 9.3.6"],
   "bemerkung:kovarianzmatrizen-sind-semidefinit-nicht": ["11.2.9", "Bemerkung 11.2.9"],
   "bemerkung:kreis-gegen-raute-warum-lasso-nullen": ["12.5.11", "Bemerkung 12.5.11"],
+  "bemerkung:kronecker-designmatrix-tensorprodukt-splines": ["9.4.13", "Bemerkung 9.4.13"],
   "bemerkung:linearisierung-wie-die-definition-zu-lesen-ist": ["10.1.6", "Bemerkung 10.1.6"],
   "bemerkung:lipschitz-stetiger-gradient-und-die": ["12.3.9", "Bemerkung 12.3.9"],
   "bemerkung:maximieren-ist-minimieren": ["12.2.2", "Bemerkung 12.2.2"],

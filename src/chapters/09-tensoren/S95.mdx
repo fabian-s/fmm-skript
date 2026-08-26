@@ -194,6 +194,57 @@ haben deshalb stets dasselbe Format, hier $4 \times 4$, und beide lassen sich
 mit $\vec(\bX)$ multiplizieren.
 :::
 
+:::beispiel[#sylvester-gleichung-per-vec-trick (Sylvester-Gleichung mit dem vec-Trick)]
+Die *Sylvester-Gleichung* lautet
+
+$$
+\bA\bX + \bX\bB = \bC .
+$$
+
+Mit den beiden Spezialfällen von @eq:vektorisierung-eines-matrixprodukts wird
+daraus
+
+$$
+\bigl(\bI_2 \kron \bA + \bB^\top \kron \bI_2\bigr)\vec(\bX)
+= \vec(\bC) .
+$$
+
+Betrachten wir
+
+$$
+\bA = \begin{pmatrix}3&0\\1&2\end{pmatrix},\qquad
+\bB = \begin{pmatrix}0&1\\1&1\end{pmatrix},\qquad
+\bC = \begin{pmatrix}1&3\\2&4\end{pmatrix}.
+$$
+
+Das zugehörige lineare Gleichungssystem hat die Systemmatrix
+$\bigl(\begin{smallmatrix}3&0&1&0\\1&2&0&1\\1&0&4&0\\0&1&1&3\end{smallmatrix}\bigr)$.
+Seine Lösung ist
+
+$$
+\vec(\bX) =
+\begin{pmatrix}1/11\\27/55\\8/11\\51/55\end{pmatrix},
+\qquad
+\bX = \begin{pmatrix}1/11&8/11\\27/55&51/55\end{pmatrix}.
+$$
+
+In R folgt die Rechnung direkt der Formel:
+
+```r
+A <- matrix(c(3, 1, 0, 2), 2, 2)
+B <- matrix(c(0, 1, 1, 1), 2, 2)
+C <- matrix(c(1, 2, 3, 4), 2, 2)
+M <- kronecker(diag(2), A) + kronecker(t(B), diag(2))
+X <- matrix(solve(M, as.vector(C)), 2, 2)
+A %*% X + X %*% B
+all.equal(A %*% X + X %*% B, C)
+```
+
+Die letzte Zeile ergibt `TRUE`. Lyapunov-Gleichungen, etwa für stationäre
+Kovarianzmatrizen von Zeitreihenmodellen, sind wichtige Spezialfälle. Für
+große Matrizen verwenden wir spezialisierte Löser, die die Struktur ausnutzen.
+:::
+
 Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit @eq:vektorisierung-eines-matrixprodukts ein gewöhnliches
 :k[lineares Gleichungssystem]{#linear-system}
 $(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$

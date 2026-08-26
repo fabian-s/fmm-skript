@@ -122,6 +122,7 @@ und in der Geodäsie (GPS-Positionsbestimmung gleicht widersprüchliche Distanzm
 aus). Wer KQ-Probleme schnell und stabil lösen kann, hat also einen Universalschlüssel
 in der Hand.
 
+:::interaktiv[Wie gut passt die Gerade?]
 @definition:kleinste-quadrate-problem-kq-problem verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommt man
 denn mit bloßem Augenmaß heran? Jeder Punkt im folgenden Bild ist ein (fiktiver) Wohnungsverkauf,
 Fläche gegen Preis in Tsd. €; die blaue Gerade gehört zum eingestellten Parameterpaar, jede
@@ -130,9 +131,11 @@ violette Strecke ist ein Residuum $y_i - \beta_0 - \beta_1 x_i$.
 <RegressionWidget />
 
 Das Widget verbindet die verstellte Regressionsgerade mit den quadratischen Residuen.
+:::
 
 <h3 id="sec-7.1-geometrie">Die Geometrie: Projektion auf den Spaltenraum</h3>
 
+:::interaktiv[Die Projektion aus verschiedenen Blickrichtungen]
 Der Schlüssel zum KQ-Problem ist ein Perspektivwechsel. Während $\bx$ alle
 Vektoren in $\R^n$ durchläuft, durchläuft $\cblue{\bA\bx}$ genau
 den :k[Spaltenraum]{#span}
@@ -147,6 +150,10 @@ $\col(\bA)$. Halten wir das Bild dazu fest: Links steht die Zeichnung, wie sie i
 die linke Zeichnung so plausibel aussieht, liegt auch an der geschickt gewählten Blickrichtung.
 
 <FigKQGeometrie />
+
+Drehen wir die rechte Tafel, bleibt dieselbe Projektion sichtbar: Der
+Lotfuß liegt im Spaltenraum, das Residuum steht senkrecht darauf.
+:::
 
 Das folgende Resultat macht die Anschauung präzise.
 

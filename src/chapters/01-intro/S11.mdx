@@ -35,6 +35,26 @@ $p \times p$-Matrix und belegt allein schon etwa 800 MB. Bessere Wege (die
 :k[Singulärwertzerlegung]{#singular-value-decomposition},
 iterative Verfahren) sind genau der Stoff dieses Skripts.
 
+:::beispiel[#komplexitaet-matrixmultiplikation (Komplexität der Matrixmultiplikation)]
+Für zwei $n \times n$-Matrizen hängt der Rechenaufwand stark vom gewählten
+Algorithmus ab:
+
+| Algorithmus | Rechenoperationen für $n = 1000$ | Komplexität |
+| --- | ---: | ---: |
+| Naive Methode | $\approx 10^9$ | $O(n^3)$ |
+| Strassen | $\approx 6 \cdot 10^8$ | $O(n^{2{,}807})$ |
+| Bester bekannter Algorithmus | $\approx 2 \cdot 10^8$ | $O(n^{2{,}373})$ |
+
+Die Exponenten liegen scheinbar nah beieinander, wirken sich bei großen Matrizen
+aber stark aus. Welches Verfahren praktisch gewinnt, hängt zusätzlich von
+Konstanten und Speicherzugriffen ab.
+
+Für $n = 10\,000$ stehen damit grob $10^{12}$ Operationen der naiven Methode
+etwa $2 \cdot 10^{10}$ Operationen gegenüber. Das ist ein möglicher Faktor
+von 50. Für die Statistik ist dieser Unterschied entscheidend, weil
+Matrixmultiplikationen etwa beim Schätzen großer Modelle immer wieder anfallen.
+:::
+
 Wie dramatisch das erste Problem werden kann, zeigt schon ein
 :k[Gleichungssystem]{#linear-system} mit zwei Unbekannten:
 
@@ -159,6 +179,14 @@ empfehlen ist außerdem, die geometrische Intuition mit den Videos von
     (:k[Matrix-Vektor-Produkt]{#matrix-vector-product}): Je
     nach $\bA$ wird $\bx$ gestreckt, gedreht, gespiegelt, geschert
     oder in einen Unterraum projiziert.
+  </SelbsttestFrage>
+  <SelbsttestFrage q={<>Wann bilden Vektoren <M>{"\\bv_1, \\dots, \\bv_n"}</M> eine Basis des <M>{"\\R^n"}</M>? Was ist ihr Span?</>}>
+    Die Vektoren bilden eine :k[Basis]{#basis} des $\R^n$, wenn sie linear
+    unabhängig sind und den gesamten $\R^n$ aufspannen. Bei $n$ Vektoren im
+    $\R^n$ genügt bereits eine dieser beiden Bedingungen. Ihr
+    :k[Span]{#span} ist die Menge aller Linearkombinationen
+    $\alpha_1\bv_1 + \dots + \alpha_n\bv_n$ mit
+    $\alpha_1, \dots, \alpha_n \in \R$.
   </SelbsttestFrage>
 </ol>
 

@@ -31,6 +31,7 @@ ausnehmen, denn $\bnull^\top \bA \bnull = 0$ erfüllt die Bedingung
 ohnehin. Der Unterschied zur Definitheit wirkt klein, entscheidet aber
 später darüber, ob die Cholesky-Zerlegung ohne Zusatztricks durchläuft.
 
+:::interaktiv[Welche Richtung widerlegt positive Definitheit?]
 Eine Richtung kann positive Definitheit widerlegen, aber niemals allein
 beweisen. Finden wir im folgenden Test die Richtung, die den Gegenbeweis
 liefert.
@@ -40,6 +41,7 @@ liefert.
 Wie das Widget zeigt, genügt bei einer nicht-SPD-Matrix ein Vektor mit
 $\bx^\top\bA\bx \leq 0$. Für SPD muss die strikte Ungleichung dagegen für
 alle Richtungen gelten.
+:::
 
 Das Paradebeispiel liefert die Statistik selbst: Jede
 :k[Kovarianzmatrix]{#covariance-matrix} $\bSigma = \var(\bx)$ ist
@@ -283,10 +285,15 @@ $$
 Auf der Diagonalen steht also eine Wurzel, darunter eine Division durch
 den zuletzt berechneten Diagonaleintrag.
 
+:::interaktiv[Cholesky-Zerlegung Schritt für Schritt]
 Ab $3 \times 3$ entsteht pro Eintrag ein Rechenschritt. In welcher Reihenfolge
 füllt sich $\bL$?
 
 <CholeskyStepper />
+
+Der Stepper macht die spaltenweise Reihenfolge sichtbar: Auf einen
+Diagonaleintrag folgen die Einträge darunter.
+:::
 
 ### Anwendung: korrelierte Zufallsvektoren simulieren
 
