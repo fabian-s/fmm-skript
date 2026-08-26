@@ -323,9 +323,10 @@ Transformationssatz für Dichten den Ausgleich schafft.
 ::::
 
 Wie schnell verschwindet der Unterschied zwischen dem krummen Bild und dem Parallelogramm,
-wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor aus
-@bemerkung:wie-stark-die-flaeche-verzerrt-wird wirklich zu, oder gilt er nur im Grenzwert? Beides ist eine Frage an ein
-Bild, nicht an eine Formel.
+wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor
+$\left|\det \bJ_f(\bx_0)\right|$ wirklich zu, oder gilt er nur im Grenzwert
+(Herleitung in der Vertiefung @bemerkung:wie-stark-die-flaeche-verzerrt-wird)?
+Beides ist eine Frage an ein Bild, nicht an eine Formel.
 
 <LinearisierungsWidget />
 
@@ -344,7 +345,9 @@ null, so wie es @korollar:lineare-abbildungen-sind-ihre-eigene verlangt, und das
 exakt $\left|\det \corange{\bJ_f(\bx_0)}\right| = 1{,}65$. Bei den krummen Abbildungen
 nähert es sich diesem Wert erst für kleines $h$: Beim Quadrieren an der Stelle
 $\bx_0 = (1;\ 0{,}5)^\top$ steht bei $h = 0{,}3$ noch $5{,}24$ und bei $h = 0{,}075$
-bereits $5{,}015$, gegen den Grenzwert $5$ aus @bemerkung:wie-stark-die-flaeche-verzerrt-wird. Die Voreinstellung
+bereits $5{,}015$, gegen den Flächenfaktor
+$\left|\det \bJ_f(\bx_0)\right| = 5$ (Herleitung in der Vertiefung
+@bemerkung:wie-stark-die-flaeche-verzerrt-wird). Die Voreinstellung
 „Wirbel" ist der Sonderfall dazu: Dort ist $\det \corange{\bJ_f(\bx)} = 1$ an jeder
 Stelle, die Abbildung verschiebt Fläche also, ohne sie zu verändern, und trotzdem verbiegt
 sie das Gitter kräftig.
@@ -558,7 +561,7 @@ bei diskreten Daten oder Nullgewichten können sie dagegen durchaus exakt
 getroffen werden.
 :::
 
-::::vertiefung[Wie teuer die Kette ist, und warum sie von links ausgewertet wird]
+:::::vertiefung[Wie teuer die Kette ist, und warum sie von links ausgewertet wird]
 
 :::bemerkung[#wie-die-kette-ausgewertet-wird (Wie die Kette ausgewertet wird)]
 Gleichung @eq:die-gradientenkette-eines-netzes ist ein Produkt aus vielen Matrizen, und
@@ -614,7 +617,21 @@ Ableitung der ersten Schicht nach ihren eigenen Gewichten, nicht noch einmal $\b
 einer Knickstelle der Art aus @beispiel:jacobimatrix-eines-relu-layers.
 :::
 
+::::quiz
+
+:::frage{falsch}
+Ob wir das Produkt in @eq:die-gradientenkette-eines-netzes von links oder von rechts auswerten, ändert
+nur die Reihenfolge der Rechenschritte, nicht den Aufwand.
+
+Das Ergebnis ist dasselbe, der Aufwand nicht. Im Beispiel aus
+@bemerkung:wie-die-kette-ausgewertet-wird kostet die Auswertung von links $1200$ und die von rechts
+$10\,500$ Multiplikationen. Weil $L$ skalar ist, bleibt von links jedes
+Zwischenergebnis eine Zeile; von rechts entstehen volle Matrizen. Genau diese
+Auswertungsreihenfolge ist die Backpropagation.
+:::
+
 ::::
+:::::
 
 ### Selbsttest
 
@@ -671,17 +688,6 @@ verschiedene Steigungen (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt). For
 abseits echter Schalthyperebenen; in der Praxis wird dort meist die Ableitung
 null verwendet. Bei einer Nullzeile wäre die Komponente dagegen konstant null
 und differenzierbar (@beispiel:jacobimatrix-eines-relu-layers).
-:::
-
-:::frage{falsch}
-Ob wir das Produkt in @eq:die-gradientenkette-eines-netzes von links oder von rechts auswerten, ändert
-nur die Reihenfolge der Rechenschritte, nicht den Aufwand.
-
-Das Ergebnis ist dasselbe, der Aufwand nicht. Im Beispiel aus
-@bemerkung:wie-die-kette-ausgewertet-wird kostet die Auswertung von links $1200$ und die von rechts
-$10\,500$ Multiplikationen. Weil $L$ skalar ist, bleibt von links jedes
-Zwischenergebnis eine Zeile; von rechts entstehen volle Matrizen. Genau diese
-Auswertungsreihenfolge ist die Backpropagation.
 :::
 
 :::zahlfrage{loesung=5 toleranz=0,05}

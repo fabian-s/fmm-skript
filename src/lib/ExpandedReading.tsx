@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * Expandable "Deep dive" accordion, rendered after key paragraphs /
@@ -7,8 +7,18 @@ import { useState, type ReactNode } from "react";
  */
 export function ExpandedReading({ title, children }: { title: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const openForFragment = () => setOpen(true);
+    root.addEventListener("fmm-open", openForFragment);
+    return () => root.removeEventListener("fmm-open", openForFragment);
+  }, []);
+
   return (
-    <div data-deep className="my-5 overflow-hidden rounded-lg border border-amber-600/30 bg-amber-50/60 dark:border-amber-400/25 dark:bg-amber-950/25">
+    <div ref={rootRef} data-deep className="my-5 overflow-hidden rounded-lg border border-amber-600/30 bg-amber-50/60 dark:border-amber-400/25 dark:bg-amber-950/25">
       <button
         type="button"
         className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left font-display text-[15px] font-semibold text-amber-900 hover:bg-amber-600/5 dark:text-amber-100 dark:hover:bg-amber-400/5"

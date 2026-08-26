@@ -268,7 +268,7 @@ weit überragt, ist der Energieanteil schon bei $k = 1$ nahe bei eins, obwohl
 die Approximation noch sehr grob ist. Ein Kriterium, das so leicht zufrieden
 ist, taugt wenig als alleiniger Ratgeber.
 
-::::vertiefung[Typische Singulärwert-Verläufe und die Ellenbogen-Heuristik]
+:::::vertiefung[Typische Singulärwert-Verläufe und die Ellenbogen-Heuristik]
 :::bemerkung[#typische-singulaerwert-verlaeufe-und-der (Typische Singulärwert-Verläufe und der Ellenbogen)]
 Wie gut sich eine Matrix überhaupt komprimieren lässt, steht im Verlauf ihrer
 Singulärwerte. Drei Muster begegnen uns immer wieder:
@@ -290,7 +290,22 @@ denen wirklich Struktur steckt, von denen, in denen nur noch Rauschen sitzt,
 und liefert einen brauchbaren Startwert für $k$. Eine Garantie ist das nicht;
 manche Spektren haben schlicht keinen Ellenbogen.
 :::
+
+::::quiz
+
+:::frage{falsch}
+Ein Spektrum mit langsam abfallenden Singulärwerten,
+$\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
+eine Rang-k-Approximation.
+
+Es ist der ungünstigste der drei Fälle aus @bemerkung:typische-singulaerwert-verlaeufe-und-der. Viele Komponenten
+tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
+sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
+komprimieren lässt sich der exponentielle Abfall.
+:::
+
 ::::
+:::::
 
 ### Anwendung: Datenkompression
 
@@ -605,17 +620,6 @@ Sie kostet $k(m + n + 1)$ Zahlen gegen $mn$ für die volle Matrix, und das ist
 für großes $k$ mehr. Bei $m = n = 100$ und $k = 50$ etwa speichern wir
 $50 \cdot 201 = 10\,050$ statt $10\,000$ Zahlen. Ein Gewinn entsteht erst für
 $k < mn/(m + n + 1) \approx 49{,}8$, hier also für $k \leq 49$.
-:::
-
-:::frage{falsch}
-Ein Spektrum mit langsam abfallenden Singulärwerten,
-$\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
-eine Rang-k-Approximation.
-
-Es ist der ungünstigste der drei Fälle aus @bemerkung:typische-singulaerwert-verlaeufe-und-der. Viele Komponenten
-tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
-sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
-komprimieren lässt sich der exponentielle Abfall.
 :::
 
 :::frage{wahr}

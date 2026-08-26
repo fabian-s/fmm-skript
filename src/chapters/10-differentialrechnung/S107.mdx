@@ -523,7 +523,7 @@ Bedingung an die zweite Ableitung, und das ist der Grund, warum konvexe
 schon ein globales Minimum, und es gibt keine Sattelpunkte, an denen ein Verfahren
 hängenbleiben könnte.
 
-::::vertiefung[Zwei Gegenbeispiele zu den Voraussetzungen offen und konvex]
+:::::vertiefung[Zwei Gegenbeispiele zu den Voraussetzungen offen und konvex]
 
 :::bemerkung[#warum-die-menge-offen-und-konvex-sein (Warum die Menge offen und konvex sein muss)]
 Beide Zusätze in @satz:konvexitaet-und-positive-semidefinitheit werden leicht überlesen, nötig sind sie trotzdem.
@@ -545,7 +545,21 @@ an $\corange{\bH_f}$ Information aus Richtungen zieht, die in $S$ gar nicht vork
 Sobald $S$ offen und konvex ist, stimmt die Äquivalenz.
 :::
 
+::::quiz
+
+:::frage{falsch}
+Gilt $\bH_f(\bx) \succeq 0$ für alle $\bx$ einer beliebigen Menge $S \subseteq \R^n$, so
+ist $f$ auf $S$ konvex.
+
+Ohne Zusatzbedingungen an $S$ ist die Behauptung nicht einmal sinnvoll. Auf
+$S = (-2,-1) \cup (1,2)$ mit $f \equiv -5$ links und $f \equiv 0$ rechts ist
+$f'' \equiv 0$, aber die Verbindungsstrecke zwischen zwei Punkten verlässt $S$, und eine
+konvexe Fortsetzung auf $\R$ gibt es nicht. @satz:konvexitaet-und-positive-semidefinitheit verlangt $S$ offen und konvex
+(@bemerkung:warum-die-menge-offen-und-konvex-sein).
+:::
+
 ::::
+:::::
 
 Die :k[Konvexität]{#convexity} und was sie für Optimierungsverfahren bedeutet, ist ein
 Thema für sich; @kap:konvexitaet nimmt es sich vor.
@@ -663,7 +677,7 @@ $\var(\wh{p}) = 0{,}000475$: Nahe am Rand des Parameterbereichs sind die Daten d
 informativer.
 :::
 
-::::vertiefung[Was die Merkregel zur Varianz des ML-Schätzers wirklich sagt]
+:::::vertiefung[Was die Merkregel zur Varianz des ML-Schätzers wirklich sagt]
 
 :::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao, sauber formuliert)]
 Als Merkregel kursiert
@@ -704,7 +718,22 @@ In allen drei Fassungen bleibt die Merkregel dieselbe: mehr Information, kleiner
 präzisere Schätzung.
 :::
 
+::::quiz
+
+:::frage{falsch}
+Für den ML-Schätzer gilt bei jedem Stichprobenumfang $\var(\wh{\btheta}) = \bI(\btheta)^{-1}$.
+
+Gemeint ist eine asymptotische Aussage. Bei festem $n$
+gilt die Cramér-Rao-Schranke $\var(\wh{\btheta}) \succeq \bI_n(\btheta)^{-1}$, und zwar für
+erwartungstreue Schätzer; der ML-Schätzer ist im Allgemeinen verzerrt und erreicht die
+Schranke erst für $n \to \infty$, in der Form
+$\sqrt{n}(\wh{\btheta}_n - \btheta) \to N(\bnull, \bI_1(\btheta)^{-1})$
+(@bemerkung:cramer-rao-sauber-formuliert). Das Bernoulli-Modell ist ein Sonderfall, in dem Gleichheit schon für
+endliches $n$ gilt.
+:::
+
 ::::
+:::::
 
 ### Vektor zu Vektor
 
@@ -808,7 +837,7 @@ Näherung.
 
 ### Selbsttest
 
-Sieben Aussagen zu diesem Abschnitt. Welche davon stimmen?
+Fünf Aussagen zu diesem Abschnitt. Welche davon stimmen?
 
 ::::quiz
 
@@ -848,29 +877,6 @@ Halten wir $\bh_2$ fest, so ist die Zuordnung $\bh_1 \mapsto \bh_1^\top \bH_f(\b
 das Skalarprodukt mit einem festen Vektor, also linear; für $\bh_1$ fest genauso. Damit ist
 $D^2_{\bx} f$ eine bilineare Abbildung im Sinne von @definition:beschraenkte-bilineare-abbildung, so wie es
 @definition:k-mal-frechet-differenzierbar für alle Stufen verlangt.
-:::
-
-:::frage{falsch}
-Gilt $\bH_f(\bx) \succeq 0$ für alle $\bx$ einer beliebigen Menge $S \subseteq \R^n$, so
-ist $f$ auf $S$ konvex.
-
-Ohne Zusatzbedingungen an $S$ ist die Behauptung nicht einmal sinnvoll. Auf
-$S = (-2,-1) \cup (1,2)$ mit $f \equiv -5$ links und $f \equiv 0$ rechts ist
-$f'' \equiv 0$, aber die Verbindungsstrecke zwischen zwei Punkten verlässt $S$, und eine
-konvexe Fortsetzung auf $\R$ gibt es nicht. @satz:konvexitaet-und-positive-semidefinitheit verlangt $S$ offen und konvex
-(@bemerkung:warum-die-menge-offen-und-konvex-sein).
-:::
-
-:::frage{falsch}
-Für den ML-Schätzer gilt bei jedem Stichprobenumfang $\var(\wh{\btheta}) = \bI(\btheta)^{-1}$.
-
-Gemeint ist eine asymptotische Aussage. Bei festem $n$
-gilt die Cramér-Rao-Schranke $\var(\wh{\btheta}) \succeq \bI_n(\btheta)^{-1}$, und zwar für
-erwartungstreue Schätzer; der ML-Schätzer ist im Allgemeinen verzerrt und erreicht die
-Schranke erst für $n \to \infty$, in der Form
-$\sqrt{n}(\wh{\btheta}_n - \btheta) \to N(\bnull, \bI_1(\btheta)^{-1})$
-(@bemerkung:cramer-rao-sauber-formuliert). Das Bernoulli-Modell ist ein Sonderfall, in dem Gleichheit schon für
-endliches $n$ gilt.
 :::
 
 :::frage{falsch}

@@ -878,6 +878,45 @@ Sehenswert ist dort das Zickzack: Die steile Richtung überschießt, während di
 flache kaum vorankommt – dasselbe Bild wie beim Gradientenabstieg in
 @sec:nelder-mead-gradient.
 ::::
+
+::::quiz
+
+:::frage{wahr}
+Für $f(\bx) = \bA\bx - \bb$ ist die Fixpunktiteration @eq:fixpunktiteration-erster-ordnung genau das
+Richardson-Verfahren aus @sec:la-misc/iterative-loeser.
+
+Einsetzen gibt $\bx^{(k)} = \bx^{(k-1)} - \gamma(\bA\bx^{(k-1)} - \bb)$, also die
+Korrektur des Residuums mit fester Schrittweite. Die dortige Konvergenzbedingung
+$\left\|\bI - \gamma\bA\right\| < 1$ ist wörtlich @eq:konvergenzrate-der-fixpunktiteration, und weil $f$ affin
+ist, greift der affine Fall im Beweis von @satz:konvergenzrate-der-fixpunktiteration: Die Schranke gilt für jeden
+Startpunkt.
+:::
+
+:::frage{falsch}
+Ist $\rho = \left\|\bI_n - \gamma\bJ_f(\bx^\star)\right\| < 1$, so konvergiert
+die Fixpunktiteration von jedem Startpunkt aus gegen $\bx^\star$.
+
+@satz:konvergenzrate-der-fixpunktiteration ist eine *lokale* Aussage: Die Schranke im Beweis gilt nur in
+einer Kugel um $\bx^\star$, deren Radius wir nicht kennen. Weiter draußen taugt
+die lineare Näherung nichts mehr, und die Iteration kann zu einer anderen
+Nullstelle laufen oder ganz davonlaufen. Nur im affinen Fall verschwindet der
+Restterm und die Aussage wird global.
+:::
+
+:::frage{wahr}
+Verdoppeln wir im symmetrisch positiv definiten Fall die optimale Schrittweite,
+so ist die Konvergenzgarantie verloren.
+
+Die optimale Wahl ist $\gamma^\star = 2/(\lambda_{\min} + \lambda_{\max})$,
+divergiert wird ab $2/\lambda_{\max}$. Wegen
+$4/(\lambda_{\min} + \lambda_{\max}) \ge 2/\lambda_{\max}$ liegt das Doppelte
+immer auf oder jenseits der Grenze, mit Gleichheit nur für
+$\lambda_{\min} = \lambda_{\max}$. Bei $\bA = \diag(1, 10)$ etwa ist
+$\gamma^\star = 2/11 = 0{,}18$ und die Grenze $0{,}2$; das Doppelte $0{,}36$
+liegt weit darüber.
+:::
+
+::::
 :::::
 
 Damit ist der Werkzeugkasten für Nullstellen beisammen. Für die Optimierung ist
@@ -931,41 +970,6 @@ Nullstelle, und nur wenn diese einfach ist, also
 $\corange{f'(x^\star)} \neq 0$ gilt. Bei einer mehrfachen Nullstelle sinkt die
 Ordnung auf $1$, und weit weg vom Ziel kann die Tangente die Iteration beliebig
 weit forttragen (@bemerkung:quadratische-konvergenz).
-:::
-
-:::frage{wahr}
-Für $f(\bx) = \bA\bx - \bb$ ist die Fixpunktiteration @eq:fixpunktiteration-erster-ordnung genau das
-Richardson-Verfahren aus Kapitel 8.
-
-Einsetzen gibt $\bx^{(k)} = \bx^{(k-1)} - \gamma(\bA\bx^{(k-1)} - \bb)$, also die
-Korrektur des Residuums mit fester Schrittweite. Die dortige Konvergenzbedingung
-$\left\|\bI - \gamma\bA\right\| < 1$ ist wörtlich @eq:konvergenzrate-der-fixpunktiteration, und weil $f$ affin
-ist, greift der affine Fall im Beweis von @satz:konvergenzrate-der-fixpunktiteration: Die Schranke gilt für jeden
-Startpunkt.
-:::
-
-:::frage{falsch}
-Ist $\rho = \left\|\bI_n - \gamma\bJ_f(\bx^\star)\right\| < 1$, so konvergiert
-die Fixpunktiteration von jedem Startpunkt aus gegen $\bx^\star$.
-
-@satz:konvergenzrate-der-fixpunktiteration ist eine *lokale* Aussage: Die Schranke im Beweis gilt nur in
-einer Kugel um $\bx^\star$, deren Radius wir nicht kennen. Weiter draußen taugt
-die lineare Näherung nichts mehr, und die Iteration kann zu einer anderen
-Nullstelle laufen oder ganz davonlaufen. Nur im affinen Fall verschwindet der
-Restterm und die Aussage wird global.
-:::
-
-:::frage{wahr}
-Verdoppeln wir im symmetrisch positiv definiten Fall die optimale Schrittweite,
-so ist die Konvergenzgarantie verloren.
-
-Die optimale Wahl ist $\gamma^\star = 2/(\lambda_{\min} + \lambda_{\max})$,
-divergiert wird ab $2/\lambda_{\max}$. Wegen
-$4/(\lambda_{\min} + \lambda_{\max}) \ge 2/\lambda_{\max}$ liegt das Doppelte
-immer auf oder jenseits der Grenze, mit Gleichheit nur für
-$\lambda_{\min} = \lambda_{\max}$. Bei $\bA = \diag(1, 10)$ etwa ist
-$\gamma^\star = 2/11 = 0{,}18$ und die Grenze $0{,}2$; das Doppelte $0{,}36$
-liegt weit darüber.
 :::
 
 ::::

@@ -15,6 +15,39 @@ function currentChapterId(): string {
   return chapterAliases[k] ?? k;
 }
 
+const fragmentHighlights = new WeakMap<
+  HTMLElement,
+  { timer: number; outline: string; outlineOffset: string }
+>();
+
+function highlightFragment(target: HTMLElement) {
+  const previous = fragmentHighlights.get(target);
+  if (previous) window.clearTimeout(previous.timer);
+
+  const original = previous ?? {
+    timer: 0,
+    outline: target.style.outline,
+    outlineOffset: target.style.outlineOffset,
+  };
+  target.style.outline = "3px solid rgb(245 158 11)";
+  target.style.outlineOffset = "4px";
+
+  const timer = window.setTimeout(() => {
+    target.style.outline = original.outline;
+    target.style.outlineOffset = original.outlineOffset;
+    fragmentHighlights.delete(target);
+  }, 1500);
+  fragmentHighlights.set(target, { ...original, timer });
+}
+
+function fragmentId(hash: string): string {
+  try {
+    return decodeURIComponent(hash.replace(/^#/, ""));
+  } catch {
+    return hash.replace(/^#/, "");
+  }
+}
+
 export default function App() {
   const chapterId = currentChapterId();
   const entry = chapters.find((c) => c.id === chapterId) ?? chapters[0];
@@ -45,19 +78,83 @@ export default function App() {
     document.title = `${chapterLabel(entry)} · FMM-Skript`;
   }, [entry]);
 
-  // Fragment-Navigation: der Browser scrollt beim Laden zu #sec-…, bevor
-  // React die (lazy geladenen) Abschnitte eingefügt hat — nachholen.
+  // Fragment-Navigation: Ziele können erst nach dem lazy geladenen Kapitel
+  // erscheinen oder in einer (auch verschachtelten) Vertiefung verborgen sein.
   useEffect(() => {
     if (!mod) return;
-    let h = decodeURIComponent(window.location.hash.slice(1));
-    if (!h) return;
-    // Alte Deep-Links (?k=<alte ID>#sec-K.k) auf die neuen Anker umbiegen.
-    const rawK = new URLSearchParams(window.location.search).get("k");
-    if (rawK && chapterAliases[rawK] && h.startsWith("sec-")) {
-      h = `sec-${sectionAlias(rawK, h.slice(4))}`;
-      history.replaceState(null, "", `?k=${chapterAliases[rawK]}#${h}`);
-    }
-    document.getElementById(h)?.scrollIntoView();
+    let cancelled = false;
+    let navigation = 0;
+    const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+    const revealFragment = async (hash: string, retries = 0) => {
+      const thisNavigation = ++navigation;
+      let id = fragmentId(hash);
+      if (!id) return;
+
+      // Alte Deep-Links (?k=<alte ID>#sec-K.k) auf die neuen Anker umbiegen.
+      const rawK = new URLSearchParams(window.location.search).get("k");
+      if (rawK && chapterAliases[rawK] && id.startsWith("sec-")) {
+        id = `sec-${sectionAlias(rawK, id.slice(4))}`;
+        history.replaceState(null, "", `?k=${chapterAliases[rawK]}#${id}`);
+      }
+
+      let target = document.getElementById(id);
+      for (let attempt = 0; !target && attempt < retries; attempt += 1) {
+        await nextFrame();
+        if (cancelled || thisNavigation !== navigation) return;
+        target = document.getElementById(id);
+      }
+      if (!target || cancelled || thisNavigation !== navigation) return;
+
+      const containers: HTMLElement[] = [];
+      let container = target.closest<HTMLElement>("[data-deep]");
+      while (container) {
+        containers.push(container);
+        container = container.parentElement?.closest<HTMLElement>("[data-deep]") ?? null;
+      }
+
+      for (const deep of containers.reverse()) {
+        deep.dispatchEvent(new Event("fmm-open"));
+        await nextFrame();
+        if (cancelled || thisNavigation !== navigation) return;
+      }
+
+      target.scrollIntoView({ block: "center" });
+      highlightFragment(target);
+      // MathJax und Widgets verschieben das Layout noch sekundenlang nach
+      // dem ersten Scroll — so lange nachjustieren, bis die Zielposition steht.
+      const el = target;
+      let lastTop = el.getBoundingClientRect().top;
+      for (const delay of [250, 600, 1200, 2000, 3000]) {
+        await new Promise<void>((resolve) => setTimeout(resolve, delay));
+        if (cancelled || thisNavigation !== navigation) return;
+        const top = el.getBoundingClientRect().top;
+        if (Math.abs(top - lastTop) > 2 || top < 0 || top > window.innerHeight) {
+          el.scrollIntoView({ block: "center" });
+        }
+        lastTop = el.getBoundingClientRect().top;
+      }
+    };
+
+    const onHashChange = () => void revealFragment(window.location.hash, 5);
+    const onFragmentClick = (event: MouseEvent) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const origin = event.target instanceof Element ? event.target : null;
+      const link = origin?.closest<HTMLAnchorElement>('a[href^="#"]');
+      const href = link?.getAttribute("href");
+      if (href) void revealFragment(href, 5);
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    document.addEventListener("click", onFragmentClick, true);
+    void revealFragment(window.location.hash, 8);
+
+    return () => {
+      cancelled = true;
+      navigation += 1;
+      window.removeEventListener("hashchange", onHashChange);
+      document.removeEventListener("click", onFragmentClick, true);
+    };
   }, [mod]);
 
   // Schublade: Esc schließt, offene Schublade friert die Seite dahinter ein.

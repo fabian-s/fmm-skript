@@ -282,7 +282,7 @@ Wie das Widget zeigt, sind die drei Kanalscheiben keine drei Bilder, sondern dre
 Komponenten jedes Pixels desselben Bildes.
 :::
 
-::::vertiefung[Bilder, Stapel und Feature-Maps im Detail]
+:::::vertiefung[Bilder, Stapel und Feature-Maps im Detail]
 
 :::beispiel[#ein-farbbild-als-tensor-der-stufe-3 (Ein Farbbild als Tensor der Stufe 3)]
 Beim Graustufenbild läuft eine Indexrichtung über die Pixel in der Waagerechten,
@@ -370,7 +370,32 @@ jeden Eintrag einzeln wirkt. Erst diese Funktion macht aus einem
 :k[neuronalen Netz]{#neural-network} mehr als eine lange Kette linearer
 Abbildungen.
 
+::::quiz
+
+:::frage{wahr}
+Ein Farbbild mit $224 \times 224$ Pixeln und drei Farbkanälen ist ein Tensor der
+Stufe $3$ mit $150\,528$ Einträgen.
+
+Es ist $224 \cdot 224 \cdot 3 = 150\,528$, also rund $150 \cdot 10^3$ Zahlen
+(@beispiel:ein-farbbild-als-tensor-der-stufe-3). Die drei Indexpositionen sind die beiden Pixelrichtungen und
+der Farbkanal; in welcher Reihenfolge sie stehen, ist Verabredung und von
+Bibliothek zu Bibliothek verschieden.
+:::
+
+:::frage{falsch}
+Weil die Faltungsschicht
+$c \colon \R^{32 \times 224 \times 224 \times 3} \to \R^{32 \times 56 \times 56 \times 64}$
+die Auflösung von $224 \times 224$ auf $56 \times 56$ senkt, hat ihr Ausgang
+weniger Einträge als ihr Eingang.
+
+Nachgezählt: $32 \cdot 224 \cdot 224 \cdot 3 = 4\,816\,896$ gegen
+$32 \cdot 56 \cdot 56 \cdot 64 = 6\,422\,528$. Die Auflösung fällt um den Faktor
+$16$, die Kanalzahl wächst um den Faktor $64/3$, zusammen wächst die Zahl der
+Einträge um den Faktor $4/3$ (@beispiel:feature-maps-eine-abbildung-von-tensoren).
+:::
+
 ::::
+:::::
 
 ### Selbsttest
 
@@ -417,28 +442,6 @@ Eine Menge kennt weder Reihenfolge noch Vielfachheit. Vertauschen wir zwei
 verschiedene Einträge einer Matrix, so bleibt die Menge der vorkommenden Zahlen
 dieselbe, die Matrix ist aber eine andere. Festgelegt ist ein Tensor durch die Zuordnung von
 Indextupeln zu Zahlen (@definition:tensor und @bemerkung:stufe-und-warum-eine-menge-es-nicht-tut).
-:::
-
-:::frage{wahr}
-Ein Farbbild mit $224 \times 224$ Pixeln und drei Farbkanälen ist ein Tensor der
-Stufe $3$ mit $150\,528$ Einträgen.
-
-Es ist $224 \cdot 224 \cdot 3 = 150\,528$, also rund $150 \cdot 10^3$ Zahlen
-(@beispiel:ein-farbbild-als-tensor-der-stufe-3). Die drei Indexpositionen sind die beiden Pixelrichtungen und
-der Farbkanal; in welcher Reihenfolge sie stehen, ist Verabredung und von
-Bibliothek zu Bibliothek verschieden.
-:::
-
-:::frage{falsch}
-Weil die Faltungsschicht
-$c \colon \R^{32 \times 224 \times 224 \times 3} \to \R^{32 \times 56 \times 56 \times 64}$
-die Auflösung von $224 \times 224$ auf $56 \times 56$ senkt, hat ihr Ausgang
-weniger Einträge als ihr Eingang.
-
-Nachgezählt: $32 \cdot 224 \cdot 224 \cdot 3 = 4\,816\,896$ gegen
-$32 \cdot 56 \cdot 56 \cdot 64 = 6\,422\,528$. Die Auflösung fällt um den Faktor
-$16$, die Kanalzahl wächst um den Faktor $64/3$, zusammen wächst die Zahl der
-Einträge um den Faktor $4/3$ (@beispiel:feature-maps-eine-abbildung-von-tensoren).
 :::
 
 ::::

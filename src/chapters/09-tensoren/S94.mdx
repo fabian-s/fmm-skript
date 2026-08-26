@@ -32,28 +32,26 @@ V \otimes W = \spann\bigl\{\cblue{\bv} \otimes \cgreen{\bw} :
 \cblue{\bv} \in V, \ \cgreen{\bw} \in W\bigr\} .
 $$
 
+Dabei hat $\otimes$ die *universelle Eigenschaft*: Jede bilineare Abbildung
+$f\colon V \times W \to Z$ in einen Vektorraum $Z$ faktorisiert eindeutig über
+$\otimes$, es gibt also genau eine lineare Abbildung
+$\wt{f}\colon V \otimes W \to Z$ mit
+$f(\cblue{\bv},\cgreen{\bw}) = \wt{f}(\cblue{\bv}\otimes\cgreen{\bw})$ für alle
+$\cblue{\bv}\in V$ und $\cgreen{\bw}\in W$.
+
 Die Produkte $\cblue{\bv} \otimes \cgreen{\bw}$ selbst nennen wir *elementare
 Tensoren*.
 :::
 
 :::vertiefung[Die universelle Eigenschaft]
-Die Definition sagt, wie der Raum erzeugt wird. Dass sie ihn bis auf Isomorphie
-festlegt und nicht von einer zufällig gewählten bilinearen Abbildung abhängt,
-sichert eine zusätzliche Forderung an $\otimes$, die *universelle Eigenschaft*:
-Zu jedem Vektorraum $Z$ und jeder bilinearen Abbildung $f\colon V\times W\to Z$
-gibt es genau eine lineare Abbildung $\wt{f}\colon V\otimes W\to Z$ mit
-
-$$
-f(\cblue{\bv},\cgreen{\bw})
-=\wt{f}(\cblue{\bv}\otimes\cgreen{\bw})
-\qquad\text{für alle }\cblue{\bv}\in V,\ \cgreen{\bw}\in W.
-$$
-
-Das Tensorprodukt *linearisiert* also bilineare Abbildungen: Statt $f$ auf Paaren
+Die universelle Eigenschaft legt den Raum bis auf Isomorphie fest und macht ihn
+unabhängig von einer zufällig gewählten konkreten Realisierung. Das
+Tensorprodukt *linearisiert* damit bilineare Abbildungen: Statt $f$ auf Paaren
 auszuwerten, wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren
 an. Der Spann allein würde dazu nicht genügen. Nähmen wir etwa die Nullabbildung
-als bilineare Abbildung, so wäre ihr Bildspann nur der Nullraum und könnte die
-übrigen bilinearen Abbildungen nicht darstellen.
+als bilineare Abbildung, so wäre ihr Bildspann zwar der Nullraum, erfüllte aber
+die universelle Eigenschaft nicht und könnte die übrigen bilinearen Abbildungen
+nicht darstellen.
 
 Für $V = \R^m$ und $W = \R^n$ mit dem äußeren Produkt, also
 $\R^m \otimes \R^n = \R^{m \times n}$ nach @beispiel:das-tensorprodukt-von-und,
