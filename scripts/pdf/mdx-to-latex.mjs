@@ -256,6 +256,7 @@ const ALIAS = {
   question: "frage",
   numquestion: "zahlfrage",
   deepdive: "vertiefung",
+  interactive: "interaktiv",
   source: "quelle",
   c: "k",
 };
@@ -564,6 +565,11 @@ function containerDirective(n) {
   if (name === "vertiefung") {
     const title = takeLabel(n) ?? a.title ?? "";
     return `\\begin{fmmvertiefung}{${esc(title)}}\n${blocks(n.children)}\n\\end{fmmvertiefung}`;
+  }
+
+  if (name === "interaktiv") {
+    const title = takeLabel(n) ?? a.title ?? "";
+    return `\\begin{fmminteraktiv}{${esc(title)}}\n${blocks(n.children)}\n\\end{fmminteraktiv}`;
   }
 
   if (name === "beweis") {

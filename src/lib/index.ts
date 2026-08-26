@@ -4,6 +4,7 @@ export type { ConceptDef, ConceptId } from "./types";
 export { TooltipProvider, ConceptLink } from "./tooltip/TooltipEngine";
 export type { TooltipLabels } from "./tooltip/TooltipEngine";
 export { ExpandedReading } from "./ExpandedReading";
+export { Interaktiv } from "./Interaktiv";
 export { M, MD, Eq, EnvBlock } from "./Math";
 export { Quiz, Frage, QuizLabelsProvider } from "./Quiz";
 export type { QuizLabels } from "./Quiz";

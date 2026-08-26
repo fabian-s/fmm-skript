@@ -45,6 +45,8 @@ const ACCEPT = {
   environment: [`:::satz[2.4 (Cauchy-Schwarz)]\nInhalt.\n:::`, `<EnvBlock kind="Satz" label="2.4 (Cauchy-Schwarz)">`],
   "concept link": [`Hier ist :k[die Spur]{#trace} erklärt.`, `<ConceptLink id="trace">`],
   vertiefung: [`:::vertiefung[Mehr dazu]\nInhalt.\n:::`, `<ExpandedReading title="Mehr dazu">`],
+  interaktiv: [`:::interaktiv[Zum Schieben]\nInhalt.\n:::`, `<Interaktiv title="Zum Schieben">`],
+  "english interactive": [`:::interactive[Drag it]\nText.\n:::`, `<Interaktiv title="Drag it">`],
   proof: [`::::beweis\n\n:::schritt\nSchritt eins.\n\n::why[weil $a>0$]\n:::\n\n::::`, `<PStep why={`],
   "proof without qed": [`::::beweis{ohne-qed}\n\n:::schritt\nEins.\n:::\n\n::::`, `qed={false}`],
   quiz: [`::::quiz\n\n:::frage{wahr}\nAussage.\n\nErklärung.\n:::\n\n::::`, `wahr={true}`],

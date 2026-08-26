@@ -8,7 +8,8 @@
  *   $$ {#eq-2.3} … $$          -> <Eq tag="2.3">{"…"}</Eq>
  *   :::satz[2.4 (Cauchy)] …    -> <EnvBlock kind="Satz" label="2.4 (Cauchy)">
  *   :k[die Spur]{#trace}       -> <ConceptLink id="trace">die Spur</ConceptLink>
- *   :::vertiefung[Titel] …     -> <ExpandedReading title="Titel">
+ *   :::vertiefung[Titel] …     -> <ExpandedReading title="Titel">   (Zusatzstoff, eingeklappt)
+ *   :::interaktiv[Titel] …     -> <Interaktiv title="Titel">         (Widget-Kasten, Kernstoff)
  *   ::::beweis / :::schritt    -> <Proof> / <PStep why={…}>
  *   ::why[…]                   -> das why-Prop des umgebenden :::schritt
  *   ::::quiz / :::frage{wahr}  -> <Quiz> / <Frage wahr>
@@ -68,6 +69,7 @@ const DIRECTIVE_ALIAS = {
   question: "frage",
   numquestion: "zahlfrage",
   deepdive: "vertiefung",
+  interactive: "interaktiv",
   source: "quelle",
   c: "k",
 };
@@ -83,6 +85,7 @@ const LIB = [
   "EnvBlock",
   "ConceptLink",
   "ExpandedReading",
+  "Interaktiv",
   "Proof",
   "PStep",
   "Quiz",
@@ -94,6 +97,7 @@ const LIB = [
 const ALLOWED_ATTRS = {
   k: ["id"],
   vertiefung: ["title"],
+  interaktiv: ["title"],
   beweis: ["ohne-qed", "no-qed"],
   schritt: [],
   why: [],
@@ -319,7 +323,8 @@ export default function remarkFmm(options = {}) {
         (node.type === "textDirective" && name === "k") ||
         (node.type === "leafDirective" && (name === "quelle" || name === "why")) ||
         (node.type === "containerDirective" &&
-          (ENV[name] || ["vertiefung", "beweis", "schritt", "quiz", "frage", "zahlfrage"].includes(name)));
+          (ENV[name] ||
+            ["vertiefung", "interaktiv", "beweis", "schritt", "quiz", "frage", "zahlfrage"].includes(name)));
       if (!known) {
         const sigil = node.type === "textDirective" ? ":" : node.type === "leafDirective" ? "::" : ":::";
         fail(node, `unbekannte Direktive ${sigil}${name}`, "remark-fmm:unknown-directive");
@@ -480,6 +485,14 @@ export default function remarkFmm(options = {}) {
           node.children,
           node
         );
+        return;
+      }
+
+      if (name === "interaktiv") {
+        const title = takeLabel(node, fail) ?? a.title;
+        if (!title)
+          fail(node, `:::interaktiv braucht einen Titel in [ … ]`, "remark-fmm:missing-label");
+        parent.children[index] = el("Interaktiv", [attr("title", title)], node.children, node);
         return;
       }
 

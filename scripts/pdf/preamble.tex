@@ -181,6 +181,19 @@
     \noindent\textbf{\sffamily\color{fmmslate}Vertiefung:~#1}\par\smallskip}%
 }
 
+% Interaktiv: Kasten um ein Widget samt Aufgabe/Auswertung. Im Druck bleibt
+% davon die Prosa plus der Widget-Platzhalter; die Marke sagt, dass hier im
+% Web etwas zu bedienen ist. Kernstoff, deshalb normale Schriftgroesse.
+\newtcolorbox{fmminteraktiv}[1]{%
+  breakable, enhanced, sharp corners,
+  boxrule=0.5pt, colback=fmmblue!4!white, colframe=fmmblue!45!white,
+  borderline west={2.2pt}{0pt}{fmmblue!65!white},
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=9pt, after skip=9pt,
+  before upper={\emergencystretch=3em
+    \noindent\textbf{\sffamily\color{fmmblue!75!black}Interaktiv:~#1}\par\smallskip}%
+}
+
 % Quellenzeile unter der Abschnittsueberschrift
 \newcommand{\fmmquelle}[1]{{\par\small\color{fmmgray}#1\par\addvspace{4pt}}}
 

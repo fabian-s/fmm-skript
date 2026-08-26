@@ -49,8 +49,18 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - `<Proof><PStep why={<>Begründung</>}>…</PStep></Proof>` — annotierte,
   schrittweise aufdeckbare Beweise; jede nichttriviale Zeile bekommt ein
   `why`.
-- `<ExpandedReading title="…">` — „Vertiefung:"-Boxen (Präfix kommt vom
-  Component); Widgets hier hinein.
+- `:::interaktiv[Titel]` → `<Interaktiv title="…">` — der Kasten um ein
+  Widget samt Aufgabe und Auswertung. KERNSTOFF, immer aufgeklappt, blaue
+  Marke „Interaktiv". Die Prosa, die das Widget auswertet („bei h = 0,3 …"),
+  gehört IN den Kasten, nicht dahinter.
+- `:::vertiefung[Titel]` → `<ExpandedReading title="…">` — ZUSATZSTOFF, den
+  Studierende in der Prüfungsvorbereitung überspringen können (Beweise, die
+  die Vorlesung nur zitiert; Anhangsfolien-Material; Exkurse). Eingeklappt,
+  amberfarbene Marke „Vertiefung". Darf Widgets enthalten (dann als
+  `::::interaktiv` darin, eine Fence-Stufe mehr): optional ist der Stoff,
+  nicht das Widget. Seit 2026-08-26 gilt diese Trennung; vorher war
+  `:::vertiefung` faktisch nur der Widget-Rahmen (96 von 99 Blöcken) und trug
+  deshalb kein Signal.
 - Widgets: `Slider`, `MatrixInput`, `LabeledPlot`, `LabeledTransformCanvas`
   (+ `sigmaMax`/`maxAbsCoord`); eigene Widgets nach
   `src/chapters/<kap>/widgets/` bzw. `src/concepts/widgets/`.
