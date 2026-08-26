@@ -98,14 +98,14 @@ export function SpyWidget() {
         ) : band === 1 ? (
           <>
             Bandbreite 1 ergibt eine Tridiagonalmatrix: {fmtInt(anzahl)} statt {fmtInt(dicht)}{" "}
-            Zahlen ({anteil} %). Allgemein sind es n(2b+1) − b(b+1) Einträge, für festes b also
-            O(nb) statt O(n²).
+            Zahlen ({anteil} %). Allgemein sind es n(2b+1) − b(b+1) Einträge; bei festgehaltenem b
+            und wachsendem n ist das O(nb) statt O(n²).
           </>
         ) : (
           <>
             Bei Bandbreite {band} brauchen wir {fmtInt(anzahl)} statt {fmtInt(dicht)} Speicherplätze
-            ({anteil} %). Der Vorteil schrumpft mit wachsendem b: O(nb) nähert sich O(n²), sobald b
-            in die Größenordnung von n kommt.
+            ({anteil} %). O(nb) gilt für festgehaltenes b; kommt b in die Größenordnung von n,
+            zählt wieder die exakte Zahl n(2b+1) − b(b+1) ≈ n².
           </>
         )}
       </Verdikt>

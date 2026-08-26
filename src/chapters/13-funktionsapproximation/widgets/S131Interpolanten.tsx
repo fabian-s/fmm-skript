@@ -64,12 +64,12 @@ const fmt = fmtDe;
 /** Kleines Strichmuster als Legendensymbol. */
 function Muster({ dash }: { dash: number[] }) {
   return (
-    <svg viewBox="0 0 30 10" className="h-auto max-w-full shrink-0">
+    <svg width={56} height={12} viewBox="0 0 56 12" className="h-3 w-14 shrink-0" aria-hidden="true">
       <line
         x1={1}
-        y1={5}
-        x2={29}
-        y2={5}
+        y1={6}
+        x2={55}
+        y2={6}
         stroke={GRUEN}
         strokeWidth={2}
         strokeDasharray={dash.length ? dash.join(" ") : undefined}
@@ -100,9 +100,9 @@ export function VierInterpolanten() {
   return (
     <div className="my-2">
       <Aufgabe>Schätzen wir zuerst die größte Spanne und schieben dann x* zwischen zwei Stützstellen.</Aufgabe>
-      <div className="mb-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+      <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
         {KANDIDATEN.map((k, i) => (
-          <label key={k.name} className="flex items-center gap-1 whitespace-nowrap">
+          <label key={k.name} className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap">
             <input
               type="checkbox"
               checked={an[i]}

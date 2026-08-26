@@ -6,9 +6,10 @@ import { DigitWidget } from "./widgets/CancellationWidget";
 große :k[Gleitkommazahlen]{#floating-point} voneinander abziehen: Ihre
 gemeinsamen führenden Ziffern heben sich exakt weg, und übrig bleiben nur die
 hinteren Ziffern – genau die, die von früheren
-:k[Rundungsfehlern]{#rounding-error} verseucht sind. Die Subtraktion selbst ist
-dabei exakt; sie *erzeugt* keinen Fehler, sondern *verstärkt* die schon
-vorhandenen: Der relative Fehler wächst ungefähr um den Faktor
+:k[Rundungsfehlern]{#rounding-error} verseucht sind. Für so nahe
+Maschinenzahlen ist die Subtraktion selbst exakt; sie *erzeugt* keinen
+Fehler, sondern *verstärkt* die schon vorhandenen: Der relative Fehler wächst
+ungefähr um den Faktor
 
 $$
 \frac{|a|}{|a - b|} \gg 1 \qquad \text{für } a \approx b.

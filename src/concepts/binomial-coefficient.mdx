@@ -4,9 +4,10 @@ import { ChooseWidget } from "./widgets/BinomialCoefficientWidget";
 
 {/* Konzept-Tooltip: Binomialkoeffizient „n über i" (vgl. MML Bsp. 5.2). */}
 
-Der Binomialkoeffizient $\binom{n}{i}$ (gelesen „n über i“) zählt, auf wie
-viele Arten wir $i$ Objekte aus $n$ auswählen können, wenn die Reihenfolge
-keine Rolle spielt. Berechnet wird er aus :k[Fakultäten]{#factorial}:
+Der Binomialkoeffizient $\binom{n}{i}$ (gelesen „n über i“) zählt für ganze
+Zahlen $0 \le i \le n$, auf wie viele Arten wir $i$ Objekte aus $n$ auswählen
+können, wenn die Reihenfolge keine Rolle spielt. Berechnet wird er aus
+:k[Fakultäten]{#factorial}:
 
 $$
 \binom{n}{i} = \frac{n!}{i!\,(n-i)!}, \qquad \text{z.B. } \binom{4}{2} = \frac{24}{2 \cdot 2} = 6.
@@ -16,12 +17,12 @@ Aus der Einführungsstatistik kennen wir ihn als Zählfaktor der
 Binomialverteilung. Hier taucht er aus einem anderen Grund auf: wenn wir
 $(x+h)^n$ über den :k[binomischen Lehrsatz]{#binomial-theorem}
 ausmultiplizieren, zählt $\binom{n}{i}$, wie viele der Produktterme genau $i$
-Faktoren $h$ enthalten (vgl. MML Bsp. 5.2). Nützliche Spezialwerte:
-$\binom{n}{0} = 1$ und $\binom{n}{1} = n$; letzterer liefert den Koeffizienten
-$n$, der in der Ableitung $n x^{n-1}$ übrig bleibt.
+Faktoren $h$ enthalten (vgl. MML Bsp. 5.2). Spezialwerte:
+$\binom{n}{0} = 1$ und $\binom{n}{1} = n$; letzterer ist der Koeffizient in der
+Ableitung $n x^{n-1}$.
 
 Wie entstehen die Werte, wenn wir sie nicht nur als Formel, sondern als Dreieck lesen?
 
 <ChooseWidget />
 
-So zeigt das Dreieck, dass die Rekursion und die Auswahlzählung dieselbe Zahl beschreiben.
+Das Dreieck zeigt: Rekursion und Auswahlzählung beschreiben dieselbe Zahl.

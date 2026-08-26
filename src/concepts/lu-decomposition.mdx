@@ -30,20 +30,18 @@ $\bP\bA = \bL\bU$ mit einer
 :k[Permutationsmatrix]{#permutation-matrix}
 $\bP$.
 
-Zwei Verwandte sind wichtig: Für
+Ein wichtiger Spezialfall: Für
 :k[symmetrische]{#symmetric-matrix},
 :k[positiv definite]{#positive-definite}
 Matrizen spezialisiert sich die Zerlegung zur
 :k[Cholesky-Zerlegung]{#cholesky-factorization}
-$\bA = \bL\bL^T$. Und das erweiterte Gleichungssystem der
-Kleinste-Quadrate-Rechnung (vgl. Heath §3.4.2) ist symmetrisch, aber
-*indefinit*. Dafür braucht es eine symmetrisch-indefinite
-Variante oder die gewöhnliche LU-Zerlegung, die ihre Pivots frei
-wählen darf; genau diese Freiheit nutzt jene Methode aus.
+$\bA = \bL\bL^T$, die mit der halben Arbeit auskommt.
 
 Was passiert eigentlich, wenn der Pivot null ist?
 
 <LuWidget />
 
 Der Multiplikator ist das einzige, was die Elimination sich merken muss; alles
-Übrige lässt sich daraus zurückrechnen.
+Übrige lässt sich daraus zurückrechnen. Ein Nullpivot heißt dabei nicht, dass
+es keine Zerlegung gäbe – er sagt nur, dass *dieser* Eliminationsschritt so
+nicht geht.

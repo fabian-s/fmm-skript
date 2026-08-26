@@ -16,12 +16,10 @@ $$
 Die :k[Inverse]{#matrix-inverse} bekommen
 wir also geschenkt: nichts zu lösen, wir vertauschen einfach Zeilen
 und Spalten von $\bQ$. Geometrisch sind orthogonale
-Matrizen die starren Bewegungen:
+Matrizen genau die längentreuen linearen Abbildungen, in der Ebene also
 :k[Drehungen]{#rotation-matrix} und
-:k[Spiegelungen]{#reflection}, die Vektoren
-bewegen, ohne irgendetwas zu strecken oder zu stauchen. Insbesondere
-bleibt die :k[2-Norm]{#euclidean-norm}
-unangetastet:
+:k[Spiegelungen]{#reflection} um den Ursprung. Insbesondere bleibt die
+:k[2-Norm]{#euclidean-norm} unangetastet:
 
 $$
 \|\bQ\bv\|_2^2 = (\bQ\bv)^T (\bQ\bv) = \bv^T \bQ^T \bQ \bv = \bv^T \bv = \|\bv\|_2^2 .
@@ -38,7 +36,7 @@ Drehung und Spiegelung sehen im Bild recht verschieden aus. Woran merken wir
 
 <OrthogonalMatrixWidget />
 
-Am Kreis und an den Längen ist der Unterschied nicht zu erkennen; erst die
-Determinante trennt die beiden Fälle. Für die Numerik ist das die gute
-Nachricht: Was wir mit $\bQ$ multiplizieren, ändert seine Länge nie, egal
-welche orthogonale Matrix wir gewählt haben.
+Am Kreis und an den Längen ist der Unterschied nicht zu erkennen; in der Ebene
+trennt erst das Vorzeichen der Determinante die beiden Fälle (in höheren
+Dimensionen genügt $\det \bQ$ dafür nicht mehr). Für die Numerik ist das die
+gute Nachricht: Was wir mit $\bQ$ multiplizieren, ändert seine Länge nie.

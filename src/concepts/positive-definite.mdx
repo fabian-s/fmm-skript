@@ -12,12 +12,13 @@ $$
 \bx^T \bA \bx > 0 \quad \text{für alle } \bx \neq \bnull.
 $$
 
-Stellen wir uns das als Matrix-Version von „eine positive Zahl" vor: In einer
+Stellen wir uns das als Matrix-Version von „eine positive Zahl“ vor: In einer
 Dimension lautet die Bedingung $a x^2 > 0$, also $a > 0$. Gleichwertig: Alle
 :k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA$ sind positiv. Symmetrische
-positiv definite (SPD) Matrizen sind die gutartigsten linearen
-Gleichungssysteme überhaupt. Sie lassen sich stabil und billig per
-:k[Cholesky-Zerlegung]{#cholesky-factorization} lösen. Das zentrale Beispiel
+positiv definite (SPD) Systeme lassen sich deshalb billig per
+:k[Cholesky-Zerlegung]{#cholesky-factorization} lösen, die immer existiert und
+ohne Pivotsuche auskommt – wie genau die Lösung wird, hängt trotzdem weiter an
+der :k[Konditionszahl]{#condition-number}. Das zentrale Beispiel
 für uns ist $\bA^T \bA$: Wegen
 $\bx^T \bA^T \bA \bx = \left\| \bA\bx \right\|_2^2 \geq 0$ ist die
 quadratische Form eine quadrierte :k[Länge]{#euclidean-norm}, und sie ist

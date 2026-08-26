@@ -9,26 +9,29 @@ die Krümmung ausnutzt: Statt wie das
 :k[Gradientenverfahren]{#gradient-descent} nur bergab zu laufen, ersetzt es die
 Zielfunktion nahe dem aktuellen Punkt durch die Parabel mit demselben Wert,
 derselben Steigung und derselben Krümmung (das Taylor-Polynom zweiter Ordnung,
-vgl. MML §5.1) und springt direkt zum Minimum dieser Parabel. In einer
-Variablen löst der Sprung die Frage, wo die Steigung des Modells Null wird, und
-liefert das Update
+vgl. MML §5.1) und springt in deren Minimum. In einer
+Variablen ist das das Update
 
 $$
 x_{t+1} = x_t - \frac{f'(x_t)}{f''(x_t)} .
 $$
 
-Für eine Funktion vieler Parameter wird aus der ersten Ableitung der
-:k[Gradient]{#gradient} und aus der zweiten Ableitung die
-:k[Hesse-Matrix]{#hessian-matrix} $\bH$; das Update multipliziert den
-Gradienten also mit der :k[Inversen]{#matrix-inverse} der Hesse-Matrix:
-$\btheta_{t+1} = \btheta_t - \bH^{-1} \nabla f(\btheta_t)^\top$. Das ist der
-klassische Grund, warum sich zweite Ableitungen lohnen (vgl. MML §5.7): Nahe
-einem Minimum ist das quadratische Modell ausgezeichnet, und das
-Newton-Verfahren braucht typischerweise weit weniger Schritte als das
-Gradientenverfahren.
+Bei vielen Parametern wird aus der ersten Ableitung der
+:k[Gradient]{#gradient}, aus der zweiten die
+:k[Hesse-Matrix]{#hessian-matrix} $\bH$ und aus dem Bruch das Produkt mit ihrer
+:k[Inversen]{#matrix-inverse}:
+$\btheta_{t+1} = \btheta_t - \bH^{-1} \nabla f(\btheta_t)^\top$ – transponiert,
+weil der Gradient hier eine Zeile ist, ein Schritt aber eine Spalte.
+
+Der Schritt zielt dabei nur auf einen *kritischen* Punkt des Modells: bergab
+geht er nur bei :k[positiv definiter]{#positive-definite} $\bH$, sonst kann er
+den Funktionswert erhöhen oder von einem schlechten Startpunkt aus davonlaufen –
+praktische Varianten dämpfen ihn deshalb. Nahe einem solchen Minimum ist das
+quadratische Modell dagegen ausgezeichnet, und Newton braucht dort weit weniger
+Schritte als das Gradientenverfahren (vgl. MML §5.7).
 
 Wie verändert der Startpunkt die Folge der Newton-Schritte?
 
 <NewtonWidget />
 
-Die Fehlertabelle macht die schnelle lokale Annäherung an das Minimum nachvollziehbar.
+Die Fehlertabelle macht nachvollziehbar, wie lokal dieser Vorteil ist.

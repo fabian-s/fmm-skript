@@ -20,6 +20,9 @@
  *   log₁₀ davon = 0; 0; 0,301; 0,778; 1,380; 2,079; 2,857 — der letzte Wert
  *   liegt unter 3, die y-Achse [0; 3] deckt also alle Punkte ab.
  *   Von 3! auf 6! wächst der Wert um den Faktor 720/6 = 120.
+ *   Zuwächse auf der Log-Achse (k = 2 … 6): 0,301; 0,477; 0,602; 0,699; 0,778 —
+ *   das ist jeweils log₁₀(k), also unbeschränkt wachsend, während c^k dort eine
+ *   Gerade mit konstantem Zuwachs log₁₀(c) ergäbe.
  */
 import { Aufgabe, FMM_COLORS, fmtDe, Verdikt, W_PANEL, W_TEXT } from "../../lib";
 
@@ -107,14 +110,15 @@ export function FactorialTable() {
         </text>
       </svg>
       <p className={`text-xs ${W_TEXT}`}>
-        Blau: log₁₀(k!) — eine Gerade wäre reines Zehnerpotenz-Wachstum, hier steigt die Folge
+        Blau: log₁₀(k!) – eine Gerade wäre reines Zehnerpotenz-Wachstum, hier steigt die Folge
         aber immer steiler.
       </p>
       <Verdikt kind="neutral">
         Von 3! = 6 auf 6! = 720 wächst der Wert um den Faktor 120, während k nur um 3 steigt.
-        Selbst auf der logarithmischen Achse werden die Abstände von Punkt zu Punkt größer: das
-        ist mehr als exponentielles Wachstum, und genau das zähmt die Nenner k! in
-        Taylor-Polynomen. Als feste Tafel gedacht — hier gibt es nichts zu verstellen.
+        Auf der logarithmischen Achse wird jeder Schritt größer als der vorige (0,30; 0,48;
+        0,60; 0,70; 0,78), denn der Zuwachs von k−1 auf k ist genau log₁₀(k) – ein reines
+        c<sup>k</sup> wäre hier eine Gerade mit konstantem Zuwachs. Als feste Tafel gedacht –
+        hier gibt es nichts zu verstellen.
       </Verdikt>
     </div>
   );

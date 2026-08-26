@@ -109,9 +109,9 @@ function Achsen() {
 
 function Tafel({ titel, formula, children }: { titel: string; formula: string; children: ReactNode }) {
   return (
-    <div>
+    <div className="w-[210px] shrink-0">
       <p className="mb-1 text-center text-sm font-medium">{titel}</p>
-      <svg viewBox={`0 0 ${W} ${H}`} className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600">
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full rounded border border-slate-300 bg-white dark:border-slate-600">
         <Achsen />
         {children}
       </svg>
@@ -134,8 +134,9 @@ export function DreiProbleme() {
   return (
     <div className="my-2">
       <Aufgabe>Schieben wir das Rauschen auf null und vergleichen die drei Aufgaben.</Aufgabe>
-      <div className="flex flex-wrap items-start justify-center gap-4">
-        <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
+      <div className="overflow-x-auto pb-1">
+        <div className="mx-auto flex w-max items-start gap-4">
+          <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline
             points={kurve((x) => f(x) + 0.045 * Math.sin(4 * Math.PI * x + 1))}
@@ -143,15 +144,15 @@ export function DreiProbleme() {
             stroke={SCHAETZER}
             strokeWidth={2}
           />
-        </Tafel>
-        <Tafel titel="Interpolation" formula={"\\wh{f}(x_i) = y_i \\ \\ \\forall i"}>
+          </Tafel>
+          <Tafel titel="Interpolation" formula={"\\wh{f}(x_i) = y_i \\ \\ \\forall i"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline points={kurve((x) => f(x) + g(x))} fill="none" stroke={SCHAETZER} strokeWidth={2} />
           {KNOTEN.map((x) => (
             <circle key={x} cx={sx(x)} cy={sy(f(x))} r={3.5} fill={DATEN} />
           ))}
-        </Tafel>
-        <Tafel titel="Glättung" formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}>
+          </Tafel>
+          <Tafel titel="Glättung" formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}>
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           {XOBS.map((x, i) => (
             <line
@@ -167,7 +168,8 @@ export function DreiProbleme() {
           {XOBS.map((x, i) => (
             <circle key={x} cx={sx(x)} cy={sy(yObs[i])} r={3.5} fill={DATEN} />
           ))}
-        </Tafel>
+          </Tafel>
+        </div>
       </div>
       <p className="mt-2 text-sm">
         Grau gestrichelt läuft die Funktion <M>{"f"}</M>, die wir treffen

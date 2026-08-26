@@ -30,7 +30,10 @@ export function OptimizationWidget() {
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Aufgabe>Finden wir durch Verschieben einen möglichst kleinen Funktionswert.</Aufgabe>
+      <Aufgabe>
+        Verschieben wir θ und suchen wir einen möglichst kleinen Wert von L(θ); die grüne Marke
+        hält den kleinsten bisher getroffenen fest.
+      </Aufgabe>
       <Schaetzfrage frage="Wo vermuten wir das globale Minimum?" loesung={-1.04} toleranz={0.2} min={-1.8} max={1.8} schritt={0.05}>
         <Plot
           series={[{ f: loss, label: "L(θ)", color: FMM_COLORS.blau }]}

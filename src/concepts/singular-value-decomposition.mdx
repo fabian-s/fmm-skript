@@ -6,14 +6,14 @@ Die *Singulärwertzerlegung* (singular value decomposition, SVD) zerlegt eine
 beliebige :k[Matrix]{#matrix} in „Drehen–Strecken–Drehen": Für jedes
 $\bA \in \R^{m \times n}$ existieren
 :k[orthogonale Matrizen]{#orthogonal-matrix}
-$\bU \in \R^{m \times m}$, $\bV \in \R^{n \times n}$ und eine
-„:k[Diagonalmatrix]{#diagonal-matrix}" $\bSigma \in \R^{m \times n}$ mit
+$\bU \in \R^{m \times m}$, $\bV \in \R^{n \times n}$ und eine *rechteckige*
+:k[Diagonalmatrix]{#diagonal-matrix} $\bSigma \in \R^{m \times n}$, die auf
+der Hauptdiagonale $\sigma_1 \ge \sigma_2 \ge \cdots \ge \sigma_{\min(m,n)} \ge 0$
+trägt und sonst überall null ist:
 
 $$
-\bA = \bU\bSigma\bV^\top, \qquad \bSigma = \diag(\sigma_1, \ldots, \sigma_{\min(m,n)})
+\bA = \bU\bSigma\bV^\top.
 $$
-
-mit $\sigma_1 \ge \sigma_2 \ge \cdots \ge 0$.
 
 Die *Singulärwerte* $\sigma_i$ sind die Wurzeln der
 :k[Eigenwerte]{#eigenvalue-eigenvector} von

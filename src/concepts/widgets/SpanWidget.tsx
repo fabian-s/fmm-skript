@@ -103,7 +103,12 @@ export function SpanWidget({ variante = "span" }: { variante?: "span" | "unterra
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>
-        Ziehen wir den roten Punkt und versuchen wir, damit w zu treffen.
+        Erst raten, dann ziehen:{" "}
+        {modus === "ebene"
+          ? "Lässt sich der graue Vektor w als c₁v₁ + c₂v₂ treffen?"
+          : modus === "verschoben"
+            ? "Trifft der violette Punkt auf p + c₁v₁ jemals den Ursprung?"
+            : "Kann der violette Punkt c₁v₁ den grauen Vektor w treffen?"}
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={IDENT}

@@ -6,7 +6,7 @@ Eine *Basis* eines :k[Vektorraums]{#vector-space} (oder
 :k[Unterraums]{#subspace}) ist ein kleinstmöglicher Satz von Bausteinen: eine
 Sammlung :k[linear unabhängiger]{#linear-independence}
 :k[Vektoren]{#vector}, deren :k[Spann]{#span} der ganze Raum ist. Weil es
-keine Redundanz gibt, lässt sich jedes Element des Raums auf genau *eine*
+keine Redundanz gibt, lässt sich jedes Element auf genau *eine*
 Weise als :k[Linearkombination]{#linear-combination} der Basis schreiben; die
 Koeffizienten sind seine *Koordinaten*. In $\R^2$ lautet die Standardbasis
 
@@ -14,18 +14,19 @@ $$
 \be_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \quad \be_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}, \qquad \begin{bmatrix} 3 \\ 5 \end{bmatrix} = 3\,\be_1 + 5\,\be_2 .
 $$
 
-Die Anzahl der Basisvektoren ist die :k[Dimension]{#dimension} des Raums.
-Dieselbe Idee funktioniert auch für Funktionen: die Monome $1, t, t^2$ bilden
-eine Basis aller quadratischen Polynome, und ein Modell
-$f(t) = x_1 + x_2 t + x_3 t^2$ anzupassen heißt, die Koordinaten
-$x_1, x_2, x_3$ in dieser Basis zu wählen. Interpolation wählt sie so, dass die
-Kurve exakt durch alle Datenpunkte läuft; die Methode der kleinsten Quadrate
-wählt sie so, dass die Kurve den Daten möglichst nahe kommt, wenn ein exakter
-Fit unmöglich ist (vgl. Heath §3.1).
+Ihre Anzahl ist die :k[Dimension]{#dimension} des Raums.
+Dieselbe Idee trägt für Funktionen: die Monome $1, t, t^2$ bilden
+eine Basis aller quadratischen Polynome; ein Modell
+$f(t) = x_1 + x_2 t + x_3 t^2$ anzupassen heißt, seine Koordinaten in dieser
+Basis zu wählen. Durch höchstens drei Datenpunkte mit verschiedenen $t$-Werten
+lässt sich die Kurve exakt legen (*Interpolation*); bei mehr Punkten kommt die
+Methode der kleinsten Quadrate den Daten nur noch möglichst nahe
+(vgl. Heath §3.1).
 
-Wie viele Koordinatentripel treffen eine vorgegebene Kurve?
+Woran erkennen wir, dass ein Tripel *nicht* zur Zielkurve $g$ gehört?
 
 <BasisFunctionWidget />
 
-Genau eines: weil die drei Monome linear unabhängig sind, gehört zu jeder Kurve
-ein einziges Tripel, und jede andere Einstellung liefert ein anderes Polynom.
+Am Differenzpolynom $d(t) = f(t) - g(t)$: Seine Koordinaten sind die
+Koordinatendifferenzen, und weil $1, t, t^2$ linear unabhängig sind, ist es nur
+bei lauter Nullen die Nullfunktion – zu jeder Kurve gehört genau ein Tripel.

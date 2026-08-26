@@ -3,10 +3,15 @@
  * Konzept-Widget für `symmetric-matrix` (Triage C3: KEEP + Verdikt für
  * „Streckung vs. Spiegelung"; dazu x als Suchaufgabe ziehbar).
  *
- * DIE EINE EINSICHT: Eine symmetrische Matrix hat immer zwei senkrecht
- * aufeinander stehende Richtungen, in denen sie nur streckt oder staucht.
- * Suchen kann man sie, indem man x auf dem Einheitskreis dreht, bis Ax
- * wieder auf x zeigt; die zweite Richtung liegt dann automatisch 90° daneben.
+ * DIE EINE EINSICHT: Eine symmetrische Matrix besitzt stets eine orthonormale
+ * Eigenbasis; in diesen Richtungen streckt, staucht oder klappt sie nur, ohne
+ * zu scheren. Suchen kann man sie, indem man x auf dem Einheitskreis dreht,
+ * bis Ax wieder auf x zeigt; die zweite Richtung liegt dann 90° daneben.
+ * ACHTUNG mit der Allgemeinheit: Dass es GENAU zwei Eigenrichtungen gibt und
+ * die zweite zwangsläufig senkrecht steht, liegt an den zwei verschiedenen
+ * Eigenwerten dieser Familie (siehe unten: λ₁ − λ₂ = √(1+4c²) ≥ 1 > 0 für
+ * jedes c). Bei einem mehrfachen Eigenwert – etwa A = 2·I – ist jede Richtung
+ * eine Eigenrichtung; orthonormal WÄHLEN lässt sich die Basis auch dann.
  *
  * FARBROLLEN (Batch-C3-Konvention):
  *   rot    = das Objekt in der Hand (x auf dem Einheitskreis)
@@ -23,7 +28,7 @@
  *   c = 1 (Default): λ₁ = 2,618, λ₂ = 0,382, det A = 1, Spur 3,
  *     v₁ = (0,8507; 0,5257) unter 31,717°, v₂ = (0,5257; −0,8507),
  *     v₁ᵀv₂ = 0 und Av₁ − λ₁v₁ = 0 (beides auf 1e−12);
- *   c = √2 = 1,414214: λ₂ = 0 und det A = 0 — dort kollabiert die Ellipse;
+ *   c = √2 = 1,414214: λ₂ = 0 und det A = 0 – dort kollabiert die Ellipse;
  *   c = 2: λ₁ = 3,5616, λ₂ = −0,5616, det A = −2;
  *   die Spur bleibt für jedes c gleich 3, also λ₁ + λ₂ = 3.
  */
@@ -118,8 +123,9 @@ export function SymmetricWidget() {
         {getroffen ? (
           <>
             Getroffen: Ax = λx mit λ = {fmtDe(lambda)}. Das ist eine Eigenrichtung, und die
-            zweite liegt exakt 90° daneben – bei symmetrischen Matrizen stehen die
-            Eigenrichtungen immer senkrecht aufeinander.
+            zweite liegt exakt 90° daneben: λ₁ = {fmtDe(l1)} und λ₂ = {fmtDe(l2)} sind
+            verschieden, und zu verschiedenen Eigenwerten stehen die Eigenvektoren einer
+            symmetrischen Matrix immer senkrecht aufeinander.
             {lambda < 0 ? " Hier ist λ negativ, Ax zeigt also in die Gegenrichtung." : ""}
           </>
         ) : Math.abs(c) > SCHWELLE ? (

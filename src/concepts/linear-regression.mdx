@@ -6,9 +6,9 @@ import { RegressionWidget } from "./widgets/LinearRegressionWidget";
 
 Lineare Regression ist Kurvenanpassung: Zu Datenpunkten
 $(x_i, y_i)$ suchen wir die
-:k[Funktion]{#function} aus einer einfachen
-Familie, die ihnen am nächsten kommt. Im vertrautesten Fall besteht die
-Familie aus allen Geraden,
+:k[Funktion]{#function} einer einfachen
+Familie, die ihnen am nächsten kommt. Am vertrautesten ist die
+Familie aller Geraden,
 
 $$
 f(x) = \theta_0 + \theta_1 x ,
@@ -18,16 +18,16 @@ und Anpassen heißt: Wir wählen den Achsenabschnitt $\theta_0$
 und die :k[Steigung]{#slope}
 $\theta_1$ so, dass sie eine
 :k[Zielfunktion]{#objective-function}
-minimieren, etwa die Summe der quadrierten vertikalen Abstände,
-gleichbedeutend damit, die
-:k[Likelihood]{#likelihood} der Daten unter
-einem Fehlermodell zu maximieren. „Linear" bezieht sich darauf, dass
-die Parameter $\btheta$ linear eingehen; dieselbe Maschinerie
+minimieren, etwa die Summe der quadrierten vertikalen Abstände –
+gleichbedeutend mit maximaler
+:k[Likelihood]{#likelihood} unter einem Fehlermodell.
+„Linear“ bezieht sich darauf, dass die Parameter $\btheta$ linear eingehen; dieselbe Maschinerie
 passt also auch Kurven wie
 $\theta_0 + \theta_1 x + \theta_2 x^2$ an.
 
-Können wir eine Gerade finden, deren Fehlerquadratsumme klein genug ist?
+Wie klein bekommen wir die Fehlerquadratsumme für die fünf Punkte unten?
 
 <RegressionWidget />
 
-Die Residuen machen deutlich, weshalb die Regression vertikale Abstände quadriert.
+Weil die vertikalen Abstände quadriert werden, kostet ein Residuum von
+$0{,}4$ viermal so viel wie eines von $0{,}2$.

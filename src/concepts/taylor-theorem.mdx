@@ -4,39 +4,33 @@ import { TaylorRestgliedWidget } from "./widgets/TaylorTheoremWidget";
 
 {/* Konzept-Tooltip: Satz von Taylor: lokale Polynom-Näherung mit kontrolliertem Restglied. */}
 
-Der Satz von Taylor (Taylor&rsquo;s theorem) besagt: Eine glatte
-Funktion lässt sich in der Nähe eines Punktes allein aus ihren
-:k[Ableitungen]{#derivative} an diesem
-Punkt rekonstruieren. Die Version erster Ordnung ist das Arbeitspferd
-der Numerik:
+Der Satz von Taylor (Taylor&rsquo;s theorem) ersetzt eine Funktion in der Nähe
+eines Punktes durch ein Polynom aus ihren :k[Ableitungen]{#derivative} dort und
+beziffert den Fehler. Ist $x$ auf einem Intervall um $0$ $(n+1)$-mal
+differenzierbar, gibt es zu jedem $t$ darin ein $\xi$ zwischen $0$ und $t$ mit
 
 $$
-x(t) = x(0) + t\,x'(0) + O(t^2) \quad \text{für } t \to 0,
+x(t) = p_n(t) + R_n(t), \qquad
+p_n(t) = \sum_{k=0}^{n} \frac{t^k}{k!}\, x^{(k)}(0), \qquad
+R_n(t) = \frac{t^{n+1}}{(n+1)!}\, x^{(n+1)}(\xi).
 $$
 
-d.&thinsp;h. die Funktion ist gleich ihrer
-:k[Tangente]{#tangent-line} bei
-$t = 0$ plus einem Restglied der Größenordnung
-:k[$O(t^2)$]{#big-o-notation}: es schrumpft garantiert wie $t^2$ und ist für
-kleines $t$ gegenüber dem $t$-Term vernachlässigbar.
-Weitere Terme
-$\tfrac{t^2}{2} x''(0), \tfrac{t^3}{6} x'''(0), \dots$
-verbessern die Näherung und drücken das Restglied auf noch höhere
-Potenzen von $t$.
+Die Aussage ist *lokal*: Endlich viele Ableitungen legen eine Funktion nicht
+global fest.
 
-Ein kleiner Check mit $\sin t$: Der Satz liefert
-$\sin t = t + O(t^3)$, und tatsächlich ist
-$\sin(0.1) = 0.0998\ldots$, also nur
-$2 \times 10^{-4}$ von $t = 0.1$ entfernt.
-Sensitivitätsanalysen nutzen genau das aus: Um zu sehen, wie eine
-Lösung auf eine kleine Störung der Größe $t$ reagiert,
-behalten wir den linearen Term und stecken alles Übrige in
-$O(t^2)$.
+Das Arbeitspferd der Numerik ist $n = 1$: $x(t) = x(0) + t\,x'(0) + O(t^2)$
+für $t \to 0$, die Funktion ist also ihre :k[Tangente]{#tangent-line} plus ein
+Restglied der Größenordnung :k[$O(t^2)$]{#big-o-notation}. Dass es wirklich
+wie $t^2$ schrumpft, verschenkt uns das Symbol allerdings nicht – es folgt aus
+der Restgliedformel, sobald $|x''| \le M$ nahe $0$ gilt, und heißt dann
+$|R_1(t)| \le M\,t^2/2$.
+Beim Sinus sind alle Ableitungen durch $1$ beschränkt, für $n = 2$ also
+$|\sin t - t| \le |t|^3/6$: Bei $t = 0{,}1$ erlaubt das
+$1{,}667 \cdot 10^{-4}$, tatsächlich fehlen $1{,}666 \cdot 10^{-4}$.
 
 Wie viel gibt die Schranke für das Restglied wirklich her?
 
 <TaylorRestgliedWidget />
 
-Sie ist großzügig: der tatsächliche Fehler bleibt deutlich darunter. Garantiert
-ist trotzdem nur die Schranke, und sie kommt ohne Kenntnis der Zwischenstelle
-$\xi$ aus.
+Bei größeren $t$ ist sie großzügig: Sie ersetzt $x^{(n+1)}(\xi)$ an der
+unbekannten Zwischenstelle durch das Maximum.

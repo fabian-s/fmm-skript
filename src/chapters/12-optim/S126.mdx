@@ -176,35 +176,6 @@ optim(c(-1, 0.5), f, gr = grad_f, method = "L-BFGS-B",
 [Abschnitt 12.5](#sec-12.5).
 :::
 
-:::bemerkung[12.6.4 (Analytische Gradienten gehören geprüft)]
-Häufig wird so ein Gradient aus zwei Stücken zusammengebaut: die äußere
-Ableitung als Hilfsgröße `log1p_dx`, die inneren Ableitungen
-$4x_1u$ beziehungsweise $6\cos(3x_2)\,u$ davor. Gebraucht wird dafür
-$1/(1 + u^2)$. Genau hier passiert der klassische Tippfehler:
-
-```r
-log1p_dx <- 1 / (1 + (x[1]^2 + sin(3*x[2])))^2   # = 1/(1 + u)^2
-```
-
-Das Quadrat steht an der falschen Stelle: nicht $u$ wird quadriert, sondern
-die ganze Klammer $1 + u$. Eine schließende Klammer zu früh, mehr ist es
-nicht, und weil `^` in R stärker bindet als `/`, greift das Quadrat auch
-wirklich auf $(1 + u)$ und nicht auf den Bruch. Am Startpunkt
-$(-1;\ -0{,}5)$ fällt das kaum auf, weil dort zufällig $u \approx 0{,}0025$
-winzig ist und beide Ausdrücke fast $1$ ergeben ($0{,}9950$ gegen
-$0{,}99999$). Am Punkt $(1;\ 0{,}5)$ mit $u \approx 2{,}00$ liefert die
-fehlerhafte Fassung dagegen $(1{,}09;\ 0{,}19)$ statt des korrekten Gradienten
-$(1{,}80;\ 0{,}27)$, den der numerische Differenzenquotient bestätigt.
-Setzen wir allein die Klammer richtig, stimmen beide Komponenten wieder.
-
-Ein falscher Gradient bremst BFGS bestenfalls; schlimmstenfalls konvergiert
-es an eine Stelle, die gar kein kritischer Punkt ist, denn abgebrochen wird
-nach dem *gemeldeten* Gradienten. Der Vergleich mit dem zentralen
-Differenzenquotienten aus
-[Kapitel 10](?k=10-differentialrechnung#sec-10.4) ist die Standardprobe für jeden
-von Hand abgeleiteten Gradienten.
-:::
-
 ### Wann welches Verfahren
 
 Die Methodenwahl aus diesem Kapitel, zusammengefasst:
@@ -226,7 +197,7 @@ Gradient nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfo
 
 ### Was bleibt
 
-:::bemerkung[12.6.5 (Kernkonzepte des Kapitels)]
+:::bemerkung[12.6.4 (Kernkonzepte des Kapitels)]
 1. **Nichtlineare Gleichungen** lösen wir iterativ: Die Bisektion halbiert
    verlässlich, aber langsam; Newton-Raphson konvergiert lokal quadratisch,
    $e_{k+1} \approx C\,e_k^2$ mit einer Konstanten $C$, die von $f$ abhängt,

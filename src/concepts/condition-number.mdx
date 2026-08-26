@@ -5,7 +5,7 @@ import { CondWidget } from "./widgets/ConditionNumberWidget";
 Die *Konditionszahl* (condition number) einer regulären quadratischen
 :k[Matrix]{#matrix} misst, wie empfindlich die Lösung von $\bA\bx = \bb$ auf
 kleine Änderungen in den Eingangsdaten reagiert. Definiert ist sie über eine
-:k[Matrixnorm]{#euclidean-norm} und die :k[Inverse]{#matrix-inverse}:
+:k[Matrixnorm]{#matrix-norm} und die :k[Inverse]{#matrix-inverse}:
 
 $$
 \operatorname{cond}(\bA) = \|\bA\| \cdot \|\bA^{-1}\| \;\ge\; 1.
@@ -28,17 +28,13 @@ $\operatorname{cond}(\bA) = 1$ (zum Beispiel eine
 eine fast singuläre Matrix quetscht irgendeine Richtung beinahe platt und hat
 eine riesige Konditionszahl.
 
-Das Konzept stammt aus der Theorie linearer Gleichungssysteme (vgl. Heath
-Kap. 2); für rechteckige Matrizen ersetzt man $\bA^{-1}$ durch die
-Pseudoinverse: $\operatorname{cond}(\bA) = \|\bA\|_2 \cdot \|\bA^{+}\|_2$
-(vgl. Heath §3.3).
+Für rechteckige Matrizen tritt an die Stelle von $\bA^{-1}$ die
+:k[Pseudoinverse]{#pseudoinverse} (vgl. Heath §3.3).
 
 Wie stark unterscheidet sich die Streckung von Richtung zu Richtung, wenn wir
 $\bA$ fast singulär machen?
 
 <CondWidget />
 
-Die Bildellipse macht die Definition anschaulich: Solange sie rund ist, kostet
-eine Störung in jeder Richtung gleich viel; je flacher sie wird, desto weiter
-liegen längste und kürzeste Halbachse auseinander, und genau dieses Verhältnis
-zählt Satz 4.2.6 als Verstärkungsfaktor.
+Je flacher die Bildellipse, desto weiter liegen längste und kürzeste Halbachse
+auseinander – genau dieses Verhältnis zählt Satz 4.2.6 als Verstärkungsfaktor.

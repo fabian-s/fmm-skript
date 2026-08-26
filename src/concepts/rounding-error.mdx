@@ -7,8 +7,10 @@ Weil ein Computer pro
 16 signifikante Ziffern speichert, ist das exakte Ergebnis einer
 Rechenoperation meistens nicht darstellbar und muss auf die nächste
 darstellbare Zahl gerundet werden. Jede Operation begeht darum einen
-*Rundungsfehler* (rounding error): einen relativen Fehler von
-höchstens etwa
+*Rundungsfehler* (rounding error): Für eine korrekt gerundete Operation
+$\circ \in \{+, -, \cdot, /\}$ mit exaktem Ergebnis $x \circ y \neq 0$ im
+normalen Zahlenbereich garantiert der IEEE-Standard pro Schritt einen
+*relativen* Fehler von höchstens etwa
 :k[Maschinengenauigkeit]{#machine-epsilon},
 
 $$
@@ -26,11 +28,10 @@ gespeicherten Ziffern überlebt nur eine einzige (ohnehin unsichere)
 Ziffer.
 
 Rundungsfehler ziehen eine harte Untergrenze für alle
-Genauigkeitsfragen ein: Jede Eingabematrix ist sowieso nur bis auf
-relative Störungen der Größenordnung
-$\varepsilon_{\text{mach}}$ bekannt. Eine Störung dieser
-Größe ist also kein künstlicher Extremfall, sondern der Alltag;
-wie viel Schaden so eine Störung anrichten kann, misst genau die
+Genauigkeitsfragen ein: Jede Eingabematrix ist ohnehin nur bis auf
+relative Störungen der Größenordnung $\varepsilon_{\text{mach}}$
+bekannt – kein künstlicher Extremfall, sondern der Alltag. Wie viel
+Schaden so eine Störung anrichten kann, misst genau die
 :k[Konditionszahl]{#condition-number}.
 
 Ab wann weichen die zwei algebraisch gleichen Formeln in Double-Precision sichtbar auseinander?

@@ -1,9 +1,11 @@
 /**
  * Konzept-Widget `gradient`.
  *
- * DIE EINE EINSICHT: Der Gradient zeigt in die Richtung des stärksten Anstiegs
- * und steht damit senkrecht auf der Höhenlinie durch den Punkt; jede andere
- * Richtung u hat die kleinere Steigung D_uφ = ∇φᵀu.
+ * DIE EINE EINSICHT: Der transponierte Gradient zeigt in die Richtung des
+ * stärksten Anstiegs und steht damit senkrecht auf der Höhenlinie durch den
+ * Punkt; jede andere Richtung u mit ‖u‖₂ = 1 hat die kleinere Steigung
+ * D_uφ = ∇φ(x) u. Der Gradient ist hier wie im ganzen Skript ein Zeilenvektor
+ * (Definition 10.2.1), u eine Spalte, das Produkt also eine Zahl.
  *
  * FARBROLLEN: blau = Höhenlinien von φ; rot = der Gradient ∇φ; grün = die
  * gewählte Richtung u; orange = der gezogene Punkt. Achsen, Ticks und
@@ -15,10 +17,13 @@
  *   φ(x) = x₁² + 2x₂², ∇φ = (2x₁, 4x₂) — numerisch gegen zentrale Differenzen
  *   an drei Punkten geprüft. Die Höhenlinie φ = v ist die Ellipse mit den
  *   Halbachsen √v und √(v/2); gezeichnet sind v ∈ {0,5; 1; 2; 3}.
- *   D_uφ = ∇φᵀu verschwindet genau tangential (Kontrollrechnung bei
- *   x = (0,9; 0,6): θ = 2,498).
- *   RANDFALL: im Ursprung ist ∇φ = 0, dann ist D_uφ = 0 für jedes θ — dieser
- *   Fall bekommt ein eigenes Verdikt und wird nicht als „tangential“ gemeldet.
+ *   D_uφ = ∇φ(x) u verschwindet genau tangential (Kontrollrechnung bei
+ *   x = (0,9; 0,6): θ = 2,498). u = (cos θ, sin θ) hat immer die Länge 1 —
+ *   ohne diese Normierung gäbe es kein Maximum von D_uφ.
+ *   RANDFÄLLE (2026-08-26, drei Zustände statt zwei): im Ursprung ist ∇φ EXAKT
+ *   null, dann ist D_uφ = 0 für jedes θ. Ein sehr kurzer, aber von null
+ *   verschiedener Gradient (‖∇φ‖ < 0,08) bekommt ein eigenes Verdikt und wird
+ *   nicht als „∇φ = 0“ ausgegeben; beide werden nicht als „tangential“ gemeldet.
  */
 import { useState } from "react";
 import {
@@ -47,8 +52,11 @@ export function GradientWidget() {
   const ng = Math.hypot(...g);
   const u: [number, number] = [Math.cos(theta), Math.sin(theta)];
   const d = g[0] * u[0] + g[1] * u[1];
-  const stationaer = ng < 0.08;
-  const tangential = !stationaer && Math.abs(d) < 0.08;
+  // Exakt stationär ist nur der Ursprung: ∇φ(x) = (2x₁, 4x₂) verschwindet genau
+  // für x = 0, und die Regler (Schrittweite 0,05) treffen die 0 exakt.
+  const stationaer = p[0] === 0 && p[1] === 0;
+  const fastStationaer = !stationaer && ng < 0.08;
+  const tangential = !stationaer && !fastStationaer && Math.abs(d) < 0.08;
   const drag = useDrag<"p">({
     feld: { x0: mid - 1.9 * S, y0: mid - 1.9 * S, w: 3.8 * S, h: 3.8 * S },
     welt: { x0: -1.9, x1: 1.9, y0: -1.9, y1: 1.9 },
@@ -58,7 +66,10 @@ export function GradientWidget() {
   });
   return (
     <div className={`mt-2 p-2 ${W_PANEL}`}>
-      <Aufgabe>Ziehen wir den Punkt und drehen wir die Richtung u.</Aufgabe>
+      <Aufgabe>
+        Ziehen wir den Punkt und drehen wir die Richtung u (immer Länge 1): Bei welchem θ
+        wird D<sub>u</sub>φ am größten?
+      </Aufgabe>
       <svg
         viewBox={`0 0 ${W} ${W}`}
         className="max-w-full h-auto"
@@ -150,8 +161,8 @@ export function GradientWidget() {
         />
       </svg>
       <p className={`text-xs ${W_TEXT}`}>
-        φ(x) = x₁² + 2x₂² · Blau: Höhenlinien (mit ihrem Wert); Rot: ∇φ; Grün: Richtung u;
-        Orange: der gezogene Punkt.
+        φ(x) = x₁² + 2x₂² · Blau: Höhenlinien (mit ihrem Wert); Rot: ∇φ(x)ᵀ; Grün: Richtung
+        u mit ‖u‖₂ = 1; Orange: der gezogene Punkt.
       </p>
       <Slider
         label="x₁"
@@ -170,12 +181,17 @@ export function GradientWidget() {
         step={0.05}
       />
       <Slider label="Richtung θ" value={theta} onChange={setTheta} min={0} max={6.28} step={0.02} />
-      <Verdikt kind={stationaer ? "warn" : tangential ? "ok" : "neutral"}>
+      <Verdikt kind={stationaer || fastStationaer ? "warn" : tangential ? "ok" : "neutral"}>
         {stationaer ? (
           <>
-            Hier ist ∇φ = 0, der Punkt ist stationär. Dann verschwindet D<sub>u</sub>φ für jede
-            Richtung, und „steilster Anstieg“ ergibt keinen Sinn mehr — das ist genau die
-            Bedingung, die ein Minimum erfüllen muss.
+            Im Ursprung ist ∇φ exakt null, der Punkt ist stationär. Dann verschwindet
+            D<sub>u</sub>φ für jede Richtung, und „steilster Anstieg“ ergibt keinen Sinn mehr.
+          </>
+        ) : fastStationaer ? (
+          <>
+            ‖∇φ‖ = {fmtDe(ng, 3)} ist winzig, aber nicht null: Es gibt weiterhin genau eine
+            Richtung des steilsten Anstiegs, sie ist nur kaum von den anderen zu
+            unterscheiden. Exakt null wird ∇φ allein im Ursprung.
           </>
         ) : tangential ? (
           <>
@@ -184,8 +200,9 @@ export function GradientWidget() {
           </>
         ) : (
           <>
-            D<sub>u</sub>φ = {fmtDe(d, 2)}, der größtmögliche Wert ist ‖∇φ‖ = {fmtDe(ng, 2)} und
-            wird nur in der roten Gradientrichtung erreicht.
+            D<sub>u</sub>φ = {fmtDe(d, 2)}. Unter allen Richtungen mit ‖u‖<sub>2</sub> = 1 ist
+            ‖∇φ‖ = {fmtDe(ng, 2)} der größte Wert, erreicht nur in der roten
+            Gradientrichtung.
           </>
         )}
       </Verdikt>

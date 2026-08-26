@@ -1,30 +1,32 @@
 export const title = "Permutationsmatrix";
 
-import { PermWidget } from "./widgets/PermutationMatrixWidget";
+import { PermFigur } from "./widgets/PermutationMatrixWidget";
 
-{/* Konzept-Tooltip: Permutationsmatrix: Einheitsmatrix mit gemischten Zeilen. */}
+{/* Konzept-Tooltip: Permutationsmatrix: Einheitsmatrix mit vertauschten Zeilen. */}
 
 Eine *Permutationsmatrix* $\bP$ ist eine
-:k[Einheitsmatrix]{#identity-matrix}, deren Zeilen (oder Spalten)
-durchgemischt wurden: Jede Zeile und jede Spalte enthält genau eine $1$, alle
-anderen Einträge sind $0$. Multiplikation mit ihr schiebt Daten umher, ohne
-einen einzigen Wert zu ändern: $\bP\bx$ ordnet die Einträge eines Vektors um,
-und das :k[Produkt]{#matrix-multiplication} $\bA\bP$ ordnet die Spalten von
-$\bA$ um.
+:k[Einheitsmatrix]{#identity-matrix}, deren Zeilen vertauscht wurden: Jede
+Zeile und jede Spalte enthält genau eine $1$, alle anderen Einträge sind $0$.
+Die :k[Multiplikation]{#matrix-multiplication} mit ihr schiebt Daten umher,
+ohne einen einzigen Wert zu ändern, und auf welcher Seite $\bP$ steht,
+entscheidet darüber, was umgeordnet wird: links Zeilen, rechts Spalten. Für das
+$\bP$ der Abbildung unten, dessen Einsen in den Spalten $2, 3, 1$ stehen, ist
+$\bP\bx = (x_2, x_3, x_1)^\top$ – Zeile $i$ liest den Eintrag aus der Spalte,
+in der ihre $1$ steht – und
+$\bA\bP = (\ba_3\;\; \ba_1\;\; \ba_2)$, denn umgekehrt wandert Spalte $i$
+von $\bA$ dorthin, wo Zeile $i$ ihre $1$ hat.
 
-Weil das Umsortieren von Einträgen keine Längen ändert, ist $\bP$ eine
+Weil das Umsortieren keine Längen ändert, ist $\bP$ eine
 :k[orthogonale Matrix]{#orthogonal-matrix}, und ihre
 :k[Inverse]{#matrix-inverse} ist einfach ihre :k[Transponierte]{#transpose}:
-Das Rückgängigmachen einer Mischung ist selbst wieder eine Mischung.
-
-Mit Permutationsmatrizen führen Algorithmen Buch über Zeilen- oder
-Spaltenvertauschungen: Die partielle Pivotsuche bei der
+Das Rückgängigmachen einer Mischung ist selbst wieder eine Mischung. So führen
+Algorithmen Buch über Vertauschungen: Die partielle Pivotsuche der
 :k[LU-Zerlegung]{#lu-decomposition} protokolliert ihre Zeilentausche in einem
-$\bP$, und die Spaltenpivotsuche der QR-Zerlegung hält ihre Spaltentausche im
-$\bP$ von $\bQ^T \bA \bP$ fest (vgl. Heath §3.5).
+$\bP$ (vgl. Heath §3.5).
 
-Welche Umordnung erzeugt die gewählte Permutationsmatrix?
+Woran sehen wir, welchen Eintrag eine Zeile holt, und wie macht $\bP^\top$ das
+rückgängig?
 
-<PermWidget />
+<PermFigur />
 
 Eine Permutationsmatrix erhält die Werte und ändert allein ihre Positionen.

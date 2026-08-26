@@ -42,7 +42,18 @@ export function DetWidget() {
     [2, 2],
   ]);
   const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  const singulaer = Math.abs(det) < 0.05;
+  // Drei Zustände statt zwei – eine kleine Determinante ist keine Null:
+  //   exakt singulär   det = 0, über die Zahleneingabe erreichbar (Spalten
+  //                    (1, 2) und (2, 4): det = 1·4 − 2·2 = 0),
+  //   nahe singulär    0 < |det| < 0,05: platt aussehend, aber invertierbar –
+  //                    das entsteht beim Ziehen laufend,
+  //   regulär          sonst.
+  // Die 1e-12 sind reiner Fließkommaschutz für die Zahleneingabe, keine
+  // Aussage „ungefähr null“: Gezogene Werte treffen die Null praktisch nie,
+  // und der Kollaps darf nur im exakten Fall behauptet werden.
+  const exaktSingulaer = Math.abs(det) < 1e-12;
+  const nahSingulaer = !exaktSingulaer && Math.abs(det) < 0.05;
+  const detText = fmtDe(det, nahSingulaer ? 4 : 2);
 
   const ae1: [number, number] = [m[0][0], m[1][0]];
   const ae2: [number, number] = [m[0][1], m[1][1]];
@@ -52,8 +63,8 @@ export function DetWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>
-        Ziehen wir die Spalten, bis das orange Parallelogramm in sich
-        zusammenfällt.
+        Ziehen wir die Spalten, bis das orange Parallelogramm fast in sich
+        zusammenfällt – und tragen wir es danach als exaktes Vielfaches ein.
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={m}
@@ -89,7 +100,7 @@ export function DetWidget() {
             </g>
           );
         }}
-        ariaLabel={`Das Einheitsquadrat und sein Bildparallelogramm unter A; die Determinante beträgt ${fmtDe(det, 2)}.`}
+        ariaLabel={`Das Einheitsquadrat und sein Bildparallelogramm unter A; die Determinante beträgt ${detText}.`}
       />
       <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
         <span>A =</span>
@@ -114,14 +125,16 @@ export function DetWidget() {
         <span style={{ color: FMM_COLORS.orange }}>▮</span> Bild des
         Einheitsquadrats
       </p>
-      <Verdikt kind={singulaer ? "warn" : "neutral"}>
-        det A = {fmtDe(det, 2)}, das Parallelogramm hat also den Flächeninhalt{" "}
-        {fmtDe(Math.abs(det), 2)}.{" "}
-        {singulaer
+      <Verdikt kind={exaktSingulaer ? "fail" : nahSingulaer ? "warn" : "neutral"}>
+        det A = {detText}, das Parallelogramm hat also den Flächeninhalt{" "}
+        {fmtDe(Math.abs(det), nahSingulaer ? 4 : 2)}.{" "}
+        {exaktSingulaer
           ? "Beide Spalten liegen auf einer Ursprungsgeraden, das Parallelogramm ist platt: A drückt die ganze Ebene auf eine Gerade und besitzt keine Inverse."
-          : det < 0
-            ? `Das Vorzeichen ist negativ: die Abbildung klappt die Ebene um, aus dem Umlauf Ae₁ → Ae₂ gegen den Uhrzeigersinn wird ein Umlauf im Uhrzeigersinn. Flächen werden dabei mit ${fmtDe(Math.abs(det), 2)} skaliert.`
-            : `Jede Fläche wird mit dem Faktor ${fmtDe(det, 2)} skaliert, und der Umlaufsinn bleibt erhalten. Weil det A ≠ 0 ist, ist A invertierbar.`}
+          : nahSingulaer
+            ? "Das Parallelogramm sieht platt aus, ist es aber nicht: Wegen det A ≠ 0 bleibt A invertierbar, nur schlecht konditioniert. Platt wird es erst, wenn eine Spalte ein exaktes Vielfaches der anderen ist."
+            : det < 0
+              ? `Das Vorzeichen ist negativ: die Abbildung klappt die Ebene um, aus dem Umlauf Ae₁ → Ae₂ gegen den Uhrzeigersinn wird ein Umlauf im Uhrzeigersinn. Flächen werden dabei mit ${fmtDe(Math.abs(det), 2)} skaliert.`
+              : `Jede Fläche wird mit dem Faktor ${fmtDe(det, 2)} skaliert, und der Umlaufsinn bleibt erhalten. Weil det A ≠ 0 ist, ist A invertierbar.`}
       </Verdikt>
     </div>
   );

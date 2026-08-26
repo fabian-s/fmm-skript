@@ -85,7 +85,10 @@ export function TaylorRestgliedWidget() {
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Aufgabe>Erhöhen wir die Ordnung und beobachten, wie sich das rote Band um die Kurve schnürt.</Aufgabe>
+      <Aufgabe>
+        Erhöhen wir die Ordnung und beobachten, wie sich das rote Band um das Polynom pₙ schnürt –
+        die blaue sin-Kurve muss darin bleiben.
+      </Aufgabe>
       <Plot
         xLabel="t"
         yLabel="f(t)"

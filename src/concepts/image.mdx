@@ -24,17 +24,16 @@ seine :k[Dimension]{#dimension} ist genau der
 :k[Rang]{#rank} von $\bA$. Ein
 :k[lineares Gleichungssystem]{#linear-system}
 $\bA\bx = \bb$ ist genau dann lösbar, wenn
-$\bb$ im Bild liegt. Bild und
-:k[Kern]{#kernel} stehen im Tausch
-zueinander: Nach dem
+$\bb$ im Bild liegt. Nach dem
 :k[Rangsatz]{#rank-nullity-theorem} fehlen
-dem Bild genau die Dimensionen, die an den Kern verloren gehen. Zum
+dem Bild genau die Dimensionen, die an den :k[Kern]{#kernel} gehen. Zum
 Beispiel zeigen bei
 $\bA = \begin{pmatrix} 1 & 2 \\ 0.5 & 1 \end{pmatrix}$
-beide Spalten entlang $(1, 0.5)^\top$. Wie weit reicht das Bild dieser Matrix
-dann noch?
+beide Spalten entlang $(1, 0.5)^\top$. Wohin führt das die Ausgaben
+$\bA\bv$, wenn wir $\bv$ im Kreis herumziehen?
 
 <ImageWidget />
 
-Egal welche Eingabe wir wählen, das Ergebnis verlässt diese Gerade nie: mehr
-Richtungen können zwei abhängige Spalten nicht erzeugen.
+Keine Eingabe verlässt diese Gerade: Ausmultipliziert ist
+$\bA\bv = (v_1 + 2v_2)\,(1, 0.5)^\top$. Das Bild ist eindimensional, der Rang
+von $\bA$ ist 1.

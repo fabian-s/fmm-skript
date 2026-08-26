@@ -2,18 +2,18 @@ export const title = "Charakteristisches Polynom";
 
 Wie findet man die :k[Eigenwerte]{#eigenvalue-eigenvector} einer Matrix von
 Hand? Die Gleichung $\bA\bv = \lambda\bv$ hat genau dann eine Lösung
-$\bv \neq \bnull$, wenn $\bA - \lambda\bI$ singulär ist, wenn also ihre
-:k[Determinante]{#determinant} verschwindet. Das *charakteristische
+$\bv \neq \bnull$, wenn $\bA - \lambda\bI$ singulär ist, ihre
+:k[Determinante]{#determinant} also verschwindet. Das *charakteristische
 Polynom* (characteristic polynomial) macht daraus eine Rechenaufgabe:
 
 $$
 p(\lambda) = \det(\bA - \lambda\bI) .
 $$
 
-Für $\bA \in \R^{n \times n}$ ist $p$ ein Polynom vom Grad $n$, und seine
-Nullstellen sind genau die Eigenwerte von $\bA$.
+Für $\bA \in \R^{n \times n}$ ist $p$ ein Polynom vom Grad $n$; seine
+Nullstellen sind genau die Eigenwerte.
 
-Ein kleines Beispiel: Für $\bA = \begin{pmatrix} 6 & 4 \\ 4 & 5 \end{pmatrix}$
+Beispiel: Für $\bA = \begin{pmatrix} 6 & 4 \\ 4 & 5 \end{pmatrix}$
 ist
 
 $$
@@ -21,8 +21,8 @@ p(\lambda) = (6-\lambda)(5-\lambda) - 16 = \lambda^2 - 11\lambda + 14 ,
 $$
 
 und die Mitternachtsformel liefert
-$\lambda_{1,2} = \tfrac{11 \pm \sqrt{65}}{2}$. Für große Matrizen taugt
-dieser Weg allerdings nur auf dem Papier: Numerisch berechnet man
-Eigenwerte nie über :k[Polynom-Nullstellen]{#polynomial-roots}, weil die
-extrem empfindlich von den Koeffizienten abhängen; Software nutzt
-stattdessen iterative Verfahren.
+$\lambda_{1,2} = \tfrac{11 \pm \sqrt{65}}{2}$. Für große Matrizen taugt dieser
+Weg allerdings nur auf dem Papier: Der Umweg über die Koeffizienten von $p$ ist
+schlecht konditioniert – winzige Änderungen an ihnen verschieben die
+Nullstellen weit. Software nutzt deshalb iterative Verfahren, die direkt mit
+$\bA$ arbeiten, statt :k[Polynom-Nullstellen]{#polynomial-roots} zu suchen.

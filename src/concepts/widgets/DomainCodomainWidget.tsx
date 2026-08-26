@@ -22,6 +22,24 @@
  *  - Die Hervorhebung verglich `hot` mit der PIXEL-Zielhöhe (String(target)),
  *    traf also nie; jetzt hängt sie am Bildwert, sodass beim Zeigen auf −2 auch
  *    2 und die gemeinsame 4 aufleuchten. Auch die Ausgaben sind Zeigeziele.
+ *
+ * FEHLERKORREKTUREN 2026-08-26 (Konzept-Pop-up-Audit, Shard 7):
+ *  - Die Zuordnungen waren nur per Zeiger erreichbar (`onPointerEnter` ohne
+ *    Tastaturpfad). Jede Eingabe, jede Ausgabe und die −1 haben jetzt ein
+ *    fokussierbares Ziel (`role="button"`, `tabIndex`, `aria-pressed`,
+ *    Enter/Leertaste) mit sichtbarem Fokusrahmen.
+ *  - Die Legende sagte „liegt im Zielbereich, aber außerhalb davon“ und
+ *    behauptete damit das Gegenteil des Gemeinten; jetzt „außerhalb des Bildes“.
+ *  - Das `<svg>` trug `role="img"`; dessen Nachfahren gelten als rein
+ *    darstellend, die neuen `role="button"`-Ziele wären für Screenreader
+ *    unsichtbar geblieben. Jetzt `role="group"` wie im MatrixMultiplicationWidget.
+ *
+ * GEOMETRIE DER ZIELFLÄCHEN (nachgerechnet): Eingaben 34 × 28 um (58; y) liegen
+ * mit allen vier Ecken in der Definitionsbereichs-Ellipse, denn für die äußerste
+ * Ecke (41; 31) ist ((41−65)/45)² + ((31−85)/65)² = 0,284 + 0,690 = 0,975 < 1.
+ * Das Ziel der −1 ist 28 × 28 um (250; 86); seine äußerste Ecke (264; 100) liegt
+ * mit ((264−215)/52)² + ((100−85)/68)² = 0,888 + 0,049 = 0,937 < 1 innerhalb des
+ * Zielbereichs und mit x = 236 > 207 + 26 = 233 vollständig außerhalb des Bildes.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Verdikt, W_PANEL, W_TEXT } from "../../lib";
@@ -39,6 +57,61 @@ const WERTE = [
   { wert: "0", y: 129 },
 ];
 
+/**
+ * Fokussierbares Ziel über einer Beschriftung: liefert denselben Zustand per
+ * Zeiger, per Tabulator (Fokus) und per Enter/Leertaste. Der gestrichelte
+ * Rahmen macht das gewählte Ziel auch ohne Zeiger sichtbar.
+ */
+function Ziel({
+  x,
+  y,
+  breite,
+  hoehe,
+  wert,
+  beschriftung,
+  aktiv,
+  setzen,
+}: {
+  x: number;
+  y: number;
+  breite: number;
+  hoehe: number;
+  wert: string;
+  beschriftung: string;
+  aktiv: boolean;
+  setzen: (w: string | null) => void;
+}) {
+  return (
+    <rect
+      x={x - breite / 2}
+      y={y - hoehe / 2}
+      width={breite}
+      height={hoehe}
+      rx={4}
+      fill="transparent"
+      stroke={aktiv ? FMM_COLORS.orange : "transparent"}
+      strokeWidth={1.5}
+      strokeDasharray="3 2"
+      role="button"
+      tabIndex={0}
+      aria-pressed={aktiv}
+      aria-label={beschriftung}
+      style={{ cursor: "pointer" }}
+      onPointerEnter={() => setzen(wert)}
+      onPointerLeave={() => setzen(null)}
+      onFocus={() => setzen(wert)}
+      onBlur={() => setzen(null)}
+      onClick={() => setzen(wert)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setzen(wert);
+        }
+      }}
+    />
+  );
+}
+
 export function MappingDiagram() {
   const [heiss, setHeiss] = useState<string | null>(null);
   const aktiv = (wert: string) => heiss === wert;
@@ -46,11 +119,14 @@ export function MappingDiagram() {
   const anzahl = heiss ? EINTRAEGE.filter((e) => e.wert === heiss).length : 0;
   return (
     <div className={`mt-2 p-2 ${W_PANEL}`}>
-      <Aufgabe>Fahren wir über eine Eingabe oder eine Ausgabe und verfolgen wir ihre Pfeile.</Aufgabe>
+      <Aufgabe>
+        Wählen wir eine Eingabe oder eine Ausgabe – mit Zeiger oder Tabulator – und verfolgen
+        wir ihre Pfeile.
+      </Aufgabe>
       <svg
         viewBox="0 0 280 175"
         className="max-w-full h-auto"
-        role="img"
+        role="group"
         aria-label="Pfeildiagramm: drei Eingaben, ihre Bilder und ein Element des Zielbereichs außerhalb des Bildes."
       >
         <defs>
@@ -131,9 +207,6 @@ export function MappingDiagram() {
             textAnchor="middle"
             fill={aktiv(w.wert) ? FMM_COLORS.orange : "var(--w-text)"}
             fontSize="13"
-            style={{ cursor: "pointer" }}
-            onPointerEnter={() => setHeiss(w.wert)}
-            onPointerLeave={() => setHeiss(null)}
           >
             {w.wert}
           </text>
@@ -144,22 +217,57 @@ export function MappingDiagram() {
           textAnchor="middle"
           fill={aktiv("−1") ? FMM_COLORS.orange : "var(--w-muted)"}
           fontSize="13"
-          style={{ cursor: "pointer" }}
-          onPointerEnter={() => setHeiss("−1")}
-          onPointerLeave={() => setHeiss(null)}
         >
           −1
         </text>
+        {/* Zeige- und Tastaturziele zuletzt, damit sie über den Beschriftungen
+            liegen; die Rahmen zeigen den Fokus. */}
+        {EINTRAEGE.map((e) => (
+          <Ziel
+            key={`ziel-${e.label}`}
+            x={58}
+            y={e.y}
+            breite={34}
+            hoehe={28}
+            wert={e.wert}
+            beschriftung={`Eingabe ${e.label} mit Bild ${e.wert}`}
+            aktiv={aktiv(e.wert)}
+            setzen={setHeiss}
+          />
+        ))}
+        {WERTE.map((w) => (
+          <Ziel
+            key={`ziel-wert-${w.wert}`}
+            x={207}
+            y={w.y - 4}
+            breite={30}
+            hoehe={28}
+            wert={w.wert}
+            beschriftung={`Ausgabe ${w.wert} im Bild`}
+            aktiv={aktiv(w.wert)}
+            setzen={setHeiss}
+          />
+        ))}
+        <Ziel
+          x={250}
+          y={86}
+          breite={28}
+          hoehe={28}
+          wert="−1"
+          beschriftung="Element −1 des Zielbereichs"
+          aktiv={aktiv("−1")}
+          setzen={setHeiss}
+        />
       </svg>
       <p className={`text-xs ${W_TEXT}`}>
         Blau: Definitionsbereich; Rot: das tatsächlich getroffene Bild; die −1 liegt im
-        Zielbereich, aber außerhalb davon.
+        Zielbereich, aber außerhalb des Bildes.
       </p>
       <Verdikt kind={heiss === "−1" ? "warn" : "neutral"}>
         {heiss === "−1" ? (
           <>
             Auf die −1 zeigt kein einziger Pfeil. Sie gehört zum Zielbereich ℝ, aber nicht zum
-            Bild von x² — genau deshalb sind die beiden Mengen verschieden.
+            Bild von x² – genau deshalb sind die beiden Mengen verschieden.
           </>
         ) : getroffen && anzahl > 1 ? (
           <>
@@ -172,7 +280,7 @@ export function MappingDiagram() {
           </>
         ) : (
           <>
-            Drei Eingaben, aber nur zwei verschiedene Bildwerte. Fahren wir über die −1, um ein
+            Drei Eingaben, aber nur zwei verschiedene Bildwerte. Wählen wir die −1, um ein
             Element zu sehen, das zum Zielbereich, aber nicht zum Bild gehört.
           </>
         )}

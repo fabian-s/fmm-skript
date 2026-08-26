@@ -4,6 +4,12 @@
  * orange = Daten und aktueller Parameter. PROVENIENZ: neu.
  * VERIFIZIERTE ZAHLEN: `scripts/verify/QA-L2/verify-qa-l2.mjs`, 2026-08-20, prüft
  * für a = 1 den Wert L(a) = 0,0925 und die im Widget verwendete MSE-Formel.
+ * Nachgerechnet: Residuen bei a = 1 sind 0,4 / 0,2 / 0,1 / 0,4, Quadratsumme
+ * 0,37, geteilt durch n = 4 also 0,0925.
+ *
+ * NORMIERUNG: L(a) ist der MITTLERE quadratische Fehler (Teilung durch n = 4).
+ * objective-function.mdx führt diese Normierung ausdrücklich ein, damit die
+ * angezeigten Zahlen zur Formel im Text passen (Audit 2026-08-26).
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe } from "../../lib";
@@ -60,8 +66,8 @@ export function ObjectiveWidget() {
         accent={FMM_COLORS.blau}
       />
       <Verdikt kind={l < 0.12 ? "ok" : "neutral"}>
-        a = {fmtDe(a, 2)} erzeugt L(a) = {fmtDe(l, 3)}. Beide Tafeln zeigen denselben
-        Modellparameter.
+        a = {fmtDe(a, 2)} erzeugt den mittleren quadratischen Fehler L(a) = {fmtDe(l, 3)}. Beide
+        Tafeln zeigen denselben Modellparameter.
       </Verdikt>
     </div>
   );

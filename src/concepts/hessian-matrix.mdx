@@ -12,24 +12,25 @@ $$
 $$
 
 das mehrdimensionale Gegenstück zur zweiten Ableitung
-$f''(x)$ (für glattes $\phi$ ist sie automatisch
-:k[symmetrisch]{#symmetric-matrix}, weil die
-Reihenfolge der Ableitungen keine Rolle spielt). Sie misst die Krümmung
-in alle Richtungen gleichzeitig und verallgemeinert damit den Test mit
-der zweiten Ableitung aus der Schule: Dort, wo der
+$f''(x)$ (nach dem Satz von Schwarz für zweimal stetig differenzierbares
+$\phi$ automatisch
+:k[symmetrisch]{#symmetric-matrix}). Sie verallgemeinert den
+Test mit der zweiten Ableitung aus der Schule: Dort, wo der
 :k[Gradient]{#gradient} verschwindet, hat
 $\phi$ ein lokales Minimum, wenn die Hesse-Matrix
 :k[positiv definit]{#positive-definite} ist;
-sie krümmt sich dann in jede Richtung nach oben, wie eine Schüssel. Für
-die Kleinste-Quadrate-Zielfunktion ergibt sich als Hesse-Matrix die
-konstante Matrix $2\bA^T\bA$; ihre positive Definitheit ist
-genau das, was garantiert, dass die Lösung der Normalengleichungen
-wirklich ein Minimum ist und kein Sattelpunkt.
+die Fläche krümmt sich dann überall nach oben, wie eine Schüssel. Für die
+Kleinste-Quadrate-Zielfunktion ist die Hesse-Matrix konstant $2\bA^T\bA$; ihre
+positive Definitheit macht die Lösung der Normalengleichungen zum Minimum
+statt zum Sattelpunkt.
 
 Was sagt der Test, wenn sich eine Richtung überhaupt nicht krümmt?
 
 <HessianWidget />
 
-In diesem Fall sagt er nichts: mit einem Eigenwert null bleibt eine flache Rinne
-übrig, und erst positive Definitheit macht den kritischen Punkt zum isolierten
-Minimum.
+Für die quadratische Form $q(x, y) = a x^2 + b y^2$ des Widgets bleibt mit
+$a > 0$ und $b = 0$ eine flache Rinne übrig: ein Minimum, aber kein
+isoliertes. Für beliebige $\phi$ entscheidet Semidefinitheit dagegen gar
+nichts: $x^2 + y^4$ und $x^2 - y^4$ haben in $(0,0)$ dieselbe Hesse-Matrix
+$\diag(2, 0)$, aber nur die erste ein Minimum.
+Erst positive Definitheit macht den kritischen Punkt zum isolierten Minimum.

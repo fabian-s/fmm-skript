@@ -47,7 +47,7 @@ export function ToleranceBandWidget() {
         viewBox={`0 0 ${W} ${H}`}
         className="max-w-full h-auto"
         role="img"
-        aria-label={`Die Folge aₙ = 1 + (−0,75)ⁿ mit einem Toleranzband der Breite ${fmtDe(eps, 2)} um den Grenzwert 1; ab n = ${need} liegen alle Glieder im Band.`}
+        aria-label={`Die Folge aₙ = 1 + (−0,75)ⁿ mit dem Toleranzband von 1 − ε bis 1 + ε um den Grenzwert 1, ε = ${fmtDe(eps, 2)}; ab n = ${need} liegen alle Glieder im Band.`}
       >
         <rect
           x={PAD_L}
@@ -136,7 +136,7 @@ export function ToleranceBandWidget() {
         ))}
       </svg>
       <p className={`text-xs ${W_TEXT}`}>
-        aₙ = 1 + (−0,75)ⁿ · Grün: im Band; Orange: noch außerhalb.
+        aₙ = 1 + (−0,75)ⁿ · Band: 1 − ε bis 1 + ε · Grün: im Band; Orange: noch außerhalb.
       </p>
       <Slider label="Toleranz ε" value={eps} onChange={setEps} min={0.05} max={0.6} step={0.01} />
       <Verdikt kind="ok">

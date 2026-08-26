@@ -4,8 +4,10 @@
  * DIE EINE EINSICHT: So verschieden Drehung, Scherung, Streckung und Kollaps
  * aussehen, sie hinterlassen denselben Fingerabdruck: gerade, gleichmäßig
  * verteilte Gitterlinien und ein Ursprung, der liegen bleibt. Genau das
- * bedeutet Linearität, und mehr Formen als diese vier Grundtypen gibt es in
- * der Ebene nicht.
+ * bedeutet Linearität. Die vier Presets sind nur typische Beispiele – lineare
+ * Abbildungen der Ebene gibt es unendlich viele (jede 2×2-Matrix ist eine),
+ * und Regler bzw. Spalten-Drag erreichen sie alle. Die Einsicht ist der
+ * gemeinsame Fingerabdruck, nicht eine Vollzähligkeit der vier Typen.
  *
  * FARBROLLEN: rot = Ae₁ (erste Spalte), grün = Ae₂ (zweite Spalte), blau = das
  * Bild von Gitter und Einheitskreis (Lib-Vorgabe).
@@ -62,7 +64,12 @@ export function LinearMapWidget() {
 
   const det = m[0][0] * m[1][1] - m[0][1] * m[1][0];
   const s1 = sigmaMax(m);
-  const singulaer = Math.abs(det) < 0.02;
+  // Drei Zustaende statt zwei: exakt singulaer (det = 0, z. B. das Preset
+  // „Kollaps": 1·1 − 0,5·2 = 0), nahe singulaer (winzige, aber von null
+  // verschiedene Determinante) und regulaer. Eine fast parallele Spaltenlage
+  // ist noch umkehrbar und darf nicht als Kollaps ausgegeben werden.
+  const exaktSingulaer = Math.abs(det) < 1e-12;
+  const fastSingulaer = !exaktSingulaer && Math.abs(det) < 0.02;
   const spaltenOrthonormal =
     Math.abs(m[0][0] * m[0][1] + m[1][0] * m[1][1]) < 0.02 &&
     Math.abs(Math.hypot(m[0][0], m[1][0]) - 1) < 0.02 &&
@@ -81,7 +88,7 @@ export function LinearMapWidget() {
   return (
     <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
-        Vergleichen wir die vier Grundtypen und suchen, was allen gemeinsam
+        Vergleichen wir die vier Beispiele und suchen, was allen gemeinsam
         bleibt.
       </Aufgabe>
       <LabeledTransformCanvas
@@ -98,7 +105,7 @@ export function LinearMapWidget() {
         }}
         ariaLabel={`Das Bild des Gitters und des Einheitskreises unter A; die Determinante beträgt ${fmtDe(det, 2)}.`}
       />
-      <div className="mt-1 flex flex-wrap gap-1" role="group" aria-label="Grundtypen">
+      <div className="mt-1 flex flex-wrap gap-1" role="group" aria-label="Beispiele">
         {PRESETS.map((p) => {
           const aktiv = gleich(m, p.m);
           return (
@@ -127,17 +134,20 @@ export function LinearMapWidget() {
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Ae₁ (Spalte a, c) ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> Ae₂ (Spalte b, d)
       </p>
-      <Verdikt kind={singulaer ? "warn" : "neutral"}>
-        det A = {fmtDe(det, 2)}.{" "}
-        {singulaer
-          ? "Die Spalten liegen auf einer Geraden: die Ebene wird plattgedrückt. Auch dieser Kollaps ist linear, das Bildgitter besteht weiter aus gleichmäßig verteilten Punkten auf einer Geraden."
+      <Verdikt kind={exaktSingulaer || fastSingulaer ? "warn" : "neutral"}>
+        det A = {fmtDe(det, fastSingulaer ? 4 : 2)}.{" "}
+        {exaktSingulaer
+          ? "Die Determinante ist null: Die Spalten liegen auf einer Geraden, die Ebene wird plattgedrückt. Auch dieser Kollaps ist linear – die Bildpunkte bleiben gleichmäßig verteilt, nur auf einer Geraden."
+          : fastSingulaer
+          ? "Die Determinante ist winzig, aber nicht null: fast parallele Spalten, die Ebene wird auf einen dünnen Streifen gequetscht. Umkehrbar ist die Abbildung noch, aber schlecht – nahe an singulär ist nicht singulär."
           : spaltenOrthonormal
             ? "Die beiden Spalten stehen senkrecht aufeinander und haben Länge 1: eine reine Drehung, Längen und Winkel bleiben erhalten."
             : diagonal
               ? "Die Nebendiagonale ist null: jede Achse wird für sich gestreckt, das Gitter bleibt achsenparallel."
               : "Die Gitterzellen sind zu Parallelogrammen gekippt, aber die Gitterlinien bleiben gerade, parallel und gleichmäßig verteilt."}{" "}
-        Der Ursprung bleibt in jedem der vier Fälle liegen: das ist der
-        Fingerabdruck einer linearen Abbildung.
+        Der Ursprung bleibt liegen, die Gitterlinien bleiben gerade und
+        gleichmäßig verteilt: der Fingerabdruck jeder linearen Abbildung, nicht
+        nur dieser vier Beispiele.
       </Verdikt>
     </div>
   );

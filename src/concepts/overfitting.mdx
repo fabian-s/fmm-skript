@@ -7,18 +7,19 @@ so eng an, dass es deren zufälliges Rauschen mitlernt statt nur das Signal.
 Auf den gesehenen Daten wirkt es hervorragend, auf neuen Daten versagt es.
 
 Das Paradebeispiel ist die Glättung mit zu vielen Basisfunktionen: Mit
-$K = n$ Koeffizienten interpoliert der Schätzer jeden Datenpunkt exakt,
-also auch jeden Messfehler. In der Sprache der
-Bias-Varianz-Zerlegung ist die :k[Varianz]{#variance} des Schätzers dann
-groß, während der Bias verschwindet; der mittlere quadratische Fehler wird
-von der Varianz dominiert.
+$K = n$ Basisfunktionen und invertierbarer Designmatrix interpoliert der
+Kleinste-Quadrate-Schätzer jeden Datenpunkt exakt – also auch jeden
+Messfehler. In der Bias-Varianz-Zerlegung verschwindet der Bias an den
+Beobachtungsstellen, der Fehler dort ist reine :k[Varianz]{#variance}.
 
-Ein Zahlengefühl: Bei $y_i = f(x_i) + \epsilon_i$ mit Rauschvarianz
-$\sigma^2$ wächst die Varianz eines Basisschätzers wie $O(K/n)$. Wer $K$
-verdoppelt, verdoppelt grob den Varianzanteil des Fehlers, gewinnt an Bias
-aber nur, solange die Funktion wirklich mehr Flexibilität braucht.
+Ein Zahlengefühl: Bei unkorrelierten Fehlern mit Varianz $\sigma^2$ und
+fester Basis mit $K$ Spalten vollen Rangs ist die mittlere Varianz der
+$\wh{f}(x_i)$ exakt $\sigma^2 K / n$ – die
+:k[Projektionsmatrix]{#projection} hat Spur $K$. Wer $K$ verdoppelt,
+verdoppelt also diesen Varianzanteil, gewinnt an Bias aber nur, solange die
+Funktion wirklich mehr Flexibilität braucht.
 
 Die Gegenmittel sind Modellwahl (Kreuzvalidierung, Informationskriterien)
-oder Regularisierung: eine Strafe auf die Rauheit der Funktion, die
-überflüssige Flexibilität teuer macht. Das Gegenstück heißt
+und Regularisierung, eine Strafe auf die Rauheit der Funktion. Das
+Gegenstück heißt
 *Unteranpassung*, ein zu starres Modell mit großem Bias.

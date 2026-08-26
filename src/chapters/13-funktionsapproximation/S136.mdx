@@ -272,23 +272,22 @@ nähern sich der $16$ erst mit feiner werdendem Gitter. Wer eine Rechnung „mit
 Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas falsch wäre.
 :::
 
-:::vertiefung[Vier Gitter an einem Regler]
-Das Widget rechnet die Tabelle live nach und zeigt zusätzlich, wo der Fehler
-sitzt. Beim gröbsten Gitter ist die Abweichung noch mit bloßem Auge zu sehen,
-danach trennt nur noch das untere Bild die beiden Kurven. Dort ist eine zweite
-Beobachtung ablesbar: Der Fehler verschwindet an den Knoten und hat in jedem
-Teilintervall einen Bauch, doch die Bäuche sind verschieden hoch. Bei $17$
-Knoten misst der kleinste $1{,}4 \cdot 10^{-5}$ und der größte
-$6{,}3 \cdot 10^{-5}$. Die flachen Stellen liegen bei $x = 0$, $0{,}5$ und $1$,
-also genau dort, wo $\sin(2\pi x)$ seine Nullstellen hat und mit ihm die vierte
-Ableitung; die hohen Bäuche sitzen an den Extrema. Das ist Punkt 3 aus
-Bemerkung 13.6.3 am lebenden Objekt.
+:::vertiefung[Vom groben zum feinen Gitter]
+Das Widget verschärft das Tabellenbeispiel zu
+$f(x) = \sin(3\pi x)$ und beginnt schon mit drei Knoten. Die zusätzliche
+Halbwelle macht die Schwäche eines groben Gitters sichtbar: Mit drei und fünf
+Knoten liegen Funktion und Spline im oberen Bild noch deutlich auseinander.
+Trotzdem bleiben die Voraussetzungen der Schranke sauber erfüllt, denn
+$f''(0) = f''(1) = 0$ und
+$\max_{x \in [0,1]} |f^{(4)}(x)| = (3\pi)^4$.
 
-Die halblogarithmische Tafel rechts legt Messung und Schranke übereinander.
-Beide Linien fallen fast parallel, die gemessene bei den groben Gittern etwas
-steiler, weil dort die Faktoren noch über $16$ liegen. Der senkrechte Abstand
-zwischen den Linien ist der Sicherheitsabstand, den die Konstante
-$\tfrac{5}{384}$ einbaut.
+Im unteren Bild verschwindet der Fehler an jedem Knoten und bildet dazwischen
+Bäuche. Beim Verfeinern werden diese schnell so klein, dass sie im oberen Bild
+nicht mehr zu erkennen sind. Die halblogarithmische Tafel rechts legt Messung
+und Schranke übereinander. Auf den sehr groben Gittern schwankt der gemessene
+Faktor noch stark; erst mit feinerem Gitter nähert er sich der asymptotischen
+$16$. Die Schranke selbst fällt bei jeder Halbierung von $h$ exakt auf ein
+Sechzehntel.
 
 Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
 

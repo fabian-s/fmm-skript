@@ -93,7 +93,8 @@ export function BasisWidget() {
       <Verdikt kind={aufB1 ? "ok" : "neutral"}>
         In der Standardbasis heißt der Pfeil ({fmtDe(x[0], 2)}; {fmtDe(x[1], 2)}), in der neuen
         Basis ({fmtDe(c1, 2)}; {fmtDe(c2, 2)}). Zwei Etiketten, ein Pfeil: seine Länge bleibt{" "}
-        {fmtDe(laenge, 3)}, denn c₁² + c₂² = ‖x‖².{" "}
+        {fmtDe(laenge, 3)} – die gedrehte Basis ist orthonormal, deshalb gilt hier
+        c₁² + c₂² = ‖x‖².{" "}
         {aufB1
           ? "Gerade zeigt b₁ genau in Richtung x, deshalb steckt alles in der ersten Koordinate."
           : ""}

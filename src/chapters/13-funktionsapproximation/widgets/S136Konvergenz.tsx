@@ -14,24 +14,24 @@ import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
  * Fehler und Schranke rot; die wahre Funktion f traegt das im Kapitel freie
  * Violett (Rolle steht in der Widget-Einleitung).
  *
- * Verifiziert (node, verify-13-funktionsapproximation/s152.mjs, 2026-08-19), f(x) = sin(2 pi x) auf [0, 1],
- * C = 5/384, max|f^(4)| = (2 pi)^4 = 1558,5455:
- *   5 Knoten  h = 0,25     Schranke 0,0793     Fehler 0,020017
- *   9 Knoten  h = 0,125    Schranke 0,00495    Fehler 0,0010661   Faktor 18,78
- *  17 Knoten  h = 0,0625   Schranke 0,000310   Fehler 0,000063121 Faktor 16,89
- *  33 Knoten  h = 0,03125  Schranke 0,0000194  Fehler 0,0000038893 Faktor 16,23
+ * Verifiziert (node, 2026-08-26), f(x) = sin(3 pi x) auf [0, 1],
+ * C = 5/384, max|f^(4)| = (3 pi)^4 = 7890,1364:
+ *   3 Knoten  h = 0,5      Schranke 6,421       Fehler 1,519916
+ *   5 Knoten  h = 0,25     Schranke 0,4013      Fehler 0,220532   Faktor 6,89
+ *   9 Knoten  h = 0,125    Schranke 0,02508     Fehler 0,0068359  Faktor 32,26
+ *  17 Knoten  h = 0,0625   Schranke 0,001568    Fehler 0,00033989 Faktor 20,11
+ *  33 Knoten  h = 0,03125  Schranke 0,00009798  Fehler 0,00002000 Faktor 17,00
  * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
- * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
 const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
-const KNOTENZAHLEN = [5, 9, 17, 33];
+const KNOTENZAHLEN = [3, 5, 9, 17, 33];
 const C_SPLINE = 5 / 384;
-const M4 = Math.pow(2 * Math.PI, 4);
+const M4 = Math.pow(3 * Math.PI, 4);
 const ABTASTUNG = 8001;
 
-const f = (x: number) => Math.sin(2 * Math.PI * x);
+const f = (x: number) => Math.sin(3 * Math.PI * x);
 
 interface Spline {
   xs: number[];
@@ -223,9 +223,9 @@ export function SplineKonvergenz() {
       `Das gröbste Gitter hat ${zeile.knoten} Knoten, also die Gitterweite h = ${fmtH(zeile.h)}. ` +
       `Satz 13.6.2 erlaubt damit einen Fehler von bis zu C·h⁴·M₄ = ${fmtE(zeile.schranke)}; gemessen ` +
       `haben wir ${fmtE(zeile.fehler)} an der Stelle x = ${fmt(zeile.argmax, 4)}, also ` +
-      `${fmt(verhaeltnis * 100, 1)} % der Schranke. Schon hier liegt der Spline sichtbar nah an f, ` +
-      `und die Abweichung ist im oberen Bild kaum vom Strich zu unterscheiden. Schieben wir den ` +
-      `Regler nach rechts, um die Gitterweite zu halbieren.`;
+      `${fmt(verhaeltnis * 100, 1)} % der Schranke. Mit nur drei Knoten verfehlt der Spline die ` +
+      `zusätzlichen Schwingungen deutlich. Schieben wir den Regler nach rechts, um die Gitterweite ` +
+      `zu halbieren.`;
   } else {
     const lage =
       Math.abs(faktor - 16) <= 1.2

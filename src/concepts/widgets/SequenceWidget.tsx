@@ -99,13 +99,14 @@ export function SequenceDots() {
         ))}
       </svg>
       <p className={`mt-1 text-xs ${W_MUTED}`}>
-        <span style={{ color: FMM_COLORS.blau }}>▮</span> aₙ = 1/n ·{" "}
+        <span style={{ color: FMM_COLORS.blau }}>▮</span> aₙ = 1/n, Ausschnitt n = 1 … 20 ·{" "}
         <span style={{ color: FMM_COLORS.rot }}>▮</span> Grenzwert 0
       </p>
       <Verdikt>
         Jeder Punkt hat eine eigene Stelle auf der n-Achse: a₁ = 1 ganz links, a₂₀ = 0,05 ganz
         rechts. Die Werte rücken zwar immer dichter an die rote Linie, aber ihre Position auf der
-        n-Achse hält die Reihenfolge fest – die Folge ist mehr als die Menge ihrer Werte.
+        n-Achse hält die Reihenfolge fest – die Folge ist mehr als die Menge ihrer Werte. Dass es
+        hinter n = 20 so weitergeht, wissen wir aus 1/n &lt; ε für n &gt; 1/ε, nicht aus dem Bild.
       </Verdikt>
     </div>
   );

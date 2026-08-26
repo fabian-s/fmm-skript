@@ -21,19 +21,23 @@ Da reelle Matrizen auch
 :k[komplexe]{#complex-numbers} Eigenwerte
 haben können, meint $|\lambda|$ hier den Betrag einer
 komplexen Zahl. Beispiel: Für
-$\bA = \begin{bmatrix} 0.5 & 0.3 \\ 0 & 0.8 \end{bmatrix}$
-sind die Eigenwerte $0.5$ und $0.8$, also
-$\rho(\bA) = 0.8$.
+$\bA = \begin{bmatrix} 0{,}5 & 0{,}3 \\ 0 & 0{,}8 \end{bmatrix}$
+sind die Eigenwerte $0{,}5$ und $0{,}8$, also
+$\rho(\bA) = 0{,}8$.
 
 Warum das wichtig ist: Wiederholtes Multiplizieren mit $\bA$
 streckt jede Eigenrichtung pro Schritt um ihren Eigenwert. Die
 Potenzen $\bA^k$ schrumpfen also genau dann gegen Null, wenn
-$\rho(\bA) < 1$ gilt, und irgendwann dominiert die am
-langsamsten schrumpfende Richtung: Fehler klingen ungefähr wie
-$\rho^k$ ab. Das macht
+$\rho(\bA) < 1$ gilt, und $\rho$ gibt die Rate vor – allerdings nur asymptotisch,
+$\left\|\bA^k\right\|^{1/k} \to \rho(\bA)$: Ist $\bA$ nicht diagonalisierbar,
+kommt zu $\rho^k$ noch ein in $k$ polynomiell wachsender Faktor hinzu. Das macht
 $\rho(\bG(\bx^*)) < 1$ zum natürlichen mehrdimensionalen
 Ersatz für die skalare Bedingung $|g'(x^*)| < 1$ bei der
 Fixpunkt-Iteration für Gleichungssysteme.
+
+Das Widget zeigt den einfachsten Fall, die um $\theta$ gedrehte Streckung
+$\bG = s\,\bR(\theta)$ mit $\rho(\bG) = s$: Weil Drehungen Längen nicht ändern,
+gilt hier exakt $\left\|\bx_k\right\| = s^k\left\|\bx_0\right\|$.
 
 Wie verändert sich die Länge der Iterierten, wenn der Spektralradius die Eins passiert?
 

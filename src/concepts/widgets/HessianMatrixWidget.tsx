@@ -260,10 +260,10 @@ export function HessianWidget() {
           </>
         ) : (
           <>
-            Ein Eigenwert ist null ({fmtDe(l1, 1)} und {fmtDe(l2, 1)}), H ist nur semidefinit. Die
-            Fläche ist eine Rinne mit einer flachen Richtung, und der Test entscheidet nichts: es
-            gibt eine ganze Gerade kritischer Punkte, kein isoliertes Extremum. Genau diesen Fall
-            schließt die Bedingung „positiv definit" aus.
+            Ein Eigenwert ist null ({fmtDe(l1, 1)} und {fmtDe(l2, 1)}), H ist nur semidefinit.
+            Für dieses quadratische q heißt das: eine Rinne mit einer flachen Richtung, entlang
+            der q konstant bleibt – eine ganze Gerade kritischer Punkte, kein isoliertes Extremum.
+            Für beliebige Funktionen entscheidet Semidefinitheit dagegen gar nichts.
           </>
         )}
       </Verdikt>

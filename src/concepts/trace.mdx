@@ -3,7 +3,7 @@ export const title = "Spur";
 import { TraceWidget } from "./widgets/TraceWidget";
 
 Die *Spur* (engl. *trace*) einer quadratischen
-:k[Matrix]{#matrix} ist einfach die Summe
+:k[Matrix]{#matrix} ist die Summe
 ihrer Diagonaleinträge:
 
 $$
@@ -12,22 +12,22 @@ $$
 
 Für
 $\bA = \begin{pmatrix} 3 & 1 \\ 1 & 3 \end{pmatrix}$
-ist sie $3 + 3 = 6$; die Einträge abseits der Diagonale
-ignorieren wir komplett. Obwohl sie so billig zu berechnen ist, steckt
-in der Spur etwas Tiefes: Sie ist gleich der Summe aller
+ist sie $3 + 3 = 6$; Einträge abseits der Diagonale
+ignorieren wir. Obwohl sie so billig ist, steckt
+in der Spur etwas Tiefes: Sie ist die Summe aller
 :k[Eigenwerte]{#eigenvalue-eigenvector}
-(mit Vielfachheit gezählt), so wie die
-:k[Determinante]{#determinant} gleich ihrem
+(mit Vielfachheit), so wie die
+:k[Determinante]{#determinant} ihr
 Produkt ist. Hier sind die Eigenwerte $4$ und $2$:
 tatsächlich $4 + 2 = 6$ und $4 \cdot 2 = 8$.
 
-Beide Tatsachen folgen aus dem charakteristischen Polynom, das für
-eine $2 \times 2$-Matrix
-$\lambda^2 - \tr(\bA)\,\lambda + \det(\bA)$
-lautet. Weil eine Ähnlichkeitstransformation die Eigenwerte erhält,
-erhält sie auch Spur und Determinante. Das macht die beiden zu
-praktischen Invarianten, um Rechnungen zu prüfen: Hat eine angeblich
-ähnliche Matrix eine andere Spur, ist etwas schiefgelaufen.
+Beide Tatsachen folgen aus dem
+:k[charakteristischen Polynom]{#characteristic-polynomial}, das für $n = 2$
+gerade $\lambda^2 - \tr(\bA)\,\lambda + \det(\bA)$ lautet; für größeres $n$
+stehen Spur und Determinante ebenso als Koeffizienten darin. Weil eine
+Ähnlichkeitstransformation die Eigenwerte erhält, erhält sie auch Spur und
+Determinante. Das macht die beiden zu praktischen Invarianten: Hat eine
+angeblich ähnliche Matrix eine andere Spur, ist etwas schiefgelaufen.
 
 Was machen die Eigenwerte, während Spur und Determinante gleich bleiben?
 

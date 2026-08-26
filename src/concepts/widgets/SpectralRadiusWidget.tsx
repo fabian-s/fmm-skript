@@ -5,6 +5,19 @@
  * allein ρ(G), nicht die Drehung. Der Winkel θ verändert die Spirale, aber
  * kein bisschen an der Normkurve.
  *
+ * GELTUNGSBEREICH (Pop-up-Audit 2026-08-26): Gezeigt wird ausschliesslich die
+ * gedrehte Streckung G = s·R(θ). Sie ist normal, deshalb gilt ‖xₖ‖ = sᵏ‖x₀‖
+ * hier EXAKT und in jedem Schritt. Fuer allgemeine Matrizen ist ρ nur die
+ * asymptotische Rate (‖A^k‖^{1/k} → ρ); bei nicht diagonalisierbarem A kommt
+ * ein in k polynomieller Faktor hinzu. spectral-radius.mdx sagt das vor dem
+ * Widget, die Aufgabenzeile nennt die Matrixform.
+ *
+ * DREI ZUSTAENDE statt Toleranz (Pop-up-Audit 2026-08-26): Der Regler laeuft in
+ * Hundertstel-Schritten, also entscheidet Math.round(100·s) exakt zwischen
+ * ρ < 1, ρ = 1 und ρ > 1. Frueher galt |s − 1| ≤ 0,005 als „ρ = 1“; im Fall
+ * ρ = 1 hiess es ausserdem, die Iterierte „drehe sich nur noch“ – bei θ = 0
+ * bleibt sie schlicht stehen.
+ *
  * FARBROLLEN: blau = die Iterierten x_k in der Ebene; rot = der Startpunkt x₀;
  * grün = die Normen ‖xₖ‖ in der Nebentafel darunter.
  *
@@ -14,7 +27,7 @@
  * Regler-unter-Grafik sind neu.
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
- * G = s·Rot(θ) hat die Eigenwerte s·e^{±iθ}, also ρ(G) = s exakt, und damit
+ * G = s·R(θ) hat die Eigenwerte s·e^{±iθ}, also ρ(G) = s exakt, und damit
  * ‖xₖ‖ = s^k·‖x₀‖ unabhängig von θ — für s ∈ {0,6; 0,85; 1; 1,1} und
  * θ ∈ {0; 0,55; 1,5} auf 1e−9 nachgerechnet. Mit x₀ = (1 | 0,4), also
  * ‖x₀‖ = √1,16 = 1,0770, ergibt der Startzustand s = 0,85 nach 16 Schritten
@@ -73,17 +86,29 @@ export function PowerSpiralWidget() {
   const nx2 = (k: number) => NPAD_L + (k / K) * (NB - NPAD_L - NPAD_R);
   const ny2 = (v: number) => NPAD_T + (1 - v / nMax) * (NH - NPAD_T - NPAD_B);
 
-  const art = s < 0.995 ? "ok" : s > 1.005 ? "warn" : "neutral";
+  // Exakt statt per Toleranz: der Regler liefert Vielfache von 0,01.
+  const s100 = Math.round(s * 100);
+  const steht = th === 0;
+  const art = s100 < 100 ? "ok" : s100 > 100 ? "warn" : "neutral";
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Aufgabe>Bewegen wir s über die Schwelle 1 und drehen θ, ohne die Normkurve zu ändern.</Aufgabe>
+      <Aufgabe>
+        Die Iteration ist xₖ₊₁ = G xₖ mit G = s·R(θ), also ρ(G) = s. Bewegen wir s über die
+        Schwelle 1 und drehen θ, ohne die Normkurve zu ändern.
+      </Aufgabe>
       <svg
         viewBox={`0 0 ${B} ${H}`}
         className="h-auto max-w-full rounded"
         role="img"
-        aria-label={`Spirale der Iterierten mit rho gleich ${fmtDe(s)}; die Punkte laufen ${
-          s < 1 ? "nach innen" : s > 1 ? "nach außen" : "auf einem Kreis"
+        aria-label={`Iterierte mit rho gleich ${fmtDe(s)}; die Punkte laufen ${
+          s100 < 100
+            ? "nach innen"
+            : s100 > 100
+              ? "nach außen"
+              : steht
+                ? "gar nicht, sie liegen alle auf dem Startpunkt"
+                : "auf einem Kreis"
         }.`}
       >
         <rect
@@ -155,7 +180,7 @@ export function PowerSpiralWidget() {
         className="mt-1 h-auto max-w-full rounded"
         role="img"
         aria-label={`Normen der Iterierten von k gleich 0 bis 16; sie ${
-          s < 1 ? "fallen" : s > 1 ? "wachsen" : "bleiben konstant"
+          s100 < 100 ? "fallen" : s100 > 100 ? "wachsen" : "bleiben konstant"
         }.`}
       >
         <rect
@@ -235,13 +260,15 @@ export function PowerSpiralWidget() {
       <Verdikt kind={art}>
         ρ(G) = {fmtDe(s)}; nach 16 Schritten ist ‖x₁₆‖ = {fmtDe(normen[K], 3)} statt anfangs{" "}
         {fmtDe(normen[0], 3)}.{" "}
-        {s < 0.995
+        {s100 < 100
           ? "Die Normen fallen geometrisch mit dem Faktor ρ(G) je Schritt – die Iteration konvergiert gegen 0."
-          : s > 1.005
+          : s100 > 100
             ? "Die Normen wachsen geometrisch mit dem Faktor ρ(G) je Schritt – die Iteration divergiert."
-            : "Die Normen bleiben konstant: bei ρ(G) = 1 dreht sich die Iterierte nur noch."}{" "}
-        Der Drehwinkel θ verformt die Spirale, lässt die Normkurve aber unberührt, denn ‖xₖ‖ =
-        ρ(G)ᵏ·‖x₀‖.
+            : steht
+              ? "Bei ρ(G) = 1 und θ = 0 ist G die Einheitsmatrix: die Iterierte bleibt stehen."
+              : "Bei ρ(G) = 1 bleibt die Norm konstant, die Iterierte rotiert auf einem Kreis."}{" "}
+        Der Drehwinkel θ verformt die Spirale, lässt die Normkurve aber unberührt, denn für diese
+        gedrehte Streckung ist ‖xₖ‖ = ρ(G)ᵏ·‖x₀‖ exakt.
       </Verdikt>
     </div>
   );

@@ -76,7 +76,14 @@ export function CompositionWidget() {
 
   const xJetzt = anwenden(aktuell, X);
   const xAndere = anwenden(andere, X);
-  const gleich = Math.hypot(xJetzt[0] - xAndere[0], xJetzt[1] - xAndere[1]) < 1e-9;
+  // Verglichen werden die MATRIZEN, nicht nur die Bilder des Testvektors x:
+  // AB = [[k, ks], [0, 1]] und BA = [[k, s], [0, 1]] unterscheiden sich einzig
+  // im Eintrag (1,2), also ist AB = BA genau dann, wenn ks = s ist (s = 0 oder
+  // k = 1). Gleiche Bilder von x allein wären kein Beleg für AB = BA.
+  const gleich =
+    Math.max(
+      ...([0, 1] as const).flatMap((i) => ([0, 1] as const).map((j) => Math.abs(produkt[i][j] - andere[i][j]))),
+    ) < 1e-9;
 
   const narration =
     schritt === 0
@@ -143,8 +150,8 @@ export function CompositionWidget() {
                 : `\\bB\\bA = \\begin{pmatrix} ${tex(k)} & ${tex(s)} \\\\ 0 & 1 \\end{pmatrix}`}
             </M>{" "}
             schafft beide Schritte auf einmal. {gleich
-              ? "Hier fallen beide Reihenfolgen zufällig zusammen – bei s = 0 oder k = 1 ist einer der Schritte wirkungslos."
-              : `Die andere Reihenfolge landet dagegen bei (${fmtDe(xAndere[0], 2)}; ${fmtDe(xAndere[1], 2)}) statt (${fmtDe(xJetzt[0], 2)}; ${fmtDe(xJetzt[1], 2)}): AB ≠ BA. Die Determinante stört das nicht, sie ist in beiden Fällen ${fmtDe(k, 2)}.`}
+              ? "Hier fallen beide Reihenfolgen zusammen: Die Produkte unterscheiden sich nur im Eintrag (1,2), ks gegen s – und bei s = 0 oder k = 1 ist ks = s."
+              : `Die andere Reihenfolge landet dagegen bei (${fmtDe(xAndere[0], 2)}; ${fmtDe(xAndere[1], 2)}) statt (${fmtDe(xJetzt[0], 2)}; ${fmtDe(xJetzt[1], 2)}); im Eintrag (1,2) steht ks = ${fmtDe(k * s, 2)} gegen s = ${fmtDe(s, 2)}, also AB ≠ BA. Die Determinante stört das nicht, sie ist in beiden Fällen ${fmtDe(k, 2)}.`}
           </>
         )}
       </Verdikt>

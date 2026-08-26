@@ -9,30 +9,28 @@ Arbeitspferd hinter dem „Trainieren“ eines Modells: Es löst das
 :k[Optimierungsproblem]{#optimization}, eine
 :k[Zielfunktion]{#objective-function}
 $L(\btheta)$ zu minimieren, wenn wir die besten Parameter
-nicht direkt ausrechnen können. Das Rezept: Wir stehen am aktuellen
-Parameter-:k[Vektor]{#vector}, berechnen den
+nicht direkt ausrechnen können. Das Rezept: Wir berechnen am aktuellen
+Parameter-:k[Vektor]{#vector} den
 :k[Gradienten]{#gradient} von $L$
-(die Richtung des steilsten *Anstiegs*) und machen einen kleinen
+(Richtung des steilsten *Anstiegs*) und machen einen kleinen
 Schritt in die Gegenrichtung,
 
 $$
 \btheta_{t+1} = \btheta_t - \gamma \, \big(\nabla_{\btheta} L(\btheta_t)\big)^\top,
 $$
 
-wobei die Schrittweite $\gamma > 0$ (die „Lernrate“)
-steuert, wie weit jeder Schritt geht. Kleines Beispiel: Für
-$L(\theta) = \theta^2$ lautet der Update-Schritt
-$\theta_{t+1} = \theta_t - \gamma \cdot 2\theta_t$. Er
-wandert zum Minimum bei $0$, solange $\gamma$ nicht
-zu groß ist. Genau deshalb steckt Backpropagation (vgl. MML §5.6) so
-viel Aufwand in die Gradienten der Verlustfunktion eines
-:k[neuronalen Netzes]{#neural-network} nach
-seinen Parametern: Jeder Trainingsschritt braucht einen. Eine
-ausführliche Behandlung des Verfahrens findet sich in der Literatur
-(vgl. MML §7.1).
+wobei die Schrittweite $\gamma > 0$ („Lernrate“)
+steuert, wie weit jeder Schritt geht; transponiert wird, weil der Gradient
+hier ein Zeilenvektor ist. Für
+$L(\theta) = \theta^2$ lautet der Schritt
+$\theta_{t+1} = \theta_t - \gamma \cdot 2\theta_t = (1 - 2\gamma)\,\theta_t$.
+Deshalb steckt Backpropagation so viel Aufwand in die Gradienten der
+Verlustfunktion eines :k[neuronalen Netzes]{#neural-network} (vgl. MML §5.6).
 
 Wie verändert die Schrittweite den Weg zum Minimum?
 
 <GradientDescentWidget />
 
-Das Widget macht sichtbar, dass der Update-Faktor über die Stabilität der Folge entscheidet.
+Alles hängt am Update-Faktor $1 - 2\gamma$: Wird er negativ, oszilliert die
+Folge um das Minimum; konvergent ist sie genau für
+$\left|1 - 2\gamma\right| < 1$, hier also für $0 < \gamma < 1$.

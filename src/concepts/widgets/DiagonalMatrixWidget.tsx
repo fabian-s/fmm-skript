@@ -12,7 +12,9 @@
  * PROVENIENZ: Vorgängerwidget (Stand 2026-08-18) mit zwei Reglern und einer
  * statischen Schlusszeile. Neu: ziehbare Achsenbilder (Lib-`TransformCanvas`,
  * Drag frei, in `onVectorChange` auf die Achse projiziert), Verdikt für die
- * Sonderfälle d = 0 und d < 0.
+ * Sonderfälle d = 0 und d < 0. 2026-08-26: Das Verdikt trennt jetzt drei
+ * Zustände – exakt entartet (ein oder beide Faktoren gleich 0), nahe entartet
+ * (|d| < 0,06, aber ≠ 0: invertierbar, schlecht konditioniert) und regulär.
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-19):
@@ -45,7 +47,18 @@ export function DiagWidget() {
     [0, d2],
   ];
   const flaeche = d1 * d2;
-  const platt = Math.abs(d1) < 0.06 || Math.abs(d2) < 0.06;
+  // Drei Zustände statt zwei: exakt entartet (ein Faktor ist wirklich 0, über den
+  // Regler exakt erreichbar), nahe entartet (klein, aber ungleich 0 — D ist noch
+  // invertierbar, nur schlecht konditioniert) und regulär. Ein ε-kleiner Faktor
+  // wird also nicht als "= 0" ausgegeben.
+  const klein = Math.min(Math.abs(d1), Math.abs(d2));
+  const gross = Math.max(Math.abs(d1), Math.abs(d2));
+  const beideNull = d1 === 0 && d2 === 0;
+  const exaktNull = d1 === 0 || d2 === 0;
+  const naheNull = !exaktNull && klein < 0.06;
+  // Für D = diag(d₁; d₂) ist κ₂(D) = max|dᵢ| / min|dᵢ|; Beispiel diag(2; 0,05):
+  // κ₂ = 2/0,05 = 40.
+  const kappa = gross / klein;
   const gespiegelt = flaeche < 0;
 
   return (
@@ -91,12 +104,16 @@ export function DiagWidget() {
         <span style={{ color: FMM_COLORS.rot }}>▮</span> De₁ ·{" "}
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> De₂
       </p>
-      <Verdikt kind={platt ? "warn" : "neutral"}>
-        {platt
-          ? `Ein Faktor ist null: die zugehörige Koordinate wird gelöscht, das Gitter fällt auf eine einzige Achse zusammen. Der Flächenfaktor d₁·d₂ = ${fmtDe(flaeche, 2)} sagt dasselbe, und D besitzt keine Inverse.`
-          : gespiegelt
-            ? `Ein Faktor ist negativ: diese Achse wird umgeklappt, die andere bleibt, wie sie ist. Der Flächenfaktor d₁·d₂ = ${fmtDe(flaeche, 2)} trägt deshalb ein Minus. Die Gitterlinien bleiben trotzdem achsenparallel.`
-            : `Jede Koordinate wird nur mit ihrem eigenen Faktor multipliziert, die Achsen mischen sich nie: das Gitter bleibt rechteckig. Flächen werden mit d₁·d₂ = ${fmtDe(flaeche, 2)} skaliert${Math.abs(flaeche - 1) < 0.02 ? ", hier hebt die Streckung der einen Achse die Stauchung der anderen also gerade auf" : ""}.`}
+      <Verdikt kind={exaktNull ? "fail" : naheNull ? "warn" : "neutral"}>
+        {beideNull
+          ? `Beide Faktoren sind exakt null: das ganze Gitter fällt auf den Ursprung zusammen, d₁·d₂ = 0, und D besitzt keine Inverse.`
+          : exaktNull
+            ? `Genau ein Faktor ist exakt null: diese Koordinate wird gelöscht, das Bild liegt ganz auf der anderen Achse. Der Flächenfaktor d₁·d₂ = 0 sagt dasselbe, und D besitzt keine Inverse.`
+            : naheNull
+              ? `Kein Faktor ist exakt null, einer aber mit ${fmtDe(klein, 2)} sehr klein: D bleibt invertierbar, ist nur schlecht konditioniert – κ₂(D) = max|dᵢ|/min|dᵢ| = ${fmtDe(kappa, 0)}.`
+              : gespiegelt
+                ? `Ein Faktor ist negativ: diese Achse wird umgeklappt, die andere bleibt, wie sie ist. Der Flächenfaktor d₁·d₂ = ${fmtDe(flaeche, 2)} trägt deshalb ein Minus. Die Gitterlinien bleiben trotzdem achsenparallel.`
+                : `Jede Koordinate wird nur mit ihrem eigenen Faktor multipliziert, die Achsen mischen sich nie: das Gitter bleibt rechteckig. Flächen werden mit d₁·d₂ = ${fmtDe(flaeche, 2)} skaliert${Math.abs(flaeche - 1) < 0.02 ? ", hier hebt die Streckung der einen Achse die Stauchung der anderen also gerade auf" : ""}.`}
       </Verdikt>
     </div>
   );

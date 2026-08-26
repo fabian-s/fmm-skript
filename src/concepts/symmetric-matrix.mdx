@@ -19,18 +19,20 @@ $(\bA^T\bA)^T = \bA^T(\bA^T)^T = \bA^T\bA$, und
 Symmetrie ($\bP^T = \bP$) ist die halbe Definition einer
 orthogonalen Projektionsmatrix (orthogonal projector). Geometrisch
 sind sie die „gutartigsten&ldquo; linearen Abbildungen: Eine
-symmetrische Matrix hat reelle
-:k[Eigenwerte]{#eigenvalue-eigenvector} und
-paarweise
-:k[senkrechte]{#orthogonality}
-Eigenvektor-Richtungen; sie wirkt also als reine Streckung
-entlang orthogonaler Achsen, ganz ohne Scherung.
+symmetrische Matrix hat nur reelle
+:k[Eigenwerte]{#eigenvalue-eigenvector}, und ihre Eigenvektoren
+*lassen sich* stets als
+:k[Orthonormalbasis]{#orthonormal-basis} wählen, also paarweise
+:k[senkrecht]{#orthogonality}. In dieser Eigenbasis wirkt $\bA$ als
+reine Streckung entlang orthogonaler Achsen, ohne Scherung.
 
 Finden lassen sich diese Achsen von Hand: Für welche Richtungen von $\bx$
 zeigt $\bA\bx$ wieder genau dorthin, wo $\bx$ schon hinzeigt?
 
 <SymmetricWidget />
 
-Es sind stets zwei Richtungen, und sie stehen stets im rechten Winkel
-zueinander. Ob $\bA$ entlang einer davon streckt oder umklappt, verrät das
-Vorzeichen des zugehörigen Eigenwerts.
+Hier sind die beiden Eigenwerte für jedes $c$ verschieden, es gibt also
+genau zwei solche Richtungen, und sie stehen senkrecht aufeinander (für
+$\bA = 2\bI$ wäre dagegen *jede* Richtung eine Eigenrichtung). Ob $\bA$
+entlang einer davon streckt oder umklappt, verrät das Vorzeichen des
+Eigenwerts.

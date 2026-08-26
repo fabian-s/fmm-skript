@@ -13,11 +13,23 @@
  * die gefüllten Flächen (`fill` in `Plot` v2), `aria-pressed` auf den Knöpfen,
  * die getrennt ausgewiesene positive und negative Fläche und das Verdikt.
  *
- * VERIFIZIERTE ZAHLEN (node, scripts/verify/REV0/InnerProductFunctionsWidget.mjs,
- * 2026-08-20; Simpson mit 2000 Teilintervallen, exakte Werte in Klammern):
- * ⟨1,1⟩ = 2,000000 (2), ⟨t,t⟩ = 0,666667 (2/3), ⟨P₂,P₂⟩ = 0,400000 (2/5);
- * alle gemischten Paare sind 0. Die Teilflächen: ⟨1,t⟩ ± 0,500000,
- * ⟨1,P₂⟩ ± 0,384900, ⟨t,P₂⟩ ± 0,208333.
+ * VERIFIZIERTE ZAHLEN (node, Simpson mit n = 200 und n = 2000 gerechnet, beide
+ * bis zur angezeigten Stelle gleich, 2026-08-26; w ≡ 1 auf [−1, 1],
+ * P₂ = (3t²−1)/2, exakte Werte in Klammern):
+ *   ⟨1,1⟩   = 2,0000 (2)      grün 2,0000   rot 0
+ *   ⟨t,t⟩   = 0,6667 (2/3)    grün 0,6667   rot 0
+ *   ⟨t²,t²⟩ = 0,4000 (2/5)    grün 0,4000   rot 0
+ *   ⟨P₂,P₂⟩ = 0,4000 (2/5)    grün 0,4000   rot 0
+ *   ⟨1,t⟩   = 0               grün 0,5000   rot 0,5000
+ *   ⟨1,P₂⟩  = 0               grün 0,3849   rot 0,3849
+ *   ⟨t,t²⟩  = 0               grün 0,2500   rot 0,2500
+ *   ⟨t,P₂⟩  = 0               grün 0,2083   rot 0,2083
+ *   ⟨1,t²⟩  = 0,6667 (2/3)    grün 0,6667   rot 0
+ *   ⟨t²,P₂⟩ = 0,2667 (4/15)   grün 0,2923   rot 0,0257
+ * Die letzten beiden Zeilen sind die didaktisch wichtigen Gegenbeispiele: Bei
+ * ⟨1,t²⟩ ist das Produkt überall ≥ 0, obwohl p ≠ q ist, und bei ⟨t²,P₂⟩ gibt es
+ * Fläche auf beiden Seiten, ohne dass sie sich aufheben.
+ * Nachrechnung ⟨t²,P₂⟩ = ∫₋₁¹ (3t⁴ − t²)/2 dt = (3·2/5 − 2/3)/2 = 4/15.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Verdikt, W_BUTTON, W_BUTTON_AKTIV, fmtDe } from "../../lib";
@@ -25,6 +37,7 @@ import { Aufgabe, FMM_COLORS, Plot, Verdikt, W_BUTTON, W_BUTTON_AKTIV, fmtDe } f
 const POLYS = [
   { name: "1", f: (_t: number) => 1 },
   { name: "t", f: (t: number) => t },
+  { name: "t²", f: (t: number) => t * t },
   { name: "(3t²−1)/2", f: (t: number) => (3 * t * t - 1) / 2 },
 ];
 
@@ -38,15 +51,24 @@ function integriere(g: (t: number) => number): number {
 }
 
 export function InnerProductWidget() {
+  // Startbild p = 1, q = t²: ein Paar OHNE rote Fläche, das trotzdem nicht
+  // orthogonal ist. Damit steht die Aufgabe noch offen, statt die Antwort
+  // schon im Ausgangszustand zu zeigen.
   const [pi, setPi] = useState(0);
-  const [qi, setQi] = useState(1);
+  const [qi, setQi] = useState(2);
   const p = POLYS[pi];
   const q = POLYS[qi];
   const produkt = (t: number) => p.f(t) * q.f(t);
   const ip = integriere(produkt);
   const positiv = integriere((t) => Math.max(produkt(t), 0));
   const negativ = -integriere((t) => Math.min(produkt(t), 0));
-  const orthogonal = Math.abs(ip) < 1e-8;
+  // Die Schranken sind reiner Fließkommaschutz, keine Aussage „ungefähr null“:
+  // Bei diesen vier kuratierten Polynomen ist jedes Skalarprodukt entweder
+  // exakt 0 (ungerader Integrand, Simpson liefert ~1e-17) oder mindestens
+  // 0,2667 – ein Zwischenbereich ist über die Eingabe nicht erreichbar.
+  const gleich = pi === qi;
+  const orthogonal = !gleich && Math.abs(ip) < 1e-8;
+  const ohneRot = negativ < 1e-8;
 
   const auswahl = (label: string, gewaehlt: number, setzen: (i: number) => void) => (
     <div className="flex flex-wrap items-center gap-1">
@@ -67,7 +89,10 @@ export function InnerProductWidget() {
 
   return (
     <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
-      <Aufgabe>Suchen wir ein Paar, bei dem sich grüne und rote Fläche genau aufheben.</Aufgabe>
+      <Aufgabe>
+        Suchen wir ein Paar, bei dem sich grüne und rote Fläche aufheben – und eines ohne rote
+        Fläche, das trotzdem nicht orthogonal ist.
+      </Aufgabe>
       <Plot
         xLabel="t"
         yLabel="p·q"
@@ -92,13 +117,23 @@ export function InnerProductWidget() {
         {orthogonal ? (
           <>
             Grün {fmtDe(positiv, 3)} gegen rot {fmtDe(negativ, 3)}: die Flächen heben sich auf,
-            also ⟨p, q⟩ = 0. Die beiden Polynome sind orthogonal – der erste Schritt beim Aufbau
-            orthogonaler Polynome (vgl. Heath §7.3.4).
+            also ⟨p, q⟩ = 0. Die beiden Polynome sind orthogonal.
+          </>
+        ) : gleich ? (
+          <>
+            p = q: Das Produkt ist p² und liegt nirgends unter der Achse. ⟨p, p⟩ ={" "}
+            {fmtDe(ip, 3)} ist die quadrierte Länge von p und wird nur für die Nullfunktion null.
+          </>
+        ) : ohneRot ? (
+          <>
+            ⟨p, q⟩ = {fmtDe(ip, 3)} ≠ 0 (grün {fmtDe(positiv, 3)}, rot {fmtDe(negativ, 3)}): Auch
+            für p ≠ q kann das Produkt überall ≥ 0 sein – fehlende rote Fläche ist also kein
+            Kennzeichen von p = q.
           </>
         ) : (
           <>
-            ⟨p, q⟩ = {fmtDe(ip, 3)} ≠ 0 (grün {fmtDe(positiv, 3)}, rot {fmtDe(negativ, 3)}). Bei
-            p = q ist das Integral die quadrierte Länge der Funktion und kann gar nicht null sein.
+            ⟨p, q⟩ = {fmtDe(ip, 3)} ≠ 0 (grün {fmtDe(positiv, 3)}, rot {fmtDe(negativ, 3)}): Fläche
+            gibt es auf beiden Seiten der Achse, aber sie halten sich nicht die Waage.
           </>
         )}
       </Verdikt>

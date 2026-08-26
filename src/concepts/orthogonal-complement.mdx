@@ -6,7 +6,7 @@ Das *orthogonale Komplement* (engl.
 *orthogonal complement*) eines
 :k[Unterraums]{#subspace}
 $S \subseteq \R^n$, geschrieben $S^\perp$,
-sammelt alle Vektoren ein, die
+sammelt alle Vektoren, die
 :k[orthogonal]{#orthogonality} zu
 *ganz* $S$ stehen:
 
@@ -16,26 +16,25 @@ $$
 
 Ist $S$ eine Ursprungsgerade in
 $\R^2$, dann ist $S^\perp$ die dazu senkrechte
-Gerade; für eine Ebene in $\R^3$ ist es die Normalengerade,
+Gerade; für eine Ebene in $\R^3$ die Normalengerade,
 und die :k[Dimensionen]{#dimension}
 addieren sich immer zu $n$ auf. Der Gewinn ist eine
-eindeutige Zerlegung: Jeder Vektor spaltet sich auf als
-$\bb = \bp + \br$ mit $\bp \in S$ und
+eindeutige Zerlegung $\bb = \bp + \br$ mit $\bp \in S$ und
 $\br \in S^\perp$. Genau diese Aufspaltung berechnet die
 Kleinste-Quadrate-Methode: Der Projektor $\bP$ (vgl. Heath
 §3.2) erzeugt das Stück in
 $S = \mathrm{span}(\bA)$, sein Gegenstück
-$\bI - \bP$ das Stück in $S^\perp$, und das
-Residuum landet in
-$\mathrm{span}(\bA)^\perp$, und das ist dieselbe Menge
-wie der :k[Nullraum]{#null-space} von
-$\bA^T$.
+$\bI - \bP$ das in $S^\perp$, und das
+Residuum landet in $\mathrm{span}(\bA)^\perp$, dem
+:k[Nullraum]{#null-space} von $\bA^T$.
 
-Ist diese Aufteilung wirklich für jedes $\bb$ möglich, und bleibt der rechte
-Winkel dabei immer erhalten?
+Ist die Aufteilung für jedes $\bb$ möglich, und bleibt der rechte Winkel
+erhalten?
 
 <ComplementWidget />
 
-Der Winkel zwischen $\bp$ und $\br$ ändert sich nie, was auch immer wir mit
-$\bb$ anstellen. Das ist der Grund, warum wir in der Kleinste-Quadrate-Theorie
-den Fehler stets in zwei unabhängige Stücke zerlegen dürfen.
+Möglich ist sie für jedes $\bb$, und $\br^T\bp = 0$ gilt immer: Solange beide
+Anteile ungleich null sind, ist das ein rechter Winkel; liegt $\bb$ ganz in $S$
+oder ganz in $S^\perp$, fehlt ein Anteil und damit der Winkel. Deshalb
+dürfen wir in der Kleinste-Quadrate-Theorie den Fehler stets in zwei
+unabhängige Stücke zerlegen.

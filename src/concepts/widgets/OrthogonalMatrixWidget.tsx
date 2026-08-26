@@ -2,9 +2,10 @@
  * Konzept-Widget für `orthogonal-matrix` (Triage C3: POLISH — Checkbox zu zwei
  * aria-pressed-Knöpfen mit 250-ms-Übergang, v ziehbar).
  *
- * DIE EINE EINSICHT: Orthogonale Matrizen sind genau die starren Bewegungen.
+ * DIE EINE EINSICHT: Orthogonale Matrizen sind genau die längentreuen linearen
+ * Abbildungen, in der Ebene also Drehungen und Spiegelungen um den Ursprung.
  * Drehung und Spiegelung sehen im Bild verschieden aus, aber beide lassen den
- * Einheitskreis auf sich liegen und jede Länge unangetastet; unterscheiden
+ * Einheitskreis auf sich liegen und jede Länge unangetastet; in 2D unterscheiden
  * lassen sie sich nur am Vorzeichen der Determinante.
  *
  * FARBROLLEN (Batch-C3-Konvention):
@@ -113,8 +114,8 @@ export function OrthogonalMatrixWidget() {
           </>
         ) : (
           <>
-            Auch hier bleibt ‖Qv‖ = ‖v‖ – eine Spiegelung ist ebenso starr. Der Unterschied
-            steckt allein im Vorzeichen: det Q = −1. Die Achse liegt bei θ/2 ={" "}
+            Auch hier bleibt ‖Qv‖ = ‖v‖ – eine Spiegelung ist ebenso längentreu. In der Ebene
+            steckt der Unterschied allein im Vorzeichen: det Q = −1. Die Achse liegt bei θ/2 ={" "}
             {fmtDe(deg / 2, 0)}°, und was auf ihr liegt, bleibt liegen.
           </>
         )}

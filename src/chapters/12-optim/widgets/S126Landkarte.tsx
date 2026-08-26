@@ -21,8 +21,7 @@ import {
  * Die optim()-Beispielfunktion der Folien als begehbare Landkarte:
  * f(x₁, x₂) = log(1 + (x₁² + sin(3x₂))²) + 0,1·x₁² + 0,1·x₂². Ein Klick, ein
  * Zug oder eine Voreinstellung setzt den Startpunkt, dann läuft
- * Gradientenabstieg mit dem analytischen Gradienten (numerisch geprüft,
- * siehe Bemerkung 12.6.4). Der
+ * Gradientenabstieg mit dem analytischen Gradienten (numerisch geprüft). Der
  * Startpunkt lässt sich zusätzlich über zwei Regler setzen (Doppelpfad).
  * Eigenbau, kein portierter Code, kein Math.random.
  *

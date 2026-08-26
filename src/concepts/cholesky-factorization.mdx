@@ -26,11 +26,12 @@ $$
 Ist $\bL$ einmal bekannt, kostet das Lösen von $\bA\bx = \bb$ nur noch zwei
 billige :k[Dreieckssysteme]{#triangular-solve}: erst $\bL\by = \bb$, dann
 $\bL^T\bx = \by$. Genau so lassen sich die Normalengleichungen
-$\bA^T\bA\,\bx = \bA^T\bb$ lösen, unter Wiederverwendung der
-Cholesky-Zerlegung (vgl. Heath Bsp. 2.21 und Bsp. 3.3).
+$\bA^T\bA\,\bx = \bA^T\bb$ lösen (Heath Bsp. 2.21 und 3.3).
 
 Woran erkennen wir gleichzeitig in der Geometrie und in der Rechnung, ob die Zerlegung möglich ist?
 
 <CholeskyWidget />
 
-Positive Definitheit verbindet die Ellipsengeometrie mit den reellen Wurzelschritten der Zerlegung.
+Positive Definitheit verbindet die Ellipsengeometrie mit den Wurzelschritten
+der Zerlegung: Genau am Rand $\det\bA = 0$ wird $l_{22} = 0$ und $\bL$
+singulär, jenseits davon ist $l_{22}$ nicht mehr reell.

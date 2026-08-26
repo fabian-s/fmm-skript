@@ -3,28 +3,28 @@ export const title = "Neuronales Netz";
 import { NetworkDiagram } from "./widgets/NetworkDiagram";
 
 Ein neuronales Netz ist ein flexibles Vorhersagemodell, das viele einfache
-:k[Funktionen]{#function} („Schichten“, engl. *layers*) per
+:k[Funktionen]{#function} („Schichten“, *layers*) per
 :k[Funktionskomposition]{#function-composition} übereinanderstapelt. Eine
 typische Schicht nimmt einen :k[Vektor]{#vector} $x^{(k-1)}$, multipliziert ihn
-mit einer Matrix von *Gewichten* (weights) $A_{k-1}$, addiert einen
-*Bias*-Vektor $b_{k-1}$ und schickt das Ergebnis durch eine einfache
-nichtlineare Funktion $\sigma$ (z.&nbsp;B. $\tanh$):
+mit einer Matrix von *Gewichten* (weights) $A_{k-1}$ (Format
+$n_k \times n_{k-1}$, passend zu den Längen der beiden Schichten), addiert
+einen *Bias*-Vektor $b_{k-1}$ und schickt das Ergebnis komponentenweise durch
+eine nichtlineare Funktion $\sigma$ (z.&nbsp;B. $\tanh$):
 
 $$
 x^{(k)} = \sigma\left(A_{k-1}\, x^{(k-1)} + b_{k-1}\right)
 $$
 
 Das Netz zu „trainieren“ heißt, alle Gewichte und Biases so einzustellen, dass
-eine :k[Zielfunktion]{#objective-function} (z.&nbsp;B. der mittlere
+eine :k[Zielfunktion]{#objective-function} (z.&nbsp;B. der
 Vorhersagefehler) möglichst klein wird, ein
 :k[Optimierungsproblem]{#optimization}, das numerisch mit
-:k[Gradienten]{#gradient} der Zielfunktion nach den Parametern gelöst wird. Ein
-bekanntes Beispiel sind *Auto-Encoder*: Netze, die darauf trainiert werden,
-eine Eingabe zu einem kurzen Code zu komprimieren und daraus wieder zu
-rekonstruieren (vgl. MML Kap. 7).
+:k[Gradienten]{#gradient} nach den Parametern gelöst wird. Ein bekanntes
+Beispiel sind *Auto-Encoder*, die eine Eingabe zu einem kurzen Code
+komprimieren und daraus wieder rekonstruieren (vgl. MML Kap. 7).
 
 Wie sind Eingabe, verborgene Schicht und Ausgabe in einem kleinen Netz verbunden?
 
 <NetworkDiagram />
 
-Die Figur zeigt die Komposition vieler einfacher, gewichteter Schichten.
+Die Figur zeigt die Komposition einfacher, gewichteter Schichten.

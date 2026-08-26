@@ -23,6 +23,16 @@
  *   rᵀu = 0 (auf 1e−12), ‖p‖ = 1,3416, ‖r‖ = 1,5652;
  *   ‖b‖² = 4,25 = ‖p‖² + ‖r‖²;
  *   normierte Richtung von S⊥: (−0,4472; 0,8944).
+ *
+ * DREI ZUSTÄNDE (Toleranz ist keine Gleichheit): Die Regler laufen in Schritten
+ * von 0,05, deshalb sind die entarteten Lagen EXAKT erreichbar:
+ *   b = (2; 1)  ⇒ t = (4 + 1)/5 = 1, p = b, r = (0; 0)   (b ∈ S)
+ *   b = (1; −2) ⇒ t = (2 − 2)/5 = 0, p = (0; 0), r = b   (b ∈ S⊥)
+ * Beim Ziehen entstehen dagegen nur KURZE, nicht verschwindende Anteile; dort
+ * ist der Winkel zwischen p und r weiterhin exakt 90°, nur das Winkeleck wird
+ * unleserlich. Genau null wird ein Anteil erst in den beiden Fällen oben, und
+ * dann ist der Winkel nicht definiert (der Nullvektor hat keine Richtung),
+ * während rᵀp = 0 trivialerweise weiter gilt.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, LabeledTransformCanvas, Verdikt, fmtDe } from "../../lib";
@@ -41,12 +51,23 @@ export function ComplementWidget() {
   const np = Math.hypot(p[0], p[1]);
   const nr = Math.hypot(r[0], r[1]);
 
-  const inS = nr < 0.12;
-  const inSperp = np < 0.12;
+  // Entartet nur bei echter Null (1e-9 ist Fließkommaschutz für die
+  // Reglerwerte, keine Toleranz); kurze Anteile sind nur „fast entartet“.
+  const NULL = 1e-9;
+  const bNull = np < NULL && nr < NULL;
+  const inS = !bNull && nr < NULL;
+  const inSperp = !bNull && np < NULL;
+  const fastInS = nr >= NULL && nr < 0.12;
+  const fastInSperp = np >= NULL && np < 0.12;
+  const entartet = bNull || inS || inSperp;
+  const ru = r[0] * U[0] + r[1] * U[1];
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
-      <Aufgabe>Ziehen wir b umher und beobachten, was mit den beiden Anteilen passiert.</Aufgabe>
+      <Aufgabe>
+        Ziehen wir b umher: Weicht rᵀu je von null ab? Legen wir b danach exakt auf S,
+        etwa auf (2; 1).
+      </Aufgabe>
       <LabeledTransformCanvas
         matrix={[
           [1, 0],
@@ -101,24 +122,36 @@ export function ComplementWidget() {
       <Slider label="b₂" value={b[1]} onChange={(y) => setB([b[0], y])} min={-3} max={3} step={0.05} accent={FMM_COLORS.rot} />
       <p className="mt-1 font-mono text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
         p = ({fmtDe(p[0])}; {fmtDe(p[1])}) · r = ({fmtDe(r[0])}; {fmtDe(r[1])}) · rᵀu ={" "}
-        {fmtDe(r[0] * U[0] + r[1] * U[1])}
+        {fmtDe(ru)}
       </p>
-      <Verdikt kind={inS || inSperp ? "warn" : "ok"}>
-        {inS ? (
+      <Verdikt kind={entartet ? "warn" : "ok"}>
+        {bNull ? (
           <>
-            b liegt selbst schon auf S, also bleibt nichts übrig: r = 0 und p = b. Der Rest ist
-            trotzdem ein zulässiges Element von S⊥ – der Nullvektor gehört jedem Unterraum an.
+            b ist selbst der Nullvektor, also sind p = 0 und r = 0. Die Zerlegung ist eindeutig,
+            aber leer: Zwischen zwei Nullvektoren gibt es keinen Winkel.
+          </>
+        ) : inS ? (
+          <>
+            b liegt exakt auf S, also bleibt nichts übrig: p = b und r = 0. Ein Winkel zwischen p
+            und r ist damit nicht definiert – der Nullvektor hat keine Richtung; rᵀp = 0 gilt
+            trotzdem.
           </>
         ) : inSperp ? (
           <>
-            Umgekehrter Randfall: b steht senkrecht auf ganz S, deshalb ist p = 0 und r = b. Die
-            Projektion auf S wirft b vollständig weg.
+            Umgekehrter Randfall: b steht exakt senkrecht auf ganz S, deshalb ist p = 0 und
+            r = b. Auch hier gibt es keinen Winkel zwischen p und r – wohl aber rᵀp = 0.
           </>
         ) : (
           <>
-            Die Zerlegung b = p + r trennt sauber: rᵀu = {fmtDe(r[0] * U[0] + r[1] * U[1])}, das
-            markierte Eck bei p ist ein echter rechter Winkel. Damit gilt auch Pythagoras,
-            ‖b‖² = ‖p‖² + ‖r‖² = {fmtDe(np * np)} + {fmtDe(nr * nr)} ={" "}
+            Die Zerlegung b = p + r trennt sauber: rᵀu = {fmtDe(ru)}, der Winkel zwischen p und r
+            ist exakt 90°.{" "}
+            {fastInS
+              ? `r ist mit ${fmtDe(nr)} nur noch sehr kurz, aber nicht null – der rechte Winkel bleibt. `
+              : fastInSperp
+                ? `p ist mit ${fmtDe(np)} nur noch sehr kurz, aber nicht null – nah an S⊥ ist noch nicht auf S⊥. `
+                : ""}
+            Damit gilt auch Pythagoras, ‖b‖² = ‖p‖² + ‖r‖² = {fmtDe(np * np)} + {fmtDe(nr * nr)}{" "}
+            ={" "}
             {fmtDe(b[0] * b[0] + b[1] * b[1])}. Genau diese Aufteilung berechnet die Methode der
             kleinsten Quadrate, mit r als Residuum.
           </>

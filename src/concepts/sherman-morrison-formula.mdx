@@ -19,7 +19,7 @@ $$
 (\bA + \bu\bv^T)^{-1} = \bA^{-1} - \frac{\bA^{-1}\bu\,\bv^T\bA^{-1}}{1 + \bv^T\bA^{-1}\bu},
 $$
 
-gültig, solange der skalare Nenner
+gültig für invertierbares $\bA$, solange der Nenner
 $1 + \bv^T\bA^{-1}\bu$ nicht Null ist. Alles auf der
 rechten Seite besteht aus Matrix-Vektor-Produkten; die Formel
 anzuwenden (oder analog eine vorhandene
@@ -36,6 +36,6 @@ $$
 
 Genau das macht Broydens Verfahren so billig: Jeder Schritt ändert die
 approximierte Jacobi-Matrix nur um einen Rang-1-Term, sodass die
-Zerlegung, mit der der nächste Schritt berechnet wird, in
+Zerlegung für den nächsten Schritt in
 $\mathcal{O}(n^2)$ aktualisiert werden kann, statt für
 $\mathcal{O}(n^3)$ neu berechnet zu werden.

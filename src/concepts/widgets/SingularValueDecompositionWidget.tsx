@@ -31,6 +31,18 @@
  *   σ₂ = 0: det A = 0, min‖Ax‖ = 0, Rang 1;
  *   Vᵀ lässt jeden Punkt des Einheitskreises auf dem Kreis (bis auf
  *     Maschinenrundung).
+ *
+ * DREI ZUSTÄNDE STATT ZWEI (Revision 2026-08-26): Vorher galt σ₂ < 0,05 als
+ * „Rang 1, det A = 0, κ₂ = ∞". Das verwechselt eine Toleranz mit Gleichheit.
+ * Jetzt wird unterschieden zwischen
+ *   (a) exakt singulär: σ₂ = 0 – nur dann Rang 1, det A = 0 und κ₂ = ∞;
+ *   (b) nahezu singulär: 0 < σ₂ ≤ σ₁/20 – Rang bleibt 2, det A = σ₁σ₂ ≠ 0 und
+ *       κ₂ = σ₁/σ₂ ist endlich (aber groß);
+ *   (c) regulär.
+ * Fall (a) ist exakt erreichbar und braucht keine Toleranz: Der σ₂-Regler hat
+ * min = 0 und Schrittweite 0,05, trifft die 0 also genau (die Schranke 1e−12
+ * fängt nur die Binärrundung ab). Nachgerechnet: σ₁ = 1,8, σ₂ = 0,05 ergibt
+ * det A = σ₁σ₂ = 0,090 ≠ 0 und κ₂ = 36 – endlich, die Matrix hat Rang 2.
  */
 import { useMemo, useState } from "react";
 import {
@@ -106,7 +118,11 @@ export function SvdWidget() {
     ["σ₁e₁", "σ₂e₂"],
     ["σ₁u₁", "σ₂u₂"],
   ][k];
-  const rangverlust = s2 < 0.05;
+  // det A = det U · det Σ · det Vᵀ = σ₁σ₂, weil U und V Drehungen sind.
+  const detA = s1 * s2;
+  const exaktSingulaer = s2 < 1e-12;
+  const kappa = s1 / s2;
+  const nahSingulaer = !exaktSingulaer && kappa >= 20;
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2 text-sm">
@@ -150,7 +166,7 @@ export function SvdWidget() {
         <span style={{ color: FMM_COLORS.gruen }}>▮</span> zweite ·{" "}
         <span style={{ color: FMM_COLORS.blau }}>▮</span> Bild von Kreis und Gitter
       </p>
-      <Verdikt kind={k === 3 && rangverlust ? "fail" : k === 0 ? "neutral" : "ok"}>
+      <Verdikt kind={k === 3 && exaktSingulaer ? "fail" : k === 3 && nahSingulaer ? "warn" : k === 0 ? "neutral" : "ok"}>
         {k === 0 ? (
           <>
             Noch ist nichts geschehen: v₁ und v₂ sind zwei senkrechte Einheitsvektoren auf dem
@@ -170,11 +186,18 @@ export function SvdWidget() {
             {fmtDe(s1)} und die zweite auf {fmtDe(s2)}. Die Ellipse steht achsenparallel, ihre
             Fläche ist um den Faktor σ₁σ₂ = {fmtDe(s1 * s2)} gewachsen.
           </>
-        ) : rangverlust ? (
+        ) : exaktSingulaer ? (
           <>
-            Mit σ₂ = {fmtDe(s2)} ist die Ellipse zu einer Strecke zusammengefallen: det A ={" "}
+            Mit σ₂ = 0 ist die Ellipse zu einer Strecke zusammengefallen: det A ={" "}
             {fmtDe(A[0][0] * A[1][1] - A[0][1] * A[1][0])}, A hat Rang 1, und κ₂ = σ₁/σ₂ ist
             unendlich. Das ganze Bild von A liegt auf der Geraden durch σ₁u₁.
+          </>
+        ) : nahSingulaer ? (
+          <>
+            Die Ellipse ist nadelförmig, aber noch keine Strecke: σ₂ = {fmtDe(s2)} ist klein und
+            trotzdem nicht null. A hat also weiterhin Rang 2, det A = σ₁σ₂ = {fmtDe(detA, 3)} ≠ 0
+            und κ₂ = σ₁/σ₂ = {fmtDe(kappa, 1)} – groß, aber endlich; erst σ₂ = 0 wäre
+            Rangverlust.
           </>
         ) : (
           <>

@@ -21,7 +21,18 @@
  * 2026-08-20): Start e₀ = 10⁻¹. Linear mit C = 0,1 → 1,000 Stellen je Schritt,
  * 15 Schritte bis 10⁻¹⁶; C = 0,5 → 0,301 Stellen, 50 Schritte; C = 0,9 →
  * 0,046 Stellen, 328 Schritte. Quadratisch: log₁₀e_k = −2^k, also
- * −1, −2, −4, −8, −16 — vier Schritte bis 10⁻¹⁶.
+ * −1, −2, −4, −8, −16: vier Schritte bis 10⁻¹⁶.
+ *
+ * SICHTBARER AUSSCHNITT: Die x-Achse endet nicht mehr fest bei k = 8, sondern
+ * bei der Schrittzahl, die die lineare Folge tatsächlich braucht (mindestens 8).
+ * Sonst behauptet das Verdikt 328 Schritte, während das Bild nur die ersten acht
+ * zeigt. Kontrollwerte (node, 2026-08-26):
+ *   C = 0,05 → 12 Schritte,  1,301 Stellen je Schritt
+ *   C = 0,10 → 15 Schritte,  1,000 Stellen je Schritt
+ *   C = 0,50 → 50 Schritte,  0,301 Stellen je Schritt
+ *   C = 0,90 → 328 Schritte, 0,046 Stellen je Schritt
+ *   C = 0,95 → 674 Schritte, 0,022 Stellen je Schritt
+ * Formel: ⌈(−16 − log₁₀ 0,1)/log₁₀ C⌉ = ⌈−15/log₁₀ C⌉.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Plot, Slider, Verdikt, fmtDe, fmtInt } from "../../lib";
@@ -33,22 +44,31 @@ export function RateWidget() {
   const [c, setC] = useState(0.5);
   const linLog = (k: number) => Math.log10(E0) + k * Math.log10(c);
   const quadLog = (k: number) => Math.pow(2, k) * Math.log10(E0);
-  const marken: { x: number; y: number; color: string; r: number }[] = [];
-  for (let k = 0; k <= 8; k++) {
-    if (linLog(k) >= BODEN) marken.push({ x: k, y: linLog(k), color: FMM_COLORS.rot, r: 3 });
-    if (quadLog(k) >= BODEN) marken.push({ x: k, y: quadLog(k), color: FMM_COLORS.blau, r: 3 });
-  }
   const stellenProSchritt = -Math.log10(c);
   const schritteLinear = Math.ceil((BODEN - Math.log10(E0)) / Math.log10(c));
   const schritteQuadratisch = Math.ceil(Math.log2(-BODEN / -Math.log10(E0)));
+  // Der Ausschnitt reicht so weit, wie die lineare Folge wirklich braucht –
+  // sonst stünde im Verdikt eine Schrittzahl, die das Bild gar nicht zeigt.
+  const kMax = Math.max(8, schritteLinear);
+  const marken: { x: number; y: number; color: string; r: number }[] = [];
+  const dk = Math.max(1, Math.round(kMax / 8));
+  for (let k = 0; k <= kMax; k += dk) {
+    if (linLog(k) >= BODEN) marken.push({ x: k, y: linLog(k), color: FMM_COLORS.rot, r: 3 });
+  }
+  for (let k = 0; k <= 8; k++) {
+    if (quadLog(k) >= BODEN) marken.push({ x: k, y: quadLog(k), color: FMM_COLORS.blau, r: 3 });
+  }
 
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
-      <Aufgabe>Verstellen wir den linearen Faktor C und zählen die Schritte bis zum Boden.</Aufgabe>
+      <Aufgabe>
+        Verstellen wir den linearen Faktor C und lesen wir ab, wie weit sich die rote Gerade
+        dehnen muss, bis sie den Boden erreicht.
+      </Aufgabe>
       <Plot
         xLabel="Iteration k"
         yLabel="log₁₀ Fehler"
-        xDomain={[0, 8]}
+        xDomain={[0, kMax]}
         yDomain={[BODEN, 0]}
         width={320}
         height={220}
@@ -62,6 +82,10 @@ export function RateWidget() {
         points={marken}
       />
       <Slider label="linearer Faktor C" value={c} onChange={setC} min={0.05} max={0.95} step={0.05} accent={FMM_COLORS.rot} />
+      <p className="mt-1 text-xs tabular-nums" style={{ color: "var(--w-muted)" }}>
+        Schritte bis 10⁻¹⁶: <span style={{ color: FMM_COLORS.rot }}>linear {fmtInt(schritteLinear)}</span>{" "}
+        · <span style={{ color: FMM_COLORS.blau }}>quadratisch {fmtInt(schritteQuadratisch)}</span>
+      </p>
       <Verdikt kind={c <= 0.2 ? "ok" : c >= 0.8 ? "warn" : "neutral"}>
         {c <= 0.2 ? (
           <>Mit C = {fmtDe(c, 2)} gewinnt die lineare Folge {fmtDe(stellenProSchritt, 2)} Stellen pro Schritt und erreicht den Boden nach {fmtInt(schritteLinear)} Schritten.</>

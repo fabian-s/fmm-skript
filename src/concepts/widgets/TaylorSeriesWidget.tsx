@@ -84,9 +84,8 @@ export function TaylorWidget() {
       <Slider label="Grad n" value={n} onChange={setN} min={1} max={13} step={2} accent={FMM_COLORS.rot} />
       <Verdikt kind={fehlerPi < 0.01 ? "ok" : "warn"}>
         Bis |x| ≈ {fmtDe(breite, 2)} weicht das Polynom vom Grad {n} um weniger als 0,01 von sin ab; an der Stelle π
-        beträgt der Fehler {expDe(fehlerPi)}. Jeder weitere Term
-        schiebt diese Grenze hinaus, aber weit draußen (etwa bei 2π) wächst der Fehler mit
-        steigendem Grad zunächst sogar.
+        beträgt der Fehler {expDe(fehlerPi)}. Weit draußen (etwa bei 2π) wächst der Fehler mit
+        steigendem Grad zunächst sogar an.
       </Verdikt>
     </div>
   );

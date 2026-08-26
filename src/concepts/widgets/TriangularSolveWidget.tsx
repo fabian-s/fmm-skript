@@ -18,8 +18,14 @@
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-O1/check-o1.mjs, 2026-08-20):
  * für U = [[2,1,1],[0,3,−1],[0,0,2]] und b = (7 | 3 | 6) liefert die
  * Rückwärtssubstitution x₃ = 3, x₂ = 2, x₁ = 1, also x = (1 | 2 | 3) exakt.
- * Der Aufwand ist n(n−1) Multiplikationen und Subtraktionen plus n Divisionen,
- * für n = 3 also 9 Operationen — Größenordnung n².
+ * Der Aufwand ist n(n−1)/2 Multiplikationen und ebenso viele Subtraktionen,
+ * zusammen n(n−1), plus n Divisionen, für n = 3 also 3 + 3 + 3 = 9 Operationen
+ * – Größenordnung n².
+ *
+ * GELTUNGSBEREICH: Gezeigt wird EIN festes reguläres 3×3-System; die
+ * Diagonaleinträge 2, 3, 2 sind ungleich null. Genau das ist die Voraussetzung
+ * des Verfahrens, und das Verdikt sagt das auch so – aus dem Beispiel folgt
+ * nicht, dass jedes Dreieckssystem ohne Umformung lösbar wäre.
  */
 import { useState } from "react";
 import { Aufgabe, MD, Stepper, Verdikt, W_MUTED } from "../../lib";
@@ -70,10 +76,10 @@ export function BackSubWidget() {
           </>
         ) : schritt === 3 ? (
           <>
-            x = (1, 2, 3), und keine Zeile musste dafür umgeformt werden. Für n Unbekannte kostet
-            das n(n−1) Multiplikationen und Subtraktionen plus n Divisionen, hier also 9
-            Operationen – Größenordnung n², gegenüber n³/3 für die Elimination, die erst zur
-            Dreiecksform führt.
+            x = (1, 2, 3), hier ohne jede Zeilenumformung – weil die Diagonaleinträge 2, 3, 2
+            alle ungleich null sind, die Voraussetzung des Verfahrens. Der Aufwand für n
+            Unbekannte ist n(n−1) Multiplikationen und Subtraktionen plus n Divisionen, hier also
+            9 Operationen – Größenordnung n² statt n³/3 für die Elimination.
           </>
         ) : (
           <>

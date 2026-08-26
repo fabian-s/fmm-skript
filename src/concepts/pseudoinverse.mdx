@@ -1,31 +1,25 @@
 export const title = "Pseudoinverse A⁺";
 
 Eine rechteckige oder singuläre Matrix hat keine
-:k[Inverse]{#matrix-inverse}, aber wir können „so gut wie möglich"
+:k[Inverse]{#matrix-inverse}, aber wir können „so gut wie möglich“
 invertieren. Die *Pseudoinverse* (Moore-Penrose-Inverse)
-$\bA\pinv \in \R^{n \times m}$ kehrt $\bA \in \R^{m \times n}$ dort um, wo das
-geht, und ignoriert den Rest. Über die reduzierte
-:k[SVD]{#singular-value-decomposition} $\bA = \bU_r\bSigma_r\bV_r^\top$ ist
-sie definiert als
+$\bA\pinv \in \R^{n \times m}$ von $\bA \in \R^{m \times n}$ ordnet jeder
+rechten Seite $\bb$ die beste erreichbare Lösung von $\bA\bx = \bb$ zu:
+$\wh{\bx} = \bA\pinv\bb$ macht $\|\bA\bx - \bb\|_2$ so klein wie möglich und
+hat unter allen Vektoren, die das tun, die kleinste Norm. Im Skript ist sie
+über die reduzierte :k[SVD]{#singular-value-decomposition}
+$\bA = \bU_r\bSigma_r\bV_r^\top$ definiert,
 
 $$
-\bA\pinv = \bV_r \bSigma_r^{-1} \bU_r^\top
+\bA\pinv = \bV_r \bSigma_r^{-1} \bU_r^\top .
 $$
 
 Wir invertieren also nur die $r = \rang(\bA)$ Singulärwerte ungleich Null und
-tauschen die Rollen der beiden Orthogonalbasen. Ist $\bA$ quadratisch und
-regulär, gilt schlicht $\bA\pinv = \bA^{-1}$. Hat $\bA$ vollen Spaltenrang
-($\rang(\bA) = n$), gibt es die geschlossene Formel
-
-$$
-\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top.
-$$
-
-Ihre Hauptrolle in diesem Skript: $\wh{\bx} = \bA\pinv\bb$ ist die Lösung des
-:k[Kleinste-Quadrate-Problems]{#linear-least-squares}
-$\min_{\bx} \|\bA\bx - \bb\|_2^2$; die Formel oben ist genau die aufgelöste
-Form der :k[Normalengleichungen]{#normal-equations}. Bei nicht vollem Rang
-liefert $\bA\pinv\bb$ unter allen KQ-Lösungen diejenige mit minimaler Norm.
+tauschen die Rollen der beiden Orthogonalbasen. Für reguläres quadratisches $\bA$ ist schlicht $\bA\pinv = \bA^{-1}$, bei
+vollem Spaltenrang ($\rang(\bA) = n$) ist die
+:k[Kleinste-Quadrate-Lösung]{#linear-least-squares} eindeutig und
+$\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top$ – die aufgelöste Form der
+:k[Normalengleichungen]{#normal-equations}.
 
 Kleines Beispiel: Für $\bA = \begin{pmatrix} 2 & 0 \\ 0 & 0 \end{pmatrix}$ ist
 $\bA\pinv = \begin{pmatrix} 0{,}5 & 0 \\ 0 & 0 \end{pmatrix}$: Die $2$ wird

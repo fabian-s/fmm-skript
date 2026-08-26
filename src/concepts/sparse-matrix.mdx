@@ -16,11 +16,14 @@ Die Nullen nützen uns aber nur, wenn ein Algorithmus sie auch Null
 aus Nullen Nichtnullen werden (sogenanntes *Fill-in*, bekannt
 aus der
 :k[LR-Zerlegung]{#lu-decomposition}), und
-die Ersparnis ist dahin. Deshalb bevorzugen wir für dünnbesetzte
-Kleinste-Quadrate-Probleme Givens-Rotationen, die gezielt einen
-einzelnen Eintrag auslöschen und das restliche Nullmuster in Ruhe
-lassen, gegenüber Householder-Spiegelungen, die ganze Spalten auf
-einmal verändern.
+die Ersparnis ist dahin. Für dünnbesetzte
+Kleinste-Quadrate-Probleme greifen wir deshalb gern zu
+Givens-Rotationen: Eine Rotation löscht gezielt einen Eintrag
+und rührt nur zwei Zeilen an, ihr Fill-in bleibt also lokal und lässt sich
+über die Reihenfolge klein halten. Householder-Spiegelungen räumen eine ganze
+Spalte auf einmal frei – auf dichten Blöcken günstiger, dafür mischen sie
+viele Zeilen und kosten ohne fill-in-reduzierende Spaltenanordnung mehr
+Nullen.
 
 Wie verändert die Bandbreite das Nullmuster und den Speicherbedarf?
 

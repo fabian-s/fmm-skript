@@ -42,7 +42,7 @@ import {
 
 export function CondWidget() {
   // Voreinstellung ε = 0,3: die Ellipse ist schon deutlich länglich (cond ≈ 16),
-  // aber noch nicht zur Nadel entartet – der Effekt ist sichtbar, nicht extrem.
+  // aber noch nicht nadeldünn – der Effekt ist sichtbar, nicht extrem.
   const [eps, setEps] = useState(0.3);
   const [winkel, setWinkel] = useState(60);
 
@@ -120,7 +120,7 @@ export function CondWidget() {
           ? "Jede Richtung wird ähnlich stark gestreckt: Satz 4.2.6 schätzt den relativen Fehler der Lösung mit cond(A) mal dem relativen Datenfehler ab, hier also noch mit einem einstelligen Faktor."
           : cond < 1000
             ? `Längste und kürzeste Halbachse liegen schon spürbar auseinander. Nach Satz 4.2.6 wird ein relativer Datenfehler bis zum ${condTxt}-Fachen verstärkt: rund ${fmtDe(stellen, 1)} Dezimalstellen gehen verloren.`
-            : `Die Ellipse ist zur Nadel entartet. Der Fehlerverstärkungsfaktor aus Satz 4.2.6 liegt bei ${condTxt}, wir verlieren also etwa ${fmtDe(stellen, 1)} Dezimalstellen: von den 16 Stellen doppelter Genauigkeit bleiben nur noch ${fmtDe(16 - stellen, 1)}.`}
+            : `Die Ellipse ist nadeldünn, aber nicht entartet: det A = ε bleibt für jedes einstellbare ε ungleich null. Der Fehlerverstärkungsfaktor aus Satz 4.2.6 liegt bei ${condTxt} – von den 16 Stellen doppelter Genauigkeit bleiben nur noch ${fmtDe(16 - stellen, 1)}.`}
       </Verdikt>
     </div>
   );

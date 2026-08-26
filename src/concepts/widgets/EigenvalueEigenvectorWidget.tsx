@@ -14,7 +14,11 @@
  * PROVENIENZ: Vorgängerwidget (Stand 2026-08-18); dessen Schlussabsatz nannte
  * die gesuchten Winkel 45° und 135° samt Eigenwerten und war damit ein
  * Spoiler. Ziehen auf dem Einheitskreis und Achsen kommen aus der
- * Lib-`TransformCanvas`, Suchlogik und Texte sind neu.
+ * Lib-`TransformCanvas`, Suchlogik und Texte sind neu. Korrektur 2026-08-26
+ * (Audit): Das Verdikt sagte „eine 2×2-Matrix hat höchstens zwei“ Eigen-
+ * richtungen; das gilt nicht allgemein (ein Vielfaches der Einheitsmatrix hat
+ * unendlich viele). Es bezieht sich jetzt auf DIESE Matrix mit ihren zwei
+ * verschiedenen Eigenwerten.
  *
  * VERIFIZIERTE ZAHLEN (node, scripts/verify/QA-L0/verify-qa-l0.mjs,
  * 2026-08-20; ergänzend zur ursprünglichen Gitterprüfung), A = [[2, 1], [1, 2]],
@@ -81,8 +85,9 @@ export function EigenWidget() {
   return (
     <div className="mt-2 rounded bg-slate-700/60 p-2">
       <Aufgabe>
-        Drehen wir v, bis der blaue Pfeil genau auf dem roten liegt: es gibt
-        zwei solche Richtungen.
+        Drehen wir v, bis blauer und roter Pfeil auf derselben Geraden durch den Ursprung
+        liegen – gleiche oder entgegengesetzte Richtung zählt beides. Es gibt zwei solche
+        Geraden.
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={A}
@@ -119,15 +124,14 @@ export function EigenWidget() {
             Treffer: Av liegt auf der Geraden durch v, und zwar mit dem Faktor λ ={" "}
             {fmtDe(rayleigh, 2)}. Das ist die Eigenwertgleichung Av = λv.{" "}
             {beide
-              ? "Beide Eigenrichtungen sind damit gefunden; eine 2×2-Matrix hat höchstens zwei, und die beiden gestrichelten Geraden stehen hier senkrecht aufeinander, wie es sich für eine symmetrische Matrix gehört."
-              : "Eine zweite Richtung mit dieser Eigenschaft fehlt noch."}
+              ? "Beide Eigenrichtungen dieser Matrix sind gefunden: Zu ihren zwei verschiedenen Eigenwerten 3 und 1 gehört je eine Gerade, und weil A symmetrisch ist, stehen die beiden senkrecht aufeinander."
+              : "Eine zweite Gerade mit dieser Eigenschaft fehlt noch."}
           </>
         ) : (
           <>
             Av = ({fmtDe(Av[0], 2)}; {fmtDe(Av[1], 2)}) kippt aus der Geraden durch
-            v heraus: keine Eigenrichtung. Die Zahl vᵀAv = {fmtDe(rayleigh, 2)}{" "}
-            beschreibt hier nur, wie stark v in seine eigene Richtung gestreckt
-            wird, und ist kein Eigenwert.
+            v heraus: keine Eigenrichtung, und vᵀAv = {fmtDe(rayleigh, 2)} misst hier nur die
+            Streckung in Richtung v.
           </>
         )}
       </Verdikt>
