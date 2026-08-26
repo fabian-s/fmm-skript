@@ -3,7 +3,7 @@ import { SattelpunktWidget } from "./widgets/S122Sattel";
 
 ### Vom Nullstellen- zum Optimierungsproblem
 
-[Abschnitt 12.1](#sec-12.1) hat Gleichungen gelöst: gesucht war ein $x$ mit
+@sec:nichtlineare-gleichungen hat Gleichungen gelöst: gesucht war ein $x$ mit
 $f(x) = 0$. Ab hier suchen wir etwas anderes, nämlich die Stelle, an der eine
 Funktion ihren kleinsten Wert annimmt. Für die Statistik ist das der Normalfall.
 Kleinste Quadrate minimieren eine Residuenquadratsumme, Maximum-Likelihood
@@ -15,7 +15,7 @@ Dieser Abschnitt beantwortet die zweite Hälfte der Frage. Er sagt, was ein
 Optimum ist, welche Bedingungen an einer optimalen Stelle gelten und warum
 :k[Konvexität]{#convexity} den Unterschied zwischen „irgendein Minimum" und „das
 Minimum" ausmacht. Die Verfahren, die das Optimum dann tatsächlich suchen, kommen
-in den [Abschnitten 12.3](#sec-12.3) und [12.4](#sec-12.4).
+in den Abschnitten @num:optim/nelder-mead-gradient und @num:optim/newton-sgd.
 
 Der Farbcode des Kapitels: blau die Iterierten eines Verfahrens, grün das Optimum
 und Grenzwerte, rot die Richtungen, in denen etwas davonläuft, und Nebenbedingungen.
@@ -24,12 +24,12 @@ Gradient und Hesse-Matrix behalten das Orange aus
 Suchrichtungen. Der stationäre Punkt des Sattelbeispiels bekommt Violett, weil er
 keine dieser Rollen spielt.
 
-:::definition[12.2.1 (Lokales und globales Minimum)]
+:::definition[#lokales-und-globales-minimum (Lokales und globales Minimum)]
 Seien $\Xcal \subseteq \R^n$ die *zulässige Menge* (feasible set) und
 $f\colon \Xcal \to \R$ die :k[Zielfunktion]{#objective-function} (objective
 function), das Problem also
 
-$$ {#eq-12.2.1}
+$$ {#eq-lokales-und-globales-minimum}
 \cgreen{\bx^\star} \in \argmin_{\bx \in \Xcal} f(\bx) .
 $$
 
@@ -45,7 +45,7 @@ Gilt jeweils die strikte Ungleichung für $\bx \neq \cgreen{\bx^\star}$, so hei�
 Minimum *strikt*.
 :::
 
-Das Problem ($12.2.1$) hat [Abschnitt 12.1](#sec-12.1) schon aufgeschrieben, dort mit
+Das Problem @eq:lokales-und-globales-minimum hat @sec:nichtlineare-gleichungen schon aufgeschrieben, dort mit
 $S$ für die zulässige Menge. Wir schreiben hier $\Xcal$, weil der Buchstabe $S$ in
 den Sätzen unten für den offenen Definitionsbereich gebraucht wird. Neu ist die
 Unterscheidung zwischen lokal und global, und um die dreht sich der ganze
@@ -58,11 +58,11 @@ Zweitens meint „unbeschränkte Optimierung" die Optimierung ohne
 Nebenbedingungen, also $\Xcal = \R^n$, und nicht etwa eine unbeschränkte Funktion.
 Die Sätze zur Konvexität unten formulieren wir trotzdem für eine allgemeine
 zulässige Menge, weil gerade dort sichtbar wird, was $\Xcal$ beiträgt; die
-Verfahren der [Abschnitte 12.3](#sec-12.3) und [12.4](#sec-12.4) arbeiten dann
+Verfahren der Abschnitte @num:optim/nelder-mead-gradient und @num:optim/newton-sgd arbeiten dann
 durchweg mit $\Xcal = \R^n$, und wie Nebenbedingungen die Bedingungen ändern,
-klärt [Abschnitt 12.5](#sec-12.5).
+klärt @sec:beschraenkt.
 
-:::bemerkung[12.2.2 (Maximieren ist Minimieren)]
+:::bemerkung[#maximieren-ist-minimieren (Maximieren ist Minimieren)]
 Ein Maximierungsproblem müssen wir nicht getrennt behandeln. Eine einzige
 Zeile hält das fest, und sie meint zweierlei:
 
@@ -73,7 +73,7 @@ $$
 $$
 
 Die Werte kippen im Vorzeichen, die Argumente bleiben dieselben; die zweite
-Gleichung stand schon in [Abschnitt 12.1](#sec-12.1). Deshalb sind die gängigen
+Gleichung stand schon in @sec:nichtlineare-gleichungen. Deshalb sind die gängigen
 Bibliotheken Minimierer, und deshalb heißt die Zielfunktion der
 Maximum-Likelihood-Schätzung dort in aller Regel die *negative*
 :k[Log-Likelihood]{#likelihood}. Wir formulieren im Folgenden alles für Minima.
@@ -81,18 +81,18 @@ Maximum-Likelihood-Schätzung dort in aller Regel die *negative*
 
 ### Die Bedingung erster Ordnung
 
-[Abschnitt 12.1](#sec-12.1) hat die Bedingung schon benutzt, und
+@sec:nichtlineare-gleichungen hat die Bedingung schon benutzt, und
 [Kapitel 10](?k=10-differentialrechnung#sec-10.7) hat um kritische Punkte herum das
 Hesse-Kriterium gebaut. Bewiesen haben wir die Bedingung selbst an keiner der
 beiden Stellen. Für die Optimierung ist sie der Ausgangspunkt jedes Verfahrens,
 deshalb holen wir den Beweis hier nach.
 
-:::satz[12.2.3 (Notwendige Bedingung erster Ordnung)]
+:::satz[#notwendige-bedingung-erster-ordnung (Notwendige Bedingung erster Ordnung)]
 Seien $S \subseteq \R^n$ offen, $f\colon S \to \R$ und $\cgreen{\bx^\star} \in S$
 ein lokales Minimum von $f$. Ist $f$ in $\cgreen{\bx^\star}$ differenzierbar, so
 gilt
 
-$$ {#eq-12.2.2}
+$$ {#eq-notwendige-bedingung-erster-ordnung}
 \corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top .
 $$
 
@@ -113,7 +113,7 @@ $$
 Weil $\cgreen{\bx^\star}$ ein lokales Minimum von $f$ ist, hat $g$ in $t = 0$ ein
 lokales Minimum.
 
-::why[Für kleine $\left|t\right|$ liegt $\bx^\star + t\bh$ in der Umgebung $U$ aus Definition 12.2.1, dort ist $f(\bx^\star) \le f(\bx^\star + t\bh)$, also $g(0) \le g(t)$]
+::why[Für kleine $\left|t\right|$ liegt $\bx^\star + t\bh$ in der Umgebung $U$ aus @definition:lokales-und-globales-minimum, dort ist $f(\bx^\star) \le f(\bx^\star + t\bh)$, also $g(0) \le g(t)$]
 :::
 
 :::schritt
@@ -124,22 +124,22 @@ Grenzwert folgt $g'(0) \ge 0$. Für hinreichend kleine $t < 0$ dreht der Nenner 
 Vorzeichen um, wir erhalten $(g(t) - g(0))/t \le 0$ und im Grenzwert
 $g'(0) \le 0$. Beides zusammen ergibt $g'(0) = 0$.
 
-::why[Der Wert der Ableitung ist die Richtungsableitung aus [Abschnitt 10.2](?k=10-differentialrechnung#sec-10.2); die Kettenregel auf die affine Abbildung $t \mapsto \bx^\star + t\bh$ angewandt gibt genau $\nabla f(\bx^\star)\bh$]
+::why[Der Wert der Ableitung ist die Richtungsableitung aus @sec:differentialrechnung/gradient; die Kettenregel auf die affine Abbildung $t \mapsto \bx^\star + t\bh$ angewandt gibt genau $\nabla f(\bx^\star)\bh$]
 :::
 
 :::schritt
 Der zweite Schritt gilt für *jedes* $\bh$. Setzen wir nacheinander die
 Einheitsvektoren $\bh = \be_j$ ein, so steht dort
 $\corange{\nabla f(\cgreen{\bx^\star})}\,\be_j = \partial f(\cgreen{\bx^\star}) / \partial x_j = 0$
-für $j = 1, \dots, n$, und das ist ($12.2.2$). Für ein lokales Maximum wenden wir
-das Gezeigte auf $-f$ an und benutzen Bemerkung 12.2.2.
+für $j = 1, \dots, n$, und das ist @eq:notwendige-bedingung-erster-ordnung. Für ein lokales Maximum wenden wir
+das Gezeigte auf $-f$ an und benutzen @bemerkung:maximieren-ist-minimieren.
 
 ::why[Ein Zeilenvektor, der auf jedem Einheitsvektor verschwindet, ist der Nullvektor]
 :::
 
 ::::
 
-:::definition[12.2.4 (Stationärer Punkt)]
+:::definition[#stationaerer-punkt (Stationärer Punkt)]
 Ein Punkt $\bx$ mit $\corange{\nabla f(\bx)} = \bnull^\top$ heißt *stationärer
 Punkt* von $f$. In [Kapitel 10](?k=10-differentialrechnung#sec-10.7) heißt derselbe Punkt
 *kritischer Punkt*; beide Wörter sind gebräuchlich und meinen dasselbe.
@@ -155,27 +155,27 @@ $\Xcal$ hineinführt, muss $\corange{\nabla f(\cgreen{\bx^\star})}\,\bd \ge 0$
 gelten, der *negative* Gradient darf also nicht ins Innere zeigen. Bei
 $f(x) = x$ auf $\Xcal = [0, 1]$ etwa liegt das Minimum in $0$ mit $f'(0) = 1$: Der
 Gradient zeigt dort sogar ins Innere, der negative Gradient dagegen hinaus. Genau
-davon handelt [Abschnitt 12.5](#sec-12.5).
+davon handelt @sec:beschraenkt.
 
-:::bemerkung[12.2.5 (Optimieren heißt Gleichungen lösen)]
-Gleichung ($12.2.2$) ist ein System aus $n$ Gleichungen in $n$ Unbekannten, meist
-nichtlinear. Damit sind wir wieder bei [Abschnitt 12.1](#sec-12.1), und das ganze
+:::bemerkung[#optimieren-heisst-gleichungen-loesen (Optimieren heißt Gleichungen lösen)]
+Gleichung @eq:notwendige-bedingung-erster-ordnung ist ein System aus $n$ Gleichungen in $n$ Unbekannten, meist
+nichtlinear. Damit sind wir wieder bei @sec:nichtlineare-gleichungen, und das ganze
 dortige Werkzeug steht bereit. Insbesondere ist
 
-$$ {#eq-12.2.3}
+$$ {#eq-optimieren-heisst-gleichungen-loesen}
 \Phi(\bx) := \bx - \gamma\,\corange{\nabla f(\bx)}^\top
 $$
 
 eine :k[Fixpunktabbildung]{#fixed-point-iteration}, deren Fixpunkte genau die
 stationären Punkte von $f$ sind, denn $\Phi(\bx) = \bx$ gilt für $\gamma \neq 0$
-genau dann, wenn $\corange{\nabla f(\bx)} = \bnull^\top$ ist. Die zu ($12.2.3$)
+genau dann, wenn $\corange{\nabla f(\bx)} = \bnull^\top$ ist. Die zu @eq:optimieren-heisst-gleichungen-loesen
 gehörige Fixpunktiteration $\cblue{\bx^{(k+1)}} = \Phi(\cblue{\bx^{(k)}})$ ist der
-:k[Gradientenabstieg]{#gradient-descent} aus [Abschnitt 12.3](#sec-12.3).
+:k[Gradientenabstieg]{#gradient-descent} aus @sec:nelder-mead-gradient.
 
-Analytisch lösen lässt sich ($12.2.2$) nur in Sonderfällen. Einer davon ist
+Analytisch lösen lässt sich @eq:notwendige-bedingung-erster-ordnung nur in Sonderfällen. Einer davon ist
 wichtig genug, um ihn zu nennen: Bei den kleinsten Quadraten ist der Gradient
-linear in $\bbeta$, aus ($12.2.2$) werden die Normalgleichungen, und die lösen wir
-mit den Mitteln aus [Kapitel 7](?k=07-kq#sec-7.1) in einem Zug. Sobald das Modell
+linear in $\bbeta$, aus @eq:notwendige-bedingung-erster-ordnung werden die Normalgleichungen, und die lösen wir
+mit den Mitteln aus @kap:kq in einem Zug. Sobald das Modell
 nichtlinear wird, ist damit Schluss, und wir iterieren.
 :::
 
@@ -188,7 +188,7 @@ und deshalb ist Konvexität die wichtigste Struktureigenschaft der ganzen
 Optimierung. [Kapitel 11](?k=11-konvexitaet#sec-11.3) hat die Begriffe
 bereitgestellt, wir ernten hier.
 
-:::satz[12.2.6 (Globale Optimalität bei Konvexität)]
+:::satz[#globale-optimalitaet-bei-konvexitaet (Globale Optimalität bei Konvexität)]
 Seien $\Xcal \subseteq \R^n$ konvex und $f\colon \Xcal \to \R$
 :k[konvex]{#convexity}. Dann ist jedes lokale Minimum von $f$ auf $\Xcal$
 auch ein globales.
@@ -198,7 +198,7 @@ auch ein globales.
 
 :::schritt
 Sei $\cgreen{\bx^\star}$ ein lokales Minimum mit Umgebung $U$ wie in
-Definition 12.2.1. Angenommen, es gäbe ein $\by \in \Xcal$ mit
+@definition:lokales-und-globales-minimum. Angenommen, es gäbe ein $\by \in \Xcal$ mit
 $\cred{f(\by) < f(\cgreen{\bx^\star})}$. Wir verbinden die beiden Punkte und
 betrachten für $\lambda \in (0, 1]$
 
@@ -236,7 +236,7 @@ falsch, es gibt kein besseres $\by$.
 
 ::::
 
-:::satz[12.2.7 (Eindeutigkeit bei strikter Konvexität)]
+:::satz[#eindeutigkeit-bei-strikter-konvexitaet (Eindeutigkeit bei strikter Konvexität)]
 Seien $\Xcal \subseteq \R^n$ konvex und $f\colon \Xcal \to \R$ strikt konvex, gelte
 also
 
@@ -278,7 +278,7 @@ sein kann. Also war die Annahme zweier verschiedener Minimierer falsch.
 
 ::::
 
-:::bemerkung[12.2.8 (Beide Sätze brauchen zwei Konvexitätsbedingungen)]
+:::bemerkung[#beide-saetze-brauchen-zwei (Beide Sätze brauchen zwei Konvexitätsbedingungen)]
 Leicht zu übersehen ist, dass in beiden Sätzen die Konvexität der zulässigen
 Menge genauso tragend ist wie die der Zielfunktion. Die Beweise oben zeigen,
 warum: Der Vergleichspunkt muss *zulässig* sein, dafür sorgt die Menge, und er
@@ -288,7 +288,7 @@ muss *besser* sein, dafür sorgt die Funktion.
 $\cred{\Xcal = \{-1, +1\}}$ und $f(y) = y^2$. Die Zielfunktion ist strikt konvex,
 und trotzdem sind $y = -1$ und $y = +1$ beide optimal mit dem Wert $1$. Der
 Mittelpunkt $\bz = 0$ hätte den kleineren Wert $0$, er ist aber nicht zulässig,
-und der Widerspruch aus Satz 12.2.7 entsteht gar nicht erst. Die Eindeutigkeit
+und der Widerspruch aus @satz:eindeutigkeit-bei-strikter-konvexitaet entsteht gar nicht erst. Die Eindeutigkeit
 fällt mit der Konvexität der Menge.
 
 *Das Projektionstheorem ist der Spezialfall, bei dem die zweite Bedingung
@@ -306,7 +306,7 @@ $\ba = (1; 0)$, $\bb = (2; 0)$ und $\lambda = \tfrac12$ stehen auf beiden Seiten
 $1{,}5$. Die *quadrierte* Norm ist dagegen strikt konvex, und zwar wegen der
 Identität
 
-$$ {#eq-12.2.4}
+$$ {#eq-beide-saetze-brauchen-zwei}
 \left\|\lambda\ba + (1-\lambda)\bb\right\|^2
 = \lambda\left\|\ba\right\|^2 + (1-\lambda)\left\|\bb\right\|^2
 - \cred{\lambda(1-\lambda)\left\|\ba - \bb\right\|^2} ,
@@ -319,7 +319,7 @@ negativ, und genau das ist die strikte Konvexität. Weil $t \mapsto t^2$ auf
 $[0, \infty)$ streng wächst, haben Distanz und quadrierte Distanz dieselben
 Minimierer; das Quadrieren kostet also nichts und bringt die strikte Konvexität.
 
-*Und das gilt nur in Skalarprodukträumen.* In ($12.2.4$) haben wir das
+*Und das gilt nur in Skalarprodukträumen.* In @eq:beide-saetze-brauchen-zwei haben wir das
 Skalarprodukt benutzt, nicht bloß eine Norm. Nehmen wir stattdessen die
 Maximumsnorm im $\R^2$ und projizieren den Nullpunkt auf die konvexe Menge
 $\Xcal = \{(t; 1) : t \in [-1, 1]\}$, so hat jeder Punkt der Strecke den Abstand
@@ -330,7 +330,7 @@ Menge also nicht notwendig eindeutig.
 
 ### Konvexe Verlustfunktionen in Statistik und ML
 
-:::beispiel[12.2.9 (Vier konvexe Verlustfunktionen)]
+:::beispiel[#vier-konvexe-verlustfunktionen (Vier konvexe Verlustfunktionen)]
 Vier Standardfälle stehen hier nebeneinander. Alle vier begegnen uns im Skript
 wieder.
 
@@ -346,7 +346,7 @@ Sie ist stets positiv semidefinit, denn
 $\bh^\top\bX^\top\bX\bh = \left\|\bX\bh\right\|_2^2 \ge 0$, und positiv definit
 genau dann, wenn $\bX$ vollen Spaltenrang hat: Nur dann folgt aus $\bh \neq \bnull$
 auch $\bX\bh \neq \bnull$. Mit vollem Spaltenrang ist $L$ also strikt konvex und
-der Kleinste-Quadrate-Schätzer nach Satz 12.2.7 eindeutig. Ein Zahlenbeispiel:
+der Kleinste-Quadrate-Schätzer nach @satz:eindeutigkeit-bei-strikter-konvexitaet eindeutig. Ein Zahlenbeispiel:
 Für die Designmatrix mit den Zeilen $(1, 1)$, $(1, 2)$, $(1, 3)$ und $(1, 5)$ ist
 $\corange{\bH_L} = \begin{pmatrix} 8 & 22 \\ 22 & 78\end{pmatrix}$ mit den
 Eigenwerten $84{,}34$ und $1{,}66$, also positiv definit.
@@ -366,14 +366,14 @@ $\bX$ zwei identische Spalten, etwa mit den Zeilen $(1, 1)$, $(2, 2)$, $(3, 3)$,
 so hat $\bX^\top\bX$ die Eigenwerte $28$ und $0$; mit $\lambda = 1{,}5$ stehen in
 $\corange{\bH_f}$ die Eigenwerte $59$ und $3$. Ridge macht aus einem Problem mit
 unendlich vielen Lösungen eines mit genau einer; den Gradienten dazu haben wir in
-[Abschnitt 10.6](?k=10-differentialrechnung#sec-10.6) schon gerechnet.
+@sec:differentialrechnung/produkt-kettenregel schon gerechnet.
 
 *Negative Log-Likelihood.* Ist die Log-Likelihood konkav, so ist ihr Negatives
 konvex, und die Maximum-Likelihood-Schätzung wird zu einem konvexen
 Minimierungsproblem. Das ist bei vielen Standardmodellen so, etwa bei der
 Normalverteilung mit bekannter Varianz, wo dabei wieder genau das
 Kleinste-Quadrate-Problem herauskommt, und bei der logistischen Regression aus
-[Abschnitt 10.6](?k=10-differentialrechnung#sec-10.6). Automatisch ist die Konkavität
+@sec:differentialrechnung/produkt-kettenregel. Automatisch ist die Konkavität
 nicht: Die Log-Likelihood einer :k[Mischverteilung]{#gaussian-mixture-model} ist
 nicht konkav, und solche Modelle sind der Standardfall für mehrere lokale Optima.
 
@@ -392,7 +392,7 @@ Subgradienten-Werkzeug aus [Kapitel 11](?k=11-konvexitaet#sec-11.4).
 Bei nicht-konvexen Funktionen sagt $\corange{\nabla f(\bx)} = \bnull^\top$ wenig.
 Der Punkt kann ein Minimum sein, ein Maximum, oder keines von beidem.
 
-:::definition[12.2.10 (Sattelpunkt)]
+:::definition[#sattelpunkt (Sattelpunkt)]
 Ein stationärer Punkt $\bx^\star$ von $f$ heißt *Sattelpunkt*, wenn jede
 Umgebung von $\bx^\star$ Punkte $\bx_-$ und $\bx_+$ enthält mit
 
@@ -406,14 +406,14 @@ negative :k[Eigenwerte]{#eigenvalue-eigenvector}, so sprechen wir genauer von
 einem *Sattelpunkt mit indefiniter Hesse-Matrix*.
 :::
 
-Ist $f$ zweimal stetig differenzierbar, wie es Satz 10.7.9 verlangt, so ist die
+Ist $f$ zweimal stetig differenzierbar, wie es @satz:hesse-kriterium-fuer-kritische-punkte verlangt, so ist die
 indefinite Hesse-Matrix ein hinreichendes Kriterium für die Definition: In jeder
 Umgebung liegen Punkte mit größerem und Punkte mit kleinerem Funktionswert. Die
 Umkehrung gilt nicht. Bei $f(x)=x^3$ ist $x=0$ ebenfalls ein Sattelpunkt, obwohl
 $f''(0)=0$ ist und das Kriterium zweiter Ordnung nichts entscheidet. Praktisch
 wichtig ist vor allem der Fall der indefiniten Hesse-Matrix.
 
-:::beispiel[12.2.11 (Der Standardsattel)]
+:::beispiel[#der-standardsattel (Der Standardsattel)]
 Wir rechnen den einfachsten Fall vollständig durch. Sei
 
 $$
@@ -483,11 +483,11 @@ $(0{,}0059;\, 10{,}25)$ – die erste Komponente fällt gegen null, die zweite l
 davon. Nur auf dem Startstrahl $y = 0$ kriecht auch er hinein: Dort bleibt die
 zweite Komponente in jedem Schritt null, und aus $x = 1{,}5$ stehen die Iterierten
 nach acht Schritten bei $0{,}0059$, nach zwanzig bei $1{,}4 \cdot 10^{-6}$.
-Warum diese Ausnahme in der Praxis keine Rolle spielt, sagt Bemerkung 12.2.12.
+Warum diese Ausnahme in der Praxis keine Rolle spielt, sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
 
-:::bemerkung[12.2.12 (Was Sattelpunkte für die Verfahren bedeuten)]
+:::bemerkung[#was-sattelpunkte-fuer-die-verfahren (Was Sattelpunkte für die Verfahren bedeuten)]
 *Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method} aus
-[Abschnitt 10.8](?k=10-differentialrechnung#sec-10.8) sucht eine Nullstelle des
+@sec:differentialrechnung/taylor sucht eine Nullstelle des
 Gradienten, und ein Sattelpunkt ist eine. Für unser $f$ rechnen wir das in einer
 Zeile nach. Der Schritt lautet
 $\cblue{\bx^{(1)}} = \bx - \corange{\bH_f^{-1}}\,\corange{\nabla f(\bx)}^\top$ mit
@@ -505,30 +505,30 @@ $$
 
 und zwar von jedem Startpunkt aus. Wer Krümmungsinformation benutzt, ohne auf ihr
 Vorzeichen zu achten, wird von Sattelpunkten genauso angezogen wie von Minima.
-[Abschnitt 12.4](#sec-12.4) zeigt die Gegenmittel.
+@sec:newton-sgd zeigt die Gegenmittel.
 
 *Der Gradientenabstieg entkommt.* Mit Schrittweite $\gamma$ lautet die Iteration
 komponentenweise
 
-$$ {#eq-12.2.5}
+$$ {#eq-was-sattelpunkte-fuer-die-verfahren}
 \cblue{x^{(k+1)}} = (1 - 2\gamma)\,\cblue{x^{(k)}} ,
 \qquad
 \cblue{y^{(k+1)}} = (1 + 2\gamma)\,\cblue{y^{(k)}} .
 $$
 
-Für $0 < \gamma < \tfrac12$ schrumpft nach ($12.2.5$) die erste Komponente, die
+Für $0 < \gamma < \tfrac12$ schrumpft nach @eq:was-sattelpunkte-fuer-die-verfahren die erste Komponente, die
 zweite wächst in jedem Schritt um den Faktor $\cred{1 + 2\gamma} > 1$. Nur wer exakt auf der
 $x$-Achse startet, also mit $y^{(0)} = 0$, landet im Sattel. Diese Startmenge ist
 eine Gerade im $\R^2$ und hat das Volumen null. In der Praxis genügt schon
 Rundungsrauschen, um sie zu verfehlen, und der stochastische Gradientenabstieg
-aus [Abschnitt 12.4](#sec-12.4) bringt sein eigenes Rauschen mit.
+aus @sec:newton-sgd bringt sein eigenes Rauschen mit.
 
 *Eine hochdimensionale Vorzeichenheuristik.* Solange kein Eigenwert von
 $\corange{\bH_f}$ null ist, entscheidet allein das Vorzeichenmuster: Ein Minimum
 verlangt dann, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt mit
 indefiniter Hesse-Matrix genügen gemischte Vorzeichen. (Ein Eigenwert null lässt
-beide Fälle offen, dazu Bemerkung 12.2.14.) Die Münzwurf-Faustregel aus
-[Abschnitt 10.7](?k=10-differentialrechnung#sec-10.7) illustriert den Unterschied: Wären
+beide Fälle offen, dazu @bemerkung:warum-die-rueckrichtung-nicht-gilt.) Die Münzwurf-Faustregel aus
+@sec:differentialrechnung/hoehere-ableitungen illustriert den Unterschied: Wären
 die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte ein Minimum die
 Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$; für $n = 100$ sind
 das $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$.
@@ -540,7 +540,7 @@ weder unabhängig noch fair verteilt, und wegen Überparametrisierung treten zud
 viele nahezu flache Richtungen auf. Belastbar bleibt die geometrische Aussage:
 Positive Definitheit verlangt ein einheitliches Vorzeichen, Indefinitheit nur ein
 gemischtes Muster. Wie Verfahren auf solche negative Krümmung reagieren, zeigen
-die [Abschnitte 12.3](#sec-12.3) und [12.4](#sec-12.4).
+die Abschnitte @num:optim/nelder-mead-gradient und @num:optim/newton-sgd.
 :::
 
 ### Optimalitätsbedingungen im Überblick
@@ -548,7 +548,7 @@ die [Abschnitte 12.3](#sec-12.3) und [12.4](#sec-12.4).
 Damit haben wir alle Bausteine zusammen. Der folgende Satz stellt sie
 nebeneinander, für eine zweimal stetig differenzierbare Zielfunktion.
 
-:::satz[12.2.13 (Bedingungen erster und zweiter Ordnung)]
+:::satz[#bedingungen-erster-und-zweiter-ordnung (Bedingungen erster und zweiter Ordnung)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
 
 1. *Notwendig, erste Ordnung.* Ist $\bx^\star$ ein lokales Minimum, so gilt
@@ -564,11 +564,11 @@ Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
 ::::beweis
 
 :::schritt
-Teil 1 ist Satz 12.2.3, und Teil 3 ist Satz 10.7.9(1) aus
-[Abschnitt 10.7](?k=10-differentialrechnung#sec-10.7). Zu zeigen bleibt Teil 2. Sei
+Teil 1 ist @satz:notwendige-bedingung-erster-ordnung, und Teil 3 ist @satz:hesse-kriterium-fuer-kritische-punkte(1) aus
+@sec:differentialrechnung/hoehere-ableitungen. Zu zeigen bleibt Teil 2. Sei
 $\bh \in \R^n$ beliebig und wieder $g(t) = f(\bx^\star + t\bh)$ wie im Beweis von
-Satz 12.2.3. Die :k[Taylorentwicklung]{#taylor-theorem} zweiter Ordnung aus
-[Abschnitt 10.8](?k=10-differentialrechnung#sec-10.8) gibt mit
+@satz:notwendige-bedingung-erster-ordnung. Die :k[Taylorentwicklung]{#taylor-theorem} zweiter Ordnung aus
+@sec:differentialrechnung/taylor gibt mit
 $\corange{\nabla f(\bx^\star)} = \bnull^\top$ aus Teil 1
 
 $$
@@ -599,7 +599,7 @@ ist $\corange{\bH_f(\bx^\star)}$ positiv semidefinit.
 
 ::::
 
-:::bemerkung[12.2.14 (Warum die Rückrichtung nicht gilt)]
+:::bemerkung[#warum-die-rueckrichtung-nicht-gilt (Warum die Rückrichtung nicht gilt)]
 Verlockend wäre, aus Teil 3 eine Äquivalenz zu machen und zu schreiben:
 $\corange{\nabla f(\bx^\star)} = \bnull^\top$ und
 $\corange{\bH_f(\bx^\star)} \succ 0$ *genau dann, wenn* $\bx^\star$ ein lokales
@@ -611,8 +611,8 @@ $\cred{f(x) = x^4}$ hat in $x = 0$ ein striktes globales Minimum, denn
 $f(x) > 0 = f(0)$ für alle $x \neq 0$. Es ist aber $f'(0) = 0$ *und*
 $f''(0) = 0$, die Hesse-Matrix $\corange{\bH_f(0)} = (0)$ ist also nicht positiv
 definit. Was aus einem lokalen Minimum wirklich folgt, steht in Teil 2 des Satzes:
-positive Semidefinitheit, mehr nicht. Bemerkung 10.7.10 in
-[Abschnitt 10.7](?k=10-differentialrechnung#sec-10.7) führt neben $x^4$ noch $-x^4$ und
+positive Semidefinitheit, mehr nicht. @bemerkung:wenn-die-hesse-matrix-nichts-entscheidet in
+@sec:differentialrechnung/hoehere-ableitungen führt neben $x^4$ noch $-x^4$ und
 $x^3$ vor, drei Funktionen mit derselben Hesse-Matrix im Nullpunkt und drei
 verschiedenen Antworten.
 :::
@@ -633,10 +633,10 @@ oder anders argumentieren. Ein einzelner Eigenwert null genügt dafür übrigens
 nicht. Bei $\corange{\bH_f} = \diag(1, -1, 0)$ ist die Matrix indefinit, und die
 dritte Zeile greift nach wie vor.
 
-:::bemerkung[12.2.15 (Was Konvexität aus der Tabelle macht)]
+:::bemerkung[#was-konvexitaet-aus-der-tabelle-macht (Was Konvexität aus der Tabelle macht)]
 Sei $f$ auf einer offenen konvexen Menge $S$ konvex und zweimal stetig
 differenzierbar. Dann ist $\corange{\bH_f(\bx)} \succeq 0$ an *jeder* Stelle
-(Satz 10.7.11), eine indefinite Hesse-Matrix kann also gar nicht auftreten: Die
+(@satz:konvexitaet-und-positive-semidefinitheit), eine indefinite Hesse-Matrix kann also gar nicht auftreten: Die
 dritte Zeile der Tabelle bleibt leer, eine konvexe Funktion hat keine
 Sattelpunkte. Mehr noch, die Bedingung erster Ordnung wird für konvexe Funktionen
 hinreichend. Die Gradientenungleichung aus
@@ -649,13 +649,13 @@ $$
 
 und mit $\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ bleibt
 $f(\by) \ge f(\cgreen{\bx^\star})$ für alle $\by$ stehen. Jeder stationäre Punkt
-einer konvexen Funktion ist also bereits ein globales Minimum, was Satz 12.2.6 von
+einer konvexen Funktion ist also bereits ein globales Minimum, was @satz:globale-optimalitaet-bei-konvexitaet von
 der anderen Seite bestätigt.
 
 Für die Praxis heißt das: Bei einem konvexen Problem sagt ein *verschwindender*
 Gradient schon alles, wir stehen dann im globalen Minimum. Ein bloß *kleiner*
 Gradient garantiert das nicht von selbst; wie viel er wert ist, hängt an der
-Krümmung, und darauf kommt [Abschnitt 12.3](#sec-12.3) mit den Abbruchkriterien
+Krümmung, und darauf kommt @sec:nelder-mead-gradient mit den Abbruchkriterien
 zurück. Bei einem nicht-konvexen Problem heißt ein kleiner Gradient ohnehin nur,
 dass wir irgendwo stationär stehen, und die Tabelle sagt, welche drei
 Möglichkeiten das offenlässt.
@@ -668,7 +668,7 @@ Möglichkeiten das offenlässt.
 :::frage{falsch}
 Ein Punkt mit $\nabla f(\bx^\star) = \bnull^\top$ ist ein lokales Minimum von $f$.
 
-Die Bedingung ist notwendig, nicht hinreichend (Satz 12.2.3). Der Ursprung ist ein
+Die Bedingung ist notwendig, nicht hinreichend (@satz:notwendige-bedingung-erster-ordnung). Der Ursprung ist ein
 stationärer Punkt von $f(x, y) = x^2 - y^2$, aber weder Minimum noch Maximum,
 sondern ein Sattelpunkt: entlang der $x$-Achse geht es nach oben, entlang der
 $y$-Achse nach unten.
@@ -679,7 +679,7 @@ Ein Maximierungsproblem lässt sich ohne Verlust in ein Minimierungsproblem
 umschreiben.
 
 Es ist $\max f = -\min(-f)$, und die Maximierer von $f$ sind genau die Minimierer
-von $-f$ (Bemerkung 12.2.2). Die Werte kippen im Vorzeichen, die Argumente bleiben
+von $-f$ (@bemerkung:maximieren-ist-minimieren). Die Werte kippen im Vorzeichen, die Argumente bleiben
 dieselben. Deshalb minimieren Softwarebibliotheken die *negative* Log-Likelihood.
 :::
 
@@ -687,11 +687,11 @@ dieselben. Deshalb minimieren Softwarebibliotheken die *negative* Log-Likelihood
 Ist die Zielfunktion strikt konvex, so hat das Optimierungsproblem höchstens eine
 Lösung, gleichgültig wie die zulässige Menge aussieht.
 
-Satz 12.2.7 braucht beide Konvexitätsbedingungen. Auf
+@satz:eindeutigkeit-bei-strikter-konvexitaet braucht beide Konvexitätsbedingungen. Auf
 $\Xcal = \{-1, +1\}$ ist $f(y) = y^2$ strikt konvex, und trotzdem sind beide
 Punkte optimal mit dem Wert $1$. Der Mittelpunkt $0$ wäre besser, ist aber nicht
 zulässig, und ohne ihn entsteht der Widerspruch des Beweises gar nicht erst
-(Bemerkung 12.2.8).
+(@bemerkung:beide-saetze-brauchen-zwei).
 :::
 
 :::frage{wahr}
@@ -703,7 +703,7 @@ semidefinit. Gleichheit tritt für ein $\bh \neq \bnull$ genau dann ein, wenn
 $\bX\bh = \bnull$ gilt, wenn also die Spalten linear abhängig sind. Ohne vollen
 Spaltenrang ist die Zielfunktion nur konvex, nicht strikt konvex, und das Minimum
 ist nicht mehr eindeutig. Ridge repariert das, indem es $2\lambda$ auf jeden
-Eigenwert addiert (Beispiel 12.2.9).
+Eigenwert addiert (@beispiel:vier-konvexe-verlustfunktionen).
 :::
 
 :::frage{falsch}
@@ -713,7 +713,7 @@ folgt, dass $\bx^\star$ ein lokales Minimum ist.
 Semidefinit reicht nicht, das ist die letzte Zeile der Klassifikationstabelle. Für
 $f(x) = x^3$ ist $f'(0) = 0$ und $f''(0) = 0$, die Hesse-Matrix also positiv
 semidefinit, und trotzdem liegt in $0$ kein Minimum: links davon ist $f$ negativ.
-Positive *Definitheit* dagegen genügt (Satz 12.2.13).
+Positive *Definitheit* dagegen genügt (@satz:bedingungen-erster-und-zweiter-ordnung).
 :::
 
 :::frage{falsch}
@@ -721,7 +721,7 @@ Das Newton-Verfahren umgeht Sattelpunkte, weil es die Krümmung mitbenutzt.
 
 Es läuft eher hinein. Auf $f(x, y) = x^2 - y^2$ landet ein einziger Newton-Schritt
 von jedem Startpunkt aus exakt im Sattel $(0; 0)$, wie die Rechnung in
-Bemerkung 12.2.12 zeigt. Der Schritt sucht eine Nullstelle des Gradienten, und ein
+@bemerkung:was-sattelpunkte-fuer-die-verfahren zeigt. Der Schritt sucht eine Nullstelle des Gradienten, und ein
 Sattelpunkt ist eine. Der Gradientenabstieg entkommt dagegen, weil er die
 Komponente in der Richtung mit negativem Eigenwert in jedem Schritt um den Faktor
 $1 + 2\gamma$ vergrößert.
@@ -748,7 +748,7 @@ Extremum dürfen alle positiv oder alle negativ sein, also $2^{1-n}$. Bei $n=100
 sind das $7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Für reale
 Probleme ist die Unabhängigkeitsannahme im Allgemeinen falsch; der Selbsttest
 prüft deshalb ausdrücklich nur die Konsequenz des Toy-Modells
-(Bemerkung 12.2.12).
+(@bemerkung:was-sattelpunkte-fuer-die-verfahren).
 :::
 
 ::::
@@ -756,4 +756,4 @@ prüft deshalb ausdrücklich nur die Konsequenz des Toy-Modells
 *Vertiefung: Heath §6.1 stellt Optimierungsprobleme und ihre Sprechweisen
 zusammen, §6.2.1 sammelt die Folgen der Konvexität und §6.2.2 die
 Optimalitätsbedingungen ohne Nebenbedingungen; die Bedingungen mit
-Nebenbedingungen (Heath §6.2.3) folgen in [Abschnitt 12.5](#sec-12.5).*
+Nebenbedingungen (Heath §6.2.3) folgen in @sec:beschraenkt.*

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: Positive Definitheit fordert xᵀAx>0 in jeder Richtung; eine Richtung widerlegt sie.
@@ -36,6 +37,6 @@ export function SpdRichtung() {
       <text x={18} y={26} fill="var(--w-muted)" fontSize={12}>xᵀAx = {q.toFixed(3).replace(".", ",")}</text>
     </svg>
     <Slider label="Richtung θ" value={theta} onChange={setTheta} min={0} max={360} step={1} unit="°" accent={BLUE} />
-    <Verdikt kind={fall === "spd" ? "ok" : hit ? "fail" : "warn"}>{fall === "spd" ? "Für jede dargestellte Richtung bleibt xᵀAx positiv. Das bestätigt nur diese Matrixfamilie; Satz 5.4.2 darf angewendet werden." : hit ? "Aufgabe geschafft: Diese Richtung liefert xᵀAx ≤ 0 und widerlegt positive Definitheit." : "Diese Richtung besteht den Test, beweist aber nichts: SPD verlangt die Ungleichung für alle Richtungen."}</Verdikt>
+    <Verdikt kind={fall === "spd" ? "ok" : hit ? "fail" : "warn"}>{fall === "spd" ? `Für jede dargestellte Richtung bleibt xᵀAx positiv. Das bestätigt nur diese Matrixfamilie; ${ref("satz:cholesky-zerlegung")} darf angewendet werden.` : hit ? "Aufgabe geschafft: Diese Richtung liefert xᵀAx ≤ 0 und widerlegt positive Definitheit." : "Diese Richtung besteht den Test, beweist aber nichts: SPD verlangt die Ungleichung für alle Richtungen."}</Verdikt>
   </div>;
 }

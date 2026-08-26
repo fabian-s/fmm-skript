@@ -42,10 +42,11 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 
 - `<ConceptLink id="kebab-id">Text</ConceptLink>` — Tooltip-Link;
   Module in `src/concepts/*.tsx` registrieren sich selbst (import.meta.glob).
-- `<M>/<MD>` Mathe (Backslashes in TSX doppelt escapen!), `<Eq tag>` NUR
-  wenn das Skript selbst nummerierte Gleichungen vergibt (Schema
-  „(K.n)", K = Foliensatz-Nummer).
-- `<EnvBlock kind="Definition|Satz|Lemma|Korollar|Beispiel|Bemerkung|Algorithmus" label="7.3">`.
+- `<M>/<MD>` Mathe (Backslashes in TSX doppelt escapen!). In MDX schreibt
+  niemand `<Eq>` oder `<EnvBlock>` von Hand: `$$ {#eq-<id>}` und
+  `:::satz[#<id> (Name)]` erzeugen sie, die Nummern kommen aus der
+  Nummerntabelle. Siehe „Nummerierung und Verweise" unten — die Regeln dort
+  gelten vor allem, was weiter unten in dieser Datei steht.
 - `<Proof><PStep why={<>Begründung</>}>…</PStep></Proof>` — annotierte,
   schrittweise aufdeckbare Beweise; jede nichttriviale Zeile bekommt ein
   `why`.
@@ -77,6 +78,113 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Nach Änderungen: `npx tsc --noEmit` im Repo-Root (LMU: Achtung, immer
   aus dem App-Verzeichnis heraus!). KEINE git-Kommandos für Agenten.
 
+## Nummerierung und Verweise (VERBINDLICH, überschreibt alle Bauaufträge unten)
+
+**Grundregel: Wir schreiben nie eine Nummer.** Keine „Satz 12.5.7", keine
+„(11.3.4)", keine „Abschnitt 7.3" — weder in MDX-Prosa noch in Widget-TSX,
+weder im Fließtext noch in einem Env-Label. Nummern vergibt ein Zähler
+(`scripts/gen-numbers.mjs`) und trägt sie in
+`src/chapters/numbers.generated.json` ein; Web und Druckfassung lesen daraus.
+Wer eine Nummer tippt, schreibt eine Zeitbombe: Sobald jemand vor der Stelle
+einen Satz einfügt, ist sie still falsch.
+
+### Labeln (Ziel bekommt eine ID)
+
+| Objekt | Form |
+| --- | --- |
+| Umgebung | `:::satz[#kkt (KKT-Bedingungen)]`, `:::bemerkung[#breite-matrizen]` |
+| unnummerierte Umgebung | `:::bemerkung[(Konvention zur Schreibweise)]` — Klammern heißt „ohne Nummer" |
+| Gleichung | `$$ {#eq-kkt-stationaritaet}` (direkt hinter der öffnenden `$$`-Zeile) |
+| Unterüberschrift | `### Die Idee hinter Lagrange :id[lagrange-idee]` — `:id[…]` steht am ENDE, ohne Attribute |
+| Abschnitt | Feld `key: "beschraenkt"` in `src/chapters/<kap>/index.ts` |
+
+IDs: `^[a-z0-9][a-z0-9-]*$`, nie rein numerisch, und je Namensraum
+(Umgebungen, Gleichungen, Unterüberschriften) **global eindeutig über alle
+Kapitel** — `gen-numbers` prüft das. Nur Objekte, auf die verwiesen wird oder
+werden könnte, brauchen eine ID; alles andere bleibt unnummeriert.
+
+### Verweisen (`@typ:id`, nur in Prosa-Text)
+
+| Form | Ausgabe |
+| --- | --- |
+| `@satz:kkt`, ebenso `@definition: @lemma: @korollar: @beispiel: @bemerkung: @algorithmus:` (+ englische Zweitnamen `@theorem:` …) | `Satz 12.5.7`, verlinkt auf `#env-kkt` |
+| `@eq:kkt-stationaritaet` | `(12.5.3)`, verlinkt |
+| `@sec:beschraenkt` (gleiches Kapitel), `@sec:optim/beschraenkt` (fremdes) | `Abschnitt 12.5` |
+| `@sec:lagrange-idee` (Unterüberschrift) | `Abschnitt 12.5.1` |
+| `@kap:svd` | `Kapitel 6` |
+| `@num:kkt` | nur `12.5.7` — für „Beispiele @num:a bis @num:b"; geht auch auf Gleichungen, Unterüberschriften, Abschnitte (`@num:optim/beschraenkt` → `12.5`) und Kapitel (`@num:svd` → `6`) |
+| `@ref:kkt` | Art automatisch: `Satz 12.5.7` |
+| `\@satz:kkt` | wörtlich `@satz:kkt` (Maskierung) |
+
+- Die Art wird geprüft: `@definition:kkt` auf einen Satz ist ein Build-Fehler,
+  ebenso jede unbekannte ID. Ein Verweis kann also nicht mehr ins Leere zeigen.
+- Kapitelschlüssel = Verzeichnisname ohne Nummernpräfix (`12-optim` →
+  `optim`). Kapitelübergreifend erzeugt der Verweis automatisch die
+  `?k=<kap-id>#anker`-Form; von Hand geschriebene `?k=…#sec-…`-Links braucht
+  es nicht mehr. Aus Konzept-MDX (`src/concepts/`, kein Kapitel) immer die
+  Langform `@sec:<kap>/<key>`.
+- Der Punkt hinter einem Verweis gehört nicht zur ID (`@satz:kkt.` ist
+  richtig), ein Bindestrich schon (`@satz:kkt-x`).
+- Verboten: Verweise in Env-Labels und Vertiefungstiteln; Verweise innerhalb
+  eines Markdown-Links (der Verweis verlinkt selbst); ein `[` oder `{` direkt
+  hinter der ID.
+- In `::why[…]` funktionieren Verweise.
+
+### Nummern in Widget-TSX
+
+Nie als String. Stattdessen aus der generierten Tabelle:
+
+```tsx
+import { num, ref } from "../../numbers.generated";
+`… wie in ${ref("satz:kkt")}`   // "… wie in Satz 12.5.7"
+num("eq:kkt-stationaritaet")     // "12.5.3"
+```
+
+Schlüssel sind `<direktive>:<id>`, `eq:<id>`, `sec:<kap>/<key>`,
+`sec:<überschriften-id>`, `kap:<kap>`. Ein unbekannter Schlüssel ist ein
+tsc-Fehler, kein stiller Tippfehler.
+
+### Zählkonvention
+
+Ein Abschnitt ist `K.k`: `K` ist die Kapitelnummer aus
+`src/chapters/index.ts`, `k` die **Position** im `sections`-Array von
+`src/chapters/<kap>/index.ts`. Innerhalb eines Abschnitts läuft je ein Zähler
+über alle Umgebungen zusammen (`K.k.1`, `K.k.2`, … in Dokumentreihenfolge,
+ohne Rücksicht auf die Art), ein zweiter über die Gleichungen und ein dritter
+über die nummerierten Unterüberschriften. Vertiefungen zählen mit.
+
+Das Feld `id: "12.5"` einer Sektion ist nur noch ein Alias für alte,
+öffentlich verlinkte URLs; die Nummer kommt aus der Position. Beim Anlegen
+einer Sektion muss `key` zwischen `id` und `title` stehen — die Registry wird
+per Regex gelesen (`scripts/lib/registry.mjs`), und `gen-toc` bricht sonst ab.
+`key` ist frei umbenennbar, solange kein `@sec:` darauf zeigt.
+
+### Werkzeuge
+
+- `npm run gen:numbers` nach jeder MDX-Änderung. `npm run dev` und
+  `npm run build` rufen es selbst auf; `numbers.generated.json`/`.ts` sind
+  eingecheckt und werden **nie** von Hand editiert.
+- `node scripts/gen-numbers.mjs --check` — Exit 1, wenn die eingecheckte
+  Tabelle veraltet ist (CI).
+- `npm run lint:numbers` findet handgeschriebene Nummern in MDX und TSX.
+  Läuft in `npm run build` mit; `--strict` macht daraus einen Fehler.
+- Im Dev-Server rechnet ein Vite-Plugin die Tabelle bei jeder MDX-Änderung
+  neu. Ändert sich keine Nummer, läuft normales HMR. Verschiebt eine
+  Einfügung den Zähler, sind die Nummern in **allen** Modulen veraltet: dann
+  gibt es einen Full-Reload. Ein Reload nach dem Einfügen eines Satzes ist
+  also kein Fehler, sondern genau die Absicht.
+
+### Altbestand
+
+Handnummerierte Labels (`:::satz[12.5.7 …]`, `$$ {#eq-12.5.3}`,
+`### 2.5.1 Titel`) bauen und rendern unverändert weiter und dürfen in einer
+Datei neben ID-Labels stehen. Sie sind aber **nicht verweisbar**:
+`@satz:12.5.7` ist ein Fehler. Wer einen Verweis setzen will, stellt zuerst
+das Ziel auf eine ID um. Neuer Text bekommt ausschließlich ID-Labels.
+Bei einer Unterüberschrift ändert die Umstellung den Anker
+(`#sec-2.5.1` → `#sec-<id>`); bestehende Links darauf im selben Schritt auf
+`@sec:<id>` umstellen.
+
 ## Tooltip-Konzepte (deutsch)
 
 - Module in `src/concepts/<id>.tsx`; die **id bleibt englisch/kebab-case**
@@ -107,6 +215,14 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   zur Lesson-Zeile in `FOLIENFEHLER.md` eingetragen (Foliensatz, Zeile,
   Befund, Status im Skript) — Sammelstelle für die Folien-Überarbeitung.
 
+> **Zu allen Bauaufträgen unten (KAPITEL 1–15):** Sie sind datiert und
+> beschreiben den Stand ihrer Entstehung. Wo dort „Labels 3.k.n",
+> `<Eq tag="…">` oder handgeschriebene `?k=…#sec-…`-Querlinks stehen, gilt
+> stattdessen der Abschnitt „Nummerierung und Verweise" oben: ID-Labels und
+> `@`-Verweise, keine getippten Nummern. Auch die Kapitelnummern dort sind
+> teils vor der Umstrukturierung vom 2026-08-25 vergeben (13 statt 15
+> Kapitel).
+
 ## KAPITEL 7 (Foliensatz 07-kq) — Bauauftrag 2026-08-04
 
 - Quelle: `/home/fabians/lehre/FMM/fmm-lmu/slides/07-kq.Rmd` (Zeilenbereiche
@@ -116,11 +232,13 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
 - Abschnitte/Anker: `#sec-7.1` … `#sec-7.6` (Registry in
   `src/chapters/07-kq/index.ts`, NICHT editieren; nur den eigenen Stub
   `S7x.tsx` überschreiben).
-- Nummerierung: Abschnitt 7.k vergibt seine Labels als „7.k.1, 7.k.2, …"
-  in Reihenfolge des Auftretens (z. B. Definition 7.3.1, Satz 7.3.2) —
-  eindeutig und kollisionsfrei zwischen parallel arbeitenden Agenten.
-- Gleichungsnummern `<Eq tag="7.k.n">` nur für Gleichungen, auf die
-  verwiesen wird.
+- Nummerierung: siehe „Nummerierung und Verweise" oben. Labels bekommen
+  ID-Namen (`:::satz[#normalgleichungen]`), Gleichungen `$$ {#eq-<id>}`,
+  Verweise `@satz:…`/`@eq:…`. Der Zähler vergibt die Nummern; parallel
+  arbeitende Agenten können sich damit nicht mehr in die Quere kommen.
+  (Historisch stand hier die Handregel „Abschnitt 7.k vergibt 7.k.1,
+  7.k.2, …"; die dabei entstandenen Handnummern bauen weiter, sind aber
+  nicht verweisbar.)
 - **Widget-Recycling:** Die private App
   `/home/fabians/lehre/FMM/fmm-lmu/interactive/heath-ch3/` enthält zu
   fast jedem Thema dieses Kapitels erprobte Widgets
@@ -149,9 +267,11 @@ als fachliche Referenz und werden als Literaturhinweise zitiert
   Bildschirmseite Prosa, höchstens 1 kleine Vertiefung, kein
   Environments-Feuerwerk.
 - Kapitel 2 (`src/chapters/02-algos/`, S21–S25, Anker `#sec-2.1` …
-  `#sec-2.5`): volle Skript-Tiefe wie Kapitel 7. Labels „2.k.n".
-- Nummerierung/Regeln wie im Kapitel-7-Block (sinngemäß, Kapitelnummer
-  1 bzw. 2). Für Kapitel 2 existieren passende Tooltips bereits:
+  `#sec-2.5`): volle Skript-Tiefe wie Kapitel 7.
+- Nummerierung/Regeln wie im Kapitel-7-Block (sinngemäß) — also
+  ID-Labels und `@`-Verweise nach dem Abschnitt „Nummerierung und
+  Verweise" oben, keine getippten Nummern. Für Kapitel 2 existieren
+  passende Tooltips bereits:
   big-o-notation, machine-epsilon, rounding-error, cancellation,
   floating-point, matrix-vector-product, … (`ls src/concepts/`).
 - Widget-Ideen Kapitel 2: Fibonacci-Stepper (naiv vs. iterativ,

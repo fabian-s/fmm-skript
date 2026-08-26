@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe as fmt } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.4, erster Teil (Skalar zu Matrix): die drei Identitäten aus Satz 10.4.4
@@ -98,7 +99,7 @@ const BEISPIELE: Beispiel[] = [
     xMax: 2,
     x0: 1,
     hinweis:
-      "Die Diagonalmatrix aus Beispiel 10.4.5: det F(x) = 2x², die Ableitung ist 4x. Bei x = 0 ist F singulär, dann sind F⁻¹ und die Formel für die Determinante nicht definiert.",
+      `Die Diagonalmatrix aus ${ref("beispiel:die-jacobi-formel-an-einem")}: det F(x) = 2x², die Ableitung ist 4x. Bei x = 0 ist F singulär, dann sind F⁻¹ und die Formel für die Determinante nicht definiert.`,
   },
   {
     name: "(x 1; x² 3x)",
@@ -316,13 +317,13 @@ export function IdentitaetenSkalarMatrix() {
             {". "}
             F(x) ist hier singulär. Die Determinantenformel und die Inversenformel setzen
             beide F(x)⁻¹ voraus und liefern deshalb keinen Wert; die Spur-Identität aus
-            Satz 10.4.4(1) gilt dagegen weiter, denn sie braucht nur die Linearität der Spur.
+            {ref("satz:identitaeten-fuer-skalar-zu-matrix")}(1) gilt dagegen weiter, denn sie braucht nur die Linearität der Spur.
           </>
         ) : (
           <>
             , tr(F⁻¹ ∂F/∂x) ={" "}
             <span className="font-mono">{fmt(spur(mul(inv2(F), Fp)), 4)}</span>. Beide Faktoren
-            zusammen ergeben die Ableitung der Determinante, wie Satz 10.4.4(2) es behauptet.
+            zusammen ergeben die Ableitung der Determinante, wie {ref("satz:identitaeten-fuer-skalar-zu-matrix")}(2) es behauptet.
             Die numerische Spalte kennt keine der Formeln: Wir werten F an{" "}
             <span className="font-mono">x ± 10⁻⁵</span> aus und bilden den zentralen
             Differenzenquotienten. Dass beide Spalten übereinstimmen, ist deshalb eine echte

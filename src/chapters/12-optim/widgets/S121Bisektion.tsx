@@ -11,6 +11,7 @@ import {
   W_BUTTON,
   W_BUTTON_AKTIV,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.1 — DIE EINE EINSICHT: Die Bisektion halbiert die Klammer in jedem
@@ -184,7 +185,7 @@ export function BisektionStepper() {
     art = "ok";
     titel = "am Ziel";
     status =
-      `Fertig nach ${zeilen.length - 1} Halbierungen. Satz 12.1.8 hatte ` +
+      `Fertig nach ${zeilen.length - 1} Halbierungen. ${ref("satz:schrittzahl-der-bisektion")} hatte ` +
       `⌈log₂((b − a)/ε)⌉ = ${schritteVorhergesagt} vorhergesagt, und das ist keine Schätzung, ` +
       `sondern die exakte Zahl. Zurück geben wir die Mitte ${fmt(mitte)} des Endintervalls, dessen ` +
       `Länge ${fmtE(b - a)} unter ε = ${fmtE(tol)} liegt. Garantiert ist damit ein Fehler von ` +
@@ -219,12 +220,12 @@ export function BisektionStepper() {
     <div className="space-y-3">
       <Aufgabe>
         Schieben wir den Schrittregler durch und vergleichen die gebrauchte Zahl der Halbierungen
-        mit der Vorhersage von Satz 12.1.8.
+        mit der Vorhersage von {ref("satz:schrittzahl-der-bisektion")}.
       </Aufgabe>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
         Violett der Graph von f, blau die aktuelle Klammer [a, b] auf der x-Achse, orange der
         Mittelpunkt m, den dieser Schritt prüft, grün die Nullstellen. Ein Schritt ist genau ein
-        Durchlauf der Schleife aus Algorithmus 12.1.7.
+        Durchlauf der Schleife aus {ref("algorithmus:bisektionsverfahren")}.
       </p>
       <div className="flex flex-wrap gap-2">
         {AUFGABEN.map((x) => (

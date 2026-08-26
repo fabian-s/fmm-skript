@@ -10,6 +10,7 @@ import {
   useDrag,
 } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.4, zweiter Teil (Matrix zu Skalar): einen Eintrag von X anstupsen und
@@ -73,7 +74,7 @@ const FUNKTIONEN: Funktion[] = [
     tex: "f(X) = aᵀXb   mit a = (1; −2), b = (2; 1; 3)",
     f: (X) => A_VEK.reduce((s, ai, i) => s + ai * B_VEK.reduce((t, bj, j) => t + X[i][j] * bj, 0), 0),
     grad: () => A_VEK.map((ai) => B_VEK.map((bj) => ai * bj)),
-    regel: "∂f/∂X = abᵀ (Beispiel 10.4.9)",
+    regel: `∂f/∂X = abᵀ (${ref("beispiel:ableitung-von-f-x-a-xb")})`,
     ordnung: 0,
   },
   {
@@ -81,7 +82,7 @@ const FUNKTIONEN: Funktion[] = [
     tex: "f(X) = ‖X‖_F² = tr(XᵀX)",
     f: (X) => X.flat().reduce((s, v) => s + v * v, 0),
     grad: (X) => X.map((zeile) => zeile.map((v) => 2 * v)),
-    regel: "∂f/∂X = 2X (Satz 10.4.10)",
+    regel: `∂f/∂X = 2X (${ref("satz:identitaeten-fuer-matrix-zu-skalar")})`,
     ordnung: 2,
   },
   {
@@ -92,7 +93,7 @@ const FUNKTIONEN: Funktion[] = [
       return A_MAT.flat().reduce((s, v, k) => s + v * flach[k], 0);
     },
     grad: () => A_MAT.map((zeile) => [...zeile]),
-    regel: "∂f/∂X = A (Satz 10.4.10)",
+    regel: `∂f/∂X = A (${ref("satz:identitaeten-fuer-matrix-zu-skalar")})`,
     ordnung: 0,
   },
 ];
@@ -342,15 +343,15 @@ export function AnstupsWidget() {
         kind={art === "abweichung" ? "fail" : art === "kein-stups" ? "neutral" : "ok"}
       >
         {art === "abweichung" &&
-          `Formelwert und Differenzenquotient weichen um ${fmt(probeFehler, 6)} voneinander ab. Das darf nach Satz 10.4.10 nicht passieren; hier stimmt etwas im Widget nicht.`}
+          `Formelwert und Differenzenquotient weichen um ${fmt(probeFehler, 6)} voneinander ab. Das darf nach ${ref("satz:identitaeten-fuer-matrix-zu-skalar")} nicht passieren; hier stimmt etwas im Widget nicht.`}
         {art === "kein-stups" &&
           `Ohne Stups ändert sich nichts. Der Eintrag (${i},${j}) der Gradientenmatrix sagt voraus, mit welcher Rate f reagiert, sobald wir an dieser Stelle wackeln: pro Einheit um ${fmt(eintrag, 3)}.`}
         {art === "exakt" &&
-          `f ist linear in X. Der grüne Ableitungsterm D_X f(h·E) = h·[∂f/∂X]${ij} trifft die Änderung deshalb exakt, der rote Restterm bleibt für jedes h null. Nach Bemerkung 10.4.8 ist dieser Term das Skalarprodukt tr((∂f/∂X)ᵀ H); bei H = h·E bleibt davon genau ein Summand übrig.`}
+          `f ist linear in X. Der grüne Ableitungsterm D_X f(h·E) = h·[∂f/∂X]${ij} trifft die Änderung deshalb exakt, der rote Restterm bleibt für jedes h null. Nach ${ref("bemerkung:der-ableitungsterm-ist-ein-skalarprodukt")} ist dieser Term das Skalarprodukt tr((∂f/∂X)ᵀ H); bei H = h·E bleibt davon genau ein Summand übrig.`}
         {art === "quadratisch" &&
-          `f ist quadratisch in X, und der Restterm ist exakt h² = ${fmt(h * h, 4)}. Er fällt schneller als h selbst: halbieren wir den Stups, viertelt er sich. Genau das und nicht mehr verlangt Definition 10.1.5 vom o(‖H‖)-Term.`}
+          `f ist quadratisch in X, und der Restterm ist exakt h² = ${fmt(h * h, 4)}. Er fällt schneller als h selbst: halbieren wir den Stups, viertelt er sich. Genau das und nicht mehr verlangt ${ref("definition:frechet-ableitung")} vom o(‖H‖)-Term.`}
         {art === "rest-verschwindet" &&
-          `Bei diesem kleinen Stups ist der Restterm h² = ${fmt(h * h, 5)} bereits unter der angezeigten Genauigkeit. Die lineare Vorhersage der Gradientenmatrix ist damit praktisch exakt: die Aussage von Satz 10.4.10 ist eine über kleine H, nicht über beliebige.`}
+          `Bei diesem kleinen Stups ist der Restterm h² = ${fmt(h * h, 5)} bereits unter der angezeigten Genauigkeit. Die lineare Vorhersage der Gradientenmatrix ist damit praktisch exakt: die Aussage von ${ref("satz:identitaeten-fuer-matrix-zu-skalar")} ist eine über kleine H, nicht über beliebige.`}
       </Verdikt>
     </div>
   );

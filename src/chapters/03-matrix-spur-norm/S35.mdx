@@ -1,8 +1,9 @@
 import { S35AequivalenzWidget } from "./widgets/S35Aequivalenz";
 import { S35SubmultWidget } from "./widgets/S35SubmultWidget";
 import { SelbsttestFrage } from "./widgets/S35Local";
+import { ref } from "../numbers.generated";
 
-In den [Abschnitten 3.2](#sec-3.2) bis [3.4](#sec-3.4) haben wir einen ganzen Zoo von
+In den Abschnitten @num:matrix-spur-norm/matrixnormen bis @num:matrix-spur-norm/schattennormen haben wir einen ganzen Zoo von
 Matrixnormen kennengelernt: elementweise Normen wie die Frobenius- und die Maximumsnorm,
 die Operatornormen und die Schatten-Normen. Drei Fragen drängen sich jetzt auf. Erstens:
 Wie hängen all diese Normen zusammen? Kann dieselbe Matrix in einer Norm „klein" und in
@@ -13,7 +14,7 @@ davon? Die Antworten auf die ersten beiden Fragen heißen *Normenäquivalenz*,
 führt uns zur :k[Konditionszahl]{#condition-number} und zur
 Fehleranalyse, also mitten hinein in die Numerik.
 
-### 3.5.1 Normenäquivalenz
+### Normenäquivalenz :id[normenaequivalenz]
 
 Beginnen wir mit der ersten Frage. Für :k[Vektornormen]{#norm}
 auf $\R^n$ gilt bekanntlich: Alle Normen sind äquivalent, d. h. je zwei Normen
@@ -22,7 +23,7 @@ $\R^{m \times n}$ denselben Axiomen gehorchen (eine Matrix ist aus Sicht der
 Normaxiome nur ein langer Vektor mit $mn$ Einträgen), überträgt sich dieses
 Resultat direkt:
 
-:::satz[3.5.1 (Alle Matrixnormen sind äquivalent)]
+:::satz[#alle-matrixnormen-sind-aequivalent (Alle Matrixnormen sind äquivalent)]
 Für je zwei Matrixnormen $\left\|\cdot\right\|_a$ und
 $\left\|\cdot\right\|_b$ auf $\R^{m \times n}$ (bei festen
 $m, n$) existieren Konstanten $c, C > 0$ mit
@@ -38,7 +39,7 @@ Maximum an); wir übernehmen das Resultat hier ohne Beweis. Interessanter für d
 ist, *wie groß* die Konstanten für die konkreten Normen aus den letzten
 Abschnitten ausfallen:
 
-:::beispiel[3.5.2 (Explizite Äquivalenzkonstanten)]
+:::beispiel[#explizite-aequivalenzkonstanten (Explizite Äquivalenzkonstanten)]
 Für $\bA \in \R^{m \times n}$ gilt unter anderem:
 
 $$
@@ -54,7 +55,7 @@ $$
 $$
 
 ($\left\|\cdot\right\|_\infty$ ist hier die Zeilensummennorm aus
-[Abschnitt 3.3](#sec-3.3), nicht zu verwechseln mit
+@sec:operatornormen, nicht zu verwechseln mit
 der elementweisen Maximumsnorm $\left\|\cdot\right\|_M$.) Die Konstanten
 hängen also nur über die Dimensionen $m, n$ von der Matrix ab,
 und sie wachsen mit der Dimension. Für sehr große Matrizen können zwei Normen also
@@ -62,7 +63,7 @@ durchaus um Größenordnungen auseinanderliegen.
 :::
 
 Die erste Kette können wir mit dem Schatten-Blick aus
-[Abschnitt 3.4](#sec-3.4) vollständig beweisen. Dort
+@sec:schattennormen vollständig beweisen. Dort
 haben wir gesehen: Sind $\lambda_1 \ge \cdots \ge \lambda_r > 0$ die
 positiven :k[Eigenwerte]{#eigenvalue-eigenvector} von
 $\bA^\top\bA$ (mit $r = \rang(\bA)$), so ist
@@ -98,7 +99,7 @@ $$
 
 ::::
 
-:::bemerkung[3.5.3 (Äquivalenz ist nicht Gleichheit)]
+:::bemerkung[#aequivalenz-ist-nicht-gleichheit (Äquivalenz ist nicht Gleichheit)]
 Vorsicht: Äquivalenz heißt nur, dass keine Norm „unendlich viel größer" sein kann als
 eine andere. Verschiedene Normen können Matrizen aber durchaus
 *unterschiedlich ordnen*. Betrachten wir
@@ -116,7 +117,7 @@ summiert die „Gesamtmasse" aller Einträge, die Spektralnorm die maximale Stre
 Welche Norm die passende ist, entscheidet die Anwendung.
 :::
 
-Eine Frage bleibt offen: Sind die Konstanten in Beispiel 3.5.2 nur bequeme Abschätzungen,
+Eine Frage bleibt offen: Sind die Konstanten in @beispiel:explizite-aequivalenzkonstanten nur bequeme Abschätzungen,
 oder lässt sich der Faktor $\sqrt{\min(m,n)}$ noch drücken? Anders gefragt: Gibt es
 Matrizen, für die eine der beiden Ungleichungen mit Gleichheit steht? Weil alle drei
 beteiligten Normen nur von den Singulärwerten abhängen, können wir das für $2 \times 2$
@@ -132,10 +133,10 @@ Dazwischen ist der Quotient echt kleiner als $\sqrt{2}$. Verbessern lässt sich 
 Konstante also nicht, und sie wird schlecht: Im $\R^{n \times n}$ steht dort
 $\sqrt{n}$, und für $\bA = \bI_n$ ist diese Schranke scharf.
 
-### 3.5.2 Submultiplikativität
+### Submultiplikativität :id[submultiplikativitaet]
 
 Kommen wir zur zweiten Frage. Die Normaxiome aus
-[Abschnitt 3.2](#sec-3.2) regeln per
+@sec:matrixnormen regeln per
 Dreiecksungleichung, wie sich Normen unter *Addition* verhalten:
 $\left\|\bA + \bB\right\| \le \left\|\bA\right\| + \left\|\bB\right\|$.
 Über das Matrix*produkt* sagen sie dagegen gar nichts. Für die Numerik ist das
@@ -143,7 +144,7 @@ Produkt aber die zentrale Operation: Algorithmen sind Ketten von
 Matrixmultiplikationen, und wir wollen abschätzen können, wie stark so eine Kette
 Fehler aufbläht. Normen, die das erlauben, bekommen einen eigenen Namen:
 
-:::definition[3.5.4 (Submultiplikative Matrixnorm)]
+:::definition[#submultiplikative-matrixnorm (Submultiplikative Matrixnorm)]
 Eine Matrixnorm $\left\|\cdot\right\|$ heißt
 *submultiplikativ*, wenn für alle Matrizen mit passenden Formaten (
 $\cbred{\bA} \in \R^{m \times n}$, $\cblue{\bB} \in \R^{n \times p}$) gilt:
@@ -155,8 +156,8 @@ $$
 
 Die gute Nachricht: Die wichtigsten Normen aus diesem Kapitel haben diese Eigenschaft.
 
-:::satz[3.5.5 (Operatornormen sind submultiplikativ)]
-Jede Operatornorm ([Abschnitt 3.3](#sec-3.3)) ist
+:::satz[#operatornormen-sind-submultiplikativ (Operatornormen sind submultiplikativ)]
+Jede Operatornorm (@sec:operatornormen) ist
 submultiplikativ.
 :::
 
@@ -195,7 +196,7 @@ $$
 ::::
 
 Auch alle Schatten-Normen aus
-[Abschnitt 3.4](#sec-3.4) (insbesondere die
+@sec:schattennormen (insbesondere die
 Frobenius-Norm und die Nuklearnorm) sind submultiplikativ. Der Beweis braucht
 Ungleichungen für Singulärwerte von Produkten, die wir hier nicht entwickeln; wir merken
 uns das Resultat.
@@ -212,7 +213,7 @@ Es gibt sie, die Norm, die aus der Reihe tanzt, und es ist die elementweise Maxi
 Schon das einfachste Paar bringt sie zu Fall, wie das Widget zeigt: die Einsermatrix mit
 sich selbst multipliziert. Rechnen wir diesen Fall von Hand nach.
 
-:::beispiel[3.5.6 (Die Maximumsnorm ist nicht submultiplikativ)]
+:::beispiel[#die-maximumsnorm-ist-nicht (Die Maximumsnorm ist nicht submultiplikativ)]
 Betrachten wir die Einsermatrix
 $\cbred{\bA} = \begin{pmatrix} 1 & 1 \\ 1 & 1 \end{pmatrix}$ und ihr
 Quadrat. Jeder Eintrag von $\cgreen{\bA^2}$ ist ein Skalarprodukt aus einer
@@ -232,12 +233,12 @@ Die Maximumsnorm „übersieht", dass bei der Matrixmultiplikation viele Produkt
 *aufsummiert* werden, denn sie schaut nur auf den größten einzelnen Eintrag.
 :::
 
-:::bemerkung[3.5.7 (Reparatur: die Gesamtnorm)]
+:::bemerkung[#reparatur-die-gesamtnorm (Reparatur: die Gesamtnorm)]
 Der Defekt lässt sich durch einen dimensionsabhängigen Faktor beheben: Die
 *Gesamtnorm* $\left\|\bA\right\|_G := \sqrt{mn}\, \left\|\bA\right\|_M$ ist
 submultiplikativ. Der Nachweis ist eine gute Übung. Er benutzt genau die
 Summenstruktur der Matrixmultiplikation, die die Maximumsnorm ignoriert. (Probe am
-Beispiel 3.5.6 mit $m = n = 2$, also $\sqrt{mn} = 2$:
+@beispiel:die-maximumsnorm-ist-nicht mit $m = n = 2$, also $\sqrt{mn} = 2$:
 $\left\|\bA\right\|_G = 2 \cdot 1 = 2$ und
 $\left\|\bA^2\right\|_G = 2 \cdot 2 = 4 \le 4 = \left\|\bA\right\|_G^2$,
 es passt.)
@@ -257,14 +258,14 @@ zeigen, dass $\rho(\bA) \le \left\|\bA\right\|$ für jede
 submultiplikative Norm gilt: Jede solche Norm ist eine obere Schranke für die
 betragsgrößten Eigenwerte.
 
-### 3.5.3 Verträglichkeit von Normen
+### Verträglichkeit von Normen :id[vertraeglichkeit-von-normen]
 
 Submultiplikativität vergleicht Matrixnormen mit Matrixnormen. Genauso oft brauchen wir
 aber ein gemischtes Szenario: Eine Matrix wirkt auf einen *Vektor*, und wir
 wollen $\left\|\bA\bx\right\|$ durch die Norm von $\bA$ und
 die Norm von $\bx$ abschätzen. Das führt auf folgenden Begriff:
 
-:::definition[3.5.8 (Verträgliche Norm)]
+:::definition[#vertraegliche-norm (Verträgliche Norm)]
 Eine Matrixnorm $\left\|\cdot\right\|$ ist *verträglich*
 (kompatibel) mit einer :k[Vektornorm]{#norm}
 $\left\|\cdot\right\|_V$, wenn für alle
@@ -278,7 +279,7 @@ $$
 auf $\R^n$ und auf $\R^m$.)
 :::
 
-:::satz[3.5.9 (Wichtige Verträglichkeiten)]
+:::satz[#wichtige-vertraeglichkeiten (Wichtige Verträglichkeiten)]
 1. Jede submultiplikative Matrixnorm ist mit „sich selbst" verträglich, d. h. mit der
    Vektornorm, die entsteht, wenn wir $\bx \in \R^n$ als
    $n \times 1$-Matrix lesen.
@@ -300,11 +301,11 @@ $$
 \left\|\bA\bx\right\| \le \left\|\bA\right\| \cdot \left\|\bx\right\|.
 $$
 
-::why[Submultiplikativität (Definition 3.5.4), angewendet auf das Matrixprodukt einer $m \times n$- mit einer $n \times 1$-Matrix]
+::why[Submultiplikativität (@definition:submultiplikative-matrixnorm), angewendet auf das Matrixprodukt einer $m \times n$- mit einer $n \times 1$-Matrix]
 :::
 
 :::schritt
-*Zu (2):* Das ist die Hilfsungleichung aus dem Beweis von Satz 3.5.5: Für
+*Zu (2):* Das ist die Hilfsungleichung aus dem Beweis von @satz:operatornormen-sind-submultiplikativ: Für
 $\bx \ne \bnull$ gilt
 
 $$
@@ -346,7 +347,7 @@ Ein kleiner Eingangsfehler bleibt nach der Multiplikation kontrolliert, denn die
 ist der Verstärkungsfaktor im schlimmsten Fall. Diese Denkfigur bauen wir jetzt zu
 den zwei wichtigsten Anwendungen aus.
 
-### 3.5.4 Matrixnormen und Konditionierung
+### Matrixnormen und Konditionierung :id[matrixnormen-und-konditionierung]
 
 Die :k[Konditionszahl]{#condition-number} misst, wie stark ein Problem
 relative Eingabefehler verstärkt. Für das Lösen
@@ -355,7 +356,7 @@ $\bA\bx = \bb$ lässt sich dieser Verstärkungsfaktor direkt aus Matrixnormen
 gewinnen. Das rechnen wir im Kapitel über lineare Gleichungssysteme nach, halten die
 Definition aber schon hier fest:
 
-:::definition[3.5.10 (Konditionszahl einer Matrix)]
+:::definition[#eigenschaften-konditionszahl-einer-matrix (Konditionszahl einer Matrix)]
 Für eine :k[invertierbare]{#matrix-inverse} Matrix
 $\bA \in \R^{n \times n}$ und eine submultiplikative Matrixnorm
 $\left\|\cdot\right\|$ ist die *Konditionszahl*
@@ -378,7 +379,7 @@ für *induzierte Operatornormen*. Bei anderen Normen kann auch die Normierung an
 aussehen: Beispielsweise ist $\kappa_F(\bI_n)=n$, nicht $1$.
 
 Die zweite Gleichheit sieht man so: Nach
-[Abschnitt 3.3](#sec-3.3) ist
+@sec:operatornormen ist
 $\left\|\bA\right\|_2 = \lambda_{\max}(\bA^\top\bA)^{1/2}$, und die
 Eigenwerte von $(\bA^{-1})^\top\bA^{-1} = (\bA\bA^\top)^{-1}$ sind die
 Kehrwerte der Eigenwerte von $\bA\bA^\top$, und
@@ -394,7 +395,7 @@ gerade die Beträge der Eigenwerte; dort ist
 $\kappa_2(\bA) = \max_i |\lambda_i| \,/\, \min_i |\lambda_i|$, das
 Verhältnis der betragsmäßig extremen Eigenwerte.
 
-:::bemerkung[3.5.11 (Interpretation der Konditionszahl)]
+:::bemerkung[#interpretation-der-konditionszahl (Interpretation der Konditionszahl)]
 Für eine induzierte Operatornorm gilt:
 
 - $\kappa(\bA) \approx 1$: gut konditioniert; $\bA$ streckt
@@ -413,11 +414,11 @@ $$
 Den Idealwert $\kappa_2 = 1$ erreichen zum Beispiel
 :k[Orthogonalmatrizen]{#orthogonal-matrix}: Sie lassen alle
 euklidischen Längen unverändert (
-[Abschnitt 3.3](#sec-3.3)), strecken also jede
+@sec:operatornormen), strecken also jede
 Richtung mit dem Faktor 1.
 :::
 
-### 3.5.5 Normen in der Fehleranalyse
+### Normen in der Fehleranalyse :id[normen-in-der-fehleranalyse]
 
 Zum Abschluss zeigen wir an einem konkreten Resultat, wie Matrixnormen in der
 Fehleranalyse arbeiten. Angenommen, wir lösen $\bA\bx = \bb$ numerisch und
@@ -428,7 +429,7 @@ stellt die Frage geschickt um: Statt zu fragen, wie falsch $\wt{\bx}$ ist
 $\wt{\bx}$ die exakte Lösung?* Ist die nötige Störung winzig, hat der
 Algorithmus sein Bestes getan; alles Weitere ist Sache der Kondition des Problems.
 
-:::satz[3.5.12 (Rückwärtsfehler beim linearen Gleichungssystem)]
+:::satz[#rueckwaertsfehler-beim-linearen (Rückwärtsfehler beim linearen Gleichungssystem)]
 Sei $\wt{\bx} \ne \bnull$ eine Näherungslösung von
 $\bA\bx = \bb$ mit Residuum
 $\cbpurp{\br} = \bA\wt{\bx} - \bb$. Dann löst $\wt{\bx}$
@@ -488,7 +489,7 @@ $\cbpurp{\br}$ und die Normen von $\bA$ und
 $\wt{\bx}$. Matrixnormen machen den Rückwärtsfehler also *berechenbar*:
 Ein kleines relatives Residuum bedeutet, dass $\wt{\bx}$ die exakte Lösung
 eines nur winzig gestörten Systems ist. Wie weit $\wt{\bx}$ dann von der
-wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus Definition 3.5.10.
+wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus @definition:eigenschaften-konditionszahl-einer-matrix.
 Als Faustregel gilt: Vorwärtsfehler $\lesssim \kappa(\bA) \times$
 Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
 
@@ -497,7 +498,7 @@ Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
 <ul className="max-w-prose list-none space-y-4 pl-0">
   <SelbsttestFrage q={<>Gilt <M>{"\\left\\|\\bA^2\\right\\| \\le \\left\\|\\bA\\right\\|^2"}</M> für <em>jede</em> Matrixnorm?</>}>
     Nein, das gilt nur für submultiplikative Normen. Die Maximumsnorm liefert ein
-    Gegenbeispiel: Für die Einsermatrix aus Beispiel 3.5.6 ist
+    Gegenbeispiel: Für die Einsermatrix aus @beispiel:die-maximumsnorm-ist-nicht ist
     $\left\|\bA^2\right\|_M = 2 > 1 = \left\|\bA\right\|_M^2$.
     Operator- und Schatten-Normen (also auch Spektral-, Frobenius- und Nuklearnorm)
     erfüllen die Ungleichung dagegen immer.
@@ -511,7 +512,7 @@ Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
     konditioniert – ein Hauptgrund, warum numerische Verfahren so gerne mit ihnen
     arbeiten.
   </SelbsttestFrage>
-  <SelbsttestFrage q={<>Für die Einheitsmatrix gilt <M>{"\\left\\|\\bI_n\\right\\|_2 = 1"}</M>, aber <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n}"}</M>. Widerspricht das der Normenäquivalenz (Satz 3.5.1)? Und was sagt uns das Beispiel über die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus Beispiel 3.5.2?</>}>
+  <SelbsttestFrage q={<>Für die Einheitsmatrix gilt <M>{"\\left\\|\\bI_n\\right\\|_2 = 1"}</M>, aber <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n}"}</M>. Widerspricht das der Normenäquivalenz ({ref("satz:alle-matrixnormen-sind-aequivalent")})? Und was sagt uns das Beispiel über die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus {ref("beispiel:explizite-aequivalenzkonstanten")}?</>}>
     Kein Widerspruch: Satz 3.5.1 gilt bei *festen* Dimensionen, und die
     Konstanten dürfen von $m, n$ abhängen. Das Beispiel zeigt sogar, dass die
     Konstante scharf ist: $\bI_n$ erfüllt
@@ -531,7 +532,7 @@ Welchen Quotienten $\left\|\bA\right\|_F / \left\|\bA\right\|_2$ zeigt es dann?
 
 $\sqrt{2} \approx 1{,}414$, unabhängig davon, wie weit außen auf der Winkelhalbierenden
 wir landen. Dort ist $\bA$ ein Vielfaches der Einheitsmatrix, und die rechte Ungleichung
-aus Beispiel 3.5.2 steht mit Gleichheit. Auf der waagerechten Achse dagegen ist der
+aus @beispiel:explizite-aequivalenzkonstanten steht mit Gleichheit. Auf der waagerechten Achse dagegen ist der
 Quotient $1$.
 :::
 
@@ -541,9 +542,9 @@ wählen wir die Maximumsnorm. Welchen Quotienten
 $\left\|\bA\bB\right\| / (\left\|\bA\right\| \cdot \left\|\bB\right\|)$ zeigt der Balken?
 
 $2$, also doppelt so viel wie erlaubt. Alle Einträge von $\bA\bB$ sind $2$, alle Einträge
-von $\bA$ und $\bB$ sind $1$: $2 / (1 \cdot 1) = 2$ (Beispiel 3.5.6). Schalten wir bei
+von $\bA$ und $\bB$ sind $1$: $2 / (1 \cdot 1) = 2$ (@beispiel:die-maximumsnorm-ist-nicht). Schalten wir bei
 denselben Matrizen auf eine Operatornorm um, springt der Balken auf genau $1$ – dort ist
-die Schranke aus Satz 3.5.5 scharf, aber eben nicht verletzt.
+die Schranke aus @satz:operatornormen-sind-submultiplikativ scharf, aber eben nicht verletzt.
 :::
 
 :::frage{falsch}

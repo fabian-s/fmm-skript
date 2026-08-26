@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, MatrixDisplay, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: B^T ⊗_K A ist keine Schreibvariante, sondern seine A-Blöcke sorgen
@@ -75,7 +76,7 @@ export function KroneckerRechner() {
     <Verdikt kind={vertauscht ? "warn" : "ok"}>
       {vertauscht
         ? "A ⊗_K Bᵀ hat ebenfalls das Format 4 × 4, ordnet die vier Produkte aber anders an. Für quadratische Faktoren ist es zu Bᵀ ⊗_K A permutationsähnlich, nicht gleich."
-        : "Jeder grüne Eintrag von Bᵀ skaliert einen ganzen blauen A-Block. Daher bildet Bᵀ ⊗_K A die gestapelten Spalten von X genau zu vec(AXB) ab, wie Satz 9.5.3 behauptet."}
+        : `Jeder grüne Eintrag von Bᵀ skaliert einen ganzen blauen A-Block. Daher bildet Bᵀ ⊗_K A die gestapelten Spalten von X genau zu vec(AXB) ab, wie ${ref("satz:vektorisierung-eines-matrixprodukts")} behauptet.`}
     </Verdikt>
   </div>;
 }

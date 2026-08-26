@@ -14,6 +14,7 @@ import {
   W_BUTTON_AKTIV,
 } from "../../../lib";
 import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.5 — DIE EINE EINSICHT: Im Optimum eines beschraenkten Problems sind
@@ -231,13 +232,13 @@ export function LagrangeGeometrie() {
   let status: string;
   if (modus === "eq") {
     if (parallel) {
-      status = `Die beiden Pfeile decken sich: ∇f = (${fmt(gf[0])}; ${fmt(gf[1])}) ist ein Vielfaches von ${gradText}. Beide Stationaritätsgleichungen liefern denselben Multiplikator λ = ${fmt(multAusX)}. Entlang der Geraden ändert sich f hier nicht mehr, die Richtungsableitung ist ${fmt(richtung)}. Die Höhenlinie f = ${fmt(wert)} berührt die Gerade, statt sie zu kreuzen: das ist das Optimum. Das ist genau die notwendige Bedingung von Satz 12.5.5; das Vorzeichen von λ ist bei einer Gleichungsnebenbedingung frei.`;
+      status = `Die beiden Pfeile decken sich: ∇f = (${fmt(gf[0])}; ${fmt(gf[1])}) ist ein Vielfaches von ${gradText}. Beide Stationaritätsgleichungen liefern denselben Multiplikator λ = ${fmt(multAusX)}. Entlang der Geraden ändert sich f hier nicht mehr, die Richtungsableitung ist ${fmt(richtung)}. Die Höhenlinie f = ${fmt(wert)} berührt die Gerade, statt sie zu kreuzen: das ist das Optimum. Das ist genau die notwendige Bedingung von ${ref("satz:notwendige-bedingung-von-lagrange")}; das Vorzeichen von λ ist bei einer Gleichungsnebenbedingung frei.`;
     } else {
       status = `∇f = (${fmt(gf[0])}; ${fmt(gf[1])}) und ${gradText} zeigen in verschiedene Richtungen; das Kreuzprodukt beträgt ${fmt(kreuz)}. ${uneinig} Hier kann also kein Optimum liegen. ${tiefer}`;
     }
   } else if (modus === "ge") {
     if (parallel) {
-      status = `Zulässig ist die rote Halbebene x + y ≥ 1, das unbeschränkte Minimum (0; 0) liegt außerhalb. Hier stimmen beide Stationaritätsgleichungen überein und liefern μ = ${fmt(multAusX)} > 0, und wegen h(${fmt(x)}; ${fmt(y)}) = 0 ist auch die Komplementarität erfüllt. Alle vier Bedingungen von Satz 12.5.7 sind damit erfüllt, die Ungleichung ist aktiv, sie bindet: ∇f = (${fmt(gf[0])}; ${fmt(gf[1])}) und ${gradText} zeigen in entgegengesetzte Richtungen, und diese Gegenläufigkeit ist es, die μ positiv macht.`;
+      status = `Zulässig ist die rote Halbebene x + y ≥ 1, das unbeschränkte Minimum (0; 0) liegt außerhalb. Hier stimmen beide Stationaritätsgleichungen überein und liefern μ = ${fmt(multAusX)} > 0, und wegen h(${fmt(x)}; ${fmt(y)}) = 0 ist auch die Komplementarität erfüllt. Alle vier Bedingungen von ${ref("satz:karush-kuhn-tucker-bedingungen")} sind damit erfüllt, die Ungleichung ist aktiv, sie bindet: ∇f = (${fmt(gf[0])}; ${fmt(gf[1])}) und ${gradText} zeigen in entgegengesetzte Richtungen, und diese Gegenläufigkeit ist es, die μ positiv macht.`;
     } else {
       status = `Zulässig ist die rote Halbebene x + y ≥ 1. ${uneinig} Hier kann also kein Optimum liegen. ${tiefer} Im Punkt (0,50; 0,50) werden sich beide auf μ = 1 einigen, und weil das positiv ist, darf die Ungleichung dort binden.`;
     }
@@ -245,7 +246,7 @@ export function LagrangeGeometrie() {
     const rand = parallel
       ? `Im einzigen Punkt der Geraden, in dem sich die beiden Stationaritätsgleichungen einigen, fordern sie μ = ${fmt(multAusX)} < 0.`
       : `${uneinig} Und selbst dort, wo sie sich einigen, nämlich in (0,50; 0,50), fordern sie μ = −1 < 0.`;
-    status = `Jetzt zeigt die Ungleichung in die andere Richtung, zulässig ist die rote Halbebene x + y ≤ 1. ${rand} Die duale Zulässigkeit aus Satz 12.5.7 verbietet das: Kein Randpunkt ist ein KKT-Punkt. Stattdessen gewinnt das unbeschränkte Minimum x* = (0; 0) mit f* = 0. Dort ist h(0; 0) = −1 < 0, die Ungleichung ist inaktiv, die Komplementarität μ·h = 0 erzwingt μ = 0, und die Stationarität wird trivial erfüllt, weil ∇f(0; 0) = (0; 0) ist.`;
+    status = `Jetzt zeigt die Ungleichung in die andere Richtung, zulässig ist die rote Halbebene x + y ≤ 1. ${rand} Die duale Zulässigkeit aus ${ref("satz:karush-kuhn-tucker-bedingungen")} verbietet das: Kein Randpunkt ist ein KKT-Punkt. Stattdessen gewinnt das unbeschränkte Minimum x* = (0; 0) mit f* = 0. Dort ist h(0; 0) = −1 < 0, die Ungleichung ist inaktiv, die Komplementarität μ·h = 0 erzwingt μ = 0, und die Stationarität wird trivial erfüllt, weil ∇f(0; 0) = (0; 0) ist.`;
   }
 
   return (

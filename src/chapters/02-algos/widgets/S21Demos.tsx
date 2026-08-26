@@ -12,6 +12,7 @@ import {
   W_PANEL,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §2.1: „Zwei Gesichter derselben Auslöschung" — die Varianz nach der
@@ -242,7 +243,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         <>
           Beide Rechenwege liefern exakt <M>{"22{,}5"}</M>. Die Auflösung an der Rechenstelle
           liegt noch weit unter der gesuchten Varianz, die Subtraktion verliert also nichts
-          Wesentliches (Beispiel 2.1.3).
+          Wesentliches ({ref("beispiel:katastrophale-ausloeschung")}).
         </>
       );
     } else if (formel === 0) {
@@ -251,7 +252,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         <>
           Totalausfall: Beide Terme werden auf dieselbe Maschinenzahl gerundet, ihre Differenz
           ist exakt <M>{"0"}</M>. Die gesamte Information über die Streuung ist ausgelöscht —
-          genau der Fall, den Beispiel 2.1.3 vorrechnet.
+          genau der Fall, den {ref("beispiel:katastrophale-ausloeschung")} vorrechnet.
         </>
       );
     } else if (formel < 0) {
@@ -260,7 +261,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         <>
           Eine negative Varianz ({kompakt(formel)}): Die Rundungsfehler der beiden Riesenterme
           sind größer als deren wahre Differenz <M>{"22{,}5"}</M>, das Vorzeichen ist reiner
-          Rundungszufall (Beispiel 2.1.3).
+          Rundungszufall ({ref("beispiel:katastrophale-ausloeschung")}).
         </>
       );
     } else if (abweichung > 22.5) {
@@ -269,7 +270,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         <>
           Das Ergebnis ({kompakt(formel)}) ist um Größenordnungen daneben. Übrig geblieben sind
           nur noch die Rundungsreste der beiden Terme; welcher Wert dabei herauskommt, ist
-          Zufall (Beispiel 2.1.3).
+          Zufall ({ref("beispiel:katastrophale-ausloeschung")}).
         </>
       );
     } else {
@@ -288,7 +289,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
       <>
         Beide Klammerungen liefern <M>{"1"}</M>. Die <M>{"1"}</M> ist noch größer als der
         Abstand benachbarter Maschinenzahlen bei <M>{`10^{${k}}`}</M>, die Zwischensumme{" "}
-        <M>{"y + z"}</M> kann sie also festhalten (Beispiel 2.1.4).
+        <M>{"y + z"}</M> kann sie also festhalten ({ref("beispiel:verletzte-assoziativitaet")}).
       </>
     );
   } else {
@@ -298,7 +299,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         Die Klammerungen gehen auseinander: links <M>{"1"}</M>, rechts <M>{"0"}</M>. Bei{" "}
         <M>{`10^{${k}}`}</M> liegen benachbarte Maschinenzahlen {kompakt(aufloesung)}{" "}
         auseinander, <M>{"y + z"}</M> wird deshalb auf <M>{"y"}</M> zurückgerundet und die{" "}
-        <M>{"1"}</M> verschwindet spurlos (Beispiel 2.1.4).
+        <M>{"1"}</M> verschwindet spurlos ({ref("beispiel:verletzte-assoziativitaet")}).
       </>
     );
   }
@@ -327,8 +328,8 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
       <div className="flex flex-wrap gap-2" role="group" aria-label="Rechenweg">
         {(
           [
-            ["varianz", "Varianz (Beispiel 2.1.3)"],
-            ["assoziativ", "Assoziativität (Beispiel 2.1.4)"],
+            ["varianz", `Varianz (${ref("beispiel:katastrophale-ausloeschung")})`],
+            ["assoziativ", `Assoziativität (${ref("beispiel:verletzte-assoziativitaet")})`],
           ] as [Modus, string][]
         ).map(([id, text]) => (
           <button
@@ -395,7 +396,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
         <p className={`max-w-prose text-xs ${W_MUTED}`}>
           Kleingedrucktes: Das Widget summiert naiv von vorne nach hinten, Rs{" "}
           <code>mean()</code> hängt einen Korrekturschritt an. Deshalb steht hier bei{" "}
-          <M>{"k = 9"}</M> der Wert <M>{"-128"}</M>, wo Beispiel 2.1.3 die R-Ausgabe{" "}
+          <M>{"k = 9"}</M> der Wert <M>{"-128"}</M>, wo {ref("beispiel:katastrophale-ausloeschung")} die R-Ausgabe{" "}
           <M>{"0"}</M> zitiert. Beides ist IEEE-Doppelpräzision.
         </p>
       )}

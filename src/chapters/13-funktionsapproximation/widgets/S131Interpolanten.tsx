@@ -11,6 +11,7 @@
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe, type PlotPoint, type Series } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Vier Interpolanten durch dieselben drei Punkte (§13.1). Ersetzt das
@@ -152,7 +153,7 @@ export function VierInterpolanten() {
             </tbody>
           </table>
           <Verdikt kind={werte.length < 2 ? "warn" : aufKnoten ? "ok" : "fail"}>
-            {werte.length < 2 ? "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven." : aufKnoten ? <>Spanne 0: <M>{"x^{\\ast}"}</M> ist eine Stützstelle, dort sind alle Interpolanten gleich.</> : <>Die Spanne bei <M>{"x^{\\ast}"}</M> beträgt <span className="font-mono">{fmt(spanne)}</span>; die roten Punkte markieren sie. Nach Satz 13.1.8 bleiben alle Kurven an den Stützstellen gebunden, dazwischen nicht.</>}
+            {werte.length < 2 ? "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven." : aufKnoten ? <>Spanne 0: <M>{"x^{\\ast}"}</M> ist eine Stützstelle, dort sind alle Interpolanten gleich.</> : <>Die Spanne bei <M>{"x^{\\ast}"}</M> beträgt <span className="font-mono">{fmt(spanne)}</span>; die roten Punkte markieren sie. Nach {ref("satz:gestalt-aller-interpolanten")} bleiben alle Kurven an den Stützstellen gebunden, dazwischen nicht.</>}
           </Verdikt>
         </div>
       </div>

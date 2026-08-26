@@ -9,6 +9,7 @@ import {
   W_MUTED,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.4: Schattennormen und ihre unitäre Invarianz.
@@ -316,17 +317,17 @@ export function S34SchattenWidget() {
           <>
             Noch steht die Drehung still. Die Halbachsen der Ellipse sind{" "}
             <M>{`\\sigma_1 = ${deMath(s1)}`}</M> und <M>{`\\sigma_2 = ${deMath(s2)}`}</M>; alle
-            Schattennormen rechts sind aus diesen beiden Zahlen gebaut (Definition 3.4.1).
+            Schattennormen rechts sind aus diesen beiden Zahlen gebaut ({ref("definition:schatten-p-norm")}).
           </>
         ) : (
           <>
             Über die durchfahrenen {fmtDe(spanne, 0)}° hinweg beträgt die größte Abweichung der
             Schattennormen {wissenschaftlich(abwSchatten)} –
-            das ist Rundungsrauschen, keine Änderung: Satz 3.4.7 in Zahlen. Summen- und
+            das ist Rundungsrauschen, keine Änderung: {ref("satz:unitaere-invarianz")} in Zahlen. Summen- und
             Maximumsnorm dagegen bewegen sich um bis zu {fmtDe(abwElement, 3)}. Und die grüne
             elementweise Summe trifft weiterhin die Frobenius-Norm auf{" "}
             {wissenschaftlich(Math.abs(frobElement - frob))}{" "}
-            genau, wie Korollar 3.4.4 es verlangt.
+            genau, wie {ref("korollar:spezialfaelle-der-schatten-p-norm")} es verlangt.
           </>
         )}
       </Verdikt>

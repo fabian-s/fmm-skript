@@ -13,6 +13,7 @@ import {
   useDrag,
 } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §10.3: zwei Widgets zur Jacobimatrix.
@@ -94,13 +95,13 @@ export function JacobiFormWidget() {
 
   const art = m === 1 && n === 1 ? "zahl" : m === 1 ? "zeile" : n === 1 ? "spalte" : "matrix";
   const befund: Record<string, ReactNode> = {
-    zahl: "Zeile und Spalte schrumpfen auf ein einziges Feld: Wir sind zurück bei Definition 10.1.1, dem Grenzwert des Differenzenquotienten.",
+    zahl: `Zeile und Spalte schrumpfen auf ein einziges Feld: Wir sind zurück bei ${ref("definition:differenzierbarkeit")}, dem Grenzwert des Differenzenquotienten.`,
     zeile:
-      "Nur eine Ausgabe, also nur eine Zeile. Damit steht hier Definition 10.2.1, der Gradient, als Sonderfall der Jacobimatrix.",
+      `Nur eine Ausgabe, also nur eine Zeile. Damit steht hier ${ref("definition:gradient")}, der Gradient, als Sonderfall der Jacobimatrix.`,
     spalte:
       "Nur eine Eingabe, also nur eine Spalte. So sieht die Ableitung einer Kurve nach ihrem Parameter aus, m Steigungen übereinander.",
     matrix:
-      "Beide Regler größer als eins: das volle Rechteck aus Definition 10.3.1, zeilenweise gelesen m Gradienten.",
+      `Beide Regler größer als eins: das volle Rechteck aus ${ref("definition:jacobimatrix")}, zeilenweise gelesen m Gradienten.`,
   };
 
   return (
@@ -196,7 +197,7 @@ const ABBILDUNGEN: Abbildung[] = [
   {
     id: "quadrat",
     name: "Quadrieren",
-    titel: "Beispiel 10.3.7: Winkel verdoppeln, Radius quadrieren",
+    titel: `${ref("beispiel:quadrieren-in-der-ebene")}: Winkel verdoppeln, Radius quadrieren`,
     f: ([a, b]) => [a * a - b * b, 2 * a * b],
     J: ([a, b]) => [
       [2 * a, -2 * b],
@@ -784,7 +785,7 @@ function LinearisierungsTafeln({ aufgeloest }: { aufgeloest: boolean }) {
             <span className="font-mono" style={{ color: ORANGE }}>
               |det J| = {fmt(Math.abs(d.det), 4)}
             </span>{" "}
-            , nicht nur im Grenzwert, sondern exakt. Genau das sagt Korollar 10.3.6.
+            , nicht nur im Grenzwert, sondern exakt. Genau das sagt {ref("korollar:lineare-abbildungen-sind-ihre-eigene")}.
           </>
         ) : (
           <>
@@ -796,7 +797,7 @@ function LinearisierungsTafeln({ aufgeloest }: { aufgeloest: boolean }) {
             <span className="font-mono" style={{ color: ROT }}>
               ‖r(h)‖/‖h‖² = {fmt(restQuotient, 3)}
             </span>
-            . Der Quotient bleibt beim Verkleinern von h beschränkt; (10.3.1) verlangt nur,
+            . Der Quotient bleibt beim Verkleinern von h beschränkt; ({num("eq:eq-10-3-1")}) verlangt nur,
             dass ‖r(h)‖/‖h‖ verschwindet, und das ist hier{" "}
             <span className="font-mono">{fmt(d.maxRest / normH, 4)}</span>. Das Bild des
             Fensters hat die Fläche <span className="font-mono">{fmt(d.flaeche, 4)}</span>, das
@@ -806,7 +807,7 @@ function LinearisierungsTafeln({ aufgeloest }: { aufgeloest: boolean }) {
             <span className="font-mono" style={{ color: ORANGE }}>
               |det J| = {fmt(Math.abs(d.det), 4)}
             </span>{" "}
-            (Bemerkung 10.3.8).
+            ({ref("bemerkung:wie-stark-die-flaeche-verzerrt-wird")}).
             {abb.id === "wirbel" && (
               <>
                 {" "}

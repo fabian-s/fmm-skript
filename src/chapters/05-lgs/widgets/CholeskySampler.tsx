@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
 import { fmtNum, MatTable, WidgetLabel } from "./shared";
+import { ref } from "../../numbers.generated";
 
 /**
  * Cholesky-Sampler für §5.4: aus σ₁, σ₂ und ρ entsteht live die
@@ -183,7 +184,7 @@ export function CholeskySampler() {
             <br />
             Probe: max |LLᵀ − Σ| = {fmtNum(residual)}
           </div>
-          <Verdikt kind={Math.abs(rho) > 0.9 ? "warn" : Math.abs(rho) < 0.1 ? "neutral" : "ok"} className="mt-2">{Math.abs(rho) > 0.9 ? "L₂₂ wird klein; die Kovarianz ist fast singulär." : Math.abs(rho) < 0.1 ? "Die Wolke bleibt fast rund: die Korrelation ist nahe null." : "L erzeugt die sichtbare Scherung und Satz 5.4.4 garantiert die Kovarianz Σ."}</Verdikt>
+          <Verdikt kind={Math.abs(rho) > 0.9 ? "warn" : Math.abs(rho) < 0.1 ? "neutral" : "ok"} className="mt-2">{Math.abs(rho) > 0.9 ? "L₂₂ wird klein; die Kovarianz ist fast singulär." : Math.abs(rho) < 0.1 ? "Die Wolke bleibt fast rund: die Korrelation ist nahe null." : `L erzeugt die sichtbare Scherung und ${ref("satz:kovarianz-unter-dem-cholesky-faktor")} garantiert die Kovarianz Σ.`}</Verdikt>
         </div>
       </div>
     </div>

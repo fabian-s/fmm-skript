@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe as fmt, niceTicks, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.5: Kruemmungsvergleich am Beispiel (0,0), (1,1), (2,0).
@@ -147,7 +148,7 @@ export function KruemmungsVergleich() {
     status =
       `Bei t = 0 ist g₀ der natürliche kubische Spline selbst, die rote Kurve liegt auf der ` +
       `grünen. Das Krümmungsintegral steht bei ${fmt(Jg)} und ist über den ganzen Regler ` +
-      `hinweg der kleinste erreichbare Wert: Der Beweis zu Satz 13.5.4 liefert ` +
+      `hinweg der kleinste erreichbare Wert: Der Beweis zu ${ref("satz:kubische-splines-haben-minimale")} liefert ` +
       `J(g) = J(s) + ∫(h″)², und der Zusatzterm ist genau dann null, wenn h verschwindet.`;
   } else if (Math.abs(t - 1) < 1e-9) {
     status =
@@ -304,7 +305,7 @@ export function KruemmungsVergleich() {
         </div>
       </div>
 
-      <Verdikt kind={Math.abs(t) < 0.001 ? "ok" : "warn"}>{status} Das bestätigt Satz 13.5.4.</Verdikt>
+      <Verdikt kind={Math.abs(t) < 0.001 ? "ok" : "warn"}>{status} Das bestätigt {ref("satz:kubische-splines-haben-minimale")}.</Verdikt>
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
   niceTicks,
 } from "../../../lib";
 import { gitter, hoehenlinie, niveaus, type Segment } from "./S108Kontur";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.8: Die EINE Einsicht — Newton konvergiert quadratisch: der Quotient
@@ -208,7 +209,7 @@ export function NewtonStepper() {
     art = "warn";
     status =
       `Bei x₁ = 0 ist die Hesse-Matrix diag(0, 1) und damit nicht invertierbar: Der Newton-Schritt ` +
-      `aus Algorithmus 10.8.11 verlangt H⁻¹ und ist hier gar nicht definiert. Das Taylorpolynom T₂ ` +
+      `aus ${ref("algorithmus:newton-raphson-verfahren")} verlangt H⁻¹ und ist hier gar nicht definiert. Das Taylorpolynom T₂ ` +
       `entartet in dieser Richtung zu einer Geraden, die kein Minimum hat. Ein Stück am Startregler ` +
       `genügt, um wieder in den regulären Fall zu kommen.`;
   } else if (aufgabe.quadratisch) {
@@ -227,7 +228,7 @@ export function NewtonStepper() {
       `Der Start liegt links der Null, und die Iteration läuft gegen (−1; 0). Dort ist der Gradient ` +
       `null, die Hesse-Matrix diag(−2, 1) aber indefinit: ein Sattelpunkt. Newton sucht Nullstellen ` +
       `des Gradienten, also kritische Punkte, und unterscheidet Minimum, Maximum und Sattel nicht ` +
-      `von selbst. Wer das Minimum will, muss die Definitheit prüfen (Bemerkung 10.8.12).`;
+      `von selbst. Wer das Minimum will, muss die Definitheit prüfen (${ref("bemerkung:drei-vorbehalte")}).`;
   } else if (bahn[0].fehler === 0) {
     status =
       `Der Startpunkt ist schon das Minimum (1; 0): Der Gradient ist null, der Newton-Schritt ` +
@@ -273,7 +274,7 @@ export function NewtonStepper() {
       </Aufgabe>
       <p className={`max-w-prose text-xs ${W_MUTED}`}>
         Blau: die Höhenlinien von f. Orange: der Weg der Iterierten. Grün: der Punkt, den die
-        Iteration ansteuert. Ein Schritt des Reglers ist genau eine Zeile von Algorithmus 10.8.11.
+        Iteration ansteuert. Ein Schritt des Reglers ist genau eine Zeile von {ref("algorithmus:newton-raphson-verfahren")}.
       </p>
       <div className="flex flex-wrap gap-2">
         {AUFGABEN.map((a) => (

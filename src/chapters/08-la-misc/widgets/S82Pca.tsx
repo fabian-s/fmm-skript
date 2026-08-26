@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, DragHandle, FMM_COLORS, Slider, Verdikt, fmtDe, useDrag } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: Die erste Hauptkomponente ist die Richtung mit maximaler
@@ -48,6 +49,6 @@ export function PcaDirectionDemo() {
       <text x="300" y="38" fill="var(--w-text)" fontSize="12">Varianz</text><rect x="302" y="48" width="28" height="160" fill="var(--w-grid)" rx="3" /><rect x="302" y={208 - 160 * variance / lambda1} width="28" height={160 * variance / lambda1} fill={FMM_COLORS.blau} rx="3" /><text x="316" y="224" textAnchor="middle" fill="var(--w-text)" fontSize="11">{fmtDe(variance, 2)}</text>
     </svg>
     <Slider label="Richtung θ" value={theta} onChange={(x) => setTheta(x)} min={-180} max={180} step={1} unit="°" accent={FMM_COLORS.blau} />
-    <Verdikt kind={max ? "ok" : "neutral"}>{max ? <>Bei θ = {fmtDe(theta, 1)}° liegt das Maximum mit Varianz {fmtDe(variance, 3)}: Das ist v₁ von Σ. Die grün gestrichelte Richtung gehört zu λ₁ = {fmtDe(lambda1, 3)}; λ₂ = {fmtDe(lambda2, 3)} gehört zur senkrechten Richtung, wie in Abschnitt 6.1.</> : <>Bei θ = {fmtDe(theta, 1)}° beträgt die Projektionsvarianz {fmtDe(variance, 3)}. Drehen wir zur grün gestrichelten Richtung: Dort maximiert der Rayleigh-Quotient vᵀΣv die Varianz.</>}</Verdikt>
+    <Verdikt kind={max ? "ok" : "neutral"}>{max ? <>Bei θ = {fmtDe(theta, 1)}° liegt das Maximum mit Varianz {fmtDe(variance, 3)}: Das ist v₁ von Σ. Die grün gestrichelte Richtung gehört zu λ₁ = {fmtDe(lambda1, 3)}; λ₂ = {fmtDe(lambda2, 3)} gehört zur senkrechten Richtung, wie in {ref("sec:svd/motivation")}.</> : <>Bei θ = {fmtDe(theta, 1)}° beträgt die Projektionsvarianz {fmtDe(variance, 3)}. Drehen wir zur grün gestrichelten Richtung: Dort maximiert der Rayleigh-Quotient vᵀΣv die Varianz.</>}</Verdikt>
   </div>;
 }

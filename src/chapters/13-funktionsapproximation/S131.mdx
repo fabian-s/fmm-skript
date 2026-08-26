@@ -4,7 +4,7 @@ import { VierInterpolanten } from "./widgets/S131Interpolanten";
 import { Schaetzfrage } from "../../lib";
 
 Mit diesem Kapitel beginnt der dritte Block des Skripts
-([Abschnitt 1.1](?k=01-intro#sec-1.1)). Die Aufgabe klingt zunächst harmlos:
+(@sec:intro/worum). Die Aufgabe klingt zunächst harmlos:
 Gegeben sind $n$ Datenpunkte $\cblue{(x_1, y_1), \dots, (x_n, y_n)}$ mit
 paarweise verschiedenen $x_i$, gesucht ist eine Funktion $\cgreen{\wh{f}}$,
 die zu ihnen passt. Manchmal stammen die Punkte gar nicht aus einer Messung,
@@ -29,13 +29,13 @@ Der Abschnitt führt kaum eigene Technik ein, greift dafür aber auf mehrere
 frühere Kapitel zurück.
 
 - Lineare Gleichungssysteme $\bB\ba = \by$ und ihre Lösbarkeit
-  ([Abschnitt 5.2](?k=05-lgs#sec-5.2)). Jede Interpolationsaufgabe dieses
+  (@sec:lgs/lgs). Jede Interpolationsaufgabe dieses
   Kapitels endet in einem solchen System.
 - Die :k[Konditionszahl]{#condition-number} einer Matrix als Maß dafür, wie
   stark sich Daten- und Rundungsfehler verstärken
-  ([Abschnitt 4.2](?k=04-fehler#sec-4.2) und
-  [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)). Sie entscheidet ab
-  [Abschnitt 13.3](#sec-13.3) darüber, welches Basissystem brauchbar ist.
+  (@sec:fehler/kondition und
+  @sec:matrix-spur-norm/eigenschaften). Sie entscheidet ab
+  @sec:polynominterpolation darüber, welches Basissystem brauchbar ist.
 - :k[Basen]{#basis} und :k[lineare Unabhängigkeit]{#linear-independence},
   diesmal in einem :k[Vektorraum]{#vector-space}, dessen Elemente Funktionen
   sind.
@@ -43,7 +43,7 @@ frühere Kapitel zurück.
   :k[Stetigkeit]{#continuity} und
   :k[Differenzierbarkeit]{#differentiability}, außerdem stückweise definierte
   Funktionen.
-- :k[Normen]{#norm} ([Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2)), hier
+- :k[Normen]{#norm} (@sec:matrix-spur-norm/matrixnormen), hier
   vor allem die *Supremumsnorm* einer Funktion: Für $g$ auf $[a, b]$ ist
   $\|g\|_\infty = \sup_{x \in [a,b]} |g(x)|$, bei stetigem $g$ auf einem
   abgeschlossenen Intervall also der größte Betrag, den $g$ dort annimmt.
@@ -53,7 +53,7 @@ frühere Kapitel zurück.
 Alle drei Aufgaben liefern am Ende ein $\cgreen{\wh{f}}$, verlangen aber sehr
 Verschiedenes von ihm.
 
-:::definition[13.1.1 (Approximationsproblem)]
+:::definition[#approximationsproblem (Approximationsproblem)]
 Gegeben seien eine Funktion $f$ auf $[a, b]$, eine Norm $\|\cdot\|$ auf
 einem Funktionenraum, der $f$ enthält, und eine vorgegebene, einfacher
 handhabbare Klasse $\mathcal A$ von Funktionen. Gesucht ist ein
@@ -70,11 +70,11 @@ nahekommen, muss es aber an keiner einzigen Stelle exakt treffen. Existiert
 ein Minimierer, steht in der Anzeige exakt ein Gleichheitszeichen.
 :::
 
-:::definition[13.1.2 (Interpolationsproblem)]
+:::definition[#interpolationsproblem (Interpolationsproblem)]
 Gegeben seien Datenpunkte $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit
 paarweise verschiedenen $x_i$. Gesucht ist ein $\cgreen{\wh{f}}$ mit
 
-$$ {#eq-13.1.1}
+$$ {#eq-interpolationsproblem}
 \cgreen{\wh{f}(x_i)} = \cblue{y_i}, \qquad i = 1, \dots, n .
 $$
 
@@ -84,7 +84,7 @@ und exakt: An den $n$ Stützstellen ist nichts erlaubt außer Treffen, zwischen
 ihnen alles.
 :::
 
-:::definition[13.1.3 (Glättungsproblem)]
+:::definition[#glaettungsproblem (Glättungsproblem)]
 Gegeben seien Datenpunkte $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, die aus
 einer unbekannten Funktion $f$ und Fehlern entstanden sind:
 
@@ -99,7 +99,7 @@ $\cblue{y_i}-\cgreen{\wh{f}(x_i)}$ sind dagegen aus den Daten berechenbare
 Abweichungen und nicht mit den unbeobachteten Fehlern gleichzusetzen.
 :::
 
-:::bemerkung[13.1.4 (Daten oder Funktion?)]
+:::bemerkung[#daten-oder-funktion (Daten oder Funktion?)]
 Die Interpolationsbedingung wird mal als
 $f(x_i) = \cgreen{\wh{f}(x_i)}$ geschrieben, mal als
 $\cblue{y_i} = \cgreen{\wh{f}(x_i)}$. Beides meint dasselbe, solange die Daten
@@ -118,13 +118,13 @@ Wann wird aus Glättung wieder Interpolation? Wir variieren dafür nur das Rausc
 
 ### Wie die drei Aufgaben zusammenhängen
 
-:::bemerkung[13.1.5 (Approximation über Interpolation)]
+:::bemerkung[#approximation-ueber-interpolation (Approximation über Interpolation)]
 Ein wichtiger Weg zu einer Approximation führt über Interpolation: Statt die
 Norm $\|f - \cgreen{\wh{f}}\|$ direkt über einem Funktionenraum zu minimieren,
 werten wir $f$ an endlich vielen Stellen $x_i$ aus und interpolieren die so
 entstandenen Paare $\cblue{(x_i, f(x_i))}$. Damit ist das konkrete
 Approximationsverfahren auf ein Interpolationsproblem zurückgeführt, und aus
-dessen Bedingung ($13.1.1$) wird in [Abschnitt 13.2](#sec-13.2) ein lineares
+dessen Bedingung @eq:interpolationsproblem wird in @sec:basisdarstellung ein lineares
 Gleichungssystem. Andere Verfahren minimieren eine Norm tatsächlich direkt,
 etwa Kleinste Quadrate oder eine Minimax-Approximation. Sind die Auswertungen
 fehlerbehaftet, tritt an die Stelle der Interpolation ein Glättungsproblem.
@@ -133,7 +133,7 @@ Von den drei Varianten ist die Glättung die schwierigste: Sie muss zusätzlich
 entscheiden, welcher Teil der Daten Signal und welcher Rauschen ist, und dafür
 braucht es ein stochastisches Modell für die $\cred{\eps_i}$. Dieses Kapitel
 behandelt deshalb die Interpolation; die Glättung folgt in
-[Abschnitt 13.7](#sec-13.7).
+@sec:glaettung.
 :::
 
 ### Wozu wir das brauchen
@@ -149,9 +149,9 @@ Näherung für $f'$ beziehungsweise für $\int f$. Auf diesem Umweg beruhen die
 klassischen Verfahren der numerischen Differentiation und Integration, die
 dieses Skript nicht weiter verfolgt.
 
-:::bemerkung[13.1.6 (Interpolation im maschinellen Lernen, und was nur so aussieht)]
+:::bemerkung[#interpolation-im-maschinellen-lernen-und (Interpolation im maschinellen Lernen, und was nur so aussieht)]
 Zwei der gängigen Anwendungsbeispiele sind Interpolation im Sinn von
-Definition 13.1.2:
+@definition:interpolationsproblem:
 
 - *Computergrafik.* Wird ein Bild gedreht oder skaliert, liegen die neuen
   Pixelmittelpunkte zwischen den alten. Bilineare und bikubische Verfahren
@@ -176,7 +176,7 @@ Zwei weitere werden gern danebengestellt, sind aber bloße Analogien:
 
 Ein echter Grenzfall ist die Idee, die feste Aktivierungsfunktion eines
 neuronalen Netzes durch eine lernbare, spline-basierte zu ersetzen
-(*Kolmogorow-Arnold-Netze*). Die Splines aus [Abschnitt 13.4](#sec-13.4) sind
+(*Kolmogorow-Arnold-Netze*). Die Splines aus @sec:splines sind
 dort das Modell selbst; ihre Koeffizienten
 werden allerdings trainiert und nicht aus Interpolationsbedingungen bestimmt.
 :::
@@ -187,7 +187,7 @@ Interpolation stellt $n$ Gleichungen an eine Funktion. Eine Funktion hat
 unendlich viele Freiheitsgrade, und deshalb bleibt nach diesen $n$ Gleichungen
 sehr viel offen. Wie viel, zeigt schon das kleinste sinnvolle Beispiel.
 
-:::beispiel[13.1.7 (Vier Interpolanten durch drei Punkte)]
+:::beispiel[#vier-interpolanten-durch-drei-punkte (Vier Interpolanten durch drei Punkte)]
 Betrachten wir die $n = 3$ Punkte $\cblue{(0, 1)}$, $\cblue{(1, 2)}$,
 $\cblue{(2, 5)}$. Die folgenden vier Funktionen interpolieren sie alle:
 
@@ -221,19 +221,19 @@ Wie weit können vier Interpolanten, die dieselben drei Punkte treffen, zwischen
   <VierInterpolanten />
 </Schaetzfrage>
 
-Wie das Widget zeigt, liegt die größte Spanne bei etwa $0{,}75$; Satz 13.1.8 erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
+Wie das Widget zeigt, liegt die größte Spanne bei etwa $0{,}75$; @satz:gestalt-aller-interpolanten erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
 :::
 
 Vier Beispiele sind noch kein Argument. Der folgende Satz beschreibt die
 gesamte Lösungsmenge und macht damit klar, dass es nicht bei vieren bleibt.
 
-:::satz[13.1.8 (Gestalt aller Interpolanten)]
+:::satz[#gestalt-aller-interpolanten (Gestalt aller Interpolanten)]
 Seien Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, gegeben und sei
 $\cgreen{p}$ irgendein Interpolant dieser Daten. Dann ist eine Funktion
 $\cgreen{\wh{f}}$ genau dann ebenfalls ein Interpolant, wenn sie sich
 schreiben lässt als
 
-$$ {#eq-13.1.2}
+$$ {#eq-gestalt-aller-interpolanten}
 \cgreen{\wh{f}} = \cgreen{p} + g
 \qquad \text{mit} \qquad
 g(x_i) = 0 \quad \text{für } i = 1, \dots, n .
@@ -263,24 +263,24 @@ $$
 g(x_i) = \cgreen{\wh{f}(x_i)} - \cgreen{p(x_i)} = \cblue{y_i} - \cblue{y_i} = 0 .
 $$
 
-Mit diesem $g$ ist $\cgreen{\wh{f}} = \cgreen{p} + g$ von der Form ($13.1.2$).
+Mit diesem $g$ ist $\cgreen{\wh{f}} = \cgreen{p} + g$ von der Form @eq:gestalt-aller-interpolanten.
 
-::why[beide Funktionen erfüllen die Interpolationsbedingung ($13.1.1$) an derselben Stelle $x_i$]
+::why[beide Funktionen erfüllen die Interpolationsbedingung @eq:interpolationsproblem an derselben Stelle $x_i$]
 :::
 
 ::::
 
-:::bemerkung[13.1.9 (Unendlich viele Lösungen)]
+:::bemerkung[#unendlich-viele-loesungen (Unendlich viele Lösungen)]
 Die Menge der Funktionen $g$ mit $g(x_i) = 0$ für alle $i$ ist ein
 Untervektorraum des Funktionenraums, und er ist unendlichdimensional: Für
 jedes Polynom $q$ liegt $q(x) \prod_{i=1}^n (x - x_i)$ darin, und diese
 Produkte sind für verschiedene Grade von $q$ linear unabhängig. Schon der
 Spezialfall $g_c(x) = c \prod_{i=1}^n (x - x_i)$ liefert für jedes
 $c \in \R$ einen weiteren Interpolanten. Damit hat das Interpolationsproblem
-aus Definition 13.1.2 stets unendlich viele Lösungen, sobald wir
+aus @definition:interpolationsproblem stets unendlich viele Lösungen, sobald wir
 $\cgreen{\wh{f}}$ nicht weiter einschränken.
 
-Die drei Zusatzfunktionen aus Beispiel 13.1.7 sind genau von dieser Bauart.
+Die drei Zusatzfunktionen aus @beispiel:vier-interpolanten-durch-drei-punkte sind genau von dieser Bauart.
 Mit $\cgreen{p} = \cgreen{\wh{f}_1}$ ist
 
 $$
@@ -301,10 +301,10 @@ einschränken, und zwar so, dass genau so viele Freiheitsgrade übrig bleiben,
 wie wir Datenpunkte haben. Das leisten *Basissysteme*: Wir wählen $K$
 Basisfunktionen und lassen nur noch Linearkombinationen aus ihnen zu. Aus der
 Interpolationsbedingung wird dann ein lineares Gleichungssystem in den $K$
-Koeffizienten ([Abschnitt 13.2](#sec-13.2)), und die Wahl der Basis entscheidet
-über alles Weitere: über Eindeutigkeit ([Abschnitt 13.3](#sec-13.3)), über die
+Koeffizienten (@sec:basisdarstellung), und die Wahl der Basis entscheidet
+über alles Weitere: über Eindeutigkeit (@sec:polynominterpolation), über die
 Kondition des Systems und über die Frage, ob eine lokale Datenänderung die
-Kurve global verbiegt ([Abschnitt 13.4](#sec-13.4)).
+Kurve global verbiegt (@sec:splines).
 
 ### Selbsttest
 
@@ -315,8 +315,8 @@ Zu Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise verschiedenen
 $x_i$ gibt es unendlich viele Funktionen $\cgreen{\wh{f}}$ mit
 $\cgreen{\wh{f}(x_i)} = \cblue{y_i}$ für alle $i$.
 
-Das ist Bemerkung 13.1.9. Ist $\cgreen{p}$ ein Interpolant, so ist nach
-Satz 13.1.8 auch $\cgreen{p} + c \prod_i (x - x_i)$ für jedes $c \in \R$ einer,
+Das ist @bemerkung:unendlich-viele-loesungen. Ist $\cgreen{p}$ ein Interpolant, so ist nach
+@satz:gestalt-aller-interpolanten auch $\cgreen{p} + c \prod_i (x - x_i)$ für jedes $c \in \R$ einer,
 und verschiedene $c$ liefern verschiedene Funktionen.
 :::
 
@@ -325,7 +325,7 @@ Aus $\cgreen{\wh{f}(x_i)} = \cblue{y_i}$ für $i = 1, \dots, n$ folgt
 $\left\|f - \cgreen{\wh{f}}\right\| \approx 0$.
 
 Die Interpolationsbedingung sagt über die Stellen zwischen den Stützstellen
-nichts. In Beispiel 13.1.7 erfüllen alle vier Funktionen dieselben drei
+nichts. In @beispiel:vier-interpolanten-durch-drei-punkte erfüllen alle vier Funktionen dieselben drei
 Bedingungen und liegen bei $x = 1{,}3$ trotzdem $0{,}75$ auseinander; höchstens
 eine von ihnen kann einem gegebenen $f$ nahekommen. Wie groß der Abstand
 tatsächlich wird, klärt erst eine Fehlerabschätzung für eine konkrete
@@ -337,7 +337,7 @@ Beschränken wir $\cgreen{\wh{f}}$ auf Polynome vom Grad höchstens $n-1$, so ha
 das Interpolationsproblem bei paarweise verschiedenen $x_i$ genau eine Lösung.
 
 Das ist der Eindeutigkeitssatz der Polynominterpolation aus
-[Abschnitt 13.3](#sec-13.3). Ohne den Zusatz „vom Grad höchstens $n-1$" wäre
+@sec:polynominterpolation. Ohne den Zusatz „vom Grad höchstens $n-1$" wäre
 die Aussage falsch; so gelesen widerspräche sie der ersten Aussage dieses
 Selbsttests.
 :::
@@ -346,7 +346,7 @@ Selbsttests.
 Beim Glättungsproblem verlangen wir wie bei der Interpolation, dass
 $\cgreen{\wh{f}}$ durch alle Datenpunkte läuft.
 
-Definition 13.1.3 lässt die Residuen $\cred{\eps_i} = \cblue{y_i} -
+@definition:glaettungsproblem lässt die Residuen $\cred{\eps_i} = \cblue{y_i} -
 \cgreen{\wh{f}(x_i)}$ ausdrücklich zu. Bei verrauschten Daten wäre eine Kurve
 durch alle Punkte die falsche Antwort, weil sie das Rauschen mit abbildet. Im
 Widget der ersten Vertiefung fallen die beiden Aufgaben nur für $\sigma = 0$
@@ -356,8 +356,8 @@ zusammen.
 :::frage{falsch}
 Ein Interpolant muss ein Polynom sein.
 
-Definition 13.1.2 verlangt nur die $n$ Gleichungen an den Stützstellen.
-$\cgreen{\wh{f}_2}$ aus Beispiel 13.1.7 ist stückweise linear und an $x = 1$
+@definition:interpolationsproblem verlangt nur die $n$ Gleichungen an den Stützstellen.
+$\cgreen{\wh{f}_2}$ aus @beispiel:vier-interpolanten-durch-drei-punkte ist stückweise linear und an $x = 1$
 nicht differenzierbar, $\cgreen{\wh{f}_4}$ enthält einen Sinusterm; beide
 interpolieren. Polynome sind eine besonders bequeme Wahl, keine Vorschrift.
 :::

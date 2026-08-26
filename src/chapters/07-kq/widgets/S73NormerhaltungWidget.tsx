@@ -37,6 +37,7 @@ import {
   fmtDe,
   maxAbsCoord,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 type Modus = "drehung" | "spiegelung" | "scherung";
 
@@ -199,7 +200,7 @@ export function S73NormerhaltungWidget() {
           Genau diese Invarianz erlaubt den Übergang von{" "}
           <M>{"\\left\\| \\bA\\bx - \\bb \\right\\|_2"}</M> zu{" "}
           <M>{"\\left\\| \\bQ\\bA\\bx - \\bQ\\bb \\right\\|_2"}</M>, ohne den Minimierer zu
-          verschieben (Lemma 7.4.2 (ii)).
+          verschieben ({ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")} (ii)).
         </Verdikt>
       ) : laengentreu ? (
         <Verdikt kind="warn" className="mt-2" titel="Zufallstreffer, keine Regel:">

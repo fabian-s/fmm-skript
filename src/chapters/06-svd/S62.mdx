@@ -1,12 +1,12 @@
 import { SingulaerwertRechner } from "./widgets/S62Rechner";
 import { SvdGeometrieExplorer } from "./widgets/S62Geometrie";
 
-In [Abschnitt 6.1](#sec-6.1) haben wir die Frage nach der Richtung stärkster
+In @sec:motivation haben wir die Frage nach der Richtung stärkster
 Streckung auf ein Maximierungsproblem über der Einheitssphäre zurückgeführt.
 Der entscheidende Kniff war, statt $\left\|\bA\bx\right\|$ das Quadrat zu
 maximieren:
 
-$$ {#eq-6.2.1}
+$$ {#eq-eq-6-2-1}
 \left\|\bA\bx\right\|^2 = (\bA\bx)^\top(\bA\bx) = \bx^\top\bigl(\bA^\top\bA\bigr)\bx .
 $$
 
@@ -21,7 +21,7 @@ dabei die :k[euklidische Norm]{#euclidean-norm} $\left\|\cdot\right\|_2$.)
 Zwei Eigenschaften machen $\bA^\top\bA$ so angenehm, und beide fallen fast von
 selbst ab.
 
-:::satz[6.2.1 (Eigenschaften von AᵀA)]
+:::satz[#eigenschaften-von-a-a (Eigenschaften von AᵀA)]
 Für $\bA \in \R^{m \times n}$ gilt:
 
 1. $\bA^\top\bA \in \R^{n \times n}$ ist :k[symmetrisch]{#symmetric-matrix}, das
@@ -47,7 +47,7 @@ $$
 :::
 
 :::schritt
-Zu (2): Die quadratische Form ist nach ($6.2.1$) ein Längenquadrat, und Längen
+Zu (2): Die quadratische Form ist nach @eq:eq-6-2-1 ein Längenquadrat, und Längen
 werden nie negativ:
 
 $$
@@ -55,7 +55,7 @@ $$
 \qquad \text{für alle } \bx \in \R^n .
 $$
 
-::why[($6.2.1$), von rechts nach links gelesen]
+::why[@eq:eq-6-2-1, von rechts nach links gelesen]
 :::
 
 :::schritt
@@ -78,9 +78,9 @@ $$
 Dass die Eigenwerte überhaupt reell sind und dass es eine
 :k[Orthonormalbasis]{#orthonormal-basis} aus Eigenvektoren gibt, garantiert der
 :k[Spektralsatz]{#spectral-theorem} für symmetrische Matrizen. Zusammen mit
-Satz 6.2.1 ergibt das:
+@satz:eigenschaften-von-a-a ergibt das:
 
-:::korollar[6.2.2 (AᵀA ist orthogonal diagonalisierbar)]
+:::korollar[#a-a-ist-orthogonal-diagonalisierbar (AᵀA ist orthogonal diagonalisierbar)]
 Zu $\bA \in \R^{m \times n}$ gibt es eine
 :k[Orthogonalmatrix]{#orthogonal-matrix} $\cblue{\bV} \in \R^{n \times n}$ und
 eine :k[Diagonalmatrix]{#diagonal-matrix}
@@ -100,7 +100,7 @@ orthonormale Basis, in der $\bA^\top\bA$ nichts weiter tut als achsenweises
 Skalieren. Rechnen wir das an einer kleinen Matrix durch, die uns durch den
 ganzen Abschnitt begleitet.
 
-:::beispiel[6.2.3 (Die Matrix AᵀA einer 3×2-Matrix)]
+:::beispiel[#die-matrix-a-a-einer-3-2-matrix (Die Matrix AᵀA einer 3×2-Matrix)]
 Sei
 
 $$
@@ -135,7 +135,7 @@ $$
 \corange{\lambda_1} \approx \corange{9{,}531}, \qquad \corange{\lambda_2} \approx \corange{1{,}469} .
 $$
 
-Satz 6.2.1 verspricht nur $\lambda_i \geq 0$. Hier sind beide Eigenwerte sogar
+@satz:eigenschaften-von-a-a verspricht nur $\lambda_i \geq 0$. Hier sind beide Eigenwerte sogar
 echt positiv, $\bA^\top\bA$ ist also positiv definit. Der Grund: Die beiden
 Spalten von $\bA$ sind :k[linear unabhängig]{#linear-independence},
 $\bA\bx = \bnull$ gilt somit nur für
@@ -147,10 +147,10 @@ Produkt ist $14$, die :k[Determinante]{#determinant} $6 \cdot 5 - 4^2$.
 
 ### Singulärwerte
 
-Die Eigenwerte von $\bA^\top\bA$ sind nach ($6.2.1$) quadrierte Längen. Wer an
+Die Eigenwerte von $\bA^\top\bA$ sind nach @eq:eq-6-2-1 quadrierte Längen. Wer an
 Streckungsfaktoren interessiert ist, zieht deshalb die Wurzel.
 
-:::definition[6.2.4 (Singulärwerte)]
+:::definition[#singulaerwerte (Singulärwerte)]
 Für $\bA \in \R^{m \times n}$ heißen die $q=\min(m,n)$ Zahlen
 
 $$
@@ -171,10 +171,10 @@ $\sigma_{q+1}=\cdots=\sigma_n=0$ setzen; diese ergänzten Nullen stehen nicht al
 weitere Diagonaleinträge in $\bSigma$.
 :::
 
-:::bemerkung[6.2.5 (Singulärwerte sind Streckungsfaktoren)]
+:::bemerkung[#singulaerwerte-sind-streckungsfaktoren (Singulärwerte sind Streckungsfaktoren)]
 - $\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
   die maximale Streckung. Das ist genau das Maximierungsproblem aus
-  [Abschnitt 6.1](#sec-6.1): Über ($6.2.1$) maximieren wir die quadratische
+  @sec:motivation: Über @eq:eq-6-2-1 maximieren wir die quadratische
   Form von $\bA^\top\bA$, und deren größter Wert auf der Einheitssphäre ist
   $\lambda_1$.
 - Falls $m\ge n$, ist $\corange{\sigma_n} = \min_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$
@@ -184,13 +184,13 @@ weitere Diagonaleinträge in $\bSigma$.
 
 Der größte Singulärwert ist damit nichts anderes als die *Spektralnorm*
 $\left\|\bA\right\|_2$ aus
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3). Definiert war sie dort als die
-von der euklidischen Norm induzierte Operatornorm; Satz 3.3.7 hat sie zu
+@sec:matrix-spur-norm/operatornormen. Definiert war sie dort als die
+von der euklidischen Norm induzierte Operatornorm; @satz:spektralnorm-und-spektralzerlegung hat sie zu
 $\lambda_{\max}(\bA^\top\bA)^{1/2}$ ausgerechnet, und das ist $\corange{\sigma_1}$.
 :::
 
-:::beispiel[6.2.6 (Singulärwerte der Beispielmatrix)]
-Für $\bA$ aus Beispiel 6.2.3 mit
+:::beispiel[#singulaerwerte-der-beispielmatrix (Singulärwerte der Beispielmatrix)]
+Für $\bA$ aus @beispiel:die-matrix-a-a-einer-3-2-matrix mit
 $\corange{\lambda_1} \approx \corange{9{,}531}$ und
 $\corange{\lambda_2} \approx \corange{1{,}469}$ ist
 
@@ -210,7 +210,7 @@ $$
 sagt, wie richtungsabhängig (*anisotrop*) diese Matrix wirkt. Für quadratische,
 invertierbare Matrizen ist $\sigma_1/\sigma_n$ genau die Spektralkondition
 $\kappa_2(\bA) = \left\|\bA\right\|_2 \left\|\bA^{-1}\right\|_2$ aus
-[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5); dort hatten wir sie als
+@sec:matrix-spur-norm/eigenschaften; dort hatten wir sie als
 Verhältnis der extremen Streckungsfaktoren gedeutet und angekündigt, dass die
 Singulärwerte diese Deutung noch durchsichtiger machen. Damit lösen wir das
 ein: $\left\|\bA\right\|_2 = \corange{\sigma_1}$ ist die stärkste Streckung
@@ -224,11 +224,11 @@ $\sigma_1/\sigma_n$ die übliche Verallgemeinerung.
 
 Streckungsfaktoren allein nützen wenig, solange wir nicht wissen, *welche*
 Richtung um $\sigma_i$ gestreckt wird. Diese Richtungen stecken bereits in
-Korollar 6.2.2.
+@korollar:a-a-ist-orthogonal-diagonalisierbar.
 
-:::definition[6.2.7 (Rechte und linke Singulärvektoren)]
+:::definition[#rechte-und-linke-singulaervektoren (Rechte und linke Singulärvektoren)]
 Sei $\bA \in \R^{m \times n}$. Für die rechten Singulärvektoren verwenden wir
-die in Bemerkung 6.2.5 erklärte erweiterte Liste
+die in @bemerkung:singulaerwerte-sind-streckungsfaktoren erklärte erweiterte Liste
 $\sigma_1 \geq \cdots \geq \sigma_n \geq 0$; bei $m<n$ enthält sie die
 zusätzlichen erzwungenen Nullen.
 
@@ -243,19 +243,19 @@ zusätzlichen erzwungenen Nullen.
 - Die *linken Singulärvektoren* $\cgreen{\bu_i} \in \R^m$ sind für
   $\sigma_i > 0$ erklärt durch
 
-  $$ {#eq-6.2.2}
+  $$ {#eq-rechte-und-linke-singulaervektoren}
   \cgreen{\bu_i} = \frac{\bA\,\cblue{\bv_i}}{\corange{\sigma_i}} ,
   \qquad\text{gleichwertig}\qquad
   \bA\,\cblue{\bv_i} = \corange{\sigma_i}\,\cgreen{\bu_i} .
   $$
 :::
 
-Die zweite Schreibweise in ($6.2.2$) ist die aussagekräftigere: $\bA$ bildet die
+Die zweite Schreibweise in @eq:rechte-und-linke-singulaervektoren ist die aussagekräftigere: $\bA$ bildet die
 Richtung $\cblue{\bv_i}$ auf die Richtung $\cgreen{\bu_i}$ ab und streckt dabei
 um $\corange{\sigma_i}$. Dass die Bildrichtungen dabei aufeinander senkrecht
 stehen, ist der eigentliche Grund, warum die ganze Konstruktion trägt.
 
-:::satz[6.2.8 (Orthogonalität der Singulärvektoren)]
+:::satz[#orthogonalitaet-der-singulaervektoren (Orthogonalität der Singulärvektoren)]
 Seien $\cblue{\bv_1}, \dots, \cblue{\bv_n}$ orthonormale rechte
 Singulärvektoren von $\bA$. Dann gilt
 
@@ -294,13 +294,13 @@ $$
 = \lambda_i \left\|\bv_i\right\|^2 = \lambda_i = \corange{\sigma_i^2} .
 $$
 
-::why[($6.2.1$) mit $\bx = \bv_i$, danach Eigenwertgleichung und $\left\|\bv_i\right\| = 1$]
+::why[@eq:eq-6-2-1 mit $\bx = \bv_i$, danach Eigenwertgleichung und $\left\|\bv_i\right\| = 1$]
 :::
 
 :::schritt
 Halten wir den Unterschied fest: Die $\cblue{\bv_i}$ sind orthoNORMAL, ihre
 Bilder $\bA\cblue{\bv_i}$ dagegen nur orthogonal, mit Längen
-$\corange{\sigma_i}$. Erst die Normierung ($6.2.2$) macht daraus orthonormale
+$\corange{\sigma_i}$. Erst die Normierung @eq:rechte-und-linke-singulaervektoren macht daraus orthonormale
 Vektoren,
 
 $$
@@ -311,13 +311,13 @@ $$
 \left\|\cgreen{\bu_i}\right\| = \frac{\left\|\bA\bv_i\right\|}{\corange{\sigma_i}} = 1 .
 $$
 
-::why[dividieren dürfen wir nur bei $\sigma_i, \sigma_j > 0$, also für Indizes $i, j \leq r$; die übrigen $\bu_i$ liefert Definition 6.2.7 gar nicht erst]
+::why[dividieren dürfen wir nur bei $\sigma_i, \sigma_j > 0$, also für Indizes $i, j \leq r$; die übrigen $\bu_i$ liefert @definition:rechte-und-linke-singulaervektoren gar nicht erst]
 :::
 
 ::::
 
-:::beispiel[6.2.9 (Singulärvektoren der Beispielmatrix)]
-Wir bleiben bei $\bA$ aus Beispiel 6.2.3 mit
+:::beispiel[#singulaervektoren-der-beispielmatrix (Singulärvektoren der Beispielmatrix)]
+Wir bleiben bei $\bA$ aus @beispiel:die-matrix-a-a-einer-3-2-matrix mit
 $\bA^\top\bA = \bigl(\begin{smallmatrix} 6 & 4 \\ 4 & 5 \end{smallmatrix}\bigr)$.
 
 **Rechte Singulärvektoren.** Für $\lambda_1 \approx 9{,}531$ suchen wir
@@ -331,7 +331,7 @@ $$
 
 Die erste Zeile heißt $(6 - 9{,}531)\,v_{11} + 4\,v_{21} = 0$, also
 $v_{21} \approx 0{,}883\,v_{11}$. Normieren wir (das Vorzeichen dürfen wir dabei
-frei wählen, siehe Bemerkung 6.2.10), so ergibt sich zusammen mit dem dazu
+frei wählen, siehe @bemerkung:singulaervektoren-sind-nicht-eindeutig), so ergibt sich zusammen mit dem dazu
 orthogonalen zweiten Eigenvektor
 
 $$
@@ -340,7 +340,7 @@ $$
 \cblue{\bv_2} \approx \begin{pmatrix} 0{,}662 \\ -0{,}750 \end{pmatrix} .
 $$
 
-**Linke Singulärvektoren.** Jetzt liefert ($6.2.2$) die Bildrichtungen:
+**Linke Singulärvektoren.** Jetzt liefert @eq:rechte-und-linke-singulaervektoren die Bildrichtungen:
 
 $$
 \cgreen{\bu_1} = \frac{\bA\,\cblue{\bv_1}}{\corange{\sigma_1}}
@@ -357,7 +357,7 @@ $$
 \approx \begin{pmatrix} -0{,}691 \\ 0{,}474 \\ 0{,}546 \end{pmatrix} .
 $$
 
-**Probe auf Orthonormalität.** Satz 6.2.8 behauptet, dass diese beiden Vektoren
+**Probe auf Orthonormalität.** @satz:orthogonalitaet-der-singulaervektoren behauptet, dass diese beiden Vektoren
 orthonormal sind, und die Zahlen bestätigen es:
 
 $$
@@ -372,10 +372,10 @@ $$
 $$
 :::
 
-:::bemerkung[6.2.10 (Singulärvektoren sind nicht eindeutig)]
+:::bemerkung[#singulaervektoren-sind-nicht-eindeutig (Singulärvektoren sind nicht eindeutig)]
 Mit $\cblue{\bv_i}$ ist auch $-\cblue{\bv_i}$ ein normierter Eigenvektor zum
 selben Eigenwert. Die Singulärwerte ändern sich dadurch nicht, wohl aber die
-Vektoren, und zwar paarweise: Nach ($6.2.2$) dreht sich mit $\cblue{\bv_i}$
+Vektoren, und zwar paarweise: Nach @eq:rechte-und-linke-singulaervektoren dreht sich mit $\cblue{\bv_i}$
 zugleich $\cgreen{\bu_i}$ um. Wer in einem Beispiel das Vorzeichen von
 $\cblue{\bv_2}$ umdreht, muss deshalb auch $\cgreen{\bu_2}$ umdrehen, sonst
 passen linke und rechte Seite von $\bA\cblue{\bv_2} = \corange{\sigma_2}\cgreen{\bu_2}$
@@ -389,8 +389,8 @@ beliebig drehen.
 :::interaktiv[Die Rechnung Schritt für Schritt]
 Wie läuft dieser Weg an einer anderen Matrix, und was geht schief, wenn die
 beiden Spalten linear abhängig sind? Das Widget rechnet die Schritte von
-Beispiel 6.2.3 bis 6.2.9 für jede eingetragene $3 \times 2$-Matrix nach; die
-beiden Vorzeichen-Knöpfe in Schritt 5 führen Bemerkung 6.2.10 vor. Unter den
+@beispiel:die-matrix-a-a-einer-3-2-matrix bis 6.2.9 für jede eingetragene $3 \times 2$-Matrix nach; die
+beiden Vorzeichen-Knöpfe in Schritt 5 führen @bemerkung:singulaervektoren-sind-nicht-eindeutig vor. Unter den
 Schritten steht dieselbe Abbildung geometrisch: links der Einheitskreis des
 $\R^2$, rechts sein Bild im $\R^3$.
 
@@ -404,9 +404,9 @@ Die verknüpften Tafeln verbinden die Ebenendarstellung mit dem Bildraum im Raum
 Bisher waren die Singulärvektoren Rechengrößen. Sie leisten aber mehr: Sie
 beschreiben auf einen Schlag alle Unterräume, die zu einer Matrix gehören.
 
-:::satz[6.2.11 (Charakterisierung der fundamentalen Unterräume)]
+:::satz[#charakterisierung-der-fundamentalen (Charakterisierung der fundamentalen Unterräume)]
 Sei $\bA \in \R^{m \times n}$ mit genau $r$ von null verschiedenen
-Singulärwerten. In der erweiterten Liste aus Bemerkung 6.2.5 gilt also
+Singulärwerten. In der erweiterten Liste aus @bemerkung:singulaerwerte-sind-streckungsfaktoren gilt also
 $\sigma_1 \geq \cdots \geq \sigma_r > 0$ und
 $\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
 
@@ -424,14 +424,14 @@ $\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
 
 Achten wir auf den Wechsel zwischen (1) und (2): In (1) steht eine
 Orthonormalbasis, in (2) nur eine Orthogonalbasis. Der Grund steht in
-Satz 6.2.8, die Längen $\left\|\bA\cblue{\bv_i}\right\| = \corange{\sigma_i}$
+@satz:orthogonalitaet-der-singulaervektoren, die Längen $\left\|\bA\cblue{\bv_i}\right\| = \corange{\sigma_i}$
 sind im Allgemeinen eben nicht $1$. Erst das Teilen durch
 $\corange{\sigma_i}$ macht die $\cgreen{\bu_i}$ daraus.
 
 ::::beweis
 
 :::schritt
-Für $i > r$ ist $\corange{\sigma_i} = 0$, nach Satz 6.2.8 also
+Für $i > r$ ist $\corange{\sigma_i} = 0$, nach @satz:orthogonalitaet-der-singulaervektoren also
 $\left\|\bA\cblue{\bv_i}\right\| = 0$ und damit $\bA\cblue{\bv_i} = \bnull$. Die
 letzten $n - r$ rechten Singulärvektoren liegen im Kern von $\bA$.
 
@@ -460,7 +460,7 @@ $i \leq r$: Für jeden Einheitsvektor $\be_j$ ist
 $\be_j = \sum_{i=1}^n (\cblue{\bv_i^\top}\be_j)\,\cblue{\bv_i}$, und Anwenden von
 $\bA$ liefert
 $\bA\be_j = \sum_{i \leq r} (\cblue{\bv_i^\top}\be_j)\,\bA\cblue{\bv_i}$. Die
-$r$ Vektoren $\bA\cblue{\bv_i}$ sind nach Satz 6.2.8 orthogonal und von null
+$r$ Vektoren $\bA\cblue{\bv_i}$ sind nach @satz:orthogonalitaet-der-singulaervektoren orthogonal und von null
 verschieden, also linear unabhängig. Sie bilden damit eine Orthogonalbasis von
 $\col(\bA)$, und es folgt $\rang(\bA) = \dim \col(\bA) = r$.
 
@@ -468,7 +468,7 @@ $\col(\bA)$, und es folgt $\rang(\bA) = \dim \col(\bA) = r$.
 :::
 
 :::schritt
-Für den Zeilenraum multiplizieren wir ($6.2.2$) von links mit $\bA^\top$: Für
+Für den Zeilenraum multiplizieren wir @eq:rechte-und-linke-singulaervektoren von links mit $\bA^\top$: Für
 $i \leq r$ ist
 
 $$
@@ -492,7 +492,7 @@ Damit liefert die SVD explizite Orthonormalbasen für alle vier fundamentalen
 Unterräume. Der vierte, der linke Kern $\operatorname{Kern}(\bA^\top)$, fällt
 im nächsten Beispiel nebenbei mit ab.
 
-:::beispiel[6.2.12 (Alle Unterräume einer Rang-1-Matrix)]
+:::beispiel[#alle-unterraeume-einer-rang-1-matrix (Alle Unterräume einer Rang-1-Matrix)]
 Wir nehmen
 
 $$
@@ -525,7 +525,7 @@ also $\col(\bA^\top) = \spann\{\cblue{\bv_1}\} = \spann\bigl\{(1, 1)^\top\bigr\}
 Das passt: Die beiden Zeilen von $\bA$, die nicht null sind, lauten beide
 $(1, 1)$.
 
-**Linker Singulärvektor und Spaltenraum.** Aus ($6.2.2$) folgt
+**Linker Singulärvektor und Spaltenraum.** Aus @eq:rechte-und-linke-singulaervektoren folgt
 
 $$
 \cgreen{\bu_1} = \frac{\bA\cblue{\bv_1}}{\corange{\sigma_1}}
@@ -535,12 +535,12 @@ $$
 
 also $\col(\bA) = \spann\{\cgreen{\bu_1}\} = \spann\bigl\{(1, 1, 0)^\top\bigr\}$.
 
-**Kern.** Nach Satz 6.2.11 ist
+**Kern.** Nach @satz:charakterisierung-der-fundamentalen ist
 $\operatorname{Kern}(\bA) = \spann\{\cblue{\bv_2}\} = \spann\bigl\{(1, -1)^\top\bigr\}$,
 und die Probe bestätigt das:
 $\bA (1, -1)^\top = (0, 0, 0)^\top$.
 
-**Linker Kern.** Für $\cgreen{\bu_2}$ liefert ($6.2.2$) nichts, denn
+**Linker Kern.** Für $\cgreen{\bu_2}$ liefert @eq:rechte-und-linke-singulaervektoren nichts, denn
 $\corange{\sigma_2} = 0$; ein $\cgreen{\bu_3}$ sieht die Formel gar nicht erst
 vor, weil $\bA$ nur zwei Spalten und damit nur zwei rechte Singulärvektoren
 hat. Wir ergänzen $\cgreen{\bu_1}$
@@ -567,11 +567,11 @@ Alle Bausteine liegen bereit. Sammeln wir die rechten Singulärvektoren als
 Spalten in einer Matrix, ebenso die linken, und schreiben wir die Singulärwerte
 auf eine Diagonale, dann steht die Zerlegung da.
 
-:::satz[6.2.13 (Singulärwertzerlegung)]
+:::satz[#singulaerwertzerlegung (Singulärwertzerlegung)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$. Dann existiert eine
 Zerlegung
 
-$$ {#eq-6.2.3}
+$$ {#eq-singulaerwertzerlegung}
 \bA = \cgreen{\bU}\,\corange{\bSigma}\,\cblue{\bV^\top}
 $$
 
@@ -585,7 +585,7 @@ mit
 - $\corange{\bSigma} \in \R^{m \times n}$ „diagonal" mit den Singulärwerten auf
   der Hauptdiagonalen,
 
-  $$ {#eq-6.2.4}
+  $$ {#eq-singulaerwertzerlegung-2}
   \corange{\bSigma} = \begin{pmatrix}
   \diag(\sigma_1, \dots, \sigma_r) & \bnull_{r \times (n-r)} \\
   \bnull_{(m-r) \times r} & \bnull_{(m-r) \times (n-r)}
@@ -602,7 +602,7 @@ Spektralsatz, den wir nicht bewiesen haben.
 ::::beweis{ohne-qed}
 
 :::schritt
-**Rechte Singulärvektoren.** Nach Korollar 6.2.2 besitzt $\bA^\top\bA$ eine
+**Rechte Singulärvektoren.** Nach @korollar:a-a-ist-orthogonal-diagonalisierbar besitzt $\bA^\top\bA$ eine
 Orthonormalbasis aus Eigenvektoren. Wir sortieren sie nach absteigenden
 Eigenwerten und stellen sie spaltenweise zusammen:
 $\cblue{\bV} = (\cblue{\bv_1} \mid \cblue{\bv_2} \mid \cdots \mid \cblue{\bv_n})$.
@@ -612,10 +612,10 @@ $\cblue{\bV} = (\cblue{\bv_1} \mid \cblue{\bv_2} \mid \cdots \mid \cblue{\bv_n})
 
 :::schritt
 **Linke Singulärvektoren.** Für $i \leq r$ setzen wir
-$\cgreen{\bu_i} = \bA\cblue{\bv_i}/\corange{\sigma_i}$ nach ($6.2.2$) und
+$\cgreen{\bu_i} = \bA\cblue{\bv_i}/\corange{\sigma_i}$ nach @eq:rechte-und-linke-singulaervektoren und
 sammeln sie in $\cgreen{\bU_r} = (\cgreen{\bu_1} \mid \cdots \mid \cgreen{\bu_r})$.
 
-::why[nach Satz 6.2.8 sind diese $r$ Vektoren orthonormal]
+::why[nach @satz:orthogonalitaet-der-singulaervektoren sind diese $r$ Vektoren orthonormal]
 :::
 
 :::schritt
@@ -624,7 +624,7 @@ des $\R^m$, etwa mit dem
 :k[Gram-Schmidt-Verfahren]{#gram-schmidt}. Das ergibt die Orthogonalmatrix
 $\cgreen{\bU} \in \R^{m \times m}$.
 
-::why[die ergänzten Spalten spannen gerade $\operatorname{Kern}(\bA^\top)$ auf, wie in Beispiel 6.2.12]
+::why[die ergänzten Spalten spannen gerade $\operatorname{Kern}(\bA^\top)$ auf, wie in @beispiel:alle-unterraeume-einer-rang-1-matrix]
 :::
 
 :::schritt
@@ -636,13 +636,13 @@ $\cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}\cblue{\bv_i}
 und für $i > r$ steht auf beiden Seiten der Nullvektor. Beide Abbildungen
 stimmen also auf einer Basis des $\R^n$ überein und sind damit gleich.
 
-::why[$\cblue{\bV^\top}\cblue{\bv_i} = \be_i$, weil $\cblue{\bV}$ orthogonal ist; $\corange{\bSigma}\be_i = \corange{\sigma_i}\be_i$ nach ($6.2.4$), und für $i > r$ ist $\corange{\bSigma}\be_i = \bnull$]
+::why[$\cblue{\bV^\top}\cblue{\bv_i} = \be_i$, weil $\cblue{\bV}$ orthogonal ist; $\corange{\bSigma}\be_i = \corange{\sigma_i}\be_i$ nach @eq:singulaerwertzerlegung-2, und für $i > r$ ist $\corange{\bSigma}\be_i = \bnull$]
 :::
 
 ::::
 
-:::beispiel[6.2.14 (Die Gestalt von Σ)]
-Die Blockform ($6.2.4$) wirkt sperriger, als sie ist. Drei Fälle:
+:::beispiel[#die-gestalt-von (Die Gestalt von Σ)]
+Die Blockform @eq:singulaerwertzerlegung-2 wirkt sperriger, als sie ist. Drei Fälle:
 
 Für ein quadratisches $\bA$ mit $m = n = 3$ und $r = 2$ ist
 
@@ -676,8 +676,8 @@ $$
 
 ### Geometrische Interpretation
 
-:::bemerkung[6.2.15 (Merkregel: Drehen, Strecken, Drehen)]
-Lesen wir ($6.2.3$) als Abbildungsvorschrift
+:::bemerkung[#merkregel-drehen-strecken-drehen (Merkregel: Drehen, Strecken, Drehen)]
+Lesen wir @eq:singulaerwertzerlegung als Abbildungsvorschrift
 $\bx \mapsto \bA\bx = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}\bx$, dann
 geschieht die Abbildung in drei Etappen:
 
@@ -696,7 +696,7 @@ den Hauptachsenrichtungen $\cgreen{\bu_i}$ und den Halbachsenlängen
 $\corange{\sigma_i}$. Drückt $\bA$ ganze Richtungen auf null, gilt also
 $r < n$, dann liegt der Nullpunkt mit im Bild, und aus dem Ellipsoid wird ein
 ausgefülltes Ellipsoid im $r$-dimensionalen Spaltenraum
-([Abschnitt 6.1](#sec-6.1)).
+(@sec:motivation).
 :::
 
 :::interaktiv[Drehen, Strecken, Drehen an einer editierbaren Matrix]
@@ -705,7 +705,7 @@ nur für ihre Lage? Vier Tafeln zeigen denselben Kreis vor $\cblue{\bV^\top}$,
 danach, nach $\corange{\bSigma}$ und nach $\cgreen{\bU}$. Voreingestellt ist
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 1 \end{smallmatrix}\bigr)$, die
 Matrix, an der Kapitel 3 die Operatornorm sichtbar gemacht hat
-([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)); drei weitere Knöpfe stellen
+(@sec:matrix-spur-norm/operatornormen); drei weitere Knöpfe stellen
 eine Drehmatrix, eine Scherung und eine Matrix mit zwei gleichen Spalten ein.
 
 <SvdGeometrieExplorer />
@@ -725,7 +725,7 @@ $\corange{3{,}087} / \corange{1{,}212} \approx 2{,}547$. Nachrechnen lässt sich
 das auch ohne Widget, denn Wurzeln ziehen und Teilen vertauschen:
 $\sqrt{9{,}531/1{,}469} = \sqrt{6{,}488} \approx 2{,}547$. Diese Zahl ist die
 Konditionszahl $\kappa_2(\bA)$ aus
-[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5); die Bildellipse ist gut
+@sec:matrix-spur-norm/eigenschaften; die Bildellipse ist gut
 zweieinhalbmal so lang wie breit.
 :::
 
@@ -733,7 +733,7 @@ zweieinhalbmal so lang wie breit.
 Für jede Matrix $\bA \in \R^{m \times n}$ sind alle Eigenwerte von
 $\bA^\top\bA$ nichtnegativ.
 
-Das ist Satz 6.2.1(2). Der Grund steckt in ($6.2.1$): Für einen normierten
+Das ist @satz:eigenschaften-von-a-a(2). Der Grund steckt in @eq:eq-6-2-1: Für einen normierten
 Eigenvektor $\bv_i$ ist $\lambda_i = \left\|\bA\bv_i\right\|^2$, also das
 Quadrat einer Länge.
 :::
@@ -742,16 +742,16 @@ Quadrat einer Länge.
 Wenn ein Singulärwert von $\bA$ null ist, muss $\bA$ die Nullmatrix sein.
 
 Ein einziger verschwindender Singulärwert bedeutet nur, dass $\bA$ eine
-Richtung plattdrückt. Beispiel 6.2.12 zeigt eine Matrix mit
+Richtung plattdrückt. @beispiel:alle-unterraeume-einer-rang-1-matrix zeigt eine Matrix mit
 $\sigma_1 = 2$ und $\sigma_2 = 0$, die alles andere als null ist; nach
-Satz 6.2.11 hat sie den Rang $1$ und einen eindimensionalen Kern.
+@satz:charakterisierung-der-fundamentalen hat sie den Rang $1$ und einen eindimensionalen Kern.
 :::
 
 :::frage{wahr}
 Die rechten Singulärvektoren $\bv_i$ sind orthonormal, die Bildvektoren
 $\bA\bv_i$ dagegen im Allgemeinen nur orthogonal.
 
-Genau das sagt Satz 6.2.8: Die Bilder stehen paarweise senkrecht aufeinander,
+Genau das sagt @satz:orthogonalitaet-der-singulaervektoren: Die Bilder stehen paarweise senkrecht aufeinander,
 haben aber die Längen $\sigma_i$. Erst die Division durch $\sigma_i$ macht
 daraus die orthonormalen linken Singulärvektoren.
 :::
@@ -770,8 +770,8 @@ Die Singulärwerte und die Singulärvektoren einer Matrix sind eindeutig
 bestimmt.
 
 Die Singulärwerte schon, die Vektoren nicht: Mit $\bv_i$ leistet auch
-$-\bv_i$ dasselbe, und dann dreht sich nach ($6.2.2$) auch $\bu_i$ um
-(Bemerkung 6.2.10). Bei mehrfachen Singulärwerten kommt sogar noch die freie
+$-\bv_i$ dasselbe, und dann dreht sich nach @eq:rechte-und-linke-singulaervektoren auch $\bu_i$ um
+(@bemerkung:singulaervektoren-sind-nicht-eindeutig). Bei mehrfachen Singulärwerten kommt sogar noch die freie
 Wahl einer Orthonormalbasis im zugehörigen Eigenraum hinzu.
 :::
 

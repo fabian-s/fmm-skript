@@ -8,6 +8,7 @@ import {
   Verdikt,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.8: Die EINE Einsicht — eine höhere Ordnung senkt den Fehler nahe am
@@ -132,7 +133,7 @@ export function TaylorOrdnungWidget() {
       `Bei x = ${fmt(x, 2)} lässt T_${k} den Fehler ${fmt(fehler, 5)} übrig, die Ordnung davor ` +
       `${fmt(fehlerDavor, 5)}; ${bilanz}. ${faustSatz} ` +
       `${nahDran ? "Auf dieser Skala liegen blaue und grüne Kurve schon aufeinander." : "Blau und Grün trennen sich hier noch sichtbar."} ` +
-      `Die Herkunft des Faktors steht im Beweis zu Satz 10.8.2: Das Restglied ist ` +
+      `Die Herkunft des Faktors steht im Beweis zu ${ref("satz:taylorentwicklung-i")}: Das Restglied ist ` +
       `e^ξ·x^(k+1)/(k+1)! mit einem ξ zwischen 0 und x. Solange |x| klein gegen k+1 ist, ` +
       `schrumpft es mit jeder Ordnung, sonst gewinnt zunächst die Potenz. Bei |x| ≤ 1 bleibt ` +
       `der größte Fehler hier bei höchstens ${fmt(maxNah, 4)}, auf dem ganzen Fenster liegt er ` +
@@ -218,7 +219,7 @@ export function TaylorOrdnungSchaetzung() {
         <p className="max-w-prose text-sm">
           Gemessen sind es 8,2: Der Fehler fällt von 0,023721 auf 0,002888. Der Faustwert dahinter
           ist |x|/(k+1) = 0,5/3 = 0,167, also ein Sechstel, und dass es etwas besser läuft, liegt
-          am Restglied aus Satz 10.8.2, in dem zusätzlich e^ξ mit ξ zwischen 0 und x steht.
+          am Restglied aus {ref("satz:taylorentwicklung-i")}, in dem zusätzlich e^ξ mit ξ zwischen 0 und x steht.
         </p>
       }
     >

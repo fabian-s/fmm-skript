@@ -1,6 +1,6 @@
 import { BasisRechner } from "./widgets/S132Basisrechner";
 
-[Abschnitt 13.1](#sec-13.1) hat uns mit einem Ärgernis zurückgelassen: Durch
+@sec:approximation hat uns mit einem Ärgernis zurückgelassen: Durch
 dieselben drei Punkte laufen eine Parabel, ein Polygonzug, ein kubisches
 Polynom und eine wellige Sinuskurve, und alle vier erfüllen die
 Interpolationsbedingungen exakt. Solange wir nur „irgendeine Funktion durch
@@ -9,13 +9,13 @@ Abschnitt räumt das auf. Die Idee ist in einem Satz gesagt: Wir suchen den
 Interpolanten nicht mehr unter allen Funktionen, sondern nur noch in einem
 kleinen, endlichdimensionalen Ansatzraum. Aus der Suche nach einer Funktion
 wird damit die Suche nach endlich vielen Zahlen, und dafür haben wir seit
-[Kapitel 5](?k=05-lgs#sec-5.1) das Werkzeug.
+@kap:lgs das Werkzeug.
 
 ### Funktionen als Vektoren
 
 Der erste Schritt ist ein Perspektivwechsel: Funktionen sind Vektoren.
 
-:::definition[13.2.1 (Der Vektorraum der Funktionen)]
+:::definition[#der-vektorraum-der-funktionen (Der Vektorraum der Funktionen)]
 Sei $\Fcal = \{f \colon [a,b] \to \R\}$ die Menge aller reellwertigen
 Funktionen auf einem Intervall $[a,b]$. Mit den punktweise erklärten
 Verknüpfungen
@@ -37,12 +37,12 @@ dürfen Funktionen also addieren und strecken wie Vektoren im
 $\R^n$. Der Unterschied liegt in der Größe des Raums, und genau die ist unser
 Problem.
 
-Was heißt der Befund aus [Abschnitt 13.1](#sec-13.1) in dieser Sprache? Dort
+Was heißt der Befund aus @sec:approximation in dieser Sprache? Dort
 war jeder Interpolant von der Gestalt $\cgreen{p} + g$ mit einer Funktion $g$,
 die an allen Stellen $x_i$ verschwindet. Genau so sieht die Lösungsmenge eines
 linearen Gleichungssystems aus, und das ist kein Zufall.
 
-:::bemerkung[13.2.2 (Unendlich viele Freiheitsgrade, endlich viele Bedingungen)]
+:::bemerkung[#unendlich-viele-freiheitsgrade-endlich (Unendlich viele Freiheitsgrade, endlich viele Bedingungen)]
 Die *Auswertungsabbildung*
 
 $$
@@ -55,8 +55,8 @@ ist linear, denn Summe und Vielfaches sind punktweise erklärt. Die
 Interpolanten der Daten $\cblue{\by}$ sind genau die Urbilder von
 $\cblue{\by}$ unter $E$, und die Gestalt einer solchen Urbildmenge kennen wir
 von linearen Gleichungssystemen: eine spezielle Lösung plus der
-:k[Kern]{#kernel} ([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Das ist die Aussage
-aus [Abschnitt 13.1](#sec-13.1) in anderer Sprache, denn
+:k[Kern]{#kernel} (@sec:lgs/grundlagen). Das ist die Aussage
+aus @sec:approximation in anderer Sprache, denn
 
 $$
 \operatorname{Kern}(E)
@@ -65,7 +65,7 @@ $$
 
 Unendlich viele Lösungen gibt es, weil dieser Kern unendlichdimensional ist;
 eine unendliche linear unabhängige Familie darin hat
-[Abschnitt 13.1](#sec-13.1) schon angegeben. Dahinter steckt die Buchführung
+@sec:approximation schon angegeben. Dahinter steckt die Buchführung
 des :k[Rangsatzes]{#rank-nullity-theorem}: Was eine lineare Abbildung nicht
 misst, bleibt im Kern frei, und $E$ misst gerade $n$ Zahlen aus einem
 unendlichdimensionalen Raum.
@@ -80,7 +80,7 @@ einem Raum, der nur endlich viele Freiheitsgrade hat.
 Wenn die Bedingungen zu wenig festlegen, engen wir den Suchraum ein. Statt in
 ganz $\Fcal$ suchen wir nur noch in einem endlichdimensionalen Unterraum.
 
-:::definition[13.2.3 (Ansatzraum, Basisdarstellung, Basiskoeffizienten)]
+:::definition[#ansatzraum-basisdarstellung (Ansatzraum, Basisdarstellung, Basiskoeffizienten)]
 Seien $\corange{\phi_1}, \dots, \corange{\phi_K} \colon [a,b] \to \R$ fest
 gewählte Funktionen, genannt *Basisfunktionen* (basis functions). Der von
 ihnen aufgespannte :k[Unterraum]{#subspace}
@@ -101,7 +101,7 @@ $\ba = (a_1, \dots, a_K)^\top \in \R^K$ beschrieben. Ob umgekehrt auch jede
 Funktion in $\Fcal_K$ nur *einen* solchen Vektor besitzt, ist eine echte
 Zusatzforderung an die $\corange{\phi_k}$.
 
-:::satz[13.2.4 (Wann K Zahlen eine Funktion festlegen)]
+:::satz[#wann-k-zahlen-eine-funktion-festlegen (Wann K Zahlen eine Funktion festlegen)]
 Die Koordinatenabbildung
 
 $$
@@ -121,7 +121,7 @@ Koeffizientenvektor.
 ::::beweis
 
 :::schritt
-Linearität und Surjektivität stehen schon in Definition 13.2.3.
+Linearität und Surjektivität stehen schon in @definition:ansatzraum-basisdarstellung.
 
 ::why[$\Fcal_K$ ist als Menge aller Linearkombinationen definiert, also ist jedes Element ein Bild unter $\Phi$; die Linearität folgt aus den punktweisen Rechenregeln]
 :::
@@ -144,11 +144,11 @@ $f \in \Fcal_K$ ist eindeutig.
 
 ::::
 
-:::bemerkung[13.2.5 (Das Wort Basisfunktion trägt eine Voraussetzung mit)]
+:::bemerkung[#das-wort-basisfunktion-traegt-eine (Das Wort Basisfunktion trägt eine Voraussetzung mit)]
 Dass jedes $f \in \Fcal_K$ durch $K$ Koeffizienten eindeutig bestimmt sei,
 klingt harmlos. In der Leserichtung von den Koeffizienten zur Funktion ist
 das immer richtig, denn $\Phi$ ist eine Abbildung. Interessant ist die
-Gegenrichtung, und die braucht Satz 13.2.4. Wählen wir etwa
+Gegenrichtung, und die braucht @satz:wann-k-zahlen-eine-funktion-festlegen. Wählen wir etwa
 $\corange{\phi_1(x)} = 1$, $\corange{\phi_2(x)} = x$ und
 $\corange{\phi_3(x)} = 1 + x$, so ist $K = 3$, aber $\Fcal_3$ besteht nur aus
 den Polynomen vom Grad höchstens $1$ und hat die Dimension $2$. Die Funktion
@@ -158,18 +158,18 @@ die lineare Unabhängigkeit stillschweigend voraus; wir prüfen sie im
 Zweifelsfall nach.
 :::
 
-:::beispiel[13.2.6 (Zwei Ansatzräume)]
+:::beispiel[#zwei-ansatzraeume (Zwei Ansatzräume)]
 1. *Polynome vom Grad höchstens $n - 1$:* Mit der *Monombasis*
    $\corange{\phi_k(x)} = x^{k-1}$ und $K = n$ ist $\Fcal_K$ der Raum aller
    :k[Polynome]{#polynomial} vom Grad höchstens $n - 1$. Die Monome sind
    linear unabhängig, also ist $\dim \Fcal_K = n$. Diesen Ansatzraum nimmt
-   sich [Abschnitt 13.3](#sec-13.3) vor.
+   sich @sec:polynominterpolation vor.
 2. *Splines vom Grad $q$ über $m + 1$ Knoten:* Stückweise Polynome vom Grad
    höchstens $q$, die an den $m - 1$ inneren Knoten $C^{q-1}$-glatt
    aneinanderstoßen, bilden ebenfalls einen Ansatzraum. Bei einfachen inneren
    Knoten und dieser größtmöglichen Glattheit hat er $K = m + q$
    Freiheitsgrade. Woher diese Zahl kommt und welche Basis man dafür wählt,
-   klärt [Abschnitt 13.4](#sec-13.4); wir nehmen sie hier als Vorschau mit.
+   klärt @sec:splines; wir nehmen sie hier als Vorschau mit.
 :::
 
 ### Der Ansatz und sein Gleichungssystem
@@ -177,7 +177,7 @@ Zweifelsfall nach.
 Jetzt können wir das Interpolationsproblem umformulieren. Gesucht ist nicht
 mehr eine Funktion, sondern ein Vektor aus $K$ Zahlen.
 
-:::algorithmus[13.2.7 (Interpolation durch Basisdarstellung)]
+:::algorithmus[#interpolation-durch-basisdarstellung (Interpolation durch Basisdarstellung)]
 Gegeben seien Daten $(x_i, \cblue{y_i})$, $i = 1, \dots, n$, mit paarweise
 verschiedenen $x_i$.
 
@@ -188,12 +188,12 @@ verschiedenen $x_i$.
    unbekannten Koeffizienten $a_1, \dots, a_K$.
 3. *Bedingungen hinschreiben:* $\cblue{y_i} = \cgreen{\wh{f}(x_i)}$ für alle
    $i$ ergibt das lineare Gleichungssystem $\bB\ba = \cblue{\by}$ aus
-   Satz 13.2.8.
+   @satz:das-interpolationsproblem-ist-ein.
 4. *System lösen* ([Kapitel 5](?k=05-lgs#sec-5.2)) und die Koeffizienten in
    den Ansatz einsetzen.
 :::
 
-:::satz[13.2.8 (Das Interpolationsproblem ist ein lineares Gleichungssystem)]
+:::satz[#das-interpolationsproblem-ist-ein (Das Interpolationsproblem ist ein lineares Gleichungssystem)]
 Sei $\bB \in \R^{n \times K}$ die Matrix mit den Einträgen
 $B_{ik} = \corange{\phi_k(x_i)}$, also
 
@@ -217,33 +217,33 @@ Der Beweis ist eine Zeile: Die $i$-te Komponente von $\bB\ba$ ist
 $\sum_{k=1}^K \corange{\phi_k(x_i)}\, a_k = \cgreen{\wh{f}(x_i)}$, die $i$-te
 Zeile der Gleichung also wörtlich die $i$-te Interpolationsbedingung.
 
-:::bemerkung[13.2.9 (Was in B steckt und was nicht)]
+:::bemerkung[#was-in-b-steckt-und-was-nicht (Was in B steckt und was nicht)]
 Die Matrix $\bB$ liest sich zeilenweise wie eine Datentabelle: *eine Zeile je
 Datenpunkt, eine Spalte je Basisfunktion*. Drei Beobachtungen dazu.
 
 - $\bB$ hängt nur von den Stellen $x_i$ und vom Basissystem ab, nicht von den
   gemessenen Werten $\cblue{y_i}$. Kommen neue Messwerte an denselben Stellen
   herein, bleibt die Matrix stehen, und eine einmal berechnete Zerlegung
-  lässt sich wiederverwenden ([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
+  lässt sich wiederverwenden (@sec:lgs/lu).
 - Für $n = K$ ist $\bB$ quadratisch. Das System ist genau dann für jede rechte
   Seite eindeutig lösbar, wenn $\bB$ invertierbar ist
-  ([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Das ist der Normalfall der
+  (@sec:lgs/grundlagen). Das ist der Normalfall der
   Interpolation, und die folgenden Abschnitte drehen sich um die Frage, wie
   gut diese Matrix konditioniert ist.
 - Für $n > K$ haben wir mehr Bedingungen als Unbekannte. Ein exakter
   Interpolant existiert dann in der Regel nicht, und wir minimieren
   stattdessen die Residuen, also
   :k[Kleinste Quadrate]{#linear-least-squares}
-  ([Kapitel 7](?k=07-kq#sec-7.1)). Das ist der Übergang zur Glättung, den
-  [Abschnitt 13.1](#sec-13.1) angekündigt hat. Für $n < K$ bleibt das Problem
+  (@kap:kq). Das ist der Übergang zur Glättung, den
+  @sec:approximation angekündigt hat. Für $n < K$ bleibt das Problem
   unterbestimmt und braucht weitere Forderungen.
 :::
 
 ### Ein Beispiel von Hand
 
-:::beispiel[13.2.10 (Basisdarstellung konkret)]
+:::beispiel[#basisdarstellung-konkret (Basisdarstellung konkret)]
 Gegeben seien die $n = 3$ Punkte $\cblue{(0, 1)}$, $\cblue{(1, 2)}$,
-$\cblue{(2, 5)}$ aus [Abschnitt 13.1](#sec-13.1), dazu die Monombasis
+$\cblue{(2, 5)}$ aus @sec:approximation, dazu die Monombasis
 $\corange{\phi_k(x)} = x^{k-1}$ mit $K = 3$. Der Ansatzraum ist der Raum der
 Polynome vom Grad höchstens $2$, der Ansatz lautet
 $\cgreen{\wh{f}(x)} = a_1 + a_2 x + a_3 x^2$.
@@ -290,7 +290,7 @@ $\cgreen{\wh{f}(0)} = \cblue{1}$, $\cgreen{\wh{f}(1)} = \cblue{2}$,
 $\cgreen{\wh{f}(2)} = \cblue{5}$.
 :::
 
-:::bemerkung[13.2.11 (Einsetzen ist hier nicht Vorwärtssubstitution)]
+:::bemerkung[#einsetzen-ist-hier-nicht (Einsetzen ist hier nicht Vorwärtssubstitution)]
 Der Rechenweg sieht aus wie das Lösen eines Dreieckssystems, ist aber keines.
 :k[Vorwärtssubstitution]{#triangular-solve} setzt eine untere
 :k[Dreiecksmatrix]{#triangular-matrix} voraus, und $\bB$ ist keine: In Zeile 2
@@ -299,13 +299,13 @@ $\corange{\phi_3(x_2)} = \corange{1} \neq 0$. Was uns die erste Zeile so
 billig gibt, ist ein Zufall der Daten: Wegen $x_1 = 0$ verschwinden dort alle
 Monome außer dem konstanten. Ab Zeile 2 rechnen wir echte
 :k[Gauß-Elimination]{#gaussian-elimination}
-([Abschnitt 5.2](?k=05-lgs#sec-5.2)), nur eben von Hand und in einem sehr
+(@sec:lgs/lgs), nur eben von Hand und in einem sehr
 kleinen System.
 :::
 
 Dass es auch anders geht, zeigt ein zweiter Anlauf mit demselben Ansatzraum.
 
-:::beispiel[13.2.12 (Dieselbe Funktion, andere Koeffizienten)]
+:::beispiel[#dieselbe-funktion-andere-koeffizienten (Dieselbe Funktion, andere Koeffizienten)]
 Wir behalten die Daten und wechseln nur das Basissystem, und zwar zur
 *Newton-Basis* zu den Knoten $0$ und $1$:
 
@@ -351,18 +351,18 @@ $$
 \cgreen{\wh{f}(x)} = 1 + x + x(x-1) = 1 + x^2 ,
 $$
 
-dieselbe Funktion wie in Beispiel 13.2.10. Anders sein kann sie auch nicht:
+dieselbe Funktion wie in @beispiel:basisdarstellung-konkret. Anders sein kann sie auch nicht:
 Die Differenz zweier Polynome vom Grad höchstens $2$, die beide durch alle
 drei Punkte laufen, hat mindestens drei Nullstellen. Ein Polynom vom Grad
 höchstens $2$ mit drei Nullstellen ist aber das Nullpolynom, wie
-[Abschnitt 13.3](#sec-13.3) allgemein festhält.
+@sec:polynominterpolation allgemein festhält.
 :::
 
 Der Ansatzraum bestimmt also den Interpolanten, das Basissystem nur seine
 Koeffizienten und den Rechenweg dorthin. Für die Numerik ist der Rechenweg
 allerdings alles andere als gleichgültig: Ein Dreieckssystem kostet
 $O(K^2)$ Operationen, die volle Elimination $O(K^3)$
-([Abschnitt 5.3](?k=05-lgs#sec-5.3)).
+(@sec:lgs/lu).
 
 :::interaktiv[Zwei Basen, ein Interpolant]
 Der Rechner führt beide Beispiele vor. Der Schalter wechselt das
@@ -387,22 +387,22 @@ Kriterien geben den Fahrplan für den Rest des Kapitels vor.
   $\|\bB^{-1}\|$ die absolute Verstärkung einer Störung der rechten Seite;
   die :k[Konditionszahl]{#condition-number} $\kappa(\bB)$ liefert die übliche
   relative Störungsabschätzung
-  ([Abschnitt 4.2](?k=04-fehler#sec-4.2)). Bei der Monombasis wächst sie mit
+  (@sec:fehler/kondition). Bei der Monombasis wächst sie mit
   $K$ dramatisch, und das ist ihr Hauptproblem
-  ([Abschnitt 13.3](#sec-13.3)).
+  (@sec:polynominterpolation).
 - *Stabilität.* Ändert sich ein einziger Messwert ein wenig, sollte sich der
   Interpolant auch nur ein wenig ändern, und zwar am besten nur in der Nähe
   dieses Punktes. Ein globales Polynom schlägt stattdessen im ganzen Intervall
   aus, oft am heftigsten weit weg von der Störung
-  ([Abschnitt 13.3](#sec-13.3)).
+  (@sec:polynominterpolation).
 - *Lokalität.* Ist jede Basisfunktion nur auf einem kleinen Teilintervall von
   null verschieden, so hat $\bB$ viele Nullen und wird zur Bandmatrix. Genau
-  das leisten die B-Splines aus [Abschnitt 13.4](#sec-13.4).
+  das leisten die B-Splines aus @sec:splines.
 - *Effiziente Lösbarkeit.* Aus der Struktur von $\bB$ wird Rechenzeit:
   Dreiecks- und Bandmatrizen lassen sich mit einem Aufwand lösen, der linear
   in der Zahl der Unbekannten wächst, statt kubisch
-  ([Abschnitt 5.3](?k=05-lgs#sec-5.3),
-  [Abschnitt 2.4](?k=02-algos#sec-2.4)).
+  (@sec:lgs/lu,
+  @sec:algos/landau).
 
 ### Selbsttest
 
@@ -412,7 +412,7 @@ Kriterien geben den Fahrplan für den Rest des Kapitels vor.
 Im System $\bB\ba = \cblue{\by}$ hat $\bB$ genau $n$ Zeilen und $K$ Spalten,
 und in Zeile $i$, Spalte $k$ steht $\corange{\phi_k(x_i)}$.
 
-So steht es in Satz 13.2.8: Jede Zeile gehört zu einem Datenpunkt, jede
+So steht es in @satz:das-interpolationsproblem-ist-ein: Jede Zeile gehört zu einem Datenpunkt, jede
 Spalte zu einer Basisfunktion. Die Unbekannte ist der Koeffizientenvektor
 $\ba \in \R^K$, die rechte Seite der Datenvektor
 $\cblue{\by} \in \R^n$.
@@ -424,7 +424,7 @@ Die Matrix $\bB$ hängt von den gemessenen Werten $\cblue{y_i}$ ab.
 In $\bB$ stehen ausschließlich Werte der Basisfunktionen an den Stellen
 $x_i$. Die Messwerte stehen komplett auf der rechten Seite. Deshalb dürfen
 wir für neue Daten an denselben Stellen dieselbe Matrix und dieselbe
-Zerlegung weiterverwenden (Bemerkung 13.2.9).
+Zerlegung weiterverwenden (@bemerkung:was-in-b-steckt-und-was-nicht).
 :::
 
 :::frage{falsch}
@@ -434,7 +434,7 @@ beschränken, ist der Interpolant eindeutig.
 Die Einschränkung allein genügt nicht. Suchen wir zu unseren drei Punkten in
 den Polynomen vom Grad höchstens $3$, also mit $K = 4 > 3 = n$, so hat das
 System mehr Unbekannte als Gleichungen und weiterhin unendlich viele
-Lösungen; der kubische Interpolant aus [Abschnitt 13.1](#sec-13.1) ist eine
+Lösungen; der kubische Interpolant aus @sec:approximation ist eine
 davon.
 Genau eine Lösung für jede rechte Seite gibt es erst, wenn $\bB$ quadratisch
 und invertierbar ist.
@@ -447,17 +447,17 @@ Interpolant.
 Es ändern sich nur die Koeffizienten, von
 $\cgreen{(1, 0, 1)^\top}$ auf $\cgreen{(1, 1, 1)^\top}$. Beide Basen spannen
 denselben Ansatzraum auf, und in ihm gibt es zu drei verschiedenen Stellen nur
-einen Interpolanten, hier $\cgreen{1 + x^2}$ (Beispiel 13.2.12). Am Widget
+einen Interpolanten, hier $\cgreen{1 + x^2}$ (@beispiel:dieselbe-funktion-andere-koeffizienten). Am Widget
 lässt sich das nachfahren: Die grüne Kurve springt beim Umschalten nicht.
 :::
 
 :::frage{falsch}
-Weil sich das System aus Beispiel 13.2.10 durch Einsetzen lösen lässt, ist
+Weil sich das System aus @beispiel:basisdarstellung-konkret durch Einsetzen lösen lässt, ist
 $\bB$ dort eine untere Dreiecksmatrix.
 
 Über der Diagonalen steht in Zeile 2 der Eintrag
 $\corange{\phi_3(x_2)} = \corange{1}$, die Matrix ist also keine
-Dreiecksmatrix (Bemerkung 13.2.11). Dass die erste Zeile sofort $a_1$ liefert,
+Dreiecksmatrix (@bemerkung:einsetzen-ist-hier-nicht). Dass die erste Zeile sofort $a_1$ liefert,
 liegt allein an $x_1 = 0$. Erst mit der Newton-Basis entsteht wirklich
 Dreiecksgestalt.
 :::
@@ -466,11 +466,11 @@ Dreiecksgestalt.
 Wählen wir $K$ Basisfunktionen, so hat der Ansatzraum $\Fcal_K$ die
 Dimension $K$.
 
-Nur wenn die $\corange{\phi_k}$ linear unabhängig sind (Satz 13.2.4). Mit
+Nur wenn die $\corange{\phi_k}$ linear unabhängig sind (@satz:wann-k-zahlen-eine-funktion-festlegen). Mit
 $\corange{\phi_1(x)} = 1$, $\corange{\phi_2(x)} = x$ und
 $\corange{\phi_3(x)} = 1 + x$ ist $K = 3$, aber $\Fcal_3$ enthält nur die
 Polynome vom Grad höchstens $1$ und hat die Dimension $2$; jede Funktion
-darin hat dann unendlich viele Koeffizientenvektoren (Bemerkung 13.2.5).
+darin hat dann unendlich viele Koeffizientenvektoren (@bemerkung:das-wort-basisfunktion-traegt-eine).
 :::
 
 ::::

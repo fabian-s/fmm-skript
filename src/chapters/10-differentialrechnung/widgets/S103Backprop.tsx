@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, M, Slider, Stepper, Verdikt, fmtDe as fmt } from "../../../lib";
 import { W_MUTED } from "../../../lib/widgets/surface";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §10.3: Backpropagation an einem winzigen Netz mit zwei Schichten.
@@ -315,8 +316,7 @@ export function BackpropWidget() {
           <>
             Hier ist eine Komponente von <M>{"\\boldsymbol{a}_1"}</M> exakt null. Dort hat
             <M>{"\\ \\max(0, \\cdot)"}</M> einen Knick und ist nicht differenzierbar; die Anzeige
-            benutzt die übliche Verabredung, die Ableitung dort auf null zu setzen. Beispiel
-            10.3.12 sagt genau das: die Jacobimatrix einer ReLU-Schicht ist
+            benutzt die übliche Verabredung, die Ableitung dort auf null zu setzen. {ref("beispiel:jacobimatrix-eines-relu-layers")} sagt genau das: die Jacobimatrix einer ReLU-Schicht ist
             <M>{"\\ \\operatorname{diag}(\\mathbb{1}\\{a_i > 0\\})"}</M>, und auf der Kante
             ist die Wahl Konvention, nicht Mathematik.
           </>
@@ -324,11 +324,11 @@ export function BackpropWidget() {
           <>
             Der ganze Rückwärtslauf steht da. Multipliziert wurde nie eine Matrix mit einer
             Matrix, sondern immer die aktuelle Zeile mit der nächsten Jacobimatrix, und das ist
-            die Auswertungsreihenfolge aus Bemerkung 10.3.13. Und die Kette für{" "}
+            die Auswertungsreihenfolge aus {ref("bemerkung:wie-die-kette-ausgewertet-wird")}. Und die Kette für{" "}
             <M>{"\\boldsymbol{W}_1"}</M> endet bei
             <M>{"\\ \\boldsymbol{J}_{f_2}(\\boldsymbol{z}_1) = \\boldsymbol{W}_2"}</M>; der
             letzte Faktor ist die Ableitung der ersten Schicht nach ihren eigenen Gewichten,
-            nicht noch einmal <M>{"\\boldsymbol{W}_1"}</M> (Bemerkung 10.3.11).
+            nicht noch einmal <M>{"\\boldsymbol{W}_1"}</M> ({ref("bemerkung:wo-die-kette-aufhoert")}).
           </>
         ) : schritt === 0 ? (
           <>
@@ -340,13 +340,13 @@ export function BackpropWidget() {
           <>
             Vorwärtslauf: Bisher sind nur Funktionswerte entstanden (blau). Der aktuelle
             Verlust wäre <M>{`L = ${fmt(v.L)}`}</M>; Ableitungen gibt es noch keine, denn die
-            Kettenregel (10.3.2) beginnt am Ende der Kette.
+            Kettenregel ({num("eq:kettenregel-fuer-jacobimatrizen")}) beginnt am Ende der Kette.
           </>
         ) : (
           <>
             Rückwärtslauf, Schritt {schritt - 4} von 5: Die orangen Zeilen wandern von rechts
             nach links. Jede entsteht aus der vorigen durch Multiplikation mit einer
-            Jacobimatrix, so wie es Satz 10.3.9 vorgibt; abgezweigt werden dabei
+            Jacobimatrix, so wie es {ref("satz:kettenregel-fuer-jacobimatrizen")} vorgibt; abgezweigt werden dabei
             <M>{"\\ \\partial L/\\partial \\boldsymbol{W}_2"}</M> und
             <M>{"\\ \\partial L/\\partial \\boldsymbol{W}_1"}</M>.
           </>

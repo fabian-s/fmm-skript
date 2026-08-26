@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.4 — DIE EINE EINSICHT: B_k naehert sich der INVERSEN Hesse-Matrix an,
@@ -165,12 +166,12 @@ export function BfgsStepper() {
     art = "ok";
     titel = "nach n = 2 Schritten exakt";
     status =
-      "Die Iterierte sitzt im Minimum, und B₂ stimmt auf allen gezeigten Stellen mit diag(1; 0,2) = H⁻¹ überein. Ein Zufall dieses Beispiels ist das nicht, sondern genau die Aussage von Satz 12.4.10: Bei einer Quadrik im ℝⁿ liefern n Schritte mit exakter Liniensuche n Sekantenbedingungen für n unabhängige Richtungen, und mehr Information über eine konstante Krümmung gibt es nicht.";
+      `Die Iterierte sitzt im Minimum, und B₂ stimmt auf allen gezeigten Stellen mit diag(1; 0,2) = H⁻¹ überein. Ein Zufall dieses Beispiels ist das nicht, sondern genau die Aussage von ${ref("satz:das-bfgs-update-erfuellt-die")}: Bei einer Quadrik im ℝⁿ liefern n Schritte mit exakter Liniensuche n Sekantenbedingungen für n unabhängige Richtungen, und mehr Information über eine konstante Krümmung gibt es nicht.`;
   } else if (!exakt && kk === 1) {
     art = "warn";
     titel = "der erste Schritt geht zu weit";
     status =
-      "f wächst von 15 auf 40, obwohl die Richtung bergab zeigte. Am Update liegt das nicht, sondern an der Länge α = 1, die niemand geprüft hat. Deshalb kommt BFGS in der Praxis nie ohne Schrittweitensuche (Häkchen setzen); Satz 12.4.10 setzt sie ausdrücklich voraus.";
+      `f wächst von 15 auf 40, obwohl die Richtung bergab zeigte. Am Update liegt das nicht, sondern an der Länge α = 1, die niemand geprüft hat. Deshalb kommt BFGS in der Praxis nie ohne Schrittweitensuche (Häkchen setzen); ${ref("satz:das-bfgs-update-erfuellt-die")} setzt sie ausdrücklich voraus.`;
   } else {
     status = `Nach ${kk === 1 ? "einem Schritt" : `${kk} Schritten`} steht f bei ${fmt(f(z.x), 4)}. Die Näherung B_${kk} hat inzwischen Krümmungsinformation gesammelt, liegt von diag(1; 0,2) aber immer noch ${fmt(abstandInvers, 3)} entfernt (Frobeniusnorm). Das stört nicht weiter, denn für den Schritt zählt nur, ob die Richtung taugt.`;
   }

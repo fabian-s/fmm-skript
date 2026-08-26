@@ -17,6 +17,7 @@
  * --allow <regel>: erwartete Unterschiede ausblenden. Regeln:
  *   link-wrap   „Prosa Satz 12.5.7" → „link #env-… „Satz 12.5.7"" (Stufe 2 der Migration)
  *   heading-id  h3#sec-2.5.1 → h3#sec-<slug> bei gleichem Text (Stufe 5)
+ *   eq-math     „($12.5.3$)" (Text „(" + math + Text „)") → Verweis-Link „(12.5.3)" (Stufe 3)
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -71,28 +72,46 @@ const ref = JSON.parse(readFileSync(compareTo, "utf8"));
  *               der alten Prosa ohne Links gemacht hat.
  *   heading-id: h3#sec-<irgendwas> → h3#sec-* bei gleichem Text.
  */
-const ENTRY = /^(text|link (?:\?k=[^ ]+)?#(?:env|eq|sec|chap)-[^ ]+ „([^]*?)")\s?([^]*?)( in [^]*)?$/;
+// Ein Eintrag = „<kopf>[ in <Pfad>]"; der Pfad beginnt mit einem Komponenten-
+// namen und „(" — Prosa wie „wie in Satz 13.7.5" enthält das nicht.
+const WHERE_RE = / in (?:Quiz(?= > |$)|[A-Z][A-Za-z]*\()/;
+const LINK_RE = /^link (?:\?k=[^ #]+)?(?:#(?:env|eq|sec|chap)-[^ ]+)? „([^]*)"$/;
+// Verweis-Links in ::why-Labels («Link:"#env-x"|Satz 1.2.3») werden zu ihrem
+// Text; da die Signatur Inline-Stücke mit Leerzeichen verbindet, wird auf
+// BEIDEN Seiten Weißraum vor Satzzeichen und nach „(" entfernt. Prosaläufe
+// werden ohne Weißraum verglichen (die Stücke kommen ohne Randleerzeichen).
+const tidy = (t) => t.replace(/\s+/g, " ").replace(/(\d)\s+\(/g, "$1(").replace(/\s+([.,;:)\]])/g, "$1").replace(/\(\s+/g, "(").replace(/\s+$/, "");
 function normalize(entries) {
   if (!allow.size) return entries;
   const out = [];
   let run = null; // { text, where }
   const flush = () => {
     if (!run) return;
-    out.push(`text ${run.text.replace(/\s+/g, " ").trim()}${run.where}`);
+    out.push(`text ${run.text.replace(/\s+/g, "")}${run.where}`);
     run = null;
   };
   for (let e of entries) {
     if (allow.has("heading-id")) e = e.replace(/^(h\d)#sec-[^ ]+ /, "$1#sec-* ");
-    const m = allow.has("link-wrap") ? ENTRY.exec(e) : null;
-    if (!m) {
+    let text = null;
+    let where = "";
+    if (allow.has("link-wrap")) {
+      e = e.replace(/«Link:"[^"]*"\|([^»]*)»/g, "$1");
+      if (allow.has("eq-math")) e = e.replace(/\(\s*«M:(\d+\.\d+\.\d+)»\s*\)/g, "($1)");
+      const wi = e.search(WHERE_RE);
+      const head = wi >= 0 ? e.slice(0, wi) : e;
+      where = wi >= 0 ? tidy(e.slice(wi)) : "";
+      let m;
+      if (head.startsWith("text ")) text = head.slice(5);
+      else if ((m = LINK_RE.exec(head))) text = m[1];
+      else if (allow.has("eq-math") && (m = /^math (\d+\.\d+\.\d+)\s*$/.exec(head))) text = m[1];
+      else e = tidy(head) + where;
+    }
+    if (text == null) {
       flush();
       out.push(e);
       continue;
     }
-    const isLink = m[1] !== "text";
-    const text = isLink ? m[2] : m[3];
-    const where = m[4] ?? "";
-    if (run && run.where === where) run.text += " " + text;
+    if (run && run.where === where) run.text += text;
     else {
       flush();
       run = { text, where };

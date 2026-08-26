@@ -1,11 +1,11 @@
 import { SelfTest } from "./widgets/S24Local";
 import { S24WachstumWidget } from "./widgets/S24WachstumWidget";
 
-{/* Abschnitt 2.4: Landau-Symbole und Rechenregeln.
+{/* @sec:landau: Landau-Symbole und Rechenregeln.
     Quelle: Folien 02-algos.Rmd, Block „Landausymbole" bis „Quiz" (Z. 371–482).
     Prosa eigenständig aus den Folien formuliert; MDX-Migration 2026-08-11. */}
 
-In [Abschnitt 2.3](#sec-2.3) haben wir den Aufwand von
+In @sec:aufwand haben wir den Aufwand von
 Algorithmen gemessen, indem wir elementare Operationen gezählt haben. Das Ergebnis sind
 Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber unhandlich. Für den Vergleich
 von Algorithmen interessiert uns fast immer nur eine Frage: Wie schnell wächst der
@@ -14,7 +14,7 @@ ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also ei
 Notation, die genau das Wachstumsverhalten festhält und alles Unwesentliche wegwirft.
 Das leisten die *Landau-Symbole* (engl. *big-O notation*).
 
-### 2.4.1 Klein-o und Groß-O
+### Klein-o und Groß-O :id[klein-o-und-gross-o]
 
 Die Idee: Wir vergleichen den Aufwand $a_n$ mit einer möglichst einfachen
 Vergleichsfolge $b_n$ (etwa $n^2$ oder $2^n$), indem wir den
@@ -23,7 +23,7 @@ $a_n / b_n$ betrachten. Bleibt der Quotient beschränkt, wächst $a_n$
 höchstens so schnell wie $b_n$; verschwindet er sogar, wächst $a_n$
 echt langsamer.
 
-:::definition[2.4.1 (Landau-Symbole)]
+:::definition[#landau-symbole (Landau-Symbole)]
 Seien $a_n, b_n$ :k[Folgen]{#sequence}, wobei $b_n$ ab einem Index
 ungleich null ist.
 
@@ -51,7 +51,7 @@ Die Interpretation der Symbole:
   $b_n$; die Vergleichsfolge $b_n$ ist gegenüber $a_n$ nicht
   vernachlässigbar.
 
-:::bemerkung[2.4.2 (Zwei Feinheiten der Definition)]
+:::bemerkung[#zwei-feinheiten-der-definition (Zwei Feinheiten der Definition)]
 *Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
 nicht :k[konvergieren]{#convergence}; er darf zum Beispiel
 oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der
@@ -68,14 +68,14 @@ $O(b_n)$". Insbesondere ist die Beziehung nicht symmetrisch: Aus
 $5n = O(n^2)$ folgt nicht $n^2 = O(5n)$.
 :::
 
-### 2.4.2 Rechenbeispiele
+### Rechenbeispiele :id[rechenbeispiele]
 
 Wie weist man eine Landau-Beziehung konkret nach? Wir bilden den Quotienten und rechnen
 seinen Grenzwert aus. In den folgenden drei Beispielen verfolgt
 $\cred{\text{Rot}}$ die untersuchte Folge $\cred{a_n}$ und
 $\cblue{\text{Blau}}$ die Vergleichsfolge $\cblue{b_n}$.
 
-:::beispiel[2.4.3]
+:::beispiel[#beispiel-2-4-3]
 **(a)** Wir zeigen $\cred{3n^2 + 5n} = O(\cblue{n^2})$:
 
 $$
@@ -118,14 +118,14 @@ Schranke $O$, weil sie für Laufzeit- und Fehlerabschätzungen bereits die
 entscheidende Garantie liefert.
 :::
 
-### 2.4.3 Rechenregeln
+### Rechenregeln :id[rechenregeln]
 
 Aufwandsausdrücke entstehen durch Hintereinanderausführung (Addition der Kosten) und
 Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Praktischerweise
 vertragen sich die Landau-Symbole genau mit diesen beiden Operationen, so dass wir die
 Grenzwertrechnung nicht jedes Mal neu machen müssen:
 
-:::lemma[2.4.4 (Rechenregeln für Landau-Symbole)]
+:::lemma[#rechenregeln-fuer-landau-symbole (Rechenregeln für Landau-Symbole)]
 Seien $a_n, b_n > 0$ Vergleichsfolgen.
 
 1. Sei $\cred{f_n} = O(a_n)$ und $\cgreen{g_n} = O(b_n)$. Dann gilt
@@ -213,13 +213,13 @@ $$
 
 ::::
 
-### 2.4.4 Anwendung: auf den dominanten Term reduzieren
+### Anwendung: auf den dominanten Term reduzieren :id[anwendung-auf-den-dominanten-term]
 
 Sehen wir die Regeln im Einsatz. Wieder verfolgt $\cred{\text{Rot}}$ die
 Folge $\cred{f_n}$ und $\cgreen{\text{Grün}}$ die Folge
 $\cgreen{g_n}$.
 
-:::beispiel[2.4.5 (Addition und Multiplikation)]
+:::beispiel[#addition-und-multiplikation (Addition und Multiplikation)]
 Gegeben seien $\cred{f_n} = 3n^2 = O(n^2)$ und
 $\cgreen{g_n} = 5n = O(n)$.
 
@@ -236,7 +236,7 @@ $$
 $$
 :::
 
-:::beispiel[2.4.6 (Vereinfachung eines Aufwandsausdrucks)]
+:::beispiel[#vereinfachung-eines-aufwandsausdrucks (Vereinfachung eines Aufwandsausdrucks)]
 Ein Algorithmus benötige $\cred{4n^3} + 16n^2 + 239$ Operationen. Rot
 verfolgt jetzt den am schnellsten wachsenden Term:
 
@@ -277,7 +277,7 @@ Klassen ist es genauso durchsichtig: $n^3 > c\,n^2$ gilt schlicht ab $n > c$. Da
 praktische Bedeutung von $c\,n^2 = O(n^2)$ und $n^2 = o(n^3)$: Vorfaktoren verschieben die
 Schwelle, die Reihenfolge drehen sie nie um.
 
-### 2.4.5 Selbsttest
+### Selbsttest :id[landau-selbsttest]
 
 Welche der folgenden Aussagen sind wahr? Erst selbst entscheiden (Quotient bilden!),
 dann die Lösung aufklappen.
@@ -300,7 +300,7 @@ Approximations- und Rundungsfehler klassifizieren.
 **Falsch.**
 $\lim_{n \to \infty} \frac{8n^3 + 7n^2 + n}{n} = \lim_{n \to \infty} \left(8n^2 + 7n + 1\right) = \infty$;
 der Quotient divergiert. Richtig wäre $O(n^3)$: der dominante Term
-entscheidet (Beispiel 2.4.6).
+entscheidet (@beispiel:vereinfachung-eines-aufwandsausdrucks).
 </SelfTest>
 
 <SelfTest nr={4} frage={<M>{"n^{-3} + n^{-2} = O(n^{-2})"}</M>}>
@@ -327,7 +327,7 @@ Exponentialfunktion endgültig davon.
 Aus $a_n = O(b_n)$ folgt $b_n = O(a_n)$.
 
 Das Gleichheitszeichen in $a_n = O(b_n)$ ist ein Notationsmissbrauch, die Beziehung ist
-nicht symmetrisch (Bemerkung 2.4.2): $5n = O(n^2)$ gilt, $n^2 = O(5n)$ nicht.
+nicht symmetrisch (@bemerkung:zwei-feinheiten-der-definition): $5n = O(n^2)$ gilt, $n^2 = O(5n)$ nicht.
 :::
 
 :::frage{wahr}
@@ -343,7 +343,7 @@ Vergleichsfolge verwenden.
 Damit haben wir das Handwerkszeug beisammen. Im
 [nächsten Abschnitt](#sec-2.5) setzen wir es ein, um
 die Komplexität unserer Fibonacci-Algorithmen aus
-[Abschnitt 2.2](#sec-2.2) präzise zu bestimmen – mit
+@sec:fibonacci präzise zu bestimmen – mit
 einem drastischen Ergebnis.
 
 *Vertiefung: Heath §1.1 (Aufwand und Genauigkeit numerischer Verfahren); Cormen,

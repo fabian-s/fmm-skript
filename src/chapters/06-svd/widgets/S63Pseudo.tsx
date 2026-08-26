@@ -12,6 +12,7 @@ import {
   W_MUTED,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Ist A singulär, so hat das Kleinste-Quadrate-Problem eine
@@ -124,7 +125,7 @@ function fensterRadius(p: [number, number], d: [number, number], h: number): num
 }
 
 const PRESETS: { id: string; name: string; A: number[][]; b: [number, number] }[] = [
-  { id: "rang1", name: "Rang 1 (Beispiel 6.3.4)", A: [[1, 1], [1, 1]], b: [1, 5] },
+  { id: "rang1", name: `Rang 1 (${ref("beispiel:reduzierte-svd-einer-rang-1-matrix")})`, A: [[1, 1], [1, 1]], b: [1, 5] },
   { id: "rang1b", name: "andere Rang-1-Matrix", A: [[1, 2], [2, 4]], b: [1, 5] },
   { id: "exakt", name: "b liegt in col(A)", A: [[1, 1], [1, 1]], b: [3, 3] },
   { id: "regulaer", name: "regulär", A: [[2, 1], [0, 1]], b: [1, 5] },
@@ -394,7 +395,7 @@ export function PseudoinverseExplorer() {
       ) : rang === 2 ? (
         <Verdikt kind="ok" titel="Regulärer Fall:">
           Der Kern ist <M>{"\\{\\bnull\\}"}</M>, die Lösungsmenge schrumpft auf einen einzigen
-          Punkt, und <M>{"\\bA\\pinv = \\bA^{-1}"}</M> (Korollar 6.3.9). Das Residuum ist{" "}
+          Punkt, und <M>{"\\bA\\pinv = \\bA^{-1}"}</M> ({ref("korollar:spezialfaelle")}). Das Residuum ist{" "}
           {fmt(rNorm)}: <M>{"\\bb"}</M> liegt in <M>{"\\col(\\bA)"}</M>, denn der Spaltenraum ist
           hier der ganze <M>{"\\R^2"}</M>. Von „kleinster Norm unter den Lösungen" bleibt nichts
           zu wählen.
@@ -411,11 +412,11 @@ export function PseudoinverseExplorer() {
           <M>{"\\bA"}</M> hat den Rang 1, der Kern ist eine Gerade, und jeder Punkt der
           gestrichelten Geraden löst die Kleinste-Quadrate-Aufgabe gleich gut: Das Bild bleibt{" "}
           <M>{"\\bA\\bx = "}</M>
-          {vecStr(Ax)}, das ist nach Satz 6.3.8 der Punkt{" "}
+          {vecStr(Ax)}, das ist nach {ref("satz:eigenschaften-der-pseudoinversen")} der Punkt{" "}
           <M>{"\\proj_{\\col(\\bA)}\\bb"}</M>, und das Residuum bleibt {fmt(rNorm)}, wie weit wir{" "}
           <M>{"\\bx"}</M> auch schieben.{" "}
           {Math.abs(t) < 0.05
-            ? `Nur die Norm unterscheidet die Lösungen, und eingestellt ist gerade die kürzeste: ‖A⁺b‖ = ${fmt(xDachNorm)}, der kleinste Wert auf der ganzen Geraden. Die Lösungsgerade berührt den grauen Kreis genau hier, denn A⁺b steht senkrecht auf dem Kern (Bemerkung 6.3.12).`
+            ? `Nur die Norm unterscheidet die Lösungen, und eingestellt ist gerade die kürzeste: ‖A⁺b‖ = ${fmt(xDachNorm)}, der kleinste Wert auf der ganzen Geraden. Die Lösungsgerade berührt den grauen Kreis genau hier, denn A⁺b steht senkrecht auf dem Kern (${ref("bemerkung:ausblick-kleinste-quadrate")}).`
             : `Nur die Norm unterscheidet die Lösungen: ${fmt(xNorm)} gegen ‖A⁺b‖ = ${fmt(xDachNorm)}, also ${fmt(xNorm - xDachNorm)} mehr. Zurück bei t = 0 steht die kürzeste.`}
         </Verdikt>
       )}

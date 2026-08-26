@@ -20,9 +20,9 @@ analytische Minimum ist $\cgreen{x^\star = 3}$ mit $f(x^\star) = 0$, und
 weiter als bis auf das voreingestellte `tol` kommt der Aufruf nicht heran:
 Es steht auf `.Machine$double.eps^0.25`, also auf rund $1{,}2\cdot 10^{-4}$.
 
-:::bemerkung[12.6.1 (Golden Section Search)]
+:::bemerkung[#golden-section-search (Golden Section Search)]
 Im Kern verwendet `optimize()` die *Golden Section Search*, eine Verwandte
-der Bisektion aus [Abschnitt 12.1](#sec-12.1): Statt eines
+der Bisektion aus @sec:nichtlineare-gleichungen: Statt eines
 Vorzeichenwechsels von $f$ schachtelt sie ein Minimum ein. Dazu hält sie
 zwei innere Testpunkte, die das Intervall im Verhältnis des goldenen
 Schnitts teilen; in jedem Schritt fällt das Teilintervall weg, das das
@@ -48,7 +48,7 @@ goldenen Schnitts.
 
 Als Testfall dient uns die Funktion
 
-$$ {#eq-12.6.1}
+$$ {#eq-eq-12-6-1}
 f(\bx) = \log\bigl(1 + (x_1^2 + \sin 3x_2)^2\bigr)
 + 0{,}1\,x_1^2 + 0{,}1\,x_2^2 ,
 $$
@@ -70,14 +70,14 @@ optim(c(-1, -0.5), f, method = "BFGS")
 
 Ohne `method`-Argument verwendet `optim()` das ableitungsfreie
 :k[Nelder-Mead-Verfahren]{#nelder-mead} aus
-[Abschnitt 12.3](#sec-12.3); mit `method = "BFGS"` das
-Quasi-Newton-Verfahren aus [Abschnitt 12.4](#sec-12.4), dessen Gradienten
+@sec:nelder-mead-gradient; mit `method = "BFGS"` das
+Quasi-Newton-Verfahren aus @sec:newton-sgd, dessen Gradienten
 es mangels `gr`-Argument per finiter Differenzen schätzt. Ein über `gr`
 mitgeliefertes Gradientenfeld wechselt die Methode übrigens nicht von
 selbst; Nelder-Mead bleibt die Voreinstellung, bis `method` etwas anderes
 sagt. Von diesem Startpunkt aus landen beide Verfahren im globalen Minimum.
 
-:::bemerkung[12.6.2 (Falsche Konvergenz, und keiner warnt)]
+:::bemerkung[#falsche-konvergenz-und-keiner-warnt (Falsche Konvergenz, und keiner warnt)]
 Zwei Fallen zeigt schon dieses kleine Beispiel; drei Aufrufe genügen:
 
 ```r
@@ -94,21 +94,21 @@ Verfahren meldet dann Konvergenz, obwohl der gefundene Wert
 $f \approx 0{,}11$ über dem globalen Minimum $0$ liegt. Der
 `convergence`-Code von `optim()` sagt nur, dass das *Verfahren* zum
 Stillstand kam, nicht, dass das Ergebnis global optimal ist
-([Abschnitt 12.2](#sec-12.2)).
+(@sec:optimalitaet).
 
 *Abgebrochene Läufe.* Begrenzen wir die Iterationen, etwa mit
 `control = list(maxit = 50)`, kann `optim()` mitten am Hang stehen bleiben.
 Das Ergebnis sieht aus wie immer, nur der `convergence`-Code (dann
 $\neq 0$) verrät den Abbruch; eine Warnung gibt es nicht. Abbruchkriterien
 prüfen heißt hier: den Rückgabewert lesen, nicht auf `warnings()` warten
-([Abschnitt 12.3](#sec-12.3), Abbruchkriterien).
+(@sec:nelder-mead-gradient, Abbruchkriterien).
 :::
 
 Wie schlimm ist das in der Praxis? Probieren wir es an der Beispielfunktion
 selbst aus.
 
 :::interaktiv[Die Landkarte zur Beispielfunktion]
-Das Widget zeichnet die Funktion aus ($12.6.1$) als Karte und lässt uns den
+Das Widget zeichnet die Funktion aus @eq:eq-12-6-1 als Karte und lässt uns den
 Startpunkt setzen, per Klick, per Zug oder über die beiden Regler. Weil das
 Widget mit Gradientenabstieg rechnet, sind das die Einzugsgebiete *dieses*
 Verfahrens; Nelder-Mead und BFGS laufen andere Wege und können deshalb an anderen
@@ -142,13 +142,13 @@ Konvergenz keine bessere Schrittweite, sondern nur ein zweiter Startpunkt.
 Wer den Gradienten kennt, sollte ihn `optim()` übergeben: Finite Differenzen
 kosten pro Gradient zusätzliche Funktionsauswertungen, bei einseitigen
 Differenzen $n$ und bei zentralen $2n$, und sie bringen Rundungsfehler mit
-([Kapitel 4](?k=04-fehler#sec-4.1)); der analytische Gradient ist schneller
+(@kap:fehler); der analytische Gradient ist schneller
 und genauer.
 
-:::beispiel[12.6.3 (Kettenregel für die Beispielfunktion)]
+:::beispiel[#kettenregel-fuer-die-beispielfunktion (Kettenregel für die Beispielfunktion)]
 Mit $u(\bx) = x_1^2 + \sin 3x_2$ ist $f = \log(1 + u^2) + 0{,}1x_1^2 +
 0{,}1x_2^2$, und die :k[Kettenregel]{#chain-rule}
-([Abschnitt 10.6](?k=10-differentialrechnung#sec-10.6)) liefert wegen
+(@sec:differentialrechnung/produkt-kettenregel) liefert wegen
 $\tfrac{d}{du}\log(1 + u^2) = \tfrac{2u}{1 + u^2}$:
 
 $$
@@ -171,9 +171,9 @@ optim(c(-1, 0.5), f, gr = grad_f, method = "L-BFGS-B",
 ```
 
 `L-BFGS-B` ist die speicherschonende BFGS-Variante aus
-[Abschnitt 12.4](#sec-12.4), erweitert um Box-Nebenbedingungen
+@sec:newton-sgd, erweitert um Box-Nebenbedingungen
 `lower`/`upper`; damit sind wir zurück bei der beschränkten Optimierung aus
-[Abschnitt 12.5](#sec-12.5).
+@sec:beschraenkt.
 :::
 
 ### Wann welches Verfahren
@@ -197,29 +197,29 @@ Gradient nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfo
 
 ### Was bleibt
 
-:::bemerkung[12.6.4 (Kernkonzepte des Kapitels)]
+:::bemerkung[#optim-in-r-kernkonzepte-des-kapitels (Kernkonzepte des Kapitels)]
 1. **Nichtlineare Gleichungen** lösen wir iterativ: Die Bisektion halbiert
    verlässlich, aber langsam; Newton-Raphson konvergiert lokal quadratisch,
    $e_{k+1} \approx C\,e_k^2$ mit einer Konstanten $C$, die von $f$ abhängt,
    und überträgt sich wörtlich ins Multivariate. Wo die Jacobimatrix pro
    Schritt zu teuer wird, ersetzt die Fixpunktiteration sie durch eine
-   feste Schrittweite ([Abschnitt 12.1](#sec-12.1)).
+   feste Schrittweite (@sec:nichtlineare-gleichungen).
 2. **Optimalität** heißt stationär plus Krümmungsbedingung; ohne Konvexität
    drohen lokale Minima und vor allem Sattelpunkte
-   ([Abschnitt 12.2](#sec-12.2)).
+   (@sec:optimalitaet).
 3. **Gradientenabstieg** lebt von der Schrittweite: Konvergenzraten
    $O(1/k)$ beziehungsweise linear mit $\rho = 1 - \gamma\mu$, für
    $\gamma = 1/L$ also $\rho = 1 - \mu/L$, und die
    :k[Kondition]{#condition-number} $\kappa_f = L/\mu$ bestimmt das
-   Zickzack ([Abschnitt 12.3](#sec-12.3)).
+   Zickzack (@sec:nelder-mead-gradient).
 4. **Newton und Quasi-Newton** kaufen mit Krümmungsinformation schnellere
    Konvergenz; BFGS approximiert die Hesse-Inverse aus Gradienten, SGD
    ersetzt den Gradienten durch den einer zufällig gezogenen Beobachtung,
    der im Mittel über diese Ziehung der gesuchte ist
-   ([Abschnitt 12.4](#sec-12.4)).
+   (@sec:newton-sgd).
 5. **Nebenbedingungen** behandeln Lagrange-Multiplikatoren und die
    KKT-Bedingungen; Ridge und Lasso sind die statistischen Musterbeispiele
-   ([Abschnitt 12.5](#sec-12.5)).
+   (@sec:beschraenkt).
 :::
 
 ### Selbsttest
@@ -232,7 +232,7 @@ Sechs Aussagen quer durch das Kapitel.
 Die Bisektion auf $[0, 8]$ braucht für die Zielgenauigkeit
 $\epsilon = 10^{-3}$ genau $13$ Halbierungen.
 
-Nach Satz 12.1.8 sind es
+Nach @satz:schrittzahl-der-bisektion sind es
 $\lceil \log_2((b - a)/\epsilon) \rceil = \lceil \log_2 8000 \rceil$
 Schritte, und wegen $2^{12} = 4096 < 8000 \le 8192 = 2^{13}$ sind das $13$.
 :::
@@ -245,7 +245,7 @@ Der Schritt lautet $x^{(k+1)} = (1 - 2\gamma)\,x^{(k)}$. Für
 $\gamma \ge 1$ ist $|1 - 2\gamma| \ge 1$: Bei $\gamma = 1$ springt die
 Iteration ewig zwischen $x^{(0)}$ und $-x^{(0)}$, für $\gamma > 1$
 wächst der Betrag sogar. Konvergenz braucht hier $\gamma < 1 = 2/L$ mit
-$L = 2$ ([Abschnitt 12.3](#sec-12.3)).
+$L = 2$ (@sec:nelder-mead-gradient).
 :::
 
 :::frage{wahr}
@@ -255,7 +255,7 @@ Startpunkt.
 
 Die quadratische Taylor-Approximation einer Quadrik ist die Quadrik
 selbst, der Newton-Schritt springt also direkt in deren Minimum
-(Beispiel in [Abschnitt 12.4](#sec-12.4); für $f(x) = x^2$ mit
+(Beispiel in @sec:newton-sgd; für $f(x) = x^2$ mit
 $x^{(0)} = 4$: $x^{(1)} = 4 - 8/2 = 0$).
 :::
 
@@ -264,7 +264,7 @@ In den KKT-Bedingungen müssen auch die Multiplikatoren $\lambda_i$ der
 Gleichungsnebenbedingungen nichtnegativ sein.
 
 Nur die $\mu_j$ der Ungleichungen tragen die Vorzeichenbedingung
-$\mu_j \ge 0$; die $\lambda_i$ sind frei. Beispiel 12.5.6 hat
+$\mu_j \ge 0$; die $\lambda_i$ sind frei. @beispiel:minimieren-auf-einer-geraden hat
 $\lambda^\star = -1$, und alles ist in Ordnung.
 :::
 
@@ -273,8 +273,8 @@ Ist eine Ungleichungs-Nebenbedingung im Optimum inaktiv, so ist ihr
 KKT-Multiplikator null.
 
 Das ist die Komplementarität $\mu_j h_j(\bx^\star) = 0$ aus
-Satz 12.5.7: Aus $h_j(\bx^\star) < 0$ folgt $\mu_j = 0$. In
-Beispiel 12.5.9 gilt genau das für die untere Schranke.
+@satz:karush-kuhn-tucker-bedingungen: Aus $h_j(\bx^\star) < 0$ folgt $\mu_j = 0$. In
+@beispiel:eine-box-beschraenkung gilt genau das für die untere Schranke.
 :::
 
 :::zahlfrage{loesung=0.1085 toleranz=0.005}
@@ -284,7 +284,7 @@ wir bei $(-1;\ 1)$ starten?
 Er landet in der oberen Mulde bei $(0;\ 1{,}0357)$ mit $f = 0{,}1085$. Das
 globale Minimum liegt bei $(0;\ 0)$ mit $f = 0$, also gut ein Zehntel tiefer.
 Beide Läufe enden mit verschwindendem Gradienten und ohne Warnung – genau das
-meint Bemerkung 12.6.2 mit „falscher Konvergenz".
+meint @bemerkung:falsche-konvergenz-und-keiner-warnt mit „falscher Konvergenz".
 :::
 
 :::frage{falsch}
@@ -295,7 +295,7 @@ Die Richtung stimmt, solange $\nabla f \neq \bnull^\top$ ist, aber die
 Schrittweite kann den Abstieg überschießen: Auf $f(x) = x^2$ mit
 $\gamma = 1$ gilt $x^{(k+1)} = -x^{(k)}$ und der Funktionswert bleibt exakt
 gleich, mit $\gamma > 1$ wächst er. Genau dagegen sichert die
-Armijo-Bedingung aus [Abschnitt 12.3](#sec-12.3) ab.
+Armijo-Bedingung aus @sec:nelder-mead-gradient ab.
 :::
 
 ::::

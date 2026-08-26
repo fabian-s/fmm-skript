@@ -13,6 +13,7 @@ import {
   fmtDe,
   useDrag,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * Widgets für §4.1 „Fehlermaße und Fehlerzerlegung".
@@ -199,14 +200,14 @@ export function FehlermassRechner() {
     nv < 0.2 ? (
       <Verdikt kind="warn" titel="Grenzfall ‖v‖ → 0.">
         Der absolute Fehler <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} bleibt
-        definiert, der relative nicht: Definition 4.1.2 verlangt{" "}
-        <M>{"\\left\\| \\bv \\right\\| \\neq 0"}</M>. Auch Lemma 4.1.3 sagt hier nichts mehr, denn
+        definiert, der relative nicht: {ref("definition:fehlermass")} verlangt{" "}
+        <M>{"\\left\\| \\bv \\right\\| \\neq 0"}</M>. Auch {ref("lemma:fehlerschranken")} sagt hier nichts mehr, denn
         das Band um den Ursprung schrumpft mit <M>{"\\left\\| \\bv \\right\\|"}</M> auf einen Punkt.
       </Verdikt>
     ) : delta < 0.01 ? (
       <Verdikt kind="ok" titel="Unter 1 %.">
         <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % liegt weit innerhalb des
-        gestrichelten Kreises. Lemma 4.1.3 klemmt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> =
+        gestrichelten Kreises. {ref("lemma:fehlerschranken")} klemmt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> =
         {" "}
         {fmtDe(nvt, 3)} damit zwischen {fmtDe(unten, 3)} und {fmtDe(oben, 3)}: ein Ring, der auf dem
         Bild kaum noch Dicke hat.
@@ -215,7 +216,7 @@ export function FehlermassRechner() {
       <Verdikt kind="ok" titel="Innerhalb der 10-%-Toleranz.">
         <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} ist höchstens{" "}
         {fmtDe(tol, 3)} = 0,1 · <M>{"\\left\\| \\bv \\right\\|_2"}</M>, also{" "}
-        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % ≤ 10 %. Nach Lemma 4.1.3
+        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % ≤ 10 %. Nach {ref("lemma:fehlerschranken")}
         liegt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> = {fmtDe(nvt, 3)} damit im orangen Band
         [{fmtDe(unten, 3)}; {fmtDe(oben, 3)}], und die Spitze von <M>{"\\wt{\\bv}"}</M> tatsächlich
         im Ring.
@@ -224,7 +225,7 @@ export function FehlermassRechner() {
       <Verdikt kind="fail" titel="Toleranz gerissen.">
         <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} übersteigt{" "}
         {fmtDe(tol, 3)}, der relative Fehler ist {fmtDe(100 * delta, 1)} %. Der orange Ring aus
-        Lemma 4.1.3 ist entsprechend breit: <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> darf
+        {ref("lemma:fehlerschranken")} ist entsprechend breit: <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> darf
         irgendwo zwischen {fmtDe(unten, 3)} und {fmtDe(oben, 3)} liegen. Als Garantie über die
         Länge von <M>{"\\wt{\\bv}"}</M> ist das fast nichts wert.
       </Verdikt>
@@ -360,7 +361,7 @@ export function FehlermassRechner() {
             setVt([3.2, 4.3]);
           }}
         >
-          zurück zu Beispiel 4.1.4
+          zurück zu {ref("beispiel:fehlermasse-fuer-vektoren")}
         </button>
       </div>
 
@@ -381,7 +382,7 @@ export function FehlermassRechner() {
           {nv > 0 ? `${fmtDe(delta, 4)} = ${fmtDe(100 * delta, 2)} %` : "nicht definiert"}
         </span>
         <span className="sm:col-span-2">
-          <span style={{ color: ORANGE }}>Lemma 4.1.3</span>: {fmtDe(unten, 4)} ≤ ‖ṽ‖₂ ={" "}
+          <span style={{ color: ORANGE }}>{ref("lemma:fehlerschranken")}</span>: {fmtDe(unten, 4)} ≤ ‖ṽ‖₂ ={" "}
           {fmtDe(nvt, 4)} ≤ {fmtDe(oben, 4)}
         </span>
       </div>
@@ -450,7 +451,7 @@ export function FehlerzerlegungExplorer() {
 
   const verdikt =
     N === 2 && k === 0 ? (
-      <Verdikt kind="neutral" titel="Beispiel 4.1.6.">
+      <Verdikt kind="neutral" titel={`${ref("beispiel:fehlerzerlegung-berechnung-von-e")}.`}>
         Genau die Rechnung aus dem Text: {fmtDe(algoF, 3)} + ({fmtDe(folgeF, 3)}) ={" "}
         {fmtDe(gesamt, 3)}. Der rote Algorithmusfehler ist fast viermal so groß wie der orange
         Folgefehler.
@@ -458,14 +459,14 @@ export function FehlerzerlegungExplorer() {
     ) : Math.abs(algoF) > 2 * Math.abs(folgeF) ? (
       <Verdikt kind="warn" titel="Der Algorithmus dominiert.">
         Der rote Anteil ist {fmtDe(Math.abs(algoF) / Math.abs(folgeF), 1)}-mal so groß wie der
-        orange. Nach der Zerlegung (4.1.1) hilft hier nur ein besserer Algorithmus (größeres{" "}
+        orange. Nach der Zerlegung ({num("eq:eq-4-1-1")}) hilft hier nur ein besserer Algorithmus (größeres{" "}
         <M>{"N"}</M>); ein genauerer Input würde den Gesamtfehler kaum bewegen.
       </Verdikt>
     ) : Math.abs(folgeF) > 2 * Math.abs(algoF) ? (
       <Verdikt kind="warn" titel="Der Input dominiert.">
         Der orange Anteil ist {fmtDe(Math.abs(folgeF) / Math.abs(algoF), 1)}-mal so groß wie der
         rote. Der Algorithmus ist genau genug; kein noch so großes <M>{"N"}</M> repariert das,
-        denn (4.1.1) lässt den zweiten Summanden davon unberührt. Nur ein genaueres{" "}
+        denn ({num("eq:eq-4-1-1")}) lässt den zweiten Summanden davon unberührt. Nur ein genaueres{" "}
         <M>{"\\wt{\\pi}"}</M> hilft.
       </Verdikt>
     ) : (
@@ -521,7 +522,7 @@ export function FehlerzerlegungExplorer() {
         <FehlerBalken label="Gesamtfehler f̃(π̃) − f(π)" value={gesamt} color={VIOLETT} vmax={vmax} />
       </div>
       <p className={`text-xs ${W_MUTED}`}>
-        Probe zu (4.1.1): <span style={{ color: ROT }}>{fmtWiss(algoF)}</span> +{" "}
+        Probe zu ({num("eq:eq-4-1-1")}): <span style={{ color: ROT }}>{fmtWiss(algoF)}</span> +{" "}
         <span style={{ color: ORANGE }}>{fmtWiss(folgeF)}</span> ={" "}
         <span style={{ color: VIOLETT }}>{fmtWiss(algoF + folgeF)}</span>.
       </p>

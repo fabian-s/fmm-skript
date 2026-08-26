@@ -14,6 +14,7 @@ import {
   niceTicks,
   useDrag,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §11.3: Sehnentest, Konvex-vs-konkav-Tafeln und Epigraph-Skizze.
@@ -476,8 +477,8 @@ export function SehnenTest() {
           </table>
           <p style={{ color: links <= rechts + 1e-12 ? GRUEN : ROT }}>
             {links <= rechts + 1e-12
-              ? "An dieser Zwischenstelle stimmt (11.3.4)."
-              : "An dieser Zwischenstelle steht in (11.3.4) das falsche Zeichen."}
+              ? `An dieser Zwischenstelle stimmt (${num("eq:konvexitaet-als-ungleichung")}).`
+              : `An dieser Zwischenstelle steht in (${num("eq:konvexitaet-als-ungleichung")}) das falsche Zeichen.`}
           </p>
         </div>
       </div>
@@ -485,21 +486,21 @@ export function SehnenTest() {
       {verletzt && kurve.id === "konkav" ? (
         <Verdikt kind="fail" titel="Der Graph liegt über der ganzen Sehne.">
           An seiner dicksten Stelle misst der rote Streifen {fmtDe(groessteVerletzung, 3)}. So
-          geht es dieser Funktion bei jedem Paar, (11.3.4) ist also nirgends erfüllt. Mit
+          geht es dieser Funktion bei jedem Paar, ({num("eq:konvexitaet-als-ungleichung")}) ist also nirgends erfüllt. Mit
           umgedrehtem Zeichen stimmt die Ungleichung dafür immer, und genau so ist konkav erklärt
-          (Bemerkung 11.3.9): −f ist konvex.
+          ({ref("bemerkung:wie-wir-die-ungleichung-lesen")}): −f ist konvex.
         </Verdikt>
       ) : verletzt ? (
         <Verdikt kind="fail" titel="Sehne unterschritten: die Frage ist entschieden.">
           An seiner dicksten Stelle misst der rote Streifen {fmtDe(groessteVerletzung, 3)}. Dort
-          steht in (11.3.4) das falsche Zeichen. Weil Satz 11.3.8 die Ungleichung für alle Paare
+          steht in ({num("eq:konvexitaet-als-ungleichung")}) das falsche Zeichen. Weil {ref("satz:konvexitaet-als-ungleichung")} die Ungleichung für alle Paare
           fordert, genügt dieses eine Gegenbeispiel: f ist nicht konvex.
         </Verdikt>
       ) : sehneAufGraph ? (
         <Verdikt kind="warn" titel="Sehne und Graph fallen zusammen.">
           Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab
-          und in (11.3.4) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung
-          nicht: Der Betrag ist konvex, aber nicht strikt konvex (Definition 11.5.4).
+          und in ({num("eq:konvexitaet-als-ungleichung")}) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung
+          nicht: Der Betrag ist konvex, aber nicht strikt konvex ({ref("definition:strikte-konvexitaet")}).
         </Verdikt>
       ) : kurve.id === "doppelmulde" ? (
         <Verdikt kind="ok" titel="Geschafft: dieses Paar besteht die Probe.">
@@ -507,7 +508,7 @@ export function SehnenTest() {
           {imSelbenAst
             ? "Beide Endpunkte liegen im selben konvexen Ast; die Wendepunkte sitzen bei ±0,7071."
             : "Das Paar überspannt sogar den Höcker: die Sehne läuft dort schlicht hoch genug."}{" "}
-          Bewiesen ist damit nichts, denn (11.3.4) fordert alle Paare, und diese Funktion fällt
+          Bewiesen ist damit nichts, denn ({num("eq:konvexitaet-als-ungleichung")}) fordert alle Paare, und diese Funktion fällt
           anderswo durch. Genau darin liegt die Asymmetrie: Widerlegen kostet ein Paar, Beweisen
           eine Rechnung.
         </Verdikt>
@@ -588,7 +589,7 @@ export function EpigraphSkizze() {
       <p className="mt-1 max-w-prose text-center text-xs text-slate-500 dark:text-slate-400">
         Der Epigraph von f(x) = 0,6x² + 0,3 ist die blaue Fläche über dem Graphen, der Graph
         selbst gehört dazu. Die grüne Sehne verbindet zwei seiner Punkte und bleibt in der
-        Fläche; so ist Konvexität in Definition 11.3.6 erklärt.
+        Fläche; so ist Konvexität in {ref("definition:konvexe-funktion")} erklärt.
       </p>
     </div>
   );

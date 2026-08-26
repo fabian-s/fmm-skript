@@ -49,6 +49,7 @@ import {
   fmtInt,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /** Deutsche Dezimalzahl für MathJax-Literale (nacktes „,“ setzt dort Abstand). */
 const mathDe = (v: number, d = 2) => fmtDe(v, d).replace(",", "{,}").replace("−", "-");
@@ -328,8 +329,7 @@ export function RegressionWidget() {
       {!zeigeKQ ? (
         <Verdikt kind="neutral" className="mt-2">
           Die violetten Strecken sind die Residuen <M>{"y_i - \\beta_0 - \\beta_1 x_i"}</M>, ihre
-          Quadratsumme ist <M>{"\\left\\| \\bA\\bbeta - \\bb \\right\\|_2^2"}</M> aus Definition
-          7.1.1 und steht gerade bei <span className="font-mono">{fmtInt(ssr)}</span>.{" "}
+          Quadratsumme ist <M>{"\\left\\| \\bA\\bbeta - \\bb \\right\\|_2^2"}</M> aus {ref("definition:kleinste-quadrate-problem-kq-problem")} und steht gerade bei <span className="font-mono">{fmtInt(ssr)}</span>.{" "}
           {beruehrt
             ? "Schieben wir weiter, bis wir sie nicht mehr verkleinern können; dann decken wir die KQ-Gerade auf."
             : "Solange wir nichts bewegt haben, bleibt die KQ-Gerade verdeckt."}
@@ -341,22 +341,22 @@ export function RegressionWidget() {
           auf <span className="font-mono">{fmtInt(REG_FIT.ssr)}</span> – das sind{" "}
           <span className="font-mono">{fmtDe(100 * ueberschuss, 0)} %</span> Aufschlag. Unter{" "}
           <span className="font-mono">{fmtInt(REG_FIT.ssr)}</span> kommt keine Wahl von{" "}
-          <M>{"(\\beta_0, \\beta_1)"}</M>, denn genau dieses Minimum definiert Definition 7.1.1.
+          <M>{"(\\beta_0, \\beta_1)"}</M>, denn genau dieses Minimum definiert {ref("definition:kleinste-quadrate-problem-kq-problem")}.
         </Verdikt>
       ) : ueberschuss > 0.005 ? (
         <Verdikt kind="ok" className="mt-2" titel="Schon nah dran:">
           <span className="font-mono">{fmtInt(ssr)}</span> gegen{" "}
           <span className="font-mono">{fmtInt(REG_FIT.ssr)}</span>, also nur noch{" "}
           <span className="font-mono">{fmtDe(100 * ueberschuss, 1)} %</span> Aufschlag. Die letzten
-          Prozente per Hand zu finden ist mühsam; die Normalengleichungen (Satz 7.1.5) liefern sie
+          Prozente per Hand zu finden ist mühsam; die Normalengleichungen ({ref("satz:problem-normalengleichungen")}) liefern sie
           in einem Rechenschritt.
         </Verdikt>
       ) : (
         <Verdikt kind="ok" className="mt-2" titel="Das ist die KQ-Gerade:">
           <span className="font-mono">{fmtInt(ssr)}</span> ist auf Reglergenauigkeit das Minimum{" "}
           <span className="font-mono">{fmtInt(REG_FIT.ssr)}</span>. Jede Bewegung von hier aus
-          macht die Quadratsumme wieder größer: Das Minimum aus Definition 7.1.1 ist erreicht, und
-          Satz 7.1.7 sagt, dass es hier nur dieses eine gibt.
+          macht die Quadratsumme wieder größer: Das Minimum aus {ref("definition:kleinste-quadrate-problem-kq-problem")} ist erreicht, und
+          {ref("satz:eindeutige-loesung-bei-vollem")} sagt, dass es hier nur dieses eine gibt.
         </Verdikt>
       )}
     </div>
@@ -525,7 +525,7 @@ export function ProjektionWidget() {
       ) : (
         <Verdikt kind="ok" className="mt-2" titel="Hier steht es senkrecht:">
           <span className="font-mono">{fmtDe(angDeg, 1)}°</span> und{" "}
-          <M>{"\\ba^\\top\\cpurp{\\br} \\approx 0"}</M> – genau der Fall aus Satz 7.1.4. Der
+          <M>{"\\ba^\\top\\cpurp{\\br} \\approx 0"}</M> – genau der Fall aus {ref("satz:kq-loesung-als-projektion")}. Der
           Kandidat sitzt auf der Projektion{" "}
           <M>{"\\cgreen{\\wh{\\bb}} = \\tfrac{1}{2}\\ba = (1{,}5;\\; 0{,}5)^\\top"}</M>, und{" "}
           <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> erreicht mit{" "}

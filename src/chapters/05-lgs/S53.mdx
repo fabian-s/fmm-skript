@@ -4,7 +4,7 @@ import { LUKostenPlot } from "./widgets/LUKosten";
 
 ### Elimination als Zerlegung
 
-Die Gauß-Elimination aus [Abschnitt 5.2](#sec-5.2) verwandelt $(\bA \mid \bb)$
+Die Gauß-Elimination aus @sec:lgs verwandelt $(\bA \mid \bb)$
 durch Zeilenoperationen in ein gestaffeltes System. In diesem Abschnitt
 wechseln wir den Blickwinkel: Die Elimination rechnet nicht nur ein konkretes
 System um, sie zerlegt die Matrix selbst. Alles, was wir dabei tun, lässt
@@ -13,7 +13,7 @@ sich in zwei Faktoren verbuchen:
 - $\bL$ (*lower*) speichert sämtliche Eliminationsschritte,
 - $\bU$ (*upper*) ist die entstehende obere :k[Dreiecksmatrix]{#triangular-matrix}.
 
-:::definition[5.3.1 (LU-Zerlegung)]
+:::definition[#lu-zerlegung (LU-Zerlegung)]
 Eine Darstellung
 
 $$
@@ -29,7 +29,7 @@ Warum lohnt sich diese Buchführung? Sobald wir $\bA = \bL\bU$ einmal
 berechnet haben, können wir $\bA\bx = \bb_i$ für *jedes* $\bb_i$ billig
 lösen, denn beide Faktoren sind Dreiecksmatrizen:
 
-:::bemerkung[5.3.2 (Merkregel: ein LGS, zwei Dreieckssysteme)]
+:::bemerkung[#merkregel-ein-lgs-zwei-dreieckssysteme (Merkregel: ein LGS, zwei Dreieckssysteme)]
 Aus der Zerlegung wird ein zweistufiger Lösungsweg:
 
 $$
@@ -43,7 +43,7 @@ wir lösen also nacheinander zwei gestaffelte Systeme:
 1. $\bL\by = \bb$ durch :k[Vorwärtssubstitution]{#triangular-solve}
    (forward substitution), von oben nach unten;
 2. $\bU\bx = \by$ durch Rückwärtssubstitution
-   ([Abschnitt 5.2](#sec-5.2)), von unten nach oben.
+   (@sec:lgs), von unten nach oben.
 
 Beide Teilschritte kosten nur $O(n^2)$ Operationen.
 :::
@@ -56,7 +56,7 @@ Spalten und entfernen alle Einträge unter der Diagonalen. Nennen wir das
 aktuelle System $(\bM \mid \br)$. Die $k$-te Spalte räumen wir, indem wir von
 links mit der *Eliminationsmatrix* $\bL_k$ multiplizieren:
 
-$$ {#eq-5.3.1}
+$$ {#eq-eq-5-3-1}
 \bL_k = \begin{pmatrix}
 1 &        &                     &   &        &   \\
   & \ddots &                     &   &        &   \\
@@ -76,7 +76,7 @@ dem Pivot $\cred{m_{kk}}$. Nach $n - 1$ solchen Schritten sind alle Spalten
 abgeräumt; ein $n$-ter Schritt wäre arbeitslos, denn unterhalb von $m_{nn}$
 steht kein Eintrag mehr ($\bL_n$ wäre schlicht die Einheitsmatrix).
 
-:::satz[5.3.3 (Die Gauß-Elimination liefert eine LU-Zerlegung)]
+:::satz[#die-gauss-elimination-liefert-eine-lu (Die Gauß-Elimination liefert eine LU-Zerlegung)]
 Läuft die Gauß-Elimination für $\bA \in \R^{n \times n}$ ohne Nullpivot
 durch, so ist
 
@@ -86,7 +86,7 @@ $$
 
 eine obere Dreiecksmatrix, und es gilt $\bA = \bL\bU$ mit
 
-$$ {#eq-5.3.2}
+$$ {#eq-die-gauss-elimination-liefert-eine-lu}
 \bL = \bL_1^{-1} \cdots \bL_{n-1}^{-1} =
 \begin{pmatrix}
 1               &                 &        &                     &   \\
@@ -115,7 +115,7 @@ $\bl_k = (0, \dots, 0, \cblue{l_{(k+1)k}}, \dots, \cblue{l_{nk}})^\top$ die
 Multiplikatoren der $k$-ten Spalte sammelt; die ersten $k$ Komponenten von
 $\bl_k$ sind null.
 
-::why[$\bl_k \be_k^\top$ ist die Matrix, die in Spalte $k$ unterhalb der Diagonalen die Einträge $l_{ik}$ trägt und sonst nur Nullen; abgezogen von $\bI$ ergibt das die Gestalt aus ($5.3.1$)]
+::why[$\bl_k \be_k^\top$ ist die Matrix, die in Spalte $k$ unterhalb der Diagonalen die Einträge $l_{ik}$ trägt und sonst nur Nullen; abgezogen von $\bI$ ergibt das die Gestalt aus @eq:eq-5-3-1]
 :::
 
 :::schritt
@@ -135,7 +135,7 @@ $$
 = \bI + \sum_{k=1}^{n-1} \bl_k \be_k^\top ,
 $$
 
-und die rechte Seite ist die Matrix aus ($5.3.2$): Einsen auf der
+und die rechte Seite ist die Matrix aus @eq:die-gauss-elimination-liefert-eine-lu: Einsen auf der
 Diagonalen, darunter die Multiplikatoren, jeder an seinem Platz.
 
 ::why[Beim Ausmultiplizieren verschwinden alle gemischten Terme: Sie enthalten Faktoren der Form $\be_j^\top \bl_k$ mit $j < k$, und die $j$-te Komponente von $\bl_k$ ist für $j \le k$ null]
@@ -163,7 +163,7 @@ liefert später denselben Vektor: $\by = \bL^{-1}\bb = \bc$.
 Rechnen wir das einmal komplett durch, im Farbcode dieses Kapitels: Pivots
 rot, Multiplikatoren blau, fertige $\bL$-Einträge grün.
 
-:::beispiel[5.3.4 (LU-Zerlegung einer 3×3-Matrix)]
+:::beispiel[#lu-zerlegung-einer-3-3-matrix (LU-Zerlegung einer 3×3-Matrix)]
 Sei
 
 $$
@@ -171,7 +171,7 @@ $$
 $$
 
 **Schritt 1:** Spalte 1 räumen. Das Pivot ist $\cred{m_{11}} = \cred{2}$,
-die Multiplikatoren nach Formel ($5.3.1$) sind
+die Multiplikatoren nach Formel @eq:eq-5-3-1 sind
 
 $$
 \cblue{l_{21}} = \frac{4}{\cred{2}} = \cblue{2} ,
@@ -222,10 +222,10 @@ und zwar auch dann, wenn $\bA$ :k[invertierbar]{#matrix-inverse} ist.
 Invertierbarkeit allein garantiert also noch keine LU-Zerlegung; sie
 garantiert nur, dass sich das Problem durch Zeilentausch beheben lässt.
 
-:::satz[5.3.5 (Existenz der LU-Zerlegung)]
+:::satz[#existenz-der-lu-zerlegung (Existenz der LU-Zerlegung)]
 Sei $\bA \in \R^{n \times n}$ invertierbar. Dann gilt:
 
-1. Die LU-Zerlegung $\bA = \bL\bU$ aus Definition 5.3.1 existiert genau
+1. Die LU-Zerlegung $\bA = \bL\bU$ aus @definition:lu-zerlegung existiert genau
    dann, wenn die Gauß-Elimination an $\bA$ ohne Nullpivot durchläuft. In
    diesem Fall ist sie eindeutig.
 2. Es gibt stets eine :k[Permutationsmatrix]{#permutation-matrix} $\bP$
@@ -234,11 +234,11 @@ Sei $\bA \in \R^{n \times n}$ invertierbar. Dann gilt:
 :::
 
 Die Richtung „kein Nullpivot $\Rightarrow$ Zerlegung existiert" ist
-Satz 5.3.3; auf die übrigen Beweisteile verzichten wir. Wichtiger ist ein
+@satz:die-gauss-elimination-liefert-eine-lu; auf die übrigen Beweisteile verzichten wir. Wichtiger ist ein
 Warnbeispiel, das zeigt, dass die Bedingung in Teil 1 keine leere
 Vorsichtsmaßnahme ist:
 
-:::beispiel[5.3.6 (Invertierbar, aber keine LU-Zerlegung)]
+:::beispiel[#invertierbar-aber-keine-lu-zerlegung (Invertierbar, aber keine LU-Zerlegung)]
 Die Vertauschungsmatrix
 
 $$
@@ -275,9 +275,9 @@ LU-Zerlegung.
 ### Lösen mit der LU-Zerlegung
 
 Angenommen, wir haben eine Faktorisierung $\bA = \bL\bU$ gefunden. Die
-Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
+Merkregel aus @bemerkung:merkregel-ein-lgs-zwei-dreieckssysteme wird jetzt zum Algorithmus:
 
-:::algorithmus[5.3.7 (Lösen von Ax = b mit der LU-Zerlegung)]
+:::algorithmus[#loesen-von-ax-b-mit-der-lu-zerlegung (Lösen von Ax = b mit der LU-Zerlegung)]
 1. *Vorwärtssubstitution:* Löse $\bL\by = \bb$ von oben nach unten,
 
    $$
@@ -288,7 +288,7 @@ Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
    eine Division ist nicht nötig, denn auf der Diagonalen von $\bL$ stehen
    Einsen.
 2. *Rückwärtssubstitution:* Löse $\bU\bx = \by$ von unten nach oben wie in
-   Formel ($5.2.1$),
+   Formel @eq:gauss-elimination-mit-partieller,
 
    $$
    \cgreen{x_i} = \Bigl(y_i - \sum_{j=i+1}^{n} u_{ij}\, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}}
@@ -296,8 +296,8 @@ Merkregel aus Bemerkung 5.3.2 wird jetzt zum Algorithmus:
    $$
 :::
 
-:::beispiel[5.3.8 (Fortsetzung: Lösen mit der Zerlegung)]
-Wir nehmen $\bL$ und $\bU$ aus Beispiel 5.3.4 und lösen $\bA\bx = \bb$ für
+:::beispiel[#fortsetzung-loesen-mit-der-zerlegung (Fortsetzung: Lösen mit der Zerlegung)]
+Wir nehmen $\bL$ und $\bU$ aus @beispiel:lu-zerlegung-einer-3-3-matrix und lösen $\bA\bx = \bb$ für
 $\bb = (5, -2, 9)^\top$.
 
 **Schritt 1: Vorwärtssubstitution** für $\bL\by = \bb$:
@@ -330,12 +330,12 @@ Die Lösung ist $\bx = \bigl(2, \tfrac{5}{3}, \tfrac{2}{3}\bigr)^\top$; die
 Probe $\bA\bx = \bb$ geht auf.
 :::
 
-:::bemerkung[5.3.9 (Eine Zerlegung, viele rechte Seiten)]
+:::bemerkung[#eine-zerlegung-viele-rechte-seiten (Eine Zerlegung, viele rechte Seiten)]
 Die Faktoren $\bL$ und $\bU$ hängen nur von $\bA$ ab, nicht von $\bb$. Für
 jede weitere rechte Seite wiederholen wir deshalb nur die beiden billigen
 Substitutionen; die teure Elimination fällt kein zweites Mal an. Dieses
 Muster trägt weit über die LU-Zerlegung hinaus: Auch die QR-Zerlegung für
-Kleinste-Quadrate-Probleme ([Abschnitt 7.4](?k=07-kq#sec-7.4)) folgt ihm.
+Kleinste-Quadrate-Probleme (@sec:kq/qr) folgt ihm.
 :::
 
 Welche Einträge speichert die LU-Zerlegung zusätzlich zur Arbeitsmatrix?
@@ -348,12 +348,12 @@ gespeichert, während die Arbeitsmatrix zu $\bU$ wird.
 ### Pivotierung
 
 Was tun, wenn ein Pivot $\cred{m_{kk}} = 0$ auftritt, wie in
-Beispiel 5.3.6? Wir tauschen die Pivotzeile gegen eine Zeile weiter unten,
+@beispiel:invertierbar-aber-keine-lu-zerlegung? Wir tauschen die Pivotzeile gegen eine Zeile weiter unten,
 in deren $k$-ter Spalte keine Null steht; bei invertierbarem $\bA$ gibt es
 so eine Zeile immer. Dieses Umsortieren heißt *Pivotierung* (pivoting).
 Buchhalterisch sammeln wir alle Vertauschungen in einer
 :k[Permutationsmatrix]{#permutation-matrix} $\bP$ und erhalten die
-pivotierte Zerlegung $\bP\bA = \bL\bU$ aus Satz 5.3.5. Zum Lösen von
+pivotierte Zerlegung $\bP\bA = \bL\bU$ aus @satz:existenz-der-lu-zerlegung. Zum Lösen von
 $\bA\bx = \bb$ substituieren wir dann entlang $\bL\bU\bx = \bP\bb$: Die
 rechte Seite wird mitvertauscht, sonst ändert sich nichts.
 
@@ -383,7 +383,7 @@ Im $k$-ten Schritt multiplizieren wir das aktuelle System mit $\bL_k$; die
 ersten $k - 1$ Spalten der Arbeitsmatrix haben ihre Nullen unter der
 Diagonalen bereits. Vor dem Nachrechnen ein Selbsttest
 (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
-[Abschnitt 2.4](?k=02-algos#sec-2.4)):
+@sec:algos/landau):
 
 ::::quiz
 
@@ -430,7 +430,7 @@ aktualisierten Eintrag und die rechte Seite.
 
 ::::
 
-:::satz[5.3.10 (Komplexität der LU-Zerlegung)]
+:::satz[#komplexitaet-der-lu-zerlegung (Komplexität der LU-Zerlegung)]
 Für invertierbares $\bA \in \R^{n \times n}$ gilt:
 
 1. Die Berechnung der LU-Zerlegung kostet $O(n^3)$ Operationen.
@@ -462,11 +462,11 @@ $$
 :::schritt
 Jede Substitution durchläuft die $n$ Zeilen ihres Dreiecksfaktors und setzt
 pro Zeile bis zu $n - 1$ bekannte Komponenten ein, kostet also $O(n^2)$,
-wie in [Abschnitt 5.2](#sec-5.2) gezählt. Für $J$ rechte Seiten fällt die
+wie in @sec:lgs gezählt. Für $J$ rechte Seiten fällt die
 Zerlegung einmal an, dazu kommen $J$ Substitutionspaare:
 $O(n^3 + J n^2)$ insgesamt.
 
-::why[die Zerlegung hängt nicht von $\bb$ ab (Bemerkung 5.3.9)]
+::why[die Zerlegung hängt nicht von $\bb$ ab (@bemerkung:eine-zerlegung-viele-rechte-seiten)]
 :::
 
 ::::
@@ -493,7 +493,7 @@ Ab der zweiten rechten Seite fällt die Zerlegung nur einmal an.
 
 ::::
 
-:::bemerkung[5.3.11 (Struktur ausnutzen)]
+:::bemerkung[#struktur-ausnutzen (Struktur ausnutzen)]
 Die Laufzeit lässt sich weiter drücken, wenn $\bA$ besondere Eigenschaften
 erfüllt, zum Beispiel:
 
@@ -507,7 +507,7 @@ erfüllt, zum Beispiel:
   allermeisten $(i, j)$.
 
 Für symmetrische, positiv definite Matrizen halbiert etwa die
-Cholesky-Zerlegung des nächsten Abschnitts ([Abschnitt 5.4](#sec-5.4)) den
+Cholesky-Zerlegung des nächsten Abschnitts (@sec:cholesky) den
 Aufwand. Für all diese Fälle existieren hervorragende, über Jahrzehnte
 gereifte Implementierungen; man schreibt solche Algorithmen selten selbst.
 :::

@@ -12,6 +12,7 @@ import {
   useDrag,
 } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.1: Von der Sekante zur Tangente, mit dem Restterm als eigener Größe.
@@ -181,7 +182,7 @@ function SekanteTafel({ aufgeloest }: { aufgeloest: boolean }) {
         `An der Stelle x = ${fmt(x, 2)} stoßen zwei Geradenstücke aufeinander: von links kommen wir mit ` +
         `der Steigung ${fmt(steigungLinks, 2)} an, nach rechts geht es mit ${fmt(steigungRechts, 2)} weiter. ` +
         `Die beiden Sekanten laufen für h → 0 gegen verschiedene Geraden, eine eindeutige Tangente gibt es ` +
-        `nicht, und der Grenzwert aus Definition 10.1.1 existiert nicht.`,
+        `nicht, und der Grenzwert aus ${ref("definition:differenzierbarkeit")} existiert nicht.`,
     },
     "knick-im-fenster": {
       kind: "warn",
@@ -213,7 +214,7 @@ function SekanteTafel({ aufgeloest }: { aufgeloest: boolean }) {
       text:
         `Die rechte Sekante hat die Steigung ${fmt(steigungRechts, 4)}, die Tangente ${fmt(ableitung, 4)}. ` +
         `Ihr Abstand ${fmt(Math.abs(steigungRechts - ableitung), 4)} ist genau der relative Fehler ` +
-        `|r(h)|/|h|, denn r(h)/h ist die Differenz der beiden Steigungen. Nach Satz 10.1.3(2) wandert ` +
+        `|r(h)|/|h|, denn r(h)/h ist die Differenz der beiden Steigungen. Nach ${ref("satz:ableitung-als-lineare-approximation")}(2) wandert ` +
         `dieser Wert für h → 0 gegen null, und die violette Sekante legt sich auf die grüne Tangente.`,
     },
   };
@@ -469,7 +470,7 @@ export function SekanteTangenteWidget() {
         <p className="text-sm">
           Bei f(x) = x² ist r(h) = h² exakt, also fällt der Restterm auf ein Viertel und der
           relative Fehler |r(h)|/|h| auf die Hälfte. Genau diese beiden Größen unterscheidet
-          Definition 10.1.5: klein werden muss der Quotient, nicht der Restterm allein.
+          {ref("definition:frechet-ableitung")}: klein werden muss der Quotient, nicht der Restterm allein.
         </p>
       }
     >

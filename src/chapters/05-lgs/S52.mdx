@@ -2,7 +2,7 @@ import { RueckSubStepper } from "./widgets/RueckSubStepper";
 
 ### Problemstellung
 
-In [Abschnitt 5.1](#sec-5.1) haben wir gezählt, was Matrixaddition und
+In @sec:grundlagen haben wir gezählt, was Matrixaddition und
 Matrixmultiplikation kosten. Jetzt setzen wir diese Bausteine zu der Aufgabe
 zusammen, die in der Statistik ständig auftritt: Wir beschäftigen uns mit der
 Lösung eines :k[linearen Gleichungssystems]{#linear-system} (LGS). Gesucht
@@ -12,7 +12,7 @@ $$
 \bA \bx = \bb .
 $$
 
-Ob Kleinste-Quadrate-Schätzer ([Abschnitt 7.1](?k=07-kq#sec-7.1)) oder
+Ob Kleinste-Quadrate-Schätzer (@sec:kq/problem) oder
 gemischtes Modell: am Ende steht fast immer ein solches System.
 
 Die Aufgabe ist nur dann sinnvoll gestellt, wenn es genau eine Lösung gibt.
@@ -21,7 +21,7 @@ quadratisch und :k[invertierbar]{#matrix-inverse} ist. Auf dem Papier ist
 damit alles erledigt: Die Lösung lässt sich als $\bx = \bA^{-1}\bb$
 schreiben. Vorsicht: Diese Formel ist eine Schreibweise, kein Rechenweg.
 
-:::bemerkung[5.2.1 (Für ein LGS keine explizite Inverse bilden)]
+:::bemerkung[#fuer-ein-lgs-keine-explizite-inverse (Für ein LGS keine explizite Inverse bilden)]
 Wer nur $\bA\bx=\bb$ lösen will, sollte die Inverse nicht explizit bilden:
 
 **Löse das System direkt.**
@@ -42,8 +42,8 @@ Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
   Gauß-Elimination *mit partieller Pivotierung* ist in der Praxis meist
   rückwärtsstabil und vermeidet diesen Umweg. Wie genau die Lösung sein kann,
   begrenzt in beiden Fällen die Konditionszahl $\corange{\kappa(\bA)}$
-  ([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) und
-  [Abschnitt 4.2](?k=04-fehler#sec-4.2)).
+  (@sec:matrix-spur-norm/eigenschaften und
+  @sec:fehler/kondition).
 
 Explizite Inversen haben legitime Anwendungen, wenn die Inverse selbst das gesuchte
 Objekt ist. Die Warnung bezieht sich auf das unnötige Bilden von $\bA^{-1}$ zum Lösen
@@ -59,7 +59,7 @@ Wie lösen wir stattdessen? Wir erinnern uns an das
 :k[Gauß'sche Eliminationsverfahren]{#gaussian-elimination} aus der linearen
 Algebra. Es besteht aus zwei Phasen:
 
-:::algorithmus[5.2.2 (Gauß-Elimination mit partieller Pivotierung)]
+:::algorithmus[#gauss-elimination-mit-partieller (Gauß-Elimination mit partieller Pivotierung)]
 1. Wähle in Eliminationsschritt $k$ unter den Zeilen $k,\ldots,n$ einen
    Eintrag mit maximalem Betrag in Spalte $k$ und tausche seine Zeile nach oben.
    Eliminiere anschließend die Einträge darunter. So entsteht aus
@@ -78,7 +78,7 @@ Algebra. Es besteht aus zwei Phasen:
 
    durch *Rückwärtssubstitution* (backward substitution):
 
-   $$ {#eq-5.2.1}
+   $$ {#eq-gauss-elimination-mit-partieller}
    x_{n} = c_n / u_{nn}, \quad x_{i} = \biggl(c_{i} - \sum_{j = i + 1}^n u_{ij} x_j\biggr) / u_{ii} \quad (i \le n - 1).
    $$
 :::
@@ -102,7 +102,7 @@ beginnt aber mit einem Nullpivot. Auch ein von null verschiedenes, jedoch sehr k
 Pivot kann in Gleitkommaarithmetik problematisch sein; genau deshalb wählen wir den
 größten verfügbaren Betrag.
 
-Die Formel ($5.2.1$) bestimmt die Komponenten von unten nach oben. Wie viele
+Die Formel @eq:gauss-elimination-mit-partieller bestimmt die Komponenten von unten nach oben. Wie viele
 Divisionen braucht das voreingestellte 3×3-System?
 
 <RueckSubStepper />
@@ -111,7 +111,7 @@ Das Widget macht die Reihenfolge der Rückwärtssubstitution und ihre eine Divis
 
 Wie teuer ist die zweite Phase? Prüfen wir die vier Antwortmöglichkeiten
 einzeln (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
-[Abschnitt 2.4](?k=02-algos#sec-2.4)).
+@sec:algos/landau).
 
 ::::quiz
 
@@ -139,7 +139,7 @@ ungünstigsten Fall also $n - 1$ Stück.
 :::frage{wahr}
 Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^2)$.
 
-Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel ($5.2.1$) je
+Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel @eq:gauss-elimination-mit-partieller je
 $n - i$ Multiplikationen und ebenso viele Subtraktionen, dazu eine Division;
 im ungünstigsten Fall sind das $n - 1$ Multiplikationen pro Schritt.
 Aufsummiert ergibt das $n(n-1)/2 \approx n^2/2$ Multiplikationen und
@@ -153,7 +153,7 @@ Das überschätzt den Aufwand um einen Faktor $n$. (Formal enthält $O(n^3)$
 zwar auch alle $O(n^2)$-Algorithmen, gemeint ist hier aber die
 Größenordnung des tatsächlichen Aufwands, und die ist $n^2$.) Bei $O(n^3)$
 liegt erst die Eliminationsphase selbst, wie wir in
-[Abschnitt 5.3](#sec-5.3) sehen werden.
+@sec:lu sehen werden.
 :::
 
 ::::
@@ -200,14 +200,14 @@ Was bringt uns eine Zerlegung konkret? Vier Dinge:
 2. **Numerische Stabilität verbessern.** Wer die Arbeit in gut
    konditionierte Teilschritte zerlegt, etwa über orthogonale Faktoren,
    vermeidet unnötige Fehlerverstärkung
-   ([Abschnitt 4.3](?k=04-fehler#sec-4.3)).
+   (@sec:fehler/stabilitaet).
 3. **Struktur und Eigenschaften von $\bA$ erkennen.** An den Faktoren
    lässt sich ablesen, ob $\bA$ (fast) singulär oder
    :k[positiv definit]{#positive-definite} ist; solche Diagnosen fallen
    bei der Zerlegung gratis mit ab.
 4. **Grundlage für weitere Algorithmen.** Auf Zerlegungen bauen viele
    Verfahren auf, von der QR-Zerlegung für das KQ-Problem
-   ([Abschnitt 7.4](?k=07-kq#sec-7.4)) bis zur Spektralzerlegung und der
+   (@sec:kq/qr) bis zur Spektralzerlegung und der
    :k[Singulärwertzerlegung]{#singular-value-decomposition} (*SVD*), die
    uns in einem späteren Kapitel begegnet.
 

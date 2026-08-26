@@ -11,6 +11,7 @@ import {
   maxAbsCoord,
   sigmaMax,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Jede lineare Abbildung der Ebene ist Drehen, Strecken,
@@ -38,7 +39,7 @@ const ORANGE = FMM_COLORS.orange;
 const GREY = FMM_COLORS.grau;
 
 const PRESETS: { id: string; name: string; A: number[][] }[] = [
-  { id: "beispiel", name: "Beispiel aus Kapitel 3", A: [[2, 1], [0, 1]] },
+  { id: "beispiel", name: `Beispiel aus ${ref("kap:matrix-spur-norm")}`, A: [[2, 1], [0, 1]] },
   { id: "drehung", name: "Drehmatrix", A: [[0, -1], [1, 0]] },
   { id: "scherung", name: "Scherung", A: [[1, 1.5], [0, 1]] },
   { id: "gleich", name: "zwei gleiche Spalten", A: [[1, 1], [1, 1]] },
@@ -250,20 +251,20 @@ export function SvdGeometrieExplorer() {
       ) : s2 < 1e-9 ? (
         <Verdikt kind="warn" titel="Singulär:">
           σ₂ = 0: Station 2 drückt eine ganze Richtung auf null, aus dem Kreis wird eine
-          Strecke. Das Verhältnis σ₁/σ₂ ist nicht mehr endlich, der Rang ist 1 (Satz 6.2.11),
+          Strecke. Das Verhältnis σ₁/σ₂ ist nicht mehr endlich, der Rang ist 1 ({ref("satz:charakterisierung-der-fundamentalen")}),
           und die letzte Drehung legt die Strecke nur noch in ihre Endlage.
         </Verdikt>
       ) : s1 / s2 > 5 ? (
         <Verdikt kind="warn" titel="Stark verzerrt:">
           σ₁/σ₂ = {fmt(kappa)}: Die Ellipse ist weit in die Länge gezogen, die Abbildung wirkt
           in den beiden Richtungen sehr unterschiedlich. Genau dieses Verhältnis ist die
-          Konditionszahl κ₂(A) aus Abschnitt 3.5.
+          Konditionszahl κ₂(A) aus {ref("sec:matrix-spur-norm/eigenschaften")}.
         </Verdikt>
       ) : s1 / s2 > 1.5 ? (
         <Verdikt kind="neutral">
           σ₁/σ₂ = {fmt(kappa)}: eine deutlich erkennbare Ellipse. Station 1 dreht v₁ und v₂ auf
           die Achsen, Station 2 streckt um {fmt(s1)} und {fmt(s2)}, Station 3 dreht in die
-          Endlage; zusammen ist das Bemerkung 6.2.15.
+          Endlage; zusammen ist das {ref("bemerkung:merkregel-drehen-strecken-drehen")}.
         </Verdikt>
       ) : (
         <Verdikt kind="ok" titel="Fast winkeltreu:">

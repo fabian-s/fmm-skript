@@ -27,7 +27,7 @@ Wir untersuchen nun die Kondition von KQ-Problemen
 $\bA\bx \approx \bb$ mit $\bA \in \R^{m \times n}$
 und $\bb \in \R^m$. Dabei beschränken wir uns auf den Fall
 $m \ge n$ und $\rang(\bA) = n$. Dann existiert,
-wie in [Abschnitt 7.1](#sec-7.1) gesehen, eine eindeutige
+wie in @sec:problem gesehen, eine eindeutige
 Lösung $\wh{\bx}$. Als Norm verwenden wir im Folgenden stets
 $\left\|\cdot\right\| = \left\|\cdot\right\|_2$: Das
 KQ-Problem minimiert gerade einen Abstand in der
@@ -37,14 +37,14 @@ ist also die natürliche Wahl.
 Die Abbildung von den Daten zur Lösung schreiben wir als
 $\wh{\bx} = \bA\pinv\bb$. Hier bezeichnet
 $\bA\pinv$ die *Pseudoinverse* von $\bA$,
-die wir in [Abschnitt 7.6](#sec-7.6) genauer kennenlernen.
+die wir in @sec:pseudoinverse genauer kennenlernen.
 Für den Moment genügt: $\bA\pinv$ ist die Matrix, die jedem
 $\bb$ seine eindeutige KQ-Lösung zuordnet, und für
 quadratisches, reguläres $\bA$ gilt schlicht
 $\bA\pinv = \bA^{-1}$. Damit können wir die vertraute
 Definition der Konditionszahl auf rechteckige Matrizen übertragen:
 
-:::definition[7.2.1]
+:::definition[#definition-7-2-1]
 Für eine nicht notwendigerweise quadratische Matrix
 $\bA \in \R^{m \times n}$ mit $m \ge n$
 definieren wir die *Konditionszahl*
@@ -54,7 +54,7 @@ $$
 $$
 :::
 
-:::bemerkung[7.2.2]
+:::bemerkung[#bemerkung-7-2-2]
 Für quadratisches, reguläres $\bA$ ist
 $\bA\pinv = \bA^{-1}$, und wir erhalten die bekannte
 Konditionszahl
@@ -68,7 +68,7 @@ $$
 
 denn $\left\|\bA\right\|_2 = \sigma_{\max}$ und
 $\left\|\bA\pinv\right\|_2 = 1/\sigma_{\min}$. Die
-Fallunterscheidung in Definition 7.2.1 ist dabei konsistent: Nähert
+Fallunterscheidung in @definition:definition-7-2-1 ist dabei konsistent: Nähert
 sich $\bA$ dem :k[Rang]{#rank}defekt,
 geht $\sigma_{\min} \to 0$ und damit
 $\kappa_2(\bA) \to \infty$.
@@ -93,7 +93,7 @@ $f(\bb) = \bA\pinv\bb$, und wir fragen: Wie stark ändert
 sich $f(\bb)$ relativ, wenn wir $\bb$ durch ein
 gestörtes $\tilde{\bb}$ ersetzen?
 
-:::satz[7.2.3]
+:::satz[#satz-7-2-3]
 Sei $\bA \in \R^{m \times n}$ fix mit
 $\rang(\bA) = n$, und sei $f$ das Problem mit
 Lösung $f(\bb) = \bA\pinv\bb$. Für $f(\bb)\ne\bnull$ ist die exakte
@@ -143,7 +143,7 @@ $$
 = \frac{\corange{\kappa_2(\bA)}}{\left\|\bA\right\| \left\|\bA\pinv\bb\right\|}\, \left\|\cblue{\tilde{\bb} - \bb}\right\|
 $$
 
-::why[Definition 7.2.1: $\corange{\kappa_2(\bA)} = \left\|\bA\right\| \left\|\bA\pinv\right\|$, also $\left\|\bA\pinv\right\| = \corange{\kappa_2(\bA)} / \left\|\bA\right\|$]
+::why[@definition:definition-7-2-1: $\corange{\kappa_2(\bA)} = \left\|\bA\right\| \left\|\bA\pinv\right\|$, also $\left\|\bA\pinv\right\| = \corange{\kappa_2(\bA)} / \left\|\bA\right\|$]
 :::
 
 :::schritt
@@ -159,7 +159,7 @@ $$
 = \corange{\kappa_2(\bA)}\, \frac{\left\|\bb\right\|}{\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|} \cdot \frac{\left\|\cblue{\tilde{\bb} - \bb}\right\|}{\left\|\bb\right\|}
 $$
 
-::why[$\bA\bA\pinv\bb = \bA\wh{\bx} = \cgreen{\proj_{\col(\bA)} \bb}$: Die KQ-Lösung ist die orthogonale :k[Projektion]{#projection} von $\bb$ auf $\col(\bA)$ ([Abschnitt 7.1](#sec-7.1)); anschließend erweitern wir mit $\left\|\bb\right\|$]
+::why[$\bA\bA\pinv\bb = \bA\wh{\bx} = \cgreen{\proj_{\col(\bA)} \bb}$: Die KQ-Lösung ist die orthogonale :k[Projektion]{#projection} von $\bb$ auf $\col(\bA)$ (@sec:problem); anschließend erweitern wir mit $\left\|\bb\right\|$]
 :::
 
 ::::
@@ -227,10 +227,10 @@ etwa durch Messfehler in den Kovariablen oder durch Rundungsfehler,
 die beim Speichern von $\bA$ und in den Zwischenschritten
 der Algorithmen zwangsläufig entstehen. Das Problem ist jetzt die
 Abbildung $f(\bA) = \bA\pinv\bb$. Das Ergebnis sieht auf
-den ersten Blick ähnlich aus wie Satz 7.2.3, hat aber eine
+den ersten Blick ähnlich aus wie @satz:satz-7-2-3, hat aber eine
 entscheidend andere Struktur:
 
-:::satz[7.2.4 (Störung der Designmatrix, erste Ordnung)]
+:::satz[#stoerung-der-designmatrix-erste-ordnung (Störung der Designmatrix, erste Ordnung)]
 Sei $\bb \in \R^m$ fix, $\bA$ habe vollen Spaltenrang und
 $f(\bA) = \bA\pinv\bb\ne\bnull$. Für $\bDelta\bA\to\bnull$ und
 $\bA+\bDelta\bA$ weiterhin von vollem Spaltenrang gilt
@@ -249,8 +249,8 @@ wobei $\cpurp{\br} = \bb - \bA\wh{\bx}$ das Residuum
 des ungestörten Problems bezeichnet.
 :::
 
-:::bemerkung[7.2.5]
-Der Beweis ist (anders als der von Satz 7.2.3) eine sehr
+:::bemerkung[#bemerkung-7-2-5]
+Der Beweis ist (anders als der von @satz:satz-7-2-3) eine sehr
 aufwändige und, offen gesagt, langweilige Rechnung. Wir verzichten
 darauf und verweisen auf die Literatur (vgl. Heath §3.3).
 :::
@@ -288,7 +288,7 @@ $$
 Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
 Statistik verschwindet es praktisch nie), kann eine Störung von
 $\bA$ mit dem Quadrat der Konditionszahl verstärkt werden.
-Dieses Quadrat wird uns in [Abschnitt 7.3](#sec-7.3) gleich
+Dieses Quadrat wird uns in @sec:normalengleichungen gleich
 wieder begegnen: Der Lösungsweg über die Normalengleichungen handelt es
 sich *immer* ein, also auch im gutartigen Fall kleiner
 Residuen, in dem das Problem selbst nur mit
@@ -327,11 +327,11 @@ eine gleich große Störung längs $\col(\bA)$.
 
 Sie verändert $\wh{\bx}$ gar nicht. Das Winkel-Widget zeigt es unmittelbar: bei
 $\varphi = 90^\circ$ bleibt $\Delta\wh{x} = 0$, die ganze Störung landet im Residuum.
-Ausgeschöpft wird von der Schranke aus Satz 7.2.3 der Anteil $\left|\cos(\varphi)\right|$.
+Ausgeschöpft wird von der Schranke aus @satz:satz-7-2-3 der Anteil $\left|\cos(\varphi)\right|$.
 :::
 
 :::frage{wahr}
-Bei exakt lösbarem $\bA\bx = \bb$ reduziert sich die lokale Schranke aus Satz 7.2.4 auf
+Bei exakt lösbarem $\bA\bx = \bb$ reduziert sich die lokale Schranke aus @satz:stoerung-der-designmatrix-erste-ordnung auf
 $\corange{\kappa_2(\bA)}$.
 
 Exakt lösbar heißt $\cpurp{\br} = \bnull$, also $\tan(\theta) = 0$; der Term
@@ -352,5 +352,5 @@ ein Verfahren an diese unvermeidbare Empfindlichkeit herankommt (Stabilität).
 
 *Vertiefung:* Heath §3.1–3.3, insbesondere §3.3 („Sensitivity
 and Conditioning") mit der vollständigen Störungsanalyse inklusive des
-Beweises von Satz 7.2.4; zum KQ-Problem als Optimierungsproblem und
+Beweises von @satz:stoerung-der-designmatrix-erste-ordnung; zum KQ-Problem als Optimierungsproblem und
 seiner Rolle in der Regression außerdem MML §7.1 und §9.2.

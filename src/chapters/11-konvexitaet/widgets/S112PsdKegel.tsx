@@ -16,6 +16,7 @@ import {
   useDrag,
 } from "../../../lib";
 import type { Ebene3D, Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.2: Der Kegel der positiv semidefiniten 2x2-Matrizen (Eigenbau, neu).
@@ -415,7 +416,7 @@ export function PsdKegel() {
       {art === "definit" ? (
         <Verdikt kind="ok" titel="Positiv definit.">
           Beide Eigenwerte sind positiv, also ist xᵀAx {">"} 0 für jedes x ≠ 0 und A erst recht
-          semidefinit im Sinne von Definition 11.2.7. Der Punkt liegt im Inneren des blauen
+          semidefinit im Sinne von {ref("definition:positiv-semidefinit")}. Der Punkt liegt im Inneren des blauen
           Schnitts, und mit ihm der ganze Halbstrahl t·A für t ≥ 0: Alle drei Bedingungen sind
           homogen, Skalieren ändert an keiner etwas.
         </Verdikt>
@@ -424,14 +425,14 @@ export function PsdKegel() {
           Der kleinere Eigenwert ist {fmtDe(l1)} und die Determinante ac − b² = {fmtDe(det)}. Es
           gibt also ein x ≠ 0 mit xᵀAx = 0, und A ist nicht invertierbar. Genau diese Matrizen
           fehlen der positiv definiten Menge; sie sind der Rand des Kegels und der Fall, an dem
-          das Cholesky-Verfahren scheitert (Bemerkung 11.2.9).
+          das Cholesky-Verfahren scheitert ({ref("bemerkung:kovarianzmatrizen-sind-semidefinit-nicht")}).
         </Verdikt>
       ) : art === "indefinit" ? (
         <Verdikt kind="fail" titel="Indefinit: A gehört nicht zu 𝒫₂.">
           Die Eigenwerte {fmtDe(l1)} und {fmtDe(l2)} haben verschiedene Vorzeichen, die Bedingung
-          aus Definition 11.2.7 ist verletzt. In der linken Tafel liegt der Punkt unter der
+          aus {ref("definition:positiv-semidefinit")} ist verletzt. In der linken Tafel liegt der Punkt unter der
           Hyperbel: ac = {fmtDe(a * c)} ist kleiner als b² = {fmtDe(b * b)}. Der Kegel ist
-          trotzdem konvex; Satz 11.2.8 verbietet nur, dass eine Mischung zweier semidefiniter
+          trotzdem konvex; {ref("satz:die-positiv-semidefiniten-matrizen")} verbietet nur, dass eine Mischung zweier semidefiniter
           Matrizen hier landet.
         </Verdikt>
       ) : art === "negativ" ? (
@@ -444,7 +445,7 @@ export function PsdKegel() {
       ) : (
         <Verdikt kind="neutral" titel="Die Nullmatrix.">
           Alle drei Zahlen sind null. Dann ist xᵀAx = 0 für jedes x, die Bedingung aus
-          Definition 11.2.7 ist mit Gleichheit erfüllt, und A liegt in 𝒫₂, und zwar als Spitze
+          {ref("definition:positiv-semidefinit")} ist mit Gleichheit erfüllt, und A liegt in 𝒫₂, und zwar als Spitze
           des Kegels, in der sich alle Halbstrahlen treffen.
         </Verdikt>
       )}

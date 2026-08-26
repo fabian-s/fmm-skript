@@ -3,7 +3,7 @@ import { PsdKegel } from "./widgets/S112PsdKegel";
 
 ### Mengen, die ihre Verbindungsstrecken enthalten
 
-In [Abschnitt 11.1](#sec-11.1) haben wir aus gegebenen Punkten neue gemacht: Konvexkombinationen
+In @sec:konvexkombinationen haben wir aus gegebenen Punkten neue gemacht: Konvexkombinationen
 mischen endlich viele Vektoren mit nichtnegativen Gewichten, die sich zu eins addieren. Jetzt
 drehen wir die Frage um. Statt zu fragen, welche Punkte aus einer Menge entstehen, fragen wir,
 welche Mengen unter dieser Konstruktion schon abgeschlossen sind.
@@ -14,7 +14,7 @@ Nebenbedingungen erfüllen. Ist sie konvex, so darf ein Verfahren, das zwei zul�
 kennt, jeden Punkt dazwischen ausprobieren, ohne aus dem Erlaubten zu fallen. Ist sie es nicht,
 kann schon der Weg zwischen zwei guten Lösungen durch verbotenes Gebiet führen.
 
-:::definition[11.2.1 (Konvexe Menge)]
+:::definition[#konvexe-menge (Konvexe Menge)]
 Sei $V$ ein :k[Vektorraum]{#vector-space}. Eine Menge $\cblue{\Xcal} \subseteq V$ heißt
 *konvex* (convex), falls für alle $\bx, \by \in \cblue{\Xcal}$ und alle $\lambda \in [0,1]$ gilt:
 
@@ -23,9 +23,9 @@ $$
 $$
 :::
 
-:::bemerkung[11.2.2 (Was die Bedingung verlangt)]
+:::bemerkung[#was-die-bedingung-verlangt (Was die Bedingung verlangt)]
 Der grüne Ausdruck ist genau die Konvexkombination zweier Punkte aus
-[Abschnitt 11.1](#sec-11.1). Läuft $\lambda$ von $0$ nach $1$, so wandert er von $\by$ nach
+@sec:konvexkombinationen. Läuft $\lambda$ von $0$ nach $1$, so wandert er von $\by$ nach
 $\bx$ und durchläuft dabei die ganze Verbindungsstrecke. Konvex heißt also: Mit je zwei Punkten
 liegt auch die Strecke zwischen ihnen in der Menge. Anschaulich hat eine konvexe Menge weder
 Einbuchtungen noch Löcher.
@@ -65,7 +65,7 @@ Die Definition spricht nur über zwei Punkte. Gemeint ist aber mehr, und der fol
 es nach. Wir brauchen ihn, sobald wir über die konvexe Hülle
 argumentieren.
 
-:::satz[11.2.3 (Konvexe Mengen enthalten alle Konvexkombinationen)]
+:::satz[#konvexe-mengen-enthalten-alle (Konvexe Mengen enthalten alle Konvexkombinationen)]
 Sei $\cblue{\Xcal} \subseteq V$ konvex, seien $\bx_1, \dots, \bx_N \in \cblue{\Xcal}$ und
 $w_1, \dots, w_N \ge 0$ mit $\sum_{i=1}^N w_i = 1$. Dann gilt
 
@@ -78,7 +78,7 @@ $$
 
 :::schritt
 Induktion über $N$. Für $N = 1$ ist $w_1 = 1$ und die Summe gleich $\bx_1 \in \cblue{\Xcal}$.
-Für $N = 2$ ist $w_2 = 1 - w_1$, und die Behauptung ist wörtlich Definition 11.2.1.
+Für $N = 2$ ist $w_2 = 1 - w_1$, und die Behauptung ist wörtlich @definition:konvexe-menge.
 
 ::why[die Nebenbedingung $\sum_i w_i = 1$ macht aus zwei Gewichten gerade das Paar $\lambda$ und $1 - \lambda$]
 :::
@@ -114,7 +114,7 @@ $$
 
 denn $s \in (0, 1)$ und $\bu, \bx_{N+1} \in \cblue{\Xcal}$.
 
-::why[Definition 11.2.1 mit $\lambda = s$; der Trick ist das Normieren der ersten $N$ Gewichte, das aus einer $(N+1)$-Kombination eine Zweierkombination von etwas schon Bekanntem macht]
+::why[@definition:konvexe-menge mit $\lambda = s$; der Trick ist das Normieren der ersten $N$ Gewichte, das aus einer $(N+1)$-Kombination eine Zweierkombination von etwas schon Bekanntem macht]
 :::
 
 :::schritt
@@ -127,7 +127,7 @@ $$
 
 Eine Menge ist also genau dann konvex, wenn sie mit ihrer konvexen Hülle übereinstimmt.
 
-::why[der Satz liefert $\conv(\Xcal) \subseteq \Xcal$, die Einerkombination die umgekehrte Inklusion; die Definition der konvexen Hülle steht in Abschnitt 11.1]
+::why[der Satz liefert $\conv(\Xcal) \subseteq \Xcal$, die Einerkombination die umgekehrte Inklusion; die Definition der konvexen Hülle steht in @sec:konvexkombinationen]
 :::
 
 ::::
@@ -141,7 +141,7 @@ Fünf Mengen stehen zur Wahl. Rechnen wir sie einzeln durch.
 :::frage{wahr}
 Die leere Menge $\emptyset$ ist konvex.
 
-Definition 11.2.1 fordert etwas über alle Paare $\bx, \by \in \cblue{\Xcal}$. In der leeren
+@definition:konvexe-menge fordert etwas über alle Paare $\bx, \by \in \cblue{\Xcal}$. In der leeren
 Menge gibt es kein solches Paar, also ist nichts zu prüfen und die Bedingung leer erfüllt. Mit
 demselben Argument ist jede einelementige Menge konvex, denn dort ist $\bx = \by$ und
 $\lambda\bx + (1-\lambda)\bx = \bx$.
@@ -189,7 +189,7 @@ $$
 
 Bemerkenswert daran ist, dass nirgends eine bestimmte Norm gebraucht wird: Kugeln bezüglich
 jeder Norm sind konvex, auch die Würfel und Rauten der $\infty$- und $1$-Norm aus
-[Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2).
+@sec:matrix-spur-norm/matrixnormen.
 :::
 
 :::frage{falsch}
@@ -202,7 +202,7 @@ verlässt die Menge sogar für jedes $\lambda$ zwischen $0$ und $1$, wie das Wid
 
 Konvex wäre die Menge oberhalb der Parabel, $\{(x,y)\colon y \ge x^2\}$. Diese Umkehrung ist
 kein Zufall, sie hängt daran, dass $x \mapsto x^2$ eine konvexe Funktion ist, und wir kommen in
-[Abschnitt 11.3](#sec-11.3) darauf zurück.
+@sec:projektion-konvexe-funktionen darauf zurück.
 :::
 
 :::zahlfrage{loesung=0.38 toleranz=0.01}
@@ -219,7 +219,7 @@ Bisektion nach; für die Widerlegung genügt ohnehin ein einziges $\lambda$.
 
 ### Weitere Beispiele
 
-:::beispiel[11.2.4 (Offener Ball)]
+:::beispiel[#offener-ball (Offener Ball)]
 Für $r>0$ ist der offene Ball
 $\cblue{\Xcal} = \{\bx \in V\colon \left\|\bx\right\| < r\}$ ebenfalls
 konvex. Sei $\lambda \in [0,1]$. Mindestens eines der beiden Gewichte $\lambda$ und $1-\lambda$
@@ -239,12 +239,12 @@ verschwinden.
 :::
 
 Der nächste Begriff beschreibt die Ecken einer konvexen Menge. In
-[Abschnitt 11.1](#sec-11.1) sind Extrempunkte über die Gewichte eingeführt worden, als Punkte
+@sec:konvexkombinationen sind Extrempunkte über die Gewichte eingeführt worden, als Punkte
 also, die sich nur mit einem einzigen $w_i = 1$ erreichen lassen; die allgemeine Fassung steht
 dort schon als Nebenbemerkung. Hier machen wir sie zur Arbeitsgrundlage, denn die folgenden
 Sätze sprechen über konvexe Mengen, die niemand als Hülle einer Punktwolke gegeben hat.
 
-:::definition[11.2.5 (Extrempunkt)]
+:::definition[#konvexe-mengen-extrempunkt (Extrempunkt)]
 Sei $\cblue{\Kcal} \subseteq V$ konvex. Ein Punkt $\corange{\bz} \in \cblue{\Kcal}$ heißt
 *Extrempunkt* (extreme point) von $\cblue{\Kcal}$, falls aus
 
@@ -258,14 +258,14 @@ stets $\bu = \bw = \corange{\bz}$ folgt.
 :::
 
 Ein Extrempunkt liegt also auf keiner Strecke, die ganz in der Menge verläuft und ihn im Inneren
-trifft. Der offene Ball aus Beispiel 11.2.4 hat deshalb gar keinen Extrempunkt: Jeder seiner
+trifft. Der offene Ball aus @beispiel:offener-ball hat deshalb gar keinen Extrempunkt: Jeder seiner
 Punkte ist Mittelpunkt zweier anderer Punkte des Balls. Beim geschlossenen *euklidischen* Ball
 dagegen ist jeder Randpunkt extrem. Auf die Norm kommt es dabei an: Der Einheitsball der
 $\infty$-Norm im $\R^2$ ist das Quadrat $[-1,1]^2$, und dessen Randpunkt $(1, 0)^\top$ ist der
 Mittelpunkt von $(1, -\tfrac12)^\top$ und $(1, \tfrac12)^\top$, die beide dazugehören. Extrem
 sind dort nur die vier Ecken.
 
-:::beispiel[11.2.6 (Der Simplex)]
+:::beispiel[#der-simplex (Der Simplex)]
 Der *Simplex*
 
 $$
@@ -324,10 +324,10 @@ Verteilungen über $\cblue{\Delta^N}$ beschreibt.
 
 Das dritte Beispiel lebt nicht im $\R^n$, sondern in einem Raum von Matrizen. Das ist
 kein Sonderfall, denn die $n \times n$-Matrizen bilden mit der üblichen Addition und
-Skalarmultiplikation selbst einen :k[Vektorraum]{#vector-space}, und Definition 11.2.1 fragt
+Skalarmultiplikation selbst einen :k[Vektorraum]{#vector-space}, und @definition:konvexe-menge fragt
 nach nichts anderem.
 
-:::definition[11.2.7 (Positiv semidefinit)]
+:::definition[#positiv-semidefinit (Positiv semidefinit)]
 Eine :k[symmetrische]{#symmetric-matrix} Matrix $\bA \in \R^{n \times n}$ heißt
 *positiv semidefinit* (PSD), falls
 
@@ -350,10 +350,10 @@ Symmetrie wäre $\bA \succeq 0$ also gar keine Eigenschaft von $\bA$ allein. Vor
 Aussagen, für die wir Semidefinitheit brauchen, an der Symmetrie: Nur für symmetrische Matrizen
 gibt der :k[Spektralsatz]{#spectral-theorem} die Äquivalenz zu „alle
 :k[Eigenwerte]{#eigenvalue-eigenvector} sind nichtnegativ" her, und nur dort greift das
-Cholesky-Verfahren aus [Abschnitt 5.4](?k=05-lgs#sec-5.4). Wir führen den Begriff deshalb wie
+Cholesky-Verfahren aus @sec:lgs/cholesky. Wir führen den Begriff deshalb wie
 üblich für symmetrische Matrizen.
 
-:::satz[11.2.8 (Die positiv semidefiniten Matrizen bilden eine konvexe Menge)]
+:::satz[#die-positiv-semidefiniten-matrizen (Die positiv semidefiniten Matrizen bilden eine konvexe Menge)]
 $\cblue{\Pcal_n}$ ist konvex.
 :::
 
@@ -389,7 +389,7 @@ Damit ist $\bA_\lambda \in \cblue{\Pcal_n}$.
 
 ::::
 
-:::bemerkung[11.2.9 (Kovarianzmatrizen sind semidefinit, nicht immer definit)]
+:::bemerkung[#kovarianzmatrizen-sind-semidefinit-nicht (Kovarianzmatrizen sind semidefinit, nicht immer definit)]
 Als Anwendung liest man häufig, Kovarianzmatrizen seien SPD, also symmetrisch und positiv
 *definit*, und bildeten deshalb eine konvexe Menge. Die Konvexität stimmt, die Begründung
 greift zu hoch.
@@ -418,7 +418,7 @@ $$
 und die Eigenwerte sind $2$ und $0$. In der Praxis passiert genau das, sobald zwei Merkmale
 exakt linear zusammenhängen oder eine empirische Kovarianzmatrix aus zu wenigen Beobachtungen
 geschätzt wird. Das ist kein Haarspalten: Das Cholesky-Verfahren aus
-[Abschnitt 5.4](?k=05-lgs#sec-5.4) verlangt positive Definitheit und scheitert im degenerierten
+@sec:lgs/cholesky verlangt positive Definitheit und scheitert im degenerierten
 Fall.
 
 Die konvexe Menge, die hier gemeint ist, ist also $\cblue{\Pcal_n}$, der Kegel der
@@ -435,7 +435,7 @@ $\bA = \bigl(\begin{smallmatrix} a & b \\ b & c\end{smallmatrix}\bigr)$. Wie sie
 der semidefiniten unter ihnen aus, und woran erkennen wir ihren Rand?
 
 :::interaktiv[Der Kegel zum Anfassen]
-Die Bedingung aus Definition 11.2.7 lässt sich für $n = 2$ in drei Ungleichungen übersetzen:
+Die Bedingung aus @definition:positiv-semidefinit lässt sich für $n = 2$ in drei Ungleichungen übersetzen:
 $a \ge 0$, $c \ge 0$ und $ac \ge b^2$. Die linke Tafel zeigt davon den Schnitt bei festem $b$,
 die rechte die ganze Menge im Raum der drei Zahlen.
 
@@ -448,7 +448,7 @@ also denen vom Rang $1$ oder $0$; dort ist der kleinere Eigenwert gerade null. I
 positiv definiten Matrizen, außen die indefiniten und die negativ semidefiniten. Die drei
 Voreinstellungen mit Spur $2$ machen den Unterschied an Zahlen fest: Die Einheitsmatrix hat die
 Eigenwerte $1$ und $1$, die Rang-$1$-Matrix mit $b = 1$ die Eigenwerte $0$ und $2$, und mit
-$b = 2$ kippt es auf $-1$ und $3$. Satz 11.2.8 ist im Bild die Aussage, dass die Strecke zwischen zwei Punkten des Kegels nie
+$b = 2$ kippt es auf $-1$ und $3$. @satz:die-positiv-semidefiniten-matrizen ist im Bild die Aussage, dass die Strecke zwischen zwei Punkten des Kegels nie
 unter die gekrümmte Randfläche taucht.
 
 Nebenbei fällt eine hübsche Beobachtung ab: Schneiden wir den Kegel mit der Ebene
@@ -466,7 +466,7 @@ von $\bA$?
 Null. Für $\bA = \bigl(\begin{smallmatrix} 1 & 1 \\ 1 & 1\end{smallmatrix}\bigr)$ ist
 $\det \bA = 1 \cdot 1 - 1^2 = 0$, die Eigenwerte sind $0$ und $2$. Die Matrix ist semidefinit,
 aber nicht definit, und liegt deshalb auf dem Rand des Kegels. Genau diese Matrix taucht in
-Bemerkung 11.2.9 als Kovarianzmatrix von $(Z, Z)^\top$ wieder auf.
+@bemerkung:kovarianzmatrizen-sind-semidefinit-nicht als Kovarianzmatrix von $(Z, Z)^\top$ wieder auf.
 :::
 
 :::frage{falsch}
@@ -487,7 +487,7 @@ Bis hierhin haben wir jede Menge einzeln geprüft. Das wird schnell mühsam. Beq
 wenige Grundbausteine als konvex nachzuweisen und dann Regeln zu haben, die aus konvexen Mengen
 neue konvexe Mengen machen. Vier solche Regeln stellen wir zusammen.
 
-:::satz[11.2.10 (Konvexitätserhaltung)]
+:::satz[#konvexitaetserhaltung (Konvexitätserhaltung)]
 Sei $\cblue{\Xcal}$ konvex und sei $(\cblue{\Xcal_i})_{i \in I}$ eine Familie konvexer Mengen
 über einer beliebigen Indexmenge $I$. Dann sind auch die folgenden Mengen konvex:
 
@@ -559,10 +559,10 @@ gerade $\cblue{\Xcal_1} \oplus \cblue{\Xcal_2}$.
 
 ::::
 
-:::bemerkung[11.2.11 (Drei Feinheiten zum Satz)]
+:::bemerkung[#drei-feinheiten-zum-satz (Drei Feinheiten zum Satz)]
 *Das Produkt heißt kartesisch.* Punkt 2 meint das kartesische Produkt der Mengen, also die
 Menge aller Tupel. Mit dem *äußeren* Produkt $\bv \otimes \bw = \bv\bw^\top$ aus
-[Abschnitt 9.3](?k=09-tensoren#sec-9.3) hat es nichts zu tun; die Namen ähneln sich, die
+@sec:tensoren/produkte hat es nichts zu tun; die Namen ähneln sich, die
 Begriffe nicht. Wir schreiben deshalb durchgehend kartesisches Produkt.
 
 *Die Abbildung ist affin.* In Punkt 3 steht $f(\bx) = \bA\bx + \bb$. Das ist eine affine
@@ -574,11 +574,11 @@ ein $\bb$ werden.
 
 *Der Schnitt darf beliebig groß sein.* Punkt 1 lässt eine beliebige Indexmenge $I$ zu und
 nicht nur eine Abzählung $\bigcap_{i=1}^\infty$. Der Beweis kennt gar keine Abzählung, und wir
-brauchen die allgemeine Fassung gleich: Satz 11.2.13 schneidet über *alle* konvexen
+brauchen die allgemeine Fassung gleich: @satz:konvexe-huelle-als-durchschnitt schneidet über *alle* konvexen
 Obermengen einer Menge, und das sind im Allgemeinen überabzählbar viele.
 :::
 
-:::beispiel[11.2.12 (Ein Dreieck als Schnitt dreier Halbräume)]
+:::beispiel[#ein-dreieck-als-schnitt-dreier (Ein Dreieck als Schnitt dreier Halbräume)]
 Im $\R^2$ betrachten wir die drei Mengen
 
 $$
@@ -597,7 +597,7 @@ $$
 \le \lambda\beta + (1-\lambda)\beta = \beta .
 $$
 
-Nach Satz 11.2.10(1) ist damit auch der Schnitt konvex, und der ist
+Nach @satz:konvexitaetserhaltung(1) ist damit auch der Schnitt konvex, und der ist
 
 $$
 \cblue{\Scal} = \cblue{\Xcal_1} \cap \cblue{\Xcal_2} \cap \cblue{\Xcal_3}
@@ -611,20 +611,20 @@ Extrempunkten.
 Das Muster trägt weit. Endliche Schnitte von Halbräumen heißen *Polyeder*, und die zulässigen
 Mengen linearer Optimierungsprobleme sind von dieser Bauart: endlich viele lineare
 Ungleichungen, jede ein Halbraum, zusammen ein konvexes Polyeder. Die Optimierung unter solchen
-Nebenbedingungen ist Thema von [Abschnitt 12.5](?k=12-optim#sec-12.5).
+Nebenbedingungen ist Thema von @sec:optim/beschraenkt.
 :::
 
 ### Die konvexe Hülle als kleinste konvexe Obermenge
 
-In [Abschnitt 11.1](#sec-11.1) ist $\conv(\cblue{\Xcal})$ als Menge aller Konvexkombinationen
+In @sec:konvexkombinationen ist $\conv(\cblue{\Xcal})$ als Menge aller Konvexkombinationen
 endlich vieler Punkte aus $\cblue{\Xcal}$ eingeführt worden, mit dem Zusatz, sie sei die
 kleinste konvexe Menge, die $\cblue{\Xcal}$ enthält. Der folgende Satz sagt genau das, und zwar
 in einer Form, die sich beweisen lässt.
 
-:::satz[11.2.13 (Konvexe Hülle als Durchschnitt)]
+:::satz[#konvexe-huelle-als-durchschnitt (Konvexe Hülle als Durchschnitt)]
 Für jede Menge $\cblue{\Xcal} \subseteq V$ gilt
 
-$$ {#eq-11.2.1}
+$$ {#eq-konvexe-huelle-als-durchschnitt}
 \conv(\cblue{\Xcal}) = \bigcap_{\cblue{\Xcal} \subseteq \cblue{\Ycal},\ \cblue{\Ycal} \text{ konvex}} \cblue{\Ycal} .
 $$
 :::
@@ -645,21 +645,21 @@ $$
 wieder eine Konvexkombination von endlich vielen Punkten aus $\cblue{\Xcal}$: Alle Gewichte
 sind nichtnegativ, und ihre Summe ist $\lambda \cdot 1 + (1-\lambda)\cdot 1 = 1$.
 
-::why[Konvexkombinationen von Konvexkombinationen sind wieder Konvexkombinationen; das ist dieselbe Rechnung wie im Induktionsschritt zu Satz 11.2.3, nur in die andere Richtung gelesen]
+::why[Konvexkombinationen von Konvexkombinationen sind wieder Konvexkombinationen; das ist dieselbe Rechnung wie im Induktionsschritt zu @satz:konvexe-mengen-enthalten-alle, nur in die andere Richtung gelesen]
 :::
 
 :::schritt
-Sei $\cblue{\Scal}$ die rechte Seite von ($11.2.1$). Über wie viele Mengen dieser Schnitt läuft,
+Sei $\cblue{\Scal}$ die rechte Seite von @eq:konvexe-huelle-als-durchschnitt. Über wie viele Mengen dieser Schnitt läuft,
 brauchen wir nicht zu wissen; leer ist die Familie jedenfalls nicht, denn $V$ selbst ist konvex
 und enthält $\cblue{\Xcal}$. Wir zeigen
 $\conv(\cblue{\Xcal}) \subseteq \cblue{\Scal}$. Sei dazu $\cblue{\Ycal}$ irgendeine konvexe
 Menge mit $\cblue{\Xcal} \subseteq \cblue{\Ycal}$, und sei $\bz \in \conv(\cblue{\Xcal})$, also
 $\bz = \sum_i w_i \bx_i$ mit $\bx_i \in \cblue{\Xcal}$. Dann sind alle $\bx_i$ auch Punkte von
-$\cblue{\Ycal}$, und weil $\cblue{\Ycal}$ konvex ist, liegt nach Satz 11.2.3 die ganze
+$\cblue{\Ycal}$, und weil $\cblue{\Ycal}$ konvex ist, liegt nach @satz:konvexe-mengen-enthalten-alle die ganze
 Konvexkombination in $\cblue{\Ycal}$. Das gilt für jedes solche $\cblue{\Ycal}$, also auch für
 den Schnitt.
 
-::why[genau hier wird Satz 11.2.3 gebraucht: Die Definition der Konvexität spricht nur über zwei Punkte, die Konvexkombination hat aber $N$ Summanden]
+::why[genau hier wird @satz:konvexe-mengen-enthalten-alle gebraucht: Die Definition der Konvexität spricht nur über zwei Punkte, die Konvexkombination hat aber $N$ Summanden]
 :::
 
 :::schritt
@@ -672,7 +672,7 @@ also unter anderem über diese Menge und ist damit in ihr enthalten.
 :::
 
 :::schritt
-Beide Inklusionen zusammen geben ($11.2.1$). Damit ist $\conv(\cblue{\Xcal})$ in einem präzisen
+Beide Inklusionen zusammen geben @eq:konvexe-huelle-als-durchschnitt. Damit ist $\conv(\cblue{\Xcal})$ in einem präzisen
 Sinn die kleinste konvexe Obermenge von $\cblue{\Xcal}$: Sie ist konvex, sie enthält
 $\cblue{\Xcal}$, und sie steckt in jeder anderen Menge mit diesen beiden Eigenschaften.
 
@@ -703,7 +703,7 @@ Argmax, und mehrdeutig ist es obendrein.
 Ist $\cblue{\Xcal}$ groß, so ist das Absuchen aller Vektoren aussichtslos. Der folgende Satz
 verkleinert die Suche drastisch.
 
-:::satz[11.2.14 (Lineare Ziele und Extrempunkte)]
+:::satz[#lineare-ziele-und-extrempunkte (Lineare Ziele und Extrempunkte)]
 Sei $\cblue{\Xcal} \subset \R^n$ endlich und nichtleer, sei $\bv \in \R^n$ und
 $M := \max_{\bx \in \cblue{\Xcal}} \bv^\top\bx$. Dann gilt:
 
@@ -751,7 +751,7 @@ Nun sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
 $\bu, \bw \in \conv(\cblue{\Xcal_M})$ und $\lambda \in (0,1)$. Ausmultiplizieren liefert die
 Identität
 
-$$ {#eq-11.2.2}
+$$ {#eq-eq-11-2-2}
 \lambda\left\|\bu\right\|^2 + (1-\lambda)\left\|\bw\right\|^2
 - \left\|\cgreen{\lambda\bu + (1-\lambda)\bw}\right\|^2
 = \lambda(1-\lambda)\left\|\bu - \bw\right\|^2 .
@@ -763,7 +763,7 @@ sind beide null, und wegen $\lambda(1-\lambda) > 0$ folgt $\bu = \bw$ und damit
 $\bu = \bw = \corange{\bx^\star}$. Der Punkt $\corange{\bx^\star}$ ist somit Extrempunkt von
 $\conv(\cblue{\Xcal_M})$.
 
-::why[($11.2.2$) entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$]
+::why[@eq:eq-11-2-2 entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$]
 :::
 
 :::schritt
@@ -787,12 +787,12 @@ $\bu = \sum_{i\ge 2} \frac{w_i}{1-w_1}\bx_i \in \conv(\cblue{\Xcal})$ und $w_1 \
 $\corange{\bz}$ extrem ist, folgt $\bx_1 = \corange{\bz}$, also wieder
 $\corange{\bz} \in \cblue{\Xcal}$.
 
-::why[dieselbe Normierung wie im Beweis zu Satz 11.2.3, hier benutzt, um eine $N$-Kombination als Zweierkombination zu lesen]
+::why[dieselbe Normierung wie im Beweis zu @satz:konvexe-mengen-enthalten-alle, hier benutzt, um eine $N$-Kombination als Zweierkombination zu lesen]
 :::
 
 ::::
 
-:::beispiel[11.2.15 (Auswahl unter einer Budgetschranke)]
+:::beispiel[#auswahl-unter-einer-budgetschranke (Auswahl unter einer Budgetschranke)]
 Zwei Gegenstände, der erste kostet $2$ und ist $5$ wert, der zweite kostet $3$ und ist $8$ wert.
 Das Budget beträgt $12$, ganze Einheiten sind zu wählen:
 
@@ -810,7 +810,7 @@ $$
 $$
 
 denn alle Punkte von $\cblue{\Xcal}$ erfüllen die drei Ungleichungen, und die drei Ecken liegen
-selbst in $\cblue{\Xcal}$. Die Zielwerte dort sind $0$, $30$ und $32$. Nach Satz 11.2.14 ist
+selbst in $\cblue{\Xcal}$. Die Zielwerte dort sind $0$, $30$ und $32$. Nach @satz:lineare-ziele-und-extrempunkte ist
 $\corange{\bx^\star} = \corange{(0,4)}$ mit dem Wert $32$ eine Lösung, und wir haben dafür drei
 Punkte geprüft statt neunzehn.
 
@@ -821,15 +821,15 @@ trotzdem nicht, denn er ist genau deren Mittelpunkt. Wer nur die Ecken absucht, 
 und verliert dadurch nichts.
 :::
 
-:::bemerkung[11.2.16 (Was der Satz leistet und was nicht)]
-*Nicht jeder Maximierer ist ein Extrempunkt.* Satz 11.2.14(2) verspricht die Existenz eines
+:::bemerkung[#was-der-satz-leistet-und-was-nicht (Was der Satz leistet und was nicht)]
+*Nicht jeder Maximierer ist ein Extrempunkt.* @satz:lineare-ziele-und-extrempunkte(2) verspricht die Existenz eines
 solchen, nicht mehr. Bei $\cblue{\Xcal} = \{(0,0), (1,0), (2,0)\}$ und $\bv = (0,1)^\top$ haben
 alle drei Punkte den Zielwert $0$, sind also alle Maximierer. Der mittlere ist aber der
 Mittelpunkt der beiden äußeren und deshalb kein Extrempunkt. Bei Gleichständen taugt der Satz
 also zum Finden *einer* Lösung, nicht zum Beschreiben aller.
 
 *Endlichkeit ist nicht kosmetisch.* Für unendliche Mengen muss das Maximum nicht angenommen
-werden. Der offene Ball aus Beispiel 11.2.4 hat, wie wir gesehen haben, überhaupt keine
+werden. Der offene Ball aus @beispiel:offener-ball hat, wie wir gesehen haben, überhaupt keine
 Extrempunkte, und für $\bv \neq \bnull$ erreicht $\bv^\top\bx$ dort sein Supremum nie. Ist die
 Menge dagegen kompakt und konvex, so wird das Maximum eines linearen Ziels weiterhin in einem
 Extrempunkt angenommen; dort besagt der Satz von Minkowski sogar, dass sich die ganze Menge als
@@ -837,13 +837,13 @@ konvexe Hülle ihrer Extrempunkte schreiben lässt.
 
 *Die Arbeit verschiebt sich, sie verschwindet nicht.* Der Satz ersetzt die Suche über
 $\cblue{\Xcal}$ durch die Suche über die Extrempunkte von $\conv(\cblue{\Xcal})$. Das nützt nur,
-wenn wir diese Hülle beschreiben können. In Beispiel 11.2.15 war sie leicht zu bekommen, weil
+wenn wir diese Hülle beschreiben können. In @beispiel:auswahl-unter-einer-budgetschranke war sie leicht zu bekommen, weil
 die Ecken des zugehörigen Ungleichungssystems zufällig ganzzahlig sind. Für allgemeine
 Teilmengen von $\N^n$ ist $\conv(\cblue{\Xcal})$ dagegen selbst schwer zu bestimmen, und genau
 darin liegt die Schwierigkeit der ganzzahligen Optimierung. Ist umgekehrt die zulässige Menge
-von vornherein ein Polyeder wie in Beispiel 11.2.12, so ist die Suche über die Ecken die
+von vornherein ein Polyeder wie in @beispiel:ein-dreieck-als-schnitt-dreier, so ist die Suche über die Ecken die
 Grundidee der linearen Programmierung. Dieses Verfahren behandelt dieses Skript nicht;
-[Abschnitt 12.5](?k=12-optim#sec-12.5) geht die Optimierung unter Nebenbedingungen stattdessen
+@sec:optim/beschraenkt geht die Optimierung unter Nebenbedingungen stattdessen
 über Lagrange-Multiplikatoren und die Karush-Kuhn-Tucker-Bedingungen an.
 :::
 

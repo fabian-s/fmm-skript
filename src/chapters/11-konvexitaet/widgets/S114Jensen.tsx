@@ -11,6 +11,7 @@ import {
   fmtTick,
   niceTicks,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §11.4: Jensen-Ungleichung zum Schieben (Eigenbau, kein Portat).
@@ -342,14 +343,14 @@ export function JensenExplorer() {
       {!definiert ? (
         <Verdikt kind="fail" titel="Summe null, keine Gewichte.">
           Alle drei Regler stehen auf null. Die Nebenbedingung w₁ + w₂ + w₃ = 1 aus
-          Satz 11.4.6 lässt sich so nicht erfüllen, und wir müssten durch null teilen. Wir
+          {ref("satz:jensen-ungleichung")} lässt sich so nicht erfüllen, und wir müssten durch null teilen. Wir
           zeichnen deshalb keine Markierung. Jede andere Stellung ist zulässig, denn durch eine
           positive Summe dürfen wir immer teilen.
         </Verdikt>
       ) : nurEiner ? (
         <Verdikt kind="warn" titel="Gleichheit: das ganze Gewicht liegt auf einer Stützstelle.">
           Ein Gewicht ist 1, die beiden anderen sind 0. Dann steht auf beiden Seiten von
-          (11.4.1) derselbe Wert {fmtDe(links)}, die Ungleichung ist mit Gleichheit erfüllt. Das
+          ({num("eq:jensen-ungleichung")}) derselbe Wert {fmtDe(links)}, die Ungleichung ist mit Gleichheit erfüllt. Das
           ist der eine Gleichheitsfall, den wir hier einstellen können; der andere wäre eine
           affine Funktion, für die Jensen in beide Richtungen gilt, und keine der drei
           Auswahlmöglichkeiten ist affin.
@@ -358,15 +359,15 @@ export function JensenExplorer() {
         <Verdikt kind="ok" titel="Jensen: der grüne Punkt liegt über dem orangen.">
           Erst mischen, dann auswerten gibt {fmtDe(links)}; erst auswerten, dann mischen gibt{" "}
           {fmtDe(rechts)}. Die Lücke {fmtDe(luecke)} ist der Abstand zwischen dem Sehnenzug und
-          der Kurve, genau wie (11.4.1) es verlangt. Der grüne Punkt liegt im Dreieck der drei
+          der Kurve, genau wie ({num("eq:jensen-ungleichung")}) es verlangt. Der grüne Punkt liegt im Dreieck der drei
           Graphenpunkte, und dieses Dreieck gehört zum Epigraphen, weil f konvex ist.
           {fkt.key === "quad" && (
             <>
               {" "}
               Bei f(x) = x² hat die Lücke einen Namen: Sie ist die gewichtete Varianz der
               Stützstellen, hier {fmtDe(varianz)}, dieselbe Rechnung wie beim fairen Würfel aus
-              Beispiel 11.1.3, wo E[X²] − E[X]² = 35/12 = {fmtDe(35 / 12)} herauskommt
-              (Beispiel 11.4.8). Deshalb ist die Varianz nie negativ.
+              {ref("beispiel:der-erwartungswert-ist-eine")}, wo E[X²] − E[X]² = 35/12 = {fmtDe(35 / 12)} herauskommt
+              ({ref("beispiel:die-varianz-ist-nicht-negativ")}). Deshalb ist die Varianz nie negativ.
             </>
           )}
         </Verdikt>
@@ -374,8 +375,8 @@ export function JensenExplorer() {
         <Verdikt kind="fail" titel="Konkave Gegenprobe: die Ungleichung dreht sich um.">
           Für die konkave Wurzel liegt der Sehnenzug unter der Kurve: {fmtDe(rechts)} ist kleiner
           als {fmtDe(links)}, die Lücke also {fmtDe(luecke)}. Das ist kein Widerspruch zu
-          Satz 11.4.6, sondern seine Spiegelung (Bemerkung 11.3.9): −√x ist konvex, für diese
-          Funktion gilt (11.4.1), und Multiplikation mit −1 dreht das Zeichen um.
+          {ref("satz:jensen-ungleichung")}, sondern seine Spiegelung ({ref("bemerkung:wie-wir-die-ungleichung-lesen")}): −√x ist konvex, für diese
+          Funktion gilt ({num("eq:jensen-ungleichung")}), und Multiplikation mit −1 dreht das Zeichen um.
         </Verdikt>
       )}
     </div>

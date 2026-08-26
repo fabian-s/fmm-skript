@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, niceTicks, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.4 — DIE EINE EINSICHT: Newton springt in den Scheitel des quadratischen
@@ -253,7 +254,7 @@ export function NewtonParabelLab() {
         kritischen Punkt Newton landet.
       </Aufgabe>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
-        Blau die Funktion und die Iterierten, orange die Parabel, mit der Algorithmus 12.4.1 an
+        Blau die Funktion und die Iterierten, orange die Parabel, mit der {ref("algorithmus:newton-verfahren-fuer-die-optimierung")} an
         der aktuellen Stelle rechnet, und ihr Scheitel: dort steht im nächsten Schritt die
         Iterierte.
       </p>

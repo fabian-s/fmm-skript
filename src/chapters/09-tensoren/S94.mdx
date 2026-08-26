@@ -1,6 +1,6 @@
 import { TensorbasisExplorer } from "./widgets/S94Tensorbasis";
 
-In [Abschnitt 9.3](#sec-9.3) war $\otimes$ eine Rechenvorschrift: Aus zwei
+In @sec:produkte war $\otimes$ eine Rechenvorschrift: Aus zwei
 Vektoren wurde eine Matrix, aus zwei Tensoren ein Tensor höherer Stufe. Jetzt
 drehen wir die Blickrichtung um und fragen nach dem Raum, in dem diese Produkte
 leben. Aus der Operation wird damit eine Konstruktion, die aus zwei
@@ -17,7 +17,7 @@ ist ihre :k[lineare Hülle]{#span}. Das erklärt, wie der Raum erzeugt wird. Dam
 er unabhängig von einer zufällig gewählten bilinearen Abbildung wirklich *das*
 Tensorprodukt ist, gehört noch eine charakteristische Eigenschaft dazu.
 
-:::definition[9.4.1 (Tensorprodukt von Vektorräumen)]
+:::definition[#tensorprodukt-von-vektorraeumen (Tensorprodukt von Vektorräumen)]
 Seien $V$ und $W$ :k[Vektorräume]{#vector-space}. Ein *Tensorprodukt* (tensor
 product) von $V$ und $W$ besteht aus einem Vektorraum $V \otimes W$ und einer
 bilinearen Abbildung
@@ -40,7 +40,7 @@ $$
 
 Der Raum wird von den Bildern dieser Abbildung erzeugt:
 
-$$ {#eq-9.4.1}
+$$ {#eq-tensorprodukt-von-vektorraeumen}
 V \otimes W = \spann\bigl\{\cblue{\bv} \otimes \cgreen{\bw} :
 \cblue{\bv} \in V, \ \cgreen{\bw} \in W\bigr\} .
 $$
@@ -50,14 +50,14 @@ Tensoren*.
 :::
 
 Für $V = \R^m$ und $W = \R^n$ sind die elementaren Tensoren genau die Matrizen
-vom Rang höchstens $1$. Satz 9.3.4 liefert davon eine Hälfte, nämlich den Rang
+vom Rang höchstens $1$. @satz:eigenschaften-des-aeusseren-produkts liefert davon eine Hälfte, nämlich den Rang
 $1$ für $\cblue{\bv}, \cgreen{\bw} \neq \bnull$; die Umkehrung steht im
 Anschluss an seinen Beweis, und der Rang $0$ gehört zum Produkt mit dem
 Nullvektor. Produkte $\bu \otimes \bv \otimes \bw$ dreier Vektoren heißen in
-[Abschnitt 9.3](#sec-9.3) entsprechend Rang-1-Tensoren.
+@sec:produkte entsprechend Rang-1-Tensoren.
 
-:::bemerkung[9.4.2 (Rechenregeln aus der Bilinearität)]
-Bilinearität im Sinn von Definition 9.1.1 ([Abschnitt 9.1](#sec-9.1)) heißt hier
+:::bemerkung[#rechenregeln-aus-der-bilinearitaet (Rechenregeln aus der Bilinearität)]
+Bilinearität im Sinn von @definition:multilineare-abbildung (@sec:multilinear) heißt hier
 ausgeschrieben: Skalare Faktoren dürfen zwischen den Argumenten wandern, und in
 jedem Argument darf man Summen auseinanderziehen,
 
@@ -79,11 +79,11 @@ Mit $c = 0$ folgt daraus sofort
 $\bnull \otimes \cgreen{\bw} = \cblue{\bv} \otimes \bnull = \bnull$. Was die
 Regeln dagegen nicht liefern, ist eine Umformung von
 $\cblue{\bv_1} \otimes \cgreen{\bw_1} + \cblue{\bv_2} \otimes \cgreen{\bw_2}$ in
-ein einzelnes Produkt. Deshalb steht in ($9.4.1$) der Spann und nicht die Menge
+ein einzelnes Produkt. Deshalb steht in @eq:tensorprodukt-von-vektorraeumen der Spann und nicht die Menge
 der Produkte.
 :::
 
-:::bemerkung[9.4.3 (Warum die universelle Eigenschaft entscheidend ist)]
+:::bemerkung[#warum-die-universelle-eigenschaft (Warum die universelle Eigenschaft entscheidend ist)]
 Das Tensorprodukt *linearisiert* bilineare Abbildungen: Statt $f$ auf Paaren
 auszuwerten, wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren an.
 Der Spann allein würde dazu nicht genügen. Nähmen wir etwa als bilineare
@@ -100,14 +100,14 @@ abstrakte Konstruktion gemeint ist.
 
 ### Zwei Beispiele mit Zahlentupeln
 
-:::beispiel[9.4.4 (Das Tensorprodukt von ℝᵐ und ℝⁿ)]
-Sei $\otimes$ das äußere Produkt aus [Abschnitt 9.3](#sec-9.3), also
+:::beispiel[#das-tensorprodukt-von-und (Das Tensorprodukt von ℝᵐ und ℝⁿ)]
+Sei $\otimes$ das äußere Produkt aus @sec:produkte, also
 $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\cgreen{\bw}^\top \in \R^{m \times n}$.
 Wir zeigen beide Inklusionen.
 
 „$\subseteq$": Jedes $\cblue{\bv} \otimes \cgreen{\bw}$ ist eine
 $m \times n$-Matrix, und $\R^{m \times n}$ ist ein Vektorraum
-(Satz 9.2.5). Mit den Produkten liegen deshalb auch alle ihre
+(@satz:der-raum-aller-tensoren-eines-formats). Mit den Produkten liegen deshalb auch alle ihre
 :k[Linearkombinationen]{#linear-combination} in $\R^{m \times n}$.
 
 „$\supseteq$": Für die Standardbasisvektoren $\be_i \in \R^m$ und
@@ -136,13 +136,13 @@ $\bE_{ij}$ den Raum aufspannen und ihr Bild durch
 $\wt{f}(\bE_{ij})=f(\be_i,\be_j)$ festgelegt ist.
 
 Damit ist $\R^m \otimes \R^n = \R^{m \times n}$ eine konkrete Realisierung des
-Tensorprodukts, und nach Satz 9.2.5 hat dieser Raum die
+Tensorprodukts, und nach @satz:der-raum-aller-tensoren-eines-formats hat dieser Raum die
 :k[Dimension]{#dimension} $mn$.
 :::
 
-:::beispiel[9.4.5 (Drei Faktoren)]
+:::beispiel[#drei-faktoren (Drei Faktoren)]
 Seien $V_1 = \R^m$, $V_2 = \R^n$, $V_3 = \R^q$ und $\otimes$ das Tensorprodukt
-von Tensoren aus [Abschnitt 9.3](#sec-9.3). Nach Beispiel 9.4.4 ist
+von Tensoren aus @sec:produkte. Nach @beispiel:das-tensorprodukt-von-und ist
 $V_1 \otimes V_2 = \R^{m \times n}$, und ein elementarer Tensor
 $\corange{\bA} \otimes \cgreen{\bw}$ mit $\corange{\bA} \in \R^{m \times n}$ und
 $\cgreen{\bw} \in \R^q$ hat die Einträge $\corange{a_{ij}}\cgreen{w_k}$. Das ist
@@ -158,7 +158,7 @@ $$
 Auf die Klammerung kommt es dabei nicht an: Der elementare Tensor
 $\bu \otimes \bv \otimes \bw$ hat die Einträge $u_i v_j w_k$, gleichgültig, in
 welcher Reihenfolge wir die drei Produkte bilden. Die Dimension ist $mnq$, wieder
-nach Satz 9.2.5.
+nach @satz:der-raum-aller-tensoren-eines-formats.
 :::
 
 ### Ein einzelnes Produkt und der ganze Raum
@@ -168,7 +168,7 @@ Die beiden Ausdrücke $\cblue{\bv} \otimes \cgreen{\bw}$ und $V \otimes W$ sehen
 der ganze Raum, den alle diese Elemente aufspannen. Der Unterschied ist keine
 Feinheit, wie das kleinste denkbare Beispiel zeigt.
 
-:::beispiel[9.4.6 (Die Einheitsmatrix ist kein elementarer Tensor)]
+:::beispiel[#die-einheitsmatrix-ist-kein-elementarer (Die Einheitsmatrix ist kein elementarer Tensor)]
 Sei $V = W = \R^2$ und
 
 $$
@@ -193,7 +193,7 @@ aber $\cblue{v_2}\cgreen{w_2} = 0$ und nicht $\cred{1}$, im Widerspruch zur
 rechten unteren Ecke. Kürzer geht es über den Rang: Alle Spalten von
 $\cblue{\bv}\cgreen{\bw}^\top$ sind Vielfache von $\cblue{\bv}$, also ist
 $\rang(\cblue{\bv} \otimes \cgreen{\bw}) \leq 1$
-([Abschnitt 9.3](#sec-9.3)), während $\rang(\bI_2) = 2$ ist.
+(@sec:produkte), während $\rang(\bI_2) = 2$ ist.
 
 **Aber ein Element des Raums.** In $V \otimes W = \R^{2 \times 2}$ liegt
 $\bI_2$ selbstverständlich, und zwar als Summe von zwei elementaren Tensoren:
@@ -212,7 +212,7 @@ $$
 Zwei Summanden genügen also. Dass das kein Zufall ist, sagt der nächste Satz.
 :::
 
-:::satz[9.4.7 (Jede Matrix ist eine kurze Summe elementarer Tensoren)]
+:::satz[#jede-matrix-ist-eine-kurze-summe (Jede Matrix ist eine kurze Summe elementarer Tensoren)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$. Dann gibt
 es $\cblue{\bu_i} \in \R^m$, $\cgreen{\bv_i} \in \R^n$ und Zahlen $\corange{\sigma_i} > 0$
 mit
@@ -229,8 +229,8 @@ aus.
 
 :::schritt
 Die :k[Singulärwertzerlegung]{#singular-value-decomposition} liefert
-$\bA = \bU\bSigma\bV^\top$ (Satz 6.2.13 in
-[Abschnitt 6.2](?k=06-svd#sec-6.2)), und ausmultipliziert wird daraus die
+$\bA = \bU\bSigma\bV^\top$ (@satz:singulaerwertzerlegung in
+@sec:svd/singulaerwerte), und ausmultipliziert wird daraus die
 Summenform
 
 $$
@@ -238,8 +238,8 @@ $$
 $$
 
 mit $r = \rang(\bA)$ und $\corange{\sigma_1} \geq \cdots \geq \corange{\sigma_r} > 0$
-(Satz 6.4.2 in [Abschnitt 6.4](?k=06-svd#sec-6.4), im Kapitel schon in
-Bemerkung 9.3.5 aufgegriffen).
+(@satz:summenform-der-svd in @sec:svd/anwendungen, im Kapitel schon in
+@bemerkung:die-svd-als-summe-aeusserer-produkte aufgegriffen).
 
 ::why[jeder Summand ist ein äußeres Produkt $\cblue{\bu_i}\cgreen{\bv_i}^\top = \cblue{\bu_i} \otimes \cgreen{\bv_i}$, also ein elementarer Tensor]
 :::
@@ -255,8 +255,8 @@ also ist $r \leq n$.
 
 ::::
 
-:::bemerkung[9.4.8 (Die SVD liefert sogar die kürzeste Summe)]
-Satz 9.4.7 sagt nur, dass $r$ Summanden reichen. Weniger geht auch nicht: Wäre
+:::bemerkung[#die-svd-liefert-sogar-die-kuerzeste (Die SVD liefert sogar die kürzeste Summe)]
+@satz:jede-matrix-ist-eine-kurze-summe sagt nur, dass $r$ Summanden reichen. Weniger geht auch nicht: Wäre
 $\bA = \sum_{i=1}^{k} \cblue{\bu_i} \otimes \cgreen{\bv_i}$ mit
 $k < r$, so lägen alle Spalten von $\bA$ im Spann von
 $\cblue{\bu_1}, \dots, \cblue{\bu_k}$, und der Rang wäre höchstens $k$. Die
@@ -272,7 +272,7 @@ Ein Vektorraum wird durch eine :k[Basis]{#basis} handhabbar. Für $V \otimes W$
 müssen wir sie nicht suchen: Sie entsteht aus Basen der beiden Faktoren, indem
 wir alle Paare miteinander multiplizieren.
 
-:::satz[9.4.9 (Tensorproduktbasis)]
+:::satz[#tensorproduktbasis (Tensorproduktbasis)]
 Seien $\Bcal_V = \{\cblue{\bv_1}, \dots, \cblue{\bv_m}\}$ eine Basis von $V$ und
 $\Bcal_W = \{\cgreen{\bw_1}, \dots, \cgreen{\bw_n}\}$ eine Basis von $W$. Dann ist
 
@@ -285,7 +285,7 @@ $$
 eine Basis von $V \otimes W$ und heißt *Tensorproduktbasis* (tensor product
 basis). Insbesondere gilt
 
-$$ {#eq-9.4.2}
+$$ {#eq-tensorproduktbasis}
 V \otimes W = \spann\bigl(\Bcal_{V \otimes W}\bigr)
 = \biggl\{\sum_{i=1}^{m} \sum_{j=1}^{n} \corange{c_{ij}}\,
 \cblue{\bv_i} \otimes \cgreen{\bw_j} :
@@ -305,7 +305,7 @@ $$
 **Erzeugendensystem.** Wir entwickeln $\cblue{\bv} \in V$ und $\cgreen{\bw} \in W$
 in den beiden Basen, $\cblue{\bv} = \sum_i a_i \cblue{\bv_i}$ und
 $\cgreen{\bw} = \sum_j b_j \cgreen{\bw_j}$, und ziehen die Summen mit
-Bemerkung 9.4.2 nach außen:
+@bemerkung:rechenregeln-aus-der-bilinearitaet nach außen:
 
 $$
 \cblue{\bv} \otimes \cgreen{\bw}
@@ -320,8 +320,8 @@ $$
 
 :::schritt
 Jeder elementare Tensor liegt damit im Spann von $\Bcal_{V \otimes W}$. Nach
-Definition 9.4.1 wird $V \otimes W$ von den elementaren Tensoren erzeugt, also
-gilt die Darstellung ($9.4.2$).
+@definition:tensorprodukt-von-vektorraeumen wird $V \otimes W$ von den elementaren Tensoren erzeugt, also
+gilt die Darstellung @eq:tensorproduktbasis.
 
 ::why[der Spann einer Menge ist der kleinste :k[Unterraum]{#subspace}, der sie enthält; liegt jedes Erzeugende im Spann von $\Bcal_{V \otimes W}$, so auch der ganze erzeugte Raum]
 :::
@@ -337,7 +337,7 @@ a_k(\cblue{\bv})\,b_l(\cgreen{\bw})
 $$
 
 bilinear, wobei $a_k$ und $b_l$ die $k$-te beziehungsweise $l$-te
-Koordinatenfunktion in den beiden Basen sind. Nach Definition 9.4.1 gibt es dazu
+Koordinatenfunktion in den beiden Basen sind. Nach @definition:tensorprodukt-von-vektorraeumen gibt es dazu
 eine lineare Abbildung auf $V\otimes W$. Sie schickt
 $\cblue{\bv_i}\otimes\cgreen{\bw_j}$ auf $1$, falls $(i,j)=(k,l)$, und sonst
 auf $0$. Wenden wir sie auf die verschwindende Summe an, erhalten wir
@@ -355,11 +355,11 @@ genau ein Element, also $mn$ Stück.
 
 ::::
 
-:::bemerkung[9.4.10 (Eine Feinheit)]
-Die Koeffizienten in ($9.4.2$) sind beliebig. Bei einem elementaren
+:::bemerkung[#eine-feinheit (Eine Feinheit)]
+Die Koeffizienten in @eq:tensorproduktbasis sind beliebig. Bei einem elementaren
 Tensor haben sie nach Schritt 1 des Beweises die besondere Form
 $\corange{c_{ij}} = a_i b_j$, bei einem allgemeinen Element von $V \otimes W$
-gerade nicht. In Beispiel 9.4.6 ist die Koeffizientenmatrix bezüglich der
+gerade nicht. In @beispiel:die-einheitsmatrix-ist-kein-elementarer ist die Koeffizientenmatrix bezüglich der
 Standardbasen $\corange{\bC} = \bI_2$, und $\bI_2$ lässt sich nicht als
 $\ba\bb^\top$ schreiben.
 :::
@@ -380,7 +380,7 @@ $$
 mit der Basis $\Bcal = \{1, x\}$, also $\dim(\Pcal_1) = 2$. Für zwei
 :k[Funktionen]{#function} $f, g\colon [0,1] \to \R$ setzen wir
 
-$$ {#eq-9.4.3}
+$$ {#eq-eq-9-4-3}
 (\cblue{f} \otimes \cgreen{g})(x, y) := \cblue{f(x)}\,\cgreen{g(y)} .
 $$
 
@@ -402,9 +402,9 @@ identische Funktion heißt im ersten Faktor $\cblue{x}$ und im zweiten
 $\cgreen{y}$. Die zweite Basis ist also dieselbe wie die erste, nur anders
 aufgeschrieben.
 
-:::beispiel[9.4.11 (Die Tensorproduktbasis von P₁ ⊗ P₁)]
-Satz 9.4.9 liefert aus $\Bcal_V = \{1, x\}$ und $\Bcal_W = \{1, y\}$ die vier
-Produkte, ausgewertet nach ($9.4.3$):
+:::beispiel[#die-tensorproduktbasis-von-p-p (Die Tensorproduktbasis von P₁ ⊗ P₁)]
+@satz:tensorproduktbasis liefert aus $\Bcal_V = \{1, x\}$ und $\Bcal_W = \{1, y\}$ die vier
+Produkte, ausgewertet nach @eq:eq-9-4-3:
 
 $$
 \begin{aligned}
@@ -423,7 +423,7 @@ $$
 \dim(\Pcal_1 \otimes \Pcal_1) = \dim(\Pcal_1)\,\dim(\Pcal_1) = 2 \cdot 2 = 4 .
 $$
 
-Nummerieren wir die Koeffizienten wie in ($9.4.2$), also $\corange{c_{ij}}$ mit
+Nummerieren wir die Koeffizienten wie in @eq:tensorproduktbasis, also $\corange{c_{ij}}$ mit
 $i$ für den ersten und $j$ für den zweiten Faktor, so ist
 $\corange{c_{11}}$ der Koeffizient von $\cblue{1} \otimes \cgreen{1}$,
 $\corange{c_{21}}$ der von $\cblue{x} \otimes \cgreen{1}$,
@@ -431,7 +431,7 @@ $\corange{c_{12}}$ der von $\cblue{1} \otimes \cgreen{y}$ und
 $\corange{c_{22}}$ der von $\cblue{x} \otimes \cgreen{y}$.
 :::
 
-:::beispiel[9.4.12 (Eine bivariate Funktion in dieser Basis)]
+:::beispiel[#eine-bivariate-funktion-in-dieser-basis (Eine bivariate Funktion in dieser Basis)]
 Nehmen wir
 
 $$
@@ -471,7 +471,7 @@ Zusammenhang macht Tensorproduktbasen in der numerischen Praxis auf
 Rechteckgittern so bequem.
 :::
 
-:::bemerkung[9.4.13 (Was der Produktbau bedeutet)]
+:::bemerkung[#was-der-produktbau-bedeutet (Was der Produktbau bedeutet)]
 Drei Beobachtungen an dieser Basis, die sich auf jeden Tensorproduktraum von
 Funktionen übertragen.
 
@@ -497,10 +497,10 @@ gemischte Basisanteil die beiden Variablen koppelt?
 
 Der gemischte Basisanteil ist genau der Teil, der die beiden Variablen in der Fläche koppelt.
 
-:::bemerkung[9.4.14 (Allgemeine Dimension, und was sie kostet)]
+:::bemerkung[#allgemeine-dimension-und-was-sie-kostet (Allgemeine Dimension, und was sie kostet)]
 Für $k$-variate Polynome mit Grad höchstens $d$ in jeder Variablen ist der
 zugehörige Raum das $k$-fache Tensorprodukt
-$\Pcal_d^{\otimes k} = \Pcal_d \otimes \cdots \otimes \Pcal_d$, und Satz 9.4.9
+$\Pcal_d^{\otimes k} = \Pcal_d \otimes \cdots \otimes \Pcal_d$, und @satz:tensorproduktbasis
 liefert seine Dimension als $k$-faches Produkt:
 
 $$
@@ -545,9 +545,9 @@ Dann hängt die Steigung in x-Richtung nicht mehr vom gewählten y-Wert ab.
 Mit dem äußeren Produkt als $\otimes$ ist $\R^2 \otimes \R^3 = \R^{2 \times 3}$,
 und dieser Raum hat die Dimension $6$.
 
-Das ist Beispiel 9.4.4 mit $m = 2$ und $n = 3$: Die sechs Matrizen
+Das ist @beispiel:das-tensorprodukt-von-und mit $m = 2$ und $n = 3$: Die sechs Matrizen
 $\be_i \otimes \be_j = \bE_{ij}$ liegen im Spann der äußeren Produkte und bilden
-eine Basis von $\R^{2 \times 3}$. Nach Satz 9.4.9 ist die Dimension
+eine Basis von $\R^{2 \times 3}$. Nach @satz:tensorproduktbasis ist die Dimension
 $2 \cdot 3 = 6$.
 :::
 
@@ -556,7 +556,7 @@ Jedes Element von $V \otimes W$ lässt sich als ein einzelnes Produkt
 $\bv \otimes \bw$ schreiben.
 
 $V \otimes W$ ist der Spann der elementaren Tensoren, und Summen von Produkten
-sind im Allgemeinen selbst keine Produkte. Beispiel 9.4.6 zeigt das an
+sind im Allgemeinen selbst keine Produkte. @beispiel:die-einheitsmatrix-ist-kein-elementarer zeigt das an
 $\bI_2 \in \R^2 \otimes \R^2$: Als Produkt hätte die Matrix höchstens den Rang
 $1$, sie hat aber den Rang $2$. Als Summe von zwei elementaren Tensoren geht es.
 :::
@@ -564,7 +564,7 @@ $1$, sie hat aber den Rang $2$. Als Summe von zwei elementaren Tensoren geht es.
 :::frage{falsch}
 Für Vektorräume $V$ und $W$ gilt $\dim(V \otimes W) = \dim(V) + \dim(W)$.
 
-Die Dimensionen multiplizieren sich, sie addieren sich nicht (Satz 9.4.9). Für
+Die Dimensionen multiplizieren sich, sie addieren sich nicht (@satz:tensorproduktbasis). Für
 $\dim(V) = 2$ und $\dim(W) = 3$ ist $\dim(V \otimes W) = 6$ und nicht $5$. Die
 Basis besteht aus allen Paaren $\bv_i \otimes \bw_j$, und davon gibt es
 $\dim(V)\dim(W)$ Stück.
@@ -574,9 +574,9 @@ $\dim(V)\dim(W)$ Stück.
 Jede Matrix $\bA \in \R^{m \times n}$ ist eine Summe von höchstens $\min(m,n)$
 elementaren Tensoren.
 
-Das ist Satz 9.4.7. Die Summenform der Singulärwertzerlegung liefert
+Das ist @satz:jede-matrix-ist-eine-kurze-summe. Die Summenform der Singulärwertzerlegung liefert
 $\bA = \sum_{i=1}^r \sigma_i \bu_i \otimes \bv_i$ mit $r = \rang(\bA)$, und der
-Rang übersteigt weder die Zeilen- noch die Spaltenzahl. Nach Bemerkung 9.4.8 ist
+Rang übersteigt weder die Zeilen- noch die Spaltenzahl. Nach @bemerkung:die-svd-liefert-sogar-die-kuerzeste ist
 $r$ sogar die kleinstmögliche Anzahl.
 :::
 
@@ -585,10 +585,10 @@ In der Darstellung $\sum_i \sum_j c_{ij}\, \bv_i \otimes \bw_j$ haben die
 Koeffizienten stets die Form $c_{ij} = a_i b_j$.
 
 Diese Produktform haben genau die elementaren Tensoren, wie Schritt 1 des
-Beweises zu Satz 9.4.9 zeigt. Allgemeine Elemente von $V \otimes W$ haben
+Beweises zu @satz:tensorproduktbasis zeigt. Allgemeine Elemente von $V \otimes W$ haben
 beliebige Koeffizienten; bezüglich der Standardbasen ist die
 Koeffizientenmatrix zu $\bI_2$ die Einheitsmatrix selbst, und die hat nicht die
-Form $\ba\bb^\top$ (Bemerkung 9.4.10).
+Form $\ba\bb^\top$ (@bemerkung:eine-feinheit).
 :::
 
 :::frage{falsch}
@@ -599,7 +599,7 @@ Sie spannt die Polynome auf, die in jeder Variablen einzeln höchstens den Grad
 $1$ haben, und das sind vier Basisfunktionen. Der Raum aller Polynome vom
 Gesamtgrad höchstens $2$ hat dagegen die Dimension $\binom{4}{2} = 6$: Es fehlen
 $x^2$ und $y^2$. Tensorprodukträume begrenzen den Grad in jeder Variablen
-einzeln, nicht den Gesamtgrad (Bemerkungen 9.4.13 und 9.4.14).
+einzeln, nicht den Gesamtgrad (Bemerkungen @num:was-der-produktbau-bedeutet und @num:allgemeine-dimension-und-was-sie-kostet).
 :::
 
 ::::

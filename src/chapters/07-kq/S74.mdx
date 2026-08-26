@@ -6,7 +6,7 @@ import { OrthoWidget, GramSchmidtWidget, CgsVsMgsWidget } from "./widgets/S74Loc
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-In [Abschnitt 7.3](#sec-7.3) haben wir das Kleinste-Quadrate-Problem über die
+In @sec:normalengleichungen haben wir das Kleinste-Quadrate-Problem über die
 Normalengleichungen gelöst: schnell, aber mit einem Haken. Das Aufstellen von
 $\bA^\top\bA$ quadriert die :k[Konditionszahl]{#condition-number},
 $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$. Wir suchen deshalb ein Verfahren, das direkt
@@ -22,7 +22,7 @@ Problem trivial lösbar.
 Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra. Frischen wir
 das kurz auf.
 
-:::definition[7.4.1 (Orthogonalmatrix)]
+:::definition[#qr-orthogonalmatrix (Orthogonalmatrix)]
 Eine Matrix $\bQ \in \R^{n \times n}$ heißt
 :k[*Orthogonalmatrix*]{#orthogonal-matrix}, wenn ihre Spalten
 :k[orthonormale Vektoren]{#orthonormal-basis} sind, also
@@ -37,7 +37,7 @@ Geometrisch beschreibt $\bQ$ eine :k[Rotation]{#rotation-matrix} und/oder
 die Sorte Abbildung, die Längen und Winkel unangetastet lässt. Die für uns wichtigen
 Eigenschaften fassen wir zusammen:
 
-:::lemma[7.4.2 (Eigenschaften von Orthogonalmatrizen)]
+:::lemma[#qr-eigenschaften-von-orthogonalmatrizen (Eigenschaften von Orthogonalmatrizen)]
 Sei $\bQ \in \R^{n \times n}$ orthogonal. Dann gilt:
 
 <ol className="list-[lower-roman] space-y-1 pl-6">
@@ -84,15 +84,15 @@ $$
 
 ::::
 
-:::bemerkung[7.4.3]
+:::bemerkung[#bemerkung-7-4-3]
 Eigenschaft (iii) ist der numerische Kern des ganzen Abschnitts: wegen
 $\kappa_2(\bQ) = 1$ ist die Multiplikation mit $\bQ$ oder $\bQ^{-1}$ *immer* gut
 konditioniert und verschlechtert die Stabilität eines Algorithmus nicht. Anders als die
-Normalengleichungen ([Abschnitt 7.3](#sec-7.3)) können orthogonale Transformationen die
+Normalengleichungen (@sec:normalengleichungen) können orthogonale Transformationen die
 Kondition unseres Problems also nicht verschlimmern (vgl. die Konditionsanalyse in
-[Abschnitt 7.2](#sec-7.2)). Eigenschaft (iv) erlaubt uns außerdem, $\bQ$ aus vielen
+@sec:kondition). Eigenschaft (iv) erlaubt uns außerdem, $\bQ$ aus vielen
 einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
-[Abschnitt 7.5](#sec-7.5) aus.
+@sec:givens-householder aus.
 :::
 
 :::interaktiv[Woran erkennt man Drehung und Spiegelung?]
@@ -111,7 +111,7 @@ Wie beim :k[Gauß-Verfahren]{#gaussian-elimination}: eine obere
 :k[Rückwärtseinsetzen]{#triangular-solve}. Das führt auf die zentrale Zerlegung dieses
 Kapitels:
 
-:::definition[7.4.4 (QR-Zerlegung)]
+:::definition[#qr-zerlegung (QR-Zerlegung)]
 Sei $\bA \in \R^{m \times n}$ mit $m\ge n$ und
 $\bQ \in \R^{m \times m}$ eine Orthogonalmatrix,
 sodass
@@ -129,7 +129,7 @@ $$
 eine *QR-Zerlegung* von $\bA$.
 :::
 
-:::bemerkung[7.4.5]
+:::bemerkung[#bemerkung-7-4-5]
 Eine QR-Zerlegung in der hier dargestellten Blockform existiert für jede Matrix
 $\bA \in \R^{m \times n}$ mit $m\ge n$. Für breite Matrizen $m<n$ verwendet man
 eine entsprechend transponierte oder trapezförmige Form. Eindeutig ist
@@ -151,7 +151,7 @@ zweite Spalte, $\cgreen{R_{12}}$ den Projektionskoeffizienten,
 $\cborange{\wt{\bq}_2}$ den orthogonalisierten (noch unnormierten) und
 $\cbpurp{\bq_2}$ den fertigen zweiten Orthonormalvektor.
 
-:::beispiel[7.4.6 (QR-Zerlegung via Gram-Schmidt)]
+:::beispiel[#qr-zerlegung-via-gram-schmidt (QR-Zerlegung via Gram-Schmidt)]
 **Gegeben:** $\bA = \begin{pmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 2 \end{pmatrix}$.
 **Gesucht:** $\bQ^\top \bA = \begin{pmatrix} \bR \\ \bnull_{1 \times 2} \end{pmatrix}$
 mit $\bQ \in \R^{3 \times 3}$ orthogonal und $\bR \in \R^{2 \times 2}$ obere
@@ -230,7 +230,7 @@ besten selbst.
 
 <p className="mt-2 text-sm">Das Widget vergleicht den Orthogonalitätsverlust der drei Gram-Schmidt-Varianten.</p>
 
-<p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in [Abschnitt 7.3](#sec-7.3) – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
+<p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in @sec:normalengleichungen – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::
 
 ### Warum die QR-Zerlegung das KQ-Problem löst
@@ -241,7 +241,7 @@ null bringen können, und einen Teil, den keine Wahl von $\bx$ beeinflusst. Zur
 Orientierung im Beweis: $\cbred{\bR\bx - \bc_1}$ verfolgt den steuerbaren,
 $\cblue{\bc_2}$ den unvermeidbaren Anteil.
 
-:::satz[7.4.7 (KQ-Lösung über die QR-Zerlegung)]
+:::satz[#kq-loesung-ueber-die-qr-zerlegung (KQ-Lösung über die QR-Zerlegung)]
 Sei $\bA \in \R^{m \times n}$, $\bb \in \R^m$ und $\bQ \in \R^{m \times m}$ eine
 Orthogonalmatrix, sodass
 
@@ -263,7 +263,7 @@ $$
 \|\bA\bx - \bb\|_2^2 = \left\|\bQ^\top(\bA\bx - \bb)\right\|_2^2 = \left\|\bQ^\top\bA\,\bx - \bQ^\top\bb\right\|_2^2
 $$
 
-::why[Multiplikation mit $\bQ^\top$ ändert die Norm nicht (Lemma 7.4.2 (ii), angewandt auf die Orthogonalmatrix $\bQ^\top$)]
+::why[Multiplikation mit $\bQ^\top$ ändert die Norm nicht (@lemma:qr-eigenschaften-von-orthogonalmatrizen (ii), angewandt auf die Orthogonalmatrix $\bQ^\top$)]
 :::
 
 :::schritt
@@ -309,7 +309,7 @@ $\min_{\bx}\|\bA\bx - \bb\|_2 = \left\|\cblue{\bc_2}\right\|_2$ ab, ohne $\wh{\b
 
 Was noch fehlt, ist ein stabiler Weg zu $\bQ$: Gram-Schmidt hat uns die Zerlegung im
 Beispiel geliefert, ist aber, wie oben gesehen, numerisch fragil. In
-[Abschnitt 7.5](#sec-7.5) konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
+@sec:givens-householder konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
 spaltenweise aus einfachen orthogonalen Bausteinen: Givens-Rotationen und
 Householder-Spiegelungen.
 
@@ -345,7 +345,7 @@ Wege, und zwar um den Faktor $\corange{\kappa_2(\bA)}$ im Fehler.
 :::
 
 :::frage{wahr}
-Aus dem Beweis von Satz 7.4.7 lässt sich die minimale Residuumsnorm ablesen, ohne
+Aus dem Beweis von @satz:kq-loesung-ueber-die-qr-zerlegung lässt sich die minimale Residuumsnorm ablesen, ohne
 $\wh{\bx}$ überhaupt einzusetzen.
 
 Der Beweis zerlegt die Zielfunktion in $\left\|\cbred{\bR\bx - \bc_1}\right\|_2^2 +

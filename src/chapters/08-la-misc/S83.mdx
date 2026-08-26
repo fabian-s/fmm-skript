@@ -3,8 +3,8 @@ import { Schaetzfrage } from "../../lib";
 
 Für :k[lineare Gleichungssysteme]{#linear-system} $\bA\bx = \bb$ und für
 Kleinste-Quadrate-Probleme kennen wir bisher nur *direkte* Verfahren. Die
-LU-Zerlegung aus [Abschnitt 5.3](?k=05-lgs#sec-5.3) und die QR-Zerlegung aus
-[Abschnitt 7.4](?k=07-kq#sec-7.4) zerlegen die Matrix einmal vollständig und
+LU-Zerlegung aus @sec:lgs/lu und die QR-Zerlegung aus
+@sec:kq/qr zerlegen die Matrix einmal vollständig und
 liefern danach die Lösung bis auf Rundungsfehler exakt. Der Preis steht dabei
 von vornherein fest, nämlich eine Operationszahl der Größenordnung $n^3$, ganz
 unabhängig davon, wie genau wir die Lösung überhaupt brauchen.
@@ -25,7 +25,7 @@ Wie nähern wir uns der Lösung überhaupt schrittweise an? Dazu brauchen wir
 zuerst ein Maß dafür, wie gut eine Näherung ist. Die Lösung $\cgreen{\bx}$
 kennen wir ja nicht, sonst wären wir fertig; einsetzen können wir aber immer.
 
-:::definition[8.3.1 (Residuum)]
+:::definition[#residuum (Residuum)]
 Sei $\bA \in \R^{n \times n}$, $\bb \in \R^n$ und $\cblue{\bx^{(k)}} \in \R^n$
 eine Näherung der Lösung von $\bA\bx = \bb$. Der Vektor
 
@@ -38,7 +38,7 @@ heißt *Residuum* (residual) von $\cblue{\bx^{(k)}}$.
 
 ::::quiz
 :::frage{wahr}
-Zeigt das Richardson-Widget für eine Schrittweite eine Rate $\rho>1$, dann erfüllt diese Wahl die Konvergenzvoraussetzung von Satz 8.3.5 nicht.
+Zeigt das Richardson-Widget für eine Schrittweite eine Rate $\rho>1$, dann erfüllt diese Wahl die Konvergenzvoraussetzung von @satz:konvergenz-der-korrekturiteration nicht.
 
 Die Kontraktionsschranke verlangt $\rho<1$.
 :::
@@ -57,7 +57,7 @@ Die Matrix $\bC \in \R^{n \times n}$ entscheidet, wie stark und in welche
 Richtung wir korrigieren. Sie ist der einzige Entwurfsspielraum des Verfahrens,
 und wir werden ihn weiter unten ausnutzen.
 
-:::bemerkung[8.3.2 (Verwandtschaft mit dem Gradientenabstieg)]
+:::bemerkung[#verwandtschaft-mit-dem-gradientenabstieg (Verwandtschaft mit dem Gradientenabstieg)]
 Für den einfachsten Fall $\bC = \gamma\bI_n$ lautet der Schritt
 $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \gamma\,\cred{\br^{(k)}}$, wir gehen
 also ein Stück in Richtung des Residuums. Das ist wörtlich ein
@@ -87,12 +87,12 @@ Größenordnungen schneller.
 
 Halten wir die Vorschrift fest, diesmal mit Laufindex.
 
-:::definition[8.3.3 (Korrekturiteration)]
+:::definition[#korrekturiteration (Korrekturiteration)]
 Sei $\bA \in \R^{n \times n}$, $\bb \in \R^n$ und $\bx$ die Lösung von
 $\bA\bx = \bb$. Für einen beliebigen Startwert $\cblue{\bx^{(0)}} \in \R^n$ und
 eine Matrix $\bC \in \R^{n \times n}$ heißt
 
-$$ {#eq-8.3.1}
+$$ {#eq-korrekturiteration}
 \cblue{\bx^{(k)}} = \cblue{\bx^{(k-1)}} + \bC\bigl(\bb - \bA\,\cblue{\bx^{(k-1)}}\bigr) ,
 \qquad k = 1, 2, \dots
 $$
@@ -102,10 +102,10 @@ die von $\bC$ erzeugte *Korrekturiteration*.
 
 Multiplizieren wir die Klammer aus, so zeigt sich die Fixpunktstruktur.
 
-:::bemerkung[8.3.4 (Fixpunktform)]
-Mit $\bB = \bI_n - \bC\bA$ ist ($8.3.1$) gleichwertig zu
+:::bemerkung[#fixpunktform (Fixpunktform)]
+Mit $\bB = \bI_n - \bC\bA$ ist @eq:korrekturiteration gleichwertig zu
 
-$$ {#eq-8.3.2}
+$$ {#eq-fixpunktform}
 \cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb ,
 \qquad k = 1, 2, \dots
 $$
@@ -117,7 +117,7 @@ allein entscheidet, ob die Folge zusammenläuft.
 
 Und tatsächlich braucht es nur eine Bedingung an $\bB$, damit alles funktioniert.
 
-:::satz[8.3.5 (Konvergenz der Korrekturiteration)]
+:::satz[#konvergenz-der-korrekturiteration (Konvergenz der Korrekturiteration)]
 Sei $\cgreen{\bx}$ die eindeutige Lösung von $\bA\bx = \bb$. Gilt für die
 :k[Spektralnorm]{#matrix-norm}
 
@@ -127,7 +127,7 @@ $$
 
 so folgt für alle $k \ge 1$
 
-$$ {#eq-8.3.3}
+$$ {#eq-konvergenz-der-korrekturiteration}
 \left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|_2
 \le \corange{\rho}^{\,k} \left\|\cblue{\bx^{(0)}} - \cgreen{\bx}\right\|_2 .
 $$
@@ -138,20 +138,20 @@ zwar für jeden Startwert.
 
 Zur Notation: Das $\corange{\rho}$ hier ist die *Konvergenzrate* der
 Iteration; mit dem Rayleigh-Quotienten $\cblue{\rho^{(k)}}$ aus
-[Abschnitt 8.1](#sec-8.1) hat es nur den Buchstaben gemeinsam.
+@sec:eigenwerte hat es nur den Buchstaben gemeinsam.
 
 ::::beweis
 
 :::schritt
 Wir schreiben $\bB = \bI_n - \bC\bA$, also
 $\left\|\bB\right\|_2 = \corange{\rho}$, und bringen die Iteration nach
-($8.3.2$) in die Form
+@eq:fixpunktform in die Form
 
 $$
 \cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb , \qquad k = 1, 2, \dots
 $$
 
-::why[Ausmultiplizieren von ($8.3.1$): $\bx + \bC(\bb - \bA\bx) = (\bI_n - \bC\bA)\bx + \bC\bb$]
+::why[Ausmultiplizieren von @eq:korrekturiteration: $\bx + \bC(\bb - \bA\bx) = (\bI_n - \bC\bA)\bx + \bC\bb$]
 :::
 
 :::schritt
@@ -203,7 +203,7 @@ und wegen $\corange{\rho} < 1$ geht die rechte Seite gegen null.
 
 ::::
 
-Die Schranke ($8.3.3$) beschreibt :k[lineare Konvergenz]{#rate-of-convergence}:
+Die Schranke @eq:konvergenz-der-korrekturiteration beschreibt :k[lineare Konvergenz]{#rate-of-convergence}:
 Der Fehler schrumpft pro Schritt auf einen festen Bruchteil, nicht um eine feste
 Differenz. Auf logarithmischer Skala aufgetragen bleibt er damit unterhalb einer
 Geraden mit Steigung $\log \corange{\rho}$.
@@ -218,7 +218,7 @@ Lösung eindeutig.
 
 Bevor wir über die Wahl von $\bC$ nachdenken, zwei Fragen zum Aufwand. Zur
 Erinnerung an die :k[Landau-Notation]{#big-o-notation} siehe
-[Abschnitt 2.4](?k=02-algos#sec-2.4).
+@sec:algos/landau.
 
 ::::quiz
 
@@ -262,7 +262,7 @@ ganze Verfahren keinen Zweck.
 
 ### Wie viele Schritte bis zur Genauigkeit ε?
 
-Satz 8.3.5 verspricht einen Fehler, der geometrisch fällt. Übersetzen wir das
+@satz:konvergenz-der-korrekturiteration verspricht einen Fehler, der geometrisch fällt. Übersetzen wir das
 in die Frage, die uns beim Rechnen wirklich beschäftigt: Wie oft müssen wir
 iterieren, bis eine vorgegebene Toleranz $\eps$ unterschritten ist?
 
@@ -282,7 +282,7 @@ $k = O(\log(1/\eps))$ Schritte.
 
 Der Fehler fällt geometrisch, also braucht jede weitere Dezimalstelle
 Genauigkeit gleich viele zusätzliche Schritte. Die Herleitung steht direkt im
-Anschluss als Korollar 8.3.6.
+Anschluss als @korollar:zahl-der-iterationen.
 :::
 
 :::frage{falsch}
@@ -292,7 +292,7 @@ $k = O(1/\eps)$ Schritte.
 Das wäre die Schrittzahl bei einem Fehler, der nur wie $1/k$ fällt. Hier fällt
 er wie $\corange{\rho}^{\,k}$, und das ist ungleich schneller: Für
 $\eps = 10^{-6}$ stünden hier eine Million Schritte statt der 15, die für das
-System aus Beispiel 8.3.11 genügen.
+System aus @beispiel:richardson-iteration genügen.
 :::
 
 :::frage{falsch}
@@ -306,15 +306,15 @@ $\corange{\rho}$ und vom Startfehler abhängen.
 
 ::::
 
-Rechnen wir die Antwort nach. Sie folgt allein aus der Schranke ($8.3.3$).
+Rechnen wir die Antwort nach. Sie folgt allein aus der Schranke @eq:konvergenz-der-korrekturiteration.
 
-:::korollar[8.3.6 (Zahl der Iterationen)]
-Es gelte ($8.3.3$) mit $\corange{\rho} \in (0, 1)$, und sei
+:::korollar[#zahl-der-iterationen (Zahl der Iterationen)]
+Es gelte @eq:konvergenz-der-korrekturiteration mit $\corange{\rho} \in (0, 1)$, und sei
 $\cred{e_0} = \left\|\cblue{\bx^{(0)}} - \cgreen{\bx}\right\|_2 > 0$ der
 Startfehler. Für $\eps > 0$ ist
 $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|_2 \le \eps$ garantiert, sobald
 
-$$ {#eq-8.3.4}
+$$ {#eq-zahl-der-iterationen}
 k \ge \max\left\{0,\left\lceil
 \frac{\log(\cred{e_0}/\eps)}{-\log \corange{\rho}}
 \right\rceil\right\}.
@@ -326,14 +326,14 @@ Insbesondere ist $k = O(\log(1/\eps))$.
 ::::beweis
 
 :::schritt
-Nach ($8.3.3$) genügt es, $\corange{\rho}^{\,k}\,\cred{e_0} \le \eps$ zu
+Nach @eq:konvergenz-der-korrekturiteration genügt es, $\corange{\rho}^{\,k}\,\cred{e_0} \le \eps$ zu
 erzwingen, also
 
 $$
 \corange{\rho}^{\,k} \le \frac{\eps}{\cred{e_0}} .
 $$
 
-::why[($8.3.3$) schätzt den Fehler nach oben ab; wer die obere Schranke unter $\eps$ drückt, drückt den Fehler mit]
+::why[@eq:konvergenz-der-korrekturiteration schätzt den Fehler nach oben ab; wer die obere Schranke unter $\eps$ drückt, drückt den Fehler mit]
 :::
 
 :::schritt
@@ -353,7 +353,7 @@ $$
 
 :::schritt
 Falls $\eps\ge \cred{e_0}$, genügt bereits $k=0$; andernfalls ist das kleinste
-ganzzahlige $k$ die Aufrundung. Beides zusammen ergibt ($8.3.4$). Wegen
+ganzzahlige $k$ die Aufrundung. Beides zusammen ergibt @eq:zahl-der-iterationen. Wegen
 $\log(\cred{e_0}/\eps) = \log \cred{e_0} + \log(1/\eps)$ hängt die Schrittzahl
 von der geforderten Genauigkeit nur über $\log(1/\eps)$ ab; der Startfehler und
 der Faktor $1/(-\log \corange{\rho})$ sind Konstanten. Damit ist
@@ -366,19 +366,19 @@ $k = O(\log(1/\eps))$.
 
 Wie freundlich diese Schranke ist, zeigen ein paar Zahlen. Für das Beispiel
 weiter unten ist $\corange{\rho} \approx \corange{0{,}405}$ und
-$\cred{e_0} \approx \cred{0{,}643}$; ($8.3.4$) verlangt dann $8$ Schritte für
+$\cred{e_0} \approx \cred{0{,}643}$; @eq:zahl-der-iterationen verlangt dann $8$ Schritte für
 $\eps = 10^{-3}$, $15$ Schritte für $\eps = 10^{-6}$ und $23$ Schritte für
 $\eps = 10^{-9}$. Drei zusätzliche Dezimalstellen kosten also jedes Mal rund
 sieben bis acht weitere Schritte, und jeder davon kostet $O(n^2)$.
 
 ### Die Wahl von C
 
-:::bemerkung[8.3.7 (Zwei Anforderungen an C)]
+:::bemerkung[#zwei-anforderungen-an-c (Zwei Anforderungen an C)]
 Die Matrix $\bC$ soll gleichzeitig zwei Dinge leisten:
 
 1. $\corange{\rho} = \left\|\bI_n - \bC\bA\right\|_2 < 1$ soll möglichst klein
    sein, damit wenige Schritte reichen. Optimal wäre $\bC \approx \bA^{-1}$.
-2. Der Schritt ($8.3.2$) soll billig auszuwerten sein, also möglichst in
+2. Der Schritt @eq:fixpunktform soll billig auszuwerten sein, also möglichst in
    $O(n^2)$.
 
 Die beiden Wünsche ziehen in verschiedene Richtungen. Mit $\bC = \bA^{-1}$ wäre
@@ -388,7 +388,7 @@ müssten wir dafür $\bA^{-1}$ kennen, und das ist teurer als das
 grobe, billige Näherungen der Inversen.
 :::
 
-:::algorithmus[8.3.8 (Drei klassische Wahlen von C)]
+:::algorithmus[#drei-klassische-wahlen-von-c (Drei klassische Wahlen von C)]
 Für eine dichte Matrix kosten alle drei pro Schritt $O(n^2)$. Die folgenden
 Angaben definieren zunächst nur die Iterationen; Konvergenz braucht jeweils
 zusätzliche Voraussetzungen:
@@ -417,7 +417,7 @@ zusätzliche Voraussetzungen:
 Alle drei nehmen einen leicht zugänglichen Teil von $\bA$ und tun so, als wäre
 er die ganze Matrix. Wie gut das gelingt, hängt von $\bA$ ab.
 
-:::beispiel[8.3.9 (Die drei Wahlen an einem 2×2-System)]
+:::beispiel[#die-drei-wahlen-an-einem-2-2-system (Die drei Wahlen an einem 2×2-System)]
 Für
 
 $$
@@ -453,9 +453,9 @@ schrumpft der Fehler auf lange Sicht. Die Norm $0{,}264$ ist die Garantie, die
 schon ab dem ersten Schritt gilt.
 :::
 
-:::bemerkung[8.3.10 (Gesamtaufwand)]
+:::bemerkung[#gesamtaufwand (Gesamtaufwand)]
 Sei $c_{Schritt}$ der Aufwand einer Iteration und
-$\corange{\rho}=\|\bI-\bC\bA\|_2<1$. Dann liefert Korollar 8.3.6 den Aufwand
+$\corange{\rho}=\|\bI-\bC\bA\|_2<1$. Dann liefert @korollar:zahl-der-iterationen den Aufwand
 
 $$
 O\!\left(
@@ -476,7 +476,7 @@ Struktur ebenfalls deutlich billiger als $O(n^3)$ sein können.
 
 ### Ein Beispiel Schritt für Schritt
 
-:::beispiel[8.3.11 (Richardson-Iteration)]
+:::beispiel[#richardson-iteration (Richardson-Iteration)]
 Gegeben seien
 
 $$
@@ -554,17 +554,17 @@ wir den Verlauf untersuchen.
 
 Die Auflösung verbindet die geschätzte Schwelle mit der Kontraktionsbedingung.
 
-Die Auflösung markiert die Grenze der Konvergenz. Satz 8.3.5 erklärt den
+Die Auflösung markiert die Grenze der Konvergenz. @satz:konvergenz-der-korrekturiteration erklärt den
 Wechsel: Auf der einen Seite fällt der Fehler geometrisch, auf der anderen
 verfehlt die Iterationsmatrix die Kontraktionsbedingung.
 :::
 
 ### Einordnung
 
-:::bemerkung[8.3.12 (Was iterative Verfahren leisten)]
+:::bemerkung[#was-iterative-verfahren-leisten (Was iterative Verfahren leisten)]
 - Iterative Verfahren gibt es nicht nur für lineare Gleichungssysteme und für
-  Eigenwertprobleme ([Abschnitt 8.1](#sec-8.1)), sondern ebenso für
-  Kleinste-Quadrate-Probleme ([Kapitel 7](?k=07-kq#sec-7.1)).
+  Eigenwertprobleme (@sec:eigenwerte), sondern ebenso für
+  Kleinste-Quadrate-Probleme (@kap:kq).
 - In Sonderfällen sind sie *exakt*. Mit $\bC = \bA^{-1}$ etwa ist
   $\corange{\rho} = 0$, und ein Schritt genügt; auch Verfahren vom Krylov-Typ
   wie das der konjugierten Gradienten erreichen die Lösung in exakter
@@ -588,8 +588,8 @@ $$
 ein kleines Residuum bürgt also nur bei gutartiger Matrix für einen kleinen
 Fehler. Das ist dieselbe Warnung wie bei der
 :k[Konditionszahl]{#condition-number} in
-[Abschnitt 4.2](?k=04-fehler#sec-4.2), diesmal als Abbruchkriterium.
+@sec:fehler/kondition, diesmal als Abbruchkriterium.
 
 *Vertiefung: Heath §10.9 (iterative Verfahren für lineare Gleichungssysteme,
 inklusive Jacobi, Gauss-Seidel und konjugierten Gradienten); für die
-Eigenwert-Iterationen aus [Abschnitt 8.1](#sec-8.1) siehe Heath §4.5.*
+Eigenwert-Iterationen aus @sec:eigenwerte siehe Heath §4.5.*

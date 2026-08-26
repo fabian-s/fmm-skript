@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, MatrixDisplay, MatrixInput, Verdikt, fmtDe } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: vec(AXB)=(B^T⊗_KA)vec(X) macht aus einer Matrixgleichung ein
@@ -57,7 +58,7 @@ export function VektorisierungMatrixgleichung() {
     <Verdikt kind={stimmt ? "ok" : "fail"}>
       {stimmt
         ? `Die vier Einträge stimmen überein. Aus A X B = C wird damit das LGS (Bᵀ ⊗_K A) vec(X) = vec(C) mit vier Unbekannten.`
-        : `Die beiden Seiten weichen um ${fmtDe(Math.max(...left.map((entry, index) => Math.abs(entry - right[index]))), 4)} ab. Das wäre ein Gegenbeispiel zu Satz 9.5.3.`}
+        : `Die beiden Seiten weichen um ${fmtDe(Math.max(...left.map((entry, index) => Math.abs(entry - right[index]))), 4)} ab. Das wäre ein Gegenbeispiel zu ${ref("satz:vektorisierung-eines-matrixprodukts")}.`}
     </Verdikt>
   </div>;
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.8: Bias-Varianz-Zerlegung eines Regressionssplines, per seeded
@@ -308,7 +309,7 @@ export function BiasVarianzExplorer() {
         ? `K = ${plateau[0]} bis ${plateau[plateau.length - 1]}`
         : `K = ${plateau.join(", ")}`;
   const varAbgleich =
-    `Für die gemittelte Varianz sagt Satz 13.8.4 exakt σ²K/n = ${fmt(theorieVar)} voraus; ` +
+    `Für die gemittelte Varianz sagt ${ref("satz:gemittelte-varianz-eines-linearen")} exakt σ²K/n = ${fmt(theorieVar)} voraus; ` +
     `unsere ${R} Wiederholungen schätzen ${fmt(lauf.varianz)}.`;
 
   let status: string;
@@ -322,7 +323,7 @@ export function BiasVarianzExplorer() {
       `${kopf} Vom MSE trägt der Bias hier nur noch ${fmt(anteilBias * 100, 1)} %, die Varianz ` +
       `${fmt(anteilVar * 100, 1)} %. Das Optimum liegt also nicht dort, wo beide Anteile gleich ` +
       `groß sind, sondern dort, wo eine weitere Verfeinerung mehr Varianz kostet als sie an Bias ` +
-      `spart.${lauf.K === daten.besteK ? " Das liegt hier zufällig nahe beim Ein-Neuntel-Verhältnis des Proxy-Modells aus Bemerkung 13.8.7; allgemein erzwingt die Theorie diesen Anteil nicht." : ""} ` +
+      `spart.${lauf.K === daten.besteK ? ` Das liegt hier zufällig nahe beim Ein-Neuntel-Verhältnis des Proxy-Modells aus ${ref("bemerkung:heuristisches-balance-modell-fuer-die")}; allgemein erzwingt die Theorie diesen Anteil nicht.` : ""} ` +
       `Innerhalb von zehn Prozent gleichwertig sind ${plateauText}. ${varAbgleich}`;
   } else if (lauf.K < daten.besteK && anteilBias > 0.5) {
     status =

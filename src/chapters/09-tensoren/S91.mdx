@@ -21,9 +21,9 @@ Sammeln wir zuerst das Vorwissen ein, auf dem dieser Abschnitt steht.
 - Die :k[lineare Hülle]{#span}
   $\spann\bigl(\{\bv_1, \dots, \bv_n\}\bigr) = \bigl\{\bw : \bw = \sum_i c_i \bv_i,\ c_i \in \R\bigr\}$.
 - Als Vorschau: Das *äußere Produkt* $\bv \otimes \bw = \bv\bw^\top$, das wir
-  in [Abschnitt 9.3](#sec-9.3) einführen. Das Zeichen $\otimes$ begegnet uns in
+  in @sec:produkte einführen. Das Zeichen $\otimes$ begegnet uns in
   diesem Kapitel noch in allgemeinerer Rolle; für das Kroneckerprodukt, die dritte
-  Konstruktion aus [Abschnitt 9.3](#sec-9.3), verwenden wir das eigene Zeichen
+  Konstruktion aus @sec:produkte, verwenden wir das eigene Zeichen
   $\kron$.
 - Aus der Analysis: Funktionen mehrerer Veränderlicher,
   $f(\bx) = f(x_1, x_2, \dots, x_n)$.
@@ -38,7 +38,7 @@ auf die *einzelnen* Argumente: Halten wir alle Argumente bis auf eines fest, so
 soll die verbleibende Abbildung linear sein. Solche Abbildungen heißen
 *multilinear*.
 
-:::definition[9.1.1 (Multilineare Abbildung)]
+:::definition[#multilineare-abbildung (Multilineare Abbildung)]
 Seien $V_1, \dots, V_n, W$ Vektorräume. Eine Abbildung
 $f\colon V_1 \times \cdots \times V_n \to W$ heißt *multilinear*, wenn
 
@@ -58,7 +58,7 @@ Die Bedingung ist $n$ Bedingungen auf einmal, eine je Argument. Für festes $i$
 sagt sie: Frieren wir die übrigen $n - 1$ Argumente ein, so ist die verbleibende
 Abbildung $V_i \to W$ linear im gewohnten Sinn.
 
-:::bemerkung[9.1.2 (Bilinear, und eine Warnung)]
+:::bemerkung[#bilinear-und-eine-warnung (Bilinear, und eine Warnung)]
 Im Spezialfall $n = 2$ nennen wir $f$ *bilinear*. Dieser Fall begegnet uns in
 den Beispielen unten immer wieder.
 
@@ -79,7 +79,7 @@ ein Unterschied, sobald $f$ überhaupt einen Wert ungleich $\bnull$ annimmt.
 
 Das kleinste interessante Beispiel steckt in der Schulgeometrie.
 
-:::beispiel[9.1.3 (Fläche eines Rechtecks)]
+:::beispiel[#flaeche-eines-rechtecks (Fläche eines Rechtecks)]
 Wir betrachten die Fläche eines Rechtecks als Funktion seiner beiden
 Seitenlängen:
 
@@ -133,13 +133,13 @@ $$
 Die Funktion ist also **in jedem Argument einzeln** linear.
 :::
 
-:::bemerkung[9.1.4 (Das Vierfache, geometrisch gelesen)]
+:::bemerkung[#das-vierfache-geometrisch-gelesen (Das Vierfache, geometrisch gelesen)]
 Der Faktor $\cred{4}$ braucht keine Rechnung. Verdoppeln wir beide Seiten, passt
 das alte Rechteck viermal in das neue. Verdoppeln wir nur eine Seite, passt es
 genau zweimal hinein, und das ist die Linearität im einzelnen Argument. Mit
 $\cblue{x} = 3$ und $\cgreen{y} = 2$ etwa ist $f(3, 2) = 6$, während
 $f(6, 4) = 24$ und $f(6, 2) = 12$ gilt. Der Faktor $\cred{4} = 2^2$ ist der Fall
-$n = 2$ der allgemeinen Regel $\cred{c^n}$ aus Bemerkung 9.1.2.
+$n = 2$ der allgemeinen Regel $\cred{c^n}$ aus @bemerkung:bilinear-und-eine-warnung.
 :::
 
 :::interaktiv[Verdoppeln, einmal beide Seiten und einmal nur eine]
@@ -153,15 +153,15 @@ Das Rechteckbild zeigt damit, warum die getrennte Linearität genau die Regel is
 
 ### Weitere Beispiele
 
-:::beispiel[9.1.5 (Multiplikation reeller Zahlen)]
+:::beispiel[#multiplikation-reeller-zahlen (Multiplikation reeller Zahlen)]
 Die Multiplikation $f\colon \R \times \R \to \R$,
 $(\cblue{x_1}, \cgreen{x_2}) \mapsto \cblue{x_1}\cgreen{x_2}$, ist bilinear. Das
-ist wörtlich die Rechnung aus Beispiel 9.1.3 ohne die geometrische Deutung.
+ist wörtlich die Rechnung aus @beispiel:flaeche-eines-rechtecks ohne die geometrische Deutung.
 Gebraucht haben wir dort nur Distributiv-, Assoziativ- und Kommutativgesetz der
 reellen Zahlen.
 :::
 
-:::beispiel[9.1.6 (Skalarprodukte sind bilinear)]
+:::beispiel[#skalarprodukte-sind-bilinear (Skalarprodukte sind bilinear)]
 Jedes :k[Skalarprodukt]{#dot-product} $f\colon V \times V \to \R$,
 $(\bv_1, \bv_2) \mapsto \inner{\bv_1, \bv_2}$, ist bilinear. Im ersten Argument
 rechnen wir
@@ -181,7 +181,7 @@ zweite Argument brauchen wir dann keine neue Rechnung: Die Symmetrie
 $\inner{\bv, \bw} = \inner{\bw, \bv}$ dreht die Rollen um.
 :::
 
-:::beispiel[9.1.7 (Matrizenmultiplikation als bilineare Abbildung)]
+:::beispiel[#matrizenmultiplikation-als-bilineare (Matrizenmultiplikation als bilineare Abbildung)]
 Die :k[Matrizenmultiplikation]{#matrix-multiplication}
 
 $$
@@ -202,7 +202,7 @@ $$
 
 Linear ist auch sie nicht. Skalieren wir beide Faktoren mit $c$, so erhalten wir
 $(c\cblue{\bA})(c\cgreen{\bB}) = \cred{c^2}\,\corange{\bA\bB}$, wie es
-Bemerkung 9.1.2 für $n = 2$ vorhersagt. Die Matrizenmultiplikation ist damit
+@bemerkung:bilinear-und-eine-warnung für $n = 2$ vorhersagt. Die Matrizenmultiplikation ist damit
 unser erstes Beispiel, in dem die drei beteiligten Räume im Allgemeinen
 verschieden sind.
 :::
@@ -213,7 +213,7 @@ Multilineare Abbildungen wirken zunächst wie eine unübersichtliche Klasse. Sin
 die beteiligten Räume Koordinatenräume, lässt sich jede von ihnen aber durch
 eine endliche Liste von Zahlen vollständig beschreiben.
 
-:::satz[9.1.8 (Darstellung multilinearer Abbildungen)]
+:::satz[#darstellung-multilinearer-abbildungen (Darstellung multilinearer Abbildungen)]
 Eine Abbildung $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ ist
 genau dann multilinear, wenn es reelle Koeffizienten
 
@@ -224,7 +224,7 @@ $$
 
 gibt, sodass
 
-$$ {#eq-9.1.1}
+$$ {#eq-darstellung-multilinearer-abbildungen}
 T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
 = \sum_{i_1 = 1}^{n_1} \cdots \sum_{i_k = 1}^{n_k} \sum_{j = 1}^{m}
   \corange{a_{i_1, \dots, i_k, j}}\;
@@ -235,11 +235,11 @@ gilt, wobei $\be_j$ der $j$-te Einheitsvektor des $\R^m$ ist. Die Koeffizienten
 $\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
 :::
 
-:::bemerkung[9.1.9 (Woher die Koeffizienten kommen)]
+:::bemerkung[#woher-die-koeffizienten-kommen (Woher die Koeffizienten kommen)]
 Einen vollständigen Beweis führen wir nicht. Die Beweisidee ist aber kurz genug,
 um sie mitzunehmen, und sie liefert die Koeffizienten gleich mit.
 
-Dass eine Abbildung der Gestalt ($9.1.1$) multilinear ist, ist Nachrechnen. In
+Dass eine Abbildung der Gestalt @eq:darstellung-multilinearer-abbildungen multilinear ist, ist Nachrechnen. In
 jedem Summanden steht aus jedem Argument genau eine Koordinate als Faktor.
 Ersetzen wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder
 Summand entsprechend auf, und die rechte Seite ist in jedem Argument linear.
@@ -257,7 +257,7 @@ T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
   T\bigl(\be_{i_1}, \dots, \be_{i_k}\bigr) .
 $$
 
-Der Vergleich mit ($9.1.1$) zeigt, was die Koeffizienten sind:
+Der Vergleich mit @eq:darstellung-multilinearer-abbildungen zeigt, was die Koeffizienten sind:
 $\corange{a_{i_1, \dots, i_k, j}}$ ist die $j$-te Komponente des Vektors
 $T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit ist auch die Eindeutigkeit
 klar, denn diese Werte legt $T$ selbst fest. Eine multilineare Abbildung ist
@@ -265,12 +265,12 @@ also bereits dadurch bestimmt, was sie mit Tupeln von Einheitsvektoren macht.
 :::
 
 Zählen wir nach: Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
-Flächenfunktion aus Beispiel 9.1.3 hat $k = 2$ Argumente mit
+Flächenfunktion aus @beispiel:flaeche-eines-rechtecks hat $k = 2$ Argumente mit
 $n_1 = n_2 = 1$ und $m = 1$, kommt also mit einer einzigen Zahl aus, nämlich
 $a_{1,1,1} = 1$. Ein bilineares $T\colon \R^2 \times \R^2 \to \R$ braucht
 dagegen schon $2 \cdot 2 \cdot 1 = 4$ Koeffizienten. Wie wir diese Zahlen
 anordnen und warum daraus ein Objekt mit $k + 1$ Indexpositionen wird, bei
-$m = 1$ also mit $k$, ist das Thema von [Abschnitt 9.2](#sec-9.2).
+$m = 1$ also mit $k$, ist das Thema von @sec:tensoren.
 
 ### Selbsttest
 
@@ -288,7 +288,7 @@ darum entscheidet dieser Randfall nicht zwischen Linearität und Bilinearität.
 Für jede multilineare Abbildung $f$ gilt
 $f(\bv_1, \dots, \bv_n) = \bnull$, sobald $\bv_i = \bnull$ für ein $i$ ist.
 
-Setzen wir in Definition 9.1.1 den zweiten Skalar auf $c' = 0$, so bleibt im
+Setzen wir in @definition:multilineare-abbildung den zweiten Skalar auf $c' = 0$, so bleibt im
 $i$-ten Argument die reine Homogenität
 $f(\bv_1, \dots, c\bv_i, \dots, \bv_n) = c\,f(\bv_1, \dots, \bv_i, \dots, \bv_n)$
 übrig. Darin wählen wir $c = 0$ und nutzen $\bnull = 0 \cdot \bv_i$:
@@ -306,9 +306,9 @@ Nullargument genügt.
 :::frage{falsch}
 Jede bilineare Abbildung ist insbesondere linear.
 
-Bemerkung 9.1.2 sagt das Gegenteil. Skalieren wir bei $n = 2$ beide Argumente
+@bemerkung:bilinear-und-eine-warnung sagt das Gegenteil. Skalieren wir bei $n = 2$ beide Argumente
 mit $c$, so wird der Wert mit $c^2$ multipliziert und nicht mit $c$. Ein
-konkreter Fall aus Beispiel 9.1.3: Für $x = y = 1$ ist $f(2, 2) = 4$, während
+konkreter Fall aus @beispiel:flaeche-eines-rechtecks: Für $x = y = 1$ ist $f(2, 2) = 4$, während
 eine lineare Abbildung $2\,f(1, 1) = 2$ liefern müsste. Beides zugleich, bilinear
 und linear, ist einzig die Nullabbildung: Aus
 $c^2 f(\bv, \bw) = c\,f(\bv, \bw)$ für alle $c$ folgt $f(\bv, \bw) = \bnull$ für
@@ -319,7 +319,7 @@ jedes Paar.
 Halten wir in einer multilinearen Abbildung alle Argumente bis auf das $i$-te
 fest, so ist die verbleibende Abbildung $V_i \to W$ linear.
 
-Das ist Definition 9.1.1, in Worte gefasst. Sie fordert genau diese eine
+Das ist @definition:multilineare-abbildung, in Worte gefasst. Sie fordert genau diese eine
 Bedingung, und zwar für jedes $i$ einzeln.
 :::
 
@@ -327,7 +327,7 @@ Bedingung, und zwar für jedes $i$ einzeln.
 Zwei verschiedene Koeffizienten-Arrays können dieselbe multilineare Abbildung
 $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ darstellen.
 
-Satz 9.1.8 sichert die Eindeutigkeit zu. Bemerkung 9.1.9 sagt auch, warum:
+@satz:darstellung-multilinearer-abbildungen sichert die Eindeutigkeit zu. @bemerkung:woher-die-koeffizienten-kommen sagt auch, warum:
 $a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente von
 $T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ selbst festgelegt. Wer die
 Koeffizienten ändert, ändert die Abbildung.

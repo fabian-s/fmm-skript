@@ -13,6 +13,7 @@ import {
   fmtInt,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.5: Die EINE Einsicht — differenzierbar heißt „lokal linear": Zoomen wir
@@ -186,18 +187,18 @@ export function ZoomWidget() {
       `${dRel < 0.05 ? "Auf dieser Zoomstufe ist der Unterschied zwischen Kurve und Gerade kaum noch zu sehen. " : "Noch ist die Krümmung sichtbar. "}` +
       `Jeder Schritt am Zoomregler halbiert das Fenster und halbiert damit auch diese Zahl; im ` +
       `Grenzwert geht sie gegen null: ` +
-      `Das ist die Aussage von Definition 10.1.1, dass der Rest o(h) ist. Die Gerade selbst hat ` +
+      `Das ist die Aussage von ${ref("definition:differenzierbarkeit")}, dass der Rest o(h) ist. Die Gerade selbst hat ` +
       `die Steigung der Ableitung an dieser Stelle, und weil f dort differenzierbar ist, ist f ` +
-      `nach Satz 10.5.2 dort auch stetig.`;
+      `nach ${ref("satz:stetigkeit-aus-differenzierbarkeit")} dort auch stetig.`;
   } else if (kurve.art === "knick" && knickInMitte) {
     art = "fail";
     verdikt =
       `Hier bleibt die Abweichung beim ${fmt(dRel, 4)}-fachen von w stehen, und zwar auf JEDER ` +
       `Zoomstufe: Der Knick sieht bei w = 2⁻¹² genauso aus wie bei w = 1. Eine Gerade, die den Graphen ` +
       `in der Nähe von 0 ersetzt, gibt es also nicht. In Zahlen ist das der Befund aus ` +
-      `Beispiel 10.5.3: Der Differenzenquotient strebt von rechts gegen +1 und von links gegen −1, ` +
-      `und Definition 10.1.1 verlangt einen einzigen Wert. Stetig ist |x| in 0 trotzdem – die ` +
-      `Umkehrung von Satz 10.5.2 gilt eben nicht.`;
+      `${ref("beispiel:die-betragsfunktion-am-nullpunkt")}: Der Differenzenquotient strebt von rechts gegen +1 und von links gegen −1, ` +
+      `und ${ref("definition:differenzierbarkeit")} verlangt einen einzigen Wert. Stetig ist |x| in 0 trotzdem – die ` +
+      `Umkehrung von ${ref("satz:stetigkeit-aus-differenzierbarkeit")} gilt eben nicht.`;
   } else if (kurve.art === "knick") {
     art = "warn";
     verdikt =

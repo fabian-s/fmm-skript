@@ -17,6 +17,7 @@ import {
   niceTicks,
 } from "../../../lib";
 import type { Series, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.7: Hesse-Definitheits-Widget (Eigenbau).
@@ -292,19 +293,19 @@ export function HesseDefinitheit() {
   const klassifikation: Record<string, { titel: string; text: string }> = {
     minimum: {
       titel: "positiv definit",
-      text: `Beide Regler stehen über null. Damit ist die quadratische Form hᵀH h für jedes h ≠ 0 positiv, und Satz 10.7.9(1) macht x* = 0 zu einem strikten lokalen Minimum. Wie steil es vom Nullpunkt weg bergauf geht, hängt an der Richtung: am flachsten mit Krümmung ${fmt(Math.min(l1, l2))}, am steilsten mit ${fmt(Math.max(l1, l2))}.`,
+      text: `Beide Regler stehen über null. Damit ist die quadratische Form hᵀH h für jedes h ≠ 0 positiv, und ${ref("satz:hesse-kriterium-fuer-kritische-punkte")}(1) macht x* = 0 zu einem strikten lokalen Minimum. Wie steil es vom Nullpunkt weg bergauf geht, hängt an der Richtung: am flachsten mit Krümmung ${fmt(Math.min(l1, l2))}, am steilsten mit ${fmt(Math.max(l1, l2))}.`,
     },
     maximum: {
       titel: "negativ definit",
-      text: `Beide Regler stehen unter null, also ist hᵀH h für jedes h ≠ 0 negativ, und Satz 10.7.9(2) liefert ein striktes lokales Maximum. Am Bild der Höhenlinien ändert das nichts; was sich umkehrt, sind die Zahlen an ihnen, denn nach außen hin wird f kleiner statt größer.`,
+      text: `Beide Regler stehen unter null, also ist hᵀH h für jedes h ≠ 0 negativ, und ${ref("satz:hesse-kriterium-fuer-kritische-punkte")}(2) liefert ein striktes lokales Maximum. Am Bild der Höhenlinien ändert das nichts; was sich umkehrt, sind die Zahlen an ihnen, denn nach außen hin wird f kleiner statt größer.`,
     },
     sattel: {
       titel: "indefinit",
-      text: `Die beiden Regler tragen verschiedene Vorzeichen, H ist also indefinit, und Satz 10.7.9(3) meldet einen Sattelpunkt. Das rechte Schaubild zeigt, was das bedeutet: Entlang ${aufAchse} geht es mit Krümmung ${fmt(aufLambda)} bergauf, entlang ${abAchse} mit ${fmt(abLambda)} bergab, in jeder Umgebung von x* = 0 liegen also Werte über und unter f(0) = 0. Das dick gezeichnete Niveau 0 zerfällt dabei in zwei sich kreuzende Geraden.`,
+      text: `Die beiden Regler tragen verschiedene Vorzeichen, H ist also indefinit, und ${ref("satz:hesse-kriterium-fuer-kritische-punkte")}(3) meldet einen Sattelpunkt. Das rechte Schaubild zeigt, was das bedeutet: Entlang ${aufAchse} geht es mit Krümmung ${fmt(aufLambda)} bergauf, entlang ${abAchse} mit ${fmt(abLambda)} bergab, in jeder Umgebung von x* = 0 liegen also Werte über und unter f(0) = 0. Das dick gezeichnete Niveau 0 zerfällt dabei in zwei sich kreuzende Geraden.`,
     },
     halb: {
       titel: "semidefinit, nicht definit",
-      text: `Ein Regler steht auf null, damit ist det H = λ₁·λ₂ = 0 und H singulär. Entlang der zugehörigen Hauptachse bleibt f konstant bei 0, die Höhenlinien werden zu Parallelen, und statt eines isolierten kritischen Punktes liegt eine ganze Gerade davon vor. Für unser rein quadratisches f ist der Nullpunkt deshalb weiterhin ein ${Math.max(l1, l2) > eps ? "Minimum" : "Maximum"}, nur eben kein striktes. Bei allgemeinen Funktionen ist in diesem Grenzfall gar nichts mehr entschieden, wie Bemerkung 10.7.10 an x⁴, −x⁴ und x³ vorführt.`,
+      text: `Ein Regler steht auf null, damit ist det H = λ₁·λ₂ = 0 und H singulär. Entlang der zugehörigen Hauptachse bleibt f konstant bei 0, die Höhenlinien werden zu Parallelen, und statt eines isolierten kritischen Punktes liegt eine ganze Gerade davon vor. Für unser rein quadratisches f ist der Nullpunkt deshalb weiterhin ein ${Math.max(l1, l2) > eps ? "Minimum" : "Maximum"}, nur eben kein striktes. Bei allgemeinen Funktionen ist in diesem Grenzfall gar nichts mehr entschieden, wie ${ref("bemerkung:wenn-die-hesse-matrix-nichts-entscheidet")} an x⁴, −x⁴ und x³ vorführt.`,
     },
     null: {
       titel: "H = 0",
@@ -608,8 +609,7 @@ export function HesseSchaetzung() {
           Mit λ₂ = 0 ist H = diag(2, 0) singulär. Entlang der Achse v₂ bleibt f konstant null,
           statt eines einzelnen kritischen Punktes liegt dort eine ganze Gerade davon. Für dieses
           rein quadratische f ist der Nullpunkt weiterhin ein Minimum, nur eben kein striktes; für
-          allgemeine Funktionen entscheidet der semidefinite Fall gar nichts mehr (Bemerkung
-          10.7.10).
+          allgemeine Funktionen entscheidet der semidefinite Fall gar nichts mehr ({ref("bemerkung:wenn-die-hesse-matrix-nichts-entscheidet")}).
         </p>
       }
     >

@@ -8,6 +8,7 @@ import {
   W_BUTTON_AKTIV,
   useAnimatedValue,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Alles, was im Produkt UΣVᵀ auf einen Nullblock von Σ
@@ -445,12 +446,12 @@ export function ReduzierteSvdBloecke() {
           : "Fällt in der reduzierten Zerlegung weg. "}
         {sel.text}{" "}
         {weg.length === 0
-          ? `Mit m = n = r = ${r} fällt allerdings gar nichts weg: U und V sind schon quadratisch, und Σ hat weder eine Nullzeile noch eine Nullspalte, die Reduktion aus Satz 6.3.1 ist dann leer.`
+          ? `Mit m = n = r = ${r} fällt allerdings gar nichts weg: U und V sind schon quadratisch, und Σ hat weder eine Nullzeile noch eine Nullspalte, die Reduktion aus ${ref("satz:reduzierte-darstellung")} ist dann leer.`
           : `Insgesamt fallen ${weg.join(" und ")} weg; Σ schrumpft von ${m}×${n} auf ${r}×${r}.`}
       </Verdikt>
 
       <p className="mt-2 font-mono text-xs" style={{ color: GREY }}>
-        Gespeicherte Zahlen (Bemerkung 6.3.3), volle Zerlegung: m² + n² + min(m, n) ={" "}
+        Gespeicherte Zahlen ({ref("bemerkung:was-die-reduzierte-form-spart-und-was")}), volle Zerlegung: m² + n² + min(m, n) ={" "}
         {speicherVoll}; reduzierte Zerlegung: r·(m + n + 1) = {speicherRed}; A selbst: m·n ={" "}
         {speicherA}
       </p>

@@ -9,6 +9,7 @@ import {
   W_PANEL,
   fmtInt,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §2.2: Der iterative Fibonacci-Algorithmus 2.2.2 Schritt für Schritt, daneben
@@ -168,7 +169,7 @@ export function FibonacciStepper() {
       <div className="grid gap-3 md:grid-cols-2">
         {/* iterativ */}
         <div className={`p-3 ${W_PANEL}`}>
-          <p className="mb-2 font-semibold">Iterativ (Algorithmus 2.2.2)</p>
+          <p className="mb-2 font-semibold">Iterativ ({ref("algorithmus:fibonacci-schleifenbasiert")})</p>
           <div className="mb-2 flex flex-wrap gap-1">
             {seq.slice(0, k).map((v, i) => {
               const idx = i + 1; // 1-basiert
@@ -265,7 +266,7 @@ export function FibonacciStepper() {
             )}{" "}
             Wie schnell diese Schere aufgeht, rechnen wir in{" "}
             <a className="underline" href="#sec-2.5">
-              Abschnitt 2.5
+              {ref("sec:algos/fibonacci-komplexitaet")}
             </a>{" "}
             nach.
           </>

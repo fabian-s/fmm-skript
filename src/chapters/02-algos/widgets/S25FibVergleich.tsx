@@ -10,6 +10,7 @@ import {
   W_PANEL,
 } from "../../../lib";
 import type { Series } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §2.5: Gezählte Schrittzahlen der naiven gegen die iterative
@@ -205,9 +206,9 @@ function Tafel({
           Die roten Punkte liegen exakt auf einer Geraden, aber auf der flacheren mit Steigung{" "}
           <span className="font-mono">log₁₀ φ ≈ 0,209</span>, nicht auf der 2ⁿ-Geraden mit
           Steigung <span className="font-mono">log₁₀ 2 ≈ 0,301</span>. Die Schranke{" "}
-          <span className="font-mono">O(2ⁿ)</span> aus Satz 2.5.6 ist also korrekt, aber nicht
+          <span className="font-mono">O(2ⁿ)</span> aus {ref("satz:exponentielle-laufzeit-der-naiven")} ist also korrekt, aber nicht
           scharf; das tatsächliche Wachstum hat die Basis{" "}
-          <span className="font-mono">φ ≈ 1,618</span> (Bemerkung 2.5.7). Die blauen Punkte
+          <span className="font-mono">φ ≈ 1,618</span> ({ref("bemerkung:wie-schlimm-ist-es-wirklich")}). Die blauen Punkte
           bleiben auf dieser Skala fast am Boden: Lineares Wachstum ist hier praktisch
           unsichtbar.
         </Verdikt>

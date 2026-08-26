@@ -18,6 +18,7 @@ import {
   fmt,
   knotenvektor,
 } from "./S134BSpline";
+import { ref } from "../../numbers.generated";
 
 /**
  * B-Spline-Basis zum Gitter 0, 1, ..., 5 mit Gradregler (§13.4).
@@ -163,7 +164,7 @@ export function BSplineBasis() {
           null.
         </p>
         <Verdikt kind={Math.abs(summe - 1) < 1e-10 ? "ok" : "warn"}>
-          Der Träger von <M>{`B_{${k}}^{(${q})}`}</M> ist genau <M>{`[\\tau_${k},\\tau_{${k + q + 1}}]`}</M>; an x* sind {aktiv} Funktionen aktiv. Ihre Summe ist {fmt(summe, 4)}, wie Bemerkung 13.4.9 vorhersagt.
+          Der Träger von <M>{`B_{${k}}^{(${q})}`}</M> ist genau <M>{`[\\tau_${k},\\tau_{${k + q + 1}}]`}</M>; an x* sind {aktiv} Funktionen aktiv. Ihre Summe ist {fmt(summe, 4)}, wie {ref("bemerkung:warum-die-knotenfolge-so-lang-sein-muss")} vorhersagt.
         </Verdikt>
       </div>
       <details className="mt-3">

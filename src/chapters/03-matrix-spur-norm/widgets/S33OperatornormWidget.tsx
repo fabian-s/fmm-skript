@@ -16,6 +16,7 @@ import {
   sigmaMax,
 } from "../../../lib";
 import type { Mat2 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.3: Die Operatornorm als längste Halbachse der Bildellipse.
@@ -92,7 +93,7 @@ const normInf = (A: number[][]): number =>
   Math.max(Math.abs(A[0][0]) + Math.abs(A[0][1]), Math.abs(A[1][0]) + Math.abs(A[1][1]));
 
 const VOREINSTELLUNGEN: { name: string; titel: string; m: number[][] }[] = [
-  { name: "Beispiel 3.3.3", titel: "die Matrix aus dem Beispiel: σ₁ ≈ 2,29", m: [[2, 1], [0, 1]] },
+  { name: `${ref("beispiel:visualisierung")}`, titel: "die Matrix aus dem Beispiel: σ₁ ≈ 2,29", m: [[2, 1], [0, 1]] },
   { name: "Drehung", titel: "alle Streckfaktoren sind 1", m: [[0.6, -0.8], [0.8, 0.6]] },
   { name: "zehnfach", titel: "alle Einträge ×10: die Norm wächst mit", m: [[20, 10], [0, 10]] },
   { name: "singulär", titel: "die Ellipse entartet zur Strecke", m: [[1, 2], [0.5, 1]] },
@@ -254,9 +255,9 @@ export function S33OperatornormWidget() {
             Die Bildellipse ist zu einer Strecke entartet: <M>{"\\sigma_2 = 0"}</M>, eine ganze
             Richtung wird auf den Nullpunkt gedrückt. Die Operatornorm merkt davon nichts, sie
             misst nur die stärkste Streckung <M>{`\\left\\| \\bA \\right\\|_2 = ${deMath(smax)}`}</M>{" "}
-            (Satz 3.3.7). Die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> aus{" "}
+            ({ref("satz:spektralnorm-und-spektralzerlegung")}). Die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> aus{" "}
             <a className="underline" href="#sec-3.5">
-              Abschnitt 3.5
+              {ref("sec:matrix-spur-norm/eigenschaften")}
             </a>{" "}
             ist hier unendlich.
           </>
@@ -264,28 +265,28 @@ export function S33OperatornormWidget() {
           <>
             Alle Streckfaktoren sind gleich {fmtDe(smax, 3)}: Die Kurve rechts ist eine Waagrechte,
             der Einheitskreis bleibt ein Kreis. Für die Drehung mit{" "}
-            <M>{"\\left\\| \\bA \\right\\|_2 = 1"}</M> ist das Bemerkung 3.3.6; die
+            <M>{"\\left\\| \\bA \\right\\|_2 = 1"}</M> ist das {ref("bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen")}; die
             Spalten- und Zeilensummennorm liegen mit {fmtDe(norm1(A), 2)} bzw.{" "}
             {fmtDe(normInf(A), 2)} daneben, denn sie messen in einer anderen Geometrie
-            (Satz 3.3.4).
+            ({ref("satz:induzierte-p-normen")}).
           </>
         ) : getroffen ? (
           <>
             Getroffen: In dieser Richtung nimmt der Streckfaktor sein Maximum{" "}
             {fmtDe(smax, 3)} an, und genau dieses Maximum ist{" "}
-            <M>{"\\left\\| \\bA \\right\\|_2"}</M> (Definition 3.3.1). Die Ellipse berührt hier den
+            <M>{"\\left\\| \\bA \\right\\|_2"}</M> ({ref("definition:operatornorm")}). Die Ellipse berührt hier den
             roten Kreis, und <M>{"\\bx"}</M> zeigt in Richtung des Eigenvektors von{" "}
             <M>{"\\bA^\\top\\bA"}</M> zum größten Eigenwert{" "}
-            <M>{`\\lambda_1 = ${deMath(smax * smax)}`}</M> (Satz 3.3.7).
+            <M>{`\\lambda_1 = ${deMath(smax * smax)}`}</M> ({ref("satz:spektralnorm-und-spektralzerlegung")}).
           </>
         ) : (
           <>
             In dieser Richtung streckt <M>{"\\bA"}</M> um den Faktor {fmtDe(streck, 3)}, also{" "}
             {fmtDe((100 * streck) / smax, 0)} % des Maximums. Der Streckfaktor pendelt zwischen{" "}
             {fmtDe(smin, 3)} und {fmtDe(smax, 3)}; nur der obere dieser beiden Werte ist die
-            Operatornorm (Definition 3.3.1). Zum Vergleich: ‖A‖₁ = {fmtDe(norm1(A), 2)} und
+            Operatornorm ({ref("definition:operatornorm")}). Zum Vergleich: ‖A‖₁ = {fmtDe(norm1(A), 2)} und
             ‖A‖∞ = {fmtDe(normInf(A), 2)} lesen dieselbe Matrix in der 1- bzw.
-            <M>{"\\,\\infty"}</M>-Geometrie (Satz 3.3.4).
+            <M>{"\\,\\infty"}</M>-Geometrie ({ref("satz:induzierte-p-normen")}).
           </>
         )}
       </Verdikt>

@@ -15,6 +15,7 @@ import {
   sigmaMax,
   type Mat2,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Auf dem Einheitskreis hat die Streckung ‖Ax(θ)‖ ein
@@ -81,7 +82,7 @@ function winkelGrad(v: [number, number]): number {
 }
 
 const PRESETS: { id: string; name: string; A: number[][] }[] = [
-  { id: "beispiel", name: "Beispiel 6.1.2", A: [[2, 1], [0, 1]] },
+  { id: "beispiel", name: `${ref("beispiel:der-einheitskreis-wird-zur-ellipse")}`, A: [[2, 1], [0, 1]] },
   { id: "drehung", name: "Drehung", A: [[0.6, -0.8], [0.8, 0.6]] },
   { id: "diagonal", name: "Strecken und Stauchen", A: [[2, 0], [0, 0.5]] },
   { id: "singulaer", name: "singulär", A: [[1, 2], [2, 4]] },
@@ -291,14 +292,14 @@ export function EinheitskreisEllipse() {
                 gedrückt, aus dem Kreis wird eine Strecke statt einer Ellipse, und die Kurve
                 berührt zweimal die Nulllinie. Die längste Halbachse misst weiterhin{" "}
                 {fmtDe(smax, 3)}. Eine Matrix mit kleinstem Singulärwert null ist singulär
-                (Abschnitt 6.1).
+                ({ref("sec:svd/motivation")}).
               </Verdikt>
             ) : isotrop ? (
               <Verdikt kind="ok" titel="Alle Richtungen gleich:">
                 Größte und kleinste Streckung fallen mit {fmtDe(smax, 3)} zusammen, die Kurve ist
                 flach. Aus dem Kreis wird wieder ein Kreis, und jede Richtung ist Maximalstelle.
                 Das passiert genau für Vielfache einer Orthogonalmatrix; die Maximalstelle in
-                (6.1.2) ist dann nicht eindeutig.
+                ({num("eq:eq-6-1-2")}) ist dann nicht eindeutig.
               </Verdikt>
             ) : (
               <Verdikt kind="neutral">
@@ -306,7 +307,7 @@ export function EinheitskreisEllipse() {
                 {fmtDe(smin, 3)} bei {fmtDe(thetaSenk, 1)}°, und die beiden Stellen liegen exakt{" "}
                 <M>{"90^\\circ"}</M> auseinander. Auch die zugehörigen Bilder stehen senkrecht
                 aufeinander: Ihr Skalarprodukt ist {fmtDe(skalarprodukt, 3)}. Genau dieses Muster
-                zerlegt Abschnitt 6.2 in <M>{"\\bA = \\bU\\bSigma\\bV^\\top"}</M>.
+                zerlegt {ref("sec:svd/singulaerwerte")} in <M>{"\\bA = \\bU\\bSigma\\bV^\\top"}</M>.
               </Verdikt>
             )}
           </>

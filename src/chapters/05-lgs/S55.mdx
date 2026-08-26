@@ -18,7 +18,7 @@ liegen in den Voraussetzungen, im Aufwand und in der
 Die Stabilität der LU-Zerlegung entscheidet sich am Pivot. Tritt ein
 Pivotelement $\cred{m_{kk}} \approx 0$ auf, macht die Division die
 Multiplikatoren riesig, und Rundungsfehler übertönen die eigentlichen
-Daten ([Abschnitt 5.3](#sec-5.3)). Partielle Pivotierung hält alle
+Daten (@sec:lu). Partielle Pivotierung hält alle
 Multiplikatoren im Betrag bei höchstens 1. Ein Stabilitätsbeweis ist das
 noch nicht: Jeder Eliminationsschritt darf den betragsgrößten Eintrag der
 Arbeitsmatrix verdoppeln, im schlimmsten Fall wächst er also exponentiell.
@@ -30,7 +30,7 @@ Perfekte Genauigkeit bekommen wir auch damit nicht: Selbst ein stabiler
 Algorithmus liefert nur eine Näherung, deren relativer Fehler in der
 Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann, mit der
 [Konditionszahl](?k=04-fehler#sec-4.2) $\corange{\kappa(\bA)}$ aus
-[Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) und der
+@sec:matrix-spur-norm/eigenschaften und der
 :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
 konditioniert, liegt das am Problem, nicht am Algorithmus.
 
@@ -42,9 +42,9 @@ nicht positiv definit erscheinen. Ein Abbruch ist daher ein Diagnosehinweis, abe
 kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für nur
 *semi*definite Matrizen springt die pivotierte
 Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
-([Abschnitt 5.4](#sec-5.4)).
+(@sec:cholesky).
 
-:::bemerkung[5.5.1 (Fazit)]
+:::bemerkung[#fazit (Fazit)]
 - **LU** ist der Universallöser: einsetzbar für jede invertierbare
   Matrix, mit partieller Pivotierung stabil genug für den Alltag.
 - **Cholesky** ist für SPD-Matrizen die erste Wahl: etwa doppelt so
@@ -59,16 +59,16 @@ Drei Botschaften bleiben:
 
 - **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel $\bA^{-1}\bb$
   steht, lösen wir in der Implementierung direkt das LGS $\bA\bx = \bb$
-  (Bemerkung 5.2.1 in [Abschnitt 5.2](#sec-5.2)).
+  (@bemerkung:fuer-ein-lgs-keine-explizite-inverse in @sec:lgs).
 - Die **LU-Zerlegung** $\bP\bA = \bL\bU$ ist die Gauß-Elimination in
   Matrixform: einmal zerlegen für $O(n^3)$, danach kostet jede weitere
   rechte Seite nur noch $O(n^2)$.
 - Die **Cholesky-Zerlegung** $\bA = \bL\bL^\top$ nutzt Symmetrie und
   Definitheit aus, halbiert den Aufwand und liefert nebenbei das Werkzeug,
   mit dem wir korrelierte Zufallsvektoren simulieren
-  ([Abschnitt 5.4](#sec-5.4)).
+  (@sec:cholesky).
 
-In [Kapitel 6](?k=06-svd#sec-6.1) lernen wir mit der
+In @kap:svd lernen wir mit der
 :k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) die
 vielseitigste aller Matrixzerlegungen kennen; sie funktioniert für
 beliebige, auch nicht quadratische Matrizen.
@@ -87,7 +87,7 @@ Das explizite Invertieren löst versteckt $n$ Gleichungssysteme statt
 einem. Die Größenordnung $O(n^3)$ bleibt dabei zwar erhalten, weil eine
 Zerlegung für alle $n$ rechten Seiten reicht, doch der Umweg kostet ein
 Mehrfaches an Rechenzeit und stapelt zusätzliche Rundungsfehler auf. Wir
-lösen stattdessen direkt das LGS (Bemerkung 5.2.1).
+lösen stattdessen direkt das LGS (@bemerkung:fuer-ein-lgs-keine-explizite-inverse).
 :::
 
 :::frage{wahr}
@@ -95,7 +95,7 @@ Liegt $\bP\bA = \bL\bU$ einmal vor, kostet jede weitere rechte Seite
 $\bb$ nur noch $O(n^2)$ Operationen.
 
 Pro rechter Seite fallen eine Vorwärts- und eine Rückwärtssubstitution
-an, zusammen rund $n^2$ Multiplikationen (Satz 5.3.10); die teure
+an, zusammen rund $n^2$ Multiplikationen (@satz:komplexitaet-der-lu-zerlegung); die teure
 Zerlegung hängt nicht von $\bb$ ab.
 :::
 
@@ -104,9 +104,9 @@ Jede invertierbare Matrix $\bA$ besitzt eine Zerlegung $\bA = \bL\bU$.
 
 Schon die Vertauschungsmatrix
 $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ startet mit dem Pivot
-$\cred{0}$ und hat keine LU-Zerlegung (Beispiel 5.3.6). Mit
+$\cred{0}$ und hat keine LU-Zerlegung (@beispiel:invertierbar-aber-keine-lu-zerlegung). Mit
 Zeilenvertauschungen existiert aber immer $\bP\bA = \bL\bU$
-(Satz 5.3.5).
+(@satz:existenz-der-lu-zerlegung).
 :::
 
 :::frage{wahr}
@@ -116,7 +116,7 @@ wie die LU-Zerlegung und kommt ohne Pivotierung aus.
 Wegen $\bU = \bL^\top$ muss nur ein Faktor berechnet und gespeichert
 werden, rund $n^3/6$ statt $n^3/3$ Multiplikationen; und die positive
 Definitheit garantiert positive Pivots, sodass kein Tauschen nötig ist
-([Abschnitt 5.4](#sec-5.4)).
+(@sec:cholesky).
 :::
 
 ::::

@@ -1,47 +1,47 @@
 Dieses Kapitel hatte ein einziges Ziel: eine Zerlegung, die für jede Matrix
 funktioniert, gleich welches Format sie hat und ob sie symmetrisch ist. Seit
-[Abschnitt 6.2](#sec-6.2) steht sie da, und die beiden folgenden Abschnitte
+@sec:singulaerwerte steht sie da, und die beiden folgenden Abschnitte
 haben gezeigt, was sich mit ihr anfangen lässt. Sammeln wir ein, was bleiben
 soll.
 
 ### Was wir gelernt haben
 
-:::bemerkung[6.5.1 (Die fünf Kernkonzepte)]
+:::bemerkung[#die-fuenf-kernkonzepte (Die fünf Kernkonzepte)]
 1. **Die SVD erweitert die Eigenwertzerlegung.** Sie verlangt weder eine
    quadratische noch eine :k[symmetrische]{#symmetric-matrix} Matrix und
    existiert für jedes $\bA \in \R^{m \times n}$
-   ([Abschnitt 6.1](#sec-6.1)).
+   (@sec:motivation).
 2. **Singulärwerte sind Wurzeln von Eigenwerten:**
    $\corange{\sigma_i(\bA)} = \sqrt{\lambda_i\left(\bA^\top\bA\right)}$
-   (Definition 6.2.4). Der Umweg über $\bA^\top\bA$ verwandelt eine beliebige
+   (@definition:singulaerwerte). Der Umweg über $\bA^\top\bA$ verwandelt eine beliebige
    Matrix in eine symmetrische, auf die der Spektralsatz passt.
 3. **Der Hauptsatz:**
    $\bA = \cgreen{\bU}\,\corange{\bSigma}\,\cblue{\bV^\top}$ mit orthogonalem
    $\cgreen{\bU} \in \R^{m \times m}$, orthogonalem
    $\cblue{\bV} \in \R^{n \times n}$ und „diagonalem"
-   $\corange{\bSigma} \in \R^{m \times n}$ (Satz 6.2.13).
+   $\corange{\bSigma} \in \R^{m \times n}$ (@satz:singulaerwertzerlegung).
 4. **Reduzierte SVD:**
    $\bA = \cgreen{\bU_r}\,\corange{\bSigma_r}\,\cblue{\bV_r^\top}$ mit
    $r = \rang(\bA)$. Die Nullblöcke von $\corange{\bSigma}$ tragen nichts bei
-   und dürfen weg (Definition 6.3.2).
+   und dürfen weg (@definition:reduzierte-svd).
 5. **Pseudoinverse:**
    $\bA\pinv = \cblue{\bV_r}\,\corange{\bSigma_r^{-1}}\,\cgreen{\bU_r^\top}$,
    die Verallgemeinerung der Inversen auf beliebige Matrizen
-   (Definition 6.3.5).
+   (@definition:moore-penrose-pseudoinverse).
 :::
 
 Angewendet haben wir das an drei Stellen. Die Pseudoinverse löst
 :k[Kleinste-Quadrate-Probleme]{#linear-least-squares} über
 $\wh{\bx} = \bA\pinv\bb$, und zwar auch dann, wenn die Normalengleichungen
-mangels vollen Spaltenrangs versagen (Bemerkung 6.3.12). Die abgeschnittene
+mangels vollen Spaltenrangs versagen (@bemerkung:ausblick-kleinste-quadrate). Die abgeschnittene
 Zerlegung liefert die beste
 :k[Approximation niedrigen Rangs]{#low-rank-approximation}, die es überhaupt
 gibt, mit einem Fehler, den die weggelassenen Singulärwerte exakt beziffern
-([Abschnitt 6.4](#sec-6.4)). Und weil diese Approximation gleichzeitig Speicher
+(@sec:anwendungen). Und weil diese Approximation gleichzeitig Speicher
 spart und Rauschen glättet, ist sie das Arbeitspferd für Datenkompression und
 Datenanalyse, von der Hauptkomponentenanalyse
-([Abschnitt 8.2](?k=08-la-misc#sec-8.2)) bis zum Empfehlungssystem
-(Beispiel 6.4.10).
+(@sec:la-misc/anwendungen) bis zum Empfehlungssystem
+(@beispiel:eine-duenn-besetzte-bewertungsmatrix).
 
 ### Querverbindungen
 
@@ -50,37 +50,37 @@ bisher über Matrizen gelernt haben.
 
 - *Eigenwerttheorie:* Der Zugang läuft komplett über $\bA^\top\bA$. Dessen
   :k[Eigenwerte]{#eigenvalue-eigenvector} liefern die Singulärwerte
-  (Definition 6.2.4), dessen Eigenvektoren die rechten Singulärvektoren
-  (Definition 6.2.7). Dass beides zu haben ist, sichern Satz 6.2.1 und
-  Korollar 6.2.2.
+  (@definition:singulaerwerte), dessen Eigenvektoren die rechten Singulärvektoren
+  (@definition:rechte-und-linke-singulaervektoren). Dass beides zu haben ist, sichern @satz:eigenschaften-von-a-a und
+  @korollar:a-a-ist-orthogonal-diagonalisierbar.
 - *Fundamentale Unterräume:* $\cgreen{\bU}$ und $\cblue{\bV}$ liefern fertige
   :k[Orthonormalbasen]{#orthonormal-basis}: die ersten $r$ Spalten von
   $\cgreen{\bU}$ spannen den Spaltenraum auf, die ersten $r$ Spalten von
   $\cblue{\bV}$ den Zeilenraum, die übrigen Spalten von $\cblue{\bV}$ den
   :k[Kern]{#null-space}. Wo die Trennlinie verläuft, sagt der Rang, und der ist
-  die Anzahl der Singulärwerte über null (Satz 6.2.11).
+  die Anzahl der Singulärwerte über null (@satz:charakterisierung-der-fundamentalen).
 - *Projektionen:* $\bA\bA\pinv$ und $\bA\pinv\bA$ sind
   :k[Projektionen]{#projection} auf $\col(\bA)$ beziehungsweise
-  $\col(\bA^\top)$ (Satz 6.3.8). Auf der ersten dieser beiden Aussagen ruht die
-  Kleinste-Quadrate-Lösung aus Bemerkung 6.3.12.
+  $\col(\bA^\top)$ (@satz:eigenschaften-der-pseudoinversen). Auf der ersten dieser beiden Aussagen ruht die
+  Kleinste-Quadrate-Lösung aus @bemerkung:ausblick-kleinste-quadrate.
 - *[Normen](?k=03-matrix-spur-norm#sec-3.2):* Der größte Singulärwert ist die
   Spektralnorm, $\left\|\bA\right\|_2 = \corange{\sigma_1}$
-  ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)); die Frobeniusnorm nimmt
+  (@sec:matrix-spur-norm/operatornormen); die Frobeniusnorm nimmt
   alle Singulärwerte zusammen,
   $\left\|\bA\right\|_F = \sqrt{\sum_i \corange{\sigma_i}^2}$
-  ([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)). Für quadratische,
+  (@sec:matrix-spur-norm/schattennormen). Für quadratische,
   invertierbare Matrizen ist der Quotient
   $\corange{\sigma_1}/\corange{\sigma_n}$ die
   :k[Spektralkondition]{#condition-number} $\kappa_2(\bA)$
-  ([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)); sie beschränkt, wie stark
+  (@sec:matrix-spur-norm/eigenschaften); sie beschränkt, wie stark
   ein relativer Datenfehler in der Lösung anwachsen kann
-  ([Abschnitt 4.2](?k=04-fehler#sec-4.2)).
+  (@sec:fehler/kondition).
 - *Matrixzerlegungen:* [LU](?k=05-lgs#sec-5.3) und
   [Cholesky](?k=05-lgs#sec-5.4) zerlegen, um Gleichungssysteme schnell zu
   lösen. Die SVD zerlegt, um die Geometrie einer Abbildung sichtbar zu machen.
   Sie ist die teuerste der drei und die einzige, die für jede Matrix existiert.
 - *Optimierung:* Kleinste Quadrate ([Kapitel 7](?k=07-kq#sec-7.6)) und die
-  beste Rang-$k$-Approximation ([Abschnitt 6.4](#sec-6.4)) sind
+  beste Rang-$k$-Approximation (@sec:anwendungen) sind
   Minimierungsprobleme, deren Lösung sich direkt an den Faktoren ablesen lässt.
 
 So viele Fäden laufen selten in einer einzigen Zerlegung zusammen. Wer die SVD
@@ -101,10 +101,10 @@ verwechselt.
 Nur die dritte Variante verliert Information, und wie viel, sagen die
 abgeschnittenen Singulärwerte. Die Wahl von $k$ ist deshalb keine technische
 Kleinigkeit, sondern eine Modellierungsentscheidung. Quantitativ helfen ein
-Fehler- oder ein Energiekriterium (Bemerkung 6.4.6), grafisch der *Ellenbogen*
+Fehler- oder ein Energiekriterium (@bemerkung:drei-kriterien-fuer-die-wahl-von-k), grafisch der *Ellenbogen*
 (elbow): Tragen wir $\log \corange{\sigma_i}$ gegen $i$ auf, markiert der Knick
 die Stelle, ab der die Singulärwerte nur noch Rauschen beschreiben
-(Bemerkung 6.4.7).
+(@bemerkung:typische-singulaerwert-verlaeufe-und-der).
 
 Ein Hinweis wiegt schwerer, als er klingt. Die Definition der Singulärwerte
 führt über die Eigenwerte von $\bA^\top\bA$; als *Rechenweg* ist dieser Umweg
@@ -113,9 +113,9 @@ $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, und beim Aufstellen verschwinden
 kleine Beiträge neben großen im :k[Rundungsfehler]{#rounding-error}. Was dann
 noch fehlt, müsste eine Differenz fast gleicher Zahlen hergeben, also
 ausgerechnet :k[Auslöschung]{#cancellation}. Die legt einen Verlust aber nur
-offen, statt ihn zu heilen ([Abschnitt 4.3](?k=04-fehler#sec-4.3)).
+offen, statt ihn zu heilen (@sec:fehler/stabilitaet).
 
-:::beispiel[6.5.2 (Der Umweg über AᵀA)]
+:::beispiel[#der-umweg-ueber-a-a (Der Umweg über AᵀA)]
 Betrachten wir
 
 $$
@@ -156,7 +156,7 @@ nicht mehr zu retten.
 
 Die gebräuchlichen Verfahren arbeiten deshalb direkt mit $\bA$ und benutzen
 ausschließlich orthogonale Transformationen, die alle Singulärwerte unverändert
-lassen (Satz 3.4.7 in [Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)); der
+lassen (@satz:unitaere-invarianz in @sec:matrix-spur-norm/schattennormen); der
 Klassiker ist der Algorithmus von Golub und Reinsch. Bei sehr großen Matrizen
 lohnt die volle Zerlegung ohnehin nicht: Dort berechnen wir gleich nur die $k$
 größten Singulärwerte samt ihren Singulärvektoren, ohne $\bA$ je vollständig zu
@@ -181,8 +181,8 @@ Welche davon sind korrekt?
 Für $\bA \in \R^{m \times n}$ ist $\bA^\top\bA \in \R^{m \times m}$.
 
 Die Formate ergeben $(n \times m) \cdot (m \times n)$, also ist $\bA^\top\bA$
-eine $n \times n$-Matrix (Satz 6.2.1). Die $m \times m$-Matrix ist
-$\bA\bA^\top$. In Beispiel 6.2.3 mit $m = 3$ und $n = 2$ war $\bA^\top\bA$
+eine $n \times n$-Matrix (@satz:eigenschaften-von-a-a). Die $m \times m$-Matrix ist
+$\bA\bA^\top$. In @beispiel:die-matrix-a-a-einer-3-2-matrix mit $m = 3$ und $n = 2$ war $\bA^\top\bA$
 entsprechend $2 \times 2$ groß.
 :::
 
@@ -191,14 +191,14 @@ Für $\bA \in \R^{m \times n}$ ist $\bA^\top\bA$ symmetrisch.
 
 Transponieren dreht die Reihenfolge um:
 $\left(\bA^\top\bA\right)^\top = \bA^\top\left(\bA^\top\right)^\top = \bA^\top\bA$
-(Satz 6.2.1). Das gilt für jede Matrix $\bA$, ohne jede Voraussetzung.
+(@satz:eigenschaften-von-a-a). Das gilt für jede Matrix $\bA$, ohne jede Voraussetzung.
 :::
 
 :::frage{falsch}
 Die Eigenwerte von $\bA^\top\bA$ sind die Singulärwerte von $\bA$.
 
 Sie sind deren *Quadrate*: $\lambda_i = \corange{\sigma_i}^2$, oder umgekehrt
-$\corange{\sigma_i} = \sqrt{\lambda_i}$ (Definition 6.2.4). In Beispiel 6.2.6
+$\corange{\sigma_i} = \sqrt{\lambda_i}$ (@definition:singulaerwerte). In @beispiel:singulaerwerte-der-beispielmatrix
 gehören zu $\lambda_1 \approx 9{,}531$ und $\lambda_2 \approx 1{,}469$ die
 Singulärwerte $\corange{\sigma_1} \approx 3{,}087$ und
 $\corange{\sigma_2} \approx 1{,}212$.
@@ -214,8 +214,8 @@ $\spann\{\be_1\}$. Es gibt also keine Basis des $\R^2$ aus
 Eigenvektoren. Vorsicht bei der Begründung: Symmetrie ist *hinreichend* für
 Diagonalisierbarkeit, nicht notwendig. Die unsymmetrische Matrix
 $\bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 1 \end{smallmatrix}\bigr)$ aus
-Beispiel 6.1.2 hat die zwei verschiedenen Eigenwerte $2$ und $1$ und ist damit
-diagonalisierbar, nur nicht *orthogonal* diagonalisierbar (Bemerkung 6.1.1).
+@beispiel:der-einheitskreis-wird-zur-ellipse hat die zwei verschiedenen Eigenwerte $2$ und $1$ und ist damit
+diagonalisierbar, nur nicht *orthogonal* diagonalisierbar (@bemerkung:wo-die-diagonalisierung-aufhoert).
 :::
 
 :::frage{wahr}
@@ -224,7 +224,7 @@ $\bA^\top\bA$ ist immer orthogonal diagonalisierbar.
 $\bA^\top\bA$ ist symmetrisch, und der Spektralsatz liefert für symmetrische
 Matrizen eine Orthonormalbasis aus Eigenvektoren, also
 $\bA^\top\bA = \cblue{\bV}\bLambda\cblue{\bV^\top}$ mit orthogonalem
-$\cblue{\bV}$ (Korollar 6.2.2). Darauf ruht die ganze Konstruktion der SVD: Die
+$\cblue{\bV}$ (@korollar:a-a-ist-orthogonal-diagonalisierbar). Darauf ruht die ganze Konstruktion der SVD: Die
 Spalten von $\cblue{\bV}$ sind die rechten Singulärvektoren.
 :::
 

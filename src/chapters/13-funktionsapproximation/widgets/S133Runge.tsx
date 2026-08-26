@@ -19,6 +19,7 @@
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.3: Das Runge-Phaenomen, aequidistante gegen Chebyshev-Knoten.
@@ -263,7 +264,7 @@ export function RungeExplorer() {
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
       <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? (chebLohnt ? "ok" : "neutral") : "warn"}>
-        {status}{vergleich} Das illustriert Bemerkung 13.3.16: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
+        {status}{vergleich} Das illustriert {ref("bemerkung:divergenz-schon-aber-nicht-monoton")}: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
       </Verdikt>
     </div>
   );

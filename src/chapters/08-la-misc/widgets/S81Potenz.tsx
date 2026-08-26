@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Stepper, TransformCanvas, Verdikt, fmtDe } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: Ein Startanteil in v₁ genügt, damit die normierte Potenzmethode
@@ -49,12 +50,12 @@ export function PotenzmethodenStepper() {
   const setDirection = (v: Vec) => { setTheta(toAngle(v)); setK(0); };
 
   const verdict = fails
-    ? "Der Start liegt auf v₂. Sein v₁-Anteil ist null; die Potenzmethode bleibt bei λ₂ = 4 stehen. Das ist der Ausnahmfall aus Bemerkung 8.1.6."
+    ? `Der Start liegt auf v₂. Sein v₁-Anteil ist null; die Potenzmethode bleibt bei λ₂ = 4 stehen. Das ist der Ausnahmfall aus ${ref("bemerkung:wann-die-potenzmethode-versagt")}.`
     : hit
-      ? "Der Start liegt bereits auf v₁. Die Normierung hebt die Streckung mit λ₁ = 9 auf; mehr Konvergenz ist nicht zu sehen. Satz 8.1.4 ist sofort erfüllt."
+      ? `Der Start liegt bereits auf v₁. Die Normierung hebt die Streckung mit λ₁ = 9 auf; mehr Konvergenz ist nicht zu sehen. ${ref("satz:konvergenz-der-potenzmethode")} ist sofort erfüllt.`
       : k === 0
-        ? "Noch sehen wir nur den Start. Sein von null verschiedener v₁-Anteil erfüllt die Voraussetzung von Satz 8.1.4."
-        : `Der Winkelrest beträgt ${fmtDe(sinPhi, 4)}; die beobachtete Rate ${fmtDe(observed, 3)} nähert sich der Rate |λ₂/λ₁| = ${fmtDe(RATE, 3)} aus Satz 8.1.4. Der Rayleigh-Quotient ist ${fmtDe(rayleigh, 4)}.`;
+        ? `Noch sehen wir nur den Start. Sein von null verschiedener v₁-Anteil erfüllt die Voraussetzung von ${ref("satz:konvergenz-der-potenzmethode")}.`
+        : `Der Winkelrest beträgt ${fmtDe(sinPhi, 4)}; die beobachtete Rate ${fmtDe(observed, 3)} nähert sich der Rate |λ₂/λ₁| = ${fmtDe(RATE, 3)} aus ${ref("satz:konvergenz-der-potenzmethode")}. Der Rayleigh-Quotient ist ${fmtDe(rayleigh, 4)}.`;
 
   return <div className="space-y-2">
     <Aufgabe>Ziehen wir den blauen Startvektor auf dem Kreis und verfolgen wir anschließend die Schritte.</Aufgabe>

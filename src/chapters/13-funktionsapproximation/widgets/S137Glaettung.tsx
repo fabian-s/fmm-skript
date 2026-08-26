@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.7: Glaettung mit einer kubischen B-Spline-Basis, Regler fuer K.
@@ -492,7 +493,7 @@ export function SplineGlaettung() {
         </div>
       </div>
 
-      <Verdikt kind={K < 7 || K > 15 ? "warn" : "ok"}>{status} Damit wird der Zielkonflikt aus Abschnitt 13.7 sichtbar.</Verdikt>
+      <Verdikt kind={K < 7 || K > 15 ? "warn" : "ok"}>{status} Damit wird der Zielkonflikt aus {ref("sec:funktionsapproximation/glaettung")} sichtbar.</Verdikt>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.4 — DIE EINE EINSICHT: Momentum hilft erst bei SCHLECHTER Kondition und
@@ -180,7 +181,7 @@ export function MomentumVergleich() {
   let status: string;
   if (alpha === 0) {
     titel = "α = 0: kein Schwung";
-    status = `Mit α = 0 ist der Schwung abgeschaltet: Algorithmus 12.4.13 fällt auf den gewöhnlichen Gradientenabstieg zurück, beide Wege sind derselbe, und die violette Kurve liegt genau auf der blauen. ${
+    status = `Mit α = 0 ist der Schwung abgeschaltet: ${ref("algorithmus:gradientenabstieg-mit-heavy-ball")} fällt auf den gewöhnlichen Gradientenabstieg zurück, beide Wege sind derselbe, und die violette Kurve liegt genau auf der blauen. ${
       instabilOhne
         ? `Mit γ·L = ${fmt(rel)} über der gemeinsamen Grenze 2 laufen deshalb auch beide davon.`
         : "Schieben wir α nach oben, trennen sich die beiden Wege."

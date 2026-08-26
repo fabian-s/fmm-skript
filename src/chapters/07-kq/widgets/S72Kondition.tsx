@@ -56,6 +56,7 @@ import {
   useDrag,
 } from "../../../lib";
 import type { Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 const COL = {
   b: FMM_COLORS.rot,
@@ -263,7 +264,7 @@ export function FigKQGeometrie() {
         <Verdikt kind="ok" titel="Blick von der Kante:">
           Aus dieser Richtung schauen wir fast in der Ebene <M>{"\\col(\\bA)"}</M> und sehen genau
           das Bild links: <M>{"\\cgreen{\\wh{\\by}}"}</M> liegt flach, <M>{"\\cpurp{\\br}"}</M>{" "}
-          steht senkrecht darauf. Genau diese Ansicht macht Satz 7.1.4 anschaulich.
+          steht senkrecht darauf. Genau diese Ansicht macht {ref("satz:kq-loesung-als-projektion")} anschaulich.
         </Verdikt>
       ) : steil ? (
         <Verdikt kind="warn" titel="Blick von oben:">
@@ -450,8 +451,7 @@ export function WinkelWidget() {
         <Verdikt kind="warn" className="mt-2" titel="Die Schranke ist scharf:">
           <M>{"\\cblue{\\Delta\\bb}"}</M> zeigt (bis aufs Vorzeichen) längs{" "}
           <M>{"\\col(\\bA)"}</M>, und die beobachtete relative Änderung{" "}
-          <span className="font-mono">{fmtDe(observed, 4)}</span> erreicht die Schranke aus Satz
-          7.2.3 praktisch: <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
+          <span className="font-mono">{fmtDe(observed, 4)}</span> erreicht die Schranke aus {ref("satz:satz-7-2-3")} praktisch: <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
           <M>{"\\corange{\\kappa_2(\\bA)} = 1"}</M> steckt der ganze Verstärkungsfaktor im Winkel,{" "}
           <M>{`1/\\cos(\\theta) = ${mathDe(1 / Math.cos(th), 2)}`}</M>.
         </Verdikt>
@@ -459,7 +459,7 @@ export function WinkelWidget() {
         <Verdikt kind="ok" className="mt-2" titel="Die Störung läuft ins Leere:">
           <M>{"\\cblue{\\Delta\\bb}"}</M> steht senkrecht auf <M>{"\\col(\\bA)"}</M> und ändert
           nur das Residuum, nicht die Lösung: <M>{"\\Delta\\wh{x}"}</M> ={" "}
-          <span className="font-mono">{fmtDe(dx, 4)}</span>. Die Schranke aus Satz 7.2.3 erlaubt
+          <span className="font-mono">{fmtDe(dx, 4)}</span>. Die Schranke aus {ref("satz:satz-7-2-3")} erlaubt
           hier <span className="font-mono">{fmtDe(bound, 4)}</span>, ausgeschöpft wird davon
           nichts – obere Schranken sind eben Schranken.
         </Verdikt>
@@ -540,7 +540,7 @@ export function FastRangdefektWidget() {
           (für diese Familie exakt <M>{"\\cot(\\alpha/2)"}</M>), das kostet rund{" "}
           <span className="font-mono">{fmtDe(stellen, 1)}</span> Dezimalstellen. Die Spalten sind
           fast <ConceptLink id="linear-independence">linear abhängig</ConceptLink>, die Ellipse
-          eine Nadel. Bei α = 0 ist <M>{"\\bA"}</M> exakt rangdefekt, und Definition 7.2.1 setzt{" "}
+          eine Nadel. Bei α = 0 ist <M>{"\\bA"}</M> exakt rangdefekt, und {ref("definition:definition-7-2-1")} setzt{" "}
           <M>{"\\kappa(\\bA) = \\infty"}</M>.
         </Verdikt>
       ) : alphaDeg >= 85 ? (
@@ -644,8 +644,7 @@ export function KonditionsQuadrierungLab() {
         <Verdikt kind="warn" className="mt-3" titel="Regime der quadrierten Kondition:">
           Mit <M>{`b_3 = ${mathDe(b3, 3)}`}</M> ist{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)\\,\\eps = b_3/\\eps"}</M> ={" "}
-          <span className="font-mono">{exp(b3 / eps)}</span> und dominiert die Schranke aus Satz
-          7.2.4. Beobachtet wird <span className="font-mono">{exp(observed)}</span>, also{" "}
+          <span className="font-mono">{exp(b3 / eps)}</span> und dominiert die Schranke aus {ref("satz:stoerung-der-designmatrix-erste-ordnung")}. Beobachtet wird <span className="font-mono">{exp(observed)}</span>, also{" "}
           <M>{"b_3/(2\\eps)"}</M>: Der Fehler in <M>{"\\wh{\\bx}"}</M> wächst mit dem{" "}
           <em>Quadrat</em> der Konditionszahl. Das liegt am Problem, nicht am Rechenweg.
         </Verdikt>
@@ -655,10 +654,10 @@ export function KonditionsQuadrierungLab() {
           <M>{"\\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)\\,\\eps = b_3/\\eps"}</M> ={" "}
           <span className="font-mono">{exp(b3 / eps)}</span> unter dem Term erster Ordnung{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}\\,\\eps = 1"}</M> bleibt. Der Quadrierungseffekt aus
-          Satz 7.2.4 ist unterdrückt, das Problem reagiert nur mit{" "}
+          {ref("satz:stoerung-der-designmatrix-erste-ordnung")} ist unterdrückt, das Problem reagiert nur mit{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}"}</M>. Ausgerechnet dieser gutartige Fall wird uns in{" "}
           <a className="underline" href="#sec-7.3">
-            Abschnitt 7.3
+            {ref("sec:kq/normalengleichungen")}
           </a>{" "}
           ärgern: Der Weg über die Normalengleichungen zahlt das Quadrat trotzdem.
         </Verdikt>

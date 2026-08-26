@@ -17,6 +17,7 @@ import {
 } from "../../../lib";
 import type { Series, Sicht3D, Vec3 } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §10.2: zwei Widgets zum Gradienten.
@@ -622,7 +623,7 @@ function Gradientenfeldtafeln() {
 
       <div className={`flex flex-wrap gap-x-5 gap-y-1 text-xs ${W_MUTED}`}>
         <span style={{ color: BLAU }}>▬&nbsp;Höhenlinien, Fläche, Tangente an die Höhenlinie</span>
-        <span style={{ color: GRUEN }}>▬&nbsp;Tangentialebene (10.2.2)</span>
+        <span style={{ color: GRUEN }}>▬&nbsp;Tangentialebene ({num("eq:richtungsableitung")})</span>
         <span style={{ color: ORANGE }}>▬&nbsp;Gradient</span>
         <span style={{ color: VIOLETT }}>▬&nbsp;gewählter Punkt</span>
       </div>
@@ -660,7 +661,7 @@ function Gradientenfeldtafeln() {
         </span>{" "}
         mit ‖∇f(x)‖₂ = <span className="font-mono">{fmt(norm, 3)}</span>.{" "}
         {hatGradient
-          ? `Der orange Pfeil steht senkrecht auf der blau gestrichelten Tangente an die Höhenlinie, so wie Bemerkung 10.2.5 es verlangt, und er wird lang, wo die Höhenlinien dicht liegen. In der Fläche daneben ist ${fmt(norm, 3)} die größte Steigung, die die grüne Tangentialebene überhaupt hat.`
+          ? `Der orange Pfeil steht senkrecht auf der blau gestrichelten Tangente an die Höhenlinie, so wie ${ref("bemerkung:der-gradient-steht-senkrecht-auf-der")} es verlangt, und er wird lang, wo die Höhenlinien dicht liegen. In der Fläche daneben ist ${fmt(norm, 3)} die größte Steigung, die die grüne Tangentialebene überhaupt hat.`
           : "Hier verschwindet der Gradient. Dann zeichnet sich keine Richtung mehr aus, und die Höhenlinie durch den Punkt ist keine glatte Kurve: solche Stellen sind die Kandidaten für Extremwerte und Sattelpunkte. Bei der quadratischen Funktion ist der Nullpunkt ein Sattel, denn f zerfällt in (x₁ + x₂)(x₁ + 2x₂), und die Höhenlinie zum Niveau 0 besteht aus diesen beiden sich kreuzenden Geraden."}
       </Verdikt>
     </div>
@@ -893,7 +894,7 @@ function RichtungsTafeln() {
 
       <div className={`flex flex-wrap gap-x-5 gap-y-1 text-xs ${W_MUTED}`}>
         <span style={{ color: BLAU }}>▬&nbsp;∇f(x)d über den Richtungen, f entlang des Strahls</span>
-        <span style={{ color: GRUEN }}>▬&nbsp;lineare Näherung (10.2.2)</span>
+        <span style={{ color: GRUEN }}>▬&nbsp;lineare Näherung ({num("eq:richtungsableitung")})</span>
         <span style={{ color: ORANGE }}>▬&nbsp;Gradient</span>
         <span style={{ color: VIOLETT }}>▬&nbsp;Richtung d</span>
       </div>
@@ -963,13 +964,13 @@ function RichtungsTafeln() {
         {art === "kritisch" &&
           "Hier verschwindet der Gradient, und dann ist jede Richtung gleich gut: die Richtungsableitung ist in alle Richtungen null. Der Kompass hat keine ausgezeichnete Achse mehr."}
         {art === "steilster-anstieg" &&
-          `Das ist die Richtung des stärksten Anstiegs: ∇f(x)d erreicht ‖∇f(x)‖₂ = ${fmt(norm, 3)}, genau wie Satz 10.2.4 es behauptet. Der blaue Punkt sitzt am weitesten außen.`}
+          `Das ist die Richtung des stärksten Anstiegs: ∇f(x)d erreicht ‖∇f(x)‖₂ = ${fmt(norm, 3)}, genau wie ${ref("satz:richtung-des-staerksten-anstiegs")} es behauptet. Der blaue Punkt sitzt am weitesten außen.`}
         {art === "steilster-abstieg" &&
-          `Das ist die Richtung des stärksten Abstiegs, die Gegenrichtung zum Gradienten: ∇f(x)d erreicht −‖∇f(x)‖₂ = ${fmt(-norm, 3)}. Genau diese Richtung nimmt Algorithmus 10.2.10.`}
+          `Das ist die Richtung des stärksten Abstiegs, die Gegenrichtung zum Gradienten: ∇f(x)d erreicht −‖∇f(x)‖₂ = ${fmt(-norm, 3)}. Genau diese Richtung nimmt ${ref("algorithmus:gradient-gradientenabstieg")}.`}
         {art === "hoehenlinie" &&
           "Diese Richtung läuft längs der Höhenlinie: die Richtungsableitung ist null, in erster Ordnung ändert sich f hier also nicht. Rechts liegt die grüne Gerade waagerecht, und im Kompass liegt d auf der blau gestrichelten Nulllinie."}
         {art === "dazwischen" &&
-          `Zwischen d und dem Gradienten liegt ein Winkel von ${fmt(winkelZuG, 1)}°. Nach Satz 10.2.4 ist ∇f(x)d = ‖∇f(x)‖₂·cos dieses Winkels, und genau dieser cos-Anteil steht oben als Prozentzahl. Die blaue Kurve im Kompass ist der Kreis, den r(θ) = ‖∇f(x)‖·cos θ beschreibt.`}
+          `Zwischen d und dem Gradienten liegt ein Winkel von ${fmt(winkelZuG, 1)}°. Nach ${ref("satz:richtung-des-staerksten-anstiegs")} ist ∇f(x)d = ‖∇f(x)‖₂·cos dieses Winkels, und genau dieser cos-Anteil steht oben als Prozentzahl. Die blaue Kurve im Kompass ist der Kreis, den r(θ) = ‖∇f(x)‖·cos θ beschreibt.`}
       </Verdikt>
     </div>
   );
@@ -996,7 +997,7 @@ export function RichtungsWidget() {
       verdeckt={
         <p className="text-sm">
           Der Knopf „d 60° daneben“ stellt genau diese Richtung ein: An beiden Stellen mit
-          Gradient zeigt das Verdikt dann 50,0 %. Das ist cos 60°, denn nach Satz 10.2.4 ist
+          Gradient zeigt das Verdikt dann 50,0 %. Das ist cos 60°, denn nach {ref("satz:richtung-des-staerksten-anstiegs")} ist
           ∇f(x)d = ‖∇f(x)‖₂·cos∡(∇f(x)ᵀ, d). Im Sattel gibt es keine Gradientenrichtung, und
           dann ist die Richtungsableitung in jede Richtung null.
         </p>
@@ -1181,7 +1182,7 @@ function AbstiegTafeln({ aufgeloest }: { aufgeloest: boolean }) {
             }`
           : rho <= 1.001
             ? `ρ ≈ 1: der Grenzfall α = 2/λ_max = ${fmt(ALPHA_GRENZ, 3)}. Die Schritte springen zwischen zwei Punkten hin und her, ohne kleiner zu werden.`
-            : `ρ = ${fmt(rho, 3)} > 1: die Schritte schießen über das Minimum hinaus und werden immer größer, die Iteration läuft davon. Satz 10.2.8 liefert dabei weiter den richtigen Gradienten, nur die Schrittweite ist zu groß.`}
+            : `ρ = ${fmt(rho, 3)} > 1: die Schritte schießen über das Minimum hinaus und werden immer größer, die Iteration läuft davon. ${ref("satz:gradient-der-quadratischen-form")} liefert dabei weiter den richtigen Gradienten, nur die Schrittweite ist zu groß.`}
       </Verdikt>
     </div>
   );

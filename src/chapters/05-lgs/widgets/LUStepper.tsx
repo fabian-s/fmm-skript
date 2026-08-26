@@ -1,6 +1,7 @@
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { backSub, fmtNum, MatTable, sub, WidgetLabel } from "./shared";
+import { ref } from "../../numbers.generated";
 
 /**
  * Schritt-für-Schritt-Widget zur LU-Zerlegung für §5.3: In der Arbeitsmatrix
@@ -176,7 +177,7 @@ export function LUZerlegungStepper() {
       <>
         Auf dem Pivotplatz steht eine Null. Ein Multiplikator wäre hier nur mit einer Division
         durch null zu haben, also endet die Elimination an dieser Stelle. Invertierbar darf die
-        Matrix dabei durchaus sein (Beispiel 5.3.6); wer weiterrechnen will, tauscht zuerst
+        Matrix dabei durchaus sein ({ref("beispiel:invertierbar-aber-keine-lu-zerlegung")}); wer weiterrechnen will, tauscht zuerst
         Zeilen.
       </>
     ),

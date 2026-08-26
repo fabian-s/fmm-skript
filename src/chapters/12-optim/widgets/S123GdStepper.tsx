@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Stepper, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.3 — DIE EINE EINSICHT: Beim Gradientenabstieg auf einer Parabel
@@ -116,15 +117,15 @@ export function GdStepper1D() {
     art = "ok";
     titel = "γ = 1/L trifft in einem Schritt";
     status =
-      "Der Faktor 1 − γf″ ist genau null, der erste Schritt landet exakt im Minimum x* = 2. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren aus Algorithmus 12.4.1 macht: γ = 1/f″ ist die inverse Krümmung.";
+      `Der Faktor 1 − γf″ ist genau null, der erste Schritt landet exakt im Minimum x* = 2. Bei einer Parabel ist das kein Zufall, sondern derselbe Schritt, den das Newton-Verfahren aus ${ref("algorithmus:newton-verfahren-fuer-die-optimierung")} macht: γ = 1/f″ ist die inverse Krümmung.`;
   } else if (gamma < 1 / L) {
     art = "neutral";
     titel = "γ < 1/L: einseitige Annäherung";
-    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist positiv. Der Fehler behält also sein Vorzeichen und schrumpft in jedem Schritt auf das ${fmt(faktor, 2)}-fache: Die Iterierten nähern sich von einer Seite, dafür langsam. Das ist der erste Fall von Bemerkung 12.3.7, und Satz 12.3.13 deckt genau diesen Bereich ab, denn er verlangt γ ≤ 1/L.`;
+    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist positiv. Der Fehler behält also sein Vorzeichen und schrumpft in jedem Schritt auf das ${fmt(faktor, 2)}-fache: Die Iterierten nähern sich von einer Seite, dafür langsam. Das ist der erste Fall von ${ref("bemerkung:zu-klein-zu-gross-gerade-richtig")}, und ${ref("satz:konvergenzrate-bei-starker-konvexitaet")} deckt genau diesen Bereich ab, denn er verlangt γ ≤ 1/L.`;
   } else if (gamma < 2 / L - eps) {
     art = "neutral";
     titel = "1/L < γ < 2/L: Überschießen, aber konvergent";
-    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist negativ, die Iterierten springen also in jedem Schritt über das Minimum hinweg. Weil sein Betrag unter 1 liegt, wird der Sprung trotzdem kleiner. Das ist der dritte Fall von Bemerkung 12.3.7: Die Garantie von Satz 12.3.13 gilt hier nicht mehr, gut geht es trotzdem.`;
+    status = `Der Faktor 1 − γf″ = ${fmt(faktor, 2)} ist negativ, die Iterierten springen also in jedem Schritt über das Minimum hinweg. Weil sein Betrag unter 1 liegt, wird der Sprung trotzdem kleiner. Das ist der dritte Fall von ${ref("bemerkung:zu-klein-zu-gross-gerade-richtig")}: Die Garantie von ${ref("satz:konvergenzrate-bei-starker-konvexitaet")} gilt hier nicht mehr, gut geht es trotzdem.`;
   } else if (Math.abs(gamma - 2 / L) < eps) {
     art = "warn";
     titel = "γ = 2/L ist die Grenze";

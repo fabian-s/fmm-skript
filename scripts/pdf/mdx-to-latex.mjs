@@ -200,6 +200,24 @@ function jsxNode(n) {
       return jsxNode(n.expression);
     case "JSXEmptyExpression":
       return "";
+    case "CallExpression": {
+      // {ref("satz:kkt")} / {num("eq:x")} aus numbers.generated.ts — wie ein @-Verweis
+      const fn = n.callee?.name;
+      const arg = n.arguments?.[0];
+      const key = arg?.type === "Literal" && typeof arg.value === "string" ? arg.value : null;
+      const km = key && /^([a-z]+):([a-z0-9][a-z0-9/-]*)$/.exec(key);
+      if ((fn === "ref" || fn === "num") && km) {
+        try {
+          const r = resolveRef(numbers, km[1], km[2], { chapterId: currentChapterId }, fn === "num");
+          return `\\hyperref[${r.anchor}]{${esc(r.text)}}`;
+        } catch (e) {
+          warn("ref()/num() in JSX-Attribut nicht auflösbar", e.message);
+          return "";
+        }
+      }
+      warn(`unbekannter Aufruf in JSX-Attribut: ${fn}(…)`);
+      return "";
+    }
     case "Literal":
       return typeof n.value === "string" ? esc(n.value) : esc(String(n.value));
     case "TemplateLiteral":
@@ -546,6 +564,8 @@ function list(n) {
  */
 function visualLen(s) {
   return String(s)
+    // \hyperref[anker]{Text}: sichtbar ist nur der Text (Anker sind lang und leerzeichenfrei)
+    .replace(/\\hyperref\[[^\]]*\]/g, "")
     .replace(/\\[a-zA-Z]+\s*/g, "x")
     .replace(/[{}$&\\]/g, "")
     .length;

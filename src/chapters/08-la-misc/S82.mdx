@@ -1,7 +1,7 @@
 import { PagerankDemo } from "./widgets/S82Pagerank";
 import { PcaDirectionDemo } from "./widgets/S82Pca";
 
-Warum lohnt sich der Aufwand aus [Abschnitt 8.1](#sec-8.1)? Weil einige der
+Warum lohnt sich der Aufwand aus @sec:eigenwerte? Weil einige der
 größten Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche,
 bei denen direkte Verfahren keine Chance haben. Drei Beispiele aus Suche,
 Statistik und Bildverarbeitung.
@@ -28,7 +28,7 @@ $$
 
 ein :k[Eigenwertproblem]{#eigenvalue-eigenvector} zum Eigenwert $1$.
 
-:::bemerkung[8.2.1 (Warum ausgerechnet der Eigenwert 1?)]
+:::bemerkung[#warum-ausgerechnet-der-eigenwert-1 (Warum ausgerechnet der Eigenwert 1?)]
 Hat jede Seite mindestens einen ausgehenden Link, so summiert sich jede
 Spalte von $\bA$ zu $1$: Eine Seite verteilt ihren ganzen Score und behält
 nichts zurück. Solche Matrizen heißen *spaltenstochastisch*, und dass $1$
@@ -41,11 +41,11 @@ betragsmäßig darüber, denn die
 [Spaltensummennorm](?k=03-matrix-spur-norm#sec-3.3) ist
 $\left\|\bA\right\|_1 = 1$, und der :k[Spektralradius]{#spectral-radius}
 bleibt unter jeder submultiplikativen Norm
-([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)). Dass sich der zugehörige
+(@sec:matrix-spur-norm/eigenschaften). Dass sich der zugehörige
 Eigenvektor nichtnegativ wählen lässt, also überhaupt als Score-Verteilung
 taugt, liefert die Perron-Frobenius-Theorie für nichtnegative Matrizen.
 
-Für die [Potenzmethode](#sec-8.1) reicht das noch nicht ganz: Satz 8.1.4
+Für die [Potenzmethode](#sec-8.1) reicht das noch nicht ganz: @satz:konvergenz-der-potenzmethode
 verlangt einen *einsamen* betragsgrößten Eigenwert, und daran hakt es beim
 rohen Web-Graphen zweimal. Seiten ohne ausgehende Links liefern gar keine
 Spaltensumme $1$, und zerfällt das Netz in mehrere Teile, so gehören zu
@@ -60,7 +60,7 @@ zufällige Seite statt einem Link zu folgen. Die neue Matrix ist strikt
 positiv, ihr Eigenwert $1$ ist einfach, und alle übrigen Eigenwerte liegen
 betragsmäßig bei höchstens $\alpha$. Erst damit ist der PageRank-Vektor der
 dominante Eigenvektor, nach dem die Potenzmethode sucht, und die Rate aus
-Satz 8.1.4 ist durch $\corange{\alpha}$ gedeckelt.
+@satz:konvergenz-der-potenzmethode ist durch $\corange{\alpha}$ gedeckelt.
 :::
 
 Und warum iterativ? Direkte Verfahren an einer Matrix mit $10^{10}$ Zeilen
@@ -71,7 +71,7 @@ Potenz-Iteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
 pro Schritt nur ein Matrix-Vektor-Produkt mit dieser dünnen Matrix, also
 $O(n)$ Operationen, und der Web-Graph ist so strukturiert, dass rund $50$
 Iterationen reichen. Zum klassischen Dämpfungsfaktor $\alpha = 0{,}85$ aus
-Bemerkung 8.2.1 passt diese Zahl gut, denn
+@bemerkung:warum-ausgerechnet-der-eigenwert-1 passt diese Zahl gut, denn
 $\corange{0{,}85}^{50} \approx 3 \cdot 10^{-4}$. Insgesamt $O(n)$ statt
 $O(n^3)$: Dieser Unterschied macht eine Websuche überhaupt erst möglich.
 
@@ -131,7 +131,7 @@ $4{,}43$. In jeder anderen Richtung ist $\bv^\top\bSigma\bv$ kleiner.
 :::
 ::::
 
-:::bemerkung[8.2.2 (Warum iterativ? Die Lanczos-Abkürzung)]
+:::bemerkung[#warum-iterativ-die-lanczos-abkuerzung (Warum iterativ? Die Lanczos-Abkürzung)]
 Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen
 (Gen-Expression, Bildanalyse), gebraucht werden aber fast immer nur die
 $k$ größten Eigenwerte mit $k \ll p$. Die
@@ -144,7 +144,7 @@ zeigt dennoch ihre Größe:
 $100\,000^2 = 10^{10}$ Einträge sind in doppelter Genauigkeit rund
 $80$ Gigabyte. In R übernimmt das zum Beispiel `irlba::irlba()` (iterativ)
 oder `irlba::svdr()` (iterativ und probabilistisch, ein Vorgeschmack auf
-[Abschnitt 8.4](#sec-8.4)).
+@sec:sketching).
 :::
 
 ### Approximative SVD in der Praxis
@@ -216,4 +216,4 @@ Potenzmethode (eines) oder Lanczos ($m \ll n$).
 
 *Vertiefung: Heath §4.5 (iterative Eigenwertverfahren: Potenzmethode,
 QR-Iteration, Lanczos); zur PCA-über-SVD-Verbindung noch einmal
-[Abschnitt 6.4](?k=06-svd#sec-6.4).*
+@sec:svd/anwendungen.*

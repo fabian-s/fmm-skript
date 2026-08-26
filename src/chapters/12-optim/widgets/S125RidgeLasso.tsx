@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.5 — DIE EINE EINSICHT: Die Lasso-Raute hat ECKEN auf den Achsen, der
@@ -226,11 +227,11 @@ export function RidgeLassoGeometrie() {
   } else if (lasso.aktiv) {
     art = "neutral";
     titel = "beide Lösungen liegen auf dem Rand";
-    text = `Über der Eckenschwelle ${fmt(ECKE_BIS, 4)} rutscht die Lasso-Lösung von der Ecke auf eine Kante der Raute: (${fmt(lasso.p[0])}; ${fmt(lasso.p[1])}) statt (r; 0). Beide Nebenbedingungen binden noch, beide Multiplikatoren sind nach Satz 12.5.7 positiv, und die Höhenlinie berührt in beiden Tafeln den Rand. Der Sparsamkeitseffekt des Lasso ist damit weg.`;
+    text = `Über der Eckenschwelle ${fmt(ECKE_BIS, 4)} rutscht die Lasso-Lösung von der Ecke auf eine Kante der Raute: (${fmt(lasso.p[0])}; ${fmt(lasso.p[1])}) statt (r; 0). Beide Nebenbedingungen binden noch, beide Multiplikatoren sind nach ${ref("satz:karush-kuhn-tucker-bedingungen")} positiv, und die Höhenlinie berührt in beiden Tafeln den Rand. Der Sparsamkeitseffekt des Lasso ist damit weg.`;
   } else {
     art = "warn";
     titel = "die Nebenbedingung ist inaktiv";
-    text = `Der Radius lässt den KQ-Schätzer selbst zu. Damit ist das Budget kein Zwang mehr: Die Lösung ist der KQ-Punkt, die Komplementarität aus Satz 12.5.7 erzwingt μ = 0, und die Schätzung wird nicht mehr geschrumpft. Die Schwellen liegen bei ‖β̂‖₂ = ${fmt(RIDGE_INAKTIV_AB, 4)} für Ridge und ‖β̂‖₁ = ${fmt(LASSO_INAKTIV_AB, 4)} für Lasso.`;
+    text = `Der Radius lässt den KQ-Schätzer selbst zu. Damit ist das Budget kein Zwang mehr: Die Lösung ist der KQ-Punkt, die Komplementarität aus ${ref("satz:karush-kuhn-tucker-bedingungen")} erzwingt μ = 0, und die Schätzung wird nicht mehr geschrumpft. Die Schwellen liegen bei ‖β̂‖₂ = ${fmt(RIDGE_INAKTIV_AB, 4)} für Ridge und ‖β̂‖₁ = ${fmt(LASSO_INAKTIV_AB, 4)} für Lasso.`;
   }
 
   return (

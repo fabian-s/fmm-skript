@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, Slider, Verdikt, fmtDe, mulberry32, randn, useSeed } from "../../../lib";
 import type { Series } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Einsicht: Eine einzelne Gauss-Skizze schwankt, und ihre typische
@@ -252,7 +253,7 @@ export function SketchingDemo() {
           </span>
         </p>
       </div>
-      <Verdikt kind={Math.abs(jetzt.distAbw) <= band ? "ok" : "warn"}>{zeigeFaustregel ? <>Die Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}; das Band ±{fmt(band, 2)} % aus der Faustregel enthält diese Ziehung {Math.abs(jetzt.distAbw) <= band ? "noch" : "nicht"}. Satz 8.4.6 erklärt die verwandte Wurzelrate der Garantie.</> : <>Die aktuelle Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}. Blenden wir die Faustregel ein, um sie mit der typischen Größenordnung zu vergleichen.</>}</Verdikt>
+      <Verdikt kind={Math.abs(jetzt.distAbw) <= band ? "ok" : "warn"}>{zeigeFaustregel ? <>Die Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}; das Band ±{fmt(band, 2)} % aus der Faustregel enthält diese Ziehung {Math.abs(jetzt.distAbw) <= band ? "noch" : "nicht"}. {ref("satz:zufaellige-einbettung-eines-festen")} erklärt die verwandte Wurzelrate der Garantie.</> : <>Die aktuelle Distanzabweichung beträgt {fmtPct(jetzt.distAbw)}. Blenden wir die Faustregel ein, um sie mit der typischen Größenordnung zu vergleichen.</>}</Verdikt>
     </div>
   );
 }

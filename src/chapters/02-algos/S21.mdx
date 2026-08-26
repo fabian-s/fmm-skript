@@ -33,7 +33,7 @@ die Koeffizienten einer Regression) oder die
 :k[Basis]{#basis}-Koeffizienten einer
 Funktionsapproximation. Allgemein fassen wir das so:
 
-:::definition[2.1.1 (Numerisches Problem)]
+:::definition[#numerisches-problem (Numerisches Problem)]
 Ein *numerisches Problem* ist eine Aufgabe der Form:
 *Gegeben ein Problem $f$ mit Input $\bx$, berechne die
 Lösung $f(\bx)$.*
@@ -50,7 +50,7 @@ offen. Und da beginnen die Schwierigkeiten.
 Computer sind so gut wie nie exakt. Das liegt nicht an schlampiger Technik,
 sondern an zwei prinzipiellen Beschränkungen jeder endlichen Maschine:
 
-:::bemerkung[2.1.2 (Grenzen des Rechnens)]
+:::bemerkung[#grenzen-des-rechnens (Grenzen des Rechnens)]
 - Computer können nur *endlich viele Zahlen mit endlich vielen Stellen*
   darstellen. Schon
 
@@ -96,7 +96,7 @@ Die beiden folgenden Beispiele zeigen die zwei wichtigsten Mechanismen, mit
 denen Gleitkommarechnung schiefgeht. Beide sehen auf dem Papier völlig harmlos
 aus.
 
-:::beispiel[2.1.3 (Katastrophale Auslöschung)]
+:::beispiel[#katastrophale-ausloeschung (Katastrophale Auslöschung)]
 Wir berechnen die Varianz von $\bx$ mit der bekannten
 Verschiebungsformel
 
@@ -153,7 +153,7 @@ bleiben nur die (verrauschten) hinteren Stellen. Dieses Phänomen heißt
 numerischen Fallen.
 :::
 
-:::beispiel[2.1.4 (Verletzte Assoziativität)]
+:::beispiel[#verletzte-assoziativitaet (Verletzte Assoziativität)]
 Gleitkomma-Addition ist nicht assoziativ! Seien
 $\cred{x = 10^{30}}$, $\cblue{y = -10^{30}}$ und
 $\cgreen{z = 1}$. Mathematisch ist
@@ -221,7 +221,7 @@ eine zweite Zutat, nämlich die konkrete Rechenvorschrift, mit der wir $f(\bx)$
 zu berechnen versuchen. Für dieselbe Varianz gab es zwei Vorschriften mit
 drastisch verschiedenem Ausgang. Diese zweite Zutat bekommt jetzt einen Namen:
 
-:::definition[2.1.5 (Algorithmus)]
+:::definition[#algorithmus (Algorithmus)]
 Ein *Algorithmus* ist ein Verfahren
 $\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$, das für Inputs
 $\bx$ eine mögliche Lösung $\wt{f}(\bx)$ berechnet.
@@ -240,7 +240,7 @@ genau die Frage, die uns in Kapitel 4 beschäftigen wird. Zu einem Problem
 $f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
 unterscheiden sich in Genauigkeit *und* Rechenaufwand.
 
-:::bemerkung[2.1.6 (Arten von Algorithmen)]
+:::bemerkung[#arten-von-algorithmen (Arten von Algorithmen)]
 Die gebräuchlichen Bezeichnungen beschreiben drei *unabhängige Achsen*:
 
 - *exakt oder approximativ*: Trifft das Verfahren die mathematische Lösung in
@@ -275,7 +275,7 @@ $10^k + \left(-10^k\right) + 1$ verschiedene Ergebnisse?
 
 Bei $10^{15}$ liegen benachbarte Maschinenzahlen $0{,}125$ auseinander, die $1$
 überlebt also die Zwischensumme. Bei $10^{16}$ ist der Abstand bereits $2$, und
-$-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (Beispiel 2.1.4).
+$-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (@beispiel:verletzte-assoziativitaet).
 :::
 
 :::frage{falsch}

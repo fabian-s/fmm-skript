@@ -1,7 +1,7 @@
 import { SketchingDemo } from "./widgets/S84Sketching";
 
-Die iterativen Verfahren der [Abschnitte 8.1](#sec-8.1) und
-[8.3](#sec-8.3) handeln Genauigkeit gegen Laufzeit: Wir brechen ab, sobald
+Die iterativen Verfahren der Abschnitte @num:la-misc/eigenwerte und
+@num:la-misc/iterative-loeser handeln Genauigkeit gegen Laufzeit: Wir brechen ab, sobald
 uns das Erreichte genügt. Dieser Abschnitt zieht einen anderen Hebel. Wir
 verkleinern nicht die Zahl der Schritte, sondern das Problem selbst, und das
 Werkzeug dafür ist Zufall.
@@ -13,7 +13,7 @@ Komplexität tauschen. Zunehmend geschieht das durch *Randomisierung*
 (randomization): Statt sorgfältig auszuwählen, welchen Teil der Daten wir
 wegwerfen, würfeln wir ihn aus.
 
-:::bemerkung[8.4.1 (Hauptidee der Randomisierung)]
+:::bemerkung[#hauptidee-der-randomisierung (Hauptidee der Randomisierung)]
 Wir ersetzen ein großes Problem durch ein zufällig erzeugtes, kleines
 Problem, das höchstwahrscheinlich eine ähnliche Lösung hat.
 
@@ -34,7 +34,7 @@ In der Ebene sind zwei zufällige Richtungen selten senkrecht: Der Winkel
 zwischen ihnen ist gleichverteilt, jeder Wert ist so gut wie jeder andere. Im
 $\R^n$ mit großem $n$ ändert sich das Bild vollständig.
 
-:::satz[8.4.2 (Zufallsrichtungen stehen fast senkrecht aufeinander)]
+:::satz[#zufallsrichtungen-stehen-fast-senkrecht (Zufallsrichtungen stehen fast senkrecht aufeinander)]
 Seien $\bs_1, \bs_2 \in \R^n$ unabhängig und je $\Ncal(\bnull, \bI_n)$-verteilt,
 und sei $\theta$ der Winkel zwischen ihnen. Dann gilt
 
@@ -67,7 +67,7 @@ $$
 Die Standardnormalverteilung ist drehinvariant, also ist $\bu$ gleichverteilt
 auf der Einheitssphäre. Daraus folgt
 
-$$ {#eq-8.4.1}
+$$ {#eq-eq-8-4-1}
 \E[\bu] = \bnull, \qquad \E\left[\bu\bu^\top\right] = \frac{1}{n}\,\bI_n .
 $$
 
@@ -87,7 +87,7 @@ $$
 
 Beide Werte hängen nicht mehr von $\bv$ ab, gelten also auch unbedingt.
 
-::why[($8.4.1$) mit $\left(\bu^\top\bv\right)^2 = \bv^\top\bu\bu^\top\bv$; $\left\|\bv\right\| = 1$ nach Konstruktion]
+::why[@eq:eq-8-4-1 mit $\left(\bu^\top\bv\right)^2 = \bv^\top\bu\bu^\top\bv$; $\left\|\bv\right\| = 1$ nach Konstruktion]
 :::
 
 :::schritt
@@ -109,9 +109,9 @@ Dimensionen drängt sich die Verteilung des Winkels also um $90^\circ$
 zusammen, zufällige Richtungen sind praktisch
 :k[orthogonal]{#orthogonality}.
 
-:::beispiel[8.4.3 (Wie senkrecht ist fast senkrecht?)]
+:::beispiel[#wie-senkrecht-ist-fast-senkrecht (Wie senkrecht ist fast senkrecht?)]
 Für $n = 10\,000$ ist $\var[\cos\theta] = 10^{-4}$, die Standardabweichung
-also $0{,}01$. Mit $t = 5$ liefert Satz 8.4.2
+also $0{,}01$. Mit $t = 5$ liefert @satz:zufallsrichtungen-stehen-fast-senkrecht
 
 $$
 \Pr\left(\left|\cos\theta\right| \ge 0{,}05\right) \le \frac{1}{25} = 0{,}04 ,
@@ -134,7 +134,7 @@ die Längen der Vorfaktor in der Verteilung. Die Abbildung
 $\bx \mapsto \bS\bx$ misst die Länge von $\bx$ dann entlang $m$ zufälliger,
 fast senkrechter Achsen, und das reicht überraschend weit.
 
-:::definition[8.4.4 (Sketching-Matrix und Skizze)]
+:::definition[#sketching-matrix-und-skizze (Sketching-Matrix und Skizze)]
 Sei $m < n$. Eine Zufallsmatrix $\bS \in \R^{m \times n}$ heißt
 *Sketching-Matrix* (sketching matrix), und für $\bx \in \R^n$ heißt
 $\cblue{\bS\bx} \in \R^m$ die *Skizze* (sketch) von $\bx$. Gesucht sind
@@ -160,7 +160,7 @@ ist nur, dass das Bild in $m$ statt in $n$ Dimensionen lebt.
 
 ### Ein Zahlenbeispiel
 
-:::beispiel[8.4.5 (Sketching zweier Vektoren mit 10 000 Komponenten)]
+:::beispiel[#sketching-zweier-vektoren-mit-10-000 (Sketching zweier Vektoren mit 10 000 Komponenten)]
 Ziehen wir zwei beliebige Vektoren $\bx, \by \in \R^{10\,000}$ und eine
 Gauss-Sketchmatrix mit $m = 50$, also einen Faktor $200$ kleiner:
 
@@ -224,17 +224,17 @@ Bisher haben wir plausibel gemacht, dass Sketching funktionieren kann. Jetzt
 beweisen wir es, und zwar mit erstaunlich wenig Aufwand: Erwartungswert,
 Varianz und die Tschebyscheff-Ungleichung genügen.
 
-:::satz[8.4.6 (Zufällige Einbettung eines festen Vektors)]
+:::satz[#zufaellige-einbettung-eines-festen (Zufällige Einbettung eines festen Vektors)]
 Sei $\bS \in \R^{m \times n}$ eine Zufallsmatrix, deren Zeilen
 $\bs_1^\top, \dots, \bs_m^\top$ unabhängig und identisch verteilt sind und
 
-$$ {#eq-8.4.2}
+$$ {#eq-zufaellige-einbettung-eines-festen}
 \E\left[\bs_i\bs_i^\top\right] = \frac{1}{m}\,\bI_n
 $$
 
 erfüllen, sowie für ein $K > 0$
 
-$$ {#eq-8.4.3}
+$$ {#eq-zufaellige-einbettung-eines-festen-2}
 \E\left[\left(\bs_i^\top\bv\right)^4\right] \le \frac{K}{m^2}
 \qquad \text{für alle } \bv \in \R^n \text{ mit } \left\|\bv\right\| = 1 .
 $$
@@ -242,7 +242,7 @@ $$
 Seien weiter $\bx \in \R^n$ *fest* und $\delta > 0$. Dann gilt mit
 Wahrscheinlichkeit mindestens $1 - \delta$
 
-$$ {#eq-8.4.4}
+$$ {#eq-zufaellige-einbettung-eines-festen-3}
 (1 - \corange{\eps})\left\|\cgreen{\bx}\right\|^2
 \le \left\|\cblue{\bS\bx}\right\|^2
 \le (1 + \corange{\eps})\left\|\cgreen{\bx}\right\|^2 ,
@@ -255,7 +255,7 @@ $$
 
 :::schritt
 Wir dürfen $\left\|\cgreen{\bx}\right\| = 1$ annehmen. Beide Seiten von
-($8.4.4$) sind homogen vom Grad $2$ in $\cgreen{\bx}$; für
+@eq:zufaellige-einbettung-eines-festen-3 sind homogen vom Grad $2$ in $\cgreen{\bx}$; für
 $\cgreen{\bx} \neq \bnull$ teilen wir die Ungleichung durch
 $\left\|\cgreen{\bx}\right\|^2$, und für $\cgreen{\bx} = \bnull$ ist nichts zu
 zeigen. Zu beweisen bleibt
@@ -281,7 +281,7 @@ $$
 
 Im Erwartungswert trifft die Skizze die Länge also exakt.
 
-::why[$\left(\bs_i^\top\bx\right)^2 = \bx^\top\bs_i\bs_i^\top\bx$, dann die Linearität des :k[Erwartungswerts]{#expected-value} und Bedingung ($8.4.2$)]
+::why[$\left(\bs_i^\top\bx\right)^2 = \bx^\top\bs_i\bs_i^\top\bx$, dann die Linearität des :k[Erwartungswerts]{#expected-value} und Bedingung @eq:zufaellige-einbettung-eines-festen]
 :::
 
 :::schritt
@@ -297,7 +297,7 @@ $$
 Hier steckt die ganze Arbeit der vierten Momente: Sie beschränken die
 Streuung der Skizze.
 
-::why[$\var[Z] = \E\left[Z^2\right] - \E[Z]^2 \le \E\left[Z^2\right]$ mit $Z = \left(\bs_i^\top\bx\right)^2$, danach Bedingung ($8.4.3$) mit $\bv = \bx$]
+::why[$\var[Z] = \E\left[Z^2\right] - \E[Z]^2 \le \E\left[Z^2\right]$ mit $Z = \left(\bs_i^\top\bx\right)^2$, danach Bedingung @eq:zufaellige-einbettung-eines-festen-2 mit $\bv = \bx$]
 :::
 
 :::schritt
@@ -319,11 +319,11 @@ $1 - \delta$.
 
 ::::
 
-:::bemerkung[8.4.7 (Warum die Momentenbedingung an der Projektion ansetzt)]
+:::bemerkung[#warum-die-momentenbedingung-an-der (Warum die Momentenbedingung an der Projektion ansetzt)]
 Die Varianz in Schritt 3 ließe sich auch bequemer abschätzen, nämlich über die
 :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
 $\left|\bs_i^\top\bv\right| \le \left\|\bs_i\right\|\left\|\bv\right\|$. Dann
-stünde in ($8.4.3$) die Länge der ganzen Zeile,
+stünde in @eq:zufaellige-einbettung-eines-festen-2 die Länge der ganzen Zeile,
 $\E\left[\left\|\bs_i\right\|^4\right] \le K/m^2$. Das wäre richtig, aber
 unbrauchbar grob: Für $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
 
@@ -332,26 +332,26 @@ $$
 $$
 
 das zugehörige $K$ wüchse also wie $n^2$ – bei $n = 10\,000$ wäre
-$K \approx 10^8$ statt $3$, und die Schranke aus Satz 8.4.6 wäre wertlos. Der
+$K \approx 10^8$ statt $3$, und die Schranke aus @satz:zufaellige-einbettung-eines-festen wäre wertlos. Der
 Unterschied ist gerade der verschenkte Faktor $(n^2+2n)/3$: Die Zeile $\bs_i$
 ist lang, ihre Projektion auf eine *feste* Richtung $\bv$ aber kurz, und nur
-diese Projektion geht in $\left\|\bS\bx\right\|^2$ ein. Bedingung ($8.4.3$)
+diese Projektion geht in $\left\|\bS\bx\right\|^2$ ein. Bedingung @eq:zufaellige-einbettung-eines-festen-2
 misst deshalb direkt $\E\left[\left(\bs_i^\top\bv\right)^4\right]$ und ist für
-Gauss-Zeilen mit $K = 3$ sogar mit Gleichheit erfüllt (Beispiel 8.4.11).
+Gauss-Zeilen mit $K = 3$ sogar mit Gleichheit erfüllt (@beispiel:gauss-rademacher-subsampling).
 :::
 
-:::bemerkung[8.4.8 (Von Quadraten zu Längen und Abständen)]
-Satz 8.4.6 spricht über $\left\|\bS\bx\right\|^2$, interessant sind aber
+:::bemerkung[#von-quadraten-zu-laengen-und-abstaenden (Von Quadraten zu Längen und Abständen)]
+@satz:zufaellige-einbettung-eines-festen spricht über $\left\|\bS\bx\right\|^2$, interessant sind aber
 Längen und Abstände.
 
-- **Wurzelziehen.** Für $\corange{\eps} \le 1$ folgt aus ($8.4.4$)
+- **Wurzelziehen.** Für $\corange{\eps} \le 1$ folgt aus @eq:zufaellige-einbettung-eines-festen-3
   $\sqrt{1-\corange{\eps}} \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le \sqrt{1+\corange{\eps}}$.
   Für $\corange{\eps} = 0{,}1$ heißt das $0{,}949 \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le 1{,}049$:
   Eine Verzerrung von $10\,\%$ im Quadrat sind rund $5\,\%$ in der Länge.
 - **Von der Länge zum Abstand.** $\bS$ ist linear, also ist
   $\bS\bx - \bS\by = \bS(\bx - \by)$. Wenden wir den Satz auf den festen
   Vektor $\bx - \by$ an, so erhalten wir die Abstandsaussage aus
-  Definition 8.4.4.
+  @definition:sketching-matrix-und-skizze.
 - **Mehrere Paare.** Für $N$ Punkte und *alle* Paare brauchen wir die
   Aussage für $N(N-1)/2$ Differenzvektoren gleichzeitig. Über eine
   Vereinigungsschranke geht das, kostet aber $\delta \to 2\delta/(N(N-1))$
@@ -361,8 +361,8 @@ Längen und Abstände.
 Winkel behandelt der Satz zunächst gar nicht. Sie folgen aber, denn
 Skalarprodukte lassen sich aus Längen zurückgewinnen.
 
-:::korollar[8.4.9 (Skalarprodukte bleiben erhalten)]
-Seien $\bx, \by \in \R^n$ fest und $\bS$ wie in Satz 8.4.6. Dann gilt mit
+:::korollar[#skalarprodukte-bleiben-erhalten (Skalarprodukte bleiben erhalten)]
+Seien $\bx, \by \in \R^n$ fest und $\bS$ wie in @satz:zufaellige-einbettung-eines-festen. Dann gilt mit
 Wahrscheinlichkeit mindestens $1 - 2\delta$
 
 $$
@@ -387,7 +387,7 @@ nutzen $\bS\bx \pm \bS\by = \bS(\bx \pm \by)$.
 :::
 
 :::schritt
-Satz 8.4.6 gilt für jeden festen Vektor, insbesondere für $\bx + \by$ und für
+@satz:zufaellige-einbettung-eines-festen gilt für jeden festen Vektor, insbesondere für $\bx + \by$ und für
 $\bx - \by$. Jedes der beiden Ereignisse verfehlt die Schranke mit
 Wahrscheinlichkeit höchstens $\delta$, zusammen also höchstens $2\delta$.
 Treten beide ein, so ist
@@ -406,17 +406,17 @@ $$
 Für Einheitsvektoren steht rechts schlicht $\corange{\eps}$. Der Kosinus des
 Winkels ist das Skalarprodukt der normierten Vektoren, und Zähler wie Nenner
 werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen. Damit ist auch
-die Winkelaussage aus Definition 8.4.4 gerechtfertigt.
+die Winkelaussage aus @definition:sketching-matrix-und-skizze gerechtfertigt.
 
-:::bemerkung[8.4.10 (Ein fester Vektor ist nicht jeder Vektor)]
-Das Wort „fest" in Satz 8.4.6 trägt Gewicht. Verschöbe man den Quantor „für
+:::bemerkung[#ein-fester-vektor-ist-nicht-jeder-vektor (Ein fester Vektor ist nicht jeder Vektor)]
+Das Wort „fest" in @satz:zufaellige-einbettung-eines-festen trägt Gewicht. Verschöbe man den Quantor „für
 alle $\bx \in \R^n$" *innerhalb* der Wahrscheinlichkeit, so wäre die Aussage
 schlicht falsch: Unser Beweis fixiert $\bx$, bevor $\bS$ gezogen wird, und die
 Ausnahmemenge darf für jedes $\bx$ eine andere sein. Ein Gegenargument in
 einer Zeile: $\bS$ hat höchstens
 :k[Rang]{#rank} $m < n$, besitzt also einen nichttrivialen
 :k[Kern]{#kernel}. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ ist
-($8.4.4$) verletzt, ganz gleich wie $\bS$ ausgefallen ist.
+@eq:zufaellige-einbettung-eines-festen-3 verletzt, ganz gleich wie $\bS$ ausgefallen ist.
 
 Gleichmäßige Aussagen sind trotzdem möglich, aber nur auf einem
 :k[Unterraum]{#subspace} kleiner Dimension und mit Zusatzarbeit: Man
@@ -430,11 +430,11 @@ gleichzeitig gut treffen.
 
 ### Drei Bauarten von Sketching-Matrizen
 
-Welche Verteilungen erfüllen ($8.4.2$) und ($8.4.3$)? Drei Bauarten sind in
+Welche Verteilungen erfüllen @eq:zufaellige-einbettung-eines-festen und @eq:zufaellige-einbettung-eines-festen-2? Drei Bauarten sind in
 der Praxis üblich, und alle drei lassen sich direkt nachrechnen.
 
-:::beispiel[8.4.11 (Gauss, Rademacher, Subsampling)]
-**Gauss.** $\bs_i \iid \Ncal(\bnull, \bI_n/m)$. Bedingung ($8.4.2$) ist die
+:::beispiel[#gauss-rademacher-subsampling (Gauss, Rademacher, Subsampling)]
+**Gauss.** $\bs_i \iid \Ncal(\bnull, \bI_n/m)$. Bedingung @eq:zufaellige-einbettung-eines-festen ist die
 Definition der Kovarianzmatrix. Für einen Einheitsvektor $\bv$ ist
 $\bs_i^\top\bv \sim \Ncal(0, 1/m)$, und das vierte Moment einer
 zentrierten Normalverteilung ist das Dreifache des quadrierten zweiten:
@@ -447,7 +447,7 @@ $$
 **Rademacher.** $s_{ij}$ unabhängig mit
 $\Pr\left(s_{ij} = 1/\sqrt{m}\right) = \Pr\left(s_{ij} = -1/\sqrt{m}\right) = 1/2$.
 Wegen $\E\left[s_{ij}^2\right] = 1/m$ und $\E\left[s_{ij}s_{ik}\right] = 0$
-für $j \neq k$ gilt wieder ($8.4.2$). Ausmultiplizieren der vierten Potenz
+für $j \neq k$ gilt wieder @eq:zufaellige-einbettung-eines-festen. Ausmultiplizieren der vierten Potenz
 liefert für $\left\|\bv\right\| = 1$
 
 $$
@@ -494,11 +494,11 @@ Koordinaten der schlechte.
 
 ### Anwendungen
 
-:::bemerkung[8.4.12 (Wo Skizzen helfen)]
+:::bemerkung[#wo-skizzen-helfen (Wo Skizzen helfen)]
 - **Matrixprodukt.** Für $\bA \in \R^{p \times n}$ und
   $\bB \in \R^{n \times q}$ ist
   $\bA\bB \approx \left(\bA\bS^\top\right)\left(\bS\bB\right)$. Der Grund ist
-  ($8.4.2$): Wegen
+  @eq:zufaellige-einbettung-eines-festen: Wegen
   $\E\left[\bS^\top\bS\right] = \sum_{i=1}^m \E\left[\bs_i\bs_i^\top\right] = \bI_n$
   ist die rechte Seite :k[erwartungstreu]{#unbiased-estimator} für
   $\bA\bB$. Statt $pnq$ kostet das
@@ -507,10 +507,10 @@ Koordinaten der schlechte.
 - **Kleinste Quadrate.**
   $\min_{\bx}\left\|\bA\bx - \bb\right\|_2
   \approx \min_{\bx}\left\|\bS\bA\bx - \bS\bb\right\|_2$, siehe
-  Algorithmus 8.4.13.
+  @algorithmus:sketching-fuer-ein-kq-problem.
 - **Approximative Zerlegungen.** Auch die randomisierte Näherung einer
   :k[Singulärwertzerlegung]{#singular-value-decomposition} aus
-  [Abschnitt 8.2](#sec-8.2) arbeitet mit einer Skizze des Spaltenraums.
+  @sec:anwendungen arbeitet mit einer Skizze des Spaltenraums.
 :::
 
 Ein Vorbehalt gilt für alle drei Punkte: Schneller wird ein Algorithmus nur,
@@ -523,7 +523,7 @@ Bei einer dichten Gauss-Matrix dagegen kostet
 $\bS\bx$ schon $O(mn)$ Operationen, und dann kann die Skizze teurer sein als
 das Problem, das sie vereinfachen soll.
 
-:::algorithmus[8.4.13 (Sketching für ein KQ-Problem)]
+:::algorithmus[#sketching-fuer-ein-kq-problem (Sketching für ein KQ-Problem)]
 Gegeben $\bA \in \R^{n \times p}$ mit $n \gg p$, $\bb \in \R^n$ und eine
 Skizzengröße $m$ mit $p < m \ll n$.
 
@@ -532,7 +532,7 @@ Skizzengröße $m$ mit $p < m \ll n$.
 3. Löse das kleine Problem
    $\min_{\bx}\left\|(\bS\bA)\bx - \bS\bb\right\|_2$, etwa per
    :k[QR-Zerlegung]{#qr-factorization}
-   ([Abschnitt 7.4](?k=07-kq#sec-7.4)).
+   (@sec:kq/qr).
 
 Schritt 3 kostet $O(mp^2)$ statt $O(np^2)$ für das
 :k[Ausgangsproblem]{#linear-least-squares}. Ob sich das lohnt, entscheidet
@@ -543,13 +543,13 @@ mit schnell anwendbaren Skizzen wie der SRHT geht die Rechnung auf.
 
 ### Wie klein darf $m$ sein?
 
-:::beispiel[8.4.14 (Dimensionsreduktion mit Matrix-Sketching)]
+:::beispiel[#dimensionsreduktion-mit-matrix-sketching (Dimensionsreduktion mit Matrix-Sketching)]
 Gegeben seien $n = 10\,000$ Dimensionen, eine Fehlerwahrscheinlichkeit
 $\delta = 0{,}05$ und eine zulässige Verzerrung $\corange{\eps} = 0{,}1$. Wie
-klein darf $m$ sein? Wir lösen ($8.4.4$) nach $m$ auf und setzen für
+klein darf $m$ sein? Wir lösen @eq:zufaellige-einbettung-eines-festen-3 nach $m$ auf und setzen für
 Gauss-Zeilen $K = 3$ ein:
 
-$$ {#eq-8.4.5}
+$$ {#eq-dimensionsreduktion-mit-matrix-sketching}
 \corange{\eps} = \sqrt{\frac{K}{\delta m}}
 \quad\Longleftrightarrow\quad
 m = \frac{K}{\delta\,\corange{\eps}^2}
@@ -560,7 +560,7 @@ $$
 Mit $m = 6000$ Dimensionen bleibt der Abstand eines vorher festgelegten
 Punktepaares mit Wahrscheinlichkeit $95\,\%$ auf $10\,\%$ genau erhalten,
 gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$
-(Bemerkung 8.4.8). Der Speicher sinkt von $10\,000$ auf $6000$ Zahlen je
+(@bemerkung:von-quadraten-zu-laengen-und-abstaenden). Der Speicher sinkt von $10\,000$ auf $6000$ Zahlen je
 Punkt, ein Faktor $n/m \approx 1{,}7$,
 und eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
 Operationen, ebenfalls ein Faktor $n/m$. Davon leben die typischen
@@ -568,14 +568,14 @@ Anwendungen: die Suche nach nächsten Nachbarn und die Clusteranalyse
 in hohen Dimensionen. Beide berühren die Daten fast nur über Abstände, und
 die bleiben unter der Skizze erhalten.
 
-Umgekehrt gelesen sagt ($8.4.5$) auch, was ein zehnmal kleineres
+Umgekehrt gelesen sagt @eq:dimensionsreduktion-mit-matrix-sketching auch, was ein zehnmal kleineres
 $m = 600$ hergibt: bei
 $\delta = 0{,}05$ nur $\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
 und bei $\corange{\eps} = 0{,}1$ nur $\delta = 3/(600 \cdot 0{,}01) = 0{,}5$,
 also die Verlässlichkeit eines Münzwurfs.
 :::
 
-:::bemerkung[8.4.15 (Zwei Nachträge zur Rechnung)]
+:::bemerkung[#zwei-nachtraege-zur-rechnung (Zwei Nachträge zur Rechnung)]
 Zwei Nachträge zu dieser Rechnung. Der erste betrifft den Gewinn, und dabei
 lohnt der Blick darauf, was genau gerechnet wird: Eine einzelne euklidische
 Distanz kostet $O(n)$ Operationen, der Gewinn ist deshalb der Faktor
@@ -587,7 +587,7 @@ Buche.
 Der zweite betrifft das $m$ selbst: Warum wird in der Praxis trotzdem mit
 Werten in der Größenordnung einiger hundert gearbeitet? Der Grund ist unser
 Werkzeug: Tschebyscheff benutzt nur zwei Momente und ist entsprechend grob.
-Wie grob, lässt sich für Gauss-Skizzen ausnahmsweise exakt sagen. Nach Beispiel 8.4.5 ist
+Wie grob, lässt sich für Gauss-Skizzen ausnahmsweise exakt sagen. Nach @beispiel:sketching-zweier-vektoren-mit-10-000 ist
 $\left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$ dort $\chi^2_m/m$-verteilt,
 und deren Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und
 $\delta = 0{,}05$ nur $m = 768$ Zeilen. Tschebyscheff fordert das Achtfache.
@@ -614,10 +614,10 @@ einmal für ein einzelnes Produkt $\bS\bx$.
 
 - **Gauss** ist theoretisch optimal, aber teuer: $mn$ Zahlen speichern und
   $mn$ Multiplikationen je Vektor.
-- **Rademacher** ist genauso gut, wie Beispiel 8.4.11 mit $K = 3$ zeigt, und
+- **Rademacher** ist genauso gut, wie @beispiel:gauss-rademacher-subsampling mit $K = 3$ zeigt, und
   einfacher zu erzeugen, weil nur Vorzeichen gewürfelt werden.
 - **Subsampling** wählt $m$ zufällige Koordinaten und ist damit extrem
-  schnell. Die Qualität hängt allerdings an den Daten: Nach Beispiel 8.4.11
+  schnell. Die Qualität hängt allerdings an den Daten: Nach @beispiel:gauss-rademacher-subsampling
   ist $K = n\sum_j v_j^4$, für gestreute Vektoren klein und für konzentrierte
   Vektoren so groß wie $n$.
 - **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
@@ -638,24 +638,24 @@ exakt erhält.
 Eine solche Matrix hat höchstens Rang $m < n$, also einen nichttrivialen
 Kern. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ schrumpft der Abstand
 zum Nullpunkt auf $0$. Sketching kann Abstände nur näherungsweise und nur mit
-hoher Wahrscheinlichkeit erhalten (Bemerkung 8.4.10).
+hoher Wahrscheinlichkeit erhalten (@bemerkung:ein-fester-vektor-ist-nicht-jeder-vektor).
 :::
 
 :::frage{wahr}
-Satz 8.4.6 macht eine Aussage über einen vorher festgelegten Vektor $\bx$,
+@satz:zufaellige-einbettung-eines-festen macht eine Aussage über einen vorher festgelegten Vektor $\bx$,
 nicht gleichzeitig über alle $\bx \in \R^n$.
 
 Im Beweis wird $\bx$ fixiert, bevor $\bS$ gezogen wird; die Ausnahmemenge
 darf für jedes $\bx$ eine andere sein. Gleichmäßige Aussagen über einen ganzen
 Unterraum brauchen ein Netzargument und eine Vereinigungsschranke
-(Bemerkung 8.4.10).
+(@bemerkung:ein-fester-vektor-ist-nicht-jeder-vektor).
 :::
 
 :::frage{falsch}
 Verdoppeln wir $m$, so halbiert sich die garantierte Verzerrung
 $\corange{\eps}$.
 
-Nach ($8.4.4$) ist $\eps = \sqrt{K/(\delta m)}$, also proportional zu
+Nach @eq:zufaellige-einbettung-eines-festen-3 ist $\eps = \sqrt{K/(\delta m)}$, also proportional zu
 $1/\sqrt{m}$. Verdoppeltes $m$ drückt $\eps$ nur um den Faktor
 $1/\sqrt{2} \approx 0{,}71$; für die Halbierung brauchen wir viermal so viele
 Zeilen.
@@ -667,8 +667,8 @@ $\E\left[\left(\bs_i^\top\bv\right)^4\right] = 3/m^2$ für jeden Vektor $\bv$
 mit $\left\|\bv\right\| = 1$.
 
 Es ist $\bs_i^\top\bv \sim \Ncal(0, 1/m)$, und das vierte Moment einer
-zentrierten Normalverteilung ist $3\sigma^4$ (Beispiel 8.4.11). Damit ist
-($8.4.3$) mit $K = 3$ erfüllt, und zwar mit Gleichheit.
+zentrierten Normalverteilung ist $3\sigma^4$ (@beispiel:gauss-rademacher-subsampling). Damit ist
+@eq:zufaellige-einbettung-eines-festen-2 mit $K = 3$ erfüllt, und zwar mit Gleichheit.
 :::
 
 :::frage{falsch}

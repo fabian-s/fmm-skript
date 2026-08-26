@@ -1,7 +1,7 @@
 import { BiasVarianzExplorer } from "./widgets/S138BiasVarianz";
 import { Schaetzfrage } from "../../lib";
 
-In [Abschnitt 13.7](#sec-13.7) haben wir die Interpolation aufgegeben und
+In @sec:glaettung haben wir die Interpolation aufgegeben und
 stattdessen mit $K < n$ Basisfunktionen geglättet. Eine Frage blieb dabei
 offen, und es ist die einzige, die in der Praxis wirklich zu beantworten ist:
 Wie groß soll $K$ sein? Zwei Kräfte ziehen in entgegengesetzte Richtungen. Zu
@@ -10,8 +10,8 @@ Schätzer dem Rauschen hinterherlaufen. Dieser Abschnitt macht aus dieser
 Intuition zwei Sätze und zeigt anschließend an einem asymptotischen
 Balance-Modell, wie eine theoretische Wahl von $K$ aussehen kann.
 
-:::bemerkung[13.8.1 (Modell, Designmatrix, Schätzer)]
-Wir sammeln die Bezeichnungen aus [Abschnitt 13.7](#sec-13.7), mit denen wir
+:::bemerkung[#modell-designmatrix-schaetzer (Modell, Designmatrix, Schätzer)]
+Wir sammeln die Bezeichnungen aus @sec:glaettung, mit denen wir
 hier rechnen. An festen Stellen $x_1 < \dots < x_n$ in $[a, b]$ beobachten wir
 
 $$
@@ -22,25 +22,25 @@ $$
 
 mit unkorrelierten Fehlern. Zu einer :k[Basis]{#basis}
 $\corange{\phi_1}, \dots, \corange{\phi_K}$ von Splinefunktionen
-([Abschnitt 13.2](#sec-13.2)) bilden wir die
+(@sec:basisdarstellung) bilden wir die
 Designmatrix $\bB \in \R^{n \times K}$ mit Einträgen
 $B_{ik} = \corange{\phi_k}(x_i)$, schreiben
 $\corange{\bphi(x)} = (\corange{\phi_1(x)}, \dots, \corange{\phi_K(x)})^\top$
 und erhalten den :k[Kleinste-Quadrate-Schätzer]{#linear-least-squares}
 
-$$ {#eq-13.8.1}
+$$ {#eq-modell-designmatrix-schaetzer}
 \cgreen{\wh{\ba}} = \bB^+ \cblue{\by},
 \qquad
 \cgreen{\wh{f}(x)} = \corange{\bphi(x)}^\top \cgreen{\wh{\ba}} .
 $$
 
 Dabei ist $\bB^+$ die :k[Pseudoinverse]{#pseudoinverse}
-([Abschnitt 7.6](?k=07-kq#sec-7.6)); hat $\bB$ vollen Spaltenrang
+(@sec:kq/pseudoinverse); hat $\bB$ vollen Spaltenrang
 $K$, so ist $\bB^+ = (\bB^\top\bB)^{-1}\bB^\top$,
-und ($13.8.1$) ist die gewöhnliche Lösung der Normalengleichungen
-([Abschnitt 7.1](?k=07-kq#sec-7.1)).
+und @eq:modell-designmatrix-schaetzer ist die gewöhnliche Lösung der Normalengleichungen
+(@sec:kq/problem).
 
-Zwei Dinge sind an ($13.8.1$) wichtig. Der Schätzer ist *linear* in den Daten,
+Zwei Dinge sind an @eq:modell-designmatrix-schaetzer wichtig. Der Schätzer ist *linear* in den Daten,
 er entsteht also durch Multiplikation mit einer festen Matrix. Und mit
 $\cblue{\by} = \symbf{f} + \cred{\beps}$, wobei
 $\symbf{f} = (f(x_1), \dots, f(x_n))^\top$ die rauschfreien
@@ -60,10 +60,10 @@ Der erste Summand ist bereits vollständig bestimmt, bevor eine einzige
 Zufallszahl gezogen wird. Er misst, wie gut sich $f$ überhaupt im Spann
 unserer $K$ Basisfunktionen darstellen lässt.
 
-:::satz[13.8.2 (Der Bias ist der Approximationsfehler ohne Rauschen)]
+:::satz[#der-bias-ist-der-approximationsfehler (Der Bias ist der Approximationsfehler ohne Rauschen)]
 Hat $\bB$ vollen Spaltenrang, so gilt für jedes $x \in [a, b]$
 
-$$ {#eq-13.8.2}
+$$ {#eq-der-bias-ist-der-approximationsfehler}
 \E\bigl[\cgreen{\wh{f}(x)}\bigr]
 = \corange{\bphi(x)}^\top \bB^+ \symbf{f} .
 $$
@@ -76,7 +76,7 @@ Liegen die Knoten gleichmäßig auf $[a, b]$, sind die $\corange{\phi_k}$ eine
 Basis der kubischen Splines zu diesen Knoten und ist $f \in \Ccal^4[a, b]$,
 so gilt zusätzlich
 
-$$ {#eq-13.8.3}
+$$ {#eq-der-bias-ist-der-approximationsfehler-2}
 \frac{1}{n}\sumin \bigl(\cred{\E[\wh{f}(x_i)] - f(x_i)}\bigr)^2
 \;\le\; \Bigl(C \corange{h}^4 \max_{x \in [a,b]}\left| f^{(4)}(x) \right|\Bigr)^2
 = O(K^{-8}) ,
@@ -88,7 +88,7 @@ wobei $\corange{h}$ die Gitterweite der Knoten ist.
 ::::beweis
 
 :::schritt
-Nach ($13.8.1$) ist $\cgreen{\wh{f}(x)}$ eine feste Linearkombination der
+Nach @eq:modell-designmatrix-schaetzer ist $\cgreen{\wh{f}(x)}$ eine feste Linearkombination der
 $\cblue{y_i}$. Aus der Linearität des :k[Erwartungswerts]{#expected-value}
 folgt
 
@@ -102,22 +102,22 @@ $$
 :::
 
 :::schritt
-Die rechte Seite von ($13.8.2$) ist der Kleinste-Quadrate-Fit an die
+Die rechte Seite von @eq:der-bias-ist-der-approximationsfehler ist der Kleinste-Quadrate-Fit an die
 rauschfreien Werte $\symbf{f}$. Nennen wir ihn $\cgreen{\wh{f}_0}$. Er
 minimiert unter allen Funktionen $s$ des Ansatzraums $\Fcal_K$, also des
 Spanns von $\corange{\phi_1}, \dots, \corange{\phi_K}$
-([Abschnitt 13.7](#sec-13.7)), die Summe $\sumin (f(x_i) - s(x_i))^2$.
+(@sec:glaettung), die Summe $\sumin (f(x_i) - s(x_i))^2$.
 
 ::why[Das ist die definierende Eigenschaft der Kleinste-Quadrate-Lösung, angewendet auf den Datenvektor $\symbf{f}$ statt auf $\cblue{\by}$]
 :::
 
 :::schritt
-Zu den Knoten unserer Basis gehört nach Satz 13.6.2 ein kubischer Spline
+Zu den Knoten unserer Basis gehört nach @satz:approximationsfehler-kubischer-splines ein kubischer Spline
 $\cgreen{s^\star}$, der $f$ dort interpoliert und
 $\max_x \cred{\left| f(x) - s^\star(x) \right|} \le C \corange{h}^4 \max_x |f^{(4)}(x)|$
 erfüllt. Dieser Spline liegt in $\Fcal_K$.
 
-::why[Kubische Splines zu $m$ Teilintervallen bilden einen Raum der Dimension $m + 3 = K$, und $\corange{\phi_1}, \dots, \corange{\phi_K}$ ist eine Basis davon ([Abschnitt 13.4](#sec-13.4))]
+::why[Kubische Splines zu $m$ Teilintervallen bilden einen Raum der Dimension $m + 3 = K$, und $\corange{\phi_1}, \dots, \corange{\phi_K}$ ist eine Basis davon (@sec:splines)]
 :::
 
 :::schritt
@@ -129,7 +129,7 @@ $$
 \;\le\; n\,\Bigl(C \corange{h}^4 \max_x |f^{(4)}(x)|\Bigr)^2 ,
 $$
 
-und Division durch $n$ gibt ($13.8.3$).
+und Division durch $n$ gibt @eq:der-bias-ist-der-approximationsfehler-2.
 :::
 
 :::schritt
@@ -142,18 +142,18 @@ $\corange{h}^8 = O(K^{-8})$.
 
 ::::
 
-:::bemerkung[13.8.3 (Woran die Ordnung hängt)]
+:::bemerkung[#woran-die-ordnung-haengt (Woran die Ordnung hängt)]
 Die Annahmen verdienen eine eigene Zeile, denn ohne sie ist die Aussage
 falsch. Gebraucht werden gleichmäßige Knoten auf einem
 festen Intervall, $f \in \Ccal^4$ und kubische Stücke. Fällt eine dieser drei
 Bedingungen weg, ändert sich der Exponent. Bei stückweise linearen Stücken
-steht $\corange{h}^2$ statt $\corange{h}^4$ (Satz 13.6.5), bei einer
+steht $\corange{h}^2$ statt $\corange{h}^4$ (@satz:fehler-der-stueckweise-linearen), bei einer
 :k[Funktion]{#function} mit nur zwei stetigen Ableitungen ebenfalls, und ein
 einziges breites Teilintervall verdirbt die Gitterweite unabhängig davon, wie
-fein der Rest liegt (Definition 13.6.1).
+fein der Rest liegt (@definition:partition-und-gitterweite).
 
 Die Kurzform $\max_x |f(x) - \cgreen{\wh{f}(x)}| = O(\corange{h}^4)$ ist die
-punktweise Fassung ohne Rauschen. Satz 13.8.2 mittelt
+punktweise Fassung ohne Rauschen. @satz:der-bias-ist-der-approximationsfehler mittelt
 stattdessen über die Entwurfsstellen und quadriert; das ist die Größe,
 die gleich in den MSE eingeht, und sie erbt die Ordnung $O(K^{-8})$.
 :::
@@ -164,12 +164,12 @@ Der zweite Summand $\bB^+\cred{\beps}$ trägt den Zufall. Er ist es,
 der bei großem $K$ aus dem Ruder läuft, und über ihn lässt sich mehr sagen als
 eine Ordnung.
 
-:::satz[13.8.4 (Gemittelte Varianz eines linearen Schätzers)]
+:::satz[#gemittelte-varianz-eines-linearen (Gemittelte Varianz eines linearen Schätzers)]
 Seien die $\cred{\eps_i}$ unkorreliert mit
 $\var[\cred{\eps_i}] = \sigma^2$ (homoskedastisch), und habe
 $\bB$ vollen Spaltenrang $K$. Dann gilt für jedes $x$
 
-$$ {#eq-13.8.4}
+$$ {#eq-gemittelte-varianz-eines-linearen}
 \var\bigl[\cgreen{\wh{f}(x)}\bigr]
 = \sigma^2\, \corange{\bphi(x)}^\top
 \bigl(\bB^\top\bB\bigr)^{-1} \corange{\bphi(x)} ,
@@ -177,7 +177,7 @@ $$
 
 und über die Entwurfsstellen gemittelt sogar exakt
 
-$$ {#eq-13.8.5}
+$$ {#eq-gemittelte-varianz-eines-linearen-2}
 \frac{1}{n}\sumin \var\bigl[\cgreen{\wh{f}(x_i)}\bigr] = \frac{\sigma^2 K}{n} .
 $$
 :::
@@ -199,14 +199,14 @@ $$
 :::
 
 :::schritt
-Daraus folgt ($13.8.4$), denn $\cgreen{\wh{f}(x)} = \corange{\bphi(x)}^\top\cgreen{\wh{\ba}}$
+Daraus folgt @eq:gemittelte-varianz-eines-linearen, denn $\cgreen{\wh{f}(x)} = \corange{\bphi(x)}^\top\cgreen{\wh{\ba}}$
 ist eine Linearkombination der Koeffizienten.
 
 ::why[$\var[\bc^\top\bv] = \bc^\top\var[\bv]\,\bc$, hier mit $\bc = \corange{\bphi(x)}$]
 :::
 
 :::schritt
-Nun summieren wir ($13.8.4$) über die Entwurfsstellen. Der Vektor
+Nun summieren wir @eq:gemittelte-varianz-eines-linearen über die Entwurfsstellen. Der Vektor
 $\corange{\bphi(x_i)}^\top$ ist die $i$-te Zeile von $\bB$, also ist
 
 $$
@@ -216,17 +216,17 @@ $$
 = \tr\bigl(\bI_K\bigr) = K .
 $$
 
-::why[Jeder Summand ist ein Skalar und damit gleich seiner :k[Spur]{#trace}; die Zyklizität der Spur ([Abschnitt 3.1](?k=03-matrix-spur-norm#sec-3.1)) zieht den Vektor nach vorn, und $\sumin \corange{\bphi(x_i)}\corange{\bphi(x_i)}^\top = \bB^\top\bB$]
+::why[Jeder Summand ist ein Skalar und damit gleich seiner :k[Spur]{#trace}; die Zyklizität der Spur (@sec:matrix-spur-norm/spur) zieht den Vektor nach vorn, und $\sumin \corange{\bphi(x_i)}\corange{\bphi(x_i)}^\top = \bB^\top\bB$]
 :::
 
 :::schritt
-Multiplikation mit $\sigma^2/n$ liefert ($13.8.5$).
+Multiplikation mit $\sigma^2/n$ liefert @eq:gemittelte-varianz-eines-linearen-2.
 :::
 
 ::::
 
-:::bemerkung[13.8.5 (Was die Varianzformel erzählt)]
-Gleichung ($13.8.5$) ist bemerkenswert schlicht. Rechts steht keine
+:::bemerkung[#was-die-varianzformel-erzaehlt (Was die Varianzformel erzählt)]
+Gleichung @eq:gemittelte-varianz-eines-linearen-2 ist bemerkenswert schlicht. Rechts steht keine
 Eigenschaft der Basis, keine Knotenlage, keine Konditionszahl, sondern nur
 $\sigma^2$, $K$ und $n$. Im Mittel kostet uns jede Basisfunktion genau
 $\sigma^2/n$ an Varianz, egal welche. Das ist die exakte Fassung der
@@ -240,10 +240,10 @@ $\tr(\bH) = K$. Diese Spur heißt in der Statistik die *Anzahl
 effektiver Freiheitsgrade* des Schätzers, und bei einer unbestraften
 Regression mit $K$ Basisfunktionen ist sie schlicht $K$.
 
-Vorsicht bei der punktweisen Lesart. Formel ($13.8.5$) mittelt, ($13.8.4$)
+Vorsicht bei der punktweisen Lesart. Formel @eq:gemittelte-varianz-eines-linearen-2 mittelt, @eq:gemittelte-varianz-eines-linearen
 nicht. An einer Stelle, in deren Nähe kaum Daten liegen, kann
 $\var[\cgreen{\wh{f}(x)}]$ um Größenordnungen darüber liegen. Werten wir
-($13.8.4$) im Beispiel unten nicht an den $100$ Entwurfsstellen aus, sondern
+@eq:gemittelte-varianz-eines-linearen im Beispiel unten nicht an den $100$ Entwurfsstellen aus, sondern
 auf einem gleichmäßigen Gitter über $[0, 2\pi]$, so ist die mittlere Varianz
 bei $K = 40$ nicht $0{,}036$, sondern $5{,}04$: Zwischen den Datenpunkten und
 an den Rändern schwingt der Schätzer weit stärker als dort, wo er angepasst
@@ -254,10 +254,10 @@ nicht.
 
 ### Der Kompromiss: mittlerer quadratischer Fehler
 
-:::satz[13.8.6 (Zerlegung des mittleren quadratischen Fehlers)]
+:::satz[#zerlegung-des-mittleren-quadratischen (Zerlegung des mittleren quadratischen Fehlers)]
 Für jedes $x$ gilt
 
-$$ {#eq-13.8.6}
+$$ {#eq-zerlegung-des-mittleren-quadratischen}
 \underbrace{\E\Bigl[\bigl(\cgreen{\wh{f}(x)} - f(x)\bigr)^2\Bigr]}_{\MSE}
 = \underbrace{\bigl(\cred{\E[\wh{f}(x)] - f(x)}\bigr)^2}_{\text{Bias}^2}
 + \underbrace{\var\bigl[\cgreen{\wh{f}(x)}\bigr]}_{\text{Varianz}} .
@@ -286,11 +286,11 @@ ist die :k[Varianz]{#variance}, der letzte ist deterministisch.
 
 ::::
 
-Setzen wir Satz 13.8.2 und Satz 13.8.4 in ($13.8.6$) ein und mitteln über die
-Entwurfsstellen, so erhalten wir unter den Voraussetzungen von Satz 13.8.2
+Setzen wir @satz:der-bias-ist-der-approximationsfehler und @satz:gemittelte-varianz-eines-linearen in @eq:zerlegung-des-mittleren-quadratischen ein und mitteln über die
+Entwurfsstellen, so erhalten wir unter den Voraussetzungen von @satz:der-bias-ist-der-approximationsfehler
 für eine Konstante $C_1>0$ die zentrale *Obergrenze* dieses Abschnitts:
 
-$$ {#eq-13.8.7}
+$$ {#eq-eq-13-8-7}
 \frac{1}{n}\sumin \E\Bigl[\bigl(\cgreen{\wh{f}(x_i)} - f(x_i)\bigr)^2\Bigr]
 \;\le\;
 \underbrace{C_1K^{-8}}_{\cred{\text{obere Schranke für Bias}^2}}
@@ -300,10 +300,10 @@ $$
 Die Schranke für den ersten Term fällt mit wachsendem $K$ rasant, der zweite
 Term wächst exakt linear. Damit besitzt die *rechte Seite* ein Minimum
 dazwischen. Der tatsächliche Bias darf unter seiner Schranke liegen oder bei
-nicht geschachtelten Räumen schwanken; aus ($13.8.7$) allein folgt daher noch
+nicht geschachtelten Räumen schwanken; aus @eq:eq-13-8-7 allein folgt daher noch
 kein tatsächliches MSE-Minimum an derselben Stelle.
 
-:::bemerkung[13.8.7 (Heuristisches Balance-Modell für die Knotenzahl)]
+:::bemerkung[#heuristisches-balance-modell-fuer-die (Heuristisches Balance-Modell für die Knotenzahl)]
 Nehmen wir stärker an, dass der quadrierte Bias in dem interessierenden
 Bereich tatsächlich wie $c_1K^{-8}$ mit $c_1>0$ verläuft, statt nur nach oben
 so beschränkt zu sein, erhalten wir das Proxy-Kriterium
@@ -350,7 +350,7 @@ konkrete Knotenzahl oder eine Garantie für jeden $f$.
 
 ### Ein numerisches Beispiel
 
-:::beispiel[13.8.8 (Bias und Varianz beim Sinusbeispiel)]
+:::beispiel[#bias-und-varianz-beim-sinusbeispiel (Bias und Varianz beim Sinusbeispiel)]
 Wir wählen das Setup $f(x) = \sin(3x)$ auf $[0, 2\pi]$,
 $n = 100$ feste Stellen, $\sigma = 0{,}3$. Die Stellen ziehen wir einmal aus
 einer Gleichverteilung und behalten sie bei; anschließend simulieren wir
@@ -369,7 +369,7 @@ Rechnung.
 | $40$ | $0{,}0001$ | $0{,}0358$ | $0{,}0360$ | $0{,}0360$ |
 
 Drei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
-$\sigma^2 K/n$ aus Satz 13.8.4 in jeder Zeile auf höchstens zwei Prozent genau;
+$\sigma^2 K/n$ aus @satz:gemittelte-varianz-eines-linearen in jeder Zeile auf höchstens zwei Prozent genau;
 die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
 liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
 das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt beim
@@ -380,7 +380,7 @@ diskrete Optimum liegt dort, wo der nächste zulässige Schritt mehr Varianz
 kostet, als er in dieser Simulation an Bias einspart.
 :::
 
-:::bemerkung[13.8.9 (Der Bias fällt nicht monoton)]
+:::bemerkung[#der-bias-faellt-nicht-monoton (Der Bias fällt nicht monoton)]
 Zwischen $K = 8$ und $K = 9$ steigt der quadrierte Bias von $0{,}0344$ auf
 $0{,}1174$. Beide Anpassungen sind schlecht, denn fünf beziehungsweise sechs
 Teilintervalle sind für drei Sinusperioden zu wenig. Welche von beiden weniger
@@ -389,10 +389,10 @@ sitzen die fünf inneren Knoten exakt auf den Nullstellen $k\pi/3$ von
 $\sin(3x)$, dort also, wo auch $f''$ verschwindet, während die Funktion
 zwischen den Knoten am stärksten gekrümmt ist.
 
-Ein Widerspruch zu Satz 13.8.2 ist das nicht. Die Aussage $O(K^{-8})$ ist eine
+Ein Widerspruch zu @satz:der-bias-ist-der-approximationsfehler ist das nicht. Die Aussage $O(K^{-8})$ ist eine
 obere Schranke für große $K$, keine Garantie, dass jeder einzelne Schritt eine
 Verbesserung bringt. Wir kennen dieselbe Unterscheidung aus
-[Abschnitt 13.6](#sec-13.6), wo die gemessenen Faktoren erst allmählich gegen
+@sec:approximationsfehler, wo die gemessenen Faktoren erst allmählich gegen
 die vorhergesagten $16$ liefen.
 :::
 
@@ -423,8 +423,8 @@ Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum?
 </Schaetzfrage>
 :::
 
-:::bemerkung[13.8.10 (Sigma oder Sigma-Quadrat? Eine naheliegende Verwechslung)]
-In ($13.8.5$) steht $\sigma^2 K/n$ und nicht $\sigma K/n$. Weil
+:::bemerkung[#sigma-oder-sigma-quadrat-eine (Sigma oder Sigma-Quadrat? Eine naheliegende Verwechslung)]
+In @eq:gemittelte-varianz-eines-linearen-2 steht $\sigma^2 K/n$ und nicht $\sigma K/n$. Weil
 $\sigma = 0{,}3$ kleiner als eins ist, sehen beide Ausdrücke plausibel aus:
 Für $K = 5$, $15$ und $40$ liefert $\sigma K/n$ die Werte $0{,}015$, $0{,}045$
 und $0{,}12$, während $\sigma^2 K/n$ mit $\sigma^2 = 0{,}09$ auf $0{,}0045$,
@@ -443,10 +443,10 @@ benennen: Wir kennen $f$ nicht. Bias und MSE sind damit nicht ausrechenbar,
 sondern nur die Residuen. In geschachtelten Räumen werden sie mit wachsendem
 $K$ immer kleiner, bis ein vollrangiger Fall mit $K=n$ jeden Datenpunkt exakt
 trifft; bei wandernden Knoten dürfen einzelne Schritte davon abweichen
-(Bemerkung 13.7.11). Der allgemeine Trend bleibt: Trainingsanpassung belohnt
+(@bemerkung:die-residuen-fallen-nicht-immer). Der allgemeine Trend bleibt: Trainingsanpassung belohnt
 Flexibilität, nicht Vorhersagegüte. Als Auswahlkriterium taugt sie daher nicht.
 
-:::bemerkung[13.8.11 (Drei Auswege)]
+:::bemerkung[#drei-auswege (Drei Auswege)]
 1. *Kreuzvalidierung.* Wir halten einen Teil der Daten zurück, passen auf dem
    Rest an und messen den Fehler auf dem zurückgehaltenen Teil. Punkte, die
    nicht an der Anpassung beteiligt waren, bestrafen Überanpassung von selbst.
@@ -460,11 +460,11 @@ Flexibilität, nicht Vorhersagegüte. Als Auswahlkriterium taugt sie daher nicht
    aus einer einzigen Anpassung.
 :::
 
-:::definition[13.8.12 (Generalisierte Kreuzvalidierung)]
+:::definition[#generalisierte-kreuzvalidierung (Generalisierte Kreuzvalidierung)]
 Mit der Residuenquadratsumme
 $\mathrm{RSS}_K = \sumin (\cblue{y_i} - \cgreen{\wh{f}(x_i)})^2$ heißt
 
-$$ {#eq-13.8.8}
+$$ {#eq-generalisierte-kreuzvalidierung}
 \mathrm{GCV}(K) = \frac{\mathrm{RSS}_K / n}{\left(1 - K/n\right)^2}
 $$
 
@@ -475,10 +475,10 @@ $\tr(\bH)=K$ gilt. Für einen allgemeinen linearen Glätter steht im Nenner die
 effektive Freiheitsgradzahl $\tr(\bH)$ anstelle von $K$.
 :::
 
-:::bemerkung[13.8.13 (Warum der Nenner nötig ist)]
+:::bemerkung[#warum-der-nenner-noetig-ist (Warum der Nenner nötig ist)]
 Bei geschachtelten Modellräumen fällt der Zähler monoton in $K$ und wäre als
 Auswahlkriterium nutzlos. Bei den hier verwendeten, mit $K$ wandernden
-Quantilsknoten kann er einzelne Male steigen (Bemerkung 13.7.11), bevorzugt
+Quantilsknoten kann er einzelne Male steigen (@bemerkung:die-residuen-fallen-nicht-immer), bevorzugt
 im Trend aber weiterhin unnötig flexible Trainingsfits. Der Nenner sorgt für
 den nötigen Gegendruck, und er kommt nicht aus der Luft. Für einen linearen Schätzer
 $\cgreen{\wh{\by}} = \bH\cblue{\by}$ lässt sich das Residuum, das
@@ -488,7 +488,7 @@ man mit der
 :k[Sherman-Morrison-Formel]{#sherman-morrison-formula} nachrechnet. Die
 Kreuzvalidierung, die jeden Punkt einmal weglässt, wird damit zu einer
 einzigen Formel. Ersetzt man darin alle $H_{ii}$ durch ihren Mittelwert
-$\tr(\bH)/n$, so steht ($13.8.8$) da, denn nach Bemerkung 13.8.5 ist
+$\tr(\bH)/n$, so steht @eq:generalisierte-kreuzvalidierung da, denn nach @bemerkung:was-die-varianzformel-erzaehlt ist
 $\tr(\bH) = K$.
 
 Die Leave-one-out-Identität hält dabei die Designmatrix und damit die Basis
@@ -501,11 +501,11 @@ bläst der Nenner den beobachteten Fehler auf, weil ein Schätzer mit vielen
 Parametern seine eigenen Residuen künstlich klein rechnet.
 :::
 
-:::beispiel[13.8.14 (Was die Kriterien in unserem Datensatz wählen)]
-Wir nehmen die erste der $200$ Ziehungen aus Beispiel 13.8.8, also einen
-einzigen Datensatz, und werten ($13.8.8$) für $K = 4, \dots, 40$ aus. Das
+:::beispiel[#was-die-kriterien-in-unserem-datensatz (Was die Kriterien in unserem Datensatz wählen)]
+Wir nehmen die erste der $200$ Ziehungen aus @beispiel:bias-und-varianz-beim-sinusbeispiel, also einen
+einzigen Datensatz, und werten @eq:generalisierte-kreuzvalidierung für $K = 4, \dots, 40$ aus. Das
 Minimum liegt bei $K = 10$ mit $\mathrm{GCV} = 0{,}0895$; AIC und BIC in den
-Formen aus Bemerkung 13.8.11 wählen dasselbe $K$.
+Formen aus @bemerkung:drei-auswege wählen dasselbe $K$.
 
 Der wahre MSE ist bei $K = 12$ am kleinsten. Mit $K = 10$ zahlen wir
 $0{,}0157$ statt $0{,}0120$, also rund $30$ Prozent Aufschlag. Für ein
@@ -515,7 +515,7 @@ Kriterien schätzen den Fehler, sie kennen ihn nicht. Auf einer anderen
 Ziehung fällt die Wahl anders aus.
 :::
 
-:::bemerkung[13.8.15 (Der praktische Ausweg: groß wählen und bestrafen)]
+:::bemerkung[#der-praktische-ausweg-gross-waehlen-und (Der praktische Ausweg: groß wählen und bestrafen)]
 In der Anwendung wird $K$ meist gar nicht feinjustiert. Man wählt es
 großzügig, sodass der Bias sicher klein ist, und steuert die Glattheit
 stattdessen über einen Strafterm. Das führt auf *P-Splines* und weiter auf
@@ -526,10 +526,10 @@ der Strafparameter dagegen stufenlos, und ein stufenloser Regler lässt sich
 mit denselben Kriterien viel feiner einstellen. Formal ist der Übergang
 derselbe wie bei der Ridge-Regression: statt die Zahl der Parameter zu
 begrenzen, bestraft man ihre Größe
-([Abschnitt 12.5](?k=12-optim#sec-12.5)). Auch die effektiven Freiheitsgrade
-$\tr(\bH)$ aus Bemerkung 13.8.5 bleiben brauchbar; sie sind dann
+(@sec:optim/beschraenkt). Auch die effektiven Freiheitsgrade
+$\tr(\bH)$ aus @bemerkung:was-die-varianzformel-erzaehlt bleiben brauchbar; sie sind dann
 keine ganze Zahl mehr, sondern rutschen mit wachsendem Strafparameter stetig
-nach unten. Die Glättungssplines aus [Abschnitt 13.7](#sec-13.7) sind der
+nach unten. Die Glättungssplines aus @sec:glaettung sind der
 Grenzfall $K = n$ mit Strafterm.
 :::
 
@@ -546,18 +546,18 @@ Die graue MSE-Kurve hat ihr Minimum bei $K=12$.
 :::frage{falsch}
 Je größer $K$, desto kleiner der Bias: Die Verzerrung fällt monoton.
 
-Satz 13.8.2 gibt eine obere Schranke der Ordnung $O(K^{-8})$, keine
+@satz:der-bias-ist-der-approximationsfehler gibt eine obere Schranke der Ordnung $O(K^{-8})$, keine
 monotone Folge. In unserer eigenen Simulation steigt der quadrierte Bias von
 $0{,}0344$ bei $K = 8$ auf $0{,}1174$ bei $K = 9$: Beide Gitter sind viel zu
 grob, und bei $K = 9$ fallen die inneren Knoten zusätzlich genau auf die
-Nullstellen von $\sin(3x)$ (Bemerkung 13.8.9). Erst über größere Sprünge in
+Nullstellen von $\sin(3x)$ (@bemerkung:der-bias-faellt-nicht-monoton). Erst über größere Sprünge in
 $K$ setzt sich der Trend durch.
 :::
 
 :::frage{wahr}
 Der Bias hängt nicht von der Rauschstärke $\sigma$ ab.
 
-Nach ($13.8.2$) ist $\E[\cgreen{\wh{f}(x)}] = \corange{\bphi(x)}^\top\bB^+\symbf{f}$,
+Nach @eq:der-bias-ist-der-approximationsfehler ist $\E[\cgreen{\wh{f}(x)}] = \corange{\bphi(x)}^\top\bB^+\symbf{f}$,
 und darin kommt $\sigma$ nicht vor. Der Bias ist der Approximationsfehler, den
 wir auch bei rauschfreien Daten hätten. Stärkeres Rauschen vergrößert die
 Varianz, nicht die Verzerrung.
@@ -567,11 +567,11 @@ Varianz, nicht die Verzerrung.
 Die über die Entwurfsstellen gemittelte Varianz ist exakt $\sigma^2 K/n$,
 unabhängig davon, wo die Knoten liegen.
 
-Das ist ($13.8.5$). Der Beweis benutzt nur, dass der Schätzer die
+Das ist @eq:gemittelte-varianz-eines-linearen-2. Der Beweis benutzt nur, dass der Schätzer die
 Kleinste-Quadrate-Anpassung an eine Designmatrix mit vollem Spaltenrang $K$
 ist, dazu Unkorreliertheit und Homoskedastizität. Weder die Basis noch die
 Knotenlage gehen ein, denn am Ende steht $\tr(\bI_K) = K$. Unsere Simulation
-bestätigt es in jeder Zeile der Tabelle aus Beispiel 13.8.8.
+bestätigt es in jeder Zeile der Tabelle aus @beispiel:bias-und-varianz-beim-sinusbeispiel.
 :::
 
 :::frage{falsch}
@@ -581,7 +581,7 @@ Gemittelt wird über die $n$ Entwurfsstellen, und dort ist die Aussage exakt.
 Zwischen den Datenpunkten und an den Rändern kann die Varianz weit darüber
 liegen: Bei $K = 40$ misst unsere Simulation über ein feines Gitter auf
 $[0, 2\pi]$ eine mittlere Varianz von $5{,}04$ statt $0{,}036$. Punktweise
-gilt nur ($13.8.4$), und dort steht $\corange{\bphi(x)}$ im Ausdruck.
+gilt nur @eq:gemittelte-varianz-eines-linearen, und dort steht $\corange{\bphi(x)}$ im Ausdruck.
 :::
 
 :::frage{falsch}
@@ -599,10 +599,10 @@ $11{,}1$ Prozent.
 :::frage{wahr}
 GCV lässt sich ausrechnen, ohne $f$ zu kennen.
 
-In ($13.8.8$) stehen nur die Residuenquadratsumme, $n$ und $K$, alles
+In @eq:generalisierte-kreuzvalidierung stehen nur die Residuenquadratsumme, $n$ und $K$, alles
 beobachtbare Größen. Darum geht es bei den Modellwahlkriterien: Sie
 schätzen den Vorhersagefehler, statt ihn zu messen, und deshalb treffen sie
-das MSE-Optimum auch nur ungefähr: In Beispiel 13.8.14 wählt GCV $K = 10$,
+das MSE-Optimum auch nur ungefähr: In @beispiel:was-die-kriterien-in-unserem-datensatz wählt GCV $K = 10$,
 während $K = 12$ am besten wäre.
 :::
 

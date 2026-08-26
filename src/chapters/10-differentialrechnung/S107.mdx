@@ -28,7 +28,7 @@ Wir definieren höhere Ableitungen in einem Zug für normierte Vektorräume. Die
 wirkt beim ersten Lesen sperrig, sagt aber etwas sehr Einfaches, das wir gleich danach
 auspacken.
 
-:::definition[10.7.1 (k-mal (Fréchet-)differenzierbar)]
+:::definition[#k-mal-frechet-differenzierbar (k-mal (Fréchet-)differenzierbar)]
 Seien $\D$ und $\E$ normierte Vektorräume, $U \subseteq \D$ offen und
 $f\colon U \to \E$. Mit $\mathcal L^j(\D,\E)$ bezeichnen wir den normierten
 Vektorraum der beschränkten $j$-linearen Abbildungen $\D^j \to \E$; für
@@ -53,7 +53,7 @@ Abbildung $\D\to\mathcal L^{j-1}(\D,\E)$, identifizieren wir mit der
 beschränkten $j$-linearen Abbildung
 $\cgreen{D^j_{\bx}f}\in\mathcal L^j(\D,\E)$. Äquivalent gilt
 
-$$ {#eq-10.7.1}
+$$ {#eq-k-mal-frechet-differenzierbar}
 \lim_{\substack{\bh\to\bnull\\\bx+\bh\in U}}
 \frac{
 \left\|\cblue{D^{j-1}_{\bx+\bh}f}-\cblue{D^{j-1}_{\bx}f}
@@ -65,7 +65,7 @@ Von $k$-maliger Differenzierbarkeit *an $\bx$* sprechen wir, wenn diese
 Voraussetzungen in einer offenen Umgebung von $\bx$ erfüllt sind.
 :::
 
-:::bemerkung[10.7.2 (Wie die Definition zu lesen ist)]
+:::bemerkung[#hoehere-ableitungen-wie-die-definition-zu-lesen-ist (Wie die Definition zu lesen ist)]
 Sechs Beobachtungen, und die sperrige Formel wird handzahm.
 
 *Für $j = 1$ steht dort die alte Definition.* Dann ist
@@ -77,7 +77,7 @@ $$
 \frac{\left\|\cred{r(\bh)}\right\|}{\left\|\bh\right\|}\longrightarrow0 ,
 $$
 
-und das ist die Fréchet-Ableitung aus Definition 10.1.5. Die höheren
+und das ist die Fréchet-Ableitung aus @definition:frechet-ableitung. Die höheren
 Stufen sind also keine neue Idee, sondern dieselbe Idee, mehrfach angewandt.
 
 *Warum eine Umgebung vorkommt.* Um $D^j_{\bx}f$ zu bilden, müssen die Werte
@@ -90,22 +90,22 @@ $$
 \bx \longmapsto \cblue{D^{j-1}_{\bx} f(\bh_1, \dots, \bh_{j-1})}
 $$
 
-eine Abbildung von $\D$ nach $\E$. Aus ($10.7.1$) folgt insbesondere: Ihre
+eine Abbildung von $\D$ nach $\E$. Aus @eq:k-mal-frechet-differenzierbar folgt insbesondere: Ihre
 Fréchet-Ableitung an der Stelle $\bx$, angewandt auf $\bh$, ist
 $\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. In einem Satz: *Die $j$-te Ableitung
 ist die lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere
 Ableitungen wie gewohnt iterativ aus, Stufe für Stufe.
 
 *Warum die Operatornorm entscheidend ist.* Setzen wir feste Richtungen
-$\bh_1,\dots,\bh_{j-1}$ ein, folgt aus ($10.7.1$) eine punktweise Restabschätzung.
+$\bh_1,\dots,\bh_{j-1}$ ein, folgt aus @eq:k-mal-frechet-differenzierbar eine punktweise Restabschätzung.
 Die Operatornorm verlangt mehr: Der Rest muss gleichmäßig für alle Richtungen mit
 Norm höchstens eins klein werden. Genau diese Gleichmäßigkeit wird später im
 allgemeinen Taylor-Satz gebraucht.
 
 *Multilinear und beschränkt.* Multilinear heißt: linear in jedem Argument, wenn die
 übrigen festgehalten werden. Solche Abbildungen kennen wir aus
-[Abschnitt 9.1](?k=09-tensoren#sec-9.1) und aus der Produktregel in
-[Abschnitt 10.6](#sec-10.6). Beschränkt heißt hier
+@sec:tensoren/multilinear und aus der Produktregel in
+@sec:produkt-kettenregel. Beschränkt heißt hier
 
 $$
 \left\|\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_j)}\right\|
@@ -119,7 +119,7 @@ automatisch erfüllt und kostet uns nichts.
 Zeilenvektor mit $n$ Zahlen, $\cgreen{D^2_{\bx} f}$ eine Matrix mit $n^2$ Zahlen,
 $\cgreen{D^3_{\bx} f}$ einen :k[Tensor]{#tensor} dritter Stufe mit $n^3$ Zahlen. Die Stufe
 wächst mit $j$, und ab $j = 3$ verlassen wir die Matrixsprache
-([Abschnitt 9.2](?k=09-tensoren#sec-9.2)). Die Definition sagt noch nichts darüber, wie wir
+(@sec:tensoren/tensoren). Die Definition sagt noch nichts darüber, wie wir
 $\cgreen{D^j_{\bx} f}$ ausrechnen. Das tun die nächsten Seiten für den wichtigsten Fall,
 $f\colon \R^n \to \R$, und danach für $f\colon \R^n \to \R^m$.
 :::
@@ -129,7 +129,7 @@ $f\colon \R^n \to \R$, und danach für $f\colon \R^n \to \R^m$.
 Für skalarwertige Funktionen sammelt die zweite Ableitung alle
 :k[partiellen Ableitungen]{#partial-derivative} zweiter Ordnung in einer Matrix.
 
-:::definition[10.7.3 (Hesse-Matrix)]
+:::definition[#hesse-matrix (Hesse-Matrix)]
 Die *Hesse-Matrix* $\corange{\bH_f(\bx)}$ einer zweimal partiell differenzierbaren Funktion
 $f\colon S \subseteq \R^n \to \R$ ist die Matrix der zweiten partiellen Ableitungen,
 
@@ -147,7 +147,7 @@ partiellen Ableitungen existieren und sind stetig.
 Unter dieser Bedingung fällt eine Symmetrie ab, die den halben Rechenaufwand spart. Wir
 stellen sie den Formeln für $\cgreen{D^2_{\bx} f}$ voran, weil diese sie schon brauchen.
 
-:::satz[10.7.4 (Satz von Schwarz)]
+:::satz[#satz-von-schwarz (Satz von Schwarz)]
 Seien $S \subseteq \R^n$ offen und $f\colon S \to \R$ zweimal stetig differenzierbar
 ($f \in \Ccal^2$). Dann gilt für alle $\bx \in S$ und alle $i, j$
 
@@ -224,8 +224,8 @@ gegen $\partial_j\partial_i f(\bx)$ beziehungsweise $\partial_i\partial_j f(\bx)
 
 ::::
 
-:::bemerkung[10.7.5 (Was die Symmetrie spart)]
-Aus Satz 10.7.4 folgt sofort
+:::bemerkung[#was-die-symmetrie-spart (Was die Symmetrie spart)]
+Aus @satz:satz-von-schwarz folgt sofort
 $\corange{\bH_f(\bx)} = \corange{\bH_f(\bx)}^\top$: Die Hesse-Matrix einer
 $\Ccal^2$-Funktion ist :k[symmetrisch]{#symmetric-matrix}. Die Reihenfolge, in der wir
 partiell ableiten, spielt also keine Rolle.
@@ -240,7 +240,7 @@ bei $n = 2$ auf $0{,}5005$ bei $n = 1000$.
 Die Symmetrie zahlt sich zweimal aus: bei der Berechnung, und beim Lösen von Systemen mit
 $\corange{\bH_f}$. Ist $\corange{\bH_f}$ zusätzlich positiv definit, also gerade in der
 Nähe eines Minimums, so bietet sich das Cholesky-Verfahren aus
-[Abschnitt 5.4](?k=05-lgs#sec-5.4) an; Symmetrie allein reicht dafür nicht, denn Satz 5.4.2
+@sec:lgs/cholesky an; Symmetrie allein reicht dafür nicht, denn @satz:cholesky-zerlegung
 verlangt positive Definitheit. Für symmetrische Matrizen gilt außerdem der
 :k[Spektralsatz]{#spectral-theorem}: Es gibt eine Orthonormalbasis aus Eigenvektoren, und
 alle Eigenwerte sind reell. Darauf beruht alles Weitere in diesem Abschnitt.
@@ -249,7 +249,7 @@ alle Eigenwerte sind reell. Darauf beruht alles Weitere in diesem Abschnitt.
 Jetzt können wir die Ableitungen erster und zweiter Stufe für $f\colon \R^n \to \R$
 ausrechnen.
 
-:::satz[10.7.6 (Erste und zweite Ableitung in Koordinaten)]
+:::satz[#erste-und-zweite-ableitung-in (Erste und zweite Ableitung in Koordinaten)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx \in S$. Dann gilt für alle
 $\bh, \bh_1, \bh_2 \in \R^n$
 
@@ -263,8 +263,8 @@ $$
 ::::beweis
 
 :::schritt
-Die erste Formel ist Gleichung ($10.2.1$) aus
-[Abschnitt 10.2](#sec-10.2): Der Gradient ist der Zeilenvektor der
+Die erste Formel ist Gleichung @eq:eq-10-2-1 aus
+@sec:gradient: Der Gradient ist der Zeilenvektor der
 partiellen Ableitungen, und $\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist die zugehörige
 lineare Abbildung.
 
@@ -272,7 +272,7 @@ lineare Abbildung.
 :::
 
 :::schritt
-Für die zweite Formel setzen wir $j = 2$ in ($10.7.1$). Das Produkt über $i = 1, \dots, 1$
+Für die zweite Formel setzen wir $j = 2$ in @eq:k-mal-frechet-differenzierbar. Das Produkt über $i = 1, \dots, 1$
 ist $\left\|\bh_1\right\|$, und beide $D^1$-Terme schreiben wir nach Schritt 1 in
 Gradientenform:
 
@@ -282,7 +282,7 @@ $$
 + \cred{o(\left\|\bh\right\|)\left\|\bh_1\right\|} .
 $$
 
-::why[($10.7.1$) mit $j = 2$; $D^1_{\bx+\bh} f(\bh_1) = \nabla f(\bx+\bh)\bh_1$ und ebenso an der Stelle $\bx$]
+::why[@eq:k-mal-frechet-differenzierbar mit $j = 2$; $D^1_{\bx+\bh} f(\bh_1) = \nabla f(\bx+\bh)\bh_1$ und ebenso an der Stelle $\bx$]
 :::
 
 :::schritt
@@ -304,7 +304,7 @@ $$
 \qquad \left\|\cred{\br(\bh)}\right\| = \cred{o(\left\|\bh\right\|)} .
 $$
 
-::why[Satz 10.7.4 macht $\bH_f$ symmetrisch, deshalb dürfen wir die Indizes tauschen; dass stetige partielle Ableitungen schon die volle Differenzierbarkeit von $\bg$ nach sich ziehen, ist ein Standardsatz der Analysis, den wir hier als bekannt voraussetzen]
+::why[@satz:satz-von-schwarz macht $\bH_f$ symmetrisch, deshalb dürfen wir die Indizes tauschen; dass stetige partielle Ableitungen schon die volle Differenzierbarkeit von $\bg$ nach sich ziehen, ist ein Standardsatz der Analysis, den wir hier als bekannt voraussetzen]
 :::
 
 :::schritt
@@ -327,18 +327,18 @@ $\cgreen{D^2_{\bx} f(\bh_1, \bh)} = \bh^\top \corange{\bH_f(\bx)}\bh_1$, und weg
 Symmetrie von $\corange{\bH_f(\bx)}$ ist das dasselbe wie
 $\bh_1^\top \corange{\bH_f(\bx)}\bh$. Mit $\bh_2 := \bh$ steht die Behauptung da.
 
-::why[das Eindeutigkeitsargument aus dem letzten Schritt des Beweises zu Satz 10.5.5: $\bh = t\bu$ einsetzen, der Quotient hängt nicht von $t$ ab und muss null sein]
+::why[das Eindeutigkeitsargument aus dem letzten Schritt des Beweises zu @satz:linearitaet-der-ableitungsoperation: $\bh = t\bu$ einsetzen, der Quotient hängt nicht von $t$ ab und muss null sein]
 :::
 
 ::::
 
 Die Formel $\cgreen{D^2_{\bx} f(\bh_1, \bh_2)} = \bh_1^\top \corange{\bH_f(\bx)}\bh_2$ ist
 in beiden Argumenten linear, also eine bilineare Abbildung im Sinne von
-Definition 10.6.1. Für $\bh_1 = \bh_2 = \bh$ wird daraus die
+@definition:beschraenkte-bilineare-abbildung. Für $\bh_1 = \bh_2 = \bh$ wird daraus die
 :k[quadratische Form]{#quadratic-form} $\bh^\top \corange{\bH_f(\bx)}\bh$, und die
 misst gleich, wie sich $f$ in Richtung $\bh$ krümmt.
 
-:::beispiel[10.7.7 (Gradient und Hesse-Matrix einer kubischen Funktion)]
+:::beispiel[#gradient-und-hesse-matrix-einer (Gradient und Hesse-Matrix einer kubischen Funktion)]
 Sei $\cblue{f(\bx)} = \tfrac{1}{3}x_1^3 - x_1 + x_2^2$. Die ersten partiellen Ableitungen
 sind $\partial f/\partial x_1 = x_1^2 - 1$ und $\partial f/\partial x_2 = 2x_2$, also
 
@@ -348,7 +348,7 @@ $$
 \corange{\bH_f(\bx)} = \begin{pmatrix} 2x_1 & 0 \\ 0 & 2 \end{pmatrix} .
 $$
 
-Die Hesse-Matrix ist symmetrisch, wie Satz 10.7.4 es verlangt, und sie hängt hier von
+Die Hesse-Matrix ist symmetrisch, wie @satz:satz-von-schwarz es verlangt, und sie hängt hier von
 $\bx$ ab. Kritische Punkte gibt es zwei, nämlich $(1, 0)$ und $(-1, 0)$.
 
 Im Punkt $(1,0)$ ist $\corange{\bH_f} = \diag(2, 2)$ mit den Eigenwerten $2$ und $2$, beide
@@ -368,7 +368,7 @@ steigt $f$ in jede Richtung, dort liegt ein lokales Minimum mit Wert
 $\cblue{f(1,0)} = -2/3$. Der nächste Satz macht daraus eine Regel.
 :::
 
-:::bemerkung[10.7.8 (Die dritte Ableitung ist ein Tensor)]
+:::bemerkung[#die-dritte-ableitung-ist-ein-tensor (Die dritte Ableitung ist ein Tensor)]
 Für $j = 3$ passt kein Matrixformat mehr. Wir schreiben
 $\cgreen{D^3_{\bx} f} \in \R^{n \times n \times n}$ mit den Einträgen
 
@@ -381,14 +381,14 @@ $$
 $$
 
 Das ist ein :k[Tensor]{#tensor} dritter Stufe, wie wir ihn in
-[Abschnitt 9.2](?k=09-tensoren#sec-9.2) kennengelernt haben, mit $n^3$ Einträgen. Für
+@sec:tensoren/tensoren kennengelernt haben, mit $n^3$ Einträgen. Für
 $f \in \Ccal^3$ ist er in allen drei Indizes symmetrisch, sodass wieder nur ein Bruchteil
 davon wirklich zu berechnen ist.
 
 Zwei Kleinigkeiten zur Notation. Erstens laufen Index- und Ableitungsreihenfolge in den
 beiden Definitionen gegenläufig: In $\corange{\bH_f(\bx)_{i,j}}$ wird zuerst nach $x_j$ und
 dann nach $x_i$ abgeleitet, in $\left(\cgreen{D^3_{\bx} f}\right)_{i,j,k}$ dagegen zuerst
-nach $x_i$ und zuletzt nach $x_k$. Solange Satz 10.7.4 zur Verfügung steht, ist das
+nach $x_i$ und zuletzt nach $x_k$. Solange @satz:satz-von-schwarz zur Verfügung steht, ist das
 folgenlos, sauberer wäre eine einheitliche Wahl. Zweitens ist der Speicherbedarf der
 eigentliche Grund, warum in der Praxis fast nie über die zweite Stufe hinausgegangen wird:
 Ein solcher Tensor verlangt für $n = 1000$ schon eine Milliarde Zahlen.
@@ -400,7 +400,7 @@ Die Hesse-Matrix beschreibt die lokale Krümmung von $f$. Weil sie symmetrisch i
 nach dem Spektralsatz reelle Eigenwerte und eine Orthonormalbasis aus Eigenvektoren. Das
 Vorzeichenmuster dieser Eigenwerte entscheidet über die Art des kritischen Punktes.
 
-:::satz[10.7.9 (Hesse-Kriterium für kritische Punkte)]
+:::satz[#hesse-kriterium-fuer-kritische-punkte (Hesse-Kriterium für kritische Punkte)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^* \in S$ ein kritischer Punkt,
 also $\corange{\nabla f(\bx^*)} = \bnull$. Dann gilt:
 
@@ -417,7 +417,7 @@ also $\corange{\nabla f(\bx^*)} = \bnull$. Dann gilt:
 :::
 
 Den Beweis liefert die Taylorentwicklung zweiter Ordnung aus
-[Abschnitt 10.8](#sec-10.8). Die Idee lässt sich aber schon hier in einem Satz sagen. In
+@sec:taylor. Die Idee lässt sich aber schon hier in einem Satz sagen. In
 einem kritischen Punkt fällt der lineare Term weg, und es bleibt
 
 $$
@@ -434,8 +434,8 @@ also die Krümmung, und $\cblue{f(\bx^*+\bh)} > \cblue{f(\bx^*)}$. Bei einem ind
 $\corange{\bH_f(\bx^*)}$ führen wir dasselbe Argument entlang der beiden Eigenrichtungen zu
 einem positiven und einem negativen Eigenwert getrennt durch.
 
-:::bemerkung[10.7.10 (Wenn die Hesse-Matrix nichts entscheidet)]
-Die drei Fälle in Satz 10.7.9 decken nicht alles ab. Offen bleibt genau der Grenzfall, in
+:::bemerkung[#wenn-die-hesse-matrix-nichts-entscheidet (Wenn die Hesse-Matrix nichts entscheidet)]
+Die drei Fälle in @satz:hesse-kriterium-fuer-kritische-punkte decken nicht alles ab. Offen bleibt genau der Grenzfall, in
 dem $\corange{\bH_f(\bx^*)}$ semidefinit, aber nicht definit ist: Mindestens ein Eigenwert
 ist null, und die übrigen tragen alle dasselbe Vorzeichen. Ein Eigenwert null allein reicht
 dafür übrigens nicht; kommt ein gemischtes Vorzeichenmuster hinzu, etwa bei
@@ -469,7 +469,7 @@ Funktion $\cblue{f(\bx)} = \tfrac{1}{2}\bx^\top\corange{\bH}\bx$ gehört dann an
 Stelle dieselbe Hesse-Matrix $\corange{\bH}$, und $\bnull$ ist ein kritischer Punkt von ihr,
 solange $\corange{\bH}$ invertierbar ist sogar der einzige.
 
-Damit lässt sich Satz 10.7.9 abfahren wie eine Landkarte. Was passiert mit den Höhenlinien,
+Damit lässt sich @satz:hesse-kriterium-fuer-kritische-punkte abfahren wie eine Landkarte. Was passiert mit den Höhenlinien,
 wenn ein Eigenwert das Vorzeichen wechselt? Welche Achse gehört zur langen Halbachse einer
 Ellipse? Und was bleibt an der Grenze übrig, wenn ein Eigenwert genau auf null steht?
 
@@ -491,9 +491,9 @@ nicht davon ab, wie wir das Koordinatensystem legen.
 
 Schieben wir einen Eigenwert unter null, so zerfallen die Ellipsen in Hyperbeln, und das
 dick gezeichnete Niveau $0$ wird zu einem Geradenkreuz. Das ist der Sattel aus
-Satz 10.7.9(3), und in der Raumtafel daneben ist es die Sattelfläche. Dieselbe Situation
+@satz:hesse-kriterium-fuer-kritische-punkte(3), und in der Raumtafel daneben ist es die Sattelfläche. Dieselbe Situation
 kennen wir schon: Das Gradientenfeld-Widget in
-[Abschnitt 10.2](#sec-10.2) zeigt
+@sec:gradient zeigt
 $\cblue{f(\bx)} = x_1^2 + 3x_1x_2 + 2x_2^2$ mit der Hesse-Matrix
 $\corange{\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4\end{smallmatrix}\bigr)}$, deren
 Eigenwerte $3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$, genau dieses Vorzeichenmuster
@@ -504,7 +504,7 @@ haben.
 Die Definitheit im kritischen Punkt ist eine lokale Aussage. Verlangen wir sie überall, so
 bekommen wir eine globale Eigenschaft.
 
-:::satz[10.7.11 (Konvexität und positive Semidefinitheit)]
+:::satz[#konvexitaet-und-positive-semidefinitheit (Konvexität und positive Semidefinitheit)]
 Seien $S \subseteq \R^n$ offen und *konvex* und $f \in \Ccal^2(S)$. Dann gilt
 
 $$
@@ -515,14 +515,14 @@ $$
 :::
 
 Für eine :k[konvexe Funktion]{#convexity} liegt die Verbindungsstrecke zwischen zwei
-Punkten des Graphen nie unter dem Graphen. Satz 10.7.11 übersetzt das in eine punktweise
+Punkten des Graphen nie unter dem Graphen. @satz:konvexitaet-und-positive-semidefinitheit übersetzt das in eine punktweise
 Bedingung an die zweite Ableitung, und das ist der Grund, warum konvexe
 :k[Optimierungsprobleme]{#optimization} handhabbar sind: Jeder kritische Punkt ist dort
 schon ein globales Minimum, und es gibt keine Sattelpunkte, an denen ein Verfahren
 hängenbleiben könnte.
 
-:::bemerkung[10.7.12 (Warum die Menge offen und konvex sein muss)]
-Beide Zusätze in Satz 10.7.11 werden leicht überlesen, nötig sind sie trotzdem.
+:::bemerkung[#warum-die-menge-offen-und-konvex-sein (Warum die Menge offen und konvex sein muss)]
+Beide Zusätze in @satz:konvexitaet-und-positive-semidefinitheit werden leicht überlesen, nötig sind sie trotzdem.
 
 *$S$ muss konvex sein.* Sonst ist die linke Seite gar nicht definiert: Die
 Konvexitätsbedingung spricht über Punkte $t\bx + (1-t)\by$ auf der Verbindungsstrecke, und
@@ -541,19 +541,19 @@ an $\corange{\bH_f}$ Information aus Richtungen zieht, die in $S$ gar nicht vork
 Sobald $S$ offen und konvex ist, stimmt die Äquivalenz.
 
 Die :k[Konvexität]{#convexity} und was sie für Optimierungsverfahren bedeutet, ist ein
-Thema für sich; [Kapitel 11](?k=11-konvexitaet#sec-11.1) nimmt es sich vor.
+Thema für sich; @kap:konvexitaet nimmt es sich vor.
 :::
 
 ### Warum das in der Praxis zählt
 
-:::bemerkung[10.7.13 (Praxisrelevanz der Hesse-Matrix)]
+:::bemerkung[#praxisrelevanz-der-hesse-matrix (Praxisrelevanz der Hesse-Matrix)]
 Vier Punkte, die zusammen erklären, warum die Hesse-Matrix in der Praxis überall
 auftaucht.
 
 *Warum Sattelpunkte in hoher Dimension plausibel sind.* Ein kritischer Punkt mit
 invertierbarer Hesse-Matrix ist nur dann ein Extremum, wenn *alle* $n$ Eigenwerte
 dasselbe Vorzeichen haben; im ausgearteten Fall entscheidet die Hesse-Matrix nichts
-(Bemerkung 10.7.10). Schon eine grobe Zählung
+(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Schon eine grobe Zählung
 macht klar, wie selten das ist: Wären die $n$ Vorzeichen wie Münzwürfe, so hätte ein
 Minimum (alle Vorzeichen positiv) die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum,
 Maximum eingeschlossen, die Wahrscheinlichkeit $2^{1-n}$. Für $n = 100$ sind das
@@ -573,7 +573,7 @@ den Parameter trifft. Der nächste Unterabschnitt führt das aus.
 
 *Maschinelles Lernen.* Im streng konvexen quadratischen Modell bestimmt die Hesse-Matrix
 die :k[Kondition]{#condition-number} exakt. Für den Gradientenabstieg aus
-[Abschnitt 10.2](#sec-10.2) hängt die Konvergenzrate dann am Verhältnis
+@sec:gradient hängt die Konvergenzrate dann am Verhältnis
 $\kappa = \corange{\lambda_{\max}}/\corange{\lambda_{\min}}$ der extremen Eigenwerte: Bei
 optimal gewählter Lernrate schrumpft der Abstand zum Minimum je Schritt auf das
 $(\kappa - 1)/(\kappa + 1)$-fache. Dort wird
@@ -589,12 +589,12 @@ Schranke $\mu\bI\preceq\bH_L(\btheta)\preceq L\bI$.
 
 *Optimierung.* Verfahren, die $\corange{\bH_f}$ nicht nur analysieren, sondern benutzen,
 konvergieren erheblich schneller. Das Newton-Verfahren in
-[Abschnitt 10.8](#sec-10.8) ist der Prototyp.
+@sec:taylor ist der Prototyp.
 :::
 
 ### Anwendung: Fisher-Information
 
-:::definition[10.7.14 (Fisher-Informationsmatrix)]
+:::definition[#fisher-informationsmatrix (Fisher-Informationsmatrix)]
 Für ein statistisches Modell mit Log-Likelihood $\ell(\btheta)$ und Parameter
 $\btheta \in \R^p$ ist unter den üblichen Regularitätsbedingungen, die insbesondere
 das Differenzieren unter dem Erwartungswert erlauben, die *Fisher-Informationsmatrix*
@@ -608,7 +608,7 @@ $$
 :::
 
 Das $\E$ ist hier wieder der :k[Erwartungswert]{#expected-value} und nicht der Zielraum aus
-Definition 10.7.1; erwartet wird über die Daten, bei festem wahrem $\btheta$. Lassen wir
+@definition:k-mal-frechet-differenzierbar; erwartet wird über die Daten, bei festem wahrem $\btheta$. Lassen wir
 den Erwartungswert weg, so erhalten wir die *beobachtete* Fisher-Information
 $-\corange{\bH_\ell(\btheta)}$ am jeweiligen Parameterwert; häufig wird sie am
 ML-Schätzer $\wh{\btheta}$ ausgewertet. Unter denselben Regularitätsbedingungen ist
@@ -621,7 +621,7 @@ schlechter, die Daten sind also *informativ* über $\btheta$. Eine flache Log-Li
 lässt einen weiten Bereich von Parametern fast gleich gut aussehen, und der Parameter ist
 schwer zu schätzen. Beides misst dieselbe zweite Ableitung.
 
-:::beispiel[10.7.15 (Fisher-Information im Bernoulli-Modell)]
+:::beispiel[#fisher-information-im-bernoulli-modell (Fisher-Information im Bernoulli-Modell)]
 Seien $y_1, \dots, y_n$ unabhängige, identisch verteilte Bernoulli-Variablen mit
 Erfolgswahrscheinlichkeit $0<p<1$. Die Log-Likelihood ist
 
@@ -657,7 +657,7 @@ $\var(\wh{p}) = 0{,}000475$: Nahe am Rand des Parameterbereichs sind die Daten d
 informativer.
 :::
 
-:::bemerkung[10.7.16 (Cramér-Rao, sauber formuliert)]
+:::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao, sauber formuliert)]
 Als Merkregel kursiert
 $\var(\wh{\btheta}) \to \corange{\bI(\btheta)}^{-1}$ für $n \to \infty$. Gemeint ist das
 Richtige, aber so verkürzt vermischt sie drei Dinge, die zu trennen sind.
@@ -689,7 +689,7 @@ gilt bei festem $n$ und für :k[erwartungstreue]{#unbiased-estimator} Schätzer:
 :k[Kovarianzmatrix]{#covariance-matrix} erfüllt
 $\var(\wh{\btheta}) \succeq \corange{\bI_n(\btheta)}^{-1}$ im Sinne der Definitheit. Der
 ML-Schätzer ist im Allgemeinen nicht erwartungstreu und erreicht die Schranke erst
-asymptotisch. Im Bernoulli-Beispiel 10.7.15 fällt beides zusammen, weil $\wh{p}$
+asymptotisch. Im Bernoulli-@beispiel:fisher-information-im-bernoulli-modell fällt beides zusammen, weil $\wh{p}$
 erwartungstreu ist und die Schranke exakt annimmt.
 
 In allen drei Fassungen bleibt die Merkregel dieselbe: mehr Information, kleinere Varianz,
@@ -701,14 +701,14 @@ präzisere Schätzung.
 Zum Schluss der allgemeine Fall $f\colon \R^n \to \R^m$. Er ist in der Statistik nicht
 exotisch. Die *Score-Funktion* $\corange{\nabla \ell(\btheta)}^\top$ ist genau von dieser
 Bauart, sie bildet $\R^p$ nach $\R^p$ ab, und ihre Jacobimatrix ist die Hesse-Matrix
-$\corange{\bH_\ell(\btheta)}$, wie Schritt 3 im Beweis zu Satz 10.7.6 zeigt; aus ihr
-entsteht die Fisher-Information von Definition 10.7.14.
+$\corange{\bH_\ell(\btheta)}$, wie Schritt 3 im Beweis zu @satz:erste-und-zweite-ableitung-in zeigt; aus ihr
+entsteht die Fisher-Information von @definition:fisher-informationsmatrix.
 Momentengleichungen sind ein zweites Beispiel. Auf das Transponierte kommt es dabei an:
 In der Zeilenkonvention aus
-[Abschnitt 10.2](#sec-10.2) ist $\corange{\nabla\ell(\btheta)}$
+@sec:gradient ist $\corange{\nabla\ell(\btheta)}$
 eine Zeile, und erst die transponierte Fassung ist eine Abbildung von $\R^p$ nach $\R^p$.
 
-Nach Definition 10.7.1 ist die $j$-te Ableitung eine multilineare Abbildung
+Nach @definition:k-mal-frechet-differenzierbar ist die $j$-te Ableitung eine multilineare Abbildung
 $\cgreen{D^j_{\bx} f}\colon \left(\R^n\right)^j \to \R^m$. Als Zahlenschema ist das ein
 Tensor der Stufe $j+1$ mit den Dimensionen
 
@@ -730,10 +730,10 @@ Komponenten der $\bh_i$. Für die ersten drei Stufen schreiben wir das aus, und 
 lohnt sich, die rechten Seiten anzusehen: Dort steht jeweils dieselbe Rechnung, ausgedrückt
 über die Jacobimatrix.
 
-:::satz[10.7.17 (Die ersten drei Stufen für Vektor-zu-Vektor)]
+:::satz[#die-ersten-drei-stufen-fuer-vektor-zu (Die ersten drei Stufen für Vektor-zu-Vektor)]
 Sei $f\colon \R^n \to \R^m$ hinreichend oft stetig differenzierbar. Dann gilt
 
-$$ {#eq-10.7.2}
+$$ {#eq-die-ersten-drei-stufen-fuer-vektor-zu}
 \begin{aligned}
 \cgreen{D_{\bx} f (\bh)}
 &= \sum_{i=1}^n \frac{\partial f(\bx)}{\partial x_i}\, h_i
@@ -756,11 +756,11 @@ $$
 
 :::schritt
 Die erste Zeile ist die Jacobimatrix aus
-[Abschnitt 10.3](#sec-10.3): Die $i$-te Spalte von
+@sec:jacobi: Die $i$-te Spalte von
 $\corange{\bJ_f(\bx)}$ ist $\partial f(\bx)/\partial x_i \in \R^m$, und das Produkt
 $\corange{\bJ_f(\bx)}\bh$ summiert die Spalten mit den Gewichten $h_i$.
 
-::why[Definition 10.3.1: $\bJ_f(\bx)_{a,i} = \partial f_a(\bx)/\partial x_i$; Matrix mal Vektor ist die gewichtete Spaltensumme]
+::why[@definition:jacobimatrix: $\bJ_f(\bx)_{a,i} = \partial f_a(\bx)/\partial x_i$; Matrix mal Vektor ist die gewichtete Spaltensumme]
 :::
 
 :::schritt
@@ -789,7 +789,7 @@ die dritte Zeile läuft es genauso mit drei Indizes.
 :::schritt
 Zur Kontrolle der Spezialfall $m = 1$. Dann ist $\corange{\bJ_f(\bx)} = \corange{\nabla f(\bx)}$
 ein Zeilenvektor, und $\partial \corange{\nabla f(\bx)}/\partial x_i$ ist die $i$-te Zeile
-von $\corange{\bH_f(\bx)}$. Die zweite Zeile von ($10.7.2$) wird damit zu
+von $\corange{\bH_f(\bx)}$. Die zweite Zeile von @eq:die-ersten-drei-stufen-fuer-vektor-zu wird damit zu
 
 $$
 \sum_{i=1}^n \left(\corange{\bH_f(\bx)}\,\bh_1\right)_i h_{2,i}
@@ -797,9 +797,9 @@ $$
 = \bh_1^\top \corange{\bH_f(\bx)}\,\bh_2 ,
 $$
 
-also genau Satz 10.7.6.
+also genau @satz:erste-und-zweite-ableitung-in.
 
-::why[der letzte Schritt nutzt die Symmetrie aus Satz 10.7.4; ohne sie stünde dort die Transponierte]
+::why[der letzte Schritt nutzt die Symmetrie aus @satz:satz-von-schwarz; ohne sie stünde dort die Transponierte]
 :::
 
 ::::
@@ -821,7 +821,7 @@ Sieben Aussagen zu diesem Abschnitt. Welche davon stimmen?
 Ist $f\colon S \to \R$ auf der offenen Menge $S$ zweimal stetig differenzierbar, so ist die
 Hesse-Matrix in jedem Punkt symmetrisch.
 
-Das ist der Satz von Schwarz (Satz 10.7.4). Der Beweis vergleicht zwei Mittelwertsätze an
+Das ist der Satz von Schwarz (@satz:satz-von-schwarz). Der Beweis vergleicht zwei Mittelwertsätze an
 derselben doppelten Differenz $\Delta(s,t)$, und die Stetigkeit der zweiten Ableitungen
 sorgt dafür, dass beide Grenzwerte für $s, t \to 0$ zusammenfallen.
 :::
@@ -832,7 +832,7 @@ $n(n+1)/2$, also auf weniger als die Hälfte.
 
 Die Zahlen stimmen, der Zusatz nicht: $n(n+1)/2 = n^2/2 + n/2$ ist etwas *mehr* als die
 Hälfte von $n^2$. Für $n = 100$ sind es $5050$ statt $5000$. Erst für große $n$ nähert sich
-der Quotient der Hälfte an, bei $n = 1000$ liegt er bei $0{,}5005$ (Bemerkung 10.7.5).
+der Quotient der Hälfte an, bei $n = 1000$ liegt er bei $0{,}5005$ (@bemerkung:was-die-symmetrie-spart).
 :::
 
 :::frage{falsch}
@@ -841,8 +841,8 @@ in $\bx^*$ ein lokales Minimum.
 
 Semidefinit reicht nicht. Für $f(x) = x^3$ ist $f'(0) = f''(0) = 0$, die Hesse-Matrix
 $(0)$ ist positiv semidefinit, und trotzdem liegt in $0$ weder ein Minimum noch ein
-Maximum. Satz 10.7.9 verlangt positive *Definitheit*; im semidefiniten Grenzfall
-entscheidet die zweite Ableitung nichts (Bemerkung 10.7.10).
+Maximum. @satz:hesse-kriterium-fuer-kritische-punkte verlangt positive *Definitheit*; im semidefiniten Grenzfall
+entscheidet die zweite Ableitung nichts (@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet).
 :::
 
 :::frage{wahr}
@@ -851,8 +851,8 @@ Argumente linear.
 
 Halten wir $\bh_2$ fest, so ist die Zuordnung $\bh_1 \mapsto \bh_1^\top \bH_f(\bx)\bh_2$
 das Skalarprodukt mit einem festen Vektor, also linear; für $\bh_1$ fest genauso. Damit ist
-$D^2_{\bx} f$ eine bilineare Abbildung im Sinne von Definition 10.6.1, so wie es
-Definition 10.7.1 für alle Stufen verlangt.
+$D^2_{\bx} f$ eine bilineare Abbildung im Sinne von @definition:beschraenkte-bilineare-abbildung, so wie es
+@definition:k-mal-frechet-differenzierbar für alle Stufen verlangt.
 :::
 
 :::frage{falsch}
@@ -862,8 +862,8 @@ ist $f$ auf $S$ konvex.
 Ohne Zusatzbedingungen an $S$ ist die Behauptung nicht einmal sinnvoll. Auf
 $S = (-2,-1) \cup (1,2)$ mit $f \equiv -5$ links und $f \equiv 0$ rechts ist
 $f'' \equiv 0$, aber die Verbindungsstrecke zwischen zwei Punkten verlässt $S$, und eine
-konvexe Fortsetzung auf $\R$ gibt es nicht. Satz 10.7.11 verlangt $S$ offen und konvex
-(Bemerkung 10.7.12).
+konvexe Fortsetzung auf $\R$ gibt es nicht. @satz:konvexitaet-und-positive-semidefinitheit verlangt $S$ offen und konvex
+(@bemerkung:warum-die-menge-offen-und-konvex-sein).
 :::
 
 :::frage{falsch}
@@ -874,15 +874,15 @@ gilt die Cramér-Rao-Schranke $\var(\wh{\btheta}) \succeq \bI_n(\btheta)^{-1}$, 
 erwartungstreue Schätzer; der ML-Schätzer ist im Allgemeinen verzerrt und erreicht die
 Schranke erst für $n \to \infty$, in der Form
 $\sqrt{n}(\wh{\btheta}_n - \btheta) \to N(\bnull, \bI_1(\btheta)^{-1})$
-(Bemerkung 10.7.16). Das Bernoulli-Modell ist ein Sonderfall, in dem Gleichheit schon für
+(@bemerkung:cramer-rao-sauber-formuliert). Das Bernoulli-Modell ist ein Sonderfall, in dem Gleichheit schon für
 endliches $n$ gilt.
 :::
 
 :::frage{falsch}
-Nach der Münzwurf-Heuristik aus Bemerkung 10.7.13 sind in sehr hohen Dimensionen die
+Nach der Münzwurf-Heuristik aus @bemerkung:praxisrelevanz-der-hesse-matrix sind in sehr hohen Dimensionen die
 meisten kritischen Punkte lokale Minima oder Maxima.
 
-Im Münzwurfmodell aus Bemerkung 10.7.13 ist es umgekehrt. Sobald die Hesse-Matrix
+Im Münzwurfmodell aus @bemerkung:praxisrelevanz-der-hesse-matrix ist es umgekehrt. Sobald die Hesse-Matrix
 Eigenwerte beider Vorzeichen trägt, liegt ein Sattelpunkt vor; ein Extremum verlangt
 bei invertierbarer Hesse-Matrix, dass alle $n$ Eigenwerte dasselbe Vorzeichen haben.
 Eine grobe
@@ -902,8 +902,8 @@ Null. Die Voreinstellung setzt $\corange{\lambda} = (3, 0)$, und wegen
 $\det\corange{\bH} = \corange{\lambda_1}\corange{\lambda_2}$ ist die Determinante damit
 null, die Matrix also singulär. Im Bild wird das zu Parallelen statt Ellipsen: Entlang der
 Hauptachse zum Eigenwert $0$ bleibt $\cblue{f}$ konstant, statt eines isolierten kritischen
-Punktes liegt dort eine ganze Gerade davon. Satz 10.7.9 greift in diesem Fall nicht mehr
-(Bemerkung 10.7.10).
+Punktes liegt dort eine ganze Gerade davon. @satz:hesse-kriterium-fuer-kritische-punkte greift in diesem Fall nicht mehr
+(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet).
 :::
 
 ::::

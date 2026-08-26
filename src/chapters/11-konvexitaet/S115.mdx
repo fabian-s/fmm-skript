@@ -7,14 +7,14 @@ in der :k[Optimierung]{#optimization} wirklich geht, lautet nicht „ist die Fun
 sondern: Wenn ein Verfahren stehenbleibt, weil es keine Abstiegsrichtung mehr findet, haben
 wir dann das Beste gefunden oder nur ein Zwischenergebnis? Für allgemeine Funktionen ist die
 Antwort ernüchternd. Ein Gradient, der verschwindet, kann zu einem Minimum gehören, zu einem
-Maximum oder zu einem Sattelpunkt (Satz 10.7.9 in
-[Abschnitt 10.7](?k=10-differentialrechnung#sec-10.7)), und selbst ein echtes lokales Minimum kann
+Maximum oder zu einem Sattelpunkt (@satz:hesse-kriterium-fuer-kritische-punkte in
+@sec:differentialrechnung/hoehere-ableitungen), und selbst ein echtes lokales Minimum kann
 weit über dem globalen liegen.
 
 Für konvexe Funktionen bricht diese Unterscheidung zusammen. Das ist der eigentliche Grund,
 warum sich der Aufwand der letzten vier Abschnitte lohnt.
 
-:::satz[11.5.1 (Kritischer Punkt und globales Minimum)]
+:::satz[#kritischer-punkt-und-globales-minimum (Kritischer Punkt und globales Minimum)]
 Sei $f\colon \R^n \to \R$ differenzierbar und :k[konvex]{#convexity}, und sei
 $\corange{\bx^\star} \in \R^n$. Dann sind die folgenden beiden Aussagen äquivalent:
 
@@ -46,8 +46,8 @@ Eintrag des Gradienten.
 :::
 
 :::schritt
-*(2) $\Rightarrow$ (1).* Hier trägt die Konvexität. Nach Satz 11.4.9(2), der
-Tangentenbedingung aus [Abschnitt 11.4](#sec-11.4), gilt für jedes $\by \in \R^n$
+*(2) $\Rightarrow$ (1).* Hier trägt die Konvexität. Nach @satz:konvexe-funktionen-von-vektoren-zu(2), der
+Tangentenbedingung aus @sec:eigenschaften, gilt für jedes $\by \in \R^n$
 
 $$
 f(\by) \ \ge\ f(\corange{\bx^\star}) + \underbrace{\nabla f(\corange{\bx^\star})}_{=\ \bnull^\top}
@@ -57,7 +57,7 @@ $$
 
 Damit ist $f(\corange{\bx^\star})$ der kleinste Funktionswert überhaupt.
 
-::why[Satz 11.4.9 ist für $f \in \Ccal^2$ formuliert; für die Äquivalenz seiner Aussagen (1) und (2) genügt nach Bemerkung 11.4.10 einfache Differenzierbarkeit, denn der zugehörige Beweisschritt rechnet nur mit Differenzenquotienten]
+::why[@satz:konvexe-funktionen-von-vektoren-zu ist für $f \in \Ccal^2$ formuliert; für die Äquivalenz seiner Aussagen (1) und (2) genügt nach @bemerkung:wo-die-voraussetzungen-stecken einfache Differenzierbarkeit, denn der zugehörige Beweisschritt rechnet nur mit Differenzenquotienten]
 :::
 
 ::::
@@ -65,7 +65,7 @@ Damit ist $f(\corange{\bx^\star})$ der kleinste Funktionswert überhaupt.
 Zwei Konsequenzen stecken in diesem Satz, und sie sind die wichtigsten des ganzen
 Kapitels. Wir gehen sie einzeln durch.
 
-:::bemerkung[11.5.2 (Was daraus folgt, und was nicht)]
+:::bemerkung[#was-daraus-folgt-und-was-nicht (Was daraus folgt, und was nicht)]
 *Jeder kritische Punkt ist ein globales Minimum.* Das ist Schritt 2 des Beweises, wörtlich.
 Die vorsichtigere Fassung „jeder kritische Punkt ist ein lokales Minimum" bleibt unter dem,
 was der Satz hergibt.
@@ -78,7 +78,7 @@ $f\colon \cblue{\Xcal} \to \R$ konvex und $\corange{\bx^\star}$ ein lokales Mini
 ein $\by \in \cblue{\Xcal}$ mit $f(\by) < f(\corange{\bx^\star})$, so läge für jedes
 $\lambda \in (0, 1]$ der Punkt
 $\cgreen{\bz_\lambda} = (1-\lambda)\corange{\bx^\star} + \lambda\by$ in $\cblue{\Xcal}$, und
-die Konvexitätsungleichung ($11.3.4$) gäbe
+die Konvexitätsungleichung @eq:konvexitaet-als-ungleichung gäbe
 
 $$
 f(\cgreen{\bz_\lambda}) \ \le\ (1-\lambda) f(\corange{\bx^\star}) + \lambda f(\by)
@@ -92,7 +92,7 @@ LASSO-Strafterm sind also genauso gutmütig.
 
 *Es gibt keine Sattelpunkte, in denen ein Verfahren hängenbleiben könnte.* An einem
 Sattelpunkt verschwindet der Gradient, und in jeder Umgebung lägen Punkte mit kleinerem
-Funktionswert. Nach Satz 11.5.1 ist ein solcher Punkt aber ein globales Minimum, und kleinere
+Funktionswert. Nach @satz:kritischer-punkt-und-globales-minimum ist ein solcher Punkt aber ein globales Minimum, und kleinere
 Werte gibt es dort nicht. Konvexe Landschaften haben nur Talböden.
 
 *Nicht folgt: Eindeutigkeit.* Eine konstante Funktion ist konvex und wird an jeder Stelle
@@ -103,7 +103,7 @@ konvexes Optimierungsproblem lösen, finden wir garantiert ein globales Optimum"
 genau so zu lesen, wie er dasteht: *falls* wir eine Lösung finden, ist sie global.
 
 *Und ohne Ableitung?* Ist $f$ konvex, so tritt an die Stelle des Gradienten das
-:k[Subdifferential]{#gradient} aus Definition 11.4.14:
+:k[Subdifferential]{#gradient} aus @definition:subgradient-und-subdifferential:
 
 $$
 \corange{\bx^\star} \ \text{ist globales Minimum}
@@ -113,11 +113,11 @@ $$
 
 Beide Richtungen stehen schon in der Definition des Subgradienten, und zwar an jeder Stelle des
 Definitionsbereichs, Randpunkte eingeschlossen. Ist $\bnull \in \partial f(\corange{\bx^\star})$,
-so lautet ($11.4.3$) mit $\bv = \bnull$ gerade $f(\by) \ge f(\corange{\bx^\star})$ für alle
+so lautet @eq:subgradient-und-subdifferential mit $\bv = \bnull$ gerade $f(\by) \ge f(\corange{\bx^\star})$ für alle
 $\by$. Und ist umgekehrt $\corange{\bx^\star}$ ein globales Minimum, so erfüllt $\bv = \bnull$
 die Ungleichung, ist also ein Subgradient. Die Voraussetzung eines inneren Punktes brauchen wir
-an anderer Stelle: Sie sichert nach Satz 11.4.15, dass $\partial f(\corange{\bx^\star})$
-überhaupt nicht leer ist. Mit dem Kriterium $\bnull \in \partial f$ leitet Beispiel 11.4.16 die
+an anderer Stelle: Sie sichert nach @satz:existenz-von-subgradienten-im-inneren, dass $\partial f(\corange{\bx^\star})$
+überhaupt nicht leer ist. Mit dem Kriterium $\bnull \in \partial f$ leitet @beispiel:das-subdifferential-des-betrags die
 Schwellenwertregel des LASSO her.
 :::
 
@@ -125,7 +125,7 @@ Wenn die Minimalstelle nicht eindeutig ist, ist wenigstens die Menge aller Minim
 handlich. Sie ist selbst wieder konvex, und das ist der Grund, warum in der Statistik von der
 *Lösungsmenge* eines konvexen Problems die Rede ist.
 
-:::satz[11.5.3 (Die Minimalstellen bilden eine konvexe Menge)]
+:::satz[#die-minimalstellen-bilden-eine-konvexe (Die Minimalstellen bilden eine konvexe Menge)]
 Seien $\cblue{\Xcal} \subseteq \R^n$ konvex und $f\colon \cblue{\Xcal} \to \R$ konvex. Dann
 ist
 
@@ -145,7 +145,7 @@ und $\bw$ zwei Minimalstellen. Beide tragen denselben Wert: Aus der Minimalität
 folgt $f(\bu) \le f(\bw)$, aus der von $\bw$ folgt $f(\bw) \le f(\bu)$. Wir setzen
 $m := f(\bu) = f(\bw)$.
 
-::why[die leere Menge und einelementige Mengen sind konvex, weil die Bedingung aus Definition 11.2.1 dort nichts fordert oder trivial erfüllt ist]
+::why[die leere Menge und einelementige Mengen sind konvex, weil die Bedingung aus @definition:konvexe-menge dort nichts fordert oder trivial erfüllt ist]
 :::
 
 :::schritt
@@ -170,28 +170,28 @@ Dieselbe Rechnung trägt mehr, als der Satz behauptet. Für jedes $c \in \R$ ist
 $f(\bu) \le c$ und $f(\bw) \le c$ folgt $f(\cgreen{\bz}) \le \lambda c + (1-\lambda)c = c$.
 Die Minimalstellen sind davon der Sonderfall $c = \min f$, sofern dieses Minimum angenommen
 wird. Konvexe Funktionen haben also konvexe *Subniveaumengen*, und daran hängt in
-[Abschnitt 12.5](?k=12-optim#sec-12.5) die Beschreibung zulässiger Bereiche. Für exakte
+@sec:optim/beschraenkt die Beschreibung zulässiger Bereiche. Für exakte
 :k[Niveaumengen]{#level-sets} $\{\bx:f(\bx)=c\}$ gilt das nicht: Das Niveau $1$ von
 $f(x)=x^2$ besteht aus $\{-1,1\}$ und ist nicht konvex.
 
 ### Strikte Konvexität und Eindeutigkeit
 
-Eindeutigkeit fehlt in Satz 11.5.1 aus einem einfachen Grund: Die Konvexitätsungleichung
+Eindeutigkeit fehlt in @satz:kritischer-punkt-und-globales-minimum aus einem einfachen Grund: Die Konvexitätsungleichung
 erlaubt Gleichheit, und Gleichheit heißt geometrisch, dass der Graph auf einem Stück gerade
 verläuft. Verbieten wir das, so bekommen wir die Eindeutigkeit geschenkt.
 
-:::definition[11.5.4 (Strikte Konvexität)]
+:::definition[#strikte-konvexitaet (Strikte Konvexität)]
 Seien $\cblue{\Xcal} \subseteq \R^n$ konvex und $f\colon \cblue{\Xcal} \to \R$. Wir nennen $f$
 *strikt konvex* (strictly convex), falls für alle $\bx, \by \in \cblue{\Xcal}$ mit
 $\bx \neq \by$ und alle $\lambda \in (0,1)$ gilt
 
-$$ {#eq-11.5.1}
+$$ {#eq-strikte-konvexitaet}
 f\left(\cgreen{\lambda\bx + (1-\lambda)\by}\right)
 \ \cred{<}\ \lambda f(\bx) + (1-\lambda) f(\by) .
 $$
 :::
 
-Gegenüber der Sehnenungleichung ($11.3.4$) aus Satz 11.3.8 haben sich drei Dinge geändert, und
+Gegenüber der Sehnenungleichung @eq:konvexitaet-als-ungleichung aus @satz:konvexitaet-als-ungleichung haben sich drei Dinge geändert, und
 alle drei sind nötig. Aus $\le$ wird $\cred{<}$, das ist der Punkt. Dafür müssen $\bx$ und
 $\by$ verschieden sein, denn
 für $\bx = \by$ stehen links und rechts derselbe Wert. Und $\lambda$ darf die Randwerte $0$
@@ -199,14 +199,14 @@ und $1$ nicht annehmen, aus demselben Grund. Ohne diese beiden Ausnahmen wäre k
 Funktion strikt konvex.
 
 Dass $\cblue{\Xcal}$ konvex sein
-muss, ist dieselbe Voraussetzung, die schon ($11.3.4$) braucht: Ohne sie muss
+muss, ist dieselbe Voraussetzung, die schon @eq:konvexitaet-als-ungleichung braucht: Ohne sie muss
 $\cgreen{\lambda\bx + (1-\lambda)\by}$ gar nicht im Definitionsbereich liegen, und die linke
-Seite von ($11.5.1$) ist undefiniert (Bemerkung 11.3.7). In
-[Abschnitt 11.3](#sec-11.3) ist derselbe Begriff schon eingeführt worden; die dort
+Seite von @eq:strikte-konvexitaet ist undefiniert (@bemerkung:der-definitionsbereich-muss-mitspielen). In
+@sec:projektion-konvexe-funktionen ist derselbe Begriff schon eingeführt worden; die dort
 erwähnte Zweitbezeichnung „streng konvex" ist ebenso gebräuchlich, wir bleiben
 bei strikt.
 
-:::satz[11.5.5 (Höchstens eine Minimalstelle)]
+:::satz[#hoechstens-eine-minimalstelle (Höchstens eine Minimalstelle)]
 Seien $\cblue{\Xcal} \subseteq \R^n$ konvex und $f\colon \cblue{\Xcal} \to \R$ strikt konvex.
 Dann besitzt $f$ höchstens eine Minimalstelle.
 :::
@@ -215,7 +215,7 @@ Dann besitzt $f$ höchstens eine Minimalstelle.
 
 :::schritt
 Angenommen, es gäbe zwei verschiedene Minimalstellen $\corange{\bx_1} \neq \corange{\bx_2}$.
-Wie in Schritt 1 des Beweises zu Satz 11.5.3 tragen beide denselben Wert
+Wie in Schritt 1 des Beweises zu @satz:die-minimalstellen-bilden-eine-konvexe tragen beide denselben Wert
 $m := f(\corange{\bx_1}) = f(\corange{\bx_2})$.
 
 ::why[jede der beiden Stellen ist minimal, also höchstens so groß wie die andere]
@@ -224,7 +224,7 @@ $m := f(\corange{\bx_1}) = f(\corange{\bx_2})$.
 :::schritt
 Wir betrachten den Mittelpunkt
 $\cgreen{\bz} = \tfrac12\corange{\bx_1} + \tfrac12\corange{\bx_2}$. Er liegt in
-$\cblue{\Xcal}$, weil $\cblue{\Xcal}$ konvex ist, und Definition 11.5.4 mit
+$\cblue{\Xcal}$, weil $\cblue{\Xcal}$ konvex ist, und @definition:strikte-konvexitaet mit
 $\lambda = \tfrac12$ liefert
 
 $$
@@ -234,25 +234,25 @@ $$
 Damit gäbe es einen zulässigen Punkt mit einem kleineren Wert als dem Minimum, ein
 Widerspruch. Also kann es keine zwei verschiedenen Minimalstellen geben.
 
-::why[hier wird jede Zutat von Definition 11.5.4 gebraucht: $\corange{\bx_1} \neq \corange{\bx_2}$ und $\tfrac12 \in (0,1)$ machen die strikte Ungleichung anwendbar, und die Konvexität von $\cblue{\Xcal}$ sichert die Zulässigkeit des Mittelpunkts]
+::why[hier wird jede Zutat von @definition:strikte-konvexitaet gebraucht: $\corange{\bx_1} \neq \corange{\bx_2}$ und $\tfrac12 \in (0,1)$ machen die strikte Ungleichung anwendbar, und die Konvexität von $\cblue{\Xcal}$ sichert die Zulässigkeit des Mittelpunkts]
 :::
 
 ::::
 
 Der Beweis ist kurz, und er zeigt, wo die Grenze verläuft:
 Genommen wird nur ein einziges $\lambda$, nämlich $\tfrac12$. Dasselbe Argument lässt sich
-auch aus Satz 11.5.3 ablesen. Die Minimalstellen bilden eine konvexe Menge; enthielte sie zwei
+auch aus @satz:die-minimalstellen-bilden-eine-konvexe ablesen. Die Minimalstellen bilden eine konvexe Menge; enthielte sie zwei
 verschiedene Punkte, so enthielte sie die ganze Strecke dazwischen, und auf deren Innerem ist
-$f$ nach ($11.5.1$) echt kleiner als an den Endpunkten. Eine konvexe Funktion, die auf einer
+$f$ nach @eq:strikte-konvexitaet echt kleiner als an den Endpunkten. Eine konvexe Funktion, die auf einer
 Strecke konstant ist, kann also nicht strikt konvex sein.
 
-:::bemerkung[11.5.6 (Drei Aussagen, die auseinanderzuhalten sind)]
+:::bemerkung[#drei-aussagen-die-auseinanderzuhalten (Drei Aussagen, die auseinanderzuhalten sind)]
 Damit sind die drei Versprechen sortiert, die in der Einleitung von
-[Abschnitt 11.1](#sec-11.1) noch zusammen aufgetreten sind.
+@sec:konvexkombinationen noch zusammen aufgetreten sind.
 
 1. *Lokal ist global.* Das leistet schon gewöhnliche Konvexität, ohne jede
-   Differenzierbarkeit (Satz 11.5.1, Bemerkung 11.5.2).
-2. *Höchstens eine Lösung.* Dafür braucht es strikte Konvexität (Satz 11.5.5).
+   Differenzierbarkeit (@satz:kritischer-punkt-und-globales-minimum, @bemerkung:was-daraus-folgt-und-was-nicht).
+2. *Höchstens eine Lösung.* Dafür braucht es strikte Konvexität (@satz:hoechstens-eine-minimalstelle).
 3. *Mindestens eine Lösung.* Das folgt aus keinem von beiden.
 
 Punkt 3 wird am leichtesten übersehen. Die Exponentialfunktion ist auf $\R$ sogar
@@ -265,12 +265,12 @@ einer hinreichend großen abgeschlossenen Kugel zu minimieren, und wir sind wied
 Erst beides zusammen, strikte Konvexität und Existenz, gibt die *genau eine* Lösung. Das Kapitel hat davon schon zwei Beispiele geliefert. Der
 :k[Kleinste-Quadrate-Verlust]{#linear-least-squares} ist bei vollem Spaltenrang der
 Designmatrix strikt konvex und koerziv, das Minimum existiert und ist eindeutig
-(Beispiel 11.3.16, Kapitel 7 rechnet es aus). Und die Ridge-Regression ist es für jedes
+(@beispiel:kleinste-quadrate-und-ridge, Kapitel 7 rechnet es aus). Und die Ridge-Regression ist es für jedes
 $\lambda > 0$ auch dann, wenn die Designmatrix rangdefizient ist.
 
 Ein statistisches Gegenbeispiel zeigt, dass Punkt 3 keine Spitzfindigkeit ist. Bei perfekt
 trennbaren Daten bleibt die negative Log-Likelihood der logistischen Regression strikt konvex,
-denn die Hesse-Matrix aus Beispiel 11.4.12 ist bei vollem Spaltenrang der Regressormatrix an
+denn die Hesse-Matrix aus @beispiel:logistische-regression-ist-ein-konvexes ist bei vollem Spaltenrang der Regressormatrix an
 jeder Stelle positiv definit. Angenommen wird ihr Infimum trotzdem nicht: Die Koeffizienten
 laufen ins Unendliche, während der Wert gegen $0$ fällt. Schon im einfachsten
 Fall mit den beiden Beobachtungen $(x, y) = (1, 1)$ und $(x, y) = (-1, 0)$ und dem Modell
@@ -299,19 +299,19 @@ im Verlauf des Graphen, sondern in der Menge der Minimalstellen.
 
 <Landschaften />
 
-Die mittlere Tafel ist der Fall, den Satz 11.5.5 abdeckt: strikt konvex, also höchstens eine
+Die mittlere Tafel ist der Fall, den @satz:hoechstens-eine-minimalstelle abdeckt: strikt konvex, also höchstens eine
 Minimalstelle, und weil die Parabel koerziv ist, wird sie auch angenommen. Links steht eine
-konvexe Funktion mit einem flachen Stück. Sie erfüllt ($11.3.4$) mit $\le$, aber auf dem
-Plateau steht in ($11.5.1$) Gleichheit, sie ist also nicht
+konvexe Funktion mit einem flachen Stück. Sie erfüllt @eq:konvexitaet-als-ungleichung mit $\le$, aber auf dem
+Plateau steht in @eq:strikte-konvexitaet Gleichheit, sie ist also nicht
 strikt konvex. Ihre Minimalstellen bilden das ganze Intervall von $-0{,}8$ bis $0{,}8$, und
-das ist eine konvexe Menge, wie Satz 11.5.3 es verlangt. Rechts ist die Konvexität verletzt,
+das ist eine konvexe Menge, wie @satz:die-minimalstellen-bilden-eine-konvexe es verlangt. Rechts ist die Konvexität verletzt,
 und damit fällt die ganze Theorie dieses Abschnitts weg: Zwei kritische Punkte tragen dort
 positive Krümmung, nur einer von beiden ist global.
 :::
 
 Was das für ein Verfahren bedeutet, sehen wir am besten, indem wir eines laufen lassen. Wir
 nehmen das einfachste, den :k[Gradientenabstieg]{#gradient-descent} aus
-[Abschnitt 10.2](?k=10-differentialrechnung#sec-10.2), der wiederholt ein Stück in Richtung des
+@sec:differentialrechnung/gradient, der wiederholt ein Stück in Richtung des
 stärksten Abstiegs geht. Auf der Doppelmulde entscheidet allein der Startwert, in welchem Tal
 er endet. Wo genau verläuft die Grenze zwischen den beiden Einzugsgebieten?
 
@@ -327,7 +327,7 @@ $-0{,}16$. Am Endpunkt selbst ist der Unterschied nicht abzulesen: In beiden Tä
 verschwindet die Ableitung, in beiden ist die Krümmung positiv, in beiden meldet jedes
 Abbruchkriterium Erfolg. Wer ein nicht-konvexes Problem rechnet, muss deshalb mehrere
 Startwerte durchprobieren und die Ergebnisse hinterher vergleichen. Bei einer konvexen
-Zielfunktion erübrigt sich das: Nach Satz 11.5.1 ist jeder Punkt mit verschwindendem
+Zielfunktion erübrigt sich das: Nach @satz:kritischer-punkt-und-globales-minimum ist jeder Punkt mit verschwindendem
 Gradienten schon das Ziel.
 :::
 
@@ -337,37 +337,37 @@ Zum Abschluss eine Landkarte. Sie sortiert die gängigen Verfahren nach der Frag
 die dieser Abschnitt beantwortet hat, und ist beim Lesen von Software-Dokumentation
 erstaunlich nützlich: Sie sagt voraus, ob ein Startwert das Ergebnis beeinflussen kann.
 
-:::bemerkung[11.5.7 (Eine Landkarte der Optimierungsprobleme)]
-*Strikt konvexe Probleme* haben höchstens eine Lösung (Satz 11.5.5), und wo sie existiert, ist
+:::bemerkung[#eine-landkarte-der-optimierungsprobleme (Eine Landkarte der Optimierungsprobleme)]
+*Strikt konvexe Probleme* haben höchstens eine Lösung (@satz:hoechstens-eine-minimalstelle), und wo sie existiert, ist
 sie eindeutig und global. Jeder korrekt konvergierte Lauf muss daher dieselbe Lösung liefern;
 Rechenweg, Laufzeit und Abbruchstatus können trotzdem vom Startwert abhängen.
 
 - Kleinste Quadrate, $\min_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2$, sofern $\bX$ vollen
-  *Spalten*rang hat (Beispiel 11.3.16). „Voller Rang" allein genügt nicht; entscheidend ist
+  *Spalten*rang hat (@beispiel:kleinste-quadrate-und-ridge). „Voller Rang" allein genügt nicht; entscheidend ist
   der Spaltenrang, denn nur er macht $\bX^\top\bX$ positiv definit.
 - Allgemeiner die Maximum-Likelihood-Schätzung in :k[verallgemeinerten linearen
   Modellen]{#linear-regression} mit kanonischem Link. Dort hat die negative Log-Likelihood die
   Hesse-Matrix $\bX^\top\bW\bX$ mit einer nichtnegativen Diagonalmatrix $\bW$, ist also stets
   konvex, und bei vollem Spaltenrang und positiven Gewichten strikt konvex
-  (Beispiel 11.4.12 rechnet den logistischen Fall vor).
+  (@beispiel:logistische-regression-ist-ein-konvexes rechnet den logistischen Fall vor).
 - Support Vector Machines. Die Zielfunktion $\tfrac12\left\|\bw\right\|_2^2 + C\sum_i
   \max\{0,\ 1 - y_i(\bw^\top\bx_i + b)\}$ ist als Summe konvexer Funktionen konvex
-  (Satz 11.4.1), und im Argument $\bw$ ist der erste Summand strikt konvex. Damit ist der
+  (@satz:operationen-die-konvexitaet-erhalten), und im Argument $\bw$ ist der erste Summand strikt konvex. Damit ist der
   Trennvektor $\bw$ eindeutig: Zwei Lösungen mit verschiedenem $\bw$ hätten nach dem Beweis
-  von Satz 11.5.5 einen Mittelpunkt mit kleinerem Wert. Im Paar $(\bw, b)$ ist die
+  von @satz:hoechstens-eine-minimalstelle einen Mittelpunkt mit kleinerem Wert. Im Paar $(\bw, b)$ ist die
   Zielfunktion dagegen nicht strikt konvex, denn der Achsenabschnitt $b$ geht nur über den
   stückweise linearen Hinge-Verlust ein; bei trennbaren Daten mit Sicherheitsabstand kann er
   mehrdeutig bleiben.
 - Ridge-Regression,
   $\min_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2 + \lambda\left\|\bbeta\right\|_2^2$, für
-  jedes $\lambda > 0$ und jedes $\bX$ (Beispiel 11.3.16), ebenso das *Elastic Net*, solange
+  jedes $\lambda > 0$ und jedes $\bX$ (@beispiel:kleinste-quadrate-und-ridge), ebenso das *Elastic Net*, solange
   sein Ridge-Anteil positiv ist.
 - Graphisches LASSO, also die regularisierte Schätzung einer Präzisionsmatrix. Optimiert wird
-  über die positiv definiten Matrizen. Sie bilden nach Bemerkung 11.2.9 das Innere des Kegels
-  aus Satz 11.2.8 *innerhalb des Raums der symmetrischen Matrizen*, und der Term $-\log\det$
+  über die positiv definiten Matrizen. Sie bilden nach @bemerkung:kovarianzmatrizen-sind-semidefinit-nicht das Innere des Kegels
+  aus @satz:die-positiv-semidefiniten-matrizen *innerhalb des Raums der symmetrischen Matrizen*, und der Term $-\log\det$
   ist darauf strikt konvex.
 
-*Konvexe, aber nicht strikt konvexe Probleme* haben nach Satz 11.5.3 eine konvexe
+*Konvexe, aber nicht strikt konvexe Probleme* haben nach @satz:die-minimalstellen-bilden-eine-konvexe eine konvexe
 Lösungsmenge, die mehr als einen Punkt enthalten darf. Jede gefundene Lösung ist global, aber
 verschiedene Implementierungen dürfen verschiedene Koeffizienten melden.
 
@@ -375,7 +375,7 @@ verschiedene Implementierungen dürfen verschiedene Koeffizienten melden.
   $\min_{\bbeta} \left\|\by - \bX\bbeta\right\|_2^2 + \lambda\left\|\bbeta\right\|_1$. Der
   Strafterm ist konvex, aber stückweise linear und damit nicht strikt; bei rangdefizienter
   Designmatrix, dem Regelfall für $p > n$, überträgt sich das auf die Zielfunktion. Verlangt
-  ist dabei eine *konvexe* Strafe, denn nur die erhält nach Satz 11.4.1 die Konvexität der
+  ist dabei eine *konvexe* Strafe, denn nur die erhält nach @satz:operationen-die-konvexitaet-erhalten die Konvexität der
   Summe; „nicht konkav" wäre deutlich weniger und ließe etwa SCAD und MCP zu.
 - Quantilregression. Die Verlustfunktion
   $\rho_\tau(u) = u\left(\tau - \ind\{u < 0\}\right)$ ist konvex, besteht aber aus zwei
@@ -405,7 +405,7 @@ trägt kein globales Gütesiegel.
 - Dimensionsreduktion und Einbettungen: tSNE, UMAP, `word2vec`.
 - Matrixvervollständigung und Tensorzerlegungen: nichtnegative Matrixfaktorisierung, dünn
   besetzte Hauptkomponenten. Die Zielfunktion aus
-  [Abschnitt 10.4](?k=10-differentialrechnung#sec-10.4) ist in $\bU$ und in $\bV$ jeweils konvex, in
+  @sec:differentialrechnung/matrixableitungen ist in $\bU$ und in $\bV$ jeweils konvex, in
   beiden zusammen aber nicht, und dort haben wir gesehen, dass verschiedene Startpunkte in
   verschiedenen Lösungen enden.
 - Graphische Modelle, wenn nicht nur die Gewichte, sondern die Struktur selbst gesucht wird.
@@ -419,52 +419,52 @@ Abstiegsverfahren.
 
 ### Die Kernkonzepte des Kapitels
 
-:::bemerkung[11.5.8 (Fünf Bausteine, die bleiben)]
-1. **Konvexkombinationen** ([Abschnitt 11.1](#sec-11.1)). Eine
+:::bemerkung[#fuenf-bausteine-die-bleiben (Fünf Bausteine, die bleiben)]
+1. **Konvexkombinationen** (@sec:konvexkombinationen). Eine
    :k[Linearkombination]{#linear-combination} mit nichtnegativen Gewichten, die sich zu $1$
-   summieren (Definition 11.1.1). Für zwei Punkte ist das genau die Verbindungsstrecke
-   (Satz 11.1.4), für endlich viele die konvexe Hülle $\conv(\Xcal)$ (Definition 11.1.5). Der
+   summieren (@definition:konvexkombination). Für zwei Punkte ist das genau die Verbindungsstrecke
+   (@satz:konvexkombinationen-zweier-vektoren), für endlich viele die konvexe Hülle $\conv(\Xcal)$ (@definition:konvexe-huelle). Der
    :k[Erwartungswert]{#expected-value} einer Zufallsvariablen mit endlichem Träger ist eine
-   Konvexkombination ihrer Werte (Beispiel 11.1.3).
-2. **Konvexe Mengen** ([Abschnitt 11.2](#sec-11.2)). Eine Menge, die mit je zwei Punkten die
-   ganze Strecke dazwischen enthält (Definition 11.2.1). Per Induktion enthält sie dann alle
-   endlichen Konvexkombinationen (Satz 11.2.3). Konvexität überlebt Durchschnitte,
-   kartesische Produkte, affine Bilder und Summen (Satz 11.2.10), und
-   $\conv(\Xcal)$ ist die kleinste konvexe Obermenge (Satz 11.2.13). Der Kegel der positiv
-   semidefiniten Matrizen ist das für die Statistik wichtigste Beispiel (Satz 11.2.8).
-3. **Konvexe Funktionen** ([Abschnitt 11.3](#sec-11.3)). Definiert über den
-   :k[Epigraphen]{#convexity} (Definition 11.3.6) oder gleichwertig über die
-   Sehnenungleichung ($11.3.4$) in Satz 11.3.8. Affine Funktionen, quadratische Funktionen mit
+   Konvexkombination ihrer Werte (@beispiel:der-erwartungswert-ist-eine).
+2. **Konvexe Mengen** (@sec:konvexe-mengen). Eine Menge, die mit je zwei Punkten die
+   ganze Strecke dazwischen enthält (@definition:konvexe-menge). Per Induktion enthält sie dann alle
+   endlichen Konvexkombinationen (@satz:konvexe-mengen-enthalten-alle). Konvexität überlebt Durchschnitte,
+   kartesische Produkte, affine Bilder und Summen (@satz:konvexitaetserhaltung), und
+   $\conv(\Xcal)$ ist die kleinste konvexe Obermenge (@satz:konvexe-huelle-als-durchschnitt). Der Kegel der positiv
+   semidefiniten Matrizen ist das für die Statistik wichtigste Beispiel (@satz:die-positiv-semidefiniten-matrizen).
+3. **Konvexe Funktionen** (@sec:projektion-konvexe-funktionen). Definiert über den
+   :k[Epigraphen]{#convexity} (@definition:konvexe-funktion) oder gleichwertig über die
+   Sehnenungleichung @eq:konvexitaet-als-ungleichung in @satz:konvexitaet-als-ungleichung. Affine Funktionen, quadratische Funktionen mit
    positiv semidefinitem symmetrischem Anteil und alle :k[Normen]{#norm} sind konvex
-   (Beispiel 11.3.11, Satz 11.3.12, Satz 11.3.15). Dazu das
-   :k[Projektionstheorem]{#projection} (Satz 11.3.1), das die konvexen Mengen mit der
+   (@beispiel:affine-funktionen, @satz:quadratische-funktionen, @satz:jede-norm-ist-konvex). Dazu das
+   :k[Projektionstheorem]{#projection} (@satz:projektionstheorem), das die konvexen Mengen mit der
    Geometrie der kleinsten Quadrate verbindet.
-4. **Eigenschaften konvexer Funktionen** ([Abschnitt 11.4](#sec-11.4)). Summen,
+4. **Eigenschaften konvexer Funktionen** (@sec:eigenschaften). Summen,
    nichtnegative Vielfache, punktweise Suprema und punktweise Grenzwerte erhalten die
-   Konvexität (Satz 11.4.1); daraus lassen sich Zielfunktionen zusammenbauen, ohne je zur
+   Konvexität (@satz:operationen-die-konvexitaet-erhalten); daraus lassen sich Zielfunktionen zusammenbauen, ohne je zur
    Definition zurückzukehren. Die :k[Jensen-Ungleichung]{#expected-value} dehnt die
-   Sehnenungleichung auf endlich viele Punkte (Satz 11.4.6). Für
+   Sehnenungleichung auf endlich viele Punkte (@satz:jensen-ungleichung). Für
    $f \in \Ccal^2$ auf offenem, konvexem Definitionsbereich sind Sehnen-, Tangenten- und
-   Krümmungsbedingung äquivalent (Satz 11.4.9), Letztere ist die positive Semidefinitheit der
+   Krümmungsbedingung äquivalent (@satz:konvexe-funktionen-von-vektoren-zu), Letztere ist die positive Semidefinitheit der
    :k[Hesse-Matrix]{#hessian-matrix}. Wo die Tangente fehlt, tritt der
-   :k[Subgradient]{#gradient} an ihre Stelle (Definition 11.4.14, Satz 11.4.15).
-5. **Konvexe Optimierungsprobleme** ([Abschnitt 11.5](#sec-11.5)). Für differenzierbares,
-   konvexes $f$ sind kritischer Punkt und globales Minimum dasselbe (Satz 11.5.1), jedes
-   lokale Minimum ist global, und Sattelpunkte gibt es nicht (Bemerkung 11.5.2). Die
-   Lösungsmenge ist konvex (Satz 11.5.3), und strikte Konvexität macht sie höchstens
-   einelementig (Definition 11.5.4, Satz 11.5.5). Existenz ist davon unabhängig
-   (Bemerkung 11.5.6).
+   :k[Subgradient]{#gradient} an ihre Stelle (@definition:subgradient-und-subdifferential, @satz:existenz-von-subgradienten-im-inneren).
+5. **Konvexe Optimierungsprobleme** (@sec:konvexe-optimierung). Für differenzierbares,
+   konvexes $f$ sind kritischer Punkt und globales Minimum dasselbe (@satz:kritischer-punkt-und-globales-minimum), jedes
+   lokale Minimum ist global, und Sattelpunkte gibt es nicht (@bemerkung:was-daraus-folgt-und-was-nicht). Die
+   Lösungsmenge ist konvex (@satz:die-minimalstellen-bilden-eine-konvexe), und strikte Konvexität macht sie höchstens
+   einelementig (@definition:strikte-konvexitaet, @satz:hoechstens-eine-minimalstelle). Existenz ist davon unabhängig
+   (@bemerkung:drei-aussagen-die-auseinanderzuhalten).
 :::
 
 ### Das Wichtigste in Kürze
 
 | Abschnitt | Thema | Was bleibt |
 | --- | --- | --- |
-| [11.1](#sec-11.1) | Konvexkombinationen | Gewichte $w_i \ge 0$ mit $\sum_i w_i = 1$; zwei Punkte spannen eine Strecke auf, endlich viele die konvexe Hülle $\conv(\Xcal)$ |
-| [11.2](#sec-11.2) | Konvexe Mengen | Mit je zwei Punkten die ganze Strecke; stabil unter Durchschnitt, kartesischem Produkt, affinen Abbildungen und Summe; der Kegel $\{\bA = \bA^\top\colon \bA \succeq 0\}$ als Beispiel |
-| [11.3](#sec-11.3) | Konvexe Funktionen | Konvexer Epigraph, gleichbedeutend mit $f(\cgreen{\lambda\bx + (1-\lambda)\by}) \le \lambda f(\bx) + (1-\lambda)f(\by)$; die Projektion auf eine nichtleere abgeschlossene konvexe Menge existiert und ist eindeutig |
-| [11.4](#sec-11.4) | Eigenschaften | Baukasten aus Summe, nichtnegativem Vielfachem, Supremum und Grenzwert; Jensen; für $f \in \Ccal^2$ auf offenem, konvexem Bereich ist Konvexität gleichbedeutend mit $\bH_f(\bx) \succeq 0$ überall; Subgradienten im Knick |
-| [11.5](#sec-11.5) | Konvexe Optimierung | Für differenzierbares konvexes $f$ bedeutet $\nabla f(\corange{\bx^\star}) = \bnull^\top$ globales Minimum; lokal ist global, keine Sattelpunkte; konvexe Lösungsmenge; strikt konvex bedeutet höchstens eine Lösung, Existenz ist eine eigene Frage |
+| @num:konvexitaet/konvexkombinationen | Konvexkombinationen | Gewichte $w_i \ge 0$ mit $\sum_i w_i = 1$; zwei Punkte spannen eine Strecke auf, endlich viele die konvexe Hülle $\conv(\Xcal)$ |
+| @num:konvexitaet/konvexe-mengen | Konvexe Mengen | Mit je zwei Punkten die ganze Strecke; stabil unter Durchschnitt, kartesischem Produkt, affinen Abbildungen und Summe; der Kegel $\{\bA = \bA^\top\colon \bA \succeq 0\}$ als Beispiel |
+| @num:konvexitaet/projektion-konvexe-funktionen | Konvexe Funktionen | Konvexer Epigraph, gleichbedeutend mit $f(\cgreen{\lambda\bx + (1-\lambda)\by}) \le \lambda f(\bx) + (1-\lambda)f(\by)$; die Projektion auf eine nichtleere abgeschlossene konvexe Menge existiert und ist eindeutig |
+| @num:konvexitaet/eigenschaften | Eigenschaften | Baukasten aus Summe, nichtnegativem Vielfachem, Supremum und Grenzwert; Jensen; für $f \in \Ccal^2$ auf offenem, konvexem Bereich ist Konvexität gleichbedeutend mit $\bH_f(\bx) \succeq 0$ überall; Subgradienten im Knick |
+| @num:konvexitaet/konvexe-optimierung | Konvexe Optimierung | Für differenzierbares konvexes $f$ bedeutet $\nabla f(\corange{\bx^\star}) = \bnull^\top$ globales Minimum; lokal ist global, keine Sattelpunkte; konvexe Lösungsmenge; strikt konvex bedeutet höchstens eine Lösung, Existenz ist eine eigene Frage |
 
 Ein Satz fasst das Kapitel zusammen. Konvexität kostet uns die Gleichheit der Linearität und
 gibt uns dafür eine globale Aussage, die keine lokale Rechnung je liefern könnte.
@@ -472,10 +472,10 @@ gibt uns dafür eine globale Aussage, die keine lokale Rechnung je liefern könn
 ### Nächstes Kapitel
 
 Wir wissen jetzt, wann ein lokaler Befund ein globaler ist. Offen ist die andere Hälfte: wie
-wir überhaupt dorthin kommen. Satz 11.5.1 sagt nichts darüber, wie ein Verfahren einen
+wir überhaupt dorthin kommen. @satz:kritischer-punkt-und-globales-minimum sagt nichts darüber, wie ein Verfahren einen
 kritischen Punkt findet, wie viele Schritte es braucht und was passiert, wenn nicht über den
 ganzen $\R^n$, sondern nur über eine zulässige Menge minimiert werden darf. Genau davon
-handelt [Kapitel 12](?k=12-optim#sec-12.1): von Abstiegsverfahren und ihren Schrittweiten,
+handelt @kap:optim: von Abstiegsverfahren und ihren Schrittweiten,
 von Newton-Verfahren, die die Krümmung mitnehmen, und von Nebenbedingungen. Die Ergebnisse
 dieses Kapitels sind dort die Eintrittskarte für alle Garantien, die über „das Verfahren
 bleibt irgendwo stehen" hinausgehen.
@@ -497,39 +497,39 @@ legen eine Gerade durch ihn und nehmen die beiden Schnittpunkte mit der Sphäre.
 $\bx = (0{,}3;\ -0{,}2)^\top$ und die waagerechte Richtung sind das
 $(0{,}9798;\ -0{,}2)^\top$ und $(-0{,}9798;\ -0{,}2)^\top$ mit den Gewichten $0{,}6531$ und
 $0{,}3469$. Die Sphäre selbst ist nicht konvex (Selbsttest in
-[Abschnitt 11.2](#sec-11.2)), ihre Hülle ist es nach Satz 11.2.13.
+@sec:konvexe-mengen), ihre Hülle ist es nach @satz:konvexe-huelle-als-durchschnitt.
 :::
 
 :::frage{wahr}
 Ist $f\colon \R^n \to \R$ differenzierbar und konvex und hat $f$ mehrere kritische Punkte, so
 haben sie alle denselben Funktionswert.
 
-Nach Satz 11.5.1 ist jeder kritische Punkt ein globales Minimum, und globale Minima tragen
+Nach @satz:kritischer-punkt-und-globales-minimum ist jeder kritische Punkt ein globales Minimum, und globale Minima tragen
 alle den kleinsten Wert. Die erste Landschaft im Widget zeigt genau das: Auf dem Plateau von
 $-0{,}8$ bis $0{,}8$ verschwindet die Ableitung überall, und überall steht der Wert $0$. Nach
-Satz 11.5.3 bilden diese Stellen sogar eine konvexe Menge, hier ein Intervall.
+@satz:die-minimalstellen-bilden-eine-konvexe bilden diese Stellen sogar eine konvexe Menge, hier ein Intervall.
 :::
 
 :::frage{falsch}
 Jede strikt konvexe Funktion $f\colon \R^n \to \R$ besitzt genau ein globales Minimum.
 
-Sie besitzt *höchstens* eines (Satz 11.5.5). Die Existenz ist eine unabhängige Frage:
+Sie besitzt *höchstens* eines (@satz:hoechstens-eine-minimalstelle). Die Existenz ist eine unabhängige Frage:
 $f(x) = e^x$ ist wegen $f''(x) = e^x > 0$ strikt konvex, nähert sich ihrem Infimum $0$ aber
 nur an. Statistisch relevant ist derselbe Effekt bei perfekt trennbaren Daten in der
-logistischen Regression, wo die Koeffizienten ins Unendliche laufen (Bemerkung 11.5.6).
+logistischen Regression, wo die Koeffizienten ins Unendliche laufen (@bemerkung:drei-aussagen-die-auseinanderzuhalten).
 Gesichert wird die Existenz erst durch Kompaktheit oder Koerzivität.
 :::
 
 :::frage{wahr}
 Ist $f_1$ konvex und $f_2$ strikt konvex, so ist $f_1 + f_2$ strikt konvex.
 
-Wir addieren die beiden Ungleichungen ($11.3.4$) und ($11.5.1$) für
+Wir addieren die beiden Ungleichungen @eq:konvexitaet-als-ungleichung und @eq:strikte-konvexitaet für
 $\bx \neq \by$ und $\lambda \in (0,1)$: Links steht $\le$, rechts $<$, in der Summe also $<$.
 Davon lebt die Ridge-Regression. Der Kleinste-Quadrate-Term ist immer konvex und bei
 rangdefizienter Designmatrix nur nicht strikt konvex; der Strafterm
 $\lambda\left\|\bbeta\right\|_2^2$ ist für
 $\lambda > 0$ strikt konvex, und die Summe erbt die strikte Konvexität
-(Beispiel 11.3.16, Satz 11.4.1). Ohne den strikten Summanden geht es nicht: $\left|x\right|$
+(@beispiel:kleinste-quadrate-und-ridge, @satz:operationen-die-konvexitaet-erhalten). Ohne den strikten Summanden geht es nicht: $\left|x\right|$
 und $\max\{0, x\}$ sind beide konvex, ihre Summe stimmt auf $(-\infty, 0]$ aber mit
 $\left|x\right| = -x$ überein und verläuft dort geradlinig.
 :::
@@ -539,10 +539,10 @@ Aus der Jensen-Ungleichung folgt für eine Zufallsvariable $X$ mit endlichem Tr�
 $\E[X]^2 \le \E[X^2]$ als auch $\E\left[\sqrt{X}\right] \le \sqrt{\E[X]}$, sofern $X \ge 0$
 ist.
 
-Beides ist derselbe Satz 11.4.6, einmal mit der konvexen Funktion $x \mapsto x^2$ und einmal
-mit der konkaven Wurzel, bei der sich das Ungleichheitszeichen umdreht (Bemerkung 11.3.9). Am
+Beides ist derselbe @satz:jensen-ungleichung, einmal mit der konvexen Funktion $x \mapsto x^2$ und einmal
+mit der konkaven Wurzel, bei der sich das Ungleichheitszeichen umdreht (@bemerkung:wie-wir-die-ungleichung-lesen). Am
 fairen Würfel gerechnet: $\E[X] = 3{,}5$ und $\E[X^2] = 15{,}1667$ gegen
-$\E[X]^2 = 12{,}25$, die Differenz $2{,}9167$ ist die Varianz (Beispiel 11.4.8). Und
+$\E[X]^2 = 12{,}25$, die Differenz $2{,}9167$ ist die Varianz (@beispiel:die-varianz-ist-nicht-negativ). Und
 $\E[\sqrt{X}] = 1{,}8053$ liegt unter $\sqrt{3{,}5} = 1{,}8708$.
 :::
 
@@ -551,40 +551,40 @@ Die quadratische Funktion $f(\bx) = \bx^\top\bQ\bx$ ist genau dann konvex, wenn 
 semidefinit ist.
 
 Die quadratische Form sieht von $\bQ$ nur den symmetrischen Anteil
-$(\bQ + \bQ^\top)/2$, und nach Satz 11.3.12 entscheidet allein dieser. Für
+$(\bQ + \bQ^\top)/2$, und nach @satz:quadratische-funktionen entscheidet allein dieser. Für
 $\bQ = \bigl(\begin{smallmatrix} 1 & 5 \\ -5 & 1\end{smallmatrix}\bigr)$ ist
 $\bx^\top\bQ\bx = x_1^2 + x_2^2$, also sogar strikt konvex, während $\bQ$ nicht einmal
-symmetrisch ist und damit nach Definition 11.2.7 gar nicht positiv semidefinit heißen kann.
+symmetrisch ist und damit nach @definition:positiv-semidefinit gar nicht positiv semidefinit heißen kann.
 An der Stelle $\bx = (2,3)^\top$ steht auf beiden Seiten $13$. Die Bedingung an $\bQ$ selbst
-ist also zu eng (Bemerkung 11.3.13).
+ist also zu eng (@bemerkung:warum-der-symmetrische-anteil).
 :::
 
 :::frage{falsch}
 Im Knick $x = 0$ hat $f(x) = \left|x\right|$ keinen Subgradienten, weil dort die Ableitung
 fehlt.
 
-Der Subgradient braucht keine Ableitung, das ist gerade sein Zweck. Bedingung ($11.4.3$)
+Der Subgradient braucht keine Ableitung, das ist gerade sein Zweck. Bedingung @eq:subgradient-und-subdifferential
 verlangt in $x = 0$ nur $\left|y\right| \ge v\,y$ für alle $y$, und das erfüllt jedes
 $v \in [-1,1]$. Das Subdifferential ist also ein ganzes Intervall,
-$\partial f(0) = [-1,1]$, und weil $\bnull$ darin liegt, ist $0$ nach Bemerkung 11.5.2 die
-globale Minimalstelle (Beispiel 11.4.16). Umgekehrt wird ein Rand gefährlich: Auf
+$\partial f(0) = [-1,1]$, und weil $\bnull$ darin liegt, ist $0$ nach @bemerkung:was-daraus-folgt-und-was-nicht die
+globale Minimalstelle (@beispiel:das-subdifferential-des-betrags). Umgekehrt wird ein Rand gefährlich: Auf
 $[0,\infty)$ hat das konvexe $-\sqrt{x}$ in $0$ wirklich keinen Subgradienten
-(Bemerkung 11.4.17).
+(@bemerkung:randpunkte-und-wozu-subgradienten-gut).
 :::
 
 :::frage{wahr}
 Erfüllen zwei verschiedene Koeffizientenvektoren eines LASSO-Problems beide die
 Subgradienten-Optimalitätsbedingung, so sind beide global optimal.
 
-Die LASSO-Zielfunktion ist als Summe zweier konvexer Funktionen konvex (Satz 11.4.1), also
-ist jeder Punkt mit $\bnull$ im Subdifferential global optimal (Bemerkung 11.5.2). Strikt
+Die LASSO-Zielfunktion ist als Summe zweier konvexer Funktionen konvex (@satz:operationen-die-konvexitaet-erhalten), also
+ist jeder Punkt mit $\bnull$ im Subdifferential global optimal (@bemerkung:was-daraus-folgt-und-was-nicht). Strikt
 konvex ist sie bei
 rangdefizienter Designmatrix nicht, die Lösungsmenge kann deshalb mehr als einen Punkt
-enthalten. Nach Satz 11.5.3 ist sie konvex, also liegt sogar die ganze Verbindungsstrecke
+enthalten. Nach @satz:die-minimalstellen-bilden-eine-konvexe ist sie konvex, also liegt sogar die ganze Verbindungsstrecke
 zwischen den beiden Lösungen in der Lösungsmenge, und alle Punkte darauf haben denselben
 Zielwert. Zwei bloße Softwareausgaben wären dagegen noch kein Beweis: Zuerst sind
 Konvergenzstatus und Optimalitätsresiduum zu prüfen. Bei nicht-konvexen Verfahren wie
-$k$-means wäre selbst erfüllte lokale Optimalität kein globales Gütesiegel (Bemerkung 11.5.7).
+$k$-means wäre selbst erfüllte lokale Optimalität kein globales Gütesiegel (@bemerkung:eine-landkarte-der-optimierungsprobleme).
 :::
 
 :::frage{wahr}

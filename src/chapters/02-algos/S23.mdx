@@ -1,7 +1,8 @@
 import { S23FlopWidget, S23WachstumsBild, S23KonstantenWidget } from "./widgets/S23Aufwand";
 import { SelfTest } from "./widgets/S23Local";
+import { ref } from "../numbers.generated";
 
-In [Abschnitt 2.2](#sec-2.2) haben wir gesehen, dass zwei Algorithmen dasselbe Problem
+In @sec:fibonacci haben wir gesehen, dass zwei Algorithmen dasselbe Problem
 lösen und sich dabei dramatisch unterschiedlich anfühlen können: Der Aufruf-Zähler der
 naiven Fibonacci-Rekursion explodiert schon für kleine $n$, die iterative Variante ist
 sofort fertig. „Fühlt sich langsam an" ist aber kein mathematischer Begriff. In diesem
@@ -9,7 +10,7 @@ Abschnitt machen wir daraus eine Größe, die wir *zählen* können (den Aufwand
 Algorithmus), und lernen dann, wie man Aufwände sinnvoll vergleicht: nicht über exakte
 Zahlen, sondern über ihr *Skalierungsverhalten*, die Komplexität.
 
-### 2.3.1 Zeit- und Speicheraufwand
+### Zeit- und Speicheraufwand :id[zeit-und-speicheraufwand]
 
 Was kostet ein Algorithmus? Der Computer führt ihn letztlich als Folge
 *elementarer Rechenoperationen* aus: Additionen, Subtraktionen, Multiplikationen und
@@ -18,7 +19,7 @@ ungefähr gleich viel Zeit, also ist ihre *Anzahl* ein gutes Maß für die Laufz
 Genauso können wir zählen, wie viele Zahlen der Algorithmus unterwegs im Speicher
 halten muss.
 
-:::definition[2.3.1 (Zeit- und Speicheraufwand)]
+:::definition[#zeit-und-speicheraufwand (Zeit- und Speicheraufwand)]
 Ein Algorithmus werde durch elementare Rechenoperationen
 $f_i \in \lbrace +, -, \cdot, / \rbrace$ ausgeführt.
 
@@ -37,7 +38,7 @@ Zwischenspeichern (Caches) und Parallelisierung ab. Für den Vergleich von Algor
 ist das Zählen der Operationen trotzdem das richtige Werkzeug, wie wir gleich sehen
 werden.
 
-### 2.3.2 Beispiel: Matrix-Vektor-Multiplikation
+### Beispiel: Matrix-Vektor-Multiplikation :id[beispiel-matrix-vektor-multiplikation]
 
 Zählen wir das an einem Arbeitspferd der Statistik konkret durch: dem
 :k[Matrix-Vektor-Produkt]{#matrix-vector-product} $\by = \bA\bx$. Es steckt in jeder
@@ -46,7 +47,7 @@ Aufwand ist also alles andere als eine akademische Frage. Wir verfolgen die
 :k[Matrix]{#matrix} $\cbred{\bA}$ in Rot und den :k[Vektor]{#vector} $\cblue{\bx}$ in
 Blau durch die Rechnung; das Ergebnis $\cbgreen{\by}$ erscheint in Grün.
 
-:::beispiel[2.3.2 (Matrix-Vektor-Multiplikation)]
+:::beispiel[#matrix-vektor-multiplikation (Matrix-Vektor-Multiplikation)]
 Berechne $\by = \bA\bx$ für $\bA \in \R^{3 \times 2}$, $\bx \in \R^2$, konkret
 
 $$
@@ -68,7 +69,7 @@ $$
 
 Das Muster aus dem Beispiel verallgemeinert sich direkt auf beliebige Dimensionen:
 
-:::satz[2.3.3 (Aufwand der Matrix-Vektor-Multiplikation)]
+:::satz[#aufwand-der-matrix-vektor-multiplikation (Aufwand der Matrix-Vektor-Multiplikation)]
 Sei $\bA \in \R^{n \times d}$ und $\bx \in \R^d$. Die Berechnung von $\by = \bA\bx$ hat
 
 - Zeitaufwand $nd$ Multiplikationen $+\; n(d-1)$ Additionen $= n(2d - 1) \approx 2nd$
@@ -138,7 +139,7 @@ $$
 berechnen, also eine :k[Linearkombination]{#linear-combination} der Spalten
 $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
 
-:::algorithmus[2.3.4 (Spaltenweise Auswertung)]
+:::algorithmus[#spaltenweise-auswertung (Spaltenweise Auswertung)]
 1. Initialisiere $\bz = \bnull \in \R^n$.
 2. Für $i = 1, \ldots, d$: berechne den Skalar $(x_i - y_i)$ und aktualisiere
    $\bz \leftarrow \bz + (x_i - y_i) \cdot \bA_{\cdot i}$.
@@ -148,7 +149,7 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
   frage={
     <p>
       <strong>Quiz 1.</strong> Wie viele elementare Rechenoperationen benötigt
-      Algorithmus 2.3.4?
+      {ref("algorithmus:spaltenweise-auswertung")}?
     </p>
   }
   optionen={[
@@ -196,7 +197,7 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
 <SelfTest
   frage={
     <p>
-      <strong>Quiz 2.</strong> Für wie viele Gleitkommazahlen braucht Algorithmus 2.3.4
+      <strong>Quiz 2.</strong> Für wie viele Gleitkommazahlen braucht {ref("algorithmus:spaltenweise-auswertung")}
       Speicherplatz?
     </p>
   }
@@ -232,7 +233,7 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
   }
 />
 
-### 2.3.3 Komplexität: Wie skaliert der Aufwand?
+### Komplexität: Wie skaliert der Aufwand? :id[komplexitaet-wie-skaliert-der-aufwand]
 
 Beim Nachrechnen der Quizfragen ist vielleicht aufgefallen: Ob nun $2nd + d$ oder
 $2nd - n$ oder $2nd$ herauskommt, hängt von Buchhaltungsdetails ab: zählt man die
@@ -242,13 +243,13 @@ interessiert uns nicht. Was uns interessiert, ist, *wie der Aufwand mit der Grö
 Problems wächst*: Was passiert, wenn wir statt $1000$ Datenpunkten $10\,000$ haben?
 Statt $10$ Kovariablen $1000$?
 
-:::definition[2.3.5 (Komplexität)]
+:::definition[#komplexitaet (Komplexität)]
 Wie der Zeit- bzw. Speicheraufwand eines Algorithmus mit der Größe des Problems
 *skaliert*, nennen wir die *Laufzeitkomplexität* bzw. *Speicherkomplexität* des
 Algorithmus.
 :::
 
-:::beispiel[2.3.6]
+:::beispiel[#beispiel-2-3-6]
 Ein Algorithmus benötige $4n^3 + 16n^2 + 239$ Operationen. Für großes $n$ ist
 $16n^2 + 239$ gegenüber $4n^3$ vernachlässigbar: Bei $n = 100$ steuert der kubische
 Term $4 \cdot 10^6$ Operationen bei, die restlichen Terme nur $160\,239$, rund
@@ -259,16 +260,16 @@ Algorithmus *skaliert* also wie $4n^3$; seine Komplexität ist von
 
 Die Schreibweise $O(n^3)$ lässt dabei bewusst auch den Vorfaktor $4$ weg; es zählt
 allein die *Ordnung* des Wachstums. Was genau hinter dem großen $O$ steckt, definieren
-wir sauber in [Abschnitt 2.4](#sec-2.4); hier genügt uns die Lesart „wächst höchstens
+wir sauber in @sec:landau; hier genügt uns die Lesart „wächst höchstens
 wie".
 
-### 2.3.4 Komplexitätsklassen
+### Komplexitätsklassen :id[komplexitaetsklassen]
 
 Die wichtigsten Wachstumsordnungen haben Namen, und es lohnt sich, für jede ein Gefühl
 zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand, wenn
 sich die Problemgröße verdoppelt?*
 
-:::bemerkung[2.3.7 (Interpretation der Komplexitätsklassen)]
+:::bemerkung[#interpretation-der-komplexitaetsklassen (Interpretation der Komplexitätsklassen)]
 Die folgenden Namen beschreiben das typische Wachstum eines Aufwands. Sie helfen
 uns, die Größenordnungen einzuordnen; eine formale obere Schranke schreiben wir
 später mit $O$.
@@ -286,9 +287,9 @@ später mit $O$.
 
 Algorithmen mit exponentieller Laufzeit sind damit schon für moderate
 Problemgrößen häufig praktisch unbrauchbar. So steht es um die naive Fibonacci-Rekursion
-aus [Abschnitt 2.2](#sec-2.2), wie wir in [Abschnitt 2.5](#sec-2.5) genau nachrechnen
+aus @sec:fibonacci, wie wir in @sec:fibonacci-komplexitaet genau nachrechnen
 werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
-zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe Satz 2.3.3
+zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe @satz:aufwand-der-matrix-vektor-multiplikation
 mit $d = n$) und $O(n^3)$ (Matrix-Zerlegungen, Matrix-Matrix-Produkte).
 
 Wie weit diese Klassen auseinanderliegen, zeigt schon ein Bild mit drei Kurven. Auf der
@@ -303,9 +304,9 @@ braucht ein $O(2^n)$-Algorithmus rund $1{,}6 \cdot 10^{60}$ Operationen. Selbst 
 Superrechner mit $10^{18}$ Operationen pro Sekunde rechnete daran $5 \cdot 10^{34}$ Jahre,
 und das Universum ist erst etwa $10^{10}$ Jahre alt. Wer feiner mit den Klassen spielen
 will (welche Klassen sichtbar sind, welcher Vorfaktor, welche Skala), findet den
-zugehörigen Explorer in [Abschnitt 2.4](#sec-2.4).
+zugehörigen Explorer in @sec:landau.
 
-:::bemerkung[2.3.8 (Vorsicht: Konstanten!)]
+:::bemerkung[#vorsicht-konstanten (Vorsicht: Konstanten!)]
 Die $O(\cdot)$-Notation ignoriert konstante Faktoren und Terme niedrigerer Ordnung. Ein
 Algorithmus mit $1000n + 10\,000$ Operationen ist $O(n)$, aber trotzdem *langsamer* als
 ein $O(n^2)$-Algorithmus mit $n^2$ Operationen, solange $n^2 < 1000n + 10\,000$ gilt.
@@ -351,7 +352,7 @@ nur zwei Dimensionen und damit der Faktor $4$.
 Ein $O(n)$-Algorithmus ist für jedes $n$ schneller als ein $O(n^2)$-Algorithmus.
 
 Die Landau-Notation ignoriert Vorfaktoren, und die können jede endliche Problemgröße
-dominieren (Bemerkung 2.3.8). Die Aussage gilt nur für *hinreichend große* $n$.
+dominieren (@bemerkung:vorsicht-konstanten). Die Aussage gilt nur für *hinreichend große* $n$.
 :::
 
 ::::

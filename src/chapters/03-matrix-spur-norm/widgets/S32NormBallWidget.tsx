@@ -15,6 +15,7 @@ import {
   useDrag,
 } from "../../../lib";
 import type { Kurve3D, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.2 (Auffrischung): Einheitskugeln der p-Normen und die Norm als
@@ -310,7 +311,7 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
             <M>
               {`\\left\\| \\be_1 + \\be_2 \\right\\|_{${de(p)}} = 2^{1/${de(p)}} = ${de(Math.pow(2, 1 / p))} > 2 = \\left\\| \\be_1 \\right\\|_{${de(p)}} + \\left\\| \\be_2 \\right\\|_{${de(p)}}`}
             </M>
-            . Genau das fordert das dritte Normaxiom (für Matrizen steht es in Definition 3.2.1,
+            . Genau das fordert das dritte Normaxiom (für Matrizen steht es in {ref("definition:matrixnorm")},
             für Vektoren lautet es wörtlich gleich); die <M>{"\\,p"}</M>-Normen sind deshalb nur
             für <M>{"p \\ge 1"}</M> erklärt.
           </>
@@ -319,7 +320,7 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
             <M>{`\\|\\bx\\|_{${pLabel}} = ${de(nx, 3)}`}</M>: Um genau diesen Faktor aufgeblasen läuft
             die Einheitskugel durch die Spitze von <M>{"\\bx"}</M>. Für <M>{"p \\ge 1"}</M> ist sie
             konvex, und diese Konvexität ist das geometrische Gesicht der Dreiecksungleichung,
-            also des dritten Normaxioms (Definition 3.2.1).
+            also des dritten Normaxioms ({ref("definition:matrixnorm")}).
             {volumenZeigen && (
               <>
                 {" "}

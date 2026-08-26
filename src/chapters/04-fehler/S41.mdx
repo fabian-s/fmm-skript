@@ -1,7 +1,7 @@
 import { FehlermassRechner, FehlerzerlegungExplorer } from "./widgets/S41Widgets";
 
 {/*
-  Abschnitt 4.1: Fehlermaße und Fehlerzerlegung.
+  @sec:fehlermasse: Fehlermaße und Fehlerzerlegung.
   Quelle: Folien 04-fehler.Rmd, Kapitelauftakt + Blöcke „Fehleranalyse"
   (absolute/relative Fehler, Fehlermaß, Fehlerschranken-Lemma,
   Vektor-Beispiel) und „Fehlerzerlegung" (Schema, Zerlegungsformel,
@@ -13,25 +13,25 @@ In Kapitel 2 haben wir gesehen, dass Computer praktisch nie exakt rechnen: Schon
 Speichern einer Zahl im :k[Gleitkommaformat]{#floating-point}
 erzeugt :k[Rundungsfehler]{#rounding-error}, und jede
 Rechenoperation kann weitere hinzufügen
-([Abschnitt 2.1](?k=02-algos#sec-2.1)). Für Statistiker/innen kommt
+(@sec:algos/probleme-algorithmen). Für Statistiker/innen kommt
 noch etwas Grundsätzlicheres dazu: Unsere Inputs sind Daten, und Daten sind gemessen,
 also selbst schon fehlerbehaftet, bevor der Computer überhaupt anfängt zu rechnen. Dieses
 Kapitel entwickelt das Handwerkszeug, um mit beidem systematisch umzugehen. Wir klären
 zuerst, wie man Fehler überhaupt *misst*, und zerlegen dann den Gesamtfehler eines
 berechneten Ergebnisses in seine zwei grundverschiedenen Quellen. Diese Zerlegung ist der
 rote Faden des ganzen Kapitels: Sie führt direkt auf die Begriffe *Kondition*
-([Abschnitt 4.2](#sec-4.2)) und *Stabilität*
-([Abschnitt 4.3](#sec-4.3)).
+(@sec:kondition) und *Stabilität*
+(@sec:stabilitaet).
 
-:::bemerkung[4.1.1 (Verwendete Vorkenntnisse)]
+:::bemerkung[#fehlermasse-verwendete-vorkenntnisse (Verwendete Vorkenntnisse)]
 Dieses Kapitel setzt voraus:
 
 - aus Kapitel 2: den Algorithmusbegriff und die Komplexitätsanalyse
-  ([Abschnitte 2.1](?k=02-algos#sec-2.1)–[2.3](?k=02-algos#sec-2.3)) sowie das Verständnis, dass
+  (Abschnitte @num:algos/probleme-algorithmen–@num:algos/aufwand) sowie das Verständnis, dass
   Algorithmen meist nur *approximative* Lösungen berechnen,
 - aus der linearen Algebra: Vektor- und
   :k[Matrixnormen]{#matrix-norm} (Kapitel 3, insbesondere
-  [Abschnitt 3.2](?k=03-matrix-spur-norm#sec-3.2)) mit den
+  @sec:matrix-spur-norm/matrixnormen) mit den
   :k[Normeigenschaften]{#norm} Definitheit, Homogenität und
   :k[Dreiecksungleichung]{#triangle-inequality}, außerdem
   Matrixoperationen und
@@ -42,7 +42,7 @@ Dieses Kapitel setzt voraus:
   :k[Taylor-Approximation]{#taylor-series}.
 :::
 
-### 4.1.1 Absolute und relative Fehler
+### Absolute und relative Fehler :id[absolute-und-relative-fehler]
 
 Beginnen wir mit dem einfachsten Fall: Eine einzelne Zahl soll gespeichert oder berechnet
 werden, und statt des $\cgreen{\text{tatsächlichen Werts}}$ erhalten wir einen
@@ -77,7 +77,7 @@ Kapitel 2 bekannte Runden im Gleitkommaformat beschreiben: Dort ist der relative
 höchstens die
 :k[Maschinengenauigkeit]{#machine-epsilon}.
 
-### 4.1.2 Fehlermaße und Fehlerschranken
+### Fehlermaße und Fehlerschranken :id[fehlermasse-und-fehlerschranken]
 
 In der Statistik sind unsere Ergebnisse selten einzelne Zahlen: Wir rechnen mit
 Vektoren von Schätzern, mit Kovarianzmatrizen, mit ganzen Funktionen. Um Fehler auch
@@ -87,7 +87,7 @@ Normbegriffe bereitgestellt; jetzt zahlt sich das aus. Die folgende Definition �
 beide Fehlerbegriffe wörtlich auf beliebige
 :k[Vektorräume]{#vector-space}:
 
-:::definition[4.1.2 (Fehlermaß)]
+:::definition[#fehlermass (Fehlermaß)]
 Sei $V$ ein Vektorraum mit (Semi-)Norm $\left\| \cdot \right\|$
 und $\cblue{\wt{\bv}} \in V$ eine Approximation zu
 $\cgreen{\bv} \in V$. Dann ist
@@ -111,7 +111,7 @@ auch, *in welche Richtung* die Approximation danebenliegt. Der relative Fehler
 $\corange{\delta_{\bv}}$ ist dagegen eine einzelne nichtnegative Zahl. Für
 Skalare ($V = \R$ mit dem Betrag als Norm) liefert die Definition gerade den
 Betrag des relativen Fehlers aus
-[Abschnitt 4.1.1](#sec-4.1.1).
+@sec:absolute-und-relative-fehler.
 
 Oft kennen wir den Fehler nicht exakt, sonst könnten wir ihn ja einfach abziehen und
 exakt rechnen. Was wir realistischerweise angeben können, ist eine Garantie nach oben:
@@ -121,7 +121,7 @@ $\corange{\delta_{\bv}} \le \eps$, so nennen wir $\eps$ eine
 eine relative Fehlerschranke praktisch wert ist: Sie kontrolliert, wie stark die Norm der
 Approximation von der Norm des wahren Werts abweichen kann.
 
-:::lemma[4.1.3 (Fehlerschranken)]
+:::lemma[#fehlerschranken (Fehlerschranken)]
 Es gilt
 
 $$
@@ -170,7 +170,7 @@ garantiert also: Die Norm der Approximation liegt zwischen $99\,\%$ und
 $101\,\%$ der wahren Norm. Rechnen wir das Ganze einmal konkret an einem
 Vektor durch.
 
-:::beispiel[4.1.4 (Fehlermaße für Vektoren)]
+:::beispiel[#fehlermasse-fuer-vektoren (Fehlermaße für Vektoren)]
 Sei $\cgreen{\bv} = \cgreen{\begin{pmatrix} 3 \\ 4 \end{pmatrix}}$ und
 $\cblue{\wt{\bv}} = \cblue{\begin{pmatrix} 3{,}2 \\ 4{,}3 \end{pmatrix}}$
 mit der :k[euklidischen Norm]{#euclidean-norm}
@@ -199,17 +199,17 @@ $$
 $\corange{\delta_{\bv}} \approx 0{,}072 \le 0{,}1$ ist
 $\eps = 0{,}1$ eine relative Fehlerschranke.
 
-Zur Probe können wir auch Lemma 4.1.3 nachrechnen: Es ist
+Zur Probe können wir auch @lemma:fehlerschranken nachrechnen: Es ist
 $\left\| \cblue{\wt{\bv}} \right\|_2 = \sqrt{3{,}2^2 + 4{,}3^2} = \sqrt{28{,}73} \approx 5{,}3600$,
 und tatsächlich gilt
 $5 \cdot (1 - \corange{\delta_{\bv}}) \approx 4{,}6394 \le 5{,}3600 \le 5{,}3606 \approx 5 \cdot (1 + \corange{\delta_{\bv}})$.
 :::
 
-Wie viel Spielraum lässt eine Fehlerschranke eigentlich? Für den Vektor aus Beispiel 4.1.4
+Wie viel Spielraum lässt eine Fehlerschranke eigentlich? Für den Vektor aus @beispiel:fehlermasse-fuer-vektoren
 bedeutet $\corange{\delta_{\bv}} \le 0{,}1$ nichts anderes als: Die Spitze von
 $\cblue{\wt{\bv}}$ darf höchstens um $0{,}1 \cdot \left\| \cgreen{\bv} \right\|_2$
 danebenliegen. Wie groß ist dieser Spielraum in der Ebene, und wie viel Information über
-$\left\| \cblue{\wt{\bv}} \right\|$ steckt am Ende in Lemma 4.1.3?
+$\left\| \cblue{\wt{\bv}} \right\|$ steckt am Ende in @lemma:fehlerschranken?
 
 :::interaktiv[Fehlermaß-Rechner: v und ṽ in der Ebene]
 <FehlermassRechner />
@@ -219,11 +219,11 @@ Der Rechner übersetzt beide Fehlermaße in Geometrie. Der absolute Fehler
 $\cred{\bDelta_{\bv}}$ ist der rote Pfeil zwischen den beiden Spitzen, der relative Fehler
 misst dessen Länge an $\left\| \cgreen{\bv} \right\|_2$, und der gestrichelte Kreis um
 $\cgreen{\bv}$ hat den Radius $0{,}1 \cdot 5 = 0{,}5$: Solange die blaue Spitze darin liegt,
-ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist Lemma 4.1.3
-als Bild. Bei den 7,2 % aus Beispiel 4.1.4 ist er noch schmal, bei 40 % lässt er für
+ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist @lemma:fehlerschranken
+als Bild. Bei den 7,2 % aus @beispiel:fehlermasse-fuer-vektoren ist er noch schmal, bei 40 % lässt er für
 $\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
 
-### 4.1.3 Fehlerzerlegung
+### Fehlerzerlegung :id[fehlerzerlegung]
 
 Jetzt zur zweiten Leitfrage: *Woher* kommt der Fehler in einem berechneten
 Ergebnis? Formalisieren wir dazu die Situation. Sei $f$ ein Problem (eine
@@ -251,31 +251,31 @@ Der zentrale Trick dieses Kapitels ist nun, den Gesamtfehler exakt in diese zwei
 zu zerlegen. Dazu subtrahieren und addieren wir den Zwischenwert
 $f(\wt{\bx})$ (das ideale Problem, ausgewertet am tatsächlichen Input):
 
-$$ {#eq-4.1.1}
+$$ {#eq-eq-4-1-1}
 \cpurp{\underbrace{\wt{f}(\wt{\bx}) - f(\bx)}_{\text{Gesamtfehler}}} \;=\; \cred{\underbrace{\wt{f}(\wt{\bx}) - f(\wt{\bx})}_{\substack{\text{Fehler im Algorithmus} \\ \text{(Maschinenarithmetik)}}}} \;+\; \corange{\underbrace{f(\wt{\bx}) - f(\bx)}_{\substack{\text{Folgefehler aus Input} \\ \text{(exakte Arithmetik)}}}}
 $$
 
 Warum ist diese Zerlegung so nützlich? Weil die beiden Terme sauber getrennte
 Verantwortlichkeiten haben:
 
-:::bemerkung[4.1.5 (Stabilität und Kondition: Ausblick)]
+:::bemerkung[#stabilitaet-und-kondition-ausblick (Stabilität und Kondition: Ausblick)]
 
 - Der erste Term $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ vergleicht
   Algorithmus und Problem *am selben Input* und hängt damit nicht vom
   Inputfehler ab. Ist er „klein", nennen wir den Algorithmus *stabil*
-  ([Abschnitt 4.3](#sec-4.3)).
+  (@sec:stabilitaet).
 - Der zweite Term $\corange{f(\wt{\bx}) - f(\bx)}$ vergleicht das ideale
   Problem $f$ an zwei Inputs, in exakter Arithmetik, und hängt damit nicht
   vom Algorithmus $\wt{f}$ ab. Ist er „klein", nennen wir das Problem
   $f$ an der Stelle $\bx$ *gut konditioniert*
-  ([Abschnitt 4.2](#sec-4.2)).
+  (@sec:kondition).
 :::
 
-Die Zerlegung (4.1.1) trennt also, was der Algorithmus verbockt, von dem, was am
+Die Zerlegung @eq:eq-4-1-1 trennt also, was der Algorithmus verbockt, von dem, was am
 gestörten Input liegt – und nur den ersten Anteil können wir durch bessere Software
 reparieren. Sehen wir uns das an einem vollständig durchgerechneten Beispiel an.
 
-:::beispiel[4.1.6 (Fehlerzerlegung: Berechnung von e^π)]
+:::beispiel[#fehlerzerlegung-berechnung-von-e (Fehlerzerlegung: Berechnung von e^π)]
 Bekanntlich lässt sich die Exponentialfunktion als
 :k[Potenzreihe]{#power-series} schreiben:
 $e^x = \sum_{n=0}^{\infty} \frac{x^n}{n!}$. Angenommen, wir wollen
@@ -283,7 +283,7 @@ $f(\pi) = e^{\pi}$ berechnen und verwenden dazu zwei Näherungen: als Input
 $\wt{\pi} = 3$ (auf eine ganze Zahl gerundet) und als Algorithmus die nach
 dem quadratischen Glied abgebrochene Reihe
 $\wt{f}(x) = \sum_{n=0}^{2} \frac{x^n}{n!} = 1 + x + \tfrac{x^2}{2}$.
-Zerlegen wir den Gesamtfehler wie in (4.1.1). Am besten erst selbst probieren, dann
+Zerlegen wir den Gesamtfehler wie in @eq:eq-4-1-1. Am besten erst selbst probieren, dann
 weiterlesen.
 
 Der Algorithmus liefert
@@ -333,7 +333,7 @@ nicht mehr er, sondern der Input das Ergebnis begrenzt?
 Im Explorer kippt die Dominanz bei $\wt{\pi} = 3$ zwischen $N = 4$ und
 $N = 6$: Bis $N = 3$ ist der Algorithmusfehler mehr als doppelt so groß wie der
 Folgefehler, ab $N = 6$ ist es umgekehrt. Ab da kostet jedes weitere Reihenglied Rechenzeit,
-ohne den Gesamtfehler zu bewegen, denn der zweite Summand in (4.1.1) enthält
+ohne den Gesamtfehler zu bewegen, denn der zweite Summand in @eq:eq-4-1-1 enthält
 $N$ überhaupt nicht. Wer den Fehler dann noch drücken will, muss am Input ansetzen.
 
 Damit haben wir das Vokabular beisammen: Fehler messen wir mit Normen (absolut oder
@@ -352,7 +352,7 @@ Fehler der Algorithmus selbst hinzufügt.
 :::frage{falsch}
 Ein absoluter Fehler von $0{,}36$ ist ein kleiner Fehler.
 
-Ohne Bezugsgröße sagt der absolute Fehler nichts. In Beispiel 4.1.4 sind
+Ohne Bezugsgröße sagt der absolute Fehler nichts. In @beispiel:fehlermasse-fuer-vektoren sind
 $0{,}36$ gemessen an $\left\| \cgreen{\bv} \right\|_2 = 5$ gerade
 7,2 %, bei einem Vektor der Länge $0{,}5$ wären dieselben
 $0{,}36$ ein relativer Fehler von über 70 %. Genau deshalb steht neben dem
@@ -365,16 +365,16 @@ $\corange{\delta_{\bv}}$.
 
 $\cred{\bDelta_{\bv}}$ ist ein Element von $V$ und sagt auch, in welche
 *Richtung* die Näherung danebenliegt; $\corange{\delta_{\bv}}$ ist eine einzelne
-nichtnegative Zahl (Definition 4.1.2). Aus $\cred{\bDelta_{\bv}}$ und
+nichtnegative Zahl (@definition:fehlermass). Aus $\cred{\bDelta_{\bv}}$ und
 $\cgreen{\bv}$ lässt sich $\corange{\delta_{\bv}}$ berechnen, umgekehrt nicht.
 :::
 
 :::frage{falsch}
-Mehr Reihenglieder in $\wt{f}$ verkleinern beide Anteile der Zerlegung (4.1.1).
+Mehr Reihenglieder in $\wt{f}$ verkleinern beide Anteile der Zerlegung @eq:eq-4-1-1.
 
 Nur den ersten. Der Folgefehler $\corange{f(\wt{\bx}) - f(\bx)}$ vergleicht das
 *ideale* Problem an zwei Inputs und weiß von $\wt{f}$ gar nichts
-(Bemerkung 4.1.5). Deshalb läuft der Gesamtfehler im Explorer gegen den Folgefehler und nicht
+(@bemerkung:stabilitaet-und-kondition-ausblick). Deshalb läuft der Gesamtfehler im Explorer gegen den Folgefehler und nicht
 gegen null.
 :::
 
@@ -387,7 +387,7 @@ Der gestrichelte Kreis hat den Radius $0{,}1 \cdot \left\| \cgreen{\bv} \right\|
 $\left\| \cgreen{\bv} \right\|_2 = 5$. Auf dem Kreis ist also
 $\left\| \cred{\bDelta_{\bv}} \right\|_2 = 0{,}5$ und damit
 $\corange{\delta_{\bv}} = 0{,}5/5 = 10\,\%$: der Grenzfall der Fehlerschranke
-$\eps = 0{,}1$ aus Beispiel 4.1.4.
+$\eps = 0{,}1$ aus @beispiel:fehlermasse-fuer-vektoren.
 :::
 
 ::::

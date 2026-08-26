@@ -12,6 +12,7 @@
 import { useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
 import { NEUTRAL, ORANGE, VIOLETT, bspl, fmt } from "./S134BSpline";
+import { num } from "../../numbers.generated";
 
 /**
  * Anatomie eines Cox-de-Boor-Schritts (§13.4).
@@ -120,7 +121,7 @@ export function CoxDeBoorSchritt() {
       />
 
       <Verdikt kind="ok">
-        Beide Rampen gewichten nichtnegative Nachbarfunktionen. Deshalb bleibt <M>{`B_3^{(${q})}`}</M> nichtnegativ; sein Träger wächst um ein Intervall und die Glattheit reicht bis zur {ORDNUNG[q - 1]} Ableitung (13.4.3).
+        Beide Rampen gewichten nichtnegative Nachbarfunktionen. Deshalb bleibt <M>{`B_3^{(${q})}`}</M> nichtnegativ; sein Träger wächst um ein Intervall und die Glattheit reicht bis zur {ORDNUNG[q - 1]} Ableitung ({num("eq:erweiterte-knotenfolge-und-b-splines-2")}).
       </Verdikt>
     </div>
   );

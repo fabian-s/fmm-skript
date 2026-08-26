@@ -14,6 +14,7 @@ import {
   niceTicks,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.3: Projektion auf eine konvexe Menge (Eigenbau).
@@ -459,9 +460,9 @@ export function ProjektionsWidget() {
       ) : aufEcke ? (
         <Verdikt kind="warn" titel="x̂ steht in einer Ecke.">
           Der Abstand ist d = {fmtDe(d, 3)}. Solange x im Normalenkegel dieser Ecke bleibt, rührt
-          sich x̂ nicht, obwohl x weiterläuft. Die Projektion ist eindeutig (Satz 11.3.1), aber
+          sich x̂ nicht, obwohl x weiterläuft. Die Projektion ist eindeutig ({ref("satz:projektionstheorem")}), aber
           keineswegs umkehrbar. Auch hier trennt die gestrichelte Gerade: Für jeden Punkt y der
-          Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0 (Satz 11.3.3), das größte abgetastete Skalarprodukt
+          Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0 ({ref("satz:kriterium-des-stumpfen-winkels")}), das größte abgetastete Skalarprodukt
           beträgt {fmtDe(groesstesSkalar, 3)}.
         </Verdikt>
       ) : (
@@ -470,7 +471,7 @@ export function ProjektionsWidget() {
           sie sonst nirgends; unter {menge.rand.length} abgetasteten Randpunkten unterbietet
           keiner diesen Abstand (kleinster gefundener Wert {fmtDe(bestRand, 3)}). Die gestrichelte
           Gerade durch x̂ steht senkrecht auf x − x̂, und die ganze Menge liegt auf ihrer
-          abgewandten Seite: Für jeden Punkt y der Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0 (Satz 11.3.3),
+          abgewandten Seite: Für jeden Punkt y der Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0 ({ref("satz:kriterium-des-stumpfen-winkels")}),
           das größte abgetastete Skalarprodukt beträgt {fmtDe(groesstesSkalar, 3)}.
         </Verdikt>
       )}

@@ -43,6 +43,7 @@ import {
   mulberry32,
   useSeed,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 type M2 = number[][];
 
@@ -211,7 +212,7 @@ export function SubmultRechner({
                 setGewuerfelt(false);
               }}
             >
-              Einsermatrix (Beispiel 3.5.6)
+              Einsermatrix ({ref("beispiel:die-maximumsnorm-ist-nicht")})
             </button>
             <button type="button" className={`text-xs ${W_BUTTON}`} onClick={wuerfeln}>
               andere Zufallsmatrizen
@@ -272,21 +273,21 @@ export function SubmultRechner({
             Verletzt: <M>{"\\left\\|\\bA\\bB\\right\\| ="}</M> {fmtDe(nAB, 3)} {">"}{" "}
             {fmtDe(rhs, 3)} <M>{"= \\left\\|\\bA\\right\\| \\cdot \\left\\|\\bB\\right\\|"}</M>. Die
             Maximumsnorm liest nur den größten Eintrag ab und übersieht, dass beim Matrixprodukt
-            aufsummiert wird (Beispiel 3.5.6). Satz 3.5.5 gilt für Operatornormen, und diese Norm
+            aufsummiert wird ({ref("beispiel:die-maximumsnorm-ist-nicht")}). {ref("satz:operatornormen-sind-submultiplikativ")} gilt für Operatornormen, und diese Norm
             ist keine. Reparieren lässt sich der Defekt mit dem Faktor{" "}
-            <M>{"\\sqrt{mn}"}</M> (Bemerkung 3.5.7).
+            <M>{"\\sqrt{mn}"}</M> ({ref("bemerkung:reparatur-die-gesamtnorm")}).
           </>
         ) : scharf ? (
           <>
             Hier steht Gleichheit: <M>{"\\left\\|\\bA\\bB\\right\\| = \\left\\|\\bA\\right\\| \\cdot \\left\\|\\bB\\right\\|"}</M>{" "}
             = {fmtDe(nAB, 3)}. Submultiplikativität verlangt „höchstens", nicht „echt kleiner"
-            (Definition 3.5.4) – die Schranke aus Satz 3.5.5 ist also scharf und lässt sich nicht
+            ({ref("definition:submultiplikative-matrixnorm")}) – die Schranke aus {ref("satz:operatornormen-sind-submultiplikativ")} ist also scharf und lässt sich nicht
             verbessern.
           </>
         ) : (
           <>
             Erfüllt, mit Luft: {fmtDe(nAB, 3)} ≤ {fmtDe(rhs, 3)}, der Quotient liegt bei{" "}
-            {fmtDe(ratio, 3)}. Für {norm.art === "operator" ? "Operatornormen ist das Satz 3.5.5" : "die Schattennormen halten wir das Resultat in Abschnitt 3.5.2 ohne Beweis fest"}
+            {fmtDe(ratio, 3)}. Für {norm.art === "operator" ? `Operatornormen ist das ${ref("satz:operatornormen-sind-submultiplikativ")}` : `die Schattennormen halten wir das Resultat in ${ref("sec:submultiplikativitaet")} ohne Beweis fest`}
             {gewuerfelt ? "; über die Zufallspaare dieses Widgets bleibt der Quotient in dieser Norm stets unter 1" : ""}. Wie viel Luft bleibt, hängt davon ab, wie gut die
             Streckrichtungen von <M>{"\\bA"}</M> und <M>{"\\bB"}</M> zusammenpassen.
           </>
@@ -319,7 +320,7 @@ export function S35SubmultWidget() {
       verdeckt={
         <p className="max-w-prose text-sm">
           Die Normwahl steht jetzt auf der Maximumsnorm. Mit der Schaltfläche können wir die
-          Einsermatrix aus Beispiel 3.5.6 einstellen.
+          Einsermatrix aus {ref("beispiel:die-maximumsnorm-ist-nicht")} einstellen.
         </p>
       }
       onAufloesen={() => setNormKey("max")}

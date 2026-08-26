@@ -13,6 +13,7 @@ import {
   niceTicks,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.1: Konvexkombinations-Explorer (Eigenbau).
@@ -369,7 +370,7 @@ export function KonvexkombinationsExplorer() {
         <Verdikt kind="fail" titel="Summe null, Normierung nicht definiert.">
           Alle drei Regler stehen auf null. Wir müssten durch die Summe 0 teilen, und das ergibt
           keine Zahl, auch keine unendlich große. Die Bedingung w₁ + w₂ + w₃ = 1 aus
-          Definition 11.1.1 lässt sich hier nicht erfüllen, also zeichnen wir keinen Punkt. Jede
+          {ref("definition:konvexkombination")} lässt sich hier nicht erfüllen, also zeichnen wir keinen Punkt. Jede
           andere Reglerstellung ist zulässig, denn durch eine positive Summe dürfen wir immer
           teilen.
         </Verdikt>
@@ -377,13 +378,13 @@ export function KonvexkombinationsExplorer() {
         <Verdikt kind="warn" titel={`Ecke ${NAMEN[eckIndex]}, ein Extrempunkt.`}>
           Ein Gewicht trägt alles, die beiden anderen sind null. So und nur so erreichen wir die
           Ecke {NAMEN[eckIndex]}: Sobald ein zweites Gewicht positiv wird, wandert der Punkt von
-          der Ecke weg. Das ist die Extrempunkt-Eigenschaft aus Definition 11.1.7. Der
+          der Ecke weg. Das ist die Extrempunkt-Eigenschaft aus {ref("definition:konvexkombinationen-extrempunkt")}. Der
           Flächenanteil der Ecke ist 1, die beiden anderen Teildreiecke sind entartet.
         </Verdikt>
       ) : lage === "kante" ? (
         <Verdikt kind="ok" titel={`Auf der Kante gegenüber von ${NAMEN[freieKante]}.`}>
           Ein Gewicht steht auf null, die Kombination läuft also nur noch über zwei Ecken. Die
-          Menge aller solchen Punkte ist nach Satz 11.1.4 genau das Liniensegment zwischen ihnen,
+          Menge aller solchen Punkte ist nach {ref("satz:konvexkombinationen-zweier-vektoren")} genau das Liniensegment zwischen ihnen,
           und wir sehen den Rand der konvexen Hülle. Der Punkt bleibt eine Konvexkombination
           aller drei Ecken, nur mit einem Gewicht 0.
         </Verdikt>
@@ -392,7 +393,7 @@ export function KonvexkombinationsExplorer() {
           kind="ok"
           titel={istSchwerpunkt ? "Nahe am Schwerpunkt (1; 2/3)." : "Im Inneren des Dreiecks."}
         >
-          Alle drei Gewichte sind positiv, der Punkt liegt im Inneren (Bemerkung 11.1.11). Die
+          Alle drei Gewichte sind positiv, der Punkt liegt im Inneren ({ref("bemerkung:rand-und-inneres-an-den-gewichten")}). Die
           gestrichelte Hilfsstrecke zeigt, wie er entsteht: erst x₂ und x₃ zu y mischen, dann x₁
           mit y. Jedes Gewicht wᵢ ist zugleich der Flächenanteil des Teildreiecks, in dem die
           Ecke xᵢ fehlt; hier {fmtDe(w[0])} gegen {fmtDe(anteile[0])} für x₁.

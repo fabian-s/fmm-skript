@@ -14,6 +14,7 @@ import {
   niceTicks,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.2: Konvexitäts-Test (Eigenbau).
@@ -503,28 +504,28 @@ export function KonvexTest() {
             : !xDrin
               ? "Der Punkt x liegt"
               : "Der Punkt y liegt"}{" "}
-          außerhalb der Menge. Definition 11.2.1 verlangt x, y ∈ 𝒳 und sagt über andere Paare
+          außerhalb der Menge. {ref("definition:konvexe-menge")} verlangt x, y ∈ 𝒳 und sagt über andere Paare
           nichts; ein Herausragen widerlegt hier also nichts. Ziehen wir den Punkt zurück, oder
           greifen wir zum vorbereiteten Paar.
         </Verdikt>
       ) : gleich ? (
         <Verdikt kind="neutral" titel="Beide Punkte fallen zusammen.">
           Die Strecke schrumpft zu einem Punkt. Für x = y ist λ·x + (1−λ)·y = x, die Bedingung
-          aus Definition 11.2.1 also erfüllt, ohne dass wir etwas über die Menge erfahren. Ziehen
+          aus {ref("definition:konvexe-menge")} also erfüllt, ohne dass wir etwas über die Menge erfahren. Ziehen
           wir y an eine andere Stelle.
         </Verdikt>
       ) : befund.anteil > 0 ? (
         <Verdikt kind="fail" titel="Geschafft: die Strecke verlässt die Menge.">
           Für λ echt zwischen {fmtDe(befund.von, 3)} und {fmtDe(befund.bis, 3)} liegt
           z(λ) = λ·x + (1−λ)·y außerhalb, das sind {fmtDe(100 * befund.anteil, 1)} % der
-          abgetasteten Strecke. Damit ist die Bedingung aus Definition 11.2.1 verletzt, und
+          abgetasteten Strecke. Damit ist die Bedingung aus {ref("definition:konvexe-menge")} verletzt, und
           dieses eine Paar entscheidet die Frage: {menge.name} ist nicht konvex.
         </Verdikt>
       ) : (
         <Verdikt kind="warn" titel="Dieses Paar besteht die Probe.">
           Für alle abgetasteten λ bleibt z(λ) = λ·x + (1−λ)·y in der Menge. Entschieden ist damit
-          nichts, denn Definition 11.2.1 fordert <em>alle</em> Paare. Genau darin liegt die
-          Asymmetrie aus Bemerkung 11.2.2: Widerlegen kostet ein Beispiel, Beweisen eine Rechnung
+          nichts, denn {ref("definition:konvexe-menge")} fordert <em>alle</em> Paare. Genau darin liegt die
+          Asymmetrie aus {ref("bemerkung:was-die-bedingung-verlangt")}: Widerlegen kostet ein Beispiel, Beweisen eine Rechnung
           über alle Paare. Ziehen wir x und y weiter auseinander.
         </Verdikt>
       )}

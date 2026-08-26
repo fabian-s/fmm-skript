@@ -54,6 +54,7 @@ import {
   useDrag,
   type Vec2,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /* ---------------------------------------------------------------- Helfer */
 
@@ -125,9 +126,9 @@ export function OrthoWidget() {
       {det > 0 ? (
         <Verdikt kind="ok" titel="Drehung:">
           <M>{"\\det \\bQ = +1"}</M>, die Orientierung bleibt erhalten. Längen ändern sich nicht
-          (Lemma 7.4.2 (ii)), also auch keine{" "}
+          ({ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")} (ii)), also auch keine{" "}
           <ConceptLink id="condition-number">Konditionszahl</ConceptLink>:{" "}
-          <M>{"\\kappa_2(\\bQ) = 1"}</M> nach Lemma 7.4.2 (iii). Deshalb kann kein noch so langes
+          <M>{"\\kappa_2(\\bQ) = 1"}</M> nach {ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")} (iii). Deshalb kann kein noch so langes
           Produkt solcher Matrizen ein Problem schlechter konditioniert machen.
         </Verdikt>
       ) : (
@@ -135,7 +136,7 @@ export function OrthoWidget() {
           <M>{"\\det \\bQ = -1"}</M> – die Orientierung kippt, ein Umlaufsinn dreht sich um.
           Für die Numerik ist das gleichgültig: Auch hier gilt{" "}
           <M>{"\\left\\|\\bQ\\bx\\right\\|_2 = \\left\\|\\bx\\right\\|_2"}</M> und{" "}
-          <M>{"\\kappa_2(\\bQ) = 1"}</M> (Lemma 7.4.2). Beide Typen sind für uns gleich brauchbar,
+          <M>{"\\kappa_2(\\bQ) = 1"}</M> ({ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")}). Beide Typen sind für uns gleich brauchbar,
           und genau diese beiden Typen gibt es im <M>{"\\R^2"}</M> auch nur.
         </Verdikt>
       )}
@@ -482,7 +483,7 @@ function CgsVsMgsTafel({ p, setP }: { p: number; setP: (v: number) => void }) {
           Durchlauf bei <span className="font-mono">{lossRe.toExponential(1)}</span>. Vorsicht ab
           hier: Der Rechner rundet <M>{"1 + \\varepsilon^2"}</M> bereits zu <M>{"1"}</M> (siehe{" "}
           <a className="underline" href="#sec-7.3">
-            Abschnitt 7.3
+            {ref("sec:kq/normalengleichungen")}
           </a>
           ), die Messwerte springen und bilden die Theorie nicht mehr sauber ab.
         </Verdikt>

@@ -15,6 +15,7 @@ import {
   mulberry32,
   useSeed,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Widgets für §4.3 „Stabilität von Algorithmen".
@@ -146,7 +147,7 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
         Ohne Rauschen wird der Abstand in jedem Schritt mit {fmtDe(rho, 2)} vergrößert; die
         Iterierten verlassen hier nach {thetas.length - 1} Schritten den Plot. Rauschen ändert
         einzelne Schritte, aber nicht die Instabilität des Verstärkungsfaktors. Das ist das
-        Signaturverhalten aus Beispiel 4.3.2.
+        Signaturverhalten aus {ref("beispiel:stochastic-gradient-descent")}.
       </Verdikt>
     ) : grenzfall ? (
       <Verdikt kind="warn" titel="Grenzfall.">
@@ -395,7 +396,7 @@ export function KappaRechner() {
   } else if (!Number.isFinite(kappa)) {
     verdikt = (
       <Verdikt kind="fail" titel="Schlecht gestellt.">
-        Für <M>{"a = b"}</M> ist <M>{"\\kappa_{rel} = \\infty"}</M> (Lemma 4.3.6, Nenner null).
+        Für <M>{"a = b"}</M> ist <M>{"\\kappa_{rel} = \\infty"}</M> ({ref("lemma:kondition-der-differenz")}, Nenner null).
         Das exakte Ergebnis ist <M>{"0"}</M>, und jede noch so kleine Störung der Inputs erzeugt
         einen relativen Fehler von beliebiger Größe.
       </Verdikt>
@@ -404,7 +405,7 @@ export function KappaRechner() {
     verdikt = (
       <Verdikt kind="fail" titel="Nichts bleibt übrig.">
         <M>{"\\kappa_{rel} \\cdot \\eps \\gtrsim 1"}</M>: Von den rund 16 Dezimalstellen doppelter
-        Genauigkeit überlebt keine einzige. Nach Satz 4.3.3 verstärkt der letzte Schritt alle
+        Genauigkeit überlebt keine einzige. Nach {ref("satz:fehlerfortpflanzung-in-einer-komposition")} verstärkt der letzte Schritt alle
         zuvor angesammelten Fehler mit diesem Faktor, und {Math.round(verlust)} verlorene Stellen
         sind mehr, als die Zwischengrößen überhaupt tragen.
       </Verdikt>
@@ -413,10 +414,10 @@ export function KappaRechner() {
     verdikt = (
       <Verdikt kind="warn" titel="Stellen gehen verloren.">
         Der letzte Schritt verstärkt alle bis dahin angesammelten relativen Fehler etwa um{" "}
-        <M>{"\\kappa_{rel}"}</M> (Satz 4.3.3): rund {Math.round(verlust)}{" "}
+        <M>{"\\kappa_{rel}"}</M> ({ref("satz:fehlerfortpflanzung-in-einer-komposition")}): rund {Math.round(verlust)}{" "}
         {Math.round(verlust) === 1 ? "Dezimalstelle geht" : "Dezimalstellen gehen"} verloren,
         höchstens etwa {Math.floor(rest)} bleiben korrekt. Als Faustregel aus
-        Bemerkung 4.2.4: <M>{"\\kappa_{rel} \\approx 10^m"}</M> kostet <M>{"m"}</M> Stellen.
+        {ref("bemerkung:interpretation")}: <M>{"\\kappa_{rel} \\approx 10^m"}</M> kostet <M>{"m"}</M> Stellen.
       </Verdikt>
     );
   } else {

@@ -11,6 +11,7 @@ import {
   fmtTick,
   niceTicks,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.6: Die EINE Einsicht — die Kettenregel ist das Produkt zweier Raten, und
@@ -185,10 +186,10 @@ export function KettenregelWidget() {
   if (!brauchbar) {
     art = "warn";
     verdikt =
-      `Hier greift Satz 10.6.8 nicht: An der Stelle x = ${fmt(x, 2)} ist f(x) = ${fmt(u, 2)}, und die ` +
+      `Hier greift ${ref("satz:kettenregel")} nicht: An der Stelle x = ${fmt(x, 2)} ist f(x) = ${fmt(u, 2)}, und die ` +
       `äußere Funktion g(u) = √u ist in u = 0 nicht differenzierbar, denn g′(u) = 1/(2√u) wächst über ` +
       `jede Grenze. Die verkettete Funktion h(x) = |x| trägt an dieser Stelle den Knick aus ` +
-      `Abschnitt 10.1, und das Produkt aus ∞ und 0 ist keine Zahl. Die Gegenprobe meldet trotzdem ` +
+      `${ref("sec:differentialrechnung/linearisierung")}, und das Produkt aus ∞ und 0 ist keine Zahl. Die Gegenprobe meldet trotzdem ` +
       `einen Wert: Der zentrale Differenzenquotient mittelt über beide Seiten des Knicks und liefert 0. ` +
       `Eine numerische Ableitung merkt von selbst nicht, dass es gar keine gibt.`;
   } else if (wahl.id === "wurzel") {
@@ -203,13 +204,13 @@ export function KettenregelWidget() {
     verdikt =
       `Die äußere Rate ist hier σ′(u) = σ(u)(1 − σ(u)) = ${fmt(aeussere, 4)}: Sie ist am größten, wo ` +
       `σ den Wert 0,5 annimmt, und wird an beiden Enden winzig. Die innere Rate bleibt konstant bei ` +
-      `${fmt(innere, 0)}. Ihr Produkt ${fmt(kette, 4)} ist nach Satz 10.6.8 die Steigung der grünen ` +
+      `${fmt(innere, 0)}. Ihr Produkt ${fmt(kette, 4)} ist nach ${ref("satz:kettenregel")} die Steigung der grünen ` +
       `Tangente. Dieselbe Rechnung steckt im Gradienten der logistischen Regression weiter unten.`;
   } else {
     art = "ok";
     verdikt =
       `Beide Stationen sind an dieser Stelle lineare Abbildungen mit je einer Zahl als Faktor: die ` +
-      `innere mit f′(x) = ${fmt(innere, 2)}, die äußere mit g′(f(x)) = ${fmt(aeussere, 3)}. Satz 10.6.8 ` +
+      `innere mit f′(x) = ${fmt(innere, 2)}, die äußere mit g′(f(x)) = ${fmt(aeussere, 3)}. ${ref("satz:kettenregel")} ` +
       `schaltet die beiden hintereinander, und für Multiplikationen mit Zahlen heißt das schlicht ` +
       `multiplizieren: h′(x) = ${fmt(kette, 3)}. Die Gegenprobe kommt ohne die Kettenregel aus und ` +
       `landet auf mehreren Stellen beim selben Wert.`;

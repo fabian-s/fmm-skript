@@ -10,6 +10,7 @@ import {
   niceTicks,
   fmtTick,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.1: Konvexe Hülle einer Punktwolke (Eigenbau).
@@ -294,20 +295,20 @@ export function KonvexeHuellePunktwolke({ start = 4 }: { start?: number }) {
         <Verdikt kind="warn" titel="Eine Ecke ist nach innen gefallen.">
           Der neue Punkt {punktText(neu)} schließt {punktText(verloren[0])}
           {verloren.length > 1 ? " und weitere" : ""} ein: eben noch Extrempunkt, jetzt selbst
-          eine Konvexkombination der übrigen. Extrempunkt zu sein hängt nach Definition 11.1.7
-          nicht am Punkt allein, sondern an der Menge, in der er liegt (Bemerkung 11.1.8).
+          eine Konvexkombination der übrigen. Extrempunkt zu sein hängt nach {ref("definition:konvexkombinationen-extrempunkt")}
+          nicht am Punkt allein, sondern an der Menge, in der er liegt ({ref("bemerkung:extrempunkt-zu-sein-ist-keine")}).
         </Verdikt>
       ) : k === 3 ? (
         <Verdikt kind="neutral" titel="Startlage.">
-          Drei Punkte, drei Ecken: Die Hülle ist das Dreieck aus Beispiel 11.1.10, und jeder der
+          Drei Punkte, drei Ecken: Die Hülle ist das Dreieck aus {ref("beispiel:konvexe-huelle-dreier-punkte")}, und jeder der
           drei Punkte ist Extrempunkt. Der grüne Mittelwert liegt als Konvexkombination mit
-          Gewichten 1/3 darin (Bemerkung 11.1.2).
+          Gewichten 1/3 darin ({ref("bemerkung:ein-gewichteter-durchschnitt")}).
         </Verdikt>
       ) : (
         <Verdikt kind="ok" titel="Alle alten Ecken bleiben Ecken.">
           Der neue Punkt {punktText(neu)} liegt entweder schon in der bisherigen Hülle, oder er
           vergrößert sie, ohne einen alten Eckpunkt zu überdecken. Die Fläche kann dabei nur
-          wachsen, denn alle alten Konvexkombinationen bleiben nach Definition 11.1.5 möglich.
+          wachsen, denn alle alten Konvexkombinationen bleiben nach {ref("definition:konvexe-huelle")} möglich.
         </Verdikt>
       )}
     </div>

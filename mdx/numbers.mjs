@@ -17,7 +17,8 @@
  *   ### 2.5.1 Titel                   Handnummer (alt)
  *
  *   @satz:kkt  @definition:x  @lemma:x  @korollar:x  @beispiel:x  @bemerkung:x  @algorithmus:x
- *   @eq:kkt-stationaritaet    → „(12.5.3)"        @num:kkt → „12.5.7" (nur die Nummer)
+ *   @eq:kkt-stationaritaet    → „(12.5.3)"        @num:kkt → „12.5.7" (nur die Nummer;
+ *                               auch @num:optim/beschraenkt → „12.5", @num:svd → „6")
  *   @sec:optim/beschraenkt    → „Abschnitt 12.5"  @sec:beschraenkt (im selben Kapitel)
  *   @sec:lagrange-idee        → „Abschnitt 12.5.1" (Unterüberschrift)
  *   @kap:optim                → „Kapitel 12"      @ref:kkt → „Satz 12.5.7" (Art automatisch)
@@ -252,12 +253,21 @@ export function resolveRef(table, type, id, ctx = {}, numOnly = false) {
     }
     if (envKind) throw new Error(`unbekannter Verweis @${type}:${id} — kein Env-Label mit dieser ID`);
     // @num / @ref auch auf Gleichungen und Unterüberschriften
+    // @num / @ref auch auf Gleichungen, Unterüberschriften, Abschnitte (nur
+    // in der Form <kap>/<key>) und Kapitel — „Abschnitte @num:optim/a und
+    // @num:optim/b", „Kapitel @num:svd und @num:kq".
     const eq = table.eqs?.[id];
     const sub = table.subs?.[id];
-    const hits = [eq && "eq", sub && "sub"].filter(Boolean);
-    if (hits.length > 1) throw new Error(`@${type}:${id} ist mehrdeutig (Gleichung UND Unterüberschrift) — nutze @eq:${id} bzw. @sec:${id}`);
+    const sec = id.includes("/") ? table.sections?.[id] : null;
+    const kap = id.includes("/") ? null : table.chapters?.[id];
+    const hits = [eq && "Gleichung", sub && "Unterüberschrift", sec && "Abschnitt", kap && "Kapitel"].filter(Boolean);
+    if (hits.length > 1) throw new Error(`@${type}:${id} ist mehrdeutig (${hits.join(" UND ")}) — nutze @eq:/@sec:/@kap:${id}`);
     if (eq) return resolveRef(table, "eq", id, ctx, type === "num");
-    if (sub) return resolveRef(table, "sec", id, ctx, type === "num");
+    if (sub || sec) return resolveRef(table, "sec", id, ctx, type === "num");
+    if (kap) {
+      const r = resolveRef(table, "kap", id, ctx);
+      return type === "num" ? { ...r, text: r.num } : r;
+    }
     throw new Error(`unbekannter Verweis @${type}:${id}`);
   }
 

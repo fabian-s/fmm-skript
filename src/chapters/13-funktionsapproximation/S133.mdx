@@ -2,7 +2,7 @@ import { MonombasisFigur, VandermondeKondition } from "./widgets/S133Monombasis"
 import { RungeExplorer } from "./widgets/S133Runge";
 import { Schaetzfrage } from "../../lib";
 
-[Abschnitt 13.2](#sec-13.2) hat das Interpolationsproblem auf das lineare
+@sec:basisdarstellung hat das Interpolationsproblem auf das lineare
 Gleichungssystem $\bB\ba = \cblue{\by}$ zurückgeführt. Damit ist die Wahl des
 Ansatzraums die eigentliche Entscheidung, und die naheliegendste ist zugleich
 die älteste: Polynome, aufgeschrieben in der Monombasis. Dieser Abschnitt
@@ -18,7 +18,7 @@ aussehenden Beispiel spektakulär versagt.
 Die Eindeutigkeit hängt an einer einzigen Aussage über Nullstellen, und die
 kommt aus der Algebra.
 
-:::satz[13.3.1 (Fundamentalsatz der Algebra)]
+:::satz[#fundamentalsatz-der-algebra (Fundamentalsatz der Algebra)]
 Jedes :k[Polynom]{#polynomial}
 $p(x) = a_n x^n + \dots + a_1 x + a_0$ mit $a_n \neq 0$ und $n \ge 1$ hat
 mindestens eine :k[Nullstelle]{#polynomial-roots} in $\C$.
@@ -34,7 +34,7 @@ dieselbe Überlegung an. Nach $n$ Schritten ist $p$ vollständig in
 Linearfaktoren zerlegt. Wir brauchen den Satz allerdings gar nicht in dieser
 Stärke, sondern nur seine Kehrseite.
 
-:::korollar[13.3.2 (Zu viele Nullstellen erzwingen das Nullpolynom)]
+:::korollar[#zu-viele-nullstellen-erzwingen-das (Zu viele Nullstellen erzwingen das Nullpolynom)]
 Sei $p$ ein Polynom vom Grad höchstens $n-1$ mit $n$ paarweise verschiedenen
 Nullstellen. Dann ist $p$ das Nullpolynom, es gilt also $p(x) = 0$ für
 *alle* $x$.
@@ -56,7 +56,7 @@ $n \ge 1$.
 :::
 
 :::schritt
-Im Fall $d \ge 1$ hat $p$ nach Satz 13.3.1 mit Vielfachheit gezählt genau
+Im Fall $d \ge 1$ hat $p$ nach @satz:fundamentalsatz-der-algebra mit Vielfachheit gezählt genau
 $d$ Nullstellen in $\C$, also höchstens $d \le n-1$ verschiedene. Auch das
 widerspricht der Voraussetzung von $n$ verschiedenen Nullstellen.
 
@@ -69,7 +69,7 @@ Beide Fälle sind unmöglich, die Annahme fällt. Also ist $p$ das Nullpolynom.
 
 ::::
 
-:::beispiel[13.3.3 (Drei Nullstellen bei Grad höchstens zwei)]
+:::beispiel[#drei-nullstellen-bei-grad-hoechstens (Drei Nullstellen bei Grad höchstens zwei)]
 Ein Polynom vom Grad höchstens $2$ hat höchstens zwei verschiedene
 Nullstellen; das kennen wir von der Parabel. Finden wir also ein solches
 Polynom mit drei Nullstellen, etwa $p(-1) = p(0) = p(1) = 0$, so bleibt nur
@@ -81,9 +81,9 @@ Achse, und genau diese Hebelwirkung brauchen wir gleich.
 ### Genau ein Polynom durch n Punkte
 
 Wir halten zuerst den Ansatzraum und seine Basismatrix fest. Beides kennen
-wir schon aus Beispiel 13.2.6, hier bekommen sie ihre Namen.
+wir schon aus @beispiel:zwei-ansatzraeume, hier bekommen sie ihre Namen.
 
-:::definition[13.3.4 (Monombasis und Vandermonde-Matrix)]
+:::definition[#monombasis-und-vandermonde-matrix (Monombasis und Vandermonde-Matrix)]
 Die $n$ Funktionen
 
 $$
@@ -97,7 +97,7 @@ heißen *Monombasis* (monomial basis). Sie sind
 $\Fcal_n$ aller Polynome vom Grad höchstens $n-1$ auf, der damit die
 Dimension $n$ hat.
 
-Die zugehörige Basismatrix aus Satz 13.2.8 zu Stellen $x_1, \dots, x_n$
+Die zugehörige Basismatrix aus @satz:das-interpolationsproblem-ist-ein zu Stellen $x_1, \dots, x_n$
 heißt *Vandermonde-Matrix*:
 
 $$
@@ -110,12 +110,12 @@ $$
 $$
 :::
 
-Dass die Monome linear unabhängig sind, ist Korollar 13.3.2 in anderer
+Dass die Monome linear unabhängig sind, ist @korollar:zu-viele-nullstellen-erzwingen-das in anderer
 Verpackung: Verschwindet $\sum_{k=1}^n a_k x^{k-1}$ für alle $x$, so hat
 dieses Polynom vom Grad höchstens $n-1$ unendlich viele Nullstellen, ist also
 das Nullpolynom, und damit sind alle $a_k$ null.
 
-:::satz[13.3.5 (Existenz und Eindeutigkeit der Polynominterpolation)]
+:::satz[#existenz-und-eindeutigkeit-der (Existenz und Eindeutigkeit der Polynominterpolation)]
 Zu $n$ Paaren $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise
 verschiedenen $x_i$ gibt es *genau ein* Polynom $\cgreen{p}$ vom Grad
 *höchstens* $n-1$ mit
@@ -147,7 +147,7 @@ $$
 
 :::schritt
 Damit hat $\cgreen{p} - \cgreen{q}$ mindestens $n$ verschiedene Nullstellen,
-obwohl der Grad höchstens $n-1$ ist. Nach Korollar 13.3.2 ist die Differenz
+obwohl der Grad höchstens $n-1$ ist. Nach @korollar:zu-viele-nullstellen-erzwingen-das ist die Differenz
 das Nullpolynom, also $\cgreen{p} = \cgreen{q}$.
 
 ::why[die Differenz zweier Polynome vom Grad höchstens $n-1$ hat wieder Grad höchstens $n-1$]
@@ -155,8 +155,8 @@ das Nullpolynom, also $\cgreen{p} = \cgreen{q}$.
 
 :::schritt
 *Invertierbarkeit von $\bB$.* Sei $\ba \in \R^n$ mit $\bB\ba = \bnull$. Nach
-Satz 13.2.8 heißt das: Das Polynom $\sum_{k=1}^n a_k x^{k-1}$ verschwindet an
-allen $n$ Stellen. Korollar 13.3.2 macht daraus das Nullpolynom, und weil die
+@satz:das-interpolationsproblem-ist-ein heißt das: Das Polynom $\sum_{k=1}^n a_k x^{k-1}$ verschwindet an
+allen $n$ Stellen. @korollar:zu-viele-nullstellen-erzwingen-das macht daraus das Nullpolynom, und weil die
 Monome linear unabhängig sind, folgt $\ba = \bnull$.
 
 ::why[$\bB\ba$ ist der Vektor der Werte dieses Polynoms an den Stellen $x_1, \dots, x_n$]
@@ -165,7 +165,7 @@ Monome linear unabhängig sind, folgt $\ba = \bnull$.
 :::schritt
 $\bB$ ist quadratisch und hat nur den trivialen
 :k[Kern]{#kernel}, ist also invertierbar
-([Abschnitt 5.1](?k=05-lgs#sec-5.1)). Damit besitzt $\bB\ba = \cblue{\by}$
+(@sec:lgs/grundlagen). Damit besitzt $\bB\ba = \cblue{\by}$
 für jede rechte Seite genau eine Lösung, und das ist die *Existenz*: Zu jedem
 Datenvektor gehört ein interpolierendes Polynom, nämlich
 $\cgreen{p} = \sum_{k=1}^n a_k \corange{\phi_k}$.
@@ -173,7 +173,7 @@ $\cgreen{p} = \sum_{k=1}^n a_k \corange{\phi_k}$.
 
 ::::
 
-:::bemerkung[13.3.6 (Die Vandermonde-Determinante)]
+:::bemerkung[#die-vandermonde-determinante (Die Vandermonde-Determinante)]
 Die Invertierbarkeit lässt sich auch direkt ablesen. Für die
 Vandermonde-Matrix gilt
 
@@ -191,16 +191,16 @@ Matrix das ansehen müssten.
 
 ### Höchstens, nicht genau
 
-:::bemerkung[13.3.7 (Ein häufiges Missverständnis)]
-Satz 13.3.5 verspricht genau ein Polynom vom Grad *höchstens* $n-1$. Er
+:::bemerkung[#ein-haeufiges-missverstaendnis (Ein häufiges Missverständnis)]
+@satz:existenz-und-eindeutigkeit-der verspricht genau ein Polynom vom Grad *höchstens* $n-1$. Er
 verspricht nicht den Grad *genau* $n-1$. Der führende Koeffizient darf null
 sein, und wenn die Daten schon auf einem Polynom kleineren Grades liegen, ist
 er es auch. Der Ansatzraum $\Fcal_n$ enthält diese Polynome ja ebenfalls.
 :::
 
-:::beispiel[13.3.8 (Drei Punkte auf einer Geraden)]
+:::beispiel[#drei-punkte-auf-einer-geraden (Drei Punkte auf einer Geraden)]
 Für die $n = 3$ Punkte $\cblue{(0,0)}$, $\cblue{(1,1)}$, $\cblue{(2,2)}$
-lautet das System aus Satz 13.2.8
+lautet das System aus @satz:das-interpolationsproblem-ist-ein
 
 $$
 \begin{pmatrix}
@@ -227,14 +227,14 @@ nicht.
 
 ### Der Rechenweg und sein Preis
 
-:::algorithmus[13.3.9 (Polynominterpolation in der Monombasis)]
+:::algorithmus[#polynominterpolation-in-der-monombasis (Polynominterpolation in der Monombasis)]
 Gegeben seien Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, mit paarweise
 verschiedenen $x_i$.
 
 1. *Vandermonde-Matrix aufstellen:* $B_{ik} = x_i^{k-1}$.
 2. *System lösen:* $\bB\ba = \cblue{\by}$ mit
    :k[Gauß-Elimination]{#gaussian-elimination}
-   ([Abschnitt 5.2](?k=05-lgs#sec-5.2)), Aufwand $O(n^3)$.
+   (@sec:lgs/lgs), Aufwand $O(n^3)$.
 3. *Auswerten:* $\cgreen{p(x)} = \sum_{k=1}^n a_k x^{k-1}$ an den
    gewünschten Stellen.
 :::
@@ -256,7 +256,7 @@ fhat <- outer(xnew, 0:9, "^") %*% a
 ggplot() + geom_point(aes(x, y)) + geom_line(aes(xnew, fhat))
 ```
 
-`outer(x, 0:9, "^")` baut genau die Matrix aus Definition 13.3.4, `solve`
+`outer(x, 0:9, "^")` baut genau die Matrix aus @definition:monombasis-und-vandermonde-matrix, `solve`
 ruft die Elimination auf, und die letzte Auswertung ist wieder ein
 Matrix-Vektor-Produkt, diesmal mit einem feinen Auswertungsgitter. So weit,
 so unauffällig. Nur ist dieses $10 \times 10$-System bereits so schlecht
@@ -266,7 +266,7 @@ Abschnitt.
 
 ### Problem 1: die Kondition der Monombasis
 
-:::bemerkung[13.3.10 (Warum die Spalten fast parallel werden)]
+:::bemerkung[#warum-die-spalten-fast-parallel-werden (Warum die Spalten fast parallel werden)]
 Die $k$-te Spalte der Vandermonde-Matrix ist der Vektor
 
 $$
@@ -286,10 +286,10 @@ gerade einmal $2{,}7^\circ$.
 Fast parallele Spalten heißen: fast :k[linear abhängig]{#linear-independence},
 also eine Matrix, die einer singulären sehr nahe kommt. Genau das misst die
 :k[Konditionszahl]{#condition-number} $\kappa(\bB)$
-([Abschnitt 4.2](?k=04-fehler#sec-4.2)), und sie wächst hier dramatisch.
+(@sec:fehler/kondition), und sie wächst hier dramatisch.
 :::
 
-:::beispiel[13.3.11 (Konditionszahlen, der Größenordnung nach)]
+:::beispiel[#konditionszahlen-der-groessenordnung (Konditionszahlen, der Größenordnung nach)]
 Wir interpolieren an $n$ gleichmäßig verteilten Stellen in $[0, 1]$ durch ein
 Polynom vom Grad $n-1$ und sehen uns die Konditionszahl der Vandermonde-Matrix an.
 
@@ -307,21 +307,21 @@ $[-1, 1]$ statt auf $[0, 1]$ liefert bei $n = 20$ nur noch
 $\kappa_2 \approx 2{,}7 \cdot 10^{8}$.
 
 Entscheidend ist der Trend, und der ist in jeder Norm derselbe: exponentielles
-Wachstum. Die Faustregel aus [Abschnitt 4.2](?k=04-fehler#sec-4.2) beschränkt
+Wachstum. Die Faustregel aus @sec:fehler/kondition beschränkt
 den relativen Fehler der berechneten Koeffizienten der Größenordnung nach
 durch $\kappa(\bB) \cdot \eps$ mit
 $\eps \approx 2{,}2 \cdot 10^{-16}$
 (:k[Maschinengenauigkeit]{#machine-epsilon},
-[Abschnitt 4.1](?k=04-fehler#sec-4.1)). Bei
+@sec:fehler/fehlermasse). Bei
 $n = 10$ steht dort $\cred{3 \cdot 10^{-9}}$, bei $n = 15$ schon
 $\cred{10^{-4}}$, und bei $n = 20$ ist die Schranke mit $\cred{2}$ größer als
 die gesuchten Zahlen selbst: Von der Lösung bleibt rechnerisch nichts
 Verlässliches übrig.
 :::
 
-:::bemerkung[13.3.12 (Der Ausweg: orthogonalisierte Basen)]
+:::bemerkung[#der-ausweg-orthogonalisierte-basen (Der Ausweg: orthogonalisierte Basen)]
 Die schlechte Kondition ist eine Eigenschaft der *Basis*, nicht des
-Ansatzraums. Nach [Abschnitt 13.2](#sec-13.2) ändert ein Basiswechsel den
+Ansatzraums. Nach @sec:basisdarstellung ändert ein Basiswechsel den
 Interpolanten nicht, nur die Koeffizienten und den Rechenweg. Wählen wir
 Basisfunktionen, die sich weniger ähneln, wird die Basismatrix besser
 konditioniert. Klassisch sind dafür die *orthogonalen Polynome*
@@ -361,7 +361,7 @@ Die zweite Schwäche zeigt sich, wenn wir an den Daten wackeln. Ändern wir
 einen einzigen Messwert, so ändert sich der Interpolant im gesamten
 Intervall, und keineswegs am stärksten dort, wo wir gewackelt haben.
 
-:::satz[13.3.13 (Wie sich eine Datenänderung fortpflanzt)]
+:::satz[#wie-sich-eine-datenaenderung-fortpflanzt (Wie sich eine Datenänderung fortpflanzt)]
 Seien $\cgreen{p}$ das interpolierende Polynom vom Grad höchstens $n-1$ zu
 den Daten $\cblue{(x_i, y_i)}$ und $\cgreen{\wt{p}}$ das interpolierende
 Polynom zu denselben Daten, bei denen nur $\cblue{y_j}$ um $\cred{\delta}$
@@ -388,14 +388,14 @@ $j$-ten Position.
 
 :::schritt
 Dieselben Werte hat $\cred{\delta} \cdot \ell_j$, und auch dieses Polynom hat
-Grad höchstens $n-1$. Nach der Eindeutigkeit in Satz 13.3.5 sind beide
+Grad höchstens $n-1$. Nach der Eindeutigkeit in @satz:existenz-und-eindeutigkeit-der sind beide
 Polynome gleich.
 :::
 
 ::::
 
-:::bemerkung[13.3.14 (Was das in Zahlen heißt)]
-Die Polynome $\ell_j$ heißen *Lagrange-Grundpolynome*, und Satz 13.3.13 sagt:
+:::bemerkung[#was-das-in-zahlen-heisst (Was das in Zahlen heißt)]
+Die Polynome $\ell_j$ heißen *Lagrange-Grundpolynome*, und @satz:wie-sich-eine-datenaenderung-fortpflanzt sagt:
 Der Ausschlag einer Datenänderung ist überall dort groß, wo $|\ell_j|$ groß
 ist. Rechnen wir das für $n = 10$ gleichmäßig verteilte Stellen in $[0, 1]$
 aus und heben den fünften Wert bei $x_5 = 4/9 \approx 0{,}444$ um
@@ -421,7 +421,7 @@ weil jedes $\ell_j$ auf dem ganzen Intervall von null verschieden ist. Beides
 ist kein Malheur der Monombasis, sondern eine Eigenschaft globaler
 Polynome: $\ell_j$ hängt allein vom Ansatzraum ab. Abhilfe schaffen erst
 Basisfunktionen, die außerhalb eines kleinen Bereichs verschwinden
-([Abschnitt 13.4](#sec-13.4)).
+(@sec:splines).
 :::
 
 ### Das Runge-Phänomen
@@ -431,7 +431,7 @@ mehr Stützstellen nehmen. Bei einer beliebig oft differenzierbaren Funktion
 sollte man das erwarten. Carl Runge hat 1901 gezeigt, dass die Erwartung
 trügt.
 
-:::beispiel[13.3.15 (Runge 1901)]
+:::beispiel[#runge-1901 (Runge 1901)]
 Wir interpolieren
 
 $$
@@ -451,7 +451,7 @@ durch immer heftigere <span style={{ color: "#D55E00" }}>Oszillationen</span> na
 Intervallenden. In der Mitte passt sich das Polynom dabei immer besser an.
 :::
 
-:::bemerkung[13.3.16 (Divergenz schon, aber nicht monoton)]
+:::bemerkung[#divergenz-schon-aber-nicht-monoton (Divergenz schon, aber nicht monoton)]
 Die knappe Schreibweise
 $\left\|f - \cgreen{p_{n-1}}\right\|_\infty \to \infty$ für $n \to \infty$
 legt nahe, dass jeder zusätzliche Knoten die Lage verschlimmert. Das ist
@@ -473,8 +473,8 @@ die letzte Spalte, wo das Unheil sitzt: Das Fehlermaximum wandert mit
 wachsendem $n$ immer näher an die Ränder $\pm 1$.
 :::
 
-:::bemerkung[13.3.17 (Ein Ausweg: die Knoten anders legen)]
-Am Ansatzraum liegt es nicht, und an der Basis auch nicht: Satz 13.3.5 gibt
+:::bemerkung[#ein-ausweg-die-knoten-anders-legen (Ein Ausweg: die Knoten anders legen)]
+Am Ansatzraum liegt es nicht, und an der Basis auch nicht: @satz:existenz-und-eindeutigkeit-der gibt
 zu jeder Knotenwahl dasselbe eindeutige Polynom her. Es liegt an den
 *Knoten*. Legen wir sie an den Rändern dichter, statt sie gleichmäßig zu
 verteilen, verschwindet das Problem. Die übliche Wahl sind die
@@ -515,7 +515,7 @@ und es konvergiert nicht einmal für harmlose Funktionen. Der Schluss daraus
 trägt den Rest des Kapitels. Statt eines globalen
 Polynoms hohen Grades nehmen wir viele Polynome kleinen Grades, jedes nur auf
 einem kurzen Stück gültig, und kleben sie glatt aneinander. Das sind die
-*Splines* aus [Abschnitt 13.4](#sec-13.4).
+*Splines* aus @sec:splines.
 
 ### Selbsttest
 
@@ -525,7 +525,7 @@ einem kurzen Stück gültig, und kleben sie glatt aneinander. Das sind die
 Durch $n$ Punkte mit paarweise verschiedenen $x_i$ läuft genau ein Polynom
 vom Grad höchstens $n-1$.
 
-Das ist Satz 13.3.5. Die Eindeutigkeit folgt aus Korollar 13.3.2 über die
+Das ist @satz:existenz-und-eindeutigkeit-der. Die Eindeutigkeit folgt aus @korollar:zu-viele-nullstellen-erzwingen-das über die
 Differenz zweier Interpolanten, die Existenz aus der Invertierbarkeit der
 Vandermonde-Matrix.
 :::
@@ -536,14 +536,14 @@ Das interpolierende Polynom durch $n$ Punkte hat den Grad genau $n-1$.
 Es hat Grad *höchstens* $n-1$. Für die drei Punkte
 $\cblue{(0,0)}$, $\cblue{(1,1)}$, $\cblue{(2,2)}$ liefert das System die
 Koeffizienten $\cgreen{(0, 1, 0)^\top}$, das Polynom ist also
-$\cgreen{p(x)} = x$ und damit vom Grad $1$ (Beispiel 13.3.8).
+$\cgreen{p(x)} = x$ und damit vom Grad $1$ (@beispiel:drei-punkte-auf-einer-geraden).
 :::
 
 :::frage{falsch}
 Ein Polynom vom Grad höchstens $5$ mit sechs verschiedenen Nullstellen kann
 noch von null verschiedene Werte annehmen.
 
-Nach Korollar 13.3.2 ist es das Nullpolynom, nimmt also überall den Wert null
+Nach @korollar:zu-viele-nullstellen-erzwingen-das ist es das Nullpolynom, nimmt also überall den Wert null
 an. Ein Polynom vom Grad $d \ge 1$ hat mit Vielfachheit gezählt genau $d$
 Nullstellen, ein konstantes Polynom ungleich null gar keine; sechs
 verschiedene Nullstellen bei Grad höchstens $5$ sind in beiden Fällen zu
@@ -558,7 +558,7 @@ Invertierbarkeit ist eine Ja-Nein-Frage, Kondition eine Frage des Ausmaßes.
 Bei $n = 20$ gleichmäßig verteilten Stellen in $[0, 1]$ ist
 $\det \bB \neq 0$, aber $\kappa_2(\bB) \approx 10^{16}$, und damit ist die
 Schranke $\kappa \cdot \eps$ für den relativen Fehler von der Größe $1$
-(Beispiel 13.3.11).
+(@beispiel:konditionszahlen-der-groessenordnung).
 :::
 
 :::frage{falsch}
@@ -566,7 +566,7 @@ Bei äquidistanten Knoten wird der Fehler $\max|f - \cgreen{p_{n-1}}|$ für
 Runges Funktion mit jedem zusätzlichen Knoten größer.
 
 Er wächst asymptotisch über alle Grenzen, aber nicht monoton: von $n = 5$ auf
-$n = 10$ fällt er von $0{,}44$ auf $0{,}30$ (Bemerkung 13.3.16). Erst danach
+$n = 10$ fällt er von $0{,}44$ auf $0{,}30$ (@bemerkung:divergenz-schon-aber-nicht-monoton). Erst danach
 setzt das Wachstum durch, mit $7{,}2$ bei $n = 15$ und $8{,}6$ bei $n = 20$.
 :::
 
@@ -575,10 +575,10 @@ Wechseln wir von der Monombasis zu den Chebyshev-Polynomen, so verschwindet
 bei gleichmäßig verteilten Knoten auch das Runge-Phänomen.
 
 Der Basiswechsel bessert die Kondition des Gleichungssystems, mehr nicht.
-Nach Satz 13.3.5 gehört zu den Daten dasselbe eindeutige Polynom, gleich in
+Nach @satz:existenz-und-eindeutigkeit-der gehört zu den Daten dasselbe eindeutige Polynom, gleich in
 welcher Basis wir es aufschreiben, also auch derselbe Fehler. Gegen die
 Oszillationen hilft nur, die Knoten anders zu legen oder den Ansatzraum zu
-wechseln (Bemerkung 13.3.17).
+wechseln (@bemerkung:ein-ausweg-die-knoten-anders-legen).
 :::
 
 :::frage{wahr}
@@ -586,10 +586,10 @@ Heben wir bei fester Knotenmenge einen einzigen Wert $\cblue{y_j}$ um
 $\cred{\delta}$ an, so ändert sich der Interpolant an jeder Stelle $x$ um
 $\cred{\delta}\,\ell_j(x)$.
 
-So steht es in Satz 13.3.13, und der Beweis ist die Eindeutigkeit aus
-Satz 13.3.5. Weil $\ell_j$ nur an den anderen Knoten verschwindet, wirkt die
+So steht es in @satz:wie-sich-eine-datenaenderung-fortpflanzt, und der Beweis ist die Eindeutigkeit aus
+@satz:existenz-und-eindeutigkeit-der. Weil $\ell_j$ nur an den anderen Knoten verschwindet, wirkt die
 Änderung im gesamten Intervall, bei $n = 10$ mit einem Faktor bis $4{,}03$
-und am stärksten fern von $x_j$ (Bemerkung 13.3.14).
+und am stärksten fern von $x_j$ (@bemerkung:was-das-in-zahlen-heisst).
 :::
 
 ::::
@@ -597,4 +597,4 @@ und am stärksten fern von $x_j$ (Bemerkung 13.3.14).
 *Vertiefung: Heath, Scientific Computing, §7.3.1 (Monombasis und
 Vandermonde-Matrix), §7.3.4 (orthogonale Polynome) und §7.3.5 (Interpolation
 stetiger Funktionen mit Runge-Phänomen und Chebyshev-Knoten); die
-Lagrange-Grundpolynome aus Satz 13.3.13 stehen dort in §7.3.2.*
+Lagrange-Grundpolynome aus @satz:wie-sich-eine-datenaenderung-fortpflanzt stehen dort in §7.3.2.*

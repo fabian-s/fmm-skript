@@ -12,6 +12,7 @@ import {
   W_PANEL,
   fmtInt,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Widgets zu §2.3 (Aufwand und Komplexität).
@@ -115,7 +116,7 @@ export function S23FlopWidget() {
         <strong style={{ color: BLAU }}>{fMv.toFixed(1).replace(".", ",")}-fache</strong>, das
         Matrix-Matrix-Produkt das{" "}
         <strong style={{ color: ORANGE }}>{fMm.toFixed(1).replace(".", ",")}-fache</strong>. Das
-        sind die Faktoren <M>{"2^2"}</M> und <M>{"2^3"}</M> aus Satz 2.3.3: In{" "}
+        sind die Faktoren <M>{"2^2"}</M> und <M>{"2^3"}</M> aus {ref("satz:aufwand-der-matrix-vektor-multiplikation")}: In{" "}
         <M>{"2nd"}</M> stecken zwei Dimensionen, in <M>{"2ndm"}</M> drei.
       </>
     );
@@ -132,7 +133,7 @@ export function S23FlopWidget() {
       <>
         Das Matrix-Matrix-Produkt kostet gerade das <strong>{fmtInt(m)}-fache</strong> des
         Matrix-Vektor-Produkts, denn es besteht aus <M>{"m"}</M> Matrix-Vektor-Produkten,
-        eines pro Spalte von <M>{"\\bB"}</M> (Satz 2.3.3). Beim Speicher ist der Abstand viel
+        eines pro Spalte von <M>{"\\bB"}</M> ({ref("satz:aufwand-der-matrix-vektor-multiplikation")}). Beim Speicher ist der Abstand viel
         kleiner ({fmtInt(mmMem)} gegen {fmtInt(mvMem)} Zahlen): Rechenzeit und Speicher
         wachsen nicht im selben Tempo.
       </>
@@ -280,7 +281,7 @@ export function S23KonstantenWidget() {
                 Konstante überholt, holt <M>{"n^2"}</M> sehr schnell auf.
               </>
             )}{" "}
-            Das ist die Aussage von Bemerkung 2.3.8: Die Komplexitätsklasse sagt, wer für
+            Das ist die Aussage von {ref("bemerkung:vorsicht-konstanten")}: Die Komplexitätsklasse sagt, wer für
             hinreichend große Probleme gewinnt, nicht wer bei unserem konkreten Problem
             gewinnt.
           </Verdikt>

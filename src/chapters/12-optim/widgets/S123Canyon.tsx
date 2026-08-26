@@ -11,6 +11,7 @@ import {
   W_BUTTON_AKTIV,
 } from "../../../lib";
 import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.3 — DIE EINE EINSICHT: Die Kondition κ = L/μ erzeugt den Zickzack. Die
@@ -167,7 +168,7 @@ export function CanyonWidget() {
   if (Math.abs(faktor2) > 1 + 1e-12) {
     art = "fail";
     titel = "γ über der Stabilitätsgrenze";
-    status = `γ = ${fmt(gamma, 4)} liegt über 2/L = ${fmt(2 / L, 4)}: In der steilen Richtung wächst der Fehler je Schritt um den Faktor ${fmt(Math.abs(faktor2), 2)}, die Folge läuft aus dem Bild. Satz 12.3.15 verlangt γ ≤ 1/L und sagt hier nichts mehr.`;
+    status = `γ = ${fmt(gamma, 4)} liegt über 2/L = ${fmt(2 / L, 4)}: In der steilen Richtung wächst der Fehler je Schritt um den Faktor ${fmt(Math.abs(faktor2), 2)}, die Folge läuft aus dem Bild. ${ref("satz:gradientenabstieg-auf-einer-quadrik")} verlangt γ ≤ 1/L und sagt hier nichts mehr.`;
   } else if (Math.abs(faktor2 + 1) < 1e-12) {
     art = "warn";
     titel = "γ = 2/L ist die Grenze";
@@ -188,7 +189,7 @@ export function CanyonWidget() {
   } else if (Math.abs(faktor2) < 1e-12) {
     art = "ok";
     titel = "γ = 1/L trifft die steile Richtung exakt";
-    status = `x₂ ist nach einem Schritt null. Danach fällt f in jedem Schritt auf das ${fmt(faktor1 ** 2, 4)}-fache, also SCHNELLER als die Schranke ρ = 1 − μ/L = ${fmt(rho, 4)} aus Satz 12.3.15. Genau das führt Beispiel 12.3.16 vor: Der Satz verspricht höchstens ρ pro Schritt, nicht genau ρ.`;
+    status = `x₂ ist nach einem Schritt null. Danach fällt f in jedem Schritt auf das ${fmt(faktor1 ** 2, 4)}-fache, also SCHNELLER als die Schranke ρ = 1 − μ/L = ${fmt(rho, 4)} aus ${ref("satz:gradientenabstieg-auf-einer-quadrik")}. Genau das führt ${ref("beispiel:warum-der-satz-eine-schranke-ist-und")} vor: Der Satz verspricht höchstens ρ pro Schritt, nicht genau ρ.`;
   } else if (Math.abs(faktor1) < 1e-12) {
     art = "warn";
     titel = "γ = 1/μ trifft die flache Richtung exakt";

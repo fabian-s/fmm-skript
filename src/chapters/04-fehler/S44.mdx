@@ -1,5 +1,5 @@
 {/*
-  Abschnitt 4.4: Zusammenfassung.
+  @sec:zusammenfassung: Zusammenfassung.
   Quelle: Folien 04-fehler.Rmd, Blöcke „Übersicht" und „Wrap-up".
   Prosa eigenständig aus den Folien formuliert; bewusst schlank gehalten.
   MDX-Migration 2026-08-11 (nur Format gewechselt, Prosa wörtlich übernommen).
@@ -25,37 +25,37 @@ Abweichung messen, zerlegen und den beiden Schuldigen zuordnen: dem *Problem* un
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">absoluter / relativer Fehler</td>
 <td className="py-1 pr-6">$\bDelta_{\bv} = \wt{\bv} - \bv$ bzw. $\delta_{\bv} = \left\| \wt{\bv} - \bv \right\| / \left\| \bv \right\|$, gemessen in einer :k[Norm]{#norm} unserer Wahl</td>
-<td className="py-1">[4.1](#sec-4.1)</td>
+<td className="py-1">@num:fehler/fehlermasse</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Fehlerzerlegung</td>
 <td className="py-1 pr-6">Gesamtfehler = algorithmischer Fehler $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ + Input-Folgefehler $\corange{f(\wt{\bx}) - f(\bx)}$</td>
-<td className="py-1">[4.1](#sec-4.1)</td>
+<td className="py-1">@num:fehler/fehlermasse</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Kondition</td>
 <td className="py-1 pr-6">Sensitivität eines *Problems* bezüglich Inputfehlern, unabhängig vom verwendeten Algorithmus</td>
-<td className="py-1">[4.2](#sec-4.2)</td>
+<td className="py-1">@num:fehler/kondition</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Konditionszahlen</td>
 <td className="py-1 pr-6">$\kappa_{abs}$ und $\kappa_{rel}$: kleinste Verstärkungsfaktoren von absolutem bzw. relativem Inputfehler; gut konditioniert ($\kappa \lesssim 1$), schlecht konditioniert ($\kappa \gg 1$), schlecht gestellt ($\kappa = \infty$)</td>
-<td className="py-1">[4.2](#sec-4.2)</td>
+<td className="py-1">@num:fehler/kondition</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">:k[Konditionszahl einer Matrix]{#condition-number}</td>
-<td className="py-1 pr-6">$\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$ in einer :k[Matrixnorm]{#matrix-norm}: obere Schranke für die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$ (eingeführt in [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5))</td>
-<td className="py-1">[4.2](#sec-4.2)</td>
+<td className="py-1 pr-6">$\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$ in einer :k[Matrixnorm]{#matrix-norm}: obere Schranke für die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$ (eingeführt in @sec:matrix-spur-norm/eigenschaften)</td>
+<td className="py-1">@num:fehler/kondition</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Stabilität</td>
 <td className="py-1 pr-6">Eigenschaft eines *Algorithmus*: $\wt{f}$ ist stabil, wenn der algorithmische Fehler $\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}$ klein ist</td>
-<td className="py-1">[4.3](#sec-4.3)</td>
+<td className="py-1">@num:fehler/stabilitaet</td>
 </tr>
 <tr>
 <td className="py-1 pr-6">zusammengesetzte Algorithmen</td>
 <td className="py-1 pr-6">Fehlerfortpflanzung über Teilschritte: Die Kondition eines späteren Teilschritts verstärkt die Fehler aller früheren</td>
-<td className="py-1">[4.3](#sec-4.3)</td>
+<td className="py-1">@num:fehler/stabilitaet</td>
 </tr>
 </tbody>
 </table>
@@ -64,7 +64,7 @@ Abweichung messen, zerlegen und den beiden Schuldigen zuordnen: dem *Problem* un
 ### Kondition und Stabilität: die Arbeitsteilung
 
 Die beiden zentralen Begriffe des Kapitels beantworten verschiedene Fragen, und die
-Fehlerzerlegung aus [Abschnitt 4.1](#sec-4.1) hält sie
+Fehlerzerlegung aus @sec:fehlermasse hält sie
 sauber auseinander:
 
 $$
@@ -84,11 +84,11 @@ $\wt{f}$ durch
 stabiler Algorithmus für ein schlecht konditioniertes Problem liefert also trotzdem
 ungenaue Ergebnisse, aber nicht ungenauer, als das Problem es erzwingt.
 
-:::bemerkung[4.4.1 (Faustregel, mit der Einschränkung aus Bemerkung 4.3.4)]
+:::bemerkung[#faustregel-mit-der-einschraenkung-aus (Faustregel, mit der Einschränkung aus Bemerkung 4.3.4)]
 <p className="font-semibold">Schlecht konditionierte Teilschritte möglichst früh ausführen!</p>
 
 Warum? Nach der Fehlerfortpflanzungs-Schranke aus
-[Abschnitt 4.3](#sec-4.3) verstärkt die Kondition
+@sec:stabilitaet verstärkt die Kondition
 eines Teilschritts die angesammelten Fehler aller *vorangegangenen* Schritte.
 Ein schlecht konditionierter Schritt am Ende der Kette trifft auf einen Input, der
 schon viele Fehler trägt, und bläst sie alle auf. Derselbe Schritt am Anfang sieht
@@ -100,7 +100,7 @@ Zwei-Pass-Formel zieht sie vor und ist deshalb stabil.
 Vorsicht: Das ist eine Faustregel, kein Satz. Eine Umordnung verändert auch die
 Zwischengrößen und damit die Konditionen selbst; verlässlicher ist es, das Teilproblem
 umzuformulieren und große, beinahe gleiche Zwischenwerte gar nicht erst entstehen zu lassen
-(Bemerkung 4.3.4).
+(@bemerkung:was-folgt-daraus-und-was-nicht).
 :::
 
 ### Wie geht es weiter?
@@ -132,7 +132,7 @@ lautet: nicht ungenauer, als das Problem es erzwingt.
 Die Konditionszahl $\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
 ist die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$.
 
-Sie ist die *obere Schranke* dafür (Satz 4.2.6). Die tatsächliche relative Kondition
+Sie ist die *obere Schranke* dafür (@satz:kondition-der-loesung-eines-lgs). Die tatsächliche relative Kondition
 $\left\| \bA^{-1} \right\| \left\| \bx \right\| / \left\| \bA^{-1}\bx \right\|$
 hängt von der rechten Seite ab und kann bis auf $1$ hinunterreichen. Weil die
 Schranke für ungünstige $\bx$ aber angenommen wird, ist sie die richtige Zahl,
@@ -140,7 +140,7 @@ solange wir die rechte Seite nicht kennen.
 :::
 
 :::zahlfrage{loesung=82 toleranz=1.5}
-Im Widget zur Kondition eines Gleichungssystems ([Abschnitt 4.2](#sec-4.2)) ist die
+Im Widget zur Kondition eines Gleichungssystems (@sec:kondition) ist die
 Voreinstellung „schlecht konditioniert" gewählt. Welchen Wert zeigt der Readout für die
 Schranke $\kappa(\bA)$?
 
@@ -148,7 +148,7 @@ Rund 82. Die Matrix ist
 $\bA = \begin{pmatrix} 1 & 1 \\ 1 & 1{,}05 \end{pmatrix}$ mit den Singulärwerten
 $\sigma_{\max} \approx 2{,}025$ und $\sigma_{\min} \approx 0{,}0247$,
 also $\kappa_2(\bA) = \sigma_{\max}/\sigma_{\min} \approx 82{,}0$
-(Bemerkung 4.2.7). Für die Voreinstellung der rechten Seite wird diese Schranke fast exakt
+(@bemerkung:kondition-konditionszahl-einer-matrix). Für die Voreinstellung der rechten Seite wird diese Schranke fast exakt
 angenommen.
 :::
 

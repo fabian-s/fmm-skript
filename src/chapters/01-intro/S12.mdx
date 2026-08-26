@@ -23,50 +23,50 @@ nicht alle Voraussetzungen erklärt.
 
 **Teil 1 – Numerische lineare Algebra (Kapitel 2–9).** Die Leitfrage: *Wie
 lassen sich Probleme der linearen Algebra auf dem Rechner effizient und genau
-lösen?* [Kapitel 2](?k=02-algos) stellt dafür die Sprache bereit – was ein
+lösen?* @kap:algos stellt dafür die Sprache bereit – was ein
 numerisches Problem, ein Algorithmus und sein Aufwand in
-:k[Landau-Notation]{#big-o-notation} ist. [Kapitel 3](?k=03-matrix-spur-norm)
+:k[Landau-Notation]{#big-o-notation} ist. @kap:matrix-spur-norm
 liefert die Messwerkzeuge (Spur und :k[Matrixnormen]{#matrix-norm}),
-[Kapitel 4](?k=04-fehler) die zentrale Unterscheidung des ganzen Skripts:
+@kap:fehler die zentrale Unterscheidung des ganzen Skripts:
 *Kondition* ist eine Eigenschaft des Problems, *Stabilität* eine Eigenschaft
 des Algorithmus – nur an letzterer können wir drehen. Darauf bauen die
-Rechenkerne auf: [Kapitel 5](?k=05-lgs) löst Gleichungssysteme über
+Rechenkerne auf: @kap:lgs löst Gleichungssysteme über
 Zerlegungen (:k[LU]{#lu-decomposition} und
 :k[Cholesky]{#cholesky-factorization}) statt über die goldene Regel des
 Skripts zu verstoßen – *niemals eine Matrix invertieren!* –,
-[Kapitel 6](?k=06-svd) entwickelt mit der
+@kap:svd entwickelt mit der
 :k[Singulärwertzerlegung]{#singular-value-decomposition} die wichtigste
-Matrixzerlegung der angewandten Mathematik, und [Kapitel 7](?k=07-kq)
+Matrixzerlegung der angewandten Mathematik, und @kap:kq
 vergleicht drei Lösungswege für das
 :k[Kleinste-Quadrate-Problem]{#linear-least-squares} – Normalengleichungen,
 :k[QR]{#qr-factorization}, SVD – nach genau den Kriterien aus Kapitel 4.
-[Kapitel 8](?k=08-la-misc) tauscht dann Exaktheit gegen Geschwindigkeit
+@kap:la-misc tauscht dann Exaktheit gegen Geschwindigkeit
 (Iteration und Zufall, von der Potenzmethode bis zum Matrix-Sketching), und
-[Kapitel 9](?k=09-tensoren) baut mit :k[Tensoren]{#tensor} und
+@kap:tensoren baut mit :k[Tensoren]{#tensor} und
 Tensorprodukten multivariate Strukturen aus univariaten Bausteinen.
 
 **Teil 2 – Analysis & Optimierung (Kapitel 10–12).** Die Leitfrage: *Wie
 differenziert und optimiert man Funktionen jenseits des Eindimensionalen?*
-[Kapitel 10](?k=10-differentialrechnung) verallgemeinert die Ableitung nach dem
+@kap:differentialrechnung verallgemeinert die Ableitung nach dem
 Prinzip „Ableitung = lineare Approximation" auf Vektoren und Matrizen
 (:k[Gradient]{#gradient}, Jacobi-Matrix) und baut darauf die Rechenregeln,
 die :k[Hesse-Matrix]{#hessian-matrix} und die
 :k[Taylor-Entwicklung]{#taylor-series} auf; nebenbei fallen die
 :k[Normalengleichungen]{#normal-equations} aus Kapitel 7 als Rechnung im
-Matrixkalkül ab. [Kapitel 11](?k=11-konvexitaet) behandelt
+Matrixkalkül ab. @kap:konvexitaet behandelt
 :k[Konvexität]{#convexity} als das Versprechen, das lokale Verfahren
 global macht: Bei konvexen Zielfunktionen ist jedes lokale Minimum bereits
-das globale. [Kapitel 12](?k=12-optim) setzt darauf die Verfahren, sortiert
+das globale. @kap:optim setzt darauf die Verfahren, sortiert
 nach der Ordnung der verwendeten Ableitungen: Nelder-Mead (nullte),
 :k[Gradientenabstieg]{#gradient-descent} mit Line Search und SGD (erste),
 :k[Newton]{#newtons-method} und Quasi-Newton (zweite), dazu Optimierung
 unter Nebenbedingungen. Eine feinere Karte dieses Teils – von der
 Fréchet-Ableitung bis zu den KKT-Bedingungen – steht am Anfang von
-[Kapitel 10](?k=10-differentialrechnung#sec-10.1).
+@kap:differentialrechnung.
 
 **Teil 3 – Funktionsapproximation (Kapitel 13).** Die Leitfrage: *Wie
 ersetzen wir eine komplizierte Funktion durch eine einfache, mit der sich gut
-rechnen lässt?* [Kapitel 13](?k=13-funktionsapproximation) überträgt zuerst
+rechnen lässt?* @kap:funktionsapproximation überträgt zuerst
 die Idee der :k[Basis]{#basis} aus dem $\R^n$ auf Funktionenräume, stellt
 Funktionen als Linearkombination $\wh{f} = \sum_k a_k \phi_k$ von
 Basisfunktionen dar – die Koeffizienten liefert wieder ein Gleichungssystem
@@ -77,7 +77,7 @@ die Bias-Varianz-Abwägung bei der Wahl der Basisgröße und der Fluch der
 Dimension im Multivariaten, dem additive Modelle (GAMs) entkommen. Dieser
 Teil setzt Teil 2 *nicht* voraus – seine Anker liegen in den Kapiteln 1, 4,
 5, 7 und 9; die feinere Karte dazu steht am Anfang von
-[Kapitel 13](?k=13-funktionsapproximation#sec-13.1).
+@kap:funktionsapproximation.
 
 ### Was sich durch das ganze Skript zieht
 
@@ -103,10 +103,10 @@ zurückgreift:
 
 | Zerlegung | Form | Kapitel | typischer Einsatz |
 | --- | --- | --- | --- |
-| LU | $\bA = \bL\bU$ | [5](?k=05-lgs) | allgemeine Gleichungssysteme |
-| Cholesky | $\bA = \bL\bL^\top$ | [5](?k=05-lgs) | SPD-Matrizen, Simulation aus $\Ncal(\bnull, \bSigma)$ |
-| QR | $\bA = \bQ\bR$ | [7](?k=07-kq) | Kleinste Quadrate, stabil |
-| SVD | $\bA = \bU\bSigma\bV^\top$ | [6](?k=06-svd) | universell: Rang, Pseudoinverse, Approximation |
+| LU | $\bA = \bL\bU$ | @num:lgs | allgemeine Gleichungssysteme |
+| Cholesky | $\bA = \bL\bL^\top$ | @num:lgs | SPD-Matrizen, Simulation aus $\Ncal(\bnull, \bSigma)$ |
+| QR | $\bA = \bQ\bR$ | @num:kq | Kleinste Quadrate, stabil |
+| SVD | $\bA = \bU\bSigma\bV^\top$ | @num:svd | universell: Rang, Pseudoinverse, Approximation |
 
 **Von exakt zu approximativ.** Die Problemklassen des Skripts bilden eine
 Treppe wachsender Allgemeinheit – und abnehmender Garantien: lineare Probleme

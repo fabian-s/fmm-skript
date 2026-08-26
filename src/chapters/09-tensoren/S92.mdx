@@ -1,6 +1,6 @@
 import { TensorScheibenViewer } from "./widgets/S92Scheiben";
 
-Der Darstellungssatz aus [Abschnitt 9.1](#sec-9.1) (Satz 9.1.8) hat multilineare
+Der Darstellungssatz aus @sec:multilinear (@satz:darstellung-multilinearer-abbildungen) hat multilineare
 Abbildungen vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist mehr als
 ein Nebenprodukt der Rechnung. Sie ist das Objekt, um das sich der Rest des
 Kapitels dreht, und sie hat einen Namen. Bevor wir ihn vergeben, sehen wir nach,
@@ -13,7 +13,7 @@ eine gewöhnliche :k[lineare Abbildung]{#linear-map} $T\colon \R^{n} \to \R^{m}$
 und von der langen Indexliste bleiben zwei Indizes übrig,
 $1 \le i \le n$ und $1 \le j \le m$:
 
-$$ {#eq-9.2.1}
+$$ {#eq-eq-9-2-1}
 T(\cblue{\bx}) = \sum_{i = 1}^{n} \sum_{j = 1}^{m} \corange{a_{i,j}}\, \cblue{x_i}\, \be_j .
 $$
 
@@ -42,7 +42,7 @@ Der Darstellungssatz reproduziert für $k = 1$ also die vertraute Tatsache, dass
 sich jede lineare Abbildung $\R^n \to \R^m$ als :k[Matrix]{#matrix} schreiben
 lässt. Eine Kleinigkeit lohnt dabei einen zweiten Blick.
 
-:::bemerkung[9.2.1 (Von der Koeffizientenfamilie zur Matrix)]
+:::bemerkung[#von-der-koeffizientenfamilie-zur-matrix (Von der Koeffizientenfamilie zur Matrix)]
 Der Darstellungssatz nummeriert die Koeffizienten mit dem Eingangsindex vorn und
 dem Ausgangsindex hinten, also $\corange{a_{i,j}}$ mit $i$ für die Komponente von
 $\cblue{\bx}$ und $j$ für die Komponente des Bildvektors. In der Matrix
@@ -62,7 +62,7 @@ Bedeutung nicht.
 
 Die Ansammlung der $nm$ Koeffizienten nennen wir eine Matrix. Sie hat zwei
 Indexpositionen, und deshalb sprechen wir bei ihr von zwei „Dimensionen"; warum
-die Anführungszeichen nötig sind, klärt Bemerkung 9.2.6. Der Darstellungssatz
+die Anführungszeichen nötig sind, klärt @bemerkung:stufe-und-dimension-sind-zwei. Der Darstellungssatz
 sagt aber mehr: Zu jedem $k$ gehört eine Ansammlung von Koeffizienten mit
 $k + 1$ Indizes, bei $m = 1$ also mit $k$, und jede solche Ansammlung beschreibt
 umgekehrt eine multilineare Abbildung. Sehen wir uns den Fall $k = 2$ an, bevor
@@ -70,7 +70,7 @@ wir dem Objekt einen Namen geben.
 
 ### Ein bilineares Beispiel
 
-:::beispiel[9.2.2 (Eine bilineare Abbildung auf R2 mal R2)]
+:::beispiel[#eine-bilineare-abbildung-auf-r2-mal-r2 (Eine bilineare Abbildung auf R2 mal R2)]
 Wir betrachten $T\colon \R^2 \times \R^2 \to \R$ mit
 
 $$
@@ -104,7 +104,7 @@ T(\cblue{\bx}, \cgreen{\by})
 $$
 
 also wieder die Abbildung, von der wir ausgegangen sind. Anders als in
-Bemerkung 9.2.1 gibt es hier keine Frage nach der Indexreihenfolge, denn beide
+@bemerkung:von-der-koeffizientenfamilie-zur-matrix gibt es hier keine Frage nach der Indexreihenfolge, denn beide
 Indizes sind Eingangsindizes: $i_1$ gehört zum ersten, $i_2$ zum zweiten
 Argument.
 
@@ -148,7 +148,7 @@ bei $m = 1$ blieben auch dort zwei Indizes übrig. Bei drei Eingangsvektoren
 brauchen wir drei Indizes, bei $k$ Vektoren und mehrdimensionalem Bildbereich
 noch einen mehr. Für all das gibt es einen gemeinsamen Namen.
 
-:::definition[9.2.3 (Tensor)]
+:::definition[#tensor (Tensor)]
 Seien $n_1, \dots, n_k \in \N$. Ein *Tensor* (tensor) der *Stufe* $k$ und des
 Formats $n_1 \times \cdots \times n_k$ ist eine durch $k$ Indizes indizierte
 Familie reeller Zahlen
@@ -163,7 +163,7 @@ $\{1, \dots, n_1\} \times \cdots \times \{1, \dots, n_k\}$ genau eine reelle Zah
 $a_{i_1, \dots, i_k}$ zuordnet.
 :::
 
-:::bemerkung[9.2.4 (Stufe, und warum eine Menge es nicht tut)]
+:::bemerkung[#stufe-und-warum-eine-menge-es-nicht-tut (Stufe, und warum eine Menge es nicht tut)]
 Die Stufe zählt Indexpositionen, nicht Einträge. Die ersten Fälle kennen wir
 alle:
 
@@ -186,7 +186,7 @@ Tensoren derselben Größe lassen sich addieren und mit Zahlen strecken, und zwa
 Eintrag für Eintrag, so wie wir es von Vektoren und Matrizen gewohnt sind. Damit
 liegt schon eine bekannte Struktur vor.
 
-:::satz[9.2.5 (Der Raum aller Tensoren eines Formats)]
+:::satz[#der-raum-aller-tensoren-eines-formats (Der Raum aller Tensoren eines Formats)]
 Seien $n_1, \dots, n_k \in \N$ fest. Mit der eintragsweisen Addition
 
 $$
@@ -246,9 +246,9 @@ Indextupel, und die ist $n_1 n_2 \cdots n_k$.
 
 ::::
 
-:::bemerkung[9.2.6 (Stufe und Dimension sind zwei verschiedene Zahlen)]
+:::bemerkung[#stufe-und-dimension-sind-zwei (Stufe und Dimension sind zwei verschiedene Zahlen)]
 Eine $4 \times 4$-Matrix hat die Stufe $2$, aber $\R^{4 \times 4}$ hat nach
-Satz 9.2.5 die Dimension $4^2 = 16$. Ein Tensor des Formats
+@satz:der-raum-aller-tensoren-eines-formats die Dimension $4^2 = 16$. Ein Tensor des Formats
 $4 \times 4 \times 4$ hat die Stufe $3$, und der zugehörige Raum die Dimension
 $4^3 = 64$. Wer die Indexpositionen „Dimensionen" nennt, meint also etwas
 anderes als die Dimension des Vektorraums. Im maschinellen Lernen heißen die
@@ -260,7 +260,7 @@ gewählten Reihenfolge durch, so wird aus jedem Tensor ein Vektor mit
 $n_1 n_2 \cdots n_k$ Komponenten und aus jeder Rechnung im Tensorraum eine
 Rechnung im $\R^{n_1 n_2 \cdots n_k}$. Die Operation heißt dort *reshape* oder
 *flatten*; verloren geht dabei nur die Information, welcher Index welche
-Bedeutung hatte. Für Matrizen bekommt sie in [Abschnitt 9.5](#sec-9.5) als
+Bedeutung hatte. Für Matrizen bekommt sie in @sec:zusammenfassung als
 spaltenweise Vektorisierung einen Namen und eine Rechenregel.
 :::
 
@@ -285,7 +285,7 @@ Wie setzen sich die drei Zahlen eines Pixels zu seiner sichtbaren Farbe zusammen
 
 Wie das Widget zeigt, sind die drei Kanalscheiben keine drei Bilder, sondern drei Komponenten jedes Pixels desselben Bildes.
 
-:::beispiel[9.2.7 (Ein Farbbild als Tensor der Stufe 3)]
+:::beispiel[#ein-farbbild-als-tensor-der-stufe-3 (Ein Farbbild als Tensor der Stufe 3)]
 Ein Graustufenbild speichert je Bildpunkt eine einzige Zahl, die Helligkeit. Eine
 Indexrichtung läuft über die Pixel in der Waagerechten, die andere über die Pixel
 in der Senkrechten. Ein Graustufenbild ist also eine Matrix.
@@ -312,7 +312,7 @@ zuerst die Spalte gezählt wird, ist ebenfalls nicht überall gleich. Für die
 Mathematik ist das gleichgültig, für den Code nicht.
 :::
 
-:::beispiel[9.2.8 (Ein Stapel Bilder als Tensor der Stufe 4)]
+:::beispiel[#ein-stapel-bilder-als-tensor-der-stufe-4 (Ein Stapel Bilder als Tensor der Stufe 4)]
 Neuronale Netze verarbeiten Bilder nicht einzeln, sondern bündelweise. Ein
 faltendes Netz (convolutional neural network, CNN) bekommt typischerweise $32$
 Bilder auf einmal vorgesetzt, also
@@ -337,7 +337,7 @@ Bilder eines Stapels, sondern die Einzelbilder in der Zeit. Was ein Index
 bedeutet, steht ihm nicht an; wir müssen es dazusagen.
 :::
 
-:::beispiel[9.2.9 (Feature-Maps: eine Abbildung von Tensoren auf Tensoren)]
+:::beispiel[#feature-maps-eine-abbildung-von-tensoren (Feature-Maps: eine Abbildung von Tensoren auf Tensoren)]
 Eine Faltungsschicht (convolutional layer) eines CNN bildet Tensoren auf Tensoren
 ab, etwa
 
@@ -365,9 +365,9 @@ jede einzelne sieht aus wie ein grobes Graustufenbild, hell an den Stellen, an
 denen das jeweilige Muster kräftig anspricht.
 :::
 
-:::bemerkung[9.2.10 (Was an einer Faltungsschicht linear ist)]
+:::bemerkung[#was-an-einer-faltungsschicht-linear-ist (Was an einer Faltungsschicht linear ist)]
 Die Abbildung $c$ hat nur ein Argument, ist also keine multilineare Abbildung im
-Sinn von [Abschnitt 9.1](#sec-9.1). Bei fest gewählten Gewichten ist sie schlicht
+Sinn von @sec:multilinear. Bei fest gewählten Gewichten ist sie schlicht
 linear im Eingangstensor. Interessant wird es, wenn wir die Gewichte als zweites
 Argument hinzunehmen: Jeder Ausgangseintrag ist eine Summe von Produkten aus je
 einem Gewicht und je einem Eingangseintrag, die Zuordnung
@@ -379,8 +379,8 @@ jeden Eintrag einzeln wirkt. Erst diese Funktion macht aus einem
 Abbildungen.
 :::
 
-:::bemerkung[9.2.11 (Warum Tensoren eigene Rechenwerke bekommen)]
-Die Zahlen aus den Beispielen 9.2.8 und 9.2.9 erklären den Aufwand, den
+:::bemerkung[#warum-tensoren-eigene-rechenwerke (Warum Tensoren eigene Rechenwerke bekommen)]
+Die Zahlen aus den Beispielen @num:ein-stapel-bilder-als-tensor-der-stufe-4 und @num:feature-maps-eine-abbildung-von-tensoren erklären den Aufwand, den
 Hardwarehersteller treiben. Rechnungen auf Tensoren bestehen aus sehr vielen
 gleichartigen Multiplikationen und Additionen auf regelmäßig angeordneten
 Zahlen, und dafür lassen sich spezialisierte Rechenwerke bauen, die genau solche
@@ -405,10 +405,10 @@ der Scheiben.
 Setzen wir im Darstellungssatz $k = 1$, so ist die Koeffizientenansammlung eine
 Matrix $\bA$, und es gilt $T(\bx) = \bA\bx$.
 
-Das ist die Rechnung zu ($9.2.1$): Die innere Summe $\sum_j a_{i,j}\be_j$ ist ein
+Das ist die Rechnung zu @eq:eq-9-2-1: Die innere Summe $\sum_j a_{i,j}\be_j$ ist ein
 fester Vektor $\ba_i \in \R^m$, und $\sum_i x_i \ba_i$ ist das Matrix-Vektor-Produkt
 mit $\bA = (\ba_1 \mid \cdots \mid \ba_n)$. Auf die Reihenfolge der Indizes
-müssen wir dabei achten, siehe Bemerkung 9.2.1.
+müssen wir dabei achten, siehe @bemerkung:von-der-koeffizientenfamilie-zur-matrix.
 :::
 
 :::frage{falsch}
@@ -416,15 +416,15 @@ Die Stufe eines Tensors ist die Anzahl seiner Einträge.
 
 Die Stufe zählt die Indexpositionen. Ein Tensor des Formats
 $4 \times 4 \times 4$ hat die Stufe $3$, aber $4^3 = 64$ Einträge
-(Definition 9.2.3).
+(@definition:tensor).
 :::
 
 :::frage{falsch}
 Der Vektorraum $\R^{4 \times 4 \times 4}$ hat die Dimension $3$.
 
 Seine Dimension ist $4 \cdot 4 \cdot 4 = 64$, denn so viele Einheitstensoren
-bilden nach Satz 9.2.5 eine Basis. Die $3$ ist die Stufe, also die Zahl der
-Indexpositionen; Bemerkung 9.2.6 hält die beiden Zahlen auseinander.
+bilden nach @satz:der-raum-aller-tensoren-eines-formats eine Basis. Die $3$ ist die Stufe, also die Zahl der
+Indexpositionen; @bemerkung:stufe-und-dimension-sind-zwei hält die beiden Zahlen auseinander.
 :::
 
 :::frage{falsch}
@@ -433,7 +433,7 @@ Ein Tensor ist durch die Menge seiner Einträge festgelegt.
 Eine Menge kennt weder Reihenfolge noch Vielfachheit. Vertauschen wir zwei
 verschiedene Einträge einer Matrix, so bleibt die Menge der vorkommenden Zahlen
 dieselbe, die Matrix ist aber eine andere. Festgelegt ist ein Tensor durch die Zuordnung von
-Indextupeln zu Zahlen (Definition 9.2.3 und Bemerkung 9.2.4).
+Indextupeln zu Zahlen (@definition:tensor und @bemerkung:stufe-und-warum-eine-menge-es-nicht-tut).
 :::
 
 :::frage{wahr}
@@ -441,7 +441,7 @@ Ein Farbbild mit $224 \times 224$ Pixeln und drei Farbkanälen ist ein Tensor de
 Stufe $3$ mit $150\,528$ Einträgen.
 
 Es ist $224 \cdot 224 \cdot 3 = 150\,528$, also rund $150 \cdot 10^3$ Zahlen
-(Beispiel 9.2.7). Die drei Indexpositionen sind die beiden Pixelrichtungen und
+(@beispiel:ein-farbbild-als-tensor-der-stufe-3). Die drei Indexpositionen sind die beiden Pixelrichtungen und
 der Farbkanal; in welcher Reihenfolge sie stehen, ist Verabredung und von
 Bibliothek zu Bibliothek verschieden.
 :::
@@ -455,7 +455,7 @@ weniger Einträge als ihr Eingang.
 Nachgezählt: $32 \cdot 224 \cdot 224 \cdot 3 = 4\,816\,896$ gegen
 $32 \cdot 56 \cdot 56 \cdot 64 = 6\,422\,528$. Die Auflösung fällt um den Faktor
 $16$, die Kanalzahl wächst um den Faktor $64/3$, zusammen wächst die Zahl der
-Einträge um den Faktor $4/3$ (Beispiel 9.2.9).
+Einträge um den Faktor $4/3$ (@beispiel:feature-maps-eine-abbildung-von-tensoren).
 :::
 
 ::::

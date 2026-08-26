@@ -2,14 +2,14 @@ import { S32NormBallWidget } from "./widgets/S32NormBallWidget";
 import { S32VecNormWidget } from "./widgets/S32VecNormWidget";
 
 {/*
-  Abschnitt 3.2 – Matrixnormen: Definition und Beispiele.
+  @sec:matrixnormen – Matrixnormen: Definition und Beispiele.
   Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Matrixnormen - Definition
   und Beispiele". Prosa eigenständig aus den Folien formuliert; der
   Einheitskugel-Widget-Code ist aus der internen heath-ch2-App recycelt.
   MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
 */}
 
-In [Abschnitt 3.1](#sec-3.1) haben wir mit der
+In @sec:spur haben wir mit der
 Frobenius-Norm bereits eine erste Möglichkeit kennengelernt, die „Größe" einer Matrix in
 einer einzigen Zahl zusammenzufassen. In diesem Abschnitt gehen wir das Thema
 grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm überhaupt ist,
@@ -17,7 +17,7 @@ konstruieren eine ganze Familie von Beispielen und entdecken dann, dass diese
 naheliegenden Normen einen blinden Fleck haben. Das motiviert die Operatornormen des
 [nächsten Abschnitts](#sec-3.3).
 
-### 3.2.1 Warum Matrixnormen?
+### Warum Matrixnormen? :id[warum-matrixnormen]
 
 Für Vektoren sind :k[Normen]{#norm} unser wichtigstes
 Messinstrument: Sie machen aus einem Fehler*vektor* eine Fehler*größe*,
@@ -53,12 +53,12 @@ $p \ge 1$ ist diese Kugel konvex, und die Konvexität ist nichts anderes als die
 Dreiecksungleichung in geometrischer Gestalt. Diese Denkfigur nehmen wir mit: Auch bei
 Matrixnormen werden wir gleich fragen, welche Menge eine Norm zur „Einheitskugel" erklärt.
 
-### 3.2.2 Die Axiome
+### Die Axiome :id[die-axiome]
 
 Was macht eine Funktion auf Matrizen zu einer „Norm"? Dieselben drei Forderungen, die
 wir schon von Vektornormen kennen:
 
-:::definition[3.2.1 (Matrixnorm)]
+:::definition[#matrixnorm (Matrixnorm)]
 Eine Funktion $\|\cdot\| : \R^{m \times n} \to [0, \infty)$ heißt
 *Matrixnorm*, wenn für alle $\bA, \bB \in \R^{m \times n}$ und
 $c \in \R$ gilt:
@@ -68,7 +68,7 @@ $c \in \R$ gilt:
 3. *Dreiecksungleichung*: $\|\bA + \bB\| \le \|\bA\| + \|\bB\|$
 :::
 
-:::bemerkung[3.2.2]
+:::bemerkung[#bemerkung-3-2-2]
 Das sind exakt die Axiome einer Vektornorm, und das ist kein Zufall: Die Menge
 $\R^{m \times n}$ ist ein
 :k[Vektorraum]{#vector-space} (der Dimension
@@ -77,16 +77,16 @@ Umgekehrt ist jede Vektornorm eine Matrixnorm auf dem Raum
 $\R^{n \times 1}$ der einspaltigen Matrizen. Was eine Matrixnorm über
 diese Grundaxiome hinaus leisten *sollte* (etwa gut mit dem Matrixprodukt
 zusammenzuspielen), untersuchen wir in
-[Abschnitt 3.5](#sec-3.5).
+@sec:eigenschaften.
 :::
 
-### 3.2.3 Matrixnormen durch Vektorisierung
+### Matrixnormen durch Vektorisierung :id[matrixnormen-durch-vektorisierung]
 
 Wie kommen wir am schnellsten an Matrixnormen? Mit einem einfachen Rezept: Wir rollen
 die Matrix zu einem langen Vektor aus und wenden darauf eine Vektornorm an, die wir
 schon kennen.
 
-:::definition[3.2.3 (Vektorisierung)]
+:::definition[#matrixnormen-vektorisierung (Vektorisierung)]
 Die *Vektorisierung* einer Matrix $\bA \in \R^{m \times n}$
 stapelt ihre Spalten zu einem Vektor der Länge $mn$:
 
@@ -98,7 +98,7 @@ $$
 Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen, denn die
 Vektorisierung sortiert die Einträge ja nur um:
 
-:::satz[3.2.4]
+:::satz[#satz-3-2-4]
 Ist $\|\cdot\|$ eine Vektornorm auf $\R^{mn}$, so ist
 
 $$
@@ -150,7 +150,7 @@ $$
 Die drei wichtigsten Vertreter dieser Bauart entstehen aus den drei vertrauten
 Vektornormen:
 
-:::beispiel[3.2.5 (Vektorisierungsnormen)]
+:::beispiel[#vektorisierungsnormen (Vektorisierungsnormen)]
 - *Frobenius-Norm* (aus der $2$-Norm):
 
   $$
@@ -158,7 +158,7 @@ Vektornormen:
   $$
 
   Das stimmt mit der Definition aus
-  [Abschnitt 3.1](#sec-3.1) überein, wo wir außerdem
+  @sec:spur überein, wo wir außerdem
   $\cblue{\left\| \bA \right\|_F} = \sqrt{\tr(\bA^\top\bA)}$
   gezeigt haben.
 
@@ -189,7 +189,7 @@ Plätze, bleibt jede der drei Zahlen stehen, während aus der Identität etwa ei
 Matrix wird. Alle drei Normen sehen nur die Multimenge der Einträge, nicht ihre Anordnung.
 Warum das ein echtes Problem ist, machen wir jetzt an einem Beispiel fest.
 
-### 3.2.4 Was elementweise Normen nicht sehen
+### Was elementweise Normen nicht sehen :id[was-elementweise-normen-nicht-sehen]
 
 Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Trotzdem
 haben sie einen konzeptionellen Haken: Sie behandeln die Matrix wie einen langen
@@ -202,7 +202,7 @@ genau $\left\| \bA \right\|_F = 5$ über die Wirkung von $\bA$
 auf Vektoren aussagt, bleibt unklar. Wie drastisch das schiefgehen kann, zeigt das
 folgende Beispiel.
 
-:::beispiel[3.2.6 (Gleiche Frobenius-Norm, völlig verschiedene Abbildungen)]
+:::beispiel[#gleiche-frobenius-norm-voellig (Gleiche Frobenius-Norm, völlig verschiedene Abbildungen)]
 Betrachten wir die drei Matrizen
 
 $$
@@ -247,7 +247,7 @@ Frobenius-Norm kann sie nicht auseinanderhalten.
 Dasselbe Problem zeigt sich aus einer zweiten Richtung, wenn wir die Dimension wachsen
 lassen:
 
-:::beispiel[3.2.7 (Identität in wachsender Dimension)]
+:::beispiel[#identitaet-in-wachsender-dimension (Identität in wachsender Dimension)]
 Für die Identitätsmatrix $\bI_n \in \R^{n \times n}$ (mit $n$
 Einsen auf der Diagonale und sonst Nullen) liefern die drei Vektorisierungsnormen
 
@@ -281,7 +281,7 @@ Vektorisierungsnormen.
 
 Alle drei entstehen als Vektornorm von $\vec(\bA)$, und die $1$-, $2$- und
 $\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab. Genau
-diese Blindheit führt in [Abschnitt 3.3](#sec-3.3) zu den Operatornormen.
+diese Blindheit führt in @sec:operatornormen zu den Operatornormen.
 :::
 
 :::frage{falsch}
@@ -290,7 +290,7 @@ Die $p$-Normen sind für jedes $p > 0$ definiert.
 Für $p < 1$ ist die Dreiecksungleichung verletzt: Im Widget beult sich die Einheitskugel
 nach innen, und für $p = 0{,}5$ ist
 $\left\|\be_1 + \be_2\right\|_p = 4 > 2 = \left\|\be_1\right\|_p + \left\|\be_2\right\|_p$.
-Das dritte Normaxiom (für Matrizen: Definition 3.2.1) verlangt daher $p \ge 1$.
+Das dritte Normaxiom (für Matrizen: @definition:matrixnorm) verlangt daher $p \ge 1$.
 :::
 
 :::zahlfrage{loesung=1.2 toleranz=0.02}

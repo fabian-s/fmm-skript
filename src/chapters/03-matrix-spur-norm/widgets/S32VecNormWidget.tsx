@@ -11,6 +11,7 @@ import {
   W_MUTED,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.2: Die drei Vektorisierungsnormen einer 2×2-Matrix.
@@ -134,14 +135,14 @@ export function S32VecNormWidget() {
             {fmtDe(mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0], 3)}: Als Abbildung ist das eine
             andere Matrix, für die Vektorisierungsnormen dieselbe. Genau diese Blindheit führt in{" "}
             <a className="underline" href="#sec-3.3">
-              Abschnitt 3.3
+              {ref("sec:matrix-spur-norm/operatornormen")}
             </a>{" "}
             zu den Operatornormen.
           </>
         ) : dieDrei ? (
           <>
             Frobenius-Norm {fmtDe(frob, 3)} = √2, derselbe Wert wie für die beiden anderen
-            Voreinstellungen aus Beispiel 3.2.6, obwohl <M>{"\\bA_1"}</M> nichts verändert,{" "}
+            Voreinstellungen aus {ref("beispiel:gleiche-frobenius-norm-voellig")}, obwohl <M>{"\\bA_1"}</M> nichts verändert,{" "}
             <M>{"\\bA_2"}</M> spiegelt und <M>{"\\bA_3"}</M> eine ganze Dimension vernichtet. Nur
             Summen- und Maximumsnorm trennen wenigstens <M>{"\\bA_3"}</M> von den beiden anderen,
             und auch das eher zufällig.

@@ -16,6 +16,7 @@ import {
   niceTicks,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §4.2.3: Kondition des Gleichungslösens f(x) = A⁻¹x.
@@ -194,7 +195,7 @@ export function LgsKonditionWidget() {
   const verdikt = !Number.isFinite(kappaRel) ? (
     <Verdikt kind="warn" titel="Nullpunkt.">
       Für <M>{"\\bx = \\bnull"}</M> ist auch <M>{"\\by = \\bnull"}</M>, und der relative
-      Fehler ist auf beiden Seiten undefiniert: Definition 4.2.2 verlangt{" "}
+      Fehler ist auf beiden Seiten undefiniert: {ref("definition:konditionszahl")} verlangt{" "}
       <M>{"\\left\\| \\bx \\right\\| \\ne 0"}</M> und{" "}
       <M>{"\\left\\| f(\\bx) \\right\\| \\ne 0"}</M>. Schieben wir die Regler von
       null weg.
@@ -202,7 +203,7 @@ export function LgsKonditionWidget() {
   ) :
     kappaA < 1.05 ? (
       <Verdikt kind="ok" titel="Orthogonal: nichts wird verstärkt.">
-        Hier ist <M>{"\\kappa(\\bA) = 1"}</M>, die Schranke aus Satz 4.2.6 lässt also gar keine
+        Hier ist <M>{"\\kappa(\\bA) = 1"}</M>, die Schranke aus {ref("satz:kondition-der-loesung-eines-lgs")} lässt also gar keine
         Verstärkung zu: Der rote Kreis wird zu einem Kreis derselben relativen Größe, egal wohin
         wir <M>{"\\bx"}</M> ziehen. Der relative Outputfehler bleibt bei {fmtDe(100 * relOut, 1)} %.
       </Verdikt>
@@ -210,7 +211,7 @@ export function LgsKonditionWidget() {
       <Verdikt kind="fail" titel="Die ungünstige rechte Seite.">
         <M>{"\\kappa_{rel}(f, \\bx)"}</M> = {fmtDe(kappaRel, 1)} schöpft{" "}
         {fmtDe(100 * anteil, 0)} % der Schranke <M>{"\\kappa(\\bA)"}</M> ={" "}
-        {fmtDe(kappaA, 1)} aus. Bemerkung 4.2.7 sagt genau das: Die Schranke ist kein
+        {fmtDe(kappaA, 1)} aus. {ref("bemerkung:kondition-konditionszahl-einer-matrix")} sagt genau das: Die Schranke ist kein
         Pessimismus, sie wird für ungünstige rechte Seiten angenommen. Aus{" "}
         {fmtDe(100 * delta, 1)} % Inputfehler werden hier {fmtDe(100 * relOut, 0)} %
         Outputfehler.
@@ -219,7 +220,7 @@ export function LgsKonditionWidget() {
       <Verdikt kind="ok" titel="Gutmütige rechte Seite.">
         Dieselbe Matrix, ein anderes <M>{"\\bx"}</M>: <M>{"\\kappa_{rel}(f, \\bx)"}</M> ={" "}
         {fmtDe(kappaRel, 2)} liegt weit unter <M>{"\\kappa(\\bA)"}</M> = {fmtDe(kappaA, 1)}. Nach
-        Satz 4.2.6 hängt die relative Kondition eben von <M>{"\\bx"}</M> ab; die Ellipse ist zwar
+        {ref("satz:kondition-der-loesung-eines-lgs")} hängt die relative Kondition eben von <M>{"\\bx"}</M> ab; die Ellipse ist zwar
         lang, aber <M>{"\\left\\| \\bA^{-1}\\bx \\right\\|"}</M> ist hier ebenfalls groß, und der
         Quotient bleibt klein.
       </Verdikt>

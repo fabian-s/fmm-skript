@@ -11,6 +11,7 @@ import {
   fmtTick,
   niceTicks,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §10.6, Anwendung: Die EINE Einsicht — der Gradient des logistischen Verlusts
@@ -185,14 +186,14 @@ export function LogistikWidget() {
     art = "warn";
     status =
       `Bei x = 0 hängt gar nichts von beta ab: Es ist t = 0, also ŷ = 0,5 für jedes beta, der Verlust ` +
-      `bleibt konstant bei log 2 = 0,693147, und der Gradient (ŷ − y)·x aus Gleichung (10.6.6) ist null. Ein ` +
+      `bleibt konstant bei log 2 = 0,693147, und der Gradient (ŷ − y)·x aus Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) ist null. Ein ` +
       `Merkmal, das immer null ist, trägt keine Information, und die Verlustkurve ist eine waagrechte ` +
       `Gerade.`;
   } else if (Math.abs(yhat - y) < 0.05) {
     art = "ok";
     status =
       `Die Vorhersage ŷ = ${fmt(yhat, 3)} liegt schon dicht an der Beobachtung y = ${y}. Der Fehler ` +
-      `ŷ − y = ${fmt(yhat - y, 3)} ist klein, also ist nach Gleichung (10.6.6) auch der Gradient ` +
+      `ŷ − y = ${fmt(yhat - y, 3)} ist klein, also ist nach Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) auch der Gradient ` +
       `${fmt(grad, 4)} klein: Die Verlustkurve ist hier fast flach, ein Gradientenschritt verschiebt ` +
       `beta kaum noch.`;
   } else if (Math.abs(yhat - y) > 0.9) {
@@ -201,20 +202,20 @@ export function LogistikWidget() {
       `Hier liegt das Modell selbstbewusst daneben: ŷ = ${fmt(yhat, 3)} bei y = ${y}. Der Fehler ` +
       `ŷ − y = ${fmt(yhat - y, 3)} schöpft seinen Wertebereich fast aus, entsprechend groß ist der ` +
       `Gradient ${fmt(grad, 3)}. Länger als |x| = ${fmt(Math.abs(x), 2)} kann er trotzdem nie werden, ` +
-      `denn |ŷ − y| ist immer kleiner als 1 – das ist die zweite Konsequenz aus Bemerkung 10.6.11.`;
+      `denn |ŷ − y| ist immer kleiner als 1 – das ist die zweite Konsequenz aus ${ref("bemerkung:fehler-mal-merkmal")}.`;
   } else {
     art = "ok";
     status =
       `Der Fehler ŷ − y = ${fmt(yhat - y, 3)} wird mit dem Merkmal x = ${fmt(x, 2)} gewichtet, das ` +
-      `ergibt nach Gleichung (10.6.6) den Gradienten ${fmt(grad, 4)}. Er ist ` +
+      `ergibt nach Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) den Gradienten ${fmt(grad, 4)}. Er ist ` +
       `${grad > 0 ? "positiv" : "negativ"}, der Abstiegsschritt schiebt beta also nach ` +
       `${grad > 0 ? "links" : "rechts"}, auf ${fmt(betaNeu, 2)}. Die grüne Tangente hat genau diese ` +
-      `Steigung, und die Gegenprobe darunter kommt ohne Beispiel 10.6.10 aus und bestätigt sie.`;
+      `Steigung, und die Gegenprobe darunter kommt ohne ${ref("beispiel:gradient-des-logistischen-verlusts")} aus und bestätigt sie.`;
   }
   const gleicheFormel =
     y === 1
-      ? "Für y = 1 steht in Gleichung (10.6.6) der Faktor ŷ − 1, für y = 0 der Faktor ŷ."
-      : "Für y = 0 steht in Gleichung (10.6.6) der Faktor ŷ, für y = 1 der Faktor ŷ − 1.";
+      ? `Für y = 1 steht in Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) der Faktor ŷ − 1, für y = 0 der Faktor ŷ.`
+      : `Für y = 0 steht in Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) der Faktor ŷ, für y = 1 der Faktor ŷ − 1.`;
   status = `${status} ${gleicheFormel} Beides ist derselbe Ausdruck (ŷ − y)·x.`;
 
   return (

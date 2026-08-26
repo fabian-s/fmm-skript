@@ -14,6 +14,7 @@ import {
   W_BUTTON,
   W_BUTTON_AKTIV,
 } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §12.1 — DIE EINE EINSICHT: Newton verdoppelt in der Nähe einer einfachen
@@ -245,11 +246,11 @@ export function NewtonNullstelle() {
   if (Math.abs(dfx) < 1e-13) {
     art = "fail";
     titel = "die Tangente ist waagerecht";
-    text = `An dieser Stelle ist f′ = 0, die Tangente schneidet die x-Achse also nirgends, und Algorithmus 12.1.11 lässt sich nicht ausführen. Genau diese Voraussetzung steht dort in der Bedingung „solange f′(x⁽ᵏ⁾) ≠ 0".`;
+    text = `An dieser Stelle ist f′ = 0, die Tangente schneidet die x-Achse also nirgends, und ${ref("algorithmus:newton-raphson-verfahren-fuer")} lässt sich nicht ausführen. Genau diese Voraussetzung steht dort in der Bedingung „solange f′(x⁽ᵏ⁾) ≠ 0".`;
   } else if (b.id === "arctan" && Math.abs(x0) > ARCTAN_SCHWELLE) {
     art = "fail";
     titel = "die Folge läuft auseinander";
-    text = `Bei arctan flacht die Kurve nach außen ab, die Tangente wird also immer flacher und ihr Schnittpunkt mit der Achse immer weiter entfernt. Ab |x⁽⁰⁾| > ${fmt(ARCTAN_SCHWELLE, 4)} überholt jeder Schritt den vorigen: Aus ${fmt(x0, 2)} wird ${fmt(bahn[1] ?? NaN, 4)}, dann ${fmt(bahn[2] ?? NaN, 4)}, und die Beträge wachsen. Es gibt hier nur EINE Nullstelle, und trotzdem findet Newton sie nicht, genau die Warnung von Bemerkung 12.1.13: Die quadratische Konvergenz ist eine LOKALE Aussage.`;
+    text = `Bei arctan flacht die Kurve nach außen ab, die Tangente wird also immer flacher und ihr Schnittpunkt mit der Achse immer weiter entfernt. Ab |x⁽⁰⁾| > ${fmt(ARCTAN_SCHWELLE, 4)} überholt jeder Schritt den vorigen: Aus ${fmt(x0, 2)} wird ${fmt(bahn[1] ?? NaN, 4)}, dann ${fmt(bahn[2] ?? NaN, 4)}, und die Beträge wachsen. Es gibt hier nur EINE Nullstelle, und trotzdem findet Newton sie nicht, genau die Warnung von ${ref("bemerkung:quadratische-konvergenz")}: Die quadratische Konvergenz ist eine LOKALE Aussage.`;
     // „Flach" heißt hier wirklich flach: ein weiter Sprung allein genügt nicht,
     // sonst behauptet der Zweig bei x^(0) = 3 auf x² − 2 eine kleine Ableitung,
     // obwohl f' = 6 ist.
@@ -264,11 +265,11 @@ export function NewtonNullstelle() {
   } else if (fehler[kk] < 1e-10) {
     art = "ok";
     titel = `am Ziel nach ${kk} Schritten`;
-    text = `Die Iteration steht auf der Nullstelle ${fmt(naeheste)}. Die Fehlerspalte zeigt, was Bemerkung 12.1.13 mit quadratischer Konvergenz meint: Der Quotient e_{k+1}/e_k² bleibt beschränkt, die Zahl der richtigen Stellen verdoppelt sich also grob von Schritt zu Schritt. Bei f(x) = x² − 2 läuft dieser Quotient gegen f″/(2f′) = 0,3536. Zum Vergleich: Die Bisektion aus Satz 12.1.8 gewinnt pro Schritt ein Bit, also rund 0,3 Dezimalstellen.`;
+    text = `Die Iteration steht auf der Nullstelle ${fmt(naeheste)}. Die Fehlerspalte zeigt, was ${ref("bemerkung:quadratische-konvergenz")} mit quadratischer Konvergenz meint: Der Quotient e_{k+1}/e_k² bleibt beschränkt, die Zahl der richtigen Stellen verdoppelt sich also grob von Schritt zu Schritt. Bei f(x) = x² − 2 läuft dieser Quotient gegen f″/(2f′) = 0,3536. Zum Vergleich: Die Bisektion aus ${ref("satz:schrittzahl-der-bisektion")} gewinnt pro Schritt ein Bit, also rund 0,3 Dezimalstellen.`;
   } else {
     art = "neutral";
     titel = `Schritt ${kk} von ${bahn.length - 1}`;
-    text = `Die Tangente im Punkt (${fmt(x, 4)}; ${fmt(fx, 4)}) hat die Steigung ${fmt(dfx, 4)} und trifft die x-Achse bei ${fmt(naechste, 6)}. Das ist die nächste Iterierte, und der Bruch in (12.1.1) sagt dasselbe in Zahlen: Wir teilen die abzubauende Höhe durch die Rate, mit der die Tangente sie abbaut. Der Abstand zur Nullstelle ${fmt(naeheste)} beträgt gerade ${fmtE(fehler[kk])}.`;
+    text = `Die Tangente im Punkt (${fmt(x, 4)}; ${fmt(fx, 4)}) hat die Steigung ${fmt(dfx, 4)} und trifft die x-Achse bei ${fmt(naechste, 6)}. Das ist die nächste Iterierte, und der Bruch in (${num("eq:newton-raphson-verfahren-fuer")}) sagt dasselbe in Zahlen: Wir teilen die abzubauende Höhe durch die Rate, mit der die Tangente sie abbaut. Der Abstand zur Nullstelle ${fmt(naeheste)} beträgt gerade ${fmtE(fehler[kk])}.`;
   }
 
   const knopf = (aktiv: boolean) => (aktiv ? W_BUTTON_AKTIV : W_BUTTON);

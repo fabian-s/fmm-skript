@@ -9,6 +9,7 @@ import {
   fmtDe,
 } from "../../../lib";
 import { EllipseImRaum } from "./S62Raum";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Der Weg AᵀA → charakteristisches Polynom → Eigenwerte →
@@ -314,21 +315,21 @@ export function SingulaerwertRechner() {
         rang === 0 ? (
           <Verdikt kind="warn" titel="Nullmatrix:">
             Beide Singulärwerte sind null, es gibt keine Bildrichtung und keine linken
-            Singulärvektoren. Die Formel u_i = Av_i/σ_i aus (6.2.2) ist hier nicht anwendbar.
+            Singulärvektoren. Die Formel u_i = Av_i/σ_i aus ({num("eq:rechte-und-linke-singulaervektoren")}) ist hier nicht anwendbar.
           </Verdikt>
         ) : rang === 1 ? (
           <Verdikt kind="warn" titel="Rang 1:">
             σ₂ = {fmt(sig[1])} verschwindet, die Spalten von A sind linear abhängig. Nach
-            Satz 6.2.11 ist v₂ eine Basis des Kerns, und u₂ liefert die Formel nicht mehr; erst
+            {ref("satz:charakterisierung-der-fundamentalen")} ist v₂ eine Basis des Kerns, und u₂ liefert die Formel nicht mehr; erst
             die volle Zerlegung ergänzt eine passende Richtung. Der Rang ist {rang}.
           </Verdikt>
         ) : (
           <Verdikt kind="ok" titel="Probe bestanden:">
             Beide Vorzeichenwahlen sind gleich richtig: Dreht sich v_i, so dreht sich nach
-            (6.2.2) auch u_i, und A = UΣVᵀ bleibt unverändert (Bemerkung 6.2.10). Der größte
+            ({num("eq:rechte-und-linke-singulaervektoren")}) auch u_i, und A = UΣVᵀ bleibt unverändert ({ref("bemerkung:singulaervektoren-sind-nicht-eindeutig")}). Der größte
             Abstand zwischen der zurückgerechneten Matrix σ₁u₁v₁ᵀ + σ₂u₂v₂ᵀ und A beträgt hier{" "}
             {rest.toExponential(1).replace(".", ",").replace("-", "−")}, also nichts als
-            Rundung. Die Proben bestätigen außerdem Satz 6.2.8: u₁ᵀu₂ = {fmt(dot(u1 ?? [], u2 ?? []))}.
+            Rundung. Die Proben bestätigen außerdem {ref("satz:orthogonalitaet-der-singulaervektoren")}: u₁ᵀu₂ = {fmt(dot(u1 ?? [], u2 ?? []))}.
           </Verdikt>
         )
       ) : null}

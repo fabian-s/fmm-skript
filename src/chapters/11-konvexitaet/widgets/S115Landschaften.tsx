@@ -8,6 +8,7 @@ import {
   Verdikt,
   fmtDe,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §11.5: Optimierungslandschaften (ersetzt resources/konvexitaet-convex-surfaces.pdf).
@@ -304,7 +305,7 @@ export function AbstiegsBecken({
           Der Startpunkt liegt links der Wasserscheide. Das Verfahren kommt bei{" "}
           {fmtDe(DW_LOK.x)} zur Ruhe, dort ist der Wert {fmtDe(DW_LOK.f)} und damit um{" "}
           {fmtDe(DW_LOK.f - DW_GLOB.f)} zu hoch. Die Ableitung verschwindet trotzdem, das
-          Abbruchkriterium meldet Erfolg. Satz 11.5.1 greift hier nicht, denn die Landschaft ist
+          Abbruchkriterium meldet Erfolg. {ref("satz:kritischer-punkt-und-globales-minimum")} greift hier nicht, denn die Landschaft ist
           nicht konvex.
           {nahAmHoecker
             ? " Ein einziger Schritt des Reglers nach rechts kippt das Ergebnis in das andere Tal, obwohl sich am Startwert kaum etwas ändert."

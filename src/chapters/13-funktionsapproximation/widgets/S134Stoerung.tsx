@@ -24,6 +24,7 @@ import {
   knotenvektor,
   loeseLGS,
 } from "./S134BSpline";
+import { ref } from "../../numbers.generated";
 
 /**
  * Ein Datenpunkt wandert: globales Polynom gegen kubischen Spline (§13.4).
@@ -334,7 +335,7 @@ export function StoerungVergleich() {
         die Diagonale, höchstens <M>{"q + 1 = 4"}</M> je Zeile; genau so viele
         Basisfunktionen sind an einer Stelle überhaupt beteiligt. Rechts ist
         kein einziges Feld leer. Der Unterschied kostet beim Lösen den Faktor,
-        den Bemerkung 13.4.14 ausrechnet, und zur schlechten Kondition der
+        den {ref("bemerkung:bandstruktur-und-aufwand")} ausrechnet, und zur schlechten Kondition der
         Monombasis kommt er noch hinzu.
       </p>
     </div>

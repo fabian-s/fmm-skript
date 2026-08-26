@@ -42,7 +42,7 @@ Methode der Kleinsten Quadrate (OLS), die wir hier aus numerischer Sicht neu bet
 
 <h3 id="sec-7.1-problem">Vom Gleichungssystem zum Ausgleichsproblem</h3>
 
-:::definition[7.1.1 (Kleinste-Quadrate-Problem, KQ-Problem)]
+:::definition[#kleinste-quadrate-problem-kq-problem (Kleinste-Quadrate-Problem, KQ-Problem)]
 Gegeben seien eine Matrix $\bA \in \R^{m \times n}$ und ein Vektor
 $\bb \in \R^m$. Gesucht ist ein Vektor $\wh{\bx} \in \R^n$,
 der die Norm des *Residuums* minimiert:
@@ -62,7 +62,7 @@ $$
 
 daher der Name der Methode.
 
-:::bemerkung[7.1.2]
+:::bemerkung[#bemerkung-7-1-2]
 Hat das Gleichungssystem $\bA\bx = \bb$ eine exakte Lösung
 $\bx^*$, dann gilt $\left\| \bA\bx^* - \bb \right\|_2 = 0$,
 und $\bx^*$ löst automatisch auch das KQ-Problem. Das KQ-Problem
@@ -79,7 +79,7 @@ Warum ist gerade dieses Problem so wichtig? Weil die KQ-Methode das Fundament vo
 Statistik und Machine Learning ist: Jedes Mal, wenn wir ein lineares Modell an Daten
 anpassen, lösen wir ein KQ-Problem.
 
-:::beispiel[7.1.3 (Lineare Regression)]
+:::beispiel[#lineare-regression (Lineare Regression)]
 Wir wollen Immobilienpreise anhand der Wohnfläche vorhersagen. Unsere Daten sind
 $n$ Beobachtungen $(x_i, y_i)$ mit $x_i$ = Fläche in
 $m^2$ und $y_i$ = Preis in €. Als Modell wählen wir eine Gerade mit
@@ -109,7 +109,7 @@ $$
 minimiert stattdessen die Summe der quadrierten Abweichungen
 $\sumin \left( y_i - \beta_0 - \beta_1 x_i \right)^2 = \left\| \cbred{\bA}\cblue{\bbeta} - \bb \right\|_2^2$
 und ist damit der Kleinste-Quadrate-Schätzer (OLS) aus der Einführungsvorlesung.
-Woher die Lösungsformel kommt, klären die Sätze 7.1.5 und 7.1.7 unten.
+Woher die Lösungsformel kommt, klären die Sätze @num:problem-normalengleichungen und @num:eindeutige-loesung-bei-vollem unten.
 :::
 
 Die lineare Regression ist nur der Anfang. KQ-Probleme stecken auch in
@@ -122,7 +122,7 @@ und in der Geodäsie (GPS-Positionsbestimmung gleicht widersprüchliche Distanzm
 aus). Wer KQ-Probleme schnell und stabil lösen kann, hat also einen Universalschlüssel
 in der Hand.
 
-Definition 7.1.1 verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommt man
+@definition:kleinste-quadrate-problem-kq-problem verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommt man
 denn mit bloßem Augenmaß heran? Jeder Punkt im folgenden Bild ist ein (fiktiver) Wohnungsverkauf,
 Fläche gegen Preis in Tsd. €; die blaue Gerade gehört zum eingestellten Parameterpaar, jede
 violette Strecke ist ein Residuum $y_i - \beta_0 - \beta_1 x_i$.
@@ -150,7 +150,7 @@ die linke Zeichnung so plausibel aussieht, liegt auch an der geschickt gewählte
 
 Das folgende Resultat macht die Anschauung präzise.
 
-:::satz[7.1.4 (KQ-Lösung als Projektion)]
+:::satz[#kq-loesung-als-projektion (KQ-Lösung als Projektion)]
 Die Lösungsmenge des KQ-Problems zu $\bA$ und $\bb$ gleicht der
 Lösungsmenge des linearen Gleichungssystems
 
@@ -216,22 +216,22 @@ mehr.
 
 <ProjektionWidget />
 
-<p className="my-2 text-sm">Das Widget verbindet die Projektion auf den Spaltenraum mit dem senkrechten Residuum aus Satz 7.1.4.</p>
+<p className="my-2 text-sm">Das Widget verbindet die Projektion auf den Spaltenraum mit dem senkrechten Residuum aus @satz:kq-loesung-als-projektion.</p>
 :::
 
 <h3 id="sec-7.1-normalengleichungen">Normalengleichungen und eindeutige Lösung</h3>
 
-Satz 7.1.4 ist geometrisch erhellend, aber unpraktisch: Um
+@satz:kq-loesung-als-projektion ist geometrisch erhellend, aber unpraktisch: Um
 $\cgreen{\wh{\bb}}$ auszurechnen, müssten wir die Projektion schon kennen.
 Die Orthogonalitätsbedingung lässt sich aber in ein Gleichungssystem übersetzen, das nur
 $\bA$ und $\bb$ enthält: die aus der linearen Algebra bekannten
 :k[Normalengleichungen]{#normal-equations}.
 
-:::satz[7.1.5 (Normalengleichungen)]
+:::satz[#problem-normalengleichungen (Normalengleichungen)]
 Die Lösungsmenge des KQ-Problems gleicht der Lösungsmenge der
 *Normalengleichungen*
 
-$$ {#eq-7.1.1}
+$$ {#eq-problem-normalengleichungen}
 \bA^\top \bA\, \wh{\bx} = \bA^\top \bb\,.
 $$
 :::
@@ -239,7 +239,7 @@ $$
 ::::beweis
 
 :::schritt
-Nach Satz 7.1.4 löst $\wh{\bx}$ das KQ-Problem genau dann, wenn
+Nach @satz:kq-loesung-als-projektion löst $\wh{\bx}$ das KQ-Problem genau dann, wenn
 $\bA\wh{\bx} = \cgreen{\wh{\bb}}$ gilt. Das wiederum ist genau dann der
 Fall, wenn das Residuum *nur* aus dem senkrechten Anteil besteht:
 
@@ -247,7 +247,7 @@ $$
 \bA\wh{\bx} = \cgreen{\wh{\bb}} \quequiv \bb - \bA\wh{\bx} = \cpurp{\br} \perp \col(\bA)\,.
 $$
 
-::why[Zerlegung aus dem Beweis von Satz 7.1.4: $\bb - \bA\wh{\bx} = (\cgreen{\wh{\bb}} - \bA\wh{\bx}) + \cpurp{\br}$ mit $\cgreen{\wh{\bb}} - \bA\wh{\bx} \in \col(\bA)$ und $\cpurp{\br} \perp \col(\bA)$]
+::why[Zerlegung aus dem Beweis von @satz:kq-loesung-als-projektion: $\bb - \bA\wh{\bx} = (\cgreen{\wh{\bb}} - \bA\wh{\bx}) + \cpurp{\br}$ mit $\cgreen{\wh{\bb}} - \bA\wh{\bx} \in \col(\bA)$ und $\cpurp{\br} \perp \col(\bA)$]
 :::
 
 :::schritt
@@ -271,7 +271,7 @@ $$
 
 ::::
 
-:::bemerkung[7.1.6 (Analysis-Perspektive)]
+:::bemerkung[#analysis-perspektive (Analysis-Perspektive)]
 Dieselben Gleichungen liefert auch die Analysis, ganz ohne Geometrie: Die Zielfunktion
 $g(\bx) = \left\| \bA\bx - \bb \right\|_2^2 = \bx^\top\bA^\top\bA\bx - 2\,\bb^\top\bA\bx + \bb^\top\bb$
 ist eine :k[konvexe]{#convexity}
@@ -282,16 +282,16 @@ $$
 \nabla g(\bx) = 2\,\bA^\top\bA\,\bx - 2\,\bA^\top\bb\,.
 $$
 
-Nullsetzen ergibt exakt (7.1.1); wegen der Konvexität ist die notwendige Bedingung auch
+Nullsetzen ergibt exakt @eq:problem-normalengleichungen; wegen der Konvexität ist die notwendige Bedingung auch
 hinreichend. Diese Sichtweise begegnet uns in
-[Kapitel 12](?k=12-optim#sec-12.1) wieder (vgl. MML §7.1).
+@kap:optim wieder (vgl. MML §7.1).
 :::
 
 Bleibt die Frage nach der Eindeutigkeit. Sie hängt am
 :k[Rang]{#rank} von $\bA$: Genau bei vollem
 Spaltenrang gibt es nur eine Lösung.
 
-:::satz[7.1.7 (Eindeutige Lösung bei vollem Spaltenrang)]
+:::satz[#eindeutige-loesung-bei-vollem (Eindeutige Lösung bei vollem Spaltenrang)]
 Falls $\rang(\bA) = n$, ist $\bA^\top\bA$
 :k[invertierbar]{#matrix-inverse} und das KQ-Problem hat die
 eindeutige Lösung
@@ -324,7 +324,7 @@ $$
 :::
 
 :::schritt
-Eine positiv definite Matrix ist invertierbar. Die Normalengleichungen (7.1.1) haben
+Eine positiv definite Matrix ist invertierbar. Die Normalengleichungen @eq:problem-normalengleichungen haben
 daher genau eine Lösung, und Auflösen liefert
 $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$.
 
@@ -341,14 +341,14 @@ invertierbares $\bA$ gilt $\bA\pinv = \bA^{-1}$, und allgemein
 löst $\bA\pinv\bb$ das KQ-Problem. Wie man $\wh{\bx}$
 *numerisch* am besten berechnet (über die Normalengleichungen sicher
 *nicht* immer!), ist das Thema der Abschnitte
-[7.3](#sec-7.3) bis [7.6](#sec-7.6); zuvor klären wir in Abschnitt
-[7.2](#sec-7.2), wie gut das Problem überhaupt *konditioniert* ist.
+@num:kq/normalengleichungen bis @num:kq/pseudoinverse; zuvor klären wir in Abschnitt
+@num:kq/kondition, wie gut das Problem überhaupt *konditioniert* ist.
 
-:::beispiel[7.1.8 (Rechenbeispiel: Regressionsgerade durch drei Punkte)]
+:::beispiel[#rechenbeispiel-regressionsgerade-durch (Rechenbeispiel: Regressionsgerade durch drei Punkte)]
 Rechnen wir die Lösungsformel einmal komplett durch. Drei Wohnungen wurden verkauft:
 $50\,m^2$ für $250$, $75\,m^2$ für $350$ und
 $100\,m^2$ für $500$ (Preise in Tsd. €). Mit dem Modell aus
-Beispiel 7.1.3:
+@beispiel:lineare-regression:
 
 $$
 \cbred{\bA} = \begin{pmatrix} 1 & 50 \\ 1 & 75 \\ 1 & 100 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 250 \\ 350 \\ 500 \end{pmatrix}.
@@ -362,7 +362,7 @@ $$
 
 Wegen
 $\det(\cbred{\bA^\top\bA}) = 3 \cdot 18\,125 - 225^2 = 54\,375 - 50\,625 = 3\,750 \neq 0$
-ist die Lösung eindeutig (Satz 7.1.7), und mit der Inversionsformel für
+ist die Lösung eindeutig (@satz:eindeutige-loesung-bei-vollem), und mit der Inversionsformel für
 $2 \times 2$-Matrizen erhalten wir
 
 $$
@@ -380,7 +380,7 @@ Tatsächlich gilt
 $\cbred{\bA}^\top \cpurp{\br} = \bnull$: Die Summe der Residuen ist
 $(25 - 50 + 25)/3 = 0$, und
 $\sumin x_i r_i = (50 \cdot 25 - 75 \cdot 50 + 100 \cdot 25)/3 = 0$. Das
-Residuum steht senkrecht auf beiden Spalten, genau wie Satz 7.1.5 verspricht. Der
+Residuum steht senkrecht auf beiden Spalten, genau wie @satz:problem-normalengleichungen verspricht. Der
 minimale Zielfunktionswert ist
 $\left\| \cpurp{\br} \right\|_2^2 = (625 + 2\,500 + 625)/9 = 1\,250/3 \approx 416{,}7$
 .
@@ -408,7 +408,7 @@ Spaltenrang.)
 $\bA \bA\pinv \bb = \proj_{\col(\bA)} \bb$
 
 $\bA\bA\pinv\bb = \bA\wh{\bx} = \cgreen{\wh{\bb}}$: die KQ-Lösung
-bildet $\bb$ gerade auf seine Projektion in den Spaltenraum ab (Satz 7.1.4).
+bildet $\bb$ gerade auf seine Projektion in den Spaltenraum ab (@satz:kq-loesung-als-projektion).
 :::
 
 :::frage{wahr}
@@ -435,7 +435,7 @@ $\left\| \cpurp{\br} \right\|_2^2$?
 Der senkrechte Stand wird bei $x = 1/2$ erreicht, also
 $\cpurp{\br} = (1,2)^\top - \tfrac{1}{2}(3,1)^\top = (-0{,}5;\, 1{,}5)^\top$ und
 $\left\| \cpurp{\br} \right\|_2^2 = 0{,}25 + 2{,}25 = 2{,}5$. Das ist das Minimum
-aus Satz 7.1.4; jeder andere Kandidat liefert einen größeren Wert.
+aus @satz:kq-loesung-als-projektion; jeder andere Kandidat liefert einen größeren Wert.
 :::
 
 ::::

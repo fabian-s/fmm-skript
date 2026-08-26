@@ -1,7 +1,7 @@
 import { SelbsttestFrage } from "./widgets/S36Local";
 
 {/*
-  Abschnitt 3.6 – Zusammenfassung.
+  @sec:zusammenfassung – Zusammenfassung.
   Quelle: Folien 03-matrix-spur-norm.Rmd, Block „Zusammenfassung" (Quiz-Folien,
   Kernkonzepte Spur/Normen, ML-Verbindung, Rechenaufwand). Prosa eigenständig
   aus den Folien formuliert; bewusst schlank gehalten.
@@ -30,32 +30,32 @@ kennengelernt.
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Spur</td>
 <td className="py-1 pr-6">$\tr(\bA) = \sumin a_{ii}$; linear, zyklisch ($\tr(\bA\bB) = \tr(\bB\bA)$) und damit ähnlichkeitsinvariant; gleich der Summe der :k[Eigenwerte]{#eigenvalue-eigenvector} (Koeffizient des charakteristischen Polynoms)</td>
-<td className="py-1">[3.1](#sec-3.1)</td>
+<td className="py-1">@num:matrix-spur-norm/spur</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Matrixnorm</td>
 <td className="py-1 pr-6">dieselben Axiome wie bei :k[Vektornormen]{#norm}: Definitheit, absolute Homogenität, Dreiecksungleichung</td>
-<td className="py-1">[3.2](#sec-3.2)</td>
+<td className="py-1">@num:matrix-spur-norm/matrixnormen</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">elementweise Normen</td>
 <td className="py-1 pr-6">Vektornorm auf $\vec(\bA)$: $\left\|\bA\right\|_F, \left\|\bA\right\|_S, \left\|\bA\right\|_M$; billig, aber blind für die Transformation</td>
-<td className="py-1">[3.2](#sec-3.2)</td>
+<td className="py-1">@num:matrix-spur-norm/matrixnormen</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Operatornormen</td>
 <td className="py-1 pr-6">maximale Streckung $\max_{\bx \neq \bnull} \left\|\bA\bx\right\|_V / \left\|\bx\right\|_V$: Spaltensummennorm $\left\|\bA\right\|_1$, Spektralnorm $\left\|\bA\right\|_2$, Zeilensummennorm $\left\|\bA\right\|_\infty$</td>
-<td className="py-1">[3.3](#sec-3.3)</td>
+<td className="py-1">@num:matrix-spur-norm/operatornormen</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">Schatten-p-Normen</td>
 <td className="py-1 pr-6">$p$-Norm des Vektors der Wurzeln der Eigenwerte von $\bA^\top\bA$; invariant unter :k[orthogonalen Transformationen]{#orthogonal-matrix}</td>
-<td className="py-1">[3.4](#sec-3.4)</td>
+<td className="py-1">@num:matrix-spur-norm/schattennormen</td>
 </tr>
 <tr>
 <td className="py-1 pr-6">Eigenschaften</td>
 <td className="py-1 pr-6">Normäquivalenz, Submultiplikativität ($\left\|\bA\bB\right\| \le \left\|\bA\right\| \left\|\bB\right\|$), Verträglichkeit mit Vektornormen</td>
-<td className="py-1">[3.5](#sec-3.5)</td>
+<td className="py-1">@num:matrix-spur-norm/eigenschaften</td>
 </tr>
 </tbody>
 </table>
@@ -123,7 +123,7 @@ deutlich billiger sein.
 </table>
 </div>
 
-:::bemerkung[3.6.1 (Ausblick: Normen als Regularisierer)]
+:::bemerkung[#ausblick-normen-als-regularisierer (Ausblick: Normen als Regularisierer)]
 Normen messen nicht nur Fehler: Im maschinellen Lernen steuern sie als Strafterme,
 *welche* Lösung ein Schätzproblem liefert. Drei prominente Beispiele, alle
 Varianten des :k[KQ-Problems]{#linear-least-squares}:
@@ -139,7 +139,7 @@ $$
 Verschiedene Normen erzwingen verschiedene Lösungseigenschaften: Die
 $2$-Norm schrumpft alle Koeffizienten gleichmäßig, die $1$-Norm
 setzt viele exakt auf null, und die Nuklearnorm aus
-[Abschnitt 3.4](#sec-3.4) begünstigt Lösungen mit
+@sec:schattennormen begünstigt Lösungen mit
 kleinem Rang (:k[Niedrigrang-Approximation]{#low-rank-approximation}).
 :::
 
@@ -164,7 +164,7 @@ $\tr(\bI_2) = 2$, rechts $2 \cdot 2 = 4$.
 $\tr(\bA\bB) = \tr(\bB\bA)$
 
 Das ist die zyklische Eigenschaft aus
-[Abschnitt 3.1](#sec-3.1), die wichtigste Rechenregel
+@sec:spur, die wichtigste Rechenregel
 der Spur.
 :::
 
@@ -218,7 +218,7 @@ $$
 \left\|\bA\right\|_F = \sqrt{1^2 + 2^2 + 3^2 + 0^2} = \sqrt{14} \approx 3{,}74.
 $$
 
-Probe über die Spur ([Abschnitt 3.2](#sec-3.2)):
+Probe über die Spur (@sec:matrixnormen):
 $\bA^\top\bA = \begin{pmatrix} 10 & 2 \\ 2 & 4 \end{pmatrix}$, also
 $\tr\left(\bA^\top\bA\right) = 10 + 4 = 14 = \left\|\bA\right\|_F^2$.
 $\checkmark$ Zum Vergleich: Die Spektralnorm ist
@@ -242,7 +242,7 @@ welches gestörte Problem $(\bA + \bDelta\bA)\,\wt{\bx} = \bb$ dieses
 $\wt{\bx}$ die exakte Lösung ist. Die Größe
 $\left\|\bDelta\bA\right\|_2 / \left\|\bA\right\|_2$ quantifiziert
 dann den Rückwärtsfehler. Submultiplikativität und Verträglichkeit aus
-[Abschnitt 3.5](#sec-3.5) sind genau die
+@sec:eigenschaften sind genau die
 Eigenschaften, die solche Abschätzungen erst möglich machen.
 
 *Vertiefung: Heath §2.3; MML §4.1/4.5.*

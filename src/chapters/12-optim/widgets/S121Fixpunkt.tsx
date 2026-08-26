@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.1 — DIE EINE EINSICHT: Über die Fixpunktiteration entscheidet allein
@@ -172,7 +173,7 @@ export function FixpunktSpirale() {
     // Rundungsdrift aus dem Wachstums-Zweig heraus.
     const gewachsen = abstand > 1.001 * start;
     status =
-      `ρ = ${fmt(rho)} ist nicht kleiner als 1, damit sagt Satz 12.1.16 nichts mehr zu. Nach ` +
+      `ρ = ${fmt(rho)} ist nicht kleiner als 1, damit sagt ${ref("satz:konvergenzrate-der-fixpunktiteration")} nichts mehr zu. Nach ` +
       `${nSchritte} Schritten steht der Abstand zum Fixpunkt bei ${fmtE(abstand)}, gestartet sind ` +
       `wir bei ${fmt(start)}. ` +
       (gewachsen
@@ -217,7 +218,7 @@ export function FixpunktSpirale() {
       </Aufgabe>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
         Blau der Weg der ersten 30 Schritte, grün der Fixpunkt x* = 0. Alle drei A sind affin,
-        also ist ρ = ‖I − γA‖₂ nach Schritt 5 des Beweises von Satz 12.1.16 eine echte Schranke
+        also ist ρ = ‖I − γA‖₂ nach Schritt 5 des Beweises von {ref("satz:konvergenzrate-der-fixpunktiteration")} eine echte Schranke
         ohne Restterm.
       </p>
       <div className="flex flex-wrap gap-2">

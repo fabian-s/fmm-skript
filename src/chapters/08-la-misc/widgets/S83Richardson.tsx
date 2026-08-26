@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, Slider, Stepper, Verdikt, fmtDe, niceTicks } from "../../../lib";
 import type { Series } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §8.3: Richardson-Iteration am Folienbeispiel
@@ -279,10 +280,10 @@ export function RichardsonStepper() {
         </p>
         <Verdikt kind={rho < 0.999 ? "ok" : rho <= 1.001 ? "warn" : "fail"}>
           {rho < 0.999
-            ? `ρ < 1: Satz 8.3.5 greift, und der Fehler fällt auf Dauer je Schritt auf etwa das ${fmt(rho, 2)}-fache.`
+            ? `ρ < 1: ${ref("satz:konvergenz-der-korrekturiteration")} greift, und der Fehler fällt auf Dauer je Schritt auf etwa das ${fmt(rho, 2)}-fache.`
             : rho <= 1.001
               ? "ρ ≈ 1: der Grenzfall. Die Schranke des Satzes verspricht nichts mehr, die Iterierten kommen kaum noch voran."
-              : `ρ > 1: die Voraussetzung von Satz 8.3.5 ist verletzt, und hier läuft die Iteration tatsächlich davon (auf Dauer das ${fmt(rho, 2)}-fache je Schritt).`}
+              : `ρ > 1: die Voraussetzung von ${ref("satz:konvergenz-der-korrekturiteration")} ist verletzt, und hier läuft die Iteration tatsächlich davon (auf Dauer das ${fmt(rho, 2)}-fache je Schritt).`}
         </Verdikt>
       </div>
     </div>

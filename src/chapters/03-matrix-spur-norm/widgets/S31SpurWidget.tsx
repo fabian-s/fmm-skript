@@ -13,6 +13,7 @@ import {
   niceTicks,
   fmtTick,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.1: Spur = Summe der Eigenwerte, an der Eigenwertebene abgelesen.
@@ -315,14 +316,14 @@ export function S31SpurWidget() {
         {art === "reell" && (
           <>
             Die beiden Realteile {fmtDe(re1, 2)} und {fmtDe(re2, 2)} ergeben aneinandergelegt genau{" "}
-            {fmtDe(e.tr, 2)}, die Spur aus den Diagonaleinträgen. Genau das behauptet Satz 3.1.7 –
+            {fmtDe(e.tr, 2)}, die Spur aus den Diagonaleinträgen. Genau das behauptet {ref("satz:spur-als-summe-der-eigenwerte")} –
             und die Nebendiagonale, die beide Eigenwerte verschiebt, taucht in der Spur nirgends
             auf.
           </>
         )}
         {art === "doppelt" && (
           <>
-            Hier fallen beide Eigenwerte auf {fmtDe(re1, 2)} zusammen. Satz 3.1.7 zählt sie mit
+            Hier fallen beide Eigenwerte auf {fmtDe(re1, 2)} zusammen. {ref("satz:spur-als-summe-der-eigenwerte")} zählt sie mit
             ihrer algebraischen Vielfachheit, die Summe ist also {fmtDe(re1, 2)} + {fmtDe(re2, 2)} ={" "}
             {fmtDe(e.tr, 2)} = tr(A), nicht etwa {fmtDe(re1, 2)}.
           </>
@@ -330,7 +331,7 @@ export function S31SpurWidget() {
         {art === "defekt" && (
           <>
             Doppelter Eigenwert {fmtDe(re1, 2)}, und wegen der Nebendiagonale gibt es zu ihm nur
-            eine Eigenrichtung: Diese Matrix ist nicht diagonalisierbar. Der Beweis von Satz 3.1.7
+            eine Eigenrichtung: Diese Matrix ist nicht diagonalisierbar. Der Beweis von {ref("satz:spur-als-summe-der-eigenwerte")}
             aus dem Skript greift hier nicht, die Aussage selbst gilt trotzdem, die Summe{" "}
             {fmtDe(re1, 2)} + {fmtDe(re2, 2)} = {fmtDe(e.tr, 2)} trifft die Spur.
           </>
@@ -340,7 +341,7 @@ export function S31SpurWidget() {
             Die Diskriminante ist negativ, die Eigenwerte {fmtDe(e.re, 2)} ± {fmtDe(e.im, 2)} i
             liegen also außerhalb der reellen Achse. In der Summenleiste zählt nur ihr Realteil
             zweimal {fmtDe(e.re, 2)}; die Imaginärteile heben sich weg, und die Spur bleibt reell
-            bei {fmtDe(e.tr, 2)} (Satz 3.1.7).
+            bei {fmtDe(e.tr, 2)} ({ref("satz:spur-als-summe-der-eigenwerte")}).
           </>
         )}
       </Verdikt>

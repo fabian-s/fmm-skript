@@ -10,6 +10,7 @@ import {
   fmtDe,
 } from "../../../lib";
 import { bildMitSVD, energieAnteil, frobenius, matSub, rankK, type Mat } from "./S64Numerik";
+import { num } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Der Singulärwert-Verlauf sagt, wie viele Rang-1-Terme ein
@@ -251,7 +252,7 @@ export function RangKExplorer() {
             ]}
           />
           <span className="max-w-[330px] text-center text-xs" style={{ color: GRAU }}>
-            Die beiden Fehlerformeln aus (6.4.4), an diesem Bild ausgewertet. Sinnvoll sind
+            Die beiden Fehlerformeln aus ({num("eq:eckart-und-young-beste-approximation-von")}), an diesem Bild ausgewertet. Sinnvoll sind
             nur ganzzahlige <M>{"k"}</M>; die Punkte sind der Übersicht halber verbunden.
           </span>
         </div>
@@ -335,7 +336,7 @@ export function RangKExplorer() {
             <Verdikt kind="fail" titel="Noch fehlt Struktur:">
               In der dritten Tafel zeichnen sich noch Gegenstände ab, nicht nur Körnung: Der
               nächste Singulärwert <M>{`\\sigma_{${k + 1}} = ${fmt(spektralFehler[k])}`}</M> ist
-              groß gegen seine Nachfolger, und genau er ist nach (6.4.4) der Fehler in der
+              groß gegen seine Nachfolger, und genau er ist nach ({num("eq:eckart-und-young-beste-approximation-von")}) der Fehler in der
               Spektralnorm. Der Energie-Anteil liegt erst bei {prozent(energie, 2)}.
             </Verdikt>
           ) : (
@@ -345,7 +346,7 @@ export function RangKExplorer() {
               <M>{`\\sigma_{${KNICK}}`}</M> fällt das Spektrum um den Faktor{" "}
               {fmt(svd.s[KNICK] / svd.s[KNICK - 1], 2)} ab, und die
               ersten drei Terme tragen bereits {prozent(energieAnteil(svd.s, KNICK), 2)} der
-              Energie. Weitere Terme senken den Frobenius-Fehler nach (6.4.4) nur noch um
+              Energie. Weitere Terme senken den Frobenius-Fehler nach ({num("eq:eckart-und-young-beste-approximation-von")}) nur noch um
               jeweils <M>{"\\sigma_{k+1}^2"}</M>, hier also um Bruchteile.
             </Verdikt>
           )}

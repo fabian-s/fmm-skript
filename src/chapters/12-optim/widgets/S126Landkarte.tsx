@@ -11,6 +11,7 @@ import {
   W_BUTTON,
   W_BUTTON_AKTIV,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.6 — DIE EINE EINSICHT: Verschiedene Startpunkte enden in verschiedenen
@@ -124,7 +125,7 @@ export function OptimLandkarte() {
       : "in der unteren Mulde gelandet";
   const text = global
     ? `Von (${fmt(start[0])}; ${fmt(start[1])}) aus läuft der Abstieg nach (0; 0) mit f = 0, dem globalen Minimum. Das ist der Glücksfall, und von außen nicht zu erkennen: Der Rückgabewert sieht genauso aus wie in den beiden anderen Fällen.`
-    : `Von (${fmt(start[0])}; ${fmt(start[1])}) aus läuft der Abstieg nach (${fmt(lauf.ende[0])}; ${fmt(lauf.ende[1], 4)}) mit f = ${fmt(lauf.fEnde, 4)}. Dort ist der Gradient null und die Hesse-Matrix positiv definit, es ist also ein sauberes lokales Minimum, nur liegt das globale bei (0; 0) mit f = 0 um ${fmt(lauf.fEnde, 4)} tiefer. Genau das meint Bemerkung 12.6.2 mit „falscher Konvergenz": Das Verfahren hat nichts falsch gemacht, es hat nur nicht gefunden, was wir suchen. Abhilfe schafft keine bessere Schrittweite, sondern nur ein anderer Startpunkt.`;
+    : `Von (${fmt(start[0])}; ${fmt(start[1])}) aus läuft der Abstieg nach (${fmt(lauf.ende[0])}; ${fmt(lauf.ende[1], 4)}) mit f = ${fmt(lauf.fEnde, 4)}. Dort ist der Gradient null und die Hesse-Matrix positiv definit, es ist also ein sauberes lokales Minimum, nur liegt das globale bei (0; 0) mit f = 0 um ${fmt(lauf.fEnde, 4)} tiefer. Genau das meint ${ref("bemerkung:falsche-konvergenz-und-keiner-warnt")} mit „falscher Konvergenz": Das Verfahren hat nichts falsch gemacht, es hat nur nicht gefunden, was wir suchen. Abhilfe schafft keine bessere Schrittweite, sondern nur ein anderer Startpunkt.`;
 
   const zelle = W / N;
   // Die 96x96 Kacheln haengen nur am (konstanten) Wertegitter: einmal bauen,

@@ -4,7 +4,7 @@ import { Schaetzfrage } from "../../lib";
 import { SelfTest } from "./widgets/S42Local";
 
 {/*
-  Abschnitt 4.2: Kondition.
+  @sec:kondition: Kondition.
   Quelle: Folien 04-fehler.Rmd, Block „Kondition" (Z. 179–297): Motivation,
   1/x-Beispiel, Definition absolute/relative Konditionszahl, Interpretation,
   Beispiel f(x) = A^-1 x, Quiz und Aufgabe. Prosa eigenständig formuliert;
@@ -12,7 +12,7 @@ import { SelfTest } from "./widgets/S42Local";
   sauber als Beweis aufgeschrieben.
 */}
 
-In [Abschnitt 4.1](#sec-4.1) haben wir den Gesamtfehler
+In @sec:fehlermasse haben wir den Gesamtfehler
 einer numerischen Rechnung in zwei Teile zerlegt: den Fehler des Algorithmus selbst und
 den Folgefehler, der aus einem fehlerhaften Input entsteht. Um den zweiten Teil geht es
 jetzt. Inputfehler betrachten wir als *unvermeidbar*: Messwerte sind ungenau,
@@ -39,11 +39,11 @@ Ergebnisänderungen auf. Wir nennen das Problem dann
 reparieren, denn er sieht nur $\wt{\bx}$ und kann nicht wissen, welcher Punkt
 von $E$ der „wahre" Input war.
 
-### 4.2.1 Ein Warnbeispiel: der Kehrwert
+### Ein Warnbeispiel: der Kehrwert :id[ein-warnbeispiel-der-kehrwert]
 
 Wie schlimm kann es werden? Ein bewusst extremes Beispiel:
 
-:::beispiel[4.2.1 (Kehrwert nahe null)]
+:::beispiel[#kehrwert-nahe-null (Kehrwert nahe null)]
 Sei $f(x) = x^{-1}$ mit Input $x = 10^{-17}$, und sei der gestörte
 Input $\wt{x} = x + \cred{\eps}$ mit
 $\cred{\eps} \in \left(-10^{-17},\, 10^{-17}\right)$. Dann durchläuft
@@ -115,15 +115,15 @@ $x = 0{,}6$ und $\cred{\eps} = -0{,}54$ ist die Verstärkung genau
 $10$, bei $\cred{\eps} = -0{,}45$ (der Voreinstellung) ist sie
 $4$.
 
-### 4.2.2 Konditionszahlen
+### Konditionszahlen :id[konditionszahlen]
 
 Um „sensitiv gegenüber Inputfehlern" quantitativ zu fassen, setzen wir Output- und
 Inputfehler direkt ins Verhältnis, einmal für absolute, einmal für relative Fehler. Im
 Folgenden betrachten wir Abbildungen $f \colon \R^n \to \R^m$;
 $\left\| \cdot \right\|$ bezeichnet eine beliebige Vektor:k[norm]{#norm} bzw. die von ihr induzierte
-:k[Operatornorm]{#matrix-norm} für Matrizen ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
+:k[Operatornorm]{#matrix-norm} für Matrizen (@sec:matrix-spur-norm/operatornormen).
 
-:::definition[4.2.2 (Konditionszahl)]
+:::definition[#konditionszahl (Konditionszahl)]
 Sei $f$ ein Problem mit Input $\bx$. Für die relative Konditionszahl setzen
 wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
 
@@ -144,7 +144,7 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
   $$
 :::
 
-:::bemerkung[4.2.3 (Wie lesen wir das?)]
+:::bemerkung[#wie-lesen-wir-das (Wie lesen wir das?)]
 
 - Der Limes superior betrachtet alle Richtungen, aus denen kleine Störungen gegen
   null gehen. $\kappa$ ist also der größte asymptotische Verstärkungsfaktor
@@ -161,14 +161,14 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
   $$
 
 - Meist ist $\kappa_{rel}$ die relevantere Größe: Gleitkommarechnung
-  erzeugt naturgemäß *relative* Fehler ([Abschnitt 4.1](#sec-4.1)), und relative Fehler
+  erzeugt naturgemäß *relative* Fehler (@sec:fehlermasse), und relative Fehler
   sind unabhängig von Maßeinheiten und Skalierung.
 :::
 
 Die Konditionszahl sortiert Probleme in gutartige und bösartige, mit einem wichtigen
 Extremfall:
 
-:::bemerkung[4.2.4 (Interpretation)]
+:::bemerkung[#interpretation (Interpretation)]
 
 - *gut konditioniert* ($\kappa \lesssim 1$): Ein Inputfehler führt
   zu einem ähnlich großen oder kleineren Outputfehler.
@@ -183,10 +183,10 @@ Extremfall:
   können das Ergebnis beliebig stark verfälschen.
 :::
 
-Mit den Formeln aus Bemerkung 4.2.3 können wir nun auch das Rätsel aus dem Warnbeispiel
+Mit den Formeln aus @bemerkung:wie-lesen-wir-das können wir nun auch das Rätsel aus dem Warnbeispiel
 auflösen:
 
-:::beispiel[4.2.5 (Der Kehrwert, aufgelöst)]
+:::beispiel[#der-kehrwert-aufgeloest (Der Kehrwert, aufgelöst)]
 Für $f(x) = x^{-1}$ ist $f'(x) = -x^{-2}$, also an der Stelle
 $x = 10^{-17}$:
 
@@ -197,7 +197,7 @@ $$
 Absolut gemessen ist das Problem also katastrophal sensitiv ($\kappa_{abs} = 10^{34}$),
 relativ gemessen dagegen völlig harmlos: Asymptotisch wird ein relativer Inputfehler
 von 0,1 % zu einem relativen Outputfehler von ebenfalls 0,1 %. Das Drama in
-Beispiel 4.2.1 entsteht, weil die Störungen dort *relativ zu* $x$
+@beispiel:kehrwert-nahe-null entsteht, weil die Störungen dort *relativ zu* $x$
 eben nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe (etwa ein
 additiver Messfehler) bedeutet bei winzigem $x$ eine riesige relative
 Störung. Merken wir uns: *Welche* Konditionszahl zählt, hängt davon ab, welche
@@ -206,7 +206,7 @@ kleine $\eps/x$ liegt die Verstärkung nahe 1, erst wenn $\eps$ in
 die Größenordnung von $x$ kommt, explodiert sie.
 :::
 
-### 4.2.3 Kondition eines linearen Gleichungssystems
+### Kondition eines linearen Gleichungssystems :id[kondition-eines-linearen]
 
 Nun zum wichtigsten Beispiel dieses Kapitels. Wir lösen ein
 :k[lineares Gleichungssystem]{#linear-system}
@@ -219,10 +219,10 @@ bezeichnet, nicht etwa eine Empfehlung, sie auszurechnen. Wie sensitiv reagiert 
 Lösung $\by$ auf Störungen von $\bx$? Die Antwort führt genau auf
 die *Konditionszahl der Matrix*
 $\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$,
-die wir in [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) kennengelernt
+die wir in @sec:matrix-spur-norm/eigenschaften kennengelernt
 haben.
 
-:::satz[4.2.6 (Kondition der Lösung eines LGS)]
+:::satz[#kondition-der-loesung-eines-lgs (Kondition der Lösung eines LGS)]
 Sei $\bA \in \R^{n \times n}$ invertierbar und
 $f(\bx) = \bA^{-1} \bx$. Bezüglich einer beliebigen Vektornorm und der von
 ihr induzierten Operatornorm gilt dann
@@ -247,7 +247,7 @@ $$
 \left\| f(\wt{\bx}) - f(\bx) \right\| = \left\| \bA^{-1} \cbred{\bh} \right\| \le \cgreen{\left\| \bA^{-1} \right\|} \left\| \cbred{\bh} \right\| \quimpl \kappa_{abs} \le \cgreen{\left\| \bA^{-1} \right\|}
 $$
 
-::why[definierende Eigenschaft der Operatornorm: $\left\| \bA^{-1} \bv \right\| \le \left\| \bA^{-1} \right\| \left\| \bv \right\|$ für alle $\bv$ ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3))]
+::why[definierende Eigenschaft der Operatornorm: $\left\| \bA^{-1} \bv \right\| \le \left\| \bA^{-1} \right\| \left\| \bv \right\|$ für alle $\bv$ (@sec:matrix-spur-norm/operatornormen)]
 :::
 
 :::schritt
@@ -276,14 +276,14 @@ $$
 
 ::::
 
-:::bemerkung[4.2.7 (Konditionszahl einer Matrix)]
+:::bemerkung[#kondition-konditionszahl-einer-matrix (Konditionszahl einer Matrix)]
 
 - Die relative Kondition des Gleichungslösens hängt von der rechten Seite
   $\bx$ ab; $\corange{\kappa(\bA)} = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
   ist die von $\bx$ unabhängige *Worst-Case*-Schranke – und sie wird
   für ungünstige $\bx$ auch angenommen. Das erklärt im Nachhinein, warum
   genau dieses Produkt in
-  [Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5) den Namen
+  @sec:matrix-spur-norm/eigenschaften den Namen
   *Konditionszahl von* $\bA$ bekommen hat.
 
 - Für die von $\left\| \cdot \right\|_2$ induzierte Operatornorm (*Spektralnorm*) gilt
@@ -299,7 +299,7 @@ $$
   $\bA^\top\bA$).
 :::
 
-Satz 4.2.6 hat zwei Aussagen, und die zweite ist die überraschende: Die relative Kondition
+@satz:kondition-der-loesung-eines-lgs hat zwei Aussagen, und die zweite ist die überraschende: Die relative Kondition
 hängt von der rechten Seite $\bx$ ab, aber die Schranke
 $\corange{\kappa(\bA)}$ wird für ungünstige $\bx$ auch wirklich
 angenommen. Sehen wir uns an, was das geometrisch heißt. Ein Kreis plausibler rechter Seiten um
@@ -349,13 +349,13 @@ schwächster Streckung.
 
 </SelfTest>
 
-### 4.2.4 Aufgabe: die Kondition einer Summe
+### Aufgabe: die Kondition einer Summe :id[aufgabe-die-kondition-einer-summe]
 
 Zum Abschluss eine Aufgabe. Versuchen wir es erst selbst, bevor wir die
 Lösung aufklappen. Sie sieht harmlos aus, trägt aber den Keim eines Phänomens in sich,
 das wir schon kennen.
 
-:::beispiel[4.2.8 (Aufgabe: Kondition der Summe)]
+:::beispiel[#aufgabe-kondition-der-summe (Aufgabe: Kondition der Summe)]
 Sei
 $f(\bx) = x_1 + x_2 = \binom{1}{1}^\top \bx = \symbf{1}^\top \bx$ mit
 $\bx \in \R^2$ und der euklidischen Norm
@@ -382,7 +382,7 @@ gibt es, also ist die Schranke scharf: Der Gleichheitsfall von Cauchy-Schwarz
 liefert hier nicht nur $\kappa_{abs} \le \sqrt{2}$, sondern
 $\kappa_{abs} = \sqrt{2}$. Da $f$ linear ist, tritt derselbe
 Gleichheitsfall auch beim relativen Fehlerquotienten auf, und wie im Beweis von
-Satz 4.2.6 folgt
+@satz:kondition-der-loesung-eines-lgs folgt
 
 $$
 \kappa_{rel} = \kappa_{abs}\, \frac{\left\| \bx \right\|_2}{\left| f(\bx) \right|} = \corange{\frac{\sqrt{2}\, \left\| \bx \right\|_2}{\left| x_1 + x_2 \right|}}.
@@ -395,7 +395,7 @@ $\left\| \bx \right\|_2$ nicht klein ist, sprich für
 $x_1 \approx -x_2$, nahe der Antidiagonalen. Dort heben sich die beiden
 Summanden fast auf: Das ist exakt die
 :k[Auslöschung]{#cancellation} aus
-[Abschnitt 2.1](?k=02-algos#sec-2.1), jetzt als
+@sec:algos/probleme-algorithmen, jetzt als
 Konditionsaussage über das *Problem* „addiere zwei Zahlen", unabhängig
 davon, wie wir die Summe ausrechnen. Auf der Diagonalen
 $x_1 = x_2$ gilt dagegen $\kappa_{rel} = 1$: besser geht es
@@ -422,7 +422,7 @@ $\corange{\kappa_{rel}} \approx 59$, also gut zwei verlorene Dezimalstellen; ein
 Schritt weiter auf $(1{,}5;\ -1{,}5)^\top$ und das Problem ist schlecht gestellt.
 
 Diese Rechnung ist mehr als eine Fingerübung: In
-[Abschnitt 4.3](#sec-4.3) wird genau die Kondition der
+@sec:stabilitaet wird genau die Kondition der
 Differenz zweier fast gleicher Zahlen erklären, warum die
 Verschiebungsformel für die Varianz numerisch scheitert.
 
@@ -446,7 +446,7 @@ etwas: nämlich nicht mehr Fehler, als das Problem erzwingt.
 Die absolute Konditionszahl von $f(x) = 1/x$ ist bei $x = 10^{-17}$
 riesig, also ist das Problem dort in jedem Sinn schlecht konditioniert.
 
-$\kappa_{abs} = 10^{34}$, aber $\kappa_{rel} = 1$ (Beispiel 4.2.5).
+$\kappa_{abs} = 10^{34}$, aber $\kappa_{rel} = 1$ (@beispiel:der-kehrwert-aufgeloest).
 Welche der beiden zählt, hängt davon ab, welche Fehlerart im Input unvermeidbar ist. Bei
 Gleitkommarechnung sind das *relative* Fehler, und die gibt der Kehrwert
 unverändert weiter.
@@ -456,7 +456,7 @@ unverändert weiter.
 Für dieselbe Matrix $\bA$ kann das Lösen von
 $\bA\by = \bx$ je nach rechter Seite gut oder schlecht konditioniert sein.
 
-Nach Satz 4.2.6 ist
+Nach @satz:kondition-der-loesung-eines-lgs ist
 $\kappa_{rel} = \left\| \bA^{-1} \right\| \left\| \bx \right\| / \left\| \bA^{-1}\bx \right\|$,
 und dieser Quotient hängt von der Richtung von $\bx$ ab. Er schöpft die
 Schranke $\corange{\kappa(\bA)}$ nur für ungünstige rechte Seiten aus; im LGS-Widget

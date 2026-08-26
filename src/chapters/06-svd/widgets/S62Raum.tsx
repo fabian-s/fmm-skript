@@ -15,6 +15,7 @@ import {
   type Sicht3D,
   type Vec3,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Eine 3×2-Matrix schickt den Einheitskreis des R² auf eine
@@ -229,14 +230,14 @@ export function EllipseImRaum({ A, v, u, sig }: RaumDaten) {
         <Verdikt kind="warn" titel="Rang 1:">
           Wegen <span className="font-mono">σ₂ = 0</span> liegt das Bild auf einer Geraden statt
           in einer Ebene; <span className="font-mono">col(A)</span> ist eindimensional
-          (Satz 6.2.11). Aus dem Kreis wird eine Strecke der halben Länge{" "}
+          ({ref("satz:charakterisierung-der-fundamentalen")}). Aus dem Kreis wird eine Strecke der halben Länge{" "}
           {fmtDe(sig[0], 3)}, die doppelt durchlaufen wird.
         </Verdikt>
       ) : (
         <Verdikt kind="neutral">
           Der Kreis landet als Ellipse in der Ebene <span className="font-mono">col(A)</span>,
           aufgespannt von <span className="font-mono">u₁</span> und{" "}
-          <span className="font-mono">u₂</span> (Satz 6.2.11). Ihre Halbachsen sind{" "}
+          <span className="font-mono">u₂</span> ({ref("satz:charakterisierung-der-fundamentalen")}). Ihre Halbachsen sind{" "}
           <span className="font-mono">σ₁u₁</span> und <span className="font-mono">σ₂u₂</span> mit{" "}
           {fmtDe(sig[0], 3)} und {fmtDe(sig[1], 3)}; dazwischen läuft ‖Ax‖ hin und her, gerade
           jetzt bei {fmtDe(nAx, 3)}. Obwohl das Bild im{" "}

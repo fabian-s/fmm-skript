@@ -39,6 +39,7 @@ import {
   sigmaMax,
   type Mat2,
 } from "../../lib";
+import { ref } from "../../chapters/numbers.generated";
 
 export function CondWidget() {
   // Voreinstellung ε = 0,3: die Ellipse ist schon deutlich länglich (cond ≈ 16),
@@ -117,10 +118,10 @@ export function CondWidget() {
         {condTxt}; in der eingestellten Richtung wird x auf{" "}
         {fmtDe(streckung, 3)} gestreckt.{" "}
         {cond < 10
-          ? "Jede Richtung wird ähnlich stark gestreckt: Satz 4.2.6 schätzt den relativen Fehler der Lösung mit cond(A) mal dem relativen Datenfehler ab, hier also noch mit einem einstelligen Faktor."
+          ? `Jede Richtung wird ähnlich stark gestreckt: ${ref("satz:kondition-der-loesung-eines-lgs")} schätzt den relativen Fehler der Lösung mit cond(A) mal dem relativen Datenfehler ab, hier also noch mit einem einstelligen Faktor.`
           : cond < 1000
-            ? `Längste und kürzeste Halbachse liegen schon spürbar auseinander. Nach Satz 4.2.6 wird ein relativer Datenfehler bis zum ${condTxt}-Fachen verstärkt: rund ${fmtDe(stellen, 1)} Dezimalstellen gehen verloren.`
-            : `Die Ellipse ist nadeldünn, aber nicht entartet: det A = ε bleibt für jedes einstellbare ε ungleich null. Der Fehlerverstärkungsfaktor aus Satz 4.2.6 liegt bei ${condTxt} – von den 16 Stellen doppelter Genauigkeit bleiben nur noch ${fmtDe(16 - stellen, 1)}.`}
+            ? `Längste und kürzeste Halbachse liegen schon spürbar auseinander. Nach ${ref("satz:kondition-der-loesung-eines-lgs")} wird ein relativer Datenfehler bis zum ${condTxt}-Fachen verstärkt: rund ${fmtDe(stellen, 1)} Dezimalstellen gehen verloren.`
+            : `Die Ellipse ist nadeldünn, aber nicht entartet: det A = ε bleibt für jedes einstellbare ε ungleich null. Der Fehlerverstärkungsfaktor aus ${ref("satz:kondition-der-loesung-eines-lgs")} liegt bei ${condTxt} – von den 16 Stellen doppelter Genauigkeit bleiben nur noch ${fmtDe(16 - stellen, 1)}.`}
       </Verdikt>
     </div>
   );

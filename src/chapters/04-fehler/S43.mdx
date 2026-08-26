@@ -10,7 +10,7 @@ import { SelbsttestFrage } from "./widgets/S43Local";
   Folien formuliert; alle Rechnungen (κ_rel-Formel, R-Ausgaben) verifiziert.
 */}
 
-Erinnern wir uns an die Fehlerzerlegung aus [Abschnitt 4.1](#sec-4.1): Wenn wir ein
+Erinnern wir uns an die Fehlerzerlegung aus @sec:fehlermasse: Wenn wir ein
 Problem $f$ mit einem Algorithmus $\wt{f}$ auf einem fehlerbehafteten Input
 $\wt{\bx}$ lösen, zerfällt der Gesamtfehler in zwei Teile:
 
@@ -18,7 +18,7 @@ $$
 \text{Gesamtfehler} = \wt{f}(\wt{\bx}) - f(\bx) = \underbrace{\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}}_{\text{Fehler im Algorithmus}} + \underbrace{\corange{f(\wt{\bx}) - f(\bx)}}_{\text{Folgefehler aus Input}}
 $$
 
-Den $\corange{\text{zweiten Summanden}}$ haben wir in [Abschnitt 4.2](#sec-4.2)
+Den $\corange{\text{zweiten Summanden}}$ haben wir in @sec:kondition
 untersucht: Er hängt nur vom Problem ab, nicht vom Algorithmus, und die
 :k[Konditionszahl]{#condition-number} sagt uns, wie stark
 er den unvermeidbaren Inputfehler verstärkt. Jetzt nehmen wir uns den
@@ -30,7 +30,7 @@ abgebrochene Reihen, durch geschätzte Zwischengrößen. Dieser Anteil hängt ni
 Inputfehler ab; er entsteht, selbst wenn der Input exakt ist. Ganz analog zur
 Kondition geben wir ihm einen Namen:
 
-:::definition[4.3.1 (Vorwärts- und Rückwärtsstabilität)]
+:::definition[#vorwaerts-und-rueckwaertsstabilitaet (Vorwärts- und Rückwärtsstabilität)]
 Sei $f$ ein Problem, $\wt f$ ein Gleitkomma-Algorithmus und
 $\wh{\by}=\wt f(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
 Für $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ heißen
@@ -72,7 +72,7 @@ Das nächste Beispiel illustriert die *dynamische* Stabilität einer Iteration. 
 eine nützliche Analogie, aber nicht dasselbe wie die eben definierte numerische
 Vorwärts- oder Rückwärtsstabilität.
 
-:::beispiel[4.3.2 (Stochastic Gradient Descent)]
+:::beispiel[#stochastic-gradient-descent (Stochastic Gradient Descent)]
 Beim Training von Machine-Learning-Modellen minimieren wir eine
 :k[Verlustfunktion]{#objective-function}
 $L(\theta)$ mit dem
@@ -133,7 +133,7 @@ Abschnitts. Wir betrachten dazu ein Problem, das als
 :k[Verkettung]{#function-composition} zweier Teilprobleme
 geschrieben ist.
 
-:::satz[4.3.3 (Fehlerfortpflanzung in einer Komposition)]
+:::satz[#fehlerfortpflanzung-in-einer-komposition (Fehlerfortpflanzung in einer Komposition)]
 Sei $f=h\circ g$, $\by=g(\bx)\ne\bnull$ und
 $\wt{\by}=\wt g(\bx)$. Wir setzen $h(\by)\ne\bnull$ voraus und definieren
 
@@ -190,7 +190,7 @@ $$
 
 ::::
 
-:::bemerkung[4.3.4 (Was folgt daraus – und was nicht?)]
+:::bemerkung[#was-folgt-daraus-und-was-nicht (Was folgt daraus – und was nicht?)]
 Ein schlecht konditionierter später Teilschritt kann Fehler aus früheren Schritten
 stark verstärken. Daraus folgt aber keine allgemeine Regel, schlecht konditionierte
 Operationen einfach „nach vorn" zu verschieben: Eine Umordnung verändert
@@ -202,12 +202,12 @@ Zwischengrößen zu vermeiden und eine rückwärtsstabile Implementierung zu ver
 ### Anwendung: Stabilität der Varianzberechnung
 
 Wenden wir den Satz auf ein Beispiel an, das wir aus
-[Abschnitt 2.1](?k=02-algos#sec-2.1)
+@sec:algos/probleme-algorithmen
 schon kennen. Dort haben wir *beobachtet*, dass die Verschiebungsformel für
 die Varianz katastrophal versagen kann. Jetzt können wir *erklären*, warum,
 und zwar quantitativ.
 
-:::beispiel[4.3.5 (Zwei Algorithmen für die Varianz)]
+:::beispiel[#zwei-algorithmen-fuer-die-varianz (Zwei Algorithmen für die Varianz)]
 **Problem:** Berechne die Stichprobenvarianz
 $f(\bx) = \frac{1}{n} \sumin \left(x_i - \bar{x}\right)^2$.
 
@@ -220,7 +220,7 @@ $$
 
 Mathematisch sind beide identisch. Als Rechenvorschriften sind sie es nicht:
 $\wt{f}_2$ ist eine Verkettung $\wt{f}_2 = \wt{h} \circ \wt{g}$
-im Sinne von Satz 4.3.3. Der erste Schritt $g$ berechnet das Paar
+im Sinne von @satz:fehlerfortpflanzung-in-einer-komposition. Der erste Schritt $g$ berechnet das Paar
 
 $$
 g(\bx) = (\cred{a}, \cblue{b}) \quad \text{mit} \quad \cred{a} = \frac{1}{n} \sumin x_i^2 \quad \text{und} \quad \cblue{b} = \bar{x}^2,
@@ -230,10 +230,10 @@ und der *letzte* Schritt bildet die Differenz
 $h(\cred{a}, \cblue{b}) = \cred{a} - \cblue{b}$.
 :::
 
-Nach Satz 4.3.3 müssen wir also die Kondition des letzten Schritts an der
+Nach @satz:fehlerfortpflanzung-in-einer-komposition müssen wir also die Kondition des letzten Schritts an der
 Übergabestelle untersuchen. Rechnen wir sie aus.
 
-:::lemma[4.3.6 (Kondition der Differenz)]
+:::lemma[#kondition-der-differenz (Kondition der Differenz)]
 Für $h(\cred{a}, \cblue{b}) = \cred{a} - \cblue{b}$ gilt bezüglich
 der :k[euklidischen Norm]{#euclidean-norm}
 
@@ -265,7 +265,7 @@ $$
 \frac{\left| h(\wt{a}, \wt{b}) - h(\cred{a}, \cblue{b}) \right|}{\left|\cred{a} - \cblue{b}\right|} \le \underbrace{\sqrt{2}\, \frac{\sqrt{\cred{a}^2 + \cblue{b}^2}}{\left|\cred{a} - \cblue{b}\right|}}_{=\, \corange{\kappa_{rel}}} \cdot \frac{\left\| (\wt{a} - \cred{a},\; \wt{b} - \cblue{b})^\top \right\|_2}{\sqrt{\cred{a}^2 + \cblue{b}^2}}
 $$
 
-::why[Definition der relativen Konditionszahl ([Abschnitt 4.2](#sec-4.2)): beide Seiten durch $|h(\cred{a}, \cblue{b})| = |\cred{a} - \cblue{b}|$ teilen und mit der Inputnorm $\left\| (\cred{a}, \cblue{b})^\top \right\|_2 = \sqrt{\cred{a}^2 + \cblue{b}^2}$ erweitern]
+::why[Definition der relativen Konditionszahl (@sec:kondition): beide Seiten durch $|h(\cred{a}, \cblue{b})| = |\cred{a} - \cblue{b}|$ teilen und mit der Inputnorm $\left\| (\cred{a}, \cblue{b})^\top \right\|_2 = \sqrt{\cred{a}^2 + \cblue{b}^2}$ erweitern]
 :::
 
 ::::
@@ -286,7 +286,7 @@ $$
 
 *quadratisch* in der Verschiebung. Das ist die
 :k[katastrophale Auslöschung]{#cancellation} aus
-[Abschnitt 2.1](?k=02-algos#sec-2.1).
+@sec:algos/probleme-algorithmen.
 Dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
 die Formel kippt. Und die Merkregel 4.3.4 erklärt, warum $\wt{f}_1$
 so viel besser dasteht: Auch $\wt{f}_1$ subtrahiert fast gleich große
@@ -297,7 +297,7 @@ Subtraktion ganz am *Ende*, nach dem Quadrieren, auf Zahlen der
 Größenordnung $c^2$. Der Verstärkungsfaktor ist $\sim c^2$
 statt $\sim c$, und er trifft alle vorher akkumulierten Rundungsfehler.
 
-:::beispiel[4.3.7 (Die Instabilität in R)]
+:::beispiel[#die-instabilitaet-in-r (Die Instabilität in R)]
 Ein Zahlenexperiment dazu: $n = 1000$ standardnormalverteilte
 Werte, um $c = 10^{10}$ verschoben. Die wahre Varianz ist $1$.
 
@@ -338,10 +338,10 @@ gefragt: Ab welcher Verschiebung $c$ frisst die Kondition des letzten Schritts d
 <KappaRechner />
 :::
 
-Der Rechner macht die Faustregel aus Bemerkung 4.2.4 zur Ablesehilfe:
+Der Rechner macht die Faustregel aus @bemerkung:interpretation zur Ablesehilfe:
 $\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
 $c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ genau 16, und
-darüber bleibt nichts mehr übrig. Das deckt sich mit Beispiel 4.3.7: Bei
+darüber bleibt nichts mehr übrig. Das deckt sich mit @beispiel:die-instabilitaet-in-r: Bei
 $c = 10^{10}$ liegt der erwartete relative Fehler bei
 $\corange{\kappa_{rel}} \cdot \eps \approx 4 \cdot 10^4$, und genau in dieser
 Größenordnung landet die Verschiebungsformel auch.
@@ -360,7 +360,7 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
       </>
     }
   >
-    Nein. Satz 4.3.3 liefert eine lokale *obere Schranke*: Die schlechte
+    Nein. @satz:fehlerfortpflanzung-in-einer-komposition liefert eine lokale *obere Schranke*: Die schlechte
     Kondition von $h$ kann ungünstig gerichtete Fehler von $\wt{g}$ stark
     verstärken. Ist $\wt{g}$ (nahezu) exakt oder liegt sein Fehler in einer
     wenig empfindlichen Richtung, kann der resultierende Fehler trotzdem klein

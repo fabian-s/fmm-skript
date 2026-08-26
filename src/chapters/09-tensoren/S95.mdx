@@ -7,14 +7,14 @@ das beides verbindet. Sammeln wir ein, was bleiben soll.
 
 ### Die Kernkonzepte
 
-:::bemerkung[9.5.1 (Sechs Begriffe, die bleiben)]
+:::bemerkung[#sechs-begriffe-die-bleiben (Sechs Begriffe, die bleiben)]
 1. **:k[Tensoren]{#tensor}** verallgemeinern Vektoren und Matrizen auf mehr als
    zwei Indexpositionen. Ein Tensor der Stufe $k$ ist eine durch $k$ Indizes
    indizierte Familie reeller Zahlen, also ein Element von
-   $\R^{n_1 \times \cdots \times n_k}$ (Definition 9.2.3,
-   [Abschnitt 9.2](#sec-9.2)); Stufe $1$ ist ein Vektor, Stufe $2$ eine Matrix.
+   $\R^{n_1 \times \cdots \times n_k}$ (@definition:tensor,
+   @sec:tensoren); Stufe $1$ ist ein Vektor, Stufe $2$ eine Matrix.
    Gebraucht werden höhere Stufen im Deep Learning, in der Bild- und
-   Videobearbeitung und in der modernen Statistik (Beispiele 9.2.7 bis 9.2.9).
+   Videobearbeitung und in der modernen Statistik (Beispiele @num:ein-farbbild-als-tensor-der-stufe-3 bis @num:feature-maps-eine-abbildung-von-tensoren).
 
 2. **Multilinearität** ist etwas anderes als Linearität. Linear heißt
    $f(c\bv + c'\bw) = c\,f(\bv) + c'\,f(\bw)$, multilinear dagegen
@@ -26,40 +26,40 @@ das beides verbindet. Sammeln wir ein, was bleiben soll.
    $$
 
    also Linearität in jedem einzelnen Argument bei festgehaltenen übrigen
-   (Definition 9.1.1, [Abschnitt 9.1](#sec-9.1)). Die
+   (@definition:multilineare-abbildung, @sec:multilinear). Die
    :k[Matrizenmultiplikation]{#matrix-multiplication} ist bilinear, aber nicht
-   linear (Beispiel 9.1.7). Der Grund gilt allgemein: Skalieren wir alle $n$
+   linear (@beispiel:matrizenmultiplikation-als-bilineare). Der Grund gilt allgemein: Skalieren wir alle $n$
    Argumente mit demselben $c$, so tritt $\cred{c^n}$ heraus statt $\cred{c}$
-   (Bemerkung 9.1.2).
+   (@bemerkung:bilinear-und-eine-warnung).
 
 3. **Das :k[äußere Produkt]{#outer-product}**
    $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\,\cgreen{\bw}^\top$ macht aus
-   zwei Vektoren $\neq \bnull$ eine Matrix vom Rang $1$ (Satz 9.3.4,
-   [Abschnitt 9.3](#sec-9.3)). Die
+   zwei Vektoren $\neq \bnull$ eine Matrix vom Rang $1$ (@satz:eigenschaften-des-aeusseren-produkts,
+   @sec:produkte). Die
    :k[Singulärwertzerlegung]{#singular-value-decomposition} zerlegt umgekehrt
    jede Matrix in genau solche Bausteine,
    $\bA = \sum_{i=1}^{r} \corange{\sigma_i}\,\cblue{\bu_i} \otimes \cgreen{\bv_i}$
-   ([Abschnitt 6.4](?k=06-svd#sec-6.4), Bemerkung 9.3.5).
+   (@sec:svd/anwendungen, @bemerkung:die-svd-als-summe-aeusserer-produkte).
 
 4. **Das Tensorprodukt** überträgt diese Vorschrift auf beliebige Stufen: Die
    Stufen addieren sich, die Einträge multiplizieren sich
-   (Definition 9.3.8, Bemerkung 9.3.9).
+   (@definition:tensorprodukt, @bemerkung:stufen-addieren-sich-eintraege).
 
 5. **Das Kroneckerprodukt** ist die flach angeordnete Fassung für zwei Matrizen,
    dieselben Zahlen als Blockmatrix statt als Tensor der Stufe $4$
-   (Definition 9.3.12, Bemerkung 9.3.13). Es trägt die Vektorisierung von
+   (@definition:kroneckerprodukt, @bemerkung:zwei-bedeutungen-zwei-zeichen). Es trägt die Vektorisierung von
    Matrixgleichungen,
    $\vec(\cblue{\bA}\bX\cgreen{\bB}) = (\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX)$
-   (Satz 9.5.3), und in der Statistik die Kronecker-strukturierten
+   (@satz:vektorisierung-eines-matrixprodukts), und in der Statistik die Kronecker-strukturierten
    :k[Kovarianzmatrizen]{#covariance-matrix} multivariater Verteilungen, von
-   Zeitreihen und von raumzeitlichen Daten (Definition 9.3.18).
+   Zeitreihen und von raumzeitlichen Daten (@definition:separierbare-kovarianz).
 
 6. **Tensorprodukte bauen größere Räume aus kleineren.** Der Raum
    $V \otimes W$ ist die :k[lineare Hülle]{#span} aller Produkte
-   $\cblue{\bv} \otimes \cgreen{\bw}$ (Definition 9.4.1,
-   [Abschnitt 9.4](#sec-9.4)), und aus Basen der Faktoren entsteht durch
+   $\cblue{\bv} \otimes \cgreen{\bw}$ (@definition:tensorprodukt-von-vektorraeumen,
+   @sec:tensorprodukt), und aus Basen der Faktoren entsteht durch
    Ausmultiplizieren eine :k[Basis]{#basis} des Produktraums mit
-   $\dim(V \otimes W) = \dim(V)\dim(W)$ (Satz 9.4.9). Mit Funktionenräumen als
+   $\dim(V \otimes W) = \dim(V)\dim(W)$ (@satz:tensorproduktbasis). Mit Funktionenräumen als
    Faktoren liefert das multivariate Basen aus univariaten, die Grundlage der
    Funktionsapproximation und höherdimensionaler Splines.
 :::
@@ -70,11 +70,11 @@ Ein Punkt dieser Liste verdient mehr als einen Halbsatz, weil er Kapitel 9 an
 Kapitel 5 zurückbindet. Eine Gleichung der Bauart
 $\cblue{\bA}\bX\cgreen{\bB} = \bC$ ist linear in der Unbekannten $\bX$, aber
 diese Unbekannte ist eine Matrix. Die Verfahren aus
-[Abschnitt 5.2](?k=05-lgs#sec-5.2) erwarten dagegen ein System $\bA\bx = \bb$
+@sec:lgs/lgs erwarten dagegen ein System $\bA\bx = \bb$
 mit einem Vektor als Unbekannter. Also stapeln wir die Matrix zu einem Vektor
 um.
 
-:::definition[9.5.2 (Vektorisierung)]
+:::definition[#zusammenfassung-vektorisierung (Vektorisierung)]
 Für $\bX \in \R^{p \times q}$ mit den Spalten $\bx_1, \dots, \bx_q \in \R^p$ ist
 die *Vektorisierung* (vectorization)
 
@@ -86,11 +86,11 @@ also der Vektor, der die Spalten von $\bX$ untereinanderhängt. Gestapelt wird
 spaltenweise, so wie R eine Matrix ohnehin abspeichert.
 :::
 
-:::satz[9.5.3 (Vektorisierung eines Matrixprodukts)]
+:::satz[#vektorisierung-eines-matrixprodukts (Vektorisierung eines Matrixprodukts)]
 Seien $\cblue{\bA} \in \R^{m \times p}$, $\bX \in \R^{p \times q}$ und
 $\cgreen{\bB} \in \R^{q \times n}$. Dann gilt
 
-$$ {#eq-9.5.1}
+$$ {#eq-vektorisierung-eines-matrixprodukts}
 \vec\bigl(\cblue{\bA}\,\bX\,\cgreen{\bB}\bigr)
 = \bigl(\cgreen{\bB^\top} \kron \cblue{\bA}\bigr)\,\vec(\bX) .
 $$
@@ -119,8 +119,8 @@ $$
 :::
 
 :::schritt
-Auf der rechten Seite von ($9.5.1$) zerlegen wir
-$\cgreen{\bB^\top} \kron \cblue{\bA}$ nach Definition 9.3.12 in Blöcke der
+Auf der rechten Seite von @eq:vektorisierung-eines-matrixprodukts zerlegen wir
+$\cgreen{\bB^\top} \kron \cblue{\bA}$ nach @definition:kroneckerprodukt in Blöcke der
 Größe $m \times p$. Der Block an der Stelle $(j,k)$ ist
 $\bigl(\cgreen{\bB^\top}\bigr)_{jk}\,\cblue{\bA} = \cgreen{b_{kj}}\,\cblue{\bA}$,
 und der $k$-te Block von $\vec(\bX)$ ist $\bx_k$. Der $j$-te Block des Produkts
@@ -141,7 +141,7 @@ Welche der beiden Rechnungen liefert denselben Vektor, wenn wir die Einträge vo
 
 Die Vektorisierung bewahrt die lineare Wirkung von links und rechts und macht damit Standardverfahren für lineare Gleichungssysteme anwendbar.
 
-:::beispiel[9.5.4 (Die Identität an 2×2-Matrizen)]
+:::beispiel[#die-identitaet-an-2-2-matrizen (Die Identität an 2×2-Matrizen)]
 Für
 
 $$
@@ -162,7 +162,7 @@ $$
 \vec\bigl(\cblue{\bA}\bX\cgreen{\bB}\bigr) = \begin{pmatrix} \corange{5} \\ \corange{2} \\ \corange{17} \\ \corange{8} \end{pmatrix} .
 $$
 
-Und nun über ($9.5.1$). Mit
+Und nun über @eq:vektorisierung-eines-matrixprodukts. Mit
 $\cgreen{\bB^\top} = \bigl(\begin{smallmatrix} \cgreen{1} & \cgreen{0} \\ \cgreen{1} & \cgreen{2} \end{smallmatrix}\bigr)$
 ist
 
@@ -191,7 +191,7 @@ haben deshalb stets dasselbe Format, hier $4 \times 4$, und beide lassen sich
 mit $\vec(\bX)$ multiplizieren.
 :::
 
-Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit ($9.5.1$) ein gewöhnliches
+Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit @eq:vektorisierung-eines-matrixprodukts ein gewöhnliches
 :k[lineares Gleichungssystem]{#linear-system}
 $(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$
 Gleichungen und $pq$ Unbekannten. Der Gewinn ist begrifflich, der Preis ist
@@ -202,32 +202,32 @@ $\bX = \cblue{\bA^{-1}}\bC\,\cgreen{\bB^{-1}}$ die Lösung allein aus den beiden
 kleinen Faktoren. Das ist eine symbolische Identität; numerisch bilden wir die
 Inversen nicht explizit, sondern lösen nacheinander lineare Systeme mit
 $\cblue{\bA}$ und $\cgreen{\bB^\top}$. Nach demselben Muster arbeiten die separierbaren
-Kovarianzmatrizen aus [Abschnitt 9.3](#sec-9.3): Dort lesen wir die Eigenwerte
+Kovarianzmatrizen aus @sec:produkte: Dort lesen wir die Eigenwerte
 von $\bSigma$ als Produkte der Eigenwerte beider Faktoren ab, ohne $\bSigma$ je
-aufzustellen (Bemerkung 9.3.20).
+aufzustellen (@bemerkung:was-die-annahme-spart-und-was-sie-kostet).
 
 ### Das Wichtigste in Kürze
 
 | Abschnitt | Thema | Was bleibt |
 | --- | --- | --- |
-| [9.1](#sec-9.1) | Multilineare Abbildungen | Linearität in jedem Argument einzeln; jede solche Abbildung ist durch eine Koeffizientenfamilie festgelegt (Satz 9.1.8) |
-| [9.2](#sec-9.2) | Tensoren | genau diese Koeffizientenfamilien; sie bilden für festes Format einen Vektorraum der Dimension $n_1 \cdots n_k$ (Satz 9.2.5) |
-| [9.3](#sec-9.3) | Produkte von Tensoren | äußeres Produkt und Tensorprodukt als $\otimes$, Kroneckerprodukt als $\kron$ (in der Literatur alle drei als $\otimes$); separierbare Kovarianz als Anwendung |
-| [9.4](#sec-9.4) | Tensorprodukt von Vektorräumen | $V \otimes W$ als Spann elementarer Tensoren, Tensorproduktbasis, $\dim(V \otimes W) = \dim(V)\dim(W)$ |
+| @num:tensoren/multilinear | Multilineare Abbildungen | Linearität in jedem Argument einzeln; jede solche Abbildung ist durch eine Koeffizientenfamilie festgelegt (@satz:darstellung-multilinearer-abbildungen) |
+| @num:tensoren/tensoren | Tensoren | genau diese Koeffizientenfamilien; sie bilden für festes Format einen Vektorraum der Dimension $n_1 \cdots n_k$ (@satz:der-raum-aller-tensoren-eines-formats) |
+| @num:tensoren/produkte | Produkte von Tensoren | äußeres Produkt und Tensorprodukt als $\otimes$, Kroneckerprodukt als $\kron$ (in der Literatur alle drei als $\otimes$); separierbare Kovarianz als Anwendung |
+| @num:tensoren/tensorprodukt | Tensorprodukt von Vektorräumen | $V \otimes W$ als Spann elementarer Tensoren, Tensorproduktbasis, $\dim(V \otimes W) = \dim(V)\dim(W)$ |
 
 Offen geblieben ist der Bogen zur Approximation. Eine gute Basis für univariate
 Funktionen, etwa Legendre-Polynome, eine Fourierbasis oder Wavelets, liefert
 über das Tensorprodukt sofort eine Basis für multivariate Funktionen. Wie wir
 damit tatsächlich approximieren und wie wir dem exponentiellen Wachstum
-$(d+1)^k$ aus Bemerkung 9.4.14 entkommen, ist das Thema von
-[Kapitel 13](?k=13-funktionsapproximation#sec-13.1).
+$(d+1)^k$ aus @bemerkung:allgemeine-dimension-und-was-sie-kostet entkommen, ist das Thema von
+@kap:funktionsapproximation.
 
-Das nächste Kapitel, [Kapitel 10](?k=10-differentialrechnung#sec-10.1), wendet
+Das nächste Kapitel, @kap:differentialrechnung, wendet
 sich der fortgeschrittenen Differentialrechnung zu. Tensoren begegnen uns dort
 gleich wieder: Leiten wir
 einen matrixwertigen Ausdruck nach einer Matrix ab
-([Abschnitt 10.4](?k=10-differentialrechnung#sec-10.4)), so ist das Ergebnis von Haus
-aus ein mehrdimensionales Zahlenfeld, und die Vektorisierung aus Satz 9.5.3 ist
+(@sec:differentialrechnung/matrixableitungen), so ist das Ergebnis von Haus
+aus ein mehrdimensionales Zahlenfeld, und die Vektorisierung aus @satz:vektorisierung-eines-matrixprodukts ist
 eines der Werkzeuge, mit denen sich das ordnen lässt.
 
 ### Selbsttest
@@ -240,7 +240,7 @@ Vier Aussagen quer durch das Kapitel. Welche davon stimmen?
 Die Schätzung aus dem Kronecker-Widget zeigt: Vertauschen der Faktoren kann die
 Blockstruktur ändern, obwohl das Ergebnisformat gleich bleibt.
 
-Das ist die Nicht-Kommutativität aus Bemerkung 9.3.15.
+Das ist die Nicht-Kommutativität aus @bemerkung:transponieren-und-reihenfolge.
 :::
 
 :::frage{falsch}
@@ -248,10 +248,10 @@ Mit spaltenweiser Vektorisierung gilt
 $\vec(\bA\bX\bB) = (\bA \kron \bB^\top)\vec(\bX)$.
 
 Die Faktoren stehen vertauscht. Richtig ist
-$\vec(\bA\bX\bB) = (\bB^\top \kron \bA)\vec(\bX)$ nach ($9.5.1$): Der
+$\vec(\bA\bX\bB) = (\bB^\top \kron \bA)\vec(\bX)$ nach @eq:vektorisierung-eines-matrixprodukts: Der
 transponierte *rechte* Faktor steht im Kroneckerprodukt *links*. Die
 Formatprobe merkt den Tausch nie, denn beide Anordnungen führen auf dasselbe
-Format. In Beispiel 9.5.4 ist das $4 \times 4$, und die vertauschte Fassung
+Format. In @beispiel:die-identitaet-an-2-2-matrizen ist das $4 \times 4$, und die vertauschte Fassung
 liefert dort
 $(1, 17, 0, 6)^\top$ statt des korrekten
 $\vec(\bA\bX\bB) = (5, 2, 17, 8)^\top$.
@@ -261,9 +261,9 @@ $\vec(\bA\bX\bB) = (5, 2, 17, 8)^\top$.
 Für $\bv \in \R^m$ und $\bw \in \R^n$ hat das äußere Produkt
 $\bv \otimes \bw$ stets den Rang $1$.
 
-Satz 9.3.4 setzt $\bv \neq \bnull$ und $\bw \neq \bnull$ voraus, und diese
+@satz:eigenschaften-des-aeusseren-produkts setzt $\bv \neq \bnull$ und $\bw \neq \bnull$ voraus, und diese
 Voraussetzung ist nötig: Ist einer der beiden Vektoren der Nullvektor, so sind
-nach ($9.3.1$) alle Einträge $v_i w_j$ gleich null, das Produkt ist die
+nach @eq:aeusseres-produkt alle Einträge $v_i w_j$ gleich null, das Produkt ist die
 Nullmatrix und hat den Rang $0$. Andernfalls stimmt die Aussage, denn dann
 spannt $\bv$ allein den Spaltenraum auf.
 :::
@@ -274,7 +274,7 @@ Tensorprodukt und das Kroneckerprodukt dieselben $mnpq$ Zahlen, nur anders
 angeordnet.
 
 Beide Male entsteht jede Zahl als ein Produkt $a_{i_1 i_2} b_{j_1 j_2}$
-(Bemerkung 9.3.13). Das Tensorprodukt legt sie in einen Tensor der Stufe $4$ mit
+(@bemerkung:zwei-bedeutungen-zwei-zeichen). Das Tensorprodukt legt sie in einen Tensor der Stufe $4$ mit
 Format $m \times n \times p \times q$, das Kroneckerprodukt flacht dieselben
 Werte zu einer Matrix aus $\R^{mp \times nq}$ ab. Welche Lesart gemeint ist,
 verrät in der Praxis das Format des Ergebnisses.
@@ -284,8 +284,8 @@ verrät in der Praxis das Format des Ergebnisses.
 Kombinieren wir $k$ univariate Basen mit je $d+1$ Funktionen zu einer
 Tensorproduktbasis, so hat diese $(d+1)^k$ Elemente.
 
-Satz 9.4.9 multipliziert die Dimensionen, und bei $k$ Faktoren entsteht so das
-$k$-fache Produkt (Bemerkung 9.4.14). Für $d = 3$ und $k = 10$ sind das
+@satz:tensorproduktbasis multipliziert die Dimensionen, und bei $k$ Faktoren entsteht so das
+$k$-fache Produkt (@bemerkung:allgemeine-dimension-und-was-sie-kostet). Für $d = 3$ und $k = 10$ sind das
 $4^{10} = 1\,048\,576$ Basisfunktionen, während der Raum der Polynome mit
 Gesamtgrad höchstens $3$ in $10$ Variablen nur
 $\binom{13}{10} = 286$ Dimensionen hat. Bequem gebaut, aber teuer bezahlt.

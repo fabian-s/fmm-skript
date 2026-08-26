@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.9: Wie die Zahl der Koeffizienten mit der Dimension waechst.
@@ -229,7 +230,7 @@ export function SkalierungTensorGam() {
         </div>
       </div>
 
-      <Verdikt kind={p >= 6 ? "warn" : "neutral"}>{status} Das ordnet die Skalierung aus Satz 13.9.5 ein.</Verdikt>
+      <Verdikt kind={p >= 6 ? "warn" : "neutral"}>{status} Das ordnet die Skalierung aus {ref("satz:eine-mse-obergrenze-im-multivariaten")} ein.</Verdikt>
     </div>
   );
 }

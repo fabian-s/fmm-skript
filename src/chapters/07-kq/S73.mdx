@@ -2,14 +2,14 @@ import { S73KreuzproduktWidget } from "./widgets/S73KreuzproduktWidget";
 import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
 
 {/*
-  Abschnitt 7.3: Normalengleichungen und Cholesky-Zerlegung.
+  @sec:normalengleichungen: Normalengleichungen und Cholesky-Zerlegung.
   Quelle: Folien 07-kq.Rmd, Block „Lösungsverfahren" (Frage-Folien,
   Cholesky-Zerlegung, Alternative Lösungswege). Prosa eigenständig aus den
   Folien formuliert; Widget-Code aus der internen heath-ch3-App recycelt.
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Aus [Abschnitt 7.1](#sec-7.1) wissen wir, dass das
+Aus @sec:problem wissen wir, dass das
 :k[Kleinste-Quadrate-Problem]{#linear-least-squares} für
 $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$ die eindeutige
 Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt. Das ist eine
@@ -19,18 +19,18 @@ einfachste Lösungsverfahren: Wir leiten die Normalengleichungen her, lösen sie
 warum dieser bequeme Weg numerisch seinen Preis hat. Das motiviert am Ende des Abschnitts
 die orthogonalen Transformationen, die uns im Rest des Kapitels beschäftigen werden.
 
-### 7.3.1 Die Normalengleichungen
+### Die Normalengleichungen :id[die-normalengleichungen]
 
 Beginnen wir mit der Herleitung. Die
 :k[Normalengleichungen]{#normal-equations} haben wir in
-[Abschnitt 7.1](#sec-7.1) bereits benutzt; jetzt zeigen
+@sec:problem bereits benutzt; jetzt zeigen
 wir, warum sie das KQ-Problem charakterisieren. Die Idee ist rein analytisch: Die
 Zielfunktion ist eine nach oben geöffnete
 :k[quadratische Form]{#quadratic-form} in $\bx$, also
 finden wir ihr Minimum, indem wir den
 :k[Gradienten]{#gradient} null setzen.
 
-:::satz[7.3.1 (Normalengleichungen)]
+:::satz[#normalengleichungen-normalengleichungen (Normalengleichungen)]
 Sei $\bA \in \R^{m \times n}$ und $\bb \in \R^m$. Ein Vektor
 $\wh{\bx} \in \R^n$ minimiert
 $g(\bx) = \left\| \bA\bx - \bb \right\|_2^2$ genau dann, wenn er die
@@ -78,19 +78,19 @@ Minimum von $g$.
 
 ::::
 
-:::bemerkung[7.3.2 (Geometrische Deutung)]
+:::bemerkung[#geometrische-deutung (Geometrische Deutung)]
 Schreiben wir die Normalengleichungen als
 $\bA^\top(\bb - \bA\wh{\bx}) = \bA^\top\wh{\br} = \bnull$, so sagen
 sie: Das Residuum $\wh{\br} = \bb - \bA\wh{\bx}$ steht
 :k[senkrecht]{#orthogonality} auf allen Spalten von
 $\bA$. Das ist genau die
 :k[Projektions]{#projection}-Sicht aus
-[Abschnitt 7.1](#sec-7.1): $\bA\wh{\bx}$
+@sec:problem: $\bA\wh{\bx}$
 ist der Punkt in $\col(\bA)$, der $\bb$ am nächsten liegt; daher
 der Name *Normal*gleichungen.
 :::
 
-### 7.3.2 Warum wir niemals invertieren
+### Warum wir niemals invertieren :id[warum-wir-niemals-invertieren]
 
 Wie berechnen wir $\wh{\bx}$ nun konkret? Betrachten wir dazu eine kleine
 Programmieraufgabe. Gegeben ist eine R-Funktion, die die Lösungsformel
@@ -107,7 +107,7 @@ kq_solve <- function(A, b) {
 *Aufgabe: Finde den Fehler in der Funktion.* Der Fehler ist kein Tippfehler,
 sondern der Ansatz selbst:
 
-:::bemerkung[7.3.3 (Merkregel)]
+:::bemerkung[#merkregel (Merkregel)]
 <p className="font-semibold text-rose-600 dark:text-rose-400">Für ein LGS keine explizite Inverse bilden!</p>
 
 Die Formel $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ ist ein
@@ -133,12 +133,12 @@ voll besetzt. Genau wie beim
 :k[LR-Zerlegung]{#lu-decomposition} gilt also: Zerlegen und
 substituieren statt invertieren.
 
-### 7.3.3 Das Cholesky-Verfahren
+### Das Cholesky-Verfahren :id[das-cholesky-verfahren]
 
 Welche Zerlegung passt zu $\bA^\top\bA$? Die Matrix hat eine besondere
 Struktur, die wir ausnutzen können:
 
-:::lemma[7.3.4]
+:::lemma[#lemma-7-3-4]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$. Dann ist
 $\bA^\top\bA \in \R^{n \times n}$
 :k[symmetrisch]{#symmetric-matrix} und
@@ -180,7 +180,7 @@ $\bM = \bL\bL^\top$ mit einer unteren
 :k[Dreiecksmatrix]{#triangular-matrix} $\bL$
 existiert. Damit zerfällt das KQ-Problem in eine Kette einfacher Teilschritte:
 
-:::algorithmus[7.3.5 (Cholesky-Verfahren für das KQ-Problem)]
+:::algorithmus[#cholesky-verfahren-fuer-das-kq-problem (Cholesky-Verfahren für das KQ-Problem)]
 1. Berechne $\cbred{\bM} = \bA^\top\bA$ und
    $\cbgreen{\bc} = \bA^\top\bb$.
 2. Berechne die Cholesky-Zerlegung $\cbred{\bM} = \cborange{\bL}\cborange{\bL}^\top$.
@@ -195,9 +195,9 @@ $n \times n$-Gleichungssystem. Die Schritte 2–4 lösen dieses System dann so,
 wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren, denn
 Dreieckssysteme können wir direkt auflösen. Rechnen wir das einmal vollständig durch.
 
-:::beispiel[7.3.6]
-Wie im Wohnungspreis-Beispiel 7.1.8 aus
-[Abschnitt 7.1](#sec-7.1) fitten wir eine
+:::beispiel[#beispiel-7-3-6]
+Wie im Wohnungspreis-@beispiel:rechenbeispiel-regressionsgerade-durch aus
+@sec:problem fitten wir eine
 :k[Regressionsgerade]{#linear-regression}
 $y = \beta_0 + \beta_1 x$, diesmal mit bewusst kleinen Zahlen, durch die
 drei Punkte $(1, 2),\ (2, 3),\ (3, 5)$:
@@ -258,13 +258,13 @@ $$
 \cbred{\bM}\,\cblue{\wh{\bx}} = \begin{pmatrix} 3 \cdot \tfrac{1}{3} + 6 \cdot \tfrac{3}{2} \\ 6 \cdot \tfrac{1}{3} + 14 \cdot \tfrac{3}{2} \end{pmatrix} = \begin{pmatrix} 10 \\ 23 \end{pmatrix} = \cbgreen{\bc}. \quad \checkmark
 $$
 
-Auch die geometrische Deutung aus Bemerkung 7.3.2 können wir nachprüfen: Das Residuum
+Auch die geometrische Deutung aus @bemerkung:geometrische-deutung können wir nachprüfen: Das Residuum
 $\wh{\br} = \bb - \bA\cblue{\wh{\bx}} = \left(\tfrac{1}{6}, -\tfrac{1}{3}, \tfrac{1}{6}\right)^\top$
 erfüllt $\bA^\top\wh{\br} = \bnull$: Es steht senkrecht auf beiden
 Spalten von $\bA$.
 :::
 
-### 7.3.4 Effizient, aber möglicherweise instabil
+### Effizient, aber möglicherweise instabil :id[effizient-aber-moeglicherweise-instabil]
 
 Das Cholesky-Verfahren ist effizient: Ab Schritt 2 rechnen wir nur noch mit der kleinen
 $n \times n$-Matrix $\bA^\top\bA$ statt mit der
@@ -273,14 +273,14 @@ Symmetrie aus und kostet nur etwa halb so viel wie eine LR-Zerlegung. Für gut
 konditionierte Probleme ist das Verfahren in der Praxis brauchbar. Es hat aber einen
 eingebauten Schwachpunkt, und der liegt ausgerechnet im allerersten Schritt.
 
-:::bemerkung[7.3.7 (Stabilität des Cholesky-Verfahrens)]
+:::bemerkung[#stabilitaet-des-cholesky-verfahrens (Stabilität des Cholesky-Verfahrens)]
 - Fehler, die beim Aufstellen von $\bA^\top\bA$ passieren, beeinflussen
   alle folgenden Schritte; kein späterer Schritt kann sie reparieren.
 - Man kann zeigen: Der relative algorithmische Fehler ist bestenfalls
   $O\!\left(\kappa_2(\bA)^2\right)$.
 - Zum Vergleich: Die Best-Case-:k[Kondition]{#condition-number}
   des KQ-Problems selbst ist $O\!\left(\kappa_2(\bA)\right)$
-  ([Abschnitt 7.2](#sec-7.2)).
+  (@sec:kondition).
 :::
 
 Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit $\bA^\top\bA$, und
@@ -314,7 +314,7 @@ dritten Zeile, und ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem P
 Das ist mehr, als die Konditionszahl allein hergibt: Nicht nur die Fehlerverstärkung wird
 quadriert, es geht auch Information verloren, bevor überhaupt gerechnet wird.
 
-### 7.3.5 Alternative Lösungswege: orthogonale Transformationen
+### Alternative Lösungswege: orthogonale Transformationen :id[alternative-loesungswege-orthogonale]
 
 Wir würden $\bA^\top\bA$ also gerne ganz vermeiden und direkt auf
 $\bA$ operieren. Erinnern wir uns an die Ausgangsform des Problems:
@@ -330,7 +330,7 @@ $\bx$ denselben Wert behält, das Transformieren also alle Normen unangetastet
 lässt. Genau das leisten
 :k[Orthogonalmatrizen]{#orthogonal-matrix}
 ($\bQ^\top\bQ = \bI$, ausführlich in
-[Abschnitt 7.4](#sec-7.4)), denn für diese gilt
+@sec:qr), denn für diese gilt
 
 $$
 \left\| \bQ\bA\bx - \bQ\bb \right\|_2 = \left\| \bQ(\bA\bx - \bb) \right\|_2 = \left\| \bA\bx - \bb \right\|_2.
@@ -372,7 +372,7 @@ $\operatorname{fl}(1 + \eps^2)$ als glatte 1?
 Sobald $\eps^2$ unter $\eps_{\text{mach}} = 2^{-52}$ rutscht, verschwindet es in der
 Addition. Das passiert ab $\eps \le 2^{-26{,}5} \approx 1{,}05\cdot 10^{-8}$, also ab
 $k \approx 8$. Ab dort sind die beiden Spalten der gespeicherten Matrix identisch, ihr Rang
-ist 1, und die Cholesky-Zerlegung aus Algorithmus 7.3.5 bricht ab.
+ist 1, und die Cholesky-Zerlegung aus @algorithmus:cholesky-verfahren-fuer-das-kq-problem bricht ab.
 :::
 
 :::frage{falsch}
@@ -382,7 +382,7 @@ konditionierter Rechenschritt ist.
 Die Cholesky-Zerlegung ist für SPD-Matrizen sogar ausgesprochen gutartig. Der Schaden
 entsteht bereits in Schritt 1: Mit $\bA^\top\bA$ arbeiten wir ab dann mit einer Matrix der
 Konditionszahl $\kappa_2(\bA)^2$, und kein späterer Schritt kann das reparieren
-(Bemerkung 7.3.7).
+(@bemerkung:stabilitaet-des-cholesky-verfahrens).
 :::
 
 :::frage{wahr}
@@ -400,7 +400,7 @@ großem $m$ auch numerisch der beste.
 
 Klein ist er, schnell auch – aber die Verkleinerung ist genau der Schritt, der die
 Konditionszahl quadriert. Effizienz und Stabilität zeigen hier in verschiedene Richtungen;
-den Vergleich rechnen wir in [Abschnitt 7.6](#sec-7.6) aus.
+den Vergleich rechnen wir in @sec:pseudoinverse aus.
 :::
 
 ::::

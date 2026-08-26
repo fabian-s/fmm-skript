@@ -14,6 +14,7 @@ import {
   fmtDe,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §3.5.1: Wie scharf sind die Äquivalenzkonstanten aus Beispiel 3.5.2?
@@ -271,7 +272,7 @@ export function S35AequivalenzWidget() {
           <>
             Hier ist <M>{"\\sigma_2 = 0"}</M>, die Matrix hat Rang 1, und die beiden Normen fallen
             zusammen: <M>{`\\left\\|\\bA\\right\\|_F = \\left\\|\\bA\\right\\|_2 = ${fmtDe(spektral, 3).replace(",", "{,}")}`}</M>
-            . Die linke Ungleichung aus Beispiel 3.5.2 gilt also mit Gleichheit und lässt sich
+            . Die linke Ungleichung aus {ref("beispiel:explizite-aequivalenzkonstanten")} gilt also mit Gleichheit und lässt sich
             nicht verschärfen.
           </>
         ) : aufDiagonale ? (
@@ -279,18 +280,18 @@ export function S35AequivalenzWidget() {
             Beide Singulärwerte sind gleich, <M>{"\\bA"}</M> ist ein Vielfaches der Einheitsmatrix.
             Jetzt steht rechts Gleichheit:{" "}
             <M>{`\\left\\|\\bA\\right\\|_F = ${fmtDe(frob, 3).replace(",", "{,}")} = \\sqrt{2}\\,\\left\\|\\bA\\right\\|_2`}</M>
-            . Die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus Beispiel 3.5.2 ist damit die
+            . Die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus {ref("beispiel:explizite-aequivalenzkonstanten")} ist damit die
             kleinstmögliche.
           </>
         ) : (
           <>
             Der Quotient liegt bei {fmtDe(quotient, 3)}, also echt zwischen den beiden Schranken 1
-            und <M>{"\\sqrt{2} \\approx 1{,}414"}</M> (Beispiel 3.5.2). Je weiter der zweite
+            und <M>{"\\sqrt{2} \\approx 1{,}414"}</M> ({ref("beispiel:explizite-aequivalenzkonstanten")}). Je weiter der zweite
             Singulärwert zurückfällt, desto näher rücken Frobenius- und Spektralnorm zusammen.
             {ordnungKippt && (
               <>
                 {" "}
-                Nebenbei: Für die Vergleichsmatrix <M>{"\\bB"}</M> aus Bemerkung 3.5.3 ist{" "}
+                Nebenbei: Für die Vergleichsmatrix <M>{"\\bB"}</M> aus {ref("bemerkung:aequivalenz-ist-nicht-gleichheit")} ist{" "}
                 <M>{"\\left\\|\\bB\\right\\|_2 = \\left\\|\\bB\\right\\|_F = 1{,}2"}</M>. Beim
                 aktuellen <M>{"\\bA"}</M> ordnen die beiden Normen die zwei Matrizen also
                 verschieden: In der Spektralnorm ist <M>{"\\bB"}</M> die größere, in der

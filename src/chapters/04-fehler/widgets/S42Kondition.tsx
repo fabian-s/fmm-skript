@@ -14,6 +14,7 @@ import {
   fmtDe,
   useDrag,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Widgets für §4.2 „Kondition".
@@ -125,7 +126,7 @@ export function KehrwertWidget() {
   const verdikt = !valid ? (
     <Verdikt kind="fail" titel="Über die Polstelle geschoben.">
       Für <M>{"\\wt{x} = x + \\eps \\le 0"}</M> hat das Ergebnis nicht einmal mehr das richtige
-      Vorzeichen. Genau dieses Regime beschreibt Beispiel 4.2.1: Läuft{" "}
+      Vorzeichen. Genau dieses Regime beschreibt {ref("beispiel:kehrwert-nahe-null")}: Läuft{" "}
       <M>{"\\wt{x}"}</M> gegen null, durchläuft der relative Outputfehler das ganze Intervall{" "}
       <M>{"[0, \\infty)"}</M>.
     </Verdikt>
@@ -144,7 +145,7 @@ export function KehrwertWidget() {
   ) : Math.abs(amp - 1) < 0.2 ? (
     <Verdikt kind="ok" titel="Verstärkung nahe 1.">
       Der relative Outputfehler ({fmtPct(relOut)}) liegt nahe beim relativen Inputfehler
-      ({fmtPct(relIn)}); die Verstärkung liegt bei {fmtDe(amp, 2)}. Das passt zu Beispiel 4.2.5: Für
+      ({fmtPct(relIn)}); die Verstärkung liegt bei {fmtDe(amp, 2)}. Das passt zu {ref("beispiel:der-kehrwert-aufgeloest")}: Für
       kleine <M>{"\\eps/x"}</M> ist der Kehrwert relativ gemessen harmlos,{" "}
       <M>{"\\kappa_{rel} = 1"}</M>, und das gilt an <em>jeder</em> Stelle{" "}
       <M>{"x > 0"}</M>, auch bei <M>{"x = 10^{-17}"}</M>.
@@ -152,9 +153,9 @@ export function KehrwertWidget() {
   ) : (
     <Verdikt kind="warn" titel="Der Faktor x/|x + ε| schlägt zu.">
       Aus {fmtPct(relIn)} Inputfehler werden {fmtPct(relOut)} Outputfehler, Verstärkung{" "}
-      {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Der Faktor ist <M>{"|x| / |x + \\eps|"}</M> aus Beispiel 4.2.1, und er wächst
+      {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Der Faktor ist <M>{"|x| / |x + \\eps|"}</M> aus {ref("beispiel:kehrwert-nahe-null")}, und er wächst
       über alle Grenzen, sobald <M>{"\\wt{x}"}</M> die Polstelle erreicht. Die Konditionszahl{" "}
-      <M>{"\\kappa_{rel} = 1"}</M> aus Bemerkung 4.2.3 widerspricht dem nicht: Sie beschreibt
+      <M>{"\\kappa_{rel} = 1"}</M> aus {ref("bemerkung:wie-lesen-wir-das")} widerspricht dem nicht: Sie beschreibt
       nur den Grenzfall <M>{"\\eps \\to 0"}</M>, und hier ist <M>{"\\eps"}</M> relativ zu{" "}
       <M>{"x"}</M> eben nicht klein.
     </Verdikt>
@@ -371,18 +372,18 @@ export function SummenKonditionWidget() {
     <Verdikt kind="fail" titel="Schlecht gestellt.">
       Auf der Antidiagonalen ist <M>{"x_1 + x_2 = 0"}</M>, der relative Outputfehler also nicht
       einmal definiert: <M>{"\\kappa_{rel} = \\infty"}</M>. Das ist der dritte Fall aus
-      Bemerkung 4.2.4, und die Lösung von Beispiel 4.2.8 sagt genau, wo er auftritt.
+      {ref("bemerkung:interpretation")}, und die Lösung von {ref("beispiel:aufgabe-kondition-der-summe")} sagt genau, wo er auftritt.
     </Verdikt>
   ) : kappa < 3 ? (
     <Verdikt kind="ok" titel="Gut konditioniert.">
       <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: relative Inputfehler werden höchstens um diesen
       Faktor verstärkt. Auf der grünen Diagonalen <M>{"x_2 = x_1"}</M> wird der Bestwert{" "}
-      <M>{"\\kappa_{rel} = 1"}</M> angenommen (Beispiel 4.2.8). Besser geht es nicht, denn{" "}
+      <M>{"\\kappa_{rel} = 1"}</M> angenommen ({ref("beispiel:aufgabe-kondition-der-summe")}). Besser geht es nicht, denn{" "}
       <M>{"\\kappa_{abs} = \\sqrt{2}"}</M> und <M>{"\\left\\| \\bx \\right\\|_2 / |x_1 + x_2| = 1/\\sqrt{2}"}</M>.
     </Verdikt>
   ) : kappa < 50 ? (
     <Verdikt kind="warn" titel="Mäßig konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}. Nach der Faustregel aus Bemerkung 4.2.4 verlieren
+      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}. Nach der Faustregel aus {ref("bemerkung:interpretation")} verlieren
       wir bis zu {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle" : "Dezimalstellen"} gegenüber der
       Genauigkeit des Inputs. Die Karte ist entlang jedes Strahls durch den Ursprung einfarbig: Nur die{" "}
@@ -392,7 +393,7 @@ export function SummenKonditionWidget() {
     <Verdikt kind="fail" titel="Schlecht konditioniert.">
       <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: rund {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle geht" : "Dezimalstellen gehen"} verloren. Nahe der Antidiagonalen löschen sich <M>{"x_1"}</M> und{" "}
-      <M>{"x_2"}</M> fast aus. Das ist dieselbe Auslöschung wie in Abschnitt 2.1, hier aber als
+      <M>{"x_2"}</M> fast aus. Das ist dieselbe Auslöschung wie in {ref("sec:algos/probleme-algorithmen")}, hier aber als
       Aussage über das <em>Problem</em> „addiere zwei Zahlen", nicht über einen Algorithmus.
     </Verdikt>
   );

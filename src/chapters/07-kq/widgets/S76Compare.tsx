@@ -37,6 +37,7 @@
  */
 import { useState, type ReactNode } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Schaetzfrage, Slider, Verdikt, fmtDe } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 const COL = {
   ne: FMM_COLORS.orange,
@@ -148,7 +149,7 @@ export function CostWidget() {
           <M>{"\\kappa_2(\\bA)"}</M> statt mit <M>{"\\kappa_2(\\bA)^2"}</M> arbeitet. Die SVD
           liegt mit Faktor <span className="font-mono">{fmtDe(svd / qr, 1)}</span> auf QR in einer
           anderen Größenordnung, aber immer noch in derselben{" "}
-          <M>{"O(mn^2 + n^3)"}</M>-Klasse (Bemerkung 7.6.3).
+          <M>{"O(mn^2 + n^3)"}</M>-Klasse ({ref("bemerkung:anmerkungen-zur-methodenwahl")}).
         </Verdikt>
       )}
     </div>
@@ -245,14 +246,14 @@ function AccuracyTafel({ lc, setLc }: { lc: number; setLc: (v: number) => void }
           Term auch bei QR: <em>beide</em> Methoden verlieren rund{" "}
           <M>{"2\\log_{10}\\kappa_2(\\bA)"}</M> Stellen (hier{" "}
           <span className="font-mono">{fmtDe(2 * lc, 0)}</span> von 16). Das ist die Kondition des
-          Problems nach Satz 7.2.4, kein Defekt des Algorithmus – hier hilft kein Verfahren mehr,
+          Problems nach {ref("satz:stoerung-der-designmatrix-erste-ordnung")}, kein Defekt des Algorithmus – hier hilft kein Verfahren mehr,
           nur ein besser konditioniertes Modell.
         </Verdikt>
       ) : neBroken ? (
         <Verdikt kind="fail" className="mt-2" titel="Die Normalengleichungen sind raus:">
           Ab <M>{"\\kappa_2(\\bA) \\gtrsim 1/\\sqrt{\\eps} \\approx 10^{8}"}</M> frisst der
           <M>{"\\;\\kappa^2"}</M>-Fehler alle 16 Stellen, und die Cholesky-Zerlegung von{" "}
-          <M>{"\\bA^\\top\\bA"}</M> bricht voraussichtlich ab (Bemerkung 7.3.7). QR hält hier noch{" "}
+          <M>{"\\bA^\\top\\bA"}</M> bricht voraussichtlich ab ({ref("bemerkung:stabilitaet-des-cholesky-verfahrens")}). QR hält hier noch{" "}
           <span className="font-mono">{fmtDe(digits(errQR), 1)}</span> Stellen und arbeitet bis{" "}
           <M>{"\\kappa_2(\\bA) \\approx 1/\\eps \\approx 4{,}5\\cdot 10^{15}"}</M> weiter.
         </Verdikt>
@@ -265,7 +266,7 @@ function AccuracyTafel({ lc, setLc }: { lc: number; setLc: (v: number) => void }
           <M>{"2\\log_{10}\\kappa_2(\\bA)"}</M> Stellen und kommen nur auf{" "}
           <span className="font-mono">{fmtDe(digits(errNE), 1)}</span> – die{" "}
           <M>{"\\kappa^2"}</M>-Strafe fällt auch bei fast perfektem Fit an. Genau das meint
-          Bemerkung 7.3.7 mit „instabil".
+          {ref("bemerkung:stabilitaet-des-cholesky-verfahrens")} mit „instabil".
         </Verdikt>
       )}
     </div>
@@ -359,7 +360,7 @@ export function MethodChooser() {
       <>
         Die Normalengleichungen scheitern hier komplett: <M>{"\\bA^\\top\\bA"}</M> ist singulär
         (oder numerisch singulär), Cholesky bricht ab. Die SVD diagnostiziert den numerischen Rang
-        explizit und liefert unter allen KQ-Lösungen die mit minimaler Norm (Satz 7.6.1). Genau
+        explizit und liefert unter allen KQ-Lösungen die mit minimaler Norm ({ref("satz:svd-loesung-des-kq-problems")}). Genau
         dafür ist sie da.
       </>
     );

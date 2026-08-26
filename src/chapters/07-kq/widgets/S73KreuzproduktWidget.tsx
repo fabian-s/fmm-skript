@@ -28,6 +28,7 @@
  */
 import { useState } from "react";
 import { Aufgabe, M, MD, Schaetzfrage, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 function fmt17(x: number): string {
   const s = x.toPrecision(17);
@@ -72,7 +73,7 @@ function KreuzproduktTafel() {
           sind jetzt identisch, ihr Rang ist 1, dabei hat <M>{"\\bA"}</M> selbst vollen
           Spaltenrang 2. Was die Spalten unterschied, steckte allein im Summanden{" "}
           <M>{"\\eps^2"}</M>, und genau den hat die Rundung ausgelöscht. Die Cholesky-Zerlegung
-          aus Algorithmus 7.3.5 bricht hier ab.
+          aus {ref("algorithmus:cholesky-verfahren-fuer-das-kq-problem")} bricht hier ab.
         </Verdikt>
       ) : gap < 1e-14 ? (
         <Verdikt kind="warn" titel="Ein einziges ULP vom Kollaps entfernt:">
@@ -85,7 +86,7 @@ function KreuzproduktTafel() {
           Vom Abstand zur Singularität bleibt der kleine Eigenwert{" "}
           <span className="font-mono">{gap.toExponential(3)}</span>. Die exakte Konditionszahl
           liegt bei <span className="font-mono">{condExact.toExponential(2)}</span> – das Quadrat
-          von <M>{"\\kappa(\\bA)"}</M>, wie es Bemerkung 7.3.7 vorhersagt.
+          von <M>{"\\kappa(\\bA)"}</M>, wie es {ref("bemerkung:stabilitaet-des-cholesky-verfahrens")} vorhersagt.
         </Verdikt>
       )}
     </div>

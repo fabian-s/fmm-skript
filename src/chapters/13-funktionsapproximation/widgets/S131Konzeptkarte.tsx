@@ -1,4 +1,5 @@
 import { ConceptFlow, FMM_COLORS, type FlowEdge, type FlowNode } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * Konzeptkarte für Kapitel 13 (Funktionsapproximation), übernommen aus der
@@ -120,11 +121,11 @@ const edges: FlowEdge[] = [
 export function TeilDreiKarte() {
   return (
     <ConceptFlow
-      ariaLabel="Konzeptkarte von Kapitel 13: von Basen und Funktionenräumen über Interpolation und Splines zu Glättung, Bias-Varianz-Abwägung und Tensorprodukt-Splines."
+      ariaLabel={`Konzeptkarte von ${ref("kap:funktionsapproximation")}: von Basen und Funktionenräumen über Interpolation und Splines zu Glättung, Bias-Varianz-Abwägung und Tensorprodukt-Splines.`}
       nodes={nodes}
       edges={edges}
       groups={[
-        { key: "anker", label: "Anker aus Kapitel 1–9", color: FMM_COLORS.gruen },
+        { key: "anker", label: `Anker aus ${ref("kap:intro")}–9`, color: FMM_COLORS.gruen },
         { key: "fa1", label: "13.1–13.4 · Interpolation", color: FMM_COLORS.orange },
         { key: "fa2", label: "13.5–13.9 · Glättung und Multivariates", color: FMM_COLORS.violett },
       ]}

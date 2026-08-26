@@ -1,6 +1,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { fmtNum, MatTable, sub, WidgetLabel } from "./shared";
+import { ref } from "../../numbers.generated";
 
 /**
  * Cholesky-Stepper für §5.4: die Zerlegung A = LLᵀ entsteht Eintrag für
@@ -207,7 +208,7 @@ export function CholeskyStepper() {
             </div>
           )}
           {failedNow && trace.fail && (
-            <Verdikt kind="fail" className="mt-2">{trace.fail.msg} Satz 5.4.2 ist hier nicht anwendbar.</Verdikt>
+            <Verdikt kind="fail" className="mt-2">{trace.fail.msg} {ref("satz:cholesky-zerlegung")} ist hier nicht anwendbar.</Verdikt>
           )}
           {done && resid !== null && (
             <Verdikt kind="ok" className="mt-2">

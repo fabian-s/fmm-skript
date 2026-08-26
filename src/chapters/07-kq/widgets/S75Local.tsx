@@ -52,6 +52,7 @@ import {
   type DragApi,
   type Vec2,
 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /* ---------------------------------------------------------------- Helfer */
 
@@ -111,7 +112,7 @@ export function GivensWidget() {
       {degeneriert ? (
         <Verdikt kind="warn" titel="Nichts zu drehen:">
           <M>{"\\ba = \\bnull"}</M> – hier gibt es keine ausgezeichnete Drehung; jedes Paar mit{" "}
-          <M>{"c^2 + s^2 = 1"}</M> tut es, üblich ist <M>{"\\bG = \\bI"}</M>. Satz 7.5.2 setzt
+          <M>{"c^2 + s^2 = 1"}</M> tut es, üblich ist <M>{"\\bG = \\bI"}</M>. {ref("satz:wahl-von-c-und-s")} setzt
           deshalb <M>{"\\ba \\neq \\bnull"}</M> voraus.
         </Verdikt>
       ) : (
@@ -127,11 +128,11 @@ export function GivensWidget() {
             <MD>{`\\bG\\ba = \\begin{pmatrix} ${fmtMath(r)} \\\\ 0 \\end{pmatrix}`}</MD>
           </div>
           <Verdikt kind="ok" titel="Zweite Komponente auf null:">
-            Satz 7.5.2 liefert <M>{`c = a_1/r = ${fmtMath(c)}`}</M> und{" "}
+            {ref("satz:wahl-von-c-und-s")} liefert <M>{`c = a_1/r = ${fmtMath(c)}`}</M> und{" "}
             <M>{`s = a_2/r = ${fmtMath(s)}`}</M>, und damit ist{" "}
             <M>{"\\bG\\ba = (\\alpha, 0)^\\top"}</M> mit{" "}
             <M>{`\\alpha = \\left\\|\\ba\\right\\|_2 = ${fmtMath(r)}`}</M>. Die Länge musste
-            herauskommen, denn <M>{"\\bG"}</M> ist orthogonal (Lemma 7.4.2 (ii)). Der angezeigte
+            herauskommen, denn <M>{"\\bG"}</M> ist orthogonal ({ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")} (ii)). Der angezeigte
             Winkel <M>{`\\theta \\approx ${fmtMath(theta, 2)}^{\\circ}`}</M> dient nur der
             Anschauung; in die Formeln geht er nirgends ein.
           </Verdikt>
@@ -419,10 +420,10 @@ export function HouseholderWidget() {
       ) : t >= 1.95 ? (
         <Verdikt kind="ok" className="mt-2" titel="Fertig gespiegelt:">
           <M>{"\\bw(2) = (\\bI - 2\\bP)\\ba = \\bH\\ba = \\alpha\\,\\be_1"}</M>, und die Länge ist
-          mit <span className="font-mono">{fmt(nw)}</span> wieder da – Satz 7.5.6 in Aktion:{" "}
+          mit <span className="font-mono">{fmt(nw)}</span> wieder da – {ref("satz:symmetrie-und-orthogonalitaet")} in Aktion:{" "}
           <M>{"\\bH^2 = \\bI"}</M>. Numerisch sicher ist hier die Wahl{" "}
           <M>{sicher === 1 ? "\\alpha = +\\left\\|\\ba\\right\\|_2" : "\\alpha = -\\left\\|\\ba\\right\\|_2"}</M>
-          , also das von <M>{"\\ba"}</M> weiter entfernte Ziel (Bemerkung 7.5.9); das nächste
+          , also das von <M>{"\\ba"}</M> weiter entfernte Ziel ({ref("bemerkung:vorzeichenwahl")}); das nächste
           Widget zeigt, was die andere Wahl anrichtet.
         </Verdikt>
       ) : (
@@ -531,7 +532,7 @@ export function AusloeschungWidget() {
           <span className="font-mono">{fehlerSchlecht.toExponential(1)}</span>. Die sichere Wahl
           addiert stattdessen zwei positive Zahlen: <span className="font-mono">{fmtDe(zifGut, 1)}</span>{" "}
           korrekte Ziffern und Restfehler <span className="font-mono">{fehlerGut.toExponential(1)}</span>{" "}
-          (Bemerkung 7.5.9).
+          ({ref("bemerkung:vorzeichenwahl")}).
         </Verdikt>
       ) : zifSchlecht < zifGut - 0.5 ? (
         <Verdikt kind="warn" titel="Führende Ziffern verloren:">

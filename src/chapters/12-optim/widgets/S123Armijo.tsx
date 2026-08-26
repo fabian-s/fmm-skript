@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §12.3 — DIE EINE EINSICHT: Die Armijo-Gerade trennt zulässige von
@@ -137,7 +138,7 @@ export function ArmijoWidget() {
     titel = "der volle Schritt genügt";
     status = `Der volle Schritt γ = 1 wird sofort angenommen: φ(1) = ${fmt(
       phi(1)
-    )} liegt bereits unter der Schranke ${fmt(armijo(1))}. Bedingung (12.3.7) aus Algorithmus 12.3.18 ist also schon beim ersten Versuch erfüllt.`;
+    )} liegt bereits unter der Schranke ${fmt(armijo(1))}. Bedingung (${num("eq:backtracking-liniensuche-nach-armijo")}) aus ${ref("algorithmus:backtracking-liniensuche-nach-armijo")} ist also schon beim ersten Versuch erfüllt.`;
   } else {
     art = "ok";
     titel = n === 1 ? "eine Halbierung genügt" : `${n} Halbierungen`;
@@ -145,7 +146,7 @@ export function ArmijoWidget() {
       n === 1 ? "Eine Verkleinerung genügt" : `${n} Verkleinerungen genügen`
     }: γ = ${fmt(akzeptiert, 4)} drückt den Funktionswert von ${fmt(phi0)} auf ${fmt(
       phi(akzeptiert)
-    )}, gefordert war nach (12.3.7) höchstens ${fmt(armijo(akzeptiert))}. Der exakte Minimierer läge bei γ* = ${fmt(gStern, 4)}; ihn zu suchen wäre teurer als der gewonnene Fortschritt wert ist.`;
+    )}, gefordert war nach (${num("eq:backtracking-liniensuche-nach-armijo")}) höchstens ${fmt(armijo(akzeptiert))}. Der exakte Minimierer läge bei γ* = ${fmt(gStern, 4)}; ihn zu suchen wäre teurer als der gewonnene Fortschritt wert ist.`;
   }
 
   return (

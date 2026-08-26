@@ -15,6 +15,7 @@ import {
   W_BUTTON_AKTIV,
 } from "../../../lib";
 import type { Kurve3D, Punkt3D, Series, Sicht3D, Vec3 } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.2 — DIE EINE EINSICHT: Ein Newton-Schritt läuft in den Sattelpunkt
@@ -171,7 +172,7 @@ export function SattelpunktWidget() {
     stationaer: {
       kind: "neutral",
       titel: "im stationären Punkt",
-      text: `Der Gradient ist null, es gibt also keinen Pfeil, und jedes Verfahren bleibt stehen, wo es steht. Trotzdem liegt hier weder ein Minimum noch ein Maximum: In jeder noch so kleinen Umgebung gibt es Punkte auf der grünen Achse mit größerem und Punkte auf der roten Achse mit kleinerem Funktionswert. Genau das meint Bemerkung 12.2.12 mit „Sattelpunkt".`,
+      text: `Der Gradient ist null, es gibt also keinen Pfeil, und jedes Verfahren bleibt stehen, wo es steht. Trotzdem liegt hier weder ein Minimum noch ein Maximum: In jeder noch so kleinen Umgebung gibt es Punkte auf der grünen Achse mit größerem und Punkte auf der roten Achse mit kleinerem Funktionswert. Genau das meint ${ref("bemerkung:was-sattelpunkte-fuer-die-verfahren")} mit „Sattelpunkt".`,
     },
     strahl: {
       kind: "warn",
@@ -186,7 +187,7 @@ export function SattelpunktWidget() {
     entkommt: {
       kind: "ok",
       titel: "der Abstieg entkommt",
-      text: `Beide Komponenten sind besetzt, und der Abstieg behandelt sie gegenläufig: x drückt er mit dem Faktor ${fmt(faktorX)} pro Schritt gegen null, y bläst er mit dem Faktor ${fmt(faktorY)} auf. Nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}), also praktisch auf der roten Achse und weit weg vom Sattel. Der Gradientenabstieg bleibt an einem Sattelpunkt nicht hängen (Bemerkung 12.2.12); dass er dabei überhaupt nichts findet, ist eine andere Geschichte.`,
+      text: `Beide Komponenten sind besetzt, und der Abstieg behandelt sie gegenläufig: x drückt er mit dem Faktor ${fmt(faktorX)} pro Schritt gegen null, y bläst er mit dem Faktor ${fmt(faktorY)} auf. Nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}), also praktisch auf der roten Achse und weit weg vom Sattel. Der Gradientenabstieg bleibt an einem Sattelpunkt nicht hängen (${ref("bemerkung:was-sattelpunkte-fuer-die-verfahren")}); dass er dabei überhaupt nichts findet, ist eine andere Geschichte.`,
     },
   };
   const status = verdikt[art];

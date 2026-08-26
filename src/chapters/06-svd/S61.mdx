@@ -14,13 +14,13 @@ Sammeln wir zuerst das Vorwissen ein, auf dem das Kapitel steht.
 
 - Die *Spektralnorm* $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$,
   also der größte Streckfaktor der Abbildung $\bx \mapsto \bA\bx$
-  ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
+  (@sec:matrix-spur-norm/operatornormen).
 - :k[Orthogonalmatrizen]{#orthogonal-matrix} $\bQ$ mit $\bQ^\top\bQ = \bI$. Sie
   erhalten Längen und Winkel, ihre Inverse ist die Transponierte
-  ([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)).
+  (@sec:matrix-spur-norm/operatornormen).
 - Matrixzerlegungen als Werkzeug: eine Matrix in leicht handhabbare Faktoren
   aufspalten und die eigentliche Rechnung dann auf den Faktoren machen
-  ([Abschnitt 5.2](?k=05-lgs#sec-5.2)).
+  (@sec:lgs/lgs).
 - Aus der linearen Algebra:
   - :k[Eigenwerte und Eigenvektoren]{#eigenvalue-eigenvector}, $\bA\bv = \lambda\bv$;
   - der :k[Rang]{#rank} einer Matrix;
@@ -45,11 +45,11 @@ aus Eigenvektoren kommt so nicht zustande.
 Zweitens nützt uns die Zerlegung vor allem dann etwas, wenn $\bP$ orthogonal
 gewählt werden kann, denn nur dann verzerrt der Basiswechsel nichts. Das gelingt
 genau für :k[symmetrische]{#symmetric-matrix} Matrizen (Spektralsatz,
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)). Ein Blick auf die Rechenregel
+@sec:matrix-spur-norm/operatornormen). Ein Blick auf die Rechenregel
 $(\bP\bD\bP^\top)^\top = \bP\bD^\top\bP^\top = \bP\bD\bP^\top$ zeigt auch, warum:
 Was so zerlegbar ist, ist automatisch symmetrisch.
 
-:::bemerkung[6.1.1 (Wo die Diagonalisierung aufhört)]
+:::bemerkung[#wo-die-diagonalisierung-aufhoert (Wo die Diagonalisierung aufhört)]
 - Die Eigenwertzerlegung setzt eine **quadratische** Matrix voraus, und auch
   dann gibt es sie nicht immer.
 - Orthogonal diagonalisierbar, also $\bA = \bP\bD\bP^\top$ mit orthogonalem
@@ -62,7 +62,7 @@ Was so zerlegbar ist, ist automatisch symmetrisch.
 Gesucht ist eine Zerlegung, die dieselbe Arbeit leistet, aber ohne diese
 Bedingungen:
 
-$$ {#eq-6.1.1}
+$$ {#eq-eq-6-1-1}
 \bA = \cgreen{\bP}\,\corange{\bD}\,\cblue{\bQ}^{-1} .
 $$
 
@@ -78,7 +78,7 @@ Punkt 3 ist der eigentliche Anspruch. Orthogonalmatrizen drehen und spiegeln,
 mehr nicht. Steckt die ganze Verzerrung in $\corange{\bD}$, dann lesen wir an
 den Diagonaleinträgen direkt ab, was die Abbildung mit dem Raum anstellt.
 Nebenbei wird die Zerlegung dadurch bequem: Für orthogonales $\bQ$ ist
-$\bQ^{-1} = \bQ^\top$, aus ($6.1.1$) wird also
+$\bQ^{-1} = \bQ^\top$, aus @eq:eq-6-1-1 wird also
 $\bA = \cgreen{\bP}\corange{\bD}\cblue{\bQ}^\top$, und niemand muss eine Inverse
 ausrechnen.
 
@@ -104,12 +104,12 @@ Für eine $2 \times 2$-Matrix wird aus dem Einheitskreis eine Ellipse; ist $\bA$
 singulär, so entartet sie zu einer Strecke. Der längste Bildvektor liegt auf
 ihrer Hauptachse, der kürzeste auf der Nebenachse, und
 diese Halbachsenlängen sind uns als Singulärwerte in
-[Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4) schon begegnet. Bildet $\bA$
+@sec:matrix-spur-norm/schattennormen schon begegnet. Bildet $\bA$
 dagegen von $\R^3$ in die Ebene ab, so wird eine ganze Richtung platt gedrückt,
 und aus der Einheitssphäre wird eine ausgefüllte Ellipse. An den Hauptachsen
 ändert das nichts.
 
-Bleiben wir konkret und nehmen wir die Matrix aus Beispiel 3.3.3,
+Bleiben wir konkret und nehmen wir die Matrix aus @beispiel:visualisierung,
 
 $$
 \bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix} .
@@ -125,7 +125,7 @@ verschiedener Dimension ab, ändert das an der Aussage nichts.
 
 Das Widget verbindet die Extremrichtungen des Kreises mit den Halbachsen der Bildellipse.
 
-:::beispiel[6.1.2 (Der Einheitskreis wird zur Ellipse)]
+:::beispiel[#der-einheitskreis-wird-zur-ellipse (Der Einheitskreis wird zur Ellipse)]
 Aus [Kapitel 3](?k=03-matrix-spur-norm#sec-3.3) kennen wir die beiden
 Streckfaktoren von $\bA$ bereits: $\corange{2{,}288} = \sqrt{3 + \sqrt{5}}$ ist die längste
 Halbachse der Bildellipse, $\corange{0{,}874}$ die kürzeste. Am stärksten
@@ -155,7 +155,7 @@ $$
 
 (bis auf Rundung). Zwei senkrechte Richtungen im Urbild, zwei senkrechte
 Richtungen im Bild, dazwischen nur zwei Streckfaktoren: Dieses Muster schreiben
-wir in [Abschnitt 6.2](#sec-6.2) als Zerlegung auf. Woher $\cblue{\bx^*}$ kommt
+wir in @sec:singulaerwerte als Zerlegung auf. Woher $\cblue{\bx^*}$ kommt
 und warum die Bilder senkrecht bleiben, klärt sich dort ebenfalls.
 :::
 
@@ -164,7 +164,7 @@ und warum die Bilder senkrecht bleiben, klärt sich dort ebenfalls.
 Wie finden wir die Richtung der stärksten Streckung? Wir schreiben die Frage als
 Optimierungsproblem:
 
-$$ {#eq-6.1.2}
+$$ {#eq-eq-6-1-2}
 \max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\| .
 $$
 
@@ -173,19 +173,19 @@ Ein Maximum gibt es tatsächlich, denn die Einheitssphäre ist
 $\bx \mapsto \left\| \bA\bx \right\|$ ist stetig. Der Maximalwert steht sogar
 schon in unserer Vorwissensliste: Er ist die Spektralnorm
 $\left\| \bA \right\|_2$, die
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) als größten Streckfaktor
+@sec:matrix-spur-norm/operatornormen als größten Streckfaktor
 einführt. Dort haben wir nach dem Wert gefragt, hier fragen wir nach der
 Maximalstelle, und gleich danach nach dem, was in den übrigen Richtungen
 passiert.
 
-Unhandlich an ($6.1.2$) ist die Zielfunktion: In der Norm steckt eine Wurzel
+Unhandlich an @eq:eq-6-1-2 ist die Zielfunktion: In der Norm steckt eine Wurzel
 über einer Quadratsumme. Der Ausweg ist ein alter Trick. Wir maximieren
 stattdessen das Quadrat.
 
-:::satz[6.1.3 (Streckung als quadratische Form)]
+:::satz[#streckung-als-quadratische-form (Streckung als quadratische Form)]
 Für $\bA \in \R^{m \times n}$ und alle $\bx \in \R^n$ gilt
 
-$$ {#eq-6.1.3}
+$$ {#eq-streckung-als-quadratische-form}
 \left\| \bA\bx \right\|^2 = (\bA\bx)^\top(\bA\bx) = \bx^\top\left(\bA^\top\bA\right)\bx .
 $$
 
@@ -197,7 +197,7 @@ $\left\| \bA\bx \right\|^2$ dieselben Maximalstellen.
 
 :::schritt
 Für jeden Vektor $\by \in \R^m$ ist $\left\| \by \right\|^2 = \by^\top\by$. Mit
-$\by = \bA\bx$ folgt die erste Gleichheit in ($6.1.3$).
+$\by = \bA\bx$ folgt die erste Gleichheit in @eq:streckung-als-quadratische-form.
 
 ::why[Definition der :k[euklidischen Norm]{#euclidean-norm}: $\left\| \by \right\| = \sqrt{\sum_i y_i^2}$, und das Skalarprodukt $\by^\top\by$ ist genau $\sum_i y_i^2$]
 :::
@@ -222,21 +222,21 @@ wenn es $\left\| \bA\bx \right\|^2$ maximiert.
 
 ::::
 
-Die rechte Seite von ($6.1.3$) ist eine
+Die rechte Seite von @eq:streckung-als-quadratische-form ist eine
 :k[quadratische Form]{#quadratic-form}, und zwar die zur Matrix $\bA^\top\bA$.
 Damit hat sich die Lage grundlegend geändert. Ist $\bA$ vom Format
 $m \times n$, so ist $\bA^\top\bA$ vom Format $n \times n$, also quadratisch,
 unabhängig davon, ob $\bA$ mehr Zeilen oder mehr Spalten hat. Symmetrisch ist
-$\bA^\top\bA$ außerdem, das rechnet [Abschnitt 6.2](#sec-6.2) nach. Der Umweg über
+$\bA^\top\bA$ außerdem, das rechnet @sec:singulaerwerte nach. Der Umweg über
 $\bA^\top\bA$ führt uns damit zurück in die Klasse, für die die orthogonale
 Diagonalisierung funktioniert. Aus ihren Eigenwerten und Eigenvektoren werden
 dort die Singulärwerte und die Singulärvektoren.
 
-:::bemerkung[6.1.4 (Notation)]
+:::bemerkung[#notation (Notation)]
 Ab hier ist $\left\| \cdot \right\|$ ohne Index immer die euklidische Norm
 $\left\| \cdot \right\|_2$, bei Matrizen entsprechend die davon induzierte
 Operatornorm, also die Spektralnorm
-([Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3)). Ist eine andere Norm gemeint,
+(@sec:matrix-spur-norm/operatornormen). Ist eine andere Norm gemeint,
 schreiben wir den Index dazu.
 :::
 
@@ -268,7 +268,7 @@ $\bA$ bildet von $\R^2$ nach $\R^3$ ab; in $\bA\bv = \lambda\bv$ stünde links e
 Vektor aus $\R^3$ und rechts einer aus $\R^2$. Das Produkt $\bA^\top\bA$ ist
 dagegen $(2 \times 3) \cdot (3 \times 2)$, also eine quadratische
 $2 \times 2$-Matrix. Diese Beobachtung ist der Grund für den Umweg aus
-Satz 6.1.3.
+@satz:streckung-als-quadratische-form.
 :::
 
 :::frage{falsch}
@@ -278,7 +278,7 @@ $\bA = \bP\bD\bP^\top$ mit orthogonalem $\bP$ schreiben.
 Aus $\bA = \bP\bD\bP^\top$ folgt $\bA^\top = \bP\bD^\top\bP^\top = \bP\bD\bP^\top = \bA$.
 So zerlegbar sind also nur symmetrische Matrizen. Die quadratische Matrix
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 1 \end{smallmatrix}\bigr)$ aus
-Beispiel 6.1.2 ist nicht symmetrisch und fällt damit heraus.
+@beispiel:der-einheitskreis-wird-zur-ellipse ist nicht symmetrisch und fällt damit heraus.
 :::
 
 :::frage{falsch}
@@ -300,7 +300,7 @@ Der Übergang von $\left\| \bA\bx \right\|$ zu $\left\| \bA\bx \right\|^2$ ände
 weder die Maximalstelle noch den Maximalwert.
 
 Die Maximalstelle bleibt, der Wert nicht: Er wird quadriert. Für die Matrix aus
-Beispiel 6.1.2 ist $\max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\| \approx 2{,}288$,
+@beispiel:der-einheitskreis-wird-zur-ellipse ist $\max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\| \approx 2{,}288$,
 während $\max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\|^2 = 3 + \sqrt{5} \approx 5{,}236$
 herauskommt. Für die Suche nach der Richtung spielt das keine Rolle, und
 deshalb dürfen wir quadrieren.

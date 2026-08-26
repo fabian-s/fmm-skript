@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §13.6: Konvergenz des natuerlichen kubischen Spline-Interpolanten.
@@ -221,7 +222,7 @@ export function SplineKonvergenz() {
   if (!vorher) {
     status =
       `Das gröbste Gitter hat ${zeile.knoten} Knoten, also die Gitterweite h = ${fmtH(zeile.h)}. ` +
-      `Satz 13.6.2 erlaubt damit einen Fehler von bis zu C·h⁴·M₄ = ${fmtE(zeile.schranke)}; gemessen ` +
+      `${ref("satz:approximationsfehler-kubischer-splines")} erlaubt damit einen Fehler von bis zu C·h⁴·M₄ = ${fmtE(zeile.schranke)}; gemessen ` +
       `haben wir ${fmtE(zeile.fehler)} an der Stelle x = ${fmt(zeile.argmax, 4)}, also ` +
       `${fmt(verhaeltnis * 100, 1)} % der Schranke. Mit nur drei Knoten verfehlt der Spline die ` +
       `zusätzlichen Schwingungen deutlich. Schieben wir den Regler nach rechts, um die Gitterweite ` +

@@ -1,6 +1,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
 import { backSub, MatTable, WidgetLabel } from "./shared";
+import { num } from "../../numbers.generated";
 
 /**
  * Rückwärts-Substitutions-Stepper für §5.2: ein kleines oberes Dreieckssystem
@@ -94,13 +95,13 @@ export function RueckSubStepper() {
           {trace.failRow >= 0 && shown >= maxT && (
             <Verdikt kind="fail" className="mt-2">
               Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile
-              ist 0, und Formel (5.2.1) verlangt, genau dadurch zu teilen. Bei einer
+              ist 0, und Formel ({num("eq:gauss-elimination-mit-partieller")}) verlangt, genau dadurch zu teilen. Bei einer
               Dreiecksmatrix entscheidet allein die Diagonale über die Invertierbarkeit;
               mit einer Null dort verliert das System seine eindeutige Lösung.
             </Verdikt>
           )}
           {trace.failRow < 0 && shown === maxT && maxT > 0 && (
-            <Verdikt kind="ok" className="mt-2">Alle Komponenten stehen. Formel (5.2.1) benötigt hier drei Divisionen; allgemein summieren sich Multiplikationen, Subtraktionen und Divisionen zu n² Operationen, also O(n²).</Verdikt>
+            <Verdikt kind="ok" className="mt-2">Alle Komponenten stehen. Formel ({num("eq:gauss-elimination-mit-partieller")}) benötigt hier drei Divisionen; allgemein summieren sich Multiplikationen, Subtraktionen und Divisionen zu n² Operationen, also O(n²).</Verdikt>
           )}
         </div>
       </div>

@@ -44,11 +44,16 @@ Vorbild: das LinAlg-Skript von T. Nagler (fmm-lmu/literature/nagler-linalg-2026.
 
 ## Mathematischer Apparat
 
-- Nummerierte Environments wie im Vorbild: Definition x.y, Theorem x.y,
-  Beispiel x.y, Beweis. (Nummerierung: x = Kapitelnummer. Kapitel 1–9
-  entsprechen dem gleichnamigen Foliensatz; ab Kapitel 10 fasst ein Kapitel
-  mehrere Foliensätze zusammen, die Zuordnung steht im Feld `deck` der
-  Registry `src/chapters/index.ts`.)
+- Nummerierte Environments wie im Vorbild: Definition x.y.z, Satz x.y.z,
+  Beispiel x.y.z, Beweis. (x = Kapitelnummer. Kapitel 1–9 entsprechen dem
+  gleichnamigen Foliensatz; ab Kapitel 10 fasst ein Kapitel mehrere
+  Foliensätze zusammen, die Zuordnung steht im Feld `deck` der Registry
+  `src/chapters/index.ts`.)
+- **Die Nummern selbst tippt niemand.** Labels bekommen eine ID
+  (`:::satz[#normalgleichungen (Normalgleichungen)]`, `$$ {#eq-…}`),
+  Verweise laufen über `@satz:…`, `@eq:…`, `@sec:…`. Ein Zähler vergibt und
+  ein Build-Fehler bestraft alles andere. Regeln und Syntax: Abschnitt
+  „Nummerierung und Verweise" in KONVENTIONEN.md.
 - Beweise: vollständig, aber schrittweise erzählt; jeder nichttriviale
   Schritt bekommt eine Begründung in Worten oder eine \expl{...}-Annotation.
 - Farbcodierung (FMM-Palette; \cbred, \cblue, \cgreen, \cborange, \cpurp):

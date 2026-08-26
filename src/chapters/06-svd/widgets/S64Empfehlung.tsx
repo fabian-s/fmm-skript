@@ -10,6 +10,7 @@ import {
   fmtDe,
 } from "../../../lib";
 import { energieAnteil, jacobiSVD, rankK, type Mat } from "./S64Numerik";
+import { ref } from "../../numbers.generated";
 
 /**
  * DIE EINE EINSICHT: Ein zurückgehaltener Wert zeigt, wie viel von der
@@ -347,7 +348,7 @@ export function EmpfehlungsExplorer() {
             ))}
           </ul>
           Diese Felder hat das Modell nicht gesehen; alles andere in seiner Vorhersage stammt
-          aus den übrigen Bewertungen und aus der Füllregel selbst (Bemerkung 6.4.13).
+          aus den übrigen Bewertungen und aus der Füllregel selbst ({ref("bemerkung:staerken-schwaechen-ausblick")}).
         </Verdikt>
       ) : (
         <Verdikt kind="neutral">

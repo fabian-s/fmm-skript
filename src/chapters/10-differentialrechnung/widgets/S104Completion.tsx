@@ -10,6 +10,7 @@ import {
   fmtDe as fmt,
 } from "../../../lib";
 import { W_BUTTON, W_BUTTON_AKTIV, W_MUTED } from "../../../lib/widgets/surface";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.4, Anwendung: Matrix Completion auf einer 2x3-Matrix mit vier
@@ -287,7 +288,7 @@ function CompletionTafeln() {
       />
 
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        <span className={`text-xs ${W_MUTED}`}>Gradienten aus Satz 10.4.12 für:</span>
+        <span className={`text-xs ${W_MUTED}`}>Gradienten aus {ref("satz:gradienten-der-completion")} für:</span>
         {[1, 2].map((k) => (
           <button
             key={k}
@@ -328,7 +329,7 @@ function CompletionTafeln() {
         {explodiert ? (
           <>
             Bei dieser Lernrate wachsen die Einträge von U und V über jede Grenze, das Produkt
-            der Überläufe ist keine Zahl mehr und L wird undefiniert. Satz 10.4.12 liefert
+            der Überläufe ist keine Zahl mehr und L wird undefiniert. {ref("satz:gradienten-der-completion")} liefert
             weiter die richtigen Gradienten, nur die Schrittweite ist zu groß. Zurücksetzen und α
             kleiner wählen.
           </>

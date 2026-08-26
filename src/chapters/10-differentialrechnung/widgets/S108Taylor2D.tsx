@@ -19,6 +19,7 @@ import {
 } from "../../../lib";
 import type { Kurve3D, Punkt3D, Sicht3D, Vec3 } from "../../../lib";
 import { gitter, hoehenlinie, niveaus, type Segment } from "./S108Kontur";
+import { ref } from "../../numbers.generated";
 
 /**
  * §10.8: Die EINE Einsicht — halbieren wir den Radius um den Entwicklungspunkt,
@@ -390,7 +391,7 @@ export function Taylor2DWidget() {
     art = "ok";
     status =
       `Auf dieser Quadrik ist T₂ nicht bloß eine Näherung, sondern f selbst: Die Hesse-Matrix ist ` +
-      `konstant, alle Ableitungen ab der dritten verschwinden, und das Restglied aus Korollar 10.8.9 ist ` +
+      `konstant, alle Ableitungen ab der dritten verschwinden, und das Restglied aus ${ref("korollar:taylorapproximation-fuer-vektor-zu")} ist ` +
       `null. Grüne und blaue Höhenlinien decken sich, die rechte Tafel bleibt weiß, die beiden Ringe in ` +
       `der Raumtafel liegen aufeinander, und der gemessene Fehler von ` +
       `${eR.toExponential(1).replace(".", ",")} auf dem Kreis ist reines Rundungsrauschen. ` +
@@ -406,12 +407,12 @@ export function Taylor2DWidget() {
     const passt = Number.isFinite(quotient) && Math.abs(quotient - erwartet) <= 0.25 * erwartet;
     art = passt ? "ok" : "warn";
     const abweichung = passt
-      ? `Das ist die Größenordnung, die Korollar 10.8.9 nahelegt.`
+      ? `Das ist die Größenordnung, die ${ref("korollar:taylorapproximation-fuer-vektor-zu")} nahelegt.`
       : quotient > erwartet
-        ? `Das liegt deutlich über den ${erwartet}, die Korollar 10.8.9 nahelegt: An dieser Stelle ist ` +
+        ? `Das liegt deutlich über den ${erwartet}, die ${ref("korollar:taylorapproximation-fuer-vektor-zu")} nahelegt: An dieser Stelle ist ` +
           `der führende Restterm fast null, sodass schon die nächste Ordnung den Fehler bestimmt, und ` +
           `dann steht dort das Doppelte.`
-        : `Das liegt unter den ${erwartet} aus Korollar 10.8.9, weil der Radius für die Aussage noch ` +
+        : `Das liegt unter den ${erwartet} aus ${ref("korollar:taylorapproximation-fuer-vektor-zu")}, weil der Radius für die Aussage noch ` +
           `zu groß ist; sie beschreibt das Verhalten für kleine ‖h‖. Ein Stück am Radiusregler nach ` +
           `unten, und der Quotient rückt an den Vorhersagewert heran.`;
     status =
@@ -645,7 +646,7 @@ export function Taylor2DSchaetzung() {
       verdeckt={
         <p className="max-w-prose text-sm">
           Gemessen sind es 4,34 in der Voreinstellung: Der Fehler fällt von 0,2672 auf 0,0616. Für
-          T₂ steht an derselben Stelle 8,07. Der Grund steht in Korollar 10.8.9: Der Restterm von
+          T₂ steht an derselben Stelle 8,07. Der Grund steht in {ref("korollar:taylorapproximation-fuer-vektor-zu")}: Der Restterm von
           T₁ wächst wie ‖h‖², der von T₂ wie ‖h‖³.
         </p>
       }

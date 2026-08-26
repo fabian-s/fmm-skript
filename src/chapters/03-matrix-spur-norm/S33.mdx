@@ -1,7 +1,7 @@
 import { S33OperatornormWidget } from "./widgets/S33OperatornormWidget";
 import { SelbsttestFrage } from "./widgets/S33Local";
 
-Die elementweisen Matrixnormen aus [Abschnitt 3.2](#sec-3.2) haben einen blinden
+Die elementweisen Matrixnormen aus @sec:matrixnormen haben einen blinden
 Fleck: Sie behandeln die Matrix als bloße Zahlentabelle. Die Identitätsmatrix
 :k[$\bI_n$]{#identity-matrix} etwa verändert
 als Abbildung überhaupt nichts; trotzdem wächst ihre Frobenius-Norm
@@ -11,7 +11,7 @@ $\bx \mapsto \bA\bx$ *tut*, sehen diese Normen nicht. In
 diesem Abschnitt bauen wir Normen, die genau das messen: Wie stark kann
 $\bA$ einen Vektor strecken?
 
-### 3.3.1 Definition und Interpretation
+### Definition und Interpretation :id[definition-und-interpretation]
 
 Die Idee: Wir schicken alle Vektoren $\bx \neq \bnull$ durch die
 Abbildung und vergleichen die Länge des Bildes $\bA\bx$ mit der Länge
@@ -19,7 +19,7 @@ des Urbildes $\bx$, gemessen mit einer
 :k[Vektornorm]{#norm} unserer Wahl. Der größte
 auftretende Streckfaktor ist die Norm der Matrix.
 
-:::definition[3.3.1 (Operatornorm)]
+:::definition[#operatornorm (Operatornorm)]
 Sei $\left\| \cdot \right\|_V$ eine Vektornorm. Die
 *Operatornorm* (auch: *induzierte Norm*) von
 $\bA \in \R^{m \times n}$ ist
@@ -40,7 +40,7 @@ der Normquotient skaleninvariant ist: Ersetzen wir $\bx$ durch
 $c\,\bx$ mit $c \neq 0$, kürzt sich $|c|$ heraus.
 Wir dürfen uns deshalb auf Vektoren der Länge 1 beschränken.
 
-:::bemerkung[3.3.2]
+:::bemerkung[#bemerkung-3-3-2]
 - Genau genommen brauchen wir zwei Normen: eine auf $\R^n$ für
   $\bx$ und eine auf $\R^m$ für $\bA\bx$. Wir
   verwenden stets dieselbe Normfamilie in der jeweils passenden Dimension und
@@ -59,10 +59,10 @@ $p = 2$) ist die Menge aller Einheitsvektoren der Einheitskreis. Sein
 Bild unter einer $2 \times 2$-Matrix ist eine Ellipse, und die
 Operatornorm ist die längste Halbachse dieser Ellipse.
 
-:::beispiel[3.3.3 (Visualisierung)]
+:::beispiel[#visualisierung (Visualisierung)]
 Betrachten wir
 $\bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix}$. Wie wir in
-Satz 3.3.7 beweisen werden, ist
+@satz:spektralnorm-und-spektralzerlegung beweisen werden, ist
 $\left\| \bA \right\|_2 = \sqrt{\corange{\lambda_{\max}(\bA^\top\bA)}}$.
 Rechnen wir nach:
 
@@ -93,7 +93,7 @@ sqrt(eigen(AtA)$values)
 Der größte Wert ist die Operatornorm: Kein Einheitsvektor wird um mehr als den
 Faktor $2{,}29$ gestreckt. Der kleinere Wert $0{,}874$ ist
 die kürzeste Halbachse der Bildellipse, also die stärkste Stauchung. Dieselbe
-Matrix begegnet uns in Beispiel 3.4.6 ([Abschnitt 3.4](#sec-3.4)) wieder. Dort
+Matrix begegnet uns in @beispiel:beispiel-3-4-6 (@sec:schattennormen) wieder. Dort
 berechnen wir ihre Schattennormen aus genau diesen Eigenwerten.
 :::
 
@@ -110,18 +110,18 @@ Bildellipse hin und her, und er tut das zweimal pro Umlauf: Die Kurve rechts hat
 Hochpunkte, an denen die Ellipse den roten Kreis von innen berührt. Nur der obere Wert ist
 die Operatornorm. Die Richtung $\bx^*$, in der das passiert, ist keine der
 Koordinatenachsen, sondern liegt schief im Raum; welche Richtung es genau ist, klärt
-Satz 3.3.7 weiter unten. Und die beiden Sonderfälle sind schnell durchgespielt: Bei der
+@satz:spektralnorm-und-spektralzerlegung weiter unten. Und die beiden Sonderfälle sind schnell durchgespielt: Bei der
 Drehung ist die Kurve eine Waagrechte, jede Richtung ist Maximalrichtung; bei der singulären
 Matrix fällt die Kurve irgendwo auf null, ohne dass das Maximum davon etwas merkt.
 
-### 3.3.2 Die wichtigsten Operatornormen
+### Die wichtigsten Operatornormen :id[die-wichtigsten-operatornormen]
 
 Jede $p$-Norm
 $\left\| \bv \right\|_p = \left( \sum_i |v_i|^p \right)^{1/p}$
 induziert ihre eigene Operatornorm. Drei Fälle sind so wichtig, dass sie eigene
 Namen tragen, und für zwei davon gibt es erfreulich einfache Formeln:
 
-:::satz[3.3.4 (Induzierte p-Normen)]
+:::satz[#induzierte-p-normen (Induzierte p-Normen)]
 Sei $\bA \in \R^{m \times n}$ mit Einträgen $a_{ij}$.
 Dann gilt:
 
@@ -150,8 +150,8 @@ sich ohne jede Eigenwertrechnung ablesen. Als Eselsbrücke: Die $1$
 steht senkrecht wie eine Spalte, das Symbol $\infty$ liegt waagrecht
 wie eine Zeile. Die Spektralnorm ist
 teurer zu berechnen, dafür passt sie zur euklidischen Geometrie: Sie ist die
-längste Halbachse der Bildellipse aus Beispiel 3.3.3. Ihre Formel beweisen wir
-in Satz 3.3.7; für die Spaltensummennorm holen wir den Beweis in der folgenden
+längste Halbachse der Bildellipse aus @beispiel:visualisierung. Ihre Formel beweisen wir
+in @satz:spektralnorm-und-spektralzerlegung; für die Spaltensummennorm holen wir den Beweis in der folgenden
 Vertiefung nach, der Fall $p = \infty$ verläuft völlig analog und ist
 eine gute Übung.
 
@@ -196,14 +196,14 @@ $$
 
 :::::
 
-### 3.3.3 Einschub: Orthogonalmatrizen
+### Einschub: Orthogonalmatrizen :id[einschub-orthogonalmatrizen]
 
 Für den Beweis der Spektralnorm-Formel brauchen wir eine besondere Klasse von
 Matrizen: solche, die Längen überhaupt nicht verändern. Sie werden uns im ganzen
 Skript immer wieder begegnen, gerade *weil* sie Normen unangetastet
 lassen.
 
-:::definition[3.3.5 (Orthogonalmatrix)]
+:::definition[#operatornormen-orthogonalmatrix (Orthogonalmatrix)]
 Eine Matrix $\bQ \in \R^{n \times n}$ heißt
 *Orthogonalmatrix*, wenn ihre Spalten
 :k[orthonormale Vektoren]{#orthonormal-basis} sind,
@@ -214,7 +214,7 @@ $$
 $$
 :::
 
-:::bemerkung[3.3.6 (Eigenschaften von Orthogonalmatrizen)]
+:::bemerkung[#operatornormen-eigenschaften-von-orthogonalmatrizen (Eigenschaften von Orthogonalmatrizen)]
 - Geometrisch beschreibt $\bQ$ eine
   :k[Rotation]{#rotation-matrix} und/oder
   :k[Spiegelung]{#reflection} in $\R^n$.
@@ -253,7 +253,7 @@ $$
 
 :::
 
-### 3.3.4 Spektralnorm und Spektralzerlegung
+### Spektralnorm und Spektralzerlegung :id[spektralnorm-und-spektralzerlegung]
 
 Jetzt können wir die Formel
 $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$
@@ -261,13 +261,13 @@ beweisen. Der Schlüssel: $\bA^\top\bA$ ist
 :k[symmetrisch]{#symmetric-matrix} und besitzt deshalb
 eine Spektralzerlegung $\bA^\top\bA = \bP\bLambda\bP^\top$ mit
 einer *orthogonalen* Eigenvektormatrix $\bP$ – und genau die
-Normerhaltung aus Bemerkung 3.3.6 macht den Beweis kurz. Die Eigenwerte sind
+Normerhaltung aus @bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen macht den Beweis kurz. Die Eigenwerte sind
 dabei automatisch nichtnegativ, denn
 $\bx^\top\bA^\top\bA\bx = \left\| \bA\bx \right\|_2^2 \geq 0$
 ($\bA^\top\bA$ ist
 :k[positiv semidefinit]{#positive-definite}).
 
-:::satz[3.3.7 (Spektralnorm und Spektralzerlegung)]
+:::satz[#spektralnorm-und-spektralzerlegung (Spektralnorm und Spektralzerlegung)]
 Sei $\bA \in \R^{m \times n}$ mit
 :k[Rang]{#rank} $r$ und Spektralzerlegung
 $\bA^\top\bA = \bP\bLambda\bP^\top$, wobei
@@ -303,7 +303,7 @@ $$
 \max_{\left\| \bx \right\|_2 = 1} \left\| \bLambda^{1/2}\,\cbgreen{\bP^\top\bx} \right\|_2^2 = \max_{\left\| \cbgreen{\by} \right\|_2 = 1} \left\| \bLambda^{1/2}\,\cbgreen{\by} \right\|_2^2
 $$
 
-::why[Substitution $\cbgreen{\by} = \cbgreen{\bP^\top\bx}$: Weil $\bP$ orthogonal ist, gilt $\left\| \cbgreen{\by} \right\|_2 = \left\| \bx \right\|_2$ (Bemerkung 3.3.6), und $\bx \mapsto \bP^\top\bx$ ist bijektiv; $\cbgreen{\by}$ durchläuft also die Einheitssphäre, wenn $\bx$ dies tut]
+::why[Substitution $\cbgreen{\by} = \cbgreen{\bP^\top\bx}$: Weil $\bP$ orthogonal ist, gilt $\left\| \cbgreen{\by} \right\|_2 = \left\| \bx \right\|_2$ (@bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen), und $\bx \mapsto \bP^\top\bx$ ist bijektiv; $\cbgreen{\by}$ durchläuft also die Einheitssphäre, wenn $\bx$ dies tut]
 :::
 
 :::schritt
@@ -331,9 +331,9 @@ intuitiver wird das über die Singulärwerte von $\bA$ und die
 :k[Singulärwertzerlegung]{#singular-value-decomposition};
 dazu später mehr.
 
-### 3.3.5 Beispiele
+### Beispiele :id[beispiele]
 
-:::beispiel[3.3.8]
+:::beispiel[#beispiel-3-3-8]
 Berechnen wir alle drei Operatornormen von
 $\bA = \begin{pmatrix} 2 & 1 \\ 0 & 3 \end{pmatrix}$.
 
@@ -369,10 +369,10 @@ $$
 Die drei Normen liefern verschiedene Werte ($4$,
 $3{,}26$, $3$), denn sie messen die maximale Streckung ja auch
 in verschiedenen Geometrien. Weit auseinander liegen können sie aber nie; mehr
-dazu in [Abschnitt 3.5](#sec-3.5).
+dazu in @sec:eigenschaften.
 :::
 
-:::beispiel[3.3.9 (Identitätsmatrix)]
+:::beispiel[#identitaetsmatrix (Identitätsmatrix)]
 Für die Identitätsmatrix $\bI_n$ gilt in jeder Operatornorm
 $\left\| \bI_n\bx \right\| / \left\| \bx \right\| = 1$ für
 alle $\bx \neq \bnull$, also
@@ -400,7 +400,7 @@ $\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
   <SelbsttestFrage q={<>Wahr oder falsch: Für jede Orthogonalmatrix <M>{"\\bQ"}</M> gilt <M>{"\\left\\| \\bQ \\right\\|_2 = 1"}</M>.</>}>
     Wahr. Wegen
     $\left\| \bQ\bx \right\|_2 = \left\| \bx \right\|_2$
-    (Bemerkung 3.3.6) ist jeder Normquotient gleich 1, also auch das
+    (@bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen) ist jeder Normquotient gleich 1, also auch das
     Maximum. Geometrisch: Eine Drehung oder Spiegelung streckt nichts, der
     Einheitskreis bleibt ein Einheitskreis.
   </SelbsttestFrage>
@@ -423,9 +423,9 @@ Stellen wir im Operatornorm-Widget die Voreinstellung „zehnfach" ein, also
 $\bA = \bigl(\begin{smallmatrix} 20 & 10 \\ 0 & 10 \end{smallmatrix}\bigr)$. Welchen Wert
 zeigt es für $\left\|\bA\right\|_2$?
 
-$22{,}882$, also genau das Zehnfache des Werts aus Beispiel 3.3.3. Das muss so sein:
+$22{,}882$, also genau das Zehnfache des Werts aus @beispiel:visualisierung. Das muss so sein:
 Multiplizieren wir eine Matrix mit $10$, so wird jedes Bild zehnmal so lang, und die
-absolute Homogenität aus Definition 3.2.1 liefert
+absolute Homogenität aus @definition:matrixnorm liefert
 $\left\|10\,\bA\right\|_2 = 10 \left\|\bA\right\|_2$. Die Ellipse behält ihre Gestalt, die
 Maximalrichtung $\bx^*$ bleibt dieselbe, nur der Maßstab wächst.
 :::
@@ -436,7 +436,7 @@ ganz platt gedrückt wird.
 
 Die Operatornorm ist ein *Maximum* über Richtungen, kein Minimum. Die Bildellipse entartet
 zu einer Strecke, ihre kurze Halbachse ist $\sigma_2 = 0$, die lange aber $2{,}5$ – und nur
-die ist $\left\|\bA\right\|_2$ (Definition 3.3.1).
+die ist $\left\|\bA\right\|_2$ (@definition:operatornorm).
 :::
 
 ::::

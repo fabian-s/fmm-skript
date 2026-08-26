@@ -11,20 +11,20 @@ komprimieren und Filmbewertungen vorhersagen.
 ### Die Spektralnorm ist der größte Singulärwert
 
 Die Spektralnorm ist in
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) als die von der euklidischen
+@sec:matrix-spur-norm/operatornormen als die von der euklidischen
 Norm induzierte Operatornorm definiert, also als maximale Streckung
-$\max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$. Satz 3.3.7 hat sie dort
+$\max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$. @satz:spektralnorm-und-spektralzerlegung hat sie dort
 zu $\sqrt{\lambda_{\max}(\bA^\top\bA)}$ ausgerechnet. So notiert
 verlangt sie einen Umweg: erst $\bA^\top\bA$ aufstellen, dann dessen größten
 Eigenwert bestimmen, dann die Wurzel ziehen. Wer die SVD kennt, liest den Wert
 dagegen ab.
 
-:::satz[6.4.1 (Spektralnorm und größter Singulärwert)]
+:::satz[#spektralnorm-und-groesster-singulaerwert (Spektralnorm und größter Singulärwert)]
 Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
 $\corange{\sigma_1} \geq \corange{\sigma_2} \geq \cdots \geq \corange{\sigma_n} \geq 0$.
 Dann gilt
 
-$$ {#eq-6.4.1}
+$$ {#eq-spektralnorm-und-groesster-singulaerwert}
 \left\| \bA \right\|_2 = \corange{\sigma_1} = \corange{\sigma_{\max}}(\bA) .
 $$
 :::
@@ -32,15 +32,15 @@ $$
 ::::beweis
 
 :::schritt
-Nach Satz 3.3.7 ist
+Nach @satz:spektralnorm-und-spektralzerlegung ist
 $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$, wobei
 $\lambda_{\max}(\bA^\top\bA)$ der größte Eigenwert von $\bA^\top\bA$ ist.
 
-::why[definiert ist $\left\| \bA \right\|_2$ in [Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3) als Operatornorm, nicht über $\lambda_{\max}$; die Wurzel ist reell, weil $\bA^\top\bA$ nach Satz 6.2.1 nur nichtnegative :k[Eigenwerte]{#eigenvalue-eigenvector} hat]
+::why[definiert ist $\left\| \bA \right\|_2$ in @sec:matrix-spur-norm/operatornormen als Operatornorm, nicht über $\lambda_{\max}$; die Wurzel ist reell, weil $\bA^\top\bA$ nach @satz:eigenschaften-von-a-a nur nichtnegative :k[Eigenwerte]{#eigenvalue-eigenvector} hat]
 :::
 
 :::schritt
-Definition 6.2.4 setzt $\corange{\sigma_i} = \sqrt{\lambda_i}$ für die
+@definition:singulaerwerte setzt $\corange{\sigma_i} = \sqrt{\lambda_i}$ für die
 absteigend sortierten Eigenwerte $\lambda_1 \geq \cdots \geq \lambda_n$ von
 $\bA^\top\bA$. Insbesondere ist $\lambda_{\max}(\bA^\top\bA) = \lambda_1$ und
 damit $\corange{\sigma_1} = \sqrt{\lambda_1}$.
@@ -60,20 +60,20 @@ $$
 
 ::::
 
-Die Gleichung ($6.4.1$) sieht man gelegentlich als Definition geschrieben. Das
+Die Gleichung @eq:spektralnorm-und-groesster-singulaerwert sieht man gelegentlich als Definition geschrieben. Das
 wäre eine Doppelbelegung: Die Spektralnorm trägt aus Kapitel 3 bereits eine
 Definition, und dass sie mit $\corange{\sigma_1}$ übereinstimmt, ist eine
-Aussage, die bewiesen werden will. Bemerkung 6.2.5 hatte sie schon angekündigt,
-Satz 6.4.1 rechnet sie nach.
+Aussage, die bewiesen werden will. @bemerkung:singulaerwerte-sind-streckungsfaktoren hatte sie schon angekündigt,
+@satz:spektralnorm-und-groesster-singulaerwert rechnet sie nach.
 
 Der Satz bündelt zwei Sichtweisen: Die
 :k[Matrixnorm]{#matrix-norm} $\left\| \bA \right\|_2$ misst die maximale
 Streckung, die $\bA$ einem Einheitsvektor antun kann, und diese Streckung ist
 der größte Singulärwert. Über die Definition der Operatornorm ist das sogar der
-kürzere Weg: Bemerkung 6.2.5 hält
+kürzere Weg: @bemerkung:singulaerwerte-sind-streckungsfaktoren hält
 $\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$
-bereits fest, und rechts steht nach Definition 3.3.1 die Spektralnorm. Das Bild
-dazu kennen wir aus [Abschnitt 6.1](#sec-6.1): $\corange{\sigma_1}$ ist die
+bereits fest, und rechts steht nach @definition:operatornorm die Spektralnorm. Das Bild
+dazu kennen wir aus @sec:motivation: $\corange{\sigma_1}$ ist die
 längste Halbachse der Bildellipse.
 
 ### Die SVD als Summe von Rang-1-Matrizen
@@ -84,18 +84,18 @@ zum Vorschein, die für Anwendungen viel handlicher ist. Dass $\corange{\bSigma}
 außerhalb der Diagonalen nur Nullen trägt, schaltet nämlich fast alle Summanden
 ab: Übrig bleibt für jeden von null verschiedenen Singulärwert genau ein Term.
 
-:::satz[6.4.2 (Summenform der SVD)]
+:::satz[#summenform-der-svd (Summenform der SVD)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und der Zerlegung
-$\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ aus Satz 6.2.13
-([Abschnitt 6.2](#sec-6.2)). Dann gilt
+$\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ aus @satz:singulaerwertzerlegung
+(@sec:singulaerwerte). Dann gilt
 
-$$ {#eq-6.4.2}
+$$ {#eq-summenform-der-svd}
 \bA = \sum_{i=1}^{r} \corange{\sigma_i}\, \cgreen{\bu_i} \cblue{\bv_i}^\top .
 $$
 
 Jeder Summand $\cgreen{\bu_i} \cblue{\bv_i}^\top \in \R^{m \times n}$ hat
 :k[Rang]{#rank} $1$, und in der Frobeniusnorm aus
-[Abschnitt 3.1](?k=03-matrix-spur-norm#sec-3.1) gilt
+@sec:matrix-spur-norm/spur gilt
 
 $$
 \left\| \cgreen{\bu_i} \cblue{\bv_i}^\top \right\|_F = 1 .
@@ -120,7 +120,7 @@ $$
 Die rechte Seite ist genau der Eintrag $(a,b)$ von
 $\sum_{i=1}^{r} \corange{\sigma_i} \cgreen{\bu_i} \cblue{\bv_i}^\top$, denn
 $\bigl(\cgreen{\bu_i} \cblue{\bv_i}^\top\bigr)_{ab} = \cgreen{U_{ai}} \cblue{V_{bi}}$.
-Da die Einträge übereinstimmen, stimmen die Matrizen überein, und ($6.4.2$) ist
+Da die Einträge übereinstimmen, stimmen die Matrizen überein, und @eq:summenform-der-svd ist
 gezeigt.
 
 ::why[das :k[äußere Produkt]{#outer-product} $\bx\by^\top$ hat an der Stelle $(a,b)$ den Eintrag $x_a y_b$; hier ist $\cgreen{\bu_i}$ die $i$-te Spalte von $\cgreen{\bU}$ und $\cblue{\bv_i}$ die $i$-te Spalte von $\cblue{\bV}$]
@@ -154,7 +154,7 @@ $$
 
 Die Summenform trägt dieselbe Information wie die reduzierte SVD
 $\bA = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}$ aus
-[Abschnitt 6.3](#sec-6.3), nur als Summe statt als Produkt geschrieben. Die
+@sec:reduzierte-svd, nur als Summe statt als Produkt geschrieben. Die
 Schreibweise macht aber etwas sichtbar, das im Produkt versteckt bleibt: Die
 Matrix $\bA$ ist eine gewichtete Summe von $r$ Bausteinen, die in der
 Frobeniusnorm alle gleich groß sind. Was die Bausteine
@@ -168,11 +168,11 @@ den Rest weg.
 
 ### Die beste Approximation von kleinem Rang
 
-:::definition[6.4.3 (Rang-k-Approximation)]
+:::definition[#rang-k-approximation (Rang-k-Approximation)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und der Summenform
-($6.4.2$). Für $k \leq r$ heißt
+@eq:summenform-der-svd. Für $k \leq r$ heißt
 
-$$ {#eq-6.4.3}
+$$ {#eq-rang-k-approximation}
 \bA_k = \sum_{i=1}^{k} \corange{\sigma_i}\, \cgreen{\bu_i} \cblue{\bv_i}^\top
 $$
 
@@ -181,7 +181,7 @@ von $\bA$. Für $k \geq 1$ hat sie tatsächlich Rang $k$, denn wegen $k \leq r$
 sind alle beteiligten $\corange{\sigma_i}$ positiv und die $\cgreen{\bu_i}$
 orthonormal.
 
-Wie in [Abschnitt 6.3](#sec-6.3) lässt sich die Summe wieder zu einem Produkt
+Wie in @sec:reduzierte-svd lässt sich die Summe wieder zu einem Produkt
 zusammenfassen: Mit den ersten $k$ Spalten $\cgreen{\bU_k}$ von $\cgreen{\bU}$,
 den ersten $k$ Spalten $\cblue{\bV_k}$ von $\cblue{\bV}$ und
 $\corange{\bSigma_k} = \diag(\corange{\sigma_1}, \dots, \corange{\sigma_k})$
@@ -196,10 +196,10 @@ Das Abschneiden ist schnell erledigt. Interessant ist, was wir dabei verlieren
 und ob eine andere Matrix vom Rang $k$ es besser könnte. Auf beide Fragen gibt
 derselbe Satz Antwort, und die Antwort ist bemerkenswert glatt.
 
-:::satz[6.4.4 (Eckart und Young: beste Approximation von Rang k)]
+:::satz[#eckart-und-young-beste-approximation-von (Eckart und Young: beste Approximation von Rang k)]
 Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
 $\corange{\sigma_1} \geq \cdots \geq \corange{\sigma_r} > 0$ und sei $k < r$.
-Dann löst $\bA_k$ aus ($6.4.3$) beide Approximationsprobleme
+Dann löst $\bA_k$ aus @eq:rang-k-approximation beide Approximationsprobleme
 
 $$
 \min_{\substack{\bB \in \R^{m \times n} \\ \rang(\bB) \leq k}} \left\| \bA - \bB \right\|_F
@@ -209,7 +209,7 @@ $$
 
 und die zugehörigen Fehler sind
 
-$$ {#eq-6.4.4}
+$$ {#eq-eckart-und-young-beste-approximation-von}
 \cred{\left\| \bA - \bA_k \right\|_F} = \sqrt{\sum_{i=k+1}^{r} \corange{\sigma_i}^2} ,
 \qquad
 \cred{\left\| \bA - \bA_k \right\|_2} = \corange{\sigma_{k+1}} .
@@ -222,7 +222,7 @@ Young (1936) haben den Fall der Frobeniusnorm behandelt, die Aussage für die
 Spektralnorm geht auf Mirsky (1960) zurück. Die Fehlerformeln selbst sind
 leicht zu merken und sagen viel:
 
-:::bemerkung[6.4.5 (Was der Satz liefert und was nicht)]
+:::bemerkung[#was-der-satz-liefert-und-was-nicht (Was der Satz liefert und was nicht)]
 - **Der Fehler steht in den weggeworfenen Singulärwerten.** In der
   Spektralnorm ist es der größte weggelassene Wert $\corange{\sigma_{k+1}}$,
   in der Frobeniusnorm die Wurzel aus der Summe aller weggelassenen Quadrate.
@@ -231,13 +231,13 @@ leicht zu merken und sagen viel:
   Selbstverständlichkeit: Zwei verschiedene Gütemaße haben im Allgemeinen zwei
   verschiedene Optima. Hier fallen sie zusammen.
 - **Der Fall $k = 0$ ist erlaubt.** Dann ist $\bA_0 = \bnull$ die leere Summe,
-  und ($6.4.4$) reproduziert die Identität
+  und @eq:eckart-und-young-beste-approximation-von reproduziert die Identität
 
   $$
   \left\| \bA \right\|_F = \sqrt{\sum_{i=1}^{r} \corange{\sigma_i}^2} ,
   $$
 
-  die Korollar 3.4.4 ([Abschnitt 3.4](?k=03-matrix-spur-norm#sec-3.4)) schon
+  die @korollar:spezialfaelle-der-schatten-p-norm (@sec:matrix-spur-norm/schattennormen) schon
   über die Schatten-2-Norm hergeleitet hat.
 
 - **Der Satz sagt, dass $\bA_k$ das Minimum annimmt, nicht dass es der einzige
@@ -251,7 +251,7 @@ leicht zu merken und sagen viel:
   $\cred{\left\| \bA - \bB \right\|_2} = \max(|3 - b|, 2) = 2 = \corange{\sigma_2}$.
   $\bA_1$ ist also *eine* beste Approximation, nicht *die*.
 - **Ab $k = r$ ist nichts mehr zu holen.** Dann ist $\bA_k = \bA$ und der
-  Fehler null. Setzen wir $\corange{\sigma_i} = 0$ für $i > r$, sagt ($6.4.4$)
+  Fehler null. Setzen wir $\corange{\sigma_i} = 0$ für $i > r$, sagt @eq:eckart-und-young-beste-approximation-von
   genau das; weitere Terme kosten dann nur noch Speicher.
 :::
 
@@ -261,18 +261,18 @@ Der Satz von Eckart und Young sagt, wie gut jedes $k$ ist. Er sagt nicht,
 welches wir nehmen sollen. Diese Entscheidung ist ein Kompromiss zwischen
 Genauigkeit und Aufwand, und dafür gibt es drei gebräuchliche Kriterien.
 
-:::bemerkung[6.4.6 (Drei Kriterien für die Wahl von k)]
-1. *Relativer Fehler in der Spektralnorm.* Aus ($6.4.4$) folgt
+:::bemerkung[#drei-kriterien-fuer-die-wahl-von-k (Drei Kriterien für die Wahl von k)]
+1. *Relativer Fehler in der Spektralnorm.* Aus @eq:eckart-und-young-beste-approximation-von folgt
 
    $$
    \frac{\cred{\left\| \bA - \bA_k \right\|_2}}{\left\| \bA \right\|_2}
    = \frac{\corange{\sigma_{k+1}}}{\corange{\sigma_1}} ,
    $$
 
-   denn der Nenner ist nach Satz 6.4.1 gerade $\corange{\sigma_1}$. Wir wählen
+   denn der Nenner ist nach @satz:spektralnorm-und-groesster-singulaerwert gerade $\corange{\sigma_1}$. Wir wählen
    das kleinste $k$, für das dieser Quotient unter einer Schranke bleibt.
 2. *Relativer Fehler in der Frobeniusnorm.* Mit derselben Rechnung und der
-   Identität aus Bemerkung 6.4.5 ist
+   Identität aus @bemerkung:was-der-satz-liefert-und-was-nicht ist
 
    $$
    \frac{\cred{\left\| \bA - \bA_k \right\|_F}}{\left\| \bA \right\|_F}
@@ -297,7 +297,7 @@ weit überragt, ist der Energieanteil schon bei $k = 1$ nahe bei eins, obwohl
 die Approximation noch sehr grob ist. Ein Kriterium, das so leicht zufrieden
 ist, taugt wenig als alleiniger Ratgeber.
 
-:::bemerkung[6.4.7 (Typische Singulärwert-Verläufe und der Ellenbogen)]
+:::bemerkung[#typische-singulaerwert-verlaeufe-und-der (Typische Singulärwert-Verläufe und der Ellenbogen)]
 Wie gut sich eine Matrix überhaupt komprimieren lässt, steht im Verlauf ihrer
 Singulärwerte. Drei Muster begegnen uns immer wieder:
 
@@ -325,7 +325,7 @@ Ein Graustufenbild ist eine Matrix. Jeder Pixel ist ein Eintrag, seine
 Helligkeit der Wert. Farbbilder bestehen aus drei solchen Matrizen, einer pro
 Kanal. Damit ist die Bildkompression eine reine Übung in Rang-k-Approximation.
 
-:::beispiel[6.4.8 (Ein Bild mit 659 × 512 Pixeln)]
+:::beispiel[#ein-bild-mit-659-512-pixeln (Ein Bild mit 659 × 512 Pixeln)]
 Das Bild sei $\bA \in \R^{659 \times 512}$. Vollständig gespeichert sind das
 
 $$
@@ -352,9 +352,9 @@ mehr Zahlen ab als das Bild selbst hat. Kompression gibt es hier nur für
 $k \leq 287$.
 :::
 
-:::algorithmus[6.4.9 (Kompression mit der SVD)]
+:::algorithmus[#kompression-mit-der-svd (Kompression mit der SVD)]
 1. Berechne die SVD $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$.
-2. Wähle $k$ anhand des Singulärwert-Verlaufs (Bemerkung 6.4.6 und 6.4.7).
+2. Wähle $k$ anhand des Singulärwert-Verlaufs (@bemerkung:drei-kriterien-fuer-die-wahl-von-k und 6.4.7).
 3. Bilde die Approximation
    $\bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$.
 4. Speichere nur $\cgreen{\bU_k}$, $\corange{\bSigma_k}$ und $\cblue{\bV_k}$;
@@ -365,7 +365,7 @@ Wie viele Rang-1-Terme braucht ein Bild eigentlich? Probieren wir es aus, an
 einem synthetisch erzeugten Graustufenbild; als Matrix verhält es sich genauso
 wie ein Foto. Der Schieber gibt $k$ vor, die dritte Tafel zeigt die Differenz
 $\cred{\bA - \bA_k}$ als Bild, und die beiden Kurven sind die Fehlerformeln aus
-($6.4.4$), an diesem Bild ausgewertet.
+@eq:eckart-und-young-beste-approximation-von, an diesem Bild ausgewertet.
 
 <RangKExplorer />
 
@@ -381,7 +381,7 @@ Ein Streamingdienst kennt $m$ Nutzer und $n$ Filme und will für jedes Paar
 vorhersagen, wie gut der Film ankommt. Die Bewertungen bilden eine Matrix,
 aber eine mit einem Haken: Fast niemand hat fast alles gesehen.
 
-:::beispiel[6.4.10 (Eine dünn besetzte Bewertungsmatrix)]
+:::beispiel[#eine-duenn-besetzte-bewertungsmatrix (Eine dünn besetzte Bewertungsmatrix)]
 Zeilen sind Nutzer, Spalten sind Filme, ein Fragezeichen steht für eine
 fehlende Bewertung:
 
@@ -411,7 +411,7 @@ lassen sich deshalb erstaunlich gut durch wenige Zahlen beschreiben. In der
 Sprache dieses Kapitels heißt das: Die Bewertungsmatrix ist näherungsweise von
 kleinem Rang.
 
-:::algorithmus[6.4.11 (Empfehlungen über eine Rang-k-Approximation)]
+:::algorithmus[#empfehlungen-ueber-eine-rang-k (Empfehlungen über eine Rang-k-Approximation)]
 1. Ergänze die fehlenden Einträge grob, etwa durch die Spaltenmittel der
    bekannten Bewertungen.
 2. Berechne von der aufgefüllten Matrix die Rang-k-Approximation
@@ -419,7 +419,7 @@ kleinem Rang.
 3. Lies die Vorhersagen an den zuvor fehlenden Stellen von $\bR_k$ ab.
 :::
 
-:::bemerkung[6.4.12 (Was die Faktoren bedeuten)]
+:::bemerkung[#was-die-faktoren-bedeuten (Was die Faktoren bedeuten)]
 Die drei Bestandteile der Zerlegung lassen sich hier ungewöhnlich gut deuten:
 
 - Die *rechten* Singulärvektoren $\cblue{\bv_j} \in \R^n$ leben im Filmraum.
@@ -439,9 +439,9 @@ Achsen summiert.
 
 :::interaktiv[Rang-k-Glättung einer Bewertungsmatrix]
 Wie gut trifft dieses Verfahren eine Bewertung, die es nicht kennt? Das Widget
-rechnet Beispiel 6.4.10 durch und lässt uns eine bekannte Bewertung
+rechnet @beispiel:eine-duenn-besetzte-bewertungsmatrix durch und lässt uns eine bekannte Bewertung
 zurückhalten; sie wird damit zur Testgröße. Der Vergleich der drei Auffüllregeln
-zeigt zusätzlich, wie stark die Vorhersage an Schritt 1 von Algorithmus 6.4.11
+zeigt zusätzlich, wie stark die Vorhersage an Schritt 1 von @algorithmus:empfehlungen-ueber-eine-rang-k
 hängt.
 
 <EmpfehlungsExplorer />
@@ -449,7 +449,7 @@ hängt.
 Das Widget macht sichtbar, dass die Bewertung der Vorhersagen von den zurückgehaltenen Daten und der Auffüllregel abhängt.
 :::
 
-:::bemerkung[6.4.13 (Stärken, Schwächen, Ausblick)]
+:::bemerkung[#staerken-schwaechen-ausblick (Stärken, Schwächen, Ausblick)]
 Für den Ansatz spricht einiges:
 
 - **Speicher.** Statt $m \cdot n$ Zahlen genügen $(m + n) \cdot k + k$, und für
@@ -463,7 +463,7 @@ Für den Ansatz spricht einiges:
 
 Ein Einwand bleibt, und er ist gewichtig: Schritt 1 erfindet Daten, und
 Schritt 2 behandelt diese Erfindungen wie Messwerte. Denn $\bR_k$ minimiert
-nach Satz 6.4.4 den Fehler über *alle* Einträge, also auch über die
+nach @satz:eckart-und-young-beste-approximation-von den Fehler über *alle* Einträge, also auch über die
 selbstgesetzten Mittelwerte. Modernere Verfahren umgehen das. Unter dem
 Stichwort *Matrix Completion* sucht man direkt eine Matrix von kleinem Rang,
 die nur an den beobachteten Stellen gut passt; die (nichtnegative)
@@ -472,37 +472,37 @@ Matrixfaktorisierung ist die bekannteste Variante.
 
 ### Wann lohnt sich die SVD?
 
-:::bemerkung[6.4.14 (Ideale Situationen für die SVD)]
+:::bemerkung[#ideale-situationen-fuer-die-svd (Ideale Situationen für die SVD)]
 1. *Niedrig-Rang-Strukturen:* $\rang(\bA) \ll \min(m,n)$, oder wenigstens
    näherungsweise.
 2. *Schnell abfallende Singulärwerte:* wenige Richtungen dominieren
-   (Bemerkung 6.4.7).
+   (@bemerkung:typische-singulaerwert-verlaeufe-und-der).
 3. *Überbestimmte Systeme:* $m > n$ und womöglich inkonsistent, wie bei
    :k[Kleinste-Quadrate-Problemen]{#linear-least-squares}
-   ([Kapitel 7](?k=07-kq#sec-7.1)).
+   (@kap:kq).
 4. *Datenanalyse:* Die Hauptkomponentenanalyse (PCA) lässt sich direkt aus der
    SVD der zentrierten Datenmatrix $\bX$ ablesen, ohne dass wir das
    Kreuzprodukt $\bX^\top\bX$ je aufstellen müssen. Dieses Kreuzprodukt ist bis
    auf einen Faktor die empirische
    :k[Kovarianzmatrix]{#covariance-matrix}; ausgeführt wird die PCA in
-   [Abschnitt 8.2](?k=08-la-misc#sec-8.2).
+   @sec:la-misc/anwendungen.
 5. *Numerische Robustheit:* als Alternative zu den
    :k[Normalgleichungen]{#normal-equations}
-   ([Abschnitt 7.3](?k=07-kq#sec-7.3)).
+   (@sec:kq/normalengleichungen).
 :::
 
 Punkt 4 und Punkt 5 haben denselben Kern. Das Produkt $\bX^\top\bX$ zu bilden
 kostet Genauigkeit, denn es quadriert die
 :k[Konditionszahl]{#condition-number}
-([Abschnitt 3.5](?k=03-matrix-spur-norm#sec-3.5)). Die SVD arbeitet direkt an
+(@sec:matrix-spur-norm/eigenschaften). Die SVD arbeitet direkt an
 $\bX$ und vermeidet diesen Schritt.
 
 Umsonst ist die Robustheit nicht.
 
-:::bemerkung[6.4.15 (Rechenaufwand)]
+:::bemerkung[#rechenaufwand (Rechenaufwand)]
 Für $\bA \in \R^{m \times n}$ gilt in der
 :k[Landau-Notation]{#big-o-notation}
-([Abschnitt 2.4](?k=02-algos#sec-2.4)):
+(@sec:algos/landau):
 
 - *SVD:* $O(\min(m^2 n,\, m n^2))$; für $m \gg n$ sind das rund $4 m n^2$
   Operationen.
@@ -521,7 +521,7 @@ das dritte Kapitel getragen haben. Gemeint ist in der mittleren Spalte die
 Eigenwertzerlegung $\bA = \bP\bD\bP^{-1}$ mit beliebigem invertierbarem
 $\bP$; erst im symmetrischen Fall wird daraus die Spektralzerlegung mit
 orthogonalem $\bP$ aus
-[Abschnitt 3.3](?k=03-matrix-spur-norm#sec-3.3).
+@sec:matrix-spur-norm/operatornormen.
 
 <table className="text-sm">
 <thead>
@@ -580,7 +580,7 @@ noch den Rest bei. Trotzdem sieht die Rekonstruktion bei $k = 2$ noch sichtbar
 falsch aus: Der Energie-Anteil misst Quadrate und wird deshalb schon von den
 großflächigen Helligkeiten fast ausgeschöpft, während die feinen Kanten in den
 kleinen $\corange{\sigma_i}$ stecken. Ein Kriterium allein reicht für die Wahl
-von $k$ nicht (Bemerkung 6.4.6).
+von $k$ nicht (@bemerkung:drei-kriterien-fuer-die-wahl-von-k).
 :::
 
 :::zahlfrage{loesung=1.8 toleranz=0.3}
@@ -589,18 +589,18 @@ die $5$ links oben, und setzen wir $k = 2$ bei Auffüllung mit dem Filmmittel.
 Welche Vorhersage steht danach in diesem Feld?
 
 Rund $1{,}8$, bei einem wahren Wert von $5$. Der Grund ist Schritt 1 von
-Algorithmus 6.4.11: Ohne Adas Bewertung sinkt das Mittel der Spalte
+@algorithmus:empfehlungen-ueber-eine-rang-k: Ohne Adas Bewertung sinkt das Mittel der Spalte
 „Sternenstaub" von $3{,}5$ auf $2{,}0$, und dieser selbst gesetzte Wert
 bestimmt die Vorhersage fast allein. Bei elf bekannten Bewertungen sagt das
 Ergebnis mehr über die Füllregel als über Ada; genau das ist der Einwand aus
-Bemerkung 6.4.13.
+@bemerkung:staerken-schwaechen-ausblick.
 :::
 
 :::frage{falsch}
 Die Spektralnorm $\left\| \bA \right\|_2$ ist der betragsgrößte Eigenwert von
 $\bA$.
 
-Sie ist der größte *Singulärwert* (Satz 6.4.1). Für symmetrische Matrizen
+Sie ist der größte *Singulärwert* (@satz:spektralnorm-und-groesster-singulaerwert). Für symmetrische Matrizen
 fallen beide Größen bis aufs Vorzeichen zusammen, sonst nicht. Gegenbeispiel:
 $\bA = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ hat
 den doppelten Eigenwert $0$, aber
@@ -613,9 +613,9 @@ existieren Eigenwerte ohnehin nicht.
 Unter allen Matrizen vom Rang höchstens $k$ minimiert $\bA_k$ den Fehler
 gleichzeitig in der Frobenius- und in der Spektralnorm.
 
-So steht es in Satz 6.4.4. Bemerkenswert daran ist, dass zwei verschiedene
+So steht es in @satz:eckart-und-young-beste-approximation-von. Bemerkenswert daran ist, dass zwei verschiedene
 Gütemaße dieselbe Lösung zulassen; erwarten müsste man das nicht. Der einzige
-Minimierer ist $\bA_k$ deshalb noch lange nicht, siehe Bemerkung 6.4.5.
+Minimierer ist $\bA_k$ deshalb noch lange nicht, siehe @bemerkung:was-der-satz-liefert-und-was-nicht.
 :::
 
 :::frage{falsch}
@@ -644,7 +644,7 @@ Ein Spektrum mit langsam abfallenden Singulärwerten,
 $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
 eine Rang-k-Approximation.
 
-Es ist der ungünstigste der drei Fälle aus Bemerkung 6.4.7. Viele Komponenten
+Es ist der ungünstigste der drei Fälle aus @bemerkung:typische-singulaerwert-verlaeufe-und-der. Viele Komponenten
 tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
 sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
 komprimieren lässt sich der exponentielle Abfall.
@@ -655,10 +655,10 @@ Ist $\corange{\sigma_{k+1}} = 0$, so ist die Rang-k-Approximation exakt.
 
 Weil die Singulärwerte absteigend sortiert sind, folgt aus
 $\corange{\sigma_{k+1}} = 0$ sofort $\rang(\bA) \leq k$. Die Summenform
-($6.4.2$) hat dann gar nicht mehr als $k$ Summanden, also ist $\bA_k = \bA$.
-Satz 6.4.4 selbst setzt $k < r$ voraus und greift hier nicht mehr. Mit der
+@eq:summenform-der-svd hat dann gar nicht mehr als $k$ Summanden, also ist $\bA_k = \bA$.
+@satz:eckart-und-young-beste-approximation-von selbst setzt $k < r$ voraus und greift hier nicht mehr. Mit der
 Fortsetzung $\corange{\sigma_i} = 0$ für $i > r$ aus dem letzten Punkt von
-Bemerkung 6.4.5 sagt ($6.4.4$) aber dasselbe: Der Fehler ist null.
+@bemerkung:was-der-satz-liefert-und-was-nicht sagt @eq:eckart-und-young-beste-approximation-von aber dasselbe: Der Fehler ist null.
 :::
 
 ::::

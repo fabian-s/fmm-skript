@@ -16,7 +16,7 @@ Pivotierung stabil bleibt: die Cholesky-Zerlegung.
 Der entscheidende Spezialfall trägt eine Abkürzung im Namen:
 **SPD**-Matrizen sind **s**ymmetrisch und **p**ositiv **d**efinit.
 
-:::definition[5.4.1 (SPD-Matrix)]
+:::definition[#spd-matrix (SPD-Matrix)]
 Eine Matrix $\bA \in \R^{n \times n}$ heißt *SPD*, wenn
 
 - $\bA = \bA^\top$ gilt ($\bA$ also symmetrisch ist) und
@@ -79,7 +79,7 @@ SPD-Matrizen auf. Drei große Familien:
 
 Warum lohnt sich diese Klasse für die Numerik? SPD-Matrizen garantieren:
 
-- Existenz der Cholesky-Zerlegung (Satz 5.4.2 unten); legen wir die
+- Existenz der Cholesky-Zerlegung (@satz:cholesky-zerlegung unten); legen wir die
   Diagonale von $\bL$ auf positive Werte fest, ist die Zerlegung sogar
   eindeutig.
 - [Numerische Stabilität](?k=04-fehler#sec-4.3) ganz ohne Pivotierung.
@@ -94,10 +94,10 @@ ignorieren würde. Tatsächlich können wir für SPD-Matrizen die Faktoren
 $\bL$ und $\bU$ der LU-Zerlegung so wählen, dass $\bU = \bL^\top$ gilt:
 Die Symmetrie von $\bA$ vererbt sich an die Zerlegung.
 
-:::satz[5.4.2 (Cholesky-Zerlegung)]
+:::satz[#cholesky-zerlegung (Cholesky-Zerlegung)]
 Jede SPD-Matrix $\bA \in \R^{n \times n}$ lässt sich zerlegen als
 
-$$ {#eq-5.4.1}
+$$ {#eq-cholesky-zerlegung}
 \bA = \bL \bL^\top ,
 $$
 
@@ -107,8 +107,8 @@ wobei $\bL$ eine untere :k[Dreiecksmatrix]{#triangular-matrix} ist.
 Statt zweier verschiedener Faktoren speichern wir nur noch $\bL$, und auch
 die Rechnung halbiert sich: Die Cholesky-Zerlegung kommt mit rund $n^3/6$
 Multiplikationen aus, die volle LU-Zerlegung derselben Matrix braucht rund
-$n^3/3$ ([Abschnitt 5.3](#sec-5.3)). An der Größenordnung $O(n^3)$ ändert
-das nichts ([Abschnitt 2.4](?k=02-algos#sec-2.4)), an der Rechenzeit sehr
+$n^3/3$ (@sec:lu). An der Größenordnung $O(n^3)$ ändert
+das nichts (@sec:algos/landau), an der Rechenzeit sehr
 wohl.
 
 Der Beweis ist eine Induktion über die Dimension $n$ und liefert
@@ -221,7 +221,7 @@ Wie kommen wir konkret an $\bL$? Für kleine Matrizen genügt ein
 Koeffizientenvergleich: Wir multiplizieren den Ansatz $\bL\bL^\top$ aus
 und vergleichen Eintrag für Eintrag mit $\bA$.
 
-:::beispiel[5.4.3 (Cholesky-Zerlegung einer 2×2-Matrix)]
+:::beispiel[#cholesky-zerlegung-einer-2-2-matrix (Cholesky-Zerlegung einer 2×2-Matrix)]
 Wir berechnen die Cholesky-Zerlegung von
 $\bA = \begin{pmatrix} 4 & 2 \\ 2 & 3 \end{pmatrix}$.
 
@@ -262,7 +262,7 @@ $\bL\bL^\top = \begin{pmatrix} 4 & 2 \\ 2 & 3 \end{pmatrix} = \bA$.
 Jede Gleichung enthielt genau eine neue Unbekannte; in dieser Reihenfolge
 löst sich das System also von selbst auf. Und dass unter der Wurzel mit
 $3 - 1 = 2 > 0$ etwas Positives stand, war kein Glück: Der Beweis von
-Satz 5.4.2 zeigt, dass das für SPD-Matrizen immer so ausgeht.
+@satz:cholesky-zerlegung zeigt, dass das für SPD-Matrizen immer so ausgeht.
 
 Für allgemeines $n$ liefert derselbe Vergleich das Rezept, das der Beweis
 schon angedeutet hat. Der Eintrag $(i,j)$ von $\bL\bL^\top$ ist
@@ -270,7 +270,7 @@ $\sum_{k=1}^{n} l_{ik} l_{jk}$, und weil $\bL$ untere Dreiecksmatrix ist,
 brechen die Summen früh ab. Wir lösen Spalte für Spalte auf, jeweils nach
 dem einzigen noch unbekannten Eintrag:
 
-$$ {#eq-5.4.2}
+$$ {#eq-eq-5-4-2}
 l_{jj} = \sqrt{a_{jj} - \sum_{k=1}^{j-1} l_{jk}^2} ,
 \qquad
 l_{ij} = \frac{1}{l_{jj}} \Bigl( a_{ij} - \sum_{k=1}^{j-1} l_{ik} l_{jk} \Bigr)
@@ -285,7 +285,7 @@ füllt sich $\bL$?
 
 <CholeskyStepper />
 
-Das Widget macht die spaltenweise Konstruktion aus ($5.4.2$) nachvollziehbar.
+Das Widget macht die spaltenweise Konstruktion aus @eq:eq-5-4-2 nachvollziehbar.
 
 ### Anwendung: korrelierte Zufallsvektoren simulieren
 
@@ -298,7 +298,7 @@ die gewünschte Abhängigkeitsstruktur. Nachrechnen lässt sich das mit zwei
 Eigenschaften des :k[Erwartungswerts]{#expected-value}: Er ist linear, und
 konstante Matrizen dürfen wir aus ihm herausziehen.
 
-:::satz[5.4.4 (Kovarianz unter dem Cholesky-Faktor)]
+:::satz[#kovarianz-unter-dem-cholesky-faktor (Kovarianz unter dem Cholesky-Faktor)]
 Sei $\bx \in \R^d$ ein Zufallsvektor mit $\E[\bx] = \bnull$ und
 $\var(\bx) = \bI_d$, und sei $\bSigma \in \R^{d \times d}$ SPD mit
 Cholesky-Zerlegung $\bSigma = \bL\bL^\top$. Dann hat $\by = \bL\bx$ den
@@ -338,18 +338,18 @@ $$
 = \bSigma .
 $$
 
-::why[erst $\by = \bL\bx$ mit $(\bL\bx)^\top = \bx^\top\bL^\top$ einsetzen; dann die konstanten Faktoren $\bL$ und $\bL^\top$ aus dem Erwartungswert ziehen (Linearität); zuletzt $\E[\bx\bx^\top] = \bI_d$ und die Zerlegung ($5.4.1$) verwenden]
+::why[erst $\by = \bL\bx$ mit $(\bL\bx)^\top = \bx^\top\bL^\top$ einsetzen; dann die konstanten Faktoren $\bL$ und $\bL^\top$ aus dem Erwartungswert ziehen (Linearität); zuletzt $\E[\bx\bx^\top] = \bI_d$ und die Zerlegung @eq:cholesky-zerlegung verwenden]
 :::
 
 ::::
 
-:::bemerkung[5.4.5 (Ziehen aus der multivariaten Normalverteilung)]
+:::bemerkung[#ziehen-aus-der-multivariaten (Ziehen aus der multivariaten Normalverteilung)]
 So simulieren wir aus $\Ncal(\bmu, \bSigma)$: Wir erzeugen
 $\bz \sim \Ncal(\bnull, \bI_d)$ aus $d$ unabhängigen
 Standardnormalvariablen, berechnen einmal den Cholesky-Faktor $\bL$ von
 $\bSigma$ und geben $\bmu + \bL\bz$ zurück. Als lineare Transformation
 eines normalverteilten Vektors ist $\bmu + \bL\bz$ wieder normalverteilt,
-nach Satz 5.4.4 mit Erwartungswert $\bmu$ und Kovarianz $\bSigma$. Die
+nach @satz:kovarianz-unter-dem-cholesky-faktor mit Erwartungswert $\bmu$ und Kovarianz $\bSigma$. Die
 Zerlegung bezahlen wir dabei nur einmal; jede weitere Ziehung kostet nur
 noch ein Matrix-Vektor-Produkt.
 :::
@@ -357,14 +357,14 @@ noch ein Matrix-Vektor-Produkt.
 :::interaktiv[Wie L eine runde Punktwolke verformt]
 Welche Veränderung der Wolke erwarten wir, wenn $|\rho|$ fast eins wird?
 
-Im zweidimensionalen Fall lässt sich Satz 5.4.4 direkt ansehen. Aus
+Im zweidimensionalen Fall lässt sich @satz:kovarianz-unter-dem-cholesky-faktor direkt ansehen. Aus
 $\sigma_1$, $\sigma_2$ und der Korrelation $\rho$ bauen wir
 
 $$
 \bSigma = \begin{pmatrix} \sigma_1^2 & \rho\,\sigma_1\sigma_2 \\ \rho\,\sigma_1\sigma_2 & \sigma_2^2 \end{pmatrix},
 $$
 
-und ($5.4.2$) liefert den Cholesky-Faktor in geschlossener Form:
+und @eq:eq-5-4-2 liefert den Cholesky-Faktor in geschlossener Form:
 
 $$
 \bL = \begin{pmatrix} \cgreen{\sigma_1} & 0 \\ \cgreen{\rho\,\sigma_2} & \cgreen{\sigma_2\sqrt{1 - \rho^2}} \end{pmatrix} .
@@ -383,7 +383,7 @@ Das Widget verknüpft den Cholesky-Faktor mit der Form der erzeugten Punktwolke.
 Im SPD-Richtungs-Widget widerlegt eine Richtung mit $\bx^\top\bA\bx \leq 0$
 die positive Definitheit.
 
-Definition 5.4.1 verlangt strikte Positivität für alle von null verschiedenen
+@definition:spd-matrix verlangt strikte Positivität für alle von null verschiedenen
 Richtungen. Ein Gegenbeispiel genügt daher zum Widerlegen.
 :::
 

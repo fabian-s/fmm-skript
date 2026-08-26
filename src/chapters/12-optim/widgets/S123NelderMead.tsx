@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Aufgabe, FMM_COLORS, fmtDe, Stepper, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
+import { ref } from "../../numbers.generated";
 
 /**
  * §12.3 — DIE EINE EINSICHT: Vier Züge (Reflexion, Expansion, Kontraktion,
@@ -197,11 +198,11 @@ export function NelderMeadSimplex() {
     art = "neutral";
     titel = "Ausgangslage";
     status =
-      "Der Startsimplex steht. Ein Schritt vorwärts wirft die schlechteste Ecke weg und probiert den Punkt auf der anderen Seite des Schwerpunkts, Zug 1 von Algorithmus 12.3.2.";
+      `Der Startsimplex steht. Ein Schritt vorwärts wirft die schlechteste Ecke weg und probiert den Punkt auf der anderen Seite des Schwerpunkts, Zug 1 von ${ref("algorithmus:nelder-mead-simplexverfahren")}.`;
   } else if (ecken[0].v < 1e-6) {
     art = "ok";
     titel = "im Minimum angekommen";
-    status = `Der beste Eckpunkt liegt bei f = ${fmtE(ecken[0].v)}, das Verfahren ist also am Ziel. Bis hierher standen ${z.Reflexion} Reflexionen, ${z.Expansion} Expansionen, ${z.Kontraktion} Kontraktionen und ${z.Schrumpfen} Schrumpfschritte auf der Rechnung: Die vier Züge von Algorithmus 12.3.2 kommen sehr ungleich zum Einsatz, und die billigste Bewegung ist bei weitem nicht die häufigste.`;
+    status = `Der beste Eckpunkt liegt bei f = ${fmtE(ecken[0].v)}, das Verfahren ist also am Ziel. Bis hierher standen ${z.Reflexion} Reflexionen, ${z.Expansion} Expansionen, ${z.Kontraktion} Kontraktionen und ${z.Schrumpfen} Schrumpfschritte auf der Rechnung: Die vier Züge von ${ref("algorithmus:nelder-mead-simplexverfahren")} kommen sehr ungleich zum Einsatz, und die billigste Bewegung ist bei weitem nicht die häufigste.`;
   } else if (jetzt.move === "Schrumpfen") {
     art = "warn";
     titel = "Schrumpfen";
