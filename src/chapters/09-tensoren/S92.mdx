@@ -1,4 +1,5 @@
 import { TensorScheibenViewer } from "./widgets/S92Scheiben";
+import vgg16Block3FeatureMaps from "./vgg16-block3-feature-maps.png";
 
 Der Darstellungssatz aus @sec:multilinear (@satz:darstellung-multilinearer-abbildungen) hat multilineare
 Abbildungen vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist mehr als
@@ -351,10 +352,22 @@ $$
 
 also mehr als die $4\,816\,896$ Einträge des Eingangs. Die Auflösung fällt zwar
 um den Faktor $16$, die Kanalzahl wächst aber um den Faktor $64/3$, und
-$\tfrac{64}{3 \cdot 16} = \tfrac{4}{3}$. Anschaulich wird das an den
-Feature-Maps aus Block 3 des VGG16-Modells (Quelle: machinelearningmastery.com);
-jede einzelne sieht aus wie ein grobes Graustufenbild, hell an den Stellen, an
-denen das jeweilige Muster kräftig anspricht.
+$\tfrac{64}{3 \cdot 16} = \tfrac{4}{3}$. Anschaulich wird das Prinzip an den
+Feature-Maps aus Block 3 des VGG16-Modells: Jede einzelne sieht aus wie ein
+grobes Graustufenbild, hell an den Stellen, an denen das jeweilige Muster
+kräftig anspricht.
+
+<figure className="mx-auto my-4 max-w-2xl">
+  <img
+    src={vgg16Block3FeatureMaps}
+    alt="Raster aus 64 ausgewählten Feature-Maps des dritten VGG16-Blocks. In den dunklen Graustufenbildern zeichnen helle Bereiche unterschiedliche Strukturen des Eingabebildes nach."
+    className="h-auto w-full rounded-md border border-slate-200 bg-white"
+  />
+  <figcaption className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+    64 ausgewählte Feature-Maps aus Block 3 von VGG16 für dasselbe Eingabebild.
+    Der Block erzeugt insgesamt 256 Kanäle. Quelle: <a href="https://machinelearningmastery.com/how-to-visualize-filters-and-feature-maps-in-convolutional-neural-networks/">Machine Learning Mastery</a>.
+  </figcaption>
+</figure>
 :::
 
 **Was an einer Faltungsschicht linear ist.** Die Abbildung $c$ hat nur ein
