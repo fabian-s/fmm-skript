@@ -16,6 +16,11 @@ import remarkGfm from "remark-gfm";
 import remarkDirective from "remark-directive";
 import remarkFmm from "./remark-fmm.mjs";
 
-export function remarkChain(root) {
-  return [remarkMath, remarkGfm, remarkDirective, [remarkFmm, { root }]];
+/**
+ * `extra` reicht weitere remark-fmm-Optionen durch — heute nur `numbers`
+ * (eine Nummerntabelle für die Fixture-Tests, die sonst aus
+ * <root>/src/chapters/numbers.generated.json gelesen wird).
+ */
+export function remarkChain(root, extra = {}) {
+  return [remarkMath, remarkGfm, remarkDirective, [remarkFmm, { root, ...extra }]];
 }

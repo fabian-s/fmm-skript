@@ -6,7 +6,12 @@
  *   $\bA^\top\bA$              -> <M>{"\\bA^\\top\\bA"}</M>
  *   $$ … $$                    -> <MD>{"…"}</MD>
  *   $$ {#eq-2.3} … $$          -> <Eq tag="2.3">{"…"}</Eq>
+ *   $$ {#eq-kkt} … $$          -> <Eq tag="12.5.3" id="eq-kkt">   (Nummer aus der Tabelle)
  *   :::satz[2.4 (Cauchy)] …    -> <EnvBlock kind="Satz" label="2.4 (Cauchy)">
+ *   :::satz[#kkt (KKT)] …      -> <EnvBlock kind="Satz" label="12.5.7 (KKT)" id="env-kkt">
+ *   ### Titel :id[slug]        -> <h3 id="sec-slug">12.5.1 Titel</h3>
+ *   @satz:kkt / @eq:kkt / @sec:optim/x / @kap:optim / @num:kkt / @ref:kkt
+ *                              -> <a href="#env-kkt">Satz 12.5.7</a> usw. (siehe mdx/numbers.mjs)
  *   :k[die Spur]{#trace}       -> <ConceptLink id="trace">die Spur</ConceptLink>
  *   :::vertiefung[Titel] …     -> <ExpandedReading title="Titel">   (Zusatzstoff, eingeklappt)
  *   :::interaktiv[Titel] …     -> <Interaktiv title="Titel">         (Widget-Kasten, Kernstoff)
@@ -16,6 +21,11 @@
  *   ::::quiz / :::zahlfrage{loesung=0,433 toleranz=0,01} -> <Zahlfrage>
  *   ::quelle[…]                -> kleine graue Quellenzeile
  *   ### 2.2.1 Titel            -> <h3 id="sec-2.2.1">
+ *
+ * NUMMERN: Handnummern (2.4, {#eq-2.3}, ### 2.2.1) werden unverändert
+ * durchgereicht; ID-Labels holen ihre Nummer aus src/chapters/numbers.generated.json
+ * (scripts/gen-numbers.mjs), die synchron aus `root` gelesen wird. Beides
+ * darf gemischt vorkommen. @-Verweise werden zur Compile-Zeit zu Links.
  *
  * ENTWURFSPRINZIP (nach externem Review 2026-08-06): Dieses Plugin ist ein
  * STRIKTER SYNTAX-COMPILER und sonst nichts. Es legt insbesondere KEIN
@@ -32,6 +42,17 @@ import path from "node:path";
 import { visit } from "unist-util-visit";
 import { Parser } from "acorn";
 import acornJsx from "acorn-jsx";
+import {
+  ENV_KIND,
+  loadNumbers,
+  chapterOfFile,
+  parseEnvLabel,
+  parseEqMeta,
+  takeHeadingId,
+  resolveRef,
+  splitRefs,
+  mergeRefDirectives,
+} from "./numbers.mjs";
 
 const JsxParser = Parser.extend(acornJsx());
 
@@ -41,22 +62,7 @@ const JsxParser = Parser.extend(acornJsx());
  * deutsche Direktiven nebeneinander: ein englischsprachiges Buchkapitel soll
  * „Theorem 4.6" schreiben, das deutsche Skript „Satz 4.6".
  */
-const ENV = {
-  // englisch
-  definition: "Definition",
-  theorem: "Theorem",
-  lemma: "Lemma",
-  corollary: "Corollary",
-  example: "Example",
-  remark: "Remark",
-  algorithm: "Algorithm",
-  // deutsch
-  satz: "Satz",
-  korollar: "Korollar",
-  beispiel: "Beispiel",
-  bemerkung: "Bemerkung",
-  algorithmus: "Algorithmus",
-};
+const ENV = ENV_KIND;
 
 /**
  * Englische Zweitnamen der übrigen Direktiven. Intern wird auf die deutschen
@@ -227,7 +233,7 @@ function takeLabel(node, fail) {
   const scan = (n) => {
     if (n.type === "text" || n.type === "inlineCode" || n.type === "paragraph")
       return (n.children ?? []).forEach(scan);
-    bad.push(n.type === "inlineMath" ? "Mathematik" : n.type);
+    bad.push(n.type === "inlineMath" ? "Mathematik" : n.data?.fmmRef ? "@-Verweise" : n.type);
   };
   (first.children ?? []).forEach(scan);
   if (bad.length)
@@ -263,6 +269,16 @@ export default function remarkFmm(options = {}) {
     const fail = (node, msg, rule = "remark-fmm") => file.fail(msg, node?.position, rule);
     const source = String(file.value ?? "");
     const lines = source.split("\n");
+    // Nummerntabelle: pro Datei frisch (mtime-gecacht), damit ein laufender
+    // Dev-Server nach gen-numbers die neuen Nummern sieht. `options.numbers`
+    // ist der Testhaken der Fixtures.
+    const numbers = options.numbers ?? loadNumbers(options.root ?? process.cwd());
+    const refCtx = { chapterId: chapterOfFile(file.path) };
+    const rawOf = (node) => {
+      const a = node.position?.start?.offset;
+      const b = node.position?.end?.offset;
+      return a == null || b == null ? null : source.slice(a, b);
+    };
 
     /* ---- 0. Maskiertes Dollarzeichen IN Mathematik -------------------- */
     // `$a \$ b$` beendet die Formel schon am maskierten Dollar: es entsteht
@@ -287,6 +303,10 @@ export default function remarkFmm(options = {}) {
         "remark-fmm:dollar"
       );
     });
+
+    /* ---- 0a. @-Verweise wieder zusammensetzen ------------------------ */
+    // remark-directive hat „@satz:kkt" in Text + Direktive „:kkt" zerlegt.
+    for (const e of mergeRefDirectives(tree, visit)) fail(e.node, e.message, "remark-fmm:ref-syntax");
 
     /* ---- 0b. Englische Zweitnamen auf die internen Namen abbilden --- */
     visit(tree, (node) => {
@@ -321,14 +341,17 @@ export default function remarkFmm(options = {}) {
       // unbekannte Namen zuerst: sonst laufen die Regeln unten ins Leere
       const known =
         (node.type === "textDirective" && name === "k") ||
+        (node.type === "textDirective" && name === "id" && parent?.type === "heading") ||
         (node.type === "leafDirective" && (name === "quelle" || name === "why")) ||
         (node.type === "containerDirective" &&
           (ENV[name] ||
             ["vertiefung", "interaktiv", "beweis", "schritt", "quiz", "frage", "zahlfrage"].includes(name)));
       if (!known) {
         const sigil = node.type === "textDirective" ? ":" : node.type === "leafDirective" ? "::" : ":::";
-        fail(node, `unbekannte Direktive ${sigil}${name}`, "remark-fmm:unknown-directive");
+        const hint = node.type === "textDirective" && name === "id" ? " — :id[…] ist nur am Ende einer Überschrift erlaubt" : "";
+        fail(node, `unbekannte Direktive ${sigil}${name}${hint}`, "remark-fmm:unknown-directive");
       }
+      if (node.type === "textDirective" && name === "id") return; // wird in Schritt 4 aufgelöst
 
       // Attribute: nur erlaubte, und Flags müssen bar sein
       for (const [key, value] of Object.entries(a)) {
@@ -433,11 +456,57 @@ export default function remarkFmm(options = {}) {
       }
     });
 
+    /* ---- 1b. @-Verweise -> Links ------------------------------------ */
+    // Läuft VOR dem Umbau der Direktiven: so landen Verweise in ::why[…]
+    // als link-Knoten in jsxAll() (WHY_OK kennt link), und takeLabel() sieht
+    // einen Verweis im Label als Auszeichnung und lehnt ihn ab. Der Text
+    // kommt fertig aus der Tabelle — das Orakel und die Druckfassung sehen
+    // dieselben Nummern wie der Browser.
+    // Text in Autoren-Links ([…](url), <a href>) kann nicht noch einmal verlinkt werden.
+    visit(tree, (n) => {
+      if (!(n.type === "link" || ((n.type === "mdxJsxTextElement" || n.type === "mdxJsxFlowElement") && n.name === "a"))) return;
+      visit(n, "text", (t) => {
+        t.data = { ...(t.data ?? {}), fmmInLink: true };
+      });
+    });
+    visit(tree, "text", (node, index, parent) => {
+      const split = splitRefs(node.value, rawOf(node));
+      if (!split) return;
+      if (split.error) fail(node, split.error, "remark-fmm:ref-escape");
+      if (node.data?.fmmInLink)
+        fail(parent, `@-Verweis innerhalb eines Links [ … ]( … ) — der Verweis verlinkt selbst`, "remark-fmm:ref-in-link");
+      const out = [];
+      for (const seg of split.segments) {
+        if (seg.text != null) {
+          out.push({ type: "text", value: seg.text, position: node.position });
+          continue;
+        }
+        let r;
+        try {
+          r = resolveRef(numbers, seg.ref.type, seg.ref.id, refCtx);
+        } catch (e) {
+          fail(node, `${e.message} (Tabelle: npm run gen:numbers)`, "remark-fmm:unknown-ref");
+        }
+        out.push({
+          type: "link",
+          url: r.href,
+          title: null,
+          children: [{ type: "text", value: r.text, position: node.position }],
+          position: node.position,
+          data: { fmmRef: true, refTarget: r.target, refAnchor: r.anchor },
+        });
+      }
+      parent.children.splice(index, 1, ...out);
+      return index + out.length;
+    });
+
     /* ---- 2. Direktiven umbauen ------------------------------------ */
     visit(tree, (node, index, parent) => {
       if (!DIRECTIVE_TYPES.has(node.type)) return;
       const a = node.attributes ?? {};
       const name = node.name;
+
+      if (node.type === "textDirective" && name === "id") return; // Überschrift, Schritt 4
 
       if (node.type === "textDirective") {
         if (!a.id)
@@ -459,19 +528,33 @@ export default function remarkFmm(options = {}) {
       if (name === "why") return; // wird vom umgebenden :::schritt eingesammelt
 
       if (ENV[name]) {
-        const label = takeLabel(node, fail) ?? a.label;
-        if (!label)
+        const rawLabel = takeLabel(node, fail) ?? a.label;
+        if (!rawLabel)
           fail(
             node,
-            `:::${name} braucht ein Label, z.B. :::${name}[2.4 (Cauchy-Schwarz)]`,
+            `:::${name} braucht ein Label, z.B. :::${name}[#kurz-id (Name)] oder (alt) :::${name}[2.4 (Cauchy-Schwarz)]`,
             "remark-fmm:missing-label"
           );
-        parent.children[index] = el(
-          "EnvBlock",
-          [attr("kind", ENV[name]), attr("label", label)],
-          node.children,
-          node
-        );
+        const p = parseEnvLabel(rawLabel);
+        let label = rawLabel;
+        const attrs = [attr("kind", ENV[name])];
+        if (p.form === "id") {
+          const entry = numbers.envs?.[p.id];
+          if (!entry || entry.legacy)
+            fail(
+              node,
+              `Env-ID „${p.id}" steht nicht in der Nummerntabelle — npm run gen:numbers (bzw. ID prüfen: a-z, 0-9, -)`,
+              "remark-fmm:unknown-id"
+            );
+          if (entry.directive !== name && ENV[entry.directive] !== ENV[name])
+            fail(node, `Env-ID „${p.id}" ist in der Tabelle ein ${entry.kind}, hier :::${name} — Tabelle veraltet? npm run gen:numbers`, "remark-fmm:unknown-id");
+          label = entry.label;
+          attrs.push(attr("id", entry.anchor));
+        } else if (p.form === "unnumbered") {
+          label = p.name;
+        }
+        attrs.splice(1, 0, attr("label", label));
+        parent.children[index] = el("EnvBlock", attrs, node.children, node);
         return;
       }
 
@@ -560,39 +643,49 @@ export default function remarkFmm(options = {}) {
         return;
       }
       if (node.type !== "math") return;
-      const meta = (node.meta ?? "").trim();
+      // genau EIN {#eq-…}-Token, sonst Fehler. Vorher wurde „$$ garbage" und
+      // „$$ {#eq_2.3}" still zu einer unnummerierten Gleichung.
+      const p = parseEqMeta(node.meta);
+      if (p?.error) fail(node, p.error, "remark-fmm:eq-meta");
       let tag = null;
-      if (meta) {
-        // genau EIN {#eq-…}-Token, sonst Fehler. Vorher wurde „$$ garbage" und
-        // „$$ {#eq_2.3}" still zu einer unnummerierten Gleichung.
-        const m = /^\{#eq-([^}\s]+)\}$/.exec(meta);
-        if (!m)
-          fail(
-            node,
-            `unverständliche Angabe hinter $$: „${meta}". Erlaubt ist genau ein ` +
-              `{#eq-<nummer>}, z.B. $$ {#eq-2.3}`,
-            "remark-fmm:eq-meta"
-          );
-        tag = m[1];
-        if (eqTags.has(tag))
-          fail(node, `Gleichungsnummer „${tag}" ist doppelt vergeben`, "remark-fmm:duplicate-eq");
-        eqTags.set(tag, node.position);
+      const attrs = [];
+      if (p) {
+        if (p.legacy) tag = p.id;
+        else {
+          const entry = numbers.eqs?.[p.id];
+          if (!entry || entry.legacy)
+            fail(node, `Gleichungs-ID „${p.id}" steht nicht in der Nummerntabelle — npm run gen:numbers`, "remark-fmm:unknown-id");
+          tag = entry.num;
+          attrs.push(attr("id", entry.anchor));
+        }
+        if (eqTags.has(p.id))
+          fail(node, `Gleichungsnummer „${p.id}" ist doppelt vergeben`, "remark-fmm:duplicate-eq");
+        eqTags.set(p.id, node.position);
       }
       parent.children[index] = tag
-        ? el("Eq", [attr("tag", tag)], [expression(JSON.stringify(node.value), true)], node)
+        ? el("Eq", [attr("tag", tag), ...attrs], [expression(JSON.stringify(node.value), true)], node)
         : el("MD", [], [expression(JSON.stringify(node.value), true)], node);
     });
 
     /* ---- 4. Überschriften: IDs NUR aus der Nummerierung ------------ */
     // Frühere Fassung sluggte auch unnummerierte Überschriften; allein in
     // Kapitel 3 wären daraus vier gleiche id="selbsttest" geworden.
+    // ID-Form `### Titel :id[slug]`: Nummer aus der Tabelle vor den Titel, id="sec-slug".
     const headingIds = new Map();
     visit(tree, "heading", (node, index, parent) => {
-      const text = plain(node).trim();
-      const num = /^(\d+(?:\.\d+)*)\b/.exec(text);
+      const h = takeHeadingId(node, plain);
+      if (h.error) fail(node, h.error, "remark-fmm:heading-id");
       const attrs = [];
-      if (num) {
-        const id = `sec-${num[1]}`;
+      let id = null;
+      if (h.legacy) id = `sec-${h.legacy}`;
+      else if (h.id) {
+        const entry = numbers.subs?.[h.id];
+        if (!entry || entry.legacy)
+          fail(node, `Überschriften-ID „${h.id}" steht nicht in der Nummerntabelle — npm run gen:numbers`, "remark-fmm:unknown-id");
+        id = entry.anchor;
+        node.children = [{ type: "text", value: `${entry.num} `, position: node.position }, ...node.children];
+      }
+      if (id) {
         if (headingIds.has(id))
           fail(node, `Überschriften-ID „${id}" ist in dieser Datei doppelt`, "remark-fmm:duplicate-id");
         headingIds.set(id, node.position);

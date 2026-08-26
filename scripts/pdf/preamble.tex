@@ -159,14 +159,18 @@
 % -------------------------------------------------------------------
 % \emergencystretch in den Kaesten: das schmalere Satzbild bringt lange
 % deutsche Komposita sonst regelmaessig in Zeilen mit klaffenden Wortabstaenden.
-\newtcolorbox{fmmenv}[3]{%
+% Optionales 1. Argument: Sprungmarke fuer @-Verweise (\hyperref[env-<id>]),
+% z. B. \begin{fmmenv}[env-kkt]{fmmblue}{Satz}{12.5.7 (KKT)}. Handnummerierte
+% Umgebungen lassen es weg und bekommen kein \label.
+\newtcolorbox{fmmenv}[4][]{%
   breakable, enhanced, sharp corners,
   boxrule=0pt, leftrule=2.2pt,
-  colback=#1!5!white, colframe=#1!75!black,
+  colback=#2!5!white, colframe=#2!75!black,
   left=8pt, right=8pt, top=6pt, bottom=6pt,
   before skip=9pt, after skip=9pt,
   before upper={\emergencystretch=3em
-    \noindent\textbf{\sffamily\color{#1!75!black}#2~#3}\par\smallskip}%
+    \ifblank{#1}{}{\phantomsection\label{#1}}%
+    \noindent\textbf{\sffamily\color{#2!75!black}#3~#4}\par\smallskip}%
 }
 
 % Vertiefung: bewusst anders — grau, gestrichelt, kleiner Satz.

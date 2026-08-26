@@ -8,13 +8,13 @@ import S44Body from "./S44.mdx";
 const chapter: ChapterModule = {
   sections: [
     {
-      id: "4.1",
+      id: "4.1", key: "fehlermasse",
       title: "Fehlermaße und Fehlerzerlegung",
       C: mdxSection(S41Body),
     },
-    { id: "4.2", title: "Kondition", C: mdxSection(S42Body) },
-    { id: "4.3", title: "Stabilität von Algorithmen", C: mdxSection(S43Body) },
-    { id: "4.4", title: "Zusammenfassung", C: mdxSection(S44Body) },
+    { id: "4.2", key: "kondition", title: "Kondition", C: mdxSection(S42Body) },
+    { id: "4.3", key: "stabilitaet", title: "Stabilität von Algorithmen", C: mdxSection(S43Body) },
+    { id: "4.4", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S44Body) },
   ],
 };
 export default chapter;

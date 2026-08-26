@@ -321,8 +321,150 @@ const TYPE_REJECT = {
   ],
 };
 
+/* ------------------------------------------------------------------ */
+/* Automatische Nummerierung (mdx/numbers.mjs, scripts/gen-numbers.mjs) */
+/* ------------------------------------------------------------------ */
+
+/** Testtabelle statt src/chapters/numbers.generated.json */
+const NUMBERS = {
+  version: 1,
+  chapters: { optim: { id: "12-optim", num: 12, title: "Optimierung" }, svd: { id: "06-svd", num: 6, title: "SVD" } },
+  sections: {
+    "optim/beschraenkt": { num: "12.5", chapter: "12-optim", key: "beschraenkt", title: "Beschränkt", anchor: "sec-12.5" },
+    "svd/motivation": { num: "6.1", chapter: "06-svd", key: "motivation", title: "Motivation", anchor: "sec-6.1" },
+  },
+  envs: {
+    kkt: { num: "12.5.7", kind: "Satz", directive: "satz", name: "KKT-Bedingungen", label: "12.5.7 (KKT-Bedingungen)", chapter: "12-optim", section: "12.5", anchor: "env-kkt", legacy: false },
+    "bsp-a": { num: "6.1.2", kind: "Beispiel", directive: "beispiel", name: null, label: "6.1.2", chapter: "06-svd", section: "6.1", anchor: "env-bsp-a", legacy: false },
+    "12.5.1": { num: "12.5.1", kind: "Definition", directive: "definition", name: "Alt", label: "12.5.1 (Alt)", chapter: "12-optim", section: "12.5", anchor: null, legacy: true },
+  },
+  eqs: { "kkt-stat": { num: "12.5.3", chapter: "12-optim", section: "12.5", anchor: "eq-kkt-stat", legacy: false } },
+  subs: { "lagrange-idee": { num: "12.5.1", chapter: "12-optim", section: "12.5", anchor: "sec-lagrange-idee", legacy: false } },
+};
+const NPATH = "/x/src/chapters/12-optim/S125.mdx";
+async function buildN(src, filePath = NPATH) {
+  return String(
+    await compile({ value: src, path: filePath }, { remarkPlugins: remarkChain("/x", { numbers: NUMBERS }), jsx: true })
+  );
+}
+
+/** akzeptierte Nummern-Formen: [Quelle, erwarteter Output, (optional) Dateipfad] */
+const NUM_ACCEPT = {
+  "env with id gets number and anchor": [
+    `:::satz[#kkt (KKT-Bedingungen)]\nInhalt.\n:::`,
+    `<EnvBlock kind="Satz" label="12.5.7 (KKT-Bedingungen)" id="env-kkt">`,
+  ],
+  "env with id, no name": [`:::beispiel[#bsp-a]\nInhalt.\n:::`, `label="6.1.2" id="env-bsp-a"`, "/x/src/chapters/06-svd/S61.mdx"],
+  "env explicitly unnumbered": [`:::bemerkung[(Konvention)]\nInhalt.\n:::`, `<EnvBlock kind="Bemerkung" label="Konvention">`],
+  "legacy and id labels mixed in one file": [
+    `:::definition[12.5.1 (Alt)]\nA.\n:::\n\n:::satz[#kkt (KKT-Bedingungen)]\nB.\n:::`,
+    `label="12.5.1 (Alt)"`,
+  ],
+  "legacy env has NO anchor": [`:::definition[12.5.1 (Alt)]\nA.\n:::`, `<EnvBlock kind="Definition" label="12.5.1 (Alt)">`],
+  "equation with id": [`$$ {#eq-kkt-stat}\nx\n$$`, `<Eq tag="12.5.3" id="eq-kkt-stat">`],
+  "legacy equation unchanged": [`$$ {#eq-12.5.9}\nx\n$$`, `<Eq tag="12.5.9">`],
+  "heading with :id gets number and anchor": [`### Die Idee :id[lagrange-idee]\n`, `id="sec-lagrange-idee"`],
+  "heading with :id renders number text": [`### Die Idee :id[lagrange-idee]\n`, `12.5.1 `],
+  "@satz same chapter": [`Nach @satz:kkt gilt.`, `<_components.a href="#env-kkt">{"Satz 12.5.7"}</_components.a>`],
+  "@theorem (english) on a Satz": [`See @theorem:kkt.`, `{"Satz 12.5.7"}`],
+  "@beispiel cross-chapter": [`Siehe @beispiel:bsp-a.`, `href="?k=06-svd#env-bsp-a">{"Beispiel 6.1.2"}`],
+  "@eq": [`Aus @eq:kkt-stat folgt.`, `href="#eq-kkt-stat">{"(12.5.3)"}`],
+  "@num only number": [`Beispiele @num:bsp-a bis @num:kkt.`, `{"6.1.2"}`],
+  "@ref picks kind": [`Siehe @ref:bsp-a.`, `{"Beispiel 6.1.2"}`],
+  "@sec within chapter": [`In @sec:beschraenkt steht.`, `href="#sec-12.5">{"Abschnitt 12.5"}`],
+  "@sec cross-chapter": [`In @sec:svd/motivation steht.`, `href="?k=06-svd#sec-6.1">{"Abschnitt 6.1"}`],
+  "@sec on subheading": [`In @sec:lagrange-idee steht.`, `href="#sec-lagrange-idee">{"Abschnitt 12.5.1"}`],
+  "@kap": [`In @kap:svd steht.`, `href="?k=06-svd">{"Kapitel 6"}`],
+  "@sec from concept (no chapter) uses ?k=": [`In @sec:optim/beschraenkt.`, `href="?k=12-optim#sec-12.5"`, "/x/src/concepts/kkt.mdx"],
+  "ref at sentence end keeps the period": [`Siehe @satz:kkt.`, `{"Satz 12.5.7"}</_components.a>{"."}`],
+  "ref inside ::why label": [
+    `::::beweis\n\n:::schritt\nEins.\n\n::why[nach @satz:kkt und @eq:kkt-stat]\n:::\n\n::::`,
+    `href={"#env-kkt"}>{"Satz 12.5.7"}`,
+  ],
+  "escaped \\@ is literal": [`Schreibe \\@satz:kkt für einen Verweis.`, `{"Schreibe @satz:kkt für einen Verweis."}`],
+  "ref inside table cell": [`| a | b |\n|---|---|\n| @satz:kkt | x |`, `{"Satz 12.5.7"}`],
+};
+
+/** abgelehnte Nummern-Formen */
+const NUM_REJECT = {
+  "unknown ref": [`Nach @satz:nope gilt.`, `unbekannter Verweis`],
+  "kind mismatch": [`Nach @definition:kkt gilt.`, `ist ein Satz`],
+  "@eq on an env id": [`Nach @eq:kkt gilt.`, `unbekannter Verweis @eq:kkt`],
+  "unknown env id": [`:::satz[#nope]\nInhalt.\n:::`, `Nummerntabelle`],
+  "unknown eq id": [`$$ {#eq-nope}\nx\n$$`, `Nummerntabelle`],
+  "unknown heading id": [`### Titel :id[nope]\n`, `Nummerntabelle`],
+  "invalid env id": [`:::satz[#Kkt_x]\nInhalt.\n:::`, `Nummerntabelle`],
+  "duplicate eq id in file": [`$$ {#eq-kkt-stat}\nx\n$$\n\n$$ {#eq-kkt-stat}\ny\n$$`, `doppelt`],
+  "duplicate heading id in file": [`### A :id[lagrange-idee]\n\n### B :id[lagrange-idee]\n`, `doppelt`],
+  "ref inside a link": [`Siehe [@satz:kkt](#sec-12.5).`, `innerhalb eines Links`],
+  ":id outside a heading": [`Text :id[x] hier.`, `nur am Ende einer Überschrift`],
+  ":id not at the end": [`### A :id[lagrange-idee] B\n`, `am ENDE`],
+  "heading with number AND id": [`### 2.5.1 Titel :id[lagrange-idee]\n`, `Nummer UND`],
+  "ref inside env label": [`:::satz[#kkt (nach @eq:kkt-stat)]\nInhalt.\n:::`, `@-Verweise`],
+  "@sec unknown in chapter": [`In @sec:motivation steht.`, `unbekannter Verweis @sec:motivation`],
+  "@sec bare key from concept": [`In @sec:beschraenkt.`, `unbekannter Verweis @sec:beschraenkt`, "/x/src/concepts/kkt.mdx"],
+};
+
 let pass = 0;
 const failures = [];
+
+for (const [name, [src, expect, filePath]] of Object.entries(NUM_ACCEPT)) {
+  try {
+    const out = await buildN(src, filePath);
+    if (out.includes(expect)) pass++;
+    else failures.push(`NUM_ACCEPT ${name}: compiled but missing ${JSON.stringify(expect)}`);
+  } catch (e) {
+    failures.push(`NUM_ACCEPT ${name}: threw — ${String(e.message).split("\n")[0]}`);
+  }
+}
+for (const [name, [src, expect, filePath]] of Object.entries(NUM_REJECT)) {
+  let out = null;
+  try {
+    out = await buildN(src, filePath);
+  } catch (e) {
+    const msg = String(e.message);
+    if (msg.includes(expect)) pass++;
+    else failures.push(`NUM_REJECT ${name}: wrong message — ${msg.split("\n")[0]}`);
+    continue;
+  }
+  failures.push(`NUM_REJECT ${name}: compiled GREEN but must fail (${out.length} chars)`);
+}
+
+// Zählpass: Handnummern belegen, IDs füllen die Lücken in Dokumentreihenfolge;
+// doppelte IDs über Dateigrenzen hinweg sind ein Fehler.
+{
+  const { scanFile, assignNumbers, buildTable } = await import("../scripts/gen-numbers.mjs");
+  const { items } = scanFile(
+    `:::definition[12.5.1 (Alt)]\nA.\n:::\n\n:::satz[#a]\nB.\n:::\n\n:::bemerkung[12.5.3]\nC.\n:::\n\n:::satz[#b (N)]\nD.\n:::\n\n` +
+      `$$ {#eq-x}\n1\n$$\n\n$$ {#eq-12.5.1}\n2\n$$\n\n### 12.5.1 Alt\n\n### Neu :id[h]\n`,
+    "S.mdx"
+  );
+  const errors = [];
+  const nums = Object.fromEntries(assignNumbers(items, "12.5", "S.mdx", errors, []).map((it) => [`${it.ns}:${it.id ?? it.num}`, it.num]));
+  const want = { "envs:12.5.1": "12.5.1", "envs:a": "12.5.2", "envs:12.5.3": "12.5.3", "envs:b": "12.5.4", "eqs:x": "12.5.2", "eqs:12.5.1": "12.5.1", "subs:12.5.1": "12.5.1", "subs:h": "12.5.2" };
+  if (!errors.length && JSON.stringify(nums) === JSON.stringify(want)) pass++;
+  else failures.push(`GEN counter: ${JSON.stringify(nums)} ${errors.join("; ")}`);
+
+  const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import("node:fs");
+  const os = await import("node:os");
+  const tmp = mkdtempSync(path.join(os.tmpdir(), "fmm-numbers-"));
+  try {
+    mkdirSync(path.join(tmp, "src/chapters/01-a"), { recursive: true });
+    writeFileSync(path.join(tmp, "src/chapters/index.ts"), `{ id: "01-a", num: 1, title: "A" }`);
+    writeFileSync(
+      path.join(tmp, "src/chapters/01-a/index.ts"),
+      `import S11Body from "./S11.mdx";\nimport S12Body from "./S12.mdx";\n` +
+        `{ id: "1.1", key: "eins", title: "Eins", C: mdxSection(S11Body) },\n{ id: "1.2", key: "zwei", title: "Zwei", C: mdxSection(S12Body) },`
+    );
+    writeFileSync(path.join(tmp, "src/chapters/01-a/S11.mdx"), `:::satz[#dup]\nA.\n:::\n`);
+    writeFileSync(path.join(tmp, "src/chapters/01-a/S12.mdx"), `:::satz[#dup]\nB.\n:::\n\n### X :id[zwei]\n`);
+    const { errors: e2, table } = buildTable(tmp);
+    if (e2.some((m) => m.includes("schon vergeben")) && e2.some((m) => m.includes("kollidiert")) && table.envs.dup?.num === "1.1.1") pass++;
+    else failures.push(`GEN duplicate id across files: ${e2.join(" | ") || "kein Fehler"}`);
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+}
 
 for (const [name, [src, expect]] of Object.entries(ACCEPT)) {
   try {
@@ -415,6 +557,9 @@ try {
 const total =
   Object.keys(ACCEPT).length +
   Object.keys(REJECT).length +
+  Object.keys(NUM_ACCEPT).length +
+  Object.keys(NUM_REJECT).length +
+  2 +
   Object.keys(INVENTORY).length +
   Object.keys(TYPE_REJECT).length +
   5;

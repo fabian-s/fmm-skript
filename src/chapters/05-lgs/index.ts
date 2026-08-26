@@ -9,14 +9,14 @@ import S55Body from "./S55.mdx";
 const chapter: ChapterModule = {
   sections: [
     {
-      id: "5.1",
+      id: "5.1", key: "grundlagen",
       title: "Numerische lineare Algebra: Grundlagen",
       C: mdxSection(S51Body),
     },
-    { id: "5.2", title: "Lineare Gleichungssysteme", C: mdxSection(S52Body) },
-    { id: "5.3", title: "Die LU-Zerlegung", C: mdxSection(S53Body) },
-    { id: "5.4", title: "Die Cholesky-Zerlegung", C: mdxSection(S54Body) },
-    { id: "5.5", title: "Zusammenfassung", C: mdxSection(S55Body) },
+    { id: "5.2", key: "lgs", title: "Lineare Gleichungssysteme", C: mdxSection(S52Body) },
+    { id: "5.3", key: "lu", title: "Die LU-Zerlegung", C: mdxSection(S53Body) },
+    { id: "5.4", key: "cholesky", title: "Die Cholesky-Zerlegung", C: mdxSection(S54Body) },
+    { id: "5.5", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S55Body) },
   ],
 };
 export default chapter;

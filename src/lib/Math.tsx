@@ -265,10 +265,11 @@ export function MD({ children }: { children: string }) {
   return <TypesetDiv tex={`\\[${children}\\]`} className="my-3 overflow-x-auto" />;
 }
 
-/** Numbered display equation with right-aligned tag, e.g. (4.12). */
-export function Eq({ tag, children }: { tag?: string; children: string }) {
+/** Numbered display equation with right-aligned tag, e.g. (4.12).
+ *  `id` (z. B. "eq-kkt") ist der Sprunganker für @eq:-Verweise. */
+export function Eq({ tag, id, children }: { tag?: string; id?: string; children: string }) {
   return (
-    <div className="relative my-3">
+    <div id={id} className="relative my-3 scroll-mt-20 lg:scroll-mt-8">
       <TypesetDiv tex={`\\[${children}\\]`} className="overflow-x-auto pr-14" />
       {tag && (
         <span className="absolute right-0 top-1/2 -translate-y-1/2 text-slate-500">({tag})</span>
@@ -281,6 +282,7 @@ export function Eq({ tag, children }: { tag?: string; children: string }) {
 export function EnvBlock({
   kind,
   label,
+  id,
   children,
 }: {
   kind:
@@ -297,6 +299,8 @@ export function EnvBlock({
     | "Algorithmus"
     | "Algorithm";
   label: string;
+  /** Sprunganker für @-Verweise, z. B. "env-kkt" (nur ID-Labels; Handnummern haben keinen). */
+  id?: string;
   children: ReactNode;
 }) {
   // Entwurf „Handbuch": Karte mit getöntem Grund, dünner Rahmen in der
@@ -344,7 +348,11 @@ export function EnvBlock({
   const beiname = m ? m[2] : null;
 
   return (
-    <div data-env={alias[kind] ?? kind} className={`my-5 rounded-lg border px-4 py-3 ${c.box}`}>
+    <div
+      id={id}
+      data-env={alias[kind] ?? kind}
+      className={`my-5 rounded-lg border px-4 py-3 ${c.box} ${id ? "scroll-mt-20 lg:scroll-mt-8" : ""}`}
+    >
       <p className="mb-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span
           data-env-label

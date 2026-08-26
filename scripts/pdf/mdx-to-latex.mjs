@@ -25,10 +25,26 @@ import remarkDirective from "remark-directive";
 import remarkMdx from "remark-mdx";
 import { Parser } from "acorn";
 import acornJsx from "acorn-jsx";
+import { readChapters, readSections } from "../lib/registry.mjs";
+import {
+  loadNumbers,
+  parseEnvLabel,
+  parseEqMeta,
+  takeHeadingId,
+  resolveRef,
+  splitRefs,
+  mergeRefDirectives,
+} from "../../mdx/numbers.mjs";
+import { visit } from "unist-util-visit";
 
 const JsxParser = Parser.extend(acornJsx());
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const chaptersDir = join(root, "src", "chapters");
+
+// Nummerntabelle (scripts/gen-numbers.mjs): dieselbe Quelle wie remark-fmm,
+// damit Web und Druck garantiert dieselben Nummern zeigen.
+const numbers = loadNumbers(root);
+let currentChapterId = null;
 
 const argv = process.argv.slice(2);
 const outDir = resolve(root, argFlag("--out") ?? "build/pdf");
@@ -146,12 +162,12 @@ function displayBody(tex) {
   return `\\begin{${env}}\n${body}\n\\end{${env}}`;
 }
 
-function displayMath(tex, tag) {
+function displayMath(tex, tag, anchor = tag ? `eq-${tag}` : null) {
   const body = displayBody(tex);
   if (tag) {
     // Nummerierte Gleichungen bleiben ungeschrumpft: \fmmfit misst gegen
     // \linewidth und wuesste nichts von dem Platz, den die Nummer braucht.
-    return `\\begin{equation}\\tag{${tag}}\\phantomsection\\label{eq-${tag}}\n${body}\n\\end{equation}`;
+    return `\\begin{equation}\\tag{${tag}}\\phantomsection\\label{${anchor}}\n${body}\n\\end{equation}`;
   }
   return `\\[\n\\fmmfit{${body}}\n\\]`;
 }
@@ -282,10 +298,42 @@ function inlineAll(nodes) {
   return (nodes ?? []).map(inline).join("");
 }
 
+/**
+ * @-Verweise im Fliesstext (mdx/numbers.mjs): der Text kommt fertig aus der
+ * Tabelle, das Ziel ist das \label der Umgebung/Gleichung/Ueberschrift.
+ * Kapitel: \label{chap-<id>} (siehe Hauptlauf).
+ */
+function textWithRefs(value, raw) {
+  const split = splitRefs(value, raw);
+  if (!split) return escText(value);
+  if (split.error) {
+    warn("@-Verweis nicht zuordenbar", split.error);
+    return escText(value);
+  }
+  return split.segments
+    .map((seg) => {
+      if (seg.text != null) return escText(seg.text);
+      try {
+        const r = resolveRef(numbers, seg.ref.type, seg.ref.id, { chapterId: currentChapterId });
+        return `\\hyperref[${r.anchor}]{${esc(r.text)}}`;
+      } catch (e) {
+        warn("unbekannter @-Verweis", e.message);
+        return esc(seg.raw);
+      }
+    })
+    .join("");
+}
+
+function rawOf(n) {
+  const a = n.position?.start?.offset;
+  const b = n.position?.end?.offset;
+  return a == null || b == null || !currentSource ? null : currentSource.slice(a, b);
+}
+
 function inline(n) {
   switch (n.type) {
     case "text":
-      return escText(n.value);
+      return textWithRefs(n.value, rawOf(n));
     case "inlineMath":
       return `$${n.value}$`;
     case "emphasis":
@@ -404,8 +452,10 @@ function block(n) {
       return inlineAll(n.children);
     case "heading":
       return heading(n);
-    case "math":
-      return displayMath(n.value, eqTag(n));
+    case "math": {
+      const { tag, anchor } = eqTag(n);
+      return displayMath(n.value, tag, anchor);
+    }
     case "list":
       return list(n);
     case "code":
@@ -434,11 +484,21 @@ function block(n) {
   }
 }
 
+/** Gleichung: Handnummer direkt, ID-Nummer aus der Tabelle → { tag, anchor }. */
 function eqTag(n) {
-  const meta = (n.meta ?? "").trim();
-  const m = /^\{#eq-([^}\s]+)\}$/.exec(meta);
-  if (meta && !m) warn("unverstaendliche Gleichungsangabe", meta);
-  return m ? m[1] : null;
+  const p = parseEqMeta(n.meta);
+  if (!p) return { tag: null, anchor: null };
+  if (p.error) {
+    warn("unverstaendliche Gleichungsangabe", n.meta);
+    return { tag: null, anchor: null };
+  }
+  if (p.legacy) return { tag: p.id, anchor: `eq-${p.id}` };
+  const entry = numbers.eqs?.[p.id];
+  if (!entry || entry.legacy) {
+    warn("Gleichungs-ID nicht in der Nummerntabelle", p.id);
+    return { tag: null, anchor: null };
+  }
+  return { tag: entry.num, anchor: entry.anchor };
 }
 
 /**
@@ -447,12 +507,24 @@ function eqTag(n) {
  * Ohne sie bliebe genau ein Querverweis im PDF ins Leere zeigen.
  */
 function heading(n, explicitId = null) {
-  const text = plain(n).trim();
   const level = n.depth >= 4 ? "subsubsection" : "subsection";
-  const body = inlineAll(n.children);
-  const num = /^(\d+(?:\.\d+)*)\b/.exec(text);
+  // ID-Form `### Titel :id[slug]`: Nummer aus der Tabelle, \label{sec-slug}
+  // (<h3 id="…">-JSX kommt ohne mdast-Typ herein: dort nur die Handnummer erkennen)
+  const legacyNum = /^(\d+(?:\.\d+)*)\b/.exec(plain(n).trim());
+  const h = n.type === "heading" ? takeHeadingId(n, plain) : legacyNum ? { legacy: legacyNum[1] } : {};
+  if (h.error) warn("Ueberschrift", h.error);
+  let num = h.legacy ?? null;
   const ids = [];
-  if (num) ids.push(`sec-${num[1]}`);
+  if (h.id) {
+    const entry = numbers.subs?.[h.id];
+    if (!entry || entry.legacy) warn("Ueberschriften-ID nicht in der Nummerntabelle", h.id);
+    else {
+      num = entry.num;
+      ids.push(entry.anchor);
+      n.children = [{ type: "text", value: `${entry.num} ` }, ...(n.children ?? [])];
+    }
+  } else if (num) ids.push(`sec-${num}`);
+  const body = inlineAll(n.children);
   if (explicitId && !ids.includes(explicitId)) ids.push(explicitId);
   const anchor = ids.length ? `\\phantomsection${ids.map((i) => `\\label{${i}}`).join("")}` : "";
   const toc = num ? `\\addcontentsline{toc}{subsection}{${body}}` : "";
@@ -558,8 +630,19 @@ function containerDirective(n) {
 
   if (ENV_STYLE[name]) {
     const [color, kind] = ENV_STYLE[name];
-    const label = takeLabel(n) ?? a.label ?? "";
-    return `\\begin{fmmenv}{${color}}{${kind}}{${esc(label)}}\n${blocks(n.children)}\n\\end{fmmenv}`;
+    const raw = takeLabel(n) ?? a.label ?? "";
+    const p = parseEnvLabel(raw);
+    let label = raw;
+    let anchor = "";
+    if (p.form === "id") {
+      const entry = numbers.envs?.[p.id];
+      if (!entry || entry.legacy) warn("Env-ID nicht in der Nummerntabelle", p.id);
+      else {
+        label = entry.label;
+        anchor = `[${entry.anchor}]`; // optionales Argument von fmmenv: \phantomsection\label
+      }
+    } else if (p.form === "unnumbered") label = p.name;
+    return `\\begin{fmmenv}${anchor}{${color}}{${kind}}{${esc(label)}}\n${blocks(n.children)}\n\\end{fmmenv}`;
   }
 
   if (name === "vertiefung") {
@@ -824,44 +907,8 @@ function schaetzfrage(n) {
 }
 
 /* =================================================================== */
-/* Kapitel- und Abschnittsregistry                                     */
+/* Kapitel- und Abschnittsregistry: scripts/lib/registry.mjs               */
 /* =================================================================== */
-
-function readChapters() {
-  const src = readFileSync(join(chaptersDir, "index.ts"), "utf8");
-  const re = /\{\s*id:\s*"([^"]+)",\s*num:\s*(\d+),\s*title:\s*"((?:[^"\\]|\\.)*)"/g;
-  const out = [...src.matchAll(re)].map((m) => ({
-    id: m[1],
-    num: Number(m[2]),
-    title: JSON.parse(`"${m[3]}"`),
-  }));
-  if (!out.length) throw new Error("keine Kapitel in src/chapters/index.ts gefunden");
-  return out;
-}
-
-function readSections(chapterId) {
-  const file = join(chaptersDir, chapterId, "index.ts");
-  const src = readFileSync(file, "utf8");
-  const imports = new Map(
-    [...src.matchAll(/^import\s+(\w+)\s+from\s+"\.\/([^"]+\.mdx)";/gm)].map((m) => [m[1], m[2]])
-  );
-  const re =
-    /id:\s*"([^"]+)"\s*,\s*title:\s*"((?:[^"\\]|\\.)*)"\s*,\s*C:\s*mdxSection\(\s*(\w+)\s*\)/g;
-  const sections = [...src.matchAll(re)].map((m) => ({
-    id: m[1],
-    title: JSON.parse(`"${m[2]}"`),
-    file: imports.get(m[3]),
-  }));
-  // Dieselbe Zusicherung wie gen-toc.mjs: jeder Abschnitt hat genau eine
-  // Komponente. Weicht das ab, hat das Muster oben einen Eintrag verpasst
-  // und im PDF fehlte still ein ganzer Abschnitt.
-  const expected = (src.match(/(^|[\s{])C:\s/g) ?? []).length;
-  if (sections.length !== expected)
-    throw new Error(`${chapterId}/index.ts: ${sections.length} Abschnitte erkannt, ${expected} erwartet`);
-  for (const s of sections)
-    if (!s.file) throw new Error(`${chapterId}/index.ts: kein MDX-Import fuer Abschnitt ${s.id}`);
-  return sections;
-}
 
 /* =================================================================== */
 /* Hauptlauf                                                           */
@@ -874,27 +921,34 @@ const processor = unified()
   .use(remarkDirective)
   .use(remarkMdx);
 
+let currentSource = null;
 function convertFile(path) {
   const src = readFileSync(path, "utf8");
+  currentSource = src;
   const tree = processor.parse(src);
+  for (const e of mergeRefDirectives(tree, visit)) warn("@-Verweis", e.message);
   resetQuotes();
-  return blocks(tree.children);
+  const out = blocks(tree.children);
+  currentSource = null;
+  return out;
 }
 
-const chapters = readChapters();
+const chapters = readChapters(root);
 const body = [];
 let sectionCount = 0;
 
 for (const ch of chapters) {
-  const sections = readSections(ch.id);
+  const sections = readSections(root, ch);
+  currentChapterId = ch.id;
   body.push(`\n\n%% ================= Kapitel ${ch.num}: ${ch.title} =================`);
   body.push(`\\chapter{${esc(ch.title)}}`);
   body.push(`\\phantomsection\\label{chap-${ch.id}}`);
   for (const s of sections) {
     currentFile = `${ch.id}/${s.file}`;
     sectionCount++;
-    const title = `${s.id} ${s.title}`;
-    body.push(`\\phantomsection\\label{sec-${s.id}}`);
+    // Nummer aus der Position (s.num), nicht aus der alten id
+    const title = `${s.num} ${s.title}`;
+    body.push(`\\phantomsection\\label{sec-${s.num}}`);
     body.push(`\\section*{${esc(title)}}`);
     body.push(`\\addcontentsline{toc}{section}{${esc(title)}}`);
     body.push(`\\markright{${esc(title)}}`);

@@ -8,19 +8,19 @@ import S65Body from "./S65.mdx";
 
 const chapter: ChapterModule = {
   sections: [
-    { id: "6.1", title: "Motivation", C: mdxSection(S61Body) },
+    { id: "6.1", key: "motivation", title: "Motivation", C: mdxSection(S61Body) },
     {
-      id: "6.2",
+      id: "6.2", key: "singulaerwerte",
       title: "Singulärwerte und Singulärvektoren",
       C: mdxSection(S62Body),
     },
     {
-      id: "6.3",
+      id: "6.3", key: "reduzierte-svd",
       title: "Reduzierte SVD und Pseudoinverse",
       C: mdxSection(S63Body),
     },
-    { id: "6.4", title: "Anwendungen", C: mdxSection(S64Body) },
-    { id: "6.5", title: "Zusammenfassung", C: mdxSection(S65Body) },
+    { id: "6.4", key: "anwendungen", title: "Anwendungen", C: mdxSection(S64Body) },
+    { id: "6.5", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S65Body) },
   ],
 };
 export default chapter;

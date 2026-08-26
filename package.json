@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run gen:toc && vite",
-    "build": "npm run gen:toc && npm run typecheck:mdx && npm run test:mdx && npm run test:lib && tsc --noEmit && vite build",
+    "dev": "npm run gen:toc && npm run gen:numbers && vite",
+    "build": "npm run gen:toc && npm run gen:numbers && npm run lint:numbers && npm run typecheck:mdx && npm run test:mdx && npm run test:lib && tsc --noEmit && vite build",
     "preview": "vite preview",
     "deploy": "bash scripts/deploy.sh",
     "test:mdx": "node mdx/fixtures.test.mjs && node mdx/inventory.test.mjs",
@@ -14,6 +14,9 @@
     "typecheck:mdx": "node mdx/typecheck.mjs",
     "mdx:compare": "node mdx/compare.mjs",
     "gen:toc": "node scripts/gen-toc.mjs",
+    "gen:numbers": "node scripts/gen-numbers.mjs",
+    "lint:numbers": "node scripts/lint-numbers.mjs",
+    "verify:inventory": "node scripts/verify/inventory-snapshot.mjs",
     "pdf": "bash scripts/pdf/build.sh"
   },
   "dependencies": {

@@ -9,20 +9,20 @@ import S36Body from "./S36.mdx";
 
 const chapter: ChapterModule = {
   sections: [
-    { id: "3.1", title: "Die Spur einer Matrix", C: mdxSection(S31Body) },
+    { id: "3.1", key: "spur", title: "Die Spur einer Matrix", C: mdxSection(S31Body) },
     {
-      id: "3.2",
+      id: "3.2", key: "matrixnormen",
       title: "Matrixnormen: Definition und Beispiele",
       C: mdxSection(S32Body),
     },
-    { id: "3.3", title: "Operatornormen", C: mdxSection(S33Body) },
-    { id: "3.4", title: "Schattennormen", C: mdxSection(S34Body) },
+    { id: "3.3", key: "operatornormen", title: "Operatornormen", C: mdxSection(S33Body) },
+    { id: "3.4", key: "schattennormen", title: "Schattennormen", C: mdxSection(S34Body) },
     {
-      id: "3.5",
+      id: "3.5", key: "eigenschaften",
       title: "Eigenschaften von Matrixnormen",
       C: mdxSection(S35Body),
     },
-    { id: "3.6", title: "Zusammenfassung", C: mdxSection(S36Body) },
+    { id: "3.6", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S36Body) },
   ],
 };
 export default chapter;

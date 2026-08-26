@@ -10,7 +10,10 @@
 import type { ComponentType } from "react";
 
 export interface SectionEntry {
+  /** Abschnittsnummer "K.k" — Alias für alte Deep-Links; die gerenderte Nummer kommt aus der Position. */
   id: string;
+  /** stabiler Schlüssel (a-z, 0-9, -): Zweitanker #sec-<key>, Verweisziel @sec:<kap>/<key> */
+  key: string;
   title: string;
   C: ComponentType;
 }

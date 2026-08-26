@@ -8,11 +8,11 @@ import S115Body from "./S115.mdx";
 
 const chapter: ChapterModule = {
   sections: [
-    { id: "11.1", title: "Konvexkombinationen und konvexe Hülle", C: mdxSection(S111Body) },
-    { id: "11.2", title: "Konvexe Mengen", C: mdxSection(S112Body) },
-    { id: "11.3", title: "Projektion und konvexe Funktionen", C: mdxSection(S113Body) },
-    { id: "11.4", title: "Eigenschaften konvexer Funktionen", C: mdxSection(S114Body) },
-    { id: "11.5", title: "Konvexe Optimierung und Zusammenfassung", C: mdxSection(S115Body) },
+    { id: "11.1", key: "konvexkombinationen", title: "Konvexkombinationen und konvexe Hülle", C: mdxSection(S111Body) },
+    { id: "11.2", key: "konvexe-mengen", title: "Konvexe Mengen", C: mdxSection(S112Body) },
+    { id: "11.3", key: "projektion-konvexe-funktionen", title: "Projektion und konvexe Funktionen", C: mdxSection(S113Body) },
+    { id: "11.4", key: "eigenschaften", title: "Eigenschaften konvexer Funktionen", C: mdxSection(S114Body) },
+    { id: "11.5", key: "konvexe-optimierung", title: "Konvexe Optimierung und Zusammenfassung", C: mdxSection(S115Body) },
   ],
 };
 export default chapter;

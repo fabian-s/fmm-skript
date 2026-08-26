@@ -169,12 +169,15 @@ export default function App() {
               <p className="italic text-red-600">Kapitel konnte nicht geladen werden.</p>
             )}
             {!mod && !failed && <p className="italic text-slate-500">Kapitel wird geladen …</p>}
-            {mod?.sections.map(({ id, title, C }) => (
+            {mod?.sections.map(({ id, key, title, C }) => (
               <section
                 key={id}
                 id={`sec-${id}`}
                 className="mb-14 scroll-mt-20 [content-visibility:auto] [contain-intrinsic-size:auto_3000px] lg:scroll-mt-8"
               >
+                {/* Zweitanker über den stabilen Schlüssel; der Nummernanker sec-K.k
+                    bleibt, weil er öffentlich verlinkt ist. */}
+                <span id={`sec-${key}`} className="block scroll-mt-20 lg:scroll-mt-8" />
                 <h2 className="group mb-4 text-2xl font-bold tracking-tight text-balance">
                   <span className="text-sky-700 tabular-nums dark:text-sky-400">{id}</span>{" "}
                   {title}

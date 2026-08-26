@@ -12,15 +12,15 @@ import S109Body from "./S109.mdx";
 
 const chapter: ChapterModule = {
   sections: [
-    { id: "10.1", title: "Ableitung als lineare Approximation", C: mdxSection(S101Body) },
-    { id: "10.2", title: "Der Gradient: Vektor zu Skalar", C: mdxSection(S102Body) },
-    { id: "10.3", title: "Die Jacobimatrix: Vektor zu Vektor", C: mdxSection(S103Body) },
-    { id: "10.4", title: "Ableitungen mit Matrizen", C: mdxSection(S104Body) },
-    { id: "10.5", title: "Stetigkeit und Linearität", C: mdxSection(S105Body) },
-    { id: "10.6", title: "Produkt- und Kettenregel", C: mdxSection(S106Body) },
-    { id: "10.7", title: "Ableitungen höheren Grades", C: mdxSection(S107Body) },
-    { id: "10.8", title: "Taylorapproximation", C: mdxSection(S108Body) },
-    { id: "10.9", title: "Zusammenfassung", C: mdxSection(S109Body) },
+    { id: "10.1", key: "linearisierung", title: "Ableitung als lineare Approximation", C: mdxSection(S101Body) },
+    { id: "10.2", key: "gradient", title: "Der Gradient: Vektor zu Skalar", C: mdxSection(S102Body) },
+    { id: "10.3", key: "jacobi", title: "Die Jacobimatrix: Vektor zu Vektor", C: mdxSection(S103Body) },
+    { id: "10.4", key: "matrixableitungen", title: "Ableitungen mit Matrizen", C: mdxSection(S104Body) },
+    { id: "10.5", key: "stetigkeit", title: "Stetigkeit und Linearität", C: mdxSection(S105Body) },
+    { id: "10.6", key: "produkt-kettenregel", title: "Produkt- und Kettenregel", C: mdxSection(S106Body) },
+    { id: "10.7", key: "hoehere-ableitungen", title: "Ableitungen höheren Grades", C: mdxSection(S107Body) },
+    { id: "10.8", key: "taylor", title: "Taylorapproximation", C: mdxSection(S108Body) },
+    { id: "10.9", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S109Body) },
   ],
 };
 export default chapter;

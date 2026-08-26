@@ -9,12 +9,12 @@ import S126Body from "./S126.mdx";
 
 const chapter: ChapterModule = {
   sections: [
-    { id: "12.1", title: "Nichtlineare Gleichungen", C: mdxSection(S121Body) },
-    { id: "12.2", title: "Optimalität und Sattelpunkte", C: mdxSection(S122Body) },
-    { id: "12.3", title: "Nelder-Mead und Gradientenabstieg", C: mdxSection(S123Body) },
-    { id: "12.4", title: "Newton, Quasi-Newton und SGD", C: mdxSection(S124Body) },
-    { id: "12.5", title: "Beschränkte Optimierung", C: mdxSection(S125Body) },
-    { id: "12.6", title: "Optimierung in R und Zusammenfassung", C: mdxSection(S126Body) },
+    { id: "12.1", key: "nichtlineare-gleichungen", title: "Nichtlineare Gleichungen", C: mdxSection(S121Body) },
+    { id: "12.2", key: "optimalitaet", title: "Optimalität und Sattelpunkte", C: mdxSection(S122Body) },
+    { id: "12.3", key: "nelder-mead-gradient", title: "Nelder-Mead und Gradientenabstieg", C: mdxSection(S123Body) },
+    { id: "12.4", key: "newton-sgd", title: "Newton, Quasi-Newton und SGD", C: mdxSection(S124Body) },
+    { id: "12.5", key: "beschraenkt", title: "Beschränkte Optimierung", C: mdxSection(S125Body) },
+    { id: "12.6", key: "optim-in-r", title: "Optimierung in R und Zusammenfassung", C: mdxSection(S126Body) },
   ],
 };
 export default chapter;
