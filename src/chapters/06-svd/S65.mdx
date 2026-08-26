@@ -45,24 +45,18 @@ Datenanalyse, von der Hauptkomponentenanalyse
 
 ### Querverbindungen
 
-Die SVD ist kein isoliertes Werkzeug. Sie hängt mit fast allem zusammen, was wir
-bisher über Matrizen gelernt haben.
+Die SVD ist kein isoliertes Werkzeug. Über die
+:k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA^\top\bA$ hängt sie an der
+Eigenwerttheorie
+(@satz:eigenschaften-von-a-a, @korollar:a-a-ist-orthogonal-diagonalisierbar),
+über $\cgreen{\bU}$ und $\cblue{\bV}$ an den fundamentalen Unterräumen samt
+fertigen :k[Orthonormalbasen]{#orthonormal-basis}
+(@satz:charakterisierung-der-fundamentalen), über $\bA\bA\pinv$ und
+$\bA\pinv\bA$ an den :k[Projektionen]{#projection}
+(@satz:eigenschaften-der-pseudoinversen) und über die Minimierungsprobleme in
+@sec:anwendungen und [Kapitel 7](?k=07-kq#sec-7.6) an der Optimierung. Zwei
+Verbindungen lohnen den eigenen Blick:
 
-- *Eigenwerttheorie:* Der Zugang läuft komplett über $\bA^\top\bA$. Dessen
-  :k[Eigenwerte]{#eigenvalue-eigenvector} liefern die Singulärwerte
-  (@definition:singulaerwerte), dessen Eigenvektoren die rechten Singulärvektoren
-  (@definition:rechte-und-linke-singulaervektoren). Dass beides zu haben ist, sichern @satz:eigenschaften-von-a-a und
-  @korollar:a-a-ist-orthogonal-diagonalisierbar.
-- *Fundamentale Unterräume:* $\cgreen{\bU}$ und $\cblue{\bV}$ liefern fertige
-  :k[Orthonormalbasen]{#orthonormal-basis}: die ersten $r$ Spalten von
-  $\cgreen{\bU}$ spannen den Spaltenraum auf, die ersten $r$ Spalten von
-  $\cblue{\bV}$ den Zeilenraum, die übrigen Spalten von $\cblue{\bV}$ den
-  :k[Kern]{#null-space}. Wo die Trennlinie verläuft, sagt der Rang, und der ist
-  die Anzahl der Singulärwerte über null (@satz:charakterisierung-der-fundamentalen).
-- *Projektionen:* $\bA\bA\pinv$ und $\bA\pinv\bA$ sind
-  :k[Projektionen]{#projection} auf $\col(\bA)$ beziehungsweise
-  $\col(\bA^\top)$ (@satz:eigenschaften-der-pseudoinversen). Auf der ersten dieser beiden Aussagen ruht die
-  Kleinste-Quadrate-Lösung aus @bemerkung:ausblick-kleinste-quadrate.
 - *[Normen](?k=03-matrix-spur-norm#sec-3.2):* Der größte Singulärwert ist die
   Spektralnorm, $\left\|\bA\right\|_2 = \corange{\sigma_1}$
   (@sec:matrix-spur-norm/operatornormen); die Frobeniusnorm nimmt
@@ -79,9 +73,6 @@ bisher über Matrizen gelernt haben.
   [Cholesky](?k=05-lgs#sec-5.4) zerlegen, um Gleichungssysteme schnell zu
   lösen. Die SVD zerlegt, um die Geometrie einer Abbildung sichtbar zu machen.
   Sie ist die teuerste der drei und die einzige, die für jede Matrix existiert.
-- *Optimierung:* Kleinste Quadrate ([Kapitel 7](?k=07-kq#sec-7.6)) und die
-  beste Rang-$k$-Approximation (@sec:anwendungen) sind
-  Minimierungsprobleme, deren Lösung sich direkt an den Faktoren ablesen lässt.
 
 So viele Fäden laufen selten in einer einzigen Zerlegung zusammen. Wer die SVD
 einer Matrix kennt, kennt ihren Rang, ihre Norm, ihre Kondition, ihre
@@ -100,11 +91,9 @@ verwechselt.
 
 Nur die dritte Variante verliert Information, und wie viel, sagen die
 abgeschnittenen Singulärwerte. Die Wahl von $k$ ist deshalb keine technische
-Kleinigkeit, sondern eine Modellierungsentscheidung. Quantitativ helfen ein
-Fehler- oder ein Energiekriterium (@bemerkung:drei-kriterien-fuer-die-wahl-von-k), grafisch der *Ellenbogen*
-(elbow): Tragen wir $\log \corange{\sigma_i}$ gegen $i$ auf, markiert der Knick
-die Stelle, ab der die Singulärwerte nur noch Rauschen beschreiben
-(@bemerkung:typische-singulaerwert-verlaeufe-und-der).
+Kleinigkeit, sondern eine Modellierungsentscheidung; die Kriterien und die
+Ellenbogen-Heuristik stehen in @bemerkung:drei-kriterien-fuer-die-wahl-von-k
+und @num:typische-singulaerwert-verlaeufe-und-der.
 
 Ein Hinweis wiegt schwerer, als er klingt. Die Definition der Singulärwerte
 führt über die Eigenwerte von $\bA^\top\bA$; als *Rechenweg* ist dieser Umweg
@@ -113,8 +102,12 @@ $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, und beim Aufstellen verschwinden
 kleine Beiträge neben großen im :k[Rundungsfehler]{#rounding-error}. Was dann
 noch fehlt, müsste eine Differenz fast gleicher Zahlen hergeben, also
 ausgerechnet :k[Auslöschung]{#cancellation}. Die legt einen Verlust aber nur
-offen, statt ihn zu heilen (@sec:fehler/stabilitaet).
+offen, statt ihn zu heilen (@sec:fehler/stabilitaet). Als Faustregel: Über
+$\bA^\top\bA$ sind Singulärwerte unterhalb von
+$\sqrt{\eps} \cdot \corange{\sigma_1} \approx 1{,}5 \cdot 10^{-8} \cdot \corange{\sigma_1}$
+nicht mehr zu retten.
 
+::::vertiefung[Wie der Umweg einen Singulärwert verschluckt]
 :::beispiel[#der-umweg-ueber-a-a (Der Umweg über AᵀA)]
 Betrachten wir
 
@@ -148,11 +141,9 @@ $$
 Die Rechnung meldet $\corange{\sigma_2} = \cred{0}$ und damit Rang $1$. Ein Verfahren,
 das direkt mit $\bA$ arbeitet, bestimmt $\corange{\sigma_2}$ dagegen bis auf
 einen absoluten Fehler der Größenordnung $\eps \cdot \corange{\sigma_1}$, also
-auf etwa $3 \cdot 10^{-16}$ genau, und sieht den Rang $2$. Als Faustregel: Über
-$\bA^\top\bA$ sind Singulärwerte unterhalb von
-$\sqrt{\eps} \cdot \corange{\sigma_1} \approx 1{,}5 \cdot 10^{-8} \cdot \corange{\sigma_1}$
-nicht mehr zu retten.
+auf etwa $3 \cdot 10^{-16}$ genau, und sieht den Rang $2$.
 :::
+::::
 
 Die gebräuchlichen Verfahren arbeiten deshalb direkt mit $\bA$ und benutzen
 ausschließlich orthogonale Transformationen, die alle Singulärwerte unverändert

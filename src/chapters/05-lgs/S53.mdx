@@ -102,6 +102,7 @@ unter der Diagonalen stehen unverändert die Multiplikatoren
 $\cgreen{l_{ik}}$ aus der Elimination.
 :::
 
+:::::vertiefung[Die Eliminationsmatrizen sauber zusammenrechnen]
 Der Beweis rechnet mit einer kompakten Schreibweise für $\bL_k$; die
 eigentliche Arbeit steckt darin, dass sich die Inversen ohne jede
 Nebenwirkung aufeinanderstapeln.
@@ -151,8 +152,9 @@ ergibt schließlich $\bA = \bL_1^{-1} \cdots \bL_{n-1}^{-1} \bU = \bL\bU$.
 :::
 
 ::::
+:::::
 
-Dieselben Schritte treffen bei der klassischen Elimination auch die rechte
+Die Eliminationsmatrizen treffen bei der klassischen Elimination auch die rechte
 Seite: Aus $\bb$ wird $\bc = \bL_{n-1} \cdots \bL_1 \bb$, das gestaffelte
 Endsystem ist $(\bU \mid \bc)$. Mit gespeichertem $\bL$ dürfen wir uns
 dieses Mitschleppen sparen, denn die Vorwärtssubstitution $\bL\by = \bb$
@@ -259,14 +261,6 @@ $$
 erzwingt $u_{11} = 0$ aus dem Eintrag links oben und zugleich
 $l\, u_{11} = 1$ aus dem Eintrag links unten: ein Widerspruch.
 
-An den Einsen auf der Diagonalen von $\bL$ liegt das nicht. Lassen wir sie
-fallen und setzen allgemeiner
-$\bL = \bigl(\begin{smallmatrix} l_{11} & 0 \\ l_{21} & l_{22} \end{smallmatrix}\bigr)$
-an, so verlangt der Eintrag rechts oben $l_{11} u_{12} = 1$, also
-$l_{11} \neq 0$. Links oben folgt daraus $u_{11} = 0$, links unten also
-$l_{21} u_{11} = 0 \neq 1$, und wir stehen wieder vor demselben
-Widerspruch.
-
 Ein Zeilentausch löst das Problem dagegen sofort auf, denn mit $\bP = \bA$
 ist $\bP\bA = \bI = \bI \cdot \bI$ eine (zugegeben langweilige)
 LU-Zerlegung.
@@ -330,14 +324,6 @@ Die Lösung ist $\bx = \bigl(2, \tfrac{5}{3}, \tfrac{2}{3}\bigr)^\top$; die
 Probe $\bA\bx = \bb$ geht auf.
 :::
 
-:::bemerkung[#eine-zerlegung-viele-rechte-seiten (Eine Zerlegung, viele rechte Seiten)]
-Die Faktoren $\bL$ und $\bU$ hängen nur von $\bA$ ab, nicht von $\bb$. Für
-jede weitere rechte Seite wiederholen wir deshalb nur die beiden billigen
-Substitutionen; die teure Elimination fällt kein zweites Mal an. Dieses
-Muster trägt weit über die LU-Zerlegung hinaus: Auch die QR-Zerlegung für
-Kleinste-Quadrate-Probleme (@sec:kq/qr) folgt ihm.
-:::
-
 Welche Einträge speichert die LU-Zerlegung zusätzlich zur Arbeitsmatrix?
 
 <LUZerlegungStepper />
@@ -373,7 +359,12 @@ Was verändert der Zeilentausch am Rundungsfehler eines kleinen Pivots?
 
 <PivotVergleich />
 
-Der Vergleich ordnet die Wirkung der Pivotierung an derselben Aufgabenfamilie ein.
+Ohne Zeilentausch wächst der Fehler mit jedem Zehnerschritt von $\epsilon$ mit:
+Bei $\epsilon = 10^{-12}$ stimmen nur noch vier Nachkommastellen, und ab
+$\epsilon \approx 10^{-16}$ schluckt die Subtraktion $1 - 1/\epsilon$ den Eintrag
+$a_{22}$ vollständig – die berechnete Zerlegung gehört dann zu einer anderen
+Matrix. Die Zeile mit Zeilentausch bleibt über den ganzen Reglerbereich bei
+Maschinengenauigkeit. Am Problem ändert der Tausch nichts, nur am Rechenweg.
 :::
 
 ### Komplexität
@@ -439,16 +430,17 @@ Für invertierbares $\bA \in \R^{n \times n}$ gilt:
    derselben Matrix kostet insgesamt $O(n^3 + J n^2)$.
 :::
 
+Teil 3 lebt davon, dass $\bL$ und $\bU$ nur von $\bA$ abhängen und nicht von
+$\bb$: Die teure Elimination fällt kein zweites Mal an, für jede weitere
+rechte Seite bleiben nur die beiden billigen Substitutionen. Dieses Muster
+trägt weit über die LU-Zerlegung hinaus – auch die QR-Zerlegung für
+Kleinste-Quadrate-Probleme (@sec:kq/qr) folgt ihm.
+
 ::::beweis
 
 :::schritt
-Der $k$-te Eliminationsschritt kostet $O((n-k)^2)$ Operationen.
-
-::why[siehe Quiz: Es ändern sich nur die $(n-k)(n-k+1)$ Einträge des rechten unteren Blocks samt rechter Seite]
-:::
-
-:::schritt
-Aufsummiert über die $n - 1$ Schritte ergibt sich
+Der $k$-te Eliminationsschritt kostet $O((n-k)^2)$ Operationen, aufsummiert
+über die $n - 1$ Schritte also
 
 $$
 \sum_{k=1}^{n-1} O\bigl((n-k)^2\bigr)
@@ -456,17 +448,10 @@ $$
 = O(n^3) .
 $$
 
+Die $O(n^2)$ eines Substitutionspaars haben wir in @sec:lgs gezählt; für $J$
+rechte Seiten kommen sie $J$-mal zur einmaligen Zerlegung hinzu.
+
 ::why[Substitution $j = n - k$; die Quadratsumme ist $\sum_{j=1}^{n-1} j^2 = \frac{(n-1)n(2n-1)}{6} \approx \frac{n^3}{3}$]
-:::
-
-:::schritt
-Jede Substitution durchläuft die $n$ Zeilen ihres Dreiecksfaktors und setzt
-pro Zeile bis zu $n - 1$ bekannte Komponenten ein, kostet also $O(n^2)$,
-wie in @sec:lgs gezählt. Für $J$ rechte Seiten fällt die
-Zerlegung einmal an, dazu kommen $J$ Substitutionspaare:
-$O(n^3 + J n^2)$ insgesamt.
-
-::why[die Zerlegung hängt nicht von $\bb$ ab (@bemerkung:eine-zerlegung-viele-rechte-seiten)]
 :::
 
 ::::
@@ -475,13 +460,15 @@ Wer die Multiplikationen exakt zählt, findet rund $n^3/3$ für die Zerlegung
 und rund $n^2$ für ein Substitutionspaar. Mit diesen Konstanten rechnet das
 folgende Widget:
 
-:::interaktiv[Einmal zerlegen oder jedes Mal neu?]
+:::::interaktiv[Einmal zerlegen oder jedes Mal neu?]
 Ab wann überwiegt der einmalige Aufwand der Zerlegung nicht mehr?
 
 <LUKostenPlot />
 
-Das Kostenbild stellt die wiederverwendete Zerlegung dem vollständigen Neubeginn gegenüber.
-:::
+Bei $n = 100$ und $J = 50$ rechten Seiten kostet der Neuansatz rund das
+Zwanzigfache: Die Zerlegung wird fünfzigmal statt einmal bezahlt, während die
+Substitutionen mit ihren $n^2$ kaum ins Gewicht fallen. Schon ab der zweiten
+rechten Seite liegt die gespeicherte Zerlegung vorn.
 
 ::::quiz
 
@@ -492,6 +479,7 @@ Ab der zweiten rechten Seite fällt die Zerlegung nur einmal an.
 :::
 
 ::::
+:::::
 
 :::bemerkung[#struktur-ausnutzen (Struktur ausnutzen)]
 Die Laufzeit lässt sich weiter drücken, wenn $\bA$ besondere Eigenschaften

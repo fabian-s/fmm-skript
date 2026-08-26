@@ -112,12 +112,10 @@ optim(c(0, 0), f)                          # verwendet Nelder-Mead
 optim(c(0, 0), f, method = "Nelder-Mead")  # explizit
 ```
 
-Das ist bequem und für viele Modelle völlig ausreichend, erklärt aber auch,
-warum eine `optim()`-Anpassung mit vielen Parametern manchmal überraschend lange
-läuft oder an einer Stelle stehen bleibt, an der der Gradient noch nicht
-verschwindet. Wer die Ableitungen hat, sollte sie über das Argument `gr` und ein
-gradientenbasiertes `method` auch angeben; @sec:optim-in-r geht die
-Optionen durch.
+Das ist bequem und für viele Modelle ausreichend, erklärt aber auch, warum eine
+`optim()`-Anpassung mit vielen Parametern manchmal überraschend lange läuft. Wer
+Ableitungen hat, gibt sie über `gr` an und wählt dazu ein gradientenbasiertes
+`method`; @sec:optim-in-r geht die Optionen durch.
 :::
 
 Vier Züge, aber wie oft fällt welcher? Das entscheidet über die Kosten des
@@ -144,23 +142,21 @@ Abspielknopf lässt den ganzen Lauf durchlaufen.
   <NelderMeadSimplex />
 </Schaetzfrage>
 
+Die vier Züge verteilen sich sehr ungleich. Aus dem voreingestellten Simplex
+braucht das Verfahren vierzig Schritte, bis der beste Eckpunkt unter $10^{-6}$
+liegt, und der Zähler steht dann auf $23$ Kontraktionen, $13$ Reflexionen und
+$4$ Expansionen; ein Schrumpfschritt, der teuerste Zug, kommt auf diesem Weg gar
+nicht vor, erst der zweite Startsimplex führt ihn im vierten Schritt vor. Auch die
+Form verrät, wo der Simplex steht: Auf den geraden Stücken des Tals wird er lang
+und dünn und legt sich in Laufrichtung, in der Biegung um $x_1 \approx 0$
+schrumpft er auf ein fast gleichseitiges Dreieck und dreht sich in die neue
+Richtung. Diese Anpassung an die lokale Geometrie ersetzt hier die fehlende
+Ableitung.
+
 Eine sehr sehenswerte Animation derselben Züge, mit einstellbaren Parametern und
 mehreren Testfunktionen, liegt unter
 [alexdowad.github.io/visualizing-nelder-mead](https://alexdowad.github.io/visualizing-nelder-mead/).
 :::
-
-Im Widget verteilen sich die vier Züge sehr ungleich. Aus dem
-voreingestellten Simplex braucht das Verfahren vierzig Schritte, bis der beste
-Eckpunkt einen Funktionswert unter $10^{-6}$ erreicht, und der Zähler steht dann
-auf $23$ Kontraktionen, $13$ Reflexionen und $4$ Expansionen. Ein Schrumpfschritt
-kommt auf diesem Weg überhaupt nicht vor; er ist der teuerste der vier Züge, und
-erst der zweite Startsimplex führt ihn im vierten Schritt vor. Auch die Form des
-Simplex verrät, wo er steht: Auf den geraden Stücken des Tals wird er lang und
-dünn und legt sich in Laufrichtung, wobei seine längste Kante nur wenige Grad von
-der Talrichtung abweicht; in der Biegung um $x_1 \approx 0$ schrumpft er auf ein
-fast gleichseitiges Dreieck zusammen und dreht sich dort in die neue Richtung.
-Diese Anpassung an die lokale Geometrie ist es, die hier die fehlende Ableitung
-ersetzt.
 
 ### Der Gradientenabstieg
 
@@ -251,10 +247,11 @@ Dass dort der Faktor $-0{,}2$ steht, ist kein Zufall. Bevor wir den Grund
 ausrechnen, probieren wir die Schrittweite selbst aus: Welche Werte von $\gamma$
 führen ans Ziel, welche nicht?
 
-Die folgende Tafel zeigt das @beispiel:gradientenabstieg-von-hand mit frei einstellbarem $\gamma$.
-Weil $f'' \equiv 2$ ist, liegen die beiden Schwellen direkt auf dem Reglerraster
-und lassen sich einzeln ansteuern; der Schrittregler läuft vorwärts wie
-rückwärts.
+:::interaktiv[Die Schrittweite am eindimensionalen Beispiel]
+Die Tafel zeigt @beispiel:gradientenabstieg-von-hand mit frei einstellbarem
+$\gamma$. Weil $f'' \equiv 2$ ist, liegen die beiden Schwellen direkt auf dem
+Reglerraster und lassen sich einzeln ansteuern; der Schrittregler läuft vorwärts
+wie rückwärts.
 
 <Schaetzfrage
   frage={<>Ab welchem <M>{"\\gamma"}</M> läuft die Iteration davon, statt sich dem Minimum zu nähern?</>}
@@ -265,10 +262,11 @@ rückwärts.
 >
   <GdStepper1D />
 </Schaetzfrage>
+:::
 
-Die Beobachtungen des Widgets ordnen sich zu einer vollständigen
-Fallunterscheidung, und die lohnt sich auszurechnen: Sie erklärt das ganze
-Verhalten des Verfahrens auf einen Schlag.
+Die Beobachtungen ordnen sich zu einer vollständigen Fallunterscheidung, und die
+lohnt sich auszurechnen: Sie erklärt das ganze Verhalten des Verfahrens auf einen
+Schlag.
 
 :::bemerkung[#zu-klein-zu-gross-gerade-richtig (Zu klein, zu groß, gerade richtig)]
 Für eine Parabel $f(x) = \tfrac{L}{2}(x - \cgreen{x^\star})^2$ mit Krümmung
@@ -589,28 +587,20 @@ genau dann für jeden Startpunkt, wenn $q < 1$ ist, und das trifft für
 $0 < \gamma < 2/L$ zu.
 :::
 
+:::::vertiefung[Beweis: Fehlerzerlegung nach Eigenrichtungen]
+
 ::::beweis
 
 :::schritt
-Der Gradient der quadratischen Form ist
-$\corange{\nabla f(\bx)} = (\bx - \cgreen{\bx^\star})^\top\bA$, also
-$\corange{\nabla f(\bx)^\top} = \bA(\bx - \cgreen{\bx^\star})$. Einsetzen in
-@eq:nelder-mead-gradient-gradientenabstieg und auf beiden Seiten $\cgreen{\bx^\star}$ abziehen gibt
-
-$$
-\be^{(k+1)} = \be^{(k)} - \gamma\bA\,\be^{(k)} = (\bI - \gamma\bA)\,\be^{(k)} ,
-$$
-
-und $k$-faches Anwenden liefert die erste Aussage von @eq:gradientenabstieg-auf-einer-quadrik.
-
-::why[$\bA$ ist symmetrisch, also ist der Gradient der :k[quadratischen Form]{#quadratic-form} $\bx^\top\bA\bx$ gerade $2\bx^\top\bA$ (@sec:differentialrechnung/produkt-kettenregel); der Faktor $\tfrac12$ kürzt die $2$ weg. Der Fehler erfüllt dieselbe Rekursion wie die Iterierten, weil $\cgreen{\bx^\star}$ konstant ist]
-:::
-
-:::schritt
-Nach dem Spektralsatz gibt es eine Orthonormalbasis $\bv_1, \dots, \bv_n$ aus
-Eigenvektoren von $\bA$. Schreiben wir den Startfehler in dieser Basis,
-$\be^{(0)} = \sum_i c_i \bv_i$, so wirkt $\bI - \gamma\bA$ auf jeden Summanden
-einzeln:
+*Fehlerrekursion und Spektralzerlegung.* Der Gradient der quadratischen Form ist
+$\corange{\nabla f(\bx)} = (\bx - \cgreen{\bx^\star})^\top\bA$. Einsetzen in
+@eq:nelder-mead-gradient-gradientenabstieg und Abziehen von $\cgreen{\bx^\star}$
+auf beiden Seiten gibt
+$\be^{(k+1)} = (\bI - \gamma\bA)\,\be^{(k)}$, also nach $k$ Schritten die erste
+Aussage von @eq:gradientenabstieg-auf-einer-quadrik. Weil $\bA$ symmetrisch ist,
+liefert der Spektralsatz eine Orthonormalbasis $\bv_1, \dots, \bv_n$ aus
+Eigenvektoren, und in ihr zerfällt der Fehler in $n$ unabhängige Anteile: Mit
+$\be^{(0)} = \sum_i c_i \bv_i$ ist
 
 $$
 (\bI - \gamma\bA)\,\bv_i = (1 - \gamma\lambda_i)\,\bv_i
@@ -621,12 +611,12 @@ $$
 Jede Eigenrichtung hat also ihren eigenen Fehlerfaktor $1 - \gamma\lambda_i$;
 @eq:zu-klein-zu-gross-gerade-richtig ist der Fall $n = 1$.
 
-::why[$\bA$ ist symmetrisch, der :k[Spektralsatz]{#spectral-theorem} liefert die Orthonormalbasis; $\bI - \gamma\bA$ hat dieselben Eigenvektoren mit den Eigenwerten $1 - \gamma\lambda_i$]
+::why[der Gradient der :k[quadratischen Form]{#quadratic-form} $\bx^\top\bA\bx$ ist für symmetrisches $\bA$ gerade $2\bx^\top\bA$ (@sec:differentialrechnung/produkt-kettenregel), und der Faktor $\tfrac12$ kürzt die $2$ weg; der Fehler erfüllt dieselbe Rekursion wie die Iterierten, weil $\cgreen{\bx^\star}$ konstant ist. $\bI - \gamma\bA$ hat dieselben Eigenvektoren wie $\bA$, mit den Eigenwerten $1 - \gamma\lambda_i$]
 :::
 
 :::schritt
-Für den Funktionswert rechnen wir in derselben Basis. Wegen
-$\bA\bv_i = \lambda_i \bv_i$ und $\bv_i^\top\bv_j = \delta_{ij}$ ist
+*Der Funktionswert.* In derselben Basis ist wegen $\bA\bv_i = \lambda_i \bv_i$
+und $\bv_i^\top\bv_j = \delta_{ij}$
 
 $$
 \cblue{f\bigl(\bx^{(k)}\bigr)} - \cgreen{f(\bx^\star)}
@@ -643,17 +633,17 @@ $\cblue{f(\bx^{(0)})} - \cgreen{f(\bx^\star)}$. Das ist die zweite Aussage von
 :::
 
 :::schritt
-Bleibt die Bedingung an $\gamma$. Es ist $q < 1$ genau dann, wenn
-$-1 < 1 - \gamma\lambda_i < 1$ für alle $i$ gilt, also genau dann, wenn
-$0 < \gamma\lambda_i < 2$ für alle $i$. Weil alle $\lambda_i$ positiv sind und
-$L$ der größte ist, ist das gleichwertig zu $0 < \gamma < 2/L$. Ist umgekehrt
-$q \ge 1$, so fällt die Komponente in der zugehörigen Eigenrichtung nicht mehr
-gegen null, und für jeden Startpunkt mit $c_i \neq 0$ konvergiert nichts.
+*Die Bedingung an $\gamma$.* Es ist $q < 1$ genau dann, wenn
+$0 < \gamma\lambda_i < 2$ für alle $i$ gilt, und weil alle $\lambda_i$ positiv
+sind und $L$ der größte ist, ist das gleichwertig zu $0 < \gamma < 2/L$. Ist
+umgekehrt $q \ge 1$, so fällt die Komponente in der zugehörigen Eigenrichtung
+nicht mehr gegen null.
 
 ::why[Die kritische Bedingung stammt immer vom GRÖSSTEN Eigenwert: $\gamma\lambda_i < 2$ für alle $i$ ist dasselbe wie $\gamma L < 2$]
 :::
 
 ::::
+:::::
 
 :::beispiel[#warum-der-satz-eine-schranke-ist-und (Warum der Satz eine Schranke ist und keine Formel)]
 Nehmen wir $\bA = \diag(1, 10)$, also
@@ -701,19 +691,18 @@ $\kappa$ an derselben Stelle liegen.
 >
   <CanyonWidget />
 </Schaetzfrage>
-:::
 
-Der Aufwand wächst im Widget ungefähr proportional zur Kondition: bei
-$\kappa = 10$ sind es $35$ Schritte bis zum Millionstel, bei $\kappa = 25$ schon
-$88$ und bei $\kappa = 100$ dann $336$. Drei Stellungen lohnen daneben den
-Vergleich. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der negative Gradient
-zeigt direkt auf das Minimum, und mit einem halben Anteil ist das Verfahren nach
-einem Schritt fertig. Bei $\kappa = 10$ und einem halben Anteil, also
-$\gamma = 1/L$, lesen wir die Zahlen aus @beispiel:warum-der-satz-eine-schranke-ist-und ab: Der gemessene
-Quotient steht auf $0{,}81$, während die gestrichelte Schranke mit $0{,}9$ fällt.
-Und bei einem Anteil um $0{,}9$ entsteht das Zickzack; die Schranke wird dann gar
-nicht mehr gezeichnet, denn @satz:konvergenzrate-bei-starker-konvexitaet setzt $\gamma \le 1/L$ voraus und sagt
-jenseits davon nichts.
+Der Aufwand wächst ungefähr proportional zur Kondition: bei $\kappa = 10$ sind es
+$35$ Schritte bis zum Millionstel, bei $\kappa = 25$ schon $88$ und bei
+$\kappa = 100$ dann $336$. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der
+negative Gradient zeigt direkt auf das Minimum, und mit einem halben Anteil ist
+das Verfahren nach einem Schritt fertig. Bei $\kappa = 10$ und $\gamma = 1/L$
+stehen die Zahlen aus @beispiel:warum-der-satz-eine-schranke-ist-und auf der
+Tafel: gemessener Quotient $0{,}81$ gegen die gestrichelte Schranke $0{,}9$. Und
+bei einem Anteil um $0{,}9$ entsteht das Zickzack; die Schranke wird dann gar
+nicht mehr gezeichnet, denn @satz:konvergenzrate-bei-starker-konvexitaet setzt
+$\gamma \le 1/L$ voraus.
+:::
 
 ### Wann hören wir auf?
 
@@ -836,15 +825,6 @@ die Bedingung heißt kaum mehr als „der Funktionswert muss wirklich sinken";
 gerade das macht sie robust, denn verworfen wird nur ein Schritt, der über das
 Ziel hinausschießt.
 
-*Ein Zahlenbeispiel.* Im eindimensionalen @beispiel:gradientenabstieg-von-hand ist an der Stelle
-$\cblue{x^{(0)}} = 4{,}5$ die Richtung $\corange{d} = -\corange{f'(4{,}5)} = -5$
-und $\corange{f'(4{,}5)}\,\corange{d} = -25$. Der volle Schritt $\gamma = 1$
-führt auf $x = -0{,}5$ mit $f = 7{,}25$, dem alten Wert also, und wird deshalb
-verworfen: Gefordert waren höchstens $7{,}25 - 10^{-4}\cdot 25 = 7{,}2475$. Eine
-Halbierung genügt, denn $\gamma = 0{,}5$ landet in $x = 2$ mit $f = 1$. Das ist
-hier sogar der exakte Minimierer, und es ist kein Zufall: $\gamma = 0{,}5$ ist
-das $1/L$ aus @bemerkung:zu-klein-zu-gross-gerade-richtig.
-
 *Ausblick.* Die Liniensuche ist kein Zubehör für den Gradientenabstieg allein.
 Quasi-Newton-Verfahren wie BFGS bestimmen ihre Suchrichtung anders, benutzen
 darüber aber dieselbe Backtracking-Schleife; @sec:newton-sgd baut
@@ -863,18 +843,17 @@ $f(\bx) = \tfrac12 x_1^2 + \tfrac52 x_2^2$ mit $\kappa_f = 5$, als Suchrichtung
 wie immer $\corange{\bd} = -\corange{\nabla f(\bx)^\top}$.
 
 <ArmijoWidget />
-:::
 
-Ein bis zwei Halbierungen genügen. In der Voreinstellung
-wird $\gamma = 1$ verworfen und $\gamma = 0{,}5$ angenommen, obwohl der exakte
-Minimierer bei $\gamma^\star = 1/3$ läge; mit dem Lehrbuchwert $c = 0{,}3$ ist
-eine zweite Halbierung nötig und $\gamma = 0{,}25$ wird angenommen. Auch das
-gehört zur Idee: Der billige Kompromiss ist gut genug, weil ohnehin ein nächster
-Schritt folgt. Wer $c$ nach rechts schiebt, sieht die Forderung steiler werden
-und die Zahl der Verkleinerungen steigen; wer $\rho$ vergrößert, tastet sich in
-feineren Stufen heran und braucht dafür mehr Funktionsauswertungen. Über alle
-Reglerstellungen hinweg sind höchstens $16$ Halbierungen nötig – die Schleife
-endet also nicht nur theoretisch, sondern auch schnell.
+Ein bis zwei Halbierungen genügen. In der Voreinstellung wird $\gamma = 1$
+verworfen und $\gamma = 0{,}5$ angenommen, obwohl der exakte Minimierer bei
+$\gamma^\star = 1/3$ läge; mit dem Lehrbuchwert $c = 0{,}3$ ist eine zweite
+Halbierung nötig, und $\gamma = 0{,}25$ wird angenommen. Auch das gehört zur
+Idee: Der billige Kompromiss ist gut genug, weil ohnehin ein nächster Schritt
+folgt. Wer $c$ nach rechts schiebt, sieht die Forderung steiler werden und die
+Zahl der Verkleinerungen steigen. Über alle Reglerstellungen hinweg sind höchstens
+$16$ Halbierungen nötig – die Schleife endet also nicht nur theoretisch, sondern
+auch schnell.
+:::
 
 ### Selbsttest
 
@@ -927,17 +906,6 @@ $\sup_{\bx}\max_i \left|\lambda_i\right|$. Bei konvexem $f$ fällt beides
 zusammen, weil die Hesse-Matrix dann positiv semidefinit ist; sonst nicht. Für
 $f(x) = -x^2$ ist die exakte Konstante $2$, während der größte Eigenwert $-2$
 beträgt (@bemerkung:lipschitz-stetiger-gradient-und-die).
-:::
-
-:::zahlfrage{loesung=336 toleranz=80 einheit="Schritte"}
-Wie viele Schritte braucht der Gradientenabstieg im Canyon-Widget bei
-$\kappa = 100$ und der voreingestellten Schrittweite, bis $f$ auf ein Millionstel
-des Startwerts gefallen ist?
-
-Die Ablesetafel des Widgets nennt die Zahl: $336$. Bei $\kappa = 10$ sind es
-$35$, bei $\kappa = 25$ dann $88$ – der Aufwand wächst also ungefähr proportional
-zur Kondition, genau wie es @bemerkung:die-konditionszahl-einer-funktion für die garantierte Schrittzahl
-vorhersagt.
 :::
 
 :::frage{wahr}

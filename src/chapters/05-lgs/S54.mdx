@@ -111,6 +111,7 @@ $n^3/3$ (@sec:lu). An der Größenordnung $O(n^3)$ ändert
 das nichts (@sec:algos/landau), an der Rechenzeit sehr
 wohl.
 
+:::::vertiefung[Warum die Zerlegung immer existiert: der Induktionsbeweis]
 Der Beweis ist eine Induktion über die Dimension $n$ und liefert
 nebenbei gleich ein Rezept, wie sich $\bL$ Spalte für Spalte berechnen
 lässt.
@@ -206,13 +207,15 @@ $$
 
 ::::
 
-Achten wir auf den Quantor: Die strikte Ungleichung
+Achten wir zum Schluss auf den Quantor: Die strikte Ungleichung
 $\bx^\top (\bB - \bl\bl^\top) \bx > 0$ gilt natürlich nur für
-$\bx \neq \bnull$; deshalb haben wir ihn im Beweis überall mitgeführt.
-Nebenbei liefert die Konstruktion ein $\bL$ mit lauter positiven
-Diagonaleinträgen, denn dort steht in jedem Schritt $\sqrt{a} > 0$. Mit
-dieser Normierung ist die Zerlegung dann auch eindeutig: Ohne sie dürften
-wir in einer beliebigen Spalte von $\bL$ alle Vorzeichen umdrehen, ohne
+$\bx \neq \bnull$; deshalb haben wir ihn überall mitgeführt.
+:::::
+
+Die Konstruktion liefert ein $\bL$ mit lauter positiven Diagonaleinträgen,
+denn auf der Diagonalen steht in jedem Schritt eine Wurzel. Mit dieser
+Normierung ist die Zerlegung dann auch eindeutig: Ohne sie dürften wir in
+einer beliebigen Spalte von $\bL$ alle Vorzeichen umdrehen, ohne
 $\bL\bL^\top$ zu verändern.
 
 ### Cholesky von Hand: Koeffizientenvergleich
@@ -285,8 +288,6 @@ füllt sich $\bL$?
 
 <CholeskyStepper />
 
-Das Widget macht die spaltenweise Konstruktion aus @eq:eq-5-4-2 nachvollziehbar.
-
 ### Anwendung: korrelierte Zufallsvektoren simulieren
 
 Zufallszahlengeneratoren liefern uns unabhängige Standardnormalvariablen,
@@ -312,33 +313,18 @@ $$
 ::::beweis
 
 :::schritt
-Der Erwartungswert:
-$\E[\by] = \E[\bL\bx] = \bL\, \E[\bx] = \bL\bnull = \bnull$.
-
-::why[der Erwartungswert ist linear, und $\bL$ ist eine feste, nicht zufällige Matrix]
-:::
-
-:::schritt
-Wegen $\E[\by] = \bnull$ ist $\var(\by) = \E[\by\by^\top]$; ebenso ist
-$\E[\bx\bx^\top] = \var(\bx) = \bI_d$.
-
-::why[für zentrierte Zufallsvektoren stimmt $\var(\by) = \E[(\by - \E[\by])(\by - \E[\by])^\top]$ mit $\E[\by\by^\top]$ überein]
-:::
-
-:::schritt
-Zusammensetzen:
+Wegen $\E[\by] = \bL\,\E[\bx] = \bnull$ ist $\var(\by) = \E[\by\by^\top]$, und
+damit
 
 $$
 \var(\by)
-= \E\bigl[\by\by^\top\bigr]
 = \E\bigl[\bL\bx\bx^\top\bL^\top\bigr]
 = \bL\, \E\bigl[\bx\bx^\top\bigr]\, \bL^\top
 = \bL\, \bI_d\, \bL^\top
-= \bL\bL^\top
 = \bSigma .
 $$
 
-::why[erst $\by = \bL\bx$ mit $(\bL\bx)^\top = \bx^\top\bL^\top$ einsetzen; dann die konstanten Faktoren $\bL$ und $\bL^\top$ aus dem Erwartungswert ziehen (Linearität); zuletzt $\E[\bx\bx^\top] = \bI_d$ und die Zerlegung @eq:cholesky-zerlegung verwenden]
+::why[der Erwartungswert ist linear und $\bL$ eine feste, nicht zufällige Matrix, darf also aus ihm herausgezogen werden; für zentrierte Vektoren ist $\var(\by) = \E[\by\by^\top]$, insbesondere $\E[\bx\bx^\top] = \var(\bx) = \bI_d$; zuletzt die Zerlegung @eq:cholesky-zerlegung]
 :::
 
 ::::
@@ -372,25 +358,15 @@ $$
 
 <CholeskySampler />
 
-Das Widget verknüpft den Cholesky-Faktor mit der Form der erzeugten Punktwolke.
+$\bL$ streckt die erste Koordinate mit $\cgreen{\sigma_1}$ und mischt der
+zweiten über $\cgreen{\rho\,\sigma_2}$ einen Anteil davon bei: Aus der runden
+Wolke wird eine gestreckte, für $\rho \neq 0$ geneigte Ellipse. Läuft $|\rho|$
+gegen eins, geht der Eintrag
+$\cgreen{\sigma_2\sqrt{1 - \rho^2}}$ gegen null, die Wolke fällt auf eine
+Gerade zusammen und $\bSigma$ wird singulär.
 :::
 
-### Selbsttest
-
-::::quiz
-
-:::frage{wahr}
-Im SPD-Richtungs-Widget widerlegt eine Richtung mit $\bx^\top\bA\bx \leq 0$
-die positive Definitheit.
-
-@definition:spd-matrix verlangt strikte Positivität für alle von null verschiedenen
-Richtungen. Ein Gegenbeispiel genügt daher zum Widerlegen.
-:::
-
-::::
-
-### Cholesky mit Pivotierung
-
+:::vertiefung[Cholesky mit Pivotierung: semidefinite und rangdefiziente Matrizen]
 Was passiert, wenn $\bA$ nur positiv *semi*definit ist (also
 $\bx^\top \bA \bx \geq 0$ statt $> 0$), etwa weil $\bA$ singulär ist? Oder
 wenn $\bA$ zwar SPD, aber so
@@ -418,6 +394,7 @@ Variante hat bemerkenswerte Eigenschaften:
   mit Aufwand $O(k^2 n)$ statt $O(n^3)$ bei Abbruch nach $k$ Spalten,
   und für Gram-Matrizen $\bX^\top\bX$ im Fall $p > n$ (mehr Merkmale als
   Beobachtungen), die zwangsläufig singulär sind.
+:::
 
 *Vertiefung: Heath §2.5 (spezielle lineare Systeme, insbesondere
 symmetrische und positiv definite Matrizen).*

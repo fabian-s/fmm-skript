@@ -271,15 +271,14 @@ Maximum. Rechts steht der Schnitt von $f$ entlang des Strahls $\bx + t\bd$ samt 
 Näherung aus @eq:richtungsableitung.
 
 <RichtungsWidget />
-:::
 
-Die blaue Kurve im Kompass ist ein Kreis, der den Mittelpunkt berührt, und das ist
-genau der Graph von $\theta \mapsto \left\|\corange{\nabla f(\bx)}\right\|_2\cos\theta$
-in Polarkoordinaten. Ihr weitester Punkt liegt in Gradientenrichtung, dort erreicht die
-Richtungsableitung ihr Maximum $\left\|\corange{\nabla f(\bx)}\right\|_2$ (@satz:richtung-des-staerksten-anstiegs).
-Senkrecht dazu, also längs der Höhenlinie, ist sie null. Dazwischen zählt allein der Kosinus
+Die blaue Kurve ist ein Kreis, der den Mittelpunkt berührt, also genau der Graph von
+$\theta \mapsto \left\|\corange{\nabla f(\bx)}\right\|_2\cos\theta$ in Polarkoordinaten. Ihr
+weitester Punkt liegt in Gradientenrichtung, dort erreicht die Richtungsableitung ihr
+Maximum $\left\|\corange{\nabla f(\bx)}\right\|_2$ (@satz:richtung-des-staerksten-anstiegs);
+senkrecht dazu, also längs der Höhenlinie, ist sie null. Dazwischen zählt allein der Kosinus
 des eingeschlossenen Winkels: $60^\circ$ neben dem Gradienten bleiben noch $50\,\%$ übrig.
-Rechts sieht man dieselbe Aussage als Steigung der grünen Geraden bei $t = 0$.
+:::
 
 ### Zwei Gradienten zum Auswendiglernen
 
@@ -441,9 +440,7 @@ dafür in der Kettenregel wieder ein (@bemerkung:zeilenvektor-nicht-spaltenvekto
 :::
 
 Die Lernrate $\alpha$ ist der einzige freie Parameter des Verfahrens. Gibt es eine beste
-Wahl, und woran erkennt man sie? Beim Abstieg in der Ebene schrumpft der Abstand zum Minimum
-in jeder Eigenrichtung von $\bA$ mit einem eigenen Faktor; die langsamere der beiden
-bestimmt das Tempo.
+Wahl, und woran erkennt man sie?
 
 :::interaktiv[Gradientenabstieg auf einer konvexen quadratischen Funktion]
 Zum Ausprobieren nehmen wir nicht die Funktion aus @beispiel:gradient-einer-quadratischen-funktion, denn deren Sattel wäre
@@ -455,18 +452,18 @@ $(5 \pm \sqrt{5})/2$ beide positiv sind. Nach @satz:gradient-der-quadratischen-f
 ist $\corange{\nabla L(\btheta)} = \btheta^\top\bA$, der Schritt also $-\alpha\bA\btheta$.
 
 <AbstiegStepper />
-:::
 
-Über den Erfolg entscheidet im Widget allein die Rate
-$\rho(\alpha) = \max_i \left|1 - \alpha\lambda_i\right|$, und der Verlust
-fällt je Schritt höchstens auf das $\rho(\alpha)^2$-fache. Klein wird dieses Maximum genau
-dort, wo die beiden Eigenrichtungen gleich schnell schrumpfen, also bei
-$\alpha = 2/(\lambda_{\min} + \lambda_{\max}) = 0{,}4$ mit
-$\rho = \sqrt{5}/5 \approx 0{,}447$; kleinere Lernraten kriechen, und ab
-$\alpha = 2/\lambda_{\max} \approx 0{,}553$ ist $\rho \geq 1$, die Iterierten laufen davon.
-Für die Funktion aus @beispiel:gradient-einer-quadratischen-funktion gäbe es dagegen gar kein brauchbares $\alpha$: Ihre
-Hesse-Matrix hat den negativen Eigenwert $-0{,}162$, und entlang dieser Eigenrichtung wächst
-der Abstand zum Sattel bei jeder Lernrate.
+Über den Erfolg entscheidet allein die Rate
+$\rho(\alpha) = \max_i \left|1 - \alpha\lambda_i\right|$: Die Lernrate ist durch das
+Verhältnis der Eigenwerte begrenzt, und die beste Wahl ist die, bei der beide
+Eigenrichtungen gleich schnell schrumpfen, hier $\alpha = 0{,}4$. Zu kleine Lernraten
+kriechen, zu große lassen die Iterierten davonlaufen. Wie eng dieser Spielraum ist, hängt an
+der Hesse-Matrix; @sec:hoehere-ableitungen führt das aus, und @kap:optim nimmt die
+Konvergenzanalyse als eigenes Thema auf. Für die Funktion aus
+@beispiel:gradient-einer-quadratischen-funktion gäbe es dagegen gar kein brauchbares
+$\alpha$: Ihre Hesse-Matrix hat den negativen Eigenwert $-0{,}162$, und entlang dieser
+Eigenrichtung wächst der Abstand zum Sattel bei jeder Lernrate.
+:::
 
 ### Selbsttest
 

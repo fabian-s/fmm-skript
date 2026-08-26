@@ -218,7 +218,7 @@ export function FixpunktSpirale() {
       </Aufgabe>
       <p className="max-w-prose text-xs text-slate-600 dark:text-slate-400">
         Blau der Weg der ersten 30 Schritte, grün der Fixpunkt x* = 0. Alle drei A sind affin,
-        also ist ρ = ‖I − γA‖₂ nach Schritt 5 des Beweises von {ref("satz:konvergenzrate-der-fixpunktiteration")} eine echte Schranke
+        also ist ρ = ‖I − γA‖₂ nach dem affinen Fall im Beweis von {ref("satz:konvergenzrate-der-fixpunktiteration")} eine echte Schranke
         ohne Restterm.
       </p>
       <div className="flex flex-wrap gap-2">

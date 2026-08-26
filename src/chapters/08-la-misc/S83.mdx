@@ -36,14 +36,6 @@ $$
 heißt *Residuum* (residual) von $\cblue{\bx^{(k)}}$.
 :::
 
-::::quiz
-:::frage{wahr}
-Zeigt das Richardson-Widget für eine Schrittweite eine Rate $\rho>1$, dann erfüllt diese Wahl die Konvergenzvoraussetzung von @satz:konvergenz-der-korrekturiteration nicht.
-
-Die Kontraktionsschranke verlangt $\rho<1$.
-:::
-::::
-
 Das Residuum misst, wie weit die Näherung davon entfernt ist, die Gleichung zu
 erfüllen. Ist $\cred{\br^{(k)}} = \bnull$, so gilt
 $\bA\cblue{\bx^{(k)}} = \bb$, und wir haben die Lösung gefunden. Solange das
@@ -552,12 +544,18 @@ wir den Verlauf untersuchen.
 <RichardsonStepper />
 </Schaetzfrage>
 
-Die Auflösung verbindet die geschätzte Schwelle mit der Kontraktionsbedingung.
-
 Die Auflösung markiert die Grenze der Konvergenz. @satz:konvergenz-der-korrekturiteration erklärt den
 Wechsel: Auf der einen Seite fällt der Fehler geometrisch, auf der anderen
 verfehlt die Iterationsmatrix die Kontraktionsbedingung.
 :::
+
+::::quiz
+:::frage{wahr}
+Zeigt das Richardson-Widget für eine Schrittweite eine Rate $\rho>1$, dann erfüllt diese Wahl die Konvergenzvoraussetzung von @satz:konvergenz-der-korrekturiteration nicht.
+
+Die Kontraktionsschranke verlangt $\rho<1$.
+:::
+::::
 
 ### Einordnung
 

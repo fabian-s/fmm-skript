@@ -174,8 +174,8 @@ Schranken $0 \le \lambda \le 1$ fallen lässt, erhält die ganze Gerade durch di
 Punkte; die Nichtnegativität der Gewichte ist also genau das, was Strecke von Gerade trennt.
 
 Halten wir fest, worauf das hinausläuft. Eine Menge wird gleich *konvex* heißen, wenn sie mit
-je zwei Punkten auch deren Verbindungsstrecke enthält (@sec:konvexe-mengen). Satz
-11.1.4 sagt: Diese Strecke ist nichts anderes als die Menge aller Konvexkombinationen der
+je zwei Punkten auch deren Verbindungsstrecke enthält (@sec:konvexe-mengen).
+@satz:konvexkombinationen-zweier-vektoren sagt: Diese Strecke ist nichts anderes als die Menge aller Konvexkombinationen der
 beiden Punkte. Konvexe Mengen sind also genau die Mengen, die unter Konvexkombinationen von je
 zwei Punkten abgeschlossen sind. Dass dann auch Konvexkombinationen von mehr als zwei Punkten
 nicht hinausführen, ist eine Induktion und steht dort als eigener Satz.
@@ -233,22 +233,12 @@ hängt deshalb an der ganzen Menge $\Xcal$, nicht am Punkt für sich. Nehmen wir
 weitere Vektoren hinzu, so kann ein bisheriger Extrempunkt seinen Status verlieren, sobald
 er zwischen den neuen liegt. Das zweite Widget unten führt das vor.
 
-In der Literatur wird der Begriff meist etwas anders eingeführt, für eine beliebige konvexe
-Menge $\cblue{C}$: Ein Punkt $\corange{\bx} \in \cblue{C}$ heißt Extrempunkt, wenn aus
-$\corange{\bx} = \lambda \bu + (1-\lambda)\bv$ mit $\bu, \bv \in \cblue{C}$ und
-$\lambda \in (0,1)$ stets $\bu = \bv = \corange{\bx}$ folgt. In Worten: $\corange{\bx}$
-liegt im Inneren keiner Strecke, die ganz in $\cblue{C}$ verläuft. Für eine endliche
-Punktmenge $\Xcal$ wählen beide Lesarten dieselben Punkte aus. Wer das nachrechnen möchte,
-setzt in der Literaturfassung für $\bu$ und $\bv$ ihre Darstellungen als Konvexkombinationen
-von Punkten aus $\Xcal$ ein und sortiert um: Es entsteht wieder eine Konvexkombination von
-Punkten aus $\Xcal$, und @definition:konvexkombinationen-extrempunkt greift. Für die andere Richtung lösen wir eine
-nichttriviale Darstellung nach $\corange{\bx}$ auf und erhalten $\corange{\bx}$ als
-Konvexkombination der *übrigen* Punkte. Mindestens zwei von ihnen tragen dann positives
-Gewicht: Ein einzelner Punkt mit Gewicht $1$ wäre $\corange{\bx}$ selbst, und der kommt unter
-den übrigen nicht vor. Spalten wir einen davon ab, so liegt $\corange{\bx}$ im Inneren
-einer Strecke innerhalb von $\cblue{\conv(\Xcal)}$. Dasselbe Argument zeigt nebenbei, dass
-Punkte aus $\cblue{\conv(\Xcal)} \setminus \Xcal$ in der Literaturfassung von vornherein
-ausscheiden; im Dreiecksbeispiel unten bleiben deshalb genau die drei Ecken übrig.
+In der Literatur wird der Begriff meist etwas allgemeiner gefasst, nämlich für eine beliebige
+konvexe Menge statt für eine Punktliste: Extrem heißt dort, im Inneren keiner Strecke zu
+liegen, die ganz in der Menge verläuft. Diese Fassung brauchen wir ab
+@sec:konvexe-mengen und führen sie dort als @definition:konvexe-mengen-extrempunkt ein; für
+eine endliche Punktmenge $\Xcal$ wählen beide Lesarten dieselben Punkte aus. Im
+Dreiecksbeispiel unten bleiben deshalb genau die drei Ecken übrig.
 :::
 
 :::bemerkung[#die-kleinste-konvexe-obermenge (Die kleinste konvexe Obermenge)]

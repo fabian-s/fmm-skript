@@ -75,7 +75,7 @@ der Anknüpfungspunkt zur
 :k[Singulärwertzerlegung]{#singular-value-decomposition},
 die uns später noch ausführlich beschäftigen wird.
 
-### Was kostet die Berechnung?
+::::vertiefung[Was kostet die Berechnung der einzelnen Normen?]
 
 Für die Praxis ist entscheidend, wie teuer die einzelnen Normen sind. Spalten- und
 Zeilensummennorm sowie die Frobenius-Norm brauchen nur einen Durchlauf über alle
@@ -123,7 +123,11 @@ deutlich billiger sein.
 </table>
 </div>
 
-:::bemerkung[#ausblick-normen-als-regularisierer (Ausblick: Normen als Regularisierer)]
+::::
+
+::::vertiefung[Ausblick: Normen als Regularisierer im maschinellen Lernen]
+
+:::bemerkung[#ausblick-normen-als-regularisierer]
 Normen messen nicht nur Fehler: Im maschinellen Lernen steuern sie als Strafterme,
 *welche* Lösung ein Schätzproblem liefert. Drei prominente Beispiele, alle
 Varianten des :k[KQ-Problems]{#linear-least-squares}:
@@ -142,6 +146,8 @@ setzt viele exakt auf null, und die Nuklearnorm aus
 @sec:schattennormen begünstigt Lösungen mit
 kleinem Rang (:k[Niedrigrang-Approximation]{#low-rank-approximation}).
 :::
+
+::::
 
 ### Selbsttest
 
@@ -231,18 +237,9 @@ wie es sein muss kleiner als die Frobenius-Norm.
 ### Wie geht es weiter?
 
 Warum der ganze Aufwand? Weil Matrixnormen das zentrale Messwerkzeug der
-*Fehleranalyse* sind, mit der wir uns im nächsten Kapitel beschäftigen: Die
-:k[Konditionszahl]{#condition-number}
-$\kappa(\bA) = \left\|\bA\right\| \cdot \left\|\bA^{-1}\right\|$
-misst, wie stark eine Matrix relative Störungen der Eingabe verstärken kann; für die
-Spektralnorm ist das gerade das Verhältnis von größtem zu kleinstem Singulärwert (bei
-symmetrischen Matrizen: der Beträge der Eigenwerte). Und wenn ein Algorithmus statt der exakten Lösung von
-$\bA\bx = \bb$ nur ein $\wt{\bx}$ liefert, sagen uns Normen, für
-welches gestörte Problem $(\bA + \bDelta\bA)\,\wt{\bx} = \bb$ dieses
-$\wt{\bx}$ die exakte Lösung ist. Die Größe
-$\left\|\bDelta\bA\right\|_2 / \left\|\bA\right\|_2$ quantifiziert
-dann den Rückwärtsfehler. Submultiplikativität und Verträglichkeit aus
-@sec:eigenschaften sind genau die
-Eigenschaften, die solche Abschätzungen erst möglich machen.
+*Fehleranalyse* sind, mit der wir uns im nächsten Kapitel beschäftigen.
+:k[Konditionszahl]{#condition-number}, Rückwärtsfehler, Submultiplikativität und
+Verträglichkeit aus @sec:eigenschaften sind genau die Begriffe, mit denen wir dort
+abschätzen, wie viel Vertrauen eine numerisch berechnete Lösung verdient.
 
 *Vertiefung: Heath §2.3; MML §4.1/4.5.*

@@ -234,9 +234,17 @@ ist $\bB^\top\bB$ dünn besetzt und die Zerlegung billig
 :::bemerkung[#wann-die-designmatrix-vollen-spaltenrang (Wann die Designmatrix vollen Spaltenrang hat)]
 Vollen Spaltenrang bekommen wir nicht geschenkt. Notwendig ist $K \le n$, aber
 das reicht nicht: Die Basisfunktionen müssen auch *auf den Daten* linear
-unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen. Der
-zuständige Satz von Schoenberg und Whitney lässt sich für B-Splines vom Grad
-$q$ mit erweitertem Knotenvektor $\corange{\tau}$ so lesen: Es müssen sich
+unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen.
+Anschaulich muss jede Basisfunktion einen eigenen, passend geordneten
+Datenpunkt belegen können; der zuständige Satz von Schoenberg und Whitney
+macht daraus eine Indexbedingung. Mit Knoten auf den Quantilen der $x_i$ hält
+sie bis $K = n$, und deshalb legt das Widget seine Knoten auf Quantile, wie es
+auch `splines::bs()` tut.
+:::
+
+::::vertiefung[Die Schoenberg-Whitney-Bedingung im Detail]
+Für B-Splines vom Grad $q$ mit erweitertem Knotenvektor $\corange{\tau}$
+lautet die Bedingung: Es müssen sich
 Indizes $i_1 < \dots < i_K$ finden, sodass die jeweils zugeordnete
 Basisfunktion am eigenen Datenpunkt positiv ist,
 
@@ -257,10 +265,7 @@ Widgets, aber *gleichmäßigen* Knoten auf $[0, 2\pi]$, zeigt es: Bei $K = 35$ h
 jede der $35$ Basisfunktionen mindestens einen Datenpunkt im Träger, und
 trotzdem bricht die Cholesky-Zerlegung von $\bB^\top\bB$ ab, weil sieben der
 $32$ Knotenintervalle leer bleiben und die Bedingung damit verletzt ist.
-Mit Knoten auf den Quantilen der $x_i$ hält die Bedingung dagegen bis $K = n$.
-Das Widget legt seine Knoten deshalb auf Quantile, wie es auch `splines::bs()`
-tut.
-:::
+::::
 
 ### Interpolation und Glättung sind derselbe Rahmen
 
@@ -361,6 +366,14 @@ Abstand zur wahren Funktion auf das Zweiundzwanzigfache steigt. Am besten trifft
 in unserem Lauf $K = 11$ mit einem Abstand von $0{,}072$.
 :::
 
+Die Tabelle zeigt drei Regime. Bei $K = 4$ ist der Ansatzraum gerade der
+Raum der kubischen Polynome, und die Kurve ist zu starr, um beide Wellen
+von $f$ mitzunehmen; zwischen $K = 6$ und $K = 15$ liegt sie sauber im
+Rauschband, und $\wh\sigma$ bewegt sich dort zwischen $0{,}278$ und
+$0{,}306$, also dicht an der wahren Streuung $0{,}3$; ab $K = 16$ beginnen die
+Ausschläge, und der Abstand zu $f$ wächst wieder, während die Residuen weiter
+fallen.
+
 :::bemerkung[#die-residuen-fallen-nicht-immer (Die Residuen fallen nicht immer)]
 Beim Blick auf die Tabelle liegt die Vermutung nahe, die Residuenquadratsumme
 falle mit wachsendem $K$ immer. Für *geschachtelte* Räume stimmt das: Kommt eine
@@ -368,8 +381,7 @@ Basisfunktion hinzu und bleiben die alten erhalten, so ist der alte Minimierer
 weiterhin zulässig, das Minimum kann also nur sinken. Legen wir die Knoten aber
 auf Quantile, so wandern sie mit $K$, und die Räume sind nicht geschachtelt.
 In unserem Lauf steigt die Residuenquadratsumme bei elf der $36$ Schritte
-von $K$ auf $K+1$ wieder an, etwa von $K = 6$ auf $K = 7$
-($3{,}435$ auf $4{,}016$).
+von $K$ auf $K+1$ wieder an, etwa von $K = 6$ auf $K = 7$.
 :::
 
 :::interaktiv[Ein Regler für die Flexibilität]
@@ -378,13 +390,10 @@ für die Basis, Normalengleichungen mit Cholesky-Zerlegung für die Koeffiziente
 Im unteren Bild stehen die $K$ Basisfunktionen selbst, sie werden mit wachsendem
 $K$ schmaler und zahlreicher.
 
-Drei Regime lassen sich am Regler abfahren. Bei $K = 4$ ist der Ansatzraum
-gerade der Raum der kubischen Polynome, und die Kurve ist zu starr, um beide
-Wellen von $f$ mitzunehmen. Zwischen $K = 6$ und $K = 15$ liegt sie sauber im
-Rauschband; $\wh\sigma$ bewegt sich dort zwischen $0{,}278$ und $0{,}306$, also
-dicht an der wahren Streuung $0{,}3$. Ab $K = 16$ beginnen die Ausschläge, und
-von $K = 30$ an verlässt die Kurve bei den meisten Reglerstellungen das
-Bildfenster, ohne dass die Residuen davon noch viel besser würden.
+Die drei Regime lassen sich am Regler abfahren. Ab $K = 16$ beginnen die
+Ausschläge, und von $K = 30$ an verlässt die Kurve bei den meisten
+Reglerstellungen das Bildfenster, ohne dass die Residuen davon noch viel
+besser würden.
 
 Die rot gezeichneten Residuen zeigen dasselbe von der anderen Seite: Sie werden
 im Mittel kürzer, während die grüne Kurve immer weniger mit der violetten zu tun
@@ -475,10 +484,8 @@ Datenstellen verschwindet, wofür zwei verschiedene $x_i$ genügen. Der
 Unterschied zu Ridge liegt in der Bedeutung: Dort werden *große* Koeffizienten
 bestraft, hier *unruhige* Funktionen.
 
-Auf dieser Konstruktion stehen die additiven Modelle, mit denen in der Statistik
-tatsächlich gearbeitet wird; in R rechnet sie `mgcv::gam()`. Wie $\lambda$
-gewählt wird, ist dieselbe Frage wie die nach dem richtigen $K$
-(@sec:bias-varianz).
+Wie $\lambda$ gewählt wird, ist dieselbe Frage wie die nach dem richtigen $K$;
+@sec:bias-varianz kommt darauf zurück.
 :::
 
 ### Wann welche Methode?
@@ -493,8 +500,8 @@ Die dritte Zeile ist die wichtigste und die am wenigsten offensichtliche. Wer
 nur die vorliegenden $n$ Punkte beschreiben will, fährt mit der Interpolation
 nicht schlecht: Sie hat auf den Daten die kleinste Residuenquadratsumme, nämlich
 null. Sobald wir aber an einer *neuen* Stelle vorhersagen wollen, zählt der
-Abstand zu $f$, und der ist bei einer glatten Schätzung kleiner. Beispiel
-13.7.10 führt beide Größen nebeneinander vor.
+Abstand zu $f$, und der ist bei einer glatten Schätzung kleiner.
+@beispiel:fuenfzig-verrauschte-punkte führt beide Größen nebeneinander vor.
 
 ### Beispiel: Glättung in R
 
@@ -523,23 +530,11 @@ Drei Details lohnen den zweiten Blick.
   (@sec:kq/qr) und nicht über die Normalengleichungen.
   Das ist der stabilere der beiden Wege (@bemerkung:wie-wir-das-system-wirklich-loesen).
 - Für die Vorhersage an neuen Stellen braucht `B_new` *dieselbe* Basis. Deshalb
-  werden Knoten und Randknoten von `B` übernommen. Ohne diese Übergabe wäre die
-  Basis eine andere, und die Koeffizienten `a_hat` würden zu ihr nicht passen.
-
-:::bemerkung[#was-ohne-boundary-knots-passiert (Was ohne Boundary.knots passiert)]
-Der zweite `bs()`-Aufruf ist die Stelle, an der man sich am leichtesten
-vertut. Ruft man `bs(x_new, knots = attr(B, "knots"), intercept = TRUE)` und
-lässt `Boundary.knots` weg, so setzt `bs()` die Randknoten auf den
-Wertebereich des *neuen* Gitters, hier also auf $[0, 2\pi]$, während `B` sie
-auf den Bereich der Daten gesetzt hat. Die beiden Basen sind dann
-verschieden, und `B_new %*% a_hat` mischt Koeffizienten der einen mit
-Funktionen der anderen.
-
-Unangenehm ist das, weil nichts schiefgeht, was man merken würde: Die
-Spaltenzahl stimmt weiterhin, es gibt keine Fehlermeldung, und heraus kommt
-eine glatte Kurve – nur eben nicht die geschätzte. Beide Argumente,
-`knots` *und* `Boundary.knots`, gehören deshalb zusammen übergeben.
-:::
+  werden Knoten und Randknoten von `B` übernommen. Lässt man `Boundary.knots`
+  weg, so setzt `bs()` sie auf den Wertebereich des *neuen* Gitters: `B_new`
+  gehört dann zu einer anderen Basis als `a_hat`, und zwar lautlos
+  (@bemerkung:b-splines-in-r). Beide Argumente, `knots` *und*
+  `Boundary.knots`, gehören zusammen übergeben.
 
 Ausgaben drucken wir hier keine ab. Wer sehen will, wie die Kurve auf einen
 konkreten Datensatz reagiert, findet oben im Widget eine eigene Realisierung,
@@ -593,9 +588,9 @@ Auch bei Rangdefekt von $\bB$ sind die angepassten Werte $\bB\wh\ba$ eindeutig
 bestimmt.
 
 Sie sind die orthogonale Projektion von $\cblue{\by}$ auf den Spaltenraum von
-$\bB$, und die hängt nur vom Unterraum ab (letzter Beweisschritt zu Satz
-13.7.5). Nicht eindeutig sind dagegen die Koeffizienten und mit ihnen die
-Funktion $\cgreen{\wh f}$ selbst: Zwei Lösungen unterscheiden sich um ein
+$\bB$, und die hängt nur vom Unterraum ab (letzter Beweisschritt zu
+@satz:glaettung-ist-ein-lineares-kleinste). Nicht eindeutig sind dagegen die
+Koeffizienten und mit ihnen die Funktion $\cgreen{\wh f}$ selbst: Zwei Lösungen unterscheiden sich um ein
 Element des Kerns von $\bB$, und die zugehörige Funktion verschwindet nur an den
 Datenstellen, nicht überall.
 :::

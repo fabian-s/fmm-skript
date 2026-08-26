@@ -130,16 +130,19 @@ f(\cblue{x}, c\,\cgreen{y})
 \end{aligned}
 $$
 
-Die Funktion ist also **in jedem Argument einzeln** linear.
+Die Funktion ist also **in jedem Argument einzeln** linear. Dieselbe Rechnung
+ohne die geometrische Deutung zeigt zugleich, dass die Multiplikation reeller
+Zahlen $(\cblue{x_1}, \cgreen{x_2}) \mapsto \cblue{x_1}\cgreen{x_2}$ bilinear
+ist; gebraucht haben wir nur Distributiv-, Assoziativ- und Kommutativgesetz in
+$\R$.
 :::
 
 :::bemerkung[#das-vierfache-geometrisch-gelesen (Das Vierfache, geometrisch gelesen)]
 Der Faktor $\cred{4}$ braucht keine Rechnung. Verdoppeln wir beide Seiten, passt
-das alte Rechteck viermal in das neue. Verdoppeln wir nur eine Seite, passt es
-genau zweimal hinein, und das ist die Linearität im einzelnen Argument. Mit
-$\cblue{x} = 3$ und $\cgreen{y} = 2$ etwa ist $f(3, 2) = 6$, während
-$f(6, 4) = 24$ und $f(6, 2) = 12$ gilt. Der Faktor $\cred{4} = 2^2$ ist der Fall
-$n = 2$ der allgemeinen Regel $\cred{c^n}$ aus @bemerkung:bilinear-und-eine-warnung.
+das alte Rechteck viermal in das neue; verdoppeln wir nur eine Seite, genau
+zweimal, und das ist die Linearität im einzelnen Argument. Der Faktor
+$\cred{4} = 2^2$ ist der Fall $n = 2$ der allgemeinen Regel $\cred{c^n}$ aus
+@bemerkung:bilinear-und-eine-warnung.
 :::
 
 :::interaktiv[Verdoppeln, einmal beide Seiten und einmal nur eine]
@@ -147,19 +150,12 @@ Welche der beiden Skalierungen besteht den Linearitätstest, wenn wir die Fläch
 zuerst nur aus dem Rechteck vorhersagen?
 
 <BilinearitaetsDemo />
-:::
 
-Das Rechteckbild zeigt damit, warum die getrennte Linearität genau die Regel ist, die das Tensorprodukt später in eine lineare Abbildung übersetzt.
+Das Rechteckbild zeigt damit, warum die getrennte Linearität genau die Regel
+ist, die das Tensorprodukt später in eine lineare Abbildung übersetzt.
+:::
 
 ### Weitere Beispiele
-
-:::beispiel[#multiplikation-reeller-zahlen (Multiplikation reeller Zahlen)]
-Die Multiplikation $f\colon \R \times \R \to \R$,
-$(\cblue{x_1}, \cgreen{x_2}) \mapsto \cblue{x_1}\cgreen{x_2}$, ist bilinear. Das
-ist wörtlich die Rechnung aus @beispiel:flaeche-eines-rechtecks ohne die geometrische Deutung.
-Gebraucht haben wir dort nur Distributiv-, Assoziativ- und Kommutativgesetz der
-reellen Zahlen.
-:::
 
 :::beispiel[#skalarprodukte-sind-bilinear (Skalarprodukte sind bilinear)]
 Jedes :k[Skalarprodukt]{#dot-product} $f\colon V \times V \to \R$,
@@ -235,10 +231,14 @@ gilt, wobei $\be_j$ der $j$-te Einheitsvektor des $\R^m$ ist. Die Koeffizienten
 $\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
 :::
 
-:::bemerkung[#woher-die-koeffizienten-kommen (Woher die Koeffizienten kommen)]
-Einen vollständigen Beweis führen wir nicht. Die Beweisidee ist aber kurz genug,
-um sie mitzunehmen, und sie liefert die Koeffizienten gleich mit.
+Einen vollständigen Beweis führen wir nicht. Woher die Koeffizienten kommen,
+lässt sich aber in einem Satz sagen: $\corange{a_{i_1, \dots, i_k, j}}$ ist die
+$j$-te Komponente des Vektors $T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit
+ist auch die Eindeutigkeit klar, denn diese Werte legt $T$ selbst fest. Eine
+multilineare Abbildung ist also bereits dadurch bestimmt, was sie mit Tupeln von
+Einheitsvektoren macht.
 
+:::vertiefung[Warum die Koeffizientendarstellung stimmt]
 Dass eine Abbildung der Gestalt @eq:darstellung-multilinearer-abbildungen multilinear ist, ist Nachrechnen. In
 jedem Summanden steht aus jedem Argument genau eine Koordinate als Faktor.
 Ersetzen wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder
@@ -257,11 +257,9 @@ T\bigl(\bx^{(1)}, \dots, \bx^{(k)}\bigr)
   T\bigl(\be_{i_1}, \dots, \be_{i_k}\bigr) .
 $$
 
-Der Vergleich mit @eq:darstellung-multilinearer-abbildungen zeigt, was die Koeffizienten sind:
-$\corange{a_{i_1, \dots, i_k, j}}$ ist die $j$-te Komponente des Vektors
-$T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit ist auch die Eindeutigkeit
-klar, denn diese Werte legt $T$ selbst fest. Eine multilineare Abbildung ist
-also bereits dadurch bestimmt, was sie mit Tupeln von Einheitsvektoren macht.
+Der Vergleich mit @eq:darstellung-multilinearer-abbildungen liefert die
+Koeffizienten: Dort steht $\corange{a_{i_1, \dots, i_k, j}}$ genau an der Stelle,
+an der hier die $j$-te Komponente von $T(\be_{i_1}, \dots, \be_{i_k})$ auftaucht.
 :::
 
 Zählen wir nach: Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
@@ -327,9 +325,9 @@ Bedingung, und zwar für jedes $i$ einzeln.
 Zwei verschiedene Koeffizienten-Arrays können dieselbe multilineare Abbildung
 $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ darstellen.
 
-@satz:darstellung-multilinearer-abbildungen sichert die Eindeutigkeit zu. @bemerkung:woher-die-koeffizienten-kommen sagt auch, warum:
-$a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente von
-$T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ selbst festgelegt. Wer die
+@satz:darstellung-multilinearer-abbildungen sichert die Eindeutigkeit zu, und der
+Grund steht im Anschluss an ihn: $a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente
+von $T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ selbst festgelegt. Wer die
 Koeffizienten ändert, ändert die Abbildung.
 :::
 

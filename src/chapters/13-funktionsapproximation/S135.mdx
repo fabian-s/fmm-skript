@@ -33,32 +33,21 @@ Wir sammeln sie mit den zugehörigen Abschnitten:
   $k$-mal stetig differenzierbare Funktionen. In diesem Abschnitt zählt
   $\Ccal^2$, in @sec:approximationsfehler dann $\Ccal^4$. Dazu Integrale
   der Bauart $\int |f''(x)|^2 \dx$ und die partielle Integration.
-- **Aus der ersten Kapitelhälfte:** Splines und B-Splines
-  (@sec:splines), der Gegensatz
-  von Interpolation und Glättung
-  (@sec:approximation) sowie die
-  Darstellung $\cgreen{\wh{f}(x)} = \sum_k a_k \corange{\phi_k(x)}$ über
-  eine :k[Basis]{#basis} von Funktionen
-  (@sec:basisdarstellung).
 - **Statistik:** Designmatrix eines
-  :k[linearen Modells]{#linear-regression}, die Zerlegung des mittleren
-  quadratischen Fehlers in Bias und :k[Varianz]{#variance}, dazu
-  Kreuzvalidierung und die Informationskriterien AIC und BIC. Das ist der
-  Stoff von @sec:bias-varianz.
+  :k[linearen Modells]{#linear-regression} und die Zerlegung des mittleren
+  quadratischen Fehlers in Bias und :k[Varianz]{#variance}
+  (@sec:bias-varianz).
 :::
 
 ### Splines, kurz erinnert
 
 :::bemerkung[#spline (Spline)]
-Ein *Spline* setzt Polynome an vorgegebenen Stellen
-$\corange{\xi_1 < \dots < \xi_{m-1}}$ zusammen, den *Knoten* (knots). Auf
-jedem der $m$ Teilintervalle steht ein Polynom vom Grad höchstens $q$, und an
-den Knoten passen die Stücke bis zur $(q-1)$-ten Ableitung zusammen. Ein
-kubischer Spline ($q = 3$) ist demnach eine $\Ccal^2$-Funktion: Wert, erste
-und zweite Ableitung gehen ohne Sprung über die Knoten. Zum Vergleich derselbe
-Datensatz mit $q = 0$, $q = 1$ und $q = 3$: eine Treppe mit Sprüngen, ein
-Polygonzug mit Knicken und eine Kurve, der man die Stückelung nicht mehr
-ansieht. Genau der dritte Fall ist der Standard, und dieser Abschnitt sagt,
+Ein *Spline* setzt Polynome vom Grad höchstens $q$ an vorgegebenen Stellen
+$\corange{\xi_1 < \dots < \xi_{m-1}}$ zusammen, den *Knoten* (knots), und
+zwar so glatt wie möglich: An jedem Knoten passen die Stücke bis zur
+$(q-1)$-ten Ableitung zusammen (@sec:splines). Ein kubischer Spline ($q = 3$) ist demnach eine
+$\Ccal^2$-Funktion: Wert, erste und zweite Ableitung gehen ohne Sprung über
+die Knoten. Genau dieser Fall ist der Standard, und dieser Abschnitt sagt,
 warum.
 
 Ein Wort zur Benennung, weil im Satz weiter unten andere Buchstaben stehen:
@@ -67,12 +56,6 @@ Trennstellen. Im Krümmungssatz fallen die Knoten mit den Stützstellen
 zusammen und heißen deshalb $\corange{x_1}, \dots, \corange{x_n}$, die beiden
 Intervallenden mitgezählt. Bei $n$ Datenpunkten ist also $m = n - 1$ und
 $\corange{\xi_k} = \corange{x_{k+1}}$.
-
-Die Glattheitsforderung gehört unbedingt zur Definition dazu, sonst wäre
-jede stückweise konstante Treppenfunktion ein kubischer Spline.
-@sec:splines hat das ausgeführt,
-einschließlich der B-Spline-Basis, mit der man solche Funktionen praktisch
-darstellt.
 :::
 
 ### Krümmung als Zielgröße
@@ -269,32 +252,11 @@ sich, die drei Zutaten getrennt zu benennen.
    Das führt auf den eingespannten Spline (clamped spline), für den derselbe
    Satz in seiner Klasse gilt.
 
-Was der Beweis dagegen *nicht* braucht, ist eine Randbedingung an
-$\cred{h''}$. Man könnte auf den Gedanken kommen, zusätzlich
-$\cred{h''(a)} = \cred{h''(b)} = 0$ zu verlangen; das wäre überflüssig und
-im Allgemeinen auch gar nicht erfüllt: Wegen $\cgreen{s''(a)} = 0$ ist
-$\cred{h''(a)} = \cred{g''(a)}$, und eine beliebige
-$\Ccal^2$-Vergleichsfunktion hat dort keinen Grund zu verschwinden. Wer die
-Forderung trotzdem stellt, beweist den Satz nur für eine echte Teilmenge der
-Konkurrenten und verliert gerade die Allgemeinheit, um die es geht. Die
-Schritte 3 bis 5 kommen ohne sie aus.
-
-Auch der Gleichheitsfall verdient einen genauen Blick. Die Kette
-$\int (\cred{h''})^2 = 0 \implies \cred{h''} \equiv 0 \implies \cred{h}$
-affin $\implies \cred{h} \equiv 0$ braucht die Stetigkeit im ersten Schritt
-und $n \ge 2$ Stützstellen im letzten. Bei nur einer Stützstelle stimmt sie
-nicht: Jede Gerade durch $\cblue{(x_1, y_1)}$ hat dasselbe Krümmungsintegral
-$0$, Minimierer gibt es dann unendlich viele.
-
-Und noch eine Voraussetzung im Satzkopf ist leicht zu übersehen:
-$a = \corange{x_1}$ und $\corange{x_n} = b$. Dürften die Punkte irgendwo in
-$[a,b]$ liegen, so summierte der Beweis weiter über die Knotenintervalle, das
-Ergebnis stünde dann aber einem Randterm an $a$ und $b$ gegenüber. Das geht
-nur auf, wenn die äußersten Knoten die Intervallenden sind. Liegen die Daten echt
-im Inneren, setzt man den Spline außerhalb linear fort: Dort ist
-$\cgreen{s''} = 0$, $J(\cgreen{s})$ bleibt also unverändert, und wegen
-$\int_a^b (\cred{g''})^2 \dx \ge \int_{x_1}^{x_n} (\cred{g''})^2 \dx$
-überträgt sich die Ungleichung auf das größere Intervall.
+Eine Voraussetzung im Satzkopf ist dabei leicht zu übersehen:
+$a = \corange{x_1}$ und $\corange{x_n} = b$, die äußersten Knoten sind also
+die Intervallenden. Liegen die Daten echt im Inneren, setzt man den Spline
+außerhalb linear fort; dort ist $\cgreen{s''} = 0$, $J(\cgreen{s})$ bleibt
+unverändert, und die Ungleichung überträgt sich auf das größere Intervall.
 :::
 
 :::korollar[#der-natuerliche-kubische-spline-ist-der (Der natürliche kubische Spline ist der einzige Minimierer)]
@@ -309,10 +271,16 @@ Das ist genau der letzte Beweisschritt: Jeder andere Interpolant mit
 demselben Krümmungswert ist $\cgreen{s}$ selbst.
 :::
 
+@satz:kubische-splines-haben-minimale setzt voraus, dass ein natürlicher
+kubischer Spline durch die Punkte überhaupt existiert. Er tut es, und zwar
+genau einer: Die Abzählung von Unbekannten und Bedingungen geht auf, und das
+zugehörige tridiagonale Gleichungssystem für die zweiten Ableitungen ist
+strikt diagonaldominant und damit regulär.
+
+::::vertiefung[Die Abzählung und das tridiagonale System dahinter]
 :::bemerkung[#existenz-die-abzaehlung-geht-auf (Existenz: die Abzählung geht auf)]
-@satz:kubische-splines-haben-minimale setzt voraus, dass ein natürlicher kubischer Spline durch die
-Punkte überhaupt existiert. Die Abzählung ist beruhigend: Bei $n$ Knoten gibt
-es $n-1$ Teilintervalle mit je $4$ Koeffizienten, zusammen $4(n-1)$
+Bei $n$ Knoten gibt es $n-1$ Teilintervalle mit je $4$ Koeffizienten,
+zusammen $4(n-1)$
 Unbekannte. Dem stehen $2(n-1)$ Interpolationsbedingungen gegenüber (jedes
 Stück trifft beide Endwerte), $2(n-2)$ Glattheitsbedingungen an den inneren
 Knoten (erste und zweite Ableitung) und die $2$ natürlichen Randbedingungen.
@@ -348,6 +316,7 @@ das $\cgreen{s''(1)} = -3$, das wir dort ausrechnen.
 @sec:splines zählt denselben
 Ansatz für vier Punkte durch.
 :::
+::::
 
 ### Beispiel: Spline gegen Parabel
 
@@ -461,12 +430,6 @@ Sie ist der Gegenstand von @sec:approximationsfehler.
 ### Selbsttest
 
 ::::quiz
-
-:::zahlfrage{loesung=0 toleranz=0.05}
-Welchen Wert von $t$ zeigt das Widget als Minimum von $J(g_t)$?
-
-Bei $t=0$ fällt der rote Abweichungsterm weg; der natürliche Spline erreicht damit das Minimum.
-:::
 
 :::frage{falsch}
 Jeder kubische Spline, der die Punkte interpoliert, minimiert das

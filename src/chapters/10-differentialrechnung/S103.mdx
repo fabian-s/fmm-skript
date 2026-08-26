@@ -134,11 +134,11 @@ wählen? Die Übersichtstabelle aus @sec:gradient listet vier Fälle auf;
 Für jede Ausgabekomponente entsteht eine Zeile, für jede Eingabevariable eine Spalte.
 
 <JacobiFormWidget />
-:::
 
 Damit ist die Tabelle der Formate vollständig: Die einzelne Zahl, der Gradient als Zeile,
 die Spalte der Ableitungen einer Kurve und die volle Matrix sind vier Ansichten desselben
 Objekts, und welche wir sehen, entscheiden nur $n$ und $m$.
+:::
 
 ### Die Bausteine und ihre Jacobimatrizen
 
@@ -300,6 +300,8 @@ $\bh = (0{,}01;\ 0{,}01)^\top$ nur noch $0{,}0002$. Ein Zehntel Schrittweite
 kostet ein Hundertstel Fehler.
 :::
 
+::::vertiefung[Die Jacobi-Determinante als Flächenfaktor]
+
 :::bemerkung[#wie-stark-die-flaeche-verzerrt-wird (Wie stark die Fläche verzerrt wird)]
 Das Bild dazu ist schnell erzählt: ein kleines Quadrat links, sein verbogenes
 Bild rechts, dazu das Parallelogramm der linearen Näherung. Wie stark $f$ die
@@ -317,6 +319,8 @@ aufgeblasen, und je kleiner es ist, desto genauer stimmt der Faktor. In der
 Wahrscheinlichkeitsrechnung ist genau dieser Faktor das, was beim
 Transformationssatz für Dichten den Ausgleich schafft.
 :::
+
+::::
 
 Wie schnell verschwindet der Unterschied zwischen dem krummen Bild und dem Parallelogramm,
 wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor aus
@@ -366,6 +370,14 @@ $$
 Die Formatprobe erledigt sich von selbst: rechts steht eine $p \times m$-Matrix
 mal einer $m \times n$-Matrix, das Produkt ist $p \times n$, und genau das
 verlangt @definition:jacobimatrix für eine Abbildung von $\R^n$ nach $\R^p$.
+
+Der Beweis führt dieselbe Rechnung wie später @satz:kettenregel, dort ohne Koordinaten und
+für beliebige normierte Räume: den Zuwachs abkürzen, ihn gegen $\left\|\bh\right\|$
+abschätzen, die Linearität zum Aufspalten nutzen und beide Restterme auf denselben
+Bezugspunkt bringen. Wer die allgemeine Fassung liest, kann die folgende Vertiefung
+überspringen.
+
+:::::vertiefung[Der Beweis in Koordinaten]
 
 ::::beweis
 
@@ -429,6 +441,8 @@ $\bh \mapsto \corange{\bJ_f(\by)}\corange{\bJ_g(\bx)}\,\bh$ die Bedingung aus
 :::
 
 ::::
+
+:::::
 
 ### Anwendung: Backpropagation
 
@@ -544,6 +558,8 @@ bei diskreten Daten oder Nullgewichten können sie dagegen durchaus exakt
 getroffen werden.
 :::
 
+::::vertiefung[Wie teuer die Kette ist, und warum sie von links ausgewertet wird]
+
 :::bemerkung[#wie-die-kette-ausgewertet-wird (Wie die Kette ausgewertet wird)]
 Gleichung @eq:die-gradientenkette-eines-netzes ist ein Produkt aus vielen Matrizen, und
 Matrixmultiplikation ist assoziativ: Wir dürfen die Klammern setzen, wie wir
@@ -588,16 +604,17 @@ Zahlen des Vorwärtslaufs, über den Knoten orange die Ableitung von $L$ nach de
 Knoten.
 
 <BackpropWidget />
+
+Jede Zwischengröße des Rückwärtslaufs bleibt eine Zeile, weil links immer die Zeile des
+vorigen Schritts steht und rechts eine Jacobimatrix; erst der letzte Schritt ordnet das
+Ergebnis als Gewichtsmatrix an, denn $\bW_1$ ist keine Liste, sondern ein Rechteck. Und die
+Kette für $\bW_1$ endet bei $\corange{\bJ_{f_2}(\bz_1)} = \bW_2$: Der letzte Faktor ist die
+Ableitung der ersten Schicht nach ihren eigenen Gewichten, nicht noch einmal $\bW_1$
+(@bemerkung:wo-die-kette-aufhoert). Stellen wir den Regler auf $x_1 = 2$, so landen wir auf
+einer Knickstelle der Art aus @beispiel:jacobimatrix-eines-relu-layers.
 :::
 
-Im Widget bleibt jede Zwischengröße des Rückwärtslaufs eine Zeile, weil links
-immer die Zeile des vorigen Schritts steht und rechts eine Jacobimatrix, ganz wie in
-@bemerkung:wie-die-kette-ausgewertet-wird; erst der letzte Schritt ordnet das Ergebnis als Gewichtsmatrix an, denn
-$\bW_1$ ist keine Liste, sondern ein Rechteck. Und die Kette für $\bW_1$ endet bei
-$\corange{\bJ_{f_2}(\bz_1)} = \bW_2$: Der letzte Faktor ist die Ableitung der ersten
-Schicht nach ihren eigenen Gewichten, nicht noch einmal $\bW_1$ (@bemerkung:wo-die-kette-aufhoert).
-Stellen wir den Regler auf $x_1 = 2$, so landen wir auf einer Knickstelle der Art aus
-@beispiel:jacobimatrix-eines-relu-layers: Die erste Einheit steht dann exakt auf der Schwelle.
+::::
 
 ### Selbsttest
 

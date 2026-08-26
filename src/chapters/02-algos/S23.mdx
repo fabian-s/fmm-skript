@@ -1,4 +1,4 @@
-import { S23FlopWidget, S23WachstumsBild, S23KonstantenWidget } from "./widgets/S23Aufwand";
+import { S23FlopWidget, S23WachstumsBild } from "./widgets/S23Aufwand";
 import { SelfTest } from "./widgets/S23Local";
 import { ref } from "../numbers.generated";
 
@@ -20,8 +20,9 @@ Genauso können wir zählen, wie viele Zahlen der Algorithmus unterwegs im Speic
 halten muss.
 
 :::definition[#zeit-und-speicheraufwand (Zeit- und Speicheraufwand)]
-Ein Algorithmus werde durch elementare Rechenoperationen
-$f_i \in \lbrace +, -, \cdot, / \rbrace$ ausgeführt.
+Ein Algorithmus werde durch elementare Operationen ausgeführt: Rechenoperationen
+$f_i \in \lbrace +, -, \cdot, / \rbrace$, aber auch Vergleiche, Zuweisungen und
+Speicherzugriffe, jede mit (etwa) konstantem Aufwand.
 
 - Der *Zeitaufwand* des Algorithmus ist die Anzahl dieser elementaren Operationen.
   Höherer Zeitaufwand bedeutet (ungefähr) längere Laufzeit.
@@ -84,13 +85,9 @@ $$
 \cgreen{y_i} = \sum_{j=1}^{d} \cred{a_{ij}}\, \cblue{x_j}, \qquad i = 1, \ldots, n
 $$
 
-::why[Definition des :k[Matrix-Vektor-Produkts]{#matrix-vector-product}, komponentenweise in :k[Summenschreibweise]{#summation-notation}]
-:::
+Jede Komponente $\cgreen{y_i}$ kostet damit $d$ Multiplikationen und $d - 1$ Additionen.
 
-:::schritt
-Jede Komponente $\cgreen{y_i}$ kostet $d$ Multiplikationen und $d - 1$ Additionen.
-
-::why[$d$ Produkte $\cred{a_{ij}}\,\cblue{x_j}$; um $d$ Summanden aufzuaddieren, braucht es $d - 1$ Additionen]
+::why[Definition des :k[Matrix-Vektor-Produkts]{#matrix-vector-product}, komponentenweise in :k[Summenschreibweise]{#summation-notation}: $d$ Produkte $\cred{a_{ij}}\,\cblue{x_j}$, und um $d$ Summanden aufzuaddieren, braucht es $d - 1$ Additionen]
 :::
 
 :::schritt
@@ -98,13 +95,7 @@ $$
 n \cdot d + n \cdot (d - 1) = n(2d - 1) = 2nd - n \approx 2nd
 $$
 
-::why[$n$ Komponenten $\cgreen{y_1}, \ldots, \cgreen{y_n}$, jede gleich teuer; für großes $d$ ist der Term $-n$ gegenüber $2nd$ vernachlässigbar]
-:::
-
-:::schritt
-Der Speicheraufwand ist $nd + d + n$ Zahlen.
-
-::why[die Eingaben $\bA$ ($nd$ Einträge) und $\bx$ ($d$ Einträge) müssen vorliegen, das Ergebnis $\by$ ($n$ Einträge) wird gespeichert; die laufende Summe für $\cgreen{y_i}$ kann direkt im Eintrag $y_i$ akkumuliert werden]
+::why[$n$ Komponenten $\cgreen{y_1}, \ldots, \cgreen{y_n}$, jede gleich teuer; für großes $d$ ist der Term $-n$ gegenüber $2nd$ vernachlässigbar. der Speicheraufwand des Satzes zählt einfach die beteiligten Objekte: die Eingaben $\bA$ ($nd$ Einträge) und $\bx$ ($d$ Einträge) plus das Ergebnis $\by$ ($n$ Einträge)]
 :::
 
 ::::
@@ -119,13 +110,15 @@ größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der Au
 
 :::interaktiv[FLOP-Zähler: Was kosten Matrix-Vektor- und Matrix-Matrix-Produkt?]
 <S23FlopWidget />
-:::
 
 Der Zähler zeigt: Nein. Beim Matrix-Vektor-Produkt stecken zwei Dimensionen im Produkt
 $2nd$, also wird der Aufwand beim Verdoppeln aller Dimensionen viermal so groß; beim
 Matrix-Matrix-Produkt sind es drei Dimensionen und damit der Faktor acht. Der Speicher
-wächst dabei langsamer als die Rechenzeit. Diese Faktoren, nicht die absoluten Zahlen,
-sind das, was einen Algorithmus praktisch brauchbar oder unbrauchbar macht.
+wächst dabei langsamer als die Rechenzeit.
+:::
+
+Diese Faktoren, nicht die absoluten Zahlen, sind das, was einen Algorithmus praktisch
+brauchbar oder unbrauchbar macht.
 
 <h3 id="sec-2.3-quiz">Selbsttest: Operationen und Speicher zählen</h3>
 
@@ -186,9 +179,9 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
       <MD>{"d \\cdot (2n + 1) = 2nd + d."}</MD>
       <p>
         Zum Vergleich: Das ist bis auf den kleinen Term <M>{"+\\,d"}</M> dasselbe{" "}
-        <M>{"\\approx 2nd"}</M> wie beim gewöhnlichen Matrix-Vektor-Produkt aus Satz
-        2.3.3 – kein Wunder, denn es <em>ist</em> ein Matrix-Vektor-Produkt, nur
-        spaltenweise organisiert.
+        <M>{"\\approx 2nd"}</M> wie beim gewöhnlichen Matrix-Vektor-Produkt aus{" "}
+        {ref("satz:aufwand-der-matrix-vektor-multiplikation")} – kein Wunder, denn es{" "}
+        <em>ist</em> ein Matrix-Vektor-Produkt, nur spaltenweise organisiert.
       </p>
     </>
   }
@@ -315,24 +308,12 @@ Komplexitätsklasse sagt, wer für *hinreichend große* Probleme gewinnt, nicht,
 *unserem konkreten* Problem gewinnt.
 :::
 
-Bis zu welcher Problemgröße gewinnt hier also der schlechtere Exponent? Die beiden Kurven
-unten sind bis $n = 300$ gezeichnet, und dort liegt die $O(n)$-Gerade noch weit oben.
-
-<S23KonstantenWidget />
-
-Der Schnittpunkt liegt bei $n \approx 1010$: Für jedes Problem mit höchstens $1009$
-Datenpunkten ist der $O(n^2)$-Algorithmus hier der langsamere. Erst rechts davon zahlt
-sich die bessere Klasse aus, dann allerdings unaufhaltsam, denn die Kurven entfernen sich
-immer weiter voneinander. Für die Praxis heißt das: Die Komplexitätsklasse entscheidet die
-Frage „welches Verfahren skaliert?", die Konstanten entscheiden die Frage „welches
-Verfahren nehme ich für meine Daten?".
-
 ### Selbsttest: Aufwand und Ordnung
 
 ::::quiz
 
 :::zahlfrage{loesung=1010 toleranz=5}
-Ab welchem $n$ ist der $n^2$-Algorithmus aus dem Widget oben schneller als der mit
+Ab welchem $n$ ist ein Algorithmus mit $n^2$ Operationen schneller als einer mit
 $1000n + 10\,000$ Operationen?
 
 Der Schnittpunkt liegt bei $n = 500 + \sqrt{260\,000} \approx 1009{,}9$. Für $n = 1009$

@@ -139,7 +139,6 @@ export type NumKey =
   | "beispiel:matrix-vektor-multiplikation"
   | "beispiel:matrizenmultiplikation-als-bilineare"
   | "beispiel:minimieren-auf-einer-geraden"
-  | "beispiel:multiplikation-reeller-zahlen"
   | "beispiel:newton-auf-einer-nicht-quadratischen"
   | "beispiel:offener-ball"
   | "beispiel:optimierungsprobleme-in-statistik-und"
@@ -190,7 +189,6 @@ export type NumKey =
   | "bemerkung:anmerkungen-zur-methodenwahl"
   | "bemerkung:approximation-ueber-interpolation"
   | "bemerkung:arten-von-algorithmen"
-  | "bemerkung:attention-skalarprodukte-in-massen"
   | "bemerkung:auch-die-auswertung-kostet"
   | "bemerkung:auch-null-ist-ein-zulaessiger"
   | "bemerkung:ausblick-andere-ableitungsbegriffe"
@@ -239,8 +237,6 @@ export type NumKey =
   | "bemerkung:die-qr-iteration-ist-eine-simultane"
   | "bemerkung:die-residuen-fallen-nicht-immer"
   | "bemerkung:die-svd-als-summe-aeusserer-produkte"
-  | "bemerkung:die-svd-liefert-sogar-die-kuerzeste"
-  | "bemerkung:die-vandermonde-determinante"
   | "bemerkung:die-zeilen-sind-gradienten"
   | "bemerkung:die-zweite-schreibweise"
   | "bemerkung:divergenz-schon-aber-nicht-monoton"
@@ -265,14 +261,12 @@ export type NumKey =
   | "bemerkung:eine-feinheit"
   | "bemerkung:eine-landkarte-der-optimierungsprobleme"
   | "bemerkung:eine-vorschrift-zwei-spalten"
-  | "bemerkung:eine-zerlegung-viele-rechte-seiten"
   | "bemerkung:einsetzen-ist-hier-nicht"
   | "bemerkung:es-bleibt-ein-lineares-kleinste-quadrate"
   | "bemerkung:existenz-die-abzaehlung-geht-auf"
   | "bemerkung:extrempunkt-zu-sein-ist-keine"
   | "bemerkung:falsche-konvergenz-und-keiner-warnt"
   | "bemerkung:faustregel-mit-der-einschraenkung-aus"
-  | "bemerkung:fazit"
   | "bemerkung:fehler-mal-merkmal"
   | "bemerkung:fehlermasse-verwendete-vorkenntnisse"
   | "bemerkung:fixpunktform"
@@ -280,7 +274,6 @@ export type NumKey =
   | "bemerkung:fuenf-begriffe-die-bleiben"
   | "bemerkung:fuenf-spezialfaelle-derselben-aussage"
   | "bemerkung:fuer-ein-lgs-keine-explizite-inverse"
-  | "bemerkung:geometrische-deutung"
   | "bemerkung:gesamtaufwand"
   | "bemerkung:gewichte-als-wahrscheinlichkeiten"
   | "bemerkung:givens-householder-aufwand"
@@ -307,7 +300,6 @@ export type NumKey =
   | "bemerkung:kovarianzmatrizen-sind-mittel-aeusserer"
   | "bemerkung:kovarianzmatrizen-sind-semidefinit-nicht"
   | "bemerkung:kreis-gegen-raute-warum-lasso-nullen"
-  | "bemerkung:kruemmung-kondition-und-ein-ausblick"
   | "bemerkung:linearisierung-wie-die-definition-zu-lesen-ist"
   | "bemerkung:lipschitz-stetiger-gradient-und-die"
   | "bemerkung:maximieren-ist-minimieren"
@@ -320,6 +312,7 @@ export type NumKey =
   | "bemerkung:newton-bei-nicht-konvexen-funktionen"
   | "bemerkung:notation"
   | "bemerkung:nuklearnorm-und-niedrigrang-probleme"
+  | "bemerkung:operatornorm-hilfsungleichung"
   | "bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen"
   | "bemerkung:optim-in-r-kernkonzepte-des-kapitels"
   | "bemerkung:optimieren-heisst-gleichungen-loesen"
@@ -335,7 +328,6 @@ export type NumKey =
   | "bemerkung:reparatur-die-gesamtnorm"
   | "bemerkung:schranke-und-messung-sind-zweierlei"
   | "bemerkung:sechs-begriffe-die-bleiben"
-  | "bemerkung:sigma-oder-sigma-quadrat-eine"
   | "bemerkung:singulaervektoren-sind-nicht-eindeutig"
   | "bemerkung:singulaerwerte-sind-streckungsfaktoren"
   | "bemerkung:spline"
@@ -354,7 +346,6 @@ export type NumKey =
   | "bemerkung:umkehrfunktionen-binaersuche-und-die"
   | "bemerkung:unendlich-viele-freiheitsgrade-endlich"
   | "bemerkung:unendlich-viele-loesungen"
-  | "bemerkung:varianz-einer-linearkombination"
   | "bemerkung:verwandtschaft-mit-dem-gradientenabstieg"
   | "bemerkung:vier-bausteine-die-bleiben"
   | "bemerkung:vier-staerken-auf-einen-blick"
@@ -381,7 +372,6 @@ export type NumKey =
   | "bemerkung:warum-die-momentenbedingung-an-der"
   | "bemerkung:warum-die-rueckrichtung-nicht-gilt"
   | "bemerkung:warum-die-spalten-fast-parallel-werden"
-  | "bemerkung:warum-die-universelle-eigenschaft"
   | "bemerkung:warum-endlich-viele"
   | "bemerkung:warum-hier-die-integralform-steht"
   | "bemerkung:warum-in-gleichung-10-2-4-ein"
@@ -389,9 +379,7 @@ export type NumKey =
   | "bemerkung:warum-iterativ-die-lanczos-abkuerzung"
   | "bemerkung:warum-newton-die-kondition-nicht-spuert"
   | "bemerkung:warum-statistik-und-ml-voll-davon-sind"
-  | "bemerkung:warum-tensoren-eigene-rechenwerke"
   | "bemerkung:warum-wir-trotzdem-mit-o-nmk-rechnen"
-  | "bemerkung:was-an-einer-faltungsschicht-linear-ist"
   | "bemerkung:was-daraus-folgt-und-was-nicht"
   | "bemerkung:was-das-in-zahlen-heisst"
   | "bemerkung:was-der-produktbau-bedeutet"
@@ -406,7 +394,6 @@ export type NumKey =
   | "bemerkung:was-die-bedingung-verlangt"
   | "bemerkung:was-die-faktoren-bedeuten"
   | "bemerkung:was-die-lokalitaet-praktisch-bedeutet"
-  | "bemerkung:was-die-monotonie-annahme-leistet"
   | "bemerkung:was-die-randterme-wirklich-brauchen"
   | "bemerkung:was-die-rate-ueber-datenmengen-sagt"
   | "bemerkung:was-die-reduzierte-form-spart-und-was"
@@ -423,7 +410,6 @@ export type NumKey =
   | "bemerkung:was-iterative-verfahren-leisten"
   | "bemerkung:was-kapitel-9-dazu-schon-gesagt-hat"
   | "bemerkung:was-konvexitaet-aus-der-tabelle-macht"
-  | "bemerkung:was-ohne-boundary-knots-passiert"
   | "bemerkung:was-sattelpunkte-fuer-die-verfahren"
   | "bemerkung:was-wird-hier-eigentlich-berechnet"
   | "bemerkung:welche-zielgestalt-welches-verfahren"
@@ -443,7 +429,6 @@ export type NumKey =
   | "bemerkung:wo-die-voraussetzungen-stecken"
   | "bemerkung:wo-skizzen-helfen"
   | "bemerkung:wogegen-die-qr-iteration-konvergiert"
-  | "bemerkung:woher-die-koeffizienten-kommen"
   | "bemerkung:woran-die-ordnung-haengt"
   | "bemerkung:zaehlen-ist-konvention-die-ordnung-nicht"
   | "bemerkung:zeilenvektor-nicht-spaltenvektor"
@@ -581,12 +566,12 @@ export type NumKey =
   | "eq:eine-box-beschraenkung"
   | "eq:eine-mse-obergrenze-im-multivariaten"
   | "eq:eine-mse-obergrenze-im-multivariaten-2"
+  | "eq:elementarer-tensor-in-produktbasis"
   | "eq:eq-10-2-1"
   | "eq:eq-10-3-1"
   | "eq:eq-10-4-13"
   | "eq:eq-10-5-1"
   | "eq:eq-10-8-4"
-  | "eq:eq-11-2-2"
   | "eq:eq-11-3-2"
   | "eq:eq-12-4-1"
   | "eq:eq-12-4-4"
@@ -727,7 +712,6 @@ export type NumKey =
   | "lemma:die-matrix-der-linearen-naeherung"
   | "lemma:fehlerschranken"
   | "lemma:kondition-der-differenz"
-  | "lemma:lemma-7-3-4"
   | "lemma:qr-eigenschaften-von-orthogonalmatrizen"
   | "lemma:rechenregeln-fuer-landau-symbole"
   | "lemma:rekurrenz-der-aufrufzahl"
@@ -761,7 +745,6 @@ export type NumKey =
   | "satz:eigenschaften-von-a-a"
   | "satz:eigenschaften-von-splines-und-b-splines"
   | "satz:eindeutige-loesung-bei-vollem"
-  | "satz:eindeutigkeit-bei-strikter-konvexitaet"
   | "satz:eine-mse-obergrenze-im-multivariaten"
   | "satz:erste-und-zweite-ableitung-in"
   | "satz:existenz-der-lu-zerlegung"
@@ -777,7 +760,6 @@ export type NumKey =
   | "satz:gemittelte-varianz-eines-linearen"
   | "satz:gestalt-aller-interpolanten"
   | "satz:glaettung-ist-ein-lineares-kleinste"
-  | "satz:globale-optimalitaet-bei-konvexitaet"
   | "satz:gradient-der-quadratischen-form"
   | "satz:gradienten-der-completion"
   | "satz:gradientenabstieg-auf-einer-quadrik"
@@ -817,7 +799,6 @@ export type NumKey =
   | "satz:kubische-splines-haben-minimale"
   | "satz:lineare-ziele-und-extrempunkte"
   | "satz:linearitaet-der-ableitungsoperation"
-  | "satz:normalengleichungen-normalengleichungen"
   | "satz:notwendige-bedingung-erster-ordnung"
   | "satz:notwendige-bedingung-von-lagrange"
   | "satz:operationen-die-konvexitaet-erhalten"
@@ -879,7 +860,6 @@ export type NumKey =
   | "sec:die-frobenius-norm"
   | "sec:die-iterative-variante-linearer-aufwand"
   | "sec:die-naive-rekursion-exponentieller"
-  | "sec:die-normalengleichungen"
   | "sec:die-wichtigsten-operatornormen"
   | "sec:differentialrechnung/gradient"
   | "sec:differentialrechnung/hoehere-ableitungen"
@@ -984,7 +964,7 @@ export type NumKey =
 export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "algorithmus:backtracking-liniensuche-nach-armijo": ["12.3.18", "Algorithmus 12.3.18"],
   "algorithmus:bisektionsverfahren": ["12.1.7", "Algorithmus 12.1.7"],
-  "algorithmus:cholesky-verfahren-fuer-das-kq-problem": ["7.3.5", "Algorithmus 7.3.5"],
+  "algorithmus:cholesky-verfahren-fuer-das-kq-problem": ["7.3.2", "Algorithmus 7.3.2"],
   "algorithmus:drei-klassische-wahlen-von-c": ["8.3.8", "Algorithmus 8.3.8"],
   "algorithmus:empfehlungen-ueber-eine-rang-k": ["6.4.11", "Algorithmus 6.4.11"],
   "algorithmus:fibonacci-schleifenbasiert": ["2.2.2", "Algorithmus 2.2.2"],
@@ -1001,7 +981,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "algorithmus:newton-raphson-verfahren": ["10.8.11", "Algorithmus 10.8.11"],
   "algorithmus:newton-raphson-verfahren-fuer": ["12.1.11", "Algorithmus 12.1.11"],
   "algorithmus:newton-verfahren-fuer-die-optimierung": ["12.4.1", "Algorithmus 12.4.1"],
-  "algorithmus:polynominterpolation-in-der-monombasis": ["13.3.9", "Algorithmus 13.3.9"],
+  "algorithmus:polynominterpolation-in-der-monombasis": ["13.3.8", "Algorithmus 13.3.8"],
   "algorithmus:potenzmethode": ["8.1.2", "Algorithmus 8.1.2"],
   "algorithmus:qr-iteration": ["8.1.10", "Algorithmus 8.1.10"],
   "algorithmus:quasi-newton-schritt": ["12.4.8", "Algorithmus 12.4.8"],
@@ -1022,41 +1002,41 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:beispiel-3-1-3": ["3.1.3", "Beispiel 3.1.3"],
   "beispiel:beispiel-3-3-8": ["3.3.8", "Beispiel 3.3.8"],
   "beispiel:beispiel-3-4-6": ["3.4.6", "Beispiel 3.4.6"],
-  "beispiel:beispiel-7-3-6": ["7.3.6", "Beispiel 7.3.6"],
+  "beispiel:beispiel-7-3-6": ["7.3.3", "Beispiel 7.3.3"],
   "beispiel:bias-und-varianz-beim-sinusbeispiel": ["13.8.8", "Beispiel 13.8.8"],
   "beispiel:cholesky-zerlegung-einer-2-2-matrix": ["5.4.3", "Beispiel 5.4.3"],
   "beispiel:das-subdifferential-des-betrags": ["11.4.16", "Beispiel 11.4.16"],
-  "beispiel:das-tensorprodukt-von-und": ["9.4.4", "Beispiel 9.4.4"],
+  "beispiel:das-tensorprodukt-von-und": ["9.4.3", "Beispiel 9.4.3"],
   "beispiel:der-aufrufbaum-fuer-n-5": ["2.5.5", "Beispiel 2.5.5"],
   "beispiel:der-betrag-ist-konvex": ["11.3.10", "Beispiel 11.3.10"],
   "beispiel:der-einheitskreis-wird-zur-ellipse": ["6.1.2", "Beispiel 6.1.2"],
   "beispiel:der-erwartungswert-ist-eine": ["11.1.3", "Beispiel 11.1.3"],
   "beispiel:der-kehrwert-aufgeloest": ["4.2.5", "Beispiel 4.2.5"],
   "beispiel:der-simplex": ["11.2.6", "Beispiel 11.2.6"],
-  "beispiel:der-standardsattel": ["12.2.11", "Beispiel 12.2.11"],
+  "beispiel:der-standardsattel": ["12.2.9", "Beispiel 12.2.9"],
   "beispiel:der-umweg-ueber-a-a": ["6.5.2", "Beispiel 6.5.2"],
   "beispiel:diagonalisierung-durch-eine": ["8.1.8", "Beispiel 8.1.8"],
   "beispiel:die-betragsfunktion-am-nullpunkt": ["10.5.3", "Beispiel 10.5.3"],
   "beispiel:die-drei-wahlen-an-einem-2-2-system": ["8.3.9", "Beispiel 8.3.9"],
-  "beispiel:die-einheitsmatrix-ist-kein-elementarer": ["9.4.6", "Beispiel 9.4.6"],
+  "beispiel:die-einheitsmatrix-ist-kein-elementarer": ["9.4.5", "Beispiel 9.4.5"],
   "beispiel:die-ersten-6-fibonacci-zahlen": ["2.2.3", "Beispiel 2.2.3"],
   "beispiel:die-gestalt-von": ["6.2.14", "Beispiel 6.2.14"],
   "beispiel:die-grade-0-1-und-3": ["13.4.3", "Beispiel 13.4.3"],
   "beispiel:die-identitaet-an-2-2-matrizen": ["9.5.4", "Beispiel 9.5.4"],
   "beispiel:die-instabilitaet-in-r": ["4.3.7", "Beispiel 4.3.7"],
   "beispiel:die-jacobi-formel-an-einem": ["10.4.5", "Beispiel 10.4.5"],
-  "beispiel:die-kettenregel-in-fuenf-bauformen": ["10.6.9", "Beispiel 10.6.9"],
+  "beispiel:die-kettenregel-in-fuenf-bauformen": ["10.6.8", "Beispiel 10.6.8"],
   "beispiel:die-matrix-a-a-einer-3-2-matrix": ["6.2.3", "Beispiel 6.2.3"],
-  "beispiel:die-maximumsnorm-ist-nicht": ["3.5.6", "Beispiel 3.5.6"],
+  "beispiel:die-maximumsnorm-ist-nicht": ["3.5.7", "Beispiel 3.5.7"],
   "beispiel:die-produktregel-in-vier-bauformen": ["10.6.4", "Beispiel 10.6.4"],
-  "beispiel:die-tensorproduktbasis-von-p-p": ["9.4.11", "Beispiel 9.4.11"],
+  "beispiel:die-tensorproduktbasis-von-p-p": ["9.4.9", "Beispiel 9.4.9"],
   "beispiel:die-varianz-ist-nicht-negativ": ["11.4.8", "Beispiel 11.4.8"],
   "beispiel:die-wurzel-aus-zwei": ["12.1.12", "Beispiel 12.1.12"],
   "beispiel:dieselbe-funktion-andere-koeffizienten": ["13.2.12", "Beispiel 13.2.12"],
   "beispiel:dimensionsreduktion-mit-matrix-sketching": ["8.4.14", "Beispiel 8.4.14"],
-  "beispiel:drei-faktoren": ["9.4.5", "Beispiel 9.4.5"],
+  "beispiel:drei-faktoren": ["9.4.4", "Beispiel 9.4.4"],
   "beispiel:drei-nullstellen-bei-grad-hoechstens": ["13.3.3", "Beispiel 13.3.3"],
-  "beispiel:drei-punkte-auf-einer-geraden": ["13.3.8", "Beispiel 13.3.8"],
+  "beispiel:drei-punkte-auf-einer-geraden": ["13.3.7", "Beispiel 13.3.7"],
   "beispiel:drei-punkte-zwei-interpolanten": ["13.5.8", "Beispiel 13.5.8"],
   "beispiel:ein-bild-mit-659-512-pixeln": ["6.4.8", "Beispiel 6.4.8"],
   "beispiel:ein-dreieck-als-schnitt-dreier": ["11.2.12", "Beispiel 11.2.12"],
@@ -1065,7 +1045,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:ein-stapel-bilder-als-tensor-der-stufe-4": ["9.2.8", "Beispiel 9.2.8"],
   "beispiel:ein-zug-statt-vieler": ["12.4.6", "Beispiel 12.4.6"],
   "beispiel:eine-bilineare-abbildung-auf-r2-mal-r2": ["9.2.2", "Beispiel 9.2.2"],
-  "beispiel:eine-bivariate-funktion-in-dieser-basis": ["9.4.12", "Beispiel 9.4.12"],
+  "beispiel:eine-bivariate-funktion-in-dieser-basis": ["9.4.10", "Beispiel 9.4.10"],
   "beispiel:eine-box-beschraenkung": ["12.5.9", "Beispiel 12.5.9"],
   "beispiel:eine-duenn-besetzte-bewertungsmatrix": ["6.4.10", "Beispiel 6.4.10"],
   "beispiel:eine-quadrik-ausgerechnet": ["11.3.14", "Beispiel 11.3.14"],
@@ -1083,15 +1063,15 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:givens-rotation-beispiel": ["7.5.3", "Beispiel 7.5.3"],
   "beispiel:gleiche-frobenius-norm-voellig": ["3.2.6", "Beispiel 3.2.6"],
   "beispiel:grad-1-die-hutfunktionen": ["13.4.10", "Beispiel 13.4.10"],
-  "beispiel:gradient-der-euklidischen-norm": ["10.6.12", "Beispiel 10.6.12"],
-  "beispiel:gradient-des-logistischen-verlusts": ["10.6.10", "Beispiel 10.6.10"],
+  "beispiel:gradient-der-euklidischen-norm": ["10.6.11", "Beispiel 10.6.11"],
+  "beispiel:gradient-des-logistischen-verlusts": ["10.6.9", "Beispiel 10.6.9"],
   "beispiel:gradient-einer-linearen-funktion": ["10.2.7", "Beispiel 10.2.7"],
   "beispiel:gradient-einer-quadratischen-form": ["10.6.5", "Beispiel 10.6.5"],
   "beispiel:gradient-einer-quadratischen-funktion": ["10.2.6", "Beispiel 10.2.6"],
   "beispiel:gradient-und-hesse-matrix-einer": ["10.7.7", "Beispiel 10.7.7"],
   "beispiel:gradientenabstieg-von-hand": ["12.3.6", "Beispiel 12.3.6"],
   "beispiel:householder-spiegelung-beispiel": ["7.5.8", "Beispiel 7.5.8"],
-  "beispiel:i-n-k-s-ist-blockdiagonal": ["9.3.17", "Beispiel 9.3.17"],
+  "beispiel:i-n-k-s-ist-blockdiagonal": ["9.3.16", "Beispiel 9.3.16"],
   "beispiel:identitaet-in-wachsender-dimension": ["3.2.7", "Beispiel 3.2.7"],
   "beispiel:identitaetsmatrix": ["3.3.9", "Beispiel 3.3.9"],
   "beispiel:invertierbar-aber-keine-lu-zerlegung": ["5.3.6", "Beispiel 5.3.6"],
@@ -1101,18 +1081,17 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:kettenregel-fuer-die-beispielfunktion": ["12.6.3", "Beispiel 12.6.3"],
   "beispiel:kkt-stationaritaet-fuer-ridge": ["12.5.10", "Beispiel 12.5.10"],
   "beispiel:kleinste-quadrate-und-ridge": ["11.3.16", "Beispiel 11.3.16"],
-  "beispiel:konditionszahlen-der-groessenordnung": ["13.3.11", "Beispiel 13.3.11"],
+  "beispiel:konditionszahlen-der-groessenordnung": ["13.3.10", "Beispiel 13.3.10"],
   "beispiel:konvexe-huelle-dreier-punkte": ["11.1.10", "Beispiel 11.1.10"],
-  "beispiel:kroneckerprodukt-zweier-kleiner-matrizen": ["9.3.14", "Beispiel 9.3.14"],
+  "beispiel:kroneckerprodukt-zweier-kleiner-matrizen": ["9.3.13", "Beispiel 9.3.13"],
   "beispiel:kubischer-spline-durch-vier-punkte": ["13.4.7", "Beispiel 13.4.7"],
   "beispiel:lineare-regression": ["7.1.3", "Beispiel 7.1.3"],
   "beispiel:linearitaet-an-einem-zahlenbeispiel": ["10.5.7", "Beispiel 10.5.7"],
   "beispiel:logistische-regression-ist-ein-konvexes": ["11.4.12", "Beispiel 11.4.12"],
   "beispiel:lu-zerlegung-einer-3-3-matrix": ["5.3.4", "Beispiel 5.3.4"],
   "beispiel:matrix-vektor-multiplikation": ["2.3.2", "Beispiel 2.3.2"],
-  "beispiel:matrizenmultiplikation-als-bilineare": ["9.1.7", "Beispiel 9.1.7"],
+  "beispiel:matrizenmultiplikation-als-bilineare": ["9.1.6", "Beispiel 9.1.6"],
   "beispiel:minimieren-auf-einer-geraden": ["12.5.6", "Beispiel 12.5.6"],
-  "beispiel:multiplikation-reeller-zahlen": ["9.1.5", "Beispiel 9.1.5"],
   "beispiel:newton-auf-einer-nicht-quadratischen": ["12.4.4", "Beispiel 12.4.4"],
   "beispiel:offener-ball": ["11.2.4", "Beispiel 11.2.4"],
   "beispiel:optimierungsprobleme-in-statistik-und": ["12.1.4", "Beispiel 12.1.4"],
@@ -1127,17 +1106,17 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:rechenbeispiel-regressionsgerade-durch": ["7.1.8", "Beispiel 7.1.8"],
   "beispiel:reduzierte-svd-einer-rang-1-matrix": ["6.3.4", "Beispiel 6.3.4"],
   "beispiel:richardson-iteration": ["8.3.11", "Beispiel 8.3.11"],
-  "beispiel:ridge-regression": ["10.6.7", "Beispiel 10.6.7"],
-  "beispiel:runge-1901": ["13.3.15", "Beispiel 13.3.15"],
-  "beispiel:s-k-i-n-verteilt-die-eintraege": ["9.3.16", "Beispiel 9.3.16"],
+  "beispiel:ridge-regression": ["10.6.6", "Beispiel 10.6.6"],
+  "beispiel:runge-1901": ["13.3.14", "Beispiel 13.3.14"],
+  "beispiel:s-k-i-n-verteilt-die-eintraege": ["9.3.15", "Beispiel 9.3.15"],
   "beispiel:singulaervektoren-der-beispielmatrix": ["6.2.9", "Beispiel 6.2.9"],
   "beispiel:singulaerwerte-der-beispielmatrix": ["6.2.6", "Beispiel 6.2.6"],
   "beispiel:sinus-auf-dem-einheitsintervall": ["13.6.7", "Beispiel 13.6.7"],
-  "beispiel:skalarprodukte-sind-bilinear": ["9.1.6", "Beispiel 9.1.6"],
+  "beispiel:skalarprodukte-sind-bilinear": ["9.1.5", "Beispiel 9.1.5"],
   "beispiel:sketching-zweier-vektoren-mit-10-000": ["8.4.5", "Beispiel 8.4.5"],
   "beispiel:stochastic-gradient-descent": ["4.3.2", "Beispiel 4.3.2"],
   "beispiel:taylorapproximation-der": ["10.8.6", "Beispiel 10.8.6"],
-  "beispiel:tensorprodukt-dreier-vektoren": ["9.3.11", "Beispiel 9.3.11"],
+  "beispiel:tensorprodukt-dreier-vektoren": ["9.3.10", "Beispiel 9.3.10"],
   "beispiel:uebung-das-punktweise-maximum": ["11.4.3", "Beispiel 11.4.3"],
   "beispiel:uebung-die-summe-zweier-konvexer": ["11.4.2", "Beispiel 11.4.2"],
   "beispiel:uebung-eine-2-3-matrixfunktion": ["10.4.3", "Beispiel 10.4.3"],
@@ -1145,25 +1124,24 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:vereinfachung-eines-aufwandsausdrucks": ["2.4.6", "Beispiel 2.4.6"],
   "beispiel:verletzte-assoziativitaet": ["2.1.4", "Beispiel 2.1.4"],
   "beispiel:vier-interpolanten-durch-drei-punkte": ["13.1.7", "Beispiel 13.1.7"],
-  "beispiel:vier-konvexe-verlustfunktionen": ["12.2.9", "Beispiel 12.2.9"],
+  "beispiel:vier-konvexe-verlustfunktionen": ["12.2.7", "Beispiel 12.2.7"],
   "beispiel:visualisierung": ["3.3.3", "Beispiel 3.3.3"],
   "beispiel:warum-der-satz-eine-schranke-ist-und": ["12.3.16", "Beispiel 12.3.16"],
-  "beispiel:was-die-kriterien-in-unserem-datensatz": ["13.8.14", "Beispiel 13.8.14"],
+  "beispiel:was-die-kriterien-in-unserem-datensatz": ["13.8.13", "Beispiel 13.8.13"],
   "beispiel:wie-senkrecht-ist-fast-senkrecht": ["8.4.3", "Beispiel 8.4.3"],
   "beispiel:zehn-basisfunktionen-je-variable": ["13.9.4", "Beispiel 13.9.4"],
   "beispiel:zielfunktionen-aus-bausteinen": ["11.4.5", "Beispiel 11.4.5"],
   "beispiel:zwei-algorithmen-fuer-die-varianz": ["4.3.5", "Beispiel 4.3.5"],
   "beispiel:zwei-ansatzraeume": ["13.2.6", "Beispiel 13.2.6"],
-  "beispiel:zwei-orte-zwei-zeitpunkte": ["9.3.19", "Beispiel 9.3.19"],
+  "beispiel:zwei-orte-zwei-zeitpunkte": ["9.3.18", "Beispiel 9.3.18"],
   "beispiel:zwei-projektionen-die-wir-hinschreiben": ["11.3.4", "Beispiel 11.3.4"],
   "beispiel:zyklische-vertauschung-in-der-statistik": ["3.1.6", "Beispiel 3.1.6"],
   "bemerkung:aequivalenz-ist-nicht-gleichheit": ["3.5.3", "Bemerkung 3.5.3"],
-  "bemerkung:allgemeine-dimension-und-was-sie-kostet": ["9.4.14", "Bemerkung 9.4.14"],
+  "bemerkung:allgemeine-dimension-und-was-sie-kostet": ["9.4.12", "Bemerkung 9.4.12"],
   "bemerkung:analysis-perspektive": ["7.1.6", "Bemerkung 7.1.6"],
   "bemerkung:anmerkungen-zur-methodenwahl": ["7.6.3", "Bemerkung 7.6.3"],
   "bemerkung:approximation-ueber-interpolation": ["13.1.5", "Bemerkung 13.1.5"],
   "bemerkung:arten-von-algorithmen": ["2.1.6", "Bemerkung 2.1.6"],
-  "bemerkung:attention-skalarprodukte-in-massen": ["9.3.7", "Bemerkung 9.3.7"],
   "bemerkung:auch-die-auswertung-kostet": ["13.9.7", "Bemerkung 13.9.7"],
   "bemerkung:auch-null-ist-ein-zulaessiger": ["12.5.3", "Bemerkung 12.5.3"],
   "bemerkung:ausblick-andere-ableitungsbegriffe": ["10.1.8", "Bemerkung 10.1.8"],
@@ -1171,7 +1149,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:ausblick-normen-als-regularisierer": ["3.6.1", "Bemerkung 3.6.1"],
   "bemerkung:b-splines-in-r": ["13.4.12", "Bemerkung 13.4.12"],
   "bemerkung:bandstruktur-und-aufwand": ["13.4.14", "Bemerkung 13.4.14"],
-  "bemerkung:beide-saetze-brauchen-zwei": ["12.2.8", "Bemerkung 12.2.8"],
+  "bemerkung:beide-saetze-brauchen-zwei": ["12.2.6", "Bemerkung 12.2.6"],
   "bemerkung:beispiele-und-warum-die-schranke-selten": ["10.6.2", "Bemerkung 10.6.2"],
   "bemerkung:bemerkung-3-1-9": ["3.1.9", "Bemerkung 3.1.9"],
   "bemerkung:bemerkung-3-2-2": ["3.2.2", "Bemerkung 3.2.2"],
@@ -1185,7 +1163,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:bilinear-und-eine-warnung": ["9.1.2", "Bemerkung 9.1.2"],
   "bemerkung:bisektion-robust-implementiert": ["12.1.9", "Bemerkung 12.1.9"],
   "bemerkung:cramer-rao-sauber-formuliert": ["10.7.16", "Bemerkung 10.7.16"],
-  "bemerkung:das-dilemma-der-schrittweite": ["12.1.18", "Bemerkung 12.1.18"],
+  "bemerkung:das-dilemma-der-schrittweite": ["12.1.17", "Bemerkung 12.1.17"],
   "bemerkung:das-format-bleibt-erhalten": ["10.4.2", "Bemerkung 10.4.2"],
   "bemerkung:das-muster-hinter-dem-exponenten": ["13.6.6", "Bemerkung 13.6.6"],
   "bemerkung:das-optimum-liegt-oft-auf-der": ["12.5.2", "Bemerkung 12.5.2"],
@@ -1193,12 +1171,12 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:das-wort-basisfunktion-traegt-eine": ["13.2.5", "Bemerkung 13.2.5"],
   "bemerkung:daten-oder-funktion": ["13.1.4", "Bemerkung 13.1.4"],
   "bemerkung:der-ableitungsterm-ist-ein-skalarprodukt": ["10.4.8", "Bemerkung 10.4.8"],
-  "bemerkung:der-ausweg-orthogonalisierte-basen": ["13.3.12", "Bemerkung 13.3.12"],
+  "bemerkung:der-ausweg-orthogonalisierte-basen": ["13.3.11", "Bemerkung 13.3.11"],
   "bemerkung:der-bias-faellt-nicht-monoton": ["13.8.9", "Bemerkung 13.8.9"],
   "bemerkung:der-definitionsbereich-muss-mitspielen": ["11.3.7", "Bemerkung 11.3.7"],
   "bemerkung:der-gewinn-und-was-er-kostet": ["13.9.9", "Bemerkung 13.9.9"],
   "bemerkung:der-gradient-steht-senkrecht-auf-der": ["10.2.5", "Bemerkung 10.2.5"],
-  "bemerkung:der-praktische-ausweg-gross-waehlen-und": ["13.8.15", "Bemerkung 13.8.15"],
+  "bemerkung:der-praktische-ausweg-gross-waehlen-und": ["13.8.14", "Bemerkung 13.8.14"],
   "bemerkung:die-aufgabe-ist-so-noch-entartet": ["13.7.3", "Bemerkung 13.7.3"],
   "bemerkung:die-drei-kernideen": ["8.5.1", "Bemerkung 8.5.1"],
   "bemerkung:die-drei-leeren-felder": ["10.9.3", "Bemerkung 10.9.3"],
@@ -1212,14 +1190,12 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:die-qr-iteration-ist-eine-simultane": ["8.1.13", "Bemerkung 8.1.13"],
   "bemerkung:die-residuen-fallen-nicht-immer": ["13.7.11", "Bemerkung 13.7.11"],
   "bemerkung:die-svd-als-summe-aeusserer-produkte": ["9.3.5", "Bemerkung 9.3.5"],
-  "bemerkung:die-svd-liefert-sogar-die-kuerzeste": ["9.4.8", "Bemerkung 9.4.8"],
-  "bemerkung:die-vandermonde-determinante": ["13.3.6", "Bemerkung 13.3.6"],
   "bemerkung:die-zeilen-sind-gradienten": ["10.3.2", "Bemerkung 10.3.2"],
   "bemerkung:die-zweite-schreibweise": ["10.8.4", "Bemerkung 10.8.4"],
-  "bemerkung:divergenz-schon-aber-nicht-monoton": ["13.3.16", "Bemerkung 13.3.16"],
+  "bemerkung:divergenz-schon-aber-nicht-monoton": ["13.3.15", "Bemerkung 13.3.15"],
   "bemerkung:drei-abbruchkriterien-und-ihre-grenzen": ["12.3.17", "Bemerkung 12.3.17"],
   "bemerkung:drei-aussagen-die-auseinanderzuhalten": ["11.5.6", "Bemerkung 11.5.6"],
-  "bemerkung:drei-auswege": ["13.8.11", "Bemerkung 13.8.11"],
+  "bemerkung:drei-auswege": ["13.8.10", "Bemerkung 13.8.10"],
   "bemerkung:drei-feinheiten-zum-satz": ["11.2.11", "Bemerkung 11.2.11"],
   "bemerkung:drei-kriterien-fuer-die-wahl-von-k": ["6.4.6", "Bemerkung 6.4.6"],
   "bemerkung:drei-lesarten-desselben-schritts": ["12.3.5", "Bemerkung 12.3.5"],
@@ -1230,30 +1206,27 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:eigenschaften-kosten-und-l-bfgs": ["12.4.11", "Bemerkung 12.4.11"],
   "bemerkung:eigenwerte-als-kruemmungen": ["11.4.13", "Bemerkung 11.4.13"],
   "bemerkung:eigenwerte-aufwand": ["8.1.17", "Bemerkung 8.1.17"],
-  "bemerkung:ein-ausweg-die-knoten-anders-legen": ["13.3.17", "Bemerkung 13.3.17"],
+  "bemerkung:ein-ausweg-die-knoten-anders-legen": ["13.3.16", "Bemerkung 13.3.16"],
   "bemerkung:ein-fester-vektor-ist-nicht-jeder-vektor": ["8.4.10", "Bemerkung 8.4.10"],
   "bemerkung:ein-gewichteter-durchschnitt": ["11.1.2", "Bemerkung 11.1.2"],
-  "bemerkung:ein-haeufiges-missverstaendnis": ["13.3.7", "Bemerkung 13.3.7"],
+  "bemerkung:ein-haeufiges-missverstaendnis": ["13.3.6", "Bemerkung 13.3.6"],
   "bemerkung:eine-analogie": ["2.2.5", "Bemerkung 2.2.5"],
-  "bemerkung:eine-feinheit": ["9.4.10", "Bemerkung 9.4.10"],
+  "bemerkung:eine-feinheit": ["9.4.8", "Bemerkung 9.4.8"],
   "bemerkung:eine-landkarte-der-optimierungsprobleme": ["11.5.7", "Bemerkung 11.5.7"],
   "bemerkung:eine-vorschrift-zwei-spalten": ["12.4.3", "Bemerkung 12.4.3"],
-  "bemerkung:eine-zerlegung-viele-rechte-seiten": ["5.3.9", "Bemerkung 5.3.9"],
   "bemerkung:einsetzen-ist-hier-nicht": ["13.2.11", "Bemerkung 13.2.11"],
   "bemerkung:es-bleibt-ein-lineares-kleinste-quadrate": ["13.9.3", "Bemerkung 13.9.3"],
   "bemerkung:existenz-die-abzaehlung-geht-auf": ["13.5.7", "Bemerkung 13.5.7"],
   "bemerkung:extrempunkt-zu-sein-ist-keine": ["11.1.8", "Bemerkung 11.1.8"],
   "bemerkung:falsche-konvergenz-und-keiner-warnt": ["12.6.2", "Bemerkung 12.6.2"],
   "bemerkung:faustregel-mit-der-einschraenkung-aus": ["4.4.1", "Bemerkung 4.4.1"],
-  "bemerkung:fazit": ["5.5.1", "Bemerkung 5.5.1"],
-  "bemerkung:fehler-mal-merkmal": ["10.6.11", "Bemerkung 10.6.11"],
+  "bemerkung:fehler-mal-merkmal": ["10.6.10", "Bemerkung 10.6.10"],
   "bemerkung:fehlermasse-verwendete-vorkenntnisse": ["4.1.1", "Bemerkung 4.1.1"],
   "bemerkung:fixpunktform": ["8.3.4", "Bemerkung 8.3.4"],
   "bemerkung:fuenf-bausteine-die-bleiben": ["11.5.8", "Bemerkung 11.5.8"],
   "bemerkung:fuenf-begriffe-die-bleiben": ["10.9.1", "Bemerkung 10.9.1"],
   "bemerkung:fuenf-spezialfaelle-derselben-aussage": ["10.5.6", "Bemerkung 10.5.6"],
   "bemerkung:fuer-ein-lgs-keine-explizite-inverse": ["5.2.1", "Bemerkung 5.2.1"],
-  "bemerkung:geometrische-deutung": ["7.3.2", "Bemerkung 7.3.2"],
   "bemerkung:gesamtaufwand": ["8.3.10", "Bemerkung 8.3.10"],
   "bemerkung:gewichte-als-wahrscheinlichkeiten": ["11.4.7", "Bemerkung 11.4.7"],
   "bemerkung:givens-householder-aufwand": ["7.5.10", "Bemerkung 7.5.10"],
@@ -1270,7 +1243,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:interpolation-im-maschinellen-lernen-und": ["13.1.6", "Bemerkung 13.1.6"],
   "bemerkung:interpretation": ["4.2.4", "Bemerkung 4.2.4"],
   "bemerkung:interpretation-der-komplexitaetsklassen": ["2.3.7", "Bemerkung 2.3.7"],
-  "bemerkung:interpretation-der-konditionszahl": ["3.5.11", "Bemerkung 3.5.11"],
+  "bemerkung:interpretation-der-konditionszahl": ["3.5.12", "Bemerkung 3.5.12"],
   "bemerkung:jede-voraussetzung-wird-gebraucht": ["11.3.2", "Bemerkung 11.3.2"],
   "bemerkung:komplementaritaet-bindet-oder": ["12.5.8", "Bemerkung 12.5.8"],
   "bemerkung:kondition-der-grundoperationen": ["5.1.1", "Bemerkung 5.1.1"],
@@ -1280,11 +1253,10 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:kovarianzmatrizen-sind-mittel-aeusserer": ["9.3.6", "Bemerkung 9.3.6"],
   "bemerkung:kovarianzmatrizen-sind-semidefinit-nicht": ["11.2.9", "Bemerkung 11.2.9"],
   "bemerkung:kreis-gegen-raute-warum-lasso-nullen": ["12.5.11", "Bemerkung 12.5.11"],
-  "bemerkung:kruemmung-kondition-und-ein-ausblick": ["11.3.17", "Bemerkung 11.3.17"],
   "bemerkung:linearisierung-wie-die-definition-zu-lesen-ist": ["10.1.6", "Bemerkung 10.1.6"],
   "bemerkung:lipschitz-stetiger-gradient-und-die": ["12.3.9", "Bemerkung 12.3.9"],
   "bemerkung:maximieren-ist-minimieren": ["12.2.2", "Bemerkung 12.2.2"],
-  "bemerkung:merkregel": ["7.3.3", "Bemerkung 7.3.3"],
+  "bemerkung:merkregel": ["7.3.1", "Bemerkung 7.3.1"],
   "bemerkung:merkregel-drehen-strecken-drehen": ["6.2.15", "Bemerkung 6.2.15"],
   "bemerkung:merkregel-ein-lgs-zwei-dreieckssysteme": ["5.3.2", "Bemerkung 5.3.2"],
   "bemerkung:modell-designmatrix-schaetzer": ["13.8.1", "Bemerkung 13.8.1"],
@@ -1293,6 +1265,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:newton-bei-nicht-konvexen-funktionen": ["12.4.5", "Bemerkung 12.4.5"],
   "bemerkung:notation": ["6.1.4", "Bemerkung 6.1.4"],
   "bemerkung:nuklearnorm-und-niedrigrang-probleme": ["3.4.5", "Bemerkung 3.4.5"],
+  "bemerkung:operatornorm-hilfsungleichung": ["3.5.6", "Bemerkung 3.5.6"],
   "bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen": ["3.3.6", "Bemerkung 3.3.6"],
   "bemerkung:optim-in-r-kernkonzepte-des-kapitels": ["12.6.4", "Bemerkung 12.6.4"],
   "bemerkung:optimieren-heisst-gleichungen-loesen": ["12.2.5", "Bemerkung 12.2.5"],
@@ -1305,29 +1278,27 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:rauschen-mini-batches-und-lernraten": ["12.4.17", "Bemerkung 12.4.17"],
   "bemerkung:rechenaufwand": ["6.4.15", "Bemerkung 6.4.15"],
   "bemerkung:rechenregeln-aus-der-bilinearitaet": ["9.4.2", "Bemerkung 9.4.2"],
-  "bemerkung:reparatur-die-gesamtnorm": ["3.5.7", "Bemerkung 3.5.7"],
+  "bemerkung:reparatur-die-gesamtnorm": ["3.5.8", "Bemerkung 3.5.8"],
   "bemerkung:schranke-und-messung-sind-zweierlei": ["13.6.8", "Bemerkung 13.6.8"],
   "bemerkung:sechs-begriffe-die-bleiben": ["9.5.1", "Bemerkung 9.5.1"],
-  "bemerkung:sigma-oder-sigma-quadrat-eine": ["13.8.10", "Bemerkung 13.8.10"],
   "bemerkung:singulaervektoren-sind-nicht-eindeutig": ["6.2.10", "Bemerkung 6.2.10"],
   "bemerkung:singulaerwerte-sind-streckungsfaktoren": ["6.2.5", "Bemerkung 6.2.5"],
   "bemerkung:spline": ["13.5.2", "Bemerkung 13.5.2"],
   "bemerkung:spur-verwendete-vorkenntnisse": ["3.1.1", "Bemerkung 3.1.1"],
-  "bemerkung:stabilitaet-des-cholesky-verfahrens": ["7.3.7", "Bemerkung 7.3.7"],
+  "bemerkung:stabilitaet-des-cholesky-verfahrens": ["7.3.4", "Bemerkung 7.3.4"],
   "bemerkung:stabilitaet-und-kondition-ausblick": ["4.1.5", "Bemerkung 4.1.5"],
   "bemerkung:staerken-schwaechen-ausblick": ["6.4.13", "Bemerkung 6.4.13"],
   "bemerkung:stoerungsanalyse-als-richtungsableitung": ["10.9.4", "Bemerkung 10.9.4"],
-  "bemerkung:struktur-ausnutzen": ["5.3.11", "Bemerkung 5.3.11"],
+  "bemerkung:struktur-ausnutzen": ["5.3.10", "Bemerkung 5.3.10"],
   "bemerkung:stufe-und-dimension-sind-zwei": ["9.2.6", "Bemerkung 9.2.6"],
   "bemerkung:stufe-und-warum-eine-menge-es-nicht-tut": ["9.2.4", "Bemerkung 9.2.4"],
-  "bemerkung:stufen-addieren-sich-eintraege": ["9.3.9", "Bemerkung 9.3.9"],
+  "bemerkung:stufen-addieren-sich-eintraege": ["9.3.8", "Bemerkung 9.3.8"],
   "bemerkung:taxonomie-nach-ableitungsordnung": ["12.3.1", "Bemerkung 12.3.1"],
-  "bemerkung:transponieren-und-reihenfolge": ["9.3.15", "Bemerkung 9.3.15"],
+  "bemerkung:transponieren-und-reihenfolge": ["9.3.14", "Bemerkung 9.3.14"],
   "bemerkung:typische-singulaerwert-verlaeufe-und-der": ["6.4.7", "Bemerkung 6.4.7"],
   "bemerkung:umkehrfunktionen-binaersuche-und-die": ["12.1.10", "Bemerkung 12.1.10"],
   "bemerkung:unendlich-viele-freiheitsgrade-endlich": ["13.2.2", "Bemerkung 13.2.2"],
   "bemerkung:unendlich-viele-loesungen": ["13.1.9", "Bemerkung 13.1.9"],
-  "bemerkung:varianz-einer-linearkombination": ["10.6.6", "Bemerkung 10.6.6"],
   "bemerkung:verwandtschaft-mit-dem-gradientenabstieg": ["8.3.2", "Bemerkung 8.3.2"],
   "bemerkung:vier-bausteine-die-bleiben": ["10.9.2", "Bemerkung 10.9.2"],
   "bemerkung:vier-staerken-auf-einen-blick": ["13.6.9", "Bemerkung 13.6.9"],
@@ -1347,14 +1318,13 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:warum-das-charakteristische-polynom-kein": ["8.1.1", "Bemerkung 8.1.1"],
   "bemerkung:warum-das-in-der-statistik-gebraucht": ["10.4.6", "Bemerkung 10.4.6"],
   "bemerkung:warum-das-mehr-ist-als-eine-notloesung": ["13.9.10", "Bemerkung 13.9.10"],
-  "bemerkung:warum-der-nenner-noetig-ist": ["13.8.13", "Bemerkung 13.8.13"],
+  "bemerkung:warum-der-nenner-noetig-ist": ["13.8.12", "Bemerkung 13.8.12"],
   "bemerkung:warum-der-symmetrische-anteil": ["11.3.13", "Bemerkung 11.3.13"],
   "bemerkung:warum-die-knotenfolge-so-lang-sein-muss": ["13.4.9", "Bemerkung 13.4.9"],
   "bemerkung:warum-die-menge-offen-und-konvex-sein": ["10.7.12", "Bemerkung 10.7.12"],
   "bemerkung:warum-die-momentenbedingung-an-der": ["8.4.7", "Bemerkung 8.4.7"],
-  "bemerkung:warum-die-rueckrichtung-nicht-gilt": ["12.2.14", "Bemerkung 12.2.14"],
-  "bemerkung:warum-die-spalten-fast-parallel-werden": ["13.3.10", "Bemerkung 13.3.10"],
-  "bemerkung:warum-die-universelle-eigenschaft": ["9.4.3", "Bemerkung 9.4.3"],
+  "bemerkung:warum-die-rueckrichtung-nicht-gilt": ["12.2.12", "Bemerkung 12.2.12"],
+  "bemerkung:warum-die-spalten-fast-parallel-werden": ["13.3.9", "Bemerkung 13.3.9"],
   "bemerkung:warum-endlich-viele": ["11.1.6", "Bemerkung 11.1.6"],
   "bemerkung:warum-hier-die-integralform-steht": ["10.8.8", "Bemerkung 10.8.8"],
   "bemerkung:warum-in-gleichung-10-2-4-ein": ["10.2.11", "Bemerkung 10.2.11"],
@@ -1362,24 +1332,21 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:warum-iterativ-die-lanczos-abkuerzung": ["8.2.2", "Bemerkung 8.2.2"],
   "bemerkung:warum-newton-die-kondition-nicht-spuert": ["12.4.7", "Bemerkung 12.4.7"],
   "bemerkung:warum-statistik-und-ml-voll-davon-sind": ["10.8.13", "Bemerkung 10.8.13"],
-  "bemerkung:warum-tensoren-eigene-rechenwerke": ["9.2.11", "Bemerkung 9.2.11"],
   "bemerkung:warum-wir-trotzdem-mit-o-nmk-rechnen": ["5.1.2", "Bemerkung 5.1.2"],
-  "bemerkung:was-an-einer-faltungsschicht-linear-ist": ["9.2.10", "Bemerkung 9.2.10"],
   "bemerkung:was-daraus-folgt-und-was-nicht": ["11.5.2", "Bemerkung 11.5.2"],
-  "bemerkung:was-das-in-zahlen-heisst": ["13.3.14", "Bemerkung 13.3.14"],
-  "bemerkung:was-der-produktbau-bedeutet": ["9.4.13", "Bemerkung 9.4.13"],
+  "bemerkung:was-das-in-zahlen-heisst": ["13.3.13", "Bemerkung 13.3.13"],
+  "bemerkung:was-der-produktbau-bedeutet": ["9.4.11", "Bemerkung 9.4.11"],
   "bemerkung:was-der-satz-leistet-und-was-nicht": ["11.2.16", "Bemerkung 11.2.16"],
   "bemerkung:was-der-satz-liefert-und-was-nicht": ["6.4.5", "Bemerkung 6.4.5"],
   "bemerkung:was-der-satz-sagt-und-was-nicht": ["10.8.3", "Bemerkung 10.8.3"],
   "bemerkung:was-der-schritt-voraussetzt-und-wie-wir": ["12.4.2", "Bemerkung 12.4.2"],
   "bemerkung:was-der-schwung-bewirkt": ["12.4.14", "Bemerkung 12.4.14"],
   "bemerkung:was-der-strafterm-bewirkt": ["13.7.13", "Bemerkung 13.7.13"],
-  "bemerkung:was-die-annahme-spart-und-was-sie-kostet": ["9.3.20", "Bemerkung 9.3.20"],
+  "bemerkung:was-die-annahme-spart-und-was-sie-kostet": ["9.3.19", "Bemerkung 9.3.19"],
   "bemerkung:was-die-armijo-bedingung-fordert": ["12.3.19", "Bemerkung 12.3.19"],
   "bemerkung:was-die-bedingung-verlangt": ["11.2.2", "Bemerkung 11.2.2"],
   "bemerkung:was-die-faktoren-bedeuten": ["6.4.12", "Bemerkung 6.4.12"],
   "bemerkung:was-die-lokalitaet-praktisch-bedeutet": ["13.4.17", "Bemerkung 13.4.17"],
-  "bemerkung:was-die-monotonie-annahme-leistet": ["12.1.17", "Bemerkung 12.1.17"],
   "bemerkung:was-die-randterme-wirklich-brauchen": ["13.5.5", "Bemerkung 13.5.5"],
   "bemerkung:was-die-rate-ueber-datenmengen-sagt": ["13.9.6", "Bemerkung 13.9.6"],
   "bemerkung:was-die-reduzierte-form-spart-und-was": ["6.3.3", "Bemerkung 6.3.3"],
@@ -1395,9 +1362,8 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:was-in-dieser-definition-steckt": ["13.4.2", "Bemerkung 13.4.2"],
   "bemerkung:was-iterative-verfahren-leisten": ["8.3.12", "Bemerkung 8.3.12"],
   "bemerkung:was-kapitel-9-dazu-schon-gesagt-hat": ["13.9.2", "Bemerkung 13.9.2"],
-  "bemerkung:was-konvexitaet-aus-der-tabelle-macht": ["12.2.15", "Bemerkung 12.2.15"],
-  "bemerkung:was-ohne-boundary-knots-passiert": ["13.7.15", "Bemerkung 13.7.15"],
-  "bemerkung:was-sattelpunkte-fuer-die-verfahren": ["12.2.12", "Bemerkung 12.2.12"],
+  "bemerkung:was-konvexitaet-aus-der-tabelle-macht": ["12.2.13", "Bemerkung 12.2.13"],
+  "bemerkung:was-sattelpunkte-fuer-die-verfahren": ["12.2.10", "Bemerkung 12.2.10"],
   "bemerkung:was-wird-hier-eigentlich-berechnet": ["2.5.3", "Bemerkung 2.5.3"],
   "bemerkung:welche-zielgestalt-welches-verfahren": ["8.1.9", "Bemerkung 8.1.9"],
   "bemerkung:welcher-spline-die-konstante-traegt": ["13.6.4", "Bemerkung 13.6.4"],
@@ -1416,7 +1382,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:wo-die-voraussetzungen-stecken": ["11.4.10", "Bemerkung 11.4.10"],
   "bemerkung:wo-skizzen-helfen": ["8.4.12", "Bemerkung 8.4.12"],
   "bemerkung:wogegen-die-qr-iteration-konvergiert": ["8.1.14", "Bemerkung 8.1.14"],
-  "bemerkung:woher-die-koeffizienten-kommen": ["9.1.9", "Bemerkung 9.1.9"],
   "bemerkung:woran-die-ordnung-haengt": ["13.8.3", "Bemerkung 13.8.3"],
   "bemerkung:zaehlen-ist-konvention-die-ordnung-nicht": ["2.5.2", "Bemerkung 2.5.2"],
   "bemerkung:zeilenvektor-nicht-spaltenvektor": ["10.2.2", "Bemerkung 10.2.2"],
@@ -1425,7 +1390,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:zum-bau-der-pseudoinversen": ["6.3.6", "Bemerkung 6.3.6"],
   "bemerkung:zur-identitaet-fuer-x-a": ["10.3.5", "Bemerkung 10.3.5"],
   "bemerkung:zwei-anforderungen-an-c": ["8.3.7", "Bemerkung 8.3.7"],
-  "bemerkung:zwei-bedeutungen-zwei-zeichen": ["9.3.13", "Bemerkung 9.3.13"],
+  "bemerkung:zwei-bedeutungen-zwei-zeichen": ["9.3.12", "Bemerkung 9.3.12"],
   "bemerkung:zwei-bedingungen-fehlen-randbedingungen": ["13.4.6", "Bemerkung 13.4.6"],
   "bemerkung:zwei-feinheiten-der-definition": ["2.4.2", "Bemerkung 2.4.2"],
   "bemerkung:zwei-nachtraege-zur-rechnung": ["8.4.15", "Bemerkung 8.4.15"],
@@ -1446,7 +1411,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "definition:definition-7-2-1": ["7.2.1", "Definition 7.2.1"],
   "definition:der-vektorraum-der-funktionen": ["13.2.1", "Definition 13.2.1"],
   "definition:differenzierbarkeit": ["10.1.1", "Definition 10.1.1"],
-  "definition:eigenschaften-konditionszahl-einer-matrix": ["3.5.10", "Definition 3.5.10"],
+  "definition:eigenschaften-konditionszahl-einer-matrix": ["3.5.11", "Definition 3.5.11"],
   "definition:epigraph": ["11.3.5", "Definition 11.3.5"],
   "definition:erweiterte-knotenfolge-und-b-splines": ["13.4.8", "Definition 13.4.8"],
   "definition:fehlermass": ["4.1.2", "Definition 4.1.2"],
@@ -1454,7 +1419,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "definition:fisher-informationsmatrix": ["10.7.14", "Definition 10.7.14"],
   "definition:frechet-ableitung": ["10.1.5", "Definition 10.1.5"],
   "definition:frobenius-norm": ["3.1.8", "Definition 3.1.8"],
-  "definition:generalisierte-kreuzvalidierung": ["13.8.12", "Definition 13.8.12"],
+  "definition:generalisierte-kreuzvalidierung": ["13.8.11", "Definition 13.8.11"],
   "definition:givens-rotation-definition": ["7.5.1", "Definition 7.5.1"],
   "definition:glaettungsproblem": ["13.1.3", "Definition 13.1.3"],
   "definition:gradient": ["10.2.1", "Definition 10.2.1"],
@@ -1474,7 +1439,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "definition:konvexkombination": ["11.1.1", "Definition 11.1.1"],
   "definition:konvexkombinationen-extrempunkt": ["11.1.7", "Definition 11.1.7"],
   "definition:korrekturiteration": ["8.3.3", "Definition 8.3.3"],
-  "definition:kroneckerprodukt": ["9.3.12", "Definition 9.3.12"],
+  "definition:kroneckerprodukt": ["9.3.11", "Definition 9.3.11"],
   "definition:kruemmungsfunktional": ["13.5.3", "Definition 13.5.3"],
   "definition:lagrange-funktion": ["12.5.4", "Definition 12.5.4"],
   "definition:landau-symbole": ["2.4.1", "Definition 2.4.1"],
@@ -1502,9 +1467,9 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "definition:regressionsmodell-mit-additivem-fehler": ["13.7.1", "Definition 13.7.1"],
   "definition:residuum": ["8.3.1", "Definition 8.3.1"],
   "definition:richtungsableitung": ["10.2.3", "Definition 10.2.3"],
-  "definition:sattelpunkt": ["12.2.10", "Definition 12.2.10"],
+  "definition:sattelpunkt": ["12.2.8", "Definition 12.2.8"],
   "definition:schatten-p-norm": ["3.4.1", "Definition 3.4.1"],
-  "definition:separierbare-kovarianz": ["9.3.18", "Definition 9.3.18"],
+  "definition:separierbare-kovarianz": ["9.3.17", "Definition 9.3.17"],
   "definition:singulaerwerte": ["6.2.4", "Definition 6.2.4"],
   "definition:sketching-matrix-und-skizze": ["8.4.4", "Definition 8.4.4"],
   "definition:spd-matrix": ["5.4.1", "Definition 5.4.1"],
@@ -1517,10 +1482,10 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "definition:taylorpolynom": ["10.8.1", "Definition 10.8.1"],
   "definition:tensor": ["9.2.3", "Definition 9.2.3"],
   "definition:tensor-produkt-basis": ["13.9.1", "Definition 13.9.1"],
-  "definition:tensorprodukt": ["9.3.8", "Definition 9.3.8"],
+  "definition:tensorprodukt": ["9.3.7", "Definition 9.3.7"],
   "definition:tensorprodukt-von-vektorraeumen": ["9.4.1", "Definition 9.4.1"],
   "definition:unbeschraenktes-und-beschraenktes": ["12.1.2", "Definition 12.1.2"],
-  "definition:vertraegliche-norm": ["3.5.8", "Definition 3.5.8"],
+  "definition:vertraegliche-norm": ["3.5.9", "Definition 3.5.9"],
   "definition:vorwaerts-und-rueckwaertsstabilitaet": ["4.3.1", "Definition 4.3.1"],
   "definition:zeit-und-speicheraufwand": ["2.3.1", "Definition 2.3.1"],
   "definition:zusammenfassung-vektorisierung": ["9.5.2", "Definition 9.5.2"],
@@ -1554,12 +1519,12 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "eq:eine-box-beschraenkung": ["12.5.1", "(12.5.1)"],
   "eq:eine-mse-obergrenze-im-multivariaten": ["13.9.2", "(13.9.2)"],
   "eq:eine-mse-obergrenze-im-multivariaten-2": ["13.9.3", "(13.9.3)"],
+  "eq:elementarer-tensor-in-produktbasis": ["9.4.3", "(9.4.3)"],
   "eq:eq-10-2-1": ["10.2.1", "(10.2.1)"],
   "eq:eq-10-3-1": ["10.3.1", "(10.3.1)"],
   "eq:eq-10-4-13": ["10.4.13", "(10.4.13)"],
   "eq:eq-10-5-1": ["10.5.1", "(10.5.1)"],
   "eq:eq-10-8-4": ["10.8.4", "(10.8.4)"],
-  "eq:eq-11-2-2": ["11.2.2", "(11.2.2)"],
   "eq:eq-11-3-2": ["11.3.2", "(11.3.2)"],
   "eq:eq-12-4-1": ["12.4.1", "(12.4.1)"],
   "eq:eq-12-4-4": ["12.4.4", "(12.4.4)"],
@@ -1580,7 +1545,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "eq:eq-8-1-1": ["8.1.1", "(8.1.1)"],
   "eq:eq-8-4-1": ["8.4.1", "(8.4.1)"],
   "eq:eq-9-2-1": ["9.2.1", "(9.2.1)"],
-  "eq:eq-9-4-3": ["9.4.3", "(9.4.3)"],
+  "eq:eq-9-4-3": ["9.4.4", "(9.4.4)"],
   "eq:erweiterte-knotenfolge-und-b-splines": ["13.4.2", "(13.4.2)"],
   "eq:erweiterte-knotenfolge-und-b-splines-2": ["13.4.3", "(13.4.3)"],
   "eq:fehler-der-stueckweise-linearen": ["13.6.2", "(13.6.2)"],
@@ -1700,7 +1665,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "lemma:die-matrix-der-linearen-naeherung": ["10.3.3", "Lemma 10.3.3"],
   "lemma:fehlerschranken": ["4.1.3", "Lemma 4.1.3"],
   "lemma:kondition-der-differenz": ["4.3.6", "Lemma 4.3.6"],
-  "lemma:lemma-7-3-4": ["7.3.4", "Lemma 7.3.4"],
   "lemma:qr-eigenschaften-von-orthogonalmatrizen": ["7.4.2", "Lemma 7.4.2"],
   "lemma:rechenregeln-fuer-landau-symbole": ["2.4.4", "Lemma 2.4.4"],
   "lemma:rekurrenz-der-aufrufzahl": ["2.5.4", "Lemma 2.5.4"],
@@ -1709,13 +1673,13 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:alle-matrixnormen-sind-aequivalent": ["3.5.1", "Satz 3.5.1"],
   "satz:approximationsfehler-kubischer-splines": ["13.6.2", "Satz 13.6.2"],
   "satz:aufwand-der-matrix-vektor-multiplikation": ["2.3.3", "Satz 2.3.3"],
-  "satz:bedingungen-erster-und-zweiter-ordnung": ["12.2.13", "Satz 12.2.13"],
+  "satz:bedingungen-erster-und-zweiter-ordnung": ["12.2.11", "Satz 12.2.11"],
   "satz:charakterisierung-der-fundamentalen": ["6.2.11", "Satz 6.2.11"],
   "satz:cholesky-zerlegung": ["5.4.2", "Satz 5.4.2"],
-  "satz:darstellung-multilinearer-abbildungen": ["9.1.8", "Satz 9.1.8"],
+  "satz:darstellung-multilinearer-abbildungen": ["9.1.7", "Satz 9.1.7"],
   "satz:das-bfgs-update-erfuellt-die": ["12.4.10", "Satz 12.4.10"],
   "satz:das-interpolationsproblem-ist-ein": ["13.2.8", "Satz 13.2.8"],
-  "satz:das-tensorprodukt-ist-bilinear": ["9.3.10", "Satz 9.3.10"],
+  "satz:das-tensorprodukt-ist-bilinear": ["9.3.9", "Satz 9.3.9"],
   "satz:der-bias-ist-der-approximationsfehler": ["13.8.2", "Satz 13.8.2"],
   "satz:der-gradient-einer-zufaellig-gezogenen": ["12.4.15", "Satz 12.4.15"],
   "satz:der-raum-aller-tensoren-eines-formats": ["9.2.5", "Satz 9.2.5"],
@@ -1734,7 +1698,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:eigenschaften-von-a-a": ["6.2.1", "Satz 6.2.1"],
   "satz:eigenschaften-von-splines-und-b-splines": ["13.4.15", "Satz 13.4.15"],
   "satz:eindeutige-loesung-bei-vollem": ["7.1.7", "Satz 7.1.7"],
-  "satz:eindeutigkeit-bei-strikter-konvexitaet": ["12.2.7", "Satz 12.2.7"],
   "satz:eine-mse-obergrenze-im-multivariaten": ["13.9.5", "Satz 13.9.5"],
   "satz:erste-und-zweite-ableitung-in": ["10.7.6", "Satz 10.7.6"],
   "satz:existenz-der-lu-zerlegung": ["5.3.5", "Satz 5.3.5"],
@@ -1750,7 +1713,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:gemittelte-varianz-eines-linearen": ["13.8.4", "Satz 13.8.4"],
   "satz:gestalt-aller-interpolanten": ["13.1.8", "Satz 13.1.8"],
   "satz:glaettung-ist-ein-lineares-kleinste": ["13.7.5", "Satz 13.7.5"],
-  "satz:globale-optimalitaet-bei-konvexitaet": ["12.2.6", "Satz 12.2.6"],
   "satz:gradient-der-quadratischen-form": ["10.2.8", "Satz 10.2.8"],
   "satz:gradienten-der-completion": ["10.4.12", "Satz 10.4.12"],
   "satz:gradientenabstieg-auf-einer-quadrik": ["12.3.15", "Satz 12.3.15"],
@@ -1760,15 +1722,15 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:identitaeten-fuer-skalar-zu-matrix": ["10.4.4", "Satz 10.4.4"],
   "satz:induzierte-p-normen": ["3.3.4", "Satz 3.3.4"],
   "satz:jacobimatrizen-der-grundbausteine": ["10.3.4", "Satz 10.3.4"],
-  "satz:jede-matrix-ist-eine-kurze-summe": ["9.4.7", "Satz 9.4.7"],
+  "satz:jede-matrix-ist-eine-kurze-summe": ["9.4.6", "Satz 9.4.6"],
   "satz:jede-norm-ist-konvex": ["11.3.15", "Satz 11.3.15"],
   "satz:jensen-ungleichung": ["11.4.6", "Satz 11.4.6"],
   "satz:karush-kuhn-tucker-bedingungen": ["12.5.7", "Satz 12.5.7"],
-  "satz:kettenregel": ["10.6.8", "Satz 10.6.8"],
+  "satz:kettenregel": ["10.6.7", "Satz 10.6.7"],
   "satz:kettenregel-fuer-jacobimatrizen": ["10.3.9", "Satz 10.3.9"],
   "satz:kkt-und-konvexitaet": ["12.5.12", "Satz 12.5.12"],
   "satz:komplexitaet-der-iterativen-variante": ["2.5.1", "Satz 2.5.1"],
-  "satz:komplexitaet-der-lu-zerlegung": ["5.3.10", "Satz 5.3.10"],
+  "satz:komplexitaet-der-lu-zerlegung": ["5.3.9", "Satz 5.3.9"],
   "satz:kondition-der-loesung-eines-lgs": ["4.2.6", "Satz 4.2.6"],
   "satz:konvergenz-der-korrekturiteration": ["8.3.5", "Satz 8.3.5"],
   "satz:konvergenz-der-potenzmethode": ["8.1.4", "Satz 8.1.4"],
@@ -1790,7 +1752,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:kubische-splines-haben-minimale": ["13.5.4", "Satz 13.5.4"],
   "satz:lineare-ziele-und-extrempunkte": ["11.2.14", "Satz 11.2.14"],
   "satz:linearitaet-der-ableitungsoperation": ["10.5.5", "Satz 10.5.5"],
-  "satz:normalengleichungen-normalengleichungen": ["7.3.1", "Satz 7.3.1"],
   "satz:notwendige-bedingung-erster-ordnung": ["12.2.3", "Satz 12.2.3"],
   "satz:notwendige-bedingung-von-lagrange": ["12.5.5", "Satz 12.5.5"],
   "satz:operationen-die-konvexitaet-erhalten": ["11.4.1", "Satz 11.4.1"],
@@ -1802,7 +1763,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:quadratische-funktionen": ["11.3.12", "Satz 11.3.12"],
   "satz:reduzierte-darstellung": ["6.3.1", "Satz 6.3.1"],
   "satz:richtung-des-staerksten-anstiegs": ["10.2.4", "Satz 10.2.4"],
-  "satz:rueckwaertsfehler-beim-linearen": ["3.5.12", "Satz 3.5.12"],
+  "satz:rueckwaertsfehler-beim-linearen": ["3.5.13", "Satz 3.5.13"],
   "satz:satz-3-2-4": ["3.2.4", "Satz 3.2.4"],
   "satz:satz-7-2-3": ["7.2.3", "Satz 7.2.3"],
   "satz:satz-von-schwarz": ["10.7.4", "Satz 10.7.4"],
@@ -1819,14 +1780,14 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:symmetrie-und-orthogonalitaet": ["7.5.6", "Satz 7.5.6"],
   "satz:taylorentwicklung-i": ["10.8.2", "Satz 10.8.2"],
   "satz:taylorentwicklung-ii": ["10.8.7", "Satz 10.8.7"],
-  "satz:tensorproduktbasis": ["9.4.9", "Satz 9.4.9"],
+  "satz:tensorproduktbasis": ["9.4.7", "Satz 9.4.7"],
   "satz:unitaere-invarianz": ["3.4.7", "Satz 3.4.7"],
   "satz:vektorisierung-eines-matrixprodukts": ["9.5.3", "Satz 9.5.3"],
   "satz:wahl-des-spiegelvektors": ["7.5.7", "Satz 7.5.7"],
   "satz:wahl-von-c-und-s": ["7.5.2", "Satz 7.5.2"],
   "satz:wann-k-zahlen-eine-funktion-festlegen": ["13.2.4", "Satz 13.2.4"],
-  "satz:wichtige-vertraeglichkeiten": ["3.5.9", "Satz 3.5.9"],
-  "satz:wie-sich-eine-datenaenderung-fortpflanzt": ["13.3.13", "Satz 13.3.13"],
+  "satz:wichtige-vertraeglichkeiten": ["3.5.10", "Satz 3.5.10"],
+  "satz:wie-sich-eine-datenaenderung-fortpflanzt": ["13.3.12", "Satz 13.3.12"],
   "satz:zerlegung-des-mittleren-quadratischen": ["13.8.6", "Satz 13.8.6"],
   "satz:zufaellige-einbettung-eines-festen": ["8.4.6", "Satz 8.4.6"],
   "satz:zufallsrichtungen-stehen-fast-senkrecht": ["8.4.2", "Satz 8.4.2"],
@@ -1837,13 +1798,13 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:algos/fibonacci-komplexitaet": ["2.5", "Abschnitt 2.5"],
   "sec:algos/landau": ["2.4", "Abschnitt 2.4"],
   "sec:algos/probleme-algorithmen": ["2.1", "Abschnitt 2.1"],
-  "sec:alternative-loesungswege-orthogonale": ["7.3.5", "Abschnitt 7.3.5"],
+  "sec:alternative-loesungswege-orthogonale": ["7.3.4", "Abschnitt 7.3.4"],
   "sec:anwendung-auf-den-dominanten-term": ["2.4.4", "Abschnitt 2.4.4"],
   "sec:aufgabe-die-kondition-einer-summe": ["4.2.4", "Abschnitt 4.2.4"],
   "sec:beispiel-fibonacci-zahlen": ["2.2.1", "Abschnitt 2.2.1"],
   "sec:beispiel-matrix-vektor-multiplikation": ["2.3.2", "Abschnitt 2.3.2"],
   "sec:beispiele": ["3.3.5", "Abschnitt 3.3.5"],
-  "sec:das-cholesky-verfahren": ["7.3.3", "Abschnitt 7.3.3"],
+  "sec:das-cholesky-verfahren": ["7.3.2", "Abschnitt 7.3.2"],
   "sec:definition-und-erste-beispiele": ["3.1.1", "Abschnitt 3.1.1"],
   "sec:definition-und-interpretation": ["3.3.1", "Abschnitt 3.3.1"],
   "sec:der-vergleich-ordnung-schlaegt-konstante": ["2.5.3", "Abschnitt 2.5.3"],
@@ -1852,7 +1813,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:die-frobenius-norm": ["3.1.4", "Abschnitt 3.1.4"],
   "sec:die-iterative-variante-linearer-aufwand": ["2.5.1", "Abschnitt 2.5.1"],
   "sec:die-naive-rekursion-exponentieller": ["2.5.2", "Abschnitt 2.5.2"],
-  "sec:die-normalengleichungen": ["7.3.1", "Abschnitt 7.3.1"],
   "sec:die-wichtigsten-operatornormen": ["3.3.2", "Abschnitt 3.3.2"],
   "sec:differentialrechnung/gradient": ["10.2", "Abschnitt 10.2"],
   "sec:differentialrechnung/hoehere-ableitungen": ["10.7", "Abschnitt 10.7"],
@@ -1863,7 +1823,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:differentialrechnung/stetigkeit": ["10.5", "Abschnitt 10.5"],
   "sec:differentialrechnung/taylor": ["10.8", "Abschnitt 10.8"],
   "sec:differentialrechnung/zusammenfassung": ["10.9", "Abschnitt 10.9"],
-  "sec:effizient-aber-moeglicherweise-instabil": ["7.3.4", "Abschnitt 7.3.4"],
+  "sec:effizient-aber-moeglicherweise-instabil": ["7.3.3", "Abschnitt 7.3.3"],
   "sec:ein-warnbeispiel-der-kehrwert": ["4.2.1", "Abschnitt 4.2.1"],
   "sec:einschub-orthogonalmatrizen": ["3.3.3", "Abschnitt 3.3.3"],
   "sec:fehler/fehlermasse": ["4.1", "Abschnitt 4.1"],
@@ -1948,7 +1908,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:vom-algorithmus-zum-programm": ["2.2.2", "Abschnitt 2.2.2"],
   "sec:von-eigenwerten-zu-singulaerwerten": ["3.4.1", "Abschnitt 3.4.1"],
   "sec:warum-matrixnormen": ["3.2.1", "Abschnitt 3.2.1"],
-  "sec:warum-wir-niemals-invertieren": ["7.3.2", "Abschnitt 7.3.2"],
+  "sec:warum-wir-niemals-invertieren": ["7.3.1", "Abschnitt 7.3.1"],
   "sec:was-elementweise-normen-nicht-sehen": ["3.2.4", "Abschnitt 3.2.4"],
   "sec:was-ist-ein-guter-algorithmus": ["2.2.5", "Abschnitt 2.2.5"],
   "sec:zeit-und-speicheraufwand": ["2.3.1", "Abschnitt 2.3.1"],

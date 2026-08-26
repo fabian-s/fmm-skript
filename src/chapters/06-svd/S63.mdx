@@ -140,12 +140,9 @@ Drei Beobachtungen zur reduzierten Fassung:
    $r = 5$ sind das $5255$ statt $1\,002\,550$ Zahlen, also nicht einmal ein
    Prozent. Sogar $\bA$ selbst braucht mit $50\,000$ Einträgen noch fast das
    Zehnfache.
-2. *Rechenzeit.* Wer $\bA\bx$ über die Faktoren auswertet, macht drei
-   Matrix-Vektor-Produkte mit den kleinen Faktoren statt eines großen mit
-   $\bA$. Das kostet $rn + r + rm = r(m + n + 1)$ Multiplikationen gegen $mn$,
-   also wieder genau die Zahl aus Punkt 1, und lohnt sich für
-   $r < mn/(m + n + 1)$. Im Beispiel oben ist das jedes $r \leq 47$; bei
-   $r = 5$ sind wir weit darunter.
+2. *Rechenzeit.* Wer $\bA\bx$ über die drei kleinen Faktoren auswertet, braucht
+   wieder $r(m + n + 1)$ Multiplikationen statt $mn$, also dieselbe Schwelle wie
+   in Punkt 1.
 3. *$\corange{\bSigma_r}$ ist invertierbar.* Sie ist quadratisch, und auf ihrer
    Diagonalen stehen ausschließlich positive Zahlen. Das ist der Punkt, an dem
    der Rest dieses Abschnitts ansetzt.
@@ -215,12 +212,9 @@ Zahlen aus @bemerkung:was-die-reduzierte-form-spart-und-was mit.
 
 <ReduzierteSvdBloecke />
 
-Zwei Fälle lohnen den Vergleich. Bei $r = 1$ bleibt von $\cgreen{\bU}$ eine
-einzige Spalte übrig, von $\corange{\bSigma}$ eine einzige Zahl, und der
-Speicherbedarf fällt unter den der Matrix selbst. Bei $r = m = n$ dagegen
-schrumpft nichts: $\cgreen{\bU}$ und $\cblue{\bV}$ sind schon quadratisch, und
-$\corange{\bSigma}$ hat weder Nullzeile noch Nullspalte. Die reduzierte
-Zerlegung ist dann die volle.
+Zwei Fälle lohnen den Vergleich: Bei $r = 1$ fällt der Speicherbedarf unter den
+der Matrix selbst, bei $r = m = n$ schrumpft dagegen gar nichts, und die
+reduzierte Zerlegung ist die volle.
 :::
 
 ### Die Moore-Penrose-Pseudoinverse
@@ -274,23 +268,27 @@ Vier Anmerkungen zu dieser Definition:
   $\bA\pinv$ von $\R^m$ nach $\R^n$ abbilden, und tatsächlich ist $\bA\pinv$ vom
   Format $(n \times r) \cdot (r \times r) \cdot (r \times m) = n \times m$.
 - Die Singulärvektoren liegen nach @bemerkung:singulaervektoren-sind-nicht-eindeutig nicht eindeutig fest, auf
-  $\bA\pinv$ schlägt diese Freiheit aber nicht durch. Beim Vorzeichen sieht man
-  es sofort: Dreht sich das von $\cblue{\bv_i}$, so dreht sich nach @eq:rechte-und-linke-singulaervektoren
-  auch das von $\cgreen{\bu_i}$, und in der Summendarstellung
-
-  $$
-  \bA\pinv = \sum_{i=1}^{r} \frac{1}{\corange{\sigma_i}}\,\cblue{\bv_i}\,\cgreen{\bu_i^\top}
-  $$
-
-  heben die beiden Vorzeichen einander auf. Bei einem mehrfachen Singulärwert
-  ist die Freiheit größer, das Ergebnis aber dasselbe: Dort darf die
-  Orthonormalbasis des Eigenraums gedreht werden,
-  $\cblue{\bV_r} \mapsto \cblue{\bV_r}\bQ$ und mit @eq:rechte-und-linke-singulaervektoren zugleich
-  $\cgreen{\bU_r} \mapsto \cgreen{\bU_r}\bQ$, und weil
-  $\corange{\bSigma_r^{-1}}$ in diesem Block ein Vielfaches der Einheitsmatrix
-  ist, kürzt sich $\bQ\bQ^\top = \bI$ ebenso weg. Die Pseudoinverse hängt also
+  $\bA\pinv$ schlägt diese Freiheit aber nicht durch: Die Pseudoinverse hängt
   allein an $\bA$, nicht an der gewählten Zerlegung.
 :::
+
+::::vertiefung[Warum die Pseudoinverse nicht an der gewählten Zerlegung hängt]
+Beim Vorzeichen sieht man es sofort: Dreht sich das von $\cblue{\bv_i}$, so
+dreht sich nach @eq:rechte-und-linke-singulaervektoren auch das von
+$\cgreen{\bu_i}$, und in der Summendarstellung
+
+$$
+\bA\pinv = \sum_{i=1}^{r} \frac{1}{\corange{\sigma_i}}\,\cblue{\bv_i}\,\cgreen{\bu_i^\top}
+$$
+
+heben die beiden Vorzeichen einander auf. Bei einem mehrfachen Singulärwert ist
+die Freiheit größer, das Ergebnis aber dasselbe: Dort darf die Orthonormalbasis
+des Eigenraums gedreht werden, $\cblue{\bV_r} \mapsto \cblue{\bV_r}\bQ$ und
+mit @eq:rechte-und-linke-singulaervektoren zugleich
+$\cgreen{\bU_r} \mapsto \cgreen{\bU_r}\bQ$, und weil
+$\corange{\bSigma_r^{-1}}$ in diesem Block ein Vielfaches der Einheitsmatrix
+ist, kürzt sich $\bQ\bQ^\top = \bI$ ebenso weg.
+::::
 
 :::beispiel[#fortsetzung-die-pseudoinverse-der-rang-1 (Fortsetzung: die Pseudoinverse der Rang-1-Matrix)]
 Für $\bA$ aus @beispiel:reduzierte-svd-einer-rang-1-matrix setzen wir die drei Faktoren in umgekehrter
@@ -352,24 +350,37 @@ Dabei ist $\proj_U$ die orthogonale Projektion auf den Untervektorraum $U$.
 Die Punkte 3 und 4 heißen *Konsistenzbedingungen*: In den Dreierprodukten
 $\bA\bA\pinv\bA$ und $\bA\pinv\bA\bA\pinv$ hebt ein benachbartes Paar einander
 weg, genau wie es eine echte Inverse täte. Für sich allein sind $\bA\bA\pinv$
-und $\bA\pinv\bA$ dagegen keine Einheitsmatrizen. Der Beweis ist eine einzige
-lange Rechnung mit @eq:was-die-reduzierte-form-spart-und-was, und er lohnt sich, weil er nebenbei die
-Projektionsmatrix explizit macht.
+und $\bA\pinv\bA$ dagegen keine Einheitsmatrizen.
 
-::::beweis
-
-:::schritt
-Setzen wir @eq:reduzierte-darstellung und @eq:moore-penrose-pseudoinverse ein und schauen, was sich in der Mitte
-trifft:
+Wer die reduzierten Faktoren einsetzt, sieht schnell, was passiert:
 
 $$
 \bA\bA\pinv
 = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}\;\cblue{\bV_r}\corange{\bSigma_r^{-1}}\cgreen{\bU_r^\top}
-= \cgreen{\bU_r}\corange{\bSigma_r\bSigma_r^{-1}}\cgreen{\bU_r^\top}
-= \cgreen{\bU_r\bU_r^\top} =: \cgreen{\bP} .
+= \cgreen{\bU_r\bU_r^\top} ,
 $$
 
-::why[$\cblue{\bV_r^\top\bV_r} = \bI_r$ nach @eq:was-die-reduzierte-form-spart-und-was, danach $\corange{\bSigma_r\bSigma_r^{-1}} = \bI_r$; übrig bleibt ein Produkt, das nur noch von $\cgreen{\bU_r}$ abhängt]
+denn die inneren Faktoren heben sich nach
+@eq:was-die-reduzierte-form-spart-und-was weg; genauso wird
+$\bA\pinv\bA = \cblue{\bV_r\bV_r^\top}$. Übrig bleiben genau die beiden
+Projektionsmatrizen: Die Aussagen 1 und 2 sagen, worauf sie projizieren, und
+die Aussagen 3 und 4 fallen danach ab.
+
+:::::vertiefung[Warum die beiden Produkte orthogonale Projektionen sind]
+Die Rechnung ist lang, aber sie macht die Projektionsmatrix explizit: Sie zeigt,
+dass $\cgreen{\bU_r\bU_r^\top}$ auf $\col(\bA)$ nichts ändert und auf dem
+orthogonalen Komplement alles auf null drückt.
+
+::::beweis
+
+:::schritt
+Geben wir dem Produkt einen Namen:
+
+$$
+\cgreen{\bP} := \bA\bA\pinv = \cgreen{\bU_r\bU_r^\top} .
+$$
+
+::why[in $\bA\bA\pinv = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}\cblue{\bV_r}\corange{\bSigma_r^{-1}}\cgreen{\bU_r^\top}$ ist $\cblue{\bV_r^\top\bV_r} = \bI_r$ nach @eq:was-die-reduzierte-form-spart-und-was, danach $\corange{\bSigma_r\bSigma_r^{-1}} = \bI_r$]
 :::
 
 :::schritt
@@ -459,6 +470,7 @@ $$
 :::
 
 ::::
+:::::
 
 Für Matrizen mit vollem Zeilen- oder Spaltenrang wird eine der beiden
 Projektionen zur Identität, und dann sieht die Pseudoinverse einer echten
@@ -475,27 +487,19 @@ Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$.
 ::::beweis
 
 :::schritt
-Zu 1: Für $r = m$ ist $\cgreen{\bU_r} \in \R^{m \times m}$ quadratisch mit
-orthonormalen Spalten, also eine Orthogonalmatrix. Aus
+Zu 1 und 2: Für $r = m$ ist $\cgreen{\bU_r} \in \R^{m \times m}$ quadratisch
+mit orthonormalen Spalten, also eine Orthogonalmatrix, und aus
 $\cgreen{\bU_r^\top\bU_r} = \bI_m$ folgt dann auch
-$\cgreen{\bU_r\bU_r^\top} = \bI_m$, und das ist nach Schritt 1 des vorigen
-Beweises gerade $\bA\bA\pinv$.
-
-::why[bei einer quadratischen Matrix ist eine einseitige Inverse automatisch die beidseitige; geometrisch: $\col(\bA)$ ist ganz $\R^m$, und die Projektion auf den ganzen Raum ändert nichts]
-:::
-
-:::schritt
-Zu 2: Für $r = n$ ist $\cblue{\bV_r} \in \R^{n \times n}$ quadratisch mit
-orthonormalen Spalten, dasselbe Argument liefert
+$\bA\bA\pinv = \cgreen{\bU_r\bU_r^\top} = \bI_m$. Für $r = n$ liefert
+dasselbe Argument mit $\cblue{\bV_r}$ die Gleichung
 $\bA\pinv\bA = \cblue{\bV_r\bV_r^\top} = \bI_n$.
 
-::why[jetzt ist $\col(\bA^\top)$ der ganze $\R^n$, es gibt also keinen Kern, in dem etwas verschwinden könnte]
+::why[bei einer quadratischen Matrix ist eine einseitige Inverse automatisch die beidseitige; geometrisch: $\col(\bA)$ ist ganz $\R^m$ bzw. $\col(\bA^\top)$ ganz $\R^n$, und die Projektion auf den ganzen Raum ändert nichts]
 :::
 
 :::schritt
-Zu 3: Ist $\bA$ quadratisch und invertierbar, so ist $r = m = n$, und beide
-Fälle greifen gleichzeitig. Damit ist $\bA\pinv$ eine beidseitige Inverse von
-$\bA$, also $\bA\pinv = \bA^{-1}$.
+Zu 3: Ist $\bA$ quadratisch und invertierbar, so ist $r = m = n$, beide Fälle
+greifen gleichzeitig, und $\bA\pinv$ ist eine beidseitige Inverse von $\bA$.
 
 ::why[die Inverse einer Matrix ist eindeutig: aus $\bB\bA = \bI$ und $\bA\bC = \bI$ folgt $\bB = \bB\bA\bC = \bC$]
 :::
@@ -570,21 +574,9 @@ $$
 $$
 
 In der anderen Reihenfolge kommt dagegen keine Einheitsmatrix heraus, denn
-$\col(\bA)$ ist nur eine Ebene im $\R^3$:
-
-$$
-\bA\bA\pinv = \frac{1}{14}\begin{pmatrix} 13 & 2 & -3 \\ 2 & 10 & 6 \\ -3 & 6 & 5 \end{pmatrix}
-= \bI_3 - \cgreen{\bu_3\bu_3^\top} ,
-\qquad
-\cgreen{\bu_3} = \tfrac{1}{\sqrt{14}}\begin{pmatrix} 1 \\ -2 \\ 3 \end{pmatrix} .
-$$
-
-Diese Matrix ist symmetrisch, wie es Schritt 2 im Beweis zu @satz:eigenschaften-der-pseudoinversen für jeden
-Orthogonalprojektor zeigt, und ihre :k[Spur]{#trace} ist $(13 + 10 + 5)/14 = 2 = r$. Das ist kein Zufall: Aus der
-zyklischen Vertauschbarkeit der Spur (@sec:matrix-spur-norm/spur)
-folgt $\tr(\cgreen{\bU_r\bU_r^\top}) = \tr(\cgreen{\bU_r^\top\bU_r}) = \tr(\bI_r) = r$.
-Die Spur eines Orthogonalprojektors zählt also die Dimensionen, die er
-stehenlässt.
+$\col(\bA)$ ist nur eine Ebene im $\R^3$: Es ist
+$\bA\bA\pinv = \bI_3 - \cgreen{\bu_3\bu_3^\top}$, die orthogonale Projektion
+auf genau diese Ebene.
 :::
 
 :::bemerkung[#ausblick-kleinste-quadrate (Ausblick: Kleinste Quadrate)]
@@ -618,8 +610,6 @@ mit der Menge aller Kleinste-Quadrate-Lösungen. Ist $\bA$ singulär, so ist
 diese Menge eine ganze Gerade.
 
 <PseudoinverseExplorer />
-
-Das Widget trennt die Menge gleich guter Lösungen von der zusätzlichen Wahl der kleinsten Norm.
 :::
 
 ### Selbsttest

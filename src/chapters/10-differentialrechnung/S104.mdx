@@ -191,6 +191,8 @@ dem Ableiten. Wo eine Größe linear in den Einträgen ist, dürfen wir Ableiten
 Auswerten in beliebiger Reihenfolge ausführen. Determinante und Inverse sind dagegen nicht
 linear, und man sieht ihren Formeln @eq:identitaeten-fuer-skalar-zu-matrix-2 und @eq:identitaeten-fuer-skalar-zu-matrix-3 an, dass dort mehr passiert.
 
+::::vertiefung[Die Jacobi-Formel an einem Diagonalbeispiel nachgerechnet]
+
 :::beispiel[#die-jacobi-formel-an-einem (Die Jacobi-Formel an einem Diagonalbeispiel)]
 Sei
 
@@ -241,6 +243,8 @@ liefert. Die Invertierbarkeit in @satz:identitaeten-fuer-skalar-zu-matrix ist al
 Bedingung dafür, dass die Ableitung existiert.
 :::
 
+::::
+
 :::bemerkung[#warum-das-in-der-statistik-gebraucht (Warum das in der Statistik gebraucht wird)]
 Die Log-Dichte eines multivariaten Normalmodells enthält die Kovarianzmatrix
 $\bSigma(\theta)$ gleich zweimal: einmal als $\log\det\bigl(\bSigma(\theta)\bigr)$ und einmal
@@ -268,16 +272,15 @@ Drei Beispiele stehen zur Wahl: die Diagonalmatrix aus @beispiel:die-jacobi-form
 jeder Eintrag anders von $x$ abhängt (einer gar nicht), und eine Drehmatrix.
 
 <IdentitaetenSkalarMatrix />
-:::
 
-Im Widget halten alle drei Identitäten über den ganzen Reglerbereich stand; die
-größte Abweichung liegt in der Spur- und der Determinantenzeile unter $10^{-9}$ und ist der
-Abbruchfehler des Differenzenquotienten, nicht ein Fehler der Formel. Zwei Stellen lohnen
-einen zweiten Blick. Die Drehmatrix hat die konstante Determinante $1$, also muss die
-Jacobi-Formel null liefern, und das geht nur, wenn
-$\tr[\bF^{-1}\, \partial \bF/\partial x]$ verschwindet. Und bei der Diagonalmatrix zeigt
-der Schieber die Lücke bei $x = 0$: Dort ist $\bF$ singulär, die Determinanten- und die
-Inversenformel setzen aber beide $\bF^{-1}$ voraus. Die Spur-Identität gilt auch dort.
+Alle drei Identitäten halten über den ganzen Reglerbereich stand; die größte Abweichung
+liegt unter $10^{-9}$ und ist der Abbruchfehler des Differenzenquotienten, nicht ein Fehler
+der Formel. Zwei Stellen lohnen einen zweiten Blick: Die Drehmatrix hat die konstante
+Determinante $1$, also muss $\tr[\bF^{-1}\, \partial \bF/\partial x]$ verschwinden. Und bei
+der Diagonalmatrix zeigt der Schieber die Lücke bei $x = 0$: Dort ist $\bF$ singulär, die
+Determinanten- und die Inversenformel setzen aber beide $\bF^{-1}$ voraus, während die
+Spur-Identität auch dort gilt.
+:::
 
 ### Matrix zu Skalar
 
@@ -438,17 +441,6 @@ $$
 \corange{\frac{\partial f(\bX)}{\partial \bX}} = 2\bX .
 $$
 
-Der kleinste nichttriviale Fall macht das ganz konkret. Für
-$\bX = \begin{pmatrix} x_{11} & x_{12} \end{pmatrix} \in \R^{1 \times 2}$ ist
-$f(\bX) = x_{11}^2 + x_{12}^2$, also
-$\partial f / \partial x_{11} = 2x_{11}$ und $\partial f / \partial x_{12} = 2x_{12}$ und
-damit
-
-$$
-\corange{\frac{\partial f(\bX)}{\partial \bX}}
-= \begin{pmatrix} 2x_{11} & 2x_{12} \end{pmatrix} = 2\bX .
-$$
-
 Anders als in @beispiel:ableitung-von-f-x-a-xb ist der Restterm hier nicht null. Ausmultiplizieren liefert
 
 $$
@@ -475,16 +467,16 @@ $h \cdot \partial f(\bX)/\partial x_{ij}$; die Zeile darunter trennt sie in den 
 Ableitungsterm und den roten Rest.
 
 <AnstupsWidget />
+
+Der Eintrag $(i,j)$ der Gradientenmatrix ist genau die Rate, mit der $f$ auf einen Stups an
+dieser Stelle reagiert. Für die beiden in $\bX$ linearen Funktionen bleibt der Rest exakt
+null, die lineare Vorhersage ist dort also nicht nur eine Näherung. Bei
+$\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: sichtbar von null verschieden, aber
+schneller fallend als $h$ selbst, und damit ein Musterbeispiel für ein
+$\cred{o(\left|h\right|)}$.
 :::
 
-Der Eintrag $(i,j)$ der Gradientenmatrix ist im Widget genau die Rate, mit der
-$f$ auf einen Stups an dieser Stelle reagiert. Für die beiden in $\bX$ linearen Funktionen
-bleibt der Rest exakt null, die lineare Vorhersage ist dort also nicht nur eine Näherung.
-Bei $\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: sichtbar von null verschieden,
-aber schneller fallend als $h$ selbst, und damit ein Musterbeispiel für ein
-$\cred{o(\left|h\right|)}$.
-
-### Anwendung: Matrixzerlegung und Matrix Completion
+:::::vertiefung[Anwendung: Matrixzerlegung und Matrix Completion]
 
 Zum Schluss ein Problem, in dem der Fall Matrix zu Skalar seine ganze Kraft zeigt. Gegeben
 sei eine Matrix $\cblue{\bY} \in \R^{m \times n}$, von der wir nur die Einträge an den
@@ -643,17 +635,16 @@ zeigt alle Zwischengrößen: das Residuum $\bP_\Omega \odot (\bY - \bU\bV^\top)$
 die beiden Gradienten in Orange und die Vorhersagen für die Lücken in Grün.
 
 <MatrixCompletionDemo />
+
+Der Verlust fällt bei beiden Rängen auf null, die Vorhersagen laufen aber auseinander:
+$k = 1$ landet bei $y_{13} = 2{,}5$ und $y_{22} = 2{,}4$, $k = 2$ bei $1{,}583$ und
+$0{,}909$. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die Vorhersage
+läuft, entscheidet dann der Startpunkt. Größerer Rang heißt also nicht bessere
+Rekonstruktion. Und wer die Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein
+Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ ein Davonlaufen der Einträge.
 :::
 
-Der Verlust fällt im Widget bei beiden Rängen auf null, die Vorhersagen laufen
-aber auseinander: $k = 1$ landet bei $y_{13} = 2{,}5$ und $y_{22} = 2{,}4$, $k = 2$ bei
-$1{,}583$ und $0{,}909$. Die Rang-1-Werte lassen sich von Hand nachrechnen: Aus
-$u_1v_1 = 5$, $u_1v_2 = 3$ und $u_2v_1 = 4$ folgen die Verhältnisse, und $u_2v_3 = 2$ legt
-den Rest fest. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die
-Vorhersage läuft, entscheidet dann der Startpunkt. Größerer Rang heißt also nicht bessere
-Rekonstruktion. Und wer die Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein
-Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ ein Davonlaufen der Einträge:
-Am oberen Ende des Schiebers ist $L$ nach wenigen Schritten keine Zahl mehr.
+:::::
 
 ### Selbsttest
 

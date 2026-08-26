@@ -61,19 +61,11 @@ $$
 ::::
 
 Die Gleichung @eq:spektralnorm-und-groesster-singulaerwert sieht man gelegentlich als Definition geschrieben. Das
-wäre eine Doppelbelegung: Die Spektralnorm trägt aus Kapitel 3 bereits eine
-Definition, und dass sie mit $\corange{\sigma_1}$ übereinstimmt, ist eine
-Aussage, die bewiesen werden will. @bemerkung:singulaerwerte-sind-streckungsfaktoren hatte sie schon angekündigt,
-@satz:spektralnorm-und-groesster-singulaerwert rechnet sie nach.
-
-Der Satz bündelt zwei Sichtweisen: Die
-:k[Matrixnorm]{#matrix-norm} $\left\| \bA \right\|_2$ misst die maximale
-Streckung, die $\bA$ einem Einheitsvektor antun kann, und diese Streckung ist
-der größte Singulärwert. Über die Definition der Operatornorm ist das sogar der
-kürzere Weg: @bemerkung:singulaerwerte-sind-streckungsfaktoren hält
-$\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$
-bereits fest, und rechts steht nach @definition:operatornorm die Spektralnorm. Das Bild
-dazu kennen wir aus @sec:motivation: $\corange{\sigma_1}$ ist die
+wäre eine Doppelbelegung: Die
+:k[Matrixnorm]{#matrix-norm} $\left\| \bA \right\|_2$ trägt aus
+@kap:matrix-spur-norm bereits eine Definition, und dass sie mit
+$\corange{\sigma_1}$ übereinstimmt, ist eine Aussage, die bewiesen werden will.
+Das Bild dazu kennen wir aus @sec:motivation: $\corange{\sigma_1}$ ist die
 längste Halbachse der Bildellipse.
 
 ### Die SVD als Summe von Rang-1-Matrizen
@@ -127,27 +119,18 @@ gezeigt.
 :::
 
 :::schritt
-Jede Spalte von $\cgreen{\bu_i} \cblue{\bv_i}^\top$ ist ein Vielfaches von
-$\cgreen{\bu_i}$, nämlich die $b$-te Spalte gerade
-$\cblue{V_{bi}} \cdot \cgreen{\bu_i}$. Der Spaltenraum wird also von einem
-einzigen Vektor aufgespannt, und weil $\cgreen{\bu_i} \neq \bnull$ und
-$\cblue{\bv_i} \neq \bnull$ sind, ist er nicht der Nullvektorraum. Der Rang
-ist damit genau $1$.
-
-::why[$\cgreen{\bu_i}$ und $\cblue{\bv_i}$ sind Spalten von Orthogonalmatrizen, haben also Länge $1$ und sind insbesondere nicht der Nullvektor]
-:::
-
-:::schritt
-Für die Frobeniusnorm rechnen wir elementweise:
+Die beiden Zusatzaussagen sind schnell erledigt. Jede Spalte von
+$\cgreen{\bu_i} \cblue{\bv_i}^\top$ ist ein Vielfaches von $\cgreen{\bu_i}$,
+der Spaltenraum also eindimensional und der Rang damit $1$; und für die
+Frobeniusnorm faktorisiert die Doppelsumme:
 
 $$
 \left\| \cgreen{\bu_i} \cblue{\bv_i}^\top \right\|_F^2
-= \sum_{a=1}^{m} \sum_{b=1}^{n} \bigl(\cgreen{U_{ai}}\, \cblue{V_{bi}}\bigr)^2
 = \Bigl(\sum_{a=1}^{m} \cgreen{U_{ai}}^2\Bigr) \Bigl(\sum_{b=1}^{n} \cblue{V_{bi}}^2\Bigr)
 = 1 \cdot 1 = 1 .
 $$
 
-::why[die Doppelsumme faktorisiert, weil $\cgreen{U_{ai}}^2$ nicht von $b$ und $\cblue{V_{bi}}^2$ nicht von $a$ abhängt; beide Klammern sind quadrierte Längen von Einheitsvektoren, nämlich von $\cgreen{\bu_i}$ und $\cblue{\bv_i}$]
+::why[$\cgreen{\bu_i}$ und $\cblue{\bv_i}$ sind Spalten von Orthogonalmatrizen, haben also Länge $1$ und sind insbesondere nicht der Nullvektor; in der Doppelsumme hängt $\cgreen{U_{ai}}^2$ nicht von $b$ und $\cblue{V_{bi}}^2$ nicht von $a$ ab, beide Klammern sind quadrierte Längen von Einheitsvektoren]
 :::
 
 ::::
@@ -230,16 +213,6 @@ leicht zu merken und sagen viel:
 - **Beide Normen führen zum selben Sieger.** Das ist keine
   Selbstverständlichkeit: Zwei verschiedene Gütemaße haben im Allgemeinen zwei
   verschiedene Optima. Hier fallen sie zusammen.
-- **Der Fall $k = 0$ ist erlaubt.** Dann ist $\bA_0 = \bnull$ die leere Summe,
-  und @eq:eckart-und-young-beste-approximation-von reproduziert die Identität
-
-  $$
-  \left\| \bA \right\|_F = \sqrt{\sum_{i=1}^{r} \corange{\sigma_i}^2} ,
-  $$
-
-  die @korollar:spezialfaelle-der-schatten-p-norm (@sec:matrix-spur-norm/schattennormen) schon
-  über die Schatten-2-Norm hergeleitet hat.
-
 - **Der Satz sagt, dass $\bA_k$ das Minimum annimmt, nicht dass es der einzige
   Minimierer ist.** In der Frobeniusnorm ist $\bA_k$ eindeutig, solange
   $\corange{\sigma_k} > \corange{\sigma_{k+1}}$ gilt; bei Gleichheit gibt es
@@ -250,9 +223,6 @@ leicht zu merken und sagen viel:
   $b \in [1, 5]$ den Fehler
   $\cred{\left\| \bA - \bB \right\|_2} = \max(|3 - b|, 2) = 2 = \corange{\sigma_2}$.
   $\bA_1$ ist also *eine* beste Approximation, nicht *die*.
-- **Ab $k = r$ ist nichts mehr zu holen.** Dann ist $\bA_k = \bA$ und der
-  Fehler null. Setzen wir $\corange{\sigma_i} = 0$ für $i > r$, sagt @eq:eckart-und-young-beste-approximation-von
-  genau das; weitere Terme kosten dann nur noch Speicher.
 :::
 
 ### Wie wählen wir k?
@@ -272,7 +242,8 @@ Genauigkeit und Aufwand, und dafür gibt es drei gebräuchliche Kriterien.
    denn der Nenner ist nach @satz:spektralnorm-und-groesster-singulaerwert gerade $\corange{\sigma_1}$. Wir wählen
    das kleinste $k$, für das dieser Quotient unter einer Schranke bleibt.
 2. *Relativer Fehler in der Frobeniusnorm.* Mit derselben Rechnung und der
-   Identität aus @bemerkung:was-der-satz-liefert-und-was-nicht ist
+   Identität $\left\| \bA \right\|_F = \sqrt{\sum_i \corange{\sigma_i}^2}$
+   aus @korollar:spezialfaelle-der-schatten-p-norm ist
 
    $$
    \frac{\cred{\left\| \bA - \bA_k \right\|_F}}{\left\| \bA \right\|_F}
@@ -297,6 +268,7 @@ weit überragt, ist der Energieanteil schon bei $k = 1$ nahe bei eins, obwohl
 die Approximation noch sehr grob ist. Ein Kriterium, das so leicht zufrieden
 ist, taugt wenig als alleiniger Ratgeber.
 
+::::vertiefung[Typische Singulärwert-Verläufe und die Ellenbogen-Heuristik]
 :::bemerkung[#typische-singulaerwert-verlaeufe-und-der (Typische Singulärwert-Verläufe und der Ellenbogen)]
 Wie gut sich eine Matrix überhaupt komprimieren lässt, steht im Verlauf ihrer
 Singulärwerte. Drei Muster begegnen uns immer wieder:
@@ -318,6 +290,7 @@ denen wirklich Struktur steckt, von denen, in denen nur noch Rauschen sitzt,
 und liefert einen brauchbaren Startwert für $k$. Eine Garantie ist das nicht;
 manche Spektren haben schlicht keinen Ellenbogen.
 :::
+::::
 
 ### Anwendung: Datenkompression
 
@@ -354,7 +327,7 @@ $k \leq 287$.
 
 :::algorithmus[#kompression-mit-der-svd (Kompression mit der SVD)]
 1. Berechne die SVD $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$.
-2. Wähle $k$ anhand des Singulärwert-Verlaufs (@bemerkung:drei-kriterien-fuer-die-wahl-von-k und 6.4.7).
+2. Wähle $k$ anhand des Singulärwert-Verlaufs (@bemerkung:drei-kriterien-fuer-die-wahl-von-k und @num:typische-singulaerwert-verlaeufe-und-der).
 3. Bilde die Approximation
    $\bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$.
 4. Speichere nur $\cgreen{\bU_k}$, $\corange{\bSigma_k}$ und $\cblue{\bV_k}$;
@@ -369,7 +342,6 @@ $\cred{\bA - \bA_k}$ als Bild, und die beiden Kurven sind die Fehlerformeln aus
 
 <RangKExplorer />
 
-Das Widget verbindet die Wahl des Rangs mit dem Spektrum und dem Approximationsfehler.
 Wer lieber mit echten Fotos spielt, findet unter
 [shinyapps.io](https://fabian-s.shinyapps.io/truncatedSVD-shiny/) eine Shiny-App
 zur abgeschnittenen SVD.
@@ -445,10 +417,14 @@ zeigt zusätzlich, wie stark die Vorhersage an Schritt 1 von @algorithmus:empfeh
 hängt.
 
 <EmpfehlungsExplorer />
-
-Das Widget macht sichtbar, dass die Bewertung der Vorhersagen von den zurückgehaltenen Daten und der Auffüllregel abhängt.
 :::
 
+Ein Einwand bleibt, und er ist gewichtig: Schritt 1 erfindet Daten, und
+Schritt 2 behandelt diese Erfindungen wie Messwerte. Denn $\bR_k$ minimiert
+nach @satz:eckart-und-young-beste-approximation-von den Fehler über *alle*
+Einträge, also auch über die selbstgesetzten Mittelwerte.
+
+::::vertiefung[Stärken und Schwächen des Verfahrens, und was danach kommt]
 :::bemerkung[#staerken-schwaechen-ausblick (Stärken, Schwächen, Ausblick)]
 Für den Ansatz spricht einiges:
 
@@ -461,14 +437,12 @@ Für den Ansatz spricht einiges:
   Verfahren brauchbare Schätzungen liefern, solange die zugrunde liegende
   Struktur wirklich niedrigdimensional ist.
 
-Ein Einwand bleibt, und er ist gewichtig: Schritt 1 erfindet Daten, und
-Schritt 2 behandelt diese Erfindungen wie Messwerte. Denn $\bR_k$ minimiert
-nach @satz:eckart-und-young-beste-approximation-von den Fehler über *alle* Einträge, also auch über die
-selbstgesetzten Mittelwerte. Modernere Verfahren umgehen das. Unter dem
-Stichwort *Matrix Completion* sucht man direkt eine Matrix von kleinem Rang,
-die nur an den beobachteten Stellen gut passt; die (nichtnegative)
+Gegen ihn spricht der Einwand oben, und modernere Verfahren umgehen ihn: Unter
+dem Stichwort *Matrix Completion* sucht man direkt eine Matrix von kleinem
+Rang, die nur an den beobachteten Stellen gut passt; die (nichtnegative)
 Matrixfaktorisierung ist die bekannteste Variante.
 :::
+::::
 
 ### Wann lohnt sich die SVD?
 
@@ -560,12 +534,6 @@ orthogonalem $\bP$ aus
 </tbody>
 </table>
 
-Die Zeile zu den singulären Matrizen verdient eine Fußnote. Ein Eigenwert $0$
-ist für sich genommen harmlos; problematisch wird es, wenn zu wenige
-Eigenvektoren existieren, um eine Basis zu bilden. Dann gibt es die
-Zerlegung $\bA = \bP\bD\bP^{-1}$ überhaupt nicht. Die SVD kennt diesen Fall
-nicht: Sie existiert für jede Matrix.
-
 ### Selbsttest
 
 ::::quiz
@@ -592,8 +560,8 @@ Rund $1{,}8$, bei einem wahren Wert von $5$. Der Grund ist Schritt 1 von
 @algorithmus:empfehlungen-ueber-eine-rang-k: Ohne Adas Bewertung sinkt das Mittel der Spalte
 „Sternenstaub" von $3{,}5$ auf $2{,}0$, und dieser selbst gesetzte Wert
 bestimmt die Vorhersage fast allein. Bei elf bekannten Bewertungen sagt das
-Ergebnis mehr über die Füllregel als über Ada; genau das ist der Einwand aus
-@bemerkung:staerken-schwaechen-ausblick.
+Ergebnis mehr über die Füllregel als über Ada; genau das ist der Einwand gegen
+das Auffüllen in Schritt 1.
 :::
 
 :::frage{falsch}
@@ -656,9 +624,8 @@ Ist $\corange{\sigma_{k+1}} = 0$, so ist die Rang-k-Approximation exakt.
 Weil die Singulärwerte absteigend sortiert sind, folgt aus
 $\corange{\sigma_{k+1}} = 0$ sofort $\rang(\bA) \leq k$. Die Summenform
 @eq:summenform-der-svd hat dann gar nicht mehr als $k$ Summanden, also ist $\bA_k = \bA$.
-@satz:eckart-und-young-beste-approximation-von selbst setzt $k < r$ voraus und greift hier nicht mehr. Mit der
-Fortsetzung $\corange{\sigma_i} = 0$ für $i > r$ aus dem letzten Punkt von
-@bemerkung:was-der-satz-liefert-und-was-nicht sagt @eq:eckart-und-young-beste-approximation-von aber dasselbe: Der Fehler ist null.
+@satz:eckart-und-young-beste-approximation-von selbst setzt $k < r$ voraus und greift hier nicht mehr. Setzen wir
+$\corange{\sigma_i} = 0$ für $i > r$, sagt @eq:eckart-und-young-beste-approximation-von aber dasselbe: Der Fehler ist null.
 :::
 
 ::::

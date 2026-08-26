@@ -144,6 +144,11 @@ $$ {#eq-eine-mse-obergrenze-im-multivariaten-2}
 $$
 :::
 
+:::::vertiefung[Wie sich die Rate im Multivariaten ausbalanciert]
+Der Beweis ist die Rechnung aus @sec:bias-varianz mit $K^p$ statt $K$
+Spalten: Varianzsatz übernehmen, Bias-Schranke voraussetzen, Summe
+minimieren, einsetzen.
+
 ::::beweis
 
 :::schritt
@@ -196,6 +201,7 @@ und damit @eq:eine-mse-obergrenze-im-multivariaten-2.
 :::
 
 ::::
+:::::
 
 :::bemerkung[#was-die-rate-ueber-datenmengen-sagt (Was die Rate über Datenmengen sagt)]
 Gleichung @eq:eine-mse-obergrenze-im-multivariaten-2 ist eine Obergrenze bei einer Wahl
@@ -326,6 +332,7 @@ Wie groß vermuten wir den Speicherbedarf des vollen Tensorprodukts bei zehn Var
 </Schaetzfrage>
 :::
 
+::::vertiefung[Additivität ist mehr als ein Verzicht]
 :::bemerkung[#warum-das-mehr-ist-als-eine-notloesung (Warum das mehr ist als eine Notlösung)]
 Die Additivität sieht nach einem bloßen Verzicht aus. Ist $f$ tatsächlich
 additiv und bleibt $p$ fest, so ist sie mehr als das: Unter den üblichen
@@ -338,29 +345,31 @@ Strukturannahme umgangen. Entsprechende Optimalitätsresultate gehen auf
 C. J. Stone (1985) zurück und sind ein Grund, warum additive Modelle in der
 Statistik so verbreitet sind.
 :::
+::::
 
 ### Verstreute Punkte ohne Gitter
 
 Tensor-Produkt-Basis und additives Modell haben eines gemeinsam: Beide
 behandeln die Variablen getrennt und setzen die Bausteine anschließend
 zusammen. Für Stellen, die als verstreute Punkte im $\R^p$ anfallen, passt
-das schlecht.
+das schlecht: Messstationen auf einer Landkarte liegen nicht auf einem Gitter,
+und ein Gitter, das sie alle abdeckt, wäre in weiten Teilen leer. Die übliche
+Antwort sind *radiale Basisfunktionen* (radial basis functions), die statt
+eines Gitters nur Zentren brauchen und den Ansatz linear in den Koeffizienten
+lassen.
 
+::::vertiefung[Basisfunktionen, die nur vom Abstand abhängen]
 :::bemerkung[#radiale-basisfunktionen (Radiale Basisfunktionen)]
-Messstationen auf einer Landkarte liegen nicht auf einem Gitter, und ein
-Gitter, das sie alle abdeckt, wäre in weiten Teilen leer. Die übliche Antwort
-sind *radiale Basisfunktionen* (radial basis functions). Eine solche
-Basisfunktion hängt nur vom Abstand zu einem Zentrum $\bc_k$ ab,
+Eine radiale Basisfunktion hängt nur vom Abstand zu einem Zentrum $\bc_k$ ab,
 
 $$
 \corange{\phi_k(\bx)} = \rho\left(\left\| \bx - \bc_k \right\|\right),
 \qquad \text{etwa mit } \rho(r) = \exp\left(-r^2 / (2h^2)\right),
 $$
 
-und braucht deshalb kein Gitter, sondern nur die Zentren; oft nimmt man dafür
-die Datenpunkte selbst. Der Ansatz bleibt linear in den Koeffizienten, es ist
-also wieder das Kleinste-Quadrate-Problem aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate, nur mit
-anderen Spalten.
+oft nimmt man als Zentren die Datenpunkte selbst. Es ist wieder das
+Kleinste-Quadrate-Problem aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate,
+nur mit anderen Spalten.
 
 Bezahlt wird die Freiheit mit der Struktur. Die Basismatrix ist im
 Allgemeinen voll besetzt, denn eine Gaußglocke wird nirgends exakt null, und
@@ -369,16 +378,15 @@ solange wir nicht eigens Kerne mit beschränktem Träger wählen. Der
 Bandbreitenparameter $h$ spielt dabei die Rolle des Knotenabstands: klein
 heißt flexibel und unruhig, groß heißt glatt und träge.
 :::
+::::
 
 ### Splines im maschinellen Lernen
 
 Zwei aktuelle Verwendungen benutzen Splines als Modellbaustein, nicht als
-Interpolationsverfahren.
-
-*Kolmogorow-Arnold-Netze* ersetzen die feste Aktivierungsfunktion eines
-neuronalen Netzes durch eine lernbare, stückweise polynomiale Funktion. Die
-Gewichte des Netzes sind dann B-Spline-Koeffizienten, bestimmt werden sie
-allerdings durch Training und nicht aus Interpolationsbedingungen
+Interpolationsverfahren. *Kolmogorow-Arnold-Netze* ersetzen die feste
+Aktivierungsfunktion eines neuronalen Netzes durch eine lernbare, stückweise
+polynomiale; die Netzgewichte sind dann B-Spline-Koeffizienten, bestimmt
+durch Training statt durch Interpolationsbedingungen
 (@bemerkung:interpolation-im-maschinellen-lernen-und).
 
 *Normalizing Flows* bauen eine komplizierte Wahrscheinlichkeitsverteilung aus
@@ -388,11 +396,9 @@ Die Dichte der transformierten Größe enthält den Betrag der
 (@sec:differentialrechnung/jacobi), und deshalb muss die
 Abbildung zweierlei können: sich invertieren und ihre Determinante billig
 ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten
-beides: Strikte Monotonie zusammen mit passenden Randbedingungen macht die
-eindimensionale Abbildung bijektiv, und ihre Ableitung steht stückweise sofort
-da. Eine nur nicht fallende Funktion könnte konstante Stücke besitzen und wäre
-dort nicht invertierbar. In modernen Flows werden häufig monotone rationale
-quadratische Splines verwendet.
+beides: Strikte Monotonie macht die eindimensionale Abbildung bijektiv, und
+ihre Ableitung steht stückweise sofort da. Häufig verwendet werden dafür
+monotone rationale quadratische Splines.
 
 ### Was vom Kapitel bleibt
 
@@ -471,26 +477,9 @@ Folgen.
    kommen mit $O(pK)$ Koeffizienten aus und sind zusätzlich interpretierbar.
 :::
 
-### Die beiden Ansatzräume nebeneinander
-
-Die Bilanz des Interpolationsteils lässt sich an den zwei Systemen ablesen,
-die wir durchgerechnet haben. Die Konditionszahlen gehören zu $20$ Datenpunkten in
-$[0, 1]$ (@bemerkung:konditionszahlen-eine-groessenordnung), der Verstärkungsfaktor in der letzten Zeile zu
-$n = 10$ Stützstellen (@bemerkung:was-das-in-zahlen-heisst).
-
-| Frage | globales Polynom | kubischer Spline |
-|:--|:--|:--|
-| Ansatzraum | Polynome vom Grad höchstens $n-1$ | $\Scal_3$ zum Knotengitter |
-| Dimension | $n$ | $m + 3$ |
-| Eindeutigkeit | genau ein Interpolant (@satz:existenz-und-eindeutigkeit-der) | erst mit zwei Randbedingungen (@bemerkung:zwei-bedingungen-fehlen-randbedingungen) |
-| Kondition von $\bB$ | $\kappa_1 = 4{,}4 \cdot 10^{16}$ | $\kappa_1 = 37$ |
-| Struktur von $\bB$ | voll besetzt | Bandmatrix, höchstens $q+1$ Einträge je Zeile |
-| Aufwand | $O(n^3)$ | $O(N q^2)$, also linear in $N$ |
-| ein Messwert wackelt | wirkt global, Faktor bis $4{,}03$ | im Widget: schneller Abfall auf gut ein Viertel je Knotenabstand |
-
 :::bemerkung[#drei-stellschrauben-drei-wirkungen (Drei Stellschrauben, drei Wirkungen)]
-Wer die Tabelle sortiert, findet drei Entscheidungen mit klar getrennten
-Folgen, und das ist die kürzeste Fassung der ersten Kapitelhälfte.
+Drei Entscheidungen der ersten Kapitelhälfte haben klar getrennte Folgen, und
+das ist ihre kürzeste Fassung.
 
 - Der *Ansatzraum* bestimmt den Interpolanten. Polynome vom Grad höchstens
   $n-1$ und kubische Splines liefern verschiedene Kurven durch dieselben
@@ -536,17 +525,6 @@ Das ist Runges Funktion $f(x) = 1/(1 + 25x^2)$ auf $[-1, 1]$
 $n = 5$ über $7{,}2$ bei $n = 15$ auf $257$ bei $n = 25$, während die
 Interpolationsbedingung an jedem einzelnen Knoten exakt erfüllt bleibt.
 Interpolation sagt eben nur etwas über die Stützstellen aus.
-:::
-
-:::frage{falsch}
-Interpolieren wir an den $m+1$ Knoten eines Gitters mit einem kubischen
-Spline, so ist das Gleichungssystem quadratisch.
-
-$\bB$ hat $m+1$ Zeilen, aber $\dim \Scal_3 = m + 3$ Spalten
-(@satz:dimension-des-spline-raums). Bei $m = 10$ Teilintervallen stehen $11$ Gleichungen gegen
-$13$ Unbekannte, es fehlen also genau zwei Bedingungen. Sie kommen aus den
-Randbedingungen, im Standardfall den natürlichen mit $s''(a) = s''(b) = 0$
-(@bemerkung:zwei-bedingungen-fehlen-randbedingungen).
 :::
 
 :::frage{wahr}
@@ -636,9 +614,9 @@ In @eq:approximationsfehler-kubischer-splines steht $\corange{h}^4$, in @satz:fe
 die verdoppelte Teilintervallzahl halbiert $\corange h$. Bei $N$ Knoten gehen
 wir dafür auf $2N-1$ Knoten, wie in der Folge $5,9,17,33$. Halbiertes
 $\corange h$ gibt die Faktoren $2^4=16$ beziehungsweise $2^2=4$. Gemessen
-bestätigen unsere Rechnungen zu $\sin(2\pi x)$ beides:
-$18{,}8$, $16{,}9$ und $16{,}2$ im kubischen Fall gegen $2{,}99$, $3{,}73$
-und $3{,}93$ im linearen.
+bestätigen unsere Rechnungen zu $\sin(2\pi x)$ beides: Die gemessenen
+Faktoren laufen im kubischen Fall gegen $16$, im linearen gegen $4$
+(@beispiel:sinus-auf-dem-einheitsintervall).
 :::
 
 :::frage{falsch}
@@ -662,9 +640,9 @@ monoton.
 Die zweite Hälfte stimmt exakt: Die gemittelte Varianz ist $\sigma^2 K/n$
 (@satz:gemittelte-varianz-eines-linearen), sie wächst also linear. Für den Bias gibt @satz:der-bias-ist-der-approximationsfehler nur die
 obere Schranke $O(K^{-8})$, und die verlangt keine Monotonie. In unserer
-Simulation steigt der quadrierte Bias von $0{,}0344$ bei $K = 8$ auf
-$0{,}1174$ bei $K = 9$, weil die inneren Knoten dort gerade auf die
-Nullstellen von $\sin(3x)$ fallen.
+Simulation steigt der quadrierte Bias von $K = 8$ auf $K = 9$ sogar an, weil
+die inneren Knoten dort gerade auf die Nullstellen von $\sin(3x)$ fallen
+(@bemerkung:der-bias-faellt-nicht-monoton).
 :::
 
 :::frage{falsch}
@@ -710,12 +688,6 @@ $K\asymp n^{1/(8+p)}$ unter den Voraussetzungen von @satz:eine-mse-obergrenze-im
 beliebiges $K$ steht nur die zweigliedrige Schranke @eq:eine-mse-obergrenze-im-multivariaten zur Verfügung:
 $K$ zu klein lässt eine große Bias-Schranke, $K$ zu groß macht die Varianz
 groß.
-:::
-
-:::zahlfrage{loesung=80 toleranz=5}
-Wie viele GB benötigt das Tensorprodukt bei $K=p=10$ für seine Koeffizienten?
-
-$10^{10}$ Koeffizienten mal acht Byte sind $80$ GB.
 :::
 
 ::::

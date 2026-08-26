@@ -96,11 +96,9 @@ $\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. In einem Satz: *Die $j$-te
 ist die lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere
 Ableitungen wie gewohnt iterativ aus, Stufe für Stufe.
 
-*Warum die Operatornorm entscheidend ist.* Setzen wir feste Richtungen
-$\bh_1,\dots,\bh_{j-1}$ ein, folgt aus @eq:k-mal-frechet-differenzierbar eine punktweise Restabschätzung.
-Die Operatornorm verlangt mehr: Der Rest muss gleichmäßig für alle Richtungen mit
-Norm höchstens eins klein werden. Genau diese Gleichmäßigkeit wird später im
-allgemeinen Taylor-Satz gebraucht.
+*Warum die Operatornorm entscheidend ist.* Sie verlangt mehr als eine Restabschätzung für
+feste Richtungen: Der Rest muss gleichmäßig für alle Richtungen mit Norm höchstens eins
+klein werden. Genau diese Gleichmäßigkeit braucht der allgemeine Taylor-Satz.
 
 *Multilinear und beschränkt.* Multilinear heißt: linear in jedem Argument, wenn die
 übrigen festgehalten werden. Solche Abbildungen kennen wir aus
@@ -156,6 +154,8 @@ $$
 = \frac{\partial^2 f(\bx)}{\partial x_j \partial x_i} .
 $$
 :::
+
+:::::vertiefung[Der Beweis: zweimal Mittelwertsatz an derselben doppelten Differenz]
 
 ::::beweis
 
@@ -223,6 +223,8 @@ gegen $\partial_j\partial_i f(\bx)$ beziehungsweise $\partial_i\partial_j f(\bx)
 :::
 
 ::::
+
+:::::
 
 :::bemerkung[#was-die-symmetrie-spart (Was die Symmetrie spart)]
 Aus @satz:satz-von-schwarz folgt sofort
@@ -385,13 +387,13 @@ Das ist ein :k[Tensor]{#tensor} dritter Stufe, wie wir ihn in
 $f \in \Ccal^3$ ist er in allen drei Indizes symmetrisch, sodass wieder nur ein Bruchteil
 davon wirklich zu berechnen ist.
 
-Zwei Kleinigkeiten zur Notation. Erstens laufen Index- und Ableitungsreihenfolge in den
-beiden Definitionen gegenläufig: In $\corange{\bH_f(\bx)_{i,j}}$ wird zuerst nach $x_j$ und
-dann nach $x_i$ abgeleitet, in $\left(\cgreen{D^3_{\bx} f}\right)_{i,j,k}$ dagegen zuerst
-nach $x_i$ und zuletzt nach $x_k$. Solange @satz:satz-von-schwarz zur Verfügung steht, ist das
-folgenlos, sauberer wäre eine einheitliche Wahl. Zweitens ist der Speicherbedarf der
-eigentliche Grund, warum in der Praxis fast nie über die zweite Stufe hinausgegangen wird:
-Ein solcher Tensor verlangt für $n = 1000$ schon eine Milliarde Zahlen.
+Zur Notation halten wir ein für alle Mal fest: Der Index an Position $r$ gehört zum $r$-ten
+Argument, und in welcher Reihenfolge die partiellen Ableitungen ausgeführt werden, spielt
+unter den hier durchgehend vorausgesetzten Stetigkeitsannahmen keine Rolle
+(@satz:satz-von-schwarz für $\Ccal^2$, die entsprechende Symmetrie für $\Ccal^3$). Der
+Speicherbedarf ist dagegen der eigentliche Grund, warum in der Praxis fast nie über die
+zweite Stufe hinausgegangen wird: Ein solcher Tensor verlangt für $n = 1000$ schon eine
+Milliarde Zahlen.
 :::
 
 ### Krümmung, Definitheit und kritische Punkte
@@ -521,6 +523,8 @@ Bedingung an die zweite Ableitung, und das ist der Grund, warum konvexe
 schon ein globales Minimum, und es gibt keine Sattelpunkte, an denen ein Verfahren
 hängenbleiben könnte.
 
+::::vertiefung[Zwei Gegenbeispiele zu den Voraussetzungen offen und konvex]
+
 :::bemerkung[#warum-die-menge-offen-und-konvex-sein (Warum die Menge offen und konvex sein muss)]
 Beide Zusätze in @satz:konvexitaet-und-positive-semidefinitheit werden leicht überlesen, nötig sind sie trotzdem.
 
@@ -539,10 +543,12 @@ $f(\bx) = x_1^2 - x_2^2$. Auf $S$ ist $f(x_1, 0) = x_1^2$, also konvex. Die Hess
 ist überall $\diag(2,-2)$ und damit indefinit. Die Äquivalenz bricht, weil die Bedingung
 an $\corange{\bH_f}$ Information aus Richtungen zieht, die in $S$ gar nicht vorkommen.
 Sobald $S$ offen und konvex ist, stimmt die Äquivalenz.
+:::
+
+::::
 
 Die :k[Konvexität]{#convexity} und was sie für Optimierungsverfahren bedeutet, ist ein
 Thema für sich; @kap:konvexitaet nimmt es sich vor.
-:::
 
 ### Warum das in der Praxis zählt
 
@@ -657,6 +663,8 @@ $\var(\wh{p}) = 0{,}000475$: Nahe am Rand des Parameterbereichs sind die Daten d
 informativer.
 :::
 
+::::vertiefung[Was die Merkregel zur Varianz des ML-Schätzers wirklich sagt]
+
 :::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao, sauber formuliert)]
 Als Merkregel kursiert
 $\var(\wh{\btheta}) \to \corange{\bI(\btheta)}^{-1}$ für $n \to \infty$. Gemeint ist das
@@ -695,6 +703,8 @@ erwartungstreu ist und die Schranke exakt annimmt.
 In allen drei Fassungen bleibt die Merkregel dieselbe: mehr Information, kleinere Varianz,
 präzisere Schätzung.
 :::
+
+::::
 
 ### Vektor zu Vektor
 
@@ -764,24 +774,9 @@ $\corange{\bJ_f(\bx)}\bh$ summiert die Spalten mit den Gewichten $h_i$.
 :::
 
 :::schritt
-Die zweite Zeile ist reine Buchführung über Indexnamen. Wir schreiben beide Seiten
-komponentenweise auf. Für die $a$-te Komponente steht rechts
-
-$$
-\sum_{i=1}^n \left(\frac{\partial \corange{\bJ_f(\bx)}}{\partial x_i}\,\bh_1\right)_{\!a} h_{2,i}
-= \sum_{i=1}^n \sum_{l=1}^n \frac{\partial^2 f_a(\bx)}{\partial x_i \partial x_l}\,
-  h_{1,l}\, h_{2,i}
-$$
-
-und links
-
-$$
-\sum_{i=1}^n \sum_{j=1}^n \frac{\partial^2 f_a(\bx)}{\partial x_j \partial x_i}\,
-h_{1,i}\, h_{2,j} .
-$$
-
-Benennen wir links $i$ in $l$ und $j$ in $i$ um, so stehen zweimal dieselben Summanden. Für
-die dritte Zeile läuft es genauso mit drei Indizes.
+Die zweite und die dritte Zeile sind reine Buchführung über Indexnamen: Schreiben wir beide
+Seiten komponentenweise aus, so stehen nach Umbenennung der Summationsindizes zweimal
+dieselben Summanden.
 
 ::why[Umbenennen gebundener Summationsindizes ändert nichts; der Satz von Schwarz wird hier nirgends gebraucht, die Identität ist rein kombinatorisch]
 :::

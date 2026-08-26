@@ -49,6 +49,13 @@ $$
 $$
 :::
 
+Der Satz sagt: Die Streuung des Kosinus schrumpft wie $1/\sqrt{n}$. In hohen
+Dimensionen drängt sich die Verteilung des Winkels also um $90^\circ$
+zusammen, zufällige Richtungen sind praktisch
+:k[orthogonal]{#orthogonality}.
+
+:::::vertiefung[Woher die Streuung des Kosinus kommt]
+
 ::::beweis
 
 :::schritt
@@ -104,12 +111,7 @@ $$
 
 ::::
 
-Der Satz sagt: Die Streuung des Kosinus schrumpft wie $1/\sqrt{n}$. In hohen
-Dimensionen drängt sich die Verteilung des Winkels also um $90^\circ$
-zusammen, zufällige Richtungen sind praktisch
-:k[orthogonal]{#orthogonality}.
-
-:::beispiel[#wie-senkrecht-ist-fast-senkrecht (Wie senkrecht ist fast senkrecht?)]
+::::beispiel[#wie-senkrecht-ist-fast-senkrecht (Wie senkrecht ist fast senkrecht?)]
 Für $n = 10\,000$ ist $\var[\cos\theta] = 10^{-4}$, die Standardabweichung
 also $0{,}01$. Mit $t = 5$ liefert @satz:zufallsrichtungen-stehen-fast-senkrecht
 
@@ -121,7 +123,9 @@ mit Wahrscheinlichkeit mindestens $96\,\%$ liegt der Winkel also zwischen
 $87{,}1^\circ$ und $92{,}9^\circ$. Zum Vergleich: Für $n = 100$ erlaubt
 dieselbe Schranke noch $\left|\cos\theta\right| \le 0{,}5$, also jeden Winkel
 zwischen $60^\circ$ und $120^\circ$. Die Aussage lebt von großem $n$.
-:::
+::::
+
+:::::
 
 Damit wird plausibel, was wir eigentlich vorhaben. Ziehen wir $m$ solcher
 Richtungen und schreiben sie als Zeilen in eine Matrix, so stehen je zwei
@@ -206,8 +210,6 @@ Wie weit eine einzelne Ziehung danebenliegen kann, führt das Widget vor.
 Verändern wir die Zeilenzahl und vergleichen wir mehrere Ziehungen.
 
 <SketchingDemo />
-
-Das Widget ordnet die beobachtete Abweichung als typische Streuung ein.
 :::
 
 ::::quiz
@@ -319,6 +321,14 @@ $1 - \delta$.
 
 ::::
 
+Weil $\bS$ linear ist, gilt @satz:zufaellige-einbettung-eines-festen mit
+$\cgreen{\bx} - \cgreen{\by}$ sofort auch für Abstände, und Wurzelziehen macht
+aus der Aussage über $\left\|\cblue{\bS\bx}\right\|^2$ eine über die Länge
+selbst: Aus $\corange{\eps} = 0{,}1$ im Quadrat werden rund $5\,\%$ in der
+Länge. Damit gilt die Abstandsaussage aus
+@definition:sketching-matrix-und-skizze.
+
+::::vertiefung[Warum Cauchy-Schwarz zu grob ist und wie aus Quadraten Längen werden]
 :::bemerkung[#warum-die-momentenbedingung-an-der (Warum die Momentenbedingung an der Projektion ansetzt)]
 Die Varianz in Schritt 3 ließe sich auch bequemer abschätzen, nämlich über die
 :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
@@ -357,10 +367,14 @@ Längen und Abstände.
   Vereinigungsschranke geht das, kostet aber $\delta \to 2\delta/(N(N-1))$
   und damit ein deutlich größeres $m$.
 :::
+::::
 
 Winkel behandelt der Satz zunächst gar nicht. Sie folgen aber, denn
-Skalarprodukte lassen sich aus Längen zurückgewinnen.
+Skalarprodukte lassen sich über die Polarisationsformel aus Längen
+zurückgewinnen; damit ist auch die Winkelaussage aus
+@definition:sketching-matrix-und-skizze gerechtfertigt.
 
+:::::vertiefung[Wie die Winkeltreue aus der Längentreue folgt]
 :::korollar[#skalarprodukte-bleiben-erhalten (Skalarprodukte bleiben erhalten)]
 Seien $\bx, \by \in \R^n$ fest und $\bS$ wie in @satz:zufaellige-einbettung-eines-festen. Dann gilt mit
 Wahrscheinlichkeit mindestens $1 - 2\delta$
@@ -405,8 +419,9 @@ $$
 
 Für Einheitsvektoren steht rechts schlicht $\corange{\eps}$. Der Kosinus des
 Winkels ist das Skalarprodukt der normierten Vektoren, und Zähler wie Nenner
-werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen. Damit ist auch
-die Winkelaussage aus @definition:sketching-matrix-und-skizze gerechtfertigt.
+werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen.
+
+:::::
 
 :::bemerkung[#ein-fester-vektor-ist-nicht-jeder-vektor (Ein fester Vektor ist nicht jeder Vektor)]
 Das Wort „fest" in @satz:zufaellige-einbettung-eines-festen trägt Gewicht. Verschöbe man den Quantor „für
@@ -559,10 +574,10 @@ $$
 
 Mit $m = 6000$ Dimensionen bleibt der Abstand eines vorher festgelegten
 Punktepaares mit Wahrscheinlichkeit $95\,\%$ auf $10\,\%$ genau erhalten,
-gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$
-(@bemerkung:von-quadraten-zu-laengen-und-abstaenden). Der Speicher sinkt von $10\,000$ auf $6000$ Zahlen je
-Punkt, ein Faktor $n/m \approx 1{,}7$,
-und eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
+gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$, denn
+$\sqrt{1 \pm 0{,}1}$ weicht von $1$ nur um rund $5\,\%$ ab. Der Speicher sinkt
+von $10\,000$ auf $6000$ Zahlen je Punkt, ein Faktor $n/m \approx 1{,}7$, und
+eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
 Operationen, ebenfalls ein Faktor $n/m$. Davon leben die typischen
 Anwendungen: die Suche nach nächsten Nachbarn und die Clusteranalyse
 in hohen Dimensionen. Beide berühren die Daten fast nur über Abstände, und
@@ -575,18 +590,21 @@ und bei $\corange{\eps} = 0{,}1$ nur $\delta = 3/(600 \cdot 0{,}01) = 0{,}5$,
 also die Verlässlichkeit eines Münzwurfs.
 :::
 
-:::bemerkung[#zwei-nachtraege-zur-rechnung (Zwei Nachträge zur Rechnung)]
-Zwei Nachträge zu dieser Rechnung. Der erste betrifft den Gewinn, und dabei
-lohnt der Blick darauf, was genau gerechnet wird: Eine einzelne euklidische
+:::bemerkung[#zwei-nachtraege-zur-rechnung (Was der Gewinn wirklich ist)]
+Ein Nachtrag zu dieser Rechnung, und dabei lohnt der Blick darauf, was genau
+gerechnet wird: Eine einzelne euklidische
 Distanz kostet $O(n)$ Operationen, der Gewinn ist deshalb der Faktor
 $n/m \approx 1{,}7$ und nicht sein Quadrat. Quadratisch in der Dimension sind
 nur bestimmte Verfahren, etwa das Aufstellen einer
 :k[Kovarianzmatrix]{#covariance-matrix}, und nur dort schlägt $(n/m)^2$ zu
 Buche.
+:::
 
-Der zweite betrifft das $m$ selbst: Warum wird in der Praxis trotzdem mit
-Werten in der Größenordnung einiger hundert gearbeitet? Der Grund ist unser
-Werkzeug: Tschebyscheff benutzt nur zwei Momente und ist entsprechend grob.
+:::vertiefung[Warum in der Praxis viel kleinere Skizzen genügen]
+Warum wird in der Praxis mit Skizzengrößen in der Größenordnung einiger
+hundert gearbeitet, wo die Rechnung oben $m = 6000$ verlangt? Der Grund ist
+unser Werkzeug: Tschebyscheff benutzt nur zwei Momente und ist entsprechend
+grob.
 Wie grob, lässt sich für Gauss-Skizzen ausnahmsweise exakt sagen. Nach @beispiel:sketching-zweier-vektoren-mit-10-000 ist
 $\left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$ dort $\chi^2_m/m$-verteilt,
 und deren Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und

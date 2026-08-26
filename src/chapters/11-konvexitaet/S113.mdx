@@ -126,13 +126,10 @@ zweielementige Menge $\cred{\{-1, +1\}} \subseteq \R$ mit $\bx = 0$: zwei nächs
 
 *Endliche Dimension.* Die Abgeschlossenheit allein trägt die Existenz nicht. Sie sorgt dafür,
 dass der Grenzwert einer Minimierungsfolge wieder in der Menge liegt; dass die Folge überhaupt
-konvergiert, ist die eigentliche Arbeit. In endlicher Dimension besorgt es
-Bolzano-Weierstraß, wie oben. Der Satz gilt auch in unendlichdimensionalen Räumen, dort
-allerdings nur, wenn der Raum *vollständig* ist. Der Beweis läuft dann anders: Mit der
-Parallelogrammgleichung sehen wir, dass jede Minimierungsfolge eine Cauchy-Folge ist. Dieselbe
-Rechnung wie in Schritt 5 taucht dort wieder auf, denn die Identität
-$\left\|\bx - \tfrac{1}{2}(\ba+\bb)\right\|^2 = \tfrac{1}{2}\left\|\bx-\ba\right\|^2 + \tfrac{1}{2}\left\|\bx-\bb\right\|^2 - \tfrac{1}{4}\left\|\ba-\bb\right\|^2$
-ist nichts anderes als die Parallelogrammgleichung.
+konvergiert, ist die eigentliche Arbeit, und in endlicher Dimension besorgt es
+Bolzano-Weierstraß. In unendlichdimensionalen Räumen gilt der Satz ebenfalls, dort allerdings
+nur für *vollständige* Räume, und die Rechnung aus Schritt 5 wird dann zur
+Parallelogrammgleichung, mit der sich jede Minimierungsfolge als Cauchy-Folge erweist.
 :::
 
 Der nächstgelegene Punkt lässt sich auch ohne Minimierung erkennen. Das folgende Kriterium
@@ -149,6 +146,32 @@ $$ {#eq-kriterium-des-stumpfen-winkels}
 \qquad \text{für alle } \by \in \cblue{\Xcal} .
 $$
 :::
+
+Abgeschlossenheit und endliche Dimension braucht dieses Kriterium nicht. Es sagt allerdings
+auch nichts darüber, ob ein nächstgelegener Punkt existiert; es erkennt ihn nur, wenn es ihn
+gibt.
+
+Geometrisch sagt @eq:kriterium-des-stumpfen-winkels für $\bx \notin \cblue{\Xcal}$: Der Vektor
+von der Projektion zu $\bx$ und der Vektor von der Projektion zu einem beliebigen weiteren
+Punkt $\by \neq \corange{\wh{\bx}}$ der Menge schließen einen Winkel von mindestens
+$90^\circ$ ein. Die ganze Menge liegt also auf einer Seite der Geraden (im $\R^n$: der
+:k[Hyperebene]{#hyperplane}) durch $\corange{\wh{\bx}}$, die senkrecht auf
+$\bx - \corange{\wh{\bx}}$ steht. Liegt $\bx$ dagegen selbst in $\cblue{\Xcal}$, so ist
+$\bx - \corange{\wh{\bx}} = \bnull$ und von einem Winkel keine Rede mehr.
+
+Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird aus
+@eq:kriterium-des-stumpfen-winkels eine Gleichung. Mit $\by = \corange{\wh{\bx}} \pm \bu$ für
+beliebiges $\bu \in \Ucal$ liefert @eq:kriterium-des-stumpfen-winkels nämlich
+$\pm\langle \bx - \corange{\wh{\bx}}, \bu\rangle \le 0$, also
+$\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann wirklich senkrecht
+auf dem ganzen Unterraum, und aus dieser Bedingung entstehen die Normalgleichungen der
+Kleinsten Quadrate aus @sec:kq/problem. Für eine konvexe Menge bleibt davon die Ungleichung
+übrig, und die reicht aus.
+
+:::::vertiefung[Der Beweis des Winkelkriteriums und zwei Projektionsformeln]
+Der Beweis ist eine Rechnung mit demselben quadratischen Ausdruck wie im
+Eindeutigkeitsteil oben; die beiden Formeln danach zeigen, wie eine Projektion aussieht, wenn
+man sie ausnahmsweise hinschreiben kann.
 
 ::::beweis
 
@@ -192,29 +215,10 @@ verschwindet.
 
 ::::
 
-Abgeschlossenheit und endliche Dimension braucht dieses Kriterium nicht. Es sagt allerdings
-auch nichts darüber, ob ein nächstgelegener Punkt existiert; es erkennt ihn nur, wenn es ihn
-gibt. Die Eindeutigkeit fällt dagegen ab: Erfüllen $\corange{\wh{\bx}_1}$ und
+Die Eindeutigkeit fällt nebenbei ab: Erfüllen $\corange{\wh{\bx}_1}$ und
 $\corange{\wh{\bx}_2}$ beide @eq:kriterium-des-stumpfen-winkels, so setzen wir einmal $\by = \corange{\wh{\bx}_2}$ und
 einmal $\by = \corange{\wh{\bx}_1}$ ein und addieren die beiden Ungleichungen. Übrig bleibt
 $\left\|\corange{\wh{\bx}_2} - \corange{\wh{\bx}_1}\right\|^2 \le 0$.
-
-Geometrisch sagt @eq:kriterium-des-stumpfen-winkels für $\bx \notin \cblue{\Xcal}$: Der Vektor von der Projektion zu
-$\bx$ und der Vektor von der Projektion zu einem beliebigen weiteren Punkt
-$\by \neq \corange{\wh{\bx}}$ der Menge schließen einen Winkel von mindestens $90^\circ$ ein.
-Die ganze Menge liegt also auf einer Seite der Geraden (im $\R^n$: der
-:k[Hyperebene]{#hyperplane}) durch $\corange{\wh{\bx}}$, die senkrecht auf
-$\bx - \corange{\wh{\bx}}$ steht. Liegt $\bx$ dagegen selbst in $\cblue{\Xcal}$, so ist
-$\bx - \corange{\wh{\bx}} = \bnull$ und von einem Winkel keine Rede mehr.
-
-Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird aus @eq:kriterium-des-stumpfen-winkels eine
-Gleichung. Mit
-$\by = \corange{\wh{\bx}} \pm \bu$ für beliebiges $\bu \in \Ucal$ liefert @eq:kriterium-des-stumpfen-winkels nämlich
-$\pm\langle \bx - \corange{\wh{\bx}}, \bu\rangle \le 0$, also
-$\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann wirklich senkrecht
-auf dem ganzen Unterraum, und aus dieser Bedingung entstehen die Normalgleichungen der
-Kleinsten Quadrate aus @sec:kq/problem. Für eine konvexe Menge bleibt davon
-die Ungleichung übrig, und die reicht aus.
 
 :::beispiel[#zwei-projektionen-die-wir-hinschreiben (Zwei Projektionen, die wir hinschreiben können)]
 Selten lässt sich die Projektion in einer Formel angeben; in diesen beiden Fällen geht es.
@@ -248,6 +252,7 @@ Für ein Dreieck oder ein Polyeder gibt es keine solche Formel mehr. Dort rechne
 Projektion auf jede Seite einzeln aus, jeweils auf diese Seite beschränkt, und nehmen die
 beste; Ecken sind damit von selbst abgedeckt. Genau so rechnet das Widget unten.
 :::
+:::::
 
 :::interaktiv[Die Projektion zum Ziehen]
 In dieser Skizze ist der Punkt beweglich. Zwei Fragen lassen sich damit klären:
@@ -400,11 +405,10 @@ Ein einziges schlechtes Paar erledigt die Konvexität, während noch so viele ge
 sie nicht beweisen. Die Doppelmulde führt beides vor. In der Voreinstellung $x = -1{,}55$ und
 $y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die Sache entschieden.
 Rücken wir dagegen beide Endpunkte in denselben Talgrund, etwa auf $x = -1{,}8$ und
-$y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts. Über das
-Reglerraster gerechnet bestehen $1110$ der $3081$ Paare, und nur die Hälfte davon liegt ganz
-in einem der beiden konvexen Äste; die Probe kann also auch über den Höcker hinweg gelingen.
-Beim Betrag deckt die grüne Sehne den Graphen bei $1482$ Paaren vollständig ab, dort steht in
-@eq:konvexitaet-als-ungleichung Gleichheit, und genau daran unterscheiden sich konvex und strikt konvex.
+$y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts. Beim Betrag deckt
+die grüne Sehne den Graphen auf jedem Paar mit gleichem Vorzeichen vollständig ab, dort steht
+in @eq:konvexitaet-als-ungleichung Gleichheit, und genau daran unterscheiden sich konvex und
+strikt konvex.
 
 ### Nachweis von Hand: der Betrag
 
@@ -646,7 +650,7 @@ zwei gebraucht: die absolute Homogenität und die Dreiecksungleichung. Die Defin
 ($f(\bx) = 0 \implies \bx = \bnull$) geht nirgends ein. Der Beweis trägt deshalb auch für
 Halbnormen, und für $n = 1$ ist er wörtlich der aus @beispiel:der-betrag-ist-konvex.
 
-::why[die drei Normeigenschaften stehen als @definition:matrixnorm in Kapitel 3, dort für Matrizen formuliert; @bemerkung:bemerkung-3-2-2 hält fest, dass es dieselben Axiome sind]
+::why[die drei Normeigenschaften stehen als @definition:matrixnorm in @kap:matrix-spur-norm, dort für Matrizen formuliert; @bemerkung:bemerkung-3-2-2 hält fest, dass es dieselben Axiome sind]
 :::
 
 ::::
@@ -701,43 +705,22 @@ $\bw^\top(\bA^\top\bA + \lambda\bI)\bw = \left\|\bA\bw\right\|^2 + \lambda\left\
 für $\bw \neq \bnull$. Nach @satz:quadratische-funktionen ist $f_\lambda$ also strikt konvex, und die Lösung ist
 eindeutig, auch bei rangdefizientem $\bA$. Die Rechnung dazu, samt Gradient, steht in
 @beispiel:ridge-regression.
+
+Der Strafterm hebt dabei alle Eigenwerte um $\lambda$ an und drückt so die
+:k[Konditionszahl]{#condition-number}: Das rangdefiziente $\bA^\top\bA$ von oben hat die
+Eigenwerte $28$ und $0$, $\kappa_2$ ist also unendlich; mit $\lambda = 1$ stehen dort $29$ und
+$1$, und $\kappa_2$ fällt auf $29$.
 :::
 
-:::bemerkung[#kruemmung-kondition-und-ein-ausblick (Krümmung, Kondition und ein Ausblick)]
 An der quadratischen Form hängt mehr als die Frage konvex oder nicht. Für
 $f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ ist die
 :k[Hesse-Matrix]{#hessian-matrix} überall dieselbe, nämlich
 $\bH_f = \bQ + \bQ^\top = 2\bQ_{\mathrm{sym}}$, und ihre Eigenwerte messen die Krümmung in den
-Hauptrichtungen (@sec:differentialrechnung/hoehere-ableitungen). Für eine allgemeine zweimal
-stetig differenzierbare Funktion gilt dasselbe lokal, weil die Taylorentwicklung zweiter
-Ordnung genau eine solche Quadrik ist. Daran hängt eine Reihe von Beobachtungen,
-die wir der Reihe nach durchgehen.
-
-Liegen die Eigenwerte weit auseinander, so krümmt sich $f$ in einer Richtung stark und in einer
-anderen kaum. Für positiv definites $\bH_f$ misst das die Konditionszahl
-$\kappa_2(\bH_f) = \lambda_{\max}/\lambda_{\min}$, die für symmetrische Matrizen genau die aus
-@sec:matrix-spur-norm/eigenschaften ist. Die Höhenlinien sind dann lang gestreckte
-Ellipsen, und Verfahren, die dem Gradienten folgen, laufen im Zick-Zack durch das Tal statt
-hindurch (@sec:optim/nelder-mead-gradient).
-
-Eigenwerte nahe null bedeuten flache Richtungen: Dort ändert sich der Zielwert kaum, und die
-Lösung ist schlecht bestimmt. Negative Eigenwerte treten bei konvexem $f$ gar nicht erst auf;
-wo sie auftauchen, kippt die Funktion in einer Richtung nach unten weg, und wir stehen an einer
-Kuppe oder einem Sattel. In der Statistik ist das keine Randnotiz, denn die negative
-Hesse-Matrix der Log-Likelihood ist die beobachtete Fisher-Information, aus der die
-Standardfehler kommen. Flache Richtungen heißen breite Konfidenzintervalle. Ein Strafterm wie
-in @beispiel:kleinste-quadrate-und-ridge hebt alle Eigenwerte um $\lambda$ an und drückt damit die
-Konditionszahl. Im üblichen linearen Modell senkt Ridge gegenüber Kleinsten Quadraten außerdem
-die Varianz in den Singulärrichtungen, erkauft das aber mit einer Verzerrung. Das
-rangdefiziente $\bA^\top\bA$ von dort hat die Eigenwerte $28$ und $0$, die Konditionszahl ist
-also unendlich; mit $\lambda = 1$ stehen dort $29$ und $1$, und $\kappa_2$ fällt auf $29$.
-
-Auch die Optimierung liest das Spektrum mit. Newton-Verfahren mit Liniensuche oder mit
-Vertrauensbereich bemessen ihre Schrittweite daran, und im Deep Learning werden die Eigenwerte
-gelegentlich von Hand gestutzt, um das Training zu stabilisieren; beides gehört in
-@sec:optim/newton-sgd. Wie sich Konvexität und Krümmung
-genau zueinander verhalten, klärt @sec:eigenschaften.
-:::
+Hauptrichtungen (@sec:differentialrechnung/hoehere-ableitungen); Eigenwerte nahe null bedeuten
+flache Richtungen, in denen die Lösung schlecht bestimmt ist. In der Statistik ist das keine
+Randnotiz, denn die negative Hesse-Matrix der Log-Likelihood ist die beobachtete
+Fisher-Information, aus der die Standardfehler kommen. Wie sich Konvexität und Krümmung genau
+zueinander verhalten, klärt @sec:eigenschaften.
 
 *Vertiefung: Boyd und Vandenberghe, Convex Optimization, Kapitel 3 führt konvexe Funktionen
 über dieselbe Ungleichung ein, sammelt die Beispiele (Normen, quadratische Funktionen) und

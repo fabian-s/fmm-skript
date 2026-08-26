@@ -28,8 +28,10 @@ $\cred{\text{ersten Summanden}}$ vor: den Fehler, den der Algorithmus
 :k[Gleitkomma]{#floating-point}-Operation, durch
 abgebrochene Reihen, durch geschätzte Zwischengrößen. Dieser Anteil hängt nicht vom
 Inputfehler ab; er entsteht, selbst wenn der Input exakt ist. Ganz analog zur
-Kondition geben wir ihm einen Namen:
+Kondition geben wir ihm einen Namen: Ist er „klein", nennen wir den Algorithmus
+$\wt{f}$ *stabil*. Was „klein" heißt, lässt sich präzise fassen.
 
+::::vertiefung[Vorwärts- und Rückwärtsstabilität, präzise]
 :::definition[#vorwaerts-und-rueckwaertsstabilitaet (Vorwärts- und Rückwärtsstabilität)]
 Sei $f$ ein Problem, $\wt f$ ein Gleitkomma-Algorithmus und
 $\wh{\by}=\wt f(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
@@ -58,9 +60,11 @@ Die Konstanten in den $O$-Aussagen dürfen von Dimension und Algorithmus abhäng
 sollen aber nicht durch eine vermeidbare numerische Katastrophe riesig werden.
 Rückwärtsstabilität bedeutet besonders anschaulich: Das berechnete Ergebnis ist die
 exakte Lösung eines nur geringfügig gestörten Problems. Zusammen mit der Kondition
-liefert das typischerweise eine Vorwärtsfehlerschranke. Wichtig ist die Arbeitsteilung:
-Die
-*Kondition* ist eine Eigenschaft des *Problems*, die wir nicht wählen
+liefert das typischerweise eine Vorwärtsfehlerschranke.
+::::
+
+Wichtig ist die Arbeitsteilung: Die *Kondition* ist eine Eigenschaft des
+*Problems*, die wir nicht wählen
 können. Die *Stabilität* ist eine Eigenschaft des *Algorithmus*, und
 den wählen wir sehr wohl. Deshalb lohnt sich dieser Abschnitt: Für dasselbe
 Problem können zwei mathematisch äquivalente Rechenwege dramatisch unterschiedlich
@@ -99,19 +103,14 @@ konvergiert und wogegen, hängt zusätzlich von Annahmen an $L$, an die
 Gradientenschätzung und an den Lernratenplan ab.
 :::
 
-Praktische Techniken adressieren unterschiedliche Mechanismen: *Gradient Clipping*
-begrenzt große Updates, Lernratenpläne steuern die Iterationsdynamik, und Verfahren
-für *Mixed Precision Training* schützen besonders empfindliche Rechenschritte vor
-Rundungsproblemen. Diese Maßnahmen sind nicht untereinander austauschbar.
-
-Wie deutlich ist dieser Umschlag? Machen wir das Modell so klein, dass wir es ganz überblicken:
+:::interaktiv[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
+Wie scharf ist der Umschlag von Konvergenz zu Divergenz? Machen wir das Modell so klein, dass
+wir es ganz überblicken:
 $L(\theta) = \theta^2$ mit exaktem Gradienten $2\theta$, Start bei
 $\theta_0 = 2{,}5$. Ab welcher Lernrate laufen die Iterierten nicht mehr auf das
 Minimum zu, sondern davon weg?
 
-:::interaktiv[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
 <SgdLernratenDemo />
-:::
 
 Die Rechnung dahinter passt in eine Zeile. Ohne Rauschen ist
 $\theta_{k+1} = \theta_k - \alpha \cdot 2\theta_k = (1 - 2\alpha)\,\theta_k$,
@@ -122,6 +121,7 @@ bei $\alpha = 0{,}5$, Oszillation mit schrumpfender Amplitude für
 $0{,}5 < \alpha < 1$, und ab $\alpha > 1$ Divergenz. Die Schwelle ist
 keine Eigenschaft von SGD, sondern der Krümmung von $L$: Für
 $L(\theta) = \tfrac{c}{2}\theta^2$ läge sie bei $\alpha = 2/c$.
+:::
 
 ### Zusammengesetzte Algorithmen: die wichtigste Erkenntnis
 
@@ -242,6 +242,13 @@ $$
 $$
 :::
 
+Der Beweis ist Schritt für Schritt der von @beispiel:aufgabe-kondition-der-summe, nur mit
+$(1, -1)^\top$ statt $(1, 1)^\top$: Auch dort liefert die Cauchy-Schwarz-Ungleichung
+$\kappa_{abs} = \sqrt{2}$, und die Division durch
+$\left| h(\cred{a}, \cblue{b}) \right| = \left|\cred{a} - \cblue{b}\right|$ ergibt die
+Behauptung.
+
+:::::vertiefung[Die Rechnung im Detail]
 ::::beweis
 
 :::schritt
@@ -269,6 +276,7 @@ $$
 :::
 
 ::::
+:::::
 
 Die Formel sagt präzise, wann es gefährlich wird: Sind $\cred{a}$ und
 $\cblue{b}$ *groß*, liegen aber *nah beieinander*
@@ -288,7 +296,7 @@ $$
 :k[katastrophale Auslöschung]{#cancellation} aus
 @sec:algos/probleme-algorithmen.
 Dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
-die Formel kippt. Und die Merkregel 4.3.4 erklärt, warum $\wt{f}_1$
+die Formel kippt. Und @bemerkung:was-folgt-daraus-und-was-nicht erklärt, warum $\wt{f}_1$
 so viel besser dasteht: Auch $\wt{f}_1$ subtrahiert fast gleich große
 Zahlen ($x_i - \bar{x}$ mit $x_i \approx \bar{x} \approx c$),
 aber dieser schlecht konditionierte Schritt kommt *zuerst* und arbeitet auf
@@ -330,21 +338,18 @@ Rundungsschritt der Zwischenergebnisse – mit den Daten hat diese Zahl nichts
 mehr zu tun.
 :::
 
+:::interaktiv[Wie schlimm wird es? Der κ-Rechner für den letzten Schritt]
 Bei $c = 10^{10}$ ging alles verloren. Aber wo genau liegt die Grenze? Anders
 gefragt: Ab welcher Verschiebung $c$ frisst die Kondition des letzten Schritts die
 16 Dezimalstellen doppelter Genauigkeit auf?
 
-:::interaktiv[Wie schlimm wird es? Der κ-Rechner für den letzten Schritt]
 <KappaRechner />
-:::
 
 Der Rechner macht die Faustregel aus @bemerkung:interpretation zur Ablesehilfe:
 $\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
 $c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ genau 16, und
-darüber bleibt nichts mehr übrig. Das deckt sich mit @beispiel:die-instabilitaet-in-r: Bei
-$c = 10^{10}$ liegt der erwartete relative Fehler bei
-$\corange{\kappa_{rel}} \cdot \eps \approx 4 \cdot 10^4$, und genau in dieser
-Größenordnung landet die Verschiebungsformel auch.
+darüber bleibt nichts mehr übrig – im Einklang mit @beispiel:die-instabilitaet-in-r.
+:::
 
 ### Selbsttest
 

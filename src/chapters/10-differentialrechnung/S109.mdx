@@ -12,51 +12,29 @@ sobald Ein- und Ausgabe keine Zahlen mehr sind.
 1. **Die Fréchet-Ableitung** ist eine beschränkte lineare Abbildung
    $\cgreen{D_x f}$ mit
    $\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{o(\left\|h\right\|)}$
-   (@definition:frechet-ableitung, @sec:linearisierung). Linear ist dabei die
-   Abhängigkeit von $h$, über die Abhängigkeit von der Stelle $x$ sagt die
-   Definition nichts (@bemerkung:was-hier-eigentlich-linear-ist). Im Eindimensionalen ist das genau die
-   vertraute Ableitung, in drei gleichwertigen Fassungen (@satz:ableitung-als-lineare-approximation); in
-   endlich-dimensionalen Räumen ist die Beschränktheit ohnehin automatisch
-   erfüllt (@bemerkung:linearisierung-wie-die-definition-zu-lesen-ist).
+   (@definition:frechet-ableitung). Linear ist die Abhängigkeit von $h$, nicht die
+   von der Stelle $x$ (@bemerkung:was-hier-eigentlich-linear-ist).
 
 2. **Der :k[Gradient]{#gradient}** sammelt die
    :k[partiellen Ableitungen]{#partial-derivative} einer skalarwertigen Funktion
-   als *Zeile*, $\corange{\nabla f(\bx)} \in \R^{1 \times n}$
-   (@definition:gradient, @sec:gradient), und der Ableitungsterm ist
-   $\cgreen{D_{\bx} f(\bh)} = \corange{\nabla f(\bx)}\,\bh$. Verschwindet er
-   nicht, so zeigt er transponiert in die Richtung des stärksten Anstiegs, und
-   $\left\|\corange{\nabla f(\bx)}\right\|$ ist die Steigung dorthin
-   (@satz:richtung-des-staerksten-anstiegs). Daran hängt der
-   :k[Gradientenabstieg]{#gradient-descent} (@algorithmus:gradient-gradientenabstieg), und daher
-   auch das $^\top$ in seinem Update (@bemerkung:warum-in-gleichung-10-2-4-ein).
+   als *Zeile* (@definition:gradient); transponiert zeigt er in die Richtung des
+   stärksten Anstiegs (@satz:richtung-des-staerksten-anstiegs), und daran hängt der
+   :k[Gradientenabstieg]{#gradient-descent} (@algorithmus:gradient-gradientenabstieg).
 
-3. **Die Jacobimatrix** stapelt diese Zeilen: Für $f\colon \R^n \to \R^m$ ist
-   $\corange{\bJ_f(\bx)} \in \R^{m \times n}$, und Zeile $i$ ist der Gradient
-   der $i$-ten Komponentenfunktion (@definition:jacobimatrix,
-   @sec:jacobi). Vier Bausteine (@satz:jacobimatrizen-der-grundbausteine) und die
-   Kettenregel als gewöhnliches Matrixprodukt
-   $\corange{\bJ_f(g(\bx))}\,\corange{\bJ_g(\bx)}$ (@satz:kettenregel-fuer-jacobimatrizen) reichen für
-   fast jede Rechnung dieses Kapitels; bei quadratischer Jacobimatrix misst
-   $\left|\det \corange{\bJ_f(\bx)}\right|$, wie stark sich Flächen und Volumina
-   lokal ändern (@bemerkung:wie-stark-die-flaeche-verzerrt-wird), und die Auswertung der Kette von links ist die
-   Backpropagation im Training :k[neuronaler Netze]{#neural-network}
-   (@bemerkung:wie-die-kette-ausgewertet-wird).
+3. **Die Jacobimatrix** stapelt diese Zeilen (@definition:jacobimatrix); vier
+   Bausteine (@satz:jacobimatrizen-der-grundbausteine) und die Kettenregel als
+   Matrixprodukt (@satz:kettenregel-fuer-jacobimatrizen) reichen für fast jede
+   Rechnung dieses Kapitels.
 
 4. **Skalar zu Matrix** heißt: jeden Eintrag einzeln ableiten und stehen lassen,
-   wo er steht (@definition:ableitung-einer-matrixwertigen-funktion, @sec:matrixableitungen). Für Kennzahlen
-   eines *quadratischen* $\cblue{\bF(x)}$ gibt es geschlossene Formeln, für die
-   :k[Spur]{#trace}, die :k[Determinante]{#determinant} und die
-   :k[Inverse]{#matrix-inverse} (@satz:identitaeten-fuer-skalar-zu-matrix). Zwei davon braucht die
-   Score-Funktion eines multivariaten Normalmodells (@bemerkung:warum-das-in-der-statistik-gebraucht).
+   wo er steht (@definition:ableitung-einer-matrixwertigen-funktion); für Spur,
+   Determinante und Inverse eines quadratischen $\cblue{\bF(x)}$ gibt es
+   geschlossene Formeln (@satz:identitaeten-fuer-skalar-zu-matrix).
 
 5. **Matrix zu Skalar** läuft ebenfalls eintragsweise, und der Ableitungsterm
-   ist das Frobenius-Skalarprodukt
-   $\cgreen{D_{\bX} f(\bH)} = \tr\bigl(\corange{(\partial f(\bX)/\partial \bX)}^\top \bH\bigr)$
-   (@definition:ableitung-nach-einer-matrix, @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt). Drei Identitäten decken die häufigsten
-   Fälle ab (@satz:identitaeten-fuer-matrix-zu-skalar), und bei der
-   :k[Rang-$k$-Approximation]{#low-rank-approximation} einer lückenhaften Matrix
-   liefert genau dieser Fall die beiden Gradienten, von denen der
-   Gradientenabstieg lebt (@satz:gradienten-der-completion, @algorithmus:gradientenabstieg-fuer-matrix-completion).
+   ist das Frobenius-Skalarprodukt (@definition:ableitung-nach-einer-matrix,
+   @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt); drei Identitäten decken
+   die häufigsten Fälle ab (@satz:identitaeten-fuer-matrix-zu-skalar).
 :::
 
 Zwei Anordnungen laufen dabei nebeneinander her. Solange nur Skalare und
@@ -77,66 +55,40 @@ Bausteine sind dabei entstanden, und alle vier gehen auf dieselbe Gleichung
 zurück, auf die lineare Approximation aus @definition:frechet-ableitung.
 
 :::bemerkung[#vier-bausteine-die-bleiben (Vier Bausteine, die bleiben)]
-1. **Eigenschaften: Stetigkeit und Linearität**
-   (@sec:stetigkeit). Ist $f$ in $\bx$ differenzierbar, so ist $f$
-   dort auch :k[stetig]{#continuity} (@satz:stetigkeit-aus-differenzierbarkeit). Die Umkehrung ist falsch,
-   und der Knick von $\left|x\right|$ ist das Standardbeispiel dafür
-   (@beispiel:die-betragsfunktion-am-nullpunkt, @bemerkung:die-merkregel-und-ihre-kontraposition). Die zweite Eigenschaft gehört nicht
-   einer einzelnen Funktion, sondern der Zuordnung
-   $f \mapsto \cgreen{D_{\bx} f}$: Sie ist linear (@satz:linearitaet-der-ableitungsoperation). In den fünf
-   Formaten aus @bemerkung:fuenf-begriffe-die-bleiben heißt das jeweils dasselbe: Das zuständige
-   Ableitungsobjekt, von der gewöhnlichen Ableitung bis zur Ableitung nach einer
-   Matrix, wird eintragsweise addiert und skaliert (@bemerkung:fuenf-spezialfaelle-derselben-aussage).
+1. **Eigenschaften** (@sec:stetigkeit). Differenzierbar zieht stetig nach sich
+   (@satz:stetigkeit-aus-differenzierbarkeit), umgekehrt nicht
+   (@beispiel:die-betragsfunktion-am-nullpunkt). Die Zuordnung
+   $f \mapsto \cgreen{D_{\bx} f}$ ist linear
+   (@satz:linearitaet-der-ableitungsoperation), in jedem der fünf Formate
+   (@bemerkung:fuenf-spezialfaelle-derselben-aussage).
 
-2. **Rechenregeln: Produkt- und Kettenregel**
-   (@sec:produkt-kettenregel). Die Produktregel gilt für jede beschränkte
-   bilineare Multiplikation $\inner{\cdot, \cdot}$ (@definition:beschraenkte-bilineare-abbildung,
-   @satz:produktregel), also für Skalarprodukt, Matrixprodukt und Spurausdrücke
-   gleichermaßen. Die Kettenregel ist ohne Koordinaten schlicht eine
-   :k[Verkettung]{#function-composition},
-   $\cgreen{D_{\bx}(g \circ f)} = \cgreen{D_{\by} g} \circ \cgreen{D_{\bx} f}$
-   (@satz:kettenregel); in Koordinaten wird daraus das Matrixprodukt der
-   Jacobimatrizen aus @satz:kettenregel-fuer-jacobimatrizen. Beide Regeln zusammen liefern den Gradienten
-   der Ridge-Regression (@beispiel:ridge-regression) und den des logistischen Verlusts,
-   $\corange{\nabla\ell(\bbeta)} = (\wh{y} - y)\bx^\top$ (@beispiel:gradient-des-logistischen-verlusts,
-   @bemerkung:fehler-mal-merkmal).
+2. **Rechenregeln** (@sec:produkt-kettenregel). Die Produktregel gilt für jede
+   beschränkte bilineare Multiplikation (@satz:produktregel), die Kettenregel ist
+   ohne Koordinaten schlicht eine :k[Verkettung]{#function-composition}
+   (@satz:kettenregel) und in Koordinaten ein Matrixprodukt
+   (@satz:kettenregel-fuer-jacobimatrizen).
 
 3. **Ableitungen höheren Grades** (@sec:hoehere-ableitungen). Die $j$-te
    Ableitung ist die lineare Näherung an die Änderung der $(j-1)$-ten
-   (@definition:k-mal-frechet-differenzierbar, @bemerkung:hoehere-ableitungen-wie-die-definition-zu-lesen-ist). Für $f \in \Ccal^2$ mit
+   (@definition:k-mal-frechet-differenzierbar). Für $f \in \Ccal^2$ mit
    $f\colon \R^n \to \R$ ist die zweite Stufe die
-   :k[Hesse-Matrix]{#hessian-matrix} $\corange{\bH_f(\bx)}$
-   (@definition:hesse-matrix), und es gilt
-   $\cgreen{D^2_{\bx} f(\bh_1, \bh_2)} = \bh_1^\top \corange{\bH_f(\bx)}\bh_2$
-   (@satz:erste-und-zweite-ableitung-in). Stetige zweite partielle Ableitungen machen sie
-   :k[symmetrisch]{#symmetric-matrix} (@satz:satz-von-schwarz). In einem *kritischen* Punkt
-   entscheidet ihre Definitheit über striktes lokales Minimum, striktes lokales
-   Maximum und Sattelpunkt (@satz:hesse-kriterium-fuer-kritische-punkte); ist sie semidefinit, aber nicht
-   definit, so bleibt der Punkt unbestimmt (@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Auf einer offenen,
-   konvexen Menge ist positive Semidefinitheit überall gleichbedeutend mit
-   :k[Konvexität]{#convexity} (@satz:konvexitaet-und-positive-semidefinitheit). In der Statistik ist der
-   Erwartungswert der negativen Hesse-Matrix der Log-Likelihood die
-   Fisher-Information (@definition:fisher-informationsmatrix). Ab der dritten Stufe verlassen wir
-   die Matrixsprache, dort stehen :k[Tensoren]{#tensor} (@bemerkung:die-dritte-ableitung-ist-ein-tensor,
-   @satz:die-ersten-drei-stufen-fuer-vektor-zu).
+   :k[Hesse-Matrix]{#hessian-matrix} (@definition:hesse-matrix,
+   @satz:erste-und-zweite-ableitung-in); sie ist symmetrisch
+   (@satz:satz-von-schwarz), ihre Definitheit entscheidet im kritischen Punkt
+   über Minimum, Maximum und Sattel (@satz:hesse-kriterium-fuer-kritische-punkte)
+   und überall über :k[Konvexität]{#convexity}
+   (@satz:konvexitaet-und-positive-semidefinitheit). In der Statistik steht dort
+   die Fisher-Information (@definition:fisher-informationsmatrix).
 
 4. **Taylorapproximation** (@sec:taylor). Das
-   :k[Taylorpolynom]{#taylor-theorem} schmiegt sich in einem Punkt bis zur
-   $k$-ten Ableitung an (@definition:taylorpolynom), und für den Fehler gibt es zwei
-   Fassungen: das Lagrange-Restglied @eq:taylorentwicklung-i-2 mit einer Zwischenstelle, das
-   $(k+1)$-mal stetige Differenzierbarkeit verlangt, und die Ordnungsaussage
-   $\cred{o(\left|h\right|^k)}$ (@satz:taylorentwicklung-i). Dieselbe Aussage gilt für
-   Abbildungen aus einem normierten Vektorraum in einen Banachraum und $k$-mal
-   *stetig* differenzierbares $f$, wenn wir den
-   ganzen Summanden $\cgreen{f^{(j)}(x)}\,h^j$ durch
-   $\cgreen{D^j_{\bx} f(\bh, \dots, \bh)}$ ersetzen (@satz:taylorentwicklung-ii). Die
-   Integralform des Restglieds und die Operatornorm tragen dabei die
-   Gleichmäßigkeit über alle Richtungen (@bemerkung:warum-hier-die-integralform-steht). Für
-   $f\colon \R^n \to \R$ stehen in den ersten beiden Ordnungen Gradient und
-   Hesse-Matrix (@korollar:taylorapproximation-fuer-vektor-zu), geometrisch Tangentialebene und Quadrik
-   (@bemerkung:ebene-und-quadrik). Wer den stationären Punkt der Quadrik bestimmt, erhält den
-   Newton-Schritt; ein Minimum ist er bei positiver Hesse-Matrix
-   (@algorithmus:newton-raphson-verfahren, @bemerkung:drei-vorbehalte).
+   :k[Taylorpolynom]{#taylor-theorem} schmiegt sich bis zur $k$-ten Ableitung an
+   (@definition:taylorpolynom); für den Fehler gibt es das Lagrange-Restglied und
+   die Ordnungsaussage (@satz:taylorentwicklung-i), und dieselbe Aussage trägt bis
+   in Banachräume (@satz:taylorentwicklung-ii). Für $f\colon \R^n \to \R$ stehen in
+   den ersten beiden Ordnungen Gradient und Hesse-Matrix
+   (@korollar:taylorapproximation-fuer-vektor-zu), geometrisch Tangentialebene und
+   Quadrik (@bemerkung:ebene-und-quadrik); der stationäre Punkt der Quadrik ist der
+   Newton-Schritt (@algorithmus:newton-raphson-verfahren, @bemerkung:drei-vorbehalte).
 :::
 
 Die meisten Beweise dieser vier Abschnitte folgen demselben Muster. Wir setzen die
@@ -258,13 +210,6 @@ hilft nur eine numerische Probe an einem kleinen Beispiel.
 | @num:differentialrechnung/hoehere-ableitungen | Ableitungen höheren Grades | $\cgreen{D^j_{\bx} f}$ als multilineare Abbildung; Hesse-Matrix $\corange{\bH_f(\bx)}$, Satz von Schwarz, Definitheit im kritischen Punkt trennt lokales Minimum, Maximum und Sattel, entscheidet aber nichts, wenn sie semidefinit und nicht definit ist |
 | @num:differentialrechnung/taylor | Taylorapproximation | $\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \corange{\nabla f(\bx)}\bh + \tfrac{1}{2}\bh^\top \corange{\bH_f(\bx)}\bh + \cred{r(\bh)}$ mit einem Rest, der schneller verschwindet als die letzte mitgenommene Potenz; Newton bestimmt den stationären Punkt der Quadrik |
 
-Vier Dinge nehmen wir mit. Erstens den Ableitungsbegriff auf normierten Räumen,
-zweitens seine Spezialfälle für Skalare, Vektoren und Matrizen. Drittens ein
-Regelwerk, mit dem sich zusammengesetzte Ausdrücke ableiten lassen, ohne jedes
-Mal zur Definition zurückzukehren. Viertens die Taylorapproximation, die das
-Ableiten von der ersten Ordnung löst und damit erst zum Werkzeug der Optimierung
-und der Asymptotik macht.
-
 ### Nächstes Kapitel
 
 Offen geblieben ist eine Frage, die in diesem Kapitel zweimal aufgetaucht ist,
@@ -283,9 +228,9 @@ sich die Konvexität deshalb als eigenes Thema vor.
 
 ### Selbsttest
 
-Zwei Runden. In der ersten stehen acht Aussagen zum Ableitungsbegriff und zu den
-Formaten aus den Abschnitten @num:differentialrechnung/linearisierung bis @num:differentialrechnung/matrixableitungen, dazu zwei Fragen, die sich nur an
-den Widgets dieser Abschnitte beantworten lassen. Welche Aussagen stimmen?
+Zwei Runden. In der ersten stehen sechs Aussagen zum Ableitungsbegriff und zu den
+Formaten aus den Abschnitten @num:differentialrechnung/linearisierung bis @num:differentialrechnung/matrixableitungen, dazu eine Frage, die sich nur an
+einem Widget dieser Abschnitte beantworten lässt. Welche Aussagen stimmen?
 
 ::::quiz
 
@@ -350,32 +295,6 @@ denn sie ist linear.
 :::
 
 :::frage{wahr}
-Sei $\cblue{f(\bX)} = \left\|\bX\right\|_F^2$ und
-$\bX = \bigl(\begin{smallmatrix} 1 & 2 \\ 3 & 4 \end{smallmatrix}\bigr)$.
-Erhöhen wir $x_{12}$ um $h$ und lassen alles andere stehen, so ändert sich der
-Funktionswert um $\cgreen{4h} + \cred{h^2}$.
-
-Nach @eq:identitaeten-fuer-matrix-zu-skalar-3 ist $\corange{\partial f(\bX)/\partial \bX} = 2\bX$, an der
-Stelle $(1,2)$ also $\corange{4}$. Der grüne Ableitungsterm ist damit
-$\cgreen{4h}$, und weil nur $x_{12}$ verändert wird, bleibt vom Rest genau
-$\cred{h^2}$ übrig (@beispiel:probe-der-frobenius-identitaet). Nachgerechnet: $\cblue{f(\bX)} = 30$, und für
-$h = 0{,}1$ steht dort $30{,}41$, also eine Änderung von $0{,}41 = 0{,}4 + 0{,}01$.
-:::
-
-:::frage{falsch}
-Weil $L$ skalar ist, ist in der Gradientenkette @eq:die-gradientenkette-eines-netzes jede einzelne
-Jacobimatrix $\corange{\bJ_{f_j}(\bz_{j-1})}$ ein Zeilenvektor.
-
-Verwechselt sind die Faktoren mit den Teilprodukten. Jede Jacobimatrix hat so
-viele Zeilen, wie ihre Ausgabe Komponenten hat, im Netz aus @bemerkung:wie-die-kette-ausgewertet-wird
-etwa $10 \times 20$ und $20 \times 50$. Eine Zeile bleibt nur das Produkt,
-solange wir es von links aufbauen: Der äußerste linke Faktor
-$\partial L / \partial \wh{\by}$ ist eine Zeile, und Zeile mal Matrix gibt
-wieder eine Zeile. Deshalb kostet die Auswertung von links dort $1200$
-statt $10\,500$ Multiplikationen.
-:::
-
-:::frage{wahr}
 Für feste $\ba \in \R^m$ und $\bb \in \R^n$ mit $\ba, \bb \neq \bnull$ ist
 $\corange{\partial (\ba^\top\bX\bb) / \partial \bX} = \ba\bb^\top$, und diese
 Matrix hat den Rang $1$.
@@ -400,17 +319,6 @@ oder stapelt die Matrizen per Vektorisierung zu Vektoren um
 (@sec:tensoren/zusammenfassung).
 :::
 
-:::frage{wahr}
-Im Linearisierungs-Widget aus @sec:jacobi hat die Voreinstellung
-„Wirbel" an jeder Stelle $\det \bJ_f(\bx) = 1$: Sie verbiegt das Gitter kräftig,
-verschiebt Fläche aber, ohne sie zu verändern.
-
-Das Flächenverhältnis Bild zu Fenster steht dort für jedes $h$ exakt auf
-$1{,}000$, denn in Polarkoordinaten ist die Abbildung $r \mapsto r$,
-$\theta \mapsto \theta + \tfrac35 r$, und die ändert kein Flächenelement. Der
-Restterm ist trotzdem von null verschieden: Flächentreue heißt nicht Linearität.
-:::
-
 :::zahlfrage{loesung=0 toleranz=0,03}
 Im Gradienten-Widget aus @sec:gradient: Wir drehen $\bd$ so, dass die
 Richtung längs der Höhenlinie zeigt. Welchen Wert nimmt die Richtungsableitung
@@ -424,8 +332,7 @@ rechts liegt die grüne Gerade dann waagerecht.
 ::::
 
 Die zweite Runde nimmt sich die Abschnitte @num:differentialrechnung/stetigkeit bis @num:differentialrechnung/taylor vor: acht Aussagen zu
-Eigenschaften, Rechenregeln, Hesse-Matrix und Taylor, dazu eine Zahl aus zwei
-Widgets.
+Eigenschaften, Rechenregeln, Hesse-Matrix und Taylor.
 
 ::::quiz
 
@@ -573,21 +480,6 @@ $\varphi'$ nichtfallend und ab $t = 0$ nichtnegativ, damit
 $\varphi(1) \ge \varphi(0)$, und das heißt
 $\cblue{f(\by)} \ge \cblue{f(\bx^*)}$. Sattelpunkte kann es aus demselben Grund
 nicht geben. Darauf beruht der Ausblick auf das nächste Kapitel.
-:::
-
-:::zahlfrage{loesung=4 toleranz=0.001}
-Eine letzte Zahl aus zwei Widgets dieses Kapitels. Im Taylor-Widget für zwei Variablen
-halbieren wir den Messradius um den Entwicklungspunkt und lesen ab, um welchen Faktor der
-Fehler der Tangentialebene $\cgreen{T_1}$ fällt. Welcher Faktor ist das (auf ganze Zahlen
-gerundet)?
-
-Der Faktor $4$, gemessen $4{,}34$ in der Voreinstellung. Der Restterm von $\cgreen{T_1}$
-wächst nach @korollar:taylorapproximation-fuer-vektor-zu wie $\left\|\bh\right\|^2$, und $(1/2)^2 = 1/4$. Für
-$\cgreen{T_2}$ steht an derselben Stelle $8$, passend zu $\left\|\bh\right\|^3$. Dieselbe
-Rechnung im Eindimensionalen erklärt, warum das Lupen-Widget aus
-@sec:stetigkeit bei $\cblue{f(x) = x^2}$ eine Abweichung zeigt, die sich mit
-jeder Halbierung des Fensters halbiert: Dort steht $\cgreen{T_1}$ gegen einen Restterm der
-Ordnung $2$, gemessen aber in Fensterbreiten, also eine Potenz weniger.
 :::
 
 ::::

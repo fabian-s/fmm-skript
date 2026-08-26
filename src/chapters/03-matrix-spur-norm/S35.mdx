@@ -62,6 +62,7 @@ und sie wachsen mit der Dimension. Für sehr große Matrizen können zwei Normen
 durchaus um Größenordnungen auseinanderliegen.
 :::
 
+:::::vertiefung[Beweis der Kette zwischen Spektral- und Frobenius-Norm]
 Die erste Kette können wir mit dem Schatten-Blick aus
 @sec:schattennormen vollständig beweisen. Dort
 haben wir gesehen: Sind $\lambda_1 \ge \cdots \ge \lambda_r > 0$ die
@@ -99,6 +100,8 @@ $$
 
 ::::
 
+:::::
+
 :::bemerkung[#aequivalenz-ist-nicht-gleichheit (Äquivalenz ist nicht Gleichheit)]
 Vorsicht: Äquivalenz heißt nur, dass keine Norm „unendlich viel größer" sein kann als
 eine andere. Verschiedene Normen können Matrizen aber durchaus
@@ -117,21 +120,21 @@ summiert die „Gesamtmasse" aller Einträge, die Spektralnorm die maximale Stre
 Welche Norm die passende ist, entscheidet die Anwendung.
 :::
 
+:::interaktiv[Wie scharf sind die Äquivalenzkonstanten?]
 Eine Frage bleibt offen: Sind die Konstanten in @beispiel:explizite-aequivalenzkonstanten nur bequeme Abschätzungen,
 oder lässt sich der Faktor $\sqrt{\min(m,n)}$ noch drücken? Anders gefragt: Gibt es
 Matrizen, für die eine der beiden Ungleichungen mit Gleichheit steht? Weil alle drei
 beteiligten Normen nur von den Singulärwerten abhängen, können wir das für $2 \times 2$
 vollständig durchprobieren.
 
-:::interaktiv[Wie scharf sind die Äquivalenzkonstanten?]
 <S35AequivalenzWidget />
-:::
 
 Beide Enden der Kette werden angenommen, und zwar genau an den Rändern des zulässigen
 Bereichs: unten, wenn der zweite Singulärwert verschwindet, oben, wenn beide gleich sind.
 Dazwischen ist der Quotient echt kleiner als $\sqrt{2}$. Verbessern lässt sich die
 Konstante also nicht, und sie wird schlecht: Im $\R^{n \times n}$ steht dort
 $\sqrt{n}$, und für $\bA = \bI_n$ ist diese Schranke scharf.
+:::
 
 ### Submultiplikativität :id[submultiplikativitaet]
 
@@ -161,28 +164,35 @@ Jede Operatornorm (@sec:operatornormen) ist
 submultiplikativ.
 :::
 
-::::beweis
+Der Beweis ruht auf einer Ungleichung, die wir im Rest des Kapitels immer wieder
+brauchen und deshalb eigens festhalten:
 
-:::schritt
-Zuerst eine Hilfsungleichung: Für jede Matrix $\bM$ und jeden Vektor
-$\by$ gilt
+:::bemerkung[#operatornorm-hilfsungleichung (Die Operatornorm als Streckungsschranke)]
+Für jede Matrix $\bM$ und jeden Vektor $\by$ gilt
 
 $$
 \left\|\bM\by\right\|_V \le \left\|\bM\right\|_V \cdot \left\|\by\right\|_V.
 $$
 
-::why[Definition der Operatornorm als Maximum des Quotienten $\left\|\bA\by\right\|_V / \left\|\by\right\|_V$: das Maximum ist mindestens so groß wie der Quotient für jedes einzelne $\by \ne \bnull$; für $\by = \bnull$ stehen links und rechts null]
+Die Operatornorm ist ja als Maximum des Quotienten
+$\left\|\bM\by\right\|_V / \left\|\by\right\|_V$ definiert, also mindestens so
+groß wie dieser Quotient an jeder einzelnen Stelle $\by \ne \bnull$; für
+$\by = \bnull$ stehen links und rechts null.
 :::
 
+:::::vertiefung[Beweis der Submultiplikativität von Operatornormen]
+
+::::beweis
+
 :::schritt
-Sei nun $\bx$ ein Vektor mit $\left\|\bx\right\|_V = 1$.
+Sei $\bx$ ein Vektor mit $\left\|\bx\right\|_V = 1$.
 Dann:
 
 $$
 \left\|(\cbred{\bA}\cblue{\bB})\bx\right\|_V = \left\|\cbred{\bA}(\cblue{\bB}\bx)\right\|_V \le \left\|\cbred{\bA}\right\|_V \left\|\cblue{\bB}\bx\right\|_V \le \left\|\cbred{\bA}\right\|_V \left\|\cblue{\bB}\right\|_V.
 $$
 
-::why[Hilfsungleichung zweimal anwenden: erst auf $\cbred{\bA}$ mit dem Vektor $\cblue{\bB}\bx$, dann auf $\cblue{\bB}$ mit $\bx$, wobei $\left\|\bx\right\|_V = 1$]
+::why[@bemerkung:operatornorm-hilfsungleichung zweimal anwenden: erst auf $\cbred{\bA}$ mit dem Vektor $\cblue{\bB}\bx$, dann auf $\cblue{\bB}$ mit $\bx$, wobei $\left\|\bx\right\|_V = 1$]
 :::
 
 :::schritt
@@ -195,23 +205,27 @@ $$
 
 ::::
 
+:::::
+
 Auch alle Schatten-Normen aus
 @sec:schattennormen (insbesondere die
 Frobenius-Norm und die Nuklearnorm) sind submultiplikativ. Der Beweis braucht
 Ungleichungen für Singulärwerte von Produkten, die wir hier nicht entwickeln; wir merken
 uns das Resultat.
 
+:::interaktiv[Gilt ‖AB‖ ≤ ‖A‖·‖B‖ für jede Matrixnorm?]
 Damit sind die Operator- und die Schattennormen versorgt. Bleibt die Frage, ob wir uns die
 Ungleichung überhaupt merken müssen oder ob sie ohnehin für jede Matrixnorm gilt. Tippen wir
 zuerst, bevor wir weiterlesen.
 
-:::interaktiv[Gilt ‖AB‖ ≤ ‖A‖·‖B‖ für jede Matrixnorm?]
 <S35SubmultWidget />
-:::
 
 Es gibt sie, die Norm, die aus der Reihe tanzt, und es ist die elementweise Maximumsnorm.
-Schon das einfachste Paar bringt sie zu Fall, wie das Widget zeigt: die Einsermatrix mit
-sich selbst multipliziert. Rechnen wir diesen Fall von Hand nach.
+Schon das einfachste Paar bringt sie zu Fall: die Einsermatrix mit sich selbst
+multipliziert.
+:::
+
+Rechnen wir diesen Fall von Hand nach.
 
 :::beispiel[#die-maximumsnorm-ist-nicht (Die Maximumsnorm ist nicht submultiplikativ)]
 Betrachten wir die Einsermatrix
@@ -290,6 +304,8 @@ auf $\R^n$ und auf $\R^m$.)
 
 :::
 
+:::::vertiefung[Beweis der drei Verträglichkeiten]
+
 ::::beweis
 
 :::schritt
@@ -305,7 +321,7 @@ $$
 :::
 
 :::schritt
-*Zu (2):* Das ist die Hilfsungleichung aus dem Beweis von @satz:operatornormen-sind-submultiplikativ: Für
+*Zu (2):* Das ist genau @bemerkung:operatornorm-hilfsungleichung: Für
 $\bx \ne \bnull$ gilt
 
 $$
@@ -337,6 +353,8 @@ $$
 :::
 
 ::::
+
+:::::
 
 Wozu das Ganze? Verträglichkeit ist das Werkzeug für *Fehlerabschätzungen*.
 Steckt in einem Vektor ein Fehler $\be$ (etwa aus
@@ -378,22 +396,14 @@ Die geometrische Interpretation als Verhältnis von Streckungsfaktoren gilt jedo
 für *induzierte Operatornormen*. Bei anderen Normen kann auch die Normierung anders
 aussehen: Beispielsweise ist $\kappa_F(\bI_n)=n$, nicht $1$.
 
-Die zweite Gleichheit sieht man so: Nach
-@sec:operatornormen ist
-$\left\|\bA\right\|_2 = \lambda_{\max}(\bA^\top\bA)^{1/2}$, und die
-Eigenwerte von $(\bA^{-1})^\top\bA^{-1} = (\bA\bA^\top)^{-1}$ sind die
-Kehrwerte der Eigenwerte von $\bA\bA^\top$, und
-$\bA\bA^\top$ hat dieselben Eigenwerte wie $\bA^\top\bA$. Der
-größte Eigenwert von $(\bA\bA^\top)^{-1}$ ist also
-$1/\lambda_{\min}(\bA^\top\bA)$. In der Spektralnorm misst die Konditionszahl damit das
+Die zweite Gleichheit rechnen wir hier nicht nach; mit der
+:k[Singulärwertzerlegung]{#singular-value-decomposition} fällt sie in
+@kap:svd von selbst ab. Inhaltlich misst die Konditionszahl in der Spektralnorm das
 *Verhältnis der extremen Streckungsfaktoren*: maximale Streckung durch
-$\bA$ geteilt durch minimale Streckung. Noch durchsichtiger wird das mit der
-:k[Singulärwertzerlegung]{#singular-value-decomposition}, die
-wir später kennenlernen: $\kappa_2(\bA)$ ist der Quotient aus größtem und
+$\bA$ geteilt durch minimale Streckung, also den Quotienten aus größtem und
 kleinstem Singulärwert. Für *symmetrische* Matrizen sind die Singulärwerte
 gerade die Beträge der Eigenwerte; dort ist
-$\kappa_2(\bA) = \max_i |\lambda_i| \,/\, \min_i |\lambda_i|$, das
-Verhältnis der betragsmäßig extremen Eigenwerte.
+$\kappa_2(\bA) = \max_i |\lambda_i| \,/\, \min_i |\lambda_i|$.
 
 :::bemerkung[#interpretation-der-konditionszahl (Interpretation der Konditionszahl)]
 Für eine induzierte Operatornorm gilt:
@@ -446,6 +456,8 @@ $$
 $$
 :::
 
+:::::vertiefung[Beweis der Rückwärtsfehler-Formel]
+
 ::::beweis
 
 :::schritt
@@ -482,16 +494,14 @@ $$
 
 ::::
 
-Lesen wir das Resultat noch einmal in Ruhe. Links steht die *relative Störung des
-Problems*, die nötig wäre, damit unsere Näherung exakt richtig ist. Rechts stehen
-nur Größen, die wir nach der Rechnung kennen: das Residuum
-$\cbpurp{\br}$ und die Normen von $\bA$ und
-$\wt{\bx}$. Matrixnormen machen den Rückwärtsfehler also *berechenbar*:
-Ein kleines relatives Residuum bedeutet, dass $\wt{\bx}$ die exakte Lösung
-eines nur winzig gestörten Systems ist. Wie weit $\wt{\bx}$ dann von der
-wahren Lösung entfernt sein kann, entscheidet die Konditionszahl aus @definition:eigenschaften-konditionszahl-einer-matrix.
-Als Faustregel gilt: Vorwärtsfehler $\lesssim \kappa(\bA) \times$
-Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
+:::::
+
+Matrixnormen machen den Rückwärtsfehler damit *berechenbar*: Rechts stehen nur
+Größen, die nach der Rechnung vorliegen, und ein kleines relatives Residuum bedeutet,
+dass $\wt{\bx}$ die exakte Lösung eines nur winzig gestörten Systems ist. Wie weit
+$\wt{\bx}$ dann von der wahren Lösung entfernt sein kann, entscheidet die
+Konditionszahl aus @definition:eigenschaften-konditionszahl-einer-matrix. Als Faustregel
+gilt: Vorwärtsfehler $\lesssim \kappa(\bA) \times$ Rückwärtsfehler.
 
 ### Selbsttest
 
@@ -513,11 +523,11 @@ Rückwärtsfehler. Normen quantifizieren beide Seiten dieser Rechnung.
     arbeiten.
   </SelbsttestFrage>
   <SelbsttestFrage q={<>Für die Einheitsmatrix gilt <M>{"\\left\\|\\bI_n\\right\\|_2 = 1"}</M>, aber <M>{"\\left\\|\\bI_n\\right\\|_F = \\sqrt{n}"}</M>. Widerspricht das der Normenäquivalenz ({ref("satz:alle-matrixnormen-sind-aequivalent")})? Und was sagt uns das Beispiel über die Konstante <M>{"\\sqrt{\\min(m,n)}"}</M> aus {ref("beispiel:explizite-aequivalenzkonstanten")}?</>}>
-    Kein Widerspruch: Satz 3.5.1 gilt bei *festen* Dimensionen, und die
+    Kein Widerspruch: @satz:alle-matrixnormen-sind-aequivalent gilt bei *festen* Dimensionen, und die
     Konstanten dürfen von $m, n$ abhängen. Das Beispiel zeigt sogar, dass die
     Konstante scharf ist: $\bI_n$ erfüllt
     $\left\|\bI_n\right\|_F = \sqrt{n} = \sqrt{\min(n,n)} \cdot \left\|\bI_n\right\|_2$;
-    die obere Schranke aus Beispiel 3.5.2 wird hier mit Gleichheit angenommen, besser
+    die obere Schranke aus @beispiel:explizite-aequivalenzkonstanten wird hier mit Gleichheit angenommen, besser
     geht es also nicht.
   </SelbsttestFrage>
 </ul>

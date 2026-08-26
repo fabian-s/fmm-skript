@@ -6,10 +6,10 @@ import { AccuracyWidget, CostWidget, MethodChooser } from "./widgets/S76Compare"
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Zwei Lösungswege für das [Kleinste-Quadrate-Problem](#sec-7.1) kennen wir schon:
-die [Normalengleichungen](#sec-7.3) mit
-:k[Cholesky-Zerlegung]{#cholesky-factorization} und die
-[QR-Zerlegung](#sec-7.4). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
+Zwei Lösungswege für das Kleinste-Quadrate-Problem kennen wir schon: die
+Normalengleichungen mit :k[Cholesky-Zerlegung]{#cholesky-factorization}
+(@sec:normalengleichungen) und die QR-Zerlegung (@sec:qr und
+@sec:givens-householder). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
 Was aber, wenn $\bA$ rangdefizient oder fast singulär ist? Dann ist
 $\bA^\top\bA$ singulär, die Cholesky-Zerlegung bricht ab, und auch $\bR$ in der
 QR-Zerlegung wird singulär. Genau hier hilft die
@@ -51,9 +51,8 @@ $$
 $$
 :::
 
-Der Beweis besteht aus zwei Teilen. Zuerst zeigen wir, dass $\bA\wh{\bx}$
-tatsächlich die Projektion von $\bb$ auf $\col(\bA)$ ist; die Farben
-verfolgen $\cbred{\bU_r}$, $\cgreen{\bSigma_r}$ und
+Zuerst zeigen wir, dass $\bA\wh{\bx}$ tatsächlich die Projektion von $\bb$ auf
+$\col(\bA)$ ist; die Farben verfolgen $\cbred{\bU_r}$, $\cgreen{\bSigma_r}$ und
 $\cblue{\bV_r}$ durch die Rechnung.
 
 ::::beweis
@@ -89,9 +88,17 @@ $\left\| \bA\bx - \bb \right\|_2$.
 ::why[das ist genau die geometrische Charakterisierung der KQ-Lösung aus @sec:problem]
 :::
 
-:::schritt
-<p className="mb-1">Nun zur Minimal-Norm-Eigenschaft. Ab hier verfolgt $\cpurp{\bz}$ den Anteil einer beliebigen KQ-Lösung, der im :k[Kern]{#null-space} von $\bA$ liegt:</p>
+::::
 
+:::::vertiefung[Warum die Pseudoinverse die Lösung mit der kleinsten Norm liefert]
+Für $\rang(\bA) < n$ hat das KQ-Problem unendlich viele Lösungen. Dass
+$\wh{\bx} = \bA\pinv\bb$ darunter die kürzeste ist, sagt der zweite Teil von
+@satz:svd-loesung-des-kq-problems. Im Nachweis verfolgt $\cpurp{\bz}$ den Anteil einer
+beliebigen KQ-Lösung, der im :k[Kern]{#null-space} von $\bA$ liegt.
+
+::::beweis
+
+:::schritt
 $$
 \bx = \wh{\bx} + \cpurp{\bz} \quad \text{mit} \quad \bA\cpurp{\bz} = \bnull
 $$
@@ -123,6 +130,7 @@ vollem Rang die einzige Lösung.
 :::
 
 ::::
+:::::
 
 Rechnen wir das an einem bewusst „kaputten“ Beispiel durch, an einer Matrix, an der die
 Normalengleichungen scheitern.
@@ -166,29 +174,17 @@ $\sqrt{2} \approx 1{,}41$ – die kleinste, wie @satz:svd-loesung-des-kq-problem
 
 <h3 id="sec-7.6-svd-vs-ne">SVD vs. Normalengleichungen</h3>
 
-Stellen wir die beiden extremen Zugänge einander gegenüber. Die
-[Normalengleichungen](#sec-7.3)
-$\bA^\top\bA\,\bx = \bA^\top\bb$ sind schnell, haben aber drei
-strukturelle Schwächen: $\bA^\top\bA$ kann schlecht konditioniert sein, denn
-aus @sec:kondition
-wissen wir $\kappa(\bA^\top\bA) \approx \kappa(\bA)^2$, die
-:k[Konditionszahl]{#condition-number} wird quadriert. Sie
-funktionieren gar nicht, wenn $\bA^\top\bA$ singulär ist. Und
-:k[Rundungsfehler]{#rounding-error} werden entsprechend
-verstärkt.
-
-Der SVD-Zugang $\wh{\bx} = \bA\pinv\bb$ vermeidet all das: Er arbeitet
-direkt mit $\bA$ statt mit $\bA^\top\bA$, quadriert die Kondition
-also nicht. Singuläre und rangdefiziente Probleme behandelt er automatisch, wie
-@beispiel:rangdefizientes-kq-problem vorgeführt hat. Formel @eq:svd-loesung-des-kq-problems ist zudem eine *explizite Konstruktion*
-der Lösung: Sobald die SVD vorliegt, ist kein Gleichungssystem mehr zu lösen, nur noch
-Matrix-Vektor-Produkte auszuwerten. Er hat eine klare geometrische Interpretation (Projektion auf
-$\col(\bA)$ plus Minimal-Norm-Auswahl). Für $\rang(\bA) < n$ wählt die
-Pseudoinverse unter unendlich vielen Lösungen reproduzierbar die „kleinste“ aus.
-Das regularisiert exakt unidentifizierte Nullraumanteile, aber *keine* kleinen
-positiven Singulärwerte: Die untrunkierte Pseudoinverse verstärkt diese gerade
-mit $1/\sigma_i$. Gegen einen Fast-Rangdefekt helfen erst Verfahren wie
-truncated SVD oder Tikhonov-Regularisierung.
+Der SVD-Zugang $\wh{\bx} = \bA\pinv\bb$ vermeidet die Schwächen des Wegs über die
+Normalengleichungen (@sec:normalengleichungen): Er arbeitet direkt mit $\bA$ statt mit
+$\bA^\top\bA$, quadriert die :k[Konditionszahl]{#condition-number} also nicht, und er
+behandelt singuläre und rangdefiziente Probleme automatisch, wie
+@beispiel:rangdefizientes-kq-problem vorgeführt hat. @eq:svd-loesung-des-kq-problems ist
+zudem eine *explizite Konstruktion* der Lösung: Sobald die SVD vorliegt, ist kein
+Gleichungssystem mehr zu lösen, nur noch Matrix-Vektor-Produkte auszuwerten. Ein Vorbehalt
+bleibt: Die Pseudoinverse regularisiert exakt unidentifizierte Nullraumanteile, aber
+*keine* kleinen positiven Singulärwerte, die sie mit $1/\sigma_i$ gerade verstärkt. Gegen
+einen Fast-Rangdefekt helfen erst Verfahren wie truncated SVD oder
+Tikhonov-Regularisierung.
 
 <h3 id="sec-7.6-vergleich">Praktischer Methodenvergleich</h3>
 

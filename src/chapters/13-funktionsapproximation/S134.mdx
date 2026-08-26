@@ -104,6 +104,11 @@ bilden eine Basis, die *Basis der abgeschnittenen Potenzen* (truncated power
 basis).
 :::
 
+:::::vertiefung[Warum die abgeschnittenen Potenzen eine Basis bilden]
+Der Beweis baut einen Spline von links nach rechts aus Monomen und
+abgeschnittenen Potenzen auf und zeigt, dass diese Familie linear unabhängig
+ist. Die Abzählung darunter kommt ohne ihn aus.
+
 ::::beweis
 
 :::schritt
@@ -165,6 +170,7 @@ $(q+1) + (m-1) = m + q$.
 :::
 
 ::::
+:::::
 
 :::bemerkung[#die-parameterzaehlung-als-gegenprobe (Die Parameterzählung als Gegenprobe)]
 Zum selben Ergebnis kommt man ohne Basis, durch bloßes Abzählen.
@@ -271,9 +277,7 @@ eingespannte Variante.
 Zwei Dinge sind daran wichtig. Erstens ist die Naht unsichtbar, obwohl links
 und rechts davon verschiedene Polynome stehen; das Readout zeigt, dass Wert,
 Steigung und Krümmung bis auf Rundung übereinstimmen. Zweitens ändern sich
-beim Verschieben eines einzigen Messwerts *alle* zwölf Koeffizienten. In
-dieser Darstellung ist Spline-Interpolation global. Der nächste Abschnitt
-repariert das.
+beim Verschieben eines einzigen Messwerts *alle* zwölf Koeffizienten.
 :::
 
 ### B-Splines
@@ -281,7 +285,9 @@ repariert das.
 Die stückweise Monomdarstellung aus @beispiel:kubischer-spline-durch-vier-punkte ist zum Rechnen schlecht
 geeignet. Sie erbt die schlechte Kondition der Monombasis
 (@sec:polynominterpolation), ihre Matrix hat keine erkennbare Struktur, und
-jeder Koeffizient hängt an allen Daten. Wir suchen deshalb eine
+jeder Koeffizient hängt an allen Daten: Verschieben wir einen einzigen
+Messwert, so ändern sich alle zwölf Koeffizienten, in dieser Darstellung ist
+Spline-Interpolation also global. Wir suchen deshalb eine
 :k[*Basis*]{#basis} des
 Raums $\Scal_q$ im Sinn von @sec:basisdarstellung, aus der sich die
 Systemmatrix $\bB$ mit den Einträgen $B_{ik} = \corange{\phi_k(x_i)}$ besser
@@ -333,10 +339,9 @@ in $b$ definiert sind.
 
 :::bemerkung[#warum-die-knotenfolge-so-lang-sein-muss (Warum die Knotenfolge so lang sein muss)]
 Zu $m + q$ Basisfunktionen nur $m + q$ Knoten anzusetzen, liegt nahe, reicht
-aber nicht. Die Rekursion @eq:erweiterte-knotenfolge-und-b-splines-2 greift für $k = m+q$ auf
-$\corange{\tau_{k+q+1}} = \corange{\tau_{m+2q+1}}$ zu; der Träger der letzten
-Basisfunktion reicht also bis zum Index $m + 2q + 1$. Für $q = 3$ und
-$m = 17$ sind das $24$ Knoten statt $20$.
+aber nicht: Die Rekursion @eq:erweiterte-knotenfolge-und-b-splines-2 greift für
+$k = m+q$ auf $\corange{\tau_{m+2q+1}}$ zu, es braucht also $m + 2q + 1$
+Knoten.
 
 Ebenso wichtig ist, dass sich die drei Vorschriften in @eq:erweiterte-knotenfolge-und-b-splines nicht ins
 Gehege kommen. Der linke Randblock belegt die Indizes $1, \dots, q+1$, die
@@ -345,10 +350,6 @@ Indizes $m+q+1, \dots, m+2q+1$: Jeder Index bekommt genau einen Wert. Begänne
 der rechte Block schon bei $m+1$, so bekäme für $q = 3$ und $m = 5$ der Knoten
 $\corange{\tau_6}$ sowohl $\corange{\xi_2}$ als auch $\corange{\xi_5}$
 zugewiesen.
-
-Schließlich stehen die Nenner in @eq:erweiterte-knotenfolge-und-b-splines-2 konsequent in $\corange{\tau}$ und
-nicht in $\corange{\xi}$: Nur die erweiterte Folge enthält die mehrfachen
-Randknoten, und gerade an den Rändern entstehen die Basisfunktionen aus ihnen.
 :::
 
 :::beispiel[#grad-1-die-hutfunktionen (Grad 1: die Hutfunktionen)]
@@ -444,8 +445,10 @@ System lösen, fertig. Die zweite Hälfte wertet den Interpolanten an neuen
 Stellen aus, und dabei steckt die eigentliche Fußangel: Die neue Basismatrix
 muss zu *derselben* Basis gehören wie die alte. Deshalb werden innere Knoten,
 Randknoten und Grad weitergereicht, statt `bs()` Teile davon aus `xnew` neu
-bestimmen zu lassen. Am sichersten erledigt das bei einem angepassten Modell
-die zugehörige `predict()`-Methode.
+bestimmen zu lassen. Vergisst man das, geht nichts schief, was man merken
+würde: Die Spaltenzahl stimmt weiterhin, es gibt keine Fehlermeldung, und
+heraus kommt eine glatte Kurve – nur eben nicht die geschätzte. Am sichersten
+erledigt das bei einem angepassten Modell die zugehörige `predict()`-Methode.
 :::
 
 ### Warum B-Splines? Kondition und Aufwand
@@ -561,10 +564,9 @@ im Vergleich meist deutlich weniger lokal.
 Die Störung eines einzigen Werts wirkt über das ganze Intervall und schlägt
 am weitesten dort aus, wo gar nichts passiert ist.
 
-Im konkreten gleichmäßigen Beispiel unten rechnen wir nach, dass sich je
-Knotenabstand ungefähr ein Viertel der Änderung überträgt. Das ist ein
-Messwert dieses Systems, keine allgemeine B-Spline-Konstante. Die Lokalität
-ist eine Frage der Größenordnung, keine exakte Abschottung.
+Wie stark die Kopplung mit dem Abstand abfällt, rechnen wir im
+gleichmäßigen Beispiel unten nach; die Zahlen dort sind Messwerte dieses
+Systems, keine allgemeine B-Spline-Konstante.
 :::
 
 :::interaktiv[Ein Datenpunkt wandert]

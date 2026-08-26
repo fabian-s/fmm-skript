@@ -205,23 +205,23 @@ und tatsächlich gilt
 $5 \cdot (1 - \corange{\delta_{\bv}}) \approx 4{,}6394 \le 5{,}3600 \le 5{,}3606 \approx 5 \cdot (1 + \corange{\delta_{\bv}})$.
 :::
 
-Wie viel Spielraum lässt eine Fehlerschranke eigentlich? Für den Vektor aus @beispiel:fehlermasse-fuer-vektoren
-bedeutet $\corange{\delta_{\bv}} \le 0{,}1$ nichts anderes als: Die Spitze von
+:::interaktiv[Fehlermaß-Rechner: v und ṽ in der Ebene]
+Für den Vektor aus @beispiel:fehlermasse-fuer-vektoren bedeutet
+$\corange{\delta_{\bv}} \le 0{,}1$ nichts anderes als: Die Spitze von
 $\cblue{\wt{\bv}}$ darf höchstens um $0{,}1 \cdot \left\| \cgreen{\bv} \right\|_2$
 danebenliegen. Wie groß ist dieser Spielraum in der Ebene, und wie viel Information über
 $\left\| \cblue{\wt{\bv}} \right\|$ steckt am Ende in @lemma:fehlerschranken?
 
-:::interaktiv[Fehlermaß-Rechner: v und ṽ in der Ebene]
 <FehlermassRechner />
-:::
 
-Der Rechner übersetzt beide Fehlermaße in Geometrie. Der absolute Fehler
+Der Rechner übersetzt beide Fehlermaße in Geometrie: Der absolute Fehler
 $\cred{\bDelta_{\bv}}$ ist der rote Pfeil zwischen den beiden Spitzen, der relative Fehler
-misst dessen Länge an $\left\| \cgreen{\bv} \right\|_2$, und der gestrichelte Kreis um
+misst dessen Länge an $\left\| \cgreen{\bv} \right\|_2$. Der gestrichelte Kreis um
 $\cgreen{\bv}$ hat den Radius $0{,}1 \cdot 5 = 0{,}5$: Solange die blaue Spitze darin liegt,
-ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist @lemma:fehlerschranken
-als Bild. Bei den 7,2 % aus @beispiel:fehlermasse-fuer-vektoren ist er noch schmal, bei 40 % lässt er für
-$\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
+ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist
+@lemma:fehlerschranken als Bild – bei den 7,2 % aus @beispiel:fehlermasse-fuer-vektoren noch
+schmal, bei 40 % lässt er für $\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
+:::
 
 ### Fehlerzerlegung :id[fehlerzerlegung]
 
@@ -323,18 +323,20 @@ lohnen (mehr Reihenglieder), nicht ein genauerer Input.
 :::
 
 Bleibt das so? Den Algorithmusfehler drücken wir mit mehr Reihengliedern, den Folgefehler nur
-mit einem genaueren $\wt{\pi}$. Ab welcher Abbruchordnung ist der Algorithmus so gut, dass
-nicht mehr er, sondern der Input das Ergebnis begrenzt?
+mit einem genaueren $\wt{\pi}$.
 
 :::interaktiv[Fehlerzerlegungs-Explorer: Abbruchordnung N und Input-Genauigkeit k]
-<FehlerzerlegungExplorer />
-:::
+Ab welcher Abbruchordnung ist der Algorithmus so gut, dass nicht mehr er, sondern der Input
+das Ergebnis begrenzt?
 
-Im Explorer kippt die Dominanz bei $\wt{\pi} = 3$ zwischen $N = 4$ und
-$N = 6$: Bis $N = 3$ ist der Algorithmusfehler mehr als doppelt so groß wie der
-Folgefehler, ab $N = 6$ ist es umgekehrt. Ab da kostet jedes weitere Reihenglied Rechenzeit,
-ohne den Gesamtfehler zu bewegen, denn der zweite Summand in @eq:eq-4-1-1 enthält
-$N$ überhaupt nicht. Wer den Fehler dann noch drücken will, muss am Input ansetzen.
+<FehlerzerlegungExplorer />
+
+Bei $\wt{\pi} = 3$ kippt die Dominanz zwischen $N = 4$ und $N = 6$: Bis $N = 3$ ist der
+Algorithmusfehler mehr als doppelt so groß wie der Folgefehler, ab $N = 6$ ist es umgekehrt.
+Ab da kostet jedes weitere Reihenglied Rechenzeit, ohne den Gesamtfehler zu bewegen, denn der
+zweite Summand in @eq:eq-4-1-1 enthält $N$ überhaupt nicht. Wer den Fehler dann noch drücken
+will, muss am Input ansetzen.
+:::
 
 Damit haben wir das Vokabular beisammen: Fehler messen wir mit Normen (absolut oder
 relativ), und den Gesamtfehler eines berechneten Ergebnisses zerlegen wir in den

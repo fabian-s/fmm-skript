@@ -133,12 +133,6 @@ T(\cblue{\bx}, \cgreen{\by})
 = \begin{pmatrix} 0 & 11 \end{pmatrix} \cgreen{\begin{pmatrix} 3 \\ 4 \end{pmatrix}}
 = 0 \cdot 3 + 11 \cdot 4 = 44 .
 $$
-
-Klammern wir andersherum, kommt dasselbe heraus:
-$\corange{\bA}\,\cgreen{\by} = (18, 13)^\top$ und
-$\cblue{\bx}^\top (\corange{\bA}\,\cgreen{\by}) = 18 + 26 = 44$. Die
-Assoziativität des Matrixprodukts erspart uns die Frage, in welcher Reihenfolge
-wir vorgehen.
 :::
 
 ### Tensoren
@@ -204,25 +198,11 @@ $\R$. Seine :k[Dimension]{#dimension} ist $n_1 n_2 \cdots n_k$.
 :::schritt
 Jedes Vektorraumaxiom ist eine Gleichung zwischen Tensoren, und zwei Tensoren
 sind genau dann gleich, wenn sie an jeder Indexstelle übereinstimmen. Beide
-Verknüpfungen wirken eintragsweise, also steht an jeder Indexstelle eine
-Gleichung zwischen reellen Zahlen, etwa
+Verknüpfungen wirken eintragsweise, also bleibt an jeder Indexstelle eine
+Gleichung zwischen reellen Zahlen stehen. Neutrales Element ist der Nulltensor,
+das Negative von $A$ der Tensor mit den Einträgen $-a_{i_1, \dots, i_k}$.
 
-$$
-\bigl(c(A + B)\bigr)_{i_1, \dots, i_k}
-= c\,(a_{i_1, \dots, i_k} + b_{i_1, \dots, i_k})
-= c\,a_{i_1, \dots, i_k} + c\,b_{i_1, \dots, i_k}
-= (cA + cB)_{i_1, \dots, i_k} .
-$$
-
-::why[Assoziativität, Kommutativität und die Distributivgesetze gelten in $\R$; sie übertragen sich Stelle für Stelle]
-:::
-
-:::schritt
-Neutrales Element ist der Nulltensor mit lauter Nullen, das Negative von $A$ ist
-der Tensor mit den Einträgen $-a_{i_1, \dots, i_k}$. Damit sind alle Axiome
-erfüllt.
-
-::why[wieder eintragsweise nachgerechnet]
+::why[Assoziativität, Kommutativität und die Distributivgesetze gelten in $\R$; sie übertragen sich Stelle für Stelle, etwa $\bigl(c(A + B)\bigr)_{i_1, \dots, i_k} = c\,a_{i_1, \dots, i_k} + c\,b_{i_1, \dots, i_k} = (cA + cB)_{i_1, \dots, i_k}$]
 :::
 
 :::schritt
@@ -268,31 +248,46 @@ spaltenweise Vektorisierung einen Namen und eine Rechenregel.
 Welche vollständige Matrix erhalten wir, wenn wir die dritte Indexposition $k$ festhalten?
 
 <TensorScheibenViewer />
-:::
 
-Wie das Widget zeigt, entspricht jede Wahl von $k$ einer vollständigen Matrixscheibe desselben Zahlenfelds.
+Wie das Widget zeigt, entspricht jede Wahl von $k$ einer vollständigen
+Matrixscheibe desselben Zahlenfelds.
+:::
 
 ### Anwendungen: Bilder, Stapel, Feature-Maps
 
 Bis hierher ist ein Tensor ein Buchhaltungsobjekt. Warum er einen eigenen Namen
 und inzwischen sogar eigene Rechenwerke bekommt, zeigt der Blick auf Bilddaten.
+Ein Graustufenbild hält je Bildpunkt eine einzige Zahl fest und ist damit eine
+Matrix. Farbe braucht drei Zahlen je Pixel; ein Farbbild der Größe
+$224 \times 224$ wird deshalb zu einem Tensor der Stufe $3$,
+$\bI \in \R^{224 \times 224 \times 3}$, mit $224 \cdot 224 \cdot 3 = 150\,528$
+Zahlen. Neuronale Netze verarbeiten solche Bilder bündelweise, etwa $32$ Stück
+auf einmal, und aus dem Stapel wird ein Tensor der Stufe $4$; dieselbe vierte
+Indexposition zählt bei einem Video die Einzelbilder in der Zeit. Eine
+Faltungsschicht (convolutional layer) eines faltenden Netzes bildet dann Tensoren
+wieder auf Tensoren ab.
+
+Rechnungen dieser Art bestehen aus sehr vielen gleichartigen Multiplikationen und
+Additionen auf regelmäßig angeordneten Zahlen. Dafür lassen sich spezialisierte
+Rechenwerke bauen, die solche Blockoperationen am Stück ausführen: Googles TPUs
+und NVIDIAs Tensor Cores sind genau darauf zugeschnitten. Für das maschinelle
+Lernen ist diese Hardware keine Randnotiz, sondern eine Voraussetzung.
 
 :::interaktiv[Farbbild als Kanäle]
 Wie setzen sich die drei Zahlen eines Pixels zu seiner sichtbaren Farbe zusammen?
 
 <TensorScheibenViewer bild />
+
+Wie das Widget zeigt, sind die drei Kanalscheiben keine drei Bilder, sondern drei
+Komponenten jedes Pixels desselben Bildes.
 :::
 
-Wie das Widget zeigt, sind die drei Kanalscheiben keine drei Bilder, sondern drei Komponenten jedes Pixels desselben Bildes.
+::::vertiefung[Bilder, Stapel und Feature-Maps im Detail]
 
 :::beispiel[#ein-farbbild-als-tensor-der-stufe-3 (Ein Farbbild als Tensor der Stufe 3)]
-Ein Graustufenbild speichert je Bildpunkt eine einzige Zahl, die Helligkeit. Eine
-Indexrichtung läuft über die Pixel in der Waagerechten, die andere über die Pixel
-in der Senkrechten. Ein Graustufenbild ist also eine Matrix.
-
-Farbe braucht drei Zahlen je Pixel. Wir nummerieren die Farbkanäle mit einem
-dritten Index, und aus der Matrix wird ein Tensor der Stufe $3$. Ein Farbbild der
-Größe $224 \times 224$ Pixel wird zu $\bI \in \R^{224 \times 224 \times 3}$ mit
+Beim Graustufenbild läuft eine Indexrichtung über die Pixel in der Waagerechten,
+die andere über die Pixel in der Senkrechten. Beim Farbbild
+$\bI \in \R^{224 \times 224 \times 3}$ nummeriert der dritte Index die Kanäle:
 
 - $\bI_{i,j,1}$: Rot-Intensität an der Position $(i,j)$, ein Wert zwischen $0$
   und $255$,
@@ -313,9 +308,8 @@ Mathematik ist das gleichgültig, für den Code nicht.
 :::
 
 :::beispiel[#ein-stapel-bilder-als-tensor-der-stufe-4 (Ein Stapel Bilder als Tensor der Stufe 4)]
-Neuronale Netze verarbeiten Bilder nicht einzeln, sondern bündelweise. Ein
-faltendes Netz (convolutional neural network, CNN) bekommt typischerweise $32$
-Bilder auf einmal vorgesetzt, also
+Ein faltendes Netz (convolutional neural network, CNN) bekommt typischerweise
+$32$ Bilder auf einmal vorgesetzt, also
 
 $$
 \bB \in \R^{32 \times 224 \times 224 \times 3} ,
@@ -330,11 +324,9 @@ $$
 $$
 
 Zahlen. Bei einfacher Genauigkeit mit $4$ Byte je Zahl belegt allein die Eingabe
-eines einzigen Rechenschritts damit rund $19$ Millionen Byte.
-
-Dieselbe vierte Indexposition entsteht bei einem Video. Sie zählt dann nicht die
-Bilder eines Stapels, sondern die Einzelbilder in der Zeit. Was ein Index
-bedeutet, steht ihm nicht an; wir müssen es dazusagen.
+eines einzigen Rechenschritts damit rund $19$ Millionen Byte. Ob die vierte
+Indexposition die Bilder eines Stapels oder die eines Videos in der Zeit zählt,
+steht ihr nicht an; wir müssen es dazusagen.
 :::
 
 :::beispiel[#feature-maps-eine-abbildung-von-tensoren (Feature-Maps: eine Abbildung von Tensoren auf Tensoren)]
@@ -365,29 +357,20 @@ jede einzelne sieht aus wie ein grobes Graustufenbild, hell an den Stellen, an
 denen das jeweilige Muster kräftig anspricht.
 :::
 
-:::bemerkung[#was-an-einer-faltungsschicht-linear-ist (Was an einer Faltungsschicht linear ist)]
-Die Abbildung $c$ hat nur ein Argument, ist also keine multilineare Abbildung im
-Sinn von @sec:multilinear. Bei fest gewählten Gewichten ist sie schlicht
-linear im Eingangstensor. Interessant wird es, wenn wir die Gewichte als zweites
-Argument hinzunehmen: Jeder Ausgangseintrag ist eine Summe von Produkten aus je
-einem Gewicht und je einem Eingangseintrag, die Zuordnung
+**Was an einer Faltungsschicht linear ist.** Die Abbildung $c$ hat nur ein
+Argument, ist also keine multilineare Abbildung im Sinn von @sec:multilinear. Bei
+fest gewählten Gewichten ist sie schlicht linear im Eingangstensor. Interessant
+wird es, wenn wir die Gewichte als zweites Argument hinzunehmen: Jeder
+Ausgangseintrag ist eine Summe von Produkten aus je einem Gewicht und je einem
+Eingangseintrag, die Zuordnung
 $(\text{Gewichte}, \text{Eingang}) \mapsto \text{Ausgang}$ ist damit bilinear,
 also der Fall $k = 2$ des Darstellungssatzes. Zu einer vollständigen Schicht
 gehören meist noch ein additiver Term und eine nichtlineare Funktion, die auf
 jeden Eintrag einzeln wirkt. Erst diese Funktion macht aus einem
 :k[neuronalen Netz]{#neural-network} mehr als eine lange Kette linearer
 Abbildungen.
-:::
 
-:::bemerkung[#warum-tensoren-eigene-rechenwerke (Warum Tensoren eigene Rechenwerke bekommen)]
-Die Zahlen aus den Beispielen @num:ein-stapel-bilder-als-tensor-der-stufe-4 und @num:feature-maps-eine-abbildung-von-tensoren erklären den Aufwand, den
-Hardwarehersteller treiben. Rechnungen auf Tensoren bestehen aus sehr vielen
-gleichartigen Multiplikationen und Additionen auf regelmäßig angeordneten
-Zahlen, und dafür lassen sich spezialisierte Rechenwerke bauen, die genau solche
-Blockoperationen am Stück ausführen. Googles TPUs und NVIDIAs Tensor Cores sind
-auf Matrix- und Tensoroperationen dieser Art spezialisiert. Für das maschinelle
-Lernen ist diese Hardware keine Randnotiz, sondern eine Voraussetzung.
-:::
+::::
 
 ### Selbsttest
 

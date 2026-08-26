@@ -80,6 +80,8 @@ $$ {#eq-taylorentwicklung-i-2}
 $$
 :::
 
+:::::vertiefung[Der Beweis: zwei Hilfsfunktionen, eine Teleskopsumme, der Cauchy-Mittelwertsatz]
+
 ::::beweis
 
 :::schritt
@@ -173,6 +175,8 @@ und das heißt gerade $\cblue{f(x+h)} - \cgreen{T_k(h)} = \cred{o(\left|h\right|
 :::
 
 ::::
+
+:::::
 
 :::bemerkung[#was-der-satz-sagt-und-was-nicht (Was der Satz sagt und was nicht)]
 *Zwei Restglieder.* Die Fassung @eq:taylorentwicklung-i-2 mit der Zwischenstelle heißt
@@ -286,20 +290,16 @@ den Fehler ablesen. Voreingestellt ist $x = 0{,}5$, also genau die Stelle aus
 @beispiel:taylorapproximation-der.
 
 <TaylorOrdnungSchaetzung />
-:::
 
-Wie das Widget zeigt, ist der Gewinn nahe am Entwicklungspunkt beträchtlich: Bei
-$x = 0{,}5$ fällt der Fehler von $T_2$ auf $T_3$ um den Faktor $8{,}2$, von $T_3$
-auf $T_4$ sogar um $10{,}2$. Weiter draußen kippt das Bild. Die Stelle, an der
-grün und blau auseinanderlaufen, wandert mit jeder Ordnung nach außen, aber der
-linke Rand bleibt hartnäckig: Für $x \to -\infty$ geht $e^x$ gegen null, jedes
-Taylorpolynom positiven Grades dagegen gegen $+\infty$ oder $-\infty$, je nach
-Parität seines Grades. Bei $x = -3$ wächst der Fehler beim Schritt von $T_0$ auf
-$T_1$ deshalb von $0{,}950$ auf $2{,}050$, statt zu fallen, und auch $T_2$ liegt
-mit $2{,}450$ noch darüber. Der Faustwert $\left|x\right|/(k+1)$ aus dem Restglied
-beschreibt eben das Verhalten für kleine $\left|x\right|$; solange $\left|x\right|$
-groß gegen $k+1$ ist, gewinnt zunächst die Potenz. Das ist @bemerkung:hoeher-ist-nicht-automatisch-besser in
-Zahlen.
+Nahe am Entwicklungspunkt ist der Gewinn beträchtlich: Bei $x = 0{,}5$ fällt der Fehler von
+$T_2$ auf $T_3$ um den Faktor $8{,}2$, von $T_3$ auf $T_4$ sogar um $10{,}2$. Weiter draußen
+kippt das Bild, und der linke Rand bleibt hartnäckig: Für $x \to -\infty$ geht $e^x$ gegen
+null, jedes Taylorpolynom positiven Grades dagegen gegen $\pm\infty$. Bei $x = -3$ wächst
+der Fehler beim Schritt von $T_0$ auf $T_1$ deshalb von $0{,}950$ auf $2{,}050$, statt zu
+fallen. Der Faustwert $\left|x\right|/(k+1)$ aus dem Restglied beschreibt eben das Verhalten
+für kleine $\left|x\right|$; solange $\left|x\right|$ groß gegen $k+1$ ist, gewinnt zunächst
+die Potenz. Das ist @bemerkung:hoeher-ist-nicht-automatisch-besser in Zahlen.
+:::
 
 ### Der allgemeine Fall
 
@@ -325,6 +325,8 @@ $$ {#eq-taylorentwicklung-ii}
 \quad\text{für }\bh\to\bnull .
 $$
 :::
+
+:::::vertiefung[Der Beweis: von der Verbindungsstrecke zum Integralrestglied]
 
 ::::beweis
 
@@ -406,6 +408,8 @@ Schranke, die für alle Richtungen zugleich gilt. Genau deshalb reicht
 $f\in\Ccal^k$, während das Restglied trotzdem
 $\cred{o(\left\|\bh\right\|^k)}$ ist.
 :::
+
+:::::
 
 ### Gradient, Hesse-Matrix und die ersten drei Ordnungen
 
@@ -506,22 +510,17 @@ Dieselbe Idee zeigt außerdem eine
 Raum.
 
 <Taylor2DSchaetzung />
+
+Die Vorhersage trifft: In der Voreinstellung fällt der Fehler von $\cgreen{T_1}$ beim
+Halbieren des Radius um den Faktor $4{,}34$ und der von $\cgreen{T_2}$ um $8{,}07$, also
+ungefähr um $4$ und $8$. Die Umschaltung zwischen den beiden Ordnungen zeigt zugleich den
+strukturellen Unterschied: Die Tangentialebene liefert parallele Geraden als Höhenlinien,
+die Quadrik krümmt sich mit. Die Faustzahlen setzen allerdings voraus, dass der jeweils
+führende Restterm nicht selbst verschwindet; wo die Hesse-Matrix nahezu null ist, springt
+der $\cgreen{T_1}$-Quotient auf etwa $8$. Auf der Quadrik im dritten Menüpunkt fällt der
+$\cgreen{T_2}$-Fehler auf Rundungsniveau: Dort ist die Näherung exakt, und genau darauf
+beruht der eine exakte Newton-Schritt im nächsten Unterabschnitt.
 :::
-
-Wie das Widget zeigt, trifft die Vorhersage: In der Voreinstellung fällt der
-Fehler von $\cgreen{T_1}$ beim Halbieren des Radius von $0{,}2672$ auf $0{,}0616$,
-also um den Faktor $4{,}34$, und der von $\cgreen{T_2}$ von $0{,}0837$ auf
-$0{,}0104$, um den Faktor $8{,}07$. Die Umschaltung zwischen den beiden Ordnungen
-zeigt zugleich den strukturellen Unterschied: Die Tangentialebene liefert
-parallele Geraden als Höhenlinien, die Quadrik krümmt sich mit.
-
-Die Faustzahlen $4$ und $8$ setzen allerdings voraus, dass der jeweils führende
-Restterm nicht selbst verschwindet. An einer Stelle, an der die Hesse-Matrix
-nahezu null ist, springt der $\cgreen{T_1}$-Quotient deshalb auf etwa $8$, und im
-Zentrum der Glockenfunktion, wo alle dritten Ableitungen verschwinden, steht beim
-$\cgreen{T_2}$ ungefähr $16$. Auf der Quadrik im dritten Menüpunkt fällt der
-$\cgreen{T_2}$-Fehler auf Rundungsniveau: Dort ist die Näherung exakt, und genau
-darauf beruht der eine exakte Newton-Schritt im nächsten Unterabschnitt.
 
 ### Anwendung: das Newton-Raphson-Verfahren
 
@@ -620,6 +619,9 @@ Erwartungswert, so heißt das Verfahren *Fisher-Scoring*; für verallgemeinerte
 lineare Modelle fällt es mit den *iterativ gewichteten kleinsten Quadraten*
 (IRLS) zusammen, in denen jeder Schritt ein gewichtetes
 Kleinste-Quadrate-Problem im Sinne von @kap:kq ist.
+:::
+
+::::vertiefung[Die Asymptotik des ML-Schätzers als Taylorentwicklung]
 
 Auch die Asymptotik selbst ist eine Taylorentwicklung. Entwickeln wir die Score
 um den wahren Parameter $\btheta$ und werten sie am Schätzer $\wh\btheta$ aus, wo
@@ -633,7 +635,8 @@ unabhängiger Beiträge und wird nach dem zentralen Grenzwertsatz normal, und
 $-\corange{\bH_\ell(\btheta)}/n$ konvergiert gegen die Fisher-Information
 $\corange{\bI_1(\btheta)}$ einer einzelnen Beobachtung. Der Restterm aus @eq:taylorapproximation-fuer-vektor-zu ist
 dabei das, was die Argumentation auf eine asymptotische festlegt.
-:::
+
+::::
 
 Wie schnell ist „quadratisch konvergent" in Zahlen? Rechnen wir das Verfahren
 Schritt für Schritt mit und schauen, wie viele Schritte es bis zur
@@ -652,23 +655,18 @@ Drei Versuche lohnen sich: ein Startpunkt mit $x_1 < 0$, ein Startpunkt mit
 $x_1 = 0$, und der zweite Menüpunkt, die Quadrik aus @bemerkung:ebene-und-quadrik.
 
 <NewtonSchaetzung />
+
+In der $x_2$-Richtung sitzt der erste Schritt sofort exakt, denn dort ist $f$ quadratisch.
+In der $x_1$-Richtung läuft die Iteration über $1{,}25$, $1{,}025$, $1{,}00030$ und
+$1{,}00000005$ gegen $1$, mit den Fehlern $0{,}25$, $0{,}025$, $3{,}05\cdot 10^{-4}$ und
+$4{,}65\cdot 10^{-8}$; im fünften Schritt steht $1{,}1\cdot 10^{-15}$. Fünf Schritte für
+fünfzehn Stellen: Der Fehler wird von Schritt zu Schritt im Wesentlichen quadriert, der
+Quotient $e_k/e_{k-1}^2$ läuft gegen $1/(2x_1^*) = 0{,}5$. Die drei Versuche zeigen ebenso
+schnell die Grenzen: Ein Start mit $x_1 < 0$ führt in den Sattelpunkt $(-1; 0)$ statt ins
+Minimum (@bemerkung:drei-vorbehalte), bei $x_1 = 0$ ist die Hesse-Matrix $\diag(0, 1)$
+singulär und der Schritt gar nicht definiert, und auf der Quadrik ist nach einem einzigen
+Schritt Schluss, weil $\cgreen{T_2}$ dort mit $f$ übereinstimmt.
 :::
-
-Wie das Widget zeigt, sitzt der erste Schritt in der $x_2$-Richtung sofort exakt,
-denn dort ist $f$ quadratisch. In der $x_1$-Richtung läuft die Iteration über
-$1{,}25$, $1{,}025$, $1{,}00030$ und $1{,}00000005$ gegen $1$; die Fehlerspalte
-zeigt dazu $0{,}25$, $0{,}025$, $3{,}05\cdot 10^{-4}$ und $4{,}65\cdot 10^{-8}$,
-und im fünften Schritt steht $1{,}1\cdot 10^{-15}$. Fünf Schritte für fünfzehn
-Stellen: Der Fehler wird von Schritt zu Schritt im Wesentlichen quadriert und dann
-halbiert, der Quotient $e_k/e_{k-1}^2$ läuft über $0{,}400$ und $0{,}488$ gegen
-$1/(2x_1^*) = 0{,}5$.
-
-Die drei Versuche zeigen ebenso schnell die Grenzen. Ein Start mit $x_1 < 0$ führt
-in den Sattelpunkt $(-1; 0)$ statt ins Minimum, denn Newton sucht kritische Punkte
-und unterscheidet sie nicht (@bemerkung:drei-vorbehalte). Bei $x_1 = 0$ ist die Hesse-Matrix
-$\diag(0, 1)$ singulär und der Schritt gar nicht definiert. Auf der Quadrik
-dagegen ist nach einem einzigen Schritt Schluss, weil $\cgreen{T_2}$ dort mit $f$
-übereinstimmt.
 
 ### Selbsttest
 

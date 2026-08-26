@@ -168,7 +168,7 @@ export function CanyonWidget() {
   if (Math.abs(faktor2) > 1 + 1e-12) {
     art = "fail";
     titel = "γ über der Stabilitätsgrenze";
-    status = `γ = ${fmt(gamma, 4)} liegt über 2/L = ${fmt(2 / L, 4)}: In der steilen Richtung wächst der Fehler je Schritt um den Faktor ${fmt(Math.abs(faktor2), 2)}, die Folge läuft aus dem Bild. ${ref("satz:gradientenabstieg-auf-einer-quadrik")} verlangt γ ≤ 1/L und sagt hier nichts mehr.`;
+    status = `γ = ${fmt(gamma, 4)} liegt über 2/L = ${fmt(2 / L, 4)}: In der steilen Richtung wächst der Fehler je Schritt um den Faktor ${fmt(Math.abs(faktor2), 2)}, die Folge läuft aus dem Bild. ${ref("satz:gradientenabstieg-auf-einer-quadrik")} sichert Konvergenz genau für 0 < γ < 2/L, und genau das ist hier verletzt.`;
   } else if (Math.abs(faktor2 + 1) < 1e-12) {
     art = "warn";
     titel = "γ = 2/L ist die Grenze";
@@ -189,11 +189,11 @@ export function CanyonWidget() {
   } else if (Math.abs(faktor2) < 1e-12) {
     art = "ok";
     titel = "γ = 1/L trifft die steile Richtung exakt";
-    status = `x₂ ist nach einem Schritt null. Danach fällt f in jedem Schritt auf das ${fmt(faktor1 ** 2, 4)}-fache, also SCHNELLER als die Schranke ρ = 1 − μ/L = ${fmt(rho, 4)} aus ${ref("satz:gradientenabstieg-auf-einer-quadrik")}. Genau das führt ${ref("beispiel:warum-der-satz-eine-schranke-ist-und")} vor: Der Satz verspricht höchstens ρ pro Schritt, nicht genau ρ.`;
+    status = `x₂ ist nach einem Schritt null. Danach fällt f in jedem Schritt auf das ${fmt(faktor1 ** 2, 4)}-fache, also SCHNELLER als die Schranke ρ = 1 − μ/L = ${fmt(rho, 4)} aus ${ref("satz:konvergenzrate-bei-starker-konvexitaet")}. Genau das führt ${ref("beispiel:warum-der-satz-eine-schranke-ist-und")} vor: Der Satz verspricht höchstens ρ pro Schritt, nicht genau ρ.`;
   } else if (Math.abs(faktor1) < 1e-12) {
     art = "warn";
     titel = "γ = 1/μ trifft die flache Richtung exakt";
-    status = `x₁ ist nach einem Schritt null. In der steilen Richtung springt der Fehler dagegen mit dem Faktor ${fmt(faktor2, 3)} hin und her. Der Satz deckt diese Schrittweite nicht ab, sie liegt über 1/L.`;
+    status = `x₁ ist nach einem Schritt null. In der steilen Richtung springt der Fehler dagegen mit dem Faktor ${fmt(faktor2, 3)} hin und her. ${ref("satz:konvergenzrate-bei-starker-konvexitaet")} deckt diese Schrittweite nicht ab, sie liegt über 1/L.`;
   } else if (faktor1 < 0) {
     art = "neutral";
     titel = "beide Richtungen schießen über";

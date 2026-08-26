@@ -183,112 +183,41 @@ nichtlinear wird, ist damit Schluss, und wir iterieren.
 
 Ein Verfahren, das nur die Umgebung des aktuellen Punktes ansieht, kann
 grundsätzlich nur lokale Minima finden. Ob das genügt, entscheidet die
-Zielfunktion. Für konvexe Funktionen fallen lokale und globale Minima zusammen,
-und deshalb ist Konvexität die wichtigste Struktureigenschaft der ganzen
-Optimierung. [Kapitel 11](?k=11-konvexitaet#sec-11.3) hat die Begriffe
-bereitgestellt, wir ernten hier.
+Zielfunktion. [Kapitel 11](?k=11-konvexitaet#sec-11.3) hat die beiden Antworten
+schon bewiesen, und wir zitieren sie hier, statt sie ein zweites Mal zu führen.
 
-:::satz[#globale-optimalitaet-bei-konvexitaet (Globale Optimalität bei Konvexität)]
-Seien $\Xcal \subseteq \R^n$ konvex und $f\colon \Xcal \to \R$
-:k[konvex]{#convexity}. Dann ist jedes lokale Minimum von $f$ auf $\Xcal$
-auch ein globales.
-:::
+*Lokal ist global.* Sind $\Xcal \subseteq \R^n$ konvex und
+$f\colon \Xcal \to \R$ :k[konvex]{#convexity}, so ist jedes lokale Minimum von
+$f$ auf $\Xcal$ auch ein globales, und zwar ohne jede Differenzierbarkeit
+(@bemerkung:was-daraus-folgt-und-was-nicht). Ist $f$ differenzierbar, so steht in
+@satz:kritischer-punkt-und-globales-minimum sogar die schärfere Fassung: Dann ist
+schon jeder stationäre Punkt ein globales Minimum. Ein lokal suchendes Verfahren
+kann bei konvexem $f$ also nichts verpassen, und deshalb ist Konvexität die
+wichtigste Struktureigenschaft der ganzen Optimierung.
 
-::::beweis
+*Höchstens eine Lösung.* Ist $f$ darüber hinaus strikt konvex, gilt also
+$f\bigl(\lambda\bx + (1-\lambda)\by\bigr) < \lambda f(\bx) + (1-\lambda) f(\by)$
+für alle $\bx \neq \by$ in $\Xcal$ und alle $\lambda \in (0, 1)$, so hat $f$ auf
+$\Xcal$ nach @satz:hoechstens-eine-minimalstelle höchstens einen Minimierer; der
+Beweis dort nimmt den Mittelpunkt zweier Minimierer und findet an ihm einen
+strikt kleineren Wert. Über die *Existenz* eines Minimierers sagt keine der
+beiden Aussagen etwas: $f(x) = e^x$ ist auf $\R$ strikt konvex und hat kein
+Minimum.
 
-:::schritt
-Sei $\cgreen{\bx^\star}$ ein lokales Minimum mit Umgebung $U$ wie in
-@definition:lokales-und-globales-minimum. Angenommen, es gäbe ein $\by \in \Xcal$ mit
-$\cred{f(\by) < f(\cgreen{\bx^\star})}$. Wir verbinden die beiden Punkte und
-betrachten für $\lambda \in (0, 1]$
-
-$$
-\bz_\lambda := (1 - \lambda)\,\cgreen{\bx^\star} + \lambda\,\by \in \Xcal .
-$$
-
-::why[Hier geht die Konvexität der *Menge* ein: die ganze Verbindungsstrecke muss zulässig sein, sonst ist $\bz_\lambda$ gar kein erlaubter Vergleichspunkt]
-:::
-
-:::schritt
-Die Konvexität von $f$ schätzt den Funktionswert auf der Strecke ab:
-
-$$
-f(\bz_\lambda) \le (1 - \lambda) f(\cgreen{\bx^\star}) + \lambda\, \cred{f(\by)}
-< (1 - \lambda) f(\cgreen{\bx^\star}) + \lambda f(\cgreen{\bx^\star})
-= f(\cgreen{\bx^\star}) .
-$$
-
-Für jedes $\lambda \in (0, 1]$ ist $\bz_\lambda$ also strikt besser als
-$\cgreen{\bx^\star}$.
-
-::why[In der zweiten Ungleichung haben wir $f(\by) < f(\bx^\star)$ eingesetzt, und $\lambda > 0$ sorgt dafür, dass die Ungleichung strikt bleibt]
-:::
-
-:::schritt
-Nun lassen wir $\lambda$ klein werden. Es ist
-$\left\|\bz_\lambda - \cgreen{\bx^\star}\right\| = \lambda \left\|\by - \cgreen{\bx^\star}\right\|$,
-also liegt $\bz_\lambda$ für hinreichend kleines $\lambda > 0$ in $U$. Dort ist
-$\cgreen{\bx^\star}$ aber minimal, im Widerspruch zu Schritt 2. Die Annahme war
-falsch, es gibt kein besseres $\by$.
-
-::why[Ein lokales Minimum schlägt alle Punkte seiner Umgebung; die Konstruktion holt den strikt besseren Punkt so nah heran, wie wir wollen]
-:::
-
-::::
-
-:::satz[#eindeutigkeit-bei-strikter-konvexitaet (Eindeutigkeit bei strikter Konvexität)]
-Seien $\Xcal \subseteq \R^n$ konvex und $f\colon \Xcal \to \R$ strikt konvex, gelte
-also
-
-$$
-f\bigl(\lambda\bx + (1-\lambda)\by\bigr) < \lambda f(\bx) + (1-\lambda) f(\by)
-\qquad \text{für alle } \bx \neq \by \text{ in } \Xcal, \ \lambda \in (0, 1) .
-$$
-
-Dann hat $f$ auf $\Xcal$ höchstens einen Minimierer.
-:::
-
-::::beweis
-
-:::schritt
-Seien $\cgreen{\wh{\bx}_1} \neq \cgreen{\wh{\bx}_2}$ zwei Minimierer, beide mit dem
-Wert $m := f(\cgreen{\wh{\bx}_1}) = f(\cgreen{\wh{\bx}_2})$. Der Mittelpunkt
-
-$$
-\bz := \tfrac{1}{2}\cgreen{\wh{\bx}_1} + \tfrac{1}{2}\cgreen{\wh{\bx}_2}
-$$
-
-liegt in $\Xcal$, weil $\Xcal$ konvex ist.
-
-::why[Wieder die Konvexität der Menge, und wieder ist sie leicht zu übersehen: ohne sie ist $\bz$ kein zulässiger Punkt und der Widerspruch bricht zusammen]
-:::
-
-:::schritt
-Die strikte Konvexität mit $\lambda = \tfrac12$ liefert
-
-$$
-f(\bz) < \tfrac{1}{2} f(\cgreen{\wh{\bx}_1}) + \tfrac{1}{2} f(\cgreen{\wh{\bx}_2}) = m .
-$$
-
-Damit ist $\bz$ ein zulässiger Punkt mit kleinerem Wert als das Minimum, was nicht
-sein kann. Also war die Annahme zweier verschiedener Minimierer falsch.
-
-::why[Der Beweis zeigt nur die Eindeutigkeit. Ob überhaupt ein Minimierer existiert, ist eine andere Frage: $f(x) = e^x$ ist auf $\R$ strikt konvex und hat kein Minimum]
-:::
-
-::::
+Beide Aussagen kosten dasselbe Kleingedruckte.
 
 :::bemerkung[#beide-saetze-brauchen-zwei (Beide Sätze brauchen zwei Konvexitätsbedingungen)]
 Leicht zu übersehen ist, dass in beiden Sätzen die Konvexität der zulässigen
-Menge genauso tragend ist wie die der Zielfunktion. Die Beweise oben zeigen,
-warum: Der Vergleichspunkt muss *zulässig* sein, dafür sorgt die Menge, und er
-muss *besser* sein, dafür sorgt die Funktion.
+Menge genauso tragend ist wie die der Zielfunktion. Die Beweise in
+@sec:konvexitaet/konvexe-optimierung zeigen, warum: Der Vergleichspunkt muss
+*zulässig* sein, dafür sorgt die Menge, und er muss *besser* sein, dafür sorgt
+die Funktion.
 
 *Ohne konvexe Menge nützt die beste Zielfunktion nichts.* Wir nehmen
 $\cred{\Xcal = \{-1, +1\}}$ und $f(y) = y^2$. Die Zielfunktion ist strikt konvex,
 und trotzdem sind $y = -1$ und $y = +1$ beide optimal mit dem Wert $1$. Der
 Mittelpunkt $\bz = 0$ hätte den kleineren Wert $0$, er ist aber nicht zulässig,
-und der Widerspruch aus @satz:eindeutigkeit-bei-strikter-konvexitaet entsteht gar nicht erst. Die Eindeutigkeit
+und der Widerspruch aus @satz:hoechstens-eine-minimalstelle entsteht gar nicht erst. Die Eindeutigkeit
 fällt mit der Konvexität der Menge.
 
 *Das Projektionstheorem ist der Spezialfall, bei dem die zweite Bedingung
@@ -298,7 +227,10 @@ abgeschlossene konvexe Menge, also $\min_{\by \in \Xcal} \left\|\bx - \by\right\
 die Menge, weil die strikte Konvexität der quadrierten Distanz in $\by$ schon in
 der Struktur des Raumes steckt.
 
-*Warum quadriert?* Die :k[Dreiecksungleichung]{#triangle-inequality} liefert
+:::
+
+:::vertiefung[Warum die quadrierte Norm strikt konvex ist]
+Die :k[Dreiecksungleichung]{#triangle-inequality} liefert
 $\left\|\lambda\ba + (1-\lambda)\bb\right\| \le \lambda\left\|\ba\right\| + (1-\lambda)\left\|\bb\right\|$
 und damit nur die Konvexität der :k[Norm]{#norm}, nicht die strikte. Gleichheit
 tritt nämlich ein, sobald $\ba$ und $\bb$ in dieselbe Richtung zeigen: Für
@@ -318,14 +250,7 @@ entspricht. Für $\ba \neq \bb$ und $\lambda \in (0, 1)$ ist der rote Term strik
 negativ, und genau das ist die strikte Konvexität. Weil $t \mapsto t^2$ auf
 $[0, \infty)$ streng wächst, haben Distanz und quadrierte Distanz dieselben
 Minimierer; das Quadrieren kostet also nichts und bringt die strikte Konvexität.
-
-*Und das gilt nur in Skalarprodukträumen.* In @eq:beide-saetze-brauchen-zwei haben wir das
-Skalarprodukt benutzt, nicht bloß eine Norm. Nehmen wir stattdessen die
-Maximumsnorm im $\R^2$ und projizieren den Nullpunkt auf die konvexe Menge
-$\Xcal = \{(t; 1) : t \in [-1, 1]\}$, so hat jeder Punkt der Strecke den Abstand
-$\max(\left|t\right|, 1) = 1$. Die Projektion ist dann die ganze Strecke und nicht
-ein Punkt. In allgemeinen normierten Räumen ist die Projektion auf eine konvexe
-Menge also nicht notwendig eindeutig.
+Gebraucht wird dafür das Skalarprodukt, nicht bloß eine Norm.
 :::
 
 ### Konvexe Verlustfunktionen in Statistik und ML
@@ -346,7 +271,7 @@ Sie ist stets positiv semidefinit, denn
 $\bh^\top\bX^\top\bX\bh = \left\|\bX\bh\right\|_2^2 \ge 0$, und positiv definit
 genau dann, wenn $\bX$ vollen Spaltenrang hat: Nur dann folgt aus $\bh \neq \bnull$
 auch $\bX\bh \neq \bnull$. Mit vollem Spaltenrang ist $L$ also strikt konvex und
-der Kleinste-Quadrate-Schätzer nach @satz:eindeutigkeit-bei-strikter-konvexitaet eindeutig. Ein Zahlenbeispiel:
+der Kleinste-Quadrate-Schätzer nach @satz:hoechstens-eine-minimalstelle eindeutig. Ein Zahlenbeispiel:
 Für die Designmatrix mit den Zeilen $(1, 1)$, $(1, 2)$, $(1, 3)$ und $(1, 5)$ ist
 $\corange{\bH_L} = \begin{pmatrix} 8 & 22 \\ 22 & 78\end{pmatrix}$ mit den
 Eigenwerten $84{,}34$ und $1{,}66$, also positiv definit.
@@ -455,8 +380,10 @@ $y$-Richtung.
 Damit ist die Lage beschrieben. Offen ist die praktisch entscheidende Frage:
 Kann ein Verfahren an so einem Punkt hängenbleiben?
 
-Wir zeichnen die Höhenlinien und hängen zwei Verfahren daran. Drei
-Voreinstellungen sind die drei Experimente, die sich lohnen: der gewöhnliche Start, der Sonderfall auf der grünen Achse und ein schräger Start
+:::interaktiv[Zwei Verfahren am Sattelpunkt]
+Die Tafel zeichnet die Höhenlinien von @beispiel:der-standardsattel und hängt zwei
+Verfahren daran. Drei Voreinstellungen sind die drei Experimente, die sich lohnen:
+der gewöhnliche Start, der Sonderfall auf der grünen Achse und ein schräger Start
 für den Newton-Knopf.
 
 <Schaetzfrage
@@ -473,17 +400,17 @@ für den Newton-Knopf.
   <SattelpunktWidget />
 </Schaetzfrage>
 
-Wie das Widget zeigt, gehen die beiden Verfahren gegensätzlich mit dem Sattel um.
-Der Newton-Knopf landet von jedem Startpunkt aus in einem einzigen Schritt exakt
-in $\cpurp{\bx^\star}$, denn $f$ ist quadratisch und seine Näherung zweiter
-Ordnung damit exakt. Der Gradientenabstieg dagegen entkommt: Mit
-$\gamma = 0{,}25$ läuft er aus $(1{,}5;\, 0{,}4)$ über $(0{,}75;\, 0{,}6)$,
-$(0{,}375;\, 0{,}9)$ und $(0{,}1875;\, 1{,}35)$ und steht nach acht Schritten bei
-$(0{,}0059;\, 10{,}25)$ – die erste Komponente fällt gegen null, die zweite läuft
-davon. Nur auf dem Startstrahl $y = 0$ kriecht auch er hinein: Dort bleibt die
-zweite Komponente in jedem Schritt null, und aus $x = 1{,}5$ stehen die Iterierten
-nach acht Schritten bei $0{,}0059$, nach zwanzig bei $1{,}4 \cdot 10^{-6}$.
-Warum diese Ausnahme in der Praxis keine Rolle spielt, sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
+Die beiden Verfahren gehen gegensätzlich mit dem Sattel um. Der Newton-Knopf
+landet von jedem Startpunkt aus in einem einzigen Schritt exakt in
+$\cpurp{\bx^\star}$, denn $f$ ist quadratisch und seine Näherung zweiter Ordnung
+damit exakt. Der Gradientenabstieg dagegen entkommt: Mit $\gamma = 0{,}25$ steht
+er aus $(1{,}5;\, 0{,}4)$ nach acht Schritten bei $(0{,}0059;\, 10{,}25)$ – die
+erste Komponente fällt gegen null, die zweite läuft davon. Nur auf dem Startstrahl
+$y = 0$ kriecht auch er hinein, weil dort die zweite Komponente in jedem Schritt
+null bleibt; aus $x = 1{,}5$ stehen die Iterierten dann nach zwanzig Schritten bei
+$1{,}4 \cdot 10^{-6}$. Warum diese Ausnahme in der Praxis keine Rolle spielt,
+sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
+:::
 
 :::bemerkung[#was-sattelpunkte-fuer-die-verfahren (Was Sattelpunkte für die Verfahren bedeuten)]
 *Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method} aus
@@ -525,22 +452,18 @@ aus @sec:newton-sgd bringt sein eigenes Rauschen mit.
 
 *Eine hochdimensionale Vorzeichenheuristik.* Solange kein Eigenwert von
 $\corange{\bH_f}$ null ist, entscheidet allein das Vorzeichenmuster: Ein Minimum
-verlangt dann, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt mit
+verlangt, dass *alle* $n$ Eigenwerte positiv sind, für einen Sattelpunkt mit
 indefiniter Hesse-Matrix genügen gemischte Vorzeichen. (Ein Eigenwert null lässt
-beide Fälle offen, dazu @bemerkung:warum-die-rueckrichtung-nicht-gilt.) Die Münzwurf-Faustregel aus
-@sec:differentialrechnung/hoehere-ableitungen illustriert den Unterschied: Wären
-die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte ein Minimum die
-Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$; für $n = 100$ sind
-das $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$.
-
-Das ist ein Toy-Modell, keine Verteilungsaussage über die stationären Punkte
-eines konkreten Problems und erst recht nicht über die Punkte, die ein
-Optimierungsverfahren besucht. In neuronalen Netzen sind die Eigenwertvorzeichen
-weder unabhängig noch fair verteilt, und wegen Überparametrisierung treten zudem
-viele nahezu flache Richtungen auf. Belastbar bleibt die geometrische Aussage:
-Positive Definitheit verlangt ein einheitliches Vorzeichen, Indefinitheit nur ein
-gemischtes Muster. Wie Verfahren auf solche negative Krümmung reagieren, zeigen
-die Abschnitte @num:optim/nelder-mead-gradient und @num:optim/newton-sgd.
+beide Fälle offen, dazu @bemerkung:warum-die-rueckrichtung-nicht-gilt.) Die
+Münzwurf-Faustregel aus @sec:differentialrechnung/hoehere-ableitungen beziffert
+den Unterschied: Wären die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte
+ein Minimum die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$, für
+$n = 100$ also $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$. Ein Toy-Modell
+ist das und keine Verteilungsaussage über die stationären Punkte eines konkreten
+Problems; belastbar bleibt die Geometrie dahinter, dass positive Definitheit ein
+einheitliches Vorzeichen verlangt und Indefinitheit nur ein gemischtes Muster.
+Wie Verfahren auf negative Krümmung reagieren, zeigen die Abschnitte
+@num:optim/nelder-mead-gradient und @num:optim/newton-sgd.
 :::
 
 ### Optimalitätsbedingungen im Überblick
@@ -560,6 +483,8 @@ Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
    :k[positiv definit]{#positive-definite}, so ist $\bx^\star$ ein striktes lokales
    Minimum.
 :::
+
+:::::vertiefung[Beweis der notwendigen Bedingung zweiter Ordnung]
 
 ::::beweis
 
@@ -598,6 +523,7 @@ ist $\corange{\bH_f(\bx^\star)}$ positiv semidefinit.
 :::
 
 ::::
+:::::
 
 :::bemerkung[#warum-die-rueckrichtung-nicht-gilt (Warum die Rückrichtung nicht gilt)]
 Verlockend wäre, aus Teil 3 eine Äquivalenz zu machen und zu schreiben:
@@ -639,18 +565,10 @@ differenzierbar. Dann ist $\corange{\bH_f(\bx)} \succeq 0$ an *jeder* Stelle
 (@satz:konvexitaet-und-positive-semidefinitheit), eine indefinite Hesse-Matrix kann also gar nicht auftreten: Die
 dritte Zeile der Tabelle bleibt leer, eine konvexe Funktion hat keine
 Sattelpunkte. Mehr noch, die Bedingung erster Ordnung wird für konvexe Funktionen
-hinreichend. Die Gradientenungleichung aus
-[Kapitel 11](?k=11-konvexitaet#sec-11.4) besagt
-
-$$
-f(\by) \ge f(\bx) + \corange{\nabla f(\bx)}(\by - \bx)
-\qquad \text{für alle } \bx, \by \in S ,
-$$
-
-und mit $\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ bleibt
-$f(\by) \ge f(\cgreen{\bx^\star})$ für alle $\by$ stehen. Jeder stationäre Punkt
-einer konvexen Funktion ist also bereits ein globales Minimum, was @satz:globale-optimalitaet-bei-konvexitaet von
-der anderen Seite bestätigt.
+hinreichend: Jeder stationäre Punkt ist dann bereits ein globales Minimum
+(@satz:kritischer-punkt-und-globales-minimum, dessen Beweis nur
+$\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ in die
+Gradientenungleichung einsetzt).
 
 Für die Praxis heißt das: Bei einem konvexen Problem sagt ein *verschwindender*
 Gradient schon alles, wir stehen dann im globalen Minimum. Ein bloß *kleiner*
@@ -687,7 +605,7 @@ dieselben. Deshalb minimieren Softwarebibliotheken die *negative* Log-Likelihood
 Ist die Zielfunktion strikt konvex, so hat das Optimierungsproblem höchstens eine
 Lösung, gleichgültig wie die zulässige Menge aussieht.
 
-@satz:eindeutigkeit-bei-strikter-konvexitaet braucht beide Konvexitätsbedingungen. Auf
+@satz:hoechstens-eine-minimalstelle braucht beide Konvexitätsbedingungen. Auf
 $\Xcal = \{-1, +1\}$ ist $f(y) = y^2$ strikt konvex, und trotzdem sind beide
 Punkte optimal mit dem Wert $1$. Der Mittelpunkt $0$ wäre besser, ist aber nicht
 zulässig, und ohne ihn entsteht der Widerspruch des Beweises gar nicht erst

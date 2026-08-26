@@ -6,16 +6,12 @@ import { OrthoWidget, GramSchmidtWidget, CgsVsMgsWidget } from "./widgets/S74Loc
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-In @sec:normalengleichungen haben wir das Kleinste-Quadrate-Problem über die
-Normalengleichungen gelöst: schnell, aber mit einem Haken. Das Aufstellen von
-$\bA^\top\bA$ quadriert die :k[Konditionszahl]{#condition-number},
-$\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$. Wir suchen deshalb ein Verfahren, das direkt
-mit $\bA$ arbeitet. Die Idee dieses Abschnitts: Wir transformieren das Problem mit
-Matrizen, die die :k[euklidische Norm]{#euclidean-norm} unverändert lassen. Solche
-Transformationen ändern die Norm des Residuums $\|\bA\bx - \bb\|_2$ nicht, das
-transformierte Problem hat also dieselbe Lösung wie das ursprüngliche. Wenn wir so lange
-transformieren, bis eine :k[Dreiecksgestalt]{#triangular-matrix} erreicht ist, wird das
-Problem trivial lösbar.
+Am Ende von @sec:normalengleichungen stand der Plan: Wir transformieren das
+Kleinste-Quadrate-Problem mit Matrizen, die die
+:k[euklidische Norm]{#euclidean-norm} unverändert lassen, bis eine
+:k[Dreiecksgestalt]{#triangular-matrix} erreicht ist, in der es trivial lösbar wird. Das
+vermeidet $\bA^\top\bA$ und damit die quadrierte
+:k[Konditionszahl]{#condition-number}. Jetzt lösen wir das Versprechen ein.
 
 ### Recap: Orthogonalmatrizen
 
@@ -222,8 +218,11 @@ Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik is
 klassische Verfahren heikel. Sind zwei Spalten fast
 :k[linear abhängig]{#linear-independence}, ist das Residuum nach der Projektion winzig,
 und beim Normieren blasen wir :k[Rundungsfehler]{#rounding-error} massiv auf: die
-berechneten $\bq_k$ verlieren ihre Orthogonalität. Wie dramatisch das wird, messen wir am
-besten selbst.
+berechneten $\bq_k$ verlieren ihre Orthogonalität. Ein einfacher Umbau hilft: Das
+*modifizierte Gram-Schmidt-Verfahren* (MGS) zieht die Projektionen nacheinander von der
+jeweils schon aktualisierten Spalte ab statt alle auf einmal von der Originalspalte. In
+exakter Arithmetik ändert das nichts, in Gleitkommaarithmetik alles. Wie dramatisch der
+Unterschied wird, messen wir am besten selbst.
 
 :::interaktiv[Wie schnell zerbricht Gram-Schmidt – und wie repariert man es?]
 <CgsVsMgsWidget />
@@ -292,7 +291,7 @@ $$
 
 :::schritt
 $$
-\left\|\cbred{\bR\wh{\bx} - \bc_1}\right\|_2 = \left\|\bR\bR^{-1}\bc_1 - \bc_1\right\|_2 = 0 \quimpl \wh{\bx} = \bR^{-1}\bc_1 \text{ ist Minimierer.} \quad \blacksquare
+\left\|\cbred{\bR\wh{\bx} - \bc_1}\right\|_2 = \left\|\bR\bR^{-1}\bc_1 - \bc_1\right\|_2 = 0 \quimpl \wh{\bx} = \bR^{-1}\bc_1 \text{ ist Minimierer.}
 $$
 
 ::why[$\bR$ ist invertierbar, also bringt $\wh{\bx} = \bR^{-1}\bc_1$ den ersten Term exakt auf null, und kleiner als null kann eine Norm nicht werden]

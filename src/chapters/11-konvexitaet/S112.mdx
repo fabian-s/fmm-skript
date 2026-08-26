@@ -51,14 +51,11 @@ Verbindungsstrecke herausläuft, und wie schwer ist die Suche?
 
 Die Kreisscheibe und das Dreieck geben nicht nach, so oft wir es auch versuchen. Beim Kreisring
 und bei der Parabelunterseite finden wir dagegen schnell ein Paar, dessen Strecke hinausläuft.
-Der vorbereitete Knopf setzt beim Ring die Punkte $(1{,}1;\ 0)^\top$ und $(0;\ 1{,}1)^\top$; die
-Strecke zwischen ihnen liegt für $\lambda$ zwischen $0{,}380$ und $0{,}620$ im Loch, ihr
-Mittelpunkt hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und unterschreitet damit den Innenradius
-$0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge. Wie leicht das
-fällt, hängt an der Menge: Greifen wir beide Punkte zufällig aus dem Ring, so scheitert die
-Strecke in gut $60\,\%$ der Fälle, bei der Parabelunterseite nur in etwa $13\,\%$. Die
-Kreisscheibe und die Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung
-statt mit Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
+Der vorbereitete Knopf setzt beim Ring die Punkte $(1{,}1;\ 0)^\top$ und $(0;\ 1{,}1)^\top$;
+ihr Mittelpunkt hat die Norm $1{,}1/\sqrt2 \approx 0{,}778$ und unterschreitet damit den
+Innenradius $0{,}8$. Bei der Parabel verlässt die Strecke die Menge sogar auf ganzer Länge.
+Kreisscheibe und Parabelmenge kommen gleich im Selbsttest wieder vor, dort mit Rechnung statt
+mit Mausklicks; der Ring vertritt dort die Einheitssphäre, die als Kurve ohne Dicke nicht
 anklickbar wäre.
 
 Die Definition spricht nur über zwei Punkte. Gemeint ist aber mehr, und der folgende Satz holt
@@ -231,18 +228,15 @@ $$
 < \lambda r + (1-\lambda) r = r .
 $$
 
-Die zweite Zeile verdient einen zweiten Blick. Aus $\left\|\bx\right\| < r$ folgt
-$\lambda\left\|\bx\right\| < \lambda r$ nur, solange $\lambda > 0$ ist; für $\lambda = 0$
-trägt der zweite Summand die strikte Ungleichung. Eine Fallunterscheidung brauchen wir
-deshalb nicht, wohl aber die Beobachtung, dass die beiden Gewichte nie gleichzeitig
-verschwinden.
+Der strikte Schritt kommt dabei immer von einem der beiden Summanden: Für $\lambda = 0$ trägt
+ihn der zweite, sonst der erste. Eine Fallunterscheidung brauchen wir deshalb nicht.
 :::
 
 Der nächste Begriff beschreibt die Ecken einer konvexen Menge. In
 @sec:konvexkombinationen sind Extrempunkte über die Gewichte eingeführt worden, als Punkte
-also, die sich nur mit einem einzigen $w_i = 1$ erreichen lassen; die allgemeine Fassung steht
-dort schon als Nebenbemerkung. Hier machen wir sie zur Arbeitsgrundlage, denn die folgenden
-Sätze sprechen über konvexe Mengen, die niemand als Hülle einer Punktwolke gegeben hat.
+also, die sich nur mit einem einzigen $w_i = 1$ erreichen lassen. Hier brauchen wir die
+allgemeine Fassung, denn die folgenden Sätze sprechen über konvexe Mengen, die niemand als
+Hülle einer Punktwolke gegeben hat.
 
 :::definition[#konvexe-mengen-extrempunkt (Extrempunkt)]
 Sei $\cblue{\Kcal} \subseteq V$ konvex. Ein Punkt $\corange{\bz} \in \cblue{\Kcal}$ heißt
@@ -255,6 +249,24 @@ $$
 $$
 
 stets $\bu = \bw = \corange{\bz}$ folgt.
+:::
+
+:::vertiefung[Warum beide Fassungen dieselben Punkte auswählen]
+Für endliches $\Xcal$ und $\cblue{\Kcal} = \conv(\Xcal)$ stimmt
+@definition:konvexe-mengen-extrempunkt mit @definition:konvexkombinationen-extrempunkt überein.
+Sei zunächst $\corange{\bz} \in \Xcal$ nur trivial darstellbar, und sei
+$\corange{\bz} = \lambda\bu + (1-\lambda)\bw$ mit $\bu, \bw \in \cblue{\Kcal}$ und
+$\lambda \in (0,1)$. Setzen wir für $\bu$ und $\bw$ ihre Darstellungen als
+Konvexkombinationen von Punkten aus $\Xcal$ ein und sortieren um, so steht rechts wieder eine
+Konvexkombination von Punkten aus $\Xcal$. Sie muss also die triviale sein, und daraus folgt
+$\bu = \bw = \corange{\bz}$.
+
+Umgekehrt lösen wir eine nichttriviale Darstellung nach $\corange{\bz}$ auf und erhalten
+$\corange{\bz}$ als Konvexkombination der *übrigen* Punkte. Mindestens zwei von ihnen tragen
+positives Gewicht, denn ein einzelner Punkt mit Gewicht $1$ wäre $\corange{\bz}$ selbst, und
+der kommt unter den übrigen nicht vor. Spalten wir einen davon ab, so liegt $\corange{\bz}$
+im Inneren einer Strecke innerhalb von $\cblue{\Kcal}$. Dasselbe Argument zeigt nebenbei,
+dass Punkte aus $\cblue{\Kcal} \setminus \Xcal$ von vornherein ausscheiden.
 :::
 
 Ein Extrempunkt liegt also auf keiner Strecke, die ganz in der Menge verläuft und ihn im Inneren
@@ -286,12 +298,11 @@ $$
 $\corange{\be_1}, \dots, \corange{\be_N}$. Dass $\corange{\be_1}$ extrem ist, sieht man so: Gilt
 $\corange{\be_1} = \lambda\bu + (1-\lambda)\bw$ mit $\bu, \bw \in \cblue{\Delta^N}$ und
 $\lambda \in (0,1)$, so ist für jedes $i \ge 2$ die Zahl $\lambda u_i + (1-\lambda) w_i = 0$ eine
-Summe zweier nichtnegativer Terme mit positiven Vorfaktoren, also $u_i = w_i = 0$. Weil sich die
-Komponenten zu eins addieren, bleibt $u_1 = w_1 = 1$; für die übrigen $\corange{\be_i}$ läuft das
-Argument genauso. Umgekehrt ist jeder Punkt $\bx$ mit zwei *verschiedenen* positiven Komponenten
-$x_j, x_k > 0$, $j \neq k$, kein Extrempunkt: Für hinreichend kleines $\varepsilon > 0$
-liegen $\bx \pm \varepsilon(\be_j - \be_k)$ beide in $\cblue{\Delta^N}$, denn die Summe der
-Komponenten ändert sich nicht und alle bleiben nichtnegativ, und $\bx$ ist ihr Mittelpunkt.
+Summe zweier nichtnegativer Terme mit positiven Vorfaktoren, also $u_i = w_i = 0$; weil sich die
+Komponenten zu eins addieren, bleibt $u_1 = w_1 = 1$. Für die übrigen $\corange{\be_i}$ läuft
+das Argument genauso, und umgekehrt ist jeder Punkt mit zwei positiven Komponenten
+$x_j, x_k > 0$, $j \neq k$, der Mittelpunkt von $\bx \pm \varepsilon(\be_j - \be_k)$ und
+deshalb nicht extrem.
 Dass die Ecken den Simplex auch aufspannen, sieht man ohne Umweg: Jedes $\bx \in \cblue{\Delta^N}$
 ist $\bx = \sum_{i=1}^N x_i \corange{\be_i}$, und die $x_i$ sind gerade nichtnegative Gewichte
 mit Summe eins. Also ist $\cblue{\Delta^N} = \conv\{\corange{\be_1}, \dots, \corange{\be_N}\}$.
@@ -342,16 +353,14 @@ $$
 $$
 :::
 
-Die Symmetrie ist dabei keine Nebensache. Für die Konvexität macht sie keinen Unterschied, der
-Beweis unten läuft ohne sie genauso, für alles andere aber sehr wohl. Die
+Die Symmetrie ist dabei keine Nebensache. Die
 :k[quadratische Form]{#quadratic-form} $\bx^\top\bA\bx$ sieht von $\bA$ nur den symmetrischen
-Anteil $(\bA + \bA^\top)/2$, denn der schiefsymmetrische Teil liefert stets null. Ohne
-Symmetrie wäre $\bA \succeq 0$ also gar keine Eigenschaft von $\bA$ allein. Vor allem hängen die
-Aussagen, für die wir Semidefinitheit brauchen, an der Symmetrie: Nur für symmetrische Matrizen
-gibt der :k[Spektralsatz]{#spectral-theorem} die Äquivalenz zu „alle
+Anteil $(\bA + \bA^\top)/2$, denn der schiefsymmetrische Teil liefert stets null; ohne
+Symmetrie wäre $\bA \succeq 0$ also gar keine Eigenschaft von $\bA$ allein. Vor allem hängen
+die Aussagen, für die wir Semidefinitheit brauchen, an ihr: Nur für symmetrische Matrizen gibt
+der :k[Spektralsatz]{#spectral-theorem} die Äquivalenz zu „alle
 :k[Eigenwerte]{#eigenvalue-eigenvector} sind nichtnegativ" her, und nur dort greift das
-Cholesky-Verfahren aus @sec:lgs/cholesky. Wir führen den Begriff deshalb wie
-üblich für symmetrische Matrizen.
+Cholesky-Verfahren aus @sec:lgs/cholesky.
 
 :::satz[#die-positiv-semidefiniten-matrizen (Die positiv semidefiniten Matrizen bilden eine konvexe Menge)]
 $\cblue{\Pcal_n}$ ist konvex.
@@ -714,6 +723,10 @@ $M := \max_{\bx \in \cblue{\Xcal}} \bv^\top\bx$. Dann gilt:
 3. jeder Extrempunkt von $\conv(\cblue{\Xcal})$ liegt in $\cblue{\Xcal}$.
 :::
 
+:::::vertiefung[Der Beweis des Extrempunkt-Satzes]
+Für die Anwendung des Satzes genügt seine Aussage. Wer wissen will, wie der Nachweis läuft,
+findet ihn hier; der technische Kern ist ein Existenzbeweis für Extrempunkte.
+
 ::::beweis
 
 :::schritt
@@ -743,54 +756,40 @@ $M - \bv^\top\bx_i \ge 0$ folgt $\bv^\top\bx_i = M$ für jedes dieser $i$.
 :::
 
 :::schritt
-Unter den endlich vielen Punkten von $\cblue{\Xcal_M}$ wählen wir einen mit größter
-euklidischer Norm und nennen ihn $\corange{\bx^\star}$. Er maximiert die Norm sogar über ganz
-$\conv(\cblue{\Xcal_M})$, denn
-$\left\|\sum_i w_i\bx_i\right\| \le \sum_i w_i \left\|\bx_i\right\| \le \max_i \left\|\bx_i\right\|$.
-Nun sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
-$\bu, \bw \in \conv(\cblue{\Xcal_M})$ und $\lambda \in (0,1)$. Ausmultiplizieren liefert die
-Identität
+*Zu 2, in der Skizze.* Unter den endlich vielen Punkten von $\cblue{\Xcal_M}$ wählen wir einen
+mit größter euklidischer Norm und nennen ihn $\corange{\bx^\star}$. Zerlegen wir ihn als
+$\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
+$\bu, \bw \in \conv(\cblue{\Xcal_M})$ und $\lambda \in (0,1)$, so liefert Ausmultiplizieren
 
-$$ {#eq-eq-11-2-2}
+$$
 \lambda\left\|\bu\right\|^2 + (1-\lambda)\left\|\bw\right\|^2
 - \left\|\cgreen{\lambda\bu + (1-\lambda)\bw}\right\|^2
-= \lambda(1-\lambda)\left\|\bu - \bw\right\|^2 .
+= \lambda(1-\lambda)\left\|\bu - \bw\right\|^2 ,
 $$
 
-Die linke Seite ist höchstens null, weil $\left\|\bu\right\|$ und $\left\|\bw\right\|$ beide
-höchstens $\left\|\corange{\bx^\star}\right\|$ sind. Die rechte Seite ist mindestens null. Also
-sind beide null, und wegen $\lambda(1-\lambda) > 0$ folgt $\bu = \bw$ und damit
-$\bu = \bw = \corange{\bx^\star}$. Der Punkt $\corange{\bx^\star}$ ist somit Extrempunkt von
-$\conv(\cblue{\Xcal_M})$.
+und links steht höchstens null, rechts mindestens null. Also sind beide Seiten null und
+$\bu = \bw = \corange{\bx^\star}$, das heißt $\corange{\bx^\star}$ ist Extrempunkt von
+$\conv(\cblue{\Xcal_M})$. Für eine Zerlegung innerhalb von $\conv(\cblue{\Xcal})$ zwingt
+Schritt 1 die beiden Teilpunkte ohnehin nach $\cblue{\Fcal} = \conv(\cblue{\Xcal_M})$, und
+damit ist $\corange{\bx^\star}$ auch dort extrem.
 
-::why[@eq:eq-11-2-2 entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$]
-:::
-
-:::schritt
-*Zu 2.* Wir zeigen, dass $\corange{\bx^\star}$ sogar Extrempunkt von $\conv(\cblue{\Xcal})$ ist.
-Sei $\corange{\bx^\star} = \cgreen{\lambda\bu + (1-\lambda)\bw}$ mit
-$\bu, \bw \in \conv(\cblue{\Xcal})$ und $\lambda \in (0,1)$. Dann ist
-$M = \lambda\,\bv^\top\bu + (1-\lambda)\,\bv^\top\bw$, und nach Schritt 1 sind $\bv^\top\bu$ und
-$\bv^\top\bw$ beide höchstens $M$. Also ist $\bv^\top\bu = \bv^\top\bw = M$, das heißt
-$\bu, \bw \in \cblue{\Fcal} = \conv(\cblue{\Xcal_M})$. Nach Schritt 3 folgt
-$\bu = \bw = \corange{\bx^\star}$.
-
-::why[dasselbe Durchschnittsargument wie in Schritt 2, diesmal mit nur zwei Summanden]
+::why[die Identität entsteht aus $\left\|\lambda\bu + (1-\lambda)\bw\right\|^2 = \lambda^2\left\|\bu\right\|^2 + 2\lambda(1-\lambda)\bu^\top\bw + (1-\lambda)^2\left\|\bw\right\|^2$ und $\lambda - \lambda^2 = \lambda(1-\lambda)$; links ist höchstens null, weil $\left\|\bu\right\|$ und $\left\|\bw\right\|$ die maximale Norm $\left\|\corange{\bx^\star}\right\|$ nicht überschreiten]
 :::
 
 :::schritt
 *Zu 3.* Sei $\corange{\bz}$ ein Extrempunkt von $\conv(\cblue{\Xcal})$, geschrieben als
-$\corange{\bz} = \sum_{i=1}^{N} w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal}$ und $w_i > 0$. Ist
-$N = 1$, so ist $\corange{\bz} = \bx_1 \in \cblue{\Xcal}$. Ist $N \ge 2$, so schreiben wir
+$\corange{\bz} = \sum_{i=1}^{N} w_i\bx_i$ mit $\bx_i \in \cblue{\Xcal}$ und $w_i > 0$. Für
+$N = 1$ ist $\corange{\bz} = \bx_1 \in \cblue{\Xcal}$, und für $N \ge 2$ lesen wir
 $\corange{\bz} = w_1\bx_1 + (1-w_1)\bu$ mit
-$\bu = \sum_{i\ge 2} \frac{w_i}{1-w_1}\bx_i \in \conv(\cblue{\Xcal})$ und $w_1 \in (0,1)$; weil
-$\corange{\bz}$ extrem ist, folgt $\bx_1 = \corange{\bz}$, also wieder
-$\corange{\bz} \in \cblue{\Xcal}$.
+$\bu = \sum_{i\ge 2} \frac{w_i}{1-w_1}\bx_i \in \conv(\cblue{\Xcal})$ als
+Zweierkombination; weil $\corange{\bz}$ extrem ist, folgt wieder
+$\corange{\bz} = \bx_1 \in \cblue{\Xcal}$.
 
 ::why[dieselbe Normierung wie im Beweis zu @satz:konvexe-mengen-enthalten-alle, hier benutzt, um eine $N$-Kombination als Zweierkombination zu lesen]
 :::
 
 ::::
+:::::
 
 :::beispiel[#auswahl-unter-einer-budgetschranke (Auswahl unter einer Budgetschranke)]
 Zwei Gegenstände, der erste kostet $2$ und ist $5$ wert, der zweite kostet $3$ und ist $8$ wert.
@@ -822,29 +821,24 @@ und verliert dadurch nichts.
 :::
 
 :::bemerkung[#was-der-satz-leistet-und-was-nicht (Was der Satz leistet und was nicht)]
-*Nicht jeder Maximierer ist ein Extrempunkt.* @satz:lineare-ziele-und-extrempunkte(2) verspricht die Existenz eines
-solchen, nicht mehr. Bei $\cblue{\Xcal} = \{(0,0), (1,0), (2,0)\}$ und $\bv = (0,1)^\top$ haben
-alle drei Punkte den Zielwert $0$, sind also alle Maximierer. Der mittlere ist aber der
-Mittelpunkt der beiden äußeren und deshalb kein Extrempunkt. Bei Gleichständen taugt der Satz
-also zum Finden *einer* Lösung, nicht zum Beschreiben aller.
-
-*Endlichkeit ist nicht kosmetisch.* Für unendliche Mengen muss das Maximum nicht angenommen
-werden. Der offene Ball aus @beispiel:offener-ball hat, wie wir gesehen haben, überhaupt keine
-Extrempunkte, und für $\bv \neq \bnull$ erreicht $\bv^\top\bx$ dort sein Supremum nie. Ist die
-Menge dagegen kompakt und konvex, so wird das Maximum eines linearen Ziels weiterhin in einem
-Extrempunkt angenommen; dort besagt der Satz von Minkowski sogar, dass sich die ganze Menge als
-konvexe Hülle ihrer Extrempunkte schreiben lässt.
+*Nicht jeder Maximierer ist ein Extrempunkt.* @satz:lineare-ziele-und-extrempunkte(2) verspricht
+die Existenz eines solchen, nicht mehr: Bei $\cblue{\Xcal} = \{(0,0), (1,0), (2,0)\}$ und
+$\bv = (0,1)^\top$ sind alle drei Punkte Maximierer, der mittlere ist aber der Mittelpunkt der
+beiden äußeren. Bei Gleichständen taugt der Satz zum Finden *einer* Lösung, nicht zum
+Beschreiben aller. Und die Endlichkeit ist nicht kosmetisch: Der offene Ball aus
+@beispiel:offener-ball hat gar keine Extrempunkte, und für $\bv \neq \bnull$ erreicht
+$\bv^\top\bx$ dort sein Supremum nie.
 
 *Die Arbeit verschiebt sich, sie verschwindet nicht.* Der Satz ersetzt die Suche über
-$\cblue{\Xcal}$ durch die Suche über die Extrempunkte von $\conv(\cblue{\Xcal})$. Das nützt nur,
-wenn wir diese Hülle beschreiben können. In @beispiel:auswahl-unter-einer-budgetschranke war sie leicht zu bekommen, weil
-die Ecken des zugehörigen Ungleichungssystems zufällig ganzzahlig sind. Für allgemeine
-Teilmengen von $\N^n$ ist $\conv(\cblue{\Xcal})$ dagegen selbst schwer zu bestimmen, und genau
-darin liegt die Schwierigkeit der ganzzahligen Optimierung. Ist umgekehrt die zulässige Menge
-von vornherein ein Polyeder wie in @beispiel:ein-dreieck-als-schnitt-dreier, so ist die Suche über die Ecken die
-Grundidee der linearen Programmierung. Dieses Verfahren behandelt dieses Skript nicht;
-@sec:optim/beschraenkt geht die Optimierung unter Nebenbedingungen stattdessen
-über Lagrange-Multiplikatoren und die Karush-Kuhn-Tucker-Bedingungen an.
+$\cblue{\Xcal}$ durch die Suche über die Extrempunkte von $\conv(\cblue{\Xcal})$, und das nützt
+nur, wenn wir diese Hülle beschreiben können. In @beispiel:auswahl-unter-einer-budgetschranke
+war sie leicht zu bekommen; für allgemeine Teilmengen von $\N^n$ ist sie dagegen selbst schwer
+zu bestimmen, und genau darin liegt die Schwierigkeit der ganzzahligen Optimierung. Ist die
+zulässige Menge von vornherein ein Polyeder wie in
+@beispiel:ein-dreieck-als-schnitt-dreier, so ist die Suche über die Ecken die Grundidee der
+linearen Programmierung. Dieses Verfahren behandelt das Skript nicht;
+@sec:optim/beschraenkt geht die Optimierung unter Nebenbedingungen über
+Lagrange-Multiplikatoren und die Karush-Kuhn-Tucker-Bedingungen an.
 :::
 
 *Vertiefung: Boyd und Vandenberghe, Convex Optimization, §2.2 und §2.3 behandeln dieselben Themen

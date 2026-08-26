@@ -311,25 +311,6 @@ schon einmal bestimmt, dort durch Ausschreiben der Doppelsumme und Ableiten nach
 jeder Komponente einzeln. Die Produktregel ersetzt diese Indexrechnung.
 :::
 
-:::bemerkung[#varianz-einer-linearkombination (Varianz einer Linearkombination)]
-Ein statistisches Beispiel derselben Bauform. Für einen Zufallsvektor
-$\bX \in \R^n$ mit :k[Kovarianzmatrix]{#covariance-matrix} $\bSigma$ gilt
-
-$$
-\var(\ba^\top\bX) = \ba^\top\bSigma\ba .
-$$
-
-Kovarianzmatrizen sind symmetrisch, @beispiel:gradient-einer-quadratischen-form liefert also den Gradienten
-bezüglich der Gewichte,
-$\corange{\nabla_{\ba}\var(\ba^\top\bX)} = 2\ba^\top\bSigma$, transponiert
-$2\bSigma\ba$. Genau diesen Ausdruck braucht jedes Verfahren, das Portfoliorisiko
-oder Schätzvarianz über Gewichte minimiert. Für
-$\bSigma = \bigl(\begin{smallmatrix} 4 & 1 \\ 1 & 2\end{smallmatrix}\bigr)$ und
-$\ba = (1, -0{,}5)^\top$ etwa ist die Varianz $3{,}5$ und der Gradient
-$(7,\ 0)$: Eine kleine Änderung des zweiten Gewichts ändert die Varianz in
-erster Ordnung gar nicht.
-:::
-
 :::beispiel[#ridge-regression (Ridge-Regression)]
 Die Ridge-Regression ergänzt die
 :k[lineare Regression]{#linear-regression} um einen Strafterm. Mit Response
@@ -574,21 +555,19 @@ einmal ohne die Kettenregel nach, über einen zentralen Differenzenquotienten
 mit Schrittweite $10^{-6}$.
 
 <KettenregelWidget />
+
+Bei $h(x) = \sqrt{x^2}$ bleibt das Produkt zahm, obwohl beide Faktoren es nicht sind: Für
+jedes $x \neq 0$ ist $\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$
+exakt das Vorzeichen von $x$, wie es sich für die Ableitung von $\left|x\right|$ gehört. Bei
+$x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die Wurzel an der Stelle
+$u = f(0) = 0$ nicht differenzierbar ist; übrig bleibt der Knick aus @sec:linearisierung,
+und das Produkt aus $\infty$ und $0$ ist keine Zahl. Bemerkenswert ist, dass die numerische
+Gegenprobe davon nichts merkt und brav $0$ meldet: Der zentrale Differenzenquotient mittelt
+über beide Seiten des Knicks. @beispiel:gradient-der-euklidischen-norm wird genau diesen
+Vorbehalt für die euklidische Norm brauchen.
 :::
 
-Wie das Widget zeigt, bleibt das Produkt bei $h(x) = \sqrt{x^2}$ zahm, obwohl
-beide Faktoren es nicht sind: Für jedes $x \neq 0$ ist
-$\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$ exakt das
-Vorzeichen von $x$, wie es sich für die Ableitung von $\left|x\right|$ gehört.
-Bei $x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die Wurzel
-an der Stelle $u = f(0) = 0$ nicht differenzierbar ist; übrig bleibt der Knick
-aus @sec:linearisierung, und das Produkt aus $\infty$
-und $0$ ist keine Zahl. Bemerkenswert ist, dass die numerische Gegenprobe im
-Widget davon nichts merkt und brav $0$ meldet: Der zentrale Differenzenquotient
-mittelt über beide Seiten des Knicks. @beispiel:gradient-der-euklidischen-norm wird genau diesen
-Vorbehalt für die euklidische Norm brauchen.
-
-### Anwendung: Logistische Regression
+::::vertiefung[Alternatives Beispiel zur Kettenregel: logistische Regression]
 
 Kaum ein Modell zeigt die Kettenregel so sauber wie die logistische Regression.
 Wir wollen eine binäre Zielgröße $Y \in \{0, 1\}$ aus Merkmalen
@@ -677,7 +656,7 @@ $(0{,}9047,\ -1{,}8093,\ 0{,}4523)$.
 :::bemerkung[#fehler-mal-merkmal (Fehler mal Merkmal)]
 Gleichung @eq:gradient-des-logistischen-verlusts-2 ist eine der meistbenutzten Formeln des maschinellen
 Lernens, und sie liest sich wie ein Satz: *Der Gradient ist der Vorhersagefehler,
-gewichtet mit dem Merkmalsvektor.* Drei Konsequenzen.
+gewichtet mit dem Merkmalsvektor.* Zwei Konsequenzen.
 
 Erstens die Richtung. Ist $\wh{y} > y$, sagt das Modell also zu viel voraus, so
 zeigt der Gradient in Richtung $\bx^\top$. Der Gradientenabstieg aus
@@ -691,12 +670,6 @@ $\left\|\corange{\nabla\ell(\bbeta)}\right\| = \left|\wh y - y\right|\left\|\bx\
 < \left\|\bx\right\|$ für jedes $\bx \neq \bnull$. Eine einzelne Beobachtung
 kann das Modell nie beliebig weit reißen, egal wie falsch die Vorhersage liegt.
 
-Drittens die Statistik dahinter. Setzen wir den Gradienten der Summe über alle
-Beobachtungen auf null, so steht dort $\bX^\top(\wh{\by} - \by) = \bnull$: Die
-Residuen sind orthogonal zu den Spalten der Designmatrix, dieselbe Bedingung wie
-bei den Normalengleichungen in
-@sec:kq/normalengleichungen. Anders als dort lässt sie sich nicht in einer
-Zeile auflösen, weil $\wh{\by}$ nichtlinear von $\bbeta$ abhängt.
 :::
 
 Wie weit kann eine einzelne Beobachtung den Parameter reißen, wenn das Modell
@@ -711,18 +684,18 @@ von $\beta$, die grüne Tangente hat die Steigung aus @eq:gradient-des-logistisc
 Pfeil zeigt, wohin ein Abstiegsschritt mit Schrittweite $0{,}5$ führt.
 
 <LogistikWidget />
+
+In beiden Klassen steht derselbe Ausdruck. Schalten wir auf $y = 0$ und schieben $\beta$
+nach oben, so wird das Modell selbstbewusst falsch, der Gradient nähert sich seiner
+Obergrenze $\left|x\right|$, erreicht sie aber nie – das ist die zweite Konsequenz aus
+@bemerkung:fehler-mal-merkmal, ablesbar am Fehlerbalken, der nie über die Höhe $1$
+hinauskommt. Stellen wir umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte
+Gerade auf der Höhe $\log 2 = 0{,}693147$, und der Gradient verschwindet für jedes $\beta$.
+Vor allem aber bestätigt die numerische Gegenprobe in beiden Klassen die Formel
+@eq:gradient-des-logistischen-verlusts-2, Vorzeichen eingeschlossen.
 :::
 
-Wie das Widget zeigt, steht in beiden Klassen derselbe Ausdruck. Schalten wir auf
-$y = 0$ und schieben $\beta$ nach oben, so wird das Modell selbstbewusst falsch,
-der Gradient nähert sich seiner Obergrenze $\left|x\right|$, erreicht sie aber
-nie: Das ist die zweite Konsequenz aus @bemerkung:fehler-mal-merkmal, und im Widget lässt sie
-sich am Fehlerbalken ablesen, der nie über die Höhe $1$ hinauskommt. Stellen wir
-umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte Gerade auf der
-Höhe $\log 2 = 0{,}693147$: Ein Merkmal, das immer null ist, trägt keine
-Information, und der Gradient verschwindet für jedes $\beta$. Vor allem aber
-bestätigt die numerische Gegenprobe in beiden Klassen die Formel @eq:gradient-des-logistischen-verlusts-2,
-Vorzeichen eingeschlossen.
+::::
 
 ### Übung: Gradient der euklidischen Norm
 

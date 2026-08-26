@@ -40,18 +40,20 @@ Frischen wir zunächst das Vorwissen auf. Für Vektoren kennen wir neben der
 „Aussehen" lässt sich am besten über ihre Einheitskugeln
 $\{\bx : \|\bx\|_p = 1\}$ vergleichen: Raute, Kreis, Quadrat.
 
+:::interaktiv[Auffrischung: Was misst die Norm an der Einheitskugel?]
 Bevor wir weiterlesen, lohnt ein Blick auf diese Formen, und zwar auf die Frage, was sie mit
 der *Zahl* $\|\bx\|_p$ zu tun haben.
 
-:::interaktiv[Auffrischung: Was misst die Norm an der Einheitskugel?]
 <S32NormBallWidget />
-:::
 
 Die Norm eines Vektors ist damit ablesbar geworden: Sie ist der Faktor, mit dem wir die
 Einheitskugel aufblasen müssen, damit ihr Rand durch die Spitze von $\bx$ läuft. Für
 $p \ge 1$ ist diese Kugel konvex, und die Konvexität ist nichts anderes als die
-Dreiecksungleichung in geometrischer Gestalt. Diese Denkfigur nehmen wir mit: Auch bei
-Matrixnormen werden wir gleich fragen, welche Menge eine Norm zur „Einheitskugel" erklärt.
+Dreiecksungleichung in geometrischer Gestalt.
+:::
+
+Diese Denkfigur nehmen wir mit: Auch bei Matrixnormen werden wir gleich fragen, welche
+Menge eine Norm zur „Einheitskugel" erklärt.
 
 ### Die Axiome :id[die-axiome]
 
@@ -95,8 +97,11 @@ $$
 $$
 :::
 
-Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen, denn die
-Vektorisierung sortiert die Einträge ja nur um:
+Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen: Die
+Vektorisierung sortiert die Einträge ja nur um, und damit erbt
+$\bA \mapsto \left\| \vec(\bA) \right\|$ alle drei Axiome von der Vektornorm.
+
+:::::vertiefung[Warum jede Vektornorm auf diesem Weg eine Matrixnorm liefert]
 
 :::satz[#satz-3-2-4]
 Ist $\|\cdot\|$ eine Vektornorm auf $\R^{mn}$, so ist
@@ -147,6 +152,8 @@ $$
 
 ::::
 
+:::::
+
 Die drei wichtigsten Vertreter dieser Bauart entstehen aus den drei vertrauten
 Vektornormen:
 
@@ -175,19 +182,18 @@ Vektornormen:
   $$
 :::
 
+:::interaktiv[Frobenius-, Summen- und Maximumsnorm: was sehen sie, was nicht?]
 Diese drei Normen sind schnell hingeschrieben. Aber leisten sie auch, was wir von einem
 Größenmaß erwarten? Prüfen wir das an einer Frage, die wir gleich brauchen werden: Können
 zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei Normen
 denselben Wert haben?
 
-:::interaktiv[Frobenius-, Summen- und Maximumsnorm: was sehen sie, was nicht?]
 <S32VecNormWidget />
-:::
 
-Der Tauschknopf im Widget beantwortet die Frage: Verschieben wir die vier Einträge auf andere
+Der Tauschknopf beantwortet die Frage: Verschieben wir die vier Einträge auf andere
 Plätze, bleibt jede der drei Zahlen stehen, während aus der Identität etwa eine singuläre
 Matrix wird. Alle drei Normen sehen nur die Multimenge der Einträge, nicht ihre Anordnung.
-Warum das ein echtes Problem ist, machen wir jetzt an einem Beispiel fest.
+:::
 
 ### Was elementweise Normen nicht sehen :id[was-elementweise-normen-nicht-sehen]
 

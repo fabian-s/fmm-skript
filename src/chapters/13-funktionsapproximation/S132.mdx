@@ -51,24 +51,12 @@ E \colon \Fcal \to \R^n,
 E(f) = \bigl(f(x_1), \dots, f(x_n)\bigr)^\top,
 $$
 
-ist linear, denn Summe und Vielfaches sind punktweise erklärt. Die
-Interpolanten der Daten $\cblue{\by}$ sind genau die Urbilder von
-$\cblue{\by}$ unter $E$, und die Gestalt einer solchen Urbildmenge kennen wir
-von linearen Gleichungssystemen: eine spezielle Lösung plus der
-:k[Kern]{#kernel} (@sec:lgs/grundlagen). Das ist die Aussage
-aus @sec:approximation in anderer Sprache, denn
-
-$$
-\operatorname{Kern}(E)
-= \bigl\{ g \in \Fcal \;\big|\; g(x_i) = 0 \text{ für } i = 1, \dots, n \bigr\} .
-$$
-
-Unendlich viele Lösungen gibt es, weil dieser Kern unendlichdimensional ist;
-eine unendliche linear unabhängige Familie darin hat
-@sec:approximation schon angegeben. Dahinter steckt die Buchführung
-des :k[Rangsatzes]{#rank-nullity-theorem}: Was eine lineare Abbildung nicht
-misst, bleibt im Kern frei, und $E$ misst gerade $n$ Zahlen aus einem
-unendlichdimensionalen Raum.
+ist linear, und die Interpolanten der Daten $\cblue{\by}$ sind genau die
+Urbilder von $\cblue{\by}$ unter $E$: eine spezielle Lösung plus der
+:k[Kern]{#kernel} (@sec:lgs/grundlagen), also genau die Gestalt aus
+@sec:approximation. Der Kern ist unendlichdimensional, denn $E$ misst nur $n$
+Zahlen aus einem unendlichdimensionalen Raum
+(:k[Rangsatz]{#rank-nullity-theorem}).
 
 Die Diagnose lautet damit: unendlich viele Freiheitsgrade gegen $n$
 Bedingungen. Die Therapie liegt auf der Hand. Wir suchen von vornherein in
@@ -291,16 +279,12 @@ $\cgreen{\wh{f}(2)} = \cblue{5}$.
 :::
 
 :::bemerkung[#einsetzen-ist-hier-nicht (Einsetzen ist hier nicht Vorwärtssubstitution)]
-Der Rechenweg sieht aus wie das Lösen eines Dreieckssystems, ist aber keines.
+Der Rechenweg sieht aus wie das Lösen eines Dreieckssystems, ist aber keines:
 :k[Vorwärtssubstitution]{#triangular-solve} setzt eine untere
-:k[Dreiecksmatrix]{#triangular-matrix} voraus, und $\bB$ ist keine: In Zeile 2
-steht rechts der Diagonalen der Eintrag
-$\corange{\phi_3(x_2)} = \corange{1} \neq 0$. Was uns die erste Zeile so
-billig gibt, ist ein Zufall der Daten: Wegen $x_1 = 0$ verschwinden dort alle
-Monome außer dem konstanten. Ab Zeile 2 rechnen wir echte
-:k[Gauß-Elimination]{#gaussian-elimination}
-(@sec:lgs/lgs), nur eben von Hand und in einem sehr
-kleinen System.
+:k[Dreiecksmatrix]{#triangular-matrix} voraus, und in Zeile 2 von $\bB$ steht
+rechts der Diagonalen $\corange{\phi_3(x_2)} = \corange{1} \neq 0$. Dass die
+erste Zeile so billig ist, liegt allein an $x_1 = 0$; ab Zeile 2 rechnen wir
+echte :k[Gauß-Elimination]{#gaussian-elimination} (@sec:lgs/lgs).
 :::
 
 Dass es auch anders geht, zeigt ein zweiter Anlauf mit demselben Ansatzraum.

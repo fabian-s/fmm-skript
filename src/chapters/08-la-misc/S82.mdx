@@ -31,19 +31,9 @@ ein :k[Eigenwertproblem]{#eigenvalue-eigenvector} zum Eigenwert $1$.
 :::bemerkung[#warum-ausgerechnet-der-eigenwert-1 (Warum ausgerechnet der Eigenwert 1?)]
 Hat jede Seite mindestens einen ausgehenden Link, so summiert sich jede
 Spalte von $\bA$ zu $1$: Eine Seite verteilt ihren ganzen Score und behält
-nichts zurück. Solche Matrizen heißen *spaltenstochastisch*, und dass $1$
-ihr betragsgrößter Eigenwert ist, folgt aus zwei Beobachtungen, die wir
-beide schon kennen.
-Erstens hat $\bA^\top$ lauter Zeilensummen $1$ und hält damit den Vektor aus
-lauter Einsen fest; Transponieren ändert das charakteristische Polynom
-nicht, also ist $1$ auch Eigenwert von $\bA$. Zweitens liegt kein Eigenwert
-betragsmäßig darüber, denn die
-[Spaltensummennorm](?k=03-matrix-spur-norm#sec-3.3) ist
-$\left\|\bA\right\|_1 = 1$, und der :k[Spektralradius]{#spectral-radius}
-bleibt unter jeder submultiplikativen Norm
-(@sec:matrix-spur-norm/eigenschaften). Dass sich der zugehörige
-Eigenvektor nichtnegativ wählen lässt, also überhaupt als Score-Verteilung
-taugt, liefert die Perron-Frobenius-Theorie für nichtnegative Matrizen.
+nichts zurück. Solche Matrizen heißen *spaltenstochastisch*, und für sie ist $1$ der
+betragsgrößte Eigenwert; der zugehörige Eigenvektor lässt sich nichtnegativ
+wählen und taugt damit überhaupt erst als Score-Verteilung.
 
 Für die [Potenzmethode](#sec-8.1) reicht das noch nicht ganz: @satz:konvergenz-der-potenzmethode
 verlangt einen *einsamen* betragsgrößten Eigenwert, und daran hakt es beim
@@ -63,6 +53,20 @@ dominante Eigenvektor, nach dem die Potenzmethode sucht, und die Rate aus
 @satz:konvergenz-der-potenzmethode ist durch $\corange{\alpha}$ gedeckelt.
 :::
 
+:::vertiefung[Woher der Eigenwert 1 kommt]
+Beide Aussagen folgen aus zwei Beobachtungen, die wir schon kennen.
+Erstens hat $\bA^\top$ lauter Zeilensummen $1$ und hält damit den Vektor aus
+lauter Einsen fest; Transponieren ändert das charakteristische Polynom
+nicht, also ist $1$ auch Eigenwert von $\bA$. Zweitens liegt kein Eigenwert
+betragsmäßig darüber, denn die
+[Spaltensummennorm](?k=03-matrix-spur-norm#sec-3.3) ist
+$\left\|\bA\right\|_1 = 1$, und der :k[Spektralradius]{#spectral-radius}
+bleibt unter jeder submultiplikativen Norm
+(@sec:matrix-spur-norm/eigenschaften). Dass sich der zugehörige
+Eigenvektor nichtnegativ wählen lässt, liefert die Perron-Frobenius-Theorie
+für nichtnegative Matrizen.
+:::
+
 Und warum iterativ? Direkte Verfahren an einer Matrix mit $10^{10}$ Zeilen
 sind aussichtslos. Aber $\bA$ ist extrem
 :k[dünn besetzt]{#sparse-matrix}: Eine typische Seite hat nur etwa $10$
@@ -80,8 +84,6 @@ Welche Seite erhält langfristig den größten Score? Verfolgen wir dafür die
 Potenziteration auf dem kleinen Netz.
 
 <PagerankDemo />
-
-Das Widget verbindet die Potenziteration mit der stationären Score-Verteilung.
 :::
 
 ::::quiz
@@ -117,8 +119,6 @@ Die Kovarianzmatrix gibt eine Formel vor. Aber wie sieht die dazugehörige
 Richtung in einer Punktwolke aus? Drehen wir eine Projektion durch die Daten.
 
 <PcaDirectionDemo />
-
-Das Widget verbindet die Projektionsvarianz mit der ersten Hauptkomponente.
 :::
 
 ::::quiz

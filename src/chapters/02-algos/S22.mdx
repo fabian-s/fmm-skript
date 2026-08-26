@@ -177,24 +177,18 @@ dieselben zehn Zahlen mit $8$ Additionen aus.
 ### Algorithmenarten in ML und Statistik :id[algorithmenarten-in-ml-und-statistik]
 
 Der Fibonacci-Algorithmus ist also exakt, direkt und deterministisch. Diese drei Angaben
-liegen auf den unabhängigen Achsen aus @sec:probleme-algorithmen. Wie verteilen sich die
-Algorithmen, mit denen wir in Statistik und Machine Learning tatsächlich arbeiten, auf
-diese Achsen?
+liegen auf den unabhängigen Achsen aus @sec:probleme-algorithmen. Wo auf diesen Achsen
+liegen die Verfahren, mit denen wir in Statistik und Machine Learning tatsächlich
+arbeiten?
 
 :::beispiel[#algorithmenarten-in-ml-und-statistik (Algorithmenarten in ML und Statistik)]
-- **Exakt vs. approximativ:** Matrixmultiplikation und Gauß-Elimination sind in exakter
-  Arithmetik exakt; Monte-Carlo-Integration und vorzeitig beendete Optimierung liefern
-  Approximationen.
-- **Direkt vs. numerisch iterativ:** Gauß-Elimination ist direkt. Gradientenabstieg und
-  Newton-Verfahren erzeugen Näherungsfolgen und stoppen nach einem Abbruchkriterium.
-- **Deterministisch vs. randomisiert:** Klassische Matrixmultiplikation ist
-  deterministisch; randomisierte Quicksort-Varianten und MCMC verwenden Zufall.
+Matrixmultiplikation und Gauß-Elimination sind wie unser Fibonacci-Algorithmus exakt,
+direkt und deterministisch. Gradientenabstieg und Newton-Verfahren erzeugen dagegen
+Näherungsfolgen und stoppen nach einem Abbruchkriterium: numerisch iterativ und damit
+zugleich approximativ. Monte-Carlo-Integration, MCMC und randomisierte
+Quicksort-Varianten verwenden zusätzlich Zufall. Kombiniert sind die Achsen dabei fast
+immer (@bemerkung:arten-von-algorithmen).
 :::
-
-In der Praxis treten die Arten meist kombiniert auf: Das Training eines neuronalen Netzes
-per stochastischem Gradientenabstieg etwa ist iterativ (wiederholte Updates),
-approximativ (Abbruch bei einer Toleranz statt am exakten Optimum) *und* probabilistisch
-(zufällig gewählte Teilstichproben in jedem Schritt) zugleich.
 
 ### Was ist ein guter Algorithmus? :id[was-ist-ein-guter-algorithmus]
 

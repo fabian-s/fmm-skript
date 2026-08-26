@@ -37,7 +37,7 @@ $$
 \text{Schleife: } (n-2) \cdot 3 \text{ Operationen.}
 $$
 
-::why[die Schleife durchläuft $i = 2, \dots, n-1$, das sind $(n-1) - 2 + 1 = n-2$ Durchläufe; pro Durchlauf zählen wir 2 Additionen und 1 Zuweisung; man könnte auch die Indexrechnungen $i+1$, $i-1$ mitzählen, für die Ordnung ist das egal (@bemerkung:zaehlen-ist-konvention-die-ordnung-nicht)]
+::why[die Schleife durchläuft $i = 2, \dots, n-1$, das sind $(n-1) - 2 + 1 = n-2$ Durchläufe; pro Durchlauf zählen wir 1 Addition, 1 Zuweisung und 1 Indexrechnung; ob man die Indexrechnungen mitzählt, ist Konvention, für die Ordnung ist es egal (@bemerkung:zaehlen-ist-konvention-die-ordnung-nicht)]
 :::
 
 :::schritt
@@ -109,23 +109,10 @@ $$
 $$
 :::
 
-::::beweis
-
-:::schritt
-Für $n \in \{0, 1\}$ gibt es genau einen Aufruf, also $\cred{T(0)} = \cred{T(1)} = 1$.
-
-::why[für $n \le 1$ greift die Abbruchbedingung: Die Funktion kehrt sofort zurück, ohne sich selbst aufzurufen]
-:::
-
-:::schritt
-$$
-\cred{T(n)} = \underbrace{1}_{\text{Aufruf selbst}} + \underbrace{\cred{T(n-1)}}_{\texttt{fib\_rek}(n-1)} + \underbrace{\cred{T(n-2)}}_{\texttt{fib\_rek}(n-2)}.
-$$
-
-::why[der Aufrufbaum von $\texttt{fib\_rek}(n)$ besteht aus der Wurzel (dem Aufruf selbst) und den beiden vollständigen Teilbäumen der rekursiven Aufrufe]
-:::
-
-::::
+Für $n \le 1$ greift die Abbruchbedingung: Die Funktion kehrt sofort zurück, ohne sich
+selbst aufzurufen. Für $n \ge 2$ besteht der Aufrufbaum aus der Wurzel (dem Aufruf selbst)
+und den beiden vollständigen Teilbäumen von $\texttt{fib\_rek}(n-1)$ und
+$\texttt{fib\_rek}(n-2)$, zusammen also $1 + \cred{T(n-1)} + \cred{T(n-2)}$ Aufrufe.
 
 Bevor wir $\cred{T(n)}$ allgemein abschätzen, sehen wir uns den Aufrufbaum einmal konkret
 an. Dann ist auch sofort klar, *woher* die Explosion kommt.
@@ -166,6 +153,13 @@ Insbesondere ist $\cred{T(n)} = O(2^n)$, und für jedes feste $k \in \N$ gilt
 $n^k = o\left(\cred{T(n)}\right)$: Die Aufrufzahl wächst exponentiell und überholt jedes
 Polynom. Die Speicherkomplexität ist dagegen nur $O(n)$.
 :::
+
+Der Speicherbedarf bleibt bescheiden, weil der Aufrufbaum nie ganz gleichzeitig
+gespeichert wird: „Offen" ist immer nur der Pfad von der Wurzel zum aktuellen Aufruf, und
+der ist höchstens $n$ Aufrufe lang. Auf dem Aufruf-Stapel (call stack) liegen also
+höchstens $n$ Aufrufe, das sind $O(n)$ Speicherzellen.
+
+:::::vertiefung[Woher die beiden Schranken für die Aufrufzahl kommen]
 
 ::::beweis
 
@@ -218,15 +212,9 @@ $$
 ::why[exponentiell schlägt polynomiell: Der :k[Grenzwert]{#limit} $n^k / q^n \to 0$ für jedes $q > 1$ ist ein Analysis-Standardresultat, hier mit $q = \sqrt{2}$]
 :::
 
-:::schritt
-*Speicher:* Der Aufrufbaum hat zwar exponentiell viele Knoten, aber er steht nie ganz
-gleichzeitig im Speicher: Auf dem Aufruf-Stapel (call stack) liegen höchstens $n$ offene
-Aufrufe, also $O(n)$ Speicherzellen.
-
-::why[gleichzeitig „offen" ist immer nur der Pfad von der Wurzel zum aktuellen Aufruf; der längste Pfad $n \to n-1 \to \dots \to 1$ hat Länge $n$]
-:::
-
 ::::
+
+:::::
 
 Damit steht die Ordnung fest, aber nicht die Basis: Zwischen $\sqrt{2}$ und $2$ ist viel
 Platz. Zählen wir die Aufrufe für wachsendes $n$ also einfach aus und tragen sie
@@ -235,46 +223,44 @@ Steigung verrät die Basis.
 
 :::interaktiv[Gezählte Schritte gegen die Landau-Vorhersage]
 <S25FibVergleichWidget />
-:::
 
 Dass wir dafür die :k[logarithmische]{#logarithm} Skala brauchen, um beide Varianten
 überhaupt in ein gemeinsames Bild zu bekommen, ist selbst schon die halbe Pointe. Die
 Steigung der roten Punkte liegt dabei sichtbar unter $\log_{10} 2 \approx 0{,}301$. Woran
 liegt das?
+:::
 
 :::bemerkung[#wie-schlimm-ist-es-wirklich (Wie schlimm ist es wirklich?)]
 Zwischen unserer unteren Schranke (Basis $\sqrt{2} \approx 1{,}41$) und der oberen
 (Basis $2$) klafft noch eine Lücke: Die Schranke $O(2^n)$ ist zwar korrekt, aber nicht
-scharf. Der wahre Wachstumsfaktor liegt dazwischen und ist eine alte Bekannte: der
-goldene Schnitt $\varphi \approx 1{,}618$ (Vertiefung unten). Für das Urteil
-*„katastrophal langsam"* ist das aber einerlei: Jede Basis $q > 1$ bedeutet, dass eine um
-$1$ größere Eingabe den Aufwand um den *Faktor* $q$ vervielfacht.
-:::
-
-:::vertiefung[Der goldene Schnitt im Aufrufbaum]
-Die Aufrufzahl lässt sich sogar exakt angeben, und sie ist selbst fast eine
-Fibonacci-Zahl. Per Induktion zeigen wir $\cred{T(n)} = 2 F_{n+1} - 1$: Der Anfang stimmt
-wegen $\cred{T(0)} = 1 = 2 F_1 - 1$ und $\cred{T(1)} = 1 = 2 F_2 - 1$, und der Schritt
-folgt direkt aus der Rekurrenz:
+scharf. Die Aufrufzahl lässt sich sogar exakt angeben, und sie ist selbst fast eine
+Fibonacci-Zahl: Aus der Rekurrenz folgt per Induktion $\cred{T(n)} = 2 F_{n+1} - 1$. Der
+Anfang stimmt wegen $\cred{T(0)} = 1 = 2 F_1 - 1$ und $\cred{T(1)} = 1 = 2 F_2 - 1$, und
+der Schritt ist
 
 $$
 \cred{T(n)} = 1 + \left(2 F_n - 1\right) + \left(2 F_{n-1} - 1\right) = 2\left(F_n + F_{n-1}\right) - 1 = 2 F_{n+1} - 1.
 $$
 
-Für die Fibonacci-Zahlen selbst gilt die Binet-Formel
+Die Fibonacci-Zahlen selbst wachsen wie $\varphi^n$ mit dem goldenen Schnitt
+$\varphi = \left(1 + \sqrt{5}\right)/2 \approx 1{,}618$ (Vertiefung unten), also ist
+$\cred{T(n)} = O\left(\varphi^n\right)$: Der wahre Wachstumsfaktor liegt sauber zwischen
+unseren Schranken. Für das Urteil *„katastrophal langsam"* ist das aber einerlei: Jede
+Basis $q > 1$ bedeutet, dass eine um $1$ größere Eingabe den Aufwand um den *Faktor* $q$
+vervielfacht.
+:::
+
+:::vertiefung[Der goldene Schnitt im Aufrufbaum]
+Woher kommt die Basis $\varphi$? Für die Fibonacci-Zahlen gilt die Binet-Formel
 $F_n = \left(\varphi^n - \psi^n\right)/\sqrt{5}$ mit
-$\varphi = \left(1 + \sqrt{5}\right)/2 \approx 1{,}618$ (dem goldenen Schnitt) und
+$\varphi = \left(1 + \sqrt{5}\right)/2$ (dem goldenen Schnitt) und
 $\psi = 1 - \varphi \approx -0{,}618$. Weil $|\psi| < 1$ ist, stirbt der zweite Term aus,
-und es bleibt $F_{n+1} \approx \varphi^{n+1}/\sqrt{5}$, also
+und es bleibt $F_{n+1} \approx \varphi^{n+1}/\sqrt{5}$; mit $\cred{T(n)} = 2 F_{n+1} - 1$
+also $\cred{T(n)} = O\left(\varphi^n\right)$.
 
-$$
-\cred{T(n)} = O\left(\varphi^n\right), \qquad \varphi \approx 1{,}618.
-$$
-
-Das tatsächliche Wachstum hat also die Basis $\varphi$, sauber zwischen unseren Schranken
-$\sqrt{2}$ und $2$. Im Widget oben ist genau das zu sehen: Die gezählten Aufrufe liegen auf
-einer Geraden mit Steigung $\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren
-$2^n$-Geraden mit Steigung $\log_{10} 2 \approx 0{,}301$.
+Im Widget oben ist genau das zu sehen: Die gezählten Aufrufe liegen auf einer Geraden mit
+Steigung $\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren $2^n$-Geraden mit
+Steigung $\log_{10} 2 \approx 0{,}301$.
 :::
 
 ### Der Vergleich: Ordnung schlägt Konstante :id[der-vergleich-ordnung-schlaegt-konstante]

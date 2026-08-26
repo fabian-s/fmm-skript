@@ -162,7 +162,10 @@ die gleich in den MSE eingeht, und sie erbt die Ordnung $O(K^{-8})$.
 
 Der zweite Summand $\bB^+\cred{\beps}$ trägt den Zufall. Er ist es,
 der bei großem $K$ aus dem Ruder läuft, und über ihn lässt sich mehr sagen als
-eine Ordnung.
+eine Ordnung. Anschaulich heißt das: Ziehen wir die Daten mehrfach neu, so
+liegen die Schätzkurven bei kleinem $K$ fast übereinander und verfehlen $f$
+alle in dieselbe Richtung, während sie bei großem $K$ im Mittel richtig
+liegen, einzeln aber weit auffächern, weil jede ihrem eigenen Rauschen folgt.
 
 :::satz[#gemittelte-varianz-eines-linearen (Gemittelte Varianz eines linearen Schätzers)]
 Seien die $\cred{\eps_i}$ unkorreliert mit
@@ -329,23 +332,19 @@ Varianzterm. Als rigorose Optimalitäts- oder Minimax-Aussage bräuchte die Rate
 zusätzlich eine passende untere Schranke und genaue Annahmen an Funktionsklasse,
 Design und Folge der Ansatzräume.
 
-Aus derselben Proxy-Rechnung fällt eine Aussage ab, die man dem Minimum nicht
-ansieht. Setzen wir $8 c_1 (K^\star)^{-9} = c_2/n$ in die beiden Summanden
-ein, so ist $c_1 (K^\star)^{-8} = \tfrac{1}{8}\, c_2 K^\star/n$: Der
-quadrierte Bias trägt im Optimum dieses Modells genau ein Neuntel der Summe,
-die Varianz die übrigen acht Neuntel. Das ist keine allgemeine Eigenschaft
-des tatsächlichen MSE; sie gilt nur für die angenommene Potenzform.
+Aus derselben Rechnung folgt
+$c_1 (K^\star)^{-8} = \tfrac{1}{8}\, c_2 K^\star/n$: Der quadrierte Bias
+trägt im Optimum dieses Modells ein Neuntel der Summe, die Varianz die
+übrigen acht Neuntel – eine Eigenschaft der angenommenen Potenzform, keine
+des tatsächlichen MSE.
 
 Dass $K^\star \asymp n^{1/9}$ eine *rein asymptotische* Ordnung ist, verdient
-mehr als eine Fußnote. Mit Konstante $1$ liefert die Formel für $n = 100$ den
-Wert $K^\star = 1{,}67$, für $n = 10^6$ noch $4{,}64$ und selbst für
-$n = 10^9$ erst $10$. Niemand approximiert eine schwingende Funktion mit
-zwei Basisfunktionen. Was fehlt, ist der Faktor $(8c_1/c_2)^{1/9}$, und der
-hängt an der vierten Ableitung von $f$ und an $\sigma$. Im Beispiel unten
-finden wir bei $n = 100$ das Optimum bei $K = 12$; an diesen einen Lauf würde
-das Proxy-Modell also einen Vorfaktor von rund $7$ anpassen. Merken lässt sich
-aus der heuristischen Formel vor allem der Balance-Exponent, nicht eine
-konkrete Knotenzahl oder eine Garantie für jeden $f$.
+mehr als eine Fußnote: Mit Konstante $1$ liefert die Formel für $n = 100$ den
+Wert $K^\star = 1{,}67$, und niemand approximiert eine schwingende Funktion
+mit zwei Basisfunktionen. Was fehlt, ist der Faktor $(8c_1/c_2)^{1/9}$, und
+der hängt an der vierten Ableitung von $f$ und an $\sigma$. Merken lässt sich
+aus der heuristischen Formel deshalb der Balance-Exponent, nicht eine
+konkrete Knotenzahl.
 :::
 
 ### Ein numerisches Beispiel
@@ -374,15 +373,16 @@ die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
 liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
 das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt beim
 simulierten Minimum der Bias nur noch $11$ Prozent zum MSE bei. Das stimmt
-hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells aus Bemerkung
-13.8.7 überein, ist aber keine theoretisch erzwungene Übereinstimmung. Das
-diskrete Optimum liegt dort, wo der nächste zulässige Schritt mehr Varianz
-kostet, als er in dieser Simulation an Bias einspart.
+hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells aus
+@bemerkung:heuristisches-balance-modell-fuer-die überein, ist aber keine
+theoretisch erzwungene Übereinstimmung. Das diskrete Optimum liegt dort, wo
+der nächste zulässige Schritt mehr Varianz kostet, als er in dieser
+Simulation an Bias einspart.
 :::
 
 :::bemerkung[#der-bias-faellt-nicht-monoton (Der Bias fällt nicht monoton)]
-Zwischen $K = 8$ und $K = 9$ steigt der quadrierte Bias von $0{,}0344$ auf
-$0{,}1174$. Beide Anpassungen sind schlecht, denn fünf beziehungsweise sechs
+Zwischen $K = 8$ und $K = 9$ steigt der quadrierte Bias in der Tabelle
+wieder an. Beide Anpassungen sind schlecht, denn fünf beziehungsweise sechs
 Teilintervalle sind für drei Sinusperioden zu wenig. Welche von beiden weniger
 schlecht ausfällt, entscheidet die Lage der Knoten relativ zu $f$: Bei $K = 9$
 sitzen die fünf inneren Knoten exakt auf den Nullstellen $k\pi/3$ von
@@ -403,13 +403,11 @@ wahre Funktion violett gestrichelt, die inneren Knoten als orange Marken auf
 der Achse und in Grün die Schätzer der ersten zwölf Wiederholungen samt ihrem
 Mittelwert.
 
-Bei kleinem $K$ liegen die zwölf Kurven fast übereinander und verfehlen $f$
-alle in dieselbe Richtung: viel Bias, kaum Varianz. Bei $K = 40$ liegt der
-Mittelwert der Kurven weiter auf $f$, doch die einzelnen Kurven fächern weit
-auf, jede folgt ihrem eigenen Rauschen. Die Balken rechts zeigen die Anteile
-am MSE, die Tafel darunter den Verlauf aller drei Größen über $K$
-auf logarithmischer Skala. Dort ist der Knick gut zu sehen: Der rote Bias
-stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue Summe
+Bei kleinem $K$ liegen die zwölf Kurven fast übereinander, bei $K = 40$
+fächern sie weit auf, und nur noch ihr Mittelwert liegt auf $f$. Die Balken
+rechts zeigen die Anteile am MSE, die Tafel darunter den Verlauf aller drei
+Größen über $K$ auf logarithmischer Skala. Dort ist der Knick gut zu sehen:
+Der rote Bias stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue Summe
 hat ihr Minimum dazwischen.
 
 Alle Zufallszahlen stammen aus einem festen Startwert. Es ist bei jedem
@@ -421,19 +419,6 @@ Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum?
 <Schaetzfrage frage="Welche Knotenzahl minimiert in dieser festen Simulation den MSE?" loesung={12} toleranz={0.5} einheit="K">
 <BiasVarianzExplorer />
 </Schaetzfrage>
-:::
-
-:::bemerkung[#sigma-oder-sigma-quadrat-eine (Sigma oder Sigma-Quadrat? Eine naheliegende Verwechslung)]
-In @eq:gemittelte-varianz-eines-linearen-2 steht $\sigma^2 K/n$ und nicht $\sigma K/n$. Weil
-$\sigma = 0{,}3$ kleiner als eins ist, sehen beide Ausdrücke plausibel aus:
-Für $K = 5$, $15$ und $40$ liefert $\sigma K/n$ die Werte $0{,}015$, $0{,}045$
-und $0{,}12$, während $\sigma^2 K/n$ mit $\sigma^2 = 0{,}09$ auf $0{,}0045$,
-$0{,}0135$ und $0{,}036$ kommt. Der Unterschied ist ein konstanter Faktor
-$\sigma$ über alle Zeilen. Genau so sieht ein vergessenes Quadrat in einer
-Formel aus, und genau so lässt es sich an einer Simulation entlarven: Stimmt
-die Bias-Spalte, sind aber alle Varianzwerte um denselben Faktor daneben, dann
-lohnt der Blick auf die Einheiten. Die Rangfolge der $K$ ändert das nicht, die
-Größenordnung der Varianz aber sehr wohl.
 :::
 
 ### Wie wählt man $K$ in der Praxis?
@@ -480,25 +465,29 @@ Bei geschachtelten Modellräumen fällt der Zähler monoton in $K$ und wäre als
 Auswahlkriterium nutzlos. Bei den hier verwendeten, mit $K$ wandernden
 Quantilsknoten kann er einzelne Male steigen (@bemerkung:die-residuen-fallen-nicht-immer), bevorzugt
 im Trend aber weiterhin unnötig flexible Trainingsfits. Der Nenner sorgt für
-den nötigen Gegendruck, und er kommt nicht aus der Luft. Für einen linearen Schätzer
-$\cgreen{\wh{\by}} = \bH\cblue{\by}$ lässt sich das Residuum, das
-beim Weglassen des $i$-ten Punktes entstünde, ohne erneute Anpassung
-ausrechnen: Es ist $(\cblue{y_i} - \cgreen{\wh{f}(x_i)})/(1 - H_{ii})$, was
-man mit der
+den nötigen Gegendruck, und er kommt nicht aus der Luft: Er entsteht aus der
+Kreuzvalidierung, die jeden Punkt einmal weglässt.
+
+Die Faustregel dahinter ist einfach: Je näher $K$ an $n$ rückt, desto stärker
+bläst der Nenner den beobachteten Fehler auf, weil ein Schätzer mit vielen
+Parametern seine eigenen Residuen künstlich klein rechnet.
+:::
+
+:::vertiefung[Woher der Nenner kommt]
+Für einen linearen Schätzer $\cgreen{\wh{\by}} = \bH\cblue{\by}$ lässt
+sich das Residuum, das beim Weglassen des $i$-ten Punktes entstünde, ohne
+erneute Anpassung ausrechnen: Es ist
+$(\cblue{y_i} - \cgreen{\wh{f}(x_i)})/(1 - H_{ii})$, was man mit der
 :k[Sherman-Morrison-Formel]{#sherman-morrison-formula} nachrechnet. Die
-Kreuzvalidierung, die jeden Punkt einmal weglässt, wird damit zu einer
-einzigen Formel. Ersetzt man darin alle $H_{ii}$ durch ihren Mittelwert
-$\tr(\bH)/n$, so steht @eq:generalisierte-kreuzvalidierung da, denn nach @bemerkung:was-die-varianzformel-erzaehlt ist
-$\tr(\bH) = K$.
+Kreuzvalidierung wird damit zu einer einzigen Formel. Ersetzt man darin alle
+$H_{ii}$ durch ihren Mittelwert $\tr(\bH)/n$, so steht
+@eq:generalisierte-kreuzvalidierung da, denn nach
+@bemerkung:was-die-varianzformel-erzaehlt ist $\tr(\bH) = K$.
 
 Die Leave-one-out-Identität hält dabei die Designmatrix und damit die Basis
 fest. Würden wir nach dem Weglassen jedes Punkts auch quantilbasierte Knoten
 neu bestimmen, entstünde ein anderes Verfahren, für das die Formel nicht
 exakt dieselbe Kreuzvalidierung berechnet.
-
-Die Faustregel dahinter ist einfach: Je näher $K$ an $n$ rückt, desto stärker
-bläst der Nenner den beobachteten Fehler auf, weil ein Schätzer mit vielen
-Parametern seine eigenen Residuen künstlich klein rechnet.
 :::
 
 :::beispiel[#was-die-kriterien-in-unserem-datensatz (Was die Kriterien in unserem Datensatz wählen)]
@@ -523,11 +512,11 @@ additive Modelle; in R ist `mgcv::gam()` die Standardadresse dafür.
 
 Der Vorteil ist mehr als Bequemlichkeit. Die Knotenzahl ist eine ganze Zahl,
 der Strafparameter dagegen stufenlos, und ein stufenloser Regler lässt sich
-mit denselben Kriterien viel feiner einstellen. Formal ist der Übergang
-derselbe wie bei der Ridge-Regression: statt die Zahl der Parameter zu
-begrenzen, bestraft man ihre Größe
-(@sec:optim/beschraenkt). Auch die effektiven Freiheitsgrade
-$\tr(\bH)$ aus @bemerkung:was-die-varianzformel-erzaehlt bleiben brauchbar; sie sind dann
+mit denselben Kriterien viel feiner einstellen. Formal ist es die gestrafte
+Kleinste-Quadrate-Rechnung aus
+@bemerkung:penalized-splines-und-die-naehe-zu-ridge. Auch die effektiven
+Freiheitsgrade $\tr(\bH)$ aus @bemerkung:was-die-varianzformel-erzaehlt
+bleiben brauchbar; sie sind dann
 keine ganze Zahl mehr, sondern rutschen mit wachsendem Strafparameter stetig
 nach unten. Die Glättungssplines aus @sec:glaettung sind der
 Grenzfall $K = n$ mit Strafterm.
@@ -536,12 +525,6 @@ Grenzfall $K = n$ mit Strafterm.
 ### Selbsttest
 
 ::::quiz
-
-:::zahlfrage{loesung=12 toleranz=0.5}
-Welche Knotenzahl markiert das Widget als MSE-Minimum seiner festen Simulation?
-
-Die graue MSE-Kurve hat ihr Minimum bei $K=12$.
-:::
 
 :::frage{falsch}
 Je größer $K$, desto kleiner der Bias: Die Verzerrung fällt monoton.
@@ -591,9 +574,9 @@ Schon im glatten Proxy-Modell sind am Optimum die *Änderungsraten*, nicht die
 Beiträge gleich: $g'(K^\star)=0$ heißt, dass eine infinitesimale Verfeinerung
 genauso viel Varianz kostet, wie sie an Bias spart. Für die spezielle Form
 $c_1K^{-8}+c_2K/n$ trägt der Bias dort ein Neuntel der Summe. Das ist eine
-Eigenschaft dieses Modells, keine allgemeine MSE-Identität. In Beispiel
-13.8.8 liegt der simulierte Anteil bei $K=12$ zufällig ebenfalls nahe
-$11{,}1$ Prozent.
+Eigenschaft dieses Modells, keine allgemeine MSE-Identität. Im simulierten
+Beispiel liegt der Anteil bei $K = 12$ zufällig ebenfalls nahe daran
+(@beispiel:bias-und-varianz-beim-sinusbeispiel).
 :::
 
 :::frage{wahr}

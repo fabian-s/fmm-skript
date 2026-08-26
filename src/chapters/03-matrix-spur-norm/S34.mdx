@@ -196,21 +196,12 @@ $$
 \left\| \bA \right\|_{S,2} = \sqrt{\cred{\lambda_1} + \cblue{\lambda_2}} = \sqrt{6}, \qquad \cgreen{\sqrt{2^2 + 1^2 + 0^2 + 1^2}} = \sqrt{6} \approx 2{,}449. \quad \checkmark
 $$
 
-**Nuklearnorm** ($p = 1$): die Summe
-$\cred{\sigma_1} + \cblue{\sigma_2} \approx 3{,}162$, hier sogar mit
-geschlossener Form, denn
+**Nuklearnorm** ($p = 1$): die Summe der Singulärwerte,
 
 $$
-\left(\cred{\sigma_1} + \cblue{\sigma_2}\right)^2 = \cred{\lambda_1} + \cblue{\lambda_2} + 2\sqrt{\cred{\lambda_1}\cblue{\lambda_2}} = 6 + 2\sqrt{\det\left(\bA^\top\bA\right)} = 6 + 2\sqrt{4} = 10,
+\left\| \bA \right\|_{S,1} = \cred{\sigma_1} + \cblue{\sigma_2} = \sqrt{10} \approx 3{,}162.
 $$
 
-$$
-\text{also} \quad \left\| \bA \right\|_{S,1} = \sqrt{10} \approx 3{,}162.
-$$
-
-Dabei haben wir benutzt, dass das Produkt der Eigenwerte die
-:k[Determinante]{#determinant} ist:
-$\cred{\lambda_1}\cblue{\lambda_2} = \det\left(\bA^\top\bA\right) = 4 \cdot 2 - 2 \cdot 2 = 4$.
 In R genügt für die Singulärwerte ein Einzeiler:
 
 ```r
@@ -283,20 +274,20 @@ Summen- und Maximumsnorm gilt nichts dergleichen.
   zurück.
 :::
 
+:::interaktiv[Was überlebt eine Drehung? Schattennormen gegen elementweise Normen]
 @satz:unitaere-invarianz ist damit bewiesen, aber noch nicht wirklich geglaubt. Eine Drehung schreibt ja
 jeden einzelnen Eintrag der Matrix um. Welche der Zahlen, die wir aus einer Matrix ablesen
 können, überstehen das unverändert, und welche wandern mit?
 
-:::interaktiv[Was überlebt eine Drehung? Schattennormen gegen elementweise Normen]
 <S34SchattenWidget />
-:::
 
 Die Antwort teilt unsere Normen sauber in zwei Lager. Ellipse, Halbachsen und alles, was
 aus ihnen gebaut ist – Spektral-, Frobenius- und Nuklearnorm – stehen still, während die
-Einträge von $\bQ_\theta\bA$ munter durchwechseln; die Abweichung, die das Widget über den
-durchfahrenen Drehbereich meldet, ist reines Rundungsrauschen in der Größenordnung
+Einträge von $\bQ_\theta\bA$ munter durchwechseln; die gemeldete Abweichung über den
+durchfahrenen Drehbereich ist reines Rundungsrauschen in der Größenordnung
 $10^{-16}$. Summen- und Maximumsnorm dagegen bewegen sich sichtbar mit. Sie sind eben
 elementweise definiert, und die Einträge sind genau das, was eine Drehung ändert.
+:::
 
 ### Selbsttest
 

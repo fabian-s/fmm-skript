@@ -63,28 +63,16 @@ Abweichung messen, zerlegen und den beiden Schuldigen zuordnen: dem *Problem* un
 
 ### Kondition und Stabilität: die Arbeitsteilung
 
-Die beiden zentralen Begriffe des Kapitels beantworten verschiedene Fragen, und die
-Fehlerzerlegung aus @sec:fehlermasse hält sie
-sauber auseinander:
-
-$$
-\wt{f}(\wt{\bx}) - f(\bx) = \underbrace{\cred{\wt{f}(\wt{\bx}) - f(\wt{\bx})}}_{\text{algorithmischer Fehler}} + \underbrace{\corange{f(\wt{\bx}) - f(\bx)}}_{\text{Input-Folgefehler}}
-$$
-
-Die *Kondition* beschreibt die **Sensitivität des Problems**: Sie
-kontrolliert den *orangen*
-Term, also wie stark $f$ selbst (in exakter Arithmetik) Inputfehler
-verstärkt. Daran kann kein noch so guter Algorithmus etwas ändern. Die
-*Stabilität* beschreibt die **Robustheit des Algorithmus**: Sie
-kontrolliert den *roten*
-Term, also wie viel zusätzlichen Fehler die Umsetzung
-$\wt{f}$ durch
+Die *Kondition* kontrolliert den orangen Term der Fehlerzerlegung: wie stark
+$f$ selbst (in exakter Arithmetik) Inputfehler verstärkt. Daran kann kein noch so guter
+Algorithmus etwas ändern. Die *Stabilität* kontrolliert den roten Term: wie viel
+zusätzlichen Fehler die Umsetzung $\wt{f}$ durch
 :k[Rundungsfehler]{#rounding-error} in
 :k[Gleitkommaarithmetik]{#floating-point} obendrauf legt. Ein
 stabiler Algorithmus für ein schlecht konditioniertes Problem liefert also trotzdem
-ungenaue Ergebnisse, aber nicht ungenauer, als das Problem es erzwingt.
+ungenaue Ergebnisse – aber nicht ungenauer, als das Problem es erzwingt.
 
-:::bemerkung[#faustregel-mit-der-einschraenkung-aus (Faustregel, mit der Einschränkung aus Bemerkung 4.3.4)]
+:::bemerkung[#faustregel-mit-der-einschraenkung-aus (Faustregel, mit Einschränkung)]
 <p className="font-semibold">Schlecht konditionierte Teilschritte möglichst früh ausführen!</p>
 
 Warum? Nach der Fehlerfortpflanzungs-Schranke aus
@@ -97,10 +85,8 @@ Die Verschiebungsformel hebt sich die schlecht konditionierte Subtraktion (Stich
 :k[Auslöschung]{#cancellation}) bis zum Schluss auf, die
 Zwei-Pass-Formel zieht sie vor und ist deshalb stabil.
 
-Vorsicht: Das ist eine Faustregel, kein Satz. Eine Umordnung verändert auch die
-Zwischengrößen und damit die Konditionen selbst; verlässlicher ist es, das Teilproblem
-umzuformulieren und große, beinahe gleiche Zwischenwerte gar nicht erst entstehen zu lassen
-(@bemerkung:was-folgt-daraus-und-was-nicht).
+Vorsicht: Das ist eine Faustregel, kein Satz – die Einschränkungen und die
+verlässlicheren Strategien stehen in @bemerkung:was-folgt-daraus-und-was-nicht.
 :::
 
 ### Wie geht es weiter?
@@ -126,17 +112,6 @@ Die Stabilität begrenzt nur den roten Term der Zerlegung, den der Algorithmus s
 beisteuert. Den orangen Term erzwingt das Problem: Ist es schlecht konditioniert, verstärkt es
 den unvermeidbaren Inputfehler, und daran ändert kein Algorithmus etwas. Die richtige Erwartung
 lautet: nicht ungenauer, als das Problem es erzwingt.
-:::
-
-:::frage{falsch}
-Die Konditionszahl $\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
-ist die relative Kondition des Problems $\bx \mapsto \bA^{-1}\bx$.
-
-Sie ist die *obere Schranke* dafür (@satz:kondition-der-loesung-eines-lgs). Die tatsächliche relative Kondition
-$\left\| \bA^{-1} \right\| \left\| \bx \right\| / \left\| \bA^{-1}\bx \right\|$
-hängt von der rechten Seite ab und kann bis auf $1$ hinunterreichen. Weil die
-Schranke für ungünstige $\bx$ aber angenommen wird, ist sie die richtige Zahl,
-solange wir die rechte Seite nicht kennen.
 :::
 
 :::zahlfrage{loesung=82 toleranz=1.5}

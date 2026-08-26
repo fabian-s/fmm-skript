@@ -11,7 +11,7 @@ Klassen wird maximiert, und am Ende steht vielleicht noch ein Grenzübergang.
 Dieser Abschnitt liefert das Handwerkszeug dafür. Zuerst einen Baukasten aus vier Operationen,
 unter denen Konvexität erhalten bleibt. Dann die Jensen-Ungleichung, die die Definition von
 zwei auf beliebig viele Punkte hebt. Danach ein Kriterium, das die Frage an die zweite
-Ableitung weiterreicht und damit an das Rechnen aus [Kapitel 10](?k=10-differentialrechnung#sec-10.7)
+Ableitung weiterreicht und damit an das Rechnen aus @sec:differentialrechnung/hoehere-ableitungen
 anschließt. Zum Schluss den Subgradienten, der die Tangente ersetzt, wo es keine gibt.
 
 ### Vier Operationen, die Konvexität erhalten
@@ -163,6 +163,8 @@ $f_i(\cgreen{\bz})$, also auch für deren Supremum $f(\cgreen{\bz})$.
 </details>
 :::
 
+::::vertiefung[Was die vier Regeln zusammen hergeben]
+
 :::bemerkung[#was-die-vier-regeln-zusammen-hergeben (Was die vier Regeln zusammen hergeben)]
 Aus (1) und (2) folgt per Induktion sofort mehr: Jede *nichtnegative Linearkombination*
 $\sum_{i=1}^m c_i f_i$ mit $c_i \ge 0$ konvexer Funktionen ist konvex. Die konvexen Funktionen
@@ -175,21 +177,19 @@ konvex noch konkav: Mit $f_1(x) = x^2$ und $f_2(x) = 2x^2$ ist
 $\cred{f_1 - f_2} = -x^2$ konkav, mit $f_2(x) = \tfrac{1}{2}x^2$ dagegen bliebe die Differenz
 konvex.
 
-Zu (3) noch eine Präzisierung. Schreibt man $\max_i f_i$ für eine ganze
-Folge $f_1, f_2, \dots$, so muss ein Maximum über unendlich viele Werte weder angenommen
-werden noch endlich sein. Der Beweis oben zeigt die Aussage für das Supremum, und das ist die
-Fassung, die trägt; nur der Fall endlich vieler Funktionen darf ohne weiteres Maximum heißen.
-Der Zusatz „sofern endlich" ist dabei keine Formalie: Für $f_i(x) = i\,x^2$ ist das Supremum in
-jedem $x \neq 0$ gleich $+\infty$, und über eine Funktion mit dem Wert $+\infty$ redet
-@definition:konvexe-funktion nicht, die konvexe Funktionen mit Werten in $\R$ erklärt.
+Zu (3) trägt nur die Supremum-Fassung, denn ein Maximum über unendlich viele Werte muss weder
+angenommen werden noch endlich sein: Für $f_i(x) = i\,x^2$ ist das Supremum in jedem
+$x \neq 0$ gleich $+\infty$, und über solche Funktionen redet @definition:konvexe-funktion
+nicht.
 
-Regel (4) erhält die Konvexität, nicht aber die Glattheit. Die Funktionen
-$f_k(x) = \left|x\right|^{1+1/k}$ sind konvex und in jedem Punkt differenzierbar, auch in
-$x = 0$ mit $f_k'(0) = 0$. Punktweise streben sie gegen $\left|x\right|$, und der Grenzwert hat
-im Nullpunkt einen Knick. Aus einer Folge glatter konvexer Funktionen kann also eine konvexe
-Funktion ohne Ableitung werden. Das ist einer der Gründe, warum wir am Ende dieses Abschnitts
-einen Ersatz für die Tangente brauchen.
+Regel (4) erhält die Konvexität, nicht aber die Glattheit: Die Funktionen
+$f_k(x) = \left|x\right|^{1+1/k}$ sind konvex und überall differenzierbar, auch in $x = 0$ mit
+$f_k'(0) = 0$, streben punktweise aber gegen $\left|x\right|$ und damit gegen eine Funktion mit
+Knick. Das ist einer der Gründe, warum wir am Ende dieses Abschnitts einen Ersatz für die
+Tangente brauchen.
 :::
+
+::::
 
 :::beispiel[#zielfunktionen-aus-bausteinen (Zielfunktionen aus Bausteinen)]
 Die Regeln erledigen Fälle, die aus der Definition heraus mühsam wären. Wir sammeln vier
@@ -206,9 +206,9 @@ herausgeholt, nämlich strikte Konvexität für $\lambda > 0$; die Regeln allein
 nicht. Ihr Vorteil zeigt sich beim nächsten Punkt.
 
 *LASSO.* Ersetzen wir den Strafterm durch $\lambda\left\|\bw\right\|_1$, ändert sich am
-Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm. Eine quadratische Form steht jetzt
-nirgends mehr, @satz:quadratische-funktionen greift also nicht. Die Zielfunktion bleibt trotzdem konvex, ist
-aber an den Stellen mit $w_j = 0$ nicht differenzierbar.
+Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm – @satz:quadratische-funktionen
+greift hier dagegen nicht mehr. Die Zielfunktion bleibt konvex, ist aber an den Stellen mit
+$w_j = 0$ nicht differenzierbar.
 
 *Hinge-Verlust und Support Vector Machines.* Der Verlust $\ell(u) = \max\{0,\, 1 - u\}$ ist das
 Maximum zweier affiner Funktionen, nach Regel (3) also konvex. Setzen wir
@@ -220,11 +220,9 @@ Regel (1) wieder konvex. Den Umweg über eine Regel für Verkettungen brauchen w
 *Vom empirischen zum theoretischen Risiko.* Ist $\btheta \mapsto \ell(\btheta; \bz)$ für jede
 Beobachtung konvex, so ist das empirische Risiko
 $R_n(\btheta) = \tfrac{1}{n}\sum_{i=1}^n \ell(\btheta; \bz_i)$ als nichtnegative
-Linearkombination konvex. Nach dem Gesetz der großen Zahlen strebt es für jedes feste
-$\btheta$ fast sicher gegen das theoretische Risiko $R(\btheta) = \E[\ell(\btheta; \bZ)]$, und
-Regel (4) überträgt die Konvexität auf den Grenzwert. In der Sehnenungleichung kommen immer nur
-drei Stellen gleichzeitig vor, deshalb genügt die punktweise Konvergenz: Der Durchschnitt von
-drei Ereignissen der Wahrscheinlichkeit $1$ hat wieder Wahrscheinlichkeit $1$.
+Linearkombination konvex, und weil es nach dem Gesetz der großen Zahlen punktweise gegen das
+theoretische Risiko $R(\btheta) = \E[\ell(\btheta; \bZ)]$ strebt, überträgt Regel (4) die
+Konvexität auf den Grenzwert.
 :::
 
 ### Die Jensen-Ungleichung
@@ -361,7 +359,7 @@ auf beiden Seiten derselbe Wert, so wie bei einer Zufallsvariablen mit Varianz $
 Bisher haben wir Konvexität aus Konvexität gemacht. Die Bausteine selbst mussten wir immer noch
 aus der Definition heraus prüfen. Für zweimal stetig differenzierbare Funktionen geht es
 bequemer, und das Ergebnis verbindet dieses Kapitel mit
-[Kapitel 10](?k=10-differentialrechnung#sec-10.7).
+@sec:differentialrechnung/hoehere-ableitungen.
 
 :::satz[#konvexe-funktionen-von-vektoren-zu (Konvexe Funktionen von Vektoren zu Skalaren)]
 Sei $\cblue{\Xcal} \subseteq \R^n$ eine *offene*, konvexe Menge und
@@ -574,21 +572,16 @@ Eigenwerte haben und die Funktion trotzdem nicht konvex sein. Für
 $\bQ = \bigl(\begin{smallmatrix} 2 & 3 \\ 0 & 1\end{smallmatrix}\bigr)$ stehen auf der
 Diagonalen der Dreiecksmatrix die Eigenwerte $2$ und $1$, beide positiv. Es ist aber
 $\bQ + \bQ^\top = \bigl(\begin{smallmatrix} 4 & 3 \\ 3 & 2\end{smallmatrix}\bigr)$ mit den
-Eigenwerten $6{,}162$ und $\cred{-0{,}162}$, und die zugehörige Funktion ist nicht konvex. Wir
-brauchen dafür eine Richtung, in der der symmetrische Anteil negativ wird, und zum Eigenwert
-$-0{,}162$ gehört ungefähr die Richtung $\bd = (2;\ -3)^\top$, denn
-$\bd^\top(\bQ + \bQ^\top)\bd = 16 - 36 + 18 = \cred{-2}$. Wir setzen also
-$\bx = (1;\ -1{,}5)^\top$ und $\by = -\bx$, dazu $\bb = \bnull$ und $a = 0$. Mit
-$\lambda = \tfrac12$ ist der Mittelpunkt $\bnull$, und dort steht $f(\bnull) = 0$ gegen den
-Mittelwert $\tfrac12 f(\bx) + \tfrac12 f(\by) = \cred{-0{,}25}$. Die Sehne verläuft unter dem
-Graphen, die Konvexitätsungleichung ist verletzt.
-
-Bei der Wahl der Richtung ist Vorsicht geboten. Die ähnlich aussehende Richtung
-$\bd = (1;\ -1)^\top$ liefert $\bd^\top(\bQ+\bQ^\top)\bd = 4 - 6 + 2 = 0$ und damit exakt
-Gleichheit; sie zeigt gar nichts. Bei einem einzigen negativen Eigenwert bilden die
-brauchbaren Richtungen nur einen Kegel um den zugehörigen Eigenvektor herum, und der Rand
-dieses Kegels sind genau die Richtungen mit Defekt null.
+Eigenwerten $6{,}162$ und $\cred{-0{,}162}$, und die zugehörige Funktion ist nicht konvex. Zum
+negativen Eigenwert gehört ungefähr die Richtung $\bd = (2;\ -3)^\top$, denn
+$\bd^\top(\bQ + \bQ^\top)\bd = 16 - 36 + 18 = \cred{-2}$. Mit $\bx = (1;\ -1{,}5)^\top$,
+$\by = -\bx$, $\bb = \bnull$ und $a = 0$ steht im Mittelpunkt $\bnull$ der Wert $f(\bnull) = 0$
+gegen den Mittelwert $\tfrac12 f(\bx) + \tfrac12 f(\by) = \cred{-0{,}25}$: Die Sehne verläuft
+unter dem Graphen. Die Richtung muss dabei sorgfältig gewählt sein – die ähnlich aussehende
+$\bd = (1;\ -1)^\top$ liefert $4 - 6 + 2 = 0$ und damit exakt Gleichheit, zeigt also gar nichts.
 :::
+
+::::vertiefung[Die logistische Regression als konvexes Problem]
 
 :::beispiel[#logistische-regression-ist-ein-konvexes (Logistische Regression ist ein konvexes Problem)]
 Die negative :k[Log-Likelihood]{#likelihood} der logistischen Regression aus
@@ -630,6 +623,8 @@ linear abhängigen Regressoren bliebe nur Semidefinitheit, und mit ihr die Mehrd
 Maximums.
 :::
 
+::::
+
 ### Das Spektrum der Hesse-Matrix
 
 :::bemerkung[#eigenwerte-als-kruemmungen (Eigenwerte als Krümmungen)]
@@ -659,15 +654,12 @@ konvex, wenn an jeder Stelle *alle* Eigenwerte nichtnegativ sind. Es gibt dann n
 Richtung, in der die Funktion nach unten wegkippt, und damit auch keine Sattelpunkte, in denen
 ein Verfahren steckenbleiben könnte.
 
-Der Gradiententerm darf in dieser Näherung nicht fehlen. Die verkürzte Fassung
-$f(\bx + \bh) \approx f(\bx) + \tfrac12\bh^\top\bH_f(\bx)\bh$ stimmt ausschließlich an
-kritischen Punkten, wo $\nabla f(\bx) = \bnull^\top$ ist. Sonst ist der weggelassene Term für
-kleine $\bh$ sogar der größere von beiden, denn er verschwindet nur linear in
-$\left\|\bh\right\|$, der Krümmungsterm dagegen quadratisch. Zum Anschauen eignet sich das
-Definitheits-Widget in
-@sec:differentialrechnung/hoehere-ableitungen: Dort lassen sich Eigenwerte und Eigenrichtungen
-verstellen, und die Höhenlinien wechseln von Ellipsen zu Hyperbeln, sobald ein Eigenwert unter
-null rutscht.
+Der Gradiententerm darf in dieser Näherung nicht fehlen: Die verkürzte Fassung
+$f(\bx + \bh) \approx f(\bx) + \tfrac12\bh^\top\bH_f(\bx)\bh$ stimmt nur an kritischen
+Punkten, sonst ist der weggelassene Term für kleine $\bh$ sogar der größere von beiden. Zum
+Anschauen eignet sich das Definitheits-Widget in
+@sec:differentialrechnung/hoehere-ableitungen, dessen Höhenlinien von Ellipsen zu Hyperbeln
+wechseln, sobald ein Eigenwert unter null rutscht.
 :::
 
 ### Stützgeraden und Subgradienten
@@ -707,70 +699,37 @@ gibt es zu jedem $\corange{\bx} \in \interior(\cblue{\Xcal})$ einen Subgradiente
 $\partial f(\corange{\bx}) \neq \emptyset$.
 :::
 
+:::::vertiefung[Beweis, Subdifferential des Betrags und wozu Subgradienten dienen]
+
 ::::beweis
 
 :::schritt
-Der Schlüssel steckt im Beweis von @satz:konvexe-funktionen-von-vektoren-zu, Schritt 1, wenn wir den Grenzübergang
-weglassen. Seien $\corange{\bx} \in \cblue{\Xcal}$, eine Richtung $\bh$ und $0 < s \le t$ mit
-$\corange{\bx} + t\bh \in \cblue{\Xcal}$ gegeben. Wegen
+*Der eindimensionale Fall, in der Skizze.* Schreiben wir für eine Richtung $\bh$ und
+$0 < s \le t$ mit $\corange{\bx} + t\bh \in \cblue{\Xcal}$ den Punkt
 
 $$
 \corange{\bx} + s\bh
 = \left(1 - \tfrac{s}{t}\right)\corange{\bx} + \tfrac{s}{t}\left(\corange{\bx} + t\bh\right)
 $$
 
-und der Konvexität von $f$ ist
-
-$$
-f(\corange{\bx} + s\bh) \le \left(1 - \tfrac{s}{t}\right) f(\corange{\bx})
-+ \tfrac{s}{t}\, f(\corange{\bx} + t\bh) ,
-$$
-
-und Umstellen ergibt
+als Konvexkombination, so liefert die Konvexität von $f$ nach Umstellen
 
 $$
 \frac{f(\corange{\bx} + s\bh) - f(\corange{\bx})}{s}
 \ \le\
-\frac{f(\corange{\bx} + t\bh) - f(\corange{\bx})}{t} .
+\frac{f(\corange{\bx} + t\bh) - f(\corange{\bx})}{t} ,
 $$
 
-Der Differenzenquotient wächst also monoton in der Schrittweite.
+der Differenzenquotient wächst also monoton in der Schrittweite. In einem inneren Punkt
+$\corange{x}$ existieren deshalb beide einseitigen Ableitungen als monotone, beschränkte
+Grenzwerte, und es gilt $f'_-(\corange{x}) \le f'_+(\corange{x})$. Jedes
+$v \in [f'_-(\corange{x}),\, f'_+(\corange{x})]$ erfüllt dann
+@eq:subgradient-und-subdifferential: Für $y > \corange{x}$ ist der Differenzenquotient
+mindestens $f'_+(\corange{x})$ und damit mindestens $v$, für $y < \corange{x}$ höchstens
+$f'_-(\corange{x})$ und damit höchstens $v$, und die Multiplikation mit $y - \corange{x}$ dreht
+im zweiten Fall das Ungleichheitszeichen um.
 
-::why[die rechte Seite der Konvexitätsungleichung enthält $f(\corange{\bx})$ mit dem Gewicht $1 - s/t$; ziehen wir $f(\corange{\bx})$ ab und teilen durch $s > 0$, steht die behauptete Monotonie da]
-:::
-
-:::schritt
-Damit erledigen wir den Fall $n = 1$ vollständig. Sei $\corange{x}$ ein innerer Punkt, also
-$\corange{x} - \delta, \corange{x} + \delta \in \cblue{\Xcal}$ für ein $\delta > 0$. Nach
-Schritt 1 fallen die rechtsseitigen Differenzenquotienten monoton, wenn $t \downarrow 0$ läuft,
-und die linksseitigen wachsen. Aus der Konvexität für die drei Punkte
-$\corange{x} - s < \corange{x} < \corange{x} + t$ folgt außerdem
-
-$$
-\frac{f(\corange{x}) - f(\corange{x} - s)}{s}
-\ \le\
-\frac{f(\corange{x} + t) - f(\corange{x})}{t} .
-$$
-
-Beide einseitigen Ableitungen existieren deshalb als monotone, beschränkte Grenzwerte, und es
-gilt $f'_-(\corange{x}) \le f'_+(\corange{x})$.
-
-::why[eine monoton fallende, nach unten beschränkte Folge konvergiert; die Schranke liefert gerade der jeweils andere einseitige Quotient. Ist $f$ differenzierbar, fallen die beiden Werte zusammen]
-:::
-
-:::schritt
-Jedes $v \in [f'_-(\corange{x}),\, f'_+(\corange{x})]$ ist ein Subgradient. Für $y > \corange{x}$
-ist nämlich
-
-$$
-\frac{f(y) - f(\corange{x})}{y - \corange{x}} \ \ge\ f'_+(\corange{x}) \ \ge\ v ,
-$$
-
-und Multiplikation mit $y - \corange{x} > 0$ gibt @eq:subgradient-und-subdifferential. Für $y < \corange{x}$ ist der
-Differenzenquotient höchstens $f'_-(\corange{x})$ und damit höchstens $v$; die Multiplikation
-mit $y - \corange{x} < 0$ dreht das Ungleichheitszeichen um, und wieder steht @eq:subgradient-und-subdifferential da.
-
-::why[der rechtsseitige Quotient fällt monoton auf $f'_+$, ist also stets mindestens so groß; der linksseitige wächst monoton auf $f'_-$ und ist deshalb stets höchstens so groß]
+::why[die Monotonie ist Schritt 1 im Beweis von @satz:konvexe-funktionen-von-vektoren-zu ohne den Grenzübergang; eine monotone, beschränkte Folge konvergiert, und die Schranke liefert jeweils der andere einseitige Quotient. Ist $f$ differenzierbar, fallen $f'_-$ und $f'_+$ zusammen]
 :::
 
 :::schritt
@@ -850,6 +809,8 @@ beiden Fällen ist die Zielfunktion konvex, aber nicht differenzierbar.
 vom Gradientenabstieg bis zu Newton und seinen Verwandten; die Subgradienten-Varianten selbst
 gehören nicht mehr zum Stoff dieses Skripts, brauchen aber genau das Werkzeug von hier.
 :::
+
+:::::
 
 ### Selbsttest
 

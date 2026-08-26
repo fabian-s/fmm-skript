@@ -94,20 +94,16 @@ $$
 \cblue{x_i} = \Bigl(c_i - \sum_{j = i + 1}^n u_{ij} \, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}} .
 $$
 
-Mit partieller Pivotierung garantiert die Invertierbarkeit, dass sich in jedem
-Schritt ein von null verschiedenes Pivot finden lässt. *Ohne* Zeilentausch reicht
-Invertierbarkeit nicht: Die Matrix
-$\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$ ist invertierbar,
-beginnt aber mit einem Nullpivot. Auch ein von null verschiedenes, jedoch sehr kleines
-Pivot kann in Gleitkommaarithmetik problematisch sein; genau deshalb wählen wir den
-größten verfügbaren Betrag.
+Mit partieller Pivotierung garantiert die Invertierbarkeit in jedem Schritt ein
+von null verschiedenes Pivot; *ohne* Zeilentausch reicht sie nicht, denn ein
+Nullpivot kann trotzdem auftreten (@beispiel:invertierbar-aber-keine-lu-zerlegung).
+Auch ein sehr kleines Pivot ist in Gleitkommaarithmetik gefährlich – deshalb wählen
+wir den größten verfügbaren Betrag.
 
 Die Formel @eq:gauss-elimination-mit-partieller bestimmt die Komponenten von unten nach oben. Wie viele
 Divisionen braucht das voreingestellte 3×3-System?
 
 <RueckSubStepper />
-
-Das Widget macht die Reihenfolge der Rückwärtssubstitution und ihre eine Division pro Zeile sichtbar.
 
 Wie teuer ist die zweite Phase? Prüfen wir die vier Antwortmöglichkeiten
 einzeln (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in

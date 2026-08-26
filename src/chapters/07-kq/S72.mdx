@@ -181,8 +181,7 @@ also ist der Faktor stets $\ge 1$. Das macht die *obere Schranke* mindestens
 so groß wie $\corange{\kappa_2(\bA)}$, nicht notwendig die exakte Kondition.
 Bezeichnet
 $\theta$ den Winkel zwischen $\bb$ und
-$\col(\bA)$ (siehe die Abbildung in
-[Abschnitt 7.1](#sec-7.1-geometrie)), dann ist
+$\col(\bA)$ (siehe die Abbildung in @sec:problem), dann ist
 $\left\|\cgreen{\proj_{\col(\bA)} \bb}\right\| = \cos(\theta) \left\|\bb\right\|$
 und damit
 
@@ -194,24 +193,22 @@ $$
 Was sind nun die geometrischen Extremfälle dieser Schranke?
 
 - **Best case:** $\bb = \cgreen{\proj_{\col(\bA)} \bb}$, d.&thinsp;h.
-  $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist
-  Die Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$; die exakte
+  $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist $\cos(\theta) = 1$, und die
+  Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$; die exakte
   Kondition am konkreten $\bb$ kann kleiner sein.
 - **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, d.&thinsp;h.
-  $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Dann
-  ist $f(\bb)=\bnull$, sodass der relative Outputfehler nicht definiert ist.
-  Setzt man die relative Kondition in diesem Fall konventionsgemäß auf $\infty$,
-  passt das zum Grenzverhalten. Schon eine
-  $\wh{\bx} = \bA\pinv\bb = \bnull$ gilt: Schon eine
-  winzige Störung mit Anteil in $\col(\bA)$ erzeugt einen
-  beliebig großen *relativen* Fehler in der Lösung.
+  $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Dann ist
+  $\wh{\bx} = \bA\pinv\bb = \bnull$, der relative Outputfehler also gar nicht
+  definiert. Setzt man die relative Kondition in diesem Fall konventionsgemäß auf
+  $\infty$, passt das zum Grenzverhalten: Schon eine winzige Störung mit Anteil in
+  $\col(\bA)$ erzeugt einen beliebig großen *relativen* Fehler in der Lösung.
 
 Für die Regression heißt das vorsichtiger: Ein kleiner Projektionsanteil kann die
 Bestimmung der Koeffizienten relativ empfindlich machen. Die exakte Empfindlichkeit
 hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums und von
 den Singulärrichtungen von $\bA$ ab.
 
-:::interaktiv[Wann ist die Schranke aus Satz 7.2.3 scharf?]
+:::interaktiv[Wann ist die obere Schranke scharf?]
 <p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke tatsächlich angenommen – und bei welcher passiert gar nichts?</p>
 
 <WinkelWidget />
@@ -271,15 +268,15 @@ $$
 $$
 
 - **Best case:** $\cpurp{\br} = \bnull$,
-  d.&thinsp;h. $\bA\bx = \bb$ ist exakt lösbar. Dann ist
-  Die lokale obere Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$, wie bei einem
+  d.&thinsp;h. $\bA\bx = \bb$ ist exakt lösbar. Dann ist $\tan(\theta) = 0$, und die
+  lokale obere Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$, wie bei einem
   gewöhnlichen
   :k[linearen Gleichungssystem]{#linear-system}.
 - **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, aber
-  $\cpurp{\br} \ne \bnull$: Dann ist
-  $\bA\bx = \bb$ nicht lösbar,
-  $\bb \perp \col(\bA)$, und es gilt
-  die relative Kondition wird konventionsgemäß als $\infty$ behandelt.
+  $\cpurp{\br} \ne \bnull$: Dann ist $\bA\bx = \bb$ nicht lösbar,
+  $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Wie oben ist
+  $\wh{\bx} = \bnull$, und die relative Kondition wird konventionsgemäß als
+  $\infty$ behandelt.
 - **Normalfall:** $\cpurp{\br} \ne \bnull$
   und $\cgreen{\proj_{\col(\bA)} \bb} \ne \bnull$. Dann
   kann die obere Schranke einen Term der Ordnung

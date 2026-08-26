@@ -174,14 +174,12 @@ Lösung. Bei $p = 1$ hat diese Kugel Ecken auf den Achsen, und an einer Ecke
 kommt die wachsende Niveaumenge besonders leicht zuerst an; deshalb setzt Lasso
 Koeffizienten exakt auf null.
 
-Zwei Feinheiten sind dabei leicht zu übersehen. Erstens lässt sich bei den
-konvexen Ridge- und Lasso-Problemen zu einer penalisierten Lösung ein Budget
-$\cred c$ wählen, das dieselbe Lösung liefert. Umgekehrt entspricht eine
-bindende Nebenbedingung unter den üblichen Regularitätsbedingungen einem
-Multiplikator $\lambda \ge 0$, in aller Regel $\lambda>0$; ist sie inaktiv, gehört
-dazu $\lambda=0$. Die
-Zuordnung hängt von den Daten ab und muss nicht eindeutig sein; eine allgemeine
-Umrechnungsformel gibt es nicht. Zweitens steht im Strafterm die $p$-te *Potenz*
+Zwei Feinheiten sind dabei leicht zu übersehen. Erstens gehört zu jeder
+penalisierten Lösung ein Budget $\cred c$, das dieselbe Lösung liefert – in der
+Gegenrichtung aber nur, solange die Nebenbedingung wirklich bindet. Warum das so
+ist und warum es keine allgemeine Umrechnungsformel gibt, klärt
+@beispiel:kkt-stationaritaet-fuer-ridge in @sec:beschraenkt. Zweitens steht im
+Strafterm die $p$-te *Potenz*
 der Norm. Für $p = 1$ ist das die Norm selbst, für $p = 2$ dagegen
 $\lambda\left\|\bbeta\right\|_2^2$ – und nur mit dieser quadrierten Fassung
 ergibt sich die geschlossene Ridge-Lösung
@@ -398,7 +396,7 @@ ein Bit, also $\log_{10} 2 \approx 0{,}301$ Dezimalstellen; für eine weitere
 gültige Stelle brauchen wir rund $3{,}3$ Schritte. Das ist zuverlässig und
 langsam.
 
-:::bemerkung[#bisektion-robust-implementiert (Bisektion, robust implementiert)]
+:::bemerkung[#bisektion-robust-implementiert (Die Bisektion in sieben Zeilen)]
 Kompakt geschrieben ist das Verfahren sieben Zeilen lang:
 
 ```r
@@ -416,7 +414,10 @@ zurück, so wäre das nach der Zuweisung stets ein Randpunkt des Endintervalls:
 Statt der garantierten Genauigkeit $\epsilon/2$ aus @satz:schrittzahl-der-bisektion bliebe nur
 $\epsilon$, ein voller Halbierungsschritt verschenkt.
 
-Zwei weitere Kleinigkeiten sind Fließkomma-Handwerk aus
+:::
+
+:::vertiefung[Fließkomma-Fallen der Bisektion]
+Zwei Kleinigkeiten dieser Fassung sind Fließkomma-Handwerk aus
 @kap:fehler. Die erste betrifft den Mittelpunkt. Haben $a$
 und $b$ dasselbe Vorzeichen, so ist $a + (b-a)/2$ die verlässlichere Formel: Die
 Differenz $b - a$ ist dann betragsmäßig höchstens so groß wie der größere der
@@ -496,21 +497,17 @@ wechselt zu $f(x) = x^3 - 3x + 1$ auf $[-2, 2]$, wo die Voraussetzung von
 >
   <BisektionStepper />
 </Schaetzfrage>
-:::
 
-Im Widget trifft die Schranke aus @satz:schrittzahl-der-bisektion exakt: $10$ Schritte
-für $\epsilon = 10^{-3}$, $20$ für $10^{-6}$, $34$ für $10^{-10}$. Umgerechnet
-kostet jede weitere gültige Dezimalstelle $1/\log_{10} 2 = 3{,}32$ Schritte,
-denn jeder Schritt gewinnt genau ein Bit.
-
-Der zweite Menüpunkt zeigt, was der Satz *nicht* verspricht. Die Funktion
-$f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$ drei Nullstellen, nämlich bei
-$-1{,}879385$, $0{,}347296$ und $1{,}532089$. Das Verfahren findet eine davon,
-und welche, entscheidet schon der erste Mittelpunkt: Weil $f(0) = 1$ dasselbe
+Die Schranke aus @satz:schrittzahl-der-bisektion trifft exakt: $10$ Schritte für
+$\epsilon = 10^{-3}$, $20$ für $10^{-6}$, $34$ für $10^{-10}$, also
+$1/\log_{10} 2 = 3{,}32$ Schritte je gültiger Dezimalstelle. Der zweite Menüpunkt
+zeigt, was der Satz *nicht* verspricht: $f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$
+drei Nullstellen bei $-1{,}879385$, $0{,}347296$ und $1{,}532089$, und schon der
+erste Mittelpunkt entscheidet, welche davon wir finden – weil $f(0) = 1$ dasselbe
 Vorzeichen trägt wie $f(2) = 3$, fliegt die rechte Hälfte samt zwei Nullstellen
-im ersten Schritt hinaus, und die Iteration läuft gegen die linke. Für die
-Eindeutigkeit bräuchten wir die strenge Monotonie aus @satz:existenz-und-eindeutigkeit-einer, und die fehlt
-hier.
+sofort hinaus. Für die Eindeutigkeit fehlt hier die strenge Monotonie aus
+@satz:existenz-und-eindeutigkeit-einer.
+:::
 
 ### Das Newton-Raphson-Verfahren
 
@@ -634,22 +631,20 @@ zweiten Beispiel markieren die Stellen mit $\corange{f'} = 0$.
 >
   <NewtonNullstelle />
 </Schaetzfrage>
-:::
 
-Der Preis ist kein theoretischer, und das Widget führt ihn vor. Auf $f(x) = x^2 - 2$
-läuft alles glatt: Die Fehlerspalte fällt über
-$4{,}1 \cdot 10^{-1}$, $8{,}6 \cdot 10^{-2}$, $2{,}5 \cdot 10^{-3}$,
-$2{,}1 \cdot 10^{-6}$ auf $1{,}6 \cdot 10^{-12}$, und der Quotient
-$e_{k+1}/e_k^2$ pendelt sich bei $0{,}3536$ ein. Auf $f(x) = x^3 - 3x + 1$
-dagegen entscheidet der Startpunkt, welche der drei Nullstellen wir finden, und
-in der Nähe von $x = 1$ wird es unangenehm: Bei $\cblue{x^{(0)}} = 1{,}05$ ist
-$\corange{f'} = 0{,}31$, der erste Schritt springt nach $4{,}28$, und der Lauf
-braucht zehn Schritte statt fünf. Am deutlichsten ist die dritte Funktion. Der
-Arkustangens hat genau eine Nullstelle, nämlich $0$, aber die Kurve flacht nach
-außen ab. Ab $\left|\cblue{x^{(0)}}\right| > 1{,}3917$ überholt jeder Schritt
-den vorigen, und die Iterierten $1{,}5 \to -1{,}694 \to 2{,}321 \to -5{,}114
-\to 32{,}30 \to -1575{,}3$ laufen auseinander. Die Bisektion hätte hier ohne
-Weiteres funktioniert; sie ist eben langsam, aber nicht zu überlisten.
+Auf $f(x) = x^2 - 2$ läuft alles glatt: Die Fehlerspalte fällt über
+$8{,}6 \cdot 10^{-2}$ und $2{,}5 \cdot 10^{-3}$ auf $1{,}6 \cdot 10^{-12}$, und
+der Quotient $e_{k+1}/e_k^2$ pendelt sich bei $0{,}3536$ ein. Auf
+$f(x) = x^3 - 3x + 1$ entscheidet dagegen der Startpunkt, welche der drei
+Nullstellen wir finden, und in der Nähe von $x = 1$ wird es unangenehm: Bei
+$\cblue{x^{(0)}} = 1{,}05$ ist $\corange{f'} = 0{,}31$, der erste Schritt springt
+nach $4{,}28$, und der Lauf braucht zehn Schritte statt fünf. Am deutlichsten ist
+der Arkustangens: Er hat genau eine Nullstelle, aber ab
+$\left|\cblue{x^{(0)}}\right| > 1{,}3917$ überholt jeder Schritt den vorigen, und
+die Iterierten $1{,}5 \to -1{,}694 \to 2{,}321 \to -5{,}114 \to 32{,}30 \to
+-1575{,}3$ laufen auseinander. Die Bisektion hätte hier ohne Weiteres
+funktioniert; sie ist eben langsam, aber nicht zu überlisten.
+:::
 
 :::bemerkung[#von-der-nullstelle-zum-minimum (Von der Nullstelle zum Minimum)]
 Jetzt schließt sich der Kreis zu @bemerkung:zwei-probleme-ein-werkzeugkasten. Suchen wir das Minimum einer
@@ -671,15 +666,17 @@ der Gradient in unserer Konvention eine Zeile ist. In
 praxistauglichen aus.
 :::
 
-### Fixpunktiteration erster Ordnung
-
 Für $f\colon \R^n \to \R^n$ tritt in @eq:newton-raphson-verfahren-fuer an die Stelle der Division die
 Lösung des linearen Systems
 $\corange{\bJ_f(\bx^{(k)})}\,\bd = -\cblue{f(\bx^{(k)})}$ mit der
 Jacobimatrix aus @sec:differentialrechnung/jacobi; die nächste
 Iterierte ist dann $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \bd$. Das ist teuer:
-pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung. Die einfachste
-Alternative ersetzt die Ableitung deshalb durch eine feste Zahl.
+pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung.
+
+:::::vertiefung[Fixpunktiteration erster Ordnung]
+Die einfachste Alternative ersetzt die Ableitung durch eine feste Zahl. Das
+Ergebnis ist ein Nebenweg, aber ein lehrreicher: Es nimmt den Gradientenabstieg
+aus @sec:nelder-mead-gradient in Reinform vorweg.
 
 :::algorithmus[#fixpunktiteration-erster-ordnung (Fixpunktiteration erster Ordnung)]
 Gegeben seien $f\colon \R^n \to \R^n$, ein Startpunkt $\cblue{\bx^{(0)}}$ und
@@ -727,53 +724,30 @@ Startpunkt.
 ::::beweis
 
 :::schritt
-*Die Fehlerrekursion.* Schreiben wir $\be_k := \cblue{\bx^{(k)}} -
+*Fehlerrekursion und Kontraktion.* Schreiben wir $\be_k := \cblue{\bx^{(k)}} -
 \cgreen{\bx^\star}$. Weil $f$ in $\cgreen{\bx^\star}$ differenzierbar ist und
-dort verschwindet, gilt
-
-$$
-f(\cblue{\bx^{(k-1)}}) = \underbrace{f(\cgreen{\bx^\star})}_{= \bnull}
-+ \corange{\bJ_f(\cgreen{\bx^\star})}\,\be_{k-1} + r(\be_{k-1}) ,
-\qquad \left\|r(\bh)\right\| = o(\left\|\bh\right\|) .
-$$
-
-Einsetzen in @eq:fixpunktiteration-erster-ordnung und Abziehen von $\cgreen{\bx^\star}$ auf beiden Seiten
-liefert
+dort verschwindet, ist
+$f(\cblue{\bx^{(k-1)}}) = \corange{\bJ_f(\cgreen{\bx^\star})}\,\be_{k-1} + r(\be_{k-1})$
+mit $\left\|r(\bh)\right\| = o(\left\|\bh\right\|)$. Einsetzen in
+@eq:fixpunktiteration-erster-ordnung und Abziehen von $\cgreen{\bx^\star}$ auf
+beiden Seiten liefert
 
 $$
 \be_k = \bigl(\bI_n - \corange{\gamma\,\bJ_f(\cgreen{\bx^\star})}\bigr)\be_{k-1}
-- \corange{\gamma}\, r(\be_{k-1}) .
-$$
-
-::why[das ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Ein bloßes Ungefährzeichen an dieser Stelle würde den Restterm unter den Tisch fallen lassen]
-:::
-
-:::schritt
-*Normen anlegen.* Dreiecksungleichung und die Verträglichkeit der induzierten
-Norm aus @sec:matrix-spur-norm/operatornormen geben
-
-$$
+- \corange{\gamma}\, r(\be_{k-1}) ,
+\qquad\text{also}\qquad
 \left\|\be_k\right\| \le \corange{\rho}\left\|\be_{k-1}\right\|
 + \corange{\gamma}\left\|r(\be_{k-1})\right\| .
 $$
 
-::why[$\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ für jede induzierte Matrixnorm]
-:::
+Sei nun $\rho' \in (\corange{\rho}, 1)$ beliebig. Weil
+$\left\|r(\bh)\right\| / \left\|\bh\right\| \to 0$ für $\bh \to \bnull$ gilt, gibt
+es ein $\delta > 0$ mit
+$\corange{\gamma}\left\|r(\bh)\right\| \le (\rho' - \corange{\rho})\left\|\bh\right\|$
+für alle $\left\|\bh\right\| \le \delta$, und für $\left\|\be_{k-1}\right\| \le \delta$
+folgt daraus $\left\|\be_k\right\| \le \rho' \left\|\be_{k-1}\right\|$.
 
-:::schritt
-*Den Restterm einsammeln.* Sei $\rho' \in (\corange{\rho}, 1)$ beliebig. Weil
-$\left\|r(\bh)\right\| / \left\|\bh\right\| \to 0$ für $\bh \to \bnull$, gibt es
-ein $\delta > 0$ mit
-
-$$
-\corange{\gamma}\left\|r(\bh)\right\| \le (\rho' - \corange{\rho})\left\|\bh\right\|
-\qquad \text{für alle } \left\|\bh\right\| \le \delta .
-$$
-
-Für $\left\|\be_{k-1}\right\| \le \delta$ folgt damit
-$\left\|\be_k\right\| \le \rho' \left\|\be_{k-1}\right\|$.
-
-::why[genau hier wird die Aussage lokal: Die Abschätzung gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt. Je näher $\rho'$ an $\rho$ liegt, desto kleiner darf $\delta$ ausfallen]
+::why[die Zerlegung von $f$ ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Abschätzung benutzt danach die Dreiecksungleichung und die Verträglichkeit der induzierten Norm, $\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ (@sec:matrix-spur-norm/operatornormen). Genau hier wird die Aussage lokal: Sie gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt]
 :::
 
 :::schritt
@@ -788,8 +762,9 @@ $\rho' < 1$ konvergiert die rechte Seite gegen null.
 
 :::schritt
 *Der affine Fall.* Ist $f(\bx) = \bA\bx - \bb$, so ist
-$\corange{\bJ_f} = \bA$ konstant und $r \equiv \bnull$. Schritt 2 gibt dann
-direkt $\left\|\be_k\right\| \le \corange{\rho}\left\|\be_{k-1}\right\|$, ohne
+$\corange{\bJ_f} = \bA$ konstant und $r \equiv \bnull$. Die Abschätzung aus
+Schritt 1 gibt dann direkt
+$\left\|\be_k\right\| \le \corange{\rho}\left\|\be_{k-1}\right\|$, ohne
 Einschränkung an den Startpunkt.
 
 ::why[eine affine Abbildung ist ihre eigene lineare Näherung, der Restterm entfällt]
@@ -802,42 +777,16 @@ Kurzgefasst lautet das Ergebnis $\left\|\cblue{\bx^{(k)}} -
 aber zwei Vorbehalte: Die Aussage gilt nur in der Nähe von $\cgreen{\bx^\star}$, und
 der Restterm verwässert die Rate im nichtaffinen Fall um ein beliebig kleines Stück.
 
-:::bemerkung[#was-die-monotonie-annahme-leistet (Was die Monotonie-Annahme leistet)]
-Oft wird die Fixpunktiteration mit der Annahme formuliert, $f$ sei „monoton
-steigend". Im Eindimensionalen ist das klar: $f$ wachsend heißt
-$\corange{f'(x^\star)} \ge 0$. Ist die Ableitung dort sogar strikt positiv, so ist
-$\corange{\rho} = \left|1 - \corange{\gamma f'(x^\star)}\right| < 1$ für jedes
-$0 < \corange{\gamma} < 2/\corange{f'(x^\star)}$; bei
-$\corange{f'(x^\star)} = 0$ dagegen ist $\corange{\rho} = 1$, gleichgültig
-welches $\corange{\gamma}$ wir wählen. Ohne die Monotonie kann schon das
-*Vorzeichen* des Schrittes falsch sein: Ist $f$ fallend, so treibt uns
-@eq:fixpunktiteration-erster-ordnung mit positivem $\corange{\gamma}$ von der Nullstelle weg. Das Gegenmittel
-ist wohlfeil: Wir arbeiten mit $-f$, das dieselben Nullstellen hat.
-
-Für $n > 1$ ist zunächst offen, was „monoton steigend" bedeuten soll, denn im
-$\R^n$ gibt es keine Anordnung. Der übliche Begriff ist der eines *monotonen
-Operators*, $\left\langle f(\bx) - f(\by),\, \bx - \by\right\rangle \ge 0$ für
-alle $\bx, \by$; für differenzierbares $f$ heißt das, dass
-$\corange{\bJ_f} + \corange{\bJ_f}^\top$ positiv semidefinit ist. Ist dieser
-symmetrische Anteil in $\cgreen{\bx^\star}$ sogar positiv definit, so liefert die
-Abschätzung
-
-$$
-\left\|\bI_n - \corange{\gamma \bJ_f}\right\|_2^2
-\le 1 - \corange{\gamma}\,\lambda_{\min}\bigl(\corange{\bJ_f} + \corange{\bJ_f}^\top\bigr)
-+ \corange{\gamma}^2 \left\|\corange{\bJ_f}\right\|_2^2
-$$
-
-ein $\corange{\rho} < 1$ für alle
-$0 < \corange{\gamma} < \lambda_{\min}(\corange{\bJ_f} +
-\corange{\bJ_f}^\top)/\left\|\corange{\bJ_f}\right\|_2^2$. Die Monotonie sichert
-also die *Existenz* einer brauchbaren Schrittweite, sie nennt uns aber keine.
-Und die Schranke ist nur hinreichend: Für
-$\corange{\bJ_f} = \bigl(\begin{smallmatrix} 1 & -2 \\ 2 & 1\end{smallmatrix}\bigr)$
-liefert sie $\corange{\gamma} < 0{,}4$ und trifft die wahre Grenze exakt, für
-$\corange{\bJ_f} = \diag(1, 10)$ liefert sie $\corange{\gamma} < 0{,}02$, während
-in Wahrheit noch bis $\corange{\gamma} = 0{,}2$ alles gutgeht.
-:::
+Eine Voraussetzung ist dabei leicht zu übersehen. Damit überhaupt ein
+$\corange{\gamma} > 0$ mit $\corange{\rho} < 1$ existiert, muss die Ableitung im
+Zielpunkt in die richtige Richtung zeigen: Im Eindimensionalen ist
+$\corange{\rho} = \left|1 - \corange{\gamma f'(x^\star)}\right| < 1$ genau für
+$0 < \corange{\gamma} < 2/\corange{f'(x^\star)}$, und das setzt
+$\corange{f'(x^\star)} > 0$ voraus. Ist $f$ dort fallend, so treibt uns
+@eq:fixpunktiteration-erster-ordnung mit positivem $\corange{\gamma}$ von der
+Nullstelle weg – das Gegenmittel ist wohlfeil, wir arbeiten mit $-f$, das dieselben
+Nullstellen hat. Deshalb wird die Fixpunktiteration oft gleich mit der Annahme
+formuliert, $f$ sei monoton steigend.
 
 :::bemerkung[#das-dilemma-der-schrittweite (Das Dilemma der Schrittweite)]
 Die Vor- und Nachteile des Verfahrens hängen an einer einzigen Zahl. Positiv:
@@ -863,10 +812,14 @@ $$
 = \frac{\kappa - 1}{\kappa + 1}
 $$
 
-die beste Wahl. Für $\cred{\gamma > 2/\lambda_{\max}}$ wächst der Fehler entlang
-des Eigenvektors zu $\lambda_{\max}$, die Iteration läuft also von jedem
-Startpunkt aus auseinander, dessen Fehler in dieser Richtung einen Anteil hat.
-Hier steht $\kappa = \lambda_{\max}/\lambda_{\min}$ für die
+die beste Wahl, und für $\cred{\gamma > 2/\lambda_{\max}}$ läuft die Iteration von
+jedem Startpunkt aus auseinander, dessen Fehler einen Anteil in der steilsten
+Eigenrichtung hat. Beides steht in @satz:gradientenabstieg-auf-einer-quadrik, wo
+dieselbe Eigenzerlegung von $\bI - \gamma\bA$ den Gradientenabstieg trägt: Dort ist
+$\max_i\left|1 - \gamma\lambda_i\right|$ der Fehlerfaktor, und
+$\corange{\gamma^\star}$ ist genau die Schrittweite, die ihn kleinstmöglich macht –
+nur steht dort die Hesse-Matrix, wo hier die Jacobimatrix steht. Der Buchstabe
+$\kappa = \lambda_{\max}/\lambda_{\min}$ ist die
 :k[Konditionszahl]{#condition-number} aus
 @sec:matrix-spur-norm/eigenschaften. Schlechte Kondition heißt also
 wörtlich langsame Konvergenz: Bei $\kappa = 10$ ist selbst die beste Rate noch
@@ -877,12 +830,10 @@ oder jenseits der Divergenzgrenze, denn $4/(\lambda_{\min} + \lambda_{\max}) \ge
 Im Eindimensionalen ist die beste Wahl besonders sprechend. Dort drückt
 $\corange{\gamma^\star} = 1/\corange{f'(x^\star)}$ die Rate auf
 $\corange{\rho} = 0$, und die Iteration ist nichts anderes als das
-Newton-Verfahren mit eingefrorener Ableitung; der Fehler fällt dann sogar
-quadratisch. Für $f(x) = x^2 - 2$ etwa läuft er von $\cblue{x^{(0)}} = 2$ aus
-über $0{,}121$, $5{,}2 \cdot 10^{-3}$, $9{,}6 \cdot 10^{-6}$ und
-$3{,}2 \cdot 10^{-11}$. Der Haken ist offensichtlich: Wir müssten
-$\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die Ableitung
-in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung pro Schritt.
+Newton-Verfahren mit eingefrorener Ableitung. Der Haken ist offensichtlich: Wir
+müssten $\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die
+Ableitung in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung
+pro Schritt.
 
 In der Praxis wählen wir $\corange{\gamma_k}$ adaptiv, etwa durch eine
 Liniensuche: Ein zu großer Vorschlag wird verkleinert, bis er genügend Fortschritt
@@ -897,11 +848,11 @@ Bleibt die Frage, wie weit uns diese Schranke trägt. Sie hängt an einer einzig
 Zahl, und die lässt sich für drei kleine Systeme durchspielen: Ab welcher
 Schrittweite kippt die Iteration?
 
-:::interaktiv[Die Schrittweite als Regler]
+::::interaktiv[Die Schrittweite als Regler]
 Alle drei Beispiele sind affin, $f(\bx) = \bA(\bx - \cgreen{\bx^\star})$ mit
 $\cgreen{\bx^\star} = \bnull$. Damit ist die Jacobimatrix überall $\bA$, und
-$\corange{\rho} = \left\|\bI - \corange{\gamma}\bA\right\|_2$ ist nach Schritt 5
-des Beweises eine echte Schranke ohne Restterm.
+$\corange{\rho} = \left\|\bI - \corange{\gamma}\bA\right\|_2$ ist nach dem
+affinen Fall im Beweis eine echte Schranke ohne Restterm.
 
 <Schaetzfrage
   frage={<>Das dritte System hat <M>{"\\bA = \\diag(1, 10)"}</M>, also Kondition <M>{"10"}</M>. Ab welchem <M>{"\\gamma"}</M> divergiert es?</>}
@@ -912,28 +863,26 @@ des Beweises eine echte Schranke ohne Restterm.
 >
   <FixpunktSpirale />
 </Schaetzfrage>
-:::
 
-Entschieden wird alles von $\corange{\rho}$, und die drei Systeme des Widgets
-liefern drei verschiedene Geschichten. Das erste ist symmetrisch mit Eigenwerten
-$4{,}618$ und $2{,}382$; die Voreinstellung $\corange{\gamma} = 0{,}25$ ist genau
-die aus dem Richardson-Beispiel in
-@sec:la-misc/iterative-loeser und liefert dieselbe Rate $0{,}4045$, das
-Optimum liegt bei $\corange{\gamma^\star} = 2/7$ mit $\corange{\rho} = 0{,}319$.
-Beim zweiten sind die Eigenwerte komplex, und der Weg wird zur Spirale: Der
-Drehanteil lässt sich durch keine Schrittweite wegregeln, weshalb selbst im
-Optimum nur $2/\sqrt 5 = 0{,}894$ herausspringt. Das dritte führt
-@bemerkung:das-dilemma-der-schrittweite vor. Bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$,
-die Iteration also längst divergent; erst unterhalb von
-$\corange{\gamma} = 0{,}2$ läuft sie zusammen, und die beste Rate bleibt $9/11$.
-Sehenswert ist dabei das Zickzack: Die steile Richtung überschießt, während die
-flache kaum vorankommt. Dasselbe Bild begegnet uns beim Gradientenabstieg in
-@sec:nelder-mead-gradient wieder.
+Entschieden wird alles von $\corange{\rho}$. Das erste System ist symmetrisch mit
+den Eigenwerten $4{,}618$ und $2{,}382$; die Voreinstellung
+$\corange{\gamma} = 0{,}25$ ist die aus dem Richardson-Beispiel in
+@sec:la-misc/iterative-loeser und liefert dieselbe Rate $0{,}4045$, das Optimum
+liegt bei $\corange{\gamma^\star} = 2/7$ mit $\corange{\rho} = 0{,}319$. Beim
+zweiten sind die Eigenwerte komplex, der Weg wird zur Spirale, und der Drehanteil
+lässt sich durch keine Schrittweite wegregeln: Selbst im Optimum bleibt
+$2/\sqrt 5 = 0{,}894$. Das dritte führt @bemerkung:das-dilemma-der-schrittweite
+vor – bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$, erst unterhalb
+von $0{,}2$ läuft die Iteration zusammen, und die beste Rate bleibt $9/11$.
+Sehenswert ist dort das Zickzack: Die steile Richtung überschießt, während die
+flache kaum vorankommt – dasselbe Bild wie beim Gradientenabstieg in
+@sec:nelder-mead-gradient.
+::::
+:::::
 
 Damit ist der Werkzeugkasten für Nullstellen beisammen. Für die Optimierung ist
-allerdings gerade die Voraussetzung heikel, die @bemerkung:was-die-monotonie-annahme-leistet gebraucht hat:
-Der Gradient einer beliebigen Zielfunktion ist im Allgemeinen nicht monoton, und
-ohne diese Annahme trägt die Vorschrift @eq:fixpunktiteration-erster-ordnung keine Garantie mehr.
+allerdings gerade die Monotonie heikel, von der die Fixpunktiteration lebt: Der
+Gradient einer beliebigen Zielfunktion ist im Allgemeinen nicht monoton.
 @sec:optimalitaet setzt deshalb neu an und fragt zuerst, was ein
 Minimum überhaupt auszeichnet.
 
@@ -991,7 +940,7 @@ Richardson-Verfahren aus Kapitel 8.
 Einsetzen gibt $\bx^{(k)} = \bx^{(k-1)} - \gamma(\bA\bx^{(k-1)} - \bb)$, also die
 Korrektur des Residuums mit fester Schrittweite. Die dortige Konvergenzbedingung
 $\left\|\bI - \gamma\bA\right\| < 1$ ist wörtlich @eq:konvergenzrate-der-fixpunktiteration, und weil $f$ affin
-ist, greift Schritt 5 des Beweises von @satz:konvergenzrate-der-fixpunktiteration: Die Schranke gilt für jeden
+ist, greift der affine Fall im Beweis von @satz:konvergenzrate-der-fixpunktiteration: Die Schranke gilt für jeden
 Startpunkt.
 :::
 
@@ -999,7 +948,7 @@ Startpunkt.
 Ist $\rho = \left\|\bI_n - \gamma\bJ_f(\bx^\star)\right\| < 1$, so konvergiert
 die Fixpunktiteration von jedem Startpunkt aus gegen $\bx^\star$.
 
-@satz:konvergenzrate-der-fixpunktiteration ist eine *lokale* Aussage: Die Schranke aus Schritt 3 gilt nur in
+@satz:konvergenzrate-der-fixpunktiteration ist eine *lokale* Aussage: Die Schranke im Beweis gilt nur in
 einer Kugel um $\bx^\star$, deren Radius wir nicht kennen. Weiter draußen taugt
 die lineare Näherung nichts mehr, und die Iteration kann zu einer anderen
 Nullstelle laufen oder ganz davonlaufen. Nur im affinen Fall verschwindet der

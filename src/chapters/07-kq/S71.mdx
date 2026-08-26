@@ -239,15 +239,11 @@ $$
 ::::beweis
 
 :::schritt
-Nach @satz:kq-loesung-als-projektion löst $\wh{\bx}$ das KQ-Problem genau dann, wenn
-$\bA\wh{\bx} = \cgreen{\wh{\bb}}$ gilt. Das wiederum ist genau dann der
-Fall, wenn das Residuum *nur* aus dem senkrechten Anteil besteht:
-
 $$
 \bA\wh{\bx} = \cgreen{\wh{\bb}} \quequiv \bb - \bA\wh{\bx} = \cpurp{\br} \perp \col(\bA)\,.
 $$
 
-::why[Zerlegung aus dem Beweis von @satz:kq-loesung-als-projektion: $\bb - \bA\wh{\bx} = (\cgreen{\wh{\bb}} - \bA\wh{\bx}) + \cpurp{\br}$ mit $\cgreen{\wh{\bb}} - \bA\wh{\bx} \in \col(\bA)$ und $\cpurp{\br} \perp \col(\bA)$]
+::why[@satz:kq-loesung-als-projektion mit der Zerlegung aus seinem Beweis: Genau dann besteht das Residuum nur noch aus dem zu $\col(\bA)$ senkrechten Anteil]
 :::
 
 :::schritt
@@ -360,30 +356,27 @@ $$
 \cbred{\bA^\top\bA} = \begin{pmatrix} 3 & 225 \\ 225 & 18\,125 \end{pmatrix}, \qquad \corange{\bA^\top\bb} = \begin{pmatrix} 1\,100 \\ 88\,750 \end{pmatrix}.
 $$
 
-Wegen
-$\det(\cbred{\bA^\top\bA}) = 3 \cdot 18\,125 - 225^2 = 54\,375 - 50\,625 = 3\,750 \neq 0$
-ist die Lösung eindeutig (@satz:eindeutige-loesung-bei-vollem), und mit der Inversionsformel für
-$2 \times 2$-Matrizen erhalten wir
+Die beiden Spalten von $\cbred{\bA}$ sind linear unabhängig, nach
+@satz:eindeutige-loesung-bei-vollem ist die Lösung also eindeutig. Auflösen des
+$2 \times 2$-Systems $\cbred{\bA^\top\bA}\,\cblue{\wh{\bbeta}} = \corange{\bA^\top\bb}$
+liefert
 
 $$
-\cblue{\wh{\bbeta}} = (\cbred{\bA^\top\bA})^{-1} \corange{\bA^\top\bb} = \frac{1}{3\,750} \begin{pmatrix} 18\,125 & -225 \\ -225 & 3 \end{pmatrix} \begin{pmatrix} 1\,100 \\ 88\,750 \end{pmatrix} = \begin{pmatrix} -25/3 \\ 5 \end{pmatrix} \approx \begin{pmatrix} -8{,}33 \\ 5 \end{pmatrix}.
+\cblue{\wh{\bbeta}} = \begin{pmatrix} -25/3 \\ 5 \end{pmatrix} \approx \begin{pmatrix} -8{,}33 \\ 5 \end{pmatrix}.
 $$
 
-Jeder Quadratmeter kostet also geschätzt $5\,000$ € mehr. Zur Probe berechnen
-wir angepasste Werte und Residuum:
+Jeder Quadratmeter kostet also geschätzt $5\,000$ € mehr. Zur Probe die
+angepassten Werte und das Residuum:
 
 $$
 \cgreen{\wh{\bb}} = \cbred{\bA}\cblue{\wh{\bbeta}} = \frac{1}{3}\begin{pmatrix} 725 \\ 1\,100 \\ 1\,475 \end{pmatrix} \approx \begin{pmatrix} 241{,}7 \\ 366{,}7 \\ 491{,}7 \end{pmatrix}, \qquad \cpurp{\br} = \bb - \cgreen{\wh{\bb}} = \frac{1}{3}\begin{pmatrix} 25 \\ -50 \\ 25 \end{pmatrix}.
 $$
 
-Tatsächlich gilt
-$\cbred{\bA}^\top \cpurp{\br} = \bnull$: Die Summe der Residuen ist
-$(25 - 50 + 25)/3 = 0$, und
-$\sumin x_i r_i = (50 \cdot 25 - 75 \cdot 50 + 100 \cdot 25)/3 = 0$. Das
-Residuum steht senkrecht auf beiden Spalten, genau wie @satz:problem-normalengleichungen verspricht. Der
-minimale Zielfunktionswert ist
-$\left\| \cpurp{\br} \right\|_2^2 = (625 + 2\,500 + 625)/9 = 1\,250/3 \approx 416{,}7$
-.
+Tatsächlich gilt $\cbred{\bA}^\top \cpurp{\br} = \bnull$: Die Residuen summieren
+sich zu $(25 - 50 + 25)/3 = 0$, und ebenso ist
+$\sumin x_i r_i = (50 \cdot 25 - 75 \cdot 50 + 100 \cdot 25)/3 = 0$. Das Residuum
+steht also senkrecht auf beiden Spalten, genau wie
+@satz:problem-normalengleichungen verspricht.
 :::
 
 <h3 id="sec-7.1-quiz">Selbsttest</h3>

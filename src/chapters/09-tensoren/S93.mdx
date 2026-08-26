@@ -89,9 +89,10 @@ Wie hängen die beiden Faktoren einer Rang-1-Matrix mit ihrem Kern und ihrem Bil
 
 :::interaktiv[Ein Bildraum als Gerade]
 <RangEinsExplorer />
-:::
 
-Wie das Widget zeigt, bestimmt $\bv$ die Bildgerade und $\bw$ die dazu orthogonale Kernrichtung einer Rang-1-Matrix.
+Wie das Widget zeigt, bestimmt $\bv$ die Bildgerade und $\bw$ die dazu
+orthogonale Kernrichtung einer Rang-1-Matrix.
+:::
 
 :::satz[#eigenschaften-des-aeusseren-produkts (Eigenschaften des äußeren Produkts)]
 Seien $\cblue{\bv} \in \R^m$ und $\cgreen{\bw} \in \R^n$ beide vom Nullvektor
@@ -113,18 +114,9 @@ verschieden, und sei $\bM = \cblue{\bv} \otimes \cgreen{\bw}$. Dann gilt:
 
 :::schritt
 Zu (1): Nach @eq:aeusseres-produkt steht an der Stelle $(i,j)$ der Eintrag
-$\corange{v_i w_j}$. Halten wir $j$ fest und lassen $i$ laufen, so lesen wir die
-$j$-te Spalte ab, und in jedem ihrer Einträge steckt derselbe Faktor
-$\cgreen{w_j}$:
-
-$$
-\bM_{\cdot, j} = \begin{pmatrix} \corange{v_1 w_j} \\ \vdots \\ \corange{v_m w_j} \end{pmatrix}
-= \cgreen{w_j} \begin{pmatrix} \cblue{v_1} \\ \vdots \\ \cblue{v_m} \end{pmatrix}
-= \cgreen{w_j}\,\cblue{\bv} .
-$$
-
-Für die Zeilen läuft die Rechnung genauso, mit $\cblue{v_i}$ als gemeinsamem
-Faktor.
+$\corange{v_i w_j}$. In der $j$-ten Spalte steckt damit in jedem Eintrag derselbe
+Faktor $\cgreen{w_j}$, sie ist also $\cgreen{w_j}\,\cblue{\bv}$; für die Zeilen
+läuft es genauso mit $\cblue{v_i}$.
 
 ::why[Ausklammern eines gemeinsamen Faktors, Eintrag für Eintrag]
 :::
@@ -219,23 +211,16 @@ dort, siehe die :k[Auslöschung]{#cancellation} in
 @sec:algos/probleme-algorithmen.
 
 Für jede einzelne Realisierung ist $(\bx - \bmu) \otimes (\bx - \bmu)$ nach
-@satz:eigenschaften-des-aeusseren-produkts eine Rang-1-Matrix. Die Kovarianzmatrix mittelt solche Bausteine, und
-erst dieses Mitteln über viele Richtungen macht sie im Regelfall zu einer Matrix
-von vollem Rang. Dieselbe Bauweise hat die empirische Kovarianzmatrix aus $N$
-Beobachtungen $\bx_1, \dots, \bx_N \in \R^n$,
-
-$$
-\wh{\bSigma} = \frac{1}{N-1}\sum_{i=1}^{N} (\bx_i - \bar{\bx}) \otimes (\bx_i - \bar{\bx}) ;
-$$
-
-hier steht die Summe der Rang-1-Bausteine offen da. Die zentrierten Vektoren
-$\bx_i - \bar{\bx}$ summieren sich zu null, spannen also höchstens einen
-$(N-1)$-dimensionalen Raum auf. Alle Spalten von $\wh{\bSigma}$ liegen darin,
-und damit ist $\rang(\wh{\bSigma}) \le N - 1$: Bei weniger Beobachtungen als
+@satz:eigenschaften-des-aeusseren-produkts eine Rang-1-Matrix; erst das Mitteln
+über viele Richtungen macht die Kovarianzmatrix im Regelfall zu einer Matrix von
+vollem Rang. Genauso gebaut ist die empirische Kovarianzmatrix aus $N$
+Beobachtungen, $\wh{\bSigma} = \tfrac{1}{N-1}\sum_{i=1}^{N} (\bx_i - \bar{\bx})
+\otimes (\bx_i - \bar{\bx})$, und weil die zentrierten Vektoren sich zu null
+summieren, ist $\rang(\wh{\bSigma}) \le N - 1$: Bei weniger Beobachtungen als
 Dimensionen ist die Schätzung stets singulär.
 :::
 
-:::bemerkung[#attention-skalarprodukte-in-massen (Attention: Skalarprodukte in Massen)]
+:::vertiefung[Attention: Skalarprodukte in Massen]
 Der Aufmerksamkeitsmechanismus (attention) moderner Sprachmodelle rechnet mit
 drei Matrizen: $\bQ \in \R^{n_q \times d_k}$ mit den Anfragen (queries)
 $\bq_i^\top$ in den Zeilen, $\bK \in \R^{n_k \times d_k}$ mit den Schlüsseln
@@ -330,25 +315,16 @@ $(A \otimes B) \otimes D = A \otimes (B \otimes D)$.
 
 :::schritt
 Alle Aussagen sind Gleichungen zwischen Tensoren, und zwei Tensoren sind genau
-dann gleich, wenn sie an jeder Indexstelle übereinstimmen. An der Stelle
-$(i_1, \dots, i_p, j_1, \dots, j_q)$ steht links
+dann gleich, wenn sie an jeder Indexstelle übereinstimmen. Dort steht jeweils
+eine Gleichung zwischen reellen Zahlen, die aus den Rechengesetzen in $\R$ folgt.
 
-$$
-(a_{i_1, \dots, i_p} + a'_{i_1, \dots, i_p})\, b_{j_1, \dots, j_q}
-= a_{i_1, \dots, i_p} b_{j_1, \dots, j_q} + a'_{i_1, \dots, i_p} b_{j_1, \dots, j_q} ,
-$$
-
-und rechts steht dieselbe Summe. Die Homogenität und die beiden Aussagen im
-zweiten Argument gehen genauso, ebenso die Assoziativität.
-
-::why[Distributivität, Kommutativität und Assoziativität der Multiplikation in $\R$, Stelle für Stelle angewandt]
+::why[an der Stelle $(i_1, \dots, i_p, j_1, \dots, j_q)$ etwa $(a_{i_1, \dots, i_p} + a'_{i_1, \dots, i_p})\, b_{j_1, \dots, j_q} = a_{i_1, \dots, i_p} b_{j_1, \dots, j_q} + a'_{i_1, \dots, i_p} b_{j_1, \dots, j_q}$; Homogenität, zweites Argument und Assoziativität gehen genauso]
 :::
 
 :::schritt
-Halten wir fest, was das bedeutet: Das Tensorprodukt ist in jedem seiner beiden
-Argumente linear, also eine bilineare Abbildung im Sinn von
-@definition:multilineare-abbildung (@sec:multilinear). Es ist damit selbst ein Beispiel
-für den Gegenstand dieses Kapitels.
+Das Tensorprodukt ist damit in jedem seiner beiden Argumente linear, also eine
+bilineare Abbildung im Sinn von @definition:multilineare-abbildung
+(@sec:multilinear). Es ist selbst ein Beispiel für den Gegenstand dieses Kapitels.
 
 ::why[Bilinearität ist der Fall $n = 2$ der Multilinearität]
 :::
@@ -538,20 +514,7 @@ $$
 Transponieren zieht also in beide Faktoren hinein, ohne ihre Reihenfolge zu
 vertauschen. Der Nachweis ist ein Blick auf @eq:zwei-bedeutungen-zwei-zeichen: Auf beiden Seiten steht
 an der Stelle mit Zeilenindex $(i_2 - 1)q + j_2$ und Spaltenindex
-$(i_1 - 1)p + j_1$ der Eintrag $\cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}}$. Für
-$\cblue{\bA}$ und $\cgreen{\bB}$ aus @beispiel:kroneckerprodukt-zweier-kleiner-matrizen lässt sich das direkt
-ablesen: Beide Seiten sind
-
-$$
-\begin{pmatrix}
-\corange{3} & \corange{0} & \corange{-1} & \corange{6} & \corange{0} & \corange{-2} \\
-\corange{0} & \corange{2} & \corange{0} & \corange{0} & \corange{4} & \corange{0} \\
-\corange{0} & \corange{0} & \corange{-1} & \corange{0} & \corange{0} & \corange{-2} \\
-\corange{0} & \corange{0} & \corange{0} & \corange{15} & \corange{0} & \corange{-5} \\
-\corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{10} & \corange{0} \\
-\corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{0} & \corange{-5}
-\end{pmatrix} .
-$$
+$(i_1 - 1)p + j_1$ der Eintrag $\cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}}$.
 
 Die zweite Regel ist eine Warnung: Das Kroneckerprodukt ist **nicht
 kommutativ**, im Allgemeinen also
@@ -569,14 +532,16 @@ beginnt mit $\cgreen{3} \cdot \cblue{2}$.
 :::
 
 :::interaktiv[Kroneckerprodukte selbst ausrechnen]
-Der Rechner zeigt beide Faktoren und das Produkt in Blockdarstellung. Der erste
-Warum steht in @satz:vektorisierung-eines-matrixprodukts gerade $\cgreen{\bB^\top} \kron \cblue{\bA}$ vor
-$\vec(\bX)$, und nicht dieselben Faktoren in der anderen Reihenfolge?
+Der Rechner zeigt beide Faktoren und das Produkt in Blockdarstellung. Warum steht
+in @satz:vektorisierung-eines-matrixprodukts gerade
+$\cgreen{\bB^\top} \kron \cblue{\bA}$ vor $\vec(\bX)$ und nicht dieselben
+Faktoren in der anderen Reihenfolge?
 
 <KroneckerRechner />
-:::
 
-Die Blockstruktur legt fest, welche gestapelten Spalten miteinander verrechnet werden; deshalb ist die Reihenfolge der Faktoren Teil der Rechenvorschrift.
+Die Blockstruktur legt fest, welche gestapelten Spalten miteinander verrechnet
+werden; deshalb ist die Reihenfolge der Faktoren Teil der Rechenvorschrift.
+:::
 
 ### Blockstrukturen aus Kroneckerprodukten
 
@@ -730,6 +695,13 @@ für jedes $c > 0$ lässt sich ein Skalenfaktor zwischen den Kovarianzfaktoren
 verschieben. Identifizierbar ist deshalb ein Parameter weniger, im Beispiel also
 $5$ statt $6$.
 
+Bezahlt wird die Sparsamkeit mit einer echten Einschränkung. Separierbarkeit
+verbietet, dass sich das räumliche Muster über die Zeit ändert. Ein Wetterfeld,
+dessen Zusammenhänge morgens anders aussehen als abends, lässt sich so nicht
+beschreiben.
+:::
+
+:::vertiefung[Eigenwerte eines Kroneckerprodukts]
 Dass $\bSigma$ überhaupt eine Kovarianzmatrix sein kann, sichert eine weitere
 Rechenregel: Die Eigenwerte von $\cblue{\bSigma_T} \kron \cgreen{\bSigma_S}$
 sind die Produkte $\lambda_i\mu_j$ der Eigenwerte beider Faktoren, denn mit
@@ -757,11 +729,6 @@ $\cgreen{2{,}5}$ und $\cgreen{1{,}5}$; die vier Produkte
 $\corange{4{,}5}$, $\corange{2{,}7}$, $\corange{0{,}5}$ und $\corange{0{,}3}$
 sind die Eigenwerte von $\bSigma$. Ihre Summe ist $8$, die Spur von $\bSigma$,
 und ihr Produkt ist $1{,}8225$, die Determinante von $\bSigma$.
-
-Bezahlt wird die Sparsamkeit mit einer echten Einschränkung. Separierbarkeit
-verbietet, dass sich das räumliche Muster über die Zeit ändert. Ein Wetterfeld,
-dessen Zusammenhänge morgens anders aussehen als abends, lässt sich so nicht
-beschreiben.
 :::
 
 :::interaktiv[Separierbare Kovarianz zum Schieben]
@@ -769,9 +736,10 @@ Wie groß ist der Unterschied zwischen dem Speichern einer allgemeinen
 Kovarianzmatrix und ihrer separierbaren Beschreibung für unser Messgitter?
 
 <SeparierbareKovarianzDemo />
-:::
 
-Die separierbare Kovarianz gewinnt ihre Sparsamkeit dadurch, dass Zeit- und Ortsstruktur in zwei Faktoren getrennt modelliert werden.
+Die separierbare Kovarianz gewinnt ihre Sparsamkeit dadurch, dass Zeit- und
+Ortsstruktur in zwei Faktoren getrennt modelliert werden.
+:::
 
 ### Selbsttest
 

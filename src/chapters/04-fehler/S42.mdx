@@ -79,11 +79,11 @@ $x$ kann sie allerdings bis zu 100 % betragen. Diesen Unterschied schauen wir
 uns gleich noch genauer an.
 :::
 
+:::interaktiv[Kondition-Spielwiese: der Kehrwert unter Störungen]
 Wie schnell wächst dieser Verstärkungsfaktor eigentlich? Die Frage lässt sich schätzen, bevor
 wir sie ausrechnen: Steht der Input bei $x = 0{,}6$, wie weit müssen wir ihn dann
 stören, damit der relative Outputfehler zehnmal so groß wird wie der relative Inputfehler?
 
-:::interaktiv[Kondition-Spielwiese: der Kehrwert unter Störungen]
 <Schaetzfrage
   frage={<>Wie groß muss die Störung <M>{"\\eps"}</M> bei <M>{"x = 0{,}6"}</M> sein, damit der relative Outputfehler zehnmal so groß ist wie der relative Inputfehler?</>}
   variante="bereich"
@@ -105,7 +105,6 @@ stören, damit der relative Outputfehler zehnmal so groß wird wie der relative 
 >
   <KehrwertWidget />
 </Schaetzfrage>
-:::
 
 Das Widget zeigt beide Regime an einem Bild. Solange $\cred{\eps}$ klein gegenüber
 $x$ ist, sind roter und grüner Balken fast gleich lang, die Verstärkung liegt nahe
@@ -114,6 +113,7 @@ Outputbalken über den Bildrand hinaus, während der rote Inputbalken kaum läng
 $x = 0{,}6$ und $\cred{\eps} = -0{,}54$ ist die Verstärkung genau
 $10$, bei $\cred{\eps} = -0{,}45$ (der Voreinstellung) ist sie
 $4$.
+:::
 
 ### Konditionszahlen :id[konditionszahlen]
 
@@ -302,7 +302,10 @@ $$
 @satz:kondition-der-loesung-eines-lgs hat zwei Aussagen, und die zweite ist die überraschende: Die relative Kondition
 hängt von der rechten Seite $\bx$ ab, aber die Schranke
 $\corange{\kappa(\bA)}$ wird für ungünstige $\bx$ auch wirklich
-angenommen. Sehen wir uns an, was das geometrisch heißt. Ein Kreis plausibler rechter Seiten um
+angenommen.
+
+:::interaktiv[Kondition eines Gleichungssystems: aus dem Kreis wird eine Ellipse]
+Sehen wir uns an, was das geometrisch heißt. Ein Kreis plausibler rechter Seiten um
 $\bx$ wird von $\bA^{-1}$ zu einer Ellipse verzogen; für welche
 $\bx$ ist diese Ellipse groß gemessen an $\left\| \bA^{-1}\bx \right\|$,
 und für welche nicht?
@@ -316,11 +319,8 @@ $\kappa_{rel}(f, \bx) \approx 82{,}0$ die Schranke
 $\corange{\kappa(\bA)} \approx 82{,}0$ zu 99,99 % aus: Aus 5 % Inputfehler werden
 410 % Outputfehler, aus dem kleinen roten Kreis links wird die lange Nadel rechts. Ziehen wir
 $\bx$ dagegen in Richtung $(1;\ -1)^\top$, fällt
-$\kappa_{rel}$ auf $1$, obwohl die Matrix dieselbe bleibt. Das ist der
-Unterschied zwischen der Kondition des *Problems an dieser Stelle* und der
-Worst-Case-Schranke $\corange{\kappa(\bA)}$: Letztere ist eine Eigenschaft von
-$\bA$ allein und deshalb die Zahl, die wir angeben, wenn wir die rechte Seite
-nicht kennen.
+$\kappa_{rel}$ auf $1$, obwohl die Matrix dieselbe bleibt.
+:::
 
 <SelfTest
   frage={
@@ -405,13 +405,12 @@ nicht.
 </details>
 :::
 
+:::interaktiv[Kondition-Spielwiese: die Summe zweier Zahlen in der Ebene]
 Die Antwort auf Teil 2 lässt sich auch als Landkarte über der Ebene lesen: Für welche Punkte
 $\bx$ ist die Summe gutmütig, für welche katastrophal, und wie schnell wechselt
 das eine ins andere?
 
-:::interaktiv[Kondition-Spielwiese: die Summe zweier Zahlen in der Ebene]
 <SummenKonditionWidget />
-:::
 
 Die Karte macht zwei Dinge sichtbar, die in der Formel stecken, aber leicht zu übersehen sind.
 Erstens ist sie entlang jedes Strahls durch den Ursprung einfarbig: Da Zähler und Nenner von
@@ -420,6 +419,7 @@ allein die *Richtung*. Zweitens liegt der ganze Ärger in einer beliebig dünnen
 Umgebung der Antidiagonalen: Bei $\bx = (1{,}5;\ -1{,}45)^\top$ ist
 $\corange{\kappa_{rel}} \approx 59$, also gut zwei verlorene Dezimalstellen; ein
 Schritt weiter auf $(1{,}5;\ -1{,}5)^\top$ und das Problem ist schlecht gestellt.
+:::
 
 Diese Rechnung ist mehr als eine Fingerübung: In
 @sec:stabilitaet wird genau die Kondition der

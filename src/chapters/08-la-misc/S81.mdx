@@ -115,10 +115,13 @@ $|\lambda_1|$. Normieren wir dagegen wie in @algorithmus:potenzmethode nach jede
 Schritt, so taugt derselbe Quotient nichts mehr: Zähler und Nenner haben
 denselben Grenzwert, er läuft also gegen $1$. Mit Normierung lautet die
 Schätzung schlicht
-$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$.
+$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$, und weil eine
+Länge kein Vorzeichen liefern kann, konvergiert sie gegen
+$|\cgreen{\lambda_1}|$.
+:::
 
-Eine Länge kann kein Vorzeichen liefern, diese Schätzung konvergiert also gegen
-$|\cgreen{\lambda_1}|$. Wer das Vorzeichen mitnehmen will, verwendet den
+:::vertiefung[Der Rayleigh-Quotient als zweite Schätzung]
+Wer das Vorzeichen mitnehmen will, verwendet den
 *Rayleigh-Quotienten*
 
 $$
@@ -249,17 +252,9 @@ $$
 
 ::::
 
-::::quiz
-:::zahlfrage{loesung=0.4444444444 toleranz=0.01}
-Welche Rate zeigt der Potenzmethoden-Stepper für die Beispielmatrix langfristig an?
-
-Der orange Wert nähert sich dem Verhältnis der beiden Eigenwertbeträge.
-:::
-::::
-
 Rechnen wir das an der Beispielmatrix durch.
 
-:::beispiel[#potenzmethode-an-einer-2-2-matrix (Potenzmethode an einer 2×2-Matrix)]
+::::beispiel[#potenzmethode-an-einer-2-2-matrix (Potenzmethode an einer 2×2-Matrix)]
 Sei
 
 $$
@@ -327,12 +322,16 @@ $0{,}151/0{,}326 \approx 0{,}46$ und $0{,}068/0{,}151 \approx 0{,}45$.
 Drittens sind beide Eigenwertschätzungen schneller am Ziel als die Richtung:
 Ihr Fehler fällt pro Schritt um ungefähr
 $\corange{(\lambda_2/\lambda_1)^2} \approx 0{,}198$, also quadratisch in der
-Rate. Von $k = 8$ auf $k = 10$ geht der Fehler des Rayleigh-Quotienten von
+Rate.
+
+:::vertiefung[Der Genauigkeitsvorsprung des Rayleigh-Quotienten]
+Von $k = 8$ auf $k = 10$ geht der Fehler des Rayleigh-Quotienten von
 $-9{,}0 \cdot 10^{-4}$ auf $-3{,}5 \cdot 10^{-5}$ zurück, der Fehler der
 Normschätzung von $-3{,}3 \cdot 10^{-3}$ auf $-1{,}3 \cdot 10^{-4}$. Der
 Rayleigh-Quotient ist also nicht schneller, aber asymptotisch um den
 Faktor $3{,}7$ genauer.
 :::
+::::
 
 :::bemerkung[#wann-die-potenzmethode-versagt (Wann die Potenzmethode versagt)]
 Zwei Voraussetzungen von @satz:konvergenz-der-potenzmethode sind verletzbar, und beide Male bricht die
@@ -363,9 +362,15 @@ Was geschieht, wenn der Start genau auf der zweiten Eigenrichtung liegt?
 Ziehen wir den Start auf dem Einheitskreis und testen wir diese Vermutung.
 
 <PotenzmethodenStepper />
-
-Das Widget verbindet den Startanteil mit der Konvergenzbedingung aus @satz:konvergenz-der-potenzmethode.
 :::
+
+::::quiz
+:::zahlfrage{loesung=0.4444444444 toleranz=0.01}
+Welche Rate zeigt der Potenzmethoden-Stepper für die Beispielmatrix langfristig an?
+
+Der orange Wert nähert sich dem Verhältnis der beiden Eigenwertbeträge.
+:::
+::::
 
 ### Ähnliche Matrizen als Werkzeug
 
@@ -578,6 +583,8 @@ Die $k$-te Iterierte trägt also, versteckt in ihren Faktoren, die
 QR-Zerlegung der $k$-ten Potenz von $\bA$.
 :::
 
+:::::vertiefung[Wie sich die Potenzzerlegung induktiv ergibt]
+
 ::::beweis
 
 :::schritt
@@ -621,6 +628,8 @@ $$
 
 ::::
 
+:::::
+
 :::bemerkung[#die-qr-iteration-ist-eine-simultane (Die QR-Iteration ist eine simultane Potenzmethode)]
 Gleichung @eq:die-qr-iteration-zerlegt-die-potenzen macht das Verfahren durchschaubar. Bei der üblichen
 Normierung mit positiven Diagonaleinträgen in $\bR$ ist die QR-Zerlegung
@@ -659,20 +668,6 @@ Eigenwerten auf der Diagonalen. Das ist die *Schur-Zerlegung* von $\bA$. Die
 Einträge unterhalb der Diagonalen fallen dabei linear, der Eintrag an der
 Stelle $(i, j)$ mit $i > j$ wie $\corange{|\lambda_i/\lambda_j|}^k$; die
 langsamste dieser Raten gehört zum engsten Paar benachbarter Eigenwerte.
-
-Dass die Eigenwerte dort auch absteigend nach Betrag erscheinen, ist der
-Regelfall, aber nicht selbstverständlich. Nötig ist dafür eine technische
-Zusatzbedingung: Schreiben wir die Eigenvektoren, absteigend nach dem Betrag
-ihres Eigenwerts sortiert, als Spalten einer Matrix $\bX$, so muss $\bX^{-1}$
-eine [LU-Zerlegung](?k=05-lgs#sec-5.3) ohne Zeilentausch besitzen. Ein
-Gegenbeispiel ist schnell gefunden: Für $\bA = \diag(1, 2)$ liefert
-Gram-Schmidt $\bQ^{(1)} = \bI$ und $\bR^{(1)} = \bA$, es rührt sich also gar
-nichts, und die Diagonale bleibt aufsteigend sortiert. Das ist kein
-Sonderfall der Diagonalmatrix: Ist $\bA$ schon obere Dreiecksmatrix mit
-Diagonaleinträgen ungleich null, so ist $\bQ^{(1)} = \diag(\sign(a_{ii}))$ und
-$\cblue{\bA^{(1)}} = \bQ^{(1)}\bA\bQ^{(1)}$ trägt dieselbe Diagonale wie
-$\bA$. Die QR-Iteration sortiert also nicht um; sie erzeugt die Reihenfolge
-nur dort, wo sie die Dreiecksgestalt selbst herstellt.
 
 Ist $\bA$ zusätzlich **symmetrisch**, so ist wegen @eq:die-iterierten-sind-aehnlich-zu-a auch jedes
 $\cblue{\bA^{(k)}} = \bQ_k^\top\bA\bQ_k$ symmetrisch, und eine symmetrische
@@ -769,8 +764,6 @@ Grenzwert dreieckig und nicht diagonal ist, und die Drehung aus
 @bemerkung:wogegen-die-qr-iteration-konvergiert, bei der gar nichts passiert.
 
 <QrIterationsDemo />
-
-Das Widget macht die schrittweise Freilegung der Eigenwerte durch QR-Iteration sichtbar.
 :::
 
 ### Kondition und Aufwand
@@ -805,14 +798,10 @@ Shifts, Deflation und Eigenwertverteilung ab. Ein Schritt der
 Potenzmethode ist mit einem Matrix-Vektor-Produkt dagegen konkurrenzlos
 billig, liefert aber eben auch nur einen Eigenwert.
 
-Für große dünnbesetzte Matrizen führt die Lanczos-Iteration aus
-@bemerkung:welche-zielgestalt-welches-verfahren schneller zum Ziel. Iterative
-:k[SVD]{#singular-value-decomposition}-Verfahren nach demselben Muster, etwa
-die Lanczos-Bidiagonalisierung im R-Paket `irlba`, liefern die $k$ größten
-Singulärwerte, ohne die Matrix je vollständig zu zerlegen
-(@sec:svd/zusammenfassung). Was sich mit der Potenzmethode allein
-alles anstellen lässt, sehen wir in @sec:anwendungen am
-PageRank-Algorithmus.
+Was sich mit der Potenzmethode allein alles anstellen lässt, sehen wir in
+@sec:anwendungen am PageRank-Algorithmus; für große dünnbesetzte Matrizen
+kommt dort auch die Lanczos-Iteration aus
+@bemerkung:welche-zielgestalt-welches-verfahren wieder vor.
 :::
 
 ### Selbsttest

@@ -101,6 +101,7 @@ Format $nm \times qp$, passend zu $\vec(\bX) \in \R^{pq}$ und
 $\vec(\cblue{\bA}\bX\cgreen{\bB}) \in \R^{mn}$.
 :::
 
+:::::vertiefung[Der vec-Trick, blockweise nachgerechnet]
 ::::beweis
 
 :::schritt
@@ -132,14 +133,16 @@ genau die Spalte aus Schritt 1, und da $j$ beliebig war, stimmen beide Seiten
 :::
 
 ::::
+:::::
 
 :::interaktiv[Die Matrixgleichung als lineares System]
 Welche der beiden Rechnungen liefert denselben Vektor, wenn wir die Einträge von $\bX$ verändern?
 
 <VektorisierungMatrixgleichung />
-:::
 
-Die Vektorisierung bewahrt die lineare Wirkung von links und rechts und macht damit Standardverfahren für lineare Gleichungssysteme anwendbar.
+Die Vektorisierung bewahrt die lineare Wirkung von links und rechts und macht
+damit Standardverfahren für lineare Gleichungssysteme anwendbar.
+:::
 
 :::beispiel[#die-identitaet-an-2-2-matrizen (Die Identität an 2×2-Matrizen)]
 Für
@@ -204,16 +207,9 @@ Inversen nicht explizit, sondern lösen nacheinander lineare Systeme mit
 $\cblue{\bA}$ und $\cgreen{\bB^\top}$. Nach demselben Muster arbeiten die separierbaren
 Kovarianzmatrizen aus @sec:produkte: Dort lesen wir die Eigenwerte
 von $\bSigma$ als Produkte der Eigenwerte beider Faktoren ab, ohne $\bSigma$ je
-aufzustellen (@bemerkung:was-die-annahme-spart-und-was-sie-kostet).
+aufzustellen.
 
-### Das Wichtigste in Kürze
-
-| Abschnitt | Thema | Was bleibt |
-| --- | --- | --- |
-| @num:tensoren/multilinear | Multilineare Abbildungen | Linearität in jedem Argument einzeln; jede solche Abbildung ist durch eine Koeffizientenfamilie festgelegt (@satz:darstellung-multilinearer-abbildungen) |
-| @num:tensoren/tensoren | Tensoren | genau diese Koeffizientenfamilien; sie bilden für festes Format einen Vektorraum der Dimension $n_1 \cdots n_k$ (@satz:der-raum-aller-tensoren-eines-formats) |
-| @num:tensoren/produkte | Produkte von Tensoren | äußeres Produkt und Tensorprodukt als $\otimes$, Kroneckerprodukt als $\kron$ (in der Literatur alle drei als $\otimes$); separierbare Kovarianz als Anwendung |
-| @num:tensoren/tensorprodukt | Tensorprodukt von Vektorräumen | $V \otimes W$ als Spann elementarer Tensoren, Tensorproduktbasis, $\dim(V \otimes W) = \dim(V)\dim(W)$ |
+### Wie es weitergeht
 
 Offen geblieben ist der Bogen zur Approximation. Eine gute Basis für univariate
 Funktionen, etwa Legendre-Polynome, eine Fourierbasis oder Wavelets, liefert

@@ -15,16 +15,10 @@ liegen in den Voraussetzungen, im Aufwand und in der
 | Aufwand | rund $n^3/3$ Multiplikationen | rund $n^3/6$, also halb so viel |
 | scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | in exakter Arithmetik bei nicht-SPD-Matrizen; numerisch eventuell nahe der Semidefinitheitsgrenze |
 
-Die Stabilität der LU-Zerlegung entscheidet sich am Pivot. Tritt ein
-Pivotelement $\cred{m_{kk}} \approx 0$ auf, macht die Division die
-Multiplikatoren riesig, und Rundungsfehler übertönen die eigentlichen
-Daten (@sec:lu). Partielle Pivotierung hält alle
-Multiplikatoren im Betrag bei höchstens 1. Ein Stabilitätsbeweis ist das
-noch nicht: Jeder Eliminationsschritt darf den betragsgrößten Eintrag der
-Arbeitsmatrix verdoppeln, im schlimmsten Fall wächst er also exponentiell.
-Matrizen, die das wirklich ausreizen, sind allerdings mühsame
-Konstruktionen; in der Praxis bleibt das Wachstum harmlos, und die
-pivotierte LU-Zerlegung gilt als stabil
+Die Stabilität der LU-Zerlegung entscheidet sich am Pivot (@sec:lu):
+Partielle Pivotierung hält alle Multiplikatoren im Betrag bei höchstens 1.
+Ein Stabilitätsbeweis ist das nicht, aber in der Praxis gilt die pivotierte
+LU-Zerlegung als stabil
 ([Higham, 2020](https://nhigham.com/2020/07/14/what-is-the-growth-factor-for-gaussian-elimination/)).
 Perfekte Genauigkeit bekommen wir auch damit nicht: Selbst ein stabiler
 Algorithmus liefert nur eine Näherung, deren relativer Fehler in der
@@ -44,15 +38,6 @@ kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für
 Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
 (@sec:cholesky).
 
-:::bemerkung[#fazit (Fazit)]
-- **LU** ist der Universallöser: einsetzbar für jede invertierbare
-  Matrix, mit partieller Pivotierung stabil genug für den Alltag.
-- **Cholesky** ist für SPD-Matrizen die erste Wahl: etwa doppelt so
-  schnell, ohne Pivotierung stabil und in der Statistik ständig gefragt,
-  weil positive definite Kovarianz- und Gram-Matrizen diese Struktur tragen.
-  Hesse-Matrizen sind nur unter zusätzlichen Krümmungsannahmen positiv definit.
-:::
-
 ### Was wir mitnehmen
 
 Drei Botschaften bleiben:
@@ -66,7 +51,8 @@ Drei Botschaften bleiben:
 - Die **Cholesky-Zerlegung** $\bA = \bL\bL^\top$ nutzt Symmetrie und
   Definitheit aus, halbiert den Aufwand und liefert nebenbei das Werkzeug,
   mit dem wir korrelierte Zufallsvektoren simulieren
-  (@sec:cholesky).
+  (@sec:cholesky). Kovarianz- und Gram-Matrizen tragen diese Struktur von
+  Haus aus, Hesse-Matrizen nur unter zusätzlichen Krümmungsannahmen.
 
 In @kap:svd lernen wir mit der
 :k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) die
@@ -107,6 +93,16 @@ $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ startet mit dem Pivot
 $\cred{0}$ und hat keine LU-Zerlegung (@beispiel:invertierbar-aber-keine-lu-zerlegung). Mit
 Zeilenvertauschungen existiert aber immer $\bP\bA = \bL\bU$
 (@satz:existenz-der-lu-zerlegung).
+:::
+
+:::frage{wahr}
+Eine einzige Richtung $\bx \neq \bnull$ mit $\bx^\top\bA\bx \leq 0$ widerlegt,
+dass $\bA$ positiv definit ist.
+
+@definition:spd-matrix verlangt strikte Positivität für *alle* von null
+verschiedenen Richtungen; ein Gegenbeispiel genügt daher zum Widerlegen.
+Umgekehrt beweist keine noch so lange Liste bestandener Richtungen die
+Definitheit.
 :::
 
 :::frage{wahr}

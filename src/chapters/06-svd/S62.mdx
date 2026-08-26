@@ -162,15 +162,6 @@ sind die Quadratwurzeln der positiven Eigenwerte von $\bA^\top\bA$; bis zur
 Länge $q$ wird die Liste mit Nullen ergänzt.
 :::
 
-:::bemerkung[Konvention bei breiten Matrizen]
-Für $m<n$ besitzt $\bA^\top\bA$ insgesamt $n$ Eigenwerte, davon aber mindestens
-$n-m$ strukturell erzwungene Nullen. Üblicherweise zählt die SVD nur die
-$q=\min(m,n)$ Diagonalplätze von $\bSigma$ als Singulärwerte. Möchte man alle
-Eigenwerte von $\bA^\top\bA$ indizieren, kann man zusätzlich
-$\sigma_{q+1}=\cdots=\sigma_n=0$ setzen; diese ergänzten Nullen stehen nicht als
-weitere Diagonaleinträge in $\bSigma$.
-:::
-
 :::bemerkung[#singulaerwerte-sind-streckungsfaktoren (Singulärwerte sind Streckungsfaktoren)]
 - $\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
   die maximale Streckung. Das ist genau das Maximierungsproblem aus
@@ -181,6 +172,12 @@ weitere Diagonaleinträge in $\bSigma$.
   die minimale Streckung. Für $m<n$ ist dieses Minimum wegen des nichttrivialen
   Kerns null; in der erweiterten Konvention entspricht es $\sigma_n=0$.
 - $\sigma_i = 0$ gilt genau dann, wenn $\lambda_i = 0$ ist.
+- *Konvention bei breiten Matrizen.* Für $m < n$ hat $\bA^\top\bA$ insgesamt $n$
+  Eigenwerte, darunter mindestens $n-m$ strukturell erzwungene Nullen. Als
+  Singulärwerte zählen nur die $q = \min(m,n)$ Diagonalplätze von
+  $\corange{\bSigma}$; wer alle Eigenwerte indizieren will, ergänzt
+  $\sigma_{q+1} = \cdots = \sigma_n = 0$ zu dieser *erweiterten Liste*, ohne
+  dass die Nullen weitere Diagonaleinträge wären.
 
 Der größte Singulärwert ist damit nichts anderes als die *Spektralnorm*
 $\left\|\bA\right\|_2$ aus
@@ -389,14 +386,12 @@ beliebig drehen.
 :::interaktiv[Die Rechnung Schritt für Schritt]
 Wie läuft dieser Weg an einer anderen Matrix, und was geht schief, wenn die
 beiden Spalten linear abhängig sind? Das Widget rechnet die Schritte von
-@beispiel:die-matrix-a-a-einer-3-2-matrix bis 6.2.9 für jede eingetragene $3 \times 2$-Matrix nach; die
+@beispiel:die-matrix-a-a-einer-3-2-matrix bis @num:singulaervektoren-der-beispielmatrix für jede eingetragene $3 \times 2$-Matrix nach; die
 beiden Vorzeichen-Knöpfe in Schritt 5 führen @bemerkung:singulaervektoren-sind-nicht-eindeutig vor. Unter den
 Schritten steht dieselbe Abbildung geometrisch: links der Einheitskreis des
 $\R^2$, rechts sein Bild im $\R^3$.
 
 <SingulaerwertRechner />
-
-Die verknüpften Tafeln verbinden die Ebenendarstellung mit dem Bildraum im Raum.
 :::
 
 ### Fundamentale Unterräume
@@ -427,6 +422,9 @@ Orthonormalbasis, in (2) nur eine Orthogonalbasis. Der Grund steht in
 @satz:orthogonalitaet-der-singulaervektoren, die Längen $\left\|\bA\cblue{\bv_i}\right\| = \corange{\sigma_i}$
 sind im Allgemeinen eben nicht $1$. Erst das Teilen durch
 $\corange{\sigma_i}$ macht die $\cgreen{\bu_i}$ daraus.
+
+:::::vertiefung[Warum die Singulärvektoren genau die vier Unterräume aufspannen]
+Der Beweis geht in vier Etappen: Kern, Umkehrung, Spaltenraum, Zeilenraum.
 
 ::::beweis
 
@@ -487,6 +485,7 @@ $\col(\bA^\top)$ vollständig auf.
 :::
 
 ::::
+:::::
 
 Damit liefert die SVD explizite Orthonormalbasen für alle vier fundamentalen
 Unterräume. Der vierte, der linke Kern $\operatorname{Kern}(\bA^\top)$, fällt
@@ -656,7 +655,7 @@ $$
 \corange{\bSigma} = \begin{pmatrix} \sigma_1 & 0 & 0 \\ 0 & \sigma_2 & 0 \end{pmatrix} .
 $$
 
-Und für unsere Beispielmatrix aus 6.2.3 mit $m = 3$, $n = 2$, $r = 2$ ist
+Und für unsere Beispielmatrix aus @beispiel:die-matrix-a-a-einer-3-2-matrix mit $m = 3$, $n = 2$, $r = 2$ ist
 
 $$
 \corange{\bSigma} \approx \begin{pmatrix} 3{,}087 & 0 \\ 0 & 1{,}212 \\ 0 & 0 \end{pmatrix} .
@@ -709,8 +708,6 @@ Matrix, an der Kapitel 3 die Operatornorm sichtbar gemacht hat
 eine Drehmatrix, eine Scherung und eine Matrix mit zwei gleichen Spalten ein.
 
 <SvdGeometrieExplorer />
-
-Die vier Tafeln trennen die Formänderung von der Lageänderung der Bildellipse.
 :::
 
 ### Selbsttest

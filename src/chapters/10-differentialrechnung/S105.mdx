@@ -28,26 +28,16 @@ Notation von dort übernehmen wir mit: $\D$ und $\E$ sind die beiden
 nichts zu tun. Gleichung @eq:eq-10-5-1 ist der Ausgangspunkt für jeden Beweis in diesem
 Abschnitt.
 
-Drei konkrete Gestalten dieser Ableitung brauchen wir laufend:
+Die drei konkreten Gestalten, die wir laufend brauchen, stehen schon da: der
+:k[Gradient]{#gradient} für $f\colon \R^n \to \R$ (@sec:gradient), die Jacobimatrix für
+$f\colon \R^n \to \R^m$ (@sec:jacobi) und die beiden Matrixableitungen
+$\corange{\partial F(x)/\partial x}$ und $\corange{\partial f(\bX)/\partial \bX}$
+(@sec:matrixableitungen).
 
-- den :k[Gradienten]{#gradient} $\corange{\nabla f(\bx)} \in \R^{1 \times n}$ für
-  $f\colon \R^n \to \R$, also den Zeilenvektor der
-  :k[partiellen Ableitungen]{#partial-derivative}
-  (@sec:gradient);
-- die Jacobimatrix $\corange{\bJ_f(\bx)} \in \R^{m \times n}$ für $f\colon \R^n \to \R^m$
-  (@sec:jacobi);
-- die Matrixableitungen $\corange{\partial F(x)/\partial x}$ und
-  $\corange{\partial f(\bX)/\partial \bX}$ für matrixwertige Funktionen eines Skalars
-  beziehungsweise skalarwertige Funktionen einer Matrix
-  (@sec:matrixableitungen).
-
-Aus der Analysis setzen wir die Produktregel $(fg)' = f'g + fg'$ und die Kettenregel
-$(g \circ f)'(x) = g'(f(x))\, f'(x)$ für Funktionen einer Variablen voraus, dazu höhere
-:k[Ableitungen]{#derivative} $f'', f''', \dots$ und die
-:k[Taylorreihe]{#taylor-series}
-$f(x+h) = f(x) + f'(x)h + \tfrac{1}{2}f''(x)h^2 + \dots$. Aus der linearen Algebra
-brauchen wir bilineare und multilineare Abbildungen, insbesondere das
-:k[Skalarprodukt]{#dot-product} $\inner{\cdot, \cdot}$
+Aus der Analysis setzen wir Produkt- und Kettenregel für Funktionen einer Variablen
+voraus, dazu höhere :k[Ableitungen]{#derivative} und die
+:k[Taylorreihe]{#taylor-series}; aus der linearen Algebra bilineare und multilineare
+Abbildungen samt :k[Skalarprodukt]{#dot-product} $\inner{\cdot, \cdot}$
 (@sec:tensoren/multilinear), die
 :k[quadratischen Formen]{#quadratic-form} $\bx^\top\bA\bx$ und die
 :k[Komposition von Funktionen]{#function-composition}.
@@ -163,33 +153,13 @@ $x = 0$.
 *Stetig ist $f$ dort.* Für $h \to 0$ gilt
 $\cblue{f(0+h)} = \left|h\right| \to 0 = \cblue{f(0)}$. $\checkmark$
 
-*Differenzierbar ist $f$ dort nicht.* Wir rechnen den Differenzenquotienten getrennt von
-beiden Seiten aus. Für $h > 0$ ist $\left|h\right| = h$, für $h < 0$ ist
-$\left|h\right| = -h$, also
-
-$$
-\lim_{h \to 0^+} \frac{\cblue{f(h)} - \cblue{f(0)}}{h}
-= \lim_{h \to 0^+} \frac{\left|h\right|}{h}
-= \lim_{h \to 0^+} \frac{h}{h} = \cgreen{1} ,
-$$
-
-$$
-\lim_{h \to 0^-} \frac{\cblue{f(h)} - \cblue{f(0)}}{h}
-= \lim_{h \to 0^-} \frac{\left|h\right|}{h}
-= \lim_{h \to 0^-} \frac{-h}{h} = \cgreen{-1} .
-$$
-
-Beide einseitigen :k[Grenzwerte]{#limit} existieren, sie sind bloß verschieden.
-@definition:differenzierbarkeit verlangt aber einen einzigen Wert, gegen den der Quotient von beiden
-Seiten strebt. Also existiert $\cgreen{f'(0)}$ nicht.
-
-Beachtenswert ist, wie deutlich der Unterschied ausfällt: Die beiden Quotienten sind schon
-für jedes einzelne $h \neq 0$ exakt $\cgreen{+1}$ und $\cgreen{-1}$, sie nähern sich
-einander also nicht einmal an. Anschaulich lässt sich an den Knick bei $x = 0$ keine
-eindeutige Tangente anlegen. Wir haben diesen Knick in
-@sec:linearisierung (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt) schon vermessen und dort
-mit dem Sekanten-Widget vorgeführt, wie sich die beiden Sekanten trennen und getrennt
-bleiben.
+*Differenzierbar ist $f$ dort nicht.* Diesen Knick haben wir in @sec:linearisierung schon
+vermessen: Der Differenzenquotient ist für jedes $h > 0$ exakt $\cgreen{+1}$ und für jedes
+$h < 0$ exakt $\cgreen{-1}$ (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt). Beide
+einseitigen :k[Grenzwerte]{#limit} existieren also, sie sind bloß verschieden, während
+@definition:differenzierbarkeit einen einzigen Wert für beide Seiten verlangt. Damit
+existiert $\cgreen{f'(0)}$ nicht, und an den Knick lässt sich keine eindeutige Tangente
+anlegen.
 :::
 
 :::bemerkung[#die-merkregel-und-ihre-kontraposition (Die Merkregel und ihre Kontraposition)]
@@ -233,18 +203,17 @@ Fassung. Gemessen wird, wie weit die Kurve im Fenster von der Geraden abweicht, 
 beiden Fensterränder läuft.
 
 <ZoomSchaetzung />
-:::
 
-Wie das Widget zeigt, verhalten sich die drei Funktionen an der Stelle $0$ grundverschieden.
-Bei $\cblue{f(x) = x^2}$ halbiert sich die Abweichung von der Geraden mit jeder Halbierung
-des Fensters; genau das besagt der Rest $o(\left\|\bh\right\|)$ in @definition:differenzierbarkeit. Bei
-$\cblue{f(x) = \left|x\right|}$ steht sie auf jeder Zoomstufe bei genau einem $w$;
-der Knick sieht auf der zwölften Zoomstufe genauso aus wie auf der nullten. Und bei
-$\cblue{f(x) = \sqrt{\left|x\right|}}$ wächst sie beim Hineinzoomen sogar, wie
-$1/\sqrt{w}$: Der Graph richtet sich immer steiler auf und verlässt das Fenster nach oben.
-Nichtdifferenzierbarkeit hat also mehr als eine Bauform, und keine davon verträgt sich mit
-einer Geraden. Verschieben wir dagegen $x_0$ von der $0$ weg, so wird auch der Betrag lokal
-linear: Die Ausnahme steckt in der Stelle, nicht in der Funktion.
+Die drei Funktionen verhalten sich an der Stelle $0$ grundverschieden. Bei
+$\cblue{f(x) = x^2}$ halbiert sich die Abweichung von der Geraden mit jeder Halbierung des
+Fensters; genau das besagt der Rest $o(\left\|\bh\right\|)$ in
+@definition:differenzierbarkeit. Bei $\cblue{f(x) = \left|x\right|}$ steht sie auf jeder
+Zoomstufe bei genau einem $w$, und bei $\cblue{f(x) = \sqrt{\left|x\right|}}$ wächst sie
+beim Hineinzoomen sogar wie $1/\sqrt{w}$. Nichtdifferenzierbarkeit hat also mehr als eine
+Bauform, und keine davon verträgt sich mit einer Geraden. Verschieben wir $x_0$ von der $0$
+weg, so wird auch der Betrag lokal linear – die Ausnahme steckt in der Stelle, nicht in der
+Funktion.
+:::
 
 ### Die Ableitung ist linear
 
@@ -344,8 +313,7 @@ Gleichheitszeichen.
 
 ::::
 
-Den Beweis lassen wir als Übung stehen. Die Rechnung dahinter ist genau die eben
-geführte, und ihr Kern steckt in Schritt 3: Beide Zutaten der Definition, Linearität mit
+Der Kern dieses Beweises steckt in Schritt 3: Beide Zutaten der Definition, Linearität mit
 Beschränktheit und die Kleinheit des Restes, überstehen das Bilden von
 Linearkombinationen unbeschadet.
 

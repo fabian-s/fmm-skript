@@ -173,22 +173,6 @@ $\cgreen{p} = \sum_{k=1}^n a_k \corange{\phi_k}$.
 
 ::::
 
-:::bemerkung[#die-vandermonde-determinante (Die Vandermonde-Determinante)]
-Die Invertierbarkeit lässt sich auch direkt ablesen. Für die
-Vandermonde-Matrix gilt
-
-$$
-\det \bB = \prod_{1 \le i < j \le n} (x_j - x_i),
-$$
-
-ein Produkt, das genau dann von null verschieden ist, wenn alle Stellen
-paarweise verschieden sind. Für $\bx = (0, 1, 2, 4, 5)^\top$ etwa ist
-$\det \bB = 2880$, wie eine Elimination bestätigt. Man beachte, wie
-harmlos diese Determinante aussieht und wie wenig sie über die Numerik sagt:
-Rücken zwei Stellen nahe zusammen, wird das Produkt winzig, ohne dass wir der
-Matrix das ansehen müssten.
-:::
-
 ### Höchstens, nicht genau
 
 :::bemerkung[#ein-haeufiges-missverstaendnis (Ein häufiges Missverständnis)]
@@ -405,6 +389,16 @@ $x \approx 0{,}035$, also am *anderen Ende* des Intervalls. Der größte solche
 Verstärkungsfaktor liegt bei diesen zehn Stellen bei $4{,}03$ und gehört zu
 den beiden mittleren, $x_5$ und $x_6$.
 
+Damit sind beide Schwächen beziffert. Die Methode ist *instabil*,
+weil kleine Datenänderungen groß herauskommen, und sie ist *nicht lokal*,
+weil jedes $\ell_j$ auf dem ganzen Intervall von null verschieden ist. Beides
+ist kein Malheur der Monombasis, sondern eine Eigenschaft globaler
+Polynome: $\ell_j$ hängt allein vom Ansatzraum ab. Abhilfe schaffen erst
+Basisfunktionen, die außerhalb eines kleinen Bereichs verschwinden
+(@sec:splines).
+:::
+
+:::vertiefung[Wenn alle Werte gleichzeitig gestört werden]
 Wie schlimm es werden kann, hängt an der Zahl der Stellen. Stören wir alle
 Werte gleichzeitig um höchstens $\cred{\delta}$, so ändert sich der
 Interpolant um höchstens $\Lambda_n \cdot \cred{\delta}$ mit
@@ -414,14 +408,6 @@ Stellen wächst diese Zahl rasant, nämlich auf $2{,}2$ bei $n = 5$, $17{,}9$ be
 $283$ bei $n = 15$ und $5890$ bei $n = 20$. Für die Chebyshev-Knoten, die uns
 gleich wieder begegnen, bleibt sie im selben Bereich zwischen $2{,}0$ und
 $2{,}9$.
-
-Damit sind beide Schwächen beziffert. Die Methode ist *instabil*,
-weil kleine Datenänderungen groß herauskommen, und sie ist *nicht lokal*,
-weil jedes $\ell_j$ auf dem ganzen Intervall von null verschieden ist. Beides
-ist kein Malheur der Monombasis, sondern eine Eigenschaft globaler
-Polynome: $\ell_j$ hängt allein vom Ansatzraum ab. Abhilfe schaffen erst
-Basisfunktionen, die außerhalb eines kleinen Bereichs verschwinden
-(@sec:splines).
 :::
 
 ### Das Runge-Phänomen
@@ -473,6 +459,7 @@ die letzte Spalte, wo das Unheil sitzt: Das Fehlermaximum wandert mit
 wachsendem $n$ immer näher an die Ränder $\pm 1$.
 :::
 
+::::vertiefung[Chebyshev-Knoten als Gegenmittel]
 :::bemerkung[#ein-ausweg-die-knoten-anders-legen (Ein Ausweg: die Knoten anders legen)]
 Am Ansatzraum liegt es nicht, und an der Basis auch nicht: @satz:existenz-und-eindeutigkeit-der gibt
 zu jeder Knotenwahl dasselbe eindeutige Polynom her. Es liegt an den
@@ -491,11 +478,12 @@ gegen $7{,}2$ und $8{,}6$ oben, und er fällt weiter: $1{,}3 \cdot 10^{-5}$ bei
 $n = 60$. Ehrlicherweise gehört dazu, dass dieser Gewinn asymptotisch ist. Bei
 $n = 4$, $6$ und $8$ Knoten schneiden die gleichmäßig verteilten Knoten sogar
 etwas besser ab.
+:::
+::::
 
 Der Weg über die Knotenwahl setzt allerdings voraus, dass wir die Stellen
-frei wählen dürfen. Bei gemessenen Daten liegen sie fest, und dann hilft nur
-ein anderer Ansatzraum.
-:::
+frei wählen dürfen (@bemerkung:ein-ausweg-die-knoten-anders-legen). Bei
+gemessenen Daten liegen sie fest, und dann hilft nur ein anderer Ansatzraum.
 
 :::interaktiv[Runges Funktion, zwei Knotenfamilien]
 Fällt der Fehler bei äquidistanten Knoten von $n=5$ auf $n=10$, oder steigt er schon dort?
@@ -504,7 +492,7 @@ Fällt der Fehler bei äquidistanten Knoten von $n=5$ auf $n=10$, oder steigt er
   <RungeExplorer />
 </Schaetzfrage>
 
-Der Vergleich zeigt den nichtmonotonen Start: Der Fehler fällt von $0{,}44$ auf $0{,}30$, bevor die Randoszillationen dominieren.
+Der Vergleich zeigt den nichtmonotonen Start aus @bemerkung:divergenz-schon-aber-nicht-monoton: Von $n = 5$ auf $n = 10$ fällt der Fehler zunächst, bevor die Randoszillationen dominieren.
 :::
 
 Damit ist die Bilanz der Polynominterpolation gemischt. Der Satz von der

@@ -13,14 +13,10 @@ $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\cgreen{\bw}^\top$. Die Menge
 aller dieser Produkte ist als Vektorraum unbrauchbar, denn sie ist nicht unter
 Addition abgeschlossen: Die Summe zweier Matrizen vom :k[Rang]{#rank} $1$ hat im
 Allgemeinen den Rang $2$. Der kleinste Vektorraum, der alle Produkte enthält,
-ist ihre :k[lineare Hülle]{#span}. Das erklärt, wie der Raum erzeugt wird. Damit
-er unabhängig von einer zufällig gewählten bilinearen Abbildung wirklich *das*
-Tensorprodukt ist, gehört noch eine charakteristische Eigenschaft dazu.
+ist ihre :k[lineare Hülle]{#span}, und genau so setzen wir den Raum an.
 
 :::definition[#tensorprodukt-von-vektorraeumen (Tensorprodukt von Vektorräumen)]
-Seien $V$ und $W$ :k[Vektorräume]{#vector-space}. Ein *Tensorprodukt* (tensor
-product) von $V$ und $W$ besteht aus einem Vektorraum $V \otimes W$ und einer
-bilinearen Abbildung
+Seien $V$ und $W$ :k[Vektorräume]{#vector-space} und
 
 $$
 \otimes\colon V \times W \to V \otimes W,
@@ -28,17 +24,8 @@ $$
 \cblue{\bv}\otimes\cgreen{\bw},
 $$
 
-mit folgender universeller Eigenschaft: Zu jedem Vektorraum $Z$ und jeder
-bilinearen Abbildung $f\colon V\times W\to Z$ gibt es genau eine lineare
-Abbildung $\wt{f}\colon V\otimes W\to Z$ mit
-
-$$
-f(\cblue{\bv},\cgreen{\bw})
-=\wt{f}(\cblue{\bv}\otimes\cgreen{\bw})
-\qquad\text{für alle }\cblue{\bv}\in V,\ \cgreen{\bw}\in W.
-$$
-
-Der Raum wird von den Bildern dieser Abbildung erzeugt:
+eine bilineare Abbildung. Das *Tensorprodukt* (tensor product) von $V$ und $W$
+ist der von ihren Bildern erzeugte Vektorraum
 
 $$ {#eq-tensorprodukt-von-vektorraeumen}
 V \otimes W = \spann\bigl\{\cblue{\bv} \otimes \cgreen{\bw} :
@@ -47,6 +34,43 @@ $$
 
 Die Produkte $\cblue{\bv} \otimes \cgreen{\bw}$ selbst nennen wir *elementare
 Tensoren*.
+:::
+
+:::vertiefung[Die universelle Eigenschaft]
+Die Definition sagt, wie der Raum erzeugt wird. Dass sie ihn bis auf Isomorphie
+festlegt und nicht von einer zufällig gewählten bilinearen Abbildung abhängt,
+sichert eine zusätzliche Forderung an $\otimes$, die *universelle Eigenschaft*:
+Zu jedem Vektorraum $Z$ und jeder bilinearen Abbildung $f\colon V\times W\to Z$
+gibt es genau eine lineare Abbildung $\wt{f}\colon V\otimes W\to Z$ mit
+
+$$
+f(\cblue{\bv},\cgreen{\bw})
+=\wt{f}(\cblue{\bv}\otimes\cgreen{\bw})
+\qquad\text{für alle }\cblue{\bv}\in V,\ \cgreen{\bw}\in W.
+$$
+
+Das Tensorprodukt *linearisiert* also bilineare Abbildungen: Statt $f$ auf Paaren
+auszuwerten, wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren
+an. Der Spann allein würde dazu nicht genügen. Nähmen wir etwa die Nullabbildung
+als bilineare Abbildung, so wäre ihr Bildspann nur der Nullraum und könnte die
+übrigen bilinearen Abbildungen nicht darstellen.
+
+Für $V = \R^m$ und $W = \R^n$ mit dem äußeren Produkt, also
+$\R^m \otimes \R^n = \R^{m \times n}$ nach @beispiel:das-tensorprodukt-von-und,
+ist die Eigenschaft schnell nachgerechnet. Zu bilinearem $f\colon\R^m\times\R^n\to Z$
+setzen wir $\wt{f}(\bA):=\sum_{i=1}^m\sum_{j=1}^n a_{ij}\,f(\be_i,\be_j)$.
+Diese Abbildung ist linear, und wegen
+$\bv\bw^\top=\sum_{ij}v_iw_j\bE_{ij}$ mit der Matrix $\bE_{ij}$, die an der
+Stelle $(i,j)$ eine Eins und sonst lauter Nullen trägt, liefert die Bilinearität
+$\wt{f}(\bv\bw^\top)=f(\bv,\bw)$; eindeutig ist sie, weil die $\bE_{ij}$ den
+Raum aufspannen.
+
+Tensorprodukte existieren und sind durch die universelle Eigenschaft bis auf
+einen eindeutigen Isomorphismus festgelegt, der die elementaren Tensoren
+respektiert. Deshalb dürfen wir mit einer bequemen konkreten Realisierung
+arbeiten, in den folgenden Beispielen mit Matrizen beziehungsweise Funktionen.
+Gebraucht wird die Eigenschaft im Skript nur noch an einer Stelle, nämlich für
+die lineare Unabhängigkeit der Tensorproduktbasis in @satz:tensorproduktbasis.
 :::
 
 Für $V = \R^m$ und $W = \R^n$ sind die elementaren Tensoren genau die Matrizen
@@ -83,21 +107,6 @@ ein einzelnes Produkt. Deshalb steht in @eq:tensorprodukt-von-vektorraeumen der 
 der Produkte.
 :::
 
-:::bemerkung[#warum-die-universelle-eigenschaft (Warum die universelle Eigenschaft entscheidend ist)]
-Das Tensorprodukt *linearisiert* bilineare Abbildungen: Statt $f$ auf Paaren
-auszuwerten, wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren an.
-Der Spann allein würde dazu nicht genügen. Nähmen wir etwa als bilineare
-Abbildung die Nullabbildung, wäre ihr Bildspann nur der Nullraum und könnte die
-übrigen bilinearen Abbildungen nicht darstellen.
-
-Tensorprodukte existieren und sind durch die universelle Eigenschaft bis auf
-einen eindeutigen Isomorphismus festgelegt, der die elementaren Tensoren
-respektiert. Deshalb dürfen wir mit einer bequemen konkreten Realisierung
-arbeiten. In den folgenden Beispielen sind das Matrizen beziehungsweise
-Funktionen; die universelle Eigenschaft stellt sicher, dass damit dieselbe
-abstrakte Konstruktion gemeint ist.
-:::
-
 ### Zwei Beispiele mit Zahlentupeln
 
 :::beispiel[#das-tensorprodukt-von-und (Das Tensorprodukt von ℝᵐ und ℝⁿ)]
@@ -121,19 +130,6 @@ die Matrix mit einer $\corange{1}$ an der Stelle $(i,j)$ und sonst lauter Nullen
 Jede Matrix $\corange{\bA} \in \R^{m \times n}$ schreibt sich als
 $\corange{\bA} = \sum_{i=1}^m \sum_{j=1}^n \corange{a_{ij}} \bE_{ij}$, liegt also
 im Spann der Produkte.
-
-Auch die universelle Eigenschaft gilt. Ist
-$f\colon\R^m\times\R^n\to Z$ bilinear, definieren wir
-
-$$
-\wt{f}(\bA):=\sum_{i=1}^m\sum_{j=1}^n a_{ij}f(\be_i,\be_j).
-$$
-
-Diese Abbildung ist linear, und für
-$\bv\bw^\top=\sum_{ij}v_iw_j\bE_{ij}$ liefert die Bilinearität
-$\wt{f}(\bv\bw^\top)=f(\bv,\bw)$. Eindeutigkeit folgt, weil die Matrizen
-$\bE_{ij}$ den Raum aufspannen und ihr Bild durch
-$\wt{f}(\bE_{ij})=f(\be_i,\be_j)$ festgelegt ist.
 
 Damit ist $\R^m \otimes \R^n = \R^{m \times n}$ eine konkrete Realisierung des
 Tensorprodukts, und nach @satz:der-raum-aller-tensoren-eines-formats hat dieser Raum die
@@ -175,25 +171,11 @@ $$
 \corange{\bA} = \bI_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} .
 $$
 
-**Kein einzelnes Produkt.** Angenommen, es gäbe
-$\cblue{\bv}, \cgreen{\bw} \in \R^2$ mit
-$\corange{\bA} = \cblue{\bv} \otimes \cgreen{\bw}$. Ausgeschrieben hieße das
-
-$$
-\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
-= \begin{pmatrix}
-\cblue{v_1}\cgreen{w_1} & \cblue{v_1}\cgreen{w_2} \\
-\cblue{v_2}\cgreen{w_1} & \cblue{v_2}\cgreen{w_2}
-\end{pmatrix} .
-$$
-
-Aus $\cblue{v_1}\cgreen{w_1} = 1$ folgt $\cgreen{w_1} \neq 0$. Die linke untere
-Ecke verlangt $\cblue{v_2}\cgreen{w_1} = 0$, also $\cblue{v_2} = 0$. Dann ist
-aber $\cblue{v_2}\cgreen{w_2} = 0$ und nicht $\cred{1}$, im Widerspruch zur
-rechten unteren Ecke. Kürzer geht es über den Rang: Alle Spalten von
-$\cblue{\bv}\cgreen{\bw}^\top$ sind Vielfache von $\cblue{\bv}$, also ist
-$\rang(\cblue{\bv} \otimes \cgreen{\bw}) \leq 1$
-(@sec:produkte), während $\rang(\bI_2) = 2$ ist.
+**Kein einzelnes Produkt.** Gäbe es $\cblue{\bv}, \cgreen{\bw} \in \R^2$ mit
+$\corange{\bA} = \cblue{\bv} \otimes \cgreen{\bw}$, so wären alle Spalten von
+$\cblue{\bv}\cgreen{\bw}^\top$ Vielfache von $\cblue{\bv}$, also
+$\rang(\cblue{\bv} \otimes \cgreen{\bw}) \leq 1$ (@sec:produkte). Die
+Einheitsmatrix hat aber den Rang $\cred{2}$.
 
 **Aber ein Element des Raums.** In $V \otimes W = \R^{2 \times 2}$ liegt
 $\bI_2$ selbstverständlich, und zwar als Summe von zwei elementaren Tensoren:
@@ -255,16 +237,12 @@ also ist $r \leq n$.
 
 ::::
 
-:::bemerkung[#die-svd-liefert-sogar-die-kuerzeste (Die SVD liefert sogar die kürzeste Summe)]
-@satz:jede-matrix-ist-eine-kurze-summe sagt nur, dass $r$ Summanden reichen. Weniger geht auch nicht: Wäre
-$\bA = \sum_{i=1}^{k} \cblue{\bu_i} \otimes \cgreen{\bv_i}$ mit
-$k < r$, so lägen alle Spalten von $\bA$ im Spann von
+Weniger als $r$ Summanden reichen nicht. Wäre
+$\bA = \sum_{i=1}^{k} \cblue{\bu_i} \otimes \cgreen{\bv_i}$ mit $k < r$, so
+lägen alle Spalten von $\bA$ im Spann von
 $\cblue{\bu_1}, \dots, \cblue{\bu_k}$, und der Rang wäre höchstens $k$. Die
 kleinste Anzahl elementarer Tensoren, die eine Matrix darstellen, ist also genau
-ihr Rang, und die SVD rechnet sie aus. Für Tensoren höherer Stufe gibt es dazu
-kein ebenso vollständiges Gegenstück; schon die kleinste Zahl von Summanden ist
-dort erheblich schwerer zu bestimmen.
-:::
+ihr Rang, und die SVD rechnet sie aus.
 
 ### Die Tensorproduktbasis
 
@@ -299,36 +277,30 @@ $$
 $$
 :::
 
-::::beweis
-
-:::schritt
-**Erzeugendensystem.** Wir entwickeln $\cblue{\bv} \in V$ und $\cgreen{\bw} \in W$
-in den beiden Basen, $\cblue{\bv} = \sum_i a_i \cblue{\bv_i}$ und
+Dass die Produkte den Raum erzeugen, ist schnell gesehen. Wir entwickeln
+$\cblue{\bv} \in V$ und $\cgreen{\bw} \in W$ in den beiden Basen,
+$\cblue{\bv} = \sum_i a_i \cblue{\bv_i}$ und
 $\cgreen{\bw} = \sum_j b_j \cgreen{\bw_j}$, und ziehen die Summen mit
-@bemerkung:rechenregeln-aus-der-bilinearitaet nach außen:
+@bemerkung:rechenregeln-aus-der-bilinearitaet nach außen, zuerst im ersten, dann
+im zweiten Argument:
 
-$$
+$$ {#eq-elementarer-tensor-in-produktbasis}
 \cblue{\bv} \otimes \cgreen{\bw}
 = \Bigl(\sum_{i=1}^{m} a_i \cblue{\bv_i}\Bigr) \otimes \cgreen{\bw}
-= \sum_{i=1}^{m} a_i \bigl(\cblue{\bv_i} \otimes \cgreen{\bw}\bigr)
 = \sum_{i=1}^{m} \sum_{j=1}^{n} a_i b_j\,
 \bigl(\cblue{\bv_i} \otimes \cgreen{\bw_j}\bigr) .
 $$
 
-::why[zuerst die Bilinearität im ersten Argument, dann im zweiten; die Skalare $a_i$ und $b_j$ wandern jeweils nach vorn]
-:::
+Jeder elementare Tensor liegt damit im Spann von $\Bcal_{V \otimes W}$, und da
+die elementaren Tensoren nach @definition:tensorprodukt-von-vektorraeumen den
+ganzen Raum erzeugen, gilt die Darstellung @eq:tensorproduktbasis. Die lineare
+Unabhängigkeit holt die folgende Vertiefung nach.
+
+:::::vertiefung[Warum die Produkte linear unabhängig sind]
+::::beweis
 
 :::schritt
-Jeder elementare Tensor liegt damit im Spann von $\Bcal_{V \otimes W}$. Nach
-@definition:tensorprodukt-von-vektorraeumen wird $V \otimes W$ von den elementaren Tensoren erzeugt, also
-gilt die Darstellung @eq:tensorproduktbasis.
-
-::why[der Spann einer Menge ist der kleinste :k[Unterraum]{#subspace}, der sie enthält; liegt jedes Erzeugende im Spann von $\Bcal_{V \otimes W}$, so auch der ganze erzeugte Raum]
-:::
-
-:::schritt
-**Lineare Unabhängigkeit.** Sei
-$\sum_i\sum_j \corange{c_{ij}}\,
+Sei $\sum_i\sum_j \corange{c_{ij}}\,
 \cblue{\bv_i}\otimes\cgreen{\bw_j}=\bnull$. Zu festen Indizes $(k,l)$ ist
 
 $$
@@ -337,8 +309,8 @@ a_k(\cblue{\bv})\,b_l(\cgreen{\bw})
 $$
 
 bilinear, wobei $a_k$ und $b_l$ die $k$-te beziehungsweise $l$-te
-Koordinatenfunktion in den beiden Basen sind. Nach @definition:tensorprodukt-von-vektorraeumen gibt es dazu
-eine lineare Abbildung auf $V\otimes W$. Sie schickt
+Koordinatenfunktion in den beiden Basen sind. Die universelle Eigenschaft liefert
+dazu eine lineare Abbildung auf $V\otimes W$. Sie schickt
 $\cblue{\bv_i}\otimes\cgreen{\bw_j}$ auf $1$, falls $(i,j)=(k,l)$, und sonst
 auf $0$. Wenden wir sie auf die verschwindende Summe an, erhalten wir
 $\corange{c_{kl}}=0$. Da $(k,l)$ beliebig war, verschwinden alle Koeffizienten.
@@ -347,17 +319,18 @@ $\corange{c_{kl}}=0$. Da $(k,l)$ beliebig war, verschwinden alle Koeffizienten.
 :::
 
 :::schritt
-**Dimension.** Die Basis $\Bcal_{V \otimes W}$ enthält für jedes Paar $(i,j)$
-genau ein Element, also $mn$ Stück.
+Die Basis $\Bcal_{V \otimes W}$ enthält damit für jedes Paar $(i,j)$ genau ein
+Element, also $mn$ Stück.
 
-::why[die $mn$ Produkte sind paarweise verschieden, denn sie sind nach Schritt 3 :k[linear unabhängig]{#linear-independence}]
+::why[die $mn$ Produkte sind paarweise verschieden, denn sie sind nach dem ersten Schritt :k[linear unabhängig]{#linear-independence}]
 :::
 
 ::::
+:::::
 
 :::bemerkung[#eine-feinheit (Eine Feinheit)]
 Die Koeffizienten in @eq:tensorproduktbasis sind beliebig. Bei einem elementaren
-Tensor haben sie nach Schritt 1 des Beweises die besondere Form
+Tensor haben sie nach @eq:elementarer-tensor-in-produktbasis die besondere Form
 $\corange{c_{ij}} = a_i b_j$, bei einem allgemeinen Element von $V \otimes W$
 gerade nicht. In @beispiel:die-einheitsmatrix-ist-kein-elementarer ist die Koeffizientenmatrix bezüglich der
 Standardbasen $\corange{\bC} = \bI_2$, und $\bI_2$ lässt sich nicht als
@@ -388,19 +361,10 @@ Das Produkt zweier univariater Funktionen ist also eine Funktion auf dem Quadrat
 $[0,1]^2$, und die Zuordnung $(\cblue{f}, \cgreen{g}) \mapsto \cblue{f} \otimes \cgreen{g}$
 ist bilinear: Ein Skalar vor $\cblue{f}$ landet vor dem Produkt, ebenso einer vor
 $\cgreen{g}$, und Summen im ersten oder zweiten Argument ziehen sich punktweise
-auseinander. Nach der universellen Eigenschaft induziert sie eine lineare
-Abbildung vom abstrakten Tensorprodukt in den Raum der Funktionen auf
-$[0,1]^2$. Für die folgenden Polynomräume ist diese Abbildung injektiv: Die
-Funktionen $1$, $x$, $y$ und $xy$ sind durch Koeffizientenvergleich linear
-unabhängig. Wir dürfen das Tensorprodukt deshalb mit seinem konkreten Bild
-identifizieren.
-
-Eine Notationsverabredung brauchen wir noch. Wir benennen Funktionen nach dem
-Ausdruck, den sie liefern, und schreiben die Variable des ersten Faktors als $x$,
-die des zweiten als $y$. Die konstante Funktion heißt in beiden Fällen $1$; die
-identische Funktion heißt im ersten Faktor $\cblue{x}$ und im zweiten
-$\cgreen{y}$. Die zweite Basis ist also dieselbe wie die erste, nur anders
-aufgeschrieben.
+auseinander. Wir benennen Funktionen dabei nach dem Ausdruck, den sie liefern:
+Die konstante Funktion heißt in beiden Faktoren $1$, die identische im ersten
+$\cblue{x}$ und im zweiten $\cgreen{y}$. Die zweite Basis ist also dieselbe wie
+die erste, nur anders aufgeschrieben.
 
 :::beispiel[#die-tensorproduktbasis-von-p-p (Die Tensorproduktbasis von P₁ ⊗ P₁)]
 @satz:tensorproduktbasis liefert aus $\Bcal_V = \{1, x\}$ und $\Bcal_W = \{1, y\}$ die vier
@@ -446,29 +410,6 @@ f = \corange{2}\,\phi_1 + \corange{3}\,\phi_2 + (\corange{-1})\,\phi_3 + \corang
 \corange{c_{11}} = 2, \quad \corange{c_{21}} = 3, \quad
 \corange{c_{12}} = -1, \quad \corange{c_{22}} = 5 .
 $$
-
-Eine Probe, die zugleich etwas über die Basis verrät: Werten wir $f$ in den vier
-Ecken des Quadrats aus, so ist
-
-$$
-f(0,0) = 2, \qquad f(1,0) = 5, \qquad f(0,1) = 1, \qquad f(1,1) = 9 .
-$$
-
-Aus diesen vier Zahlen lassen sich die vier Koeffizienten zurückrechnen,
-
-$$
-\begin{aligned}
-\corange{c_{11}} &= f(0,0) = 2 , &\qquad
-\corange{c_{21}} &= f(1,0) - f(0,0) = 5 - 2 = 3 , \\
-\corange{c_{12}} &= f(0,1) - f(0,0) = 1 - 2 = -1 , &\qquad
-\corange{c_{22}} &= f(1,1) - f(1,0) - f(0,1) + f(0,0) = 9 - 5 - 1 + 2 = 5 .
-\end{aligned}
-$$
-
-Vier Ecken, vier Koeffizienten: Die Auswertung in den Ecken ist eine bijektive
-lineare Abbildung von $\Pcal_1 \otimes \Pcal_1$ auf den $\R^4$. Dieser
-Zusammenhang macht Tensorproduktbasen in der numerischen Praxis auf
-Rechteckgittern so bequem.
 :::
 
 :::bemerkung[#was-der-produktbau-bedeutet (Was der Produktbau bedeutet)]
@@ -493,9 +434,10 @@ Wie erkennen wir an derselben Stelle im Quadrat und auf der Fläche, ob der
 gemischte Basisanteil die beiden Variablen koppelt?
 
 <TensorbasisExplorer />
-:::
 
-Der gemischte Basisanteil ist genau der Teil, der die beiden Variablen in der Fläche koppelt.
+Der gemischte Basisanteil ist genau der Teil, der die beiden Variablen in der
+Fläche koppelt.
+:::
 
 :::bemerkung[#allgemeine-dimension-und-was-sie-kostet (Allgemeine Dimension, und was sie kostet)]
 Für $k$-variate Polynome mit Grad höchstens $d$ in jeder Variablen ist der
@@ -576,16 +518,17 @@ elementaren Tensoren.
 
 Das ist @satz:jede-matrix-ist-eine-kurze-summe. Die Summenform der Singulärwertzerlegung liefert
 $\bA = \sum_{i=1}^r \sigma_i \bu_i \otimes \bv_i$ mit $r = \rang(\bA)$, und der
-Rang übersteigt weder die Zeilen- noch die Spaltenzahl. Nach @bemerkung:die-svd-liefert-sogar-die-kuerzeste ist
-$r$ sogar die kleinstmögliche Anzahl.
+Rang übersteigt weder die Zeilen- noch die Spaltenzahl. Weniger als $r$ Summanden
+reichen nicht, $r$ ist also sogar die kleinstmögliche Anzahl.
 :::
 
 :::frage{falsch}
 In der Darstellung $\sum_i \sum_j c_{ij}\, \bv_i \otimes \bw_j$ haben die
 Koeffizienten stets die Form $c_{ij} = a_i b_j$.
 
-Diese Produktform haben genau die elementaren Tensoren, wie Schritt 1 des
-Beweises zu @satz:tensorproduktbasis zeigt. Allgemeine Elemente von $V \otimes W$ haben
+Diese Produktform haben genau die elementaren Tensoren, wie die Entwicklung
+@eq:elementarer-tensor-in-produktbasis zu @satz:tensorproduktbasis zeigt.
+Allgemeine Elemente von $V \otimes W$ haben
 beliebige Koeffizienten; bezüglich der Standardbasen ist die
 Koeffizientenmatrix zu $\bI_2$ die Einheitsmatrix selbst, und die hat nicht die
 Form $\ba\bb^\top$ (@bemerkung:eine-feinheit).

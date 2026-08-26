@@ -12,83 +12,14 @@ import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
 Aus @sec:problem wissen wir, dass das
 :k[Kleinste-Quadrate-Problem]{#linear-least-squares} für
 $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$ die eindeutige
-Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt. Das ist eine
-Formel – aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste und
-einfachste Lösungsverfahren: Wir leiten die Normalengleichungen her, lösen sie mit der
+Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt, charakterisiert durch die
+:k[Normalengleichungen]{#normal-equations}
+$\bA^\top\bA\,\wh{\bx} = \bA^\top\bb$ (@satz:problem-normalengleichungen). Das ist
+eine Formel – aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste
+und einfachste Lösungsverfahren: Wir lösen die Normalengleichungen mit der
 :k[Cholesky-Zerlegung]{#cholesky-factorization} und sehen dann,
 warum dieser bequeme Weg numerisch seinen Preis hat. Das motiviert am Ende des Abschnitts
 die orthogonalen Transformationen, die uns im Rest des Kapitels beschäftigen werden.
-
-### Die Normalengleichungen :id[die-normalengleichungen]
-
-Beginnen wir mit der Herleitung. Die
-:k[Normalengleichungen]{#normal-equations} haben wir in
-@sec:problem bereits benutzt; jetzt zeigen
-wir, warum sie das KQ-Problem charakterisieren. Die Idee ist rein analytisch: Die
-Zielfunktion ist eine nach oben geöffnete
-:k[quadratische Form]{#quadratic-form} in $\bx$, also
-finden wir ihr Minimum, indem wir den
-:k[Gradienten]{#gradient} null setzen.
-
-:::satz[#normalengleichungen-normalengleichungen (Normalengleichungen)]
-Sei $\bA \in \R^{m \times n}$ und $\bb \in \R^m$. Ein Vektor
-$\wh{\bx} \in \R^n$ minimiert
-$g(\bx) = \left\| \bA\bx - \bb \right\|_2^2$ genau dann, wenn er die
-*Normalengleichungen*
-
-$$
-\cbred{\bA^\top\bA}\,\wh{\bx} = \cgreen{\bA^\top\bb}
-$$
-
-erfüllt.
-:::
-
-::::beweis
-
-:::schritt
-$$
-g(\bx) = (\bA\bx - \bb)^\top(\bA\bx - \bb) = \bx^\top\cbred{\bA^\top\bA}\,\bx - 2\,\bx^\top\cgreen{\bA^\top\bb} + \bb^\top\bb
-$$
-
-::why[Skalarprodukt ausmultiplizieren; $(\bA\bx)^\top\bb = \bx^\top\bA^\top\bb$ (:k[Transponierregeln]{#transpose})]
-:::
-
-:::schritt
-$$
-\nabla g(\bx) = 2\,\cbred{\bA^\top\bA}\,\bx - 2\,\cgreen{\bA^\top\bb}
-$$
-
-::why[$\nabla_{\bx}\left(\bx^\top\bM\bx\right) = 2\bM\bx$ für symmetrisches $\bM$ und $\nabla_{\bx}\left(\bx^\top\bc\right) = \bc$; $\cbred{\bA^\top\bA}$ ist symmetrisch]
-:::
-
-:::schritt
-$$
-\nabla g(\wh{\bx}) = \bnull \quequiv \cbred{\bA^\top\bA}\,\wh{\bx} = \cgreen{\bA^\top\bb}
-$$
-
-::why[notwendige Bedingung erster Ordnung für ein Minimum der differenzierbaren Funktion $g$]
-:::
-
-:::schritt
-Die Bedingung ist auch hinreichend: Jede Lösung der Normalengleichungen ist ein globales
-Minimum von $g$.
-
-::why[Hessematrix $\nabla^2 g = 2\,\cbred{\bA^\top\bA}$ ist positiv semidefinit, also ist $g$ :k[konvex]{#convexity} und jeder stationäre Punkt ein globales Minimum]
-:::
-
-::::
-
-:::bemerkung[#geometrische-deutung (Geometrische Deutung)]
-Schreiben wir die Normalengleichungen als
-$\bA^\top(\bb - \bA\wh{\bx}) = \bA^\top\wh{\br} = \bnull$, so sagen
-sie: Das Residuum $\wh{\br} = \bb - \bA\wh{\bx}$ steht
-:k[senkrecht]{#orthogonality} auf allen Spalten von
-$\bA$. Das ist genau die
-:k[Projektions]{#projection}-Sicht aus
-@sec:problem: $\bA\wh{\bx}$
-ist der Punkt in $\col(\bA)$, der $\bb$ am nächsten liegt; daher
-der Name *Normal*gleichungen.
-:::
 
 ### Warum wir niemals invertieren :id[warum-wir-niemals-invertieren]
 
@@ -135,43 +66,12 @@ substituieren statt invertieren.
 
 ### Das Cholesky-Verfahren :id[das-cholesky-verfahren]
 
-Welche Zerlegung passt zu $\bA^\top\bA$? Die Matrix hat eine besondere
-Struktur, die wir ausnutzen können:
-
-:::lemma[#lemma-7-3-4]
-Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$. Dann ist
-$\bA^\top\bA \in \R^{n \times n}$
-:k[symmetrisch]{#symmetric-matrix} und
-:k[positiv definit]{#positive-definite}.
-:::
-
-::::beweis
-
-:::schritt
-$$
-(\bA^\top\bA)^\top = \bA^\top(\bA^\top)^\top = \bA^\top\bA
-$$
-
-::why[Rechenregeln fürs Transponieren: $(\bB\bC)^\top = \bC^\top\bB^\top$]
-:::
-
-:::schritt
-$$
-\bx^\top(\bA^\top\bA)\bx = (\bA\bx)^\top(\bA\bx) = \left\| \bA\bx \right\|_2^2 \ge 0 \quad \text{für alle } \bx \in \R^n
-$$
-
-::why[Definition der :k[euklidischen Norm]{#euclidean-norm}]
-:::
-
-:::schritt
-$$
-\left\| \bA\bx \right\|_2^2 = 0 \quequiv \bA\bx = \bnull \quequiv \bx = \bnull
-$$
-
-::why[$\rang(\bA) = n$: Die Spalten von $\bA$ sind linear unabhängig, der :k[Kern]{#kernel} ist also trivial]
-:::
-
-::::
+Welche Zerlegung passt zu $\bA^\top\bA$? Die entscheidende Struktur haben wir im
+Beweis von @satz:eindeutige-loesung-bei-vollem schon gesehen: Für $\rang(\bA) = n$ ist
+$\bA^\top\bA$ :k[symmetrisch]{#symmetric-matrix}, denn
+$(\bA^\top\bA)^\top = \bA^\top\bA$, und :k[positiv definit]{#positive-definite}, denn
+$\bx^\top(\bA^\top\bA)\bx = \left\| \bA\bx \right\|_2^2 > 0$ für jedes
+$\bx \neq \bnull$.
 
 Symmetrisch positiv definit, kurz *SPD* (engl. *symmetric positive
 definite*): das ist genau die Klasse von Matrizen, für die die
@@ -258,7 +158,7 @@ $$
 \cbred{\bM}\,\cblue{\wh{\bx}} = \begin{pmatrix} 3 \cdot \tfrac{1}{3} + 6 \cdot \tfrac{3}{2} \\ 6 \cdot \tfrac{1}{3} + 14 \cdot \tfrac{3}{2} \end{pmatrix} = \begin{pmatrix} 10 \\ 23 \end{pmatrix} = \cbgreen{\bc}. \quad \checkmark
 $$
 
-Auch die geometrische Deutung aus @bemerkung:geometrische-deutung können wir nachprüfen: Das Residuum
+Auch die geometrische Deutung aus @sec:problem können wir nachprüfen: Das Residuum
 $\wh{\br} = \bb - \bA\cblue{\wh{\bx}} = \left(\tfrac{1}{6}, -\tfrac{1}{3}, \tfrac{1}{6}\right)^\top$
 erfüllt $\bA^\top\wh{\br} = \bnull$: Es steht senkrecht auf beiden
 Spalten von $\bA$.
@@ -298,21 +198,13 @@ gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
 über die Spalten von $\bA$ verloren gehen. Im Extremfall macht ein einziger
 Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
 
-Wie extrem das wird, sehen wir am besten an einer Matrix, bei der der ganze Unterschied zwischen
-den Spalten in einem einzigen kleinen Summanden steckt. Das folgende Widget führt die kritische
-Addition wirklich in der Gleitkommaarithmetik des Browsers aus; es rechnet also nicht nach,
-sondern rechnet.
+:::interaktiv[Wann verliert die Kreuzproduktmatrix ihren Rang?]
+<p className="mb-2 text-sm">Sehen wir uns eine Matrix an, bei der der ganze Unterschied zwischen den Spalten in einem einzigen kleinen Summanden steckt. Das Widget führt die kritische Addition wirklich in der Gleitkommaarithmetik des Browsers aus; es rechnet also nicht nach, sondern rechnet.</p>
 
 <S73KreuzproduktWidget />
 
-Wie das Widget zeigt, verliert $\operatorname{fl}(\bA^\top\bA)$ seinen Rang, sobald
-$\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}}
-\approx 1{,}05 \cdot 10^{-8}$. Vorher steht in der gespeicherten Matrix noch ein winziger
-Eigenwert, nachher zwei identische Spalten. Für $\bA$ selbst ist bei diesem $\eps$ dagegen
-überhaupt nichts passiert: Ihre Spalten unterscheiden sich nach wie vor in der zweiten und
-dritten Zeile, und ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts.
-Das ist mehr, als die Konditionszahl allein hergibt: Nicht nur die Fehlerverstärkung wird
-quadriert, es geht auch Information verloren, bevor überhaupt gerechnet wird.
+<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}} \approx 1{,}05 \cdot 10^{-8}$, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Das ist mehr, als die Konditionszahl allein hergibt: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
+:::
 
 ### Alternative Lösungswege: orthogonale Transformationen :id[alternative-loesungswege-orthogonale]
 
@@ -336,11 +228,10 @@ $$
 \left\| \bQ\bA\bx - \bQ\bb \right\|_2 = \left\| \bQ(\bA\bx - \bb) \right\|_2 = \left\| \bA\bx - \bb \right\|_2.
 $$
 
-Die erste Gleichheit ist nur Ausklammern; die zweite ist die Norminvarianz:
-$\left\| \bQ\bv \right\|_2^2 = \bv^\top\bQ^\top\bQ\bv = \bv^\top\bv = \left\| \bv \right\|_2^2$
-für jeden Vektor $\bv$. Jedes $\bx$ liefert im transformierten
-Problem also exakt denselben Zielfunktionswert wie im ursprünglichen. Insbesondere
-stimmen die Minimierer überein.
+Die erste Gleichheit ist nur Ausklammern, die zweite die Norminvarianz orthogonaler
+Matrizen, die wir dort nachrechnen. Jedes $\bx$ liefert im transformierten Problem
+also exakt denselben Zielfunktionswert wie im ursprünglichen; insbesondere stimmen die
+Minimierer überein.
 
 Vorsicht: Nicht jede Transformation, die ein System „einfacher" macht, ist hier erlaubt.
 Das :k[Gauß-Verfahren]{#gaussian-elimination} etwa bringt
@@ -350,8 +241,7 @@ die norm-erhaltenden Transformationen:
 :k[Drehungen]{#rotation-matrix} und
 :k[Spiegelungen]{#reflection}. Wie wir mit ihnen
 $\bQ\bA$ gezielt auf Dreiecksform bringen (die
-*QR-Zerlegung*), ist das Thema der
-[nächsten Abschnitte](#sec-7.4).
+*QR-Zerlegung*), ist das Thema von @sec:qr und @sec:givens-householder.
 
 :::interaktiv[Welche Abbildungen erhalten Längen – und welche nicht?]
 <p className="mb-2 text-sm">Probieren wir die drei Kandidaten der Reihe nach durch: eine Drehung, eine Spiegelung und einen Eliminationsschritt des Gauß-Verfahrens. Zwei davon dürfen wir auf ein KQ-Problem loslassen, einer nicht.</p>
