@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a37c72dd2dbac68997fcdc15a3622e78.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="author" content="Vorlesung: Fabian Scheipl (fabian.scheipl@lmu.de) Material: Thomas Nagler LMU München">
+  <title>Singulärwertzerlegung (SVD)</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d0136d0452bb647bae96a262c75ef92a.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title"><em>Singulärwertzerlegung (SVD)</em></h1>
+  <p class="subtitle"><strong>Fortgeschrittene mathematische Methoden in der Statistik</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vorlesung: Fabian Scheipl (<code>fabian.scheipl@lmu.de</code>)<br>Material: Thomas Nagler<br><strong>LMU München</strong> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="verwendete-vorkenntnisse" class="slide level3">
+<h3>Verwendete Vorkenntnisse</h3>
+<div class="hidden">
+<p><span class="math display">\[
+\definecolor{fmmgreen}{RGB}{0,158,115}
+\definecolor{fmmblue}{RGB}{0,114,178}
+\definecolor{fmmred}{RGB}{213,94,0}
+\definecolor{fmmorange}{RGB}{230,159,0}
+\definecolor{fmmpurple}{RGB}{158,87,213}
+\newcommand{\ind}{\unicode{x1D7D9}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\K}{{\mathbb{K}}}
+\newcommand{\L}{\mathbb{L}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\S}{\mathbb{S}}
+\newcommand{\D}{{\mathbb{D}}}
+\newcommand{\bnull}{{\boldsymbol{0}}}
+\newcommand{\bzero}{{\boldsymbol{0}}}
+\newcommand{\ba}{{\boldsymbol{a}}}
+\newcommand{\bb}{{\boldsymbol{b}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bd}{{\boldsymbol{d}}}
+\newcommand{\be}{{\boldsymbol{e}}}
+\newcommand{\bg}{{\boldsymbol{g}}}
+\newcommand{\bh}{{\boldsymbol{h}}}
+\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bj}{{\boldsymbol{j}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bl}{{\boldsymbol{l}}}
+\newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\bo}{{\boldsymbol{o}}}
+\newcommand{\bp}{{\boldsymbol{p}}}
+\newcommand{\bq}{{\boldsymbol{q}}}
+\newcommand{\br}{{\boldsymbol{r}}}
+\newcommand{\bs}{{\boldsymbol{s}}}
+\newcommand{\bt}{{\boldsymbol{t}}}
+\newcommand{\bu}{{\boldsymbol{u}}}
+\newcommand{\bv}{{\boldsymbol{v}}}
+\newcommand{\bw}{{\boldsymbol{w}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\bB}{{\boldsymbol{B}}}
+\newcommand{\bC}{{\boldsymbol{C}}}
+\newcommand{\bD}{{\boldsymbol{D}}}
+\newcommand{\bE}{{\boldsymbol{E}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\bG}{{\boldsymbol{G}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bJ}{{\boldsymbol{J}}}
+\newcommand{\bK}{{\boldsymbol{K}}}
+\newcommand{\bL}{{\boldsymbol{L}}}
+\newcommand{\bM}{{\boldsymbol{M}}}
+\newcommand{\bN}{{\boldsymbol{N}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bQ}{{\boldsymbol{Q}}}
+\newcommand{\bR}{{\boldsymbol{R}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bT}{{\boldsymbol{T}}}
+\newcommand{\bU}{{\boldsymbol{U}}}
+\newcommand{\bV}{{\boldsymbol{V}}}
+\newcommand{\bW}{{\boldsymbol{W}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\bY}{{\boldsymbol{Y}}}
+\newcommand{\bZ}{{\boldsymbol{Z}}}
+\newcommand{\tagqed}{\tag*{$\blacksquare$}}
+\newcommand{\Acal}{{\mathcal{A}}}
+\newcommand{\Bcal}{{\mathcal{B}}}
+\newcommand{\Ccal}{{\mathcal{C}}}
+\newcommand{\Dcal}{{\mathcal{D}}}
+\newcommand{\Ecal}{{\mathcal{E}}}
+\newcommand{\Fcal}{{\mathcal{F}}}
+\newcommand{\Gcal}{{\mathcal{G}}}
+\newcommand{\Hcal}{{\mathcal{H}}}
+\newcommand{\Ical}{{\mathcal{I}}}
+\newcommand{\Jcal}{{\mathcal{J}}}
+\newcommand{\Kcal}{{\mathcal{K}}}
+\newcommand{\Lcal}{{\mathcal{L}}}
+\newcommand{\Mcal}{{\mathcal{M}}}
+\newcommand{\Ncal}{{\mathcal{N}}}
+\newcommand{\Ocal}{{\mathcal{O}}}
+\newcommand{\Pcal}{{\mathcal{P}}}
+\newcommand{\Qcal}{{\mathcal{Q}}}
+\newcommand{\Rcal}{{\mathcal{R}}}
+\newcommand{\Scal}{{\mathcal{S}}}
+\newcommand{\Tcal}{{\mathcal{T}}}
+\newcommand{\Ucal}{{\mathcal{U}}}
+\newcommand{\Vcal}{{\mathcal{V}}}
+\newcommand{\Wcal}{{\mathcal{W}}}
+\newcommand{\Xcal}{{\mathcal{X}}}
+\newcommand{\Ycal}{{\mathcal{Y}}}
+\newcommand{\Zcal}{{\mathcal{Z}}}
+\newcommand{\eps}{{\varepsilon}}
+\newcommand{\beps}{{\boldsymbol{\epsilon}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bbeta}{{\boldsymbol{\beta}}}
+\newcommand{\bchi}{{\boldsymbol{\chi}}}
+\newcommand{\bdelta}{{\boldsymbol{\delta}}}
+\newcommand{\bDelta}{{\boldsymbol{\Delta}}}
+\newcommand{\bepsilon}{{\boldsymbol{\epsilon}}}
+\newcommand{\bphi}{{\boldsymbol{\phi}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+\newcommand{\betah}{{\boldsymbol{\eta}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
+\newcommand{\biota}{{\boldsymbol{\iota}}}
+\newcommand{\bkappa}{{\boldsymbol{\kappa}}}
+\newcommand{\blambda}{{\boldsymbol{\lambda}}}
+\newcommand{\bLambda}{{\boldsymbol{\Lambda}}}
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+\newcommand{\bnu}{{\boldsymbol{\nu}}}
+\newcommand{\bomikron}{{\boldsymbol{\omicron}}}
+\newcommand{\bpi}{{\boldsymbol{\pi}}}
+\newcommand{\bSigma}{{\boldsymbol{\Sigma}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+\newcommand{\bzeta}{{\boldsymbol{\zeta}}}
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+\newcommand{\equivto}{{\Leftrightarrow}}
+\newcommand{\quequiv}{{\quad \equivto \quad}}
+\newcommand{\impl}{{\implies}}
+\newcommand{\quimpl}{{\quad \implies \quad}}
+\newcommand{\implby}{{\impliedby}}
+\newcommand{\notimplies}{\not\implies}
+\newcommand{\tr}{{\operatorname{tr}}}
+\newcommand{\spann}{{\operatorname{span}}}
+\newcommand{\col}{{\operatorname{col}}}
+\newcommand{\rang}{{\operatorname{rang}}}
+\newcommand{\diag}{{\operatorname{diag}}}
+\newcommand{\vec}{\operatorname{vec}}
+\newcommand{\pinv}{{^{+}}}
+\newcommand{\kron}{\mathbin{\otimes_{\mathrm{K}}}}
+\newcommand{\sign}{{\operatorname{sign}}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\inner}[1]{{\langle #1 \rangle}}
+\newcommand{\proj}{{\operatorname{proj}}}
+\newcommand{\bar}{\overline}
+\newcommand{\vol}{{\operatorname{vol}}}
+\newcommand{\dx}{{\, \mathrm{d}x}}
+\newcommand{\ol}{{\overline}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\conv}{\mathop{\mathrm{conv}}}
+\newcommand{\epi}{\mathop{\mathrm{epi}}}
+\newcommand{\interior}{\mathop{\mathrm{int}}}
+\newcommand{\Pr}{\mathbb{P}}
+\newcommand{\var}{{\mathbb{V}\mathrm{ar}}}
+\newcommand{\bias}{{\operatorname{bias}}}
+\newcommand{\abias}{{\mathrm{ABias}}}
+\newcommand{\AMSE}{{\mathrm{AMSE}}}
+\newcommand{\AMISE}{{\mathrm{AMISE}}}
+\newcommand{\cov}{{\mathbb{C}\mathrm{ov}}}
+\newcommand{\corr}{{\mathrm{Corr}}}
+\newcommand{\ov}{{\overline}}
+\newcommand{\wh}[1]{{\widehat{#1}}}
+\newcommand{\wt}[1]{{\widetilde{#1}}}
+\newcommand{\tod}{{\stackrel{d}{\to}}}
+\newcommand{\sumin}{{\sum_{i = 1}^n}}
+\newcommand{\sumjn}{{\sum_{j = 1}^n}}
+\newcommand{\KL}{{\operatorname{KL}}}
+\newcommand{\softmax}{{\operatorname{SoftMax}}}
+\newcommand{\layernorm}{{\operatorname{LayerNorm}}}
+\newcommand{\avg}{{\operatorname{avg}}}
+\newcommand{\relu}{{\operatorname{ReLu}}}
+\newcommand{\VC}{{\operatorname{VC}}}
+\newcommand{\indep}{{\perp \!\!\! \perp}}
+\newcommand{\unif}{{\operatorname{Unif}}}
+\newcommand{\bern}{{\operatorname{Bernoulli}}}
+\newcommand{\binomial}{{\operatorname{Binomial}}}
+\newcommand{\MSE}{{\operatorname{MSE}}}
+\newcommand{\iid}{\textit{iid}\;}
+\newcommand{\IF}{{\operatorname{IF} }}
+\newcommand{\BIC}{{\operatorname{BIC}}}
+\newcommand{\AIC}{{\operatorname{AIC}}}
+\newcommand{\IC}{{\operatorname{IC}}}
+\newcommand{\expl}[1]{{\tag*{[#1]}}}
+\newcommand{\cb}[1]{\textbf{#1}}
+\newcommand{\cbgreen}[1]{\textcolor{fmmgreen}{\textbf{#1}}}
+\newcommand{\cbred}[1]{\textcolor{fmmred}{\textbf{#1}}}
+\newcommand{\cbpurp}[1]{\textcolor{fmmpurple}{\textbf{#1}}}
+\newcommand{\cborange}[1]{\textcolor{fmmorange}{\textbf{#1}}}
+\newcommand{\corange}[1]{{\textcolor{fmmorange}{#1}}}
+\newcommand{\cblue}[1]{{\textcolor{fmmblue}{#1}}}
+\newcommand{\cgreen}[1]{{\textcolor{fmmgreen}{#1}}}
+\newcommand{\cred}[1]{{\textcolor{fmmred}{#1}}}
+\newcommand{\cpurp}[1]{{\textcolor{fmmpurple}{#1}}}
+\newcommand{\symbf}[1]{\boldsymbol{#1}}
+\]</span></p>
+</div>
+<ul>
+<li><strong>Matrixnormen</strong> und ihre Eigenschaften, speziell:
+<ul>
+<li><mark><em>Spektralnorm</em></mark> <span class="math inline">\(\|\bA\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}\)</span></li>
+<li><mark><em>Orthogonalmatrizen</em></mark> <span class="math inline">\(\bQ\)</span> mit <span class="math inline">\(\bQ^\top \bQ = \bI\)</span></li>
+</ul></li>
+<li>Matrixzerlegungskonzepte</li>
+<li><strong>Lineare Algebra</strong>
+<ul>
+<li>Eigenwerte und Eigenvektoren: <span class="math inline">\(\bA\bv = \lambda \bv\)</span></li>
+<li>Rang einer Matrix</li>
+<li>Fundamentale Unterräume: <span class="math inline">\(\operatorname{col}(\bA), \operatorname{ker}(\bA), \operatorname{col}(\bA^\top)\)</span></li>
+<li>Projektionen auf Unterräume</li>
+</ul></li>
+</ul>
+</section>
+<section id="opener-quiz-was-wissen-sie-noch" class="slide level3 smaller">
+<h3>Opener-Quiz: Was wissen Sie noch?</h3>
+<!-- TODO Particify: Opener-Fragen als quiz/06-svd/opener-*.Rmd (R/exams, schoice)
+     autorieren und via exams2particify() exportieren;
+     QR-Code beim Reinkommen projizieren. -->
+<p><strong>Frage 1:</strong> Sei <span class="math inline">\(\bA \in \R^{n \times n}\)</span> <em>symmetrisch</em> (<span class="math inline">\(\bA = \bA^\top\)</span>). Welche Aussage gilt <strong>immer</strong>?</p>
+<ol type="1">
+<li>Alle Eigenwerte von <span class="math inline">\(\bA\)</span> sind <span class="math inline">\(\geq 0\)</span>.</li>
+<li><span class="math inline">\(\bA\)</span> ist orthogonal diagonalisierbar: <span class="math inline">\(\bA = \bQ\bD\bQ^\top\)</span> mit reellen Eigenwerten.</li>
+<li><span class="math inline">\(\bA\)</span> ist invertierbar.</li>
+<li><span class="math inline">\(\bA\)</span> hat <span class="math inline">\(n\)</span> verschiedene Eigenwerte.</li>
+</ol>
+<p><strong>Frage 2:</strong> Was ist der Rang von <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; 1 \\ 0 &amp; 0 \end{pmatrix}\)</span>?</p>
+<ol type="1">
+<li><span class="math inline">\(0\)</span></li>
+<li><span class="math inline">\(1\)</span></li>
+<li><span class="math inline">\(2\)</span></li>
+<li><span class="math inline">\(3\)</span></li>
+</ol>
+<!-- SOLUTIONS: F1: 2 (Spektralsatz; 1 gilt nur fuer psd, 3 nur falls kein EW 0,
+     4 falsch z.B. fuer I). F2: 2 (identische Spalten => Rang 1; Matrix kommt
+     spaeter im Rechenbeispiel zu den Fundamentalraeumen wieder vor). -->
+</section>
+<section>
+<section id="motivation" class="title-slide slide level2 center">
+<h2>Motivation</h2>
+
+</section>
+<section id="diagonalisierung-ist-limitiert" class="slide level3">
+<h3>Diagonalisierung ist limitiert</h3>
+<ul>
+<li>Eigenwertzerlegung funktioniert nur für <strong>quadratische</strong> Matrizen – und auch dort nicht immer:<br>
+<span class="math inline">\(\begin{pmatrix} 0 &amp; 1 \\ 0 &amp; 0\end{pmatrix}\)</span> hat nur den Eigenwert 0 mit eindimensionalem Eigenraum, also keine Eigenvektorbasis</li>
+<li>Orthogonale Diagonalisierung bisher nur für <strong>symmetrische</strong> Matrizen</li>
+<li><strong>Problem</strong>:<br>
+Die meisten Matrizen sind weder quadratisch noch symmetrisch.</li>
+</ul>
+<div class="fragment">
+<p><strong>Was wir wollen:</strong> Eine Zerlegung <span class="math inline">\(\bA = \bP\bD\bQ^{-1}\)</span></p>
+<ul>
+<li>für <em>beliebige</em> <span class="math inline">\(m \times n\)</span> Matrizen, so dass</li>
+<li><span class="math inline">\(\bD\)</span> “diagonal” ist und</li>
+<li><span class="math inline">\(\bP\)</span> und <span class="math inline">\(\bQ\)</span> <mark><em>Orthogonalmatrizen</em></mark> sind</li>
+</ul>
+</div>
+</section>
+<section id="geometrische-intuition" class="slide level3 smaller">
+<h3>Geometrische Intuition</h3>
+<p><strong>Die Einheitssphäre als Testfall:</strong></p>
+<ul>
+<li>Betrachte alle Vektoren <span class="math inline">\(\bx\)</span> mit <span class="math inline">\(\|\bx\| = 1\)</span></li>
+<li>Nach Transformation: <span class="math inline">\(\bA\bx\)</span> hat verschiedene Längen</li>
+<li><strong>Frage</strong>: Welche Richtung <span class="math inline">\(\bA\bx\)</span> wurde am stärksten (zweitstärksten, drittstärksten, …) gestreckt?</li>
+</ul>
+<p><strong>Beispiel:</strong> <span class="math inline">\(\bA \in \R^{2 \times 3}\)</span></p>
+
+<img data-src="resources/svd-3-2.png" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"><ul>
+<li>Einheitssphäre in <span class="math inline">\(\R^3\)</span> <span class="math inline">\(\to\)</span> ausgefüllte Ellipse in <span class="math inline">\(\R^2\)</span>; stärkste Streckung: Hauptachse, zweitstärkste: Nebenachse; Richtungen in <span class="math inline">\(\ker(\bA)\)</span> werden auf <span class="math inline">\(\bnull\)</span> gestaucht</li>
+</ul>
+<div class="small">
+<p><a href="https://fabian-s.github.io/fmm-skript/?k=06-svd#sec-6.1"><span class="math inline">\(\blacktriangleright\)</span> Interaktive Visualisierung im Skript</a></p>
+</div>
+</section>
+<section id="die-grundidee" class="slide level3">
+<h3>Die Grundidee</h3>
+<p><strong>Maximierungsproblem:</strong></p>
+<p><span class="math display">\[\max_{\|\bx\| = 1} \|\bA\bx\|\]</span></p>
+<p><strong>Trick</strong>: Maximiere <span class="math inline">\(\|\bA\bx\|^2\)</span> statt <span class="math inline">\(\|\bA\bx\|\)</span></p>
+<p><span class="math display">\[\|\bA\bx\|^2 = (\bA\bx)^\top(\bA\bx) = \bx^\top(\bA^\top\bA)\bx\]</span></p>
+<p><strong>Erkenntnis</strong>: Dies ist eine quadratische Form bezüglich <span class="math inline">\(\bA^\top\bA\)</span>!</p>
+<p><br></p>
+<div class="small">
+<p>Im Folgenden immer: <span class="math inline">\(\|\cdot\| \equiv  \|\cdot\|_2\)</span>!</p>
+</div>
+</section></section>
+<section>
+<section id="svd-singulärwerte-und-singulärvektoren" class="title-slide slide level2 center">
+<h2>SVD: Singulärwerte und Singulärvektoren</h2>
+
+</section>
+<section id="die-matrix-batopba" class="slide level3">
+<h3>Die Matrix <span class="math inline">\(\bA^\top\bA\)</span></h3>
+<div class="block">
+<p><span class="block-title">Theorem: <strong>Eigenschaften von <span class="math inline">\(\bA^\top\bA\)</span></strong></span></p>
+<p>Für <span class="math inline">\(\bA \in \R^{m \times n}\)</span> gilt:</p>
+<ol type="1">
+<li><span class="math inline">\(\bA^\top\bA\)</span> ist <em>symmetrisch</em>: <span class="math inline">\(\left(\bA^\top\bA\right)^\top = \bA^\top\bA\)</span></li>
+<li><span class="math inline">\(\bA^\top\bA\)</span> ist <em>positiv semidefinit</em>: <span class="math inline">\(\bx^\top\left(\bA^\top\bA\right)\bx \geq 0\)</span> für alle <span class="math inline">\(\bx \in \R^n\)</span>; insbesondere sind alle Eigenwerte <span class="math inline">\(\lambda_i \geq 0\)</span></li>
+</ol>
+</div>
+<p><strong>Beweis für (2):</strong> <span class="math inline">\(\bx^\top\left(\bA^\top\bA\right)\bx = \|\bA\bx\|_2^2 \geq 0\)</span>; für jeden normierten Eigenvektor <span class="math inline">\(\bv_i\)</span> (<span class="math inline">\(\|\bv_i\| = 1\)</span>) gilt damit:</p>
+<p><span class="math display">\[0 \leq \left\|\bA\bv_i\right\|_2^2 = \bv_i^\top\left(\bA^\top\bA\right)\bv_i = \bv_i^\top\left(\lambda_i\bv_i\right) = \lambda_i\]</span></p>
+<p><strong>Folgerung</strong>: <span class="math inline">\(\bA^\top\bA\)</span> ist orthogonal diagonalisierbar!</p>
+</section>
+<section id="bsp-eigenschaften-von-batopba" class="slide level3 smaller">
+<h3>Bsp: Eigenschaften von <span class="math inline">\(\bA^\top\bA\)</span></h3>
+<p>Sei <span class="math inline">\(\bA = \begin{pmatrix} \cgreen{\ba_1}  &amp; \cblue{\ba_2}  \end{pmatrix} = \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix} \in \R^{3 \times 2}\)</span> <span class="math display">\[\begin{align*}
+\bA^\top\bA &amp;= \begin{pmatrix} \cgreen{\ba_1^\top} \\ \cblue{\ba_2^\top} \end{pmatrix} \begin{pmatrix} \cgreen{\ba_1} &amp; \cblue{\ba_2} \end{pmatrix} =
+\begin{pmatrix} \cgreen{\ba_1^\top} \cgreen{\ba_1} &amp; \cgreen{\ba_1^\top} \cblue{\ba_2} \\ \cblue{\ba_2^\top} \cgreen{\ba_1} &amp; \cblue{\ba_2^\top} \cblue{\ba_2} \end{pmatrix}\\
+&amp;= \begin{pmatrix} 1 &amp; 2 &amp; 1 \\ 2 &amp; 1 &amp; 0 \end{pmatrix} \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix} = \begin{pmatrix} 6 &amp; 4 \\ 4 &amp; 5 \end{pmatrix}
+\end{align*}\]</span></p>
+<p><strong>Symmetrie:</strong> <span class="math inline">\(\checkmark\)</span></p>
+<p><strong>Positiv semidefinit:</strong> <span class="math display">\[\begin{align*}
+\det\left(\bA^\top\bA - \lambda \bI\right) &amp;= (6-\lambda)(5-\lambda) - 16 = \lambda^2 - 11\lambda + 14 = 0\\
+\lambda_{1,2} &amp;= \tfrac{11 \pm \sqrt{11^2 - 4\cdot 1 \cdot 14}}{2} = \tfrac{11 \pm \sqrt{65}}{2}\\
+\implies \lambda_1 &amp;\approx 9.53, \quad \lambda_2 \approx 1.47
+\end{align*}\]</span> <span class="math inline">\(\lambda_1, \lambda_2 &gt; 0 \implies \bA^\top\bA\)</span> hier sogar positiv <em>definit</em> – mehr als das vom Theorem garantierte “semidefinit”, da <span class="math inline">\(\bA\)</span> vollen Spaltenrang hat (<span class="math inline">\(\text{rang}(\bA) = n = 2\)</span>)</p>
+</section>
+<section id="definition-singulärwerte" class="slide level3">
+<h3>Definition: Singulärwerte</h3>
+<p>Seien <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n\)</span> die Eigenwerte von <span class="math inline">\(\bA^\top\bA\)</span>.</p>
+<div class="block">
+<p><span class="block-title">Def.: <strong>Singulärwerte</strong></span></p>
+<p>Die <mark><strong>Singulärwerte</strong></mark> von <span class="math inline">\(\bA\)</span> sind:</p>
+<p><span class="math display">\[\sigma_i = \sqrt{\lambda_i}, \quad i = 1, 2, \ldots, n\]</span></p>
+</div>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><span class="math inline">\(\sigma_1 = \max_{\|\bx\| = 1} \|\bA\bx\|\)</span> (maximale Streckung)</li>
+<li><span class="math inline">\(\sigma_n\)</span> entspricht der minimalen Streckung / maximalen Stauchung</li>
+<li><span class="math inline">\(\sigma_i = 0 \iff \lambda_i = 0\)</span></li>
+</ul>
+</section>
+<section id="bsp-singulärwerte" class="slide level3 smaller">
+<h3>Bsp: Singulärwerte</h3>
+<p>Matrix <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}:\qquad
+\bA^\top\bA\)</span> mit <span class="math inline">\(\blambda \approx (9.53, 1.47)\)</span>:</p>
+<p><strong>Singulärwerte:</strong> <span class="math display">\[\begin{align*}
+\sigma_1 &amp;= \sqrt{\lambda_1} = \sqrt{9.53} \approx 3.09\\
+\sigma_2 &amp;= \sqrt{\lambda_2} = \sqrt{1.47} \approx 1.21
+\end{align*}\]</span></p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><span class="math inline">\(\sigma_1 \approx 3.09\)</span>: Maximale Streckung der Matrix <span class="math inline">\(\bA\)</span> (<span class="math inline">\(\bv_1\)</span> wird um Faktor 3.1 gestreckt)</li>
+<li><span class="math inline">\(\sigma_2 \approx 1.21\)</span>: Minimale Streckung (<span class="math inline">\(\bv_2\)</span> wird um Faktor 1.2 gestreckt)</li>
+<li>Verhältnis <span class="math inline">\(\tfrac{\sigma_{\max}}{\sigma_{\min}} \approx 2.55\)</span> zeigt, wie unterschiedlich die Streckung je nach Richtung ist (<em>anisotrop</em>).</li>
+</ul>
+</section>
+<section id="def-singulaervektoren" class="slide level3 smaller">
+<h3>Definition: Singulärvektoren</h3>
+<div class="block">
+<p><span class="block-title">Def.: <strong>Rechte und linke Singulärvektoren</strong></span></p>
+<p><strong>Rechte Singulärvektoren</strong> <span class="math inline">\(\bv_i\)</span>:</p>
+<ul>
+<li>Normierte Eigenvektoren von <span class="math inline">\(\bA^\top\bA\)</span></li>
+<li><span class="math inline">\(\bA^\top\bA\bv_i = \lambda_i\bv_i = \sigma_i^2\bv_i\)</span></li>
+</ul>
+<p><strong>Linke Singulärvektoren</strong> <span class="math inline">\(\bu_i\)</span>:</p>
+<ul>
+<li>Definiert durch: <span class="math inline">\(\bu_i = \frac{\bA\bv_i}{\sigma_i}\)</span> (für <span class="math inline">\(\sigma_i &gt; 0\)</span>)</li>
+</ul>
+</div>
+<p><strong>Wichtige Eigenschaften:</strong></p>
+<ul>
+<li><span class="math inline">\(\{\bv_1, \ldots, \bv_n\}\)</span> ist orthonormal</li>
+<li><span class="math inline">\(\{\bu_1, \ldots, \bu_r\}\)</span> ist orthonormal (<span class="math inline">\(r = \text{rang}(\bA)\)</span>)</li>
+</ul>
+<p><strong>Beweis der Orthonormalität:</strong> siehe <a href="#/svd-orthogonalitaet-beweis">Anhang</a></p>
+</section>
+<section id="bsp-singulaervektoren" class="slide level3 smaller">
+<h3>Bsp: Singulärvektoren</h3>
+<p>Matrix <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}:\qquad
+\bA^\top\bA = \begin{pmatrix} 6 &amp; 4 \\ 4 &amp; 5 \end{pmatrix}\)</span> mit <span class="math inline">\(\blambda \approx (9.53, 1.47)\)</span>:</p>
+<p><strong>Rechte Singulärvektoren</strong> (normierte Eigenvektoren von <span class="math inline">\(\bA^\top\bA\)</span>):</p>
+<p><span class="math display">\[\begin{pmatrix} 6 &amp; 4 \\ 4 &amp; 5 \end{pmatrix}\cgreen{\bv_1} = 9.53\,\cgreen{\bv_1}
+\;\implies\; \cgreen{\bv_1 \approx \begin{pmatrix} -0.75 \\ -0.662 \end{pmatrix}}, \qquad
+\cgreen{\bv_2 \approx \begin{pmatrix} -0.662 \\ 0.75 \end{pmatrix}} \text{ (normiert, orthogonal zu } \cgreen{\bv_1})\]</span></p>
+<p><strong>Linke Singulärvektoren</strong> (<span class="math inline">\(\cblue{\bu_i} = \bA\cgreen{\bv_i}/\sigma_i\)</span>), eine Rechnung exemplarisch:</p>
+<p><span class="math display">\[\cblue{\bu_1} = \frac{\bA\cgreen{\bv_1}}{\sigma_1} \approx \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}\cgreen{\begin{pmatrix} -0.75 \\ -0.662 \end{pmatrix}} / 3.09 = \cblue{\begin{pmatrix} -0.672 \\ -0.7 \\ -0.243 \end{pmatrix}}, \qquad
+\text{analog: } \cblue{\bu_2 \approx \begin{pmatrix} 0.691 \\ -0.474 \\ -0.546 \end{pmatrix}}\]</span></p>
+<p><strong>Check:</strong> <span class="math inline">\(\bu_1^\top\bu_2 \approx 0\)</span> und <span class="math inline">\(\|\bu_1\| \approx 1\)</span> <span class="math inline">\(\checkmark\)</span> (vollständige Rechnung: siehe <a href="#/svd-vollstaendige-rechnung">Anhang</a>)</p>
+</section>
+<section id="live-demo-svd-in-r" class="slide level3 smaller">
+<h3>Live-Demo: SVD in R</h3>
+<p>Stimmt unsere Handrechnung? <strong>Vorhersage:</strong> Was liefert <code>svd(A)</code>?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>,</span>
+<span id="cb1-2"><a></a>              <span class="dv">2</span>, <span class="dv">1</span>,</span>
+<span id="cb1-3"><a></a>              <span class="dv">1</span>, <span class="dv">0</span>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a></a><span class="fu">svd</span>(A)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>$d
+[1] 3.09 1.21
+
+$u
+       [,1]   [,2]
+[1,] -0.672  0.691
+[2,] -0.700 -0.474
+[3,] -0.243 -0.546
+
+$v
+       [,1]   [,2]
+[1,] -0.750 -0.662
+[2,] -0.662  0.750</code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><code>d</code> <span class="math inline">\(\approx (3.09, 1.21)\)</span>: wie von Hand berechnet <span class="math inline">\(\checkmark\)</span></li>
+<li><code>u</code>, <code>v</code>: Singulärvektoren – Vorzeichen nicht eindeutig (<span class="math inline">\(\pm\bu_i\)</span>, <span class="math inline">\(\pm\bv_i\)</span> ebenfalls gültig)!</li>
+</ul>
+</div>
+</section>
+<section id="fundamentale-unterräume" class="slide level3">
+<h3>Fundamentale Unterräume</h3>
+<div class="block">
+<p><span class="block-title">Theorem: <strong>Charakterisierung der Unterräume</strong></span></p>
+<p>Angenommen <span class="math inline">\(\bA\)</span> hat <span class="math inline">\(r\)</span> Singulärwerte ungleich Null. Dann:</p>
+<ol type="1">
+<li><p><span class="math inline">\(\{\bv_1, \ldots, \bv_r\}\)</span> ist Orthonormalbasis für <span class="math inline">\(\text{col}(\bA^\top)\)</span> (<em>Zeilenraum</em>)</p></li>
+<li><p><span class="math inline">\(\{\bA\bv_1, \ldots, \bA\bv_r\}\)</span> ist Orthogonalbasis für <span class="math inline">\(\text{col}(\bA)\)</span> (<em>Spaltenraum</em>) – normiert (<span class="math inline">\(\|\bA\bv_i\| = \sigma_i\)</span>) sind das die <span class="math inline">\(\{\bu_1, \ldots, \bu_r\}\)</span></p></li>
+<li><p><span class="math inline">\(\{\bv_{r+1}, \ldots, \bv_n\}\)</span> ist Orthonormalbasis für <span class="math inline">\(\ker(\bA)\)</span> (<em>Nullraum</em>)</p></li>
+<li><p><span class="math inline">\(\text{rang}(\bA) = r\)</span></p></li>
+</ol>
+</div>
+<p><strong>Interpretation</strong>: SVD gibt uns explizite Orthonormalbasen für alle Fundamentalräume! (für den <em>linken Nullraum</em> <span class="math inline">\(\ker(\bA^\top)\)</span>: erweiterte <span class="math inline">\(\bu_{r+1}, \ldots, \bu_m\)</span> → SVD-Hauptsatz &amp; Beispiel)</p>
+</section>
+<section id="rechenbeispiel-fundamentale-unterräume-1" class="slide level3 smaller">
+<h3>Rechenbeispiel: Fundamentale Unterräume (1)</h3>
+<p>Für <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; 1 \\ 0 &amp; 0 \end{pmatrix}\)</span> mit <span class="math inline">\(\bA^\top\bA = \begin{pmatrix} 2 &amp; 2 \\ 2 &amp; 2 \end{pmatrix}\)</span> und rang(<span class="math inline">\(\bA\)</span>) = 1:</p>
+<ul>
+<li><strong>Singulärwerte</strong>:<br>
+<span class="math inline">\(\lambda_1(\bA^\top\bA) = 4,\; \lambda_2(\bA^\top\bA) = 0\)</span><br>
+<span class="math inline">\(\implies \sigma_1(\bA) = 2\)</span>: Maximale Streckung durch <span class="math inline">\(\bA\)</span> um Faktor 2 in Richtung <span class="math inline">\(\cgreen{\bv_1}\)</span>; Faktor 0 in Richtung <span class="math inline">\(\cred{\bv_2}\)</span></li>
+<li><strong>Zeilenraum: Rechte Singulärvektoren</strong><br>
+<span class="math inline">\(\cgreen{\bv_1 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \end{pmatrix}}, \quad \cred{\bv_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -1 \end{pmatrix}}\)</span><br> <span class="math inline">\(\implies\)</span> col(<span class="math inline">\(\bA^\top\)</span>) = span<span class="math inline">\(\{\cgreen{\bv_1}\}\)</span> = span<span class="math inline">\(\left\{\cgreen{\begin{pmatrix} 1 \\ 1 \end{pmatrix}}\right\}\)</span></li>
+<li><strong>Spaltenraum: Linke Singulärvektoren</strong> <span class="math inline">\(\cblue{\bu_1 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix}}, \quad \cred{\bu_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} -1 \\ 1 \\ 0 \end{pmatrix}}, \quad \cred{\bu_3 = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}}\)</span><br>
+<em>(<span class="math inline">\(\cred{\bu_2}, \cred{\bu_3}\)</span>: orthonormale Ergänzung, da <span class="math inline">\(\sigma_2 = 0\)</span>; → SVD-Hauptsatz)</em><br> <span class="math inline">\(\implies\)</span> col(<span class="math inline">\(\bA\)</span>) = span<span class="math inline">\(\{\cblue{\bu_1}\}\)</span> = span<span class="math inline">\(\left\{\cblue{\begin{pmatrix} 1 \\ 1 \\ 0 \end{pmatrix}}\right\}\)</span></li>
+</ul>
+</section>
+<section id="rechenbeispiel-fundamentale-unterräume-2" class="slide level3 smaller">
+<h3>Rechenbeispiel: Fundamentale Unterräume (2)</h3>
+<p>Weiter mit <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; 1 \\ 0 &amp; 0 \end{pmatrix}\)</span>, <span class="math inline">\(\;\cred{\bv_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} 1 \\ -1 \end{pmatrix}}\)</span>, <span class="math inline">\(\;\cblue{\bu_2 = \frac{1}{\sqrt{2}}\begin{pmatrix} -1 \\ 1 \\ 0 \end{pmatrix}}\)</span>, <span class="math inline">\(\;\cblue{\bu_3 = \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}}\)</span>:</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>(Rechter) Nullraum</strong>: ker(<span class="math inline">\(\bA\)</span>) = span<span class="math inline">\(\{\cred{\bv_2}\}\)</span> = span<span class="math inline">\(\left\{\cred{\begin{pmatrix} 1 \\ -1 \end{pmatrix}}\right\}\)</span> Verifikation: <span class="math inline">\(\bA\cred{\begin{pmatrix} 1 \\ -1 \end{pmatrix}} = \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix} \quad\checkmark\)</span></p>
+</div><div class="column" style="width:50%;">
+<p><strong>Linker Nullraum:</strong> ker(<span class="math inline">\(\bA^\top\)</span>) = span<span class="math inline">\(\{\cblue{\bu_2}, \cblue{\bu_3}\}\)</span> = span<span class="math inline">\(\left\{\cblue{\begin{pmatrix} -1 \\ 1 \\ 0 \end{pmatrix}}, \cblue{\begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix}}\right\}\)</span> Verifikation: <span class="math inline">\(\bA^\top \cblue{\begin{pmatrix} -1 &amp; 0 \\ 1 &amp; 0 \\ 0 &amp; 1 \end{pmatrix}} = \begin{pmatrix} 0 &amp; 0 \\ 0 &amp; 0 \end{pmatrix} \quad\checkmark\)</span></p>
+</div></div>
+</section>
+<section id="svd-hauptsatz" class="slide level3">
+<h3>Der SVD-Hauptsatz</h3>
+<div class="block">
+<p><span class="block-title">Theorem: <strong>Singulärwertzerlegung</strong></span></p>
+<p>Sei <span class="math inline">\(\bA \in \R^{m \times n}\)</span> mit <span class="math inline">\(\text{rang}(\bA) = r\)</span>. Dann existiert eine Zerlegung:</p>
+<p><span class="math display">\[\bA = \bU\bSigma \bV^\top\]</span></p>
+<p>wobei:</p>
+<ul>
+<li><strong><span class="math inline">\(\bV \in \R^{n \times n}\)</span></strong>: Orthogonalmatrix (rechte Singulärvektoren in Spalten)</li>
+<li><strong><span class="math inline">\(\bU \in \R^{m \times m}\)</span></strong>: Orthogonalmatrix (linke Singulärvektoren erweitert zu Basis)</li>
+<li><strong><span class="math inline">\(\bSigma \in \R^{m \times n}\)</span></strong>: “Diagonalmatrix” mit Singulärwerten</li>
+</ul>
+</div>
+<p><strong>Beweis (Konstruktionsskizze):</strong> siehe <a href="#/svd-beweis-skizze">Anhang</a></p>
+</section>
+<section id="die-struktur-von-bsigma" class="slide level3 smaller">
+<h3>Die Struktur von <span class="math inline">\(\bSigma\)</span></h3>
+<p><strong>Form der Matrix <span class="math inline">\(\bSigma\)</span>:</strong></p>
+<p><span class="math display">\[\bSigma = \begin{pmatrix}
+\text{diag}(\sigma_1, \ldots, \sigma_r) &amp; 0_{r \times (n-r)} \\
+0_{(m-r) \times r} &amp; 0_{(m-r) \times (n-r)}
+\end{pmatrix}\]</span></p>
+<p><strong>Beispiele:</strong></p>
+<p><span class="math inline">\(\bA\)</span> <em>quadratisch</em> (<span class="math inline">\(m = n = 3\)</span>, <span class="math inline">\(r = 2\)</span>):</p>
+<p><span class="math display">\[\bSigma = \begin{pmatrix} \sigma_1 &amp; 0 &amp; 0 \\ 0 &amp; \sigma_2 &amp; 0 \\ 0 &amp; 0 &amp; 0 \end{pmatrix}\]</span></p>
+<p><span class="math inline">\(\bA\)</span> <em>rechteckig</em> (<span class="math inline">\(m = 2\)</span>, <span class="math inline">\(n = 3\)</span>, <span class="math inline">\(r = 2\)</span>):</p>
+<p><span class="math display">\[\bSigma = \begin{pmatrix} \sigma_1 &amp; 0 &amp; 0 \\ 0 &amp; \sigma_2 &amp; 0 \end{pmatrix}\]</span></p>
+</section>
+<section id="geometrische-interpretation" class="slide level3">
+<h3>Geometrische Interpretation</h3>
+<p><strong>Transformation: <span class="math inline">\(\bx \mapsto \bA\bx = \bU\bSigma \bV^\top\bx\)</span></strong></p>
+<p><strong>Drei Schritte</strong>:</p>
+<ol type="1">
+<li><strong><span class="math inline">\(\bV^\top\)</span></strong>:<br>
+Koordinatentransformation (Rotation/Spiegelung) zu “optimalen” Richtungen</li>
+<li><strong><span class="math inline">\(\bSigma\)</span></strong>:<br>
+“Streckung” entlang dieser Achsen um Faktoren <span class="math inline">\(\sigma_i\)</span>, Nullsetzen für <span class="math inline">\(i &gt; r\)</span></li>
+<li><strong><span class="math inline">\(\bU\)</span></strong>:<br>
+Koordinatentransformation (Rotation/Spiegelung) zurück in den Zielraum</li>
+</ol>
+<p><br></p>
+<div style="text-align: center;">
+<p><span class="math inline">\(\implies\)</span> <strong>SVD zerlegt <em>jede</em> lineare Transformation von <span class="math inline">\(\mathbb{R}^n\)</span> nach <span class="math inline">\(\mathbb{R}^m\)</span> in “Drehen-Strecken-Drehen”.</strong></p>
+</div>
+</section></section>
+<section>
+<section id="reduzierte-svd-und-pseudoinverse" class="title-slide slide level2 center">
+<h2>Reduzierte SVD und Pseudoinverse</h2>
+
+</section>
+<section id="reduzierte-svd" class="slide level3 smaller">
+<h3>Reduzierte SVD</h3>
+<p><strong>Problem</strong>: Viele Nulleinträge in <span class="math inline">\(\bSigma \in \R^{m \times n}\)</span>, sobald <span class="math inline">\(\text{rang}(\bA) = r &lt; m\)</span> oder <span class="math inline">\(r &lt; n\)</span> (<span class="math inline">\(\bA\)</span> rangdefizient <em>oder</em> nicht quadratisch):</p>
+<ul>
+<li><span class="math inline">\(\bSigma\)</span> enthält <span class="math inline">\((m-r)\)</span> Nullzeilen <strong>und</strong> <span class="math inline">\((n-r)\)</span> Nullspalten</li>
+<li>Entsprechende Spalten in <span class="math inline">\(\bU\)</span> bzw. <span class="math inline">\(\bV\)</span> werden mit 0 multipliziert</li>
+</ul>
+<p><strong>Idee</strong>: Partitioniere <span class="math inline">\(\bU = (\bU_r \mid \bU_{m-r})\)</span>, <span class="math inline">\(\bV = (\bV_r \mid \bV_{n-r})\)</span> mit <span class="math inline">\(\bU_r \in \R^{m \times r}\)</span>, <span class="math inline">\(\bV_r \in \R^{n \times r}\)</span> und behalte nur die ersten <span class="math inline">\(r\)</span> Singulärwerte und -vektoren:</p>
+<div class="block">
+<p><span class="block-title">Def.: <strong>Reduzierte SVD</strong></span></p>
+<p>Die <strong>reduzierte SVD</strong> von <span class="math inline">\(\bA\)</span> mit <span class="math inline">\(\text{rang}(\bA) = r\)</span> ist <span class="math display">\[\bA = \bU_r \bSigma_r \bV_r^\top\]</span></p>
+<p>wobei:</p>
+<ul>
+<li><span class="math inline">\(\bU_r \in \R^{m \times r}\)</span>: Erste <span class="math inline">\(r\)</span> linke Singulärvektoren</li>
+<li><span class="math inline">\(\bV_r \in \R^{n \times r}\)</span>: Erste <span class="math inline">\(r\)</span> rechte Singulärvektoren</li>
+<li><span class="math inline">\(\bSigma_r \in \R^{r \times r}\)</span>: <span class="math inline">\(\text{diag}(\sigma_1, \ldots, \sigma_r)\)</span></li>
+</ul>
+</div>
+<p><strong>Vorteile:</strong></p>
+<ul>
+<li><strong>Kompakter</strong>: Keine nutzlosen Nullblöcke; weniger Speicher und Rechenzeit</li>
+<li><strong><span class="math inline">\(\bSigma_r\)</span> ist invertierbar</strong> (alle <span class="math inline">\(\sigma_i &gt; 0\)</span>)</li>
+</ul>
+</section>
+<section id="moore-penrose-pseudoinverse" class="slide level3">
+<h3>Moore-Penrose Pseudoinverse</h3>
+<p><strong>Motivation</strong>: Was wenn <span class="math inline">\(\bA\)</span> nicht quadratisch/invertierbar?</p>
+<div class="block">
+<p><span class="block-title">Def.: <strong>Moore-Penrose Pseudoinverse</strong></span></p>
+<p>Für jede Matrix <span class="math inline">\(\bA \in \R^{m \times n}\)</span> mit Rang <span class="math inline">\(r \geq 1\)</span> und <em>reduzierter SVD</em> <span class="math inline">\(\bA = \bU_r \bSigma_r \bV_r^\top\)</span> ist die <mark><strong>Moore-Penrose Pseudoinverse</strong></mark>:</p>
+<p><span class="math display">\[\bA^+ := \bV_r \bSigma_r^{-1} \bU_r^\top \in \R^{n \times m}\]</span></p>
+</div>
+<p><strong>Bemerkung:</strong><br>
+</p>
+<p><span class="math inline">\(\bSigma_r^{-1} = \text{diag}(1/\sigma_1, \ldots, 1/\sigma_r)\)</span>; für <span class="math inline">\(\bA = \bnull\)</span> (also <span class="math inline">\(r = 0\)</span>) setzt man <span class="math inline">\(\bA^+ = \bnull \in \R^{n \times m}\)</span></p>
+</section>
+<section id="eigenschaften-der-pseudoinverse" class="slide level3 smaller">
+<h3>Eigenschaften der Pseudoinverse</h3>
+<div class="block">
+<p><span class="block-title">Theorem: <strong>Eigenschaften von <span class="math inline">\(\bA^+\)</span></strong></span></p>
+<ol type="1">
+<li><span class="math inline">\(\bA\bA^+\bx = \text{proj}_{\text{col}(\bA)}\bx\)</span> für alle <span class="math inline">\(\bx \in \R^m\)</span></li>
+<li><span class="math inline">\(\bA^+\bA\bx = \text{proj}_{\text{col}(\bA^\top)}\bx\)</span> für alle <span class="math inline">\(\bx \in \R^n\)</span></li>
+<li><span class="math inline">\(\bA\bA^+\bA = \bA\)</span> <em>(Konsistenz)</em></li>
+<li><span class="math inline">\(\bA^+\bA\bA^+ = \bA^+\)</span> <em>(Konsistenz)</em></li>
+</ol>
+</div>
+<p><strong>Warum Projektion?</strong><br>
+<span class="math inline">\(\bA\bA^+ = \bU_r\bSigma_r\bV_r^\top\bV_r\bSigma_r^{-1}\bU_r^\top = \bU_r\bU_r^\top\)</span>, und die Spalten von <span class="math inline">\(\bU_r\)</span> sind eine Orthonormalbasis von <span class="math inline">\(\text{col}(\bA)\)</span>.</p>
+<p><strong>Spezialfälle:</strong></p>
+<ul>
+<li>Wenn <span class="math inline">\(\text{rang}(\bA) = m\)</span>: <span class="math inline">\(\bA\bA^+ = \bI_m\)</span></li>
+<li>Wenn <span class="math inline">\(\text{rang}(\bA) = n\)</span>: <span class="math inline">\(\bA^+\bA = \bI_n\)</span></li>
+<li>Wenn <span class="math inline">\(\bA\)</span> quadratisch und invertierbar: <span class="math inline">\(\bA^+ = \bA^{-1}\)</span></li>
+</ul>
+</section></section>
+<section>
+<section id="anwendungen" class="title-slide slide level2 center">
+<h2>Anwendungen</h2>
+
+</section>
+<section id="spektralnorm-und-svd" class="slide level3">
+<h3>Spektralnorm und SVD</h3>
+<p>Bisher: <span class="math inline">\(\|\bA\|_2 = \sqrt{\lambda_{\max}\left(\bA^\top\bA\right)}\)</span></p>
+<p>Aus Definition SVD ist bekannt, dass <span class="math inline">\(\lambda_j\left(\bA^\top\bA\right) = \sigma_j(\bA)^2\)</span></p>
+<p>Also:</p>
+<p><span class="math display">\[\|\bA\|_2 = \sigma_{\max}(\bA)\]</span></p>
+<p><strong>Interpretation</strong>: Größter Singulärwert = maximale Streckung</p>
+</section>
+<section id="die-svd-als-summe-von-rang-1-matrizen" class="slide level3">
+<h3>Die SVD als Summe von Rang-1 Matrizen</h3>
+<p><strong>SVD in Summenform:</strong> <span class="math display">\[\bA = \bU_r \bSigma_r \bV_r^\top = \sum_{i=1}^r \sigma_i \bu_i \bv_i^\top\]</span></p>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li>Jeder Term <span class="math inline">\(\bu_i \bv_i^\top\)</span> ist eine <strong>Rang-1 Matrix</strong> (mit <span class="math inline">\(\left\|\bu_i \bv_i^\top\right\|_F = 1\)</span>)</li>
+<li><span class="math inline">\(\sigma_i\)</span> gewichtet die Bedeutung des <span class="math inline">\(i\)</span>-ten Terms</li>
+<li>Große <span class="math inline">\(\sigma_i\)</span> <span class="math inline">\(\to\)</span> wichtige Richtungen</li>
+<li>Kleine <span class="math inline">\(\sigma_i\)</span> <span class="math inline">\(\to\)</span> weniger wichtige Richtungen</li>
+</ul>
+<p><strong>Idee für Approximation</strong>: Verwende nur die wichtigsten Terme!</p>
+</section>
+<section id="rang-k-approximation" class="slide level3 smaller">
+<h3>Rang-k Approximation</h3>
+<p><strong>Low-Rank Approximation:</strong></p>
+<p><span class="math display">\[\bA_k = \sum_{i=1}^k \sigma_i \bu_i \bv_i^\top \quad (k &lt; r)\]</span></p>
+<div class="block">
+<p><span class="block-title">Theorem: <strong>Optimale Approximation</strong></span></p>
+<p><span class="math inline">\(\bA_k\)</span> ist <em>beste Rang-<span class="math inline">\(k\)</span> Approximation</em> von <span class="math inline">\(\bA\)</span> bezüglich der Frobenius- und Spektral-Normen, d.h. <span class="math inline">\(\bA_k\)</span> löst beide Approximationsprobleme: <span class="math display">\[
+\bA_k \in \arg\min_{\substack{\bB \in \R^{m \times n} \\ \text{rang}(\bB) \leq k}} \|\bA - \bB\|_F
+\quad\text{und}\quad
+\bA_k \in \arg\min_{\substack{\bB \in \R^{m \times n} \\ \text{rang}(\bB) \leq k}} \|\bA - \bB\|_2
+\]</span></p>
+<p><strong>Approximationsfehler:</strong></p>
+<ul>
+<li><span class="math inline">\(\|\bA - \bA_k\|_F = \sqrt{\sum_{i=k+1}^r \sigma_i^2}\)</span></li>
+<li><span class="math inline">\(\|\bA - \bA_k\|_2 = \sigma_{k+1}\)</span></li>
+</ul>
+</div>
+<p><strong>Interpretation</strong>: Fehler bestimmt durch <em>weggelassene</em> Singulärwerte</p>
+<div class="small">
+<p><strong>Nicht-Eindeutigkeit in Spektralnorm:</strong> Für <span class="math inline">\(\bA=\diag(3,2)\)</span>, <span class="math inline">\(k=1\)</span> und <span class="math inline">\(\bB_b=\diag(b,0)\)</span> gilt <span class="math inline">\(\|\bA-\bB_b\|_2=\max\{|3-b|,2\}\)</span>. Damit sind alle <span class="math inline">\(b\in[1,5]\)</span> optimal; die abgeschnittene SVD entspricht <span class="math inline">\(b=3\)</span>. In Frobenius-Norm ist nur <span class="math inline">\(b=3\)</span> optimal, denn der Fehler ist <span class="math inline">\(\sqrt{(3-b)^2+2^2}\)</span>.</p>
+</div>
+</section>
+<section id="wahl-rang-k-approximation" class="slide level3 smaller">
+<h3>Wahl der optimalen Rang-k Approximation</h3>
+<p><strong>Kriterien für die Wahl von <span class="math inline">\(k\)</span>:</strong></p>
+<p><strong>1. Relativer Fehler</strong> (Spektralnorm):</p>
+<p><span class="math display">\[\frac{\|\bA - \bA_k\|_2}{\|\bA\|_2} = \frac{\sigma_{k+1}}{\sigma_1}\]</span></p>
+<p><strong>2. Relativer Fehler</strong> (Frobenius-Norm):</p>
+<p><span class="math display">\[\frac{\|\bA - \bA_k\|_F}{\|\bA\|_F} = \frac{\sqrt{\sum_{i=k+1}^r \sigma_i^2}}{\sqrt{\sum_{i=1}^r \sigma_i^2}}\]</span></p>
+<p><strong>3. “Energieerhaltung”</strong>:</p>
+<p><span class="math display">\[\frac{\sum_{i=1}^k \sigma_i^2}{\sum_{i=1}^r \sigma_i^2} \geq p \quad \text{(p*100\% der "Energie")}\]</span></p>
+<p><strong>Praktische Heuristik:</strong> <span class="math inline">\(k\)</span> am “Ellenbogen” im <span class="math inline">\(\log(\sigma_i)\)</span>-Plot wählen – dort, wo die Singulärwerte abknicken. <em>(Typische Verläufe: siehe <a href="#/singulaerwert-verlaeufe">Anhang</a>)</em></p>
+</section>
+<section id="anwendung-datenkompression" class="slide level3 smaller">
+<h3>Anwendung: Datenkompression</h3>
+<p><strong>Bildkompression</strong> – <em>Originalbild</em>: <span class="math inline">\(659 \times 512\)</span> Pixel-Matrix (pro Farbkanal)</p>
+<ul>
+<li>Volle Speicherung: <span class="math inline">\(659 \times 512 = 337.408\)</span> Zahlen; <strong>Rang-50 SVD</strong>: <span class="math inline">\((659 \times 50) + 50 + (50 \times 512) = 58.600\)</span> Zahlen <span class="math inline">\(\implies\)</span> <em>Speicherersparnis</em>: <span class="math inline">\(\approx 83\%\)</span> (Speicheranteil <span class="math inline">\(\approx 17\%\)</span>)!</li>
+<li><strong>Vorgehen:</strong> SVD berechnen, <span class="math inline">\(k\)</span> anhand der Singulärwerte wählen, nur <span class="math inline">\(\bU_k, \bSigma_k, \bV_k\)</span> speichern.</li>
+</ul>
+<div class="quarto-layout-panel" data-layout="[14, 25, 14, 14, 14, 14]">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 14.7%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-original.jpg"></p>
+<figcaption>Original</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 26.3%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-singular-values.png"></p>
+<figcaption>Singulärwerte pro Kanal</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 14.7%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-svd-rank-5.jpg"></p>
+<figcaption><span class="math inline">\(k = 5\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 14.7%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-svd-rank-20.jpg"></p>
+<figcaption><span class="math inline">\(k = 20\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 14.7%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-svd-rank-50.jpg"></p>
+<figcaption><span class="math inline">\(k = 50\)</span></figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 14.7%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/gauss-svd-rank-200.jpg"></p>
+<figcaption><span class="math inline">\(k = 200\)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="small">
+<p>Bildquelle: C. A. Jensen, Porträt C. F. Gauß (1840), gemeinfrei (Wikimedia Commons).</p>
+</div>
+</section>
+<section id="demo-bildkompression" class="slide level3">
+<h3>Interaktive Demo: Bildkompression</h3>
+<!-- WICHTIG: App vor der Vorlesung "aufwecken" (shinyapps.io Free Tier schläft ein):
+     Link einmal im Browser öffnen und laden lassen. -->
+<iframe src="https://fabian-s.shinyapps.io/truncatedSVD-shiny/" width="100%" height="560" style="border: 1px solid #e8e8e8; border-radius: 4px;" loading="lazy">
+</iframe>
+<div class="small">
+<p>Fallback: <a href="https://fabian-s.shinyapps.io/truncatedSVD-shiny/"><span class="math inline">\(\blacktriangleright\)</span> App direkt öffnen</a> — <a href="#/fallback-truncatedsvd-shiny">Screenshot im Anhang</a>.</p>
+</div>
+</section>
+<section id="anwendung-empfehlungssysteme" class="slide level3 smaller">
+<h3>Anwendung: Empfehlungssysteme</h3>
+<p><em>Collaborative Filtering</em> / <em>Recommender Systems</em></p>
+<p><strong>Problem:</strong> Netflix-Szenario: <span class="math inline">\(m\)</span> Nutzer, <span class="math inline">\(n\)</span> Filme, aber Daten sehr <em>sparse</em>: meiste Nutzer haben meiste Filme nicht bewertet</p>
+<p><span class="math display">\[\bR = \begin{pmatrix}
+5 &amp; ? &amp; 1 &amp; ? &amp; 4 \\
+? &amp; 3 &amp; ? &amp; 4 &amp; ? \\
+2 &amp; 1 &amp; ? &amp; ? &amp; 5 \\
+? &amp; 5 &amp; 4 &amp; 3 &amp; ?
+\end{pmatrix} \in \R^{m \times n}\]</span></p>
+<p><strong>Idee:</strong> Nutzer-Film-Präferenzen liegen in einem <em>niedrigdimensionalen Raum</em> (Genres und Nutzerklassen).</p>
+<p><strong>SVD-Ansatz:</strong></p>
+<ol type="1">
+<li>Ergänze fehlende Einträge (z.B. durch Spaltenmittelwerte)</li>
+<li>Berechne Rang-k Approximation: <span class="math inline">\(\bR_k = \bU_k\bSigma_k\bV_k^\top\)</span></li>
+<li>Nutze <span class="math inline">\(\bR_k\)</span> für Vorhersagen fehlender Ratings</li>
+</ol>
+<p><strong>Interpretation:</strong> <span class="math inline">\(\bv_j\)</span> = “gelernte” Film-Genres, <span class="math inline">\(\bu_i\)</span> = Nutzer-Präferenzen in diesen Genre-Dimensionen, <span class="math inline">\(\sigma_i\)</span> = Wichtigkeit der Dimension <em>(mehr: siehe <a href="#/empfehlungssysteme-details">Anhang</a>)</em></p>
+</section>
+<section id="wann-ist-svd-besonders-nützlich" class="slide level3 smaller">
+<h3>Wann ist SVD besonders nützlich?</h3>
+<p><strong>Ideale Situationen für SVD:</strong></p>
+<ol type="1">
+<li><em>Niedrig-Rang Strukturen</em>: <span class="math inline">\(\text{rang}(\bA) \ll \min(m,n)\)</span></li>
+<li><em>Schnell abfallende Singulärwerte</em>: Wenige dominieren</li>
+<li><em>Überbestimmte Systeme</em>: <span class="math inline">\(m &gt; n\)</span>, möglicherweise inkonsistent</li>
+<li><em>Datenanalyse</em>: Hauptkomponentenanalyse (PCA) ohne Kreuzprodukte zu berechnen.</li>
+<li><em>Numerische Robustheit</em>: Alternative zu Normalgleichungen</li>
+</ol>
+<p><strong>Rechenaufwand:</strong></p>
+<ul>
+<li><mark><em>SVD</em></mark>: <span class="math inline">\(O(\min(m^2n, mn^2))\)</span>, für <span class="math inline">\(m \gg n\)</span> etwa <span class="math inline">\(4mn^2\)</span></li>
+<li><em>Normalgleichungen</em>: <span class="math inline">\(O(mn^2 + n^3)\)</span>, für <span class="math inline">\(m \gg n\)</span> etwa <span class="math inline">\(mn^2\)</span>.</li>
+<li>Für <span class="math inline">\(m \gg n\)</span> sind Normalgleichungen schneller, aber SVD ist robuster <span class="math inline">\(\to\)</span> trade-off zwischen Geschwindigkeit und Stabilität</li>
+</ul>
+</section>
+<section id="svd-vs.-eigenwertzerlegung" class="slide level3 smaller">
+<h3>SVD vs.&nbsp;Eigenwertzerlegung</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 51%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Eigenschaft</strong></th>
+<th><strong>Eigenwertzerlegung</strong></th>
+<th><strong>SVD</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>Matrix-Typ</em></td>
+<td>Quadratisch</td>
+<td>Beliebig <span class="math inline">\(m \times n\)</span></td>
+</tr>
+<tr class="even">
+<td><em>Orthogonale Zerlegung</em></td>
+<td>Nur symmetrisch (<span class="math inline">\(\to\)</span> Spektralzerlegung)</td>
+<td>Immer</td>
+</tr>
+<tr class="odd">
+<td><em>Numerische Stabilität</em></td>
+<td>Kann instabil sein</td>
+<td>Stabil</td>
+</tr>
+<tr class="even">
+<td><em>Existenz</em></td>
+<td>Nur für diagonalisierbare <span class="math inline">\(\bA\)</span></td>
+<td>Immer</td>
+</tr>
+<tr class="odd">
+<td><em>Geometrische Interpretation</em></td>
+<td>Hauptachsen (symmetrisch)</td>
+<td>“Optimale” Koordinaten</td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="zusammenfassung-self-check" class="title-slide slide level2 center">
+<h2>Zusammenfassung &amp; Self-Check</h2>
+
+</section>
+<section id="zusammenfassung" class="slide level3 smaller">
+<h3>Zusammenfassung</h3>
+<p><strong>Kernkonzepte:</strong></p>
+<ol type="1">
+<li><em>SVD erweitert Eigenwertzerlegung</em> auf beliebige <span class="math inline">\(m \times n\)</span> Matrizen</li>
+<li><em>Singulärwerte vs.&nbsp;Eigenwerte</em>: <span class="math inline">\(\sigma_i(\bA) = \sqrt{\lambda_i\left(\bA^\top\bA\right)}\)</span></li>
+<li><em>Hauptsatz</em>: <span class="math inline">\(\bA = \bU\bSigma \bV^\top\)</span> mit orthogonalen <span class="math inline">\(\bU\)</span> (<span class="math inline">\(m \times m\)</span>), <span class="math inline">\(\bV\)</span> (<span class="math inline">\(n \times n\)</span>), diagonalem <span class="math inline">\(\bSigma\)</span> (<span class="math inline">\(m \times n\)</span>)</li>
+<li><em>Reduzierte SVD</em>: <span class="math inline">\(\bA = \bU_r\bSigma_r \bV_r^\top\)</span> für Effizienz (<span class="math inline">\(r = \rang(\bA)\)</span>)</li>
+<li><em>Pseudoinverse</em>: <span class="math inline">\(\bA^+ = \bV_r\bSigma_r^{-1}\bU_r^\top\)</span></li>
+</ol>
+<p><strong>Anwendungen:</strong> Lösung von <mark><em>Kleinste-Quadrate-Problemen</em></mark>, optimale <mark><em>Low-Rank Approximation</em></mark> (Datenkompression, -analyse)</p>
+<p><strong>Praktische Hinweise:</strong></p>
+<ul>
+<li>SVD <strong>nicht</strong> über <span class="math inline">\(\bA^\top\bA\)</span> berechnen (numerisch instabil) – spezielle Algorithmen (z.B. Golub-Reinsch) nutzen: in R <code>svd(A)</code></li>
+<li><em>truncated SVD</em> für sehr große Matrizen: <code>irlba::irlba(A, nv = k)</code> (iterativ, Lanczos) bzw. <code>irlba::svdr(A, k)</code> (randomisiert)</li>
+</ul>
+</section>
+<section id="self-check" class="slide level3 smaller">
+<h3>Self-Check</h3>
+<!-- TODO Particify/Moodle: als quiz/06-svd/selfcheck-*.Rmd autorieren (R/exams, mchoice). -->
+<p><strong>Welche Aussagen sind korrekt?</strong></p>
+<ol type="1">
+<li>Wenn <span class="math inline">\(\bA \in \R^{m \times n}\)</span>, dann ist <span class="math inline">\(\bA^\top\bA \in \R^{m \times m}\)</span></li>
+<li>Wenn <span class="math inline">\(\bA \in \R^{m \times n}\)</span>, dann ist <span class="math inline">\(\bA^\top\bA\)</span> symmetrisch</li>
+<li>Die Eigenwerte von <span class="math inline">\(\bA^\top\bA\)</span> sind die Singulärwerte von <span class="math inline">\(\bA\)</span></li>
+<li>Wenn <span class="math inline">\(\bA \in \R^{n \times n}\)</span>, dann ist <span class="math inline">\(\bA\)</span> immer diagonalisierbar</li>
+<li><span class="math inline">\(\bA^\top\bA\)</span> ist immer orthogonal diagonalisierbar</li>
+</ol>
+<!-- SOLUTION: 2 und 5 sind korrekt
+1: nicht m x m, sondern n x n
+3: Eigenwerte sind Quadrate der Singulärwerte
+4: falsch -- nicht jede quadratische Matrix ist diagonalisierbar (z.B. Jordanblock
+   [[1,1],[0,1]]); Symmetrie ist hinreichend, aber nicht notwendig
+-->
+</section></section>
+<section>
+<section id="anhang" class="title-slide slide level1 center" data-visibility="uncounted">
+<h1>Anhang</h1>
+
+</section>
+<section id="svd-orthogonalitaet-beweis" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Orthogonalität der Singulärvektoren</h3>
+<p><strong>Warum sind die <span class="math inline">\(\sigma_i\bu_i = \bA\bv_i\)</span> orthogonal?</strong></p>
+<p>Für <span class="math inline">\(i \neq j\)</span>: <span class="math display">\[\begin{align*}
+\cgreen{\left(\bA\bv_i\right)^\top\left(\bA\bv_j\right)} &amp;= \bv_i^\top\cblue{\left(\bA^\top\bA\right)\bv_j} \\
+&amp;= \bv_i^\top\cblue{\left(\lambda_j\bv_j\right)} \\
+&amp;= \lambda_j\cred{\left(\bv_i^\top\bv_j\right)} \\
+&amp;= \lambda_j \cdot \cred{0} = 0
+\end{align*}\]</span></p>
+<p>Für <span class="math inline">\(i = j\)</span>: <span class="math display">\[\|\bA\bv_i\|^2 = \bv_i^\top\left(\bA^\top\bA\right)\bv_i = \lambda_i \|\bv_i\|^2 = \lambda_i = \sigma_i^2\]</span></p>
+<p><span class="math inline">\(\implies\)</span> Für <span class="math inline">\(i, j \leq r\)</span> (also <span class="math inline">\(\sigma_i, \sigma_j &gt; 0\)</span>) ist <span class="math inline">\(\bu_i^\top\bu_j = \tfrac{(\bA\bv_i)^\top(\bA\bv_j)}{\sigma_i\sigma_j} = 0\)</span> für <span class="math inline">\(i \neq j\)</span> bzw. <span class="math inline">\(= 1\)</span> für <span class="math inline">\(i = j\)</span>: Die <span class="math inline">\(\bu_1, \ldots, \bu_r\)</span> sind orthonormal! <em>(Die übrigen <span class="math inline">\(\bu_{r+1}, \ldots, \bu_m\)</span> werden als orthonormale Ergänzung gewählt.)</em></p>
+<div class="small">
+<p><a href="#/def-singulaervektoren">↩︎ zurück: „Definition: Singulärvektoren”</a></p>
+</div>
+</section>
+<section id="svd-vollstaendige-rechnung" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Bsp: Singulärvektoren – vollständige Rechnung (1)</h3>
+<p>Matrix <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}:\qquad
+\bA^\top\bA\)</span> mit <span class="math inline">\(\blambda \approx (9.53, 1.47)\)</span>:</p>
+<p><strong>Rechte Singulärvektoren (Eigenvektoren von <span class="math inline">\(\bA^\top\bA\)</span>):</strong></p>
+<p>Für <span class="math inline">\(\lambda_1 \approx 9.53\)</span>: <span class="math display">\[\begin{pmatrix} 6 &amp; 4 \\ 4 &amp; 5 \end{pmatrix}\cgreen{\begin{pmatrix} v_1^{(1)} \\ v_2^{(1)} \end{pmatrix}} = 9.53\cgreen{\begin{pmatrix} v_1^{(1)} \\ v_2^{(1)} \end{pmatrix}}\]</span></p>
+<p>Lösung: <span class="math inline">\(\cgreen{\bv_1 \approx \begin{pmatrix} -0.75 \\ -0.662 \end{pmatrix}}\)</span></p>
+<p>Für <span class="math inline">\(\lambda_2 \approx 1.47\)</span>: <span class="math inline">\(\cgreen{\bv_2 \approx \begin{pmatrix} -0.662 \\ 0.75 \end{pmatrix}}\)</span> (normiert, orthogonal zu <span class="math inline">\(\cgreen{\bv_1}\)</span>)</p>
+</section>
+<section id="bsp-singulärvektoren-vollständige-rechnung-2" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Bsp: Singulärvektoren – vollständige Rechnung (2)</h3>
+<p><strong>Linke Singulärvektoren:</strong></p>
+<p><span class="math display">\[\cblue{\bu_1} = \frac{\bA\cgreen{\bv_1}}{\sigma_1} \approx \begin{pmatrix} 1 &amp; 2 \\ 2 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}\cgreen{\begin{pmatrix} -0.75 \\ -0.662 \end{pmatrix}} / 3.09 = \cblue{\begin{pmatrix} -0.672 \\ -0.7 \\ -0.243 \end{pmatrix}}, \qquad
+\text{analog: } \cblue{\bu_2} = \frac{\bA\cgreen{\bv_2}}{\sigma_2} \approx \cblue{\begin{pmatrix} 0.691 \\ -0.474 \\ -0.546 \end{pmatrix}}\]</span></p>
+<p><strong>Verifikation Orthonormalität:</strong></p>
+<ul>
+<li><span class="math inline">\(\bu_1^\top\bu_2 \approx (-0.672)(0.691) + (-0.7)(-0.474) + (-0.243)(-0.546) = -0.464 + 0.332 + 0.133 \approx 0 \quad \checkmark\)</span></li>
+<li><span class="math inline">\(\|\bu_1\| \approx \sqrt{0.672^2 + 0.7^2 + 0.243^2} =  \sqrt{0.452 + 0.49 + 0.059} \approx 1 \quad \checkmark\)</span></li>
+</ul>
+<div class="small">
+<p><a href="#/bsp-singulaervektoren">↩︎ zurück: „Bsp: Singulärvektoren”</a></p>
+</div>
+</section>
+<section id="svd-beweis-skizze" class="slide level3" data-visibility="uncounted">
+<h3>Beweis des SVD-Theorems (Skizze)</h3>
+<p><strong>Konstruktion der Zerlegung:</strong></p>
+<ol type="1">
+<li><p><em>Rechte Singulärvektoren</em>: Eigenvektoren von <span class="math inline">\(\bA^\top\bA\)</span> <span class="math display">\[\bV = (\cgreen{\bv_1} \mid \cgreen{\bv_2} \mid \cdots \mid \cgreen{\bv_n})\]</span></p></li>
+<li><p><em>Linke Singulärvektoren</em>: <span class="math inline">\(\cblue{\bu_i} = \bA\cgreen{\bv_i}/\sigma_i\)</span> für <span class="math inline">\(i \leq r\)</span> <span class="math display">\[\bU_r = (\cblue{\bu_1} \mid \cblue{\bu_2} \mid \cdots \mid \cblue{\bu_r})\]</span></p></li>
+<li><p><em>Vervollständigung</em>: Erweitere <span class="math inline">\(\bU_r\)</span> zu Orthogonalbasis des <span class="math inline">\(\R^m\)</span></p></li>
+<li><p><em>Verifikation</em>: <span class="math inline">\(\bA\cgreen{\bv_i} = \sigma_i\cblue{\bu_i}\)</span> für <span class="math inline">\(i \leq r\)</span>, <span class="math inline">\(\bA\cgreen{\bv_i} = \mathbf{0}\)</span> für <span class="math inline">\(i &gt; r\)</span></p></li>
+</ol>
+<div class="small">
+<p><a href="#/svd-hauptsatz">↩︎ zurück: „Der SVD-Hauptsatz”</a></p>
+</div>
+</section>
+<section id="singulaerwert-verlaeufe" class="slide level3" data-visibility="uncounted">
+<h3>Typische Singulärwert-Verläufe</h3>
+<p><strong>1. Schneller Abfall</strong>: <span class="math inline">\(\sigma_i \approx c \cdot e^{-\alpha i}\)</span></p>
+<ul>
+<li>Gut geeignet für Low-Rank Approximation</li>
+<li>Wenige dominante Singulärwerte</li>
+</ul>
+<p><strong>2. Linearer Abfall</strong>: <span class="math inline">\(\sigma_i \approx c - \alpha i\)</span></p>
+<ul>
+<li>Moderate Approximation möglich</li>
+<li>Mittlerer Kompressionsfaktor</li>
+</ul>
+<p><strong>3. Langsamer Abfall</strong>: <span class="math inline">\(\sigma_i \approx c \cdot i^{-\alpha}\)</span></p>
+<ul>
+<li>Schwierige Approximation</li>
+<li>Viele wichtige Komponenten</li>
+</ul>
+<div class="small">
+<p><a href="#/wahl-rang-k-approximation">↩︎ zurück: „Wahl der optimalen Rang-k Approximation”</a></p>
+</div>
+</section>
+<section id="empfehlungssysteme-details" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Empfehlungssysteme: Details</h3>
+<p><strong>Interpretation der Faktoren:</strong></p>
+<ul>
+<li><strong>Rechte Singulärvektoren</strong> <span class="math inline">\(\bv_j\)</span>: “gelernte” Film-Genres
+<ul>
+<li><span class="math inline">\(\bv_1\)</span> könnte “Action vs.&nbsp;Drama” kodieren, <span class="math inline">\(\bv_2\)</span> “Komödie vs.&nbsp;Thriller”, etc</li>
+</ul></li>
+<li><strong>Linke Singulärvektoren</strong> <span class="math inline">\(\bu_i\)</span>: Nutzer-Präferenzen in diesen Genre-Dimensionen</li>
+<li><strong>Singulärwerte</strong> <span class="math inline">\(\sigma_i\)</span>: Wichtigkeit dieser Genre-Dimension</li>
+</ul>
+<p><strong>Vorteile:</strong></p>
+<ul>
+<li>Reduziert Speicher: <span class="math inline">\(k + (m+n) \cdot k \ll m \cdot n\)</span> für <span class="math inline">\(k \ll \min(m,n)\)</span></li>
+<li>“Glättet” die Daten (Low-Rank = <em>Regularisierung</em>)</li>
+<li>Kann auch bei sehr spärlichen Daten funktionieren</li>
+</ul>
+<p><strong>Modernere Varianten:</strong></p>
+<ul>
+<li><em>Matrix Completion:</em> Low-Rank-Faktorisierung nur über die <em>beobachteten</em> Einträge; mit Nichtnegativitäts-Nebenbedingung: <em>Non-negative Matrix Factorization</em> (NMF)</li>
+</ul>
+<div class="small">
+<p><a href="#/anwendung-empfehlungssysteme">↩︎ zurück: „Anwendung: Empfehlungssysteme”</a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+    (() => {
+      "use strict";
+
+      const MIN_FONT_SIZE = 24;
+      const FIT_STEP = 0.25;
+      const OVERFLOW_TOLERANCE = 1;
+      const SKIP_SELECTOR = ".smaller, .scrollable, .no-autofit";
+      const pendingSlides = new Set();
+      let fitAllPending = false;
+      let fitFrame = null;
+
+      function overflows(slide) {
+        return slide.scrollHeight > slide.clientHeight + OVERFLOW_TOLERANCE ||
+          slide.scrollWidth > slide.clientWidth + OVERFLOW_TOLERANCE;
+      }
+
+      function fitSlide(slide) {
+        if (!slide || slide.querySelector(":scope > section")) {
+          return;
+        }
+
+        // Restore the author's inline value before measuring again.
+        if (slide.hasAttribute("data-autofit-font-size")) {
+          const originalSize = slide.dataset.autofitOriginalFontSize;
+          if (originalSize) {
+            slide.style.fontSize = originalSize;
+          } else {
+            slide.style.removeProperty("font-size");
+          }
+          slide.removeAttribute("data-autofit-font-size");
+          slide.removeAttribute("data-autofit-original-font-size");
+        }
+        slide.classList.remove("autofit-minimum");
+
+        if (slide.matches(SKIP_SELECTOR)) {
+          return;
+        }
+
+        if (!overflows(slide)) {
+          return;
+        }
+
+        const initialSize = parseFloat(getComputedStyle(slide).fontSize);
+        const originalInlineSize = slide.style.fontSize;
+        let low = MIN_FONT_SIZE;
+        let high = initialSize;
+
+        slide.style.fontSize = `${MIN_FONT_SIZE}px`;
+        if (overflows(slide)) {
+          slide.classList.add("autofit-minimum");
+          slide.dataset.autofitFontSize = MIN_FONT_SIZE;
+          slide.dataset.autofitOriginalFontSize = originalInlineSize;
+          console.warn(
+            `Autofit: slide ${slide.id || "(without id)"} still overflows at ` +
+            `${MIN_FONT_SIZE}px. Split it, use .scrollable, or use .no-autofit.`
+          );
+          return;
+        }
+
+        while (high - low > FIT_STEP) {
+          const candidate = (low + high) / 2;
+          slide.style.fontSize = `${candidate}px`;
+          if (overflows(slide)) {
+            high = candidate;
+          } else {
+            low = candidate;
+          }
+        }
+
+        const fittedSize = Math.floor(low / FIT_STEP) * FIT_STEP;
+        slide.style.fontSize = `${fittedSize}px`;
+        slide.dataset.autofitFontSize = fittedSize;
+        slide.dataset.autofitOriginalFontSize = originalInlineSize;
+      }
+
+      function fitAllSlides() {
+        document.querySelectorAll(".reveal .slides > section, .reveal .slides > section > section")
+          .forEach(fitSlide);
+      }
+
+      function scheduleFit(slide) {
+        if (slide) {
+          pendingSlides.add(slide.closest("section.slide") || slide);
+        } else {
+          fitAllPending = true;
+        }
+
+        if (fitFrame !== null) {
+          return;
+        }
+
+        fitFrame = requestAnimationFrame(() => {
+          fitFrame = null;
+          if (fitAllPending) {
+            fitAllPending = false;
+            pendingSlides.clear();
+            fitAllSlides();
+          } else {
+            const slides = [...pendingSlides];
+            pendingSlides.clear();
+            slides.forEach(fitSlide);
+          }
+        });
+      }
+
+      function initializeAutofit() {
+        fitAllSlides();
+
+        Reveal.on("slidechanged", event => scheduleFit(event.currentSlide));
+
+        document.querySelectorAll(".reveal .slides img")
+          .forEach(image => {
+            if (!image.complete) {
+              image.addEventListener("load", () => scheduleFit(image.closest("section")), {
+                once: true
+              });
+            }
+          });
+
+        const slides = document.querySelector(".reveal .slides");
+        if (slides) {
+          new MutationObserver(mutations => {
+            const target = mutations[0]?.target;
+            const element = target?.nodeType === Node.ELEMENT_NODE ?
+              target : target?.parentElement;
+            const slide = element?.closest("section.slide") || Reveal.getCurrentSlide();
+            scheduleFit(slide);
+          }).observe(slides, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        }
+
+        document.fonts?.ready.then(() => scheduleFit());
+        window.MathJax?.startup?.promise?.then(() => scheduleFit());
+        window.addEventListener("load", () => scheduleFit(), { once: true });
+      }
+
+      if (window.Reveal?.isReady()) {
+        initializeAutofit();
+      } else {
+        Reveal.on("ready", initializeAutofit);
+      }
+    })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Kopiert");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Kopiert");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

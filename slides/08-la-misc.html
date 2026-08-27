@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a37c72dd2dbac68997fcdc15a3622e78.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="author" content="Vorlesung: Fabian Scheipl (fabian.scheipl@lmu.de) Material: Thomas Nagler LMU München">
+  <title>Numerische Lineare Algebra: Iteration &amp; Zufall</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d0136d0452bb647bae96a262c75ef92a.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title"><em>Numerische Lineare Algebra: Iteration &amp; Zufall</em></h1>
+  <p class="subtitle"><strong>Fortgeschrittene mathematische Methoden in der Statistik</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vorlesung: Fabian Scheipl (<code>fabian.scheipl@lmu.de</code>)<br>Material: Thomas Nagler<br><strong>LMU München</strong> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="verwendete-vorkenntnisse" class="slide level3 smaller">
+<h3>Verwendete Vorkenntnisse</h3>
+<div class="hidden">
+<p><span class="math display">\[
+\definecolor{fmmgreen}{RGB}{0,158,115}
+\definecolor{fmmblue}{RGB}{0,114,178}
+\definecolor{fmmred}{RGB}{213,94,0}
+\definecolor{fmmorange}{RGB}{230,159,0}
+\definecolor{fmmpurple}{RGB}{158,87,213}
+\newcommand{\ind}{\unicode{x1D7D9}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\K}{{\mathbb{K}}}
+\newcommand{\L}{\mathbb{L}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\S}{\mathbb{S}}
+\newcommand{\D}{{\mathbb{D}}}
+\newcommand{\bnull}{{\boldsymbol{0}}}
+\newcommand{\bzero}{{\boldsymbol{0}}}
+\newcommand{\ba}{{\boldsymbol{a}}}
+\newcommand{\bb}{{\boldsymbol{b}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bd}{{\boldsymbol{d}}}
+\newcommand{\be}{{\boldsymbol{e}}}
+\newcommand{\bg}{{\boldsymbol{g}}}
+\newcommand{\bh}{{\boldsymbol{h}}}
+\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bj}{{\boldsymbol{j}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bl}{{\boldsymbol{l}}}
+\newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\bo}{{\boldsymbol{o}}}
+\newcommand{\bp}{{\boldsymbol{p}}}
+\newcommand{\bq}{{\boldsymbol{q}}}
+\newcommand{\br}{{\boldsymbol{r}}}
+\newcommand{\bs}{{\boldsymbol{s}}}
+\newcommand{\bt}{{\boldsymbol{t}}}
+\newcommand{\bu}{{\boldsymbol{u}}}
+\newcommand{\bv}{{\boldsymbol{v}}}
+\newcommand{\bw}{{\boldsymbol{w}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\bB}{{\boldsymbol{B}}}
+\newcommand{\bC}{{\boldsymbol{C}}}
+\newcommand{\bD}{{\boldsymbol{D}}}
+\newcommand{\bE}{{\boldsymbol{E}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\bG}{{\boldsymbol{G}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bJ}{{\boldsymbol{J}}}
+\newcommand{\bK}{{\boldsymbol{K}}}
+\newcommand{\bL}{{\boldsymbol{L}}}
+\newcommand{\bM}{{\boldsymbol{M}}}
+\newcommand{\bN}{{\boldsymbol{N}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bQ}{{\boldsymbol{Q}}}
+\newcommand{\bR}{{\boldsymbol{R}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bT}{{\boldsymbol{T}}}
+\newcommand{\bU}{{\boldsymbol{U}}}
+\newcommand{\bV}{{\boldsymbol{V}}}
+\newcommand{\bW}{{\boldsymbol{W}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\bY}{{\boldsymbol{Y}}}
+\newcommand{\bZ}{{\boldsymbol{Z}}}
+\newcommand{\tagqed}{\tag*{$\blacksquare$}}
+\newcommand{\Acal}{{\mathcal{A}}}
+\newcommand{\Bcal}{{\mathcal{B}}}
+\newcommand{\Ccal}{{\mathcal{C}}}
+\newcommand{\Dcal}{{\mathcal{D}}}
+\newcommand{\Ecal}{{\mathcal{E}}}
+\newcommand{\Fcal}{{\mathcal{F}}}
+\newcommand{\Gcal}{{\mathcal{G}}}
+\newcommand{\Hcal}{{\mathcal{H}}}
+\newcommand{\Ical}{{\mathcal{I}}}
+\newcommand{\Jcal}{{\mathcal{J}}}
+\newcommand{\Kcal}{{\mathcal{K}}}
+\newcommand{\Lcal}{{\mathcal{L}}}
+\newcommand{\Mcal}{{\mathcal{M}}}
+\newcommand{\Ncal}{{\mathcal{N}}}
+\newcommand{\Ocal}{{\mathcal{O}}}
+\newcommand{\Pcal}{{\mathcal{P}}}
+\newcommand{\Qcal}{{\mathcal{Q}}}
+\newcommand{\Rcal}{{\mathcal{R}}}
+\newcommand{\Scal}{{\mathcal{S}}}
+\newcommand{\Tcal}{{\mathcal{T}}}
+\newcommand{\Ucal}{{\mathcal{U}}}
+\newcommand{\Vcal}{{\mathcal{V}}}
+\newcommand{\Wcal}{{\mathcal{W}}}
+\newcommand{\Xcal}{{\mathcal{X}}}
+\newcommand{\Ycal}{{\mathcal{Y}}}
+\newcommand{\Zcal}{{\mathcal{Z}}}
+\newcommand{\eps}{{\varepsilon}}
+\newcommand{\beps}{{\boldsymbol{\epsilon}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bbeta}{{\boldsymbol{\beta}}}
+\newcommand{\bchi}{{\boldsymbol{\chi}}}
+\newcommand{\bdelta}{{\boldsymbol{\delta}}}
+\newcommand{\bDelta}{{\boldsymbol{\Delta}}}
+\newcommand{\bepsilon}{{\boldsymbol{\epsilon}}}
+\newcommand{\bphi}{{\boldsymbol{\phi}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+\newcommand{\betah}{{\boldsymbol{\eta}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
+\newcommand{\biota}{{\boldsymbol{\iota}}}
+\newcommand{\bkappa}{{\boldsymbol{\kappa}}}
+\newcommand{\blambda}{{\boldsymbol{\lambda}}}
+\newcommand{\bLambda}{{\boldsymbol{\Lambda}}}
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+\newcommand{\bnu}{{\boldsymbol{\nu}}}
+\newcommand{\bomikron}{{\boldsymbol{\omicron}}}
+\newcommand{\bpi}{{\boldsymbol{\pi}}}
+\newcommand{\bSigma}{{\boldsymbol{\Sigma}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+\newcommand{\bzeta}{{\boldsymbol{\zeta}}}
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+\newcommand{\equivto}{{\Leftrightarrow}}
+\newcommand{\quequiv}{{\quad \equivto \quad}}
+\newcommand{\impl}{{\implies}}
+\newcommand{\quimpl}{{\quad \implies \quad}}
+\newcommand{\implby}{{\impliedby}}
+\newcommand{\notimplies}{\not\implies}
+\newcommand{\tr}{{\operatorname{tr}}}
+\newcommand{\spann}{{\operatorname{span}}}
+\newcommand{\col}{{\operatorname{col}}}
+\newcommand{\rang}{{\operatorname{rang}}}
+\newcommand{\diag}{{\operatorname{diag}}}
+\newcommand{\vec}{\operatorname{vec}}
+\newcommand{\pinv}{{^{+}}}
+\newcommand{\kron}{\mathbin{\otimes_{\mathrm{K}}}}
+\newcommand{\sign}{{\operatorname{sign}}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\inner}[1]{{\langle #1 \rangle}}
+\newcommand{\proj}{{\operatorname{proj}}}
+\newcommand{\bar}{\overline}
+\newcommand{\vol}{{\operatorname{vol}}}
+\newcommand{\dx}{{\, \mathrm{d}x}}
+\newcommand{\ol}{{\overline}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\conv}{\mathop{\mathrm{conv}}}
+\newcommand{\epi}{\mathop{\mathrm{epi}}}
+\newcommand{\interior}{\mathop{\mathrm{int}}}
+\newcommand{\Pr}{\mathbb{P}}
+\newcommand{\var}{{\mathbb{V}\mathrm{ar}}}
+\newcommand{\bias}{{\operatorname{bias}}}
+\newcommand{\abias}{{\mathrm{ABias}}}
+\newcommand{\AMSE}{{\mathrm{AMSE}}}
+\newcommand{\AMISE}{{\mathrm{AMISE}}}
+\newcommand{\cov}{{\mathbb{C}\mathrm{ov}}}
+\newcommand{\corr}{{\mathrm{Corr}}}
+\newcommand{\ov}{{\overline}}
+\newcommand{\wh}[1]{{\widehat{#1}}}
+\newcommand{\wt}[1]{{\widetilde{#1}}}
+\newcommand{\tod}{{\stackrel{d}{\to}}}
+\newcommand{\sumin}{{\sum_{i = 1}^n}}
+\newcommand{\sumjn}{{\sum_{j = 1}^n}}
+\newcommand{\KL}{{\operatorname{KL}}}
+\newcommand{\softmax}{{\operatorname{SoftMax}}}
+\newcommand{\layernorm}{{\operatorname{LayerNorm}}}
+\newcommand{\avg}{{\operatorname{avg}}}
+\newcommand{\relu}{{\operatorname{ReLu}}}
+\newcommand{\VC}{{\operatorname{VC}}}
+\newcommand{\indep}{{\perp \!\!\! \perp}}
+\newcommand{\unif}{{\operatorname{Unif}}}
+\newcommand{\bern}{{\operatorname{Bernoulli}}}
+\newcommand{\binomial}{{\operatorname{Binomial}}}
+\newcommand{\MSE}{{\operatorname{MSE}}}
+\newcommand{\iid}{\textit{iid}\;}
+\newcommand{\IF}{{\operatorname{IF} }}
+\newcommand{\BIC}{{\operatorname{BIC}}}
+\newcommand{\AIC}{{\operatorname{AIC}}}
+\newcommand{\IC}{{\operatorname{IC}}}
+\newcommand{\expl}[1]{{\tag*{[#1]}}}
+\newcommand{\cb}[1]{\textbf{#1}}
+\newcommand{\cbgreen}[1]{\textcolor{fmmgreen}{\textbf{#1}}}
+\newcommand{\cbred}[1]{\textcolor{fmmred}{\textbf{#1}}}
+\newcommand{\cbpurp}[1]{\textcolor{fmmpurple}{\textbf{#1}}}
+\newcommand{\cborange}[1]{\textcolor{fmmorange}{\textbf{#1}}}
+\newcommand{\corange}[1]{{\textcolor{fmmorange}{#1}}}
+\newcommand{\cblue}[1]{{\textcolor{fmmblue}{#1}}}
+\newcommand{\cgreen}[1]{{\textcolor{fmmgreen}{#1}}}
+\newcommand{\cred}[1]{{\textcolor{fmmred}{#1}}}
+\newcommand{\cpurp}[1]{{\textcolor{fmmpurple}{#1}}}
+\newcommand{\symbf}[1]{\boldsymbol{#1}}
+\]</span></p>
+</div>
+<ul>
+<li><mark><em>Komplexitätsanalyse</em></mark> / <span class="math inline">\(O()\)</span>-Notation</li>
+<li><mark><em>Stabilität</em></mark> und <mark><em>Konditionierung</em></mark></li>
+<li><mark><em>Orthogonalmatrizen</em></mark></li>
+<li><mark><em>Spektralnorm</em></mark> <span class="math inline">\(\|\cdot\|_2\)</span></li>
+<li><mark><em>LGS</em></mark>: Problem, Direkte Algorithmen</li>
+<li><strong>Lineare Algebra:</strong>
+<ul>
+<li>Eigenwerte und Eigenvektoren</li>
+<li>Ähnlichkeitstransformationen: <span class="math inline">\(\bB =  \bQ \bA \bQ^{-1}\)</span></li>
+</ul></li>
+<li><strong>Wahrscheinlichkeitstheorie</strong>: Zufallsvektoren</li>
+<li><strong>Analysis I</strong>:
+<ul>
+<li>Konvergenz von Folgen</li>
+<li>Geometrische Reihe <span class="math inline">\(\sum_k p^k\)</span> für <span class="math inline">\(|p| &lt; 1\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="opener-quiz-was-wissen-sie-noch" class="slide level3 smaller">
+<h3>Opener-Quiz: Was wissen Sie noch?</h3>
+<!-- TODO Particify: Opener-Fragen als quiz/08-la-misc/opener-*.Rmd (R/exams, schoice)
+     autorieren und via exams2particify() exportieren;
+     QR-Code beim Reinkommen projizieren. -->
+<p><strong>Frage 1:</strong> Sei <span class="math inline">\(\bA \in \R^{n \times n}\)</span> und <span class="math inline">\(\bv \neq \bnull\)</span> ein Eigenvektor mit <span class="math inline">\(\bA\bv = \lambda\bv\)</span>. Welche Aussage gilt dann <strong>immer</strong>?</p>
+<ol type="1">
+<li><span class="math inline">\(\bA^k \bv = \lambda^k \bv\)</span> für alle <span class="math inline">\(k \in \N\)</span></li>
+<li>Es muss <span class="math inline">\(\|\bv\| = 1\)</span> gelten</li>
+<li><span class="math inline">\(\lambda &gt; 0\)</span></li>
+<li><span class="math inline">\(\bv\)</span> ist der einzige Eigenvektor zu <span class="math inline">\(\lambda\)</span></li>
+</ol>
+<p><strong>Frage 2:</strong> Sei <span class="math inline">\(|p| &lt; 1\)</span>. Was ist <span class="math inline">\(\sum_{k=0}^\infty p^k\)</span>?</p>
+<ol type="1">
+<li><span class="math inline">\(\frac{1}{1-p}\)</span></li>
+<li><span class="math inline">\(\frac{p}{1-p}\)</span></li>
+<li><span class="math inline">\(\frac{1}{p-1}\)</span></li>
+<li>Die Reihe divergiert.</li>
+</ol>
+<!-- SOLUTIONS: F1: 1 (A^k v = lambda^k v -- heute zentral fuer die Potenzmethode;
+     2: Eigenvektoren sind beliebig skalierbar, 3: lambda kann jedes Vorzeichen haben,
+     4: jedes Vielfache von v ist auch Eigenvektor).
+     F2: 1 (geometrische Reihe -- heute zentral fuer Konvergenzraten rho^k < 1). -->
+</section>
+<section id="überblick" class="slide level3">
+<h3>Überblick</h3>
+<ul>
+<li><p>Numerische lineare Algebra ist ein sehr großes Feld.</p></li>
+<li><p>Wir haben bisher die wichtigsten Lösungsmethoden gesehen.</p></li>
+<li><p>Die Kernidee dabei war <mark><em>Matrixzerlegung</em></mark> (<mark><em>LU</em></mark>, <mark><em>QR</em></mark>, <mark><em>Cholesky</em></mark>, …).</p></li>
+<li><p>Heute sehen wir in kürzerer Form zwei weitere wichtige Kernideen:</p>
+<ul>
+<li><mark><em>Iterative Methoden</em></mark>
+<ul>
+<li>verkürzen <mark><em>Laufzeit</em></mark> auf Kosten von Genauigkeit.</li>
+</ul></li>
+<li><mark><em>Probabilistische Methoden</em></mark>
+<ul>
+<li>ersetzen große Probleme durch kleinere mit <em>höchstwahrscheinlich</em> sehr ähnlicher Lösung.</li>
+</ul></li>
+</ul></li>
+<li><p>An beiden wird in der numerischen linearen Algebra aktiv geforscht.</p></li>
+</ul>
+</section>
+<section>
+<section id="eigenwertprobleme" class="title-slide slide level2 center">
+<h2>Eigenwertprobleme</h2>
+
+</section>
+<section id="lösungsverfahren-für-eigenwertprobleme" class="slide level3 smaller">
+<h3>Lösungsverfahren für Eigenwertprobleme</h3>
+<ul>
+<li><em>Direkte Methoden existieren:</em>
+<ul>
+<li>Charakteristisches Polynom: <span class="math inline">\(\det(\bA - \lambda \bI) =   0 \to\)</span> Nullstellensuche</li>
+<li>Problem:<br>
+Polynom vom Grad <span class="math inline">\(n\)</span> für <span class="math inline">\(n \times n\)</span> Matrix <span class="math inline">\(\to\)</span> keine direkte Lösung für <span class="math inline">\(n \geq 5\)</span></li>
+<li>Numerisch instabil und teuer: <span class="math inline">\(O(n^4)\)</span> oder schlechter</li>
+</ul></li>
+<li><em>Wann sind direkte Methoden unzureichend?</em>
+<ul>
+<li>Große Matrizen (<span class="math inline">\(n &gt; 1000\)</span>): <span class="math inline">\(O(n^3)\)</span> oder schlechter</li>
+<li>Dünnbesetzte Matrizen: Direkte Methoden zerstören <em>sparsity</em>-Struktur</li>
+<li>Oft brauchen wir nur wenige Eigenwerte (z.B. die größten <span class="math inline">\(k \ll n\)</span>)</li>
+</ul></li>
+<li><em>Warum iterativ?</em>
+<ul>
+<li>Schneller wenn nur wenige Eigenwerte benötigt</li>
+<li>Nutzen <em>sparsity</em>-Struktur aus (nur Matrix-Vektor-Multiplikationen!)</li>
+<li>Trade-off “Genauigkeit vs.&nbsp;Aufwand” ist steuerbar</li>
+</ul></li>
+</ul>
+</section>
+<section id="potenzmethode" class="slide level3">
+<h3>Potenzmethode</h3>
+<p>Die <mark><strong>Potenzmethode</strong></mark> (nach Mises) liefert über Iteration den größten (separierten!) Eigenwert <span class="math inline">\(\lambda_1\)</span> und Eigenvektor <span class="math inline">\(\bv_1\)</span> einer Matrix <span class="math inline">\(\bA\)</span>:</p>
+<p><strong>Idee:</strong><br>
+Mit <span class="math inline">\(\bx^{(k)} = \frac{\bA\bx^{(k-1)}}{\left\|\bA\bx^{(k-1)}\right\|}\)</span> gilt <span class="math display">\[\lambda^{(k)} = \left\|\bA\bx^{(k)}\right\| \xrightarrow{k \to \infty} |\lambda_1| \text{ und } \bx^{(k)} \xrightarrow{k \to \infty} \pm \bv_1\]</span></p>
+<div class="small">
+<p>(Die Norm liefert nur den <em>Betrag</em> <span class="math inline">\(|\lambda_1|\)</span> – das Vorzeichen von <span class="math inline">\(\lambda_1\)</span> liefert sie nicht; für negatives <span class="math inline">\(\lambda_1\)</span> oszilliert <span class="math inline">\(\bx^{(k)}\)</span> zwischen <span class="math inline">\(\pm\bv_1\)</span>.)</p>
+</div>
+<p><strong>Intuition:</strong><br>
+</p>
+<ul>
+<li>Für diagonalisierbare <span class="math inline">\(\bA\)</span> ist jeder Startvektor Linearkombination der Eigenvektoren <span class="math inline">\(\bv_i\)</span> von <span class="math inline">\(\bA\)</span>: <span class="math inline">\(\bx^{(0)} = \sum^n_i c_i \bv_i\)</span></li>
+<li>Jede Iteration verstärkt die Komponente von <span class="math inline">\(\bx^{(k)}\)</span> in Richtung <span class="math inline">\(\bv_1\)</span> mehr als die anderen Komponenten</li>
+</ul>
+<p><strong>Algebraisch:</strong><br>
+</p>
+<p>Wegen <span class="math inline">\(\bA \bv = \lambda \bv \implies \bA^k \bv = \lambda^k \bv\)</span> gilt auch:</p>
+<ul>
+<li><span class="math inline">\(\bA^k \bx^{(0)} = \lambda_1^k \left(\cgreen{c_1 \bv_1} + \cred{\sum_{i=2}^n c_i \left(\frac{\lambda_i}{\lambda_1}\right)^k \bv_i} \right) \approx \lambda_1^k \cgreen{c_1 \bv_1} \text{ für } k \to \infty\)</span> weil<br>
+<span class="math inline">\(\cred{\left(\frac{\lambda_i}{\lambda_1}\right)^k  \xrightarrow{k \to \infty} 0}\)</span> für <span class="math inline">\(i \ge 2\)</span></li>
+<li><span class="math inline">\(\frac{\bA^k \bx^{(0)}}{\left\|\bA^k \bx^{(0)}\right\|} \approx \frac{\lambda_1^k \cgreen{c_1 \bv_1}}{|\lambda_1^k c_1| \|\bv_1\|} = \pm \bv_1\)</span></li>
+</ul>
+</section>
+<section id="potenzmethode-beispiel" class="slide level3">
+<h3>Potenzmethode: Beispiel</h3>
+<p><span class="math inline">\(\bA = \begin{pmatrix} 5 &amp; -2 \\ -2 &amp; 8 \end{pmatrix} \implies \lambda_1 = 9, \lambda_2 = 4; \bv_1 = \tfrac{1}{\sqrt{5}}\begin{pmatrix} -1 \\ 2 \end{pmatrix}, \bv_2 = \tfrac{1}{\sqrt{5}}\begin{pmatrix} 2 \\ 1 \end{pmatrix}\)</span> mit <span class="math inline">\(\bx^{(0)} = \begin{pmatrix} 2 \\ 1.3\end{pmatrix}\)</span>:</p>
+
+<img data-src="resources/power_method_viz.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"></section>
+<section id="quiz" class="slide level3">
+<h3>Quiz</h3>
+<p>Für welche <span class="math inline">\(\bx^{(0)}\)</span> versagt die Potenzmethode?</p>
+<ol type="1">
+<li><span class="math inline">\(\bx^{(0)} = c \bv_1\)</span></li>
+<li><span class="math inline">\(\bx^{(0)} = c \bv_2\)</span></li>
+<li><span class="math inline">\(\bx^{(0)} = c (\bv_1 + \bv_2)\)</span></li>
+</ol>
+<!--2: wenn c_1 = 0. In exakter Arithmetik konvergiert die Methode dann gegen den nächstdominanten Eigenvektor v_2; in Gleitkomma-Arithmetik führen Rundungsfehler i.d.R. doch wieder eine v_1-Komponente ein, sodass die Methode praktisch trotzdem gegen v_1 konvergiert.  -->
+</section>
+<section id="iterative-berechnungsverfahren" class="slide level3">
+<h3>Iterative Berechnungsverfahren</h3>
+<ul>
+<li>Wir wollen (alle) Eigenwerte/-vektoren von <span class="math inline">\(\bA \in \R^{n \times n}\)</span> finden.</li>
+<li>Idee: Überführe <span class="math inline">\(\bA\)</span> in spezielle Matrix <span class="math inline">\(\bB\)</span>, so dass das Problem leichter wird.</li>
+</ul>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei <span class="math inline">\(\bB\)</span> eine zu <span class="math inline">\(\bA\)</span> ähnliche Matrix (d.h. <span class="math inline">\(\bB = \bQ\bA\bQ^{-1}\)</span>). Dann gilt:</p>
+<ul>
+<li><span class="math inline">\(\bA\)</span> und <span class="math inline">\(\bB\)</span> haben die gleichen Eigenwerte (und damit auch gleiche Determinante und Spur).</li>
+<li>Ist <span class="math inline">\(\by\)</span> Eigenvektor von <span class="math inline">\(\bB\)</span>, so ist <span class="math inline">\(\bx = \bQ^{-1} \by\)</span> Eigenvektor von <span class="math inline">\(\bA\)</span> zum gleichen Eigenwert.</li>
+</ul>
+</div>
+<p><strong>Beweis:</strong></p>
+<p><span class="math display">\[\bB \by = \lambda \by \; \implies \; \bQ\bA\bQ^{-1} \by = \lambda \by \; \implies \; \bA\bQ^{-1}\by = \lambda \bQ^{-1} \by \; \implies \; \bA\bx = \lambda \bx.\]</span></p>
+</section>
+<section id="beispiel-aehnlichkeit" class="slide level3 smaller">
+<h3>Beispiel</h3>
+<p><span class="math inline">\(\bA = \begin{pmatrix} 5 &amp; -2 \\ -2 &amp; 8 \end{pmatrix}, \quad
+\bQ = \frac{1}{\sqrt{5}} \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix} \text{ mit } \bQ^\top \bQ = \bI\)</span></p>
+<ul>
+<li><span class="math inline">\(\bQ\)</span> ist <strong>orthogonal</strong>, also <span class="math inline">\(\bQ^{-1} = \bQ^\top\)</span>: das Beispiel spezialisiert die Ähnlichkeitstransformation <span class="math inline">\(\bQ\bA\bQ^{-1}\)</span> auf <em>orthogonale</em> Ähnlichkeit <span class="math inline">\(\bQ\bA\bQ^\top\)</span>.</li>
+</ul>
+<p><span class="math display">\[\bB = \bQ (\cgreen{\bA \bQ^\top}) = \frac{1}{5} \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix}
+\cgreen{\begin{pmatrix} 8 &amp; 9 \\ 4 &amp; -18 \end{pmatrix}}
+= \begin{pmatrix} 4 &amp; 0 \\ 0 &amp; 9 \end{pmatrix}\]</span></p>
+<p><em>(Rechnung <a href="#/aehnlichkeit-beispiel-rechnung"><span class="math inline">\(\to\)</span> Anhang</a>)</em></p>
+<ul>
+<li><span class="math inline">\(\bB\)</span> diagonal <span class="math inline">\(\implies\)</span> Eigenwerte direkt ablesbar: <span class="math inline">\(4\)</span> und <span class="math inline">\(9\)</span></li>
+<li><strong>Der Punkt:</strong><br>
+Ähnliche Matrizen haben dieselben Eigenwerte — <span class="math inline">\(\bA\)</span> hat also ebenfalls die Eigenwerte <span class="math inline">\(4\)</span> und <span class="math inline">\(9\)</span>, obwohl man sie an <span class="math inline">\(\bA\)</span> nicht ablesen kann.</li>
+</ul>
+<p><strong>Verifikation:</strong> <span class="math display">\[\det(\bA - \lambda \bI) = (5-\lambda)(8-\lambda) - 4 = \lambda^2 - 13\lambda + 36 = (\lambda-4)(\lambda-9) = 0 \; \checkmark\]</span></p>
+</section>
+<section id="verfahren" class="slide level3">
+<h3>Verfahren</h3>
+<p>Zur (iterativen) Berechnung einer zu <span class="math inline">\(\bA\)</span> ähnlichen Matrix <span class="math inline">\(\bB^{(k)}\)</span> deren Eigenwerte einfach zu bestimmen sind gibt es verschiedenste Ideen/Methoden:</p>
+<ul>
+<li><mark><em>QR-Iteration</em></mark> führt zu (approximativer) Dreiecksmatrix <span class="math inline">\(\bB\)</span> (<em>Schur-Zerlegung</em>).
+<ul>
+<li>ähnlich für <mark><em>LU</em></mark>- und <mark><em>Cholesky</em></mark>-Iteration</li>
+</ul></li>
+<li><em>Lanczos-Iteration</em> führt zu tridiagonalem <span class="math inline">\(\bB\)</span> (<span class="math inline">\(b_{ij} = 0\)</span> für <span class="math inline">\(|i -j | &gt; 1\)</span>) und kann auf die “wichtigsten” Eigenwerte eingeschränkt werden. Effizienter für große, dünn besetzte Matrizen.</li>
+<li>In der Praxis brauchen wir zusätzliche numerische Tricks, um diese Methoden <mark><em>stabil</em></mark> und akzeptabel schnell zu machen: <em>Shifted QR</em>, <em>Implicitly Restarted Lanczos</em></li>
+</ul>
+</section>
+<section id="qr-iteration-def" class="slide level3 smaller">
+<h3>QR-Iteration</h3>
+<div class="block">
+<p><span class="block-title">Def.: <strong>QR-Iteration</strong></span></p>
+<p>Die <mark><strong>QR-Iteration</strong></mark> nutzt die <mark><em>QR-Zerlegung</em></mark> zur Iteration:</p>
+<ol type="1">
+<li>Starte mit <span class="math inline">\(\bA^{(0)} = \bA\)</span></li>
+<li>Für <span class="math inline">\(k = 1, 2, \ldots\)</span>:
+<ul>
+<li>Berechne QR-Zerlegung: <span class="math inline">\(\bA^{(k-1)} = \bQ^{(k)} \bR^{(k)}\)</span></li>
+<li>Setze <span class="math inline">\(\bA^{(k)} = (\bQ^{(k)})^\top \bA^{(k-1)} \bQ^{(k)} = \bR^{(k)} \bQ^{(k)}\)</span></li>
+</ul></li>
+</ol>
+</div>
+<ul>
+<li><span class="math inline">\(\bA^{(k)}\)</span> sind ähnlich zu <span class="math inline">\(\bA\)</span>: <span class="math display">\[\bA^{(k)} = \bR^{(k)} \bQ^{(k)} = (\bQ^{(k)})^{-1} \bA^{(k-1)} \bQ^{(k)} = (\bQ^{(1)} \cdots \bQ^{(k)})^{-1} \bA (\bQ^{(1)} \cdots \bQ^{(k)})\]</span></li>
+<li>Für <span class="math inline">\(k \to \infty\)</span> konvergiert <span class="math inline">\(\bA^{(k)}\)</span> gegen eine obere Dreiecksmatrix (!) <span class="math inline">\(\to\)</span> Eigenwerte auf der Diagonalen<br>
+<em>(für symmetrisches <span class="math inline">\(\bA\)</span> mit separierten <span class="math inline">\(|\lambda_i|\)</span>; allgemein: Schur-Form)</em></li>
+<li>Berechnung der Eigenvektoren <span class="math inline">\(\bV\)</span> über Produkt <span class="math inline">\(\bQ_k := \prod^k_{j=1} \bQ^{(j)}\)</span> (für symmetrische <span class="math inline">\(\bA\)</span>).</li>
+</ul>
+<p><em>Beweis, dass</em> <span class="math inline">\(\bA^k = \bQ_k \bR_k\)</span>: siehe <a href="#/qr-iteration-beweis">Anhang</a></p>
+</section>
+<section id="qr-iteration-interpretation" class="slide level3 smaller">
+<h3>QR-Iteration: Interpretation</h3>
+<ul>
+<li><p>Die QR-Iteration berechnet iterativ die <mark><em>QR-Zerlegung</em></mark> von <span class="math inline">\(\bA^k\)</span>:<br>
+<span class="math display">\[\bA^k = \bQ_k \bR_k \text{ mit } \bQ_k := \bQ^{(1)} \cdots \bQ^{(k)}\]</span> (Beweis <a href="#/qr-iteration-beweis"><span class="math inline">\(\to\)</span> Anhang</a>)</p></li>
+<li><p>Spalten von <span class="math inline">\(\bQ_k\)</span> sind orthonormalisierte Versionen von <span class="math inline">\(\bA^k \be_1, \bA^k \be_2, \ldots, \bA^k \be_n\)</span><br>
+<span class="math inline">\(\to\)</span> entspricht <em>simultaner</em> <mark><em>Potenzmethode</em></mark> auf <strong>allen</strong> Einheitsvektoren!<br>
+<span class="math inline">\(\implies \bQ_k \xrightarrow{k \to \infty} \bV\)</span></p></li>
+<li><p><span class="math inline">\(\bA^{(k)} = \bQ_k^\top \bA \bQ_k\)</span> konvergiert wegen <span class="math inline">\(\bQ_k \xrightarrow{k \to \infty} \bV\)</span> gegen eine obere Dreiecksmatrix mit Eigenwerten auf der Diagonale (<em>Schur-Zerlegung</em>);<br>
+für <em>symmetrische</em> <span class="math inline">\(\bA = \bV\bLambda\bV^\top\)</span> (mit <em>orthogonalem</em> <span class="math inline">\(\bV\)</span>) sogar gegen die Diagonalmatrix <span class="math inline">\(\bLambda\)</span>: <span class="math display">\[\bQ_k^\top \bA \bQ_k \xrightarrow{k \to \infty} \bV^\top \bA \bV = \bV^\top \bV\bLambda \bV^\top \bV = \bLambda\]</span></p></li>
+</ul>
+</section>
+<section id="qr-iteration-beispiel" class="slide level3">
+<h3>QR-Iteration: Beispiel</h3>
+<p><span class="math inline">\(\bA = \begin{pmatrix} 5 &amp; -2 \\ -2 &amp; 8 \end{pmatrix} \implies \lambda_1 = 9, \lambda_2 = 4; \bv_1 = \tfrac{1}{\sqrt{5}}\begin{pmatrix} -1 \\ 2 \end{pmatrix}, \bv_2 = \tfrac{1}{\sqrt{5}}\begin{pmatrix} 2 \\ 1 \end{pmatrix}\)</span></p>
+
+<img data-src="resources/qr_iteration_viz.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"></section>
+<section id="bemerkungen" class="slide level3">
+<h3>Bemerkungen</h3>
+<p><strong><mark>Konditionierung</mark> von Eigenwertproblemen:</strong><br>
+</p>
+<ul>
+<li>Eigenwertprobleme sind <em>gut</em> <mark><em>konditioniert</em></mark>, wenn die Matrix nahezu <em>symmetrisch</em> ist.</li>
+<li>Eigenvektorprobleme sind <em>schlecht</em> <mark><em>konditioniert</em></mark>, wenn <em>Eigenwerte nahe beieinander</em> liegen.</li>
+</ul>
+<p><strong>Laufzeit:</strong><br>
+</p>
+<ul>
+<li>Jede QR-Iteration ist <span class="math inline">\(O(n^3)\)</span></li>
+<li>Insgesamt werden oft nur wenige Iterationen benötigt (abhängig von Eigenwertverteilung).</li>
+<li>Iterative <mark><em>SVD</em></mark>-Verfahren (z.B. <em>Lanczos Bi-Diagonalization</em>; <code>{irlba}</code>) sind noch schneller für große, dünn besetzte Matrizen</li>
+</ul>
+</section>
+<section id="anwendung-google-pagerank" class="slide level3 smaller">
+<h3>Anwendung: Google PageRank</h3>
+<p><strong>Problem:</strong><br>
+Rangordnung von <span class="math inline">\(n \approx 10^{10}\)</span> Webseiten im Internet bilden.</p>
+<p><strong>Modell:</strong><br>
+Jede Seite <span class="math inline">\(i\)</span> hat einen “Wichtigkeits-Score” <span class="math inline">\(x_i\)</span>, der die Wichtigkeit der Seiten verlinkt auf <span class="math inline">\(i\)</span> gewichtet: <span class="math display">\[x_i = \sum_{j: j \to i} \frac{x_j}{d_j}
+\quad \iff \quad \bx = \bA\bx \;\text{ mit } \bA=\left[\tfrac{I(j \to i)}{d_j}\right]_{i,j}
+\implies \text{Eigenwertproblem mit } \lambda = 1!\]</span> (“<span class="math inline">\(j \to i\)</span>” heißt “Seite <span class="math inline">\(j\)</span> verlinkt auf <span class="math inline">\(i\)</span>”, <span class="math inline">\(d_j\)</span> sei Anzahl ausgehender Links von <span class="math inline">\(j\)</span>)</p>
+<div class="small">
+<p>(Setzt voraus, dass jede Seite mindestens einen ausgehenden Link hat — sonst ist <span class="math inline">\(d_j = 0\)</span> und die Spalte <span class="math inline">\(j\)</span> gar nicht definiert; solche Spalten füllt man gleichverteilt auf.)</p>
+</div>
+<p><strong>Frage:</strong> <em>Warum kann Google keine <span class="math inline">\(10^{10} \times 10^{10}\)</span>-Matrix invertieren — und warum funktioniert die Eigenwert-Berechnung trotzdem?</em></p>
+<div class="fragment">
+<ul>
+<li>Direkte Methoden unmöglich: <span class="math inline">\(\bA\)</span> dicht gespeichert wären <span class="math inline">\(10^{20}\)</span> Einträge (<span class="math inline">\(\approx\)</span> 800 Exabyte), Inversion/Zerlegung <span class="math inline">\(O(n^3) = 10^{30}\)</span> Operationen.</li>
+<li>Aber: <span class="math inline">\(\bA\)</span> ist <em>extrem dünn besetzt</em> (jede Seite hat nur <span class="math inline">\(\sim 10\)</span> Links) <span class="math inline">\(\implies\)</span> Speicherbedarf <span class="math inline">\(O(n)\)</span> statt <span class="math inline">\(O(n^2)\)</span></li>
+<li><mark><strong>Potenzmethode</strong></mark>: <span class="math inline">\(\bx^{(k+1)} = \bA \bx^{(k)} / \left\|\bA \bx^{(k)}\right\|\)</span> braucht nur Matrix-Vektor-Produkte:<br>
+eine Iteration ist <span class="math inline">\(O(n)\)</span>, Konvergenz in <span class="math inline">\(\sim 50\)</span> Iterationen</li>
+<li><strong>Gesamt:</strong> <span class="math inline">\(O(n)\)</span> statt <span class="math inline">\(O(n^3)\)</span> — macht Google überhaupt erst möglich!</li>
+</ul>
+<div class="small">
+<p>Dass <span class="math inline">\(\lambda = 1\)</span> <em>einziger</em> dominanter Eigenwert ist (Voraussetzung der Potenzmethode!), garantiert erst das <em>gedämpfte</em> Modell <span class="math inline">\(\alpha\bA + \tfrac{1 - \alpha}{n}\bE\)</span> (<span class="math inline">\(\bE\)</span> = Einsermatrix, üblich <span class="math inline">\(\alpha = 0.85\)</span>): dann ist <span class="math inline">\(|\lambda_2| \le \alpha\)</span>, und <span class="math inline">\(0.85^{50} \approx 3\cdot 10^{-4}\)</span> erklärt gerade die <span class="math inline">\(\sim 50\)</span> Iterationen.</p>
+</div>
+</div>
+</section>
+<section id="anwendung-hauptkomponentenanalyse-pca" class="slide level3 smaller">
+<h3>Anwendung: Hauptkomponentenanalyse (PCA)</h3>
+<p>Berechnung von Eigenwerten/-vektoren für Datenanalysen essentiell:</p>
+<ul>
+<li><strong>Problem:</strong> Gegeben ist eine mittelwert-zentrierte Datenmatrix <span class="math inline">\(\bX \in \R^{n \times p}\)</span> (<span class="math inline">\(n\)</span> Beobachtungen, <span class="math inline">\(p\)</span> Variablen)</li>
+<li><strong>Ziel:</strong> Finde Richtungen maximaler Varianz zur Dimensionsreduktion</li>
+<li><strong>Lösung:</strong> Berechne die Kovarianzmatrix <span class="math inline">\(\bSigma = \frac{1}{n-1}\bX^\top \bX \in \R^{p \times p}\)</span>
+<ul>
+<li>Eigenvektoren <span class="math inline">\(\bv_j\)</span> von <span class="math inline">\(\bSigma\)</span> sind die <em>Hauptachsen</em> bzw. <em>Loading-Richtungen</em> maximaler Varianz in <span class="math inline">\(\R^p\)</span></li>
+<li>Die <mark><em>Hauptkomponenten</em></mark> (Scores) sind <span class="math inline">\(\bz_j = \bX\bv_j\)</span>; die Eigenwerte geben ihre Varianz an</li>
+</ul></li>
+<li>In der Praxis noch schneller/effizienter über <mark><em>SVD</em></mark> von <span class="math inline">\(\bX\)</span> (z.B. <code>{irlba}: irlba()</code> (<em>iterativ</em>), <code>svdr()</code> (<em>iterativ &amp; probabilistisch</em>))</li>
+</ul>
+<p><strong>Warum iterative Methoden?</strong></p>
+<ul>
+<li>Moderne Anwendungen: <span class="math inline">\(p = 10^4\)</span> bis <span class="math inline">\(10^6\)</span> (z.B. Gen-Expression, Bildanalyse, …)</li>
+<li>Oft nur die <span class="math inline">\(k\)</span> größten Eigenwerte benötigt (<span class="math inline">\(k \ll p\)</span>) - vgl. <a href="https://fabian-s.shinyapps.io/truncatedSVD-shiny/">Bildkompression</a> durch <mark><em>Reduzierte SVD</em></mark></li>
+<li>Lanczos-Iteration: Berechnet nur die <span class="math inline">\(k\)</span> größten Eigenwerte in <span class="math inline">\(O(kp^2)\)</span> statt <span class="math inline">\(O(p^3)\)</span> für alle
+<ul>
+<li>Bei <span class="math inline">\(p = 100.000\)</span> und <span class="math inline">\(k = 10\)</span> ist Lanczos <span class="math inline">\(\sim 10.000\)</span> mal schneller!</li>
+</ul></li>
+</ul>
+</section>
+<section id="anwendung-approximative-svd" class="slide level3 smaller">
+<h3>Anwendung: Approximative SVD</h3>
+<p>Bildkompression durch <mark><em>Reduzierte SVD</em></mark>: <code>X</code> ist ein Graustufen-Foto als <span class="math inline">\(2500 \times 3300\)</span>-Matrix <em>(Setup-Code, Fehlervergleich &amp; Bildpanel <a href="#/approximative-svd-setup"><span class="math inline">\(\to\)</span> Anhang</a>)</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>r <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb1-2"><a></a>microbenchmark<span class="sc">::</span><span class="fu">microbenchmark</span>(</span>
+<span id="cb1-3"><a></a>  <span class="at">svd_full   =</span> <span class="fu">svd</span>(X),                           <span class="co"># exakt: alle Singulaerwerte</span></span>
+<span id="cb1-4"><a></a>  <span class="at">svd_irlba  =</span> irlba<span class="sc">::</span><span class="fu">irlba</span>(X, <span class="at">nv =</span> r, <span class="at">nu =</span> r),  <span class="co"># iterativ (Lanczos): nur r</span></span>
+<span id="cb1-5"><a></a>  <span class="at">svd_random =</span> irlba<span class="sc">::</span><span class="fu">svdr</span>(X, <span class="at">k =</span> r),            <span class="co"># iterativ &amp; randomisiert</span></span>
+<span id="cb1-6"><a></a>  <span class="at">times =</span> <span class="dv">5</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unit: seconds
+       expr   min    lq   mean median     uq    max neval cld
+   svd_full 84.14 92.85 107.77 112.60 114.01 135.23     5  a 
+  svd_irlba  1.98  2.09   2.85   2.13   3.46   4.58     5   b
+ svd_random  5.79  7.00   9.36  10.44  10.77  12.80     5   b</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>X_svdr <span class="ot">&lt;-</span> <span class="fu">with</span>(irlba<span class="sc">::</span><span class="fu">svdr</span>(X, <span class="at">k =</span> r), u <span class="sc">%*%</span> <span class="fu">diag</span>(d) <span class="sc">%*%</span> <span class="fu">t</span>(v))</span>
+<span id="cb3-2"><a></a><span class="fu">norm</span>(X <span class="sc">-</span> X_svdr, <span class="st">"F"</span>) <span class="sc">/</span> <span class="fu">norm</span>(X, <span class="st">"F"</span>)  <span class="co"># rel. Fehler der Rang-50-Approximation</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.129</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(\to\)</span> iterative/randomisierte Verfahren sind hier <span class="math inline">\(\sim 40\times\)</span> bzw. <span class="math inline">\(\sim 11\times\)</span> schneller — bei praktisch identischem Ergebnis (Vergleich mit exakter Rang-<span class="math inline">\(50\)</span>-SVD <a href="#/approximative-svd-setup"><span class="math inline">\(\to\)</span> Anhang</a>).</p>
+</section>
+<section id="iterative-eigenwertverfahren-vergleich" class="slide level3 smaller">
+<h3>Iterative Eigenwertverfahren: Vergleich</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 31%">
+<col style="width: 33%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Methode</th>
+<th>Komplexität / Iteration</th>
+<th>Anwendung</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Potenz-methode</td>
+<td><span class="math inline">\(O(\operatorname{nnz}(\bA))\)</span></td>
+<td>Größter Eigenwert/-vektor</td>
+<td>1 Eigenpaar</td>
+</tr>
+<tr class="even">
+<td>(shifted) QR</td>
+<td><span class="math inline">\(O(n^2)\)</span>-<span class="math inline">\(O(n^3)\)</span></td>
+<td>Alle Eigenwerte</td>
+<td><span class="math inline">\(n\)</span> Eigenwerte</td>
+</tr>
+<tr class="odd">
+<td>Lanczos</td>
+<td><span class="math inline">\(O(m\operatorname{nnz}(\bA) + m^2)\)</span> für <span class="math inline">\(m\)</span> EW</td>
+<td>Wenige Extremal-EW, <em>sparse</em> <span class="math inline">\(\bA\)</span></td>
+<td><span class="math inline">\(m \ll n\)</span> Eigenpaare</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Konvergenzrate <mark><em>Potenzmethode</em></mark>: <span class="math inline">\(|\lambda_2/\lambda_1|\)</span></li>
+<li><mark><em>QR-Iteration</em></mark> <em>mit Shifts</em> oft mit quadratischer Konvergenz, am stabilsten (ohne Shifts nur linear, mit Rate <span class="math inline">\(|\lambda_i / \lambda_j|\)</span>).</li>
+<li>Anwendung:
+<ul>
+<li><em>sparse</em> Matrizen: Lanczos klar überlegen</li>
+<li>Alle Eigenwerte, Speicher sekundär: (shifted) QR-Iteration</li>
+<li>Wenige Eigenwerte: Potenzmethode (für 1), Lanczos (für <span class="math inline">\(m \ll n\)</span>)</li>
+</ul></li>
+</ul>
+<div class="small">
+<p><span class="math inline">\(\operatorname{nnz}(\cdot)\)</span> = Anzahl Nicht-Null-Einträge</p>
+</div>
+</section></section>
+<section>
+<section id="iterative-lösungsverfahren" class="title-slide slide level2 center">
+<h2>Iterative Lösungsverfahren</h2>
+
+</section>
+<section id="iterative-lösungsverfahren-intuition" class="slide level3 smaller">
+<h3>Iterative Lösungsverfahren: Intuition</h3>
+<ul>
+<li>Zur Lösung von <mark><em>LGS</em></mark> und <mark><em>KQ-Problemen</em></mark> haben wir bisher direkte Methoden gesehen — <mark><em>iterative Verfahren</em></mark> (meist <mark><em>Fixpunktiterationen</em></mark>) sind oft viel schneller, wenn man etwas Genauigkeit opfert.</li>
+</ul>
+<p><strong>Wie nähern wir uns iterativ der Lösung?</strong><br>
+</p>
+<ul>
+<li><mark><em>Residuum</em></mark>:<br>
+<span class="math inline">\(\br^{(k)} = \bb - \bA\bx^{(k)}\)</span> misst, wie stark <span class="math inline">\(\bx^{(k)}\)</span> die Gleichung <span class="math inline">\(\bA\bx = \bb\)</span> verletzt</li>
+<li>Falls <span class="math inline">\(\bA\bx^{(k)} = \bb\)</span>, dann ist <span class="math inline">\(\br^{(k)} = \bnull\)</span> und wir haben die Lösung gefunden</li>
+<li><em>Korrektur:</em><br>
+Solange <span class="math inline">\(\br^{(k)} \neq \bnull\)</span>, korrigieren wir unsere Schätzung: <span class="math display">\[\bx^{(k+1)} = \bx^{(k)} + \underbrace{\bC \br^{(k)}}_{\text{Korrekturschritt}}\]</span></li>
+<li><span class="math inline">\(\bC\)</span> bestimmt, wie stark wir wo in Richtung des Residuums korrigieren</li>
+<li><strong>Analogie:</strong> <em>Gradient Descent</em> - wir bewegen uns Schritt für Schritt zur Lösung</li>
+</ul>
+<p><strong>Warum nicht direkt lösen?</strong><br>
+<span class="math inline">\(\to\)</span> Bei großen und/oder dünnbesetzten Matrizen sind iterative Methoden oft um Größenordnungen schneller als direkte Verfahren!</p>
+</section>
+<section id="iterative-lgs-verfahren" class="slide level3 smaller">
+<h3>Iterative Lösungsverfahren für LGS</h3>
+<ul>
+<li>Sei <span class="math inline">\(\bA \in \R^{n \times n}\)</span>, <span class="math inline">\(\bb \in \R^n\)</span> und <span class="math inline">\(\bx\)</span> die Lösung des LGS <span class="math inline">\(\bA\bx = \bb\)</span>.</li>
+<li>Für einen beliebigen Startwert <span class="math inline">\(\bx^{(0)} \in \R^n\)</span> und <span class="math inline">\(\bC \in \R^{n \times n}\)</span>, definiere die Iteration <span class="math display">\[\begin{align*}
+\bx^{(k)} = \bx^{(k - 1)} + \bC(\bb - \bA \bx^{(k - 1)}), \quad k = 1, 2, \dots.
+\end{align*}\]</span></li>
+</ul>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei <span class="math inline">\(\bx\)</span> die eindeutige Lösung des LGS <span class="math inline">\(\bA\bx = \bb\)</span>.</p>
+<p>Falls <span class="math inline">\(\rho:= \|\bI_n - \bC\bA\|_2 &lt; 1\)</span> (<mark><em>Spektralnorm</em></mark>), gilt für alle <span class="math inline">\(k \ge 1\)</span>: <span class="math display">\[\begin{align*}
+\|\bx^{(k)} - \bx\|_2 \le \rho^k \|\bx^{(0)} - \bx\|_2.
+\end{align*}\]</span></p>
+</div>
+<ul>
+<li>Insbesondere: <span class="math inline">\(\lim_{k \to \infty} \bx^{(k)} = \bx\)</span> (<em>Konvergenz</em>).</li>
+</ul>
+<p><em>Beweis:</em> siehe <a href="#/iterative-lgs-konvergenz-beweis">Anhang</a></p>
+</section>
+<section id="quiz-1" class="slide level3">
+<h3>Quiz</h3>
+<p>Sei <span class="math display">\[\bx^{(k)} = (\bI - \bC\bA) \bx^{(k - 1)} + \bC \bb\]</span> mit <span class="math inline">\(\bC = \gamma \bI_n\)</span> für ein <span class="math inline">\(\gamma &gt; 0\)</span>. Was ist die Laufzeitkomplexität eines Iterationsschrittes?</p>
+<ol type="1">
+<li><span class="math inline">\(O(1)\)</span></li>
+<li><span class="math inline">\(O(n)\)</span></li>
+<li><span class="math inline">\(O(n^2)\)</span></li>
+<li><span class="math inline">\(O(n^3)\)</span></li>
+</ol>
+<div class="fragment">
+<div class="small">
+<p><strong>Lösung:</strong> 3. — Mit <span class="math inline">\(\bC = \gamma\bI\)</span> ist <span class="math inline">\(\bx^{(k)} = \bx^{(k-1)} - \gamma(\bA\bx^{(k-1)}) + \gamma\bb\)</span>: pro Schritt eine dichte Matrix-Vektor-Multiplikation <span class="math inline">\(\bA\bx^{(k-1)}\)</span>, also <span class="math inline">\(O(n^2)\)</span>; Skalierung mit <span class="math inline">\(\gamma\)</span> und die zwei Vektoradditionen sind nur <span class="math inline">\(O(n)\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="iterative-lösungsverfahren-für-lgs-wahl-von-bc" class="slide level3 smaller">
+<h3>Iterative Lösungsverfahren für LGS: Wahl von <span class="math inline">\(\bC\)</span></h3>
+<ul>
+<li>Die Frage ist nun, wie wir <span class="math inline">\(\bC\)</span> so wählen, dass:
+<ul>
+<li><span class="math inline">\(\rho = \|\bI - \bC\bA\|_2 &lt; 1\)</span> möglichst klein ist (optimal: <span class="math inline">\(\bC \approx \bA^{-1}\)</span>),</li>
+<li><span class="math inline">\(\bx^{(k)} = (\bI - \bC\bA) \bx^{(k - 1)} + \bC \bb\)</span> einfach zu berechnen ist.</li>
+</ul></li>
+</ul>
+<p><strong>Beliebte Wahlen für <span class="math inline">\(\bC\)</span> mit Iterationsaufwand <span class="math inline">\(O(n^2)\)</span>:</strong><br>
+</p>
+<ul>
+<li><em>Richardson</em>-Iteration: <span class="math inline">\(\bC = \gamma \bI_n\)</span>; konvergiert z.B. für SPD <span class="math inline">\(\bA\)</span>, falls <span class="math inline">\(0 &lt; \gamma &lt; 2 / \lambda_{\max}(\bA)\)</span>.</li>
+<li><em>Jacobi</em>-Iteration: <span class="math inline">\(\bC = \diag(\bA_{11}, \dots, \bA_{nn})^{-1}\)</span>.</li>
+<li><em>Gauss-Seidel</em>-Iteration: <span class="math inline">\(\bC^{-1}\)</span> gleich unterem Dreieck von <span class="math inline">\(\bA\)</span>.</li>
+</ul>
+<p><strong>Gesamtaufwand:</strong><br>
+</p>
+<ul>
+<li>Wegen <span class="math inline">\(\|\bx^{(k)} - \bx\| \le \rho^k \|\bx^{(0)} - \bx\|\)</span> reichen <span class="math inline">\(k = O(\log(1/\epsilon))\)</span> Schritte für Genauigkeit <span class="math inline">\(\epsilon\)</span> (→ Self-Check).</li>
+<li>Damit brauchen wir <span class="math inline">\(O(n^2 \log(1/\epsilon))\)</span> Operationen für <span class="math inline">\(\|\bx^{(k)} - \bx\| \le \epsilon\)</span>.</li>
+<li>Vergleiche: <span class="math inline">\(O(n^3)\)</span> für exakte Lösungen durch <mark><em>LU</em></mark> oder <mark><em>QR</em></mark>.</li>
+</ul>
+<div class="small">
+<p>Analoge iterative Verfahren gibt es auch für <mark><em>KQ</em></mark>-Probleme; in seltenen Fällen sind sie sogar <em>exakt</em>. Meist gilt: Trade-off zwischen <mark><em>Laufzeit</em></mark> und Genauigkeit — steuerbar über die Iterationszahl.</p>
+</div>
+</section>
+<section id="bsp-richardson-iteration" class="slide level3 smaller">
+<h3>Bsp: Richardson-Iteration</h3>
+<p>Gegeben: <span class="math inline">\(\bA = \begin{pmatrix} 4 &amp; 1 \\ 1 &amp; 3 \end{pmatrix}\)</span>, <span class="math inline">\(\bb = \begin{pmatrix} 1 \\ 2 \end{pmatrix}\)</span>. Wahre Lösung: <span class="math inline">\(\bx = \bA^{-1}\bb = \frac{1}{11}\begin{pmatrix} 1 \\ 7 \end{pmatrix} \approx \begin{pmatrix} 0.091 \\ 0.636 \end{pmatrix}\)</span>.</p>
+<p><strong>Richardson mit</strong> <span class="math inline">\(\gamma = 0.25\)</span>, Startwert <span class="math inline">\(\cgreen{\bx^{(0)} = \begin{pmatrix} 0 \\ 0 \end{pmatrix}}\)</span>:</p>
+<p><strong>Iteration 0:</strong> <span class="math inline">\(\cblue{\br^{(0)}} = \bb - \bA\cgreen{\bx^{(0)}} = \cblue{\begin{pmatrix} 1 \\ 2 \end{pmatrix}}\)</span>, <span class="math inline">\(\cgreen{\bx^{(1)}} = \cgreen{\bx^{(0)}} + 0.25 \cblue{\br^{(0)}} = \cgreen{\begin{pmatrix} 0.25 \\ 0.5 \end{pmatrix}}\)</span></p>
+<p><strong>Iteration 1:</strong> <span class="math inline">\(\bA\cgreen{\bx^{(1)}} = \begin{pmatrix} 1.5 \\ 1.75 \end{pmatrix}\)</span>, <span class="math inline">\(\cblue{\br^{(1)}} = \bb - \bA\cgreen{\bx^{(1)}} = \cblue{\begin{pmatrix} -0.5 \\ 0.25 \end{pmatrix}}\)</span>, <span class="math inline">\(\cgreen{\bx^{(2)}} = \cgreen{\bx^{(1)}} + 0.25 \cblue{\br^{(1)}} = \cgreen{\begin{pmatrix} 0.125 \\ 0.563 \end{pmatrix}}\)</span></p>
+<p><strong>Iteration 2:</strong> <span class="math inline">\(\bA\cgreen{\bx^{(2)}} = \begin{pmatrix} 1.063 \\ 1.813 \end{pmatrix}\)</span>, <span class="math inline">\(\cblue{\br^{(2)} = \begin{pmatrix} -0.063 \\ 0.188 \end{pmatrix}}\)</span>, <span class="math inline">\(\cgreen{\bx^{(3)} = \begin{pmatrix} 0.109 \\ 0.609 \end{pmatrix}}\)</span></p>
+<p><strong>Iteration 3:</strong> <span class="math inline">\(\cgreen{\bx^{(4)} = \begin{pmatrix} 0.098 \\ 0.625 \end{pmatrix}}\)</span></p>
+<p><strong>Fehler:</strong> <span class="math inline">\(\|\bx^{(k)} - \bx\|_2\)</span>: <span class="math inline">\(0.643 \to 0.210 \to 0.081 \to 0.033 \to 0.013 \to \cdots\)</span></p>
+<p><strong>Konvergenzrate:</strong> <span class="math inline">\(\rho = \|\bI - \gamma\bA\|_2 \approx 0.41\)</span> <span class="math inline">\(\implies\)</span> Fehler sollte ca. um Faktor <span class="math inline">\(2.5\)</span> pro Iteration sinken.</p>
+</section></section>
+<section>
+<section id="probabilistische-methoden" class="title-slide slide level2 center">
+<h2>Probabilistische Methoden</h2>
+
+</section>
+<section id="zufall-mit-absicht" class="slide level3">
+<h3>Zufall mit Absicht</h3>
+<ul>
+<li>Oft sind Probleme so groß, dass wir gerne Genauigkeit für bessere <mark><em>Komplexität</em></mark> tauschen.</li>
+<li>Heute wird das zunehmend durch <mark><em>Randomisierung</em></mark> erreicht.</li>
+<li><strong>Hauptidee:</strong><br>
+
+<ul>
+<li><em>Ersetze</em> großes Problem durch ein</li>
+<li><em>zufällig</em> erzeugtes, <em>kleines</em> Problem,</li>
+<li>das <em>höchstwahrscheinlich</em> eine <em>ähnliche Lösung</em> hat.</li>
+</ul></li>
+</ul>
+</section>
+<section id="idee-matrix-sketching" class="slide level3">
+<h3>Idee: Matrix-Sketching</h3>
+<p>Geometrische Fakten in hoch-dimensionalem Raum <span class="math inline">\(\R^n\)</span> mit <span class="math inline">\(n \gg 1\)</span>:</p>
+<div class="center">
+<p><em>Für großes <span class="math inline">\(n\)</span> sind zwei zufällige Vektoren <span class="math inline">\(\bs_1, \bs_2 \in \R^n\)</span> mit hoher Wahrscheinlichkeit fast orthogonal.</em></p>
+</div>
+<p><span class="math inline">\(\implies\)</span> geeignet <em>zufällig</em> gezogene Matrix <span class="math inline">\(\bS \in \R^{m \times n}\)</span> mit <span class="math inline">\(m \ll n\)</span> erhält mit hoher Wahrscheinlichkeit</p>
+<ul>
+<li>Abstände: <span class="math inline">\(\|\bS\bx - \bS\by\|_2 \approx \|\bx - \by\|_2\)</span></li>
+<li>Winkel: <span class="math inline">\(\angle(\bS\bx, \bS\by) \approx \angle(\bx, \by)\)</span></li>
+</ul>
+<p><span class="math inline">\(\implies\)</span> Eine <strong>zufällige Projektion</strong> <span class="math inline">\(\bS\)</span> in einen niedrigdimensionaleren Raum kann Geometrie oft näherungsweise erhalten.</p>
+</section>
+<section id="beispiel-sketching-in-r" class="slide level3 smaller">
+<h3>Beispiel: Sketching in R</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1312</span>)</span>
+<span id="cb5-2"><a></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span>                <span class="co"># zwei beliebige n-dimensionale Vektoren:</span></span>
+<span id="cb5-3"><a></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(n); y <span class="ot">&lt;-</span> <span class="fu">runif</span>(n)</span>
+<span id="cb5-4"><a></a>m <span class="ot">&lt;-</span> <span class="dv">50</span>                   <span class="co"># m &lt;&lt; n !!</span></span>
+<span id="cb5-5"><a></a>S <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(m <span class="sc">*</span> n, <span class="at">sd =</span> <span class="fu">sqrt</span>(<span class="dv">1</span> <span class="sc">/</span> m)) <span class="sc">|&gt;</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> m, <span class="at">ncol =</span> n)</span>
+<span id="cb5-6"><a></a>Sx <span class="ot">&lt;-</span> S <span class="sc">%*%</span> x;  Sy <span class="ot">&lt;-</span> S <span class="sc">%*%</span> y</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Wir ersetzen <span class="math inline">\(n = 10000\)</span> Koordinaten durch <span class="math inline">\(m = 50\)</span> zufällige Projektionen.</p>
+<p><strong>Vorhersage:</strong><br>
+</p>
+<p>Um wie viel Prozent ändern sich Distanz <span class="math inline">\(\|\bx - \by\|_2\)</span> und Winkel <span class="math inline">\(\angle(\bx, \by)\)</span> dabei wohl —<br>
+eher <span class="math inline">\(\sim 50\%\)</span>, <span class="math inline">\(\sim 3\%\)</span> oder <span class="math inline">\(&lt; 0.1\%\)</span>?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>angle <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y) (<span class="fu">sum</span>(x <span class="sc">*</span> y) <span class="sc">/</span> (<span class="fu">norm</span>(x, <span class="st">"2"</span>) <span class="sc">*</span> <span class="fu">norm</span>(y, <span class="st">"2"</span>))) <span class="sc">|&gt;</span> <span class="fu">acos</span>()</span>
+<span id="cb6-2"><a></a><span class="fu">c</span>(<span class="fu">norm</span>(x <span class="sc">-</span> y, <span class="st">"2"</span>), <span class="fu">norm</span>(Sx <span class="sc">-</span> Sy, <span class="st">"2"</span>))  <span class="do">## Distanzen  ||x - y||, ||Sx - Sy||</span></span>
+<span id="cb6-3"><a></a><span class="fu">c</span>(<span class="fu">angle</span>(x, y), <span class="fu">angle</span>(Sx, Sy))            <span class="do">## Winkel (rad)</span></span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 41.0 42.2
+[1] 0.728 0.735</code></pre>
+</div>
+</div>
+<div class="fragment">
+<p><span class="math inline">\(\to\)</span> nur <span class="math inline">\(\approx 3\%\)</span> [<span class="math inline">\(\approx 1\%\)</span>] Abweichung in Distanz [Winkel] — obwohl 99.5% der Dimensionen wegfallen!</p>
+<div class="small">
+<p>(Eine einzelne Ziehung, und eine recht glückliche: für Gauss-Skizzen streut die relative Abweichung der Distanz mit <span class="math inline">\(\approx 1/\sqrt{2m} = 10\%\)</span>.)</p>
+</div>
+<!-- S <-  diag(n)[sample(1:n, m), ] * sqrt(n/m) -->
+<!-- S <- (1/sqrt(m) * sample(c(-1, 1), m * n, replace = TRUE)) |> matrix(nrow = m, ncol = n) -->
+</div>
+</section>
+<section id="zufaelliges-einbetten-unterraeume" class="slide level3 smaller">
+<h3>Zufällige Einbettung eines festen Vektors</h3>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei</p>
+<ul>
+<li><span class="math inline">\(\bS \in \R^{m \times n}\)</span> eine Matrix mit i.i.d. Zeilen <span class="math inline">\(\bs_{i}^\top\)</span> (wobei <span class="math inline">\(\bs_i \in \R^n\)</span>),</li>
+<li><span class="math inline">\(\E[ \bs_i \bs_i^\top] = \bI_n / m\)</span> und <span class="math inline">\(\E[(\bs_i^\top \bx)^4] \le K \|\bx\|^4 / m^2\)</span> für alle <span class="math inline">\(\bx \in \R^n\)</span>.</li>
+</ul>
+<p>Dann gilt für jeden <em>festen</em> Vektor <span class="math inline">\(\bx \in \R^n\)</span> mit einer Wahrscheinlichkeit von mindestens <span class="math inline">\(1 - \delta\)</span> <span class="math display">\[\begin{align*}
+(1 -\epsilon) \|\bx\|^2 \le \| \bS\bx\|^2 \le (1 + \epsilon) \|\bx\|^2,
+\end{align*}\]</span> wobei <span class="math inline">\(\delta &gt; 0\)</span> und <span class="math inline">\(\epsilon = \sqrt{K / \delta m}\)</span>.</p>
+</div>
+<p>Beispiele:</p>
+<ul>
+<li><em>Gauss:</em> <span class="math inline">\(\bs_i \stackrel{\mathrm{i.i.d.}}{\sim} \mathcal{N}(0, \bI_n / m)\)</span>.</li>
+<li><em>Rademacher:</em> <span class="math inline">\(s_{ij}\)</span> <em>i.i.d.</em> mit <span class="math inline">\(\Pr(s_{ij} = 1 / \sqrt{m}) = \Pr(s_{ij} = -1 / \sqrt{m}) = 1/2\)</span>.</li>
+<li><em>Subsampling:</em> <span class="math inline">\(\bs_{i} = \sqrt{n/m} \, \be_{K_i}\)</span> skalierter Einheitsvektor mit <span class="math inline">\(K_i \sim \mathrm{Unif}\{1, \dots, n\}\)</span>.</li>
+</ul>
+<p><em>Beweis:</em> siehe <a href="#/einbetten-unterraeume-beweis">Anhang</a></p>
+</section>
+<section id="sketching-anwendungen" class="slide level3 smaller">
+<h3>Anwendungen</h3>
+<ul>
+<li>Zufällige Einbettungen (<em>Matrix-Sketching</em>) haben zahlreiche Anwendungen:
+<ul>
+<li>Matrixmultiplikation: <span class="math inline">\(\bA\bB \approx (\bA\bS^\top) (\bS \bB)\)</span></li>
+<li><mark><em>KQ-Probleme</em></mark>: <span class="math inline">\(\min \| \bA \bx - \bb\|_2 \approx \min \| \bS\bA \bx - \bS \bb\|_2\)</span></li>
+<li><span class="math inline">\(\dots\)</span></li>
+</ul></li>
+<li><em>Achtung:</em> Unser Theorem gilt je <em>festem</em> Vektor — hier hängt z.B. der Minimierer selbst von <span class="math inline">\(\bS\)</span> ab!<br>
+Dafür braucht man stärkere, <em>simultane</em> Garantien (<em>Subspace Embeddings</em>): gleiche Beweisidee, etwas größeres <span class="math inline">\(m\)</span>.</li>
+<li>Wirklich schneller werden Algorithmen aber nur, wenn wir Produkte <span class="math inline">\(\bS \bx\)</span> sehr schnell berechnen können.</li>
+<li><em>Beispiele:</em>
+<ul>
+<li>Wenn <span class="math inline">\(\bS\)</span> <span class="math inline">\(m\)</span> zufällige Koordinaten aus <span class="math inline">\(\bx\)</span> zieht, braucht es dafür nur <span class="math inline">\(O(m)\)</span> Operationen.</li>
+<li>Besonders leistungsfähig: <em>Subsampled Randomized Hadamard Transform</em> (SRHT) braucht <span class="math inline">\(O(n \log m)\)</span> Rechenschritte. (Vergleich der Sketching-Matrizen <a href="#/vergleich-sketching-matrizen"><span class="math inline">\(\to\)</span> Anhang</a>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="beispiel-dimensionsreduktion-mit-matrix-sketching" class="slide level3 smaller">
+<h3>Beispiel: Dimensionsreduktion mit Matrix-Sketching</h3>
+<p><strong>Gegeben:</strong><br>
+<span class="math inline">\(n = 10000\)</span> Dimensionen, <span class="math inline">\(\delta = 0.05\)</span>, <span class="math inline">\(\epsilon = 0.1\)</span></p>
+<p><strong>Frage:</strong><br>
+Wie klein kann <span class="math inline">\(m\)</span> sein?</p>
+<p><strong>Aus dem Theorem:</strong><br>
+Mit <span class="math inline">\(\bs_i \sim \mathcal{N}(\bnull, \bI_n/m)\)</span> gilt <span class="math inline">\(K = 3\)</span> und <span class="math display">\[\epsilon = \sqrt{\frac{K}{\delta m}} \quad \implies \quad m = \frac{K}{\delta \epsilon^2} = \frac{3}{0.05 \cdot 0.01} = 6000\]</span></p>
+<p><strong>Ergebnis:</strong><br>
+</p>
+<p>Mit <span class="math inline">\(m = 6000\)</span> Dimensionen können wir <span class="math inline">\(n = 10000\)</span> Dimensionen so darstellen, dass jeder gegebene Abstand mit 95% Wahrscheinlichkeit um höchstens 10% verzerrt wird.</p>
+<p><strong>Praktische Konsequenz:</strong><br>
+</p>
+<ul>
+<li>Speicher &amp; Rechenzeit pro Distanzberechnung: <span class="math inline">\(O(n) \to O(m)\)</span></li>
+<li>Die Schranke (via Tschebyscheff-Ungleichung) ist sehr <em>konservativ</em> — in der Praxis reichen oft viel kleinere <span class="math inline">\(m\)</span>: die Demo oben kam mit <span class="math inline">\(m = 50\)</span> auf nur <span class="math inline">\(\approx 3\%\)</span> Abweichung!</li>
+<li>Anwendung: Schnelle Nächste-Nachbar-Suche, Clusteranalyse in hohen Dimensionen, ….</li>
+</ul>
+</section></section>
+<section>
+<section id="self-check-zusammenfassung" class="title-slide slide level2 center">
+<h2>Self-Check &amp; Zusammenfassung</h2>
+
+</section>
+<section id="wrap-up" class="slide level3">
+<h3>Wrap-up</h3>
+<p><strong>Heute gelernt</strong></p>
+<ul>
+<li>Lösungsansätze für Eigenwertprobleme</li>
+<li><mark><em>Iterative Verfahren</em></mark> nähern sich Lösung schrittweise durch <mark><em>Fixpunktiteration</em></mark></li>
+<li><mark><em>Probabilistische Verfahren</em></mark> ersetzen schweres durch zufälliges, leichteres (niedrigdimensionaleres) Problem mit approximativer Lösung</li>
+<li>Beide geben uns einen Trade-off zwischen <mark><em>Laufzeit</em></mark> und Genauigkeit</li>
+</ul>
+<p><strong>Nächste Vorlesung</strong></p>
+<ul>
+<li>Tensoren und Tensorprodukte</li>
+</ul>
+</section>
+<section id="self-check-12" class="slide level3 smaller">
+<h3>Self-Check (1/2)</h3>
+<!-- TODO Particify/Moodle: als quiz/08-la-misc/selfcheck-*.Rmd autorieren (R/exams). -->
+<p><strong>Frage 1:</strong> Sei <span class="math inline">\(\rho \in (0, 1)\)</span>, <span class="math inline">\(\epsilon &gt; 0\)</span>, und <span class="math display">\[\|\bx^{(k)} - \bx\| \le \rho^k \|\bx^{(0)} - \bx\|.\]</span> Wie groß muss <span class="math inline">\(k\)</span> mindestens sein, so dass <span class="math inline">\(\|\bx^{(k)} - \bx\| \le \epsilon\)</span>?</p>
+<ol type="1">
+<li><span class="math inline">\(k = O(1)\)</span></li>
+<li><span class="math inline">\(k = O(\log(1 / \epsilon))\)</span></li>
+<li><span class="math inline">\(k = O(1 / \epsilon)\)</span></li>
+<li><span class="math inline">\(k = O(1 / \epsilon^k)\)</span></li>
+</ol>
+<div class="fragment">
+<div class="small">
+<p><strong>Lösung:</strong> 2. — mit <span class="math inline">\(e_0 = \|\bx^{(0)} - \bx\|\)</span>: <span class="math inline">\(\rho^k e_0 \le \epsilon \implies \rho^k \le \epsilon/e_0\)</span>; Logarithmieren (<span class="math inline">\(0&lt;\rho&lt;1 \implies \log \rho &lt; 0\)</span>!) gibt <span class="math inline">\(k \ge \frac{\log(\epsilon) - \log(e_0)}{\log(\rho)} = \frac{\log(e_0) + \log(1/\epsilon)}{-\log(\rho)}\)</span>, also minimales <span class="math inline">\(k = \left\lceil \frac{\log(e_0/\epsilon)}{-\log(\rho)}\right\rceil\)</span> (falls <span class="math inline">\(0 &lt; \epsilon &lt; e_0\)</span>, sonst reicht schon <span class="math inline">\(k = 0\)</span>) — wächst wie <span class="math inline">\(\log(1/\epsilon)\)</span>. <span class="math inline">\(\checkmark\)</span></p>
+</div>
+</div>
+</section>
+<section id="self-check-22" class="slide level3 smaller">
+<h3>Self-Check (2/2)</h3>
+<p><strong>Frage 2:</strong> Worin unterscheidet sich <em>Subsampling</em> (<span class="math inline">\(m\)</span> zufällige, skalierte Zeilen) von einer <em>Gauss</em>-Sketching-Matrix vor allem?</p>
+<ol type="1">
+<li>Subsampling kostet nur <span class="math inline">\(O(m)\)</span> statt <span class="math inline">\(O(mn)\)</span> (Zeit &amp; Speicher), ist aber nur zuverlässig, wenn die Information über viele Koordinaten gestreut ist.</li>
+<li>Gauss-Matrizen brauchen weniger Speicher als Subsampling.</li>
+<li>Subsampling erhält alle Distanzen exakt.</li>
+<li>Es gibt keinen Unterschied — beide sind optimal und gleich teuer.</li>
+</ol>
+<p><strong>Frage 3:</strong> Welcher Sketching-Typ kombiniert schnelle Anwendung (<span class="math inline">\(O(n \log m)\)</span> für <span class="math inline">\(\bS\bx\)</span>) mit sehr guter Qualität (“State of the art”)?</p>
+<ol type="1">
+<li>Gauss</li>
+<li>Rademacher</li>
+<li>Subsampling</li>
+<li>Subsampled Randomized Hadamard Transform (SRHT)</li>
+</ol>
+<!-- SOLUTIONS: F2: 1 (Subsampling: O(m) Zeit/Speicher, Qualitaet nur gut, wenn
+     die Information ueber viele Koordinaten gestreut ist -- schlecht, wenn sie
+     in wenigen Koordinaten konzentriert ist; Gauss: O(mn), dafuer optimal robust).
+     F3: 4 (SRHT: S wird nicht explizit gespeichert, sondern ueber schnelle
+     Transformationen angewendet -- O(n log m), sehr gute Qualitaet;
+     Tabelle im Anhang). -->
+</section></section>
+<section>
+<section id="anhang" class="title-slide slide level1 center" data-visibility="uncounted">
+<h1>Anhang</h1>
+
+</section>
+<section id="aehnlichkeit-beispiel-rechnung" class="slide level3" data-visibility="uncounted">
+<h3>Ähnlichkeit: Beispiel — Rechnung</h3>
+<p><span class="math inline">\(\bA = \begin{pmatrix} 5 &amp; -2 \\ -2 &amp; 8 \end{pmatrix}, \quad
+\bQ = \frac{1}{\sqrt{5}} \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix} \text{ mit } \bQ^\top \bQ = \bI\)</span></p>
+<p><strong>Schritt 1:</strong> Berechne <span class="math inline">\(\bA \bQ^\top\)</span>:</p>
+<p><span class="math display">\[\cgreen{\bA \bQ^\top} = \frac{1}{\sqrt{5}} \begin{pmatrix} 5 &amp; -2 \\ -2 &amp; 8 \end{pmatrix}
+\begin{pmatrix} 2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix} = \cgreen{\frac{1}{\sqrt{5}} \begin{pmatrix} 8 &amp; 9 \\ 4 &amp; -18 \end{pmatrix}}\]</span></p>
+<p><strong>Schritt 2:</strong> Berechne <span class="math inline">\(\bB = \bQ (\cgreen{\bA \bQ^\top})\)</span>: <span class="math display">\[\bB = \frac{1}{5} \begin{pmatrix} 2 &amp; 1 \\ 1 &amp; -2 \end{pmatrix}
+\cgreen{\begin{pmatrix} 8 &amp; 9 \\ 4 &amp; -18 \end{pmatrix}} = \frac{1}{5} \begin{pmatrix} 20 &amp; 0 \\ 0 &amp; 45 \end{pmatrix}
+= \begin{pmatrix} 4 &amp; 0 \\ 0 &amp; 9 \end{pmatrix}\]</span></p>
+<p><span class="math inline">\(\bB\)</span> diagonal <span class="math inline">\(\implies\)</span> Eigenwerte direkt ablesbar: <span class="math inline">\(4\)</span> und <span class="math inline">\(9\)</span>.</p>
+<div class="small">
+<p><a href="#/beispiel-aehnlichkeit">↩︎ zurück: „Beispiel”</a></p>
+</div>
+</section>
+<section id="qr-iteration-beweis" class="slide level3 smaller" data-visibility="uncounted">
+<h3>QR-Iteration: Beweis</h3>
+<p>Definiere <span class="math inline">\(\cgreen{\bQ_k := \bQ^{(1)} \bQ^{(2)} \cdots \bQ^{(k)}}\)</span>, <span class="math inline">\(\cblue{\bR_k = \bR^{(k)}  \bR^{(k-1)} \cdots \bR^{(1)}}\)</span></p>
+<p><strong>Zeige:</strong> <span class="math inline">\(\bA^k = \cgreen{\bQ_k} \cblue{\bR_k}\)</span></p>
+<p><strong>Beweis:</strong></p>
+<ul>
+<li><em>Induktionsanfang</em> (<span class="math inline">\(k=1\)</span>): <span class="math inline">\(\bA = \cgreen{\bQ^{(1)}} \cblue{\bR^{(1)}}= \cgreen{\bQ_1} \cblue{\bR_1}\)</span> <span class="math inline">\(\checkmark\)</span></li>
+<li><em>Induktionsschritt</em> (<span class="math inline">\(k \to k+1\)</span>): <span class="math inline">\(\bA^{(i)} = \cblue{\bR^{(i)}}\cgreen{\bQ^{(i)}}\)</span>, <span class="math inline">\(\bA^{(i)} = \cgreen{\bQ^{(i+1)}}\cblue{\bR^{(i+1)}} \implies  \cblue{\bR^{(i)}}\cgreen{\bQ^{(i)}} = \cgreen{\bQ^{(i+1)}}\cblue{\bR^{(i+1)}} \;(\star)\)</span> <span class="math display">\[\begin{align*}
+\bA^{k+1} &amp;= \bA \bA^k = (\cgreen{\bQ^{(1)}}\cblue{\bR^{(1)}})(\cgreen{\bQ_k} \cblue{\bR_k}) \\
+&amp;= \cgreen{\bQ^{(1)}}\bigl(\cblue{\bR^{(1)}}\cgreen{\bQ^{(1)}}\bigr)\cgreen{\bQ^{(2)}\cdots \bQ^{(k)}} \cblue{\bR^{(k)}\cdots \bR^{(1)}}\\
+&amp;\qquad [\text{nutze $k$-mal }(\star): \cblue{\bR^{(1)}}\cgreen{\bQ^{(1)}} = \cgreen{\bQ^{(2)}}\cblue{\bR^{(2)}}, \dots]\\
+&amp;= \cgreen{\bQ^{(1)}\bQ^{(2)} \cdots \bQ^{(k+1)}} \cblue{\bR^{(k+1)} \cdots \bR^{(1)}} \\
+&amp;= \cgreen{\bQ_{k+1}} \cblue{\bR_{k+1}} \quad \checkmark
+\end{align*}\]</span></li>
+</ul>
+<div class="small">
+<p><a href="#/qr-iteration-def">↩︎ zurück: „QR-Iteration”</a> · <a href="#/qr-iteration-interpretation">↩︎ zurück: „QR-Iteration: Interpretation”</a></p>
+</div>
+</section>
+<section id="iterative-lgs-konvergenz-beweis" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Iterative LGS-Verfahren: Konvergenz — Beweis</h3>
+<p>Definiere <span class="math inline">\(\cblue{\bB = \bI - \bC\bA}\)</span>, sodass <span class="math inline">\(\cblue{\|\bB\|_2 = \rho}\)</span> und <span class="math display">\[\bx^{(k)} = \cblue{\bB} \bx^{(k - 1)} + \bC\bb, \quad k = 1, 2, \dots\]</span></p>
+<p>Zunächst bemerken wir, dass <span class="math inline">\(\bx\)</span> ein Fixpunkt dieser Iteration ist: <span class="math display">\[\cblue{\bB} \bx + \bC\bb = (\bI - \bC\bA)\bx + \bC \bb = \bx - \bC\underbrace{\cred{(\bA\bx - \bb)}}_{= 0} = \bx\]</span></p>
+<p>also <span class="math display">\[\begin{align*}
+  \|\cgreen{\bx^{(k)} - \bx}\|_2 &amp; =  \|\cblue{\bB} \bx^{(k - 1)}  + \cred{\bC\bb}  - \bx\|_2           \\
+                        &amp; = \|\cblue{\bB} \bx^{(k - 1)}  + \cred{\bC\bb}  - (\cblue{\bB} \bx + \cred{\bC\bb})\|_2 \\
+                        &amp; = \|\cblue{\bB} \cgreen{(\bx^{(k - 1)} - \bx)} \|_2                  \\
+                        &amp; \le \cblue{\rho} \|\cgreen{\bx^{(k - 1)} - \bx}\|_2.
+\end{align*}\]</span></p>
+<p>Iterieren wir die Ungleichung, erhalten wir <span class="math display">\[\|\bx^{(k)} - \bx\|_2 \le \rho \|\bx^{(k - 1)} - \bx\|_2 \le \rho^2 \|\bx^{(k - 2)} - \bx\|_2 \le \cdots \le \rho^k \|\bx^{(0)} - \bx\|_2. \tagqed\]</span></p>
+<div class="small">
+<p><a href="#/iterative-lgs-verfahren">↩︎ zurück: „Iterative Lösungsverfahren für LGS”</a></p>
+</div>
+</section>
+<section id="einbetten-unterraeume-beweis" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Zufälliges Einbetten von Unterräumen: Beweis (1/2)</h3>
+<ol type="1">
+<li>Für <span class="math inline">\(\bx = \bnull\)</span> ist die Aussage trivial. Sei also <span class="math inline">\(\bx \neq \bnull\)</span> und o.B.d.A. <span class="math inline">\(\|\bx\| = 1\)</span> (andernfalls teile die Ungleichung durch <span class="math inline">\(\|\bx\|^2\)</span>). Zu zeigen also <span class="math display">\[\Pr\left(1 -\sqrt{K / \delta m} \le \| \bS\bx\|^2 \le 1 + \sqrt{K / \delta m}\right) =
+\Pr\left(| \| \bS\bx\|^2 - 1 |  \le \sqrt{K / \delta m}\right) \ge 1-\delta\]</span></li>
+<li>Mit <span class="math inline">\(\cgreen{\|\bS\bx\|^2} = \sum_{i = 1}^m \left( \bs_i^\top \bx\right)^2\)</span> gilt <span class="math display">\[\begin{align*}
+\E\left[\cgreen{\|\bS\bx\|^2}\right] = \sum_{i = 1}^m \E\left[( \bs_i^\top \bx)^2\right] = m \bx^\top \cblue{\E\left[\bs_1 \bs_1^\top\right]} \bx = \|\bx\|^2.
+\end{align*}\]</span></li>
+<li>Weil die Summanden unabhängig sind, gilt außerdem <span class="math display">\[\begin{align*}
+\var\left[\cgreen{\|\bS\bx\|^2}\right] &amp; = \sum_{i = 1}^m \var\left[( \bs_i^\top \bx)^2\right] \le m \cblue{\E\left[( \bs_1
+^\top \bx)^4\right]} \le \frac{K}{m}
+\end{align*}\]</span> nach der Momentannahme (mit <span class="math inline">\(\|\bx\| = 1\)</span>).</li>
+</ol>
+</section>
+<section id="zufälliges-einbetten-von-unterräumen-beweis-22" class="slide level3" data-visibility="uncounted">
+<h3>Zufälliges Einbetten von Unterräumen: Beweis (2/2)</h3>
+<p>(Fortsetzung)</p>
+<ol start="4" type="1">
+<li>Nun gibt die Tschebyscheff-Ungleichung (= Markov, angewandt auf die quadrierte Abweichung) <span class="math display">\[\begin{align*}
+\Pr\left(|\cgreen{\|\bS \bx\|^2} - \E[\cgreen{\|\bS \bx\|^2}]| &gt; \epsilon \right) \le \frac{\var[\cgreen{\|\bS \bx\|^2} ]}{\epsilon^2} \le \frac{m\cblue{\E[(\bs_i^\top \bx)^4]}}{\epsilon^2} \le \frac{K}{\epsilon^2 m}.
+\end{align*}\]</span> Die Wahl <span class="math inline">\(\epsilon = \sqrt{K / \delta m}\)</span> liefert die Behauptung. <span class="math inline">\(\blacksquare\)</span></li>
+</ol>
+<div class="small">
+<p><a href="#/zufaelliges-einbetten-unterraeume">↩︎ zurück: „Zufälliges Einbetten von Unterräumen”</a></p>
+</div>
+</section>
+<section id="approximative-svd-setup" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Approximative SVD: Setup &amp; Fehlervergleich</h3>
+<p>Setup-Code des Benchmarks (im Foliensatz ausgeführt):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1312</span>)</span>
+<span id="cb8-2"><a></a><span class="fu">library</span>(irlba)</span>
+<span id="cb8-3"><a></a><span class="fu">suppressMessages</span>(<span class="fu">library</span>(magick))</span>
+<span id="cb8-4"><a></a>img <span class="ot">&lt;-</span> <span class="fu">paste0</span>(</span>
+<span id="cb8-5"><a></a>  <span class="st">"https://upload.wikimedia.org/wikipedia/commons/7/7e/"</span>,</span>
+<span id="cb8-6"><a></a>  <span class="st">"Bolzano_City_Image_-_Photo_by_Giovanni_Ussi_-_In_Black_and_White_19.jpg"</span>)</span>
+<span id="cb8-7"><a></a>X <span class="ot">&lt;-</span> (<span class="fu">image_read</span>(img) <span class="sc">|&gt;</span></span>
+<span id="cb8-8"><a></a>        <span class="fu">image_data</span>(<span class="at">channels =</span> <span class="st">"gray"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-9"><a></a>        <span class="fu">as.numeric</span>())[,,<span class="dv">1</span>]</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Relative Frobenius-Fehler der niedrigrangigen Approximationen (der exakten Rang-<span class="math inline">\(50\)</span>-SVD zu <span class="math inline">\(\bX\)</span>, und der iterativen Verfahren zur exakten Rang-<span class="math inline">\(50\)</span>-SVD):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>X_r <span class="ot">&lt;-</span> <span class="fu">with</span>(<span class="fu">svd</span>(X, <span class="at">nu =</span> r, <span class="at">nv =</span> r), u <span class="sc">%*%</span> <span class="fu">diag</span>(d[<span class="dv">1</span><span class="sc">:</span>r]) <span class="sc">%*%</span> <span class="fu">t</span>(v))</span>
+<span id="cb9-2"><a></a>X_irlba <span class="ot">&lt;-</span> <span class="fu">with</span>(irlba<span class="sc">::</span><span class="fu">irlba</span>(X, <span class="at">nu =</span> r, <span class="at">nv =</span> r), u <span class="sc">%*%</span> <span class="fu">diag</span>(d) <span class="sc">%*%</span> <span class="fu">t</span>(v))</span>
+<span id="cb9-3"><a></a><span class="fu">norm</span>(X <span class="sc">-</span> X_r, <span class="st">"F"</span>) <span class="sc">/</span> <span class="fu">norm</span>(X, <span class="st">"F"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.129</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">c</span>(<span class="fu">norm</span>(X_r <span class="sc">-</span> X_irlba, <span class="st">"F"</span>), <span class="fu">norm</span>(X_r <span class="sc">-</span> X_svdr, <span class="st">"F"</span>)) <span class="sc">/</span> <span class="fu">norm</span>(X_r, <span class="st">"F"</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.27e-06 1.68e-04</code></pre>
+</div>
+</div>
+<p><span class="math inline">\(\to\)</span> <code>irlba</code>/<code>svdr</code> weichen von der exakten Rang-<span class="math inline">\(50\)</span>-SVD um Größenordnungen weniger ab, als diese vom Originalbild.</p>
+</section>
+<section id="approximative-svd-bildvergleich" class="slide level3" data-visibility="uncounted">
+<h3>Approximative SVD: Bildvergleich</h3>
+
+<img data-src="08-la-misc_files/figure-revealjs/svd-panel-1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><div class="small">
+<p><a href="#/anwendung-approximative-svd">↩︎ zurück: „Anwendung: Approximative SVD”</a></p>
+</div>
+</section>
+<section id="vergleich-sketching-matrizen" class="slide level3 smaller" data-visibility="uncounted">
+<h3>Vergleich Sketching-Matrizen</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 21%">
+<col style="width: 38%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Typ</strong></th>
+<th><strong>Speicher</strong></th>
+<th><strong>Zeit für <span class="math inline">\(\bS\bx\)</span></strong></th>
+<th><strong>Qualität</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Gauss</td>
+<td><span class="math inline">\(O(mn)\)</span></td>
+<td><span class="math inline">\(O(mn)\)</span></td>
+<td>Optimal</td>
+</tr>
+<tr class="even">
+<td>Rademacher (<span class="math inline">\(\pm 1/\sqrt{m}\)</span>)</td>
+<td><span class="math inline">\(O(mn)\)</span></td>
+<td><span class="math inline">\(O(mn)\)</span></td>
+<td>Optimal</td>
+</tr>
+<tr class="odd">
+<td>Subsampling</td>
+<td><span class="math inline">\(O(m)\)</span></td>
+<td><span class="math inline">\(O(m)\)</span></td>
+<td>Gut (bei über viele Koordinaten <em>gestreuter</em> Information)</td>
+</tr>
+<tr class="even">
+<td>SRHT (Hadamard)</td>
+<td><span class="math inline">\(O(n)\)</span></td>
+<td><span class="math inline">\(O(n \log m)\)</span></td>
+<td>Sehr gut</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trade-offs:</strong></p>
+<ul>
+<li><strong>Gauss:</strong> Theoretisch optimal, aber teuer zu speichern und anzuwenden</li>
+<li><strong>Rademacher:</strong> Genauso gut wie Gauss, einfacher zu generieren (nur <span class="math inline">\(\pm 1\)</span>)</li>
+<li><strong>Subsampling:</strong> Wählt <span class="math inline">\(m\)</span> zufällige Zeilen - extrem schnell, aber nur gut, wenn die Information über viele Koordinaten gestreut ist (schlecht, wenn sie in wenigen Koordinaten konzentriert ist)</li>
+<li><strong>SRHT:</strong> kombiniert hohe Geschwindigkeit und gute Approximationsqualität; Speicher <span class="math inline">\(O(n)\)</span> wegen der <span class="math inline">\(n\)</span> Vorzeichen der vorgeschalteten Diagonalmatrix (sofern man sie nicht aus einem Seed neu erzeugt)
+<ul>
+<li><em>Subsampled Randomized Hadamard Transform</em></li>
+<li><span class="math inline">\(\bS\)</span> wird nicht explizit gespeichert, sondern durch schnelle(!) Transformationen angewendet</li>
+</ul></li>
+</ul>
+<div class="small">
+<p><a href="#/sketching-anwendungen">↩︎ zurück: „Anwendungen”</a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+    (() => {
+      "use strict";
+
+      const MIN_FONT_SIZE = 24;
+      const FIT_STEP = 0.25;
+      const OVERFLOW_TOLERANCE = 1;
+      const SKIP_SELECTOR = ".smaller, .scrollable, .no-autofit";
+      const pendingSlides = new Set();
+      let fitAllPending = false;
+      let fitFrame = null;
+
+      function overflows(slide) {
+        return slide.scrollHeight > slide.clientHeight + OVERFLOW_TOLERANCE ||
+          slide.scrollWidth > slide.clientWidth + OVERFLOW_TOLERANCE;
+      }
+
+      function fitSlide(slide) {
+        if (!slide || slide.querySelector(":scope > section")) {
+          return;
+        }
+
+        // Restore the author's inline value before measuring again.
+        if (slide.hasAttribute("data-autofit-font-size")) {
+          const originalSize = slide.dataset.autofitOriginalFontSize;
+          if (originalSize) {
+            slide.style.fontSize = originalSize;
+          } else {
+            slide.style.removeProperty("font-size");
+          }
+          slide.removeAttribute("data-autofit-font-size");
+          slide.removeAttribute("data-autofit-original-font-size");
+        }
+        slide.classList.remove("autofit-minimum");
+
+        if (slide.matches(SKIP_SELECTOR)) {
+          return;
+        }
+
+        if (!overflows(slide)) {
+          return;
+        }
+
+        const initialSize = parseFloat(getComputedStyle(slide).fontSize);
+        const originalInlineSize = slide.style.fontSize;
+        let low = MIN_FONT_SIZE;
+        let high = initialSize;
+
+        slide.style.fontSize = `${MIN_FONT_SIZE}px`;
+        if (overflows(slide)) {
+          slide.classList.add("autofit-minimum");
+          slide.dataset.autofitFontSize = MIN_FONT_SIZE;
+          slide.dataset.autofitOriginalFontSize = originalInlineSize;
+          console.warn(
+            `Autofit: slide ${slide.id || "(without id)"} still overflows at ` +
+            `${MIN_FONT_SIZE}px. Split it, use .scrollable, or use .no-autofit.`
+          );
+          return;
+        }
+
+        while (high - low > FIT_STEP) {
+          const candidate = (low + high) / 2;
+          slide.style.fontSize = `${candidate}px`;
+          if (overflows(slide)) {
+            high = candidate;
+          } else {
+            low = candidate;
+          }
+        }
+
+        const fittedSize = Math.floor(low / FIT_STEP) * FIT_STEP;
+        slide.style.fontSize = `${fittedSize}px`;
+        slide.dataset.autofitFontSize = fittedSize;
+        slide.dataset.autofitOriginalFontSize = originalInlineSize;
+      }
+
+      function fitAllSlides() {
+        document.querySelectorAll(".reveal .slides > section, .reveal .slides > section > section")
+          .forEach(fitSlide);
+      }
+
+      function scheduleFit(slide) {
+        if (slide) {
+          pendingSlides.add(slide.closest("section.slide") || slide);
+        } else {
+          fitAllPending = true;
+        }
+
+        if (fitFrame !== null) {
+          return;
+        }
+
+        fitFrame = requestAnimationFrame(() => {
+          fitFrame = null;
+          if (fitAllPending) {
+            fitAllPending = false;
+            pendingSlides.clear();
+            fitAllSlides();
+          } else {
+            const slides = [...pendingSlides];
+            pendingSlides.clear();
+            slides.forEach(fitSlide);
+          }
+        });
+      }
+
+      function initializeAutofit() {
+        fitAllSlides();
+
+        Reveal.on("slidechanged", event => scheduleFit(event.currentSlide));
+
+        document.querySelectorAll(".reveal .slides img")
+          .forEach(image => {
+            if (!image.complete) {
+              image.addEventListener("load", () => scheduleFit(image.closest("section")), {
+                once: true
+              });
+            }
+          });
+
+        const slides = document.querySelector(".reveal .slides");
+        if (slides) {
+          new MutationObserver(mutations => {
+            const target = mutations[0]?.target;
+            const element = target?.nodeType === Node.ELEMENT_NODE ?
+              target : target?.parentElement;
+            const slide = element?.closest("section.slide") || Reveal.getCurrentSlide();
+            scheduleFit(slide);
+          }).observe(slides, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        }
+
+        document.fonts?.ready.then(() => scheduleFit());
+        window.MathJax?.startup?.promise?.then(() => scheduleFit());
+        window.addEventListener("load", () => scheduleFit(), { once: true });
+      }
+
+      if (window.Reveal?.isReady()) {
+        initializeAutofit();
+      } else {
+        Reveal.on("ready", initializeAutofit);
+      }
+    })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Kopiert");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Kopiert");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a37c72dd2dbac68997fcdc15a3622e78.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="author" content="Vorlesung: Fabian Scheipl (fabian.scheipl@lmu.de) Material: Thomas Nagler LMU München">
+  <title>Einführung</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d0136d0452bb647bae96a262c75ef92a.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title"><em>Einführung</em></h1>
+  <p class="subtitle"><strong>Fortgeschrittene mathematische Methoden in der Statistik</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vorlesung: Fabian Scheipl (<code>fabian.scheipl@lmu.de</code>)<br>Material: Thomas Nagler<br><strong>LMU München</strong> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="organisatorisches" class="slide level3">
+<h3>Organisatorisches</h3>
+<div class="hidden">
+<p><span class="math display">\[
+\definecolor{fmmgreen}{RGB}{0,158,115}
+\definecolor{fmmblue}{RGB}{0,114,178}
+\definecolor{fmmred}{RGB}{213,94,0}
+\definecolor{fmmorange}{RGB}{230,159,0}
+\definecolor{fmmpurple}{RGB}{158,87,213}
+\newcommand{\ind}{\unicode{x1D7D9}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\K}{{\mathbb{K}}}
+\newcommand{\L}{\mathbb{L}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\S}{\mathbb{S}}
+\newcommand{\D}{{\mathbb{D}}}
+\newcommand{\bnull}{{\boldsymbol{0}}}
+\newcommand{\bzero}{{\boldsymbol{0}}}
+\newcommand{\ba}{{\boldsymbol{a}}}
+\newcommand{\bb}{{\boldsymbol{b}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bd}{{\boldsymbol{d}}}
+\newcommand{\be}{{\boldsymbol{e}}}
+\newcommand{\bg}{{\boldsymbol{g}}}
+\newcommand{\bh}{{\boldsymbol{h}}}
+\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bj}{{\boldsymbol{j}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bl}{{\boldsymbol{l}}}
+\newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\bo}{{\boldsymbol{o}}}
+\newcommand{\bp}{{\boldsymbol{p}}}
+\newcommand{\bq}{{\boldsymbol{q}}}
+\newcommand{\br}{{\boldsymbol{r}}}
+\newcommand{\bs}{{\boldsymbol{s}}}
+\newcommand{\bt}{{\boldsymbol{t}}}
+\newcommand{\bu}{{\boldsymbol{u}}}
+\newcommand{\bv}{{\boldsymbol{v}}}
+\newcommand{\bw}{{\boldsymbol{w}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\bB}{{\boldsymbol{B}}}
+\newcommand{\bC}{{\boldsymbol{C}}}
+\newcommand{\bD}{{\boldsymbol{D}}}
+\newcommand{\bE}{{\boldsymbol{E}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\bG}{{\boldsymbol{G}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bJ}{{\boldsymbol{J}}}
+\newcommand{\bK}{{\boldsymbol{K}}}
+\newcommand{\bL}{{\boldsymbol{L}}}
+\newcommand{\bM}{{\boldsymbol{M}}}
+\newcommand{\bN}{{\boldsymbol{N}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bQ}{{\boldsymbol{Q}}}
+\newcommand{\bR}{{\boldsymbol{R}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bT}{{\boldsymbol{T}}}
+\newcommand{\bU}{{\boldsymbol{U}}}
+\newcommand{\bV}{{\boldsymbol{V}}}
+\newcommand{\bW}{{\boldsymbol{W}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\bY}{{\boldsymbol{Y}}}
+\newcommand{\bZ}{{\boldsymbol{Z}}}
+\newcommand{\tagqed}{\tag*{$\blacksquare$}}
+\newcommand{\Acal}{{\mathcal{A}}}
+\newcommand{\Bcal}{{\mathcal{B}}}
+\newcommand{\Ccal}{{\mathcal{C}}}
+\newcommand{\Dcal}{{\mathcal{D}}}
+\newcommand{\Ecal}{{\mathcal{E}}}
+\newcommand{\Fcal}{{\mathcal{F}}}
+\newcommand{\Gcal}{{\mathcal{G}}}
+\newcommand{\Hcal}{{\mathcal{H}}}
+\newcommand{\Ical}{{\mathcal{I}}}
+\newcommand{\Jcal}{{\mathcal{J}}}
+\newcommand{\Kcal}{{\mathcal{K}}}
+\newcommand{\Lcal}{{\mathcal{L}}}
+\newcommand{\Mcal}{{\mathcal{M}}}
+\newcommand{\Ncal}{{\mathcal{N}}}
+\newcommand{\Ocal}{{\mathcal{O}}}
+\newcommand{\Pcal}{{\mathcal{P}}}
+\newcommand{\Qcal}{{\mathcal{Q}}}
+\newcommand{\Rcal}{{\mathcal{R}}}
+\newcommand{\Scal}{{\mathcal{S}}}
+\newcommand{\Tcal}{{\mathcal{T}}}
+\newcommand{\Ucal}{{\mathcal{U}}}
+\newcommand{\Vcal}{{\mathcal{V}}}
+\newcommand{\Wcal}{{\mathcal{W}}}
+\newcommand{\Xcal}{{\mathcal{X}}}
+\newcommand{\Ycal}{{\mathcal{Y}}}
+\newcommand{\Zcal}{{\mathcal{Z}}}
+\newcommand{\eps}{{\varepsilon}}
+\newcommand{\beps}{{\boldsymbol{\epsilon}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bbeta}{{\boldsymbol{\beta}}}
+\newcommand{\bchi}{{\boldsymbol{\chi}}}
+\newcommand{\bdelta}{{\boldsymbol{\delta}}}
+\newcommand{\bDelta}{{\boldsymbol{\Delta}}}
+\newcommand{\bepsilon}{{\boldsymbol{\epsilon}}}
+\newcommand{\bphi}{{\boldsymbol{\phi}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+\newcommand{\betah}{{\boldsymbol{\eta}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
+\newcommand{\biota}{{\boldsymbol{\iota}}}
+\newcommand{\bkappa}{{\boldsymbol{\kappa}}}
+\newcommand{\blambda}{{\boldsymbol{\lambda}}}
+\newcommand{\bLambda}{{\boldsymbol{\Lambda}}}
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+\newcommand{\bnu}{{\boldsymbol{\nu}}}
+\newcommand{\bomikron}{{\boldsymbol{\omicron}}}
+\newcommand{\bpi}{{\boldsymbol{\pi}}}
+\newcommand{\bSigma}{{\boldsymbol{\Sigma}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+\newcommand{\bzeta}{{\boldsymbol{\zeta}}}
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+\newcommand{\equivto}{{\Leftrightarrow}}
+\newcommand{\quequiv}{{\quad \equivto \quad}}
+\newcommand{\impl}{{\implies}}
+\newcommand{\quimpl}{{\quad \implies \quad}}
+\newcommand{\implby}{{\impliedby}}
+\newcommand{\notimplies}{\not\implies}
+\newcommand{\tr}{{\operatorname{tr}}}
+\newcommand{\spann}{{\operatorname{span}}}
+\newcommand{\col}{{\operatorname{col}}}
+\newcommand{\rang}{{\operatorname{rang}}}
+\newcommand{\diag}{{\operatorname{diag}}}
+\newcommand{\vec}{\operatorname{vec}}
+\newcommand{\pinv}{{^{+}}}
+\newcommand{\kron}{\mathbin{\otimes_{\mathrm{K}}}}
+\newcommand{\sign}{{\operatorname{sign}}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\inner}[1]{{\langle #1 \rangle}}
+\newcommand{\proj}{{\operatorname{proj}}}
+\newcommand{\bar}{\overline}
+\newcommand{\vol}{{\operatorname{vol}}}
+\newcommand{\dx}{{\, \mathrm{d}x}}
+\newcommand{\ol}{{\overline}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\conv}{\mathop{\mathrm{conv}}}
+\newcommand{\epi}{\mathop{\mathrm{epi}}}
+\newcommand{\interior}{\mathop{\mathrm{int}}}
+\newcommand{\Pr}{\mathbb{P}}
+\newcommand{\var}{{\mathbb{V}\mathrm{ar}}}
+\newcommand{\bias}{{\operatorname{bias}}}
+\newcommand{\abias}{{\mathrm{ABias}}}
+\newcommand{\AMSE}{{\mathrm{AMSE}}}
+\newcommand{\AMISE}{{\mathrm{AMISE}}}
+\newcommand{\cov}{{\mathbb{C}\mathrm{ov}}}
+\newcommand{\corr}{{\mathrm{Corr}}}
+\newcommand{\ov}{{\overline}}
+\newcommand{\wh}[1]{{\widehat{#1}}}
+\newcommand{\wt}[1]{{\widetilde{#1}}}
+\newcommand{\tod}{{\stackrel{d}{\to}}}
+\newcommand{\sumin}{{\sum_{i = 1}^n}}
+\newcommand{\sumjn}{{\sum_{j = 1}^n}}
+\newcommand{\KL}{{\operatorname{KL}}}
+\newcommand{\softmax}{{\operatorname{SoftMax}}}
+\newcommand{\layernorm}{{\operatorname{LayerNorm}}}
+\newcommand{\avg}{{\operatorname{avg}}}
+\newcommand{\relu}{{\operatorname{ReLu}}}
+\newcommand{\VC}{{\operatorname{VC}}}
+\newcommand{\indep}{{\perp \!\!\! \perp}}
+\newcommand{\unif}{{\operatorname{Unif}}}
+\newcommand{\bern}{{\operatorname{Bernoulli}}}
+\newcommand{\binomial}{{\operatorname{Binomial}}}
+\newcommand{\MSE}{{\operatorname{MSE}}}
+\newcommand{\iid}{\textit{iid}\;}
+\newcommand{\IF}{{\operatorname{IF} }}
+\newcommand{\BIC}{{\operatorname{BIC}}}
+\newcommand{\AIC}{{\operatorname{AIC}}}
+\newcommand{\IC}{{\operatorname{IC}}}
+\newcommand{\expl}[1]{{\tag*{[#1]}}}
+\newcommand{\cb}[1]{\textbf{#1}}
+\newcommand{\cbgreen}[1]{\textcolor{fmmgreen}{\textbf{#1}}}
+\newcommand{\cbred}[1]{\textcolor{fmmred}{\textbf{#1}}}
+\newcommand{\cbpurp}[1]{\textcolor{fmmpurple}{\textbf{#1}}}
+\newcommand{\cborange}[1]{\textcolor{fmmorange}{\textbf{#1}}}
+\newcommand{\corange}[1]{{\textcolor{fmmorange}{#1}}}
+\newcommand{\cblue}[1]{{\textcolor{fmmblue}{#1}}}
+\newcommand{\cgreen}[1]{{\textcolor{fmmgreen}{#1}}}
+\newcommand{\cred}[1]{{\textcolor{fmmred}{#1}}}
+\newcommand{\cpurp}[1]{{\textcolor{fmmpurple}{#1}}}
+\newcommand{\symbf}[1]{\boldsymbol{#1}}
+\]</span></p>
+</div>
+<ul>
+<li><p><strong>Personen</strong>:</p>
+<ul>
+<li>Dr.&nbsp;Fabian Scheipl (VL)</li>
+<li>Jana Gauß (Ü)</li>
+</ul></li>
+<li><p><strong>Zeiten &amp; Räume</strong>:</p>
+<table class="caption-top">
+<tbody>
+<tr class="odd">
+<td>VL</td>
+<td>Do 10:15-12:00</td>
+<td>Hgb. – A 214</td>
+</tr>
+<tr class="even">
+<td>Übung 1</td>
+<td>Di 14:15-15:45</td>
+<td>Prof.-Huber-Pl. 2 – W 201</td>
+</tr>
+<tr class="odd">
+<td>Übung 2</td>
+<td>Mi 12:15-13:45</td>
+<td>Hgb. - M 114</td>
+</tr>
+</tbody>
+</table></li>
+<li><p><strong>Termine WS 26/27</strong>: wöchentlich Do, <strong>15.10.2026 – 4.2.2027</strong> (Weihnachtspause: letzte VL 17.12.2026, weiter am 7.1.2027)</p></li>
+</ul>
+<!-- **Vorläufiger Klausurtermin**: TBD -- vsl. Do 11.02.2027, 10-12 Uhr (erste Woche nach Vorlesungsende, wie in den Vorjahren) -->
+<!--
+:::{.block}
+[**Opener-Quiz**]{.block-title}
+
+Beim Reinkommen: QR-Code scannen und die 2 Einstiegsfragen beantworten.
+
+ TODO: particify room link
+:::
+-->
+</section>
+<section>
+<section id="motivation" class="title-slide slide level2 center">
+<h2>Motivation</h2>
+
+</section>
+<section id="inhalt-statistik-früher-heute" class="slide level3">
+<h3>Inhalt: Statistik früher &amp; heute</h3>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p><strong>Statistik früher</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/fisher.png" class="quarto-figure quarto-figure-center" style="width:80.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:55%;">
+<p><strong>Statistik heute</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/hacker.jpg" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="motivation-1" class="slide level3">
+<h3>Motivation</h3>
+<ul>
+<li><p>In der Praxis ist Statistik / ML immer <em>computational</em>.</p></li>
+<li><p>In diesem Kurs lernen wir <em>mathematische Konzepte</em>, die bei der praktischen Lösung von Problemen helfen.</p></li>
+<li><p>Diese Konzepte werden benötigt, um <em>Computeralgorithmen</em> zu entwickeln, verstehen und analysieren.</p>
+<p><span class="math inline">\(\implies\)</span> fortgeschrittene (numerische) Lineare Algebra</p>
+<p><span class="math inline">\(\implies\)</span> fortgeschrittene Analysis</p></li>
+</ul>
+</section>
+<section id="warum-so-viel-mathe-ein-beispiel" class="slide level3 smaller">
+<h3>Warum so viel Mathe? Ein Beispiel</h3>
+<p><strong>Aufgabe:</strong> Trainiere ein lineares Modell <span class="math inline">\(y_i \approx \beta_1 x_{i1} + \dots + \beta_p x_{ip}\)</span> mit <span class="math inline">\(p = 10.000\)</span> Features auf <span class="math inline">\(n = 100.000\)</span> Beobachtungen.</p>
+<p><span class="math inline">\(\implies\)</span> <strong>Kleinste-Quadrate-Problem:</strong></p>
+<p><span class="math display">\[\min_{\bbeta \in \R^p}\left(\sum^n_{i=1} \left( y_i - \sum^p_{j=1} x_{ij}\beta_j\right)^2\right) = \min_{\bbeta \in \R^p} \|\bX\bbeta - \by\|_2^2\]</span></p>
+<p><strong>Naive Lösung</strong> (falls <span class="math inline">\(\rang(\bX) = p\)</span>)<strong>:</strong> <span class="math inline">\(\wh{\bbeta} = (\bX^\top\bX)^{-1}\bX^\top\by\)</span></p>
+<div class="fragment">
+<p><strong>Probleme in der Praxis:</strong></p>
+<ol type="1">
+<li><p><strong>Kondition</strong>: <span class="math inline">\(\bX^\top\bX\)</span> kann sehr schlecht “konditioniert” sein <span class="math inline">\(\implies\)</span> numerische Instabilität, große Fehler</p></li>
+<li><p><strong>Komplexität</strong>: Matrixinversion kostet <span class="math inline">\(O(p^3)\)</span> Operationen <span class="math inline">\(\implies\)</span> für <span class="math inline">\(p = 10.000\)</span>: ca. <span class="math inline">\(10^{12}\)</span> FLOPs!</p></li>
+<li><p><strong>Speicher</strong>: <span class="math inline">\(\bX^\top\bX\)</span> ist <span class="math inline">\(p \times p\)</span> Matrix <span class="math inline">\(\implies\)</span> für <span class="math inline">\(p = 10.000\)</span>: ca. 800 MB nur für diese Matrix</p></li>
+</ol>
+<p><strong>Bessere Lösungen:</strong> QR-Zerlegung, SVD, iterative Verfahren <span class="math inline">\(\to\)</span> dieser Kurs</p>
+</div>
+</section>
+<section id="themen" class="slide level3">
+<h3>Themen</h3>
+<ul>
+<li>Kondition und Komplexität
+<ul>
+<li>Was sind gute Algorithmen?</li>
+</ul></li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Numerische Lineare Algebra
+<ul>
+<li>Matrix- &amp; Tensorrechnung</li>
+<li>Berechne (KQ-)Lösungen für <span class="math inline">\(\bA \bx \approx \bb\)</span> etc.</li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Fortgeschrittene Differenzialrechnung / Analysis
+<ul>
+<li>Höherdimensionale, verallgemeinerte Ableitungen</li>
+<li>Wie kann man komplizierte Fkt. einfach approximieren?</li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment">
+<ul>
+<li>Numerische Optimierung
+<ul>
+<li>Wie finde ich Minima/Maxima von komplizierten Funktionen?</li>
+<li>z.B. Training neuronaler Netze: Millionen Parameter, nicht-konvexe Verlustfunktionen <span class="math inline">\(\to\)</span> smarte Algorithmen nötig (SGD &amp; Co.)</li>
+</ul></li>
+</ul>
+</div>
+</section></section>
+<section>
+<section id="fünf-beispiele" class="title-slide slide level2 center">
+<h2>Fünf Beispiele</h2>
+
+</section>
+<section id="beispiel-1-kondition" class="slide level3 smaller">
+<h3><strong>Beispiel 1: Kondition</strong></h3>
+<p>Betrachte das lineare Gleichungssystem <span class="math inline">\(\bA\bx = \bb\)</span> mit <span class="math display">\[\bA = \begin{pmatrix} 1 &amp; 1 \\ 1 &amp; 1.0001 \end{pmatrix}, \quad \bb = \begin{pmatrix} 2 \\ 2.0001 \end{pmatrix}\]</span></p>
+<p><strong>Exakte Lösung:</strong> <span class="math inline">\(\bx = \begin{pmatrix} 1 \\ 1 \end{pmatrix}\)</span></p>
+<p><strong>Gestörtes Problem</strong> (z.B. durch Rundungsfehler): <span class="math inline">\(\bA\bx = \tilde{\bb}\)</span> mit <span class="math display">\[\tilde{\bb} = \begin{pmatrix} 2 \\ 2.0002 \end{pmatrix} \quad \text{(nur 0.005\% Fehler!)}\]</span></p>
+<p><strong>Lösung des gestörten Problems:</strong> <span class="math inline">\(\tilde{\bx} = \begin{pmatrix} 0 \\ 2 \end{pmatrix}\)</span></p>
+<p><span class="math inline">\(\implies\)</span> <strong>100% Fehler</strong> in <span class="math inline">\(x_1\)</span> durch 0.005% Fehler in den Daten!</p>
+<p><span class="math inline">\(\implies\)</span> Das Problem ist (furchtbar) <strong>schlecht konditioniert</strong>.</p>
+<!-- Anker für Demo (WS-F): condition-shiny — Störung schieben, Lösung springt;
+     Geometrie: zwei fast parallele Geraden. -->
+</section>
+<section id="beispiel-2-komplexität" class="slide level3">
+<h3><strong>Beispiel 2: Komplexität</strong></h3>
+<p><strong>Matrixmultiplikation</strong> <span class="math inline">\(\bC = \bA\bB\)</span> für <span class="math inline">\(n \times n\)</span> Matrizen:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Algorithmus</th>
+<th>Rechenops. für <span class="math inline">\(n = 1000\)</span></th>
+<th>Komplexität</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Naive Methode</td>
+<td><span class="math inline">\(\approx 10^9\)</span> Ops</td>
+<td><span class="math inline">\(O(n^3)\)</span></td>
+</tr>
+<tr class="even">
+<td>Strassen</td>
+<td><span class="math inline">\(\approx 6 \times 10^8\)</span> Ops</td>
+<td><span class="math inline">\(O(n^{2.807})\)</span></td>
+</tr>
+<tr class="odd">
+<td>Optimiert</td>
+<td><span class="math inline">\(\approx 2 \times 10^8\)</span> Ops</td>
+<td><span class="math inline">\(O(n^{2.373})\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Für <span class="math inline">\(n = 10.000\)</span>:</strong></p>
+<ul>
+<li>Naiv: <span class="math inline">\(\approx 10^{12}\)</span> Ops</li>
+<li>Optimiert: <span class="math inline">\(\approx 2 \times 10^{10}\)</span> Ops</li>
+</ul>
+<p><span class="math inline">\(\implies\)</span> <strong>Faktor 50 schneller</strong> durch besseren Algorithmus (…potentiell)!</p>
+</section>
+<section id="beispiel-3-höherdimensionale-ableitungen" class="slide level3 smaller">
+<h3><strong>Beispiel 3: Höherdimensionale Ableitungen</strong></h3>
+<p><strong>Beispiel AI:</strong> Gradient Descent für neuronale Netze</p>
+<p><strong>Verlustfunktion:</strong> <span class="math inline">\(L : \R^{p \times K} \to \R\)</span> (Matrix-Argument <span class="math inline">\(\bW\)</span>!)</p>
+<p>Zum Beispiel: <strong>MSE</strong> <span class="math display">\[L(\bW) = \frac{1}{2}\|\bX\bW - \bY\|_F^2\]</span> mit <span class="math inline">\(\bX \in \R^{N \times p}\)</span>, <span class="math inline">\(\bW \in \R^{p \times K}\)</span>, <span class="math inline">\(\bY \in \R^{N \times K}\)</span></p>
+<p><strong>Frage:</strong> Wie berechnen wir <span class="math inline">\(\frac{\partial L}{\partial \bW}\)</span>?</p>
+<div class="fragment">
+<p><strong>Naive Methode:</strong> Berechne <span class="math inline">\(\frac{\partial L}{\partial W_{ij}}\)</span> für alle <span class="math inline">\(i,j\)</span> einzeln</p>
+<p><span class="math inline">\(\implies\)</span> <span class="math inline">\(p \times K\)</span> Ableitungen!</p>
+<p>Für <span class="math inline">\(p = 1000, K = 10\)</span>: <strong>10.000 Ableitungen</strong>!</p>
+<p><strong>Bessere Methode:</strong> Matrix-Kalkül <span class="math display">\[\frac{\partial L}{\partial \bW} = \bX^\top(\bX\bW - \bY)\]</span></p>
+<p>Eine Zeile statt 10.000! Und: <strong>effizient implementierbar</strong>.</p>
+<p><span class="math inline">\(\implies\)</span> Ableitungen von Matrix/Tensor-Funktionen essentiell für Deep Learning, Optimierung, etc.</p>
+</div>
+</section>
+<section id="beispiel-4-funktionsapproximation-taylor-reihen" class="slide level3 smaller">
+<h3><strong>Beispiel 4: Funktionsapproximation: Taylor-Reihen</strong></h3>
+<p><strong>Ziel:</strong> Approximiere komplizierte Funktion <span class="math inline">\(f(x)\)</span> durch ein Polynom in der Nähe von <span class="math inline">\(x_0\)</span></p>
+<p><strong>Taylor-Approximation 2. Ordnung:</strong> <span class="math display">\[f(x) \approx f(x_0) + f'(x_0)(x-x_0) + \frac{f''(x_0)}{2}(x-x_0)^2\]</span></p>
+<div class="fragment">
+<div class="columns">
+<div class="column" style="width:52%;">
+<p><strong>Konkretes Beispiel:</strong> <span class="math inline">\(f(x) = e^x\)</span> um <span class="math inline">\(x_0 = 0\)</span> <span class="math display">\[f(0) = f'(0) = f''(0) = 1 \implies e^x \approx 1 + x + \frac{x^2}{2}\]</span></p>
+<p><strong>Fehler für <span class="math inline">\(x = 0.5\)</span>:</strong></p>
+<ul>
+<li>Exakt: <span class="math inline">\(e^{0.5} = 1.6487...\)</span></li>
+<li>Approximation: <span class="math inline">\(1 + 0.5 + 0.125 = 1.625\)</span></li>
+<li>Relativer Fehler: <span class="math inline">\(&lt; 2\%\)</span></li>
+</ul>
+</div><div class="column" style="width:48%;">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="01-intro_files/figure-revealjs/unnamed-chunk-1-1.png" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="beispiel-5-optimierung-in-machine-learning" class="slide level3 smaller">
+<h3><strong>Beispiel 5: Optimierung in Machine Learning</strong></h3>
+<p><strong>Typisches Problem:</strong> Training eines neuronalen Netzes</p>
+<p><span class="math display">\[\min_{\btheta \in \R^d} L(\btheta), \qquad L(\btheta) = \frac{1}{N}\sum_{i=1}^N \ell(f(\bx_i; \btheta), y_i)\]</span></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 44%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modell</th>
+<th>Parameter <span class="math inline">\(d\)</span></th>
+<th>Daten <span class="math inline">\(N\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Logistische Regression (MNIST, 10 Klassen)</td>
+<td><span class="math inline">\(\sim 8 \times 10^3\)</span></td>
+<td><span class="math inline">\(6 \times 10^4\)</span></td>
+</tr>
+<tr class="even">
+<td>ResNet-50</td>
+<td><span class="math inline">\(\sim 2.5 \times 10^7\)</span></td>
+<td><span class="math inline">\(&gt; 10^6\)</span></td>
+</tr>
+<tr class="odd">
+<td>GPT-3</td>
+<td><span class="math inline">\(\sim 1.75 \times 10^{11}\)</span></td>
+<td><span class="math inline">\(\sim 3 \times 10^{11}\)</span> Tokens</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Herausforderungen:</strong></p>
+<ol type="1">
+<li><strong>Nicht-konvex:</strong> Viele lokale Minima / Sattelpunkte der Verlustfunktion</li>
+<li><strong>Hochdimensional:</strong> Naive Methoden scheitern</li>
+<li><strong>Stochastisch:</strong> Nur Zugriff auf Minibatches</li>
+</ol>
+<p><span class="math inline">\(\implies\)</span> Brauchen <strong>smarte Algorithmen</strong>: Stochastic Gradient Descent, Momentum, etc.</p>
+</section></section>
+<section>
+<section id="vorkenntnisse-selbsttest" class="title-slide slide level2 center">
+<h2>Vorkenntnisse &amp; Selbsttest</h2>
+
+</section>
+<section id="benötigte-vorkenntnisse" class="slide level3">
+<h3>Benötigte Vorkenntnisse</h3>
+<ul>
+<li>Lineare Algebra (VL Lineare Algebra I):
+<ul>
+<li>v.a. Matrixrechnung, Eigenwerte und -vektoren</li>
+</ul></li>
+<li>Analysis (VL Analysis I):
+<ul>
+<li>v.a. Stetigkeit &amp; Differenzierbarkeit, Ableitungen</li>
+</ul></li>
+<li>R-Programmierung (VL Einführung in R)</li>
+</ul>
+<p>Empfehlung:</p>
+<ul>
+<li>Intuition für LA z.B. mit <em>3blue1brown</em> o.ä. aufbauen!</li>
+<li>Skript <strong>aktiv</strong> lesen &amp; benutzen um Grundbegriffe zu wiederholen</li>
+</ul>
+<!--
+### Zur Erinnerung: Basis & Span
+
+:::{.block}
+[Recap (Lineare Algebra I): **Span & Basis**]{.block-title}
+
+- **Span** (lineare Hülle): Menge aller Linearkombinationen,
+$$\spann(\bv_1, \dots, \bv_k) = \left\{ \sum_{j=1}^k \alpha_j \bv_j \colon \alpha_1, \dots, \alpha_k \in \R \right\}$$
+- **Basis** eines Vektorraums $V$: *linear unabhängige* Vektoren $\bv_1, \dots, \bv_d$ mit $\spann(\bv_1, \dots, \bv_d) = V$
+  - $\implies$ jedes $\bv \in V$ hat eine **eindeutige** Darstellung $\bv = \sum_{j=1}^d \alpha_j \bv_j$
+  - Anzahl der Basisvektoren = **Dimension** von $V$
+:::
+
+**Merken für später:** Am Ende des Kurses fassen wir *Funktionen* als Vektoren auf —
+Basen von Funktionenräumen (z.B. Splines) funktionieren genau nach diesem Prinzip.
+-->
+</section>
+<section id="minimaler-selbsttest-vorkenntnisse-evtl.-ausreichend" class="slide level3">
+<h3>(Minimaler) Selbsttest: Vorkenntnisse evtl. ausreichend?</h3>
+<p><strong>Lineare Algebra - Sie sollten wissen:</strong></p>
+<ol type="1">
+<li>Was ist der <em>Rang</em> einer Matrix? Wie berechne ich ihn?</li>
+<li>Was bedeutet es, wenn eine Matrix <span class="math inline">\(\bA\)</span> <em>invertierbar</em> ist?</li>
+<li>Was sind <em>Eigenwerte/Eigenvektoren</em> einer Matrix? Wie finde ich sie?</li>
+<li>Was ist die geometrische Bedeutung einer Matrix-Vektor-Multiplikation <span class="math inline">\(\bA\bx\)</span>?</li>
+<li>Wann bilden Vektoren <span class="math inline">\(\bv_1, \dots, \bv_n\)</span> eine <em>Basis</em> des <span class="math inline">\(\R^n\)</span>? Was ist ihr <em>Span</em>?</li>
+</ol>
+<!--- Lösung:
+1. Rang = Dimension des Bildes; Anzahl linear unabhängiger Spalten/Vektoren; berechnet durch Gauß-Algorithmus (zB)
+2. $\bA \in \R^{n \times n}$ ist invertierbar, wenn $\exists \bA^{-1}$ mit $\bA\bA^{-1} = \bI$; äquivalent: Rang = $n$; äquivalent: $\det(\bA) \neq 0$; äquivalent: 0 ist kein Eigenwert
+3. Eigenwert $\lambda$ und Eigenvektor $\bv \neq \bnull$ erfüllen $\bA\bv = \lambda \bv$; Eigenwerte durch Lösen von $\det(\bA - \lambda \bI) = 0$ (char. Polynom) oder numerisch; zu jedem $\lambda$ dann Eigenvektoren $\bv \neq \bnull$ aus $(\bA - \lambda\bI)\bv = \bnull$. Geometrisch gesehen: $\bA$ skaliert den Vektor $\bv$ um $\lambda$
+4. Die Abbildung $\bx \mapsto \bA\bx$ ist linear; skaliert, rotiert, spiegelt, etc. den Vektor
+5. Wenn sie linear unabhängig sind und den $\R^n$ aufspannen (n linear unabhängige Vektoren im $\R^n$ genügen); Span = Menge aller Linearkombinationen der Vektoren
+-->
+</section>
+<section id="minimaler-selbsttest-vorkenntnisse-evtl.-ausreichend-1" class="slide level3">
+<h3>(Minimaler) Selbsttest: Vorkenntnisse evtl. ausreichend?</h3>
+<p><strong>Analysis - Sie sollten wissen:</strong></p>
+<ol type="1">
+<li>Was bedeutet es, wenn eine Funktion <span class="math inline">\(f: \R \to \R\)</span> <em>stetig</em> ist?</li>
+<li>Was ist die <em>Ableitung</em> <span class="math inline">\(f'(x_0)\)</span> geometrisch?</li>
+<li>Was ist ein lokales vs.&nbsp;globales Minimum?</li>
+</ol>
+<!--- Lösung:
+1. Stetig bedeutet, dass kleine Änderungen in $x$ zu kleinen Änderungen in $f(x)$ führen; formal (Stetigkeit in jedem Punkt $x_0$): $\forall x_0 \, \forall \epsilon > 0 \, \exists \delta > 0$ s.d. $\forall x: |x - x_0| < \delta \implies |f(x) - f(x_0)| < \epsilon$
+2. $f'(x_0)$ ist die Steigung der Tangente an den Graphen von $f$ bei $x_0$; gibt die Änderungsrate von $f$ an
+3. Lokales Minimum: $f(x_0) \leq f(x)$ für alle $x$ in einer Umgebung von $x_0$; globales Minimum: $f(x_0) \leq f(x)$ für alle $x$ im Definitionsbereich
+-->
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+    (() => {
+      "use strict";
+
+      const MIN_FONT_SIZE = 24;
+      const FIT_STEP = 0.25;
+      const OVERFLOW_TOLERANCE = 1;
+      const SKIP_SELECTOR = ".smaller, .scrollable, .no-autofit";
+      const pendingSlides = new Set();
+      let fitAllPending = false;
+      let fitFrame = null;
+
+      function overflows(slide) {
+        return slide.scrollHeight > slide.clientHeight + OVERFLOW_TOLERANCE ||
+          slide.scrollWidth > slide.clientWidth + OVERFLOW_TOLERANCE;
+      }
+
+      function fitSlide(slide) {
+        if (!slide || slide.querySelector(":scope > section")) {
+          return;
+        }
+
+        // Restore the author's inline value before measuring again.
+        if (slide.hasAttribute("data-autofit-font-size")) {
+          const originalSize = slide.dataset.autofitOriginalFontSize;
+          if (originalSize) {
+            slide.style.fontSize = originalSize;
+          } else {
+            slide.style.removeProperty("font-size");
+          }
+          slide.removeAttribute("data-autofit-font-size");
+          slide.removeAttribute("data-autofit-original-font-size");
+        }
+        slide.classList.remove("autofit-minimum");
+
+        if (slide.matches(SKIP_SELECTOR)) {
+          return;
+        }
+
+        if (!overflows(slide)) {
+          return;
+        }
+
+        const initialSize = parseFloat(getComputedStyle(slide).fontSize);
+        const originalInlineSize = slide.style.fontSize;
+        let low = MIN_FONT_SIZE;
+        let high = initialSize;
+
+        slide.style.fontSize = `${MIN_FONT_SIZE}px`;
+        if (overflows(slide)) {
+          slide.classList.add("autofit-minimum");
+          slide.dataset.autofitFontSize = MIN_FONT_SIZE;
+          slide.dataset.autofitOriginalFontSize = originalInlineSize;
+          console.warn(
+            `Autofit: slide ${slide.id || "(without id)"} still overflows at ` +
+            `${MIN_FONT_SIZE}px. Split it, use .scrollable, or use .no-autofit.`
+          );
+          return;
+        }
+
+        while (high - low > FIT_STEP) {
+          const candidate = (low + high) / 2;
+          slide.style.fontSize = `${candidate}px`;
+          if (overflows(slide)) {
+            high = candidate;
+          } else {
+            low = candidate;
+          }
+        }
+
+        const fittedSize = Math.floor(low / FIT_STEP) * FIT_STEP;
+        slide.style.fontSize = `${fittedSize}px`;
+        slide.dataset.autofitFontSize = fittedSize;
+        slide.dataset.autofitOriginalFontSize = originalInlineSize;
+      }
+
+      function fitAllSlides() {
+        document.querySelectorAll(".reveal .slides > section, .reveal .slides > section > section")
+          .forEach(fitSlide);
+      }
+
+      function scheduleFit(slide) {
+        if (slide) {
+          pendingSlides.add(slide.closest("section.slide") || slide);
+        } else {
+          fitAllPending = true;
+        }
+
+        if (fitFrame !== null) {
+          return;
+        }
+
+        fitFrame = requestAnimationFrame(() => {
+          fitFrame = null;
+          if (fitAllPending) {
+            fitAllPending = false;
+            pendingSlides.clear();
+            fitAllSlides();
+          } else {
+            const slides = [...pendingSlides];
+            pendingSlides.clear();
+            slides.forEach(fitSlide);
+          }
+        });
+      }
+
+      function initializeAutofit() {
+        fitAllSlides();
+
+        Reveal.on("slidechanged", event => scheduleFit(event.currentSlide));
+
+        document.querySelectorAll(".reveal .slides img")
+          .forEach(image => {
+            if (!image.complete) {
+              image.addEventListener("load", () => scheduleFit(image.closest("section")), {
+                once: true
+              });
+            }
+          });
+
+        const slides = document.querySelector(".reveal .slides");
+        if (slides) {
+          new MutationObserver(mutations => {
+            const target = mutations[0]?.target;
+            const element = target?.nodeType === Node.ELEMENT_NODE ?
+              target : target?.parentElement;
+            const slide = element?.closest("section.slide") || Reveal.getCurrentSlide();
+            scheduleFit(slide);
+          }).observe(slides, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        }
+
+        document.fonts?.ready.then(() => scheduleFit());
+        window.MathJax?.startup?.promise?.then(() => scheduleFit());
+        window.addEventListener("load", () => scheduleFit(), { once: true });
+      }
+
+      if (window.Reveal?.isReady()) {
+        initializeAutofit();
+      } else {
+        Reveal.on("ready", initializeAutofit);
+      }
+    })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Kopiert");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Kopiert");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
