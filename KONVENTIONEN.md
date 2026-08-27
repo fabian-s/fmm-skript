@@ -168,6 +168,17 @@ per Regex gelesen (`scripts/lib/registry.mjs`), und `gen-toc` bricht sonst ab.
   Tabelle veraltet ist (CI).
 - `npm run lint:numbers` findet handgeschriebene Nummern in MDX und TSX.
   Läuft in `npm run build` mit; `--strict` macht daraus einen Fehler.
+- `npm run export:volltext` (= `node scripts/export-volltext.mjs`) schreibt den
+  Skript-Text als TXT nach `../attic/`: einmal komplett (`skript-volltext.txt`)
+  und einmal je Kursteil (`skript-volltext-teil{1,2,3}-*.txt`, Aufteilung wie in
+  `slides/concept-map.qmd`; jede Teildatei enthält Legende und Glossar, ist also
+  für sich verwendbar — manche Chatbot-Oberflächen verschlucken sich an der
+  1,6-MB-Gesamtdatei). Kontext-Futter für LLMs (Tutor-Chatbots,
+  Konsistenzprüfungen), kein Build-Artefakt. Direktiven werden zu lesbaren Markern (`[Satz 6.2.2 – …]`,
+  `[Selbsttest – richtige Antwort: wahr]`), `@typ:id`-Verweise zu echten
+  Nummern aufgelöst, Widgets nur als Marker vermerkt; Mathe bleibt LaTeX.
+  Vorher `npm run gen:numbers`, sonst sind die aufgelösten Nummern veraltet.
+  Details im Dateikopf des Skripts.
 - Im Dev-Server rechnet ein Vite-Plugin die Tabelle bei jeder MDX-Änderung
   neu. Ändert sich keine Nummer, läuft normales HMR. Verschiebt eine
   Einfügung den Zähler, sind die Nummern in **allen** Modulen veraltet: dann

@@ -109,6 +109,8 @@ Taylorentwicklung heraus, denn beide brauchen einen
 :k[Mittelwertsatz]{#mean-value-theorem}; der allgemeine @satz:taylorentwicklung-ii verwendet
 statt einer skalaren Zwischenstelle die Integralform des Restglieds.
 
+:::::vertiefung[Weitere Ableitungsformate und praktische Nachschlagewege]
+
 ### Was wir ausgelassen haben
 
 :::bemerkung[#die-drei-leeren-felder (Die drei leeren Felder)]
@@ -196,6 +198,22 @@ je nach Zeilen- oder Spaltenkonvention transponiert (@bemerkung:zeilenvektor-nic
 rechteckigen Formaten fällt das schon beim Nachzählen von Zeilen und Spalten
 auf. Bei quadratischen passt die transponierte Fassung genauso gut, und dann
 hilft nur eine numerische Probe an einem kleinen Beispiel.
+
+::::quiz
+:::frage{wahr}
+Die Ableitung einer matrixwertigen Funktion nach einer Matrix passt im
+Allgemeinen in kein rechteckiges Zahlenschema mehr.
+
+Für $f\colon \R^{m \times n} \to \R^{p \times q}$ entstehen $m n p q$ partielle
+Ableitungen mit vier Indexpositionen, also ein Tensor der Stufe $4$
+(@bemerkung:die-drei-leeren-felder). Deshalb bleiben die drei Zellen der
+Übersicht aus @sec:gradient leer. Wer den Fall braucht, rechnet mit Tensoren
+oder stapelt die Matrizen per Vektorisierung zu Vektoren um
+(@sec:tensoren/zusammenfassung).
+:::
+::::
+
+:::::
 
 ### Das Wichtigste in Kürze
 
@@ -305,18 +323,6 @@ Die Formel ist @eq:ableitung-von-f-x-a-xb, und rechts steht ein
 Rang $1$ hat. Für $\ba = (1,2)^\top$ und $\bb = (3,-1)^\top$ ist
 $\ba\bb^\top = \bigl(\begin{smallmatrix} 3 & -1 \\ 6 & -2 \end{smallmatrix}\bigr)$
 mit Determinante $0$; die zweite Zeile ist das Doppelte der ersten.
-:::
-
-:::frage{wahr}
-Die Ableitung einer matrixwertigen Funktion nach einer Matrix passt im
-Allgemeinen in kein rechteckiges Zahlenschema mehr.
-
-Für $f\colon \R^{m \times n} \to \R^{p \times q}$ entstehen $m n p q$ partielle
-Ableitungen mit vier Indexpositionen, also ein Tensor der Stufe $4$
-(@bemerkung:die-drei-leeren-felder). Deshalb bleiben die drei Zellen der Übersicht aus
-@sec:gradient leer. Wer den Fall braucht, rechnet mit Tensoren
-oder stapelt die Matrizen per Vektorisierung zu Vektoren um
-(@sec:tensoren/zusammenfassung).
 :::
 
 :::zahlfrage{loesung=0 toleranz=0,03}

@@ -109,9 +109,19 @@ ein kubischer Spline und interpoliert sich fehlerfrei. Der natürliche Spline au
 vier gleich langen Teilintervallen weicht dagegen um $0{,}018$ ab, weil er
 $\cgreen{s''(1)} = 0$ erzwingt, während $f''(1) = 6$ ist.
 
-Im Beispiel unten passt beides zusammen: $f(x) = \sin(2\pi x)$ hat
-$f''(0) = f''(1) = 0$ und erfüllt die natürliche Randbedingung exakt. Die
-Konstante $\tfrac{5}{384}$ ist dort also ehrlich verdient.
+Für das Beispiel unten schreiben wir deshalb gleich die Randableitungen vor,
+$\cgreen{s'(0)} = f'(0)$ und $\cgreen{s'(1)} = f'(1)$; die Konstante
+$\tfrac{5}{384}$ ist dort also ehrlich verdient. Wie viel daran hängt, zeigt
+der Vergleich mit dem natürlichen Spline derselben Funktion. Auf groben Gittern
+ist der Unterschied winzig, weil die Funktion dort an beiden Rändern fast flach
+ausläuft: bei fünf Knoten messen wir $0{,}341$ statt $0{,}324$. Sobald das Gitter
+fein wird, schlägt der Randfehler durch. Bei $33$ Knoten sitzt der größte Fehler
+des natürlichen Splines nicht mehr an der Spitze im Inneren, sondern bei
+$x \approx 0{,}012$ am linken Rand, und bei $65$ Knoten ist er mit
+$1{,}84 \cdot 10^{-5}$ sogar *größer* als die Schranke
+$1{,}49 \cdot 10^{-5}$ aus @eq:approximationsfehler-kubischer-splines. Ein
+Widerspruch wäre das nur, wenn der Satz die Schranke für jeden Randabschluss
+behauptete.
 :::
 
 ### Woher der Exponent kommt
@@ -234,33 +244,56 @@ Grades ruiniert
 
 ### Ein numerisches Beispiel
 
-:::beispiel[#sinus-auf-dem-einheitsintervall (Sinus auf dem Einheitsintervall)]
-Wir nehmen $f(x) = \sin(2\pi x)$ auf $[0, 1]$. Die vierte Ableitung ist
-$f^{(4)}(x) = (2\pi)^4 \sin(2\pi x)$, also
+:::beispiel[#buckel-auf-dem-einheitsintervall (Ein Buckel auf dem Einheitsintervall)]
+Wir nehmen einen schmalen Buckel,
 
 $$
-M_4 := \max_{x \in [0, 1]} \left| f^{(4)}(x) \right| = (2\pi)^4 \approx 1559 .
+f(x) = \exp\left(-\alpha \left(x - \tfrac{2}{5}\right)^2\right)
+\quad \text{mit } \alpha = 40, \qquad x \in [0, 1] .
 $$
+
+Mit $t := x - \tfrac{2}{5}$ ist
+
+$$
+f^{(4)}(x) = \left(12\alpha^2 - 48\alpha^3 t^2 + 16\alpha^4 t^4\right) f(x) ,
+\qquad
+M_4 := \max_{x \in [0, 1]} \left| f^{(4)}(x) \right| = 12\alpha^2 = 19200 ,
+$$
+
+und das Maximum sitzt in der Spitze $t = 0$. Dort, auf einem schmalen Streifen,
+steckt fast der ganze Fehler; an beiden Rändern ist $f$ praktisch null.
 
 Auf gleichmäßigen Gittern mit $n + 1$ Knoten ist $\corange{h} = 1/n$, und
 @eq:approximationsfehler-kubischer-splines liefert die Schranke $\tfrac{5}{384} \corange{h}^4 M_4$. Die vierte
-Spalte ist unsere eigene Rechnung: Wir bestimmen den natürlichen kubischen
-Spline über das tridiagonale System seiner zweiten Ableitungen und messen
-$\max \cred{|f - s|}$ auf einem feinen Raster.
+Spalte ist unsere eigene Rechnung: Wir bestimmen den vollständigen kubischen
+Spline über das tridiagonale System seiner zweiten Ableitungen an den Knoten und
+messen $\max \cred{|f - s|}$ auf einem feinen Raster.
 
 | Knoten $n+1$ | Gitterweite $h$ | Schranke $C h^4 M_4$ | gemessener Fehler | Faktor |
 |:---|:---|:---|:---|:---|
-| $5$ | $0{,}25$ | $0{,}0793$ | $0{,}0200$ | – |
-| $9$ | $0{,}125$ | $0{,}00495$ | $0{,}001066$ | $18{,}8$ |
-| $17$ | $0{,}0625$ | $0{,}000310$ | $0{,}0000631$ | $16{,}9$ |
-| $33$ | $0{,}03125$ | $0{,}0000194$ | $0{,}00000389$ | $16{,}2$ |
+| $5$ | $0{,}25$ | $0{,}977$ | $0{,}324$ | – |
+| $9$ | $0{,}125$ | $0{,}0610$ | $0{,}0239$ | $13{,}6$ |
+| $17$ | $0{,}0625$ | $3{,}81 \cdot 10^{-3}$ | $1{,}11 \cdot 10^{-3}$ | $21{,}6$ |
+| $33$ | $0{,}03125$ | $2{,}38 \cdot 10^{-4}$ | $5{,}16 \cdot 10^{-5}$ | $21{,}4$ |
+| $65$ | $0{,}015625$ | $1{,}49 \cdot 10^{-5}$ | $3{,}05 \cdot 10^{-6}$ | $16{,}9$ |
+| $129$ | $0{,}0078125$ | $9{,}31 \cdot 10^{-7}$ | $1{,}87 \cdot 10^{-7}$ | $16{,}3$ |
 
-Die Schranke fällt bei jeder Halbierung exakt auf ein Sechzehntel, denn
-$\corange{h}^4$ tut genau das. Der gemessene Fehler tut es näherungsweise: Die
-Faktoren $18{,}8$, $16{,}9$ und $16{,}2$ laufen von oben auf $2^4 = 16$ zu.
-Ausgeschöpft wird die Schranke in keinem der vier Fälle; das Verhältnis von
-gemessenem Fehler zu Schranke beträgt $0{,}25$, $0{,}22$, $0{,}20$ und
-$0{,}20$.
+Zweierlei ist hier zu sehen. Erstens ist der Fehler auf groben Gittern mit
+bloßem Auge zu erkennen: Bei fünf Knoten beträgt er $0{,}324$, also rund ein
+Drittel der Buckelhöhe $1$. Der Spline drückt die Spitze auf $0{,}71$ herunter
+und schwingt rechts davon bis auf $-0{,}056$ unter die Nulllinie.
+
+Zweitens stellt sich der Faktor $16$ nicht sofort ein. Die Schranke fällt bei
+jeder Halbierung exakt auf ein Sechzehntel, denn $\corange{h}^4$ tut genau das;
+der gemessene Fehler springt dagegen erst auf $13{,}6$, dann auf $21{,}6$ und
+$21{,}4$ und beruhigt sich ab $65$ Knoten bei $16{,}9$ und $16{,}3$. Der Grund
+steht in @bemerkung:wie-wir-die-schranke-lesen: $M_4$ ist ein Maximum über das
+*ganze* Intervall, tatsächlich aber lebt $\left| f^{(4)} \right|$ fast nur auf
+der Breite $1/\sqrt{\alpha} \approx 0{,}16$ um die Spitze. Solange
+$\corange{h}$ von dieser Größenordnung ist, hängt der gemessene Fehler stark
+davon ab, wie die Knoten gerade zur Spitze liegen, und die Ordnung $4$ ist noch
+nicht zu sehen. $O(\corange{h}^4)$ ist eine Aussage für kleine $\corange{h}$,
+und „klein" heißt hier: klein gegen die Breite, auf der sich $f^{(4)}$ ändert.
 :::
 
 :::bemerkung[#schranke-und-messung-sind-zweierlei (Schranke und Messung sind zweierlei)]
@@ -274,27 +307,29 @@ $\cred{\left\| f - s \right\|_\infty} = O(\corange{h}^4)$ schreiben. Wir sagen
 dazu, der Fehler sei *von vierter Ordnung* in $\corange{h}$; das ist dieselbe
 Sprechweise wie bei der :k[Konvergenzordnung]{#rate-of-convergence} iterativer
 Verfahren, nur läuft hier kein Iterationszähler, sondern die Gitterweite gegen
-null. Unsere Messung liegt konsequent unter der Schranke, und die Faktoren
-nähern sich der $16$ erst mit feiner werdendem Gitter. Wer eine Rechnung „mit
-Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas falsch wäre.
+null. Unsere Messung liegt in @beispiel:buckel-auf-dem-einheitsintervall
+durchweg unter der Schranke — das Verhältnis von gemessenem Fehler zu Schranke
+beträgt $0{,}33$, $0{,}39$, $0{,}29$, $0{,}22$ und dann zweimal $0{,}20$ —, aber
+die Faktoren erreichen die $16$ erst, wenn das Gitter fein genug ist. Wer eine
+Rechnung „mit Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas
+falsch wäre.
 :::
 
 :::interaktiv[Vom groben zum feinen Gitter]
-Das Widget verschärft das Tabellenbeispiel zu
-$f(x) = \sin(3\pi x)$ und beginnt schon mit drei Knoten. Die zusätzliche
-Halbwelle macht die Schwäche eines groben Gitters sichtbar: Mit drei und fünf
-Knoten liegen Funktion und Spline im oberen Bild noch deutlich auseinander.
-Trotzdem bleiben die Voraussetzungen der Schranke sauber erfüllt, denn
-$f''(0) = f''(1) = 0$ und
-$\max_{x \in [0,1]} |f^{(4)}(x)| = (3\pi)^4$.
+Das Widget rechnet den Buckel aus @beispiel:buckel-auf-dem-einheitsintervall
+noch einmal nach und beginnt schon bei drei Knoten. Im oberen Bild ist zu sehen,
+wie der Spline die Spitze zunächst gar nicht findet: Mit drei Knoten bleibt er
+bei $0{,}67$ hängen, mit fünf kommt er auf $0{,}71$ und schwingt rechts der
+Spitze unter null. Erst ab neun Knoten liegen Funktion und Interpolant nahezu
+übereinander.
 
 Im unteren Bild verschwindet der Fehler an jedem Knoten und bildet dazwischen
-Bäuche. Beim Verfeinern werden diese schnell so klein, dass sie im oberen Bild
-nicht mehr zu erkennen sind. Die halblogarithmische Tafel rechts legt Messung
-und Schranke übereinander. Auf den sehr groben Gittern schwankt der gemessene
-Faktor noch stark; erst mit feinerem Gitter nähert er sich der asymptotischen
-$16$. Die Schranke selbst fällt bei jeder Halbierung von $h$ exakt auf ein
-Sechzehntel.
+Bäuche; sie sammeln sich um die Spitze, wo $\left| f^{(4)} \right|$ groß ist.
+Darunter legt eine halblogarithmische Tafel Messung und Schranke übereinander,
+und die Tabelle listet dieselben Zahlen. Die Schranke fällt bei jeder
+Halbierung von $h$ exakt auf ein Sechzehntel; der gemessene Faktor schwankt auf
+den groben Gittern kräftig und nähert sich der asymptotischen $16$ erst am
+rechten Ende.
 
 Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
 
@@ -313,11 +348,12 @@ bemerkenswert gut bestückt.
    ein Gleichungssystem mit Bandstruktur
    (@sec:splines), und Bandstruktur
    ist genau die Sorte Struktur, die den Aufwand drückt (@bemerkung:struktur-ausnutzen in
-   @sec:lgs/lu). Der natürliche kubische Spline dieses
+   @sec:lgs/lu). Der kubische Spline-Interpolant dieses
    Abschnitts ist das kleinste Beispiel dafür: Seine zweiten Ableitungen an den
-   Knoten lösen ein *tridiagonales* System, und weil die Elimination dessen
-   Band erhält, kostet es $O(n)$ statt $O(n^3)$ Operationen. Genau so rechnet
-   das Widget oben.
+   Knoten lösen ein *tridiagonales* System — bei natürlichem wie bei
+   eingespanntem Randabschluss —, und weil die Elimination dessen Band erhält,
+   kostet es $O(n)$ statt $O(n^3)$ Operationen. Genau so rechnet das Widget
+   oben.
 2. *Stabilität und Lokalität.* B-Splines haben kompakten Träger, jede
    Basisfunktion lebt also nur über wenigen Teilintervallen. Eine Änderung an
    einem Datenpunkt wirkt lokal, und die Basis ist weit besser konditioniert als
@@ -350,19 +386,20 @@ Sechzehntel.
 
 Die Schranke ist $C \corange{h}^4 M_4$, und nur $\corange{h}$ ändert sich. Aus
 $(\corange{h}/2)^4 = \corange{h}^4/16$ folgt der Faktor
-$\tfrac{1}{16}$ exakt. In @beispiel:sinus-auf-dem-einheitsintervall sind das die Werte $0{,}0793$,
-$0{,}00495$, $0{,}000310$ und $0{,}0000194$.
+$\tfrac{1}{16}$ exakt. In @beispiel:buckel-auf-dem-einheitsintervall sind das die Werte $0{,}977$,
+$0{,}0610$, $3{,}81 \cdot 10^{-3}$, $2{,}38 \cdot 10^{-4}$ und so fort.
 :::
 
 :::frage{falsch}
 Auch der tatsächliche Fehler wird bei jeder Halbierung von $\corange{h}$ genau
 $16$-mal kleiner.
 
-@eq:approximationsfehler-kubischer-splines ist eine obere Schranke, keine Gleichung. Unsere eigenen Messungen zu
-$f(x) = \sin(2\pi x)$ ergeben die Faktoren $18{,}8$, $16{,}9$ und $16{,}2$: Sie
-laufen von oben auf $16$ zu, treffen die Zahl aber nicht. Als Aussage über die
-Größenordnung bleibt die Faustregel „Fehler wird $2^4 = 16$-mal kleiner"
-trotzdem richtig.
+@eq:approximationsfehler-kubischer-splines ist eine obere Schranke, keine Gleichung. Unsere eigenen Messungen am
+Buckel aus @beispiel:buckel-auf-dem-einheitsintervall ergeben der Reihe nach die
+Faktoren $13{,}6$, $21{,}6$, $21{,}4$, $16{,}9$ und $16{,}3$: Erst wenn das
+Gitter die Spitze auflöst, pendeln sie sich bei $16$ ein, und getroffen wird die
+Zahl auch dann nicht. Als Aussage über die Größenordnung bleibt die Faustregel
+„Fehler wird $2^4 = 16$-mal kleiner" trotzdem richtig.
 :::
 
 :::frage{falsch}

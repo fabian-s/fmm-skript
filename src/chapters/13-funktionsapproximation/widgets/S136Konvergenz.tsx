@@ -1,38 +1,45 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, FMM_COLORS, niceTicks, Slider, Verdikt } from "../../../lib";
+import { Aufgabe, FMM_COLORS, fmtTick, niceTicks, Slider, Verdikt } from "../../../lib";
 import { ref } from "../../numbers.generated";
 
 /**
- * §13.6: Konvergenz des natuerlichen kubischen Spline-Interpolanten.
+ * §13.6: Konvergenz des vollstaendigen (eingespannten) kubischen
+ * Spline-Interpolanten am Buckel f(x) = exp(-40 (x - 2/5)^2).
  *
  * Eigenbau (kein portierter Code). Der Spline wird hier in JS geloest:
  * Momentengleichungen M_i = s''(x_i) als tridiagonales System, Thomas-
- * Algorithmus, natuerliche Randbedingung M_0 = M_n = 0. Alle angezeigten
- * Fehlerwerte sind EIGENE Rechnungen dieses Widgets, keine Uebernahme der
- * R-Ausgaben der Folientabelle.
+ * Algorithmus, eingespannte Randbedingung s'(0) = f'(0), s'(1) = f'(1) —
+ * genau der Randabschluss, fuer den die Konstante 5/384 gilt. Alle
+ * angezeigten Fehlerwerte sind EIGENE Rechnungen dieses Widgets.
  *
  * Farbrollen nach dem Kapitel-15-Code: Knoten orange, Interpolant s gruen,
  * Fehler und Schranke rot; die wahre Funktion f traegt das im Kapitel freie
  * Violett (Rolle steht in der Widget-Einleitung).
  *
- * Verifiziert (node, 2026-08-26), f(x) = sin(3 pi x) auf [0, 1],
- * C = 5/384, max|f^(4)| = (3 pi)^4 = 7890,1364:
- *   3 Knoten  h = 0,5      Schranke 6,421       Fehler 1,519916
- *   5 Knoten  h = 0,25     Schranke 0,4013      Fehler 0,220532   Faktor 6,89
- *   9 Knoten  h = 0,125    Schranke 0,02508     Fehler 0,0068359  Faktor 32,26
- *  17 Knoten  h = 0,0625   Schranke 0,001568    Fehler 0,00033989 Faktor 20,11
- *  33 Knoten  h = 0,03125  Schranke 0,00009798  Fehler 0,00002000 Faktor 17,00
- * Die Werte sind ab 4001 Abtastpunkten stabil; das Widget nimmt 8001.
+ * Verifiziert (scripts/verify/R6/spline-buckel.mjs, 2026-08-27),
+ * C = 5/384, max|f^(4)| = 12 * 40^2 = 19200:
+ *   3 Knoten  h = 0,5       Schranke 15,625      Fehler 0,4423233
+ *   5 Knoten  h = 0,25      Schranke 0,97656     Fehler 0,3244323  Faktor 1,36
+ *   9 Knoten  h = 0,125     Schranke 0,061035    Fehler 0,0238954  Faktor 13,58
+ *  17 Knoten  h = 0,0625    Schranke 0,0038147   Fehler 0,00110657 Faktor 21,59
+ *  33 Knoten  h = 0,03125   Schranke 0,00023842  Fehler 5,1615e-5  Faktor 21,44
+ *  65 Knoten  h = 0,015625  Schranke 1,4901e-5   Fehler 3,0523e-6  Faktor 16,91
+ * Die Werte sind ab 4001 Abtastpunkten auf vier Stellen stabil; das Widget
+ * nimmt 8001.
  */
 
 const { gruen: GRUEN, orange: ORANGE, rot: ROT, violett: VIOLETT, grau: ACHSE, hellgrau: RAHMEN } = FMM_COLORS;
 
-const KNOTENZAHLEN = [3, 5, 9, 17, 33];
+const KNOTENZAHLEN = [3, 5, 9, 17, 33, 65];
 const C_SPLINE = 5 / 384;
-const M4 = Math.pow(3 * Math.PI, 4);
+/** Buckelschaerfe; f^(4) hat sein Maximum 12 alpha^2 in der Spitze x = 2/5. */
+const ALPHA = 40;
+const MITTE = 2 / 5;
+const M4 = 12 * ALPHA * ALPHA;
 const ABTASTUNG = 8001;
 
-const f = (x: number) => Math.sin(3 * Math.PI * x);
+const f = (x: number) => Math.exp(-ALPHA * (x - MITTE) * (x - MITTE));
+const fStrich = (x: number) => -2 * ALPHA * (x - MITTE) * f(x);
 
 interface Spline {
   xs: number[];
@@ -41,43 +48,47 @@ interface Spline {
   M: number[];
 }
 
-/** Natuerlicher kubischer Spline durch (xs, ys): tridiagonales System fuer M_i = s''(x_i). */
-function natuerlicherSpline(xs: number[], ys: number[]): Spline {
+/**
+ * Vollstaendiger (eingespannter) kubischer Spline durch (xs, ys):
+ * tridiagonales System fuer M_i = s''(x_i). Die beiden Randzeilen kodieren
+ * s'(x_0) = f'(x_0) und s'(x_n) = f'(x_n).
+ */
+function eingespannterSpline(xs: number[], ys: number[]): Spline {
   const n = xs.length - 1;
   const hs: number[] = [];
   for (let i = 0; i < n; i++) hs.push(xs[i + 1] - xs[i]);
-  const M = new Array<number>(n + 1).fill(0);
-  if (n >= 2) {
-    const m = n - 1;
-    const unter: number[] = [];
-    const diag: number[] = [];
-    const ober: number[] = [];
-    const rechts: number[] = [];
-    for (let k = 0; k < m; k++) {
-      const i = k + 1;
-      unter.push(hs[i - 1]);
-      diag.push(2 * (hs[i - 1] + hs[i]));
-      ober.push(hs[i]);
-      rechts.push(
-        6 * ((ys[i + 1] - ys[i]) / hs[i] - (ys[i] - ys[i - 1]) / hs[i - 1]),
-      );
-    }
-    // Thomas-Algorithmus (LU einer Tridiagonalmatrix ohne Pivotierung,
-    // zulaessig wegen strikter Diagonaldominanz)
-    const co = new Array<number>(m);
-    const cr = new Array<number>(m);
-    co[0] = ober[0] / diag[0];
-    cr[0] = rechts[0] / diag[0];
-    for (let k = 1; k < m; k++) {
-      const nenner = diag[k] - unter[k] * co[k - 1];
-      co[k] = ober[k] / nenner;
-      cr[k] = (rechts[k] - unter[k] * cr[k - 1]) / nenner;
-    }
-    const loesung = new Array<number>(m);
-    loesung[m - 1] = cr[m - 1];
-    for (let k = m - 2; k >= 0; k--) loesung[k] = cr[k] - co[k] * loesung[k + 1];
-    for (let k = 0; k < m; k++) M[k + 1] = loesung[k];
+  const m = n + 1;
+  const unter = new Array<number>(m).fill(0);
+  const diag = new Array<number>(m).fill(0);
+  const ober = new Array<number>(m).fill(0);
+  const rechts = new Array<number>(m).fill(0);
+  for (let i = 1; i < n; i++) {
+    unter[i] = hs[i - 1];
+    diag[i] = 2 * (hs[i - 1] + hs[i]);
+    ober[i] = hs[i];
+    rechts[i] =
+      6 * ((ys[i + 1] - ys[i]) / hs[i] - (ys[i] - ys[i - 1]) / hs[i - 1]);
   }
+  diag[0] = 2 * hs[0];
+  ober[0] = hs[0];
+  rechts[0] = 6 * ((ys[1] - ys[0]) / hs[0] - fStrich(xs[0]));
+  unter[n] = hs[n - 1];
+  diag[n] = 2 * hs[n - 1];
+  rechts[n] = 6 * (fStrich(xs[n]) - (ys[n] - ys[n - 1]) / hs[n - 1]);
+  // Thomas-Algorithmus (LU einer Tridiagonalmatrix ohne Pivotierung,
+  // zulaessig wegen strikter Diagonaldominanz)
+  const co = new Array<number>(m);
+  const cr = new Array<number>(m);
+  co[0] = ober[0] / diag[0];
+  cr[0] = rechts[0] / diag[0];
+  for (let k = 1; k < m; k++) {
+    const nenner = diag[k] - unter[k] * co[k - 1];
+    co[k] = ober[k] / nenner;
+    cr[k] = (rechts[k] - unter[k] * cr[k - 1]) / nenner;
+  }
+  const M = new Array<number>(m);
+  M[m - 1] = cr[m - 1];
+  for (let k = m - 2; k >= 0; k--) M[k] = cr[k] - co[k] * M[k + 1];
   return { xs, ys, hs, M };
 }
 
@@ -115,6 +126,8 @@ interface Zeile {
   fehler: number;
   /** Stelle des groessten Fehlers */
   argmax: number;
+  /** groesster Wert des Interpolanten (die "erreichte" Buckelhoehe) */
+  hoehe: number;
   sp: Spline;
 }
 
@@ -127,19 +140,22 @@ function rechne(knoten: number): Zeile {
     xs.push(x);
     ys.push(f(x));
   }
-  const sp = natuerlicherSpline(xs, ys);
+  const sp = eingespannterSpline(xs, ys);
   let fehler = 0;
   let argmax = 0;
+  let hoehe = -Infinity;
   for (let k = 0; k < ABTASTUNG; k++) {
     const x = k / (ABTASTUNG - 1);
-    const e = Math.abs(f(x) - auswerten(sp, x));
+    const wert = auswerten(sp, x);
+    if (wert > hoehe) hoehe = wert;
+    const e = Math.abs(f(x) - wert);
     if (e > fehler) {
       fehler = e;
       argmax = x;
     }
   }
   const h = 1 / n;
-  return { knoten, h, schranke: C_SPLINE * Math.pow(h, 4) * M4, fehler, argmax, sp };
+  return { knoten, h, schranke: C_SPLINE * Math.pow(h, 4) * M4, fehler, argmax, hoehe, sp };
 }
 
 const HOCH: Record<string, string> = {
@@ -184,13 +200,17 @@ export function SplineKonvergenz() {
   const vorher = idx > 0 ? zeilen[idx - 1] : null;
 
   const px = (x: number) => PAD.l + x * (W - PAD.l - PAD.r);
+  // Bei 65 Knoten liegen die Punkte 5,7 px auseinander; r = 3 waere ein Strich.
+  const knotenRadius = zeile.knoten > 33 ? 1.5 : zeile.knoten > 17 ? 2.2 : 3;
   const pyKurve = (y: number) =>
-    PAD.t + ((1.25 - y) / 2.5) * (H_KURVE - PAD.t - PAD.b);
+    PAD.t + ((1.1 - y) / 1.3) * (H_KURVE - PAD.t - PAD.b);
 
+  // 1200 Stuetzstellen: bei 65 Knoten liegen sonst nur ~6 Punkte je
+  // Teilintervall und der Fehlerbauch wird als Alias gezeichnet.
   const pfad = (g: (x: number) => number, py: (y: number) => number) => {
     let d = "";
-    for (let i = 0; i <= 400; i++) {
-      const x = i / 400;
+    for (let i = 0; i <= 1200; i++) {
+      const x = i / 1200;
       const y = g(x);
       if (!Number.isFinite(y)) continue;
       d += `${i === 0 ? "M" : "L"}${px(x).toFixed(1)} ${py(y).toFixed(1)}`;
@@ -203,7 +223,7 @@ export function SplineKonvergenz() {
   const pyFehler = (e: number) =>
     PAD.t + ((skala - e) / (2 * skala)) * (H_FEHLER - PAD.t - PAD.b);
 
-  // Konvergenzpanel: log10 von Fehler und Schranke ueber den vier Gittern
+  // Konvergenzpanel: log10 von Fehler und Schranke ueber allen Gittern
   const WK = 300;
   const HK = 190;
   const PK = { l: 44, r: 12, t: 12, b: 30 };
@@ -224,15 +244,15 @@ export function SplineKonvergenz() {
       `Das gröbste Gitter hat ${zeile.knoten} Knoten, also die Gitterweite h = ${fmtH(zeile.h)}. ` +
       `${ref("satz:approximationsfehler-kubischer-splines")} erlaubt damit einen Fehler von bis zu C·h⁴·M₄ = ${fmtE(zeile.schranke)}; gemessen ` +
       `haben wir ${fmtE(zeile.fehler)} an der Stelle x = ${fmt(zeile.argmax, 4)}, also ` +
-      `${fmt(verhaeltnis * 100, 1)} % der Schranke. Mit nur drei Knoten verfehlt der Spline die ` +
-      `zusätzlichen Schwingungen deutlich. Schieben wir den Regler nach rechts, um die Gitterweite ` +
-      `zu halbieren.`;
+      `${fmt(verhaeltnis * 100, 1)} % der Schranke. Mit nur drei Knoten geht die Spitze des Buckels ` +
+      `komplett verloren: Der Spline kommt über ${fmt(zeile.hoehe, 2)} nicht hinaus, während f auf 1 steigt. ` +
+      `Schieben wir den Regler nach rechts, um die Gitterweite zu halbieren.`;
   } else {
     const lage =
       Math.abs(faktor - 16) <= 1.2
         ? "Wir liegen schon dicht daran"
         : faktor > 16
-          ? "Auf diesem noch groben Gitter liegen wir darüber"
+          ? "Auf diesem Gitter liegen wir darüber"
           : "Auf diesem Gitter liegen wir darunter";
     status =
       `${zeile.knoten} Knoten, h = ${fmtH(zeile.h)}: Der gemessene Fehler fällt von ` +
@@ -281,15 +301,15 @@ export function SplineKonvergenz() {
                   fontSize={9}
                   fill={ACHSE}
                 >
-                  {String(t).replace(".", ",")}
+                  {fmtTick(t, 0.2)}
                 </text>
               </g>
             ))}
-            {[-1, 0, 1].map((t) => (
+            {[0, 0.5, 1].map((t) => (
               <g key={`y${t}`}>
                 <line x1={PAD.l - 3} x2={PAD.l} y1={pyKurve(t)} y2={pyKurve(t)} stroke={ACHSE} />
                 <text x={PAD.l - 5} y={pyKurve(t) + 3} textAnchor="end" fontSize={9} fill={ACHSE}>
-                  {String(t).replace("-", "−")}
+                  {fmtTick(t, 0.5)}
                 </text>
               </g>
             ))}
@@ -313,7 +333,7 @@ export function SplineKonvergenz() {
               strokeDasharray="5 3"
             />
             {zeile.sp.xs.map((x, i) => (
-              <circle key={x} cx={px(x)} cy={pyKurve(zeile.sp.ys[i])} r={3} fill={ORANGE} />
+              <circle key={x} cx={px(x)} cy={pyKurve(zeile.sp.ys[i])} r={knotenRadius} fill={ORANGE} />
             ))}
             <text x={PAD.l + 4} y={PAD.t + 11} fontSize={10} fill={VIOLETT}>
               f
@@ -353,7 +373,7 @@ export function SplineKonvergenz() {
                   fontSize={9}
                   fill={ACHSE}
                 >
-                  {String(t).replace(".", ",")}
+                  {fmtTick(t, 0.2)}
                 </text>
               </g>
             ))}
@@ -380,7 +400,7 @@ export function SplineKonvergenz() {
               strokeWidth={1.8}
             />
             {zeile.sp.xs.map((x) => (
-              <circle key={`k${x}`} cx={px(x)} cy={pyFehler(0)} r={2.2} fill={ORANGE} />
+              <circle key={`k${x}`} cx={px(x)} cy={pyFehler(0)} r={knotenRadius * 0.75} fill={ORANGE} />
             ))}
             <text x={PAD.l + 4} y={PAD.t + 11} fontSize={10} fill={ROT}>
               f − s

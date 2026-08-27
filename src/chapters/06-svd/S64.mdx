@@ -29,6 +29,8 @@ $$ {#eq-spektralnorm-und-groesster-singulaerwert}
 $$
 :::
 
+:::::vertiefung[Warum die Spektralnorm gleich dem größten Singulärwert ist]
+
 ::::beweis
 
 :::schritt
@@ -59,6 +61,8 @@ $$
 :::
 
 ::::
+
+:::::
 
 Die Gleichung @eq:spektralnorm-und-groesster-singulaerwert sieht man gelegentlich als Definition geschrieben. Das
 wäre eine Doppelbelegung: Die
@@ -93,6 +97,8 @@ $$
 \left\| \cgreen{\bu_i} \cblue{\bv_i}^\top \right\|_F = 1 .
 $$
 :::
+
+:::::vertiefung[Herleitung der Rang-1-Summenform]
 
 ::::beweis
 
@@ -134,6 +140,8 @@ $$
 :::
 
 ::::
+
+:::::
 
 Die Summenform trägt dieselbe Information wie die reduzierte SVD
 $\bA = \cgreen{\bU_r}\corange{\bSigma_r}\cblue{\bV_r^\top}$ aus
@@ -298,7 +306,7 @@ Ein Spektrum mit langsam abfallenden Singulärwerten,
 $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
 eine Rang-k-Approximation.
 
-Es ist der ungünstigste der drei Fälle aus @bemerkung:typische-singulaerwert-verlaeufe-und-der. Viele Komponenten
+Es ist der ungünstigste Fall: Viele Komponenten
 tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
 sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
 komprimieren lässt sich der exponentielle Abfall.
@@ -342,7 +350,7 @@ $k \leq 287$.
 
 :::algorithmus[#kompression-mit-der-svd (Kompression mit der SVD)]
 1. Berechne die SVD $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$.
-2. Wähle $k$ anhand des Singulärwert-Verlaufs (@bemerkung:drei-kriterien-fuer-die-wahl-von-k und @num:typische-singulaerwert-verlaeufe-und-der).
+2. Wähle $k$ anhand der Kriterien aus @bemerkung:drei-kriterien-fuer-die-wahl-von-k.
 3. Bilde die Approximation
    $\bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$.
 4. Speichere nur $\cgreen{\bU_k}$, $\corange{\bSigma_k}$ und $\cblue{\bV_k}$;
@@ -469,8 +477,7 @@ Matrixfaktorisierung ist die bekannteste Variante.
 :::bemerkung[#ideale-situationen-fuer-die-svd (Ideale Situationen für die SVD)]
 1. *Niedrig-Rang-Strukturen:* $\rang(\bA) \ll \min(m,n)$, oder wenigstens
    näherungsweise.
-2. *Schnell abfallende Singulärwerte:* wenige Richtungen dominieren
-   (@bemerkung:typische-singulaerwert-verlaeufe-und-der).
+2. *Schnell abfallende Singulärwerte:* wenige Richtungen dominieren.
 3. *Überbestimmte Systeme:* $m > n$ und womöglich inkonsistent, wie bei
    :k[Kleinste-Quadrate-Problemen]{#linear-least-squares}
    (@kap:kq).
@@ -493,6 +500,8 @@ $\bX$ und vermeidet diesen Schritt.
 
 Umsonst ist die Robustheit nicht.
 
+::::vertiefung[Genauer Aufwandsvergleich]
+
 :::bemerkung[#rechenaufwand (Rechenaufwand)]
 Für $\bA \in \R^{m \times n}$ gilt in der
 :k[Landau-Notation]{#big-o-notation}
@@ -507,6 +516,8 @@ Für $m \gg n$ ist die SVD also grob viermal so teuer. Das ist der übliche
 Kompromiss: Geschwindigkeit gegen Stabilität. Wer schlecht konditionierte
 Daten hat, zahlt den Faktor gern.
 :::
+
+::::
 
 ### SVD und Eigenwertzerlegung im Vergleich
 

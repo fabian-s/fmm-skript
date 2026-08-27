@@ -19,7 +19,8 @@ for (const t of [-1, -0.5, 0, 0.5, 1]) {
   const numerischesJ = simpson((x) => gZwei(x, t) ** 2, 0, 1) + simpson((x) => gZwei(x, t) ** 2, 1, 2);
   near(numerischesJ, 6 + 2 * t ** 2, 1e-9, "S151 energy");
 }
-near(5 / 384 * (2 * Math.PI) ** 4 * 0.25 ** 4, 0.079272, 1e-6, "S152 bound");
+// §13.6 (frueher 15.2): die erste Zeile der Tabelle, jetzt am Buckel-Beispiel.
+near(5 / 384 * 19200 * 0.25 ** 4, 0.9765625, 1e-6, "S136 bound");
 near(10 ** 10 * 8 / 1e9, 80, 1e-12, "S155 GB");
 near(0.09 * 12 / 100, 0.0108, 1e-12, "S154 variance theory");
 console.log("R5 chapter 13 numerical claims: OK");

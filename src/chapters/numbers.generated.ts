@@ -51,6 +51,7 @@ export type NumKey =
   | "beispiel:beispiel-3-4-6"
   | "beispiel:beispiel-7-3-6"
   | "beispiel:bias-und-varianz-beim-sinusbeispiel"
+  | "beispiel:buckel-auf-dem-einheitsintervall"
   | "beispiel:cholesky-zerlegung-einer-2-2-matrix"
   | "beispiel:das-subdifferential-des-betrags"
   | "beispiel:das-tensorprodukt-von-und"
@@ -160,7 +161,6 @@ export type NumKey =
   | "beispiel:s-k-i-n-verteilt-die-eintraege"
   | "beispiel:singulaervektoren-der-beispielmatrix"
   | "beispiel:singulaerwerte-der-beispielmatrix"
-  | "beispiel:sinus-auf-dem-einheitsintervall"
   | "beispiel:skalarprodukte-sind-bilinear"
   | "beispiel:sketching-zweier-vektoren-mit-10-000"
   | "beispiel:stochastic-gradient-descent"
@@ -1008,6 +1008,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:beispiel-3-4-6": ["3.4.6", "Beispiel 3.4.6"],
   "beispiel:beispiel-7-3-6": ["7.3.3", "Beispiel 7.3.3"],
   "beispiel:bias-und-varianz-beim-sinusbeispiel": ["13.8.8", "Beispiel 13.8.8"],
+  "beispiel:buckel-auf-dem-einheitsintervall": ["13.6.7", "Beispiel 13.6.7"],
   "beispiel:cholesky-zerlegung-einer-2-2-matrix": ["5.4.3", "Beispiel 5.4.3"],
   "beispiel:das-subdifferential-des-betrags": ["11.4.16", "Beispiel 11.4.16"],
   "beispiel:das-tensorprodukt-von-und": ["9.4.3", "Beispiel 9.4.3"],
@@ -1117,7 +1118,6 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:s-k-i-n-verteilt-die-eintraege": ["9.3.15", "Beispiel 9.3.15"],
   "beispiel:singulaervektoren-der-beispielmatrix": ["6.2.9", "Beispiel 6.2.9"],
   "beispiel:singulaerwerte-der-beispielmatrix": ["6.2.6", "Beispiel 6.2.6"],
-  "beispiel:sinus-auf-dem-einheitsintervall": ["13.6.7", "Beispiel 13.6.7"],
   "beispiel:skalarprodukte-sind-bilinear": ["9.1.5", "Beispiel 9.1.5"],
   "beispiel:sketching-zweier-vektoren-mit-10-000": ["8.4.5", "Beispiel 8.4.5"],
   "beispiel:stochastic-gradient-descent": ["4.3.2", "Beispiel 4.3.2"],

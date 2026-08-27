@@ -78,6 +78,8 @@ Sei $\bA \in \R^{n \times d}$ und $\bx \in \R^d$. Die Berechnung von $\by = \bA\
 - Speicheraufwand $nd + d + n$ Zahlen (für $\bA$, $\bx$ und $\by$).
 :::
 
+:::::vertiefung[Beweis durch genaues Zählen der Operationen]
+
 ::::beweis
 
 :::schritt
@@ -107,6 +109,8 @@ $\bB \in \R^{d \times m}$: Sie besteht aus $m$ Matrix-Vektor-Produkten (eines pr
 von $\bB$), kostet also $\approx 2ndm$ Operationen. Damit stellt sich sofort die Frage, die
 uns den Rest des Kapitels beschäftigt: Was passiert mit diesen Zahlen, wenn das Problem
 größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der Aufwand?
+
+:::::
 
 :::interaktiv[FLOP-Zähler: Was kosten Matrix-Vektor- und Matrix-Matrix-Produkt?]
 <S23FlopWidget />
@@ -292,12 +296,16 @@ rechts macht die Klassen vergleichbar, und dort wird $2^n$ zu einer Geraden:
 
 <S23WachstumsBild />
 
+:::vertiefung[Wie groß ist exponentieller Aufwand?]
+
 An dieser Geraden lässt sich der Preis exponentieller Verfahren ablesen. Bei $n = 200$
 braucht ein $O(2^n)$-Algorithmus rund $1{,}6 \cdot 10^{60}$ Operationen. Selbst ein
 Superrechner mit $10^{18}$ Operationen pro Sekunde rechnete daran $5 \cdot 10^{34}$ Jahre,
 und das Universum ist erst etwa $10^{10}$ Jahre alt. Wer feiner mit den Klassen spielen
 will (welche Klassen sichtbar sind, welcher Vorfaktor, welche Skala), findet den
 zugehörigen Explorer in @sec:landau.
+
+:::
 
 :::bemerkung[#vorsicht-konstanten (Vorsicht: Konstanten!)]
 Die $O(\cdot)$-Notation ignoriert konstante Faktoren und Terme niedrigerer Ordnung. Ein

@@ -85,6 +85,8 @@ $$
 wobei $\corange{h}$ die Gitterweite der Knoten ist.
 :::
 
+:::::vertiefung[Beweis der Bias-Darstellung]
+
 ::::beweis
 
 :::schritt
@@ -142,6 +144,8 @@ $\corange{h}^8 = O(K^{-8})$.
 
 ::::
 
+:::::
+
 :::bemerkung[#woran-die-ordnung-haengt (Woran die Ordnung hängt)]
 Die Annahmen verdienen eine eigene Zeile, denn ohne sie ist die Aussage
 falsch. Gebraucht werden gleichmäßige Knoten auf einem
@@ -184,6 +188,8 @@ $$ {#eq-gemittelte-varianz-eines-linearen-2}
 \frac{1}{n}\sumin \var\bigl[\cgreen{\wh{f}(x_i)}\bigr] = \frac{\sigma^2 K}{n} .
 $$
 :::
+
+:::::vertiefung[Beweis der gemittelten Varianzformel]
 
 ::::beweis
 
@@ -228,6 +234,8 @@ Multiplikation mit $\sigma^2/n$ liefert @eq:gemittelte-varianz-eines-linearen-2.
 
 ::::
 
+:::::
+
 :::bemerkung[#was-die-varianzformel-erzaehlt (Was die Varianzformel erzählt)]
 Gleichung @eq:gemittelte-varianz-eines-linearen-2 ist bemerkenswert schlicht. Rechts steht keine
 Eigenschaft der Basis, keine Knotenlage, keine Konditionszahl, sondern nur
@@ -267,6 +275,8 @@ $$ {#eq-zerlegung-des-mittleren-quadratischen}
 $$
 :::
 
+:::::vertiefung[Beweis der Bias-Varianz-Zerlegung]
+
 ::::beweis
 
 :::schritt
@@ -288,6 +298,8 @@ ist die :k[Varianz]{#variance}, der letzte ist deterministisch.
 :::
 
 ::::
+
+:::::
 
 Setzen wir @satz:der-bias-ist-der-approximationsfehler und @satz:gemittelte-varianz-eines-linearen in @eq:zerlegung-des-mittleren-quadratischen ein und mitteln über die
 Entwurfsstellen, so erhalten wir unter den Voraussetzungen von @satz:der-bias-ist-der-approximationsfehler
@@ -512,9 +524,9 @@ additive Modelle; in R ist `mgcv::gam()` die Standardadresse dafür.
 
 Der Vorteil ist mehr als Bequemlichkeit. Die Knotenzahl ist eine ganze Zahl,
 der Strafparameter dagegen stufenlos, und ein stufenloser Regler lässt sich
-mit denselben Kriterien viel feiner einstellen. Formal ist es die gestrafte
-Kleinste-Quadrate-Rechnung aus
-@bemerkung:penalized-splines-und-die-naehe-zu-ridge. Auch die effektiven
+mit denselben Kriterien viel feiner einstellen. Formal führt das auf gestrafte
+Normalengleichungen; die Details stehen in der Vertiefung zu Glättungs- und
+Penalized Splines in @sec:glaettung. Auch die effektiven
 Freiheitsgrade $\tr(\bH)$ aus @bemerkung:was-die-varianzformel-erzaehlt
 bleiben brauchbar; sie sind dann
 keine ganze Zahl mehr, sondern rutschen mit wachsendem Strafparameter stetig

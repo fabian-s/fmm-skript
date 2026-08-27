@@ -567,7 +567,7 @@ Gegenprobe davon nichts merkt und brav $0$ meldet: Der zentrale Differenzenquoti
 Vorbehalt für die euklidische Norm brauchen.
 :::
 
-::::vertiefung[Alternatives Beispiel zur Kettenregel: logistische Regression]
+:::::vertiefung[Alternatives Beispiel zur Kettenregel: logistische Regression]
 
 Kaum ein Modell zeigt die Kettenregel so sauber wie die logistische Regression.
 Wir wollen eine binäre Zielgröße $Y \in \{0, 1\}$ aus Merkmalen
@@ -695,7 +695,19 @@ Vor allem aber bestätigt die numerische Gegenprobe in beiden Klassen die Formel
 @eq:gradient-des-logistischen-verlusts-2, Vorzeichen eingeschlossen.
 :::
 
+::::quiz
+:::frage{wahr}
+Für den logistischen Verlust einer Beobachtung gilt
+$\nabla\ell(\bbeta) = (\wh{y} - y)\bx^\top$ für $y = 0$ und für $y = 1$.
+
+Beide Fälle führen über die Kettenregel auf dieselbe Form, siehe
+@eq:gradient-des-logistischen-verlusts-2. Für $y = 1$ ist die äußere Ableitung
+$\sigma(t) - 1$, für $y = 0$ ist sie $\sigma(t)$, und beides ist
+$\wh{y} - y$.
+:::
 ::::
+
+:::::
 
 ### Übung: Gradient der euklidischen Norm
 
@@ -806,15 +818,6 @@ links. Schon die Formate zeigen es: $\bJ_g$ ist $p \times m$, $\bJ_f$ ist
 $m \times n$, und $p \times m$ mal $m \times n$ ergibt $p \times n$. Die falsche
 Reihenfolge stellt dagegen $m \times n$ neben $p \times m$ und ist für
 $n \neq p$ nicht einmal definiert.
-:::
-
-:::frage{wahr}
-Für den logistischen Verlust einer Beobachtung gilt
-$\nabla\ell(\bbeta) = (\wh{y} - y)\bx^\top$ für $y = 0$ und für $y = 1$.
-
-Beide Fälle führen über die Kettenregel auf dieselbe Form, siehe @eq:gradient-des-logistischen-verlusts-2.
-Für $y = 1$ ist die äußere Ableitung $\sigma(t) - 1$, für $y = 0$ ist sie
-$\sigma(t)$, und beides ist $\wh{y} - y$.
 :::
 
 :::frage{wahr}

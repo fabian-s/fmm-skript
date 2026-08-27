@@ -751,6 +751,8 @@ $$
 $$
 :::
 
+:::::vertiefung[Beweis der Unverzerrtheit]
+
 ::::beweis
 
 :::schritt
@@ -769,6 +771,8 @@ und das ist $\corange{\nabla R(\btheta)}$.
 :::
 
 ::::
+
+:::::
 
 Der Beweis ist kurz, aber die Voraussetzung verdient Aufmerksamkeit. Kurz
 hingeschrieben lautet die Aussage $\E[\nabla L(y_i, p_\btheta(\bx_i))] =
@@ -790,6 +794,8 @@ $k = 0, 1, 2, \dots$
    - \corange{\gamma^{(k)}}\,\corange{\nabla L\bigl(y_{i_k}, p_{\btheta^{(k)}}(\bx_{i_k})\bigr)^\top} .
    $$
 :::
+
+::::vertiefung[Mini-Batches, Lernraten und praktische Varianten]
 
 :::bemerkung[#rauschen-mini-batches-und-lernraten (Rauschen, Mini-Batches und Lernraten)]
 *Der Preis und der Gewinn.* Ein Schritt kostet jetzt $O(1)$ statt $O(N)$, und zwar
@@ -827,6 +833,8 @@ der sämtliche modernen neuronalen Netze trainiert werden. Der MSc-Kurs
 [Optimization for ML](https://slds-lmu.github.io/website_optimization/) behandelt
 ADAM, Muon und die Lernratenpläne im Detail.
 :::
+
+::::
 
 Damit ist der Werkzeugkasten für unbeschränkte Probleme beisammen. Im nächsten
 Abschnitt kommen Nebenbedingungen dazu, und mit ihnen ein Optimalitätsbegriff, der
@@ -900,8 +908,7 @@ genauer als eine einzelne Beobachtung.
 
 Die *Varianz* fällt auf ein Zweiunddreißigstel, die Standardabweichung also nur um
 den Faktor $\sqrt{32} \approx 5{,}7$. Genau deshalb sind Mini-Batches ein Kompromiss
-und keine Lösung: Der Aufwand wächst linear, die Genauigkeit mit der Wurzel
-(@bemerkung:rauschen-mini-batches-und-lernraten).
+und keine Lösung: Der Aufwand wächst linear, die Genauigkeit mit der Wurzel.
 :::
 
 :::zahlfrage{loesung=31 toleranz=5 einheit="Schritte"}

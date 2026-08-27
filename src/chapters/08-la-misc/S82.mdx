@@ -131,6 +131,8 @@ $4{,}43$. In jeder anderen Richtung ist $\bv^\top\bSigma\bv$ kleiner.
 :::
 ::::
 
+::::vertiefung[Lanczos für sehr große PCA-Probleme]
+
 :::bemerkung[#warum-iterativ-die-lanczos-abkuerzung (Warum iterativ? Die Lanczos-Abkürzung)]
 Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen
 (Gen-Expression, Bildanalyse), gebraucht werden aber fast immer nur die
@@ -146,6 +148,8 @@ $80$ Gigabyte. In R übernimmt das zum Beispiel `irlba::irlba()` (iterativ)
 oder `irlba::svdr()` (iterativ und probabilistisch, ein Vorgeschmack auf
 @sec:sketching).
 :::
+
+::::
 
 ### Approximative SVD in der Praxis
 
