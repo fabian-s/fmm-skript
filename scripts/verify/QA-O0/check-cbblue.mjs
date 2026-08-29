@@ -1,8 +1,11 @@
 /** QA-O0, 2026-08-20: Gibt es ein \cbblue-Makro? Rendert der Ausdruck fehlerfrei? */
 import { createRequire } from "node:module";
 import fs from "node:fs";
-const require = createRequire("/home/fabians/lehre/FMM/fmm-lmu/skript/package.json");
-const src = fs.readFileSync("/home/fabians/lehre/FMM/fmm-lmu/skript/src/fmm-macros.ts", "utf8");
+import { fileURLToPath } from "node:url";
+import { join, dirname } from "node:path";
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+const require = createRequire(join(repoRoot, "package.json"));
+const src = fs.readFileSync(join(repoRoot, "src/fmm-macros.ts"), "utf8");
 const namen = [...src.matchAll(/^\s*"([A-Za-z]+)":\s*\[/gm)].map((m) => m[1]);
 console.log("cblue vorhanden:", namen.includes("cblue"), "| cbblue vorhanden:", namen.includes("cbblue"));
 // Makrotabelle fuer MathJax rekonstruieren
