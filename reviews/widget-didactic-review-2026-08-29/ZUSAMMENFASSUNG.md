@@ -111,3 +111,29 @@ dieser Umgebung). Details in den Fix-Logs unter „Entscheidung nötig".
   (scripts/dev/shot-widgets.mjs, gefixt in diesem Lauf), sonst leere Clips/Roh-TeX.
 - Violett trägt in Kap. 12 vier verschiedene Rollen (je Header begründet, auf
   Kapitelebene aber Drift) — bei nächster Gelegenheit vereinheitlichen (H3).
+
+## Umsetzungs-Stand (Ende des Laufs, 2026-08-29 abends)
+
+Alle 13 Kapitel sind gefixt: **10/10 CRITICAL und 168/169 MAJOR umgesetzt** (der
+eine offene MAJOR ist der Kap.-3-Selbsttest-Dedup, der eine neue lib-Komponente
+braucht — lib ist in diesem Lauf tabu). Dazu der Großteil der MINOR, 63 neue
+Prüfskripte unter `scripts/verify/REV29/` und reparierte Tautologien in
+HDR/R2/R3; `npm run verify:numbers` läuft jetzt 124 Skripte grün (vorher 69),
+`npm run build` grün. Die neuen Skripte fanden dabei vier weitere echte Fehler
+in Header-/Verdikttexten (18 statt 17 Kanten, Sekanten-Faktor 4,571, unbewegte
+Randkoeffizienten, Zweigverteilung 2/9/16/10) — der Zweck des F6-Musters,
+live vorgeführt.
+
+Vorher/Nachher-Galerie (alle 122 überarbeiteten Widgets, mit Begründung):
+zwei private Artefakte „Widget-Revision Kapitel 1–7" / „Kapitel 8–13"
+(Links in der Sitzung vom 2026-08-29). Wortzahl-Budget: alle MDX-Dateien
+≤ +3 % außer S54 (+3,25 %, neues Pflicht-Quiz) und S82 (+5,9 %, fehlende
+Konsolidierung in der kürzesten Datei — vom Fix-Log begründet).
+
+Offen bleiben (gesammelt in `fixes/<kap>.md` unter „Entscheidung nötig" bzw.
+„lib-Befund"): die 6 STATIC-/1 REMOVE-Empfehlungen; ein Batch
+lib-Befunde (Schaetzfrage rendert children in beiden Phasen; Slider-Breite;
+ConceptFlow-Detailzeile; TransformCanvas-Clipping); der F5-Diff S76Compare
+gegen heath-ch3 (Quell-App nicht in dieser Umgebung); Violett-Drift Kap. 12
+und f-Farbe Kap. 13 (kapitelweite Farbumbauten); einige Plot-Umbauten
+(Zahlentafel → Kurve), die mehr als lokale Fixes wären.
