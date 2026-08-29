@@ -1,0 +1,119 @@
+[
+  {
+    "widget": "src/chapters/12-optim/widgets/S121Bisektion.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nichtlineare-gleichungen",
+    "boxIndexe": [1],
+    "severityFixed": ["MAJOR"],
+    "titel": "BisektionStepper",
+    "rationale": "Die Antwort auf die Schätzfrage stand zweimal daneben: einmal als Satz vor dem Kasten („also brauchen wir 20 Schritte\") und einmal darunter. Die Rechnung bleibt, die Ergebniszahl ist weg; die drei Schrittzahlen 10 / 20 / 34 erscheinen erst nach dem Auflösen."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S121Newton.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nichtlineare-gleichungen",
+    "boxIndexe": [2],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "NewtonNullstelle",
+    "rationale": "Das Verdikt meldete „am Ziel nach k Schritten\" mit k = Reglerstellung statt Ankunftsschritt und widersprach damit dem eigenen Header; jetzt zählt es den ersten Schritt mit Fehler unter 10⁻¹⁰. K_MAX steigt von 8 auf 12, damit der beworbene zähe Lauf ab x⁽⁰⁾ = 1,05 überhaupt zu Ende läuft, und die Konsolidierung beschreibt endlich den Lauf ab der Voreinstellung x⁽⁰⁾ = 3 statt eines Laufs, den der Leser nicht sieht."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S121Fixpunkt.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nichtlineare-gleichungen",
+    "boxIndexe": [3],
+    "severityFixed": ["MAJOR"],
+    "titel": "FixpunktSpirale",
+    "rationale": "Die Ablesetafel zeigte dauerhaft „Divergenz ab γ > …\" — die Antwort der Schätzfrage, ein Klick auf das dritte System genügte. Die Schwelle wird jetzt über eine Render-Prop aus der Schaetzfrage durchgereicht und erscheint erst nach dem Auflösen; dasselbe gilt für die beiden Verdikt-Sätze, die sie nannten."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S122Sattel.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-optimalitaet",
+    "boxIndexe": [4],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "SattelpunktWidget",
+    "rationale": "Der Preset hieß wörtlich „Startstrahl y = 0\" und war damit die Antwort der Auswahlfrage; die Presets tragen jetzt neutrale Namen. Der γ-Regler reicht bis 0,5, wo der x-Faktor exakt null wird und ein einziger Schritt genügt — der didaktisch schönste Fall des Widgets war vorher nicht einstellbar. Die Behauptung „nach zwanzig Schritten\" ist weg, das Widget rechnet acht."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S123NelderMead.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nelder-mead-gradient",
+    "boxIndexe": [5],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "NelderMeadSimplex",
+    "rationale": "Die volle Zugstatistik stand in der Konsolidierung desselben Kastens, obwohl der Zugzähler des Widgets genau dafür gebaut ist; sie steht jetzt hinter dem Auflösen. Der Absatz über die Zielfunktion, der wörtlich schon in der Prosa davor stand, ist auf die zwei Sätze gekürzt, die nur das Widget braucht."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S123GdStepper.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nelder-mead-gradient",
+    "boxIndexe": [6],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "GdStepper1D",
+    "rationale": "Die Ablesezeile rechnete die beiden Schwellen 1/L und 2/L im Startzustand vor — die Frage darüber lautet, ab welchem γ die Iteration davonläuft. Sie nennt jetzt nur noch L; die Schwellen stehen im Verdikt, wo sie hingehören. Und der Kasten hat endlich eine eigene Konsolidierung, statt die Einsicht in den Block danach auszulagern."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S123Canyon.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nelder-mead-gradient",
+    "boxIndexe": [7],
+    "severityFixed": ["MAJOR"],
+    "titel": "CanyonWidget",
+    "rationale": "Die Konsolidierung nannte die gesuchte Schrittzahl 336 samt der beiden Vergleichswerte; sie stehen jetzt hinter dem Auflösen, und die Ablesetafel liefert zu jedem eingestellten κ die Zahl ohnehin selbst."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S123Armijo.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-nelder-mead-gradient",
+    "boxIndexe": [8],
+    "severityFixed": ["MINOR"],
+    "titel": "ArmijoWidget",
+    "rationale": "Die Erläuterung, warum der c-Regler bei 0,05 statt beim Praxiswert 10⁻⁴ beginnt, ist eine Bauentscheidung und steht jetzt im Header statt auf der Seite."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S124Newton.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-newton-sgd",
+    "boxIndexe": [9],
+    "severityFixed": ["MAJOR"],
+    "titel": "NewtonParabelLab",
+    "rationale": "Die Konsolidierung beantwortete die Auswahlfrage wörtlich („0,5 landet in einem einzigen Schritt exakt auf dem lokalen Maximum\"); der Satz steht jetzt im verdeckt-Feld, wo er die Auflösung erklärt statt sie vorwegzunehmen."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S124Momentum.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-newton-sgd",
+    "boxIndexe": [11],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "MomentumVergleich",
+    "rationale": "Das Zahlenpaar 106 gegen 31, das zugleich die Selbsttest-Zahlfrage erledigte, steht jetzt hinter dem Auflösen. PRUEFE steigt von 400 auf 1000, damit die im Text genannten 608 Schritte bei κ = 100 im Widget wirklich abzulesen sind statt „> 400\", und drei Schweizer „ss\" im Verdikttext sind zu „ß\" korrigiert."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S125Lagrange.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-beschraenkt",
+    "boxIndexe": [12],
+    "severityFixed": ["MINOR"],
+    "titel": "LagrangeGeometrie",
+    "rationale": "Im Modus „x + y ≤ 1\" stand über dem Text, der erklärt, dass kein Randpunkt ein KKT-Punkt ist, ein grünes Häkchen. Die Verdikt-Art leitet sich jetzt aus dem Modus mit ab: parallel und μ < 0 ergibt eine Warnung mit dem Titel „parallel, aber μ < 0: kein KKT-Punkt\"."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S125RidgeLasso.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-beschraenkt",
+    "boxIndexe": [13],
+    "severityFixed": ["MAJOR"],
+    "titel": "RidgeLassoGeometrie",
+    "rationale": "Für dreizehn Reglerstellungen behauptete das Verdikt „beide Nebenbedingungen binden noch\", während die Ablesezeile darüber „NB inaktiv, μ = 0\" meldete; ein vierter Zweig macht aus dem Widerspruch die Lehraussage, dass derselbe Radius die eine Norm noch bindet und die andere nicht mehr. Die Eckenschwelle 1,3429, die im Startzustand im Verdikt stand, ist die Antwort der Schätzfrage und steht jetzt hinter dem Auflösen."
+  },
+  {
+    "widget": "src/chapters/12-optim/widgets/S126Landkarte.tsx",
+    "kapitel": "12-optim",
+    "anker": "sec-optim-in-r",
+    "boxIndexe": [14],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "OptimLandkarte",
+    "rationale": "Die Konsolidierung begann mit „Es sind genau drei.\" — der Antwort der Frage direkt darüber; sie steht jetzt im verdeckt-Feld, der Rest bleibt sichtbar. Die Karte hat außerdem Achsenticks und -beschriftungen bekommen, sodass sich die Koordinaten aus Verdikt und Preset-Namen im Bild verorten lassen."
+  }
+]

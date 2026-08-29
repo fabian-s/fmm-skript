@@ -63,8 +63,8 @@ import { ref } from "../../numbers.generated";
  * nach dem tiefsten Punkt DIESER Kurve. Die 3D-Tafel behauptet keine eigenen
  * Zahlen; alle Zahlen stehen in der Ablesetafel und im Verdikt.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefung rev135-zahlen.mjs bestaetigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - Auf der Geraden ist f(t, 1-t) = t^2 + (1-t)^2 minimal bei t = 0,500000
  *    mit f = 0,500000; das Kreuzprodukt von grad f = (2t, 2(1-t)) mit (1, 1)
  *    ist 4t - 2 und verschwindet nur dort (bei t = 1,2 etwa 2,80).
@@ -223,6 +223,11 @@ export function LagrangeGeometrie() {
     modus === "ge"
       ? `${px(1.7)},${py(-0.7)} ${px(1.7)},${py(1.7)} ${px(-0.7)},${py(1.7)}`
       : `${px(-0.8)},${py(-0.8)} ${px(1.8)},${py(-0.8)} ${px(-0.8)},${py(1.8)}`;
+
+  // Parallel allein macht noch keinen KKT-Punkt: Bei einer Ungleichung verlangt
+  // die duale Zulässigkeit zusätzlich einen nichtnegativen Multiplikator. Im
+  // „le"-Modus ist er negativ, der Randpunkt also gerade KEIN KKT-Punkt.
+  const kkt = parallel && (modus === "eq" || multAusX > 0);
 
   const gradText = `∇${m.nb} = (${fmt(gg[0])}; ${fmt(gg[1])})`;
   const uneinig = `Die erste Stationaritätsgleichung verlangt ${m.mult} = ${fmt(multAusX)}, die zweite ${m.mult} = ${fmt(multAusY)}; das widerspricht sich.`;
@@ -470,7 +475,19 @@ export function LagrangeGeometrie() {
           </p>
         </div>
       </div>
-      <Verdikt kind={parallel ? "ok" : "neutral"} titel={parallel ? "die Pfeile sind parallel" : "die Pfeile sind nicht parallel"}>
+      {/* Im „le"-Modus ist ein paralleler Randpunkt gerade KEIN KKT-Punkt (die
+          duale Zulässigkeit verbietet μ < 0). Ein grünes Häkchen dazu widerspräche
+          dem eigenen Statustext, deshalb hängt die Verdikt-Art auch am Modus. */}
+      <Verdikt
+        kind={parallel ? (kkt ? "ok" : "warn") : "neutral"}
+        titel={
+          parallel
+            ? kkt
+              ? "die Pfeile sind parallel"
+              : "parallel, aber μ < 0: kein KKT-Punkt"
+            : "die Pfeile sind nicht parallel"
+        }
+      >
         {status}
       </Verdikt>
     </div>

@@ -37,7 +37,7 @@ import { ref } from "../../numbers.generated";
  *
  * Kein Zufall: alle Zustaende haengen allein am Startwert-Regler.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19; zuvor check-math-s125.mjs):
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29):
  *   Doppelmulde f(x) = x^4 - 3x^2 - x + 3, f'(x) = 4x^3 - 6x - 1.
  *   kritische Punkte  -1,1309 (f = 1,9298; f'' = 9,35)
  *                     -0,1699 (f = 3,0841; f'' = -5,65, Hoecker)
@@ -48,8 +48,9 @@ import { ref } from "../../numbers.generated";
  *   Wasserscheide -0,1699 liegt genau dazwischen), und ueber alle 441
  *   Reglerstellungen kippt das Ergebnis genau EINMAL.
  *   Plateau 2*max(0,|x|-0,8)^2: f = 0 auf [-0,8; 0,8], f(2,2) = 3,92,
- *   Sehnendefekt ueber 200000 geseedete Zufallspaare hoechstens 0 (also
- *   konvex), nicht strikt konvex. Schuessel 0,8x^2: f(2,2) = 3,872.
+ *   Sehnenprobe ueber das ganze Intervall bestanden (also konvex), auf dem
+ *   Plateau mit Gleichheit (also nicht strikt). Schuessel 0,8x^2: f(2,2) =
+ *   3,872, Sehnenprobe echt (also strikt konvex).
  */
 
 const BLAU = FMM_COLORS.blau; // Funktionsgraph
@@ -101,7 +102,9 @@ export function Landschaften() {
     titel: string;
     f: (x: number) => number;
     yDomain: [number, number];
-    markers: { x: number; y: number; color: string }[];
+    markers: { x: number; y: number; color: string; label?: string; r?: number }[];
+    /** durchgezogenes Segment, wo eine ganze Strecke minimiert */
+    segmente?: { pts: [number, number][]; color: string }[];
     text: string;
   }[] = [
     {
@@ -109,19 +112,21 @@ export function Landschaften() {
       titel: "konvex, aber nicht strikt",
       f: plateau,
       yDomain: [-0.4, 4.4],
+      // Nicht drei isolierte Punkte: das ganze Intervall minimiert, also wird
+      // es als durchgezogenes orangefarbenes Segment gezeichnet.
       markers: [
-        { x: -0.8, y: 0, color: ORANGE },
-        { x: 0, y: 0, color: ORANGE },
-        { x: 0.8, y: 0, color: ORANGE },
+        { x: -0.8, y: 0, color: ORANGE, r: 3 },
+        { x: 0.8, y: 0, color: ORANGE, r: 3, label: "alle glob." },
       ],
-      text: "Auf dem ganzen Stück von −0,8 bis 0,8 steht derselbe kleinste Wert 0. Jeder dieser Punkte ist ein globales Minimum, eindeutig ist keiner. Die Minimalstellen bilden hier ein Intervall, also selbst wieder eine konvexe Menge.",
+      segmente: [{ pts: [[-0.8, 0], [0.8, 0]], color: ORANGE }],
+      text: "Auf dem ganzen orange gezeichneten Stück von −0,8 bis 0,8 steht derselbe kleinste Wert 0. Jeder dieser Punkte ist ein globales Minimum, eindeutig ist keiner. Die Minimalstellen bilden hier ein Intervall, also selbst wieder eine konvexe Menge.",
     },
     {
       key: "schuessel",
       titel: "strikt konvex",
       f: schuessel,
       yDomain: [-0.4, 4.4],
-      markers: [{ x: 0, y: 0, color: ORANGE }],
+      markers: [{ x: 0, y: 0, color: ORANGE, label: "glob." }],
       text: "Kein gerades Stück, keine flache Stelle: Die Schüssel hat genau eine tiefste Stelle. Wer irgendwo bergab läuft, kann nur dort ankommen.",
     },
     {
@@ -129,9 +134,10 @@ export function Landschaften() {
       titel: "nicht konvex",
       f: dw,
       yDomain: [-1.5, 14.8],
+      // Zweites Merkmal neben der Farbe (E3): das Kürzel am Punkt.
       markers: [
-        { x: DW_LOK.x, y: DW_LOK.f, color: ROT },
-        { x: DW_GLOB.x, y: DW_GLOB.f, color: ORANGE },
+        { x: DW_LOK.x, y: DW_LOK.f, color: ROT, label: "lok." },
+        { x: DW_GLOB.x, y: DW_GLOB.f, color: ORANGE, label: "glob." },
       ],
       text: "Zwei Täler, zwei kritische Punkte mit positiver Krümmung. Das linke Tal bei −1,13 ist ein lokales Minimum mit Wert 1,93, das rechte bei 1,30 das globale mit −0,51. Von innen sehen beide gleich aus.",
     },
@@ -141,26 +147,27 @@ export function Landschaften() {
     <div className="space-y-3">
       <p className="max-w-prose text-sm text-slate-500 dark:text-slate-400">
         Drei Landschaften über demselben Bereich von −2,2 bis 2,2. Blau ist der Graph, orange
-        markiert ein globales Minimum, rot ein Minimum, das nur lokal ist. Die beiden linken
-        Tafeln teilen sich eine Werteachse, die rechte reicht bis 14,8; verglichen wird die Form,
-        nicht die Höhe.
+        und „glob." markieren ein globales Minimum, rot und „lok." ein nur lokales. Die beiden
+        konvexen Tafeln teilen sich eine Werteachse, die dritte reicht bis 14,8; verglichen wird
+        die Form, nicht die Höhe.
       </p>
-      <div className="flex flex-wrap gap-5">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         {panels.map((p) => (
-          <div key={p.key} className="min-w-0 basis-[19rem]">
+          <div key={p.key} className="min-w-0">
             <p className="mb-1 text-sm font-medium">{p.titel}</p>
             <Plot
               xLabel="x"
               yLabel="f(x)"
               series={[{ f: p.f, color: BLAU }]}
               markers={p.markers}
+              polylines={p.segmente}
               xDomain={[X_LO, X_HI]}
               yDomain={p.yDomain}
               width={250}
               height={170}
               ariaLabel={`Landschaft: ${p.titel}.`}
             />
-            <p className="mt-1 max-w-[19rem] text-sm">{p.text}</p>
+            <p className="mt-1 max-w-prose text-sm">{p.text}</p>
           </div>
         ))}
       </div>

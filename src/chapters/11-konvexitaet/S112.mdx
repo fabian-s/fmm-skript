@@ -44,8 +44,9 @@ wir eine Rechnung, keine Beispiele.
 
 :::interaktiv[Welche Mengen sind konvex?]
 Statt hier zwei Bilder abzudrucken, eine konvexe und eine nicht konvexe Menge,
-machen wir daraus einen Test. Vier Mengen stehen zur Wahl, zwei Punkte
-lassen sich frei hineinziehen: Bei welchen der vier finden wir ein Paar, dessen
+machen wir daraus einen Test. Zur Wahl stehen die Kreisscheibe $\|\bz\| \le 1{,}2$, der
+Kreisring $0{,}8 \le \|\bz\| \le 1{,}2$, ein Dreieck und die Menge unter der Parabel; zwei
+Punkte lassen sich frei hineinziehen: Bei welchen der vier finden wir ein Paar, dessen
 Verbindungsstrecke herausläuft, und wie schwer ist die Suche?
 
 <KonvexTest />
@@ -451,8 +452,11 @@ der semidefiniten unter ihnen aus, und woran erkennen wir ihren Rand?
 
 :::interaktiv[Der Kegel zum Anfassen]
 Die Bedingung aus @definition:positiv-semidefinit lässt sich für $n = 2$ in drei Ungleichungen übersetzen:
-$a \ge 0$, $c \ge 0$ und $ac \ge b^2$. Die linke Tafel zeigt davon den Schnitt bei festem $b$,
-die rechte die ganze Menge im Raum der drei Zahlen.
+$a \ge 0$, $c \ge 0$ und $ac \ge b^2$. Die linke Tafel zeigt davon den Schnitt bei festem $b$.
+Die rechte zeigt dieselbe Menge im Raum der drei Zahlen, aber in gedrehten Koordinaten:
+waagerecht $\tfrac{a-c}{2}$ und $b$, senkrecht die halbe Spur $\tfrac{a+c}{2}$. Darin ist
+$\cblue{\Pcal_2}$ ein Kreiskegel, denn $ac \ge b^2$ heißt dort
+$\tfrac{a+c}{2} \ge \sqrt{\bigl(\tfrac{a-c}{2}\bigr)^2 + b^2}$.
 
 <PsdKegel />
 
@@ -461,9 +465,9 @@ $\bA$ gehört der ganze Halbstrahl $t\bA$, $t \ge 0$, dazu, denn alle drei Bedin
 homogen. Der Rand $ac = b^2$ besteht genau aus den semidefiniten Matrizen mit Determinante $0$,
 also denen vom Rang $1$ oder $0$; dort ist der kleinere Eigenwert gerade null. Innen liegen die
 positiv definiten Matrizen, außen die indefiniten und die negativ semidefiniten. Die drei
-Voreinstellungen mit Spur $2$ machen den Unterschied an Zahlen fest: Die Einheitsmatrix hat die
-Eigenwerte $1$ und $1$, die Rang-$1$-Matrix mit $b = 1$ die Eigenwerte $0$ und $2$, und mit
-$b = 2$ kippt es auf $-1$ und $3$. @satz:die-positiv-semidefiniten-matrizen ist im Bild die Aussage, dass die Strecke zwischen zwei Punkten des Kegels nie
+Voreinstellungen mit Spur $2$ machen den Unterschied an Zahlen fest: Beim Übergang von
+$b = 0$ über $b = 1$ zu $b = 2$ wandert der kleinere Eigenwert, den die Tabelle im Widget
+mitführt, von positiv über null ins Negative. @satz:die-positiv-semidefiniten-matrizen ist im Bild die Aussage, dass die Strecke zwischen zwei Punkten des Kegels nie
 unter die gekrümmte Randfläche taucht.
 
 Nebenbei fällt eine hübsche Beobachtung ab: Schneiden wir den Kegel mit der Ebene

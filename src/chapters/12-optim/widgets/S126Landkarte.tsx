@@ -31,8 +31,8 @@ import { ref } from "../../numbers.generated";
  * und Suchrichtungen vorbehalten). Die Höhenskala bleibt neutral grau, damit
  * sie nicht mit dem Blau der Iterierten kollidiert.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * ältere Prüfungen rev136-b.mjs, rev136-c.mjs bestätigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - Die drei Voreinstellungen sind die Startpunkte der Folien. (−1; −0,5)
  *    endet im globalen Minimum (0; 0) mit f = 0, (−1; 1) im oberen lokalen
  *    Minimum (0; 1,0357) und (−0,5; −1) im unteren (0; −1,0357), beide mit
@@ -186,6 +186,26 @@ export function OptimLandkarte() {
           {...zieh.surfaceProps("p")}
         >
           {heatmap}
+          {/* Ticks an beiden Achsen: ohne sie lassen sich die Koordinaten aus
+              Verdikt und Preset-Namen nicht im Bild verorten (B3). */}
+          {[-1, 0, 1].concat([1.5]).map((t) => (
+            <g key={`tick${t}`} aria-hidden="true">
+              <line x1={sx(t)} x2={sx(t)} y1={W - 6} y2={W} stroke="#94a3b8" strokeWidth={1} />
+              <text x={sx(t)} y={W - 9} fontSize={9} textAnchor="middle" fill="#475569">
+                {fmt(t, 1)}
+              </text>
+              <line x1={0} x2={6} y1={sy(t)} y2={sy(t)} stroke="#94a3b8" strokeWidth={1} />
+              <text x={9} y={sy(t) + 3} fontSize={9} fill="#475569">
+                {fmt(t, 1)}
+              </text>
+            </g>
+          ))}
+          <text x={W - 4} y={W - 9} fontSize={9} textAnchor="end" fill="#475569">
+            x₁ →
+          </text>
+          <text x={9} y={12} fontSize={9} fill="#475569">
+            x₂ ↑
+          </text>
           <polyline
             points={lauf.pfad.map(([x, y]) => `${sx(x)},${sy(y)}`).join(" ")}
             fill="none"

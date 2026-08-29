@@ -137,15 +137,13 @@ Abspielknopf lässt den ganzen Lauf durchlaufen.
     { id: "schrumpfen", text: "Schrumpfen" },
   ]}
   loesung="kontraktion"
-  verdeckt={<>Der Zugzähler im Widget führt mit.</>}
+  verdeckt={<>Der Zugzähler im Widget führt mit: Aus dem voreingestellten Simplex braucht das Verfahren vierzig Schritte, bis der beste Eckpunkt unter <M>{"10^{-6}"}</M> liegt, und der Zähler steht dann auf <M>{"23"}</M> Kontraktionen, <M>{"13"}</M> Reflexionen und <M>{"4"}</M> Expansionen.</>}
 >
   <NelderMeadSimplex />
 </Schaetzfrage>
 
-Die vier Züge verteilen sich sehr ungleich. Aus dem voreingestellten Simplex
-braucht das Verfahren vierzig Schritte, bis der beste Eckpunkt unter $10^{-6}$
-liegt, und der Zähler steht dann auf $23$ Kontraktionen, $13$ Reflexionen und
-$4$ Expansionen; ein Schrumpfschritt, der teuerste Zug, kommt auf diesem Weg gar
+Die vier Züge verteilen sich sehr ungleich; der Zähler im Widget hält das fest.
+Ein Schrumpfschritt, der teuerste Zug, kommt auf dem voreingestellten Weg gar
 nicht vor, erst der zweite Startsimplex führt ihn im vierten Schritt vor. Auch die
 Form verrät, wo der Simplex steht: Auf den geraden Stücken des Tals wird er lang
 und dünn und legt sich in Laufrichtung, in der Biegung um $x_1 \approx 0$
@@ -262,6 +260,12 @@ wie rückwärts.
 >
   <GdStepper1D />
 </Schaetzfrage>
+
+Alles hängt am Fehlerfaktor $1 - \gamma L$, den die Ablesetafel mitführt. Solange
+sein Betrag unter $1$ bleibt, schrumpft der Fehler; wird er negativ, springen die
+Iterierten über das Minimum hinweg und nähern sich trotzdem; erreicht sein Betrag
+$1$, pendelt die Folge, und darüber wächst der Fehler in jedem Schritt. Die
+nächste Bemerkung rechnet diese fünf Fälle einmal durch.
 :::
 
 Die Beobachtungen ordnen sich zu einer vollständigen Fallunterscheidung, und die
@@ -691,14 +695,13 @@ $\kappa$ an derselben Stelle liegen.
   loesung={336}
   toleranz={80}
   einheit="Schritte"
-  verdeckt={<>Der Aufwand wächst proportional zu <M>{"\\kappa"}</M>; die Ablesetafel des Widgets nennt die Zahl.</>}
+  verdeckt={<>Der Aufwand wächst ungefähr proportional zu <M>{"\\kappa"}</M>: <M>{"35"}</M> Schritte bei <M>{"\\kappa = 10"}</M>, <M>{"88"}</M> bei <M>{"\\kappa = 25"}</M> und <M>{"336"}</M> bei <M>{"\\kappa = 100"}</M>. Die Ablesetafel des Widgets nennt die Zahl zu jedem eingestellten <M>{"\\kappa"}</M>.</>}
 >
   <CanyonWidget />
 </Schaetzfrage>
 
-Der Aufwand wächst ungefähr proportional zur Kondition: bei $\kappa = 10$ sind es
-$35$ Schritte bis zum Millionstel, bei $\kappa = 25$ schon $88$ und bei
-$\kappa = 100$ dann $336$. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der
+Der Aufwand wächst ungefähr proportional zur Kondition; die Ablesetafel zeigt zu
+jedem $\kappa$ die zugehörige Schrittzahl. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der
 negative Gradient zeigt direkt auf das Minimum, und mit einem halben Anteil ist
 das Verfahren nach einem Schritt fertig. Bei $\kappa = 10$ und $\gamma = 1/L$
 stehen dieselben Zahlen auf der Tafel: gemessener Quotient $0{,}81$ gegen die

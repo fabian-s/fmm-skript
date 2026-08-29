@@ -382,9 +382,7 @@ Kann ein Verfahren an so einem Punkt hängenbleiben?
 
 :::interaktiv[Zwei Verfahren am Sattelpunkt]
 Die Tafel zeichnet die Höhenlinien von @beispiel:der-standardsattel und hängt zwei
-Verfahren daran. Drei Voreinstellungen sind die drei Experimente, die sich lohnen:
-der gewöhnliche Start, der Sonderfall auf der grünen Achse und ein schräger Start
-für den Newton-Knopf.
+Verfahren daran. Drei Voreinstellungen markieren die Experimente, die sich lohnen.
 
 <Schaetzfrage
   variante="auswahl"
@@ -395,7 +393,7 @@ für den Newton-Knopf.
     { id: "keiner", text: "von keinem" },
   ]}
   loesung="achse"
-  verdeckt={<>Die Voreinstellung „Startstrahl <M>{"y = 0"}</M>" trifft genau diesen Fall.</>}
+  verdeckt={<>Der zweite Start trifft genau diesen Fall: Auf dem Strahl <M>{"y = 0"}</M> bleibt die zweite Komponente in jedem Schritt exakt null, und der Abstieg kriecht in den Sattelpunkt hinein. Dieser eine Strahl hat in der Ebene Maß null.</>}
 >
   <SattelpunktWidget />
 </Schaetzfrage>
@@ -405,10 +403,8 @@ landet von jedem Startpunkt aus in einem einzigen Schritt exakt in
 $\cpurp{\bx^\star}$, denn $f$ ist quadratisch und seine Näherung zweiter Ordnung
 damit exakt. Der Gradientenabstieg dagegen entkommt: Mit $\gamma = 0{,}25$ steht
 er aus $(1{,}5;\, 0{,}4)$ nach acht Schritten bei $(0{,}0059;\, 10{,}25)$ – die
-erste Komponente fällt gegen null, die zweite läuft davon. Nur auf dem Startstrahl
-$y = 0$ kriecht auch er hinein, weil dort die zweite Komponente in jedem Schritt
-null bleibt; aus $x = 1{,}5$ stehen die Iterierten dann nach zwanzig Schritten bei
-$1{,}4 \cdot 10^{-6}$. Warum diese Ausnahme in der Praxis keine Rolle spielt,
+erste Komponente fällt gegen null, die zweite läuft davon. Warum die Ausnahme, die
+das Widget vorführt, in der Praxis keine Rolle spielt,
 sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
 :::
 

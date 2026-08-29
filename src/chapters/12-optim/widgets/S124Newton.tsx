@@ -41,7 +41,7 @@ import { ref } from "../../numbers.generated";
  *
  * Alles ist deterministisch; kein Math.random.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen:
  *  - f(x) = x − 2 ln x ab x⁽⁰⁾ = 1: 1 → 1,5 → 1,875 → 1,9921875 → 1,99996948
  *    → 2,00000000 mit den Fehlern 1 / 0,5 / 0,125 / 7,8125e-3 / 3,0518e-5 /
  *    4,66e-10 und dem Quotienten e_{k+1}/e_k² konstant 0,500000.

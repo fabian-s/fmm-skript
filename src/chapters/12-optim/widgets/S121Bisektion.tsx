@@ -28,8 +28,8 @@ import { ref } from "../../numbers.generated";
  * Nullstelle gruen, der gerade gepruefte Mittelpunkt orange; der Graph von f
  * traegt das im Kapitel freie Violett.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefung check-math-s131.mjs bestaetigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  * - f(x) = x^2 - 2 auf [1, 2]: eps = 1e-3 -> 10 Schritte, 1e-4 -> 14,
  *   1e-6 -> 20, 1e-8 -> 27, 1e-10 -> 34; die Vorhersage ceil(log2((b-a)/eps))
  *   trifft in allen fuenf Faellen exakt. Bei eps = 1e-6 hat das Endintervall
