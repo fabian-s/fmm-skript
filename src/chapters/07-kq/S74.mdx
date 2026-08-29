@@ -100,7 +100,7 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 
 <OrthoWidget />
 
-<p className="mt-2 text-sm">Das Widget verbindet die Determinante mit dem Typ der orthogonalen Abbildung und ihrer Normerhaltung.</p>
+<p className="mt-2 text-sm">Die Typen trennt $\det \bQ = \pm 1$; gleich bleibt $\left\|\bQ\bx\right\|_2 = \left\|\bx\right\|_2$. Für KQ-Probleme zählt nur das Zweite, also dürfen wir beide mischen.</p>
 :::
 
 ### Die QR-Zerlegung
@@ -215,7 +215,7 @@ Verfahrens: die $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalve
 
 <GramSchmidtWidget />
 
-<p className="mt-2 text-sm">Das Widget verbindet den Winkel der Spalten mit der Größe des zu normierenden Restvektors.</p>
+<p className="mt-2 text-sm">Der Rest ist $\left\|\ba_2\right\|_2 \sin \angle(\ba_1, \ba_2)$: Je kleiner der Winkel, desto weniger bleibt übrig – und desto stärker vergrößert das Normieren die Rundungsfehler darin.</p>
 :::
 
 Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
@@ -231,9 +231,11 @@ Unterschied wird, messen wir am besten selbst.
 ::::vertiefung[Numerische Stabilität der Gram-Schmidt-Varianten]
 
 :::interaktiv[Wie schnell zerbricht Gram-Schmidt – und wie repariert man es?]
+<p className="mb-2 text-sm">Die Läuchli-Matrix ist der Ernstfall: drei fast parallele Spalten, deren Unterschied allein in $\varepsilon = 10^{-p}$ steckt. Wie weit laufen die Varianten bei wachsendem $p$ auseinander?</p>
+
 <CgsVsMgsWidget />
 
-<p className="mt-2 text-sm">Das Widget vergleicht den Orthogonalitätsverlust der drei Gram-Schmidt-Varianten.</p>
+<p className="mt-2 text-sm">Klassisch wächst der Orthogonalitätsverlust mit $\corange{\kappa_2(\bA)}^2$, modifiziert nur mit $\corange{\kappa_2(\bA)}$; ein zweiter Durchlauf drückt ihn auf Maschinengenauigkeit.</p>
 
 <p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in @sec:normalengleichungen – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::

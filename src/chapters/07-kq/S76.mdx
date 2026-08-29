@@ -214,7 +214,7 @@ Praxis-Regeln zusammen:
 
 <CostWidget />
 
-<p className="mt-2 text-sm">Das Widget trennt die gemeinsamen Größenordnungen von den konstanten Kostenfaktoren der Verfahren.</p>
+<p className="mt-2 text-sm">Alle drei kosten $\mathcal{O}(mn^2)$ und unterscheiden sich nur im konstanten Faktor. Für $m \gg n$ läuft QR gegen das Doppelte der Normalengleichungen: Stabilität kostet einen Faktor, keine Größenordnung.</p>
 :::
 
 :::interaktiv[Wie viele der 16 Stellen überleben?]
@@ -222,7 +222,7 @@ Praxis-Regeln zusammen:
 
 <AccuracyWidget />
 
-<p className="mt-2 text-sm">Das Widget verbindet Kondition und Residuum mit der erreichbaren Genauigkeit der drei Verfahren.</p>
+<p className="mt-2 text-sm">Die Normalengleichungen zahlen $\corange{\kappa_2(\bA)}^2$ auch dort, wo das Problem selbst nur $\corange{\kappa_2(\bA)}$ verlangt – genau das trennt sie bei kleinem Residuum von QR.</p>
 :::
 
 <h3 id="sec-7.6-zusammenfassung">Zusammenfassung: das Kapitel im Überblick</h3>
@@ -271,7 +271,7 @@ einen Kompromiss aus Geschwindigkeit und Stabilität.
 
 <MethodChooser />
 
-<p className="mt-2 text-sm">Das Widget ordnet die Methodenwahl nach Stabilität, Rang und Aufwand.</p>
+<p className="mt-2 text-sm">Die Empfehlung hängt fast nur an zwei Fragen: Ist $\bA$ (fast) rangdefekt, und wie groß ist $\corange{\kappa_2(\bA)}$. Der Aufwand entscheidet erst, wenn beide Antworten harmlos ausfallen.</p>
 :::
 
 <h3 id="sec-7.6-quiz">Selbsttest</h3>
@@ -284,7 +284,7 @@ Marker für $W(\text{QR}) / W(\text{NE})$?
 
 Mit $W_{\text{NE}} = mn^2/2 + n^3/6$ und $W_{\text{QR}} = mn^2 - n^3/3$ ist das Verhältnis
 $(r - 1/3)/(r/2 + 1/6)$ mit $r = m/n$, für $r = 10$ also $9{,}667/5{,}167 = 1{,}87$. Es
-hängt nur von $r$ ab, nicht von $n$ – beide Regler für $n$ ändern daran nichts.
+hängt nur von $r$ ab, nicht von $n$ – der $n$-Regler ändert daran nichts.
 :::
 
 :::frage{falsch}

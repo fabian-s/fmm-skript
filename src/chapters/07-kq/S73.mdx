@@ -203,7 +203,7 @@ Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singulär
 
 <S73KreuzproduktWidget />
 
-<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}} \approx 1{,}05 \cdot 10^{-8}$, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Das ist mehr, als die Konditionszahl allein hergibt: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
+<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Das ist mehr, als die Konditionszahl allein hergibt: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
 :::
 
 ### Alternative Lösungswege: orthogonale Transformationen :id[alternative-loesungswege-orthogonale]
@@ -248,7 +248,7 @@ $\bQ\bA$ gezielt auf Dreiecksform bringen (die
 
 <S73NormerhaltungWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, bilden Drehung und Spiegelung den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse: Bei $m = 1{,}2$ wird aus $\left\|\bv\right\|_2 = 1{,}803$ ein $\left\|\bM\bv\right\|_2 = 3{,}176$, ein Faktor 1,76. Dass $\det \bM = 1$ bleibt, hilft nichts – Flächentreue ist eben nicht Längentreue. Genau deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
+<p className="mt-2 text-sm">Drehung und Spiegelung bilden den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse; einzelne Vektoren behalten dabei zufällig ihre Länge, alle zusammen aber nicht. Dass $\det \bM = 1$ bleibt, hilft nichts – Flächentreue ist eben nicht Längentreue. Genau deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
 :::
 
 ### Selbsttest

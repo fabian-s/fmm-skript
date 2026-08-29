@@ -9,7 +9,12 @@ import { Aufgabe, DragHandle, FMM_COLORS, MatrixDisplay, Slider, useDrag, Verdik
  * Provenienz: Eigenbau. Verifizierte Zahlen: Für v=(1,1), w=(1,0),
  * x=(1,3;0,3) ist A=((1,0),(1,0)), wᵀx=1,3 und Ax=(1,3;1,3);
  * für x=(0;1,2) gilt wᵀx=0 und Ax=0.
- * Siehe scripts/verify/KAP09/s93-rang-eins.mjs (2026-08-26).
+ * Siehe scripts/verify/KAP09/s93-rang-eins.mjs (2026-08-26) und
+ * scripts/verify/REV29/09-tensoren-S93RangEins.mjs (2026-08-29). Das zweite
+ * Skript belegt die Drei-Zustands-Trennung: wᵀx = 0 und ‖v‖ = 0 bzw. ‖w‖ = 0
+ * sind über die Regler (Schritt 0,1) und über den Preset exakt erreichbar, der
+ * Ziehgriff dagegen liefert Zwischenwerte, für die die Verdikte jetzt einen
+ * eigenen „fast"-Zweig haben.
  */
 type Vektor2 = [number, number];
 type Fall = "ausserhalb" | "kern";
@@ -84,8 +89,17 @@ export function RangEinsExplorer() {
   const A = matrix(v, w);
   const skalar = w[0] * x[0] + w[1] * x[1];
   const Ax: Vektor2 = [v[0] * skalar, v[1] * skalar];
-  const rangEins = norm(v) > 0.12 && norm(w) > 0.12;
-  const kernTreffer = rangEins && Math.abs(skalar) < 0.08;
+  // Drei Zustände statt zweier Toleranzschwellen:
+  //   exakt      – ein Faktor ist wirklich der Nullvektor bzw. wᵀx ist wirklich 0
+  //                (beides über die Regler mit Schritt 0,1 und über die Presets
+  //                erreichbar);
+  //   fast       – sehr kurz bzw. sehr klein, aber nicht null (typisch beim Ziehen);
+  //   regulär    – alles andere.
+  const nullFaktor = norm(v) === 0 || norm(w) === 0;
+  const kurzerFaktor = !nullFaktor && (norm(v) < 0.12 || norm(w) < 0.12);
+  const rangEins = !nullFaktor;
+  const kernExakt = rangEins && skalar === 0;
+  const kernNah = rangEins && !kernExakt && Math.abs(skalar) < 0.08;
   const kernRichtung: Vektor2 = [-w[1], w[0]];
   const [AxImBild, AxAusserhalb] = insSichtfeld(Ax);
   const kernPreset = presetX("kern", w);
@@ -95,7 +109,7 @@ export function RangEinsExplorer() {
     : nahe(x, ausserhalbPreset) ? "ausserhalb" : null;
 
   const setzeFall = (fall: Fall) => {
-    if (norm(w) > 0.12) setX(presetX(fall, w));
+    if (norm(w) > 0) setX(presetX(fall, w));
   };
 
   const reset = () => {
@@ -132,15 +146,15 @@ export function RangEinsExplorer() {
         viewBox="0 0 300 300"
         className="mx-auto block h-auto w-full max-w-[27rem] overflow-hidden"
         role="img"
-        aria-label={kernTreffer
-          ? "Der Eingabevektor x liegt im gestrichelten Kern; das Ergebnis A x ist der Nullvektor."
+        aria-label={kernExakt
+          ? "Der Eingabevektor x liegt exakt im gestrichelten Kern; das Ergebnis A x ist der Nullvektor."
           : "Der Eingabevektor x wird auf einen Vektor A x entlang der blauen Bildgeraden abgebildet."}
         {...zieh.svgProps}
       >
         <line x1="54" y1="150" x2="246" y2="150" stroke="var(--w-axis)" />
         <line x1="150" y1="54" x2="150" y2="246" stroke="var(--w-axis)" />
 
-        {norm(w) > 0.12 && (
+        {norm(w) > 0 && (
           <line
             x1={px(-2 * kernRichtung[0] / norm(kernRichtung))}
             y1={py(-2 * kernRichtung[1] / norm(kernRichtung))}
@@ -215,12 +229,16 @@ export function RangEinsExplorer() {
         </Reglergruppe>
       </div>
 
-      <Verdikt kind={!rangEins ? "warn" : kernTreffer ? "ok" : "neutral"}>
-        {!rangEins
-          ? "Mindestens einer der Faktoren ist der Nullvektor: A ist dann die Nullmatrix und keine Rang-1-Matrix."
-          : kernTreffer
-            ? `1. Messen: wᵀx = ${fmtDe(skalar, 2)}. 2. Auf v ablegen: Ax = 0 · v = 0. Genau deshalb gehört x zum Kern.`
-            : `1. Messen: wᵀx = ${fmtDe(skalar, 2)}. 2. Auf v ablegen: Ax = ${fmtDe(skalar, 2)} · v = (${fmtDe(Ax[0], 2)}; ${fmtDe(Ax[1], 2)})ᵀ. Das Ergebnis liegt auf der blauen Bildgeraden span(v).`}
+      <Verdikt kind={nullFaktor ? "warn" : kurzerFaktor ? "warn" : kernExakt ? "ok" : kernNah ? "neutral" : "neutral"}>
+        {nullFaktor
+          ? "Einer der beiden Faktoren ist der Nullvektor: A ist dann die Nullmatrix, hat Rang 0 und ist keine Rang-1-Matrix."
+          : kurzerFaktor
+            ? `Beide Faktoren sind ungleich null, A = v wᵀ hat also weiterhin Rang 1 – aber mit ‖v‖ = ${fmtDe(norm(v), 2)} und ‖w‖ = ${fmtDe(norm(w), 2)} ist einer davon so kurz, dass im Maßstab des Bildes kaum noch etwas zu sehen ist.`
+            : kernExakt
+              ? `1. Messen: wᵀx = 0 exakt. 2. Auf v ablegen: Ax = 0 · v = 0. Genau deshalb gehört x zum Kern.`
+              : kernNah
+                ? `1. Messen: wᵀx = ${fmtDe(skalar, 2)} – klein, aber nicht null. 2. Auf v ablegen: Ax = (${fmtDe(Ax[0], 2)}; ${fmtDe(Ax[1], 2)})ᵀ ist schon sehr kurz, verschwindet aber erst genau auf der grünen Kerngeraden.`
+                : `1. Messen: wᵀx = ${fmtDe(skalar, 2)}. 2. Auf v ablegen: Ax = ${fmtDe(skalar, 2)} · v = (${fmtDe(Ax[0], 2)}; ${fmtDe(Ax[1], 2)})ᵀ. Das Ergebnis liegt auf der blauen Bildgeraden span(v).`}
       </Verdikt>
 
       <details className="mx-auto max-w-xl rounded-md border border-slate-200 p-3 dark:border-slate-700">

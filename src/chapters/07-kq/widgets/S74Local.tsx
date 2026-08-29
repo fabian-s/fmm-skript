@@ -20,7 +20,10 @@
  * interactive/heath-ch3 portiert (Labels deutsch); Ziehgriffe, Schätzfrage,
  * Verdikte und alle Texte für dieses Skript neu geschrieben.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S74Local.mjs (2026-08-29), Teil von
+ * `npm run verify:numbers`. Das Skript rechnet die Läuchli-Messreihe mit einer
+ * eigenen Implementierung von CGS/MGS/MGS+Nachlauf nach und prüft die
+ * Gram-Schmidt-Geometrie gegen die trigonometrische Formel:
  *   OrthoWidget: x = (2,1)ᵀ mit ‖x‖₂ = 2,236068; für θ = 35° liefert die
  *   Drehung Qx = (1,0647; 1,9663) und die Spiegelung Qx = (2,2119; 0,3280),
  *   beide mit ‖Qx‖₂ = 2,236067977500 (zwölf Stellen) und det = ±1.
@@ -333,8 +336,8 @@ export function GramSchmidtWidget() {
           <span className="font-mono">{fmtDe(nr, 3)}</span> übrig, also{" "}
           <span className="font-mono">{fmtDe(100 * anteil, 1)} %</span> seiner Länge. Genau diesen
           Rest teilen wir gleich durch seine eigene Länge – und mit ihm alle Rundungsfehler, die
-          in der Differenz <M>{"\\ba_2 - R_{12}\\bq_1"}</M> stecken. Das nächste Widget misst,
-          wie viel davon übrig bleibt.
+          in der Differenz <M>{"\\ba_2 - R_{12}\\bq_1"}</M> stecken. Genau hier verliert das
+          klassische Gram-Schmidt-Verfahren in Gleitkommaarithmetik seine Orthogonalität.
         </Verdikt>
       ) : anteil > 0.95 ? (
         <Verdikt kind="ok" titel="Der bequeme Fall:">
@@ -408,10 +411,11 @@ function orthLoss(Q: number[][]): number {
   return worst;
 }
 
+/** Ampel aus der \cb*-Palette (die Stufe steht zusätzlich als Zahl daneben). */
 function lossColor(v: number): string {
-  if (v < 1e-13) return "text-emerald-600 dark:text-emerald-400";
-  if (v < 1e-7) return "text-amber-600 dark:text-amber-400";
-  return "text-red-600 dark:text-red-400";
+  if (v < 1e-13) return FMM_COLORS.gruen;
+  if (v < 1e-7) return FMM_COLORS.orange;
+  return FMM_COLORS.rot;
 }
 
 /** Verbleibende korrekte Stellen aus einem Orthogonalitätsfehler. */
@@ -450,6 +454,10 @@ function CgsVsMgsTafel({ p, setP }: { p: number; setP: (v: number) => void }) {
         <M>{`\\varepsilon = 10^{-${p.toFixed(1).replace(".", "{,}")}}, \\qquad \\corange{\\kappa_2(\\bA)} \\approx ${zehnerpotenz(kappa)}`}</M>
       </p>
       <table className="my-2 text-sm">
+        <caption className="sr-only">
+          Maximale Abweichung von der Orthogonalität für klassisches Gram-Schmidt, modifiziertes
+          Gram-Schmidt und modifiziertes Gram-Schmidt mit Nachlauf, beim aktuellen Exponenten p.
+        </caption>
         <thead>
           <tr className="text-left text-slate-500 dark:text-slate-400">
             <th className="py-1 pr-6 font-normal">Verfahren</th>
@@ -460,7 +468,9 @@ function CgsVsMgsTafel({ p, setP }: { p: number; setP: (v: number) => void }) {
           {rows.map(([name, v]) => (
             <tr key={name}>
               <td className="py-1 pr-6">{name}</td>
-              <td className={`py-1 font-mono tabular-nums ${lossColor(v)}`}>{v.toExponential(2)}</td>
+              <td className="py-1 font-mono tabular-nums" style={{ color: lossColor(v) }}>
+                {v.toExponential(2).replace(".", ",").replace("-", "−")}
+              </td>
             </tr>
           ))}
         </tbody>

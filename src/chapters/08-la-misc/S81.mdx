@@ -346,9 +346,7 @@ Konvergenz zusammen.
 dem größten Eigenwert, der im Startvektor überhaupt vertreten ist. Für symmetrisches $\bA$
 sind die Eigenvektoren orthogonal, dort heißt $c_1 = \cgreen{\bv_1}^\top\bx^{(0)} = 0$
 also schlicht: Der Startvektor steht senkrecht auf dem gesuchten Eigenvektor.
-In @beispiel:potenzmethode-an-einer-2-2-matrix trifft das auf $\bx^{(0)} = c\,\bv_2$ zu. Dann ist
-$\bA\bx^{(0)} = 4\,\bx^{(0)}$, die normierte Iterierte bleibt für immer stehen,
-und beide Schätzungen liefern hartnäckig $4$ statt $9$. In der Praxis ist das
+Wie sich das auswirkt, sehen wir gleich am Widget. In der Praxis ist das
 weniger dramatisch, als es klingt: Ein zufällig gewählter Startvektor erfüllt
 $c_1 \neq 0$ mit Wahrscheinlichkeit $1$, und Rundungsfehler schmuggeln beim
 Rechnen ohnehin einen kleinen $\cgreen{\bv_1}$-Anteil hinein, den die Iteration
@@ -366,6 +364,11 @@ Was geschieht, wenn der Start genau auf der zweiten Eigenrichtung liegt?
 Ziehen wir den Start auf dem Einheitskreis und testen wir diese Vermutung.
 
 <PotenzmethodenStepper />
+
+Der Ausnahmefall ist eine Nullmenge, aber keine Kleinigkeit: Auf $\cgreen{\bv_2}$
+gestartet, bleibt die normierte Iterierte für immer stehen. Von jedem anderen Start
+aus schrumpft der Winkelrest in jedem Schritt um denselben Faktor
+$\corange{|\lambda_2/\lambda_1|}$ – die Rate hängt an der Matrix, nicht am Start.
 :::
 
 ::::quiz
@@ -771,11 +774,17 @@ Schritts und das
 aufgesammelte Produkt $\bQ_k$; rechts fällt der Betrag der Nebendiagonalen auf
 logarithmischer Skala, wo lineare Konvergenz als Gerade erscheint. Neben der
 Beispielmatrix lohnen sich zwei weitere Eingaben: die unsymmetrische Matrix
-$\bigl(\begin{smallmatrix} 2 & 3 \\ 1 & 4 \end{smallmatrix}\bigr)$, bei der der
-Grenzwert dreieckig und nicht diagonal ist, und die Drehung aus
-@bemerkung:wogegen-die-qr-iteration-konvergiert, bei der gar nichts passiert.
+$\bigl(\begin{smallmatrix} 2 & 3 \\ 1 & 4 \end{smallmatrix}\bigr)$ und die Drehung
+aus @bemerkung:wogegen-die-qr-iteration-konvergiert. Probieren wir beide aus,
+bevor wir weiterlesen.
 
 <QrIterationsDemo />
+
+Alle drei Fälle des Satzes stecken in diesen drei Knöpfen: getrennte Beträge und
+Symmetrie führen auf eine Diagonalmatrix mit Eigenvektoren in $\bQ_k$, getrennte
+Beträge ohne Symmetrie nur auf eine Dreiecksmatrix, und gleiche Beträge auf
+Stillstand. Was die Iteration liefert, hängt also nicht am Rechenaufwand, sondern
+allein am Spektrum von $\bA$.
 :::
 
 ### Kondition und Aufwand

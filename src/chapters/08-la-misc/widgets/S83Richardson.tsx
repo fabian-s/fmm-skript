@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, FMM_COLORS, LabeledPlot, Slider, Stepper, Verdikt, fmtDe, niceTicks } from "../../../lib";
+import { Aufgabe, FMM_COLORS, LabeledPlot, Schaetzfrage, Slider, Stepper, Verdikt, fmtDe, niceTicks } from "../../../lib";
 import type { Series } from "../../../lib";
 import { ref } from "../../numbers.generated";
 
@@ -14,8 +14,13 @@ import { ref } from "../../numbers.generated";
  *
  * Einsicht: Die Richardson-Iteration kippt genau dann, wenn die Rate rho über 1 steigt.
  * Farbrollen: Iterierte blau, Lösung grün, Residuum/Fehler rot, Rate orange.
- * Provenienz: Eigenbau; keine portierte Prosa. Zahlen verifiziert in
- * verify-08-la-misc/check-widgets.mjs am 2026-08-19.
+ * Provenienz: Eigenbau; keine portierte Prosa.
+ * PRÜFSTATUS: scripts/verify/REV29/08-la-misc-S83Richardson.mjs (2026-08-29),
+ * Teil von `npm run verify:numbers`. Das Skript bestimmt λ_max und λ_min durch
+ * Potenziteration auf A bzw. auf 5·I − A (also ohne das charakteristische
+ * Polynom, das hier hartkodiert ist) und assertiert γ* = 2/λ_max = 0,4330847,
+ * ρ(0,25) = 0,4045 sowie die Erreichbarkeit des Grenzzweigs auf dem
+ * 0,001er-Reglerraster.
  */
 
 const { gruen: GREEN, blau: BLUE, rot: RED, orange: ORANGE } = FMM_COLORS;
@@ -29,6 +34,8 @@ const XSTAR: [number, number] = [1 / 11, 7 / 11];
 const LMAX = (7 + Math.sqrt(5)) / 2; // ≈ 4,618
 const LMIN = (7 - Math.sqrt(5)) / 2; // ≈ 2,382
 const KMAX = 12;
+/** Kippgrenze: für γ > 2/λ_max ist ρ > 1. Lösung der Schätzfrage. */
+const GAMMA_STERN = 2 / LMAX;
 
 function residuum(x: [number, number]): [number, number] {
   return [
@@ -95,14 +102,17 @@ function EbenenPanel({
   const pfad = punkte.map((p) => `${px(p[0])},${py(p[1])}`).join(" ");
 
   return (
-    <div className="inline-block shrink-0 select-none text-[10px] text-slate-500 dark:text-slate-400">
+    <div className="min-w-0 shrink select-none text-[10px] text-slate-500 dark:text-slate-400">
       <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
         x₂ ↑
       </div>
       <svg
         width={PAD_L + SIZE + 6}
         height={SIZE + PAD_B}
-        className="rounded border border-slate-300 bg-white dark:border-slate-600"
+        viewBox={`0 0 ${PAD_L + SIZE + 6} ${SIZE + PAD_B}`}
+        className="h-auto max-w-full rounded border border-slate-300 bg-white dark:border-slate-600"
+        role="img"
+        aria-label={`Der Weg der Iterierten in der x₁-x₂-Ebene; ${punkte.length} Punkte, der letzte bei (${fmt(punkte[punkte.length - 1][0], 3)}; ${fmt(punkte[punkte.length - 1][1], 3)}), die Lösung liegt bei (0,091; 0,636).`}
       >
         <defs>
           <clipPath id="s83-clip">
@@ -190,8 +200,20 @@ function EbenenPanel({
   );
 }
 
-export function RichardsonStepper() {
-  const [gamma, setGamma] = useState(0.25);
+export function RichardsonStepper({
+  gamma: gammaExtern,
+  setGamma: setGammaExtern,
+  zeigeGrenze = false,
+}: {
+  /** von außen geführte Schrittweite (die Schätzfrage setzt sie beim Auflösen) */
+  gamma?: number;
+  setGamma?: (v: number) => void;
+  /** nach dem Auflösen: Grenze γ* am Regler und ρ = 1 im Fehlerplot markieren */
+  zeigeGrenze?: boolean;
+} = {}) {
+  const [gammaLokal, setGammaLokal] = useState(0.25);
+  const gamma = gammaExtern ?? gammaLokal;
+  const setGamma = setGammaExtern ?? setGammaLokal;
   const [k, setK] = useState(1);
 
   const { schritte, rho } = useMemo(() => {
@@ -225,8 +247,10 @@ export function RichardsonStepper() {
       .map((s, i) => ({ x: i, y: lg(s.err), color: RED }))
       .filter((m) => Number.isFinite(m.y));
     const series: Series[] = [{ f: vorhersage, color: ORANGE, dash: [7, 4] }];
+    // Nach dem Auflösen: die Höhe, auf der der Fehler bei ρ = 1 stehen bliebe.
+    if (zeigeGrenze) series.push({ f: () => Math.log10(e0), color: GREEN, dash: [3, 3] });
     return { series, markers, yDomain: [lo, hi] as [number, number] };
-  }, [schritte, rho, k]);
+  }, [schritte, rho, k, zeigeGrenze]);
 
   return (
     <div className="space-y-3">
@@ -234,12 +258,19 @@ export function RichardsonStepper() {
       <Slider
         label="γ (Schrittweite)"
         value={gamma}
-        onChange={(v) => setGamma(Math.round(v * 200) / 200)}
+        onChange={(v) => setGamma(Math.round(v * 1000) / 1000)}
         min={0.05}
         max={0.55}
-        step={0.005}
+        step={0.001}
         fmt={(v) => fmt(v, 3)}
       />
+      {zeigeGrenze && (
+        <p className="text-xs" style={{ color: ORANGE }}>
+          Kippgrenze γ* = 2/λ<sub>max</sub> = {fmt(GAMMA_STERN, 4)}: Links davon fällt der
+          Fehler, rechts davon wächst er. Die grün gestrichelte Waagerechte im Fehlerplot ist
+          die Höhe, auf der er bei ρ = 1 stehen bliebe.
+        </p>
+      )}
       <Stepper step={k} setStep={setK} max={KMAX} narration="Ein Schritt wendet die aktuelle Residuumskorrektur an." />
       <div className="flex flex-wrap gap-4">
         <EbenenPanel
@@ -255,6 +286,7 @@ export function RichardsonStepper() {
           yDomain={yDomain}
           width={300}
           height={288}
+          ariaLabel={`Fehler der Iterierten auf logarithmischer Skala über der Schrittzahl, mit der Theoriegeraden zur Rate ${fmt(rho, 3)}.`}
         />
       </div>
       <div className="max-w-prose space-y-1 text-sm">
@@ -287,5 +319,40 @@ export function RichardsonStepper() {
         </Verdikt>
       </div>
     </div>
+  );
+}
+
+/**
+ * Der Kasten in §8.3: erst die Kippgrenze schätzen, dann auflösen. Beim Auflösen
+ * springt der Regler auf γ* und der Plot bekommt die ρ-1-Marke – ohne das
+ * passierte beim Klick auf „Auflösen" im Widget nichts (Review 2026-08-29).
+ */
+export function RichardsonSchaetzfrage() {
+  const [gamma, setGamma] = useState(0.25);
+  const [aufgeloest, setAufgeloest] = useState(false);
+  return (
+    <Schaetzfrage
+      frage="Ab welchem γ beginnt diese Richardson-Iteration zu divergieren?"
+      loesung={GAMMA_STERN}
+      toleranz={0.02}
+      einheit="γ"
+      min={0.05}
+      max={0.55}
+      schritt={0.005}
+      onAufloesen={() => {
+        setGamma(GAMMA_STERN);
+        setAufgeloest(true);
+      }}
+      verdeckt={
+        <Verdikt kind="neutral" titel="Auflösung:">
+          Die Grenze ist γ* = 2/λ<sub>max</sub> = {fmt(GAMMA_STERN, 4)}: Genau dort ist
+          ρ = |1 − γ λ<sub>max</sub>| = 1. Der Regler steht jetzt darauf, und die grün
+          gestrichelte Waagerechte im Fehlerplot zeigt, wo der Fehler dann hängen bliebe.
+          Ein Tausendstel weiter nach rechts, und die Iterierten laufen davon.
+        </Verdikt>
+      }
+    >
+      <RichardsonStepper gamma={gamma} setGamma={setGamma} zeigeGrenze={aufgeloest} />
+    </Schaetzfrage>
   );
 }

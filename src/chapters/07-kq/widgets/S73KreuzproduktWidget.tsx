@@ -15,7 +15,10 @@
  * PROVENIENZ: Berechnungsgerüst aus der internen App interactive/heath-ch3
  * portiert; sämtliche Texte für dieses Skript neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S73Kreuzprodukt.mjs (2026-08-29), Teil
+ * von `npm run verify:numbers`. Das Skript führt die Bisektion in k über die
+ * echte IEEE-Addition selbst aus (unabhängig von der Konstante 2^−26,5 im Code)
+ * und assertiert:
  *   fl(1 + ε²) = 1 genau ab ε ≤ 2^−26,5 = 1,0537·10⁻⁸, also ab k = 7,9773
  *   (Bisektion in k über die echte IEEE-Addition: 7,977295 – Übereinstimmung
  *   mit 2^−26,5 auf vier Stellen). Bei k = 7 bleibt fl(1+ε²)−1 = 9,992·10⁻¹⁵,
@@ -38,6 +41,11 @@ function fmt17(x: number): string {
 /** fl(1 + ε²) = 1 sobald ε² ≤ 2⁻⁵³, d. h. ε ≤ 2^(−26,5) ≈ 1,05·10⁻⁸. */
 const COLLAPSE_EPS = Math.pow(2, -26.5);
 const COLLAPSE_K = -Math.log10(COLLAPSE_EPS); // = 7,9773
+/** Abstand zweier benachbarter Gleitkommazahlen knapp oberhalb von 1. */
+const ULP = Math.pow(2, -52);
+
+/** Zehnerpotenzschreibweise mit deutschem Komma. */
+const expDe = (v: number, d = 2) => v.toExponential(d).replace(".", ",").replace("-", "−");
 
 function KreuzproduktTafel() {
   const [k, setK] = useState(6);
@@ -59,13 +67,13 @@ function KreuzproduktTafel() {
       <Slider label="k (ε = 10⁻ᵏ)" value={k} onChange={setK} min={4} max={10} step={0.1} fmt={(v) => v.toFixed(1).replace(".", ",")} />
       <MD>{`\\operatorname{fl}(\\bA^\\top\\bA) = \\begin{pmatrix} ${fmt17(d)} & 1 \\\\ 1 & ${fmt17(d)} \\end{pmatrix}`}</MD>
       <ul className="my-2 list-disc space-y-1 pl-5 font-mono text-xs">
-        <li>ε = {eps.toExponential(2)}, ε² = {(eps * eps).toExponential(2)}</li>
+        <li>ε = {expDe(eps)}, ε² = {expDe(eps * eps)}</li>
         <li>gespeicherter Diagonaleintrag fl(1 + ε²) = {fmt17(d)}</li>
         <li>
           Eigenwerte der gespeicherten Matrix: {fmt17(d)} + 1 und {fmt17(d)} − 1 ={" "}
-          {gap === 0 ? "0" : gap.toExponential(3)}
+          {gap === 0 ? "0" : expDe(gap, 3)}
         </li>
-        <li>exakt: κ(AᵀA) = κ(A)² ≈ {condExact.toExponential(2)}</li>
+        <li>exakt: κ(AᵀA) = κ(A)² ≈ {expDe(condExact)}</li>
       </ul>
       {singular ? (
         <Verdikt kind="fail" titel="Rang 1 statt Rang 2:">
@@ -75,18 +83,28 @@ function KreuzproduktTafel() {
           <M>{"\\eps^2"}</M>, und genau den hat die Rundung ausgelöscht. Die Cholesky-Zerlegung
           aus {ref("algorithmus:cholesky-verfahren-fuer-das-kq-problem")} bricht hier ab.
         </Verdikt>
-      ) : gap < 1e-14 ? (
+      ) : gap <= 3 * ULP ? (
         <Verdikt kind="warn" titel="Ein einziges ULP vom Kollaps entfernt:">
-          Der kleinere Eigenwert der gespeicherten Matrix ist nur noch{" "}
-          <span className="font-mono">{gap.toExponential(3)}</span>. Ein weiterer Schritt am
-          Regler, und die Information über den Unterschied der Spalten ist ganz weg.
+          Der kleinere Eigenwert der gespeicherten Matrix ist mit{" "}
+          <span className="font-mono">{expDe(gap, 3)}</span> gerade noch{" "}
+          <span className="font-mono">{Math.round(gap / ULP)}</span> Stufen der
+          Gleitkommaarithmetik von der Null entfernt (eine Stufe ist{" "}
+          <M>{"2^{-52}"}</M>). Ein weiterer Schritt am Regler, und die Information über den
+          Unterschied der Spalten ist ganz weg.
+        </Verdikt>
+      ) : gap < 1e-13 ? (
+        <Verdikt kind="warn" titel="Noch wenige Dutzend ULP:">
+          Der kleine Eigenwert steht bei <span className="font-mono">{expDe(gap, 3)}</span>, das
+          sind <span className="font-mono">{Math.round(gap / ULP)}</span> Stufen der
+          Gleitkommaarithmetik – die gespeicherte Matrix ist noch regulär, aber der Vorrat
+          schmilzt mit jedem Reglerschritt um rund eine halbe Zehnerpotenz.
         </Verdikt>
       ) : (
         <Verdikt kind="ok" titel="Noch regulär:">
           Vom Abstand zur Singularität bleibt der kleine Eigenwert{" "}
-          <span className="font-mono">{gap.toExponential(3)}</span>. Die exakte Konditionszahl
-          liegt bei <span className="font-mono">{condExact.toExponential(2)}</span> – das Quadrat
-          von <M>{"\\kappa(\\bA)"}</M>, wie es {ref("bemerkung:stabilitaet-des-cholesky-verfahrens")} vorhersagt.
+          <span className="font-mono">{expDe(gap, 3)}</span>. Die exakte Konditionszahl liegt bei{" "}
+          <span className="font-mono">{expDe(condExact)}</span> – das Quadrat von{" "}
+          <M>{"\\kappa(\\bA)"}</M>, wie es {ref("bemerkung:stabilitaet-des-cholesky-verfahrens")} vorhersagt.
         </Verdikt>
       )}
     </div>

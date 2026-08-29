@@ -79,7 +79,7 @@ $\kappa_2(\bA) \to \infty$.
 
 <FastRangdefektWidget />
 
-<p className="mt-3 text-sm">Das Widget zeigt die stetige Verschlechterung der Kondition auf dem Weg zum Rangdefekt.</p>
+<p className="mt-3 text-sm">Hier ist $\corange{\kappa_2(\bA)} = \cot(\alpha/2)$: Jede Halbierung von α verdoppelt sie ungefähr, und rangdefekt ist $\bA$ erst bei $\alpha = 0$, nicht schon davor.</p>
 :::
 
 ### Kondition bezüglich $\bb$
@@ -214,15 +214,15 @@ Bestimmung der Koeffizienten relativ empfindlich machen. Die exakte Empfindlichk
 hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums und von
 den Singulärrichtungen von $\bA$ ab.
 
+::::
+
 :::interaktiv[Wann ist die obere Schranke scharf?]
 <p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke tatsächlich angenommen – und bei welcher passiert gar nichts?</p>
 
 <WinkelWidget />
 
-<p className="mt-3 text-sm">Das Widget trennt den störenden Projektionsanteil vom Anteil, der im Residuum verbleibt.</p>
+<p className="mt-3 text-sm">Nur der Anteil von $\cblue{\Delta\bb}$ längs $\col(\bA)$ verschiebt $\wh{x}$, der Rest landet im Residuum. Die Schranke aus @satz:satz-7-2-3 wird deshalb genau längs $\col(\bA)$ angenommen, sonst nur zum Bruchteil $\left|\cos(\varphi)\right|$.</p>
 :::
-
-::::
 
 ### Kondition bezüglich $\bA$
 
@@ -310,7 +310,7 @@ $$
 
 <KonditionsQuadrierungLab />
 
-<p className="mt-3 text-sm">Das Widget trennt das lineare vom quadrierten Konditionsregime der Problembeschreibung.</p>
+<p className="mt-3 text-sm">Über $b_3/\eps = 1$ übernimmt der quadrierte Term die Schranke, darunter reagiert das Problem nur mit $\corange{\kappa_2(\bA)}$. Entscheidend ist nicht $\eps$, sondern das Verhältnis von Residuum zu Störung.</p>
 :::
 
 ### Selbsttest
