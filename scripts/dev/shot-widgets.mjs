@@ -26,6 +26,14 @@ for (let i = 0; i < 60; i++) { await sleep(500); const m = await ev(`document.qu
 const opened = await ev(`(()=>{const b=[...document.querySelectorAll('[data-deep] button[aria-expanded="false"]')]; b.forEach(x=>x.click()); return b.length})()`);
 console.log("vertiefungen geoeffnet:", opened);
 if (opened) { await sleep(3000); n = await ev(`document.querySelectorAll('[data-interaktiv]').length`); }
+// content-visibility:auto rendert Abschnitte ausserhalb des Viewports nicht —
+// Clip-Screenshots waeren leer. Fuer die Aufnahme global aufheben.
+await ev(`(()=>{const s=document.createElement('style'); s.textContent='*{content-visibility:visible !important}'; document.head.appendChild(s); return 1})()`);
+// Einmal langsam durch die ganze Seite scrollen, damit der IntersectionObserver
+// alle Mathe-Literale typesetzt (sonst zeigen die Schuesse rohes TeX).
+await ev(`(async()=>{const s=window.innerHeight*0.8; for(let y=0;y<document.body.scrollHeight;y+=s){window.scrollTo(0,y); await new Promise(r=>setTimeout(r,250));} window.scrollTo(0,0); return 1})()`);
+await sleep(2000);
+for (let i = 0; i < 20; i++) { const raw = await ev(`[...document.querySelectorAll('[data-interaktiv]')].some(w=>/\\$[^$]+\\$|\\\\\\(/.test(w.textContent))`); if (!raw) break; await sleep(500); }
 console.log("interaktiv boxes:", n);
 const errs = await ev(`document.querySelectorAll('merror, mjx-merror, [data-mml-node="merror"]').length`);
 console.log("merror count:", errs);
@@ -36,7 +44,7 @@ const labels = await ev(`[...document.querySelectorAll('[data-interaktiv]')].map
 })`);
 for (let i = 0; i < n; i++) {
   await ev(`(()=>{const w=document.querySelectorAll('[data-interaktiv]')[${i}]; w.scrollIntoView({block:'start'}); window.scrollBy(0,-8); return 1})()`);
-  await sleep(700);
+  await sleep(1500);
   const box = await ev(`(()=>{const r=document.querySelectorAll('[data-interaktiv]')[${i}].getBoundingClientRect(); return {x:r.x+window.scrollX, y:r.y+window.scrollY, w:r.width, h:r.height}})()`);
   const clipH = Math.min(box.h + 8, 6000);
   await send("Emulation.setDeviceMetricsOverride", { width, height: Math.ceil(clipH) + 200, deviceScaleFactor: 1, mobile: width < 500 });
