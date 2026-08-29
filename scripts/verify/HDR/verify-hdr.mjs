@@ -1,10 +1,28 @@
 #!/usr/bin/env node
 // Independent numerical checks for the HDR F1 headers, 2026-08-20.
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 const close = (a, b, eps = 1e-9) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 
-// S101: the displayed map is a 15-node, 17-edge directed dependency graph.
-assert.equal(15, 15); assert.equal(17, 17);
+// S101: the displayed map is a directed dependency graph; node and edge counts
+// are read out of the widget source instead of being asserted against
+// themselves (assert.equal(15, 15) could not fail — REV29).
+const s101 = readFileSync(
+  new URL("../../../src/chapters/10-differentialrechnung/widgets/S101Konzeptkarte.tsx", import.meta.url),
+  "utf8",
+);
+const s101Nodes = [...(/const nodes: FlowNode\[\] = \[([\s\S]*?)\n\];/.exec(s101)?.[1] ?? "")
+  .matchAll(/id: "([^"]+)"/g)].map((m) => m[1]);
+const s101Edges = [...(/const edges: FlowEdge\[\] = \[([\s\S]*?)\n\];/.exec(s101)?.[1] ?? "")
+  .matchAll(/from: "([^"]+)", to: "([^"]+)"/g)].map((m) => [m[1], m[2]]);
+assert.equal(s101Nodes.length, 15);
+assert.equal(s101Edges.length, 18);
+assert.equal(new Set(s101Nodes).size, 15, "S101: doppelte Knoten-IDs");
+assert.equal(new Set(s101Edges.map((e) => e.join("→"))).size, 18, "S101: doppelte Kanten");
+for (const [a, b] of s101Edges) {
+  assert.ok(s101Nodes.includes(a) && s101Nodes.includes(b), `S101: Kante ${a} → ${b} ins Leere`);
+}
+assert.equal(new Set([...s101.matchAll(/group: "(k\w+)"/g)].map((m) => m[1])).size, 4);
 
 // S141DreiProbleme: extrema are analytic; noise has RMS one independently.
 const f = x => .5 + .28 * Math.sin(2 * Math.PI * x - .9);

@@ -14,8 +14,9 @@ import { ConceptLink, M, Schaetzfrage, W_MUTED } from "../../../lib";
  *
  * FARBROLLEN: keine; die Tafel ist reiner Text.
  *
- * VERIFIZIERTE ZAHLEN (Rscript --vanilla, 2026-08-19, protokolliert in
- * historische Prüfung, Skript nicht mehr vorhanden):
+ * VERIFIZIERTE ZAHLEN (Rscript --vanilla, 2026-08-19; die drei in JS
+ * reproduzierbaren Werte und die Größenordnung des vierten sind seit
+ * 2026-08-29 in scripts/verify/REV29/02-algos-S21Local.mjs abgesichert):
  *   1.0 - 1.0              → 0
  *   1.0 - 0.9 - 0.1        → -2.775558e-17
  *   100 * 0.58 == 58       → FALSE   (100 * 0.58 = 57,999999999999992895)

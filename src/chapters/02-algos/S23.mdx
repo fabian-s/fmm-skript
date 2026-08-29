@@ -1,5 +1,6 @@
 import { S23FlopWidget, S23WachstumsBild } from "./widgets/S23Aufwand";
 import { SelfTest } from "./widgets/S23Local";
+import { Schaetzfrage } from "../../lib";
 import { ref } from "../numbers.generated";
 
 In @sec:fibonacci haben wir gesehen, dass zwei Algorithmen dasselbe Problem
@@ -106,23 +107,40 @@ Die Faustregel lautet also: *Matrix-Vektor kostet* $\approx 2nd$ *Operationen*, 
 pro Matrixeintrag, eine Multiplikation und eine Addition. Dieselbe Zählung funktioniert
 für die :k[Matrix-Matrix-Multiplikation]{#matrix-multiplication} $\bC = \bA\bB$ mit
 $\bB \in \R^{d \times m}$: Sie besteht aus $m$ Matrix-Vektor-Produkten (eines pro Spalte
-von $\bB$), kostet also $\approx 2ndm$ Operationen. Damit stellt sich sofort die Frage, die
-uns den Rest des Kapitels beschäftigt: Was passiert mit diesen Zahlen, wenn das Problem
-größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der Aufwand?
+von $\bB$), kostet also $\approx 2ndm$ Operationen.
 
 :::::
 
 :::interaktiv[FLOP-Zähler: Was kosten Matrix-Vektor- und Matrix-Matrix-Produkt?]
-<S23FlopWidget />
+Damit stellt sich die Frage, die uns den Rest des Kapitels beschäftigt: Verdoppeln wir
+alle Dimensionen, verdoppelt sich dann auch der Aufwand?
 
-Der Zähler zeigt: Nein. Beim Matrix-Vektor-Produkt stecken zwei Dimensionen im Produkt
-$2nd$, also wird der Aufwand beim Verdoppeln aller Dimensionen viermal so groß; beim
-Matrix-Matrix-Produkt sind es drei Dimensionen und damit der Faktor acht. Der Speicher
-wächst dabei langsamer als die Rechenzeit.
+<Schaetzfrage
+  variante="auswahl"
+  frage="Verdoppeln wir n, d und m: um welchen Faktor wächst der Matrix-Matrix-Aufwand?"
+  optionen={[
+    { id: "zwei", text: "doppelt" },
+    { id: "vier", text: "viermal" },
+    { id: "acht", text: "achtmal" },
+  ]}
+  loesung="acht"
+  verdeckt={
+    <p className="max-w-prose text-sm">
+      Beim Matrix-Vektor-Produkt stecken zwei Dimensionen im Produkt <M>{"2nd"}</M>, also
+      wird der Aufwand beim Verdoppeln aller Dimensionen viermal so groß; beim
+      Matrix-Matrix-Produkt sind es drei Dimensionen und damit der Faktor acht.
+    </p>
+  }
+>
+<S23FlopWidget />
+</Schaetzfrage>
+
+Entscheidend ist nicht die absolute Zahl, sondern die Zahl der Dimensionen im Produkt;
+der Speicher wächst dabei langsamer als die Rechenzeit.
 :::
 
-Diese Faktoren, nicht die absoluten Zahlen, sind das, was einen Algorithmus praktisch
-brauchbar oder unbrauchbar macht.
+Die Wachstumsfaktoren, nicht die absoluten Zahlen, sind das, was einen Algorithmus
+praktisch brauchbar oder unbrauchbar macht.
 
 <h3 id="sec-2.3-quiz">Selbsttest: Operationen und Speicher zählen</h3>
 

@@ -1,0 +1,29 @@
+[
+  {
+    "widget": "src/chapters/01-intro/widgets/S12Landkarte.tsx",
+    "kapitel": "01-intro",
+    "anker": "sec-landkarte",
+    "boxIndexe": [1],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Landkarte: worauf ein Kapitel aufbaut und wohin es führt",
+    "rationale": "Die Karte war bei 390 px unlesbar (Beschriftung ~6 px) und im ganzen Kapitel nirgends tragend; jetzt scrollt das SVG mit lesbarer Mindestbreite in seinem eigenen Container, die Kästen sind 42 px hohe Antippziele, eine neue zahlfrage macht die Karte zum einzigen Weg zur Antwort, und ihre drei Kennzahlen sind erstmals durch ein Prüfskript gedeckt."
+  },
+  {
+    "widget": "src/chapters/01-intro/widgets/S11Widgets.tsx",
+    "kapitel": "01-intro",
+    "anker": "sec-worum-geht-es",
+    "boxIndexe": [],
+    "severityFixed": ["MINOR"],
+    "titel": "Selbsttest-Hilfskomponente 1.1",
+    "rationale": "Der Header beschrieb Farbrollen einer anderen Komponente und zitierte ein Prüfskript ohne Deckung; die hartcodierten Slate-Klassen machten den Kasten auf der dunklen Tooltip-Oberfläche unlesbar. Beides ist jetzt ehrlich beziehungsweise über surface.ts gelöst."
+  },
+  {
+    "widget": "scripts/verify/HDR/verify-hdr.mjs",
+    "kapitel": "01-intro",
+    "anker": "sec-landkarte",
+    "boxIndexe": [1],
+    "severityFixed": ["MINOR"],
+    "titel": "Tautologische Kartenprüfung",
+    "rationale": "assert.equal(15, 15) konnte nicht scheitern und verdeckte, dass die geprüfte Karte 18 statt 17 Kanten hat; die Zählung kommt jetzt aus der Widget-Quelle und die falsche Headerzahl in Kapitel 10 ist korrigiert."
+  }
+]

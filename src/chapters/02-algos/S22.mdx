@@ -114,15 +114,21 @@ zwanzigmal? Das ist keine Geschmacksfrage, sondern eine Zählaufgabe.
   loesung={8}
   toleranz={0}
   einheit="mal"
+  verdeckt={
+    <p className="max-w-prose text-sm">
+      Bis <M>{"x_8"}</M> kommt die Iteration mit sechs Additionen aus und hat dabei <em>alle</em>{" "}
+      acht Zahlen berechnet; die Rekursion braucht für die <em>eine</em> Zahl <M>{"x_8"}</M> schon
+      20 Additionen und 41 Aufrufe, weil sie <M>{"x_3"}</M> achtmal und <M>{"x_2"}</M>{" "}
+      dreizehnmal von vorn ausrechnet.
+    </p>
+  }
 >
 <FibonacciStepper />
 </Schaetzfrage>
 
-Der Stepper zählt es aus. Bis $x_8$ kommt die Iteration mit sechs Additionen aus und hat
-dabei *alle* acht Zahlen berechnet; die Rekursion braucht für die *eine* Zahl $x_8$ schon
-$20$ Additionen und $41$ Aufrufe, weil sie $x_3$ achtmal und $x_2$ dreizehnmal von vorn
-ausrechnet. Bis $x_{15}$ sind es $609$ Additionen gegen $13$. Die genaue Analyse, *wie*
-schnell die naive Rekursion explodiert, folgt in @sec:fibonacci-komplexitaet.
+Der Stepper zählt es aus, und die Schere geht schnell auf: Bis $x_{15}$ stehen $609$
+Additionen der Rekursion gegen $13$ der Iteration. Die genaue Analyse, *wie* schnell die
+naive Rekursion explodiert, folgt in @sec:fibonacci-komplexitaet.
 :::
 
 ### Selbsttest :id[fibonacci-selbsttest]
@@ -214,9 +220,9 @@ nicht unnötig. Zusammengefasst wollen wir Algorithmen, die
 Diese drei Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
 Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um solche
 Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst einmal
-präzise messen. Das ist das Thema des [nächsten Abschnitts](#sec-2.3). Wie wir „möglichst
-exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 4;
-Kapitel 3 stellt dafür zunächst Normen als Fehlermaße bereit.
+präzise messen. Das ist das Thema des @sec:zeit-und-speicheraufwand. Wie wir „möglichst
+exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in @kap:fehler;
+@kap:matrix-spur-norm stellt dafür zunächst Normen als Fehlermaße bereit.
 
 *Vertiefung: Heath §1.1 (Näherungen und Fehlerquellen im wissenschaftlichen Rechnen);
 Cormen, Leiserson, Rivest & Stein, _Introduction to Algorithms_, der Klassiker zu Entwurf

@@ -38,15 +38,20 @@ import { ref } from "../../numbers.generated";
  * Quadrate bzw. x, blau das Quadrat des Mittels bzw. y. Grün bleibt in beiden
  * Fällen die gesuchte Größe (22,5 bzw. die 1).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19; naive Summation in IEEE-Doppelpräzision):
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-S21Demos.mjs, 2026-08-29; naive
+ * Summation in IEEE-Doppelpräzision, alle erreichbaren k = 0 … K_MAX geprüft):
  *   Varianz, x_i ∈ {4,7,13,16} + 10^k, wahrer Wert 22,5 —
  *     k ≤ 7: exakt 22,5 · k = 8: 22 · k = 9: −128 · k = 10: 16384 ·
- *     k = 11, 12, 14: 0 · k = 13: 17179869184.
+ *     k = 11, 12, 14, 15, 16: 0 · k = 13: 17179869184 ·
+ *     k = 17: 1,15 · 10^18 · k = 18, 19, 20: 0.
  *     ÜBERRASCHUNG, die wir offen zeigen: der Ausfall ist NICHT monoton. Ab
  *     k = 8 ist das Ergebnis kaputt, aber es pendelt zwischen 0, positiven
- *     Riesenwerten und negativen Werten — reiner Rundungszufall.
- *     Die zweistufige Rechnung liefert für jedes k exakt 22,5.
+ *     Riesenwerten und negativen Werten – reiner Rundungszufall.
+ *     Die zweistufige Rechnung hält deutlich länger durch, aber nicht ewig:
+ *     k ≤ 15 exakt 22,5 · k = 16: 20 · k = 17: 128 · k ≥ 18: 0. Ab k = 16
+ *     sind schon die Abweichungen x_i − x̄ nicht mehr darstellbar; das Widget
+ *     bekommt dafür einen eigenen Verdikt-Zweig, damit die grüne Zeile nicht
+ *     stillschweigend als „exakte Referenz" durchgeht.
  *   Assoziativität, x = 10^k, y = −10^k, z = 1 —
  *     bis k = 15 liefern beide Klammerungen 1, ab k = 16 liefert
  *     x + (y + z) den Wert 0 (ULP bei 10^16 ist 2 > 1).
@@ -210,7 +215,10 @@ function GroessenAchse({
 
 export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Modus } = {}) {
   const [modus, setModus] = useState<Modus>(startModus);
-  const [k, setK] = useState(6);
+  // Startwert 7: die orange Auflösung steht schon dicht links neben der grünen
+  // Marke, die Spannung ist in der toten Anfangsfigur sichtbar, die Antwort
+  // (der Bruch bei k = 8) aber noch nicht verraten.
+  const [k, setK] = useState(7);
 
   /* Varianz nach Verschiebungsformel */
   const c = 10 ** k;
@@ -237,7 +245,20 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
   let verdikt: ReactNode;
   if (istVarianz) {
     const abweichung = Math.abs(formel - 22.5);
-    if (formel === 22.5) {
+    if (zweistufig !== 22.5) {
+      // Erreichbare Zustandsklasse ab k = 16: auch der zweistufige Weg bricht
+      // zusammen, die grüne Zeile ist dann keine Referenz mehr.
+      art = "fail";
+      verdikt = (
+        <>
+          Jetzt versagt auch der zweistufige Weg: Er zeigt {kompakt(zweistufig)} statt{" "}
+          <M>{"22{,}5"}</M>. Bei <M>{`10^{${k}}`}</M> liegen benachbarte Maschinenzahlen so weit
+          auseinander, dass schon die Abweichungen <M>{"x_i - \\bar{x}"}</M> nicht mehr
+          darstellbar sind – die grüne Zeile ist hier keine exakte Referenz mehr, sondern
+          selbst ein Rundungsartefakt. Die Verschiebungsformel ist längst vorher gekippt.
+        </>
+      );
+    } else if (formel === 22.5) {
       art = "ok";
       verdikt = (
         <>
@@ -251,7 +272,7 @@ export function AusloeschungWidget({ startModus = "varianz" }: { startModus?: Mo
       verdikt = (
         <>
           Totalausfall: Beide Terme werden auf dieselbe Maschinenzahl gerundet, ihre Differenz
-          ist exakt <M>{"0"}</M>. Die gesamte Information über die Streuung ist ausgelöscht —
+          ist exakt <M>{"0"}</M>. Die gesamte Information über die Streuung ist ausgelöscht –
           genau der Fall, den {ref("beispiel:katastrophale-ausloeschung")} vorrechnet.
         </>
       );

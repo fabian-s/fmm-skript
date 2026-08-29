@@ -6,8 +6,10 @@
  * Kanten bedeuten fachliche Abhängigkeit.
  * PROVENIENZ: Layout aus der Konzeptkarte des Vorlesungs-Repos portiert,
  * Begriffe und Verknüpfungen für dieses Skript zusammengestellt.
- * VERIFIZIERTE ZAHLEN: 15 Knoten, 17 gerichtete Kanten und die vier Farbgruppen
- * werden unabhängig gezählt.
+ * VERIFIZIERTE ZAHLEN: 15 Knoten, 18 gerichtete Kanten und die vier Farbgruppen
+ * werden in verify-hdr.mjs aus dieser Datei gezählt (die frühere Angabe „17
+ * Kanten" war falsch und blieb unbemerkt, weil die Prüfung assert.equal(17, 17)
+ * lautete; korrigiert 2026-08-29).
  * Geprüft mit verify-hdr.mjs, 2026-08-20.
  */
 import { ConceptFlow, type FlowEdge, type FlowNode } from "../../../lib";

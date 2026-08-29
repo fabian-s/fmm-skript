@@ -4,7 +4,6 @@
  * FARBROLLEN: Slate-Töne sind Oberfläche, ohne mathematische Codierung.
  * PROVENIENZ: Eigene, aus S35 portierte MDX-Hilfskomponente.
  * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
  */
 /**
  * Lokale Begleitkomponente für Abschnitt 3.5 (aus der TSX-Fassung von S35
