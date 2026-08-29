@@ -47,7 +47,8 @@ import { num, ref } from "../../numbers.generated";
  *   violett — das vom Leser gewaehlte Fenster: Quadrat und Punkt x0
  *             (dieselbe Rolle wie die frei gewaehlte Richtung d in S102)
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen. Alle vier Voreinstellungen: die
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S101S103S104.mjs,
+ * 2026-08-29). Alle vier Voreinstellungen: die
  * analytische Jacobimatrix trifft die zentralen Differenzen auf 1,5e-10.
  *   Trigwelle, x0 = (1,2; 0,6): f(x0) = (1,6660; 0,9377),
  *     J = (1 0,36236; -0,73739 1), det J = 1,26720;
@@ -771,7 +772,13 @@ function LinearisierungsTafeln({ aufgeloest }: { aufgeloest: boolean }) {
         <M>{`\\boldsymbol{J}_f(\\boldsymbol{x}_0) = \\begin{pmatrix} ${fmt(d.Jm[0][0], 3)} & ${fmt(d.Jm[0][1], 3)} \\\\ ${fmt(d.Jm[1][0], 3)} & ${fmt(d.Jm[1][1], 3)} \\end{pmatrix}, \\quad \\det \\boldsymbol{J}_f(\\boldsymbol{x}_0) = ${fmt(d.det, 3)}`}</M>
       </div>
 
-      <Verdikt kind={abb.linear ? "ok" : restQuotient < 1e-9 ? "ok" : "neutral"}>
+      {/*
+        „ok" nur über den kontrollierten Parameter (die gewählte Abbildung),
+        nicht über eine Toleranzschwelle auf dem gerechneten Restquotienten:
+        bei einer krummen Abbildung mit lokal verschwindender Krümmung hätte
+        die Schwelle sonst fälschlich Exaktheit gemeldet.
+      */}
+      <Verdikt kind={abb.linear ? "ok" : "neutral"}>
         {abb.linear ? (
           <>
             Die Abbildung ist linear, also ist sie ihre eigene Linearisierung: Der Restterm

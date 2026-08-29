@@ -291,8 +291,8 @@ den Fehler ablesen. Voreingestellt ist $x = 0{,}5$, also genau die Stelle aus
 
 <TaylorOrdnungSchaetzung />
 
-Nahe am Entwicklungspunkt ist der Gewinn beträchtlich: Bei $x = 0{,}5$ fällt der Fehler von
-$T_2$ auf $T_3$ um den Faktor $8{,}2$, von $T_3$ auf $T_4$ sogar um $10{,}2$. Weiter draußen
+Nahe am Entwicklungspunkt ist der Gewinn beträchtlich, und er wächst mit jeder weiteren
+Ordnung; die Zahlen dazu stehen im Verdikt. Weiter draußen
 kippt das Bild, und der linke Rand bleibt hartnäckig: Für $x \to -\infty$ geht $e^x$ gegen
 null, jedes Taylorpolynom positiven Grades dagegen gegen $\pm\infty$. Bei $x = -3$ wächst
 der Fehler beim Schritt von $T_0$ auf $T_1$ deshalb von $0{,}950$ auf $2{,}050$, statt zu
@@ -511,13 +511,12 @@ Raum.
 
 <Taylor2DSchaetzung />
 
-Die Vorhersage trifft: In der Voreinstellung fällt der Fehler von $\cgreen{T_1}$ beim
-Halbieren des Radius um den Faktor $4{,}34$ und der von $\cgreen{T_2}$ um $8{,}07$, also
-ungefähr um $4$ und $8$. Die Umschaltung zwischen den beiden Ordnungen zeigt zugleich den
+Die Umschaltung zwischen den beiden Ordnungen zeigt zugleich den
 strukturellen Unterschied: Die Tangentialebene liefert parallele Geraden als Höhenlinien,
-die Quadrik krümmt sich mit. Die Faustzahlen setzen allerdings voraus, dass der jeweils
+die Quadrik krümmt sich mit. Die Faustzahlen aus @korollar:taylorapproximation-fuer-vektor-zu
+setzen allerdings voraus, dass der jeweils
 führende Restterm nicht selbst verschwindet; wo die Hesse-Matrix nahezu null ist, springt
-der $\cgreen{T_1}$-Quotient auf etwa $8$. Auf der Quadrik im dritten Menüpunkt fällt der
+der gemessene Quotient deutlich über den Vorhersagewert. Auf der Quadrik im dritten Menüpunkt fällt der
 $\cgreen{T_2}$-Fehler auf Rundungsniveau: Dort ist die Näherung exakt, und genau darauf
 beruht der eine exakte Newton-Schritt im nächsten Unterabschnitt.
 :::
@@ -657,10 +656,9 @@ $x_1 = 0$, und der zweite Menüpunkt, die Quadrik aus @bemerkung:ebene-und-quadr
 <NewtonSchaetzung />
 
 In der $x_2$-Richtung sitzt der erste Schritt sofort exakt, denn dort ist $f$ quadratisch.
-In der $x_1$-Richtung läuft die Iteration über $1{,}25$, $1{,}025$, $1{,}00030$ und
-$1{,}00000005$ gegen $1$, mit den Fehlern $0{,}25$, $0{,}025$, $3{,}05\cdot 10^{-4}$ und
-$4{,}65\cdot 10^{-8}$; im fünften Schritt steht $1{,}1\cdot 10^{-15}$. Fünf Schritte für
-fünfzehn Stellen: Der Fehler wird von Schritt zu Schritt im Wesentlichen quadriert, der
+In der $x_1$-Richtung läuft die Iteration gegen $1$, und die Fehlerspalte fällt dabei mit
+jedem Schritt um mehr Größenordnungen als im Schritt davor: Der Fehler wird von Schritt zu
+Schritt im Wesentlichen quadriert, der
 Quotient $e_k/e_{k-1}^2$ läuft gegen $1/(2x_1^*) = 0{,}5$. Die drei Versuche zeigen ebenso
 schnell die Grenzen: Ein Start mit $x_1 < 0$ führt in den Sattelpunkt $(-1; 0)$ statt ins
 Minimum (@bemerkung:drei-vorbehalte), bei $x_1 = 0$ ist die Hesse-Matrix $\diag(0, 1)$

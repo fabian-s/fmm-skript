@@ -637,13 +637,35 @@ die beiden Gradienten in Orange und die Vorhersagen für die Lücken in Grün.
 
 <MatrixCompletionDemo />
 
-Der Verlust fällt bei beiden Rängen auf null, die Vorhersagen laufen aber auseinander:
-$k = 1$ landet bei $y_{13} = 2{,}5$ und $y_{22} = 2{,}4$, $k = 2$ bei $1{,}583$ und
-$0{,}909$. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die Vorhersage
+Der Verlust fällt bei beiden Rängen auf null, die grünen Vorhersagen für die beiden Lücken
+laufen aber auseinander. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die Vorhersage
 läuft, entscheidet dann der Startpunkt. Größerer Rang heißt also nicht bessere
 Rekonstruktion. Und wer die Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein
 Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ ein Davonlaufen der Einträge.
 :::
+
+::::quiz
+
+:::frage{falsch}
+Bei der Matrix Completion liefert ein größeres $k$ stets eine bessere Rekonstruktion der
+unbeobachteten Einträge.
+
+Ein größeres $k$ senkt den Verlust auf den beobachteten Feldern, über die Lücken sagt es
+dagegen nichts. Im Widget passt $k = 2$ die vier Beobachtungen mit zehn Parametern exakt an,
+und die beiden Vorhersagen hängen dann nur noch am Startpunkt. Genau deshalb steht am Anfang
+die Annahme, dass die gesuchte Matrix kleinen Rang hat.
+:::
+
+:::zahlfrage{loesung=1,583 toleranz=0,03}
+Im Completion-Widget: Wir lassen beide Modelle mit $\alpha = 0{,}05$ so lange laufen, bis
+der Verlust bei beiden praktisch null ist. Welchen Wert sagt das Rang-2-Modell für die Lücke
+$y_{13}$ voraus?
+
+$1{,}583$, während das Rang-1-Modell $2{,}5$ vorhersagt. Beide erreichen denselben Verlust
+null auf den vier beobachteten Einträgen; über die Lücken sagt der Verlust nichts.
+:::
+
+::::
 
 :::::
 
@@ -695,25 +717,6 @@ Für $f(\bX) = \tr(\bA^\top\bX)$ ist $\partial f(\bX)/\partial \bX = \bA$, und d
 Die Formel steht als @eq:identitaeten-fuer-matrix-zu-skalar-2 in @satz:identitaeten-fuer-matrix-zu-skalar. Nach @eq:der-ableitungsterm-ist-ein-skalarprodukt ist $f$ die Summe
 $\sum_{ij} a_{ij}x_{ij}$ und damit linear in $\bX$, also ist die lineare Näherung exakt. Das
 zweite Widget zeigt denselben Effekt für die Funktion $\ba^\top\bX\bb$ aus @eq:ableitung-von-f-x-a-xb.
-:::
-
-:::frage{falsch}
-Bei der Matrix Completion liefert ein größeres $k$ stets eine bessere Rekonstruktion der
-unbeobachteten Einträge.
-
-Ein größeres $k$ senkt den Verlust auf den beobachteten Feldern, über die Lücken sagt es
-dagegen nichts. Im Widget passt $k = 2$ die vier Beobachtungen mit zehn Parametern exakt an,
-und die beiden Vorhersagen hängen dann nur noch am Startpunkt. Genau deshalb steht am Anfang
-die Annahme, dass die gesuchte Matrix kleinen Rang hat.
-:::
-
-:::zahlfrage{loesung=1,583 toleranz=0,03}
-Im Completion-Widget: Wir lassen beide Modelle mit $\alpha = 0{,}05$ so lange laufen, bis
-der Verlust bei beiden praktisch null ist. Welchen Wert sagt das Rang-2-Modell für die Lücke
-$y_{13}$ voraus?
-
-$1{,}583$, während das Rang-1-Modell $2{,}5$ vorhersagt. Beide erreichen denselben Verlust
-null auf den vier beobachteten Einträgen; über die Lücken sagt der Verlust nichts.
 :::
 
 :::zahlfrage{loesung=0,16 toleranz=0,005}

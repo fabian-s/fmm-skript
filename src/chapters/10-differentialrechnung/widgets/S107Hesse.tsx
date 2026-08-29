@@ -56,32 +56,31 @@ import { ref } from "../../numbers.generated";
  * und die daran hängende Klassifikation bekommen deshalb Violett, die in
  * Kapitel 10 freie Palettenfarbe (Muster: S61EllipseWidget in Kapitel 6).
  *
- * Per node nachgerechnet (Skript-Prüfskript check-math-s113.mjs):
+ * Per node nachgerechnet
+ * (scripts/verify/REV29/10-differentialrechnung-S107Hesse.mjs, 2026-08-29):
  * H(2, 8, 0) = diag(2, 8) mit Spur 10 und Determinante 16;
  * H(3, -1, 30°) = (2 1,7321; 1,7321 0) mit Spur 2, det −3, Eigenwerten 3/−1;
  * H(−2, −5, 60°) = (−4,25 1,299; 1,299 −2,75) mit Spur −7, det 10;
  * f(t v_i) = 1/2 lambda_i t^2 auf acht Stellen (t = 1,7: 4,335 bzw. −1,445);
  * Halbachsen der Niveaumenge f = 4 im Folienbeispiel: 2 und 1.
  *
- * Die vier Voreinstellungen zusätzlich geprüft mit
- * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19): die Eigenwerte werden aus H
+ * Die vier Voreinstellungen zusätzlich geprüft im selben Skript: die
+ * Eigenwerte werden aus H
  * zurückgerechnet und treffen die Reglerwerte auf 1e−12, die Klassifikation
  * stimmt in allen vier Fällen, Spur = λ₁ + λ₂ und det = λ₁·λ₂ ebenfalls
  * (10/16, 2/−3, −7/10, 3/0). Wertebereich auf dem gezeigten Fenster
  * [−2,4; 2,4]²: 0 bis 28,8 (Schale), −4,32 bis 15,74 (Sattel), −27,64 bis 0
  * (Kuppel), 0 bis 14,19 (Rinne) — das ist der Höhenbereich der 3D-Tafel.
- * Die Projektion der 3D-Tafel selbst ist in
- * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19) geprüft.
+ * Die Projektion der 3D-Tafel selbst trägt keine eigenen Zahlen.
  *
- * Nachtrag zur Schätzfrage (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19): Ziehen wir λ₂ von 8 auf 0, so ist H = diag(2, 0) singulär, f auf
+ * Nachtrag zur Schätzfrage (dasselbe Skript, Abschnitt „semidefiniter
+ * Grenzfall“): Ziehen wir λ₂ von 8 auf 0, so ist H = diag(2, 0) singulär, f auf
  * dem ganzen Fenster nichtnegativ (kleinster Wert 0) und entlang der Achse v₂
  * konstant null — der Nullpunkt bleibt also ein Minimum, aber kein STRIKTES,
  * und Satz 10.7.9 entscheidet den Fall nicht mehr. Zur Gegenprobe im
  * semidefiniten Grenzfall: x⁴, −x⁴ und x³ haben in 0 alle die zweite Ableitung
  * null und dort ein Minimum, ein Maximum beziehungsweise keins von beidem
  * (Bemerkung 10.7.10).
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion, Höhenlinien, Fläche
@@ -409,12 +408,14 @@ export function HesseDefinitheit() {
         fmt={(v) => `${fmt(v, 0)}°`}
       />
       <div className="flex flex-wrap gap-4">
-        <div className={`select-none text-[10px] ${W_MUTED}`}>
+        <div className={`min-w-0 grow basis-60 select-none text-[10px] ${W_MUTED}`}>
           <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
             x₂ ↑
           </div>
           <svg
             viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
+            width={PAD_L + SIZE + PAD_R}
+            height={SIZE + PAD_B}
             role="img"
             aria-label={`Höhenlinien von f mit den orangen Hauptachsen; im aktuellen Zustand ${GESTALT[artDesPunktes]}.`}
             className="h-auto max-w-full rounded border"

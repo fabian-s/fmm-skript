@@ -46,12 +46,12 @@ import { ref } from "../../numbers.generated";
  * Fehler rot, Ableitungsobjekte (Gradient, Hesse-Matrix, Entwicklungspunkt,
  * Messkreis) orange.
  *
- * Nachgerechnet (node, rev-s114-b/f.mjs): Gradienten und Hesse-Matrizen aller
+ * Nachgerechnet (scripts/verify/REV29/10-differentialrechnung-S108Taylor.mjs,
+ * 2026-08-29): Gradienten und Hesse-Matrizen aller
  * drei Funktionen stimmen an mehreren Stellen bis auf 1e-5 mit zentralen
  * Differenzen überein.
  *
- * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19): In der Voreinstellung (0,75; −1,25) mit r = 0,8 fällt der größte
+ * Ebenfalls dort nachgerechnet: In der Voreinstellung (0,75; −1,25) mit r = 0,8 fällt der größte
  * Fehler auf dem Kreis beim Halbieren des Radius
  *   für T₁ auf ein 4,341- (sin+cos), 3,990- (Glocke) bzw. exakt 4,000-faches
  *   (Quadrik), für T₂ auf ein 8,066- bzw. 8,778-faches;
@@ -66,7 +66,6 @@ import { ref } from "../../numbers.generated";
  * 5,79 bis 15,98 (Extremfälle: H ≈ 0 bei sin+cos in (0; 1,55), und im Zentrum
  * der Glocke verschwinden alle dritten Ableitungen). Das Verdikt verzweigt
  * deshalb.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // f, Höhenlinien von f, Fläche
@@ -212,7 +211,13 @@ function Linien({ segmente, farbe, gestrichelt }: { segmente: Segment[]; farbe: 
   );
 }
 
-export function Taylor2DWidget() {
+/**
+ * `aufgeloest` steuert nur, ob der QUOTIENT der beiden Kreisfehler und der
+ * Merksatz „ein Viertel bzw. ein Achtel" schon zu sehen sind: Genau danach
+ * fragt die Schätzfrage, und im Grundzustand stünde die Antwort sonst
+ * ungefragt im Readout.
+ */
+export function Taylor2DWidget({ aufgeloest = false }: { aufgeloest?: boolean }) {
   const [fnId, setFnId] = useState("sincos");
   const [ordnung, setOrdnung] = useState(1);
   const [x1, setX1] = useState(0.75);
@@ -400,8 +405,9 @@ export function Taylor2DWidget() {
     art = "neutral";
     status =
       `Die Tangentialebene lässt hier den vollständigen quadratischen Anteil stehen: Der Fehler ist ` +
-      `exakt ½h⊤H h mit konstantem H, deshalb steht beim Halbieren des Radius der Quotient ` +
-      `${fmt(quotient, 2)} und nicht bloß „ungefähr 4". Ein Umschalten auf T₂ drückt ihn auf null.`;
+      `exakt ½h⊤H h mit konstantem H. ` +
+      `${aufgeloest ? `Beim Halbieren des Radius steht deshalb der Quotient ${fmt(quotient, 2)} und nicht bloß „ungefähr 4". ` : ""}` +
+      `Ein Umschalten auf T₂ drückt den Fehler auf null.`;
   } else {
     const erwartet = ordnung === 1 ? 4 : 8;
     const passt = Number.isFinite(quotient) && Math.abs(quotient - erwartet) <= 0.25 * erwartet;
@@ -419,10 +425,16 @@ export function Taylor2DWidget() {
       `Am Entwicklungspunkt (${fmt(x1, 2)}; ${fmt(x2, 2)}) ist die Hesse-Matrix ${kruemmung}, die ` +
       `Höhenlinien von T₂ sind dort also ${konturForm}. Auf dem Kreis mit Radius ${fmt(r, 2)} weicht ` +
       `T${ordnung === 1 ? "₁" : "₂"} um höchstens ${fmt(eR, 4)} von f ab, auf dem halb so großen Kreis ` +
-      `um ${fmt(eHalb, 5)}; das ist ein Quotient von ${fmt(quotient, 2)}. ${abweichung} ` +
-      `Der Fehler von T₁ ist o(‖h‖) und wächst in aller Regel wie ‖h‖², beim Halbieren fällt er also ` +
-      `auf ein Viertel, der von T₂ wächst wie ‖h‖³ und fällt auf ein Achtel. In der Raumtafel ist ` +
-      `dieser Fehler der senkrechte Abstand zwischen dem blauen und dem grünen Ring.`;
+      `um ${fmt(eHalb, 5)}. ` +
+      `${
+        aufgeloest
+          ? `Das ist ein Quotient von ${fmt(quotient, 2)}. ${abweichung} ` +
+            `Der Fehler von T₁ ist o(‖h‖) und wächst in aller Regel wie ‖h‖², beim Halbieren fällt er also ` +
+            `auf ein Viertel, der von T₂ wächst wie ‖h‖³ und fällt auf ein Achtel. `
+          : ""
+      }` +
+      `In der Raumtafel ist dieser Fehler der senkrechte Abstand zwischen dem blauen und dem ` +
+      `grünen Ring.`;
   }
 
   const marker = (
@@ -614,8 +626,12 @@ export function Taylor2DWidget() {
           {fmt(detH, 3)}
         </div>
         <div style={{ color: ROT }}>
-          max |f − T| auf dem Kreis: r = {fmt(r, 2)} → {fmt(eR, 5)}, r/2 → {fmt(eHalb, 5)}, Quotient{" "}
-          {Number.isNaN(quotient) ? "numerisch null" : fmt(quotient, 2)}
+          max |f − T| auf dem Kreis: r = {fmt(r, 2)} → {fmt(eR, 5)}, r/2 → {fmt(eHalb, 5)}
+          {aufgeloest && (
+            <>
+              , Quotient {Number.isNaN(quotient) ? "numerisch null" : fmt(quotient, 2)}
+            </>
+          )}
         </div>
         <div style={{ color: ROT }}>
           größter Fehler im ganzen Fenster = {fmt(maxFehlerFenster, 3)}
@@ -629,8 +645,8 @@ export function Taylor2DWidget() {
 
 /**
  * Der Abschnitts-Baustein: erst tippen, dann messen. Verifizierter Quotient in
- * der Voreinstellung: 4,341 für T₁ und 8,066 für T₂ (check-s114.mjs,
- * 2026-08-19).
+ * der Voreinstellung: 4,341 für T₁ und 8,066 für T₂
+ * (scripts/verify/REV29/10-differentialrechnung-S108Taylor.mjs, 2026-08-29).
  */
 export function Taylor2DSchaetzung() {
   return (
@@ -651,7 +667,7 @@ export function Taylor2DSchaetzung() {
         </p>
       }
     >
-      <Taylor2DWidget />
+      {({ aufgeloest }) => <Taylor2DWidget aufgeloest={aufgeloest} />}
     </Schaetzfrage>
   );
 }
