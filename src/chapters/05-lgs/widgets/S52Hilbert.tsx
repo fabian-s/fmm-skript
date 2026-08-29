@@ -5,11 +5,15 @@ import { Aufgabe, FMM_COLORS, Slider, Verdikt } from "../../../lib";
  * Einsicht: Bei Hilbert-Matrizen wächst die Kondition rasch; der Umweg über
  * die explizite Inverse kann den Lösungsfehler zusätzlich stark vergrößern.
  * Farbrollen: direktes Lösen grün, explizite Inverse rot, Kondition neutral.
- * Provenienz: neu für dieses Skript. Node-Scratchpad (2026-08-26), vollständiger
- * Reglerbereich n=2,...,11 mit derselben partiell pivotierten Gauß-Elimination
- * geprüft: n=11 ergibt κ∞=1.230618630778665e15, Fehler
- * 9.658807364938404e-3 bzw. 3.7310791015625e-1.
+ * Provenienz: neu für dieses Skript.
+ * Zahlen: vollständiger Reglerbereich n = 2, …, 11 in
+ * scripts/verify/REV29/05-lgs-S52Hilbert.mjs, 2026-08-29 (unabhängige
+ * Elimination ohne Pivotsuche plus exakte rationale Inverse als Gegenprobe);
+ * n = 11 ergibt κ∞ = 1,2306 · 10¹⁵, Fehler 9,6588 · 10⁻³ bzw. 3,7311 · 10⁻¹.
  */
+
+/** Maschinengenauigkeit doppelter Genauigkeit. */
+const EPS = 2.220446049250313e-16;
 
 type Matrix = number[][];
 
@@ -66,8 +70,18 @@ function hilbertEvidence(n: number) {
   };
 }
 
+/** Exponent als Unicode-Hochzahl: Widget-Text läuft nicht durch MathJax. */
+function hoch(e: number): string {
+  const z = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+  return (e < 0 ? "⁻" : "") + String(Math.abs(e)).split("").map((d) => z[Number(d)]).join("");
+}
+
+/** Mantisse · 10^Exponent wie im übrigen Skript (E5), nicht „2,70e1". */
 function sci(value: number): string {
-  return value.toExponential(2).replace(".", ",").replace("e+", "e").replace("e-", "e−");
+  if (value === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(value)));
+  const m = value / 10 ** e;
+  return `${m.toFixed(2).replace(".", ",")} · 10${hoch(e)}`;
 }
 
 function Readout({ label, value, color }: { label: string; value: number; color?: string }) {
@@ -81,6 +95,9 @@ export function HilbertInverseVergleich() {
   const [n, setN] = useState(11);
   const result = useMemo(() => hilbertEvidence(n), [n]);
   const ratio = result.viaInverse / result.direct;
+  // Schwelle mit Grund statt „n ≥ 9": κ∞ · ε misst, wie viel von den 16 Stellen
+  // doppelter Genauigkeit die Kondition schon aufgefressen hat.
+  const empfindlich = result.kappa * EPS > 1e-4;
   return <div>
     <Aufgabe>Verkleinern wir die Ordnung und beobachten, ab wann Rundungsfehler die beiden Rechenwege sichtbar trennen.</Aufgabe>
     <Slider label="Ordnung n" value={n} onChange={setN} min={2} max={11} step={1} marks={[2, 5, 8, 11]} />
@@ -89,10 +106,10 @@ export function HilbertInverseVergleich() {
       <Readout label="relativer Fehler, direkt" value={result.direct} color={FMM_COLORS.gruen} />
       <Readout label="relativer Fehler, über Inverse" value={result.viaInverse} color={FMM_COLORS.rot} />
     </div>
-    <Verdikt kind={n >= 9 ? "warn" : "neutral"}>
-      {n >= 9
-        ? `Die Matrix ist in dieser Arithmetik stark empfindlich. Der Inversenweg hat hier den ${ratio.toFixed(1).replace(".", ",")}-fachen relativen Fehler des direkten Lösens.`
-        : "Beide Fehler sind noch klein. Der Inversenweg gewinnt aber keine Genauigkeit; einzelne Rundungseffekte lassen das Fehlerverhältnis nicht monoton wachsen."}
+    <Verdikt kind={empfindlich ? "warn" : "neutral"}>
+      {empfindlich
+        ? `Ab hier überschreitet κ∞ · ε den Wert 10⁻⁴ (aktuell ${sci(result.kappa * EPS)}): Von den rund 16 Dezimalstellen doppelter Genauigkeit bleiben höchstens vier. Die Matrix ist in dieser Arithmetik stark empfindlich, und der Inversenweg hat hier den ${ratio.toFixed(1).replace(".", ",")}-fachen relativen Fehler des direkten Lösens.`
+        : `κ∞ · ε liegt bei ${sci(result.kappa * EPS)}, also weit unter 10⁻⁴: Beide Fehler sind noch klein. Der Inversenweg gewinnt aber keine Genauigkeit; einzelne Rundungseffekte lassen das Fehlerverhältnis nicht monoton wachsen.`}
     </Verdikt>
   </div>;
 }

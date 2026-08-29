@@ -29,16 +29,17 @@ import { ref } from "../../numbers.generated";
  * nichts Eigenes.
  *
  * FARBROLLEN (Kapitel 6): blau = rechte Singulärvektoren v im Urbild,
- * grün = linke Singulärvektoren u und die von ihnen aufgespannte Ebene col(A),
- * orange = die Streckfaktoren σ (Beschriftung der Halbachsen),
- * grau = laufendes x, violett = sein Bild Ax.
+ * grün = linke Singulärvektoren u, die von ihnen aufgespannte Ebene col(A) und
+ * die Halbachsenpfeile σᵢuᵢ (sie zeigen in Richtung uᵢ, ihre LÄNGE ist σᵢ),
+ * grau = laufendes x, violett = sein Bild Ax. Orange, die Kapitelfarbe der
+ * Streckfaktoren, kommt in der Raumtafel nicht als Fläche oder Pfeil vor; σ
+ * steht nur als Zahl im Verdikt.
  *
  * PROVENIENZ: eigener Aufbau auf den lib-Bausteinen Surface3D/ViewControls
  * (Referenzaufrufer 10-differentialrechnung/widgets/S107Hesse.tsx) und
  * TransformCanvas v2. Kein übernommener Code, alle Texte neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19) für die Voreinstellung A = (1 2; 2 1; 1 0):
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29) für die Voreinstellung A = (1 2; 2 1; 1 0):
  *   σ₁ = 3,0873, σ₂ = 1,2120; u₁ = (−0,672; −0,700; −0,243),
  *   u₂ = (−0,691; 0,474; 0,546); u₁ᵀu₂ = 0 (< 1e−12), ‖u₁‖ = ‖u₂‖ = 1;
  *   Rasterlauf über 360 000 Winkel: max‖Ax‖ = 3,0873, min‖Ax‖ = 1,2120,

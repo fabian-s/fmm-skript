@@ -32,15 +32,13 @@ ohnehin. Der Unterschied zur Definitheit wirkt klein, entscheidet aber
 später darüber, ob die Cholesky-Zerlegung ohne Zusatztricks durchläuft.
 
 :::interaktiv[Welche Richtung widerlegt positive Definitheit?]
-Eine Richtung kann positive Definitheit widerlegen, aber niemals allein
-beweisen. Finden wir im folgenden Test die Richtung, die den Gegenbeweis
-liefert.
+Eine Richtung kann positive Definitheit widerlegen, aber niemals beweisen.
+Finden wir die Richtung, die den Gegenbeweis liefert.
 
 <SpdRichtung />
 
-Wie das Widget zeigt, genügt bei einer nicht-SPD-Matrix ein Vektor mit
-$\bx^\top\bA\bx \leq 0$. Für SPD muss die strikte Ungleichung dagegen für
-alle Richtungen gelten.
+Wie das Widget zeigt, genügt ein Vektor mit $\bx^\top\bA\bx \leq 0$; für SPD
+muss die strikte Ungleichung dagegen in jeder Richtung gelten.
 :::
 
 Das Paradebeispiel liefert die Statistik selbst: Jede
@@ -402,6 +400,27 @@ Variante hat bemerkenswerte Eigenschaften:
   und für Gram-Matrizen $\bX^\top\bX$ im Fall $p > n$ (mehr Merkmale als
   Beobachtungen), die zwangsläufig singulär sind.
 :::
+
+### Selbsttest
+
+::::quiz
+
+:::zahlfrage{loesung=0.436 toleranz=0.01}
+Welchen Wert zeigt der Sampler für $L_{22}$, wenn wir
+$\sigma_1 = \sigma_2 = 1$ und $\rho = 0{,}9$ einstellen?
+
+$L_{22} = \sigma_2\sqrt{1 - \rho^2} = \sqrt{0{,}19} \approx 0{,}436$.
+:::
+
+:::frage{wahr}
+Bricht der Cholesky-Stepper mit einer exakten Null unter der Wurzel ab, kann
+$\bA$ trotzdem positiv semidefinit sein.
+
+Semidefinit verlangt nur $\bx^\top\bA\bx \geq 0$; dieser Randfall liefert
+$l_{jj} = 0$, und erst die nächste Spalte scheitert an der Division.
+:::
+
+::::
 
 *Vertiefung: Heath §2.5 (spezielle lineare Systeme, insbesondere
 symmetrische und positiv definite Matrizen).*

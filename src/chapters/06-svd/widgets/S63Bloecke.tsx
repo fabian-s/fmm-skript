@@ -26,8 +26,7 @@ import { ref } from "../../numbers.generated";
  * werden 2×2-Geometrie und 3D-Perspektive gezeichnet, kein Blockschema);
  * Aufbau, Farben und sämtliche Texte sind eigenes Material.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19): Speicherbilanz m² + n² + min(m,n) gegen r(m + n + 1) gegen mn:
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29): Speicherbilanz m² + n² + min(m,n) gegen r(m + n + 1) gegen mn:
  * Voreinstellung m = 5, n = 4, r = 2: 45 gegen 20 gegen 20;
  * Preset r = 1: 45 gegen 10; Preset m = n = r = 4: 36 gegen 36 gegen 16;
  * das Beispiel aus dem Selbsttest (1000 × 50, r = 5): 1 002 550 gegen 5255.
@@ -171,7 +170,24 @@ export function ReduzierteSvdBloecke() {
     if (w <= 0 || h <= 0) return null;
     const aktiv = wahl === id;
     return (
-      <g onClick={() => setWahl(id)} style={{ cursor: "pointer" }}>
+      // Tastaturweg: role="button" + tabIndex + Enter/Leertaste. Ohne das war
+      // die Blockauswahl – und damit das ganze Verdikt – nur mit der Maus
+      // erreichbar, und das role="img" des SVG versteckte die Blöcke zusätzlich
+      // vor Screenreadern.
+      <g
+        role="button"
+        tabIndex={0}
+        aria-pressed={aktiv}
+        aria-label={BLOCKS[id].name}
+        onClick={() => setWahl(id)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+            e.preventDefault();
+            setWahl(id);
+          }
+        }}
+        style={{ cursor: "pointer" }}
+      >
         <title>{BLOCKS[id].name}</title>
         <rect
           x={x}
@@ -331,8 +347,8 @@ export function ReduzierteSvdBloecke() {
           height={hoehe}
           viewBox={`0 0 ${breite} ${hoehe}`}
           className="h-auto max-w-full"
-          role="img"
-          aria-label={`Blockschema der ${reduziert ? "reduzierten" : "vollen"} Singulärwertzerlegung einer ${m} mal ${n}-Matrix vom Rang ${r}.`}
+          role="group"
+          aria-label={`Blockschema der ${reduziert ? "reduzierten" : "vollen"} Singulärwertzerlegung einer ${m} mal ${n}-Matrix vom Rang ${r}. Die Blöcke sind anwählbar.`}
         >
           {/* A selbst, von der Reduktion unberührt */}
           <rect x={xA} y={yA} width={wA} height={hA} fill={GREY} fillOpacity={0.12} stroke={GREY} />

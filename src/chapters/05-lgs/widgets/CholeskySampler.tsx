@@ -11,11 +11,19 @@ import { ref } from "../../numbers.generated";
  * Farbcode wie im Kapitel: grün = Ergebnis der Zerlegung bzw. ihr Bild.
  * Einsicht: L formt unabhängige Punkte zu einer Wolke mit Kovarianz Σ.
  * Farbrollen: Ergebnis/L und Bild grün, Referenzwolke neutral.
- * Provenienz: neu für dieses Skript. Zahlen: LLᵀ=Σ und L₂₂=σ₂√(1−ρ²) in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Provenienz: neu für dieses Skript. Zahlen: LLᵀ=Σ und L₂₂=σ₂√(1−ρ²) in
+ * scripts/verify/REV29/05-lgs-Anwendungen.mjs, 2026-08-29.
  */
 
 const GREEN = FMM_COLORS.gruen;
 const GREY = FMM_COLORS.grau;
+
+/** Residuen als Mantisse · 10^Exponent: auf drei Stellen gerundet steht dort immer 0,000. */
+function fmtExp(v: number): string {
+  if (v === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return `${fmtNum(v / 10 ** e)} · 10^${e}`;
+}
 
 /** 200 feste Standardnormal-Punkte (Box-Muller, fester Seed) */
 const ZPTS: [number, number][] = (() => {
@@ -44,13 +52,15 @@ export function CholeskySampler() {
   const [s2, setS2] = useState(1);
   const [rho, setRho] = useState(0.7);
 
-  // Σ und ihr Cholesky-Faktor, in geschlossener Form für 2×2
+  // Σ kommt aus den Reglern; L wird daraus per Koeffizientenvergleich
+  // ZURÜCKGERECHNET (nicht aus σ₁, σ₂, ρ abgelesen). Nur so ist die Probe
+  // max |LLᵀ − Σ| weiter unten wirklich eine Probe und kein x − x.
   const S11 = s1 * s1;
   const S12 = rho * s1 * s2;
   const S22 = s2 * s2;
-  const L11 = s1;
-  const L21 = rho * s2;
-  const L22 = s2 * Math.sqrt(1 - rho * rho);
+  const L11 = Math.sqrt(S11);
+  const L21 = S12 / L11;
+  const L22 = Math.sqrt(Math.max(0, S22 - L21 * L21));
 
   const ys = useMemo(
     () => ZPTS.map(([z1, z2]): [number, number] => [L11 * z1, L21 * z1 + L22 * z2]),
@@ -96,6 +106,12 @@ export function CholeskySampler() {
   return (
     <div>
       <Aufgabe>Schieben wir ρ Richtung ±1 und beobachten, wie die grüne Wolke schmal wird.</Aufgabe>
+      <p className="text-xs" style={{ color: "var(--w-muted)" }}>
+        Legende: <span style={{ color: GREY, fontWeight: 600 }}>grau</span> die feste Wolke
+        z ~ N(0, I₂) samt Referenzkreis vom Radius 2,{" "}
+        <span style={{ color: GREEN, fontWeight: 600 }}>grün</span> ihr Bild y = Lz samt
+        Bildellipse.
+      </p>
       <p className="sr-only">
         Wir halten 200 Punkte <span className="font-mono">z</span> aus der
         Standardnormalverteilung N(0, I₂) fest (grau, runde Wolke) und schauen, was die
@@ -113,11 +129,12 @@ export function CholeskySampler() {
           width={W}
           height={H}
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full rounded bg-white"
+          className="max-w-full h-auto rounded"
           style={{ border: "1px solid var(--w-border)" }}
           role="img"
           aria-label="Punktwolke z (grau) und ihr Bild y = Lz (grün)"
         >
+          <rect x={0} y={0} width={W} height={H} fill="var(--w-bg)" />
           {/* Achsen durch den Ursprung */}
           <line x1={sx(-w)} y1={sy(0)} x2={sx(w)} y2={sy(0)} stroke="var(--w-grid-strong)" strokeWidth={1} />
           <line x1={sx(0)} y1={sy(-w)} x2={sx(0)} y2={sy(w)} stroke="var(--w-grid-strong)" strokeWidth={1} />
@@ -163,6 +180,7 @@ export function CholeskySampler() {
                   [S11, S12],
                   [S12, S22],
                 ]}
+                label="Kovarianzmatrix Sigma"
               />
             </WidgetLabel>
             <WidgetLabel label="L = chol(Σ)">
@@ -172,6 +190,7 @@ export function CholeskySampler() {
                   [L21, L22],
                 ]}
                 cellStyle={lStyle}
+                label="Cholesky-Faktor L"
               />
             </WidgetLabel>
           </div>
@@ -182,7 +201,7 @@ export function CholeskySampler() {
             <br />
             L₂₂ = σ₂·√(1 − ρ²) = {fmtNum(L22)}
             <br />
-            Probe: max |LLᵀ − Σ| = {fmtNum(residual)}
+            Probe: max |LLᵀ − Σ| = {fmtExp(residual)}
           </div>
           <Verdikt kind={Math.abs(rho) > 0.9 ? "warn" : Math.abs(rho) < 0.1 ? "neutral" : "ok"} className="mt-2">{Math.abs(rho) > 0.9 ? "L₂₂ wird klein; die Kovarianz ist fast singulär." : Math.abs(rho) < 0.1 ? "Die Wolke bleibt fast rund: die Korrelation ist nahe null." : `L erzeugt die sichtbare Scherung und ${ref("satz:kovarianz-unter-dem-cholesky-faktor")} garantiert die Kovarianz Σ.`}</Verdikt>
         </div>

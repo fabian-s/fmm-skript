@@ -1,7 +1,7 @@
 import { useMemo, useState, type CSSProperties } from "react";
 import { Aufgabe, FMM_COLORS, MatrixInput, Stepper, Verdikt } from "../../../lib";
-import { backSub, MatTable, WidgetLabel } from "./shared";
-import { num } from "../../numbers.generated";
+import { backSub, fmtNum, MatTable, WidgetLabel } from "./shared";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * Rückwärts-Substitutions-Stepper für §5.2: ein kleines oberes Dreieckssystem
@@ -12,7 +12,9 @@ import { num } from "../../numbers.generated";
  * Einsicht: Rückwärtseinsetzen bestimmt die Komponenten von unten nach oben.
  * Farbrollen: Pivot rot, aktuelle Zeile blau, fertige Lösung grün.
  * Provenienz: Trace-Struktur aus heath-ch2 (nur Code), sichtbare Texte neu.
- * Zahlen: x=(2;1;2), 3 Divisionen und 9 Operationen in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Zahlen: x=(2;1;2), 3 Divisionen und 9 Operationen in
+ * scripts/verify/R3/widgets-05.mjs und scripts/verify/REV29/05-lgs-Stepper.mjs,
+ * 2026-08-29.
  */
 
 const { blau: BLUE, gruen: GREEN, rot: RED } = FMM_COLORS;
@@ -25,7 +27,9 @@ export function RueckSubStepper() {
     [0, 0, 2],
   ]);
   const [cIn, setCIn] = useState<number[][]>([[3], [7], [4]]);
-  const [t, setT] = useState(0); // wie viele Komponenten schon berechnet sind
+  // Start bei 1: die tote Ansicht zeigt sonst den Trivialfall (leere x-Spalte,
+  // kein Protokoll, kein Verdikt).
+  const [t, setT] = useState(1); // wie viele Komponenten schon berechnet sind
   const n = 3;
   const c = cIn.map((r) => r[0]);
   const trace = useMemo(() => backSub(U, c), [U, cIn]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -47,6 +51,12 @@ export function RueckSubStepper() {
     return undefined;
   };
 
+  // Drei Zustände: Pivot exakt null (Abbruch, oben), Pivot winzig gegen den Rest
+  // der Matrix (rechnet weiter, verstärkt aber jeden Fehler) und regulär.
+  const skala = Math.max(...U.flat().map((v) => Math.abs(v)), 1e-30);
+  const pivotMin = Math.min(...U.map((r, i) => Math.abs(r[i])));
+  const winzigesPivot = trace.failRow < 0 && pivotMin / skala < 1e-3;
+
   const xCol: (number | null)[][] = trace.x.map((v, i) => [i >= solvedFrom ? v : null]);
   const xStyle = (i: number, _j: number): CSSProperties | undefined =>
     i >= solvedFrom ? { color: GREEN, fontWeight: 600 } : undefined;
@@ -61,7 +71,7 @@ export function RueckSubStepper() {
             value={U}
             onChange={(m) => {
               setU(m.map((r, i) => r.map((v, j) => (j < i ? 0 : v))));
-              setT(0);
+              setT(1);
             }}
           />
         </div>
@@ -71,18 +81,24 @@ export function RueckSubStepper() {
             value={cIn}
             onChange={(m) => {
               setCIn(m);
-              setT(0);
+              setT(1);
             }}
           />
         </div>
       </div>
       <Stepper step={shown} setStep={setT} max={maxT} narration={`${shown} von ${n} Komponenten bekannt`} />
+      <p className="my-1 text-xs" style={{ color: "var(--w-muted)" }}>
+        Farben: <span style={{ color: RED, fontWeight: 600 }}>rot</span> das Pivot, durch das
+        geteilt wird, <span style={{ color: BLUE, fontWeight: 600 }}>blau</span> die Zeile, die
+        gerade an der Reihe ist, <span style={{ color: GREEN, fontWeight: 600 }}>grün</span> die
+        fertigen Komponenten.
+      </p>
       <div className="my-3 flex flex-wrap items-start gap-5">
         <WidgetLabel label="U | c">
-          <MatTable m={aug} cellClass={augClass} cellStyle={augStyle} />
+          <MatTable m={aug} cellClass={augClass} cellStyle={augStyle} label="erweiterte Matrix U senkrecht c" />
         </WidgetLabel>
         <WidgetLabel label="x">
-          <MatTable m={xCol} cellStyle={xStyle} />
+          <MatTable m={xCol} cellStyle={xStyle} label="Lösungsvektor x" />
         </WidgetLabel>
         <div className="grow">
           {shown > 0 && (
@@ -93,15 +109,40 @@ export function RueckSubStepper() {
             </div>
           )}
           {trace.failRow >= 0 && shown >= maxT && (
-            <Verdikt kind="fail" className="mt-2">
-              Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile
-              ist 0, und Formel ({num("eq:gauss-elimination-mit-partieller")}) verlangt, genau dadurch zu teilen. Bei einer
-              Dreiecksmatrix entscheidet allein die Diagonale über die Invertierbarkeit;
-              mit einer Null dort verliert das System seine eindeutige Lösung.
+            trace.failExakt ? (
+              <Verdikt kind="fail" className="mt-2">
+                Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile
+                ist exakt 0, und Formel ({num("eq:gauss-elimination-mit-partieller")}) verlangt, genau dadurch zu teilen. Bei einer
+                Dreiecksmatrix entscheidet allein die Diagonale über die Invertierbarkeit;
+                mit einer Null dort verliert das System seine eindeutige Lösung.
+              </Verdikt>
+            ) : (
+              <Verdikt kind="fail" className="mt-2">
+                Schritt {trace.failRow + 1} bleibt stecken: Das Diagonalelement dieser Zeile ist
+                mit {fmtNum(trace.failPivot)} zwar nicht null, aber so winzig, dass die Division
+                jeden Rundungsfehler der Zeile um den Kehrwert aufbläst. Rechnerisch ist das
+                System noch eindeutig lösbar, numerisch ist die Lösung wertlos – genau davor
+                warnt die Pivot-Demo weiter unten.
+              </Verdikt>
+            )
+          )}
+          {trace.failRow < 0 && shown === maxT && maxT > 0 && winzigesPivot && (
+            <Verdikt kind="warn" className="mt-2">
+              Alle Komponenten stehen, aber das kleinste Pivot ist mit {fmtNum(pivotMin)} winzig
+              gegen die übrigen Einträge: Die Division dadurch multipliziert jeden Rundungsfehler
+              der Zeile mit rund {fmtNum(skala / pivotMin)}. Zwischen „null" und „winzig" liegt
+              genau der Unterschied, um den es in {ref("sec:lgs/lu")} geht.
             </Verdikt>
           )}
-          {trace.failRow < 0 && shown === maxT && maxT > 0 && (
-            <Verdikt kind="ok" className="mt-2">Alle Komponenten stehen. Formel ({num("eq:gauss-elimination-mit-partieller")}) benötigt hier drei Divisionen; allgemein summieren sich Multiplikationen, Subtraktionen und Divisionen zu n² Operationen, also O(n²).</Verdikt>
+          {trace.failRow < 0 && shown === maxT && maxT > 0 && !winzigesPivot && (
+            <Verdikt kind="ok" className="mt-2">Alle Komponenten stehen. Formel ({num("eq:gauss-elimination-mit-partieller")}) benötigt hier {trace.lines.length} Divisionen, eine je Zeile; allgemein summieren sich Multiplikationen, Subtraktionen und Divisionen zu n² Operationen, also O(n²).</Verdikt>
+          )}
+          {trace.failRow < 0 && shown > 0 && shown < maxT && (
+            <Verdikt kind="neutral" className="mt-2">
+              {shown === 1
+                ? "Die letzte Zeile enthält nur eine Unbekannte: eine Division genügt, und die erste Komponente steht (grün)."
+                : `Zeile ${current + 1} ist an der Reihe (blau): Die ${shown} bereits bekannten Komponenten werden eingesetzt, es bleibt eine Gleichung in einer Unbekannten, und die Division durch das rote Pivot löst sie.`}
+            </Verdikt>
           )}
         </div>
       </div>

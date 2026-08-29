@@ -29,8 +29,7 @@ import { num } from "../../numbers.generated";
  * portiert (widgets/S46Widgets.tsx, widgets/svd.ts); Aufbau, Fehlerkurven,
  * Speicherbilanz und sämtliche Texte sind neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19) für das synthetische Testbild (36 × 54, Rauschstärke 0,07):
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29) für das synthetische Testbild (36 × 54, Rauschstärke 0,07):
  *   σ₁…σ₆ = 26,475 · 6,060 · 3,008 · 0,561 · 0,497 · 0,417, ‖A‖_F = 27,353;
  *   der Knick liegt bei k = 3: σ₄/σ₃ = 0,187 ist der stärkste Abfall des
  *   Spektrums (die Nachbarquotienten sind 0,229, 0,496, 0,887, 0,838);
@@ -128,7 +127,10 @@ function stetig(werte: number[]): (x: number) => number {
 
 export function RangKExplorer() {
   const { A, svd } = bildMitSVD();
-  const [k, setK] = useState(3);
+  // NICHT auf KNICK starten: der Regler steht sonst beim Laden schon auf der
+  // Lösung der eigenen Schätzfrage. Bei k = 1 führt das Schieben durch alle drei
+  // Bildstufen.
+  const [k, setK] = useState(1);
 
   const Ak = useMemo(() => rankK(svd, k), [svd, k]);
   const rest = useMemo(() => matSub(A, Ak), [A, Ak]);
