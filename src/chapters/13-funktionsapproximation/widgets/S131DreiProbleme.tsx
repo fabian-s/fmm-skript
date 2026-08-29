@@ -23,7 +23,7 @@ import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
  * eingebetteten Vektor (kein Math.random im Render). z_i ist auf Mittelwert
  * 0 und Streuung 1 normiert, das Rausch-Niveau sigma skaliert es.
  *
- * Verifiziert (node, gen-noise-s141.mjs):
+ * Nachgerechnet (node, scripts/verify/HDR/verify-hdr.mjs, 2026-08-20):
  *  - f(x) = 0,5 + 0,28 sin(2 pi x - 0,9) laeuft auf [0,1] zwischen 0,220
  *    und 0,780, mit sigma <= 0,12 bleiben alle y_i in [0,180; 0,957] und
  *    damit im Bildausschnitt.
@@ -52,7 +52,8 @@ const sx = (x: number) => PL + x * (W - PL - PR);
 const sy = (y: number) => H - PB - y * (H - PB - PT);
 
 /** Die (unbekannte) datenerzeugende Funktion aller drei Tafeln. */
-const f = (x: number) => 0.5 + 0.28 * Math.sin(2 * Math.PI * x - 0.9);
+const AMPLITUDE = 0.28;
+const f = (x: number) => 0.5 + AMPLITUDE * Math.sin(2 * Math.PI * x - 0.9);
 
 /** Stuetzstellen der Interpolationstafel: sechs gleichabstaendige Knoten. */
 const KNOTEN = [0, 0.2, 0.4, 0.6, 0.8, 1];
@@ -107,11 +108,28 @@ function Achsen() {
   );
 }
 
-function Tafel({ titel, formula, children }: { titel: string; formula: string; children: ReactNode }) {
+function Tafel({
+  titel,
+  formula,
+  beschreibung,
+  children,
+}: {
+  titel: string;
+  formula: string;
+  beschreibung: string;
+  children: ReactNode;
+}) {
   return (
-    <div className="w-[210px] shrink-0">
+    <div className="w-[210px] max-w-full min-w-0 grow-0">
       <p className="mb-1 text-center text-sm font-medium">{titel}</p>
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full rounded border border-slate-300 bg-white dark:border-slate-600">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        width={W}
+        height={H}
+        className="h-auto w-full rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
+        role="img"
+        aria-label={beschreibung}
+      >
         <Achsen />
         {children}
       </svg>
@@ -131,12 +149,19 @@ export function DreiProbleme() {
     (best, y, i) => (Math.abs(y - f(XOBS[i])) > best.d ? { d: Math.abs(y - f(XOBS[i])), x: XOBS[i] } : best),
     { d: 0, x: 0 },
   );
+  // Dritte Zustandsklasse zwischen „rauschfrei" und „deutlich verrauscht":
+  // Rauschen unter einem Zehntel der Signalamplitude.
+  const klein = sigma > 0 && rms < 0.1 * AMPLITUDE;
   return (
     <div className="my-2">
       <Aufgabe>Schieben wir das Rauschen auf null und vergleichen die drei Aufgaben.</Aufgabe>
-      <div className="overflow-x-auto pb-1">
-        <div className="mx-auto flex w-max items-start gap-4">
-          <Tafel titel="Approximation" formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}>
+      <div className="pb-1">
+        <div className="mx-auto flex flex-wrap items-start justify-center gap-4">
+          <Tafel
+            titel="Approximation"
+            formula={"\\left\\|f - \\wh{f}\\right\\| \\text{ möglichst klein}"}
+            beschreibung="Approximation: die wahre Funktion grau gestrichelt, der Approximant grün leicht daneben, keine Datenpunkte."
+          >
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline
             points={kurve((x) => f(x) + 0.045 * Math.sin(4 * Math.PI * x + 1))}
@@ -145,16 +170,24 @@ export function DreiProbleme() {
             strokeWidth={2}
           />
           </Tafel>
-          <Tafel titel="Interpolation" formula={"\\wh{f}(x_i) = y_i \\ \\ \\forall i"}>
+          <Tafel
+            titel="Interpolation"
+            formula={"\\wh{f}(x_i) = y_i \\ \\ \\forall i"}
+            beschreibung="Interpolation: der grüne Interpolant trifft die sechs blauen Knoten exakt, weicht dazwischen aber sichtbar von der grauen wahren Funktion ab."
+          >
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
           <polyline points={kurve((x) => f(x) + g(x))} fill="none" stroke={SCHAETZER} strokeWidth={2} />
           {KNOTEN.map((x) => (
             <circle key={x} cx={sx(x)} cy={sy(f(x))} r={3.5} fill={DATEN} />
           ))}
           </Tafel>
-          <Tafel titel="Glättung" formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}>
+          <Tafel
+            titel="Glättung"
+            formula={"y_i = f(x_i) + \\eps_i \\ \\ \\forall i"}
+            beschreibung={`Glättung: zwölf blaue Beobachtungen streuen mit σ = ${fmt(sigma, 3)} um die graue wahre Funktion; rote Strecken markieren die Abstände.`}
+          >
           <polyline points={kurve(f)} fill="none" stroke={WAHR} strokeWidth={1.5} strokeDasharray="5 3" />
-          {XOBS.map((x, i) => (
+          {sigma > 0 && XOBS.map((x, i) => (
             <line
               key={`r${x}`}
               x1={sx(x)}
@@ -173,13 +206,22 @@ export function DreiProbleme() {
       </div>
       <p className="mt-2 text-sm">
         Grau gestrichelt läuft die Funktion <M>{"f"}</M>, die wir treffen
-        wollen, grün unser <M>{"\\wh{f}"}</M>, blau die Datenpunkte. Links darf{" "}
-        <M>{"\\wh{f}"}</M> überall ein
-        wenig danebenliegen, muss aber nirgends genau treffen. In der Mitte ist es umgekehrt: An den
-        sechs Knoten sitzt <M>{"\\wh{f}"}</M> exakt auf den Daten, dazwischen weicht es sichtbar von{" "}
-        <M>{"f"}</M> ab. Rechts streuen die Beobachtungen um die unbekannte wahre Funktion
-        <M>{"f"}</M>; die roten Strecken sind die Fehler <M>{"\\eps_i"}</M>. Eine aus diesen Punkten
-        geschätzte grüne Kurve ist dort bewusst noch nicht eingezeichnet.
+        wollen, grün unser <M>{"\\wh{f}"}</M>, blau die Datenpunkte.
+        {sigma > 0 ? (
+          <>
+            {" "}
+            In der Tafel „Glättung“ sind die roten Strecken die Fehler{" "}
+            <M>{"\\eps_i"}</M>.
+          </>
+        ) : (
+          <>
+            {" "}
+            In der Tafel „Glättung“ liegen bei <M>{"\\sigma = 0"}</M> alle
+            Beobachtungen auf <M>{"f"}</M>, rote Strecken gibt es keine.
+          </>
+        )}{" "}
+        Eine aus diesen Punkten geschätzte grüne Kurve ist dort bewusst noch
+        nicht eingezeichnet.
       </p>
       <Slider
         label="σ (Rauschen)"
@@ -190,8 +232,8 @@ export function DreiProbleme() {
         step={0.005}
         fmt={(v) => fmt(v, 3)}
       />
-      <Verdikt className="mt-1" kind={sigma === 0 ? "ok" : "warn"}>
-        {rms === 0 ? (
+      <Verdikt className="mt-1" kind={sigma === 0 ? "ok" : klein ? "neutral" : "warn"}>
+        {sigma === 0 ? (
           "Bei σ = 0 liegen alle zwölf Punkte exakt auf der wahren Funktion. Dann sind die Funktionswerte rauschfrei und dürfen interpoliert werden."
         ) : (
           <>
@@ -200,9 +242,10 @@ export function DreiProbleme() {
             <span className="font-mono" style={{ color: FEHLER }}>
               {fmt(groesster.d, 3)}
             </span>{" "}
-            bei <span className="font-mono">x = {fmt(groesster.x, 3)}</span>. Solange σ &gt; 0 ist,
-            wäre eine Kurve durch alle Punkte die falsche Antwort, denn sie würde das Rauschen
-            mitzeichnen.
+            bei <span className="font-mono">x = {fmt(groesster.x, 3)}</span>.{" "}
+            {klein
+              ? `Das Rauschen ist klein gegen die Signalamplitude ${fmt(AMPLITUDE, 2)}: Eine Kurve durch alle Punkte kostet hier wenig, richtig ist sie trotzdem nicht mehr.`
+              : "Solange σ groß genug ist, um die Punkte sichtbar von f wegzuziehen, wäre eine Kurve durch alle Punkte die falsche Antwort, denn sie würde das Rauschen mitzeichnen."}
           </>
         )}
       </Verdikt>

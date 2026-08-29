@@ -337,6 +337,10 @@ die Zahl der Stellen hoch, die Schalter wechseln zwischen drei Basissystemen
 desselben Ansatzraums.
 
 <VandermondeKondition />
+
+Beide Monom-Kurven sind im logarithmischen Bild ungefähr Geraden, ihre
+Konditionszahl wächst also exponentiell in $n$. Verschieben auf $[-1, 1]$
+drückt nur die Steigung, Chebyshev drückt sie deutlich stärker.
 :::
 
 ### Problem 2: Stabilität und Lokalität
@@ -433,7 +437,7 @@ $f \in \Ccal^\infty$, und beschränkt durch $1$.
 Trotzdem konvergieren die Interpolanten nicht gleichmäßig gegen $f$. Der
 Fehler $\left\|f - \cgreen{p_{n-1}}\right\|_\infty = \max_{x \in [-1,1]}
 \left|f(x) - \cgreen{p_{n-1}(x)}\right|$ wächst über alle Grenzen, und zwar
-durch immer heftigere <span style={{ color: "#D55E00" }}>Oszillationen</span> nahe den
+durch immer heftigere $\cred{\text{Oszillationen}}$ nahe den
 Intervallenden. In der Mitte passt sich das Polynom dabei immer besser an.
 :::
 
@@ -474,8 +478,9 @@ $$
 
 die Nullstellen des $n$-ten Chebyshev-Polynoms. Für Runges Funktion sinkt der
 größte Fehler damit auf $0{,}047$ bei $n = 15$ und $0{,}038$ bei $n = 20$,
-gegen $7{,}2$ und $8{,}6$ oben, und er fällt weiter: $1{,}3 \cdot 10^{-5}$ bei
-$n = 60$. Ehrlicherweise gehört dazu, dass dieser Gewinn asymptotisch ist. Bei
+gegen $7{,}2$ und $8{,}6$ oben, und er fällt weiter: $0{,}015$ bei $n = 21$,
+dem Ende des Reglerbereichs im Widget unten. Ehrlicherweise gehört dazu, dass
+dieser Gewinn asymptotisch ist. Bei
 $n = 4$, $6$ und $8$ Knoten schneiden die gleichmäßig verteilten Knoten sogar
 etwas besser ab.
 :::
@@ -487,13 +492,18 @@ Stellen frei wählen dürfen (in der Vertiefung
 liegen sie fest, und dann hilft nur ein anderer Ansatzraum.
 
 :::interaktiv[Runges Funktion, zwei Knotenfamilien]
-Fällt der Fehler bei äquidistanten Knoten von $n=5$ auf $n=10$, oder steigt er schon dort?
+Die Tabelle oben nennt vier Knotenzahlen. Dazwischen liegt eine Struktur, die sie nicht zeigt: Wann wird der Fehler zum ersten Mal größer als die Funktion selbst?
 
-<Schaetzfrage variante="auswahl" frage="Welche Richtung nimmt der Fehler von n = 5 auf n = 10 bei äquidistanten Knoten?" loesung="faellt" optionen={[{id: "faellt", text: "Er fällt"}, {id: "steigt", text: "Er steigt"}]}>
-  <RungeExplorer />
-</Schaetzfrage>
+<Schaetzfrage
+  frage="Schätzen wir, ab welcher Knotenzahl n der größte Fehler bei äquidistanten Knoten erstmals über 1 liegt."
+  loesung={9}
+  toleranz={1}
+  einheit="Knoten"
+  verdeckt={<p>Bei n = 9 steht dort 1,05. Ungerade Knotenzahlen liegen durchweg über den benachbarten geraden, weil nur sie einen Knoten auf die Spitze von f legen; bei n = 10 fällt der Fehler deshalb wieder auf 0,30.</p>}
+  children={({ aufgeloest }) => <RungeExplorer zeigeFehlerkurve={aufgeloest} />}
+/>
 
-Der Vergleich zeigt den nichtmonotonen Start aus @bemerkung:divergenz-schon-aber-nicht-monoton: Von $n = 5$ auf $n = 10$ fällt der Fehler zunächst, bevor die Randoszillationen dominieren.
+Der Vergleich zeigt den nichtmonotonen Start aus @bemerkung:divergenz-schon-aber-nicht-monoton: Von $n = 5$ auf $n = 10$ fällt der Fehler zunächst, bevor die Randoszillationen dominieren. Die zweite Tafel trägt die Fehlerkurven beider Familien übereinander; sie erscheint erst nach dem Auflösen.
 :::
 
 Damit ist die Bilanz der Polynominterpolation gemischt. Der Satz von der

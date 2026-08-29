@@ -5,12 +5,14 @@
  * PROVENIENZ: BasisExplorer aus heath-ch7/S743 portiert; offener Knotenvektor
  * und Texte für Bemerkung 13.4.9 neu gefasst.
  * VERIFIZIERTE ZAHLEN: Für q=0,1,2,3 stimmen Knotenlänge m+2q+1 und Zahl
- * m+q; die maximale Summenabweichung auf [0,5) ist ≤4,4e-16.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * m+q; die maximale Summenabweichung auf [0,5) ist ≤4,4e-16. Im Inneren eines
+ * Gitterintervalls sind genau q+1 Funktionen ungleich null, auf einem inneren
+ * Knoten q, an x = 0 genau eine.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20, und mit
+ * scripts/verify/REV29/13-funktionsapproximation-S134BSplineBasis.mjs, 2026-08-29.
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
-import { CoxDeBoorSchritt } from "./S134CoxDeBoor";
 import {
   NEUTRAL,
   ORANGE,
@@ -31,8 +33,8 @@ import { ref } from "../../numbers.generated";
  * aus Bemerkung 13.4.9 (das Buch arbeitet mit einer unendlichen Knotenkette),
  * saemtliche Texte sind neu.
  *
- * Nachgerechnet (node, verify-13-funktionsapproximation/verify-values.mjs,
- * 2026-08-19; detailliert 2026-08-13): Laenge des Knotenvektors m + 2q + 1,
+ * Nachgerechnet (node, scripts/verify/HDR/verify-hdr.mjs, 2026-08-20):
+ * Laenge des Knotenvektors m + 2q + 1,
  * Anzahl Basisfunktionen m + q; die Summe aller B_k weicht auf [0, 5) fuer
  * q = 0, 1, 2, 3 um hoechstens 4,4e-16 von 1 ab; der numerisch bestimmte
  * Traeger stimmt bei jedem k mit [tau_k, tau_{k+q+1}] ueberein.
@@ -40,6 +42,14 @@ import { ref } from "../../numbers.generated";
 
 const GITTER = [0, 1, 2, 3, 4, 5];
 const RECHTER_RAND = 5;
+/**
+ * Der Regler endet knapp VOR xi_m. Die Indikatorfunktion vom Grad 0 ist rechts
+ * halboffen; genau an xi_m wären alle B_k null, und `bsplRand` würde still von
+ * links auswerten — das Widget zeigte dann gleichzeitig „Funktionswert 0" und
+ * „Summe 1". Diesen entarteten Randpunkt klemmen wir weg, statt ihn stumm zu
+ * überspielen.
+ */
+const X_MAX = 4.95;
 
 export function BSplineBasis() {
   const [qRoh, setQ] = useState(3);
@@ -71,17 +81,34 @@ export function BSplineBasis() {
     return s;
   }, [tau, q, K, k, zeigeSumme]);
 
-  const wert = bsplRand(tau, k - 1, q, xStern, RECHTER_RAND);
+  const xProbe = Math.min(xStern, X_MAX);
+  const wert = bsplRand(tau, k - 1, q, xProbe, RECHTER_RAND);
   let summe = 0;
-  for (let j = 0; j < K; j++) summe += bsplRand(tau, j, q, xStern, RECHTER_RAND);
+  for (let j = 0; j < K; j++) summe += bsplRand(tau, j, q, xProbe, RECHTER_RAND);
   let aktiv = 0;
   for (let j = 0; j < K; j++) {
-    if (bsplRand(tau, j, q, xStern, RECHTER_RAND) > 1e-12) aktiv++;
+    if (bsplRand(tau, j, q, xProbe, RECHTER_RAND) > 1e-12) aktiv++;
   }
+
+  // Zustandsklassen: der Regler rastet auf 0,05, innere Knoten liegen auf
+  // ganzen Zahlen, also ist „auf einem Knoten" über den kontrollierten
+  // Parameter exakt entscheidbar (keine Toleranz auf einem Float).
+  const raster = Math.round(xProbe * 20);
+  const aufKnoten = raster % 20 === 0;
+  const lage: "grad0" | "linkerRand" | "knoten" | "innen" =
+    q === 0 ? "grad0" : raster === 0 ? "linkerRand" : aufKnoten ? "knoten" : "innen";
+  const erklaerung =
+    lage === "grad0"
+      ? "Bei q = 0 ist jede Basisfunktion die Indikatorfunktion genau eines Gitterintervalls. An jeder Stelle ist deshalb genau eine von ihnen ungleich null, und die Summe ist trivialerweise eins – um den Preis, dass die Basis an jedem Knoten springt."
+      : lage === "linkerRand"
+        ? `Am linken Rand fallen q + 1 = ${q + 1} Knoten zusammen. Dort ist nur die erste Basisfunktion ungleich null, und zwar gleich eins: Deshalb interpoliert eine B-Spline-Darstellung den Randwert exakt.`
+        : lage === "knoten"
+          ? `x* sitzt auf dem inneren Knoten ${fmt(xProbe, 0)}. Der Träger ist rechts halboffen, eine der Funktionen endet hier also gerade; es tragen ${aktiv} statt der ${q + 1} des Intervallinneren.`
+          : `x* liegt im Inneren eines Gitterintervalls. Genau ${q + 1} Funktionen sind dort ungleich null, alle übrigen ${K - (q + 1)} verschwinden – das ist der lokale Träger.`;
 
   return (
     <div className="my-2">
-      <Aufgabe>Wählen wir Grad, Basisfunktion und Stelle; vergleichen wir dann ihren Träger mit dem Rekursionsschritt darunter.</Aufgabe>
+      <Aufgabe>Wählen wir Grad, Basisfunktion und Stelle und zählen dann, wie viele Funktionen dort ungleich null sind.</Aufgabe>
 
       <div className="mb-2 grid max-w-2xl gap-x-8 sm:grid-cols-2">
         <Slider label="Grad q" value={qRoh} onChange={setQ} min={0} max={3} step={1} fmt={(v) => `${Math.round(v)}`} />
@@ -99,7 +126,7 @@ export function BSplineBasis() {
           value={xStern}
           onChange={setXStern}
           min={0}
-          max={5}
+          max={X_MAX}
           step={0.05}
           fmt={(v) => fmt(v, 2)}
         />
@@ -140,6 +167,29 @@ export function BSplineBasis() {
         height={230}
       />
 
+      <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: NEUTRAL }}>
+        <span className="inline-flex items-center gap-1.5">
+          <svg width={28} height={8} viewBox="0 0 28 8" className="h-2 w-7 shrink-0" aria-hidden="true">
+            <line x1={1} y1={4} x2={27} y2={4} stroke={ORANGE} strokeWidth={2.4} />
+          </svg>
+          <span style={{ color: ORANGE }}>hervorgehobene Funktion B_k</span>
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <svg width={28} height={8} viewBox="0 0 28 8" className="h-2 w-7 shrink-0" aria-hidden="true">
+            <line x1={1} y1={4} x2={27} y2={4} stroke={NEUTRAL} strokeWidth={1.6} />
+          </svg>
+          übrige Basisfunktionen
+        </span>
+        {zeigeSumme ? (
+          <span className="inline-flex items-center gap-1.5">
+            <svg width={28} height={8} viewBox="0 0 28 8" className="h-2 w-7 shrink-0" aria-hidden="true">
+              <line x1={1} y1={4} x2={27} y2={4} stroke={NEUTRAL} strokeWidth={1.6} strokeDasharray="6 4" />
+            </svg>
+            Summe aller B_k
+          </span>
+        ) : null}
+      </p>
+
       <div className="mt-2 text-sm">
         <p>
           Träger der hervorgehobenen Funktion:{" "}
@@ -160,17 +210,26 @@ export function BSplineBasis() {
             {fmt(wert, 4)}
           </span>
           , Summe aller <span className="font-mono">{fmt(summe, 4)}</span>, davon{" "}
-          <span className="font-mono">{aktiv}</span> von {K} Funktionen ungleich
-          null.
+          <span className="font-mono">{aktiv}</span> von {K}{" "}
+          {aktiv === 1 ? "Funktion" : "Funktionen"} ungleich null.
         </p>
-        <Verdikt kind={Math.abs(summe - 1) < 1e-10 ? "ok" : "warn"}>
-          Der Träger von <M>{`B_{${k}}^{(${q})}`}</M> ist genau <M>{`[\\tau_${k},\\tau_{${k + q + 1}}]`}</M>; an x* sind {aktiv} Funktionen aktiv. Ihre Summe ist {fmt(summe, 4)}, wie {ref("bemerkung:warum-die-knotenfolge-so-lang-sein-muss")} vorhersagt.
+        <Verdikt
+          kind={lage === "innen" ? "ok" : "neutral"}
+          titel={
+            lage === "grad0"
+              ? "Grad null:"
+              : lage === "linkerRand"
+                ? "Linker Rand:"
+                : lage === "knoten"
+                  ? "Auf einem Knoten:"
+                  : "Im Intervallinneren:"
+          }
+        >
+          {erklaerung} Die Summe bleibt in allen vier Lagen eins, wie{" "}
+          {ref("bemerkung:warum-die-knotenfolge-so-lang-sein-muss")} es über die
+          Länge der Knotenfolge vorhersagt.
         </Verdikt>
       </div>
-      <details className="mt-3">
-        <summary className="cursor-pointer text-sm font-medium">Rekursionsschritt an einer Stelle</summary>
-        <CoxDeBoorSchritt />
-      </details>
     </div>
   );
 }

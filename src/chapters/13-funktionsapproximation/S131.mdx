@@ -119,6 +119,10 @@ $\cblue{y_i}$ und sagen dazu, ob $\cblue{y_i} = f(x_i)$ gelten soll.
 Wann wird aus Glättung wieder Interpolation? Wir variieren dafür nur das Rauschen.
 
 <DreiProbleme />
+
+Bei der Approximation darf $\cgreen{\wh{f}}$ überall ein wenig danebenliegen,
+bei der Interpolation nirgends an den Knoten und dazwischen beliebig. Nur bei
+$\sigma = 0$ fallen Glättung und Interpolation zusammen.
 :::
 
 ### Wie die drei Aufgaben zusammenhängen
@@ -213,20 +217,24 @@ Zahl verschwindet, und $\cgreen{\wh{f}_2}$ ist auf beiden Teilintervallen die
 Gerade durch die jeweiligen Endpunkte.
 
 Zwischen den Stützstellen sehen die vier Funktionen dagegen völlig
-verschieden aus. Bei $x = 1{,}3$ liefern sie $2{,}69$, $2{,}90$, $2{,}42$ und
-$3{,}17$; die höchste und die niedrigste trennt dort $0{,}75$. Viel weiter
-gehen sie auf $[0, 2]$ nirgends auseinander, die größte Spanne beträgt
-$0{,}7499$ und wird bei $x \approx 1{,}288$ erreicht.
+verschieden aus. Wie weit sie dort auseinandergehen, legen die drei
+Bedingungen nicht fest, und ablesen lässt es sich nur an einer konkreten
+Stelle.
 :::
 
 :::interaktiv[Vier Interpolanten, ein Datensatz]
 Wie weit können vier Interpolanten, die dieselben drei Punkte treffen, zwischen zwei Stützstellen auseinanderliegen?
 
-<Schaetzfrage frage="Schätzen wir die größte Spanne auf [0, 2]." loesung={0.75} toleranz={0.08} einheit="">
-  <VierInterpolanten />
-</Schaetzfrage>
+<Schaetzfrage
+  frage="Schätzen wir die größte Spanne auf [0, 2]."
+  loesung={0.75}
+  toleranz={0.08}
+  einheit=""
+  verdeckt={<p>Bei x = 1,3 liefern die vier Kurven 2,69, 2,90, 2,42 und 3,17, die höchste und die niedrigste trennt dort 0,75. Weiter gehen sie nirgends auseinander: Die größte Spanne ist 0,7499 bei x ≈ 1,288.</p>}
+  children={({ aufgeloest }) => <VierInterpolanten zeigeSpanne={aufgeloest} />}
+/>
 
-Wie das Widget zeigt, liegt die größte Spanne bei etwa $0{,}75$; @satz:gestalt-aller-interpolanten erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
+@satz:gestalt-aller-interpolanten erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
 :::
 
 Vier Beispiele sind noch kein Argument. Der folgende Satz beschreibt die
@@ -358,7 +366,7 @@ $\cgreen{\wh{f}}$ durch alle Datenpunkte läuft.
 @definition:glaettungsproblem lässt die Residuen $\cred{\eps_i} = \cblue{y_i} -
 \cgreen{\wh{f}(x_i)}$ ausdrücklich zu. Bei verrauschten Daten wäre eine Kurve
 durch alle Punkte die falsche Antwort, weil sie das Rauschen mit abbildet. Im
-Widget der ersten Vertiefung fallen die beiden Aufgaben nur für $\sigma = 0$
+Widget zu den drei Aufgaben fallen die beiden Aufgaben nur für $\sigma = 0$
 zusammen.
 :::
 

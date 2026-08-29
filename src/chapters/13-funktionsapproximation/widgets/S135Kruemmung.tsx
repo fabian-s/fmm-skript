@@ -17,11 +17,12 @@ import { ref } from "../../numbers.generated";
  * Farbrollen nach dem Kapitel-15-Code: Daten blau, Schaetzer/Interpolant s
  * gruen, Knoten orange, Abweichung h und Vergleichsfunktion g_t rot.
  *
- * Verifiziert (node, verify-13-funktionsapproximation/s151.mjs, 2026-08-19):
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S135Kruemmung.mjs,
+ * 2026-08-29; dort SYMBOLISCH ueber Stammfunktionen, ganz ohne Quadratur):
  * - s ist C^2, natuerlich (s''(0) = s''(2) = 0) und interpoliert die Punkte.
  * - J(s) = 3 + 3 = 6, J(p) = 4 * 2 = 8, Kreuzterm exakt 0.
- * - J(g_t) = 6 + 2t^2 (Simpson trifft die Formel ueber den ganzen
- *   Reglerbereich auf 1e-9 genau).
+ * - J(g_t) = 6 + 2t^2 auf allen 61 Rastwerten des Reglers exakt; t = 0 ist
+ *   Rastwert und der einzige Minimierer darunter.
  * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
@@ -134,7 +135,9 @@ export function KruemmungsVergleich() {
 
   const pfadS = pfad(ansicht.fs);
   const pfadG = pfad((x) => ansicht.fg(x, t));
-  const deckungsgleich = Math.abs(t) < 1e-9;
+  // Exakt entartet nur ueber den KONTROLLIERTEN Parameter: der Regler rastet
+  // auf Promille, t = 0 ist damit exakt erreichbar (Drei-Zustands-Regel).
+  const deckungsgleich = tPromille === 0;
 
   const knopf = (aktiv: boolean) =>
     `rounded border px-2 py-1 text-sm ${
@@ -204,7 +207,9 @@ export function KruemmungsVergleich() {
       <div className="flex flex-wrap items-start gap-4">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+          width={W}
+          height={H}
+          className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -265,7 +270,13 @@ export function KruemmungsVergleich() {
               Spline s
             </text>
             <text x={W - PAD.r - 8} y={PAD.t + 27} textAnchor="end" fill={ROT}>
-              g_t
+              g_t (gestrichelt)
+            </text>
+            <text x={W - PAD.r - 8} y={PAD.t + 40} textAnchor="end" fill={ORANGE}>
+              Knoten (senkrecht)
+            </text>
+            <text x={W - PAD.r - 8} y={PAD.t + 53} textAnchor="end" fill={BLAU}>
+              {zeigeKruemmung ? "Daten (nur in der ersten Ansicht)" : "Daten"}
             </text>
           </g>
         </svg>
@@ -305,7 +316,7 @@ export function KruemmungsVergleich() {
         </div>
       </div>
 
-      <Verdikt kind={Math.abs(t) < 0.001 ? "ok" : "warn"}>{status} Das bestätigt {ref("satz:kubische-splines-haben-minimale")}.</Verdikt>
+      <Verdikt kind={deckungsgleich ? "ok" : "warn"}>{status} Das bestätigt {ref("satz:kubische-splines-haben-minimale")}.</Verdikt>
     </div>
   );
 }

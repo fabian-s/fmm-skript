@@ -11,7 +11,7 @@
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
-import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, loeseLGS } from "./S134BSpline";
+import { BLAU, GRUEN, NEUTRAL, ORANGE, fmt, fmtExp, loeseLGS } from "./S134BSpline";
 
 /**
  * Kubischer Spline durch vier Punkte: das 12x12-System live (§13.4).
@@ -147,6 +147,18 @@ export function SplineKonstruktion() {
       ? [d2(0)(KNOTEN[0]), d2(2)(KNOTEN[3])]
       : [d1(0)(KNOTEN[0]), d1(2)(KNOTEN[3])];
 
+  // Das Verdikt klassifiziert die didaktisch tragende Unterscheidung: welche
+  // beiden Zeilen die Randbedingung stellt und was sie an den Enden erzwingt.
+  // (Der Nahtsprung ist Rundungsrauschen einer Zeile des gelösten Systems und
+  // deshalb kein Zustand, über den sich klassifizieren ließe.)
+  const steigungAussen = [d1(0)(KNOTEN[0]), d1(2)(KNOTEN[3])];
+  const kruemmungAussen = [d2(0)(KNOTEN[0]), d2(2)(KNOTEN[3])];
+  const randTitel = rand === "natuerlich" ? "Natürlich:" : "Eingespannt:";
+  const randSatz =
+    rand === "natuerlich"
+      ? `Die letzten beiden Zeilen setzen s''(0) = s''(3) = 0. Die Krümmung verschwindet an beiden Enden, der Spline läuft geradlinig aus; seine Steigung dort ist frei und steht gerade bei ${fmt(steigungAussen[0], 2)} und ${fmt(steigungAussen[1], 2)}.`
+      : `Die letzten beiden Zeilen setzen s'(0) = s'(3) = 0. Der Spline läuft an beiden Enden waagerecht aus; dafür ist jetzt die Krümmung dort frei und steht bei ${fmt(kruemmungAussen[0], 2)} und ${fmt(kruemmungAussen[1], 2)}.`;
+
   return (
     <div className="my-2">
       <Aufgabe>Verschieben wir einen Messwert und vergleichen die beiden Randbedingungen.</Aufgabe>
@@ -192,7 +204,7 @@ export function SplineKonstruktion() {
       </div>
 
       <div className="flex flex-wrap items-start gap-5">
-        <div>
+        <div className="min-w-0">
           <LabeledPlot
             xLabel="x"
             yLabel="y"
@@ -216,8 +228,9 @@ export function SplineKonstruktion() {
           </p>
         </div>
 
-        <div className="text-sm">
-          <table className="mb-2 font-mono text-xs">
+        <div className="min-w-0 max-w-full grow basis-72 text-sm">
+          <div className="mb-2 overflow-x-auto">
+          <table className="font-mono text-xs">
             <thead>
               <tr className="text-slate-500 dark:text-slate-400">
                 <th className="pr-2 text-left font-normal">Stück</th>
@@ -236,7 +249,7 @@ export function SplineKonstruktion() {
             <tbody>
               {[0, 1, 2].map((k) => (
                 <tr key={k}>
-                  <td className="pr-2 text-slate-500 dark:text-slate-400">
+                  <td className="pr-2 whitespace-nowrap text-slate-500 dark:text-slate-400">
                     p{k + 1} auf [{KNOTEN[k]}, {KNOTEN[k + 1]}]
                   </td>
                   {[0, 1, 2, 3].map((j) => (
@@ -248,6 +261,7 @@ export function SplineKonstruktion() {
               ))}
             </tbody>
           </table>
+          </div>
 
           <p>
             Probe an den Daten:{" "}
@@ -263,7 +277,7 @@ export function SplineKonstruktion() {
             Größter Sprung von <M>{"s"}</M>, <M>{"s'"}</M> oder <M>{"s''"}</M> an
             den inneren Knoten:{" "}
             <span className="font-mono">
-              {maxSprung < 1e-9 ? "0 (bis auf Rundung)" : maxSprung.toExponential(1)}
+              {maxSprung < 1e-9 ? "0 (bis auf Rundung)" : fmtExp(maxSprung)}
             </span>
           </p>
           <p className="mt-1" style={{ color: NEUTRAL }}>
@@ -272,26 +286,14 @@ export function SplineKonstruktion() {
               {randWert.map((v) => fmt(v, 3)).join(" und ")}
             </span>
           </p>
-          <p className="mt-2 max-w-[22rem]">
-            {rand === "natuerlich"
-              ? "Natürlich heißt: An beiden Enden verschwindet die Krümmung, der Spline läuft dort geradlinig aus."
-              : "Eingespannt heißt hier: An beiden Enden ist die Steigung auf null gesetzt, der Spline läuft dort waagerecht aus."}{" "}
-            Beide Male bleiben es zwölf Bedingungen für zwölf Unbekannte, nur die
-            letzten beiden Zeilen der Matrix wechseln.
-          </p>
-          <p className="mt-1 max-w-[22rem]">
-            Ein Blick auf die Koeffiziententabelle beim Schieben lohnt sich: Es
-            gibt keine Zeile, die stehen bliebe. Zwölf Zahlen hängen an vier
-            Messwerten, und die Zuordnung ist so verteilt, dass jede von jedem
-            abhängt. Weiter unten in diesem Abschnitt steht dieselbe Funktion
-            in einer anderen Darstellung, und dort geht das anders aus.
-          </p>
         </div>
       </div>
-      <Verdikt kind={maxSprung < 1e-9 ? "ok" : "warn"}>
-        {maxSprung < 1e-9
-          ? "Die drei Stücke schließen ohne sichtbaren Sprung aneinander an. Die zwölf Bedingungen bestimmen den Spline für die gewählte Randbedingung."
-          : "Die Rundung lässt einen Sprung erkennen; wir prüfen die Randwerte und die lineare Lösung erneut."}
+      <Verdikt kind={rand === "natuerlich" ? "neutral" : "ok"} titel={randTitel}>
+        {randSatz} Beide Male bleiben es zwölf Bedingungen für zwölf Unbekannte,
+        nur die letzten beiden Zeilen der Matrix wechseln; die Naht bei{" "}
+        <M>{"x = 1"}</M> und <M>{"x = 2"}</M> bleibt in beiden Fällen
+        unsichtbar, weil Wert, Steigung und Krümmung dort Zeilen desselben
+        gelösten Systems sind.
       </Verdikt>
     </div>
   );

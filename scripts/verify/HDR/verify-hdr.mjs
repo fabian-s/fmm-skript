@@ -66,12 +66,44 @@ const pieces=[[0,23/15,0,-8/15],[-6/5,77/15,-18/5,2/3],[26/5,-67/15,6/5,-2/15]];
 const val=(p,x)=>p[0]+p[1]*x+p[2]*x*x+p[3]*x*x*x, d1=(p,x)=>p[1]+2*p[2]*x+3*p[3]*x*x,d2=(p,x)=>2*p[2]+6*p[3]*x;
 for(const [i,x,y] of [[0,0,0],[0,1,1],[1,2,0],[2,3,-1]])close(val(pieces[i],x),y);
 for(const [i,x] of [[0,1],[1,2]]){close(val(pieces[i],x),val(pieces[i+1],x));close(d1(pieces[i],x),d1(pieces[i+1],x));close(d2(pieces[i],x),d2(pieces[i+1],x));}
-close(d2(pieces[0],0),0); close(d2(pieces[2],3),0); assert.equal(3*4,12);
+close(d2(pieces[0],0),0); close(d2(pieces[2],3),0);
+// "12 Bedingungen fuer 12 Unbekannte" wird gezaehlt, nicht behauptet
+// (assert.equal(3*4,12) konnte nicht fehlschlagen — REV29): die Zeilen werden
+// wie im Widget aufgebaut und die dokumentierten Stuecke eingesetzt.
+const kn=[0,1,2,3], zeile=(k,f)=>{const r=new Array(12).fill(0); f(r,4*k); return r;};
+const rows=[
+  ...[[0,0],[0,1],[1,2],[2,3]].map(([k,x])=>zeile(k,(r,o)=>{r[o]=1;r[o+1]=x;r[o+2]=x*x;r[o+3]=x**3;})),
+  ...[0,1].flatMap((k)=>{const x=kn[k+1]; const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+    const p=(kk)=>zeile(kk,(r,o)=>{r[o]=1;r[o+1]=x;r[o+2]=x*x;r[o+3]=x**3;});
+    const p1=(kk)=>zeile(kk,(r,o)=>{r[o+1]=1;r[o+2]=2*x;r[o+3]=3*x*x;});
+    const p2=(kk)=>zeile(kk,(r,o)=>{r[o+2]=2;r[o+3]=6*x;});
+    return [sub(p(k),p(k+1)),sub(p1(k),p1(k+1)),sub(p2(k),p2(k+1))];}),
+  zeile(0,(r,o)=>{r[o+2]=2;r[o+3]=0;}), zeile(2,(r,o)=>{r[o+2]=2;r[o+3]=18;}),
+];
+const rhs=[0,1,0,-1,0,0,0,0,0,0,0,0];
+assert.equal(rows.length,12); assert.ok(rows.every(r=>r.length===12));
+const koeff=pieces.flat();
+rows.forEach((r,i)=>close(r.reduce((s,v,j)=>s+v*koeff[j],0),rhs[i],1e-12));
+// Die Bedingungsmatrix hat vollen Rang: Gauss mit Spaltenpivotierung raeumt
+// alle zwoelf Spalten, kein Pivot faellt unter 1e-9.
+{const Ag=rows.map(r=>r.slice()); let minPiv=Infinity;
+ for(let c=0;c<12;c++){let p=c; for(let r=c+1;r<12;r++) if(Math.abs(Ag[r][c])>Math.abs(Ag[p][c])) p=r;
+  [Ag[c],Ag[p]]=[Ag[p],Ag[c]]; minPiv=Math.min(minPiv,Math.abs(Ag[c][c]));
+  for(let r=c+1;r<12;r++){const m=Ag[r][c]/Ag[c][c]; for(let j=c;j<12;j++) Ag[r][j]-=m*Ag[c][j];}}
+ assert.ok(minPiv>1e-9, `S144Konstruktion: Bedingungsmatrix fast singulaer (${minPiv})`);}
 
 // S144Stoerung: the displayed B-spline collocation structure has q+1=4
 // nonzeros per interior data row; the degree-8 Vandermonde has nine entries.
 const tx=[0,0,0,1,2,3,4,5,6,7,8,9,9,9,9], q=3, kk=tx.length-q-1;
 for(const x of [1,2,3,4,5,6,7,8,9-1e-9]) assert.ok(Array.from({length:kk},(_,k)=>Math.abs(B(tx,k,q,x))>1e-12).filter(Boolean).length<=4);
-assert.equal(9,9);
+// Gegenstueck: die 9x9-Vandermonde-Matrix zu x = 1..9 ist VOLL besetzt — 81
+// Eintraege, keiner null (assert.equal(9,9) hat das nur behauptet, REV29).
+{const xd=[1,2,3,4,5,6,7,8,9], V=xd.map(x=>xd.map((_,s)=>x**s));
+ assert.equal(V.flat().length,81);
+ assert.equal(V.flat().filter(v=>Math.abs(v)>1e-12).length,81);
+ for(const r of V) assert.equal(r.filter(v=>Math.abs(v)>1e-12).length,9);
+ // und die Bandmatrix bleibt darunter: hoechstens 4 von 11 je Datenzeile.
+ const band=[1,2,3,4,5,6,7,8,9-1e-9].map(x=>Array.from({length:kk},(_,k)=>B(tx,k,q,x)).filter(v=>Math.abs(v)>1e-12).length);
+ assert.ok(Math.max(...band)<=4 && band.length===9);}
 
 console.log("HDR verification passed: S101, S141–S144 numerical claims.");
