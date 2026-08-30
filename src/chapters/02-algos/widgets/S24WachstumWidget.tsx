@@ -27,8 +27,8 @@ import { ref } from "../../numbers.generated";
  * Rot ist damit im ganzen Kapitel „das Teuerste": die naive Rekursion in
  * §2.2/§2.5 und die Klasse O(2ⁿ) hier.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19): kleinstes n, ab dem endgültig 2^n > c·n² gilt —
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-S24Wachstum.mjs, 2026-08-29):
+ * kleinstes n, ab dem endgültig 2^n > c·n² gilt —
  *   c = 1 → 5 · c = 10 → 10 · c = 100 → 15 · c = 178 → 16 · c = 316 → 17 ·
  *   c = 1000 → 19.
  * Der Vorfaktor 1000 kostet die Exponentialfunktion also ganze 14 Schritte.
@@ -111,6 +111,8 @@ function fmtVal(v: number): ReactNode {
     );
   }
   if (v >= 100) return Math.round(v).toLocaleString("de-DE");
+  // Ganzzahlige Werte ohne Nachkommastelle: sonst steht „30,0" neben „900".
+  if (Number.isInteger(v)) return String(v).replace(".", ",");
   return v.toFixed(1).replace(".", ",");
 }
 
@@ -178,9 +180,9 @@ export function S24WachstumWidget() {
     art = "warn";
     verdikt = (
       <>
-        Mit dem Vorfaktor <M>{`c = ${c}`}</M> liegt <M>{"c \\cdot n^2"}</M> bis{" "}
-        <M>{`n = ${nStar - 1}`}</M> über <M>{"2^n"}</M>; ab <M>{`n = ${nStar}`}</M> gilt
-        endgültig <M>{"2^n > c \\cdot n^2"}</M>. Der Vorfaktor verschiebt die Schwelle also
+        Mit dem Vorfaktor <M>{`c = ${c}`}</M> zieht <M>{"2^n"}</M> spätestens ab{" "}
+        <M>{`n = ${nStar}`}</M> endgültig davon; davor können beide Kurven die Rollen
+        mehrfach tauschen. Der Vorfaktor verschiebt die Schwelle also
         nur, und selbst <M>{"c = 1000"}</M> kostet die Exponentialfunktion bloß 14 Schritte
         (von <M>{"n = 5"}</M> auf <M>{"n = 19"}</M>). Nach {ref("beispiel:vereinfachung-eines-aufwandsausdrucks")} verschwindet jeder
         konstante Faktor in der Landau-Notation, deshalb ist <M>{"c \\cdot n^2 = O(n^2)"}</M>{" "}
@@ -315,17 +317,14 @@ export function S24WachstumWidget() {
               type="button"
               onClick={() => setScale(s)}
               aria-pressed={scale === s}
-              className={`px-3 py-1 ${
-                scale === s
-                  ? "bg-sky-600 text-white"
-                  : "bg-white text-slate-700 dark:bg-slate-800 dark:text-slate-200"
-              }`}
+              className={`rounded-none border-0 ${scale === s ? W_BUTTON_AKTIV : W_BUTTON}`}
             >
               {s === "linear" ? "lineare Skala" : "log-Skala"}
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-3">
+        <fieldset className="flex flex-wrap gap-3 border-0 p-0">
+          <legend className="sr-only">Sichtbare Komplexitätsklassen</legend>
           {KLASSEN.map((k) => (
             <label key={k.key} className="flex cursor-pointer select-none items-center gap-1">
               <input
@@ -341,7 +340,7 @@ export function S24WachstumWidget() {
               </span>
             </label>
           ))}
-        </div>
+        </fieldset>
       </div>
 
       <div className="max-w-md">

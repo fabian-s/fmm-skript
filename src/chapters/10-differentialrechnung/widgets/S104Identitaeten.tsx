@@ -21,7 +21,8 @@ import { ref } from "../../numbers.generated";
  * Identität grün (die „lineare Approximation" dieses Abschnitts), Abweichung
  * rot, das Ableitungsobjekt ∂F/∂x orange.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: über den ganzen Reglerbereich in Schritten
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S104Identitaeten.mjs,
+ * 2026-08-29): über den ganzen Reglerbereich in Schritten
  * von 0,1 (Stellen mit |det F| < 0,05 ausgenommen) betragen die größten
  * Abweichungen zwischen Formel und zentraler Differenz
  *   diag(x, 2x): Spur 6,4e-11, det 5,1e-11, Inverse 6,3e-8;
@@ -80,6 +81,12 @@ interface Beispiel {
   xMin: number;
   xMax: number;
   x0: number;
+  /**
+   * Die Stellen, an denen det F(x) exakt verschwindet – als KONTROLLIERTER
+   * Parameter, nicht als Toleranzschwelle auf dem gerechneten det. Der Regler
+   * rastet auf 0,01 und trifft sie deshalb genau.
+   */
+  singulaerBei: number[];
   hinweis: string;
 }
 
@@ -98,6 +105,7 @@ const BEISPIELE: Beispiel[] = [
     xMin: -2,
     xMax: 2,
     x0: 1,
+    singulaerBei: [0],
     hinweis:
       `Die Diagonalmatrix aus ${ref("beispiel:die-jacobi-formel-an-einem")}: det F(x) = 2x², die Ableitung ist 4x. Bei x = 0 ist F singulär, dann sind F⁻¹ und die Formel für die Determinante nicht definiert.`,
   },
@@ -115,6 +123,7 @@ const BEISPIELE: Beispiel[] = [
     xMin: -2,
     xMax: 2,
     x0: 1.3,
+    singulaerBei: [0],
     hinweis:
       "Hier hängt jeder Eintrag anders von x ab, der rechte obere sogar gar nicht. det F(x) = 3x² − x² = 2x², also wieder 4x als Ableitung, diesmal aber über einen unübersichtlicheren Weg.",
   },
@@ -132,6 +141,7 @@ const BEISPIELE: Beispiel[] = [
     xMin: -3,
     xMax: 3,
     x0: 0.6,
+    singulaerBei: [],
     hinweis:
       "Eine Drehung um den Winkel x hat stets det F(x) = 1. Die Determinante ist also konstant, ihre Ableitung null, und die Jacobi-Formel muss das über tr(F⁻¹ ∂F/∂x) = 0 abbilden.",
   },
@@ -204,7 +214,10 @@ export function IdentitaetenSkalarMatrix() {
   const F = bsp.F(x);
   const Fp = bsp.Fp(x);
   const d = det2(F);
-  const singulaer = Math.abs(d) < 1e-8;
+  // Exakt entartet nur über den kontrollierten Reglerwert (Raster 0,01),
+  // nahezu entartet über den Betrag der Determinante, sonst regulär.
+  const singulaer = bsp.singulaerBei.some((s) => x === s);
+  const schlechtKonditioniert = !singulaer && Math.abs(d) < 0.05;
 
   // Spur
   const spurNum = dSkalar((t) => spur(bsp.F(t)), x);
@@ -310,7 +323,7 @@ export function IdentitaetenSkalarMatrix() {
           </p>
         </>
       )}
-      <Verdikt kind={singulaer ? "warn" : "ok"}>
+      <Verdikt kind={singulaer || schlechtKonditioniert ? "warn" : "ok"}>
         <span className="font-mono">det F(x) = {fmt(d, 4)}</span>
         {singulaer ? (
           <>
@@ -318,6 +331,16 @@ export function IdentitaetenSkalarMatrix() {
             F(x) ist hier singulär. Die Determinantenformel und die Inversenformel setzen
             beide F(x)⁻¹ voraus und liefern deshalb keinen Wert; die Spur-Identität aus
             {ref("satz:identitaeten-fuer-skalar-zu-matrix")}(1) gilt dagegen weiter, denn sie braucht nur die Linearität der Spur.
+          </>
+        ) : schlechtKonditioniert ? (
+          <>
+            {". "}
+            F(x) ist hier nicht singulär, aber schlecht konditioniert: Die Determinante ist
+            klein, die Einträge von F(x)⁻¹ wachsen entsprechend, und der zentrale
+            Differenzenquotient verliert Stellen durch Auslöschung. Die Identitäten aus
+            {ref("satz:identitaeten-fuer-skalar-zu-matrix")} gelten hier unverändert – was hier bröckelt, ist die numerische Probe,
+            nicht die Formel. Ein Stück vom kritischen Punkt weg, und beide Spalten stimmen
+            wieder auf vier Nachkommastellen überein.
           </>
         ) : (
           <>

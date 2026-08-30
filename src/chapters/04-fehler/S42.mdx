@@ -1,6 +1,5 @@
 import { KehrwertWidget, SummenKonditionWidget } from "./widgets/S42Kondition";
 import { LgsKonditionWidget } from "./widgets/S42Lgs";
-import { Schaetzfrage } from "../../lib";
 import { SelfTest } from "./widgets/S42Local";
 
 {/*
@@ -80,39 +79,15 @@ uns gleich noch genauer an.
 :::
 
 :::interaktiv[Kondition-Spielwiese: der Kehrwert unter Störungen]
-Wie schnell wächst dieser Verstärkungsfaktor eigentlich? Die Frage lässt sich schätzen, bevor
-wir sie ausrechnen: Steht der Input bei $x = 0{,}6$, wie weit müssen wir ihn dann
-stören, damit der relative Outputfehler zehnmal so groß wird wie der relative Inputfehler?
+Wie schnell wächst dieser Verstärkungsfaktor eigentlich? Schätzen wir zuerst, bevor wir
+rechnen.
 
-<Schaetzfrage
-  frage={<>Wie groß muss die Störung <M>{"\\eps"}</M> bei <M>{"x = 0{,}6"}</M> sein, damit der relative Outputfehler zehnmal so groß ist wie der relative Inputfehler?</>}
-  variante="bereich"
-  loesung={-0.54}
-  toleranz={0.02}
-  einheit="ε"
-  min={-0.55}
-  max={0}
-  schritt={0.005}
-  start={-0.2}
-  fmt={(v) => v.toFixed(3).replace(".", ",").replace("-", "−")}
-  verdeckt={
-    <p className="max-w-prose text-sm">
-      Die Verstärkung ist <M>{"|x| / |x + \\eps|"}</M>. Zehnfach heißt
-      <M>{"|x + \\eps| = x/10 = 0{,}06"}</M>, also <M>{"\\eps = -0{,}54"}</M>: 90 % der Strecke
-      von <M>{"x"}</M> zur Polstelle.
-    </p>
-  }
->
-  <KehrwertWidget />
-</Schaetzfrage>
+<KehrwertWidget />
 
 Das Widget zeigt beide Regime an einem Bild. Solange $\cred{\eps}$ klein gegenüber
 $x$ ist, sind roter und grüner Balken fast gleich lang, die Verstärkung liegt nahe
 $1$. Schieben wir $\wt{x}$ dagegen an die Polstelle, wächst der grüne
-Outputbalken über den Bildrand hinaus, während der rote Inputbalken kaum länger wird. Bei
-$x = 0{,}6$ und $\cred{\eps} = -0{,}54$ ist die Verstärkung genau
-$10$, bei $\cred{\eps} = -0{,}45$ (der Voreinstellung) ist sie
-$4$.
+Outputbalken über den Bildrand hinaus, während der rote Inputbalken kaum länger wird.
 :::
 
 ### Konditionszahlen :id[konditionszahlen]

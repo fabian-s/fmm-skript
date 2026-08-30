@@ -20,18 +20,22 @@
  * PROVENIENZ: SVG-/Rechengerüst aus der internen App interactive/heath-ch3
  * (§3.5) portiert; Ziehgriffe, Verdikte und alle Texte für dieses Skript neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S75Local.mjs (2026-08-29), Teil von
+ * `npm run verify:numbers`. Das Skript baut G, H und die t-stellige Arithmetik
+ * unabhängig vom Widget-Code nach und assertiert:
  *   Givens: a = (4,3)ᵀ ⇒ r = 5, c = 0,8, s = 0,6, Ga = (5; 4,4e−16), θ = 36,870°;
  *   a = (−3,4)ᵀ ⇒ c = −0,6, s = 0,8, Ga = (5; 4,4e−16); c² + s² = 1 exakt.
  *   Householder mit ‖a‖ = 2: 2·vᵀa/vᵀv = 1,000000000 in allen geprüften Fällen;
  *   bei a-Richtung 130° und α = +2 ist w(0) = a, ‖w(1)‖ = 0,845237 mit
  *   vᵀw(1) = −1,3e−15 (also auf dem Spiegel), ‖w(2)‖ = 2 und
- *   ‖Ha − αe₁‖ = 9,9e−16. Die Projektion verkürzt also, erst der doppelte
- *   Schritt bringt die Länge zurück.
+ *   ‖Ha − αe₁‖ = 1,2e−15. Die Projektion verkürzt also, erst der doppelte
+ *   Schritt bringt die Länge zurück. Beide exakten Zustände (t = 1 und t = 2)
+ *   sind Rastwerte des t-Reglers (Schritt 0,01).
  *   Auslöschung (a = (1, δ)ᵀ, t-stellige Arithmetik): δ = 10⁻³, t = 4 ⇒ die
  *   ungünstige Wahl liefert v₁ = 0 (0 korrekte Ziffern) und ‖Ha − αe₁‖ = 1,0e−3,
  *   die sichere Wahl v₁ = 2,000 (4 korrekte Ziffern) und 2,5e−10.
- *   δ = 10⁻¹, t = 4 ⇒ 2,6 gegen 4,0 korrekte Ziffern (6,2e−7 gegen 2,5e−4).
+ *   δ = 10⁻¹, t = 4 ⇒ 2,6 gegen 4,0 korrekte Ziffern und 2,5e−4 gegen 6,2e−7
+ *   (ungünstige gegen sichere Wahl, in dieser Reihenfolge).
  *   v₁ wird exakt zu 0 gerundet ab δ ≤ 10^(−1,5) (t = 4), 10^(−2,5) (t = 6),
  *   10^(−3,5) (t = 8).
  */
@@ -270,7 +274,7 @@ function SpiegelungSVG({
       </defs>
       {/* Achsen */}
       <line x1={0} y1={size / 2} x2={size} y2={size / 2} stroke="var(--w-grid)" />
-      <line x1={size / 2} y1={0} x2={size} y2={size} stroke="var(--w-grid)" />
+      <line x1={size / 2} y1={0} x2={size / 2} y2={size} stroke="var(--w-grid)" />
       <text x={size - 16} y={size / 2 - 5} fontSize="11" fill="var(--w-axis)">
         x₁
       </text>
@@ -291,11 +295,11 @@ function SpiegelungSVG({
       {arrow(a, FARBEN.a)}
       {vv > 1e-12 && arrow(p, FARBEN.p)}
       {vv > 1e-12 && arrow(proj, FARBEN.proj)}
-      {t >= 1.95 && arrow(refl, FARBEN.refl)}
+      {t === 2 && arrow(refl, FARBEN.refl)}
       {label(a, "a", FARBEN.a)}
-      {vv > 1e-12 && label(p, "v·(vᵀa/vᵀv)", FARBEN.p, 6, 12)}
-      {vv > 1e-12 && label(proj, "a − v(vᵀa/vᵀv)", FARBEN.proj, -40, -8)}
-      {t >= 1.95 ? (
+      {vv > 1e-12 && label(p, "q", FARBEN.p, 6, 12)}
+      {vv > 1e-12 && label(proj, "p", FARBEN.proj, -10, -8)}
+      {t === 2 ? (
         label(refl, "Ha = αe₁", FARBEN.refl, -16, 26)
       ) : (
         <g>
@@ -365,13 +369,13 @@ export function HouseholderWidget() {
           <Slider label="t" value={t} onChange={setT} min={0} max={2} step={0.01} accent={FARBEN.refl} fmt={(x) => fmtDe(x, 2)} />
           <div className="rounded bg-slate-200/70 p-2 font-mono text-xs tabular-nums dark:bg-slate-900/60">
             <div>
-              a = ({fmt(a[0])}, {fmt(a[1])}), ‖a‖₂ = 2
+              a = ({fmt(a[0])}; {fmt(a[1])}), ‖a‖₂ = 2
             </div>
             <div>
-              α = {sign === 1 ? "+" : "−"}2 → v = a − αe₁ = ({fmt(v[0])}, {fmt(v[1])})
+              α = {sign === 1 ? "+" : "−"}2 → v = a − αe₁ = ({fmt(v[0])}; {fmt(v[1])})
             </div>
             <div>
-              w(t) = ({fmt(w[0])}, {fmt(w[1])}), ‖w(t)‖₂ = {fmt(nw)}
+              w(t) = ({fmt(w[0])}; {fmt(w[1])}), ‖w(t)‖₂ = {fmt(nw)}
             </div>
             <div>vᵀw(t) = {fmt(dot2(v, w))}</div>
           </div>
@@ -382,13 +386,12 @@ export function HouseholderWidget() {
             </li>
             <li>
               <Swatch color={FARBEN.p} />
-              <M>{"\\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Anteil von <M>{"\\ba"}</M> längs{" "}
-              <M>{"\\bv"}</M>
+              <M>{"\\bq = \\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Anteil von{" "}
+              <M>{"\\ba"}</M> längs <M>{"\\bv"}</M> (im Bild als „q" beschriftet)
             </li>
             <li>
               <Swatch color={FARBEN.proj} />
-              <M>{"\\ba - \\bv\\,(\\bv^\\top\\ba/\\bv^\\top\\bv)"}</M> – Projektion auf die
-              Spiegelgerade
+              <M>{"\\bp = \\ba - \\bq"}</M> – Projektion auf die Spiegelgerade (im Bild „p")
             </li>
             <li>
               <Swatch color={FARBEN.refl} />
@@ -409,7 +412,7 @@ export function HouseholderWidget() {
           <M>{"\\bw(0) = \\ba"}</M> – noch ist nichts abgezogen. Der rote Pfeil zeigt, wie viel
           von <M>{"\\ba"}</M> längs <M>{"\\bv"}</M> liegt; das ist der Anteil, um den es geht.
         </Verdikt>
-      ) : Math.abs(t - 1) < 0.05 ? (
+      ) : t === 1 ? (
         <Verdikt kind="warn" className="mt-2" titel="Halbzeit: die Projektion:">
           <M>{"\\bw(1) = (\\bI - \\bP)\\ba"}</M> liegt auf der Spiegelgeraden, erkennbar an{" "}
           <M>{"\\bv^\\top\\bw = "}</M> <span className="font-mono">{fmt(dot2(v, w))}</span>. Aber{" "}
@@ -417,14 +420,26 @@ export function HouseholderWidget() {
           ist echt kleiner als <M>{"\\left\\|\\ba\\right\\|_2 = 2"}</M>: Eine Projektion verkürzt,
           sie ist keine Orthogonalmatrix und für unseren Zweck unbrauchbar.
         </Verdikt>
-      ) : t >= 1.95 ? (
+      ) : Math.abs(t - 1) <= 0.05 + 1e-9 ? (
+        <Verdikt kind="neutral" className="mt-2" titel="Fast auf dem Spiegel:">
+          <M>{"\\bv^\\top\\bw"}</M> = <span className="font-mono">{fmt(dot2(v, w))}</span> ist
+          klein, aber noch nicht null: <M>{"\\bw(t)"}</M> liegt knapp neben der Spiegelgeraden.
+          Genau darauf landet der Wanderpunkt erst beim Reglerwert <M>{"t = 1{,}00"}</M>.
+        </Verdikt>
+      ) : t === 2 ? (
         <Verdikt kind="ok" className="mt-2" titel="Fertig gespiegelt:">
           <M>{"\\bw(2) = (\\bI - 2\\bP)\\ba = \\bH\\ba = \\alpha\\,\\be_1"}</M>, und die Länge ist
           mit <span className="font-mono">{fmt(nw)}</span> wieder da – {ref("satz:symmetrie-und-orthogonalitaet")} in Aktion:{" "}
           <M>{"\\bH^2 = \\bI"}</M>. Numerisch sicher ist hier die Wahl{" "}
           <M>{sicher === 1 ? "\\alpha = +\\left\\|\\ba\\right\\|_2" : "\\alpha = -\\left\\|\\ba\\right\\|_2"}</M>
-          , also das von <M>{"\\ba"}</M> weiter entfernte Ziel ({ref("bemerkung:vorzeichenwahl")}); das nächste
-          Widget zeigt, was die andere Wahl anrichtet.
+          , also das von <M>{"\\ba"}</M> weiter entfernte Ziel ({ref("bemerkung:vorzeichenwahl")}).
+        </Verdikt>
+      ) : t >= 1.95 ? (
+        <Verdikt kind="neutral" className="mt-2" titel="Fast fertig:">
+          <M>{"\\left\\|\\bw(t)\\right\\|_2"}</M> = <span className="font-mono">{fmt(nw)}</span>{" "}
+          liegt schon dicht an <M>{"\\left\\|\\ba\\right\\|_2 = 2"}</M>, ist aber noch kleiner.
+          Erst der volle doppelte Schritt <M>{"t = 2{,}00"}</M> bringt die Länge exakt zurück –
+          das ist der Unterschied zwischen Projektion und Spiegelung.
         </Verdikt>
       ) : (
         <Verdikt kind="neutral" className="mt-2" titel="Unterwegs:">
@@ -486,7 +501,7 @@ export function AusloeschungWidget() {
     fehler: number,
     schlecht: boolean,
   ) => (
-    <tr className={schlecht ? "bg-rose-50 dark:bg-rose-950/40" : "bg-emerald-50 dark:bg-emerald-950/30"}>
+    <tr style={{ backgroundColor: `${schlecht ? FMM_COLORS.rot : FMM_COLORS.gruen}1f` }}>
       <td className="px-2 py-1">{name}</td>
       <td className="px-2 py-1 font-mono">{alphaS}</td>
       <td className="px-2 py-1 font-mono">{v1.toExponential(Math.min(stellen - 1, 6))}</td>

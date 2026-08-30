@@ -10,6 +10,7 @@
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, LabeledPlot, M, Slider, Verdikt, fmtDe } from "../../../lib";
+import { fmtExp } from "./S134BSpline";
 
 /**
  * Basisdarstellungs-Rechner (§13.2, Eigenbau).
@@ -101,20 +102,15 @@ export function BasisRechner() {
   ];
 
   const dreiecksform = B[0][1] === 0 && B[0][2] === 0 && B[1][2] === 0;
-  const gerade = Math.abs(a[2]) < 1e-12;
+  // Exakt entartet nur über den KONTROLLIERTEN Parameter: bei Reglerschritt 0,5
+  // ist y1 - 2 y2 + y3 exakt darstellbar, a3 wird also wirklich null.
+  const gerade = y[0] - 2 * y[1] + y[2] === 0;
+  // Probe an den drei Knoten; restMax ist reines Rundungsrauschen der Formeln.
+  const probeGehtAuf = restMax < 1e-12;
 
   return (
     <div className="my-2">
       <Aufgabe>Verschieben wir einen Messwert und wechseln dann die Basis.</Aufgabe>
-      <p className="mb-2 text-sm">
-        Wir halten die Knoten <M>{"x_1 = 0,\\ x_2 = 1,\\ x_3 = 2"}</M> fest und
-        verschieben die drei Messwerte. Die Matrix <M>{"\\bB"}</M> hängt nur von
-        den Knoten und vom Basissystem ab, sie bleibt beim Schieben also stehen;
-        nur die rechte Seite <M>{"\\by"}</M> wandert mit. Der Schalter wechselt
-        das Basissystem, ohne den Ansatzraum zu ändern: Beide Basen spannen die
-        Polynome vom Grad höchstens 2 auf, die grüne Kurve springt beim Wechsel
-        deshalb nicht, nur die Koeffizienten <M>{"\\ba"}</M> tun es.
-      </p>
 
       <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
         {(Object.keys(BASEN) as BasisId[]).map((id) => (
@@ -157,7 +153,11 @@ export function BasisRechner() {
       ))}
 
       <div className="mt-2 flex flex-wrap items-start gap-5">
-        <div>
+        <div
+          className="min-w-0"
+          role="img"
+          aria-label={`Interpolant durch die drei Messwerte ${y.map((v) => fmt(v, 1)).join(", ")} an den Knoten 0, 1, 2, in der ${basis.name} dargestellt.`}
+        >
           <LabeledPlot
             xLabel="x"
             yLabel="y"
@@ -176,11 +176,12 @@ export function BasisRechner() {
           </p>
         </div>
 
-        <div className="text-sm">
+        <div className="min-w-0 text-sm">
           <p className="mb-1" style={{ color: ORANGE }}>
             <M>{`\\phi_1(x) = ${basis.tex[0]}, \\quad \\phi_2(x) = ${basis.tex[1]}, \\quad \\phi_3(x) = ${basis.tex[2]}`}</M>
           </p>
-          <table className="mb-2 font-mono text-xs">
+          <div className="mb-2 overflow-x-auto">
+          <table className="font-mono text-xs">
             <thead>
               <tr className="text-slate-500 dark:text-slate-400">
                 <th className="pr-2 text-left font-normal">Zeile</th>
@@ -212,6 +213,7 @@ export function BasisRechner() {
               ))}
             </tbody>
           </table>
+          </div>
 
           <p>
             Lösung des Systems <M>{"\\bB\\ba = \\by"}</M>:{" "}
@@ -231,7 +233,7 @@ export function BasisRechner() {
           </p>
           <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
             größte Abweichung:{" "}
-            {restMax === 0 ? "0 (exakt)" : restMax.toExponential(1)}
+            {restMax === 0 ? "0 (exakt)" : fmtExp(restMax)}
           </p>
 
           <p className="mt-2 max-w-[20rem]">
@@ -239,17 +241,17 @@ export function BasisRechner() {
               ? "B ist hier untere Dreiecksmatrix: Zeile 1 gibt a₁ direkt, dann setzen wir nach unten durch. Das ist Vorwärtssubstitution im engen Sinn."
               : "Über der Diagonalen steht in Zeile 2 eine 1, B ist also keine Dreiecksmatrix. Wir lösen mit Elimination: Zeile 1 gibt a₁, das setzen wir in die Zeilen 2 und 3 ein und räumen dann a₂ weg."}
           </p>
-          <p className="mt-1 max-w-[20rem]">
-            {gerade
-              ? "Der quadratische Baustein hat Gewicht a₃ = 0. Der Interpolant ist eine Gerade, obwohl wir im Raum der Polynome vom Grad höchstens 2 gesucht haben."
-              : `Alle drei Bausteine tragen bei; das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}.`}
-          </p>
         </div>
       </div>
-      <Verdikt kind={dreiecksform ? "ok" : "neutral"}>
-        {dreiecksform
-          ? "In der Newton-Basis ist B untere Dreiecksmatrix. Wir bestimmen die Koeffizienten daher nacheinander; die grüne Kurve bleibt dabei unverändert."
-          : "Die Monombasis beschreibt denselben Ansatzraum, aber B ist nicht dreieckig. Die Koeffizienten ändern sich beim Basiswechsel, nicht der Interpolant."}
+      <Verdikt
+        kind={gerade ? "warn" : probeGehtAuf ? "ok" : "neutral"}
+        titel={dreiecksform ? "Newton-Basis:" : "Monombasis:"}
+      >
+        {gerade
+          ? `Der quadratische Baustein hat Gewicht a₃ = 0, weil y₁ − 2y₂ + y₃ = 0 ist. Der Interpolant ist hier eine Gerade, obwohl wir im Raum der Polynome vom Grad höchstens 2 gesucht haben: Die drei Punkte liegen auf einer Geraden, und die Basis ist trotzdem dieselbe geblieben.`
+          : probeGehtAuf
+            ? `Alle drei Bausteine tragen bei, das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}. Die Probe trifft die drei Messwerte exakt: Die Koeffizienten hängen an der Basis, der Interpolant nicht.`
+            : `Alle drei Bausteine tragen bei, das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}. Die Probe weicht um ${fmtExp(restMax)} ab; das ist Rundung, nicht ein anderer Interpolant.`}
       </Verdikt>
     </div>
   );

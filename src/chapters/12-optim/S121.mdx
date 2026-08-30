@@ -390,8 +390,8 @@ $$
 
 Ein Beispiel, das uns durch den Rest des Abschnitts begleitet: Für
 $f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$, und
-$\epsilon = 10^{-6}$ ist $\log_2(10^6) = 19{,}93$, also brauchen wir $20$
-Schritte, und das Endintervall hat die Länge $2^{-20} = 9{,}54 \cdot 10^{-7}$. Die Bisektion gewinnt pro Schritt genau
+$\epsilon = 10^{-6}$ ist $\log_2(10^6) = 19{,}93$; aufgerundet steht damit die
+Schrittzahl fest. Die Bisektion gewinnt pro Schritt genau
 ein Bit, also $\log_{10} 2 \approx 0{,}301$ Dezimalstellen; für eine weitere
 gültige Stelle brauchen wir rund $3{,}3$ Schritte. Das ist zuverlässig und
 langsam.
@@ -493,14 +493,14 @@ wechselt zu $f(x) = x^3 - 3x + 1$ auf $[-2, 2]$, wo die Voraussetzung von
   loesung={20}
   toleranz={2}
   einheit="Schritte"
-  verdeckt={<>{ref("satz:schrittzahl-der-bisektion")} sagt <M>{"\\lceil \\log_2((b-a)/\\epsilon)\\rceil = 20"}</M> voraus, und das ist keine Schätzung, sondern die exakte Zahl.</>}
+  verdeckt={<>{ref("satz:schrittzahl-der-bisektion")} sagt <M>{"\\lceil \\log_2((b-a)/\\epsilon)\\rceil = 20"}</M> voraus, und das ist keine Schätzung, sondern die exakte Zahl. Dieselbe Schranke liefert <M>{"10"}</M> Schritte für <M>{"\\epsilon = 10^{-3}"}</M> und <M>{"34"}</M> für <M>{"10^{-10}"}</M>, also <M>{"1/\\log_{10} 2 = 3{,}32"}</M> Schritte je gültiger Dezimalstelle.</>}
 >
   <BisektionStepper />
 </Schaetzfrage>
 
-Die Schranke aus @satz:schrittzahl-der-bisektion trifft exakt: $10$ Schritte für
-$\epsilon = 10^{-3}$, $20$ für $10^{-6}$, $34$ für $10^{-10}$, also
-$1/\log_{10} 2 = 3{,}32$ Schritte je gültiger Dezimalstelle. Der zweite Menüpunkt
+Die Schranke aus @satz:schrittzahl-der-bisektion trifft exakt, und zwar für jedes
+$\epsilon$: Der Stepper stellt am Ende die vorhergesagte Schrittzahl neben die
+tatsächlich gebrauchte. Der zweite Menüpunkt
 zeigt, was der Satz *nicht* verspricht: $f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$
 drei Nullstellen bei $-1{,}879385$, $0{,}347296$ und $1{,}532089$, und schon der
 erste Mittelpunkt entscheidet, welche davon wir finden – weil $f(0) = 1$ dasselbe
@@ -631,22 +631,23 @@ zweiten Beispiel markieren die Stellen mit $\corange{f'} = 0$.
     { id: "nein", text: "nein, ab einem gewissen Abstand nicht mehr" },
   ]}
   loesung="nein"
-  verdeckt={<>Die Schwelle liegt bei <M>{"|x^{(0)}| = 1{,}3917"}</M>.</>}
+  verdeckt={<>Die Schwelle liegt bei <M>{"|x^{(0)}| = 1{,}3917"}</M>: Ab dort überholt jeder Schritt den vorigen, und die Iterierten laufen über <M>{"1{,}5 \\to -1{,}694 \\to 2{,}321 \\to -5{,}114 \\to 32{,}30 \\to -1575{,}3"}</M> auseinander.</>}
 >
   <NewtonNullstelle />
 </Schaetzfrage>
 
-Auf $f(x) = x^2 - 2$ läuft alles glatt: Die Fehlerspalte fällt über
-$8{,}6 \cdot 10^{-2}$ und $2{,}5 \cdot 10^{-3}$ auf $1{,}6 \cdot 10^{-12}$, und
+Auf $f(x) = x^2 - 2$ läuft alles glatt: Aus der Voreinstellung
+$\cblue{x^{(0)}} = 3$ fällt die Fehlerspalte über $4{,}2 \cdot 10^{-1}$,
+$4{,}8 \cdot 10^{-2}$ und $7{,}9 \cdot 10^{-4}$ auf $2{,}2 \cdot 10^{-7}$, und
 der Quotient $e_{k+1}/e_k^2$ pendelt sich bei $0{,}3536$ ein. Auf
 $f(x) = x^3 - 3x + 1$ entscheidet dagegen der Startpunkt, welche der drei
 Nullstellen wir finden, und in der Nähe von $x = 1$ wird es unangenehm: Bei
 $\cblue{x^{(0)}} = 1{,}05$ ist $\corange{f'} = 0{,}31$, der erste Schritt springt
-nach $4{,}28$, und der Lauf braucht zehn Schritte statt fünf. Am deutlichsten ist
-der Arkustangens: Er hat genau eine Nullstelle, aber ab
-$\left|\cblue{x^{(0)}}\right| > 1{,}3917$ überholt jeder Schritt den vorigen, und
-die Iterierten $1{,}5 \to -1{,}694 \to 2{,}321 \to -5{,}114 \to 32{,}30 \to
--1575{,}3$ laufen auseinander. Die Bisektion hätte hier ohne Weiteres
+nach $4{,}28$, und der Lauf braucht doppelt so viele Schritte wie aus einem
+gutmütigen Startpunkt. Am deutlichsten ist
+der Arkustangens: Er hat genau eine Nullstelle, aber jenseits einer Schwelle für
+$\left|\cblue{x^{(0)}}\right|$ überholt jeder Schritt den vorigen, und
+die Iterierten laufen auseinander. Die Bisektion hätte hier ohne Weiteres
 funktioniert; sie ist eben langsam, aber nicht zu überlisten.
 :::
 
@@ -864,9 +865,8 @@ affinen Fall im Beweis eine echte Schranke ohne Restterm.
   toleranz={0.03}
   einheit="γ"
   verdeckt={<>Die Grenze liegt bei <M>{"2/\\lambda_{\\max} = 0{,}2"}</M>, das beste erreichbare <M>{"\\rho"}</M> bei <M>{"9/11 = 0{,}818"}</M>.</>}
->
-  <FixpunktSpirale />
-</Schaetzfrage>
+  children={({ aufgeloest }) => <FixpunktSpirale zeigeGrenze={aufgeloest} />}
+/>
 
 Entschieden wird alles von $\corange{\rho}$. Das erste System ist symmetrisch mit
 den Eigenwerten $4{,}618$ und $2{,}382$; die Voreinstellung
@@ -876,8 +876,9 @@ liegt bei $\corange{\gamma^\star} = 2/7$ mit $\corange{\rho} = 0{,}319$. Beim
 zweiten sind die Eigenwerte komplex, der Weg wird zur Spirale, und der Drehanteil
 lässt sich durch keine Schrittweite wegregeln: Selbst im Optimum bleibt
 $2/\sqrt 5 = 0{,}894$. Das dritte führt @bemerkung:das-dilemma-der-schrittweite
-vor – bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$, erst unterhalb
-von $0{,}2$ läuft die Iteration zusammen, und die beste Rate bleibt $9/11$.
+vor – bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$, die Iteration
+läuft also davon; erst unterhalb einer Schwelle, die die Ablesetafel des Widgets
+nach dem Auflösen nennt, läuft sie zusammen.
 Sehenswert ist dort das Zickzack: Die steile Richtung überschießt, während die
 flache kaum vorankommt – dasselbe Bild wie beim Gradientenabstieg in
 @sec:nelder-mead-gradient.

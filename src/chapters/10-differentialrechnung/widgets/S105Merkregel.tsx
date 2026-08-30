@@ -17,14 +17,14 @@ import { FMM_COLORS } from "../../../lib";
  * Beispielfunktionen an der Stelle 0, keine Auswertung, kein Zufall, kein
  * Zeitverhalten. Die einzigen Zahlen im Bild sind die einseitigen
  * Differenzenquotienten ±1 von |x| aus Beispiel 10.5.3, nachgerechnet in
- * historische Prüfung, Skript nicht mehr vorhanden (2026-08-19): für h = 0,5,
- * 0,01 und 10⁻⁸ steht rechts exakt +1 und links exakt −1.
+ * scripts/verify/REV29/10-differentialrechnung-S105Zoom.mjs (2026-08-29): für
+ * h = 0,5, 0,01 und 10⁻⁸ steht rechts exakt +1 und links exakt −1.
  *
  * Farbrollen Kapitel 10 (= Kapitel 10): Blau steht für die Funktion und ihre
  * Werte, und Stetigkeit ist eine Aussage über Funktionswerte; Grün steht für
  * den Ableitungsterm, und Differenzierbarkeit ist die Existenz genau dieses
- * Terms.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
+ * Terms. Grau bleibt dem Fall ohne beides. Jede Vorschaukurve trägt die Farbe
+ * ihres eigenen Falls – die Sprungfunktion also Grau, nicht Blau.
  */
 
 const BLAU = FMM_COLORS.blau; // Stetigkeit (Aussage über Funktionswerte)
@@ -99,15 +99,20 @@ function Vorschau({ fall }: { fall: Fall }) {
       >
         <line x1={px(-1)} x2={px(1)} y1={py(0)} y2={py(0)} stroke="var(--w-axis)" strokeWidth={0.8} />
         <line x1={px(0)} x2={px(0)} y1={6} y2={S - 6} stroke="var(--w-axis)" strokeWidth={0.8} />
+        {/*
+          Die Vorschaukurve trägt die Farbe IHRES Falls, nicht pauschal Blau:
+          Blau steht in diesem Kapitel für Stetigkeit, und die Sprungfunktion
+          ist in 0 gerade nicht stetig (sie ist im Mengendiagramm grau).
+        */}
         {fall.sprung ? (
           <>
-            <path d={ast(-1, -0.02)} fill="none" stroke={BLAU} strokeWidth={2.2} />
-            <path d={ast(0.02, 1)} fill="none" stroke={BLAU} strokeWidth={2.2} />
-            <circle cx={px(0)} cy={py(0)} r={2.6} fill="var(--w-bg)" stroke={BLAU} strokeWidth={1.4} />
-            <circle cx={px(0)} cy={py(1)} r={2.6} fill={BLAU} />
+            <path d={ast(-1, -0.02)} fill="none" stroke={fall.farbe} strokeWidth={2.2} />
+            <path d={ast(0.02, 1)} fill="none" stroke={fall.farbe} strokeWidth={2.2} />
+            <circle cx={px(0)} cy={py(0)} r={2.6} fill="var(--w-bg)" stroke={fall.farbe} strokeWidth={1.4} />
+            <circle cx={px(0)} cy={py(1)} r={2.6} fill={fall.farbe} />
           </>
         ) : (
-          <path d={ast(-1, 1)} fill="none" stroke={BLAU} strokeWidth={2.2} />
+          <path d={ast(-1, 1)} fill="none" stroke={fall.farbe} strokeWidth={2.2} />
         )}
       </svg>
       <figcaption className={`mt-0.5 text-center text-[11px] ${W_MUTED}`}>{fall.bildTitel}</figcaption>

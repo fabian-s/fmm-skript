@@ -39,11 +39,13 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Achsen/Zahlformat/Farben aus
  * `src/lib/widgets/util.ts`.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: über alle 7921 mit dem 0,05-Raster
- * erreichbaren Lagen von x und je 3600 abgetastete Randpunkte bleibt
- * max ⟨x − x̂, y − x̂⟩ ≤ 1,4e−15 (rechnerisch null, angenommen in y = x̂) und
- * kein Randpunkt unterbietet d um mehr als 4,5e−16; von je 400 000
- * gleichverteilten Punkten der vollen Menge liegt keiner näher an x als x̂.
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen — x̂ wird dort nicht über die
+ * Kanten-Formeln bestimmt, sondern über eine feine Abtastung des Randes und
+ * anschließend über das Kriterium des stumpfen Winkels ZERTIFIZIERT. Über alle
+ * 7921 mit dem 0,05-Raster erreichbaren Lagen von x bleibt
+ * max ⟨x − x̂, y − x̂⟩ ≤ 5e−3 (Diskretisierungsfehler der Abtastung; auf einem
+ * gröberen Lagenraster mit 100-facher Auflösung ≤ 1e−4), und über ein
+ * 701 × 701-Raster der vollen Menge liegt kein Punkt näher an x als x̂.
  * Voreinstellungen: Kreisscheibe x = (1,6; 1,2) hat x̂ = (0,8; 0,6) und d = 1;
  * Dreieck x = (1,8; 0,9) hat x̂ = (0,6957; 0,2252) und d = 1,2941; Dreieck
  * x = (2,1; −1,35) projiziert genau auf die Ecke (1,2; −0,6), d = 1,1715 —
@@ -467,19 +469,18 @@ export function ProjektionsWidget() {
         </Verdikt>
       ) : (
         <Verdikt kind="ok" titel="x̂ ist der eindeutige nächste Punkt.">
-          Der Kreis mit Radius d = {fmtDe(d, 3)} um x berührt die Menge genau in x̂ und schneidet
-          sie sonst nirgends; unter {menge.rand.length} abgetasteten Randpunkten unterbietet
-          keiner diesen Abstand (kleinster gefundener Wert {fmtDe(bestRand, 3)}). Die gestrichelte
-          Gerade durch x̂ steht senkrecht auf x − x̂, und die ganze Menge liegt auf ihrer
-          abgewandten Seite: Für jeden Punkt y der Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0 ({ref("satz:kriterium-des-stumpfen-winkels")}),
-          das größte abgetastete Skalarprodukt beträgt {fmtDe(groesstesSkalar, 3)}.
+          Die gestrichelte Gerade durch x̂ steht senkrecht auf x − x̂, und die ganze Menge liegt
+          auf ihrer abgewandten Seite: Für jeden Punkt y der Menge ist ⟨x − x̂, y − x̂⟩ ≤ 0
+          ({ref("satz:kriterium-des-stumpfen-winkels")}). Das ist der Grund für die Eindeutigkeit, und der Kreis mit Radius
+          d = {fmtDe(d, 3)} um x berührt die Menge deshalb genau in x̂. Die Stichprobe
+          bestätigt beides: Unter {menge.rand.length} abgetasteten Randpunkten unterbietet keiner
+          diesen Abstand (kleinster Wert {fmtDe(bestRand, 3)}), und das größte abgetastete
+          Skalarprodukt beträgt {fmtDe(groesstesSkalar, 3)}.
         </Verdikt>
       )}
       <p className="max-w-prose text-xs text-slate-500 dark:text-slate-400">
-        Das Maximum in der letzten Zeile läuft über die abgetasteten Randpunkte y der Menge. Weil
-        y ↦ ⟨x − x̂, y − x̂⟩ linear ist, wird es ohnehin am Rand angenommen; für das Dreieck
-        genügten sogar die drei Ecken. Der Wert bleibt bei jeder Lage von x kleiner oder gleich
-        null, und er ist genau dann null, wenn y auf der gestrichelten Stützgeraden liegt.
+        Das größte abgetastete Skalarprodukt ist genau dann null, wenn ein Randpunkt auf der
+        gestrichelten Stützgeraden liegt.
       </p>
     </div>
   );

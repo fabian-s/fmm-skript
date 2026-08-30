@@ -26,8 +26,7 @@ import { ref } from "../../numbers.generated";
  * portiert (widgets/svdMath.ts: svd2x2; widgets/SvdStages2x2.tsx); alle
  * sichtbaren Texte, die Presets und die Farbgebung sind neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19): Voreinstellung A = (2 1; 0 1) hat σ₁ = 2,2882 = √(3+√5),
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29): Voreinstellung A = (2 1; 0 1) hat σ₁ = 2,2882 = √(3+√5),
  * σ₂ = 0,8740 = √(3−√5), σ₁/σ₂ = 2,618, v₁ = (0,851; 0,526);
  * Presets: Drehung (0 −1; 1 0) σ₁ = σ₂ = 1; gleiche Spalten (1 1; 1 1)
  * σ₁ = 2, σ₂ = 0; Scherung (1 1,5; 0 1) σ₁ = 2, σ₂ = 0,5.
@@ -82,6 +81,13 @@ function svd2x2(A: Mat2): Svd2 {
 
 /** 3 Dezimalen, deutsches Komma (fmtDe aus der lib). */
 const fmt = (v: number) => fmtDe(v, 3);
+
+/** Residuen als Mantisse · 10^Exponent: „0,000" könnte 4·10⁻⁴ verstecken. */
+function fmtExp(v: number): string {
+  if (v === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return `${fmtDe(v / 10 ** e, 2)} · 10^${e}`;
+}
 
 const vecStr = (v: [number, number]) => `(${fmt(v[0])}, ${fmt(v[1])})`;
 
@@ -170,7 +176,10 @@ export function SvdGeometrieExplorer() {
   for (let i = 0; i < 2; i++)
     for (let j = 0; j < 2; j++) rest = Math.max(rest, Math.abs(rekonstruiert[i][j] - A[i][j]));
 
-  const kappa = s2 > 0 ? s1 / s2 : s1 > 0 ? Infinity : NaN;
+  // EINE benannte Schwelle für Readout und Verdikte: vorher las der Readout
+  // σ₁/σ₂ = 1,0·10¹² vor, während das Verdikt darunter „σ₂ = 0" behauptete.
+  const NULLSCHWELLE = 1e-9;
+  const kappa = s2 > NULLSCHWELLE ? s1 / s2 : s1 > NULLSCHWELLE ? Infinity : NaN;
 
   return (
     <div>
@@ -240,18 +249,18 @@ export function SvdGeometrieExplorer() {
           u₁ = {vecStr(u1)} &nbsp; u₂ = {vecStr(u2)}
         </div>
         <div style={{ color: GREY }}>
-          größter Abstand zwischen UΣVᵀ und A: {fmt(rest)}
+          größter Abstand zwischen UΣVᵀ und A: {fmtExp(rest)}
         </div>
       </div>
-      {s1 < 1e-9 ? (
+      {s1 < NULLSCHWELLE ? (
         <Verdikt kind="warn" titel="Nullmatrix:">
           Beide Singulärwerte sind null. Die Abbildung schickt jeden Vektor in den Ursprung,
           vom Kreis bleibt ein Punkt, und Station 2 löscht alles aus.
         </Verdikt>
-      ) : s2 < 1e-9 ? (
+      ) : s2 < NULLSCHWELLE ? (
         <Verdikt kind="warn" titel="Singulär:">
-          σ₂ = 0: Station 2 drückt eine ganze Richtung auf null, aus dem Kreis wird eine
-          Strecke. Das Verhältnis σ₁/σ₂ ist nicht mehr endlich, der Rang ist 1 ({ref("satz:charakterisierung-der-fundamentalen")}),
+          σ₂ = {fmtExp(s2)} liegt unter der Nullschwelle 10⁻⁹: Station 2 drückt eine ganze
+          Richtung auf null, aus dem Kreis wird eine Strecke. Das Verhältnis σ₁/σ₂ ist nicht mehr endlich, der Rang ist 1 ({ref("satz:charakterisierung-der-fundamentalen")}),
           und die letzte Drehung legt die Strecke nur noch in ihre Endlage.
         </Verdikt>
       ) : s1 / s2 > 5 ? (

@@ -206,7 +206,7 @@ lassen; der zweite Menüpunkt ist die nicht-konvexe Funktion aus
     { id: "min-global", text: "im globalen Minimum bei 2" },
   ]}
   loesung="max"
-  verdeckt={<>Der zweite Menüpunkt und der Startpunktregler zeigen es in einem einzigen Schritt.</>}
+  verdeckt={<>Der zweite Menüpunkt und der Startpunktregler zeigen es in einem einzigen Schritt: <M>{"0{,}5"}</M> landet exakt auf dem lokalen Maximum bei <M>{"0"}</M>, denn dort ist <M>{"f'' = -2{,}25"}</M>, die Modellparabel öffnet nach unten, und ihr Scheitel ist ein Hochpunkt.</>}
 >
   <NewtonParabelLab />
 </Schaetzfrage>
@@ -214,10 +214,8 @@ lassen; der zweite Menüpunkt ist die nicht-konvexe Funktion aus
 Alles hängt am Startpunkt. Auf der konvexen Funktion verlässt der erste Schritt ab
 $\cblue{x^{(0)}} = 4$ den Definitionsbereich, wie am Ende von
 @beispiel:newton-auf-einer-nicht-quadratischen gerechnet. Auf der nicht-konvexen
-führt $-2$ in das *lokale* Minimum bei $-1$, $2{,}5$ in das globale bei $2$, und
-$0{,}5$ landet in einem einzigen Schritt exakt auf dem lokalen Maximum bei $0$ –
-dort ist $\corange{f''} = -2{,}25$, die Modellparabel öffnet nach unten, und ihr
-Scheitel ist ein Hochpunkt. Am lehrreichsten ist $\cblue{x^{(0)}} = 1{,}2$: Dort
+führt $-2$ in das *lokale* Minimum bei $-1$ und $2{,}5$ in das globale bei $2$.
+Am lehrreichsten ist $\cblue{x^{(0)}} = 1{,}2$: Dort
 ist $\corange{f''} = -0{,}08$ fast null, der erste Schritt springt nach
 $\cred{-25{,}2}$, und $14$ Schritte später steht die Iteration im *lokalen*
 Minimum bei $-1$ – obwohl der Startpunkt näher am globalen lag.
@@ -692,14 +690,13 @@ konditioniert, jeweils mit dem Standardwert $\alpha = 0{,}9$.
     { id: "egal", text: "er ändert nichts" },
   ]}
   loesung="nein"
-  verdeckt={<>Die Ablesezeile zählt beide Verfahren mit.</>}
+  verdeckt={<>Die Ablesezeile zählt beide Verfahren mit: Bei <M>{"\\kappa = 5"}</M> dreht sich das Ergebnis sogar um, <M>{"106"}</M> Schritte mit gegen <M>{"31"}</M> ohne Momentum.</>}
 >
   <MomentumVergleich />
 </Schaetzfrage>
 
-Der Nutzen des Schwungs hängt allein an der Kondition. Bei $\kappa = 5$ dreht sich
-das Ergebnis sogar um: $106$ Schritte mit gegen $31$ ohne Momentum. Bei
-$\kappa = 25$ steht es $103$ zu $161$, bei $\kappa = 100$ dann $121$ zu $608$ – je
+Der Nutzen des Schwungs hängt allein an der Kondition. Bei $\kappa = 25$ steht es
+$103$ Schritte mit gegen $161$ ohne, bei $\kappa = 100$ dann $121$ zu $608$ – je
 schlechter die Kondition, desto größer der Gewinn. Und bei
 $\corange{\gamma} L = 2{,}5$ explodiert der blaue Weg, während der violette stabil
 bleibt, denn seine Grenze liegt bei $2 \cdot 1{,}9 = 3{,}8$. Der Standardwert

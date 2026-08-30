@@ -3,6 +3,7 @@ import {
   Aufgabe,
   FMM_COLORS,
   M,
+  MD,
   Schaetzfrage,
   Slider,
   Verdikt,
@@ -43,8 +44,9 @@ import { ref } from "../../numbers.generated";
  * R-Ausgaben des Folien-Chunks zitiert nur der Fließtext (Lesson: R-Output
  * nicht in JS-Widgets spiegeln).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19):
+ * PRÜFSTATUS (scripts/verify/R2/check-s43-claims.mjs, 2026-08-20, seit
+ * 2026-08-29 ohne die tautologische Assertion; ergänzt um
+ * scripts/verify/REV29/04-fehler-S43Widgets.mjs, 2026-08-29):
  *   SGD auf L(θ) = θ², θ₀ = 2,5: θ_{k+1} = θ_k (1 − 2α), also ρ = |1 − 2α|.
  *   ρ(0,25) = 0,5; ρ(0,45) = 0,1; ρ(0,5) = 0 (schnellste Konvergenz, ein
  *   Schritt); ρ(0,72) = 0,44; ρ(1) = 1 (Grenzfall, θ_30 = 2,5); ρ(1,15) = 1,3
@@ -53,10 +55,10 @@ import { ref } from "../../numbers.generated";
  *   κ_rel(h, (a, b)) = √2 · √(a² + b²)/|a − b| mit a = c² + 1, b = c²
  *   (|a − b| = 1 analytisch gesetzt): k = 2 ⇒ 2,0001 · 10⁴ (log₁₀ = 4,301);
  *   k = 5 ⇒ 2,0 · 10¹⁰ (log₁₀ = 10,301); k = 8 ⇒ 2,0 · 10¹⁶ (log₁₀ = 16,301);
- *   k = 10 ⇒ 2,0 · 10²⁰ (log₁₀ = 20,301). Frei a = 2000, b = 1999:
- *   R2-Nachprüfung: scripts/verify/R2/check-s43-claims.mjs, 2026-08-20.
- *   κ_rel = 3999,0 (log₁₀ = 3,602). Beispiel 4.3.7: κ_rel · ε ≈ 4,4 · 10⁴,
- *   beobachtet 16384/1,023151 = 1,60 · 10⁴, und 2¹⁴ = 16384.
+ *   k = 10 ⇒ 2,0 · 10²⁰ (log₁₀ = 20,301).
+ *   Freier Modus, Voreinstellung a = 2000, b = 1999: κ_rel = 3999,0
+ *   (log₁₀ = 3,602). Beispiel 4.3.7: κ_rel · ε ≈ 4,4 · 10⁴, beobachtet
+ *   16384/1,023151 = 1,60 · 10⁴, und 2¹⁴ = 16384.
  */
 
 const FMM = {
@@ -97,6 +99,7 @@ function fmtKlein(v: number): string {
 
 const ALPHA_PRESETS: { id: string; text: string; alpha: number }[] = [
   { id: "monoton", text: "monoton (α = 0,25)", alpha: 0.25 },
+  { id: "einschritt", text: "ein Schritt (α = 0,5)", alpha: 0.5 },
   { id: "oszill", text: "oszillierend (α = 0,72)", alpha: 0.72 },
   { id: "grenz", text: "Grenzfall (α = 1)", alpha: 1 },
   { id: "div", text: "divergent (α = 1,15)", alpha: 1.15 },
@@ -130,7 +133,14 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
   }, [alpha, sigma, seed]);
 
   const rho = Math.abs(1 - 2 * alpha);
-  const grenzfall = Math.abs(rho - 1) < 1e-9;
+  // Der Regler rastet auf 0,01: die beiden ausgezeichneten Lernraten sind damit
+  // exakt erkennbar und werden nicht aus einer Toleranz auf ρ erschlossen.
+  const alphaRaster = Math.round(alpha * 100);
+  const grenzfall = alphaRaster === 100;
+  const einSchritt = alphaRaster === 50;
+  // Der rauschfreie Vergleichswert |θ_N| = θ₀ ρ^N — im Verdikt darf NICHT der
+  // verrauschte Pfad stehen, wenn der Satz „ohne Rauschen" sagt.
+  const ohneRauschen = THETA0 * rho ** (thetas.length - 1);
   const farbe =
     diverged || rho > 1 ? FMM.rot : grenzfall ? FMM.violett : alpha > 0.5 ? FMM.orange : FMM.gruen;
 
@@ -152,8 +162,18 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
     ) : grenzfall ? (
       <Verdikt kind="warn" titel="Grenzfall.">
         Ohne Rauschen springen die Iterierten mit konstanter Amplitude um das Minimum, weder
-        Konvergenz noch Divergenz: <M>{"|\\theta_k|"}</M> bleibt bei {fmtDe(Math.abs(letzte), 2)}.
-        {sigma > 0 && " Mit Rauschen kommt zusätzlich ein zufälliger Schritt hinzu; eine Konvergenz zum Minimum gibt es dann erst recht nicht."}
+        Konvergenz noch Divergenz: <M>{"|\\theta_k|"}</M> bleibt bei{" "}
+        {fmtDe(ohneRauschen, 2)}.
+        {sigma > 0 &&
+          ` Mit Rauschen kommt in jedem Schritt ein zufälliger Beitrag hinzu; im gezeigten Pfad steht am Ende |θ| = ${fmtKlein(letzte)}, und eine Konvergenz zum Minimum gibt es erst recht nicht.`}
+      </Verdikt>
+    ) : einSchritt ? (
+      <Verdikt kind="ok" titel="ρ = 0: ein Schritt genügt.">
+        Bei <M>{"\\alpha = 0{,}5"}</M> ist <M>{"\\rho = |1 - 2\\alpha| = 0"}</M>: Der erste Schritt
+        landet ohne Rauschen exakt im Minimum, alle weiteren ändern nichts mehr. Schneller kann
+        diese Iteration nicht sein.
+        {sigma > 0 &&
+          ` Mit Rauschen bleibt es nicht dabei: Der geschätzte Gradient ist im Minimum nicht null, nach ${thetas.length - 1} Schritten steht |θ| = ${fmtKlein(letzte)}.`}
       </Verdikt>
     ) : alpha > 0.5 ? (
       <Verdikt kind="ok" titel="Oszillierend, aber konvergent.">
@@ -180,7 +200,7 @@ function SgdTafel({ aufgeloest }: { aufgeloest: boolean }) {
         viewBox={`0 0 ${W} ${H}`}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
-        aria-label={`Parabel L(theta) = theta Quadrat mit dem Pfad der Iterierten bei Lernrate ${fmtDe(alpha, 2)}; der Pfad ist derzeit ${diverged || rho > 1 ? "divergent" : grenzfall ? "am Grenzfall" : alpha > 0.5 ? "oszillierend konvergent" : "monoton konvergent"}.`}
+        aria-label={`Parabel L(theta) = theta Quadrat mit dem Pfad der Iterierten bei Lernrate ${fmtDe(alpha, 2)}; der Pfad ist derzeit ${diverged || rho > 1 ? "divergent" : grenzfall ? "am Grenzfall" : einSchritt ? "nach einem Schritt im Minimum" : alpha > 0.5 ? "oszillierend konvergent" : "monoton konvergent"}.`}
       >
         <rect x={0} y={0} width={W} height={H} fill="var(--w-bg)" />
         <line x1={px(X0)} y1={py(0)} x2={px(X1)} y2={py(0)} stroke="var(--w-axis)" strokeWidth={1} />
@@ -416,7 +436,7 @@ export function KappaRechner() {
         Der letzte Schritt verstärkt alle bis dahin angesammelten relativen Fehler etwa um{" "}
         <M>{"\\kappa_{rel}"}</M> ({ref("satz:fehlerfortpflanzung-in-einer-komposition")}): rund {Math.round(verlust)}{" "}
         {Math.round(verlust) === 1 ? "Dezimalstelle geht" : "Dezimalstellen gehen"} verloren,
-        höchstens etwa {Math.floor(rest)} bleiben korrekt. Als Faustregel aus
+        höchstens etwa {Math.floor(rest)} bleiben korrekt. Als Faustregel aus{" "}
         {ref("bemerkung:interpretation")}: <M>{"\\kappa_{rel} \\approx 10^m"}</M> kostet <M>{"m"}</M> Stellen.
       </Verdikt>
     );
@@ -435,12 +455,14 @@ export function KappaRechner() {
         Schieben wir den Exponenten <M>{"k"}</M> nach oben und lesen ab, wie viele Dezimalstellen
         der letzte Schritt kostet.
       </Aufgabe>
+      {/* <MD> bringt overflow-x-auto mit: bei 390 px bricht die Formel sonst am
+          rechten Rand ab. */}
       <div className="max-w-prose">
-        <M>
+        <MD>
           {
             "\\kappa_{rel}\\bigl(h, (\\cred{a}, \\cblue{b})\\bigr) = \\sqrt{2}\\,\\frac{\\sqrt{\\cred{a}^2 + \\cblue{b}^2}}{|\\cred{a} - \\cblue{b}|}, \\qquad \\eps \\approx 2{,}2 \\cdot 10^{-16}."
           }
-        </M>
+        </MD>
       </div>
       <div className="flex flex-wrap gap-4 text-sm">
         <label className="flex items-center gap-1.5">

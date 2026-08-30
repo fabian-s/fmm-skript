@@ -42,7 +42,7 @@ import { num, ref } from "../../numbers.generated";
  * will, muss zuerst die Formeln umfärben.
  *
  * ── VERIFIZIERTE ZAHLEN ─────────────────────────────────────────────────────
- * node, historische Prüfung, Skript nicht mehr vorhanden, 2026-08-19:
+ * scripts/verify/REV29/04-fehler-S41Widgets.mjs, 2026-08-29:
  *   Beispiel 4.1.4: Δ = (0,2; 0,3), ‖Δ‖₂ = 0,36056, ‖v‖₂ = 5,
  *   δ = 0,072111 = 7,2111 %, ‖ṽ‖₂ = 5,36004; Lemma-4.1.3-Band
  *   [4,63944; 5,36056] enthält ‖ṽ‖₂ (Abstand zur oberen Schranke 0,00052).
@@ -97,6 +97,7 @@ function taylorExp(x: number, N: number): number {
  * ist genau die Aussage, dass ṽ dann in einem Ring um den Ursprung liegt.
  */
 
+const CLIP = "s41-fehlermass-flaeche"; // clipPath-Kennung der Zeichenfläche
 const S = 320; // viewBox-Kantenlänge
 const FX = 36; // Zeichenfläche links
 const FY = 12; // Zeichenfläche oben
@@ -197,12 +198,21 @@ export function FehlermassRechner() {
   const gitter = [0, 1, 2, 3, 4, 5];
 
   const verdikt =
-    nv < 0.2 ? (
-      <Verdikt kind="warn" titel="Grenzfall ‖v‖ → 0.">
-        Der absolute Fehler <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} bleibt
-        definiert, der relative nicht: {ref("definition:fehlermass")} verlangt{" "}
-        <M>{"\\left\\| \\bv \\right\\| \\neq 0"}</M>. Auch {ref("lemma:fehlerschranken")} sagt hier nichts mehr, denn
-        das Band um den Ursprung schrumpft mit <M>{"\\left\\| \\bv \\right\\|"}</M> auf einen Punkt.
+    nv === 0 ? (
+      <Verdikt kind="warn" titel="Exakt entartet: v = 0.">
+        Beide Koordinaten von <M>{"\\bv"}</M> stehen auf null. Der absolute Fehler{" "}
+        <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} bleibt definiert, der
+        relative nicht: {ref("definition:fehlermass")} verlangt{" "}
+        <M>{"\\left\\| \\bv \\right\\| \\neq 0"}</M>.
+      </Verdikt>
+    ) : nv < 0.2 ? (
+      <Verdikt kind="warn" titel="‖v‖ winzig.">
+        <M>{"\\left\\| \\bv \\right\\|_2"}</M> = {fmtDe(nv, 3)} ist nicht null, aber sehr klein:{" "}
+        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 1)} % wird riesig, weil derselbe
+        absolute Fehler an einer winzigen Länge gemessen wird. {ref("lemma:fehlerschranken")} gilt
+        weiter und klemmt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> = {fmtDe(nvt, 3)} zwischen{" "}
+        {fmtDe(unten, 3)} und {fmtDe(oben, 3)} – das Band wird dabei so breit, dass es keine
+        Information mehr trägt.
       </Verdikt>
     ) : delta < 0.01 ? (
       <Verdikt kind="ok" titel="Unter 1 %.">
@@ -216,7 +226,7 @@ export function FehlermassRechner() {
       <Verdikt kind="ok" titel="Innerhalb der 10-%-Toleranz.">
         <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} ist höchstens{" "}
         {fmtDe(tol, 3)} = 0,1 · <M>{"\\left\\| \\bv \\right\\|_2"}</M>, also{" "}
-        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % ≤ 10 %. Nach {ref("lemma:fehlerschranken")}
+        <M>{"\\corange{\\delta_{\\bv}}"}</M> = {fmtDe(100 * delta, 2)} % ≤ 10 %. Nach {ref("lemma:fehlerschranken")}{" "}
         liegt <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> = {fmtDe(nvt, 3)} damit im orangen Band
         [{fmtDe(unten, 3)}; {fmtDe(oben, 3)}], und die Spitze von <M>{"\\wt{\\bv}"}</M> tatsächlich
         im Ring.
@@ -224,7 +234,7 @@ export function FehlermassRechner() {
     ) : (
       <Verdikt kind="fail" titel="Toleranz gerissen.">
         <M>{"\\left\\| \\bDelta_{\\bv} \\right\\|_2"}</M> = {fmtDe(nd, 3)} übersteigt{" "}
-        {fmtDe(tol, 3)}, der relative Fehler ist {fmtDe(100 * delta, 1)} %. Der orange Ring aus
+        {fmtDe(tol, 3)}, der relative Fehler ist {fmtDe(100 * delta, 1)} %. Der orange Ring aus{" "}
         {ref("lemma:fehlerschranken")} ist entsprechend breit: <M>{"\\left\\| \\wt{\\bv} \\right\\|_2"}</M> darf
         irgendwo zwischen {fmtDe(unten, 3)} und {fmtDe(oben, 3)} liegen. Als Garantie über die
         Länge von <M>{"\\wt{\\bv}"}</M> ist das fast nichts wert.
@@ -245,6 +255,12 @@ export function FehlermassRechner() {
         aria-label={`Die Ebene mit dem wahren Vektor v, seiner Näherung v-Schlange und dem Fehlerpfeil dazwischen; der relative Fehler beträgt ${fmtDe(100 * delta, 1)} Prozent.`}
         {...zieh.svgProps}
       >
+        <defs>
+          {/* Ohne clipPath läuft das Lemma-Band über die Zeichenfläche hinaus. */}
+          <clipPath id={CLIP}>
+            <rect x={FX} y={FY} width={FW} height={FH} />
+          </clipPath>
+        </defs>
         <rect x={FX} y={FY} width={FW} height={FH} fill="var(--w-bg)" />
         {gitter.map((t) => (
           <g key={`g${t}`}>
@@ -254,8 +270,9 @@ export function FehlermassRechner() {
         ))}
 
         {/* Lemma-4.1.3-Band: alle Punkte mit Länge zwischen ‖v‖(1−δ) und ‖v‖(1+δ) */}
-        {nv > 0.2 && Number.isFinite(delta) && (
+        {nv > 0 && Number.isFinite(delta) && (
           <path
+            clipPath={`url(#${CLIP})`}
             d={
               `M ${px(0) + oben * skala} ${py(0)} A ${oben * skala} ${oben * skala} 0 1 0 ${px(0) - oben * skala} ${py(0)}` +
               ` A ${oben * skala} ${oben * skala} 0 1 0 ${px(0) + oben * skala} ${py(0)} Z` +
@@ -287,8 +304,9 @@ export function FehlermassRechner() {
         ))}
 
         {/* 10-%-Toleranzkreis um die Spitze von v */}
-        {nv > 0.2 && (
+        {nv > 0 && (
           <circle
+            clipPath={`url(#${CLIP})`}
             cx={px(v[0])}
             cy={py(v[1])}
             r={tol * skala}
@@ -459,8 +477,11 @@ export function FehlerzerlegungExplorer() {
     ) : Math.abs(algoF) > 2 * Math.abs(folgeF) ? (
       <Verdikt kind="warn" titel="Der Algorithmus dominiert.">
         Der rote Anteil ist {fmtDe(Math.abs(algoF) / Math.abs(folgeF), 1)}-mal so groß wie der
-        orange. Nach der Zerlegung ({num("eq:eq-4-1-1")}) hilft hier nur ein besserer Algorithmus (größeres{" "}
-        <M>{"N"}</M>); ein genauerer Input würde den Gesamtfehler kaum bewegen.
+        orange. Nach der Zerlegung ({num("eq:eq-4-1-1")}) hilft hier nur ein besserer Algorithmus;
+        ein genauerer Input würde den Gesamtfehler kaum bewegen.{" "}
+        {N === 10
+          ? "Der Regler für N ist allerdings ausgereizt: Um weiterzukommen, bräuchten wir mehr Reihenglieder, als das Widget zulässt."
+          : "Schieben wir also N nach oben."}
       </Verdikt>
     ) : Math.abs(folgeF) > 2 * Math.abs(algoF) ? (
       <Verdikt kind="warn" titel="Der Input dominiert.">

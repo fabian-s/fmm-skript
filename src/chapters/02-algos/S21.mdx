@@ -83,7 +83,7 @@ auf:
 Halten wir die Beobachtungen fest: Computer können nur endlich viele Zahlen
 darstellen. Das führt zu *Rundungsfehlern*
 (:k[Rundungsfehler]{#rounding-error}; ausführlich in
-Kapitel 4, nach den Normen aus Kapitel 3), und diese Fehler können sich *akkumulieren*. Der Fehler einer
+@kap:fehler, nach den Normen aus @kap:matrix-spur-norm), und diese Fehler können sich *akkumulieren*. Der Fehler einer
 einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
 vieler kleiner Fehler. Und weil jede Operation frisch rundet, spielt sogar die
 *Reihenfolge* unserer Rechenschritte eine Rolle. Eine erste praktische
@@ -192,22 +192,28 @@ Das lässt sich nicht ansehen, das müssen wir ausprobieren.
 :::interaktiv[Zwei Gesichter derselben Auslöschung]
 <Schaetzfrage
   variante="auswahl"
-  frage="Bei welcher Verschiebung c verliert die Verschiebungsformel die Varianz zum ersten Mal?"
+  frage="Im Rechenweg »Varianz«: bei welcher Verschiebung c verliert die Verschiebungsformel die Varianz zum ersten Mal?"
   optionen={[
     { id: "e4", text: "c = 10⁴" },
     { id: "e8", text: "c = 10⁸" },
     { id: "e12", text: "c = 10¹²" },
   ]}
   loesung="e8"
+  verdeckt={
+    <p className="max-w-prose text-sm">
+      Die Verschiebungsformel verliert schon bei <M>{"c = 10^8"}</M> die erste
+      Nachkommastelle (<M>{"22"}</M> statt <M>{"22{,}5"}</M>) und ab <M>{"c = 10^9"}</M> jede
+      Information; die Klammerung der Summe hält bis <M>{"10^{15}"}</M> und bricht bei{" "}
+      <M>{"10^{16}"}</M>.
+    </p>
+  }
 >
 <AusloeschungWidget />
 </Schaetzfrage>
 
 Die Tafel macht das Kriterium sichtbar: Solange die orange Auflösung links von der
 grünen Zielgröße steht, überlebt das Ergebnis; sobald sie rechts davon steht, ist es
-weg. Die Verschiebungsformel verliert schon bei $c = 10^8$ die erste Nachkommastelle
-($22$ statt $22{,}5$) und ab $c = 10^9$ jede Information; die Klammerung der Summe hält
-bis $10^{15}$ und bricht bei $10^{16}$.
+weg.
 :::
 
 <h3 id="sec-2.1-algorithmen">Algorithmen</h3>
@@ -232,7 +238,7 @@ dessen Ergebnis, und so weiter. Die Tilde ist Programm: $\wt{f}$ ist
 nicht dasselbe wie $f$, sondern nur ein Versuch, $f$
 nachzubauen; die Definition verspricht vorsichtig nur eine „mögliche Lösung".
 Wie gut $\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, ist
-genau die Frage, die uns in Kapitel 4 beschäftigen wird. Zu einem Problem
+genau die Frage, die uns in @kap:fehler beschäftigen wird. Zu einem Problem
 $f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
 unterscheiden sich in Genauigkeit *und* Rechenaufwand.
 
@@ -274,14 +280,16 @@ Bei $10^{15}$ liegen benachbarte Maschinenzahlen $0{,}125$ auseinander, die $1$
 $-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (@beispiel:verletzte-assoziativitaet).
 :::
 
-:::frage{falsch}
-Die zweistufige Varianzformel $\frac{1}{n}\sumin (x_i - \bar{x})^2$ versagt
-bei genügend großer Verschiebung genauso wie die Verschiebungsformel.
+:::frage{wahr}
+Auch die zweistufige Varianzformel $\frac{1}{n}\sumin (x_i - \bar{x})^2$ versagt,
+wenn wir die Verschiebung im Widget weit genug treiben.
 
-Sie liefert im Widget für jedes $k$ exakt $22{,}5$. Sie subtrahiert die großen
-Zahlen, *bevor* quadriert wird, und rechnet danach nur noch mit den kleinen
-Abweichungen $-6, -3, 3, 6$; zwei riesige, fast gleiche Zahlen treffen dabei
-nie aufeinander.
+Sie hält sehr viel länger durch als die Verschiebungsformel, weil sie die großen
+Zahlen subtrahiert, *bevor* quadriert wird, und danach nur noch mit den kleinen
+Abweichungen $-6, -3, 3, 6$ rechnet: bis $k = 15$ liefert sie exakt $22{,}5$. Ab
+$k = 16$ sind aber schon diese Abweichungen nicht mehr darstellbar, und das Widget
+zeigt $20$, bei $k = 17$ sogar $128$ und ab $k = 18$ nur noch $0$. Robuster heißt
+nicht immun.
 :::
 
 :::frage{wahr}
@@ -298,4 +306,4 @@ winzigen relativen Fehler einen riesigen relativen Fehler des Ergebnisses.
 
 *Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
 Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt
-Heath §1.3 sowie unser Kapitel 4, mit Normen aus Kapitel 3.*
+Heath §1.3 sowie unser @kap:fehler, mit Normen aus @kap:matrix-spur-norm.*

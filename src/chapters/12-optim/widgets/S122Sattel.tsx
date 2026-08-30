@@ -40,8 +40,8 @@ import { ref } from "../../numbers.generated";
  * davon), violett der stationäre Punkt — die im Kapitel freie Farbe, hier mit
  * genau dieser Rolle.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * ältere Prüfung check-math-s132.mjs bestätigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - ∇f = (2x, −2y) und H = diag(2, −2) gegen zentrale Differenzen (in
  *    (1,7; −0,9): numerisch (3,400000; 1,800000) = analytisch).
  *  - Ein Newton-Schritt liefert aus JEDEM Punkt exakt (0; 0), denn
@@ -104,9 +104,11 @@ const NIVEAUS_NEG = [-0.5, -1, -2, -3];
  * dem aus der Newton-Schritt gezeigt wird.
  */
 const VOREINSTELLUNGEN: { name: string; x: number; y: number; gamma: number; bahn: boolean }[] = [
-  { name: "Abstieg entkommt", x: 1.5, y: 0.4, gamma: 0.25, bahn: true },
-  { name: "Startstrahl y = 0", x: 1.5, y: 0, gamma: 0.25, bahn: true },
-  { name: "Newton von schräg", x: 1.7, y: -0.9, gamma: 0.25, bahn: false },
+  // Die Namen sind bewusst neutral: „Startstrahl y = 0" wäre die Antwort auf
+  // die Schätzfrage des Kastens.
+  { name: "erster Start", x: 1.5, y: 0.4, gamma: 0.25, bahn: true },
+  { name: "zweiter Start", x: 1.5, y: 0, gamma: 0.25, bahn: true },
+  { name: "Start für den Newton-Knopf", x: 1.7, y: -0.9, gamma: 0.25, bahn: false },
 ];
 
 export function SattelpunktWidget() {
@@ -159,6 +161,9 @@ export function SattelpunktWidget() {
   const aufAchseY = Math.abs(x) < eps;
   const faktorX = Math.abs(1 - 2 * gamma);
   const faktorY = 1 + 2 * gamma;
+  // γ = 0,5 ist ein Rastwert des Reglers (Schrittweite 0,05), der Faktor also
+  // EXAKT null — kein Toleranzvergleich auf einer abgeleiteten Größe.
+  const exakterAbstiegsschritt = Math.abs(gamma - 0.5) < 1e-12;
 
   /* ------------------------------------------------- Verdikt: vier Zweige */
 
@@ -177,7 +182,7 @@ export function SattelpunktWidget() {
     strahl: {
       kind: "warn",
       titel: "der Sonderfall y = 0",
-      text: `Auf der grünen Achse zeigt der Gradient nur in x-Richtung, und der Abstieg bleibt auf der Achse: y bleibt exakt null, x schrumpft mit dem Faktor ${fmt(faktorX)} pro Schritt und steht nach ${SCHRITTE} Schritten bei ${fmt(ende[0], 4)}. Hier läuft also auch der Gradientenabstieg in den Sattelpunkt hinein. Dieser eine Startstrahl ist die Ausnahme: Er hat in der Ebene Maß null, weshalb ihn ein zufälliger Startpunkt mit Wahrscheinlichkeit null trifft.`,
+      text: `Auf der grünen Achse zeigt der Gradient nur in x-Richtung, und der Abstieg bleibt auf der Achse: y bleibt exakt null, x schrumpft mit dem Faktor ${fmt(faktorX)} pro Schritt und steht nach ${SCHRITTE} Schritten bei ${fmt(ende[0], 4)}.${exakterAbstiegsschritt ? " Bei γ = 0,5 ist dieser Faktor exakt null: Ein einziger Schritt genügt, genau wie beim Newton-Schritt in dieser Richtung." : ""} Hier läuft also auch der Gradientenabstieg in den Sattelpunkt hinein. Dieser eine Startstrahl ist die Ausnahme: Er hat in der Ebene Maß null, weshalb ihn ein zufälliger Startpunkt mit Wahrscheinlichkeit null trifft.`,
     },
     achseY: {
       kind: "fail",
@@ -187,7 +192,7 @@ export function SattelpunktWidget() {
     entkommt: {
       kind: "ok",
       titel: "der Abstieg entkommt",
-      text: `Beide Komponenten sind besetzt, und der Abstieg behandelt sie gegenläufig: x drückt er mit dem Faktor ${fmt(faktorX)} pro Schritt gegen null, y bläst er mit dem Faktor ${fmt(faktorY)} auf. Nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}), also praktisch auf der roten Achse und weit weg vom Sattel. Der Gradientenabstieg bleibt an einem Sattelpunkt nicht hängen (${ref("bemerkung:was-sattelpunkte-fuer-die-verfahren")}); dass er dabei überhaupt nichts findet, ist eine andere Geschichte.`,
+      text: `Beide Komponenten sind besetzt, und der Abstieg behandelt sie gegenläufig: x drückt er mit dem Faktor ${fmt(faktorX)} pro Schritt gegen null, y bläst er mit dem Faktor ${fmt(faktorY)} auf.${exakterAbstiegsschritt ? " Bei γ = 0,5 ist der x-Faktor exakt null, ein Schritt räumt diese Richtung also vollständig ab; der y-Faktor steht dann bei 2." : ""} Nach ${SCHRITTE} Schritten steht er bei (${fmt(ende[0], 3)}; ${fmt(ende[1], 3)}), also praktisch auf der roten Achse und weit weg vom Sattel. Der Gradientenabstieg bleibt an einem Sattelpunkt nicht hängen (${ref("bemerkung:was-sattelpunkte-fuer-die-verfahren")}); dass er dabei überhaupt nichts findet, ist eine andere Geschichte.`,
     },
   };
   const status = verdikt[art];
@@ -411,7 +416,7 @@ export function SattelpunktWidget() {
         value={gamma}
         onChange={(v) => setGamma(Math.round(v * 20) / 20)}
         min={0.05}
-        max={0.45}
+        max={0.5}
         step={0.05}
         accent={ORANGE}
       />

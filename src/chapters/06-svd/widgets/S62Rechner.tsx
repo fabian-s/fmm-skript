@@ -24,8 +24,7 @@ import { num, ref } from "../../numbers.generated";
  * stammt aus der privaten mml-ch4-App (widgets/svdMath.ts: svd2x2); Aufbau,
  * Schrittsteuerung (lib-`Stepper`) und sämtliche Texte sind neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19) für die Voreinstellung A = (1 2; 2 1; 1 0):
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29) für die Voreinstellung A = (1 2; 2 1; 1 0):
  *   AᵀA = (6 4; 4 5), Spur 11, det 14; λ₁ = 9,531, λ₂ = 1,469;
  *   σ₁ = 3,087, σ₂ = 1,212, σ₁/σ₂ = 2,547;
  *   v₁ = (−0,750; −0,662), v₂ = (0,662; −0,750);
@@ -158,7 +157,7 @@ export function SingulaerwertRechner() {
           <Zeile>
             <span className="font-mono text-xs">
               det(AᵀA − λI) = ({fmtKurz(E)} − λ)({fmtKurz(G)} − λ) − ({fmtKurz(F)})² = λ² −{" "}
-              {fmtKurz(spur)}λ {det < 0 ? "−" : "+"} {fmtKurz(Math.abs(det))}
+              {fmtKurz(spur)}λ{det === 0 ? "" : ` ${det < 0 ? "−" : "+"} ${fmtKurz(Math.abs(det))}`}
             </span>
           </Zeile>
           <p className="text-sm" style={{ color: GREY }}>
@@ -319,7 +318,7 @@ export function SingulaerwertRechner() {
           </Verdikt>
         ) : rang === 1 ? (
           <Verdikt kind="warn" titel="Rang 1:">
-            σ₂ = {fmt(sig[1])} verschwindet, die Spalten von A sind linear abhängig. Nach
+            σ₂ = {fmt(sig[1])} verschwindet, die Spalten von A sind linear abhängig. Nach{" "}
             {ref("satz:charakterisierung-der-fundamentalen")} ist v₂ eine Basis des Kerns, und u₂ liefert die Formel nicht mehr; erst
             die volle Zerlegung ergänzt eine passende Richtung. Der Rang ist {rang}.
           </Verdikt>

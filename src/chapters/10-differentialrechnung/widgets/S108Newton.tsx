@@ -30,7 +30,8 @@ import { ref } from "../../numbers.generated";
  * Farben nach dem Kapitel-11-Code: Funktion blau, Ziel (Minimum bzw.
  * kritischer Punkt) grün, Iterierte und Ableitungsobjekte orange, Fehler rot.
  *
- * Nachgerechnet (node, rev-s114-c.mjs):
+ * Nachgerechnet (scripts/verify/REV29/10-differentialrechnung-S108Newton.mjs,
+ * 2026-08-29):
  * - f(x) = x1³/3 − x1 + x2²/2, Start (2; 1,5): x2 fällt nach EINEM Schritt auf
  *   0 (in dieser Richtung ist f quadratisch), x1 läuft über 1,25 / 1,025 /
  *   1,00030488 / 1,00000005 gegen 1. Die Fehlerspalte misst den ABSTAND zum
@@ -43,8 +44,7 @@ import { ref } from "../../numbers.generated";
  * - f(x) = 2x1² + 2x1x2 + 3x2² − 4x1 − 6x2 hat das Minimum (0,6; 0,8) mit
  *   f = −3,6; von jedem Startpunkt trifft der erste Schritt es exakt.
  *
- * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19): Der Lauf ab (2; 1,5) unterschreitet den Fehler 10⁻¹⁰ zum ersten
+ * Ebenfalls dort nachgerechnet: Der Lauf ab (2; 1,5) unterschreitet den Fehler 10⁻¹⁰ zum ersten
  * Mal in Schritt 5 (e_5 = 1,1e−15, e_4 = 4,6e−8) — das ist die Antwort der
  * Schätzfrage. Die Quotienten e_k/e_{k-1}² lauten 0,0769 / 0,4000 / 0,4878 /
  * 0,4998 und streben gegen 1/(2x*) = 0,5. Auf der Quadrik steht der Gradient
@@ -53,7 +53,6 @@ import { ref } from "../../numbers.generated";
  *
  * Farbrollen Kapitel 10: Funktion blau, Ziel (Minimum bzw. kritischer Punkt)
  * grün, Iterierte und Ableitungsobjekte orange, Fehler rot.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau;
@@ -203,6 +202,14 @@ export function NewtonStepper() {
       ? `Ausgangslage: x₀ = (${fmt(aktuell.x[0], 3)}; ${fmt(aktuell.x[1], 3)}), ‖∇f‖ = ${fmtE(aktuell.gradNorm)}.`
       : `Schritt ${k}: x_${k} = (${fmt(aktuell.x[0], 6)}; ${fmt(aktuell.x[1], 6)}), ‖∇f‖ = ${fmtE(aktuell.gradNorm)}, Abstand zum Ziel ${fmtE(aktuell.fehler)}.`;
 
+  /**
+   * „Am Ziel" heißt: der Abstand liegt unter der Maschinengenauigkeit,
+   * gemessen RELATIV zur Länge des Ziels – keine Float-Gleichheit auf einer
+   * abgeleiteten Größe.
+   */
+  const amZiel = (e: number) =>
+    ziel !== null && e <= Number.EPSILON * Math.max(1, Math.hypot(ziel[0], ziel[1]));
+
   let art: "neutral" | "ok" | "warn" = "neutral";
   let status: string;
   if (aktuell.singulaer) {
@@ -229,12 +236,12 @@ export function NewtonStepper() {
       `null, die Hesse-Matrix diag(−2, 1) aber indefinit: ein Sattelpunkt. Newton sucht Nullstellen ` +
       `des Gradienten, also kritische Punkte, und unterscheidet Minimum, Maximum und Sattel nicht ` +
       `von selbst. Wer das Minimum will, muss die Definitheit prüfen (${ref("bemerkung:drei-vorbehalte")}).`;
-  } else if (bahn[0].fehler === 0) {
+  } else if (amZiel(bahn[0].fehler)) {
     status =
       `Der Startpunkt ist schon das Minimum (1; 0): Der Gradient ist null, der Newton-Schritt ` +
       `ändert nichts mehr, und die Fehlerspalte bleibt bei 0. Der Quotient eₖ/eₖ₋₁² ist hier ` +
       `0/0 und deshalb leer. Ein Stück am Startregler, und die Iteration bekommt etwas zu tun.`;
-  } else if (aktuell.fehler === 0) {
+  } else if (amZiel(aktuell.fehler)) {
     art = "ok";
     status =
       `Die Iteration ist am Ziel: Der Abstand zum Minimum (1; 0) ist auf null gefallen, weiter ` +
@@ -324,12 +331,14 @@ export function NewtonStepper() {
       />
 
       <div className="flex flex-wrap gap-4">
-        <div className={`select-none text-[10px] ${W_MUTED}`}>
+        <div className={`min-w-0 grow basis-60 select-none text-[10px] ${W_MUTED}`}>
           <div className="mb-0.5 text-[11px]" style={{ paddingLeft: PAD_L }}>
             x₂ ↑
           </div>
           <svg
             viewBox={`0 0 ${PAD_L + W + 6} ${W + PAD_B}`}
+            width={PAD_L + W + 6}
+            height={W + PAD_B}
             role="img"
             aria-label={`Höhenlinien von f mit dem Weg der Newton-Iterierten bis Schritt ${sichtbar.length - 1}; das Ziel ist grün markiert.`}
             className="h-auto max-w-full rounded border"
@@ -432,8 +441,8 @@ export function NewtonStepper() {
 
 /**
  * Der Abschnitts-Baustein: erst tippen, dann schrittweise nachrechnen.
- * Verifiziert (check-s114.mjs, 2026-08-19): ab Schritt 5 liegt der Abstand zum
- * Minimum unter 10⁻¹⁰.
+ * Verifiziert (scripts/verify/REV29/10-differentialrechnung-S108Newton.mjs,
+ * 2026-08-29): ab Schritt 5 liegt der Abstand zum Minimum unter 10⁻¹⁰.
  */
 export function NewtonSchaetzung() {
   return (

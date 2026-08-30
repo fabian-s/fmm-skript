@@ -23,8 +23,7 @@ import { ref } from "../../numbers.generated";
  * ManyInterpolantsWidget aus heath-ch7/src/sections/S71.tsx; die Funktionen,
  * der Regler, die Auswertung und saemtliche Texte sind eigene Arbeit.
  *
- * Verifiziert (node, verify-13-funktionsapproximation/verify-values.mjs,
- * 2026-08-19; detailliert check-math-s141.mjs):
+ * Nachgerechnet (node, scripts/verify/HDR/verify-hdr.mjs, 2026-08-20):
  *  - alle vier Funktionen treffen (0,1), (1,2), (2,5) exakt;
  *  - f2 - f1, f3 - f1 und f4 - f1 verschwinden an genau diesen drei Stellen
  *    (f3 - f1 = x(x-1)(x-2), f4 - f1 = 0,5 sin(2 pi x));
@@ -79,10 +78,16 @@ function Muster({ dash }: { dash: number[] }) {
   );
 }
 
-/** Vier Interpolanten durch (0,1), (1,2), (2,5), einzeln zuschaltbar. */
-export function VierInterpolanten() {
+/**
+ * Vier Interpolanten durch (0,1), (1,2), (2,5), einzeln zuschaltbar.
+ *
+ * `zeigeSpanne` schaltet das Spannen-Readout ab, solange die umgebende
+ * Schätzfrage noch auf einen Tipp wartet: der Startzustand darf die Antwort
+ * nicht schon anzeigen.
+ */
+export function VierInterpolanten({ zeigeSpanne = true }: { zeigeSpanne?: boolean } = {}) {
   const [an, setAn] = useState([true, true, true, true]);
-  const [xStern, setXStern] = useState(1.3);
+  const [xStern, setXStern] = useState(1);
 
   const sichtbar = KANDIDATEN.filter((_, i) => an[i]);
   const series: Series[] = sichtbar.map((k) => ({ f: k.f, color: GRUEN, dash: k.dash }));
@@ -152,8 +157,26 @@ export function VierInterpolanten() {
               })}
             </tbody>
           </table>
-          <Verdikt kind={werte.length < 2 ? "warn" : aufKnoten ? "ok" : "fail"}>
-            {werte.length < 2 ? "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven." : aufKnoten ? <>Spanne 0: <M>{"x^{\\ast}"}</M> ist eine Stützstelle, dort sind alle Interpolanten gleich.</> : <>Die Spanne bei <M>{"x^{\\ast}"}</M> beträgt <span className="font-mono">{fmt(spanne)}</span>; die roten Punkte markieren sie. Nach {ref("satz:gestalt-aller-interpolanten")} bleiben alle Kurven an den Stützstellen gebunden, dazwischen nicht.</>}
+          <Verdikt kind={werte.length < 2 ? "warn" : aufKnoten ? "ok" : "neutral"}>
+            {werte.length < 2 ? (
+              "Zum Vergleichen brauchen wir mindestens zwei eingeschaltete Kurven."
+            ) : aufKnoten ? (
+              "Spanne 0: x* ist eine Stützstelle, dort sind alle Interpolanten gleich."
+            ) : zeigeSpanne ? (
+              <>
+                Nicht festgelegt: Die Spanne bei x* beträgt{" "}
+                <span className="font-mono">{fmt(spanne)}</span>; die roten Punkte
+                markieren sie. Nach {ref("satz:gestalt-aller-interpolanten")} bleiben alle
+                Kurven an den Stützstellen gebunden, dazwischen nicht.
+              </>
+            ) : (
+              <>
+                Nicht festgelegt: Zwischen zwei Stützstellen laufen die vier Kurven
+                auseinander, die roten Punkte markieren den Abstand. Nach{" "}
+                {ref("satz:gestalt-aller-interpolanten")} bleiben alle Kurven an den
+                Stützstellen gebunden, dazwischen nicht.
+              </>
+            )}
           </Verdikt>
         </div>
       </div>

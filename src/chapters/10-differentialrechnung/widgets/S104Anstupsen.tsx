@@ -32,7 +32,8 @@ import { ref } from "../../numbers.generated";
  * FARBROLLEN (Kapitel 10): Funktionswerte blau, linearer Ableitungsterm grün,
  * Restterm rot, Gradientenmatrix orange, die vom Leser gewählte Zelle violett.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, an der Startmatrix X = (1 0 2; −1 2 1):
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S101S103S104.mjs,
+ * 2026-08-29), an der Startmatrix X = (1 0 2; −1 2 1):
  *   f(X) = aᵀXb = 2 mit ∂f/∂X = abᵀ = (2 1 3; −4 −2 −6);
  *   f(X) = ‖X‖_F² = 11 mit ∂f/∂X = 2X = (2 0 4; −2 4 2);
  *   f(X) = tr(AᵀX) = −4 mit ∂f/∂X = A = (1 0 −2; 3 1 0);
@@ -308,7 +309,13 @@ export function AnstupsWidget() {
         <p className="mb-1 text-xs" style={{ color: BLAU }}>
           Grundmatrix X (auch tippbar)
         </p>
-        <MatrixInput value={X} onChange={setX} />
+        {/*
+          Die Einträge sind auf [−20; 20] begrenzt: Bei Größenordnungen um 10⁶
+          löscht sich der zentrale Differenzenquotient (eps = 1e−4) aus, und das
+          Widget meldete dann eine Abweichung, wo in Wahrheit Auslöschung
+          vorliegt.
+        */}
+        <MatrixInput value={X} onChange={setX} min={-20} max={20} />
       </div>
 
       <div className="max-w-prose space-y-1 text-sm">
@@ -340,10 +347,10 @@ export function AnstupsWidget() {
       </div>
 
       <Verdikt
-        kind={art === "abweichung" ? "fail" : art === "kein-stups" ? "neutral" : "ok"}
+        kind={art === "abweichung" ? "warn" : art === "kein-stups" ? "neutral" : "ok"}
       >
         {art === "abweichung" &&
-          `Formelwert und Differenzenquotient weichen um ${fmt(probeFehler, 6)} voneinander ab. Das darf nach ${ref("satz:identitaeten-fuer-matrix-zu-skalar")} nicht passieren; hier stimmt etwas im Widget nicht.`}
+          `Formelwert und Differenzenquotient weichen um ${fmt(probeFehler, 6)} voneinander ab. An ${ref("satz:identitaeten-fuer-matrix-zu-skalar")} liegt das nicht: Hier löscht sich der Differenzenquotient aus. Er bildet die Differenz zweier fast gleicher Zahlen und teilt sie durch 2·10⁻⁴; sind die Einträge von X sehr groß, so bleibt von der Differenz kaum eine gültige Stelle übrig. Mit kleineren Einträgen stimmen beide Spalten wieder überein.`}
         {art === "kein-stups" &&
           `Ohne Stups ändert sich nichts. Der Eintrag (${i},${j}) der Gradientenmatrix sagt voraus, mit welcher Rate f reagiert, sobald wir an dieser Stelle wackeln: pro Einheit um ${fmt(eintrag, 3)}.`}
         {art === "exakt" &&

@@ -375,21 +375,16 @@ Rechnung.
 | $5$ | $0{,}4103$ | $0{,}0044$ | $0{,}0045$ | $0{,}4147$ |
 | $8$ | $0{,}0344$ | $0{,}0071$ | $0{,}0072$ | $0{,}0415$ |
 | $9$ | $0{,}1174$ | $0{,}0080$ | $0{,}0081$ | $0{,}1254$ |
-| $12$ | $0{,}0013$ | $0{,}0107$ | $0{,}0108$ | $0{,}0120$ |
 | $15$ | $0{,}0001$ | $0{,}0135$ | $0{,}0135$ | $0{,}0136$ |
 | $40$ | $0{,}0001$ | $0{,}0358$ | $0{,}0360$ | $0{,}0360$ |
 
-Drei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
+Zwei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
 $\sigma^2 K/n$ aus @satz:gemittelte-varianz-eines-linearen in jeder Zeile auf höchstens zwei Prozent genau;
 die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
-liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
-das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt beim
-simulierten Minimum der Bias nur noch $11$ Prozent zum MSE bei. Das stimmt
-hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells aus
-@bemerkung:heuristisches-balance-modell-fuer-die überein, ist aber keine
-theoretisch erzwungene Übereinstimmung. Das diskrete Optimum liegt dort, wo
-der nächste zulässige Schritt mehr Varianz kostet, als er in dieser
-Simulation an Bias einspart.
+fällt der MSE zwischen $K = 9$ und $K = 15$ um eine Größenordnung und steigt
+danach wieder an; das diskrete Optimum liegt irgendwo dazwischen, nämlich
+dort, wo der nächste zulässige Schritt mehr Varianz kostet, als er in dieser
+Simulation an Bias einspart. Wo genau, rechnet das Widget unten aus.
 :::
 
 :::bemerkung[#der-bias-faellt-nicht-monoton (Der Bias fällt nicht monoton)]
@@ -409,28 +404,30 @@ die vorhergesagten $16$ liefen.
 :::
 
 :::interaktiv[Zwölf Kurven, drei Balken, ein Regler]
-Das Widget rechnet die Tabelle live nach und zeigt zugleich, woher die beiden
-Anteile kommen. Links stehen die Daten einer einzelnen Ziehung in Blau, die
+Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum? Das Widget
+rechnet die Tabelle live nach; alle Zufallszahlen stammen aus einem festen
+Startwert, es ist bei jedem Aufruf dieselbe Simulation.
+
+<Schaetzfrage
+  frage="Welche Knotenzahl minimiert in dieser festen Simulation den MSE?"
+  loesung={12}
+  toleranz={0.5}
+  einheit="K"
+  verdeckt={<p>Das Minimum liegt bei K = 12 mit einem MSE von 0,0120: Bei K = 5 ist der MSE das 34,5-fache davon, bei K = 40 das Dreifache. Bias² 0,0013 und Varianz 0,0107 ergänzen sich dort zu 0,0120, der Bias trägt also nur noch 11 Prozent. Das stimmt hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells überein, ist aber keine theoretisch erzwungene Übereinstimmung. Innerhalb von zehn Prozent gleichwertig sind K = 12 bis 14.</p>}
+  children={({ aufgeloest }) => <BiasVarianzExplorer zeigeOptimum={aufgeloest} />}
+/>
+
+In der oberen Tafel stehen die Daten einer einzelnen Ziehung in Blau, die
 wahre Funktion violett gestrichelt, die inneren Knoten als orange Marken auf
 der Achse und in Grün die Schätzer der ersten zwölf Wiederholungen samt ihrem
-Mittelwert.
-
-Bei kleinem $K$ liegen die zwölf Kurven fast übereinander, bei $K = 40$
-fächern sie weit auf, und nur noch ihr Mittelwert liegt auf $f$. Die Balken
-rechts zeigen die Anteile am MSE, die Tafel darunter den Verlauf aller drei
-Größen über $K$ auf logarithmischer Skala. Dort ist der Knick gut zu sehen:
-Der rote Bias stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue Summe
-hat ihr Minimum dazwischen.
-
-Alle Zufallszahlen stammen aus einem festen Startwert. Es ist bei jedem
-Aufruf dieselbe Simulation, und die Zahlen im Widget stimmen mit denen der
-Tabelle überein.
-
-Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum?
-
-<Schaetzfrage frage="Welche Knotenzahl minimiert in dieser festen Simulation den MSE?" loesung={12} toleranz={0.5} einheit="K">
-<BiasVarianzExplorer />
-</Schaetzfrage>
+Mittelwert. Bei kleinem $K$ liegen die zwölf Kurven fast übereinander, bei
+$K = 40$ fächern sie weit auf, und nur noch ihr Mittelwert liegt auf $f$.
+Die Balkentafel zeigt die Anteile am MSE, die logarithmische Tafel den Verlauf
+aller drei Größen über $K$. Dort ist der Knick gut zu sehen: Der rote
+Bias stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue
+Summe hat ihr Minimum dazwischen. Grün steht in beiden Tafeln für dieselbe
+Sache, nämlich für $\cgreen{\wh{f}}$ – die Varianz ist gerade die Streuung
+dieses Schätzers.
 :::
 
 ### Wie wählt man $K$ in der Praxis?

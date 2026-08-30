@@ -30,9 +30,11 @@ import { ref } from "../../numbers.generated";
  * für die Lücken grün (das ist der Ausgabeteil des Modells), Residuen rot,
  * Gradienten orange, das Rang-2-Modell im Vergleichsplot violett.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S104Completion.mjs,
+ * 2026-08-29):
  *   k = 1, α = 0,05: L₀ = 18,8373, L(20) = 1,689e−4, L(200) = 1,233e−24,
- *     L(300) = 2,983e−30; Vorhersagen y₁₃ = 2,5 und y₂₂ = 2,4 (die exakte
+ *     L(300) = 2,983e−30 (der Stepper endet bei 200; L(300) steht nur im
+ *     Prüfskript); Vorhersagen y₁₃ = 2,5 und y₂₂ = 2,4 (die exakte
  *     Rang-1-Antwort 2·5/4 bzw. 3·4/5);
  *   k = 2, α = 0,05: L(20) = 9,279e−6, L(200) = 2,958e−31; Vorhersagen
  *     y₁₃ = 1,5831 und y₂₂ = 0,9091 — gleicher Verlust, andere Antwort;
@@ -123,6 +125,24 @@ function bahnVon(k: number, alpha: number) {
   return punkte;
 }
 
+/**
+ * Vierter Zustand neben „explodiert", „beide klein" und „läuft noch": Der
+ * Verlust fällt nicht mehr, sondern springt zwischen zwei Niveaus. Erkannt am
+ * Verlauf der letzten zwanzig Schritte – die Schwankung im Fenster ist groß,
+ * das erreichte Minimum der zweiten Hälfte aber nicht kleiner als das der
+ * ersten. Der Fall tritt ab etwa α = 0,15 auf.
+ */
+function pendelt(bahn: { L: number }[], schritt: number): boolean {
+  if (schritt < 20) return false;
+  const fenster = bahn.slice(schritt - 19, schritt + 1).map((p) => p.L);
+  if (!fenster.every((v) => Number.isFinite(v) && v > 1e-3)) return false;
+  const hoch = Math.max(...fenster);
+  const tief = Math.min(...fenster);
+  const frueh = Math.min(...fenster.slice(0, 10));
+  const spaet = Math.min(...fenster.slice(10));
+  return hoch - tief > 0.1 * hoch && spaet > 0.98 * frueh;
+}
+
 function Tafel({
   titel,
   A,
@@ -200,6 +220,11 @@ function CompletionTafeln() {
 
   const explodiert = modelle.some((m) => !Number.isFinite(m.jetzt.L));
   const beideKlein = modelle.every((m) => Number.isFinite(m.jetzt.L) && m.jetzt.L < 1e-3);
+  const pendelnde = modelle.filter((m) => pendelt(m.bahn, schritt));
+  const pendelFenster = pendelnde.map((m) => {
+    const werte = m.bahn.slice(schritt - 19, schritt + 1).map((p) => p.L);
+    return { k: m.k, tief: Math.min(...werte), hoch: Math.max(...werte) };
+  });
   const y13 = modelle.map((m) => m.S[0][2]);
   const y22 = modelle.map((m) => m.S[1][1]);
   const unterschied = Math.abs(y13[0] - y13[1]);
@@ -325,7 +350,11 @@ function CompletionTafeln() {
         />
       </div>
 
-      <Verdikt kind={explodiert ? "fail" : beideKlein ? "warn" : "neutral"}>
+      <Verdikt
+        kind={
+          explodiert ? "fail" : beideKlein ? "warn" : pendelFenster.length ? "warn" : "neutral"
+        }
+      >
         {explodiert ? (
           <>
             Bei dieser Lernrate wachsen die Einträge von U und V über jede Grenze, das Produkt
@@ -359,6 +388,22 @@ function CompletionTafeln() {
             fest, die vierte fixiert den Rest. Mit k = 2 stehen zehn Parameter vier
             Beobachtungen gegenüber, und wohin die Vorhersage läuft, entscheidet allein der
             Startpunkt. Ein kleiner Verlust ist deshalb kein Gütesiegel für die Lücken.
+          </>
+        ) : pendelFenster.length ? (
+          <>
+            Der Verlust fällt nicht mehr, er pendelt:{" "}
+            {pendelFenster.map((p, i) => (
+              <span key={p.k}>
+                {i > 0 && " und "}
+                bei k = {p.k} springt L über die letzten zwanzig Schritte zwischen{" "}
+                <span className="font-mono">{fmt(p.tief, 3)}</span> und{" "}
+                <span className="font-mono">{fmt(p.hoch, 3)}</span> hin und her
+              </span>
+            ))}
+            . Die Schrittweite ist zu groß für die Krümmung des Verlusts: Der Schritt schießt
+            über das Tal hinaus und landet auf der anderen Seite wieder gleich hoch. Der
+            Gradient stimmt dabei weiter, nur α ist zu groß – ein Stück nach unten am Regler,
+            und der Verlust fällt wieder. Noch größeres α lässt die Einträge ganz davonlaufen.
           </>
         ) : (
           <>

@@ -690,7 +690,7 @@ nach oben, so wird das Modell selbstbewusst falsch, der Gradient nähert sich se
 Obergrenze $\left|x\right|$, erreicht sie aber nie – das ist die zweite Konsequenz aus
 @bemerkung:fehler-mal-merkmal, ablesbar am Fehlerbalken, der nie über die Höhe $1$
 hinauskommt. Stellen wir umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte
-Gerade auf der Höhe $\log 2 = 0{,}693147$, und der Gradient verschwindet für jedes $\beta$.
+Gerade, und der Gradient verschwindet für jedes $\beta$.
 Vor allem aber bestätigt die numerische Gegenprobe in beiden Klassen die Formel
 @eq:gradient-des-logistischen-verlusts-2, Vorzeichen eingeschlossen.
 :::
@@ -705,6 +705,18 @@ Beide Fälle führen über die Kettenregel auf dieselbe Form, siehe
 $\sigma(t) - 1$, für $y = 0$ ist sie $\sigma(t)$, und beides ist
 $\wh{y} - y$.
 :::
+
+:::zahlfrage{loesung=0.693147 toleranz=0.002}
+Stellen wir im Logistik-Widget das Merkmal auf $x = 0$. Auf welcher Höhe liegt
+die Verlustkurve dann?
+
+Bei $\log 2 = 0{,}693147$, und zwar für jedes $\beta$. Mit $x = 0$ ist der Score
+$t = \beta x$ konstant null, also $\wh{y} = \sigma(0) = 0{,}5$ und
+$\ell = -\log 0{,}5 = \log 2$. Der Gradient $(\wh y - y)x$ verschwindet
+entsprechend, unabhängig von der Klasse: Ein Merkmal ohne Variation trägt keine
+Information über $\beta$.
+:::
+
 ::::
 
 :::::
@@ -838,17 +850,6 @@ $32{,}768$. Die innere Rate ist $\cgreen{f'(x)} = 2$, die äußere
 $\cgreen{g'(f(x))} = 4\cdot 1{,}6^3 = 16{,}384$, und @satz:kettenregel multipliziert
 beide. Die numerische Gegenprobe im Widget landet auf demselben Wert; sie weicht
 erst in der zehnten Stelle ab.
-:::
-
-:::zahlfrage{loesung=0.693147 toleranz=0.002}
-Stellen wir im Logistik-Widget das Merkmal auf $x = 0$. Auf welcher Höhe liegt
-die Verlustkurve dann?
-
-Bei $\log 2 = 0{,}693147$, und zwar für jedes $\beta$. Mit $x = 0$ ist der Score
-$t = \beta x$ konstant null, also $\wh{y} = \sigma(0) = 0{,}5$ und
-$\ell = -\log 0{,}5 = \log 2$. Der Gradient $(\wh y - y)x$ verschwindet
-entsprechend, unabhängig von der Klasse: Ein Merkmal ohne Variation trägt keine
-Information über $\beta$.
 :::
 
 ::::

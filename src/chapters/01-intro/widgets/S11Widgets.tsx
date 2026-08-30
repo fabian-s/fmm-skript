@@ -1,13 +1,13 @@
 /**
  * F1 — DIE EINE EINSICHT: Selbsttests machen aus einer gelesenen Aussage eine
  * eigene Entscheidung; die aufklappbare Lösung trennt beides.
- * FARBROLLEN: Grün bestätigt eine richtige Wahl, Rot kennzeichnet eine falsche;
- * die übrigen Slate-Töne sind reine Oberfläche.
+ * FARBROLLEN: keine; die Komponente trägt keine mathematische Farbcodierung,
+ * sondern nur die neutralen Oberflächenklassen aus surface.ts.
  * PROVENIENZ: Eigene, bei der MDX-Migration aus S11 portierte Hilfskomponente.
- * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * VERIFIZIERTE ZAHLEN: keine numerischen Claims in Caption oder Verdikt.
  */
 import type { ReactNode } from "react";
+import { W_MUTED, W_PANEL } from "../../../lib";
 
 /**
  * Begleit-Widgets für Abschnitt 1.1 (aus der TSX-Fassung von S11 portiert,
@@ -19,8 +19,8 @@ export function SelbsttestFrage({ q, children }: { q: ReactNode; children: React
   return (
     <li className="space-y-1">
       <div>{q}</div>
-      <details className="rounded border border-slate-300 bg-white/60 px-3 py-1.5 text-sm dark:border-slate-600 dark:bg-slate-900/40">
-        <summary className="cursor-pointer select-none font-medium text-slate-600 dark:text-slate-300">
+      <details className={`px-3 py-1.5 text-sm ${W_PANEL}`}>
+        <summary className={`cursor-pointer select-none font-medium ${W_MUTED}`}>
           Lösung anzeigen
         </summary>
         <div className="pt-1.5">{children}</div>
@@ -28,5 +28,3 @@ export function SelbsttestFrage({ q, children }: { q: ReactNode; children: React
     </li>
   );
 }
-
-/** Konzeptionelle SVG-Landkarte der drei Themenblöcke. */

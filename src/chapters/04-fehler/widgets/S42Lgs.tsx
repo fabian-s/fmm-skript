@@ -41,8 +41,8 @@ import { ref } from "../../numbers.generated";
  * geschlossenen Form über A^T A (dasselbe Muster wie in `lib/widgets/util.ts`,
  * Funktion sigmaMax), hier für beide Werte ausgeschrieben.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19), jeweils σ_max, σ_min und κ₂ = σ_max/σ_min:
+ * PRÜFSTATUS (scripts/verify/REV29/04-fehler-S42Lgs.mjs, 2026-08-29),
+ * jeweils σ_max, σ_min und κ₂ = σ_max/σ_min:
  *   Drehung um 30°: 1, 1, κ₂ = 1.
  *   (2 0; 0 0,8): 2, 0,8, κ₂ = 2,5.
  *   (1 1; 1 1,05): 2,02531, 0,024688, κ₂ = 82,0378.
@@ -101,6 +101,7 @@ const PRESETS: { id: string; text: string; A: Mat }[] = [
   { id: "fast", text: "fast singulär", A: [[1, 1], [1, 1.005]] },
 ];
 
+const CLIP_OUT = "s42lgs-loesungsebene"; // clipPath-Kennung der rechten Tafel
 const S = 300;
 const PAD = 26;
 const FW = S - PAD - 10;
@@ -216,13 +217,23 @@ export function LgsKonditionWidget() {
         {fmtDe(100 * delta, 1)} % Inputfehler werden hier {fmtDe(100 * relOut, 0)} %
         Outputfehler.
       </Verdikt>
-    ) : anteil < 0.15 ? (
+    ) : anteil < 0.15 && kappaRel < 3 ? (
       <Verdikt kind="ok" titel="Gutmütige rechte Seite.">
         Dieselbe Matrix, ein anderes <M>{"\\bx"}</M>: <M>{"\\kappa_{rel}(f, \\bx)"}</M> ={" "}
-        {fmtDe(kappaRel, 2)} liegt weit unter <M>{"\\kappa(\\bA)"}</M> = {fmtDe(kappaA, 1)}. Nach
+        {fmtDe(kappaRel, 2)} liegt weit unter <M>{"\\kappa(\\bA)"}</M> = {fmtDe(kappaA, 1)}. Nach{" "}
         {ref("satz:kondition-der-loesung-eines-lgs")} hängt die relative Kondition eben von <M>{"\\bx"}</M> ab; die Ellipse ist zwar
         lang, aber <M>{"\\left\\| \\bA^{-1}\\bx \\right\\|"}</M> ist hier ebenfalls groß, und der
-        Quotient bleibt klein.
+        Quotient bleibt klein: Aus {fmtDe(100 * delta, 1)} % Inputfehler werden nur{" "}
+        {fmtDe(100 * relOut, 1)} % Outputfehler.
+      </Verdikt>
+    ) : anteil < 0.15 ? (
+      <Verdikt kind="warn" titel="Weit unter der Schranke, trotzdem stark verstärkend.">
+        <M>{"\\kappa_{rel}(f, \\bx)"}</M> = {fmtDe(kappaRel, 1)} schöpft nur{" "}
+        {fmtDe(100 * anteil, 0)} % von <M>{"\\kappa(\\bA)"}</M> = {fmtDe(kappaA, 1)} aus – das ist
+        aber keine Entwarnung: Aus {fmtDe(100 * delta, 1)} % Inputfehler werden immer noch{" "}
+        {fmtDe(100 * relOut, 0)} % Outputfehler, also rund{" "}
+        {Math.max(1, Math.round(Math.log10(kappaRel)))} verlorene Dezimalstellen. Der
+        Ausschöpfungsgrad misst die Lage relativ zur Schranke, nicht die Verstärkung selbst.
       </Verdikt>
     ) : (
       <Verdikt kind="warn" titel="Dazwischen.">
@@ -297,9 +308,16 @@ export function LgsKonditionWidget() {
             role="img"
             aria-label={`Lösungsebene mit y gleich A hoch minus eins mal x bei (${fmtDe(y[0], 2)}; ${fmtDe(y[1], 2)}) und der Bildellipse des Störkreises.`}
           >
+            <defs>
+              {/* Ohne clipPath läuft die Bildellipse über den Rahmen der Tafel hinaus. */}
+              <clipPath id={CLIP_OUT}>
+                <rect x={0} y={0} width={S} height={S} />
+              </clipPath>
+            </defs>
             <rect x={0} y={0} width={S} height={S} fill="var(--w-bg)" />
             <Achsen r={rOut} px={pxOut} py={pyOut} namen={["y₁", "y₂"]} />
             <polygon
+              clipPath={`url(#${CLIP_OUT})`}
               points={ellipse.map(([a, b]) => `${pxOut(a).toFixed(1)},${pyOut(b).toFixed(1)}`).join(" ")}
               fill={COL.pert}
               fillOpacity={0.18}
@@ -374,7 +392,7 @@ export function LgsKonditionWidget() {
           </span>
           <span className="sm:col-span-2" style={{ color: COL.amp }}>
             Schranke κ(A) = σ_max/σ_min = {fmtDe(kappaA, 2)} · ausgeschöpft zu{" "}
-            {fmtDe(100 * anteil, 0)} %
+            {Number.isFinite(kappaRel) ? `${fmtDe(100 * anteil, 0)} %` : "–"}
           </span>
         </div>
       </div>

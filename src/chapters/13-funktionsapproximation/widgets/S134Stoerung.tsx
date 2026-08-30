@@ -5,10 +5,14 @@
  * Vandermonde-Besetzung rot.
  * PROVENIENZ: BandedLocality (S743) und newtonEval (S74) aus heath-ch7
  * portiert; Daten, Kollokation und Texte neu; Ersatz zweier Folienbilder.
- * VERIFIZIERTE ZAHLEN: bei Punkt 5, x=4, delta=1: max Änderungen 1,000/2,320,
+ * VERIFIZIERTE ZAHLEN: bei Punkt 5, delta=1: max Änderungen 1,000/2,320,
  * fern 0,037/2,320; Koeffizienten 1,732/0,464/0,124/0,031/0,010; q+1=4
- * Nichtnullen je Kollokationszeile.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * Nichtnullen je Kollokationszeile; der warn-Zweig ist genau bei j=1 und j=9
+ * erreichbar (alle 9 x 16 Reglerzustände durchgerechnet).
+ * Geprüft mit
+ * scripts/verify/REV29/13-funktionsapproximation-S134Stoerung.mjs
+ * (Momentenform und baryzentrische Lagrange-Form als Zweitimplementierung),
+ * 2026-08-29, und mit verify-hdr.mjs, 2026-08-20.
  */
 import { useMemo, useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
@@ -37,12 +41,16 @@ import { ref } from "../../numbers.generated";
  * Daten, Farben und saemtliche Texte sind neu; das Widget ersetzt die
  * Folienabbildungen interp-poly-2 und interp-spline-2.
  *
- * Nachgerechnet (node, 2026-08-13) fuer die Voreinstellung (Punkt 5 bei
- * x = 4, delta = 1): max |Delta| beim Spline 1,000 und beim Polynom 2,320;
- * weiter als zwei Knoten entfernt 0,037 gegen 2,320. Die
- * Koeffizientenaenderungen fallen mit rund Faktor 3,7 je Knotenabstand
- * (1,732 / 0,464 / 0,124 / 0,031 / 0,010). Die Kollokationsmatrix hat je
- * Zeile hoechstens q + 1 = 4 Eintraege ungleich null.
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S134Stoerung.mjs,
+ * 2026-08-29) fuer die Voreinstellung (Punkt 5 bei x = 5, delta = 1):
+ * max |Delta| beim Spline 1,000 und beim Polynom 2,320; weiter als zwei
+ * Knoten entfernt 0,037 gegen 2,320. Die Koeffizientenaenderungen fallen mit
+ * rund Faktor 3,7 je Knotenabstand (1,732 / 0,464 / 0,124 / 0,031 / 0,010),
+ * neun der elf Koeffizienten aendern sich um mehr als ein Prozent der
+ * Verschiebung. Die beiden RANDkoeffizienten a_1 und a_11 bleiben exakt
+ * stehen, weil sie beim offenen Knotenvektor an y_1 bzw. y_9 haengen.
+ * Die Kollokationsmatrix hat je Zeile hoechstens q + 1 = 4 Eintraege
+ * ungleich null, die 9x9-Vandermonde dagegen 81 von 81.
  * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
  */
 
@@ -144,6 +152,35 @@ export function StoerungVergleich() {
   const dcMax = Math.max(...dc, 1e-12);
   const spuerbar = dc.filter((v) => v > 0.01 * Math.max(Math.abs(delta), 1e-9)).length;
 
+  // Profil der Koeffizientenänderung: Spitze und Flanken hängen davon ab, WO
+  // der Punkt sitzt. In der Mitte gibt es zwei Flanken, an den Enden nur eine.
+  const spitze = Math.max(0, dc.indexOf(Math.max(...dc)));
+  const flankeLinks = spitze >= 2 && dc[spitze - 1] > 1e-9;
+  const flankeRechts = spitze <= K - 3 && dc[spitze + 1] > 1e-9;
+  const flankenZahl = (flankeLinks ? 1 : 0) + (flankeRechts ? 1 : 0);
+  const abfall = (() => {
+    const nachbarn = [];
+    if (flankeRechts && dc[spitze + 1] > 1e-12) nachbarn.push(dcMax / dc[spitze + 1]);
+    if (flankeLinks && dc[spitze - 1] > 1e-12) nachbarn.push(dcMax / dc[spitze - 1]);
+    return nachbarn.length ? nachbarn.reduce((s, v) => s + v, 0) / nachbarn.length : NaN;
+  })();
+  // Nur die beiden Endpunkte des Gitters kippen den Vergleich: dort hat das
+  // Polynom wenig Hebel und das „ferne" Gebiet umfasst fast das ganze
+  // Intervall. Per node über alle 9 x 16 Reglerzustände nachgeprüft
+  // (REV29/13-funktionsapproximation-S134Stoerung.mjs).
+  const amRand = j === 1 || j === 9;
+
+  const verdiktArt: "neutral" | "ok" | "warn" =
+    delta === 0 ? "neutral" : fernP > 4 * fernS ? "ok" : "warn";
+  const verdiktTitel =
+    delta === 0 ? "Ohne Verschiebung:" : amRand ? "Am Gitterrand:" : "In der Gittermitte:";
+  const verdiktText =
+    delta === 0
+      ? "Ohne Verschiebung bleiben beide Interpolanten unverändert; es gibt daher keine Fernwirkung zu vergleichen, und alle Balken sind null."
+      : fernP > 4 * fernS
+        ? `Fern vom verschobenen Punkt bleibt die Spline-Änderung mit ${fmt(fernS, 3)} deutlich kleiner als die Polynom-Änderung mit ${fmt(fernP, 3)}. Der Balkensatz zeigt, woher das kommt: eine Spitze bei a${["₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁"][spitze]}, und ${flankenZahl === 2 ? "beide Flanken fallen" : "die eine Flanke fällt"} je Knotenabstand auf rund ${fmt(1 / abfall, 2)} des vorigen Werts.`
+        : `Auch hier ändert der Spline nur wenige Koeffizienten, aber der Vergleich trägt in diesem Zustand nicht: Punkt ${j} liegt am Gitterrand, wo das Polynom vom Grad 8 wenig Hebel hat, und das „ferne" Gebiet |x − x_${j}| > 2 fällt fast mit dem ganzen Intervall zusammen. Der Balkensatz hat deshalb nur ${flankenZahl === 1 ? "eine Flanke" : "zwei Flanken"}. Schieben wir den Punkt in die Mitte, dann trennen sich die beiden Spalten wieder.`;
+
   const marker = XS.map((x, i) => ({
     x,
     y: daten[i],
@@ -167,8 +204,8 @@ export function StoerungVergleich() {
         markers={marker}
         xDomain={[0.8, 9.2]}
         yDomain={[yLo, yHi]}
-        width={330}
-        height={210}
+        width={310}
+        height={205}
       />
     </div>
   );
@@ -206,7 +243,7 @@ export function StoerungVergleich() {
         />
       </div>
 
-      <div className="flex flex-wrap gap-5">
+      <div className="flex flex-wrap gap-4">
         {tafel("Polynom vom Grad 8", pVor, pNach)}
         {tafel("Natürlicher kubischer Spline", sVor, sNach)}
       </div>
@@ -233,12 +270,7 @@ export function StoerungVergleich() {
           <span className="font-mono" style={{ color: GRUEN }}>
             {fmt(fernS, 3)}
           </span>
-          .{" "}
-          {delta === 0
-            ? "Bei δ = 0 ändert sich naturgemäß nichts."
-            : fernP > 4 * fernS
-              ? "Beim Spline ist nach wenigen Knoten nichts mehr davon übrig, beim Polynom bleibt bis zum Rand hin etwas zu sehen."
-              : "Nahe am Rand hat das Polynom weniger Hebel als in der Mitte, deshalb fällt der Abstand zwischen beiden Spalten hier kleiner aus."}
+          .
         </p>
       </div>
 
@@ -248,7 +280,7 @@ export function StoerungVergleich() {
       <div className="max-w-md">
         {dc.map((v, i) => (
           <div key={i} className="flex items-center gap-2 text-xs">
-            <span className="w-10 shrink-0 text-right">
+            <span className="w-12 shrink-0 text-right">
               <M>{`a_{${i + 1}}`}</M>
             </span>
             <div className="h-3 flex-1 rounded-sm bg-slate-200 dark:bg-slate-700">
@@ -266,19 +298,11 @@ export function StoerungVergleich() {
       </div>
       <p className="mt-1 max-w-[34rem] text-sm">
         <span className="font-mono">{spuerbar}</span> von {K} Koeffizienten
-        ändern sich um mehr als ein Prozent der Verschiebung. Der Balkensatz
-        hat eine Spitze und zwei Flanken, und die Flanken fallen je
-        Knotenabstand auf rund ein Viertel. Wichtig ist dabei, dass sie nicht
-        abbrechen: Auch die äußersten Koeffizienten bewegen sich noch, nur eben
-        um sehr wenig.
+        ändern sich um mehr als ein Prozent der Verschiebung.
       </p>
 
-      <Verdikt kind={delta === 0 ? "neutral" : fernS < fernP ? "ok" : "warn"}>
-        {delta === 0
-          ? "Ohne Verschiebung bleiben beide Interpolanten unverändert; es gibt daher keine Fernwirkung zu vergleichen."
-          : fernS < fernP
-          ? `Fern vom verschobenen Punkt bleibt die Spline-Änderung mit ${fmt(fernS, 3)} kleiner als die Polynom-Änderung mit ${fmt(fernP, 3)}. Das macht die Lokalität der B-Spline-Darstellung sichtbar.`
-          : "In diesem Zustand ist die Fernwirkung nicht kleiner; wir prüfen die gewählte Verschiebung und das betrachtete Gebiet."}
+      <Verdikt kind={verdiktArt} titel={verdiktTitel}>
+        {verdiktText}
       </Verdikt>
 
       <p className="mt-3 mb-1 text-sm font-semibold">Besetzungsmuster</p>
@@ -300,7 +324,7 @@ export function StoerungVergleich() {
                     height: 13,
                     background: Math.abs(v) > 1e-12 ? ORANGE : undefined,
                   }}
-                  className={Math.abs(v) > 1e-12 ? "" : "bg-white dark:bg-slate-900"}
+                  className={Math.abs(v) > 1e-12 ? "" : "bg-[var(--w-bg)]"}
                 />
               )),
             )}
@@ -323,7 +347,7 @@ export function StoerungVergleich() {
                     height: 13,
                     background: Math.abs(Math.pow(x, s)) > 1e-12 ? ROT : undefined,
                   }}
-                  className={Math.abs(Math.pow(x, s)) > 1e-12 ? "" : "bg-white dark:bg-slate-900"}
+                  className={Math.abs(Math.pow(x, s)) > 1e-12 ? "" : "bg-[var(--w-bg)]"}
                 />
               )),
             )}

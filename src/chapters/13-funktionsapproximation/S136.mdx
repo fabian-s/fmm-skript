@@ -308,34 +308,32 @@ dazu, der Fehler sei *von vierter Ordnung* in $\corange{h}$; das ist dieselbe
 Sprechweise wie bei der :k[Konvergenzordnung]{#rate-of-convergence} iterativer
 Verfahren, nur läuft hier kein Iterationszähler, sondern die Gitterweite gegen
 null. Unsere Messung liegt in @beispiel:buckel-auf-dem-einheitsintervall
-durchweg unter der Schranke — das Verhältnis von gemessenem Fehler zu Schranke
-beträgt $0{,}33$, $0{,}39$, $0{,}29$, $0{,}22$ und dann zweimal $0{,}20$ —, aber
-die Faktoren erreichen die $16$ erst, wenn das Gitter fein genug ist. Wer eine
-Rechnung „mit Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas
-falsch wäre.
+durchweg unter der Schranke. Das Verhältnis von gemessenem Fehler zu Schranke
+beträgt $0{,}33$, $0{,}39$, $0{,}29$, $0{,}22$ und dann zweimal $0{,}20$; die
+Faktoren erreichen den asymptotischen Wert aber erst, wenn das Gitter fein
+genug ist. Wer eine Rechnung mit einem exakten Faktor erwartet, wird
+enttäuscht, ohne dass etwas falsch wäre.
 :::
 
 :::interaktiv[Vom groben zum feinen Gitter]
-Das Widget rechnet den Buckel aus @beispiel:buckel-auf-dem-einheitsintervall
-noch einmal nach und beginnt schon bei drei Knoten. Im oberen Bild ist zu sehen,
-wie der Spline die Spitze zunächst gar nicht findet: Mit drei Knoten bleibt er
-bei $0{,}67$ hängen, mit fünf kommt er auf $0{,}71$ und schwingt rechts der
-Spitze unter null. Erst ab neun Knoten liegen Funktion und Interpolant nahezu
-übereinander.
-
-Im unteren Bild verschwindet der Fehler an jedem Knoten und bildet dazwischen
-Bäuche; sie sammeln sich um die Spitze, wo $\left| f^{(4)} \right|$ groß ist.
-Darunter legt eine halblogarithmische Tafel Messung und Schranke übereinander,
-und die Tabelle listet dieselben Zahlen. Die Schranke fällt bei jeder
-Halbierung von $h$ exakt auf ein Sechzehntel; der gemessene Faktor schwankt auf
-den groben Gittern kräftig und nähert sich der asymptotischen $16$ erst am
-rechten Ende.
-
 Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
+Das Widget rechnet den Buckel aus @beispiel:buckel-auf-dem-einheitsintervall
+noch einmal nach und beginnt schon bei drei Knoten.
 
-<Schaetzfrage frage="Schätzen wir den asymptotischen Faktor beim Halbieren von h." loesung={16} toleranz={1}>
-<SplineKonvergenz />
-</Schaetzfrage>
+<Schaetzfrage
+  frage="Schätzen wir den asymptotischen Faktor beim Halbieren von h."
+  loesung={16}
+  toleranz={1}
+  verdeckt={<p>Die Schranke fällt bei jeder Halbierung von h exakt auf ein Sechzehntel, denn sie hängt an h⁴. Der gemessene Faktor schwankt auf den groben Gittern kräftig (1,36 und 13,58) und nähert sich dem asymptotischen Wert erst am rechten Ende: 21,59, 21,44 und schließlich 16,91.</p>}
+  children={({ aufgeloest }) => <SplineKonvergenz zeigeFaktor={aufgeloest} />}
+/>
+
+Im oberen Bild ist zu sehen, wie der Spline die Spitze zunächst gar nicht
+findet: Mit drei Knoten bleibt er bei $0{,}67$ hängen, mit fünf kommt er auf
+$0{,}71$ und schwingt rechts der Spitze unter null. Erst ab neun Knoten liegen
+Funktion und Interpolant nahezu übereinander. Im unteren Bild verschwindet der
+Fehler an jedem Knoten und bildet dazwischen Bäuche; sie sammeln sich um die
+Spitze, wo $\left| f^{(4)} \right|$ groß ist.
 :::
 
 ### Was Splines stark macht
@@ -350,8 +348,8 @@ bemerkenswert gut bestückt.
    ist genau die Sorte Struktur, die den Aufwand drückt (@bemerkung:struktur-ausnutzen in
    @sec:lgs/lu). Der kubische Spline-Interpolant dieses
    Abschnitts ist das kleinste Beispiel dafür: Seine zweiten Ableitungen an den
-   Knoten lösen ein *tridiagonales* System — bei natürlichem wie bei
-   eingespanntem Randabschluss —, und weil die Elimination dessen Band erhält,
+   Knoten lösen ein *tridiagonales* System, bei natürlichem wie bei
+   eingespanntem Randabschluss, und weil die Elimination dessen Band erhält,
    kostet es $O(n)$ statt $O(n^3)$ Operationen. Genau so rechnet das Widget
    oben.
 2. *Stabilität und Lokalität.* B-Splines haben kompakten Träger, jede

@@ -399,26 +399,28 @@ $\int_0^2 (\cred{h''})^2 \dx = 2$, und tatsächlich ist $6 + 2 = 8$.
 Spline und Parabel sind nur zwei Punkte in einer unendlichen Menge. Weil
 $\cred{h} = \cred{p} - \cgreen{s}$ an allen drei Stützstellen verschwindet,
 interpoliert auch jede Mischung
-$g_t = \cgreen{s} + t\,\cred{h}$ dieselben Daten, für jedes $t \in \R$. Mit
-@eq:eq-13-5-3 ist ihr Krümmungsintegral
-
-$$
-J(g_t) = J(\cgreen{s}) + t^2 \int_0^2 (\cred{h''})^2 \dx = 6 + 2t^2 ,
-$$
-
-eine nach oben geöffnete Parabel in $t$ mit Minimum bei $t = 0$. Der Regler
-fährt diese Schar ab: $t = 0$ ist der Spline, $t = 1$ die Parabel des
-Beispiels. Die zweite Ansicht zeigt, woher der Unterschied kommt, nämlich aus
-zwei Geradenstücken von $\cgreen{s''}$ gegen die Konstante $-2$ von
-$\cred{p''}$. Die Farben tragen dieselben Rollen wie im Text: blau die Daten,
-orange die Knoten, grün der Spline als Lösung des Minimierungsproblems, rot
-die Abweichung $\cred{h}$ und mit ihr jeder Konkurrent $g_t$.
+$g_t = \cgreen{s} + t\,\cred{h}$ dieselben Daten, für jedes $t \in \R$. Der
+Regler fährt diese Schar ab: $t = 0$ ist der Spline, $t = 1$ die Parabel des
+Beispiels. Die Farben tragen dieselben Rollen wie im Text: blau die Daten,
+orange die Knoten, grün der Spline, rot die Abweichung $\cred{h}$ und mit ihr
+jeder Konkurrent $g_t$.
 
 Welche Mischung hat nach unserer Vermutung die kleinste Krümmungsenergie?
 
-<Schaetzfrage frage="Bei welchem t wird die Krümmungsenergie minimal?" loesung={0} toleranz={0.05} einheit="t">
+<Schaetzfrage
+  frage="Bei welchem t wird die Krümmungsenergie minimal?"
+  loesung={0}
+  toleranz={0.05}
+  einheit="t"
+  verdeckt={<p>Das Krümmungsintegral der Schar ist J(g_t) = J(s) + t² ∫ (h″)² dx = 6 + 2t², eine nach oben geöffnete Parabel in t. Ihr Minimum liegt bei t = 0, und das ist gerade der Spline.</p>}
+>
 <KruemmungsVergleich />
 </Schaetzfrage>
+
+Die zweite Ansicht zeigt, woher der Unterschied kommt: zwei Geradenstücke von
+$\cgreen{s''}$ gegen die Konstante $-2$ von $\cred{p''}$. Wegen
+$\int_0^2 \cgreen{s''}\cred{h''}\dx = 0$ fällt der gemischte Term aus dem
+Integral heraus, und übrig bleibt genau der quadratische Zuschlag in $t$.
 :::
 
 Bemerkenswert an @satz:kubische-splines-haben-minimale ist, was er *nicht* sagt. Über die

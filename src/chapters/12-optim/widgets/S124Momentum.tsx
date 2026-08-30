@@ -26,8 +26,8 @@ import { ref } from "../../numbers.generated";
  * Stabilitätsbereich sichtbar bleibt: GD divergiert ab gamma*L > 2,
  * Heavy-Ball erst ab gamma*L > 2(1 + alpha).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefungen check-math-s134.mjs, check2-s134.mjs bestaetigt),
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege),
  * Schritte bis f <= 1e-6 f0 bei gamma = 1/L:
  *   c =   5: GD  31, Momentum(0,9) 106
  *   c =  10: GD  64, Momentum(0,9) 103
@@ -71,7 +71,9 @@ const VOREINSTELLUNGEN: { name: string; c: number; rel: number; alpha: number }[
 
 const START: V2 = [5, 1];
 const ZEIGE = 60; // gezeichnete Schritte
-const PRUEFE = 400; // Schritte für die Zählung im Statustext
+// 1000 statt 400: erst damit ist die im Text genannte Zahl 608 (κ = 100 ohne
+// Momentum) im Widget wirklich abzulesen. Die Rechnung kostet nichts.
+const PRUEFE = 1000; // Schritte für die Zählung im Statustext
 
 function lauf(c: number, gamma: number, alpha: number, K: number): V2[] {
   let x: V2 = [...START] as V2;
@@ -193,7 +195,7 @@ export function MomentumVergleich() {
   } else if (instabilOhne) {
     art = "warn";
     titel = "nur Momentum bleibt stabil";
-    status = `Der gewöhnliche Gradientenabstieg divergiert hier, denn γ·L = ${fmt(rel)} liegt über 2. Momentum bleibt stabil, seine Grenze ist 2(1 + α) = ${fmt(grenzeMit)}: Der Schwung erlaubt also nicht nur glattere, sondern auch grössere Schritte.`;
+    status = `Der gewöhnliche Gradientenabstieg divergiert hier, denn γ·L = ${fmt(rel)} liegt über 2. Momentum bleibt stabil, seine Grenze ist 2(1 + α) = ${fmt(grenzeMit)}: Der Schwung erlaubt also nicht nur glattere, sondern auch größere Schritte.`;
   } else if (randOhne) {
     art = "warn";
     titel = "der Gradientenabstieg steht an der Grenze";
@@ -216,7 +218,7 @@ export function MomentumVergleich() {
   } else if (bisMit !== null && bisOhne !== null) {
     art = "warn";
     titel = "hier schadet der Schwung";
-    status = `Hier schadet das Momentum: ${bisMit} Schritte gegen ${bisOhne} ohne. Bei κ = ${fmt(kappa, 0)} ist α = ${fmt(alpha)} zu viel des Guten, die Iterierten schiessen über das Tal hinaus; rechnerisch optimal wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)}. Der Standardwert 0,9 stammt aus dem Deep Learning, wo die Konditionszahl um Grössenordnungen höher liegt.`;
+    status = `Hier schadet das Momentum: ${bisMit} Schritte gegen ${bisOhne} ohne. Bei κ = ${fmt(kappa, 0)} ist α = ${fmt(alpha)} zu viel des Guten, die Iterierten schießen über das Tal hinaus; rechnerisch optimal wären α ≈ ${fmt(alphaOpt)} und γ·L ≈ ${fmt(gammaOptRel)}. Der Standardwert 0,9 stammt aus dem Deep Learning, wo die Konditionszahl um Größenordnungen höher liegt.`;
   } else if (bisMit !== null) {
     art = "ok";
     titel = "nur Momentum kommt an";

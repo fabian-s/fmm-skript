@@ -10,6 +10,7 @@ import {
   Verdikt,
   ViewControls,
   W_MUTED,
+  W_PANEL,
   clamp,
   fmtDe,
   useDrag,
@@ -40,13 +41,17 @@ import { ref } from "../../numbers.generated";
  * heath-ch2-App (S23.tsx) recycelt; Beschriftungen, Verdikt, Drag und die
  * 3D-Tafel sind für dieses Skript neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Ausgangszustand x = (−1,2; 0,9):
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-S32NormBall.mjs,
+ * 2026-08-29): Ausgangszustand x = (−1,2; 0,9):
  * ‖x‖ = 2,1 (p = 1), 1,5 (p = 2), 1,2 (p = ∞); ‖(−1,6; 1,2)‖ = 2,8 / 2,0 /
  * 1,6; für p = 0,5 ist ‖e₁ + e₂‖_p = 2^(1/p) = 4 > 2 = ‖e₁‖_p + ‖e₂‖_p,
  * die Dreiecksungleichung fällt also. Volumina der Einheitskugeln im R³:
  * Oktaeder 4/3 = 1,3333, Kugel 4π/3 = 4,1888, Würfel 8 – der Würfel ist genau
  * 3! = 6-mal so voluminös wie das Oktaeder (per Gitterintegration gegengeprüft:
  * 1,3333 und 4,1888). ‖(1, 1, 1)‖ = 3 / 1,7321 / 1 für p = 1 / 2 / ∞.
+ * Das Widget zeigt dieses Volumen jetzt live unter der Raumtafel
+ * (V_p = 8·Γ(1+1/p)³/Γ(1+3/p)), damit die Schätzfrage nach dem
+ * Volumenverhältnis eine Ablesehandlung hat und nicht geraten werden muss.
  */
 
 const BLAU = FMM_COLORS.blau; // Einheitskugel
@@ -57,6 +62,31 @@ const ROT = FMM_COLORS.rot; // der Vektor x
 function pNorm2d(x: number, y: number, p: number): number {
   if (!Number.isFinite(p)) return Math.max(Math.abs(x), Math.abs(y));
   return Math.pow(Math.pow(Math.abs(x), p) + Math.pow(Math.abs(y), p), 1 / p);
+}
+
+/** ln Γ(z) nach Lanczos (g = 7, n = 9); genügt hier auf ~1e-13 genau. */
+function lnGamma(z: number): number {
+  const g = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+    -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6,
+    1.5056327351493116e-7,
+  ];
+  let x = g[0];
+  for (let i = 1; i < 9; i++) x += g[i] / (z - 1 + i);
+  const t = z - 1 + 7.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z - 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+/**
+ * Volumen der Einheitskugel der p-Norm im R³:
+ *   V_p = 8 · Γ(1 + 1/p)³ / Γ(1 + 3/p).
+ * p = 1 → 4/3 (Oktaeder), p = 2 → 4π/3 (Kugel), p → ∞ → 8 (Würfel).
+ * Nachgerechnet in scripts/verify/REV29/03-matrix-spur-norm-S32NormBall.mjs,
+ * dort zusätzlich gegen eine Gitterintegration gehalten.
+ */
+function ballVolumen3d(p: number): number {
+  if (!Number.isFinite(p)) return 8;
+  return 8 * Math.exp(3 * lnGamma(1 + 1 / p) - lnGamma(1 + 3 / p));
 }
 
 /** Punkte der Kurve {x : ‖x‖_p = radius} in Weltkoordinaten. */
@@ -121,8 +151,14 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
         // Wertegitters werden dort nadeldünn und fransen den Rand aus. Wir
         // hören auf, sobald die Fläche steiler als etwa 70° läuft – den Rand
         // zeichnet ohnehin die blaue Kurve auf dem Boden.
-        // (nur für p > 1; für p ≤ 1 läuft die Fläche flach in den Boden)
-        const steil = pEff > 1 ? (Math.max(Math.abs(a), Math.abs(b)) / z) ** (pEff - 1) : 0;
+        // Das Kriterium |dz/da| = (|a|/z)^(p−1) gilt für JEDES p: für p > 1 wird
+        // es am Äquator groß, für p < 1 an der Spitze über der z-Achse. Die
+        // frühere Fassung klammerte p ≤ 1 ausdrücklich aus („läuft flach in den
+        // Boden"), was dort gerade falsch ist. Für p < 1 reicht der Abbruch
+        // allein allerdings nicht: die Kugel läuft dann in echte Spitzen aus,
+        // und statt eines unlesbaren Nadelbüschels zeigt das Widget in diesem
+        // Bereich einen Hinweis (siehe unten).
+        const steil = (Math.max(Math.abs(a), Math.abs(b)) / z) ** (pEff - 1);
         return steil < 3 ? z : NaN;
       },
       nx: 30,
@@ -176,8 +212,9 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
   return (
     <div className="space-y-3 text-sm">
       <Aufgabe>
-        Ziehen wir <M>{"\\bx"}</M> im Bild umher und schieben wir danach <M>{"p"}</M> von 0,5 bis 6
-        durch.
+        Ziehen wir <M>{"\\bx"}</M> im Bild umher, schieben wir danach <M>{"p"}</M> von 0,5 bis 6
+        durch und lesen wir dabei das Volumen unter der Raumtafel ab – einmal bei{" "}
+        <M>{"p = 1"}</M> und einmal mit dem Kästchen <M>{"p = \\infty"}</M>.
       </Aufgabe>
       <p className={`max-w-prose text-xs ${W_MUTED}`}>
         <span style={{ color: BLAU }}>blau</span> die Einheitskugel{" "}
@@ -280,30 +317,57 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
           </div>
         </div>
         <div className="min-w-0 shrink-0">
-          <Surface3D
-            size={260}
-            xDomain={[-1.3, 1.3]}
-            yDomain={[-1.3, 1.3]}
-            zDomain={[0, 1]}
-            surface={flaeche}
-            curves={kurven3d}
-            arrows={pfeil3d}
-            labels={{ x: "x₁", y: "x₂", z: "x₃" }}
-            azimuth={sicht.azimuth}
-            elevation={sicht.elevation}
-            onViewChange={setSicht}
-            ariaLabel={`Obere Hälfte der Einheitskugel im Raum für den aktuellen Exponenten: ${gestalt}.`}
-          />
-          <div className="mt-1 max-w-[260px]">
-            <ViewControls value={sicht} onChange={setSicht} />
-          </div>
-          <p className={`mt-1 max-w-[260px] text-xs ${W_MUTED}`}>
-            Dieselbe Einheitskugel im <M>{"\\R^3"}</M>, obere Hälfte. Ihr Schnitt mit dem Boden ist
-            genau die blaue Kurve links, der rote Pfeil derselbe Vektor. Ziehen dreht die Ansicht.
+          {/* Für p < 1 steht die Fläche an den Achsen senkrecht und läuft in
+              Spitzen aus; das Wertegitter zerfällt dort in ein Nadelbüschel, in
+              dem nichts mehr zu erkennen ist (die 2D-Tafel zeigt den Stern
+              dagegen sauber). Statt eines irreführenden Bildes steht hier ein
+              Hinweis – die Gestalt trägt in diesem Bereich die linke Tafel. */}
+          {nichtKonvex ? (
+            <div
+              className={`flex h-[260px] w-[260px] max-w-full items-center rounded p-4 text-xs ${W_PANEL} ${W_MUTED}`}
+            >
+              <span>
+                Für <M>{"p < 1"}</M> läuft die Einheitskugel im Raum in Spitzen entlang der
+                Achsen aus; als Fläche gezeichnet bleibt davon nur ein Nadelbüschel übrig.
+                Die Gestalt zeigt hier die Tafel daneben: ein nach innen gebeulter Stern.
+              </span>
+            </div>
+          ) : (
+            <>
+              <Surface3D
+                size={260}
+                xDomain={[-1.3, 1.3]}
+                yDomain={[-1.3, 1.3]}
+                zDomain={[0, 1]}
+                surface={flaeche}
+                curves={kurven3d}
+                arrows={pfeil3d}
+                labels={{ x: "x₁", y: "x₂", z: "x₃" }}
+                azimuth={sicht.azimuth}
+                elevation={sicht.elevation}
+                onViewChange={setSicht}
+                ariaLabel={`Obere Hälfte der Einheitskugel im Raum für den aktuellen Exponenten: ${gestalt}.`}
+              />
+              <div className="mt-1 max-w-[260px]">
+                <ViewControls value={sicht} onChange={setSicht} />
+              </div>
+            </>
+          )}
+          <p className="mt-1 max-w-[260px] text-sm">
+            Volumen dieser Einheitskugel im <M>{"\\R^3"}</M>:{" "}
+            <span className="font-mono tabular-nums">{fmtDe(ballVolumen3d(pEff), 2)}</span>
           </p>
+          {!nichtKonvex && (
+            <p className={`mt-1 max-w-[260px] text-xs ${W_MUTED}`}>
+              Dieselbe Einheitskugel im <M>{"\\R^3"}</M>, obere Hälfte. Ihr Schnitt mit dem Boden
+              ist genau die blaue Kurve in der Tafel daneben, der rote Pfeil derselbe Vektor.
+              Ziehen dreht die Ansicht.
+            </p>
+          )}
         </div>
       </div>
       <Verdikt kind={nichtKonvex ? "fail" : "ok"} titel={`${gestalt}.`}>
+        <M>{`\\|\\bx\\|_{${pLabel}} = ${de(nx, 3)}`}</M>.{" "}
         {nichtKonvex ? (
           <>
             Für <M>{"p < 1"}</M> beult sich die „Kugel" nach innen, und mit der Konvexität fällt die
@@ -317,8 +381,8 @@ function Normkugeln({ volumenZeigen }: { volumenZeigen: boolean }) {
           </>
         ) : (
           <>
-            <M>{`\\|\\bx\\|_{${pLabel}} = ${de(nx, 3)}`}</M>: Um genau diesen Faktor aufgeblasen läuft
-            die Einheitskugel durch die Spitze von <M>{"\\bx"}</M>. Für <M>{"p \\ge 1"}</M> ist sie
+            Um genau diesen Faktor aufgeblasen läuft die Einheitskugel durch die Spitze von{" "}
+            <M>{"\\bx"}</M>. Für <M>{"p \\ge 1"}</M> ist sie
             konvex, und diese Konvexität ist das geometrische Gesicht der Dreiecksungleichung,
             also des dritten Normaxioms ({ref("definition:matrixnorm")}).
             {volumenZeigen && (

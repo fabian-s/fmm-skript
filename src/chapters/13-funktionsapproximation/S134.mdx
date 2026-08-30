@@ -1,5 +1,6 @@
 import { SplineKonstruktion } from "./widgets/S134Konstruktion";
 import { BSplineBasis } from "./widgets/S134BSplineBasis";
+import { CoxDeBoorSchritt } from "./widgets/S134CoxDeBoor";
 import { StoerungVergleich } from "./widgets/S134Stoerung";
 
 @sec:polynominterpolation endet mit einer unbequemen Beobachtung: Ein
@@ -266,18 +267,18 @@ wie die natürliche Randbedingung verlangt.
 :::
 
 :::interaktiv[Das Zwölf-mal-zwölf-System live]
-Das Widget baut die zwölf Zeilen genau in der Reihenfolge der Tabelle auf und
-löst das System mit Spaltenpivotierung
-(@sec:lgs/lgs). Die vier Messwerte lassen sich
-verschieben, und der Schalter tauscht die letzten beiden Zeilen gegen die
-eingespannte Variante.
+Wie viele der zwölf Koeffizienten ändern sich, wenn wir einen einzigen
+Messwert verschieben?
 
 <SplineKonstruktion />
 
 Zwei Dinge sind daran wichtig. Erstens ist die Naht unsichtbar, obwohl links
 und rechts davon verschiedene Polynome stehen; das Readout zeigt, dass Wert,
 Steigung und Krümmung bis auf Rundung übereinstimmen. Zweitens ändern sich
-beim Verschieben eines einzigen Messwerts *alle* zwölf Koeffizienten.
+beim Verschieben eines einzigen Messwerts *alle* zwölf Koeffizienten: Es gibt
+keine Zeile der Tabelle, die stehen bliebe. Weiter unten in diesem Abschnitt
+zeigt @bemerkung:bandstruktur-und-aufwand, dass eine andere Darstellung
+desselben Ansatzraums genau darin anders ausgeht.
 :::
 
 ### B-Splines
@@ -418,9 +419,17 @@ Wie viele Basisfunktionen sind an einer Stelle aktiv, und wie entsteht ihre Form
 Die gestrichelte Summe liegt über dem ganzen Gitter konstant bei eins, obwohl
 die einzelnen Kurven ganz verschieden aussehen. Und an jeder Stelle sind
 höchstens $q+1$ Basisfunktionen von null verschieden: Das ist die Zahl, die
-gleich die Rechenzeit bestimmt. Der aufgeklappte Rekursionsschritt zeigt die
-beiden Gewichtsrampen an derselben Idee und erklärt, warum der Grad um eins steigt.
+gleich die Rechenzeit bestimmt.
 :::
+
+:::::vertiefung[Ein Rekursionsschritt Stück für Stück]
+Die Rekursion aus @eq:erweiterte-knotenfolge-und-b-splines-2 baut
+$\corange{B_3^{(q)}}$ aus zwei Nachbarn vom Grad $q-1$ auf, jeder mit einer
+eigenen Gewichtsrampe. Wo beide Rampen tragen, entsteht die zusätzliche
+Glattheit; wo nur eine trägt, wächst der Träger um ein Intervall.
+
+<CoxDeBoorSchritt />
+:::::
 
 :::bemerkung[#b-splines-in-r (B-Splines in R)]
 In `R` liefert `splines::bs()` die Auswertungsmatrix $\bB$ direkt. Ein
@@ -570,22 +579,19 @@ Systems, keine allgemeine B-Spline-Konstante.
 :::
 
 :::interaktiv[Ein Datenpunkt wandert]
-Das Widget stört einen einzelnen Datenpunkt. Links steht das
-Interpolationspolynom vom Grad $8$, rechts der natürliche kubische Spline zu
-denselben neun Punkten.
+Wie weit vom verschobenen Punkt entfernt ist von der Störung noch etwas zu
+sehen – beim Polynom und beim Spline?
 
 <StoerungVergleich />
 
-In der Voreinstellung wandert der fünfte Punkt um $1$ nach oben. Der Spline
-ändert sich um höchstens $1{,}000$, das Polynom um $2{,}320$, also um mehr als
-die Störung selbst. Noch deutlicher wird der Unterschied im Fernbereich: Mehr
-als zwei Knoten vom verschobenen Punkt entfernt bleibt die Spline-Änderung
-unter $0{,}037$, während das Polynom dort weiterhin $2{,}320$ ausschlägt, und
-zwar am äußeren Rand. Die Balken zeigen, wo die Änderung sitzt: Von
-$1{,}732$ fällt sie über $0{,}464$, $0{,}124$, $0{,}031$ auf $0{,}010$, also
-je Knotenabstand auf gut ein Viertel. Neun der elf Koeffizienten reagieren
-messbar, obwohl an der verschobenen Stelle nur drei Basisfunktionen
-überhaupt von null verschieden sind.
+Fern vom gestörten Punkt trennen sich die beiden Ansatzräume: Mehr als zwei
+Knoten entfernt bleibt die Spline-Änderung in der Voreinstellung unter
+$0{,}037$, während das Polynom dort weiterhin $2{,}320$ ausschlägt, und zwar
+am äußeren Rand. Lokal ist die B-Spline-Darstellung damit, abgeschottet aber
+nicht: Neun der elf Koeffizienten reagieren messbar, obwohl an der
+verschobenen Stelle nur drei Basisfunktionen von null verschieden sind. Nur
+die beiden Randkoeffizienten bleiben exakt stehen, weil sie beim offenen
+Knotenvektor unmittelbar an den Randwerten hängen.
 :::
 
 ### Selbsttest

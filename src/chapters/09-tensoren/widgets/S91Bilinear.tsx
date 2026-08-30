@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { Aufgabe, DragHandle, FMM_COLORS, Schaetzfrage, Slider, useDrag, Verdikt, fmtDe } from "../../../lib";
+import { Aufgabe, DragHandle, FMM_COLORS, Schaetzfrage, Slider, useDrag, Verdikt, W_BUTTON, W_BUTTON_AKTIV, fmtDe } from "../../../lib";
 
 /**
  * Einsicht: f(x,y)=xy ist bei festem Gegenargument linear, aber nicht auf dem
  * Paar (x,y) linear: Verdoppeln beider Seiten liefert den Faktor 4.
  * Farbrollen: x blau, y grün, Fläche orange, gemeinsame Skalierung rot.
  * Provenienz: Eigenbau, keine portierten Texte.
- * Zahlen geprüft mit scripts/verify/KAP09/s91-bilinear.mjs (2026-08-20):
- * 3·2=6, (2·3)·2=12 und (2·3)·(2·2)=24.
+ * Zahlen geprüft mit scripts/verify/KAP09/s91-bilinear.mjs (2026-08-20) und
+ * scripts/verify/REV29/09-tensoren-S91Bilinear.mjs (2026-08-29): 3·2=6,
+ * (2·3)·2=12 und (2·3)·(2·2)=24. Das REV29-Skript spiegelt dazu die
+ * Skalierungsformeln vergroessertX/vergroessertY aus diesem Widget und prüft sie
+ * über den ganzen Reglerbereich – eine Änderung dort lässt es fehlschlagen.
  */
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE, rot: ROT, grau: GRAU } = FMM_COLORS;
 const SIZE = 230;
-const PAD = 32;
+const PAD = 46;
 const W = SIZE + PAD + 18;
 const H = SIZE + PAD + 18;
 const px = (x: number) => PAD + (x / 6) * SIZE;
@@ -67,6 +70,12 @@ export function BilinearitaetsDemo() {
                 <text x={px(t)} y={py(0) + 14} fontSize="9" textAnchor="middle" fill={GRAU}>{t}</text>
               </g>
             ))}
+            {[0, 1, 2, 3, 4, 5, 6].map((t) => (
+              <g key={`y${t}`}>
+                <line x1={px(0) - 3} y1={py(t)} x2={px(0)} y2={py(t)} stroke={GRAU} />
+                <text x={px(0) - 6} y={py(t) + 3} fontSize="9" textAnchor="end" fill={GRAU}>{t}</text>
+              </g>
+            ))}
             <line x1={px(0)} y1={py(0)} x2={px(6)} y2={py(0)} stroke={GRAU} />
             <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(6)} stroke={GRAU} />
             {aufgeloest && (
@@ -80,7 +89,7 @@ export function BilinearitaetsDemo() {
             <line x1={px(0)} y1={py(0)} x2={px(x)} y2={py(0)} stroke={BLAU} strokeWidth="4" />
             <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(y)} stroke={GRUEN} strokeWidth="4" />
             <text x={(px(0) + px(x)) / 2} y={py(0) + 27} fill={BLAU} fontSize="11" textAnchor="middle">x = {fmtDe(x, 1)}</text>
-            <text x={px(0) - 10} y={(py(0) + py(y)) / 2} fill={GRUEN} fontSize="11" textAnchor="end">y = {fmtDe(y, 1)}</text>
+            <text x={px(0) + 6} y={(py(0) + py(y)) / 2} fill={GRUEN} fontSize="11" textAnchor="start">y = {fmtDe(y, 1)}</text>
             <DragHandle x={px(x)} y={py(y)} farbe={ORANGE} {...drag.handleProps("ecke")} />
           </svg>
           <div className="mt-3 max-w-md">
@@ -89,11 +98,11 @@ export function BilinearitaetsDemo() {
           </div>
           {aufgeloest && (
             <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Skalierung wählen">
-              <button type="button" className="rounded px-3 py-1 text-sm" aria-pressed={modus === "gemeinsam"} onClick={() => setModus("gemeinsam")}>Beide Seiten verdoppeln</button>
-              <button type="button" className="rounded px-3 py-1 text-sm" aria-pressed={modus === "fest"} onClick={() => setModus("fest")}>y festhalten</button>
+              <button type="button" className={modus === "gemeinsam" ? W_BUTTON_AKTIV : W_BUTTON} aria-pressed={modus === "gemeinsam"} onClick={() => setModus("gemeinsam")}>Beide Seiten verdoppeln</button>
+              <button type="button" className={modus === "fest" ? W_BUTTON_AKTIV : W_BUTTON} aria-pressed={modus === "fest"} onClick={() => setModus("fest")}>y festhalten</button>
             </div>
           )}
-          <Verdikt kind={entartet ? "warn" : !aufgeloest ? "neutral" : modus === "fest" ? "ok" : "fail"}>
+          <Verdikt kind={entartet ? "warn" : !aufgeloest ? "neutral" : modus === "fest" ? "ok" : "warn"}>
             {entartet
               ? "Auf einer Achse ist die Fläche null; einen Skalierungsfaktor können wir dort nicht ablesen."
               : !aufgeloest

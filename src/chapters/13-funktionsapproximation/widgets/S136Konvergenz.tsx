@@ -192,7 +192,7 @@ const H_KURVE = 205;
 const H_FEHLER = 150;
 const PAD = { l: 46, r: 12, t: 12, b: 26 };
 
-export function SplineKonvergenz() {
+export function SplineKonvergenz({ zeigeFaktor = true }: { zeigeFaktor?: boolean } = {}) {
   const [idx, setIdx] = useState(1);
 
   const zeilen = useMemo(() => KNOTENZAHLEN.map(rechne), []);
@@ -274,7 +274,7 @@ export function SplineKonvergenz() {
           <svg
             width={W}
             viewBox={`0 0 ${W} ${H_KURVE}`}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -346,7 +346,7 @@ export function SplineKonvergenz() {
           <svg
             width={W}
             viewBox={`0 0 ${W} ${H_FEHLER}`}
-            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -411,7 +411,9 @@ export function SplineKonvergenz() {
         <div className="min-w-0 grow space-y-2">
           <svg
             viewBox={`0 0 ${WK} ${HK}`}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={WK}
+            height={HK}
+            className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <rect
               x={PK.l}
@@ -462,7 +464,7 @@ export function SplineKonvergenz() {
                   <th className="px-2 py-1">h</th>
                   <th className="px-2 py-1">Schranke</th>
                   <th className="px-2 py-1">Fehler</th>
-                  <th className="px-2 py-1">Faktor</th>
+                  {zeigeFaktor ? <th className="px-2 py-1">Faktor</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -475,9 +477,11 @@ export function SplineKonvergenz() {
                     <td className="px-2 py-0.5">{fmtH(z.h)}</td>
                     <td className="px-2 py-0.5">{fmtE(z.schranke)}</td>
                     <td className="px-2 py-0.5">{fmtE(z.fehler)}</td>
-                    <td className="px-2 py-0.5">
-                      {i === 0 ? "–" : fmt(zeilen[i - 1].fehler / z.fehler, 2)}
-                    </td>
+                    {zeigeFaktor ? (
+                      <td className="px-2 py-0.5">
+                        {i === 0 ? "–" : fmt(zeilen[i - 1].fehler / z.fehler, 2)}
+                      </td>
+                    ) : null}
                   </tr>
                 ))}
               </tbody>
@@ -486,7 +490,13 @@ export function SplineKonvergenz() {
         </div>
       </div>
 
-      <Verdikt kind={idx === 0 ? "neutral" : "ok"}>{status}</Verdikt>
+      {zeigeFaktor ? (
+        <Verdikt kind={idx === 0 ? "neutral" : "ok"}>{status}</Verdikt>
+      ) : (
+        <Verdikt kind="neutral">
+          {`${zeile.knoten} Knoten, h = ${fmtH(zeile.h)}: Schranke ${fmtE(zeile.schranke)}, gemessener Fehler ${fmtE(zeile.fehler)}; ausgeschöpft ist die Schranke zu ${fmt(verhaeltnis * 100, 1)} %. Der größte Fehler sitzt bei x = ${fmt(zeile.argmax, 4)}.`}
+        </Verdikt>
+      )}
     </div>
   );
 }

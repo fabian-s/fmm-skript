@@ -9,7 +9,7 @@ import {
   W_PANEL,
   fmtInt,
 } from "../../../lib";
-import { ref } from "../../numbers.generated";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §2.2: Der iterative Fibonacci-Algorithmus 2.2.2 Schritt für Schritt, daneben
@@ -20,12 +20,17 @@ import { ref } from "../../numbers.generated";
  * paarmal, sondern so oft, dass die Schere schon bei einstelligem k aufgeht.
  *
  * FARBROLLEN (Kapitel 2, s. S21Demos.tsx): rot = die teure Variante (naive
- * Rekursion). Innerhalb der Iterationstafel gelten zusätzlich die
- * Elementrollen aus Algorithmus 2.2.2, wie sie auch die Prosa setzt:
- * blau = letztes Element, grün = vorletztes Element, orange = neue Summe.
+ * Rekursion) und, im Aufrufbaum, die mehrfach berechneten Argumente.
+ * Innerhalb der Iterationstafel gelten zusätzlich die Elementrollen aus
+ * Algorithmus 2.2.2, wie sie auch die Prosa setzt: blau = letztes Element,
+ * grün = vorletztes Element, orange = neue Summe. Der Baum benutzt bewusst
+ * KEINE zweite Farbskala mehr (die frühere Pastellrampe war ein zweites
+ * Farbsystem im selben Bild).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19). Zählung in der Kapitelkonvention x_1 = 0, x_2 = 1; die
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-FibonacciStepper.mjs, 2026-08-29;
+ * dort wird die Rekursion mit echten Zählern ausgeführt und gegen die
+ * geschlossene Rekurrenz gehalten). Zählung in der Kapitelkonvention
+ * x_1 = 0, x_2 = 1; die
  * Rekursion für x_k macht C(k) = 1 + C(k−1) + C(k−2) Aufrufe und
  * A(k) = 1 + A(k−1) + A(k−2) Additionen, C(1) = C(2) = 1, A(1) = A(2) = 0:
  *   k  =  3    5    8    10    12     15
@@ -85,25 +90,28 @@ function callCounts(k: number): number[] {
   return cnt;
 }
 
-/** Pastellton pro Argument j: gleiche Teilbäume bekommen dieselbe Farbe. */
-function shade(j: number): string {
-  const base = [GRUEN, BLAU, ORANGE, FMM_COLORS.violett, ROT];
-  return base[j % base.length] + "2e";
-}
-
-function CallTree({ j }: { j: number }) {
+/**
+ * Hinterlegung eines Knotens: rot (die Kapitelfarbe für „teuer") genau dann,
+ * wenn dieses Argument im Baum mehr als einmal vorkommt. Die frühere Fassung
+ * verteilte fünf Pastelltöne zyklisch über j, sodass x₁ und x₆ oder x₂ und x₇
+ * dieselbe Farbe trugen, während die Legende „gleiche Farbe = identische
+ * Teilrechnung" versprach – eine falsche Lesart des Bildes, und obendrein ein
+ * zweites Farbsystem neben den Elementrollen der Iterationstafel.
+ */
+function CallTree({ j, counts }: { j: number; counts: number[] }) {
+  const mehrfach = (counts[j] ?? 0) > 1;
   return (
     <div className="flex flex-col items-center">
       <div
         className="rounded border border-slate-300 px-1 font-mono text-[11px] dark:border-slate-600"
-        style={{ background: shade(j) }}
+        style={mehrfach ? { background: ROT + "2e", borderColor: ROT } : undefined}
       >
         x<sub>{j}</sub>
       </div>
       {j > 2 && (
         <div className="flex gap-1 pt-1">
-          <CallTree j={j - 1} />
-          <CallTree j={j - 2} />
+          <CallTree j={j - 1} counts={counts} />
+          <CallTree j={j - 2} counts={counts} />
         </div>
       )}
     </div>
@@ -112,7 +120,10 @@ function CallTree({ j }: { j: number }) {
 
 export function FibonacciStepper() {
   const [n, setN] = useState(8);
-  const [kRaw, setKRaw] = useState(1);
+  // Startzustand ist der volle Achterbaum: die tote Anfangsfigur zeigt damit
+  // 41 Aufrufe gegen 6 Additionen statt eines leeren Ein-Knoten-Baums. Der
+  // Stepper bleibt zum Zurückgehen da.
+  const [kRaw, setKRaw] = useState(8);
   const k = Math.min(kRaw, n);
 
   const seq = useMemo(() => fibSeq(N_MAX), []);
@@ -149,8 +160,9 @@ export function FibonacciStepper() {
   return (
     <div className="space-y-3 text-sm">
       <Aufgabe>
-        Scrubben wir den Schrittregler nach rechts und vergleichen die beiden Zähler unter den
-        Tafeln.
+        Scrubben wir den Schrittregler und vergleichen die beiden Zähler unter den Tafeln; in der
+        Zeile „Mehrfach berechnet" lesen wir ab, wie oft x<sub>3</sub> dabei von vorn berechnet
+        wird.
       </Aufgabe>
 
       <div className="max-w-md">
@@ -225,10 +237,11 @@ export function FibonacciStepper() {
       {k <= 8 ? (
         <div className={`overflow-x-auto p-2 ${W_PANEL}`}>
           <p className={`mb-1 text-xs ${W_MUTED}`}>
-            Aufrufbaum der naiven Rekursion für x<sub>{k}</sub>; gleiche Farbe = identische,
-            mehrfach ausgeführte Teilrechnung.
+            Aufrufbaum der naiven Rekursion für x<sub>{k}</sub>; rot hinterlegt sind die
+            Argumente, die der Baum mehrfach von vorn ausrechnet – gleiche Zahl heißt identische
+            Teilrechnung.
           </p>
-          <CallTree j={k} />
+          <CallTree j={k} counts={counts} />
         </div>
       ) : (
         <p className={`text-xs ${W_MUTED}`}>
@@ -265,7 +278,7 @@ export function FibonacciStepper() {
               </>
             )}{" "}
             Wie schnell diese Schere aufgeht, rechnen wir in{" "}
-            <a className="underline" href="#sec-2.5">
+            <a className="underline" href={`#sec-${num("sec:algos/fibonacci-komplexitaet")}`}>
               {ref("sec:algos/fibonacci-komplexitaet")}
             </a>{" "}
             nach.
