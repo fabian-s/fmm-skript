@@ -1,12 +1,11 @@
 import { RangKExplorer } from "./widgets/S64RangK";
 import { EmpfehlungsExplorer } from "./widgets/S64Empfehlung";
 
-Die Zerlegung steht. Was fangen wir damit an? Bisher war die SVD vor allem eine
-Aussage über die Geometrie einer Abbildung. In diesem Abschnitt wird sie zum
-Werkzeug. Wir lesen die Spektralnorm direkt aus ihr ab, zerlegen $\bA$ in eine
-Summe denkbar einfacher Bausteine und gewinnen daraus die beste Approximation
-von kleinem Rang. Zwei Anwendungen führen vor, wozu das gut ist: Bilder
-komprimieren und Filmbewertungen vorhersagen.
+Bisher war die SVD vor allem eine Aussage über die Geometrie einer Abbildung. In
+diesem Abschnitt wird sie zum Werkzeug. Wir lesen die Spektralnorm direkt aus
+ihr ab, zerlegen $\bA$ in eine Summe einfacher Bausteine und gewinnen daraus
+die beste Approximation von kleinem Rang. Zwei Anwendungen zeigen, wozu das gut
+ist: Bilder komprimieren und Filmbewertungen vorhersagen.
 
 ### Die Spektralnorm ist der größte Singulärwert
 
@@ -75,10 +74,10 @@ längste Halbachse der Bildellipse.
 ### Die SVD als Summe von Rang-1-Matrizen
 
 Die Zerlegung $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV^\top}$ verpackt
-alles in drei Matrizen. Multiplizieren wir sie aus, kommt eine Darstellung
-zum Vorschein, die für Anwendungen viel handlicher ist. Dass $\corange{\bSigma}$
-außerhalb der Diagonalen nur Nullen trägt, schaltet nämlich fast alle Summanden
-ab: Übrig bleibt für jeden von null verschiedenen Singulärwert genau ein Term.
+alles in drei Matrizen. Multiplizieren wir sie aus, erhalten wir eine
+Darstellung, die für Anwendungen handlicher ist. Weil $\corange{\bSigma}$
+außerhalb der Diagonalen nur Nullen trägt, fallen fast alle Summanden weg:
+Übrig bleibt für jeden von null verschiedenen Singulärwert genau ein Term.
 
 :::satz[#summenform-der-svd (Summenform der SVD)]
 Sei $\bA \in \R^{m \times n}$ mit $\rang(\bA) = r$ und der Zerlegung
@@ -125,7 +124,7 @@ gezeigt.
 :::
 
 :::schritt
-Die beiden Zusatzaussagen sind schnell erledigt. Jede Spalte von
+Zu den beiden Zusatzaussagen: Jede Spalte von
 $\cgreen{\bu_i} \cblue{\bv_i}^\top$ ist ein Vielfaches von $\cgreen{\bu_i}$,
 der Spaltenraum also eindimensional und der Rang damit $1$; und für die
 Frobeniusnorm faktorisiert die Doppelsumme:
@@ -154,8 +153,7 @@ $\corange{\sigma_i}$ markiert eine Richtung, in der viel von $\bA$ steckt, ein
 kleines eine, in der wenig passiert. Und weil die Singulärwerte absteigend
 sortiert sind, stehen die wichtigen Terme vorn.
 
-Daraus wird sofort eine Idee: Nehmen wir nur die ersten Summanden und lassen
-den Rest weg.
+Das legt nahe, nur die ersten Summanden zu nehmen und den Rest wegzulassen.
 
 ### Die beste Approximation von kleinem Rang
 
@@ -183,9 +181,8 @@ $$
 $$
 :::
 
-Das Abschneiden ist schnell erledigt. Interessant ist, was wir dabei verlieren
-und ob eine andere Matrix vom Rang $k$ es besser könnte. Auf beide Fragen gibt
-derselbe Satz Antwort, und die Antwort ist bemerkenswert glatt.
+Was verlieren wir beim Abschneiden, und könnte eine andere Matrix vom Rang $k$
+es besser? Auf beide Fragen gibt derselbe Satz Antwort.
 
 :::satz[#eckart-und-young-beste-approximation-von (Eckart und Young: beste Approximation von Rang k)]
 Sei $\bA \in \R^{m \times n}$ mit Singulärwerten
@@ -218,7 +215,7 @@ leicht zu merken und sagen viel:
   Spektralnorm ist es der größte weggelassene Wert $\corange{\sigma_{k+1}}$,
   in der Frobeniusnorm die Wurzel aus der Summe aller weggelassenen Quadrate.
   Wir kennen den Approximationsfehler also, bevor wir approximieren.
-- **Beide Normen führen zum selben Sieger.** Das ist keine
+- **Beide Normen führen zum selben Minimierer.** Das ist keine
   Selbstverständlichkeit: Zwei verschiedene Gütemaße haben im Allgemeinen zwei
   verschiedene Optima. Hier fallen sie zusammen.
 - **Der Satz sagt, dass $\bA_k$ das Minimum annimmt, nicht dass es der einzige
@@ -273,8 +270,8 @@ Genauigkeit und Aufwand, und dafür gibt es drei gebräuchliche Kriterien.
 
 Vorsicht bei Kriterium 3: Wenn $\corange{\sigma_1}$ die übrigen Singulärwerte
 weit überragt, ist der Energieanteil schon bei $k = 1$ nahe bei eins, obwohl
-die Approximation noch sehr grob ist. Ein Kriterium, das so leicht zufrieden
-ist, taugt wenig als alleiniger Ratgeber.
+die Approximation noch sehr grob ist. Als alleiniges Kriterium taugt es
+deshalb wenig.
 
 :::::vertiefung[Typische Singulärwert-Verläufe und die Ellenbogen-Heuristik]
 :::bemerkung[#typische-singulaerwert-verlaeufe-und-der (Typische Singulärwert-Verläufe und der Ellenbogen)]
@@ -282,14 +279,14 @@ Wie gut sich eine Matrix überhaupt komprimieren lässt, steht im Verlauf ihrer
 Singulärwerte. Drei Muster begegnen uns immer wieder:
 
 1. *Schneller Abfall*, etwa $\corange{\sigma_i} \approx c \cdot e^{-\alpha i}$.
-   Wenige Werte dominieren, alles Weitere ist Kleinkram. Solche Matrizen sind
+   Wenige Werte dominieren, der Rest ist vernachlässigbar. Solche Matrizen sind
    der ideale Fall für eine Rang-k-Approximation.
 2. *Linearer Abfall*, $\corange{\sigma_i} \approx c - \alpha i$. Die
    Approximation gelingt noch ordentlich, der Kompressionsfaktor bleibt aber
    mittelmäßig.
 3. *Langsamer Abfall*, $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$. Viele
    Komponenten tragen ähnlich viel bei; ein kleines $k$ verliert dann
-   zwangsläufig Substanz.
+   zwangsläufig viel Information.
 
 **Heuristik:** Tragen wir $\log \corange{\sigma_i}$ gegen $i$ auf, so wird ein
 exponentieller Abfall zur Geraden. Interessant ist der Knick, an dem die Kurve
@@ -308,7 +305,7 @@ eine Rang-k-Approximation.
 
 Es ist der ungünstigste Fall: Viele Komponenten
 tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
-sinkt entsprechend zäh, und ein kleines $k$ verliert echte Struktur. Gut
+sinkt entsprechend langsam, und ein kleines $k$ verliert echte Struktur. Gut
 komprimieren lässt sich der exponentielle Abfall.
 :::
 
@@ -319,7 +316,7 @@ komprimieren lässt sich der exponentielle Abfall.
 
 Ein Graustufenbild ist eine Matrix. Jeder Pixel ist ein Eintrag, seine
 Helligkeit der Wert. Farbbilder bestehen aus drei solchen Matrizen, einer pro
-Kanal. Damit ist die Bildkompression eine reine Übung in Rang-k-Approximation.
+Kanal. Bildkompression ist damit eine direkte Anwendung der Rang-k-Approximation.
 
 :::beispiel[#ein-bild-mit-659-512-pixeln (Ein Bild mit 659 × 512 Pixeln)]
 Das Bild sei $\bA \in \R^{659 \times 512}$. Vollständig gespeichert sind das
@@ -342,7 +339,7 @@ $$
 Das sind $58\,600 / 337\,408 \approx 17{,}4\,\%$ des Originals, wir sparen also
 rund $83\,\%$ des Speichers.
 
-Beliebig weit trägt das nicht. Der Speicherbedarf wächst linear in $k$, und
+Der Speicherbedarf wächst linear in $k$, und
 sobald $k \cdot (659 + 512 + 1) > 337\,408$ ist, also ab $k = 288$, legen wir
 mehr Zahlen ab als das Bild selbst hat. Kompression gibt es hier nur für
 $k \leq 287$.
@@ -358,9 +355,8 @@ $k \leq 287$.
 :::
 
 :::interaktiv[Bildkompression zum Schieben]
-Wie viele Rang-1-Terme braucht ein Bild eigentlich? Probieren wir es aus, an
-einem synthetisch erzeugten Graustufenbild; als Matrix verhält es sich genauso
-wie ein Foto. Der Schieber gibt $k$ vor, die dritte Tafel zeigt die Differenz
+Wie viele Rang-1-Terme braucht ein Bild? Wir probieren es an einem synthetisch
+erzeugten Graustufenbild aus; als Matrix verhält es sich wie ein Foto. Der Schieber gibt $k$ vor, die dritte Tafel zeigt die Differenz
 $\cred{\bA - \bA_k}$ als Bild, und die beiden Kurven sind die Fehlerformeln aus
 @eq:eckart-und-young-beste-approximation-von, an diesem Bild ausgewertet.
 
@@ -369,17 +365,17 @@ $\cred{\bA - \bA_k}$ als Bild, und die beiden Kurven sind die Fehlerformeln aus
 Mit wachsendem Rang sinken beide Fehler; die Kurven im Widget zeigen, wie
 schnell die zusätzlichen Terme das Bild verbessern.
 
-Wer lieber mit echten Fotos spielt, findet unter
+Für echte Fotos gibt es unter
 [shinyapps.io](https://fabian-s.shinyapps.io/truncatedSVD-shiny/) eine Shiny-App
 zur abgeschnittenen SVD.
 :::
 
 ### Anwendung: Empfehlungssysteme
 
-Der zweite Klassiker heißt *kollaboratives Filtern* (collaborative filtering).
+Die zweite Anwendung ist das *kollaborative Filtern* (collaborative filtering).
 Ein Streamingdienst kennt $m$ Nutzer und $n$ Filme und will für jedes Paar
-vorhersagen, wie gut der Film ankommt. Die Bewertungen bilden eine Matrix,
-aber eine mit einem Haken: Fast niemand hat fast alles gesehen.
+vorhersagen, wie gut der Film ankommt. Die Bewertungen bilden eine Matrix, in
+der die meisten Einträge fehlen: Fast niemand hat fast alles gesehen.
 
 :::beispiel[#eine-duenn-besetzte-bewertungsmatrix (Eine dünn besetzte Bewertungsmatrix)]
 Zeilen sind Nutzer, Spalten sind Filme, ein Fragezeichen steht für eine
@@ -403,11 +399,11 @@ Füllen wir die Lücken mit den Spaltenmitteln der bekannten Einträge, so sind
 das der Reihe nach $3{,}5$, $3$, $2{,}5$, $3{,}5$ und $4{,}5$.
 :::
 
-Warum sollte eine Zerlegung dabei helfen? Weil Geschmack Struktur hat. Die
+Eine Zerlegung hilft dabei, weil Geschmack Struktur hat. Die
 Bewertungen eines Nutzers hängen untereinander zusammen: Wer zwei
 Science-Fiction-Filme mag, mag wahrscheinlich auch den dritten. Die Vorlieben
 von Millionen Nutzern
-lassen sich deshalb erstaunlich gut durch wenige Zahlen beschreiben. In der
+lassen sich deshalb gut durch wenige Zahlen beschreiben. In der
 Sprache dieses Kapitels heißt das: Die Bewertungsmatrix ist näherungsweise von
 kleinem Rang.
 
@@ -420,7 +416,7 @@ kleinem Rang.
 :::
 
 :::bemerkung[#was-die-faktoren-bedeuten (Was die Faktoren bedeuten)]
-Die drei Bestandteile der Zerlegung lassen sich hier ungewöhnlich gut deuten:
+Die drei Bestandteile der Zerlegung lassen sich hier gut deuten:
 
 - Die *rechten* Singulärvektoren $\cblue{\bv_j} \in \R^n$ leben im Filmraum.
   Sie sind gelernte Genres: $\cblue{\bv_1}$ könnte eine Achse von Action nach
@@ -447,7 +443,7 @@ hängt.
 <EmpfehlungsExplorer />
 :::
 
-Ein Einwand bleibt, und er ist gewichtig: Schritt 1 erfindet Daten, und
+Ein gewichtiger Einwand bleibt: Schritt 1 erfindet Daten, und
 Schritt 2 behandelt diese Erfindungen wie Messwerte. Denn $\bR_k$ minimiert
 nach @satz:eckart-und-young-beste-approximation-von den Fehler über *alle*
 Einträge, also auch über die selbstgesetzten Mittelwerte.
@@ -498,7 +494,7 @@ kostet Genauigkeit, denn es quadriert die
 (@sec:matrix-spur-norm/eigenschaften). Die SVD arbeitet direkt an
 $\bX$ und vermeidet diesen Schritt.
 
-Umsonst ist die Robustheit nicht.
+Die Robustheit hat ihren Preis.
 
 ::::vertiefung[Genauer Aufwandsvergleich]
 
@@ -513,16 +509,16 @@ Für $\bA \in \R^{m \times n}$ gilt in der
   $\bA^\top\bA$ mit rund $m n^2$ Operationen.
 
 Für $m \gg n$ ist die SVD also grob viermal so teuer. Das ist der übliche
-Kompromiss: Geschwindigkeit gegen Stabilität. Wer schlecht konditionierte
-Daten hat, zahlt den Faktor gern.
+Kompromiss: Geschwindigkeit gegen Stabilität. Bei schlecht konditionierten
+Daten lohnt sich der Faktor.
 :::
 
 ::::
 
 ### SVD und Eigenwertzerlegung im Vergleich
 
-Zum Abschluss stellen wir die beiden Zerlegungen nebeneinander, die dieses und
-das dritte Kapitel getragen haben. Gemeint ist in der mittleren Spalte die
+Zum Abschluss stellen wir die beiden Zerlegungen aus diesem und dem dritten
+Kapitel nebeneinander. Gemeint ist in der mittleren Spalte die
 Eigenwertzerlegung $\bA = \bP\bD\bP^{-1}$ mit beliebigem invertierbarem
 $\bP$; erst im symmetrischen Fall wird daraus die Spektralzerlegung mit
 orthogonalem $\bP$ aus
@@ -549,7 +545,7 @@ orthogonalem $\bP$ aus
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">numerische Stabilität</td>
-<td className="py-1 pr-6">kann heikel werden</td>
+<td className="py-1 pr-6">kann problematisch sein</td>
 <td className="py-1">stabil</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
@@ -591,7 +587,7 @@ Rund $1{,}8$, bei einem wahren Wert von $5$. Der Grund ist Schritt 1 von
 @algorithmus:empfehlungen-ueber-eine-rang-k: Ohne Adas Bewertung sinkt das Mittel der Spalte
 „Sternenstaub" von $3{,}5$ auf $2{,}0$, und dieser selbst gesetzte Wert
 bestimmt die Vorhersage fast allein. Bei elf bekannten Bewertungen sagt das
-Ergebnis mehr über die Füllregel als über Ada; genau das ist der Einwand gegen
+Ergebnis mehr über die Füllregel als über Ada; das ist der Einwand gegen
 das Auffüllen in Schritt 1.
 :::
 
@@ -613,8 +609,8 @@ Unter allen Matrizen vom Rang höchstens $k$ minimiert $\bA_k$ den Fehler
 gleichzeitig in der Frobenius- und in der Spektralnorm.
 
 So steht es in @satz:eckart-und-young-beste-approximation-von. Bemerkenswert daran ist, dass zwei verschiedene
-Gütemaße dieselbe Lösung zulassen; erwarten müsste man das nicht. Der einzige
-Minimierer ist $\bA_k$ deshalb noch lange nicht, siehe @bemerkung:was-der-satz-liefert-und-was-nicht.
+Gütemaße dieselbe Lösung zulassen. Der einzige Minimierer ist $\bA_k$ deshalb
+nicht, siehe @bemerkung:was-der-satz-liefert-und-was-nicht.
 :::
 
 :::frage{falsch}

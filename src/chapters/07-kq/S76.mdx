@@ -12,7 +12,7 @@ Normalengleichungen mit :k[Cholesky-Zerlegung]{#cholesky-factorization}
 @sec:givens-householder). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
 Was aber, wenn $\bA$ rangdefizient oder fast singulär ist? Dann ist
 $\bA^\top\bA$ singulär, die Cholesky-Zerlegung bricht ab, und auch $\bR$ in der
-QR-Zerlegung wird singulär. Genau hier hilft die
+QR-Zerlegung wird singulär. Hier hilft die
 :k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) aus Kapitel 6; sie
 liefert das dritte und robusteste Lösungsverfahren. Am Ende des Abschnitts
 vergleichen wir alle drei Methoden und fassen das Kapitel zusammen.
@@ -28,7 +28,7 @@ wobei $\bSigma_r^{-1} = \diag(1/\sigma_1, \ldots, 1/\sigma_r)$ eine
 :k[Diagonalmatrix]{#diagonal-matrix} ist. Die zentrale
 Eigenschaft aus Kapitel 6: $\bA\bA\pinv$ ist die
 :k[Projektion]{#projection} auf den Spaltenraum
-$\col(\bA)$. Das ist exakt das, was wir für Kleinste Quadrate brauchen, denn
+$\col(\bA)$. Das ist, was wir für Kleinste Quadrate brauchen, denn
 in @sec:problem haben wir gesehen: $\wh{\bx}$ löst das KQ-Problem
 genau dann, wenn $\bA\wh{\bx} = \proj_{\col(\bA)}\bb$.
 
@@ -87,7 +87,7 @@ $$
 Also minimiert $\wh{\bx} = \bA\pinv\bb$ die Norm
 $\left\| \bA\bx - \bb \right\|_2$.
 
-::why[das ist genau die geometrische Charakterisierung der KQ-Lösung aus @sec:problem]
+::why[das ist die geometrische Charakterisierung der KQ-Lösung aus @sec:problem]
 :::
 
 ::::
@@ -136,8 +136,7 @@ vollem Rang die einzige Lösung.
 ::::
 :::::
 
-Rechnen wir das an einem bewusst „kaputten“ Beispiel durch, an einer Matrix, an der die
-Normalengleichungen scheitern.
+Ein Beispiel mit einer Matrix, an der die Normalengleichungen scheitern:
 
 :::beispiel[#rangdefizientes-kq-problem (rangdefizientes KQ-Problem)]
 Betrachten wir
@@ -146,7 +145,7 @@ $$
 \bA = \begin{pmatrix} 1 & 1 \\ 1 & 1 \\ 1 & 1 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}, \qquad \rang(\bA) = 1 < n = 2.
 $$
 
-Die Normalengleichungen sind hier chancenlos:
+Die Normalengleichungen versagen hier:
 $\bA^\top\bA = \left(\begin{smallmatrix} 3 & 3 \\ 3 & 3 \end{smallmatrix}\right)$
 ist singulär, die Cholesky-Zerlegung bricht ab. Die reduzierte SVD existiert trotzdem
 ($r = 1$): Wegen $\bA^\top\bA$ mit Eigenwerten $6$ und
@@ -173,7 +172,7 @@ $\bb$ auf $\col(\bA) = \spann\{(1,1,1)^\top\}$ (der Mittelwert
 von $\bb$ ist $2$). Alle KQ-Lösungen erfüllen
 $x_1 + x_2 = 2$, etwa auch $(2, 0)^\top$ mit Norm $2$.
 Unsere Lösung $\wh{\bx} = (1,1)^\top$ hat Norm
-$\sqrt{2} \approx 1{,}41$ – die kleinste, wie @satz:svd-loesung-des-kq-problems verspricht.
+$\sqrt{2} \approx 1{,}41$, die kleinste, wie @satz:svd-loesung-des-kq-problems sagt.
 :::
 
 <h3 id="sec-7.6-svd-vs-ne">SVD vs. Normalengleichungen</h3>
@@ -192,8 +191,7 @@ Tikhonov-Regularisierung.
 
 <h3 id="sec-7.6-vergleich">Praktischer Methodenvergleich</h3>
 
-Warum dann nicht immer SVD? Weil Robustheit ihren Preis hat. Fassen wir die
-Praxis-Regeln zusammen:
+Warum dann nicht immer SVD? Weil Robustheit ihren Preis hat.
 
 :::bemerkung[#anmerkungen-zur-methodenwahl (Anmerkungen zur Methodenwahl)]
 - Die QR-Zerlegung ist stabiler, aber langsamer als der Cholesky-Weg über die
@@ -210,7 +208,7 @@ Praxis-Regeln zusammen:
 :::
 
 :::interaktiv[Wie teuer ist Stabilität?]
-<p className="mb-2 text-sm">Die $O$-Klasse ist bei allen drei Methoden dieselbe; entscheidend sind die Konstanten. Um welchen Faktor ist QR teurer als die Normalengleichungen – und hängt dieser Faktor von der Problemgröße ab? Die SVD-Konstante hängt vom Algorithmus ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).</p>
+<p className="mb-2 text-sm">Die $O$-Klasse ist bei allen drei Methoden dieselbe; entscheidend sind die Konstanten. Um welchen Faktor ist QR teurer als die Normalengleichungen, und hängt dieser Faktor von der Problemgröße ab? Die SVD-Konstante hängt vom Algorithmus ab (typisch 4–12, iterative Verfahren, vgl. Kapitel 6).</p>
 
 <CostWidget />
 
@@ -218,7 +216,7 @@ Praxis-Regeln zusammen:
 :::
 
 :::interaktiv[Wie viele der 16 Stellen überleben?]
-<p className="mb-2 text-sm">In doppelter Genauigkeit stehen uns rund 16 Dezimalstellen zur Verfügung. Wie viele davon eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Bevor wir das Widget befragen, lohnt sich eine Schätzung.</p>
+<p className="mb-2 text-sm">In doppelter Genauigkeit stehen uns rund 16 Dezimalstellen zur Verfügung. Wie viele davon eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Erst schätzen, dann im Widget nachsehen.</p>
 
 <AccuracyWidget />
 
@@ -227,7 +225,7 @@ Praxis-Regeln zusammen:
 
 <h3 id="sec-7.6-zusammenfassung">Zusammenfassung: das Kapitel im Überblick</h3>
 
-Damit haben wir alle Bausteine des Kapitels beisammen:
+Die Bausteine des Kapitels:
 
 - **Kleinste-Quadrate-Problem** (@sec:problem): minimiere
   $\left\| \bA\bx - \bb \right\|_2$ für ein überbestimmtes
@@ -256,10 +254,10 @@ Damit haben wir alle Bausteine des Kapitels beisammen:
   Konstanten. Am stabilsten, funktioniert auch für rangdefiziente $\bA$ und
   liefert dann die Minimal-Norm-Lösung.
 
-Warum ist das für die Statistik zentral? Wir haben fast immer mehr Beobachtungen als
-Parameter ($m > n$): Das
+Für die Statistik ist das zentral, weil wir fast immer mehr Beobachtungen als
+Parameter haben ($m > n$): Das
 :k[lineare Modell]{#linear-regression}
-$\by = \bX\bbeta + \bepsilon$ ist genau ein Kleinste-Quadrate-Problem, und
+$\by = \bX\bbeta + \bepsilon$ ist ein Kleinste-Quadrate-Problem, und
 auch nichtlineare Probleme werden oft iterativ gelöst: linear approximieren,
 Approximation minimieren, wiederholen. Die Projektionsgeometrie liefert dabei die
 Intuition, die Analysis die Normalengleichungen ($\nabla \left\| \bA\bx - \bb \right\|_2^2 = \bnull$),
@@ -267,7 +265,7 @@ und die numerische lineare Algebra sagt uns, welchen Lösungsweg wir wählen sol
 einen Kompromiss aus Geschwindigkeit und Stabilität.
 
 :::interaktiv[Welche Methode wählen wir wann?]
-<p className="mb-2 text-sm">Zum Schluss ein Sandkasten für alles zusammen: Form von $\bA$, Kondition und Anspruch lassen sich frei kombinieren. Welche der drei Einstellungen ändert die Empfehlung am häufigsten?</p>
+<p className="mb-2 text-sm">Form von $\bA$, Kondition und Anspruch lassen sich hier frei kombinieren. Welche der drei Einstellungen ändert die Empfehlung am häufigsten?</p>
 
 <MethodChooser />
 
@@ -284,7 +282,7 @@ Marker für $W(\text{QR}) / W(\text{NE})$?
 
 Mit $W_{\text{NE}} = mn^2/2 + n^3/6$ und $W_{\text{QR}} = mn^2 - n^3/3$ ist das Verhältnis
 $(r - 1/3)/(r/2 + 1/6)$ mit $r = m/n$, für $r = 10$ also $9{,}667/5{,}167 = 1{,}87$. Es
-hängt nur von $r$ ab, nicht von $n$ – beide Regler für $n$ ändern daran nichts.
+hängt nur von $r$ ab, nicht von $n$; beide Regler für $n$ ändern daran nichts.
 :::
 
 :::frage{falsch}
@@ -316,7 +314,7 @@ Verfahren zeigt sich bei kleinem Residuum.
 
 ::::
 
-Damit endet unser Rundgang durch die Kleinste-Quadrate-Verfahren. Im nächsten Kapitel
-wechseln wir die Perspektive: probabilistische Sichtweisen und iterative Methoden.
+Im nächsten Kapitel wechseln wir die Perspektive: probabilistische Sichtweisen und
+iterative Methoden.
 
 <p className="border-t border-slate-200 pt-3 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">*Vertiefung:* Heath §3.6 (SVD und Pseudoinverse) und §3.7 (Methodenvergleich); MML §7.1 verbindet Kleinste Quadrate mit dem Gradientenblick auf Optimierung.</p>

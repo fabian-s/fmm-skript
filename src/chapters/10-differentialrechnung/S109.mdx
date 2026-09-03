@@ -1,7 +1,7 @@
-Ein einziger Gedanke trägt dieses Kapitel: Ableiten heißt linear approximieren.
-Alles Weitere war Buchführung darüber, in welchem Format die lineare Näherung
-steht und nach welchen Regeln sich mit ihr rechnen lässt. Sammeln wir ein, was
-bleiben soll, und sagen wir dazu, was wir bewusst liegengelassen haben.
+Der Grundgedanke dieses Kapitels: Ableiten heißt linear approximieren.
+Alles Weitere betraf die Frage, in welchem Format die lineare Näherung
+steht und nach welchen Regeln sich mit ihr rechnen lässt. Wir fassen zusammen, was
+bleiben soll, und nennen, was wir ausgelassen haben.
 
 ### Die Kernkonzepte
 
@@ -64,7 +64,7 @@ zurück, auf die lineare Approximation aus @definition:frechet-ableitung.
 
 2. **Rechenregeln** (@sec:produkt-kettenregel). Die Produktregel gilt für jede
    beschränkte bilineare Multiplikation (@satz:produktregel), die Kettenregel ist
-   ohne Koordinaten schlicht eine :k[Verkettung]{#function-composition}
+   ohne Koordinaten eine :k[Verkettung]{#function-composition}
    (@satz:kettenregel) und in Koordinaten ein Matrixprodukt
    (@satz:kettenregel-fuer-jacobimatrizen).
 
@@ -98,7 +98,7 @@ $\cred{o(\left\|\bh\right\|)}$ ist. So entstehen @satz:linearitaet-der-ableitung
 die Kettenregel und die Hesse-Formel in @satz:erste-und-zweite-ableitung-in. @satz:stetigkeit-aus-differenzierbarkeit kommt mit
 weniger aus, denn dort gibt es gar keinen Kandidaten: Wir schätzen beide
 Zusatzterme nach oben ab und lassen $\bh$ gegen null gehen. Das Rechnen
-mit Landau-Symbolen ist deshalb kein Beiwerk, sondern das eigentliche
+mit Landau-Symbolen ist deshalb das zentrale
 Handwerkszeug (@bemerkung:gross-o-und-klein-o-fuer-kleine). Weisen wir den Kandidaten zusätzlich als
 linear und beschränkt nach, so ist @definition:frechet-ableitung erfüllt, und mehr braucht
 es für Produkt- und Kettenregel nicht. Zweimal kommt ein Zusatzargument dazu, im
@@ -115,12 +115,12 @@ statt einer skalaren Zwischenstelle die Integralform des Restglieds.
 
 :::bemerkung[#die-drei-leeren-felder (Die drei leeren Felder)]
 In der Übersicht aus @sec:gradient sind drei Zellen leer
-geblieben: Matrix zu Vektor, Vektor zu Matrix und Matrix zu Matrix. Sie fehlen
-nicht, weil sie schwierig wären, sondern weil ihre Ableitungen aus dem
-Matrixschema herausfallen. Zählen wir nach. Eine Funktion
+geblieben: Matrix zu Vektor, Vektor zu Matrix und Matrix zu Matrix. Sie fehlen,
+weil ihre Ableitungen aus dem
+Matrixschema herausfallen. Eine Funktion
 $f\colon \R^{m \times n} \to \R^{p \times q}$ hat $m n p q$ partielle
 Ableitungen, jede davon adressiert durch zwei Indizes für die Eingabe und zwei
-für die Ausgabe. Ordentlich sortiert ergibt das ein Zahlenfeld mit vier
+für die Ausgabe. Sortiert ergibt das ein Zahlenfeld mit vier
 Indexpositionen, also einen :k[Tensor]{#tensor} der Stufe $4$
 (@sec:tensoren/tensoren). Für $2 \times 2$-Matrizen auf beiden
 Seiten sind das $16$ Zahlen in $\R^{2 \times 2 \times 2 \times 2}$. Bei den
@@ -129,7 +129,7 @@ Indexpositionen übrig.
 
 Gebraucht werden diese Fälle seltener als die sechs ausgefüllten Zellen, und wo
 sie doch auftreten, gibt es zwei Wege. Entweder wir rechnen mit Tensoren
-weiter, oder wir klopfen alles flach und stapeln jede Matrix zu einem Vektor:
+weiter, oder wir stapeln jede Matrix zu einem Vektor:
 Dafür stehen die Vektorisierung und das Kroneckerprodukt aus
 @sec:tensoren/zusammenfassung bereit, die eine Matrixgleichung in ein
 gewöhnliches :k[lineares Gleichungssystem]{#linear-system} verwandeln.
@@ -138,14 +138,14 @@ gewöhnliches :k[lineares Gleichungssystem]{#linear-system} verwandeln.
 Eine zweite Lücke ist keine Formatfrage. @definition:frechet-ableitung lässt für $\D$ und
 $\E$ beliebige normierte Vektorräume zu, also auch Räume von Funktionen. Ableitungen
 von Abbildungen zwischen Funktionenräumen bleiben hier eine Übungsaufgabe. Der
-Begriff trägt dorthin, doch die Beschränktheit von $\cgreen{D_x f}$ ist dann
-keine Formalie mehr, sondern eine echte Zusatzbedingung (@bemerkung:linearisierung-wie-die-definition-zu-lesen-ist).
+Begriff gilt auch dort, doch die Beschränktheit von $\cgreen{D_x f}$ ist dann
+eine echte Zusatzbedingung (@bemerkung:linearisierung-wie-die-definition-zu-lesen-ist).
 
 ### Ableiten in eine Richtung
 
 :::bemerkung[#stoerungsanalyse-als-richtungsableitung (Störungsanalyse als Richtungsableitung)]
-Ein Werkzeug lohnt den Nachtrag, weil es die Matrixfälle auf den
-eindimensionalen zurückführt. Wollen wir wissen, wie empfindlich eine
+Ein Werkzeug führt die Matrixfälle auf den
+eindimensionalen zurück. Wollen wir wissen, wie empfindlich eine
 Matrixrechnung auf eine Störung reagiert, so halten wir eine Störungsrichtung
 $\bE$ fest und betrachten die Funktion einer einzigen reellen Variablen
 
@@ -153,7 +153,7 @@ $$
 \varphi(h) := \cblue{f(\bX + h\bE)} .
 $$
 
-Ableiten nach dem Skalar $h$ an der Stelle $h = 0$ liefert genau den
+Ableiten nach dem Skalar $h$ an der Stelle $h = 0$ liefert den
 Ableitungsterm in Richtung $\bE$, für skalarwertiges $f$ also
 
 $$
@@ -161,21 +161,21 @@ $$
 = \tr\Biggl(\corange{\biggl(\frac{\partial f(\bX)}{\partial \bX}\biggr)^{\!\top}}\bE\Biggr) .
 $$
 
-Nachzurechnen ist das schnell: Setzen wir $\bH = h\bE$ in @eq:ableitung-nach-einer-matrix-2 ein, so
+Zum Nachweis setzen wir $\bH = h\bE$ in @eq:ableitung-nach-einer-matrix-2 ein, so
 zieht die Linearität den Faktor heraus,
 $\cgreen{D_{\bX} f(h\bE)} = h\,\cgreen{D_{\bX} f(\bE)}$, und der Restterm ist
 $\cred{o(\left|h\right|)}$, weil $\left\|h\bE\right\| = \left|h\right|\left\|\bE\right\|$
-gilt. Das ist dieselbe Idee wie die Richtungsableitung aus @definition:richtungsableitung,
+gilt. Das ist dieselbe Konstruktion wie die Richtungsableitung aus @definition:richtungsableitung,
 nur mit einer Matrix als Richtung. Anders als dort verlangen wir von $\bE$ keine
-Länge $1$; deshalb steht „Richtung" hier in Anführungszeichen. Rechnen
-wir ein kleines Beispiel nach. Für
+Länge $1$; deshalb steht „Richtung" hier in Anführungszeichen. Ein
+Beispiel: Für
 $\cblue{f(\bX)} = \left\|\bX\right\|_F^2$ mit
 $\bX = \bigl(\begin{smallmatrix} 1 & 2 \\ 3 & 4 \end{smallmatrix}\bigr)$ und
 $\bE = \bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\bigr)$ ist
 $\varphi(h) = \cblue{30} + \cgreen{4h} + \cred{h^2}$, also $\varphi'(0) = 4$,
 und das ist der Eintrag $(1,2)$ von $\corange{2\bX}$ nach @eq:identitaeten-fuer-matrix-zu-skalar-3. Diese
-Wahl von $\bE$ ist gerade das $\bE_{ij}$ aus @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt, das Anstupsen
-eines einzelnen Eintrags; beliebige $\bE$ stupsen alle Einträge zugleich an.
+Wahl von $\bE$ ist gerade das $\bE_{ij}$ aus @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt, die Störung
+eines einzelnen Eintrags; beliebige $\bE$ stören alle Einträge zugleich.
 
 Für die Praxis lesen wir das als Störungsanalyse: $\bE$ gibt an, wohin gestört
 wird, und $\varphi'(0)$ misst in erster Ordnung, wie stark diese Störung im
@@ -192,7 +192,7 @@ Ableitung, die hier nicht steht, so schlagen wir sie besser nach, statt sie neu
 herzuleiten. Das *Matrix Cookbook* von
 [Petersen und Pedersen (2012)](https://archive.org/details/imm3274) sammelt die
 Formeln, die in Anwendungen tatsächlich vorkommen, von Determinanten und
-Inversen bis zu Spur- und Normausdrücken. Eine Warnung gehört dazu: Die
+Inversen bis zu Spur- und Normausdrücken. Dabei ist zu beachten: Die
 Konventionen unterscheiden sich zwischen den Quellen, und dieselbe Formel steht
 je nach Zeilen- oder Spaltenkonvention transponiert (@bemerkung:zeilenvektor-nicht-spaltenvektor). Bei
 rechteckigen Formaten fällt das schon beim Nachzählen von Zeilen und Spalten
@@ -237,12 +237,11 @@ Semidefinitheit der Hesse-Matrix, zieht daraus aber keinen Schluss über globale
 Minima. Und @bemerkung:drei-vorbehalte nennt als ersten Vorbehalt des Newton-Verfahrens,
 dass ein kritischer Punkt eben noch kein Minimum ist.
 
-Für :k[konvexe Funktionen]{#convexity} lautet die Antwort „immer", und das ändert die Lage
-grundlegend. Jeder kritische Punkt ist dann ein globales Minimum, Sattelpunkte
+Für :k[konvexe Funktionen]{#convexity} lautet die Antwort „immer". Jeder kritische Punkt ist dann ein globales Minimum, Sattelpunkte
 gibt es keine, und ein Abstiegsverfahren kann nirgends an der falschen Stelle
 hängenbleiben. Damit bekommen :k[Optimierungsverfahren]{#optimization} Garantien
-statt Faustregeln. Das [nächste Kapitel](?k=11-konvexitaet#sec-11.1) nimmt
-sich die Konvexität deshalb als eigenes Thema vor.
+statt Faustregeln. Das [nächste Kapitel](?k=11-konvexitaet#sec-11.1) behandelt
+die Konvexität deshalb als eigenes Thema.
 
 ### Selbsttest
 
@@ -257,7 +256,7 @@ Für $g\colon \R^n \to \R^m$ und $f\colon \R^m \to \R$ gilt
 $\nabla (f \circ g)(\bx) = \nabla f(g(\bx))\,\bJ_g(\bx)$, ganz ohne
 Transponierte.
 
-Genau dafür ist der Gradient eine Zeile (@bemerkung:zeilenvektor-nicht-spaltenvektor): Das Produkt einer
+Dafür ist der Gradient eine Zeile (@bemerkung:zeilenvektor-nicht-spaltenvektor): Das Produkt einer
 $1 \times m$-Zeile mit einer $m \times n$-Matrix ist wieder eine Zeile, und für
 $m = 1$ ist der Gradient der Sonderfall der Jacobimatrix (@bemerkung:die-zeilen-sind-gradienten).
 Zahlenprobe mit $g(\bx) = \bA\bx$,
@@ -280,7 +279,7 @@ Zusatzbedingung. Auf dem Raum der
 Polynome auf $[0,1]$ mit der Supremumsnorm etwa ist das Ableiten
 $p \mapsto p'$ linear, aber unbeschränkt: Für $p_n(x) = x^n$ ist
 $\left\|p_n\right\|_\infty = 1$, während $p_n'(x) = n x^{n-1}$ die Norm $n$ hat.
-Genau deshalb bleiben Abbildungen zwischen Funktionenräumen in diesem Kapitel
+Deshalb bleiben Abbildungen zwischen Funktionenräumen in diesem Kapitel
 außen vor.
 :::
 
@@ -330,14 +329,14 @@ Im Gradienten-Widget aus @sec:gradient: Wir drehen $\bd$ so, dass die
 Richtung längs der Höhenlinie zeigt. Welchen Wert nimmt die Richtungsableitung
 $\nabla f(\bx)\bd$ dann an?
 
-Null. Entlang der Höhenlinie ändert sich $f$ in erster Ordnung nicht, und genau
+Null. Entlang der Höhenlinie ändert sich $f$ in erster Ordnung nicht, und
 deshalb steht der Gradient senkrecht auf ihr (@bemerkung:der-gradient-steht-senkrecht-auf-der). Im Schnitt
 rechts liegt die grüne Gerade dann waagerecht.
 :::
 
 ::::
 
-Die zweite Runde nimmt sich die Abschnitte @num:differentialrechnung/stetigkeit bis @num:differentialrechnung/taylor vor: acht Aussagen zu
+Die zweite Runde betrifft die Abschnitte @num:differentialrechnung/stetigkeit bis @num:differentialrechnung/taylor: acht Aussagen zu
 Eigenschaften, Rechenregeln, Hesse-Matrix und Taylor.
 
 ::::quiz
@@ -409,12 +408,12 @@ f(\bx) = \frac{x_1 x_2 \left(x_1^2 - x_2^2\right)}{x_1^2 + x_2^2}
 \ \ \text{für } \bx \neq \bnull , \qquad f(\bnull) = 0 .
 $$
 
-Auf den Achsen lässt sich alles ausrechnen: $\partial f(0, x_2)/\partial x_1 = -x_2$
+Auf den Achsen: $\partial f(0, x_2)/\partial x_1 = -x_2$
 und $\partial f(x_1, 0)/\partial x_2 = x_1$. Einmal mehr abgeleitet ergibt das im
 Nullpunkt die beiden Werte $-1$ und $+1$, je nach Reihenfolge. Die Hesse-Matrix
 ist dort also nicht symmetrisch, und alles, was auf ihrer Symmetrie aufbaut, von
-@satz:erste-und-zweite-ableitung-in bis zum Spektralsatz-Argument in @satz:hesse-kriterium-fuer-kritische-punkte, steht ohne Stetigkeit
-in der Luft.
+@satz:erste-und-zweite-ableitung-in bis zum Spektralsatz-Argument in @satz:hesse-kriterium-fuer-kritische-punkte, gilt ohne Stetigkeit
+nicht.
 :::
 
 :::frage{wahr}
@@ -439,8 +438,8 @@ zeigt ein Maximum an.
 Weil der Restterm der quadratischen Näherung $\cred{o(\left\|\bh\right\|^2)}$
 ist, fällt er beim Halbieren von $\bh$ höchstens auf ein Viertel.
 
-Eine $o$-Aussage beschreibt einen Grenzwert und verspricht über einzelne Schritte
-gar nichts. Schon im Eindimensionalen: Die Funktion
+Eine $o$-Aussage beschreibt einen Grenzwert und sagt über einzelne Schritte
+nichts. Schon im Eindimensionalen: Die Funktion
 $\cred{r(h)} = h^3\bigl(2 + \sin(1/h)\bigr)$
 erfüllt $\left|\cred{r(h)}\right|/h^2 \le 3\left|h\right| \to 0$, ist also
 $\cred{o(\left|h\right|^2)}$. Bei $h = 0{,}095$ steht trotzdem

@@ -10,7 +10,7 @@ die für jede Matrix funktioniert, ganz gleich welches Format sie hat.
 
 ### Was wir brauchen
 
-Sammeln wir zuerst das Vorwissen ein, auf dem das Kapitel steht.
+Das Kapitel setzt voraus:
 
 - Die *Spektralnorm* $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$,
   also der größte Streckfaktor der Abbildung $\bx \mapsto \bA\bx$
@@ -32,9 +32,9 @@ Sammeln wir zuerst das Vorwissen ein, auf dem das Kapitel steht.
 
 Warum brauchen wir überhaupt etwas Neues? Die Eigenwertzerlegung
 $\bA = \bP\bD\bP^{-1}$ ist das Standardwerkzeug, um eine Matrix in ihre
-Wirkungsrichtungen zu zerlegen. Nur ist sie doppelt eingeschränkt.
+Wirkungsrichtungen zu zerlegen. Sie ist aber in zwei Punkten eingeschränkt.
 
-Erstens verlangt schon die Gleichung $\bA\bv = \lambda\bv$, dass $\bA\bv$ und
+Zum einen verlangt schon die Gleichung $\bA\bv = \lambda\bv$, dass $\bA\bv$ und
 $\bv$ im selben Raum liegen. Die Matrix muss also quadratisch sein; für
 $\bA \in \R^{m \times n}$ mit $m \neq n$ stellt sich die Frage nach Eigenwerten
 gar nicht erst. Und selbst unter den quadratischen Matrizen hat nicht jede eine
@@ -42,7 +42,7 @@ Eigenwertzerlegung: $\bigl(\begin{smallmatrix} 0 & 1 \\ 0 & 0 \end{smallmatrix}\
 besitzt nur den Eigenwert $0$, dessen Eigenraum eindimensional ist. Eine Basis
 aus Eigenvektoren kommt so nicht zustande.
 
-Zweitens nützt uns die Zerlegung vor allem dann etwas, wenn $\bP$ orthogonal
+Zum anderen nützt uns die Zerlegung vor allem dann etwas, wenn $\bP$ orthogonal
 gewählt werden kann, denn nur dann verzerrt der Basiswechsel nichts. Das gelingt
 genau für :k[symmetrische]{#symmetric-matrix} Matrizen (Spektralsatz,
 @sec:matrix-spur-norm/operatornormen). Ein Blick auf die Rechenregel
@@ -74,13 +74,12 @@ Drei Dinge wünschen wir uns dabei:
    Diagonale heißen soll; das holen wir nach, sobald wir die Bausteine haben.
 3. $\cgreen{\bP}$ und $\cblue{\bQ}$ sind :k[Orthogonalmatrizen]{#orthogonal-matrix}.
 
-Punkt 3 ist der eigentliche Anspruch. Orthogonalmatrizen drehen und spiegeln,
+Punkt 3 ist die entscheidende Forderung. Orthogonalmatrizen drehen und spiegeln,
 mehr nicht. Steckt die ganze Verzerrung in $\corange{\bD}$, dann lesen wir an
 den Diagonaleinträgen direkt ab, was die Abbildung mit dem Raum anstellt.
 Nebenbei wird die Zerlegung dadurch bequem: Für orthogonales $\bQ$ ist
 $\bQ^{-1} = \bQ^\top$, aus @eq:eq-6-1-1 wird also
-$\bA = \cgreen{\bP}\corange{\bD}\cblue{\bQ}^\top$, und niemand muss eine Inverse
-ausrechnen.
+$\bA = \cgreen{\bP}\corange{\bD}\cblue{\bQ}^\top$, ganz ohne Inverse.
 
 Die Namen der Faktoren wechseln später noch. Sobald wir wissen, woraus sie
 bestehen, heißt die Zerlegung $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV}^\top$
@@ -90,14 +89,13 @@ blau die rechte Seite $\cblue{\bV}$, grün die linke Seite $\cgreen{\bU}$.
 
 ### Geometrische Intuition
 
-Woher soll so eine Zerlegung kommen? Die Antwort steckt in der Geometrie. Statt
-einen einzelnen Vektor durch die Abbildung zu schicken, schicken wir alle
-Einheitsvektoren auf einmal.
+Woher kommt so eine Zerlegung? Statt einen einzelnen Vektor durch die Abbildung
+zu schicken, schicken wir alle Einheitsvektoren auf einmal.
 
 Betrachten wir also die Einheitssphäre, alle $\bx$ mit $\left\| \bx \right\| = 1$.
 Ihre Bilder $\bA\bx$ haben ganz verschiedene Längen: Manche Richtungen streckt
-$\bA$, andere staucht sie. Die Frage, die uns durch dieses Kapitel trägt, lautet:
-Welche Richtung wird am stärksten gestreckt, welche am zweitstärksten, und so
+$\bA$, andere staucht sie. Die Leitfrage dieses Kapitels: Welche Richtung wird am
+stärksten gestreckt, welche am zweitstärksten, und so
 weiter?
 
 Für eine $2 \times 2$-Matrix wird aus dem Einheitskreis eine Ellipse; ist $\bA$
@@ -109,7 +107,7 @@ dagegen von $\R^3$ in die Ebene ab, so wird eine ganze Richtung platt gedrückt,
 und aus der Einheitssphäre wird eine ausgefüllte Ellipse. An den Hauptachsen
 ändert das nichts.
 
-Bleiben wir konkret und nehmen wir die Matrix aus @beispiel:visualisierung,
+Nehmen wir die Matrix aus @beispiel:visualisierung,
 
 $$
 \bA = \begin{pmatrix} 2 & 1 \\ 0 & 1 \end{pmatrix} .
@@ -143,8 +141,8 @@ senkrechte Richtung $\cblue{\bx^\perp} \approx (-0{,}526,\; 0{,}851)^\top$ hat d
 Bild $\cgreen{\bA\bx^\perp} \approx (-0{,}201,\; 0{,}851)^\top$ der Länge
 $\corange{0{,}874}$, wird also am schwächsten gestreckt.
 
-Nun die Beobachtung, auf der das ganze Kapitel ruht: Die beiden Bilder stehen
-wieder senkrecht aufeinander,
+Die entscheidende Beobachtung: Die beiden Bilder stehen wieder senkrecht
+aufeinander,
 
 $$
 \cgreen{\bA\bx^*}^\top \cgreen{\bA\bx^\perp}
@@ -179,8 +177,7 @@ Maximalstelle, und gleich danach nach dem, was in den übrigen Richtungen
 passiert.
 
 Unhandlich an @eq:eq-6-1-2 ist die Zielfunktion: In der Norm steckt eine Wurzel
-über einer Quadratsumme. Der Ausweg ist ein alter Trick. Wir maximieren
-stattdessen das Quadrat.
+über einer Quadratsumme. Wir maximieren deshalb stattdessen das Quadrat.
 
 :::satz[#streckung-als-quadratische-form (Streckung als quadratische Form)]
 Für $\bA \in \R^{m \times n}$ und alle $\bx \in \R^n$ gilt
@@ -228,7 +225,7 @@ wenn es $\left\| \bA\bx \right\|^2$ maximiert.
 
 Die rechte Seite von @eq:streckung-als-quadratische-form ist eine
 :k[quadratische Form]{#quadratic-form}, und zwar die zur Matrix $\bA^\top\bA$.
-Damit hat sich die Lage grundlegend geändert. Ist $\bA$ vom Format
+Das ändert die Lage. Ist $\bA$ vom Format
 $m \times n$, so ist $\bA^\top\bA$ vom Format $n \times n$, also quadratisch,
 unabhängig davon, ob $\bA$ mehr Zeilen oder mehr Spalten hat. Symmetrisch ist
 $\bA^\top\bA$ außerdem, das rechnet @sec:singulaerwerte nach. Der Umweg über
@@ -246,8 +243,6 @@ schreiben wir den Index dazu.
 
 ### Selbsttest
 
-Prüfen wir, ob die Motivation sitzt.
-
 ::::quiz
 
 :::zahlfrage{loesung=1.458 toleranz=0.02}
@@ -259,8 +254,8 @@ $\left\| \bA\bx \right\|$?
 Rund $1{,}458$. Der Einheitsvektor ist
 $\bx = (0{,}7071,\; 0{,}7071)^\top$, sein Bild $(1{,}4142,\; 0{,}3536)^\top$, und
 dessen Länge ist $\sqrt{2 + 0{,}125} = \sqrt{2{,}125} \approx 1{,}458$. Der Wert
-liegt zwischen $\corange{0{,}5}$ und $\corange{2}$, den beiden Streckfaktoren,
-und das ist kein Zufall: Auf dem Einheitskreis liegt $\left\| \bA\bx \right\|$
+liegt zwischen $\corange{0{,}5}$ und $\corange{2}$, den beiden Streckfaktoren:
+Auf dem Einheitskreis liegt $\left\| \bA\bx \right\|$
 immer zwischen kleinstem und größtem Singulärwert.
 :::
 

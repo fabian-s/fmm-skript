@@ -8,8 +8,8 @@ Interpolanten mit stetiger zweiter Ableitung hat der natürliche kubische Spline
 die kleinste Krümmung (@sec:minimale-kruemmung). Dazu kam die Zusage, dass
 ein hinreichend feines Knotengitter jede
 :k[stetige Funktion]{#continuity} beliebig genau einfängt. Diese Zusage
-nennt kein Tempo. Sie sagt weder, wie viele Knoten wir brauchen, noch was wir
-gewinnen, wenn wir die Zahl der Teilintervalle verdoppeln. Genau das holen wir
+nennt keine Geschwindigkeit. Sie sagt weder, wie viele Knoten wir brauchen, noch was wir
+gewinnen, wenn wir die Zahl der Teilintervalle verdoppeln. Das holen wir
 jetzt nach.
 
 ### Gitterweite und Fehlerschranke
@@ -30,7 +30,7 @@ $$
 $$
 :::
 
-Zwei Feinheiten stecken schon in dieser Definition. Das Gitter ist geordnet und
+Zwei Details der Definition. Das Gitter ist geordnet und
 schöpft $[a, b]$ aus, die beiden Randpunkte sind also selbst Knoten. Und
 $\corange{h}$ ist ein Maximum, kein Mittelwert: Ein einziges breites
 Teilintervall bestimmt die Gitterweite, wie fein die übrigen auch liegen mögen.
@@ -58,7 +58,7 @@ Randbedingungen gilt sie mit $C = \tfrac{5}{384}$.
 
 Die Voraussetzung $f \in \Ccal^4[a, b]$ verlangt vier stetige Ableitungen,
 also eine :k[glatte Funktion]{#smooth-function} im üblichen Sinn. Die rechte
-Seite der Schranke hat drei Faktoren, und jeder erzählt etwas anderes.
+Seite der Schranke hat drei Faktoren mit verschiedener Bedeutung.
 
 :::bemerkung[#wie-wir-die-schranke-lesen (Wie wir die Schranke lesen)]
 1. Die Gitterweite steht in der *vierten* Potenz. Halbieren wir
@@ -77,17 +77,17 @@ Seite der Schranke hat drei Faktoren, und jeder erzählt etwas anderes.
    führen wir diese lokale Rechnung gleich in @satz:fehler-der-stueckweise-linearen vor.
 :::
 
-Wie ernst Punkt 3 gemeint ist, zeigt eine kleine Rechnung mit
+Wie wichtig Punkt 3 ist, zeigt eine Rechnung mit
 $f(x) = \sin(2\pi x)$ auf $[0, 1]$. Legen wir zehn Knoten so, dass die linke
 Hälfte des Intervalls ein einziges Teilstück bleibt und die rechte Hälfte in
 acht gleiche Stücke zerfällt, dann ist $\corange{h} = 0{,}5$, und der maximale
 Fehler des natürlichen kubischen Splines beträgt $0{,}479$. Ein gleichmäßiges
 Gitter mit *neun* Knoten kommt auf $0{,}00107$ und ist damit rund 450-mal
-genauer. Ein Knoten mehr nützt nichts, solange eine Lücke bleibt.
+genauer. Ein zusätzlicher Knoten nützt nichts, solange eine Lücke bleibt.
 
 :::bemerkung[#welcher-spline-die-konstante-traegt (Welcher Spline die Konstante trägt)]
 @satz:approximationsfehler-kubischer-splines behauptet die Existenz eines kubischen Splines, nicht die Güte
-eines beliebigen Randabschlusses. Das ist keine Spitzfindigkeit. Die scharfe
+eines beliebigen Randabschlusses. Das ist wesentlich. Die scharfe
 Konstante $\tfrac{5}{384}$ gilt etwa für den *vollständigen* kubischen Spline,
 der $s'(a) = f'(a)$ und $s'(b) = f'(b)$ erfüllt, sowie für die passende
 Randbedingung zweiter Ordnung $s''(a)=f''(a)$ und $s''(b)=f''(b)$. Der
@@ -111,11 +111,11 @@ $\cgreen{s''(1)} = 0$ erzwingt, während $f''(1) = 6$ ist.
 
 Für das Beispiel unten schreiben wir deshalb gleich die Randableitungen vor,
 $\cgreen{s'(0)} = f'(0)$ und $\cgreen{s'(1)} = f'(1)$; die Konstante
-$\tfrac{5}{384}$ ist dort also ehrlich verdient. Wie viel daran hängt, zeigt
+$\tfrac{5}{384}$ gilt dort also. Wie viel daran hängt, zeigt
 der Vergleich mit dem natürlichen Spline derselben Funktion. Auf groben Gittern
 ist der Unterschied winzig, weil die Funktion dort an beiden Rändern fast flach
 ausläuft: bei fünf Knoten messen wir $0{,}341$ statt $0{,}324$. Sobald das Gitter
-fein wird, schlägt der Randfehler durch. Bei $33$ Knoten sitzt der größte Fehler
+fein wird, dominiert der Randfehler. Bei $33$ Knoten sitzt der größte Fehler
 des natürlichen Splines nicht mehr an der Spitze im Inneren, sondern bei
 $x \approx 0{,}012$ am linken Rand, und bei $65$ Knoten ist er mit
 $1{,}84 \cdot 10^{-5}$ sogar *größer* als die Schranke
@@ -143,10 +143,9 @@ $$
 :::
 
 :::::vertiefung[Wie die Schranke für Geradenstücke entsteht]
-Der Beweis arbeitet auf einem einzelnen Teilintervall, schiebt eine
-Hilfsfunktion mit drei Nullstellen dazwischen und wendet zweimal den Satz von
-Rolle an. Die Bemerkung darunter zieht daraus das Muster, auf das es hier
-ankommt.
+Der Beweis arbeitet auf einem einzelnen Teilintervall, konstruiert eine
+Hilfsfunktion mit drei Nullstellen und wendet zweimal den Satz von
+Rolle an. Die Bemerkung darunter beschreibt das allgemeine Muster.
 
 ::::beweis
 
@@ -223,8 +222,8 @@ Größenordnung $\corange{h}$, und genauso oft wird differenziert. Bei
 Geradenstücken sind es zwei Bedingungen, zwei Ableitungen und $\corange{h}^2$.
 Das Muster setzt sich fort: Bei Polynomstücken vom Grad $q$ steht am Ende
 $\corange{h}^{q+1}$ neben der $(q+1)$-ten Ableitung, für kubische Stücke also
-$\corange{h}^4$ neben $f^{(4)}$. Wer den Restterm im
-:k[Satz von Taylor]{#taylor-theorem} kennt, erkennt die Bauart wieder: Dort
+$\corange{h}^4$ neben $f^{(4)}$. Der Restterm im
+:k[Satz von Taylor]{#taylor-theorem} hat dieselbe Bauart: Dort
 steht eine höhere Ableitung an einer Zwischenstelle mal eine Potenz des
 Abstands, hier $\tfrac{1}{2} f''(\xi)$ mal ein Produkt von Abständen.
 
@@ -232,13 +231,13 @@ Für Splines ist der Beweis deutlich länger als der obige, weil die
 Anschlussbedingungen die Teilintervalle koppeln: Der Spline auf einem Stück
 hängt über das Gleichungssystem aus
 @sec:splines an *allen* Daten, und
-genau davon lebt ja seine Glattheit. Die Buchführung über die Ordnung bleibt
-dieselbe.
+darauf beruht seine Glattheit. Das Zählen der Ordnung bleibt
+dasselbe.
 
-Bemerkenswert ist dabei, was *nicht* gebraucht wird. Kein Schritt verlangt einen
+Zu beachten ist, was *nicht* gebraucht wird. Kein Schritt verlangt einen
 wachsenden Polynomgrad. Wir verfeinern das Gitter und lassen den Grad bei drei,
-und deshalb passiert hier nichts von dem, was die Polynominterpolation hohen
-Grades ruiniert
+und deshalb treten die Probleme der Polynominterpolation hohen
+Grades hier nicht auf
 (@sec:polynominterpolation).
 :::
 
@@ -278,18 +277,18 @@ messen $\max \cred{|f - s|}$ auf einem feinen Raster.
 | $65$ | $0{,}015625$ | $1{,}49 \cdot 10^{-5}$ | $3{,}05 \cdot 10^{-6}$ | $16{,}9$ |
 | $129$ | $0{,}0078125$ | $9{,}31 \cdot 10^{-7}$ | $1{,}87 \cdot 10^{-7}$ | $16{,}3$ |
 
-Zweierlei ist hier zu sehen. Erstens ist der Fehler auf groben Gittern mit
-bloßem Auge zu erkennen: Bei fünf Knoten beträgt er $0{,}324$, also rund ein
+Zwei Beobachtungen. Der Fehler auf groben Gittern ist
+deutlich sichtbar: Bei fünf Knoten beträgt er $0{,}324$, also rund ein
 Drittel der Buckelhöhe $1$. Der Spline drückt die Spitze auf $0{,}71$ herunter
 und schwingt rechts davon bis auf $-0{,}056$ unter die Nulllinie.
 
-Zweitens stellt sich der Faktor $16$ nicht sofort ein. Die Schranke fällt bei
+Und der Faktor $16$ stellt sich nicht sofort ein. Die Schranke fällt bei
 jeder Halbierung exakt auf ein Sechzehntel, denn $\corange{h}^4$ tut genau das;
-der gemessene Fehler springt dagegen erst auf $13{,}6$, dann auf $21{,}6$ und
-$21{,}4$ und beruhigt sich ab $65$ Knoten bei $16{,}9$ und $16{,}3$. Der Grund
+der gemessene Fehler fällt dagegen erst um $13{,}6$, dann um $21{,}6$ und
+$21{,}4$ und stabilisiert sich ab $65$ Knoten bei $16{,}9$ und $16{,}3$. Der Grund
 steht in @bemerkung:wie-wir-die-schranke-lesen: $M_4$ ist ein Maximum über das
-*ganze* Intervall, tatsächlich aber lebt $\left| f^{(4)} \right|$ fast nur auf
-der Breite $1/\sqrt{\alpha} \approx 0{,}16$ um die Spitze. Solange
+*ganze* Intervall, tatsächlich aber ist $\left| f^{(4)} \right|$ fast nur auf
+der Breite $1/\sqrt{\alpha} \approx 0{,}16$ um die Spitze von null verschieden. Solange
 $\corange{h}$ von dieser Größenordnung ist, hängt der gemessene Fehler stark
 davon ab, wie die Knoten gerade zur Spitze liegen, und die Ordnung $4$ ist noch
 nicht zu sehen. $O(\corange{h}^4)$ ist eine Aussage für kleine $\corange{h}$,
@@ -297,7 +296,7 @@ und „klein" heißt hier: klein gegen die Breite, auf der sich $f^{(4)}$ änder
 :::
 
 :::bemerkung[#schranke-und-messung-sind-zweierlei (Schranke und Messung sind zweierlei)]
-Die beiden Fehlerspalten in der Tabelle oben sehen ähnlich aus, sagen aber
+Die beiden Fehlerspalten in der Tabelle oben sagen
 Verschiedenes. Die Schranke gilt für *jedes* $f \in \Ccal^4[a, b]$ und für
 jede Partition; der
 gemessene Fehler gehört zu genau einer Funktion auf genau einem Gitter. Aus dem
@@ -308,27 +307,27 @@ dazu, der Fehler sei *von vierter Ordnung* in $\corange{h}$; das ist dieselbe
 Sprechweise wie bei der :k[Konvergenzordnung]{#rate-of-convergence} iterativer
 Verfahren, nur läuft hier kein Iterationszähler, sondern die Gitterweite gegen
 null. Unsere Messung liegt in @beispiel:buckel-auf-dem-einheitsintervall
-durchweg unter der Schranke — das Verhältnis von gemessenem Fehler zu Schranke
-beträgt $0{,}33$, $0{,}39$, $0{,}29$, $0{,}22$ und dann zweimal $0{,}20$ —, aber
-die Faktoren erreichen die $16$ erst, wenn das Gitter fein genug ist. Wer eine
-Rechnung „mit Faktor genau 16" erwartet, wird enttäuscht, ohne dass etwas
+durchweg unter der Schranke; das Verhältnis von gemessenem Fehler zu Schranke
+beträgt $0{,}33$, $0{,}39$, $0{,}29$, $0{,}22$ und dann zweimal $0{,}20$. Die
+Faktoren erreichen die $16$ aber erst, wenn das Gitter fein genug ist. Ein
+Faktor von genau $16$ ist nicht zu erwarten, ohne dass etwas
 falsch wäre.
 :::
 
 :::interaktiv[Vom groben zum feinen Gitter]
 Das Widget rechnet den Buckel aus @beispiel:buckel-auf-dem-einheitsintervall
 noch einmal nach und beginnt schon bei drei Knoten. Im oberen Bild ist zu sehen,
-wie der Spline die Spitze zunächst gar nicht findet: Mit drei Knoten bleibt er
-bei $0{,}67$ hängen, mit fünf kommt er auf $0{,}71$ und schwingt rechts der
+wie der Spline die Spitze zunächst nicht erreicht: Mit drei Knoten bleibt er
+bei $0{,}67$, mit fünf kommt er auf $0{,}71$ und schwingt rechts der
 Spitze unter null. Erst ab neun Knoten liegen Funktion und Interpolant nahezu
 übereinander.
 
 Im unteren Bild verschwindet der Fehler an jedem Knoten und bildet dazwischen
 Bäuche; sie sammeln sich um die Spitze, wo $\left| f^{(4)} \right|$ groß ist.
-Darunter legt eine halblogarithmische Tafel Messung und Schranke übereinander,
+Darunter zeigt eine halblogarithmische Tafel Messung und Schranke,
 und die Tabelle listet dieselben Zahlen. Die Schranke fällt bei jeder
 Halbierung von $h$ exakt auf ein Sechzehntel; der gemessene Faktor schwankt auf
-den groben Gittern kräftig und nähert sich der asymptotischen $16$ erst am
+den groben Gittern stark und nähert sich der asymptotischen $16$ erst am
 rechten Ende.
 
 Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
@@ -340,22 +339,21 @@ Um welchen Faktor erwarten wir beim Halbieren von $h$ einen kleineren Fehler?
 
 ### Was Splines stark macht
 
-Damit ist der theoretische Werkzeugkasten für Splines beisammen, und er ist
-bemerkenswert gut bestückt.
+Damit sind die theoretischen Eigenschaften der Splines beisammen.
 
 :::bemerkung[#vier-staerken-auf-einen-blick (Vier Stärken auf einen Blick)]
 1. *Effiziente Berechnung.* In der B-Spline-Basis führt die Interpolation auf
    ein Gleichungssystem mit Bandstruktur
    (@sec:splines), und Bandstruktur
-   ist genau die Sorte Struktur, die den Aufwand drückt (@bemerkung:struktur-ausnutzen in
+   ist die Sorte Struktur, die den Aufwand senkt (@bemerkung:struktur-ausnutzen in
    @sec:lgs/lu). Der kubische Spline-Interpolant dieses
    Abschnitts ist das kleinste Beispiel dafür: Seine zweiten Ableitungen an den
-   Knoten lösen ein *tridiagonales* System — bei natürlichem wie bei
-   eingespanntem Randabschluss —, und weil die Elimination dessen Band erhält,
-   kostet es $O(n)$ statt $O(n^3)$ Operationen. Genau so rechnet das Widget
+   Knoten lösen ein *tridiagonales* System, bei natürlichem wie bei
+   eingespanntem Randabschluss, und weil die Elimination dessen Band erhält,
+   kostet es $O(n)$ statt $O(n^3)$ Operationen. So rechnet das Widget
    oben.
 2. *Stabilität und Lokalität.* B-Splines haben kompakten Träger, jede
-   Basisfunktion lebt also nur über wenigen Teilintervallen. Eine Änderung an
+   Basisfunktion ist also nur über wenigen Teilintervallen von null verschieden. Eine Änderung an
    einem Datenpunkt wirkt lokal, und die Basis ist weit besser konditioniert als
    die Monombasis (@sec:polynominterpolation,
    Kondition in @sec:fehler/kondition).
@@ -370,8 +368,8 @@ bemerkenswert gut bestückt.
    (@bemerkung:welcher-spline-die-konstante-traegt).
 :::
 
-Alle vier Punkte gelten für *Interpolation*, also für Daten ohne Rauschen. Genau
-diese Voraussetzung fällt im nächsten Abschnitt weg. Sobald die $y_i$ eine
+Alle vier Punkte gelten für *Interpolation*, also für Daten ohne Rauschen.
+Diese Voraussetzung fällt im nächsten Abschnitt weg. Sobald die $y_i$ eine
 Zufallskomponente tragen, ist es nicht mehr wünschenswert, sie exakt zu treffen,
 und aus dem Interpolationsproblem wird ein Glättungsproblem
 (@sec:glaettung).
@@ -397,7 +395,7 @@ $16$-mal kleiner.
 @eq:approximationsfehler-kubischer-splines ist eine obere Schranke, keine Gleichung. Unsere eigenen Messungen am
 Buckel aus @beispiel:buckel-auf-dem-einheitsintervall ergeben der Reihe nach die
 Faktoren $13{,}6$, $21{,}6$, $21{,}4$, $16{,}9$ und $16{,}3$: Erst wenn das
-Gitter die Spitze auflöst, pendeln sie sich bei $16$ ein, und getroffen wird die
+Gitter die Spitze auflöst, nähern sie sich $16$, und getroffen wird die
 Zahl auch dann nicht. Als Aussage über die Größenordnung bleibt die Faustregel
 „Fehler wird $2^4 = 16$-mal kleiner" trotzdem richtig.
 :::
@@ -433,7 +431,7 @@ Der Satz verlangt $f \in \Ccal^4[a, b]$, denn auf der rechten Seite steht
 $\max \left| f^{(4)} \right|$. Dass sich *stetige* Funktionen durch Splines
 beliebig genau approximieren lassen, ist eine andere Aussage
 (@sec:splines); sie nennt keine
-Geschwindigkeit. Wer weniger Glattheit mitbringt, bekommt eine schwächere
+Geschwindigkeit. Bei weniger Glattheit ergibt sich eine schwächere
 Ordnung: @satz:fehler-der-stueckweise-linearen verlangt nur $f \in \Ccal^2$ und liefert dafür auch nur
 $O(\corange{h}^2)$.
 :::

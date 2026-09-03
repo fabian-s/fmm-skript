@@ -63,12 +63,10 @@ exakte Lösung eines nur geringfügig gestörten Problems. Zusammen mit der Kond
 liefert das typischerweise eine Vorwärtsfehlerschranke.
 ::::
 
-Wichtig ist die Arbeitsteilung: Die *Kondition* ist eine Eigenschaft des
-*Problems*, die wir nicht wählen
-können. Die *Stabilität* ist eine Eigenschaft des *Algorithmus*, und
-den wählen wir sehr wohl. Deshalb lohnt sich dieser Abschnitt: Für dasselbe
-Problem können zwei mathematisch äquivalente Rechenwege dramatisch unterschiedlich
-stabil sein.
+Die *Kondition* ist eine Eigenschaft des *Problems*, die wir nicht wählen können. Die
+*Stabilität* ist eine Eigenschaft des *Algorithmus*, und den wählen wir. Für dasselbe
+Problem können zwei mathematisch äquivalente Rechenwege sehr unterschiedlich stabil
+sein.
 
 ### Eine verwandte Idee aus dem maschinellen Lernen: SGD
 
@@ -104,32 +102,30 @@ Gradientenschätzung und an den Lernratenplan ab.
 :::
 
 :::interaktiv[Die Lernrate als Stabilitätsregler: SGD zum Ausprobieren]
-Wie scharf ist der Umschlag von Konvergenz zu Divergenz? Machen wir das Modell so klein, dass
-wir es ganz überblicken:
+Wie scharf ist der Umschlag von Konvergenz zu Divergenz? Wir nehmen ein Modell, das wir
+ganz überblicken:
 $L(\theta) = \theta^2$ mit exaktem Gradienten $2\theta$, Start bei
 $\theta_0 = 2{,}5$. Ab welcher Lernrate laufen die Iterierten nicht mehr auf das
 Minimum zu, sondern davon weg?
 
 <SgdLernratenDemo />
 
-Die Rechnung dahinter passt in eine Zeile. Ohne Rauschen ist
+Ohne Rauschen ist
 $\theta_{k+1} = \theta_k - \alpha \cdot 2\theta_k = (1 - 2\alpha)\,\theta_k$,
 der Abstand zum Minimum wird in jedem Schritt also mit
-$\corange{\rho(\alpha) = |1 - 2\alpha|}$ multipliziert. Das erklärt alle vier
-Regime auf einmal: monotone Konvergenz für $\alpha < 0{,}5$, ein einziger Schritt
+$\corange{\rho(\alpha) = |1 - 2\alpha|}$ multipliziert. Das erklärt alle vier Regime: monotone Konvergenz für $\alpha < 0{,}5$, ein einziger Schritt
 bei $\alpha = 0{,}5$, Oszillation mit schrumpfender Amplitude für
 $0{,}5 < \alpha < 1$, und ab $\alpha > 1$ Divergenz. Die Schwelle ist
 keine Eigenschaft von SGD, sondern der Krümmung von $L$: Für
 $L(\theta) = \tfrac{c}{2}\theta^2$ läge sie bei $\alpha = 2/c$.
 :::
 
-### Zusammengesetzte Algorithmen: die wichtigste Erkenntnis
+### Zusammengesetzte Algorithmen
 
 Praktisch jeder Algorithmus ist eine Kette von Teilschritten. Was passiert mit den
 Fehlern der frühen Schritte, wenn spätere Schritte darauf aufbauen? Das folgende
 Resultat verknüpft die Stabilität eines zusammengesetzten Algorithmus mit der
-*Kondition seiner Teilschritte*. Es ist die wichtigste Erkenntnis dieses
-Abschnitts. Wir betrachten dazu ein Problem, das als
+*Kondition seiner Teilschritte*. Wir betrachten dazu ein Problem, das als
 :k[Verkettung]{#function-composition} zweier Teilprobleme
 geschrieben ist.
 
@@ -190,7 +186,7 @@ $$
 
 ::::
 
-:::bemerkung[#was-folgt-daraus-und-was-nicht (Was folgt daraus – und was nicht?)]
+:::bemerkung[#was-folgt-daraus-und-was-nicht (Was folgt daraus, und was nicht?)]
 Ein schlecht konditionierter später Teilschritt kann Fehler aus früheren Schritten
 stark verstärken. Daraus folgt aber keine allgemeine Regel, schlecht konditionierte
 Operationen einfach „nach vorn" zu verschieben: Eine Umordnung verändert
@@ -204,8 +200,7 @@ Zwischengrößen zu vermeiden und eine rückwärtsstabile Implementierung zu ver
 Wenden wir den Satz auf ein Beispiel an, das wir aus
 @sec:algos/probleme-algorithmen
 schon kennen. Dort haben wir *beobachtet*, dass die Verschiebungsformel für
-die Varianz katastrophal versagen kann. Jetzt können wir *erklären*, warum,
-und zwar quantitativ.
+die Varianz versagen kann. Jetzt können wir quantitativ *erklären*, warum.
 
 :::beispiel[#zwei-algorithmen-fuer-die-varianz (Zwei Algorithmen für die Varianz)]
 **Problem:** Berechne die Stichprobenvarianz
@@ -278,11 +273,11 @@ $$
 ::::
 :::::
 
-Die Formel sagt präzise, wann es gefährlich wird: Sind $\cred{a}$ und
+Die Formel sagt, wann es gefährlich wird: Sind $\cred{a}$ und
 $\cblue{b}$ *groß*, liegen aber *nah beieinander*
 ($\cred{a} \approx \cblue{b}$), dann ist der Zähler riesig und der
-Nenner winzig: $\corange{\kappa_{rel}}$ explodiert, und der letzte
-Schritt verstärkt *alle* vorangegangenen Fehler mit diesem Faktor. Genau das
+Nenner winzig: $\corange{\kappa_{rel}}$ wird sehr groß, und der letzte
+Schritt verstärkt *alle* vorangegangenen Fehler mit diesem Faktor. Das
 passiert bei der Varianz von Daten mit großem Mittelwert: Für
 $x_i = c + z_i$ mit Verschiebung $c$ und Varianz $1$ ist
 $\cred{a} \approx c^2 + 1$ und $\cblue{b} \approx c^2$,
@@ -297,7 +292,7 @@ $$
 @sec:algos/probleme-algorithmen.
 Dort können wir mit der interaktiven Demo nachspielen, ab welcher Verschiebung
 die Formel kippt. Und @bemerkung:was-folgt-daraus-und-was-nicht erklärt, warum $\wt{f}_1$
-so viel besser dasteht: Auch $\wt{f}_1$ subtrahiert fast gleich große
+so viel besser abschneidet: Auch $\wt{f}_1$ subtrahiert fast gleich große
 Zahlen ($x_i - \bar{x}$ mit $x_i \approx \bar{x} \approx c$),
 aber dieser schlecht konditionierte Schritt kommt *zuerst* und arbeitet auf
 Zahlen der Größenordnung $c$. Bei $\wt{f}_2$ kommt die
@@ -319,7 +314,7 @@ mean(x^2) - mean(x)^2
 ```
 
 Die zweistufige Rechnung $\wt{f}_1$ liefert $1{,}023$, eine
-völlig plausible Stichprobenvarianz. Die Verschiebungsformel $\wt{f}_2$
+plausible Stichprobenvarianz. Die Verschiebungsformel $\wt{f}_2$
 liefert $16384$: um mehr als vier Größenordnungen daneben. Passt das zu
 unserer Analyse? Mit $c = 10^{10}$ ist
 $\corange{\kappa_{rel}} \approx 2c^2 = 2 \cdot 10^{20}$; die
@@ -331,29 +326,28 @@ $\corange{\kappa_{rel}} \cdot \eps \approx 4 \cdot 10^{4}$.
 Beobachtet: $16384/1{,}02 \approx 1{,}6 \cdot 10^4$. Die
 Größenordnung stimmt.
 
-Ein hübsches Detail: $16384 = 2^{14}$ ist genau der Abstand zweier
-benachbarter Maschinenzahlen in der Größenordnung $10^{20}$. Was die
-Verschiebungsformel als „Varianz" ausgibt, ist hier also schlicht ein einzelner
-Rundungsschritt der Zwischenergebnisse – mit den Daten hat diese Zahl nichts
-mehr zu tun.
+Dabei ist $16384 = 2^{14}$ genau der Abstand zweier benachbarter Maschinenzahlen in
+der Größenordnung $10^{20}$. Was die Verschiebungsformel als „Varianz" ausgibt, ist
+hier also ein einzelner Rundungsschritt der Zwischenergebnisse; mit den Daten hat diese
+Zahl nichts mehr zu tun.
 :::
 
 :::interaktiv[Wie schlimm wird es? Der κ-Rechner für den letzten Schritt]
-Bei $c = 10^{10}$ ging alles verloren. Aber wo genau liegt die Grenze? Anders
-gefragt: Ab welcher Verschiebung $c$ frisst die Kondition des letzten Schritts die
-16 Dezimalstellen doppelter Genauigkeit auf?
+Bei $c = 10^{10}$ ging alles verloren. Wo liegt die Grenze? Ab welcher Verschiebung
+$c$ verbraucht die Kondition des letzten Schritts die 16 Dezimalstellen doppelter
+Genauigkeit?
 
 <KappaRechner />
 
 Der Rechner macht die Faustregel aus @bemerkung:interpretation zur Ablesehilfe:
 $\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
 $c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ genau 16, und
-darüber bleibt nichts mehr übrig – im Einklang mit @beispiel:die-instabilitaet-in-r.
+darüber bleibt nichts mehr übrig, wie in @beispiel:die-instabilitaet-in-r.
 :::
 
 ### Selbsttest
 
-Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
+Erst selbst überlegen, dann aufklappen.
 
 <ol className="max-w-prose list-decimal space-y-3 pl-5">
   <SelbsttestFrage
@@ -386,7 +380,7 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
     $\wt{f}_2$ bildet dagegen zunächst zwei Aggregate der Größenordnung $c^2$
     und versucht, ihre kleine Differenz als Varianz zurückzugewinnen; deren
     Information kann schon in den Rundungen der großen Aggregate verschwunden
-    sein. Die Zentrierung vermeidet genau diese großen, beinahe gleichen
+    sein. Die Zentrierung vermeidet diese großen, beinahe gleichen
     Zwischenwerte.
   </SelbsttestFrage>
   <SelbsttestFrage
@@ -399,7 +393,7 @@ Prüfen wir das Verständnis. Erst selbst überlegen, dann aufklappen.
     }
   >
     Die Lernrate $\alpha$. Oszillation mit wachsender Amplitude ist das
-    Signaturverhalten eines instabilen Iterationsverfahrens: Der
+    typische Verhalten eines instabilen Iterationsverfahrens: Der
     Verstärkungsfaktor pro Schritt liegt über $1$, jeder Schritt bläht
     die Fehler des geschätzten Gradienten weiter auf. Eine kleinere Lernrate
     (oder Gradient Clipping) drückt den Faktor wieder unter $1$. In der

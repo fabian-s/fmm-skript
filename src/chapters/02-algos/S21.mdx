@@ -2,15 +2,14 @@ import { AusloeschungWidget } from "./widgets/S21Demos";
 import { RSelbsttest } from "./widgets/S21Local";
 import { Schaetzfrage } from "../../lib";
 
-Mit diesem Kapitel beginnt die eigentliche Numerik. Statistische Methoden sind am
-Ende immer Rechenvorschriften, die ein Computer ausführt, und Computer rechnen
-anders als die Mathematik auf dem Papier. In diesem Kapitel klären wir zuerst,
-was ein *numerisches Problem* und was ein *Algorithmus* überhaupt
-ist. Dann sehen wir an konkreten Beispielen, warum es entscheidend darauf
-ankommt, *wie* wir etwas berechnen: dieselbe Formel kann als
-Rechenvorschrift brillant oder katastrophal sein. In den folgenden Abschnitten
-fragen wir dann, wie *teuer* ein Algorithmus ist, und entwickeln mit den
-Landau-Symbolen die Sprache, um Rechenaufwand zu vergleichen.
+Statistische Methoden sind am Ende Rechenvorschriften, die ein Computer
+ausführt, und Computer rechnen anders als die Mathematik auf dem Papier. In
+diesem Kapitel klären wir zuerst, was ein *numerisches Problem* und was ein
+*Algorithmus* ist. Dann sehen wir an Beispielen, dass es darauf ankommt, *wie*
+wir etwas berechnen: Dieselbe Formel kann als Rechenvorschrift gut oder
+unbrauchbar sein. In den folgenden Abschnitten fragen wir, wie *teuer* ein
+Algorithmus ist, und entwickeln mit den Landau-Symbolen die Sprache, um
+Rechenaufwand zu vergleichen.
 
 ### Verwendete Vorkenntnisse
 
@@ -43,12 +42,12 @@ Die Schreibweise ist bewusst abstrakt: $f$ ist die mathematische
 Abbildung von den Eingabedaten auf die exakte Lösung; beim Gleichungssystem
 $\bA\by = \bb$ etwa $f(\bA, \bb) = \bA^{-1}\bb$. Ob und
 wie wir $f(\bx)$ tatsächlich ausrechnen können, ist damit noch völlig
-offen. Und da beginnen die Schwierigkeiten.
+offen.
 
 ### Zwei grundsätzliche Schwierigkeiten
 
-Computer sind so gut wie nie exakt. Das liegt nicht an schlampiger Technik,
-sondern an zwei prinzipiellen Beschränkungen jeder endlichen Maschine:
+Computer rechnen so gut wie nie exakt. Der Grund sind zwei prinzipielle
+Beschränkungen jeder endlichen Maschine:
 
 :::bemerkung[#grenzen-des-rechnens (Grenzen des Rechnens)]
 - Computer können nur *endlich viele Zahlen mit endlich vielen Stellen*
@@ -73,15 +72,14 @@ sondern an zwei prinzipiellen Beschränkungen jeder endlichen Maschine:
   Auswertung bricht irgendwo ab.
 :::
 
-Deshalb ist es wichtig, *wie* wir Dinge berechnen. Wie schlimm kann es schon
-sein? Prüfen wir unsere Intuition an vier kurzen R-Ausdrücken.
+Deshalb kommt es darauf an, *wie* wir etwas berechnen. Prüfen wir unsere
+Intuition an vier kurzen R-Ausdrücken.
 Tippen wir bei jedem zuerst, was herauskommt, und decken erst dann die Ausgabe
 auf:
 
 <RSelbsttest />
 
-Halten wir die Beobachtungen fest: Computer können nur endlich viele Zahlen
-darstellen. Das führt zu *Rundungsfehlern*
+Computer können nur endlich viele Zahlen darstellen. Das führt zu *Rundungsfehlern*
 (:k[Rundungsfehler]{#rounding-error}; ausführlich in
 Kapitel 4, nach den Normen aus Kapitel 3), und diese Fehler können sich *akkumulieren*. Der Fehler einer
 einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
@@ -93,8 +91,7 @@ besonders kleine Zahlen im selben Ausdruck vermeiden.
 ### Zwei warnende Beispiele
 
 Die beiden folgenden Beispiele zeigen die zwei wichtigsten Mechanismen, mit
-denen Gleitkommarechnung schiefgeht. Beide sehen auf dem Papier völlig harmlos
-aus.
+denen Gleitkommarechnung schiefgeht. Auf dem Papier sehen beide harmlos aus.
 
 :::beispiel[#katastrophale-ausloeschung (Katastrophale Auslöschung)]
 Wir berechnen die Varianz von $\bx$ mit der bekannten
@@ -139,18 +136,16 @@ $$
 \cred{1\,000\,000\,020\,000\,000\,128} - \cblue{1\,000\,000\,020\,000\,000\,128} = 0.
 $$
 
-Die berechnete „Varianz" ist $0$ statt $22{,}5$ – nicht
-ungefähr falsch, sondern komplett informationsfrei. Die zweistufige Rechnung
+Die berechnete „Varianz" ist $0$ statt $22{,}5$ und enthält damit keinerlei
+Information mehr. Die zweistufige Rechnung
 $\frac{1}{n}\sumin \left(x_i - \bar{x}\right)^2$ liefert dagegen
 exakt $22{,}5$, denn sie subtrahiert die großen Zahlen, *bevor*
 quadriert wird, und arbeitet danach nur noch mit den kleinen Abweichungen.
 
-**Ursache** des Desasters ist die Subtraktion zweier fast gleich
-großer Zahlen: Die übereinstimmenden führenden Ziffern heben sich weg, übrig
+**Ursache** ist die Subtraktion zweier fast gleich großer Zahlen: Die übereinstimmenden führenden Ziffern heben sich weg, übrig
 bleiben nur die (verrauschten) hinteren Stellen. Dieses Phänomen heißt
 *:k[katastrophale Auslöschung]{#cancellation}*
-(engl. *catastrophic cancellation*) und ist der Klassiker unter den
-numerischen Fallen.
+(engl. *catastrophic cancellation*) und ist die häufigste numerische Falle.
 :::
 
 :::beispiel[#verletzte-assoziativitaet (Verletzte Assoziativität)]
@@ -187,7 +182,6 @@ Die beiden Beispiele sehen verschieden aus, aber sie scheitern am selben
 Mechanismus: An der Stelle, an der die Maschine rechnet, liegen benachbarte
 darstellbare Zahlen weiter auseinander als die Größe, die wir eigentlich
 suchen. Wie weit dürfen wir die Verschiebung treiben, bis es so weit ist?
-Das lässt sich nicht ansehen, das müssen wir ausprobieren.
 
 :::interaktiv[Zwei Gesichter derselben Auslöschung]
 <Schaetzfrage
@@ -223,16 +217,16 @@ $\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$, das für Inputs
 $\bx$ eine mögliche Lösung $\wt{f}(\bx)$ berechnet.
 :::
 
-Lesen wir die Definition genau. Ein Algorithmus ist eine
+Ein Algorithmus ist eine
 :k[Verkettung]{#function-composition}
 $\wt{f}_s \circ \cdots \circ \wt{f}_1$ endlich vieler elementarer
 Rechenschritte $\wt{f}_1, \ldots, \wt{f}_s$: erst wird
 $\wt{f}_1$ auf den Input angewandt, dann $\wt{f}_2$ auf
-dessen Ergebnis, und so weiter. Die Tilde ist Programm: $\wt{f}$ ist
-nicht dasselbe wie $f$, sondern nur ein Versuch, $f$
-nachzubauen; die Definition verspricht vorsichtig nur eine „mögliche Lösung".
+dessen Ergebnis, und so weiter. Die Tilde markiert, dass $\wt{f}$
+nicht dasselbe ist wie $f$, sondern nur ein Versuch, $f$
+nachzubauen; die Definition verspricht deshalb nur eine „mögliche Lösung".
 Wie gut $\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, ist
-genau die Frage, die uns in Kapitel 4 beschäftigen wird. Zu einem Problem
+die Frage, die uns in Kapitel 4 beschäftigt. Zu einem Problem
 $f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
 unterscheiden sich in Genauigkeit *und* Rechenaufwand.
 

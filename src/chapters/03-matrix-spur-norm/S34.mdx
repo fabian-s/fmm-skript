@@ -11,7 +11,7 @@ import { S34SchattenWidget } from "./widgets/S34SchattenWidget";
 
 Wir kennen inzwischen zwei Rezepte für Matrixnormen. Die elementweisen Normen aus
 @sec:matrixnormen behandeln die Matrix als
-Zahlenhaufen und verlieren dabei jede Information über die Transformation, die sie
+Zahlentabelle und verlieren dabei jede Information über die Transformation, die sie
 beschreibt. Die Operatornormen aus
 @sec:operatornormen messen die Transformation
 direkt, aber nur ihre *stärkste* Streckung. Eine Matrix streckt verschiedene
@@ -44,9 +44,9 @@ Halbachsenlängen der Ellipse, in die $\bA$ die Einheitssphäre abbildet:
 $\sigma_1$ ist die stärkste Streckung (die Spektralnorm!),
 $\sigma_n$ die schwächste. Systematisch entwickeln wir das später mit der
 :k[Singulärwertzerlegung]{#singular-value-decomposition};
-hier genügt uns: Der Vektor $(\sigma_1, \ldots, \sigma_n)$ ist der
-vollständige „Streckungs-Fingerabdruck" der Transformation. Auf diesen Vektor wenden
-wir jetzt eine :k[Vektornorm]{#norm} an:
+hier genügt uns: Der Vektor $(\sigma_1, \ldots, \sigma_n)$ beschreibt die
+Streckung der Transformation vollständig. Auf diesen Vektor wenden wir jetzt eine
+:k[Vektornorm]{#norm} an:
 
 :::definition[#schatten-p-norm (Schatten-p-Norm)]
 Sei $\bA \in \R^{m \times n}$, und sei
@@ -76,16 +76,15 @@ $$
   $p \to \infty$.
 - Schatten-p-Normen erfüllen tatsächlich alle drei Normaxiome aus
   @sec:matrixnormen. Definitheit und
-  absolute Homogenität lassen sich direkt nachrechnen; die Dreiecksungleichung ist
-  überraschend knifflig, wir verzichten hier auf den Beweis.
+  absolute Homogenität lassen sich direkt nachrechnen; der Beweis der
+  Dreiecksungleichung ist aufwendig, wir verzichten hier darauf.
 :::
 
 ### Die drei wichtigen Spezialfälle :id[die-drei-wichtigen-spezialfaelle]
 
-Drei Werte von $p$ liefern genau die Normen, die in der Praxis dominieren,
-und zwei davon kennen wir schon. Der Schlüssel zum überraschendsten Fall ist die
-Verbindung zwischen Frobenius-Norm und
-[Spur](#sec-3.1):
+Drei Werte von $p$ liefern die Normen, die in der Praxis dominieren, und zwei davon
+kennen wir schon. Für den überraschendsten Fall brauchen wir die Verbindung zwischen
+Frobenius-Norm und [Spur](#sec-3.1):
 
 :::satz[#frobenius-norm-und-spur (Frobenius-Norm und Spur)]
 Für $\bA \in \R^{m \times n}$ mit
@@ -118,7 +117,7 @@ $$
 
 ::::
 
-Damit fallen die Spezialfälle wie reife Früchte:
+Damit ergeben sich die Spezialfälle direkt:
 
 :::korollar[#spezialfaelle-der-schatten-p-norm (Spezialfälle der Schatten-p-Norm)]
 - $p = \infty$:
@@ -133,13 +132,12 @@ Damit fallen die Spezialfälle wie reife Früchte:
   die *Nuklearnorm* (nuclear norm), für uns neu.
 :::
 
-Der Fall $p = 2$ ist eine echte Überraschung. Die Frobenius-Norm hatten wir
-in @sec:matrixnormen als elementweise Norm
-eingeführt, als Musterbeispiel einer Norm, die von der Transformation nichts weiß.
-Jetzt stellt sich heraus: Sie ist zugleich eine Schatten-Norm, also vollständig durch
-die Singulärwerte bestimmt. Sie weiß mehr über die Transformation, als ihre Definition
-vermuten lässt. Das erklärt auch im Nachhinein das Beispiel aus @sec:matrixnormen, in dem
-drei völlig verschiedene Transformationen dieselbe Frobenius-Norm hatten: Ihre
+Der Fall $p = 2$ ist überraschend. Die Frobenius-Norm hatten wir in
+@sec:matrixnormen als elementweise Norm eingeführt, als Musterbeispiel einer Norm, die
+von der Transformation nichts weiß. Sie ist aber zugleich eine Schatten-Norm, also
+vollständig durch die Singulärwerte bestimmt. Das erklärt im Nachhinein auch das
+Beispiel aus @sec:matrixnormen, in dem drei sehr verschiedene Transformationen dieselbe
+Frobenius-Norm hatten: Ihre
 quadrierten Singulärwerte summierten sich jeweils zu $2$.
 
 ::::vertiefung[Nuklearnorm und Niedrigrang-Probleme]
@@ -150,7 +148,7 @@ Warum eine dritte Norm, wenn wir schon zwei haben? Der
 Singulärwerte $\sigma_i > 0$. Rang-Minimierung ist ein kombinatorisch
 schwieriges Problem; die Nuklearnorm $\sum_i \sigma_i$ ist dagegen
 konvex und wird klein, wenn viele Singulärwerte (nahezu) verschwinden. Sie dient
-deshalb in Statistik und maschinellem Lernen als gutmütiger Ersatz für den Rang,
+deshalb in Statistik und maschinellem Lernen als konvexer Ersatz für den Rang,
 etwa bei der
 :k[Niedrigrang-Approximation]{#low-rank-approximation}
 und beim Vervollständigen von Matrizen mit fehlenden Einträgen
@@ -217,13 +215,13 @@ sqrt(eigen(crossprod(A))$values)
 
 ### Unitäre Invarianz :id[unitaere-invarianz]
 
-Was macht die Schatten-Familie so besonders? Drehen wir eine Matrix (genauer:
+Drehen wir eine Matrix (genauer:
 multiplizieren wir sie mit einer
 :k[Orthogonalmatrix]{#orthogonal-matrix}), dann ändern
 sich ihre Einträge komplett. Elementweise Normen wie Summen- oder Maximumsnorm ändern
 sich mit. Die Streckungswirkung der Transformation bleibt aber dieselbe, nur die
 Richtungen rotieren. Da Schattennormen ausschließlich von den Streckungsfaktoren
-abhängen, dürfen sie sich nicht ändern – und das lässt sich beweisen:
+abhängen, dürfen sie sich nicht ändern. Das lässt sich beweisen:
 
 :::satz[#unitaere-invarianz (Unitäre Invarianz)]
 Seien $\bP \in \R^{m \times m}$ und $\bQ \in \R^{n \times n}$
@@ -265,10 +263,10 @@ und damit dieselbe Schatten-p-Norm, für jedes $p$ gleichzeitig.
 
 :::::
 
-Eine bemerkenswerte Konsequenz für die Frobenius-Norm: Ihrer elementweisen Definition
-sieht man die Invarianz
-$\left\| \bP\bA\bQ \right\|_F = \left\| \bA \right\|_F$
-überhaupt nicht an; erst der Umweg über @korollar:spezialfaelle-der-schatten-p-norm macht sie offensichtlich. Für
+Für die Frobenius-Norm folgt daraus
+$\left\| \bP\bA\bQ \right\|_F = \left\| \bA \right\|_F$. Ihrer elementweisen
+Definition sieht man diese Invarianz nicht an; erst der Umweg über
+@korollar:spezialfaelle-der-schatten-p-norm macht sie offensichtlich. Für
 Summen- und Maximumsnorm gilt nichts dergleichen.
 
 ::::vertiefung[Robert Schatten und Approximationsprobleme]
@@ -280,25 +278,24 @@ Summen- und Maximumsnorm gilt nichts dergleichen.
   *Approximationsprobleme*: Wie gut eine Matrix eine andere approximiert,
   sollte nicht davon abhängen, in welchem (orthogonalen) Koordinatensystem wir die
   Daten aufschreiben. Messen wir Approximationsfehler in einer Schatten-Norm, ist
-  genau das garantiert. Darauf kommen wir bei der Niedrigrang-Approximation
+  das garantiert. Darauf kommen wir bei der Niedrigrang-Approximation
   zurück.
 :::
 
 ::::
 
 :::interaktiv[Was überlebt eine Drehung? Schattennormen gegen elementweise Normen]
-@satz:unitaere-invarianz ist damit bewiesen, aber noch nicht wirklich geglaubt. Eine Drehung schreibt ja
-jeden einzelnen Eintrag der Matrix um. Welche der Zahlen, die wir aus einer Matrix ablesen
+Eine Drehung schreibt jeden einzelnen Eintrag der Matrix um. Welche der Zahlen, die wir aus einer Matrix ablesen
 können, überstehen das unverändert, und welche wandern mit?
 
 <S34SchattenWidget />
 
-Die Antwort teilt unsere Normen sauber in zwei Lager. Ellipse, Halbachsen und alles, was
-aus ihnen gebaut ist – Spektral-, Frobenius- und Nuklearnorm – stehen still, während die
-Einträge von $\bQ_\theta\bA$ munter durchwechseln; die gemeldete Abweichung über den
-durchfahrenen Drehbereich ist reines Rundungsrauschen in der Größenordnung
-$10^{-16}$. Summen- und Maximumsnorm dagegen bewegen sich sichtbar mit. Sie sind eben
-elementweise definiert, und die Einträge sind genau das, was eine Drehung ändert.
+Die Antwort teilt unsere Normen in zwei Gruppen. Ellipse, Halbachsen und alles, was
+aus ihnen gebaut ist (Spektral-, Frobenius- und Nuklearnorm), bleiben konstant, während
+sich die Einträge von $\bQ_\theta\bA$ ändern; die gemeldete Abweichung über den
+durchfahrenen Drehbereich ist Rundungsrauschen in der Größenordnung $10^{-16}$.
+Summen- und Maximumsnorm dagegen bewegen sich sichtbar mit. Sie sind elementweise
+definiert, und die Einträge ändert eine Drehung.
 :::
 
 ### Selbsttest

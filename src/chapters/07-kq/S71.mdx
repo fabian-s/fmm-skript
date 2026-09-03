@@ -16,11 +16,11 @@ wie Unbekannte. In der Statistik ist die Lage fast immer anders: Wir haben
 *viel mehr* Beobachtungen als Modellparameter, und die Beobachtungen sind
 fehlerbehaftet. Ein Gleichungssystem mit mehr Gleichungen als Unbekannten
 (*überbestimmt*, engl. *overdetermined*) hat in aller Regel gar keine exakte
-Lösung. Was tun? Wir geben den Anspruch auf, alle Gleichungen exakt zu erfüllen, und
+Lösung. Wir geben deshalb den Anspruch auf, alle Gleichungen exakt zu erfüllen, und
 suchen stattdessen den Vektor, der sie *möglichst gut* erfüllt, gemessen an der
 :k[euklidischen Norm]{#euclidean-norm} des Fehlers. Das ist die
-*Methode der Kleinsten Quadrate* (engl. *least squares*), das Arbeitspferd
-der gesamten Regressionsrechnung. Dieses Kapitel behandelt, wie man solche Probleme
+*Methode der Kleinsten Quadrate* (engl. *least squares*), die Grundlage der
+gesamten Regressionsrechnung. Dieses Kapitel behandelt, wie man solche Probleme
 *numerisch* löst: stabil, effizient und mit kontrollierbarem Fehler.
 
 Wir bauen dabei auf früheren Kapiteln auf:
@@ -53,7 +53,7 @@ $$
 :::
 
 Da $t \mapsto t^2$ auf $[0, \infty)$ streng monoton wächst, können wir
-genauso gut $\left\| \bA\bx - \bb \right\|_2^2$ minimieren – dieselben
+genauso gut $\left\| \bA\bx - \bb \right\|_2^2$ minimieren: dieselben
 Minimalstellen, aber ohne Wurzel. Ausgeschrieben ist das eine Summe von Quadraten,
 
 $$
@@ -75,9 +75,8 @@ $\bb$ wegen Messfehlern nicht im
 
 <h3 id="sec-7.1-motivation">Motivation: Regression und Ausgleichsrechnung</h3>
 
-Warum ist gerade dieses Problem so wichtig? Weil die KQ-Methode das Fundament von
-Statistik und Machine Learning ist: Jedes Mal, wenn wir ein lineares Modell an Daten
-anpassen, lösen wir ein KQ-Problem.
+Die KQ-Methode ist die Grundlage von Statistik und Machine Learning: Jedes Mal, wenn
+wir ein lineares Modell an Daten anpassen, lösen wir ein KQ-Problem.
 
 :::beispiel[#lineare-regression (Lineare Regression)]
 Wir wollen Immobilienpreise anhand der Wohnfläche vorhersagen. Unsere Daten sind
@@ -119,12 +118,11 @@ iterativ gewichtete KQ-Probleme), im Training
 Verlust ist ein KQ-Kriterium), in der Computer Vision (Kamerakalibrierung,
 3D-Rekonstruktion aus 2D-Bildern), im Signal Processing (De-Noising, Signalschätzung)
 und in der Geodäsie (GPS-Positionsbestimmung gleicht widersprüchliche Distanzmessungen
-aus). Wer KQ-Probleme schnell und stabil lösen kann, hat also einen Universalschlüssel
-in der Hand.
+aus).
 
 :::interaktiv[Wie gut passt die Gerade?]
-@definition:kleinste-quadrate-problem-kq-problem verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommt man
-denn mit bloßem Augenmaß heran? Jeder Punkt im folgenden Bild ist ein (fiktiver) Wohnungsverkauf,
+@definition:kleinste-quadrate-problem-kq-problem verlangt das Minimum über *alle* Paare $(\beta_0, \beta_1)$. Wie nah kommen
+wir mit bloßem Augenmaß heran? Jeder Punkt im folgenden Bild ist ein (fiktiver) Wohnungsverkauf,
 Fläche gegen Preis in Tsd. €; die blaue Gerade gehört zum eingestellten Parameterpaar, jede
 violette Strecke ist ein Residuum $y_i - \beta_0 - \beta_1 x_i$.
 
@@ -136,7 +134,7 @@ Das Widget verbindet die verstellte Regressionsgerade mit den quadratischen Resi
 <h3 id="sec-7.1-geometrie">Die Geometrie: Projektion auf den Spaltenraum</h3>
 
 :::interaktiv[Die Projektion aus verschiedenen Blickrichtungen]
-Der Schlüssel zum KQ-Problem ist ein Perspektivwechsel. Während $\bx$ alle
+Während $\bx$ alle
 Vektoren in $\R^n$ durchläuft, durchläuft $\cblue{\bA\bx}$ genau
 den :k[Spaltenraum]{#span}
 $\col(\bA) \subseteq \R^m$, also alle
@@ -145,9 +143,9 @@ $\bA$. Das KQ-Problem fragt daher: Welcher Punkt des Unterraums
 $\col(\bA)$ liegt am nächsten an $\bb$? Aus der linearen Algebra
 wissen wir: der Fußpunkt des Lots, also die
 :k[orthogonale Projektion]{#projection} von $\bb$ auf
-$\col(\bA)$. Halten wir das Bild dazu fest: Links steht die Zeichnung, wie sie in jedem Buch
-über Kleinste Quadrate zu finden ist, rechts dieselbe Konfiguration im Raum, drehbar. Denn dass
-die linke Zeichnung so plausibel aussieht, liegt auch an der geschickt gewählten Blickrichtung.
+$\col(\bA)$. Links steht die Zeichnung, wie sie in jedem Buch über Kleinste Quadrate zu
+finden ist, rechts dieselbe Konfiguration im Raum, drehbar. Dass die linke Zeichnung so
+plausibel aussieht, liegt auch an der günstig gewählten Blickrichtung.
 
 <FigKQGeometrie />
 
@@ -215,11 +213,10 @@ erklären kann. Vorsicht: Das Gleichungssystem
 $\bA\wh{\bx} = \cgreen{\wh{\bb}}$ ist stets lösbar (denn
 $\cgreen{\wh{\bb}} \in \col(\bA)$), aber seine Lösung ist nur dann
 eindeutig, wenn die Spalten von $\bA$
-:k[linear unabhängig]{#linear-independence} sind. Dazu gleich
-mehr.
+:k[linear unabhängig]{#linear-independence} sind.
 
 :::interaktiv[Wo genau steht das Residuum senkrecht?]
-<p className="my-2">Kleiner geht ein KQ-Problem nicht: $m = 2$, $n = 1$, die Matrix hat als einzige Spalte $\ba = (3, 1)^\top$, gesucht ist ein einzelner Skalar $x$, und $\col(\bA)$ ist die graue Ursprungsgerade. Für welches $x$ wird $\left\| \cpurp{\br} \right\|_2^2$ am kleinsten – und was ist dort mit dem Winkel los?</p>
+<p className="my-2">Das kleinste mögliche KQ-Problem: $m = 2$, $n = 1$, die Matrix hat als einzige Spalte $\ba = (3, 1)^\top$, gesucht ist ein einzelner Skalar $x$, und $\col(\bA)$ ist die graue Ursprungsgerade. Für welches $x$ wird $\left\| \cpurp{\br} \right\|_2^2$ am kleinsten, und welchen Winkel bildet das Residuum dort?</p>
 
 <ProjektionWidget />
 
@@ -228,7 +225,7 @@ mehr.
 
 <h3 id="sec-7.1-normalengleichungen">Normalengleichungen und eindeutige Lösung</h3>
 
-@satz:kq-loesung-als-projektion ist geometrisch erhellend, aber unpraktisch: Um
+@satz:kq-loesung-als-projektion ist geometrisch anschaulich, aber unpraktisch: Um
 $\cgreen{\wh{\bb}}$ auszurechnen, müssten wir die Projektion schon kennen.
 Die Orthogonalitätsbedingung lässt sich aber in ein Gleichungssystem übersetzen, das nur
 $\bA$ und $\bb$ enthält: die aus der linearen Algebra bekannten
@@ -336,19 +333,19 @@ $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$.
 
 ::::
 
-Die Matrix $\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top$ ist genau die aus dem
+Die Matrix $\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top$ ist die aus dem
 SVD-Kapitel bekannte
 :k[Pseudoinverse]{#pseudoinverse} von $\bA$
 (eingeschränkt auf den Fall $\rang(\bA) = n$): Für quadratisches,
 invertierbares $\bA$ gilt $\bA\pinv = \bA^{-1}$, und allgemein
 löst $\bA\pinv\bb$ das KQ-Problem. Wie man $\wh{\bx}$
-*numerisch* am besten berechnet (über die Normalengleichungen sicher
-*nicht* immer!), ist das Thema der Abschnitte
+*numerisch* am besten berechnet (über die Normalengleichungen jedenfalls
+*nicht* immer), ist das Thema der Abschnitte
 @num:kq/normalengleichungen bis @num:kq/pseudoinverse; zuvor klären wir in Abschnitt
 @num:kq/kondition, wie gut das Problem überhaupt *konditioniert* ist.
 
 :::beispiel[#rechenbeispiel-regressionsgerade-durch (Rechenbeispiel: Regressionsgerade durch drei Punkte)]
-Rechnen wir die Lösungsformel einmal komplett durch. Drei Wohnungen wurden verkauft:
+Drei Wohnungen wurden verkauft:
 $50\,m^2$ für $250$, $75\,m^2$ für $350$ und
 $100\,m^2$ für $500$ (Preise in Tsd. €). Mit dem Modell aus
 @beispiel:lineare-regression:
@@ -382,14 +379,14 @@ $$
 Tatsächlich gilt $\cbred{\bA}^\top \cpurp{\br} = \bnull$: Die Residuen summieren
 sich zu $(25 - 50 + 25)/3 = 0$, und ebenso ist
 $\sumin x_i r_i = (50 \cdot 25 - 75 \cdot 50 + 100 \cdot 25)/3 = 0$. Das Residuum
-steht also senkrecht auf beiden Spalten, genau wie
-@satz:problem-normalengleichungen verspricht.
+steht also senkrecht auf beiden Spalten, wie @satz:problem-normalengleichungen
+verlangt.
 :::
 
 <h3 id="sec-7.1-quiz">Selbsttest</h3>
 
-Zum Abschluss vier Aussagen über die Pseudoinverse und Projektionen.
-Welche sind wahr? Es sei dabei $\rang(\bA) = n$ mit $m > n$ und
+Welche der folgenden Aussagen über die Pseudoinverse und Projektionen sind wahr?
+Es sei dabei $\rang(\bA) = n$ mit $m > n$ und
 $\wh{\bx} = \bA\pinv\bb$.
 
 ::::quiz
@@ -414,7 +411,7 @@ bildet $\bb$ gerade auf seine Projektion in den Spaltenraum ab (@satz:kq-loesung
 :::frage{wahr}
 $\br = \bb - \bA\wh{\bx} \perp \col(\bA)$
 
-Das ist genau die Aussage der Normalengleichungen:
+Das ist die Aussage der Normalengleichungen:
 $\bA^\top(\bb - \bA\wh{\bx}) = \bnull$ heißt, das Residuum steht senkrecht
 auf allen Spalten von $\bA$.
 :::

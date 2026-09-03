@@ -8,8 +8,7 @@ import { SelbsttestFrage } from "./widgets/S36Local";
   MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
 */}
 
-Fassen wir das Kapitel zusammen. Der rote Faden war die Frage, wie wir die „Größe" einer
-Matrix messen, und zwar so, dass die Zahl etwas über die
+Das Kapitel hat die Frage behandelt, wie wir die „Größe" einer Matrix messen, und zwar so, dass die Zahl etwas über die
 :k[lineare Abbildung]{#linear-transformation}
 $\bx \mapsto \bA\bx$ aussagt, nicht nur über die Einträge. Als Werkzeuge
 haben wir die Spur als skalare Invariante und drei Familien von Matrixnormen
@@ -61,13 +60,11 @@ kennengelernt.
 </table>
 </div>
 
-Die drei Familien sind dabei kein loses Nebeneinander, sondern eng verwoben. Die
-Frobenius-Norm gehört gleich zwei Familien an: Sie ist elementweise Norm (die
-:k[euklidische Norm]{#euclidean-norm} von
-$\vec(\bA)$) und zugleich die Schatten-Norm mit $p = 2$. Die
-Brücke schlägt die Spur:
-$\left\|\bA\right\|_F^2 = \tr\left(\bA^\top\bA\right)$. Und die
-Spektralnorm verbindet Operator- und Schatten-Welt: Sie ist die von der euklidischen
+Die drei Familien hängen eng zusammen. Die Frobenius-Norm gehört zwei Familien an: Sie
+ist elementweise Norm (die :k[euklidische Norm]{#euclidean-norm} von $\vec(\bA)$) und
+zugleich die Schatten-Norm mit $p = 2$; die Verbindung liefert die Spur,
+$\left\|\bA\right\|_F^2 = \tr\left(\bA^\top\bA\right)$. Die Spektralnorm
+verbindet Operator- und Schattennormen: Sie ist die von der euklidischen
 Norm induzierte Operatornorm *und* die Schatten-Norm mit
 $p = \infty$, berechenbar als
 $\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}\left(\bA^\top\bA\right)}$,
@@ -151,8 +148,7 @@ kleinem Rang (:k[Niedrigrang-Approximation]{#low-rank-approximation}).
 
 ### Selbsttest
 
-Prüfen wir zum Abschluss, ob die Kernaussagen sitzen. Welche der folgenden Aussagen
-über die Spur sind wahr ($\bA, \bB \in \R^{n \times n}$)?
+Welche der folgenden Aussagen über die Spur sind wahr ($\bA, \bB \in \R^{n \times n}$)?
 
 <div className="max-w-prose">
 
@@ -236,10 +232,9 @@ wie es sein muss kleiner als die Frobenius-Norm.
 
 ### Wie geht es weiter?
 
-Warum der ganze Aufwand? Weil Matrixnormen das zentrale Messwerkzeug der
-*Fehleranalyse* sind, mit der wir uns im nächsten Kapitel beschäftigen.
-:k[Konditionszahl]{#condition-number}, Rückwärtsfehler, Submultiplikativität und
-Verträglichkeit aus @sec:eigenschaften sind genau die Begriffe, mit denen wir dort
-abschätzen, wie viel Vertrauen eine numerisch berechnete Lösung verdient.
+Matrixnormen sind das zentrale Messwerkzeug der *Fehleranalyse*, mit der wir uns im
+nächsten Kapitel beschäftigen. :k[Konditionszahl]{#condition-number}, Rückwärtsfehler,
+Submultiplikativität und Verträglichkeit aus @sec:eigenschaften sind die Begriffe, mit
+denen wir dort abschätzen, wie viel Vertrauen eine numerisch berechnete Lösung verdient.
 
 *Vertiefung: Heath §2.3; MML §4.1/4.5.*

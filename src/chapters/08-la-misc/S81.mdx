@@ -65,13 +65,13 @@ Bleiben wir also bei den Verfahren der numerischen linearen Algebra. Auch dort
 gibt es direkte Methoden, doch spätestens in drei Situationen wollen wir lieber
 iterieren:
 
-- bei großen Matrizen ($n > 1000$), wo schon $O(n^3)$ wehtut,
+- bei großen Matrizen ($n > 1000$), wo $O(n^3)$ zu teuer wird,
 - bei :k[dünnbesetzten Matrizen]{#sparse-matrix}, deren Struktur direkte
   Verfahren zerstören, weil sie die Nullen mit Zwischenergebnissen auffüllen,
 - wenn wir gar nicht alle Eigenwerte brauchen, sondern nur wenige, etwa die
   $k \ll n$ größten.
 
-Iterative Verfahren spielen hier ihre Stärken aus. Sie kommen oft mit
+Iterative Verfahren sind hier im Vorteil. Sie kommen oft mit
 :k[Matrix-Vektor-Produkten]{#matrix-vector-product} als einziger Operation an
 $\bA$ aus, nutzen also die Dünnbesetztheit unverändert weiter, und der
 Kompromiss zwischen Genauigkeit und Laufzeit ist über die Abbruchbedingung
@@ -83,8 +83,7 @@ Das einfachste iterative Verfahren ist zugleich das anschaulichste. Die
 *Potenzmethode* (power iteration, nach von Mises) berechnet den betragsgrößten
 Eigenwert $\cgreen{\lambda_1}$ und einen zugehörigen Eigenvektor
 $\cgreen{\bv_1}$, vorausgesetzt, dieser Eigenwert ist von den übrigen getrennt.
-Die Idee besteht aus einer einzigen Zeile: Wir wenden $\bA$ immer wieder an und
-normieren nach jedem Schritt.
+Die Idee: Wir wenden $\bA$ immer wieder an und normieren nach jedem Schritt.
 
 :::algorithmus[#potenzmethode (Potenzmethode)]
 Gegeben seien $\bA \in \R^{n \times n}$ und ein Startvektor
@@ -103,8 +102,7 @@ $\cblue{\bx^{(0)}} \neq \bnull$.
 
 Pro Schritt fällt genau ein Matrix-Vektor-Produkt an. Für eine volle Matrix
 kostet das $O(n^2)$, für eine dünnbesetzte nur so viel, wie sie Einträge
-ungleich null hat. Zerlegt wird nichts, umgeformt wird nichts, $\bA$ selbst
-bleibt unangetastet.
+ungleich null hat. $\bA$ selbst wird weder zerlegt noch umgeformt.
 
 :::bemerkung[#zwei-schaetzungen-fuer-den-eigenwert (Zwei Schätzungen für den Eigenwert)]
 Wie man den Eigenwert abliest, hängt daran, ob unterwegs normiert wird. Ohne
@@ -139,7 +137,7 @@ näher dran und bringt das Vorzeichen mit. Ist $\bA$ nicht symmetrisch, stehen
 die Eigenvektoren nicht mehr senkrecht aufeinander und beide Schätzungen sind
 nur noch linear genau.
 
-Ein Wort noch zum Abbruchkriterium aus @algorithmus:potenzmethode: Auch dort gehört
+Zum Abbruchkriterium aus @algorithmus:potenzmethode: Auch dort gehört
 $\cblue{\rho^{(k)}}$ hin, sobald $\cgreen{\lambda_1}$ negativ sein kann. Für
 $\cgreen{\lambda_1} < 0$ wechselt $\cblue{\bx^{(k)}}$ nämlich in jedem Schritt
 das Vorzeichen, und das Residuum mit
@@ -318,12 +316,12 @@ k & \cblue{\bx^{(k)}} & \cblue{\lambda^{(k)}} & \cblue{\rho^{(k)}} & \cred{\sin 
 \end{array}
 $$
 
-Drei Beobachtungen. Erstens dauert es vier Schritte, bis die Iterierte
-überhaupt in den richtigen Quadranten wandert; solange dominiert der
-$\bv_2$-Anteil. Zweitens schrumpft der Winkel zur grünen Richtung ab dann in
-jedem Schritt um ungefähr $\corange{0{,}444}$, die Rate aus @satz:konvergenz-der-potenzmethode:
-$0{,}151/0{,}326 \approx 0{,}46$ und $0{,}068/0{,}151 \approx 0{,}45$.
-Drittens sind beide Eigenwertschätzungen schneller am Ziel als die Richtung:
+Es dauert vier Schritte, bis die Iterierte überhaupt in den richtigen Quadranten
+wandert; solange dominiert der $\bv_2$-Anteil. Ab dann schrumpft der Winkel zur
+grünen Richtung in jedem Schritt um ungefähr $\corange{0{,}444}$, die Rate aus
+@satz:konvergenz-der-potenzmethode: $0{,}151/0{,}326 \approx 0{,}46$ und
+$0{,}068/0{,}151 \approx 0{,}45$. Beide Eigenwertschätzungen sind schneller am
+Ziel als die Richtung:
 Ihr Fehler fällt pro Schritt um ungefähr
 $\corange{(\lambda_2/\lambda_1)^2} \approx 0{,}198$, also quadratisch in der
 Rate.
@@ -338,8 +336,8 @@ Faktor $3{,}7$ genauer.
 ::::
 
 :::bemerkung[#wann-die-potenzmethode-versagt (Wann die Potenzmethode versagt)]
-Zwei Voraussetzungen von @satz:konvergenz-der-potenzmethode sind verletzbar, und beide Male bricht die
-Konvergenz zusammen.
+Zwei Voraussetzungen von @satz:konvergenz-der-potenzmethode können verletzt sein, und beide Male
+konvergiert das Verfahren nicht mehr.
 
 **Kein Anteil in Richtung $\cgreen{\bv_1}$.** Ist $c_1 = 0$, so fehlt in
 @eq:eq-8-1-1 der grüne Term. Die Iteration läuft dann gegen die Eigenrichtung mit
@@ -348,16 +346,16 @@ sind die Eigenvektoren orthogonal, dort heißt $c_1 = \cgreen{\bv_1}^\top\bx^{(0
 also schlicht: Der Startvektor steht senkrecht auf dem gesuchten Eigenvektor.
 In @beispiel:potenzmethode-an-einer-2-2-matrix trifft das auf $\bx^{(0)} = c\,\bv_2$ zu. Dann ist
 $\bA\bx^{(0)} = 4\,\bx^{(0)}$, die normierte Iterierte bleibt für immer stehen,
-und beide Schätzungen liefern hartnäckig $4$ statt $9$. In der Praxis ist das
-weniger dramatisch, als es klingt: Ein zufällig gewählter Startvektor erfüllt
-$c_1 \neq 0$ mit Wahrscheinlichkeit $1$, und Rundungsfehler schmuggeln beim
+und beide Schätzungen liefern $4$ statt $9$. In der Praxis ist das
+weniger schlimm, als es klingt: Ein zufällig gewählter Startvektor erfüllt
+$c_1 \neq 0$ mit Wahrscheinlichkeit $1$, und Rundungsfehler bringen beim
 Rechnen ohnehin einen kleinen $\cgreen{\bv_1}$-Anteil hinein, den die Iteration
-dann geduldig aufbläst.
+dann verstärkt.
 
 **Kein separierter größter Eigenwert.** Gilt $|\lambda_1| = |\lambda_2|$, etwa
 bei $\lambda_2 = -\lambda_1$ oder bei einem komplexen Eigenwertpaar, so ist die
 Rate $\corange{|\lambda_2/\lambda_1|} = 1$ und nichts konvergiert mehr. Und
-selbst wenn die beiden nur *nahe* beieinanderliegen, wird die Methode quälend
+selbst wenn die beiden nur *nahe* beieinanderliegen, wird die Methode sehr
 langsam. Beide Male brauchen wir andere Verfahren.
 :::
 
@@ -380,7 +378,7 @@ Der orange Wert nähert sich dem Verhältnis der beiden Eigenwertbeträge.
 
 Die Potenzmethode liefert einen Eigenwert. Wollen wir alle, brauchen wir eine
 andere Idee: Wir überführen $\bA$ in eine Matrix $\bB$, der wir die Eigenwerte
-ansehen können, ohne sie dabei zu verändern. Genau das leisten
+ansehen können, ohne sie dabei zu verändern. Das leisten
 Ähnlichkeitstransformationen.
 
 :::satz[#aehnliche-matrizen-haben-dieselben (Ähnliche Matrizen haben dieselben Eigenwerte)]
@@ -475,8 +473,8 @@ $$
 = \begin{pmatrix} \cgreen{4} & 0 \\ 0 & \cgreen{9} \end{pmatrix} .
 $$
 
-Die beiden Nullen sind kein Zufall: Die Zeilen von $\bQ$ sind gerade die
-Eigenvektoren von $\bA$. Auf der Diagonalen stehen deshalb die Eigenwerte, und
+Die beiden Nullen entstehen, weil die Zeilen von $\bQ$ gerade die
+Eigenvektoren von $\bA$ sind. Auf der Diagonalen stehen deshalb die Eigenwerte, und
 sie stimmen mit den Nullstellen des charakteristischen Polynoms aus
 @beispiel:potenzmethode-an-einer-2-2-matrix überein.
 
@@ -495,7 +493,7 @@ ist tatsächlich Eigenvektor von $\bA$ zu demselben Eigenwert.
 :::
 
 :::bemerkung[#welche-zielgestalt-welches-verfahren (Welche Zielgestalt, welches Verfahren)]
-@beispiel:diagonalisierung-durch-eine hat geschummelt: Wir kannten die Eigenvektoren schon und haben
+In @beispiel:diagonalisierung-durch-eine kannten wir die Eigenvektoren schon und haben
 $\bQ$ daraus gebaut. Ein Algorithmus muss ein passendes $\bQ$ erst finden, und
 zwar iterativ. Er erzeugt eine Folge $\bB^{(k)}$ von zu $\bA$ ähnlichen
 Matrizen, die einer Zielgestalt immer näher kommt. Welche Zielgestalt, das
@@ -509,15 +507,14 @@ unterscheidet die Verfahren:
   Eigenwerte einschränken. Für große dünnbesetzte Matrizen ist sie deutlich
   effizienter.
 
-In der Praxis kommen zu beiden noch numerische Kniffe hinzu, die sie stabil und
+In der Praxis kommen zu beiden noch Techniken hinzu, die sie stabil und
 schnell genug machen: *Shifted QR* und *Implicitly Restarted Lanczos*.
 :::
 
 ### Die QR-Iteration
 
-Die QR-Iteration ist von verblüffender Schlichtheit. Wir zerlegen die aktuelle
-Matrix in $\bQ\bR$ und multiplizieren die beiden Faktoren in der falschen
-Reihenfolge wieder zusammen.
+Die QR-Iteration ist einfach: Wir zerlegen die aktuelle Matrix in $\bQ\bR$ und
+multiplizieren die beiden Faktoren in umgekehrter Reihenfolge wieder zusammen.
 
 :::algorithmus[#qr-iteration (QR-Iteration)]
 Gegeben sei $\bA \in \R^{n \times n}$.
@@ -530,7 +527,7 @@ Gegeben sei $\bA \in \R^{n \times n}$.
       $\cblue{\bA^{(k)}} = \bR^{(k)}\bQ^{(k)}$.
 :::
 
-Der zweite Schritt sieht willkürlich aus, ist aber genau die
+Der zweite Schritt sieht willkürlich aus, ist aber eine
 Ähnlichkeitstransformation aus dem letzten Abschnitt. Wegen
 $\bR^{(k)} = (\bQ^{(k)})^\top\bA^{(k-1)}$ ist nämlich
 
@@ -579,9 +576,8 @@ $$
 
 :::::
 
-Damit ist klar, dass die Iteration nichts kaputt macht. Warum sie aber
-überhaupt irgendwohin läuft, verrät erst der folgende Satz. Er ist der
-eigentliche Grund, warum das Verfahren funktioniert.
+Die Iteration verändert die Eigenwerte also nicht. Warum sie überhaupt
+konvergiert, zeigt erst der folgende Satz.
 
 :::satz[#die-qr-iteration-zerlegt-die-potenzen (Die QR-Iteration zerlegt die Potenzen von A)]
 Mit $\bQ_k := \bQ^{(1)}\bQ^{(2)}\cdots\bQ^{(k)}$ und
@@ -655,8 +651,8 @@ $$
 Jede einzelne dieser Spalten ist eine unnormierte Iterierte der Potenzmethode,
 gestartet in einem Einheitsvektor. Die QR-Iteration ist also eine *simultane*
 Potenzmethode auf allen $n$ Einheitsvektoren zugleich, mit einer
-Orthonormalisierung nach jedem Schritt. Diese Orthonormalisierung ist der ganze
-Trick: Ohne sie würden alle $n$ Spalten in dieselbe Richtung
+Orthonormalisierung nach jedem Schritt. Diese Orthonormalisierung ist
+entscheidend: Ohne sie würden alle $n$ Spalten in dieselbe Richtung
 $\cgreen{\bv_1}$ kippen und die Information über die übrigen Eigenrichtungen
 ginge verloren.
 :::
@@ -723,7 +719,7 @@ $$
 \bR^{(1)} = \frac{1}{\sqrt{29}}\begin{pmatrix} 29 & -26 \\ 0 & 36 \end{pmatrix} .
 $$
 
-Eine schnelle Probe: $r_{11} r_{22} = \sqrt{29} \cdot 36/\sqrt{29} = 36 = \det(\bA)$.
+Probe: $r_{11} r_{22} = \sqrt{29} \cdot 36/\sqrt{29} = 36 = \det(\bA)$.
 Nun die Vertauschung:
 
 $$
@@ -807,8 +803,8 @@ $O(n^3)$ auf Hessenbergform. Danach kostet ein QR-Sweep $O(n^2)$; bei einer
 symmetrischen Matrix reduziert man zunächst auf Tridiagonalform, sodass ein
 impliziter Sweep sogar $O(n)$ kostet. Wie viele Sweeps nötig sind, hängt von
 Shifts, Deflation und Eigenwertverteilung ab. Ein Schritt der
-Potenzmethode ist mit einem Matrix-Vektor-Produkt dagegen konkurrenzlos
-billig, liefert aber eben auch nur einen Eigenwert.
+Potenzmethode ist mit einem Matrix-Vektor-Produkt dagegen sehr billig,
+liefert aber auch nur einen Eigenwert.
 
 Was sich mit der Potenzmethode allein alles anstellen lässt, sehen wir in
 @sec:anwendungen am PageRank-Algorithmus; für große dünnbesetzte Matrizen
@@ -823,7 +819,7 @@ kommt dort auch die Lanczos-Iteration aus
 :::frage{falsch}
 Für $\bx^{(0)} = c\,\bv_1$ mit $c \neq 0$ versagt die Potenzmethode.
 
-Im Gegenteil, das ist der bequemste aller Startvektoren: Er hat
+Im Gegenteil, das ist der günstigste Startvektor: Er hat
 $c_1 = c \neq 0$, und die Iteration ist bereits im ersten Schritt am Ziel, denn
 $\bA\bv_1 = \lambda_1\bv_1$ ändert die Richtung nicht.
 :::

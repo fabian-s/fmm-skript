@@ -4,11 +4,11 @@ import { JensenExplorer } from "./widgets/S114Jensen";
 
 In @sec:projektion-konvexe-funktionen haben wir Konvexität direkt aus der Definition nachgewiesen,
 für den Betrag mit der Dreiecksungleichung. Für jede neue Funktion dasselbe zu tun, wäre
-mühsam. Bei den Zielfunktionen der Statistik ist es aussichtslos, denn die entstehen aus
+mühsam. Die Zielfunktionen der Statistik entstehen zudem aus
 Bausteinen: Ein Verlust wird über alle Beobachtungen summiert, ein Strafterm kommt dazu, über
 Klassen wird maximiert, und am Ende steht vielleicht noch ein Grenzübergang.
 
-Dieser Abschnitt liefert das Handwerkszeug dafür. Zuerst einen Baukasten aus vier Operationen,
+Dieser Abschnitt liefert die Werkzeuge dafür. Zuerst vier Operationen,
 unter denen Konvexität erhalten bleibt. Dann die Jensen-Ungleichung, die die Definition von
 zwei auf beliebig viele Punkte hebt. Danach ein Kriterium, das die Frage an die zweite
 Ableitung weiterreicht und damit an das Rechnen aus @sec:differentialrechnung/hoehere-ableitungen
@@ -85,11 +85,11 @@ notfalls mit dem Wert $+\infty$, und braucht die Konvergenz erst in der letzten 
 
 :::::
 
-Jetzt die beiden Übungen. Wer will, deckt die Lösungen ab und rechnet selbst.
+Jetzt die beiden Übungen.
 
 :::beispiel[#uebung-die-summe-zweier-konvexer (Übung: die Summe zweier konvexer Funktionen)]
 Zu zeigen ist Teil (1) von @satz:operationen-die-konvexitaet-erhalten: Sind $f_1$ und $f_2$ konvex, so ist $f = f_1 + f_2$
-konvex. Zwei Ungleichungen stehen bereit, gesucht ist eine.
+konvex. Aus zwei Ungleichungen wird eine.
 
 <details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
 <summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
@@ -118,8 +118,8 @@ Zeichen dürfen addiert werden. Sortiert wird danach nur noch nach $\bx$ und $\b
 
 :::beispiel[#uebung-das-punktweise-maximum (Übung: das punktweise Maximum)]
 Zu zeigen ist Teil (3) von @satz:operationen-die-konvexitaet-erhalten für endlich viele Funktionen: Sind
-$f_1, \dots, f_m$ konvex, so ist $f(\bx) = \max_{i \le m} f_i(\bx)$ konvex. Der Trick steckt
-in der Frage, *welches* $i$ das Maximum liefert.
+$f_1, \dots, f_m$ konvex, so ist $f(\bx) = \max_{i \le m} f_i(\bx)$ konvex. Entscheidend ist
+die Frage, *welches* $i$ das Maximum liefert.
 
 <details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
 <summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
@@ -149,8 +149,8 @@ $\lambda$ und $1-\lambda$ nichtnegativ sind.
 
 Der Index $j$ hängt von $\cgreen{\bz}$ ab, und an den Stellen $\bx$ und $\by$ maximiert
 womöglich ein ganz anderer Index. Das stört nicht: Gebraucht wird $j$ nur auf der linken
-Seite, und rechts schätzen wir sofort wieder gegen das Maximum ab. Genau deshalb funktioniert
-die Fallunterscheidung, ohne dass wir die Stücke des Maximums je einzeln verfolgen müssten.
+Seite, und rechts schätzen wir sofort wieder gegen das Maximum ab. Deshalb müssen wir
+die Stücke des Maximums nicht einzeln verfolgen.
 
 Für unendlich viele Funktionen gibt es kein Argmax mehr. Dann argumentieren wir ohne
 Fallunterscheidung: Für jedes einzelne $i$ ist
@@ -170,9 +170,9 @@ $f_i(\cgreen{\bz})$, also auch für deren Supremum $f(\cgreen{\bz})$.
 ::::vertiefung[Was die vier Regeln zusammen hergeben]
 
 :::bemerkung[#was-die-vier-regeln-zusammen-hergeben (Was die vier Regeln zusammen hergeben)]
-Aus (1) und (2) folgt per Induktion sofort mehr: Jede *nichtnegative Linearkombination*
+Aus (1) und (2) folgt per Induktion: Jede *nichtnegative Linearkombination*
 $\sum_{i=1}^m c_i f_i$ mit $c_i \ge 0$ konvexer Funktionen ist konvex. Die konvexen Funktionen
-auf $\cblue{\Xcal}$ bilden also einen konvexen Kegel, ganz analog zum Kegel der positiv
+auf $\cblue{\Xcal}$ bilden also einen konvexen Kegel, analog zum Kegel der positiv
 semidefiniten Matrizen aus @satz:die-positiv-semidefiniten-matrizen.
 
 Die Vorzeichenbedingung ist unverzichtbar. Für $c < 0$ dreht sich die Ungleichung, $c f_1$ ist
@@ -196,21 +196,21 @@ Tangente brauchen.
 ::::
 
 :::beispiel[#zielfunktionen-aus-bausteinen (Zielfunktionen aus Bausteinen)]
-Die Regeln erledigen Fälle, die aus der Definition heraus mühsam wären. Wir sammeln vier
-Beispiele ein, deren Bausteine wir schon kennen: :k[Normen]{#norm} sind konvex, quadratische
+Die Regeln erledigen Fälle, die aus der Definition heraus mühsam wären. Vier
+Beispiele, deren Bausteine wir schon kennen: :k[Normen]{#norm} sind konvex, quadratische
 Funktionen mit positiv semidefinitem symmetrischen Anteil ebenfalls, und affine Funktionen sind
 sogar zugleich konvex und konkav (alles @sec:projektion-konvexe-funktionen).
 
 *Ridge-Regression.* Die Zielfunktion
 $f(\bw) = \left\|\bA\bw - \by\right\|^2 + \lambda\left\|\bw\right\|^2$ ist eine Summe zweier
 konvexer Funktionen, der zweite Summand zusätzlich mit dem Faktor $\lambda \ge 0$ versehen.
-Regeln (1) und (2) geben die Konvexität, ohne dass wir eine einzige Ungleichung nachrechnen.
-@beispiel:kleinste-quadrate-und-ridge ist denselben Weg noch über die quadratische Form gegangen und hat dabei mehr
-herausgeholt, nämlich strikte Konvexität für $\lambda > 0$; die Regeln allein liefern das
+Regeln (1) und (2) geben die Konvexität, ohne dass wir eine Ungleichung nachrechnen.
+@beispiel:kleinste-quadrate-und-ridge ist über die quadratische Form gegangen und hat dabei mehr
+erhalten, nämlich strikte Konvexität für $\lambda > 0$; die Regeln allein liefern das
 nicht. Ihr Vorteil zeigt sich beim nächsten Punkt.
 
 *LASSO.* Ersetzen wir den Strafterm durch $\lambda\left\|\bw\right\|_1$, ändert sich am
-Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm – @satz:quadratische-funktionen
+Argument nichts, denn auch die $\ell_1$-Norm ist eine Norm. @satz:quadratische-funktionen
 greift hier dagegen nicht mehr. Die Zielfunktion bleibt konvex, ist aber an den Stellen mit
 $w_j = 0$ nicht differenzierbar.
 
@@ -232,8 +232,8 @@ Konvexität auf den Grenzwert.
 ### Die Jensen-Ungleichung
 
 Die Definition der Konvexität spricht über zwei Punkte. Konvexkombinationen aus
-@sec:konvexkombinationen dürfen beliebig viele Punkte mischen. Der folgende Satz schließt
-die Lücke.
+@sec:konvexkombinationen dürfen beliebig viele Punkte mischen. Der folgende Satz überträgt
+die Ungleichung auf diesen Fall.
 
 :::satz[#jensen-ungleichung (Jensen-Ungleichung)]
 Sei $\cblue{\Xcal} \subseteq \R^n$ konvex und $f\colon \cblue{\Xcal} \to \R$ konvex. Dann gilt
@@ -271,7 +271,7 @@ Die Koeffizienten $w_i/s$ sind nichtnegativ und summieren sich zu $1$, also ist
 $\cgreen{\bz}$ eine Konvexkombination von $\bx_1, \dots, \bx_{N-1}$ und liegt in
 $\cblue{\Xcal}$.
 
-::why[hier zahlt sich @satz:konvexe-mengen-enthalten-alle aus: Eine konvexe Menge enthält nicht nur die Verbindungsstrecken je zweier Punkte, sondern alle endlichen Konvexkombinationen. Ohne diese Aussage wüssten wir nicht, dass $f(\cgreen{\bz})$ überhaupt definiert ist]
+::why[hier wird @satz:konvexe-mengen-enthalten-alle gebraucht: Eine konvexe Menge enthält alle endlichen Konvexkombinationen, nicht nur die Verbindungsstrecken je zweier Punkte. Ohne diese Aussage wüssten wir nicht, dass $f(\cgreen{\bz})$ überhaupt definiert ist]
 :::
 
 :::schritt
@@ -312,14 +312,13 @@ auswerten gibt höchstens so viel wie erst auswerten und dann mischen.
 Zwei Einschränkungen sind dabei zu beachten. @satz:jensen-ungleichung deckt nur endlich viele Punkte ab,
 also Zufallsvariablen mit endlichem Träger. Für allgemeine integrierbare $X$ gilt die
 Ungleichung ebenfalls, der Beweis läuft dann aber nicht mehr über die Induktion; am Ende dieses
-Abschnitts fällt er als Nebenprodukt der Stützgeraden ab (@bemerkung:randpunkte-und-wozu-subgradienten-gut). Und für konkave
-$f$ dreht sich alles um: Dort gilt $f(\E[X]) \ge \E[f(X)]$, was etwa beim Logarithmus in
+Abschnitts folgt er aus der Existenz von Stützgeraden (@bemerkung:randpunkte-und-wozu-subgradienten-gut). Für konkave
+$f$ dreht sich die Ungleichung um: Dort gilt $f(\E[X]) \ge \E[f(X)]$, was etwa beim Logarithmus in
 Likelihood-Rechnungen ständig gebraucht wird.
 :::
 
 :::beispiel[#die-varianz-ist-nicht-negativ (Die Varianz ist nicht negativ)]
-Aus der Jensen-Ungleichung folgt eine Aussage, die wir längst benutzen, ohne sie je
-bewiesen zu haben. Die Funktion $f(x) = x^2$ ist konvex auf $\R$. Für eine Zufallsvariable $X$
+Aus der Jensen-Ungleichung folgt eine Aussage, die wir bisher ohne Beweis benutzt haben. Die Funktion $f(x) = x^2$ ist konvex auf $\R$. Für eine Zufallsvariable $X$
 mit endlichem Träger liefert @bemerkung:gewichte-als-wahrscheinlichkeiten damit
 
 $$
@@ -340,8 +339,7 @@ wenn die Varianz verschwindet, wenn also $X$ mit Wahrscheinlichkeit $1$ konstant
 Jensen-Lücke misst hier direkt die Streuung.
 :::
 
-:::interaktiv[Die Jensen-Ungleichung zum Schieben]
-Der Satz sagt, dass zwei Zahlen in einer bestimmten Reihenfolge stehen. Sehen wir sie uns an.
+:::interaktiv[Die Jensen-Ungleichung mit Reglern]
 Drei feste Stützstellen bekommen einstellbare Gewichte, und das Widget zeichnet beide Seiten
 von @eq:jensen-ungleichung über derselben Stelle $\cgreen{\sum_i w_i x_i}$: orange den Funktionswert der
 Mischung, grün die Mischung der Funktionswerte. Wie groß ist der Abstand zwischen beiden, und
@@ -356,9 +354,9 @@ $f(x) = x^2$ und gleiche Gewichte stehen $3{,}3611$ gegen $4{,}9167$, die Lücke
 $1{,}5556$. Das ist genau die gewichtete Varianz der drei Stützstellen, denn für $x \mapsto x^2$
 ist die Jensen-Lücke nach @beispiel:die-varianz-ist-nicht-negativ die Differenz
 $\E[X^2] - \left(\E[X]\right)^2$. Bei $f(x) = e^x$ wächst die Lücke auf $6{,}8273$, weil die
-Krümmung dort viel stärker zunimmt. Die dritte Wahl ist eine Gegenprobe: $\sqrt{x}$ ist konkav,
-und prompt tauschen die beiden Markierungen die Plätze, $1{,}2676$ gegen $1{,}3540$. Und wer
-alles Gewicht auf eine einzige Stützstelle schiebt, erzeugt den Gleichheitsfall: Dann steht
+Krümmung dort stärker zunimmt. Die dritte Wahl ist eine Gegenprobe: $\sqrt{x}$ ist konkav,
+und die beiden Markierungen tauschen die Plätze, $1{,}2676$ gegen $1{,}3540$. Liegt
+alles Gewicht auf einer einzigen Stützstelle, entsteht der Gleichheitsfall: Dann steht
 auf beiden Seiten derselbe Wert, so wie bei einer Zufallsvariablen mit Varianz $0$.
 :::
 
@@ -366,7 +364,7 @@ auf beiden Seiten derselbe Wert, so wie bei einer Zufallsvariablen mit Varianz $
 
 Bisher haben wir Konvexität aus Konvexität gemacht. Die Bausteine selbst mussten wir immer noch
 aus der Definition heraus prüfen. Für zweimal stetig differenzierbare Funktionen geht es
-bequemer, und das Ergebnis verbindet dieses Kapitel mit
+einfacher, und das Ergebnis verbindet dieses Kapitel mit
 @sec:differentialrechnung/hoehere-ableitungen.
 
 :::satz[#konvexe-funktionen-von-vektoren-zu (Konvexe Funktionen von Vektoren zu Skalaren)]
@@ -383,18 +381,17 @@ die folgenden Aussagen äquivalent:
    :k[positiv semidefinit]{#positive-definite} für alle $\bx \in \cblue{\Xcal}$.
 :::
 
-Alle drei Aussagen beschreiben dieselbe Krümmungseigenschaft, jede aus einer anderen
-Entfernung. Aussage (1) ist die Sehnenbedingung: Die Verbindungsstrecke zwischen zwei Punkten
+Alle drei Aussagen beschreiben dieselbe Krümmungseigenschaft. Aussage (1) ist die Sehnenbedingung: Die Verbindungsstrecke zwischen zwei Punkten
 des Graphen verläuft nie unter dem Graphen. Aussage (2) ist die Tangentenbedingung: Die
 Tangentialebene im Punkt $\corange{\bx}$ verläuft nie über dem Graphen, die lineare Näherung
 unterschätzt $f$ also überall. Aussage (3) ist die punktweise Krümmungsbedingung: In keiner
 Richtung und an keiner Stelle krümmt sich $f$ nach unten, denn die
 :k[quadratische Form]{#quadratic-form} $\bh^\top\bH_f(\bx)\bh$ ist überall nichtnegativ. In
-einer Variablen schrumpft (3) auf die Schulregel $f'' \ge 0$ zusammen.
+einer Variablen wird (3) zur Bedingung $f'' \ge 0$.
 
 Die Äquivalenz von (1) und (3) haben wir in
 @sec:differentialrechnung/hoehere-ableitungen als @satz:konvexitaet-und-positive-semidefinitheit schon einmal gesehen, damals
-ohne Beweis. Den holen wir jetzt nach, und zwar über (2) als Drehscheibe.
+ohne Beweis. Den holen wir jetzt nach, über (2) als Zwischenschritt.
 
 :::::vertiefung[Beweis der drei Charakterisierungen]
 
@@ -487,7 +484,7 @@ $$
 Die linke Seite hängt nicht von $t$ ab, also ist sie nichtnegativ. Da $\bh$ beliebig war, ist
 $\bH_f(\bx)$ positiv semidefinit.
 
-::why[der Faktor $2$ vor der eckigen Klammer kommt aus dem $\tfrac{1}{2}$ der Taylorformel; wer ihn vergisst, verschiebt die Kette um den Faktor $2$, am Vorzeichen und damit an der Schlussfolgerung ändert das nichts]
+::why[der Faktor $2$ vor der eckigen Klammer kommt aus dem $\tfrac{1}{2}$ der Taylorformel; am Vorzeichen und damit an der Schlussfolgerung ändert er nichts]
 :::
 
 :::schritt
@@ -527,7 +524,7 @@ Der letzte Summand ist nach (3) nichtnegativ, denn die Zwischenstelle
 $\corange{\bx} + t(\by - \corange{\bx})$ liegt in $\cblue{\Xcal}$. Weglassen macht die rechte
 Seite also nur kleiner, und es folgt @eq:konvexe-funktionen-von-vektoren-zu.
 
-Damit ist der Ring geschlossen: Die Schritte 1 bis 3 zeigen (1) $\Leftrightarrow$ (2), die
+Damit sind alle Äquivalenzen gezeigt: Die Schritte 1 bis 3 zeigen (1) $\Leftrightarrow$ (2), die
 Schritte 4 bis 6 zeigen (2) $\Leftrightarrow$ (3).
 
 ::why[hier geht die Konvexität von $\cblue{\Xcal}$ ein zweites Mal ein: Ohne sie wüssten wir nicht, dass die Hesse-Matrix an der Zwischenstelle überhaupt zur Verfügung steht]
@@ -552,7 +549,7 @@ vor.
 Taylorformeln gelten. Für (1) $\Leftrightarrow$ (2) allein genügt einfache
 Differenzierbarkeit.
 
-Zwei Verschärfungen liegen nahe und gelten nur halb. Ist $\bH_f(\bx)$ an jeder Stelle positiv
+Von zwei naheliegenden Verschärfungen gilt nur eine. Ist $\bH_f(\bx)$ an jeder Stelle positiv
 *definit*, so ist $f$ strikt konvex. Die Umkehrung ist falsch: $f(x) = x^4$ ist strikt konvex,
 hat aber $f''(0) = 0$. Wir kennen den Grenzfall aus @bemerkung:wenn-die-hesse-matrix-nichts-entscheidet, wo dieselbe Funktion
 zeigt, dass die zweite Ableitung im semidefiniten Fall nichts entscheidet.
@@ -562,8 +559,8 @@ zeigt, dass die zweite Ableitung im semidefiniten Fall nichts entscheidet.
 @satz:quadratische-funktionen hat für die quadratische Funktion
 $f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ schon gezeigt: Ist der symmetrische Anteil
 $\bQ_{\mathrm{sym}} = \tfrac12(\bQ + \bQ^\top)$ positiv semidefinit, so ist $f$ konvex. Bewiesen
-haben wir das damals über den Sehnendefekt. @satz:konvexe-funktionen-von-vektoren-zu liefert denselben Schluss in zwei
-Zeilen und obendrein die Umkehrung, macht die Bedingung also zu einem *genau dann, wenn*.
+haben wir das dort über den Sehnendefekt. @satz:konvexe-funktionen-von-vektoren-zu liefert denselben Schluss kürzer
+und zusätzlich die Umkehrung, macht die Bedingung also zu einem *genau dann, wenn*.
 Den Gradienten der quadratischen Form kennen wir aus
 @sec:differentialrechnung/gradient, und noch einmal ableiten gibt die
 Hesse-Matrix:
@@ -579,7 +576,7 @@ $\bQ + \bQ^\top \succeq 0$ gilt. Für symmetrisches $\bQ$ steht dort $2\bQ$, und
 ist wörtlich $\bQ \succeq 0$.
 
 @bemerkung:warum-der-symmetrische-anteil hat eine Matrix gezeigt, die trotz fehlender Symmetrie eine strikt konvexe
-Funktion erzeugt. Die andere Richtung ist ebenso lehrreich: $\bQ$ kann lauter positive
+Funktion erzeugt. Auch die andere Richtung ist möglich: $\bQ$ kann lauter positive
 Eigenwerte haben und die Funktion trotzdem nicht konvex sein. Für
 $\bQ = \bigl(\begin{smallmatrix} 2 & 3 \\ 0 & 1\end{smallmatrix}\bigr)$ stehen auf der
 Diagonalen der Dreiecksmatrix die Eigenwerte $2$ und $1$, beide positiv. Es ist aber
@@ -589,8 +586,8 @@ negativen Eigenwert gehört ungefähr die Richtung $\bd = (2;\ -3)^\top$, denn
 $\bd^\top(\bQ + \bQ^\top)\bd = 16 - 36 + 18 = \cred{-2}$. Mit $\bx = (1;\ -1{,}5)^\top$,
 $\by = -\bx$, $\bb = \bnull$ und $a = 0$ steht im Mittelpunkt $\bnull$ der Wert $f(\bnull) = 0$
 gegen den Mittelwert $\tfrac12 f(\bx) + \tfrac12 f(\by) = \cred{-0{,}25}$: Die Sehne verläuft
-unter dem Graphen. Die Richtung muss dabei sorgfältig gewählt sein – die ähnlich aussehende
-$\bd = (1;\ -1)^\top$ liefert $4 - 6 + 2 = 0$ und damit exakt Gleichheit, zeigt also gar nichts.
+unter dem Graphen. Die Richtung muss dabei passend gewählt sein. Die ähnliche Richtung
+$\bd = (1;\ -1)^\top$ liefert $4 - 6 + 2 = 0$ und damit Gleichheit, zeigt also nichts.
 :::
 
 ::::vertiefung[Die logistische Regression als konvexes Problem]
@@ -655,32 +652,31 @@ $$
 
 Die letzte Gleichung ist die Spektralzerlegung
 $\bH_f = \sum_i \lambda_i \bv_i\bv_i^\top$, eingesetzt in die quadratische Form. Sie
-zerlegt die Krümmung in Richtungen, und jede Richtung bekommt ihre eigene Zahl:
+zerlegt die Krümmung nach Richtungen:
 
 - $\lambda_i > 0$: In Richtung $\bv_i$ krümmt sich $f$ nach oben, wir stehen in einem Tal.
 - $\lambda_i < 0$: In Richtung $\bv_i$ krümmt sich $f$ nach unten, wir stehen auf einer Kuppe.
 - $\left|\lambda_i\right|$ misst, wie stark die Krümmung in Richtung $\bv_i$ ausfällt.
 
-Konvexität ist in dieser Sprache leicht zu sagen: Nach @satz:konvexe-funktionen-von-vektoren-zu(3) ist $f$ genau dann
+In dieser Sprache: Nach @satz:konvexe-funktionen-von-vektoren-zu(3) ist $f$ genau dann
 konvex, wenn an jeder Stelle *alle* Eigenwerte nichtnegativ sind. Es gibt dann nirgends eine
-Richtung, in der die Funktion nach unten wegkippt, und damit auch keine Sattelpunkte, in denen
+Richtung, in der sich die Funktion nach unten krümmt, und damit auch keine Sattelpunkte, in denen
 ein Verfahren steckenbleiben könnte.
 
 Der Gradiententerm darf in dieser Näherung nicht fehlen: Die verkürzte Fassung
 $f(\bx + \bh) \approx f(\bx) + \tfrac12\bh^\top\bH_f(\bx)\bh$ stimmt nur an kritischen
-Punkten, sonst ist der weggelassene Term für kleine $\bh$ sogar der größere von beiden. Zum
-Anschauen eignet sich das Definitheits-Widget in
+Punkten, sonst ist der weggelassene Term für kleine $\bh$ sogar der größere von beiden. Das zeigt das Definitheits-Widget in
 @sec:differentialrechnung/hoehere-ableitungen, dessen Höhenlinien von Ellipsen zu Hyperbeln
 wechseln, sobald ein Eigenwert unter null rutscht.
 :::
 
 ### Stützgeraden und Subgradienten
 
-Aussage (2) von @satz:konvexe-funktionen-von-vektoren-zu ist eine bemerkenswerte Eigenschaft: Eine konvexe Funktion liegt
+Aussage (2) von @satz:konvexe-funktionen-von-vektoren-zu besagt: Eine konvexe Funktion liegt
 nirgends unter ihrer Tangentialebene. Was aber, wenn es keine Tangente gibt? Der Betrag hat im
 Nullpunkt keine, der LASSO-Strafterm ebenfalls nicht, und nach @bemerkung:was-die-vier-regeln-zusammen-hergeben kann selbst der
-Grenzwert glatter konvexer Funktionen einen Knick bekommen. Es zeigt sich, dass die *Existenz*
-einer Stützgeraden erhalten bleibt, auch wenn die Ableitung fehlt.
+Grenzwert glatter konvexer Funktionen einen Knick bekommen. Die *Existenz*
+einer Stützgeraden bleibt aber erhalten, auch wenn die Ableitung fehlt.
 
 :::definition[#subgradient-und-subdifferential (Subgradient und Subdifferential)]
 Seien $\cblue{\Xcal} \subseteq \R^n$ konvex, $f\colon \cblue{\Xcal} \to \R$ und
@@ -701,7 +697,7 @@ die affine Funktion $\by \mapsto f(\corange{\bx}) + \bv^\top(\by - \corange{\bx}
 über dem Graphen von $f$ verläuft und ihn in $\corange{\bx}$ berührt. Ist $f$ in einem inneren
 Punkt $\corange{\bx}$ differenzierbar, so ist $\nabla f(\corange{\bx})^\top$ ein solcher
 Vektor, und dann ist er auch der einzige. Die Schritte 1 und 2 im Beweis von @satz:konvexe-funktionen-von-vektoren-zu
-brauchen dafür nur Differenzierbarkeit in genau diesem einen Punkt, nicht die
+brauchen dafür nur Differenzierbarkeit in diesem einen Punkt, nicht die
 $\Ccal^2$-Voraussetzung des Satzes. Am Knick können dagegen viele auftreten: Für
 $f(x) = \left|x\right|$ ist $\partial f(0) = [-1, 1]$ (Herleitung in der Vertiefung
 @beispiel:das-subdifferential-des-betrags).
@@ -747,7 +743,7 @@ im zweiten Fall das Ungleichheitszeichen um.
 
 :::schritt
 Für $n > 1$ liefert dasselbe Argument in jeder einzelnen Richtung eine Steigung, aber noch
-keinen Vektor $\bv$, der alle Richtungen gleichzeitig bedient. Den Rest erledigt eine
+keinen Vektor $\bv$, der alle Richtungen gleichzeitig bedient. Den Rest liefert eine
 Trennungsaussage: Der *Epigraph*
 $\cblue{\epi(f)} = \{(\by, r) \colon \by \in \cblue{\Xcal},\ r \ge f(\by)\} \subseteq \R^{n+1}$
 aus @definition:epigraph ist konvex, und $(\corange{\bx}, f(\corange{\bx}))$ ist ein Randpunkt.
@@ -758,7 +754,7 @@ letzte Koordinate; nach Division durch diese Koordinate steht @eq:subgradient-un
 da. Die Trennungsaussage selbst beweisen wir hier nicht, sie lässt sich aus dem
 Projektionssatz in @sec:projektion-konvexe-funktionen gewinnen.
 
-::why[dass der Epigraph konvex ist, ist @definition:konvexe-funktion, die konvexe Funktionen genau darüber erklärt; läge $\corange{\bx}$ auf dem Rand von $\cblue{\Xcal}$, könnte die stützende Hyperebene senkrecht stehen, und die Division wäre nicht möglich. Genau daran scheitert @bemerkung:randpunkte-und-wozu-subgradienten-gut]
+::why[dass der Epigraph konvex ist, ist @definition:konvexe-funktion, die konvexe Funktionen genau darüber erklärt; läge $\corange{\bx}$ auf dem Rand von $\cblue{\Xcal}$, könnte die stützende Hyperebene senkrecht stehen, und die Division wäre nicht möglich. Daran scheitert das Beispiel in @bemerkung:randpunkte-und-wozu-subgradienten-gut]
 :::
 
 ::::
@@ -766,7 +762,7 @@ Projektionssatz in @sec:projektion-konvexe-funktionen gewinnen.
 :::beispiel[#das-subdifferential-des-betrags (Das Subdifferential des Betrags)]
 Sei $f(x) = \left|x\right|$ auf $\cblue{\Xcal} = \R$. Für $\corange{x} > 0$ ist $f$
 differenzierbar mit Ableitung $1$, und $\partial f(\corange{x}) = \{1\}$; für
-$\corange{x} < 0$ entsprechend $\{-1\}$. Interessant ist der Knick in $\corange{x} = 0$. Dort
+$\corange{x} < 0$ entsprechend $\{-1\}$. Bleibt der Knick in $\corange{x} = 0$. Dort
 verlangt @eq:subgradient-und-subdifferential
 
 $$
@@ -776,9 +772,9 @@ $$
 und das ist für $v \in [-1, 1]$ erfüllt, sonst nicht: Für $v > 1$ scheitert $y = 1$, denn
 $\cred{1 < v}$; für $v < -1$ scheitert $y = -1$. Also ist
 $\partial f(0) = [-1, 1]$, ein ganzes Intervall von Stützgeraden. Der Satz sagt nur, dass es
-mindestens eine gibt; eindeutig ist sie an einem Knick gerade nicht.
+mindestens eine gibt; eindeutig ist sie an einem Knick nicht.
 
-Diese Vielfalt hat eine praktische Kehrseite, die den LASSO erklärt. Für die eindimensionale
+Diese Mehrdeutigkeit erklärt eine Eigenschaft des LASSO. Für die eindimensionale
 Zielfunktion $g(w) = \tfrac12(w - z)^2 + \lambda\left|w\right|$ mit $\lambda > 0$ ist
 $0 \in \partial g(w^\star)$ die Optimalitätsbedingung, und sie führt auf die
 Schwellenwertregel
@@ -789,29 +785,29 @@ $$
 
 Für $z = 2$ und $\lambda = 0{,}5$ steht dort $1{,}5$, für $z = 0{,}3$ dagegen exakt $0$. Weil
 das Subdifferential im Nullpunkt ein ganzes Intervall ist, kann die Bedingung dort für einen
-ganzen Bereich von $z$ erfüllt sein, und der LASSO setzt Koeffizienten wirklich auf null statt
+ganzen Bereich von $z$ erfüllt sein, und der LASSO setzt Koeffizienten exakt auf null statt
 nur nahe an null.
 :::
 
 :::bemerkung[#randpunkte-und-wozu-subgradienten-gut (Randpunkte, und wozu Subgradienten gut sind)]
-Der innere Punkt in @satz:existenz-von-subgradienten-im-inneren ist keine Formalie: Am Rand kann die Aussage scheitern.
+Die Voraussetzung eines inneren Punktes in @satz:existenz-von-subgradienten-im-inneren ist nötig: Am Rand kann die Aussage scheitern.
 Auf $\cblue{\Xcal} = [0, \infty)$ ist $\cred{f(x) = -\sqrt{x}}$ konvex, aber im Randpunkt
 $0$ gibt es keinen Subgradienten. Für $v \ge 0$ scheitert schon $y = 1$, denn dort verlangt
 @eq:subgradient-und-subdifferential die falsche Aussage $-1 \ge v$. Und für $v = -c$ mit $c > 0$ nimmt
 $f(y) - v\,y = -\sqrt{y} + c\,y$ bei
 $y = 1/(4c^2)$ den Wert $-1/(4c) < 0$ an, während @eq:subgradient-und-subdifferential dort $\ge 0$ verlangt. Für
 $c = 10$ etwa ist das $-0{,}025$ an der Stelle $y = 0{,}0025$. Anschaulich wird die Funktion am
-Rand unendlich steil, und keine Gerade kommt hinterher. @satz:existenz-von-subgradienten-im-inneren verlangt deshalb einen
-inneren Punkt; im Inneren von $[0,\infty)$ existiert der Subgradient wie versprochen.
+Rand unendlich steil, und keine Gerade bleibt darunter. @satz:existenz-von-subgradienten-im-inneren verlangt deshalb einen
+inneren Punkt; im Inneren von $[0,\infty)$ existiert der Subgradient.
 
-Die Existenz von Stützgeraden ist mehr wert, als sie zunächst aussieht. Sie liefert etwa die
+Die Existenz von Stützgeraden hat weitere Folgen. Sie liefert etwa die
 Jensen-Ungleichung für beliebige integrierbare Zufallsvariablen, die @satz:jensen-ungleichung mit seinen
 endlich vielen Gewichten nicht erreicht: Ist $\bmu = \E[\bX]$ ein innerer Punkt von
 $\cblue{\Xcal}$ und $\bv \in \partial f(\bmu)$, so gilt punktweise
 $f(\bX) \ge f(\bmu) + \bv^\top(\bX - \bmu)$, und Erwartungswertbildung auf beiden Seiten lässt
 den zweiten Summanden verschwinden. Übrig bleibt $\E[f(\bX)] \ge f(\E[\bX])$.
 
-Algorithmisch sind Subgradienten die Eintrittskarte in die nichtdifferenzierbare Optimierung.
+Algorithmisch sind Subgradienten die Grundlage der nichtdifferenzierbaren Optimierung.
 Wo der Gradient fehlt, tritt ein beliebiger Subgradient an seine Stelle, und Verfahren wie der
 :k[Gradientenabstieg]{#gradient-descent} bleiben in ihrer Subgradienten-Fassung anwendbar.
 Typische Anwendungen sind der LASSO und die Quantilregression, deren Verlustfunktion
@@ -820,14 +816,12 @@ $u = 0$ hat und für $\tau = \tfrac12$ bis auf den Faktor $\tfrac12$ mit ihm üb
 beiden Fällen ist die Zielfunktion konvex, aber nicht differenzierbar.
 @kap:optim entwickelt die Verfahren für den differenzierbaren Fall,
 vom Gradientenabstieg bis zu Newton und seinen Verwandten; die Subgradienten-Varianten selbst
-gehören nicht mehr zum Stoff dieses Skripts, brauchen aber genau das Werkzeug von hier.
+gehören nicht mehr zum Stoff dieses Skripts, brauchen aber das Werkzeug von hier.
 :::
 
 :::::
 
 ### Selbsttest
-
-Sieben Aussagen zu diesem Abschnitt. Welche davon stimmen?
 
 ::::quiz
 
@@ -857,7 +851,7 @@ Das punktweise Minimum zweier konvexer Funktionen ist konvex.
 Für das Minimum gibt es keine Regel. Zu $f_1(x) = x^2$ und $f_2(x) = (x-3)^2$ ist
 $f = \min\{f_1, f_2\}$ in $x = 0$ und $x = 3$ jeweils null, in der Mitte aber
 $f(1{,}5) = 2{,}25$. Der Mittelpunkt liegt also über der Sehne, und die Konvexitätsbedingung
-ist verletzt. Der Beweis aus @beispiel:uebung-das-punktweise-maximum bricht genau an der Stelle, an der wir nach oben
+ist verletzt. Der Beweis aus @beispiel:uebung-das-punktweise-maximum scheitert an der Stelle, an der wir nach oben
 abschätzen: Beim Minimum zeigt die entsprechende Ungleichung in die falsche Richtung.
 :::
 
@@ -866,8 +860,8 @@ Für $N = 2$ ist die Jensen-Ungleichung wörtlich die Definition einer konvexen 
 
 Mit $\lambda = w_1$ und $1 - \lambda = w_2$ steht in @eq:jensen-ungleichung genau
 $f(\lambda\bx_1 + (1-\lambda)\bx_2) \le \lambda f(\bx_1) + (1-\lambda) f(\bx_2)$. Der Beweis
-von @satz:jensen-ungleichung nimmt das als Induktionsanfang und schiebt in jedem Schritt einen weiteren
-Punkt nach, wobei @satz:konvexe-mengen-enthalten-alle sicherstellt, dass die Zwischenpunkte in $\Xcal$ bleiben.
+von @satz:jensen-ungleichung nimmt das als Induktionsanfang und fügt in jedem Schritt einen weiteren
+Punkt hinzu, wobei @satz:konvexe-mengen-enthalten-alle sicherstellt, dass die Zwischenpunkte in $\Xcal$ bleiben.
 :::
 
 :::frage{falsch}

@@ -1,13 +1,13 @@
 import { VektorisierungMatrixgleichung } from "./widgets/S95Vektorisierung";
 
-Vier Abschnitte, ein Faden: Begonnen haben wir mit Abbildungen, die mehrere
-Vektoren gleichzeitig verarbeiten, geendet sind wir bei Vektorräumen, die aus
-zwei anderen zusammengesetzt werden. Dazwischen stand der Tensor als das Objekt,
-das beides verbindet. Sammeln wir ein, was bleiben soll.
+Begonnen haben wir mit Abbildungen, die mehrere Vektoren gleichzeitig
+verarbeiten, geendet sind wir bei Vektorräumen, die aus zwei anderen
+zusammengesetzt werden. Dazwischen stand der Tensor als das Objekt, das beides
+verbindet.
 
 ### Die Kernkonzepte
 
-:::bemerkung[#sechs-begriffe-die-bleiben (Sechs Begriffe, die bleiben)]
+:::bemerkung[#sechs-begriffe-die-bleiben (Sechs Begriffe)]
 1. **:k[Tensoren]{#tensor}** verallgemeinern Vektoren und Matrizen auf mehr als
    zwei Indexpositionen. Ein Tensor der Stufe $k$ ist eine durch $k$ Indizes
    indizierte Familie reeller Zahlen, also ein Element von
@@ -67,8 +67,8 @@ das beides verbindet. Sammeln wir ein, was bleiben soll.
 
 ### Vektorisierung von Matrixgleichungen
 
-Ein Punkt dieser Liste verdient mehr als einen Halbsatz, weil er Kapitel 9 an
-Kapitel 5 zurückbindet. Eine Gleichung der Bauart
+Ein Punkt dieser Liste verbindet Kapitel 9 mit Kapitel 5 und wird deshalb hier
+ausgeführt. Eine Gleichung der Bauart
 $\cblue{\bA}\bX\cgreen{\bB} = \bC$ ist linear in der Unbekannten $\bX$, aber
 diese Unbekannte ist eine Matrix. Die Verfahren aus
 @sec:lgs/lgs erwarten dagegen ein System $\bA\bx = \bb$
@@ -127,7 +127,7 @@ Größe $m \times p$. Der Block an der Stelle $(j,k)$ ist
 $\bigl(\cgreen{\bB^\top}\bigr)_{jk}\,\cblue{\bA} = \cgreen{b_{kj}}\,\cblue{\bA}$,
 und der $k$-te Block von $\vec(\bX)$ ist $\bx_k$. Der $j$-te Block des Produkts
 lautet damit $\sum_{k=1}^{q} \cgreen{b_{kj}}\,\cblue{\bA}\,\bx_k$. Das ist
-genau die Spalte aus Schritt 1, und da $j$ beliebig war, stimmen beide Seiten
+die Spalte aus Schritt 1, und da $j$ beliebig war, stimmen beide Seiten
 überein.
 
 ::why[Blockmultiplikation: der $j$-te Block eines Produkts ist die Summe der Blockprodukte über $k$; das Transponieren vertauscht die Indizes, deshalb steht dort $\cgreen{b_{kj}}$ und nicht $\cgreen{b_{jk}}$]
@@ -184,7 +184,7 @@ $$
 $$
 
 und das Produkt der beiden ist
-$(\corange{5}, \corange{2}, \corange{17}, \corange{8})^\top$, wie versprochen.
+$(\corange{5}, \corange{2}, \corange{17}, \corange{8})^\top$, wie es sein muss.
 Auf die Reihenfolge kommt es dabei an: $\cblue{\bA} \kron \cgreen{\bB^\top}$
 liefert $(1, 17, 0, 6)^\top$ und damit etwas ganz anderes. Die Formatprobe
 schützt uns davor grundsätzlich nicht: Zeilen- und
@@ -249,8 +249,8 @@ große Matrizen verwenden wir spezialisierte Löser, die die Struktur ausnutzen.
 Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit @eq:vektorisierung-eines-matrixprodukts ein gewöhnliches
 :k[lineares Gleichungssystem]{#linear-system}
 $(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$
-Gleichungen und $pq$ Unbekannten. Der Gewinn ist begrifflich, der Preis ist
-Speicher und Rechenzeit: Ausgeschrieben hat die Systemmatrix $mnpq$ Einträge.
+Gleichungen und $pq$ Unbekannten. Das kostet Speicher und Rechenzeit:
+Ausgeschrieben hat die Systemmatrix $mnpq$ Einträge.
 Praktisch nutzen wir deshalb die Struktur, statt sie auszumultiplizieren. Sind
 $\cblue{\bA}$ und $\cgreen{\bB}$ quadratisch und invertierbar, so liefert
 $\bX = \cblue{\bA^{-1}}\bC\,\cgreen{\bB^{-1}}$ die Lösung allein aus den beiden
@@ -263,7 +263,7 @@ aufzustellen.
 
 ### Wie es weitergeht
 
-Offen geblieben ist der Bogen zur Approximation. Eine gute Basis für univariate
+Offen geblieben ist die Verbindung zur Approximation. Eine gute Basis für univariate
 Funktionen, etwa Legendre-Polynome, eine Fourierbasis oder Wavelets, liefert
 über das Tensorprodukt sofort eine Basis für multivariate Funktionen. Wie wir
 damit tatsächlich approximieren und wie wir dem exponentiellen Wachstum
@@ -279,8 +279,6 @@ aus ein mehrdimensionales Zahlenfeld, und die Vektorisierung aus @satz:vektorisi
 eines der Werkzeuge, mit denen sich das ordnen lässt.
 
 ### Selbsttest
-
-Vier Aussagen quer durch das Kapitel. Welche davon stimmen?
 
 ::::quiz
 

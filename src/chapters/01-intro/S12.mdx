@@ -1,21 +1,19 @@
 import { KursKarte } from "./widgets/S12Landkarte";
 
 Die dreizehn Kapitel dieses Skripts sind zum Durchlesen von vorne nach hinten
-gebaut – aber sie hängen enger zusammen, als eine lineare Reihenfolge zeigen
-kann. Manche Kapitel sind Fundament für fast alles Spätere (die Normen aus
-Kapitel 3, die Fehleranalyse aus Kapitel 4), andere greifen weit voraus oder
-zurück: Die Funktionsapproximation in Teil 3 etwa braucht kein einziges
-Ergebnis aus Teil 2, dafür umso mehr aus Teil 1. Die folgende Karte macht
-diese Struktur sichtbar.
+gebaut. Ihre Abhängigkeiten folgen dieser Reihenfolge aber nur zum Teil. Manche
+Kapitel sind Fundament für fast alles Spätere (die Normen aus Kapitel 3, die
+Fehleranalyse aus Kapitel 4), andere greifen weit voraus oder zurück: Die
+Funktionsapproximation in Teil 3 etwa braucht kein einziges Ergebnis aus
+Teil 2, dafür umso mehr aus Teil 1. Die folgende Karte zeigt diese Struktur.
 
 :::interaktiv[Landkarte: worauf ein Kapitel aufbaut und wohin es führt]
 <KursKarte />
 
 Die Kästen sind die Kapitel in Lesereihenfolge, die Bögen sind Abhängigkeiten
 über Nachbarkapitel hinweg. Wählen wir ein Kapitel aus, hebt die Karte hervor,
-worauf es aufbaut und wohin es führt – nützlich vor dem Lesen (*was sollte ich
-parat haben?*) genauso wie bei der Prüfungsvorbereitung (*wofür brauche ich das
-noch?*).
+worauf es aufbaut und wohin es führt. Das hilft vor dem Lesen (was sollten wir
+parat haben?) und bei der Prüfungsvorbereitung (wofür brauchen wir das noch?).
 :::
 
 :::vertiefung[Die Kapitel im Detail]
@@ -24,23 +22,23 @@ noch?*).
 
 **Teil 1 – Numerische lineare Algebra (Kapitel 2–9).** Die Leitfrage: *Wie
 lassen sich Probleme der linearen Algebra auf dem Rechner effizient und genau
-lösen?* @kap:algos stellt dafür die Sprache bereit – was ein
+lösen?* @kap:algos stellt dafür die Sprache bereit: was ein
 numerisches Problem, ein Algorithmus und sein Aufwand in
 :k[Landau-Notation]{#big-o-notation} ist. @kap:matrix-spur-norm
 liefert die Messwerkzeuge (Spur und :k[Matrixnormen]{#matrix-norm}),
 @kap:fehler die zentrale Unterscheidung des ganzen Skripts:
 *Kondition* ist eine Eigenschaft des Problems, *Stabilität* eine Eigenschaft
-des Algorithmus – nur an letzterer können wir drehen. Darauf bauen die
+des Algorithmus, und nur an letzterer können wir drehen. Darauf bauen die
 Rechenkerne auf: @kap:lgs löst Gleichungssysteme über
 Zerlegungen (:k[LU]{#lu-decomposition} und
-:k[Cholesky]{#cholesky-factorization}) statt über die goldene Regel des
-Skripts zu verstoßen – *niemals eine Matrix invertieren!* –,
+:k[Cholesky]{#cholesky-factorization}) und hält sich damit an die goldene
+Regel des Skripts, *niemals eine Matrix zu invertieren*.
 @kap:svd entwickelt mit der
-:k[Singulärwertzerlegung]{#singular-value-decomposition} die wichtigste
-Matrixzerlegung der angewandten Mathematik, und @kap:kq
+:k[Singulärwertzerlegung]{#singular-value-decomposition} die vielseitigste
+Matrixzerlegung des Skripts, und @kap:kq
 vergleicht drei Lösungswege für das
-:k[Kleinste-Quadrate-Problem]{#linear-least-squares} – Normalengleichungen,
-:k[QR]{#qr-factorization}, SVD – nach genau den Kriterien aus Kapitel 4.
+:k[Kleinste-Quadrate-Problem]{#linear-least-squares} (Normalengleichungen,
+:k[QR]{#qr-factorization}, SVD) nach den Kriterien aus Kapitel 4.
 @kap:la-misc tauscht dann Exaktheit gegen Geschwindigkeit
 (Iteration und Zufall, von der Potenzmethode bis zum Matrix-Sketching), und
 @kap:tensoren baut mit :k[Tensoren]{#tensor} und
@@ -55,14 +53,14 @@ die :k[Hesse-Matrix]{#hessian-matrix} und die
 :k[Taylor-Entwicklung]{#taylor-series} auf; nebenbei fallen die
 :k[Normalengleichungen]{#normal-equations} aus Kapitel 7 als Rechnung im
 Matrixkalkül ab. @kap:konvexitaet behandelt
-:k[Konvexität]{#convexity} als das Versprechen, das lokale Verfahren
-global macht: Bei konvexen Zielfunktionen ist jedes lokale Minimum bereits
+:k[Konvexität]{#convexity}, die Eigenschaft, die aus lokalen Verfahren
+globale macht: Bei konvexen Zielfunktionen ist jedes lokale Minimum bereits
 das globale. @kap:optim setzt darauf die Verfahren, sortiert
 nach der Ordnung der verwendeten Ableitungen: Nelder-Mead (nullte),
 :k[Gradientenabstieg]{#gradient-descent} mit Line Search und SGD (erste),
 :k[Newton]{#newtons-method} und Quasi-Newton (zweite), dazu Optimierung
-unter Nebenbedingungen. Eine feinere Karte dieses Teils – von der
-Fréchet-Ableitung bis zu den KKT-Bedingungen – steht am Anfang von
+unter Nebenbedingungen. Eine feinere Karte dieses Teils, von der
+Fréchet-Ableitung bis zu den KKT-Bedingungen, steht am Anfang von
 @kap:differentialrechnung.
 
 **Teil 3 – Funktionsapproximation (Kapitel 13).** Die Leitfrage: *Wie
@@ -70,25 +68,24 @@ ersetzen wir eine komplizierte Funktion durch eine einfache, mit der sich gut
 rechnen lässt?* @kap:funktionsapproximation überträgt zuerst
 die Idee der :k[Basis]{#basis} aus dem $\R^n$ auf Funktionenräume, stellt
 Funktionen als Linearkombination $\wh{f} = \sum_k a_k \phi_k$ von
-Basisfunktionen dar – die Koeffizienten liefert wieder ein Gleichungssystem
-oder ein KQ-Problem – und erklärt, warum Polynominterpolation scheitert
+Basisfunktionen dar (die Koeffizienten liefert wieder ein Gleichungssystem
+oder ein KQ-Problem) und erklärt, warum Polynominterpolation scheitert
 (Runge-Phänomen) und B-Splines funktionieren. Die zweite Hälfte des Kapitels
 macht daraus Statistik: Glättung verrauschter Daten als Regressionsproblem,
 die Bias-Varianz-Abwägung bei der Wahl der Basisgröße und der Fluch der
 Dimension im Multivariaten, dem additive Modelle (GAMs) entkommen. Dieser
-Teil setzt Teil 2 *nicht* voraus – seine Anker liegen in den Kapiteln 1, 4,
+Teil setzt Teil 2 *nicht* voraus. Er stützt sich auf die Kapitel 1, 4,
 5, 7 und 9; die feinere Karte dazu steht am Anfang von
 @kap:funktionsapproximation.
 
 :::
 
 :::vertiefung[Was sich durch das ganze Skript zieht]
-Vier Themen tauchen in allen drei Teilen wieder auf; sie sind das eigentliche
-Gerüst des Skripts.
+Vier Themen tauchen in allen drei Teilen wieder auf.
 
 **Stabilität.** Wähle Algorithmen, die Fehler nicht verstärken. Die
 :k[Konditionszahl]{#condition-number} des Problems ist uns vorgegeben, die
-Stabilität des Algorithmus nicht – deshalb Zerlegungen statt Inversion,
+Stabilität des Algorithmus nicht. Deshalb Zerlegungen statt Inversion,
 :k[orthogonale Matrizen]{#orthogonal-matrix} (perfekt konditioniert,
 $\kappa = 1$) wo immer möglich, und schlecht konditionierte Schritte so früh
 wie möglich.
@@ -97,10 +94,10 @@ wie möglich.
 einzuprägen lohnt: Vektoroperationen $O(n)$,
 :k[Matrix-Vektor-Produkte]{#matrix-vector-product} $O(n^2)$,
 Matrixzerlegungen $O(n^3)$, iterative Verfahren
-$O(n^2 \log(1/\eps))$ – und als Warnung der Fluch der Dimension mit
+$O(n^2 \log(1/\eps))$, und als Warnung der Fluch der Dimension mit
 $O(K^p)$.
 
-**Matrixzerlegungen.** Das Werkzeugregal von Teil 1, auf das alles Spätere
+**Matrixzerlegungen.** Die Werkzeuge aus Teil 1, auf die alles Spätere
 zurückgreift:
 
 | Zerlegung | Form | Kapitel | typischer Einsatz |
@@ -110,16 +107,16 @@ zurückgreift:
 | QR | $\bA = \bQ\bR$ | @num:kq | Kleinste Quadrate, stabil |
 | SVD | $\bA = \bU\bSigma\bV^\top$ | @num:svd | universell: Rang, Pseudoinverse, Approximation |
 
-**Von exakt zu approximativ.** Die Problemklassen des Skripts bilden eine
-Treppe wachsender Allgemeinheit – und abnehmender Garantien: lineare Probleme
-haben exakte Lösungen per Zerlegung; Kleinste Quadrate lösen wir als
-Projektion; nichtlineare Gleichungen nur noch iterativ (Newton); allgemeine
-Optimierung mit Gradientenverfahren, die lokal suchen; erst
-:k[Konvexität]{#convexity} gibt globale Garantien zurück; und die
-Funktionsapproximation handelt schließlich Genauigkeit gegen Aufwand.
+**Von exakt zu approximativ.** Je allgemeiner die Problemklasse, desto
+schwächer die Garantien: Lineare Probleme haben exakte Lösungen per Zerlegung.
+Kleinste Quadrate lösen wir als Projektion. Nichtlineare Gleichungen lösen wir
+nur noch iterativ (Newton), allgemeine Optimierungsprobleme mit
+Gradientenverfahren, die lokal suchen. Erst
+:k[Konvexität]{#convexity} gibt globale Garantien zurück. Die
+Funktionsapproximation schließlich tauscht Genauigkeit gegen Aufwand.
 :::
 
-*Vertiefung: Die Referenzen des Skripts, nach Teilen sortiert – zu Teil 1
+*Vertiefung: Die Referenzen des Skripts, nach Teilen sortiert. Zu Teil 1
 Heath, Scientific Computing, §1–4 (und §11 für die iterativen Verfahren)
 sowie MML §2–4; zu Teil 2 MML §5 und §7 und Heath §5–6, für die Konvexität
 Boyd & Vandenberghe, Convex Optimization (frei verfügbar); zu Teil 3

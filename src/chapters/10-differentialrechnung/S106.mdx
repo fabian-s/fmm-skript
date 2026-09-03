@@ -204,7 +204,7 @@ $\cgreen{D_{\bx} b} = \cgreen{L}$.
 
 ::::
 
-Die Reihenfolge in @eq:produktregel ist kein Zierrat. Sobald das Produkt nicht
+Die Reihenfolge in @eq:produktregel ist verbindlich. Sobald das Produkt nicht
 kommutativ ist, etwa beim Matrixprodukt, steht der abgeleitete Faktor genau
 dort, wo vorher der ursprüngliche stand.
 
@@ -296,7 +296,7 @@ $$
 und für symmetrisches $\bA$ vereinfacht sich das zu
 $\corange{\nabla b(\bx)} = 2\bx^\top\bA$.
 
-Die Unterscheidung ist keine Förmelei. Für
+Die Unterscheidung hat Folgen. Für
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 3\end{smallmatrix}\bigr)$ und
 $\bx = (1, 2)^\top$ ist
 $\bA + \bA^\top = \bigl(\begin{smallmatrix} 4 & 1 \\ 1 & 6\end{smallmatrix}\bigr)$
@@ -370,7 +370,7 @@ Strafterm. Die Länge des Koeffizientenvektors sinkt dabei von $0{,}833$ auf
 $0{,}671$, die zweite Komponente wächst aber sogar leicht: Der Strafterm
 verkürzt den Vektor, nicht jede einzelne Komponente.
 
-Eine Notationsfalle lauert beim Aufschreiben: Der Zeilenvektor
+Beim Aufschreiben ist auf die Form zu achten: Der Zeilenvektor
 $-2(\by - \bX\bbeta)^\top\bX$ und der Spaltenvektor
 $-2\bX^\top(\by - \bX\bbeta)$ tragen dieselbe Information, sind aber
 verschiedene Objekte und dürfen nicht in derselben Zeile gleichgesetzt werden.
@@ -540,7 +540,7 @@ Eingesetzt wird die Richtung $\bH = \partial\bF(x)/\partial x$.
 :::
 
 Zwei der drei Voreinstellungen sind harmlos. Bei der dritten,
-$h(x) = \sqrt{x^2}$, laufen beide Faktoren aus dem Ruder: Die äußere Rate wächst
+$h(x) = \sqrt{x^2}$, sind beide Faktoren unbeschränkt oder null: Die äußere Rate wächst
 zum Nullpunkt hin über jede Grenze, die innere geht dorthin gegen null. Was
 kommt dann heraus, und was passiert bei $x = 0$ selbst?
 
@@ -556,13 +556,13 @@ mit Schrittweite $10^{-6}$.
 
 <KettenregelWidget />
 
-Bei $h(x) = \sqrt{x^2}$ bleibt das Produkt zahm, obwohl beide Faktoren es nicht sind: Für
+Bei $h(x) = \sqrt{x^2}$ bleibt das Produkt beschränkt, obwohl beide Faktoren es nicht sind: Für
 jedes $x \neq 0$ ist $\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$
 exakt das Vorzeichen von $x$, wie es sich für die Ableitung von $\left|x\right|$ gehört. Bei
 $x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die Wurzel an der Stelle
 $u = f(0) = 0$ nicht differenzierbar ist; übrig bleibt der Knick aus @sec:linearisierung,
-und das Produkt aus $\infty$ und $0$ ist keine Zahl. Bemerkenswert ist, dass die numerische
-Gegenprobe davon nichts merkt und brav $0$ meldet: Der zentrale Differenzenquotient mittelt
+und das Produkt aus $\infty$ und $0$ ist keine Zahl. Die numerische
+Gegenprobe merkt davon nichts und meldet $0$: Der zentrale Differenzenquotient mittelt
 über beide Seiten des Knicks. @beispiel:gradient-der-euklidischen-norm wird genau diesen
 Vorbehalt für die euklidische Norm brauchen.
 :::
@@ -608,7 +608,7 @@ $$
 
 wobei wir im letzten Schritt $1 - \sigma(t) = e^{-t}/(1 + e^{-t})$ benutzt
 haben. Die Ableitung der Sigmoidfunktion lässt sich also aus ihrem eigenen
-Funktionswert ablesen, was jede Implementierung dankbar ausnutzt.
+Funktionswert ablesen, was Implementierungen ausnutzen.
 
 *Fall $y = 1$.* Hier ist $\ell = g \circ f$ mit
 
@@ -656,15 +656,15 @@ $(0{,}9047,\ -1{,}8093,\ 0{,}4523)$.
 :::bemerkung[#fehler-mal-merkmal (Fehler mal Merkmal)]
 Gleichung @eq:gradient-des-logistischen-verlusts-2 ist eine der meistbenutzten Formeln des maschinellen
 Lernens, und sie liest sich wie ein Satz: *Der Gradient ist der Vorhersagefehler,
-gewichtet mit dem Merkmalsvektor.* Zwei Konsequenzen.
+gewichtet mit dem Merkmalsvektor.* Daraus folgen Richtung und Länge des Gradienten.
 
-Erstens die Richtung. Ist $\wh{y} > y$, sagt das Modell also zu viel voraus, so
+Zur Richtung: Ist $\wh{y} > y$, sagt das Modell also zu viel voraus, so
 zeigt der Gradient in Richtung $\bx^\top$. Der Gradientenabstieg aus
 @sec:gradient verschiebt $\bbeta$ entgegen
 dieser Richtung, senkt damit den Score $\bbeta^\top\bx$ und mit ihm die
 Vorhersage.
 
-Zweitens die Länge. Es gilt stets $\left|\wh{y} - y\right| < 1$, weil
+Zur Länge: Es gilt stets $\left|\wh{y} - y\right| < 1$, weil
 $\sigma$ die Werte $0$ und $1$ nie annimmt, also ist
 $\left\|\corange{\nabla\ell(\bbeta)}\right\| = \left|\wh y - y\right|\left\|\bx\right\|
 < \left\|\bx\right\|$ für jedes $\bx \neq \bnull$. Eine einzelne Beobachtung
@@ -686,8 +686,8 @@ Pfeil zeigt, wohin ein Abstiegsschritt mit Schrittweite $0{,}5$ führt.
 <LogistikWidget />
 
 In beiden Klassen steht derselbe Ausdruck. Schalten wir auf $y = 0$ und schieben $\beta$
-nach oben, so wird das Modell selbstbewusst falsch, der Gradient nähert sich seiner
-Obergrenze $\left|x\right|$, erreicht sie aber nie – das ist die zweite Konsequenz aus
+nach oben, so wird das Modell mit wachsender Sicherheit falsch. Der Gradient nähert sich seiner
+Obergrenze $\left|x\right|$, erreicht sie aber nie. Das ist die Aussage zur Länge aus
 @bemerkung:fehler-mal-merkmal, ablesbar am Fehlerbalken, der nie über die Höhe $1$
 hinauskommt. Stellen wir umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte
 Gerade auf der Höhe $\log 2 = 0{,}693147$, und der Gradient verschwindet für jedes $\beta$.

@@ -48,13 +48,13 @@ Minimum *strikt*.
 Das Problem @eq:lokales-und-globales-minimum hat @sec:nichtlineare-gleichungen schon aufgeschrieben, dort mit
 $S$ für die zulässige Menge. Wir schreiben hier $\Xcal$, weil der Buchstabe $S$ in
 den Sätzen unten für den offenen Definitionsbereich gebraucht wird. Neu ist die
-Unterscheidung zwischen lokal und global, und um die dreht sich der ganze
-Abschnitt.
+Unterscheidung zwischen lokal und global, um die es in diesem
+Abschnitt geht.
 
-Zwei Sprachfallen stecken in der Schreibweise. Erstens ist $\argmin$ streng
+Zwei Hinweise zur Schreibweise. $\argmin$ ist streng
 genommen die Menge aller Minimierer; wir schreiben
-$\cgreen{\bx^\star}$ für ein Element daraus, sofern überhaupt eines existiert.
-Zweitens meint „unbeschränkte Optimierung" die Optimierung ohne
+$\cgreen{\bx^\star}$ für ein Element daraus, sofern eines existiert.
+Und „unbeschränkte Optimierung" meint die Optimierung ohne
 Nebenbedingungen, also $\Xcal = \R^n$, und nicht etwa eine unbeschränkte Funktion.
 Die Sätze zur Konvexität unten formulieren wir trotzdem für eine allgemeine
 zulässige Menge, weil gerade dort sichtbar wird, was $\Xcal$ beiträgt; die
@@ -63,8 +63,7 @@ durchweg mit $\Xcal = \R^n$, und wie Nebenbedingungen die Bedingungen ändern,
 klärt @sec:beschraenkt.
 
 :::bemerkung[#maximieren-ist-minimieren (Maximieren ist Minimieren)]
-Ein Maximierungsproblem müssen wir nicht getrennt behandeln. Eine einzige
-Zeile hält das fest, und sie meint zweierlei:
+Ein Maximierungsproblem müssen wir nicht getrennt behandeln:
 
 $$
 \max_{\bx \in \Xcal} f(\bx) = -\min_{\bx \in \Xcal}\bigl(-f(\bx)\bigr) ,
@@ -82,8 +81,8 @@ Maximum-Likelihood-Schätzung dort in aller Regel die *negative*
 ### Die Bedingung erster Ordnung
 
 @sec:nichtlineare-gleichungen hat die Bedingung schon benutzt, und
-[Kapitel 10](?k=10-differentialrechnung#sec-10.7) hat um kritische Punkte herum das
-Hesse-Kriterium gebaut. Bewiesen haben wir die Bedingung selbst an keiner der
+[Kapitel 10](?k=10-differentialrechnung#sec-10.7) hat das
+Hesse-Kriterium für kritische Punkte aufgestellt. Bewiesen haben wir die Bedingung selbst an keiner der
 beiden Stellen. Für die Optimierung ist sie der Ausgangspunkt jedes Verfahrens,
 deshalb holen wir den Beweis hier nach.
 
@@ -118,7 +117,7 @@ lokales Minimum.
 
 :::schritt
 $g$ ist in $t = 0$ differenzierbar mit $g'(0) = \corange{\nabla f(\cgreen{\bx^\star})}\,\bh$.
-Nun schauen wir den Differenzenquotienten von zwei Seiten an. Für hinreichend
+Wir betrachten den Differenzenquotienten von zwei Seiten. Für hinreichend
 kleine $t > 0$ ist $(g(t) - g(0))/t \ge 0$, weil der Zähler nicht negativ ist; im
 Grenzwert folgt $g'(0) \ge 0$. Für hinreichend kleine $t < 0$ dreht der Nenner das
 Vorzeichen um, wir erhalten $(g(t) - g(0))/t \le 0$ und im Grenzwert
@@ -145,7 +144,7 @@ Punkt* von $f$. In [Kapitel 10](?k=10-differentialrechnung#sec-10.7) heißt ders
 *kritischer Punkt*; beide Wörter sind gebräuchlich und meinen dasselbe.
 :::
 
-Zwei Warnungen gehören sofort dazu. Die Bedingung ist *notwendig*, nicht
+Zwei Vorbehalte. Die Bedingung ist *notwendig*, nicht
 hinreichend: Jedes lokale Minimum ist stationär, aber ein stationärer Punkt kann
 ebenso ein Maximum oder ein Sattelpunkt sein. Und sie gilt nur im *Inneren*.
 Liegt das Minimum auf dem Rand der zulässigen Menge, so darf der Gradient dort
@@ -154,13 +153,13 @@ Abstiegsrichtung: Für jede Richtung $\bd$, die von $\cgreen{\bx^\star}$ aus in
 $\Xcal$ hineinführt, muss $\corange{\nabla f(\cgreen{\bx^\star})}\,\bd \ge 0$
 gelten, der *negative* Gradient darf also nicht ins Innere zeigen. Bei
 $f(x) = x$ auf $\Xcal = [0, 1]$ etwa liegt das Minimum in $0$ mit $f'(0) = 1$: Der
-Gradient zeigt dort sogar ins Innere, der negative Gradient dagegen hinaus. Genau
-davon handelt @sec:beschraenkt.
+Gradient zeigt dort ins Innere, der negative Gradient dagegen hinaus. Davon
+handelt @sec:beschraenkt.
 
 :::bemerkung[#optimieren-heisst-gleichungen-loesen (Optimieren heißt Gleichungen lösen)]
 Gleichung @eq:notwendige-bedingung-erster-ordnung ist ein System aus $n$ Gleichungen in $n$ Unbekannten, meist
-nichtlinear. Damit sind wir wieder bei @sec:nichtlineare-gleichungen, und das ganze
-dortige Werkzeug steht bereit. Insbesondere ist
+nichtlinear. Damit sind wir wieder bei @sec:nichtlineare-gleichungen, und die
+dortigen Verfahren stehen bereit. Insbesondere ist
 
 $$ {#eq-optimieren-heisst-gleichungen-loesen}
 \Phi(\bx) := \bx - \gamma\,\corange{\nabla f(\bx)}^\top
@@ -173,10 +172,10 @@ gehörige Fixpunktiteration $\cblue{\bx^{(k+1)}} = \Phi(\cblue{\bx^{(k)}})$ ist 
 :k[Gradientenabstieg]{#gradient-descent} aus @sec:nelder-mead-gradient.
 
 Analytisch lösen lässt sich @eq:notwendige-bedingung-erster-ordnung nur in Sonderfällen. Einer davon ist
-wichtig genug, um ihn zu nennen: Bei den kleinsten Quadraten ist der Gradient
+wichtig: Bei den kleinsten Quadraten ist der Gradient
 linear in $\bbeta$, aus @eq:notwendige-bedingung-erster-ordnung werden die Normalgleichungen, und die lösen wir
 mit den Mitteln aus @kap:kq in einem Zug. Sobald das Modell
-nichtlinear wird, ist damit Schluss, und wir iterieren.
+nichtlinear wird, geht das nicht mehr, und wir iterieren.
 :::
 
 ### Lokal oder global
@@ -184,7 +183,7 @@ nichtlinear wird, ist damit Schluss, und wir iterieren.
 Ein Verfahren, das nur die Umgebung des aktuellen Punktes ansieht, kann
 grundsätzlich nur lokale Minima finden. Ob das genügt, entscheidet die
 Zielfunktion. [Kapitel 11](?k=11-konvexitaet#sec-11.3) hat die beiden Antworten
-schon bewiesen, und wir zitieren sie hier, statt sie ein zweites Mal zu führen.
+schon bewiesen, und wir zitieren sie hier.
 
 *Lokal ist global.* Sind $\Xcal \subseteq \R^n$ konvex und
 $f\colon \Xcal \to \R$ :k[konvex]{#convexity}, so ist jedes lokale Minimum von
@@ -204,16 +203,16 @@ strikt kleineren Wert. Über die *Existenz* eines Minimierers sagt keine der
 beiden Aussagen etwas: $f(x) = e^x$ ist auf $\R$ strikt konvex und hat kein
 Minimum.
 
-Beide Aussagen kosten dasselbe Kleingedruckte.
+Beide Aussagen haben dieselben Voraussetzungen.
 
 :::bemerkung[#beide-saetze-brauchen-zwei (Beide Sätze brauchen zwei Konvexitätsbedingungen)]
-Leicht zu übersehen ist, dass in beiden Sätzen die Konvexität der zulässigen
-Menge genauso tragend ist wie die der Zielfunktion. Die Beweise in
+In beiden Sätzen ist die Konvexität der zulässigen
+Menge genauso wesentlich wie die der Zielfunktion. Die Beweise in
 @sec:konvexitaet/konvexe-optimierung zeigen, warum: Der Vergleichspunkt muss
 *zulässig* sein, dafür sorgt die Menge, und er muss *besser* sein, dafür sorgt
 die Funktion.
 
-*Ohne konvexe Menge nützt die beste Zielfunktion nichts.* Wir nehmen
+*Ohne konvexe Menge nützt die Zielfunktion nichts.* Wir nehmen
 $\cred{\Xcal = \{-1, +1\}}$ und $f(y) = y^2$. Die Zielfunktion ist strikt konvex,
 und trotzdem sind $y = -1$ und $y = +1$ beide optimal mit dem Wert $1$. Der
 Mittelpunkt $\bz = 0$ hätte den kleineren Wert $0$, er ist aber nicht zulässig,
@@ -221,7 +220,7 @@ und der Widerspruch aus @satz:hoechstens-eine-minimalstelle entsteht gar nicht e
 fällt mit der Konvexität der Menge.
 
 *Das Projektionstheorem ist der Spezialfall, bei dem die zweite Bedingung
-geschenkt ist.* Es minimiert die Distanz zu einem festen Punkt $\bx$ über eine
+automatisch erfüllt ist.* Es minimiert die Distanz zu einem festen Punkt $\bx$ über eine
 abgeschlossene konvexe Menge, also $\min_{\by \in \Xcal} \left\|\bx - \by\right\|^2$
 ([Kapitel 11](?k=11-konvexitaet#sec-11.3)). Sichtbar ist dort nur die Bedingung an
 die Menge, weil die strikte Konvexität der quadrierten Distanz in $\by$ schon in
@@ -247,17 +246,16 @@ $$
 die durch Ausmultiplizieren mit der Bilinearität des
 :k[Skalarprodukts]{#dot-product} entsteht und der Parallelogrammgleichung
 entspricht. Für $\ba \neq \bb$ und $\lambda \in (0, 1)$ ist der rote Term strikt
-negativ, und genau das ist die strikte Konvexität. Weil $t \mapsto t^2$ auf
+negativ, und das ist die strikte Konvexität. Weil $t \mapsto t^2$ auf
 $[0, \infty)$ streng wächst, haben Distanz und quadrierte Distanz dieselben
-Minimierer; das Quadrieren kostet also nichts und bringt die strikte Konvexität.
-Gebraucht wird dafür das Skalarprodukt, nicht bloß eine Norm.
+Minimierer; das Quadrieren ändert die Lösung also nicht und liefert die strikte Konvexität.
+Gebraucht wird dafür das Skalarprodukt, nicht nur eine Norm.
 :::
 
 ### Konvexe Verlustfunktionen in Statistik und ML
 
 :::beispiel[#vier-konvexe-verlustfunktionen (Vier konvexe Verlustfunktionen)]
-Vier Standardfälle stehen hier nebeneinander. Alle vier begegnen uns im Skript
-wieder.
+Vier Standardfälle, die im Skript wiederkehren.
 
 *Kleinste Quadrate.* Für $L(\bbeta) = \left\|\by - \bX\bbeta\right\|_2^2$ ist der
 Gradient $\corange{\nabla L(\bbeta)} = 2(\bX\bbeta - \by)^\top\bX$ und die
@@ -377,12 +375,12 @@ sind Hyperbeln, die in $x$-Richtung öffnen, die negativen Hyperbeln öffnen in
 $y$-Richtung.
 :::
 
-Damit ist die Lage beschrieben. Offen ist die praktisch entscheidende Frage:
-Kann ein Verfahren an so einem Punkt hängenbleiben?
+Offen ist die praktische Frage:
+Kann ein Verfahren an einem solchen Punkt hängenbleiben?
 
 :::interaktiv[Zwei Verfahren am Sattelpunkt]
 Die Tafel zeichnet die Höhenlinien von @beispiel:der-standardsattel und hängt zwei
-Verfahren daran. Drei Voreinstellungen sind die drei Experimente, die sich lohnen:
+Verfahren daran. Drei Voreinstellungen decken die wichtigen Fälle ab:
 der gewöhnliche Start, der Sonderfall auf der grünen Achse und ein schräger Start
 für den Newton-Knopf.
 
@@ -404,9 +402,9 @@ Die beiden Verfahren gehen gegensätzlich mit dem Sattel um. Der Newton-Knopf
 landet von jedem Startpunkt aus in einem einzigen Schritt exakt in
 $\cpurp{\bx^\star}$, denn $f$ ist quadratisch und seine Näherung zweiter Ordnung
 damit exakt. Der Gradientenabstieg dagegen entkommt: Mit $\gamma = 0{,}25$ steht
-er aus $(1{,}5;\, 0{,}4)$ nach acht Schritten bei $(0{,}0059;\, 10{,}25)$ – die
-erste Komponente fällt gegen null, die zweite läuft davon. Nur auf dem Startstrahl
-$y = 0$ kriecht auch er hinein, weil dort die zweite Komponente in jedem Schritt
+er aus $(1{,}5;\, 0{,}4)$ nach acht Schritten bei $(0{,}0059;\, 10{,}25)$: Die
+erste Komponente fällt gegen null, die zweite wächst. Nur auf dem Startstrahl
+$y = 0$ läuft auch er hinein, weil dort die zweite Komponente in jedem Schritt
 null bleibt; aus $x = 1{,}5$ stehen die Iterierten dann nach zwanzig Schritten bei
 $1{,}4 \cdot 10^{-6}$. Warum diese Ausnahme in der Praxis keine Rolle spielt,
 sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
@@ -415,8 +413,7 @@ sagt @bemerkung:was-sattelpunkte-fuer-die-verfahren.
 :::bemerkung[#was-sattelpunkte-fuer-die-verfahren (Was Sattelpunkte für die Verfahren bedeuten)]
 *Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method} aus
 @sec:differentialrechnung/taylor sucht eine Nullstelle des
-Gradienten, und ein Sattelpunkt ist eine. Für unser $f$ rechnen wir das in einer
-Zeile nach. Der Schritt lautet
+Gradienten, und ein Sattelpunkt ist eine. Für unser $f$ rechnen wir das nach. Der Schritt lautet
 $\cblue{\bx^{(1)}} = \bx - \corange{\bH_f^{-1}}\,\corange{\nabla f(\bx)}^\top$ mit
 der Spalte $\corange{\nabla f(\bx)}^\top$, und mit
 $\corange{\bH_f^{-1}} = \diag(\tfrac12, -\tfrac12)$ ist
@@ -430,8 +427,8 @@ $$
 = \cpurp{\begin{pmatrix} 0 \\ 0 \end{pmatrix}} ,
 $$
 
-und zwar von jedem Startpunkt aus. Wer Krümmungsinformation benutzt, ohne auf ihr
-Vorzeichen zu achten, wird von Sattelpunkten genauso angezogen wie von Minima.
+und zwar von jedem Startpunkt aus. Ein Verfahren, das Krümmungsinformation benutzt, ohne auf ihr
+Vorzeichen zu achten, konvergiert gegen Sattelpunkte genauso wie gegen Minima.
 @sec:newton-sgd zeigt die Gegenmittel.
 
 *Der Gradientenabstieg entkommt.* Mit Schrittweite $\gamma$ lautet die Iteration
@@ -458,9 +455,9 @@ beide Fälle offen, dazu @bemerkung:warum-die-rueckrichtung-nicht-gilt.) Die
 Münzwurf-Faustregel aus @sec:differentialrechnung/hoehere-ableitungen beziffert
 den Unterschied: Wären die $n$ Vorzeichen unabhängige faire Münzwürfe, so hätte
 ein Minimum die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum $2^{1-n}$, für
-$n = 100$ also $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$. Ein Toy-Modell
-ist das und keine Verteilungsaussage über die stationären Punkte eines konkreten
-Problems; belastbar bleibt die Geometrie dahinter, dass positive Definitheit ein
+$n = 100$ also $7{,}9 \cdot 10^{-31}$ und $1{,}6 \cdot 10^{-30}$. Das
+ist ein Spielzeugmodell und keine Verteilungsaussage über die stationären Punkte eines konkreten
+Problems; gültig bleibt die Geometrie dahinter, dass positive Definitheit ein
 einheitliches Vorzeichen verlangt und Indefinitheit nur ein gemischtes Muster.
 Wie Verfahren auf negative Krümmung reagieren, zeigen die Abschnitte
 @num:optim/nelder-mead-gradient und @num:optim/newton-sgd.
@@ -468,8 +465,8 @@ Wie Verfahren auf negative Krümmung reagieren, zeigen die Abschnitte
 
 ### Optimalitätsbedingungen im Überblick
 
-Damit haben wir alle Bausteine zusammen. Der folgende Satz stellt sie
-nebeneinander, für eine zweimal stetig differenzierbare Zielfunktion.
+Der folgende Satz stellt die Bausteine
+zusammen, für eine zweimal stetig differenzierbare Zielfunktion.
 
 :::satz[#bedingungen-erster-und-zweiter-ordnung (Bedingungen erster und zweiter Ordnung)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
@@ -519,24 +516,24 @@ Der rote Quotient verschwindet für $t \to 0$, also bleibt
 $\bh^\top\corange{\bH_f(\bx^\star)}\,\bh \ge 0$ stehen. Weil $\bh$ beliebig war,
 ist $\corange{\bH_f(\bx^\star)}$ positiv semidefinit.
 
-::why[Genau hier bleibt nur die schwache Ungleichung übrig: Der Grenzwert einer Folge nichtnegativer Zahlen ist nichtnegativ, aber nicht notwendig positiv]
+::why[Hier bleibt nur die schwache Ungleichung übrig: Der Grenzwert einer Folge nichtnegativer Zahlen ist nichtnegativ, aber nicht notwendig positiv]
 :::
 
 ::::
 :::::
 
 :::bemerkung[#warum-die-rueckrichtung-nicht-gilt (Warum die Rückrichtung nicht gilt)]
-Verlockend wäre, aus Teil 3 eine Äquivalenz zu machen und zu schreiben:
+Naheliegend wäre, aus Teil 3 eine Äquivalenz zu machen:
 $\corange{\nabla f(\bx^\star)} = \bnull^\top$ und
 $\corange{\bH_f(\bx^\star)} \succ 0$ *genau dann, wenn* $\bx^\star$ ein lokales
 Minimum ist. Die Richtung von links nach rechts stimmt, das ist Teil 3 des
 Satzes. Die Rückrichtung ist falsch.
 
-Das Gegenbeispiel ist schon in einer Variablen zu haben:
+Das Gegenbeispiel gibt es schon in einer Variablen:
 $\cred{f(x) = x^4}$ hat in $x = 0$ ein striktes globales Minimum, denn
 $f(x) > 0 = f(0)$ für alle $x \neq 0$. Es ist aber $f'(0) = 0$ *und*
 $f''(0) = 0$, die Hesse-Matrix $\corange{\bH_f(0)} = (0)$ ist also nicht positiv
-definit. Was aus einem lokalen Minimum wirklich folgt, steht in Teil 2 des Satzes:
+definit. Was aus einem lokalen Minimum folgt, steht in Teil 2 des Satzes:
 positive Semidefinitheit, mehr nicht. @bemerkung:wenn-die-hesse-matrix-nichts-entscheidet in
 @sec:differentialrechnung/hoehere-ableitungen führt neben $x^4$ noch $-x^4$ und
 $x^3$ vor, drei Funktionen mit derselben Hesse-Matrix im Nullpunkt und drei
@@ -553,9 +550,9 @@ Punkte, also unter der Voraussetzung $\corange{\nabla f(\bx^\star)} = \bnull^\to
 | indefinit | Sattelpunkt |
 | semidefinit, aber nicht definit | unklar, weitere Analyse nötig |
 
-Die letzte Zeile ist keine Bequemlichkeit, sondern eine Tatsache: In diesem Fall
+In der letzten Zeile
 entscheidet die zweite Ableitung nichts, und wir müssen höhere Ableitungen ansehen
-oder anders argumentieren. Ein einzelner Eigenwert null genügt dafür übrigens
+oder anders argumentieren. Ein einzelner Eigenwert null genügt dafür
 nicht. Bei $\corange{\bH_f} = \diag(1, -1, 0)$ ist die Matrix indefinit, und die
 dritte Zeile greift nach wie vor.
 
@@ -570,9 +567,9 @@ hinreichend: Jeder stationäre Punkt ist dann bereits ein globales Minimum
 $\corange{\nabla f(\cgreen{\bx^\star})} = \bnull^\top$ in die
 Gradientenungleichung einsetzt).
 
-Für die Praxis heißt das: Bei einem konvexen Problem sagt ein *verschwindender*
-Gradient schon alles, wir stehen dann im globalen Minimum. Ein bloß *kleiner*
-Gradient garantiert das nicht von selbst; wie viel er wert ist, hängt an der
+Für die Praxis heißt das: Bei einem konvexen Problem genügt ein *verschwindender*
+Gradient, wir stehen dann im globalen Minimum. Ein *kleiner*
+Gradient garantiert das nicht; wie viel er wert ist, hängt an der
 Krümmung, und darauf kommt @sec:nelder-mead-gradient mit den Abbruchkriterien
 zurück. Bei einem nicht-konvexen Problem heißt ein kleiner Gradient ohnehin nur,
 dass wir irgendwo stationär stehen, und die Tabelle sagt, welche drei
@@ -652,7 +649,7 @@ Schritt, wenn $\gamma = 0{,}25$ eingestellt ist?
 Die Iteration lautet $y^{(k+1)} = y^{(k)} - \gamma \cdot (-2y^{(k)}) =
 (1 + 2\gamma)\,y^{(k)}$, mit $\gamma = 0{,}25$ also der Faktor $1{,}5$. Die
 Ablesetafel des Widgets nennt ihn direkt; in der $x$-Richtung steht daneben
-$\left|1 - 2\gamma\right| = 0{,}5$. Diese Gegenläufigkeit ist der ganze Grund,
+$\left|1 - 2\gamma\right| = 0{,}5$. Diese Gegenläufigkeit ist der Grund,
 warum der Abstieg dem Sattel entkommt.
 :::
 
@@ -665,7 +662,7 @@ $n$ positiv ausfallen; das hat Wahrscheinlichkeit $2^{-n}$. Für irgendein
 Extremum dürfen alle positiv oder alle negativ sein, also $2^{1-n}$. Bei $n=100$
 sind das $7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Für reale
 Probleme ist die Unabhängigkeitsannahme im Allgemeinen falsch; der Selbsttest
-prüft deshalb ausdrücklich nur die Konsequenz des Toy-Modells
+prüft deshalb nur die Konsequenz des Spielzeugmodells
 (@bemerkung:was-sattelpunkte-fuer-die-verfahren).
 :::
 

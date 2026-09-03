@@ -3,11 +3,11 @@ import { Schaetzfrage } from "../../lib";
 
 In @sec:glaettung haben wir die Interpolation aufgegeben und
 stattdessen mit $K < n$ Basisfunktionen geglättet. Eine Frage blieb dabei
-offen, und es ist die einzige, die in der Praxis wirklich zu beantworten ist:
-Wie groß soll $K$ sein? Zwei Kräfte ziehen in entgegengesetzte Richtungen. Zu
-wenige Basisfunktionen können $f$ gar nicht darstellen, zu viele lassen den
-Schätzer dem Rauschen hinterherlaufen. Dieser Abschnitt macht aus dieser
-Intuition zwei Sätze und zeigt anschließend an einem asymptotischen
+offen, und sie ist in der Praxis die wichtigste:
+Wie groß soll $K$ sein? Zwei Effekte wirken gegeneinander. Zu
+wenige Basisfunktionen können $f$ nicht darstellen, zu viele lassen den
+Schätzer dem Rauschen folgen. Dieser Abschnitt macht aus dieser
+Beobachtung zwei Sätze und zeigt anschließend an einem asymptotischen
 Balance-Modell, wie eine theoretische Wahl von $K$ aussehen kann.
 
 :::bemerkung[#modell-designmatrix-schaetzer (Modell, Designmatrix, Schätzer)]
@@ -40,7 +40,7 @@ $K$, so ist $\bB^+ = (\bB^\top\bB)^{-1}\bB^\top$,
 und @eq:modell-designmatrix-schaetzer ist die gewöhnliche Lösung der Normalengleichungen
 (@sec:kq/problem).
 
-Zwei Dinge sind an @eq:modell-designmatrix-schaetzer wichtig. Der Schätzer ist *linear* in den Daten,
+Zwei Eigenschaften von @eq:modell-designmatrix-schaetzer sind wichtig. Der Schätzer ist *linear* in den Daten,
 er entsteht also durch Multiplikation mit einer festen Matrix. Und mit
 $\cblue{\by} = \symbf{f} + \cred{\beps}$, wobei
 $\symbf{f} = (f(x_1), \dots, f(x_n))^\top$ die rauschfreien
@@ -147,7 +147,7 @@ $\corange{h}^8 = O(K^{-8})$.
 :::::
 
 :::bemerkung[#woran-die-ordnung-haengt (Woran die Ordnung hängt)]
-Die Annahmen verdienen eine eigene Zeile, denn ohne sie ist die Aussage
+Die Annahmen sind wesentlich, denn ohne sie ist die Aussage
 falsch. Gebraucht werden gleichmäßige Knoten auf einem
 festen Intervall, $f \in \Ccal^4$ und kubische Stücke. Fällt eine dieser drei
 Bedingungen weg, ändert sich der Exponent. Bei stückweise linearen Stücken
@@ -164,8 +164,8 @@ die gleich in den MSE eingeht, und sie erbt die Ordnung $O(K^{-8})$.
 
 ### Varianz: der Preis für zu viele Basisfunktionen
 
-Der zweite Summand $\bB^+\cred{\beps}$ trägt den Zufall. Er ist es,
-der bei großem $K$ aus dem Ruder läuft, und über ihn lässt sich mehr sagen als
+Der zweite Summand $\bB^+\cred{\beps}$ trägt den Zufall. Er
+wächst bei großem $K$, und über ihn lässt sich mehr sagen als
 eine Ordnung. Anschaulich heißt das: Ziehen wir die Daten mehrfach neu, so
 liegen die Schätzkurven bei kleinem $K$ fast übereinander und verfehlen $f$
 alle in dieselbe Richtung, während sie bei großem $K$ im Mittel richtig
@@ -237,21 +237,21 @@ Multiplikation mit $\sigma^2/n$ liefert @eq:gemittelte-varianz-eines-linearen-2.
 :::::
 
 :::bemerkung[#was-die-varianzformel-erzaehlt (Was die Varianzformel erzählt)]
-Gleichung @eq:gemittelte-varianz-eines-linearen-2 ist bemerkenswert schlicht. Rechts steht keine
+Gleichung @eq:gemittelte-varianz-eines-linearen-2 ist einfach. Rechts steht keine
 Eigenschaft der Basis, keine Knotenlage, keine Konditionszahl, sondern nur
-$\sigma^2$, $K$ und $n$. Im Mittel kostet uns jede Basisfunktion genau
-$\sigma^2/n$ an Varianz, egal welche. Das ist die exakte Fassung der
+$\sigma^2$, $K$ und $n$. Im Mittel kostet jede Basisfunktion
+$\sigma^2/n$ an Varianz, unabhängig von ihrer Form. Das ist die exakte Fassung der
 Ordnungsaussage $\var[\cgreen{\wh{f}(x)}] = O(K/n)$.
 
-Der Beweis liefert nebenbei eine Größe, die uns im letzten Teil dieses
+Der Beweis liefert außerdem eine Größe, die uns im letzten Teil dieses
 Abschnitts wieder begegnet. Die Matrix
 $\bH = \bB(\bB^\top\bB)^{-1}\bB^\top$
 bildet die Beobachtungen auf die angepassten Werte ab, und Schritt 3 zeigt
 $\tr(\bH) = K$. Diese Spur heißt in der Statistik die *Anzahl
 effektiver Freiheitsgrade* des Schätzers, und bei einer unbestraften
-Regression mit $K$ Basisfunktionen ist sie schlicht $K$.
+Regression mit $K$ Basisfunktionen ist sie $K$.
 
-Vorsicht bei der punktweisen Lesart. Formel @eq:gemittelte-varianz-eines-linearen-2 mittelt, @eq:gemittelte-varianz-eines-linearen
+Die punktweise Lesart ist davon zu unterscheiden. Formel @eq:gemittelte-varianz-eines-linearen-2 mittelt, @eq:gemittelte-varianz-eines-linearen
 nicht. An einer Stelle, in deren Nähe kaum Daten liegen, kann
 $\var[\cgreen{\wh{f}(x)}]$ um Größenordnungen darüber liegen. Werten wir
 @eq:gemittelte-varianz-eines-linearen im Beispiel unten nicht an den $100$ Entwurfsstellen aus, sondern
@@ -312,8 +312,8 @@ $$ {#eq-eq-13-8-7}
 + \underbrace{\frac{\sigma^2 K}{n}}_{\text{Varianz}} .
 $$
 
-Die Schranke für den ersten Term fällt mit wachsendem $K$ rasant, der zweite
-Term wächst exakt linear. Damit besitzt die *rechte Seite* ein Minimum
+Die Schranke für den ersten Term fällt mit wachsendem $K$ schnell, der zweite
+Term wächst linear. Damit besitzt die *rechte Seite* ein Minimum
 dazwischen. Der tatsächliche Bias darf unter seiner Schranke liegen oder bei
 nicht geschachtelten Räumen schwanken; aus @eq:eq-13-8-7 allein folgt daher noch
 kein tatsächliches MSE-Minimum an derselben Stelle.
@@ -347,11 +347,11 @@ Design und Folge der Ansatzräume.
 Aus derselben Rechnung folgt
 $c_1 (K^\star)^{-8} = \tfrac{1}{8}\, c_2 K^\star/n$: Der quadrierte Bias
 trägt im Optimum dieses Modells ein Neuntel der Summe, die Varianz die
-übrigen acht Neuntel – eine Eigenschaft der angenommenen Potenzform, keine
+übrigen acht Neuntel. Das ist eine Eigenschaft der angenommenen Potenzform, keine
 des tatsächlichen MSE.
 
-Dass $K^\star \asymp n^{1/9}$ eine *rein asymptotische* Ordnung ist, verdient
-mehr als eine Fußnote: Mit Konstante $1$ liefert die Formel für $n = 100$ den
+Dass $K^\star \asymp n^{1/9}$ eine *rein asymptotische* Ordnung ist, ist
+wesentlich: Mit Konstante $1$ liefert die Formel für $n = 100$ den
 Wert $K^\star = 1{,}67$, und niemand approximiert eine schwingende Funktion
 mit zwei Basisfunktionen. Was fehlt, ist der Faktor $(8c_1/c_2)^{1/9}$, und
 der hängt an der vierten Ableitung von $f$ und an $\sigma$. Merken lässt sich
@@ -379,12 +379,12 @@ Rechnung.
 | $15$ | $0{,}0001$ | $0{,}0135$ | $0{,}0135$ | $0{,}0136$ |
 | $40$ | $0{,}0001$ | $0{,}0358$ | $0{,}0360$ | $0{,}0360$ |
 
-Drei Beobachtungen. Erstens trifft die geschätzte Varianz die Vorhersage
+Drei Beobachtungen. Die geschätzte Varianz trifft die Vorhersage
 $\sigma^2 K/n$ aus @satz:gemittelte-varianz-eines-linearen in jeder Zeile auf höchstens zwei Prozent genau;
-die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Zweitens
-liegt das Minimum des MSE bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
-das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Drittens trägt beim
-simulierten Minimum der Bias nur noch $11$ Prozent zum MSE bei. Das stimmt
+die Abweichung ist der Simulationsfehler von $200$ Wiederholungen. Das Minimum
+des MSE liegt bei $K = 12$ mit $0{,}0120$. Bei $K = 5$ ist der MSE
+das $34{,}5$-fache davon, bei $K = 40$ das Dreifache. Und beim
+simulierten Minimum trägt der Bias nur noch $11$ Prozent zum MSE bei. Das stimmt
 hier numerisch mit dem Ein-Neuntel-Verhältnis des Proxy-Modells aus
 @bemerkung:heuristisches-balance-modell-fuer-die überein, ist aber keine
 theoretisch erzwungene Übereinstimmung. Das diskrete Optimum liegt dort, wo
@@ -409,7 +409,7 @@ die vorhergesagten $16$ liefen.
 :::
 
 :::interaktiv[Zwölf Kurven, drei Balken, ein Regler]
-Das Widget rechnet die Tabelle live nach und zeigt zugleich, woher die beiden
+Das Widget rechnet die Tabelle nach und zeigt zugleich, woher die beiden
 Anteile kommen. Links stehen die Daten einer einzelnen Ziehung in Blau, die
 wahre Funktion violett gestrichelt, die inneren Knoten als orange Marken auf
 der Achse und in Grün die Schätzer der ersten zwölf Wiederholungen samt ihrem
@@ -419,7 +419,7 @@ Bei kleinem $K$ liegen die zwölf Kurven fast übereinander, bei $K = 40$
 fächern sie weit auf, und nur noch ihr Mittelwert liegt auf $f$. Die Balken
 rechts zeigen die Anteile am MSE, die Tafel darunter den Verlauf aller drei
 Größen über $K$ auf logarithmischer Skala. Dort ist der Knick gut zu sehen:
-Der rote Bias stürzt ab, die grüne Varianz steigt langsam und stetig, und die graue Summe
+Der rote Bias fällt steil, die grüne Varianz steigt langsam, und die graue Summe
 hat ihr Minimum dazwischen.
 
 Alle Zufallszahlen stammen aus einem festen Startwert. Es ist bei jedem
@@ -435,8 +435,7 @@ Wo vermuten wir vor dem Blick auf die MSE-Kurve ihr Minimum?
 
 ### Wie wählt man $K$ in der Praxis?
 
-Die ganze bisherige Rechnung hat einen Haken, und er ist deutlich zu
-benennen: Wir kennen $f$ nicht. Bias und MSE sind damit nicht ausrechenbar,
+Die bisherige Rechnung hat eine Einschränkung: Wir kennen $f$ nicht. Bias und MSE sind damit nicht ausrechenbar,
 sondern nur die Residuen. In geschachtelten Räumen werden sie mit wachsendem
 $K$ immer kleiner, bis ein vollrangiger Fall mit $K=n$ jeden Datenpunkt exakt
 trifft; bei wandernden Knoten dürfen einzelne Schritte davon abweichen
@@ -476,12 +475,12 @@ effektive Freiheitsgradzahl $\tr(\bH)$ anstelle von $K$.
 Bei geschachtelten Modellräumen fällt der Zähler monoton in $K$ und wäre als
 Auswahlkriterium nutzlos. Bei den hier verwendeten, mit $K$ wandernden
 Quantilsknoten kann er einzelne Male steigen (@bemerkung:die-residuen-fallen-nicht-immer), bevorzugt
-im Trend aber weiterhin unnötig flexible Trainingsfits. Der Nenner sorgt für
-den nötigen Gegendruck, und er kommt nicht aus der Luft: Er entsteht aus der
+im Trend aber weiterhin unnötig flexible Trainingsfits. Der Nenner wirkt dem
+entgegen, und er ist begründet: Er entsteht aus der
 Kreuzvalidierung, die jeden Punkt einmal weglässt.
 
-Die Faustregel dahinter ist einfach: Je näher $K$ an $n$ rückt, desto stärker
-bläst der Nenner den beobachteten Fehler auf, weil ein Schätzer mit vielen
+Die Faustregel dahinter: Je näher $K$ an $n$ rückt, desto stärker
+vergrößert der Nenner den beobachteten Fehler, weil ein Schätzer mit vielen
 Parametern seine eigenen Residuen künstlich klein rechnet.
 :::
 
@@ -517,20 +516,19 @@ Ziehung fällt die Wahl anders aus.
 :::
 
 :::bemerkung[#der-praktische-ausweg-gross-waehlen-und (Der praktische Ausweg: groß wählen und bestrafen)]
-In der Anwendung wird $K$ meist gar nicht feinjustiert. Man wählt es
-großzügig, sodass der Bias sicher klein ist, und steuert die Glattheit
+In der Anwendung wird $K$ meist nicht feinjustiert. Wir wählen es
+groß, sodass der Bias sicher klein ist, und steuert die Glattheit
 stattdessen über einen Strafterm. Das führt auf *P-Splines* und weiter auf
-additive Modelle; in R ist `mgcv::gam()` die Standardadresse dafür.
+additive Modelle; in R ist `mgcv::gam()` die Standardimplementierung dafür.
 
-Der Vorteil ist mehr als Bequemlichkeit. Die Knotenzahl ist eine ganze Zahl,
+Der Vorteil: Die Knotenzahl ist eine ganze Zahl,
 der Strafparameter dagegen stufenlos, und ein stufenloser Regler lässt sich
 mit denselben Kriterien viel feiner einstellen. Formal führt das auf gestrafte
 Normalengleichungen; die Details stehen in der Vertiefung zu Glättungs- und
 Penalized Splines in @sec:glaettung. Auch die effektiven
 Freiheitsgrade $\tr(\bH)$ aus @bemerkung:was-die-varianzformel-erzaehlt
 bleiben brauchbar; sie sind dann
-keine ganze Zahl mehr, sondern rutschen mit wachsendem Strafparameter stetig
-nach unten. Die Glättungssplines aus @sec:glaettung sind der
+keine ganze Zahl mehr, sondern fallen mit wachsendem Strafparameter stetig. Die Glättungssplines aus @sec:glaettung sind der
 Grenzfall $K = n$ mit Strafterm.
 :::
 
@@ -545,7 +543,7 @@ Je größer $K$, desto kleiner der Bias: Die Verzerrung fällt monoton.
 monotone Folge. In unserer eigenen Simulation steigt der quadrierte Bias von
 $0{,}0344$ bei $K = 8$ auf $0{,}1174$ bei $K = 9$: Beide Gitter sind viel zu
 grob, und bei $K = 9$ fallen die inneren Knoten zusätzlich genau auf die
-Nullstellen von $\sin(3x)$ (@bemerkung:der-bias-faellt-nicht-monoton). Erst über größere Sprünge in
+Nullstellen von $\sin(3x)$ (@bemerkung:der-bias-faellt-nicht-monoton). Erst über größere Schritte in
 $K$ setzt sich der Trend durch.
 :::
 

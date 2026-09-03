@@ -6,8 +6,8 @@ Zwei Felder der Tabelle aus @sec:gradient haben wir noch nicht besetzt. Im einen
 steht eine Matrix als Ausgabe und ein Skalar als Eingabe, im anderen genau umgekehrt. Beide Fälle
 kommen in der Statistik ständig vor, und beide brauchen kein neues Werkzeug: Wir leiten
 Eintrag für Eintrag ab und sortieren die Ergebnisse so, dass die Bedingung aus
-@definition:frechet-ableitung wieder in der gewohnten Gestalt dasteht. Die eigentliche Arbeit steckt in
-der Buchführung, nicht in der Analysis.
+@definition:frechet-ableitung wieder in der gewohnten Gestalt dasteht. Der Aufwand liegt im
+Sortieren der Indizes, nicht in der Analysis.
 
 ### Skalar zu Matrix
 
@@ -235,7 +235,7 @@ $$
 = 2x^2 \cdot \frac{2}{x} = 4x .
 $$
 
-Beide Wege stimmen überein. Wichtig ist dabei die Spur auf der rechten Seite: Ohne sie stünde
+Beide Wege stimmen überein. Die Spur auf der rechten Seite ist notwendig: Ohne sie stünde
 dort ein Produkt aus einer Zahl und einer Matrix, also gar keine Zahl, während links die
 Ableitung einer skalaren Größe steht. Und noch eine Feinheit: Die Jacobi-Formel
 verlangt $x \neq 0$, während die direkte Rechnung auch bei $x = 0$ durchläuft und dort $0$
@@ -425,7 +425,7 @@ liefert die Produktregel zwei Beiträge: aus dem linken Vorkommen wird $[\bX\bA^
 aus dem rechten $[\bX\bA]_{pq}$. Zusammen ist das $\bX(\bA + \bA^\top)$. Und @eq:identitaeten-fuer-matrix-zu-skalar-3 ist
 der Spezialfall $\bA = \bI$ von @eq:identitaeten-fuer-matrix-zu-skalar, denn
 $\tr(\bX\bI\bX^\top) = \tr(\bX\bX^\top) = \left\|\bX\right\|_F^2$ und $\bX(\bI + \bI) = 2\bX$.
-Die Verwandtschaft zu $\partial x^2/\partial x = 2x$ ist kein Zufall.
+Das ist die Matrixfassung von $\partial x^2/\partial x = 2x$.
 
 :::beispiel[#probe-der-frobenius-identitaet (Probe der Frobenius-Identität)]
 Für @eq:identitaeten-fuer-matrix-zu-skalar-3 brauchen wir keine Matrixrechnung. Nach Definition der Frobenius-Norm ist
@@ -471,7 +471,7 @@ Ableitungsterm und den roten Rest.
 
 Der Eintrag $(i,j)$ der Gradientenmatrix ist genau die Rate, mit der $f$ auf einen Stups an
 dieser Stelle reagiert. Für die beiden in $\bX$ linearen Funktionen bleibt der Rest exakt
-null, die lineare Vorhersage ist dort also nicht nur eine Näherung. Bei
+null, die lineare Vorhersage ist dort also exakt. Bei
 $\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: sichtbar von null verschieden, aber
 schneller fallend als $h$ selbst, und damit ein Musterbeispiel für ein
 $\cred{o(\left|h\right|)}$.
@@ -479,7 +479,7 @@ $\cred{o(\left|h\right|)}$.
 
 :::::vertiefung[Anwendung: Matrixzerlegung und Matrix Completion]
 
-Zum Schluss ein Problem, in dem der Fall Matrix zu Skalar seine ganze Kraft zeigt. Gegeben
+Zum Schluss ein Problem, das der Fall Matrix zu Skalar vollständig abdeckt. Gegeben
 sei eine Matrix $\cblue{\bY} \in \R^{m \times n}$, von der wir nur die Einträge an den
 Positionen einer Indexmenge $\Omega$ kennen. Das klassische Beispiel sind Bewertungen von
 Filmen: Die Zeilen sind Nutzer, die Spalten Filme, und die allermeisten Felder der Tabelle
@@ -613,11 +613,11 @@ vom Rangmodell und vom Optimierungslauf gelieferten Vorhersagen.
 :::
 
 Das Pluszeichen in Schritt 2 ist kein Tippfehler: Wir gehen gegen den Gradienten, und der
-trägt nach @eq:gradienten-der-completion bereits ein Minus. Zwei Warnungen gehören dazu. Erstens ist $L$ in
+trägt nach @eq:gradienten-der-completion bereits ein Minus. Dazu zwei Vorbehalte. $L$ ist in
 $(\bU, \bV)$ nicht konvex, das Produkt $\bU\bV^\top$ ist ja quadratisch in den Unbekannten.
 Gradientenabstieg hat deshalb keine allgemeine Garantie für ein globales Minimum: Je nach
 Startpunkt und Lernrate kann er zu einem lokalen oder globalen Minimum beziehungsweise einem
-anderen stationären Punkt konvergieren, oszillieren oder divergieren. Zweitens
+anderen stationären Punkt konvergieren, oszillieren oder divergieren. Außerdem
 ist die Zerlegung nie eindeutig, denn für jede invertierbare $\bT \in \R^{k \times k}$ ist
 $(\bU\bT)(\bV\bT^{-\top})^\top = \bU\bV^\top$. Für die Vorhersage stört das nicht, wohl aber
 für jede Interpretation der Spalten von $\bU$ und $\bV$.

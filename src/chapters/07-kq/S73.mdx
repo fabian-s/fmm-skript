@@ -15,16 +15,15 @@ $\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$ die eindeutige
 Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt, charakterisiert durch die
 :k[Normalengleichungen]{#normal-equations}
 $\bA^\top\bA\,\wh{\bx} = \bA^\top\bb$ (@satz:problem-normalengleichungen). Das ist
-eine Formel – aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste
+eine Formel, aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste
 und einfachste Lösungsverfahren: Wir lösen die Normalengleichungen mit der
 :k[Cholesky-Zerlegung]{#cholesky-factorization} und sehen dann,
-warum dieser bequeme Weg numerisch seinen Preis hat. Das motiviert am Ende des Abschnitts
+warum dieser bequeme Weg numerisch problematisch ist. Das motiviert am Ende des Abschnitts
 die orthogonalen Transformationen, die uns im Rest des Kapitels beschäftigen werden.
 
 ### Warum wir niemals invertieren :id[warum-wir-niemals-invertieren]
 
-Wie berechnen wir $\wh{\bx}$ nun konkret? Betrachten wir dazu eine kleine
-Programmieraufgabe. Gegeben ist eine R-Funktion, die die Lösungsformel
+Wie berechnen wir $\wh{\bx}$ konkret? Gegeben ist eine R-Funktion, die die Lösungsformel
 $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ wörtlich umsetzt: Sie
 bildet also erst die :k[Inverse]{#matrix-inverse} von
 $\bA^\top\bA$ und multipliziert dann:
@@ -55,11 +54,11 @@ Zweitens bringt die anschließende Multiplikation zusätzliche
 :k[Rundungsfehler]{#rounding-error}, ohne für eine einzelne rechte Seite einen
 Genauigkeitsvorteil zu bieten; eine stabile Zerlegung mit Substitution löst dasselbe
 System direkter. Das heißt nicht, dass das Berechnen einer Inversen grundsätzlich
-instabil wäre – nur, dass sie hier das falsche Zwischenprodukt ist. Drittens kann die
+instabil wäre, nur, dass sie hier das falsche Zwischenprodukt ist. Drittens kann die
 Inverse Struktur zerstören:
 Die Inverse einer
 :k[dünnbesetzten]{#sparse-matrix} Matrix ist typischerweise
-voll besetzt. Genau wie beim
+voll besetzt. Wie beim
 :k[Gauß-Verfahren]{#gaussian-elimination} mit seiner
 :k[LR-Zerlegung]{#lu-decomposition} gilt also: Zerlegen und
 substituieren statt invertieren.
@@ -74,7 +73,7 @@ $\bx^\top(\bA^\top\bA)\bx = \left\| \bA\bx \right\|_2^2 > 0$ für jedes
 $\bx \neq \bnull$.
 
 Symmetrisch positiv definit, kurz *SPD* (engl. *symmetric positive
-definite*): das ist genau die Klasse von Matrizen, für die die
+definite*): das ist die Klasse von Matrizen, für die die
 :k[Cholesky-Zerlegung]{#cholesky-factorization}
 $\bM = \bL\bL^\top$ mit einer unteren
 :k[Dreiecksmatrix]{#triangular-matrix} $\bL$
@@ -93,7 +92,7 @@ existiert. Damit zerfällt das KQ-Problem in eine Kette einfacher Teilschritte:
 Schritt 1 ersetzt das $m \times n$-Ausgangsproblem durch ein quadratisches
 $n \times n$-Gleichungssystem. Die Schritte 2–4 lösen dieses System dann so,
 wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren, denn
-Dreieckssysteme können wir direkt auflösen. Rechnen wir das einmal vollständig durch.
+Dreieckssysteme können wir direkt auflösen.
 
 :::beispiel[#beispiel-7-3-6]
 Wie im Wohnungspreis-@beispiel:rechenbeispiel-regressionsgerade-durch aus
@@ -170,8 +169,8 @@ Das Cholesky-Verfahren ist effizient: Ab Schritt 2 rechnen wir nur noch mit der 
 $n \times n$-Matrix $\bA^\top\bA$ statt mit der
 $m \times n$-Matrix $\bA$, und die Cholesky-Zerlegung nutzt deren
 Symmetrie aus und kostet nur etwa halb so viel wie eine LR-Zerlegung. Für gut
-konditionierte Probleme ist das Verfahren in der Praxis brauchbar. Es hat aber einen
-eingebauten Schwachpunkt, und der liegt ausgerechnet im allerersten Schritt.
+konditionierte Probleme ist das Verfahren in der Praxis brauchbar. Sein Schwachpunkt
+liegt im ersten Schritt.
 
 :::bemerkung[#stabilitaet-des-cholesky-verfahrens (Stabilität des Cholesky-Verfahrens)]
 - Fehler, die beim Aufstellen von $\bA^\top\bA$ passieren, beeinflussen
@@ -188,10 +187,10 @@ deren Konditionszahl ist
 $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, denn die Singulärwerte von
 $\bA^\top\bA$ sind die Quadrate der Singulärwerte von $\bA$. Diese
 quadrierte Kondition erben alle weiteren Schritte, ganz gleich, wie empfindlich das
-eigentliche KQ-Problem ist. Besonders ärgerlich ist das im günstigsten Fall: Bei kleinem
+eigentliche KQ-Problem ist. Am deutlichsten ist das im günstigsten Fall: Bei kleinem
 Residuum gilt $\kappa \approx \kappa_2(\bA)$, der Algorithmus verstärkt
 Fehler aber trotzdem mit $\kappa_2(\bA)^2$. Er ist also deutlich
-fehleranfälliger, als die Kondition des Problems erzwingt. Genau solche Verfahren nennen
+fehleranfälliger, als die Kondition des Problems erzwingt. Solche Verfahren nennen
 wir *instabil*. Es gibt noch einen zweiten Effekt, den die Konditionszahl allein
 gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
 :k[Gleitkommaarithmetik]{#floating-point} kann Information
@@ -199,11 +198,11 @@ gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
 Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
 
 :::interaktiv[Wann verliert die Kreuzproduktmatrix ihren Rang?]
-<p className="mb-2 text-sm">Sehen wir uns eine Matrix an, bei der der ganze Unterschied zwischen den Spalten in einem einzigen kleinen Summanden steckt. Das Widget führt die kritische Addition wirklich in der Gleitkommaarithmetik des Browsers aus; es rechnet also nicht nach, sondern rechnet.</p>
+<p className="mb-2 text-sm">Sehen wir uns eine Matrix an, bei der der ganze Unterschied zwischen den Spalten in einem einzigen kleinen Summanden steckt. Das Widget führt die kritische Addition in der Gleitkommaarithmetik des Browsers aus.</p>
 
 <S73KreuzproduktWidget />
 
-<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}} \approx 1{,}05 \cdot 10^{-8}$, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Das ist mehr, als die Konditionszahl allein hergibt: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
+<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, also ab $\eps \approx \sqrt{\eps_{\text{mach}}} \approx 1{,}05 \cdot 10^{-8}$, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Diesen Effekt erfasst die Konditionszahl allein nicht: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
 :::
 
 ### Alternative Lösungswege: orthogonale Transformationen :id[alternative-loesungswege-orthogonale]
@@ -219,7 +218,7 @@ Die Idee: Wir transformieren das Problem mit einer Matrix $\bQ$ zu einem
 „einfacheren" Problem $\bQ\bA\bx \approx \bQ\bb$, ohne die Lösung zu
 ändern. Wann ändert sich die Lösung nicht? Wenn die Zielfunktion für *jedes*
 $\bx$ denselben Wert behält, das Transformieren also alle Normen unangetastet
-lässt. Genau das leisten
+lässt. Das leisten
 :k[Orthogonalmatrizen]{#orthogonal-matrix}
 ($\bQ^\top\bQ = \bI$, ausführlich in
 @sec:qr), denn für diese gilt
@@ -243,12 +242,12 @@ die norm-erhaltenden Transformationen:
 $\bQ\bA$ gezielt auf Dreiecksform bringen (die
 *QR-Zerlegung*), ist das Thema von @sec:qr und @sec:givens-householder.
 
-:::interaktiv[Welche Abbildungen erhalten Längen – und welche nicht?]
-<p className="mb-2 text-sm">Probieren wir die drei Kandidaten der Reihe nach durch: eine Drehung, eine Spiegelung und einen Eliminationsschritt des Gauß-Verfahrens. Zwei davon dürfen wir auf ein KQ-Problem loslassen, einer nicht.</p>
+:::interaktiv[Welche Abbildungen erhalten Längen, und welche nicht?]
+<p className="mb-2 text-sm">Wir probieren drei Kandidaten durch: eine Drehung, eine Spiegelung und einen Eliminationsschritt des Gauß-Verfahrens. Zwei davon dürfen wir auf ein KQ-Problem anwenden, einen nicht.</p>
 
 <S73NormerhaltungWidget />
 
-<p className="mt-2 text-sm">Wie das Widget zeigt, bilden Drehung und Spiegelung den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse: Bei $m = 1{,}2$ wird aus $\left\|\bv\right\|_2 = 1{,}803$ ein $\left\|\bM\bv\right\|_2 = 3{,}176$, ein Faktor 1,76. Dass $\det \bM = 1$ bleibt, hilft nichts – Flächentreue ist eben nicht Längentreue. Genau deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
+<p className="mt-2 text-sm">Wie das Widget zeigt, bilden Drehung und Spiegelung den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse: Bei $m = 1{,}2$ wird aus $\left\|\bv\right\|_2 = 1{,}803$ ein $\left\|\bM\bv\right\|_2 = 3{,}176$, ein Faktor 1,76. Dass $\det \bM = 1$ bleibt, hilft nichts, denn Flächentreue ist nicht Längentreue. Deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
 :::
 
 ### Selbsttest
@@ -269,7 +268,7 @@ ist 1, und die Cholesky-Zerlegung aus @algorithmus:cholesky-verfahren-fuer-das-k
 Das Cholesky-Verfahren ist instabil, weil die Cholesky-Zerlegung selbst ein schlecht
 konditionierter Rechenschritt ist.
 
-Die Cholesky-Zerlegung ist für SPD-Matrizen sogar ausgesprochen gutartig. Der Schaden
+Die Cholesky-Zerlegung ist für SPD-Matrizen stabil. Der Schaden
 entsteht bereits in Schritt 1: Mit $\bA^\top\bA$ arbeiten wir ab dann mit einer Matrix der
 Konditionszahl $\kappa_2(\bA)^2$, und kein späterer Schritt kann das reparieren
 (@bemerkung:stabilitaet-des-cholesky-verfahrens).
@@ -288,9 +287,9 @@ der Minimierer. Orthogonalmatrizen lassen beides unangetastet.
 Weil $\bA^\top\bA$ nur $n \times n$ groß ist, ist der Weg über die Normalengleichungen bei
 großem $m$ auch numerisch der beste.
 
-Klein ist er, schnell auch – aber die Verkleinerung ist genau der Schritt, der die
-Konditionszahl quadriert. Effizienz und Stabilität zeigen hier in verschiedene Richtungen;
-den Vergleich rechnen wir in @sec:pseudoinverse aus.
+Klein ist er, schnell auch, aber die Verkleinerung ist der Schritt, der die
+Konditionszahl quadriert. Effizienz und Stabilität stehen hier gegeneinander; den
+Vergleich rechnen wir in @sec:pseudoinverse aus.
 :::
 
 ::::

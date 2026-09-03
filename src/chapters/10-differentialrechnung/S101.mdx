@@ -16,7 +16,7 @@ Folgerungen hervor; verlinkte Kästen führen direkt zum zugehörigen Kapitel.
 
 ### Was wir mitbringen
 
-Dieses Kapitel steht auf zwei Beinen. Aus der linearen Algebra brauchen wir die
+Aus der linearen Algebra brauchen wir die
 :k[Spur]{#trace} einer Matrix aus
 @sec:matrix-spur-norm/spur und die
 :k[Matrixnormen]{#matrix-norm} aus
@@ -31,8 +31,8 @@ $\partial f(\bx)/\partial x_i$, die lineare Approximation
 $f(x+h) \approx f(x) + f'(x)h$ und die Grundzüge der
 :k[Taylorreihen]{#taylor-series}.
 
-Ein Werkzeug verdient eine eigene Zeile, weil das ganze Kapitel daran hängt:
-die Landau-Notation für kleine Argumente. Für eine Funktion $g$ schreiben wir
+Ein Werkzeug brauchen wir im ganzen Kapitel: die Landau-Notation für kleine
+Argumente. Für eine Funktion $g$ schreiben wir
 
 $$
 g(h) = o(h)
@@ -52,7 +52,7 @@ Landau-Symbole haben wir in
 Rechenaufwand messen; hier läuft das Argument gegen null statt gegen unendlich,
 die Rechenregeln bleiben dieselben (:k[O-Notation]{#big-o-notation}).
 
-Wohin geht die Reise? Ableitungen und :k[Differenzierbarkeit]{#differentiability}
+Ableitungen und :k[Differenzierbarkeit]{#differentiability}
 kennen wir aus der Analysis für Funktionen einer reellen Variablen. Neu ist in
 diesem Kapitel ein allgemeinerer Ableitungsbegriff, die *Fréchet-Ableitung*. Mit
 ihm können wir Funktionen ableiten, die Vektoren oder Matrizen als Eingabe oder
@@ -66,7 +66,7 @@ Abschnitts: *Ableitung = lineare Approximation*.
 
 ### Die Ableitung im Eindimensionalen
 
-Fangen wir dort an, wo wir uns auskennen. Für eine Funktion einer reellen
+Für eine Funktion einer reellen
 Variablen misst der Differenzenquotient, wie stark sich der Funktionswert
 ändert, wenn wir das Argument um $h$ verrücken.
 
@@ -89,10 +89,9 @@ auf den ersten zu, und die Sekante dreht sich in die
 :k[Tangente]{#tangent-line}. Die Ableitung $\cgreen{f'(x)}$ ist deren
 :k[Steigung]{#slope}.
 
-Das Wort „der Grenzwert" in @definition:differenzierbarkeit trägt mehr Gewicht, als es
-aussieht. Verlangt ist ein einziger Wert, gegen den der Differenzenquotient
-strebt, egal von welcher Seite und in welchem Tempo wir uns nähern. Daran kann
-es scheitern.
+Das Wort „der Grenzwert" in @definition:differenzierbarkeit ist wesentlich.
+Verlangt ist ein einziger Wert, gegen den der Differenzenquotient strebt, egal
+von welcher Seite und in welchem Tempo wir uns nähern. Das kann scheitern.
 
 :::bemerkung[#wenn-es-keine-eindeutige-tangente-gibt (Wenn es keine eindeutige Tangente gibt)]
 Betrachten wir $f(x) = \left|x\right|$ an der Stelle $x = 0$. Für $h > 0$ ist
@@ -169,7 +168,7 @@ Damit ist (1) gleichwertig zu (2).
 :::
 
 :::schritt
-Zu (2) $\Longrightarrow$ (3): Wir taufen den Fehler auf einen Namen und setzen
+Zu (2) $\Longrightarrow$ (3): Wir geben dem Fehler einen Namen und setzen
 
 $$
 \cred{r(h)} := \cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h} .
@@ -194,7 +193,7 @@ Zu (3) $\Longrightarrow$ (2): Gilt (3), so ist die Differenz
 $\cblue{f(x+h)} - \cblue{f(x)} - \cgreen{a h}$ ein Term der Ordnung
 $\cred{o(\left|h\right|)}$. Nach Definition strebt sein Quotient mit
 $\left|h\right|$ gegen null, und dann tut es auch der Betrag dieses Quotienten.
-Damit ist der Ring geschlossen, und Aussage (1) ist wörtlich @definition:differenzierbarkeit
+Damit sind alle drei Aussagen gleichwertig, und Aussage (1) ist @definition:differenzierbarkeit
 mit $\cgreen{f'(x)} = \cgreen{a}$.
 
 ::why[wieder $\lim g = 0 \iff \lim \left|g\right| = 0$, diesmal in der Gegenrichtung]
@@ -204,16 +203,16 @@ mit $\cgreen{f'(x)} = \cgreen{a}$.
 
 :::::
 
-Aussage (3) ist die Fassung, die uns durch das ganze Kapitel trägt: *die
+Aussage (3) ist die Fassung, die wir im ganzen Kapitel benutzen: *die
 Funktion, ihre lineare Näherung, und ein Rest, der schneller verschwindet als
 $h$.* Farblich halten wir das durch: blau die Funktion und ihre Werte, grün die
 lineare Approximation, rot der Restterm.
 
 :::bemerkung[#was-hier-eigentlich-linear-ist (Was hier eigentlich linear ist)]
-Eine Verwechslung lohnt sich auszuräumen, bevor wir verallgemeinern. Die
+Bevor wir verallgemeinern, eine mögliche Verwechslung: Die
 Ableitung $f'$ selbst ist im Allgemeinen keine
 :k[lineare Funktion]{#linear-function}: für $f(x) = \sin(x)$ etwa ist
-$f'(x) = \cos(x)$, und der Kosinus ist alles andere als linear.
+$f'(x) = \cos(x)$, und der Kosinus ist nicht linear.
 
 Linear ist eine andere Abbildung, nämlich
 
@@ -224,17 +223,17 @@ $$
 bei *festem* $x$. Sie erfüllt
 $\cgreen{f'(x)(h_1 + h_2)} = \cgreen{f'(x) h_1} + \cgreen{f'(x) h_2}$ und
 $\cgreen{f'(x)(c h)} = c\,\cgreen{f'(x) h}$, ist also linear in $h$. Wie
-$\cgreen{f'(x)}$ von $x$ abhängt, bleibt davon völlig unberührt. Diese
-Trennung ist der Hebel für den Rest des Kapitels: Was wir verallgemeinern
+$\cgreen{f'(x)}$ von $x$ abhängt, bleibt davon unberührt. Diese
+Trennung ist der Ansatzpunkt für den Rest des Kapitels: Was wir verallgemeinern
 wollen, ist nicht die Zahl $f'(x)$, sondern die lineare Abbildung
 $\cgreen{D_x f}$.
 :::
 
-Zwei Fragen bleiben offen. Wie schnell verschwindet der Restterm, wenn wir $h$
+Zwei Fragen bleiben. Wie schnell verschwindet der Restterm, wenn wir $h$
 verkleinern? Und was geht schief, wenn die Funktion an der betrachteten Stelle
 einen Knick hat? Beides lässt sich an drei Beispielkurven ausprobieren.
 
-:::interaktiv[Sekante, Tangente und der Restterm zum Anfassen]
+:::interaktiv[Sekante, Tangente und der Restterm]
 Zur Wahl stehen zwei glatte Funktionen und die Betragsfunktion aus
 @bemerkung:wenn-es-keine-eindeutige-tangente-gibt. Der rote Balken über $x+h$ ist der Restterm $\cred{r(h)}$, der
 letzte Readout darunter der *relative* Fehler
@@ -242,16 +241,16 @@ $\left|\cred{r(h)}\right|/\left|h\right|$.
 
 <SekanteTangenteWidget />
 
-Dieser relative Fehler ist genau der Abstand zwischen Sekanten- und Tangentensteigung, und
+Dieser relative Fehler ist der Abstand zwischen Sekanten- und Tangentensteigung, und
 nach @satz:ableitung-als-lineare-approximation(2) geht er gegen null. Bei $f(x) = x^2$ steht
 dort sogar exakt $\left|h\right|$, denn der Restterm ist $h^2$
 (@beispiel:frechet-ableitung-von-f-x-x); halbieren wir die Schrittweite, so fällt der
 Restterm auf ein Viertel und der relative Fehler auf die Hälfte. Die Betragsfunktion zeigt
 die Kehrseite: Schieben wir $x$ auf $0$, so trennen sich die beiden Sekanten und bleiben
-getrennt, wie klein $h$ auch wird. Lehrreich ist eine Stelle knapp neben dem Knick – solange
-$\left|x\right| < h$ ist, liegt er noch im Fenster, und genau eine der beiden Sekanten läuft
+getrennt, wie klein $h$ auch wird. Lehrreich ist eine Stelle knapp neben dem Knick: Solange
+$\left|x\right| < h$ ist, liegt er noch im Fenster, und eine der beiden Sekanten läuft
 über ihn hinweg und misst etwas anderes als die Ableitung. Lineare Approximation ist eine
-lokale Angelegenheit.
+lokale Aussage.
 :::
 
 ### Der allgemeine Ableitungsbegriff
@@ -293,7 +292,7 @@ die Grenzwertbedingung in @eq:frechet-ableitung: Das $o$ ist kein Skalar, den wi
 addieren, sondern beschreibt die Größe des $\E$-wertigen Restes.
 
 :::bemerkung[#linearisierung-wie-die-definition-zu-lesen-ist (Wie die Definition zu lesen ist)]
-Vier Punkte, die in der knappen Formulierung leicht untergehen.
+Vier Punkte zur Definition:
 
 *Der Restterm.* Setzen wir wie im Beweis von @satz:ableitung-als-lineare-approximation
 
@@ -331,7 +330,7 @@ $\left|\cgreen{f'(x)}\right| < \infty$ ist, mit $M = \left|\cgreen{f'(x)}\right|
 Die alte Ableitung ist also ein Spezialfall der neuen.
 :::
 
-Prüfen wir die Definition an dem einfachsten Beispiel, das nicht trivial ist.
+Wir prüfen die Definition am einfachsten nichttrivialen Beispiel.
 
 :::beispiel[#frechet-ableitung-von-f-x-x (Fréchet-Ableitung von f(x) = x²)]
 Sei $f\colon \R \to \R$ mit $\cblue{f(x)} = x^2$. Behauptung: $f$ ist
@@ -360,8 +359,7 @@ $$
 \cred{h^2} = \cred{o(\left|h\right|)} . \quad\checkmark
 $$
 
-Bemerkenswert daran: Der relative Fehler ist hier nicht bloß klein, er ist
-exakt $\left|h\right|$. Bei $h = 0{,}1$ beträgt er $0{,}1$, bei $h = 0{,}01$
+Der relative Fehler ist hier nicht nur klein, sondern exakt $\left|h\right|$. Bei $h = 0{,}1$ beträgt er $0{,}1$, bei $h = 0{,}01$
 schon $0{,}01$. Das Widget oben zeigt diese Zahlen an.
 
 *Ist $\cgreen{D_x f}$ beschränkt?* Bei festem $x$ ist
@@ -377,7 +375,7 @@ $\cgreen{D_x f(h)} = \cgreen{2xh}$. Das passt zur Schulableitung: Nach
 @bemerkung:linearisierung-wie-die-definition-zu-lesen-ist ist $\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und aus
 $\cgreen{f'(x) h} = \cgreen{2x \cdot h}$ lesen wir $\cgreen{f'(x)} = \cgreen{2x}$ ab.
 
-Ein Wort zum Quantor in der Beschränktheit. Das $\forall$ in der Schranke
+Zum Quantor in der Beschränktheit: Das $\forall$ in der Schranke
 gehört zum $h$, nicht zum $x$: Die Schranke $M$ hängt ja gerade von $x$ ab, und
 ein einziges $M$ für alle $x$ kann es nicht geben, weil $2\left|x\right|$ über
 jede Grenze wächst. Beschränktheit ist punktweise in $x$ zu verstehen, und bei

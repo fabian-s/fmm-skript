@@ -10,8 +10,8 @@ Beobachtungen gibt. Eine Schicht eines :k[neuronalen Netzes]{#neural-network}
 macht aus einem Vektor von Eingaben einen Vektor von Aktivierungen. Und eine
 Koordinatentransformation der Ebene ordnet jedem Punkt wieder einen Punkt zu.
 
-Solche Funktionen $f\colon \R^n \to \R^m$ sind nichts weiter als $m$ gestapelte
-skalarwertige Funktionen,
+Solche Funktionen $f\colon \R^n \to \R^m$ sind $m$ gestapelte skalarwertige
+Funktionen,
 
 $$
 \cblue{f(\bx)} = \bigl(f_1(\bx), \dots, f_m(\bx)\bigr)^\top ,
@@ -68,12 +68,12 @@ $$
 \end{pmatrix} .
 $$
 
-Die Jacobimatrix bringt also nichts grundsätzlich Neues, sie ordnet nur an,
-was wir schon haben. Zwei Sonderfälle stecken bereits darin.
+Die Jacobimatrix ordnet also nur an, was wir schon haben. Zwei Sonderfälle
+stecken bereits darin.
 
 - Für $m = 1$ bleibt eine einzige Zeile übrig, und das ist der Gradient aus
-  @definition:gradient. Dass wir ihn dort als Zeilenvektor definiert haben,
-  zahlt sich hier aus: Gradient und Jacobimatrix sind dasselbe Objekt, nur
+  @definition:gradient. Weil wir ihn dort als Zeilenvektor definiert haben,
+  sind Gradient und Jacobimatrix dasselbe Objekt, nur
   mit unterschiedlich vielen Zeilen.
 - Für $n = 1$ bleibt eine einzige Spalte übrig. Das ist der Fall Skalar zu
   Vektor aus der Übersicht in @sec:gradient, etwa die Ableitung
@@ -142,8 +142,8 @@ Objekts, und welche wir sehen, entscheiden nur $n$ und $m$.
 
 ### Die Bausteine und ihre Jacobimatrizen
 
-Vier Funktionen tauchen so oft als Bausteine auf, dass sich das Auswendiglernen
-lohnt. Alle vier sind konstant oder linear, und entsprechend einfach fallen die
+Vier Funktionen tauchen so oft als Bausteine auf, dass man ihre Jacobimatrizen
+kennen sollte. Alle vier sind konstant oder linear, und entsprechend einfach fallen die
 Jacobimatrizen aus.
 
 :::satz[#jacobimatrizen-der-grundbausteine (Jacobimatrizen der Grundbausteine)]
@@ -235,15 +235,13 @@ und zwar exakt für jedes $\bh$, ohne Restterm. Die lineare Näherung @eq:eq-10-
 ist hier keine Näherung, sondern eine Identität.
 :::
 
-Das ist der Grund, warum die vier Bausteine so nützlich sind. Sie bilden
-zusammen mit der Kettenregel den Werkzeugkasten, mit dem sich fast alle
-Ableitungen dieses Kapitels zusammensetzen lassen, und bei ihnen selbst fällt
-kein Fehler an.
+Deshalb sind die vier Bausteine so nützlich: Zusammen mit der Kettenregel lassen
+sich aus ihnen fast alle Ableitungen dieses Kapitels zusammensetzen, und bei ihnen
+selbst fällt kein Fehler an.
 
 ### Was die Jacobimatrix geometrisch anstellt
 
-Für eine nichtlineare Abbildung $f\colon \R^2 \to \R^2$ ist die Lage
-interessanter. Sie verbiegt die Ebene, obwohl Urbild und Bild dieselbe Dimension
+Eine nichtlineare Abbildung $f\colon \R^2 \to \R^2$ verbiegt die Ebene, obwohl Urbild und Bild dieselbe Dimension
 haben. Legen wir ein feines Gitter um einen Punkt $\bx_0$, so wird daraus ein
 krummes Netz um $\cblue{f(\bx_0)}$. Die Jacobimatrix beschreibt dieses krumme
 Netz näherungsweise durch ein Parallelogrammgitter: Die beiden Spalten
@@ -303,21 +301,21 @@ kostet ein Hundertstel Fehler.
 ::::vertiefung[Die Jacobi-Determinante als Flächenfaktor]
 
 :::bemerkung[#wie-stark-die-flaeche-verzerrt-wird (Wie stark die Fläche verzerrt wird)]
-Das Bild dazu ist schnell erzählt: ein kleines Quadrat links, sein verbogenes
-Bild rechts, dazu das Parallelogramm der linearen Näherung. Wie stark $f$ die
+Das Bild dazu: ein kleines Quadrat links, sein verbogenes Bild rechts, dazu das
+Parallelogramm der linearen Näherung. Wie stark $f$ die
 Fläche dehnt oder staucht, steht in der
 :k[Determinante]{#determinant} der Jacobimatrix. Ein achsenparalleles Quadrat
 mit Kantenlänge $a$ um $\bx_0$ geht unter der Linearisierung in das
 Parallelogramm über, das von $a\,\corange{\bJ_f(\bx_0)}\be_1$ und
 $a\,\corange{\bJ_f(\bx_0)}\be_2$ aufgespannt wird; dessen Flächeninhalt ist das
 $\left|\det \corange{\bJ_f(\bx_0)}\right|$-fache von $a^2$. Weil sich das krumme
-Bild für kleine Quadrate immer besser an dieses Parallelogramm anschmiegt, gilt
+Bild für kleine Quadrate immer besser mit diesem Parallelogramm übereinstimmt, gilt
 derselbe Faktor im Grenzwert auch für $f$ selbst. In @beispiel:quadrieren-in-der-ebene ist
 $\det \corange{\bJ_f(\bx)} = 4x_1^2 + 4x_2^2$, an der Stelle $\bx_0$ also $5$:
 Ein kleines Quadrat um $\bx_0$ wird auf annähernd die fünffache Fläche
 aufgeblasen, und je kleiner es ist, desto genauer stimmt der Faktor. In der
-Wahrscheinlichkeitsrechnung ist genau dieser Faktor das, was beim
-Transformationssatz für Dichten den Ausgleich schafft.
+Wahrscheinlichkeitsrechnung ist dieser Faktor der Korrekturterm im
+Transformationssatz für Dichten.
 :::
 
 ::::
@@ -326,7 +324,6 @@ Transformationssatz für Dichten den Ausgleich schafft.
 Wie schnell verschwindet der Unterschied zwischen dem krummen Bild und dem Parallelogramm,
 wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor
 $\left|\det \bJ_f(\bx_0)\right|$ wirklich zu, oder gilt er nur im Grenzwert?
-Beides ist eine Frage an ein Bild, nicht an eine Formel.
 
 <LinearisierungsWidget />
 
@@ -354,8 +351,8 @@ sie das Gitter kräftig.
 
 ### Verkettung
 
-Bisher haben wir einzelne Abbildungen abgeleitet. Interessant wird es, wenn
-mehrere hintereinandergeschaltet sind, wenn also die Ausgabe der einen die
+Bisher haben wir einzelne Abbildungen abgeleitet. Jetzt schalten wir mehrere
+hintereinander, wenn also die Ausgabe der einen die
 Eingabe der nächsten ist. Für die
 :k[Verkettung]{#function-composition} gilt dieselbe Regel wie in der Analysis,
 nur dass jetzt Matrizen multipliziert werden.
@@ -370,8 +367,8 @@ $$ {#eq-kettenregel-fuer-jacobimatrizen}
 $$
 :::
 
-Die Formatprobe erledigt sich von selbst: rechts steht eine $p \times m$-Matrix
-mal einer $m \times n$-Matrix, das Produkt ist $p \times n$, und genau das
+Die Formate passen: Rechts steht eine $p \times m$-Matrix
+mal einer $m \times n$-Matrix, das Produkt ist $p \times n$, und das
 verlangt @definition:jacobimatrix für eine Abbildung von $\R^n$ nach $\R^p$.
 
 Der Beweis führt dieselbe Rechnung wie später @satz:kettenregel, dort ohne Koordinaten und
@@ -449,7 +446,7 @@ $\bh \mapsto \corange{\bJ_f(\by)}\corange{\bJ_g(\bx)}\,\bh$ die Bedingung aus
 
 ### Anwendung: Backpropagation
 
-Ein neuronales Netz ist eine Verkettung, wie sie im Buche steht. Aus einer
+Ein neuronales Netz ist eine Verkettung. Aus einer
 Eingabe $\bx$ wird über $K$ Schichten eine Vorhersage $\wh{\by}$,
 
 $$
@@ -485,8 +482,7 @@ $$ {#eq-die-gradientenkette-eines-netzes}
 \frac{\partial f_k(\bz_{k-1}; \btheta_k)}{\partial \btheta_k} .
 $$
 
-Die Formate lesen sich von links nach rechts wie eine Kette von Dominosteinen.
-Ganz links steht mit $\partial L / \partial \wh{\by}$ ein Zeilenvektor, weil $L$
+Die Formate passen von links nach rechts zusammen. Ganz links steht mit $\partial L / \partial \wh{\by}$ ein Zeilenvektor, weil $L$
 skalar ist. Jede Jacobimatrix $\corange{\bJ_{f_j}(\bz_{j-1})}$ hat so viele
 Zeilen wie $\bz_j$ Komponenten und so viele Spalten wie $\bz_{j-1}$. Der letzte
 Faktor leitet die Schicht $k$ nach ihren *eigenen* Parametern ab, nicht nach
@@ -500,10 +496,10 @@ $\partial R/\partial\btheta_k$.
 :::
 
 :::bemerkung[#wo-die-kette-aufhoert (Wo die Kette aufhört)]
-Eine Stolperstelle in @eq:die-gradientenkette-eines-netzes verdient einen eigenen Absatz, weil sie leicht
-zu übersehen ist. Das Produkt der Jacobimatrizen läuft nur bis
-$\corange{\bJ_{f_{k+1}}(\bz_k)}$, also bis zur Schicht *über* der gesuchten.
-Verlockend wäre, die Kette bis $\corange{\bJ_{f_k}(\bz_{k-1})}$ weiterzuziehen
+Ein leicht zu übersehender Punkt in @eq:die-gradientenkette-eines-netzes: Das Produkt der
+Jacobimatrizen läuft nur bis $\corange{\bJ_{f_{k+1}}(\bz_k)}$, also bis zur Schicht
+*über* der gesuchten. Naheliegend wäre, die Kette bis $\corange{\bJ_{f_k}(\bz_{k-1})}$
+weiterzuziehen
 und erst dann nach $\btheta_k$ abzuleiten. Das zählt $\bW_k$ jedoch doppelt:
 $\corange{\bJ_{f_k}(\bz_{k-1})}$ ist die Ableitung der Schicht $k$ nach ihrer
 Eingabe $\bz_{k-1}$ und enthält $\bW_k$ bereits als Faktor. Für die Parameter
@@ -581,12 +577,12 @@ Matrixprodukt $(10 \times 20)\cdot(20 \times 50)$ mit $10\,000$
 Multiplikationen und danach noch einmal $500$, zusammen $10\,500$, also fast das
 Neunfache.
 
-Der Grund ist immer derselbe: Weil $L$ skalar ist, ist der äußerste linke Faktor
+Der Grund: Weil $L$ skalar ist, ist der äußerste linke Faktor
 eine Zeile, und eine Zeile mal einer Matrix bleibt eine Zeile. Wer bei
 $\partial L / \partial \wh{\by}$ anfängt, hält also stets nur einen Vektor im
 Speicher; wer am anderen Ende beginnt, baut große Zwischenmatrizen auf. In der
 Sprache des Netzes heißt „links anfangen" gerade: von der Ausgabe rückwärts
-Schicht für Schicht zur Schicht $k$ laufen. Nichts anderes ist
+Schicht für Schicht zur Schicht $k$ laufen. Das ist
 *Backpropagation*, und dazu kommt eine zweite Ersparnis: Das Teilprodukt für die
 Schicht $k$ entsteht aus dem für die Schicht $k+1$ durch einen einzigen weiteren
 Faktor, nämlich $\corange{\bJ_{f_{k+1}}(\bz_k)}$. Ein Rückwärtslauf liefert
@@ -626,7 +622,7 @@ nur die Reihenfolge der Rechenschritte, nicht den Aufwand.
 Das Ergebnis ist dasselbe, der Aufwand nicht. Im Beispiel aus
 @bemerkung:wie-die-kette-ausgewertet-wird kostet die Auswertung von links $1200$ und die von rechts
 $10\,500$ Multiplikationen. Weil $L$ skalar ist, bleibt von links jedes
-Zwischenergebnis eine Zeile; von rechts entstehen volle Matrizen. Genau diese
+Zwischenergebnis eine Zeile; von rechts entstehen volle Matrizen. Diese
 Auswertungsreihenfolge ist die Backpropagation.
 :::
 
@@ -660,7 +656,7 @@ Die Kettenregel lautet $\bJ_{f \circ g}(\bx) = \bJ_g(\bx)\,\bJ_f(g(\bx))$.
 
 Die Reihenfolge ist vertauscht; richtig ist @eq:kettenregel-fuer-jacobimatrizen,
 $\bJ_{f \circ g}(\bx) = \bJ_f(g(\bx))\,\bJ_g(\bx)$. Schon die Formate
-verraten den Fehler: Für $g\colon \R^n \to \R^m$ und $f\colon \R^m \to \R^p$
+zeigen den Fehler: Für $g\colon \R^n \to \R^m$ und $f\colon \R^m \to \R^p$
 wäre das falsch geordnete Produkt $(m \times n)\cdot(p \times m)$ gar nicht
 definiert, außer wenn zufällig $n = p$ gilt.
 :::

@@ -1,8 +1,7 @@
 import { S31SpurWidget } from "./widgets/S31SpurWidget";
 
-Mit diesem Kapitel beginnt der Numerik-Teil des Skripts in der linearen Algebra. Bevor wir
-in den folgenden Kapiteln Gleichungssysteme zerlegen und lösen, brauchen wir ein
-Handwerkszeug, das dort auf Schritt und Tritt auftaucht: Wir müssen
+Bevor wir in den folgenden Kapiteln Gleichungssysteme zerlegen und lösen, brauchen wir
+ein Werkzeug, das dort überall gebraucht wird: Wir müssen
 :k[Matrizen]{#matrix} *messen* können. Wie groß ist eine
 Matrix? Wie stark verstärkt sie Fehler? Wann konvergiert ein iteratives Verfahren? Alle
 diese Fragen verlangen, eine ganze Tabelle voller Zahlen zu einer einzigen aussagekräftigen
@@ -31,11 +30,9 @@ Dieses Kapitel setzt voraus:
 ### Definition und erste Beispiele :id[definition-und-erste-beispiele]
 
 Die einfachste Art, eine quadratische Matrix zu einer Zahl zu verdichten, ist zugleich die
-billigste: Wir addieren einfach die Diagonalelemente. Das klingt zunächst willkürlich.
-Warum ausgerechnet die Diagonale? Die Antwort liefert dieser Abschnitt: Diese Summe ist
-eine erstaunlich stabile Kenngröße der Matrix, die sich von Basiswechseln nicht
-beeindrucken lässt und die Summe der Eigenwerte liefert, ohne dass wir auch nur einen
-davon ausrechnen müssten.
+billigste: Wir addieren die Diagonalelemente. Warum ausgerechnet die Diagonale? Weil diese
+Summe unter Basiswechseln unverändert bleibt und die Summe der Eigenwerte liefert, ohne
+dass wir auch nur einen davon ausrechnen müssten.
 
 :::definition[#spur (Spur)]
 Die *Spur* (*trace*) einer quadratischen Matrix
@@ -46,14 +43,12 @@ $$
 $$
 :::
 
-Zwei Dinge halten wir gleich fest: Erstens ist die Spur *nur für quadratische
-Matrizen* definiert, denn bei einer rechteckigen Matrix hat „die Diagonale" keine
-sinnvolle Bedeutung. Zweitens ist die Spur eine *skalare Invariante* der Matrix:
-Sie ändert sich nicht, wenn wir dieselbe lineare Abbildung in einer anderen
-:k[Basis]{#basis} darstellen (das ist die
-Ähnlichkeitsinvarianz, die wir gleich in @satz:eigenschaften-der-spur beweisen). Nebenbei bemerkt ist die
-Spur auch numerisch ein Schnäppchen: $n - 1$ Additionen, keine einzige
-Multiplikation.
+Die Spur ist *nur für quadratische Matrizen* definiert, denn bei einer rechteckigen
+Matrix hat „die Diagonale" keine sinnvolle Bedeutung. Sie ist eine *skalare Invariante*
+der Matrix: Sie ändert sich nicht, wenn wir dieselbe lineare Abbildung in einer anderen
+:k[Basis]{#basis} darstellen (das ist die Ähnlichkeitsinvarianz, die wir in
+@satz:eigenschaften-der-spur beweisen). Numerisch ist sie außerdem billig: $n - 1$
+Additionen, keine Multiplikation.
 
 :::beispiel[#beispiel-3-1-3]
 Für die :k[Einheitsmatrix]{#identity-matrix} stehen auf der
@@ -70,9 +65,8 @@ zweiten Beispiel könnte genauso gut $5000$ sein.
 
 ### Rechenregeln und zyklische Vertauschung :id[rechenregeln-und-zyklische-vertauschung]
 
-Der eigentliche Wert der Spur liegt in ihren Rechenregeln. Sie machen aus der harmlosen
-Diagonalsumme ein Werkzeug, mit dem sich viele Matrixausdrücke drastisch vereinfachen
-lassen.
+Nützlich wird die Spur durch ihre Rechenregeln. Mit ihnen lassen sich viele
+Matrixausdrücke stark vereinfachen.
 
 :::satz[#eigenschaften-der-spur (Eigenschaften der Spur)]
 Für Matrizen $\bA, \bB \in \R^{n \times n}$, invertierbares
@@ -138,9 +132,8 @@ $$
 \tr(\bA\bB\bC) = \tr(\bB\bC\bA) = \tr(\bC\bA\bB).
 $$
 
-Wir dürfen die Faktoren unter der Spur also „im Kreis herumschieben", so als stünden
-sie auf einem Karussell: Die Reihenfolge im Kreis bleibt erhalten, nur der Startpunkt
-wandert.
+Wir dürfen die Faktoren unter der Spur also „im Kreis herumschieben": Die Reihenfolge
+im Kreis bleibt erhalten, nur der Startpunkt wandert.
 
 :::bemerkung[#vorsicht-was-die-spur-nicht-kann (Vorsicht: Was die Spur nicht kann)]
 - Die Spur ist *nicht* multiplikativ: $\tr(\bA\bB) = \tr(\bB\bA)$,
@@ -158,8 +151,8 @@ wandert.
 ::::vertiefung[Anwendung: Freiheitsgrade in der linearen Regression]
 
 :::beispiel[#zyklische-vertauschung-in-der-statistik (Zyklische Vertauschung in der Statistik)]
-Ein Vorgeschmack darauf, warum die zyklische Vertauschung in der Statistik ein
-Dauerbrenner ist: In der
+Ein Beispiel dafür, wie oft die zyklische Vertauschung in der Statistik gebraucht
+wird: In der
 :k[linearen Regression]{#linear-regression} mit Designmatrix
 $\bX \in \R^{n \times p}$ (voller Spaltenrang) erzeugt die „Hutmatrix"
 $\bH = \bX(\bX^\top\bX)^{-1}\bX^\top \in \R^{n \times n}$ die
@@ -180,10 +173,9 @@ $p \times p$-Einheitsmatrix.
 
 ### Spur und Eigenwerte :id[spur-und-eigenwerte]
 
-Warum ist ausgerechnet die Diagonalsumme so invariant? Das folgende Resultat liefert die
-tiefere Erklärung: Die Spur ist in Wahrheit eine Kennzahl der
-:k[Eigenwerte]{#eigenvalue-eigenvector} – und die hängen nur
-von der linearen Abbildung ab, nicht von der Basis, in der wir sie aufschreiben.
+Warum ist ausgerechnet die Diagonalsumme invariant? Das folgende Resultat erklärt es:
+Die Spur ist eine Kennzahl der :k[Eigenwerte]{#eigenvalue-eigenvector}, und die hängen
+nur von der linearen Abbildung ab, nicht von der Basis, in der wir sie aufschreiben.
 
 :::satz[#spur-als-summe-der-eigenwerte (Spur als Summe der Eigenwerte)]
 Für eine Matrix $\bA \in \R^{n \times n}$ mit Eigenwerten
@@ -234,24 +226,23 @@ Der Satz gilt auch für nicht diagonalisierbare Matrizen; der allgemeine Beweis 
 einen Koeffizientenvergleich im charakteristischen Polynom
 $\det(\bA - \lambda\bI)$
 (:k[Determinante]{#determinant}) und ist hier nicht unser Thema.
-Zwei Feinheiten sind trotzdem erwähnenswert: Die Eigenwerte zählen wir mit ihrer
+Zwei Feinheiten: Die Eigenwerte zählen wir mit ihrer
 algebraischen Vielfachheit, und sie dürfen
 :k[komplex]{#complex-numbers} sein (eine reelle Matrix kann
 komplexe Eigenwerte haben). Die treten dann aber immer als konjugierte Paare
 $a \pm b\,i$ auf, deren Imaginärteile sich in der Summe wegheben: Die Spur
-bleibt reell, wie es sich für eine Summe reeller Diagonalelemente gehört.
+bleibt reell, wie es für eine Summe reeller Diagonalelemente sein muss.
 
 :::interaktiv[Was macht ein Eintrag neben der Diagonale mit Eigenwerten und Spur?]
-Wie belastbar diese Aussage ist, merken wir erst, wenn wir an der Matrix rütteln. Verändern
-wir einen Eintrag *außerhalb* der Diagonale: Was macht das mit den beiden Eigenwerten, und
+Verändern wir einen Eintrag *außerhalb* der Diagonale: Was macht das mit den beiden Eigenwerten, und
 was mit ihrer Summe?
 
 <S31SpurWidget />
 
 Die Eigenwerte reagieren empfindlich. Ein kleiner Nebendiagonaleintrag schiebt sie
 auseinander, lässt sie zusammenfallen oder hebt sie ganz aus der reellen Achse heraus; die
-Spur bemerkt davon nichts, weil sie nur die Diagonale abliest. Auch im komplexen Fall bleibt
-die Bilanz stehen: Die beiden Eigenwerte sind dann konjugiert, ihre Imaginärteile heben sich
+Spur bemerkt davon nichts, weil sie nur die Diagonale abliest. Auch im komplexen Fall
+stimmt die Summe: Die beiden Eigenwerte sind dann konjugiert, ihre Imaginärteile heben sich
 in der Summe weg, und übrig bleiben zwei gleiche Realteile, zusammen wieder die Spur.
 :::
 
@@ -325,8 +316,8 @@ $$
 
 ::::
 
-Diese Spur-Darstellung ist mehr als eine Kuriosität: Sie macht die Frobenius-Norm in
-Rechnungen handhabbar, in denen die Doppelsumme unhandlich wäre. Ob die Frobenius-Norm
+Diese Spur-Darstellung macht die Frobenius-Norm in Rechnungen handhabbar, in denen die
+Doppelsumme unhandlich wäre. Ob die Frobenius-Norm
 allerdings das misst, was wir bei der Fehleranalyse wirklich brauchen (nämlich wie stark
 eine Matrix Vektoren verzerren kann), ist eine andere Frage. Ihr gehen wir im
 [nächsten Abschnitt](#sec-3.2) nach, wo wir den Begriff

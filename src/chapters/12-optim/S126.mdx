@@ -2,7 +2,7 @@ import { Schaetzfrage } from "../../lib";
 import { OptimLandkarte } from "./widgets/S126Landkarte";
 
 Zum Abschluss übersetzen wir die Verfahren dieses Kapitels in R-Aufrufe. Die
-beiden Arbeitspferde sind `optimize()` für univariate und `optim()` für
+beiden Standardfunktionen sind `optimize()` für univariate und `optim()` für
 multivariate Zielfunktionen. Die Ausgaben der Aufrufe drucken wir hier nicht
 ab; stattdessen rechnen wir die Beispielfunktion im Widget selbst nach. Das
 Widget läuft mit Gradientenabstieg und nicht mit den Verfahren aus `optim()`,
@@ -34,8 +34,8 @@ danach fallen sie nicht mehr. Ein bloß eindeutiges globales Minimum ohne diese
 Formbedingung genügt nicht, weil zusätzliche Wellen die Intervallsuche täuschen
 können.
 
-Der goldene Schnitt ist aber nur der eine Baustein. Tatsächlich kombiniert
-`optimize()` ihn mit einer parabolischen Interpolation: Solange sich die drei zuletzt
+Der goldene Schnitt ist nur der eine Baustein. `optimize()` kombiniert
+ihn mit einer parabolischen Interpolation: Solange sich die drei zuletzt
 berechneten Punkte gutartig verhalten, springt der nächste Testpunkt in den
 Scheitel der Parabel durch sie, und erst wenn dieser Sprung aus dem
 eingeschachtelten Intervall führt oder zu wenig einbringt, greift wieder der
@@ -73,12 +73,12 @@ Ohne `method`-Argument verwendet `optim()` das ableitungsfreie
 @sec:nelder-mead-gradient; mit `method = "BFGS"` das
 Quasi-Newton-Verfahren aus @sec:newton-sgd, dessen Gradienten
 es mangels `gr`-Argument per finiter Differenzen schätzt. Ein über `gr`
-mitgeliefertes Gradientenfeld wechselt die Methode übrigens nicht von
+mitgeliefertes Gradientenfeld wechselt die Methode nicht von
 selbst; Nelder-Mead bleibt die Voreinstellung, bis `method` etwas anderes
 sagt. Von diesem Startpunkt aus landen beide Verfahren im globalen Minimum.
 
-:::bemerkung[#falsche-konvergenz-und-keiner-warnt (Falsche Konvergenz, und keiner warnt)]
-Zwei Fallen zeigt schon dieses kleine Beispiel; drei Aufrufe genügen:
+:::bemerkung[#falsche-konvergenz-und-keiner-warnt (Falsche Konvergenz ohne Warnung)]
+Zwei Probleme zeigt schon dieses Beispiel; drei Aufrufe genügen:
 
 ```r
 optim(c(-1, 1), f)                                # Nelder-Mead
@@ -100,19 +100,19 @@ Stillstand kam, nicht, dass das Ergebnis global optimal ist
 `control = list(maxit = 50)`, kann `optim()` mitten am Hang stehen bleiben.
 Das Ergebnis sieht aus wie immer, nur der `convergence`-Code (dann
 $\neq 0$) verrät den Abbruch; eine Warnung gibt es nicht. Abbruchkriterien
-prüfen heißt hier: den Rückgabewert lesen, nicht auf `warnings()` warten
+prüfen heißt hier: den Rückgabewert lesen, nicht auf `warnings()` verlassen
 (@sec:nelder-mead-gradient, Abbruchkriterien).
 :::
 
-Wie schlimm ist das in der Praxis? Probieren wir es an der Beispielfunktion
-selbst aus.
+Wie wirkt sich das aus? Wir probieren es an der Beispielfunktion
+aus.
 
 :::interaktiv[Die Landkarte zur Beispielfunktion]
 Das Widget zeichnet die Funktion aus @eq:eq-12-6-1 als Karte und lässt uns den
 Startpunkt setzen, per Klick, per Zug oder über die beiden Regler. Weil das
 Widget mit Gradientenabstieg rechnet, sind das die Einzugsgebiete *dieses*
 Verfahrens; Nelder-Mead und BFGS laufen andere Wege und können deshalb an anderen
-Startpunkten umkippen als die blaue Spur.
+Startpunkten in eine andere Mulde laufen als die blaue Spur.
 
 <Schaetzfrage
   variante="auswahl"
@@ -131,8 +131,8 @@ Startpunkten umkippen als die blaue Spur.
 Es sind genau drei. Von $(-1;\ -0{,}5)$ aus geht es ins globale Minimum
 $(0;\ 0)$ mit $f = 0$, von $(-1;\ 1)$ in die obere und von $(-0{,}5;\ -1)$ in die
 untere Mulde, beide bei $(0;\ \pm 1{,}0357)$ mit $f = 0{,}1085$. Alle drei Läufe
-enden ordnungsgemäß – Gradient null, Hesse-Matrix positiv definit, kein
-Warnhinweis –, und trotzdem landen zwei von dreien am falschen Ort. Gegen falsche
+enden regulär, mit Gradient null, positiv definiter Hesse-Matrix und ohne
+Warnhinweis, und trotzdem landen zwei von dreien im falschen Minimum. Gegen falsche
 Konvergenz hilft deshalb keine bessere Schrittweite, sondern nur ein zweiter
 Startpunkt.
 :::
@@ -193,7 +193,7 @@ Die Methodenwahl aus diesem Kapitel, zusammengefasst:
 Ein verbreitetes Missverständnis dazu: BFGS ist zwar in vielen
 Optimierungsbibliotheken die Voreinstellung, in `optim()` aber nicht. Dort ist
 Nelder-Mead die Voreinstellung, und daran ändert auch ein über `gr` übergebener
-Gradient nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfordern.
+Gradient nichts. BFGS bleibt trotzdem der gute Kompromiss, wir müssen ihn nur anfordern.
 
 ### Was bleibt
 
@@ -212,7 +212,7 @@ Gradient nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfo
    $\gamma = 1/L$ also $\rho = 1 - \mu/L$, und die
    :k[Kondition]{#condition-number} $\kappa_f = L/\mu$ bestimmt das
    Zickzack (@sec:nelder-mead-gradient).
-4. **Newton und Quasi-Newton** kaufen mit Krümmungsinformation schnellere
+4. **Newton und Quasi-Newton** erreichen mit Krümmungsinformation schnellere
    Konvergenz; BFGS approximiert die Hesse-Inverse aus Gradienten, SGD
    ersetzt den Gradienten durch den einer zufällig gezogenen Beobachtung,
    der im Mittel über diese Ziehung der gesuchte ist
@@ -223,8 +223,6 @@ Gradient nichts. Der gute Kompromiss ist BFGS trotzdem, wir müssen ihn nur anfo
 :::
 
 ### Selbsttest
-
-Sechs Aussagen quer durch das Kapitel.
 
 ::::quiz
 
@@ -265,7 +263,7 @@ Gleichungsnebenbedingungen nichtnegativ sein.
 
 Nur die $\mu_j$ der Ungleichungen tragen die Vorzeichenbedingung
 $\mu_j \ge 0$; die $\lambda_i$ sind frei. @beispiel:minimieren-auf-einer-geraden hat
-$\lambda^\star = -1$, und alles ist in Ordnung.
+$\lambda^\star = -1$.
 :::
 
 :::frage{wahr}
@@ -283,7 +281,7 @@ wir bei $(-1;\ 1)$ starten?
 
 Er landet in der oberen Mulde bei $(0;\ 1{,}0357)$ mit $f = 0{,}1085$. Das
 globale Minimum liegt bei $(0;\ 0)$ mit $f = 0$, also gut ein Zehntel tiefer.
-Beide Läufe enden mit verschwindendem Gradienten und ohne Warnung – genau das
+Beide Läufe enden mit verschwindendem Gradienten und ohne Warnung; das
 meint @bemerkung:falsche-konvergenz-und-keiner-warnt mit „falscher Konvergenz".
 :::
 
@@ -294,7 +292,7 @@ jeder Gradientenabstiegs-Schritt den Funktionswert.
 Die Richtung stimmt, solange $\nabla f \neq \bnull^\top$ ist, aber die
 Schrittweite kann den Abstieg überschießen: Auf $f(x) = x^2$ mit
 $\gamma = 1$ gilt $x^{(k+1)} = -x^{(k)}$ und der Funktionswert bleibt exakt
-gleich, mit $\gamma > 1$ wächst er. Genau dagegen sichert die
+gleich, mit $\gamma > 1$ wächst er. Dagegen sichert die
 Armijo-Bedingung aus @sec:nelder-mead-gradient ab.
 :::
 

@@ -7,8 +7,8 @@ import { ref } from "../numbers.generated";
 ### Was wir mitbringen
 
 Der zweite Block des Skripts, *Analysis und Optimierung*, läuft auf dieses Kapitel
-zu. Alles, was wir dafür brauchen, steht schon da, und es lohnt sich, es kurz
-nebeneinanderzulegen.
+zu. Die benötigten Werkzeuge stehen bereit; wir stellen sie kurz
+zusammen.
 
 Aus @sec:differentialrechnung/gradient kommt der
 :k[Gradient]{#gradient} $\corange{\nabla f(\bx)}$ einer Funktion
@@ -43,8 +43,7 @@ und die Warnzeichen für Divergenz.
 
 ### Drei Sorten von Problemen
 
-Der Rest des Kapitels behandelt drei Fragestellungen, die enger zusammengehören,
-als sie zunächst aussehen.
+Der Rest des Kapitels behandelt drei Fragestellungen, die eng zusammengehören.
 
 :::definition[#nichtlineares-gleichungssystem (Nichtlineares Gleichungssystem)]
 Sei $f\colon \R^n \to \R^m$. Ein *nichtlineares Gleichungssystem* ist die
@@ -60,8 +59,8 @@ Für $n = m = 1$ sprechen wir von einer *Nullstelle* (root) von $f$.
 Der Zusatz „nichtlinear" grenzt gegen @kap:lgs ab: Ist $f$
 affin, also $f(\bx) = \bA\bx - \bb$, so ist das ein
 :k[lineares Gleichungssystem]{#linear-system}, und dafür haben wir fertige
-Zerlegungen. Sobald $f$ krumm ist, gibt es keine Formel mehr, die uns die Lösung
-in endlich vielen Schritten hinstellt.
+Zerlegungen. Sobald $f$ nichtlinear ist, gibt es keine Formel mehr, die die Lösung
+in endlich vielen Schritten liefert.
 
 :::definition[#unbeschraenktes-und-beschraenktes (Unbeschränktes und beschränktes Optimierungsproblem)]
 Sei $f\colon \R^n \to \R$. Ein *unbeschränktes Optimierungsproblem*
@@ -123,7 +122,7 @@ von der [Potenzmethode](?k=08-la-misc#sec-8.1) und den
 ### Warum Optimierung?
 
 :::beispiel[#optimierungsprobleme-in-statistik-und (Optimierungsprobleme in Statistik und maschinellem Lernen)]
-Ein erstaunlich großer Teil beider Fächer besteht daraus, ein Minimum zu suchen.
+Ein großer Teil beider Fächer besteht daraus, ein Minimum zu suchen.
 
 *Maximum-Likelihood-Schätzung.* Für unabhängige, identisch verteilte
 Beobachtungen $y_1, \dots, y_n$ mit Dichte $f_Y(y \mid \btheta)$ ist der
@@ -166,22 +165,22 @@ $$
 \quad \text{so dass} \quad \cred{\left\|\bbeta\right\|_p \le c} ,
 $$
 
-und darin sitzt die geometrische Anschauung. Verletzt der KQ-Schätzer die
-Nebenbedingung, so blasen wir die :k[Niveaumengen]{#level-sets} des
-Kleinste-Quadrate-Verlusts um ihn herum so lange auf, bis eine von ihnen die
-$p$-Norm-Kugel vom Radius $\cred{c}$ gerade berührt; der Berührpunkt ist die
+und daran lässt sich die Geometrie ablesen. Verletzt der KQ-Schätzer die
+Nebenbedingung, so vergrößern wir die :k[Niveaumengen]{#level-sets} des
+Kleinste-Quadrate-Verlusts um ihn herum so lange, bis eine von ihnen die
+$p$-Norm-Kugel vom Radius $\cred{c}$ berührt; der Berührpunkt ist die
 Lösung. Bei $p = 1$ hat diese Kugel Ecken auf den Achsen, und an einer Ecke
-kommt die wachsende Niveaumenge besonders leicht zuerst an; deshalb setzt Lasso
+trifft die wachsende Niveaumenge häufig zuerst auf; deshalb setzt Lasso
 Koeffizienten exakt auf null.
 
-Zwei Feinheiten sind dabei leicht zu übersehen. Erstens gehört zu jeder
-penalisierten Lösung ein Budget $\cred c$, das dieselbe Lösung liefert – in der
-Gegenrichtung aber nur, solange die Nebenbedingung wirklich bindet. Warum das so
+Zwei Feinheiten. Zu jeder
+penalisierten Lösung gehört ein Budget $\cred c$, das dieselbe Lösung liefert, in der
+Gegenrichtung aber nur, solange die Nebenbedingung bindet. Warum das so
 ist und warum es keine allgemeine Umrechnungsformel gibt, klärt
-@beispiel:kkt-stationaritaet-fuer-ridge in @sec:beschraenkt. Zweitens steht im
+@beispiel:kkt-stationaritaet-fuer-ridge in @sec:beschraenkt. Außerdem steht im
 Strafterm die $p$-te *Potenz*
 der Norm. Für $p = 1$ ist das die Norm selbst, für $p = 2$ dagegen
-$\lambda\left\|\bbeta\right\|_2^2$ – und nur mit dieser quadrierten Fassung
+$\lambda\left\|\bbeta\right\|_2^2$, und nur mit dieser quadrierten Fassung
 ergibt sich die geschlossene Ridge-Lösung
 $\wh{\bbeta} = (\bX^\top\bX + \lambda\bI_p)^{-1}\bX^\top\by$ aus
 @beispiel:ridge-regression in @sec:differentialrechnung/produkt-kettenregel. Die
@@ -193,7 +192,7 @@ $\left\|\bbeta\right\|_2^2 \le c^2$ dieselbe Menge beschreiben.
 
 ### Wann hat $f(x) = 0$ überhaupt eine Lösung?
 
-Bevor wir ein Verfahren bauen, sollten wir wissen, wonach wir suchen. Sei
+Bevor wir ein Verfahren konstruieren, klären wir, wann eine Lösung existiert. Sei
 $[a, b] \subset \R$ und $f\colon [a, b] \to \R$; gesucht sind Lösungen von
 $f(x) = 0$. Welche der folgenden Aussagen stimmen?
 
@@ -204,8 +203,8 @@ Ist $f$ stetig, so hat $f(x) = 0$ genau eine Lösung.
 
 Stetigkeit allein liefert weder Existenz noch Eindeutigkeit. Die konstante
 Funktion $f \equiv 1$ ist stetig und hat gar keine Nullstelle, die konstante
-Funktion $f \equiv 0$ ist stetig und hat lauter Nullstellen. Was Stetigkeit
-beiträgt, ist erst in Verbindung mit einem Vorzeichenwechsel etwas wert.
+Funktion $f \equiv 0$ ist stetig und hat lauter Nullstellen. Stetigkeit
+hilft erst in Verbindung mit einem Vorzeichenwechsel.
 :::
 
 :::frage{falsch}
@@ -224,7 +223,7 @@ Ist $f$ streng monoton, so hat $f(x) = 0$ höchstens eine Lösung.
 Streng monotone Funktionen sind injektiv: Aus $x_1 < x_2$ folgt
 $f(x_1) \neq f(x_2)$. Der Wert $0$ wird also höchstens einmal angenommen. Für die
 Existenz sagt das nichts, dafür brauchen wir Stetigkeit und einen
-Vorzeichenwechsel. Diese Aufteilung steckt im folgenden Satz.
+Vorzeichenwechsel. Diese Aufteilung zeigt der folgende Satz.
 :::
 
 ::::
@@ -254,7 +253,7 @@ Nullstelle liegt am Rand.
 :::
 
 :::schritt
-*Der interessante Fall.* Sei nun $\cblue{f(a)} \cdot \cblue{f(b)} < 0$, die
+*Der Hauptfall.* Sei nun $\cblue{f(a)} \cdot \cblue{f(b)} < 0$, die
 beiden Randwerte haben also verschiedene Vorzeichen. Ohne Beschränkung der
 Allgemeinheit nehmen wir $\cblue{f(a)} < 0 < \cblue{f(b)}$ an.
 
@@ -281,16 +280,15 @@ Bedingungen des Satzes sind also *hinreichend*, aber nicht *notwendig*.
 
 Praktisch heißt das: Findet ein Verfahren keine Nullstelle, so ist damit nicht
 gesagt, dass es keine gibt. Umgekehrt liefert ein Vorzeichenwechsel plus
-Stetigkeit eine belastbare Zusage, und darauf baut das erste Verfahren auf.
+Stetigkeit eine Garantie, und darauf baut das erste Verfahren auf.
 :::
 
 ### Das Bisektionsverfahren
 
-Die Idee des :k[Bisektionsverfahrens]{#bisection} ist so einfach, dass sie fast
-keine Erklärung braucht. Wir kennen ein Intervall, in dem eine Nullstelle
+Die Idee des :k[Bisektionsverfahrens]{#bisection}: Wir kennen ein Intervall, in dem eine Nullstelle
 stecken muss, weil $f$ an den Rändern das Vorzeichen wechselt. Wir halbieren es,
-schauen nach, in welcher Hälfte der Vorzeichenwechsel geblieben ist, und werfen
-die andere weg.
+prüfen, in welcher Hälfte der Vorzeichenwechsel liegt, und verwerfen
+die andere.
 
 :::algorithmus[#bisektionsverfahren (Bisektionsverfahren)]
 Gegeben seien eine stetige Funktion $f\colon \R \to \R$, zwei Punkte $a < b$ mit
@@ -306,7 +304,7 @@ Endintervalls zurück.
 :::
 
 Das $\epsilon$ ist hier die gewünschte Genauigkeit, nicht die Maschinengenauigkeit
-aus @kap:fehler. Wie viele Schritte kostet uns das?
+aus @kap:fehler. Wie viele Schritte kostet das?
 
 :::satz[#schrittzahl-der-bisektion (Schrittzahl der Bisektion)]
 Es gelten die Voraussetzungen von @algorithmus:bisektionsverfahren, und das Startintervall sei
@@ -383,17 +381,17 @@ $$
 \le \frac{\cblue{b_k} - \cblue{a_k}}{2} \le \frac{\epsilon}{2} .
 $$
 
-::why[hier zahlt sich die Rückgabe der Intervallmitte aus; ein Randpunkt des Endintervalls hätte nur die Schranke $\epsilon$]
+::why[hier zeigt sich der Nutzen der Rückgabe der Intervallmitte; ein Randpunkt des Endintervalls hätte nur die Schranke $\epsilon$]
 :::
 
 ::::
 
-Ein Beispiel, das uns durch den Rest des Abschnitts begleitet: Für
+Ein Beispiel, das im Rest des Abschnitts wiederkehrt: Für
 $f(x) = x^2 - 2$ auf $[1, 2]$, also die Suche nach $\sqrt 2$, und
 $\epsilon = 10^{-6}$ ist $\log_2(10^6) = 19{,}93$, also brauchen wir $20$
 Schritte, und das Endintervall hat die Länge $2^{-20} = 9{,}54 \cdot 10^{-7}$. Die Bisektion gewinnt pro Schritt genau
 ein Bit, also $\log_{10} 2 \approx 0{,}301$ Dezimalstellen; für eine weitere
-gültige Stelle brauchen wir rund $3{,}3$ Schritte. Das ist zuverlässig und
+gültige Stelle brauchen wir rund $3{,}3$ Schritte. Das Verfahren ist zuverlässig und
 langsam.
 
 :::bemerkung[#bisektion-robust-implementiert (Die Bisektion in sieben Zeilen)]
@@ -409,7 +407,7 @@ bisect <- function(f, a, b, eps) {
 }
 ```
 
-Auf die letzte Zeile kommt es dabei an. Gäbe sie den *letzten Mittelpunkt*
+Die letzte Zeile ist wesentlich. Gäbe sie den *letzten Mittelpunkt*
 zurück, so wäre das nach der Zuweisung stets ein Randpunkt des Endintervalls:
 Statt der garantierten Genauigkeit $\epsilon/2$ aus @satz:schrittzahl-der-bisektion bliebe nur
 $\epsilon$, ein voller Halbierungsschritt verschenkt.
@@ -417,7 +415,7 @@ $\epsilon$, ein voller Halbierungsschritt verschenkt.
 :::
 
 :::vertiefung[Fließkomma-Fallen der Bisektion]
-Zwei Kleinigkeiten dieser Fassung sind Fließkomma-Handwerk aus
+Zwei Details dieser Fassung betreffen die Fließkommaarithmetik aus
 @kap:fehler. Die erste betrifft den Mittelpunkt. Haben $a$
 und $b$ dasselbe Vorzeichen, so ist $a + (b-a)/2$ die verlässlichere Formel: Die
 Differenz $b - a$ ist dann betragsmäßig höchstens so groß wie der größere der
@@ -452,15 +450,15 @@ bisect <- function(f, a, b, eps) {
 Der Aufruf `stopifnot` macht aus einer stillschweigenden Voraussetzung eine
 geprüfte, und das Zwischenspeichern von `fa` halbiert die Zahl der
 Funktionsauswertungen. Bei einer Zielfunktion, deren Auswertung eine Minute
-dauert, ist das kein Schönheitsfehler.
+dauert, ist das relevant.
 :::
 
 :::bemerkung[#umkehrfunktionen-binaersuche-und-die (Umkehrfunktionen, Binärsuche und die Grenze des Verfahrens)]
 *Umkehrfunktionen auswerten.* Suchen wir $f^{-1}(y)$ für ein gegebenes $y$, so
-lösen wir einfach $f(x) - y = 0$. Für die Statistik ist der wichtigste Fall die
+lösen wir $f(x) - y = 0$. Für die Statistik ist der wichtigste Fall die
 Quantilfunktion: Ist $F$ eine stetige, streng wachsende Verteilungsfunktion, so
-ist das $p$-Quantil die Lösung von $F(x) - p = 0$. @satz:existenz-und-eindeutigkeit-einer ist hier wörtlich
-anwendbar, und genau so berechnen viele Programmbibliotheken Quantile, für die es
+ist das $p$-Quantil die Lösung von $F(x) - p = 0$. @satz:existenz-und-eindeutigkeit-einer ist hier direkt
+anwendbar, und so berechnen viele Programmbibliotheken Quantile, für die es
 keine geschlossene Formel gibt.
 
 *Verwandtschaft zur Binärsuche.* Die Bisektion halbiert in jedem Schritt den
@@ -470,7 +468,7 @@ Auflösung (@sec:algos/aufwand). Der Vorzeichenwechsel
 übernimmt dabei die Rolle des Größenvergleichs: Er sagt uns, in welcher Hälfte
 weiterzusuchen ist.
 
-*Und die Grenze.* Beide Verfahren leben davon, dass $\R$ angeordnet ist. Im
+*Die Grenze.* Beide Verfahren setzen voraus, dass $\R$ angeordnet ist. Im
 $\R^n$ ist es das nicht: Ein „Vorzeichenwechsel" eines vektorwertigen $f$ ist gar
 nicht definiert, und ein Gebiet lässt sich nicht so halbieren, dass eine
 Nullstelle nachweislich in einer Hälfte bleibt. Deshalb eignet sich die Bisektion
@@ -479,7 +477,7 @@ einfachste davon steht am Ende dieses Abschnitts.
 :::
 
 Zwei Fragen bleiben offen. Wie viele Halbierungen kostet eine vorgegebene
-Genauigkeit wirklich, und was passiert, wenn im Startintervall mehr als eine
+Genauigkeit, und was passiert, wenn im Startintervall mehr als eine
 Nullstelle liegt? Beides lässt sich am Verfahren selbst ablesen.
 
 :::interaktiv[Halbieren, Schritt für Schritt]
@@ -498,21 +496,21 @@ wechselt zu $f(x) = x^3 - 3x + 1$ auf $[-2, 2]$, wo die Voraussetzung von
   <BisektionStepper />
 </Schaetzfrage>
 
-Die Schranke aus @satz:schrittzahl-der-bisektion trifft exakt: $10$ Schritte für
+Die Schranke aus @satz:schrittzahl-der-bisektion ist exakt: $10$ Schritte für
 $\epsilon = 10^{-3}$, $20$ für $10^{-6}$, $34$ für $10^{-10}$, also
 $1/\log_{10} 2 = 3{,}32$ Schritte je gültiger Dezimalstelle. Der zweite Menüpunkt
 zeigt, was der Satz *nicht* verspricht: $f(x) = x^3 - 3x + 1$ hat auf $[-2, 2]$
 drei Nullstellen bei $-1{,}879385$, $0{,}347296$ und $1{,}532089$, und schon der
-erste Mittelpunkt entscheidet, welche davon wir finden – weil $f(0) = 1$ dasselbe
-Vorzeichen trägt wie $f(2) = 3$, fliegt die rechte Hälfte samt zwei Nullstellen
-sofort hinaus. Für die Eindeutigkeit fehlt hier die strenge Monotonie aus
+erste Mittelpunkt entscheidet, welche davon wir finden: Weil $f(0) = 1$ dasselbe
+Vorzeichen trägt wie $f(2) = 3$, wird die rechte Hälfte samt zwei Nullstellen
+sofort verworfen. Für die Eindeutigkeit fehlt hier die strenge Monotonie aus
 @satz:existenz-und-eindeutigkeit-einer.
 :::
 
 ### Das Newton-Raphson-Verfahren
 
 Die Bisektion benutzt von $f$ nur das Vorzeichen. Ist $f$ differenzierbar,
-verschenken wir damit Information: Die Ableitung sagt uns nicht nur, auf welcher
+bleibt damit Information ungenutzt: Die Ableitung sagt uns nicht nur, auf welcher
 Seite die Nullstelle liegt, sondern auch ungefähr wie weit.
 
 Der Ansatz ist die Taylorentwicklung erster Ordnung aus
@@ -544,7 +542,7 @@ Schranke fällt.
 
 Geometrisch ist $\cblue{x^{(k+1)}}$ der Schnittpunkt der Tangente an $f$ im
 Punkt $\bigl(\cblue{x^{(k)}}, \cblue{f(x^{(k)})}\bigr)$ mit der $x$-Achse. Der
-Bruch in @eq:newton-raphson-verfahren-fuer sagt das noch einmal in Zahlen: Wir teilen die Höhe, die
+Bruch in @eq:newton-raphson-verfahren-fuer sagt dasselbe in Zahlen: Wir teilen die Höhe, die
 abzubauen ist, durch die Rate, mit der die Tangente sie abbaut.
 
 ::::vertiefung[Newton-Raphson einmal vollständig durchgerechnet]
@@ -558,7 +556,7 @@ $$
 = \frac{1}{2}\left(\cblue{x^{(k)}} + \frac{2}{\cblue{x^{(k)}}}\right) ,
 $$
 
-also gerade dem Heron-Verfahren, das seit der Antike Wurzeln zieht. Von
+also dem Heron-Verfahren. Von
 $\cblue{x^{(0)}} = 2$ aus laufen die Iterierten so:
 
 $$
@@ -581,7 +579,7 @@ brauchte die Bisektion auf demselben Intervall $20$ Schritte für sechs Stellen.
 ::::
 
 :::bemerkung[#quadratische-konvergenz (Quadratische Konvergenz)]
-Was wir in der letzten Spalte gesehen haben, ist *quadratische Konvergenz*
+Die letzte Spalte zeigt *quadratische Konvergenz*
 (:k[Konvergenzordnung]{#rate-of-convergence}): Der Fehler des nächsten Schrittes
 verhält sich wie das Quadrat des aktuellen,
 
@@ -592,18 +590,18 @@ $$
 mit einer Konstanten $C$, die von $f$ abhängt. Ist $f$ in einer Umgebung einer
 einfachen Nullstelle zweimal stetig differenzierbar, so ist asymptotisch
 $C = \left|f''(\cgreen{x^\star})\right| / \bigl(2\left|f'(\cgreen{x^\star})\right|\bigr)$,
-für unser Beispiel also $2/(2 \cdot 2\sqrt 2) = 0{,}354$, genau der beobachtete
-Wert. Auf $C$ kommt es an: Zur Merkregel „der Fehler quadriert sich pro Schritt"
-abgekürzt, stimmt die Aussage schon in unserem eigenen Beispiel nicht, denn
+für unser Beispiel also $2/(2 \cdot 2\sqrt 2) = 0{,}354$, der beobachtete
+Wert. Die Konstante $C$ ist wesentlich: Zur Merkregel „der Fehler quadriert sich pro Schritt"
+verkürzt, stimmt die Aussage schon in unserem Beispiel nicht, denn
 $e_0^2 = 0{,}343$ steht gegen $e_1 = 0{,}086$. Praktisch heißt
 quadratische Konvergenz: Sobald wir nah genug dran sind,
 verdoppelt jeder Schritt die Zahl der richtigen Stellen, und wenige Schritte
 genügen bis zur Maschinengenauigkeit.
 
-Der Preis dafür steht im Kleingedruckten. Erstens braucht das Verfahren die
-Ableitung, die Bisektion kam mit Funktionswerten aus. Zweitens gilt die Aussage
+Dafür gibt es drei Vorbehalte. Das Verfahren braucht die
+Ableitung, die Bisektion kam mit Funktionswerten aus. Die Aussage gilt
 nur *lokal*: Weit weg vom Ziel kann die Tangente irgendwohin zeigen, und die
-Iteration läuft dann davon. Drittens muss die Nullstelle einfach und $f'$ hinreichend
+Iteration divergiert dann. Und die Nullstelle muss einfach und $f'$ hinreichend
 glatt sein; eine lokal Lipschitz-stetige Ableitung ist eine übliche hinreichende Annahme.
 Ist $\corange{f'(\cgreen{x^\star})} = 0$, so bricht die Konvergenz auf lineare
 Geschwindigkeit ein, und unterwegs kann ein $\corange{f'(x^{(k)})} = 0$ den
@@ -613,7 +611,7 @@ Praxis kombinieren wir beides: erst klammern, dann Newton. Wir kommen in
 @sec:newton-sgd darauf zurück.
 :::
 
-Das Kleingedruckte klingt harmlos. Wie schlimm wird es tatsächlich, wenn die
+Wie stark wirken sich diese Vorbehalte aus, wenn die
 Tangente flach liegt?
 
 :::interaktiv[Die Tangente als Wegweiser]
@@ -640,18 +638,18 @@ Auf $f(x) = x^2 - 2$ läuft alles glatt: Die Fehlerspalte fällt über
 $8{,}6 \cdot 10^{-2}$ und $2{,}5 \cdot 10^{-3}$ auf $1{,}6 \cdot 10^{-12}$, und
 der Quotient $e_{k+1}/e_k^2$ pendelt sich bei $0{,}3536$ ein. Auf
 $f(x) = x^3 - 3x + 1$ entscheidet dagegen der Startpunkt, welche der drei
-Nullstellen wir finden, und in der Nähe von $x = 1$ wird es unangenehm: Bei
+Nullstellen wir finden, und in der Nähe von $x = 1$ wird es problematisch: Bei
 $\cblue{x^{(0)}} = 1{,}05$ ist $\corange{f'} = 0{,}31$, der erste Schritt springt
 nach $4{,}28$, und der Lauf braucht zehn Schritte statt fünf. Am deutlichsten ist
 der Arkustangens: Er hat genau eine Nullstelle, aber ab
 $\left|\cblue{x^{(0)}}\right| > 1{,}3917$ überholt jeder Schritt den vorigen, und
 die Iterierten $1{,}5 \to -1{,}694 \to 2{,}321 \to -5{,}114 \to 32{,}30 \to
--1575{,}3$ laufen auseinander. Die Bisektion hätte hier ohne Weiteres
-funktioniert; sie ist eben langsam, aber nicht zu überlisten.
+-1575{,}3$ laufen auseinander. Die Bisektion hätte hier
+funktioniert; sie ist langsam, aber sie divergiert nicht.
 :::
 
 :::bemerkung[#von-der-nullstelle-zum-minimum (Von der Nullstelle zum Minimum)]
-Jetzt schließt sich der Kreis zu @bemerkung:zwei-probleme-ein-werkzeugkasten. Suchen wir das Minimum einer
+Damit sind wir zurück bei @bemerkung:zwei-probleme-ein-werkzeugkasten. Suchen wir das Minimum einer
 differenzierbaren Funktion $\cblue{f}$, so suchen wir eine Nullstelle von
 $\corange{\nabla f}$. Wenden wir @eq:newton-raphson-verfahren-fuer auf diese Funktion an, so steht im
 Nenner die Ableitung des Gradienten, also die Hesse-Matrix:
@@ -679,8 +677,8 @@ pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung.
 
 :::::vertiefung[Fixpunktiteration erster Ordnung]
 Die einfachste Alternative ersetzt die Ableitung durch eine feste Zahl. Das
-Ergebnis ist ein Nebenweg, aber ein lehrreicher: Es nimmt den Gradientenabstieg
-aus @sec:nelder-mead-gradient in Reinform vorweg.
+Ergebnis nimmt den Gradientenabstieg
+aus @sec:nelder-mead-gradient in seiner einfachsten Form vorweg.
 
 :::algorithmus[#fixpunktiteration-erster-ordnung (Fixpunktiteration erster Ordnung)]
 Gegeben seien $f\colon \R^n \to \R^n$, ein Startpunkt $\cblue{\bx^{(0)}}$ und
@@ -698,7 +696,7 @@ gilt $g(\cgreen{\bx^\star}) = \cgreen{\bx^\star}$ genau dann, wenn
 $f(\cgreen{\bx^\star}) = \bnull$ ist. Fixpunkte von $g$ und Nullstellen von $f$
 sind dasselbe.
 
-Für affines $f(\bx) = \bA\bx - \bb$ ist @eq:fixpunktiteration-erster-ordnung übrigens wörtlich das
+Für affines $f(\bx) = \bA\bx - \bb$ ist @eq:fixpunktiteration-erster-ordnung wörtlich das
 Richardson-Verfahren aus @sec:la-misc/iterative-loeser, und die dortige
 Konvergenzbedingung ist der Spezialfall des folgenden Satzes.
 
@@ -751,7 +749,7 @@ $\corange{\gamma}\left\|r(\bh)\right\| \le (\rho' - \corange{\rho})\left\|\bh\ri
 für alle $\left\|\bh\right\| \le \delta$, und für $\left\|\be_{k-1}\right\| \le \delta$
 folgt daraus $\left\|\be_k\right\| \le \rho' \left\|\be_{k-1}\right\|$.
 
-::why[die Zerlegung von $f$ ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Abschätzung benutzt danach die Dreiecksungleichung und die Verträglichkeit der induzierten Norm, $\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ (@sec:matrix-spur-norm/operatornormen). Genau hier wird die Aussage lokal: Sie gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt]
+::why[die Zerlegung von $f$ ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Abschätzung benutzt danach die Dreiecksungleichung und die Verträglichkeit der induzierten Norm, $\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ (@sec:matrix-spur-norm/operatornormen). Hier wird die Aussage lokal: Sie gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt]
 :::
 
 :::schritt
@@ -777,9 +775,9 @@ Einschränkung an den Startpunkt.
 ::::
 
 Kurzgefasst lautet das Ergebnis $\left\|\cblue{\bx^{(k)}} -
-\cgreen{\bx^\star}\right\| = O(\corange{\rho}^k)$. Das trifft den Kern, unterschlägt
-aber zwei Vorbehalte: Die Aussage gilt nur in der Nähe von $\cgreen{\bx^\star}$, und
-der Restterm verwässert die Rate im nichtaffinen Fall um ein beliebig kleines Stück.
+\cgreen{\bx^\star}\right\| = O(\corange{\rho}^k)$. Das verkürzt
+um zwei Vorbehalte: Die Aussage gilt nur in der Nähe von $\cgreen{\bx^\star}$, und
+der Restterm verschlechtert die Rate im nichtaffinen Fall um ein beliebig kleines Stück.
 
 Eine Voraussetzung ist dabei leicht zu übersehen. Damit überhaupt ein
 $\corange{\gamma} > 0$ mit $\corange{\rho} < 1$ existiert, muss die Ableitung im
@@ -788,13 +786,13 @@ $\corange{\rho} = \left|1 - \corange{\gamma f'(x^\star)}\right| < 1$ genau für
 $0 < \corange{\gamma} < 2/\corange{f'(x^\star)}$, und das setzt
 $\corange{f'(x^\star)} > 0$ voraus. Ist $f$ dort fallend, so treibt uns
 @eq:fixpunktiteration-erster-ordnung mit positivem $\corange{\gamma}$ von der
-Nullstelle weg – das Gegenmittel ist wohlfeil, wir arbeiten mit $-f$, das dieselben
+Nullstelle weg. Abhilfe ist einfach: Wir arbeiten mit $-f$, das dieselben
 Nullstellen hat. Deshalb wird die Fixpunktiteration oft gleich mit der Annahme
 formuliert, $f$ sei monoton steigend.
 
 :::bemerkung[#das-dilemma-der-schrittweite (Das Dilemma der Schrittweite)]
 Die Vor- und Nachteile des Verfahrens hängen an einer einzigen Zahl. Positiv:
-Es ist denkbar simpel, funktioniert für multivariates $f$ und braucht keine
+Es ist einfach, funktioniert für multivariates $f$ und braucht keine
 Jacobimatrix, sondern nur Funktionsauswertungen; bei gutartigem $f$, also kleinem
 $\corange{\rho}$, ist es zudem schnell. Negativ: Die Schrittweite
 $\corange{\gamma}$ muss passen.
@@ -821,8 +819,8 @@ jedem Startpunkt aus auseinander, dessen Fehler einen Anteil in der steilsten
 Eigenrichtung hat. Beides steht in @satz:gradientenabstieg-auf-einer-quadrik, wo
 dieselbe Eigenzerlegung von $\bI - \gamma\bA$ den Gradientenabstieg trägt: Dort ist
 $\max_i\left|1 - \gamma\lambda_i\right|$ der Fehlerfaktor, und
-$\corange{\gamma^\star}$ ist genau die Schrittweite, die ihn kleinstmöglich macht –
-nur steht dort die Hesse-Matrix, wo hier die Jacobimatrix steht. Der Buchstabe
+$\corange{\gamma^\star}$ ist die Schrittweite, die ihn kleinstmöglich macht;
+dort steht die Hesse-Matrix, wo hier die Jacobimatrix steht. Der Buchstabe
 $\kappa = \lambda_{\max}/\lambda_{\min}$ ist die
 :k[Konditionszahl]{#condition-number} aus
 @sec:matrix-spur-norm/eigenschaften. Schlechte Kondition heißt also
@@ -831,10 +829,10 @@ $9/11 = 0{,}818$. Und wer die optimale Schrittweite verdoppelt, landet stets auf
 oder jenseits der Divergenzgrenze, denn $4/(\lambda_{\min} + \lambda_{\max}) \ge
 2/\lambda_{\max}$ mit Gleichheit nur für $\lambda_{\min} = \lambda_{\max}$.
 
-Im Eindimensionalen ist die beste Wahl besonders sprechend. Dort drückt
+Im Eindimensionalen ist die beste Wahl besonders anschaulich. Dort drückt
 $\corange{\gamma^\star} = 1/\corange{f'(x^\star)}$ die Rate auf
-$\corange{\rho} = 0$, und die Iteration ist nichts anderes als das
-Newton-Verfahren mit eingefrorener Ableitung. Der Haken ist offensichtlich: Wir
+$\corange{\rho} = 0$, und die Iteration ist das
+Newton-Verfahren mit eingefrorener Ableitung. Der Nachteil: Wir
 müssten $\corange{f'(x^\star)}$ schon kennen. Newton umgeht das, indem es die
 Ableitung in jedem Schritt neu auswertet, und bezahlt sie mit einer Auswertung
 pro Schritt.
@@ -848,7 +846,7 @@ Die deterministische Schrittweitensteuerung behandelt
 @sec:nelder-mead-gradient.
 :::
 
-Bleibt die Frage, wie weit uns diese Schranke trägt. Sie hängt an einer einzigen
+Die Schranke hängt an einer einzigen
 Zahl, und die lässt sich für drei kleine Systeme durchspielen: Ab welcher
 Schrittweite kippt die Iteration?
 
@@ -868,18 +866,18 @@ affinen Fall im Beweis eine echte Schranke ohne Restterm.
   <FixpunktSpirale />
 </Schaetzfrage>
 
-Entschieden wird alles von $\corange{\rho}$. Das erste System ist symmetrisch mit
+Entscheidend ist $\corange{\rho}$. Das erste System ist symmetrisch mit
 den Eigenwerten $4{,}618$ und $2{,}382$; die Voreinstellung
 $\corange{\gamma} = 0{,}25$ ist die aus dem Richardson-Beispiel in
 @sec:la-misc/iterative-loeser und liefert dieselbe Rate $0{,}4045$, das Optimum
 liegt bei $\corange{\gamma^\star} = 2/7$ mit $\corange{\rho} = 0{,}319$. Beim
 zweiten sind die Eigenwerte komplex, der Weg wird zur Spirale, und der Drehanteil
 lässt sich durch keine Schrittweite wegregeln: Selbst im Optimum bleibt
-$2/\sqrt 5 = 0{,}894$. Das dritte führt @bemerkung:das-dilemma-der-schrittweite
-vor – bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$, erst unterhalb
+$2/\sqrt 5 = 0{,}894$. Das dritte zeigt @bemerkung:das-dilemma-der-schrittweite:
+Bei $\corange{\gamma} = 0{,}25$ ist $\corange{\rho} = 1{,}5$, erst unterhalb
 von $0{,}2$ läuft die Iteration zusammen, und die beste Rate bleibt $9/11$.
-Sehenswert ist dort das Zickzack: Die steile Richtung überschießt, während die
-flache kaum vorankommt – dasselbe Bild wie beim Gradientenabstieg in
+Auffällig ist dort der Zickzackverlauf: Die steile Richtung überschießt, während die
+flache kaum vorankommt, dasselbe Bild wie beim Gradientenabstieg in
 @sec:nelder-mead-gradient.
 ::::
 
@@ -903,7 +901,7 @@ die Fixpunktiteration von jedem Startpunkt aus gegen $\bx^\star$.
 @satz:konvergenzrate-der-fixpunktiteration ist eine *lokale* Aussage: Die Schranke im Beweis gilt nur in
 einer Kugel um $\bx^\star$, deren Radius wir nicht kennen. Weiter draußen taugt
 die lineare Näherung nichts mehr, und die Iteration kann zu einer anderen
-Nullstelle laufen oder ganz davonlaufen. Nur im affinen Fall verschwindet der
+Nullstelle laufen oder divergieren. Nur im affinen Fall verschwindet der
 Restterm und die Aussage wird global.
 :::
 
@@ -923,8 +921,8 @@ liegt weit darüber.
 ::::
 :::::
 
-Damit ist der Werkzeugkasten für Nullstellen beisammen. Für die Optimierung ist
-allerdings gerade die Monotonie heikel, von der die Fixpunktiteration lebt: Der
+Damit sind die Verfahren für Nullstellen beisammen. Für die Optimierung ist
+allerdings die Monotonie problematisch, die die Fixpunktiteration voraussetzt: Der
 Gradient einer beliebigen Zielfunktion ist im Allgemeinen nicht monoton.
 @sec:optimalitaet setzt deshalb neu an und fragt zuerst, was ein
 Minimum überhaupt auszeichnet.
@@ -937,8 +935,8 @@ Minimum überhaupt auszeichnet.
 Das Bisektionsverfahren braucht die Ableitung von $f$.
 
 Es braucht nur Funktionswerte, genauer sogar nur deren Vorzeichen, und einen
-Startbereich mit Vorzeichenwechsel. Das ist seine große Stärke: Es funktioniert
-für nicht differenzierbare, nur numerisch auswertbare oder schlicht hässliche
+Startbereich mit Vorzeichenwechsel. Das ist seine Stärke: Es funktioniert
+für nicht differenzierbare oder nur numerisch auswertbare
 Funktionen, und es kann nach @satz:schrittzahl-der-bisektion nicht divergieren. Dafür kostet jede
 weitere gültige Dezimalstelle rund $3{,}3$ Schritte, während Newton in der Nähe
 der Nullstelle ihre Zahl verdoppelt.
@@ -959,9 +957,9 @@ Ab welchem $\left|x^{(0)}\right|$ läuft Newton auf $f(x) = \arctan x$
 auseinander?
 
 Die Schwelle liegt bei $1{,}3917$; sie löst $\arctan(\xi)(1+\xi^2) = 2\xi$.
-Darunter zieht sich das Pendeln zusammen, darüber wächst es. Dass es überhaupt
+Darunter zieht sich das Pendeln zusammen, darüber wächst es. Dass es
 eine solche Schwelle gibt, obwohl die Funktion nur eine einzige Nullstelle hat,
-ist die Pointe von @bemerkung:quadratische-konvergenz: Quadratische Konvergenz ist eine *lokale*
+zeigt den Vorbehalt aus @bemerkung:quadratische-konvergenz: Quadratische Konvergenz ist eine *lokale*
 Aussage, und wie groß die Umgebung ist, sagt sie nicht.
 :::
 
@@ -969,11 +967,11 @@ Aussage, und wie groß die Umgebung ist, sagt sie nicht.
 Das Newton-Raphson-Verfahren konvergiert quadratisch, gleichgültig wo wir starten
 und welche Nullstelle wir suchen.
 
-Beides ist zu viel versprochen. Quadratisch wird es erst in der Nähe der
+Beides gilt nicht. Quadratisch wird es erst in der Nähe der
 Nullstelle, und nur wenn diese einfach ist, also
 $\corange{f'(x^\star)} \neq 0$ gilt. Bei einer mehrfachen Nullstelle sinkt die
 Ordnung auf $1$, und weit weg vom Ziel kann die Tangente die Iteration beliebig
-weit forttragen (@bemerkung:quadratische-konvergenz).
+weit wegführen (@bemerkung:quadratische-konvergenz).
 :::
 
 ::::

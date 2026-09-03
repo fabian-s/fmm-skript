@@ -6,12 +6,11 @@ import { Schaetzfrage } from "../../lib";
 Gleichungssystem $\bB\ba = \cblue{\by}$ zurückgeführt. Damit ist die Wahl des
 Ansatzraums die eigentliche Entscheidung, und die naheliegendste ist zugleich
 die älteste: Polynome, aufgeschrieben in der Monombasis. Dieser Abschnitt
-zeigt beide Seiten dieser Wahl. Theoretisch ist der Fall erledigt, und zwar
-so schön, wie man es sich nur wünschen kann: Durch $n$ Punkte läuft genau ein
-Polynom vom Grad höchstens $n-1$. Numerisch dagegen sammelt derselbe Ansatz
-drei Probleme ein, eine katastrophal konditionierte Matrix, eine global
-instabile Lösung und ein Konvergenzverhalten, das an einem harmlos
-aussehenden Beispiel spektakulär versagt.
+zeigt beide Seiten dieser Wahl. Theoretisch ist der Fall einfach: Durch $n$ Punkte läuft genau ein
+Polynom vom Grad höchstens $n-1$. Numerisch dagegen hat derselbe Ansatz
+drei Probleme, eine sehr schlecht konditionierte Matrix, eine global
+instabile Lösung und ein Konvergenzverhalten, das schon bei einer glatten
+Funktion versagt.
 
 ### Wie viele Nullstellen ein Polynom haben kann
 
@@ -31,8 +30,8 @@ Beide Fassungen gehen durch Polynomdivision auseinander hervor. Ist $x_0$
 eine Nullstelle von $p$, so lässt sich der Linearfaktor abspalten,
 $p(x) = (x - x_0)\, q(x)$ mit $\deg q = n - 1$, und auf $q$ wenden wir
 dieselbe Überlegung an. Nach $n$ Schritten ist $p$ vollständig in
-Linearfaktoren zerlegt. Wir brauchen den Satz allerdings gar nicht in dieser
-Stärke, sondern nur seine Kehrseite.
+Linearfaktoren zerlegt. Wir brauchen den Satz allerdings nicht in dieser
+Stärke, sondern nur eine Folgerung.
 
 :::korollar[#zu-viele-nullstellen-erzwingen-das (Zu viele Nullstellen erzwingen das Nullpolynom)]
 Sei $p$ ein Polynom vom Grad höchstens $n-1$ mit $n$ paarweise verschiedenen
@@ -75,13 +74,13 @@ Nullstellen; das kennen wir von der Parabel. Finden wir also ein solches
 Polynom mit drei Nullstellen, etwa $p(-1) = p(0) = p(1) = 0$, so bleibt nur
 ein Schluss: $p$ ist das Nullpolynom, und dann ist auch $p(7) = 0$ und
 $p(10^6) = 0$. Aus drei Nullstellen wird eine Aussage über die gesamte reelle
-Achse, und genau diese Hebelwirkung brauchen wir gleich.
+Achse, und das brauchen wir gleich.
 :::
 
 ### Genau ein Polynom durch n Punkte
 
 Wir halten zuerst den Ansatzraum und seine Basismatrix fest. Beides kennen
-wir schon aus @beispiel:zwei-ansatzraeume, hier bekommen sie ihre Namen.
+wir aus @beispiel:zwei-ansatzraeume, hier bekommen sie ihre Namen.
 
 :::definition[#monombasis-und-vandermonde-matrix (Monombasis und Vandermonde-Matrix)]
 Die $n$ Funktionen
@@ -110,8 +109,7 @@ $$
 $$
 :::
 
-Dass die Monome linear unabhängig sind, ist @korollar:zu-viele-nullstellen-erzwingen-das in anderer
-Verpackung: Verschwindet $\sum_{k=1}^n a_k x^{k-1}$ für alle $x$, so hat
+Dass die Monome linear unabhängig sind, folgt aus @korollar:zu-viele-nullstellen-erzwingen-das: Verschwindet $\sum_{k=1}^n a_k x^{k-1}$ für alle $x$, so hat
 dieses Polynom vom Grad höchstens $n-1$ unendlich viele Nullstellen, ist also
 das Nullpolynom, und damit sind alle $a_k$ null.
 
@@ -179,7 +177,7 @@ $\cgreen{p} = \sum_{k=1}^n a_k \corange{\phi_k}$.
 @satz:existenz-und-eindeutigkeit-der verspricht genau ein Polynom vom Grad *höchstens* $n-1$. Er
 verspricht nicht den Grad *genau* $n-1$. Der führende Koeffizient darf null
 sein, und wenn die Daten schon auf einem Polynom kleineren Grades liegen, ist
-er es auch. Der Ansatzraum $\Fcal_n$ enthält diese Polynome ja ebenfalls.
+er es auch. Der Ansatzraum $\Fcal_n$ enthält diese Polynome ebenfalls.
 :::
 
 :::beispiel[#drei-punkte-auf-einer-geraden (Drei Punkte auf einer Geraden)]
@@ -240,10 +238,9 @@ fhat <- outer(xnew, 0:9, "^") %*% a
 ggplot() + geom_point(aes(x, y)) + geom_line(aes(xnew, fhat))
 ```
 
-`outer(x, 0:9, "^")` baut genau die Matrix aus @definition:monombasis-und-vandermonde-matrix, `solve`
+`outer(x, 0:9, "^")` erzeugt die Matrix aus @definition:monombasis-und-vandermonde-matrix, `solve`
 ruft die Elimination auf, und die letzte Auswertung ist wieder ein
-Matrix-Vektor-Produkt, diesmal mit einem feinen Auswertungsgitter. So weit,
-so unauffällig. Nur ist dieses $10 \times 10$-System bereits so schlecht
+Matrix-Vektor-Produkt, diesmal mit einem feinen Auswertungsgitter. Dieses $10 \times 10$-System ist allerdings so schlecht
 konditioniert, dass von den rund $16$ verlässlichen Dezimalstellen der
 doppelten Genauigkeit etwa sieben verloren gehen. Warum, klärt der nächste
 Abschnitt.
@@ -258,19 +255,19 @@ $$
 $$
 
 Für wachsendes $k$ unterscheiden sich diese Vektoren immer weniger in ihrer
-*Richtung*. Auf $[0, 1]$ drückt jedes weitere Potenzieren die Einträge gegen
-null, den größten aber gar nicht, denn er gehört zu $x_n = 1$. Damit
+*Richtung*. Auf $[0, 1]$ verkleinert jedes weitere Potenzieren die Einträge,
+den größten aber nicht, denn er gehört zu $x_n = 1$. Damit
 konzentriert sich jeder dieser Vektoren mehr und mehr auf seine letzten
 Komponenten, und alle zeigen am Ende in dieselbe Richtung.
 Bei $n = 10$ gleichmäßig verteilten Stellen in $[0, 1]$ schließen
 $\bb_1$ und $\bb_2$ noch einen Winkel von $32{,}6^\circ$ ein,
 $\bb_5$ und $\bb_6$ nur noch $5{,}5^\circ$, und $\bb_9$ und $\bb_{10}$
-gerade einmal $2{,}7^\circ$.
+nur $2{,}7^\circ$.
 
 Fast parallele Spalten heißen: fast :k[linear abhängig]{#linear-independence},
-also eine Matrix, die einer singulären sehr nahe kommt. Genau das misst die
+also eine Matrix, die einer singulären nahe kommt. Das misst die
 :k[Konditionszahl]{#condition-number} $\kappa(\bB)$
-(@sec:fehler/kondition), und sie wächst hier dramatisch.
+(@sec:fehler/kondition), und sie wächst hier sehr schnell.
 :::
 
 :::beispiel[#konditionszahlen-der-groessenordnung (Konditionszahlen, der Größenordnung nach)]
@@ -332,8 +329,8 @@ Warum sind die Spalten einer Vandermonde-Matrix auf $[0,1]$ fast parallel? Die e
 
 <MonombasisFigur />
 
-Diese Ähnlichkeit ist es, die das Gleichungssystem verdirbt. Der Regler zieht
-die Zahl der Stellen hoch, die Schalter wechseln zwischen drei Basissystemen
+Diese Ähnlichkeit verschlechtert das Gleichungssystem. Der Regler erhöht
+die Zahl der Stellen, die Schalter wechseln zwischen drei Basissystemen
 desselben Ansatzraums.
 
 <VandermondeKondition />
@@ -341,9 +338,9 @@ desselben Ansatzraums.
 
 ### Problem 2: Stabilität und Lokalität
 
-Die zweite Schwäche zeigt sich, wenn wir an den Daten wackeln. Ändern wir
+Die zweite Schwäche zeigt sich bei Datenänderungen. Ändern wir
 einen einzigen Messwert, so ändert sich der Interpolant im gesamten
-Intervall, und keineswegs am stärksten dort, wo wir gewackelt haben.
+Intervall, und nicht am stärksten dort, wo wir geändert haben.
 
 :::satz[#wie-sich-eine-datenaenderung-fortpflanzt (Wie sich eine Datenänderung fortpflanzt)]
 Seien $\cgreen{p}$ das interpolierende Polynom vom Grad höchstens $n-1$ zu
@@ -390,21 +387,21 @@ Verstärkungsfaktor liegt bei diesen zehn Stellen bei $4{,}03$ und gehört zu
 den beiden mittleren, $x_5$ und $x_6$.
 
 Damit sind beide Schwächen beziffert. Die Methode ist *instabil*,
-weil kleine Datenänderungen groß herauskommen, und sie ist *nicht lokal*,
+weil kleine Datenänderungen verstärkt werden, und sie ist *nicht lokal*,
 weil jedes $\ell_j$ auf dem ganzen Intervall von null verschieden ist. Beides
-ist kein Malheur der Monombasis, sondern eine Eigenschaft globaler
+ist keine Eigenschaft der Monombasis, sondern globaler
 Polynome: $\ell_j$ hängt allein vom Ansatzraum ab. Abhilfe schaffen erst
 Basisfunktionen, die außerhalb eines kleinen Bereichs verschwinden
 (@sec:splines).
 :::
 
 :::vertiefung[Wenn alle Werte gleichzeitig gestört werden]
-Wie schlimm es werden kann, hängt an der Zahl der Stellen. Stören wir alle
+Wie groß der Effekt werden kann, hängt an der Zahl der Stellen. Stören wir alle
 Werte gleichzeitig um höchstens $\cred{\delta}$, so ändert sich der
 Interpolant um höchstens $\Lambda_n \cdot \cred{\delta}$ mit
 $\Lambda_n = \max_x \sum_{j=1}^n |\ell_j(x)|$, und diese Schranke wird bei
 passend gewählten Vorzeichen auch angenommen. Für gleichmäßig verteilte
-Stellen wächst diese Zahl rasant, nämlich auf $2{,}2$ bei $n = 5$, $17{,}9$ bei $n = 10$,
+Stellen wächst diese Zahl schnell, nämlich auf $2{,}2$ bei $n = 5$, $17{,}9$ bei $n = 10$,
 $283$ bei $n = 15$ und $5890$ bei $n = 20$. Für die Chebyshev-Knoten, die uns
 gleich wieder begegnen, bleibt sie im selben Bereich zwischen $2{,}0$ und
 $2{,}9$.
@@ -414,8 +411,7 @@ $2{,}9$.
 
 Bleibt die Frage, ob wenigstens der Interpolant selbst besser wird, wenn wir
 mehr Stützstellen nehmen. Bei einer beliebig oft differenzierbaren Funktion
-sollte man das erwarten. Carl Runge hat 1901 gezeigt, dass die Erwartung
-trügt.
+wäre das zu erwarten. Carl Runge hat 1901 gezeigt, dass das nicht stimmt.
 
 :::beispiel[#runge-1901 (Runge 1901)]
 Wir interpolieren
@@ -426,14 +422,13 @@ f(x) = \frac{1}{1 + 25x^2}
 $$
 
 an $n$ gleichmäßig verteilten Knoten durch das Polynom $\cgreen{p_{n-1}}$ vom
-Grad $n-1$. Die Funktion $f$ ist so gutartig, wie man es sich wünschen kann,
-sie ist :k[beliebig oft differenzierbar]{#smooth-function}, also
+Grad $n-1$. Die Funktion $f$ ist :k[beliebig oft differenzierbar]{#smooth-function}, also
 $f \in \Ccal^\infty$, und beschränkt durch $1$.
 
 Trotzdem konvergieren die Interpolanten nicht gleichmäßig gegen $f$. Der
 Fehler $\left\|f - \cgreen{p_{n-1}}\right\|_\infty = \max_{x \in [-1,1]}
 \left|f(x) - \cgreen{p_{n-1}(x)}\right|$ wächst über alle Grenzen, und zwar
-durch immer heftigere <span style={{ color: "#D55E00" }}>Oszillationen</span> nahe den
+durch immer stärkere <span style={{ color: "#D55E00" }}>Oszillationen</span> nahe den
 Intervallenden. In der Mitte passt sich das Polynom dabei immer besser an.
 :::
 
@@ -451,11 +446,11 @@ größten Fehler:
 | 15 | 14 | $7{,}2$ | $x \approx \pm 0{,}96$ |
 | 20 | 19 | $8{,}6$ | $x \approx \pm 0{,}97$ |
 
-Von $n = 5$ auf $n = 10$ *fällt* der Fehler. Erst danach dreht die Folge
-nach oben, und dann sehr entschlossen: bei $n = 25$ steht dort bereits
+Von $n = 5$ auf $n = 10$ *fällt* der Fehler. Erst danach wächst die Folge,
+dann aber schnell: bei $n = 25$ steht dort bereits
 $257$. Die Aussage lautet also präzise, dass der Fehler asymptotisch
 unbeschränkt wächst, nicht dass er in jedem Schritt zunimmt. Zugleich zeigt
-die letzte Spalte, wo das Unheil sitzt: Das Fehlermaximum wandert mit
+die letzte Spalte, wo das Problem liegt: Das Fehlermaximum wandert mit
 wachsendem $n$ immer näher an die Ränder $\pm 1$.
 :::
 
@@ -475,13 +470,13 @@ $$
 die Nullstellen des $n$-ten Chebyshev-Polynoms. Für Runges Funktion sinkt der
 größte Fehler damit auf $0{,}047$ bei $n = 15$ und $0{,}038$ bei $n = 20$,
 gegen $7{,}2$ und $8{,}6$ oben, und er fällt weiter: $1{,}3 \cdot 10^{-5}$ bei
-$n = 60$. Ehrlicherweise gehört dazu, dass dieser Gewinn asymptotisch ist. Bei
-$n = 4$, $6$ und $8$ Knoten schneiden die gleichmäßig verteilten Knoten sogar
+$n = 60$. Dieser Gewinn ist allerdings asymptotisch. Bei
+$n = 4$, $6$ und $8$ Knoten schneiden die gleichmäßig verteilten Knoten
 etwas besser ab.
 :::
 ::::
 
-Chebyshev-Knoten zähmen das Runge-Phänomen, setzen aber voraus, dass wir die
+Chebyshev-Knoten vermeiden das Runge-Phänomen, setzen aber voraus, dass wir die
 Stellen frei wählen dürfen (in der Vertiefung
 @bemerkung:ein-ausweg-die-knoten-anders-legen erklärt). Bei gemessenen Daten
 liegen sie fest, und dann hilft nur ein anderer Ansatzraum.
@@ -496,14 +491,14 @@ Fällt der Fehler bei äquidistanten Knoten von $n=5$ auf $n=10$, oder steigt er
 Der Vergleich zeigt den nichtmonotonen Start aus @bemerkung:divergenz-schon-aber-nicht-monoton: Von $n = 5$ auf $n = 10$ fällt der Fehler zunächst, bevor die Randoszillationen dominieren.
 :::
 
-Damit ist die Bilanz der Polynominterpolation gemischt. Der Satz von der
-Existenz und Eindeutigkeit ist so sauber, wie ein Satz nur sein kann. Der
+Die Bilanz der Polynominterpolation ist gemischt. Existenz und
+Eindeutigkeit sind vollständig geklärt. Der
 praktische Nutzen des globalen Polynoms hoher Ordnung ist trotzdem gering: Es
-rechnet sich schlecht, es reagiert auf jeden Messwert im ganzen Intervall,
-und es konvergiert nicht einmal für harmlose Funktionen. Der Schluss daraus
-trägt den Rest des Kapitels. Statt eines globalen
+ist schlecht konditioniert, es reagiert auf jeden Messwert im ganzen Intervall,
+und es konvergiert nicht einmal für glatte Funktionen. Daraus folgt das
+Vorgehen im Rest des Kapitels. Statt eines globalen
 Polynoms hohen Grades nehmen wir viele Polynome kleinen Grades, jedes nur auf
-einem kurzen Stück gültig, und kleben sie glatt aneinander. Das sind die
+einem kurzen Stück gültig, und setzen sie glatt zusammen. Das sind die
 *Splines* aus @sec:splines.
 
 ### Selbsttest

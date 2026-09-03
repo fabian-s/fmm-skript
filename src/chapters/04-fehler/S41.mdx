@@ -15,11 +15,11 @@ erzeugt :k[Rundungsfehler]{#rounding-error}, und jede
 Rechenoperation kann weitere hinzufügen
 (@sec:algos/probleme-algorithmen). Für Statistiker/innen kommt
 noch etwas Grundsätzlicheres dazu: Unsere Inputs sind Daten, und Daten sind gemessen,
-also selbst schon fehlerbehaftet, bevor der Computer überhaupt anfängt zu rechnen. Dieses
-Kapitel entwickelt das Handwerkszeug, um mit beidem systematisch umzugehen. Wir klären
-zuerst, wie man Fehler überhaupt *misst*, und zerlegen dann den Gesamtfehler eines
-berechneten Ergebnisses in seine zwei grundverschiedenen Quellen. Diese Zerlegung ist der
-rote Faden des ganzen Kapitels: Sie führt direkt auf die Begriffe *Kondition*
+also selbst schon fehlerbehaftet, bevor der Computer anfängt zu rechnen. Dieses
+Kapitel entwickelt die Werkzeuge, um mit beidem systematisch umzugehen. Wir klären
+zuerst, wie man Fehler *misst*, und zerlegen dann den Gesamtfehler eines
+berechneten Ergebnisses in seine zwei verschiedenen Quellen. Diese Zerlegung
+führt direkt auf die Begriffe *Kondition*
 (@sec:kondition) und *Stabilität*
 (@sec:stabilitaet).
 
@@ -53,9 +53,8 @@ $$
 \text{absoluter Fehler} = \cblue{\text{fehlerhafter Wert}} - \cgreen{\text{tatsächlicher Wert}}.
 $$
 
-Der absolute Fehler hat aber einen Schönheitsfehler: Er hängt von der Skala ab. Ein
-Fehler von einem Meter ist beim Vermessen eines Zimmers eine Katastrophe, beim Abstand
-zwischen München und Hamburg belanglos. Deshalb ist es üblicher, Fehler *relativ*
+Der absolute Fehler hängt aber von der Skala ab. Ein Fehler von einem Meter ist beim
+Vermessen eines Zimmers viel, beim Abstand zwischen München und Hamburg belanglos. Deshalb ist es üblicher, Fehler *relativ*
 zum tatsächlichen Wert zu betrachten:
 
 $$
@@ -82,8 +81,7 @@ höchstens die
 In der Statistik sind unsere Ergebnisse selten einzelne Zahlen: Wir rechnen mit
 Vektoren von Schätzern, mit Kovarianzmatrizen, mit ganzen Funktionen. Um Fehler auch
 dort messen zu können, brauchen wir statt des Betrags eine
-:k[Norm]{#norm}. Genau dafür haben wir in Kapitel 3 die
-Normbegriffe bereitgestellt; jetzt zahlt sich das aus. Die folgende Definition überträgt
+:k[Norm]{#norm} aus Kapitel 3. Die folgende Definition überträgt
 beide Fehlerbegriffe wörtlich auf beliebige
 :k[Vektorräume]{#vector-space}:
 
@@ -105,7 +103,7 @@ $\cgreen{\bv} \in V$. Dann ist
   $$
 :::
 
-Beachten wir den kleinen, aber wichtigen Unterschied: Der absolute Fehler
+Der absolute Fehler
 $\cred{\bDelta_{\bv}}$ ist selbst ein Element von $V$ und sagt uns
 auch, *in welche Richtung* die Approximation danebenliegt. Der relative Fehler
 $\corange{\delta_{\bv}}$ ist dagegen eine einzelne nichtnegative Zahl. Für
@@ -167,8 +165,7 @@ $$
 
 Ein relativer Fehler von zum Beispiel $\corange{\delta_{\bz}} = 0{,}01$
 garantiert also: Die Norm der Approximation liegt zwischen $99\,\%$ und
-$101\,\%$ der wahren Norm. Rechnen wir das Ganze einmal konkret an einem
-Vektor durch.
+$101\,\%$ der wahren Norm.
 
 :::beispiel[#fehlermasse-fuer-vektoren (Fehlermaße für Vektoren)]
 Sei $\cgreen{\bv} = \cgreen{\begin{pmatrix} 3 \\ 4 \end{pmatrix}}$ und
@@ -219,14 +216,13 @@ $\cred{\bDelta_{\bv}}$ ist der rote Pfeil zwischen den beiden Spitzen, der relat
 misst dessen Länge an $\left\| \cgreen{\bv} \right\|_2$. Der gestrichelte Kreis um
 $\cgreen{\bv}$ hat den Radius $0{,}1 \cdot 5 = 0{,}5$: Solange die blaue Spitze darin liegt,
 ist $\eps = 0{,}1$ eine gültige Fehlerschranke. Der orange Ring um den Ursprung ist
-@lemma:fehlerschranken als Bild – bei den 7,2 % aus @beispiel:fehlermasse-fuer-vektoren noch
-schmal, bei 40 % lässt er für $\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
+@lemma:fehlerschranken als Bild: Bei den 7,2 % aus @beispiel:fehlermasse-fuer-vektoren ist er
+noch schmal, bei 40 % lässt er für $\left\| \cblue{\wt{\bv}} \right\|_2$ fast alles zu.
 :::
 
 ### Fehlerzerlegung :id[fehlerzerlegung]
 
-Jetzt zur zweiten Leitfrage: *Woher* kommt der Fehler in einem berechneten
-Ergebnis? Formalisieren wir dazu die Situation. Sei $f$ ein Problem (eine
+*Woher* kommt der Fehler in einem berechneten Ergebnis? Sei $f$ ein Problem (eine
 Funktion, die wir auswerten wollen) mit idealem Input $\bx$. Was der Computer
 stattdessen ausführt, ist ein Algorithmus $\wt{f}$ (eine Näherung an
 $f$), und zwar am tatsächlichen Input $\wt{\bx}$, einer Näherung an
@@ -247,16 +243,14 @@ $\cgreen{f(\bx)}$ ab, kann das an zwei ganz verschiedenen Stellen liegen:
   Diskretisierung, endlich viele Iterationen). Diese Fehler *können wir
   beeinflussen*: durch die Wahl eines besseren Algorithmus.
 
-Der zentrale Trick dieses Kapitels ist nun, den Gesamtfehler exakt in diese zwei Anteile
-zu zerlegen. Dazu subtrahieren und addieren wir den Zwischenwert
+Wir zerlegen den Gesamtfehler exakt in diese zwei Anteile. Dazu subtrahieren und addieren wir den Zwischenwert
 $f(\wt{\bx})$ (das ideale Problem, ausgewertet am tatsächlichen Input):
 
 $$ {#eq-eq-4-1-1}
 \cpurp{\underbrace{\wt{f}(\wt{\bx}) - f(\bx)}_{\text{Gesamtfehler}}} \;=\; \cred{\underbrace{\wt{f}(\wt{\bx}) - f(\wt{\bx})}_{\substack{\text{Fehler im Algorithmus} \\ \text{(Maschinenarithmetik)}}}} \;+\; \corange{\underbrace{f(\wt{\bx}) - f(\bx)}_{\substack{\text{Folgefehler aus Input} \\ \text{(exakte Arithmetik)}}}}
 $$
 
-Warum ist diese Zerlegung so nützlich? Weil die beiden Terme sauber getrennte
-Verantwortlichkeiten haben:
+Diese Zerlegung ist nützlich, weil die beiden Terme getrennte Ursachen haben:
 
 :::bemerkung[#stabilitaet-und-kondition-ausblick (Stabilität und Kondition: Ausblick)]
 
@@ -271,9 +265,9 @@ Verantwortlichkeiten haben:
   (@sec:kondition).
 :::
 
-Die Zerlegung @eq:eq-4-1-1 trennt also, was der Algorithmus verbockt, von dem, was am
-gestörten Input liegt – und nur den ersten Anteil können wir durch bessere Software
-reparieren. Sehen wir uns das an einem vollständig durchgerechneten Beispiel an.
+Die Zerlegung @eq:eq-4-1-1 trennt also, was am Algorithmus liegt, von dem, was am
+gestörten Input liegt, und nur den ersten Anteil können wir durch bessere Software
+reparieren.
 
 :::beispiel[#fehlerzerlegung-berechnung-von-e (Fehlerzerlegung: Berechnung von e^π)]
 Bekanntlich lässt sich die Exponentialfunktion als
@@ -314,7 +308,7 @@ $$
 \cpurp{\wt{f}(3) - f(\pi)} \approx 8{,}5 - 23{,}141 = \cpurp{-14{,}641} = \cred{(-11{,}586)} + \corange{(-3{,}055)}. \quad \checkmark
 $$
 
-Beide Anteile sind hier negativ, und das aus jeweils gutem Grund: Die abgebrochene
+Beide Anteile sind hier negativ: Die abgebrochene
 Reihe lässt nur positive Terme weg und unterschätzt $e^3$ deshalb systematisch;
 und wegen $3 < \pi$ und der Monotonie von $e^x$ ist auch
 $e^3 < e^{\pi}$. Der Algorithmusfehler dominiert klar ($-11{,}6$
@@ -338,7 +332,7 @@ zweite Summand in @eq:eq-4-1-1 enthält $N$ überhaupt nicht. Wer den Fehler dan
 will, muss am Input ansetzen.
 :::
 
-Damit haben wir das Vokabular beisammen: Fehler messen wir mit Normen (absolut oder
+Fehler messen wir also mit Normen (absolut oder
 relativ), und den Gesamtfehler eines berechneten Ergebnisses zerlegen wir in den
 Algorithmus-Anteil und den Folgefehler aus dem Input. Die nächsten beiden Abschnitte
 quantifizieren die zwei Anteile: Die *Kondition* eines Problems misst, wie stark
@@ -357,7 +351,7 @@ Ein absoluter Fehler von $0{,}36$ ist ein kleiner Fehler.
 Ohne Bezugsgröße sagt der absolute Fehler nichts. In @beispiel:fehlermasse-fuer-vektoren sind
 $0{,}36$ gemessen an $\left\| \cgreen{\bv} \right\|_2 = 5$ gerade
 7,2 %, bei einem Vektor der Länge $0{,}5$ wären dieselben
-$0{,}36$ ein relativer Fehler von über 70 %. Genau deshalb steht neben dem
+$0{,}36$ ein relativer Fehler von über 70 %. Deshalb steht neben dem
 absoluten Fehler immer auch der relative.
 :::
 

@@ -1,8 +1,8 @@
 import { S33OperatornormWidget } from "./widgets/S33OperatornormWidget";
 import { SelbsttestFrage } from "./widgets/S33Local";
 
-Die elementweisen Matrixnormen aus @sec:matrixnormen haben einen blinden
-Fleck: Sie behandeln die Matrix als bloße Zahlentabelle. Die Identitätsmatrix
+Die elementweisen Matrixnormen aus @sec:matrixnormen behandeln die Matrix als
+Zahlentabelle. Die Identitätsmatrix
 :k[$\bI_n$]{#identity-matrix} etwa verändert
 als Abbildung überhaupt nichts; trotzdem wächst ihre Frobenius-Norm
 $\left\| \bI_n \right\|_F = \sqrt{n}$ mit der Dimension. Was die
@@ -58,8 +58,8 @@ Wir dürfen uns deshalb auf Vektoren der Länge 1 beschränken.
 
 ::::
 
-Schauen wir uns das geometrisch an. In der euklidischen Norm (
-$p = 2$) ist die Menge aller Einheitsvektoren der Einheitskreis. Sein
+Geometrisch: In der euklidischen Norm ($p = 2$) ist die Menge aller Einheitsvektoren
+der Einheitskreis. Sein
 Bild unter einer $2 \times 2$-Matrix ist eine Ellipse, und die
 Operatornorm ist die längste Halbachse dieser Ellipse.
 
@@ -98,12 +98,12 @@ Der größte Wert ist die Operatornorm: Kein Einheitsvektor wird um mehr als den
 Faktor $2{,}29$ gestreckt. Der kleinere Wert $0{,}874$ ist
 die kürzeste Halbachse der Bildellipse, also die stärkste Stauchung. Dieselbe
 Matrix begegnet uns in @beispiel:beispiel-3-4-6 (@sec:schattennormen) wieder. Dort
-berechnen wir ihre Schattennormen aus genau diesen Eigenwerten.
+berechnen wir ihre Schattennormen aus denselben Eigenwerten.
 :::
 
 :::interaktiv[Wie schwankt der Streckfaktor, wenn der Vektor um den Einheitskreis wandert?]
-Gerechnet haben wir das Maximum damit, gesehen haben wir es nicht. Die Definition läuft über
-*alle* Einheitsvektoren, ausprobieren können wir immer nur einen. Wie stark schwankt der
+Die Definition läuft über *alle* Einheitsvektoren, ausprobieren können wir immer nur
+einen. Wie stark schwankt der
 Streckfaktor $\left\|\bA\bx\right\|_2$ überhaupt, wenn $\bx$ einmal ganz um den
 Einheitskreis wandert, und in welche Richtung muss $\bx$ zeigen, damit er sein Maximum
 erreicht?
@@ -115,8 +115,8 @@ Bildellipse hin und her, und er tut das zweimal pro Umlauf: Die Kurve rechts hat
 Hochpunkte, an denen die Ellipse den roten Kreis von innen berührt. Nur der obere Wert ist
 die Operatornorm. Die Richtung $\bx^*$, in der das passiert, ist keine der
 Koordinatenachsen, sondern liegt schief im Raum; welche Richtung es genau ist, klärt
-@satz:spektralnorm-und-spektralzerlegung weiter unten. Und die beiden Sonderfälle sind schnell durchgespielt: Bei der
-Drehung ist die Kurve eine Waagrechte, jede Richtung ist Maximalrichtung; bei der singulären
+@satz:spektralnorm-und-spektralzerlegung weiter unten. Bei der Drehung ist die Kurve
+eine Waagrechte, jede Richtung ist Maximalrichtung; bei der singulären
 Matrix fällt die Kurve irgendwo auf null, ohne dass das Maximum davon etwas merkt.
 :::
 
@@ -125,7 +125,7 @@ Matrix fällt die Kurve irgendwo auf null, ohne dass das Maximum davon etwas mer
 Jede $p$-Norm
 $\left\| \bv \right\|_p = \left( \sum_i |v_i|^p \right)^{1/p}$
 induziert ihre eigene Operatornorm. Drei Fälle sind so wichtig, dass sie eigene
-Namen tragen, und für zwei davon gibt es erfreulich einfache Formeln:
+Namen tragen, und für zwei davon gibt es einfache Formeln:
 
 :::satz[#induzierte-p-normen (Induzierte p-Normen)]
 Sei $\bA \in \R^{m \times n}$ mit Einträgen $a_{ij}$.
@@ -248,8 +248,8 @@ $$
   :k[Konditionszahl]{#condition-number} folgt
   $\kappa_2(\bQ) = \left\| \bQ \right\|_2 \left\| \bQ^{-1} \right\|_2 = 1$:
   Multiplikation mit $\bQ$ oder $\bQ^{-1}$ verstärkt relative Störungen in der
-  $2$-Norm nicht. Stabil implementierte orthogonale Transformationen sind deshalb
-  ein Arbeitspferd der numerischen linearen Algebra
+  $2$-Norm nicht. Stabil implementierte orthogonale Transformationen gehören deshalb zu den
+  wichtigsten Werkzeugen der numerischen linearen Algebra
   (mehr dazu bei der QR-Zerlegung in @kap:kq).
 - Produkte bleiben orthogonal: Sind $\bQ_1, \dots, \bQ_k$
   orthogonal, dann auch $\bQ = \bQ_1 \cdots \bQ_k$. Warum? Weil
@@ -263,10 +263,10 @@ $$
 
 Jetzt können wir die Formel
 $\left\| \bA \right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$
-beweisen. Der Schlüssel: $\bA^\top\bA$ ist
-:k[symmetrisch]{#symmetric-matrix} und besitzt deshalb
+beweisen. Dazu nutzen wir, dass $\bA^\top\bA$
+:k[symmetrisch]{#symmetric-matrix} ist und deshalb
 eine Spektralzerlegung $\bA^\top\bA = \bP\bLambda\bP^\top$ mit
-einer *orthogonalen* Eigenvektormatrix $\bP$ – und genau die
+einer *orthogonalen* Eigenvektormatrix $\bP$ besitzt; die
 Normerhaltung aus @bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen macht den Beweis kurz. Die Eigenwerte sind
 dabei automatisch nichtnegativ, denn
 $\bx^\top\bA^\top\bA\bx = \left\| \bA\bx \right\|_2^2 \geq 0$
@@ -391,10 +391,10 @@ $$
 \left\| \bI_n \right\|_1 = \left\| \bI_n \right\|_2 = \left\| \bI_n \right\|_\infty = 1. \quad \checkmark
 $$
 
-Das ist genau das Verhalten, das wir uns eingangs gewünscht haben: Eine
+Das ist das Verhalten, das wir uns eingangs gewünscht haben: Eine
 Abbildung, die nichts verändert, bekommt Norm 1, unabhängig von der
-Dimension. Der Schönheitsfehler der elementweisen Normen (
-$\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
+Dimension. Die Schwäche der elementweisen Normen
+($\left\| \bI_n \right\|_F = \sqrt{n}$) ist behoben.
 :::
 
 #### Selbsttest
@@ -437,8 +437,8 @@ Bei der Voreinstellung „singulär" zeigt das Widget die Operatornorm $0$, weil
 ganz platt gedrückt wird.
 
 Die Operatornorm ist ein *Maximum* über Richtungen, kein Minimum. Die Bildellipse entartet
-zu einer Strecke, ihre kurze Halbachse ist $\sigma_2 = 0$, die lange aber $2{,}5$ – und nur
-die ist $\left\|\bA\right\|_2$ (@definition:operatornorm).
+zu einer Strecke, ihre kurze Halbachse ist $\sigma_2 = 0$, die lange aber $2{,}5$, und
+nur die ist $\left\|\bA\right\|_2$ (@definition:operatornorm).
 :::
 
 ::::

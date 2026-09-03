@@ -3,12 +3,11 @@ import { Schaetzfrage } from "../../lib";
 
 In @sec:probleme-algorithmen haben wir Algorithmen abstrakt definiert: als Verkettung
 $\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$ elementarer Rechenschritte. Diese
-Definition bleibt blass, solange wir sie nicht einmal vollständig durchspielen. Das tun
-wir jetzt an einem Problem, das einfach genug ist, um jeden einzelnen Schritt
-hinzuschreiben, und trotzdem reich genug, um uns durch das ganze Kapitel zu begleiten:
-den Fibonacci-Zahlen. Danach ordnen wir das Beispiel in die Landschaft der
+Definition spielen wir jetzt einmal vollständig durch, an einem Problem, das einfach
+genug ist, um jeden einzelnen Schritt hinzuschreiben, und das uns trotzdem durch das
+ganze Kapitel begleitet: den Fibonacci-Zahlen. Danach ordnen wir das Beispiel in die
 Algorithmenarten ein, die uns in Statistik und Machine Learning begegnen, und überlegen,
-was einen *guten* Algorithmus eigentlich auszeichnet.
+was einen *guten* Algorithmus auszeichnet.
 
 ### Beispiel: Fibonacci-Zahlen :id[beispiel-fibonacci-zahlen]
 
@@ -71,7 +70,7 @@ $$
 \end{aligned}
 $$
 
-Ergebnis: $\wt{f}(6) = (0, 1, 1, 2, 3, 5)$ – vier Additionen
+Ergebnis: $\wt{f}(6) = (0, 1, 1, 2, 3, 5)$, vier Additionen
 ($\corange{1}, \corange{2}, \corange{3}, \corange{5}$) für sechs Zahlen.
 :::
 
@@ -102,12 +101,12 @@ berechnet und dann wiederverwendet.
 
 :::interaktiv[Wie oft rechnet die Rekursion doppelt?]
 Dass hier *nichts doppelt* gerechnet wird, ist keine Selbstverständlichkeit. Die
-@definition:fibonacci-zahlen legt nämlich noch einen zweiten, verführerisch eleganten Weg nahe: Um
+@definition:fibonacci-zahlen legt nämlich noch einen zweiten, eleganteren Weg nahe: Um
 $x_n$ zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$
-auf, ohne Zwischenergebnisse zu speichern. Das liefert dieselben Zahlen, aber zu einem
-absurden Preis: Beide Teilaufrufe berechnen große Teile der Folge unabhängig voneinander
-noch einmal, und deren Teilaufrufe wieder. Wie oft ist „noch einmal" – zweimal, fünfmal,
-zwanzigmal? Das ist keine Geschmacksfrage, sondern eine Zählaufgabe.
+auf, ohne Zwischenergebnisse zu speichern. Das liefert dieselben Zahlen, aber viel
+teurer: Beide Teilaufrufe berechnen große Teile der Folge unabhängig voneinander
+noch einmal, und deren Teilaufrufe wieder. Wie oft ist „noch einmal"? Zweimal, fünfmal,
+zwanzigmal?
 
 <Schaetzfrage
   frage="Beim Ziel x₈: wie oft rechnet die naive Rekursion die Zahl x₃ von vorn aus?"
@@ -200,21 +199,21 @@ Kochrezept, und der Computer dem Koch, der sich zwar an das Rezept hält, dabei 
 Fehler macht.
 :::
 
-Die Analogie trägt weiter, als sie zunächst wirkt. Erstens: Für dasselbe Gericht gibt es
-viele Rezepte, und sie sind nicht gleich gut, genau wie unsere beiden Fibonacci-Varianten
-dasselbe Problem lösen, aber zu drastisch verschiedenen Kosten. Zweitens: Ein gutes
-Rezept ist *robust* gegen die kleinen Ungenauigkeiten des Kochs; ein gutes numerisches
-Verfahren verstärkt die unvermeidlichen :k[Rundungsfehler]{#rounding-error} des Computers
-nicht unnötig. Zusammengefasst wollen wir Algorithmen, die
+Für dasselbe Gericht gibt es viele Rezepte, und sie sind nicht gleich gut, so wie
+unsere beiden Fibonacci-Varianten dasselbe Problem zu sehr verschiedenen Kosten lösen.
+Ein gutes Rezept ist außerdem *robust* gegen die kleinen Ungenauigkeiten des Kochs; ein
+gutes numerisches Verfahren verstärkt die unvermeidlichen
+:k[Rundungsfehler]{#rounding-error} des Computers nicht unnötig. Wir wollen also
+Algorithmen, die
 
 - möglichst exakte Ergebnisse liefern,
 - schnell sind,
 - wenig Speicher brauchen.
 
-Diese drei Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
+Diese Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
 Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um solche
 Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst einmal
-präzise messen. Das ist das Thema des [nächsten Abschnitts](#sec-2.3). Wie wir „möglichst
+messen. Das ist das Thema des [nächsten Abschnitts](#sec-2.3). Wie wir „möglichst
 exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in Kapitel 4;
 Kapitel 3 stellt dafür zunächst Normen als Fehlermaße bereit.
 

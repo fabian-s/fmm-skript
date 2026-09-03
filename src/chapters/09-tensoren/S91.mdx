@@ -6,12 +6,12 @@ Matrizenmultiplikation verarbeitet zwei Matrizen zu einer dritten, und hinter
 einer quadratischen Form $\bx^\top\bA\bx$ steckt die Abbildung
 $(\bx, \by) \mapsto \bx^\top\bA\by$, die ebenfalls zwei Vektoren aufnimmt.
 Betrachten wir das ganze Tupel auf einmal, ist keine dieser Abbildungen linear.
-In jedem einzelnen Argument sind sie es aber sehr wohl, und diese Beobachtung
-trägt das gesamte Kapitel.
+In jedem einzelnen Argument sind sie es aber, und auf dieser Beobachtung baut
+das Kapitel auf.
 
 ### Was wir brauchen
 
-Sammeln wir zuerst das Vorwissen ein, auf dem dieser Abschnitt steht.
+Dieser Abschnitt setzt voraus:
 
 - :k[Vektorräume]{#vector-space} und ihre Unterräume, dazu :k[Basis]{#basis}
   und :k[Dimension]{#dimension}. In einem Raum der Dimension $n$ ist jeder
@@ -77,7 +77,7 @@ ein Unterschied, sobald $f$ überhaupt einen Wert ungleich $\bnull$ annimmt.
 
 ### Die Fläche eines Rechtecks
 
-Das kleinste interessante Beispiel steckt in der Schulgeometrie.
+Das einfachste Beispiel kommt aus der Schulgeometrie.
 
 :::beispiel[#flaeche-eines-rechtecks (Fläche eines Rechtecks)]
 Wir betrachten die Fläche eines Rechtecks als Funktion seiner beiden
@@ -97,8 +97,8 @@ f(2\cblue{x}, 2\cgreen{y}) = 2\cblue{x} \cdot 2\cgreen{y}
 $$
 
 Linear wäre $f(c\cblue{x}, c\cgreen{y}) = c\,f(\cblue{x}, \cgreen{y})$, hier
-also das Doppelte. Solange $\cblue{x}\cgreen{y} \neq 0$ ist, klaffen die beiden
-Werte auseinander.
+also das Doppelte. Solange $\cblue{x}\cgreen{y} \neq 0$ ist, sind die beiden
+Werte verschieden.
 
 **Aber $f$ ist bilinear.** Halten wir $\cgreen{y}$ fest, so gelten Additivität
 und Homogenität im ersten Argument:
@@ -138,7 +138,7 @@ $\R$.
 :::
 
 :::bemerkung[#das-vierfache-geometrisch-gelesen (Das Vierfache, geometrisch gelesen)]
-Der Faktor $\cred{4}$ braucht keine Rechnung. Verdoppeln wir beide Seiten, passt
+Der Faktor $\cred{4}$ ist auch ohne Rechnung klar. Verdoppeln wir beide Seiten, passt
 das alte Rechteck viermal in das neue; verdoppeln wir nur eine Seite, genau
 zweimal, und das ist die Linearität im einzelnen Argument. Der Faktor
 $\cred{4} = 2^2$ ist der Fall $n = 2$ der allgemeinen Regel $\cred{c^n}$ aus
@@ -151,7 +151,7 @@ zuerst nur aus dem Rechteck vorhersagen?
 
 <BilinearitaetsDemo />
 
-Das Rechteckbild zeigt damit, warum die getrennte Linearität genau die Regel
+Das Rechteckbild zeigt damit, warum die getrennte Linearität die Regel
 ist, die das Tensorprodukt später in eine lineare Abbildung übersetzt.
 :::
 
@@ -205,8 +205,8 @@ verschieden sind.
 
 ### Darstellung durch Koeffizienten
 
-Multilineare Abbildungen wirken zunächst wie eine unübersichtliche Klasse. Sind
-die beteiligten Räume Koordinatenräume, lässt sich jede von ihnen aber durch
+Sind die beteiligten Räume Koordinatenräume, lässt sich jede multilineare
+Abbildung durch
 eine endliche Liste von Zahlen vollständig beschreiben.
 
 :::satz[#darstellung-multilinearer-abbildungen (Darstellung multilinearer Abbildungen)]
@@ -231,8 +231,8 @@ gilt, wobei $\be_j$ der $j$-te Einheitsvektor des $\R^m$ ist. Die Koeffizienten
 $\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
 :::
 
-Einen vollständigen Beweis führen wir nicht. Woher die Koeffizienten kommen,
-lässt sich aber in einem Satz sagen: $\corange{a_{i_1, \dots, i_k, j}}$ ist die
+Einen vollständigen Beweis führen wir nicht. Die Koeffizienten kommen so
+zustande: $\corange{a_{i_1, \dots, i_k, j}}$ ist die
 $j$-te Komponente des Vektors $T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit
 ist auch die Eindeutigkeit klar, denn diese Werte legt $T$ selbst fest. Eine
 multilineare Abbildung ist also bereits dadurch bestimmt, was sie mit Tupeln von
@@ -262,7 +262,7 @@ Koeffizienten: Dort steht $\corange{a_{i_1, \dots, i_k, j}}$ genau an der Stelle
 an der hier die $j$-te Komponente von $T(\be_{i_1}, \dots, \be_{i_k})$ auftaucht.
 :::
 
-Zählen wir nach: Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
+Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
 Flächenfunktion aus @beispiel:flaeche-eines-rechtecks hat $k = 2$ Argumente mit
 $n_1 = n_2 = 1$ und $m = 1$, kommt also mit einer einzigen Zahl aus, nämlich
 $a_{1,1,1} = 1$. Ein bilineares $T\colon \R^2 \times \R^2 \to \R$ braucht
@@ -317,7 +317,7 @@ jedes Paar.
 Halten wir in einer multilinearen Abbildung alle Argumente bis auf das $i$-te
 fest, so ist die verbleibende Abbildung $V_i \to W$ linear.
 
-Das ist @definition:multilineare-abbildung, in Worte gefasst. Sie fordert genau diese eine
+Das ist @definition:multilineare-abbildung, in Worte gefasst. Sie fordert diese eine
 Bedingung, und zwar für jedes $i$ einzeln.
 :::
 

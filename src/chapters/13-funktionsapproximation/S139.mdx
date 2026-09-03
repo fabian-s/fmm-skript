@@ -4,15 +4,15 @@ import { Schaetzfrage } from "../../lib";
 Alles, was wir bisher gerechnet haben, spielte auf einem Intervall: eine
 Variable, Knoten darauf, eine Kurve. Reale Datensätze bringen mehr als eine
 Kovariable mit. Dieser Abschnitt überträgt den Basisansatz auf
-$f\colon \R^p \to \R$. Die Übertragung selbst gelingt mühelos, sie ist eine
+$f\colon \R^p \to \R$. Die Übertragung selbst ist einfach, sie ist eine
 Anwendung des Tensorprodukts aus
-@sec:tensoren/tensorprodukt. Bezahlen müssen wir sie mit einem
-Aufwand, der in $p$ exponentiell wächst. Danach ziehen wir Bilanz, für das
+@sec:tensoren/tensorprodukt. Sie kostet allerdings einen
+Aufwand, der in $p$ exponentiell wächst. Danach fassen wir zusammen, für das
 Kapitel und für das ganze Skript.
 
 ### Tensor-Produkt-Basen
 
-Eine Basis für Funktionen mehrerer Variablen bauen wir nicht neu, sondern aus
+Eine Basis für Funktionen mehrerer Variablen bauen wir aus
 den univariaten Bausteinen zusammen, die wir schon haben. Aus $K$
 Basisfunktionen pro Variable entstehen alle möglichen Produkte.
 
@@ -47,7 +47,7 @@ $$
 :::
 
 :::bemerkung[#was-kapitel-9-dazu-schon-gesagt-hat (Was Kapitel 9 dazu schon gesagt hat)]
-Die Konstruktion ist genau das Tensorprodukt von Funktionenräumen aus
+Die Konstruktion ist das Tensorprodukt von Funktionenräumen aus
 @sec:tensoren/tensorprodukt. Dort haben wir gesehen, dass die
 Produkte von Basiselementen wieder eine Basis bilden und dass sich die
 :k[Dimensionen]{#dimension} dabei multiplizieren, für $p$ Faktoren also
@@ -59,7 +59,7 @@ dimensionality).
 Anschaulich legen wir ein Gitter über den $p$-dimensionalen Raum. In jeder
 Variablen sitzen $K$ Basisfunktionen mit ihren Knoten, und jede
 Basisfunktion des Produkts gehört zu einer Zelle dieses Gitters. Der Ansatz
-ist bequem, weil wir für jede Variable dieselben eindimensionalen Bausteine
+ist einfach, weil wir für jede Variable dieselben eindimensionalen Bausteine
 verwenden können, und teuer, weil das Gitter mit jeder Variablen um einen
 Faktor $K$ wächst.
 :::
@@ -81,8 +81,8 @@ mit denselben Mitteln, über die
 :k[Normalengleichungen]{#normal-equations} oder besser über eine
 QR-Zerlegung (@sec:kq/qr).
 
-Die Spaltenzahl ist die schlechte Nachricht. Vollen Spaltenrang kann
-$\corange{\bB}$ nur haben, wenn $n \ge K^p$ ist, und das ist eine harte
+Die Spaltenzahl ist das Problem. Vollen Spaltenrang kann
+$\corange{\bB}$ nur haben, wenn $n \ge K^p$ ist, und das ist eine feste
 Schranke: Mit $K = 10$ Basisfunktionen je Variable und $p = 5$ Kovariablen
 brauchen wir mindestens $100\,000$ Beobachtungen, bevor die Anpassung
 überhaupt eindeutig ist.
@@ -108,8 +108,8 @@ Wir rechnen mit $K = 10$ und speichern jeden Koeffizienten als
 | $5$ | $100\,000$ | $800$ kB |
 | $10$ | $10^{10}$ | $\cred{80}$ GB |
 
-Bis $p = 3$ ist der Koeffizienten-Tensor ein Nichts, bei $p = 5$ noch
-handlich, bei $p = 10$ passt er auf keinen üblichen Arbeitsspeicher. Die
+Bis $p = 3$ ist der Koeffizienten-Tensor sehr klein, bei $p = 5$ noch
+handlich, bei $p = 10$ passt er in keinen üblichen Arbeitsspeicher. Die
 Speicherangaben verwenden dezimale Präfixe, $1$ kB sind also $1000$ Bytes;
 binär gerechnet sind die $8 \cdot 10^{10}$ Bytes der letzten Zeile
 $74{,}5$ GiB. Der Sprung von $p = 5$ auf $p = 10$ ist ein Faktor $10^5$,
@@ -231,13 +231,13 @@ Die Botschaft der Spalte bleibt davon unberührt, und sie steckt im Exponenten
 $(8+p)/4$. Jede weitere Variable multipliziert die nötige Datenmenge mit
 $10^{1/4} \approx 1{,}78$, bei schärferer Genauigkeitsforderung mit noch mehr:
 für $\varepsilon = 10^{-4}$ mit $\varepsilon^{-1/8} \approx 3{,}16$ je
-Dimension. Der Datenhunger wächst also exponentiell in $p$, ganz so wie der
+Dimension. Der Datenbedarf wächst also exponentiell in $p$, wie der
 Speicherbedarf.
 :::
 
 :::bemerkung[#auch-die-auswertung-kostet (Auch die Auswertung kostet)]
 Für eine einzelne Auswertung von $\cgreen{\wh{f}}$ steht zunächst der
-Aufwand $O(K^p)$, und das ist die ehrliche Zahl für eine Basis ohne besondere
+Aufwand $O(K^p)$, und das ist die korrekte Zahl für eine Basis ohne besondere
 Struktur: Die Summe in @eq:tensor-produkt-basis hat $K^p$ Summanden.
 
 Mit B-Splines wird es besser, denn die haben kompakten Träger
@@ -255,7 +255,7 @@ Koeffizienten ohnehin alle.
 
 Der Ausweg ist keine bessere Numerik, sondern eine Annahme über $f$. Wenn wir
 darauf verzichten, beliebige Wechselwirkungen zwischen den Variablen
-darzustellen, schrumpft der Ansatzraum dramatisch.
+darzustellen, schrumpft der Ansatzraum stark.
 
 :::definition[#additives-modell (Additives Modell)]
 Ein *additives Regressionsmodell* setzt statt des vollen Tensorprodukts eine
@@ -288,14 +288,14 @@ $p(K-1)+1=O(pK)$ frei wählbar. Für $p=10$ und $K=10$ sind das $91$ freie
 Parameter gegen $10^{10}$, ein Faktor von gut $10^8$. Aus dem Wachstum in
 $p$ wird ein lineares.
 
-Die geläufige Kurzformel lautet $pK$; um diese Zahl sauber zu bekommen,
-räumen wir kurz auf: Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
+Die geläufige Kurzformel lautet $pK$; um diese Zahl genau zu bekommen,
+zählen wir nach: Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
 $\beta_0$, dafür ist jede Komponente nur bis auf eine additive Konstante
 bestimmt, denn eine Konstante ließe sich von $\cgreen{f_1}$ nach
 $\cgreen{f_2}$ verschieben, ohne @eq:additives-modell zu ändern. Üblich ist deshalb eine
 Zentrierungsbedingung an jede Komponente, etwa dass sich ihre Werte an den
 Beobachtungsstellen zu null summieren; dann bleiben $p(K-1) + 1$ frei wählbare
-Koeffizienten. Die Größenordnung $pK$ stimmt, die Buchführung ist ein wenig
+Koeffizienten. Die Größenordnung $pK$ stimmt, die genaue Zählung ist etwas
 feiner.
 
 *Interpretierbar.* Jede Komponente ist eine Funktion einer einzigen Variablen
@@ -307,7 +307,7 @@ anderen Variablen definiert.
 die Wirkung von $x_1$ vom Wert von $x_2$ abhängt. Wo einzelne solche
 Wechselwirkungen gebraucht werden, nehmen wir sie gezielt als
 Tensorprodukt-Term für zwei oder drei Variablen dazu und behalten für den Rest
-die additive Struktur. In R ist `mgcv::gam()` die Standardadresse, mit
+die additive Struktur. In R ist `mgcv::gam()` die Standardimplementierung, mit
 automatischer Wahl der Glättungsparameter über die Kriterien aus
 @sec:bias-varianz.
 :::
@@ -334,7 +334,7 @@ Wie groß vermuten wir den Speicherbedarf des vollen Tensorprodukts bei zehn Var
 
 ::::vertiefung[Additivität ist mehr als ein Verzicht]
 :::bemerkung[#warum-das-mehr-ist-als-eine-notloesung (Warum das mehr ist als eine Notlösung)]
-Die Additivität sieht nach einem bloßen Verzicht aus. Ist $f$ tatsächlich
+Die Additivität sieht nach einem Verzicht aus. Ist $f$ tatsächlich
 additiv und bleibt $p$ fest, so ist sie mehr als das: Unter den üblichen
 Regularitäts- und Designannahmen lassen sich die einzelnen Komponenten mit
 derselben eindimensionalen Rate schätzen wie eine univariate Funktion; $p$
@@ -371,9 +371,9 @@ oft nimmt man als Zentren die Datenpunkte selbst. Es ist wieder das
 Kleinste-Quadrate-Problem aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate,
 nur mit anderen Spalten.
 
-Bezahlt wird die Freiheit mit der Struktur. Die Basismatrix ist im
+Die Freiheit kostet die Struktur. Die Basismatrix ist im
 Allgemeinen voll besetzt, denn eine Gaußglocke wird nirgends exakt null, und
-damit ist die Lokalität der B-Splines aus @sec:splines dahin,
+damit fehlt die Lokalität der B-Splines aus @sec:splines,
 solange wir nicht eigens Kerne mit beschränktem Träger wählen. Der
 Bandbreitenparameter $h$ spielt dabei die Rolle des Knotenabstands: klein
 heißt flexibel und unruhig, groß heißt glatt und träge.
@@ -404,11 +404,11 @@ monotone rationale quadratische Splines.
 
 ### Was vom Kapitel bleibt
 
-Am Anfang stand ein Wunsch, der sich in einem Satz sagen lässt: eine Funktion
-finden, die zu gegebenen Daten passt. Am Ende steht ein lineares
-Gleichungssystem, dessen Matrix wir uns selbst aussuchen dürfen. Alles
-Interessante entscheidet sich bei dieser Wahl, und deshalb war dieses Kapitel
-weniger eine Sammlung von Formeln als eine Reihe von Entscheidungen samt ihren
+Am Anfang stand die Aufgabe, eine Funktion zu finden, die zu gegebenen Daten
+passt. Am Ende steht ein lineares
+Gleichungssystem, dessen Matrix wir selbst wählen dürfen. Das
+Wesentliche entscheidet sich bei dieser Wahl, und deshalb war dieses Kapitel
+eine Reihe von Entscheidungen samt ihren
 Folgen.
 
 :::bemerkung[#multivariat-kernkonzepte-des-kapitels (Kernkonzepte des Kapitels)]
@@ -430,7 +430,7 @@ Folgen.
    Datenpunkt, eine Spalte je Basisfunktion
    (@sec:basisdarstellung). Die Matrix hängt nur von den Stellen und
    der Basis ab, nicht von den Messwerten.
-3. **Polynome sind theoretisch schön und numerisch heikel.** Durch $n$ Punkte
+3. **Polynome sind theoretisch einfach und numerisch problematisch.** Durch $n$ Punkte
    läuft genau ein Polynom vom Grad höchstens $n-1$
    (@sec:polynominterpolation). Die Monombasis erkauft das mit einer
    :k[Kondition]{#condition-number}, die exponentiell wächst, mit einer
@@ -440,7 +440,7 @@ Folgen.
    gleichmäßig verteilten Knoten nicht konvergieren.
 4. **Splines halten den Grad klein und die Wirkung lokal.** Statt eines
    Polynoms hohen Grades nehmen wir viele Polynome vom festen Grad $q$ und
-   kleben sie $\Ccal^{q-1}$-glatt aneinander; der Raum $\Scal_q$ hat die
+   setzen sie $\Ccal^{q-1}$-glatt zusammen; der Raum $\Scal_q$ hat die
    Dimension $m + q$ (@sec:splines). Die B-Spline-Basis dazu
    hat lokale Träger, macht $\bB$ zu einer
    :k[dünn besetzten]{#sparse-matrix} Bandmatrix und senkt den Aufwand von
@@ -480,8 +480,7 @@ Folgen.
 :::
 
 :::bemerkung[#drei-stellschrauben-drei-wirkungen (Drei Stellschrauben, drei Wirkungen)]
-Drei Entscheidungen der ersten Kapitelhälfte haben klar getrennte Folgen, und
-das ist ihre kürzeste Fassung.
+Drei Entscheidungen der ersten Kapitelhälfte haben getrennte Folgen.
 
 - Der *Ansatzraum* bestimmt den Interpolanten. Polynome vom Grad höchstens
   $n-1$ und kubische Splines liefern verschiedene Kurven durch dieselben
@@ -491,7 +490,7 @@ das ist ihre kürzeste Fassung.
   ergeben dieselbe Funktion (@beispiel:dieselbe-funktion-andere-koeffizienten); orthogonalisierte Basen
   ändern an ihr nichts und an der Kondition alles (@bemerkung:der-ausweg-orthogonalisierte-basen).
 - Die *Knotenwahl* bestimmt, wie gut der Interpolant zwischen den Daten
-  liegt. Bei frei wählbaren Stellen zähmen Chebyshev-Knoten das
+  liegt. Bei frei wählbaren Stellen vermeiden Chebyshev-Knoten das
   Runge-Phänomen (in der Vertiefung
   @bemerkung:ein-ausweg-die-knoten-anders-legen erklärt); bei gemessenen Daten
   liegen die Stellen fest, und dann bleibt nur der Wechsel des Ansatzraums.
@@ -527,7 +526,7 @@ Das ist Runges Funktion $f(x) = 1/(1 + 25x^2)$ auf $[-1, 1]$
 (@beispiel:runge-1901). Nachgerechnet steigt der größte Fehler von $0{,}44$ bei
 $n = 5$ über $7{,}2$ bei $n = 15$ auf $257$ bei $n = 25$, während die
 Interpolationsbedingung an jedem einzelnen Knoten exakt erfüllt bleibt.
-Interpolation sagt eben nur etwas über die Stützstellen aus.
+Interpolation sagt nur etwas über die Stützstellen aus.
 :::
 
 :::frage{wahr}
@@ -578,7 +577,7 @@ $\left\| f - \cgreen{s} \right\|_\infty < \varepsilon$ existiert.
 
 Das ist @satz:eigenschaften-von-splines-und-b-splines, Punkt 1, im Fall $q = 1$; dort ist er nichts anderes
 als die gleichmäßige Stetigkeit von $f$ auf einem abgeschlossenen Intervall.
-Bemerkenswert ist der Gegensatz zum Runge-Phänomen: Der Weg über wachsenden
+Zu beachten ist der Gegensatz zum Runge-Phänomen: Der Weg über wachsenden
 Polynomgrad kann scheitern, der Weg über feinere Gitter bei festem Grad nicht.
 :::
 
@@ -588,7 +587,7 @@ Grad des Interpolanten.
 
 Der Grad $q$ ist fest gewählt, meist $q = 3$. Was mit den Daten wächst, ist
 die Zahl der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
-(@satz:dimension-des-spline-raums). Genau darin liegt der Unterschied zur Polynominterpolation,
+(@satz:dimension-des-spline-raums). Darin liegt der Unterschied zur Polynominterpolation,
 bei der der Ansatzraum für $n$ Punkte Polynome bis zum Grad $n-1$ zulässt
 (@satz:existenz-und-eindeutigkeit-der). Das tatsächliche Interpolationspolynom darf kleineren Grad
 haben. Am wachsenden maximalen Grad hängt, dass die Oszillationen aus
@@ -668,7 +667,7 @@ Koeffizienten-Tensor mit rund $80$ MB noch gut zu handhaben.
 Es sind $10^{10}$ Koeffizienten, und mit $8$ Byte je Zahl macht das
 $8 \cdot 10^{10}$ Bytes, also $80$ GB und nicht $80$ MB (@beispiel:zehn-basisfunktionen-je-variable).
 Dazu kämen mindestens ebenso viele Beobachtungen, damit die Designmatrix
-vollen Spaltenrang haben kann. Genau daran scheitert der volle Tensoransatz in
+vollen Spaltenrang haben kann. Daran scheitert der volle Tensoransatz in
 hohen Dimensionen.
 :::
 
@@ -678,7 +677,7 @@ hat eine Koeffizientenzahl der Ordnung $pK$, wächst also nur linear in $p$.
 
 Das ist @eq:additives-modell: $pK$ Komponenten-Koeffizienten plus Achsenabschnitt, nach
 Zentrierung $p(K-1)+1$ frei wählbare. Für $p = 10$ und $K = 10$ sind das
-$91$ freie Parameter statt $10^{10}$. Bezahlt wird der Gewinn mit den Wechselwirkungen, die
+$91$ freie Parameter statt $10^{10}$. Der Gewinn kostet die Wechselwirkungen, die
 der Ansatz nicht darstellen kann (@bemerkung:der-gewinn-und-was-er-kostet).
 :::
 
@@ -697,7 +696,7 @@ groß.
 
 ### Wie es weitergeht
 
-Drei Fragen hat dieses Kapitel nur angerissen, und jede füllt eine eigene
+Drei Fragen hat dieses Kapitel nur angeschnitten, und jede füllt eine eigene
 Vorlesung: die theoretische Analyse statistischer Verfahren, die Eigenschaften
 von Parameterschätzern und die Funktionsapproximation über das hier Gezeigte
 hinaus. Dafür bieten sich die Vorlesungen von Thomas Nagler an,
@@ -705,10 +704,10 @@ hinaus. Dafür bieten sich die Vorlesungen von Thomas Nagler an,
 Bachelor und Master. Additive Modelle und ihre Verwandten behandelt die
 Vorlesung *Statistik V: Konzepte statistischer Modellierung* im Bachelor.
 
-### Finito
+### Schluss
 
 Damit endet das Skript. Begonnen haben wir mit der Frage, warum Rechnen mit
-endlicher Genauigkeit überhaupt schiefgehen kann, und mit dem Handwerkszeug
+endlicher Genauigkeit schiefgehen kann, und mit den Werkzeugen
 dagegen: Kondition, Stabilität, Aufwandsanalyse. Darauf baute die numerische
 lineare Algebra auf, von der Elimination über die Zerlegungen bis zur
 Singulärwertzerlegung, und darauf wiederum die Analysis mehrerer

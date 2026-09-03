@@ -3,12 +3,12 @@ import { SelfTest } from "./widgets/S23Local";
 import { ref } from "../numbers.generated";
 
 In @sec:fibonacci haben wir gesehen, dass zwei Algorithmen dasselbe Problem
-lösen und sich dabei dramatisch unterschiedlich anfühlen können: Der Aufruf-Zähler der
+lösen und dabei sehr verschieden schnell sein können: Der Aufruf-Zähler der
 naiven Fibonacci-Rekursion explodiert schon für kleine $n$, die iterative Variante ist
-sofort fertig. „Fühlt sich langsam an" ist aber kein mathematischer Begriff. In diesem
+sofort fertig. „Langsam" ist aber kein mathematischer Begriff. In diesem
 Abschnitt machen wir daraus eine Größe, die wir *zählen* können (den Aufwand eines
-Algorithmus), und lernen dann, wie man Aufwände sinnvoll vergleicht: nicht über exakte
-Zahlen, sondern über ihr *Skalierungsverhalten*, die Komplexität.
+Algorithmus), und lernen dann, wie man Aufwände vergleicht: über ihr
+*Skalierungsverhalten*, die Komplexität, statt über exakte Zahlen.
 
 ### Zeit- und Speicheraufwand :id[zeit-und-speicheraufwand]
 
@@ -41,10 +41,9 @@ werden.
 
 ### Beispiel: Matrix-Vektor-Multiplikation :id[beispiel-matrix-vektor-multiplikation]
 
-Zählen wir das an einem Arbeitspferd der Statistik konkret durch: dem
-:k[Matrix-Vektor-Produkt]{#matrix-vector-product} $\by = \bA\bx$. Es steckt in jeder
-Vorhersage eines linearen Modells und in jeder Schicht eines neuronalen Netzes. Sein
-Aufwand ist also alles andere als eine akademische Frage. Wir verfolgen die
+Zählen wir das am :k[Matrix-Vektor-Produkt]{#matrix-vector-product} $\by = \bA\bx$
+durch. Es steckt in jeder Vorhersage eines linearen Modells und in jeder Schicht eines
+neuronalen Netzes. Wir verfolgen die
 :k[Matrix]{#matrix} $\cbred{\bA}$ in Rot und den :k[Vektor]{#vector} $\cblue{\bx}$ in
 Blau durch die Rechnung; das Ergebnis $\cbgreen{\by}$ erscheint in Grün.
 
@@ -106,9 +105,9 @@ Die Faustregel lautet also: *Matrix-Vektor kostet* $\approx 2nd$ *Operationen*, 
 pro Matrixeintrag, eine Multiplikation und eine Addition. Dieselbe Zählung funktioniert
 für die :k[Matrix-Matrix-Multiplikation]{#matrix-multiplication} $\bC = \bA\bB$ mit
 $\bB \in \R^{d \times m}$: Sie besteht aus $m$ Matrix-Vektor-Produkten (eines pro Spalte
-von $\bB$), kostet also $\approx 2ndm$ Operationen. Damit stellt sich sofort die Frage, die
-uns den Rest des Kapitels beschäftigt: Was passiert mit diesen Zahlen, wenn das Problem
-größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der Aufwand?
+von $\bB$), kostet also $\approx 2ndm$ Operationen. Was passiert mit diesen Zahlen, wenn
+das Problem größer wird? Verdoppeln wir alle Dimensionen, verdoppelt sich dann auch der
+Aufwand?
 
 :::::
 
@@ -121,12 +120,11 @@ Matrix-Matrix-Produkt sind es drei Dimensionen und damit der Faktor acht. Der Sp
 wächst dabei langsamer als die Rechenzeit.
 :::
 
-Diese Faktoren, nicht die absoluten Zahlen, sind das, was einen Algorithmus praktisch
-brauchbar oder unbrauchbar macht.
+Diese Faktoren, nicht die absoluten Zahlen, entscheiden darüber, ob ein Algorithmus
+praktisch brauchbar ist.
 
 <h3 id="sec-2.3-quiz">Selbsttest: Operationen und Speicher zählen</h3>
 
-Zeit für einen Selbsttest. Versuchen wir uns an zwei Fragen zum Aufwand.
 Gegeben sind $\bA \in \R^{n \times d}$ und $\bx, \by \in \R^d$, und wir wollen
 
 $$
@@ -184,7 +182,7 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
       <p>
         Zum Vergleich: Das ist bis auf den kleinen Term <M>{"+\\,d"}</M> dasselbe{" "}
         <M>{"\\approx 2nd"}</M> wie beim gewöhnlichen Matrix-Vektor-Produkt aus{" "}
-        {ref("satz:aufwand-der-matrix-vektor-multiplikation")} – kein Wunder, denn es{" "}
+        {ref("satz:aufwand-der-matrix-vektor-multiplikation")}, denn es{" "}
         <em>ist</em> ein Matrix-Vektor-Produkt, nur spaltenweise organisiert.
       </p>
     </>
@@ -232,12 +230,11 @@ $\bA_{\cdot i}$ von $\bA$. Der Algorithmus arbeitet die Summe spaltenweise ab:
 
 ### Komplexität: Wie skaliert der Aufwand? :id[komplexitaet-wie-skaliert-der-aufwand]
 
-Beim Nachrechnen der Quizfragen ist vielleicht aufgefallen: Ob nun $2nd + d$ oder
-$2nd - n$ oder $2nd$ herauskommt, hängt von Buchhaltungsdetails ab: zählt man die
-Initialisierung mit? Das Zwischenergebnis? Solche Details sind für den Vergleich von
-Algorithmen unwichtig. Die *exakte* Anzahl an Operationen und gespeicherten Zahlen
-interessiert uns nicht. Was uns interessiert, ist, *wie der Aufwand mit der Größe des
-Problems wächst*: Was passiert, wenn wir statt $1000$ Datenpunkten $10\,000$ haben?
+Ob in den Quizfragen $2nd + d$ oder $2nd - n$ oder $2nd$ herauskommt, hängt von
+Buchhaltungsdetails ab: Zählt man die Initialisierung mit? Das Zwischenergebnis? Für
+den Vergleich von Algorithmen sind solche Details unwichtig. Uns interessiert nicht die
+exakte Anzahl an Operationen, sondern *wie der Aufwand mit der Größe des Problems
+wächst*: Was passiert, wenn wir statt $1000$ Datenpunkten $10\,000$ haben?
 Statt $10$ Kovariablen $1000$?
 
 :::definition[#komplexitaet (Komplexität)]
@@ -262,9 +259,8 @@ wie".
 
 ### Komplexitätsklassen :id[komplexitaetsklassen]
 
-Die wichtigsten Wachstumsordnungen haben Namen, und es lohnt sich, für jede ein Gefühl
-zu entwickeln. Der Schlüssel dazu ist die Frage: *Was passiert mit dem Aufwand, wenn
-sich die Problemgröße verdoppelt?*
+Die wichtigsten Wachstumsordnungen haben Namen. Ein Gefühl für sie bekommen wir über
+die Frage: *Was passiert mit dem Aufwand, wenn sich die Problemgröße verdoppelt?*
 
 :::bemerkung[#interpretation-der-komplexitaetsklassen (Interpretation der Komplexitätsklassen)]
 Die folgenden Namen beschreiben das typische Wachstum eines Aufwands. Sie helfen
@@ -284,26 +280,24 @@ später mit $O$.
 
 Algorithmen mit exponentieller Laufzeit sind damit schon für moderate
 Problemgrößen häufig praktisch unbrauchbar. So steht es um die naive Fibonacci-Rekursion
-aus @sec:fibonacci, wie wir in @sec:fibonacci-komplexitaet genau nachrechnen
-werden. In der numerischen linearen Algebra bewegen wir uns dagegen meist
+aus @sec:fibonacci, wie wir in @sec:fibonacci-komplexitaet nachrechnen. In der numerischen linearen Algebra bewegen wir uns dagegen meist
 zwischen $O(n)$ (Vektoroperationen), $O(n^2)$ (Matrix-Vektor-Produkte, siehe @satz:aufwand-der-matrix-vektor-multiplikation
 mit $d = n$) und $O(n^3)$ (Matrix-Zerlegungen, Matrix-Matrix-Produkte).
 
-Wie weit diese Klassen auseinanderliegen, zeigt schon ein Bild mit drei Kurven. Auf der
-linearen Skala links verlässt $2^n$ den Bildausschnitt bereits bei $n = 10$ als fast
-senkrechte Wand; alles andere liegt darunter platt am Boden. Erst die logarithmische Skala
-rechts macht die Klassen vergleichbar, und dort wird $2^n$ zu einer Geraden:
+Wie weit diese Klassen auseinanderliegen, zeigt ein Bild mit drei Kurven. Auf der
+linearen Skala links verlässt $2^n$ den Bildausschnitt bereits bei $n = 10$, die anderen
+Kurven sind daneben kaum von der Achse zu unterscheiden. Erst die logarithmische Skala
+rechts macht die Klassen vergleichbar; dort wird $2^n$ zu einer Geraden:
 
 <S23WachstumsBild />
 
 :::vertiefung[Wie groß ist exponentieller Aufwand?]
 
-An dieser Geraden lässt sich der Preis exponentieller Verfahren ablesen. Bei $n = 200$
+Bei $n = 200$
 braucht ein $O(2^n)$-Algorithmus rund $1{,}6 \cdot 10^{60}$ Operationen. Selbst ein
 Superrechner mit $10^{18}$ Operationen pro Sekunde rechnete daran $5 \cdot 10^{34}$ Jahre,
-und das Universum ist erst etwa $10^{10}$ Jahre alt. Wer feiner mit den Klassen spielen
-will (welche Klassen sichtbar sind, welcher Vorfaktor, welche Skala), findet den
-zugehörigen Explorer in @sec:landau.
+und das Universum ist erst etwa $10^{10}$ Jahre alt. Ein Explorer, in dem sich Klassen,
+Vorfaktor und Skala einstellen lassen, steht in @sec:landau.
 
 :::
 
