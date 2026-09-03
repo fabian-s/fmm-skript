@@ -1,19 +1,19 @@
 import { BasisRechner } from "./widgets/S132Basisrechner";
 
-@sec:approximation hat uns mit einem Ärgernis zurückgelassen: Durch
+@sec:approximation hat ein Problem offengelassen: Durch
 dieselben drei Punkte laufen eine Parabel, ein Polygonzug, ein kubisches
 Polynom und eine wellige Sinuskurve, und alle vier erfüllen die
 Interpolationsbedingungen exakt. Solange wir nur „irgendeine Funktion durch
-die Punkte" verlangen, ist die Aufgabe hoffnungslos unterbestimmt. Dieser
-Abschnitt räumt das auf. Die Idee ist in einem Satz gesagt: Wir suchen den
+die Punkte" verlangen, ist die Aufgabe unterbestimmt. Dieser
+Abschnitt behebt das. Die Idee: Wir suchen den
 Interpolanten nicht mehr unter allen Funktionen, sondern nur noch in einem
 kleinen, endlichdimensionalen Ansatzraum. Aus der Suche nach einer Funktion
 wird damit die Suche nach endlich vielen Zahlen, und dafür haben wir seit
-@kap:lgs das Werkzeug.
+@kap:lgs die Werkzeuge.
 
 ### Funktionen als Vektoren
 
-Der erste Schritt ist ein Perspektivwechsel: Funktionen sind Vektoren.
+Der erste Schritt: Funktionen sind Vektoren.
 
 :::definition[#der-vektorraum-der-funktionen (Der Vektorraum der Funktionen)]
 Sei $\Fcal = \{f \colon [a,b] \to \R\}$ die Menge aller reellwertigen
@@ -30,17 +30,17 @@ $$
 ist $\Fcal$ ein :k[Vektorraum]{#vector-space} über $\R$.
 :::
 
-Nachzurechnen ist daran nichts Aufregendes: Assoziativität, Kommutativität
+Nachzurechnen ist daran wenig: Assoziativität, Kommutativität
 und die Distributivgesetze erbt $\Fcal$ punktweise von $\R$, die Nullfunktion
 $x \mapsto 0$ ist das neutrale Element, und $-f$ ist das Inverse zu $f$. Wir
 dürfen Funktionen also addieren und strecken wie Vektoren im
-$\R^n$. Der Unterschied liegt in der Größe des Raums, und genau die ist unser
+$\R^n$. Der Unterschied liegt in der Größe des Raums, und die ist das
 Problem.
 
 Was heißt der Befund aus @sec:approximation in dieser Sprache? Dort
 war jeder Interpolant von der Gestalt $\cgreen{p} + g$ mit einer Funktion $g$,
-die an allen Stellen $x_i$ verschwindet. Genau so sieht die Lösungsmenge eines
-linearen Gleichungssystems aus, und das ist kein Zufall.
+die an allen Stellen $x_i$ verschwindet. So sieht auch die Lösungsmenge eines
+linearen Gleichungssystems aus, und das hat einen Grund.
 
 :::bemerkung[#unendlich-viele-freiheitsgrade-endlich (Unendlich viele Freiheitsgrade, endlich viele Bedingungen)]
 Die *Auswertungsabbildung*
@@ -58,8 +58,8 @@ Urbilder von $\cblue{\by}$ unter $E$: eine spezielle Lösung plus der
 Zahlen aus einem unendlichdimensionalen Raum
 (:k[Rangsatz]{#rank-nullity-theorem}).
 
-Die Diagnose lautet damit: unendlich viele Freiheitsgrade gegen $n$
-Bedingungen. Die Therapie liegt auf der Hand. Wir suchen von vornherein in
+Es stehen also unendlich viele Freiheitsgrade gegen $n$
+Bedingungen. Die Abhilfe: Wir suchen von vornherein in
 einem Raum, der nur endlich viele Freiheitsgrade hat.
 :::
 
@@ -138,9 +138,9 @@ $f \in \Fcal_K$ ist eindeutig.
 
 :::bemerkung[#das-wort-basisfunktion-traegt-eine (Das Wort Basisfunktion trägt eine Voraussetzung mit)]
 Dass jedes $f \in \Fcal_K$ durch $K$ Koeffizienten eindeutig bestimmt sei,
-klingt harmlos. In der Leserichtung von den Koeffizienten zur Funktion ist
-das immer richtig, denn $\Phi$ ist eine Abbildung. Interessant ist die
-Gegenrichtung, und die braucht @satz:wann-k-zahlen-eine-funktion-festlegen. Wählen wir etwa
+klingt selbstverständlich. In der Leserichtung von den Koeffizienten zur Funktion ist
+das immer richtig, denn $\Phi$ ist eine Abbildung. Die
+Gegenrichtung braucht @satz:wann-k-zahlen-eine-funktion-festlegen. Wählen wir etwa
 $\corange{\phi_1(x)} = 1$, $\corange{\phi_2(x)} = x$ und
 $\corange{\phi_3(x)} = 1 + x$, so ist $K = 3$, aber $\Fcal_3$ besteht nur aus
 den Polynomen vom Grad höchstens $1$ und hat die Dimension $2$. Die Funktion
@@ -154,8 +154,8 @@ Zweifelsfall nach.
 1. *Polynome vom Grad höchstens $n - 1$:* Mit der *Monombasis*
    $\corange{\phi_k(x)} = x^{k-1}$ und $K = n$ ist $\Fcal_K$ der Raum aller
    :k[Polynome]{#polynomial} vom Grad höchstens $n - 1$. Die Monome sind
-   linear unabhängig, also ist $\dim \Fcal_K = n$. Diesen Ansatzraum nimmt
-   sich @sec:polynominterpolation vor.
+   linear unabhängig, also ist $\dim \Fcal_K = n$. Diesen Ansatzraum behandelt
+   @sec:polynominterpolation.
 2. *Splines vom Grad $q$ über $m + 1$ Knoten:* Stückweise Polynome vom Grad
    höchstens $q$, die an den $m - 1$ inneren Knoten $C^{q-1}$-glatt
    aneinanderstoßen, bilden ebenfalls einen Ansatzraum. Bei einfachen inneren
@@ -205,7 +205,7 @@ Dann interpoliert $\cgreen{\wh{f}} = \sum_{k=1}^K a_k \corange{\phi_k}$ die
 Daten genau dann, wenn $\bB\ba = \cblue{\by}$ gilt.
 :::
 
-Der Beweis ist eine Zeile: Die $i$-te Komponente von $\bB\ba$ ist
+Der Beweis ist kurz: Die $i$-te Komponente von $\bB\ba$ ist
 $\sum_{k=1}^K \corange{\phi_k(x_i)}\, a_k = \cgreen{\wh{f}(x_i)}$, die $i$-te
 Zeile der Gleichung also wörtlich die $i$-te Interpolationsbedingung.
 
@@ -287,8 +287,8 @@ Der Rechenweg sieht aus wie das Lösen eines Dreieckssystems, ist aber keines:
 :k[Vorwärtssubstitution]{#triangular-solve} setzt eine untere
 :k[Dreiecksmatrix]{#triangular-matrix} voraus, und in Zeile 2 von $\bB$ steht
 rechts der Diagonalen $\corange{\phi_3(x_2)} = \corange{1} \neq 0$. Dass die
-erste Zeile so billig ist, liegt allein an $x_1 = 0$; ab Zeile 2 rechnen wir
-echte :k[Gauß-Elimination]{#gaussian-elimination} (@sec:lgs/lgs).
+erste Zeile so einfach ist, liegt allein an $x_1 = 0$; ab Zeile 2 rechnen wir
+:k[Gauß-Elimination]{#gaussian-elimination} (@sec:lgs/lgs).
 :::
 
 Dass es auch anders geht, zeigt ein zweiter Anlauf mit demselben Ansatzraum.
@@ -318,7 +318,7 @@ $$
 
 Sie ist eine untere Dreiecksmatrix, denn $\corange{\phi_2}$ verschwindet in
 $0$ und $\corange{\phi_3}$ verschwindet in $0$ und in $1$. Jetzt greift die
-Vorwärtssubstitution wirklich, Zeile für Zeile von oben nach unten:
+Vorwärtssubstitution, Zeile für Zeile von oben nach unten:
 
 $$
 \begin{aligned}
@@ -348,17 +348,16 @@ höchstens $2$ mit drei Nullstellen ist aber das Nullpolynom, wie
 
 Der Ansatzraum bestimmt also den Interpolanten, das Basissystem nur seine
 Koeffizienten und den Rechenweg dorthin. Für die Numerik ist der Rechenweg
-allerdings alles andere als gleichgültig: Ein Dreieckssystem kostet
+allerdings wesentlich: Ein Dreieckssystem kostet
 $O(K^2)$ Operationen, die volle Elimination $O(K^3)$
 (@sec:lgs/lu).
 
 :::interaktiv[Zwei Basen, ein Interpolant]
-Der Rechner führt beide Beispiele vor. Der Schalter wechselt das
-Basissystem, die Regler verschieben die drei Messwerte. Beobachten lässt sich
-dabei alles, worauf es in diesem Abschnitt ankommt: Die Matrix bleibt beim
+Der Rechner zeigt beide Beispiele. Der Schalter wechselt das
+Basissystem, die Regler verschieben die drei Messwerte. Zu beobachten ist: Die Matrix bleibt beim
 Schieben stehen, weil sie nur von den Stellen und der Basis abhängt; die
 Koeffizienten springen beim Basiswechsel, die grüne Kurve nicht; und die
-orangen Bausteine $a_k \corange{\phi_k}$ summieren sich punktweise zu genau
+orangen Bausteine $a_k \corange{\phi_k}$ summieren sich punktweise zu
 dieser Kurve.
 
 <BasisRechner />
@@ -367,8 +366,8 @@ dieser Kurve.
 ### Woran sich Basissysteme unterscheiden
 
 Interpolationsverfahren unterscheiden sich im Wesentlichen durch die Wahl des
-Basissystems, und manche Systeme sind erheblich brauchbarer als andere. Vier
-Kriterien geben den Fahrplan für den Rest des Kapitels vor.
+Basissystems, und manche Systeme sind deutlich brauchbarer als andere. Vier
+Kriterien bestimmen den Rest des Kapitels.
 
 - *Kondition.* Wie empfindlich reagieren die berechneten Koeffizienten auf
   Störungen der Daten? Für eine quadratische invertierbare Matrix kontrolliert
@@ -376,16 +375,16 @@ Kriterien geben den Fahrplan für den Rest des Kapitels vor.
   die :k[Konditionszahl]{#condition-number} $\kappa(\bB)$ liefert die übliche
   relative Störungsabschätzung
   (@sec:fehler/kondition). Bei der Monombasis wächst sie mit
-  $K$ dramatisch, und das ist ihr Hauptproblem
+  $K$ sehr schnell, und das ist ihr Hauptproblem
   (@sec:polynominterpolation).
 - *Stabilität.* Ändert sich ein einziger Messwert ein wenig, sollte sich der
   Interpolant auch nur ein wenig ändern, und zwar am besten nur in der Nähe
-  dieses Punktes. Ein globales Polynom schlägt stattdessen im ganzen Intervall
-  aus, oft am heftigsten weit weg von der Störung
+  dieses Punktes. Ein globales Polynom ändert sich stattdessen im ganzen Intervall,
+  oft am stärksten weit weg von der Störung
   (@sec:polynominterpolation).
 - *Lokalität.* Ist jede Basisfunktion nur auf einem kleinen Teilintervall von
-  null verschieden, so hat $\bB$ viele Nullen und wird zur Bandmatrix. Genau
-  das leisten die B-Splines aus @sec:splines.
+  null verschieden, so hat $\bB$ viele Nullen und wird zur Bandmatrix. Das
+  leisten die B-Splines aus @sec:splines.
 - *Effiziente Lösbarkeit.* Aus der Struktur von $\bB$ wird Rechenzeit:
   Dreiecks- und Bandmatrizen lassen sich mit einem Aufwand lösen, der linear
   in der Zahl der Unbekannten wächst, statt kubisch
@@ -446,7 +445,7 @@ $\bB$ dort eine untere Dreiecksmatrix.
 Über der Diagonalen steht in Zeile 2 der Eintrag
 $\corange{\phi_3(x_2)} = \corange{1}$, die Matrix ist also keine
 Dreiecksmatrix (@bemerkung:einsetzen-ist-hier-nicht). Dass die erste Zeile sofort $a_1$ liefert,
-liegt allein an $x_1 = 0$. Erst mit der Newton-Basis entsteht wirklich
+liegt allein an $x_1 = 0$. Erst mit der Newton-Basis entsteht
 Dreiecksgestalt.
 :::
 

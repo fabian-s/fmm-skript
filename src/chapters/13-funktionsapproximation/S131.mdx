@@ -4,10 +4,10 @@ import { VierInterpolanten } from "./widgets/S131Interpolanten";
 import { Schaetzfrage } from "../../lib";
 
 Mit diesem Kapitel beginnt der dritte Block des Skripts
-(@sec:intro/worum). Die Aufgabe klingt zunächst harmlos:
+(@sec:intro/worum). Die Aufgabe:
 Gegeben sind $n$ Datenpunkte $\cblue{(x_1, y_1), \dots, (x_n, y_n)}$ mit
 paarweise verschiedenen $x_i$, gesucht ist eine Funktion $\cgreen{\wh{f}}$,
-die zu ihnen passt. Manchmal stammen die Punkte gar nicht aus einer Messung,
+die zu ihnen passt. Manchmal stammen die Punkte nicht aus einer Messung,
 sondern sind Auswertungen einer bekannten Funktion $f$, die zu teuer ist, um
 sie an beliebig vielen Stellen auszurechnen.
 
@@ -22,8 +22,8 @@ Wählen wir einen Begriff aus, hebt die Karte seine Voraussetzungen und
 Folgerungen hervor; verlinkte Kästen führen direkt zum zugehörigen Kapitel.
 :::
 
-„Passt" lässt sich allerdings auf sehr verschiedene Weisen verlangen, und
-deshalb stehen gleich drei Varianten nebeneinander. Der Rechenweg
+„Passt" lässt sich auf verschiedene Weisen verlangen, und
+deshalb stehen drei Varianten nebeneinander. Der Rechenweg
 bleibt dabei der aus den bisherigen Kapiteln: Am Ende steht wieder ein
 lineares Gleichungssystem, neu ist nur, dass die Unbekannten darin die
 Koeffizienten einer Funktion sind.
@@ -72,7 +72,7 @@ $$
 
 Die Bedingung ist global: $\cgreen{\wh{f}}$ soll $f$ überall auf $[a, b]$
 nahekommen, muss es aber an keiner einzigen Stelle exakt treffen. Existiert
-ein Minimierer, steht in der Anzeige exakt ein Gleichheitszeichen.
+ein Minimierer, gilt Gleichheit.
 :::
 
 :::definition[#interpolationsproblem (Interpolationsproblem)]
@@ -85,8 +85,8 @@ $$
 
 Jede Funktion mit dieser Eigenschaft heißt *Interpolant* (interpolant) der
 Daten, die $x_i$ heißen *Stützstellen* (nodes). Die Bedingung ist punktweise
-und exakt: An den $n$ Stützstellen ist nichts erlaubt außer Treffen, zwischen
-ihnen alles.
+und exakt: An den $n$ Stützstellen muss $\cgreen{\wh{f}}$ die Werte treffen, zwischen
+ihnen ist alles erlaubt.
 :::
 
 :::definition[#glaettungsproblem (Glättungsproblem)]
@@ -143,12 +143,11 @@ behandelt deshalb die Interpolation; die Glättung folgt in
 
 ### Wozu wir das brauchen
 
-Klassisch sind drei Anlässe. Erstens die glatte Kurve durch eine
-Punktwolke, etwa für eine Grafik. Zweitens der Wunsch, eine teure Funktion
-schneller auszuwerten: Wenn $f(x) = \int_0^x g(y)\,\mathrm{d}y$ oder
+Klassisch sind drei Anlässe. Die glatte Kurve durch eine
+Punktwolke, etwa für eine Grafik. Die schnellere Auswertung einer teuren Funktion: Wenn $f(x) = \int_0^x g(y)\,\mathrm{d}y$ oder
 $f(x) = g^{-1}(x)$ jedes Mal ein numerisches Verfahren erfordert, ist es
 billiger, $f$ an wenigen Stellen zu bestimmen und dazwischen zu interpolieren.
-Drittens Ableitungen und Integrale von $f$: Ein Polynom oder ein Spline lässt
+Und Ableitungen und Integrale von $f$: Ein Polynom oder ein Spline lässt
 sich exakt differenzieren und integrieren, und wir nehmen das Ergebnis als
 Näherung für $f'$ beziehungsweise für $\int f$. Auf diesem Umweg beruhen die
 klassischen Verfahren der numerischen Differentiation und Integration, die
@@ -165,7 +164,7 @@ Zwei der gängigen Anwendungsbeispiele sind Interpolation im Sinn von
 - *Zeitreihen.* Fehlende Werte in Sensor- oder Finanzdaten werden aufgefüllt,
   indem eine Kurve durch die vorhandenen Messzeitpunkte gelegt wird.
 
-Zwei weitere werden gern danebengestellt, sind aber bloße Analogien:
+Zwei weitere werden oft danebengestellt, sind aber nur Analogien:
 
 - *Latent-Space-Interpolation* in VAEs und GANs interpoliert linear zwischen
   zwei Codes, $\bz(t) = (1-t)\bz_0 + t\bz_1$. Das ist Interpolation im
@@ -179,7 +178,7 @@ Zwei weitere werden gern danebengestellt, sind aber bloße Analogien:
   engen Sinn taucht dort erst auf, wenn ein trainiertes Modell auf längere
   Kontexte umskaliert wird.
 
-Ein echter Grenzfall ist die Idee, die feste Aktivierungsfunktion eines
+Ein Grenzfall ist die Idee, die feste Aktivierungsfunktion eines
 neuronalen Netzes durch eine lernbare, spline-basierte zu ersetzen
 (*Kolmogorow-Arnold-Netze*). Die Splines aus @sec:splines sind
 dort das Modell selbst; ihre Koeffizienten
@@ -226,11 +225,11 @@ Wie weit können vier Interpolanten, die dieselben drei Punkte treffen, zwischen
   <VierInterpolanten />
 </Schaetzfrage>
 
-Wie das Widget zeigt, liegt die größte Spanne bei etwa $0{,}75$; @satz:gestalt-aller-interpolanten erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
+Die größte Spanne liegt bei etwa $0{,}75$; @satz:gestalt-aller-interpolanten erklärt, warum die Interpolationsbedingungen diese Zwischenwerte nicht festlegen.
 :::
 
-Vier Beispiele sind noch kein Argument. Der folgende Satz beschreibt die
-gesamte Lösungsmenge und macht damit klar, dass es nicht bei vieren bleibt.
+Der folgende Satz beschreibt die
+gesamte Lösungsmenge.
 
 :::satz[#gestalt-aller-interpolanten (Gestalt aller Interpolanten)]
 Seien Daten $\cblue{(x_i, y_i)}$, $i = 1, \dots, n$, gegeben und sei
@@ -299,7 +298,7 @@ $$
 $$
 
 und beide verschwinden an $0$, $1$ und $2$; das erste ist gerade $g_1$ von
-oben, das zweite eine Sinusschwingung, die zufällig an denselben Stellen
+oben, das zweite eine Sinusschwingung, die an denselben Stellen
 Nullstellen hat. Auch die stückweise lineare Differenz
 $\cgreen{\wh{f}_2} - \cgreen{p}$ verschwindet dort, sie lautet $x(1-x)$ auf
 $[0,1]$ und $-(x-1)(x-2)$ auf $[1,2]$.
@@ -311,7 +310,7 @@ wie wir Datenpunkte haben. Das leisten *Basissysteme*: Wir wählen $K$
 Basisfunktionen und lassen nur noch Linearkombinationen aus ihnen zu. Aus der
 Interpolationsbedingung wird dann ein lineares Gleichungssystem in den $K$
 Koeffizienten (@sec:basisdarstellung), und die Wahl der Basis entscheidet
-über alles Weitere: über Eindeutigkeit (@sec:polynominterpolation), über die
+über das Weitere: über Eindeutigkeit (@sec:polynominterpolation), über die
 Kondition des Systems und über die Frage, ob eine lokale Datenänderung die
 Kurve global verbiegt (@sec:splines).
 
@@ -368,7 +367,7 @@ Ein Interpolant muss ein Polynom sein.
 @definition:interpolationsproblem verlangt nur die $n$ Gleichungen an den Stützstellen.
 $\cgreen{\wh{f}_2}$ aus @beispiel:vier-interpolanten-durch-drei-punkte ist stückweise linear und an $x = 1$
 nicht differenzierbar, $\cgreen{\wh{f}_4}$ enthält einen Sinusterm; beide
-interpolieren. Polynome sind eine besonders bequeme Wahl, keine Vorschrift.
+interpolieren. Polynome sind eine praktische Wahl, keine Vorschrift.
 :::
 
 ::::

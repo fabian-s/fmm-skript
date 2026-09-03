@@ -4,13 +4,13 @@ import { Schaetzfrage } from "../../lib";
 Bisher waren die Daten exakt. Ein Interpolant läuft durch jeden vorgegebenen
 Punkt, und @satz:approximationsfehler-kubischer-splines sagt, wie weit er dazwischen danebenliegen kann. Messwerte
 sind aber selten exakt. Ein Sensor rauscht, eine Stichprobe streut, eine
-Befragung trifft nur zufällig ausgewählte Personen. Wer solche Werte
-interpoliert, zwingt die Kurve durch jeden Messfehler hindurch.
+Befragung trifft nur zufällig ausgewählte Personen. Werden solche Werte
+interpoliert, läuft die Kurve durch jeden Messfehler.
 
 @sec:approximation hat die beiden Aufgaben schon
 nebeneinandergestellt: Interpolation trifft die Daten exakt, Glättung nur
 ungefähr. In diesem Abschnitt rechnen wir die
-zweite Aufgabe aus, und sie stellt sich als altbekanntes Problem heraus.
+zweite Aufgabe aus, und sie führt auf ein bekanntes Problem.
 
 ### Das Modell
 
@@ -36,8 +36,7 @@ die $\cblue{y_i}$ Funktionswerte, und wir wären wieder in
 @sec:approximationsfehler.
 
 :::bemerkung[#was-in-der-fehlerannahme-steckt (Was in der Fehlerannahme steckt)]
-Die Bedingung $\E[\cred{\eps_i} \mid x_i] = 0$ sieht harmlos aus, trägt aber die
-ganze Aufgabe.
+Die Bedingung $\E[\cred{\eps_i} \mid x_i] = 0$ ist wesentlich.
 
 1. Sie sagt, dass die Beobachtungen an jeder Stelle *um* $f(x_i)$ herum streuen
    und nicht systematisch daneben. Anders gesagt ist $f(x)$ der
@@ -54,7 +53,7 @@ ganze Aufgabe.
    (@sec:bias-varianz).
 :::
 
-Wie messen wir, ob eine Kandidatin $\cgreen{\wh f}$ zu den Daten passt? Mit
+Wie messen wir, ob ein Kandidat $\cgreen{\wh f}$ zu den Daten passt? Mit
 derselben Größe wie in Kapitel 7, der Summe der quadrierten Abweichungen:
 
 $$ {#eq-eq-13-7-2}
@@ -68,7 +67,7 @@ einzelnen Differenzen $\cred{r_i} = \cblue{y_i} - \cgreen{\wh f(x_i)}$ heißen
 
 :::bemerkung[#die-aufgabe-ist-so-noch-entartet (Die Aufgabe ist so noch entartet)]
 Suchten wir das Minimum von @eq:eq-13-7-2 unter *allen* Funktionen, wäre die
-Antwort langweilig und nutzlos: Das Minimum ist null, und angenommen wird es von
+Antwort nutzlos: Das Minimum ist null, und angenommen wird es von
 jedem Interpolanten der Daten. Davon gibt es unendlich viele
 (@sec:approximation). Alle übernehmen an
 den Datenstellen jedes $\cred{\eps_i}$; die Trainings-RSS kann dabei zwischen
@@ -121,7 +120,7 @@ Knotenvektor $\corange{\xi_1 < \dots < \xi_{m-1}}$
 (@sec:splines). Wir halten die beiden
 Rollen auseinander: $x_i$ sind die Stellen, an denen *gemessen* wurde,
 $\corange{\xi_j}$ die Stellen, an denen die Polynomstücke *zusammengesetzt*
-werden. Beide dürfen völlig verschieden liegen, und bei der Glättung tun sie das
+werden. Beide dürfen verschieden liegen, und bei der Glättung tun sie das
 auch.
 
 :::satz[#glaettung-ist-ein-lineares-kleinste (Glättung ist ein lineares Kleinste-Quadrate-Problem)]
@@ -174,7 +173,7 @@ $\cblue{\by} - \bB\ba$, also @eq:glaettung-ist-ein-lineares-kleinste.
 Jedes Element von $\Fcal_K$ hat einen Koeffizientenvektor, und jeder
 Koeffizientenvektor liefert ein Element von $\Fcal_K$. Das Minimieren über
 $\Fcal_K$ ist deshalb dasselbe wie das Minimieren über $\ba \in \R^K$, und das
-ist wortwörtlich das
+ist das
 :k[lineare Kleinste-Quadrate-Problem]{#linear-least-squares}
 $\min_{\ba} \left\| \cblue{\by} - \bB\ba \right\|_2$ aus
 @sec:kq/problem.
@@ -232,7 +231,7 @@ ist $\bB^\top\bB$ dünn besetzt und die Zerlegung billig
 :::
 
 :::bemerkung[#wann-die-designmatrix-vollen-spaltenrang (Wann die Designmatrix vollen Spaltenrang hat)]
-Vollen Spaltenrang bekommen wir nicht geschenkt. Notwendig ist $K \le n$, aber
+Voller Spaltenrang ist nicht selbstverständlich. Notwendig ist $K \le n$, aber
 das reicht nicht: Die Basisfunktionen müssen auch *auf den Daten* linear
 unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen.
 Anschaulich muss jede Basisfunktion einen eigenen, passend geordneten
@@ -311,8 +310,8 @@ $$
 
 An jeder Beobachtungsstelle ist der Schätzfehler exakt der Messfehler. Er wird
 nicht kleiner, wenn wir mehr Daten erheben, denn jeder neue Punkt bringt seinen
-eigenen Fehler mit, den der Interpolant pflichtschuldig übernimmt. Zwischen den
-Punkten wird es eher schlimmer: Liegen zwei Stellen dicht beieinander und ziehen
+eigenen Fehler mit, den der Interpolant übernimmt. Zwischen den
+Punkten wird es eher schlechter: Liegen zwei Stellen dicht beieinander und ziehen
 ihre Fehler in verschiedene Richtungen, muss die Kurve dazwischen steil werden.
 Modelliert eine Schätzung auf diese Weise den Zufallsanteil der Daten mit,
 spricht die Statistik von :k[Überanpassung]{#overfitting}.
@@ -322,8 +321,7 @@ Datenvektor möglich; bei generischen verrauschten Daten bleibt ein Rest. Jeder
 Koeffizient wird dann aus mehreren Beobachtungen bestimmt, und in dieser
 Mittelung hebt sich ein Teil der Fehler auf. Ausnahmsweise kann auch ein
 kleiner Raum exakt interpolieren, nämlich wenn $\cblue{\by}$ zufällig in
-$\operatorname{Bild}(\bB)$ liegt. Der Preis des kleinen Ansatzraums steht auf
-der anderen Seite: Er enthält $f$ vielleicht gar nicht. Wie sich beides
+$\operatorname{Bild}(\bB)$ liegt. Der Nachteil des kleinen Ansatzraums: Er enthält $f$ vielleicht nicht. Wie sich beides
 gegeneinander verrechnet, ist das Thema von @sec:bias-varianz.
 :::
 
@@ -368,7 +366,7 @@ in unserem Lauf $K = 11$ mit einem Abstand von $0{,}072$.
 
 Die Tabelle zeigt drei Regime. Bei $K = 4$ ist der Ansatzraum gerade der
 Raum der kubischen Polynome, und die Kurve ist zu starr, um beide Wellen
-von $f$ mitzunehmen; zwischen $K = 6$ und $K = 15$ liegt sie sauber im
+von $f$ mitzunehmen; zwischen $K = 6$ und $K = 15$ liegt sie im
 Rauschband, und $\wh\sigma$ bewegt sich dort zwischen $0{,}278$ und
 $0{,}306$, also dicht an der wahren Streuung $0{,}3$; ab $K = 16$ beginnen die
 Ausschläge, und der Abstand zu $f$ wächst wieder, während die Residuen weiter
@@ -390,7 +388,7 @@ für die Basis, Normalengleichungen mit Cholesky-Zerlegung für die Koeffiziente
 Im unteren Bild stehen die $K$ Basisfunktionen selbst, sie werden mit wachsendem
 $K$ schmaler und zahlreicher.
 
-Die drei Regime lassen sich am Regler abfahren. Ab $K = 16$ beginnen die
+Die drei Regime lassen sich am Regler durchlaufen. Ab $K = 16$ beginnen die
 Ausschläge, und von $K = 30$ an verlässt die Kurve bei den meisten
 Reglerstellungen das Bildfenster, ohne dass die Residuen davon noch viel
 besser würden.
@@ -410,7 +408,7 @@ Welche der drei voreingestellten Knotenzahlen dürfte die unbekannte wahre Funkt
 
 Bei der Glättung über einen kleinen Ansatzraum steuert $K$ die Glattheit in
 groben Stufen, und wir müssen uns vorab auf Zahl und Lage der Knoten festlegen.
-Der zweite Weg aus @bemerkung:die-aufgabe-ist-so-noch-entartet dreht das um: Wir lassen viele Knoten zu und
+Der zweite Weg aus @bemerkung:die-aufgabe-ist-so-noch-entartet geht anders vor: Wir lassen viele Knoten zu und
 bestrafen dafür unruhige Lösungen.
 
 ::::vertiefung[Glättungssplines und Penalized Splines im Detail]
@@ -430,7 +428,7 @@ $\lambda$ heißt *Glättungsparameter*.
 
 Der Strafterm ist keine neue Größe. Er ist das Krümmungsfunktional
 $J(g) = \int_a^b |g''|^2 \dx$ aus @sec:minimale-kruemmung, also dasselbe
-Maß für Unruhe, das dort den natürlichen kubischen Spline ausgezeichnet hat.
+Maß für Welligkeit, das dort den natürlichen kubischen Spline ausgezeichnet hat.
 
 :::bemerkung[#was-der-strafterm-bewirkt (Was der Strafterm bewirkt)]
 Drei Beobachtungen ordnen das Kriterium ein.
@@ -447,20 +445,20 @@ Drei Beobachtungen ordnen das Kriterium ein.
    Interpolanten, und unter ihnen wählt der Strafterm den mit der kleinsten
    Krümmung, also den natürlichen kubischen Spline aus @satz:kubische-splines-haben-minimale. Bei
    wiederholten Stellen mit verschiedenen Beobachtungen kann es dagegen keinen
-   Interpolanten aller Einzelwerte geben. Für $\lambda \to \infty$ wird jede Kandidatin mit
-   $J(g) > 0$ unbezahlbar; übrig bleiben die Funktionen mit $g'' \equiv 0$, also
+   Interpolanten aller Einzelwerte geben. Für $\lambda \to \infty$ wird jeder Kandidat mit
+   $J(g) > 0$ ausgeschlossen; übrig bleiben die Funktionen mit $g'' \equiv 0$, also
    die Geraden, und unter ihnen die
    :k[Kleinste-Quadrate-Gerade]{#linear-regression}. Der Glättungsparameter
-   fährt die Schätzung stufenlos zwischen Interpolation und einfacher linearer
-   Regression hin und her.
+   bewegt die Schätzung stufenlos zwischen Interpolation und einfacher linearer
+   Regression.
 3. *Gesteuert wird jetzt mit $\lambda$, nicht mit $K$.* Statt einer ganzen Zahl
-   drehen wir an einer stetigen Größe, und die Knotenwahl fällt als Frage weg.
-   Bezahlt wird das mit einem Gleichungssystem der Größe $n$ statt $K$.
+   wählen wir eine stetige Größe, und die Knotenwahl fällt als Frage weg.
+   Dafür ist das Gleichungssystem von der Größe $n$ statt $K$.
 :::
 
 :::bemerkung[#penalized-splines-und-die-naehe-zu-ridge (Penalized Splines und die Nähe zu Ridge)]
 Zwischen beiden Wegen liegt der in der Praxis übliche Kompromiss: eine
-großzügige, aber nicht datengroße Basis ($K < n$) *und* ein Strafterm. Solche
+große, aber nicht datengroße Basis ($K < n$) *und* ein Strafterm. Solche
 *Penalized Splines* führen auf ein Kriterium, das sich vollständig in
 Matrixform schreiben lässt. Mit
 $\bP_{jk} := \int_a^b \corange{\phi_j''(x)}\,\corange{\phi_k''(x)} \dx$ ist
@@ -476,8 +474,8 @@ $$
 \left( \bB^\top\bB + \lambda \bP \right) \ba = \bB^\top \cblue{\by} .
 $$
 
-Mit $\bP = \bI$ steht dort wortwörtlich die Ridge-Regression aus
-@sec:optim/beschraenkt, und der Rechentrick ist derselbe: Der
+Mit $\bP = \bI$ steht dort die Ridge-Regression aus
+@sec:optim/beschraenkt, und der Effekt ist derselbe: Der
 Zuschlag macht das System auch dann eindeutig lösbar, wenn $\bB$ keinen vollen
 Spaltenrang hat. Beim Krümmungs-Strafterm ist $\bP$ allerdings nur positiv
 semidefinit, denn affine Funktionen haben Strafe null. Positiv definit wird
@@ -501,15 +499,15 @@ Wie $\lambda$ gewählt wird, ist dieselbe Frage wie die nach dem richtigen $K$;
 | Vorhersage auf neuen Daten | Glättung |
 
 Die dritte Zeile ist die wichtigste und die am wenigsten offensichtliche. Wer
-nur die vorliegenden $n$ Punkte beschreiben will, fährt mit der Interpolation
-nicht schlecht: Sie hat auf den Daten die kleinste Residuenquadratsumme, nämlich
+nur die vorliegenden $n$ Punkte beschreiben will, kommt mit der Interpolation
+aus: Sie hat auf den Daten die kleinste Residuenquadratsumme, nämlich
 null. Sobald wir aber an einer *neuen* Stelle vorhersagen wollen, zählt der
 Abstand zu $f$, und der ist bei einer glatten Schätzung kleiner.
-@beispiel:fuenfzig-verrauschte-punkte führt beide Größen nebeneinander vor.
+@beispiel:fuenfzig-verrauschte-punkte zeigt beide Größen nebeneinander.
 
 ### Beispiel: Glättung in R
 
-Der ganze Abschnitt passt in acht Zeilen R, hier für den Datensatz aus
+Der Abschnitt passt in acht Zeilen R, hier für den Datensatz aus
 @beispiel:fuenfzig-verrauschte-punkte:
 
 ```r
@@ -524,7 +522,7 @@ B_new <- splines::bs(x_new,
 f_hat <- B_new %*% a_hat
 ```
 
-Drei Details lohnen den zweiten Blick.
+Drei Details.
 
 - `bs()` baut die B-Spline-Designmatrix $\bB$. Das Argument `df = 10` zusammen
   mit `intercept = TRUE` fordert $K = 10$ Spalten; bei Grad $3$ bleiben dafür
@@ -536,12 +534,12 @@ Drei Details lohnen den zweiten Blick.
 - Für die Vorhersage an neuen Stellen braucht `B_new` *dieselbe* Basis. Deshalb
   werden Knoten und Randknoten von `B` übernommen. Lässt man `Boundary.knots`
   weg, so setzt `bs()` sie auf den Wertebereich des *neuen* Gitters: `B_new`
-  gehört dann zu einer anderen Basis als `a_hat`, und zwar lautlos
+  gehört dann zu einer anderen Basis als `a_hat`, ohne Fehlermeldung
   (@bemerkung:b-splines-in-r). Beide Argumente, `knots` *und*
   `Boundary.knots`, gehören zusammen übergeben.
 
-Ausgaben drucken wir hier keine ab. Wer sehen will, wie die Kurve auf einen
-konkreten Datensatz reagiert, findet oben im Widget eine eigene Realisierung,
+Ausgaben drucken wir hier keine ab. Wie die Kurve auf einen
+konkreten Datensatz reagiert, zeigt das Widget oben an einer eigenen Realisierung,
 deren Zahlen wir selbst nachgerechnet haben.
 
 ### Selbsttest
