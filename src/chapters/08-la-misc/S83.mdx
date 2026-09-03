@@ -17,7 +17,7 @@ erreichte Genauigkeit genügt. Fast alle folgen dabei demselben Bauplan, einer
 Vorschrift wird immer wieder auf ihr eigenes Ergebnis angewendet, und die
 gesuchte Lösung ist gerade der Punkt, den diese Vorschrift nicht mehr bewegt.
 Bei großen oder :k[dünnbesetzten]{#sparse-matrix} Matrizen lohnt sich dieser
-Handel fast immer: etwas Genauigkeit gegen viel Rechenzeit.
+Tausch fast immer: etwas Genauigkeit gegen viel Rechenzeit.
 
 ### Residuum und Korrekturschritt
 
@@ -77,7 +77,7 @@ Größenordnungen schneller.
 
 ### Die Iteration und ihr Konvergenzsatz
 
-Halten wir die Vorschrift fest, diesmal mit Laufindex.
+Die Vorschrift mit Laufindex:
 
 :::definition[#korrekturiteration (Korrekturiteration)]
 Sei $\bA \in \R^{n \times n}$, $\bb \in \R^n$ und $\bx$ die Lösung von
@@ -107,7 +107,7 @@ Ergebnis des vorigen Schritts. Die Matrix $\bB$ heißt *Iterationsmatrix*; sie
 allein entscheidet, ob die Folge zusammenläuft.
 :::
 
-Und tatsächlich braucht es nur eine Bedingung an $\bB$, damit alles funktioniert.
+Es braucht nur eine Bedingung an $\bB$.
 
 :::satz[#konvergenz-der-korrekturiteration (Konvergenz der Korrekturiteration)]
 Sei $\cgreen{\bx}$ die eindeutige Lösung von $\bA\bx = \bb$. Gilt für die
@@ -204,7 +204,7 @@ Der Fehler schrumpft pro Schritt auf einen festen Bruchteil, nicht um eine feste
 Differenz. Auf logarithmischer Skala aufgetragen bleibt er damit unterhalb einer
 Geraden mit Steigung $\log \corange{\rho}$.
 
-Die Voraussetzung des Satzes ist übrigens stärker, als sie aussieht. Wäre $\bA$
+Die Voraussetzung des Satzes ist stärker, als sie aussieht. Wäre $\bA$
 singulär, so gäbe es ein $\bv \neq \bnull$ mit $\bA\bv = \bnull$, also
 $(\bI_n - \bC\bA)\bv = \bv$ und damit $\corange{\rho} \ge 1$. Aus
 $\corange{\rho} < 1$ folgt somit von selbst, dass $\bA$ invertierbar ist und die
@@ -249,7 +249,7 @@ Mit $\bC = \gamma\bI_n$ kostet ein Iterationsschritt $O(n^3)$ Operationen.
 
 So teuer würde es nur, wenn wir die Iterationsmatrix
 $\bB = \bI_n - \gamma\bA$ in jedem Schritt neu als Matrixprodukt aufbauten.
-Das tut niemand: $\bB$ wird gar nicht gebildet, wir wenden $\bA$ direkt auf den
+$\bB$ wird aber gar nicht gebildet, wir wenden $\bA$ direkt auf den
 aktuellen Vektor an. Wäre ein Schritt so teuer wie eine LU-Zerlegung, hätte das
 ganze Verfahren keinen Zweck.
 :::
@@ -258,8 +258,8 @@ ganze Verfahren keinen Zweck.
 
 ### Wie viele Schritte bis zur Genauigkeit ε?
 
-@satz:konvergenz-der-korrekturiteration verspricht einen Fehler, der geometrisch fällt. Übersetzen wir das
-in die Frage, die uns beim Rechnen wirklich beschäftigt: Wie oft müssen wir
+@satz:konvergenz-der-korrekturiteration verspricht einen Fehler, der geometrisch fällt. Für die
+Praxis heißt das: Wie oft müssen wir
 iterieren, bis eine vorgegebene Toleranz $\eps$ unterschritten ist?
 
 ::::quiz
@@ -364,7 +364,7 @@ $k = O(\log(1/\eps))$.
 
 :::::
 
-Wie freundlich diese Schranke ist, zeigen ein paar Zahlen. Für das Beispiel
+Ein paar Zahlen zu dieser Schranke: Für das Beispiel
 weiter unten ist $\corange{\rho} \approx \corange{0{,}405}$ und
 $\cred{e_0} \approx \cred{0{,}643}$; @eq:zahl-der-iterationen verlangt dann $8$ Schritte für
 $\eps = 10^{-3}$, $15$ Schritte für $\eps = 10^{-6}$ und $23$ Schritte für
@@ -381,7 +381,7 @@ Die Matrix $\bC$ soll gleichzeitig zwei Dinge leisten:
 2. Der Schritt @eq:fixpunktform soll billig auszuwerten sein, also möglichst in
    $O(n^2)$.
 
-Die beiden Wünsche ziehen in verschiedene Richtungen. Mit $\bC = \bA^{-1}$ wäre
+Die beiden Wünsche stehen gegeneinander. Mit $\bC = \bA^{-1}$ wäre
 $\corange{\rho} = 0$, und ein einziger Schritt träfe die Lösung exakt. Nur
 müssten wir dafür $\bA^{-1}$ kennen, und das ist teurer als das
 :k[Gleichungssystem]{#linear-system} selbst. Brauchbare Wahlen sind deshalb
@@ -445,7 +445,7 @@ sich aus, dass Jacobi mehr über $\bA$ weiß als Richardson und Gauss-Seidel meh
 als Jacobi. Als Regel taugt die Reihenfolge trotzdem nicht: Es gibt Matrizen,
 für die Jacobi konvergiert und Gauss-Seidel nicht, und ebenso umgekehrt.
 
-Ein Detail zum Mitnehmen: $\corange{\rho}$ ist die *Norm* der Iterationsmatrix,
+Dabei ist $\corange{\rho}$ die *Norm* der Iterationsmatrix,
 und die ist nur ein hinreichendes Kriterium. Die Gauss-Seidel-Matrix hier hat
 die :k[Eigenwerte]{#eigenvalue-eigenvector} $0$ und $\tfrac{1}{12}$, ihr
 :k[Spektralradius]{#spectral-radius} ist also $0{,}083$, und mit diesem Faktor
@@ -528,7 +528,7 @@ $$
 \;\to\; \cred{0{,}033} \;\to\; \cred{0{,}013} \;\to\; \cdots
 $$
 
-Passt das zur Theorie? Die Iterationsmatrix
+Vergleich mit der Theorie: Die Iterationsmatrix
 $\bI - \gamma\bA$ ist symmetrisch, ihre Norm also der größte Eigenwertbetrag.
 Aus den Eigenwerten $\tfrac{1}{2}(7 \pm \sqrt{5}) \approx 4{,}618$ und
 $2{,}382$ von $\bA$ werden die Eigenwerte $1 - 0{,}25 \cdot 4{,}618 =
@@ -580,7 +580,7 @@ Die Kontraktionsschranke verlangt $\rho<1$.
   letzte Stelle, sind Iterationen die Methode der Wahl.
 :::
 
-Ein praktischer Punkt bleibt offen: Den Fehler
+Ein praktischer Punkt: Den Fehler
 $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|$ können wir nicht messen, denn
 dazu müssten wir $\cgreen{\bx}$ kennen. Abgebrochen wird deshalb nach dem
 Residuum, das jederzeit verfügbar ist. Wegen
@@ -591,8 +591,8 @@ $$
 \le \left\|\bA^{-1}\right\|_2 \left\|\cred{\br^{(k)}}\right\|_2 ,
 $$
 
-ein kleines Residuum bürgt also nur bei gutartiger Matrix für einen kleinen
-Fehler. Das ist dieselbe Warnung wie bei der
+ein kleines Residuum garantiert also nur bei gut konditionierter Matrix einen
+kleinen Fehler. Das ist dieselbe Warnung wie bei der
 :k[Konditionszahl]{#condition-number} in
 @sec:fehler/kondition, diesmal als Abbruchkriterium.
 

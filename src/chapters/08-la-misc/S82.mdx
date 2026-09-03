@@ -1,15 +1,15 @@
 import { PagerankDemo } from "./widgets/S82Pagerank";
 import { PcaDirectionDemo } from "./widgets/S82Pca";
 
-Warum lohnt sich der Aufwand aus @sec:eigenwerte? Weil einige der
-größten Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche,
-bei denen direkte Verfahren keine Chance haben. Drei Beispiele aus Suche,
-Statistik und Bildverarbeitung.
+Der Aufwand aus @sec:eigenwerte lohnt sich, weil einige der größten
+Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche, für die
+direkte Verfahren zu teuer sind. Drei Beispiele aus Suche, Statistik und
+Bildverarbeitung.
 
 ### Google PageRank
 
-Das Problem: eine Rangordnung für $n \approx 10^{10}$ Webseiten. Das Modell
-dahinter passt in eine Zeile. Jede Seite $i$ bekommt einen
+Das Problem: eine Rangordnung für $n \approx 10^{10}$ Webseiten. Das Modell:
+Jede Seite $i$ bekommt einen
 Wichtigkeits-Score $x_i$, und wichtig ist, wer von wichtigen Seiten
 verlinkt wird:
 
@@ -36,8 +36,8 @@ betragsgrößte Eigenwert; der zugehörige Eigenvektor lässt sich nichtnegativ
 wählen und taugt damit überhaupt erst als Score-Verteilung.
 
 Für die [Potenzmethode](#sec-8.1) reicht das noch nicht ganz: @satz:konvergenz-der-potenzmethode
-verlangt einen *einsamen* betragsgrößten Eigenwert, und daran hakt es beim
-rohen Web-Graphen zweimal. Seiten ohne ausgehende Links liefern gar keine
+verlangt einen *einfachen* betragsgrößten Eigenwert, und das ist beim rohen
+Web-Graphen aus zwei Gründen nicht gegeben. Seiten ohne ausgehende Links liefern gar keine
 Spaltensumme $1$, und zerfällt das Netz in mehrere Teile, so gehören zu
 jedem Teil eigene Eigenvektoren zum Eigenwert $1$. Beides lässt sich
 reparieren. Leere Spalten füllen wir gleichverteilt auf: Wer nirgendwohin
@@ -67,8 +67,8 @@ Eigenvektor nichtnegativ wählen lässt, liefert die Perron-Frobenius-Theorie
 für nichtnegative Matrizen.
 :::
 
-Und warum iterativ? Direkte Verfahren an einer Matrix mit $10^{10}$ Zeilen
-sind aussichtslos. Aber $\bA$ ist extrem
+Und warum iterativ? Direkte Verfahren sind an einer Matrix mit $10^{10}$ Zeilen
+nicht durchführbar. Aber $\bA$ ist extrem
 :k[dünn besetzt]{#sparse-matrix}: Eine typische Seite hat nur etwa $10$
 ausgehende Links, der Speicherbedarf ist also $O(n)$ statt $O(n^2)$. Die
 Potenz-Iteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
@@ -191,11 +191,11 @@ c(norm(X_r - X_irlba, "F"), norm(X_r - X_svdr, "F")) / norm(X_r, "F")
 ```
 
 Die beiden Zeilen messen Verschiedenes. Die erste ist der relative
-Frobenius-Fehler der exakten Rang-50-Approximation, also genau die Größe,
+Frobenius-Fehler der exakten Rang-50-Approximation, also die Größe,
 die der [Satz von Eckart und Young](?k=06-svd#sec-6.4) minimiert. Die
 zweite hält die beiden iterativen Rekonstruktionen gegen eben diese exakte
 Lösung. Fällt sie deutlich kleiner aus als die erste, kostet die Abkürzung
-nichts, was neben dem Approximationsfehler ins Gewicht fiele. Genau das ist
+nichts, was neben dem Approximationsfehler ins Gewicht fiele. Das ist
 zu erwarten: `irlba` rechnet dieselbe Rang-50-Zerlegung bis auf eine
 einstellbare Toleranz aus, während `svdr` bewusst etwas Genauigkeit gegen
 Tempo tauscht. Zum Selbst-Ausprobieren: das
@@ -214,7 +214,7 @@ Dabei zählt $\operatorname{nnz}(\cdot)$ die Nicht-Null-Einträge. Zur
 Einordnung: Die [Potenzmethode](#sec-8.1) konvergiert mit der Rate
 $\corange{|\lambda_2/\lambda_1|}$, die QR-Iteration (mit Shifts) oft
 quadratisch und am stabilsten. Als Faustregeln: Für *sparse* Matrizen ist
-Lanczos klar überlegen; wer alle Eigenwerte braucht und Speicher übrig
+Lanczos deutlich überlegen; wer alle Eigenwerte braucht und Speicher übrig
 hat, nimmt die (shifted) QR-Iteration; für wenige Eigenpaare reichen
 Potenzmethode (eines) oder Lanczos ($m \ll n$).
 
