@@ -21,9 +21,8 @@ Daten wurden gerundet gespeichert, und schon das Ablegen einer reellen Zahl als
 :k[Rundungsfehler]{#rounding-error} von der Größenordnung der
 :k[Maschinengenauigkeit]{#machine-epsilon}.
 
-Die entscheidende Beobachtung: Wie stark sich solche Inputfehler im Ergebnis
-niederschlagen, ist eine Eigenschaft des *Problems* $f$, noch bevor
-irgendein Algorithmus ins Spiel kommt. Stellen wir uns die Menge aller Inputs vor, die
+Wie stark sich solche Inputfehler im Ergebnis niederschlagen, ist eine Eigenschaft des
+*Problems* $f$, noch bevor ein Algorithmus ins Spiel kommt. Stellen wir uns die Menge aller Inputs vor, die
 wir von $\bx$ nicht unterscheiden können, weil ihr relativer Fehler unter einer
 Toleranz $\delta$ liegt:
 
@@ -41,7 +40,7 @@ von $E$ der „wahre" Input war.
 
 ### Ein Warnbeispiel: der Kehrwert :id[ein-warnbeispiel-der-kehrwert]
 
-Wie schlimm kann es werden? Ein bewusst extremes Beispiel:
+Ein bewusst extremes Beispiel:
 
 :::beispiel[#kehrwert-nahe-null (Kehrwert nahe null)]
 Sei $f(x) = x^{-1}$ mit Input $x = 10^{-17}$, und sei der gestörte
@@ -73,16 +72,14 @@ Der *relative Outputfehler* ist also der *relative Inputfehler*, multipliziert m
 $\corange{|x| / |x + \cred{\eps}|}$. Für
 $\cred{\eps} \to -10^{-17}$ wächst dieser Faktor über alle Grenzen;
 insgesamt durchläuft der relative Outputfehler das gesamte Intervall
-$[0, \infty)$. Und das, obwohl die Störung absolut winziger ist als jede
-Messgenauigkeit der Welt: $|\cred{\eps}| < 10^{-17}$. Relativ zu
-$x$ kann sie allerdings bis zu 100 % betragen. Diesen Unterschied schauen wir
-uns gleich noch genauer an.
+$[0, \infty)$, obwohl die Störung absolut winzig ist: $|\cred{\eps}| < 10^{-17}$.
+Relativ zu $x$ kann sie allerdings bis zu 100 % betragen. Auf diesen Unterschied
+kommen wir gleich zurück.
 :::
 
 :::interaktiv[Kondition-Spielwiese: der Kehrwert unter Störungen]
-Wie schnell wächst dieser Verstärkungsfaktor eigentlich? Die Frage lässt sich schätzen, bevor
-wir sie ausrechnen: Steht der Input bei $x = 0{,}6$, wie weit müssen wir ihn dann
-stören, damit der relative Outputfehler zehnmal so groß wird wie der relative Inputfehler?
+Wie schnell wächst dieser Verstärkungsfaktor? Steht der Input bei $x = 0{,}6$, wie weit
+müssen wir ihn stören, damit der relative Outputfehler zehnmal so groß wird wie der relative Inputfehler?
 
 <Schaetzfrage
   frage={<>Wie groß muss die Störung <M>{"\\eps"}</M> bei <M>{"x = 0{,}6"}</M> sein, damit der relative Outputfehler zehnmal so groß ist wie der relative Inputfehler?</>}
@@ -165,8 +162,8 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
   sind unabhängig von Maßeinheiten und Skalierung.
 :::
 
-Die Konditionszahl sortiert Probleme in gutartige und bösartige, mit einem wichtigen
-Extremfall:
+Die Konditionszahl sortiert Probleme in gut und schlecht konditionierte, mit einem
+wichtigen Extremfall:
 
 :::bemerkung[#interpretation (Interpretation)]
 
@@ -183,8 +180,7 @@ Extremfall:
   können das Ergebnis beliebig stark verfälschen.
 :::
 
-Mit den Formeln aus @bemerkung:wie-lesen-wir-das können wir nun auch das Rätsel aus dem Warnbeispiel
-auflösen:
+Mit den Formeln aus @bemerkung:wie-lesen-wir-das können wir das Warnbeispiel auflösen:
 
 :::beispiel[#der-kehrwert-aufgeloest (Der Kehrwert, aufgelöst)]
 Für $f(x) = x^{-1}$ ist $f'(x) = -x^{-2}$, also an der Stelle
@@ -194,21 +190,21 @@ $$
 \kappa_{abs} = \left| f'(x) \right| = \frac{1}{x^2} = 10^{34}, \qquad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|} = \frac{x^{-2} \cdot x}{x^{-1}} = 1.
 $$
 
-Absolut gemessen ist das Problem also katastrophal sensitiv ($\kappa_{abs} = 10^{34}$),
-relativ gemessen dagegen völlig harmlos: Asymptotisch wird ein relativer Inputfehler
-von 0,1 % zu einem relativen Outputfehler von ebenfalls 0,1 %. Das Drama in
+Absolut gemessen ist das Problem also extrem sensitiv ($\kappa_{abs} = 10^{34}$),
+relativ gemessen dagegen harmlos: Asymptotisch wird ein relativer Inputfehler
+von 0,1 % zu einem relativen Outputfehler von ebenfalls 0,1 %. Der große Fehler in
 @beispiel:kehrwert-nahe-null entsteht, weil die Störungen dort *relativ zu* $x$
-eben nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe (etwa ein
+nicht klein waren (bis zu 100 %): Ein absoluter Fehler fester Größe (etwa ein
 additiver Messfehler) bedeutet bei winzigem $x$ eine riesige relative
-Störung. Merken wir uns: *Welche* Konditionszahl zählt, hängt davon ab, welche
+Störung. *Welche* Konditionszahl zählt, hängt also davon ab, welche
 Fehlerart im Input unvermeidbar ist. Im Widget oben sehen wir beide Regime: Für
 kleine $\eps/x$ liegt die Verstärkung nahe 1, erst wenn $\eps$ in
-die Größenordnung von $x$ kommt, explodiert sie.
+die Größenordnung von $x$ kommt, wächst sie stark an.
 :::
 
 ### Kondition eines linearen Gleichungssystems :id[kondition-eines-linearen]
 
-Nun zum wichtigsten Beispiel dieses Kapitels. Wir lösen ein
+Das wichtigste Beispiel dieses Kapitels: Wir lösen ein
 :k[lineares Gleichungssystem]{#linear-system}
 $\bA \by = \bx$ mit invertierbarem
 $\bA \in \R^{n \times n}$, wobei die rechte Seite $\bx$ der
@@ -216,7 +212,7 @@ fehlerbehaftete Input ist. Als Problem geschrieben:
 $f(\bx) = \bA^{-1} \bx = \by$, wobei die
 :k[Inverse]{#matrix-inverse} hier nur die Lösungsabbildung
 bezeichnet, nicht etwa eine Empfehlung, sie auszurechnen. Wie sensitiv reagiert die
-Lösung $\by$ auf Störungen von $\bx$? Die Antwort führt genau auf
+Lösung $\by$ auf Störungen von $\bx$? Die Antwort führt auf
 die *Konditionszahl der Matrix*
 $\kappa(\bA) = \left\| \bA \right\| \left\| \bA^{-1} \right\|$,
 die wir in @sec:matrix-spur-norm/eigenschaften kennengelernt
@@ -280,9 +276,9 @@ $$
 
 - Die relative Kondition des Gleichungslösens hängt von der rechten Seite
   $\bx$ ab; $\corange{\kappa(\bA)} = \left\| \bA \right\| \left\| \bA^{-1} \right\|$
-  ist die von $\bx$ unabhängige *Worst-Case*-Schranke – und sie wird
+  ist die von $\bx$ unabhängige *Worst-Case*-Schranke, und sie wird
   für ungünstige $\bx$ auch angenommen. Das erklärt im Nachhinein, warum
-  genau dieses Produkt in
+  dieses Produkt in
   @sec:matrix-spur-norm/eigenschaften den Namen
   *Konditionszahl von* $\bA$ bekommen hat.
 
@@ -299,13 +295,11 @@ $$
   $\bA^\top\bA$).
 :::
 
-@satz:kondition-der-loesung-eines-lgs hat zwei Aussagen, und die zweite ist die überraschende: Die relative Kondition
-hängt von der rechten Seite $\bx$ ab, aber die Schranke
-$\corange{\kappa(\bA)}$ wird für ungünstige $\bx$ auch wirklich
-angenommen.
+Die relative Kondition hängt also von der rechten Seite $\bx$ ab, aber die Schranke
+$\corange{\kappa(\bA)}$ wird für ungünstige $\bx$ auch angenommen.
 
 :::interaktiv[Kondition eines Gleichungssystems: aus dem Kreis wird eine Ellipse]
-Sehen wir uns an, was das geometrisch heißt. Ein Kreis plausibler rechter Seiten um
+Geometrisch: Ein Kreis plausibler rechter Seiten um
 $\bx$ wird von $\bA^{-1}$ zu einer Ellipse verzogen; für welche
 $\bx$ ist diese Ellipse groß gemessen an $\left\| \bA^{-1}\bx \right\|$,
 und für welche nicht?
@@ -351,9 +345,7 @@ schwächster Streckung.
 
 ### Aufgabe: die Kondition einer Summe :id[aufgabe-die-kondition-einer-summe]
 
-Zum Abschluss eine Aufgabe. Versuchen wir es erst selbst, bevor wir die
-Lösung aufklappen. Sie sieht harmlos aus, trägt aber den Keim eines Phänomens in sich,
-das wir schon kennen.
+Zum Abschluss eine Aufgabe; erst selbst versuchen, dann die Lösung aufklappen.
 
 :::beispiel[#aufgabe-kondition-der-summe (Aufgabe: Kondition der Summe)]
 Sei
@@ -407,23 +399,22 @@ nicht.
 
 :::interaktiv[Kondition-Spielwiese: die Summe zweier Zahlen in der Ebene]
 Die Antwort auf Teil 2 lässt sich auch als Landkarte über der Ebene lesen: Für welche Punkte
-$\bx$ ist die Summe gutmütig, für welche katastrophal, und wie schnell wechselt
+$\bx$ ist die Summe gut konditioniert, für welche schlecht, und wie schnell wechselt
 das eine ins andere?
 
 <SummenKonditionWidget />
 
 Die Karte macht zwei Dinge sichtbar, die in der Formel stecken, aber leicht zu übersehen sind.
-Erstens ist sie entlang jedes Strahls durch den Ursprung einfarbig: Da Zähler und Nenner von
+Entlang jedes Strahls durch den Ursprung ist sie einfarbig: Da Zähler und Nenner von
 $\corange{\kappa_{rel}}$ beide homogen vom Grad 1 in $\bx$ sind, zählt
-allein die *Richtung*. Zweitens liegt der ganze Ärger in einer beliebig dünnen
-Umgebung der Antidiagonalen: Bei $\bx = (1{,}5;\ -1{,}45)^\top$ ist
+allein die *Richtung*. Und die schlecht konditionierten Punkte liegen in einer
+beliebig dünnen Umgebung der Antidiagonalen: Bei $\bx = (1{,}5;\ -1{,}45)^\top$ ist
 $\corange{\kappa_{rel}} \approx 59$, also gut zwei verlorene Dezimalstellen; ein
 Schritt weiter auf $(1{,}5;\ -1{,}5)^\top$ und das Problem ist schlecht gestellt.
 :::
 
-Diese Rechnung ist mehr als eine Fingerübung: In
-@sec:stabilitaet wird genau die Kondition der
-Differenz zweier fast gleicher Zahlen erklären, warum die
+In @sec:stabilitaet wird die Kondition der Differenz zweier fast gleicher Zahlen
+erklären, warum die
 Verschiebungsformel für die Varianz numerisch scheitert.
 
 ### Selbsttest
