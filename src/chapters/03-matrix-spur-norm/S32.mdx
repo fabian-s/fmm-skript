@@ -12,9 +12,9 @@ import { S32VecNormWidget } from "./widgets/S32VecNormWidget";
 In @sec:spur haben wir mit der
 Frobenius-Norm bereits eine erste Möglichkeit kennengelernt, die „Größe" einer Matrix in
 einer einzigen Zahl zusammenzufassen. In diesem Abschnitt gehen wir das Thema
-grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm überhaupt ist,
-konstruieren eine ganze Familie von Beispielen und entdecken dann, dass diese
-naheliegenden Normen einen blinden Fleck haben. Das motiviert die Operatornormen des
+grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm ist,
+konstruieren eine Familie von Beispielen und sehen dann, was diesen naheliegenden
+Normen fehlt. Das motiviert die Operatornormen des
 [nächsten Abschnitts](#sec-3.3).
 
 ### Warum Matrixnormen? :id[warum-matrixnormen]
@@ -41,8 +41,7 @@ Frischen wir zunächst das Vorwissen auf. Für Vektoren kennen wir neben der
 $\{\bx : \|\bx\|_p = 1\}$ vergleichen: Raute, Kreis, Quadrat.
 
 :::interaktiv[Auffrischung: Was misst die Norm an der Einheitskugel?]
-Bevor wir weiterlesen, lohnt ein Blick auf diese Formen, und zwar auf die Frage, was sie mit
-der *Zahl* $\|\bx\|_p$ zu tun haben.
+Was haben diese Formen mit der *Zahl* $\|\bx\|_p$ zu tun?
 
 <S32NormBallWidget />
 
@@ -52,8 +51,8 @@ $p \ge 1$ ist diese Kugel konvex, und die Konvexität ist nichts anderes als die
 Dreiecksungleichung in geometrischer Gestalt.
 :::
 
-Diese Denkfigur nehmen wir mit: Auch bei Matrixnormen werden wir gleich fragen, welche
-Menge eine Norm zur „Einheitskugel" erklärt.
+Auch bei Matrixnormen werden wir gleich fragen, welche Menge eine Norm zur
+„Einheitskugel" erklärt.
 
 ### Die Axiome :id[die-axiome]
 
@@ -71,7 +70,7 @@ $c \in \R$ gilt:
 :::
 
 :::bemerkung[#bemerkung-3-2-2]
-Das sind exakt die Axiome einer Vektornorm, und das ist kein Zufall: Die Menge
+Das sind exakt die Axiome einer Vektornorm: Die Menge
 $\R^{m \times n}$ ist ein
 :k[Vektorraum]{#vector-space} (der Dimension
 $mn$), und eine Matrixnorm ist schlicht eine Norm auf diesem Raum.
@@ -84,9 +83,8 @@ zusammenzuspielen), untersuchen wir in
 
 ### Matrixnormen durch Vektorisierung :id[matrixnormen-durch-vektorisierung]
 
-Wie kommen wir am schnellsten an Matrixnormen? Mit einem einfachen Rezept: Wir rollen
-die Matrix zu einem langen Vektor aus und wenden darauf eine Vektornorm an, die wir
-schon kennen.
+Der schnellste Weg zu Matrixnormen: Wir rollen die Matrix zu einem langen Vektor aus
+und wenden darauf eine Vektornorm an, die wir schon kennen.
 
 :::definition[#matrixnormen-vektorisierung (Vektorisierung)]
 Die *Vektorisierung* einer Matrix $\bA \in \R^{m \times n}$
@@ -183,9 +181,7 @@ Vektornormen:
 :::
 
 :::interaktiv[Frobenius-, Summen- und Maximumsnorm: was sehen sie, was nicht?]
-Diese drei Normen sind schnell hingeschrieben. Aber leisten sie auch, was wir von einem
-Größenmaß erwarten? Prüfen wir das an einer Frage, die wir gleich brauchen werden: Können
-zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei Normen
+Leisten diese drei Normen, was wir von einem Größenmaß erwarten? Können zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei Normen
 denselben Wert haben?
 
 <S32VecNormWidget />
@@ -197,16 +193,15 @@ Matrix wird. Alle drei Normen sehen nur die Multimenge der Einträge, nicht ihre
 
 ### Was elementweise Normen nicht sehen :id[was-elementweise-normen-nicht-sehen]
 
-Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Trotzdem
-haben sie einen konzeptionellen Haken: Sie behandeln die Matrix wie einen langen
-Vektor; jede Umordnung der Einträge lässt die Norm unverändert. Eine Matrix ist aber
+Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Sie
+behandeln die Matrix aber wie einen langen Vektor; jede Umordnung der Einträge lässt die
+Norm unverändert. Eine Matrix ist aber
 mehr als eine Tabelle von Zahlen: Sie repräsentiert die
 :k[lineare Abbildung]{#linear-transformation}
 $\bx \mapsto \bA\bx$, und von dieser Abbildung wissen die elementweisen
 Normen nichts. Ihnen fehlt damit auch eine direkte geometrische Interpretation: Was
 genau $\left\| \bA \right\|_F = 5$ über die Wirkung von $\bA$
-auf Vektoren aussagt, bleibt unklar. Wie drastisch das schiefgehen kann, zeigt das
-folgende Beispiel.
+auf Vektoren aussagt, bleibt unklar. Das folgende Beispiel zeigt, wie weit das geht.
 
 :::beispiel[#gleiche-frobenius-norm-voellig (Gleiche Frobenius-Norm, völlig verschiedene Abbildungen)]
 Betrachten wir die drei Matrizen
@@ -226,8 +221,8 @@ $$
 $$
 
 Alle drei Matrizen haben also *dieselbe* Frobenius-Norm
-$\sqrt{2}$. Als Abbildungen könnten sie kaum unterschiedlicher sein.
-Verfolgen wir den Vektor $\bx = (1, 0)^\top$:
+$\sqrt{2}$. Als Abbildungen sind sie sehr verschieden. Verfolgen wir den Vektor
+$\bx = (1, 0)^\top$:
 
 - $\cred{\bA_1}\bx = \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \bx$:
   Die :k[Identität]{#identity-matrix} lässt
@@ -246,7 +241,7 @@ Verfolgen wir den Vektor $\bx = (1, 0)^\top$:
   :k[invertierbar]{#matrix-inverse}); sie kollabiert die
   ganze Ebene auf die $x_1$-Achse.
 
-Zwei längentreue Abbildungen und eine, die eine ganze Dimension vernichtet – und die
+Zwei längentreue Abbildungen und eine, die eine ganze Dimension auslöscht: Die
 Frobenius-Norm kann sie nicht auseinanderhalten.
 :::
 
@@ -286,8 +281,8 @@ Vertauschen wir zwei Einträge einer Matrix, so ändert sich keine der drei
 Vektorisierungsnormen.
 
 Alle drei entstehen als Vektornorm von $\vec(\bA)$, und die $1$-, $2$- und
-$\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab. Genau
-diese Blindheit führt in @sec:operatornormen zu den Operatornormen.
+$\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab. Diese
+Schwäche führt in @sec:operatornormen zu den Operatornormen.
 :::
 
 :::frage{falsch}
