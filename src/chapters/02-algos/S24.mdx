@@ -11,7 +11,7 @@ Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber unhandlich. Für den Vergleich
 von Algorithmen interessiert uns fast immer nur eine Frage: Wie schnell wächst der
 Aufwand, wenn die Problemgröße $n$ groß wird? Die konkreten Vorfaktoren hängen
 ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also eine
-Notation, die genau das Wachstumsverhalten festhält und alles Unwesentliche wegwirft.
+Notation, die nur das Wachstumsverhalten festhält.
 Das leisten die *Landau-Symbole* (engl. *big-O notation*).
 
 ### Klein-o und Groß-O :id[klein-o-und-gross-o]
@@ -125,9 +125,9 @@ entscheidende Garantie liefert.
 ### Rechenregeln :id[rechenregeln]
 
 Aufwandsausdrücke entstehen durch Hintereinanderausführung (Addition der Kosten) und
-Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Praktischerweise
-vertragen sich die Landau-Symbole genau mit diesen beiden Operationen, so dass wir die
-Grenzwertrechnung nicht jedes Mal neu machen müssen:
+Verschachtelung (Multiplikation der Kosten) von Algorithmus-Bausteinen. Die
+Landau-Symbole vertragen sich mit beiden Operationen, sodass wir die Grenzwertrechnung
+nicht jedes Mal neu machen müssen:
 
 :::lemma[#rechenregeln-fuer-landau-symbole (Rechenregeln für Landau-Symbole)]
 Seien $a_n, b_n > 0$ Vergleichsfolgen.
@@ -223,7 +223,7 @@ $$
 
 ### Anwendung: auf den dominanten Term reduzieren :id[anwendung-auf-den-dominanten-term]
 
-Sehen wir die Regeln im Einsatz. Wieder verfolgt $\cred{\text{Rot}}$ die
+Wieder verfolgt $\cred{\text{Rot}}$ die
 Folge $\cred{f_n}$ und $\cgreen{\text{Grün}}$ die Folge
 $\cgreen{g_n}$.
 
@@ -269,20 +269,19 @@ $$
 \log n \,,\quad n \,,\quad n \log n \,,\quad n^2 \,,\quad n^3 \,,\quad 2^n.
 $$
 
-Wie drastisch unterscheiden sich diese Klassen tatsächlich, und ab welchem $n$ überholt ein
-schneller wachsender Term jeden noch so großen Vorfaktor? Der Explorer unten lässt beides
-ausprobieren; der :k[Logarithmus]{#logarithm}-Trick der log-Skala macht dabei aus $2^n$ eine
-Gerade.
+Wie stark unterscheiden sich diese Klassen, und ab welchem $n$ überholt ein schneller
+wachsender Term jeden noch so großen Vorfaktor? Der Explorer unten lässt beides
+ausprobieren; auf der :k[logarithmischen]{#logarithm} Skala wird $2^n$ dabei zu einer
+Geraden.
 
 :::interaktiv[Wachstumsraten-Explorer: wer dominiert wen, und ab wann?]
 <S24WachstumWidget />
 
-Die Antwort auf das „ab wann" fällt ernüchternd aus. Ohne Vorfaktor überholt $2^n$ die
-Kurve $n^2$ endgültig ab $n = 5$; mit dem tausendfachen Vorfaktor $c = 1000$ erst ab
-$n = 19$. Vierzehn Schritte, mehr kauft der Faktor $1000$ nicht. Bei den polynomialen
-Klassen ist es genauso durchsichtig: $n^3 > c\,n^2$ gilt schlicht ab $n > c$. Das ist die
-praktische Bedeutung von $c\,n^2 = O(n^2)$ und $n^2 = o(n^3)$: Vorfaktoren verschieben die
-Schwelle, die Reihenfolge drehen sie nie um.
+Ohne Vorfaktor überholt $2^n$ die Kurve $n^2$ endgültig ab $n = 5$; mit dem
+Vorfaktor $c = 1000$ erst ab $n = 19$. Mehr als vierzehn Schritte kauft der Faktor
+$1000$ also nicht. Bei den polynomialen Klassen gilt $n^3 > c\,n^2$ ab $n > c$. Das ist
+die praktische Bedeutung von $c\,n^2 = O(n^2)$ und $n^2 = o(n^3)$: Vorfaktoren
+verschieben die Schwelle, die Reihenfolge drehen sie nie um.
 :::
 
 ### Selbsttest :id[landau-selbsttest]
@@ -325,10 +324,10 @@ sondern *wie schnell* die Folge verschwindet.
 Setzen wir im Explorer oben den Vorfaktor auf $c = 100$ und schalten $c \cdot n^2$ und
 $2^n$ an: Ab welchem $n$ gilt endgültig $2^n > c \cdot n^2$?
 
-Das Verdikt des Widgets nennt die Schwelle; nachrechnen lässt sie sich auch von Hand:
+Das Widget nennt die Schwelle; nachrechnen lässt sie sich auch von Hand:
 $2^{14} = 16\,384$ liegt noch unter $100 \cdot 14^2 = 19\,600$, aber
-$2^{15} = 32\,768$ liegt über $100 \cdot 15^2 = 22\,500$, und danach zieht die
-Exponentialfunktion endgültig davon.
+$2^{15} = 32\,768$ liegt über $100 \cdot 15^2 = 22\,500$, und danach bleibt die
+Exponentialfunktion vorn.
 :::
 
 :::frage{falsch}
@@ -348,11 +347,8 @@ Vergleichsfolge verwenden.
 
 ::::
 
-Damit haben wir das Handwerkszeug beisammen. Im
-[nächsten Abschnitt](#sec-2.5) setzen wir es ein, um
-die Komplexität unserer Fibonacci-Algorithmen aus
-@sec:fibonacci präzise zu bestimmen – mit
-einem drastischen Ergebnis.
+Im [nächsten Abschnitt](#sec-2.5) setzen wir diese Werkzeuge ein, um die Komplexität
+unserer Fibonacci-Algorithmen aus @sec:fibonacci zu bestimmen.
 
 *Vertiefung: Heath §1.1 (Aufwand und Genauigkeit numerischer Verfahren); Cormen,
 Leiserson, Rivest & Stein, _Introduction to Algorithms_, Kap. 3

@@ -1,14 +1,14 @@
 import { S25FibVergleichWidget } from "./widgets/S25FibVergleich";
 import { S25Aufrufbaum } from "./widgets/S25Aufrufbaum";
 
-Jetzt wird geerntet. In @sec:fibonacci haben wir zwei Algorithmen für
+In @sec:fibonacci haben wir zwei Algorithmen für
 dasselbe Problem kennengelernt (die ersten $n$ Fibonacci-Zahlen zu berechnen) und im
 Widget dort beobachtet, dass die rekursive Variante schon für moderate $n$ unangenehm
 viele Aufrufe produziert. In @sec:aufwand haben wir gelernt, Aufwand zu
-zählen, und in @sec:landau, die Zählerei mit Landau-Symbolen auf ihre
-Ordnung einzudampfen. Mit diesen Werkzeugen können wir den Unterschied zwischen beiden
-Varianten nun präzise machen. Und er ist drastischer, als man zunächst vermuten würde:
-Es geht nicht um einen konstanten Faktor, sondern um *linear gegen exponentiell*.
+zählen, und in @sec:landau, die Zählung mit Landau-Symbolen auf ihre Ordnung zu
+reduzieren. Mit diesen Werkzeugen können wir den Unterschied zwischen beiden Varianten
+nun präzise machen. Es geht dabei nicht um einen konstanten Faktor, sondern um *linear
+gegen exponentiell*.
 
 ### Die iterative Variante: linearer Aufwand :id[die-iterative-variante-linearer-aufwand]
 
@@ -86,17 +86,15 @@ fib_rek <- function(n) {
 }
 ```
 
-Das ist verführerisch elegant: der Code *ist* praktisch die Rekursionsformel. Aber die
-Eleganz täuscht.
+Das ist elegant: Der Code *ist* praktisch die Rekursionsformel.
 
 :::bemerkung[#was-wird-hier-eigentlich-berechnet (Was wird hier eigentlich berechnet?)]
-Zwei Feinheiten sind dabei wichtig: Erstens berechnet $\texttt{fib\_rek}(n)$ nur eine
-*einzelne* Fibonacci-Zahl $F_n$ (mit der Zählung $F_0 = 0$, $F_1 = 1$,
-$F_n = F_{n-1} + F_{n-2}$), nicht den ganzen Vektor der ersten $n$
-Zahlen; in der Notation aus @sec:fibonacci gilt $F_n = x_{n+1}$. Zweitens
-macht das den Vergleich nicht etwa unfair, sondern erst recht vernichtend: Die Rekursion
-braucht schon für *eine* Zahl exponentiell viele Schritte, während die Iteration *alle*
-ersten $n$ Zahlen in $\cblue{O(n)}$ liefert.
+$\texttt{fib\_rek}(n)$ berechnet nur eine *einzelne* Fibonacci-Zahl $F_n$ (mit der
+Zählung $F_0 = 0$, $F_1 = 1$, $F_n = F_{n-1} + F_{n-2}$), nicht den ganzen Vektor der
+ersten $n$ Zahlen; in der Notation aus @sec:fibonacci gilt $F_n = x_{n+1}$. Das macht
+den Vergleich nicht unfair, im Gegenteil: Die Rekursion braucht schon für *eine* Zahl
+exponentiell viele Schritte, während die Iteration *alle* ersten $n$ Zahlen in
+$\cblue{O(n)}$ liefert.
 :::
 
 Was kostet ein Aufruf von $\texttt{fib\_rek}(n)$? Außer den beiden rekursiven Aufrufen
@@ -118,8 +116,8 @@ selbst aufzurufen. Für $n \ge 2$ besteht der Aufrufbaum aus der Wurzel (dem Auf
 und den beiden vollständigen Teilbäumen von $\texttt{fib\_rek}(n-1)$ und
 $\texttt{fib\_rek}(n-2)$, zusammen also $1 + \cred{T(n-1)} + \cred{T(n-2)}$ Aufrufe.
 
-Bevor wir $\cred{T(n)}$ allgemein abschätzen, sehen wir uns den Aufrufbaum einmal konkret
-an. Dann ist auch sofort klar, *woher* die Explosion kommt.
+Bevor wir $\cred{T(n)}$ allgemein abschätzen, sehen wir uns den Aufrufbaum für ein
+konkretes $n$ an. Daran wird klar, *woher* das Wachstum kommt.
 
 :::beispiel[#der-aufrufbaum-fuer-n-5 (Der Aufrufbaum für n = 5)]
 Der Aufruf $\texttt{fib\_rek}(5)$ erzeugt den folgenden Baum (jeder Knoten ist ein
@@ -133,15 +131,14 @@ zusammen $1 + 1 + 2 + 3 + 5 + 3 = \cred{15}$ Aufrufe. Das passt zum Lemma: Aus
 $\cred{T(2)} = 3$ und $\cred{T(3)} = 1 + 3 + 1 = 5$ folgt $\cred{T(4)} = 1 + 5 + 3 = 9$
 und $\cred{T(5)} = 1 + 9 + 5 = \cred{15}$. $\checkmark$
 
-Die Wurzel des Übels ist rot markiert: Der komplette Teilbaum unter
+Die Ursache ist rot markiert: Der komplette Teilbaum unter
 $\texttt{fib\_rek}(3)$ wird zweimal durchgerechnet, denn die Rekursion „vergisst" alles,
 was sie schon berechnet hat. Bei größerem $n$ verdoppeln sich diese Dopplungen immer
 weiter. Die iterative Variante berechnet dagegen jede Zahl genau einmal, weil sie die
 Zwischenergebnisse im Vektor aufbewahrt.
 :::
 
-Jetzt die allgemeine Analyse. Kurz und bündig argumentiert: Jeder Aufruf erzeugt bis zu 2
-weitere Aufrufe, diese wieder je 2, und so fort über bis zu $n$ Ebenen, insgesamt
+Allgemein: Jeder Aufruf erzeugt bis zu 2 weitere Aufrufe, diese wieder je 2, und so fort über bis zu $n$ Ebenen, insgesamt
 höchstens $1 + 2 + 4 + \dots + 2^n$ Aufrufe, also $O(2^n)$. Das folgende
 Resultat macht dieses Argument präzise und ergänzt die Gegenrichtung: Das Wachstum ist
 auch wirklich exponentiell, nicht nur durch eine Exponentialfunktion beschränkt.
@@ -228,10 +225,9 @@ Steigung verrät die Basis.
 :::interaktiv[Gezählte Schritte gegen die Landau-Vorhersage]
 <S25FibVergleichWidget />
 
-Dass wir dafür die :k[logarithmische]{#logarithm} Skala brauchen, um beide Varianten
-überhaupt in ein gemeinsames Bild zu bekommen, ist selbst schon die halbe Pointe. Die
-Steigung der roten Punkte liegt dabei sichtbar unter $\log_{10} 2 \approx 0{,}301$. Woran
-liegt das?
+Schon dass wir die :k[logarithmische]{#logarithm} Skala brauchen, um beide Varianten
+in ein gemeinsames Bild zu bekommen, sagt viel. Die Steigung der roten Punkte liegt
+dabei sichtbar unter $\log_{10} 2 \approx 0{,}301$. Woran liegt das?
 :::
 
 ::::vertiefung[Die exakte Aufrufzahl]
@@ -250,10 +246,9 @@ $$
 
 Die Fibonacci-Zahlen selbst wachsen wie $\varphi^n$ mit dem goldenen Schnitt
 $\varphi = \left(1 + \sqrt{5}\right)/2 \approx 1{,}618$ (Vertiefung unten), also ist
-$\cred{T(n)} = O\left(\varphi^n\right)$: Der wahre Wachstumsfaktor liegt sauber zwischen
-unseren Schranken. Für das Urteil *„katastrophal langsam"* ist das aber einerlei: Jede
-Basis $q > 1$ bedeutet, dass eine um $1$ größere Eingabe den Aufwand um den *Faktor* $q$
-vervielfacht.
+$\cred{T(n)} = O\left(\varphi^n\right)$: Der wahre Wachstumsfaktor liegt zwischen
+unseren Schranken. Am Urteil ändert das nichts: Jede Basis $q > 1$ bedeutet, dass eine
+um $1$ größere Eingabe den Aufwand um den *Faktor* $q$ vervielfacht.
 :::
 
 ::::
@@ -266,7 +261,7 @@ $\psi = 1 - \varphi \approx -0{,}618$. Weil $|\psi| < 1$ ist, stirbt der zweite 
 und es bleibt $F_{n+1} \approx \varphi^{n+1}/\sqrt{5}$; mit $\cred{T(n)} = 2 F_{n+1} - 1$
 also $\cred{T(n)} = O\left(\varphi^n\right)$.
 
-Im Widget oben ist genau das zu sehen: Die gezählten Aufrufe liegen auf einer Geraden mit
+Im Widget oben ist das zu sehen: Die gezählten Aufrufe liegen auf einer Geraden mit
 Steigung $\log_{10} \varphi \approx 0{,}209$, nicht auf der steileren $2^n$-Geraden mit
 Steigung $\log_{10} 2 \approx 0{,}301$.
 :::
@@ -274,9 +269,9 @@ Steigung $\log_{10} 2 \approx 0{,}301$.
 ### Der Vergleich: Ordnung schlägt Konstante :id[der-vergleich-ordnung-schlaegt-konstante]
 
 Was bedeuten $\cblue{O(n)}$ gegen $\cred{O(\varphi^n)}$ in echten Zahlen? Setzen wir unsere
-gezählten Aufwände ein – iterativ $\cblue{4n - 6}$ Operationen (die additive Konstante $c$
+gezählten Aufwände ein, iterativ $\cblue{4n - 6}$ Operationen (die additive Konstante $c$
 aus dem Beweis von @satz:komplexitaet-der-iterativen-variante lassen wir weg), naiv rekursiv
-$\cred{T(n) = 2F_{n+1} - 1}$ Aufrufe – und rechnen als grobes Modell mit $10^9$
+$\cred{T(n) = 2F_{n+1} - 1}$ Aufrufe, und rechnen als grobes Modell mit $10^9$
 Elementarschritten pro Sekunde (ein realer Funktionsaufruf in R kostet deutlich mehr, das
 macht es nur schlimmer):
 
@@ -287,12 +282,11 @@ macht es nur schlimmer):
 | 50 | 194 | ≈ 4,1 · 10¹⁰ | ≈ 41 s |
 | 100 | 394 | ≈ 1,1 · 10²¹ | ≈ 36 000 Jahre |
 
-Die iterative Spalte bleibt dabei durchgehend im Nanosekundenbereich. Das ist die zentrale
-Botschaft dieses Kapitels: Der Unterschied zwischen den beiden Varianten ist kein
-Implementierungsdetail und keine Frage schnellerer Hardware: Ein tausendmal schnellerer
-Rechner verschiebt die $36\,000$ Jahre lediglich auf $36$ Jahre. Nur ein *besserer
-Algorithmus* hilft, und die Landau-Notation ist das Instrument, mit dem wir „besser"
-präzise ausdrücken: *Die iterative Lösung ist dramatisch effizienter; sie liegt in einer
+Die iterative Spalte bleibt dabei durchgehend im Nanosekundenbereich. Der Unterschied
+zwischen den beiden Varianten ist kein Implementierungsdetail und keine Frage schnellerer
+Hardware: Ein tausendmal schnellerer Rechner verschiebt die $36\,000$ Jahre lediglich auf
+$36$ Jahre. Nur ein *besserer Algorithmus* hilft, und die Landau-Notation ist das
+Instrument, mit dem wir „besser" präzise ausdrücken: *Die iterative Lösung liegt in einer
 anderen Komplexitätsklasse.*
 
 ### Selbsttest
@@ -348,17 +342,16 @@ Jahre. Die Iteration braucht für dieselbe Zahl $314$ Operationen.
 
 ### Zusammenfassung des Kapitels
 
-In diesem Kapitel haben wir den Grundwortschatz des Skripts aufgebaut: Ein *numerisches
+In diesem Kapitel haben wir die Grundbegriffe des Skripts eingeführt: Ein *numerisches
 Problem* ist eine Abbildung $f$, die Eingabedaten $\bx$ eine gesuchte Lösung $f(\bx)$
 zuordnet, und ein *Algorithmus* ist eine endliche Folge elementarer Rechenschritte, die
 diese Lösung exakt oder näherungsweise berechnet (Abschnitte @num:algos/probleme-algorithmen–@num:algos/fibonacci).
 Gute Algorithmen erkennen wir daran, dass sie mit wenig Laufzeit und Speicher auskommen;
 beides messen wir als Funktion der Problemgröße $n$ (@sec:aufwand) und
 beschreiben es nur noch durch seine Ordnung, mit Landau-Symbolen und ihren Rechenregeln
-(@sec:landau). Die Fibonacci-Fallstudie dieses Abschnitts hat gezeigt, wie
-viel diese komprimierte Sprache leistet: $\cblue{O(n)}$ gegen
-$\cred{O(\varphi^n)}$ markiert den
-Unterschied zwischen „sofort fertig" und „Jahrtausende". Im nächsten Kapitel kommt die
+(@sec:landau). Die Fibonacci-Fallstudie dieses Abschnitts hat gezeigt, was diese
+Sprache leistet: $\cblue{O(n)}$ gegen $\cred{O(\varphi^n)}$ ist der Unterschied
+zwischen „sofort fertig" und „Jahrtausende". Im nächsten Kapitel kommt die
 Sprache für Fehlermaße hinzu: Normen. Kapitel 4 nutzt sie dann, um Rundungsfehler,
 Kondition und Stabilität präzise zu behandeln.
 
