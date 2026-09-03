@@ -13,7 +13,6 @@ Pivotierung stabil bleibt: die Cholesky-Zerlegung.
 
 ### SPD-Matrizen
 
-Der entscheidende Spezialfall trägt eine Abkürzung im Namen:
 **SPD**-Matrizen sind **s**ymmetrisch und **p**ositiv **d**efinit.
 
 :::definition[#spd-matrix (SPD-Matrix)]
@@ -43,7 +42,7 @@ $\bx^\top\bA\bx \leq 0$. Für SPD muss die strikte Ungleichung dagegen für
 alle Richtungen gelten.
 :::
 
-Das Paradebeispiel liefert die Statistik selbst: Jede
+Das wichtigste Beispiel aus der Statistik: Jede
 :k[Kovarianzmatrix]{#covariance-matrix} $\bSigma = \var(\bx)$ ist
 symmetrisch und positiv semidefinit, denn für jeden festen Vektor
 $\ba \neq \bnull$ ist $\ba^\top \bSigma \ba = \var(\ba^\top \bx) \geq 0$,
@@ -54,8 +53,8 @@ zusammenfällt.
 
 ### SPD-Matrizen in Statistik und ML
 
-Wo immer in Statistik und maschinellem Lernen gerechnet wird, tauchen
-SPD-Matrizen auf. Drei große Familien:
+In Statistik und maschinellem Lernen treten SPD-Matrizen vor allem in drei
+Familien auf:
 
 1. **Kovarianzmatrizen** $\bSigma = \E[(\bx - \bmu)(\bx - \bmu)^\top]$:
    Sie parametrisieren multivariate Normalverteilungen
@@ -73,9 +72,9 @@ SPD-Matrizen auf. Drei große Familien:
 3. **Hesse-Matrizen**
    $\bH = \bigl[\tfrac{\partial^2}{\partial x_i \partial x_j} f(\bx)\bigr]_{i,j}$
    (:k[Hesse-Matrix]{#hessian-matrix}): In der Optimierung
-   charakterisieren sie :k[Konvexität]{#convexity} und treiben das
-   :k[Newton-Verfahren]{#newtons-method} und andere Optimierer zweiter
-   Ordnung an. Ihr statistisches Gegenstück ist die Fisher-Information
+   charakterisieren sie :k[Konvexität]{#convexity} und bilden die Grundlage
+   des :k[Newton-Verfahrens]{#newtons-method} und anderer Optimierer zweiter
+   Ordnung. Ihr statistisches Gegenstück ist die Fisher-Information
    $\E\bigl[-\tfrac{\partial^2}{\partial \theta_i \partial \theta_j} \log L(\btheta)\bigr]_{i,j}$
    der Log-:k[Likelihood]{#likelihood}.
 
@@ -91,8 +90,8 @@ Warum lohnt sich diese Klasse für die Numerik? SPD-Matrizen garantieren:
 ### Der Zerlegungssatz
 
 Bei einer symmetrischen Matrix steckt die gesamte Information schon in
-einer Dreieckshälfte. Es wäre verschwenderisch, wenn die Zerlegung das
-ignorieren würde. Tatsächlich können wir für SPD-Matrizen die Faktoren
+einer Dreieckshälfte, und die Zerlegung sollte das ausnutzen. Für
+SPD-Matrizen können wir die Faktoren
 $\bL$ und $\bU$ der LU-Zerlegung so wählen, dass $\bU = \bL^\top$ gilt:
 Die Symmetrie von $\bA$ vererbt sich an die Zerlegung.
 
@@ -209,7 +208,7 @@ $$
 
 ::::
 
-Achten wir zum Schluss auf den Quantor: Die strikte Ungleichung
+Zum Quantor: Die strikte Ungleichung
 $\bx^\top (\bB - \bl\bl^\top) \bx > 0$ gilt natürlich nur für
 $\bx \neq \bnull$; deshalb haben wir ihn überall mitgeführt.
 :::::
@@ -265,8 +264,8 @@ $\bL\bL^\top = \begin{pmatrix} 4 & 2 \\ 2 & 3 \end{pmatrix} = \bA$.
 :::
 
 Jede Gleichung enthielt genau eine neue Unbekannte; in dieser Reihenfolge
-löst sich das System also von selbst auf. Und dass unter der Wurzel mit
-$3 - 1 = 2 > 0$ etwas Positives stand, war kein Glück: Der Beweis von
+löst sich das System also von selbst auf. Dass unter der Wurzel mit
+$3 - 1 = 2 > 0$ etwas Positives stand, war kein Zufall: Der Beweis von
 @satz:cholesky-zerlegung zeigt, dass das für SPD-Matrizen immer so ausgeht.
 
 Für allgemeines $n$ liefert derselbe Vergleich das Rezept, das der Beweis
@@ -300,9 +299,9 @@ Diagonaleintrag folgen die Einträge darunter.
 Zufallszahlengeneratoren liefern uns unabhängige Standardnormalvariablen,
 also Vektoren $\bx$ mit $\E[\bx] = \bnull$ und $\var(\bx) = \bI_d$.
 Gebraucht werden in der Statistik aber meist *korrelierte* Ziehungen mit
-vorgegebener Kovarianzmatrix $\bSigma$. Der Cholesky-Faktor schlägt die
-Brücke: Als lineare Abbildung verformt er unkorreliertes Rauschen in genau
-die gewünschte Abhängigkeitsstruktur. Nachrechnen lässt sich das mit zwei
+vorgegebener Kovarianzmatrix $\bSigma$. Der Cholesky-Faktor liefert sie: Als
+lineare Abbildung verformt er unkorreliertes Rauschen in die gewünschte
+Abhängigkeitsstruktur. Nachrechnen lässt sich das mit zwei
 Eigenschaften des :k[Erwartungswerts]{#expected-value}: Er ist linear, und
 konstante Matrizen dürfen wir aus ihm herausziehen.
 
@@ -380,7 +379,7 @@ wenn $\bA$ zwar SPD, aber so
 [schlecht konditioniert](?k=04-fehler#sec-4.2) ist, dass Rundungsfehler
 den Unterschied verwischen? Dann läuft der Koeffizientenvergleich
 irgendwann auf eine Wurzel aus null oder sogar aus einer negativen Zahl,
-und die gewohnte Rechnung bricht zusammen. Die Rettung kennen wir sinngemäß schon von der LU-Zerlegung:
+und die gewohnte Rechnung bricht ab. Abhilfe schafft wie bei der LU-Zerlegung die
 Pivotierung. Diesmal vertauschen wir Zeilen *und* Spalten symmetrisch
 (*complete pivoting*), damit die Symmetrie erhalten bleibt:
 
@@ -389,7 +388,7 @@ $$
 $$
 
 mit einer :k[Permutationsmatrix]{#permutation-matrix} $\bP$. Diese
-Variante hat bemerkenswerte Eigenschaften:
+Variante hat drei nützliche Eigenschaften:
 
 - **Rang-aufdeckend:** Nullspalten in $\bL$ zeigen direkt den Rangabfall
   von $\bA$ an; die Zerlegung bestimmt also nebenbei den Rang der Matrix.

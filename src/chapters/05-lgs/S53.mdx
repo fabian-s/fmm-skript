@@ -25,7 +25,7 @@ Einsen auf der Diagonalen und einer oberen Dreiecksmatrix $\bU$ heißt
 *LU-Zerlegung* (LU decomposition) von $\bA$.
 :::
 
-Warum lohnt sich diese Buchführung? Sobald wir $\bA = \bL\bU$ einmal
+Sobald wir $\bA = \bL\bU$ einmal
 berechnet haben, können wir $\bA\bx = \bb_i$ für *jedes* $\bb_i$ billig
 lösen, denn beide Faktoren sind Dreiecksmatrizen:
 
@@ -103,9 +103,9 @@ $\cgreen{l_{ik}}$ aus der Elimination.
 :::
 
 :::::vertiefung[Die Eliminationsmatrizen sauber zusammenrechnen]
-Der Beweis rechnet mit einer kompakten Schreibweise für $\bL_k$; die
-eigentliche Arbeit steckt darin, dass sich die Inversen ohne jede
-Nebenwirkung aufeinanderstapeln.
+Der Beweis rechnet mit einer kompakten Schreibweise für $\bL_k$; der
+entscheidende Punkt ist, dass sich das Produkt der Inversen ohne
+Mischterme ausmultiplizieren lässt.
 
 ::::beweis
 
@@ -213,7 +213,7 @@ $$
 \bU = \begin{pmatrix} 2 & 1 & -1 \\ 0 & -8 & 2 \\ 0 & 0 & 3 \end{pmatrix} .
 $$
 
-Die Probe $\bL\bU = \bA$ geht auf (nachrechnen!).
+Die Probe $\bL\bU = \bA$ geht auf.
 :::
 
 ### Wann existiert die Zerlegung?
@@ -236,9 +236,8 @@ Sei $\bA \in \R^{n \times n}$ invertierbar. Dann gilt:
 :::
 
 Die Richtung „kein Nullpivot $\Rightarrow$ Zerlegung existiert" ist
-@satz:die-gauss-elimination-liefert-eine-lu; auf die übrigen Beweisteile verzichten wir. Wichtiger ist ein
-Warnbeispiel, das zeigt, dass die Bedingung in Teil 1 keine leere
-Vorsichtsmaßnahme ist:
+@satz:die-gauss-elimination-liefert-eine-lu; auf die übrigen Beweisteile verzichten wir. Ein
+Beispiel zeigt, dass die Bedingung in Teil 1 nötig ist:
 
 :::beispiel[#invertierbar-aber-keine-lu-zerlegung (Invertierbar, aber keine LU-Zerlegung)]
 Die Vertauschungsmatrix
@@ -345,7 +344,7 @@ pivotierte Zerlegung $\bP\bA = \bL\bU$ aus @satz:existenz-der-lu-zerlegung. Zum 
 $\bA\bx = \bb$ substituieren wir dann entlang $\bL\bU\bx = \bP\bb$: Die
 rechte Seite wird mitvertauscht, sonst ändert sich nichts.
 
-Pivotierung ist aber mehr als eine Notfallmaßnahme für exakte Nullen. Auch
+Pivotierung brauchen wir nicht nur bei exakten Nullen. Auch
 ein sehr kleines Pivot $\cred{m_{kk}} \approx 0$ ist gefährlich: Die
 Multiplikatoren $l_{ik} = m_{ik}/\cred{m_{kk}}$ werden dann riesig, beim
 Abziehen der aufgeblähten Pivotzeile gehen die ursprünglichen Einträge der
@@ -364,7 +363,7 @@ Was verändert der Zeilentausch am Rundungsfehler eines kleinen Pivots?
 Ohne Zeilentausch wächst der Fehler mit jedem Zehnerschritt von $\epsilon$ mit:
 Bei $\epsilon = 10^{-12}$ stimmen nur noch vier Nachkommastellen, und ab
 $\epsilon \approx 10^{-16}$ schluckt die Subtraktion $1 - 1/\epsilon$ den Eintrag
-$a_{22}$ vollständig – die berechnete Zerlegung gehört dann zu einer anderen
+$a_{22}$ vollständig; die berechnete Zerlegung gehört dann zu einer anderen
 Matrix. Die Zeile mit Zeilentausch bleibt über den ganzen Reglerbereich bei
 Maschinengenauigkeit. Am Problem ändert der Tausch nichts, nur am Rechenweg.
 :::
@@ -374,8 +373,7 @@ Maschinengenauigkeit. Am Problem ändert der Tausch nichts, nur am Rechenweg.
 Was kostet die Zerlegung? Zählen wir zuerst einen einzelnen Schritt nach.
 Im $k$-ten Schritt multiplizieren wir das aktuelle System mit $\bL_k$; die
 ersten $k - 1$ Spalten der Arbeitsmatrix haben ihre Nullen unter der
-Diagonalen bereits. Vor dem Nachrechnen ein Selbsttest
-(:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
+Diagonalen bereits (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
 @sec:algos/landau):
 
 ::::quiz
@@ -384,7 +382,7 @@ Diagonalen bereits. Vor dem Nachrechnen ein Selbsttest
 Für den $k$-ten Schritt müssen wir das volle Matrixprodukt $\bL_k \bM$
 ausrechnen; er kostet also $O(n^3)$ Operationen.
 
-Niemand multipliziert $\bL_k$ wirklich aus. $\bL_k$ unterscheidet sich von
+$\bL_k$ wird nicht ausmultipliziert. $\bL_k$ unterscheidet sich von
 der Einheitsmatrix nur in Spalte $k$: Das Produkt zieht lediglich von den
 Zeilen $k+1, \dots, n$ je ein Vielfaches der Pivotzeile ab; alle anderen
 Zeilen bleiben unverändert stehen.
@@ -432,11 +430,10 @@ Für invertierbares $\bA \in \R^{n \times n}$ gilt:
    derselben Matrix kostet insgesamt $O(n^3 + J n^2)$.
 :::
 
-Teil 3 lebt davon, dass $\bL$ und $\bU$ nur von $\bA$ abhängen und nicht von
+Teil 3 beruht darauf, dass $\bL$ und $\bU$ nur von $\bA$ abhängen und nicht von
 $\bb$: Die teure Elimination fällt kein zweites Mal an, für jede weitere
-rechte Seite bleiben nur die beiden billigen Substitutionen. Dieses Muster
-trägt weit über die LU-Zerlegung hinaus – auch die QR-Zerlegung für
-Kleinste-Quadrate-Probleme (@sec:kq/qr) folgt ihm.
+rechte Seite bleiben nur die beiden billigen Substitutionen. Demselben Muster
+folgt auch die QR-Zerlegung für Kleinste-Quadrate-Probleme (@sec:kq/qr).
 
 ::::::vertiefung[Herleitung der Aufwandsordnung und exakte Kosten]
 
@@ -502,8 +499,8 @@ erfüllt, zum Beispiel:
 
 Für symmetrische, positiv definite Matrizen halbiert etwa die
 Cholesky-Zerlegung des nächsten Abschnitts (@sec:cholesky) den
-Aufwand. Für all diese Fälle existieren hervorragende, über Jahrzehnte
-gereifte Implementierungen; man schreibt solche Algorithmen selten selbst.
+Aufwand. Für all diese Fälle existieren ausgereifte Implementierungen; man
+schreibt solche Algorithmen selten selbst.
 :::
 
 *Vertiefung: Heath §2.4 (Gauß-Elimination, LU-Zerlegung, Pivotierung) und
