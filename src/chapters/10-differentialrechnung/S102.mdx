@@ -1,7 +1,7 @@
 import { Gradientenfeld, RichtungsWidget, AbstiegStepper } from "./widgets/S102Gradient";
 
 In @sec:linearisierung haben wir das Ableiten so weit gefasst, dass es in jedem
-normierten Raum funktioniert. Der Preis dafür ist Abstraktheit: Die Ableitung ist dort eine
+normierten Raum funktioniert. Dafür ist der Begriff abstrakt: Die Ableitung ist dort eine
 lineare Abbildung, kein Objekt, mit dem wir rechnen könnten. Für jede Kombination von Ein-
 und Ausgabeformat brauchen wir deshalb eine konkrete Gestalt, in der diese lineare Abbildung
 steckt, also eine Zahl, einen Vektor oder eine Matrix.
@@ -10,8 +10,8 @@ steckt, also eine Zahl, einen Vektor oder eine Matrix.
 
 Alle Ableitungen, die wir aus der Analysis kennen, sind Spezialfälle der Fréchet-Ableitung.
 Neu und für die Statistik wichtig sind die Fälle, in denen Skalare, Vektoren oder Matrizen
-als Eingabe oder als Ausgabe auftreten. Wir ordnen sie in einer Tabelle an, und diese
-Tabelle ist zugleich der Fahrplan für die nächsten drei Abschnitte.
+als Eingabe oder als Ausgabe auftreten. Wir ordnen sie in einer Tabelle an, die zugleich
+die nächsten drei Abschnitte gliedert.
 
 | Eingabe ↓ / Ausgabe → | Skalar $y$ | Vektor $\by$ | Matrix $\bY$ |
 | --- | --- | --- | --- |
@@ -55,14 +55,14 @@ $$
 :::
 
 Dass dieser Zeilenvektor wirklich die Ableitung im Sinne von
-@sec:linearisierung ist, kostet ein kurzes Argument. Die Formate passen jedenfalls:
+@sec:linearisierung ist, zeigt ein kurzes Argument. Die Formate passen:
 Das Produkt einer $1 \times n$-Zeile mit einer $n \times 1$-Spalte ist eine Zahl, und
-$\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist in $\bh$ linear. Dass es genau diese lineare
+$\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist in $\bh$ linear. Dass es diese lineare
 Abbildung sein muss, sehen wir, indem wir $\bh = t\,\be_j$ mit dem $j$-ten Einheitsvektor
 $\be_j$ einsetzen und durch $t$ teilen: Links steht dann der Differenzenquotient von $f$ in
 Richtung der $j$-ten Koordinate, rechts $\cgreen{D_{\bx} f(\be_j)}$ plus ein Term, der mit
 $t \to 0$ verschwindet. Der Grenzwert links ist $\partial f(\bx)/\partial x_j$, also ist
-$\cgreen{D_{\bx} f(\be_j)}$ genau die $j$-te partielle Ableitung. Eine lineare Abbildung ist
+$\cgreen{D_{\bx} f(\be_j)}$ die $j$-te partielle Ableitung. Eine lineare Abbildung ist
 durch ihre Werte auf den $n$ Koordinatenrichtungen schon festgelegt, es bleibt also keine
 andere Wahl. (@lemma:die-matrix-der-linearen-naeherung in @sec:jacobi führt dasselbe Argument für
 beliebige Ausgabeformate aus.) Die lineare Approximation lautet damit
@@ -94,15 +94,15 @@ Spaltenkonvention kehrt sich diese Reihenfolge um und die Faktoren tragen Transp
 
 Bezahlen müssen wir dafür an einer anderen Stelle. Wo der Gradient als Punkt oder als
 Schritt im $\R^n$ auftritt, etwa in einem Optimierungsverfahren, steht der
-:k[transponierte]{#transpose} Gradient. Genau das passiert weiter unten im
+:k[transponierte]{#transpose} Gradient. Das passiert weiter unten im
 Gradientenabstieg.
 :::
 
 ### Was der Gradient über $f$ verrät
 
-Die Definition zählt nur die Steigungen entlang der $n$ Koordinatenachsen auf. Sie sagt
-scheinbar nichts über schräge Richtungen. Tatsächlich steckt darin schon die vollständige
-Information, und @eq:eq-10-2-1 liefert sie uns.
+Die Definition zählt nur die Steigungen entlang der $n$ Koordinatenachsen auf. Über
+schräge Richtungen sagt sie scheinbar nichts. Die vollständige Information steckt aber
+schon darin, und @eq:eq-10-2-1 liefert sie.
 
 :::definition[#richtungsableitung (Richtungsableitung)]
 Sei $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$. Die *Richtungsableitung* von $f$ in $\bx$
@@ -179,7 +179,7 @@ das negative den Wert $-\left\|\bg\right\|_2$.
 :::::
 
 :::bemerkung[#der-gradient-steht-senkrecht-auf-der (Der Gradient steht senkrecht auf der Höhenlinie)]
-Interessant ist auch das andere Extrem. Für Richtungen $\bd$ mit
+Das andere Extrem: Für Richtungen $\bd$ mit
 $\corange{\nabla f(\bx)}\bd = 0$ verschwindet in @eq:richtungsableitung der lineare Term, und $f$ ändert
 sich in erster Ordnung überhaupt nicht. Solche Richtungen stehen senkrecht auf
 $\corange{\nabla f(\bx)^\top}$. Ist $f$ in einer Umgebung von $\bx$ stetig differenzierbar
@@ -189,7 +189,7 @@ dort nach dem Satz über implizite Funktionen eine glatte Kurve oder Fläche, f�
 die Höhenlinie durch $\bx$. Verschwindet der Gradient dagegen, kann die Niveaumenge eine
 Ecke haben, und ein Beispiel dafür folgt gleich.
 
-Beide Beobachtungen zusammen ergeben das vertraute Bild einer Landkarte: Der Gradient steht
+Beide Beobachtungen zusammen ergeben das Bild einer Landkarte: Der Gradient steht
 senkrecht auf der Höhenlinie und zeigt bergauf, und je enger die Höhenlinien beieinander
 liegen, desto größer ist $\left\|\corange{\nabla f(\bx)}\right\|_2$.
 :::
@@ -242,14 +242,13 @@ wird:
 | $(0{,}05;\, 0{,}05)$ | $0{,}0707$ | $0{,}015$ | $0{,}212$ |
 | $(0{,}01;\, 0{,}01)$ | $0{,}0141$ | $0{,}0006$ | $0{,}042$ |
 
-Die letzte Spalte geht gegen null, und das ist genau die Aussage
+Die letzte Spalte geht gegen null, und das ist die Aussage
 $\cred{o(\left\|\bh\right\|)}$.
 :::
 
 :::interaktiv[Gradient und Höhenlinie zum Verschieben]
 @bemerkung:der-gradient-steht-senkrecht-auf-der behauptet etwas Geometrisches über einen Vektor aus lauter partiellen
-Ableitungen: Er steht senkrecht auf der Höhenlinie. Das lässt sich nachsehen, statt es zu
-glauben.
+Ableitungen: Er steht senkrecht auf der Höhenlinie. Das lässt sich nachprüfen.
 
 <Gradientenfeld />
 
@@ -266,9 +265,9 @@ Richtung mehr aus: Das ist die Stelle, an der die Höhenlinie zum Niveau $0$ aus
 kreuzenden Geraden besteht.
 :::
 
-Damit bleibt die zweite Behauptung, die von @satz:richtung-des-staerksten-anstiegs: keine Richtung steigt steiler an
-als der Gradient. Und gleich die Anschlussfrage: Wie viel vom maximalen Anstieg bleibt
-übrig, wenn wir schräg dazu laufen?
+Damit bleibt die zweite Behauptung, die von @satz:richtung-des-staerksten-anstiegs: Keine Richtung steigt steiler an
+als der Gradient. Wie viel vom maximalen Anstieg bleibt übrig, wenn wir schräg dazu
+laufen?
 
 :::interaktiv[Der Kompass der Richtungen]
 Der Kompass zeigt für jede Richtung $\bd$, wie stark $f$ in diese Richtung ansteigt: Der
@@ -278,7 +277,7 @@ Näherung aus @eq:richtungsableitung.
 
 <RichtungsWidget />
 
-Die blaue Kurve ist ein Kreis, der den Mittelpunkt berührt, also genau der Graph von
+Die blaue Kurve ist ein Kreis, der den Mittelpunkt berührt, also der Graph von
 $\theta \mapsto \left\|\corange{\nabla f(\bx)}\right\|_2\cos\theta$ in Polarkoordinaten. Ihr
 weitester Punkt liegt in Gradientenrichtung, dort erreicht die Richtungsableitung ihr
 Maximum $\left\|\corange{\nabla f(\bx)}\right\|_2$ (@satz:richtung-des-staerksten-anstiegs);
@@ -293,7 +292,7 @@ lohnt: die lineare Funktion und die :k[quadratische Form]{#quadratic-form}.
 
 :::beispiel[#gradient-einer-linearen-funktion (Gradient einer linearen Funktion)]
 Seien $\ba, \bx \in \R^n$ und $f(\bx) = \ba^\top\bx$. Was ist $\corange{\nabla f(\bx)}$?
-Bevor wir weiterlesen, lohnt sich der eigene Versuch.
+Erst selbst versuchen, dann die Lösung aufklappen.
 
 <details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
 <summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
@@ -349,7 +348,7 @@ $$
 :::
 
 :::schritt
-Erst hier geht die Symmetrie ein. Aus $a_{ik} = a_{ki}$ folgt, dass beide Summen dasselbe
+Hier geht die Symmetrie ein. Aus $a_{ik} = a_{ki}$ folgt, dass beide Summen dasselbe
 sind:
 
 $$
@@ -398,7 +397,7 @@ $$
 2\bx^\top\bA = \begin{pmatrix} 2x_1 + 3x_2 & 3x_1 + 4x_2 \end{pmatrix} ,
 $$
 
-also genau den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist
+also den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist
 allerdings *nicht* :k[positiv definit]{#positive-definite}, denn ihre Determinante ist
 $1 \cdot 2 - (3/2)^2 = -1/4 < 0$. Die Matrix der zweiten partiellen Ableitungen, die
 :k[Hesse-Matrix]{#hessian-matrix} $2\bA = \bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4
@@ -410,12 +409,11 @@ Widget oben kreuzen sich dort die beiden Geraden zum Niveau $0$.
 
 ### Anwendung: Gradientenabstieg
 
-Warum interessieren wir uns überhaupt für die Richtung des stärksten Anstiegs? Weil das
-Standardwerkzeug der :k[Optimierung]{#optimization} in hohen Dimensionen genau darauf beruht.
-Gesucht sind Parameter $\btheta \in \R^p$, die eine Verlustfunktion $L(\btheta)$ klein
-machen, etwa den mittleren quadratischen Fehler eines Modells. Für $p$ in der Größenordnung
-von Millionen ist an eine geschlossene Lösung nicht zu denken, wohl aber an kleine Schritte
-bergab.
+Die Richtung des stärksten Anstiegs interessiert uns, weil das Standardwerkzeug der
+:k[Optimierung]{#optimization} in hohen Dimensionen darauf beruht. Gesucht sind Parameter
+$\btheta \in \R^p$, die eine Verlustfunktion $L(\btheta)$ klein machen, etwa den
+mittleren quadratischen Fehler eines Modells. Für $p$ in der Größenordnung von Millionen
+gibt es keine geschlossene Lösung, wohl aber kleine Schritte bergab.
 
 :::algorithmus[#gradient-gradientenabstieg (Gradientenabstieg)]
 Gegeben eine differenzierbare Verlustfunktion $L\colon \R^p \to \R$, ein Startwert
@@ -436,21 +434,21 @@ Dass er damit tatsächlich am Ziel ankommt, hängt an $\alpha$ und an der Gestal
 Training :k[neuronaler Netze]{#neural-network} und für komplexe Regressionsmodelle.
 
 :::bemerkung[#warum-in-gleichung-10-2-4-ein (Warum in Gleichung 10.2.4 ein Transponiertes steht)]
-Das $^\top$ in @eq:gradient-gradientenabstieg ist keine Kosmetik, sondern eine Formatfrage. Die Parameter
+Das $^\top$ in @eq:gradient-gradientenabstieg ist eine Formatfrage. Die Parameter
 $\btheta^{(t)}$ bilden einen Spaltenvektor in $\R^p$, der Gradient
 $\corange{\nabla L(\btheta^{(t)})}$ nach @definition:gradient dagegen eine Zeile in
 $\R^{1 \times p}$. Eine Zeile von einer Spalte abzuziehen ist nicht definiert. Erst
 $\corange{\nabla L(\btheta^{(t)})^\top} \in \R^p$ passt zum Rest der Gleichung. Wer den
-Gradienten von vornherein als Spalte definiert, spart hier das $^\top$ und handelt es sich
-dafür in der Kettenregel wieder ein (@bemerkung:zeilenvektor-nicht-spaltenvektor).
+Gradienten von vornherein als Spalte definiert, spart hier das $^\top$ und braucht es
+dafür in der Kettenregel (@bemerkung:zeilenvektor-nicht-spaltenvektor).
 :::
 
 Die Lernrate $\alpha$ ist der einzige freie Parameter des Verfahrens. Gibt es eine beste
 Wahl, und woran erkennt man sie?
 
 :::interaktiv[Gradientenabstieg auf einer konvexen quadratischen Funktion]
-Zum Ausprobieren nehmen wir nicht die Funktion aus @beispiel:gradient-einer-quadratischen-funktion, denn deren Sattel wäre
-für ein Abstiegsverfahren eine Falle. Stattdessen minimieren wir
+Zum Ausprobieren nehmen wir nicht die Funktion aus @beispiel:gradient-einer-quadratischen-funktion, denn an deren Sattel
+scheitert ein Abstiegsverfahren. Stattdessen minimieren wir
 $L(\btheta) = \tfrac{1}{2}\btheta^\top\bA\btheta$ mit der symmetrischen und positiv
 definiten Matrix
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3 \end{smallmatrix}\bigr)$, deren Eigenwerte
@@ -487,7 +485,7 @@ und einer $n \times 1$-Spalte ist eine Zahl, und die Abbildung ist linear in $\b
 :::frage{falsch}
 Für $f(\bx) = \ba^\top\bx$ hängt der Gradient von der Stelle $\bx$ ab.
 
-Er ist konstant gleich $\ba^\top$ (@beispiel:gradient-einer-linearen-funktion). Das ist kein Zufall: $f$ ist selbst
+Er ist konstant gleich $\ba^\top$ (@beispiel:gradient-einer-linearen-funktion), denn $f$ ist selbst
 linear, also ist die beste lineare Näherung $f$ selbst, und der Restterm in @eq:eq-10-2-1
 verschwindet exakt.
 :::
@@ -509,7 +507,7 @@ wenn $\bd$ in Richtung $\nabla f(\bx)^\top$ zeigt, und ihr Maximalwert ist
 $\left\|\nabla f(\bx)\right\|_2$.
 
 Das ist @satz:richtung-des-staerksten-anstiegs, bewiesen mit dem Gleichheitsfall der Cauchy-Schwarz-Ungleichung. Ohne
-die Voraussetzung $\nabla f(\bx) \neq \bnull$ wäre nichts zu holen: Dann sind alle
+die Voraussetzung $\nabla f(\bx) \neq \bnull$ gilt die Aussage nicht: Dann sind alle
 Richtungsableitungen null, und keine Richtung zeichnet sich aus.
 :::
 
