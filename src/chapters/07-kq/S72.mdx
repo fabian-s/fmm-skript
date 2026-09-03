@@ -10,8 +10,8 @@ import {
 */}
 
 Bevor wir in den folgenden Abschnitten Algorithmen zur Lösung des
-KQ-Problems entwickeln, stellen wir dieselbe Frage wie seinerzeit bei
-den linearen Gleichungssystemen: Wie empfindlich reagiert die Lösung
+KQ-Problems entwickeln, stellen wir dieselbe Frage wie bei den linearen
+Gleichungssystemen: Wie empfindlich reagiert die Lösung
 $\wh{\bx}$ auf kleine Störungen der Eingaben? Die Antwort
 gibt die :k[Kondition]{#condition-number} des
 Problems, und sie legt fest, welche Genauigkeit wir von
@@ -84,8 +84,7 @@ $\kappa_2(\bA) \to \infty$.
 
 ### Kondition bezüglich $\bb$
 
-Beginnen wir mit dem statistisch wichtigsten Fall: $\bA$ ist
-fix, aber der Datenvektor $\bb$ ist gestört, etwa durch
+Der statistisch wichtigste Fall: $\bA$ ist fix, aber der Datenvektor $\bb$ ist gestört, etwa durch
 Messfehler oder schlicht durch
 :k[Rundungsfehler]{#rounding-error} beim
 Einlesen. Das Problem ist dann die Abbildung
@@ -196,7 +195,7 @@ $$
 \frac{\corange{\kappa_2(\bA)}}{\cos(\theta)}.
 $$
 
-Was sind nun die geometrischen Extremfälle dieser Schranke?
+Die geometrischen Extremfälle dieser Schranke:
 
 - **Best case:** $\bb = \cgreen{\proj_{\col(\bA)} \bb}$, d.&thinsp;h.
   $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist $\cos(\theta) = 1$, und die
@@ -215,7 +214,7 @@ hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums un
 den Singulärrichtungen von $\bA$ ab.
 
 :::interaktiv[Wann ist die obere Schranke scharf?]
-<p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke tatsächlich angenommen – und bei welcher passiert gar nichts?</p>
+<p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke angenommen, und bei welcher ändert sich die Lösung gar nicht?</p>
 
 <WinkelWidget />
 
@@ -233,7 +232,7 @@ die beim Speichern von $\bA$ und in den Zwischenschritten
 der Algorithmen zwangsläufig entstehen. Das Problem ist jetzt die
 Abbildung $f(\bA) = \bA\pinv\bb$. Das Ergebnis sieht auf
 den ersten Blick ähnlich aus wie @satz:satz-7-2-3, hat aber eine
-entscheidend andere Struktur:
+andere Struktur:
 
 :::satz[#stoerung-der-designmatrix-erste-ordnung (Störung der Designmatrix, erste Ordnung)]
 Sei $\bb \in \R^m$ fix, $\bA$ habe vollen Spaltenrang und
@@ -294,9 +293,8 @@ Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
 Statistik verschwindet es praktisch nie), kann eine Störung von
 $\bA$ mit dem Quadrat der Konditionszahl verstärkt werden.
 Dieses Quadrat wird uns in @sec:normalengleichungen gleich
-wieder begegnen: Der Lösungsweg über die Normalengleichungen handelt es
-sich *immer* ein, also auch im gutartigen Fall kleiner
-Residuen, in dem das Problem selbst nur mit
+wieder begegnen: Beim Lösungsweg über die Normalengleichungen tritt es
+*immer* auf, also auch im günstigen Fall kleiner Residuen, in dem das Problem selbst nur mit
 $\corange{\kappa_2(\bA)}$ reagiert.
 
 :::interaktiv[Die quadrierte Kondition im Experiment]
@@ -306,7 +304,7 @@ $$
 \bA = \begin{pmatrix} 1 & 1 \\ \eps & -\eps \\ 0 & 0 \end{pmatrix}, \quad \tilde{\bA} = \bA + \cblue{\bE} \text{ mit } \cblue{\bE} = \begin{pmatrix} 0 & 0 \\ 0 & 0 \\ -\eps & \eps \end{pmatrix}, \quad \bb = \begin{pmatrix} 1 \\ 0 \\ b_3 \end{pmatrix}.
 $$
 
-<p className="mb-3 text-sm">Hier ist $\corange{\kappa_2(\bA)} = 1/\eps$, und die relative Störung ist $\left\|\cblue{\bE}\right\|_2 / \left\|\bA\right\|_2 = \eps$. Die ungestörte Lösung ist stets $\wh{\bx} = (1/2,\, 1/2)^\top$, unabhängig von $\eps$ und $b_3$. Die Frage ist: Wie stark muss das Residuum sein, damit der quadrierte Term die Schranke übernimmt?</p>
+<p className="mb-3 text-sm">Hier ist $\corange{\kappa_2(\bA)} = 1/\eps$, und die relative Störung ist $\left\|\cblue{\bE}\right\|_2 / \left\|\bA\right\|_2 = \eps$. Die ungestörte Lösung ist stets $\wh{\bx} = (1/2,\, 1/2)^\top$, unabhängig von $\eps$ und $b_3$. Wie stark muss das Residuum sein, damit der quadrierte Term die Schranke übernimmt?</p>
 
 <KonditionsQuadrierungLab />
 
@@ -340,7 +338,7 @@ Bei exakt lösbarem $\bA\bx = \bb$ reduziert sich die lokale Schranke aus @satz:
 $\corange{\kappa_2(\bA)}$.
 
 Exakt lösbar heißt $\cpurp{\br} = \bnull$, also $\tan(\theta) = 0$; der Term
-$\corange{\kappa_2(\bA)}^2\tan(\theta)$ verschwindet, und übrig bleibt genau
+$\corange{\kappa_2(\bA)}^2\tan(\theta)$ verschwindet, und übrig bleibt
 $\corange{\kappa_2(\bA)}$ wie bei einem gewöhnlichen linearen Gleichungssystem.
 :::
 
@@ -348,8 +346,8 @@ $\corange{\kappa_2(\bA)}$ wie bei einem gewöhnlichen linearen Gleichungssystem.
 Die Konditionszahl $\corange{\kappa_2(\bA)}$ hängt davon ab, mit welchem Verfahren wir das
 KQ-Problem lösen.
 
-Die Kondition ist eine Eigenschaft des Problems, nicht des Lösungswegs – genau das ist der
-Grund, warum wir sie vor den Algorithmen behandeln. Der Lösungsweg entscheidet nur, wie nah
+Die Kondition ist eine Eigenschaft des Problems, nicht des Lösungswegs. Deshalb
+behandeln wir sie vor den Algorithmen. Der Lösungsweg entscheidet nur, wie nah
 ein Verfahren an diese unvermeidbare Empfindlichkeit herankommt (Stabilität).
 :::
 

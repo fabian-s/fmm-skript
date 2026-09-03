@@ -11,12 +11,11 @@ Kleinste-Quadrate-Problem mit Matrizen, die die
 :k[euklidische Norm]{#euclidean-norm} unverändert lassen, bis eine
 :k[Dreiecksgestalt]{#triangular-matrix} erreicht ist, in der es trivial lösbar wird. Das
 vermeidet $\bA^\top\bA$ und damit die quadrierte
-:k[Konditionszahl]{#condition-number}. Jetzt lösen wir das Versprechen ein.
+:k[Konditionszahl]{#condition-number}. Diesen Plan führen wir jetzt aus.
 
 ### Recap: Orthogonalmatrizen
 
-Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra. Frischen wir
-das kurz auf.
+Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra.
 
 :::definition[#qr-orthogonalmatrix (Orthogonalmatrix)]
 Eine Matrix $\bQ \in \R^{n \times n}$ heißt
@@ -29,8 +28,8 @@ $$
 :::
 
 Geometrisch beschreibt $\bQ$ eine :k[Rotation]{#rotation-matrix} und/oder
-:k[Spiegelung]{#reflection} des $\R^n$, also genau
-die Sorte Abbildung, die Längen und Winkel unangetastet lässt. Die für uns wichtigen
+:k[Spiegelung]{#reflection} des $\R^n$, also eine Abbildung, die Längen und
+Winkel unverändert lässt. Die für uns wichtigen
 Eigenschaften fassen wir zusammen:
 
 :::lemma[#qr-eigenschaften-von-orthogonalmatrizen (Eigenschaften von Orthogonalmatrizen)]
@@ -85,7 +84,7 @@ $$
 :::::
 
 :::bemerkung[#bemerkung-7-4-3]
-Eigenschaft (iii) ist der numerische Kern des ganzen Abschnitts: wegen
+Eigenschaft (iii) ist für die Numerik entscheidend: wegen
 $\kappa_2(\bQ) = 1$ ist die Multiplikation mit $\bQ$ oder $\bQ^{-1}$ *immer* gut
 konditioniert und verschlechtert die Stabilität eines Algorithmus nicht. Anders als die
 Normalengleichungen (@sec:normalengleichungen) können orthogonale Transformationen die
@@ -96,7 +95,7 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 :::
 
 :::interaktiv[Woran erkennt man Drehung und Spiegelung?]
-<p className="mb-2 text-sm">Jede Orthogonalmatrix in $\R^{2 \times 2}$ ist eine :k[Drehung]{#rotation-matrix} oder eine :k[Spiegelung]{#reflection} – zwei Typen, mehr gibt es nicht. Welche Größe unterscheidet sie, und welche bleibt in beiden Fällen gleich?</p>
+<p className="mb-2 text-sm">Jede Orthogonalmatrix in $\R^{2 \times 2}$ ist eine :k[Drehung]{#rotation-matrix} oder eine :k[Spiegelung]{#reflection}. Welche Größe unterscheidet sie, und welche bleibt in beiden Fällen gleich?</p>
 
 <OrthoWidget />
 
@@ -107,7 +106,7 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 
 Welche „einfache Gestalt" streben wir mit unseren orthogonalen Transformationen an?
 Wie beim :k[Gauß-Verfahren]{#gaussian-elimination}: eine obere
-:k[Dreiecksmatrix]{#triangular-matrix}, denn Dreieckssysteme lösen wir mühelos durch
+:k[Dreiecksmatrix]{#triangular-matrix}, denn Dreieckssysteme lösen wir direkt durch
 :k[Rückwärtseinsetzen]{#triangular-solve}. Das führt auf die zentrale Zerlegung dieses
 Kapitels:
 
@@ -145,8 +144,7 @@ Algebra: die :k[Gram-Schmidt-Orthonormalisierung]{#gram-schmidt} der Spalten von
 Sie liefert orthonormale Vektoren $\bq_1, \bq_2, \dots$, die denselben Raum
 :k[aufspannen]{#span} wie die Spalten $\ba_1, \ba_2, \dots$, und die Koeffizienten, die
 dabei anfallen (Normen und :k[Projektions]{#projection}-Koeffizienten), sind genau die
-Einträge von $\bR$. Rechnen wir ein Beispiel vollständig durch. Zur
-Orientierung: $\cbred{\bq_1}$ verfolgt den ersten Orthonormalvektor, $\cblue{\ba_2}$ die
+Einträge von $\bR$. Im folgenden Beispiel verfolgt $\cbred{\bq_1}$ den ersten Orthonormalvektor, $\cblue{\ba_2}$ die
 zweite Spalte, $\cgreen{R_{12}}$ den Projektionskoeffizienten,
 $\cborange{\wt{\bq}_2}$ den orthogonalisierten (noch unnormierten) und
 $\cbpurp{\bq_2}$ den fertigen zweiten Orthonormalvektor.
@@ -203,46 +201,45 @@ $$
 $$
 :::
 
-Beachten wir die Arbeitsteilung: $\bQ$ sammelt die orthonormalen Richtungen, $\bR$
+$\bQ$ sammelt die orthonormalen Richtungen, $\bR$
 protokolliert, wie sich die Originalspalten aus diesen Richtungen
 :k[linear kombinieren]{#linear-combination}:
 $\ba_1 = R_{11}\,\cbred{\bq_1}, \quad \cblue{\ba_2} = \cgreen{R_{12}}\,\cbred{\bq_1} + R_{22}\,\cbpurp{\bq_2}\,.$
-Dass $\bR$ eine obere Dreiecksmatrix ist, ist kein Zufall, sondern die Struktur des
-Verfahrens: die $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
+Dass $\bR$ eine obere Dreiecksmatrix ist, liegt an der Struktur des Verfahrens: Die
+$k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
 
 :::interaktiv[Was bleibt von a₂ übrig, wenn es fast auf a₁ liegt?]
-<p className="mb-2 text-sm">Sehen wir uns den zweiten Schritt genauer an. Nach Abzug der Projektion bleibt von $\ba_2$ nur der zu $\cgreen{\bq_1}$ senkrechte Anteil übrig, und genau den normieren wir anschließend. Wie viel ist das noch, wenn die beiden Spalten fast dieselbe Richtung haben?</p>
+<p className="mb-2 text-sm">Nach Abzug der Projektion bleibt von $\ba_2$ nur der zu $\cgreen{\bq_1}$ senkrechte Anteil übrig, und den normieren wir anschließend. Wie viel ist das noch, wenn die beiden Spalten fast dieselbe Richtung haben?</p>
 
 <GramSchmidtWidget />
 
 <p className="mt-2 text-sm">Das Widget verbindet den Winkel der Spalten mit der Größe des zu normierenden Restvektors.</p>
 :::
 
-Vorsicht: So elegant Gram-Schmidt auf dem Papier ist, in Gleitkommaarithmetik ist das
-klassische Verfahren heikel. Sind zwei Spalten fast
-:k[linear abhängig]{#linear-independence}, ist das Residuum nach der Projektion winzig,
-und beim Normieren blasen wir :k[Rundungsfehler]{#rounding-error} massiv auf: die
-berechneten $\bq_k$ verlieren ihre Orthogonalität. Ein einfacher Umbau hilft: Das
+Vorsicht: In Gleitkommaarithmetik ist das klassische Gram-Schmidt-Verfahren instabil.
+Sind zwei Spalten fast :k[linear abhängig]{#linear-independence}, ist das Residuum nach
+der Projektion winzig, und beim Normieren werden :k[Rundungsfehler]{#rounding-error}
+stark verstärkt: Die berechneten $\bq_k$ verlieren ihre Orthogonalität. Ein einfacher Umbau hilft: Das
 *modifizierte Gram-Schmidt-Verfahren* (MGS) zieht die Projektionen nacheinander von der
 jeweils schon aktualisierten Spalte ab statt alle auf einmal von der Originalspalte. In
-exakter Arithmetik ändert das nichts, in Gleitkommaarithmetik alles. Wie dramatisch der
-Unterschied wird, messen wir am besten selbst.
+exakter Arithmetik ändert das nichts, in Gleitkommaarithmetik sehr viel. Wie groß der
+Unterschied wird, messen wir selbst.
 
 ::::vertiefung[Numerische Stabilität der Gram-Schmidt-Varianten]
 
-:::interaktiv[Wie schnell zerbricht Gram-Schmidt – und wie repariert man es?]
+:::interaktiv[Wie schnell verliert Gram-Schmidt die Orthogonalität, und wie repariert man es?]
 <CgsVsMgsWidget />
 
 <p className="mt-2 text-sm">Das Widget vergleicht den Orthogonalitätsverlust der drei Gram-Schmidt-Varianten.</p>
 
-<p className="mt-2 text-sm">Ein Detail lohnt die Aufmerksamkeit, weil es leicht in die Irre führt: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in @sec:normalengleichungen – der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
+<p className="mt-2 text-sm">Ein Detail kann in die Irre führen: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in @sec:normalengleichungen: Der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::
 
 ::::
 
 ### Warum die QR-Zerlegung das KQ-Problem löst
 
-Jetzt zahlt sich die Vorarbeit aus. Haben wir eine QR-Zerlegung, zerfällt das
+Haben wir eine QR-Zerlegung, zerfällt das
 :k[Kleinste-Quadrate-Problem]{#linear-least-squares} in einen Teil, den wir exakt auf
 null bringen können, und einen Teil, den keine Wahl von $\bx$ beeinflusst. Zur
 Orientierung im Beweis: $\cbred{\bR\bx - \bc_1}$ verfolgt den steuerbaren,
@@ -309,13 +306,13 @@ $$
 
 In der Praxis :k[invertieren]{#matrix-inverse} wir $\bR$ natürlich nicht explizit,
 sondern lösen das Dreieckssystem $\bR\wh{\bx} = \bc_1$ durch
-:k[Rückwärtseinsetzen]{#triangular-solve} in $\mathcal{O}(n^2)$ Operationen. Als Bonus
-fällt die Residuumsnorm gratis ab: aus dem Beweis lesen wir
+:k[Rückwärtseinsetzen]{#triangular-solve} in $\mathcal{O}(n^2)$ Operationen. Die
+Residuumsnorm bekommen wir dabei ohne Zusatzaufwand: Aus dem Beweis lesen wir
 $\min_{\bx}\|\bA\bx - \bb\|_2 = \left\|\cblue{\bc_2}\right\|_2$ ab, ohne $\wh{\bx}$
 überhaupt einsetzen zu müssen.
 
 Was noch fehlt, ist ein stabiler Weg zu $\bQ$: Gram-Schmidt hat uns die Zerlegung im
-Beispiel geliefert, ist aber, wie oben gesehen, numerisch fragil. In
+Beispiel geliefert, ist aber, wie oben gesehen, numerisch instabil. In
 @sec:givens-householder konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
 spaltenweise aus einfachen orthogonalen Bausteinen: Givens-Rotationen und
 Householder-Spiegelungen.
@@ -331,11 +328,11 @@ Wie lang ist der senkrechte Anteil $\left\|\wt{\bq}_2\right\|_2$?
 
 Der senkrechte Anteil ist $\left\|\ba_2\right\|_2\sin(8^\circ) = 2{,}2 \cdot 0{,}1392
 = 0{,}306$, also knapp 14 % der ursprünglichen Länge. Diesen Rest teilen wir anschließend
-durch seine eigene Länge – mitsamt aller Rundungsfehler, die in ihm stecken.
+durch seine eigene Länge, mitsamt aller Rundungsfehler, die in ihm stecken.
 :::
 
 :::frage{wahr}
-$\bR$ ist genau deshalb eine obere Dreiecksmatrix, weil die $k$-te Spalte von $\bA$ nur die
+$\bR$ ist deshalb eine obere Dreiecksmatrix, weil die $k$-te Spalte von $\bA$ nur die
 ersten $k$ Orthonormalvektoren braucht.
 
 Das ist die Struktur des Verfahrens: $\bq_k$ entsteht erst aus $\ba_k$, kann also in
@@ -357,7 +354,7 @@ $\wh{\bx}$ überhaupt einzusetzen.
 
 Der Beweis zerlegt die Zielfunktion in $\left\|\cbred{\bR\bx - \bc_1}\right\|_2^2 +
 \left\|\cblue{\bc_2}\right\|_2^2$; der erste Term wird exakt null, also ist das Minimum
-gerade $\left\|\cblue{\bc_2}\right\|_2$. Das fällt bei der QR-Zerlegung gratis ab.
+gerade $\left\|\cblue{\bc_2}\right\|_2$. Das liefert die QR-Zerlegung ohne Zusatzaufwand.
 :::
 
 ::::
