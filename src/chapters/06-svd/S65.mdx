@@ -1,8 +1,7 @@
-Dieses Kapitel hatte ein einziges Ziel: eine Zerlegung, die für jede Matrix
-funktioniert, gleich welches Format sie hat und ob sie symmetrisch ist. Seit
+Ziel dieses Kapitels war eine Zerlegung, die für jede Matrix funktioniert,
+gleich welches Format sie hat und ob sie symmetrisch ist. Seit
 @sec:singulaerwerte steht sie da, und die beiden folgenden Abschnitte
-haben gezeigt, was sich mit ihr anfangen lässt. Sammeln wir ein, was bleiben
-soll.
+haben gezeigt, was sich mit ihr anfangen lässt.
 
 ### Was wir gelernt haben
 
@@ -35,17 +34,16 @@ Angewendet haben wir das an drei Stellen. Die Pseudoinverse löst
 $\wh{\bx} = \bA\pinv\bb$, und zwar auch dann, wenn die Normalengleichungen
 mangels vollen Spaltenrangs versagen (@bemerkung:ausblick-kleinste-quadrate). Die abgeschnittene
 Zerlegung liefert die beste
-:k[Approximation niedrigen Rangs]{#low-rank-approximation}, die es überhaupt
-gibt, mit einem Fehler, den die weggelassenen Singulärwerte exakt beziffern
+:k[Approximation niedrigen Rangs]{#low-rank-approximation}, mit einem Fehler, den die weggelassenen Singulärwerte exakt beziffern
 (@sec:anwendungen). Und weil diese Approximation gleichzeitig Speicher
-spart und Rauschen glättet, ist sie das Arbeitspferd für Datenkompression und
+spart und Rauschen glättet, ist sie das Standardwerkzeug für Datenkompression und
 Datenanalyse, von der Hauptkomponentenanalyse
 (@sec:la-misc/anwendungen) bis zum Empfehlungssystem
 (@beispiel:eine-duenn-besetzte-bewertungsmatrix).
 
 ### Querverbindungen
 
-Die SVD ist kein isoliertes Werkzeug. Über die
+Über die
 :k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA^\top\bA$ hängt sie an der
 Eigenwerttheorie
 (@satz:eigenschaften-von-a-a, @korollar:a-a-ist-orthogonal-diagonalisierbar),
@@ -55,7 +53,7 @@ fertigen :k[Orthonormalbasen]{#orthonormal-basis}
 $\bA\pinv\bA$ an den :k[Projektionen]{#projection}
 (@satz:eigenschaften-der-pseudoinversen) und über die Minimierungsprobleme in
 @sec:anwendungen und [Kapitel 7](?k=07-kq#sec-7.6) an der Optimierung. Zwei
-Verbindungen lohnen den eigenen Blick:
+Verbindungen im Einzelnen:
 
 - *[Normen](?k=03-matrix-spur-norm#sec-3.2):* Der größte Singulärwert ist die
   Spektralnorm, $\left\|\bA\right\|_2 = \corange{\sigma_1}$
@@ -74,8 +72,7 @@ Verbindungen lohnen den eigenen Blick:
   lösen. Die SVD zerlegt, um die Geometrie einer Abbildung sichtbar zu machen.
   Sie ist die teuerste der drei und die einzige, die für jede Matrix existiert.
 
-So viele Fäden laufen selten in einer einzigen Zerlegung zusammen. Wer die SVD
-einer Matrix kennt, kennt ihren Rang, ihre Norm, ihre Kondition, ihre
+Wer die SVD einer Matrix kennt, kennt ihren Rang, ihre Norm, ihre Kondition, ihre
 fundamentalen Unterräume und die beste Näherung jeder Stufe.
 
 ### Praktische Hinweise
@@ -90,22 +87,22 @@ verwechselt.
 | truncated SVD | $\bA \approx \bA_k = \cgreen{\bU_k}\corange{\bSigma_k}\cblue{\bV_k^\top}$, $k < r$ | $\cgreen{\bU_k}$ ist $m \times k$, $\cblue{\bV_k}$ ist $n \times k$ | Approximation, Kompression |
 
 Nur die dritte Variante verliert Information, und wie viel, sagen die
-abgeschnittenen Singulärwerte. Die Wahl von $k$ ist deshalb keine technische
-Kleinigkeit, sondern eine Modellierungsentscheidung; die Kriterien und die
-Kriterien stehen in @bemerkung:drei-kriterien-fuer-die-wahl-von-k; typische
+abgeschnittenen Singulärwerte. Die Wahl von $k$ ist deshalb eine
+Modellierungsentscheidung; die Kriterien stehen in
+@bemerkung:drei-kriterien-fuer-die-wahl-von-k; typische
 Singulärwert-Verläufe und die Ellenbogen-Heuristik sind als Vertiefung markiert.
 
-Ein Hinweis wiegt schwerer, als er klingt. Die Definition der Singulärwerte
-führt über die Eigenwerte von $\bA^\top\bA$; als *Rechenweg* ist dieser Umweg
-trotzdem der schlechteste von allen. Das Produkt quadriert die Kondition,
+Ein wichtiger Hinweis: Die Definition der Singulärwerte führt über die
+Eigenwerte von $\bA^\top\bA$; als *Rechenweg* ist dieser Umweg trotzdem
+ungeeignet. Das Produkt quadriert die Kondition,
 $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, und beim Aufstellen verschwinden
 kleine Beiträge neben großen im :k[Rundungsfehler]{#rounding-error}. Was dann
 noch fehlt, müsste eine Differenz fast gleicher Zahlen hergeben, also
-ausgerechnet :k[Auslöschung]{#cancellation}. Die legt einen Verlust aber nur
-offen, statt ihn zu heilen (@sec:fehler/stabilitaet). Als Faustregel: Über
-$\bA^\top\bA$ sind Singulärwerte unterhalb von
+ausgerechnet :k[Auslöschung]{#cancellation}, die den Verlust nicht rückgängig
+machen kann (@sec:fehler/stabilitaet). Als Faustregel: Über $\bA^\top\bA$
+lassen sich Singulärwerte unterhalb von
 $\sqrt{\eps} \cdot \corange{\sigma_1} \approx 1{,}5 \cdot 10^{-8} \cdot \corange{\sigma_1}$
-nicht mehr zu retten.
+nicht mehr bestimmen.
 
 ::::vertiefung[Wie der Umweg einen Singulärwert verschluckt]
 :::beispiel[#der-umweg-ueber-a-a (Der Umweg über AᵀA)]
@@ -123,8 +120,8 @@ Eigenwerte $a + b$ und $a - b$, hier also $(1 + \delta^2) + 1 = 2 + \delta^2$
 und $(1 + \delta^2) - 1 = \delta^2$. Damit besitzt $\bA$ die Singulärwerte
 $\corange{\sigma_1} = \sqrt{2 + \delta^2} \approx 1{,}4142$ und
 $\corange{\sigma_2} = \delta = 10^{-8}$; die Matrix hat Rang $2$. Der kleinere
-Eigenwert ist buchstäblich eine Differenz fast gleicher Zahlen. Er hängt allein
-an dem Summanden $\delta^2$ im Diagonaleintrag, und genau der ist gefährdet.
+Eigenwert ist eine Differenz fast gleicher Zahlen. Er hängt allein an dem
+Summanden $\delta^2$ im Diagonaleintrag, und der ist gefährdet.
 
 In doppelter Genauigkeit geht das schief. Der Abstand von $1$ zur nächstgrößeren
 darstellbaren Zahl ist die :k[Maschinengenauigkeit]{#machine-epsilon}
@@ -147,8 +144,8 @@ auf etwa $3 \cdot 10^{-16}$ genau, und sieht den Rang $2$.
 
 Die gebräuchlichen Verfahren arbeiten deshalb direkt mit $\bA$ und benutzen
 ausschließlich orthogonale Transformationen, die alle Singulärwerte unverändert
-lassen (@satz:unitaere-invarianz in @sec:matrix-spur-norm/schattennormen); der
-Klassiker ist der Algorithmus von Golub und Reinsch. Bei sehr großen Matrizen
+lassen (@satz:unitaere-invarianz in @sec:matrix-spur-norm/schattennormen); das
+Standardverfahren ist der Algorithmus von Golub und Reinsch. Bei sehr großen Matrizen
 lohnt die volle Zerlegung ohnehin nicht: Dort berechnen wir gleich nur die $k$
 größten Singulärwerte samt ihren Singulärvektoren, ohne $\bA$ je vollständig zu
 zerlegen. In R stehen beide Wege bereit:
@@ -163,8 +160,8 @@ irlba::irlba(A, nv = k)       # nur die k größten, für sehr große Matrizen
 
 ### Selbsttest
 
-Zum Abschluss fünf Aussagen über $\bA^\top\bA$ und die Diagonalisierbarkeit.
-Welche davon sind korrekt?
+Welche der folgenden Aussagen über $\bA^\top\bA$ und die Diagonalisierbarkeit
+sind korrekt?
 
 ::::quiz
 
