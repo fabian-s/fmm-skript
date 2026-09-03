@@ -2,17 +2,15 @@ import { Landschaften, AbstiegsBeckenSchaetzung } from "./widgets/S115Landschaft
 
 ### Warum konvexe Probleme leichter sind
 
-Bis hierher haben wir Konvexität beschrieben. Jetzt ernten wir. Die Frage, um die es
-in der :k[Optimierung]{#optimization} wirklich geht, lautet nicht „ist die Funktion konvex",
-sondern: Wenn ein Verfahren stehenbleibt, weil es keine Abstiegsrichtung mehr findet, haben
+Bis hierher haben wir Konvexität beschrieben. Jetzt geht es um die Folgen für die
+:k[Optimierung]{#optimization}. Die Frage dort lautet: Wenn ein Verfahren stehenbleibt, weil es keine Abstiegsrichtung mehr findet, haben
 wir dann das Beste gefunden oder nur ein Zwischenergebnis? Für allgemeine Funktionen ist die
-Antwort ernüchternd. Ein Gradient, der verschwindet, kann zu einem Minimum gehören, zu einem
+Antwort unbefriedigend. Ein Gradient, der verschwindet, kann zu einem Minimum gehören, zu einem
 Maximum oder zu einem Sattelpunkt (@satz:hesse-kriterium-fuer-kritische-punkte in
 @sec:differentialrechnung/hoehere-ableitungen), und selbst ein echtes lokales Minimum kann
 weit über dem globalen liegen.
 
-Für konvexe Funktionen bricht diese Unterscheidung zusammen. Das ist der eigentliche Grund,
-warum sich der Aufwand der letzten vier Abschnitte lohnt.
+Für konvexe Funktionen entfällt diese Unterscheidung.
 
 :::satz[#kritischer-punkt-und-globales-minimum (Kritischer Punkt und globales Minimum)]
 Sei $f\colon \R^n \to \R$ differenzierbar und :k[konvex]{#convexity}, und sei
@@ -64,8 +62,7 @@ Damit ist $f(\corange{\bx^\star})$ der kleinste Funktionswert überhaupt.
 
 ::::
 
-Zwei Konsequenzen stecken in diesem Satz, und sie sind die wichtigsten des ganzen
-Kapitels. Wir gehen sie einzeln durch.
+Der Satz hat zwei Konsequenzen, die wir einzeln durchgehen.
 
 :::::
 
@@ -76,8 +73,8 @@ was der Satz hergibt.
 
 *Jedes lokale Minimum ist ein globales Minimum.* Für differenzierbares $f$ folgt das aus dem
 Satz, indem wir beide Schritte hintereinanderschalten: In einem lokalen Minimum verschwindet
-der Gradient nach Schritt 1, und Schritt 2 macht daraus ein globales. Bemerkenswerterweise
-brauchen wir dafür aber gar keine Ableitung. Sei $\cblue{\Xcal} \subseteq \R^n$ konvex,
+der Gradient nach Schritt 1, und Schritt 2 macht daraus ein globales. Wir
+brauchen dafür aber keine Ableitung. Sei $\cblue{\Xcal} \subseteq \R^n$ konvex,
 $f\colon \cblue{\Xcal} \to \R$ konvex und $\corange{\bx^\star}$ ein lokales Minimum. Gäbe es
 ein $\by \in \cblue{\Xcal}$ mit $f(\by) < f(\corange{\bx^\star})$, so läge für jedes
 $\lambda \in (0, 1]$ der Punkt
@@ -92,19 +89,19 @@ $$
 Für kleines $\lambda$ liegt $\cgreen{\bz_\lambda}$ aber in jeder noch so kleinen
 :k[Umgebung]{#neighborhood} von $\corange{\bx^\star}$, im Widerspruch zur lokalen
 Minimalität. Nichtdifferenzierbare konvexe Funktionen wie der Betrag oder der
-LASSO-Strafterm sind also genauso gutmütig.
+LASSO-Strafterm verhalten sich also genauso.
 
 *Es gibt keine Sattelpunkte, in denen ein Verfahren hängenbleiben könnte.* An einem
 Sattelpunkt verschwindet der Gradient, und in jeder Umgebung lägen Punkte mit kleinerem
 Funktionswert. Nach @satz:kritischer-punkt-und-globales-minimum ist ein solcher Punkt aber ein globales Minimum, und kleinere
-Werte gibt es dort nicht. Konvexe Landschaften haben nur Talböden.
+Werte gibt es dort nicht.
 
 *Nicht folgt: Eindeutigkeit, und ebenso wenig Existenz.* Eine konstante Funktion ist konvex und
-wird an jeder Stelle minimal – die erste der drei Landschaften weiter unten zeigt denselben
-Effekt mit einem flachen Stück; $f(x) = e^x$ ist konvex und nimmt ihr Infimum nie an.
+wird an jeder Stelle minimal; die erste der drei Landschaften weiter unten zeigt denselben
+Effekt mit einem flachen Stück, und $f(x) = e^x$ ist konvex und nimmt ihr Infimum nie an.
 @bemerkung:drei-aussagen-die-auseinanderzuhalten sortiert die drei Aussagen. Der Merksatz „wenn
 wir ein konvexes Optimierungsproblem lösen, finden wir garantiert ein globales Optimum" ist
-deshalb genau so zu lesen, wie er dasteht: *falls* wir eine Lösung finden, ist sie global.
+deshalb wörtlich zu lesen: *falls* wir eine Lösung finden, ist sie global.
 
 *Und ohne Ableitung?* Ist $f$ konvex, so tritt an die Stelle des Gradienten das
 :k[Subdifferential]{#gradient} aus @definition:subgradient-und-subdifferential:
@@ -127,8 +124,8 @@ Schwellenwertregel des LASSO (Herleitung in der Vertiefung
 @beispiel:das-subdifferential-des-betrags).
 :::
 
-Wenn die Minimalstelle nicht eindeutig ist, ist wenigstens die Menge aller Minimalstellen
-handlich. Sie ist selbst wieder konvex, und das ist der Grund, warum in der Statistik von der
+Ist die Minimalstelle nicht eindeutig, so ist die Menge aller Minimalstellen
+selbst wieder konvex, und das ist der Grund, warum in der Statistik von der
 *Lösungsmenge* eines konvexen Problems die Rede ist.
 
 :::satz[#die-minimalstellen-bilden-eine-konvexe (Die Minimalstellen bilden eine konvexe Menge)]
@@ -173,7 +170,7 @@ Damit ist $f(\cgreen{\bz}) = m$, und $\cgreen{\bz}$ ist selbst eine Minimalstell
 
 ::::
 
-Dieselbe Rechnung trägt mehr, als der Satz behauptet. Für jedes $c \in \R$ ist die
+Dieselbe Rechnung zeigt mehr, als der Satz behauptet. Für jedes $c \in \R$ ist die
 *Subniveaumenge* $\{\bx \in \cblue{\Xcal}\colon f(\bx) \le c\}$ konvex, denn aus
 $f(\bu) \le c$ und $f(\bw) \le c$ folgt $f(\cgreen{\bz}) \le \lambda c + (1-\lambda)c = c$.
 Die Minimalstellen sind davon der Sonderfall $c = \min f$, sofern dieses Minimum angenommen
@@ -188,7 +185,7 @@ $f(x)=x^2$ besteht aus $\{-1,1\}$ und ist nicht konvex.
 
 Eindeutigkeit fehlt in @satz:kritischer-punkt-und-globales-minimum aus einem einfachen Grund: Die Konvexitätsungleichung
 erlaubt Gleichheit, und Gleichheit heißt geometrisch, dass der Graph auf einem Stück gerade
-verläuft. Verbieten wir das, so bekommen wir die Eindeutigkeit geschenkt.
+verläuft. Schließen wir das aus, so folgt die Eindeutigkeit.
 
 :::definition[#strikte-konvexitaet (Strikte Konvexität)]
 Seien $\cblue{\Xcal} \subseteq \R^n$ konvex und $f\colon \cblue{\Xcal} \to \R$. Wir nennen $f$
@@ -203,9 +200,9 @@ $$
 
 Gegenüber der Sehnenungleichung @eq:konvexitaet-als-ungleichung aus
 @satz:konvexitaet-als-ungleichung haben sich drei Dinge geändert, und alle drei sind nötig. Aus
-$\le$ wird $\cred{<}$, das ist der Punkt. Dafür müssen $\bx$ und $\by$ verschieden sein und
+$\le$ wird $\cred{<}$. Dafür müssen $\bx$ und $\by$ verschieden sein und
 $\lambda$ die Randwerte $0$ und $1$ auslassen, denn sonst stünde links und rechts ohnehin
-derselbe Wert und keine einzige Funktion wäre strikt konvex. Eingeführt ist der Begriff samt
+derselbe Wert und keine Funktion wäre strikt konvex. Eingeführt ist der Begriff samt
 seiner Zweitbezeichnung „streng konvex" schon in @bemerkung:wie-wir-die-ungleichung-lesen; wir
 bleiben bei strikt.
 
@@ -244,8 +241,7 @@ Widerspruch. Also kann es keine zwei verschiedenen Minimalstellen geben.
 
 ::::
 
-Der Beweis ist kurz, und er zeigt, wo die Grenze verläuft:
-Genommen wird nur ein einziges $\lambda$, nämlich $\tfrac12$. Dasselbe Argument lässt sich
+Der Beweis benutzt nur ein einziges $\lambda$, nämlich $\tfrac12$. Dasselbe Argument lässt sich
 auch aus @satz:die-minimalstellen-bilden-eine-konvexe ablesen. Die Minimalstellen bilden eine konvexe Menge; enthielte sie zwei
 verschiedene Punkte, so enthielte sie die ganze Strecke dazwischen, und auf deren Innerem ist
 $f$ nach @eq:strikte-konvexitaet echt kleiner als an den Endpunkten. Eine konvexe Funktion, die auf einer
@@ -254,15 +250,15 @@ Strecke konstant ist, kann also nicht strikt konvex sein.
 :::::
 
 :::bemerkung[#drei-aussagen-die-auseinanderzuhalten (Drei Aussagen, die auseinanderzuhalten sind)]
-Damit sind die drei Versprechen sortiert, die in der Einleitung von
-@sec:konvexkombinationen noch zusammen aufgetreten sind.
+Damit sind die drei Aussagen getrennt, die in der Einleitung von
+@sec:konvexkombinationen zusammen aufgetreten sind.
 
 1. *Lokal ist global.* Das leistet schon gewöhnliche Konvexität, ohne jede
    Differenzierbarkeit (@satz:kritischer-punkt-und-globales-minimum, @bemerkung:was-daraus-folgt-und-was-nicht).
 2. *Höchstens eine Lösung.* Dafür braucht es strikte Konvexität (@satz:hoechstens-eine-minimalstelle).
 3. *Mindestens eine Lösung.* Das folgt aus keinem von beiden.
 
-Punkt 3 wird am leichtesten übersehen. Die Exponentialfunktion ist auf $\R$ sogar
+Punkt 3 wird leicht übersehen. Die Exponentialfunktion ist auf $\R$ sogar
 strikt konvex, denn $f''(x) = e^x > 0$ überall, und trotzdem gibt es kein Minimum. Für die
 Existenz sorgen andere Argumente: eine :k[kompakte]{#closed-bounded-set} zulässige Menge und
 Stetigkeit nach dem Satz von Weierstraß, wie in @satz:projektionstheorem, oder Koerzivität,
@@ -275,7 +271,7 @@ Designmatrix strikt konvex und koerziv, das Minimum existiert und ist eindeutig
 (@beispiel:kleinste-quadrate-und-ridge, @kap:kq rechnet es aus). Und die Ridge-Regression ist es für jedes
 $\lambda > 0$ auch dann, wenn die Designmatrix rangdefizient ist.
 
-Ein statistisches Gegenbeispiel zeigt, dass Punkt 3 keine Spitzfindigkeit ist. Bei perfekt
+Ein statistisches Gegenbeispiel zeigt die Relevanz von Punkt 3. Bei perfekt
 trennbaren Daten bleibt die negative Log-Likelihood der logistischen Regression strikt konvex,
 angenommen wird ihr Infimum aber nicht: Die Koeffizienten laufen ins Unendliche, während der
 Wert gegen $0$ fällt. Schon mit den beiden Beobachtungen $(x, y) = (1, 1)$ und
@@ -289,13 +285,11 @@ $\lambda = 0{,}2$ liegt das Minimum bei $\beta = 1{,}18$.
 
 ### Optimierungslandschaften
 
-Der Unterschied lässt sich als Bildtafel mit drei Flächen nebeneinander zeigen. Wir bauen ihn
-in einer Variablen nach, weil sich dort alles einzeichnen lässt, worauf es ankommt: erst die
+Der Unterschied lässt sich in einer Variablen zeichnen: erst die
 drei Fälle als Tafel, danach ein Verfahren, das in einem von ihnen scheitert.
 
 :::interaktiv[Drei Landschaften nebeneinander]
-Woran sehen wir einer Landschaft an, welcher der drei Fälle vorliegt? Die Antwort steckt nicht
-im Verlauf des Graphen, sondern in der Menge der Minimalstellen.
+Welcher der drei Fälle vorliegt, zeigt die Menge der Minimalstellen.
 
 <Landschaften />
 
@@ -305,25 +299,25 @@ konvexe Funktion mit einem flachen Stück. Sie erfüllt @eq:konvexitaet-als-ungl
 Plateau steht in @eq:strikte-konvexitaet Gleichheit, sie ist also nicht
 strikt konvex. Ihre Minimalstellen bilden das ganze Intervall von $-0{,}8$ bis $0{,}8$, und
 das ist eine konvexe Menge, wie @satz:die-minimalstellen-bilden-eine-konvexe es verlangt. Rechts ist die Konvexität verletzt,
-und damit fällt die ganze Theorie dieses Abschnitts weg: Zwei kritische Punkte tragen dort
+und damit gilt die Theorie dieses Abschnitts nicht mehr: Zwei kritische Punkte tragen dort
 positive Krümmung, nur einer von beiden ist global.
 :::
 
 ::::vertiefung[Ein Abstiegsverfahren auf der Doppelmulde]
-Wie sich der Unterschied auf ein Verfahren auswirkt, gehört eigentlich schon zu
-@kap:optim. Ein Blick voraus lohnt sich trotzdem: Wir lassen den einfachsten Vertreter laufen,
+Wie sich der Unterschied auf ein Verfahren auswirkt, gehört zu
+@kap:optim. Als Vorgriff lassen wir den einfachsten Vertreter laufen,
 den :k[Gradientenabstieg]{#gradient-descent} aus @sec:differentialrechnung/gradient, der
 wiederholt ein Stück in Richtung des stärksten Abstiegs geht. Auf der Doppelmulde entscheidet
 allein der Startwert, in welchem Tal er endet.
 
 :::interaktiv[Ein Abstieg auf der Doppelmulde]
 Der Startwert lässt sich Schritt für Schritt verschieben; die Tafel zeigt jedes Mal die
-ausgewählten Zwischenstationen und den Punkt, an dem die Folge zur Ruhe kommt. Wo genau
+ausgewählten Zwischenstationen und den Punkt, an dem die Folge zur Ruhe kommt. Wo
 verläuft die Grenze zwischen den beiden Einzugsgebieten?
 
 <AbstiegsBeckenSchaetzung />
 
-Wie das Widget zeigt, trennt der Höcker bei $-0{,}1699$ die beiden Einzugsbereiche. Am
+Der Höcker bei $-0{,}1699$ trennt die beiden Einzugsbereiche. Am
 Endpunkt selbst ist der Unterschied nicht abzulesen: In beiden Tälern verschwindet die
 Ableitung, in beiden ist die Krümmung positiv, in beiden meldet jedes Abbruchkriterium Erfolg.
 Wer ein nicht-konvexes Problem rechnet, muss deshalb mehrere Startwerte durchprobieren; bei
@@ -336,11 +330,11 @@ schon das Ziel.
 
 ### Konvexe und nicht-konvexe Probleme in Statistik und maschinellem Lernen
 
-Zum Abschluss eine Landkarte. Sie sortiert die gängigen Verfahren nach der Frage,
-die dieser Abschnitt beantwortet hat, und ist beim Lesen von Software-Dokumentation
-erstaunlich nützlich: Sie sagt voraus, ob ein Startwert das Ergebnis beeinflussen kann.
+Zum Abschluss eine Übersicht. Sie sortiert die gängigen Verfahren nach der Frage,
+die dieser Abschnitt beantwortet hat, und sagt voraus, ob ein Startwert das Ergebnis
+beeinflussen kann.
 
-:::bemerkung[#eine-landkarte-der-optimierungsprobleme (Eine Landkarte der Optimierungsprobleme)]
+:::bemerkung[#eine-landkarte-der-optimierungsprobleme (Eine Übersicht der Optimierungsprobleme)]
 *Strikt konvexe Probleme* haben höchstens eine Lösung (@satz:hoechstens-eine-minimalstelle), und wo sie existiert, ist
 sie eindeutig und global. Jeder korrekt konvergierte Lauf muss daher dieselbe Lösung liefern;
 Rechenweg, Laufzeit und Abbruchstatus können trotzdem vom Startwert abhängen.
@@ -384,11 +378,11 @@ verschiedene Implementierungen dürfen verschiedene Koeffizienten melden.
 - Nicht-kanonische Links in verallgemeinerten linearen Modellen. Hier entfällt die Garantie:
   Der Term, der beim kanonischen Link die Form $\bX^\top\bW\bX$ erzwingt, fällt weg. Konvex
   bleibt die negative Log-Likelihood trotzdem oft, etwa im Probit-Modell, weil die
-  Verteilungsfunktion der Normalverteilung log-konkav ist. Automatisch ist es eben nicht mehr.
+  Verteilungsfunktion der Normalverteilung log-konkav ist. Automatisch ist es nicht mehr.
 
 *Nicht-konvexe Probleme* können mehrere lokale Minima und Sattelpunkte haben. Verschiedene
-Startwerte können dann in verschiedene Einzugsgebiete führen, und ein bloß stationäres Ergebnis
-trägt kein globales Gütesiegel.
+Startwerte können dann in verschiedene Einzugsgebiete führen, und ein stationäres Ergebnis
+ist nicht notwendig global optimal.
 
 - :k[Neuronale Netze]{#neural-network}. Schon das Vertauschen zweier Neuronen einer Schicht
   liefert ein anderes Parameterset mit demselben Verlust, das Problem ist also nicht einmal
@@ -411,7 +405,7 @@ trägt kein globales Gütesiegel.
 
 Die Wahl von Hyperparametern gehört nur mit Vorbehalt in dieselbe Liste: Dort ist die
 Zielfunktion, meist ein Kreuzvalidierungsfehler, oft nicht einmal stetig. Von Sattelpunkten
-lässt sich da gar nicht sprechen, und deshalb kommen Gittersuche, Zufallssuche und Bayessche
+lässt sich dann nicht sprechen, und deshalb kommen Gittersuche, Zufallssuche und Bayessche
 Optimierung zum Einsatz statt Abstiegsverfahren.
 :::
 
@@ -463,20 +457,18 @@ Optimierung zum Einsatz statt Abstiegsverfahren.
 | @num:konvexitaet/eigenschaften | Eigenschaften | Baukasten aus Summe, nichtnegativem Vielfachem, Supremum und Grenzwert; Jensen; für $f \in \Ccal^2$ auf offenem, konvexem Bereich ist Konvexität gleichbedeutend mit $\bH_f(\bx) \succeq 0$ überall; Subgradienten im Knick |
 | @num:konvexitaet/konvexe-optimierung | Konvexe Optimierung | Für differenzierbares konvexes $f$ bedeutet $\nabla f(\corange{\bx^\star}) = \bnull^\top$ globales Minimum; lokal ist global, keine Sattelpunkte; konvexe Lösungsmenge; strikt konvex bedeutet höchstens eine Lösung, Existenz ist eine eigene Frage |
 
-Ein Satz fasst das Kapitel zusammen. Konvexität kostet uns die Gleichheit der Linearität und
-gibt uns dafür eine globale Aussage, die keine lokale Rechnung je liefern könnte.
+Zusammengefasst: Konvexität ersetzt die Gleichheit der Linearität durch eine Ungleichung und
+liefert dafür eine globale Aussage, die keine lokale Rechnung liefern könnte.
 
 ### Nächstes Kapitel
 
 Wir wissen jetzt, wann ein lokaler Befund ein globaler ist. Offen ist die andere Hälfte: wie
-wir überhaupt dorthin kommen. Davon handelt @kap:optim – von Abstiegsverfahren und ihren
-Schrittweiten, von Newton-Verfahren, die die Krümmung mitnehmen, und von Nebenbedingungen. Die
-Ergebnisse dieses Kapitels sind dort die Eintrittskarte für alle Garantien, die über „das
+wir überhaupt dorthin kommen. Davon handelt @kap:optim: von Abstiegsverfahren und ihren
+Schrittweiten, von Newton-Verfahren, die die Krümmung benutzen, und von Nebenbedingungen. Die
+Ergebnisse dieses Kapitels sind dort die Voraussetzung für alle Garantien, die über „das
 Verfahren bleibt irgendwo stehen" hinausgehen.
 
 ### Selbsttest
-
-Acht Aussagen aus dem ganzen Kapitel. Welche davon stimmen?
 
 ::::quiz
 
@@ -499,7 +491,7 @@ Ist $f\colon \R^n \to \R$ differenzierbar und konvex und hat $f$ mehrere kritisc
 haben sie alle denselben Funktionswert.
 
 Nach @satz:kritischer-punkt-und-globales-minimum ist jeder kritische Punkt ein globales Minimum, und globale Minima tragen
-alle den kleinsten Wert. Die erste Landschaft im Widget zeigt genau das: Auf dem Plateau von
+alle den kleinsten Wert. Die erste Landschaft im Widget zeigt das: Auf dem Plateau von
 $-0{,}8$ bis $0{,}8$ verschwindet die Ableitung überall, und überall steht der Wert $0$. Nach
 @satz:die-minimalstellen-bilden-eine-konvexe bilden diese Stellen sogar eine konvexe Menge, hier ein Intervall.
 :::
@@ -519,11 +511,11 @@ Ist $f_1$ konvex und $f_2$ strikt konvex, so ist $f_1 + f_2$ strikt konvex.
 
 Wir addieren die beiden Ungleichungen @eq:konvexitaet-als-ungleichung und @eq:strikte-konvexitaet für
 $\bx \neq \by$ und $\lambda \in (0,1)$: Links steht $\le$, rechts $<$, in der Summe also $<$.
-Davon lebt die Ridge-Regression. Der Kleinste-Quadrate-Term ist immer konvex und bei
+Darauf beruht die Ridge-Regression. Der Kleinste-Quadrate-Term ist immer konvex und bei
 rangdefizienter Designmatrix nur nicht strikt konvex; der Strafterm
 $\lambda\left\|\bbeta\right\|_2^2$ ist für
 $\lambda > 0$ strikt konvex, und die Summe erbt die strikte Konvexität
-(@beispiel:kleinste-quadrate-und-ridge, @satz:operationen-die-konvexitaet-erhalten). Ohne den strikten Summanden geht es nicht: $\left|x\right|$
+(@beispiel:kleinste-quadrate-und-ridge, @satz:operationen-die-konvexitaet-erhalten). Ohne den strikten Summanden gilt das nicht: $\left|x\right|$
 und $\max\{0, x\}$ sind beide konvex, ihre Summe stimmt auf $(-\infty, 0]$ aber mit
 $\left|x\right| = -x$ überein und verläuft dort geradlinig.
 :::
@@ -557,12 +549,12 @@ ist also zu eng (@bemerkung:warum-der-symmetrische-anteil).
 Im Knick $x = 0$ hat $f(x) = \left|x\right|$ keinen Subgradienten, weil dort die Ableitung
 fehlt.
 
-Der Subgradient braucht keine Ableitung, das ist gerade sein Zweck. Bedingung @eq:subgradient-und-subdifferential
+Der Subgradient braucht keine Ableitung, das ist sein Zweck. Bedingung @eq:subgradient-und-subdifferential
 verlangt in $x = 0$ nur $\left|y\right| \ge v\,y$ für alle $y$, und das erfüllt jedes
 $v \in [-1,1]$. Das Subdifferential ist also ein ganzes Intervall,
 $\partial f(0) = [-1,1]$, und weil $\bnull$ darin liegt, ist $0$ nach @bemerkung:was-daraus-folgt-und-was-nicht die
-globale Minimalstelle (@beispiel:das-subdifferential-des-betrags). Umgekehrt wird ein Rand gefährlich: Auf
-$[0,\infty)$ hat das konvexe $-\sqrt{x}$ in $0$ wirklich keinen Subgradienten
+globale Minimalstelle (@beispiel:das-subdifferential-des-betrags). Am Rand kann es dagegen scheitern: Auf
+$[0,\infty)$ hat das konvexe $-\sqrt{x}$ in $0$ keinen Subgradienten
 (@bemerkung:randpunkte-und-wozu-subgradienten-gut).
 :::
 
@@ -576,15 +568,15 @@ konvex ist sie bei
 rangdefizienter Designmatrix nicht, die Lösungsmenge kann deshalb mehr als einen Punkt
 enthalten. Nach @satz:die-minimalstellen-bilden-eine-konvexe ist sie konvex, also liegt sogar die ganze Verbindungsstrecke
 zwischen den beiden Lösungen in der Lösungsmenge, und alle Punkte darauf haben denselben
-Zielwert. Zwei bloße Softwareausgaben wären dagegen noch kein Beweis: Zuerst sind
+Zielwert. Zwei Softwareausgaben allein wären dagegen kein Beweis: Zuerst sind
 Konvergenzstatus und Optimalitätsresiduum zu prüfen. Bei nicht-konvexen Verfahren wie
-$k$-means wäre selbst erfüllte lokale Optimalität kein globales Gütesiegel (@bemerkung:eine-landkarte-der-optimierungsprobleme).
+$k$-means wäre selbst erfüllte lokale Optimalität keine Garantie für globale Optimalität (@bemerkung:eine-landkarte-der-optimierungsprobleme).
 :::
 
 :::frage{wahr}
 Im Abstiegs-Widget landet ein Lauf, der bei $x_0 = -0{,}16$ startet, im tiefen Tal rechts.
 
-Er landet dort, obwohl er weit links vom tiefen Tal beginnt. Die Wasserscheide ist der Höcker
+Er landet dort, obwohl er weit links vom tiefen Tal beginnt. Die Grenze ist der Höcker
 bei $-0{,}1699$, und $-0{,}16$ liegt knapp rechts davon; der negative Gradient zeigt dort nach
 rechts, und die Folge rollt über den ganzen Höcker hinweg bis $1{,}30084$. Ein Start bei
 $-0{,}17$ endet dagegen bei $-1{,}13090$. Ein Reglerschritt von $0{,}01$ entscheidet also über

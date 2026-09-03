@@ -20,12 +20,12 @@ verlangt Konvexität davon nur noch die Ungleichung $\le$.
 
 Warum sich das lohnt, zeigt sich an zwei Stellen. In der
 :k[Optimierung]{#optimization} und damit im maschinellen Lernen und in der Statistik ist ein
-konvexes Problem eines, bei dem kein Verfahren in einem schlechten Tal hängenbleiben kann:
-Jedes lokale Minimum ist dort automatisch ein globales. Darauf bauen viele Standardwerkzeuge
+konvexes Problem eines, bei dem kein Verfahren in einem lokalen Minimum hängenbleiben kann:
+Jedes lokale Minimum ist dort ein globales. Darauf bauen viele Standardwerkzeuge
 auf, etwa die :k[Maximum-Likelihood-Schätzung]{#likelihood} in verallgemeinerten linearen
 Modellen, Support Vector Machines und die Ridge-Regression, deren Zielfunktion wir in
-@sec:differentialrechnung/produkt-kettenregel abgeleitet haben. Bei der Likelihood lohnt ein
-Blick auf die Richtung: Konvex ist die
+@sec:differentialrechnung/produkt-kettenregel abgeleitet haben. Bei der Likelihood ist auf das
+Vorzeichen zu achten: Konvex ist die
 *negative* Log-Likelihood, die wir minimieren. Die Log-Likelihood selbst ist in diesen Modellen
 konkav, und eine konkave Funktion zu maximieren ist dasselbe, wie ihr Negatives zu minimieren.
 
@@ -34,20 +34,20 @@ Minima zusprechen. Verlässlich ist nur die Aussage über lokal und global. Eind
 bekommen wir erst mit strikter Konvexität, denn eine konstante Funktion ist konvex und wird
 an jeder Stelle minimal. Und ob überhaupt ein Minimum angenommen wird, ist noch einmal eine
 eigene Frage: $f(x) = e^x$ ist konvex, kommt ihrem Infimum $0$ auf $\R$ aber nur beliebig
-nahe. Sauber getrennt stehen die drei Aussagen in @sec:konvexe-optimierung, und in
+nahe. Getrennt stehen die drei Aussagen in @sec:konvexe-optimierung, und in
 @kap:optim hängen daran die Konvergenzgarantien der Verfahren.
 
 In der Wahrscheinlichkeitstheorie liefert Konvexität Ungleichungen für Erwartungswerte. Die
 Jensen-Ungleichung ist der Prototyp (@sec:eigenschaften); die Kullback-Leibler-
 Divergenz ist konvex, was in der Variationsinferenz gebraucht wird; und die
-Nichtnegativität der Varianz ist nichts anderes als die Jensen-Ungleichung für
+Nichtnegativität der Varianz ist die Jensen-Ungleichung für
 $x \mapsto x^2$:
 
 $$
 \E[X^2] \ge \left(\E[X]\right)^2 .
 $$
 
-Dieser Abschnitt legt das Fundament für all das. Wir brauchen dafür wenig:
+Dieser Abschnitt legt die Grundlagen dafür. Wir brauchen dazu
 :k[Vektorräume]{#vector-space} und
 :k[Linearkombinationen]{#linear-combination}, den Umgang mit :k[Normen]{#norm} und
 :k[Skalarprodukten]{#dot-product}, aus der Analysis :k[Grenzwerte]{#limit},
@@ -58,7 +58,7 @@ Später im Kapitel kommen der :k[Gradient]{#gradient} und
 
 ### Konvexkombinationen
 
-Beginnen wir mit dem Baustein, aus dem alles Weitere entsteht.
+Wir beginnen mit dem Grundbaustein.
 
 :::definition[#konvexkombination (Konvexkombination)]
 Sei $V$ ein Vektorraum und $\Xcal = \{\bx_1, \dots, \bx_k\} \subset V$. Wir nennen
@@ -74,15 +74,14 @@ $$
 :::
 
 :::bemerkung[#ein-gewichteter-durchschnitt (Ein gewichteter Durchschnitt)]
-Konvexkombinationen sind spezielle Linearkombinationen. Zwei Bedingungen kommen hinzu, und
-jede von beiden zieht etwas nach sich.
+Konvexkombinationen sind spezielle Linearkombinationen. Zwei Bedingungen kommen hinzu.
 
 Die Gewichte sind nichtnegativ, sie dürfen also keine Richtung umkehren. Sie summieren sich
 zu $1$, wir können sie also nicht gemeinsam hochskalieren. Zusammen heißt das: Die Gewichte
-$\cgreen{w_1}, \dots, \cgreen{w_k}$ sind nichts anderes als eine Wahrscheinlichkeitsverteilung
+$\cgreen{w_1}, \dots, \cgreen{w_k}$ bilden eine Wahrscheinlichkeitsverteilung
 auf den $k$ Punkten, und $\cgreen{\bx}$ ist deren *gewichteter Durchschnitt*.
 
-Zwei Sonderfälle sind schnell abgehakt. Für $k = 1$ bleibt nur $\cgreen{w_1} = 1$, also
+Zwei Sonderfälle. Für $k = 1$ bleibt nur $\cgreen{w_1} = 1$, also
 $\cgreen{\bx} = \bx_1$. Und wählen wir alle Gewichte gleich, so ist
 $\cgreen{w_i} = \tfrac{1}{k}$ und $\cgreen{\bx}$ das arithmetische Mittel der Punkte.
 
@@ -114,20 +113,20 @@ daraus eine Reihe, und wir bräuchten einen Grenzübergang.
 
 Beim fairen Würfel etwa tragen alle sechs Augenzahlen das Gewicht $\tfrac{1}{6}$, und wir
 erhalten das arithmetische Mittel $\cgreen{\E(X)} = 3{,}5$. Daran hängt eine Aussage, die
-uns durch das Kapitel begleitet: Ein gewichteter Durchschnitt verlässt den Bereich seiner
+im ganzen Kapitel wiederkehrt: Ein gewichteter Durchschnitt verlässt den Bereich seiner
 Zutaten nicht. $\E(X)$ liegt zwischen $1$ und $6$, obwohl kein einzelner Wurf jemals $3{,}5$
 zeigt.
 
-Rechnen wir dagegen erst und mitteln dann, ändert sich das Bild. Für dieselbe Zufallsvariable
+Transformieren wir dagegen erst und mitteln dann, gilt das nicht mehr. Für dieselbe Zufallsvariable
 ist $\E(X^2) = \tfrac{91}{6} \approx 15{,}17$, während $\left(\E(X)\right)^2 = 12{,}25$ ist.
 Die Differenz $\tfrac{35}{12} \approx 2{,}92$ ist die :k[Varianz]{#variance}. Dass hier immer dieses
-Vorzeichen steht, ist kein Zufall des Würfels, sondern die Jensen-Ungleichung; wir beweisen
+Vorzeichen steht, gilt für jede Zufallsvariable und ist die Jensen-Ungleichung; wir beweisen
 sie in @sec:eigenschaften.
 :::
 
 ### Zwei Punkte: das Liniensegment
 
-Der einfachste nichttriviale Fall hat $k = 2$, und er ist bereits das geometrische Herz des
+Der einfachste nichttriviale Fall hat $k = 2$, und er ist die geometrische Grundlage des
 ganzen Kapitels.
 
 :::satz[#konvexkombinationen-zweier-vektoren (Konvexkombinationen zweier Vektoren)]
@@ -173,13 +172,13 @@ Mengen enthalten einander, sind also gleich.
 :::::
 
 Der Parameter $\lambda$ misst den Fortschritt entlang der Strecke: $\lambda = 0$ gibt
-$\bx_1$, $\lambda = \tfrac{1}{2}$ den Mittelpunkt, $\lambda = 1$ gibt $\bx_2$. Wer die
-Schranken $0 \le \lambda \le 1$ fallen lässt, erhält die ganze Gerade durch die beiden
-Punkte; die Nichtnegativität der Gewichte ist also genau das, was Strecke von Gerade trennt.
+$\bx_1$, $\lambda = \tfrac{1}{2}$ den Mittelpunkt, $\lambda = 1$ gibt $\bx_2$. Ohne die
+Schranken $0 \le \lambda \le 1$ erhalten wir die ganze Gerade durch die beiden
+Punkte; die Nichtnegativität der Gewichte unterscheidet also Strecke von Gerade.
 
-Halten wir fest, worauf das hinausläuft. Eine Menge wird gleich *konvex* heißen, wenn sie mit
+Eine Menge wird *konvex* heißen, wenn sie mit
 je zwei Punkten auch deren Verbindungsstrecke enthält (@sec:konvexe-mengen).
-@satz:konvexkombinationen-zweier-vektoren sagt: Diese Strecke ist nichts anderes als die Menge aller Konvexkombinationen der
+@satz:konvexkombinationen-zweier-vektoren sagt: Diese Strecke ist die Menge aller Konvexkombinationen der
 beiden Punkte. Konvexe Mengen sind also genau die Mengen, die unter Konvexkombinationen von je
 zwei Punkten abgeschlossen sind. Dass dann auch Konvexkombinationen von mehr als zwei Punkten
 nicht hinausführen, ist eine Induktion und steht dort als eigener Satz.
@@ -187,7 +186,7 @@ nicht hinausführen, ist eine Induktion und steht dort als eigener Satz.
 ### Die konvexe Hülle
 
 Bisher haben wir von einer festen, endlichen Punktliste aus kombiniert. Die konvexe Hülle
-dreht den Blick um: Wir sammeln alles ein, was sich aus einer Menge $\Xcal$ überhaupt
+erfasst umgekehrt alles, was sich aus einer Menge $\Xcal$
 kombinieren lässt.
 
 :::definition[#konvexe-huelle (Konvexe Hülle)]
@@ -203,26 +202,25 @@ aller Konvexkombinationen von endlich vielen Vektoren aus $\Xcal$ heißt *konvex
 :::
 
 :::bemerkung[#warum-endlich-viele (Warum endlich viele)]
-Drei Details der Definition verdienen einen zweiten Blick.
+Drei Details der Definition.
 
 $\Xcal$ selbst darf unendlich sein, eine Kugel etwa oder eine Kurve. Jede *einzelne*
-Kombination benutzt aber nur endlich viele Punkte daraus. Und $N$ ist nicht ein für alle Mal
-festgelegt, sondern darf von Punkt zu Punkt anders ausfallen; deshalb steht das $N \in \N$
+Kombination benutzt aber nur endlich viele Punkte daraus. Und $N$ darf von Punkt zu Punkt anders ausfallen; deshalb steht das $N \in \N$
 mit in der Mengenklammer.
 
 Für endliches $\Xcal = \{\bx_1, \dots, \bx_k\}$ reicht immer $N = k$. Wir dürfen ja Gewichte
 $0$ vergeben, brauchen also nie mehr Summanden als Punkte, und Wiederholungen bringen nichts
-Neues, weil sich die Gewichte zweier gleicher Punkte einfach addieren.
+Neues, weil sich die Gewichte zweier gleicher Punkte addieren.
 
 Schließlich gilt $\Xcal \subseteq \cblue{\conv(\Xcal)}$: Für $N = 1$ ist
-$\cgreen{w_1} = 1$ erzwungen, und wir bekommen die Punkte von $\Xcal$ selbst zurück. Wer
-neugierig ist: Im $\R^n$ genügen sogar stets $N \le n+1$ Punkte pro Kombination, in der
-Ebene also drei. Das ist der klassische Satz von Carathéodory, den wir hier nicht
+$\cgreen{w_1} = 1$ erzwungen, und wir bekommen die Punkte von $\Xcal$ selbst zurück. Im
+$\R^n$ genügen stets $N \le n+1$ Punkte pro Kombination, in der
+Ebene also drei. Das ist der Satz von Carathéodory, den wir hier nicht
 brauchen.
 :::
 
-Unter den Punkten von $\Xcal$ gibt es solche, die sich nicht wegdiskutieren lassen, weil sie
-aus den anderen nicht zu bauen sind.
+Unter den Punkten von $\Xcal$ gibt es solche, die sich aus den anderen nicht
+kombinieren lassen.
 
 :::definition[#konvexkombinationen-extrempunkt (Extrempunkt)]
 Ein Punkt $\corange{\bx} \in \Xcal$ heißt *Extrempunkt* (extreme point) von
@@ -246,15 +244,14 @@ Dreiecksbeispiel unten bleiben deshalb genau die drei Ecken übrig.
 :::
 
 :::bemerkung[#die-kleinste-konvexe-obermenge (Die kleinste konvexe Obermenge)]
-Der Name *Hülle* ist mit Bedacht gewählt: $\cblue{\conv(\Xcal)}$ ist die
+$\cblue{\conv(\Xcal)}$ ist die
 kleinste konvexe Menge, die $\Xcal$ enthält. Das sind drei
-Behauptungen auf einmal: $\cblue{\conv(\Xcal)}$ ist konvex, sie enthält $\Xcal$, und sie
+Behauptungen: $\cblue{\conv(\Xcal)}$ ist konvex, sie enthält $\Xcal$, und sie
 liegt in *jeder* konvexen Menge, die $\Xcal$ enthält.
 
 Die zweite steht schon in @bemerkung:warum-endlich-viele. Für die anderen beiden fehlt uns
 noch der Begriff der konvexen Menge, deshalb holen wir den Beweis in
-@sec:konvexe-mengen nach. Die Beweisidee lässt sich aber jetzt schon in einem Satz
-sagen: Eine konvexe Menge ist unter Konvexkombinationen von zwei Punkten abgeschlossen, und
+@sec:konvexe-mengen nach. Die Beweisidee: Eine konvexe Menge ist unter Konvexkombinationen von zwei Punkten abgeschlossen, und
 daraus folgt per Induktion die Abgeschlossenheit unter Konvexkombinationen von $N$ Punkten.
 :::
 
@@ -265,11 +262,11 @@ für die Liste ihrer Extrempunkte?
 
 <HuellenSchaetzung />
 
-Wie das Widget zeigt, wächst die Fläche monoton, die Liste der Extrempunkte dagegen nicht:
+Die Fläche wächst monoton, die Liste der Extrempunkte dagegen nicht:
 Bei $k = 5, 6, 8, 9, 10, 11$ und $12$ fällt jeweils eine alte Ecke heraus, während der neue
 Punkt nachrückt. Die Anzahl bleibt dabei stehen und nur die Zusammensetzung ändert sich;
 fallen kann sie ebenfalls, nämlich sobald ein einziger neuer Punkt gleich zwei alte Ecken
-einschließt. Am Ende tragen sieben der vierzehn Punkte die ganze Hülle. Genau das meint
+einschließt. Am Ende tragen sieben der vierzehn Punkte die ganze Hülle. Das meint
 @bemerkung:extrempunkt-zu-sein-ist-keine: Extrempunkt zu sein ist keine Eigenschaft des Punktes, sondern der Menge.
 
 Der grüne Punkt ist der Mittelwert der freigeschalteten Punkte, also die Konvexkombination
@@ -330,22 +327,21 @@ drei positiv, liegt er im Inneren. Ist genau eines gleich $0$, liegt er auf der
 gegenüberliegenden Kante, die nach @satz:konvexkombinationen-zweier-vektoren gerade das Liniensegment der beiden anderen
 Ecken ist. Sind zwei gleich $0$, sind wir in einer Ecke.
 
-Die Gewichte haben hier eine hübsche geometrische Bedeutung: $\cgreen{w_i}$ ist der
+Die Gewichte haben hier eine geometrische Bedeutung: $\cgreen{w_i}$ ist der
 Flächenanteil des Teildreiecks, das aus $\cgreen{\bx}$ und den beiden *anderen* Ecken
 gebildet wird. Beim Schwerpunkt sind alle drei Teilflächen gleich groß, jede also ein Drittel
-der Gesamtfläche $2$. Das Widget rechnet diese Probe live mit.
+der Gesamtfläche $2$. Das Widget rechnet diese Probe mit.
 :::
 
 :::interaktiv[Konvexkombinationen zum Schieben]
-Ein einziges Widget deckt Liniensegment und Dreieck zugleich ab, wenn wir den Punkt selbst
-bewegen dürfen. Zwei Fragen lassen sich daran
+Das Widget deckt Liniensegment und Dreieck zugleich ab. Zwei Fragen lassen sich daran
 klären: Welche Punkte der Ebene sind überhaupt Konvexkombinationen der drei Ecken, und woran
 sehen wir den Gewichten an, ob der Punkt im Inneren, auf einer Kante oder in einer Ecke liegt?
 
 <KonvexkombinationsExplorer />
 
-Der grüne Punkt verlässt das Dreieck nie: Negative Gewichte sind nicht zugelassen, und genau
-diese Nichtnegativität hält ihn drinnen. Jede Kante entsteht, sobald ein Gewicht null wird:
+Der grüne Punkt verlässt das Dreieck nie: Negative Gewichte sind nicht zugelassen, und
+diese Nichtnegativität hält ihn im Dreieck. Jede Kante entsteht, sobald ein Gewicht null wird:
 Übrig bleibt die Konvexkombination zweier Ecken, also nach @satz:konvexkombinationen-zweier-vektoren ihr Liniensegment.
 
 Die drei Regler geben unnormierte Werte; geteilt wird durch ihre Summe, damit
@@ -357,7 +353,7 @@ Die gestrichelte Hilfsstrecke zeigt, warum die drei Ecken die gesamte Fläche er
 mischen zuerst $\corange{\bx_2}$ und $\corange{\bx_3}$ zum Punkt $\cgreen{\by}$ auf der
 Kante zwischen diesen beiden und mischen dann $\corange{\bx_1}$ mit $\cgreen{\by}$. Läuft
 $\cgreen{\by}$ über die ganze Kante, so überstreichen die Strecken von $\corange{\bx_1}$ aus
-das ganze Dreieck. Formal steckt dahinter nichts anderes als das Zusammenfassen von
+das ganze Dreieck. Formal ist das ein Zusammenfassen von
 Gewichten:
 
 $$
@@ -369,9 +365,9 @@ $$
 $$
 
 und die beiden inneren Gewichte summieren sich wieder zu $1$. Vorausgesetzt ist dabei
-$\cgreen{w_2} + \cgreen{w_3} > 0$; sonst bleibt schlicht $\cgreen{\bx} = \corange{\bx_1}$,
-und es gibt nichts zu mischen. Dieselbe Rechnung, ein paar
-Punkte weiter getrieben, ist die Induktion, die wir in
+$\cgreen{w_2} + \cgreen{w_3} > 0$; sonst bleibt $\cgreen{\bx} = \corange{\bx_1}$,
+und es gibt nichts zu mischen. Dieselbe Rechnung mit
+mehr Punkten ist die Induktion, die wir in
 @sec:konvexe-mengen für die Hülle brauchen.
 :::
 
@@ -397,11 +393,11 @@ $\bx_1 = \bnull$, so wäre $2\bx_1 = \bx_1$ sehr wohl eine Konvexkombination.
 :::frage{falsch}
 Ist ein Optimierungsproblem konvex, so besitzt es genau ein globales Minimum.
 
-So formuliert verspricht die Aussage zu viel. Zuverlässig ist: Jedes lokale Minimum ist
+So formuliert ist die Aussage zu stark. Richtig ist: Jedes lokale Minimum ist
 global. Eindeutigkeit folgt daraus nicht, denn eine konstante Funktion ist konvex und wird an
 jeder Stelle minimal; dafür braucht es strikte Konvexität. Und die Existenz ist eine dritte,
 davon unabhängige Frage: $f(x) = e^x$ ist konvex und nimmt ihr Infimum $0$ auf $\R$ nie an.
-Die drei Aussagen werden in @sec:konvexe-optimierung sauber getrennt.
+Die drei Aussagen werden in @sec:konvexe-optimierung getrennt.
 :::
 
 :::frage{falsch}
@@ -439,7 +435,7 @@ Zutaten nicht.
 In der Definition der konvexen Hülle muss die Zahl $N$ der beteiligten Punkte für alle
 Elemente dieselbe sein, und $\Xcal$ muss endlich sein.
 
-Beides ist zu eng gelesen. $N$ steht mit in der Mengenklammer und darf von Punkt zu Punkt
+Beides ist falsch. $N$ steht mit in der Mengenklammer und darf von Punkt zu Punkt
 verschieden ausfallen, und $\Xcal$ selbst darf ohne Weiteres unendlich sein; nur jede
 einzelne Kombination benutzt endlich viele Punkte (@bemerkung:warum-endlich-viele). Für endliches $\Xcal$
 mit $k$ Elementen reicht dagegen immer $N = k$, weil Gewichte $0$ erlaubt sind.
@@ -450,7 +446,7 @@ Schieben wir im Hüllen-Widget den Regler ganz nach rechts, also auf $k = 14$. W
 vierzehn Punkte sind dann noch Extrempunkte?
 
 Sieben. Die anderen sieben liegen im Inneren der Hülle und lassen sich als Konvexkombination
-der Ecken schreiben; sie steuern zur Hülle nichts bei. Genau darin liegt der Nutzen der
+der Ecken schreiben; sie steuern zur Hülle nichts bei. Darin liegt der Nutzen der
 Extrempunkte: Sie sind die sparsame Beschreibung einer konvexen Menge. Die Hülle hat dann die
 Fläche $7{,}46$, und keiner der sieben inneren Punkte könnte sie vergrößern.
 :::

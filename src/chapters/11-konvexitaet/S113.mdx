@@ -3,16 +3,16 @@ import { ProjektionsWidget } from "./widgets/S113Projektion";
 
 ### Der nächste Punkt einer konvexen Menge
 
-@sec:konvexe-mengen hat konvexe Mengen von innen betrachtet: Zwei Punkte drin, die
-ganze Strecke drin. Jetzt schauen wir von außen darauf. Gegeben ein Punkt $\bx$, der nicht in
+@sec:konvexe-mengen hat konvexe Mengen von innen betrachtet: Mit zwei Punkten liegt die
+ganze Strecke in der Menge. Jetzt betrachten wir sie von außen. Gegeben ein Punkt $\bx$, der nicht in
 der Menge liegt: Welcher Punkt der Menge kommt ihm am nächsten?
 
-Die Frage ist keine Spielerei. Verfahren für Optimierungsprobleme mit Nebenbedingungen rechnen
+Verfahren für Optimierungsprobleme mit Nebenbedingungen rechnen
 einen Schritt oft erst frei aus und holen das Ergebnis danach in die zulässige Menge zurück,
 und zwar an die nächstgelegene Stelle. Auch die Kleinste-Quadrate-Rechnung aus
 @sec:kq/problem ist eine solche Aufgabe: Dort suchen wir im Spaltenraum von
-$\bA$ den Punkt mit dem kleinsten Abstand zu $\by$. Damit ein Verfahren darauf bauen kann,
-brauchen wir zwei Zusagen. Es muss einen nächstgelegenen Punkt überhaupt geben, und es darf nur
+$\bA$ den Punkt mit dem kleinsten Abstand zu $\by$. Damit ein Verfahren darauf aufbauen kann,
+brauchen wir zwei Aussagen. Es muss einen nächstgelegenen Punkt überhaupt geben, und es darf nur
 einen geben. Beides liefert Konvexität.
 
 :::satz[#projektionstheorem (Projektionstheorem)]
@@ -36,7 +36,7 @@ $\cblue{\Xcal}$.
 :::schritt
 *Existenz.* Wir setzen $d := \inf_{\by \in \cblue{\Xcal}} \left\|\bx - \by\right\|$. Das
 Infimum existiert, weil die Menge der Abstände nichtleer und nach unten durch $0$ beschränkt
-ist. Nun greifen wir uns irgendein $\by_0 \in \cblue{\Xcal}$ und schneiden die Menge mit einer
+ist. Nun wählen wir ein $\by_0 \in \cblue{\Xcal}$ und schneiden die Menge mit einer
 Kugel:
 
 $$
@@ -75,7 +75,7 @@ $\cgreen{\corange{\wh{\bx}_1} + \lambda\bv} = \cgreen{(1-\lambda)\corange{\wh{\b
 für jedes solche $\lambda$ in $\cblue{\Xcal}$. Nach Schritt 2 ist $d$ der kleinstmögliche
 Abstand, also gilt $g(\lambda) \ge d^2$ auf dem ganzen Intervall.
 
-::why[genau hier geht die Konvexität ein: ohne sie wüssten wir über die Punkte der Strecke gar nichts]
+::why[hier geht die Konvexität ein: ohne sie wüssten wir über die Punkte der Strecke nichts]
 :::
 
 :::schritt
@@ -108,7 +108,7 @@ denn $\bv \neq \bnull$. Der Mittelpunkt der beiden Kandidaten liegt also echt n�
 $d$, und das widerspricht Schritt 3. Folglich war die Annahme falsch, und es gilt
 $\corange{\wh{\bx}_1} = \corange{\wh{\bx}_2}$.
 
-::why[der rote Term ist der ganze Gewinn: Er misst, wie weit die beiden Kandidaten auseinanderliegen, und genau um ihn unterbietet der Mittelpunkt den angeblich kleinsten Abstand]
+::why[der rote Term misst, wie weit die beiden Kandidaten auseinanderliegen, und um ihn unterbietet der Mittelpunkt den angeblich kleinsten Abstand]
 :::
 
 ::::
@@ -116,7 +116,7 @@ $\corange{\wh{\bx}_1} = \corange{\wh{\bx}_2}$.
 :::::
 
 :::bemerkung[#jede-voraussetzung-wird-gebraucht (Jede Voraussetzung wird gebraucht)]
-Der Satz stellt drei Bedingungen, und entbehrlich ist keine davon.
+Der Satz stellt drei Bedingungen, und keine davon ist entbehrlich.
 
 *Abgeschlossen.* Für den offenen Einheitsball
 $\cred{\{\bz\colon \left\|\bz\right\| < 1\}}$ und $\bx = (2,0)^\top$ ist das Infimum der
@@ -130,14 +130,13 @@ zweielementige Menge $\cred{\{-1, +1\}} \subseteq \R$ mit $\bx = 0$: zwei nächs
 
 *Endliche Dimension.* Die Abgeschlossenheit allein trägt die Existenz nicht. Sie sorgt dafür,
 dass der Grenzwert einer Minimierungsfolge wieder in der Menge liegt; dass die Folge überhaupt
-konvergiert, ist die eigentliche Arbeit, und in endlicher Dimension besorgt es
+konvergiert, ist der schwierigere Teil, und in endlicher Dimension liefert ihn
 Bolzano-Weierstraß. In unendlichdimensionalen Räumen gilt der Satz ebenfalls, dort allerdings
 nur für *vollständige* Räume, und die Rechnung aus Schritt 5 wird dann zur
 Parallelogrammgleichung, mit der sich jede Minimierungsfolge als Cauchy-Folge erweist.
 :::
 
-Der nächstgelegene Punkt lässt sich auch ohne Minimierung erkennen. Das folgende Kriterium
-sagt, woran wir ihn sehen. Für einen Untervektorraum wird daraus die vertraute
+Der nächstgelegene Punkt lässt sich auch ohne Minimierung erkennen. Für einen Untervektorraum wird aus dem folgenden Kriterium die bekannte
 Orthogonalität, für allgemeine konvexe Mengen bleibt nur die Ungleichung.
 
 :::satz[#kriterium-des-stumpfen-winkels (Kriterium des stumpfen Winkels)]
@@ -161,21 +160,21 @@ Punkt $\by \neq \corange{\wh{\bx}}$ der Menge schließen einen Winkel von mindes
 $90^\circ$ ein. Die ganze Menge liegt also auf einer Seite der Geraden (im $\R^n$: der
 :k[Hyperebene]{#hyperplane}) durch $\corange{\wh{\bx}}$, die senkrecht auf
 $\bx - \corange{\wh{\bx}}$ steht. Liegt $\bx$ dagegen selbst in $\cblue{\Xcal}$, so ist
-$\bx - \corange{\wh{\bx}} = \bnull$ und von einem Winkel keine Rede mehr.
+$\bx - \corange{\wh{\bx}} = \bnull$ und ein Winkel ist nicht definiert.
 
 Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird aus
 @eq:kriterium-des-stumpfen-winkels eine Gleichung. Mit $\by = \corange{\wh{\bx}} \pm \bu$ für
 beliebiges $\bu \in \Ucal$ liefert @eq:kriterium-des-stumpfen-winkels nämlich
 $\pm\langle \bx - \corange{\wh{\bx}}, \bu\rangle \le 0$, also
-$\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann wirklich senkrecht
+$\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann senkrecht
 auf dem ganzen Unterraum, und aus dieser Bedingung entstehen die Normalgleichungen der
 Kleinsten Quadrate aus @sec:kq/problem. Für eine konvexe Menge bleibt davon die Ungleichung
 übrig, und die reicht aus.
 
 :::::vertiefung[Der Beweis des Winkelkriteriums und zwei Projektionsformeln]
 Der Beweis ist eine Rechnung mit demselben quadratischen Ausdruck wie im
-Eindeutigkeitsteil oben; die beiden Formeln danach zeigen, wie eine Projektion aussieht, wenn
-man sie ausnahmsweise hinschreiben kann.
+Eindeutigkeitsteil oben; die beiden Formeln danach zeigen zwei Fälle, in denen sich die Projektion
+geschlossen angeben lässt.
 
 ::::beweis
 
@@ -219,7 +218,7 @@ verschwindet.
 
 ::::
 
-Die Eindeutigkeit fällt nebenbei ab: Erfüllen $\corange{\wh{\bx}_1}$ und
+Die Eindeutigkeit folgt daraus ebenfalls: Erfüllen $\corange{\wh{\bx}_1}$ und
 $\corange{\wh{\bx}_2}$ beide @eq:kriterium-des-stumpfen-winkels, so setzen wir einmal $\by = \corange{\wh{\bx}_2}$ und
 einmal $\by = \corange{\wh{\bx}_1}$ ein und addieren die beiden Ungleichungen. Übrig bleibt
 $\left\|\corange{\wh{\bx}_2} - \corange{\wh{\bx}_1}\right\|^2 \le 0$.
@@ -254,12 +253,12 @@ Gleichheit erfüllt ist. Liegt $\bx$ schon im Halbraum, passiert nichts.
 
 Für ein Dreieck oder ein Polyeder gibt es keine solche Formel mehr. Dort rechnen wir die
 Projektion auf jede Seite einzeln aus, jeweils auf diese Seite beschränkt, und nehmen die
-beste; Ecken sind damit von selbst abgedeckt. Genau so rechnet das Widget unten.
+beste; Ecken sind damit abgedeckt. So rechnet das Widget unten.
 :::
 :::::
 
-:::interaktiv[Die Projektion zum Ziehen]
-In dieser Skizze ist der Punkt beweglich. Zwei Fragen lassen sich damit klären:
+:::interaktiv[Die Projektion mit beweglichem Punkt]
+Zwei Fragen lassen sich damit klären:
 Wandert $\corange{\wh{\bx}}$ immer mit, wenn wir $\bx$ bewegen, und wo liegt der nächste Punkt, wenn $\bx$ hinter einer Ecke steht?
 
 <ProjektionsWidget />
@@ -277,9 +276,8 @@ stehen, während $\bx$ weiterläuft.
 ### Der Epigraph
 
 Bisher ging es um Mengen. Für die Optimierung brauchen wir aber vor allem Aussagen über
-*Funktionen*, und daraus wird keine neue Theorie: Wir führen die Konvexität einer
-Funktion auf die Konvexität einer Menge zurück. Diese Menge ist alles, was über dem Graphen
-liegt.
+*Funktionen*, und wir führen die Konvexität einer
+Funktion auf die Konvexität einer Menge zurück, nämlich der Menge über dem Graphen.
 
 :::definition[#epigraph (Epigraph)]
 Seien $\Xcal\subseteq\R^n$ und $f\colon \Xcal \to \R$. Der *Epigraph*
@@ -303,15 +301,14 @@ $\R^n \times \R$ ist.
 :::
 
 :::bemerkung[#der-definitionsbereich-muss-mitspielen (Der Definitionsbereich muss mitspielen)]
-Dass $\Xcal$ dabei konvex ist, muss man nicht eigens fordern. Es ist keine zusätzliche
-Forderung, sondern eine Folgerung. Sind nämlich $\bx, \by \in \Xcal$, so liegen $(\bx, f(\bx))$
+Dass $\Xcal$ dabei konvex ist, müssen wir nicht eigens fordern; es folgt aus der Definition. Sind nämlich $\bx, \by \in \Xcal$, so liegen $(\bx, f(\bx))$
 und $(\by, f(\by))$ in $\cblue{\epi(f)}$, und ist der Epigraph konvex, so liegt auch
 $\cgreen{\lambda(\bx, f(\bx)) + (1-\lambda)(\by, f(\by))}$ darin. Die erste Komponente dieses
 Punktes ist $\cgreen{\lambda\bx + (1-\lambda)\by}$, und weil alle Punkte des Epigraphen ihre
 erste Komponente in $\Xcal$ haben, liegt sie in $\Xcal$. Ein konvexer Epigraph erzwingt also
 einen konvexen Definitionsbereich.
 
-Umgekehrt brauchen wir die Konvexität von $\Xcal$ sehr wohl als Voraussetzung, sobald wir
+Umgekehrt brauchen wir die Konvexität von $\Xcal$ als Voraussetzung, sobald wir
 gleich mit Ungleichungen arbeiten: Dort steht $f(\cgreen{\lambda\bx + (1-\lambda)\by})$, und
 dieser Ausdruck muss überhaupt erst definiert sein. Wir setzen deshalb ab jetzt durchgehend
 voraus, dass $\Xcal$ konvex ist.
@@ -372,11 +369,10 @@ Konvexkombination der beiden Punkte damit wieder in $\cblue{\epi(f)}$.
 :::::
 
 :::bemerkung[#wie-wir-die-ungleichung-lesen (Wie wir die Ungleichung lesen)]
-Für $f\colon \R^n \to \R$ sagt @eq:konvexitaet-als-ungleichung etwas sehr Anschauliches. Die rechte Seite ist der
+Für $f\colon \R^n \to \R$ hat @eq:konvexitaet-als-ungleichung eine anschauliche Bedeutung. Die rechte Seite ist der
 Wert, den die Verbindungsstrecke zwischen den Graphenpunkten $(\bx, f(\bx))$ und
 $(\by, f(\by))$ an der Stelle $\cgreen{\lambda\bx + (1-\lambda)\by}$ hat, die linke der
-Funktionswert dort. Die *Sehne* liegt also nie unter dem Graphen, oder umgekehrt: Zwischen zwei
-Punkten hängt der Graph durch. Konvexe Funktionen sind nach oben geöffnet.
+Funktionswert dort. Die *Sehne* liegt also nie unter dem Graphen.
 
 Aus derselben Ungleichung entstehen zwei weitere Begriffe. Wir nennen $f$ *konkav* (concave), wenn $-f$ konvex ist; für
 konkave Funktionen dreht sich in @eq:konvexitaet-als-ungleichung das Ungleichheitszeichen um, die Sehne liegt nie
@@ -389,8 +385,7 @@ Funktionen dürfen also keine geraden Stücke haben. Warum das wichtig ist, sehe
 macht das Minimum eindeutig.
 :::
 
-Eine Bildtafel stellt konvex und konkav gegenüber, und daran hängt ein
-beweglicher Test.
+Die folgenden Tafeln stellen konvex und konkav gegenüber.
 
 <KonvexKonkavPanels />
 
@@ -400,30 +395,30 @@ konkaven Funktion ist das ganze Zwischenstück rot, bei der Doppelmulde rechts n
 davon. Beides widerlegt Konvexität, konkav ist von den vier Funktionen aber nur die zweite.
 In der dritten Tafel liegen beide Endpunkte rechts vom Knick des Betrags. Dort verdeckt die
 grüne Sehne den blauen Graphen vollständig, denn auf diesem Ast steht in @eq:konvexitaet-als-ungleichung
-Gleichheit; genau darin unterscheiden sich konvex und strikt konvex. Die Parabel links kennt
-diesen Fall nicht, sie bleibt zwischen ihren Endpunkten überall echt unter der Sehne.
+Gleichheit; darin unterscheiden sich konvex und strikt konvex. Bei der Parabel links tritt
+dieser Fall nicht auf, sie bleibt zwischen ihren Endpunkten überall echt unter der Sehne.
 
 :::interaktiv[Konvexität mit einer beweglichen Sehne]
-Wählen wir die Endpunkte selbst, wird aus der Tafel ein Werkzeug. Wie viele Paare müssen wir
+Hier lassen sich die Endpunkte frei wählen. Wie viele Paare müssen wir
 prüfen, um Konvexität zu widerlegen, und wie viele, um sie zu beweisen?
 
 <SehnenTest />
 
 Nachweis und Widerlegung sind ebenso ungleich schwer wie bei den Mengen in @bemerkung:was-die-bedingung-verlangt:
-Ein einziges schlechtes Paar erledigt die Konvexität, während noch so viele gelungene Proben
-sie nicht beweisen. Die Doppelmulde führt beides vor. In der Voreinstellung $x = -1{,}55$ und
-$y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die Sache entschieden.
+Ein einziges Paar widerlegt die Konvexität, während beliebig viele bestandene Proben
+sie nicht beweisen. Die Doppelmulde zeigt beides. In der Voreinstellung $x = -1{,}55$ und
+$y = 1{,}25$ ragt der Graph um $1{,}891$ über die Sehne, damit ist die Frage entschieden.
 Rücken wir dagegen beide Endpunkte in denselben Talgrund, etwa auf $x = -1{,}8$ und
 $y = -0{,}9$, so besteht das Paar die Probe, und bewiesen ist damit nichts. Beim Betrag deckt
 die grüne Sehne den Graphen auf jedem Paar mit gleichem Vorzeichen vollständig ab, dort steht
-in @eq:konvexitaet-als-ungleichung Gleichheit, und genau daran unterscheiden sich konvex und
+in @eq:konvexitaet-als-ungleichung Gleichheit, und daran unterscheiden sich konvex und
 strikt konvex.
 :::
 
 ### Nachweis von Hand: der Betrag
 
-Beweisen lässt sich Konvexität nur mit einer Rechnung über alle Paare. Wie so eine Rechnung
-aussieht, führen wir am Betrag vor.
+Beweisen lässt sich Konvexität nur mit einer Rechnung über alle Paare. Wie eine solche Rechnung
+aussieht, zeigen wir am Betrag.
 
 :::beispiel[#der-betrag-ist-konvex (Der Betrag ist konvex)]
 Die Funktion $f\colon \R \to \R$, $f(x) = |x|$, ist konvex.
@@ -462,7 +457,7 @@ Dreiecksungleichung. Beides haben alle Normen, und deshalb tragen wir denselben 
 Der Betrag ist konvex, aber nicht strikt konvex: Für $x, y > 0$ steht in der Rechnung
 durchgehend Gleichheit. Und er zeigt noch etwas: Konvexe Funktionen dürfen Knicke haben, sie
 müssen nicht differenzierbar sein. Die Ableitungskriterien, die
-@sec:eigenschaften bringt, sind deshalb bequem, aber nicht die Definition.
+@sec:eigenschaften bringt, sind deshalb praktisch, aber nicht die Definition.
 
 ### Selbsttest
 
@@ -480,7 +475,7 @@ $f$ konvex und zugleich konkav, aber für kein $a$ strikt konvex.
 :::frage{wahr}
 Die Funktion $f\colon \R \to \R$, $f(x) = x^4$, ist konvex.
 
-Sie ist es, und zwar streng. Ein Beweis in einer Zeile folgt in
+Sie ist es, und zwar strikt. Ein kurzer Beweis folgt in
 @sec:eigenschaften aus $f''(x) = 12x^2 \ge 0$. Dass die zweite Ableitung im Nullpunkt
 verschwindet, schadet dabei nicht: Die Sehnenungleichung verlangt nichts über Ableitungen, und
 die Funktion ist auch über den Nullpunkt hinweg strikt konvex.
@@ -497,7 +492,7 @@ Ungleichung erfüllt, also ist $\sqrt{\cdot}$ konkav im Sinne von @bemerkung:wie
 :::frage{wahr}
 Die Exponentialfunktion $f\colon \R \to \R$, $f(x) = e^x$, ist konvex.
 
-Sogar strikt konvex. Nebenbei ist die Exponentialfunktion das Standardbeispiel dafür, dass
+Sogar strikt konvex. Die Exponentialfunktion ist außerdem das Standardbeispiel dafür, dass
 Konvexität allein noch kein Minimum liefert: $e^x > 0$ für alle $x$, das Infimum $0$ wird nie
 angenommen.
 :::
@@ -514,7 +509,7 @@ ist die Anschauung hinter konkav.
 :::frage{falsch}
 Ist $f$ konkav, so ist ihr Epigraph konvex.
 
-Genau andersherum. Konkav heißt, dass $-f$ konvex ist, und das ist gleichbedeutend damit, dass
+Umgekehrt. Konkav heißt, dass $-f$ konvex ist, und das ist gleichbedeutend damit, dass
 die Menge *unter* dem Graphen konvex ist. Für $f(x) = -x^2$ etwa ist der Epigraph das Gebiet
 über einer nach unten geöffneten Parabel, und die Verbindungsstrecke zwischen $(-1,-1)$ und
 $(1,-1)$ läuft durch $(0,-1)$, was wegen $-1 < f(0) = 0$ nicht im Epigraphen liegt. Konvex ist
@@ -536,8 +531,7 @@ Streifen leer, bewiesen ist damit aber nichts.
 
 ### Beispiele konvexer Funktionen
 
-Zum Schluss stehen drei Klassen zusammen, die in der Statistik ständig vorkommen. Wir gehen
-sie der Reihe nach durch, mit Beweis, wo er kurz ist.
+Zum Schluss drei Klassen, die in der Statistik häufig vorkommen, mit Beweis, wo er kurz ist.
 
 :::beispiel[#affine-funktionen (Affine Funktionen)]
 Für $\bb \in \R^n$ und $a \in \R$ ist $f(\bx) = \bb^\top\bx + a$ konvex und konkav zugleich,
@@ -577,7 +571,7 @@ $$
 Die affinen Anteile $\bb^\top\bx + a$ fallen dabei heraus, weil sie nach @beispiel:affine-funktionen die
 Gleichung mit Gleichheit erfüllen; zu rechnen bleibt der quadratische Teil.
 
-::why[ausmultiplizieren: $\bz^\top\bQ\bz = \lambda^2\bx^\top\bQ\bx + \lambda(1-\lambda)(\bx^\top\bQ\by + \by^\top\bQ\bx) + (1-\lambda)^2\by^\top\bQ\by$, und mit $\lambda - \lambda^2 = \lambda(1-\lambda)$ bleibt genau der angegebene Term; numerisch über 200000 Zufallsfälle bestätigt]
+::why[ausmultiplizieren: $\bz^\top\bQ\bz = \lambda^2\bx^\top\bQ\bx + \lambda(1-\lambda)(\bx^\top\bQ\by + \by^\top\bQ\bx) + (1-\lambda)^2\by^\top\bQ\by$, und mit $\lambda - \lambda^2 = \lambda(1-\lambda)$ bleibt der angegebene Term]
 :::
 
 :::schritt
@@ -597,7 +591,7 @@ die strikte Ungleichung.
 :::::
 
 :::bemerkung[#warum-der-symmetrische-anteil (Warum der symmetrische Anteil entscheidet)]
-Die Voraussetzung des Satzes ist bewusst an $\bQ_{\mathrm{sym}}$ geknüpft und nicht an $\bQ$
+Die Voraussetzung des Satzes betrifft $\bQ_{\mathrm{sym}}$ und nicht $\bQ$
 selbst. Verlangten wir „$\bQ$ positiv semidefinit", so wäre die Aussage unnötig eng, denn die
 quadratische Form sieht von $\bQ$ nur den symmetrischen Anteil, wie Schritt 2 zeigt. Für
 
@@ -612,7 +606,7 @@ weil wir $\bQ$ ohnehin symmetrisch wählen; die allgemeinere Fassung kostet aber
 :::
 
 :::beispiel[#eine-quadrik-ausgerechnet (Eine Quadrik ausgerechnet)]
-Rechnen wir ein Beispiel vor. Sei
+Sei
 $f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ mit
 
 $$
@@ -634,8 +628,8 @@ f(\bx) &= \begin{pmatrix} 1 & 2 \end{pmatrix}\begin{pmatrix} 2 & 0 \\ 0 & 1 \end
 $$
 
 Weil $\bQ$ hier diagonal ist, lässt sich $f$ auch als
-$2x_1^2 + x_2^2 + x_1 - 2x_2 + 3$ schreiben, und daran sehen wir die strikte Konvexität ohne
-Matrixrechnung: eine Summe zweier nach oben geöffneter Parabeln plus einer affinen Funktion.
+$2x_1^2 + x_2^2 + x_1 - 2x_2 + 3$ schreiben, und daran ist die strikte Konvexität ohne
+Matrixrechnung zu sehen: eine Summe zweier nach oben geöffneter Parabeln plus einer affinen Funktion.
 :::
 
 :::satz[#jede-norm-ist-konvex (Jede Norm ist konvex)]
@@ -672,8 +666,8 @@ Halbnormen, und für $n = 1$ ist er wörtlich der aus @beispiel:der-betrag-ist-k
 Strikt konvex ist keine dieser Normen. Liegen $\bx$ und $\by$ auf demselben Strahl durch den
 Ursprung, so steht in Schritt 1 überall Gleichheit. Für das *Quadrat* der euklidischen Norm
 sieht es anders aus: $f(\bx) = \left\|\bx\right\|_2^2 = \bx^\top\bI\bx$ ist nach
-@satz:quadratische-funktionen strikt konvex, weil $\bI$ positiv definit ist. Und diese Funktion ist es, die uns
-in der Statistik ständig begegnet.
+@satz:quadratische-funktionen strikt konvex, weil $\bI$ positiv definit ist. Diese Funktion kommt
+in der Statistik häufig vor.
 
 :::beispiel[#kleinste-quadrate-und-ridge (Kleinste Quadrate und Ridge)]
 Sei $\bA \in \R^{m \times n}$ die Designmatrix und $\by \in \R^m$ der Beobachtungsvektor. Der
@@ -692,9 +686,8 @@ $$
 = \left\|\bA\bw\right\|^2 \ge 0 .
 $$
 
-Nach @satz:quadratische-funktionen ist der Kleinste-Quadrate-Verlust deshalb immer konvex, ganz gleich, wie die
-Daten aussehen. Das ist der Grund, warum wir uns in @kap:kq nie um
-lokale Minima kümmern mussten.
+Nach @satz:quadratische-funktionen ist der Kleinste-Quadrate-Verlust deshalb immer konvex, unabhängig von den
+Daten. Deshalb spielten lokale Minima in @kap:kq keine Rolle.
 
 Strikt konvex ist er dagegen nur bei vollem Spaltenrang. Hat $\bA$ zwei gleiche Spalten, etwa
 
@@ -731,8 +724,8 @@ $f(\bx) = \bx^\top\bQ\bx + \bb^\top\bx + a$ ist die
 :k[Hesse-Matrix]{#hessian-matrix} überall dieselbe, nämlich
 $\bH_f = \bQ + \bQ^\top = 2\bQ_{\mathrm{sym}}$, und ihre Eigenwerte messen die Krümmung in den
 Hauptrichtungen (@sec:differentialrechnung/hoehere-ableitungen); Eigenwerte nahe null bedeuten
-flache Richtungen, in denen die Lösung schlecht bestimmt ist. In der Statistik ist das keine
-Randnotiz, denn die negative Hesse-Matrix der Log-Likelihood ist die beobachtete
+flache Richtungen, in denen die Lösung schlecht bestimmt ist. In der Statistik ist das
+wesentlich, denn die negative Hesse-Matrix der Log-Likelihood ist die beobachtete
 Fisher-Information, aus der die Standardfehler kommen. Wie sich Konvexität und Krümmung genau
 zueinander verhalten, klärt @sec:eigenschaften.
 
