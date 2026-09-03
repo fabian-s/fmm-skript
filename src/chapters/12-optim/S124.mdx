@@ -7,11 +7,10 @@ import { MomentumVergleich } from "./widgets/S124Momentum";
 
 Der Gradientenabstieg aus @sec:nelder-mead-gradient kennt von $\cblue{f}$ nur die
 Steigung. Er ersetzt die Funktion an der aktuellen Stelle durch ihre Tangentialebene
-und läuft dann bergab. Wie weit er laufen darf, sagt ihm niemand, deshalb die
-Schrittweite $\corange{\gamma}$ und deshalb der Zickzack in engen Tälern.
+und läuft dann bergab. Wie weit er laufen darf, weiß er nicht; daher die
+Schrittweite $\corange{\gamma}$ und der Zickzack in engen Tälern.
 
-Die :k[Taylorentwicklung]{#taylor-theorem} liefert die nächstbessere Näherung
-gratis. @satz:taylorentwicklung-ii aus @sec:differentialrechnung/taylor gibt sie für
+Die :k[Taylorentwicklung]{#taylor-theorem} liefert die nächstbessere Näherung. @satz:taylorentwicklung-ii aus @sec:differentialrechnung/taylor gibt sie für
 $f \in \Ccal^2$, also für zweimal stetig differenzierbares $f$, mit einem Restterm
 $o(\left\|\bh\right\|^2)$. @korollar:taylorapproximation-fuer-vektor-zu schreibt dieselbe Zeile für
 $f\colon \R^n \to \R$ in Gradient und Hesse-Matrix aus, verlangt dafür aber
@@ -45,7 +44,7 @@ $$
 Beide Seiten sind Zeilenvektoren. Auflösen nach $\bh^\top$ und Transponieren liefert
 den Schritt, den wir suchen. Dieselbe Rechnung lässt sich auch in Spalten führen,
 als $\corange{\nabla f(\bx)^\top} + \corange{\bH_f(\bx)}\bh = \bnull$; sie liefert
-denselben Schritt. Nur mischen darf man die beiden Konventionen nicht – links zwei
+denselben Schritt. Mischen dürfen wir die beiden Konventionen aber nicht: Links zwei
 Spaltenvektoren und rechts eine Zeile ergibt keine Gleichung.
 
 :::algorithmus[#newton-verfahren-fuer-die-optimierung (Newton-Verfahren für die Optimierung)]
@@ -70,8 +69,8 @@ Startpunkt $\cblue{\bx^{(0)}}$. Für $k = 0, 1, 2, \dots$ wiederhole:
 :::bemerkung[#was-der-schritt-voraussetzt-und-wie-wir (Was der Schritt voraussetzt und wie wir ihn rechnen)]
 *Die Hesse-Matrix muss invertierbar sein.* Sonst hat die quadratische Näherung
 entweder gar keinen kritischen Punkt oder gleich einen ganzen affinen Unterraum
-davon, und @eq:newton-verfahren-fuer-die-optimierung steht nicht einmal auf dem Papier. „Bei konvexem $f$ ist
-$\corange{\bH_f} \succ 0$" wäre dafür ein zu bequemes Argument: Konvexität liefert
+davon, und @eq:newton-verfahren-fuer-die-optimierung ist nicht definiert. „Bei konvexem $f$ ist
+$\corange{\bH_f} \succ 0$" wäre dafür kein gültiges Argument: Konvexität liefert
 nur positive *Semi*definitheit (@sec:konvexitaet/eigenschaften),
 und selbst strikte Konvexität reicht nicht, wie $f(x) = x^4$ im Nullpunkt zeigt. Gebraucht wird eine
 :k[positiv definite]{#positive-definite} Hesse-Matrix, und die ist eine eigene
@@ -90,14 +89,14 @@ Das ist billiger und stabiler (@sec:lgs/lu). Ist
 $\corange{\bH_f}$ positiv definit, so ist die
 :k[Cholesky-Zerlegung]{#cholesky-factorization} aus
 @sec:lgs/cholesky das Mittel der Wahl, und ihr Gelingen ist zugleich
-die Definitheitsprobe. Die Merkregel lautet knapper:
+die Definitheitsprobe. Kurz:
 *Invertiere niemals eine Matrix.*
 :::
 
 ### Newton-Raphson und Newton-Optimierung sind dasselbe Verfahren
 
 In @sec:nichtlineare-gleichungen haben wir Newton-Raphson als Verfahren für Nullstellen
-kennengelernt, hier als Verfahren für Minima. Das ist kein Zufall, sondern ein und
+kennengelernt, hier als Verfahren für Minima. Es ist
 dieselbe Vorschrift, angewandt auf zwei verschiedene Funktionen.
 
 :::bemerkung[#eine-vorschrift-zwei-spalten (Eine Vorschrift, zwei Spalten)]
@@ -111,7 +110,7 @@ Nebeneinandergestellt sehen die beiden Fassungen so aus:
 Der Übergang ist wörtlich zu nehmen. Setzen wir
 $\corange{\bg(\bx)} := \corange{\nabla f(\bx)^\top}$, so ist die Optimierung genau
 die Nullstellensuche für $\corange{\bg}\colon \R^n \to \R^n$, und deren
-Jacobimatrix ist die Hesse-Matrix, $\bJ_{\corange{\bg}} = \corange{\bH_f}$ – das
+Jacobimatrix ist die Hesse-Matrix, $\bJ_{\corange{\bg}} = \corange{\bH_f}$; das
 ist die Definition der Hesse-Matrix (@definition:hesse-matrix). Der
 mehrdimensionale Newton-Raphson-Schritt
 $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} - \bJ_{\corange{\bg}}^{-1}\corange{\bg}$
@@ -122,14 +121,13 @@ Alles, was wir über Newton-Raphson wissen, gilt deshalb hier
 weiter: Unter ausreichender lokaler Glattheit, etwa einer lokal Lipschitz-stetigen
 Hesse-Matrix, erhalten wir quadratische Konvergenz in der Nähe einer Lösung mit
 invertierbarer Hesse-Matrix. Es bleiben die Empfindlichkeit gegen schlechte
-Startpunkte und der Ärger, wenn die Ableitung im Nenner verschwindet.
+Startpunkte und das Problem einer verschwindenden Ableitung im Nenner.
 :::
 
 ### Wie schnell das geht
 
-Dass sich die Näherungsparabel Schritt für Schritt an das Minimum heranarbeitet,
-ist als Bild schnell gezeichnet. Interessanter ist, wie schnell das geht. Rechnen
-wir es an einer Funktion nach, deren Vorschrift wir kennen.
+Wie schnell sich die Näherungsparabel dem Minimum nähert, rechnen
+wir an einer Funktion nach, deren Vorschrift wir kennen.
 
 :::beispiel[#newton-auf-einer-nicht-quadratischen (Newton auf einer nicht-quadratischen Funktion)]
 Wir minimieren
@@ -140,8 +138,8 @@ $$
 
 mit $\corange{f'(x)} = 1 - 2/x$ und $\corange{f''(x)} = 2/x^2 > 0$. Die Funktion ist
 also strikt konvex, und $\corange{f'(x)} = 0$ hat die einzige Lösung
-$\cgreen{x^\star} = 2$ (@sec:optimalitaet). Statistisch ist das kein
-Kunstprodukt: Bis auf eine additive Konstante ist $\cblue{f}$ die negative
+$\cgreen{x^\star} = 2$ (@sec:optimalitaet). Statistisch ist das
+ein natürliches Beispiel: Bis auf eine additive Konstante ist $\cblue{f}$ die negative
 Log-Dichte einer Gammaverteilung mit Formparameter $3$ und Rate $1$, und $2$ ist
 deren Modus.
 
@@ -167,7 +165,7 @@ k & \cblue{x^{(k)}} & e_k := \left|\cblue{x^{(k)}} - \cgreen{x^\star}\right| & e
 \end{array}
 $$
 
-Die letzte Spalte ist hier nicht bloß ungefähr konstant, sondern exakt $1/2$. Denn
+Die letzte Spalte ist hier exakt $1/2$. Denn
 aus der Schrittformel folgt
 
 $$
@@ -176,14 +174,14 @@ $$
 = -\frac{\bigl(\cblue{x^{(k)}} - \cgreen{2}\bigr)^2}{2} ,
 $$
 
-also $e_{k+1} = e_k^2/2$ in jedem einzelnen Schritt. Der Faktor $1/2$ ist kein
-Zufallswert, sondern das Gegenstück zu der Konstanten aus @bemerkung:quadratische-konvergenz: Weil
+also $e_{k+1} = e_k^2/2$ in jedem einzelnen Schritt. Der Faktor $1/2$ ist
+das Gegenstück zu der Konstanten aus @bemerkung:quadratische-konvergenz: Weil
 wir Newton-Raphson auf $\corange{f'}$ anwenden, rutschen die Ableitungen um eine
 Ordnung hoch, und aus $\left|f''\right| / (2\left|f'\right|)$ wird
 $\left|f'''(\cgreen{x^\star})\right| / \bigl(2 \corange{f''(\cgreen{x^\star})}\bigr)
 = 0{,}5 / (2 \cdot 0{,}5) = 0{,}5$.
 
-Lokal ist die Aussage aber auch hier. Für $\cblue{x^{(0)}} = 4$ liefert die
+Auch hier gilt die Aussage nur lokal. Für $\cblue{x^{(0)}} = 4$ liefert die
 Schrittformel $\cred{0}$, für $\cblue{x^{(0)}} = 4{,}5$ sogar $\cred{-1{,}125}$.
 Beide Male landet der erste Schritt außerhalb von $(0, \infty)$, wo $\cblue{f}$ gar
 nicht erklärt ist.
@@ -192,7 +190,7 @@ nicht erklärt ist.
 :::interaktiv[Die Parabel am Startpunkt]
 Die Tafel zeigt, was @eq:eq-12-4-1 meint. Orange liegt das quadratische Modell am
 aktuellen Punkt, sein Scheitel ist die nächste Iterierte, und die blauen Punkte
-zeigen, wohin die Reise geht. Voreingestellt ist @beispiel:newton-auf-einer-nicht-quadratischen mit
+zeigen den Verlauf der Iteration. Voreingestellt ist @beispiel:newton-auf-einer-nicht-quadratischen mit
 $\cblue{x^{(0)}} = 1$, sodass sich die Zahlen der Tabelle direkt wiederfinden
 lassen; der zweite Menüpunkt ist die nicht-konvexe Funktion aus
 @bemerkung:newton-bei-nicht-konvexen-funktionen.
@@ -211,16 +209,16 @@ lassen; der zweite Menüpunkt ist die nicht-konvexe Funktion aus
   <NewtonParabelLab />
 </Schaetzfrage>
 
-Alles hängt am Startpunkt. Auf der konvexen Funktion verlässt der erste Schritt ab
+Das Verhalten hängt am Startpunkt. Auf der konvexen Funktion verlässt der erste Schritt ab
 $\cblue{x^{(0)}} = 4$ den Definitionsbereich, wie am Ende von
 @beispiel:newton-auf-einer-nicht-quadratischen gerechnet. Auf der nicht-konvexen
 führt $-2$ in das *lokale* Minimum bei $-1$, $2{,}5$ in das globale bei $2$, und
-$0{,}5$ landet in einem einzigen Schritt exakt auf dem lokalen Maximum bei $0$ –
-dort ist $\corange{f''} = -2{,}25$, die Modellparabel öffnet nach unten, und ihr
-Scheitel ist ein Hochpunkt. Am lehrreichsten ist $\cblue{x^{(0)}} = 1{,}2$: Dort
+$0{,}5$ landet in einem einzigen Schritt exakt auf dem lokalen Maximum bei $0$:
+Dort ist $\corange{f''} = -2{,}25$, die Modellparabel öffnet nach unten, und ihr
+Scheitel ist ein Hochpunkt. Bemerkenswert ist $\cblue{x^{(0)}} = 1{,}2$: Dort
 ist $\corange{f''} = -0{,}08$ fast null, der erste Schritt springt nach
 $\cred{-25{,}2}$, und $14$ Schritte später steht die Iteration im *lokalen*
-Minimum bei $-1$ – obwohl der Startpunkt näher am globalen lag.
+Minimum bei $-1$, obwohl der Startpunkt näher am globalen lag.
 :::
 
 :::bemerkung[#newton-bei-nicht-konvexen-funktionen (Newton bei nicht-konvexen Funktionen)]
@@ -233,15 +231,14 @@ mehreren Mulden; im Widget übernimmt das
 $\cblue{f(x)} = x^4/4 - x^3/3 - x^2 + 2$ mit den kritischen Punkten $-1$, $0$ und
 $2$. Bei $-1$ liegt ein lokales Minimum mit $\cblue{f(-1)} \approx 1{,}583$, bei $2$
 das globale mit $\cblue{f(2)} \approx -0{,}667$. Welches der beiden Täler die
-Iteration findet, entscheidet allein der Startpunkt. Das ist keine Schwäche gerade
-dieses Verfahrens, sondern der Preis dafür, dass alle Verfahren dieses Kapitels nur
+Iteration findet, entscheidet allein der Startpunkt. Das ist keine Schwäche
+dieses Verfahrens allein, sondern folgt daraus, dass alle Verfahren dieses Kapitels nur
 lokale Information benutzen.
 
 *Ein Sattelpunkt oder ein Maximum.* Ist $\corange{\bH_f(\bx^{(k)})}$ indefinit, so
 ist der Scheitel der Näherung ein Sattel, und ist sie negativ definit, ein Maximum.
-Der Schritt läuft dann genauso zielstrebig dorthin, wie er sonst ins Minimum läuft
-(@sec:optimalitaet). Im Widget genügt der Startpunkt $\cred{0{,}5}$, um
-das vorzuführen.
+Der Schritt läuft dann genauso dorthin, wie er sonst ins Minimum läuft
+(@sec:optimalitaet). Im Widget zeigt das der Startpunkt $\cred{0{,}5}$.
 
 Praktische Fassungen des Verfahrens sorgen deshalb zunächst für einen
 Abstiegsschritt: Sie addieren ein Vielfaches der Einheitsmatrix, bis
@@ -257,8 +254,7 @@ Gradienten über.
 
 ### Newton gegen Gradientenabstieg
 
-Beide Verfahren lassen sich an einem Fall gegenüberstellen, der sich
-vollständig im Kopf rechnen lässt.
+Beide Verfahren lassen sich an einem einfachen Fall gegenüberstellen.
 
 :::beispiel[#ein-zug-statt-vieler (Ein Zug statt vieler)]
 Wir minimieren $\cblue{f(x)} = x^2$ mit $\corange{f'(x)} = 2x$,
@@ -284,7 +280,7 @@ $$
 \cblue{x^{(1)}} = 4 - \frac{8}{2} = \cgreen{0} .
 $$
 
-Ein Schritt, und wir stehen exakt im Minimum. Auch das ist kein Zufall: Für eine
+Ein Schritt, und wir stehen exakt im Minimum. Der Grund: Für eine
 quadratische Funktion ist die Näherung @eq:eq-12-4-1 exakt (@bemerkung:ebene-und-quadrik), der
 Scheitel der Parabel *ist* der kritische Punkt der Funktion selbst. Ist die
 Hesse-Matrix dabei positiv definit, so ist dieser Punkt das Minimum, und Newton löst
@@ -298,7 +294,7 @@ In @sec:nelder-mead-gradient hing die Konvergenzrate des Gradientenabstiegs an d
 Tal, desto langsamer. @beispiel:ein-zug-statt-vieler zeigt daneben eine Rechnung, in der die
 Kondition gar nicht vorkommt. Der Grund ist, dass Newton die Krümmung nicht schätzt,
 sondern benutzt: Sein Schritt ist gegen lineare Koordinatenwechsel unempfindlich,
-und schlechte Kondition ist nichts anderes als ein ungünstig gewähltes
+und schlechte Kondition ist ein ungünstig gewähltes
 Koordinatensystem. Der Gradientenschritt hat diese Eigenschaft nicht.
 
 Gemeint ist damit die Zahl der Schritte, nicht die Rechnung darin. Numerisch bleibt
@@ -306,12 +302,12 @@ die Kondition sehr wohl spürbar: Das lineare System aus @bemerkung:was-der-schr
 $\kappa(\corange{\bH_f})$ schlechter konditioniert, und der gelöste Schritt trägt
 diesen Fehler weiter (@sec:fehler/kondition).
 
-Bezahlt wird das an anderer Stelle. Ein Newton-Schritt braucht die
+Die Kosten liegen an anderer Stelle. Ein Newton-Schritt braucht die
 $n(n+1)/2$ zweiten Ableitungen, ihren Speicher der Größenordnung $n^2$ und eine
 Zerlegung der Größenordnung $n^3$ (@sec:lgs/lu). Für
 $n = 10\,000$ Parameter, in der Statistik keine ungewöhnliche Zahl, sind das
 $10^8$ Einträge allein für die Matrix. Der nächste Unterabschnitt handelt davon, wie
-sich dieser Preis drücken lässt.
+sich diese Kosten senken lassen.
 :::
 
 :::vertiefung[Warum sich der Koordinatenwechsel im Newton-Schritt herauskürzt]
@@ -324,17 +320,17 @@ $$
 = -\bA^{-1}\corange{\bH_f^{-1}}\,\corange{\nabla f^\top} ,
 $$
 
-und übrig bleibt genau das Bild des alten Schrittes. Beim Gradientenschritt
+und übrig bleibt das Bild des alten Schrittes. Beim Gradientenschritt
 $-\gamma\bigl(\corange{\nabla f}\bA\bigr)^\top
 = -\gamma\,\bA^\top\corange{\nabla f^\top}$ bleibt der Faktor $\bA^\top$ dagegen
-stehen, und genau er trägt die Kondition.
+stehen, und er trägt die Kondition.
 :::
 
 ### Quasi-Newton: die Krümmung schätzen statt rechnen
 
 Newton ist schnell und teuer, der Gradientenabstieg billig und langsam. Die
-Quasi-Newton-Verfahren sitzen dazwischen, und die Idee ist so einfach wie
-naheliegend: Wir sammeln die Krümmungsinformation aus den Gradienten ein, die wir
+Quasi-Newton-Verfahren liegen dazwischen. Die Idee: Wir gewinnen die
+Krümmungsinformation aus den Gradienten, die wir
 ohnehin berechnen.
 
 :::algorithmus[#quasi-newton-schritt (Quasi-Newton-Schritt)]
@@ -352,9 +348,9 @@ Schritten geschätzt wird und die Schrittweite $\corange{\gamma_k}$ aus einer
 Liniensuche stammt (@sec:nelder-mead-gradient).
 :::
 
-Die Schrittweite $\corange{\gamma_k}$ gehört dabei zwingend dazu. Ohne sie ist der
+Die Schrittweite $\corange{\gamma_k}$ ist dabei notwendig. Ohne sie ist der
 erste Schritt aus $\corange{\bB_0} = \bI$ ein ungebremster Gradientenschritt, und
-der kann den Funktionswert erhöhen. Das Widget weiter unten führt genau das vor.
+der kann den Funktionswert erhöhen. Das Widget weiter unten zeigt das.
 
 Der Unterschied zu @eq:newton-verfahren-fuer-die-optimierung ist die Matrix. Newton setzt dort die exakte inverse
 Hesse-Matrix ein und zahlt jedes Mal :k[$O(n^3)$]{#big-o-notation}; @eq:quasi-newton-schritt
@@ -364,7 +360,7 @@ Näherung gebaut wird, unterscheidet die Verfahren der Familie: Häufig ist
 $\corange{\bB_k}$ eine Diagonalmatrix oder eine Einheitsmatrix plus eine Korrektur
 kleinen Ranges, weil beides sich billig speichern und anwenden lässt.
 
-Bleibt die Frage, woher $\corange{\bB_k}$ kommt. Fangen wir in einer Dimension an.
+Bleibt die Frage, woher $\corange{\bB_k}$ kommt. Wir beginnen in einer Dimension.
 Dort ist die zweite Ableitung die Ableitung der ersten, und die schätzen wir wie
 jede Ableitung durch einen Differenzenquotienten aus zwei benachbarten Werten:
 
@@ -388,10 +384,10 @@ $$ {#eq-eq-12-4-4}
 \corange{\bB_{k+1}}\,\corange{\by_k} = \cblue{\bs_k} .
 $$
 
-In einer Dimension ist das genau der Differenzenquotient von eben, nur auf den Kopf
-gestellt: $b = s/y$ statt $f'' \approx y/s$. Beide Gleichungen heißen
-„Sekantenbedingung", und wer den Kehrwert überliest, hält $\corange{\bB_k}$ für eine
-Näherung der Hesse-Matrix statt ihrer Inversen. Im $\R^n$ ist @eq:eq-12-4-4 ein System aus
+In einer Dimension ist das der Kehrwert des Differenzenquotienten von eben:
+$b = s/y$ statt $f'' \approx y/s$. Beide Gleichungen heißen
+„Sekantenbedingung"; $\corange{\bB_k}$ nähert die Inverse der Hesse-Matrix, nicht die
+Hesse-Matrix selbst. Im $\R^n$ ist @eq:eq-12-4-4 ein System aus
 $n$ Gleichungen für die $n(n+1)/2$ Einträge einer symmetrischen Matrix, also weit
 unterbestimmt. Die verbleibende Freiheit nutzen wir, um $\corange{\bB_{k+1}}$
 möglichst wenig von $\corange{\bB_k}$ abweichen zu lassen. Die bekannteste Wahl ist
@@ -421,14 +417,14 @@ $$
 $$
 
 und das ist die Krümmung in Richtung $\cblue{\bs_k}$. Die Krümmungsbedingung
-$\corange{\by_k}^\top \cblue{\bs_k} > 0$ aus @bemerkung:eigenschaften-kosten-und-l-bfgs sagt damit schlicht:
+$\corange{\by_k}^\top \cblue{\bs_k} > 0$ aus @bemerkung:eigenschaften-kosten-und-l-bfgs sagt damit:
 Entlang des gerade gegangenen Schrittes ist $\cblue{f}$ nach oben gekrümmt.
 
-Der Ausdruck @eq:bfgs-update sieht schlimmer aus, als er ist. Beide Klammern sind
+Der Ausdruck @eq:bfgs-update ist einfacher, als er aussieht. Beide Klammern sind
 Einheitsmatrizen plus eine Rang-1-Störung, der letzte Summand ist ebenfalls vom
 Rang 1. Ausmultipliziert steht dort $\corange{\bB_k}$ plus eine Korrektur, die von
 $\cblue{\bs_k}$ und $\corange{\bB_k\by_k}$ aufgespannt wird und deshalb höchstens
-Rang 2 hat. Dass die Formel tut, wozu sie gebaut wurde, rechnen wir in drei Zeilen
+Rang 2 hat. Dass die Formel die Sekantenbedingung erfüllt, rechnen wir
 nach.
 
 :::satz[#das-bfgs-update-erfuellt-die (Das BFGS-Update erfüllt die Sekantenbedingung)]
@@ -482,7 +478,7 @@ $$
 :::::
 
 :::bemerkung[#eigenschaften-kosten-und-l-bfgs (Eigenschaften, Kosten und L-BFGS)]
-*Symmetrie und Definitheit erben sich.* Ist $\corange{\bB_k}$ symmetrisch, so ist es
+*Symmetrie und Definitheit bleiben erhalten.* Ist $\corange{\bB_k}$ symmetrisch, so ist es
 $\corange{\bB_{k+1}}$ nach @eq:bfgs-update auch. Ist $\corange{\bB_k}$ zusätzlich positiv
 definit und gilt die Krümmungsbedingung
 $\corange{\by_k}^\top \cblue{\bs_k} > 0$, so bleibt auch die Definitheit erhalten.
@@ -513,7 +509,7 @@ Zahlen einigen Hunderttausend gegenüber, also drei Größenordnungen weniger.
 :::
 
 :::interaktiv[BFGS Schritt für Schritt]
-Wir sehen dem Verfahren beim Lernen zu. Minimiert wird die Quadrik
+Minimiert wird die Quadrik
 $\cblue{f(\bx)} = 0{,}5\,x_1^2 + 2{,}5\,x_2^2$ mit der Hesse-Matrix
 $\diag(1; 5)$, gestartet wird bei $(5; 1)$ mit $\corange{\bB_0} = \bI$. Über die
 Krümmung weiß das Verfahren zu diesem Zeitpunkt nichts, der erste Schritt ist also
@@ -540,8 +536,8 @@ fertig.
 
 ### Vier Verfahren nebeneinander
 
-Damit sind die vier Verfahren beisammen, die für unbeschränkte Probleme zur
-Wahl stehen. Nebeneinandergestellt:
+Damit sind die vier Verfahren für unbeschränkte Probleme beisammen.
+Nebeneinandergestellt:
 
 | Eigenschaft | Nelder-Mead | Gradientenabstieg | Quasi-Newton | Newton |
 |---|---|---|---|---|
@@ -555,7 +551,7 @@ Wahl stehen. Nebeneinandergestellt:
 :::bemerkung[#wie-die-tabelle-zu-lesen-ist (Wie die Tabelle zu lesen ist)]
 *Die Aufwandsspalte zählt die lineare Algebra je Schritt*, nicht die Funktions- und
 Gradientenauswertungen. Die können ihrerseits teuer sein: Bei einem empirischen
-Risiko über $N$ Beobachtungen kostet schon ein einziger Gradient $O(N)$, und genau
+Risiko über $N$ Beobachtungen kostet schon ein einziger Gradient $O(N)$, und
 davon handelt der letzte Unterabschnitt.
 
 *Die Konvergenzspalte ist asymptotisch und lokal.* Die quadratische Rate von Newton
@@ -575,11 +571,11 @@ $$
 $$
 
 sind also allesamt Fixpunktiterationen für $\corange{\nabla f(\bx)} = \bnull^\top$
-im Sinne von @sec:nichtlineare-gleichungen. Die Wahl von $\corange{\bM_k}$ ist genau
+im Sinne von @sec:nichtlineare-gleichungen. Die Wahl von $\corange{\bM_k}$ ist
 die Wahl zwischen Rechenzeit und Schrittqualität, dieselbe Abwägung wie bei den
 Splitting-Verfahren in @sec:la-misc/iterative-loeser.
 
-*Wo sie eingesetzt werden.* Nelder-Mead ist der Notnagel ohne Ableitungen
+*Wo sie eingesetzt werden.* Nelder-Mead ist die Rückfalloption ohne Ableitungen
 (@sec:nelder-mead-gradient), der
 Gradientenabstieg die Grundlage der Optimierer für
 :k[neuronale Netze]{#neural-network}, BFGS der
@@ -594,18 +590,18 @@ die Voreinstellung von `optim()` ist es nicht (@sec:optim-in-r).
 
 ### Momentum: Schwung gegen den Zickzack
 
-Zurück zum billigsten der Verfahren. Der Gradientenabstieg leidet an schlecht
-konditionierten Problemen: In einem langen, schmalen Tal zeigt der negative Gradient
+Zurück zum billigsten der Verfahren. Der Gradientenabstieg hat Probleme mit schlechter
+Kondition: In einem langen, schmalen Tal zeigt der negative Gradient
 fast quer zur Talrichtung, die Iterierten pendeln zwischen den Hängen hin und her und
 kommen der Länge nach kaum voran (@sec:nelder-mead-gradient). Große Schritte
 verstärken das Pendeln, kleine machen den Fortschritt entlang des Tals noch
 langsamer.
 
-Ein Bild aus der Mechanik hilft weiter. Eine Kugel, die den Hang
+Ein Bild aus der Mechanik: Eine Kugel, die den Hang
 hinunterrollt, folgt nicht in jedem Augenblick der lokalen Falllinie, sondern
 sammelt Schwung. Quer zum Tal wird sie von den Hängen abwechselnd nach links und
-rechts geschubst, das mittelt sich weg; entlang des Tals ziehen alle Schubser in
-dieselbe Richtung und addieren sich auf.
+rechts gelenkt, das mittelt sich weg; entlang des Tals wirken alle Kräfte in
+dieselbe Richtung und addieren sich.
 
 :::algorithmus[#gradientenabstieg-mit-heavy-ball (Gradientenabstieg mit Heavy-Ball-Momentum)]
 Gegeben seien $f\colon \R^n \to \R$ stetig differenzierbar, ein Startpunkt
@@ -636,7 +632,7 @@ $\alpha = 0{,}9$ ist das ein Faktor $10$.
 *Wechselnde Gradienten mitteln sich weg.* Kippt die Gradientenrichtung dagegen in
 jedem Schritt, so heben sich die Beiträge in @eq:gradientenabstieg-mit-heavy-ball weitgehend auf. Das ist die
 Dämpfung des Zickzacks. Der gelegentlich zu lesende Name „Dämpfungsfaktor" für
-$\alpha$ führt dabei leicht in die Irre: Gedämpft wird die Schwingung, nicht die
+$\alpha$ ist irreführend: Gedämpft wird die Schwingung, nicht die
 Bewegung, und in der mechanischen Analogie ist gerade $1 - \alpha$ die Reibung. Je
 größer $\alpha$, desto weniger Reibung und desto mehr Gedächtnis.
 
@@ -697,11 +693,11 @@ konditioniert, jeweils mit dem Standardwert $\alpha = 0{,}9$.
   <MomentumVergleich />
 </Schaetzfrage>
 
-Der Nutzen des Schwungs hängt allein an der Kondition. Bei $\kappa = 5$ dreht sich
-das Ergebnis sogar um: $106$ Schritte mit gegen $31$ ohne Momentum. Bei
-$\kappa = 25$ steht es $103$ zu $161$, bei $\kappa = 100$ dann $121$ zu $608$ – je
+Der Nutzen des Schwungs hängt allein an der Kondition. Bei $\kappa = 5$ kehrt sich
+das Ergebnis um: $106$ Schritte mit gegen $31$ ohne Momentum. Bei
+$\kappa = 25$ steht es $103$ zu $161$, bei $\kappa = 100$ dann $121$ zu $608$. Je
 schlechter die Kondition, desto größer der Gewinn. Und bei
-$\corange{\gamma} L = 2{,}5$ explodiert der blaue Weg, während der violette stabil
+$\corange{\gamma} L = 2{,}5$ divergiert der blaue Weg, während der violette stabil
 bleibt, denn seine Grenze liegt bei $2 \cdot 1{,}9 = 3{,}8$. Der Standardwert
 $0{,}9$ stammt aus dem Deep Learning, wo die Konditionszahlen um Größenordnungen
 höher liegen als hier.
@@ -736,7 +732,7 @@ $$
 $$
 
 Ein einziger Gradientenschritt läuft also einmal durch den gesamten Datensatz. Bei
-$N$ in Millionenhöhe ist das der Flaschenhals, und zwar unabhängig davon, wie gut
+$N$ in Millionenhöhe ist das der begrenzende Faktor, und zwar unabhängig davon, wie gut
 die Schrittrichtung ist. Die Idee des *stochastischen Gradientenabstiegs* ist,
 diesen Mittelwert durch einen :k[unverzerrten Schätzer]{#unbiased-estimator} zu
 ersetzen, statt ihn auszurechnen.
@@ -767,15 +763,15 @@ $$
 
 und das ist $\corange{\nabla R(\btheta)}$.
 
-::why[Erwartungswert einer Funktion einer diskreten Zufallsvariablen; die $y_j$ und $\bx_j$ sind hier Konstanten, zufällig ist nur, welche von ihnen wir erwischen]
+::why[Erwartungswert einer Funktion einer diskreten Zufallsvariablen; die $y_j$ und $\bx_j$ sind hier Konstanten, zufällig ist nur, welche von ihnen gezogen wird]
 :::
 
 ::::
 
 :::::
 
-Der Beweis ist kurz, aber die Voraussetzung verdient Aufmerksamkeit. Kurz
-hingeschrieben lautet die Aussage $\E[\nabla L(y_i, p_\btheta(\bx_i))] =
+Der Beweis ist kurz, aber die Voraussetzung ist zu beachten. Kurz
+geschrieben lautet die Aussage $\E[\nabla L(y_i, p_\btheta(\bx_i))] =
 \nabla R(\btheta)$, und dann ist leicht zu übersehen, worüber gemittelt wird:
 über den Zug des Index, nicht über die Verteilung der Daten. Deshalb ist die
 Aussage auch keine Annahme über das Modell, sondern eine Konsequenz daraus, wie
@@ -800,7 +796,7 @@ $k = 0, 1, 2, \dots$
 :::bemerkung[#rauschen-mini-batches-und-lernraten (Rauschen, Mini-Batches und Lernraten)]
 *Der Preis und der Gewinn.* Ein Schritt kostet jetzt $O(1)$ statt $O(N)$, und zwar
 unabhängig von der Datenmenge. Dafür ist die Richtung nur im Mittel richtig. Die
-Iterierten laufen nicht mehr glatt bergab, sondern zappeln; in der Nähe des Minimums
+Iterierten laufen nicht mehr glatt bergab, sondern schwanken; in der Nähe des Minimums
 bleibt bei fester Schrittweite ein Rauschband, das nicht kleiner wird.
 
 *Mini-Batches.* In der Praxis ziehen wir nicht eine Beobachtung, sondern einen ganzen
@@ -809,7 +805,7 @@ Summanden in @eq:stochastischer-gradientenabstieg-sgd tritt dann dieses Mittel. 
 weil $n$ in diesem Abschnitt schon die Zahl der Parameter ist. Der Schätzer bleibt
 unverzerrt, und bei unabhängigen
 Ziehungen fällt seine Varianz auf den $b$-ten Teil, die Standardabweichung also auf
-den $\sqrt b$-ten. Das ist die entscheidende Buchführung: Der Aufwand wächst linear in
+den $\sqrt b$-ten. Der Aufwand wächst also linear in
 $b$, die Genauigkeit nur mit $\sqrt b$. Ein Stapel von $32$ statt einer einzelnen
 Beobachtung kostet das $32$-fache und drückt das Rauschen nur um den Faktor
 $5{,}7$. Übliche Größen liegen zwischen $32$ und $256$, und diese Wahl folgt
@@ -823,7 +819,7 @@ und $\sum_k (\corange{\gamma^{(k)}})^2 < \infty$, damit sich das Rauschen
 herausmittelt; $\corange{\gamma^{(k)}} \sim 1/k$ erfüllt beides. In der Praxis
 kommen dazu Aufwärmphasen und stufenweise Absenkungen (*learning rate schedules*).
 
-*Und was wirklich passiert.* Statt unabhängig zu ziehen, mischen die gängigen
+*Praxis.* Statt unabhängig zu ziehen, mischen die gängigen
 Implementierungen den Datensatz einmal pro Durchlauf und gehen ihn der Reihe nach
 durch; @satz:der-gradient-einer-zufaellig-gezogenen gilt dann nur noch gemittelt
 über alle Mischungen, praktisch funktioniert es aber besser.
@@ -836,7 +832,7 @@ ADAM, Muon und die Lernratenpläne im Detail.
 
 ::::
 
-Damit ist der Werkzeugkasten für unbeschränkte Probleme beisammen. Im nächsten
+Damit sind die Verfahren für unbeschränkte Probleme beisammen. Im nächsten
 Abschnitt kommen Nebenbedingungen dazu, und mit ihnen ein Optimalitätsbegriff, der
 mehr verlangt als einen verschwindenden Gradienten
 (@sec:beschraenkt).
@@ -866,7 +862,7 @@ negativ definiter Hesse-Matrix träfe Newton stattdessen ein Maximum, bei
 indefiniter einen Sattel, und bei singulärer wäre der angegebene Schritt nicht
 definiert. Der Gradientenabstieg schafft den Treffer im Allgemeinen nicht, seine
 Schrittzahl hängt an der Kondition. In einer Dimension gibt es allerdings eine
-Ausnahme: Mit $\corange{\gamma} = 1/\corange{f''}$ trifft auch er sofort, und genau
+Ausnahme: Mit $\corange{\gamma} = 1/\corange{f''}$ trifft auch er sofort, und
 diese Schrittweite ist der Newton-Schritt.
 :::
 
@@ -874,7 +870,7 @@ diese Schrittweite ist der Newton-Schritt.
 Damit BFGS funktioniert, muss $\corange{\bB_k}$ gegen die inverse Hesse-Matrix
 konvergieren.
 
-Muss es nicht. Im Widget steht nach sechs Schritten mit $\corange{\gamma_k} = 1$
+Das ist nicht nötig. Im Widget steht nach sechs Schritten mit $\corange{\gamma_k} = 1$
 eine Matrix, die $\diag(1; 0{,}2)$ nur nahekommt, und das Verfahren konvergiert
 trotzdem. Gebraucht wird eine gute Richtung, nicht die richtige Matrix. Nur im
 Sonderfall der Quadrik mit exakter Liniensuche wird die Näherung nach $n$ Schritten
@@ -896,7 +892,7 @@ Momentum mit $\alpha = 0{,}9$ ist immer mindestens so schnell wie der reine
 Gradientenabstieg.
 
 Bei gut konditionierten Problemen schadet es. Im Widget braucht der Abstieg mit
-$\alpha = 0{,}9$ auf $\kappa = 5$ ganze $106$ Schritte, ohne Momentum sind es $31$.
+$\alpha = 0{,}9$ auf $\kappa = 5$ $106$ Schritte, ohne Momentum sind es $31$.
 Rechnerisch optimal wäre dort $\alpha^\star \approx 0{,}15$. Der Wert $0{,}9$ stammt
 aus dem Deep Learning, wo die Konditionszahl um Größenordnungen höher liegt
 (@bemerkung:was-der-schwung-bewirkt).
@@ -907,7 +903,7 @@ Ein Mini-Batch aus $32$ Beobachtungen macht die Schätzung des Gradienten $32$-m
 genauer als eine einzelne Beobachtung.
 
 Die *Varianz* fällt auf ein Zweiunddreißigstel, die Standardabweichung also nur um
-den Faktor $\sqrt{32} \approx 5{,}7$. Genau deshalb sind Mini-Batches ein Kompromiss
+den Faktor $\sqrt{32} \approx 5{,}7$. Deshalb sind Mini-Batches ein Kompromiss
 und keine Lösung: Der Aufwand wächst linear, die Genauigkeit mit der Wurzel.
 :::
 
@@ -927,7 +923,7 @@ Die Unverzerrtheit des SGD-Gradienten folgt aus der Art, wie wir den Index ziehe
 und nicht aus einer Annahme über die Daten.
 
 In @satz:der-gradient-einer-zufaellig-gezogenen sind Datensatz und Parameter fest; zufällig ist einzig, welchen
-Summanden von @eq:eq-12-4-7 wir erwischen. Weil jeder Index Wahrscheinlichkeit $1/N$
+Summanden von @eq:eq-12-4-7 gezogen wird. Weil jeder Index Wahrscheinlichkeit $1/N$
 hat, ist der Erwartungswert der Mittelwert aller Summanden, also der volle Gradient.
 :::
 

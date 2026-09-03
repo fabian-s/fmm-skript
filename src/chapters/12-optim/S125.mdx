@@ -31,8 +31,8 @@ Minimieren wir etwa $f(x, y) = x^2 + y^2$ unter der Gleichungsnebenbedingung
 $\cred{g(x, y)} = x + y - 1 = 0$, so ist das unbeschränkte Minimum
 $(0, 0)$ nicht zulässig. Das beschränkte Optimum muss auf der Geraden
 $x + y = 1$ liegen, und zwar dort, wo die Gerade die niedrigste
-:k[Höhenlinie]{#level-sets} von $f$ berührt. Dieses Berührbild trägt das
-ganze folgende Verfahren.
+:k[Höhenlinie]{#level-sets} von $f$ berührt. Auf dieser Berührbedingung beruht das
+folgende Verfahren.
 :::
 
 ### Die Idee der Lagrange-Multiplikatoren
@@ -55,13 +55,13 @@ $$
 $$
 
 :::bemerkung[#auch-null-ist-ein-zulaessiger (Auch null ist ein zulässiger Multiplikator)]
-Verlockend wäre, an dieser Stelle $\lambda \in \R \setminus \{0\}$ zu verlangen.
-Das stimmt aber nicht. Liegt das unbeschränkte Minimum zufällig auf der
+Naheliegend wäre, an dieser Stelle $\lambda \in \R \setminus \{0\}$ zu verlangen.
+Das wäre falsch. Liegt das unbeschränkte Minimum zufällig auf der
 Nebenbedingung, dann ist dort schon $\corange{\nabla f(\bx^\star)} = \bnull^\top$,
 und die Bedingung gilt mit $\lambda = 0$. Der Multiplikator darf also jeden
 reellen Wert annehmen; sein Vorzeichen ist bei Gleichungsnebenbedingungen
 frei, wie gleich @beispiel:minimieren-auf-einer-geraden zeigt. Damit die Parallelitätsbedingung das
-Optimum wirklich erfasst, brauchen wir außerdem
+Optimum erfasst, brauchen wir außerdem
 $\corange{\nabla g(\bx^\star)} \neq \bnull^\top$, sonst legt die
 Nebenbedingung ihre Tangente nicht fest.
 :::
@@ -98,7 +98,7 @@ eines Minimierungsproblems mit Zwang lösen wir also ein Gleichungssystem in
 den $n + m$ Unbekannten $(\bx, \blambda)$, und dafür haben wir die Verfahren
 aus @sec:nichtlineare-gleichungen.
 
-Die Unabhängigkeitsbedingung an die Gradienten ist keine Formsache.
+Die Unabhängigkeitsbedingung an die Gradienten ist notwendig.
 Minimieren wir $f(x, y) = x$ unter
 $\cred{g(x, y)} = y^2 - x^3 = 0$, so erzwingt die Nebenbedingung $x \ge 0$,
 das Minimum liegt also im Ursprung. Dort ist wegen
@@ -106,7 +106,7 @@ $\corange{\nabla g(x, y)} = (-3x^2,\, 2y)$ aber
 $\corange{\nabla g(0, 0)} = \bnull^\top$, während
 $\corange{\nabla f} = (1, 0)$ nirgends verschwindet: Kein $\lambda$ erfüllt
 die Stationaritätsgleichung. An dieser Spitze der zulässigen Kurve greift der
-Satz von Lagrange schlicht nicht.
+Satz von Lagrange nicht.
 
 Hinreichende Bedingungen sind feiner (zweite Ableitungen der
 Lagrange-Funktion auf dem Tangentialraum); dazu Heath, Ch. 6.2.3.
@@ -137,11 +137,10 @@ $\corange{\nabla g} = (1, 1)$, und das Vorzeichen von $\lambda^\star$ ist
 negativ. Bei Gleichungsnebenbedingungen ist das erlaubt.
 :::
 
-Woran erkennen wir am Bild, dass ein Punkt der Geraden optimal ist? Probieren wir
-es aus.
+Woran erkennen wir am Bild, dass ein Punkt der Geraden optimal ist?
 
 :::interaktiv[Höhenlinien, Gerade und zwei Pfeile]
-Das Widget zeigt das Beispiel live: die Höhenlinien von $f$ in Grau, die gerade
+Das Widget zeigt das Beispiel: die Höhenlinien von $f$ in Grau, die gerade
 erreichte violett, die Nebenbedingung in Rot, an einem verschiebbaren Punkt auf
 der Geraden die beiden Gradienten in Orange. Daneben steht dieselbe Funktion als
 Fläche, auf die die Nebenbedingung als rote Kurve gehoben ist. Die drei Knöpfe
@@ -187,8 +186,8 @@ Bedingung 4 ist ein Entweder-oder je Ungleichung:
 - $h_j(\bx^\star) < 0$ (inaktiv) $\implies \mu_j = 0$: Die Nebenbedingung
   trägt nichts zur Stationarität bei.
 - $\mu_j > 0 \implies h_j(\bx^\star) = 0$ (aktiv): Die Nebenbedingung bindet,
-  und ihr Gradient stemmt sich in der Stationaritätsgleichung gegen
-  $\corange{\nabla f}$.
+  und ihr Gradient gleicht in der Stationaritätsgleichung
+  $\corange{\nabla f}$ aus.
 
 Anders als bei Gleichungen ist das Vorzeichen hier festgelegt:
 $\mu_j \ge 0$, denn eine Ungleichung kann nur in eine Richtung drücken.
@@ -221,8 +220,8 @@ die Box verlässt.
 
 Anschaulich zeigt die negative Ableitung $-f'(2) = 2$ nach rechts, Richtung
 des unbeschränkten Minimums, aber die aktive Schranke $\cred{h_2}$ blockiert
-jede weitere Bewegung. Genau diese blockierte Abstiegsrichtung bezahlt das
-Problem mit $\mu_2 > 0$.
+jede weitere Bewegung. Diese blockierte Abstiegsrichtung entspricht
+$\mu_2 > 0$.
 :::
 
 ### Anwendung: Ridge und Lasso als beschränkte Optimierung
@@ -266,7 +265,7 @@ beschränkte Form mit derselben Lösung dazu. Im Sonderfall
 $\wh{\bbeta}(\lambda)=\bnull$ ist das aktive Budget $c=0$; ein größeres Budget
 kann dieselbe Lösung enthalten, ist dann aber inaktiv und hat $\mu=0$. Die
 Umkehrung gilt nur,
-solange die Nebenbedingung wirklich bindet: Ist $c$ so groß, dass der
+solange die Nebenbedingung bindet: Ist $c$ so groß, dass der
 Kleinste-Quadrate-Schätzer selbst zulässig ist, dann erzwingt die
 Komplementarität $\mu = 0$, und das entspricht $\lambda = 0$. Welches $c$ zu
 welchem $\lambda$ gehört, hängt außerdem von den Daten ab; eine
@@ -284,10 +283,10 @@ $|\beta_1| + |\beta_2| \le c$. Verletzt der Kleinste-Quadrate-Schätzer die
 Nebenbedingung, so liegt die Lösung dort, wo die um ihn herum wachsende
 Ellipse den Bereich zuerst berührt. Einen Kreis trifft sie fast immer in
 einem glatten Randpunkt, an dem beide Koordinaten von null verschieden sind.
-Die Raute dagegen streckt ihre Ecken auf die Achsen hinaus, und an einer Ecke
-kommt die wachsende Ellipse besonders leicht zuerst an; dort ist eine
+Die Raute dagegen hat ihre Ecken auf den Achsen, und an einer Ecke
+trifft die wachsende Ellipse häufig zuerst auf; dort ist eine
 Koordinate exakt null. Zwingend ist das nicht: Wird das Budget $c$ groß
-genug, rutscht auch die Lasso-Lösung auf eine Kante der Raute, und beide
+genug, liegt auch die Lasso-Lösung auf einer Kante der Raute, und beide
 Koordinaten sind wieder besetzt. Am Regler des Widgets lassen sich beide
 Regime durchfahren. Der Ecken-Fall ist der geometrische Grund für die
 Sparsity des Lasso; formal steckt dahinter das Subdifferential der
@@ -316,9 +315,9 @@ sind dieselben; nur die Parametrisierung unterscheidet sich.
 </Schaetzfrage>
 
 Die Eckenschwelle liegt bei $r = 1{,}3429$: Darunter steht die Lasso-Lösung exakt
-auf $(r;\, 0)$, darüber rutscht sie auf eine Kante der Raute, und beide
-Koordinaten sind wieder besetzt. Die Ridge-Lösung wandert dagegen glatt am
-Kreisrand entlang und wird nie exakt null. Nach oben verschwindet der Zwang ganz:
+auf $(r;\, 0)$, darüber liegt sie auf einer Kante der Raute, und beide
+Koordinaten sind wieder besetzt. Die Ridge-Lösung wandert dagegen am
+Kreisrand entlang und wird nie exakt null. Für große $r$ wird die Nebenbedingung inaktiv:
 Ab $\|\wh{\bbeta}\|_2 = 1{,}8358$ ist die Ridge-Nebenbedingung inaktiv, ab
 $\|\wh{\bbeta}\|_1 = 2{,}5$ die des Lasso, und beide Male erzwingt die
 Komplementarität aus @satz:karush-kuhn-tucker-bedingungen dann $\mu = 0$.
@@ -330,7 +329,7 @@ Punkt $\cgreen{\bx^\star}$, der die KKT-Bedingungen erfüllt, ein globales
 Minimum.
 :::
 
-Der Beweis ist eine Zeile: Mit festen $\lambda_i^\star$ und
+Der Beweis ist kurz: Mit festen $\lambda_i^\star$ und
 $\mu_j^\star \ge 0$ ist $\Lcal(\cdot, \blambda^\star, \bmu^\star)$ konvex,
 die Stationarität macht $\cgreen{\bx^\star}$ zu ihrem Minimierer, und für
 jedes zulässige $\bx$ gilt
@@ -344,9 +343,9 @@ Die erste Ungleichung nutzt $g_i(\bx) = 0$, $h_j(\bx) \le 0$ und
 $\mu_j^\star \ge 0$, die letzte Gleichheit die Komplementarität.
 
 Diese Richtung braucht also keine Regularitätsbedingung. Die umgekehrte aus
-@satz:karush-kuhn-tucker-bedingungen braucht sie weiterhin, auch bei konvexen Problemen – die beiden
+@satz:karush-kuhn-tucker-bedingungen braucht sie weiterhin, auch bei konvexen Problemen. Die beiden
 Richtungen sind nicht symmetrisch, und die verbreitete Kurzformel „im konvexen
-Fall sind die KKT-Bedingungen notwendig *und* hinreichend" verwischt genau das. Bei
+Fall sind die KKT-Bedingungen notwendig *und* hinreichend" unterschlägt das. Bei
 $\min x$ unter $\cred{h(x)} = x^2 \le 0$ sind Ziel und
 Nebenbedingung konvex, der einzige zulässige Punkt $\cgreen{x^\star = 0}$ ist
 das Optimum, und trotzdem erfüllt kein $\mu \ge 0$ die Stationarität
@@ -433,10 +432,10 @@ Regularitätsbedingung.
 :::frage{wahr}
 Die Lasso-Lösung muss nicht in einer Ecke der Raute liegen.
 
-Die Ecke gewinnt nur, solange das Budget klein genug ist. Im Widget sitzt
+Die Lösung liegt nur in der Ecke, solange das Budget klein genug ist. Im Widget sitzt
 die Lösung für $c \le 1{,}30$ exakt in $(c;\, 0)$, bei $c = 1{,}40$ dagegen
 liest das Readout $(1{,}36;\, 0{,}04)$: beide Koordinaten sind besetzt. Die
-Sparsity des Lasso ist eine Tendenz der Geometrie, keine Garantie.
+Sparsity des Lasso ist eine Tendenz, keine Garantie.
 :::
 
 ::::
