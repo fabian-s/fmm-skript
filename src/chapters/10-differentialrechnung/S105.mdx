@@ -10,7 +10,7 @@ dann steht. Ab hier geht es um das Rechnen damit: Welche Eigenschaften erbt eine
 differenzierbare Funktion, und wie leiten wir zusammengesetzte Ausdrücke ab, ohne jedes Mal
 zur Definition zurückzukehren.
 
-Der Begriff, an dem alles hängt, ist die *Fréchet-Ableitung*. Für normierte Vektorräume $\D$
+Der zentrale Begriff ist die *Fréchet-Ableitung*. Für normierte Vektorräume $\D$
 und $\E$, eine Funktion $f\colon \D \to \E$ und eine Stelle $\bx \in \D$ heißt $f$ dort
 :k[differenzierbar]{#differentiability}, wenn es eine beschränkte lineare Abbildung
 $\cgreen{D_{\bx} f}\colon \D \to \E$ und einen Rest $\cred{r(\bh)} \in \E$ gibt mit
@@ -74,7 +74,7 @@ das Argument gegen unendlich, hier gegen null, die Rechenregeln sind dieselben.
 ### Differenzierbarkeit erzwingt Stetigkeit
 
 Die lineare Approximation @eq:eq-10-5-1 sagt mehr, als sie auf den ersten Blick zugibt. Sie
-zwingt die Funktion nämlich, sich in der Nähe von $\bx$ zahm zu verhalten: Wer sich in
+schließt nämlich Sprünge in der Nähe von $\bx$ aus: Wer sich in
 erster Ordnung linear approximieren lässt, kann an dieser Stelle nicht springen.
 
 :::satz[#stetigkeit-aus-differenzierbarkeit (Stetigkeit aus Differenzierbarkeit)]
@@ -97,7 +97,7 @@ $$
 
 und damit ist $\cgreen{D_{\bx} f(\bh)} = O(\left\|\bh\right\|)$.
 
-::why[@definition:frechet-ableitung verlangt von $D_{\bx} f$ nicht nur Linearität, sondern auch Beschränktheit; das $M$ darf von der Stelle $\bx$ abhängen, nicht aber von $\bh$]
+::why[@definition:frechet-ableitung verlangt von $D_{\bx} f$ Linearität und Beschränktheit; das $M$ darf von der Stelle $\bx$ abhängen, nicht aber von $\bh$]
 :::
 
 :::schritt
@@ -147,8 +147,8 @@ Forderung eine echte Zusatzbedingung, und ohne sie bricht der Beweis zusammen.
 
 ### Stetig, aber nicht differenzierbar
 
-@satz:stetigkeit-aus-differenzierbarkeit hat eine Richtung. Die andere ist falsch, und das Gegenbeispiel ist so
-einfach, dass es kaum ein besseres gibt.
+@satz:stetigkeit-aus-differenzierbarkeit hat eine Richtung. Die andere ist falsch, und das Gegenbeispiel ist
+der Betrag.
 
 :::beispiel[#die-betragsfunktion-am-nullpunkt (Die Betragsfunktion am Nullpunkt)]
 Sei $f\colon \R \to \R$ mit $\cblue{f(x)} = \left|x\right|$, betrachtet an der Stelle
@@ -208,14 +208,14 @@ beiden Fensterränder läuft.
 
 <ZoomSchaetzung />
 
-Die drei Funktionen verhalten sich an der Stelle $0$ grundverschieden. Bei
+Die drei Funktionen verhalten sich an der Stelle $0$ verschieden. Bei
 $\cblue{f(x) = x^2}$ halbiert sich die Abweichung von der Geraden mit jeder Halbierung des
-Fensters; genau das besagt der Rest $o(\left\|\bh\right\|)$ in
+Fensters; das besagt der Rest $o(\left\|\bh\right\|)$ in
 @definition:differenzierbarkeit. Bei $\cblue{f(x) = \left|x\right|}$ steht sie auf jeder
 Zoomstufe bei genau einem $w$, und bei $\cblue{f(x) = \sqrt{\left|x\right|}}$ wächst sie
 beim Hineinzoomen sogar wie $1/\sqrt{w}$. Nichtdifferenzierbarkeit hat also mehr als eine
 Bauform, und keine davon verträgt sich mit einer Geraden. Verschieben wir $x_0$ von der $0$
-weg, so wird auch der Betrag lokal linear – die Ausnahme steckt in der Stelle, nicht in der
+weg, so wird auch der Betrag lokal linear. Die Ausnahme liegt an der Stelle, nicht an der
 Funktion.
 :::
 
@@ -274,8 +274,8 @@ $$
 :::
 
 :::schritt
-Die Zerlegung hat die Gestalt von @eq:eq-10-5-1, sobald zwei Dinge stimmen. Erstens ist der
-mittlere Term eine beschränkte lineare Abbildung in $\bh$: Linearkombinationen linearer
+Die Zerlegung hat die Gestalt von @eq:eq-10-5-1, sobald zwei Dinge stimmen. Der
+mittlere Term ist eine beschränkte lineare Abbildung in $\bh$: Linearkombinationen linearer
 Abbildungen sind linear, und mit den Schranken $M_f$ und $M_g$ von
 $\cgreen{D_{\bx} f}$ und $\cgreen{D_{\bx} g}$ gilt
 
@@ -284,7 +284,7 @@ $$
 \le \left(\left|c_1\right| M_f + \left|c_2\right| M_g\right) \left\|\bh\right\| .
 $$
 
-Zweitens ist der hintere Term wieder $\cred{o(\left\|\bh\right\|)}$, denn
+Und der hintere Term ist wieder $\cred{o(\left\|\bh\right\|)}$, denn
 
 $$
 \frac{\left\|\cred{c_1 r_f(\bh) + c_2 r_g(\bh)}\right\|}{\left\|\bh\right\|}
