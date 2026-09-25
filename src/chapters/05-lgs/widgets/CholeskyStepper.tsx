@@ -13,10 +13,22 @@ import { ref } from "../../numbers.generated";
  * Einsicht: Cholesky bestimmt L spaltenweise und scheitert an einer nicht-SPD-Matrix.
  * Farbrollen: A-Eintrag/Pivot rot, gesuchter Eintrag blau, fertige L-Einträge grün.
  * Provenienz: Trace-Muster aus heath-ch2 (nur Code), sichtbare Texte neu.
- * Zahlen: Standardmatrix L=(2,0,0;1,3,0;−1,1,2), Rest 0 in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Zahlen: Standardmatrix L=(2,0,0;1,3,0;−1,1,2), Rest 0 in
+ * scripts/verify/REV29/05-lgs-Stepper.mjs, 2026-08-29.
+ *
+ * DREI-ZUSTANDS-REGEL beim Abbruch: s < 0 (nicht positiv semidefinit),
+ * s = 0 exakt (positiv semidefinit, aber nicht definit) und 0 < s < 1e−12
+ * (numerisch nicht mehr unterscheidbar) bekommen je einen eigenen Text.
  */
 
 const { blau: BLUE, gruen: GREEN, rot: RED } = FMM_COLORS;
+
+/** Residuen als Mantisse · 10^Exponent: „0,000" könnte 4·10⁻⁴ verstecken. */
+function fmtExp(v: number): string {
+  if (v === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return `${fmtNum(v / 10 ** e)} · 10^${e}`;
+}
 
 interface CholStep {
   i: number; // Zeile des L-Eintrags (0-basiert)
@@ -51,12 +63,13 @@ function cholTrace(A: number[][]): {
         line: `l${sub(j + 1)}${sub(j + 1)} = √(${fmtNum(A[j][j])}${terms}) = √(${fmtNum(s)})  ✗`,
         value: NaN,
       });
-      return {
-        steps,
-        fail: {
-          msg: `Unter der Wurzel steht ${fmtNum(s)} ≤ 0: die eingegebene Matrix ist nicht positiv definit, eine Cholesky-Zerlegung existiert nicht.`,
-        },
-      };
+      const msg =
+        s < 0
+          ? `Unter der Wurzel steht ${fmtNum(s)} < 0: Die eingegebene Matrix ist nicht einmal positiv semidefinit, eine Cholesky-Zerlegung existiert nicht.`
+          : s === 0
+            ? `Unter der Wurzel steht exakt 0: Die Matrix ist positiv semidefinit, aber nicht positiv definit. Das reelle l${sub(j + 1)}${sub(j + 1)} = 0 gäbe es zwar, doch die nächste Spalte müsste durch null teilen – genau die Lücke, die die pivotierte Cholesky-Variante schließt.`
+            : `Unter der Wurzel steht ${fmtNum(s)}: positiv, aber so winzig, dass die folgende Division jeden Rundungsfehler aufbläst. Numerisch ist die Matrix von einer semidefiniten nicht mehr zu unterscheiden.`;
+      return { steps, fail: { msg } };
     }
     L[j][j] = Math.sqrt(s);
     steps.push({
@@ -92,7 +105,8 @@ export function CholeskyStepper() {
     [2, 10, 2],
     [-2, 2, 6],
   ]);
-  const [t, setT] = useState(0);
+  // Start bei 1: die tote Ansicht zeigt sonst ein L aus lauter Punkten.
+  const [t, setT] = useState(1);
   const trace = useMemo(() => cholTrace(A), [A]);
   const maxT = trace.steps.length;
   const shown = Math.min(t, maxT);
@@ -139,17 +153,18 @@ export function CholeskyStepper() {
 
   return (
     <div>
-      <Aufgabe>Schieben wir durch die sechs Einträge von L und probieren danach eine nicht-SPD-Matrix.</Aufgabe>
+      <Aufgabe>Schieben wir durch alle {maxT} Einträge von L und probieren danach eine nicht-SPD-Matrix.</Aufgabe>
+      <p className="text-xs" style={{ color: "var(--w-muted)" }}>
+        Farben: <span style={{ color: RED, fontWeight: 600 }}>rot</span> der verglichene Eintrag
+        von A, <span style={{ color: BLUE, fontWeight: 600 }}>blau</span> der gesuchte Eintrag
+        von L, <span style={{ color: GREEN, fontWeight: 600 }}>grün</span> die fertigen Einträge.
+      </p>
       <p className="sr-only">
         Bauen wir <span className="font-mono">L</span> per Koeffizientenvergleich auf,
-        spaltenweise von links oben nach rechts unten. In jedem Schritt vergleichen wir den{" "}
-        <span style={{ color: RED, fontWeight: 600 }}>rot markierten Eintrag von A</span> mit
-        dem entsprechenden Eintrag von <span className="font-mono">LLᵀ</span> und lösen nach
-        dem <span style={{ color: BLUE, fontWeight: 600 }}>blau markierten Eintrag von L</span>{" "}
-        auf; fertige Einträge erscheinen{" "}
-        <span style={{ color: GREEN, fontWeight: 600 }}>grün</span>. Die Matrix lässt sich
-        editieren (wir symmetrisieren die Eingabe automatisch). Setzen wir etwa a₁₁ auf −1,
-        sehen wir, wie die Zerlegung an einer nicht positiv definiten Matrix scheitert.
+        spaltenweise von links oben nach rechts unten; jeder Schritt löst eine Gleichung nach
+        genau einer neuen Unbekannten auf. Die Matrix lässt sich editieren (wir symmetrisieren
+        die Eingabe automatisch). Setzen wir etwa a₁₁ auf −1, sehen wir, wie die Zerlegung an
+        einer nicht positiv definiten Matrix scheitert.
       </p>
       <div className="my-3 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2 text-sm">
@@ -158,46 +173,18 @@ export function CholeskyStepper() {
             value={A}
             onChange={(m) => {
               setA(m.map((r, i) => r.map((v, j) => (v + (m[j]?.[i] ?? v)) / 2)));
-              setT(0);
+              setT(1);
             }}
           />
         </div>
       </div>
       <Stepper step={shown} setStep={setT} max={maxT} narration={`${shown} von ${maxT} Einträgen berechnet`} />
-      <div className="hidden my-2 flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
-          onClick={() => setT((v) => Math.max(0, v - 1))}
-          disabled={shown === 0}
-        >
-          ◀ zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 bg-slate-100 px-3 py-1 text-sm font-medium disabled:opacity-40 dark:bg-slate-800"
-          onClick={() => setT((v) => Math.min(maxT, v + 1))}
-          disabled={shown >= maxT}
-        >
-          nächster Eintrag ▶
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm"
-          onClick={() => setT(0)}
-        >
-          zurücksetzen
-        </button>
-        <span className="text-sm" style={{ color: "var(--w-muted)" }}>
-          {shown} von {maxT} Einträgen berechnet
-        </span>
-      </div>
       <div className="my-3 flex flex-wrap items-start gap-5">
         <WidgetLabel label="A (symmetrisch)">
-          <MatTable m={A} cellStyle={aStyle} />
+          <MatTable m={A} cellStyle={aStyle} label="Matrix A" />
         </WidgetLabel>
         <WidgetLabel label="L (untere Dreiecksmatrix)">
-          <MatTable m={Ldisp} cellStyle={lStyle} />
+          <MatTable m={Ldisp} cellStyle={lStyle} label="untere Dreiecksmatrix L" />
         </WidgetLabel>
         <div className="grow">
           {shown > 0 && (
@@ -214,7 +201,7 @@ export function CholeskyStepper() {
             <Verdikt kind="ok" className="mt-2">
               Fertig: alle {maxT} Gleichungen des Koeffizientenvergleichs sind abgearbeitet,
               jede enthielt genau eine neue Unbekannte. Probe: max |A − L·Lᵀ| ={" "}
-              <span className="font-mono">{fmtNum(resid)}</span>.
+              <span className="font-mono">{fmtExp(resid)}</span>.
             </Verdikt>
           )}
         </div>

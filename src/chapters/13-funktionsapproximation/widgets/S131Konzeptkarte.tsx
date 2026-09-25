@@ -126,8 +126,8 @@ export function TeilDreiKarte() {
       edges={edges}
       groups={[
         { key: "anker", label: `Anker aus ${ref("kap:intro")}–9`, color: FMM_COLORS.gruen },
-        { key: "fa1", label: "13.1–13.4 · Interpolation", color: FMM_COLORS.orange },
-        { key: "fa2", label: "13.5–13.9 · Glättung und Multivariates", color: FMM_COLORS.violett },
+        { key: "fa1", label: "Interpolationsstrang", color: FMM_COLORS.orange },
+        { key: "fa2", label: "Glättungsstrang und Multivariates", color: FMM_COLORS.violett },
       ]}
       openLabel="Kapitel öffnen"
     />

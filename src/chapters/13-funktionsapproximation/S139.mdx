@@ -313,23 +313,28 @@ automatischer Wahl der Glättungsparameter über die Kriterien aus
 :::
 
 :::interaktiv[Zwei Kurven auf logarithmischer Achse]
+Die Tabelle oben rechnet mit $K = 10$. Wie groß wird der Koeffizienten-Tensor,
+wenn wir eine Variable weglassen, dafür aber doppelt so fein auflösen?
+
+<Schaetzfrage
+  frage="Schätzen wir den Speicherbedarf in GB für K = 20 und p = 8."
+  loesung={205}
+  toleranz={25}
+  einheit="GB"
+  verdeckt={<p>20⁸ = 2,56 · 10¹⁰ Koeffizienten zu je 8 Byte sind rund 205 GB – mehr als die 80 GB der Tabellenzeile für K = 10 und p = 10. Eine Variable weniger spart hier weniger, als die feinere Auflösung kostet: K steht im Exponenten der Basis, p im Exponenten selbst.</p>}
+>
+<SkalierungTensorGam />
+</Schaetzfrage>
+
 Das Widget stellt die beiden Zählungen nebeneinander. Orange die $K^p$
 Koeffizienten des vollen Tensorprodukts, grün die $p(K-1)+1$ freien Parameter
 des zentrierten additiven Modells, beides über der Dimension $p$ und mit
 logarithmischer senkrechter Achse. Der Tensoransatz ist dort eine Gerade, das
-additive Modell eine flach liegende Kurve.
-
-Der zweite Regler ändert $K$. Er verschiebt die grüne Kurve kaum und kippt die
-orange Gerade steiler oder flacher: Bei einer Geraden im logarithmischen Bild
-sitzt $K$ in der Steigung. Die Tafel daneben rechnet Speicherbedarf,
-Mindestzahl an Beobachtungen und die Konvergenzrate zum eingestellten Zustand
-mit.
-
-Wie groß vermuten wir den Speicherbedarf des vollen Tensorprodukts bei zehn Variablen und zehn Basisfunktionen?
-
-<Schaetzfrage frage="Schätzen wir den Speicherbedarf in GB für K = 10 und p = 10." loesung={80} toleranz={5} einheit="GB">
-<SkalierungTensorGam />
-</Schaetzfrage>
+additive Modell eine flach liegende Kurve. Der zweite Regler ändert $K$: Er
+verschiebt die grüne Kurve kaum und kippt die orange Gerade steiler oder
+flacher, denn bei einer Geraden im logarithmischen Bild sitzt $K$ in der
+Steigung. Die Werttafel rechnet Speicherbedarf, Mindestzahl an Beobachtungen
+und die Konvergenzrate zum eingestellten Zustand mit.
 :::
 
 ::::vertiefung[Additivität ist mehr als ein Verzicht]

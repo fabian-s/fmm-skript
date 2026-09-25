@@ -6,8 +6,10 @@
  * deutsche Texte neu.
  * VERIFIZIERTE ZAHLEN: Für q=1,2,3 und alle zulässigen x sind beide Rampen
  * nichtnegativ, ihr Produkt-Summenwert ist B₃^(q), und der Träger wächst um
- * genau ein Gitterintervall.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * genau ein Gitterintervall; die drei Verdikt-Zweige (Überlappung, einseitig,
+ * außerhalb) sind über den Regler alle erreichbar.
+ * Geprüft mit verify-hdr.mjs, 2026-08-20, und mit
+ * scripts/verify/REV29/13-funktionsapproximation-S134BSplineBasis.mjs, 2026-08-29.
  */
 import { useState } from "react";
 import { Aufgabe, LabeledPlot, M, Slider, Verdikt } from "../../../lib";
@@ -47,9 +49,19 @@ export function CoxDeBoorSchritt() {
   const serien = [
     { f: (x: number) => bspl(TAU, K0, q - 1, x), color: VIOLETT, dash: [] },
     { f: (x: number) => bspl(TAU, K0 + 1, q - 1, x), color: VIOLETT, dash: [2, 3] },
-    { f: rampeLinks, color: NEUTRAL, dash: [6, 4] },
-    { f: rampeRechts, color: NEUTRAL, dash: [6, 4] },
+    // Die beiden Rampen tragen verschiedene Strichmuster: die ganze Erklärung
+    // („links wächst, rechts fällt") hängt daran, sie unterscheiden zu können.
+    { f: rampeLinks, color: NEUTRAL, dash: [9, 4] },
+    { f: rampeRechts, color: NEUTRAL, dash: [1, 4] },
     { f: (x: number) => bspl(TAU, K0, q, x), color: ORANGE, dash: [] },
+  ];
+
+  const LEGENDE: { dash: number[]; farbe: string; text: string }[] = [
+    { dash: [], farbe: VIOLETT, text: `linker Nachbar B₃⁽${q - 1}⁾` },
+    { dash: [2, 3], farbe: VIOLETT, text: `rechter Nachbar B₄⁽${q - 1}⁾` },
+    { dash: [9, 4], farbe: NEUTRAL, text: "Gewichtsrampe links (wächst)" },
+    { dash: [1, 4], farbe: NEUTRAL, text: "Gewichtsrampe rechts (fällt)" },
+    { dash: [], farbe: ORANGE, text: `Ergebnis B₃⁽${q}⁾` },
   ];
 
   const vL = rampeLinks(xStern);
@@ -57,6 +69,25 @@ export function CoxDeBoorSchritt() {
   const vR = rampeRechts(xStern);
   const bR = bspl(TAU, K0 + 1, q - 1, xStern);
   const ergebnis = bspl(TAU, K0, q, xStern);
+
+  // Zustandsklassen entlang des x*-Reglers: der Träger von B_3^(q) ist
+  // [tau_3, tau_{4+q}], der Überlappungsbereich beider Nachbarn (tau_4, tau_{3+q}).
+  const linksTraegt = bL > 1e-12;
+  const rechtsTraegt = bR > 1e-12;
+  const lage: "ausserhalb" | "ueberlappung" | "einseitig" =
+    ergebnis <= 1e-12 ? "ausserhalb" : linksTraegt && rechtsTraegt ? "ueberlappung" : "einseitig";
+  const titel =
+    lage === "ausserhalb"
+      ? "Außerhalb des Trägers:"
+      : lage === "ueberlappung"
+        ? "Beide Rampen tragen:"
+        : "Nur ein Nachbar trägt:";
+  const deutung =
+    lage === "ausserhalb"
+      ? `Bei x* = ${fmt(xStern, 2)} verschwinden beide Nachbarfunktionen, das Ergebnis ist deshalb exakt null: Hier endet der Träger [${fmt(TAU[K0], 0)}, ${fmt(TAU[K0 + q + 1], 0)}].`
+      : lage === "ueberlappung"
+        ? `Bei x* = ${fmt(xStern, 2)} sind beide Nachbarn ungleich null. Die linke Rampe gewichtet mit ${fmt(vL, 3)}, die rechte mit ${fmt(vR, 3)}; zusammen ergeben die beiden Summanden ${fmt(ergebnis, 4)}. Genau in diesem Überlappungsbereich entsteht die Glattheit.`
+        : `Bei x* = ${fmt(xStern, 2)} ist nur der ${linksTraegt ? "linke" : "rechte"} Nachbar ungleich null. Das Ergebnis ${fmt(ergebnis, 4)} kommt allein aus ${linksTraegt ? "seinem wachsenden" : "seinem fallenden"} Beitrag; der andere Summand ist null.`;
 
   return (
     <div className="my-2">
@@ -66,7 +97,14 @@ export function CoxDeBoorSchritt() {
         <Slider
           label="Grad q"
           value={qRoh}
-          onChange={setQ}
+          onChange={(v) => {
+            const neu = Math.round(v);
+            setQ(neu);
+            // x* mitziehen: sonst zeigt der Regler den geklemmten Wert, während
+            // der interne Zustand noch der alte ist, und x* springt zurück,
+            // sobald der Grad wieder steigt.
+            setX((alt) => Math.min(alt, TAU[K0] + neu + 1));
+          }}
           min={1}
           max={3}
           step={1}
@@ -120,8 +158,30 @@ export function CoxDeBoorSchritt() {
         height={230}
       />
 
-      <Verdikt kind="ok">
-        Beide Rampen gewichten nichtnegative Nachbarfunktionen. Deshalb bleibt <M>{`B_3^{(${q})}`}</M> nichtnegativ; sein Träger wächst um ein Intervall und die Glattheit reicht bis zur {ORDNUNG[q - 1]} Ableitung ({num("eq:erweiterte-knotenfolge-und-b-splines-2")}).
+      <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: NEUTRAL }}>
+        {LEGENDE.map((e) => (
+          <span key={e.text} className="inline-flex items-center gap-1.5">
+            <svg width={28} height={8} viewBox="0 0 28 8" className="h-2 w-7 shrink-0" aria-hidden="true">
+              <line
+                x1={1}
+                y1={4}
+                x2={27}
+                y2={4}
+                stroke={e.farbe}
+                strokeWidth={2}
+                strokeDasharray={e.dash.length ? e.dash.join(" ") : undefined}
+              />
+            </svg>
+            <span style={{ color: e.farbe }}>{e.text}</span>
+          </span>
+        ))}
+      </p>
+
+      <Verdikt kind={lage === "ueberlappung" ? "ok" : "neutral"} titel={titel}>
+        {deutung} Beide Rampen gewichten nichtnegative Nachbarfunktionen; deshalb
+        bleibt {`B₃ vom Grad ${q}`} nichtnegativ, sein Träger wächst um ein
+        Intervall und die Glattheit reicht bis zur {ORDNUNG[q - 1]} Ableitung (
+        {num("eq:erweiterte-knotenfolge-und-b-splines-2")}).
       </Verdikt>
     </div>
   );

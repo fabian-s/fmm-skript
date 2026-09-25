@@ -37,9 +37,15 @@ import { ref } from "../../numbers.generated";
  * grau n·log n · orange O(n²) · violett O(n³) · rot O(2ⁿ), also die teuerste
  * gezeigte Klasse. Im FLOP-Zähler: blau das Matrix-Vektor-Produkt (linear in
  * jeder Dimension), orange das Matrix-Matrix-Produkt.
+ * AUSNAHME, bewusst in Kauf genommen: Die Prosa desselben Abschnitts färbt beim
+ * Rechenbeispiel die Matrix A rot, den Vektor x blau und das Ergebnis y grün.
+ * Blau trägt damit auf einer Bildschirmseite zwei Rollen — Vektor x im Text,
+ * Klasse „Matrix-Vektor-Produkt" im Widget. Wir behalten im Widget die
+ * Klassenrampe des Kapitels bei, weil sie über fünf Widgets hinweg dieselbe
+ * Bedeutung trägt; die beiden Panels sind zusätzlich über ihre Kopfzeilen
+ * benannt, die Farbe ist dort nicht die einzige Unterscheidung.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19):
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-S23Aufwand.mjs, 2026-08-29):
  *   FLOPs bei n = d = m = 100: Matrix-Vektor 10 000 Multiplikationen +
  *     9 900 Additionen = 19 900 (Näherung 2nd = 20 000), Speicher 10 200;
  *     Matrix-Matrix 1 000 000 + 990 000 = 1 990 000 (Näherung 2ndm =

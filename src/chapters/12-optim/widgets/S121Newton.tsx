@@ -32,18 +32,23 @@ import { num, ref } from "../../numbers.generated";
  * Tangente als Suchrichtung orange, Divergenzwarnung rot; der Graph von f
  * trägt das im Kapitel freie Violett (wie in S131Bisektion und S133GdStepper).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - f(x) = x² − 2 ab x⁽⁰⁾ = 1: 1 → 1,5 → 1,4166666667 → 1,4142156863 →
  *    1,4142135624 mit den Fehlern 4,142·10⁻¹ / 8,579·10⁻² / 2,453·10⁻³ /
  *    2,124·10⁻⁶ / 1,595·10⁻¹². Der Quotient e_{k+1}/e_k² läuft gegen
- *    f″/(2f′) = 0,353553 (gemessen 0,352941 / 0,353522).
+ *    f″/(2f′) = 0,353553 (gemessen 0,352941 / 0,353522). Aus der
+ *    VOREINSTELLUNG x⁽⁰⁾ = 3 lauten die Fehler 1,59 / 4,19·10⁻¹ / 4,79·10⁻² /
+ *    7,85·10⁻⁴ / 2,18·10⁻⁷, Ankunft in 5 Schritten.
  *    Ab x⁽⁰⁾ = 0,5 springt der erste Schritt auf 2,25, danach dieselbe
  *    quadratische Endphase.
  *  - f(x) = x³ − 3x + 1 (Nullstellen −1,879385 / 0,347296 / 1,532089):
- *    ab −2 in 5 Schritten zur linken, ab 0 in 5 Schritten zur mittleren, ab 2
- *    in 7 Schritten zur rechten. Bei x⁽⁰⁾ = 1,05 ist f′ = 0,3075, der erste
- *    Schritt springt nach 4,277236, und der Lauf braucht 10 Schritte.
+ *    Gezählt wird der erste Schritt mit Fehler < 1e−10 (so meldet es seit
+ *    REV29 auch das Verdikt) — ab −2 in 4 Schritten zur linken, ab 0 in 4 zur
+ *    mittleren, ab 2 in 5 zur rechten. Bei x⁽⁰⁾ = 1,05 ist f′ = 0,3075, der
+ *    erste Schritt springt nach 4,277236, und der Lauf braucht 8 Schritte,
+ *    also doppelt so viele wie aus einem gutmütigen Startpunkt. K_MAX = 12
+ *    macht diesen Fall überhaupt erst vorführbar.
  *  - f(x) = arctan x hat genau die Nullstelle 0. Newton konvergiert nur für
  *    |x⁽⁰⁾| < 1,391745200 (bisektiert aus arctan(ξ)(1+ξ²) = 2ξ). Ab
  *    x⁽⁰⁾ = 1,5 läuft die Folge 1,5 → −1,694080 → 2,321127 → −5,114088 →
@@ -157,7 +162,9 @@ const PAD_L = 42;
 const PAD_R = 12;
 const PAD_T = 10;
 const PAD_B = 26;
-const K_MAX = 8;
+// 12 statt 8: erst damit ist der beworbene Fall x⁽⁰⁾ = 1,05 auf dem kubischen
+// Beispiel (10 Schritte bis unter die Fehlerschwelle) im Widget vorführbar.
+const K_MAX = 12;
 
 export function NewtonNullstelle() {
   const [id, setId] = useState("wurzel");
@@ -235,6 +242,10 @@ export function NewtonNullstelle() {
     b.nullstellen[0],
   );
   const fehler = bahn.map((v) => Math.abs(v - naeheste));
+  // Der Schritt, in dem die Iteration ANKOMMT — nicht die Stellung des
+  // Schrittreglers. Nur so ist die Zahl im Verdikt ein Aufwandsmaß.
+  const ankunftIndex = fehler.findIndex((e) => e < 1e-10);
+  const ankunft = ankunftIndex >= 0 ? ankunftIndex : bahn.length - 1;
   const divergiert = !Number.isFinite(ziel) || Math.abs(ziel - naeheste) > 1;
   const sprung = Math.abs(naechste - x);
 
@@ -264,7 +275,9 @@ export function NewtonNullstelle() {
     text = `Die Iterierten wachsen über jede Schranke; nach ${bahn.length - 1} Schritten steht die Folge bei ${fmt(ziel, 2)}. Newton hat keine Abstiegsgarantie wie die Bisektion, sondern nur eine lokale Aussage.`;
   } else if (fehler[kk] < 1e-10) {
     art = "ok";
-    titel = `am Ziel nach ${kk} Schritten`;
+    // Nicht die Reglerstellung, sondern der erste Schritt, in dem der Fehler
+    // unter die Schwelle fällt: sonst zählt das Verdikt das Scrubben mit.
+    titel = `am Ziel nach ${ankunft} Schritten`;
     text = `Die Iteration steht auf der Nullstelle ${fmt(naeheste)}. Die Fehlerspalte zeigt, was ${ref("bemerkung:quadratische-konvergenz")} mit quadratischer Konvergenz meint: Der Quotient e_{k+1}/e_k² bleibt beschränkt, die Zahl der richtigen Stellen verdoppelt sich also grob von Schritt zu Schritt. Bei f(x) = x² − 2 läuft dieser Quotient gegen f″/(2f′) = 0,3536. Zum Vergleich: Die Bisektion aus ${ref("satz:schrittzahl-der-bisektion")} gewinnt pro Schritt ein Bit, also rund 0,3 Dezimalstellen.`;
   } else {
     art = "neutral";

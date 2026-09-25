@@ -11,7 +11,7 @@ import {
   W_MUTED,
   fmtDe,
 } from "../../../lib";
-import { ref } from "../../numbers.generated";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §3.2: Die drei Vektorisierungsnormen einer 2×2-Matrix.
@@ -29,11 +29,28 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau (Vorfassung 2026-08-05); neu sind Voreinstellung,
  * Permutationsknopf und Verdikt.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: A₁ = I, A₂ = Vertauschung und A₃ = diag(√2, 0)
+ * FARBROLLEN-KOLLISION, benannt statt verschwiegen: Im selben Abschnitt trägt
+ * Blau im Beispiel „Gleiche Frobenius-Norm, völlig verschiedene Abbildungen"
+ * die Matrix A₂. Blau hat damit auf einer Bildschirmseite zwei Rollen. Wir
+ * behalten hier die Normfarbe bei, weil sie durch das ganze Kapitel läuft; die
+ * Matrizen des Beispiels sind zusätzlich über ihre Indizes unterscheidbar.
+ *
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-normen.mjs,
+ * 2026-08-29): A₁ = I, A₂ = Vertauschung und A₃ = diag(√2, 0)
  * haben alle ‖A‖_F = 1,414214 = √2; ihre Summennormen sind 2, 2 und 1,414214,
  * ihre Maximumsnormen 1, 1 und 1,414214. Die Beispielmatrix (1 −2; 3 4) hat
  * ‖·‖_F = 5,477226 = √30, ‖·‖_S = 10, ‖·‖_M = 4.
  */
+
+/** Singulärwerte σ₁ ≥ σ₂ ≥ 0 einer 2×2-Matrix über die Eigenwerte von AᵀA. */
+function singulaerwerte(m: number[][]): [number, number] {
+  const p = m[0][0] ** 2 + m[1][0] ** 2;
+  const q = m[0][0] * m[0][1] + m[1][0] * m[1][1];
+  const r = m[0][1] ** 2 + m[1][1] ** 2;
+  const halb = (p + r) / 2;
+  const d = Math.hypot((p - r) / 2, q);
+  return [Math.sqrt(Math.max(halb + d, 0)), Math.sqrt(Math.max(halb - d, 0))];
+}
 
 /** Deutsche Dezimaldarstellung für MathJax-Strings: 1.25 -> "1{,}25". */
 function de(v: number): string {
@@ -85,7 +102,13 @@ export function S32VecNormWidget() {
   };
 
   const dieDrei = PRESETS.slice(0, 3).some((p) => gleich(p.m, mat));
-  const singulaer = Math.abs(mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0]) < 1e-9;
+  /* Drei-Zustands-Regel: exakt singulär erkennen wir am Produktvergleich der
+     EINGEGEBENEN Einträge, nicht an einer Toleranz auf der Determinante; die
+     Zwischenklasse „nahezu singulär" hängt am Verhältnis σ₂/σ₁, weil genau das
+     die Kondition ist, die in @sec:eigenschaften folgt. */
+  const singulaer = mat[0][0] * mat[1][1] === mat[0][1] * mat[1][0];
+  const [s1, s2] = singulaerwerte(mat);
+  const fastSingulaer = !singulaer && s1 > 0 && s2 / s1 < 0.05;
 
   return (
     <div className="space-y-2 text-sm">
@@ -134,7 +157,7 @@ export function S32VecNormWidget() {
             {fmtDe(frob, 3)} / {fmtDe(sum, 3)} / {fmtDe(max, 3)}), die Determinante ist inzwischen{" "}
             {fmtDe(mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0], 3)}: Als Abbildung ist das eine
             andere Matrix, für die Vektorisierungsnormen dieselbe. Genau diese Blindheit führt in{" "}
-            <a className="underline" href="#sec-3.3">
+            <a className="underline" href={`#sec-${num("sec:matrix-spur-norm/operatornormen")}`}>
               {ref("sec:matrix-spur-norm/operatornormen")}
             </a>{" "}
             zu den Operatornormen.
@@ -153,7 +176,9 @@ export function S32VecNormWidget() {
             gemittelt), {fmtDe(sum, 3)} (alles aufaddiert), {fmtDe(max, 3)} (nur der größte Betrag).
             {singulaer
               ? " Diese Matrix ist singulär, sie drückt die Ebene auf eine Gerade; keine der drei Zahlen verrät das."
-              : " Wohin die Matrix Vektoren schickt, verrät keine der drei Zahlen."}
+              : fastSingulaer
+                ? ` Diese Matrix ist nicht singulär, aber nahe daran: σ₂/σ₁ = ${fmtDe(s2 / s1, 4)}, sie drückt die Ebene fast auf eine Gerade und ist damit schlecht konditioniert. Auch das verrät keine der drei Zahlen.`
+                : " Wohin die Matrix Vektoren schickt, verrät keine der drei Zahlen."}
           </>
         )}
       </Verdikt>

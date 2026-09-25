@@ -16,7 +16,7 @@ import {
   sigmaMax,
 } from "../../../lib";
 import type { Mat2 } from "../../../lib";
-import { ref } from "../../numbers.generated";
+import { num, ref } from "../../numbers.generated";
 
 /**
  * §3.3: Die Operatornorm als längste Halbachse der Bildellipse.
@@ -42,7 +42,8 @@ import { ref } from "../../numbers.generated";
  * der Lib-Komponente TransformCanvas v2. Texte, Presets, Streckfaktorkurve
  * und Verdikt sind neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-normen.mjs,
+ * 2026-08-29):
  *   (2 1; 0 1)        σ = 2,288246 / 0,874032, κ = 2,618, ‖A‖₁ = 2, ‖A‖∞ = 3
  *   (0,6 −0,8; 0,8 0,6) σ = 1 / 1 (Drehung), ‖A‖₁ = ‖A‖∞ = 1,4, ‖A‖_F = 1,4142
  *   (20 10; 0 10)     σ = 22,882456 / 8,740320 – exakt das Zehnfache von Zeile 1
@@ -93,7 +94,11 @@ const normInf = (A: number[][]): number =>
   Math.max(Math.abs(A[0][0]) + Math.abs(A[0][1]), Math.abs(A[1][0]) + Math.abs(A[1][1]));
 
 const VOREINSTELLUNGEN: { name: string; titel: string; m: number[][] }[] = [
-  { name: `${ref("beispiel:visualisierung")}`, titel: "die Matrix aus dem Beispiel: σ₁ ≈ 2,29", m: [[2, 1], [0, 1]] },
+  {
+    name: "schiefe Streckung",
+    titel: `die Matrix aus ${ref("beispiel:visualisierung")}: σ₁ ≈ 2,29`,
+    m: [[2, 1], [0, 1]],
+  },
   { name: "Drehung", titel: "alle Streckfaktoren sind 1", m: [[0.6, -0.8], [0.8, 0.6]] },
   { name: "zehnfach", titel: "alle Einträge ×10: die Norm wächst mit", m: [[20, 10], [0, 10]] },
   { name: "singulär", titel: "die Ellipse entartet zur Strecke", m: [[1, 2], [0.5, 1]] },
@@ -136,10 +141,21 @@ export function S33OperatornormWidget() {
     );
   };
 
-  const singulaer = smin < 1e-9;
+  /* Drei-Zustands-Regel: exakt singulär erkennen wir am Produktvergleich der
+     EINGEGEBENEN Einträge (die Voreinstellung „singulär" trifft ihn exakt),
+     nicht an einer Toleranz auf dem abgeleiteten σ₂. Dazwischen liegt die
+     didaktisch interessante Klasse: σ₂ winzig, aber nicht null. */
+  const singulaer = A[0][0] * A[1][1] === A[0][1] * A[1][0];
+  const schlechtKonditioniert = !singulaer && smax > 1e-12 && smin / smax < 0.02;
   const isotrop = !singulaer && Math.abs(smax - smin) < 1e-6;
   const getroffen = smax > 1e-9 && streck >= smax * 0.995;
-  const art = singulaer ? "singulär" : isotrop ? "isotrop" : "generisch";
+  const art = singulaer
+    ? "singulär"
+    : isotrop
+      ? "isotrop"
+      : schlechtKonditioniert
+        ? "schlecht"
+        : "generisch";
 
   return (
     <div className="space-y-3 text-sm">
@@ -250,32 +266,52 @@ export function S33OperatornormWidget() {
         <div>‖A‖₁ = {fmtDe(norm1(A), 3)} · ‖A‖∞ = {fmtDe(normInf(A), 3)}</div>
       </div>
       <Verdikt kind={getroffen ? "ok" : art === "singulär" ? "warn" : "neutral"}>
+        {/* Die Erfolgsmeldung steht VOR der Fallunterscheidung: sonst quittiert
+            das Widget den Treffer in den beiden Sonderfällen gar nicht, obwohl
+            die Verdiktart schon auf „ok" steht. */}
+        {getroffen && (
+          <>
+            <strong>Getroffen:</strong> In dieser Richtung nimmt der Streckfaktor sein Maximum{" "}
+            {fmtDe(smax, 3)} an, und genau dieses Maximum ist{" "}
+            <M>{"\\left\\| \\bA \\right\\|_2"}</M> ({ref("definition:operatornorm")}).{" "}
+          </>
+        )}
         {art === "singulär" ? (
           <>
             Die Bildellipse ist zu einer Strecke entartet: <M>{"\\sigma_2 = 0"}</M>, eine ganze
             Richtung wird auf den Nullpunkt gedrückt. Die Operatornorm merkt davon nichts, sie
             misst nur die stärkste Streckung <M>{`\\left\\| \\bA \\right\\|_2 = ${deMath(smax)}`}</M>{" "}
             ({ref("satz:spektralnorm-und-spektralzerlegung")}). Die Konditionszahl <M>{"\\kappa_2(\\bA)"}</M> aus{" "}
-            <a className="underline" href="#sec-3.5">
+            <a className="underline" href={`#sec-${num("sec:matrix-spur-norm/eigenschaften")}`}>
               {ref("sec:matrix-spur-norm/eigenschaften")}
             </a>{" "}
             ist hier unendlich.
           </>
         ) : art === "isotrop" ? (
           <>
-            Alle Streckfaktoren sind gleich {fmtDe(smax, 3)}: Die Kurve rechts ist eine Waagrechte,
+            Alle Streckfaktoren sind gleich {fmtDe(smax, 3)}: Die Streckfaktorkurve ist eine Waagrechte,
             der Einheitskreis bleibt ein Kreis. Für die Drehung mit{" "}
             <M>{"\\left\\| \\bA \\right\\|_2 = 1"}</M> ist das {ref("bemerkung:operatornormen-eigenschaften-von-orthogonalmatrizen")}; die
             Spalten- und Zeilensummennorm liegen mit {fmtDe(norm1(A), 2)} bzw.{" "}
             {fmtDe(normInf(A), 2)} daneben, denn sie messen in einer anderen Geometrie
             ({ref("satz:induzierte-p-normen")}).
           </>
+        ) : art === "schlecht" ? (
+          <>
+            Die Bildellipse ist fast zu einer Strecke zusammengefallen:{" "}
+            <M>{`\\sigma_2 = ${deMath(smin)}`}</M> ist winzig, aber nicht null. Diese Matrix ist
+            nicht singulär, sondern schlecht konditioniert – die Konditionszahl{" "}
+            <M>{`\\kappa_2(\\bA) = ${deMath(smax / smin)}`}</M> aus{" "}
+            <a className="underline" href={`#sec-${num("sec:matrix-spur-norm/eigenschaften")}`}>
+              {ref("sec:matrix-spur-norm/eigenschaften")}
+            </a>{" "}
+            ist groß, aber endlich. Die Operatornorm{" "}
+            <M>{`\\left\\| \\bA \\right\\|_2 = ${deMath(smax)}`}</M> merkt auch davon nichts.
+          </>
         ) : getroffen ? (
           <>
-            Getroffen: In dieser Richtung nimmt der Streckfaktor sein Maximum{" "}
-            {fmtDe(smax, 3)} an, und genau dieses Maximum ist{" "}
-            <M>{"\\left\\| \\bA \\right\\|_2"}</M> ({ref("definition:operatornorm")}). Die Ellipse berührt hier den
-            roten Kreis, und <M>{"\\bx"}</M> zeigt in Richtung des Eigenvektors von{" "}
+            Die Ellipse berührt hier den roten Kreis, und <M>{"\\bx"}</M> zeigt in Richtung des
+            Eigenvektors von{" "}
             <M>{"\\bA^\\top\\bA"}</M> zum größten Eigenwert{" "}
             <M>{`\\lambda_1 = ${deMath(smax * smax)}`}</M> ({ref("satz:spektralnorm-und-spektralzerlegung")}).
           </>

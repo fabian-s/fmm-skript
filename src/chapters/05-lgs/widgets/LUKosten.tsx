@@ -8,7 +8,9 @@ import type { Series } from "../../../lib";
  * (n³/3 + J·n²) gegen jedes Mal komplett neu eliminieren (J·(n³/3 + n²)).
  * Einsicht: Bei zwei rechten Seiten lohnt die gespeicherte Zerlegung bereits.
  * Farbrollen: gespeicherte Zerlegung grün, Neuansatz rot, κ/Verstärkung orange unbenutzt.
- * Provenienz: neu für dieses Skript. Zahlen: Schwelle J=2, Kostenformeln in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Provenienz: neu für dieses Skript. Zahlen: Schwelle J=2, Kostenformeln und
+ * die drei Verdikt-Regime in scripts/verify/R3/widgets-05.mjs und
+ * scripts/verify/REV29/05-lgs-Anwendungen.mjs, 2026-08-29.
  */
 
 const { gruen: GREEN, rot: RED } = FMM_COLORS;
@@ -57,7 +59,26 @@ export function LUKostenPlot() {
   }, [n]);
 
   return (
-    <Schaetzfrage frage="Bei wie vielen rechten Seiten lohnt sich das einmalige Zerlegen?" loesung={2} toleranz={0.5} min={1} max={10} schritt={1}>
+    <Schaetzfrage
+      frage="Bei wie vielen rechten Seiten lohnt sich das einmalige Zerlegen?"
+      loesung={2}
+      toleranz={0.5}
+      min={1}
+      max={10}
+      schritt={1}
+      start={5}
+      verdeckt={
+        <div className="max-w-prose text-sm">
+          <p>
+            Gleichsetzen der beiden Kosten: <span className="font-mono">n³/3 + J·n² = J·(n³/3 + n²)</span>,
+            also <span className="font-mono">n³/3 = J·n³/3</span> und damit{" "}
+            <span className="font-mono">J = 1</span> als Gleichstand. Schon die zweite rechte
+            Seite bezahlt die Zerlegung nur einmal statt zweimal – ab <span className="font-mono">J = 2</span>{" "}
+            ist die gespeicherte Zerlegung strikt billiger.
+          </p>
+        </div>
+      }
+    >
       <div className="text-sm">
       <Aufgabe>Vergleichen wir die beiden Kostenkurven bei verschiedenen Werten von J.</Aufgabe>
       <div className="max-w-md">
@@ -81,11 +102,12 @@ export function LUKostenPlot() {
         />
       </div>
       <div className="mt-2 flex flex-wrap items-start gap-6">
+        {/* Fenster an J gekoppelt: bei J_MAX läge die Schwelle J = 2 im ersten Pixel. */}
         <LabeledPlot
           xLabel="J (rechte Seiten)"
           yLabel="log₁₀ Multiplikationen"
           series={series}
-          xDomain={[1, J_MAX]}
+          xDomain={[1, Math.max(10, Math.min(J_MAX, 2 * J))]}
           yDomain={yDomain}
           width={360}
           height={240}
@@ -105,7 +127,33 @@ export function LUKostenPlot() {
             jedes Mal neu: {fmtVal(cNeu)}
           </p>
           <p className="font-mono text-xs">Ersparnisfaktor: {faktor.toFixed(1).replace(".", ",")}×</p>
-          <Verdikt kind="neutral">Bei J = {J} beträgt die Ersparnis aktuell {faktor.toFixed(1).replace(".", ",")}×; die Auflösung ordnet den Schwellenwert ein.</Verdikt>
+          {J === 1 ? (
+            <Verdikt kind="neutral" titel="Gleichstand.">
+              Bei einer einzigen rechten Seite rechnen beide Strategien dasselbe:
+              n³/3 + n² gegen 1 · (n³/3 + n²). Die Zerlegung zu speichern kostet nichts und
+              bringt nichts.
+            </Verdikt>
+          ) : J <= 5 ? (
+            <Verdikt kind="ok" titel="Amortisiert.">
+              Ab der zweiten rechten Seite fällt der teure Anteil n³/3 nur noch einmal an statt
+              J-mal; bei J = {J} ist das der Faktor {faktor.toFixed(1).replace(".", ",")}×. Die
+              Zerlegung hat sich also schon bezahlt gemacht.
+            </Verdikt>
+          ) : J >= n ? (
+            <Verdikt kind="ok" titel="Die Ersparnis läuft in ihre Schranke.">
+              Für J ≫ n dominiert in beiden Kosten der J-Anteil: Der Faktor strebt gegen
+              (n³/3 + n²)/n² ≈ n/3 ={" "}
+              {(n / 3).toFixed(1).replace(".", ",")} und steht bei J = {J} schon bei{" "}
+              {faktor.toFixed(1).replace(".", ",")}×. Mehr als rund n/3 ist nicht zu holen.
+            </Verdikt>
+          ) : (
+            <Verdikt kind="ok" titel="Deutlich billiger.">
+              Bei J = {J} spart die gespeicherte Zerlegung den Faktor{" "}
+              {faktor.toFixed(1).replace(".", ",")}×, weil die Elimination J-mal statt einmal
+              bezahlt würde. Mit wachsendem J läuft dieser Faktor gegen n/3 ={" "}
+              {(n / 3).toFixed(1).replace(".", ",")}.
+            </Verdikt>
+          )}
         </div>
       </div>
       </div>

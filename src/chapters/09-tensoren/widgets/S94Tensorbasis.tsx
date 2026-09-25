@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, DragHandle, FMM_COLORS, Slider, Surface3D, useDrag, Verdikt, ViewControls, fmtDe } from "../../../lib";
+import { Aufgabe, DragHandle, FMM_COLORS, Slider, Surface3D, useDrag, Verdikt, ViewControls, W_BUTTON, fmtDe } from "../../../lib";
 import type { Sicht3D } from "../../../lib";
 
 /**
@@ -8,13 +8,25 @@ import type { Sicht3D } from "../../../lib";
  * Farbrollen: x blau, y grün, ausgewählter Punkt orange, Funktionswerte violett.
  * Provenienz: Eigenbau, keine portierten Texte. Zahlen geprüft mit
  * scripts/verify/KAP09/s94-tensorbasis.mjs (2026-08-20): für
- * 2+3x−y+5xy sind die Eckwerte 2,5,1,9 und c22=5.
+ * 2+3x−y+5xy sind die Eckwerte 2,5,1,9 und c22=5. Die drei Presets und die
+ * Vorzeichenaussage des Verdikts prüft
+ * scripts/verify/REV29/09-tensoren-S94Tensorbasis.mjs (2026-08-29).
  */
 const { blau: BLAU, gruen: GRUEN, orange: ORANGE, violett: VIOLETT, grau: GRAU } = FMM_COLORS;
 type Koeffizienten = { a: number; b: number; c: number; d: number };
 type Segment = { a: [number, number]; b: [number, number] };
 const f = (k: Koeffizienten, x: number, y: number) => k.a + k.b * x + k.c * y + k.d * x * y;
 const HEAT = { x: 34, y: 18, size: 210 };
+
+/**
+ * Drei Presets, die die Fallunterscheidung des Abschnitts sind: reine Ebene,
+ * nur der gemischte Anteil, und das Beispiel aus dem Text.
+ */
+const PRESETS: { name: string; k: Koeffizienten }[] = [
+  { name: "Ebene (c₂₂ = 0)", k: { a: 2, b: 3, c: -1, d: 0 } },
+  { name: "nur der gemischte Anteil", k: { a: 0, b: 0, c: 0, d: 5 } },
+  { name: "Beispiel 2 + 3x − y + 5xy", k: { a: 2, b: 3, c: -1, d: 5 } },
+];
 
 function schnitt(a: [number, number, number], b: [number, number, number], niveau: number): [number, number] | null {
   const da = a[2] - niveau;
@@ -70,7 +82,7 @@ export function TensorbasisExplorer() {
             const t = (value - lo) / (hi - lo || 1);
             return <rect key={`${ix}-${iy}`} x={HEAT.x + ix * 7.5} y={HEAT.y + (27 - iy) * 7.5} width="7.7" height="7.7" fill={VIOLETT} fillOpacity={0.12 + 0.76 * t} />;
           }))}
-          {linien.map((segments, level) => <g key={niveaus[level]} stroke="var(--w-text)" strokeWidth="1.1" fill="none">{segments.map((s, i) => <line key={i} x1={hpx(s.a[0])} y1={hpy(s.a[1])} x2={hpx(s.b[0])} y2={hpy(s.b[1])} />)}<text x="252" y={32 + level * 15} fontSize="10" fill="var(--w-text)">{fmtDe(niveaus[level], 1)}</text></g>)}
+          {linien.map((segments, level) => <g key={niveaus[level]} stroke="var(--w-text)" strokeWidth="1.1" fill="none">{segments.map((s, i) => <line key={i} x1={hpx(s.a[0])} y1={hpy(s.a[1])} x2={hpx(s.b[0])} y2={hpy(s.b[1])} />)}{segments.length > 0 && <text x={hpx(segments[segments.length - 1].b[0]) + 3} y={hpy(segments[segments.length - 1].b[1]) - 2} fontSize="10" fill="var(--w-text)" stroke="none">{fmtDe(niveaus[level], 1)}</text>}</g>)}
           <rect x={HEAT.x} y={HEAT.y} width={HEAT.size} height={HEAT.size} fill="none" stroke={GRAU} />
           <line x1={HEAT.x} y1={HEAT.y + HEAT.size} x2={HEAT.x + HEAT.size} y2={HEAT.y + HEAT.size} stroke={BLAU} />
           <line x1={HEAT.x} y1={HEAT.y} x2={HEAT.x} y2={HEAT.y + HEAT.size} stroke={GRUEN} />
@@ -78,6 +90,13 @@ export function TensorbasisExplorer() {
           <DragHandle x={hpx(punkt[0])} y={hpy(punkt[1])} farbe={ORANGE} {...drag.handleProps("punkt")} />
         </svg>
         <Surface3D size={280} xDomain={[0, 1]} yDomain={[0, 1]} zDomain={zDom} surface={surface} contours={niveaus} contourColor={VIOLETT} points={[{ p: [punkt[0], punkt[1], z], color: ORANGE, label: `f = ${fmtDe(z, 2)}`, onTop: true }]} dropLines azimuth={sicht.azimuth} elevation={sicht.elevation} onViewChange={setSicht} labels={{ x: "x", y: "y", z: "f" }} ariaLabel="Dieselbe Tensorproduktfunktion als Fläche; der orange Punkt ist mit der Höhenlinientafel verknüpft." />
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {PRESETS.map((eintrag) => (
+          <button key={eintrag.name} type="button" className={W_BUTTON} onClick={() => setK(eintrag.k)}>
+            {eintrag.name}
+          </button>
+        ))}
       </div>
       <div className="mt-3 max-w-md">
         <Slider label="c₁₁" value={k.a} onChange={(a) => setK({ ...k, a })} min={-5} max={5} step={0.5} accent={VIOLETT} />
@@ -88,10 +107,10 @@ export function TensorbasisExplorer() {
         <Slider label="Punkt y" value={punkt[1]} onChange={(y) => setPunkt([punkt[0], y])} min={0} max={1} step={0.05} accent={GRUEN} />
       </div>
       <ViewControls value={sicht} onChange={setSicht} />
-      <Verdikt kind={Math.abs(k.d) < 1e-9 ? "ok" : "neutral"}>
-        {Math.abs(k.d) < 1e-9
+      <Verdikt kind={k.d === 0 ? "ok" : "neutral"}>
+        {k.d === 0
           ? `Bei c₂₂ = 0 liegt der Punkt bei f(${fmtDe(punkt[0], 2)}, ${fmtDe(punkt[1], 2)}) = ${fmtDe(z, 2)} auf einer Ebene: Die x-Steigung ist für jedes y gleich.`
-          : `Bei c₂₂ = ${fmtDe(k.d, 1)} liegt derselbe Punkt in beiden Bildern bei f(${fmtDe(punkt[0], 2)}, ${fmtDe(punkt[1], 2)}) = ${fmtDe(z, 2)}. Die gekrümmten Höhenlinien zeigen die Kopplung von x und y.`}
+          : `Bei c₂₂ = ${fmtDe(k.d, 1)} liegt derselbe Punkt in beiden Bildern bei f(${fmtDe(punkt[0], 2)}, ${fmtDe(punkt[1], 2)}) = ${fmtDe(z, 2)}. Ein ${k.d > 0 ? "positives" : "negatives"} c₂₂ ${k.d > 0 ? "hebt" : "senkt"} die Ecke (1, 1) gegenüber der Ebene, und die Höhenlinien krümmen sich ${k.d > 0 ? "von" : "zu"} ihr ${k.d > 0 ? "weg" : "hin"}: Genau das ist die Kopplung von x und y.`}
       </Verdikt>
     </div>
   );

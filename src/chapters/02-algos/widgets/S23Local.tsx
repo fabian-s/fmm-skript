@@ -1,16 +1,19 @@
 /**
  * F1 — DIE EINE EINSICHT: Ein Selbsttest liefert erst nach einer eigenen Wahl
  * gezieltes Feedback.
- * FARBROLLEN: Grün = richtige, Rot = falsche gewählte Option; Slate = Oberfläche.
+ * FARBROLLEN: keine eigenen; die Rückmeldung läuft über <Verdikt kind="ok" /
+ * "fail">, die Oberfläche über die Klassenketten aus surface.ts. Damit belegt
+ * die Komponente insbesondere nicht Rot, das im Kapitel „das teure Verfahren"
+ * bedeutet, mit einer zweiten Rolle.
  * PROVENIENZ: Eigene, aus der TSX-Fassung von S23 portierte MDX-Hilfskomponente.
- * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * VERIFIZIERTE ZAHLEN: keine numerischen Claims in Caption oder Verdikt.
  */
 import { useState, type ReactNode } from "react";
+import { Verdikt, W_BUTTON, W_BUTTON_AKTIV, W_MUTED, W_PANEL } from "../../../lib";
 
 /**
  * Lokale Begleitkomponente für Abschnitt 2.3 (aus der TSX-Fassung von S23
- * portiert, MDX-Migration 2026-08-11; Rendering unverändert).
+ * portiert, MDX-Migration 2026-08-11).
  *
  * Selbsttest: Multiple-Choice mit Feedback pro Option und aufklappbarer
  * Lösung. Das ist kein wahr/falsch-Quiz und deshalb nicht als
@@ -32,45 +35,37 @@ export function SelfTest({
   const answered = chosen !== null;
   const correct = answered && chosen === richtig;
   return (
-    <div className="my-4 max-w-prose rounded border border-slate-200 p-4 dark:border-slate-700">
+    <div className={`my-4 max-w-prose p-4 ${W_PANEL}`}>
       <div className="mb-3">{frage}</div>
-      <div className="flex flex-col gap-2">
-        {optionen.map((opt, i) => {
-          const isChosen = chosen === i;
-          const cls = isChosen
-            ? i === richtig
-              ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/40"
-              : "border-red-600 bg-red-50 dark:bg-red-950/40"
-            : "border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800";
-          return (
-            <button
-              key={i}
-              type="button"
-              className={`rounded border px-3 py-1.5 text-left text-sm ${cls}`}
-              onClick={() => setChosen(i)}
-            >
-              <span className="mr-2 font-mono text-xs text-slate-500">
-                {String.fromCharCode(97 + i)})
-              </span>
-              {opt}
-            </button>
-          );
-        })}
+      <div className="flex flex-col gap-2" role="radiogroup" aria-label="Antwortmöglichkeiten">
+        {optionen.map((opt, i) => (
+          <button
+            key={i}
+            type="button"
+            role="radio"
+            aria-checked={chosen === i}
+            className={`text-left ${chosen === i ? W_BUTTON_AKTIV : W_BUTTON}`}
+            onClick={() => setChosen(i)}
+          >
+            <span className={`mr-2 font-mono text-xs ${W_MUTED}`}>
+              {String.fromCharCode(97 + i)})
+            </span>
+            {opt}
+          </button>
+        ))}
       </div>
       {answered && (
-        <p
-          className={`mt-3 text-sm font-medium ${
-            correct ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"
-          }`}
-        >
-          {correct
-            ? "Richtig!"
-            : "Leider nein, noch einmal probieren oder die Lösung ansehen."}
-        </p>
+        <div className="mt-3">
+          <Verdikt kind={correct ? "ok" : "fail"}>
+            {correct
+              ? "Richtig."
+              : "Leider nein, noch einmal probieren oder die Lösung ansehen."}
+          </Verdikt>
+        </div>
       )}
       <button
         type="button"
-        className="mt-3 rounded bg-slate-200 px-2 py-1 text-xs font-medium hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+        className={`mt-3 text-xs ${W_BUTTON}`}
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
       >

@@ -27,12 +27,12 @@ import { ref } from "../../numbers.generated";
  * Farben nach dem Kapitel-11-Code: Funktion blau, Taylorpolynom grün,
  * Fehler rot.
  *
- * Nachgerechnet (node, rev-s114-a/d.mjs): e^0,5 = 1,648721; die Polynome
+ * Nachgerechnet (scripts/verify/REV29/10-differentialrechnung-S108Taylor.mjs,
+ * 2026-08-29): e^0,5 = 1,648721; die Polynome
  * T_1/T_2/T_3 liefern bei x = 0,5 die Werte 1,5 / 1,625 / 1,645833 und damit
  * die Fehler 0,148721 / 0,023721 / 0,002888 aus Beispiel 10.8.6.
  *
- * Nachgerechnet (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19): Die Fehlerquotienten bei x = 0,5 sind 4,362 (T_0 -> T_1),
+ * Ebenfalls dort nachgerechnet: Die Fehlerquotienten bei x = 0,5 sind 4,362 (T_0 -> T_1),
  * 6,270 (T_1 -> T_2), 8,214 (T_2 -> T_3) und 10,177 (T_3 -> T_4) — daher die
  * Schätzfrage mit der Antwort „Faktor 8". Größter Fehler auf [-1, 1] bzw.
  * [-3, 3]: 0,7183/16,09 (k=1), 0,2183/11,59 (k=2), 0,0516/7,086 (k=3),
@@ -43,7 +43,6 @@ import { ref } from "../../numbers.generated";
  * Entwicklungspunkt: Auf dem Reglerraster wächst der Fehler beim Ordnungsschritt
  * für k = 1 ab x <= -1,60 und für k = 2 ab x <= -2,60 sogar (k = 1, x = -3:
  * 0,950 -> 2,050). Der Statustext verzweigt deshalb.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion und Funktionswerte
@@ -121,10 +120,13 @@ export function TaylorOrdnungWidget() {
     const gewachsen = quotient > 1;
     const trifft = Math.abs(quotient - faust) <= 0.25 * faust;
     art = gewachsen ? "warn" : "ok";
+    // Beide Formen nennen: Die Schätzfrage fragt nach dem FAKTOR, das Readout
+    // zeigt sonst nur dessen Kehrwert, und der Leser müsste selbst invertieren.
     const bilanz = gewachsen
       ? `der Schritt auf die Ordnung ${k} hat ihn also nicht gedrückt, sondern auf das ` +
         `${fmt(quotient, 3)}-fache wachsen lassen`
-      : `der Schritt auf die Ordnung ${k} hat ihn also auf ein ${fmt(quotient, 3)}-faches gedrückt`;
+      : `der Schritt auf die Ordnung ${k} hat ihn also auf ein ${fmt(quotient, 3)}-faches gedrückt, ` +
+        `das ist der Faktor ${fmt(1 / quotient, 3)}`;
     const faustSatz = trifft
       ? `Das passt zum Faustwert |x|/(k+1) = ${fmt(faust, 3)}.`
       : `Der Faustwert |x|/(k+1) = ${fmt(faust, 3)} trifft das nicht: Er beschreibt das Verhalten ` +
@@ -202,7 +204,8 @@ export function TaylorOrdnungWidget() {
 
 /**
  * Der Abschnitts-Baustein: erst tippen, dann schieben. Verifizierter Wert des
- * Quotienten bei x = 0,5: 8,214 (check-s114.mjs, 2026-08-19).
+ * Quotienten bei x = 0,5: 8,214
+ * (scripts/verify/REV29/10-differentialrechnung-S108Taylor.mjs, 2026-08-29).
  */
 export function TaylorOrdnungSchaetzung() {
   return (

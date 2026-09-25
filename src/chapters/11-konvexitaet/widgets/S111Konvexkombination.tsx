@@ -39,12 +39,12 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Farben/Zahlformat aus
  * `src/lib/widgets/util.ts`.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Dreiecksfläche 2; Schwerpunkt (1; 2/3)
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen — Dreiecksfläche 2; Schwerpunkt (1; 2/3)
  * mit w = (1/3; 1/3; 1/3); w = (1/2; 1/4; 1/4) gibt (0,75; 0,5);
- * w = (1/4; 1/4; 1/2) gibt (1; 1). Baryzentrische Gewichte und Flächenanteile
- * stimmen auf 5,6e−17 überein; über ein 401×401-Raster summieren sich die drei
- * Teilflächen für jeden Punkt im Dreieck auf die Gesamtfläche (Abweichung
- * ≤ 2,2e−16).
+ * w = (1/4; 1/4; 1/2) gibt (1; 1). Über alle 9260 Reglerstellungen des
+ * 0,05-Rasters liefert die Rückrechnung der baryzentrischen Gewichte aus dem
+ * gemischten Punkt wieder die normierten Reglerwerte (Abweichung ≤ 1e−12), und
+ * die drei Gewichte summieren sich auf 1.
  */
 
 const GRUEN = FMM_COLORS.gruen; // Konvexkombination, Verbindungsstrecken
@@ -60,6 +60,8 @@ const ECKEN: P2[] = [
   [1, 2],
 ];
 const NAMEN = ["x₁", "x₂", "x₃"];
+// Die Regler steuern die unnormierten Gewichte w₁, w₂, w₃ — nicht die Ecken xᵢ.
+const GEWICHT_INDEX = ["₁", "₂", "₃"];
 
 const LO = -0.5;
 const HI = 2.5;
@@ -148,6 +150,10 @@ export function KonvexkombinationsExplorer() {
   const eps = 1e-9;
   const nullen = definiert ? w.filter((v) => v < eps).length : -1;
   const lage = !definiert ? "undefiniert" : nullen >= 2 ? "ecke" : nullen === 1 ? "kante" : "innen";
+  // Drei Zustände statt zwei: exakt getroffen wird der Schwerpunkt über die
+  // KONTROLLIERTEN Reglerwerte (drei gleiche Rohwerte normieren exakt auf 1/3),
+  // nahe daran über die Toleranz auf den abgeleiteten Gewichten.
+  const istGenauSchwerpunkt = definiert && roh[0] === roh[1] && roh[1] === roh[2];
   const istSchwerpunkt = definiert && w.every((v) => Math.abs(v - 1 / 3) < 5e-3);
   const eckIndex = definiert ? w.findIndex((v) => v > 1 - eps) : -1;
   const freieKante = definiert && nullen === 1 ? w.findIndex((v) => v < eps) : -1;
@@ -322,7 +328,7 @@ export function KonvexkombinationsExplorer() {
           {[0, 1, 2].map((i) => (
             <Slider
               key={i}
-              label={`Regler ${NAMEN[i]}`}
+              label={`Gewicht w${GEWICHT_INDEX[i]} (unnormiert)`}
               value={roh[i]}
               onChange={(v) =>
                 setRoh((r) => {
@@ -391,7 +397,13 @@ export function KonvexkombinationsExplorer() {
       ) : (
         <Verdikt
           kind="ok"
-          titel={istSchwerpunkt ? "Nahe am Schwerpunkt (1; 2/3)." : "Im Inneren des Dreiecks."}
+          titel={
+            istGenauSchwerpunkt
+              ? "Genau der Schwerpunkt (1; 2/3)."
+              : istSchwerpunkt
+                ? "Nahe am Schwerpunkt (1; 2/3)."
+                : "Im Inneren des Dreiecks."
+          }
         >
           Alle drei Gewichte sind positiv, der Punkt liegt im Inneren ({ref("bemerkung:rand-und-inneres-an-den-gewichten")}). Die
           gestrichelte Hilfsstrecke zeigt, wie er entsteht: erst x₂ und x₃ zu y mischen, dann x₁

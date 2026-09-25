@@ -30,13 +30,24 @@ export function MatTable({
   m,
   cellClass,
   cellStyle,
+  label,
 }: {
   m: (number | null)[][];
   cellClass?: (i: number, j: number) => string;
   cellStyle?: (i: number, j: number) => CSSProperties | undefined;
+  /** Name der Matrix; ohne ihn liest ein Screenreader nur eine Zahlenfolge. */
+  label?: string;
 }) {
+  // Ein CSS-Grid aus <div>s hat für Screenreader keine Zeilenstruktur. Statt
+  // ARIA-Grid-Rollen (die eine andere DOM-Schachtelung bräuchten) geben wir die
+  // Matrix zeilenweise als Textalternative aus.
+  const vorlesen = m
+    .map((row, i) => `Zeile ${i + 1}: ${row.map((v) => (v === null ? "offen" : fmtNum(v))).join(", ")}`)
+    .join("; ");
   return (
     <div
+      role="img"
+      aria-label={`${label ? `${label}, ` : ""}${m.length} mal ${m[0].length}. ${vorlesen}`}
       className="inline-grid gap-px self-start rounded border-x-2 border-slate-500 px-1.5 py-1"
       style={{ gridTemplateColumns: `repeat(${m[0].length}, minmax(2.3rem, auto))` }}
     >
@@ -77,12 +88,21 @@ export function backSub(U: number[][], rhs: number[]): {
   x: (number | null)[];
   lines: string[];
   failRow: number;
+  /** true, wenn das Pivot der Fehlzeile exakt 0 ist (sonst: winzig, aber ≠ 0) */
+  failExakt: boolean;
+  /** das Pivot der Fehlzeile, für den Text des Verdikts */
+  failPivot: number;
 } {
   const n = U.length;
   const x: (number | null)[] = new Array(n).fill(null);
   const lines: string[] = [];
   for (let i = n - 1; i >= 0; i--) {
-    if (Math.abs(U[i][i]) < 1e-12) return { x, lines, failRow: i };
+    // Drei Zustände: exakt null (Eingabewert), winzig (Division bläst den Fehler
+    // auf) und regulär. Der Abbruch trifft beide entarteten Fälle, der Text
+    // unterscheidet sie.
+    if (Math.abs(U[i][i]) < 1e-12) {
+      return { x, lines, failRow: i, failExakt: U[i][i] === 0, failPivot: U[i][i] };
+    }
     let s = rhs[i];
     let terms = "";
     for (let j = i + 1; j < n; j++) {
@@ -96,5 +116,5 @@ export function backSub(U: number[][], rhs: number[]): {
       )}`
     );
   }
-  return { x, lines, failRow: -1 };
+  return { x, lines, failRow: -1, failExakt: false, failPivot: NaN };
 }

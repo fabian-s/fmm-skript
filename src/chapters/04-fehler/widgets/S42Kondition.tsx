@@ -4,6 +4,7 @@ import {
   DragHandle,
   FMM_COLORS,
   M,
+  Schaetzfrage,
   Slider,
   Verdikt,
   W_BUTTON,
@@ -39,8 +40,8 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau (Fassung 2026-08-05, hier auf Direktmanipulation,
  * Voreinstellungen und <Verdikt> umgebaut).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19):
+ * PRÜFSTATUS (scripts/verify/R2/check-s42-claims.mjs, 2026-08-20; ergänzt um
+ * scripts/verify/REV29/04-fehler-S42Kondition.mjs, 2026-08-29):
  *   Kehrwert, Voreinstellung x = 0,6 und ε = −0,45: x̃ = 0,15, relativer
  *   Inputfehler 75 %, relativer Outputfehler 300 %, Verstärkung 4 = x/|x+ε|.
  *   Verstärkung 2 bei ε = −0,3, Verstärkung 5 bei ε = −0,48, Verstärkung 10
@@ -49,7 +50,10 @@ import { ref } from "../../numbers.generated";
  *   Summe: κ_rel(1,2; −0,85) = 5,9419 (‖x‖₂ = 1,47054, Summe 0,35);
  *   κ_rel(1,4; 1,4) = 1; κ_rel(1,5; −1,45) = 59,008 (2 verlorene Stellen);
  *   κ_rel(1,5; −1,5) = ∞; κ_abs = √2 = 1,41421.
- *   R2-Nachprüfung: scripts/verify/R2/check-s42-claims.mjs, 2026-08-20.
+ *
+ * DREI-ZUSTANDS-REGEL: Polstelle (x̃ = 0) und Antidiagonale (x₁ + x₂ = 0) sind
+ * Strukturaussagen und werden auf den RASTERWERTEN der Regler exakt entschieden
+ * (Ganzzahlarithmetik), nicht über eine Toleranz auf einem abgeleiteten Float.
  */
 
 const COL = {
@@ -91,12 +95,17 @@ const YMAX = 10;
 const sx = (wx: number) => L + ((W - L - R) * wx) / XMAX;
 const sy = (wy: number) => T + (H - T - B) * (1 - Math.min(wy, YMAX) / YMAX);
 
-export function KehrwertWidget() {
+/** Die Tafel selbst; `aufgeloest` gibt Verstärkungs-Readout und Verdikt frei. */
+function KehrwertTafel({ aufgeloest }: { aufgeloest: boolean }) {
   const [x, setX] = useState(0.6);
   const [eps, setEps] = useState(-0.45);
 
   const xt = x + eps;
-  const valid = xt > 0.001;
+  // Beide Regler laufen auf einem Raster (0,01 bzw. 0,005): x̃ = 0 lässt sich
+  // deshalb exakt erkennen, statt es aus einer Toleranz zu erschließen.
+  const xtRaster = Math.round(x * 1000) + Math.round(eps * 1000);
+  const aufPolstelle = xtRaster === 0;
+  const valid = xtRaster > 0;
   const fx = 1 / x;
   const fxt = valid ? 1 / xt : NaN;
   const relIn = Math.abs(eps) / x;
@@ -123,12 +132,18 @@ export function KehrwertWidget() {
   const fxC = Math.min(fx, YMAX);
   const fxtC = valid ? Math.min(fxt, YMAX) : YMAX;
 
-  const verdikt = !valid ? (
-    <Verdikt kind="fail" titel="Über die Polstelle geschoben.">
-      Für <M>{"\\wt{x} = x + \\eps \\le 0"}</M> hat das Ergebnis nicht einmal mehr das richtige
-      Vorzeichen. Genau dieses Regime beschreibt {ref("beispiel:kehrwert-nahe-null")}: Läuft{" "}
-      <M>{"\\wt{x}"}</M> gegen null, durchläuft der relative Outputfehler das ganze Intervall{" "}
-      <M>{"[0, \\infty)"}</M>.
+  const verdikt = aufPolstelle ? (
+    <Verdikt kind="fail" titel="Genau auf der Polstelle.">
+      Hier ist <M>{"\\wt{x} = x + \\eps = 0"}</M> exakt, und <M>{"1/\\wt{x}"}</M> existiert gar
+      nicht: kein falsches Vorzeichen, sondern gar kein Wert. Genau diesen Übergang beschreibt{" "}
+      {ref("beispiel:kehrwert-nahe-null")}: Läuft <M>{"\\wt{x}"}</M> gegen null, durchläuft der
+      relative Outputfehler das ganze Intervall <M>{"[0, \\infty)"}</M>.
+    </Verdikt>
+  ) : !valid ? (
+    <Verdikt kind="fail" titel="Hinter der Polstelle.">
+      Für <M>{"\\wt{x} = x + \\eps < 0"}</M> hat das Ergebnis nicht einmal mehr das richtige
+      Vorzeichen: <M>{"1/\\wt{x}"}</M> ist negativ, <M>{"1/x"}</M> positiv. Der relative
+      Outputfehler übersteigt damit dauerhaft 100 %, egal wie klein <M>{"\\eps"}</M> noch wird.
     </Verdikt>
   ) : eps === 0 ? (
     <Verdikt kind="neutral" titel="Keine Störung.">
@@ -171,7 +186,7 @@ export function KehrwertWidget() {
         viewBox={`0 0 ${W} ${H}`}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
-        aria-label={`Graph von f(x) = 1 durch x mit dem Punkt x, dem gestörten Punkt x plus epsilon und den Fehlerintervallen auf beiden Achsen; die Verstärkung beträgt derzeit ${Number.isFinite(amp) ? fmtDe(amp, 2) : "unendlich"}.`}
+        aria-label={`Graph von f(x) = 1 durch x mit dem Punkt x, dem gestörten Punkt x plus epsilon und den Fehlerintervallen auf beiden Achsen; ${aufgeloest ? `die Verstärkung beträgt derzeit ${Number.isFinite(amp) ? fmtDe(amp, 2) : "unendlich"}` : `der grüne Outputbalken ist derzeit ${relOut > relIn ? "länger" : "kürzer"} als der rote Inputbalken`}.`}
         {...zieh.svgProps}
       >
         <rect x={0} y={0} width={W} height={H} fill="var(--w-bg)" />
@@ -296,14 +311,71 @@ export function KehrwertWidget() {
         <Readout label="f(x̃) = 1/x̃" value={valid ? fmtDe(fxt, 2) : "–"} />
         <Readout label="rel. Inputfehler |ε|/|x|" value={fmtPct(relIn)} color={COL.pert} />
         <Readout label="rel. Outputfehler" value={fmtPct(relOut)} color={COL.out} />
-        <Readout label="Verstärkung x/|x + ε|" value={Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"} color={COL.amp} />
+        <Readout
+          label="Verstärkung x/|x + ε|"
+          value={
+            !aufgeloest
+              ? "nach dem Auflösen"
+              : aufPolstelle
+                ? "∞"
+                : Number.isFinite(amp)
+                  ? fmtDe(amp, 2)
+                  : "–"
+          }
+          color={COL.amp}
+        />
       </div>
-      {verdikt}
+      {aufgeloest ? (
+        verdikt
+      ) : (
+        <Verdikt kind="neutral">
+          Vergleichen wir zunächst nur die Balkenlängen: Wie weit muss der rote Punkt an die
+          Polstelle, damit der grüne Balken zehnmal so lang wird wie der rote?
+        </Verdikt>
+      )}
       <p className={`max-w-prose text-xs ${W_MUTED}`}>
         Beide Fehlerquotienten hängen nur vom Verhältnis <M>{"\\eps/x"}</M> ab; die Stelle{" "}
         <M>{"x"}</M> selbst spielt keine Rolle.
       </p>
     </div>
+  );
+}
+
+/**
+ * Der Abschnitts-Baustein: erst tippen, dann auflösen (Muster 1). Die
+ * Schätzfrage steht im Widget und nicht in der MDX, weil freie Ausdrücke im
+ * Fließtext dort nicht erlaubt sind (remark-fmm) — dasselbe Muster wie bei
+ * SgdLernratenDemo in S43Widgets.tsx.
+ */
+export function KehrwertWidget() {
+  return (
+    <Schaetzfrage
+      frage={
+        <>
+          Wie groß muss die Störung <M>{"\\eps"}</M> bei <M>{"x = 0{,}6"}</M> sein, damit der
+          relative Outputfehler zehnmal so groß ist wie der relative Inputfehler?
+        </>
+      }
+      variante="bereich"
+      loesung={-0.54}
+      toleranz={0.02}
+      einheit="ε"
+      min={-0.55}
+      max={0}
+      schritt={0.005}
+      start={-0.2}
+      fmt={(v) => v.toFixed(3).replace(".", ",").replace("-", "−")}
+      verdeckt={
+        <p className="max-w-prose text-sm">
+          Die Verstärkung ist <M>{"|x| / |x + \\eps|"}</M>. Zehnfach heißt{" "}
+          <M>{"|x + \\eps| = x/10 = 0{,}06"}</M>, also <M>{"\\eps = -0{,}54"}</M>: 90 % der
+          Strecke von <M>{"x"}</M> zur Polstelle. Die Voreinstellung{" "}
+          <M>{"\\eps = -0{,}45"}</M> liefert zum Vergleich die Verstärkung <M>{"4"}</M>.
+        </p>
+      }
+    >
+      {({ aufgeloest }) => <KehrwertTafel aufgeloest={aufgeloest} />}
+    </Schaetzfrage>
   );
 }
 
@@ -357,7 +429,18 @@ export function SummenKonditionWidget() {
 
   const summe = p[0] + p[1];
   const nrm = Math.hypot(p[0], p[1]);
-  const kappa = Math.abs(summe) < 1e-12 ? Infinity : (Math.SQRT2 * nrm) / Math.abs(summe);
+  // Beide Regler laufen auf dem 0,01-Raster; „auf der Antidiagonalen" und „im
+  // Ursprung" sind deshalb exakt entscheidbar.
+  const p1 = Math.round(p[0] * 100);
+  const p2 = Math.round(p[1] * 100);
+  const imUrsprung = p1 === 0 && p2 === 0;
+  const aufAntidiagonale = !imUrsprung && p1 === -p2;
+  const kappa = imUrsprung
+    ? NaN // im Ursprung ist κ_rel nach Definition 4.2.2 gar nicht erklärt
+    : aufAntidiagonale
+      ? Infinity
+      : (Math.SQRT2 * nrm) / Math.abs(summe);
+  const kappaText = Number.isNaN(kappa) ? "–" : Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞";
 
   const zieh = useDrag<"p">({
     feld: { x0: 0, y0: 0, w: KS, h: KS },
@@ -368,22 +451,31 @@ export function SummenKonditionWidget() {
 
   const aktivesPreset = PRESETS.find((q) => q.p[0] === p[0] && q.p[1] === p[1])?.id;
 
-  const verdikt = !Number.isFinite(kappa) ? (
+  const verdikt = imUrsprung ? (
+    <Verdikt kind="warn" titel="Im Ursprung nicht erklärt.">
+      Für <M>{"\\bx = \\bnull"}</M> verlangt {ref("definition:konditionszahl")} sowohl{" "}
+      <M>{"\\left\\| \\bx \\right\\| \\neq 0"}</M> als auch{" "}
+      <M>{"\\left\\| f(\\bx) \\right\\| \\neq 0"}</M>; beides ist verletzt, es gibt hier also
+      keinen Wert <M>{"\\kappa_{rel}"}</M> – auch nicht <M>{"\\infty"}</M>. Schieben wir den Punkt
+      ein Stück vom Ursprung weg.
+    </Verdikt>
+  ) : aufAntidiagonale ? (
     <Verdikt kind="fail" titel="Schlecht gestellt.">
-      Auf der Antidiagonalen ist <M>{"x_1 + x_2 = 0"}</M>, der relative Outputfehler also nicht
-      einmal definiert: <M>{"\\kappa_{rel} = \\infty"}</M>. Das ist der dritte Fall aus
-      {ref("bemerkung:interpretation")}, und die Lösung von {ref("beispiel:aufgabe-kondition-der-summe")} sagt genau, wo er auftritt.
+      Auf der Antidiagonalen ist <M>{"x_1 + x_2 = 0"}</M> bei <M>{"\\bx \\neq \\bnull"}</M>, der
+      relative Outputfehler also nicht einmal definiert: <M>{"\\kappa_{rel} = \\infty"}</M>. Das
+      ist der dritte Fall aus {ref("bemerkung:interpretation")}, und die Lösung von{" "}
+      {ref("beispiel:aufgabe-kondition-der-summe")} sagt genau, wo er auftritt.
     </Verdikt>
   ) : kappa < 3 ? (
     <Verdikt kind="ok" titel="Gut konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: relative Inputfehler werden höchstens um diesen
+      <M>{"\\kappa_{rel}"}</M> = {kappaText}: relative Inputfehler werden höchstens um diesen
       Faktor verstärkt. Auf der grünen Diagonalen <M>{"x_2 = x_1"}</M> wird der Bestwert{" "}
       <M>{"\\kappa_{rel} = 1"}</M> angenommen ({ref("beispiel:aufgabe-kondition-der-summe")}). Besser geht es nicht, denn{" "}
       <M>{"\\kappa_{abs} = \\sqrt{2}"}</M> und <M>{"\\left\\| \\bx \\right\\|_2 / |x_1 + x_2| = 1/\\sqrt{2}"}</M>.
     </Verdikt>
   ) : kappa < 50 ? (
     <Verdikt kind="warn" titel="Mäßig konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}. Nach der Faustregel aus {ref("bemerkung:interpretation")} verlieren
+      <M>{"\\kappa_{rel}"}</M> = {kappaText}. Nach der Faustregel aus {ref("bemerkung:interpretation")} verlieren
       wir bis zu {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle" : "Dezimalstellen"} gegenüber der
       Genauigkeit des Inputs. Die Karte ist entlang jedes Strahls durch den Ursprung einfarbig: Nur die{" "}
@@ -391,7 +483,7 @@ export function SummenKonditionWidget() {
     </Verdikt>
   ) : (
     <Verdikt kind="fail" titel="Schlecht konditioniert.">
-      <M>{"\\kappa_{rel}"}</M> = {Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"}: rund {Math.ceil(Math.log10(kappa))}{" "}
+      <M>{"\\kappa_{rel}"}</M> = {kappaText}: rund {Math.ceil(Math.log10(kappa))}{" "}
       {Math.ceil(Math.log10(kappa)) === 1 ? "Dezimalstelle geht" : "Dezimalstellen gehen"} verloren. Nahe der Antidiagonalen löschen sich <M>{"x_1"}</M> und{" "}
       <M>{"x_2"}</M> fast aus. Das ist dieselbe Auslöschung wie in {ref("sec:algos/probleme-algorithmen")}, hier aber als
       Aussage über das <em>Problem</em> „addiere zwei Zahlen", nicht über einen Algorithmus.
@@ -408,7 +500,7 @@ export function SummenKonditionWidget() {
         viewBox={`0 0 ${KS} ${KS}`}
         className="max-w-full h-auto rounded border border-slate-300 dark:border-slate-600"
         role="img"
-        aria-label={`Karte der relativen Konditionszahl der Summe x1 plus x2 über der Ebene; entlang der Antidiagonalen explodiert sie. Der Punkt liegt bei (${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)}) mit kappa gleich ${Number.isFinite(kappa) ? fmtDe(kappa, 2) : "unendlich"}.`}
+        aria-label={`Karte der relativen Konditionszahl der Summe x1 plus x2 über der Ebene; entlang der Antidiagonalen explodiert sie. Der Punkt liegt bei (${fmtDe(p[0], 2)}; ${fmtDe(p[1], 2)}) mit kappa gleich ${Number.isNaN(kappa) ? "nicht erklärt" : Number.isFinite(kappa) ? fmtDe(kappa, 2) : "unendlich"}.`}
         {...zieh.svgProps}
         {...zieh.surfaceProps("p")}
       >
@@ -459,7 +551,7 @@ export function SummenKonditionWidget() {
         <Readout label="f(x) = x₁ + x₂" value={fmtDe(summe, 2)} />
         <Readout label="‖x‖₂" value={fmtDe(nrm, 2)} />
         <Readout label="κ_abs = √2" value={fmtDe(Math.SQRT2, 3)} />
-        <Readout label="κ_rel = √2 · ‖x‖₂ / |x₁ + x₂|" value={Number.isFinite(kappa) ? fmtDe(kappa, 2) : "∞"} color={COL.amp} />
+        <Readout label="κ_rel = √2 · ‖x‖₂ / |x₁ + x₂|" value={kappaText} color={COL.amp} />
       </div>
       {verdikt}
       <p className={`max-w-prose text-xs ${W_MUTED}`}>

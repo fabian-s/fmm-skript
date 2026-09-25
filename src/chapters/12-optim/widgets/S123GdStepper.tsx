@@ -18,7 +18,7 @@ import { ref } from "../../numbers.generated";
  * Schritt −γf′(x⁽ᵏ⁾) und die Tangente orange, Divergenzwarnung rot; der Graph
  * von f trägt das im Kapitel freie Violett (wie in S131Bisektion).
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen:
  *  - f(x) = (x − 2)² + 1, f″ ≡ 2 = L, also 1/L = 0,5 und 2/L = 1.
  *  - γ = 0,6 ab x⁽⁰⁾ = 4,5: 4,5 → 1,5 → 2,1 → 1,98 → 2,004 → 1,9992 mit den
  *    Fehlern 2,5 / −0,5 / 0,1 / −0,02 / 0,004 / −0,0008, Faktor also −0,2.
@@ -285,7 +285,9 @@ export function GdStepper1D() {
           />
           <Stepper step={k} setStep={setK} max={K_MAX} narration={narration} />
           <div className="mt-2 font-mono text-xs">
-            <p>f(x) = (x − 2)² + 1, f′(x) = 2x − 4, L = f″ = 2, also 1/L = 0,5 und 2/L = 1</p>
+            {/* Nur die Daten der Funktion; die abgeleiteten Schwellen 1/L und 2/L
+                sind die Antwort auf die Schätzfrage und stehen im Verdikt. */}
+            <p>f(x) = (x − 2)² + 1, f′(x) = 2x − 4, L = f″ = 2</p>
             <p>Fehlerfaktor 1 − γf″ = {fmt(faktor, 2)}</p>
             <table className="mt-1 w-full text-right">
               <thead>

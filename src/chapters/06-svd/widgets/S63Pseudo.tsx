@@ -32,8 +32,7 @@ import { ref } from "../../numbers.generated";
  * portiert), die Pseudoinverse entsteht daraus über die reduzierte SVD
  * A⁺ = Σ_{σ_i > 0} v_i u_iᵀ / σ_i, also über Definition 6.3.5. Texte neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19), Voreinstellung A = (1 1; 1 1), b = (1; 5):
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29), Voreinstellung A = (1 1; 1 1), b = (1; 5):
  *   σ = 2 und 0, Rang 1; A⁺ = ¼(1 1; 1 1); A⁺b = (1,5; 1,5) mit ‖A⁺b‖ = 2,1213;
  *   Ax̂ = (3; 3) = proj_col(A) b (Abweichung < 1e−12); Residuum (−2; 2) mit
  *   ‖r‖ = 2,8284; ⟨A⁺b, v₂⟩ = 0; entlang der Lösungsgeraden ändert sich ‖r‖

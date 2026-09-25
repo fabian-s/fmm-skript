@@ -11,12 +11,20 @@ import { Aufgabe, FMM_COLORS, LabeledPlot, MatrixInput, Stepper, Verdikt, fmtDe 
  * rechnen nur mit dem charakteristischen Polynom). Farbcode wie im Kapitel:
  * Einsicht: QR-Iteration macht die Nebendiagonale klein und legt Eigenwerte frei.
  * Farbrollen: Schritt blau, Grenzwert grün, Residuum rot, Rate orange.
- * Provenienz: Eigenbau; Zahlen verifiziert in check-widgets.mjs, 2026-08-19.
+ * Provenienz: Eigenbau.
+ * PRÜFSTATUS: scripts/verify/REV29/08-la-misc-S81QR.mjs (2026-08-29), Teil von
+ * `npm run verify:numbers`. Das Skript fährt die Iteration mit einer eigenen
+ * QR-Zerlegung (Householder statt Gram-Schmidt) und bestätigt: Eigenwerte 9/4
+ * bzw. 5/1, Raten 4/9 bzw. 0,2, und der Erfolgszweig |a₂₁| < 1e−9 wird für das
+ * symmetrische Beispiel bei k = 29 erreicht – deshalb KMAX = 40 statt 20.
  */
 
 const { blau: BLUE, gruen: GREEN, orange: ORANGE, rot: RED, grau: GREY } = FMM_COLORS;
 
-const KMAX = 20;
+// KMAX = 40: Der Erfolgszweig |a₂₁| < 1e−9 wird für das symmetrische
+// Standardbeispiel erst bei k = 29 erreicht; mit 20 Schritten blieb die Aufgabe
+// „verfolgen, ob der rote Eintrag verschwindet" in der Voreinstellung unlösbar.
+const KMAX = 40;
 
 type Mat = number[][];
 
@@ -206,24 +214,6 @@ export function QrIterationsDemo() {
         </button>
       </div>
       <div className="my-2">
-        {/*
-        <button
-          type="button"
-          className="rounded border border-slate-400 px-3 py-1 text-sm disabled:opacity-40"
-          onClick={() => setK((v) => Math.max(0, v - 1))}
-          disabled={kk <= 0}
-        >
-          ◀ zurück
-        </button>
-        <button
-          type="button"
-          className="rounded border border-slate-400 bg-slate-100 px-3 py-1 text-sm font-medium disabled:opacity-40 dark:bg-slate-800"
-          onClick={() => setK((v) => Math.min(maxK, v + 1))}
-          disabled={kk >= maxK}
-        >
-          nächster Schritt ▶
-        </button>
-        */}
         <Stepper step={kk} setStep={setK} max={maxK} narration="Ein QR-Schritt vertauscht RQ nach der Zerlegung A = QR." />
       </div>
 
@@ -296,6 +286,7 @@ export function QrIterationsDemo() {
             yDomain={[-16, 2]}
             width={300}
             height={200}
+            ariaLabel="Betrag der Nebendiagonalen von A hoch k, logarithmisch über der Iterationszahl, mit der Theoriegeraden aus der Rate."
           />
           <p className="mt-1 max-w-[19rem] text-xs" style={{ color: GREY }}>
             Rote Punkte: der Betrag der Nebendiagonalen, logarithmisch aufgetragen. Die orange

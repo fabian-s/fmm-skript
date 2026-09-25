@@ -39,7 +39,8 @@ import { ref } from "../../numbers.generated";
  * am charakteristischen Polynom λ² − tr λ + det) stammt aus der Vorfassung
  * dieses Widgets (2026-08-05), Rahmen und Zeichnung sind neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Voreinstellungen (2 −1; 0 3): tr 5, det 6,
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-normen.mjs,
+ * 2026-08-29): Voreinstellungen (2 −1; 0 3): tr 5, det 6,
  * λ = 3 und 2; (2 1; 1 3): tr 5, det 5, λ = 3,618 und 1,382; (0 −1; 1 0):
  * tr 0, det 1, λ = ±i; (2 1; 0 2): tr 4, det 4, doppelter Eigenwert 2 mit
  * nur einer Eigenrichtung. In allen vier Fällen ist λ₁ + λ₂ − tr = 0 auf
@@ -106,15 +107,33 @@ export function S31SpurWidget() {
   const dTick = ticks.length > 1 ? ticks[1] - ticks[0] : undefined;
   const bandY = -imHalb * 0.62; // Höhe der Summenleiste unter der reellen Achse
 
-  const doppelt = e.real && Math.abs(e.l1 - e.l2) < 1e-9;
+  /* Drei-Zustands-Regel: Die exakte Entartung erkennen wir an der KONTROLLIERTEN
+     Größe – der Diskriminante (a₁₁ − a₂₂)² + 4·a₁₂·a₂₁ aus den eingegebenen
+     Einträgen –, nicht an einer Toleranz auf den abgeleiteten Eigenwerten. Für
+     die didaktisch interessante Zwischenlage („fast zusammengefallen") gibt es
+     einen eigenen Zweig. */
+  const disc = (m[0][0] - m[1][1]) ** 2 + 4 * m[0][1] * m[1][0];
+  const skala = Math.max(1, m.flat().reduce((a, v) => a + v * v, 0));
+  const doppelt = disc === 0;
+  const fastDoppelt = !doppelt && disc > 0 && disc < 1e-3 * skala;
   const defekt = doppelt && Math.abs(m[0][1]) + Math.abs(m[1][0]) > 1e-9;
-  const art = !e.real ? "komplex" : defekt ? "defekt" : doppelt ? "doppelt" : "reell";
+  const art = !e.real
+    ? "komplex"
+    : defekt
+      ? "defekt"
+      : doppelt
+        ? "doppelt"
+        : fastDoppelt
+          ? "fastdoppelt"
+          : "reell";
   const gestalt =
     art === "komplex"
       ? "ein konjugiertes Paar über und unter der reellen Achse"
       : art === "reell"
         ? "zwei getrennte Punkte auf der reellen Achse"
-        : "ein doppelter Punkt auf der reellen Achse";
+        : art === "fastdoppelt"
+          ? "zwei fast zusammengefallene Punkte auf der reellen Achse"
+          : "ein doppelter Punkt auf der reellen Achse";
 
   const setEintrag = (i: number, j: number, v: number) => {
     const next = m.map((r) => [...r]);
@@ -122,12 +141,24 @@ export function S31SpurWidget() {
     setM(next);
   };
 
+  /* Bei Realteil 0 (etwa der Voreinstellung „Drehung um 90°") hat der Pfeil die
+     Länge null; dann bleibt ein sichtbarer Marker stehen, damit die Leiste als
+     Objekt nicht verschwindet und die Aufgabenzeile nicht ins Leere zeigt. */
   const summenPfeil = (von: number, bis: number, key: string) => (
     <g key={key} stroke={BLAU} fill={BLAU}>
-      <line x1={px(von)} y1={py(bandY)} x2={px(bis)} y2={py(bandY)} strokeWidth={2.4} />
+      {Math.abs(px(bis) - px(von)) < 1.5 ? (
+        <circle cx={px(von)} cy={py(bandY)} r={3} stroke="none" />
+      ) : (
+        <line x1={px(von)} y1={py(bandY)} x2={px(bis)} y2={py(bandY)} strokeWidth={2.4} />
+      )}
       <line x1={px(von)} y1={py(bandY) - 4} x2={px(von)} y2={py(bandY) + 4} strokeWidth={1.4} />
     </g>
   );
+
+  /* Die grüne tr-Beschriftung weicht nach oben aus, wenn sie einem Eigenwert
+     zu nahe kommt (bei „Drehung um 90°" liegen beide auf der Imaginärachse). */
+  const trLabelDodge =
+    Math.min(Math.abs(px(e.tr) - px(re1)), Math.abs(px(e.tr) - px(re2))) < 22 ? 16 : 0;
 
   return (
     <div className="space-y-3 text-sm">
@@ -217,7 +248,7 @@ export function S31SpurWidget() {
             />
             <text
               x={px(e.tr)}
-              y={py(bandY) - 14}
+              y={py(bandY) - 14 - trLabelDodge}
               fontSize={11}
               fill={GRUEN}
               textAnchor="middle"
@@ -247,21 +278,38 @@ export function S31SpurWidget() {
             )}
 
             {/* Eigenwerte */}
+            {/* Bei exakt doppeltem Eigenwert lägen zwei Kreise und zwei
+                Beschriftungen aufeinander; sichtbar bliebe nur „λ₂", und der
+                Leser sähe einen einfachen Eigenwert, während das Verdikt von
+                einem doppelten spricht. Deshalb ein Punkt mit Doppelring und
+                gemeinsamer Beschriftung. */}
             {(e.real
-              ? [
-                  { x: e.l1, y: 0, name: "λ₁" },
-                  { x: e.l2, y: 0, name: "λ₂" },
-                ]
+              ? doppelt
+                ? [{ x: e.l1, y: 0, name: "λ₁ = λ₂", ring: true }]
+                : [
+                    { x: e.l1, y: 0, name: "λ₁", ring: false },
+                    { x: e.l2, y: 0, name: "λ₂", ring: false },
+                  ]
               : [
-                  { x: e.re, y: e.im, name: "λ₁" },
-                  { x: e.re, y: -e.im, name: "λ₂" },
+                  { x: e.re, y: e.im, name: "λ₁", ring: false },
+                  { x: e.re, y: -e.im, name: "λ₂", ring: false },
                 ]
             ).map((p, i) => (
               <g key={`ew${i}`}>
+                {p.ring && (
+                  <circle
+                    cx={px(p.x)}
+                    cy={py(p.y)}
+                    r={8.5}
+                    fill="none"
+                    stroke={BLAU}
+                    strokeWidth={1.6}
+                  />
+                )}
                 <circle cx={px(p.x)} cy={py(p.y)} r={5} fill={BLAU} />
                 <text
                   x={px(p.x)}
-                  y={py(p.y) - 9}
+                  y={py(p.y) - (p.ring ? 13 : 9)}
                   fontSize={11}
                   fill={BLAU}
                   textAnchor="middle"
@@ -312,13 +360,22 @@ export function S31SpurWidget() {
           </div>
         </div>
       </div>
-      <Verdikt kind={art === "komplex" ? "warn" : "ok"} titel={`${gestalt}.`}>
+      <Verdikt kind={art === "komplex" || art === "fastdoppelt" ? "neutral" : "ok"} titel={`${gestalt}.`}>
         {art === "reell" && (
           <>
             Die beiden Realteile {fmtDe(re1, 2)} und {fmtDe(re2, 2)} ergeben aneinandergelegt genau{" "}
             {fmtDe(e.tr, 2)}, die Spur aus den Diagonaleinträgen. Genau das behauptet {ref("satz:spur-als-summe-der-eigenwerte")} –
             und die Nebendiagonale, die beide Eigenwerte verschiebt, taucht in der Spur nirgends
             auf.
+          </>
+        )}
+        {art === "fastdoppelt" && (
+          <>
+            Die beiden Eigenwerte {fmtDe(re1, 4)} und {fmtDe(re2, 4)} sind noch getrennt, aber
+            nur knapp: Die Diskriminante ist {fmtDe(disc, 6)}, also klein und doch nicht null.
+            In dieser Lage reagieren die Eigenwerte extrem empfindlich auf die Einträge – eine
+            winzige Änderung schiebt sie zusammen oder ins Komplexe. Die Spur merkt davon nichts,
+            sie bleibt {fmtDe(e.tr, 2)} ({ref("satz:spur-als-summe-der-eigenwerte")}).
           </>
         )}
         {art === "doppelt" && (

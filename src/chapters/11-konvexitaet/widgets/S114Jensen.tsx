@@ -37,7 +37,7 @@ import { num, ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau; Farben, Zahlformat und Achsen aus
  * `src/lib/widgets/util.ts`.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: gleiche Gewichte geben x̄ = 11/6 =
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen — gleiche Gewichte geben x̄ = 11/6 =
  * 1,8333; x²: 3,3611 gegen 4,9167 (Lücke 1,5556 = gewichtete Varianz);
  * eˣ: 6,2547 gegen 13,0820 (Lücke 6,8273); √x: 1,3540 gegen 1,2676, also
  * umgekehrtes Vorzeichen (Lücke −0,0864). Für w = (0,2; 0,3; 0,5): x̄ = 2,3,
@@ -102,6 +102,9 @@ export function JensenExplorer() {
   const links = definiert ? fkt.f(xquer) : NaN; // f(sum w_i x_i)
   const rechts = definiert ? STUETZ.reduce((s, x, i) => s + w[i] * fkt.f(x), 0) : NaN;
   const luecke = rechts - links;
+  // Beschriftungslage: rechts im Bild nach links klappen, sonst läuft der Text
+  // über den Rand.
+  const markeLinks = xquer > X_LO + 0.75 * (X_HI - X_LO);
   const varianz = definiert ? STUETZ.reduce((s, x, i) => s + w[i] * (x - xquer) ** 2, 0) : NaN;
 
   const yMax = fkt.yMax;
@@ -236,28 +239,37 @@ export function JensenExplorer() {
                 />
                 <circle cx={px(xquer)} cy={py(rechts)} r={5} fill={GRUEN} />
                 <circle cx={px(xquer)} cy={py(links)} r={5} fill={ORANGE} />
+                {/* Rechts im Bild klappt die Beschriftung nach links, sonst
+                    läuft sie über den Rand; im Gleichheitsfall liegen beide
+                    Marken übereinander, dann wird nur eine beschriftet. */}
                 <text
-                  x={px(xquer) + 8}
+                  x={px(xquer) + (markeLinks ? -8 : 8)}
                   y={py(rechts) - 4}
+                  textAnchor={markeLinks ? "end" : "start"}
                   fill={GRUEN}
                   fontSize={11}
                   stroke="var(--w-bg, #ffffff)"
                   strokeWidth={2.5}
                   paintOrder="stroke"
                 >
-                  Σ wᵢ f(xᵢ) = {fmtDe(rechts)}
+                  {nurEiner
+                    ? `beide Seiten = ${fmtDe(rechts)}`
+                    : `Σ wᵢ f(xᵢ) = ${fmtDe(rechts)}`}
                 </text>
-                <text
-                  x={px(xquer) + 8}
-                  y={py(links) + 13}
-                  fill={ORANGE}
-                  fontSize={11}
-                  stroke="var(--w-bg, #ffffff)"
-                  strokeWidth={2.5}
-                  paintOrder="stroke"
-                >
-                  f(Σ wᵢ xᵢ) = {fmtDe(links)}
-                </text>
+                {!nurEiner && (
+                  <text
+                    x={px(xquer) + (markeLinks ? -8 : 8)}
+                    y={py(links) + 13}
+                    textAnchor={markeLinks ? "end" : "start"}
+                    fill={ORANGE}
+                    fontSize={11}
+                    stroke="var(--w-bg, #ffffff)"
+                    strokeWidth={2.5}
+                    paintOrder="stroke"
+                  >
+                    f(Σ wᵢ xᵢ) = {fmtDe(links)}
+                  </text>
+                )}
               </g>
             )}
             <text x={PAD_L} y={9} fill="var(--w-muted, #64748b)" fontSize={10}>

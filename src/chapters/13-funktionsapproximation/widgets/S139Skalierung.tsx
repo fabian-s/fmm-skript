@@ -13,9 +13,11 @@ import { ref } from "../../numbers.generated";
  * Farbrollen nach dem Kapitel-15-Code: Basis/Koeffizienten orange, der
  * Schaetzer des additiven Modells gruen.
  *
- * Verifiziert (node, verify-13-funktionsapproximation/s155.mjs, 2026-08-19):
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S139Skalierung.mjs,
+ * 2026-08-29; dort ueber Logarithmen statt ueber Math.pow gerechnet):
  *   K = 10, p = 10:  10^10 Koeffizienten, 10^10 * 8 B = 80 GB (74,5 GiB)
  *   K = 10, p =  5:  10^5 Koeffizienten, 800 kB
+ *   K = 20, p =  8:  2,56e10 Koeffizienten, 204,8 GB
  *   additiv p = 10:  91 freie Parameter nach Zentrierung, 728 Bytes
  *   n fuer MSE <= 0,01 bei Konstante 1: 10^((8+p)/4)
  * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
@@ -75,7 +77,9 @@ const H = 240;
 const PAD = { l: 46, r: 14, t: 14, b: 34 };
 
 export function SkalierungTensorGam() {
-  const [p, setP] = useState(5);
+  // Startzustand mitten im Phänomen statt im unauffälligen Fall (B2): bei
+  // p = 8 zeigt das Verdikt sofort, worum es im Abschnitt geht.
+  const [p, setP] = useState(8);
   const [K, setK] = useState(10);
 
   const daten = useMemo(() => {
@@ -101,14 +105,30 @@ export function SkalierungTensorGam() {
     daten.map((z, i) => `${i === 0 ? "M" : "L"}${px(z.p)},${py(Math.log10(wert(z)))}`).join(" ");
 
   const speicherTensor = aktuell.tensor * BYTE_PRO_KOEFFIZIENT;
+  // Verdikt-Art und Textzweig hängen an DERSELBEN Schwelle.
+  const art: "neutral" | "warn" | "fail" =
+    p === 1 || speicherTensor < 1e6 ? "neutral" : speicherTensor < 1e9 ? "warn" : "fail";
   const status =
     p === 1
-      ? `Bei p = 1 gibt es nichts zu vergleichen: ${fmtAnzahl(aktuell.tensor)} gegen ${fmtAnzahl(aktuell.additiv)} Koeffizienten, beide Ansätze sind dieselbe univariate Anpassung. Der Fluch beginnt erst mit der zweiten Variablen.`
+      ? `Bei p = 1 gibt es nichts zu vergleichen: ${fmtAnzahl(aktuell.tensor)} gegen ` +
+        `${fmtAnzahl(aktuell.additiv)} Koeffizienten, beide Ansätze sind dieselbe ` +
+        `univariate Anpassung. Der Fluch beginnt erst mit der zweiten Variablen.`
       : speicherTensor < 1e6
-        ? `Mit p = ${p} und K = ${K} kostet die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Das passt noch bequem in den Speicher, und wir brauchen mindestens ebenso viele Beobachtungen, damit die Designmatrix vollen Spaltenrang haben kann.`
+        ? `Mit p = ${p} und K = ${K} kostet die Tensor-Produkt-Basis ` +
+          `${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Das ` +
+          `passt noch bequem in den Speicher, und wir brauchen mindestens ebenso viele ` +
+          `Beobachtungen, damit die Designmatrix vollen Spaltenrang haben kann.`
         : speicherTensor < 1e9
-          ? `Mit p = ${p} und K = ${K} sind es ${fmtAnzahl(aktuell.tensor)} Koeffizienten (${fmtSpeicher(speicherTensor)}). Der Speicher reicht noch, die geforderten ${fmtAnzahl(aktuell.tensor)} Beobachtungen sind in den meisten Anwendungen aber schon die härtere Schranke. Das additive Modell käme nach Zentrierung mit ${fmtAnzahl(aktuell.additiv)} freien Parametern aus.`
-          : `Mit p = ${p} und K = ${K} verlangt die Tensor-Produkt-Basis ${fmtAnzahl(aktuell.tensor)} Koeffizienten, also ${fmtSpeicher(speicherTensor)} allein für den Koeffizienten-Tensor. Praktikabel ist das nicht mehr; das additive Modell braucht nach Zentrierung nur ${fmtAnzahl(aktuell.additiv)} freie Parameter (${fmtSpeicher(aktuell.additiv * BYTE_PRO_KOEFFIZIENT)}).`;
+          ? `Mit p = ${p} und K = ${K} sind es ${fmtAnzahl(aktuell.tensor)} Koeffizienten ` +
+            `(${fmtSpeicher(speicherTensor)}). Der Speicher reicht noch, die geforderten ` +
+            `${fmtAnzahl(aktuell.tensor)} Beobachtungen sind in den meisten Anwendungen aber ` +
+            `schon die härtere Schranke. Das additive Modell käme nach Zentrierung mit ` +
+            `${fmtAnzahl(aktuell.additiv)} freien Parametern aus.`
+          : `Mit p = ${p} und K = ${K} verlangt die Tensor-Produkt-Basis ` +
+            `${fmtAnzahl(aktuell.tensor)} Koeffizienten, also ${fmtSpeicher(speicherTensor)} ` +
+            `allein für den Koeffizienten-Tensor. Praktikabel ist das nicht mehr; das additive ` +
+            `Modell braucht nach Zentrierung nur ${fmtAnzahl(aktuell.additiv)} freie Parameter ` +
+            `(${fmtSpeicher(aktuell.additiv * BYTE_PRO_KOEFFIZIENT)}).`;
 
   return (
     <div className="space-y-3">
@@ -121,7 +141,9 @@ export function SkalierungTensorGam() {
       <div className="flex flex-wrap gap-4">
         <svg
           viewBox={`0 0 ${W} ${H}`}
-          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+          width={W}
+          height={H}
+          className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
         >
           <rect
             x={PAD.l}
@@ -230,7 +252,10 @@ export function SkalierungTensorGam() {
         </div>
       </div>
 
-      <Verdikt kind={p >= 6 ? "warn" : "neutral"}>{status} Das ordnet die Skalierung aus {ref("satz:eine-mse-obergrenze-im-multivariaten")} ein.</Verdikt>
+      <Verdikt kind={art}>
+        {status} Das ordnet die Skalierung aus{" "}
+        {ref("satz:eine-mse-obergrenze-im-multivariaten")} ein.
+      </Verdikt>
     </div>
   );
 }

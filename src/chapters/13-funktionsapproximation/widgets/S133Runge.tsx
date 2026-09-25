@@ -6,8 +6,10 @@
  * PROVENIENZ: Rechen- und Layout-Code aus heath-ch7/S734 portiert; Texte neu.
  * VERIFIZIERTE ZAHLEN: Die Fehlerreihen für n=5,10,15,20,30,40,60 werden
  * unabhängig gescannt; insbesondere 0,4384→0,3003 ist nicht monoton und
- * die in der Tabelle genannten Randmaxima werden geprüft.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * die in der Tabelle genannten Randmaxima werden geprüft; ebenso, dass der
+ * äquidistante Fehler erst bei n = 9 über 1 steigt (Schätzfrage im Kasten).
+ * Geprüft mit verify-hdr.mjs, 2026-08-20, und mit
+ * scripts/verify/REV29/13-funktionsapproximation-S133Runge.mjs, 2026-08-29.
  * NACHTRAG (n-abhängiges Chebyshev-Verdikt): Bei n = 5 ist der
  * Chebyshev-Fehler 0,402 kaum kleiner als der äquidistante 0,438, bei
  * geradem n ≤ 10 sogar größer oder fast gleich (n=4: 0,750 vs 0,707;
@@ -31,8 +33,8 @@ import { ref } from "../../numbers.generated";
  * Statuszeilen und Zahlformate sind fuer dieses Skript neu geschrieben
  * (App-Prosa ist buchadaptiert und im oeffentlichen Repo verboten).
  *
- * Verifiziert mit node (verify-13-funktionsapproximation/verify-values.mjs,
- * 2026-08-19; detaillierter Scan check-s143.mjs / check2-s143.mjs, 2026-08-13),
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S133Runge.mjs,
+ * 2026-08-29; dort in NEWTON-Form statt baryzentrisch),
  * max|f - p| auf [-1,1] bei n Knoten:
  *   n =  5: aequidistant 0,4384 (bei x = -0,795) | Chebyshev 0,4020
  *   n = 10: 0,3003 (x = -0,927) | 0,2692
@@ -131,7 +133,7 @@ function fmt(v: number, d = 3): string {
 /* Widget                                                              */
 /* ------------------------------------------------------------------ */
 
-export function RungeExplorer() {
+export function RungeExplorer({ zeigeFehlerkurve = true }: { zeigeFehlerkurve?: boolean } = {}) {
   const [n, setN] = useState(11);
   const [modus, setModus] = useState<"aequi" | "cheb">("aequi");
 
@@ -237,6 +239,7 @@ export function RungeExplorer() {
           </p>
         </div>
 
+        {zeigeFehlerkurve ? (
         <div>
           <LabeledPlot
             xLabel="n (Knoten)"
@@ -257,6 +260,7 @@ export function RungeExplorer() {
             Chebyshev-Knoten.
           </p>
         </div>
+        ) : null}
       </div>
 
       <p className="font-mono text-xs">
@@ -264,7 +268,15 @@ export function RungeExplorer() {
         {fehler >= 100 ? fmt(fehler, 0) : fmt(fehler)}
       </p>
       <Verdikt kind={modus === "aequi" && fehler > 1 ? "fail" : modus === "cheb" ? (chebLohnt ? "ok" : "neutral") : "warn"}>
-        {status}{vergleich} Das illustriert {ref("bemerkung:divergenz-schon-aber-nicht-monoton")}: Bei äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
+        {status}
+        {vergleich}
+        {modus === "aequi" ? (
+          <>
+            {" "}
+            Das illustriert {ref("bemerkung:divergenz-schon-aber-nicht-monoton")}: Bei
+            äquidistanten Knoten wächst der Fehler asymptotisch, aber nicht monoton.
+          </>
+        ) : null}
       </Verdikt>
     </div>
   );

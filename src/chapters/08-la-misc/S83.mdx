@@ -1,5 +1,4 @@
-import { RichardsonStepper } from "./widgets/S83Richardson";
-import { Schaetzfrage } from "../../lib";
+import { RichardsonSchaetzfrage } from "./widgets/S83Richardson";
 
 Für :k[lineare Gleichungssysteme]{#linear-system} $\bA\bx = \bb$ und für
 Kleinste-Quadrate-Probleme kennen wir bisher nur *direkte* Verfahren. Die
@@ -548,9 +547,7 @@ bestätigen das und nähern sich von unten der Vorhersage an.
 Bei welcher Schrittweite kippt diese Iteration? Schätzen wir die Grenze, bevor
 wir den Verlauf untersuchen.
 
-<Schaetzfrage frage="Ab welchem γ beginnt diese Richardson-Iteration zu divergieren?" loesung={0.4330847293182009} toleranz={0.02} einheit="γ" min={0.05} max={0.55} schritt={0.005}>
-<RichardsonStepper />
-</Schaetzfrage>
+<RichardsonSchaetzfrage />
 
 Die Auflösung markiert die Grenze der Konvergenz. @satz:konvergenz-der-korrekturiteration erklärt den
 Wechsel: Auf der einen Seite fällt der Fehler geometrisch, auf der anderen

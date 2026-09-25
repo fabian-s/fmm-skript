@@ -28,8 +28,9 @@ import { num, ref } from "../../numbers.generated";
  *
  * Deterministisch: keine Zufallszahlen, alle Kurven aus geschlossenen Formeln.
  *
- * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19). Der geschlossene Gradient (ŷ − y)·x stimmt in BEIDEN Klassen
+ * Verifizierte Zahlen
+ * (scripts/verify/REV29/10-differentialrechnung-S106Kettenregel.mjs,
+ * 2026-08-29). Der geschlossene Gradient (ŷ − y)·x stimmt in BEIDEN Klassen
  * mit dem zentralen Differenzenquotienten (ε = 10⁻⁶) überein, Abweichung
  * höchstens 6·10⁻¹¹; geprüfte Stellen (β; x) = (0,5; 1,5), (−1,2; 1,5),
  * (2; −0,8), (0,5; 0). Beispielwerte für y = 1 und x = 1,5: β = 0,5 gibt
@@ -38,7 +39,6 @@ import { num, ref } from "../../numbers.generated";
  * Verlust konstant log 2 = 0,693147 und der Gradient null. Damit sind die
  * beiden klassischen Stolperstellen (vertauschte Klassen, Vorzeichen für y = 0)
  * numerisch abgedeckt: In beiden Fällen steht (ŷ − y)·x.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktionswerte, Kurven
@@ -185,7 +185,7 @@ export function LogistikWidget() {
   if (x === 0) {
     art = "warn";
     status =
-      `Bei x = 0 hängt gar nichts von beta ab: Es ist t = 0, also ŷ = 0,5 für jedes beta, der Verlust ` +
+      `Bei x = 0 hängt gar nichts von β ab: Es ist t = 0, also ŷ = 0,5 für jedes β, der Verlust ` +
       `bleibt konstant bei log 2 = 0,693147, und der Gradient (ŷ − y)·x aus Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) ist null. Ein ` +
       `Merkmal, das immer null ist, trägt keine Information, und die Verlustkurve ist eine waagrechte ` +
       `Gerade.`;
@@ -195,7 +195,7 @@ export function LogistikWidget() {
       `Die Vorhersage ŷ = ${fmt(yhat, 3)} liegt schon dicht an der Beobachtung y = ${y}. Der Fehler ` +
       `ŷ − y = ${fmt(yhat - y, 3)} ist klein, also ist nach Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) auch der Gradient ` +
       `${fmt(grad, 4)} klein: Die Verlustkurve ist hier fast flach, ein Gradientenschritt verschiebt ` +
-      `beta kaum noch.`;
+      `β kaum noch.`;
   } else if (Math.abs(yhat - y) > 0.9) {
     art = "warn";
     status =
@@ -208,7 +208,7 @@ export function LogistikWidget() {
     status =
       `Der Fehler ŷ − y = ${fmt(yhat - y, 3)} wird mit dem Merkmal x = ${fmt(x, 2)} gewichtet, das ` +
       `ergibt nach Gleichung (${num("eq:gradient-des-logistischen-verlusts-2")}) den Gradienten ${fmt(grad, 4)}. Er ist ` +
-      `${grad > 0 ? "positiv" : "negativ"}, der Abstiegsschritt schiebt beta also nach ` +
+      `${grad > 0 ? "positiv" : "negativ"}, der Abstiegsschritt schiebt β also nach ` +
       `${grad > 0 ? "links" : "rechts"}, auf ${fmt(betaNeu, 2)}. Die grüne Tangente hat genau diese ` +
       `Steigung, und die Gegenprobe darunter kommt ohne ${ref("beispiel:gradient-des-logistischen-verlusts")} aus und bestätigt sie.`;
   }
@@ -221,7 +221,7 @@ export function LogistikWidget() {
   return (
     <div className="space-y-3">
       <Aufgabe>
-        Schieben wir beta, bis der orange Fehlerbalken links am längsten wird, und lesen rechts ab,
+        Schieben wir β, bis der orange Fehlerbalken links am längsten wird, und lesen rechts ab,
         was das für die Steigung der Verlustkurve bedeutet.
       </Aufgabe>
 
@@ -246,7 +246,7 @@ export function LogistikWidget() {
       </div>
 
       <Slider
-        label="beta"
+        label="β"
         value={beta}
         onChange={(v) => setBeta(Math.round(v * 20) / 20)}
         min={-2.5}
@@ -267,7 +267,7 @@ export function LogistikWidget() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Tafel
           titel="σ(t)"
-          xLabel="t = beta·x"
+          xLabel="t = β·x"
           x0={T0}
           x1={T1}
           y0={-0.12}
@@ -315,14 +315,14 @@ export function LogistikWidget() {
         />
 
         <Tafel
-          titel="ℓ(beta)"
-          xLabel="beta"
+          titel="ℓ(β)"
+          xLabel="β"
           x0={B0}
           x1={B1}
           y0={ly0}
           y1={ly1}
           clipId="s112-log-verlust"
-          ariaLabel={`Der Verlust als Funktion von beta mit der Tangente der Steigung ${fmt(grad, 3)} im aktuellen Punkt.`}
+          ariaLabel={`Der Verlust als Funktion von β mit der Tangente der Steigung ${fmt(grad, 3)} im aktuellen Punkt.`}
           kinder={(px, py) => (
             <>
               <line
@@ -368,13 +368,13 @@ export function LogistikWidget() {
 
       <div className="max-w-prose font-mono text-sm">
         <div style={{ color: BLAU }}>
-          Score t = beta·x = {fmt(t, 3)}, Vorhersage ŷ = σ(t) = {fmt(yhat, 4)}
+          Score t = β·x = {fmt(t, 3)}, Vorhersage ŷ = σ(t) = {fmt(yhat, 4)}
         </div>
-        <div style={{ color: BLAU }}>Verlust ℓ(beta) = {fmt(ell, 4)}</div>
+        <div style={{ color: BLAU }}>Verlust ℓ(β) = {fmt(ell, 4)}</div>
         <div style={{ color: ORANGE }}>
-          Gradient ∇ℓ(beta) = (ŷ − y)·x = ({fmt(yhat, 3)} − {y}) · {fmt(x, 1)} = {fmt(grad, 4)}
+          Gradient ∇ℓ(β) = (ŷ − y)·x = ({fmt(yhat, 3)} − {y}) · {fmt(x, 1)} = {fmt(grad, 4)}
         </div>
-        <div>Gegenprobe (ℓ(beta+ε) − ℓ(beta−ε))/(2ε) = {fmt(numerisch, 4)}</div>
+        <div>Gegenprobe (ℓ(β+ε) − ℓ(β−ε))/(2ε) = {fmt(numerisch, 4)}</div>
       </div>
 
       <Verdikt kind={art}>{status}</Verdikt>

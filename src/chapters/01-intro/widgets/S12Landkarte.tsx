@@ -9,9 +9,11 @@ import { chapters } from "../../index";
  * Lösungsfarben aus Beispiel 1.1.1.
  * Provenienz: Kantenstruktur aus conceptmap.qmd des Kurs-Repos, Darstellung
  * mit der lokalen ConceptFlow-Komponente.
- * Verifizierte Zahlen: 13 Kapitel (Anzahl kommt aus der Registry
+ * Verifizierte Zahlen (scripts/verify/REV29/01-intro-S12Landkarte.mjs,
+ * 2026-08-29): 13 Kapitel (Anzahl kommt aus der Registry
  * src/chapters/index.ts), 3 Vorwissensknoten und 30 Abhängigkeiten in der
- * Kantenliste unten; Stand nach der Kapitelzusammenlegung, 2026-08-25.
+ * Kantenliste unten (5 Vorwissenskanten + 11 Lesereihenfolge + 7 Vorgriffe +
+ * 7 Anker); genau 3 Kapitel bauen laut Karte direkt auf Kapitel 6 auf.
  */
 
 // Kurztitel für die Kästen — der volle Titel steht in der Detailzeile.
@@ -33,7 +35,10 @@ const KURZ: Record<number, string> = {
 
 const SPINE_X = 440;
 const TOP = 128;
-const STEP = 57;
+// Kastenhöhe 44 statt 38 und entsprechend größerer Abstand: bei 390 px bleibt
+// so auch im Scrollcontainer unten ein Antippziel von rund 42 px übrig.
+const STEP = 62;
+const BOX_H = 44;
 // Extra-Luft vor Kapitel 10 und 13: dort beginnt jeweils ein neuer Teil.
 const yOf = (num: number) => TOP + (num - 1) * STEP + (num >= 10 ? 18 : 0) + (num >= 13 ? 18 : 0);
 
@@ -47,7 +52,7 @@ const kapitel: FlowNode[] = chapters.map((c) => ({
   x: SPINE_X,
   y: yOf(c.num),
   w: 285,
-  h: 38,
+  h: BOX_H,
   group: teil(c.num),
   href: `?k=${c.id}`,
 }));
@@ -89,18 +94,26 @@ export function KursKarte() {
   return (
     <div>
       <Aufgabe>Tippen wir ein Kapitel an und verfolgen wir seine direkten Voraussetzungen und Folgen.</Aufgabe>
-      <ConceptFlow
-        ariaLabel="Abhängigkeitskarte der 13 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
-        nodes={[...vorwissen, ...kapitel]}
-        edges={edges}
-        groups={[
-          { key: "vor", label: "Vorwissen", color: FMM_COLORS.grau },
-          { key: "teil1", label: "Teil 1 · Numerische lineare Algebra (Kap. 1–9)", color: FMM_COLORS.blau },
-          { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–12)", color: FMM_COLORS.orange },
-          { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 13)", color: FMM_COLORS.violett },
-        ]}
-        openLabel="Kapitel öffnen"
-      />
+      {/* Bei 390 px skalierte die Karte sonst auf knapp die Hälfte herunter und
+          die Beschriftungen landeten bei rund 6 px. Deshalb bekommt die Grafik
+          eine lesbare Mindestbreite und ihr Container den Seitwärts-Scroll;
+          Legende und Detailzeile (Geschwister des SVG) behalten die volle
+          Kastenbreite und laufen weiter normal um. Ab lg fällt die
+          Mindestbreite weg, dort ist der Kasten ohnehin breit genug. */}
+      <div className="[&>div]:overflow-x-auto [&_svg]:min-w-[680px] lg:[&_svg]:min-w-0">
+        <ConceptFlow
+          ariaLabel="Abhängigkeitskarte der 13 Kapitel: Lesereihenfolge von oben nach unten, Bögen zeigen, welche Kapitel über die Reihenfolge hinaus aufeinander aufbauen."
+          nodes={[...vorwissen, ...kapitel]}
+          edges={edges}
+          groups={[
+            { key: "vor", label: "Vorwissen", color: FMM_COLORS.grau },
+            { key: "teil1", label: "Einführung und Teil 1 · Numerische lineare Algebra (Kap. 1–9)", color: FMM_COLORS.blau },
+            { key: "teil2", label: "Teil 2 · Analysis & Optimierung (Kap. 10–12)", color: FMM_COLORS.orange },
+            { key: "teil3", label: "Teil 3 · Funktionsapproximation (Kap. 13)", color: FMM_COLORS.violett },
+          ]}
+          openLabel="Kapitel öffnen"
+        />
+      </div>
     </div>
   );
 }

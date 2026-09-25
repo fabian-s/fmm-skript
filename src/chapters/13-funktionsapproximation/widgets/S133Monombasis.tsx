@@ -6,7 +6,8 @@
  * Chebyshev-Vergleichsbasis sind eigene Arbeit.
  * VERIFIZIERTE ZAHLEN: Für n=5,10,15,20 werden die dargestellten κ₂-Werte und
  * für n=10 die Winkel 32,55°, 5,47°, 2,72° unabhängig nachgerechnet.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * Geprüft mit scripts/verify/REV29/13-funktionsapproximation-S133Monombasis.mjs
+ * (einseitige Jacobi-SVD statt Potenzmethode und Inverse), 2026-08-29.
  */
 import { useState } from "react";
 import { Aufgabe, FMM_COLORS, M, Slider, Verdikt } from "../../../lib";
@@ -22,8 +23,9 @@ import { Aufgabe, FMM_COLORS, M, Slider, Verdikt } from "../../../lib";
  * Kurve (Chebyshev-Polynome als Basis) und die Winkel-Readouts, die es in
  * der Quelle nicht gibt.
  *
- * Verifiziert mit node (check-s143.mjs / check3-s143.mjs, 2026-08-13),
- * n aequidistante Stellen, kappa_2 ueber die explizit berechnete Inverse:
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S133Monombasis.mjs,
+ * 2026-08-29; die dort benutzte einseitige Jacobi-SVD kommt ohne Inverse und
+ * ohne Potenziteration aus), n aequidistante Stellen:
  *   n =  5: Monom [0,1] 6,86e2 | Monom [-1,1] 2,35e1 | Chebyshev 2,22
  *   n = 10: 1,52e7 | 4,63e3 | 1,46e1
  *   n = 15: 4,03e11 | 1,10e6 | 2,26e2
@@ -167,10 +169,21 @@ function spaltenwinkel(n: number, j: number): number {
 /* Zahlformate (deutsch; undefiniert von unendlich trennen)            */
 /* ------------------------------------------------------------------ */
 
+const HOCH = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
+
+/** Echte Hochzahl statt Caret-Literal (wie in S139Skalierung). */
+function hochzahl(n: number): string {
+  return String(Math.abs(n))
+    .split("")
+    .map((z) => HOCH[Number(z)] ?? z)
+    .join("")
+    .replace(/^/, n < 0 ? "⁻" : "");
+}
+
 function fmtKappa(c: number): string {
   if (Number.isNaN(c)) return "undefiniert";
   if (!Number.isFinite(c)) return "∞";
-  // Kleine Werte lesbar ausschreiben statt als 2,2 · 10^0.
+  // Kleine Werte lesbar ausschreiben statt als 2,2 · 10⁰.
   if (c < 100) return c.toFixed(c < 10 ? 2 : 1).replace(".", ",");
   let e = Math.floor(Math.log10(c));
   let m = c / 10 ** e;
@@ -179,7 +192,7 @@ function fmtKappa(c: number): string {
     m /= 10;
     e += 1;
   }
-  return `${m.toFixed(1).replace(".", ",")} · 10^${e}`;
+  return `${m.toFixed(1).replace(".", ",")} · 10${hochzahl(e)}`;
 }
 
 function fmt(v: number, d = 1): string {
@@ -291,6 +304,23 @@ export function MonombasisFigur() {
 /* Bild 2: Konditionszahl gegen n, halblogarithmisch                    */
 /* ------------------------------------------------------------------ */
 
+/** Strichmuster-Swatch als Inline-Legende (Muster aus S131Interpolanten). */
+function Muster({ dash }: { dash: string }) {
+  return (
+    <svg width={34} height={10} viewBox="0 0 34 10" className="h-2.5 w-[34px] shrink-0" aria-hidden="true">
+      <line
+        x1={1}
+        y1={5}
+        x2={33}
+        y2={5}
+        stroke={ORANGE}
+        strokeWidth={2}
+        strokeDasharray={dash || undefined}
+      />
+    </svg>
+  );
+}
+
 function KonditionsChart({ n, aktiv }: { n: number; aktiv: BasisId }) {
   const W = 460;
   const H = 250;
@@ -328,13 +358,13 @@ function KonditionsChart({ n, aktiv }: { n: number; aktiv: BasisId }) {
             strokeDasharray="2 3"
           />
           <text x={L - 6} y={py(lg) + 4} textAnchor="end" fontSize={10} fill={NEUTRAL}>
-            {`10^${lg}`}
+            {`10${hochzahl(lg)}`}
           </text>
         </g>
       ))}
       <line x1={L} y1={py(16)} x2={L + w} y2={py(16)} stroke={ROT} strokeDasharray="6 4" />
       <text x={L + w - 4} y={py(16) - 5} textAnchor="end" fontSize={10} fill={ROT}>
-        1/ε ≈ 10^16: doppelte Genauigkeit aufgebraucht
+        1/ε ≈ 10¹⁶: doppelte Genauigkeit aufgebraucht
       </text>
       {N_LISTE.filter((nn) => nn % 2 === 0).map((nn) => (
         <text key={nn} x={px(nn)} y={T + h + 15} textAnchor="middle" fontSize={10} fill={NEUTRAL}>
@@ -407,6 +437,10 @@ export function VandermondeKondition() {
   const winkelLetzt = n >= 3 ? spaltenwinkel(n, n - 2) : NaN;
   const name = BASEN.find((b) => b.id === aktiv)!.name;
 
+  // Verdikt-Art und Text hängen an DERSELBEN Schwelle (Drei-Zustands-Regel).
+  const art: "neutral" | "warn" | "fail" =
+    n < 3 ? "neutral" : verlorene >= 15.5 ? "fail" : verlorene >= 6 ? "warn" : "neutral";
+
   const status =
     n < 3
       ? `Mit ${n} Stellen ist die Basismatrix winzig, und alle drei Systeme sind unbedenklich.`
@@ -423,12 +457,8 @@ export function VandermondeKondition() {
         Zu <M>{"n"}</M> gleichmäßig verteilten Stellen bauen wir die
         <M>{"\\,n \\times n"}</M>-Basismatrix <M>{"\\bB"}</M> und schätzen ihre
         Konditionszahl <M>{"\\kappa_2(\\bB)"}</M> über die explizit berechnete
-        Inverse. Drei Basissysteme desselben Ansatzraums stehen zur Wahl. Die
-        senkrechte Achse ist logarithmisch: Beide Monom-Kurven sind ungefähr
-        Geraden, ihre Konditionszahl wächst also exponentiell in <M>{"n"}</M>.
-        Verschieben und Skalieren auf <M>{"[-1, 1]"}</M> drückt nur die
-        Steigung, die Chebyshev-Polynome drücken sie noch einmal deutlich
-        stärker.
+        Inverse. Drei Basissysteme desselben Ansatzraums stehen zur Wahl, die
+        senkrechte Achse ist logarithmisch.
       </p>
 
       <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -466,7 +496,8 @@ export function VandermondeKondition() {
               aktiv === b.id ? "bg-slate-200 dark:bg-slate-700" : "bg-slate-100 dark:bg-slate-800"
             }`}
           >
-            <p className="font-semibold" style={{ color: ORANGE }}>
+            <p className="flex items-center gap-1.5 font-semibold" style={{ color: ORANGE }}>
+              <Muster dash={b.dash} />
               {b.kurz}
             </p>
             <p className="font-mono text-xs">κ₂ ≈ {fmtKappa(KAPPA[b.id][idx])}</p>
@@ -479,7 +510,7 @@ export function VandermondeKondition() {
       <p className="mt-2 font-mono text-xs">
         n = {n}, Polynomgrad {n - 1}: κ₂ ≈ {fmtKappa(k)}
       </p>
-      <Verdikt kind={aktiv === "monom01" && n >= 15 ? "warn" : "neutral"}>{status}</Verdikt>
+      <Verdikt kind={art}>{status}</Verdikt>
       {n >= 3 ? (
         <p className="mt-1">
           {aktiv === "monom01"

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt } from "../../../lib";
+import { Aufgabe, FMM_COLORS, mulberry32, Slider, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 import { ref } from "../../numbers.generated";
 
 /**
@@ -21,7 +21,10 @@ import { ref } from "../../numbers.generated";
  * Basis und Knoten orange, Residuen rot; die wahre Funktion f traegt das im
  * Kapitel freie Violett (Rolle steht in der Widget-Einleitung).
  *
- * Verifiziert (node, verify-13-funktionsapproximation/s153.mjs, 2026-08-19), identischer Rechenkern:
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S137Glaettung.mjs,
+ * 2026-08-29; dort mit REKURSIVER Cox-de-Boor-Auswertung, Householder-QR
+ * direkt auf der Designmatrix statt Cholesky auf B^T B und Gauss-Legendre
+ * statt Simpson):
  *   K =  4  RSS 6,421  sigmahat 0,374  RMS|fhat-f| 0,2471  max 0,467
  *   K = 10  RSS 3,084  sigmahat 0,278  RMS 0,0864  max 0,532
  *   K = 11  RSS 3,151  sigmahat 0,284  RMS 0,0724 (bester Wert im Bereich)
@@ -29,8 +32,9 @@ import { ref } from "../../numbers.generated";
  *   K = 40  RSS 0,557  sigmahat 0,236  RMS 1,9078  max 8,574
  *   Basis: max |sum_k N_k(x) - 1| = 4,4e-16, keine negativen Werte.
  *   Empirische sd der gezogenen Fehler: 0,2662 (wahres sigma = 0,3).
- * Alle 37 Reglerzustaende durchgespielt (check-s153-widget.mjs): die vier
- * Statuszweige sind mit 2 / 10 / 16 / 9 Zustaenden alle erreichbar; der
+ * Alle 37 Reglerzustaende durchgespielt: die vier Statuszweige sind mit
+ * "zu starr" 2, "verlaesst Fenster" 9, "Ausschlag" 16 und "passend" 10
+ * Zustaenden alle erreichbar; K = 11 ist der beste RMS im Reglerbereich. Der
  * Singulaer-Zweig ist reiner Rechenschutz und feuert bei Quantilknoten im
  * Bereich K = 4..40 nie.
  * R5-Nachprüfung: scripts/verify/R5/verify-r5-claims.mjs, 2026-08-20.
@@ -272,13 +276,19 @@ export function SplineGlaettung() {
   const verlaesstFenster =
     !!fit.a && (fit.maxWert > Y_FENSTER || fit.minWert < -Y_FENSTER);
 
+  // Zweig und Verdikt-Art hängen an DEMSELBEN Baum (Widerspruchsklasse aus dem
+  // Review: kind schaltete früher bei K < 7 || K > 15, der Text an anderen
+  // Schwellen).
+  let zweig: "singulaer" | "starr" | "fenster" | "ausschlag" | "passend";
   let status: string;
   if (!fit.a) {
+    zweig = "singulaer";
     status =
       `Bei K = ${K} ist BᵀB nicht mehr positiv definit: Die Basis ist auf diesen ` +
       `50 Datenpunkten linear abhängig, die Normalengleichungen haben also keine ` +
       `eindeutige Lösung. Schieben wir den Regler zurück.`;
   } else if (K <= 5) {
+    zweig = "starr";
     const raum =
       K === 4
         ? "ist genau der Raum der kubischen Polynome, innere Knoten gibt es keine"
@@ -290,6 +300,7 @@ export function SplineGlaettung() {
       `RSS = ${fmt(fit.rss, 2)} und damit σ̂ = ${fmt(fit.sigmaHut)} statt der wahren 0,3. Was hier ` +
       `übrig bleibt, ist kein Rauschen, sondern nicht erklärte Struktur.`;
   } else if (verlaesstFenster) {
+    zweig = "fenster";
     status =
       `K = ${K} bei n = 50 Datenpunkten: Der Fit hat nur noch ${N - K} Freiheitsgrade übrig. ` +
       `Die Residuenquadratsumme ist mit ${fmt(fit.rss, 2)} klein, die geschätzte Kurve läuft aber ` +
@@ -299,6 +310,7 @@ export function SplineGlaettung() {
       `${fmt(fit.maxAbw, 2)}. Das ist Überanpassung in Reinform: Die Kurve jagt einzelne Punkte, ` +
       `und zwischen zwei eng benachbarten x-Werten mit verschiedenem Rauschen muss sie steil werden.`;
   } else if (fit.rms > 0.18) {
+    zweig = "ausschlag";
     status =
       `K = ${K}: Zwischen den Datenpunkten schlägt die Kurve aus. Die Residuenquadratsumme ist auf ` +
       `${fmt(fit.rss, 2)} gefallen, der Abstand zum wahren f dagegen auf ${fmt(fit.rms)} gestiegen ` +
@@ -306,6 +318,7 @@ export function SplineGlaettung() {
       `Daten wird also besser, die Schätzung von f schlechter. Nur den ersten der beiden Werte ` +
       `könnten wir an echten Daten überhaupt ausrechnen.`;
   } else {
+    zweig = "passend";
     status =
       `K = ${K} mit ${innere.length} inneren Knoten: Die Kurve folgt f, ohne den einzelnen Punkten ` +
       `nachzulaufen. Der Abstand zum wahren f beträgt im quadratischen Mittel ${fmt(fit.rms)}. ` +
@@ -316,10 +329,23 @@ export function SplineGlaettung() {
 
   return (
     <div className="space-y-3">
-      <Aufgabe>Vergleichen wir die drei Fälle „zu starr“, „passend“ und „zu flexibel“.</Aufgabe>
+      <Aufgabe>Fahren wir den Regler ab und vergleichen die drei Sprungmarken K = 4, K = 11 und K = 40.</Aufgabe>
 
-      <div className="flex flex-wrap gap-2">
-        {[{ k: 4, label: "zu starr" }, { k: 11, label: "passend" }, { k: 40, label: "zu flexibel" }].map(({ k, label }) => <button key={k} type="button" onClick={() => setK(k)} aria-pressed={K === k}>{label}</button>)}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm" style={{ color: ACHSE }}>
+          Sprungmarken:
+        </span>
+        {[4, 11, 40].map((k) => (
+          <button
+            key={k}
+            type="button"
+            className={K === k ? W_BUTTON_AKTIV : W_BUTTON}
+            onClick={() => setK(k)}
+            aria-pressed={K === k}
+          >
+            {k}
+          </button>
+        ))}
       </div>
 
       <Slider label="Basisfunktionen K" min={K_MIN} max={K_MAX} step={1} value={K} onChange={setK} fmt={(v) => `${v} (${v - 4} innere Knoten)`} accent={ORANGE} />
@@ -329,7 +355,7 @@ export function SplineGlaettung() {
           <svg
             width={W}
             viewBox={`0 0 ${W} ${H}`}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <rect
               x={PAD.l}
@@ -412,7 +438,7 @@ export function SplineGlaettung() {
           <svg
             width={W}
             viewBox={`0 0 ${W} ${H_BASIS}`}
-            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            className="mt-2 max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <line
               x1={PAD.l}
@@ -442,10 +468,10 @@ export function SplineGlaettung() {
                 strokeWidth={1.6}
               />
             ))}
-            <text x={PAD.l + 4} y={H_BASIS - 3} fontSize={10} fill={ORANGE}>
-              die {K} Basisfunktionen und ihre inneren Knoten
-            </text>
           </svg>
+          <p className="mt-1 text-xs" style={{ color: ORANGE }}>
+            die {K} Basisfunktionen und ihre inneren Knoten
+          </p>
         </div>
 
         <div className="min-w-0 grow space-y-2">
@@ -493,7 +519,7 @@ export function SplineGlaettung() {
         </div>
       </div>
 
-      <Verdikt kind={K < 7 || K > 15 ? "warn" : "ok"}>{status} Damit wird der Zielkonflikt aus {ref("sec:funktionsapproximation/glaettung")} sichtbar.</Verdikt>
+      <Verdikt kind={zweig === "passend" ? "ok" : zweig === "singulaer" ? "fail" : "warn"}>{status} Damit wird der Zielkonflikt aus {ref("sec:funktionsapproximation/glaettung")} sichtbar.</Verdikt>
     </div>
   );
 }

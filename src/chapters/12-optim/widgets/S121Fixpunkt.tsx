@@ -20,8 +20,8 @@ import { ref } from "../../numbers.generated";
  * Alles ist linear: f(x) = A(x - x*), also J_f = A ueberall und
  * rho = ||I - gamma A||_2 exakt.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefung check-fix-s131.mjs bestaetigt; gamma-Raster 1e-4):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege; gamma-Raster 1e-4):
  * - A = (4 1; 1 3): Eigenwerte 4,618034 / 2,381966, gamma_opt = 2/7 mit
  *   rho = sqrt(5)/7 = 0,3194, Divergenz ab gamma > 2/lambda_max = 0,4331;
  *   bei gamma = 0,25 ist rho = 0,4045 (dieselbe Zahl wie in §8.3).
@@ -127,7 +127,9 @@ function fmtE(v: number): string {
   return `${mant.replace(".", ",")}·10${hoch}`;
 }
 
-export function FixpunktSpirale() {
+export function FixpunktSpirale({ zeigeGrenze = false }: { zeigeGrenze?: boolean }) {
+  // `zeigeGrenze` kommt aus der Schaetzfrage: Die Divergenzschwelle γ_max IST
+  // die Antwort auf die Schätzfrage und darf erst nach dem Auflösen dastehen.
   const [id, setId] = useState("gutartig");
   const [gamma, setGamma] = useState(0.25);
 
@@ -180,7 +182,9 @@ export function FixpunktSpirale() {
         ? `Der Fehler wächst also, und der Zuwachs pro Schritt nähert sich dem Faktor ρ. `
         : `Gewachsen ist er nicht: Bei ρ = 1 hält die Iteration den Fehler in mindestens einer ` +
           `Richtung genau fest, und weiter als bis dorthin kommt sie nicht. `) +
-      `Zusammen läuft die Iteration nur für γ < ${fmt(sys.gammaMax)}.`;
+      (zeigeGrenze
+        ? `Zusammen läuft die Iteration nur für γ < ${fmt(sys.gammaMax)}.`
+        : `Zusammen läuft die Iteration nur für hinreichend kleine γ.`);
   } else if (Math.abs(gamma - sys.gammaOpt) < 0.011 && rho <= 1.05 * sys.rhoOpt) {
     art = "ok";
     titel = "nahe der besten Schrittweite";
@@ -205,8 +209,10 @@ export function FixpunktSpirale() {
     status =
       `γ liegt bereits über der besten Wahl γ* ≈ ${fmt(sys.gammaOpt)}, und das kostet: ρ ist mit ` +
       `${fmt(rho)} wieder größer als das erreichbare Minimum ${fmt(sys.rhoOpt)}. Die Folge läuft ` +
-      `noch zusammen, nach ${nSchritte} Schritten steht der Abstand bei ${fmtE(abstand)}. Jenseits ` +
-      `von γ = ${fmt(sys.gammaMax)} kippt sie ganz.`;
+      `noch zusammen, nach ${nSchritte} Schritten steht der Abstand bei ${fmtE(abstand)}. ` +
+      (zeigeGrenze
+        ? `Jenseits von γ = ${fmt(sys.gammaMax)} kippt sie ganz.`
+        : `Jenseits einer Schwelle kippt sie ganz.`);
   }
 
   const knopf = (aktiv: boolean) => (aktiv ? W_BUTTON_AKTIV : W_BUTTON);
@@ -289,7 +295,8 @@ export function FixpunktSpirale() {
             ‖x⁽⁰⁾ − x*‖ = {fmt(start)} · nach {nSchritte} Schritten {fmtE(abstand)}
           </p>
           <p className="font-mono text-xs">
-            bestes γ ≈ {fmt(sys.gammaOpt)} · Divergenz ab γ &gt; {fmt(sys.gammaMax)}
+            bestes γ ≈ {fmt(sys.gammaOpt)}
+            {zeigeGrenze ? ` · Divergenz ab γ > ${fmt(sys.gammaMax)}` : ""}
           </p>
           {ausserhalb && (
             <p className="text-xs text-slate-600 dark:text-slate-400">

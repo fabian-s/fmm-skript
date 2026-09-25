@@ -12,14 +12,14 @@
  * DIE EINE EINSICHT: Der Teilbaum unter fib_rek(3) steht zweimal im Baum von
  * fib_rek(5) — die Rekursion vergisst alles, was sie schon gerechnet hat.
  * Muster 11 (bewusst kein Widget): der Baum hat keine interessante
- * Parameterrichtung; wer ihn für andere n sehen will, findet ihn im Stepper
- * in Abschnitt 2.2.
+ * Parameterrichtung; wer ihn für andere n sehen will, findet ihn im
+ * FibonacciStepper (Abschnitt „Vom Algorithmus zum Programm").
  *
  * FARBROLLEN: rot markiert die doppelt ausgeführte Teilrechnung (Kapitelrolle
  * „das Teure", s. S21Demos.tsx).
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19): Der Baum von fib_rek(5) hat T(5) = 15 Knoten; F_5 und F_4
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-FibonacciStepper.mjs,
+ * 2026-08-29): Der Baum von fib_rek(5) hat T(5) = 15 Knoten; F_5 und F_4
  * kommen je einmal vor, F_3 zweimal, F_2 dreimal, F_1 fünfmal, F_0 dreimal
  * (1 + 1 + 2 + 3 + 5 + 3 = 15).
  */

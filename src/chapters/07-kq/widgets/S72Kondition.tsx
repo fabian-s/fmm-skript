@@ -22,7 +22,10 @@
  * interactive/heath-ch3 (S33Sensitivity.tsx) portiert; Ziehgriffe, 3D-Tafel,
  * Verdikte und sämtliche Texte sind für dieses Skript neu geschrieben.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S72Kondition.mjs (2026-08-29), Teil von
+ * `npm run verify:numbers`. Das Skript rechnet die KQ-Größen über die
+ * QR-Zerlegung (unabhängig vom Weg des Widgets) und κ₂ über die Eigenwerte von
+ * AᵀA (unabhängig von cot(α/2)) und assertiert:
  *   3D-Konfiguration: col(A) = span{(1,0,0,45)ᵀ, (0,1,−0,35)ᵀ},
  *   b = (0,75; 0,9; 1,35)ᵀ ⇒ x̂ = (1,200849; 0,549340),
  *   ŷ = (1,200849; 0,549340; 0,348113), r = (−0,450849; 0,350660; 1,001887);
@@ -34,8 +37,10 @@
  *   FastRangdefekt: κ₂(A) = cot(α/2) exakt (Gegenprobe über die Eigenwerte
  *   von AᵀA); α = 12° ⇒ σ₁ = 1,40647, σ₂ = 0,14783, κ₂ = 9,5144 (0,98
  *   Dezimalstellen); α = 3° ⇒ κ₂ = 38,1885 (1,58 Stellen); α = 90° ⇒ κ₂ = 1.
- *   Konditionsquadrierung: ‖Δx̂‖/‖x̂‖ = b₃/(2ε) exakt (2,500000e3 bei
- *   ε = 10⁻⁴, b₃ = 0,5), Schranke (κ²tanθ + κ)·ε = b₃/ε + 1.
+ *   Konditionsquadrierung: ‖Δx̂‖/‖x̂‖ = b₃/(2ε) exakt (5,000000e2 in der
+ *   Voreinstellung ε = 10⁻⁴, b₃ = 10⁻¹), Schranke (κ²tanθ + κ)·ε = b₃/ε + 1.
+ *   Beide Regler laufen logarithmisch, damit der Preset „b₃ = ε/10" ein
+ *   Rastwert ist und das Readout dem Reglerstand entspricht.
  */
 import { useMemo, useState } from "react";
 import {
@@ -323,6 +328,10 @@ export function WinkelWidget() {
   const observed = Math.abs(dx) / Math.abs(x);
   const bound = delta / Math.cos(th); // κ₂(A) = 1, ‖b‖ = 1
   const anteil = bound > 1e-12 ? observed / bound : 0; // = |cos φ|, exakt
+  // Drei Zustände, erkannt am KONTROLLIERTEN Parameter φ (Regler- und
+  // Ziehschritt sind ganze Grad, beide Extremlagen sind exakt einstellbar).
+  const laengsExakt = phiDeg % 180 === 0;
+  const senkrechtExakt = phiDeg % 180 === 90;
 
   /** Die Spitze von Δb ist ziehbar; Länge und Richtung folgen daraus. */
   const zieh = useDrag<"db">({
@@ -447,21 +456,37 @@ export function WinkelWidget() {
           Mit <M>{"\\left\\|\\cblue{\\Delta\\bb}\\right\\|_2 = 0"}</M> passiert nichts. Ziehen wir
           die blaue Spitze los, oder schieben wir den mittleren Regler auf.
         </Verdikt>
-      ) : anteil > 0.98 ? (
-        <Verdikt kind="warn" className="mt-2" titel="Die Schranke ist scharf:">
-          <M>{"\\cblue{\\Delta\\bb}"}</M> zeigt (bis aufs Vorzeichen) längs{" "}
-          <M>{"\\col(\\bA)"}</M>, und die beobachtete relative Änderung{" "}
-          <span className="font-mono">{fmtDe(observed, 4)}</span> erreicht die Schranke aus {ref("satz:satz-7-2-3")} praktisch: <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
+      ) : laengsExakt ? (
+        <Verdikt kind="warn" className="mt-2" titel="Die Schranke wird angenommen:">
+          Bei <M>{`\\varphi = ${phiDeg}^\\circ`}</M> liegt <M>{"\\cblue{\\Delta\\bb}"}</M> (bis
+          aufs Vorzeichen) längs <M>{"\\col(\\bA)"}</M>: Die beobachtete relative Änderung{" "}
+          <span className="font-mono">{fmtDe(observed, 4)}</span> ist gleich der Schranke aus {ref("satz:satz-7-2-3")}, <span className="font-mono">{fmtDe(bound, 4)}</span>. Wegen{" "}
           <M>{"\\corange{\\kappa_2(\\bA)} = 1"}</M> steckt der ganze Verstärkungsfaktor im Winkel,{" "}
           <M>{`1/\\cos(\\theta) = ${mathDe(1 / Math.cos(th), 2)}`}</M>.
         </Verdikt>
-      ) : anteil < 0.02 ? (
+      ) : anteil > 0.98 ? (
+        <Verdikt kind="warn" className="mt-2" titel="Fast in der schlechtesten Richtung:">
+          <M>{"\\cblue{\\Delta\\bb}"}</M> zeigt beinahe längs <M>{"\\col(\\bA)"}</M>:
+          Ausgeschöpft werden <span className="font-mono">{fmtDe(100 * anteil, 1)} %</span> der
+          Schranke <span className="font-mono">{fmtDe(bound, 4)}</span> aus {ref("satz:satz-7-2-3")}.
+          Gleichheit gibt es erst bei <M>{"\\varphi \\in \\{0^\\circ, 180^\\circ\\}"}</M>.
+        </Verdikt>
+      ) : senkrechtExakt ? (
         <Verdikt kind="ok" className="mt-2" titel="Die Störung läuft ins Leere:">
-          <M>{"\\cblue{\\Delta\\bb}"}</M> steht senkrecht auf <M>{"\\col(\\bA)"}</M> und ändert
-          nur das Residuum, nicht die Lösung: <M>{"\\Delta\\wh{x}"}</M> ={" "}
-          <span className="font-mono">{fmtDe(dx, 4)}</span>. Die Schranke aus {ref("satz:satz-7-2-3")} erlaubt
-          hier <span className="font-mono">{fmtDe(bound, 4)}</span>, ausgeschöpft wird davon
-          nichts – obere Schranken sind eben Schranken.
+          Bei <M>{`\\varphi = ${phiDeg}^\\circ`}</M> steht <M>{"\\cblue{\\Delta\\bb}"}</M>{" "}
+          senkrecht auf <M>{"\\col(\\bA)"}</M>: <M>{"\\Delta\\wh{x} = 0"}</M>, die Störung landet
+          vollständig im Residuum. Die Schranke aus {ref("satz:satz-7-2-3")} erlaubt hier{" "}
+          <span className="font-mono">{fmtDe(bound, 4)}</span>, ausgeschöpft wird davon nichts –
+          obere Schranken sind eben Schranken.
+        </Verdikt>
+      ) : anteil < 0.02 ? (
+        <Verdikt kind="ok" className="mt-2" titel="Fast wirkungslos:">
+          <M>{"\\cblue{\\Delta\\bb}"}</M> steht beinahe senkrecht auf <M>{"\\col(\\bA)"}</M>;{" "}
+          <M>{"\\Delta\\wh{x}"}</M> ist mit <span className="font-mono">{fmtDe(dx, 4)}</span> sehr
+          klein, aber nicht null. Ausgeschöpft wird{" "}
+          <M>{`\\left|\\cos(\\varphi)\\right| = ${mathDe(anteil, 3)}`}</M> der Schranke. Exakt
+          null wird <M>{"\\Delta\\wh{x}"}</M> erst bei{" "}
+          <M>{"\\varphi \\in \\{90^\\circ, 270^\\circ\\}"}</M>.
         </Verdikt>
       ) : (
         <Verdikt kind="neutral" className="mt-2" titel="Dazwischen:">
@@ -543,11 +568,18 @@ export function FastRangdefektWidget() {
           eine Nadel. Bei α = 0 ist <M>{"\\bA"}</M> exakt rangdefekt, und {ref("definition:definition-7-2-1")} setzt{" "}
           <M>{"\\kappa(\\bA) = \\infty"}</M>.
         </Verdikt>
-      ) : alphaDeg >= 85 ? (
+      ) : alphaDeg === 90 ? (
         <Verdikt kind="ok" className="mt-2" titel="Bestmöglich konditioniert:">
-          Bei senkrechten Spalten ist <M>{"\\corange{\\kappa_2(\\bA)}"}</M> ={" "}
-          <span className="font-mono">{fmtDe(kappa, 3)}</span>, das Bild des Einheitskreises also
-          wieder (fast) ein Kreis. Kleiner als 1 kann eine Konditionszahl nicht werden.
+          Bei <M>{"\\alpha = 90^\\circ"}</M> stehen die Spalten senkrecht,{" "}
+          <M>{"\\bA"}</M> ist orthogonal und <M>{"\\corange{\\kappa_2(\\bA)}"}</M> ={" "}
+          <span className="font-mono">{fmtDe(kappa, 3)}</span>: Das Bild des Einheitskreises ist
+          wieder ein Kreis. Kleiner als 1 kann eine Konditionszahl nicht werden.
+        </Verdikt>
+      ) : alphaDeg >= 85 ? (
+        <Verdikt kind="ok" className="mt-2" titel="Fast senkrechte Spalten:">
+          <M>{"\\corange{\\kappa_2(\\bA)}"}</M> = <span className="font-mono">{fmtDe(kappa, 3)}</span>{" "}
+          liegt dicht am bestmöglichen Wert 1, das Bild des Einheitskreises ist eine sehr flache
+          Ellipse. Genau 1 wird erst beim Reglerwert <M>{"\\alpha = 90^\\circ"}</M> erreicht.
         </Verdikt>
       ) : (
         <Verdikt kind="neutral" className="mt-2">
@@ -570,8 +602,13 @@ export function FastRangdefektWidget() {
  */
 export function KonditionsQuadrierungLab() {
   const [logEps, setLogEps] = useState(-4);
-  const [b3, setB3] = useState(0.5);
+  // b₃ läuft logarithmisch: nur so ist der Reglerstand mit dem Readout tan θ = b₃
+  // über acht Zehnerpotenzen konsistent und der Preset b₃ = ε/10 ein Rastwert.
+  const [logB3, setLogB3] = useState(-1);
+  // Eigener Preset-Zustand statt einer abgeleiteten Größe (aria-pressed).
+  const [preset, setPreset] = useState<"klein" | "gross" | null>(null);
   const eps = Math.pow(10, logEps);
+  const b3 = Math.pow(10, logB3);
 
   // KQ-Lösung mit A:   x₁+x₂ = b₁ = 1,  x₁−x₂ = b₂/ε = 0
   const xs: [number, number] = [0.5, 0.5];
@@ -586,7 +623,11 @@ export function KonditionsQuadrierungLab() {
   const cond = 1 / eps;
   const tanTheta = b3; // r = (0, 0, b₃)ᵀ, ŷ = Ax̂ = (1, 0, 0)ᵀ
   const bound = (cond * cond * tanTheta + cond) * eps; // = b₃/ε + 1
-  const quadriert = b3 / eps > 1;
+  // Der quadrierte Term dominiert, sobald b₃/ε > 1; Rastwerte machen b₃/ε = 1
+  // exakt erreichbar, deshalb ist der Gleichheitsfall ein eigener Zweig.
+  const verhaeltnis = b3 / eps;
+  const quadriert = verhaeltnis > 1.0000001;
+  const grenzfall = Math.abs(logB3 - logEps) < 1e-9;
   const exp = (v: number) => (v === 0 ? "0" : v.toExponential(2).replace(".", ",").replace("-", "−"));
 
   return (
@@ -597,22 +638,50 @@ export function KonditionsQuadrierungLab() {
       </Aufgabe>
       <div className="flex flex-wrap items-start gap-5">
         <div className="min-w-[16rem] grow basis-64">
-          <Slider label="log₁₀ ε" value={logEps} onChange={setLogEps} min={-8} max={-1} step={0.5} fmt={(v) => fmtDe(v, 1)} />
-          <Slider label="b₃ (dritte Komponente von b)" value={b3} onChange={setB3} min={0} max={1} step={0.001} fmt={(v) => fmtDe(v, 3)} />
+          <Slider
+            label="log₁₀ ε"
+            value={logEps}
+            onChange={(v) => {
+              setLogEps(v);
+              setPreset(null);
+            }}
+            min={-8}
+            max={-1}
+            step={0.5}
+            fmt={(v) => fmtDe(v, 1)}
+          />
+          <Slider
+            label="log₁₀ b₃ (dritte Komponente von b)"
+            value={logB3}
+            onChange={(v) => {
+              setLogB3(v);
+              setPreset(null);
+            }}
+            min={-9}
+            max={0}
+            step={0.5}
+            fmt={(v) => fmtDe(v, 1)}
+          />
           <div className="mt-2 flex flex-wrap gap-2">
             <button
               type="button"
-              aria-pressed={!quadriert}
+              aria-pressed={preset === "klein"}
               className="rounded border border-slate-400 px-2 py-1 text-xs hover:bg-slate-200 dark:hover:bg-slate-700"
-              onClick={() => setB3(eps)}
+              onClick={() => {
+                setLogB3(clamp(logEps - 1, -9, 0));
+                setPreset("klein");
+              }}
             >
-              kleines Residuum: b₃ = ε
+              kleines Residuum: b₃ = ε/10
             </button>
             <button
               type="button"
-              aria-pressed={quadriert}
+              aria-pressed={preset === "gross"}
               className="rounded border border-slate-400 px-2 py-1 text-xs hover:bg-slate-200 dark:hover:bg-slate-700"
-              onClick={() => setB3(1)}
+              onClick={() => {
+                setLogB3(0);
+                setPreset("gross");
+              }}
             >
               großes Residuum: b₃ = 1
             </button>
@@ -640,9 +709,18 @@ export function KonditionsQuadrierungLab() {
           </div>
         </div>
       </div>
-      {quadriert ? (
+      {grenzfall ? (
+        <Verdikt kind="neutral" className="mt-3" titel="Genau auf der Kippe:">
+          Hier ist <M>{"b_3 = \\eps"}</M>, also{" "}
+          <M>{"\\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)\\,\\eps = b_3/\\eps = 1"}</M> – der
+          quadrierte Term ist genauso groß wie der Term erster Ordnung{" "}
+          <M>{"\\corange{\\kappa_2(\\bA)}\\,\\eps = 1"}</M>. Das ist die Grenze zwischen den
+          beiden Regimen, kein Regime für sich: Eine halbe Reglerstufe nach oben oder unten
+          entscheidet, welcher Term die Schranke aus {ref("satz:stoerung-der-designmatrix-erste-ordnung")} trägt.
+        </Verdikt>
+      ) : quadriert ? (
         <Verdikt kind="warn" className="mt-3" titel="Regime der quadrierten Kondition:">
-          Mit <M>{`b_3 = ${mathDe(b3, 3)}`}</M> ist{" "}
+          Mit <M>{"b_3"}</M> = <span className="font-mono">{exp(b3)}</span> ist{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)\\,\\eps = b_3/\\eps"}</M> ={" "}
           <span className="font-mono">{exp(b3 / eps)}</span> und dominiert die Schranke aus {ref("satz:stoerung-der-designmatrix-erste-ordnung")}. Beobachtet wird <span className="font-mono">{exp(observed)}</span>, also{" "}
           <M>{"b_3/(2\\eps)"}</M>: Der Fehler in <M>{"\\wh{\\bx}"}</M> wächst mit dem{" "}
@@ -652,7 +730,7 @@ export function KonditionsQuadrierungLab() {
         <Verdikt kind="ok" className="mt-3" titel="Gutmütiges Regime:">
           Das Residuum ist so klein, dass{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}^2 \\tan(\\theta)\\,\\eps = b_3/\\eps"}</M> ={" "}
-          <span className="font-mono">{exp(b3 / eps)}</span> unter dem Term erster Ordnung{" "}
+          <span className="font-mono">{exp(verhaeltnis)}</span> echt unter dem Term erster Ordnung{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}\\,\\eps = 1"}</M> bleibt. Der Quadrierungseffekt aus
           {ref("satz:stoerung-der-designmatrix-erste-ordnung")} ist unterdrückt, das Problem reagiert nur mit{" "}
           <M>{"\\corange{\\kappa_2(\\bA)}"}</M>. Ausgerechnet dieser gutartige Fall wird uns in{" "}

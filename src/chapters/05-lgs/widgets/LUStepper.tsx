@@ -11,10 +11,26 @@ import { ref } from "../../numbers.generated";
  * Einsicht: Jeder eliminierte Eintrag wird als Multiplikator in L gespeichert.
  * Farbrollen: Pivot rot, aktuelle Zeile/Multiplikator blau, U-Nullen und L grün.
  * Provenienz: Ablauf-/Trace-Code aus heath-ch2 (nur Code), sichtbare Texte neu.
- * Zahlen: Standardbeispiel L·U=A in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Zahlen: Standardbeispiel L·U=A in scripts/verify/REV29/05-lgs-Stepper.mjs, 2026-08-29.
  */
 
 const { rot: RED, blau: BLUE, gruen: GREEN } = FMM_COLORS;
+
+/** Der Stepper zählt selbst „Schritt k von n"; die Narration benennt die Phase. */
+const PHASENNAME: Record<Phase, string> = {
+  init: "Startzustand",
+  mult: "Multiplikatoren bestimmen",
+  apply: "Zeilen abziehen",
+  fail: "Abbruch: kein brauchbares Pivot",
+  done: "Zerlegung fertig",
+};
+
+/** Residuen als Mantisse · 10^Exponent: eine Probe, die auf „0,000" rundet, kann nicht scheitern. */
+function fmtExp(v: number): string {
+  if (v === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  return `${fmtNum(v / 10 ** e)} · 10^${e}`;
+}
 
 type Phase = "init" | "mult" | "apply" | "fail" | "done";
 
@@ -173,14 +189,22 @@ export function LUZerlegungStepper() {
         Pivots bleiben, wie sie sind.
       </>
     ),
-    fail: (
-      <>
-        Auf dem Pivotplatz steht eine Null. Ein Multiplikator wäre hier nur mit einer Division
-        durch null zu haben, also endet die Elimination an dieser Stelle. Invertierbar darf die
-        Matrix dabei durchaus sein ({ref("beispiel:invertierbar-aber-keine-lu-zerlegung")}); wer weiterrechnen will, tauscht zuerst
-        Zeilen.
-      </>
-    ),
+    fail:
+      s.phase === "fail" && s.W[s.k][s.k] !== 0 ? (
+        <>
+          Auf dem Pivotplatz steht mit {fmtNum(s.W[s.k][s.k])} keine Null, aber ein so winziger
+          Wert, dass die Multiplikatoren riesig würden und die Elimination hier abbricht. Das ist
+          der numerische, nicht der algebraische Fall: Ohne Zeilentausch bläst die Division jeden
+          Rundungsfehler auf – die Pivot-Demo unten führt es vor.
+        </>
+      ) : (
+        <>
+          Auf dem Pivotplatz steht eine Null. Ein Multiplikator wäre hier nur mit einer Division
+          durch null zu haben, also endet die Elimination an dieser Stelle. Invertierbar darf die
+          Matrix dabei durchaus sein ({ref("beispiel:invertierbar-aber-keine-lu-zerlegung")}); wer weiterrechnen will, tauscht zuerst
+          Zeilen.
+        </>
+      ),
     done: (
       <>
         Unterhalb der Diagonalen ist nichts mehr übrig: Die Arbeitsmatrix ist das gesuchte{" "}
@@ -206,7 +230,7 @@ export function LUZerlegungStepper() {
           <MatrixInput value={b0} onChange={(m) => { setB0(m); setStep(0); }} step={1} />
         </div>
       </div>
-      <Stepper step={Math.min(step, last)} setStep={setStep} max={last} narration={`Phase ${Math.min(step, last) + 1} von ${last + 1}`} />
+      <Stepper step={Math.min(step, last)} setStep={setStep} max={last} narration={PHASENNAME[s.phase]} />
       <div className="my-3 flex flex-wrap items-start gap-5">
         <WidgetLabel label={s.phase === "done" ? "U | y  (fertig)" : "Arbeitsmatrix | b"}>
           <MatTable m={aug} cellClass={augClass} cellStyle={augStyle} />
@@ -231,11 +255,20 @@ export function LUZerlegungStepper() {
       {s.phase === "done" && doneX && (
         <Verdikt kind={doneX.failRow >= 0 ? "fail" : "ok"} className="mt-2">
           {doneX.failRow >= 0 ? (
-            <>
-              In Zeile {doneX.failRow + 1} von <span className="font-mono">U</span> steht eine
-              Null auf der Diagonalen. Dividieren lässt sich dort nicht, und das liegt nicht am
-              Verfahren: Diese Matrix ist singulär.
-            </>
+            doneX.failExakt ? (
+              <>
+                In Zeile {doneX.failRow + 1} von <span className="font-mono">U</span> steht eine
+                exakte Null auf der Diagonalen. Dividieren lässt sich dort nicht, und das liegt
+                nicht am Verfahren: Diese Matrix ist singulär.
+              </>
+            ) : (
+              <>
+                In Zeile {doneX.failRow + 1} von <span className="font-mono">U</span> steht mit{" "}
+                {fmtNum(doneX.failPivot)} zwar keine Null, aber ein winziges Diagonalelement.
+                Algebraisch ist die Matrix damit regulär, numerisch aber so nah an der
+                Singularität, dass die Rückwärtssubstitution abbricht.
+              </>
+            )
           ) : (
             <>
               Lösung:{" "}
@@ -243,7 +276,7 @@ export function LUZerlegungStepper() {
                 x = ({doneX.x.map((v) => fmtNum(v as number)).join("; ")})
               </span>
               . Probe der Zerlegung: max |A − L·U| ={" "}
-              <span className="font-mono">{fmtNum(luErr ?? 0)}</span>.
+              <span className="font-mono">{fmtExp(luErr ?? 0)}</span>.
             </>
           )}
         </Verdikt>

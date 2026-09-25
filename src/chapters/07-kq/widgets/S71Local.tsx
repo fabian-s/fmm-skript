@@ -21,7 +21,10 @@
  * Ziehgriffe (useDrag/DragHandle), Verdikte und sämtliche Texte sind für
  * dieses Skript neu. Prosa niemals aus der Quell-App übernommen.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S71Local.mjs (2026-08-29), Teil von
+ * `npm run verify:numbers`. Das Skript rechnet die KQ-Lösung über einen
+ * unabhängigen Weg (Normalengleichungen als 2×2-System, Gauss ohne die
+ * geschlossene Formel des Widgets) und assertiert:
  *   Regressionsdaten (12 Punkte): KQ-Lösung β̂ = (36,686075; 4,415469),
  *   SSR(β̂) = 714,1240; Gegenprobe über die Normalengleichungen stimmt auf
  *   2,8e−14, Σrᵢ = 2,8e−14 und Σxᵢrᵢ = −2,7e−12 (Orthogonalität).
@@ -34,7 +37,8 @@
  *   Projektionsbeispiel a = (3,1)ᵀ, b = (1,2)ᵀ: x* = 0,5, b̂ = (1,5; 0,5),
  *   r = (−0,5; 1,5), ‖r‖² = 2,5, aᵀr = 0 exakt; ‖r‖²(x) = 10x² − 10x + 5,
  *   Startwert x = 0,1 liefert ‖r‖² = 4,1 = 1,64 × Minimum, Winkel 51,34°.
- *   Die Winkelschwellen 85° und 95° liegen bei x = 0,4563 bzw. 0,5437.
+ *   Das Nahband |x − 1/2| ≤ 0,05 entspricht 84,29°…95,71°; der exakte Fall
+ *   x = 1/2 ist über den Regler (Schritt 0,01) als Rastwert erreichbar.
  */
 import { useState } from "react";
 import {
@@ -315,7 +319,8 @@ export function RegressionWidget() {
         </button>
         <button
           type="button"
-          className="rounded bg-slate-200 px-2 py-1 text-xs hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600"
+          className="rounded bg-slate-200 px-2 py-1 text-xs hover:bg-slate-300 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-700 dark:hover:bg-slate-600"
+          disabled={!beruehrt}
           onClick={() => {
             setB0(REG_FIT.b0);
             setB1(REG_FIT.b1);
@@ -372,9 +377,15 @@ const PH = 285;
 const psx = (u: number) => ((u + 0.6) / 4.8) * PW;
 const psy = (v: number) => PH - ((v + 1.2) / 3.8) * PH;
 
+/** Der exakte Fall x* = 1/2 ist ein Rastwert des Reglers (Schritt 0,01). */
+const X_STERN = 0.5;
+/** EINE Schwelle für Verdikt und rechten-Winkel-Marker (|x − x*| ≤ NAH). */
+const NAH = 0.05;
+
 /** Spielzeugproblem: a = (3,1)ᵀ, b = (1,2)ᵀ, Kandidat y = x·a. */
 export function ProjektionWidget() {
   const [x, setX] = useState(0.1);
+  const [beruehrt, setBeruehrt] = useState(false);
   const a: [number, number] = [3, 1];
   const b: [number, number] = [1, 2];
   const y: [number, number] = [a[0] * x, a[1] * x];
@@ -384,15 +395,23 @@ export function ProjektionWidget() {
   const an = Math.hypot(a[0], a[1]);
   const cosAng = rn > 1e-9 ? atr / (an * rn) : 0;
   const angDeg = (Math.acos(clamp(cosAng, -1, 1)) * 180) / Math.PI;
-  const perp = Math.abs(angDeg - 90) < 2;
+  // Drei Zustände: exakt (nur über den Reglerrastwert x = 1/2), nahe, sonst.
+  const exakt = x === X_STERN;
+  const nahe = Math.abs(x - X_STERN) <= NAH + 1e-9;
+  const perp = nahe; // Marker und Verdikt teilen sich dieselbe Schwelle
   // Projektion b̂ = ((aᵀb)/(aᵀa))·a = 0.5·a = (1.5, 0.5)
   const bh: [number, number] = [1.5, 0.5];
+
+  const setzeX = (v: number) => {
+    setX(v);
+    setBeruehrt(true);
+  };
 
   /** Ziehen: der Kandidat bleibt auf der Geraden col(A) = span{a}. */
   const zieh = useDrag<"y">({
     feld: { x0: 0, y0: 0, w: PW, h: PH },
     welt: { x0: -0.6, x1: 4.2, y0: -1.2, y1: 2.6 },
-    onDrag: ([px, py]) => setX(clamp((a[0] * px + a[1] * py) / (an * an), 0, 1.2)),
+    onDrag: ([px, py]) => setzeX(clamp((a[0] * px + a[1] * py) / (an * an), 0, 1.2)),
   });
 
   // Marker für den rechten Winkel zwischen col(A)-Richtung und r
@@ -452,11 +471,16 @@ export function ProjektionWidget() {
             <text x={psx(3.35)} y={psy(1.35)} fill="var(--w-muted)" fontSize="11">
               col(𝑨)
             </text>
-            {/* Zielpunkt b̂ = Projektion von b */}
-            <circle cx={psx(bh[0])} cy={psy(bh[1])} r={3.5} fill="none" stroke={FMM_COLORS.gruen} strokeWidth={2} />
-            <text x={psx(bh[0]) + 6} y={psy(bh[1]) - 7} fill={FMM_COLORS.gruen} fontSize="12" fontStyle="italic">
-              b̂
-            </text>
+            {/* Zielpunkt b̂ = Projektion von b – erst nach dem ersten eigenen Versuch,
+                sonst ist die Frage „für welches x?" schon im toten Bild beantwortet. */}
+            {beruehrt && (
+              <>
+                <circle cx={psx(bh[0])} cy={psy(bh[1])} r={3.5} fill="none" stroke={FMM_COLORS.gruen} strokeWidth={2} />
+                <text x={psx(bh[0]) + 6} y={psy(bh[1]) - 7} fill={FMM_COLORS.gruen} fontSize="12" fontStyle="italic">
+                  b̂
+                </text>
+              </>
+            )}
             {/* rechter Winkel nur, wenn wirklich orthogonal */}
             {perp && (
               <polyline
@@ -497,7 +521,7 @@ export function ProjektionWidget() {
           <div className="mt-0.5 text-center text-[11px]">x₁ →</div>
         </div>
         <div className="min-w-[220px] grow text-sm">
-          <Slider label="x" value={x} onChange={setX} min={0} max={1.2} step={0.01} accent={FMM_COLORS.blau} />
+          <Slider label="x" value={x} onChange={setzeX} min={0} max={1.2} step={0.01} accent={FMM_COLORS.blau} />
           <ul className="ml-4 list-disc space-y-1 font-mono text-xs tabular-nums">
             <li>aᵀr = {fmtDe(atr, 2)}</li>
             <li>‖r‖₂² = {fmtDe(rn * rn, 3)}</li>
@@ -505,7 +529,7 @@ export function ProjektionWidget() {
           </ul>
         </div>
       </div>
-      {angDeg < 85 ? (
+      {!nahe && x < X_STERN ? (
         <Verdikt kind="warn" className="mt-2" titel="Noch nicht senkrecht:">
           Der Winkel liegt bei <span className="font-mono">{fmtDe(angDeg, 1)}°</span>, also unter
           90°: <M>{"\\ba^\\top\\cpurp{\\br} = 5 - 10x"}</M> ist mit{" "}
@@ -513,7 +537,7 @@ export function ProjektionWidget() {
           rechts verkürzt das Residuum, <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> steht
           gerade bei <span className="font-mono">{fmtDe(rn * rn, 3)}</span>.
         </Verdikt>
-      ) : angDeg > 95 ? (
+      ) : !nahe ? (
         <Verdikt kind="warn" className="mt-2" titel="Über das Ziel hinaus:">
           Mit <span className="font-mono">{fmtDe(angDeg, 1)}°</span> ist der Winkel größer als 90°,{" "}
           <M>{"\\ba^\\top\\cpurp{\\br}"}</M> also negativ (
@@ -522,14 +546,24 @@ export function ProjektionWidget() {
           <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> ={" "}
           <span className="font-mono">{fmtDe(rn * rn, 3)}</span>.
         </Verdikt>
-      ) : (
+      ) : exakt ? (
         <Verdikt kind="ok" className="mt-2" titel="Hier steht es senkrecht:">
-          <span className="font-mono">{fmtDe(angDeg, 1)}°</span> und{" "}
-          <M>{"\\ba^\\top\\cpurp{\\br} \\approx 0"}</M> – genau der Fall aus {ref("satz:kq-loesung-als-projektion")}. Der
+          Bei <M>{"x = \\tfrac{1}{2}"}</M> ist{" "}
+          <M>{"\\ba^\\top\\cpurp{\\br} = 5 - 10x = 0"}</M> exakt – genau der Fall aus {ref("satz:kq-loesung-als-projektion")}. Der
           Kandidat sitzt auf der Projektion{" "}
           <M>{"\\cgreen{\\wh{\\bb}} = \\tfrac{1}{2}\\ba = (1{,}5;\\; 0{,}5)^\\top"}</M>, und{" "}
           <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> erreicht mit{" "}
-          <span className="font-mono">{fmtDe(rn * rn, 3)}</span> seinen kleinsten Wert 2,5.
+          <span className="font-mono">{fmtDe(rn * rn, 3)}</span> seinen kleinsten Wert.
+        </Verdikt>
+      ) : (
+        <Verdikt kind="ok" className="mt-2" titel="Fast senkrecht:">
+          Der Winkel liegt bei <span className="font-mono">{fmtDe(angDeg, 1)}°</span>, aber{" "}
+          <M>{"\\ba^\\top\\cpurp{\\br} = 5 - 10x"}</M> ist mit{" "}
+          <span className="font-mono">{fmtDe(atr, 2)}</span> noch nicht null, und{" "}
+          <M>{"\\left\\| \\cpurp{\\br} \\right\\|_2^2"}</M> steht mit{" "}
+          <span className="font-mono">{fmtDe(rn * rn, 3)}</span> knapp über dem Minimum{" "}
+          <span className="font-mono">2,5</span>. Exakt senkrecht wird es erst beim
+          Reglerwert <M>{"x = 0{,}50"}</M>.
         </Verdikt>
       )}
     </div>

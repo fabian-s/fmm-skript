@@ -37,8 +37,7 @@ import { ref } from "../../numbers.generated";
  * Quadrik selbst (Höhenlinien und 3D-Fläche), damit die blaue Bahn auf ihr
  * sichtbar bleibt.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen und
- * s133b.mjs, 2026-08-19; ältere Prüfung check-math-s133.mjs bestätigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige Rechenwege):
  *  - Schritte, bis f auf ein Millionstel des Startwerts gefallen ist, bei
  *    γ = 1/L: κ = 1 → 1, κ = 10 → 64, κ = 100 → 608; bei γ = 0,9·(2/L), also
  *    den Voreinstellungen „Zickzack" und „Schlucht": κ = 10 → 35, κ = 25 → 88,
@@ -51,7 +50,7 @@ import { ref } from "../../numbers.generated";
  *  - Schritte je Dezimalstelle in f (gemessen ab dem Start) bei γ = 1/L:
  *    κ = 10 → 10, κ = 25 → 20, κ = 100 → 35; bei γ = 0,9·2/L: 6 / 12 / 20.
  *  - Alle 2200 Reglerzustände des Rasters (κ ∈ {1, …, 100}, Anteil
- *    0,05 … 1,10) wurden auf die Verdikt-Zweige durchgespielt (s133c.mjs):
+ *    0,05 … 1,10) wurden auf die Verdikt-Zweige durchgespielt:
  *    Zickzack 891, monoton 891, divergent 200, Grenze 2/L 100, γ = 1/L 99,
  *    κ = 1 gerade 18, κ = 1 in einem Schritt 1. Die beiden Zweige „γ = 1/μ"
  *    und „beide Richtungen schießen über" feuern auf diesem Raster NIE; sie

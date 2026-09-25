@@ -4,12 +4,14 @@ import { Aufgabe, FMM_COLORS, fmtDe, M, Slider, Verdikt } from "../../../lib";
 /**
  * Kleine-Pivots-Demo für §5.3 (Pivotierung): dasselbe 2×2-System wird in
  * echter IEEE-Doppelgenauigkeit einmal ohne und einmal mit Zeilentausch
- * gelöst; der Regler steuert die Pivotgröße ε. Rechenweg aus dem
- * SmallPivotLab der privaten heath-ch2-App portiert (nur Code; alle Texte
+ * gelöst; der Regler steuert die Pivotgröße ε.
+ *
  * Einsicht: Ein kleiner Pivot verstärkt Rundungsfehler, Zeilentausch verhindert das.
  * Farbrollen: Pivot/Fehler rot, stabile Lösung grün, sonst neutral.
- * Provenienz: Rechenweg aus heath-ch2 (nur Code), sichtbare Texte neu.
- * Zahlen: Kosten-/Float64-Grenzen in verify-05-lgs/verify.mjs, 2026-08-19.
+ * Provenienz: Rechenweg aus dem SmallPivotLab der privaten heath-ch2-App
+ * portiert (nur Code; alle sichtbaren Texte sind neu geschrieben).
+ * Zahlen: Fehlerverlauf über ε und die Float64-Grenzen in
+ * scripts/verify/REV29/05-lgs-Stepper.mjs, 2026-08-29.
  */
 
 const { rot: RED, gruen: GREEN } = FMM_COLORS;
@@ -24,7 +26,9 @@ function fmt(v: number): string {
 }
 
 export function PivotVergleich() {
-  const [e, setE] = useState(-8);
+  // Start bei ε = 1e−15: dort trennt die tote Ansicht die beiden Strategien
+  // sichtbar (0,888 gegen 1,0000). Bei 1e−8 sähen beide Zeilen gleich aus.
+  const [e, setE] = useState(-15);
   const eps = Math.pow(10, e);
 
   // ohne Zeilentausch: Pivot ε, Multiplikator 1/ε, alles ehrlich in float64
@@ -52,6 +56,7 @@ export function PivotVergleich() {
         className="text-right font-mono tabular-nums"
         style={!(err < 1e-4) ? { color: RED, fontWeight: 600 } : { color: GREEN }}
       >
+        <span aria-hidden="true">{err < 1e-4 ? "✓ " : "✗ "}</span>
         {err === 0 ? "0" : err.toExponential(2).replace(".", ",")}
       </td>
     </tr>

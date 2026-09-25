@@ -23,10 +23,18 @@ import { ref } from "../../numbers.generated";
  *
  * Farbrollen nach dem Kapitel-15-Code: Daten blau, Schaetzer gruen, Knoten
  * orange, Bias rot; die wahre Funktion f traegt das im Kapitel freie Violett,
- * der MSE als Summe der beiden Anteile ein neutrales Grau.
+ * der MSE als Summe der beiden Anteile ein neutrales Grau. GRUEN traegt in
+ * beiden Bildhaelften DIESELBE Rolle: es markiert f-Dach. Die Varianz ist die
+ * Streuung genau dieses gruenen Objekts (im Text steht sie ebenfalls als
+ * var[\cgreen{f-Dach}]), der Bias die rot gefuehrte systematische Abweichung.
+ * Die Beschriftung der Verlaufstafel sagt das ausdruecklich.
  *
- * Verifiziert (node, verify-13-funktionsapproximation/s154.mjs, 2026-08-19): Spur der Hutmatrix ist fuer
- * alle K exakt K (auf acht Stellen), und die MC-Varianz trifft sigma^2 K/n:
+ * Nachgerechnet (node, REV29/13-funktionsapproximation-S138BiasVarianz.mjs,
+ * 2026-08-29; dort mit rekursiver Cox-de-Boor-Auswertung, Householder-QR
+ * statt Cholesky und einer zweiten, ANALYTISCHEN Rechnung ueber die
+ * Hutmatrix): Spur der Hutmatrix ist fuer alle K exakt K (auf acht Stellen),
+ * das MSE-Minimum liegt bei K = 12 und das Zehn-Prozent-Plateau ist
+ * K = 12..14; die MC-Varianz trifft sigma^2 K/n:
  *   K =  5: Bias^2 0,4103  Var 0,0044 (Theorie 0,0045)  MSE 0,4147
  *   K =  8: Bias^2 0,0344  Var 0,0071 (Theorie 0,0072)  MSE 0,0415
  *   K =  9: Bias^2 0,1174  Var 0,0080 (Theorie 0,0081)  MSE 0,1254
@@ -238,8 +246,11 @@ const W_C = 300;
 const H_C = 186;
 const PAD_C = { l: 46, r: 10, t: 10, b: 30 };
 
-export function BiasVarianzExplorer() {
-  const [K, setK] = useState(12);
+export function BiasVarianzExplorer({ zeigeOptimum = true }: { zeigeOptimum?: boolean } = {}) {
+  // Startwert bewusst NICHT auf dem Minimum: solange die umgebende
+  // Schaetzfrage auf einen Tipp wartet, darf der Anfangszustand die Antwort
+  // nicht zeigen (REV29).
+  const [K, setK] = useState(6);
   const daten = useMemo(simuliere, []);
   const lauf = daten.laeufe.find((l) => l.K === K) ?? daten.laeufe[0];
 
@@ -299,6 +310,11 @@ export function BiasVarianzExplorer() {
   const skalaB = lauf.mse > 0 ? lauf.mse : 1;
   const bx = 96;
   const bw = W_B - bx - 8;
+  /** Zahl neben dem Balken, solange dort Platz ist; sonst hell im Balken. */
+  const ende = (v: number) => bw * balken(v / skalaB);
+  const eng = (v: number) => ende(v) > bw - 42;
+  const zahlX = (v: number) => (eng(v) ? bx + 4 : bx + ende(v) + 4);
+  const zahlFarbe = (v: number) => (eng(v) ? "var(--w-bg)" : GRAU);
 
   const plateau = daten.laeufe.filter((l) => l.mse <= 1.1 * bestes.mse).map((l) => l.K);
   const lueckenlos = plateau.every((k, i) => i === 0 || k === plateau[i - 1] + 1);
@@ -313,7 +329,15 @@ export function BiasVarianzExplorer() {
     `unsere ${R} Wiederholungen schätzen ${fmt(lauf.varianz)}.`;
 
   let status: string;
-  if (!(vielfaches > 1.1)) {
+  if (!zeigeOptimum) {
+    // Solange die Schaetzfrage laeuft, nennt das Verdikt weder das Minimum
+    // noch den Abstand dazu — nur die Zerlegung des aktuellen Zustands.
+    status =
+      `K = ${lauf.K}: Vom MSE ${fmt(lauf.mse)} trägt der Bias ${fmt(anteilBias * 100, 1)} %, die ` +
+      `Varianz ${fmt(anteilVar * 100, 1)} %. ` +
+      `${anteilBias > 0.5 ? "Die zwölf Kurven der oberen Tafel liegen dicht beieinander und weichen alle in dieselbe Richtung ab: Der Spline ist noch zu starr für f(x) = sin(3x)." : "Die zwölf Kurven der oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt."} ` +
+      `${varAbgleich}`;
+  } else if (!(vielfaches > 1.1)) {
     const kopf =
       lauf.K === daten.besteK
         ? `Bei K = ${lauf.K} ist der MSE unserer Simulation am kleinsten: ${fmt(lauf.mse)}.`
@@ -327,8 +351,8 @@ export function BiasVarianzExplorer() {
       `Innerhalb von zehn Prozent gleichwertig sind ${plateauText}. ${varAbgleich}`;
   } else if (lauf.K < daten.besteK && anteilBias > 0.5) {
     status =
-      `K = ${lauf.K}: Der Bias trägt ${fmt(anteilBias * 100, 1)} % des MSE. Die zwölf Kurven links ` +
-      `liegen dicht beieinander und weichen alle in dieselbe Richtung ab: Der Spline ist zu starr ` +
+      `K = ${lauf.K}: Der Bias trägt ${fmt(anteilBias * 100, 1)} % des MSE. Die zwölf Kurven der ` +
+      `oberen Tafel liegen dicht beieinander und weichen alle in dieselbe Richtung ab: Der Spline ist zu starr ` +
       `für f(x) = sin(3x). Das ist Unteranpassung. Der MSE ist das ${fmt(vielfaches, 1)}-fache des ` +
       `Minimums bei K = ${daten.besteK}. ${varAbgleich}`;
   } else if (lauf.K < daten.besteK) {
@@ -339,8 +363,8 @@ export function BiasVarianzExplorer() {
       `noch mehr an Bias, als sie an Varianz kostet. ${varAbgleich}`;
   } else {
     status =
-      `K = ${lauf.K}: Die Varianz trägt ${fmt(anteilVar * 100, 1)} % des MSE. Die zwölf Kurven links ` +
-      `fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt. ` +
+      `K = ${lauf.K}: Die Varianz trägt ${fmt(anteilVar * 100, 1)} % des MSE. Die zwölf Kurven der ` +
+      `oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt. ` +
       `${vielfaches >= 2 ? "Das ist deutliche Überanpassung" : "Hier beginnt die Überanpassung"}: ` +
       `Der MSE ist das ${fmt(vielfaches, 1)}-fache des Minimums bei K = ${daten.besteK}. ` +
       `${varAbgleich}`;
@@ -355,7 +379,9 @@ export function BiasVarianzExplorer() {
       <div className="flex flex-wrap gap-4">
         <svg
           viewBox={`0 0 ${W_A} ${H_A}`}
-          className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+          width={W_A}
+          height={H_A}
+          className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
         >
           <clipPath id="s154-clip">
             <rect
@@ -414,7 +440,7 @@ export function BiasVarianzExplorer() {
             stroke={ACHSE}
             strokeWidth={0.8}
           />
-          <text x={W_A - PAD_A.r - 4} y={H_A - PAD_A.b + 14} textAnchor="end" fontSize={9} fill={ACHSE}>
+          <text x={W_A - PAD_A.r - 2} y={py(0) - 5} textAnchor="end" fontSize={9} fill={ACHSE}>
             x
           </text>
           <g clipPath="url(#s154-clip)">
@@ -454,10 +480,12 @@ export function BiasVarianzExplorer() {
           </text>
         </svg>
 
-        <div className="grow space-y-2">
+        <div className="min-w-0 grow basis-72 space-y-2">
           <svg
             viewBox={`0 0 ${W_B} ${H_B}`}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={W_B}
+            height={H_B}
+            className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <text x={8} y={16} fontSize={10} fill={ACHSE}>
               Anteile am MSE bei K = {lauf.K}
@@ -467,7 +495,9 @@ export function BiasVarianzExplorer() {
                 Bias²
               </text>
               <rect x={bx} y={32} width={bw * balken(lauf.bias2 / skalaB)} height={13} fill={ROT} />
-              <text x={bx + 4} y={42} fontSize={9} fill={GRAU}>
+              {/* Kurze Balken tragen ihre Zahl AUSSERHALB, sonst steht helle
+                  Schrift auf hellem Grund (REV29). */}
+              <text x={zahlX(lauf.bias2)} y={42} fontSize={9} fill={zahlFarbe(lauf.bias2)}>
                 {fmt(lauf.bias2)}
               </text>
             </g>
@@ -476,7 +506,7 @@ export function BiasVarianzExplorer() {
                 Varianz
               </text>
               <rect x={bx} y={58} width={bw * balken(lauf.varianz / skalaB)} height={13} fill={GRUEN} />
-              <text x={bx + 4} y={68} fontSize={9} fill={GRAU}>
+              <text x={zahlX(lauf.varianz)} y={68} fontSize={9} fill={zahlFarbe(lauf.varianz)}>
                 {fmt(lauf.varianz)}
               </text>
             </g>
@@ -503,7 +533,9 @@ export function BiasVarianzExplorer() {
 
           <svg
             viewBox={`0 0 ${W_C} ${H_C}`}
-            className="max-w-full h-auto rounded border border-slate-300 bg-white dark:border-slate-600"
+            width={W_C}
+            height={H_C}
+            className="max-w-full h-auto rounded border border-slate-300 bg-[var(--w-bg)] dark:border-slate-600"
           >
             <rect
               x={PAD_C.l}
@@ -546,15 +578,17 @@ export function BiasVarianzExplorer() {
             <path d={linie((l) => l.bias2)} fill="none" stroke={ROT} strokeWidth={1.6} />
             <path d={linie((l) => l.varianz)} fill="none" stroke={GRUEN} strokeWidth={1.6} />
             <path d={linie((l) => l.mse)} fill="none" stroke={GRAU} strokeWidth={2} />
-            <circle cx={cx(daten.besteK)} cy={cy(bestes.mse)} r={4} fill="none" stroke={GRAU} strokeWidth={1.8} />
+            {zeigeOptimum ? (
+              <circle cx={cx(daten.besteK)} cy={cy(bestes.mse)} r={4} fill="none" stroke={GRAU} strokeWidth={1.8} />
+            ) : null}
             <text x={PAD_C.l + 5} y={PAD_C.t + 11} fontSize={8.5} fill={GRAU}>
-              MSE (grau) = Bias² (rot) + Varianz (grün)
+              MSE (grau) = Bias² (rot) + Varianz des grünen Schätzers
             </text>
           </svg>
         </div>
       </div>
 
-      <Verdikt kind={lauf.K === daten.besteK ? "ok" : "warn"}>{status}</Verdikt>
+      <Verdikt kind={!zeigeOptimum ? "neutral" : lauf.K === daten.besteK ? "ok" : "warn"}>{status}</Verdikt>
     </div>
   );
 }

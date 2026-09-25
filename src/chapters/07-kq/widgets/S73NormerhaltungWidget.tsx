@@ -15,15 +15,19 @@
  * PROVENIENZ: Berechnungs- und Overlay-Code aus der internen App
  * interactive/heath-ch3 portiert; Texte für dieses Skript neu.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS: scripts/verify/REV29/07-kq-S73Normerhaltung.mjs (2026-08-29),
+ * Teil von `npm run verify:numbers`. Das Skript baut die drei Matrizen unabhängig
+ * vom Widget-Code auf und assertiert:
  *   v = (1,5; 1,0)ᵀ mit ‖v‖₂ = 1,802776. Drehungen um 0°, 40°, 90°, 180° und
  *   Spiegelungen an Achsen mit φ = 0°, 25°, 45° liefern ‖Qv‖₂ = 1,802775637732
  *   auf zwölf Stellen; det = +1 bzw. −1.
  *   Scherung mit Multiplikator m: ‖Mv‖₂ = 1,581 (m = −1), 2,305 (m = 0,5),
  *   3,176 (m = 1,2), 4,272 (m = 2) – Faktoren 0,877 bis 2,370 bei det = 1.
- *   Längentreu ist die Scherung nur für m = 0 und m = −4/3 = −1,333333
- *   (dort spiegelt sie v an der x₁-Achse); der Verdikt-Zweig behandelt diesen
- *   Zufallstreffer eigens.
+ *   Längentreu ist die Scherung nur für m = 0 (dort ist M = I, der einzige
+ *   orthogonale Fall der Familie) und für m = −4/3 = −1,333333, wo sie dieses
+ *   eine v an der x₁-Achse spiegelt. Beide Fälle haben einen eigenen
+ *   Verdikt-Zweig; m = −4/3 liegt nicht auf dem Reglerraster (Schritt 0,05) und
+ *   ist deshalb über einen Preset-Knopf exakt einstellbar.
  */
 import { useCallback, useState } from "react";
 import {
@@ -37,7 +41,6 @@ import {
   fmtDe,
   maxAbsCoord,
 } from "../../../lib";
-import { ref } from "../../numbers.generated";
 
 type Modus = "drehung" | "spiegelung" | "scherung";
 
@@ -78,7 +81,12 @@ export function S73NormerhaltungWidget() {
   const nw = Math.hypot(w[0], w[1]);
   const worldHalf = Math.max(2.6, maxAbsCoord(v, w) * 1.25);
   const istOrth = modus !== "scherung";
-  const laengentreu = Math.abs(nw - nv) < 5e-4;
+  // Drei Zustände der Scherung, erkannt am KONTROLLIERTEN Multiplikator:
+  // m = 0 ist die Identität (Reglerrastwert), m = −4/3 der Zufallstreffer
+  // (Preset-Knopf), sonst wird die Länge verändert.
+  const identitaet = modus === "scherung" && mult === 0;
+  const zufallstreffer = modus === "scherung" && !identitaet && Math.abs(nw - nv) < 5e-4;
+  const laengentreu = istOrth || identitaet || zufallstreffer;
   const det = Q[0][0] * Q[1][1] - Q[0][1] * Q[1][0];
 
   // Zusatz-Zeichnung: Winkelbogen θ zwischen v und Mv (Drehung) bzw.
@@ -164,14 +172,24 @@ export function S73NormerhaltungWidget() {
         <Slider label="Achse φ (°)" value={phi} onChange={setPhi} min={-90} max={90} step={1} fmt={(x) => fmtDe(x, 0) + "°"} />
       )}
       {modus === "scherung" && (
-        <Slider label="Multiplikator m" value={mult} onChange={setMult} min={-2} max={2} step={0.05} fmt={(x) => fmtDe(x, 2)} />
+        <>
+          <Slider label="Multiplikator m" value={mult} onChange={setMult} min={-2} max={2} step={0.05} fmt={(x) => fmtDe(x, 2)} />
+          <button
+            type="button"
+            aria-pressed={mult === -4 / 3}
+            className="mb-2 rounded border border-slate-400 px-2 py-1 text-xs hover:bg-slate-200 dark:hover:bg-slate-700"
+            onClick={() => setMult(-4 / 3)}
+          >
+            m = −4/3 einstellen
+          </button>
+        </>
       )}
       <div className="flex flex-wrap items-start gap-4">
         <LabeledTransformCanvas
           matrix={Q}
           vectors={[
             { v, color: FMM_COLORS.grau, label: "v" },
-            { v: w, color: istOrth ? FMM_COLORS.gruen : FMM_COLORS.rot, label: "Mv" },
+            { v: w, color: laengentreu ? FMM_COLORS.gruen : FMM_COLORS.rot, label: "Mv" },
           ]}
           showGrid
           showUnitCircle
@@ -200,13 +218,22 @@ export function S73NormerhaltungWidget() {
           Genau diese Invarianz erlaubt den Übergang von{" "}
           <M>{"\\left\\| \\bA\\bx - \\bb \\right\\|_2"}</M> zu{" "}
           <M>{"\\left\\| \\bQ\\bA\\bx - \\bQ\\bb \\right\\|_2"}</M>, ohne den Minimierer zu
-          verschieben ({ref("lemma:qr-eigenschaften-von-orthogonalmatrizen")} (ii)).
+          verschieben – genau die Rechnung über diesem Kasten.
         </Verdikt>
-      ) : laengentreu ? (
+      ) : identitaet ? (
+        <Verdikt kind="ok" className="mt-2" titel="Der einzige orthogonale Fall dieser Familie:">
+          Bei <M>{"m = 0"}</M> ist <M>{"\\bM = \\bI"}</M>: Der Einheitskreis bleibt der
+          Einheitskreis, ‖Mv‖₂ = ‖v‖₂ = <span className="font-mono">{fmtDe(nv, 3)}</span>, und
+          das ist keine Ausnahme, sondern die Regel für <em>jedes</em> v. Es ist allerdings auch
+          der Fall, in dem gar nichts eliminiert wird.
+        </Verdikt>
+      ) : zufallstreffer ? (
         <Verdikt kind="warn" className="mt-2" titel="Zufallstreffer, keine Regel:">
-          Bei diesem m stimmt ‖Mv‖₂ ausnahmsweise mit ‖v‖₂ überein – aber nur für{" "}
-          <em>dieses</em> v. Eine Scherung ist keine Orthogonalmatrix; das sieht man am
-          Einheitskreis, aus dem eine Ellipse geworden ist.
+          Bei <M>{`m = ${fmtDe(mult, 2)}`}</M> stimmt ‖Mv‖₂ ausnahmsweise mit ‖v‖₂ überein – aber
+          nur für <em>dieses</em> v: Die Scherung spiegelt es gerade an der x₁-Achse. Eine
+          Scherung mit <M>{"m \\ne 0"}</M> ist keine Orthogonalmatrix; das sieht man am
+          Einheitskreis, aus dem eine Ellipse geworden ist. Ein anderes v wird hier sehr wohl
+          gestreckt.
         </Verdikt>
       ) : (
         <Verdikt kind="fail" className="mt-2" titel="Nicht längentreu:">

@@ -56,8 +56,10 @@ import { num, ref } from "../../numbers.generated";
  *   orange  — Gradient (Pfeil, Zahlen, Rate ρ)
  *   violett — die frei gewählte Richtung d bzw. der gewählte Punkt
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen; alle Gradienten gegen zentrale
- * Differenzen geprüft:
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S102Gradient.mjs,
+ * 2026-08-29): alle Gradienten gegen zentrale Differenzen geprüft, dazu die
+ * Senkrechte des Kompasses (aus dem Quelltext gelesen und gegen den Gradienten
+ * getestet) und die Erreichbarkeit des Grenzfalls ρ = 1:
  *   f(x) = x₁² + 3x₁x₂ + 2x₂², ∇f = (2x₁+3x₂, 3x₁+4x₂);
  *     f(1,1) = 6, ∇f(1,1) = (5, 7), ‖∇f(1,1)‖ = √74 = 8,602325;
  *     f(x) = (x₁+x₂)(x₁+2x₂) auf einem 41×41-Gitter bis 7,1e-15;
@@ -69,8 +71,11 @@ import { num, ref } from "../../numbers.generated";
  *     an allen drei geprüften Stellen (das ist cos 60°).
  *   A = (2 1; 1 3): Spur 5, det 5, λ = 3,618034 und 1,381966;
  *     α* = 0,4 = 2/(λ_min+λ_max) mit ρ = 0,447214 = √5/5 und ρ² = 0,2
- *     (numerisches Minimum von ρ über [0,01; 0,9] ebenfalls bei α = 0,4000);
- *     α = 2/λ_max = 0,552786 gibt ρ = 1;
+ *     (numerisches Minimum von ρ über das 0,01-Raster von 0,05 bis 0,90
+ *     ebenfalls bei α = 0,4000);
+ *     α = 2/λ_max = 0,552786 gibt ρ = 1; dieser Wert liegt NICHT auf dem
+ *     0,01-Raster des Reglers (ρ(0,55) = 0,9899, ρ(0,56) = 1,0261) und ist
+ *     deshalb nur über den Knopf „Grenzfall" erreichbar;
  *     L(θ⁽⁰⁾) = 3,24 bei θ⁽⁰⁾ = (1,8; −1,2); bei α* ist das Verhältnis
  *     L(θ⁽ᵗ⁺¹⁾)/L(θ⁽ᵗ⁾) in jedem Schritt exakt 0,2, nach 5 Schritten ist L
  *     unter L⁽⁰⁾/1000 (1,037e−3), nach 12 Schritten 1,33e−8.
@@ -295,7 +300,8 @@ function FeldPanel({
         ))}
         <g clipPath={`url(#${id}-clip)`}>
           {pfade.map((d, i) => (
-            <path key={i} d={d} stroke={BLAU} strokeWidth={0.9} opacity={0.35} fill="none" />
+            // Kräftig genug, dass die Höhenlinien auch auf 390 px tragen.
+            <path key={i} d={d} stroke={BLAU} strokeWidth={1.1} opacity={0.55} fill="none" />
           ))}
           {hervorPfad && <path d={hervorPfad} stroke={BLAU} strokeWidth={2.2} fill="none" />}
           {geradeEnden && (
@@ -442,7 +448,9 @@ const FELDER: Feld[] = [
     gmax: maxNorm(gradG),
     stellen: [
       { name: "Flanke", p: [0.6, 0.5] },
-      { name: "Maximum", p: [0.7, 0] },
+      // Das Maximum von g liegt bei x₁ = 1/√2 = 0,70710678 und damit ZWISCHEN
+      // zwei Rastwerten des 0,05-Reglers; nur dieser Knopf trifft es exakt.
+      { name: "Maximum", p: [Math.SQRT1_2, 0] },
       { name: "Außenbereich", p: [1.6, 1.2] },
     ],
   },
@@ -475,6 +483,12 @@ function Gradientenfeldtafeln() {
   // im Verdikt, der Pfeil zeigt Richtung und Größenverhältnis.
   const laenge = 0.25 + 0.85 * Math.min(1, norm / feld.gmax);
   const hatGradient = norm > 1e-9;
+  /**
+   * Dritter Zustand zwischen „Gradient null" und „regulär": Der Gradient ist
+   * noch da, aber klein gegen sein Maximum auf dem Ausschnitt. Die Schwelle ist
+   * relativ, damit sie für beide Funktionen dasselbe bedeutet.
+   */
+  const fastFlach = hatGradient && norm < 0.05 * feld.gmax;
   const gPfeil: [number, number] = hatGradient
     ? [x1 + (laenge * g[0]) / norm, x2 + (laenge * g[1]) / norm]
     : [x1, x2];
@@ -651,7 +665,7 @@ function Gradientenfeldtafeln() {
       <Slider label="x₁" value={x1} onChange={(v) => setX1(Math.round(v * 20) / 20)} min={-2} max={2} step={0.05} accent={VIOLETT} fmt={(v) => fmt(v)} />
       <Slider label="x₂" value={x2} onChange={(v) => setX2(Math.round(v * 20) / 20)} min={-2} max={2} step={0.05} accent={VIOLETT} fmt={(v) => fmt(v)} />
 
-      <Verdikt kind={hatGradient ? "neutral" : "warn"}>
+      <Verdikt kind={hatGradient && !fastFlach ? "neutral" : "warn"}>
         <span className="font-mono">
           x = ({fmt(x1)}; {fmt(x2)}), f(x) = {fmt(wert, 3)}
         </span>
@@ -660,9 +674,11 @@ function Gradientenfeldtafeln() {
           ∇f(x) = ({fmt(g[0], 3)}; {fmt(g[1], 3)}) ∈ ℝ¹ˣ²
         </span>{" "}
         mit ‖∇f(x)‖₂ = <span className="font-mono">{fmt(norm, 3)}</span>.{" "}
-        {hatGradient
+        {hatGradient && !fastFlach
           ? `Der orange Pfeil steht senkrecht auf der blau gestrichelten Tangente an die Höhenlinie, so wie ${ref("bemerkung:der-gradient-steht-senkrecht-auf-der")} es verlangt, und er wird lang, wo die Höhenlinien dicht liegen. In der Fläche daneben ist ${fmt(norm, 3)} die größte Steigung, die die grüne Tangentialebene überhaupt hat.`
-          : "Hier verschwindet der Gradient. Dann zeichnet sich keine Richtung mehr aus, und die Höhenlinie durch den Punkt ist keine glatte Kurve: solche Stellen sind die Kandidaten für Extremwerte und Sattelpunkte. Bei der quadratischen Funktion ist der Nullpunkt ein Sattel, denn f zerfällt in (x₁ + x₂)(x₁ + 2x₂), und die Höhenlinie zum Niveau 0 besteht aus diesen beiden sich kreuzenden Geraden."}
+          : hatGradient
+            ? `Der Gradient ist hier sehr klein gegen sein Maximum auf dem Ausschnitt: Seine Richtung ist noch definiert, und der orange Pfeil steht weiter senkrecht auf der Tangente an die Höhenlinie (${ref("bemerkung:der-gradient-steht-senkrecht-auf-der")}), aber sie ist numerisch heikel – schon eine kleine Änderung an x dreht sie deutlich. Die Höhenlinien liegen hier weit auseinander, die Fläche ist fast waagerecht. Ein Stück weiter, und der Gradient verschwindet ganz.`
+            : "Hier verschwindet der Gradient. Dann zeichnet sich keine Richtung mehr aus, und die Höhenlinie durch den Punkt ist keine glatte Kurve: solche Stellen sind die Kandidaten für Extremwerte und Sattelpunkte. Bei der quadratischen Funktion ist der Nullpunkt ein Sattel, denn f zerfällt in (x₁ + x₂)(x₁ + 2x₂), und die Höhenlinie zum Niveau 0 besteht aus diesen beiden sich kreuzenden Geraden."}
       </Verdikt>
     </div>
   );
@@ -813,13 +829,38 @@ function RichtungsTafeln() {
               stroke="var(--w-grid, #e2e8f0)"
               strokeWidth={1}
             />
+            {/*
+              Radiale Skala: Der Abstand vom Mittelpunkt trägt eine
+              quantitative Aussage, also bekommt er einen Halbring bei
+              ‖∇f‖/2 und eine Beschriftung am Rand.
+            */}
+            <circle
+              cx={K_MITTE}
+              cy={K_MITTE}
+              r={K_R / 2}
+              fill="none"
+              stroke="var(--w-grid, #e2e8f0)"
+              strokeWidth={0.8}
+              strokeDasharray="3 4"
+            />
+            <text x={K_MITTE + 3} y={K_MITTE - K_R / 2 - 3} fill="var(--w-muted, #64748b)" fontSize={9}>
+              ½‖∇f(x)‖₂
+            </text>
+            <text x={K_MITTE + 3} y={K_MITTE - K_R - 3} fill="var(--w-muted, #64748b)" fontSize={9}>
+              ‖∇f(x)‖₂ = {fmt(norm, 2)}
+            </text>
             {hatGradient && (
               <>
-                {/* Tangente an die Höhenlinie: die Richtungen mit ∇f(x)d = 0 */}
+                {/*
+                  Tangente an die Höhenlinie: die beiden Richtungen mit
+                  ∇f(x)d = 0, also ±(−g₂; g₁)/‖∇f‖. Umgerechnet mit derselben
+                  Abbildung wie der Gradientenpfeil (Z. 754-755): x wächst nach
+                  rechts, y nach unten.
+                */}
                 <line
-                  x1={K_MITTE - K_R * (-g[1] / norm)}
-                  y1={K_MITTE + K_R * (-g[0] / norm)}
-                  x2={K_MITTE + K_R * (-g[1] / norm)}
+                  x1={K_MITTE + K_R * (g[1] / norm)}
+                  y1={K_MITTE + K_R * (g[0] / norm)}
+                  x2={K_MITTE - K_R * (g[1] / norm)}
                   y2={K_MITTE - K_R * (g[0] / norm)}
                   stroke={BLAU}
                   strokeWidth={1.2}
@@ -1150,6 +1191,22 @@ function AbstiegTafeln({ aufgeloest }: { aufgeloest: boolean }) {
         accent={ORANGE}
         fmt={(v) => fmt(v)}
       />
+      {/*
+        Der Grenzfall ρ = 1 liegt bei α = 2/λ_max = 0,552786 und damit zwischen
+        zwei Rastwerten des Reglers (ρ(0,55) = 0,990, ρ(0,56) = 1,026). Er ist
+        deshalb nur über diesen Knopf exakt einstellbar – der kontrollierte
+        Parameter, an dem das Verdikt den entarteten Fall erkennt.
+      */}
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          className={alpha === ALPHA_GRENZ ? W_BUTTON_AKTIV : W_BUTTON}
+          aria-pressed={alpha === ALPHA_GRENZ}
+          onClick={() => setAlpha(ALPHA_GRENZ)}
+        >
+          Grenzfall α = 2/λ_max
+        </button>
+      </div>
       <Stepper
         step={k}
         setStep={setK}
@@ -1160,7 +1217,11 @@ function AbstiegTafeln({ aufgeloest }: { aufgeloest: boolean }) {
           </>
         }
       />
-      <Verdikt kind={rho < 0.999 ? "ok" : rho <= 1.001 ? "warn" : "fail"}>
+      <Verdikt
+        kind={
+          alpha === ALPHA_GRENZ || (rho > 0.98 && rho < 1.02) ? "warn" : rho < 1 ? "ok" : "fail"
+        }
+      >
         <span className="font-mono" style={{ color: ORANGE }}>
           ∇L(θ⁽{sup(k)}⁾) = ({fmt(g[0], 3)}; {fmt(g[1], 3)}) ∈ ℝ¹ˣ²
         </span>
@@ -1174,15 +1235,19 @@ function AbstiegTafeln({ aufgeloest }: { aufgeloest: boolean }) {
           ρ² = {fmt(rho * rho, 3)}
         </span>
         .{" "}
-        {rho < 0.999
-          ? `ρ = ${fmt(rho, 3)} < 1: die Iteration läuft ins Minimum, der Verlust fällt je Schritt höchstens auf das ${fmt(rho * rho, 3)}-fache.${
-              Math.abs(alpha - ALPHA_OPT) < 0.005
-                ? " Das ist die beste Wahl: bei α = 0,40 schrumpfen beide Eigenrichtungen mit demselben Faktor √5/5 = 0,447, und kein anderes α macht das Maximum der beiden kleiner."
-                : ` Ein Stück näher an α = ${fmt(ALPHA_OPT)} ginge es schneller.`
-            }`
-          : rho <= 1.001
-            ? `ρ ≈ 1: der Grenzfall α = 2/λ_max = ${fmt(ALPHA_GRENZ, 3)}. Die Schritte springen zwischen zwei Punkten hin und her, ohne kleiner zu werden.`
-            : `ρ = ${fmt(rho, 3)} > 1: die Schritte schießen über das Minimum hinaus und werden immer größer, die Iteration läuft davon. ${ref("satz:gradient-der-quadratischen-form")} liefert dabei weiter den richtigen Gradienten, nur die Schrittweite ist zu groß.`}
+        {alpha === ALPHA_GRENZ
+          ? `ρ = 1 exakt: das ist der Grenzfall α = 2/λ_max = ${fmt(ALPHA_GRENZ, 3)}, den nur der Knopf trifft – auf dem 0,01-Raster des Reglers liegt er zwischen zwei Rastwerten. Die Schritte springen längs der Eigenrichtung zu λ_max zwischen zwei Punkten hin und her, ohne kleiner zu werden.`
+          : rho > 0.98 && rho < 1.02
+            ? `ρ = ${fmt(rho, 3)}: die Iteration ist nur noch knapp auf der ${rho < 1 ? "guten" : "falschen"} Seite des Grenzfalls α = 2/λ_max = ${fmt(ALPHA_GRENZ, 3)}. Der Verlust ${rho < 1 ? "fällt zwar noch, aber so langsam, dass zwölf Schritte kaum etwas ausrichten" : "wächst bereits, wenn auch langsam"}.`
+            : rho < 1
+              ? `ρ = ${fmt(rho, 3)} < 1: die Iteration läuft ins Minimum, der Verlust fällt je Schritt höchstens auf das ${fmt(rho * rho, 3)}-fache.${
+                  aufgeloest
+                    ? Math.abs(alpha - ALPHA_OPT) < 0.005
+                      ? " Das ist die beste Wahl: bei α = 0,40 schrumpfen beide Eigenrichtungen mit demselben Faktor √5/5 = 0,447, und kein anderes α macht das Maximum der beiden kleiner."
+                      : ` Ein Stück näher an α = ${fmt(ALPHA_OPT)} ginge es schneller.`
+                    : ""
+                }`
+              : `ρ = ${fmt(rho, 3)} > 1: die Schritte schießen über das Minimum hinaus und werden immer größer, die Iteration läuft davon. ${ref("satz:gradient-der-quadratischen-form")} liefert dabei weiter den richtigen Gradienten, nur die Schrittweite ist zu groß.`}
       </Verdikt>
     </div>
   );

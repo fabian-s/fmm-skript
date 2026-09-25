@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Aufgabe, FMM_COLORS, MatrixDisplay, MatrixInput, Verdikt, fmtDe } from "../../../lib";
+import { Aufgabe, FMM_COLORS, MatrixDisplay, MatrixInput, Verdikt, W_BUTTON, W_BUTTON_AKTIV, fmtDe } from "../../../lib";
 import { ref } from "../../numbers.generated";
 
 /**
@@ -8,7 +8,10 @@ import { ref } from "../../numbers.generated";
  * Farbrollen: A blau, B grün, beide Ergebnisvektoren orange, LGS-Operator rot.
  * Provenienz: Eigenbau nach Satz 9.5.3, mit dem Beispiel 9.5.4 als Vorgabe.
  * Per node verifiziert: Gleichung für das Beispiel sowie 24 deterministische
- * mulberry32-Fälle in scripts/verify/KAP09/kronecker-vektorisierung.mjs (2026-08-20).
+ * mulberry32-Fälle in scripts/verify/KAP09/kronecker-vektorisierung.mjs
+ * (2026-08-20). Dass der zweite Knopf (A ⊗_K Bᵀ) wirklich einen anderen Vektor
+ * liefert – der fail-Zweig also erreichbar ist – prüft
+ * scripts/verify/REV29/09-tensoren-S95Vektorisierung.mjs (2026-08-29).
  */
 type Mat = number[][];
 const { blau, gruen, orange, rot } = FMM_COLORS;
@@ -19,46 +22,80 @@ const kron = (A: Mat, B: Mat): Mat => A.flatMap((aRow) => B.map((bRow) => aRow.f
 const vec = (M: Mat) => M[0].flatMap((_, j) => M.map((row) => row[j]));
 const column = (v: number[]): Mat => v.map((entry) => [entry]);
 
+/** Die beiden Anordnungen, zwischen denen der Leser wählt. */
+type Reihenfolge = "richtig" | "vertauscht";
+
+const BEISPIEL: { name: string; A: Mat; X: Mat; B: Mat }[] = [
+  { name: "Beispiel 9.5.4", A: [[1, 2], [0, 1]], X: [[1, 0], [2, 3]], B: [[1, 1], [0, 2]] },
+  { name: "B = I", A: [[1, 2], [0, 1]], X: [[1, 0], [2, 3]], B: [[1, 0], [0, 1]] },
+  { name: "A = I", A: [[1, 0], [0, 1]], X: [[1, 0], [2, 3]], B: [[1, 1], [0, 2]] },
+];
+
 export function VektorisierungMatrixgleichung() {
-  const [A, setA] = useState<Mat>([[1, 2], [0, 1]]);
-  const [X, setX] = useState<Mat>([[1, 0], [2, 3]]);
-  const [B, setB] = useState<Mat>([[1, 1], [0, 2]]);
+  const [A, setA] = useState<Mat>(BEISPIEL[0].A);
+  const [X, setX] = useState<Mat>(BEISPIEL[0].X);
+  const [B, setB] = useState<Mat>(BEISPIEL[0].B);
+  const [reihenfolge, setReihenfolge] = useState<Reihenfolge>("richtig");
   const [operatorVisible, setOperatorVisible] = useState(false);
   const AXB = useMemo(() => multiply(multiply(A, X), B), [A, X, B]);
-  const operator = useMemo(() => kron(transpose(B), A), [A, B]);
+  // Der zweite Knopf baut BEWUSST den falschen Operator: nur so kann die
+  // Prüfung „Eintrag für Eintrag" überhaupt scheitern (F6/F8).
+  const operator = useMemo(
+    () => (reihenfolge === "richtig" ? kron(transpose(B), A) : kron(A, transpose(B))),
+    [A, B, reihenfolge],
+  );
+  const operatorName = reihenfolge === "richtig" ? "Bᵀ ⊗_K A" : "A ⊗_K Bᵀ";
   const left = vec(AXB);
   const right = vec(multiply(operator, column(vec(X))));
-  const stimmt = left.every((entry, index) => Math.abs(entry - right[index]) < 1e-9);
+  const abweichung = Math.max(...left.map((entry, index) => Math.abs(entry - right[index])));
+  const stimmt = abweichung < 1e-9;
+
+  const setzeBeispiel = (index: number) => {
+    setA(BEISPIEL[index].A);
+    setX(BEISPIEL[index].X);
+    setB(BEISPIEL[index].B);
+  };
 
   return <div className="rounded p-3" style={{ backgroundColor: "var(--w-bg)" }}>
-    <Aufgabe>Ändern wir A, X oder B und prüfen wir die beiden orangefarbenen Vektoren Eintrag für Eintrag.</Aufgabe>
-    <div className="my-2 text-xs"><span style={{ color: blau }}>A</span> wirkt links, <span style={{ color: gruen }}>B</span> rechts; <span style={{ color: orange }}>orange</span> markiert die zwei gleichen Ergebnisvektoren.</div>
+    <Aufgabe>
+      Wählen wir die Reihenfolge der Kroneckerfaktoren und prüfen wir die beiden orangefarbenen
+      Vektoren Eintrag für Eintrag: Nur eine der beiden Anordnungen liefert denselben Vektor.
+    </Aufgabe>
+    <div className="my-2 text-xs"><span style={{ color: blau }}>A</span> wirkt links, <span style={{ color: gruen }}>B</span> rechts; <span style={{ color: orange }}>orange</span> markiert die beiden zu vergleichenden Ergebnisvektoren.</div>
     <div className="my-3 flex flex-wrap items-center gap-3">
-      <div><div className="text-sm" style={{ color: orange }}>vec(AXB)</div><MatrixDisplay value={column(left)} /></div>
-      <span aria-hidden="true" className="text-xl">=</span>
-      <div><div className="text-sm" style={{ color: orange }}>(Bᵀ ⊗_K A) vec(X)</div><MatrixDisplay value={column(right)} /></div>
-      <svg viewBox="0 0 300 74" width="300" height="74" className="max-w-full h-auto" role="img"
-        aria-label="Eine Matrixgleichung wird durch Vektorisierung in ein lineares Gleichungssystem überführt.">
-        <rect x="8" y="18" width="112" height="38" rx="5" fill={orange} fillOpacity="0.18" stroke={orange} />
-        <text x="64" y="42" textAnchor="middle" fill="var(--w-text)" fontSize="14">A X B = C</text>
-        <path d="M128 37H174" stroke={rot} strokeWidth="2" markerEnd="url(#arrow)" />
-        <rect x="182" y="18" width="110" height="38" rx="5" fill={rot} fillOpacity="0.12" stroke={rot} />
-        <text x="237" y="42" textAnchor="middle" fill="var(--w-text)" fontSize="12">(Bᵀ ⊗_K A) vec(X)</text>
-        <defs><marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6z" fill={rot} /></marker></defs>
-      </svg>
+      <div><div className="text-sm">C = A X B</div><MatrixDisplay value={AXB} /></div>
+      <div><div className="text-sm" style={{ color: orange }}>vec(C)</div><MatrixDisplay value={column(left)} /></div>
+      <span aria-hidden="true" className="text-xl">{stimmt ? "=" : "≠"}</span>
+      <div><div className="text-sm" style={{ color: orange }}>({operatorName}) vec(X)</div><MatrixDisplay value={column(right)} /></div>
+    </div>
+    <div className="mt-3 flex flex-wrap gap-2">
+      {BEISPIEL.map((eintrag, index) => (
+        <button key={eintrag.name} type="button" className={W_BUTTON} onClick={() => setzeBeispiel(index)}>
+          {eintrag.name}
+        </button>
+      ))}
+      <button type="button" aria-pressed={reihenfolge === "richtig"} className={reihenfolge === "richtig" ? W_BUTTON_AKTIV : W_BUTTON} onClick={() => setReihenfolge("richtig")}>
+        Bᵀ ⊗_K A
+      </button>
+      <button type="button" aria-pressed={reihenfolge === "vertauscht"} className={reihenfolge === "vertauscht" ? W_BUTTON_AKTIV : W_BUTTON} onClick={() => setReihenfolge("vertauscht")}>
+        A ⊗_K Bᵀ
+      </button>
     </div>
     <div className="mt-3 flex flex-wrap items-start gap-4">
       <label><span className="block text-sm" style={{ color: blau }}>A</span><MatrixInput value={A} onChange={setA} step={1} min={-4} max={4} /></label>
       <label><span className="block text-sm">X (unbekannt)</span><MatrixInput value={X} onChange={setX} step={1} min={-4} max={4} /></label>
       <label><span className="block text-sm" style={{ color: gruen }}>B</span><MatrixInput value={B} onChange={setB} step={1} min={-4} max={4} /></label>
-      <button type="button" className="rounded border px-2 py-1 text-sm" onClick={() => setOperatorVisible((visible) => !visible)}
-        style={{ borderColor: rot }}>{operatorVisible ? "Operator verbergen" : "Operator Bᵀ ⊗_K A zeigen"}</button>
-      {operatorVisible && <div><div className="text-sm" style={{ color: rot }}>Bᵀ ⊗_K A</div><MatrixDisplay value={operator} /></div>}
+      <button type="button" className={W_BUTTON} onClick={() => setOperatorVisible((visible) => !visible)}>
+        {operatorVisible ? "Operator verbergen" : `Operator ${operatorName} zeigen`}
+      </button>
+      {operatorVisible && <div><div className="text-sm" style={{ color: rot }}>{operatorName}</div><MatrixDisplay value={operator} /></div>}
     </div>
-    <Verdikt kind={stimmt ? "ok" : "fail"}>
-      {stimmt
-        ? `Die vier Einträge stimmen überein. Aus A X B = C wird damit das LGS (Bᵀ ⊗_K A) vec(X) = vec(C) mit vier Unbekannten.`
-        : `Die beiden Seiten weichen um ${fmtDe(Math.max(...left.map((entry, index) => Math.abs(entry - right[index]))), 4)} ab. Das wäre ein Gegenbeispiel zu ${ref("satz:vektorisierung-eines-matrixprodukts")}.`}
+    <Verdikt kind={reihenfolge === "richtig" ? "ok" : stimmt ? "neutral" : "fail"}>
+      {reihenfolge === "richtig"
+        ? `Die vier Einträge stimmen überein, und zwar für jede Wahl von A, X und B. Aus A X B = C wird damit das LGS (Bᵀ ⊗_K A) vec(X) = vec(C) mit vier Unbekannten.`
+        : stimmt
+          ? `Hier fallen beide Anordnungen zufällig zusammen – bei diesen speziellen Faktoren. Ein einzelner Treffer beweist nichts: Ändern wir A oder B, laufen die Vektoren auseinander.`
+          : `Die beiden Seiten weichen um ${fmtDe(abweichung, 4)} ab. A ⊗_K Bᵀ ist also nicht der Operator aus ${ref("satz:vektorisierung-eines-matrixprodukts")}; auf die spaltenweise gestapelten Einträge wirkt nur Bᵀ ⊗_K A richtig.`}
     </Verdikt>
   </div>;
 }

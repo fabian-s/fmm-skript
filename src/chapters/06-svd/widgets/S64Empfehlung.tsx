@@ -27,16 +27,15 @@ import { ref } from "../../numbers.generated";
  * widgets/MovieRatings.tsx ist nichts übernommen. Die Daten stammen von der
  * Folie, Nutzer- und Filmnamen sind frei erfunden, alle Texte neu.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19) für die Bewertungsmatrix aus Beispiel 6.4.10, aufgefüllt mit den
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-Widgets.mjs, 2026-08-29) für die Bewertungsmatrix aus Beispiel 6.4.10, aufgefüllt mit den
  * Spaltenmitteln 3,5 · 3 · 2,5 · 3,5 · 4,5 (Gesamtmittel 3,364, 11 bekannte
  * Einträge):
  *   Singulärwerte der aufgefüllten Matrix 15,574 · 2,844 · 2,671 · 0,464 · 0,
  *   Energie-Anteil 94,0 % (k=1), 97,2 % (k=2), 99,9 % (k=3);
  *   RMSE auf den 11 bekannten Bewertungen 1,143 (k=1), 0,735 (k=2), 0,108 (k=3);
  *   Vorhersage für Ada bei „Nachtzug" 3,07 (k=1), 3,34 (k=2), 3,02 (k=3).
- * Zurückgehaltene Bewertung (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19): Ada bei „Sternenstaub" (wahr 5) wird zu 1,744 (k=1), 1,793 (k=2),
+ * Zurückgehaltene Bewertung (ebenfalls in scripts/verify/REV29/06-svd-Widgets.mjs,
+ * 2026-08-29): Ada bei „Sternenstaub" (wahr 5) wird zu 1,744 (k=1), 1,793 (k=2),
  * 1,950 (k=3) vorhergesagt, weil das Spaltenmittel ohne diese Bewertung von 3,5
  * auf 2,0 fällt.
  */
@@ -211,7 +210,10 @@ export function EmpfehlungsExplorer() {
       </div>
 
       <div className="mt-3 flex flex-wrap items-start justify-center gap-6">
-        <div>
+        {/* min-w-0: ohne das greift min-width:auto, der overflow-x-auto-Container
+            wird nie eingeschränkt und die Tabelle ragt bei 390 px an beiden
+            Rändern aus dem Kasten. */}
+        <div className="min-w-0">
           <p className="mb-1 text-center text-sm font-medium">
             Bewertungen <M>{"\\bR"}</M> ({anzahlBeobachtet} von {ZEILEN * SPALTEN} bekannt)
           </p>
@@ -237,6 +239,12 @@ export function EmpfehlungsExplorer() {
                           type="button"
                           onClick={() => umschalten(i, j)}
                           disabled={v === null}
+                          aria-pressed={v === null ? undefined : versteckt[i][j]}
+                          aria-label={
+                            v === null
+                              ? `${NUTZER[i]} hat ${FILME[j]} nie bewertet`
+                              : `Bewertung ${v} von ${NUTZER[i]} für ${FILME[j]}, ${versteckt[i][j] ? "zurückgehalten" : "wird verwendet"}`
+                          }
                           title={
                             v === null
                               ? "nie bewertet"
@@ -262,7 +270,7 @@ export function EmpfehlungsExplorer() {
           </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="mb-1 text-center text-sm font-medium">
             Rang-{k}-Rekonstruktion <M>{`\\bR_{${k}}`}</M>
           </p>

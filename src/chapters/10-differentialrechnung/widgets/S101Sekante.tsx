@@ -36,13 +36,14 @@ import { ref } from "../../numbers.generated";
  *
  * Alles ist deterministisch: drei fest verdrahtete Funktionen, kein Zufall.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen:
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S101S103S104.mjs,
+ * 2026-08-29):
  *   f(x) = x²: r(h) = h² exakt (auf einem 61×200-Raster bis 1,7e-15), also
  *     |r(h)|/|h| = |h|; bei x = 0,6 und h = 0,6 ist die rechte Sekante 1,8,
  *     die Tangente 1,2, r(h) = 0,36; bei h = 0,3 ist r = 0,09, bei h = 0,15
  *     ist r = 0,0225 — Halbieren von h drittelt drei Viertel weg (Faktor 4,0).
  *   f(x) = x³/3 − x + 1: r(h) = h²(x + h/3) exakt (bis 1,8e-15); bei x = 0,6,
- *     h = 0,6 ist r = 0,288 und der Faktor beim Halbieren 4,4 (nicht exakt 4,
+ *     h = 0,6 ist r = 0,288 und der Faktor beim Halbieren 4,571 (nicht exakt 4,
  *     weil r nicht rein quadratisch ist); r verschwindet genau bei x = −h/3,
  *     für h = 0,6 also bei x = −0,2.
  *   f(x) = |x|: bei x = 0,6 ist r(h) = 0 für alle h ≤ 0,6 (f ist dort selbst
@@ -437,7 +438,12 @@ function SekanteTafel({ aufgeloest }: { aufgeloest: boolean }) {
         <p className={`text-xs ${W_MUTED}`}>
           Bei halber Schrittweite stünde dort r(h/2) ={" "}
           <span className="font-mono">{fmt(restHalb, 6)}</span>
-          {Math.abs(restHalb) > 1e-14 && (
+          {/*
+            Der Faktor steht nur dort, wo BEIDE Restterme über dem Rauschen
+            liegen: Verschwindet r(h) selbst (kubische Kurve bei x = −h/3), so
+            ist der Quotient bedeutungslos.
+          */}
+          {Math.abs(restHalb) > 1e-14 && Math.abs(rest) > 1e-14 && (
             <>
               , also der Faktor{" "}
               <span className="font-mono">{fmt(Math.abs(rest / restHalb), 2)}</span>
@@ -469,7 +475,7 @@ export function SekanteTangenteWidget() {
       verdeckt={
         <p className="text-sm">
           Bei f(x) = x² ist r(h) = h² exakt, also fällt der Restterm auf ein Viertel und der
-          relative Fehler |r(h)|/|h| auf die Hälfte. Genau diese beiden Größen unterscheidet
+          relative Fehler |r(h)|/|h| auf die Hälfte. Genau diese beiden Größen unterscheidet{" "}
           {ref("definition:frechet-ableitung")}: klein werden muss der Quotient, nicht der Restterm allein.
         </p>
       }

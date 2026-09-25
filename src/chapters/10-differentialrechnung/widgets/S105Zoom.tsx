@@ -44,8 +44,8 @@ import { ref } from "../../numbers.generated";
  * Deterministisch: drei fest verdrahtete Funktionen, kein Zufall, keine
  * Animationsschleife.
  *
- * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19), analytisch und numerisch übereinstimmend:
+ * Verifizierte Zahlen (scripts/verify/REV29/10-differentialrechnung-S105Zoom.mjs,
+ * 2026-08-29), analytisch und numerisch übereinstimmend:
  *   f(x) = x²:  D(w) = w für JEDE Stelle x₀ — halbe Fensterbreite halbiert,
  *               Abweichung halbiert (Quotient 2,0000 auf allen Stufen);
  *   f(x) = |x|: bei x₀ = 0 ist D(w) = 1 für jedes w (auch für w = 10⁻⁶),
@@ -60,8 +60,8 @@ import { ref } from "../../numbers.generated";
  * Auf der Zoomleiter des Reglers (w = 2^(−z), z = 0 … 12, x₀ = 0) steht bei x²
  * genau w (also 1; 0,5; 0,25; … 0,000244), bei |x| auf jeder Stufe 1,00000 und
  * bei √|x| 1; 1,414; 2; 2,828; 4; … 64 — dasselbe Skript, Abschnitt
- * „Zoomleiter".
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
+ * „Zoomleiter". Das Skript rechnet D(w) mit demselben Raster wie das Widget
+ * und prüft es gegen die analytischen Werte w, 1 und 1/√w.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion
@@ -93,7 +93,13 @@ const SIZE = 260;
 const PAD_L = 34;
 const PAD_B = 18;
 const PAD_R = 8;
-const N = 601;
+/**
+ * Zahl der Teilintervalle im Fenster. GERADE, damit die Fenstermitte t = 0
+ * exakt auf dem Raster liegt (Muster wie `S101Sekante.tsx:104`): bei einer
+ * ungeraden Zahl wird der Knick nie getroffen, und die gemessene Abweichung
+ * fällt um den Faktor (1 − 1/N) zu klein aus.
+ */
+const N = 600;
 
 const fmt = (v: number, d = 3) => fmtDe(v, d);
 
@@ -122,14 +128,17 @@ export function ZoomWidget() {
     const linie = (t: number) => a + ((b - a) * (t + w)) / (2 * w);
     let m = 0;
     let arg = 0;
-    for (let i = 0; i <= N; i++) {
-      const t = -w + (2 * w * i) / N;
+    const pruefe = (t: number) => {
       const d = Math.abs(kurve.f(x0 + t) - linie(t));
       if (d > m) {
         m = d;
         arg = t;
       }
-    }
+    };
+    for (let i = 0; i <= N; i++) pruefe(-w + (2 * w * i) / N);
+    // Die Ausnahmestellen selbst kommen zusätzlich ins Raster: dort liegt das
+    // Maximum, und bei krummen x₀ träfe es das gleichmäßige Raster nicht.
+    for (const k of kurve.knick) if (Math.abs(k - x0) <= w) pruefe(k - x0);
     return { sehne: linie, dRel: m / w, tMax: arg };
   }, [kurve, x0, w]);
 
@@ -274,6 +283,8 @@ export function ZoomWidget() {
 
       <svg
         viewBox={`0 0 ${PAD_L + SIZE + PAD_R} ${SIZE + PAD_B}`}
+        width={PAD_L + SIZE + PAD_R}
+        height={SIZE + PAD_B}
         role="img"
         aria-label={`${kurve.label} im Fenster der halben Breite ${fmt(w, 4)} um x₀ = ${fmt(x0, 2)}; die Abweichung von der Geraden beträgt das ${fmt(dRel, 3)}-fache davon.`}
         className="h-auto max-w-full rounded border"
@@ -358,8 +369,8 @@ export function ZoomWidget() {
 
 /**
  * Der Abschnitts-Baustein: erst tippen, dann zoomen. Verifiziert
- * (check-s111.mjs, 2026-08-19): D(w) → 0 nur bei x², bei |x| konstant 1, bei
- * √|x| wachsend wie 1/√w.
+ * (scripts/verify/REV29/10-differentialrechnung-S105Zoom.mjs, 2026-08-29):
+ * D(w) → 0 nur bei x², bei |x| konstant 1, bei √|x| wachsend wie 1/√w.
  */
 export function ZoomSchaetzung() {
   return (

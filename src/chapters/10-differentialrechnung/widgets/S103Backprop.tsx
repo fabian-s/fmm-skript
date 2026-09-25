@@ -25,7 +25,8 @@ import { num, ref } from "../../numbers.generated";
  * S102/S103). Rot (Restterm) und Gruen (Linearisierung) kommen hier nicht vor;
  * die Warnung an der Knickstelle traegt das <Verdikt kind="warn">.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, bei x1 = 1:
+ * PRÜFSTATUS (scripts/verify/REV29/10-differentialrechnung-S101S103S104.mjs,
+ * 2026-08-29), bei x1 = 1:
  * a1 = (-1; 2,5), z1 = (0; 2,5), yhat = -2,5, L = 6,125, dL/dyhat = -3,5,
  * dL/dz1 = (-7, 3,5), dL/da1 = (0, 3,5), dL/dW2 = (0, -8,75),
  * dL/dW1 = (0 0; 3,5 7) - beide Parametergradienten stimmen mit zentralen
@@ -312,15 +313,7 @@ export function BackpropWidget() {
       />
       <Stepper step={schritt} setStep={setSchritt} max={schritte.length} narration={phasentext} />
       <Verdikt kind={v.knick ? "warn" : fertig ? "ok" : "neutral"}>
-        {v.knick ? (
-          <>
-            Hier ist eine Komponente von <M>{"\\boldsymbol{a}_1"}</M> exakt null. Dort hat
-            <M>{"\\ \\max(0, \\cdot)"}</M> einen Knick und ist nicht differenzierbar; die Anzeige
-            benutzt die übliche Verabredung, die Ableitung dort auf null zu setzen. {ref("beispiel:jacobimatrix-eines-relu-layers")} sagt genau das: die Jacobimatrix einer ReLU-Schicht ist
-            <M>{"\\ \\operatorname{diag}(\\mathbb{1}\\{a_i > 0\\})"}</M>, und auf der Kante
-            ist die Wahl Konvention, nicht Mathematik.
-          </>
-        ) : fertig ? (
+        {fertig ? (
           <>
             Der ganze Rückwärtslauf steht da. Multipliziert wurde nie eine Matrix mit einer
             Matrix, sondern immer die aktuelle Zeile mit der nächsten Jacobimatrix, und das ist
@@ -349,6 +342,21 @@ export function BackpropWidget() {
             Jacobimatrix, so wie es {ref("satz:kettenregel-fuer-jacobimatrizen")} vorgibt; abgezweigt werden dabei
             <M>{"\\ \\partial L/\\partial \\boldsymbol{W}_2"}</M> und
             <M>{"\\ \\partial L/\\partial \\boldsymbol{W}_1"}</M>.
+          </>
+        )}
+        {/*
+          Der Knickhinweis ERGÄNZT den Schrittkommentar, statt ihn zu ersetzen:
+          Wer x₁ = 2 einstellt (was die Prosa ausdrücklich empfiehlt), soll
+          weiterhin lesen, an welcher Stelle der Kette er gerade steht.
+        */}
+        {v.knick && (
+          <>
+            {" "}
+            Nebenbei: Hier ist eine Komponente von <M>{"\\boldsymbol{a}_1"}</M> exakt null. Dort hat
+            <M>{"\\ \\max(0, \\cdot)"}</M> einen Knick und ist nicht differenzierbar; die Anzeige
+            benutzt die übliche Verabredung, die Ableitung dort auf null zu setzen. {ref("beispiel:jacobimatrix-eines-relu-layers")} sagt genau das: die Jacobimatrix einer ReLU-Schicht ist
+            <M>{"\\ \\operatorname{diag}(\\mathbb{1}\\{a_i > 0\\})"}</M>, und auf der Kante
+            ist die Wahl Konvention, nicht Mathematik.
           </>
         )}
       </Verdikt>

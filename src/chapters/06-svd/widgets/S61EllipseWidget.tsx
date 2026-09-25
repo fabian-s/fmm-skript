@@ -25,7 +25,9 @@ import { num, ref } from "../../numbers.generated";
  *
  * Der Leser tippt den Winkel der stärksten Streckung, bevor das Widget die
  * Extremrichtungen und die σ-Werte zeigt (Muster 1, predict-then-reveal): vor
- * dem Auflösen stehen im Widget keine Zahlen, die die Antwort verraten.
+ * dem Auflösen nennt das Widget weder σ₁ noch θ*; die Kurve ‖Ax(θ)‖ ist
+ * absichtlich schon gezeichnet, weil das Suchen ihres Höchstpunkts die Aufgabe
+ * ist.
  *
  * FARBROLLEN (Kapitel 6): orange = Streckfaktoren σ (Kurve, Extremmarken),
  * blau = rechte Singulärrichtungen v im Urbild, grün = deren Bilder Av,
@@ -42,14 +44,20 @@ import { num, ref } from "../../numbers.generated";
  * AUSGEFÜLLTE Ellipse. Hier steht das 2x2-Analogon: Einheitskreis in R^2 → Ellipse in R^2, bei singulärem
  * A zu einer Strecke entartet.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19), Voreinstellung A = (2 1; 0 1):
+ * PRÜFSTATUS (scripts/verify/REV29/06-svd-S61Ellipse.mjs, 2026-08-29),
+ * Voreinstellung A = (2 1; 0 1):
  *   σ₁ = 2,2882 = √(3+√5) bei θ* = 31,72°, σ₂ = 0,8740 = √(3−√5) bei 121,72°
  *   (Rasterlauf über 3,6 Mio. Winkel bestätigt Lage und Wert beider Extrema),
  *   v₁ = (0,851; 0,526), v₂ = (−0,526; 0,851), u₁·u₂ = 0 (< 1e−12),
  *   σ₁/σ₂ = 2,618.
  * Presets: Drehung (0,6 −0,8; 0,8 0,6) σ = 1 und 1; singulär (1 2; 2 4)
  *   σ₁ = 5, σ₂ = 0 bei θ* = 63,43°; Diagonal (2 0; 0 0,5) σ = 2 und 0,5.
+ *
+ * DREI-ZUSTANDS-REGEL: „singulär" und „Vielfaches einer Orthogonalmatrix" sind
+ * Strukturaussagen über A und werden deshalb EXAKT auf den eingegebenen
+ * Rasterwerten entschieden (istEntartet/istIsotrop, Ganzzahlarithmetik), nie
+ * über eine Toleranz auf σ. Dazwischen liegen die beiden ehrlichen Zwischen-
+ * stufen „fast entartet, schlecht konditioniert" und „fast ein Kreis".
  */
 
 /** kleinste Streckung: kleinster Singulärwert einer 2x2-Matrix */
@@ -73,6 +81,44 @@ function maxStreckRichtung(m: Mat2): [number, number] {
   const v: [number, number] = [q, l1 - p];
   const n = Math.hypot(v[0], v[1]);
   return [v[0] / n, v[1] / n];
+}
+
+/**
+ * Die Eingabefelder liefern Rasterwerte mit höchstens sechs Nachkommastellen.
+ * Wir rechnen die vier Einträge deshalb in ganze Zahlen um und entscheiden die
+ * beiden Strukturfragen exakt statt über eine Toleranz auf σ.
+ */
+function ganzzahlig(m: number[][]): [number, number, number, number] {
+  const g = (v: number) => Math.round((v || 0) * 1e6);
+  return [g(m[0][0]), g(m[0][1]), g(m[1][0]), g(m[1][1])];
+}
+
+/** exakt singulär: det A = 0 (auf den eingegebenen Rasterwerten) */
+function istEntartet(m: number[][]): boolean {
+  const [a, b, c, d] = ganzzahlig(m);
+  return a * d - b * c === 0;
+}
+
+/** exakt AᵀA = λI mit λ > 0, also A ein Vielfaches einer Orthogonalmatrix */
+function istIsotrop(m: number[][]): boolean {
+  const [a, b, c, d] = ganzzahlig(m);
+  const spalte1 = a * a + c * c;
+  return a * b + c * d === 0 && spalte1 === b * b + d * d && spalte1 > 0;
+}
+
+/** Exponent als Unicode-Hochzahl: Widget-Text läuft nicht durch MathJax. */
+function hoch(e: number): string {
+  const z = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+  return (e < 0 ? "⁻" : "") + String(Math.abs(e)).split("").map((d) => z[Number(d)]).join("");
+}
+
+/** σ mit drei Stellen; winzige Werte als Mantisse · 10^Exponent statt als „0,000". */
+function fmtSigma(v: number): string {
+  if (!Number.isFinite(v)) return fmtDe(v, 3);
+  if (v === 0) return "0";
+  if (v >= 0.001) return fmtDe(v, 3);
+  const e = Math.floor(Math.log10(v));
+  return `${fmtDe(v / 10 ** e, 2)} · 10${hoch(e)}`;
 }
 
 /** Winkel eines Vektors in Grad, auf [0, 360) normiert */
@@ -133,8 +179,12 @@ export function EinheitskreisEllipse() {
     setAroh(m);
   };
 
-  const entartet = smin < 1e-9;
-  const isotrop = !entartet && smax / smin < 1.02;
+  // Strukturaussagen exakt auf der Eingabe, Zwischenstufen über das Verhältnis.
+  const entartet = istEntartet(Aroh);
+  const isotrop = !entartet && istIsotrop(Aroh);
+  const kappa = entartet ? Infinity : smax / smin;
+  const fastEntartet = !entartet && kappa > 1e3;
+  const fastIsotrop = !entartet && !isotrop && kappa < 1.02;
 
   return (
     <div className="text-sm">
@@ -146,6 +196,8 @@ export function EinheitskreisEllipse() {
         }
         loesung={thetaStern}
         toleranz={5}
+        // Bei exakt isotropem A ist θ* nur EINE von unendlich vielen Maximalstellen.
+        labels={isotrop ? { tatsaechlich: "Eine Maximalstelle unter vielen" } : undefined}
         einheit="°"
         fmt={(v) => fmtDe(v, 1)}
         min={0}
@@ -288,18 +340,34 @@ export function EinheitskreisEllipse() {
               </Verdikt>
             ) : entartet ? (
               <Verdikt kind="warn" titel="Entartet:">
-                Die kleinste Streckung ist {fmtDe(smin, 3)}: Eine ganze Richtung wird auf null
-                gedrückt, aus dem Kreis wird eine Strecke statt einer Ellipse, und die Kurve
-                berührt zweimal die Nulllinie. Die längste Halbachse misst weiterhin{" "}
+                <M>{"\\det \\bA = 0"}</M>, die kleinste Streckung ist damit exakt null: Eine ganze
+                Richtung wird plattgedrückt, aus dem Kreis wird eine Strecke statt einer Ellipse,
+                und die Kurve berührt zweimal die Nulllinie. Die längste Halbachse misst weiterhin{" "}
                 {fmtDe(smax, 3)}. Eine Matrix mit kleinstem Singulärwert null ist singulär
                 ({ref("sec:svd/motivation")}).
               </Verdikt>
+            ) : fastEntartet ? (
+              <Verdikt kind="warn" titel="Fast entartet:">
+                Die kleinste Streckung ist {fmtSigma(smin)}, also nicht null, aber winzig gegen{" "}
+                {fmtDe(smax, 3)}. Die Ellipse ist eine sehr dünne Nadel, ohne je zur Strecke zu
+                werden. Das Verhältnis <M>{"\\sigma_1/\\sigma_2"}</M> = {fmtSigma(kappa)} ist die
+                Konditionszahl aus {ref("sec:fehler/kondition")}: Die Matrix ist
+                schlecht konditioniert, nicht singulär.
+              </Verdikt>
             ) : isotrop ? (
               <Verdikt kind="ok" titel="Alle Richtungen gleich:">
-                Größte und kleinste Streckung fallen mit {fmtDe(smax, 3)} zusammen, die Kurve ist
-                flach. Aus dem Kreis wird wieder ein Kreis, und jede Richtung ist Maximalstelle.
-                Das passiert genau für Vielfache einer Orthogonalmatrix; die Maximalstelle in
-                ({num("eq:eq-6-1-2")}) ist dann nicht eindeutig.
+                Hier ist <M>{"\\bA^\\top\\bA"}</M> ein Vielfaches der Einheitsmatrix, größte und
+                kleinste Streckung fallen deshalb exakt mit {fmtDe(smax, 3)} zusammen und die Kurve
+                ist flach. Aus dem Kreis wird wieder ein Kreis, und jede Richtung ist
+                Maximalstelle: Die Maximalstelle in ({num("eq:eq-6-1-2")}) ist dann nicht eindeutig.
+              </Verdikt>
+            ) : fastIsotrop ? (
+              <Verdikt kind="neutral" titel="Fast ein Kreis:">
+                Größte und kleinste Streckung liegen mit {fmtDe(smax, 3)} und {fmtDe(smin, 3)} dicht
+                beieinander. Die Ellipse ist fast, aber nicht ganz ein Kreis, und die Maximalstelle
+                bei {fmtDe(thetaStern, 1)}° ist zwar eindeutig, an der flachen Kurve aber kaum
+                abzulesen. Ein Vielfaches einer Orthogonalmatrix ist <M>{"\\bA"}</M> erst, wenn{" "}
+                <M>{"\\sigma_1 = \\sigma_2"}</M> gilt.
               </Verdikt>
             ) : (
               <Verdikt kind="neutral">

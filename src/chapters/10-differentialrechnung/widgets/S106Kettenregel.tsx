@@ -32,8 +32,9 @@ import { ref } from "../../numbers.generated";
  *
  * Deterministisch: drei fest verdrahtete Verkettungen, kein Zufall.
  *
- * Verifizierte Zahlen (historische Prüfung, Skript nicht mehr vorhanden,
- * 2026-08-19), jeweils an der Startstelle der Voreinstellung und gegen einen
+ * Verifizierte Zahlen
+ * (scripts/verify/REV29/10-differentialrechnung-S106Kettenregel.mjs,
+ * 2026-08-29), jeweils an der Startstelle der Voreinstellung und gegen einen
  * zentralen Differenzenquotienten mit ε = 10⁻⁶ geprüft:
  *   (2x+1)⁴ bei x = 0,3: f(x) = 1,6, h(x) = 6,5536, f′ = 2,
  *     g′(f(x)) = 16,384, Produkt 32,768 (Abweichung 8·10⁻¹⁰);
@@ -44,7 +45,6 @@ import { ref } from "../../numbers.generated";
  * Bei x = 0 ist g′(0) = 1/(2·0) unendlich, während der zentrale
  * Differenzenquotient von |x| in 0 den Wert 0 meldet — eine numerische
  * Ableitung merkt von selbst nicht, dass es gar keine gibt.
- * R4-Nachprüfung: check-r4-claims.mjs, 2026-08-20.
  */
 
 const BLAU = FMM_COLORS.blau; // Funktion, Funktionswerte
@@ -276,6 +276,8 @@ export function KettenregelWidget() {
         </div>
         <svg
           viewBox={`0 0 ${PAD_L + W + PAD_R} ${H + PAD_B}`}
+          width={PAD_L + W + PAD_R}
+          height={H + PAD_B}
           role="img"
           aria-label={`Der Graph von ${wahl.label} in Blau mit der grünen Tangente an der Stelle x = ${fmt(x, 2)}.`}
           className="h-auto max-w-full rounded border"

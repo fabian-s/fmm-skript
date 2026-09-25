@@ -21,7 +21,7 @@ import { ref } from "../../numbers.generated";
  * vom schlechtesten Punkt durch den Schwerpunkt ist die Suchrichtung dieses
  * Verfahrens, also orange. Rot warnt, wenn der Simplex nur noch schrumpft.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen
  * für f(x) = (1 − x₁)² + 5(x₂ − x₁²)² mit Minimum (1; 1), f = 0:
  *  - Startsimplex „Tal von oben" (Voreinstellung): nach 40 Schritten
  *    13 Reflexionen, 4 Expansionen, 23 Kontraktionen, 0 Schrumpfschritte, und
@@ -293,9 +293,8 @@ export function NelderMeadSimplex() {
         </div>
         <div className="min-w-60 grow space-y-2">
           <p className="text-sm">
-            Minimiert wird f(x₁, x₂) = (1 − x₁)² + 5(x₂ − x₁²)². Die Talsohle ist die Parabel
-            x₂ = x₁², das Minimum liegt in (1; 1) mit f = 0. Ausgewertet wird nur f selbst,
-            verglichen werden nur Funktionswerte.
+            Die Talsohle ist die Parabel x₂ = x₁². Ausgewertet wird nur f selbst, verglichen
+            werden nur Funktionswerte.
           </p>
           <Stepper
             step={kk}

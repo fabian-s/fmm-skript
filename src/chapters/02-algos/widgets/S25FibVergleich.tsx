@@ -29,13 +29,15 @@ import { ref } from "../../numbers.generated";
  * Rekursion, wie \cred im Text), blau = die günstige (Iteration, wie \cblue).
  * Punkte sind gezählte Werte, gestrichelte Linien sind Vorhersagen.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen,
- * 2026-08-19; T(n) = 1 + T(n−1) + T(n−2), T(0) = T(1) = 1, exakt per BigInt
- * gegengerechnet über T(n) = 2F(n+1) − 1):
+ * PRÜFSTATUS (scripts/verify/REV29/02-algos-S25FibVergleich.mjs, 2026-08-29;
+ * T(n) = 1 + T(n−1) + T(n−2), T(0) = T(1) = 1, exakt per BigInt gegengerechnet
+ * über T(n) = 2F(n+1) − 1):
  *   T(20) = 21 891 · T(30) = 2 692 537 · T(50) = 40 730 022 147 ·
  *   T(80) = 75 778 124 746 287 811 · T(100) = 1 146 295 688 027 634 168 201.
  *   Modellzeiten bei 10^9 Schritten/s: n = 30 → 2,7 ms, n = 50 → 41 s,
- *   n = 80 → 2,4 Jahre, n = 100 → 36 320 Jahre.
+ *   n = 80 → 2,40 Jahre, n = 100 → 36 321 Jahre. ANZEIGE: fmtTime rundet Jahre
+ *   ganzzahlig, im Widget steht bei n = 80 deshalb „≈ 2 Jahre" (so fragt es
+ *   auch der Selbsttest in S25.mdx).
  *   Steigungen im log₁₀-Bild: log₁₀ 2 = 0,30103, log₁₀ φ = 0,208988,
  *   φ = 1,6180340. Die Iteration zählt 4n − 6 Operationen.
  *
@@ -56,11 +58,16 @@ function sup(e: number): string {
     .join("");
 }
 
-/** Zahl deutsch formatieren; ab 10⁶ wissenschaftlich. */
-function fmtCount(x: number): string {
-  if (x < 1e6) return Math.round(x).toLocaleString("de-DE");
-  const e = Math.floor(Math.log10(x));
-  const m = x / 10 ** e;
+/**
+ * Zahl deutsch formatieren; ab 10⁶ wissenschaftlich. Nimmt auch `bigint`, damit
+ * die Ablesezeile die exakt gezählten Aufrufe zeigt: ab n = 76 überschreitet
+ * T(n) den Bereich 2⁵³, in dem `number` noch jede ganze Zahl trifft.
+ */
+function fmtCount(x: number | bigint): string {
+  const s = typeof x === "bigint" ? x.toString() : String(Math.round(x));
+  if (s.length <= 6) return Number(s).toLocaleString("de-DE");
+  const e = s.length - 1;
+  const m = Number(s.slice(0, 4)) / 1000;
   return `${m.toFixed(1).replace(".", ",")} · 10${sup(e)}`;
 }
 
@@ -108,10 +115,13 @@ function Tafel({
   setNMax: (v: number) => void;
   aufgeloest: boolean;
 }) {
-  const { T, markers, series, yMax } = useMemo(() => {
+  const { T, TExakt, markers, series, yMax } = useMemo(() => {
     // Exakte Aufrufzahl der naiven Rekursion: T(n) = 1 + T(n-1) + T(n-2).
-    const T: number[] = [1, 1];
-    for (let n = 2; n <= nMax; n++) T[n] = 1 + T[n - 1] + T[n - 2];
+    // In BigInt gerechnet, damit die Ablesezeile auch jenseits von 2⁵³ die
+    // wirklich gezählten Aufrufe zeigt; fürs Bild reicht der Double-Wert.
+    const TExakt: bigint[] = [1n, 1n];
+    for (let n = 2; n <= nMax; n++) TExakt[n] = 1n + TExakt[n - 1] + TExakt[n - 2];
+    const T: number[] = TExakt.map(Number);
     // Gezählte Operationen der Iteration (n Initialisierungen + 3(n-2) Schleifenkosten).
     const itOps = (n: number) => 4 * n - 6;
 
@@ -152,17 +162,17 @@ function Tafel({
     ];
 
     const yMax = Math.max(a2 + nMax * L2, Math.log10(T[nMax])) + 0.5;
-    return { T, markers, series, yMax };
+    return { T, TExakt, markers, series, yMax };
   }, [nMax, aufgeloest]);
 
-  const naive = T[nMax];
+  const naive = TExakt[nMax];
   const iter = 4 * nMax - 6;
 
   return (
     <div className="space-y-3">
       <Aufgabe>
         Schieben wir <span className="font-mono">n</span> nach oben und vergleichen die roten
-        Punkte mit der gestrichelten Geraden über ihnen.
+        Punkte mit den gestrichelten Vorhersagen.
       </Aufgabe>
       <LabeledPlot
         xLabel="n"
@@ -195,7 +205,7 @@ function Tafel({
         <span className="font-semibold" style={{ color: ROT }}>
           {fmtCount(naive)}
         </span>{" "}
-        Aufrufe (Modellrechnung bei 10⁹ Schritten/s: ≈ {fmtTime(naive)}), iterative Variante{" "}
+        Aufrufe (Modellrechnung bei 10⁹ Schritten/s: ≈ {fmtTime(Number(naive))}), iterative Variante{" "}
         <span className="font-semibold" style={{ color: BLAU }}>
           {fmtCount(iter)}
         </span>{" "}
@@ -214,9 +224,9 @@ function Tafel({
         </Verdikt>
       ) : (
         <Verdikt kind="neutral">
-          Beide Punktfolgen liegen sauber auf Geraden, die rote steigt deutlich steiler an. Sie
-          verläuft aber sichtbar flacher als die gestrichelte Schranke darüber, und der Abstand
-          zwischen beiden wächst mit <span className="font-mono">n</span>.
+          Beide Punktfolgen liegen sauber auf Geraden, die rote steigt deutlich steiler an.
+          Welche Steigung sie hat, entscheidet sich am Vergleich mit den gestrichelten
+          Vorhersagen.
         </Verdikt>
       )}
     </div>

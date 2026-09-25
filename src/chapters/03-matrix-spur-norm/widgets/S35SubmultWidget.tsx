@@ -18,7 +18,8 @@
  * PROVENIENZ: Eigenbau (2026-08-05); neu sind der geseedete Zufall, der
  * Quotientenbalken, das Verdikt und die Schätzfrage.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für die Einsermatrix A = B = (1 1; 1 1) ist
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-S35Submult.mjs,
+ * 2026-08-29): Für die Einsermatrix A = B = (1 1; 1 1) ist
  * AB = (2 2; 2 2); Spektral-, Spalten-, Zeilensummen-, Frobenius- und
  * Nuklearnorm liefern alle den Quotienten genau 1 (Schranke scharf), die
  * Maximumsnorm dagegen 2 (Beispiel 3.5.6). Über die 40 Seeds des Würfelknopfs
@@ -139,9 +140,13 @@ const EINSER: M2 = [
 export function SubmultRechner({
   normKey,
   setNormKey,
+  aufgeloest = true,
 }: {
   normKey: string;
   setNormKey: (k: string) => void;
+  /** Vor dem Auflösen der Schätzfrage darf weder Aufgabe noch Knopfbeschriftung
+      verraten, dass es ein Gegenbeispiel überhaupt gibt. */
+  aufgeloest?: boolean;
 }) {
   const [A, setA] = useState<M2>(EINSER.map((r) => [...r]));
   const [B, setB] = useState<M2>(EINSER.map((r) => [...r]));
@@ -179,8 +184,17 @@ export function SubmultRechner({
   return (
     <div className="space-y-3 text-sm">
       <Aufgabe>
-        Wählen wir eine Norm und suchen wir ein Paar <M>{"\\bA, \\bB"}</M>, für das der Balken über
-        die 1 hinausschießt.
+        {aufgeloest ? (
+          <>
+            Wählen wir eine Norm und suchen wir ein Paar <M>{"\\bA, \\bB"}</M>, für das der Balken
+            über die 1 hinausschießt.
+          </>
+        ) : (
+          <>
+            Wählen wir eine Norm und probieren wir Paare <M>{"\\bA, \\bB"}</M> durch: Bleibt der
+            Balken immer links von der 1?
+          </>
+        )}
       </Aufgabe>
       <div className="flex flex-wrap items-start gap-5">
         <div className="min-w-0 space-y-2">
@@ -212,7 +226,7 @@ export function SubmultRechner({
                 setGewuerfelt(false);
               }}
             >
-              Einsermatrix ({ref("beispiel:die-maximumsnorm-ist-nicht")})
+              {aufgeloest ? `Einsermatrix (${ref("beispiel:die-maximumsnorm-ist-nicht")})` : "Einsermatrix"}
             </button>
             <button type="button" className={`text-xs ${W_BUTTON}`} onClick={wuerfeln}>
               andere Zufallsmatrizen
@@ -279,17 +293,44 @@ export function SubmultRechner({
           </>
         ) : scharf ? (
           <>
-            Hier steht Gleichheit: <M>{"\\left\\|\\bA\\bB\\right\\| = \\left\\|\\bA\\right\\| \\cdot \\left\\|\\bB\\right\\|"}</M>{" "}
+            Hier stehen beide Seiten auf Anzeigegenauigkeit gleich:{" "}
+            <M>{"\\left\\|\\bA\\bB\\right\\| = \\left\\|\\bA\\right\\| \\cdot \\left\\|\\bB\\right\\|"}</M>{" "}
             = {fmtDe(nAB, 3)}. Submultiplikativität verlangt „höchstens", nicht „echt kleiner"
-            ({ref("definition:submultiplikative-matrixnorm")}) – die Schranke aus {ref("satz:operatornormen-sind-submultiplikativ")} ist also scharf und lässt sich nicht
-            verbessern.
+            ({ref("definition:submultiplikative-matrixnorm")}) –{" "}
+            {norm.art === "elementweise"
+              ? "dass die Ungleichung für die Maximumsnorm hier überhaupt gilt, ist eine Eigenschaft dieses Paares und kein Satz."
+              : `die Schranke aus ${ref("satz:operatornormen-sind-submultiplikativ")} ist also scharf und lässt sich nicht verbessern.`}
           </>
         ) : (
           <>
             Erfüllt, mit Luft: {fmtDe(nAB, 3)} ≤ {fmtDe(rhs, 3)}, der Quotient liegt bei{" "}
-            {fmtDe(ratio, 3)}. Für {norm.art === "operator" ? `Operatornormen ist das ${ref("satz:operatornormen-sind-submultiplikativ")}` : `die Schattennormen halten wir das Resultat in ${ref("sec:submultiplikativitaet")} ohne Beweis fest`}
-            {gewuerfelt ? "; über die Zufallspaare dieses Widgets bleibt der Quotient in dieser Norm stets unter 1" : ""}. Wie viel Luft bleibt, hängt davon ab, wie gut die
-            Streckrichtungen von <M>{"\\bA"}</M> und <M>{"\\bB"}</M> zusammenpassen.
+            {fmtDe(ratio, 3)}.{" "}
+            {norm.art === "operator" ? (
+              <>
+                Für Operatornormen ist das {ref("satz:operatornormen-sind-submultiplikativ")}
+                {gewuerfelt
+                  ? "; über die Zufallspaare dieses Widgets bleibt der Quotient in dieser Norm stets unter 1"
+                  : ""}
+                . Wie viel Luft bleibt, hängt davon ab, wie gut die Streckrichtungen von{" "}
+                <M>{"\\bA"}</M> und <M>{"\\bB"}</M> zusammenpassen.
+              </>
+            ) : norm.art === "schatten" ? (
+              <>
+                Für die Schattennormen halten wir das Resultat in{" "}
+                {ref("sec:submultiplikativitaet")} ohne Beweis fest
+                {gewuerfelt
+                  ? "; über die Zufallspaare dieses Widgets bleibt der Quotient in dieser Norm stets unter 1"
+                  : ""}
+                . Wie viel Luft bleibt, hängt davon ab, wie gut die Streckrichtungen von{" "}
+                <M>{"\\bA"}</M> und <M>{"\\bB"}</M> zusammenpassen.
+              </>
+            ) : (
+              <>
+                Hier gilt die Ungleichung zufällig – für die Maximumsnorm garantiert sie
+                niemand: Sie ist weder Operator- noch Schattennorm, und ein Gegenbeispiel liegt
+                einen Klick entfernt (Einsermatrix).
+              </>
+            )}
           </>
         )}
       </Verdikt>
@@ -319,13 +360,17 @@ export function S35SubmultWidget() {
       ]}
       verdeckt={
         <p className="max-w-prose text-sm">
-          Die Normwahl steht jetzt auf der Maximumsnorm. Mit der Schaltfläche können wir die
-          Einsermatrix aus {ref("beispiel:die-maximumsnorm-ist-nicht")} einstellen.
+          Es gibt sie, die Norm, die aus der Reihe tanzt, und es ist die elementweise
+          Maximumsnorm; die Normwahl steht jetzt auf ihr. Schon das einfachste Paar bringt sie
+          zu Fall: die Einsermatrix mit sich selbst multipliziert, hier über die Schaltfläche
+          ({ref("beispiel:die-maximumsnorm-ist-nicht")}).
         </p>
       }
       onAufloesen={() => setNormKey("max")}
     >
-      <SubmultRechner normKey={normKey} setNormKey={setNormKey} />
+      {({ aufgeloest }) => (
+        <SubmultRechner normKey={normKey} setNormKey={setNormKey} aufgeloest={aufgeloest} />
+      )}
     </Schaetzfrage>
   );
 }

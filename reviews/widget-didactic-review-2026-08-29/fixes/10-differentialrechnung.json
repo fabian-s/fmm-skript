@@ -1,0 +1,164 @@
+[
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S101Konzeptkarte.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-linearisierung",
+    "boxIndexe": [1],
+    "severityFixed": ["MINOR"],
+    "titel": "TeilZweiKarte",
+    "rationale": "Die vier Gruppenfarben kommen jetzt aus FMM_COLORS statt aus eigenen Hexwerten; die Karte liest sich damit in derselben Palette wie die Schwesterkarten in Kapitel 1 und 13."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S101Sekante.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-linearisierung",
+    "boxIndexe": [2],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "SekanteTangenteWidget",
+    "rationale": "Die Auflösung der Schätzfrage stand wörtlich im sichtbaren Kastentext und ist gestrichen (sie steht ohnehin im verdeckt-Feld); die Faktorzeile erscheint nur noch, wenn beide Restterme über dem Rauschen liegen, statt an der Ausnahmestelle den Unsinn Faktor 0,00 zu zeigen. Das neue Prüfskript hat dabei eine falsche Headerzahl gefunden (4,571 statt 4,4)."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S102Gradient.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-gradient",
+    "boxIndexe": [3],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Gradientenfeld",
+    "rationale": "Der Preset Maximum trifft den kritischen Punkt jetzt exakt (1/√2 statt 0,70, das Reglerraster verfehlt ihn), und zwischen verschwindendem und regulärem Gradienten steht ein dritter Zweig: Richtung noch definiert, aber numerisch heikel. Die Höhenlinien sind kräftig genug, dass sie auch auf dem Handy tragen."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S102Gradient.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-gradient",
+    "boxIndexe": [4],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "RichtungsWidget (Kompass)",
+    "rationale": "Die als Tangente an die Höhenlinie beschriftete Linie hatte identische y-Koordinaten und lief immer waagerecht; sie steht jetzt wirklich senkrecht auf dem Gradientenpfeil, an genau der Stelle, an der Bemerkung 10.2.5 anschaulich werden soll. Dazu eine radiale Skala am Kompass und die 50-Prozent-Auflösung aus der Prosa heraus."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S102Gradient.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-gradient",
+    "boxIndexe": [5],
+    "severityFixed": ["MAJOR"],
+    "titel": "AbstiegStepper",
+    "rationale": "Das Widget verriet seine eigene Schätzfrage im Grundzustand; der Hinweis auf α* erscheint jetzt erst nach dem Auflösen, und dieselbe Zahl ist auch aus der Konsolidierung verschwunden. Der beworbene Grenzfall ρ = 1 liegt zwischen zwei Rastwerten und ist deshalb über einen eigenen Knopf exakt einstellbar, mit einem vierten Zweig für die Umgebung."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S103Jacobi.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-jacobi",
+    "boxIndexe": [7],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "LinearisierungsWidget",
+    "rationale": "Die Konsolidierung nannte den Faktor 4 und beide Determinantenwerte und beantwortete damit die Schätzfrage und beide zahlfragen des Abschnitts; die Zahlen liest der Leser jetzt im Widget ab. Der redundante Float-Zweig im Verdikt ist gestrichen, der exakte Fall läuft allein über die gewählte Abbildung."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S103Backprop.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-jacobi",
+    "boxIndexe": [8],
+    "severityFixed": ["MINOR"],
+    "titel": "BackpropWidget",
+    "rationale": "Der Knickhinweis ersetzte bisher den Schritt-für-Schritt-Kommentar über den ganzen Lauf, sobald man x₁ = 2 einstellte – was die Prosa ausdrücklich empfiehlt. Er hängt jetzt als zweiter Absatz an, die Erzählung bleibt erhalten."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S104Identitaeten.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-matrixableitungen",
+    "boxIndexe": [9],
+    "severityFixed": ["MINOR"],
+    "titel": "IdentitaetenSkalarMatrix",
+    "rationale": "Der exakt singuläre Fall wird jetzt über den kontrollierten Reglerwert erkannt statt über eine Schwelle auf der gerechneten Determinante, und der Bereich knapp daneben bekommt ein eigenes Verdikt: schlecht konditioniert, die Formel gilt weiter, die numerische Probe bröckelt."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S104Anstupsen.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-matrixableitungen",
+    "boxIndexe": [10],
+    "severityFixed": ["MINOR"],
+    "titel": "AnstupsWidget",
+    "rationale": "Bei sehr großen Einträgen behauptete das Widget, in ihm stimme etwas nicht, obwohl der Differenzenquotient sich auslöschte. Die Eingabe ist begrenzt, und der Text benennt die wahre Ursache."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S104Completion.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-matrixableitungen",
+    "boxIndexe": [11],
+    "severityFixed": ["MAJOR"],
+    "titel": "MatrixCompletionDemo",
+    "rationale": "Das Pendeln, das Prosa und Header ausdrücklich bewerben, landete bisher im neutralen Zweig und wurde nicht kommentiert; es hat jetzt ein eigenes Verdikt mit den beiden Niveaus, zwischen denen der Verlust springt. Die vier Zahlen der Konsolidierung sind aus dem Kasten heraus, und die beiden widgetabhängigen Selbsttestfragen stehen nun in derselben Vertiefung wie das Widget."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S105Merkregel.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-stetigkeit",
+    "boxIndexe": [],
+    "severityFixed": ["MINOR"],
+    "titel": "MerkregelDiagramm (statische Tafel, kein Kasten)",
+    "rationale": "Die drei Vorschaukurven waren alle blau, auch die Sprungfunktion – blau steht im Kapitel aber für Stetigkeit, und H ist in 0 gerade nicht stetig. Jede Kurve trägt jetzt die Farbe ihres eigenen Falls."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S105Zoom.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-stetigkeit",
+    "boxIndexe": [12],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "ZoomSchaetzung / ZoomWidget",
+    "rationale": "Die Abtastung mit ungerade vielen Teilintervallen traf den Knick nie: Das Widget zeigte 0,9983 statt 1 und 61,39 statt 64, und der eigene Selbsttest war damit unlösbar. Das Raster ist gerade und enthält die Ausnahmestellen explizit; dazu ein Prüfskript gegen die analytischen Werte und eine Tafel in der Größe ihrer Nachbarn."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S106Kettenregel.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-produkt-kettenregel",
+    "boxIndexe": [13],
+    "severityFixed": ["MINOR"],
+    "titel": "KettenregelWidget",
+    "rationale": "Die Tafel wurde ohne width/height auf volle Spaltenbreite gestreckt und fiel aus dem Größenraster des Kapitels; sie hat jetzt ihre natürliche Größe. Der Header zeigt auf ein Skript, das die Kettenregelzahlen wirklich prüft."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S106Logistik.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-produkt-kettenregel",
+    "boxIndexe": [14],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "LogistikWidget",
+    "rationale": "Das Widget schrieb durchgehend beta, die Prosa β; jetzt steht überall dasselbe Symbol. Die Selbsttestfrage, die das Widget voraussetzt, steht nicht mehr im sichtbaren Quiz, sondern in der Vertiefung, in der das Widget liegt, und ihre Lösung nicht mehr in der Konsolidierung."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S107Hesse.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-hoehere-ableitungen",
+    "boxIndexe": [15],
+    "severityFixed": ["MAJOR"],
+    "titel": "HesseSchaetzung / HesseDefinitheit",
+    "rationale": "Die als tot lesbare Hauptdarstellung deklarierte Höhenlinientafel war auf 51 × 47 px kollabiert und damit unbrauchbar; sie misst jetzt 340 × 316 px (316 × 294 px bei 390 px Viewport), und die drei Fragen der Prosa lassen sich wieder am Bild beantworten. Der Header zitiert kein fehlendes Skript und keine leere Assertion mehr."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S108Taylor1D.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-taylor",
+    "boxIndexe": [16],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "TaylorOrdnungSchaetzung / TaylorOrdnungWidget",
+    "rationale": "Die Konsolidierung nannte den gefragten Faktor 8,2 im selben Kasten; sie ist jetzt allgemein gehalten. Das Verdikt gibt beide Formen aus, sodass der Leser den Kehrwert nicht selbst bilden muss."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S108Taylor2D.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-taylor",
+    "boxIndexe": [17],
+    "severityFixed": ["MAJOR"],
+    "titel": "Taylor2DSchaetzung / Taylor2DWidget",
+    "rationale": "Quotient und Merksatz standen in der Voreinstellung vor dem Auflösen im Readout und im Verdikt und beantworteten die Schätzfrage; sie erscheinen jetzt erst danach, vorher nur die beiden Kreisfehler. Dieselben Zahlen sind auch aus der Konsolidierung verschwunden."
+  },
+  {
+    "widget": "src/chapters/10-differentialrechnung/widgets/S108Newton.tsx",
+    "kapitel": "10-differentialrechnung",
+    "anker": "sec-taylor",
+    "boxIndexe": [18],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "NewtonSchaetzung / NewtonStepper",
+    "rationale": "Die Höhenlinientafel war wie bei S107Hesse auf 47 × 44 px kollabiert; der Weg der Iterierten und das grüne Ziel, die die Prosa ankündigt, sind wieder zu sehen (282 × 266 px bei beiden Breiten). Die Auflösung der Schätzfrage stand als Zahlenreihe im selben Kasten und ist heraus; die Erkennung des Endzustands läuft nicht mehr über eine Float-Gleichheit."
+  }
+]

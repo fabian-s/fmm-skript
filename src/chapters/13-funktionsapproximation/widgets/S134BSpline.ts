@@ -26,6 +26,24 @@ export const NEUTRAL = FMM_COLORS.grau; // hell und dunkel lesbar
 /** Deutsche Zahlformatierung; undefinierte Werte von unendlichen trennen. */
 export const fmt = fmtDe;
 
+const HOCH = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+
+/**
+ * Zehnerpotenz-Schreibweise mit deutschem Dezimalkomma und echter Hochzahl.
+ * Ersetzt `toExponential`, das „8.9e-16" mit englischem Punkt ausgibt.
+ */
+export function fmtExp(v: number, stellen = 1): string {
+  if (!Number.isFinite(v)) return "–";
+  if (v === 0) return "0";
+  const e = Math.floor(Math.log10(Math.abs(v)));
+  const m = v / 10 ** e;
+  const hoch = String(Math.abs(e))
+    .split("")
+    .map((z) => HOCH[Number(z)])
+    .join("");
+  return `${m.toFixed(stellen).replace(".", ",")} · 10${e < 0 ? "⁻" : ""}${hoch}`;
+}
+
 /**
  * Offener Knotenvektor zum Gitter xi = (xi_0, ..., xi_m) und Grad q:
  * die Randknoten (q+1)-fach, die inneren einfach. Laenge m + 2q + 1,

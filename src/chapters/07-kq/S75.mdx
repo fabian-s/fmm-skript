@@ -152,7 +152,7 @@ nicht verändert, wie es für eine Orthogonalmatrix sein muss.
 
 <GivensWidget />
 
-<p className="mt-2 text-sm">Das Widget verknüpft die Givens-Koeffizienten mit einer längenerhaltenden Drehung auf die Achse.</p>
+<p className="mt-2 text-sm">Die Drehung schiebt $\ba$ längentreu auf die $x_1$-Achse: $\bG\ba = (r, 0)^\top$ mit $r = \left\|\ba\right\|_2$. Genau ein Eintrag wird null, die übrigen bleiben unberührt – deshalb passt Givens zu dünn besetzten Problemen.</p>
 :::
 
 Dasselbe funktioniert in $\R^n$: Auch dort können wir damit jede einzelne
@@ -349,7 +349,7 @@ einzigen* Spiegelung verschwunden.
 
 <HouseholderWidget />
 
-<p className="mt-2 text-sm">Das Widget trennt die Projektion auf die Spiegelgerade von der vollständigen Householder-Spiegelung.</p>
+<p className="mt-2 text-sm">Der halbe Schritt landet auf der Spiegelgeraden und verkürzt; erst der doppelte bringt die Länge zurück. Genau dafür steht die Zwei in $\bH = \bI - 2\bv\bv^\top/(\bv^\top\bv)$.</p>
 :::
 
 :::bemerkung[#vorzeichenwahl (Vorzeichenwahl)]
@@ -375,7 +375,7 @@ auf das Ziel, das *weiter* von $\ba$ entfernt liegt.
 
 <AusloeschungWidget />
 
-<p className="mt-2 text-sm">Das Widget zeigt, wie die Wahl des Vorzeichens die Auslöschung beim Aufbau der Spiegelung beeinflusst.</p>
+<p className="mt-2 text-sm">Zeigt $\ba$ fast in Richtung $\be_1$, löschen sich in $v_1 = a_1 - \alpha$ bei gleichem Vorzeichen die führenden Ziffern aus. Die Wahl $\alpha = -\sign(a_1)\left\|\ba\right\|_2$ vermeidet das und kostet nichts.</p>
 :::
 
 :::bemerkung[#givens-householder-aufwand (Aufwand)]

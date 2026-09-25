@@ -4,8 +4,7 @@
  * FARBROLLEN: Slate-Töne strukturieren die Oberfläche; sie tragen keine
  * mathematische Bedeutung.
  * PROVENIENZ: Eigene, aus der TSX-Fassung von S24 portierte MDX-Hilfskomponente.
- * VERIFIZIERTE ZAHLEN: keine mathematischen Zahlen in Caption oder Verdikt.
- * Geprüft mit verify-hdr.mjs, 2026-08-20.
+ * VERIFIZIERTE ZAHLEN: keine numerischen Claims in Caption oder Verdikt.
  */
 /**
  * Lokale Begleitkomponente für Abschnitt 2.4 (aus der TSX-Fassung von S24
@@ -16,16 +15,17 @@
  * deshalb nicht als ::::quiz-Direktive abbildbar.
  */
 import { type ReactNode } from "react";
+import { W_MUTED, W_PANEL } from "../../../lib";
 
 /** Aufklappbare Selbsttest-Frage: erst selbst entscheiden, dann Lösung ansehen. */
 export function SelfTest({ nr, frage, children }: { nr: number; frage: ReactNode; children: ReactNode }) {
   return (
-    <details className="my-2 max-w-prose rounded-md border border-slate-300 dark:border-slate-600">
+    <details className={`my-2 max-w-prose ${W_PANEL}`}>
       <summary className="cursor-pointer select-none px-3 py-2">
         <span className="font-semibold">Frage {nr}.</span> {frage}{" "}
-        <span className="text-sm text-slate-500 dark:text-slate-400">(Lösung aufklappen)</span>
+        <span className={`text-sm ${W_MUTED}`}>(Lösung aufklappen)</span>
       </summary>
-      <div className="space-y-2 border-t border-slate-200 px-3 py-2 dark:border-slate-700">
+      <div className="space-y-2 border-t border-slate-200 px-3 py-2 dark:border-slate-700 [.w-dark_&]:border-slate-600">
         {children}
       </div>
     </details>

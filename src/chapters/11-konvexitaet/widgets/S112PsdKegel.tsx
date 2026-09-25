@@ -46,15 +46,17 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau für dieses Skript; Ziehen über `useDrag`, 3D über
  * `Surface3D` (Referenz-Aufrufer 10-differentialrechnung/widgets/S107Hesse.tsx).
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Eigenwerte der fünf Voreinstellungen
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen — Eigenwerte der fünf Voreinstellungen
  * (Spur je 2 bzw. −2): Einheitsmatrix (1; 1), Rang 1 mit b = 1 (0; 2),
  * indefinit mit b = 2 (−1; 3), Nullzeile a = 2, c = 0 (0; 2), negativ definit
  * (−1; −1). Die Äquivalenz „a ≥ 0, c ≥ 0, ac ≥ b² ⇔ λ_min ≥ 0" wurde auf
  * einem 61³-Raster über [−1; 4] × [−2,5; 2,5] × [−1; 4] ohne Abweichung
- * bestätigt. Über 200 000 geseedete PSD-Paare bleibt sowohl t·A (t ≥ 0) als
- * auch jede Mischung λA + (1−λ)B semidefinit — 200 000 von 200 000.
- * Zusatzprobe: der Schnitt bei Spur 2 ist exakt die Einheitskreisscheibe
- * ((a−c)/2)² + b² ≤ 1 (641 601 Proben, 0 Abweichungen).
+ * bestätigt. Über alle Paare eines 9³-Rasters von PSD-Matrizen bleibt jede
+ * Mischung λA + (1−λ)B semidefinit, ebenso der Halbstrahl t·A. Zusatzprobe:
+ * der Schnitt bei Spur 2 ist exakt die Einheitskreisscheibe
+ * ((a−c)/2)² + b² ≤ 1 (401 × 401 Proben, 0 Abweichungen). Und die gezeichnete
+ * blaue Fläche deckt sich über das ganze b-Reglerraster mit dem Kriterium —
+ * einschließlich des Falls b = 0, in dem sie der volle Viertelraum ist.
  */
 
 const BLAU = FMM_COLORS.blau; // der Kegel und sein Schnitt
@@ -113,6 +115,11 @@ export function PsdKegel() {
             ? "negativ"
             : "indefinit";
 
+  // Drei Zustände statt zwei: exakt auf dem Rand (det = 0, über das 0,05-Raster
+  // der Regler kontrolliert und damit exakt erkennbar), nahe am Rand (definit,
+  // aber schlecht konditioniert) und komfortabel im Inneren.
+  const knappDefinit = art === "definit" && l2 / l1 > 20;
+
   const farbeA = psd ? ORANGE : ROT;
 
   /* ----------------------------------------- 2D-Tafel: Schnitt bei festem b */
@@ -129,9 +136,23 @@ export function PsdKegel() {
     },
   });
 
-  /** Rand des Schnitts: c = b²/a, abgetastet von a₀ = b²/A_HI bis A_HI. */
-  const randPunkte = useMemo(() => {
-    const a0 = Math.max((b * b) / A_HI, 1e-6);
+  /**
+   * Rand des Schnitts, von links oben nach rechts unten gelesen. Für b ≠ 0 ist
+   * das die Hyperbel c = b²/a, abgetastet von a₀ = b²/A_HI bis A_HI. Für b = 0
+   * entartet die Hyperbel zu den beiden Achsen: der Schnitt ist dann der ganze
+   * Viertelraum {a ≥ 0, c ≥ 0}, sein Rand also der senkrechte Ast a = 0 und der
+   * waagerechte Ast c = 0. Ohne den senkrechten Ast bliebe als Fläche nur das
+   * Dreieck {0 ≤ c ≤ a} übrig — dann läge etwa diag(1, 3) fälschlich außerhalb.
+   */
+  const randPunkte = useMemo<[number, number][]>(() => {
+    if (Math.abs(b) < 1e-9) {
+      return [
+        [0, A_HI],
+        [0, 0],
+        [A_HI, 0],
+      ];
+    }
+    const a0 = (b * b) / A_HI;
     const pts: [number, number][] = [];
     for (let i = 0; i <= 120; i++) {
       const t = i / 120;
@@ -141,6 +162,8 @@ export function PsdKegel() {
     return pts;
   }, [b]);
 
+  // Die Fläche schließt über die Ecke (A_HI, A_HI) zum ersten Randpunkt zurück,
+  // der in beiden Fällen auf der Höhe c = A_HI liegt.
   const schnittPolygon = `${randPunkte
     .map(([u, v]) => `${px(u).toFixed(1)},${py(v).toFixed(1)}`)
     .join(" ")} ${px(A_HI).toFixed(1)},${py(A_HI).toFixed(1)}`;
@@ -374,11 +397,9 @@ export function PsdKegel() {
             <ViewControls value={sicht} onChange={setSicht} />
           </div>
           <p className="mt-1 max-w-[280px] text-xs text-slate-500 dark:text-slate-400">
-            Dieselbe Menge in gedrehten Koordinaten: waagerecht ½(a−c) und b, senkrecht die
-            halbe Spur ½(a+c). Darin ist 𝒫₂ ein Kreiskegel, denn ac ≥ b² heißt hier
-            (a+c)/2 ≥ √(((a−c)/2)² + b²). Blau der Rand, grau gestrichelt sein Schnitt bei
-            Spur 2, die graue Scheibe die Ebene b = {fmtDe(b)} mit der Hyperbel der linken Tafel,
-            grün der Halbstrahl t·A. Ziehen dreht die Ansicht.
+            Blau der Rand des Kegels, grau gestrichelt sein Schnitt bei Spur 2, die graue
+            Scheibe die Ebene b = {fmtDe(b)} mit der Hyperbel der linken Tafel, grün der
+            Halbstrahl t·A. Ziehen dreht die Ansicht.
           </p>
         </div>
 
@@ -413,7 +434,14 @@ export function PsdKegel() {
         </div>
       </div>
 
-      {art === "definit" ? (
+      {art === "definit" && knappDefinit ? (
+        <Verdikt kind="ok" titel="Positiv definit, aber schlecht konditioniert.">
+          Beide Eigenwerte sind positiv, also ist xᵀAx {">"} 0 für jedes x ≠ 0 und A definit im
+          Sinne von {ref("definition:positiv-semidefinit")}. Der kleinere Eigenwert ist mit{" "}
+          {fmtDe(l1)} aber winzig gegen den größeren ({fmtDe(l2)}): Der Punkt liegt zwar im blauen
+          Schnitt, aber dicht am Rand. Cholesky läuft noch durch, verliert dabei jedoch Stellen.
+        </Verdikt>
+      ) : art === "definit" ? (
         <Verdikt kind="ok" titel="Positiv definit.">
           Beide Eigenwerte sind positiv, also ist xᵀAx {">"} 0 für jedes x ≠ 0 und A erst recht
           semidefinit im Sinne von {ref("definition:positiv-semidefinit")}. Der Punkt liegt im Inneren des blauen

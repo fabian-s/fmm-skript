@@ -1,16 +1,19 @@
 /**
  * F1 — DIE EINE EINSICHT: Ableitung, Krümmung, Konvexität und Optimierung
  * bilden eine gerichtete Begriffslandkarte statt isolierter Kapitel.
- * FARBROLLEN: Petrol = Kapitel 10, Abschnitte 10.1-10.4, Violett = Kapitel 10,
- * Abschnitte 10.5-10.8, Orange = Kapitel 11, Pink = Kapitel 12;
+ * FARBROLLEN (Palettenfarben, keine eigenen Hexwerte): Blau = Kapitel 10,
+ * Abschnitte 10.1-10.4, Violett = Kapitel 10, Abschnitte 10.5-10.8,
+ * Orange = Kapitel 11, Rot = Kapitel 12;
  * Kanten bedeuten fachliche Abhängigkeit.
  * PROVENIENZ: Layout aus der Konzeptkarte des Vorlesungs-Repos portiert,
  * Begriffe und Verknüpfungen für dieses Skript zusammengestellt.
- * VERIFIZIERTE ZAHLEN: 15 Knoten, 17 gerichtete Kanten und die vier Farbgruppen
- * werden unabhängig gezählt.
+ * VERIFIZIERTE ZAHLEN: 15 Knoten, 18 gerichtete Kanten und die vier Farbgruppen
+ * werden in verify-hdr.mjs aus dieser Datei gezählt (die frühere Angabe „17
+ * Kanten" war falsch und blieb unbemerkt, weil die Prüfung assert.equal(17, 17)
+ * lautete; korrigiert 2026-08-29).
  * Geprüft mit verify-hdr.mjs, 2026-08-20.
  */
-import { ConceptFlow, type FlowEdge, type FlowNode } from "../../../lib";
+import { ConceptFlow, FMM_COLORS, type FlowEdge, type FlowNode } from "../../../lib";
 
 /**
  * Konzeptkarte für Teil 2 (Analysis & Optimierung), übernommen aus der
@@ -92,10 +95,12 @@ export function TeilZweiKarte() {
       nodes={nodes}
       edges={edges}
       groups={[
-        { key: "k10", label: "Kap. 10 · Differentialrechnung, 10.1–10.4", color: "#0f7490" },
-        { key: "k11", label: "Kap. 10 · Differentialrechnung, 10.5–10.8", color: "#7c5cd6" },
-        { key: "k12", label: "Kap. 11 · Konvexität", color: "#c2620b" },
-        { key: "k13", label: "Kap. 12 · Gleichungen & Optimierung", color: "#c2417c" },
+        // Palettenfarben statt eigener Hexwerte (README-widgets), wie in
+        // 01-intro/widgets/S12Landkarte.tsx und 13-.../S131Konzeptkarte.tsx.
+        { key: "k10", label: "Kap. 10 · Differentialrechnung, 10.1–10.4", color: FMM_COLORS.blau },
+        { key: "k11", label: "Kap. 10 · Differentialrechnung, 10.5–10.8", color: FMM_COLORS.violett },
+        { key: "k12", label: "Kap. 11 · Konvexität", color: FMM_COLORS.orange },
+        { key: "k13", label: "Kap. 12 · Gleichungen & Optimierung", color: FMM_COLORS.rot },
       ]}
       openLabel="Kapitel öffnen"
     />

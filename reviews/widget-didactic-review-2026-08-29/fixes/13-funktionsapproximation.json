@@ -1,0 +1,137 @@
+[
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S131Konzeptkarte.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-approximation",
+    "boxIndexe": [1],
+    "severityFixed": ["MINOR"],
+    "titel": "Landkarte der Funktionsapproximation",
+    "rationale": "Die beiden Gruppenlabels trugen hartcodierte Abschnittsnummern neben korrekt gesetzten ref()-Verweisen; sie heißen jetzt „Interpolationsstrang\" und „Glättungsstrang und Multivariates\" und veralten damit nicht mehr."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S131DreiProbleme.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-approximation",
+    "boxIndexe": [2],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Die drei Aufgaben nebeneinander",
+    "rationale": "Bei 390 px lagen zwei der drei Tafeln hinter dem Rand, ausgerechnet die eine, auf die der σ-Regler wirkt; die Reihe bricht jetzt um, die Legende nennt die Tafeln beim Namen statt links/Mitte/rechts, und das Verdikt hat eine dritte Klasse für kleines Rauschen sowie eine Schwelle auf dem kontrollierten Parameter statt auf dem abgeleiteten RMS."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S131Interpolanten.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-approximation",
+    "boxIndexe": [3],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Vier Interpolanten, ein Datensatz",
+    "rationale": "Die Schätzfrage nach der größten Spanne war dreifach beantwortet (Beispiel darüber, Konsolidierung darunter, Startwert x* = 1,3 mit Readout); jetzt startet das Widget auf einer Stützstelle, nennt die Spanne erst nach dem Auflösen, und die Zahlen stehen im verdeckt-Slot. Das Verdikt sagt nicht mehr „Scheitert\", sondern „Nicht festgelegt\"."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S132Basisrechner.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-basisdarstellung",
+    "boxIndexe": [4],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Zwei Basen, ein Interpolant",
+    "rationale": "Das Verdikt hing allein am Basisschalter und quittierte die drei Messwertregler nicht; es klassifiziert jetzt Gerade gegen echte Parabel und die Probe, mit der Basisform als Titel. Die Auflösung ist hinter das Widget gewandert, der doppelte Absatz gestrichen, der Exponentialwert deutsch formatiert."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S133Monombasis.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-polynominterpolation",
+    "boxIndexe": [5],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "Die Monombasis und ihre Kondition",
+    "rationale": "Das gesamte Konditionsargument des Abschnitts war unbelegt, obwohl der Header eine Prüfung behauptete; ein neues REV29-Skript rechnet κ₂ über eine einseitige Jacobi-SVD unabhängig nach. Dazu Strichmuster-Swatches für die drei farbgleichen Kurven, echte Hochzahlen statt „10^16\" und ein Verdikt-Zeichen, das an derselben Schwelle hängt wie sein Text."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S133Runge.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-polynominterpolation",
+    "boxIndexe": [6],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Runges Funktion, zwei Knotenfamilien",
+    "rationale": "Die alte Schätzfrage war in der Bemerkung darüber bereits als Tabelle bewiesen; sie fragt jetzt nach der ersten Überschreitung von 1 (n = 9), die nur eine Reglerfahrt zeigt, und die Fehlerkurven-Tafel erscheint erst nach dem Auflösen. Der Bemerkungs-Nachsatz hängt nur noch am äquidistanten Zweig, und die Prosa nennt keinen Chebyshev-Wert mehr, den der Regler nicht erreicht."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S134Konstruktion.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-splines",
+    "boxIndexe": [7],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Das Zwölf-mal-zwölf-System live",
+    "rationale": "Das Verdikt war über alle Reglerstände und beide Randbedingungen wortgleich und sein warn-Zweig unerreichbar; es klassifiziert jetzt natürlich gegen eingespannt und nennt, was an den Enden dadurch frei wird. Bei 390 px scrollt die Koeffiziententabelle, statt am Kastenrand abgeschnitten zu werden."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S134BSplineBasis.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-splines",
+    "boxIndexe": [8],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "Die B-Spline-Basis erkunden",
+    "rationale": "Am Reglermaximum zeigte das Widget gleichzeitig Funktionswert 0 und Summe 1 und berief sich dabei auf einen Satz, den der Zustand nicht erfüllt; der entartete Randpunkt ist jetzt weggeklemmt und das Verdikt unterscheidet vier Lagen (Grad null, linker Rand, innerer Knoten, Intervallinneres) mit Grund statt das Readout nachzusprechen."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S134CoxDeBoor.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-splines",
+    "boxIndexe": [8],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Ein Rekursionsschritt Stück für Stück",
+    "rationale": "Der Schritt saß in einem rohen details im Widget, obwohl sichtbare Prosa darauf verwies; er steht jetzt als eigene Vertiefung neben dem Kasten. Die beiden Gewichtsrampen tragen verschiedene Strichmuster und eine Legende, und das feste kind=\"ok\" ist drei Zustandsklassen entlang des x*-Reglers gewichen."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S134Stoerung.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-splines",
+    "boxIndexe": [9],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "Ein Datenpunkt wandert",
+    "rationale": "Die Lokalitätszahlen, die die MDX-Prosa als Fakt druckt, waren durch eine Tautologie „gedeckt\"; ein neues Skript rechnet sie über die Momentenform und die baryzentrische Lagrange-Form unabhängig nach. Der Flankensatz hängt jetzt an j und δ statt zustandsunabhängig behauptet zu werden, und der Gegenzustand am Gitterrand wird erklärt statt zum Verlassen aufgefordert."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S135Kruemmung.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-minimale-kruemmung",
+    "boxIndexe": [10],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Eine ganze Schar von Interpolanten",
+    "rationale": "Die Antwort „Minimum bei t = 0\" stand wörtlich im Satz über der Schätzfrage; die Herleitung von J(g_t) = 6 + 2t² liegt jetzt im verdeckt-Slot und die Deutung der zweiten Ansicht hinter dem Widget. Die beiden verschiedenen Schwellen für denselben Zustand sind zu einer auf dem Reglerraster zusammengezogen."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S136Konvergenz.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-approximationsfehler",
+    "boxIndexe": [11],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Vom groben zum feinen Gitter",
+    "rationale": "Faktorspalte und Verdikt nannten die gesuchte 16 über dem leeren Eingabefeld; beide erscheinen jetzt erst nach dem Auflösen, und die Kastenprosa nennt die Zahl nicht mehr. Die Konvergenztafel bekommt ihr width zurück und ist wieder 300 statt 654 px breit."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S137Glaettung.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-glaettung",
+    "boxIndexe": [12],
+    "severityFixed": ["CRITICAL", "MAJOR", "MINOR"],
+    "titel": "Ein Regler für die Flexibilität",
+    "rationale": "Kein angezeigter Wert war durch ein committetes Skript gedeckt, obwohl der Header sogar Zweigabdeckung behauptete; das neue Skript bestätigt die fünf Zeilen und korrigiert die Zweigverteilung auf 2/9/16/10. Die Presets heißen neutral „4 · 11 · 40\" statt „passend\" die Antwort vorwegzunehmen und sind endlich echte Knöpfe."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S138BiasVarianz.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-bias-varianz",
+    "boxIndexe": [13],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Zwölf Kurven, drei Balken, ein Regler",
+    "rationale": "Die Schätzfrage war vierfach beantwortet (Startwert K = 12, Balkenüberschrift, Ring im Diagramm, Fließtext); Startwert, Ring und Minimum-Nennung hängen jetzt am Auflösen, die Tabellenzeile steht im verdeckt-Slot. Alle drei Tafeln tragen wieder ihre eigene Breite, und die Prosa beschreibt die Anordnung, die es tatsächlich gibt."
+  },
+  {
+    "widget": "src/chapters/13-funktionsapproximation/widgets/S139Skalierung.tsx",
+    "kapitel": "13-funktionsapproximation",
+    "anker": "sec-multivariat",
+    "boxIndexe": [14],
+    "severityFixed": ["MAJOR", "MINOR"],
+    "titel": "Zwei Kurven auf logarithmischer Achse",
+    "rationale": "Die gesuchten 80 GB standen als Tabellenzeile 220 Zeilen über der Schätzfrage; gefragt ist jetzt eine Konfiguration, die nicht in der Tabelle steht (K = 20, p = 8), und der Toleranzbereich schließt den Tabellenwert aus. Startzustand p = 8 zeigt das Phänomen sofort, und das Verdikt-Zeichen hängt an derselben Speicherschwelle wie sein Text."
+  }
+]

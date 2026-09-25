@@ -37,7 +37,7 @@ import { num, ref } from "../../numbers.generated";
  * FARBROLLEN (Kapitel 11): Epigraph/Funktionsgraph blau, Sehne und
  * Konvexkombinationen grün, Verletzungen rot, ausgezeichnete Punkte orange.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19; zuvor rev123-widget.mjs), über alle 3081
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): über alle 3081
  * Paare des 0,05-Rasters mit y − x ≥ 0,15 je Kurve: 0,6x²+0,3 besteht die
  * Sehnenprobe auf JEDEM Paar und deckt den Graphen nie (strikt konvex);
  * |x| besteht ebenfalls jedes Paar, bei 1482 davon fällt die Sehne mit dem
@@ -500,7 +500,8 @@ export function SehnenTest() {
         <Verdikt kind="warn" titel="Sehne und Graph fallen zusammen.">
           Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab
           und in ({num("eq:konvexitaet-als-ungleichung")}) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung
-          nicht: Der Betrag ist konvex, aber nicht strikt konvex ({ref("definition:strikte-konvexitaet")}).
+          nicht: Der Betrag ist konvex, aber nicht streng konvex
+          ({ref("bemerkung:wie-wir-die-ungleichung-lesen")}; die formale Fassung folgt in {ref("definition:strikte-konvexitaet")}).
         </Verdikt>
       ) : kurve.id === "doppelmulde" ? (
         <Verdikt kind="ok" titel="Geschafft: dieses Paar besteht die Probe.">
@@ -541,12 +542,13 @@ export function KonvexKonkavPanels() {
         {tafeln.map(({ id, a, b, titel }) => {
           const k = KURVEN.find((c) => c.id === id) ?? KURVEN[0];
           return (
-            <div key={id} className="min-w-0 basis-[190px]">
+            <div key={id} className="min-w-0 grow basis-[190px] max-w-[280px]">
               <svg
                 width={190}
                 height={140}
                 viewBox="0 0 190 140"
-                className="max-w-full h-auto rounded"
+                preserveAspectRatio="xMidYMid meet"
+                className="w-full max-w-full h-auto rounded"
                 role="img"
                 aria-label={`${titel}: ${k.formel} mit einer Sehne.`}
               >
@@ -560,6 +562,12 @@ export function KonvexKonkavPanels() {
           );
         })}
       </div>
+      <p className="mx-auto mt-2 max-w-prose text-center text-xs text-slate-500 dark:text-slate-400">
+        <span style={{ color: BLAU }}>Blau</span> der Graph,{" "}
+        <span style={{ color: GRUEN }}>grün</span> die Sehne, solange sie nirgends unterschritten
+        wird, <span style={{ color: ROT }}>rot</span> die Stellen, an denen der Graph über ihr
+        liegt.
+      </p>
     </div>
   );
 }

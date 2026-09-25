@@ -84,6 +84,11 @@ Welche Seite erhält langfristig den größten Score? Verfolgen wir dafür die
 Potenziteration auf dem kleinen Netz.
 
 <PagerankDemo />
+
+Auf $a$ und $c$ zeigen je zwei Links, auf $b$ und $d$ nur einer – genau dieses
+Verhältnis findet die Iteration wieder. Der Score ist trotzdem keine Zählung von
+Links, sondern ein Fixpunkt: Er hängt daran, wie viel die verweisenden Seiten
+selbst wert sind.
 :::
 
 ::::quiz
@@ -119,6 +124,11 @@ Die Kovarianzmatrix gibt eine Formel vor. Aber wie sieht die dazugehörige
 Richtung in einer Punktwolke aus? Drehen wir eine Projektion durch die Daten.
 
 <PcaDirectionDemo />
+
+Die gesuchte Richtung ist keine Koordinatenachse und nicht ablesbar, sondern die
+Lösung eines Maximierungsproblems – und die liefert der erste Eigenvektor von
+$\bSigma$. Sein Eigenwert $\lambda_1$ ist die dort erreichte Varianz, $\lambda_2$
+der Rest senkrecht dazu.
 :::
 
 ::::quiz

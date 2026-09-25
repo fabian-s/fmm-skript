@@ -6,6 +6,8 @@ import {
   MatrixInput,
   Slider,
   Verdikt,
+  W_BUTTON,
+  W_BUTTON_AKTIV,
   W_MUTED,
   fmtDe,
 } from "../../../lib";
@@ -32,7 +34,8 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau (2026-08-05); neu sind Aufgabenzeile, Invarianzmessung
  * und Verdikt.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für A = (2 1; 0 1) ist σ₁ = 2,288246,
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-normen.mjs,
+ * 2026-08-29): Für A = (2 1; 0 1) ist σ₁ = 2,288246,
  * σ₂ = 0,874032, ‖A‖_F = 2,449490 = √6 und ‖A‖_{S,1} = 3,162278 = √10
  * (Beispiel 3.4.6). Über θ ∈ [0°, 360°] in 1°-Schritten beträgt die größte
  * Abweichung von σ₁, σ₂ und ‖·‖_F 8,88e−16, also reines Rundungsrauschen;
@@ -105,11 +108,25 @@ function wissenschaftlich(x: number): string {
 const summennorm = (B: Mat2) => B.flat().reduce((a, x) => a + Math.abs(x), 0);
 const maxnorm = (B: Mat2) => Math.max(...B.flat().map(Math.abs));
 
+/**
+ * Drei Voreinstellungen, die die Fallunterscheidung des Abschnitts SIND:
+ * allgemeine Matrix (nichts außer den Schattennormen steht still), symmetrische
+ * Matrix (dasselbe Bild, andere Eigenstruktur) und eine Orthogonalmatrix, bei
+ * der auch Summen- und Maximumsnorm über weite Strecken stillstehen – der
+ * didaktische Gegenfall, an dem sich zeigt, dass Stillstand allein noch keine
+ * unitäre Invarianz beweist.
+ */
+const VOREINSTELLUNGEN: { name: string; titel: string; m: Mat2 }[] = [
+  { name: "allgemein", titel: "die Matrix aus dem Beispiel: σ₁ ≈ 2,29, σ₂ ≈ 0,87", m: [[2, 1], [0, 1]] },
+  { name: "symmetrisch", titel: "symmetrische Matrix mit getrennten Singulärwerten", m: [[2, 1], [1, 2]] },
+  { name: "Orthogonalmatrix", titel: "Drehung: beide Singulärwerte sind 1", m: [[0.6, -0.8], [0.8, 0.6]] },
+];
+
+const gleichM = (a: Mat2, b: Mat2) =>
+  a.every((r, i) => r.every((x, j) => Math.abs(x - b[i][j]) < 1e-12));
+
 export function S34SchattenWidget() {
-  const [A, setA] = useState<Mat2>([
-    [2, 1],
-    [0, 1],
-  ]);
+  const [A, setA] = useState<Mat2>(VOREINSTELLUNGEN[0].m.map((r) => [...r]));
   const [theta, setTheta] = useState(0);
   // Bisher durchfahrener Drehbereich; er trägt die Invarianz-Messung.
   const [bereich, setBereich] = useState<[number, number]>([0, 0]);
@@ -199,8 +216,8 @@ export function S34SchattenWidget() {
   return (
     <div className="space-y-3">
       <Aufgabe>
-        Drehen wir <M>{"\\theta"}</M> einmal ganz durch und vergleichen wir, welche der Zahlen
-        rechts sich mitbewegen.
+        Wählen wir eine Matrix, drehen wir <M>{"\\theta"}</M> einmal ganz durch und vergleichen
+        wir in der Werteliste, welche Zahlen sich mitbewegen.
       </Aufgabe>
       <p className={`max-w-prose text-xs ${W_MUTED}`}>
         <span style={{ color: GRAU }}>grau</span> der Einheitskreis,{" "}
@@ -233,6 +250,20 @@ export function S34SchattenWidget() {
           </svg>
         </div>
         <div className="min-w-0 space-y-3 text-sm">
+          <div className="flex flex-wrap gap-2">
+            {VOREINSTELLUNGEN.map((v) => (
+              <button
+                key={v.name}
+                type="button"
+                title={v.titel}
+                aria-pressed={gleichM(v.m, A)}
+                className={`text-xs ${gleichM(v.m, A) ? W_BUTTON_AKTIV : W_BUTTON}`}
+                onClick={() => setzeA(v.m.map((r) => [...r]))}
+              >
+                {v.name}
+              </button>
+            ))}
+          </div>
           <div className="flex flex-wrap items-center gap-3">
             <M>{"\\bA ="}</M>
             <MatrixInput value={A} onChange={setzeA} />

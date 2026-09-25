@@ -37,7 +37,8 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Neubau 2026-08-19 (die „Fehlende Widgets"-Liste des
  * Kapitel-Surveys, Punkt 1).
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Für A = diag(σ₁, σ₂) ist ‖A‖₂ = σ₁,
+ * PRÜFSTATUS (scripts/verify/REV29/03-matrix-spur-norm-normen.mjs,
+ * 2026-08-29): Für A = diag(σ₁, σ₂) ist ‖A‖₂ = σ₁,
  * ‖A‖_F = √(σ₁²+σ₂²) und ‖A‖_* = σ₁+σ₂. Der Quotient ‖A‖_F/‖A‖₂ läuft von 1
  * (σ₂ = 0, Rang 1) bis √2 = 1,414214 (σ₁ = σ₂); die Voreinstellung
  * σ = (1,6; 0,8) liefert ‖A‖_F = 1,788854 und den Quotienten 1,118034.
@@ -186,7 +187,10 @@ export function S35AequivalenzWidget() {
             <text x={px(0) - 26} y={py(WELT) + 4} fontSize={11} fill="var(--w-muted)">
               σ₂
             </text>
-            {/* Beschriftung der beiden Ränder */}
+            {/* Beschriftung der beiden Ränder: bewusst NEUTRAL. Die frühere
+                Fassung („rechte Schranke scharf") nahm im Anfangsbild schon das
+                Ergebnis vorweg, zu dem die Aufgabenzeile erst hinführen will;
+                die Deutung übernimmt das Verdikt. */}
             <text
               x={px(WELT) - 4}
               y={py(WELT) + 14}
@@ -197,7 +201,7 @@ export function S35AequivalenzWidget() {
               strokeWidth={2.5}
               paintOrder="stroke"
             >
-              σ₁ = σ₂: rechte Schranke scharf
+              σ₁ = σ₂
             </text>
             <text
               x={px(WELT) - 4}
@@ -209,7 +213,7 @@ export function S35AequivalenzWidget() {
               strokeWidth={2.5}
               paintOrder="stroke"
             >
-              σ₂ = 0: linke Schranke scharf
+              σ₂ = 0
             </text>
             {/* Lote auf die Achsen */}
             <line x1={px(s1)} y1={py(s2)} x2={px(s1)} y2={py(0)} stroke={ROT} strokeWidth={1} strokeDasharray="3 3" />

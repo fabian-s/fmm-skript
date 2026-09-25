@@ -39,15 +39,14 @@ import { ref } from "../../numbers.generated";
  * PROVENIENZ: Eigenbau; Ziehen über `useDrag`, Achsen/Zahlformat/Farben aus
  * `src/lib/widgets/util.ts`.
  *
- * PRÜFSTATUS (historische Notiz, 2026-08-19): Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen: Kreisring 0,8 ≤ ‖z‖ ≤ 1,2 mit
+ * PRÜFSTATUS (scripts/verify/REV29/11-konvexitaet.mjs, 2026-08-29): nachgerechnet mit unabhängigen Rechenwegen — Kreisring 0,8 ≤ ‖z‖ ≤ 1,2 mit
  * x = (1,1; 0) und y = (0; 1,1) liegt für λ zwischen 0,380 und 0,620 im Loch,
  * der Mittelpunkt hat die Norm 1,1/√2 = 0,7778 < 0,8; die Parabelmenge mit
- * x = (−1; 1) und y = (1; 1) liegt für JEDES λ in (0, 1) außerhalb. Über je
- * 200 000 geseedete Zufallspaare aus der Menge verlässt die Strecke bei
- * Kreisscheibe und Dreieck kein einziges Mal die Menge, beim Ring in 60,5 %
- * und bei der Parabelunterseite in 12,9 % der Fälle. Die Startlage
- * x = (1,1; 0), y = (0,85; 0,75) liegt ganz im Ring: sie besteht die Probe,
- * ohne etwas zu beweisen.
+ * x = (−1; 1) und y = (1; 1) liegt für JEDES λ in (0, 1) außerhalb. Die vier
+ * `startPaar`-Lagen, die der Mengenknopf setzt, bestehen dagegen alle die
+ * Probe: ihre Strecke bleibt ganz in der jeweiligen Menge (4001 Abtastungen je
+ * Paar). Die Startlage x = (1,1; 0), y = (0,85; 0,75) liegt ganz im Ring: sie
+ * besteht die Probe, ohne etwas zu beweisen.
  */
 
 const BLAU = FMM_COLORS.blau; // die Menge selbst
@@ -80,8 +79,18 @@ type Menge = {
   flaeche: (px: (x: number) => number, py: (y: number) => number) => ReactNode;
   /** Extrempunkte, soweit es endlich viele sind */
   extrem?: Punkt[];
+  /**
+   * Das Paar hinter dem Knopf: bei den nicht konvexen Mengen das
+   * Gegenbeispiel, bei den konvexen ein Testpaar.
+   */
   paar: [Punkt, Punkt];
   paarName: string;
+  /**
+   * Die Lage nach dem Umschalten: ein Paar, dessen Strecke ganz in der Menge
+   * bleibt. Erst so bleibt die Suche nach dem Gegenbeispiel die Aufgabe des
+   * Lesers und nicht schon das Ergebnis des Mengenknopfs.
+   */
+  startPaar: [Punkt, Punkt];
 };
 
 /* ------------------------------------------------------------- die Mengen */
@@ -114,6 +123,10 @@ const MENGEN: Menge[] = [
       [0.9, -0.6],
     ],
     paarName: "Testpaar setzen",
+    startPaar: [
+      [-0.75, 0.35],
+      [0.6, -0.45],
+    ],
   },
   {
     id: "ring",
@@ -139,6 +152,11 @@ const MENGEN: Menge[] = [
       [0, 1.1],
     ],
     paarName: "Gegenbeispiel setzen",
+    // besteht die Probe: kleinste Norm auf der Strecke rund 1,04, also im Ring
+    startPaar: [
+      [1.1, 0],
+      [0.85, 0.75],
+    ],
   },
   {
     id: "dreieck",
@@ -165,6 +183,10 @@ const MENGEN: Menge[] = [
       [0.8, 0.15],
     ],
     paarName: "Testpaar setzen",
+    startPaar: [
+      [0.15, 0.6],
+      [0.6, 0.2],
+    ],
   },
   {
     id: "parabel",
@@ -194,6 +216,11 @@ const MENGEN: Menge[] = [
       [1, 1],
     ],
     paarName: "Gegenbeispiel setzen",
+    // besteht die Probe: die Strecke bleibt durchweg unter z₂ = −0,4 ≤ z₁²
+    startPaar: [
+      [-1.3, -0.4],
+      [1, -0.9],
+    ],
   },
 ];
 
@@ -255,9 +282,10 @@ function analysiere(menge: Menge, x: Punkt, y: Punkt, n = 600): Befund {
 export function KonvexTest() {
   // Startlage: der Kreisring mit einem Paar, das die Probe BESTEHT — die
   // Auflösung (das Gegenbeispiel) liegt hinter dem Knopf, nicht im Default.
+  // Dasselbe gilt nach jedem Mengenwechsel (s. `startPaar`).
   const [mengeId, setMengeId] = useState(MENGEN[1].id);
-  const [x, setX] = useState<Punkt>([1.1, 0]);
-  const [y, setY] = useState<Punkt>([0.85, 0.75]);
+  const [x, setX] = useState<Punkt>(MENGEN[1].startPaar[0]);
+  const [y, setY] = useState<Punkt>(MENGEN[1].startPaar[1]);
 
   const menge = MENGEN.find((m) => m.id === mengeId) ?? MENGEN[0];
 
@@ -281,8 +309,8 @@ export function KonvexTest() {
   const mengenWahl = (id: string) => {
     const m = MENGEN.find((k) => k.id === id) ?? MENGEN[0];
     setMengeId(id);
-    setX(m.paar[0]);
-    setY(m.paar[1]);
+    setX(m.startPaar[0]);
+    setY(m.startPaar[1]);
   };
 
   const gleich = x[0] === y[0] && x[1] === y[1];

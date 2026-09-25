@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, Slider, Verdikt, fmtDe } from "../../../lib";
+import { Aufgabe, FMM_COLORS, M, Slider, Verdikt, fmtDe } from "../../../lib";
 
 /**
  * Einsicht: Eine separierbare Kovarianz ersetzt eine große mn×mn-Matrix durch
@@ -25,9 +25,13 @@ export function SeparierbareKovarianzDemo() {
   return (
     <div>
       <Aufgabe>Verändern wir Orte und Zeitpunkte und vergleichen die beiden Modellgrößen.</Aufgabe>
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" role="img" aria-label="Vergleich einer allgemeinen und einer separierbaren Kovarianzmatrix.">
+      {/* Kein role="img": die beiden Karten sind Text, ihre Zahlen müssen für
+          Hilfsmittel einzeln erreichbar bleiben. */}
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="rounded border p-3" style={{ borderColor: ORANGE }}>
-          <div className="text-sm font-semibold">allgemein: Σ ∈ ℝ^{dimension}×{dimension}</div>
+          <div className="text-sm font-semibold">
+            allgemein: <M>{`\\bSigma \\in \\R^{${dimension} \\times ${dimension}}`}</M>
+          </div>
           <div className="mt-2 font-mono text-2xl" style={{ color: ORANGE }}>{fmtDe(allgemein, 0)}</div>
           <div className="text-sm">freie Parameter</div>
           <div className="mt-2 font-mono text-sm">{fmtDe(allgemeinSpeicher, 0)} gespeicherte Einträge</div>
@@ -45,8 +49,8 @@ export function SeparierbareKovarianzDemo() {
       </div>
       <Verdikt kind={gross ? "ok" : "neutral"}>
         {gross
-          ? `Für ${orte} Orte und ${zeiten} Zeitpunkte spart die separierbare Annahme ${fmtDe(sparquote, 1)} % der freien Parameter. Wir schätzen zwei Muster statt einer ${dimension}×${dimension}-Matrix.`
-          : `Bei ${orte}×${zeiten} Messwerten ist der Unterschied noch klein, aber schon sichtbar: ${fmtDe(allgemein, 0)} statt ${fmtDe(separierbar, 0)} freie Parameter. Mit wachsendem Gitter wächst der Vorteil quadratisch.`}
+          ? `Für ${orte} Orte und ${zeiten} Zeitpunkte spart die separierbare Annahme ${fmtDe(sparquote, 1)} % der freien Parameter: zwei Muster statt einer ${dimension}×${dimension}-Matrix. Die allgemeine Zahl wächst wie (mn)²/2, die separierbare nur wie (m² + n²)/2 – der Abstand ist eine Größenordnung, keine Konstante.`
+          : `Bei ${orte}×${zeiten} Messwerten sind es ${fmtDe(allgemein, 0)} gegen ${fmtDe(separierbar, 0)} freie Parameter. Auf einem so kleinen Gitter ist die separierbare Annahme also vor allem eine Modellannahme und noch keine Notwendigkeit; die Ersparnis lohnt den Verlust an Flexibilität erst weiter oben.`}
       </Verdikt>
     </div>
   );

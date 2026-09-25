@@ -19,8 +19,8 @@ import { ref } from "../../numbers.generated";
  * feine deterministische Randsuche (kein Math.random); die vier Ecken der
  * Raute liegen exakt im Suchraster, ein Eckentreffer ist deshalb exakt.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefungen rev135-ridgelasso.mjs, rev135-ecke.mjs bestaetigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - c = 1 gibt Ridge (0,8891; 0,4578) mit f = 1,5837 und Lasso exakt (1; 0)
  *    mit f = 2,1780.
  *  - Die Lasso-Ecke (c; 0) ist optimal fuer c <= 1,342857 (bisektiert), auf
@@ -223,11 +223,19 @@ export function RidgeLassoGeometrie() {
   if (inEcke) {
     art = "ok";
     titel = "Lasso sitzt in der Ecke";
-    text = `Bei r = ${fmt(c)} liegt die Lasso-Lösung exakt auf (${fmt(c)}; 0): β₂ ist nicht klein, sondern null. Die Ridge-Lösung (${fmt(ridge.p[0])}; ${fmt(ridge.p[1])}) hat dagegen zwei von null verschiedene Koeffizienten. Der Unterschied steckt allein in der Form des zulässigen Bereichs: Die Raute hat Ecken auf den Achsen, der Kreis nicht. Die Ecke bleibt optimal bis r = ${fmt(ECKE_BIS, 4)}.`;
-  } else if (lasso.aktiv) {
+    // Die Eckenschwelle IST die Antwort auf die Schätzfrage des Kastens; das
+    // Beweismittel ist der Vermerk „Ecke!" an der rechten Tafel, nicht diese Zahl.
+    text = `Bei r = ${fmt(c)} liegt die Lasso-Lösung exakt auf (${fmt(c)}; 0): β₂ ist nicht klein, sondern null. Die Ridge-Lösung (${fmt(ridge.p[0])}; ${fmt(ridge.p[1])}) hat dagegen zwei von null verschiedene Koeffizienten. Der Unterschied steckt allein in der Form des zulässigen Bereichs: Die Raute hat Ecken auf den Achsen, der Kreis nicht.`;
+  } else if (lasso.aktiv && ridge.aktiv) {
     art = "neutral";
     titel = "beide Lösungen liegen auf dem Rand";
     text = `Über der Eckenschwelle ${fmt(ECKE_BIS, 4)} rutscht die Lasso-Lösung von der Ecke auf eine Kante der Raute: (${fmt(lasso.p[0])}; ${fmt(lasso.p[1])}) statt (r; 0). Beide Nebenbedingungen binden noch, beide Multiplikatoren sind nach ${ref("satz:karush-kuhn-tucker-bedingungen")} positiv, und die Höhenlinie berührt in beiden Tafeln den Rand. Der Sparsamkeitseffekt des Lasso ist damit weg.`;
+  } else if (lasso.aktiv) {
+    // Eigener Zweig: die Ridge-Bedingung ist hier schon inaktiv (μ = 0), wie es
+    // die Ablesezeile der linken Tafel meldet — „beide binden noch" wäre falsch.
+    art = "neutral";
+    titel = "nur noch das Lasso-Budget bindet";
+    text = `Die Lasso-Lösung (${fmt(lasso.p[0])}; ${fmt(lasso.p[1])}) liegt auf einer Kante der Raute, ihr Multiplikator ist nach ${ref("satz:karush-kuhn-tucker-bedingungen")} positiv. Der Ridge-Kreis lässt den KQ-Schätzer dagegen schon zu: Dort ist die Nebenbedingung inaktiv, die Komplementarität erzwingt μ = 0, und die linke Tafel vermerkt das. Ein und derselbe Radius bindet also die eine Norm noch und die andere nicht mehr.`;
   } else {
     art = "warn";
     titel = "die Nebenbedingung ist inaktiv";

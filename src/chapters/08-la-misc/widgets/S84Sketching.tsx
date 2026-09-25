@@ -27,7 +27,11 @@ import { ref } from "../../numbers.generated";
  * Abweichung ist damit 9,97 % bei m = 50 und 7,06 % bei m = 100, also
  * praktisch die Faustregel 1/sqrt(2m) (10,00 % bzw. 7,07 %). Das Band
  * +-1/sqrt(2m) faengt rund 68 % der Ziehungen (4000 Ziehungen: 68,2 %).
- * Verifiziert in historische Prüfung, Skript nicht mehr vorhanden, 2026-08-19.
+ * PRÜFSTATUS: scripts/verify/REV29/08-la-misc-S84Sketching.mjs (2026-08-29),
+ * Teil von `npm run verify:numbers`. Das Skript liest X und Y aus dieser Datei,
+ * rechnet Abstand und Winkel unabhängig nach und schätzt die Standardabweichung
+ * der relativen Abstandsabweichung sowie die Bandabdeckung aus 4000 geseedeten
+ * Ziehungen (eigener RNG, nicht der des Widgets).
  */
 
 const { gruen: GREEN, blau: BLUE, rot: RED, orange: ORANGE, violett: PURPLE, grau: GREY } = FMM_COLORS;
@@ -149,7 +153,8 @@ const grad = (rad: number) => (rad * 180) / Math.PI;
 
 export function SketchingDemo() {
   const [m, setM] = useState(25);
-  const [zeigeFaustregel, setZeigeFaustregel] = useState(false);
+  // Default AN: sonst zeigt der tote Startzustand die Streuung ohne ihren Maßstab.
+  const [zeigeFaustregel, setZeigeFaustregel] = useState(true);
   const { seed, neueStichprobe, setSeed } = useSeed(SEED0);
 
   const zeilen = useMemo(() => ziehung(seed), [seed]);
@@ -219,7 +224,12 @@ export function SketchingDemo() {
         yDomain={yDomain}
         width={460}
         height={260}
+        ariaLabel={`Relative Abweichung von Abstand (rot) und Winkel (violett) über der Skizzendimension m; bei m = ${m} beträgt sie ${fmt(jetzt.distAbw, 1)} Prozent beziehungsweise ${fmt(jetzt.winkelAbw, 1)} Prozent.`}
       />
+      <p className="text-xs">
+        <span style={{ color: RED }}>■</span> Abstand <span style={{ color: PURPLE }}>■</span>{" "}
+        Winkel {zeigeFaustregel && <><span style={{ color: ORANGE }}>▪ ▪</span> Faustregel ±1/√(2m)</>}
+      </p>
       <div className="max-w-prose space-y-1 text-sm">
         <p className="font-mono">
           n = {N}, m = {m}, Kompression {fmt(N / m, 1)}×

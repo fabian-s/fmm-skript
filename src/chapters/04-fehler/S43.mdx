@@ -113,9 +113,8 @@ Minimum zu, sondern davon weg?
 Ohne Rauschen ist
 $\theta_{k+1} = \theta_k - \alpha \cdot 2\theta_k = (1 - 2\alpha)\,\theta_k$,
 der Abstand zum Minimum wird in jedem Schritt also mit
-$\corange{\rho(\alpha) = |1 - 2\alpha|}$ multipliziert. Das erklärt alle vier Regime: monotone Konvergenz für $\alpha < 0{,}5$, ein einziger Schritt
-bei $\alpha = 0{,}5$, Oszillation mit schrumpfender Amplitude für
-$0{,}5 < \alpha < 1$, und ab $\alpha > 1$ Divergenz. Die Schwelle ist
+$\corange{\rho(\alpha) = |1 - 2\alpha|}$ multipliziert. Die nach dem Auflösen
+eingeblendete $\corange{\rho}$-Kurve ordnet die vier Regime ein. Die Schwelle ist
 keine Eigenschaft von SGD, sondern der Krümmung von $L$: Für
 $L(\theta) = \tfrac{c}{2}\theta^2$ läge sie bei $\alpha = 2/c$.
 :::
@@ -341,7 +340,7 @@ Genauigkeit?
 
 Der Rechner macht die Faustregel aus @bemerkung:interpretation zur Ablesehilfe:
 $\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
-$c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ genau 16, und
+$c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ gut 16, und
 darüber bleibt nichts mehr übrig, wie in @beispiel:die-instabilitaet-in-r.
 :::
 

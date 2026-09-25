@@ -24,8 +24,8 @@ import { num, ref } from "../../numbers.generated";
  * Kapitel freie Violett, die Armijo-Gerade als reine Abnahmeschranke bleibt
  * neutral grau.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * ältere Prüfungen check-math-s133.mjs / -s133b.mjs bestätigt) für
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege) für
  * f(x) = ½x₁² + 2,5x₂² in x = (5; 1): ∇f = (5; 5), d = (−5; −5),
  * ∇f(x)d = −50, φ(0) = 15, φ(1) = 40, φ(0,5) = 8,75, exakter Minimierer
  * γ* = 1/3 mit φ = 6,667. Mit c = 10⁻⁴ und ρ = 0,5 wird γ = 1 verworfen und
@@ -37,6 +37,10 @@ import { num, ref } from "../../numbers.generated";
  * x = (−1,75; −2), c = 0,5, ρ = 0,9); der „erfolglos"-Zweig ist damit
  * unerreichbar und bleibt reine Absicherung. γ* liegt in jedem Zustand unter
  * GMAX = 1,2, die senkrechte Hilfslinie fehlt nie.
+ *
+ * BAUENTSCHEIDUNG: Der Regler für c beginnt bei 0,05 und damit weit über dem
+ * Praxiswert 10⁻⁴ — nur so ist die graue Armijo-Gerade von der waagerechten
+ * Höhe φ(0) zu unterscheiden.
  */
 
 const BLAU = FMM_COLORS.blau; // akzeptierter Schritt
@@ -292,10 +296,6 @@ export function ArmijoWidget() {
               exakter Minimierer γ* = {fmt(gStern, 4)} mit φ(γ*) = {fmt(phi(gStern))}
             </p>
           </div>
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-            Der Regler für c beginnt bei 0,05 und damit weit über dem Praxiswert 10⁻⁴; nur so ist
-            die graue Armijo-Gerade von der waagerechten Höhe φ(0) zu unterscheiden.
-          </p>
         </div>
       </div>
       <Verdikt kind={art} titel={titel}>

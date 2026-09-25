@@ -24,8 +24,8 @@ import { ref } from "../../numbers.generated";
  * Beispiel ist die Quadrik f(x) = 0,5 x1^2 + 2,5 x2^2 (Hesse diag(1; 5),
  * kappa = 5, H^{-1} = diag(1; 0,2)) mit Start (5; 1) und B_0 = I.
  *
- * PRÜFSTATUS (historische Notiz: Das ursprüngliche Skript ist nicht mehr vorhanden; die folgenden Zahlen sind derzeit nicht reproduzierbar nachgewiesen, 2026-08-19;
- * aeltere Pruefung check-math-s134.mjs bestaetigt):
+ * PRÜFSTATUS (scripts/verify/REV29/12-optim.mjs, 2026-08-29; unabhängige
+ * Rechenwege):
  *  - Einheitsschritt alpha = 1: (5; 1) -> (0; -4) -> (-2,222; 0,444) ->
  *    (0,816; 0,082) -> ...; f springt im ersten Schritt von 15 auf 40 und
  *    faellt danach (15 / 40 / 2,963 / 0,3499 / 0,0006 / ...); B_6 liegt

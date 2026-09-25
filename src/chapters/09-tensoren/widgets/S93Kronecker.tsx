@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Aufgabe, FMM_COLORS, MatrixDisplay, Verdikt } from "../../../lib";
+import { Aufgabe, FMM_COLORS, MatrixDisplay, Verdikt, W_BUTTON, W_BUTTON_AKTIV } from "../../../lib";
 import { ref } from "../../numbers.generated";
 
 /**
@@ -9,15 +9,23 @@ import { ref } from "../../numbers.generated";
  * Farbrollen: A blau, B^T grün, skalierte A-Blöcke orange, Umordnung rot.
  * Provenienz: Eigenbau nach Definition 9.3.12 und Satz 9.5.3.
  * Per node verifiziert: 2×2-Blockform, P(A⊗_KB)P^T=B⊗_KA und Beispielwerte in
- * scripts/verify/KAP09/kronecker-vektorisierung.mjs (2026-08-20).
+ * scripts/verify/KAP09/kronecker-vektorisierung.mjs (2026-08-20); die drei
+ * Presets als echte Fallunterscheidung (A = I, Bᵀ = I, beide voll besetzt) in
+ * scripts/verify/REV29/09-tensoren-S93Kronecker.mjs (2026-08-29).
  */
 type Mat = number[][];
 
 const { blau, gruen, orange, rot } = FMM_COLORS;
+/**
+ * Die drei Presets sind eine Fallunterscheidung, keine drei Zahlenbeispiele:
+ * mit A = I skaliert Bᵀ ganze Einheitsblöcke, mit B = I steht A zweimal auf der
+ * Blockdiagonalen, und erst der dritte Fall mischt beides. Jeder Fall hat einen
+ * eigenen Verdikt-Zweig.
+ */
 const PRESETS: { name: string; A: Mat; B: Mat }[] = [
-  { name: "Vektorisierung", A: [[1, 2], [0, 1]], B: [[1, 1], [0, 2]] },
-  { name: "Diagonale Faktoren", A: [[2, 0], [0, -1]], B: [[3, 0], [0, 4]] },
-  { name: "Gemischte Vorzeichen", A: [[1, -1], [2, 0]], B: [[0, 1], [1, 1]] },
+  { name: "A = I", A: [[1, 0], [0, 1]], B: [[1, 1], [0, 2]] },
+  { name: "B = I", A: [[1, 2], [0, 1]], B: [[1, 0], [0, 1]] },
+  { name: "beide voll besetzt", A: [[1, 2], [0, 1]], B: [[1, 1], [0, 2]] },
 ];
 
 const transpose = (M: Mat): Mat => M[0].map((_, j) => M.map((row) => row[j]));
@@ -55,7 +63,10 @@ export function KroneckerRechner() {
   const name = vertauscht ? "A ⊗_K Bᵀ" : "Bᵀ ⊗_K A";
 
   return <div className="rounded p-3" style={{ backgroundColor: "var(--w-bg)" }}>
-    <Aufgabe>Wählen wir Faktoren und vertauschen wir die Kronecker-Reihenfolge. Welche Blockmatrix wirkt auf vec(X)?</Aufgabe>
+    <Aufgabe>
+      Klicken wir die drei Faktorpaare durch und vertauschen wir die Reihenfolge: Wo landen
+      die Einträge von Bᵀ, wo die Blöcke von A, und was genau ändert die Vertauschung?
+    </Aufgabe>
     <div className="my-3 flex flex-wrap items-start gap-4">
       <div><div className="text-sm" style={{ color: blau }}>A</div><MatrixDisplay value={A} /></div>
       <div><div className="text-sm" style={{ color: gruen }}>Bᵀ</div><MatrixDisplay value={transpose(B)} /></div>
@@ -66,17 +77,20 @@ export function KroneckerRechner() {
     </div>
     <div className="mt-3 flex flex-wrap gap-2">
       {PRESETS.map((entry, index) => <button key={entry.name} type="button" aria-pressed={preset === index}
-        onClick={() => setPreset(index)} className="rounded border px-2 py-1 text-sm"
-        style={{ borderColor: preset === index ? orange : "var(--w-border)" }}>{entry.name}</button>)}
+        onClick={() => setPreset(index)} className={preset === index ? W_BUTTON_AKTIV : W_BUTTON}>{entry.name}</button>)}
       <button type="button" aria-pressed={vertauscht} onClick={() => setVertauscht((value) => !value)}
-        className="rounded border px-2 py-1 text-sm" style={{ borderColor: vertauscht ? rot : "var(--w-border)" }}>
+        className={vertauscht ? W_BUTTON_AKTIV : W_BUTTON}>
         {vertauscht ? "Bᵀ ⊗_K A zeigen" : "A ⊗_K Bᵀ zeigen"}
       </button>
     </div>
     <Verdikt kind={vertauscht ? "warn" : "ok"}>
       {vertauscht
         ? "A ⊗_K Bᵀ hat ebenfalls das Format 4 × 4, ordnet die vier Produkte aber anders an. Für quadratische Faktoren ist es zu Bᵀ ⊗_K A permutationsähnlich, nicht gleich."
-        : `Jeder grüne Eintrag von Bᵀ skaliert einen ganzen blauen A-Block. Daher bildet Bᵀ ⊗_K A die gestapelten Spalten von X genau zu vec(AXB) ab, wie ${ref("satz:vektorisierung-eines-matrixprodukts")} behauptet.`}
+        : preset === 0
+          ? `Mit A = I ist jeder Block ein Vielfaches der Einheitsmatrix: Bᵀ ⊗_K I trägt die Einträge von Bᵀ als Skalare, jeder wirkt auf einen ganzen Zweierblock von vec(X). Das ist die Wirkung von B auf die Spalten, nichts weiter.`
+          : preset === 1
+            ? `Mit B = I ist Bᵀ = I, und A steht zweimal unverändert auf der Blockdiagonalen; alle übrigen Blöcke sind null. I ⊗_K A wendet also A getrennt auf jede Spalte von X an – die Spalten sprechen nicht miteinander.`
+            : `Jeder grüne Eintrag von Bᵀ skaliert einen ganzen blauen A-Block. Erst wenn beide Faktoren voll besetzt sind, mischen sich Zeilen- und Spaltenwirkung, und Bᵀ ⊗_K A bildet die gestapelten Spalten von X genau zu vec(AXB) ab, wie ${ref("satz:vektorisierung-eines-matrixprodukts")} behauptet.`}
     </Verdikt>
   </div>;
 }
