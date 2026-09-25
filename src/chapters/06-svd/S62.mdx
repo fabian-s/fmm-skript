@@ -3,8 +3,7 @@ import { SvdGeometrieExplorer } from "./widgets/S62Geometrie";
 
 In @sec:motivation haben wir die Frage nach der Richtung stärkster
 Streckung auf ein Maximierungsproblem über der Einheitssphäre zurückgeführt.
-Der entscheidende Kniff war, statt $\left\|\bA\bx\right\|$ das Quadrat zu
-maximieren:
+Dabei haben wir statt $\left\|\bA\bx\right\|$ das Quadrat maximiert:
 
 $$ {#eq-eq-6-2-1}
 \left\|\bA\bx\right\|^2 = (\bA\bx)^\top(\bA\bx) = \bx^\top\bigl(\bA^\top\bA\bigr)\bx .
@@ -18,8 +17,8 @@ dabei die :k[euklidische Norm]{#euclidean-norm} $\left\|\cdot\right\|_2$.)
 
 ### Die Matrix $\bA^\top\bA$
 
-Zwei Eigenschaften machen $\bA^\top\bA$ so angenehm, und beide fallen fast von
-selbst ab.
+Zwei Eigenschaften machen $\bA^\top\bA$ so nützlich, und beide sind leicht zu
+zeigen.
 
 :::satz[#eigenschaften-von-a-a (Eigenschaften von AᵀA)]
 Für $\bA \in \R^{m \times n}$ gilt:
@@ -99,9 +98,8 @@ Die Spalten von $\cblue{\bV}$ sind Eigenvektoren von $\bA^\top\bA$ und bilden
 eine Orthonormalbasis des $\R^n$.
 :::
 
-Damit liegt das halbe Rüstzeug für die Singulärwertzerlegung schon bereit: eine
-orthonormale Basis, in der $\bA^\top\bA$ nichts weiter tut als achsenweises
-Skalieren. Rechnen wir das an einer kleinen Matrix durch, die uns durch den
+Damit haben wir eine orthonormale Basis, in der $\bA^\top\bA$ nichts weiter tut
+als achsenweises Skalieren. Rechnen wir das an einer kleinen Matrix durch, die uns durch den
 ganzen Abschnitt begleitet.
 
 :::beispiel[#die-matrix-a-a-einer-3-2-matrix (Die Matrix AᵀA einer 3×2-Matrix)]
@@ -144,8 +142,7 @@ echt positiv, $\bA^\top\bA$ ist also positiv definit. Der Grund: Die beiden
 Spalten von $\bA$ sind :k[linear unabhängig]{#linear-independence},
 $\bA\bx = \bnull$ gilt somit nur für
 $\bx = \bnull$, und ein Eigenwert $0$ hätte nach der Rechnung oben einen
-Eigenvektor mit $\bA\bv = \bnull$ verlangt. Zwei schnelle
-Proben: Die Summe der Eigenwerte ist $11$, die Spur von $\bA^\top\bA$; ihr
+Eigenvektor mit $\bA\bv = \bnull$ verlangt. Zwei Proben: Die Summe der Eigenwerte ist $11$, die Spur von $\bA^\top\bA$; ihr
 Produkt ist $14$, die :k[Determinante]{#determinant} $6 \cdot 5 - 4^2$.
 :::
 
@@ -168,7 +165,7 @@ Länge $q$ wird die Liste mit Nullen ergänzt.
 
 :::bemerkung[#singulaerwerte-sind-streckungsfaktoren (Singulärwerte sind Streckungsfaktoren)]
 - $\corange{\sigma_1} = \max_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$ ist
-  die maximale Streckung. Das ist genau das Maximierungsproblem aus
+  die maximale Streckung. Das ist das Maximierungsproblem aus
   @sec:motivation: Über @eq:eq-6-2-1 maximieren wir die quadratische
   Form von $\bA^\top\bA$, und deren größter Wert auf der Einheitssphäre ist
   $\lambda_1$.
@@ -209,12 +206,12 @@ $$
 $$
 
 sagt, wie richtungsabhängig (*anisotrop*) diese Matrix wirkt. Für quadratische,
-invertierbare Matrizen ist $\sigma_1/\sigma_n$ genau die Spektralkondition
+invertierbare Matrizen ist $\sigma_1/\sigma_n$ die Spektralkondition
 $\kappa_2(\bA) = \left\|\bA\right\|_2 \left\|\bA^{-1}\right\|_2$ aus
 @sec:matrix-spur-norm/eigenschaften; dort hatten wir sie als
 Verhältnis der extremen Streckungsfaktoren gedeutet und angekündigt, dass die
-Singulärwerte diese Deutung noch durchsichtiger machen. Damit lösen wir das
-ein: $\left\|\bA\right\|_2 = \corange{\sigma_1}$ ist die stärkste Streckung
+Singulärwerte diese Deutung noch durchsichtiger machen. Das ist jetzt der Fall:
+$\left\|\bA\right\|_2 = \corange{\sigma_1}$ ist die stärkste Streckung
 durch $\bA$, und $\left\|\bA^{-1}\right\|_2 = 1/\corange{\sigma_n}$, denn die
 schwächste Streckung durch $\bA$ ist die stärkste durch $\bA^{-1}$.
 Für rechteckige Matrizen mit vollem Spaltenrang, wie hier, ist
@@ -254,7 +251,7 @@ zusätzlichen erzwungenen Nullen.
 Die zweite Schreibweise in @eq:rechte-und-linke-singulaervektoren ist die aussagekräftigere: $\bA$ bildet die
 Richtung $\cblue{\bv_i}$ auf die Richtung $\cgreen{\bu_i}$ ab und streckt dabei
 um $\corange{\sigma_i}$. Dass die Bildrichtungen dabei aufeinander senkrecht
-stehen, ist der eigentliche Grund, warum die ganze Konstruktion trägt.
+stehen, ist der Grund, warum die Konstruktion funktioniert.
 
 :::satz[#orthogonalitaet-der-singulaervektoren (Orthogonalität der Singulärvektoren)]
 Seien $\cblue{\bv_1}, \dots, \cblue{\bv_n}$ orthonormale rechte
@@ -301,8 +298,8 @@ $$
 :::
 
 :::schritt
-Halten wir den Unterschied fest: Die $\cblue{\bv_i}$ sind orthoNORMAL, ihre
-Bilder $\bA\cblue{\bv_i}$ dagegen nur orthogonal, mit Längen
+Die $\cblue{\bv_i}$ sind ortho*normal*, ihre Bilder $\bA\cblue{\bv_i}$
+dagegen nur orthogonal, mit Längen
 $\corange{\sigma_i}$. Erst die Normierung @eq:rechte-und-linke-singulaervektoren macht daraus orthonormale
 Vektoren,
 
@@ -404,8 +401,8 @@ $\R^2$, rechts sein Bild im $\R^3$.
 
 ### Fundamentale Unterräume
 
-Bisher waren die Singulärvektoren Rechengrößen. Sie leisten aber mehr: Sie
-beschreiben auf einen Schlag alle Unterräume, die zu einer Matrix gehören.
+Die Singulärvektoren beschreiben außerdem alle Unterräume, die zu einer Matrix
+gehören.
 
 :::satz[#charakterisierung-der-fundamentalen (Charakterisierung der fundamentalen Unterräume)]
 Sei $\bA \in \R^{m \times n}$ mit genau $r$ von null verschiedenen
@@ -425,13 +422,13 @@ $\sigma_{r+1} = \cdots = \sigma_n = 0$. Dann gilt:
    verschiedenen Singulärwerte.
 :::
 
-Achten wir auf den Wechsel zwischen (1) und (2): In (1) steht eine
+Zum Wechsel zwischen (1) und (2): In (1) steht eine
 Orthonormalbasis, in (2) nur eine Orthogonalbasis. Der Grund steht in
 @satz:orthogonalitaet-der-singulaervektoren, die Längen $\left\|\bA\cblue{\bv_i}\right\| = \corange{\sigma_i}$
 sind im Allgemeinen eben nicht $1$. Erst das Teilen durch
 $\corange{\sigma_i}$ macht die $\cgreen{\bu_i}$ daraus.
 
-:::::vertiefung[Warum die Singulärvektoren genau die vier Unterräume aufspannen]
+:::::vertiefung[Warum die Singulärvektoren die vier Unterräume aufspannen]
 Der Beweis geht in vier Etappen: Kern, Umkehrung, Spaltenraum, Zeilenraum.
 
 ::::beweis
@@ -496,8 +493,8 @@ $\col(\bA^\top)$ vollständig auf.
 :::::
 
 Damit liefert die SVD explizite Orthonormalbasen für alle vier fundamentalen
-Unterräume. Der vierte, der linke Kern $\operatorname{Kern}(\bA^\top)$, fällt
-im nächsten Beispiel nebenbei mit ab.
+Unterräume. Den vierten, den linken Kern $\operatorname{Kern}(\bA^\top)$,
+behandelt das nächste Beispiel mit.
 
 :::beispiel[#alle-unterraeume-einer-rang-1-matrix (Alle Unterräume einer Rang-1-Matrix)]
 Wir nehmen
@@ -570,7 +567,7 @@ $$
 
 ### Der SVD-Hauptsatz
 
-Alle Bausteine liegen bereit. Sammeln wir die rechten Singulärvektoren als
+Sammeln wir die rechten Singulärvektoren als
 Spalten in einer Matrix, ebenso die linken, und schreiben wir die Singulärwerte
 auf eine Diagonale, dann steht die Zerlegung da.
 
@@ -653,7 +650,7 @@ stimmen also auf einer Basis des $\R^n$ überein und sind damit gleich.
 :::::
 
 :::beispiel[#die-gestalt-von (Die Gestalt von Σ)]
-Die Blockform @eq:singulaerwertzerlegung-2 wirkt sperriger, als sie ist. Drei Fälle:
+Die Blockform @eq:singulaerwertzerlegung-2 in drei Fällen:
 
 Für ein quadratisches $\bA$ mit $m = n = 3$ und $r = 2$ ist
 
@@ -752,7 +749,7 @@ Wenn ein Singulärwert von $\bA$ null ist, muss $\bA$ die Nullmatrix sein.
 
 Ein einziger verschwindender Singulärwert bedeutet nur, dass $\bA$ eine
 Richtung plattdrückt. @beispiel:alle-unterraeume-einer-rang-1-matrix zeigt eine Matrix mit
-$\sigma_1 = 2$ und $\sigma_2 = 0$, die alles andere als null ist; nach
+$\sigma_1 = 2$ und $\sigma_2 = 0$, die nicht null ist; nach
 @satz:charakterisierung-der-fundamentalen hat sie den Rang $1$ und einen eindimensionalen Kern.
 :::
 
@@ -760,7 +757,7 @@ $\sigma_1 = 2$ und $\sigma_2 = 0$, die alles andere als null ist; nach
 Die rechten Singulärvektoren $\bv_i$ sind orthonormal, die Bildvektoren
 $\bA\bv_i$ dagegen im Allgemeinen nur orthogonal.
 
-Genau das sagt @satz:orthogonalitaet-der-singulaervektoren: Die Bilder stehen paarweise senkrecht aufeinander,
+Das sagt @satz:orthogonalitaet-der-singulaervektoren: Die Bilder stehen paarweise senkrecht aufeinander,
 haben aber die Längen $\sigma_i$. Erst die Division durch $\sigma_i$ macht
 daraus die orthonormalen linken Singulärvektoren.
 :::

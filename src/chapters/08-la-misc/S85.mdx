@@ -1,7 +1,7 @@
 Bis Kapitel 7 lief fast alles über *Zerlegungen*. LU, Cholesky, QR und die SVD
 schreiben eine Matrix als Produkt handlicher Faktoren, und die eigentliche
 Rechnung findet danach in diesen Faktoren statt. Das ist exakt bis auf
-Rundungsfehler, und es kostet, was es kostet: rund $n^3$ Operationen, gleich ob
+Rundungsfehler und kostet einen festen Preis: rund $n^3$ Operationen, gleich ob
 wir drei Stellen brauchen oder fünfzehn. In diesem Kapitel sind zwei
 Bauprinzipien dazugekommen, die diesen festen Preis drücken, indem sie etwas
 anderes dafür hergeben.
@@ -14,8 +14,8 @@ anderes dafür hergeben.
    taugt aber nicht als Algorithmus (@bemerkung:warum-das-charakteristische-polynom-kein). Stattdessen wenden wir
    die Matrix immer wieder an. Die Potenzmethode (@algorithmus:potenzmethode) holt mit
    einem :k[Matrix-Vektor-Produkt]{#matrix-vector-product} pro Schritt das
-   betragsgrößte Eigenpaar, sofern der größte Eigenwert einsam an der Spitze
-   steht (@satz:konvergenz-der-potenzmethode); die QR-Iteration (@algorithmus:qr-iteration) liefert unter den
+   betragsgrößte Eigenpaar, sofern der größte Eigenwert betragsmäßig von den
+   übrigen getrennt ist (@satz:konvergenz-der-potenzmethode); die QR-Iteration (@algorithmus:qr-iteration) liefert unter den
    Voraussetzungen von @bemerkung:wogegen-die-qr-iteration-konvergiert alle Eigenwerte auf einmal, im Grunde
    als simultane Potenzmethode auf allen Koordinatenachsen (@bemerkung:die-qr-iteration-ist-eine-simultane).
    Getragen wird die QR-Iteration von der Ähnlichkeit: Jeder Schritt ersetzt
@@ -56,8 +56,8 @@ anderes dafür hergeben.
    $1 - \delta$.
 :::
 
-Die zweite und die dritte Idee laufen auf dasselbe Geschäft hinaus: Wir geben
-Genauigkeit her und bekommen Laufzeit zurück. Nur sitzt der Regler an
+Die zweite und die dritte Idee laufen auf denselben Tausch hinaus: Wir geben
+Genauigkeit her und bekommen Laufzeit zurück. Der Regler sitzt aber an
 verschiedenen Stellen.
 
 ### Laufzeit gegen Genauigkeit
@@ -69,7 +69,7 @@ verschiedenen Stellen.
 | Iteration (@num:la-misc/eigenwerte, @num:la-misc/iterative-loeser) | Iterationszahl $k$ | $k$ mal die Kosten eines Schritts | Fehler höchstens $\corange{\rho}^{\,k}$ mal Startfehler |
 | Sketching (@num:la-misc/sketching) | Skizzengröße $m$ | Rechnen in $\R^m$ statt in $\R^n$ | Verzerrung $\eps$ je festem Paar, mit Wahrscheinlichkeit $1 - \delta$ |
 
-Die beiden Regler haben sehr verschiedene Preisschilder. Bei der Iteration
+Die beiden Regler kosten sehr Verschiedenes. Bei der Iteration
 fällt der Fehler geometrisch, die Schrittzahl wächst deshalb nur wie
 $\log(1/\eps)$ (@korollar:zahl-der-iterationen); die Zahlen dazu stehen bei
 @beispiel:richardson-iteration. Beim Sketching fällt die Verzerrung dagegen
@@ -79,8 +79,7 @@ und eine zusätzliche Dezimalstelle verlangt die hundertfache Skizzengröße.
 
 Ein fairer Vergleich ist das trotzdem nicht, denn die beiden $\eps$ messen
 Verschiedenes: einmal den Abstand zur Lösung, einmal die Verzerrung der
-Geometrie. Die Faustregel, die bleibt: Wo hohe Genauigkeit gefragt ist,
-iterieren wir; wo eine grobe Antwort genügt und $n$ riesig ist, würfeln wir.
+Geometrie. Als Faustregel: Wo hohe Genauigkeit gefragt ist, iterieren wir; wo eine grobe Antwort genügt und $n$ riesig ist, würfeln wir.
 :::
 
 ### Ausblick
@@ -94,8 +93,6 @@ Differenzieren hängt der Buchführung eine weitere Dimension an. Die Fragen
 bleiben dabei dieselben wie hier: zerlegen, approximieren, iterieren.
 
 ### Selbsttest
-
-Fünf Aussagen zu den Kernideen dieses Kapitels. Welche stimmen?
 
 ::::quiz
 
@@ -124,7 +121,7 @@ denn $\bA^{-1}$ zu kennen wäre teurer als das Gleichungssystem selbst.
 Die Potenzmethode konvergiert umso schneller, je näher $|\lambda_2|$ bei
 $|\lambda_1|$ liegt.
 
-Es ist genau umgekehrt. Die Rate ist $\corange{|\lambda_2/\lambda_1|}$
+Es ist umgekehrt. Die Rate ist $\corange{|\lambda_2/\lambda_1|}$
 (@satz:konvergenz-der-potenzmethode), und die geht gegen $1$, sobald sich die beiden Eigenwerte
 nähern; im Grenzfall $|\lambda_2| = |\lambda_1|$ trägt @satz:konvergenz-der-potenzmethode gar nicht
 mehr (@bemerkung:wann-die-potenzmethode-versagt). Dieselbe Nähe macht auch die Eigenvektoren schlecht

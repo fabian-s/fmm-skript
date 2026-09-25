@@ -45,12 +45,12 @@ $$
 \qquad \cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\,\cgreen{\bw}^\top .
 $$
 
-Drei Unterschiede lohnen einen Blick. Das innere Produkt verlangt zwei Vektoren
+Drei Unterschiede: Das innere Produkt verlangt zwei Vektoren
 gleicher Länge, das äußere verträgt beliebige Längen. Beim inneren Produkt
 steht das Transponat links, beim äußeren rechts. Und heraus kommt einmal eine
 einzige Zahl, einmal eine ganze Matrix aus $mn$ Zahlen.
 
-Wer sich die Formeln nicht merken mag, zählt die Formate ab: In
+Statt der Formeln kann man auch die Formate abzählen: In
 $\cblue{\bv}^\top\cgreen{\bw}$ multiplizieren wir $(1 \times n)$ mit
 $(n \times 1)$, die langen Dimensionen treffen sich innen und verschwinden. In
 $\cblue{\bv}\,\cgreen{\bw}^\top$ multiplizieren wir $(m \times 1)$ mit
@@ -79,8 +79,8 @@ $$
 $$
 
 Die zweite Zeile ist das Doppelte der ersten, denn $\cblue{v_2} = 2\cblue{v_1}$.
-Genauso ist jede Spalte ein Vielfaches von $\cblue{\bv} = (1, 2)^\top$. Das ist
-kein Zufall dieses Beispiels, sondern die Regel.
+Genauso ist jede Spalte ein Vielfaches von $\cblue{\bv} = (1, 2)^\top$. Das gilt
+allgemein.
 :::
 
 ### Eine Rang-1-Matrix und was sie tut
@@ -184,7 +184,7 @@ $$
 erhalten (@satz:summenform-der-svd; dort noch als $\bu_i\bv_i^\top$ geschrieben). Jetzt lesen
 wir sie mit @satz:eigenschaften-des-aeusseren-produkts: Jeder Summand ist eine Rang-1-Matrix, ihr Bild ist die
 Gerade $\spann\{\cblue{\bu_i}\}$, und $\corange{\sigma_i}$ sagt, wie stark
-dieser Anteil zählt. Die SVD zerlegt eine Matrix also in $r$ denkbar einfache Bausteine.
+dieser Anteil zählt. Die SVD zerlegt eine Matrix also in $r$ einfache Bausteine.
 Brechen wir die Summe nach $k$ Termen ab, entsteht die beste
 :k[Rang-k-Approximation]{#low-rank-approximation}, wie der Satz von
 Eckart, Young und Mirsky in @sec:svd/anwendungen zeigt.
@@ -237,7 +237,7 @@ $$
 $$
 
 wobei $\softmax$ zeilenweise wirkt und das Ergebnis in $\R^{n_q \times d_v}$
-liegt. Der interessante Faktor ist $\bQ\bK^\top$:
+liegt. Der Faktor $\bQ\bK^\top$ ist hier interessant:
 Sein Eintrag $(i,j)$ ist das innere Produkt $\inner{\bq_i, \bk_j}$, das Modell
 vergleicht also jede Anfrage mit jedem Schlüssel. Als ganze Matrix ist derselbe
 Ausdruck eine Summe äußerer Produkte, diesmal über die $d_k$ Spalten,
@@ -249,7 +249,7 @@ $$
 mit $\bq^{(l)}$ und $\bk^{(l)}$ als $l$-ten Spalten von $\bQ$ und $\bK$. Der
 Rang der *Scorematrix* $\bQ\bK^\top$ ist damit höchstens $d_k$, und weil $d_k$
 in der Praxis viel kleiner ist als die Zahl der Zeilen, steckt in den Scores eine
-Zerlegung von niedrigem Rang, genau wie bei der SVD. Diese Aussage gilt vor der
+Zerlegung von niedrigem Rang, wie bei der SVD. Diese Aussage gilt vor der
 Softmax-Transformation: Softmax ist nicht linear und erhält die Rangschranke im
 Allgemeinen nicht, die Matrix der Attention-Gewichte kann also vollen Rang haben.
 :::
@@ -452,10 +452,10 @@ $i_2$ und $j_2$. Der Index des ersten Faktors läuft also langsam, der des
 zweiten schnell.
 
 Beide Produkte mit demselben Zeichen $\otimes$ zu schreiben, ist verbreitet; welche
-Bedeutung gemeint ist, verrät dann das Format des Ergebnisses. Wir sparen uns diese
-Rückfrage und schreiben $\kron$, sobald das Kroneckerprodukt gemeint ist. Das Zeichen
-$\otimes$ bleibt dem äußeren Produkt und dem Tensorprodukt vorbehalten. Beim Lesen fremder Texte
-ist die Unterscheidung wieder Ihre Aufgabe.
+Bedeutung gemeint ist, verrät dann das Format des Ergebnisses. Wir schreiben
+stattdessen $\kron$, sobald das Kroneckerprodukt gemeint ist. Das Zeichen
+$\otimes$ bleibt dem äußeren Produkt und dem Tensorprodukt vorbehalten. Beim Lesen
+anderer Texte müssen wir die Unterscheidung selbst treffen.
 
 An Vektoren lässt sich das Abflachen gut ablesen. Fassen wir
 $\cblue{\bv} \in \R^{m}$ und $\cgreen{\bw} \in \R^{n}$ als $(m \times 1)$- und
@@ -511,8 +511,7 @@ Blöcke, nur mit unterschiedlichem Vorfaktor.
 :::
 
 :::bemerkung[#transponieren-und-reihenfolge (Transponieren und Reihenfolge)]
-Zwei Regeln sind im Umgang mit dem Kroneckerprodukt nützlich, und die erste
-davon ist bequem:
+Zwei Regeln sind im Umgang mit dem Kroneckerprodukt nützlich. Die erste:
 
 $$
 \bigl(\cblue{\bA} \kron \cgreen{\bB}\bigr)^\top
@@ -520,7 +519,7 @@ $$
 $$
 
 Transponieren zieht also in beide Faktoren hinein, ohne ihre Reihenfolge zu
-vertauschen. Der Nachweis ist ein Blick auf @eq:zwei-bedeutungen-zwei-zeichen: Auf beiden Seiten steht
+vertauschen. Das folgt aus @eq:zwei-bedeutungen-zwei-zeichen: Auf beiden Seiten steht
 an der Stelle mit Zeilenindex $(i_2 - 1)q + j_2$ und Spaltenindex
 $(i_1 - 1)p + j_1$ der Eintrag $\cblue{a_{i_1, i_2}}\cgreen{b_{j_1, j_2}}$.
 
@@ -554,8 +553,8 @@ werden; deshalb ist die Reihenfolge der Faktoren Teil der Rechenvorschrift.
 ### Blockstrukturen aus Kroneckerprodukten
 
 Setzen wir eine :k[Einheitsmatrix]{#identity-matrix} als einen der beiden
-Faktoren ein, entstehen Muster, die in der Statistik ständig vorkommen. Auf
-welcher Seite sie steht, macht dabei den ganzen Unterschied.
+Faktoren ein, entstehen Muster, die in der Statistik häufig vorkommen. Auf
+welcher Seite sie steht, entscheidet über die Struktur.
 
 :::beispiel[#s-k-i-n-verteilt-die-eintraege (S ⊗_K I_n verteilt die Einträge)]
 Sei $\cblue{\bS} \in \R^{p \times p}$ mit den Einträgen $\cblue{s_{ij}}$. Dann
@@ -609,7 +608,7 @@ Nullen sonst. In der Statistik ist das die Kovarianzmatrix eines Vektors, der
 aus $n$ voneinander unabhängigen Blöcken besteht, die alle dieselbe
 Kovarianzmatrix $\cblue{\bS}$ haben; ein typischer Fall sind $n$ Personen mit
 je $p$ Messungen. Der Vergleich mit @beispiel:s-k-i-n-verteilt-die-eintraege zeigt die
-Nicht-Kommutativität von der anschaulichen Seite: Dieselben zwei Faktoren
+Nicht-Kommutativität anschaulich: Dieselben zwei Faktoren
 ergeben einmal eine blockdiagonale und einmal eine über die ganze Matrix
 verteilte Struktur.
 :::
@@ -680,8 +679,8 @@ Noch klarer wird die Struktur in Korrelationen. Zwei Beobachtungen am selben Ort
 zu verschiedenen Zeiten sind mit $1{,}6/2{,}0 = 0{,}8$ korreliert, zwei
 Beobachtungen zur selben Zeit an verschiedenen Orten mit
 $0{,}5/2{,}0 = 0{,}25$, und unterscheiden sich beide Merkmale, so ist die
-Korrelation das Produkt $0{,}8 \cdot 0{,}25 = 0{,}2$. Separierbarkeit heißt
-genau das: Die Korrelation zerfällt in einen zeitlichen und einen räumlichen
+Korrelation das Produkt $0{,}8 \cdot 0{,}25 = 0{,}2$. Das ist Separierbarkeit:
+Die Korrelation zerfällt in einen zeitlichen und einen räumlichen
 Anteil, die sich nicht gegenseitig beeinflussen.
 :::
 
@@ -703,7 +702,7 @@ für jedes $c > 0$ lässt sich ein Skalenfaktor zwischen den Kovarianzfaktoren
 verschieben. Identifizierbar ist deshalb ein Parameter weniger, im Beispiel also
 $5$ statt $6$.
 
-Bezahlt wird die Sparsamkeit mit einer echten Einschränkung. Separierbarkeit
+Die Sparsamkeit kostet eine Einschränkung. Separierbarkeit
 verbietet, dass sich das räumliche Muster über die Zeit ändert. Ein Wetterfeld,
 dessen Zusammenhänge morgens anders aussehen als abends, lässt sich so nicht
 beschreiben.

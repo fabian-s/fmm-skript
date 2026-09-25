@@ -1,11 +1,10 @@
 import { SelbsttestFrage } from "./widgets/S11Widgets";
 
-Statistik war einmal Papier-und-Bleistift-Arbeit an kleinen Tabellen. Heute ist sie
-(genau wie das maschinelle Lernen) durch und durch *computational*: Jedes Modell,
+Statistik ist heute, genau wie das maschinelle Lernen, Rechnerarbeit: Jedes Modell,
 das wir fitten, jede Prognose, die wir berechnen, entsteht durch einen Algorithmus auf
 einem Rechner. In diesem Skript lernen wir die mathematischen Konzepte, mit denen wir
 solche Algorithmen entwickeln, verstehen und beurteilen können. Es geht also nicht um
-neue Statistik, sondern um die Frage: *Wie rechnet man das eigentlich – schnell,
+neue Statistik, sondern um die Frage: *Wie rechnet man das eigentlich, schnell,
 sparsam und zuverlässig?*
 
 ### Warum Numerik?
@@ -22,21 +21,21 @@ $$
 
 lösen. Die Theorie liefert die Formel
 $\wh{\bbeta} = (\bX^\top\bX)^{-1}\bX^\top\by$. Wer sie wörtlich in
-den Rechner tippt, erlebt gleich drei Überraschungen. Erstens die *Kondition*: Die
+den Rechner tippt, bekommt drei Probleme. Das erste ist die *Kondition*: Die
 Matrix $\bX^\top\bX$ kann so empfindlich sein, dass winzige
 :k[Rundungsfehler]{#rounding-error} das Ergebnis komplett
-verfälschen. Zweitens die *Komplexität*: Das
+verfälschen. Das zweite ist die *Komplexität*: Das
 :k[Invertieren]{#matrix-inverse} kostet
 :k[$O(p^3)$]{#big-o-notation} Rechenoperationen, für
-$p = 10\,000$ rund $10^{12}$ Gleitkommaoperationen. Drittens der
+$p = 10\,000$ rund $10^{12}$ Gleitkommaoperationen. Das dritte ist der
 *Speicher*: $\bX^\top\bX$ ist eine
-$p \times p$-Matrix und belegt allein schon etwa 800 MB. Bessere Wege (die
-:k[QR-Zerlegung]{#qr-factorization}, die
-:k[Singulärwertzerlegung]{#singular-value-decomposition},
-iterative Verfahren) sind genau der Stoff dieses Skripts.
+$p \times p$-Matrix und belegt allein schon etwa 800 MB. Wie es besser geht (mit der
+:k[QR-Zerlegung]{#qr-factorization}, der
+:k[Singulärwertzerlegung]{#singular-value-decomposition} oder
+iterativen Verfahren), ist der Stoff dieses Skripts.
 
 :::beispiel[#komplexitaet-matrixmultiplikation (Komplexität der Matrixmultiplikation)]
-Für zwei $n \times n$-Matrizen hängt der Rechenaufwand stark vom gewählten
+Für zwei $n \times n$-Matrizen hängt der Rechenaufwand vom gewählten
 Algorithmus ab:
 
 | Algorithmus | Rechenoperationen für $n = 1000$ | Komplexität |
@@ -45,17 +44,15 @@ Algorithmus ab:
 | Strassen | $\approx 6 \cdot 10^8$ | $O(n^{2{,}807})$ |
 | Bester bekannter Algorithmus | $\approx 2 \cdot 10^8$ | $O(n^{2{,}373})$ |
 
-Die Exponenten liegen scheinbar nah beieinander, wirken sich bei großen Matrizen
-aber stark aus. Welches Verfahren praktisch gewinnt, hängt zusätzlich von
-Konstanten und Speicherzugriffen ab.
-
-Für $n = 10\,000$ stehen damit grob $10^{12}$ Operationen der naiven Methode
-etwa $2 \cdot 10^{10}$ Operationen gegenüber. Das ist ein möglicher Faktor
-von 50. Für die Statistik ist dieser Unterschied entscheidend, weil
-Matrixmultiplikationen etwa beim Schätzen großer Modelle immer wieder anfallen.
+Die Exponenten liegen nah beieinander, machen bei großen Matrizen aber viel aus.
+Für $n = 10\,000$ stehen grob $10^{12}$ Operationen der naiven Methode
+etwa $2 \cdot 10^{10}$ Operationen gegenüber, ein Faktor 50. Welches Verfahren
+in der Praxis gewinnt, hängt allerdings auch von Konstanten und Speicherzugriffen ab.
+Für die Statistik zählt dieser Unterschied, weil beim Schätzen großer Modelle
+immer wieder Matrixmultiplikationen anfallen.
 :::
 
-Wie dramatisch das erste Problem werden kann, zeigt schon ein
+Wie stark das erste Problem ins Gewicht fallen kann, zeigt schon ein
 :k[Gleichungssystem]{#linear-system} mit zwei Unbekannten:
 
 :::beispiel[#ein-schlecht-konditioniertes-problem (Ein schlecht konditioniertes Problem)]
@@ -69,30 +66,29 @@ Subtrahieren wir die erste Zeile von der zweiten, bleibt
 $0{,}0001\,x_2 = 0{,}0001$, also $x_2 = 1$ und damit
 $x_1 = 1$: Die exakte Lösung ist
 $\cblue{\bx} = \cblue{(1, 1)^\top}$. Nun stören wir die rechte Seite
-minimal (etwa so, wie es ein Rundungsfehler täte) im zweiten Eintrag:
+minimal im zweiten Eintrag, etwa so, wie es ein Rundungsfehler täte:
 
 $$
 \cred{\wt{\bb}} = \begin{pmatrix} 2 \\ \cred{2{,}0002} \end{pmatrix} \quimpl 0{,}0001\,x_2 = \cred{0{,}0002} \quimpl \cred{\wt{\bx}} = \cred{\begin{pmatrix} 0 \\ 2 \end{pmatrix}}.
 $$
 
-Die winzige Störung wird bei der Division durch $0{,}0001$ massiv verstärkt:
+Die Division durch $0{,}0001$ verstärkt die winzige Störung um das Zehntausendfache:
 Aus $\cblue{x_2 = 1}$ wird $\cred{\wt{x}_2 = 2}$, aus
-$\cblue{x_1 = 1}$ wird $\cred{\wt{x}_1 = 0}$ – ein Fehler von
-100 % in der Lösung, ausgelöst durch einen Datenfehler von 0,005 %. Solche Probleme
-heißen *schlecht konditioniert*; die
-:k[Konditionszahl]{#condition-number} misst das präzise und
-begleitet uns durch das ganze erste Drittel des Skripts.
+$\cblue{x_1 = 1}$ wird $\cred{\wt{x}_1 = 0}$. Ein Datenfehler von 0,005 % erzeugt
+einen Fehler von 100 % in der Lösung. Solche Probleme heißen
+*schlecht konditioniert*. Die
+:k[Konditionszahl]{#condition-number} misst das präzise; sie
+begleitet uns durch den ganzen ersten Teil des Skripts.
 :::
 
-### Die drei Themenblöcke
+### Die drei Teile des Skripts
 
-Das Skript besteht aus drei Blöcken, die aufeinander aufbauen. Der erste Block,
-*Numerische Lineare Algebra*, klärt zunächst, was einen guten Algorithmus
-ausmacht (Kondition, Stabilität, Komplexität), und entwickelt dann Matrix-Zerlegungen,
-mit denen wir Gleichungssysteme und KQ-Probleme $\bA\bx \approx \bb$
-zuverlässig lösen, statt naiv zu invertieren.
+Der erste Teil, *Numerische Lineare Algebra*, klärt zunächst, was einen guten
+Algorithmus ausmacht (Kondition, Stabilität, Komplexität), und entwickelt dann
+Matrix-Zerlegungen, mit denen wir Gleichungssysteme und KQ-Probleme
+$\bA\bx \approx \bb$ zuverlässig lösen, statt naiv zu invertieren.
 
-Der zweite Block, *Analysis und Optimierung*, verallgemeinert die
+Der zweite Teil, *Analysis und Optimierung*, verallgemeinert die
 :k[Ableitung]{#derivative} auf Funktionen mit Vektor-, Matrix-
 und Tensor-Argumenten. Wozu? Beim Training
 :k[neuronaler Netze]{#neural-network} müssen wir
@@ -101,16 +97,15 @@ $L(\bW) = \tfrac{1}{2}\left\| \bX\bW - \bY \right\|_F^2$ nach einer
 ganzen Matrix $\bW$ ableiten. Naiv wären das so viele einzelne
 :k[partielle Ableitungen]{#partial-derivative}, wie
 $\bW$ Einträge hat, bei $1000 \times 10$ schon
-$10\,000$; der
-Matrix-Kalkül liefert stattdessen eine einzige Zeile,
-$\partial L / \partial \bW = \bX^\top(\bX\bW - \bY)$, und die ist auch
-noch effizient implementierbar. Darauf setzt die numerische Optimierung auf:
+$10\,000$. Der Matrix-Kalkül liefert stattdessen eine einzige Zeile,
+$\partial L / \partial \bW = \bX^\top(\bX\bW - \bY)$, und die lässt sich auch
+effizient implementieren. Darauf setzt die numerische Optimierung auf:
 :k[Gradientenverfahren]{#gradient-descent} und ihre
 Verwandten finden Minima von Funktionen, die nicht
-:k[konvex]{#convexity}, hochdimensional (GPT-3:
-$1{,}75 \cdot 10^{11}$ Parameter!) und nur häppchenweise auswertbar sind.
+:k[konvex]{#convexity}, hochdimensional (GPT-3 hat
+$1{,}75 \cdot 10^{11}$ Parameter) und nur häppchenweise auswertbar sind.
 
-Der dritte Block, *Funktionsapproximation*, fragt: Wie ersetzen wir eine
+Der dritte Teil, *Funktionsapproximation*, fragt: Wie ersetzen wir eine
 komplizierte Funktion durch eine einfache, mit der sich gut rechnen lässt? Das
 klassische Werkzeug ist die
 :k[Taylor-Approximation]{#taylor-series}: Schon
@@ -119,20 +114,20 @@ Wert $1{,}625$ statt $e^{0{,}5} = 1{,}6487\ldots$, ein relativer
 Fehler von unter 2 %. Später kommen flexiblere Bausteine wie Splines dazu, mit denen
 die Statistik glatte Funktionen aus Daten schätzt.
 
-Die drei Blöcke bauen aufeinander auf; welches Kapitel im Einzelnen worauf aufbaut,
-zeigt die Landkarte in @sec:landkarte.
+Welches Kapitel im Einzelnen worauf aufbaut, zeigt die Landkarte in @sec:landkarte.
 
 ### Wie dieses Skript funktioniert
 
-Drei Elemente helfen beim Lesen. *Erstens:* Gestrichelt unterstrichene Begriffe
-wie :k[Eigenwerte]{#eigenvalue-eigenvector} öffnen Tooltips,
-die das nötige Vorwissen auffrischen, oft mit weiteren Links darin, sodass wir uns bei
-Bedarf bis zu den Grundlagen durchhangeln können. *Zweitens:* Blaue
-„Interaktiv"-Kästen enthalten Widgets zum Selbst-Ausprobieren, jeweils mit einer
-Aufgabe und der Auswertung dazu; sie gehören zum roten Faden. Ausklappbare
-„Vertiefung"-Boxen sammeln dagegen Zusatzstoff – Exkurse, längere Beweise,
-Übersichten –, den wir beim ersten Lesen überspringen können; die erste steht am Ende
-von @sec:landkarte. *Drittens:*
+Gestrichelt unterstrichene Begriffe wie :k[Eigenwerte]{#eigenvalue-eigenvector}
+öffnen Tooltips, die das nötige Vorwissen auffrischen. Oft enthalten sie weitere
+Links, sodass wir uns bei Bedarf bis zu den Grundlagen durchhangeln können.
+
+Blaue „Interaktiv"-Kästen enthalten Widgets zum Selbst-Ausprobieren, jeweils mit
+einer Aufgabe und der Auswertung dazu. Sie gehören zum Kernstoff. Ausklappbare
+„Vertiefung"-Boxen sammeln dagegen Zusatzstoff (Exkurse, längere Beweise,
+Übersichten), den wir beim ersten Lesen überspringen können. Die erste steht am Ende
+von @sec:landkarte.
+
 Beweise sind als Stepper gebaut: Wir decken sie Schritt für Schritt auf, und jeder
 Schritt trägt seine Begründung. Am Ende jedes Abschnitts verweist eine
 „Vertiefung:"-Zeile auf Literatur zum Weiterlesen.
@@ -140,10 +135,10 @@ Schritt trägt seine Begründung. Am Ende jedes Abschnitts verweist eine
 ### Selbsttest: Reicht das Vorwissen?
 
 Das Skript setzt Lineare Algebra I, Analysis I und etwas R-Programmierung voraus. Die
-folgenden Fragen sollten wir (zumindest nach kurzem Nachdenken) beantworten können.
-Wer hängt, klappt die Lösung auf und frischt das Thema per Tooltip auf; sehr zu
-empfehlen ist außerdem, die geometrische Intuition mit den Videos von
-*3blue1brown* („Essence of Linear Algebra") aufzubauen.
+folgenden Fragen sollten wir, zumindest nach kurzem Nachdenken, beantworten können.
+Wer hängt, klappt die Lösung auf und frischt das Thema per Tooltip auf. Für die
+geometrische Intuition empfehlen sich außerdem die Videos von
+*3blue1brown* („Essence of Linear Algebra").
 
 **Lineare Algebra:**
 

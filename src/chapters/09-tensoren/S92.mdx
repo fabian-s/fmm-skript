@@ -2,10 +2,9 @@ import { TensorScheibenViewer } from "./widgets/S92Scheiben";
 import vgg16Block3FeatureMaps from "./vgg16-block3-feature-maps.png";
 
 Der Darstellungssatz aus @sec:multilinear (@satz:darstellung-multilinearer-abbildungen) hat multilineare
-Abbildungen vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist mehr als
-ein Nebenprodukt der Rechnung. Sie ist das Objekt, um das sich der Rest des
-Kapitels dreht, und sie hat einen Namen. Bevor wir ihn vergeben, sehen wir nach,
-was aus der Liste im einfachsten Fall wird.
+Abbildungen vollständig auf eine Liste von Zahlen zurückgeführt. Diese Liste ist das
+Objekt, um das es im Rest des Kapitels geht, und sie hat einen Namen. Bevor wir
+ihn vergeben, sehen wir nach, was aus der Liste im einfachsten Fall wird.
 
 ### Der Fall k = 1 liefert die Matrix
 
@@ -31,7 +30,7 @@ $$
 
 Rechts steht eine Summe von Vektoren, gewichtet mit den Komponenten von
 $\cblue{\bx}$. Stellen wir die $\corange{\ba_i}$ als Spalten nebeneinander, so
-ist das genau das :k[Matrix-Vektor-Produkt]{#matrix-vector-product}: Mit
+ist das das :k[Matrix-Vektor-Produkt]{#matrix-vector-product}: Mit
 $\corange{\bA} = (\corange{\ba_1} \mid \cdots \mid \corange{\ba_n}) \in \R^{m \times n}$
 gilt
 
@@ -41,7 +40,7 @@ $$
 
 Der Darstellungssatz reproduziert für $k = 1$ also die vertraute Tatsache, dass
 sich jede lineare Abbildung $\R^n \to \R^m$ als :k[Matrix]{#matrix} schreiben
-lässt. Eine Kleinigkeit lohnt dabei einen zweiten Blick.
+lässt. Ein Detail ist dabei zu beachten.
 
 :::bemerkung[#von-der-koeffizientenfamilie-zur-matrix (Von der Koeffizientenfamilie zur Matrix)]
 Der Darstellungssatz nummeriert die Koeffizienten mit dem Eingangsindex vorn und
@@ -120,7 +119,7 @@ $$
 
 **In Matrixschreibweise.** Die Doppelsumme ist der Ausdruck
 $\cblue{\bx}^\top \corange{\bA}\, \cgreen{\by}$, ausgeschrieben. Eine bilineare
-Abbildung mit Werten in $\R$ heißt eine *Bilinearform*, und genau das ist $T$.
+Abbildung mit Werten in $\R$ heißt eine *Bilinearform*, und das ist $T$.
 Setzen wir beide Argumente gleich, so entsteht daraus die
 :k[quadratische Form]{#quadratic-form}
 $\cblue{\bx} \mapsto \cblue{\bx}^\top \corange{\bA}\, \cblue{\bx}$, eine
@@ -170,7 +169,7 @@ alle:
 | $3$ | Stapel von Matrizen | $n_1 \times n_2 \times n_3$ | $n_1 n_2 n_3$ |
 
 Gelegentlich liest man, ein Tensor sei eine „geordnete Menge" reeller Zahlen.
-Das trifft es nicht ganz. Eine Menge kennt weder Reihenfolge noch Vielfachheit,
+Das ist ungenau: Eine Menge kennt weder Reihenfolge noch Vielfachheit,
 es ist ja $\{1, 1, 2\} = \{2, 1\}$. Worauf es ankommt, ist die Zuordnung: zu
 jedem Indextupel gehört genau eine Zahl. Derselbe Zahlenvorrat, anders
 angeordnet, ergibt einen anderen Tensor. Wir sagen deshalb *indizierte Familie*
@@ -260,8 +259,8 @@ Matrixscheibe desselben Zahlenfelds.
 
 ### Anwendungen: Bilder, Stapel, Feature-Maps
 
-Bis hierher ist ein Tensor ein Buchhaltungsobjekt. Warum er einen eigenen Namen
-und inzwischen sogar eigene Rechenwerke bekommt, zeigt der Blick auf Bilddaten.
+Warum ein Tensor einen eigenen Namen und inzwischen sogar eigene Rechenwerke
+bekommt, zeigt der Blick auf Bilddaten.
 Ein Graustufenbild hält je Bildpunkt eine einzige Zahl fest und ist damit eine
 Matrix. Farbe braucht drei Zahlen je Pixel; ein Farbbild der Größe
 $224 \times 224$ wird deshalb zu einem Tensor der Stufe $3$,
@@ -275,8 +274,8 @@ wieder auf Tensoren ab.
 Rechnungen dieser Art bestehen aus sehr vielen gleichartigen Multiplikationen und
 Additionen auf regelmäßig angeordneten Zahlen. Dafür lassen sich spezialisierte
 Rechenwerke bauen, die solche Blockoperationen am Stück ausführen: Googles TPUs
-und NVIDIAs Tensor Cores sind genau darauf zugeschnitten. Für das maschinelle
-Lernen ist diese Hardware keine Randnotiz, sondern eine Voraussetzung.
+und NVIDIAs Tensor Cores sind darauf zugeschnitten. Für das maschinelle
+Lernen ist diese Hardware eine Voraussetzung.
 
 :::interaktiv[Farbbild als Kanäle]
 Wie setzen sich die drei Zahlen eines Pixels zu seiner sichtbaren Farbe zusammen?
@@ -331,7 +330,7 @@ $$
 Zahlen. Bei einfacher Genauigkeit mit $4$ Byte je Zahl belegt allein die Eingabe
 eines einzigen Rechenschritts damit rund $19$ Millionen Byte. Ob die vierte
 Indexposition die Bilder eines Stapels oder die eines Videos in der Zeit zählt,
-steht ihr nicht an; wir müssen es dazusagen.
+sieht man ihr nicht an; wir müssen es dazusagen.
 :::
 
 :::beispiel[#feature-maps-eine-abbildung-von-tensoren (Feature-Maps: eine Abbildung von Tensoren auf Tensoren)]

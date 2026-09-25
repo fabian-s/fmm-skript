@@ -2,18 +2,17 @@ import { TensorbasisExplorer } from "./widgets/S94Tensorbasis";
 
 In @sec:produkte war $\otimes$ eine Rechenvorschrift: Aus zwei
 Vektoren wurde eine Matrix, aus zwei Tensoren ein Tensor höherer Stufe. Jetzt
-drehen wir die Blickrichtung um und fragen nach dem Raum, in dem diese Produkte
-leben. Aus der Operation wird damit eine Konstruktion, die aus zwei
+fragen wir nach dem Raum, in dem diese Produkte leben. Aus der Operation wird damit eine Konstruktion, die aus zwei
 Vektorräumen einen dritten macht.
 
 ### Der Raum V ⊗ W
 
-Bleiben wir kurz bei $V = \R^m$ und $W = \R^n$ mit dem äußeren Produkt
+Sei zunächst $V = \R^m$ und $W = \R^n$ mit dem äußeren Produkt
 $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\cgreen{\bw}^\top$. Die Menge
 aller dieser Produkte ist als Vektorraum unbrauchbar, denn sie ist nicht unter
 Addition abgeschlossen: Die Summe zweier Matrizen vom :k[Rang]{#rank} $1$ hat im
 Allgemeinen den Rang $2$. Der kleinste Vektorraum, der alle Produkte enthält,
-ist ihre :k[lineare Hülle]{#span}, und genau so setzen wir den Raum an.
+ist ihre :k[lineare Hülle]{#span}, und so setzen wir den Raum an.
 
 :::definition[#tensorprodukt-von-vektorraeumen (Tensorprodukt von Vektorräumen)]
 Seien $V$ und $W$ :k[Vektorräume]{#vector-space} und
@@ -55,7 +54,7 @@ nicht darstellen.
 
 Für $V = \R^m$ und $W = \R^n$ mit dem äußeren Produkt, also
 $\R^m \otimes \R^n = \R^{m \times n}$ nach @beispiel:das-tensorprodukt-von-und,
-ist die Eigenschaft schnell nachgerechnet. Zu bilinearem $f\colon\R^m\times\R^n\to Z$
+lässt sich die Eigenschaft direkt nachrechnen. Zu bilinearem $f\colon\R^m\times\R^n\to Z$
 setzen wir $\wt{f}(\bA):=\sum_{i=1}^m\sum_{j=1}^n a_{ij}\,f(\be_i,\be_j)$.
 Diese Abbildung ist linear, und wegen
 $\bv\bw^\top=\sum_{ij}v_iw_j\bE_{ij}$ mit der Matrix $\bE_{ij}$, die an der
@@ -159,8 +158,8 @@ nach @satz:der-raum-aller-tensoren-eines-formats.
 
 Die beiden Ausdrücke $\cblue{\bv} \otimes \cgreen{\bw}$ und $V \otimes W$ sehen
 ähnlich aus und meinen Verschiedenes. Links steht ein einzelnes Element, rechts
-der ganze Raum, den alle diese Elemente aufspannen. Der Unterschied ist keine
-Feinheit, wie das kleinste denkbare Beispiel zeigt.
+der ganze Raum, den alle diese Elemente aufspannen. Der Unterschied ist
+wesentlich, wie das kleinste Beispiel zeigt.
 
 :::beispiel[#die-einheitsmatrix-ist-kein-elementarer (Die Einheitsmatrix ist kein elementarer Tensor)]
 Sei $V = W = \R^2$ und
@@ -176,7 +175,7 @@ $\rang(\cblue{\bv} \otimes \cgreen{\bw}) \leq 1$ (@sec:produkte). Die
 Einheitsmatrix hat aber den Rang $\cred{2}$.
 
 **Aber ein Element des Raums.** In $V \otimes W = \R^{2 \times 2}$ liegt
-$\bI_2$ selbstverständlich, und zwar als Summe von zwei elementaren Tensoren:
+$\bI_2$ natürlich, und zwar als Summe von zwei elementaren Tensoren:
 
 $$
 \begin{aligned}
@@ -189,7 +188,7 @@ $$
 \end{aligned}
 $$
 
-Zwei Summanden genügen also. Dass das kein Zufall ist, sagt der nächste Satz.
+Zwei Summanden genügen also. Das gilt allgemein, wie der nächste Satz zeigt.
 :::
 
 :::satz[#jede-matrix-ist-eine-kurze-summe (Jede Matrix ist eine kurze Summe elementarer Tensoren)]
@@ -279,7 +278,7 @@ $$
 $$
 :::
 
-Dass die Produkte den Raum erzeugen, ist schnell gesehen. Wir entwickeln
+Dass die Produkte den Raum erzeugen, zeigt eine kurze Rechnung. Wir entwickeln
 $\cblue{\bv} \in V$ und $\cgreen{\bw} \in W$ in den beiden Basen,
 $\cblue{\bv} = \sum_i a_i \cblue{\bv_i}$ und
 $\cgreen{\bw} = \sum_j b_j \cgreen{\bw_j}$, und ziehen die Summen mit
@@ -341,7 +340,7 @@ $\ba\bb^\top$ schreiben.
 
 ### Tensorproduktbasen für Funktionen
 
-Der Basissatz braucht nirgends, dass die Elemente von $V$ und $W$ Zahlentupel
+Der Basissatz setzt nicht voraus, dass die Elemente von $V$ und $W$ Zahlentupel
 sind. Nehmen wir Funktionenräume, so wird aus ihm ein Werkzeug für die
 Approximation multivariater Funktionen.
 
@@ -415,8 +414,8 @@ $$
 :::
 
 :::bemerkung[#was-der-produktbau-bedeutet (Was der Produktbau bedeutet)]
-Drei Beobachtungen an dieser Basis, die sich auf jeden Tensorproduktraum von
-Funktionen übertragen.
+Drei Eigenschaften dieser Basis übertragen sich auf jeden Tensorproduktraum von
+Funktionen.
 
 1. Halten wir $\cgreen{y}$ fest, so ist $x \mapsto f(x, \cgreen{y})$ ein Polynom
    aus $\Pcal_1$, und umgekehrt. Jeder achsenparallele Schnitt durch die Fläche
@@ -437,7 +436,7 @@ gemischte Basisanteil die beiden Variablen koppelt?
 
 <TensorbasisExplorer />
 
-Der gemischte Basisanteil ist genau der Teil, der die beiden Variablen in der
+Der gemischte Basisanteil ist der Teil, der die beiden Variablen in der
 Fläche koppelt.
 :::
 
@@ -455,7 +454,7 @@ Das wächst exponentiell in der Zahl der Variablen. Für $d = 3$ und $k = 10$ si
 das $4^{10} = 1\,048\,576$ Basisfunktionen. Zum Vergleich: Der Raum der Polynome
 mit *Gesamtgrad* höchstens $d$ in $k$ Variablen hat nur $\binom{d+k}{k}$
 Dimensionen, für $d = 3$ und $k = 10$ also $\binom{13}{10} = 286$. Der
-Produktbau ist bequem, aber teuer, und dieser Preis hat einen Namen:
+Produktbau ist bequem, aber teuer; dieses Wachstum heißt
 *Fluch der Dimensionalität* (curse of dimensionality).
 
 In der Praxis begegnet uns die Konstruktion trotzdem überall:

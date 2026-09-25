@@ -3,8 +3,7 @@ import { HesseSchaetzung } from "./widgets/S107Hesse";
 ### Wo die erste Ableitung aufhört
 
 Die Fréchet-Ableitung ersetzt $f$ in der Nähe von $\bx$ durch eine lineare Abbildung. Für
-sehr vieles reicht das. Sie versagt aber ausgerechnet dort, wo wir am meisten wissen
-wollen. Sei $f\colon S \subseteq \R^n \to \R$ und $\bx^*$ ein *kritischer Punkt*, also eine
+vieles reicht das. In kritischen Punkten sagt sie aber nichts mehr aus. Sei $f\colon S \subseteq \R^n \to \R$ und $\bx^*$ ein *kritischer Punkt*, also eine
 Stelle mit $\corange{\nabla f(\bx^*)} = \bnull$. Die lineare Näherung lautet dort
 
 $$
@@ -25,8 +24,7 @@ und in der Statistik führt sie direkt zur Fisher-Information.
 ### Ableitungen höheren Grades
 
 Wir definieren höhere Ableitungen in einem Zug für normierte Vektorräume. Die Definition
-wirkt beim ersten Lesen sperrig, sagt aber etwas sehr Einfaches, das wir gleich danach
-auspacken.
+ist technisch; was sie besagt, erläutert die Bemerkung danach.
 
 :::definition[#k-mal-frechet-differenzierbar (k-mal (Fréchet-)differenzierbar)]
 Seien $\D$ und $\E$ normierte Vektorräume, $U \subseteq \D$ offen und
@@ -66,7 +64,7 @@ Voraussetzungen in einer offenen Umgebung von $\bx$ erfüllt sind.
 :::
 
 :::bemerkung[#hoehere-ableitungen-wie-die-definition-zu-lesen-ist (Wie die Definition zu lesen ist)]
-Sechs Beobachtungen, und die sperrige Formel wird handzahm.
+Sechs Beobachtungen zur Definition.
 
 *Für $j = 1$ steht dort die alte Definition.* Dann ist
 $\mathcal L^0(\D,\E)=\E$ und $D^0f=f$, also lautet die Restbedingung
@@ -96,9 +94,9 @@ $\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. In einem Satz: *Die $j$-te
 ist die lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere
 Ableitungen wie gewohnt iterativ aus, Stufe für Stufe.
 
-*Warum die Operatornorm entscheidend ist.* Sie verlangt mehr als eine Restabschätzung für
+*Warum die Operatornorm.* Sie verlangt mehr als eine Restabschätzung für
 feste Richtungen: Der Rest muss gleichmäßig für alle Richtungen mit Norm höchstens eins
-klein werden. Genau diese Gleichmäßigkeit braucht der allgemeine Taylor-Satz.
+klein werden. Diese Gleichmäßigkeit braucht der allgemeine Taylor-Satz.
 
 *Multilinear und beschränkt.* Multilinear heißt: linear in jedem Argument, wenn die
 übrigen festgehalten werden. Solche Abbildungen kennen wir aus
@@ -111,7 +109,7 @@ $$
 $$
 
 für ein $M < \infty$, das von $\bx$ abhängen darf. In endlicher Dimension ist das
-automatisch erfüllt und kostet uns nichts.
+automatisch erfüllt.
 
 *Die Objekte werden größer.* Für $f\colon \R^n \to \R$ braucht $\cgreen{D^1_{\bx} f}$ einen
 Zeilenvektor mit $n$ Zahlen, $\cgreen{D^2_{\bx} f}$ eine Matrix mit $n^2$ Zahlen,
@@ -142,7 +140,7 @@ existieren, brauchen wir zweite partielle Ableitungen, und für alles Weitere so
 Stetigkeit. Wir schreiben dafür kurz $f \in \Ccal^2$, gemeint ist: alle zweiten
 partiellen Ableitungen existieren und sind stetig.
 
-Unter dieser Bedingung fällt eine Symmetrie ab, die den halben Rechenaufwand spart. Wir
+Unter dieser Bedingung ist die Hesse-Matrix symmetrisch, was etwa den halben Rechenaufwand spart. Wir
 stellen sie den Formeln für $\cgreen{D^2_{\bx} f}$ voran, weil diese sie schon brauchen.
 
 :::satz[#satz-von-schwarz (Satz von Schwarz)]
@@ -232,10 +230,10 @@ $\corange{\bH_f(\bx)} = \corange{\bH_f(\bx)}^\top$: Die Hesse-Matrix einer
 $\Ccal^2$-Funktion ist :k[symmetrisch]{#symmetric-matrix}. Die Reihenfolge, in der wir
 partiell ableiten, spielt also keine Rolle.
 
-Das ist mehr als eine Schönheit. Statt aller $n^2$ Einträge müssen wir nur die
+Statt aller $n^2$ Einträge müssen wir nur die
 $n(n+1)/2$ Einträge auf und über der Diagonalen berechnen und speichern. Für $n = 100$ sind
 das $5050$ statt $10\,000$ Zahlen, für $n = 1000$ schon $500\,500$ statt einer Million.
-Vorsicht mit der naheliegenden Kurzfassung: Das ist etwas *mehr* als die Hälfte, nicht
+Das ist etwas *mehr* als die Hälfte, nicht
 weniger, denn $n(n+1)/2 = n^2/2 + n/2$. Der Quotient fällt mit wachsendem $n$ von $0{,}75$
 bei $n = 2$ auf $0{,}5005$ bei $n = 1000$.
 
@@ -328,7 +326,7 @@ $\bh \mapsto \cgreen{D^2_{\bx} f(\bh_1, \bh)}$ und
 $\bh \mapsto \bh^\top\corange{\bH_f(\bx)}\bh_1$ zwei lineare Abbildungen, die sich nur um
 $\cred{o(\left\|\bh\right\|)}$ unterscheiden, und solche Abbildungen sind gleich. Also ist
 $\cgreen{D^2_{\bx} f(\bh_1, \bh)} = \bh^\top \corange{\bH_f(\bx)}\bh_1$, und wegen der
-Symmetrie von $\corange{\bH_f(\bx)}$ ist das dasselbe wie
+Symmetrie von $\corange{\bH_f(\bx)}$ ist das gleich
 $\bh_1^\top \corange{\bH_f(\bx)}\bh$. Mit $\bh_2 := \bh$ steht die Behauptung da.
 
 ::why[das Eindeutigkeitsargument aus dem letzten Schritt des Beweises zu @satz:linearitaet-der-ableitungsoperation: $\bh = t\bu$ einsetzen, der Quotient hängt nicht von $t$ ab und muss null sein]
@@ -342,7 +340,7 @@ Die Formel $\cgreen{D^2_{\bx} f(\bh_1, \bh_2)} = \bh_1^\top \corange{\bH_f(\bx)}
 in beiden Argumenten linear, also eine bilineare Abbildung im Sinne von
 @definition:beschraenkte-bilineare-abbildung. Für $\bh_1 = \bh_2 = \bh$ wird daraus die
 :k[quadratische Form]{#quadratic-form} $\bh^\top \corange{\bH_f(\bx)}\bh$, und die
-misst gleich, wie sich $f$ in Richtung $\bh$ krümmt.
+misst die Krümmung von $f$ in Richtung $\bh$.
 
 :::beispiel[#gradient-und-hesse-matrix-einer (Gradient und Hesse-Matrix einer kubischen Funktion)]
 Sei $\cblue{f(\bx)} = \tfrac{1}{3}x_1^3 - x_1 + x_2^2$. Die ersten partiellen Ableitungen
@@ -391,7 +389,7 @@ Das ist ein :k[Tensor]{#tensor} dritter Stufe, wie wir ihn in
 $f \in \Ccal^3$ ist er in allen drei Indizes symmetrisch, sodass wieder nur ein Bruchteil
 davon wirklich zu berechnen ist.
 
-Zur Notation halten wir ein für alle Mal fest: Der Index an Position $r$ gehört zum $r$-ten
+Zur Notation: Der Index an Position $r$ gehört zum $r$-ten
 Argument, und in welcher Reihenfolge die partiellen Ableitungen ausgeführt werden, spielt
 unter den hier durchgehend vorausgesetzten Stetigkeitsannahmen keine Rolle
 (@satz:satz-von-schwarz für $\Ccal^2$, die entsprechende Symmetrie für $\Ccal^3$). Der
@@ -423,7 +421,7 @@ also $\corange{\nabla f(\bx^*)} = \bnull$. Dann gilt:
 :::
 
 Den Beweis liefert die Taylorentwicklung zweiter Ordnung aus
-@sec:taylor. Die Idee lässt sich aber schon hier in einem Satz sagen. In
+@sec:taylor. Die Idee lässt sich schon hier angeben. In
 einem kritischen Punkt fällt der lineare Term weg, und es bleibt
 
 $$
@@ -441,7 +439,7 @@ $\corange{\bH_f(\bx^*)}$ führen wir dasselbe Argument entlang der beiden Eigenr
 einem positiven und einem negativen Eigenwert getrennt durch.
 
 :::bemerkung[#wenn-die-hesse-matrix-nichts-entscheidet (Wenn die Hesse-Matrix nichts entscheidet)]
-Die drei Fälle in @satz:hesse-kriterium-fuer-kritische-punkte decken nicht alles ab. Offen bleibt genau der Grenzfall, in
+Die drei Fälle in @satz:hesse-kriterium-fuer-kritische-punkte decken nicht alles ab. Offen bleibt der Grenzfall, in
 dem $\corange{\bH_f(\bx^*)}$ semidefinit, aber nicht definit ist: Mindestens ein Eigenwert
 ist null, und die übrigen tragen alle dasselbe Vorzeichen. Ein Eigenwert null allein reicht
 dafür übrigens nicht; kommt ein gemischtes Vorzeichenmuster hinzu, etwa bei
@@ -464,9 +462,9 @@ so folgt daraus nur, dass $\corange{\bH_f(\bx^*)}$ positiv *semi*definit ist. Di
 Ungleichung darf verloren gehen, wie $f(x) = x^4$ zeigt.
 :::
 
-Ein Bild macht das greifbar: die Funktion
-$\cblue{f(\bx)} = x_1^2 + 4x_2^2$ mit ihren Höhenlinien. Zeichnen wir sie und machen die
-Eigenwerte gleich verstellbar. Der Aufbau nutzt aus, dass sich jede symmetrische Matrix
+Als Beispiel dient die Funktion
+$\cblue{f(\bx)} = x_1^2 + 4x_2^2$ mit ihren Höhenlinien. Wir zeichnen sie und machen die
+Eigenwerte verstellbar. Der Aufbau nutzt aus, dass sich jede symmetrische Matrix
 nach dem Spektralsatz als
 $\corange{\bH} = \bR(\varphi)\diag(\corange{\lambda_1}, \corange{\lambda_2})\bR(\varphi)^\top$
 schreiben lässt, mit einer Drehung $\bR(\varphi)$. Wir stellen also nicht die Einträge von
@@ -476,13 +474,13 @@ Stelle dieselbe Hesse-Matrix $\corange{\bH}$, und $\bnull$ ist ein kritischer Pu
 solange $\corange{\bH}$ invertierbar ist sogar der einzige.
 
 :::interaktiv[Hesse-Kriterium zum Schieben]
-Damit lässt sich @satz:hesse-kriterium-fuer-kritische-punkte abfahren wie eine Landkarte. Was passiert mit den Höhenlinien,
+Damit lassen sich alle Fälle von @satz:hesse-kriterium-fuer-kritische-punkte durchspielen. Was passiert mit den Höhenlinien,
 wenn ein Eigenwert das Vorzeichen wechselt? Welche Achse gehört zur langen Halbachse einer
 Ellipse? Und was bleibt an der Grenze übrig, wenn ein Eigenwert genau auf null steht?
 
 <HesseSchaetzung />
 
-Wie das Widget zeigt, hängt die ganze Fallunterscheidung an den Vorzeichen der beiden
+Die Fallunterscheidung hängt an den Vorzeichen der beiden
 Eigenwerte. Das Beispiel von eben liegt auf dem ersten Knopf: $\corange{\lambda} = (2, 8)$ und
 $\varphi = 0$ ergibt $\corange{\bH} = \diag(2,8)$ und damit
 $\cblue{f(\bx)} = x_1^2 + 4x_2^2$. Die Höhenlinien sind Ellipsen um das Minimum in
@@ -493,7 +491,7 @@ $\cblue{f(t\bv_i)} = \tfrac{1}{2}\corange{\lambda_i}t^2$. Die letzten beiden Beo
 gelten für jede symmetrische Hesse-Matrix, die erste nur im definiten Fall. Die lange
 Halbachse gehört dabei zum *kleinen* Eigenwert: Die Niveaumenge zum Wert $4$ hat die
 Halbachsen $2$ und $1$, und $2/1 = \sqrt{8/2}$. Der Regler $\varphi$ dreht Höhenlinien und
-Hauptachsen gemeinsam, lässt Spur und Determinante aber unberührt – die Eigenwerte hängen
+Hauptachsen gemeinsam, lässt Spur und Determinante aber unverändert. Die Eigenwerte hängen
 nicht davon ab, wie wir das Koordinatensystem legen.
 
 Schieben wir einen Eigenwert unter null, so zerfallen die Ellipsen in Hyperbeln, und das
@@ -503,7 +501,7 @@ kennen wir schon: Das Gradientenfeld-Widget in
 @sec:gradient zeigt
 $\cblue{f(\bx)} = x_1^2 + 3x_1x_2 + 2x_2^2$ mit der Hesse-Matrix
 $\corange{\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4\end{smallmatrix}\bigr)}$, deren
-Eigenwerte $3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$, genau dieses Vorzeichenmuster
+Eigenwerte $3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$, dieses Vorzeichenmuster
 haben.
 :::
 
@@ -532,7 +530,7 @@ hängenbleiben könnte.
 :::::vertiefung[Zwei Gegenbeispiele zu den Voraussetzungen offen und konvex]
 
 :::bemerkung[#warum-die-menge-offen-und-konvex-sein (Warum die Menge offen und konvex sein muss)]
-Beide Zusätze in @satz:konvexitaet-und-positive-semidefinitheit werden leicht überlesen, nötig sind sie trotzdem.
+Beide Zusätze in @satz:konvexitaet-und-positive-semidefinitheit sind nötig.
 
 *$S$ muss konvex sein.* Sonst ist die linke Seite gar nicht definiert: Die
 Konvexitätsbedingung spricht über Punkte $t\bx + (1-t)\by$ auf der Verbindungsstrecke, und
@@ -568,19 +566,19 @@ konvexe Fortsetzung auf $\R$ gibt es nicht. @satz:konvexitaet-und-positive-semid
 :::::
 
 Die :k[Konvexität]{#convexity} und was sie für Optimierungsverfahren bedeutet, ist ein
-Thema für sich; @kap:konvexitaet nimmt es sich vor.
+Thema für sich; @kap:konvexitaet behandelt es.
 
 ### Warum das in der Praxis zählt
 
 :::bemerkung[#praxisrelevanz-der-hesse-matrix (Praxisrelevanz der Hesse-Matrix)]
-Vier Punkte, die zusammen erklären, warum die Hesse-Matrix in der Praxis überall
+Vier Gründe, warum die Hesse-Matrix in der Praxis häufig
 auftaucht.
 
 *Warum Sattelpunkte in hoher Dimension plausibel sind.* Ein kritischer Punkt mit
 invertierbarer Hesse-Matrix ist nur dann ein Extremum, wenn *alle* $n$ Eigenwerte
 dasselbe Vorzeichen haben; im ausgearteten Fall entscheidet die Hesse-Matrix nichts
-(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Schon eine grobe Zählung
-macht klar, wie selten das ist: Wären die $n$ Vorzeichen wie Münzwürfe, so hätte ein
+(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Eine grobe Zählung
+zeigt, wie selten das ist: Wären die $n$ Vorzeichen wie Münzwürfe, so hätte ein
 Minimum (alle Vorzeichen positiv) die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum,
 Maximum eingeschlossen, die Wahrscheinlichkeit $2^{1-n}$. Für $n = 100$ sind das
 $7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Die Eigenwerte
@@ -589,8 +587,7 @@ warum indefinite kritische Punkte in hochdimensionalen Verlustlandschaften eine 
 Rolle spielen können. Auch das Rauschen des
 :k[stochastischen Gradientenabstiegs]{#gradient-descent} *kann* helfen, instabile
 Sattelregionen zu verlassen; eine Garantie gegen schlechte lokale Minima oder jeden
-Sattelpunkt folgt aus der Münzwurfrechnung nicht. Augenzwinkernd ließe sich anhängen,
-dass die Singularität also bevorstehe, vielleicht.
+Sattelpunkt folgt aus der Münzwurfrechnung nicht.
 
 *Statistik.* Der wichtigste Spezialfall einer Funktion $\R^p \to \R$ ist die
 :k[Log-Likelihood]{#likelihood} $\ell(\btheta)$. Die Hesse-Matrix der negativen
@@ -613,7 +610,7 @@ Für eine allgemeine Verlustfunktion ist die Hesse-Matrix ortsabhängig. Dieselb
 gilt dort nur lokal beziehungsweise unter zusätzlichen Annahmen wie einer gleichmäßigen
 Schranke $\mu\bI\preceq\bH_L(\btheta)\preceq L\bI$.
 
-*Optimierung.* Verfahren, die $\corange{\bH_f}$ nicht nur analysieren, sondern benutzen,
+*Optimierung.* Verfahren, die $\corange{\bH_f}$ in der Iteration benutzen,
 konvergieren erheblich schneller. Das Newton-Verfahren in
 @sec:taylor ist der Prototyp.
 :::
@@ -641,7 +638,7 @@ ML-Schätzer $\wh{\btheta}$ ausgewertet. Unter denselben Regularitätsbedingunge
 die erwartete Score-Funktion null und es gilt außerdem
 $\bI(\btheta)=\E[\nabla\ell(\btheta)^\top\nabla\ell(\btheta)]$.
 
-Die Intuition steckt schon in der Krümmung. Eine stark gekrümmte Log-Likelihood fällt
+Die Interpretation folgt aus der Krümmung. Eine stark gekrümmte Log-Likelihood fällt
 neben ihrem Maximum steil ab: Benachbarte Parameterwerte erklären die Daten deutlich
 schlechter, die Daten sind also *informativ* über $\btheta$. Eine flache Log-Likelihood
 lässt einen weiten Bereich von Parametern fast gleich gut aussehen, und der Parameter ist
@@ -677,7 +674,7 @@ $\var(\wh{p}) = p(1-p)/n$. Das ist exakt $\corange{\bI_n(p)}^{-1}$, in diesem Mo
 keine Näherung. Mit $p = 0{,}2$ und $n = 100$ steht dort $\corange{\bI_n} = 625$, damit
 $\var(\wh{p}) = 0{,}0016$ und eine Standardabweichung von $0{,}04$.
 
-Die Krümmungs-Intuition lässt sich am selben Beispiel ablesen, weiterhin mit
+Die Krümmungsinterpretation lässt sich am selben Beispiel ablesen, weiterhin mit
 $n = 100$. Am flachsten ist die Log-Likelihood bei $p = 0{,}5$: Dort steuert eine einzelne
 Beobachtung nur $\corange{\bI_1} = 4$ bei, und $\var(\wh{p}) = 0{,}0025$ ist am größten.
 Bei $p = 0{,}05$ ist $\corange{\bI_1} = 21{,}05$, also gut das Fünffache, und
@@ -692,9 +689,9 @@ informativer.
 :::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao, sauber formuliert)]
 Als Merkregel kursiert
 $\var(\wh{\btheta}) \to \corange{\bI(\btheta)}^{-1}$ für $n \to \infty$. Gemeint ist das
-Richtige, aber so verkürzt vermischt sie drei Dinge, die zu trennen sind.
+Richtige, aber so verkürzt vermischt sie drei Dinge.
 
-Erstens die Buchführung über $n$. Ein konsistenter Schätzer hat
+*Die Abhängigkeit von $n$.* Ein konsistenter Schätzer hat
 $\var(\wh{\btheta}) \to \bnull$; gegen eine feste Matrix kann die Varianz also nicht
 streben. Die Aussage trägt nur, wenn $\corange{\bI}$ die Information der *ganzen*
 Stichprobe meint. Für unabhängige, identisch verteilte Beobachtungen ist
@@ -705,7 +702,7 @@ $$
 = \frac{1}{n}\corange{\bI_1(\btheta)}^{-1} .
 $$
 
-Zweitens die saubere asymptotische Fassung. Unter Regularitätsbedingungen gilt für den
+*Die asymptotische Fassung.* Unter Regularitätsbedingungen gilt für den
 ML-Schätzer
 
 $$
@@ -716,7 +713,7 @@ $$
 
 und daraus lesen wir die Faustformel als Näherung für endliches $n$ ab.
 
-Drittens der Name. Die Cramér-Rao-Schranke selbst ist keine asymptotische Aussage, sondern
+*Der Name.* Die Cramér-Rao-Schranke selbst ist keine asymptotische Aussage, sondern
 gilt bei festem $n$ und für :k[erwartungstreue]{#unbiased-estimator} Schätzer: Deren
 :k[Kovarianzmatrix]{#covariance-matrix} erfüllt
 $\var(\wh{\btheta}) \succeq \corange{\bI_n(\btheta)}^{-1}$ im Sinne der Definitheit. Der
@@ -747,12 +744,12 @@ endliches $n$ gilt.
 
 ### Vektor zu Vektor
 
-Zum Schluss der allgemeine Fall $f\colon \R^n \to \R^m$. Er ist in der Statistik nicht
-exotisch. Die *Score-Funktion* $\corange{\nabla \ell(\btheta)}^\top$ ist genau von dieser
+Zum Schluss der allgemeine Fall $f\colon \R^n \to \R^m$. Er kommt in der Statistik
+regelmäßig vor. Die *Score-Funktion* $\corange{\nabla \ell(\btheta)}^\top$ ist genau von dieser
 Bauart, sie bildet $\R^p$ nach $\R^p$ ab, und ihre Jacobimatrix ist die Hesse-Matrix
 $\corange{\bH_\ell(\btheta)}$, wie Schritt 3 im Beweis zu @satz:erste-und-zweite-ableitung-in zeigt; aus ihr
 entsteht die Fisher-Information von @definition:fisher-informationsmatrix.
-Momentengleichungen sind ein zweites Beispiel. Auf das Transponierte kommt es dabei an:
+Momentengleichungen sind ein zweites Beispiel. Das Transponierte ist dabei nötig:
 In der Zeilenkonvention aus
 @sec:gradient ist $\corange{\nabla\ell(\btheta)}$
 eine Zeile, und erst die transponierte Fassung ist eine Abbildung von $\R^p$ nach $\R^p$.
@@ -775,8 +772,8 @@ h_{1,i_1} \cdots h_{j,i_j} .
 $$
 
 Die Ausgabe ist also eine Summe von Vektoren aus $\R^m$, gewichtet mit Produkten von
-Komponenten der $\bh_i$. Für die ersten drei Stufen schreiben wir das aus, und es
-lohnt sich, die rechten Seiten anzusehen: Dort steht jeweils dieselbe Rechnung, ausgedrückt
+Komponenten der $\bh_i$. Für die ersten drei Stufen schreiben wir das aus. Auf den
+rechten Seiten steht jeweils dieselbe Rechnung, ausgedrückt
 über die Jacobimatrix.
 
 :::satz[#die-ersten-drei-stufen-fuer-vektor-zu (Die ersten drei Stufen für Vektor-zu-Vektor)]
@@ -815,7 +812,7 @@ $\corange{\bJ_f(\bx)}\bh$ summiert die Spalten mit den Gewichten $h_i$.
 :::
 
 :::schritt
-Die zweite und die dritte Zeile sind reine Buchführung über Indexnamen: Schreiben wir beide
+Die zweite und die dritte Zeile sind Umbenennungen von Indizes: Schreiben wir beide
 Seiten komponentenweise aus, so stehen nach Umbenennung der Summationsindizes zweimal
 dieselben Summanden.
 
@@ -833,7 +830,7 @@ $$
 = \bh_1^\top \corange{\bH_f(\bx)}\,\bh_2 ,
 $$
 
-also genau @satz:erste-und-zweite-ableitung-in.
+also @satz:erste-und-zweite-ableitung-in.
 
 ::why[der letzte Schritt nutzt die Symmetrie aus @satz:satz-von-schwarz; ohne sie stünde dort die Transponierte]
 :::
@@ -843,15 +840,13 @@ also genau @satz:erste-und-zweite-ableitung-in.
 :::::
 
 Wie groß werden diese Objekte? Für $f\colon \R^{10} \to \R^5$ hat
-$\cgreen{D^1_{\bx} f}$ genau $50$ Einträge, $\cgreen{D^2_{\bx} f}$ schon $500$ und
-$\cgreen{D^3_{\bx} f}$ ganze $5000$. Der Satz von Schwarz drückt die zweite Stufe auf
+$\cgreen{D^1_{\bx} f}$ $50$ Einträge, $\cgreen{D^2_{\bx} f}$ $500$ und
+$\cgreen{D^3_{\bx} f}$ $5000$. Der Satz von Schwarz drückt die zweite Stufe auf
 $5 \cdot 10 \cdot 11/2 = 275$. Das erklärt, warum in der Praxis zweite Ableitungen fast nur
 für skalarwertige Funktionen wirklich aufgestellt werden, und auch dort oft nur als
 Näherung.
 
 ### Selbsttest
-
-Fünf Aussagen zu diesem Abschnitt. Welche davon stimmen?
 
 ::::quiz
 

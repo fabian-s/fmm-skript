@@ -34,13 +34,13 @@ scheitert für Matrizen, die nicht positiv definit sind. In Gleitkommaarithmetik
 eine Matrix nahe der Grenze zur Semidefinitheit wegen Daten- oder Rundungsfehlern als
 nicht positiv definit erscheinen. Ein Abbruch ist daher ein Diagnosehinweis, aber
 kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für nur
-*semi*definite Matrizen springt die pivotierte
-Variante $\bP^\top \bA \bP = \bL\bL^\top$ ein
+*semi*definite Matrizen gibt es die pivotierte
+Variante $\bP^\top \bA \bP = \bL\bL^\top$
 (@sec:cholesky).
 
 ### Was wir mitnehmen
 
-Drei Botschaften bleiben:
+Drei Punkte zum Merken:
 
 - **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel $\bA^{-1}\bb$
   steht, lösen wir in der Implementierung direkt das LGS $\bA\bx = \bb$
@@ -60,8 +60,6 @@ vielseitigste aller Matrixzerlegungen kennen; sie funktioniert für
 beliebige, auch nicht quadratische Matrizen.
 
 ### Selbsttest
-
-Prüfen wir die Kernaussagen des Kapitels.
 
 ::::quiz
 
