@@ -18,29 +18,26 @@ $$
 x = \pm\, (1.b_1 b_2 \ldots b_t)_2 \times 2^{e},
 $$
 
-wobei die $b_i$ Bits sind und $t$ durch das Format
-festgelegt ist (doppelte Genauigkeit: $t = 52$ gespeicherte
-Nachkommabits plus die feste, nicht abgelegte führende $1$, also $53$
+wobei die $b_i$ Bits sind und $t$ vom Format abhängt (doppelte Genauigkeit:
+$t = 52$ gespeicherte Bits, dazu die nicht abgelegte führende $1$, also $53$
 signifikante Bits). Zum Beispiel passt
 $3{,}25 = (1{,}101)_2 \times 2^{1}$ exakt, aber $0{,}1$
-hat eine unendlich periodische Binärdarstellung und muss nach
-$t$ Bits abgeschnitten werden; gespeichert wird nur eine
-darstellbare Zahl in der Nähe.
+hat eine periodische Binärdarstellung und wird nach $t$ Bits abgeschnitten;
+gespeichert wird nur eine darstellbare Zahl in der Nähe.
 
 Weil es nur endlich viele Ziffernmuster gibt, bilden die darstellbaren
-Zahlen ein diskretes Gitter auf der reellen Achse, dessen Lücken
+Zahlen ein Gitter auf der reellen Achse, dessen Lücken
 proportional zur Größe der Zahlen wachsen: Nahe $1$ ist die
-Lücke das
-:k[Maschinen-Epsilon]{#machine-epsilon}
-$2^{-t}$, nahe $1000$ ist sie etwa tausendmal
-breiter. Jede Eingabe und jedes Rechenergebnis wird auf den nächsten
-Gitterpunkt gerundet – die Quelle der
+Lücke das :k[Maschinen-Epsilon]{#machine-epsilon} $2^{-t}$, nahe $1000$ ist sie
+etwa tausendmal breiter. Jede Eingabe und jedes Rechenergebnis wird auf den
+nächsten Gitterpunkt gerundet: die Quelle der
 :k[Rundungsfehler]{#rounding-error}.
 
-Sehen wir uns ein Spielzeugsystem an: Wie ändert sich das Gitter, wenn wir
-Mantissenbits hinzunehmen, und wo landet eine Zahl, die nicht darauf liegt?
+Wie ändert sich das Gitter eines Spielzeugsystems, wenn wir Mantissenbits
+hinzunehmen, und wo landet eine Zahl zwischen zwei Gitterpunkten?
 
 <ToyFloatLine />
 
-Am Strahl wird sichtbar: In jeder Binade stehen die Striche doppelt so weit
-auseinander wie in der vorigen.
+Zwischen je zwei Zweierpotenzen liegen die Gitterpunkte doppelt so weit
+auseinander wie im Intervall davor; ein zusätzliches Mantissenbit halbiert alle
+Lücken, und der relative Rundungsfehler bleibt überall unter $2^{-(t+1)}$.

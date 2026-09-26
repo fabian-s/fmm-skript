@@ -19,17 +19,14 @@ $\log_{10} \operatorname{cond}(\bA)$ Dezimalstellen an Genauigkeit. Mit
 :k[Maschinengenauigkeit]{#machine-epsilon} $\approx 10^{-16}$ lässt eine
 Konditionszahl von $10^{12}$ nur noch etwa vier verlässliche Stellen übrig.
 
-In der 2-Norm hat die Konditionszahl eine saubere geometrische Bedeutung:
+In der 2-Norm hat die Konditionszahl eine geometrische Bedeutung:
 $\bA$ bildet den Einheitskreis auf eine Ellipse ab, und
 $\operatorname{cond}_2(\bA) = \sigma_{\max} / \sigma_{\min}$ ist das Verhältnis
 der stärksten zur schwächsten Streckung (der Singulärwerte). Eine Matrix mit
 $\operatorname{cond}(\bA) = 1$ (zum Beispiel eine
 :k[orthogonale Matrix]{#orthogonal-matrix}) behandelt jede Richtung gleich;
-eine fast singuläre Matrix quetscht irgendeine Richtung beinahe platt und hat
-eine riesige Konditionszahl.
-
-Für rechteckige Matrizen tritt an die Stelle von $\bA^{-1}$ die
-:k[Pseudoinverse]{#pseudoinverse} (vgl. Heath §3.3).
+eine fast singuläre Matrix drückt eine Richtung beinahe auf null zusammen und
+hat eine riesige Konditionszahl.
 
 Wie stark unterscheidet sich die Streckung von Richtung zu Richtung, wenn wir
 $\bA$ fast singulär machen?
@@ -37,4 +34,5 @@ $\bA$ fast singulär machen?
 <CondWidget />
 
 Je flacher die Bildellipse, desto weiter liegen längste und kürzeste Halbachse
-auseinander, und dieses Verhältnis zählt Satz 4.2.6 als Verstärkungsfaktor.
+auseinander; ihr Verhältnis ist der Faktor, um den sich relative Fehler in der
+Lösung höchstens verstärken.
