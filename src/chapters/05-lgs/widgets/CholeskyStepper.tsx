@@ -17,7 +17,7 @@ import { ref } from "../../numbers.generated";
  * scripts/verify/REV29/05-lgs-Stepper.mjs, 2026-08-29.
  *
  * DREI-ZUSTANDS-REGEL beim Abbruch: s < 0 (nicht positiv semidefinit),
- * s = 0 exakt (positiv semidefinit, aber nicht definit) und 0 < s < 1e−12
+ * s = 0 exakt (nicht positiv definit; semidefinit höchstens der führende Block) und 0 < s < 1e−12
  * (numerisch nicht mehr unterscheidbar) bekommen je einen eigenen Text.
  */
 
@@ -67,7 +67,7 @@ function cholTrace(A: number[][]): {
         s < 0
           ? `Unter der Wurzel steht ${fmtNum(s)} < 0: Die eingegebene Matrix ist nicht einmal positiv semidefinit, eine Cholesky-Zerlegung existiert nicht.`
           : s === 0
-            ? `Unter der Wurzel steht exakt 0: Die Matrix ist positiv semidefinit, aber nicht positiv definit. Das reelle l${sub(j + 1)}${sub(j + 1)} = 0 gäbe es zwar, doch die nächste Spalte müsste durch null teilen – genau die Lücke, die die pivotierte Cholesky-Variante schließt.`
+            ? `Unter der Wurzel steht exakt 0: Die Matrix ist nicht positiv definit. Ob sie wenigstens positiv semidefinit ist, entscheidet dieser Schritt nicht: (0 1; 1 0) etwa bricht genauso ab und ist indefinit. Das reelle l${sub(j + 1)}${sub(j + 1)} = 0 gäbe es zwar, doch die nächste Spalte müsste durch null teilen – genau die Lücke, die die pivotierte Cholesky-Variante schließt.`
             : `Unter der Wurzel steht ${fmtNum(s)}: positiv, aber so winzig, dass die folgende Division jeden Rundungsfehler aufbläst. Numerisch ist die Matrix von einer semidefiniten nicht mehr zu unterscheiden.`;
       return { steps, fail: { msg } };
     }

@@ -23,8 +23,8 @@ Algorithmus $\wt{f}$ *stabil*.
 
 ::::vertiefung[Vorwärts- und Rückwärtsstabilität, präzise]
 :::definition[#vorwaerts-und-rueckwaertsstabilitaet (Vorwärts- und Rückwärtsstabilität)]
-Sei $f$ ein Problem, $\wt f$ ein Gleitkomma-Algorithmus und
-$\wh{\by}=\wt f(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
+Sei $f$ ein Problem, $\wt{f}$ ein Gleitkomma-Algorithmus und
+$\wh{\by}=\wt{f}(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
 Für $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ heißen
 
 $$
@@ -119,17 +119,17 @@ Teilschritte*.
 
 :::satz[#fehlerfortpflanzung-in-einer-komposition (Fehlerfortpflanzung in einer Komposition)]
 Sei $f=h\circ g$, $\by=g(\bx)\ne\bnull$ und
-$\wt{\by}=\wt g(\bx)$. Wir setzen $h(\by)\ne\bnull$ voraus und definieren
+$\wt{\by}=\wt{g}(\bx)$. Wir setzen $h(\by)\ne\bnull$ voraus und definieren
 
 $$
 \eta_g=\frac{\|\wt{\by}-\by\|}{\|\by\|},\qquad
-\eta_h=\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\wt{\by})\|}.
+\eta_h=\frac{\|\wt{h}(\wt{\by})-h(\wt{\by})\|}{\|h(\wt{\by})\|}.
 $$
 
 Ist $h$ in $\by$ stetig und $\wt{\by}\to\by$, dann gilt in erster Ordnung
 
 $$
-\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\frac{\|\wt{h}(\wt{\by})-h(\by)\|}{\|h(\by)\|}
 \le \bigl(1+o(1)\bigr)\eta_h
 +\bigl(\kappa_{rel}(h,\by)+o(1)\bigr)\eta_g.
 $$
@@ -148,9 +148,9 @@ Durch Addieren und Subtrahieren von $h(\wt{\by})$ sowie die
 Dreiecksungleichung erhalten wir exakt
 
 $$
-\frac{\|\wt h(\wt{\by})-h(\by)\|}{\|h(\by)\|}
+\frac{\|\wt{h}(\wt{\by})-h(\by)\|}{\|h(\by)\|}
 \le
-\frac{\|\wt h(\wt{\by})-h(\wt{\by})\|}{\|h(\by)\|}
+\frac{\|\wt{h}(\wt{\by})-h(\wt{\by})\|}{\|h(\by)\|}
 +\frac{\|h(\wt{\by})-h(\by)\|}{\|h(\by)\|}.
 $$
 :::
