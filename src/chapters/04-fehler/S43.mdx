@@ -181,7 +181,7 @@ für Instabilität. Daraus ergibt sich die Faustregel: *Schlecht konditionierte
 Teilschritte möglichst früh ausführen.* Am Anfang der Kette trifft ein solcher Schritt
 nur auf den unvermeidbaren Inputfehler, am Ende auf alle angesammelten Fehler.
 
-Ein Satz ist das nicht: Eine Umordnung verändert Zwischengrößen, Rundungsfehler und
+Die Faustregel ist allerdings kein Satz: Eine Umordnung verändert Zwischengrößen, Rundungsfehler und
 oft auch die relevanten Konditionen. Verlässlicher ist es, das Teilproblem
 umzuformulieren, große, beinahe gleiche Zwischengrößen zu vermeiden und eine
 rückwärtsstabile Implementierung zu verwenden, deren Ergebnis die exakte Lösung eines
@@ -236,7 +236,7 @@ $\kappa_{abs} = \sqrt{2}$, und die Division durch
 $\left| h(\cred{a}, \cblue{b}) \right| = \left|\cred{a} - \cblue{b}\right|$ ergibt die
 Behauptung.
 
-:::::vertiefung[Die Rechnung im Detail]
+:::::vertiefung[Kondition der Differenz: Beweis im Detail]
 ::::beweis
 
 :::schritt
@@ -329,8 +329,8 @@ Kondition des letzten Schritts die 16 Dezimalstellen doppelter Genauigkeit?
 
 <KappaRechner />
 
-Der Rechner macht die Faustregel aus @bemerkung:interpretation zur Ablesehilfe:
-$\log_{10} \corange{\kappa_{rel}}$ zählt die verlorenen Dezimalstellen. Bei
+Nach der Faustregel aus @bemerkung:interpretation zeigt der Rechner
+$\log_{10} \corange{\kappa_{rel}}$ als Zahl der verlorenen Dezimalstellen. Bei
 $c = 10^5$ sind das schon 10 von 16, bei $c = 10^8$ gut 16, und
 darüber bleibt nichts mehr übrig, wie in @beispiel:die-instabilitaet-in-r.
 :::
@@ -382,8 +382,8 @@ darüber bleibt nichts mehr übrig, wie in @beispiel:die-instabilitaet-in-r.
   >
     Die Lernrate $\alpha$. Oszillation mit wachsender Amplitude ist das
     typische Verhalten eines instabilen Iterationsverfahrens: Der
-    Verstärkungsfaktor pro Schritt liegt über $1$, jeder Schritt bläht
-    die Fehler des geschätzten Gradienten weiter auf. Eine kleinere Lernrate
+    Verstärkungsfaktor pro Schritt liegt über $1$, jeder Schritt vergrößert
+    die Fehler des geschätzten Gradienten weiter. Eine kleinere Lernrate
     drückt den Faktor wieder unter $1$. In der
     SGD-Demo oben lässt sich der Umschlag direkt beobachten.
   </SelbsttestFrage>
@@ -401,8 +401,7 @@ Rund 10,3. Mit $\cred{a} = c^2 + 1$ und $\cblue{b} = c^2$ bei
 $c = 10^5$ ist
 $\corange{\kappa_{rel}} = \sqrt{2}\,\sqrt{a^2 + b^2} \approx 2c^2 = 2 \cdot 10^{10}$,
 also $\log_{10} \corange{\kappa_{rel}} \approx 10{,}3$. Von den etwa 16 Stellen
-doppelter Genauigkeit bleiben knapp 6 übrig, die Verschiebungsformel liefert hier noch eine
-Zahl, aber nur noch mit einer Handvoll gültiger Stellen.
+doppelter Genauigkeit bleiben knapp 6 übrig.
 :::
 
 :::zahlfrage{loesung=1 toleranz=0.05}
