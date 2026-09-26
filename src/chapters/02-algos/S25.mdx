@@ -243,7 +243,7 @@ dass eine um $1$ größere Eingabe den Aufwand um den *Faktor* $q$ vervielfacht.
 Was bedeutet linear gegen exponentiell in echten Zahlen? Wir setzen die gezählten
 Aufwände ein, iterativ $\cblue{4n - 6}$ Operationen (ohne die Konstante $c$ aus dem
 Beweis von @satz:komplexitaet-der-iterativen-variante), naiv rekursiv die exakte
-Aufrufzahl $\cred{T(n)}$ (@bemerkung:wie-schlimm-ist-es-wirklich), und rechnen als grobes
+Aufrufzahl $\cred{T(n)}$ aus @lemma:rekurrenz-der-aufrufzahl, und rechnen als grobes
 Modell mit $10^9$ Elementarschritten pro Sekunde. Ein realer Funktionsaufruf in R kostet
 deutlich mehr, das Modell ist also optimistisch:
 
@@ -254,10 +254,10 @@ deutlich mehr, das Modell ist also optimistisch:
 | 50 | 194 | ≈ 4,1 · 10¹⁰ | ≈ 41 s |
 | 100 | 394 | ≈ 1,1 · 10²¹ | ≈ 36 000 Jahre |
 
-Die iterative Variante bleibt durchgehend unter einer Mikrosekunde. Schnellere Hardware
-ändert daran wenig: Ein tausendmal schnellerer Rechner verkürzt die $36\,000$ Jahre auf
-$36$ Jahre. Helfen kann nur ein *besserer Algorithmus*, und die Landau-Notation drückt
-„besser" präzise aus: *Die iterative Lösung liegt in einer anderen Komplexitätsklasse.*
+Die iterative Variante bleibt durchgehend unter einer Mikrosekunde. Am Abstand ändert
+schnellere Hardware wenig: Ein tausendmal schnellerer Rechner verkürzt die $36\,000$
+Jahre der Rekursion auf $36$ Jahre. Helfen kann nur ein *besserer Algorithmus*, und die
+Landau-Notation drückt „besser" präzise aus: *Die iterative Lösung liegt in einer anderen Komplexitätsklasse.*
 
 ### Selbsttest
 

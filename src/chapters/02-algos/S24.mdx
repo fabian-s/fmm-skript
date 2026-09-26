@@ -45,9 +45,15 @@ Anschaulich heißt das:
 - Zusätzlich schreiben wir $a_n = \Theta(b_n)$, falls $a_n = O(b_n)$ und
   $b_n = O(a_n)$ gilt: $a_n$ wächst *genauso schnell* wie $b_n$.
 
+Bei Groß-O steht der Limes superior statt des Grenzwerts, weil der Quotient
+$a_n/b_n$ nicht :k[konvergieren]{#convergence} muss; er darf zum Beispiel
+oszillieren. Die Bedingung bedeutet: Ab irgendeinem Index gilt
+$\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$ für eine
+Konstante $C$.
+
 ### Rechenbeispiele :id[rechenbeispiele]
 
-Eine Landau-Beziehung weisen wir nach, indem wir den Grenzwert des Quotienten
+Eine Landau-Beziehung weisen wir meist nach, indem wir den Grenzwert des Quotienten
 ausrechnen. In den drei Beispielen verfolgt $\cred{\text{Rot}}$ die untersuchte Folge
 $\cred{a_n}$ und $\cblue{\text{Blau}}$ die Vergleichsfolge $\cblue{b_n}$.
 
@@ -80,15 +86,11 @@ schneller als $\cblue{n}$.
 ::::vertiefung[Limes superior, Schreibweise und Theta]
 
 :::bemerkung[#zwei-feinheiten-der-definition (Feinheiten der Definition)]
-*Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
-nicht :k[konvergieren]{#convergence}; er darf zum Beispiel
-oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der
-:k[Suprema]{#supremum} der Restfolgen) existiert dagegen
-immer, notfalls als $\infty$. Die Bedingung
-$\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$
-bedeutet: Ab irgendeinem Index gilt
-$\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$
-für eine Konstante $C$.
+*Was ist der Limes superior?* Der größte Häufungswert einer Folge, gebildet als
+Grenzwert der :k[Suprema]{#supremum} der Restfolgen. Anders als der Grenzwert
+existiert er immer, notfalls als $\infty$; deshalb ist die Bedingung
+$\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$ auch für
+oszillierende Quotienten definiert.
 
 *Das Gleichheitszeichen ist ein Notationsmissbrauch:*
 $a_n = O(b_n)$ liest man besser als „$a_n$ gehört zur Klasse
