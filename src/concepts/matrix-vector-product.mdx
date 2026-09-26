@@ -3,25 +3,23 @@ export const title = "Matrix-Vektor-Produkt";
 import { ProductWidget } from "./widgets/MatrixVectorProductWidget";
 
 Das Produkt $\bA\bx$ verknüpft eine :k[Matrix]{#matrix} und einen
-:k[Vektor]{#vector} zu einem neuen Vektor. Das zeilenweise Rezept: Eintrag $i$
-des Ergebnisses multipliziert jeden Eintrag von Zeile $i$ mit dem passenden
-Eintrag von $\bx$ und summiert alles auf. Zum Beispiel:
+:k[Vektor]{#vector} zu einem neuen Vektor. Zeilenweise gerechnet: Für Eintrag $i$
+des Ergebnisses multiplizieren wir jeden Eintrag von Zeile $i$ mit dem passenden
+Eintrag von $\bx$ und summieren auf. Zum Beispiel:
 
 $$
 \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix} \begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 1\cdot 2 + 2\cdot 1 \\ 3\cdot 2 + 4\cdot 1 \end{bmatrix} = \begin{bmatrix} 4 \\ 10 \end{bmatrix}.
 $$
 
-Genauso wichtig ist die Spaltensicht: $\bA\bx$ ist die
+Ebenso wichtig ist die Spaltensicht: $\bA\bx$ ist die
 :k[Linearkombination]{#linear-combination} der Spalten von $\bA$ mit den
-Einträgen von $\bx$ als Gewichten. Ein Gleichungssystem als $\bA\bx = \bb$ zu
-schreiben nutzt das: $\bb$ aus einem bekannten $\bx$ zu berechnen ist
-eine einzige Multiplikation, und eine Bedingung wie $\bA\bz \neq \bo$ besagt,
-dass das Rezept angewandt auf $\bz$ nicht den Nullvektor liefert. Probieren wir
-es aus: Bewegen wir unten die Gewichte und beobachten, wie das Ergebnis die
-beiden Spalten mischt.
+Einträgen von $\bx$ als Gewichten. Ein Gleichungssystem $\bA\bx = \bb$ fragt
+also, mit welchen Gewichten die Spalten von $\bA$ zusammen $\bb$ ergeben.
 
 Wie addieren sich die gewichteten Spalten zu $\bA\bx$?
 
 <ProductWidget />
 
-Die Spaltensicht beschreibt dieselbe Multiplikation wie das zeilenweise Rezept.
+Für $\bx = (2; 1)^\top$ ergibt die Pfeilkette
+$2 \cdot (1; 3)^\top + 1 \cdot (2; 4)^\top = (4; 10)^\top$, dasselbe wie
+zeilenweise gerechnet.

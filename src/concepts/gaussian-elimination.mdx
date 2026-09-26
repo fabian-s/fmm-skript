@@ -11,37 +11,23 @@ verschwindet. Spalte für Spalte werden Vielfache der aktuellen
 der Diagonale nur noch Nullen stehen und die
 :k[Matrix]{#matrix} eine
 :k[obere Dreiecksmatrix]{#triangular-matrix}
-ist. Danach erledigt
-:k[Rückwärtseinsetzen]{#triangular-solve}
-den Rest. In der Praxis werden zusätzlich Zeilen getauscht (*Pivotisierung*), so
-dass als Pivot der betragsgrößte verfügbare Spalteneintrag dient; die Division
-durch ein winziges Pivotelement
-verstärkt
-:k[Rundungsfehler]{#rounding-error}.
-Notieren wir nebenbei die verwendeten Multiplikatoren, erhalten wir
-die :k[LU-Zerlegung]{#lu-decomposition}
-gratis dazu.
+ist. Das Dreieckssystem lösen wir dann durch
+:k[Rückwärtseinsetzen]{#triangular-solve}.
+In der Praxis tauschen wir zusätzlich Zeilen (*Pivotierung*), sodass der
+betragsgrößte verfügbare Eintrag der Spalte als Pivot dient; die Division
+durch ein sehr kleines Pivotelement würde
+:k[Rundungsfehler]{#rounding-error} verstärken.
+Notieren wir die Multiplikatoren mit, erhalten wir ohne Zusatzaufwand
+die :k[LU-Zerlegung]{#lu-decomposition}.
 
 Welche Zeilenoperation erzeugt jeweils die nächsten Nullen unter dem Pivot?
 
 <EliminationWidget />
 
-Die Schritte machen sichtbar, wie die Pivotspalten nacheinander geräumt werden.
+Jeder Schritt räumt eine Pivotspalte und braucht dafür je Zeile darunter
+genau einen Multiplikator (hier $2$ und $1$, dann $-1$).
 
-Ein Vorbehalt ist hier wichtig. Zeilenoperationen lassen sich als
-Multiplikation mit einer regulären Matrix $\bM$ schreiben. Solche
-Umformungen erhalten die *Lösungen* von $\bA\bx = \bb$,
-verändern aber die
-:k[euklidische Norm]{#euclidean-norm} von
-Vektoren,
-
-$$
-\|\bM\bv\|_2 \ne \|\bv\|_2 \text{ im Allgemeinen.}
-$$
-
-Ein Kleinste-Quadrate-Problem verlangt aber die
-*kleinste Residuumsnorm*, nicht eine exakte Lösung; eine
-Transformation mit $\bM$ ändert deshalb im Allgemeinen,
-welches $\bx$ gewinnt (vgl. Heath §3.4.3). Darum
-triangularisiert man dort stattdessen mit
-:k[orthogonalen Matrizen]{#orthogonal-matrix}, die die 2-Norm unangetastet lassen (vgl. Heath §3.5).
+Auf ein Kleinste-Quadrate-Problem dürfen wir die Elimination nicht direkt anwenden: Zeilenoperationen
+verändern im Allgemeinen die :k[euklidische Norm]{#euclidean-norm} und damit, welches $\bx$
+die kleinste Residuumsnorm hat. Dort triangularisieren wir mit
+:k[orthogonalen Matrizen]{#orthogonal-matrix} (vgl. Heath §3.4.3 und §3.5).

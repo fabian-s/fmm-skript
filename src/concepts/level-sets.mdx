@@ -7,36 +7,34 @@ import { LevelSetWidget } from "./widgets/LevelSetsWidget";
  * Variablen.
  */}
 
-Denken wir an eine topografische Wanderkarte: Kurven verbinden alle
-Punkte gleicher Höhe. Für eine Funktion
-$f\colon \R^2 \to \R$ gilt dasselbe Bild: die
-*Niveaumenge* (level set) zur Höhe $c$ sammelt alle
-Eingaben, an denen $f$ genau diesen Wert annimmt:
+Auf einer Wanderkarte verbinden Höhenlinien alle Punkte gleicher Höhe.
+Für eine Funktion $f\colon \R^n \to \R$ sammelt die
+*Niveaumenge* (level set) zur Höhe $c$ alle
+Eingaben, an denen $f$ den Wert $c$ annimmt:
 
 $$
 \{\, \bx \in \R^n : f(\bx) = c \,\}.
 $$
 
-In zwei Dimensionen sind das typischerweise Kurven (Höhenlinien, contour
-lines), im $\R^n$ typischerweise eine $(n-1)$-dimensionale Hyperfläche; an
-kritischen Werten kann sie entarten. Zeichnen wir verschachtelte
-Höhenlinien für mehrere Werte von $c$, wird die Gestalt einer
-Funktion auf einen Blick sichtbar: Eng beieinander liegende Linien
-bedeuten steiles Gelände, weit auseinander liegende flaches, und
-kleine geschlossene Schleifen umschließen ein Minimum oder Maximum.
+Für $n = 2$ sind das meist Kurven, die *Höhenlinien* (contour lines), im
+$\R^n$ meist $(n-1)$-dimensionale Flächen. Höhenlinien zu mehreren Werten
+von $c$ zeigen die Gestalt der Funktion: Dicht liegende Linien bedeuten
+steiles Gelände, weit auseinander liegende flaches; kleine geschlossene
+Schleifen umschließen ein Minimum oder Maximum.
 
-Für die Optimierung sind zwei Fakten wichtig. Wo
+Wo
 $\nabla f(\bx) \neq \bnull$ ist, steht der
 :k[Gradient]{#gradient}
 $\nabla f(\bx)$ senkrecht auf der Niveaumenge durch
 $\bx$ und zeigt in Richtung größerer Werte von $f$;
-$-\nabla f$ ist also lokal der steilste Weg bergab. Und
-nahe einem Minimum sehen die Höhenlinien einer glatten Funktion aus wie
-verschachtelte Ellipsen, deren Form die Hesse-Matrix bestimmt. Stark
-gestreckte Ellipsen signalisieren ein schlecht konditioniertes Problem.
+$-\nabla f$ ist also lokal der steilste Weg bergab. Nahe einem Minimum mit
+positiv definiter Hesse-Matrix sind die Höhenlinien näherungsweise
+verschachtelte Ellipsen; stark gestreckte Ellipsen zeigen ein schlecht
+konditioniertes Problem an.
 
 Bleibt der Gradient auch dann senkrecht zur Höhenlinie, wenn wir den Punkt entlang der Linie verschieben?
 
 <LevelSetWidget />
 
-Die orthogonale Beziehung gilt lokal an jedem regulären Punkt der Höhenlinie.
+Der Gradient steht in jedem Punkt senkrecht auf der Tangente, auch auf
+gestreckten Ellipsen, wo er nicht mehr radial nach außen zeigt.

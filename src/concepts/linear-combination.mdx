@@ -12,20 +12,18 @@ $$
 c_1 \bv_1 + c_2 \bv_2 + \cdots + c_k \bv_k.
 $$
 
-Denken wir an ein Rezept: Die Vektoren sind die Zutaten, und die
-Skalare $c_1, \ldots, c_k$ geben an, wie viel von jeder wir
-verwenden (negative Mengen erlaubt). Zum Beispiel:
-$2 \begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1 \begin{bmatrix} -1 \\ 1 \end{bmatrix} = \begin{bmatrix} 5 \\ 1 \end{bmatrix}$. Die Frage, ob sich $\bb$ durch Gewichten und Addieren der
-Spalten einer :k[Matrix]{#matrix}
-$\bA$ bauen lässt, ist die Frage, ob irgendeine Wahl von
-Gewichten diese Spalten genau zu $\bb$ mischt, und die
-Gewichte sind dann genau eine Lösung $\bx$ von
-$\bA\bx = \bb$. Lässt sich damit wirklich jeder Punkt der Ebene treffen, und
-welche Gewichte gehören zu einem vorgegebenen Ziel?
+Die Skalare $c_1, \ldots, c_k$ heißen Koeffizienten oder Gewichte; sie dürfen
+auch negativ sein. Zum Beispiel ist
+$2 \begin{bmatrix} 2 \\ 1 \end{bmatrix} - 1 \begin{bmatrix} -1 \\ 1 \end{bmatrix} = \begin{bmatrix} 5 \\ 1 \end{bmatrix}$.
+Ob sich $\bb$ als Linearkombination der Spalten einer :k[Matrix]{#matrix}
+$\bA$ schreiben lässt, ist dieselbe Frage wie die, ob $\bA\bx = \bb$ lösbar
+ist: Die Gewichte sind die Einträge von $\bx$.
+
+Welche Gewichte mischen die beiden Vektoren des Beispiels zum Ziel
+$(1; 3)^\top$, und lässt sich so jeder Punkt der Ebene treffen?
 
 <MixWidget />
 
-Zu jedem Ziel gehört genau ein Paar von Gewichten, solange die beiden Vektoren
-:k[linear unabhängig]{#linear-independence} sind. Die Gewichte einer
-Linearkombination sind damit dasselbe wie die Lösung eines linearen
-Gleichungssystems.
+Zu jedem Ziel gehört genau ein Paar von Gewichten, weil die beiden Vektoren
+:k[linear unabhängig]{#linear-independence} sind; für $(1; 3)^\top$ sind es
+$c_1 = 4/3$ und $c_2 = 5/3$.

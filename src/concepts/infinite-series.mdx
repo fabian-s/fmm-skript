@@ -11,13 +11,12 @@ vielen Summanden, einem für jedes Glied einer
 :k[Folge]{#sequence}
 $a_0, a_1, a_2, \dots$
 
-Unendlich viele Zahlen können wir nie wirklich addieren, also wird die
-Summe über *Partialsummen*
-$S_n = a_0 + a_1 + \cdots + a_n$ definiert: Die Reihe hat den
-Wert $S$, wenn die Partialsummen als
-:k[Grenzwert]{#limit} gegen $S$
-:k[konvergieren]{#convergence}. Ein
-klassisches Beispiel ist die
+Unendlich viele Zahlen können wir nicht addieren; die Summe ist deshalb über
+die *Partialsummen*
+$S_n = a_0 + a_1 + \cdots + a_n$ erklärt: Die Reihe hat den
+Wert $S$, wenn die Partialsummen gegen $S$
+:k[konvergieren]{#convergence}, $S$ also ihr :k[Grenzwert]{#limit} ist. Ein
+Beispiel ist die
 :k[geometrische Reihe]{#geometric-series}
 
 $$
@@ -25,14 +24,14 @@ $$
 $$
 
 bei der jeder weitere Summand die Hälfte der verbleibenden Lücke zur
-$2$ schließt. Das Widget unten zeigt, wie sich der Balken
-füllt. Nicht jede Reihe konvergiert:
+$2$ schließt. Nicht jede Reihe konvergiert:
 $1 + 1 + 1 + \cdots$ wächst über alle Grenzen und hat darum
-keinen Wert. Taylorreihen sind solche Objekte: eine unendliche
-Summe von Polynomtermen.
+keinen Wert. Auch Taylorreihen sind unendliche Reihen, ihre Summanden sind
+Polynomterme.
 
 Wie groß ist nach endlich vielen Summanden noch die Lücke zum Grenzwert?
 
 <PartialSumBar />
 
-Die Lücke ist das Restglied und verschwindet hier mit wachsendem $n$.
+Die Lücke ist der Rest $2 - S_n = 2^{-n}$: Jeder Summand halbiert sie, null wird
+sie für kein endliches $n$.

@@ -5,8 +5,8 @@ import { InnerProductWidget } from "./widgets/InnerProductFunctionsWidget";
 {/* Konzept-Tooltip: Skalarprodukt von Funktionen, das Integral-Gegenstück zum Skalarprodukt von Vektoren. */}
 
 Das :k[Skalarprodukt]{#dot-product} zweier
-Vektoren multipliziert passende Komponenten und summiert sie auf. Genauso
-behandeln wir Funktionen auf einem Intervall: Stellen wir uns $p(t)$ und
+Vektoren multipliziert passende Komponenten und summiert sie auf. Für
+Funktionen auf einem Intervall gehen wir ebenso vor: Stellen wir uns $p(t)$ und
 $q(t)$ als „Vektoren“ mit einer Komponente pro Punkt $t$ vor, dann wird aus
 der Summe ein Integral:
 
@@ -18,17 +18,17 @@ wobei die Gewichtsfunktion $w > 0$ manche
 Bereiche stärker zählen lässt als andere. Die
 geometrische Sprache überträgt sich: Zwei Funktionen sind
 :k[orthogonal]{#orthogonality}, wenn
-$\langle p, q \rangle = 0$. Kleines Beispiel: Auf
+$\langle p, q \rangle = 0$. Beispiel: Auf
 $[-1, 1]$ mit $w(t) \equiv 1$ ist
 $\langle 1, t \rangle = \int_{-1}^{1} t \, dt = 0$, die
-konstante Funktion und $t$ sind also orthogonal – der
+konstante Funktion und $t$ sind also orthogonal. Das ist der
 erste Schritt zu orthogonalen Polynomen (vgl. Heath §7.3.4).
 
 Welche Paare stehen senkrecht aufeinander?
 
 <InnerProductWidget />
 
-Orthogonalität heißt hier: die Fläche über der Achse hebt die darunter exakt
-auf; fehlt rote Fläche, heißt das umgekehrt nicht $p = q$. Sicher ist nur
-$\langle p, p \rangle = \int_a^b p(t)^2\, w(t)\, dt \ge 0$, null genau für die
-Nullfunktion.
+Orthogonal heißt hier: Die Fläche des Produkts über der Achse hebt die darunter
+exakt auf. Für $q = p$ liegt das Produkt nie unter der Achse, also
+$\langle p, p \rangle \ge 0$, null nur für die Nullfunktion; umgekehrt folgt aus
+fehlender Fläche unter der Achse nicht $p = q$ (Beispiel: $1$ und $t^2$).

@@ -4,7 +4,7 @@ import { RegressionWidget } from "./widgets/LinearRegressionWidget";
 
 {/* Concept tooltip: lineare Regression, Kurvenanpassung mit linearen Parametern. */}
 
-Lineare Regression ist Kurvenanpassung: Zu Datenpunkten
+*Lineare Regression* ist Kurvenanpassung: Zu Datenpunkten
 $(x_i, y_i)$ suchen wir die
 :k[Funktion]{#function} einer einfachen
 Familie, die ihnen am nächsten kommt. Am vertrautesten ist die
@@ -18,16 +18,18 @@ und Anpassen heißt: Wir wählen den Achsenabschnitt $\theta_0$
 und die :k[Steigung]{#slope}
 $\theta_1$ so, dass sie eine
 :k[Zielfunktion]{#objective-function}
-minimieren, etwa die Summe der quadrierten vertikalen Abstände –
+minimieren, etwa die Summe der quadrierten vertikalen Abstände. Das ist
 gleichbedeutend mit maximaler
-:k[Likelihood]{#likelihood} unter einem Fehlermodell.
-„Linear“ bezieht sich darauf, dass die Parameter $\btheta$ linear eingehen; dieselbe Maschinerie
-passt also auch Kurven wie
+:k[Likelihood]{#likelihood} bei unabhängigen, normalverteilten Fehlern
+gleicher Varianz.
+„Linear“ bezieht sich darauf, dass die Parameter $\btheta$ linear eingehen;
+dasselbe Verfahren passt deshalb auch Kurven wie
 $\theta_0 + \theta_1 x + \theta_2 x^2$ an.
 
 Wie klein bekommen wir die Fehlerquadratsumme für die fünf Punkte unten?
 
 <RegressionWidget />
 
-Weil die vertikalen Abstände quadriert werden, kostet ein Residuum von
+Das Minimum liegt bei $\theta_0 = 0{,}28$ und $\theta_1 = 0{,}93$ mit
+Fehlerquadratsumme $0{,}179$. Weil die Abstände quadriert werden, kostet ein Residuum von
 $0{,}4$ viermal so viel wie eines von $0{,}2$.

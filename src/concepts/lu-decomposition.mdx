@@ -4,9 +4,9 @@ import { LuWidget } from "./widgets/LuDecompositionWidget";
 
 Die *LU-Zerlegung* (engl. *LU factorization*, auch
 *LR-Zerlegung*) ist
-:k[Gauß-Elimination]{#gaussian-elimination}
-mit Buchführung: Wir merken uns jeden Multiplikator genau an der
-Stelle, an der er eine Null erzeugt hat. Die Multiplikatoren bilden
+:k[Gauß-Elimination]{#gaussian-elimination},
+bei der wir jeden Multiplikator an der Stelle notieren, an der er eine
+Null erzeugt hat. Die Multiplikatoren bilden
 eine untere
 :k[Dreiecksmatrix]{#triangular-matrix}
 $\bL$ mit Einsen auf der Diagonale, das eliminierte Ergebnis
@@ -18,30 +18,26 @@ $$
 \bA = \bL\bU, \qquad \begin{bmatrix} 2 & 1 \\ 4 & 5 \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}.
 $$
 
-Was bringt das? Ist die Matrix einmal zerlegt, wird
-$\bA\bx = \bb$ zu $\bL(\bU\bx) = \bb$, also zwei
-billige
-:k[Substitutions-Durchläufe]{#triangular-solve}
+Ist $\bA$ einmal zerlegt, wird
+$\bA\bx = \bb$ zu $\bL(\bU\bx) = \bb$, also zu zwei schnellen
+:k[Substitutions-Durchläufen]{#triangular-solve}
 (erst $\bL\by = \bb$ vorwärts lösen, dann
-$\bU\bx = \by$ rückwärts). Die teure Zerlegung zahlen wir
+$\bU\bx = \by$ rückwärts). Die aufwendige Zerlegung berechnen wir
 einmal und verwenden sie für jede neue rechte Seite wieder. Mit
-Zeilentauschen für die Stabilität wird die Identität zu
+Zeilentauschen (für Stabilität oder bei einem Nullpivot) wird daraus
 $\bP\bA = \bL\bU$ mit einer
 :k[Permutationsmatrix]{#permutation-matrix}
-$\bP$.
-
-Ein wichtiger Spezialfall: Für
+$\bP$. Für
 :k[symmetrische]{#symmetric-matrix},
 :k[positiv definite]{#positive-definite}
-Matrizen spezialisiert sich die Zerlegung zur
+Matrizen halbiert die
 :k[Cholesky-Zerlegung]{#cholesky-factorization}
-$\bA = \bL\bL^T$, die mit der halben Arbeit auskommt.
+$\bA = \bL\bL^T$ die Arbeit.
 
-Was passiert eigentlich, wenn der Pivot null ist?
+Was passiert, wenn der Pivot links oben null ist?
 
 <LuWidget />
 
-Der Multiplikator ist das einzige, was die Elimination sich merken muss; alles
-Übrige lässt sich daraus zurückrechnen. Ein Nullpivot heißt dabei nicht, dass
-es keine Zerlegung gäbe – er sagt nur, dass *dieser* Eliminationsschritt so
-nicht geht.
+Dann scheitert dieser Eliminationsschritt, aber nicht unbedingt die Zerlegung:
+Steht darunter eine Zahl ungleich null, hilft nur ein Zeilentausch; steht
+darunter eine Null, ist nichts zu eliminieren, und $\bL = \bI$, $\bU = \bA$.
