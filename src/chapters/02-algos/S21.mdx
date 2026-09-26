@@ -3,13 +3,11 @@ import { RSelbsttest } from "./widgets/S21Local";
 import { Schaetzfrage } from "../../lib";
 
 Statistische Methoden sind am Ende Rechenvorschriften, die ein Computer
-ausführt, und Computer rechnen anders als die Mathematik auf dem Papier. In
-diesem Kapitel klären wir zuerst, was ein *numerisches Problem* und was ein
-*Algorithmus* ist. Dann sehen wir an Beispielen, dass es darauf ankommt, *wie*
-wir etwas berechnen: Dieselbe Formel kann als Rechenvorschrift gut oder
-unbrauchbar sein. In den folgenden Abschnitten fragen wir, wie *teuer* ein
-Algorithmus ist, und entwickeln mit den Landau-Symbolen die Sprache, um
-Rechenaufwand zu vergleichen.
+ausführt, und Computer rechnen anders als die Mathematik auf dem Papier. Wir
+klären zuerst, was ein *numerisches Problem* und was ein *Algorithmus* ist, und
+sehen an Beispielen, dass dieselbe Formel als Rechenvorschrift gut oder
+unbrauchbar sein kann. Danach fragen wir, wie *teuer* ein Algorithmus ist, und
+vergleichen Rechenaufwand mit den Landau-Symbolen.
 
 ### Verwendete Vorkenntnisse
 
@@ -23,13 +21,11 @@ dazu ein erstes Gespür dafür, wie viele Einzelrechnungen darin stecken.
 
 <h3 id="sec-2.1-numerische-probleme">Numerische Probleme</h3>
 
-Was ist ein numerisches Problem? Kurz gesagt: eine Rechenaufgabe, deren Lösung
-aus einer oder mehreren Zahlen besteht. Drei typische Beispiele aus der
-Statistik: der Wert eines Integrals (etwa eine Wahrscheinlichkeit als Fläche
-unter einer Dichte), die Lösung eines
-:k[linearen Gleichungssystems]{#linear-system} (etwa
-die Koeffizienten einer Regression) oder die
-:k[Basis]{#basis}-Koeffizienten einer
+Ein numerisches Problem ist eine Rechenaufgabe, deren Lösung aus einer oder
+mehreren Zahlen besteht. Drei typische Beispiele aus der Statistik: der Wert
+eines Integrals (etwa eine Wahrscheinlichkeit als Fläche unter einer Dichte),
+die Lösung eines :k[linearen Gleichungssystems]{#linear-system} (etwa die
+Koeffizienten einer Regression) oder die :k[Basis]{#basis}-Koeffizienten einer
 Funktionsapproximation. Allgemein fassen wir das so:
 
 :::definition[#numerisches-problem (Numerisches Problem)]
@@ -38,11 +34,10 @@ Ein *numerisches Problem* ist eine Aufgabe der Form:
 Lösung $f(\bx)$.*
 :::
 
-Die Schreibweise ist bewusst abstrakt: $f$ ist die mathematische
-Abbildung von den Eingabedaten auf die exakte Lösung; beim Gleichungssystem
-$\bA\by = \bb$ etwa $f(\bA, \bb) = \bA^{-1}\bb$. Ob und
-wie wir $f(\bx)$ tatsächlich ausrechnen können, ist damit noch völlig
-offen.
+Dabei ist $f$ die mathematische Abbildung von den Eingabedaten auf die
+exakte Lösung, beim Gleichungssystem $\bA\by = \bb$ etwa
+$f(\bA, \bb) = \bA^{-1}\bb$. Ob und wie wir $f(\bx)$ tatsächlich
+ausrechnen können, ist damit noch offen.
 
 ### Zwei grundsätzliche Schwierigkeiten
 
@@ -61,7 +56,7 @@ Beschränkungen jeder endlichen Maschine:
   gerundete Näherung.
 
 - Computer können nur *endlich viele Rechenoperationen* ausführen.
-  Schon die harmlose Exponentialfunktion ist über eine
+  Schon die Exponentialfunktion ist über eine
   :k[unendliche Reihe]{#infinite-series} definiert,
 
   $$
@@ -72,26 +67,19 @@ Beschränkungen jeder endlichen Maschine:
   Auswertung bricht irgendwo ab.
 :::
 
-Deshalb kommt es darauf an, *wie* wir etwas berechnen. Prüfen wir unsere
-Intuition an vier kurzen R-Ausdrücken.
-Tippen wir bei jedem zuerst, was herauskommt, und decken erst dann die Ausgabe
-auf:
+Deshalb kommt es darauf an, *wie* wir etwas berechnen. Was geben die folgenden
+vier R-Ausdrücke aus? Erst raten, dann aufdecken:
 
 <RSelbsttest />
 
-Computer können nur endlich viele Zahlen darstellen. Das führt zu *Rundungsfehlern*
-(:k[Rundungsfehler]{#rounding-error}; ausführlich in
-@kap:fehler, nach den Normen aus @kap:matrix-spur-norm), und diese Fehler können sich *akkumulieren*. Der Fehler einer
-einzelnen Operation ist meist vernachlässigbar klein. Gefährlich wird die Summe
-vieler kleiner Fehler. Und weil jede Operation frisch rundet, spielt sogar die
-*Reihenfolge* unserer Rechenschritte eine Rolle. Eine erste praktische
-Empfehlung, die wir gleich zweimal in Aktion sehen: besonders große und
-besonders kleine Zahlen im selben Ausdruck vermeiden.
+Weil der Computer nur endlich viele Zahlen darstellen kann, entstehen
+*:k[Rundungsfehler]{#rounding-error}* (ausführlich in @kap:fehler). Der Fehler einer
+einzelnen Operation ist meist vernachlässigbar klein, aber die Fehler können sich
+*akkumulieren*. Und weil jede Operation neu rundet, spielt sogar die *Reihenfolge*
+unserer Rechenschritte eine Rolle. Daraus folgt eine erste praktische Empfehlung:
+besonders große und besonders kleine Zahlen im selben Ausdruck vermeiden.
 
 ### Zwei warnende Beispiele
-
-Die beiden folgenden Beispiele zeigen die zwei wichtigsten Mechanismen, mit
-denen Gleitkommarechnung schiefgeht. Auf dem Papier sehen beide harmlos aus.
 
 :::beispiel[#katastrophale-ausloeschung (Katastrophale Auslöschung)]
 Wir berechnen die Varianz von $\bx$ mit der bekannten
@@ -101,9 +89,8 @@ $$
 \text{Var}(x) = \cred{\frac{1}{n}\sumin x_i^2} - \cblue{\left(\frac{1}{n}\sumin x_i\right)^2}
 $$
 
-(wir teilen der Einfachheit halber durch $n$ statt $n-1$; am
-Phänomen ändert das nichts). Die Daten sind vier kleine Zahlen, verschoben um
-eine große Konstante:
+(der Einfachheit halber mit $1/n$ statt $1/(n-1)$; am Phänomen ändert das
+nichts). Die Daten sind vier kleine Zahlen, verschoben um eine große Konstante:
 
 $$
 \bx = \left(4 + 10^9,\; 7 + 10^9,\; 13 + 10^9,\; 16 + 10^9\right).
@@ -124,28 +111,27 @@ $$
 $$
 
 und die Differenz $\cred{122{,}5} - \cblue{100} = 22{,}5$ stimmt.
-Aber: Beide Terme sind riesig ($\approx 10^{18}$), und ihre gesamte
-Information über die Varianz steckt in den letzten drei Ziffern. Bei der
-Größenordnung $10^{18}$ liegen benachbarte
-:k[Gleitkommazahlen]{#floating-point} aber schon
-$128$ auseinander. Feiner kann die Maschine dort nicht auflösen. In
-R (Doppelpräzision) werden deshalb *beide* Terme auf dieselbe
-Maschinenzahl gerundet:
+Beide Terme sind aber riesig ($\approx 10^{18}$), und die ganze Information
+über die Varianz steckt in ihren letzten drei Ziffern. Bei der Größenordnung
+$10^{18}$ liegen benachbarte :k[Gleitkommazahlen]{#floating-point} schon $128$
+auseinander; feiner kann die Maschine dort nicht auflösen. In R
+(Doppelpräzision) werden deshalb *beide* Terme auf dieselbe Maschinenzahl
+gerundet:
 
 $$
 \cred{1\,000\,000\,020\,000\,000\,128} - \cblue{1\,000\,000\,020\,000\,000\,128} = 0.
 $$
 
-Die berechnete „Varianz" ist $0$ statt $22{,}5$ und enthält damit keinerlei
-Information mehr. Die zweistufige Rechnung
+Die berechnete „Varianz" ist $0$ statt $22{,}5$. Die zweistufige Rechnung
 $\frac{1}{n}\sumin \left(x_i - \bar{x}\right)^2$ liefert dagegen
 exakt $22{,}5$, denn sie subtrahiert die großen Zahlen, *bevor*
 quadriert wird, und arbeitet danach nur noch mit den kleinen Abweichungen.
 
-**Ursache** ist die Subtraktion zweier fast gleich großer Zahlen: Die übereinstimmenden führenden Ziffern heben sich weg, übrig
-bleiben nur die (verrauschten) hinteren Stellen. Dieses Phänomen heißt
-*:k[katastrophale Auslöschung]{#cancellation}*
-(engl. *catastrophic cancellation*) und ist die häufigste numerische Falle.
+**Ursache** ist die Subtraktion zweier fast gleich großer Zahlen: Die
+übereinstimmenden führenden Ziffern heben sich weg, übrig bleiben nur die
+(verrauschten) hinteren Stellen. Dieses Phänomen heißt
+*:k[katastrophale Auslöschung]{#cancellation}* (engl. *catastrophic
+cancellation*) und ist eine der häufigsten numerischen Fehlerquellen.
 :::
 
 :::beispiel[#verletzte-assoziativitaet (Verletzte Assoziativität)]
@@ -162,28 +148,25 @@ $$
 \cred{x} + (\cblue{y} + \cgreen{z}) = \cred{10^{30}} + (\cblue{(-10^{30})} + \cgreen{1}) \;\stackrel{!!}{\approx}\; \cred{10^{30}} + \cblue{(-10^{30})} = 0.
 $$
 
-Die erste Klammerung ist exakt: $\cred{x} + \cblue{y} = 0$ löscht
-die riesigen Zahlen sauber aus, danach überlebt die $\cgreen{1}$. In
-der zweiten Klammerung muss die Maschine
-$\cblue{-10^{30}} + \cgreen{1}$ als Gleitkommazahl speichern. Aber
-bei der Größenordnung $10^{30}$ liegen benachbarte Maschinenzahlen
-etwa $10^{14}$ auseinander. Die $\cgreen{1}$ ist viel
-kleiner als diese Auflösung, das Zwischenergebnis wird auf
-$\cblue{-10^{30}}$ zurückgerundet, und am Ende steht $0$
-statt $1$.
+Die erste Klammerung ist exakt: $\cred{x} + \cblue{y} = 0$ hebt die großen
+Zahlen genau auf, danach überlebt die $\cgreen{1}$. In der zweiten Klammerung
+muss die Maschine $\cblue{-10^{30}} + \cgreen{1}$ als Gleitkommazahl speichern.
+Bei der Größenordnung $10^{30}$ liegen benachbarte Maschinenzahlen aber etwa
+$10^{14}$ auseinander. Die $\cgreen{1}$ ist viel kleiner als diese Auflösung,
+das Zwischenergebnis wird auf $\cblue{-10^{30}}$ zurückgerundet, und am Ende
+steht $0$ statt $1$.
 
 $\impl$ Die Reihenfolge (Klammerung) einer Summe beeinflusst das
-Ergebnis. Das haben wir oben im Selbsttest bei
-`sum(x) - sum(rev(x))` beobachtet: vorwärts und rückwärts summiert
-ergeben dieselben $10^5$ Zahlen verschiedene Summen.
+Ergebnis. Das zeigte oben schon `sum(x) - sum(rev(x))`: Vorwärts und
+rückwärts summiert ergeben dieselben $10^5$ Zahlen verschiedene Summen.
 :::
 
-Die beiden Beispiele sehen verschieden aus, aber sie scheitern am selben
-Mechanismus: An der Stelle, an der die Maschine rechnet, liegen benachbarte
-darstellbare Zahlen weiter auseinander als die Größe, die wir eigentlich
-suchen. Wie weit dürfen wir die Verschiebung treiben, bis es so weit ist?
+Beide Beispiele scheitern am selben Mechanismus: An der Stelle, an der die
+Maschine rechnet, liegen benachbarte darstellbare Zahlen weiter auseinander als
+die Größe, die wir suchen. Wie weit dürfen wir die Verschiebung treiben, bis
+das passiert?
 
-:::interaktiv[Zwei Gesichter derselben Auslöschung]
+:::interaktiv[Varianz und Klammerung bei wachsender Verschiebung]
 <Schaetzfrage
   variante="auswahl"
   frage="Im Rechenweg »Varianz«: bei welcher Verschiebung c verliert die Verschiebungsformel die Varianz zum ersten Mal?"
@@ -205,61 +188,49 @@ suchen. Wie weit dürfen wir die Verschiebung treiben, bis es so weit ist?
 <AusloeschungWidget />
 </Schaetzfrage>
 
-Die Tafel macht das Kriterium sichtbar: Solange die orange Auflösung links von der
-grünen Zielgröße steht, überlebt das Ergebnis; sobald sie rechts davon steht, ist es
-weg.
+Die Tafel stellt die Auflösung der Maschine an der Rechenstelle (orange) neben die
+gesuchte Größe (grün): Solange die Auflösung kleiner ist, überlebt das Ergebnis,
+sonst geht es verloren.
 :::
 
 <h3 id="sec-2.1-algorithmen">Algorithmen</h3>
 
-Die Beispiele zeigen: Zum numerischen Problem $f$ gehört immer noch
-eine zweite Zutat, nämlich die konkrete Rechenvorschrift, mit der wir $f(\bx)$
-zu berechnen versuchen. Für dieselbe Varianz gab es zwei Vorschriften mit
-drastisch verschiedenem Ausgang. Diese zweite Zutat bekommt jetzt einen Namen:
+Für dieselbe Varianz gab es zwei Rechenvorschriften mit sehr verschiedenem
+Ergebnis. Zum numerischen Problem $f$ gehört also eine zweite Zutat: die konkrete
+Rechenvorschrift, mit der wir $f(\bx)$ zu berechnen versuchen.
 
 :::definition[#algorithmus (Algorithmus)]
 Ein *Algorithmus* ist ein Verfahren
 $\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$, das für Inputs
-$\bx$ eine mögliche Lösung $\wt{f}(\bx)$ berechnet.
+$\bx$ eine mögliche Lösung $\wt{f}(\bx)$ des Problems $f(\bx)$ berechnet.
 :::
 
-Ein Algorithmus ist eine
-:k[Verkettung]{#function-composition}
-$\wt{f}_s \circ \cdots \circ \wt{f}_1$ endlich vieler elementarer
-Rechenschritte $\wt{f}_1, \ldots, \wt{f}_s$: erst wird
-$\wt{f}_1$ auf den Input angewandt, dann $\wt{f}_2$ auf
-dessen Ergebnis, und so weiter. Die Tilde markiert, dass $\wt{f}$
-nicht dasselbe ist wie $f$, sondern nur ein Versuch, $f$
-nachzubauen; die Definition verspricht deshalb nur eine „mögliche Lösung".
-Wie gut $\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, ist
-die Frage, die uns in @kap:fehler beschäftigt. Zu einem Problem
-$f$ gibt es dabei meist viele verschiedene Algorithmen, und sie
-unterscheiden sich in Genauigkeit *und* Rechenaufwand.
+Der Algorithmus ist also eine :k[Verkettung]{#function-composition} endlich
+vieler elementarer Rechenschritte $\wt{f}_1, \ldots, \wt{f}_s$: Erst wird
+$\wt{f}_1$ auf den Input angewandt, dann $\wt{f}_2$ auf dessen Ergebnis und so
+weiter. Die Tilde markiert, dass $\wt{f}$ nur ein Versuch ist, $f$ nachzubauen;
+deshalb verspricht die Definition nur eine „mögliche Lösung". Wie gut
+$\wt{f}(\bx)$ die wahre Lösung $f(\bx)$ trifft, untersuchen wir in @kap:fehler.
+Zu einem Problem gibt es meist viele Algorithmen, und sie unterscheiden sich in
+Genauigkeit *und* Rechenaufwand.
 
 :::bemerkung[#arten-von-algorithmen (Arten von Algorithmen)]
 Die gebräuchlichen Bezeichnungen beschreiben drei *unabhängige Achsen*:
 
-- *exakt oder approximativ*: Trifft das Verfahren die mathematische Lösung in
-  exakter Arithmetik, oder entsteht bereits durch das Verfahren ein
-  Approximationsfehler? Eine abgebrochene Reihe für $e^x$ ist approximativ.
-- *direkt oder numerisch iterativ*: Liefert eine vorab endliche Folge von
+- *exakt* ($\wt{f}(\bx) = f(\bx)$ bis auf Rundungsfehler) oder *approximativ*
+  ($\wt{f}(\bx) \approx f(\bx)$): Trifft das Verfahren die mathematische Lösung
+  in exakter Arithmetik, oder entsteht schon durch das Verfahren ein
+  Approximationsfehler, wie bei einer abgebrochenen Reihe für $e^x$?
+- *direkt oder numerisch iterativ*: Liefert eine vorab feste, endliche Folge von
   Rechenschritten die Lösung, oder erzeugt das Verfahren eine Folge von
-  Näherungen mit Abbruchkriterium? Das Gauß-Verfahren ist direkt; Newton- und
-  Gradientenverfahren sind iterativ.
-- *deterministisch oder randomisiert*: Ist das Ergebnis bei gleichem Input
-  vollständig festgelegt, oder verwendet das Verfahren Zufall? Die
-  Monte-Carlo-Integration ist randomisiert.
+  Näherungen mit Abbruchkriterium? Eine Programmschleife allein macht ein
+  Verfahren noch nicht iterativ; auch direkte Algorithmen enthalten Schleifen.
+- *deterministisch oder randomisiert* (probabilistisch): Ist das Ergebnis bei
+  gleichem Input vollständig festgelegt, oder verwendet das Verfahren Zufall?
 
-Eine Programmschleife allein macht ein Verfahren noch nicht *numerisch
-iterativ*: Auch ein direkter Algorithmus kann Schleifen enthalten. Umgekehrt
-können sich die Achsen beliebig kombinieren. Das stochastische
-Gradientenverfahren etwa ist numerisch iterativ, approximativ und randomisiert.
+Beispiele für alle drei Achsen und ihre Kombinationen folgen in
+@sec:algorithmenarten-in-ml-und-statistik.
 :::
-
-Im nächsten Abschnitt sehen wir an einem klassischen Beispiel (den
-Fibonacci-Zahlen), dass zwei exakte Algorithmen für dasselbe Problem sich im
-Rechenaufwand so drastisch unterscheiden können, dass der eine praktisch
-unbrauchbar ist.
 
 ### Selbsttest
 
@@ -278,21 +249,21 @@ $-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (@beispiel:verletzte-assoziat
 Auch die zweistufige Varianzformel $\frac{1}{n}\sumin (x_i - \bar{x})^2$ versagt,
 wenn wir die Verschiebung im Widget weit genug treiben.
 
-Sie hält sehr viel länger durch als die Verschiebungsformel, weil sie die großen
-Zahlen subtrahiert, *bevor* quadriert wird, und danach nur noch mit den kleinen
-Abweichungen $-6, -3, 3, 6$ rechnet: bis $k = 15$ liefert sie exakt $22{,}5$. Ab
+Sie hält viel länger durch als die Verschiebungsformel, weil sie die großen
+Zahlen subtrahiert, *bevor* quadriert wird, und danach nur mit den kleinen
+Abweichungen $-6, -3, 3, 6$ rechnet: Bis $k = 15$ liefert sie exakt $22{,}5$. Ab
 $k = 16$ sind aber schon diese Abweichungen nicht mehr darstellbar, und das Widget
 zeigt $20$, bei $k = 17$ sogar $128$ und ab $k = 18$ nur noch $0$. Robuster heißt
 nicht immun.
 :::
 
 :::frage{wahr}
-Ein Rundungsfehler pro Operation ist harmlos, gefährlich ist erst das
-Zusammenspiel vieler Operationen.
+Ein Rundungsfehler pro Operation ist meist vernachlässigbar, gefährlich ist erst
+das Zusammenspiel vieler Operationen.
 
-Darum ging es in beiden Beispielen: Jede einzelne Rundung ist relativ
-winzig, aber eine Subtraktion fast gleich großer Zahlen macht aus diesem
-winzigen relativen Fehler einen riesigen relativen Fehler des Ergebnisses.
+Jede einzelne Rundung ist relativ winzig. Folgt aber eine Subtraktion fast gleich
+großer Zahlen, wird daraus ein großer relativer Fehler des Ergebnisses, wie in
+@beispiel:katastrophale-ausloeschung.
 :::
 
 ::::
@@ -300,4 +271,4 @@ winzigen relativen Fehler einen riesigen relativen Fehler des Ergebnisses.
 
 *Vertiefung: Heath §1.1–1.2 (wissenschaftliches Rechnen, Näherungen und
 Fehlerquellen); die Gleitkomma-Arithmetik hinter den Beispielen behandelt
-Heath §1.3 sowie unser @kap:fehler, mit Normen aus @kap:matrix-spur-norm.*
+Heath §1.3.*

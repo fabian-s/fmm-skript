@@ -1,13 +1,9 @@
 import { FibonacciStepper } from "./widgets/FibonacciStepper";
 import { Schaetzfrage } from "../../lib";
 
-In @sec:probleme-algorithmen haben wir Algorithmen abstrakt definiert: als Verkettung
-$\wt{f} = \wt{f}_s \circ \cdots \circ \wt{f}_1$ elementarer Rechenschritte. Diese
-Definition spielen wir jetzt einmal vollständig durch, an einem Problem, das einfach
-genug ist, um jeden einzelnen Schritt hinzuschreiben, und das uns trotzdem durch das
-ganze Kapitel begleitet: den Fibonacci-Zahlen. Danach ordnen wir das Beispiel in die
-Algorithmenarten ein, die uns in Statistik und Machine Learning begegnen, und überlegen,
-was einen *guten* Algorithmus auszeichnet.
+Die abstrakte Definition aus @sec:probleme-algorithmen spielen wir jetzt an einem
+Problem vollständig durch, das einfach genug ist, um jeden Schritt hinzuschreiben, und
+das uns durch das ganze Kapitel begleitet: den Fibonacci-Zahlen.
 
 ### Beispiel: Fibonacci-Zahlen :id[beispiel-fibonacci-zahlen]
 
@@ -22,19 +18,17 @@ $$
 Jedes Folgenglied ist also die Summe seiner beiden Vorgänger; die Folge beginnt mit
 $0, 1, 1, 2, 3, 5, 8, 13, 21, \dots$ (Manche Bücher lassen die Folge bei $1, 1$ oder mit
 dem Index $0$ beginnen; wir bleiben bei der obigen Konvention.) Unser numerisches
-Problem lautet: *Berechne die ersten $n$ Fibonacci-Zahlen.* In der Sprache von
-@sec:probleme-algorithmen: Das Problem ist die Abbildung $f$ mit Input $n$ und Lösung
-$f(n) = (x_1, \dots, x_n)$.
+Problem lautet: *Berechne die ersten $n$ Fibonacci-Zahlen.* Es ist also die Abbildung
+$f$ mit Input $n$ und Lösung $f(n) = (x_1, \dots, x_n)$.
 
 Wie berechnen wir das? Die Definition selbst gibt den Weg vor: Wir bauen den
 Ergebnisvektor von links nach rechts auf und gewinnen jeden neuen Eintrag durch *eine*
-Addition aus den beiden zuletzt berechneten. Als Verkettung elementarer Schritte
-(:k[Komposition]{#function-composition} von Funktionen) aufgeschrieben:
+Addition aus den beiden zuletzt berechneten:
 
 :::algorithmus[#fibonacci-schleifenbasiert (Fibonacci, schleifenbasiert)]
 $$
-f : \N \longrightarrow \bigcup_{n\ge 1}\N_0^n,
-\qquad f(n)=(x_1,\ldots,x_n).
+\wt{f} : \N \longrightarrow \bigcup_{n\ge 1}\N_0^n,
+\qquad \wt{f}(n)=(x_1,\ldots,x_n).
 $$
 
 Für $n\ge 1$ setzt der Algorithmus $x_1=0$, für $n\ge2$ zusätzlich
@@ -47,12 +41,17 @@ gib (x[1], ..., x[n]) zurück
 ```
 :::
 
-Jeder Schleifendurchlauf hängt an das bisher berechnete Tupel die Summe aus dem
-$\cblue{\text{letzten}}$ und dem $\cgreen{\text{vorletzten}}$ Element als
-$\corange{\text{neues Element}}$ an. Nach dem letzten Durchlauf steht das vollständige
-Ergebnis da. Der Zielraum hängt von der Eingabe $n$ ab; deshalb schreiben wir oben die
-disjunkte Vereinigung der möglichen Vektorräume statt des formal unzulässigen
-$\N_0^n$ als festen Zielraum.
+Als :k[Komposition]{#function-composition}
+$\wt{f} = \wt{f}_n \circ \cdots \circ \wt{f}_1$ elementarer Schritte geschrieben:
+
+$$
+\wt{f}_1(n) = 0, \qquad \wt{f}_2(x) = (x, 1), \qquad \wt{f}_{i+1}(x_1, \ldots, x_i) = (x_1, \ldots, x_i, \cblue{x_i} + \cgreen{x_{i-1}}) \quad (i \ge 2).
+$$
+
+Jeder Schritt hängt an das bisherige Tupel die Summe aus dem
+$\cblue{\text{letzten}}$ und dem $\cgreen{\text{vorletzten}}$ Element als neues
+Element an. Weil die Länge des Ergebnisses von $n$ abhängt,
+ist der Zielraum die Vereinigung aller $\N_0^n$ und kein fester Raum $\N_0^n$.
 
 :::beispiel[#die-ersten-6-fibonacci-zahlen (Die ersten 6 Fibonacci-Zahlen)]
 Berechnen wir $\wt{f}(6)$ Schritt für Schritt. Die Farben verfolgen die Rollen aus
@@ -76,10 +75,8 @@ Ergebnis: $\wt{f}(6) = (0, 1, 1, 2, 3, 5)$, vier Additionen
 
 ### Vom Algorithmus zum Programm :id[vom-algorithmus-zum-programm]
 
-Der Algorithmus lässt sich fast wörtlich in Code übersetzen. Lege zuerst einen Vektor der
-Länge $n$ an, mit Nullen vorbelegt; damit ist $x_1 = 0$ bereits erledigt. Setze dann
-(falls $n > 1$) das zweite Element auf $1$. Durchlaufe schließlich $i = 2, \dots, n-1$ und
-setze in jedem Durchlauf $x_{i+1} = \cblue{x_i} + \cgreen{x_{i-1}}$. In R:
+Der Algorithmus lässt sich fast wörtlich in R übersetzen. `numeric(n)` legt einen mit
+Nullen gefüllten Vektor der Länge $n$ an; damit ist $x_1 = 0$ schon erledigt:
 
 ```r
 fibonacci <- function(n) {
@@ -100,13 +97,12 @@ Eine Schleife, eine Addition pro Durchlauf, und jedes Zwischenergebnis wird gena
 berechnet und dann wiederverwendet.
 
 :::interaktiv[Wie oft rechnet die Rekursion doppelt?]
-Dass hier *nichts doppelt* gerechnet wird, ist keine Selbstverständlichkeit. Die
-@definition:fibonacci-zahlen legt nämlich noch einen zweiten, eleganteren Weg nahe: Um
-$x_n$ zu berechnen, rufe dieselbe Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$
-auf, ohne Zwischenergebnisse zu speichern. Das liefert dieselben Zahlen, aber viel
-teurer: Beide Teilaufrufe berechnen große Teile der Folge unabhängig voneinander
-noch einmal, und deren Teilaufrufe wieder. Wie oft ist „noch einmal"? Zweimal, fünfmal,
-zwanzigmal?
+Dass hier *nichts doppelt* gerechnet wird, ist nicht selbstverständlich. Die
+@definition:fibonacci-zahlen legt einen zweiten Weg nahe: Für $x_n$ ruft sich dieselbe
+Rechenvorschrift rekursiv für $x_{n-1}$ und $x_{n-2}$ auf, ohne Zwischenergebnisse zu
+speichern. Das liefert dieselben Zahlen, aber beide Teilaufrufe berechnen große Teile
+der Folge unabhängig voneinander noch einmal, und deren Teilaufrufe wieder. Wie oft
+ist „noch einmal"?
 
 <Schaetzfrage
   frage="Beim Ziel x₈: wie oft rechnet die naive Rekursion die Zahl x₃ von vorn aus?"
@@ -125,15 +121,15 @@ zwanzigmal?
 <FibonacciStepper />
 </Schaetzfrage>
 
-Der Stepper zählt es aus, und die Schere geht schnell auf: Bis $x_{15}$ stehen $609$
-Additionen der Rekursion gegen $13$ der Iteration. Die genaue Analyse, *wie* schnell die
-naive Rekursion explodiert, folgt in @sec:fibonacci-komplexitaet.
+Der Abstand wächst schnell: Für $x_{15}$ allein braucht die Rekursion $609$
+Additionen, die Iteration für alle fünfzehn Zahlen $13$. Wie schnell der Aufwand der
+Rekursion wächst, bestimmen wir in @sec:fibonacci-komplexitaet.
 :::
 
 ### Selbsttest :id[fibonacci-selbsttest]
 
-Ordnen wir @algorithmus:fibonacci-schleifenbasiert in die Arten aus @sec:probleme-algorithmen ein. Für jede
-Aussage: wahr oder falsch?
+Wo liegt @algorithmus:fibonacci-schleifenbasiert auf den Achsen aus
+@bemerkung:arten-von-algorithmen?
 
 ::::quiz
 
@@ -141,28 +137,19 @@ Aussage: wahr oder falsch?
 Der Algorithmus ist *exakt*.
 
 Es gilt $f(n) = \wt{f}(n)$: Der Algorithmus liefert genau die definierten
-Fibonacci-Zahlen, keine Näherung. (Die Einschränkung „bis auf
-:k[Rundungsfehler]{#rounding-error}" aus der Definition greift hier erst, wenn $x_n$ für
-sehr großes $n$ den exakt darstellbaren Ganzzahlbereich der
-:k[Gleitkommazahlen]{#floating-point} verlässt.)
-:::
-
-:::frage{falsch}
-Der Algorithmus ist *approximativ*.
-
-Approximativ hieße $f(n) \approx \wt{f}(n)$: der Algorithmus bricht etwa bei einem
-Toleranzlevel ab, bevor die exakte Lösung erreicht ist. Hier gibt es nichts zu
-approximieren: Nach $n$ Schritten steht das exakte Ergebnis fest.
+Fibonacci-Zahlen, keine Näherung. Die Einschränkung „bis auf
+:k[Rundungsfehler]{#rounding-error}" greift erst, wenn $x_n$ für sehr großes $n$ den
+exakt darstellbaren Ganzzahlbereich der :k[Gleitkommazahlen]{#floating-point} verlässt.
 :::
 
 :::frage{falsch}
 Der Algorithmus ist *numerisch iterativ*.
 
-Er enthält zwar eine Schleife, erzeugt aber keine Folge von Näherungen mit einem
-Abbruchkriterium: Nach einer vorab durch $n$ festgelegten Zahl von Schritten steht das
-exakte Ergebnis fest. In der numerischen Terminologie ist er daher *direkt*. Die häufige
-Bezeichnung „iterative Fibonacci-Variante" meint hier nur die schleifenbasierte
-Implementierung im Gegensatz zur Rekursion.
+Er enthält zwar eine Schleife, erzeugt aber keine Folge von Näherungen mit
+Abbruchkriterium: Nach einer durch $n$ festgelegten Zahl von Schritten steht das exakte
+Ergebnis fest. In der numerischen Terminologie ist er daher *direkt*. Die übliche
+Bezeichnung „iterative Fibonacci-Variante" meint nur die Schleife im Gegensatz zur
+Rekursion.
 :::
 
 :::frage{falsch}
@@ -183,18 +170,19 @@ dieselben zehn Zahlen mit $8$ Additionen aus.
 
 ### Algorithmenarten in ML und Statistik :id[algorithmenarten-in-ml-und-statistik]
 
-Der Fibonacci-Algorithmus ist also exakt, direkt und deterministisch. Diese drei Angaben
-liegen auf den unabhängigen Achsen aus @sec:probleme-algorithmen. Wo auf diesen Achsen
-liegen die Verfahren, mit denen wir in Statistik und Machine Learning tatsächlich
-arbeiten?
+Der Fibonacci-Algorithmus ist also exakt, direkt und deterministisch. Wo liegen die
+Verfahren, mit denen wir in Statistik und Machine Learning arbeiten?
 
 :::beispiel[#algorithmenarten-in-ml-und-statistik (Algorithmenarten in ML und Statistik)]
-Matrixmultiplikation und Gauß-Elimination sind wie unser Fibonacci-Algorithmus exakt,
-direkt und deterministisch. Gradientenabstieg und Newton-Verfahren erzeugen dagegen
-Näherungsfolgen und stoppen nach einem Abbruchkriterium: numerisch iterativ und damit
-zugleich approximativ. Monte-Carlo-Integration, MCMC und randomisierte
-Quicksort-Varianten verwenden zusätzlich Zufall. Kombiniert sind die Achsen dabei fast
-immer (@bemerkung:arten-von-algorithmen).
+- *Exakt und direkt*: Matrixmultiplikation und Gauß-Elimination (@kap:lgs).
+- *Approximativ*: Monte-Carlo-Integration, die Integrale durch Stichproben schätzt, und
+  das Training neuronaler Netze, das nur bis zu einem Toleranzniveau optimiert.
+- *Numerisch iterativ*: Gradientenabstieg und Newton-Verfahren zur Nullstellensuche.
+- *Probabilistisch*: approximative Singulärwertzerlegung durch Matrix Sketching
+  (@sec:la-misc/sketching) und MCMC-Verfahren der Bayes-Statistik.
+
+Oft sind die Achsen kombiniert: Viele ML-Algorithmen, etwa das stochastische
+Gradientenverfahren, sind iterativ, approximativ und probabilistisch zugleich.
 :::
 
 ### Was ist ein guter Algorithmus? :id[was-ist-ein-guter-algorithmus]
@@ -205,24 +193,21 @@ Kochrezept, und der Computer dem Koch, der sich zwar an das Rezept hält, dabei 
 Fehler macht.
 :::
 
-Für dasselbe Gericht gibt es viele Rezepte, und sie sind nicht gleich gut, so wie
+Für dasselbe Gericht gibt es viele Rezepte, und nicht alle sind gleich gut, so wie
 unsere beiden Fibonacci-Varianten dasselbe Problem zu sehr verschiedenen Kosten lösen.
-Ein gutes Rezept ist außerdem *robust* gegen die kleinen Ungenauigkeiten des Kochs; ein
-gutes numerisches Verfahren verstärkt die unvermeidlichen
-:k[Rundungsfehler]{#rounding-error} des Computers nicht unnötig. Wir wollen also
-Algorithmen, die
+Ein gutes Rezept verzeiht außerdem kleine Ungenauigkeiten des Kochs, und ein gutes
+numerisches Verfahren verstärkt die unvermeidlichen :k[Rundungsfehler]{#rounding-error}
+nicht unnötig. Wir wollen also Algorithmen, die
 
 - möglichst exakte Ergebnisse liefern,
 - schnell sind,
 - wenig Speicher brauchen.
 
-Diese Wünsche stehen oft in Konkurrenz: Mehr Genauigkeit kostet in der Regel
-Rechenzeit oder Speicher, und der schnellste Weg ist nicht immer der stabilste. Um solche
-Abwägungen treffen zu können, müssen wir „schnell" und „wenig Speicher" erst einmal
-messen. Das ist das Thema des @sec:zeit-und-speicheraufwand. Wie wir „möglichst
-exakt" trotz Rundungsfehlern erreichen, beschäftigt uns dann ausführlich in @kap:fehler;
-@kap:matrix-spur-norm stellt dafür zunächst Normen als Fehlermaße bereit.
+Die drei Wünsche konkurrieren oft: Mehr Genauigkeit kostet meist Rechenzeit oder
+Speicher, und der schnellste Weg ist nicht immer der stabilste. „Schnell" und „wenig
+Speicher" machen wir in @sec:aufwand messbar, „möglichst exakt" ist das Thema von
+@kap:fehler.
 
 *Vertiefung: Heath §1.1 (Näherungen und Fehlerquellen im wissenschaftlichen Rechnen);
-Cormen, Leiserson, Rivest & Stein, _Introduction to Algorithms_, der Klassiker zu Entwurf
-und Analyse von Algorithmen.*
+Cormen, Leiserson, Rivest & Stein, _Introduction to Algorithms_ (Entwurf und Analyse
+von Algorithmen).*
