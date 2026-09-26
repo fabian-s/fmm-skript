@@ -1,7 +1,6 @@
-Ab hier geht es um *numerische lineare Algebra*. Sie fragt, wie sich die
-Objekte und Operationen der linearen Algebra auf dem Rechner tatsächlich
-berechnen lassen, und zwar schnell und verlässlich. Auf dem Programm stehen
-numerische Methoden für
+Ab hier geht es um *numerische lineare Algebra*: Wie berechnen wir die
+Objekte und Operationen der linearen Algebra auf dem Rechner schnell und
+verlässlich? Auf dem Programm stehen numerische Methoden für
 
 - die Matrizenrechnung (Addition, Multiplikation),
 - :k[lineare Gleichungssysteme]{#linear-system} (der Kern dieses Kapitels,
@@ -9,25 +8,23 @@ numerische Methoden für
 - Kleinste-Quadrate-Probleme (@kap:kq),
 - :k[Eigenwertprobleme]{#eigenvalue-eigenvector} und mehr.
 
-Dabei achten wir bei jeder Methode auf dieselben zwei Gütekriterien, die wir
-in den letzten Kapiteln aufgebaut haben: auf die
-[Kondition](?k=04-fehler#sec-4.2) (wie stark verstärken sich kleine Fehler?)
-und auf die [Komplexität](?k=02-algos#sec-2.4) (wie wächst der Aufwand mit
-der Problemgröße?).
+Bei jeder Methode achten wir auf zwei Gütekriterien: auf die Kondition
+(wie stark verstärken sich kleine Fehler?) und auf die Komplexität (wie
+wächst der Aufwand mit der Problemgröße?).
 
 ### Was wir mitbringen
 
-Dieses Kapitel baut auf den bisherigen Kapiteln auf. Wir brauchen:
+Aus den bisherigen Kapiteln brauchen wir
 
-- aus Kapitel 2 den [Algorithmus-Begriff](?k=02-algos#sec-2.1), insbesondere
+- den Algorithmus-Begriff (@sec:algos/probleme-algorithmen), insbesondere
   *direkte Methoden* (endlich viele Schritte, exakte Lösung in exakter
-  Arithmetik) und die [Komplexitätsanalyse](?k=02-algos#sec-2.4) mit
-  Landau-Symbolen,
-- aus Kapitel 4 die [Kondition](?k=04-fehler#sec-4.2) von Problemen und die
-  [Stabilität](?k=04-fehler#sec-4.3) von Algorithmen,
-- aus Kapitel 3 die [Matrixnormen](?k=03-matrix-spur-norm#sec-3.2) und die
-  [Orthogonalmatrizen](?k=03-matrix-spur-norm#sec-3.3) mit ihrer perfekten
-  Kondition $\corange{\kappa_2(\bQ)} = 1$.
+  Arithmetik), und die Komplexitätsanalyse mit Landau-Symbolen
+  (@sec:algos/landau),
+- die Kondition von Problemen (@sec:fehler/kondition) und die Stabilität
+  von Algorithmen (@sec:fehler/stabilitaet),
+- Matrixnormen (@sec:matrix-spur-norm/matrixnormen) und Orthogonalmatrizen
+  mit ihrer perfekten Kondition $\corange{\kappa_2(\bQ)} = 1$
+  (@sec:matrix-spur-norm/operatornormen).
 
 Dazu kommt Grundwissen aus der Linearen Algebra I: das Lösen linearer
 Gleichungssysteme mit grundlegenden Methoden,
@@ -39,8 +36,8 @@ Kapitel vor allem eines: dass wir sie numerisch *nicht* berechnen.
 
 ### Matrizenrechnung
 
-Beginnen wir mit den Grundoperationen. Ihre algorithmische Berechnung folgt
-für gewöhnlich direkt den mathematischen Formeln. Für die Addition von
+Die algorithmische Berechnung der Grundoperationen folgt für gewöhnlich
+direkt den mathematischen Formeln. Für die Addition von
 $\bA, \bB \in \R^{n \times m}$ heißt das
 
 $$
@@ -65,14 +62,10 @@ $$
 Jeder Eintrag des Produkts ist also ein :k[Skalarprodukt]{#dot-product}
 einer Zeile von $\bA$ mit einer Spalte von $\bB$.
 
-:::bemerkung[#kondition-der-grundoperationen (Kondition der Grundoperationen)]
-Wie gut oder schlecht Matrixaddition und -multiplikation konditioniert sind,
-untersuchen wir in der Übung. Das Handwerkszeug dafür steht in
-[Kapitel 4](?k=04-fehler#sec-4.2).
-:::
-
-Die Komplexität der beiden Formeln können wir dagegen sofort bestimmen,
-indem wir Operationen zählen wie in [Kapitel 2](?k=02-algos#sec-2.3).
+Wie gut diese Operationen konditioniert sind, untersuchen wir in der Übung
+mit dem Handwerkszeug aus @sec:fehler/kondition. Ihre Komplexität können
+wir sofort bestimmen, indem wir Operationen zählen wie in
+@sec:algos/aufwand.
 
 Was ist die algorithmische Komplexität der *Addition* von
 $\bA, \bB \in \R^{n \times m}$? Zur Auswahl stehen $O(nm)$, $O(n + m)$ und
@@ -86,8 +79,8 @@ größenordnungsmäßig auch nicht.
 
 Das Ergebnis hat $nm$ Einträge, und jeder Eintrag kostet genau eine
 Addition $a_{ij} + b_{ij}$: zusammen $nm$ Additionen, also $O(nm)$. Weniger
-ist nicht drin, denn allein das Hinschreiben der $nm$ Ergebniseinträge
-braucht schon $nm$ Schritte.
+geht nicht, denn schon das Hinschreiben der $nm$ Ergebniseinträge braucht
+$nm$ Schritte.
 :::
 
 :::frage{falsch}
@@ -102,11 +95,10 @@ alle Ergebniseinträge schreiben.
 Der Aufwand wächst wie $n^2 m^2$, weil jeder Eintrag von $\bA$ mit jedem
 Eintrag von $\bB$ verrechnet werden muss.
 
-Die Begründung stimmt nicht: Addiert wird nur *paarweise* an gleicher
-Position $(i,j)$, kein Eintrag trifft je einen anderen. Als reine obere
-Schranke wäre $O(n^2m^2)$ zwar formal korrekt (Landau-Symbole schließen
-Überschätzung nicht aus, vgl. [Kapitel 2](?k=02-algos#sec-2.4)), aber als
-Beschreibung des Wachstums grob falsch; die scharfe Ordnung ist $nm$.
+Addiert wird nur *paarweise* an gleicher Position $(i,j)$; Einträge an
+verschiedenen Positionen treffen nie aufeinander. Als obere Schranke wäre $O(n^2m^2)$ formal korrekt
+(Landau-Symbole erlauben Überschätzung, @sec:algos/landau), beschreibt das
+Wachstum aber grob falsch: Die scharfe Ordnung ist $nm$.
 :::
 
 ::::
@@ -139,43 +131,34 @@ $nk\,(2m - 1) = O(nmk)$ Operationen. Für quadratische Matrizen
 Es reichen $O(nm + k)$ Operationen.
 
 Für $n = m = k$ wüchse $nm + k = n^2 + n$ nur quadratisch, die Produktformel
-braucht aber kubischen Aufwand $n^3$. Die Summe $nm + k$ unterschätzt den
-Aufwand also drastisch, sobald die Dimensionen wachsen.
+braucht aber kubischen Aufwand $n^3$.
 :::
 
 ::::
-
-::::vertiefung[Schnellere Matrixmultiplikation]
 
 ### Geht Matrixmultiplikation schneller?
 
-Ja, zumindest auf dem Papier. Für das Produkt zweier
-quadratischer Matrizen $\bA, \bB \in \R^{n \times n}$ gibt es Algorithmen
-mit besserer Komplexität als $O(n^3)$. Der erste stammt von Strassen (1969):
-Er zerlegt beide Matrizen in vier Blöcke und kommt mit sieben statt acht
-Blockmultiplikationen aus. Rekursiv angewandt kostet das
+Für quadratische Matrizen $\bA, \bB \in \R^{n \times n}$ gibt es
+Algorithmen mit besserer Komplexität als $O(n^3)$. Der erste stammt von
+Strassen (1969): Er zerlegt beide Matrizen in vier Blöcke und kommt mit
+sieben statt acht Blockmultiplikationen aus. Rekursiv angewandt kostet das
 $O\bigl(n^{\log_2 7}\bigr)$ Operationen, also etwa $O(n^{2{,}8})$, denn
-$\log_2 7 \approx 2{,}807$. Seither wurde der Exponent in kleinen Schritten
-weiter gedrückt; der aktuelle Rekord liegt bei etwa $O(n^{2{,}37})$
-(Alman et al., 2024), und wesentlich Besseres ist bislang nicht bekannt.
-Die Suche nach neuen Multiplikationsschemata geht weiter. 2022 hat etwa
-DeepMinds AlphaTensor per Reinforcement Learning bisher unbekannte
-Varianten für kleine Matrixformate gefunden.
+$\log_2 7 \approx 2{,}807$. Der aktuelle Rekord liegt bei etwa
+$O(n^{2{,}37})$ (Alman et al., 2024). 2022 hat DeepMinds AlphaTensor per
+Reinforcement Learning bisher unbekannte Multiplikationsschemata für kleine
+Matrixformate gefunden.
 
 :::bemerkung[#warum-wir-trotzdem-mit-o-nmk-rechnen (Warum wir trotzdem mit O(nmk) rechnen)]
 Die Landau-Notation versteckt konstante Faktoren, und bei den schnellen
-Multiplikationsalgorithmen sind diese Konstanten meist so groß, dass sich
-die bessere Ordnung erst bei riesigen Matrizen auszahlen würde. In der
-Praxis werden die Verfahren deshalb kaum verwendet. Wir rechnen in diesem
-Skript der Einfachheit halber immer mit $O(nmk)$ für die Multiplikation
-und $O(nm)$ für die Addition.
+Multiplikationsalgorithmen sind diese Konstanten meist so groß, dass sich die
+bessere Ordnung erst bei riesigen Matrizen auszahlen würde. In der Praxis
+werden die Verfahren deshalb kaum verwendet. Wir rechnen der Einfachheit
+halber immer mit $O(nmk)$ für die Multiplikation und $O(nm)$ für die
+Addition.
 :::
 
-::::
+Ab @sec:lgs geht es um das wichtigste Problem der numerischen linearen
+Algebra: das Lösen von $\bA\bx = \bb$.
 
-Ab dem [nächsten Abschnitt](#sec-5.2) wenden wir uns dem wichtigsten Problem der
-numerischen linearen Algebra zu: dem
-Lösen von $\bA\bx = \bb$.
-
-*Vertiefung: Heath §2.1 (der Einstieg in Heath Kap. 2, das lineare
-Gleichungssysteme behandelt); zur Komplexitätsanalyse Heath §1.1.*
+*Vertiefung: Heath §2.1 (Einstieg in lineare Gleichungssysteme); zur
+Komplexitätsanalyse Heath §1.1.*

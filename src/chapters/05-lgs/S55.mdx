@@ -1,63 +1,57 @@
-Zum Abschluss stellen wir die beiden Zerlegungen dieses Kapitels
-nebeneinander. Beide lösen $\bA\bx = \bb$ nach demselben Plan: einmal
-zerlegen, dann pro rechter Seite zwei
-:k[Dreieckssysteme]{#triangular-solve} substituieren. Die Unterschiede
-liegen in den Voraussetzungen, im Aufwand und in der
-[Stabilität](?k=04-fehler#sec-4.3).
+Beide Zerlegungen dieses Kapitels lösen $\bA\bx = \bb$ nach demselben
+Plan: einmal zerlegen, dann pro rechter Seite zwei
+:k[Dreieckssysteme]{#triangular-solve} substituieren. Sie unterscheiden
+sich in Voraussetzungen, Aufwand und Stabilität (@sec:fehler/stabilitaet).
 
 ### LU und Cholesky im Vergleich
 
-|  | [LU-Zerlegung](#sec-5.3) | [Cholesky-Zerlegung](#sec-5.4) |
+|  | LU-Zerlegung | Cholesky-Zerlegung |
 | --- | --- | --- |
 | Zerlegung | $\bP\bA = \bL\bU$ | $\bA = \bL\bL^\top$ |
-| geeignet für | jede invertierbare Matrix | [SPD-Matrizen](#sec-5.4) |
+| geeignet für | jede invertierbare Matrix | SPD-Matrizen |
 | Pivotierung | für die Stabilität nötig | nicht nötig |
 | Aufwand | rund $n^3/3$ Multiplikationen | rund $n^3/6$, also halb so viel |
 | scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | in exakter Arithmetik bei nicht-SPD-Matrizen; numerisch eventuell nahe der Semidefinitheitsgrenze |
 
-Die Stabilität der LU-Zerlegung entscheidet sich am Pivot (@sec:lu):
-Partielle Pivotierung hält alle Multiplikatoren im Betrag bei höchstens 1.
-Ein Stabilitätsbeweis ist das nicht, aber in der Praxis gilt die pivotierte
+Die Stabilität der LU-Zerlegung entscheidet sich am Pivot (@sec:lu).
+Partielle Pivotierung hält alle Multiplikatoren im Betrag bei höchstens 1;
+ein Stabilitätsbeweis ist das nicht, aber in der Praxis gilt die pivotierte
 LU-Zerlegung als stabil
 ([Higham, 2020](https://nhigham.com/2020/07/14/what-is-the-growth-factor-for-gaussian-elimination/)).
-Perfekte Genauigkeit bekommen wir auch damit nicht: Selbst ein stabiler
-Algorithmus liefert nur eine Näherung, deren relativer Fehler in der
-Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann, mit der
-[Konditionszahl](?k=04-fehler#sec-4.2) $\corange{\kappa(\bA)}$ aus
-@sec:matrix-spur-norm/eigenschaften und der
+Auch ein stabiler Algorithmus liefert nur eine Näherung, deren relativer
+Fehler in der Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann,
+mit der Konditionszahl $\corange{\kappa(\bA)}$
+(@sec:matrix-spur-norm/eigenschaften, @sec:fehler/kondition) und der
 :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
 konditioniert, liegt das am Problem, nicht am Algorithmus.
 
 Die Cholesky-Zerlegung braucht für eine SPD-Matrix keine Pivotierung und ist
-rückwärtsstabil. In exakter Arithmetik läuft sie für jede SPD-Matrix durch und
-scheitert für Matrizen, die nicht positiv definit sind. In Gleitkommaarithmetik kann
-eine Matrix nahe der Grenze zur Semidefinitheit wegen Daten- oder Rundungsfehlern als
-nicht positiv definit erscheinen. Ein Abbruch ist daher ein Diagnosehinweis, aber
-kein Beweis dafür, dass allein eine große Konditionszahl die Ursache war. Für nur
-*semi*definite Matrizen gibt es die pivotierte
-Variante $\bP^\top \bA \bP = \bL\bL^\top$
+rückwärtsstabil. In exakter Arithmetik läuft sie für jede SPD-Matrix durch
+und bricht für jede symmetrische, nicht positiv definite Matrix ab. In
+Gleitkommaarithmetik kann eine Matrix nahe der Grenze zur Semidefinitheit
+wegen Daten- oder Rundungsfehlern als nicht positiv definit erscheinen. Ein
+Abbruch ist deshalb ein nützlicher Diagnosehinweis: Entweder ist $\bA$ nicht
+SPD, oder $\bA$ liegt numerisch an dieser Grenze. Für nur *semi*definite
+Matrizen gibt es die pivotierte Variante $\bP^\top \bA \bP = \bL\bL^\top$
 (@sec:cholesky).
 
 ### Was wir mitnehmen
 
-Drei Punkte zum Merken:
-
-- **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel $\bA^{-1}\bb$
-  steht, lösen wir in der Implementierung direkt das LGS $\bA\bx = \bb$
-  (@bemerkung:fuer-ein-lgs-keine-explizite-inverse in @sec:lgs).
+- **Für ein LGS keine explizite Inverse bilden.** Wo in einer Formel
+  $\bA^{-1}\bb$ steht, lösen wir in der Implementierung direkt das LGS
+  $\bA\bx = \bb$ (@bemerkung:fuer-ein-lgs-keine-explizite-inverse).
 - Die **LU-Zerlegung** $\bP\bA = \bL\bU$ ist die Gauß-Elimination in
   Matrixform: einmal zerlegen für $O(n^3)$, danach kostet jede weitere
   rechte Seite nur noch $O(n^2)$.
 - Die **Cholesky-Zerlegung** $\bA = \bL\bL^\top$ nutzt Symmetrie und
-  Definitheit aus, halbiert den Aufwand und liefert nebenbei das Werkzeug,
-  mit dem wir korrelierte Zufallsvektoren simulieren
-  (@sec:cholesky). Kovarianz- und Gram-Matrizen tragen diese Struktur von
-  Haus aus, Hesse-Matrizen nur unter zusätzlichen Krümmungsannahmen.
+  Definitheit aus, halbiert den Aufwand und dient auch zum Simulieren
+  korrelierter Zufallsvektoren (@sec:cholesky). Kovarianz- und
+  Gram-Matrizen sind stets positiv semidefinit und bei vollem Rang SPD,
+  Hesse-Matrizen nur unter Krümmungsannahmen.
 
-In @kap:svd lernen wir mit der
-:k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) die
-vielseitigste aller Matrixzerlegungen kennen; sie funktioniert für
-beliebige, auch nicht quadratische Matrizen.
+In @kap:svd folgt die
+:k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD), die für
+beliebige, auch nicht quadratische Matrizen funktioniert.
 
 ### Selbsttest
 
@@ -68,10 +62,10 @@ Um $\bA\bx = \bb$ numerisch zu lösen, berechnen wir am besten zuerst
 $\bA^{-1}$ und bilden dann das Produkt $\bA^{-1}\bb$.
 
 Das explizite Invertieren löst versteckt $n$ Gleichungssysteme statt
-einem. Die Größenordnung $O(n^3)$ bleibt dabei zwar erhalten, weil eine
-Zerlegung für alle $n$ rechten Seiten reicht, doch der Umweg kostet ein
-Mehrfaches an Rechenzeit und stapelt zusätzliche Rundungsfehler auf. Wir
-lösen stattdessen direkt das LGS (@bemerkung:fuer-ein-lgs-keine-explizite-inverse).
+einem. Die Größenordnung $O(n^3)$ bleibt, weil eine Zerlegung für alle $n$
+rechten Seiten reicht, aber der Umweg kostet ein Mehrfaches an Rechenzeit
+und bringt zusätzliche Rundungsfehler
+(@bemerkung:fuer-ein-lgs-keine-explizite-inverse).
 :::
 
 :::frage{wahr}
@@ -90,7 +84,8 @@ Schon die Vertauschungsmatrix
 $\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ startet mit dem Pivot
 $\cred{0}$ und hat keine LU-Zerlegung (@beispiel:invertierbar-aber-keine-lu-zerlegung). Mit
 Zeilenvertauschungen existiert aber immer $\bP\bA = \bL\bU$
-(@satz:existenz-der-lu-zerlegung).
+(@satz:existenz-der-lu-zerlegung). Pivotierung brauchen wir, sobald ein
+Pivot null oder nahe null ist, auch bei invertierbarem $\bA$.
 :::
 
 :::frage{wahr}
@@ -99,7 +94,7 @@ dass $\bA$ positiv definit ist.
 
 @definition:spd-matrix verlangt strikte Positivität für *alle* von null
 verschiedenen Richtungen; ein Gegenbeispiel genügt daher zum Widerlegen.
-Umgekehrt beweist keine noch so lange Liste bestandener Richtungen die
+Umgekehrt beweist keine endliche Liste bestandener Richtungen die
 Definitheit.
 :::
 
