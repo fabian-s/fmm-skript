@@ -18,7 +18,7 @@ $$
 \min_{\bbeta \in \R^p} \left\| \bX\bbeta - \by \right\|_2^2
 $$
 
-lösen. Die Theorie liefert die Formel
+lösen. Hat $\bX$ vollen Spaltenrang, liefert die Theorie die Formel
 $\wh{\bbeta} = (\bX^\top\bX)^{-1}\bX^\top\by$. Wer sie wörtlich in
 den Rechner tippt, bekommt drei Probleme. Das erste ist die *Kondition*: Die
 Matrix $\bX^\top\bX$ kann so empfindlich sein, dass winzige
@@ -74,7 +74,7 @@ Wir multiplizieren zwei $n \times n$-Matrizen.
 
 Die Exponenten liegen nah beieinander, machen bei großen Matrizen aber viel aus.
 Für $n = 10\,000$ stehen grob $10^{12}$ Operationen der naiven Methode
-etwa $2 \cdot 10^{10}$ Operationen gegenüber, ein Faktor 50. Welches Verfahren
+etwa $2 \cdot 10^{10}$ der schnellsten Verfahren gegenüber, ein Faktor 50. Welches Verfahren
 in der Praxis gewinnt, hängt allerdings auch von Konstanten und Speicherzugriffen ab.
 Beim Schätzen großer Modelle fallen solche Produkte ständig an.
 :::
@@ -85,7 +85,7 @@ Der erste Teil, *Numerische Lineare Algebra*, klärt zunächst, wie empfindlich
 ein Problem auf Störungen reagiert (Kondition) und was einen guten Algorithmus
 ausmacht (Stabilität, Komplexität). Dann entwickelt er Matrixzerlegungen, mit
 denen wir Gleichungssysteme und KQ-Probleme $\bA\bx \approx \bb$ zuverlässig
-lösen, statt naiv zu invertieren; am Ende stehen Tensoren.
+lösen, statt naiv zu invertieren; zum Schluss kommen :k[Tensoren]{#tensor} dazu.
 
 Der zweite Teil, *Analysis und Optimierung*, verallgemeinert die
 :k[Ableitung]{#derivative} auf Funktionen mit Vektor-, Matrix-
@@ -99,7 +99,7 @@ $\bW$ Einträge hat, bei $1000 \times 10$ schon
 $10\,000$. Der Matrixkalkül liefert stattdessen eine einzige Zeile,
 $\partial L / \partial \bW = \bX^\top(\bX\bW - \bY)$, und die lässt sich auch
 effizient implementieren. Darauf baut die numerische Optimierung auf. Die
-Verlustfunktionen neuronaler Netze sind nicht :k[konvex]{#convexity}, hängen
+Verlustfunktionen neuronaler Netze sind meist nicht :k[konvex]{#convexity}, hängen
 von sehr vielen Parametern ab (GPT-3 hat $1{,}75 \cdot 10^{11}$) und werden pro
 Schritt nur auf einem kleinen Teil der Daten ausgewertet, einem Minibatch.
 Minima solcher Funktionen suchen wir mit
@@ -108,8 +108,8 @@ Minima solcher Funktionen suchen wir mit
 Der dritte Teil, *Funktionsapproximation*, fragt: Wie ersetzen wir eine
 komplizierte Funktion durch eine einfache, mit der sich gut rechnen lässt? Das
 klassische Werkzeug ist die
-:k[Taylor-Approximation]{#taylor-series}: Schon
-$e^x \approx 1 + x + \tfrac{x^2}{2}$ liefert bei $x = 0{,}5$ den
+:k[Taylor-Approximation]{#taylor-series}: Schon die Näherung zweiter Ordnung um
+$x_0 = 0$, $e^x \approx 1 + x + \tfrac{x^2}{2}$, liefert bei $x = 0{,}5$ den
 Wert $1{,}625$ statt $e^{0{,}5} = 1{,}6487\ldots$, ein relativer
 Fehler von unter 2 %. Später kommen flexiblere Bausteine wie Splines dazu, mit denen
 die Statistik glatte Funktionen aus Daten schätzt.
@@ -125,8 +125,8 @@ Exkurse, Übersichten) und lassen sich überspringen; die ersten beiden stehen i
 
 Gepunktet unterstrichene Begriffe wie :k[Eigenwerte]{#eigenvalue-eigenvector}
 öffnen Tooltips, die das nötige Vorwissen auffrischen, oft mit weiteren Links
-bis zu den Grundlagen. Blaue „Interaktiv"-Kästen enthalten Widgets mit einer
-Aufgabe und ihrer Auswertung und gehören zum Haupttext.
+bis zu den Grundlagen. Blaue „Interaktiv"-Kästen gehören zum Haupttext; sie
+enthalten Widgets mit einer Aufgabe und ihrer Auswertung.
 Beweise lassen sich Schritt für Schritt aufdecken, jeder nichttriviale Schritt
 trägt seine Begründung. Die kursive Zeile „Vertiefung: …" am Ende eines
 Abschnitts nennt Literatur zum Weiterlesen.

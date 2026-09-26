@@ -49,7 +49,7 @@ die :k[Hesse-Matrix]{#hessian-matrix} und die
 Matrixkalkül. @kap:konvexitaet behandelt
 :k[Konvexität]{#convexity}, die Eigenschaft, die aus lokalen Verfahren
 globale macht: Bei konvexen Zielfunktionen ist jedes lokale Minimum bereits
-das globale. @kap:optim ordnet die Verfahren dann nach der Ordnung der
+das globale. @kap:optim sortiert die Verfahren dann nach der Ordnung der
 verwendeten Ableitungen: Nelder-Mead (nullte),
 :k[Gradientenabstieg]{#gradient-descent} mit Line Search und SGD (erste),
 :k[Newton]{#newtons-method} und Quasi-Newton (zweite), dazu Optimierung
@@ -76,11 +76,11 @@ dazu steht am Anfang von @kap:funktionsapproximation.
 Vier Themen kehren im ganzen Skript wieder.
 
 **Stabilität.** Die :k[Konditionszahl]{#condition-number} gibt das Problem vor,
-die Stabilität wählen wir mit dem Algorithmus. Deshalb nehmen wir Zerlegungen
-statt Inversion, wo immer möglich
-:k[orthogonale Matrizen]{#orthogonal-matrix} (perfekt konditioniert,
-$\kappa = 1$), und führen schlecht konditionierte Teilschritte möglichst früh
-aus.
+die Stabilität wählen wir mit dem Algorithmus: Er soll Fehler nicht zusätzlich
+verstärken. Deshalb lösen wir mit Zerlegungen statt per Inversion, arbeiten wo
+immer möglich mit :k[orthogonalen Matrizen]{#orthogonal-matrix} (perfekt
+konditioniert, $\kappa = 1$) und führen schlecht konditionierte Teilschritte
+möglichst früh aus.
 
 **Rechenaufwand.** Die typischen Größenordnungen: Vektoroperationen $O(n)$,
 :k[Matrix-Vektor-Produkte]{#matrix-vector-product} $O(n^2)$,
