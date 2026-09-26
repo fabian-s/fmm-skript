@@ -44,9 +44,9 @@ $$
 Das innere Produkt verlangt zwei Vektoren gleicher Länge und liefert eine Zahl,
 das äußere verträgt beliebige Längen und liefert eine $m \times n$-Matrix. In
 $\cblue{\bv}^\top\cgreen{\bw}$, also $(1 \times n)$ mal $(n \times 1)$, treffen
-sich die langen Dimensionen innen und verschwinden; in
+sich die beiden Längen innen und verschwinden; in
 $\cblue{\bv}\,\cgreen{\bw}^\top$, also $(m \times 1)$ mal $(1 \times n)$, stehen
-sie außen und bleiben stehen.
+sie außen und ergeben das Format $m \times n$.
 :::
 
 :::beispiel[#aeusseres-produkt-zweier-vektoren (Äußeres Produkt zweier Vektoren)]
@@ -220,7 +220,7 @@ ist der Faktor $\bQ\bK^\top$ eine Summe äußerer Produkte, eines je Spalte von
 $\bQ$ und $\bK$.
 
 :::vertiefung[Empirische Kovarianz und Attention]
-Für jede einzelne Realisierung ist $(\bx - \bmu) \otimes (\bx - \bmu)$ nach
+Für jede einzelne Realisierung mit $\bx \neq \bmu$ ist $(\bx - \bmu) \otimes (\bx - \bmu)$ nach
 @satz:eigenschaften-des-aeusseren-produkts eine Rang-1-Matrix; erst das Mitteln
 über viele Richtungen macht die Kovarianzmatrix im Regelfall zu einer Matrix von
 vollem Rang. Genauso gebaut ist die empirische Kovarianzmatrix aus $N$

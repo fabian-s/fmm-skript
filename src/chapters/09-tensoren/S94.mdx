@@ -34,16 +34,20 @@ Die Produkte $\cblue{\bv} \otimes \cgreen{\bw}$ selbst nennen wir *elementare
 Tensoren*.
 :::
 
+Nicht jede bilineare Abbildung eignet sich als $\otimes$: Auch die Nullabbildung
+ist bilinear, ihre Bilder spannen aber nur den Nullraum auf. Gemeint ist ein
+$\otimes$ mit der *universellen Eigenschaft* aus der folgenden Vertiefung; das
+äußere Produkt und das Produkt von Funktionen in den Beispielen unten haben sie.
+
 :::vertiefung[Die universelle Eigenschaft]
-Für abstrakte Vektorräume legt die Definition den Raum erst fest, wenn
-$\otimes$ zusätzlich die *universelle Eigenschaft* hat: Jede bilineare Abbildung
+Die universelle Eigenschaft verlangt: Jede bilineare Abbildung
 $f\colon V \times W \to Z$ in einen Vektorraum $Z$ faktorisiert eindeutig über
 $\otimes$, es gibt also genau eine lineare Abbildung
 $\wt{f}\colon V \otimes W \to Z$ mit
 $f(\cblue{\bv},\cgreen{\bw}) = \wt{f}(\cblue{\bv}\otimes\cgreen{\bw})$ für alle
-$\cblue{\bv}\in V$ und $\cgreen{\bw}\in W$. Der Spann allein genügt nicht: Auch
-die Nullabbildung ist bilinear, ihr Bildspann ist der Nullraum, und der kann die
-übrigen bilinearen Abbildungen nicht darstellen. Das Tensorprodukt
+$\cblue{\bv}\in V$ und $\cgreen{\bw}\in W$. Der Nullraum der Nullabbildung
+leistet das nicht, denn über ihn lässt sich keine bilineare Abbildung
+$f \neq 0$ faktorisieren. Das Tensorprodukt
 *linearisiert* also bilineare Abbildungen: Statt $f$ auf Paaren auszuwerten,
 wenden wir die lineare Abbildung $\wt{f}$ auf elementare Tensoren an.
 
@@ -426,7 +430,7 @@ Geraden. Ein $c_{22} \neq 0$ biegt die Ebene: Die Höhenlinien krümmen sich, un
 die Steigung in $x$-Richtung hängt vom gewählten $y$ ab.
 :::
 
-:::bemerkung[#allgemeine-dimension-und-was-sie-kostet (Allgemeine Dimension, und was sie kostet)]
+:::bemerkung[#allgemeine-dimension-und-was-sie-kostet (Allgemeine Dimension und Fluch der Dimensionalität)]
 Für $k$-variate Polynome mit Grad höchstens $d$ in jeder Variablen ist der
 zugehörige Raum das $k$-fache Tensorprodukt
 $\Pcal_d^{\otimes k} = \Pcal_d \otimes \cdots \otimes \Pcal_d$, und @satz:tensorproduktbasis
@@ -470,7 +474,18 @@ $$
 $$
 
 Die Designmatrix des Gitters ist also das Kroneckerprodukt
-$\bB_y \kron \bB_x$. Dicht ausgeschrieben hat sie das Format
+$\bB_y \kron \bB_x$. In R, mit je sechs B-Splines auf $50$ Punkten je Achse:
+
+```r
+library(splines)
+x <- seq(0, 1, length.out = 50)
+Bx <- bs(x, df = 6)  # B-Spline-Basis
+By <- bs(x, df = 6)
+B <- kronecker(By, Bx)
+dim(B)  # 2500 Gitterpunkte, 6*6 Koeffizienten
+```
+
+Dicht ausgeschrieben hat die Designmatrix das Format
 $(n_xn_y) \times (K_xK_y)$ und damit $n_xn_yK_xK_y$ Einträge, die beiden
 Faktoren zusammen nur $n_xK_x+n_yK_y$. Deshalb werten wir $\bB_x\bC\bB_y^\top$
 mit zwei kleinen Matrixprodukten aus, statt die große Designmatrix aufzubauen;
