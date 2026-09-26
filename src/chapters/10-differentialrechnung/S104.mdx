@@ -2,18 +2,16 @@ import { IdentitaetenSkalarMatrix } from "./widgets/S104Identitaeten";
 import { AnstupsWidget } from "./widgets/S104Anstupsen";
 import { MatrixCompletionDemo } from "./widgets/S104Completion";
 
-Zwei Felder der Tabelle aus @sec:gradient haben wir noch nicht besetzt. Im einen
-steht eine Matrix als Ausgabe und ein Skalar als Eingabe, im anderen genau umgekehrt. Beide Fälle
-kommen in der Statistik ständig vor, und beide brauchen kein neues Werkzeug: Wir leiten
-Eintrag für Eintrag ab und sortieren die Ergebnisse so, dass die Bedingung aus
+Zwei Felder der Tabelle aus @sec:gradient fehlen noch: Skalar zu Matrix und Matrix zu
+Skalar. Beide kommen in der Statistik ständig vor und brauchen kein neues Werkzeug: Wir
+leiten Eintrag für Eintrag ab und sortieren die Ergebnisse so, dass
 @definition:frechet-ableitung wieder in der gewohnten Gestalt dasteht. Der Aufwand liegt im
 Sortieren der Indizes, nicht in der Analysis.
 
 ### Skalar zu Matrix
 
-Beginnen wir mit dem Fall, in dem eine ganze Matrix an einer einzigen Zahl hängt. Eine
-Kovarianzmatrix, die von einem Korrelationsparameter abhängt, ist so ein Objekt, ebenso eine
-Modellmatrix, in der ein Bandbreitenparameter steckt. Formal betrachten wir
+Hier hängt eine ganze Matrix an einer einzigen Zahl, etwa eine Kovarianzmatrix an einem
+Korrelationsparameter oder eine Modellmatrix an einer Bandbreite. Formal betrachten wir
 
 $$
 \bF\colon \R \to \R^{m \times n}, \qquad
@@ -24,8 +22,8 @@ f_{m1}(x) & \cdots & f_{mn}(x)
 \end{pmatrix} .
 $$
 
-Jeder der $m \cdot n$ Einträge ist eine gewöhnliche Funktion einer reellen Variablen. Wir
-können also jeden einzeln ableiten und die Ergebnisse an ihrem Platz stehen lassen.
+Jeder der $m \cdot n$ Einträge ist eine gewöhnliche Funktion einer reellen Variablen,
+also leiten wir jeden einzeln ab und lassen das Ergebnis an seinem Platz.
 
 :::definition[#ableitung-einer-matrixwertigen-funktion (Ableitung einer matrixwertigen Funktion nach einem Skalar)]
 Sei $\bF\colon \R \to \R^{m \times n}$ so, dass alle Einträge $f_{ij}$ an der Stelle
@@ -49,26 +47,18 @@ $$
 :::
 
 :::bemerkung[#das-format-bleibt-erhalten (Das Format bleibt erhalten)]
-Drei Beobachtungen zur Definition.
+*Die Ableitung hat dieselbe Gestalt wie die Funktion.* $\cblue{\bF(x)}$ und
+$\corange{\partial \bF(x)/\partial x}$ liegen beide in $\R^{m \times n}$, die orange Matrix
+enthält aber Steigungen, die blaue Funktionswerte. Für $n = 1$ ist das der Fall Skalar zu
+Vektor, die Jacobimatrix mit einer einzigen Spalte aus @sec:jacobi.
 
-*Die Ableitung hat dieselbe Gestalt wie die Funktion.* Sowohl $\cblue{\bF(x)}$ als auch
-$\corange{\partial \bF(x)/\partial x}$ liegen in $\R^{m \times n}$. Das ist bequem, verführt
-aber dazu, beide zu verwechseln; die orange Matrix enthält Steigungen, die blaue
-Funktionswerte. Für $n = 1$ steht in @eq:ableitung-einer-matrixwertigen-funktion der Fall Skalar zu Vektor, den
-@sec:jacobi als Jacobimatrix mit einer einzigen Spalte führt.
-
-*Warum die Ableitung eine Matrix sein darf.* Nach @definition:frechet-ableitung ist die Ableitung eine
-lineare Abbildung $\cgreen{D_x \bF}\colon \R \to \R^{m \times n}$. Eine lineare Abbildung
-mit eindimensionalem Definitionsbereich ist durch ihren Wert an der Stelle $1$ vollständig
-festgelegt, denn $\cgreen{D_x \bF(h)} = h \cdot \cgreen{D_x \bF(1)}$. Dieser eine Wert ist
-die Matrix @eq:ableitung-einer-matrixwertigen-funktion. Dasselbe Argument hat in
-@sec:linearisierung aus der Ableitung $f'(x)$ eine Zahl gemacht.
-
-*Der Restterm.* In @eq:ableitung-einer-matrixwertigen-funktion-2 misst $\cred{o(\left|h\right|)}$ eine Matrix, wir brauchen dort
-also eine :k[Matrixnorm]{#matrix-norm}, etwa die Frobenius-Norm aus
-@sec:matrix-spur-norm/spur. Da die Bedingung eintragsweise nachgerechnet
-wird und in endlich-dimensionalen Räumen alle Normen äquivalent sind, spielt die Wahl keine
-Rolle.
+*Warum die Ableitung eine Matrix sein darf.* Die Fréchet-Ableitung
+$\cgreen{D_x \bF}\colon \R \to \R^{m \times n}$ ist linear mit eindimensionalem
+Definitionsbereich, also durch ihren Wert an der Stelle $1$ festgelegt:
+$\cgreen{D_x \bF(h)} = h \cdot \cgreen{D_x \bF(1)}$. Dieser eine Wert ist die Matrix
+@eq:ableitung-einer-matrixwertigen-funktion, so wie in @sec:linearisierung die Zahl $f'(x)$.
+Den matrixwertigen Restterm messen wir in einer beliebigen :k[Matrixnorm]{#matrix-norm};
+im Endlichdimensionalen sind alle Normen äquivalent.
 :::
 
 :::beispiel[#uebung-eine-2-3-matrixfunktion (Übung: eine 2×3-Matrixfunktion)]
@@ -83,15 +73,13 @@ x^2 & 2e^x & 0 \\
 $$
 
 Die Einschränkung auf $x > 0$ kommt vom Logarithmus im letzten Eintrag. Was ist
-$\corange{\partial \bF(x)/\partial x}$? Das ist eine gute Stelle für einen eigenen Versuch,
-bevor wir weiterlesen.
+$\corange{\partial \bF(x)/\partial x}$? Erst selbst versuchen, dann die Lösung aufklappen.
 
 <details className="mt-2 rounded border border-slate-300 bg-white/60 px-3 py-1.5 dark:border-slate-600 dark:bg-slate-900/40">
 <summary className="cursor-pointer select-none font-medium">Lösung anzeigen</summary>
 <div className="space-y-2 pt-2">
 
-Ableiten heißt hier schlicht: sechsmal die Schulregeln anwenden und das Ergebnis an
-derselben Stelle notieren.
+Sechsmal die Schulregeln anwenden und das Ergebnis an derselben Stelle notieren:
 
 $$
 \corange{\frac{\partial \bF(x)}{\partial x}} = \begin{pmatrix}
@@ -101,8 +89,7 @@ $$
 $$
 
 Der konstante Eintrag $0$ bleibt $0$, und $2e^x$ steht unverändert da, weil die
-Exponentialfunktion ihre eigene Ableitung ist. An der Stelle $x = 2$ etwa lauten die
-Einträge $4$, $2e^2 \approx 14{,}778$, $0$, $0$, $1$ und $0{,}5$.
+Exponentialfunktion ihre eigene Ableitung ist.
 
 </div>
 </details>
@@ -110,13 +97,12 @@ Einträge $4$, $2e^2 \approx 14{,}778$, $0$, $0$, $1$ und $0{,}5$.
 
 #### Kennzahlen von F ableiten
 
-Interessant wird es, wenn wir nicht $\bF$ selbst ableiten wollen, sondern eine Größe, die aus
-$\bF$ gewonnen wird: die :k[Spur]{#trace}, die :k[Determinante]{#determinant} oder die
-:k[Inverse]{#matrix-inverse}. Für alle drei gibt es geschlossene Formeln, die mit
-$\corange{\partial \bF(x)/\partial x}$ auskommen. Ein Wort zu den Voraussetzungen vorweg: Alle
-drei Größen sind nur für quadratische Matrizen erklärt. Ab hier setzen wir deshalb
-$\bF\colon \R \to \R^{n \times n}$ voraus; nur @definition:ableitung-einer-matrixwertigen-funktion selbst kommt mit beliebigen
-Formaten aus.
+Oft wollen wir nicht $\bF$ selbst ableiten, sondern eine Größe, die aus $\bF$ gewonnen
+wird: die :k[Spur]{#trace}, die :k[Determinante]{#determinant} oder die
+:k[Inverse]{#matrix-inverse}. Für alle drei gibt es geschlossene Formeln mit
+$\corange{\partial \bF(x)/\partial x}$. Alle drei Größen sind nur für quadratische Matrizen
+erklärt; ab hier setzen wir deshalb $\bF\colon \R \to \R^{n \times n}$ voraus, nur
+@definition:ableitung-einer-matrixwertigen-funktion selbst kommt mit beliebigen Formaten aus.
 
 :::satz[#identitaeten-fuer-skalar-zu-matrix (Identitäten für Skalar zu Matrix)]
 Sei $\bF\colon \R \to \R^{n \times n}$ an der Stelle $x$ differenzierbar. Dann gilt
@@ -148,8 +134,8 @@ Gleichung @eq:identitaeten-fuer-skalar-zu-matrix-2 heißt *Jacobi-Formel* (Jacob
 
 :::schritt
 Wir beweisen die Spur-Identität @eq:identitaeten-fuer-skalar-zu-matrix; die beiden anderen Formeln übernehmen wir aus der
-Literatur (MML §5.5) und prüfen sie am Ende dieses Abschnitts numerisch nach. Der Beweis kommt
-mit einer einzigen Beobachtung aus, denn die Spur liest nur die Diagonale:
+Literatur (MML §5.5) und prüfen sie unten numerisch nach. Die Spur liest nur die
+Diagonale:
 
 $$
 \tr\bigl(\cblue{\bF(x)}\bigr) = \sum_{i=1}^n f_{ii}(x) .
@@ -185,11 +171,10 @@ $$
 
 ::::
 
-Hinter dem Beweis steckt ein Prinzip, das über die Spur hinausreicht: Die Spur ist eine
-lineare Abbildung von $\R^{n \times n}$ nach $\R$, und lineare Abbildungen vertauschen mit
-dem Ableiten. Wo eine Größe linear in den Einträgen ist, dürfen wir Ableiten und
-Auswerten in beliebiger Reihenfolge ausführen. Determinante und Inverse sind dagegen nicht
-linear, und man sieht ihren Formeln @eq:identitaeten-fuer-skalar-zu-matrix-2 und @eq:identitaeten-fuer-skalar-zu-matrix-3 an, dass dort mehr passiert.
+Hinter dem Beweis steckt ein Prinzip: Die Spur ist linear, und lineare Abbildungen
+vertauschen mit dem Ableiten. Determinante und Inverse sind nicht linear, und ihren Formeln
+@eq:identitaeten-fuer-skalar-zu-matrix-2 und @eq:identitaeten-fuer-skalar-zu-matrix-3
+sehen wir an, dass dort mehr passiert.
 
 ::::vertiefung[Die Jacobi-Formel an einem Diagonalbeispiel nachgerechnet]
 
@@ -237,8 +222,8 @@ $$
 
 Beide Wege stimmen überein. Die Spur auf der rechten Seite ist notwendig: Ohne sie stünde
 dort ein Produkt aus einer Zahl und einer Matrix, also gar keine Zahl, während links die
-Ableitung einer skalaren Größe steht. Und noch eine Feinheit: Die Jacobi-Formel
-verlangt $x \neq 0$, während die direkte Rechnung auch bei $x = 0$ durchläuft und dort $0$
+Ableitung einer skalaren Größe steht. Außerdem verlangt die Jacobi-Formel
+$x \neq 0$, während die direkte Rechnung auch bei $x = 0$ durchläuft und dort $0$
 liefert. Die Invertierbarkeit in @satz:identitaeten-fuer-skalar-zu-matrix ist also eine Voraussetzung der Formel, keine
 Bedingung dafür, dass die Ableitung existiert.
 :::
@@ -249,7 +234,7 @@ Bedingung dafür, dass die Ableitung existiert.
 Die Log-Dichte eines multivariaten Normalmodells enthält die Kovarianzmatrix
 $\bSigma(\theta)$ gleich zweimal: einmal als $\log\det\bigl(\bSigma(\theta)\bigr)$ und einmal
 als $\bSigma(\theta)^{-1}$ in der quadratischen Form. Wer die Score-Funktion aufstellen will,
-also die Ableitung der Log-:k[Likelihood]{#likelihood} nach $\theta$, braucht deshalb genau
+also die Ableitung der Log-:k[Likelihood]{#likelihood} nach $\theta$, braucht deshalb
 @eq:identitaeten-fuer-skalar-zu-matrix-2 und @eq:identitaeten-fuer-skalar-zu-matrix-3. Aus der Jacobi-Formel wird mit der Kettenregel
 
 $$
@@ -258,15 +243,13 @@ $$
 $$
 
 denn die äußere Ableitung des Logarithmus liefert den Faktor $1/\det(\bSigma)$, und der kürzt
-sich gegen das $\det(\bSigma)$ aus @eq:identitaeten-fuer-skalar-zu-matrix-2. Das ist eine der meistbenutzten Formeln der
-Statistik.
+sich gegen das $\det(\bSigma)$ aus @eq:identitaeten-fuer-skalar-zu-matrix-2.
 :::
 
-Stimmen diese drei Formeln wirklich, oder merken wir uns nur Muster? Eine Probe ist
-schnell gemacht: Wir werten $\bF$ numerisch an $x \pm 10^{-5}$ aus und stellen den
+Zur Probe werten wir $\bF$ numerisch an $x \pm 10^{-5}$ aus und stellen den
 Differenzenquotienten neben den Formelwert.
 
-:::interaktiv[Die drei Identitäten gegen numerische Ableitungen halten]
+:::interaktiv[Die drei Identitäten im numerischen Vergleich]
 Die numerische Spalte kennt keine der Formeln, die Formelspalte rechnet mit @satz:identitaeten-fuer-skalar-zu-matrix.
 Drei Beispiele stehen zur Wahl: die Diagonalmatrix
 $\bF(x) = \diag(x,2x)$, eine Matrix, in der
@@ -274,22 +257,20 @@ jeder Eintrag anders von $x$ abhängt (einer gar nicht), und eine Drehmatrix.
 
 <IdentitaetenSkalarMatrix />
 
-Alle drei Identitäten halten über den ganzen Reglerbereich stand; die größte Abweichung
-liegt unter $10^{-9}$ und ist der Abbruchfehler des Differenzenquotienten, nicht ein Fehler
-der Formel. Zwei Stellen lohnen einen zweiten Blick: Die Drehmatrix hat die konstante
-Determinante $1$, also muss $\tr[\bF^{-1}\, \partial \bF/\partial x]$ verschwinden. Und bei
-der Diagonalmatrix zeigt der Schieber die Lücke bei $x = 0$: Dort ist $\bF$ singulär, die
-Determinanten- und die Inversenformel setzen aber beide $\bF^{-1}$ voraus, während die
-Spur-Identität auch dort gilt.
+Alle drei Identitäten halten über den ganzen Reglerbereich; die größte Abweichung liegt
+unter $10^{-9}$ und ist der Abbruchfehler des Differenzenquotienten. Die Drehmatrix hat die
+konstante Determinante $1$, also muss $\tr[\bF^{-1}\, \partial \bF/\partial x]$
+verschwinden. Bei der Diagonalmatrix zeigt der Schieber die Lücke bei $x = 0$: Dort ist
+$\bF$ singulär, Determinanten- und Inversenformel setzen $\bF^{-1}$ voraus, die
+Spur-Identität gilt auch dort.
 :::
 
 ### Matrix zu Skalar
 
-Jetzt drehen wir die Richtung um. Eine :k[Verlustfunktion]{#objective-function} bewertet eine
-ganze Matrix und gibt dafür eine einzige Zahl zurück. Die Gewichtsmatrix einer Netzschicht,
-die Faktormatrix einer Zerlegung, die Kovarianzmatrix eines Modells: In allen Fällen wollen
-wir wissen, wie sich der Wert ändert, wenn wir an einem einzelnen Eintrag drehen. So lautet
-dann auch die Definition.
+Jetzt drehen wir die Richtung um: Eine :k[Verlustfunktion]{#objective-function} bewertet
+eine ganze Matrix, etwa die Gewichtsmatrix einer Netzschicht oder die Kovarianzmatrix eines
+Modells, mit einer einzigen Zahl. Wir wollen wissen, wie sich der Wert ändert, wenn wir an
+einem einzelnen Eintrag drehen, und so lautet auch die Definition.
 
 :::definition[#ableitung-nach-einer-matrix (Ableitung nach einer Matrix)]
 Sei $f\colon \R^{m \times n} \to \R$ an der Stelle
@@ -316,31 +297,28 @@ $$
 :::
 
 :::bemerkung[#der-ableitungsterm-ist-ein-skalarprodukt (Der Ableitungsterm ist ein Skalarprodukt)]
-Die Spur in @eq:ableitung-nach-einer-matrix-2 sieht auf den ersten Blick nach einem Trick aus. Sie ist aber genau
-das, was wir schon kennen. Für zwei Matrizen $\bA, \bB \in \R^{m \times n}$ gilt
+Die Spur in @eq:ableitung-nach-einer-matrix-2 ist ein Skalarprodukt in anderer Schreibweise.
+Für zwei Matrizen $\bA, \bB \in \R^{m \times n}$ gilt
 
 $$ {#eq-der-ableitungsterm-ist-ein-skalarprodukt}
 \tr\bigl(\bA^\top\bB\bigr) = \sum_{i=1}^m \sum_{j=1}^n a_{ij} b_{ij} ,
 $$
 
 und rechts steht das Skalarprodukt der beiden Matrizen, wenn wir sie als lange Vektoren der
-Länge $m \cdot n$ lesen. Man nennt es das *Frobenius-Skalarprodukt*; für $\bA = \bB$ ergibt
-es das Quadrat der Frobenius-Norm aus
-@sec:matrix-spur-norm/spur, was @satz:frobenius-norm-ueber-die-spur dort als
-$\left\|\bA\right\|_F = \sqrt{\tr(\bA^\top\bA)}$ festhält. Damit lesen wir @eq:ableitung-nach-einer-matrix-2 so:
+Länge $m \cdot n$ lesen. Es heißt *Frobenius-Skalarprodukt*. Damit lesen wir
+@eq:ableitung-nach-einer-matrix-2 so:
 
 $$
 \cgreen{D_{\bX} f(\bH)}
 = \sum_{i=1}^m \sum_{j=1}^n \corange{\frac{\partial f(\bX)}{\partial x_{ij}}}\, h_{ij} .
 $$
 
-Der Ableitungsterm summiert also über alle Einträge das Produkt aus Steigung und Auslenkung.
-Beim Gradienten in @sec:gradient stand an dieser Stelle das gewöhnliche
-Skalarprodukt $\nabla f(\bx)\, \bh$; hier ist es dieselbe Rechnung, nur mit zwei
-Indexrichtungen. Setzen wir speziell $\bH = h \cdot \bE_{ij}$, wobei $\bE_{ij}$ die Matrix
-mit einer $1$ an der Stelle $(i,j)$ und sonst lauter Nullen ist, so bleibt von der Summe nur
-ein Term übrig, nämlich $h \cdot \partial f(\bX)/\partial x_{ij}$. Das ist die
-Rechtfertigung dafür, die Ableitung eintragsweise zu definieren.
+Der Ableitungsterm summiert also über alle Einträge das Produkt aus Steigung und
+Auslenkung, wie das Skalarprodukt $\nabla f(\bx)\, \bh$ beim Gradienten in @sec:gradient,
+nur mit zwei Indexrichtungen. Setzen wir speziell $\bH = h \cdot \bE_{ij}$, wobei
+$\bE_{ij}$ die Matrix mit einer $1$ an der Stelle $(i,j)$ und sonst lauter Nullen ist, so
+bleibt von der Summe nur $h \cdot \partial f(\bX)/\partial x_{ij}$ übrig. Das rechtfertigt,
+die Ableitung eintragsweise zu definieren.
 :::
 
 :::beispiel[#ableitung-von-f-x-a-xb (Ableitung von f(X) = aᵀXb)]
@@ -384,9 +362,8 @@ $$
 = \cblue{f(\bX)} + \cgreen{D_{\bX} f(\bH)} .
 $$
 
-Der Restterm $\cred{o(\left\|\bH\right\|)}$ ist hier also nicht bloß klein, sondern exakt
-null. Bei einer linearen Funktion muss das so sein: Ihre beste lineare Näherung ist sie
-selbst.
+Der Restterm ist hier exakt null, wie bei jeder linearen Funktion: Ihre beste lineare
+Näherung ist sie selbst.
 :::
 
 #### Identitäten zum Nachschlagen
@@ -414,6 +391,8 @@ Sei $\bX \in \R^{m \times n}$.
    \corange{\frac{\partial f(\bX)}{\partial \bX}} = 2\bX .
    $$
 :::
+
+::::vertiefung[Woher die drei Identitäten kommen]
 
 Alle drei Formeln lassen sich als Muster lesen. Hinter @eq:identitaeten-fuer-matrix-zu-skalar-2 steckt nichts weiter als
 @eq:der-ableitungsterm-ist-ein-skalarprodukt: Dort ist $f$ das Frobenius-Skalarprodukt von $\bA$ mit $\bX$, und die Ableitung
@@ -451,15 +430,16 @@ $$
 $$
 
 und der mittlere Term ist wegen $\tr\bigl((2\bX)^\top\bH\bigr) = 2\tr\bigl(\bX^\top\bH\bigr)$
-genau $\cgreen{D_{\bX} f(\bH)}$. Übrig bleibt
+gerade $\cgreen{D_{\bX} f(\bH)}$. Übrig bleibt
 $\cred{r(\bH)} = \left\|\bH\right\|_F^2$, und dieser Ausdruck verschwindet im Verhältnis zu
 $\left\|\bH\right\|_F$ wie verlangt.
 :::
 
-Was sagt ein einzelner Eintrag der Gradientenmatrix konkret aus, etwa der an der Stelle
-$(2,3)$? Die Antwort steckt in @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt: Lenken wir nur in Richtung $\bE_{ij}$ aus,
-so schrumpft die Summe über alle Einträge auf einen einzigen Summanden zusammen. Das lässt
-sich anstupsen.
+::::
+
+Was sagt ein einzelner Eintrag der Gradientenmatrix aus? Lenken wir nur in Richtung
+$\bE_{ij}$ aus, so schrumpft nach @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt die
+Summe über alle Einträge auf einen einzigen Summanden.
 
 :::interaktiv[Auslenkung in Richtung einer einzelnen Koordinate]
 Wir fassen eine Zelle von $\bX$ an und ziehen sie um $h$ nach oben oder unten. Das Widget
@@ -469,12 +449,10 @@ Ableitungsterm und den roten Rest.
 
 <AnstupsWidget />
 
-Der Eintrag $(i,j)$ der Gradientenmatrix ist genau die Rate, mit der $f$ auf einen Stups an
+Der Eintrag $(i,j)$ der Gradientenmatrix ist die Rate, mit der $f$ auf einen Stups an
 dieser Stelle reagiert. Für die beiden in $\bX$ linearen Funktionen bleibt der Rest exakt
-null, die lineare Vorhersage ist dort also exakt. Bei
-$\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: sichtbar von null verschieden, aber
-schneller fallend als $h$ selbst, und damit ein Musterbeispiel für ein
-$\cred{o(\left|h\right|)}$.
+null. Bei $\left\|\bX\right\|_F^2$ ist der Rest exakt $h^2$: von null verschieden, aber
+schneller fallend als $h$, also $\cred{o(\left|h\right|)}$.
 :::
 
 :::::vertiefung[Anwendung: Matrixzerlegung und Matrix Completion]
@@ -506,8 +484,8 @@ möglichen fehlenden Werte.
 
 Bei vollständig beobachtetem $\bY$ wäre das Problem gelöst: Nach dem Satz von Eckart und
 Young (@sec:svd/anwendungen) liefert die abgeschnittene
-Singulärwertzerlegung die beste Rang-$k$-Approximation. Fehlende Einträge machen diese Tür
-zu, denn die Zerlegung braucht die ganze Matrix. Also formulieren wir eine Verlustfunktion,
+Singulärwertzerlegung die beste Rang-$k$-Approximation. Bei fehlenden Einträgen geht das
+nicht, denn die Zerlegung braucht die ganze Matrix. Also formulieren wir eine Verlustfunktion,
 die nur die beobachteten Felder bewertet, und minimieren sie numerisch:
 
 $$ {#eq-eq-10-4-13}
@@ -523,12 +501,11 @@ beobachteten und einer $0$ an jeder fehlenden Position, und $\odot$ bezeichnet d
 *elementweise Produkt* (Hadamard-Produkt), also
 $(\bA \odot \bB)_{ij} = a_{ij} b_{ij}$. Die Maske blendet damit alle unbeobachteten
 Abweichungen aus, bevor die Frobenius-Norm sie aufsummieren kann. Ein gewöhnliches
-Matrixprodukt kann an dieser Stelle nicht gemeint sein: $\bP_\Omega$ und
-$\cblue{\bY} - \bU\bV^\top$ sind beide $m \times n$, und nur elementweise blendet die Maske
-die unbeobachteten Positionen aus.
+Matrixprodukt kann hier nicht gemeint sein, denn $\bP_\Omega$ und
+$\cblue{\bY} - \bU\bV^\top$ sind beide $m \times n$.
 
 Für die Optimierung brauchen wir die Ableitungen von $L$ nach den beiden Faktormatrizen, und
-das ist genau der Fall Matrix zu Skalar.
+das ist der Fall Matrix zu Skalar.
 
 :::satz[#gradienten-der-completion (Gradienten der Completion-Verlustfunktion)]
 Mit $\bR := \bP_\Omega \odot \bigl(\cblue{\bY} - \bU\bV^\top\bigr)$ gilt für $L$ aus
@@ -641,7 +618,7 @@ Der Verlust fällt bei beiden Rängen auf null, die grünen Vorhersagen für die
 laufen aber auseinander. Bei $k = 2$ treffen zehn Parameter auf vier Beobachtungen; wohin die Vorhersage
 läuft, entscheidet dann der Startpunkt. Größerer Rang heißt also nicht bessere
 Rekonstruktion. Und wer die Lernrate hochschiebt, sieht ab etwa $\alpha = 0{,}14$ ein
-Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ ein Davonlaufen der Einträge.
+Pendeln des Verlusts und jenseits von etwa $\alpha = 0{,}25$ divergierende Einträge.
 :::
 
 ::::quiz
@@ -652,7 +629,7 @@ unbeobachteten Einträge.
 
 Ein größeres $k$ senkt den Verlust auf den beobachteten Feldern, über die Lücken sagt es
 dagegen nichts. Im Widget passt $k = 2$ die vier Beobachtungen mit zehn Parametern exakt an,
-und die beiden Vorhersagen hängen dann nur noch am Startpunkt. Genau deshalb steht am Anfang
+und die beiden Vorhersagen hängen dann nur noch am Startpunkt. Deshalb steht am Anfang
 die Annahme, dass die gesuchte Matrix kleinen Rang hat.
 :::
 
@@ -678,7 +655,7 @@ Für $\bF\colon \R \to \R^{m \times n}$ hat die Ableitung
 $\partial \bF(x)/\partial x$ dasselbe Format $m \times n$ wie $\bF(x)$ selbst.
 
 Das ist @definition:ableitung-einer-matrixwertigen-funktion: Jeder Eintrag wird für sich abgeleitet und bleibt an seinem Platz.
-Verwechseln darf man die beiden Matrizen trotzdem nicht, die eine enthält Werte, die andere
+Verwechseln dürfen wir die beiden Matrizen trotzdem nicht, die eine enthält Werte, die andere
 Steigungen (@bemerkung:das-format-bleibt-erhalten).
 :::
 

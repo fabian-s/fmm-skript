@@ -4,39 +4,23 @@ import { NewtonSchaetzung } from "./widgets/S108Newton";
 
 ### Vom linearen Blick zum Polynom
 
-@sec:linearisierung hat die Ableitung als lineare Näherung
-eingeführt: In der Nähe von $\bx$ verhält sich $f$ wie eine lineare Abbildung, und
-der Fehler ist $\cred{o(\left\|\bh\right\|)}$. Diese Näherung ist billig und oft
-gut genug, aber sie ist nur die erste Stufe. Mit den höheren Ableitungen aus
-@sec:hoehere-ableitungen lassen sich weitere Stufen bilden: eine
-quadratische Näherung, eine kubische, und so fort. Das Ergebnis heißt
-:k[Taylorapproximation]{#taylor-theorem}, und sie ist eines der meistbenutzten
-Werkzeuge dieses Skripts.
-
-Zwei Verwendungen kommen darin immer wieder vor. Wir rechnen mit dem
-:k[Polynom]{#polynomial} statt mit $f$, weil sich seine Ableitungen und kritischen
-Punkte leichter bestimmen lassen, ohne dass wir über $f$ mehr wissen müssen als ein paar
-Ableitungen an einer einzigen Stelle. Der Newton-Schritt am Ende dieses Abschnitts
-macht davon Gebrauch: Bestimmt wird der stationäre Punkt der quadratischen Näherung;
-bei positiver Hesse-Matrix ist er deren Minimum. Außerdem sind Taylorentwicklungen
-das Standardwerkzeug der Konvergenz-
-und Asymptotikanalyse.
-Die asymptotische Normalität des Maximum-Likelihood-Schätzers etwa entsteht, indem
-wir die Score-Funktion um den wahren Parameter entwickeln; wir kommen in
-@bemerkung:warum-statistik-und-ml-voll-davon-sind darauf zurück.
-
-Der Farbcode des Kapitels bleibt: blau die Funktion und ihre Werte, grün die
-Näherung $\cgreen{T_k}$ und die abstrakten Ableitungen $\cgreen{D^j_{\bx} f}$, rot
-der Restterm. Gradient, Hesse-Matrix und die übrigen konkreten Ableitungsobjekte
-tragen das Orange aus @sec:hoehere-ableitungen, in den Formeln wie in den
-Widgets.
+@sec:linearisierung hat die Ableitung als lineare Näherung mit Fehler
+$\cred{o(\left\|\bh\right\|)}$ eingeführt. Das ist die erste Stufe; mit den höheren
+Ableitungen aus @sec:hoehere-ableitungen folgen quadratische, kubische und weitere
+Näherungen, die :k[Taylorapproximation]{#taylor-theorem}. Wir brauchen sie auf zwei
+Arten. Wir rechnen mit dem :k[Polynom]{#polynomial} statt mit $f$, weil sich seine
+Ableitungen und kritischen Punkte leichter bestimmen lassen; so bestimmt der
+Newton-Schritt am Ende dieses Abschnitts den stationären Punkt der quadratischen
+Näherung. Außerdem sind Taylorentwicklungen das Standardwerkzeug der Konvergenz- und
+Asymptotikanalyse, etwa für die asymptotische Normalität des
+Maximum-Likelihood-Schätzers. Die Farben bleiben: die Näherung $\cgreen{T_k}$ grün, der
+Restterm rot, Gradient und Hesse-Matrix orange.
 
 ### Der eindimensionale Fall
 
-Wir beginnen mit $f\colon \R \to \R$. Gesucht ist ein Polynom, das
-sich an einer Stelle $x$ möglichst eng an $f$ anschmiegt. Die
-Bedingung lässt sich präzise fassen: Das Polynom soll in $x$
-denselben Wert, dieselbe Steigung, dieselbe Krümmung und so weiter haben wie $f$.
+Wir beginnen mit $f\colon \R \to \R$ und suchen ein Polynom, das sich an der Stelle
+$x$ möglichst eng an $f$ anschmiegt: Es soll dort denselben Wert, dieselbe Steigung,
+dieselbe Krümmung und so weiter haben wie $f$.
 
 :::definition[#taylorpolynom (Taylorpolynom)]
 Seien $S \subseteq \R$ offen und $f\colon S \to \R$ an der Stelle $x \in S$
@@ -53,14 +37,12 @@ Grad ist höchstens $k$ und kann kleiner sein, wenn die höchsten Koeffizienten
 verschwinden.
 :::
 
-Wir lesen $\cgreen{T_k}$ als Funktion des Zuwachses $h$ bei festgehaltenem
-Entwicklungspunkt, ganz wie die lineare Abbildung $\cgreen{D_x f}$ aus
-@definition:frechet-ableitung. Der Ausdruck rechts hängt vom Zuwachs $h$ ab und nicht von $x$
-allein; @bemerkung:die-zweite-schreibweise stellt die gebräuchliche zweite Schreibweise daneben.
-
-Die Anschmiegebedingung steckt bereits in @eq:taylorpolynom: Leiten wir das Polynom
-$j$-mal nach $h$ ab und setzen $h = 0$, so überlebt genau der $j$-te Summand, und
-es bleibt $\cgreen{f^{(j)}(x)}$ stehen. Für $k = 1$ steht dort die Tangente aus
+Wir lesen $\cgreen{T_k}$ als Funktion des Zuwachses $h$ bei festem
+Entwicklungspunkt, wie die lineare Abbildung $\cgreen{D_x f}$ aus
+@definition:frechet-ableitung; die gebräuchliche zweite Schreibweise steht in
+@bemerkung:die-zweite-schreibweise. Leiten wir $\cgreen{T_k}$ $j$-mal nach $h$ ab und
+setzen $h = 0$, so bleibt nur $\cgreen{f^{(j)}(x)}$ stehen: Das ist die
+Anschmiegebedingung. Für $k = 1$ ist $\cgreen{T_1}$ die Tangente aus
 @sec:linearisierung, für $k = 0$ die Konstante $\cblue{f(x)}$.
 
 :::satz[#taylorentwicklung-i (Taylorentwicklung I)]
@@ -80,7 +62,7 @@ $$ {#eq-taylorentwicklung-i-2}
 $$
 :::
 
-:::::vertiefung[Der Beweis: zwei Hilfsfunktionen, eine Teleskopsumme, der Cauchy-Mittelwertsatz]
+:::::vertiefung[Beweis der eindimensionalen Taylorentwicklung]
 
 ::::beweis
 
@@ -181,29 +163,25 @@ und das heißt gerade $\cblue{f(x+h)} - \cgreen{T_k(h)} = \cred{o(\left|h\right|
 :::bemerkung[#was-der-satz-sagt-und-was-nicht (Was der Satz sagt und was nicht)]
 *Zwei Restglieder.* Die Fassung @eq:taylorentwicklung-i-2 mit der Zwischenstelle heißt
 *Lagrange-Restglied*; sie ist eine Gleichung und liefert konkrete Schranken, sobald
-wir $f^{(k+1)}$ abschätzen können. Die Fassung @eq:taylorentwicklung-i mit
-$\cred{o(\left|h\right|^k)}$ sagt nur etwas über das Verhalten für $h \to 0$, dafür
-kommt sie mit weniger Voraussetzungen aus. Für uns ist die
-$o$-Fassung die Arbeitsform, weil sie sich auf normierte Vektorräume mit
+wir $f^{(k+1)}$ abschätzen können. Die $o$-Fassung @eq:taylorentwicklung-i sagt nur etwas
+über $h \to 0$. Sie ist unsere Arbeitsform, weil sie sich auf normierte Vektorräume mit
 vollständigem Zielraum überträgt.
 
-*Warum $\left|h\right|^k$ und nicht $\left|h\right|^{k+1}$.* Der Rest ist nach
-@eq:taylorentwicklung-i-2 von der Größenordnung $\left|h\right|^{k+1}$, also sogar noch kleiner,
-als @eq:taylorentwicklung-i behauptet. Die schwächere Aussage steht dort, weil sie ohne die
-Zusatzvoraussetzung „$(k+1)$-mal stetig differenzierbar" auskommt und weil
-sie die Bauform von @definition:frechet-ableitung hat: Näherung plus Rest, der schneller
-verschwindet als die letzte mitgenommene Potenz.
+*Warum $\left|h\right|^k$ und nicht $\left|h\right|^{k+1}$.* Nach
+@eq:taylorentwicklung-i-2 ist der Rest sogar von der Ordnung $\left|h\right|^{k+1}$. Die
+schwächere Aussage gilt schon ohne die Voraussetzung „$(k+1)$-mal stetig
+differenzierbar" und hat die Bauform von @definition:frechet-ableitung: Näherung plus
+Rest, der schneller verschwindet als die letzte mitgenommene Potenz.
 
 *Der Grenzfall $k = 1$.* Dann ist @eq:taylorentwicklung-i wörtlich
 $\cblue{f(x+h)} = \cblue{f(x)} + \cgreen{f'(x)h} + \cred{o(\left|h\right|)}$, also
-Aussage (3) aus @satz:ableitung-als-lineare-approximation. Die Taylorentwicklung verallgemeinert die
-Ableitungsdefinition, sie ersetzt sie nicht.
+Aussage (3) aus @satz:ableitung-als-lineare-approximation. Die Taylorentwicklung
+verallgemeinert die Ableitungsdefinition.
 :::
 
 :::bemerkung[#die-zweite-schreibweise (Die zweite Schreibweise)]
-Statt Entwicklungspunkt und Zuwachs zu trennen, wird das Taylorpolynom oft als
-Funktion der Auswertungsstelle geschrieben. Mit $x_0$ als Entwicklungspunkt und
-$h = x - x_0$ wird aus @eq:taylorpolynom
+Oft wird das Taylorpolynom als Funktion der Auswertungsstelle geschrieben. Mit $x_0$
+als Entwicklungspunkt und $h = x - x_0$ wird aus @eq:taylorpolynom
 
 $$
 \cgreen{T_k(x)} = \sum_{j=0}^{k} \frac{1}{j!}\,\cgreen{f^{(j)}(x_0)}\,(x - x_0)^j ,
@@ -212,23 +190,21 @@ $$
 \quad \text{für } x \to x_0 .
 $$
 
-Beide Fassungen sind gebräuchlich. Wir benutzen
-die $h$-Fassung, wenn es um die Struktur „Funktion gleich Näherung plus Rest" geht,
-und die $x_0$-Fassung, wenn wir das Polynom zeichnen wollen.
+Die $h$-Fassung zeigt die Struktur „Näherung plus Rest", die $x_0$-Fassung eignet
+sich zum Zeichnen.
 :::
 
 :::bemerkung[#hoeher-ist-nicht-automatisch-besser (Höher ist nicht automatisch besser)]
 Oft heißt es: je höher der Grad $k$, desto besser und globaler die
-Approximation. Als Faustregel für gutartige Funktionen stimmt das, und @eq:taylorentwicklung-i-2
-erklärt auch, warum: Der Faktor $\left|h\right|^{k+1}/(k+1)!$ wird mit wachsendem
+Approximation. Nahe am Entwicklungspunkt stimmt das meist, und @eq:taylorentwicklung-i-2
+erklärt, warum: Der Faktor $\left|h\right|^{k+1}/(k+1)!$ wird mit wachsendem
 $k$ rasch klein. Eine Garantie ist es nicht, denn der andere Faktor
 $f^{(k+1)}(\xi)$ kann mindestens ebenso rasch wachsen.
 
 Das Standardbeispiel ist $f(x) = 1/(1+x^2)$ mit Entwicklungspunkt $0$. Bei
-$x = 0{,}5$ fallen die Fehler der Ordnungen
-$k = 2, 4, 8, 16$ sind $5{,}0 \cdot 10^{-2}$, $1{,}3 \cdot 10^{-2}$,
-$7{,}8 \cdot 10^{-4}$ und $3{,}1 \cdot 10^{-6}$ ab. Bei $x = 1{,}5$ dagegen wachsen
-sie: $1{,}6$, $3{,}5$, $17{,}7$ und $455$. Die :k[Taylorreihe]{#taylor-series}
+$x = 0{,}5$ fallen die Fehler der Ordnungen $k = 2, 4, 8, 16$ von
+$5{,}0 \cdot 10^{-2}$ über $1{,}3 \cdot 10^{-2}$ und $7{,}8 \cdot 10^{-4}$ auf
+$3{,}1 \cdot 10^{-6}$. Bei $x = 1{,}5$ dagegen wachsen sie: $1{,}6$, $3{,}5$, $17{,}7$ und $455$. Die :k[Taylorreihe]{#taylor-series}
 dieser Funktion konvergiert nur für $\left|x\right| < 1$, obwohl $f$ auf ganz
 $\R$ beliebig oft differenzierbar ist. Höhere Ordnung hilft also lokal, nicht global.
 :::
@@ -241,8 +217,7 @@ messen den Fehler bei $x = 0{,}5$.
 $j \ge 0$, im Entwicklungspunkt also $\cgreen{f^{(j)}(0)} = e^0 = 1$. Alle
 Koeffizienten sind damit $1/j!$.
 
-*Die Polynome.* In der Schreibweise von @bemerkung:die-zweite-schreibweise mit $x_0 = 0$ lesen wir
-aus @eq:taylorpolynom ab:
+*Die Polynome* in der Schreibweise von @bemerkung:die-zweite-schreibweise mit $x_0 = 0$:
 
 $$
 \begin{aligned}
@@ -267,48 +242,35 @@ $$
 \end{aligned}
 $$
 
-Jede Ordnung drückt den Fehler also auf etwa ein Sechstel bis ein Achtel. Das
-Lagrange-Restglied erklärt, warum: Der Rest ist
+Das Lagrange-Restglied erklärt, wie schnell der Fehler fällt: Der Rest ist
 $e^{\xi}\,0{,}5^{\,k+1}/(k+1)!$ mit einem $\xi \in (0; 0{,}5)$, beim Übergang von
-$k$ auf $k+1$ kommt also im Wesentlichen der Faktor $0{,}5/(k+2)$ dazu; die
-Zwischenstelle $\xi$ verschiebt sich dabei mit, weshalb die gemessenen
-Quotienten $6{,}3$ und $8{,}2$ die vorhergesagten $6$ und $8$ nur ungefähr
-treffen. Für $k = 1$ lässt sich das $\xi$ sogar ausrechnen, indem wir @eq:taylorentwicklung-i-2
-nach ihm auflösen: Aus
-$e^{0{,}5} - 1{,}5 = e^{\xi}\cdot 0{,}25/2$ folgt $\xi = 0{,}1738$, und das liegt
-wie behauptet zwischen $0$ und $0{,}5$.
+$k$ auf $k+1$ kommt also im Wesentlichen der Faktor $0{,}5/(k+2)$ hinzu.
 :::
 
-@beispiel:taylorapproximation-der hat den Fehler an einer einzigen Stelle für drei Ordnungen
-ausgerechnet. Lohnt sich der Sprung von $T_2$ auf $T_3$ überhaupt, und gilt der
-Gewinn auch weit weg vom Entwicklungspunkt?
+Gilt der Gewinn je Ordnung auch weit weg vom Entwicklungspunkt?
 
-:::interaktiv[Drei Ordnungen an einem Regler]
-Die drei Näherungen $T_1$, $T_2$ und $T_3$ derselben Funktion hängen hier an
-einem Regler, dazu kommt ein zweiter für die Stelle, an der wir
-den Fehler ablesen. Voreingestellt ist $x = 0{,}5$, die Stelle aus
-@beispiel:taylorapproximation-der.
+:::interaktiv[Taylorpolynome der Exponentialfunktion]
+Ein Regler wählt die Ordnung $k$, ein zweiter die Stelle, an der wir den Fehler
+ablesen; voreingestellt ist $x = 0{,}5$ aus @beispiel:taylorapproximation-der.
 
 <TaylorOrdnungSchaetzung />
 
-Nahe am Entwicklungspunkt ist der Gewinn groß, und er wächst mit jeder weiteren
-Ordnung; die Zahlen dazu stehen im Verdikt. Weiter draußen
-kehrt sich das um, am linken Rand dauerhaft: Für $x \to -\infty$ geht $e^x$ gegen
-null, jedes Taylorpolynom positiven Grades dagegen gegen $\pm\infty$. Bei $x = -3$ wächst
-der Fehler beim Schritt von $T_0$ auf $T_1$ deshalb von $0{,}950$ auf $2{,}050$, statt zu
-fallen. Der Faustwert $\left|x\right|/(k+1)$ aus dem Restglied beschreibt das Verhalten
-für kleine $\left|x\right|$; solange $\left|x\right|$ groß gegen $k+1$ ist, gewinnt zunächst
-die Potenz. Das ist @bemerkung:hoeher-ist-nicht-automatisch-besser in Zahlen.
+Nahe am Entwicklungspunkt gewinnt jede weitere Ordnung viel. Links kehrt sich das um:
+Für $x \to -\infty$ geht $e^x$ gegen null, jedes Taylorpolynom positiven Grades gegen
+$\pm\infty$, und bei $x = -3$ wächst der Fehler beim Schritt von $T_0$ auf $T_1$ von
+$0{,}950$ auf $2{,}050$. Der Faustwert $\left|x\right|/(k+1)$ für den Fehlerquotienten
+gilt nur für kleine $\left|x\right|$; solange $\left|x\right|$ groß gegen $k+1$ ist,
+gewinnt zunächst die Potenz. Das ist @bemerkung:hoeher-ist-nicht-automatisch-besser in
+Zahlen.
 :::
 
 ### Der allgemeine Fall
 
-@satz:taylorentwicklung-i lebt vom Rechnen mit Potenzen $h^j$, und die gibt es im
-$\R^n$ oder in einem Funktionenraum nicht. Die höheren Ableitungen aus
-@sec:hoehere-ableitungen liefern den Ersatz: $\cgreen{D_{\bx}^j f}$ ist eine
-multilineare Abbildung mit $j$ Argumenten. Setzen wir überall denselben
-Zuwachs $\bh$ ein, so entsteht der passende Ersatz für den Term
-$f^{(j)}(x)h^j$.
+@satz:taylorentwicklung-i rechnet mit Potenzen $h^j$, die es im $\R^n$ oder in einem
+Funktionenraum nicht gibt. Ersatz liefern die höheren Ableitungen aus
+@sec:hoehere-ableitungen: Setzen wir in die multilineare Abbildung
+$\cgreen{D_{\bx}^j f}$ überall denselben Zuwachs $\bh$ ein, so entsteht das Gegenstück
+zu $f^{(j)}(x)h^j$.
 
 :::satz[#taylorentwicklung-ii (Taylorentwicklung II)]
 Seien $V$ ein normierter Vektorraum, $W$ ein Banachraum, $U\subseteq V$ offen,
@@ -326,7 +288,7 @@ $$ {#eq-taylorentwicklung-ii}
 $$
 :::
 
-:::::vertiefung[Der Beweis: von der Verbindungsstrecke zum Integralrestglied]
+:::::vertiefung[Beweis der allgemeinen Taylorentwicklung]
 
 ::::beweis
 
@@ -409,6 +371,21 @@ $f\in\Ccal^k$, während das Restglied trotzdem
 $\cred{o(\left\|\bh\right\|^k)}$ ist.
 :::
 
+::::quiz
+
+:::frage{falsch}
+Der Beweis von @satz:taylorentwicklung-ii überträgt die eindimensionale Aussage einfach auf jede
+Gerade durch $\bx$, mehr ist nicht zu zeigen.
+
+Der Kern ist das, aber die Aussage $\cred{o(\left\|\bh\right\|^k)}$ verlangt
+Kleinheit gleichmäßig über alle Richtungen, während die Entwicklung von $\psi$
+zunächst nur für eine feste Richtung $\bu$ gilt. Die Stetigkeit der $k$-ten
+Ableitung liefert eine gemeinsame Normschranke für alle Richtungen und damit die
+benötigte gleichmäßige Kleinheit (@bemerkung:warum-hier-die-integralform-steht).
+:::
+
+::::
+
 :::::
 
 ### Gradient, Hesse-Matrix und die ersten drei Ordnungen
@@ -452,39 +429,20 @@ $$
 Die ersten beiden Zeilen kommen mit $f \in \Ccal^1$ bzw. $f \in \Ccal^2$ aus.
 :::
 
-Dass hier Gradient und Hesse-Matrix auftauchen, liegt an @satz:erste-und-zweite-ableitung-in: Er
-übersetzt $\cgreen{D_{\bx} f(\bh)}$ in $\corange{\nabla f(\bx)}\bh$ und
-$\cgreen{D^2_{\bx} f(\bh, \bh)}$ in $\bh^\top \corange{\bH_f(\bx)}\bh$, und danach
-ist @eq:taylorapproximation-fuer-vektor-zu dasselbe wie @eq:taylorentwicklung-ii in Koordinaten.
-
-Die Formate gehen auf: Der Gradient ist ein Zeilenvektor, $\bh$ ein Spaltenvektor,
-also ist $\corange{\nabla f(\bx)}\bh$ eine Zahl. Ebenso ist
-$\bh^\top \corange{\bH_f(\bx)}\bh$ eine :k[quadratische Form]{#quadratic-form} und
-damit skalar. Ab der dritten Ordnung gibt es keine Matrixschreibweise mehr, weil
-$\cgreen{D_{\bx}^3 f}$ drei Indexpositionen hat, also ein
-:k[Tensor]{#tensor} dritter Stufe ist (@sec:tensoren/tensoren);
-deshalb steht dort die ausgeschriebene Summe. Praktisch verwendet werden fast nur
-die ersten beiden Zeilen.
+Gradient und Hesse-Matrix tauchen auf, weil @satz:erste-und-zweite-ableitung-in
+$\cgreen{D_{\bx} f(\bh)}$ in $\corange{\nabla f(\bx)}\bh$ und
+$\cgreen{D^2_{\bx} f(\bh, \bh)}$ in die :k[quadratische Form]{#quadratic-form}
+$\bh^\top \corange{\bH_f(\bx)}\bh$ übersetzt; beides sind Zahlen. Die dritte Ordnung
+ist ein :k[Tensor]{#tensor} (@sec:tensoren/tensoren), deshalb steht dort die
+ausgeschriebene Summe. Praktisch verwendet werden fast nur die ersten beiden Zeilen.
 
 :::bemerkung[#ebene-und-quadrik (Ebene und Quadrik)]
-Geometrisch lassen sich die beiden Näherungen so beschreiben. Der Graph von
-$\cgreen{T_1}$ ist die *Tangentialebene* an den Graphen von $f$ im Punkt
-$(\bx, \cblue{f(\bx)})$; solange $\corange{\nabla f(\bx)} \neq \bnull^\top$ ist,
-sind ihre :k[Höhenlinien]{#level-sets} parallele Geraden senkrecht zum Gradienten
-(@sec:gradient), im kritischen Punkt dagegen ist
-$\cgreen{T_1}$ konstant. Seine Niveaumenge zum konstanten Wert ist dann der ganze
-Definitionsraum, alle anderen sind leer; reguläre Höhenlinien mit einer ausgezeichneten
-Gradientenrichtung gibt es nicht. Der
-Graph von $\cgreen{T_2}$ ist eine Quadrik, und ihre Höhenlinien verraten die
-Definitheit der Hesse-Matrix: Ellipsen bei definiter, Hyperbeln bei indefiniter
-Hesse-Matrix. Damit ist der Anschluss an
-@satz:hesse-kriterium-fuer-kritische-punkte hergestellt, wo dieselbe Fallunterscheidung über Minimum, Maximum
-und Sattelpunkt entscheidet, sofern die Hesse-Matrix definit oder indefinit ist
-(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Die zweite Zeile von @eq:taylorapproximation-fuer-vektor-zu ist das
-Werkzeug, das der Beweis dieses Satzes braucht: Im kritischen Punkt fällt der
-lineare Term weg, und weil der rote Rest schneller verschwindet als
-$\left\|\bh\right\|^2$, entscheidet für kleine $\bh$ das Vorzeichen von
-$\bh^\top \corange{\bH_f(\bx^*)}\bh$.
+Der Graph von $\cgreen{T_1}$ ist die *Tangentialebene* an den Graphen von $f$ im
+Punkt $(\bx, \cblue{f(\bx)})$; für $\corange{\nabla f(\bx)} \neq \bnull^\top$ sind ihre
+:k[Höhenlinien]{#level-sets} parallele Geraden senkrecht zum Gradienten
+(@sec:gradient). Der Graph von $\cgreen{T_2}$ ist eine Quadrik, und ihre Höhenlinien
+zeigen die Definitheit der Hesse-Matrix: Ellipsen bei definiter, Hyperbeln bei
+indefiniter. Das ist der Anschluss an @satz:hesse-kriterium-fuer-kritische-punkte.
 
 Ein Sonderfall: Ist $f$ selbst ein Polynom zweiten Grades, so
 verschwinden alle Ableitungen ab der dritten, das Restglied ist null und
@@ -492,43 +450,34 @@ $\cgreen{T_2} = \cblue{f}$ gilt exakt, an jeder Stelle und für jedes $\bh$. Auf
 dieser Beobachtung beruht das Verfahren im nächsten Unterabschnitt.
 :::
 
-@korollar:taylorapproximation-fuer-vektor-zu macht eine quantitative Aussage: Der Restterm von $\cgreen{T_1}$
-wächst wie $\left\|\bh\right\|^2$, der von $\cgreen{T_2}$ wie
-$\left\|\bh\right\|^3$. Halbieren wir also den Abstand zum Entwicklungspunkt, um
-welchen Faktor fällt dann der Fehler?
+Nach @korollar:taylorapproximation-fuer-vektor-zu wächst der Restterm von $\cgreen{T_1}$
+wie $\left\|\bh\right\|^2$, der von $\cgreen{T_2}$ wie $\left\|\bh\right\|^3$. Um welchen
+Faktor fällt der Fehler, wenn wir den Abstand zum Entwicklungspunkt halbieren?
 
 :::interaktiv[Tangentialebene und Quadrik im Höhenlinienbild]
-Statt nur der Flächen zeichnen wir die Höhenlinien, und zwar die von $f$ und die
-des Taylorpolynoms im selben Fenster und auf denselben Niveaus; daneben steht
-dieselbe Lage im Raum. Gemessen wird der größte Fehler auf einem Kreis mit Radius
-$r$ um den Entwicklungspunkt, im Vergleich zu dem auf dem halb so großen Kreis.
-In der Raumtafel ist dieser Fehler der senkrechte Abstand zwischen dem blauen und
-dem grünen Ring.
-
-Dieselbe Idee zeigt außerdem eine
-[Shiny-App](https://fabian-s.shinyapps.io/taylor-approx/) mit Flächen im
-Raum.
+Die Tafel zeigt die Höhenlinien von $f$ und des Taylorpolynoms im selben Fenster und auf
+denselben Niveaus, daneben dieselbe Lage im Raum. Gemessen wird der größte Fehler auf
+einem Kreis mit Radius $r$ um den Entwicklungspunkt, verglichen mit dem auf dem halb so
+großen Kreis; eine [Shiny-App](https://fabian-s.shinyapps.io/taylor-approx/) zeigt
+dieselbe Idee mit Flächen im Raum.
 
 <Taylor2DSchaetzung />
 
-Die Umschaltung zwischen den beiden Ordnungen zeigt zugleich den
-strukturellen Unterschied: Die Tangentialebene liefert parallele Geraden als Höhenlinien,
-die Quadrik krümmt sich mit. Die Faustzahlen aus @korollar:taylorapproximation-fuer-vektor-zu
-setzen allerdings voraus, dass der jeweils
-führende Restterm nicht selbst verschwindet; wo die Hesse-Matrix nahezu null ist, springt
-der gemessene Quotient deutlich über den Vorhersagewert. Auf der Quadrik im dritten Menüpunkt fällt der
-$\cgreen{T_2}$-Fehler auf Rundungsniveau: Dort ist die Näherung exakt, und darauf
-beruht der eine exakte Newton-Schritt im nächsten Unterabschnitt.
+Die Tangentialebene hat gerade Höhenlinien, die Quadrik gekrümmte. Die Faustzahlen $4$
+und $8$ setzen voraus, dass der jeweils führende Restterm nicht selbst verschwindet; wo
+die Hesse-Matrix nahezu null ist, springt der gemessene Quotient deutlich über den
+Vorhersagewert. Auf der Quadrik im dritten Menüpunkt fällt der $\cgreen{T_2}$-Fehler auf
+Rundungsniveau, weil die Näherung dort exakt ist. Darauf beruht der eine exakte
+Newton-Schritt im nächsten Unterabschnitt.
 :::
 
 ### Anwendung: das Newton-Raphson-Verfahren
 
-Gesucht ist ein lokales Minimum, sofern eines existiert, für eine zweimal stetig
-differenzierbare Funktion $f\colon \R^n \to \R$. Direkt lösen können wir das im
-Allgemeinen nicht. Für eine quadratische Funktion mit positiv definiter Hesse-Matrix
-dagegen schon: Dort ist die Bedingung „Gradient gleich null" ein lineares Gleichungssystem,
-und lineare
-Gleichungssysteme lösen wir seit @kap:lgs. Die Idee des
+Gesucht ist ein lokales Minimum einer zweimal stetig differenzierbaren Funktion
+$f\colon \R^n \to \R$, sofern eines existiert. Direkt lösen können wir das im
+Allgemeinen nicht, für eine quadratische Funktion mit positiv definiter Hesse-Matrix aber
+schon: Dort ist „Gradient gleich null" ein lineares Gleichungssystem (@kap:lgs). Die
+Idee des
 :k[Newton-Raphson-Verfahrens]{#newtons-method} ist deshalb, an der aktuellen
 Stelle $\bx^{(k)}$ die quadratische Näherung aus @korollar:taylorapproximation-fuer-vektor-zu hinzulegen und
 ihren stationären Punkt zu bestimmen:
@@ -539,13 +488,11 @@ $$
 + \tfrac{1}{2}\bigl(\bx - \bx^{(k)}\bigr)^\top \corange{\bH_f(\bx^{(k)})}\bigl(\bx - \bx^{(k)}\bigr) .
 $$
 
-Den Gradienten dieser Funktion kennen wir aus
-@sec:produkt-kettenregel: Der lineare Term steuert
-$\corange{\nabla f(\bx^{(k)})}$ bei, und die quadratische Form hat nach
-@beispiel:gradient-einer-quadratischen-form den Gradienten
+Der lineare Term hat den Gradienten $\corange{\nabla f(\bx^{(k)})}$, der quadratische
+nach @beispiel:gradient-einer-quadratischen-form den Gradienten
 $\bigl(\bx - \bx^{(k)}\bigr)^\top\bigl(\corange{\bH_f} + \corange{\bH_f^\top}\bigr)/2$,
-was wegen der Symmetrie der Hesse-Matrix (Satz von Schwarz, @satz:satz-von-schwarz) gerade
-$\bigl(\bx - \bx^{(k)}\bigr)^\top \corange{\bH_f(\bx^{(k)})}$ ist. Nullsetzen liefert
+nach @satz:satz-von-schwarz also $\bigl(\bx - \bx^{(k)}\bigr)^\top \corange{\bH_f(\bx^{(k)})}$.
+Nullsetzen liefert
 
 $$
 \begin{aligned}
@@ -559,11 +506,9 @@ $$
 $$
 
 Der letzte Schritt setzt voraus, dass $\corange{\bH_f(\bx^{(k)})}$ invertierbar
-ist; sonst hat $\cgreen{T_2}$ entweder gar keinen kritischen Punkt oder einen affinen
-Lösungsraum positiver Dimension. Ansonsten sind beide Seiten Zeilenvektoren, wie es die
-Konvention aus
-@sec:gradient verlangt. Transponieren führt
-zurück zu Spalten.
+ist; sonst hat $\cgreen{T_2}$ keinen oder unendlich viele kritische Punkte. Beide Seiten
+sind Zeilenvektoren (Konvention aus @sec:gradient); Transponieren führt zurück zu
+Spalten.
 
 :::algorithmus[#newton-raphson-verfahren (Newton-Raphson-Verfahren)]
 Gegeben seien $f\colon \R^n \to \R$ zweimal stetig differenzierbar und ein
@@ -583,29 +528,24 @@ $\corange{\bH_f(\bx^{(k)})}$ invertierbar ist:
 :::
 
 :::bemerkung[#drei-vorbehalte (Drei Vorbehalte)]
-*Der Schritt sucht kritische Punkte, keine Minima.* Konstruiert wurde @eq:newton-raphson-verfahren
-als Nullstelle von $\corange{\nabla T_2}$. Ein solcher Punkt ist ein Minimum der
-Näherung nur dann, wenn $\corange{\bH_f(\bx^{(k)})}$
-:k[positiv definit]{#positive-definite} ist. Bei indefiniter beziehungsweise negativ
-definiter Hesse-Matrix ist der stationäre Punkt des lokalen quadratischen Modells ein
-Sattel beziehungsweise Maximum, und der Schritt muss keine Abstiegsrichtung sein. Das
-klassische Newton-Verfahren sucht Nullstellen des Gradienten und kann deshalb je nach
-Startpunkt zu Minima, Maxima oder Sattelpunkten konvergieren. Praktische Varianten erzwingen
-deshalb
-Definitheit, etwa indem sie ein Vielfaches der Einheitsmatrix addieren.
+*Der Schritt sucht kritische Punkte, keine Minima.* @eq:newton-raphson-verfahren ist
+eine Nullstelle von $\corange{\nabla T_2}$, also ein Minimum der Näherung nur bei
+:k[positiv definiter]{#positive-definite} Hesse-Matrix; sonst ist es ein Sattel oder ein
+Maximum, und der Schritt muss keine Abstiegsrichtung sein. Je nach Startpunkt kann das
+Verfahren deshalb gegen Minima, Maxima oder Sattelpunkte konvergieren. Praktische
+Varianten erzwingen Definitheit, etwa indem sie ein Vielfaches der Einheitsmatrix
+addieren.
 
-*Die Inverse ist eine Schreibweise, keine Rechenanweisung.* In @eq:newton-raphson-verfahren steht
-$\corange{\bH_f^{-1}}$, gerechnet wird aber das Gleichungssystem
-$\corange{\bH_f(\bx^{(k)})}\,\bd = -\corange{\nabla f(\bx^{(k)})}^\top$ mit
-anschließendem $\bx^{(k+1)} = \bx^{(k)} + \bd$. Das kostet weniger und ist
-stabiler (@sec:lgs/lu); bei positiv definiter Hesse-Matrix
-ist die Cholesky-Zerlegung aus @sec:lgs/cholesky das Mittel der
-Wahl, und ihr Gelingen ist zugleich die Definitheitsprobe.
+*Die Inverse ist eine Schreibweise, keine Rechenanweisung.* Gerechnet wird das
+Gleichungssystem $\corange{\bH_f(\bx^{(k)})}\,\bd = -\corange{\nabla f(\bx^{(k)})}^\top$
+mit anschließendem $\bx^{(k+1)} = \bx^{(k)} + \bd$; das kostet weniger und ist stabiler
+(@sec:lgs/lu). Bei positiv definiter Hesse-Matrix nehmen wir die Cholesky-Zerlegung aus
+@sec:lgs/cholesky, deren Gelingen zugleich die Definitheit prüft.
 
 *Nur lokal.* Weit weg vom Ziel kann die quadratische Näherung so schlecht sein,
-dass der Schritt in die falsche Richtung zeigt. Die Gegenmittel heißen
-Schrittweitensteuerung und Trust-Region und gehören in ein eigenes Kapitel über
-:k[Optimierung]{#optimization}, das später in diesem Skript folgt.
+dass der Schritt in die falsche Richtung zeigt. Die Gegenmittel,
+Schrittweitensteuerung und Trust-Region, gehören zur :k[Optimierung]{#optimization}
+in @kap:optim.
 :::
 
 :::bemerkung[#warum-statistik-und-ml-voll-davon-sind (Newton in Statistik und ML)]
@@ -637,47 +577,47 @@ dabei der Grund, warum die Aussage nur asymptotisch gilt.
 
 ::::
 
-Wie schnell ist „quadratisch konvergent" in Zahlen? Das Widget rechnet das Verfahren
-Schritt für Schritt und zählt, wie viele Schritte es bis zur
-Maschinengenauigkeit braucht.
+Wie schnell ist „quadratisch konvergent" in Zahlen?
 
 :::interaktiv[Newton Schritt für Schritt]
 Die Tafel zeigt die Höhenlinien, den Weg der Iterierten und eine Tabelle mit
-Gradientennorm, Fehler und dem Quotienten $e_k / e_{k-1}^2$. Bleibt dieser
-Quotient beschränkt, so wird der Fehler in jedem Schritt im Wesentlichen
-quadriert; das ist die *quadratische Konvergenz* des Newton-Verfahrens
-(:k[Konvergenzordnung]{#rate-of-convergence}). Der Schrittregler lässt sich
-vor- und zurückfahren, ohne dass die Iteration neu startet.
-
-Voreingestellt ist $f(\bx) = x_1^3/3 - x_1 + x_2^2/2$ mit Start $(2; 1{,}5)$.
-Drei Versuche: ein Startpunkt mit $x_1 < 0$, ein Startpunkt mit
-$x_1 = 0$, und der zweite Menüpunkt, die Quadrik aus @bemerkung:ebene-und-quadrik.
+Gradientennorm, Fehler und dem Quotienten $e_k / e_{k-1}^2$; bleibt dieser beschränkt, so
+wird der Fehler je Schritt im Wesentlichen quadriert, das ist die *quadratische
+Konvergenz* (:k[Konvergenzordnung]{#rate-of-convergence}). Voreingestellt ist
+$f(\bx) = x_1^3/3 - x_1 + x_2^2/2$ mit Start $(2; 1{,}5)$; der Schrittregler fährt die
+Iteration vor und zurück. Drei Versuche: ein Start mit $x_1 < 0$, ein Start mit
+$x_1 = 0$ und der zweite Menüpunkt, die Quadrik aus @bemerkung:ebene-und-quadrik.
 
 <NewtonSchaetzung />
 
 In der $x_2$-Richtung sitzt der erste Schritt sofort exakt, denn dort ist $f$ quadratisch.
-In der $x_1$-Richtung läuft die Iteration gegen $1$, und die Fehlerspalte fällt dabei mit
-jedem Schritt um mehr Größenordnungen als im Schritt davor: Der Fehler wird von Schritt zu
-Schritt im Wesentlichen quadriert, der
-Quotient $e_k/e_{k-1}^2$ läuft gegen $1/(2x_1^*) = 0{,}5$. Die drei Versuche zeigen
-die Grenzen: Ein Start mit $x_1 < 0$ führt in den Sattelpunkt $(-1; 0)$ statt ins
-Minimum (@bemerkung:drei-vorbehalte), bei $x_1 = 0$ ist die Hesse-Matrix $\diag(0, 1)$
-singulär und der Schritt gar nicht definiert, und auf der Quadrik ist nach einem einzigen
-Schritt Schluss, weil $\cgreen{T_2}$ dort mit $f$ übereinstimmt.
+In der $x_1$-Richtung läuft die Iteration gegen $x_1^* = 1$; der Fehler wird je Schritt
+im Wesentlichen quadriert, und der Quotient $e_k/e_{k-1}^2$ läuft gegen
+$1/(2x_1^*) = 0{,}5$. Ein Start mit $x_1 < 0$ führt
+in den Sattelpunkt $(-1; 0)$ statt ins Minimum (@bemerkung:drei-vorbehalte), bei
+$x_1 = 0$ ist die Hesse-Matrix $\diag(0, 1)$ singulär und der Schritt nicht definiert.
+Auf der Quadrik ist nach einem Schritt Schluss, weil $\cgreen{T_2}$ dort mit $f$
+übereinstimmt.
 :::
 
 ### Selbsttest
 
 ::::quiz
 
+:::frage{wahr}
+Ist $f$ $(k+1)$-mal stetig differenzierbar, so gilt
+$f(x+h) - T_k(h) = o(\left|h\right|^k)$ für $h \to 0$.
+
+Das ist @satz:taylorentwicklung-i. Nach dem Lagrange-Restglied
+@eq:taylorentwicklung-i-2 ist der Fehler sogar von der Ordnung $\left|h\right|^{k+1}$.
+:::
+
 :::frage{falsch}
 Im Restglied von @satz:taylorentwicklung-i steht die $(k+1)$-te Ableitung an der
 Entwicklungsstelle, also $f^{(k+1)}(x)$.
 
-Sie steht an einer Zwischenstelle $\xi$ zwischen $x$ und $x+h$, die der
-Mittelwertsatz liefert und über die wir sonst nichts wissen. Stünde dort
-$f^{(k+1)}(x)$, so wäre der Rest ein exakt bekannter Ausdruck und
-der Mittelwertsatz im Beweis überflüssig. Bekannt ist nur eine Schranke für
+Sie steht an einer Zwischenstelle $\xi$ zwischen $x$ und $x+h$, über die wir sonst
+nichts wissen. Bekannt ist nur eine Schranke für
 $f^{(k+1)}$ in einer Umgebung, und daraus folgt die $o$-Aussage.
 :::
 
@@ -723,18 +663,6 @@ $\left\|\bh\right\|^3$. Das Widget misst diesen Quotienten auf einem Kreis: In
 der Voreinstellung stehen dort $4{,}34$ und $8{,}07$ für
 $\sin(x_1) + \cos(x_2)$, für die Glockenfunktion an derselben Stelle $3{,}99$
 und $8{,}78$.
-:::
-
-:::frage{falsch}
-Der Beweis von @satz:taylorentwicklung-ii überträgt die eindimensionale Aussage einfach auf jede
-Gerade durch $\bx$, mehr ist nicht zu zeigen.
-
-Der Kern ist das, aber die Aussage $\cred{o(\left\|\bh\right\|^k)}$ verlangt
-Kleinheit gleichmäßig über alle Richtungen, während die Entwicklung von $\psi$
-zunächst nur für eine feste Richtung $\bu$ gilt. Die Stetigkeit der $k$-ten
-Ableitung liefert eine gemeinsame Normschranke für alle Richtungen und damit die
-benötigte gleichmäßige Kleinheit (Herleitung in der Vertiefung
-@bemerkung:warum-hier-die-integralform-steht).
 :::
 
 :::zahlfrage{loesung=5 toleranz=0}

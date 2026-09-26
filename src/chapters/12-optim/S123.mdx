@@ -6,19 +6,10 @@ import { ArmijoWidget } from "./widgets/S123Armijo";
 
 ### Wie viel Ableitung darf es sein?
 
-@sec:optimalitaet hat die Bedingung geliefert, an der ein Minimum zu
-erkennen ist: In einem inneren Minimum verschwindet der Gradient. Nur ist
-$\corange{\nabla f(\bx)} = \bnull^\top$ ein nichtlineares Gleichungssystem, und
-solche Systeme lösen wir nach @sec:nichtlineare-gleichungen iterativ. Ab hier geht
-es also um Verfahren, die eine Folge $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}},
-\cblue{\bx^{(2)}}, \dots$ erzeugen und hoffen, dass sie gegen ein Minimum
-$\cgreen{\bx^\star}$ läuft.
-
-Die Verfahren unterscheiden sich vor allem darin, wie viel Ableitungsinformation
-sie benutzen. Diese Einteilung hat praktische Folgen: Jede Ableitung, die
-ein Verfahren verlangt, muss jemand bereitstellen, sei es von Hand, per
-automatischem Differenzieren oder durch Differenzenquotienten, und jede Ableitung
-kostet Rechenzeit in jedem einzelnen Schritt.
+In einem inneren Minimum verschwindet der Gradient (@sec:optimalitaet), und
+$\corange{\nabla f(\bx)} = \bnull^\top$ ist ein nichtlineares Gleichungssystem,
+das wir iterativ lösen. Die Verfahren dafür unterscheiden sich vor allem darin,
+wie viel Ableitungsinformation sie benutzen.
 
 :::bemerkung[#taxonomie-nach-ableitungsordnung (Taxonomie nach Ableitungsordnung)]
 | Ordnung | benutzt | Beispiele |
@@ -27,30 +18,26 @@ kostet Rechenzeit in jedem einzelnen Schritt.
 | erste | $\cblue{f}$ und $\corange{\nabla f}$ | Gradientenabstieg, Momentum-Verfahren, SGD |
 | zweite | $\cblue{f}$, $\corange{\nabla f}$ und $\corange{\bH_f}$ | Newton-Verfahren |
 
-Beide Richtungen haben Vor- und Nachteile. Verfahren nullter Ordnung sind
-robust und laufen auf allem, was sich auswerten lässt, auch auf Funktionen mit
-Knicken oder auf Simulationsergebnissen; dafür brauchen sie viele Iterationen.
-Höhere Ordnung bringt schnellere Konvergenz, macht aber jeden einzelnen Schritt
-teurer, und die Hesse-Matrix hat $n^2$ Einträge. In der Praxis greifen wir oft
-zu einem Kompromiss, den superlinearen Quasi-Newton-Verfahren wie BFGS, die eine
+Jede Ableitung, die ein Verfahren verlangt, muss jemand bereitstellen (von
+Hand, per automatischem Differenzieren oder durch Differenzenquotienten), und
+sie kostet in jedem Schritt Rechenzeit. Verfahren nullter Ordnung sind robust
+und laufen auf allem, was sich auswerten lässt; dafür brauchen sie viele
+Iterationen. Höhere
+Ordnung bringt schnellere Konvergenz, macht aber jeden Schritt teurer, und die
+Hesse-Matrix hat $n^2$ Einträge. In der Praxis greifen wir oft zu einem
+Kompromiss, den superlinearen Quasi-Newton-Verfahren wie BFGS, die eine
 Näherung der inversen Hesse-Matrix aus den bereits berechneten Gradienten
 aufbauen (@sec:newton-sgd).
-
-Dieser Abschnitt behandelt die ersten beiden Zeilen: ein Verfahren nullter
-Ordnung als robuste Rückfalloption und den Gradientenabstieg als das
-Standardverfahren des maschinellen Lernens.
 :::
 
 ### Nelder-Mead: Optimieren ohne Ableitungen
 
-Manchmal gibt es keine Ableitung. Die Zielfunktion ist das Ergebnis einer
-Simulation, einer Datenbankabfrage oder eines Programms, dessen Innenleben wir
-nicht kennen; sie kann Knicke haben oder gar nicht überall differenzierbar sein.
-Dann bleibt nur, Funktionswerte zu vergleichen. Das bekannteste Verfahren dieser
-Art arbeitet mit einem *Simplex*, also mit $n+1$ Punkten im $\R^n$: einem Dreieck
-in der Ebene, einem Tetraeder im Raum. Der Simplex bewegt sich durch den Suchraum,
-dehnt sich und schrumpft wieder, indem er in jedem Schritt seine schlechteste
-Ecke durch eine bessere ersetzt.
+Manchmal gibt es keine Ableitung: Die Zielfunktion ist das Ergebnis einer
+Simulation oder eines Programms, dessen Innenleben wir nicht kennen, oder sie
+hat Knicke. Dann bleibt nur, Funktionswerte zu vergleichen. Das bekannteste
+Verfahren dieser Art arbeitet mit einem *Simplex* aus $n+1$ Punkten im $\R^n$,
+einem Dreieck in der Ebene, einem Tetraeder im Raum, und ersetzt in jedem
+Schritt seine schlechteste Ecke durch eine bessere.
 
 :::algorithmus[#nelder-mead-simplexverfahren (Nelder-Mead-Simplexverfahren)]
 Gegeben seien $f\colon \R^n \to \R$ und ein Startsimplex aus $n+1$ Punkten.
@@ -75,12 +62,10 @@ Wiederhole, bis der Simplex klein genug ist:
    $\cblue{\bx_{(1)}}$ hin.
 :::
 
-Zwei Bewegungsmuster stecken in diesen vier Zügen. Solange es bergab geht,
-bewegt sich der Simplex über Reflexionen und Expansionen voran und wird dabei
-lang; sobald er ein Tal umschließt, ziehen ihn Kontraktionen und
-Schrumpfschritte zusammen. Die Schrittweite steuert er dabei selbst, ohne dass
-wir einen Parameter einstellen müssten. Das ist der Hauptvorteil des
-Verfahrens.
+Solange es bergab geht, bewegt sich der Simplex über Reflexionen und
+Expansionen voran und wird dabei lang; umschließt er ein Tal, ziehen ihn
+Kontraktionen und Schrumpfschritte zusammen. Die Schrittweite steuert er so
+selbst, ohne einen Parameter, und das ist der Hauptvorteil des Verfahrens.
 
 :::bemerkung[#wann-sich-nelder-mead-lohnt (Wann sich Nelder-Mead lohnt)]
 | Situation | geeignet? |
@@ -91,38 +76,24 @@ Verfahrens.
 | hohe Dimension, $n > 50$ | nein, zu langsam |
 | präzise Konvergenz nötig | nein, im Allgemeinen ohne Garantie |
 
-*Kosten.* Ein Simplex im $\R^n$ hat $n+1$ Ecken. Ein gewöhnlicher Schritt kostet
-ein bis zwei neue Funktionsauswertungen, ein Schrumpfschritt dagegen $n$ neue
-Ecken; pro Iteration fallen also $O(n)$ Auswertungen an
-(:k[Landau-Notation]{#big-o-notation}), und es sind meist sehr viele Iterationen
-nötig. In hoher Dimension wird beides zum Problem.
+*Kosten.* Ein gewöhnlicher Schritt kostet ein bis zwei neue
+Funktionsauswertungen, ein Schrumpfschritt $n$ neue Ecken; pro Iteration fallen
+also $O(n)$ Auswertungen an (:k[Landau-Notation]{#big-o-notation}), und meist
+sind sehr viele Iterationen nötig. In hoher Dimension wird beides zum Problem.
 
-*Garantien.* Es gibt keinen allgemeinen Konvergenzsatz. Es sind sogar
-strikt konvexe Funktionen bekannt, auf denen das Verfahren gegen einen Punkt
-läuft, der gar kein stationärer Punkt ist (McKinnon 1998). In der Praxis wird
-Nelder-Mead deshalb oft als robuste Startpunktsuche vor einem
-gradientenbasierten Verfahren eingesetzt.
+*Garantien.* Einen allgemeinen Konvergenzsatz gibt es nicht; auf manchen
+strikt konvexen Funktionen läuft das Verfahren sogar gegen einen Punkt, der kein
+stationärer Punkt ist (McKinnon 1998). In der Praxis dient Nelder-Mead deshalb
+oft als robuste Startpunktsuche vor einem gradientenbasierten Verfahren.
 
-*In R.* Nelder-Mead ist die Voreinstellung von `optim()`; wer nichts angibt,
-optimiert also ableitungsfrei:
-
-```r
-# Nelder-Mead ist der Default in optim()!
-optim(c(0, 0), f)                          # verwendet Nelder-Mead
-optim(c(0, 0), f, method = "Nelder-Mead")  # explizit
-```
-
-Das ist für viele Modelle ausreichend, erklärt aber auch, warum eine
-`optim()`-Anpassung mit vielen Parametern manchmal lange läuft. Wer
-Ableitungen hat, gibt sie über `gr` an und wählt dazu ein gradientenbasiertes
-`method`; @sec:optim-in-r geht die Optionen durch.
+*In R.* Nelder-Mead ist die Voreinstellung von `optim()` (@sec:optim-in-r).
 :::
 
-Wie oft fällt welcher der vier Züge? Das entscheidet über die Kosten des
-Verfahrens, denn die vier sind verschieden teuer.
+Wie oft welcher der vier Züge fällt, entscheidet über die Kosten, denn die
+Züge sind verschieden teuer.
 
 :::interaktiv[Der Simplex bei der Arbeit]
-Hier läuft das Verfahren Schritt für Schritt, auf der Testfunktion
+Das Verfahren läuft Schritt für Schritt auf der Testfunktion
 $f(\bx) = (1-x_1)^2 + 5(x_2 - x_1^2)^2$ mit Minimum in $\cgreen{(1; 1)}$. Der orange Strahl markiert jeweils den nächsten
 Versuchspunkt; der Schrittregler lässt sich vorwärts und rückwärts schieben, der
 Abspielknopf lässt den ganzen Lauf durchlaufen.
@@ -142,14 +113,12 @@ Abspielknopf lässt den ganzen Lauf durchlaufen.
   <NelderMeadSimplex />
 </Schaetzfrage>
 
-Die vier Züge verteilen sich sehr ungleich; der Zähler im Widget hält das fest.
-Ein Schrumpfschritt, der teuerste Zug, kommt auf dem voreingestellten Weg gar
-nicht vor, erst der zweite Startsimplex führt ihn im vierten Schritt vor. Auch die
-Form verrät, wo der Simplex steht: Auf den geraden Stücken des Tals wird er lang
-und dünn und legt sich in Laufrichtung, in der Biegung um $x_1 \approx 0$
-schrumpft er auf ein fast gleichseitiges Dreieck und dreht sich in die neue
-Richtung. Diese Anpassung an die lokale Geometrie ersetzt hier die fehlende
-Ableitung.
+Die Züge verteilen sich sehr ungleich. Der Schrumpfschritt, der teuerste Zug,
+kommt auf dem voreingestellten Weg gar nicht vor; erst der zweite Startsimplex
+erzwingt ihn im vierten Schritt. Auf den geraden Stücken des Tals wird der
+Simplex lang und dünn und legt sich in Laufrichtung, in der Biegung um
+$x_1 \approx 0$ schrumpft er und dreht sich in die neue Richtung: Die Anpassung
+an die lokale Geometrie ersetzt die fehlende Ableitung.
 
 Eine Animation derselben Züge, mit einstellbaren Parametern und
 mehreren Testfunktionen, liegt unter
@@ -158,10 +127,8 @@ mehreren Testfunktionen, liegt unter
 
 ### Der Gradientenabstieg
 
-Der Gradient zeigt bergauf. Diese Beobachtung aus
-@sec:differentialrechnung/gradient reicht für ein
-Optimierungsverfahren: Wenn wir minimieren wollen, laufen wir in die
-Gegenrichtung.
+Der Gradient zeigt bergauf (@sec:differentialrechnung/gradient). Zum
+Minimieren laufen wir also in die Gegenrichtung.
 
 :::algorithmus[#nelder-mead-gradient-gradientenabstieg (Gradientenabstieg)]
 Gegeben seien eine differenzierbare Funktion $f\colon \R^n \to \R$, ein
@@ -175,44 +142,38 @@ $$
 und brich ab, sobald eines der Kriterien aus @bemerkung:drei-abbruchkriterien-und-ihre-grenzen greift.
 :::
 
-Das Transponierte gehört dazu. Der Gradient ist in diesem Skript ein Zeilenvektor
-(:k[Gradient]{#gradient}, @sec:differentialrechnung/gradient), eine
-Richtung im $\R^n$ dagegen eine Spalte. In der Sprache des maschinellen Lernens
-heißt $\gamma$ *Lernrate* (learning rate), und das Verfahren selbst heißt
-:k[Gradientenabstieg]{#gradient-descent} (gradient descent).
+Das Transponierte steht da, weil der :k[Gradient]{#gradient} in diesem Skript
+ein Zeilenvektor ist, eine Richtung im $\R^n$ dagegen eine Spalte. Im
+maschinellen Lernen heißt $\gamma$ *Lernrate* (learning rate) und der
+:k[Gradientenabstieg]{#gradient-descent} *gradient descent*.
 
 :::bemerkung[#drei-lesarten-desselben-schritts (Drei Lesarten desselben Schritts)]
-*Steilster Abstieg.* Sei $\corange{\nabla f(\bx)} \neq \bnull^\top$. Unter allen
-Richtungen $\bd$ mit $\left\|\bd\right\| = 1$
-macht $\bd = -\corange{\nabla f(\bx)^\top}/\left\|\corange{\nabla f(\bx)}\right\|$
-die Richtungsableitung $\corange{\nabla f(\bx)}\bd$ so klein wie möglich; das ist
-der Gleichheitsfall der
-:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} und steht als Satz in
-@sec:differentialrechnung/gradient. Lokal gibt es also keine bessere
-Richtung als die des negativen Gradienten.
+*Steilster Abstieg.* Für $\corange{\nabla f(\bx)} \neq \bnull^\top$ macht unter
+allen Richtungen $\bd$ mit $\left\|\bd\right\| = 1$ die Richtung
+$\bd = -\corange{\nabla f(\bx)^\top}/\left\|\corange{\nabla f(\bx)}\right\|$
+die Richtungsableitung $\corange{\nabla f(\bx)}\bd$ am kleinsten
+(@satz:richtung-des-staerksten-anstiegs, Gleichheitsfall der
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}). Lokal gibt es also
+keine bessere Richtung als die des negativen Gradienten.
 
 *Abstiegsrichtung.* Für $\corange{\nabla f(\bx)} \neq \bnull^\top$ ist
 $\corange{\nabla f(\bx)}\bigl(-\corange{\nabla f(\bx)^\top}\bigr)
 = -\left\|\corange{\nabla f(\bx)}\right\|^2 < 0$, und
 nach der Taylorentwicklung erster Ordnung
 (@sec:differentialrechnung/taylor) sinkt $f$ deshalb für alle
-hinreichend kleinen $\gamma$ tatsächlich. Zwei Missverständnisse sind dabei zu vermeiden.
-Abstiegsrichtung ist $-\corange{\nabla f(\bx)^\top}$ auch ohne Konvexität, solange
-der Gradient nicht verschwindet. Und
-*hin zum* Minimum zeigt sie im Allgemeinen nicht, wie das Zickzack-Bild
-weiter unten zeigt. Was die :k[Konvexität]{#convexity} aus
-[Kapitel 11](?k=11-konvexitaet#sec-11.3) beisteuert, ist etwas anderes: Sie sorgt dafür, dass jeder stationäre Punkt schon ein globales
-Minimum ist (@sec:optimalitaet), das Verfahren also nirgends sonst
-hängen bleiben kann.
+hinreichend kleinen $\gamma$ tatsächlich. Zwei Missverständnisse sind dabei zu
+vermeiden. Abstiegsrichtung ist $-\corange{\nabla f(\bx)^\top}$ auch ohne
+Konvexität, solange der Gradient nicht verschwindet. Und *hin zum* Minimum zeigt
+sie im Allgemeinen nicht, wie das Zickzack weiter unten zeigt. Die
+:k[Konvexität]{#convexity} sorgt für etwas anderes: Jeder stationäre Punkt ist
+dann schon ein globales Minimum (@sec:optimalitaet), das Verfahren kann also
+nirgends sonst hängen bleiben.
 
-*Fixpunktiteration.* Mit $\bg(\bx) := \bx - \gamma\,\corange{\nabla f(\bx)^\top}$
-ist @eq:nelder-mead-gradient-gradientenabstieg wörtlich die :k[Fixpunktiteration]{#fixed-point-iteration}
-$\cblue{\bx^{(k+1)}} = \bg(\cblue{\bx^{(k)}})$ aus
-@sec:nichtlineare-gleichungen, und die Fixpunkte von $\bg$ sind genau die
-stationären Punkte von $f$. Alles, was dort über Schrittweiten und
-Konvergenzraten steht, gilt deshalb hier weiter; wir bekommen es gleich in
-schärferer Form, weil $\corange{\nabla f}$ mehr Struktur hat als ein beliebiges
-$\bg$.
+*Fixpunktiteration.* @eq:nelder-mead-gradient-gradientenabstieg ist die
+:k[Fixpunktiteration]{#fixed-point-iteration} zu
+@eq:optimieren-heisst-gleichungen-loesen, deren Fixpunkte die stationären Punkte
+von $f$ sind. Wie bei jeder Fixpunktiteration entscheidet die Schrittweite über
+die Konvergenz (@satz:konvergenzrate-der-fixpunktiteration).
 :::
 
 :::beispiel[#gradientenabstieg-von-hand (Gradientenabstieg von Hand)]
@@ -233,16 +194,14 @@ $$
 \end{aligned}
 $$
 
-Der erste Schritt schießt weit über das Ziel hinaus, von $4{,}5$ auf $1{,}5$.
-Danach konvergiert die Iteration schnell: Die Fehler
+Der erste Schritt schießt von $4{,}5$ auf $1{,}5$ weit über das Ziel hinaus,
+danach konvergiert die Iteration schnell. Die Fehler
 $\cblue{x^{(k)}} - \cgreen{x^\star}$ sind $2{,}5$, $-0{,}5$, $0{,}1$ und
-$-0{,}02$. Sie wechseln in jedem Schritt das Vorzeichen und schrumpfen dabei
-exakt auf ein Fünftel.
+$-0{,}02$; sie wechseln in jedem Schritt das Vorzeichen und schrumpfen exakt auf
+ein Fünftel, der Faktor ist also $-0{,}2$.
 :::
 
-Der Faktor $-0{,}2$ hat einen einfachen Grund. Bevor wir ihn
-ausrechnen, probieren wir die Schrittweite aus: Welche Werte von $\gamma$
-führen ans Ziel, welche nicht?
+Welche Schrittweiten führen ans Ziel, welche nicht?
 
 :::interaktiv[Die Schrittweite am eindimensionalen Beispiel]
 Die Tafel zeigt @beispiel:gradientenabstieg-von-hand mit frei einstellbarem
@@ -260,15 +219,11 @@ wie rückwärts.
   <GdStepper1D />
 </Schaetzfrage>
 
-Alles hängt am Fehlerfaktor $1 - \gamma L$, den die Ablesetafel mitführt. Solange
-sein Betrag unter $1$ bleibt, schrumpft der Fehler; wird er negativ, springen die
-Iterierten über das Minimum hinweg und nähern sich trotzdem; erreicht sein Betrag
-$1$, pendelt die Folge, und darüber wächst der Fehler in jedem Schritt. Die
-nächste Bemerkung rechnet diese fünf Fälle einmal durch.
+Alles hängt am Fehlerfaktor $1 - \gamma L$ mit der Krümmung $L = f'' = 2$, den
+die Ablesetafel mitführt. Solange sein Betrag unter $1$ bleibt, schrumpft der
+Fehler, bei negativem Faktor mit Sprüngen über das Minimum hinweg; bei Betrag
+$1$ pendelt die Folge, darüber wächst der Fehler.
 :::
-
-Die Beobachtungen ordnen sich zu einer vollständigen Fallunterscheidung, die
-das Verhalten des Verfahrens erklärt.
 
 :::bemerkung[#zu-klein-zu-gross-gerade-richtig (Zu klein, zu groß, gerade richtig)]
 Für eine Parabel $f(x) = \tfrac{L}{2}(x - \cgreen{x^\star})^2$ mit Krümmung
@@ -291,7 +246,8 @@ $1 - \gamma L$ ab:
   Vorzeichen und schrumpft. Für sehr kleines $\gamma$ liegt er dicht an $1$, und
   das Verfahren kommt kaum voran.
 - $\gamma = 1/L$: Der Faktor ist null, ein einziger Schritt trifft
-  $\cgreen{x^\star}$ exakt.
+  $\cgreen{x^\star}$ exakt; das ist der Newton-Schritt aus
+  @sec:differentialrechnung/taylor.
 - $1/L < \gamma < 2/L$: Der Faktor ist negativ mit Betrag unter $1$; die
   Iterierten springen über das Minimum hinweg und nähern sich trotzdem.
 - $\gamma = 2/L$: Der Betrag ist genau $1$. Die Folge pendelt für immer zwischen
@@ -302,23 +258,17 @@ $1 - \gamma L$ ab:
 
 Im @beispiel:gradientenabstieg-von-hand ist $L = 2$, also $1/L = 0{,}5$ und $2/L = 1$; mit
 $\gamma = 0{,}6$ landen wir im dritten Fall und lesen $1 - 0{,}6\cdot 2 =
--0{,}2$ ab. Das sind genau die fünf Bilder, die das Widget oben liefert: bei
-$\gamma = 0{,}2$ die zähe einseitige Annäherung, bei $\gamma = 0{,}5$ der Treffer
-im ersten Schritt (es ist der Newton-Schritt aus
-@sec:differentialrechnung/taylor), bei $\gamma = 0{,}6$ die Zahlen
-der Tabelle, bei $\gamma = 1$ das Pendeln und darüber die Divergenz.
-Das ist das Dilemma der Schrittweite, dem wir schon bei
-der Fixpunktiteration in @sec:nichtlineare-gleichungen begegnet sind: klein genug
-für Konvergenz, groß genug für Tempo. Im $\R^n$ wird es schwieriger,
-denn dort gibt es einen solchen Faktor je Krümmungsrichtung, und ein einziges
-$\gamma$ muss sie alle zugleich bedienen.
+-0{,}2$ ab. Das ist das Dilemma der Schrittweite: klein genug für Konvergenz,
+groß genug für Tempo. Im $\R^n$ wird es schwieriger, denn dort gibt es einen
+solchen Faktor je Krümmungsrichtung, und ein einziges $\gamma$ muss sie alle
+zugleich bedienen.
 :::
 
 ### Zwischenfrage: ein Schritt im $\R^2$
 
 Sei $f(\bx) = x_1^2 + x_2^2$ und $\cblue{\bx^{(0)}} = (4, 3)^\top$ mit
 Schrittweite $\gamma = 0{,}25$. Wo liegt $\cblue{\bx^{(1)}}$ nach einem Schritt
-des Gradientenabstiegs? Vier Vorschläge.
+des Gradientenabstiegs?
 
 ::::quiz
 
@@ -377,13 +327,7 @@ $$
 :::
 
 Anschaulich: Die Funktionswerte ändern sich höchstens $L$-mal so schnell wie die
-Argumente. Je größer $L$, desto stärker darf $f$ schwanken. Lipschitz-Stetigkeit
-ist deutlich stärker als bloße :k[Stetigkeit]{#continuity}, mit
-Differenzierbarkeit aber ohne Zusatzannahmen nicht vergleichbar:
-$f(x)=\left|x\right|$ ist mit $L=1$ Lipschitz-stetig und im Nullpunkt trotzdem
-nicht differenzierbar; $f(x)=x^2$ ist auf $\R$ differenzierbar, aber nicht global
-Lipschitz-stetig. Auf einem kompakten Intervall ist eine stetig differenzierbare
-Funktion wegen ihrer dort beschränkten Ableitung Lipschitz-stetig.
+Argumente. Je größer $L$, desto stärker darf $f$ schwanken.
 
 Für den Gradientenabstieg brauchen wir die Bedingung nicht für $f$, sondern für
 den Gradienten.
@@ -412,27 +356,37 @@ $$
 wobei $L_{\min}$ die kleinste mögliche Lipschitz-Konstante bezeichnet; jede
 größere Zahl ist ebenfalls eine gültige Konstante.
 
-Denn für :k[symmetrische]{#symmetric-matrix} Matrizen ist die
-:k[Spektralnorm]{#matrix-norm} der betragsgrößte
-:k[Eigenwert]{#eigenvalue-eigenvector}. @satz:spektralnorm-und-spektralzerlegung in
-@sec:matrix-spur-norm/operatornormen berechnet
-$\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$; für symmetrisches
-$\bA$ ist $\bA^\top\bA = \bA^2$, und der :k[Spektralsatz]{#spectral-theorem}
-gibt dieser Matrix die Eigenwerte $\lambda_i^2$, also
-$\left\|\bA\right\|_2 = \max_i \left|\lambda_i(\bA)\right|$. Dieselbe
-Umrechnung steckt hinter der Formel für $\kappa_2$ symmetrischer Matrizen in
-@sec:matrix-spur-norm/eigenschaften.
-
 Der Betrag ist wesentlich. Die kürzere Schreibweise
 $L = \sup_{\bx} \lambda_{\max}(\corange{\bH_f(\bx)})$ geht nur gut, solange $f$
 konvex ist, denn dann ist $\corange{\bH_f}$ positiv semidefinit und der größte
 Eigenwert zugleich der betragsgrößte. Für nicht konvexes $f$ ist sie falsch:
 Für $f(x) = -x^2$ ist $\corange{f'(x)} = -2x$ mit der exakten Lipschitz-Konstanten $2$, während
-$\lambda_{\max}(\corange{\bH_f}) = -2$ nicht einmal positiv ist. Im
-Mehrdimensionalen genügt schon eine Sattelrichtung: Bei
-$\corange{\bH_f} = \diag(0{,}5;\ -8)$ ist $L = 8$, das Supremum der größten
-Eigenwerte aber $0{,}5$. Gerade in der nicht konvexen Optimierung, wo die
-Schrittweite an $L$ hängt, wäre $L$ dann um den Faktor $16$ zu klein.
+$\lambda_{\max}(\corange{\bH_f}) = -2$ nicht einmal positiv ist.
+:::
+
+:::vertiefung[Lipschitz-Stetigkeit, Differenzierbarkeit und die Spektralnorm]
+*Lipschitz-stetig und differenzierbar.* Lipschitz-Stetigkeit ist deutlich
+stärker als :k[Stetigkeit]{#continuity}, mit Differenzierbarkeit aber ohne
+Zusatzannahmen nicht vergleichbar: $f(x)=\left|x\right|$ ist mit $L=1$
+Lipschitz-stetig und im Nullpunkt trotzdem nicht differenzierbar; $f(x)=x^2$ ist
+auf $\R$ differenzierbar, aber nicht global Lipschitz-stetig. Auf einem
+kompakten Intervall ist eine stetig differenzierbare Funktion wegen ihrer dort
+beschränkten Ableitung Lipschitz-stetig.
+
+*Spektralnorm und Eigenwerte.* Für :k[symmetrische]{#symmetric-matrix} Matrizen
+ist die :k[Spektralnorm]{#matrix-norm} der betragsgrößte
+:k[Eigenwert]{#eigenvalue-eigenvector}. @satz:spektralnorm-und-spektralzerlegung
+berechnet $\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$; für
+symmetrisches $\bA$ ist $\bA^\top\bA = \bA^2$, und der
+:k[Spektralsatz]{#spectral-theorem} gibt dieser Matrix die Eigenwerte
+$\lambda_i^2$, also $\left\|\bA\right\|_2 = \max_i \left|\lambda_i(\bA)\right|$.
+Dieselbe Umrechnung steckt hinter der Formel für $\kappa_2$ symmetrischer
+Matrizen in @sec:matrix-spur-norm/eigenschaften.
+
+*Eine Sattelrichtung genügt.* Bei $\corange{\bH_f} = \diag(0{,}5;\ -8)$ ist
+$L = 8$, das Supremum der größten Eigenwerte aber $0{,}5$. In der nicht konvexen
+Optimierung, wo die Schrittweite an $L$ hängt, wäre $L$ mit der kürzeren
+Schreibweise um den Faktor $16$ zu klein.
 :::
 
 :::satz[#konvergenzrate-bei-konvexem-f (Konvergenzrate bei konvexem f)]
@@ -449,18 +403,15 @@ $$
 
 :::bemerkung[#was-eine-rate-der-ordnung-1-k-praktisch (Was eine Rate der Ordnung 1/k praktisch heißt)]
 Die Schranke fällt wie $1/k$. Um den Fehler unter $\varepsilon$ zu drücken,
-brauchen wir also $k \sim 1/\varepsilon$ Schritte, und das ist langsam: Eine Dezimalstelle mehr Genauigkeit kostet die zehnfache
-Iterationszahl, der Weg von $10^{-2}$ auf $10^{-6}$ das Zehntausendfache. Zum
-Vergleich hat das Newton-Verfahren aus @sec:nichtlineare-gleichungen in seinem
-Einzugsbereich die Zahl der korrekten Stellen in jedem Schritt verdoppelt.
+brauchen wir also $k \sim 1/\varepsilon$ Schritte, und das ist langsam: Eine
+Dezimalstelle mehr Genauigkeit kostet die zehnfache Iterationszahl. Newton-Raphson
+verdoppelt dagegen in seinem Einzugsbereich die Zahl der korrekten Stellen in
+jedem Schritt (@bemerkung:quadratische-konvergenz).
 
-Zwei Feinheiten. @eq:konvergenzrate-bei-konvexem-f misst den
-Fehler im *Funktionswert*, nicht den Abstand zu $\cgreen{\bx^\star}$; die beiden
-können weit auseinanderliegen, wie @bemerkung:drei-abbruchkriterien-und-ihre-grenzen gleich beziffert. Und der Satz setzt voraus, dass ein
-Minimierer überhaupt existiert. Für $f(x) = \sqrt{1 + x^2} - x$ ist alles andere
-erfüllt, denn $f''(x) = (1+x^2)^{-3/2} \le 1$ macht $f$ konvex mit $L = 1$; das
-Infimum $0$ wird aber nirgends angenommen, und der Gradientenabstieg läuft
-ergebnislos nach rechts.
+@eq:konvergenzrate-bei-konvexem-f misst den Fehler im *Funktionswert*; über den
+Abstand zu $\cgreen{\bx^\star}$ sagt die Schranke nichts, und die beiden können
+weit auseinanderliegen (@bemerkung:drei-abbruchkriterien-und-ihre-grenzen).
+Außerdem setzt der Satz voraus, dass ein Minimierer existiert.
 :::
 
 Schneller wird es, wenn die Krümmung nicht nur nach oben, sondern auch nach
@@ -481,10 +432,8 @@ kleinste vorkommende Krümmung.
 :::
 
 Ohne Ableitungen formuliert heißt dasselbe: $\bx \mapsto f(\bx) -
-\tfrac{\mu}{2}\left\|\bx\right\|^2$ ist konvex. In dieser Fassung braucht die
-Definition keine zweiten Ableitungen, und sie zeigt zugleich, was starke
-Konvexität aussagt: Unter $f$ steckt an jeder Stelle eine Parabel mit Krümmung
-mindestens $\mu$.
+\tfrac{\mu}{2}\left\|\bx\right\|^2$ ist konvex. Anschaulich steckt unter $f$ an
+jeder Stelle eine Parabel mit Krümmung mindestens $\mu$.
 
 :::satz[#konvergenzrate-bei-starker-konvexitaet (Konvergenzrate bei starker Konvexität)]
 Sei $f$ stark konvex mit Parameter $\mu > 0$ und habe einen Lipschitz-stetigen
@@ -503,21 +452,10 @@ insbesondere $\rho = 1 - \mu/L$ für $\gamma = 1/L$.
 Der Gewinn gegenüber @satz:konvergenzrate-bei-konvexem-f ist groß. Dort brauchten wir
 $k \sim 1/\varepsilon$ Schritte, hier genügen wegen $\rho^k < \varepsilon$ schon
 $k \sim \log(1/\varepsilon)$: Jede weitere Dezimalstelle kostet nicht mehr das
-Zehnfache, sondern denselben festen Zuschlag. Das ist derselbe Unterschied wie
-zwischen linearer und exponentieller Fehlerreduktion in
-@sec:nichtlineare-gleichungen.
-
-Die Existenz von $\cgreen{\bx^\star}$ muss dieser Satz nicht mehr eigens
-voraussetzen. Starke Konvexität legt unter $f$ an jeder Stelle eine Parabel mit
-Krümmung $\mu > 0$, und eine solche Parabel wächst in jeder Richtung über alle
-Grenzen; ein Minimum wird also angenommen, und weil $f$ dann auch strikt konvex
-ist, gibt es nur dieses eine
-(@sec:konvexitaet/konvexe-optimierung).
-
-Die Schrittweite gehört dabei zur Rate. Mit einem sehr kleinen $\gamma$
-bleibt zwar die Konvergenz, aber eben mit $1 - \gamma\mu$ statt mit
-$1 - \mu/L$; die Rate $\rho = 1 - \mu/L$ ist die beste, die dieser Satz hergibt,
-und sie gehört zu $\gamma = 1/L$.
+Zehnfache, sondern denselben festen Zuschlag. Diese Konvergenz heißt *linear*,
+weil der Fehler je Schritt um einen festen Faktor schrumpft. Die beste Rate, die
+der Satz hergibt, ist $\rho = 1 - \mu/L$ bei $\gamma = 1/L$; ein kleineres
+$\gamma$ konvergiert nur mit $1 - \gamma\mu$.
 
 :::bemerkung[#die-konditionszahl-einer-funktion (Die Konditionszahl einer Funktion)]
 Die beiden Konstanten spannen die Krümmung von beiden Seiten ein,
@@ -562,12 +500,20 @@ heißt großes $\kappa_f$, dass die :k[Höhenlinien]{#level-sets} lange, schmale
 Ellipsen sind; bei einer Quadrik gilt das überall, sonst in der Nähe eines
 Minimums, wo die Hesse-Matrix positiv definit ist. In solchen Tälern läuft der
 Gradientenabstieg im Zickzack: Er bewegt sich quer zum Tal, statt es entlangzulaufen.
+
+Auf einer Quadrik lässt sich das ausrechnen: Der Fehler zerfällt nach den
+Eigenrichtungen von $\corange{\bH_f}$, und jede Richtung hat ihren eigenen
+Faktor $1 - \gamma\lambda_i$ (@satz:gradientenabstieg-auf-einer-quadrik). Die
+Schrittweite muss sich mit $\gamma < 2/L$ nach der steilsten Richtung richten,
+vorankommen müssen wir aber in der flachsten, wo der Faktor $1 - \gamma\mu$
+nahe eins liegt.
 :::
 
-Warum das so ist, lässt sich auf einer Quadrik vollständig ausrechnen. Der
-folgende Satz behandelt diesen Sonderfall schärfer als @satz:konvergenzrate-bei-starker-konvexitaet: Er sagt, was
-tatsächlich passiert, statt nur eine Schranke zu geben, und er deckt jede
-Schrittweite unterhalb der Divergenzgrenze ab.
+:::::vertiefung[Gradientenabstieg auf einer Quadrik: Fehlerzerlegung und Zahlenbeispiel]
+Auf einer Quadrik ist der folgende Satz schärfer als
+@satz:konvergenzrate-bei-starker-konvexitaet: Er sagt, was tatsächlich passiert,
+statt nur eine Schranke zu geben, und deckt jede Schrittweite unterhalb der
+Divergenzgrenze ab.
 
 :::satz[#gradientenabstieg-auf-einer-quadrik (Gradientenabstieg auf einer Quadrik)]
 Sei $\bA \in \R^{n \times n}$ symmetrisch und positiv definit mit Eigenwerten
@@ -587,8 +533,6 @@ mit $q := \max_i \left|1 - \gamma\lambda_i\right|$. Die Iteration konvergiert
 genau dann für jeden Startpunkt, wenn $q < 1$ ist, und das trifft für
 $0 < \gamma < 2/L$ zu.
 :::
-
-:::::vertiefung[Beweis: Fehlerzerlegung nach Eigenrichtungen]
 
 ::::beweis
 
@@ -644,9 +588,6 @@ nicht mehr gegen null.
 :::
 
 ::::
-:::::
-
-::::vertiefung[Schranke und tatsächliche Rate an einem Zahlenbeispiel]
 
 :::beispiel[#warum-der-satz-eine-schranke-ist-und (Warum der Satz eine Schranke ist und keine Formel)]
 Nehmen wir $\bA = \diag(1, 10)$, also
@@ -667,17 +608,15 @@ wie $\rho^k$" ist falsch.
 
 *Mit $\gamma = 0{,}18$* dagegen sind die Faktoren $0{,}82$ und $-0{,}8$: Die
 steile Richtung wechselt in jedem Schritt das Vorzeichen, die flache kommt kaum voran.
-Das ist das Zickzack aus @bemerkung:die-konditionszahl-einer-funktion, und der Grund steht daneben: Die
-Schrittweite ist an die *steilste* Richtung gebunden, denn dort droht
-Divergenz; vorankommen müssen wir aber in der *flachsten*.
+Das ist das Zickzack aus @bemerkung:die-konditionszahl-einer-funktion.
 
 *Mit $\cred{\gamma = 0{,}2 = 2/L}$* pendelt die zweite Komponente zwischen zwei
-Werten, ohne kleiner zu werden, und darüber läuft sie davon.
+Werten, ohne kleiner zu werden, und darüber divergiert sie.
 :::
 
-::::
+:::::
 
-Wie teuer wird eine schlechte Kondition? Das lässt sich zählen.
+Wie teuer schlechte Kondition wird, lässt sich zählen.
 
 :::interaktiv[Zickzack im schmalen Tal]
 Die obere Tafel zeigt die Höhenlinien von
@@ -697,24 +636,22 @@ $\kappa$ an derselben Stelle liegen.
   <CanyonWidget />
 </Schaetzfrage>
 
-Der Aufwand wächst ungefähr proportional zur Kondition; die Ablesetafel zeigt zu
-jedem $\kappa$ die zugehörige Schrittzahl. Bei $\kappa = 1$ sind die Höhenlinien Kreise, der
-negative Gradient zeigt direkt auf das Minimum, und mit einem halben Anteil ist
-das Verfahren nach einem Schritt fertig. Bei $\kappa = 10$ und $\gamma = 1/L$
-stehen dieselben Zahlen auf der Tafel: gemessener Quotient $0{,}81$ gegen die
-gestrichelte Schranke $0{,}9$. Und
-bei einem Anteil um $0{,}9$ entsteht das Zickzack; die Schranke wird dann gar
-nicht mehr gezeichnet, denn @satz:konvergenzrate-bei-starker-konvexitaet setzt
-$\gamma \le 1/L$ voraus.
+Der Aufwand wächst ungefähr proportional zur Kondition. Bei $\kappa = 1$ sind
+die Höhenlinien Kreise, der negative Gradient zeigt direkt auf das Minimum, und
+mit einem halben Anteil ist das Verfahren nach einem Schritt fertig. Bei
+$\kappa = 10$ und $\gamma = 1/L$ zeigt die Tafel den gemessenen Quotienten
+$0{,}81$ gegen die gestrichelte Schranke $\rho = 0{,}9$ aus
+@satz:konvergenzrate-bei-starker-konvexitaet: Der Satz gibt eine obere Schranke,
+das Verfahren darf schneller sein. Bei einem Anteil um $0{,}9$ entsteht das
+Zickzack; die Schranke fehlt dann, weil der Satz $\gamma \le 1/L$ voraussetzt.
 :::
 
 ### Wann hören wir auf?
 
-Die Iteration @eq:nelder-mead-gradient-gradientenabstieg läuft von sich aus ewig. In der Praxis brauchen wir eine
-Regel, wann wir sie beenden, und alle brauchbaren Regeln messen etwas, das wir
-tatsächlich ausrechnen können. Der Abstand
-$\left\|\cblue{\bx^{(k)}} - \cgreen{\bx^\star}\right\|$ gehört nicht dazu, denn
-$\cgreen{\bx^\star}$ ist ja gerade das Gesuchte.
+Die Iteration @eq:nelder-mead-gradient-gradientenabstieg läuft von sich aus
+ewig. Brauchbare Abbruchregeln messen etwas, das wir ausrechnen können; der
+Abstand $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx^\star}\right\|$ gehört nicht
+dazu, denn $\cgreen{\bx^\star}$ ist gerade das Gesuchte.
 
 :::bemerkung[#drei-abbruchkriterien-und-ihre-grenzen (Drei Abbruchkriterien und ihre Grenzen)]
 1. *Der Gradient ist klein:*
@@ -728,8 +665,8 @@ $k_{\max} \approx 1000$ bis $10\,000$, und üblich ist es auch, mehrere Kriterie
 zu kombinieren: Die ersten beiden sagen etwas über die Lösung, das dritte
 verhindert eine Endlosschleife, wenn keines der anderen greift.
 
-*Vorsicht.* Bei schlecht konditionierten oder nicht stark konvexen Problemen
-können die Kriterien versagen. Für stark konvexes $f$ gilt zwar
+Bei schlecht konditionierten oder nicht stark konvexen Problemen können die
+Kriterien versagen. Für stark konvexes $f$ gilt zwar
 $\left\|\corange{\nabla f(\bx)}\right\| \ge \mu\left\|\bx - \cgreen{\bx^\star}\right\|$
 und damit
 $\left\|\bx - \cgreen{\bx^\star}\right\| \le \left\|\corange{\nabla f(\bx)}\right\|/\mu$,
@@ -743,29 +680,23 @@ $f - \cgreen{f^\star} = 5\cdot 10^{-7}$. Das ist die
 korrekte Auskunft: In einer flachen Richtung ist die *Stelle* des Minimums
 schlecht bestimmt, sein *Wert* dagegen gut.
 
-Das zweite Kriterium ist noch schwächer. Ein kleiner Fortschritt kann daran
-liegen, dass wir angekommen sind, aber genauso daran, dass $\gamma$ zu klein
-gewählt ist; und ist $\cblue{f(\bx^{(k)})}$ nahe null, so ist der relative
-Quotient gar nicht mehr aussagekräftig. Zusätzlich ist am Ende zu prüfen, ob der Gradient wirklich klein *relativ zur Skala des Problems* ist.
+Das zweite Kriterium ist noch schwächer: Kleiner Fortschritt kann auch an einem
+zu kleinen $\gamma$ liegen, und für $\cblue{f(\bx^{(k)})}$ nahe null ist der
+relative Quotient nicht aussagekräftig. Am Ende lohnt deshalb die Prüfung, ob der
+Gradient *relativ zur Skala des Problems* klein ist.
 :::
 
 ### Schrittweitensuche: die Armijo-Bedingung
 
-Eine feste Schrittweite ist immer ein Kompromiss. @bemerkung:zu-klein-zu-gross-gerade-richtig hat gezeigt,
-wie schmal der brauchbare Bereich sein kann, und $L$ kennen wir in der Regel
-nicht. Naheliegend ist deshalb, $\gamma$ in jedem Schritt neu zu bestimmen: klein
-genug, dass es sicher bergab geht, groß genug, dass sich der Schritt lohnt. Diese
-Suche heißt *Liniensuche* (line search), weil sie sich mit der Suchrichtung
-$\corange{\bd}$ auf der Geraden
-$\gamma \mapsto \cblue{\bx^{(k)}} + \gamma\corange{\bd}$ abspielt.
-
-Den exakten Minimierer auf dieser Geraden zu bestimmen, wäre wieder ein
-Optimierungsproblem. Billiger und in der Praxis besser ist eine Bedingung, die
-nur „genügend Abstieg" verlangt. Ein Hinweis zur Notation: Der
-Buchstabe $\rho$ steht im folgenden Algorithmus für den Faktor, um den die
-Schrittweite verkleinert wird, und hat mit der Konvergenzrate $\rho$ aus
-@satz:konvergenzrate-bei-starker-konvexitaet nichts zu tun. Beide Bezeichnungen sind üblich, und wir
-behalten sie bei.
+Eine feste Schrittweite ist immer ein Kompromiss, und $L$ kennen wir in der
+Regel nicht. Naheliegend ist deshalb, $\gamma$ in jedem Schritt neu zu
+bestimmen, klein genug für sicheren Abstieg und groß genug für Fortschritt. Diese
+Suche auf der Geraden $\gamma \mapsto \cblue{\bx^{(k)}} + \gamma\corange{\bd}$
+heißt *Liniensuche* (line search). Den exakten Minimierer dort zu bestimmen,
+wäre wieder ein Optimierungsproblem; billiger ist eine Bedingung, die nur
+„genügend Abstieg" verlangt. Der Buchstabe $\rho$ steht im folgenden Algorithmus
+für den Faktor, um den die Schrittweite verkleinert wird, nicht für die
+Konvergenzrate aus @satz:konvergenzrate-bei-starker-konvexitaet.
 
 :::algorithmus[#backtracking-liniensuche-nach-armijo (Backtracking-Liniensuche nach Armijo)]
 Gegeben seien die aktuelle Stelle $\cblue{\bx^{(k)}}$, die Suchrichtung
@@ -797,41 +728,36 @@ $$
 $$
 
 der Zusatzterm $c\,\gamma\,\corange{\nabla f(\bx^{(k)})}\corange{\bd}$ auf der
-rechten Seite von @eq:backtracking-liniensuche-nach-armijo ist also *negativ*. Verschwindet der Gradient, gibt
-es überhaupt keine Suchrichtung mehr, und die Abbruchkriterien haben längst
-gegriffen. Die rechte Seite liegt damit
-unter dem alten Funktionswert, und darauf zielt die Bedingung: Der
-Funktionswert muss um einen Betrag sinken, der
-proportional zu $\gamma$ und zum Quadrat der Gradientennorm ist. Wo es steil
-bergab geht, wird viel verlangt, wo es flach ist, wenig.
+rechten Seite von @eq:backtracking-liniensuche-nach-armijo ist also *negativ*,
+und die rechte Seite liegt unter dem alten Funktionswert. Der Funktionswert muss
+um einen Betrag sinken, der proportional zu $\gamma$ und zum Quadrat der
+Gradientennorm ist: Wo es steil bergab geht, wird viel verlangt, wo es flach
+ist, wenig.
 
 *Die geometrische Lesart.* Die Gerade
 $\gamma \mapsto \cblue{f(\bx^{(k)})} + \gamma\,\corange{\nabla f(\bx^{(k)})}\corange{\bd}$
 ist die Tangente an den Schnitt
-$\varphi(\gamma) = \cblue{f(\bx^{(k)} + \gamma\corange{\bd})}$ im Nullpunkt, also
-das Beste, was die erste Ordnung verspricht. Die Armijo-Gerade ist
-dieselbe Gerade, um den Faktor $c$ flacher gelegt. Gefordert wird, unter dieser
-flacheren Geraden zu bleiben, und je kleiner $c$, desto bescheidener die
-Forderung.
+$\varphi(\gamma) = \cblue{f(\bx^{(k)} + \gamma\corange{\bd})}$ im Nullpunkt. Die
+Armijo-Gerade ist dieselbe Gerade, um den Faktor $c$ flacher gelegt. Gefordert
+wird, unter ihr zu bleiben; je kleiner $c$, desto bescheidener die Forderung.
 
-*Warum die Schleife endet.* Nach der Taylorentwicklung erster Ordnung ist
+*Warum die Schleife endet.* Nach Taylor ist
 $\varphi(\gamma) = \varphi(0) + \gamma\varphi'(0) + o(\gamma)$ mit
-$\varphi'(0) = \corange{\nabla f(\bx^{(k)})}\corange{\bd} < 0$. Für kleine
-$\gamma$ ist die linke Seite von @eq:backtracking-liniensuche-nach-armijo deshalb ungefähr
-$\varphi(0) + \gamma\varphi'(0)$, und das liegt unter der rechten Seite, weil
-$\gamma\varphi'(0) < c\,\gamma\varphi'(0)$ für $c < 1$ und $\varphi'(0) < 0$ gilt. Solange der Gradient nicht verschwindet, bricht die Schleife also nach
-endlich vielen Verkleinerungen ab.
+$\varphi'(0) = \corange{\nabla f(\bx^{(k)})}\corange{\bd} < 0$; für kleine
+$\gamma$ liegt die linke Seite von @eq:backtracking-liniensuche-nach-armijo also
+nahe bei $\varphi(0) + \gamma\varphi'(0)$ und damit unter der rechten, weil
+$\gamma\varphi'(0) < c\,\gamma\varphi'(0)$ für $c < 1$ gilt. Solange der
+Gradient nicht verschwindet, endet die Schleife deshalb nach endlich vielen
+Verkleinerungen.
 
 *Typische Parameter.* $c = 10^{-4}$ und $\rho = 0{,}5$, die Schrittweite wird
 also halbiert. Mit so kleinem $c$ ist die Armijo-Gerade praktisch waagerecht, und
 die Bedingung heißt kaum mehr als „der Funktionswert muss wirklich sinken";
-gerade das macht sie robust, denn verworfen wird nur ein Schritt, der über das
-Ziel hinausschießt.
+das macht sie robust, denn verworfen wird nur ein Schritt, der über das Ziel
+hinausschießt.
 
-*Ausblick.* Die Liniensuche ist kein Zubehör für den Gradientenabstieg allein.
-Quasi-Newton-Verfahren wie BFGS bestimmen ihre Suchrichtung anders, benutzen
-darüber aber dieselbe Backtracking-Schleife; @sec:newton-sgd baut
-darauf auf.
+*Ausblick.* Quasi-Newton-Verfahren wie BFGS benutzen dieselbe
+Backtracking-Schleife mit einer anderen Suchrichtung (@sec:newton-sgd).
 :::
 
 Wie oft muss die Schleife halbieren, bis sie eine Schrittweite akzeptiert?
@@ -846,19 +772,26 @@ wie immer $\corange{\bd} = -\corange{\nabla f(\bx)^\top}$.
 
 <ArmijoWidget />
 
-Ein bis zwei Halbierungen genügen. In der Voreinstellung wird $\gamma = 1$
-verworfen und $\gamma = 0{,}5$ angenommen, obwohl der exakte Minimierer bei
-$\gamma^\star = 1/3$ läge; mit dem Lehrbuchwert $c = 0{,}3$ ist eine zweite
-Halbierung nötig, und $\gamma = 0{,}25$ wird angenommen. Das gehört zur
-Idee: Der billige Kompromiss genügt, weil ohnehin ein nächster Schritt
-folgt. Mit größerem $c$ wird die Forderung steiler und die
-Zahl der Verkleinerungen steigt. Über alle Reglerstellungen hinweg sind höchstens
-$16$ Halbierungen nötig; die Schleife endet also auch praktisch schnell.
+In der Voreinstellung wird $\gamma = 1$ verworfen und $\gamma = 0{,}5$
+angenommen, obwohl der exakte Minimierer bei $\gamma^\star = 1/3$ läge; der
+billige Kompromiss genügt, weil ohnehin ein nächster Schritt folgt. Mit
+$c = 0{,}3$ wird die Forderung steiler, und erst nach einer zweiten Halbierung
+wird $\gamma = 0{,}25$ angenommen. Über alle Reglerstellungen hinweg sind
+höchstens $16$ Halbierungen nötig.
 :::
 
 ### Selbsttest
 
 ::::quiz
+
+:::frage{wahr}
+Für $f(\bx) = x_1^2 + 4x_2^2$ mit $\cblue{\bx^{(0)}} = (2, 1)^\top$ und
+$\gamma = 0{,}25$ ist $\cblue{\bx^{(1)}} = (1, -1)^\top$.
+
+Der Gradient ist $\corange{\nabla f(\bx)} = (2x_1,\ 8x_2)$, an der Stelle
+$(2, 1)^\top$ also $(4,\ 8)$. Damit ist
+$\cblue{\bx^{(1)}} = (2, 1)^\top - 0{,}25\cdot(4, 8)^\top = (1, -1)^\top$.
+:::
 
 :::frage{falsch}
 Auf der Quadrik mit $\corange{\bH_f} = \diag(1, 10)$ fällt der Funktionswert mit
@@ -878,24 +811,20 @@ Abstiegsrichtung, solange $\corange{\nabla f(\bx)} \neq \bnull^\top$ ist.
 Es ist $\corange{\nabla f(\bx)}\bigl(-\corange{\nabla f(\bx)^\top}\bigr) =
 -\left\|\corange{\nabla f(\bx)}\right\|^2 < 0$, und daraus folgt mit der
 Taylorentwicklung erster Ordnung, dass $f$ für hinreichend kleine Schritte
-sinkt. Konvexität wird dafür nicht gebraucht. Was sie liefert, ist etwas
-anderes: dass jeder stationäre Punkt, an dem das Verfahren zur Ruhe kommt, schon
-global optimal ist (@bemerkung:drei-lesarten-desselben-schritts).
+sinkt. Konvexität wird dafür nicht gebraucht
+(@bemerkung:drei-lesarten-desselben-schritts).
 :::
 
 :::frage{falsch}
 Ist $\left\|\corange{\nabla f(\cblue{\bx^{(k)}})}\right\| < 10^{-6}$, so liegt
 $\cblue{\bx^{(k)}}$ nahe am Minimum.
 
-Beide Schranken, die es dazu gibt, hängen an der kleinsten Krümmung $\mu$:
-$\left\|\bx - \cgreen{\bx^\star}\right\| \le
-\left\|\corange{\nabla f(\bx)}\right\|/\mu$ für die Stelle und
-$\cblue{f(\bx)} - \cgreen{f(\bx^\star)} \le
-\left\|\corange{\nabla f(\bx)}\right\|^2/(2\mu)$ für den Wert. Bei kleinem
-$\mu$ ist vor allem die erste unbrauchbar. Für
+Die Schranke $\left\|\bx - \cgreen{\bx^\star}\right\| \le
+\left\|\corange{\nabla f(\bx)}\right\|/\mu$ hängt an der kleinsten Krümmung
+$\mu$ und ist bei kleinem $\mu$ unbrauchbar. Für
 $f(\bx) = \tfrac12(x_1^2 + 10^{-8}x_2^2)$ ist der Gradient in $(0;\ 10)^\top$
-nur $10^{-7}$ lang, der Abstand zum Minimum aber $10$, während der Funktionswert
-mit $5\cdot 10^{-7}$ tatsächlich schon fast optimal ist (@bemerkung:drei-abbruchkriterien-und-ihre-grenzen).
+nur $10^{-7}$ lang, der Abstand zum Minimum aber $10$
+(@bemerkung:drei-abbruchkriterien-und-ihre-grenzen).
 :::
 
 :::frage{falsch}
@@ -916,17 +845,14 @@ kein einziger Schrumpfschritt.
 Der Zugzähler steht nach vierzig Schritten auf $13$ Reflexionen, $4$ Expansionen,
 $23$ Kontraktionen und null Schrumpfschritten. Der Schrumpfschritt ist der
 teuerste der vier Züge aus @algorithmus:nelder-mead-simplexverfahren, und dass er hier gar nicht
-gebraucht wird, ist der Grund für die verhältnismäßig guten Kosten. Erst der
-zweite Startsimplex („flach von links") erzwingt ihn, und zwar im vierten
-Schritt.
+gebraucht wird, ist der Grund für die verhältnismäßig guten Kosten.
 :::
 
 :::frage{falsch}
 Nelder-Mead braucht pro Iteration $O(n^2)$ Funktionsauswertungen.
 
-Es sind $O(n)$. Der Simplex hat $n+1$ Ecken, aber in einem gewöhnlichen Schritt
-werden nur ein oder zwei neue Punkte ausgewertet; erst der Schrumpfschritt kostet
-$n$ neue Ecken. Langsam wird das Verfahren in hoher Dimension nicht wegen der
+Es sind $O(n)$: In einem gewöhnlichen Schritt werden nur ein oder zwei neue
+Punkte ausgewertet, erst der Schrumpfschritt kostet $n$ neue Ecken. Langsam wird das Verfahren in hoher Dimension nicht wegen der
 Kosten pro Iteration, sondern wegen der Zahl der Iterationen (@bemerkung:wann-sich-nelder-mead-lohnt).
 :::
 
@@ -939,7 +865,8 @@ $\rho = 1 - 1/\kappa_f$, und wegen $-\ln(1 - 1/\kappa_f) \approx 1/\kappa_f$
 wächst sie näherungsweise linear in $\kappa_f$: $21{,}9$ bei $\kappa_f = 10$,
 $44{,}9$ bei $20$, $229{,}1$ bei $100$ und $459{,}4$ bei $200$
 (@bemerkung:die-konditionszahl-einer-funktion). Der tatsächliche Verlauf darf
-schneller sein, wie das Canyon-Widget zeigt, langsamer aber nicht.
+schneller sein, wie das Widget „Zickzack im schmalen Tal" zeigt, langsamer aber
+nicht.
 :::
 
 ::::

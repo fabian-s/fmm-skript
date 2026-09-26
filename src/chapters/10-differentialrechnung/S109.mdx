@@ -1,97 +1,10 @@
-Der Grundgedanke dieses Kapitels: Ableiten heißt linear approximieren.
-Alles Weitere betraf die Frage, in welchem Format die lineare Näherung
-steht und nach welchen Regeln sich mit ihr rechnen lässt. Wir fassen zusammen, was
-bleiben soll, und nennen, was wir ausgelassen haben.
+Der Grundgedanke dieses Kapitels: Ableiten heißt linear approximieren. Alles Weitere
+betraf das Format der linearen Näherung und die Regeln, nach denen sich mit ihr rechnen
+lässt; die Tabelle unten fasst die Abschnitte zusammen.
 
-### Die Kernkonzepte
-
-Die ersten vier Abschnitte haben geklärt, was eine Ableitung überhaupt ist,
-sobald Ein- und Ausgabe keine Zahlen mehr sind.
-
-:::bemerkung[#fuenf-begriffe-die-bleiben (Fünf Begriffe, die bleiben)]
-1. **Die Fréchet-Ableitung** ist eine beschränkte lineare Abbildung
-   $\cgreen{D_x f}$ mit
-   $\cblue{f(x + h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{o(\left\|h\right\|)}$
-   (@definition:frechet-ableitung). Linear ist die Abhängigkeit von $h$, nicht die
-   von der Stelle $x$ (@bemerkung:was-hier-eigentlich-linear-ist).
-
-2. **Der :k[Gradient]{#gradient}** sammelt die
-   :k[partiellen Ableitungen]{#partial-derivative} einer skalarwertigen Funktion
-   als *Zeile* (@definition:gradient); transponiert zeigt er in die Richtung des
-   stärksten Anstiegs (@satz:richtung-des-staerksten-anstiegs), und daran hängt der
-   :k[Gradientenabstieg]{#gradient-descent} (@algorithmus:gradient-gradientenabstieg).
-
-3. **Die Jacobimatrix** stapelt diese Zeilen (@definition:jacobimatrix); vier
-   Bausteine (@satz:jacobimatrizen-der-grundbausteine) und die Kettenregel als
-   Matrixprodukt (@satz:kettenregel-fuer-jacobimatrizen) reichen für fast jede
-   Rechnung dieses Kapitels.
-
-4. **Skalar zu Matrix** heißt: jeden Eintrag einzeln ableiten und stehen lassen,
-   wo er steht (@definition:ableitung-einer-matrixwertigen-funktion); für Spur,
-   Determinante und Inverse eines quadratischen $\cblue{\bF(x)}$ gibt es
-   geschlossene Formeln (@satz:identitaeten-fuer-skalar-zu-matrix).
-
-5. **Matrix zu Skalar** läuft ebenfalls eintragsweise, und der Ableitungsterm
-   ist das Frobenius-Skalarprodukt (@definition:ableitung-nach-einer-matrix,
-   @bemerkung:der-ableitungsterm-ist-ein-skalarprodukt); drei Identitäten decken
-   die häufigsten Fälle ab (@satz:identitaeten-fuer-matrix-zu-skalar).
-:::
-
-Zwei Anordnungen laufen dabei nebeneinander her. Solange nur Skalare und
-Vektoren beteiligt sind, gilt: pro Ausgabekomponente eine Zeile, pro
-Eingabevariable eine Spalte. Sobald eine Matrix als Eingabe oder als Ausgabe
-auftritt, sortieren wir die Ableitungen dagegen so, dass ihr Format erhalten
-bleibt (@bemerkung:das-format-bleibt-erhalten); der Ableitungsterm entsteht dann nicht als
-Matrixprodukt, sondern im Fall Matrix zu Skalar über die Spur
-(@bemerkung:der-ableitungsterm-ist-ein-skalarprodukt). Einzeln ausrechnen müssen wir die partiellen Ableitungen
-nur dann, wenn wir die lineare Näherung nicht schon auf anderem Weg haben.
-Finden wir irgendeine Matrix $\bM$ mit
-$\cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{\bM\bh} + \cred{o(\left\|\bh\right\|)}$,
-so ist sie bereits die Jacobimatrix (@lemma:die-matrix-der-linearen-naeherung). Ausmultiplizieren ist oft
-kürzer als Ableiten.
-
-Die zweite Kapitelhälfte hat geklärt, wie wir mit diesem Begriff rechnen. Vier
-Bausteine sind dabei entstanden, und alle vier gehen auf dieselbe Gleichung
-zurück, auf die lineare Approximation aus @definition:frechet-ableitung.
-
-:::bemerkung[#vier-bausteine-die-bleiben (Vier Bausteine, die bleiben)]
-1. **Eigenschaften** (@sec:stetigkeit). Differenzierbar zieht stetig nach sich
-   (@satz:stetigkeit-aus-differenzierbarkeit), umgekehrt nicht
-   (@beispiel:die-betragsfunktion-am-nullpunkt). Die Zuordnung
-   $f \mapsto \cgreen{D_{\bx} f}$ ist linear
-   (@satz:linearitaet-der-ableitungsoperation), in jedem der fünf Formate
-   (@bemerkung:fuenf-spezialfaelle-derselben-aussage).
-
-2. **Rechenregeln** (@sec:produkt-kettenregel). Die Produktregel gilt für jede
-   beschränkte bilineare Multiplikation (@satz:produktregel), die Kettenregel ist
-   ohne Koordinaten eine :k[Verkettung]{#function-composition}
-   (@satz:kettenregel) und in Koordinaten ein Matrixprodukt
-   (@satz:kettenregel-fuer-jacobimatrizen).
-
-3. **Ableitungen höheren Grades** (@sec:hoehere-ableitungen). Die $j$-te
-   Ableitung ist die lineare Näherung an die Änderung der $(j-1)$-ten
-   (@definition:k-mal-frechet-differenzierbar). Für $f \in \Ccal^2$ mit
-   $f\colon \R^n \to \R$ ist die zweite Stufe die
-   :k[Hesse-Matrix]{#hessian-matrix} (@definition:hesse-matrix,
-   @satz:erste-und-zweite-ableitung-in); sie ist symmetrisch
-   (@satz:satz-von-schwarz), ihre Definitheit entscheidet im kritischen Punkt
-   über Minimum, Maximum und Sattel (@satz:hesse-kriterium-fuer-kritische-punkte)
-   und überall über :k[Konvexität]{#convexity}
-   (@satz:konvexitaet-und-positive-semidefinitheit). In der Statistik steht dort
-   die Fisher-Information (@definition:fisher-informationsmatrix).
-
-4. **Taylorapproximation** (@sec:taylor). Das
-   :k[Taylorpolynom]{#taylor-theorem} schmiegt sich bis zur $k$-ten Ableitung an
-   (@definition:taylorpolynom); für den Fehler gibt es das Lagrange-Restglied und
-   die Ordnungsaussage (@satz:taylorentwicklung-i), und dieselbe Aussage trägt bis
-   in Banachräume (@satz:taylorentwicklung-ii). Für $f\colon \R^n \to \R$ stehen in
-   den ersten beiden Ordnungen Gradient und Hesse-Matrix
-   (@korollar:taylorapproximation-fuer-vektor-zu), geometrisch Tangentialebene und
-   Quadrik (@bemerkung:ebene-und-quadrik); der stationäre Punkt der Quadrik ist der
-   Newton-Schritt (@algorithmus:newton-raphson-verfahren, @bemerkung:drei-vorbehalte).
-:::
-
-Die meisten Beweise dieser vier Abschnitte folgen demselben Muster. Wir setzen die
+:::::vertiefung[Das gemeinsame Muster der Beweise]
+Die meisten Beweise der Abschnitte @num:differentialrechnung/stetigkeit bis
+@num:differentialrechnung/taylor folgen demselben Muster. Wir setzen die
 Definition für jeden Baustein einzeln ein, sortieren die entstehenden Terme nach
 Bauart und zeigen, dass alles außerhalb des Kandidaten
 $\cred{o(\left\|\bh\right\|)}$ ist. So entstehen @satz:linearitaet-der-ableitungsoperation, die Produktregel,
@@ -108,10 +21,21 @@ gleich. Aus dem Muster fallen der Satz von Schwarz und die eindimensionale
 Taylorentwicklung heraus, denn beide brauchen einen
 :k[Mittelwertsatz]{#mean-value-theorem}; der allgemeine @satz:taylorentwicklung-ii verwendet
 statt einer skalaren Zwischenstelle die Integralform des Restglieds.
-
-:::::vertiefung[Weitere Ableitungsformate und praktische Nachschlagewege]
+:::::
 
 ### Was wir ausgelassen haben
+
+Drei Zellen der Übersicht aus @sec:gradient sind leer geblieben: Matrix zu Vektor, Vektor
+zu Matrix und Matrix zu Matrix. Ihre Ableitungen sind :k[Tensoren]{#tensor} der Stufe $3$
+oder $4$ (@sec:tensoren/tensoren); alternativ stapeln wir die Matrizen per
+Vektorisierung zu Vektoren. Für eine Störungsanalyse genügt oft eine einzige Richtung:
+Für eine feste Störungsrichtung $\bE$ ist $\varphi(h) = \cblue{f(\bX + h\bE)}$ eine
+Funktion einer reellen Variablen, und $\varphi'(0) = \cgreen{D_{\bX} f(\bE)}$. Ableitungen
+von Abbildungen zwischen Funktionenräumen bleiben eine Übungsaufgabe. Weitere Formeln
+sammelt das *Matrix Cookbook* von
+[Petersen und Pedersen (2012)](https://archive.org/details/imm3274).
+
+:::::vertiefung[Leere Felder, Störungsanalyse und Nachschlagewerke im Detail]
 
 :::bemerkung[#die-drei-leeren-felder (Die drei leeren Felder)]
 In der Übersicht aus @sec:gradient sind drei Zellen leer
@@ -221,7 +145,7 @@ oder stapelt die Matrizen per Vektorisierung zu Vektoren um
 | --- | --- | --- |
 | @num:differentialrechnung/linearisierung | Ableitung als lineare Approximation | Fréchet-Ableitung auf normierten Räumen: $\cblue{f(x+h)} = \cblue{f(x)} + \cgreen{D_x f(h)} + \cred{r(h)}$ mit linearem, beschränktem $\cgreen{D_x f}$ und einem Restterm $\cred{r(h)}$, der schneller verschwindet als $h$ |
 | @num:differentialrechnung/gradient | Der Gradient | $\corange{\nabla f(\bx)} \in \R^{1 \times n}$ als Zeile der partiellen Ableitungen; Richtung des stärksten Anstiegs; Gradientenabstieg |
-| @num:differentialrechnung/jacobi | Die Jacobimatrix | $\corange{\bJ_f(\bx)} \in \R^{m \times n}$ mit Gradienten als Zeilen; Kettenregel als Matrixprodukt; Backpropagation als Auswertung von links |
+| @num:differentialrechnung/jacobi | Die Jacobimatrix | $\corange{\bJ_f(\bx)} \in \R^{m \times n}$ mit Gradienten als Zeilen; jede Matrix $\bM$ mit $\cblue{f(\bx+\bh)} = \cblue{f(\bx)} + \bM\bh + \cred{o(\left\|\bh\right\|)}$ ist schon die Jacobimatrix; Kettenregel als Matrixprodukt; Backpropagation als Auswertung von links |
 | @num:differentialrechnung/matrixableitungen | Ableitungen mit Matrizen | eintragsweise Ableitungen für Skalar zu Matrix und Matrix zu Skalar; Spur, Jacobi-Formel, Inverse; Frobenius-Skalarprodukt als Ableitungsterm |
 | @num:differentialrechnung/stetigkeit | Stetigkeit und Linearität | Differenzierbar zieht stetig nach sich, nicht umgekehrt; die Ableitungsoperation $f \mapsto \cgreen{D_{\bx} f}$ ist linear, in jedem der fünf Formate aus den Abschnitten @num:differentialrechnung/linearisierung bis @num:differentialrechnung/matrixableitungen |
 | @num:differentialrechnung/produkt-kettenregel | Produkt- und Kettenregel | Produktregel für jede beschränkte bilineare Multiplikation $\inner{\cdot, \cdot}$; Kettenregel als Verkettung $\cgreen{D_{\by} g} \circ \cgreen{D_{\bx} f}$, in Koordinaten ein Matrixprodukt |
@@ -230,24 +154,18 @@ oder stapelt die Matrizen per Vektorisierung zu Vektoren um
 
 ### Nächstes Kapitel
 
-Offen geblieben ist eine Frage, die in diesem Kapitel zweimal aufgetaucht ist,
-ohne dass wir sie beantwortet hätten: Wann ist ein lokaler Befund auch ein
-globaler? @satz:konvexitaet-und-positive-semidefinitheit verknüpft die :k[Konvexität]{#convexity} mit der positiven
-Semidefinitheit der Hesse-Matrix, zieht daraus aber keinen Schluss über globale
-Minima. Und @bemerkung:drei-vorbehalte nennt als ersten Vorbehalt des Newton-Verfahrens,
-dass ein kritischer Punkt eben noch kein Minimum ist.
-
-Für :k[konvexe Funktionen]{#convexity} lautet die Antwort „immer". Jeder kritische Punkt ist dann ein globales Minimum, Sattelpunkte
-gibt es keine, und ein Abstiegsverfahren kann nirgends an der falschen Stelle
-hängenbleiben. Damit bekommen :k[Optimierungsverfahren]{#optimization} Garantien
-statt Faustregeln. Das [nächste Kapitel](?k=11-konvexitaet#sec-11.1) behandelt
-die Konvexität deshalb als eigenes Thema.
+Offen geblieben ist, wann ein lokaler Befund auch ein globaler ist:
+@satz:konvexitaet-und-positive-semidefinitheit verknüpft :k[Konvexität]{#convexity} mit
+der Hesse-Matrix, zieht aber keinen Schluss über globale Minima, und nach
+@bemerkung:drei-vorbehalte ist ein kritischer Punkt noch kein Minimum. Für
+:k[konvexe Funktionen]{#convexity} ist jeder kritische Punkt ein globales Minimum,
+Sattelpunkte gibt es keine, und :k[Optimierungsverfahren]{#optimization} bekommen
+Garantien statt Faustregeln. Deshalb behandelt @kap:konvexitaet die Konvexität als
+eigenes Thema.
 
 ### Selbsttest
 
-Zwei Runden. In der ersten stehen sechs Aussagen zum Ableitungsbegriff und zu den
-Formaten aus den Abschnitten @num:differentialrechnung/linearisierung bis @num:differentialrechnung/matrixableitungen, dazu eine Frage, die sich nur an
-einem Widget dieser Abschnitte beantworten lässt. Welche Aussagen stimmen?
+*Erste Runde: Ableitungsbegriff und Formate.*
 
 ::::quiz
 
@@ -260,13 +178,11 @@ Dafür ist der Gradient eine Zeile (@bemerkung:zeilenvektor-nicht-spaltenvektor)
 $1 \times m$-Zeile mit einer $m \times n$-Matrix ist wieder eine Zeile, und für
 $m = 1$ ist der Gradient der Sonderfall der Jacobimatrix (@bemerkung:die-zeilen-sind-gradienten).
 Zahlenprobe mit $g(\bx) = \bA\bx$,
-$\bA = \bigl(\begin{smallmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \end{smallmatrix}\bigr)$
-und $f(\by) = \left\|\by\right\|^2$: In $\bx = (1,2,3)^\top$ ist
-$\bA\bx = (5, 11)^\top$, also
-$\nabla f(\bA\bx)\,\bA = 2(5,11)\bA = (10, 42, 66)$. Direkt ausgerechnet ist
-$f(g(\bx)) = \bx^\top\bA^\top\bA\bx$ mit Gradient $2\bx^\top\bA^\top\bA$ nach
-@satz:gradient-der-quadratischen-form, dessen Symmetrieforderung $\bA^\top\bA$ erfüllt. Das ergibt
-dieselbe Zeile.
+$\bA = \bigl(\begin{smallmatrix} 1 & 2 & 0 \\ 0 & 1 & 3 \end{smallmatrix}\bigr)$,
+$f(\by) = \left\|\by\right\|^2$ und $\bx = (1,2,3)^\top$:
+$\nabla f(\bA\bx)\,\bA = 2(5,11)\bA = (10, 42, 66)$. Dieselbe Zeile liefert der direkte
+Weg über $f(g(\bx)) = \bx^\top\bA^\top\bA\bx$ mit Gradient $2\bx^\top\bA^\top\bA$
+(@satz:gradient-der-quadratischen-form).
 :::
 
 :::frage{falsch}
@@ -336,8 +252,7 @@ rechts liegt die grüne Gerade dann waagerecht.
 
 ::::
 
-Die zweite Runde betrifft die Abschnitte @num:differentialrechnung/stetigkeit bis @num:differentialrechnung/taylor: acht Aussagen zu
-Eigenschaften, Rechenregeln, Hesse-Matrix und Taylor.
+*Zweite Runde: Rechenregeln, Hesse-Matrix, Taylor.*
 
 ::::quiz
 
@@ -369,10 +284,7 @@ $\corange{\nabla (f g)(\bx)} = \cblue{g(\bx)}\,\corange{\nabla f(\bx)} + \cblue{
 Das ist @satz:produktregel mit der Multiplikation zweier Zahlen als bilinearer
 Abbildung, die wegen $\left|uv\right| = \left|u\right|\left|v\right|$ die
 Schranke $K = 1$ hat (@bemerkung:beispiele-und-warum-die-schranke-selten, Punkt 2 mit $m = 1$). Beide Summanden sind Zeilenvektoren,
-skaliert mit einer Zahl. Zahlenprobe mit $\cblue{f(\bx)} = x_1^2 + x_2$ und
-$\cblue{g(\bx)} = e^{x_1}x_2$ an der Stelle $\bx = (0{,}4;\ -0{,}7)^\top$: Dort
-ist $\cblue{f} = -0{,}54$ und $\cblue{g} = -1{,}0443$, und beide Wege liefern
-$\corange{\nabla(fg)} = (-0{,}2715;\ -1{,}8499)$.
+skaliert mit einer Zahl.
 :::
 
 :::frage{falsch}
@@ -400,8 +312,7 @@ Der Satz von Schwarz gilt für jede Funktion, deren zweite partielle Ableitungen
 existieren.
 
 Er verlangt zusätzlich deren Stetigkeit, also $f \in \Ccal^2$ (@satz:satz-von-schwarz).
-Schon für die Einträge der Hesse-Matrix reicht bloße Differenzierbarkeit nicht
-(@definition:hesse-matrix). Das Standardgegenbeispiel ist
+Das Standardgegenbeispiel ist
 
 $$
 f(\bx) = \frac{x_1 x_2 \left(x_1^2 - x_2^2\right)}{x_1^2 + x_2^2}
@@ -460,15 +371,12 @@ und der Linearität aus @satz:linearitaet-der-ableitungsoperation ist
 $\corange{\nabla f(\bx)} = \bx^\top\bA - \bb^\top$, und
 $\corange{\bH_f(\bx)} = \bA$ ist konstant. Eingesetzt in @eq:newton-raphson-verfahren gibt das
 $\bx^{(1)} = \bx^{(0)} - \bA^{-1}\bigl(\bA\bx^{(0)} - \bb\bigr) = \bA^{-1}\bb$,
-unabhängig vom Start. Zahlenprobe mit
+unabhängig vom Start. Für
 $\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3\end{smallmatrix}\bigr)$ und
-$\bb = (1, 2)^\top$: Von $(5, -4)^\top$, von $\bnull$ und von
-$(-13{,}7;\ 8{,}2)^\top$ aus steht nach einem Schritt jeweils exakt
+$\bb = (1, 2)^\top$ steht von $(5, -4)^\top$, von $\bnull$ und von
+$(-13{,}7;\ 8{,}2)^\top$ aus nach einem Schritt jeweils exakt
 $(0{,}2;\ 0{,}6)^\top$ da. Der Grund ist @bemerkung:ebene-und-quadrik: Bei einer
-quadratischen Funktion ist $\cgreen{T_2} = \cblue{f}$, das Verfahren minimiert
-also die Funktion selbst. Gerechnet wird der Schritt als Gleichungssystem und
-nicht über die Inverse, bei positiv definitem $\bA$ per Cholesky-Zerlegung
-(@sec:lgs/cholesky).
+quadratischen Funktion ist $\cgreen{T_2} = \cblue{f}$.
 :::
 
 :::frage{wahr}
@@ -483,8 +391,7 @@ Kettenregel gibt $\varphi'(0) = \corange{\nabla f(\bx^*)}(\by - \bx^*) = 0$ und
 $\varphi''(t) = (\by - \bx^*)^\top \corange{\bH_f\bigl(\bx^* + t(\by - \bx^*)\bigr)} (\by - \bx^*) \ge 0$. Also ist
 $\varphi'$ nichtfallend und ab $t = 0$ nichtnegativ, damit
 $\varphi(1) \ge \varphi(0)$, und das heißt
-$\cblue{f(\by)} \ge \cblue{f(\bx^*)}$. Sattelpunkte kann es aus demselben Grund
-nicht geben. Darauf beruht der Ausblick auf das nächste Kapitel.
+$\cblue{f(\by)} \ge \cblue{f(\bx^*)}$.
 :::
 
 ::::

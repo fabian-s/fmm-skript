@@ -3,29 +3,23 @@ import { LogistikWidget } from "./widgets/S106Logistik";
 
 ### Warum zwei Regeln fehlen
 
-Die Linearität aus @sec:stetigkeit erledigt Summen und Vielfache.
-Damit allein kommen wir nicht weit. Die Zielfunktionen der Statistik sind selten
-Summen fertiger Bausteine, sondern Produkte und Verkettungen: Eine Quadratsumme
-$\left\|\by - \bX\bbeta\right\|_2^2$ ist ein Skalarprodukt einer Funktion mit sich
-selbst, eine Log-Likelihood schiebt einen linearen Score durch eine nichtlineare
-Antwortfunktion, und ein neuronales Netz stapelt Dutzende solcher Schichten
-übereinander.
-
-Aus der Analysis kennen wir beide Regeln für Funktionen einer reellen Variablen.
-Sie gelten wörtlich weiter, sobald wir Ableitung als lineare Approximation lesen.
-Bei der Produktregel ist allerdings zuerst zu klären, was „Produkt" überhaupt
-heißen soll: Zwei Vektoren lassen sich nicht ohne Weiteres miteinander
-multiplizieren.
+Die Linearität aus @sec:stetigkeit erledigt Summen und Vielfache. Die
+Zielfunktionen der Statistik sind aber meist Produkte und Verkettungen: Die
+Quadratsumme $\left\|\by - \bX\bbeta\right\|_2^2$ ist ein Skalarprodukt einer
+Funktion mit sich selbst, eine Log-Likelihood schiebt einen linearen Score durch
+eine nichtlineare Antwortfunktion, ein neuronales Netz verkettet viele solcher
+Schichten. Produkt- und Kettenregel aus der Analysis gelten weiter, wenn wir die
+Ableitung als lineare Approximation lesen. Bei der Produktregel ist nur zuerst zu
+klären, was „Produkt" heißen soll.
 
 ### Produkte sind bilineare Abbildungen
 
-Für $f, g\colon \D \to \R^m$ gibt es kein kanonisches Produkt $f(\bx)g(\bx)$.
-Was es gibt, sind mehrere nützliche Multiplikationen: das
+Für $f, g\colon \D \to \R^m$ gibt es kein kanonisches Produkt $f(\bx)g(\bx)$,
+wohl aber mehrere nützliche Multiplikationen: das
 :k[Skalarprodukt]{#dot-product} zweier Vektoren, das
-:k[Matrixprodukt]{#matrix-product}, das Produkt aus Zahl und Vektor. Alle drei
-teilen eine Eigenschaft. Halten wir ein Argument fest, so ist die Abbildung im
-anderen linear. Diese Abbildungen sind uns in
-@sec:tensoren/multilinear schon als multilineare Abbildungen
+:k[Matrixprodukt]{#matrix-product}, das Produkt aus Zahl und Vektor. Halten wir
+bei einer von ihnen ein Argument fest, so ist sie im anderen linear. Solche
+Abbildungen sind uns in @sec:tensoren/multilinear als multilineare Abbildungen
 begegnet; hier brauchen wir den Fall zweier Argumente und zusätzlich eine
 Größenschranke.
 
@@ -49,38 +43,32 @@ $$ {#eq-beschraenkte-bilineare-abbildung}
 $$
 :::
 
-:::bemerkung[#beispiele-und-warum-die-schranke-selten (Beispiele, und warum die Schranke selten etwas kostet)]
-Vier Multiplikationen, die uns in diesem Abschnitt begegnen, samt ihrer
-Schranke.
-
+:::bemerkung[#beispiele-und-warum-die-schranke-selten (Vier Multiplikationen und ihre Schranke)]
 1. Das Skalarprodukt $\inner{\bu, \bv} = \bu^\top\bv$ auf
-   $\R^m \times \R^m \to \R$. Die
+   $\R^m \times \R^m \to \R$; die
    :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality} liefert
    $K = 1$.
 2. Zahl mal Vektor, $\R \times \R^m \to \R^m$, mit
    $\left\|c\,\bv\right\| = \left|c\right|\left\|\bv\right\|$, also ebenfalls
    $K = 1$.
-3. Das Matrixprodukt $\R^{m \times n} \times \R^{n \times p} \to \R^{m \times p}$.
-   Für eine submultiplikative :k[Matrixnorm]{#matrix-norm} ist $K = 1$, siehe
-   @sec:matrix-spur-norm/eigenschaften.
-4. Die Spur eines Matrixprodukts, $(\bF, \bG) \mapsto \tr(\bF\bG)$, mit
-   $\bF \in \R^{m \times n}$ und $\bG \in \R^{n \times m}$. Bilinear ist sie,
-   weil Matrixprodukt und :k[Spur]{#trace} es sind. Wegen
-   $\tr(\bF\bG) = \sum_{i,j} f_{ij}g_{ji}$ ist sie das Frobenius-Skalarprodukt
-   von $\bF$ und $\bG^\top$, und Cauchy-Schwarz gibt wieder $K = 1$, diesmal in
-   der Frobenius-Norm aus
-   @sec:matrix-spur-norm/spur.
+3. Das Matrixprodukt $\R^{m \times n} \times \R^{n \times p} \to \R^{m \times p}$;
+   für eine submultiplikative :k[Matrixnorm]{#matrix-norm}
+   (@sec:matrix-spur-norm/eigenschaften) ist $K = 1$.
+4. Die Spur eines Matrixprodukts, $(\bF, \bG) \mapsto \tr(\bF\bG)$ mit
+   $\bF \in \R^{m \times n}$ und $\bG \in \R^{n \times m}$. Wegen
+   $\tr(\bF\bG) = \sum_{i,j} f_{ij}g_{ji}$ ist diese :k[Spur]{#trace} das
+   Frobenius-Skalarprodukt von $\bF$ und $\bG^\top$, also bilinear, und
+   Cauchy-Schwarz in der Frobenius-Norm (@sec:matrix-spur-norm/spur) gibt
+   wieder $K = 1$.
 
-In endlich-dimensionalen Räumen ist jede bilineare Abbildung automatisch
-beschränkt: Wir entwickeln $u$ und $v$ in Basen, ziehen die endlich vielen
-Werte $\inner{e_i, e_j}$ heraus und erhalten eine Schranke aus deren Maximum.
-Erst im Unendlichdimensionalen ist die Forderung eine echte Zusatzbedingung.
-Der Beweis des folgenden Satzes braucht @eq:beschraenkte-bilineare-abbildung ausdrücklich: Ohne diese
-Schranke lässt sich der Kreuzterm nicht abschätzen.
+In endlicher Dimension ist jede bilineare Abbildung automatisch beschränkt
+(Entwicklung in Basen, $K$ aus den endlich vielen Werten $\inner{e_i, e_j}$);
+erst im Unendlichdimensionalen ist die Schranke eine echte Zusatzbedingung. Der
+Beweis des folgenden Satzes braucht @eq:beschraenkte-bilineare-abbildung für den
+Kreuzterm.
 :::
 
-Damit ist der Rahmen gesteckt, und die Regel selbst sieht aus wie die aus der
-Schule.
+Die Regel selbst sieht aus wie die aus der Schule.
 
 :::satz[#produktregel (Produktregel)]
 Seien $\D$, $\E_1$, $\E_2$ und $\mathbb{B}$ normierte Vektorräume,
@@ -112,7 +100,7 @@ $\cred{r_g}$. Beide Ableitungen sind beschränkt, es gibt also $M_f, M_g < \inft
 mit $\left\|\cgreen{D_{\bx} f(\bh)}\right\| \le M_f \left\|\bh\right\|$ und
 $\left\|\cgreen{D_{\bx} g(\bh)}\right\| \le M_g \left\|\bh\right\|$.
 
-::why[@definition:frechet-ableitung der Fréchet-Ableitung, @sec:linearisierung; die Beschränktheit der linearen Abbildung gehört dort zur Definition]
+::why[@definition:frechet-ableitung; die Beschränktheit der linearen Abbildung gehört dort zur Definition]
 :::
 
 :::schritt
@@ -151,42 +139,33 @@ $$
 \le K M_f M_g \left\|\bh\right\|^2 .
 $$
 
-::why[@eq:beschraenkte-bilineare-abbildung mit $u = \cgreen{D_{\bx} f(\bh)}$ und $v = \cgreen{D_{\bx} g(\bh)}$, danach die beiden Schranken aus Schritt 1]
+Geteilt durch $\left\|\bh\right\|$ bleibt $K M_f M_g \left\|\bh\right\| \to 0$,
+also ist er $\cred{o(\left\|\bh\right\|)}$.
+
+::why[@eq:beschraenkte-bilineare-abbildung mit $u = \cgreen{D_{\bx} f(\bh)}$ und $v = \cgreen{D_{\bx} g(\bh)}$, danach die beiden Schranken aus Schritt 1; zu $O$ und $o$ siehe @bemerkung:gross-o-und-klein-o-fuer-kleine]
 :::
 
 :::schritt
-Die beiden übrigen Summanden von $\cred{R(\bh)}$ sind
-$\cred{o(\left\|\bh\right\|)}$. Für den mittleren etwa gilt
+Die beiden übrigen Summanden von $\cred{R(\bh)}$ sind ebenfalls
+$\cred{o(\left\|\bh\right\|)}$. Für den mittleren gilt
 
 $$
 \left\|\inner{\cblue{f(\bx)} + \cgreen{D_{\bx} f(\bh)} + \cred{r_f(\bh)},\; \cred{r_g(\bh)}}\right\|
 \le K \bigl(\left\|\cblue{f(\bx)}\right\| + M_f\left\|\bh\right\| + \left\|\cred{r_f(\bh)}\right\|\bigr)
-\left\|\cred{r_g(\bh)}\right\| ,
+\left\|\cred{r_g(\bh)}\right\| .
 $$
 
-und die Klammer bleibt für kleine $\bh$ unter einer festen Schranke, während
-$\left\|\cred{r_g(\bh)}\right\| / \left\|\bh\right\|$ gegen null geht. Der
-letzte Summand wird genauso behandelt.
+Die Klammer bleibt für kleine $\bh$ beschränkt, während
+$\left\|\cred{r_g(\bh)}\right\| / \left\|\bh\right\| \to 0$; der letzte Summand
+geht genauso. Mit Schritt 3 ist also $\cred{R(\bh)} = \cred{o(\left\|\bh\right\|)}$.
 
-::why[wieder @eq:beschraenkte-bilineare-abbildung; der erste Faktor hängt nur beschränkt von $\bh$ ab, der zweite ist nach Schritt 1 von kleinerer Ordnung als $\left\|\bh\right\|$]
+::why[wieder @eq:beschraenkte-bilineare-abbildung; der erste Faktor hängt nur beschränkt von $\bh$ ab, der zweite ist nach Schritt 1 von kleinerer Ordnung als $\left\|\bh\right\|$; eine Summe endlich vieler $o(\left\|\bh\right\|)$-Terme ist wieder $o(\left\|\bh\right\|)$]
 :::
 
 :::schritt
-Ordnung $\left\|\bh\right\|^2$ ist kleiner als Ordnung $\left\|\bh\right\|$:
-Teilen wir die Schranke aus Schritt 3 durch $\left\|\bh\right\|$, so bleibt
-$K M_f M_g \left\|\bh\right\|$ stehen, und das geht gegen null. Der Kreuzterm ist
-also ebenfalls $\cred{o(\left\|\bh\right\|)}$, und eine Summe aus endlich vielen
-solchen Termen ist wieder $\cred{o(\left\|\bh\right\|)}$. Insgesamt ist
-$\cred{R(\bh)} = \cred{o(\left\|\bh\right\|)}$.
-
-::why[$a(\bh) = O(\left\|\bh\right\|^2)$ heißt $\left\|a(\bh)\right\| \le C\left\|\bh\right\|^2$ nahe $\bnull$, also $\left\|a(\bh)\right\|/\left\|\bh\right\| \le C \left\|\bh\right\| \to 0$; die Schreibweisen stehen in @bemerkung:gross-o-und-klein-o-fuer-kleine, die Landau-Rechenregeln in @sec:algos/landau, dort nur mit Argument gegen unendlich statt gegen null]
-:::
-
-:::schritt
-Bleibt zu prüfen, dass $\cgreen{L}$ als Kandidat überhaupt zulässig ist. Linear
-in $\bh$ ist $\cgreen{L}$, weil $\cgreen{D_{\bx} f}$ und $\cgreen{D_{\bx} g}$ es
-sind und die Multiplikation im jeweils anderen, festgehaltenen Argument linear
-ist. Beschränkt ist sie wegen
+$\cgreen{L}$ ist linear in $\bh$, weil $\cgreen{D_{\bx} f}$, $\cgreen{D_{\bx} g}$
+und die Multiplikation im jeweils festgehaltenen Argument es sind, und
+beschränkt wegen
 
 $$
 \left\|\cgreen{L(\bh)}\right\|
@@ -194,10 +173,9 @@ $$
 \left\|\bh\right\| .
 $$
 
-Damit hat $b$ die Gestalt
-$\cblue{b(\bx+\bh)} = \cblue{b(\bx)} + \cgreen{L(\bh)} + \cred{o(\left\|\bh\right\|)}$
-mit beschränktem, linearem $\cgreen{L}$, und das ist @definition:frechet-ableitung mit
-$\cgreen{D_{\bx} b} = \cgreen{L}$.
+Also gilt
+$\cblue{b(\bx+\bh)} = \cblue{b(\bx)} + \cgreen{L(\bh)} + \cred{o(\left\|\bh\right\|)}$,
+und das ist @definition:frechet-ableitung mit $\cgreen{D_{\bx} b} = \cgreen{L}$.
 
 ::why[Bilinearität gibt die Additivität und Homogenität in jedem Argument einzeln; für die Schranke wieder @eq:beschraenkte-bilineare-abbildung, diesmal mit den festen Vektoren $\cblue{f(\bx)}$ und $\cblue{g(\bx)}$]
 :::
@@ -205,8 +183,8 @@ $\cgreen{D_{\bx} b} = \cgreen{L}$.
 ::::
 
 Die Reihenfolge in @eq:produktregel ist verbindlich. Sobald das Produkt nicht
-kommutativ ist, etwa beim Matrixprodukt, steht der abgeleitete Faktor genau
-dort, wo vorher der ursprüngliche stand.
+kommutativ ist, etwa beim Matrixprodukt, steht der abgeleitete Faktor dort, wo
+vorher der ursprüngliche stand.
 
 :::beispiel[#die-produktregel-in-vier-bauformen (Die Produktregel in vier Bauformen)]
 Je nach Wahl der Räume und der Multiplikation liest sich @eq:produktregel anders.
@@ -238,8 +216,8 @@ b(\bx) = \cblue{f(\bx)^\top g(\bx)}
 + \cblue{f(\bx)^\top}\corange{\bJ_g(\bx)} .
 $$
 
-Die Formatprobe geht auf: $1 \times m$ mal $m \times n$ ergibt $1 \times n$, wie
-es sich für den Gradienten einer skalaren Funktion auf dem $\R^n$ gehört.
+Die Formate passen: $1 \times m$ mal $m \times n$ ergibt $1 \times n$, das Format
+eines Gradienten auf dem $\R^n$.
 
 *Spur eines Matrixprodukts*, $\D = \R$:
 
@@ -250,23 +228,12 @@ b(x) = \tr\left[\cblue{\bF(x)\bG(x)}\right]
 + \tr\left[\cblue{\bF(x)}\corange{\frac{\partial \bG(x)}{\partial x}}\right] .
 $$
 
-Damit $\bF\bG$ quadratisch ist und die Spur überhaupt existiert, muss
+Damit $\bF\bG$ quadratisch ist und die Spur existiert, muss
 $\bF(x) \in \R^{m \times n}$ und $\bG(x) \in \R^{n \times m}$ sein; für
-quadratische Faktoren ($m = n$) ist das von selbst erfüllt. Zur
-Kontrolle rechnen wir den Fall einmal mit Zahlen nach. Für
-
-$$
-\bF(x) = \begin{pmatrix} x^2 & 1 \\ 0 & e^x \end{pmatrix} ,
-\qquad
-\bG(x) = \begin{pmatrix} 1 & x \\ x & 2 \end{pmatrix}
-$$
-
-liefern die Produktregel und der zentrale Differenzenquotient an der Stelle
-$x = 0{,}3$ beide den Wert $4{,}2997$.
+quadratische Faktoren ($m = n$) ist das von selbst erfüllt.
 :::
 
-Die dritte Bauform ist die nützlichste, weil sich damit quadratische Formen in
-drei Zeilen ableiten lassen.
+Mit der dritten Bauform lassen sich quadratische Formen in drei Zeilen ableiten.
 
 :::beispiel[#gradient-einer-quadratischen-form (Gradient einer quadratischen Form)]
 Gesucht ist $\corange{\nabla b(\bx)}$ für
@@ -293,22 +260,10 @@ $$
 \end{aligned}
 $$
 
-und für symmetrisches $\bA$ vereinfacht sich das zu
-$\corange{\nabla b(\bx)} = 2\bx^\top\bA$.
-
-Die Unterscheidung hat Folgen. Für
-$\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 0 & 3\end{smallmatrix}\bigr)$ und
-$\bx = (1, 2)^\top$ ist
-$\bA + \bA^\top = \bigl(\begin{smallmatrix} 4 & 1 \\ 1 & 6\end{smallmatrix}\bigr)$
-und damit $\corange{\nabla b(\bx)} = (6,\ 13)$, während die Symmetrieformel
-$2\bx^\top\bA = (4,\ 14)$ liefern würde. Bei der
-:k[symmetrischen Matrix]{#symmetric-matrix}
-$\bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3\end{smallmatrix}\bigr)$ stimmen beide
-Wege überein und geben $(8,\ 14)$.
-
-In @sec:gradient haben wir denselben Gradienten
-schon einmal bestimmt, dort durch Ausschreiben der Doppelsumme und Ableiten nach
-jeder Komponente einzeln. Die Produktregel ersetzt diese Indexrechnung.
+und für :k[symmetrisches]{#symmetric-matrix} $\bA$ vereinfacht sich das zu
+$\corange{\nabla b(\bx)} = 2\bx^\top\bA$. In @sec:gradient haben wir denselben
+Gradienten über die ausgeschriebene Doppelsumme bestimmt; die Produktregel
+erspart diese Indexrechnung.
 :::
 
 :::beispiel[#ridge-regression (Ridge-Regression)]
@@ -345,16 +300,13 @@ $$
 
 Nullsetzen führt auf $(\bX^\top\bX + \lambda\bI_p)\bbeta = \bX^\top\by$, also
 auf die Normalengleichungen aus
-@sec:kq/normalengleichungen mit einem Zuschlag auf der Diagonalen. Der
-Zuschlag ist der eigentliche Gewinn: Ohne vollen Spaltenrang von $\bX$ ist
-$\bX^\top\bX$ nur positiv semidefinit und singulär,
-$\bX^\top\bX + \lambda\bI_p$ dagegen für $\lambda > 0$ stets
-:k[positiv definit]{#positive-definite} und invertierbar. Das gestrafte System
-ist deshalb stets *eindeutig* lösbar. Die ungestraften Normalengleichungen sind
-auch bei Rangdefizienz konsistent und besitzen Lösungen, diese sind dann aber
-nicht eindeutig; vollen Spaltenrang brauchen wir nur für ihre Eindeutigkeit.
+@sec:kq/normalengleichungen mit einem Zuschlag auf der Diagonalen. Für
+$\lambda > 0$ ist $\bX^\top\bX + \lambda\bI_p$ stets
+:k[positiv definit]{#positive-definite} und invertierbar, das gestrafte System
+also *eindeutig* lösbar. Ohne Strafterm haben die Normalengleichungen auch bei
+Rangdefizit von $\bX$ Lösungen, aber keine eindeutige.
 
-Ein Zahlenbeispiel zur Kontrolle. Mit
+Ein Zahlenbeispiel zur Kontrolle: Mit
 
 $$
 \bX = \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3\end{pmatrix} , \qquad
@@ -367,24 +319,15 @@ liefert @eq:ridge-regression den Gradienten $(-0{,}7,\ -3{,}6)$, was ein numeris
 Differenzenquotient bestätigt. Die Lösung des gestraften Systems ist
 $\bbeta = (0{,}341,\ 0{,}578)^\top$ gegenüber $(0{,}667,\ 0{,}500)^\top$ ohne
 Strafterm. Die Länge des Koeffizientenvektors sinkt dabei von $0{,}833$ auf
-$0{,}671$, die zweite Komponente wächst aber sogar leicht: Der Strafterm
-verkürzt den Vektor, nicht jede einzelne Komponente.
-
-Beim Aufschreiben ist auf die Form zu achten: Der Zeilenvektor
-$-2(\by - \bX\bbeta)^\top\bX$ und der Spaltenvektor
-$-2\bX^\top(\by - \bX\bbeta)$ tragen dieselbe Information, sind aber
-verschiedene Objekte und dürfen nicht in derselben Zeile gleichgesetzt werden.
-Wir bleiben bei der Zeilenkonvention aus
-@sec:gradient und transponieren sichtbar.
+$0{,}671$, die zweite Komponente wächst dagegen leicht: Der Strafterm verkürzt
+den Vektor, nicht jede einzelne Komponente.
 :::
 
 ### Die Kettenregel
 
 Verkettungen sind die zweite Art, aus einfachen Funktionen komplizierte zu
-bauen. Für Jacobimatrizen haben wir die zugehörige
-Regel in @sec:jacobi schon bewiesen. Ohne
-Koordinaten wird sie noch einfacher, weil dann nicht einmal mehr ein
-Matrixprodukt dasteht, sondern schlicht eine Hintereinanderausführung.
+bauen. Für Jacobimatrizen kennen wir die Regel aus @sec:jacobi; ohne Koordinaten
+steht an der Stelle des Matrixprodukts eine Hintereinanderausführung.
 
 :::satz[#kettenregel (Kettenregel)]
 Seien $\D_1$, $\D_2$, $\D_3$ normierte Vektorräume, $f\colon \D_1 \to \D_2$ in
@@ -397,10 +340,9 @@ $$ {#eq-kettenregel}
 $$
 :::
 
-Rechts steht die Verkettung zweier linearer Abbildungen, und die ist wieder
-linear und beschränkt. In Koordinaten wird daraus ein Matrixprodukt, dessen
-Reihenfolge die Verkettung spiegelt: zuerst wirkt $\cgreen{D_{\bx} f}$, also
-steht es rechts.
+Rechts steht die Verkettung zweier linearer Abbildungen. In Koordinaten wird
+daraus ein Matrixprodukt, dessen Reihenfolge die Verkettung spiegelt: Zuerst
+wirkt $\cgreen{D_{\bx} f}$, also steht es rechts.
 
 ::::beweis
 
@@ -456,15 +398,14 @@ $$
 $$
 
 und mit $\bh \to \bnull$ geht auch $\bk \to \bnull$, der rechte Quotient also
-gegen null. Dieser Schritt wird leicht übersprungen: Der Restterm von $g$ ist
-zunächst nur gemessen an $\bk$ klein und nicht an $\bh$. Erst die Schranke aus
-Schritt 1 wechselt den Bezugspunkt.
+gegen null. Der Restterm von $g$ ist zunächst nur gemessen an $\bk$ klein; erst
+die Schranke aus Schritt 1 überträgt das auf $\bh$.
 
 ::why[für $\bk = \bnull$ ist $\cred{r_g(\bk)} = \bnull$, der Quotient wird dann gar nicht gebildet; sonst gilt die Abschätzung aus Schritt 1]
 :::
 
 :::schritt
-Alles zusammengesetzt:
+Zusammengesetzt:
 
 $$
 \cblue{(g \circ f)(\bx + \bh)}
@@ -473,9 +414,8 @@ $$
 + \cred{o(\left\|\bh\right\|)} .
 $$
 
-Die Verkettung zweier beschränkter linearer Abbildungen ist beschränkt und
-linear, mit Schranke $M_g M_f$. Damit ist @definition:frechet-ableitung erfüllt, und
-@eq:kettenregel ist bewiesen.
+Die Verkettung $\cgreen{D_{\by} g \circ D_{\bx} f}$ ist linear und beschränkt mit
+Schranke $M_g M_f$, also ist @definition:frechet-ableitung erfüllt.
 
 ::why[$\left\|D_{\by} g(D_{\bx} f(\bh))\right\| \le M_g\left\|D_{\bx} f(\bh)\right\| \le M_g M_f \left\|\bh\right\|$]
 :::
@@ -497,11 +437,6 @@ $$
 \corange{\nabla\left[g\bigl(f(\bx)\bigr)\right]}
 = \cgreen{g'\bigl(f(\bx)\bigr)}\,\corange{\nabla f(\bx)} \in \R^{1 \times n} .
 $$
-
-Ein Skalar mal ein Zeilenvektor. Solange $\cgreen{g'(f(\bx))} \neq 0$ ist,
-bleibt die Richtung des Gradienten bis auf das Vorzeichen erhalten und nur seine
-Länge ändert sich; an einer Stelle mit $\cgreen{g'(f(\bx))} = 0$ verschwindet
-der Gradient dagegen ganz, gleichgültig wie steil $f$ dort ist.
 
 *Zwei vektorwertige Abbildungen*, $f\colon \R^n \to \R^m$,
 $g\colon \R^m \to \R^p$:
@@ -532,46 +467,38 @@ $$
 \corange{\frac{\partial \bF(x)}{\partial x}}\right) \in \R .
 $$
 
-Hier zahlt sich die Lesart aus
-@sec:matrixableitungen aus: Die Fréchet-Ableitung einer
-skalaren Funktion mit Matrixargument wirkt über das Frobenius-Skalarprodukt,
-$\cgreen{D_{\bY} g(\bH)} = \tr\bigl((\partial g/\partial\bY)^\top\bH\bigr)$.
-Eingesetzt wird die Richtung $\bH = \partial\bF(x)/\partial x$.
+Die Fréchet-Ableitung einer skalaren Funktion mit Matrixargument wirkt nach
+@sec:matrixableitungen über das Frobenius-Skalarprodukt,
+$\cgreen{D_{\bY} g(\bH)} = \tr\bigl((\partial g/\partial\bY)^\top\bH\bigr)$,
+hier mit der Richtung $\bH = \partial\bF(x)/\partial x$.
 :::
 
-Zwei der drei Voreinstellungen sind harmlos. Bei der dritten,
-$h(x) = \sqrt{x^2}$, sind beide Faktoren unbeschränkt oder null: Die äußere Rate wächst
-zum Nullpunkt hin über jede Grenze, die innere geht dorthin gegen null. Was
-kommt dann heraus, und was passiert bei $x = 0$ selbst?
+Die dritte Voreinstellung des folgenden Widgets, $h(x) = \sqrt{x^2}$, ist ein
+Grenzfall: Zum Nullpunkt hin wächst die äußere Rate über jede Grenze, während die
+innere gegen null geht. Was kommt dann heraus, und was passiert bei $x = 0$ selbst?
 
-:::interaktiv[Warum im Eindimensionalen ein Produkt herauskommt]
-@satz:kettenregel verkettet zwei lineare Abbildungen. Ist $\D_1 = \D_2 = \D_3 = \R$,
-so ist jede lineare Abbildung eine Multiplikation mit einer Zahl, und das
-Hintereinanderausführen zweier Multiplikationen ist die Multiplikation der
-beiden Zahlen. Deshalb steht in @eq:kettenregel dort, wo sonst eine Verkettung oder
-ein Matrixprodukt stünde, schlicht ein Produkt zweier Steigungen. Die Tafel
-führt beide Zahlen einzeln vor und rechnet die Ableitung zur Kontrolle noch
-einmal ohne die Kettenregel nach, über einen zentralen Differenzenquotienten
-mit Schrittweite $10^{-6}$.
+:::interaktiv[Die Kettenregel im Eindimensionalen]
+Für $\D_1 = \D_2 = \D_3 = \R$ ist jede lineare Abbildung die Multiplikation mit
+einer Zahl, und zwei solche Multiplikationen hintereinander ergeben die
+Multiplikation mit dem Produkt; deshalb steht in @eq:kettenregel hier ein Produkt
+zweier Steigungen. Die Tafel zeigt beide Faktoren einzeln und prüft die Ableitung
+mit einem zentralen Differenzenquotienten (Schrittweite $10^{-6}$).
 
 <KettenregelWidget />
 
-Bei $h(x) = \sqrt{x^2}$ bleibt das Produkt beschränkt, obwohl beide Faktoren es nicht sind: Für
-jedes $x \neq 0$ ist $\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$
-exakt das Vorzeichen von $x$, wie es sich für die Ableitung von $\left|x\right|$ gehört. Bei
-$x = 0$ dagegen ist die Voraussetzung des Satzes verletzt, weil die Wurzel an der Stelle
-$u = f(0) = 0$ nicht differenzierbar ist; übrig bleibt der Knick aus @sec:linearisierung,
-und das Produkt aus $\infty$ und $0$ ist keine Zahl. Die numerische
-Gegenprobe merkt davon nichts und meldet $0$: Der zentrale Differenzenquotient mittelt
-über beide Seiten des Knicks. @beispiel:gradient-der-euklidischen-norm wird genau diesen
-Vorbehalt für die euklidische Norm brauchen.
+Bei $h(x) = \sqrt{x^2}$ ist das Produkt
+$\cgreen{g'(f(x))}\cgreen{f'(x)} = \frac{1}{2\left|x\right|}\cdot 2x$ für jedes
+$x \neq 0$ das Vorzeichen von $x$, also die Ableitung von $\left|x\right|$, obwohl
+der erste Faktor unbeschränkt ist. Bei $x = 0$ ist die Voraussetzung des Satzes
+verletzt, weil die Wurzel in $u = f(0) = 0$ nicht differenzierbar ist; der
+zentrale Differenzenquotient mittelt über den Knick aus @sec:linearisierung und
+meldet $0$. Denselben Vorbehalt braucht @beispiel:gradient-der-euklidischen-norm.
 :::
 
 :::::vertiefung[Alternatives Beispiel zur Kettenregel: logistische Regression]
 
-Kaum ein Modell zeigt die Kettenregel so sauber wie die logistische Regression.
-Wir wollen eine binäre Zielgröße $Y \in \{0, 1\}$ aus Merkmalen
-$\bx \in \R^p$ vorhersagen und modellieren dafür
+Bei der logistischen Regression wollen wir eine binäre Zielgröße
+$Y \in \{0, 1\}$ aus Merkmalen $\bx \in \R^p$ vorhersagen und modellieren dafür
 
 $$
 P(Y = 1 \mid \bx) = \sigma(\bbeta^\top\bx) ,
@@ -668,15 +595,16 @@ Zur Länge: Es gilt stets $\left|\wh{y} - y\right| < 1$, weil
 $\sigma$ die Werte $0$ und $1$ nie annimmt, also ist
 $\left\|\corange{\nabla\ell(\bbeta)}\right\| = \left|\wh y - y\right|\left\|\bx\right\|
 < \left\|\bx\right\|$ für jedes $\bx \neq \bnull$. Eine einzelne Beobachtung
-kann das Modell nie beliebig weit reißen, egal wie falsch die Vorhersage liegt.
+kann das Modell also nie beliebig weit verschieben, egal wie falsch die
+Vorhersage liegt.
 
 :::
 
-Wie weit kann eine einzelne Beobachtung den Parameter reißen, wenn das Modell
+Wie weit kann eine einzelne Beobachtung den Parameter verschieben, wenn das Modell
 maximal danebenliegt? Und was bleibt vom Gradienten übrig, wenn das Merkmal
 selbst null ist?
 
-:::interaktiv[Der Gradient am Regler: eine Beobachtung, ein Merkmal]
+:::interaktiv[Der logistische Gradient an einer Beobachtung]
 Die Tafel zeigt den einfachsten denkbaren Fall, ein Merkmal und einen Parameter.
 Links wandert der Punkt auf der Sigmoidkurve, wenn wir $\beta$ verschieben; der
 orange Balken ist der Fehler $\wh{y} - y$. Rechts steht der Verlust als Funktion
@@ -690,9 +618,9 @@ nach oben, so wird das Modell mit wachsender Sicherheit falsch. Der Gradient nä
 Obergrenze $\left|x\right|$, erreicht sie aber nie. Das ist die Aussage zur Länge aus
 @bemerkung:fehler-mal-merkmal, ablesbar am Fehlerbalken, der nie über die Höhe $1$
 hinauskommt. Stellen wir umgekehrt $x = 0$ ein, so ist die Verlustkurve eine waagerechte
-Gerade, und der Gradient verschwindet für jedes $\beta$.
-Vor allem aber bestätigt die numerische Gegenprobe in beiden Klassen die Formel
-@eq:gradient-des-logistischen-verlusts-2, Vorzeichen eingeschlossen.
+Gerade, und der Gradient verschwindet für jedes $\beta$. Die numerische
+Gegenprobe bestätigt @eq:gradient-des-logistischen-verlusts-2 in beiden Klassen,
+Vorzeichen eingeschlossen.
 :::
 
 ::::quiz
@@ -723,7 +651,7 @@ Information über $\beta$.
 
 ### Übung: Gradient der euklidischen Norm
 
-Zum Schluss eine Rechnung, die beide Regeln dieses Abschnitts in Anspruch nimmt.
+Zum Schluss eine Rechnung mit beiden Regeln dieses Abschnitts.
 Gesucht ist $\corange{\nabla h(\bx)}$ für
 
 $$
@@ -752,24 +680,18 @@ $$
 $$
 
 Der Gradient der Norm ist also der auf Länge $1$ normierte Vektor selbst, als
-Zeile geschrieben. Er zeigt radial vom Ursprung weg, was zur Anschauung passt:
-Am schnellsten wächst der Abstand zum Ursprung, wenn wir uns direkt von ihm
+Zeile geschrieben. Er zeigt radial vom Ursprung weg: Am schnellsten wächst der Abstand zum Ursprung, wenn wir uns direkt von ihm
 entfernen. Für $\bx = (3, 4)^\top$ etwa ist
 $\corange{\nabla h(\bx)} = (0{,}6,\ 0{,}8)$, für $\bx = (1, -2, 2)^\top$
 entsprechend $(1/3,\ -2/3,\ 2/3)$.
 
-*Der Vorbehalt.* Die Rechnung gilt nur für $\bx \neq \bnull$. Die Kettenregel
-verlangt Differenzierbarkeit von $\cblue{g}$ an
-der Stelle $u = \cblue{f(\bx)} = \left\|\bx\right\|_2^2$, und für $\bx = \bnull$
-ist das gerade die Stelle $u = 0$, an der $\cgreen{g'}$ über jede Grenze wächst.
-Der Nullpunkt ist dabei nicht bloß eine Lücke unserer Herleitung, dort gibt es
-überhaupt keine Fréchet-Ableitung. Gäbe es nämlich eine lineare Abbildung
-$L$ mit $\left\|\bh\right\|_2 = L(\bh) + \cred{o(\left\|\bh\right\|)}$, so
-setzten wir $\bh = t\bd$ ein und teilten durch $t$: Für $t > 0$ folgte
-$L(\bd) = \left\|\bd\right\|_2$, für $t < 0$ dagegen
-$L(\bd) = -\left\|\bd\right\|_2$. Für $\bd \neq \bnull$ widerspricht sich das.
-Im Fall $n = 1$ ist es genau der Knick der Betragsfunktion aus
-@sec:linearisierung.
+*Der Vorbehalt.* Die Rechnung gilt nur für $\bx \neq \bnull$: Die Kettenregel
+verlangt Differenzierbarkeit von $\cblue{g}$ in $u = \left\|\bx\right\|_2^2$, und
+bei $u = 0$ wächst $\cgreen{g'}$ über jede Grenze. Im Nullpunkt gibt es auch keine
+Fréchet-Ableitung: Aus $\left\|\bh\right\|_2 = L(\bh) + \cred{o(\left\|\bh\right\|)}$
+folgte mit $\bh = t\bd$ und $t \to 0^\pm$ sowohl $L(\bd) = \left\|\bd\right\|_2$
+als auch $L(\bd) = -\left\|\bd\right\|_2$, ein Widerspruch für $\bd \neq \bnull$.
+Für $n = 1$ ist das der Knick der Betragsfunktion aus @sec:linearisierung.
 :::
 
 ### Selbsttest

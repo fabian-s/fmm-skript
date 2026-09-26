@@ -11,7 +11,7 @@ import { EndpointWidget } from "./widgets/ClosedBoundedSetWidget";
 Zwei getrennte Bedingungen an eine Menge $S \subseteq \R^n$. *Beschränkt*
 (bounded) heißt: $S$ passt in eine Kugel mit endlichem Radius,
 $\|\bx\| \le R$ für alle $\bx \in S$, gemessen mit der
-:k[euklidischen Norm]{#euclidean-norm}. Keine Punkte entkommen ins Unendliche.
+:k[euklidischen Norm]{#euclidean-norm}.
 *Abgeschlossen* (closed) heißt: $S$ enthält alle seine Randpunkte. Wann immer
 sich Punkte aus $S$ auf einen Grenzwert zubewegen, gehört auch dieser
 Grenzwert zu $S$. Das Intervall $[0, 1]$ ist abgeschlossen; $(0, 1)$ nicht,
@@ -30,8 +30,10 @@ Fällt eine Bedingung weg, fällt die Garantie, nicht automatisch das Minimum:
 $f(x) = x$ hat auf ganz $\R$ kein Minimum (nicht beschränkt), $f(x) = x^2$
 dagegen schon.
 
-Was geschieht mit dem Minimum, wenn wir nur den Randpunkt aus der Menge entfernen?
+Was geschieht mit dem Minimum, wenn der linke Randpunkt nicht zur Menge gehört?
 
 <EndpointWidget />
 
-Ohne den Randpunkt wird der kleinste Wert beliebig gut angenähert, aber von keinem Punkt erreicht; erst die Abgeschlossenheit macht den Grenzwert zum Minimum.
+Ohne den Randpunkt kommen die Funktionswerte ihrer unteren Grenze (dem Infimum)
+beliebig nahe, erreichen sie aber nicht; erst die Abgeschlossenheit macht den
+Grenzwert zum Minimum.

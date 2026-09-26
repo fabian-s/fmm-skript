@@ -12,19 +12,19 @@ $$
 
 Konvergiert diese Folge und ist $g$ stetig, so ist der Grenzwert ein
 Fixpunkt. Deshalb haben viele numerische Verfahren diese Gestalt: Wir formen
-die Gleichung so um, dass die gesuchte Größe als Fixpunkt dasteht, und
+die zu lösende Gleichung so um, dass die gesuchte Größe als Fixpunkt dasteht, und
 iterieren.
 
-Ob sie das tut, hängt daran, ob $g$ Abstände verkleinert. Gilt in der Umgebung
+Die Iteration konvergiert, wenn $g$ Abstände verkleinert: Gilt in der Umgebung
 des Fixpunkts $|g'(x)| \le C$ mit einem $C < 1$, so schrumpft der Fehler
 $e_k = |x_k - x^*|$ in jedem Schritt mindestens um den Faktor $C$, und die
-Iteration konvergiert :k[linear]{#rate-of-convergence}. Für $|g'(x^*)| > 1$
-ist der Fixpunkt dagegen *abstoßend*: Die Iteration entfernt sich von ihm.
+Iteration konvergiert :k[linear]{#rate-of-convergence}.
 
 Beispiel: $g(x) = 1 + x/2$ hat den Fixpunkt $x^* = 2$ und $g'(x) = 1/2$. Von
 $x_0 = 0$ aus entsteht $1,\; 1{,}5,\; 1{,}75,\; 1{,}875,\; \dots$, der Fehler
-halbiert sich pro Schritt. Dieselbe Gleichung lässt sich aber auch als
-$g(x) = 2x - 2$ schreiben, mit demselben Fixpunkt und $g'(x) = 2$; von
-$x_0 = 0$ aus liefert sie $-2,\; -6,\; -14,\; -30,\; \dots$ und entfernt sich
-immer weiter. Die Umformung entscheidet also über Erfolg oder Misserfolg, nicht
-die Gleichung. Im Mehrdimensionalen tritt an die Stelle von $g'$ eine Matrix.
+halbiert sich pro Schritt. Schreiben wir dieselbe Gleichung als
+$g(x) = 2x - 2$, so ist $g'(x) = 2 > 1$ und der Fixpunkt *abstoßend*: Von
+$x_0 = 0$ aus entsteht $-2,\; -6,\; -14,\; -30,\; \dots$, der Fehler verdoppelt
+sich pro Schritt. Die Umformung entscheidet also über Erfolg oder Misserfolg, nicht
+die Gleichung. Im Mehrdimensionalen tritt an die Stelle von $|g'|$ eine
+:k[Matrixnorm]{#matrix-norm} der Jacobimatrix von $g$.

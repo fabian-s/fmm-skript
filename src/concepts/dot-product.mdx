@@ -17,27 +17,23 @@ Zum Beispiel liefern $[1, 2]^T$ und $[3, 1]^T$ den
 Wert $1 \cdot 3 + 2 \cdot 1 = 5$. Diese Zahl misst, wie stark zwei Vektoren in
 dieselbe Richtung zeigen: Geometrisch gilt
 $\bx^T \by = \|\bx\|_2 \|\by\|_2 \cos\theta$ mit dem Winkel $\theta$
-zwischen den beiden (von $\bnull$ verschiedenen) Vektoren. Das Skalarprodukt
-ist also positiv, wenn sie grob in dieselbe Richtung zeigen, null, wenn sie
-senkrecht aufeinander stehen (:k[Orthogonalität]{#orthogonality}), und negativ,
-wenn sie einander entgegengesetzt sind. Außerdem erzeugt es die
-:k[euklidische Norm]{#euclidean-norm} über $\|\bx\|_2^2 = \bx^T \bx$. In der
-Statistik ist die Stichprobenkovarianz zweier zentrierter Datenvektoren ihr
-Skalarprodukt geteilt durch $n-1$.
+zwischen den beiden (von $\bnull$ verschiedenen) Vektoren. Das Vorzeichen
+zeigt also, ob der Winkel spitz (positiv), ein rechter (null,
+:k[Orthogonalität]{#orthogonality}) oder stumpf (negativ) ist. Außerdem erzeugt das Skalarprodukt die
+:k[euklidische Norm]{#euclidean-norm} über $\|\bx\|_2^2 = \bx^T \bx$.
 
 Allgemeiner heißt eine Abbildung $\inner{\cdot, \cdot} \colon V \times V \to \R$
 auf einem :k[Vektorraum]{#vector-space} $V$ ein Skalarprodukt, wenn sie in beiden
 Argumenten linear und symmetrisch ist und $\inner{\bv, \bv} > 0$ für
-$\bv \neq \bnull$ erfüllt; jedes Skalarprodukt erzeugt über
-$\|\bv\| = \sqrt{\inner{\bv, \bv}}$ eine Norm. Das wichtigste Beispiel jenseits
-des $\R^n$ ist das
-:k[Skalarprodukt von Funktionen]{#inner-product-functions}, bei dem die Summe
-zum Integral wird.
+$\bv \neq \bnull$ erfüllt; $V$ heißt dann *Skalarproduktraum*. Jedes
+Skalarprodukt erzeugt über $\|\bv\| = \sqrt{\inner{\bv, \bv}}$ eine Norm. Beim
+:k[Skalarprodukt von Funktionen]{#inner-product-functions} wird die Summe zum
+Integral.
 
 Wann wechselt das Skalarprodukt sein Vorzeichen, wenn wir $\by$ um $\bx$
 herumschwenken?
 
 <DotProductWidget />
 
-Das Vorzeichen wechselt in dem Moment, in dem der Schatten von $\by$ auf $\bx$
-die Seite wechselt, also beim rechten Winkel.
+Das Vorzeichen wechselt, wenn der Schatten von $\by$ auf $\bx$ die Seite
+wechselt, also beim rechten Winkel.

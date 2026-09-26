@@ -3,15 +3,11 @@ import { ZoomSchaetzung } from "./widgets/S105Zoom";
 
 ### Woran wir anknüpfen
 
-Damit ist der Begriffsteil des Kapitels abgeschlossen. Die
-Abschnitte @num:differentialrechnung/linearisierung bis @num:differentialrechnung/matrixableitungen haben geklärt, was eine Ableitung
-überhaupt ist, sobald Ein- und Ausgabe keine Zahlen mehr sind, und in welchem Format sie
-dann steht. Ab hier geht es um das Rechnen damit: Welche Eigenschaften erbt eine
+Ab hier geht es um das Rechnen mit der Ableitung: Welche Eigenschaften erbt eine
 differenzierbare Funktion, und wie leiten wir zusammengesetzte Ausdrücke ab, ohne jedes Mal
-zur Definition zurückzukehren.
-
-Der zentrale Begriff ist die *Fréchet-Ableitung*. Für normierte Vektorräume $\D$
-und $\E$, eine Funktion $f\colon \D \to \E$ und eine Stelle $\bx \in \D$ heißt $f$ dort
+zur Definition zurückzukehren? Ausgangspunkt für jeden Beweis ist die Fréchet-Ableitung
+(@definition:frechet-ableitung): Für normierte Vektorräume $\D$ und $\E$ heißt
+$f\colon \D \to \E$ in $\bx \in \D$
 :k[differenzierbar]{#differentiability}, wenn es eine beschränkte lineare Abbildung
 $\cgreen{D_{\bx} f}\colon \D \to \E$ und einen Rest $\cred{r(\bh)} \in \E$ gibt mit
 
@@ -22,32 +18,17 @@ $$ {#eq-eq-10-5-1}
 \quad \text{für } \bh \to \bnull .
 $$
 
-Das ist @definition:frechet-ableitung aus @sec:linearisierung, und die
-Notation von dort übernehmen wir mit: $\D$ und $\E$ sind die beiden
-:k[normierten]{#norm} :k[Vektorräume]{#vector-space}, mit dem Erwartungswert hat das $\E$
-nichts zu tun. Gleichung @eq:eq-10-5-1 ist der Ausgangspunkt für jeden Beweis in diesem
-Abschnitt.
-
-Die drei konkreten Gestalten, die wir laufend brauchen, stehen schon da: der
-:k[Gradient]{#gradient} für $f\colon \R^n \to \R$ (@sec:gradient), die Jacobimatrix für
-$f\colon \R^n \to \R^m$ (@sec:jacobi) und die beiden Matrixableitungen
-$\corange{\partial F(x)/\partial x}$ und $\corange{\partial f(\bX)/\partial \bX}$
-(@sec:matrixableitungen).
-
-Aus der Analysis setzen wir Produkt- und Kettenregel für Funktionen einer Variablen
-voraus, dazu höhere :k[Ableitungen]{#derivative} und die
-:k[Taylorreihe]{#taylor-series}; aus der linearen Algebra bilineare und multilineare
-Abbildungen samt :k[Skalarprodukt]{#dot-product} $\inner{\cdot, \cdot}$
-(@sec:tensoren/multilinear), die
-:k[quadratischen Formen]{#quadratic-form} $\bx^\top\bA\bx$ und die
+Aus der Analysis brauchen wir Produkt- und Kettenregel für Funktionen einer Variablen,
+höhere :k[Ableitungen]{#derivative} und die :k[Taylorreihe]{#taylor-series}, aus der
+linearen Algebra bilineare und multilineare Abbildungen samt
+:k[Skalarprodukt]{#dot-product} $\inner{\cdot, \cdot}$ (@sec:tensoren/multilinear),
+:k[quadratische Formen]{#quadratic-form} $\bx^\top\bA\bx$ und die
 :k[Komposition von Funktionen]{#function-composition}.
 
-Der Fahrplan für die zweite Kapitelhälfte: Dieser Abschnitt klärt zwei allgemeine
-Eigenschaften. Jede differenzierbare Funktion ist stetig, und die Ableitungsoperation
-selbst ist linear.
-@sec:produkt-kettenregel bringt Produkt- und Kettenregel in der allgemeinen Fassung,
-@sec:hoehere-ableitungen die Ableitungen höheren Grades und
-@sec:taylor die Taylorapproximation.
+Dieser Abschnitt klärt zwei allgemeine Eigenschaften: Jede differenzierbare Funktion ist
+stetig, und die Ableitungsoperation selbst ist linear. @sec:produkt-kettenregel bringt
+Produkt- und Kettenregel in der allgemeinen Fassung, @sec:hoehere-ableitungen die
+Ableitungen höheren Grades und @sec:taylor die Taylorapproximation.
 
 :::bemerkung[#gross-o-und-klein-o-fuer-kleine (Groß-O und klein-o für kleine Argumente)]
 In @sec:linearisierung haben wir $g(\bh) = o(\left\|\bh\right\|)$
@@ -66,15 +47,12 @@ Ein $O$-Term darf also von derselben Größenordnung sein wie $\left\|\bh\right\
 nur mitschrumpfen. Jeder $o$-Term ist damit automatisch ein $O$-Term: Strebt der Quotient
 gegen null, so liegt er für hinreichend kleine $\bh$ unter $1$, und das ist die Schranke
 mit $C = 1$. Umgekehrt geht es nicht, denn $g(h) = h$ ist $O(\left|h\right|)$, aber nicht
-$o(\left|h\right|)$. Die :k[Landau-Symbole]{#big-o-notation} kennen wir aus
-@sec:algos/landau in ihrer üblichen Rolle als Aufwandsmaß; dort läuft
-das Argument gegen unendlich, hier gegen null, die Rechenregeln sind dieselben.
+$o(\left|h\right|)$.
 :::
 
 ### Differenzierbarkeit erzwingt Stetigkeit
 
-Die lineare Approximation @eq:eq-10-5-1 sagt mehr, als sie auf den ersten Blick zugibt. Sie
-schließt nämlich Sprünge in der Nähe von $\bx$ aus: Wer sich in
+Die lineare Approximation @eq:eq-10-5-1 schließt Sprünge aus: Eine Funktion, die sich in
 erster Ordnung linear approximieren lässt, kann an dieser Stelle nicht springen.
 
 :::satz[#stetigkeit-aus-differenzierbarkeit (Stetigkeit aus Differenzierbarkeit)]
@@ -82,48 +60,37 @@ Seien $\D$ und $\E$ normierte Vektorräume und $f\colon \D \to \E$ in $\bx \in \
 differenzierbar. Dann ist $f$ in $\bx$ :k[stetig]{#continuity}.
 :::
 
-:::::vertiefung[Warum Differenzierbarkeit Stetigkeit erzwingt]
-
 ::::beweis
 
 :::schritt
-Die Ableitung $\cgreen{D_{\bx} f}$ ist nach Definition eine beschränkte lineare Abbildung.
-Es gibt also ein $M < \infty$ mit
+Die Ableitung $\cgreen{D_{\bx} f}$ ist nach Definition beschränkt und linear. Es gibt also
+ein $M < \infty$ mit
 
 $$
 \left\|\cgreen{D_{\bx} f(\bh)}\right\| \le M \left\|\bh\right\|
 \qquad \text{für alle } \bh ,
 $$
 
-und damit ist $\cgreen{D_{\bx} f(\bh)} = O(\left\|\bh\right\|)$.
+das heißt $\cgreen{D_{\bx} f(\bh)} = O(\left\|\bh\right\|)$.
 
-::why[@definition:frechet-ableitung verlangt von $D_{\bx} f$ Linearität und Beschränktheit; das $M$ darf von der Stelle $\bx$ abhängen, nicht aber von $\bh$]
+::why[@definition:frechet-ableitung; nur hier geht die Beschränktheit ein, und in endlich-dimensionalen Räumen ist sie automatisch erfüllt (@bemerkung:linearisierung-wie-die-definition-zu-lesen-ist)]
 :::
 
 :::schritt
 Der Restterm $\cred{r(\bh)} := \cblue{f(\bx+\bh)} - \cblue{f(\bx)} - \cgreen{D_{\bx} f(\bh)}$
-ist nach @eq:eq-10-5-1 von der Ordnung $\cred{o(\left\|\bh\right\|)}$. Nach @bemerkung:gross-o-und-klein-o-fuer-kleine
-gibt es deshalb ein $\delta > 0$ mit
-
-$$
-\left\|\cred{r(\bh)}\right\| \le \left\|\bh\right\|
-\qquad \text{für alle } \bh \text{ mit } \left\|\bh\right\| < \delta .
-$$
-
-::why[der Quotient $\left\|r(\bh)\right\|/\left\|\bh\right\|$ strebt gegen null, liegt also ab einem $\delta$ unter $1$]
-:::
-
-:::schritt
-Beide Schranken zusammen liefern für alle $\bh$ mit $\left\|\bh\right\| < \delta$
+ist $\cred{o(\left\|\bh\right\|)}$, für alle $\bh$ mit $\left\|\bh\right\| < \delta$ also
+höchstens $\left\|\bh\right\|$ lang. Für diese $\bh$ gilt
 
 $$
 \left\|\cblue{f(\bx+\bh)} - \cblue{f(\bx)}\right\|
 = \left\|\cgreen{D_{\bx} f(\bh)} + \cred{r(\bh)}\right\|
 \le M \left\|\bh\right\| + \left\|\bh\right\|
-= (M+1)\left\|\bh\right\| .
+= (M+1)\left\|\bh\right\| ,
 $$
 
-::why[erst die Definition von $r(\bh)$ umgestellt, dann die Dreiecksungleichung, dann die Schranken aus Schritt 1 und 2]
+kurz $\cblue{f(\bx+\bh)} = \cblue{f(\bx)} + O(\left\|\bh\right\|)$.
+
+::why[der Quotient $\left\|r(\bh)\right\|/\left\|\bh\right\|$ strebt gegen null, liegt also ab einem $\delta$ unter $1$ (@bemerkung:gross-o-und-klein-o-fuer-kleine); dann die Dreiecksungleichung und Schritt 1]
 :::
 
 :::schritt
@@ -134,16 +101,6 @@ heißt $\cblue{f(\bx+\bh)} \to \cblue{f(\bx)}$, und das ist die Stetigkeit von $
 :::
 
 ::::
-
-Üblicherweise fasst man die beiden Zusatzterme zu einem einzigen zusammen und schreibt kurz
-$\cblue{f(\bx+\bh)} = \cblue{f(\bx)} + O(\left\|\bh\right\|)$. Schritt 3 ist genau diese
-Aussage, nur mit der Konstanten $M+1$ ausgeschrieben. Nebenbei sehen wir, welche Zutat
-wirklich gebraucht wird: die Beschränktheit von $\cgreen{D_{\bx} f}$. In
-endlich-dimensionalen Räumen ist jede lineare Abbildung automatisch beschränkt
-(@bemerkung:linearisierung-wie-die-definition-zu-lesen-ist), dort kostet Schritt 1 also nichts. Im Unendlichdimensionalen ist die
-Forderung eine echte Zusatzbedingung, und ohne sie bricht der Beweis zusammen.
-
-:::::
 
 ### Stetig, aber nicht differenzierbar
 
@@ -158,9 +115,9 @@ $x = 0$.
 $\cblue{f(0+h)} = \left|h\right| \to 0 = \cblue{f(0)}$. $\checkmark$
 
 *Differenzierbar ist $f$ dort nicht.* Diesen Knick haben wir in @sec:linearisierung schon
-vermessen: Der Differenzenquotient ist für jedes $h > 0$ exakt $\cgreen{+1}$ und für jedes
+untersucht: Der Differenzenquotient ist für jedes $h > 0$ exakt $\cgreen{+1}$ und für jedes
 $h < 0$ exakt $\cgreen{-1}$ (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt). Beide
-einseitigen :k[Grenzwerte]{#limit} existieren also, sie sind bloß verschieden, während
+einseitigen :k[Grenzwerte]{#limit} existieren also, sie sind nur verschieden, während
 @definition:differenzierbarkeit einen einzigen Wert für beide Seiten verlangt. Damit
 existiert $\cgreen{f'(0)}$ nicht, und an den Knick lässt sich keine eindeutige Tangente
 anlegen.
@@ -177,52 +134,41 @@ $$
 
 Stetigkeit ist für Differenzierbarkeit also notwendig, aber nicht hinreichend. In der
 Praxis benutzen wir meist die Kontraposition der ersten Zeile: Wo eine Funktion springt,
-brauchen wir gar nicht erst nach einer Ableitung zu suchen. Umgekehrt darf uns ein glatt
-aussehender Graph nicht beruhigen, denn Knicke sind mit Stetigkeit verträglich. Beides
-begegnet uns wieder, sobald wir in @sec:hoehere-ableitungen Ableitungen höheren Grades
-verlangen: Jede Ableitungsstufe kostet eine Stufe Glattheit.
+brauchen wir gar nicht erst nach einer Ableitung zu suchen. Umgekehrt beweist ein Graph
+ohne Sprünge noch keine Differenzierbarkeit, denn Knicke sind mit Stetigkeit verträglich.
 :::
 
 <MerkregelDiagramm />
 
-*Die beiden Aussagen als Bild, alles an der Stelle $x_0 = 0$. Der grüne Bereich liegt
-vollständig im blauen; das ist @satz:stetigkeit-aus-differenzierbarkeit. Im Ring dazwischen wohnt die Betragsfunktion
-aus @beispiel:die-betragsfunktion-am-nullpunkt, und dass dieser Ring nicht leer ist, verbietet die Umkehrung. Ganz
-außen steht die Sprungfunktion $H$, die in $0$ nicht einmal stetig ist und deshalb auch
-nicht differenzierbar sein kann. Die Farben folgen dem Kapitel-Code: Blau gehört zur
-Funktion und ihren Werten, und Stetigkeit ist eine Aussage über Funktionswerte; Grün
-gehört zum Ableitungsterm, und Differenzierbarkeit ist die Existenz genau dieses Terms.*
+*Die beiden Aussagen als Bild, an der Stelle $x_0 = 0$: Der grüne Bereich
+(differenzierbar) liegt vollständig im blauen (stetig), das ist
+@satz:stetigkeit-aus-differenzierbarkeit. Im Ring dazwischen liegt die Betragsfunktion aus
+@beispiel:die-betragsfunktion-am-nullpunkt, und weil er nicht leer ist, gilt die Umkehrung
+nicht; ganz außen steht die Sprungfunktion $H$, die in $0$ nicht einmal stetig ist.*
 
-Ein zweiter Blick auf denselben Sachverhalt lohnt sich, und er ist der anschaulichere.
-Differenzierbarkeit in $\bx$ heißt nach @definition:differenzierbarkeit, dass sich $f$ dort bis auf einen
-Rest der Ordnung $o(\left\|\bh\right\|)$ durch eine lineare Abbildung ersetzen lässt. Wenn
-das stimmt, muss der Graph unter einer starken Lupe aussehen wie eine Gerade. Was passiert
-also, wenn wir in eine Stelle hineinzoomen: Bei welcher der drei Funktionen wird die Kurve
-irgendwann gerade, und bei welcher nicht?
+Lässt sich $f$ in $\bx$ bis auf einen Rest $o(\left\|\bh\right\|)$ durch eine lineare
+Abbildung ersetzen, so muss der Graph unter einer starken Lupe aussehen wie eine Gerade. Bei
+welcher der drei Funktionen im Widget passiert das?
 
-:::interaktiv[Unter der Lupe: lokal linear oder nicht]
-Wir legen ein quadratisches Fenster um die Stelle $x_0$ und ziehen es zusammen. Beide Achsen
-werden dabei gleich gestaucht, das Bild zeigt also wirklich einen Zoom und keine gestreckte
-Fassung. Gemessen wird, wie weit die Kurve im Fenster von der Geraden abweicht, die durch die
-beiden Fensterränder läuft.
+:::interaktiv[Lokale Linearität unter der Lupe]
+Wir ziehen ein quadratisches Fenster um $x_0$ zusammen, beide Achsen gleich stark, also ein
+echter Zoom. Gemessen wird, wie weit die Kurve im Fenster von der Geraden durch die beiden
+Fensterränder abweicht.
 
 <ZoomSchaetzung />
 
-Die drei Funktionen verhalten sich an der Stelle $0$ verschieden: Nur bei einer von
-ihnen fällt die Abweichung von der Geraden mit jeder Halbierung des Fensters, und das
-besagt der Rest $o(\left\|\bh\right\|)$ in @definition:differenzierbarkeit. Die anderen
-beiden zeigen, dass Nichtdifferenzierbarkeit mehr als eine
-Bauform hat, und keine davon verträgt sich mit einer Geraden. Verschieben wir $x_0$ von der $0$
-weg, so wird auch der Betrag lokal linear. Die Ausnahme liegt an der Stelle, nicht an der
-Funktion.
+Nur bei einer der drei Funktionen fällt die Abweichung an der Stelle $0$ mit jeder
+Halbierung des Fensters, wie es der Rest $o(\left\|\bh\right\|)$ verlangt. Die anderen beiden
+zeigen zwei Bauformen von Nichtdifferenzierbarkeit, und keine verträgt sich mit einer
+Geraden. Verschieben wir $x_0$ von der $0$ weg, so wird auch der Betrag lokal linear: Die
+Ausnahme liegt an der Stelle, nicht an der Funktion.
 :::
 
 ### Die Ableitung ist linear
 
 Die zweite allgemeine Eigenschaft betrifft nicht eine einzelne Funktion, sondern die
 Zuordnung $f \mapsto \cgreen{D_{\bx} f}$ selbst. Sie ist verträglich mit Summen und mit
-Vielfachen, und das ist der Grund, warum wir Summen von Bausteinen Summand für Summand
-ableiten dürfen.
+Vielfachen; deshalb dürfen wir Summen von Bausteinen Summand für Summand ableiten.
 
 :::satz[#linearitaet-der-ableitungsoperation (Linearität der Ableitungsoperation)]
 Seien $\D$ und $\E$ normierte Vektorräume und $f, g\colon \D \to \E$ in $\bx \in \D$
@@ -326,12 +272,11 @@ Linearkombinationen unbeschadet.
 ### Was die Linearität in den einzelnen Formaten bedeutet
 
 :::bemerkung[#fuenf-spezialfaelle-derselben-aussage (Fünf Spezialfälle derselben Aussage)]
-Gleichung @eq:linearitaet-der-ableitungsoperation ist eine Aussage über lineare Abbildungen. In den Spezialfällen aus den
-Abschnitten @num:differentialrechnung/gradient bis @num:differentialrechnung/matrixableitungen steckt diese Abbildung jeweils in einem
-konkreten Objekt, und die Linearität überträgt sich wörtlich auf dieses Objekt. Es sind fünf
-Fälle, und wir gehen sie in derselben Reihenfolge durch wie der Fahrplan in
-@sec:gradient. Überall sind $c_1, c_2 \in \R$
-beliebig, und die beteiligten Funktionen sind an der jeweiligen Stelle differenzierbar.
+In den Spezialfällen der Abschnitte @num:differentialrechnung/gradient bis
+@num:differentialrechnung/matrixableitungen steckt die lineare Abbildung aus
+@eq:linearitaet-der-ableitungsoperation jeweils in einem konkreten Objekt, und die
+Linearität überträgt sich auf dieses Objekt (überall $c_1, c_2 \in \R$ beliebig, alle
+Funktionen an der jeweiligen Stelle differenzierbar).
 
 1. $\D = \R$, $\E = \R$: die gewöhnliche Ableitung
    (@sec:linearisierung).
@@ -374,22 +319,18 @@ beliebig, und die beteiligten Funktionen sind an der jeweiligen Stelle differenz
    + c_2 \corange{\frac{\partial g(\bX)}{\partial \bX}}
    $$
 
-Alle fünf Zeilen sagen dasselbe: Die Ableitungsobjekte werden eintragsweise addiert und
-mit Skalaren multipliziert. Überraschend ist das nicht, denn jeder ihrer Einträge ist eine
-gewöhnliche oder eine partielle Ableitung, und für die kennen wir die Linearität schon aus
-der Analysis. Der Gewinn liegt woanders: @satz:linearitaet-der-ableitungsoperation gilt in jedem normierten Raum, also
-auch dort, wo wir gar keine Einträge zum Nachrechnen haben. Die drei leeren Zellen der Tabelle aus
-@sec:gradient bleiben auch hier unbesetzt; sie bräuchten
-:k[Tensoren]{#tensor} mit mindestens drei Indexpositionen
-(@sec:tensoren/tensoren).
+Die Ableitungsobjekte werden also eintragsweise addiert und mit Skalaren multipliziert;
+das wussten wir schon aus der Analysis, denn jeder Eintrag ist eine gewöhnliche oder eine
+partielle Ableitung. Der Gewinn von @satz:linearitaet-der-ableitungsoperation: Er gilt in
+jedem normierten Raum, auch dort, wo es keine Einträge zum Nachrechnen gibt.
 :::
 
 :::beispiel[#linearitaet-an-einem-zahlenbeispiel (Linearität an einem Zahlenbeispiel)]
 Gegeben sind $\cblue{f(\bx)} = \bx^\top\bx$ und $\cblue{g(\bx)} = \ba^\top\bx$ mit
 $\ba = (1, 2)^\top$. Gesucht ist $\corange{\nabla h(\bx)}$ für
 $\cblue{h(\bx)} = 3\cblue{f(\bx)} - 2\cblue{g(\bx)}$ an der Stelle
-$\bx = (1, -1)^\top$. Der Buchstabe $h$ ist hier ausnahmsweise ein Funktionsname und nicht
-der Zuwachs aus @eq:eq-10-5-1; ein Zuwachs kommt in dieser Rechnung nicht vor.
+$\bx = (1, -1)^\top$. Der Buchstabe $h$ ist hier ausnahmsweise ein Funktionsname, nicht
+der Zuwachs aus @eq:eq-10-5-1.
 
 *Schritt 1: die Gradienten der Bausteine.* Ausgeschrieben ist
 $\cblue{f(\bx)} = x_1^2 + x_2^2$, also
@@ -424,11 +365,8 @@ $$
 
 *Probe.* Multiplizieren wir $h$ zuerst aus, so steht dort
 $\cblue{h(\bx)} = 3x_1^2 + 3x_2^2 - 2x_1 - 4x_2$, und die beiden partiellen Ableitungen
-sind $6x_1 - 2$ und $6x_2 - 4$. $\checkmark$ Bei diesem kleinen Beispiel sind beide Wege
-etwa gleich lang. Sobald $f$ und $g$ komplizierter werden, spielt der Umweg über die
-Bausteine seinen Vorteil aus, denn wir dürfen dann auf fertige Identitäten aus
-@sec:gradient zurückgreifen, statt eine unübersichtliche
-Summe von Hand zu differenzieren.
+sind $6x_1 - 2$ und $6x_2 - 4$. $\checkmark$ Bei komplizierteren $f$ und $g$ spart der Weg
+über die Bausteine Arbeit, weil wir auf fertige Identitäten aus @sec:gradient zurückgreifen.
 :::
 
 ### Selbsttest
@@ -458,7 +396,7 @@ Am Knick von $f(x) = \left|x\right|$ existieren die einseitigen Grenzwerte des
 Differenzenquotienten nicht.
 
 Sie existieren beide, sie stimmen nur nicht überein: $+1$ von rechts, $-1$ von links, und
-zwar schon für jedes einzelne $h \neq 0$. Genau daran scheitert @definition:differenzierbarkeit, die
+zwar schon für jedes einzelne $h \neq 0$. Daran scheitert @definition:differenzierbarkeit, die
 einen einzigen Grenzwert für beide Seiten verlangt.
 :::
 
@@ -489,7 +427,7 @@ Für in $\bx$ differenzierbare $f, g\colon \R^n \to \R$ gilt
 $\nabla\left[3f(\bx) - 2g(\bx)\right] = 3\nabla f(\bx) - 2\nabla g(\bx)$.
 
 Das ist Zeile 2 aus @bemerkung:fuenf-spezialfaelle-derselben-aussage, also @satz:linearitaet-der-ableitungsoperation im Fall $\D = \R^n$, $\E = \R$ mit
-$c_1 = 3$ und $c_2 = -2$. @beispiel:linearitaet-an-einem-zahlenbeispiel rechnet genau diesen Fall durch und erhält an
+$c_1 = 3$ und $c_2 = -2$. @beispiel:linearitaet-an-einem-zahlenbeispiel rechnet diesen Fall durch und erhält an
 der Stelle $(1, -1)^\top$ den Gradienten $(4, -10)$.
 :::
 

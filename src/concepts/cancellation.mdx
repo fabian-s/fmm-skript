@@ -18,11 +18,11 @@ $$
 Stimmen $a$ und $b$ in $k$ führenden Ziffern überein, verlieren wir etwa $k$
 der rund 16 signifikanten Dezimalstellen, die uns die
 :k[Maschinengenauigkeit]{#machine-epsilon} lässt. Klassisches Beispiel: Die
-Varianz-„Formel" $\tfrac{1}{n}\sum_i x_i^2 - \bar{x}^2$ subtrahiert
+Varianz-„Formel“ $\tfrac{1}{n}\sum_i x_i^2 - \bar{x}^2$ subtrahiert
 für Daten um $10^9$ zwei Zahlen der Größe $10^{18}$; das Ergebnis kann sogar
 negativ werden.
 
-Die Kur ist nie „genauer rechnen", sondern *umformen*, sodass keine fast
+Abhilfe schafft nicht genaueres Rechnen, sondern *Umformen*, sodass keine fast
 gleichen Zahlen subtrahiert werden. Ein Beispiel aus der QR-Zerlegung: Beim
 Householder-Vektor $v_1 = a_1 - \alpha$ wählen wir das Vorzeichen
 $\alpha = -\sign(a_1)\,\|\ba\|_2$, damit aus der Subtraktion eine Addition
@@ -32,4 +32,5 @@ Wie viele Stellen bleiben verlässlich, wenn mehr führende Ziffern übereinstim
 
 <DigitWidget />
 
-Jede gemeinsame führende Ziffer kostet eine signifikante Stelle des Ergebnisses; ab einigen Ziffern trägt nur noch der alte Rundungsfehler die Differenz.
+Jede gemeinsame führende Ziffer verzehnfacht den Verstärkungsfaktor
+$|a|/|a - b|$ und kostet damit eine signifikante Stelle.
