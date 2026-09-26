@@ -7,9 +7,9 @@ import { PermFigur } from "./widgets/PermutationMatrixWidget";
 Eine *Permutationsmatrix* $\bP$ ist eine
 :k[Einheitsmatrix]{#identity-matrix}, deren Zeilen vertauscht wurden: Jede
 Zeile und jede Spalte enthält genau eine $1$, alle anderen Einträge sind $0$.
-Die :k[Multiplikation]{#matrix-multiplication} mit ihr schiebt Daten umher,
-ohne einen einzigen Wert zu ändern, und auf welcher Seite $\bP$ steht,
-entscheidet darüber, was umgeordnet wird: links Zeilen, rechts Spalten. Für das
+Die :k[Multiplikation]{#matrix-multiplication} mit ihr ordnet Einträge um,
+ohne einen Wert zu ändern, und die Seite, auf der $\bP$ steht,
+entscheidet, was umgeordnet wird: links Zeilen, rechts Spalten. Für das
 $\bP$ der Abbildung unten, dessen Einsen in den Spalten $2, 3, 1$ stehen, ist
 $\bP\bx = (x_2, x_3, x_1)^\top$ (Zeile $i$ liest den Eintrag aus der Spalte,
 in der ihre $1$ steht) und
@@ -18,15 +18,15 @@ von $\bA$ dorthin, wo Zeile $i$ ihre $1$ hat.
 
 Weil das Umsortieren keine Längen ändert, ist $\bP$ eine
 :k[orthogonale Matrix]{#orthogonal-matrix}, und ihre
-:k[Inverse]{#matrix-inverse} ist einfach ihre :k[Transponierte]{#transpose}:
-Das Rückgängigmachen einer Mischung ist selbst wieder eine Mischung. So führen
-Algorithmen Buch über Vertauschungen: Die partielle Pivotsuche der
-:k[LU-Zerlegung]{#lu-decomposition} protokolliert ihre Zeilentausche in einem
-$\bP$ (vgl. Heath §3.5).
+:k[Inverse]{#matrix-inverse} ist ihre :k[Transponierte]{#transpose}.
+Die partielle Pivotsuche der
+:k[LU-Zerlegung]{#lu-decomposition} sammelt ihre Zeilentausche in einem
+solchen $\bP$ (vgl. Heath §2.4).
 
 Woran sehen wir, welchen Eintrag eine Zeile holt, und wie macht $\bP^\top$ das
 rückgängig?
 
 <PermFigur />
 
-Eine Permutationsmatrix erhält die Werte und ändert allein ihre Positionen.
+Mit $\bP$ wird $(5, 7, 9)$ zu $(7, 9, 5)$. $\bP^\top$ liest dieselbe Zuordnung
+rückwärts und stellt $(5, 7, 9)$ wieder her.

@@ -1,10 +1,8 @@
 import { SketchingDemo } from "./widgets/S84Sketching";
 
 Die iterativen Verfahren der Abschnitte @num:la-misc/eigenwerte und
-@num:la-misc/iterative-loeser handeln Genauigkeit gegen Laufzeit: Wir brechen ab, sobald
-uns das Erreichte genügt. Dieser Abschnitt setzt an einer anderen Stelle an. Wir
-verkleinern nicht die Zahl der Schritte, sondern das Problem selbst, und das
-Werkzeug dafür ist Zufall.
+@num:la-misc/iterative-loeser tauschen Genauigkeit gegen Laufzeit, indem sie
+früh abbrechen. Dieser Abschnitt verkleinert stattdessen das Problem selbst.
 
 ### Zufall mit Absicht
 
@@ -17,22 +15,29 @@ wegwerfen, würfeln wir ihn aus.
 Wir ersetzen ein großes Problem durch ein zufällig erzeugtes, kleines
 Problem, das höchstwahrscheinlich eine ähnliche Lösung hat.
 
-Das Wort „höchstwahrscheinlich" ist dabei wörtlich gemeint. Ein
-randomisiertes Verfahren darf danebenliegen, und die Fehlerwahrscheinlichkeit
-$\delta$ ist ein Parameter, den wir einstellen. Wir kaufen uns Rechenzeit,
-indem wir ein kontrolliertes Risiko eingehen.
+„Höchstwahrscheinlich" heißt: Ein randomisiertes Verfahren darf
+danebenliegen, und die Fehlerwahrscheinlichkeit $\delta$ ist ein Parameter,
+den wir einstellen. Wir gewinnen Rechenzeit und gehen dafür ein kontrolliertes
+Risiko ein.
 :::
 
 Warum sollte das gutgehen? Wer eine Punktwolke im $\R^{10\,000}$ auf ein paar
-hundert Koordinaten eindampft, wirft weit über 90 % der Koordinaten weg. Dass
-die Wolke danach noch dieselbe Form hat, klingt zunächst unplausibel. Der Grund
-liegt in einer Eigenart hochdimensionaler Räume, die wir uns zuerst ansehen.
+hundert Koordinaten reduziert, wirft weit über 90 % der Koordinaten weg. Dass
+die Wolke danach noch dieselbe Form hat, liegt an einer Eigenart
+hochdimensionaler Räume.
 
 ### Fast orthogonale Zufallsvektoren
 
 In der Ebene sind zwei zufällige Richtungen selten senkrecht: Der Winkel
-zwischen ihnen ist gleichverteilt, jeder Wert ist so gut wie jeder andere. Im
-$\R^n$ mit großem $n$ ist das anders.
+zwischen ihnen ist gleichverteilt. Im $\R^n$ mit großem $n$ stehen zwei
+zufällige Vektoren dagegen mit hoher Wahrscheinlichkeit fast senkrecht
+aufeinander. Für unabhängige, standardnormalverteilte $\bs_1, \bs_2 \in \R^n$
+hat der Kosinus des Winkels zwischen ihnen den Erwartungswert $0$ und die
+Varianz $1/n$. Seine Streuung schrumpft also wie $1/\sqrt{n}$: In hohen
+Dimensionen drängt sich der Winkel um $90^\circ$ zusammen, zufällige Richtungen
+sind praktisch :k[orthogonal]{#orthogonality}.
+
+:::::vertiefung[Fast-Orthogonalität zufälliger Vektoren]
 
 :::satz[#zufallsrichtungen-stehen-fast-senkrecht (Zufallsrichtungen stehen fast senkrecht aufeinander)]
 Seien $\bs_1, \bs_2 \in \R^n$ unabhängig und je $\Ncal(\bnull, \bI_n)$-verteilt,
@@ -48,13 +53,6 @@ $$
 \Pr\left(\left|\cos\theta\right| \ge \frac{t}{\sqrt{n}}\right) \le \frac{1}{t^2} .
 $$
 :::
-
-Der Satz sagt: Die Streuung des Kosinus schrumpft wie $1/\sqrt{n}$. In hohen
-Dimensionen drängt sich die Verteilung des Winkels also um $90^\circ$
-zusammen, zufällige Richtungen sind praktisch
-:k[orthogonal]{#orthogonality}.
-
-:::::vertiefung[Woher die Streuung des Kosinus kommt]
 
 ::::beweis
 
@@ -127,16 +125,15 @@ zwischen $60^\circ$ und $120^\circ$. Die Aussage lebt von großem $n$.
 
 :::::
 
-Damit wird plausibel, was wir vorhaben. Ziehen wir $m$ solcher
-Richtungen und schreiben sie als Zeilen in eine Matrix, so stehen je zwei
-dieser Zeilen fast senkrecht aufeinander. Ein Orthonormalsystem sind sie
-deshalb noch lange nicht: Für eine Gauss-Zeile
+Ziehen wir $m$ solcher Richtungen und schreiben sie als Zeilen in eine Matrix
+$\bS$, so stehen je zwei Zeilen fast senkrecht aufeinander. Ein
+Orthonormalsystem sind sie deshalb nicht: Für eine Gauss-Zeile
 $\bs_i \sim \Ncal(\bnull, \bI_n/m)$ ist
 $\E\left[\left\|\bs_i\right\|^2\right] = n/m$, bei $n = 10\,000$ und
 $m = 50$ also $200$. Um die Richtungen kümmert sich die hohe Dimension, um
 die Längen der Vorfaktor in der Verteilung. Die Abbildung
 $\bx \mapsto \bS\bx$ misst die Länge von $\bx$ dann entlang $m$ zufälliger,
-fast senkrechter Achsen, und das reicht weit.
+fast senkrechter Achsen.
 
 :::definition[#sketching-matrix-und-skizze (Sketching-Matrix und Skizze)]
 Sei $m < n$. Eine Zufallsmatrix $\bS \in \R^{m \times n}$ heißt
@@ -157,10 +154,9 @@ ganzen Kapitel ist $\left\|\cdot\right\|$ die
 :k[euklidische Norm]{#euclidean-norm}.
 :::
 
-Häufig heißt $\bS$ eine zufällige „Projektion". Das Wort ist mit Vorsicht zu
-lesen: Eine :k[Projektion]{#projection} bildet einen Raum in sich ab und ist
-idempotent, $\bS$ dagegen führt vom $\R^n$ in den kleineren $\R^m$. Gemeint
-ist nur, dass das Bild in $m$ statt in $n$ Dimensionen lebt.
+Häufig heißt $\bS$ eine zufällige „Projektion". Im strengen Sinn ist sie
+keine: Eine :k[Projektion]{#projection} bildet einen Raum in sich ab und ist
+idempotent, $\bS$ dagegen führt vom $\R^n$ in den kleineren $\R^m$.
 
 ### Ein Zahlenbeispiel
 
@@ -192,20 +188,13 @@ Bedingung brauchen wir gleich. Für diesen Seed weicht der Abstand um rund
 $3\,\%$ ab, der Winkel um rund $1\,\%$, obwohl $99{,}5\,\%$ der
 Dimensionen wegfallen.
 
-Diese Zahlen sind eine gute Ziehung, und wie gut, lässt sich für
-eine Gauss-Skizze exakt beziffern. Ist $\bz \in \R^n$ fest, so sind die $m$
-Komponenten $\bs_i^\top\bz$ von $\bS\bz$ unabhängig
-$\Ncal(0, \left\|\bz\right\|^2/m)$-verteilt; damit ist
-$\left\|\bS\bz\right\|^2/\left\|\bz\right\|^2$ genau $\chi^2_m/m$-verteilt.
-Bei $m = 50$ hat die relative Abweichung des Abstands damit die
-Standardabweichung $9{,}97\,\%$, praktisch die Faustregel
-$1/\sqrt{2m} = 10\,\%$; nur knapp ein Viertel aller Ziehungen bleibt unter
-der $3\,\%$-Marke, und nur knapp $8\,\%$ landen unter $1\,\%$. Das Verfahren
-funktioniert, aber einzelne Ziehungen streuen erheblich.
+Das war eine gute Ziehung: Bei Gauss-Skizzen liegt die typische relative
+Abweichung des Abstands bei $1/\sqrt{2m} = 10\,\%$. Das Verfahren funktioniert,
+aber einzelne Skizzen streuen erheblich.
 :::
 
 :::interaktiv[Sketching mit verstellbarem m]
-Wie weit eine einzelne Ziehung danebenliegen kann, führt das Widget vor – im
+Wie weit kann eine einzelne Ziehung danebenliegen? Das Widget rechnet im
 kleineren Format $n = 200$ statt $10\,000$, damit sich die Skizzendimension $m$
 über den ganzen interessanten Bereich schieben lässt. Verändern wir $m$ und
 vergleichen wir mehrere Ziehungen.
@@ -228,9 +217,8 @@ Nach dem Einblenden zeigt das orange Band $1/\sqrt{2m} = 10\,\%$.
 
 ### Der Einbettungssatz
 
-Bisher haben wir plausibel gemacht, dass Sketching funktionieren kann. Jetzt
-beweisen wir es. Erwartungswert, Varianz und die Tschebyscheff-Ungleichung genügen
-dafür.
+Der folgende Satz macht das präzise. Sein Beweis braucht nur Erwartungswert,
+Varianz und die Tschebyscheff-Ungleichung.
 
 :::satz[#zufaellige-einbettung-eines-festen (Zufällige Einbettung eines festen Vektors)]
 Sei $\bS \in \R^{m \times n}$ eine Zufallsmatrix, deren Zeilen
@@ -328,18 +316,8 @@ $1 - \delta$.
 
 ::::
 
-:::::
-
-Weil $\bS$ linear ist, gilt @satz:zufaellige-einbettung-eines-festen mit
-$\cgreen{\bx} - \cgreen{\by}$ sofort auch für Abstände, und Wurzelziehen macht
-aus der Aussage über $\left\|\cblue{\bS\bx}\right\|^2$ eine über die Länge
-selbst: Aus $\corange{\eps} = 0{,}1$ im Quadrat werden rund $5\,\%$ in der
-Länge. Damit gilt die Abstandsaussage aus
-@definition:sketching-matrix-und-skizze.
-
-::::vertiefung[Warum Cauchy-Schwarz zu grob ist und wie aus Quadraten Längen werden]
 :::bemerkung[#warum-die-momentenbedingung-an-der (Warum die Momentenbedingung an der Projektion ansetzt)]
-Die Varianz in Schritt 3 ließe sich auch bequemer abschätzen, nämlich über die
+Die Varianz in Schritt 3 ließe sich auch einfacher abschätzen, nämlich über die
 :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
 $\left|\bs_i^\top\bv\right| \le \left\|\bs_i\right\|\left\|\bv\right\|$. Dann
 stünde in @eq:zufaellige-einbettung-eines-festen-2 die Länge der ganzen Zeile,
@@ -359,31 +337,24 @@ misst deshalb direkt $\E\left[\left(\bs_i^\top\bv\right)^4\right]$ und ist für
 Gauss-Zeilen mit $K = 3$ sogar mit Gleichheit erfüllt (@beispiel:gauss-rademacher-subsampling).
 :::
 
-:::bemerkung[#von-quadraten-zu-laengen-und-abstaenden (Von Quadraten zu Längen und Abständen)]
-@satz:zufaellige-einbettung-eines-festen spricht über $\left\|\bS\bx\right\|^2$, interessant sind aber
-Längen und Abstände.
+:::::
 
-- **Wurzelziehen.** Für $\corange{\eps} \le 1$ folgt aus @eq:zufaellige-einbettung-eines-festen-3
-  $\sqrt{1-\corange{\eps}} \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le \sqrt{1+\corange{\eps}}$.
-  Für $\corange{\eps} = 0{,}1$ heißt das $0{,}949 \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le 1{,}049$:
-  Eine Verzerrung von $10\,\%$ im Quadrat sind rund $5\,\%$ in der Länge.
-- **Von der Länge zum Abstand.** $\bS$ ist linear, also ist
-  $\bS\bx - \bS\by = \bS(\bx - \by)$. Wenden wir den Satz auf den festen
-  Vektor $\bx - \by$ an, so erhalten wir die Abstandsaussage aus
-  @definition:sketching-matrix-und-skizze.
-- **Mehrere Paare.** Für $N$ Punkte und *alle* Paare brauchen wir die
-  Aussage für $N(N-1)/2$ Differenzvektoren gleichzeitig. Über eine
-  Vereinigungsschranke geht das, kostet aber $\delta \to 2\delta/(N(N-1))$
-  und damit ein deutlich größeres $m$.
-:::
-::::
+Weil $\bS$ linear ist, gilt $\bS\bx - \bS\by = \bS(\bx - \by)$, und der Satz,
+angewandt auf den festen Vektor $\cgreen{\bx} - \cgreen{\by}$, liefert die
+Abstandsaussage aus @definition:sketching-matrix-und-skizze. Wurzelziehen
+macht aus der Aussage über $\left\|\cblue{\bS\bx}\right\|^2$ eine über die
+Länge selbst: Für $\corange{\eps} \le 1$ ist
+$\sqrt{1-\corange{\eps}} \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le \sqrt{1+\corange{\eps}}$,
+für $\corange{\eps} = 0{,}1$ also
+$0{,}949 \le \left\|\cblue{\bS\bx}\right\|/\left\|\cgreen{\bx}\right\| \le 1{,}049$:
+Eine Verzerrung von $10\,\%$ im Quadrat sind rund $5\,\%$ in der Länge.
 
 Winkel behandelt der Satz zunächst gar nicht. Sie folgen aber, denn
 Skalarprodukte lassen sich über die Polarisationsformel aus Längen
 zurückgewinnen; damit ist auch die Winkelaussage aus
 @definition:sketching-matrix-und-skizze gerechtfertigt.
 
-:::::vertiefung[Wie die Winkeltreue aus der Längentreue folgt]
+:::::vertiefung[Winkeltreue und viele Paare]
 :::korollar[#skalarprodukte-bleiben-erhalten (Skalarprodukte bleiben erhalten)]
 Seien $\bx, \by \in \R^n$ fest und $\bS$ wie in @satz:zufaellige-einbettung-eines-festen. Dann gilt mit
 Wahrscheinlichkeit mindestens $1 - 2\delta$
@@ -426,36 +397,42 @@ $$
 
 ::::
 
-Für Einheitsvektoren steht rechts schlicht $\corange{\eps}$. Der Kosinus des
-Winkels ist das Skalarprodukt der normierten Vektoren, und Zähler wie Nenner
-werden bis auf Terme der Ordnung $\corange{\eps}$ getroffen.
+Für Einheitsvektoren steht rechts $\corange{\eps}$. Der Kosinus des Winkels
+ist das Skalarprodukt der normierten Vektoren, und Zähler wie Nenner werden bis
+auf Terme der Ordnung $\corange{\eps}$ getroffen.
+
+Dieselbe Vereinigungsschranke trägt weiter: Für $N$ Punkte und *alle* Paare
+brauchen wir die Aussage für $N(N-1)/2$ Differenzvektoren gleichzeitig. Das
+geht, kostet aber $\delta \to 2\delta/(N(N-1))$ und damit ein deutlich
+größeres $m$.
 
 :::::
 
 :::bemerkung[#ein-fester-vektor-ist-nicht-jeder-vektor (Ein fester Vektor ist nicht jeder Vektor)]
-Das Wort „fest" in @satz:zufaellige-einbettung-eines-festen ist wesentlich. Verschöbe man den Quantor „für
-alle $\bx \in \R^n$" *innerhalb* der Wahrscheinlichkeit, so wäre die Aussage
-schlicht falsch: Unser Beweis fixiert $\bx$, bevor $\bS$ gezogen wird, und die
-Ausnahmemenge darf für jedes $\bx$ eine andere sein. Ein kurzes Gegenargument:
-$\bS$ hat höchstens
-:k[Rang]{#rank} $m < n$, besitzt also einen nichttrivialen
-:k[Kern]{#kernel}. Für ein $\bx \neq \bnull$ mit $\bS\bx = \bnull$ ist
-@eq:zufaellige-einbettung-eines-festen-3 verletzt, wie auch immer $\bS$ ausgefallen ist.
+Das Wort „fest" in @satz:zufaellige-einbettung-eines-festen ist wesentlich:
+$\bx$ wird festgelegt, bevor $\bS$ gezogen wird, und die Ausnahmemenge darf für
+jedes $\bx$ eine andere sein. Für alle $\bx \in \R^n$ zugleich kann die
+Aussage nicht gelten. $\bS$ hat höchstens :k[Rang]{#rank} $m < n$, besitzt
+also einen nichttrivialen :k[Kern]{#kernel}, und für ein $\bx \neq \bnull$ mit
+$\bS\bx = \bnull$ ist @eq:zufaellige-einbettung-eines-festen-3 verletzt, wie
+auch immer $\bS$ ausgefallen ist.
 
 Gleichmäßige Aussagen sind trotzdem möglich, aber nur auf einem
-:k[Unterraum]{#subspace} kleiner Dimension und mit Zusatzarbeit: Man
-kontrolliert endlich viele Richtungen eines feinen Netzes und überträgt das
-Ergebnis per Vereinigungsschranke auf den ganzen Unterraum. Daher rührt der
-Name „Einbetten von Unterräumen", und daher stammt die Rechtfertigung für das
-gesketchte Kleinste-Quadrate-Problem weiter unten: Dort muss die Skizze alle
-Vektoren des von den Spalten von $\bA$ und $\bb$ aufgespannten Unterraums
-gleichzeitig gut treffen.
+:k[Unterraum]{#subspace} kleiner Dimension und mit etwas größerem $m$ (*Subspace
+Embeddings*): Man kontrolliert endlich viele Richtungen eines feinen Netzes und
+überträgt das Ergebnis per Vereinigungsschranke auf den ganzen Unterraum.
+Solche simultanen Garantien braucht etwa das gesketchte
+Kleinste-Quadrate-Problem (@algorithmus:sketching-fuer-ein-kq-problem). Dort
+hängt der Minimierer selbst von $\bS$ ab, und die Skizze muss alle Vektoren des
+von den Spalten von $\bA$ und $\bb$ aufgespannten Unterraums gleichzeitig gut
+treffen.
 :::
 
 ### Drei Bauarten von Sketching-Matrizen
 
-Welche Verteilungen erfüllen @eq:zufaellige-einbettung-eines-festen und @eq:zufaellige-einbettung-eines-festen-2? Drei Bauarten sind in
-der Praxis üblich, und alle drei lassen sich direkt nachrechnen.
+Welche Verteilungen erfüllen @eq:zufaellige-einbettung-eines-festen und
+@eq:zufaellige-einbettung-eines-festen-2? In der Praxis sind drei Bauarten
+üblich.
 
 :::beispiel[#gauss-rademacher-subsampling (Gauss, Rademacher, Subsampling)]
 **Gauss.** $\bs_i \iid \Ncal(\bnull, \bI_n/m)$. Bedingung @eq:zufaellige-einbettung-eines-festen ist die
@@ -479,12 +456,8 @@ $$
 = \frac{3 - 2\sum_{j=1}^n v_j^4}{m^2} \le \frac{3}{m^2} ,
 $$
 
-also ebenfalls $K = 3$. Besser wird die Schranke, je stärker $\bv$ auf
-wenige Koordinaten konzentriert ist: Für $\bv = \be_1$ ist
-$\sum_j v_j^4 = 1$ und damit $K = 1$, für einen gestreuten Vektor dagegen
-$\sum_j v_j^4 = 1/n$, also so gut wie die $3$ des Gauss-Falls. Der
-praktische Vorteil liegt ohnehin woanders, im Erzeugen und Speichern: ein
-Bit pro Eintrag.
+also ebenfalls $K = 3$. Der praktische Vorteil gegenüber Gauss liegt im
+Erzeugen und Speichern: ein Bit pro Eintrag.
 
 **Subsampling.** $\bs_i = \sqrt{n/m}\,\be_{K_i}$ mit
 $K_i \sim \unif\{1, \dots, n\}$, die Skizze greift also $m$ zufällige
@@ -502,19 +475,43 @@ $$
 Dieses $K$ hängt von den Daten ab. Für einen gestreuten Vektor mit
 $v_j = \pm 1/\sqrt{n}$ ist $\sum_j v_j^4 = 1/n$ und damit $K = 1$, besser als
 Gauss. Für $\bv = \be_1$ dagegen ist $K = n$: Die gesamte Information steckt
-in einer Koordinate, und die Stichprobe mit Zurücklegen erwischt sie mindestens
-einmal nur mit Wahrscheinlichkeit
-
-$$
-1-\left(1-\frac1n\right)^m,
-$$
-
-nicht mit $m/n$. Subsampling taugt also, wenn die Information über viele
-Koordinaten verteilt ist, und versagt, wenn sie in wenigen sitzt. Der
-Merksatz, Subsampling sei „nur gut für spezielle Daten", ist in dieser
-Richtung zu lesen: Verteilte Information ist der gute Fall, wenige dominante
-Koordinaten der schlechte.
+in einer Koordinate, und die Stichprobe mit Zurücklegen erwischt sie nur mit
+Wahrscheinlichkeit $1-(1-1/n)^m$ überhaupt. Subsampling taugt also, wenn die
+Information über viele Koordinaten verteilt ist, und versagt, wenn sie in
+wenigen sitzt.
 :::
+
+::::vertiefung[Vergleich der Sketching-Matrizen]
+
+| Typ | Speicher | Zeit für $\bS\bx$ | Qualität |
+| --- | --- | --- | --- |
+| Gauss | $O(mn)$ | $O(mn)$ | optimal |
+| Rademacher ($\pm 1/\sqrt{m}$) | $O(mn)$ | $O(mn)$ | optimal |
+| Subsampling | $O(m)$ | $O(m)$ | gut bei gestreuten Daten |
+| SRHT (Hadamard) | $O(n+m)$ oder reproduzierbar erzeugte Vorzeichen | $O(n \log n)$ | sehr gut |
+
+Speicher und Rechenzeit stehen in
+:k[Landau-Notation]{#big-o-notation}: einmal für das Vorhalten von $\bS$,
+einmal für ein einzelnes Produkt $\bS\bx$.
+
+- **Gauss** ist theoretisch optimal, aber teuer: $mn$ Zahlen speichern und
+  $mn$ Multiplikationen je Vektor.
+- **Rademacher** ist genauso gut, wie @beispiel:gauss-rademacher-subsampling
+  mit $K = 3$ zeigt, und einfacher zu erzeugen, weil nur Vorzeichen gewürfelt
+  werden. Die Schranke wird sogar besser, je stärker $\bv$ auf wenige
+  Koordinaten konzentriert ist (für $\bv = \be_1$ ist $K = 1$), also gerade
+  umgekehrt wie beim Subsampling.
+- **Subsampling** wählt $m$ zufällige Koordinaten und ist damit extrem
+  schnell; die Qualität hängt aber an den Daten
+  (@beispiel:gauss-rademacher-subsampling).
+- **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
+  sondern durch eine schnelle Transformation angewendet, daher die
+  $O(n \log n)$ in der Tabelle. Neben den $m$ gezogenen Indizes gehören $n$
+  Vorzeichen zur Transformation; sie werden gespeichert oder reproduzierbar
+  aus einem Seed erzeugt. Die Arbeitskopie des transformierten Vektors benötigt
+  unabhängig davon $O(n)$ Speicher.
+
+::::
 
 ### Anwendungen
 
@@ -537,16 +534,19 @@ Koordinaten der schlechte.
   @sec:anwendungen arbeitet mit einer Skizze des Spaltenraums.
 :::
 
-Ein Vorbehalt gilt für alle drei Punkte: Schneller wird ein Algorithmus nur,
-wenn sich $\bS\bx$ schnell berechnen lässt. Zieht $\bS$ nur $m$ Komponenten
-von $\bx$ heraus, kostet das $O(m)$ Operationen. Eine klassische schnelle Wahl
-ist die *Subsampled Randomized Hadamard Transform* (SRHT). Ihre vollständige
-Hadamard-Transformation kostet $O(n\log n)$ Rechenschritte; speziell geprunte
-Varianten können unter zusätzlichen Implementationsannahmen weniger benötigen.
-Bei einer dichten Gauss-Matrix dagegen kostet
-$\bS\bx$ schon $O(mn)$ Operationen, und dann kann die Skizze teurer sein als
-das Problem, das sie vereinfachen soll.
+Schneller wird ein Algorithmus allerdings nur, wenn sich $\bS\bx$ schnell
+berechnen lässt. Bei einer dichten Gauss-Matrix kostet $\bS\bx$ schon $O(mn)$
+Operationen, und dann kann die Skizze teurer sein als das Problem, das sie
+vereinfachen soll. Subsampling zieht nur $m$ Komponenten von $\bx$ heraus und
+kostet $O(m)$, taugt nach @beispiel:gauss-rademacher-subsampling aber nur für
+gestreute Information. Schnelle Anwendung und sehr gute Qualität verbindet die
+*Subsampled Randomized Hadamard Transform* (SRHT): $\bS$ wird nicht
+gespeichert, sondern über eine schnelle Transformation angewendet. Die
+vollständige Hadamard-Transformation kostet $O(n\log n)$ Rechenschritte;
+beschnittene (pruned) Varianten kommen unter zusätzlichen
+Implementationsannahmen mit weniger aus.
 
+::::vertiefung[Sketching für ein Kleinste-Quadrate-Problem]
 :::algorithmus[#sketching-fuer-ein-kq-problem (Sketching für ein KQ-Problem)]
 Gegeben $\bA \in \R^{n \times p}$ mit $n \gg p$, $\bb \in \R^n$ und eine
 Skizzengröße $m$ mit $p < m \ll n$.
@@ -564,6 +564,7 @@ Schritt 2: Eine dichte Gauss-Matrix braucht dort $O(mnp)$ Operationen, und
 wegen $m > p$ ist das mehr als die $O(np^2)$, die wir sparen wollten. Erst
 mit schnell anwendbaren Skizzen wie der SRHT geht die Rechnung auf.
 :::
+::::
 
 ### Wie klein darf $m$ sein?
 
@@ -583,78 +584,46 @@ $$
 
 Mit $m = 6000$ Dimensionen bleibt der Abstand eines vorher festgelegten
 Punktepaares mit Wahrscheinlichkeit $95\,\%$ auf $10\,\%$ genau erhalten,
-gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$, denn
-$\sqrt{1 \pm 0{,}1}$ weicht von $1$ nur um rund $5\,\%$ ab. Der Speicher sinkt
-von $10\,000$ auf $6000$ Zahlen je Punkt, ein Faktor $n/m \approx 1{,}7$, und
-eine einzelne Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$
-Operationen, ebenfalls ein Faktor $n/m$. Davon leben die typischen
-Anwendungen: die Suche nach nächsten Nachbarn und die Clusteranalyse
-in hohen Dimensionen. Beide berühren die Daten fast nur über Abstände, und
-die bleiben unter der Skizze erhalten.
+gemessen im Quadrat der Länge, in der Länge selbst auf rund $5\,\%$. Der
+Speicher sinkt von $10\,000$ auf $6000$ Zahlen je Punkt, und eine einzelne
+Distanzberechnung kostet statt $O(n)$ nur noch $O(m)$ Operationen. Der Gewinn
+ist beide Male der Faktor $n/m \approx 1{,}7$, nicht sein Quadrat; quadratisch
+in der Dimension sind nur bestimmte Verfahren, etwa das Aufstellen einer
+:k[Kovarianzmatrix]{#covariance-matrix}. Typische Anwendungen sind die Suche
+nach nächsten Nachbarn und die Clusteranalyse in hohen Dimensionen: Beide
+berühren die Daten fast nur über Abstände, und die bleiben unter der Skizze
+erhalten.
 
-Umgekehrt gelesen sagt @eq:dimensionsreduktion-mit-matrix-sketching auch, was ein zehnmal kleineres
-$m = 600$ hergibt: bei
-$\delta = 0{,}05$ nur $\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
+Die Schranke ist allerdings sehr konservativ, weil die
+Tschebyscheff-Ungleichung nur zwei Momente benutzt. In der Praxis reichen oft
+viel kleinere $m$: @beispiel:sketching-zweier-vektoren-mit-10-000 kam mit
+$m = 50$ auf rund $3\,\%$ Abweichung, wenn auch mit einer guten Ziehung.
+:::
+
+:::vertiefung[Wie scharf die Schranke ist]
+Umgekehrt gelesen sagt @eq:dimensionsreduktion-mit-matrix-sketching, was ein
+zehnmal kleineres $m = 600$ hergibt: bei $\delta = 0{,}05$ nur
+$\corange{\eps} = \sqrt{3/(0{,}05 \cdot 600)} = \sqrt{0{,}1} \approx 0{,}32$,
 und bei $\corange{\eps} = 0{,}1$ nur $\delta = 3/(600 \cdot 0{,}01) = 0{,}5$,
-also die Verlässlichkeit eines Münzwurfs.
-:::
-
-:::bemerkung[#zwei-nachtraege-zur-rechnung (Was der Gewinn wirklich ist)]
-Ein Nachtrag dazu, was hier gerechnet wird: Eine einzelne euklidische
-Distanz kostet $O(n)$ Operationen, der Gewinn ist deshalb der Faktor
-$n/m \approx 1{,}7$ und nicht sein Quadrat. Quadratisch in der Dimension sind
-nur bestimmte Verfahren, etwa das Aufstellen einer
-:k[Kovarianzmatrix]{#covariance-matrix}, und nur dort wirkt sich $(n/m)^2$ aus.
-:::
-
-:::vertiefung[Warum in der Praxis viel kleinere Skizzen genügen]
-Warum wird in der Praxis mit Skizzengrößen in der Größenordnung einiger
-hundert gearbeitet, wo die Rechnung oben $m = 6000$ verlangt? Der Grund ist
-unser Werkzeug: Tschebyscheff benutzt nur zwei Momente und ist entsprechend
-grob.
-Wie grob, lässt sich für Gauss-Skizzen exakt sagen. Nach @beispiel:sketching-zweier-vektoren-mit-10-000 ist
-$\left\|\bS\bx\right\|^2/\left\|\bx\right\|^2$ dort $\chi^2_m/m$-verteilt,
-und deren Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und
-$\delta = 0{,}05$ nur $m = 768$ Zeilen. Tschebyscheff fordert das Achtfache.
+also die Verlässlichkeit eines Münzwurfs. Für Gauss-Skizzen ist das viel zu
+pessimistisch, denn dort lässt sich exakt rechnen. Ist $\bz \in \R^n$ fest, so
+sind die $m$ Komponenten $\bs_i^\top\bz$ von $\bS\bz$ unabhängig
+$\Ncal(0, \left\|\bz\right\|^2/m)$-verteilt; damit ist
+$\left\|\bS\bz\right\|^2/\left\|\bz\right\|^2$ genau $\chi^2_m/m$-verteilt.
+Die Verteilungsfunktion verlangt für $\corange{\eps} = 0{,}1$ und
+$\delta = 0{,}05$ nur $m = 768$ Zeilen; Tschebyscheff fordert das Achtfache.
+Auch die Ziehung aus @beispiel:sketching-zweier-vektoren-mit-10-000 lässt sich
+so einordnen: Bei $m = 50$ hat die relative Abweichung des Abstands die
+Standardabweichung $9{,}97\,\%$, praktisch die Faustregel
+$1/\sqrt{2m} = 10\,\%$; nur knapp ein Viertel aller Ziehungen bleibt unter der
+$3\,\%$-Marke, und nur knapp $8\,\%$ landen unter $1\,\%$.
 Für andere Verteilungen steht diese exakte Rechnung nicht zur Verfügung,
 schärfere Konzentrationsungleichungen dagegen schon: Sie liefern ein $m$ der
 Größenordnung $\corange{\eps}^{-2}\log(1/\delta)$, also eine logarithmische
-statt einer linearen Abhängigkeit von $1/\delta$. Der Preis dafür sind
-deutlich mehr Voraussetzungen und ein längerer Beweis (Literatur am Ende des
+statt einer linearen Abhängigkeit von $1/\delta$. Dafür brauchen sie deutlich
+mehr Voraussetzungen und einen längeren Beweis (Literatur am Ende des
 Abschnitts).
 :::
-
-::::vertiefung[Vergleich weiterer Sketching-Matrizen]
-
-### Vergleich der Sketching-Matrizen
-
-| Typ | Speicher | Zeit für $\bS\bx$ | Qualität |
-| --- | --- | --- | --- |
-| Gauss | $O(mn)$ | $O(mn)$ | optimal |
-| Rademacher ($\pm 1/\sqrt{m}$) | $O(mn)$ | $O(mn)$ | optimal |
-| Subsampling | $O(m)$ | $O(m)$ | gut bei gestreuten Daten |
-| SRHT (Hadamard) | $O(n+m)$ oder reproduzierbar erzeugte Vorzeichen | $O(n \log n)$ | sehr gut |
-
-Speicher und Rechenzeit stehen in
-:k[Landau-Notation]{#big-o-notation}: einmal für das Vorhalten von $\bS$,
-einmal für ein einzelnes Produkt $\bS\bx$.
-
-- **Gauss** ist theoretisch optimal, aber teuer: $mn$ Zahlen speichern und
-  $mn$ Multiplikationen je Vektor.
-- **Rademacher** ist genauso gut, wie @beispiel:gauss-rademacher-subsampling mit $K = 3$ zeigt, und
-  einfacher zu erzeugen, weil nur Vorzeichen gewürfelt werden.
-- **Subsampling** wählt $m$ zufällige Koordinaten und ist damit extrem
-  schnell. Die Qualität hängt allerdings an den Daten: Nach @beispiel:gauss-rademacher-subsampling
-  ist $K = n\sum_j v_j^4$, für gestreute Vektoren klein und für konzentrierte
-  Vektoren so groß wie $n$.
-- **SRHT** verbindet beides. Die Matrix wird nicht explizit gespeichert,
-  sondern durch eine schnelle Transformation angewendet, daher die
-  $O(n \log n)$ in der Tabelle. Neben den $m$ gezogenen Indizes gehören $n$
-  Vorzeichen zur Transformation; sie werden gespeichert oder reproduzierbar
-  aus einem Seed erzeugt. Die Arbeitskopie des transformierten Vektors benötigt
-  unabhängig davon $O(n)$ Speicher.
-
-::::
 
 ### Selbsttest
 
@@ -675,9 +644,8 @@ hoher Wahrscheinlichkeit erhalten (@bemerkung:ein-fester-vektor-ist-nicht-jeder-
 nicht gleichzeitig über alle $\bx \in \R^n$.
 
 Im Beweis wird $\bx$ fixiert, bevor $\bS$ gezogen wird; die Ausnahmemenge
-darf für jedes $\bx$ eine andere sein. Gleichmäßige Aussagen über einen ganzen
-Unterraum brauchen ein Netzargument und eine Vereinigungsschranke
-(@bemerkung:ein-fester-vektor-ist-nicht-jeder-vektor).
+darf für jedes $\bx$ eine andere sein. Gleichmäßige Aussagen über einen
+Unterraum brauchen mehr (@bemerkung:ein-fester-vektor-ist-nicht-jeder-vektor).
 :::
 
 :::frage{falsch}
@@ -705,8 +673,8 @@ Subsampling ist für beliebige Daten genauso gut wie eine Gauss-Skizze.
 
 Für Subsampling ist $K = n\sum_j v_j^4$ und hängt damit von den Daten ab.
 Bei gestreuten Vektoren ist $K = 1$ und damit besser als die $3$ der
-Gauss-Skizze, beim Standard-Basisvektor $\be_1$ dagegen $K = n$. Die Tabelle oben
-schreibt deshalb „gut bei gestreuten Daten" und nicht „optimal".
+Gauss-Skizze, beim Standard-Basisvektor $\be_1$ dagegen $K = n$. Subsampling
+taugt deshalb nur, wenn die Information über viele Koordinaten gestreut ist.
 :::
 
 ::::

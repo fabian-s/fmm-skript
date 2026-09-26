@@ -16,8 +16,7 @@ $$
 Von den $n$ Dimensionen, die der Eingangsraum anbietet, drückt die Abbildung
 $\dim(\ker)$ davon auf null zusammen (den :k[Kern]{#kernel}), und jede nicht
 zusammengedrückte Dimension taucht im :k[Bild]{#image} auf, dessen Dimension
-der :k[Rang]{#rank} ist. Keine entsteht neu, keine geht verloren. Kleines
-Beispiel: $\bA = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{pmatrix}$ hat
+der :k[Rang]{#rank} ist. Beispiel: $\bA = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & 1 \end{pmatrix}$ hat
 Rang 2 (die ersten beiden Spalten sind unabhängig, die dritte ist ihre
 Summe), also muss der Kern eine Gerade sein: Tatsächlich spannt
 $(1, 1, -1)^\top$ ihn auf, und $1 + 2 = 3$ geht auf.
@@ -27,8 +26,11 @@ $m < n$ bleiben mindestens $n - m$ Dimensionen für den Kern. Ein homogenes
 :k[Gleichungssystem]{#linear-system} mit weniger Gleichungen als Unbekannten
 hat deshalb immer eine Lösung ungleich null.
 
-Wie teilen sich Rang und Kerndimension das feste Dimensionsbudget?
+Wie teilen sich Rang und Kerndimension die $n = 3$ Eingangsdimensionen einer
+$2 \times 3$-Matrix?
 
 <DimensionBudgetWidget />
 
-Der Rangsatz bilanziert diese beiden Anteile stets zur Eingangsdimension.
+Wächst der Rang um eins, schrumpft der Kern um eins. Mehr als $m = 2$
+Dimensionen kann das Bild nicht aufnehmen, also bleibt mindestens eine für
+den Kern.

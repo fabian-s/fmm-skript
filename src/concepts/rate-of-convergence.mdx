@@ -5,8 +5,8 @@ import { RateWidget } from "./widgets/RateOfConvergenceWidget";
 {/* Konzept-Tooltip: Konvergenzrate: linear vs. quadratisch. */}
 
 Ein iterativer Algorithmus erzeugt eine Folge von Näherungen
-$x_1, x_2, x_3, \ldots$, die sich (hoffentlich) der wahren
-Lösung $x^*$ nähern. Mit
+$x_1, x_2, x_3, \ldots$, die sich der wahren
+Lösung $x^*$ nähern sollen. Mit
 $e_k = \|x_k - x^*\|$ für den Fehler in Schritt
 $k$ beschreibt die *Konvergenzrate* (rate of
 convergence), wie schnell die Fehler schrumpfen, typischerweise über
@@ -15,7 +15,7 @@ $$
 e_{k+1} \approx C\, e_k^{\,r}.
 $$
 
-Mit $r = 1$ und $0 < C < 1$ heißt die Konvergenz
+Der Exponent $r$ heißt *Konvergenzordnung*. Mit $r = 1$ und $0 < C < 1$ heißt die Konvergenz
 *linear*: Jeder Schritt multipliziert den Fehler mit demselben
 Faktor $C$, das sind ungefähr konstant viele neue korrekte Stellen pro
 Iteration (bei $C = 0{,}1$ etwa eine). Mit $r = 2$ ist sie
@@ -24,17 +24,10 @@ $10^{-4}$, dann $10^{-8}$; die Zahl der korrekten Stellen verdoppelt sich,
 bis die :k[Maschinengenauigkeit]{#machine-epsilon} erreicht ist. Kubische
 Konvergenz ($r = 3$) verdreifacht sie.
 
-Deshalb lohnt sich Eigenwert-Analyse: Die
-Potenziteration (power iteration) konvergiert linear mit
-$C = |\lambda_2 / \lambda_1|$, sofern $\lambda_1$ einfach und betragsmäßig
-dominant ist und der Startvektor einen Anteil in dessen Eigenrichtung hat; die
-Rayleigh-Quotienten-Iteration schafft für :k[symmetrische]{#symmetric-matrix}
-Matrizen bei gutem Startwert sogar lokal kubische Konvergenz.
-
 Wie viele Iterationen kostet der Unterschied zwischen linear und quadratisch?
 
 <RateWidget />
 
 Die Schrittzahl der linearen Folge hängt empfindlich von $C$ ab: von
 $10^{-1}$ bis $10^{-16}$ sind es mit $C = 0{,}1$ fünfzehn Schritte, mit
-$C = 0{,}9$ dagegen $328$ – die quadratische braucht beide Male vier.
+$C = 0{,}9$ dagegen $328$. Die quadratische braucht beide Male vier.

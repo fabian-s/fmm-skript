@@ -5,9 +5,9 @@ import { ProjektionsmatrixWidget } from "./widgets/ProjectionWidget";
 {/* Konzept-Tooltip: Projektion. */}
 
 Eine *Projektion* ist eine :k[lineare Abbildung]{#linear-map} $\pi$, die den
-Raum auf einen :k[Untervektorraum]{#subspace} $U$ plättet und dabei jeden
-Punkt, der schon in $U$ liegt, an seinem Platz lässt. Zweimal projizieren
-ändert deshalb nichts gegenüber einmal projizieren: $\pi \circ \pi = \pi$;
+Raum auf einen :k[Untervektorraum]{#subspace} $U$ abbildet und dabei jeden
+Punkt, der schon in $U$ liegt, an seinem Platz lässt. Ein zweites Mal
+projizieren ändert deshalb nichts mehr: $\pi \circ \pi = \pi$;
 gleichwertig erfüllt ihre :k[Matrix]{#matrix} $\bP^2 = \bP$.
 
 Der wichtigste Fall ist die *orthogonale* Projektion: Sie schickt $\bx$ auf den
@@ -19,16 +19,17 @@ $$
 \pi(\bx) = (\bb^\top \bx)\,\bb, \qquad \bP = \bb\bb^\top \qquad (\text{nur für } \|\bb\| = 1),
 $$
 
-wobei $\bb^\top\bx$ das :k[Skalarprodukt]{#dot-product} ist. Kleines Beispiel:
+wobei $\bb^\top\bx$ das :k[Skalarprodukt]{#dot-product} ist. Beispiel:
 Projizieren wir $(2, 3)^\top$ auf die $x_1$-Achse (also
 $\bb = (1, 0)^\top$), erhalten wir $(2, 0)^\top$: die zweite Koordinate wird
-verworfen. Die Kleinste-Quadrate-Schätzung in der Statistik ist
-so eine Projektion: die des Datenvektors auf den Untervektorraum der
-Modellvorhersagen.
+verworfen. Die Kleinste-Quadrate-Schätzung projiziert so den Datenvektor
+auf den Unterraum der möglichen Modellvorhersagen. Auch den nächstgelegenen
+Punkt einer abgeschlossenen konvexen Menge nennen wir Projektion; diese
+Abbildung ist aber meist nicht linear.
 
-Wo genau landet ein Punkt, der neben der Geraden liegt?
+Wo landet ein Punkt, der neben der Geraden liegt?
 
 <ProjektionsmatrixWidget />
 
-Der abgeworfene Rest steht immer senkrecht auf dem Ziel; diese Bedingung
-macht die Kleinste-Quadrate-Lösung aus.
+Auf dem Lotfußpunkt: Der Rest $\bx - \bP\bx$ steht immer senkrecht auf der
+Geraden und verschwindet erst, wenn $\bx$ auf ihr liegt.

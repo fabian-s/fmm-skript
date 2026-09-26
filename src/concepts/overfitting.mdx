@@ -4,20 +4,21 @@ export const title = "Überanpassung";
 
 *Überanpassung* (overfitting) heißt: Ein Modell passt sich den Trainingsdaten
 so eng an, dass es deren zufälliges Rauschen mitlernt statt nur das Signal.
-Auf den gesehenen Daten wirkt es hervorragend, auf neuen Daten versagt es.
+Auf den Trainingsdaten passt es sehr gut, auf neuen Daten sagt es schlecht
+vorher.
 
-Das Paradebeispiel ist die Glättung mit zu vielen Basisfunktionen: Mit
+Das Standardbeispiel ist die Glättung mit zu vielen Basisfunktionen: Mit
 $K = n$ Basisfunktionen und invertierbarer Designmatrix interpoliert der
-Kleinste-Quadrate-Schätzer jeden Datenpunkt exakt – also auch jeden
+Kleinste-Quadrate-Schätzer jeden Datenpunkt exakt, also auch jeden
 Messfehler. In der Bias-Varianz-Zerlegung verschwindet der Bias an den
 Beobachtungsstellen, der Fehler dort ist reine :k[Varianz]{#variance}.
 
-Ein Zahlengefühl: Bei unkorrelierten Fehlern mit Varianz $\sigma^2$ und
+Bei unkorrelierten Fehlern mit Varianz $\sigma^2$ und
 fester Basis mit $K$ Spalten vollen Rangs ist die mittlere Varianz der
 $\wh{f}(x_i)$ exakt $\sigma^2 K / n$, denn die
-:k[Projektionsmatrix]{#projection} hat Spur $K$. Wer $K$ verdoppelt,
-verdoppelt also diesen Varianzanteil, gewinnt an Bias aber nur, solange die
-Funktion wirklich mehr Flexibilität braucht.
+:k[Projektionsmatrix]{#projection} hat Spur $K$. Verdoppeln wir $K$,
+verdoppelt sich also dieser Varianzanteil; der Bias sinkt dafür nur, solange
+die Funktion mehr Flexibilität braucht.
 
 Die Gegenmittel sind Modellwahl (Kreuzvalidierung, Informationskriterien)
 und Regularisierung, eine Strafe auf die Rauheit der Funktion. Das

@@ -6,13 +6,11 @@ import { ProjectionWidget } from "./widgets/NormalEquationsWidget";
  * Konzept-Tooltip: Normalengleichungen (Stoff aus Heath §3.2).
  */}
 
-Wie lösen wir ein
-:k[lineares Kleinste-Quadrate-Problem]{#linear-least-squares}
-eigentlich konkret? Die quadrierte Residuenlänge
-$\phi(\bx) = \| \bb - \bA\bx \|_2^2$
-ist eine glatte Schüssel in $\bx$, an ihrem Minimum muss
-also der :k[Gradient]{#gradient}
-verschwinden – bei uns ein Zeilenvektor,
+Ein :k[lineares Kleinste-Quadrate-Problem]{#linear-least-squares}
+minimiert die quadrierte Residuenlänge
+$\phi(\bx) = \| \bb - \bA\bx \|_2^2$.
+An ihrem Minimum muss der :k[Gradient]{#gradient}
+verschwinden, bei uns ein Zeilenvektor:
 $\nabla \phi(\bx) = 2(\bA\bx - \bb)^{T}\bA$.
 Auf null gesetzt und transponiert sind das die
 *Normalengleichungen* (engl. *normal equations*):
@@ -23,20 +21,13 @@ $$
 
 ein quadratisches $n \times n$-System, obwohl
 $\bA$ selbst hoch und schmal ist. Der Name kommt aus der
-Geometrie: Umgestellt zu
-$\bA^{T}\br = \bzero$ besagt das System, dass das Residuum
-:k[orthogonal]{#orthogonality} („normal“) zu
-jeder Spalte von $\bA$ stehen muss. Das beste
+Geometrie: Mit dem Residuum $\br = \bb - \bA\bx$ lautet es
+$\bA^{T}\br = \bzero$, also steht $\br$
+:k[orthogonal]{#orthogonality} („normal“) auf
+jeder Spalte von $\bA$. Das beste
 $\bA\bx$ ist der Fußpunkt des Lots von
 $\bb$ auf den :k[Spann]{#span} der
-Spalten. Für das Beispiel einer Ausgleichsgeraden durch drei
-Datenpunkte (vgl. Heath Kap. 3) ergibt sich, mit den
-:k[transponierten]{#transpose} Faktoren
-ausmultipliziert:
-
-$$
-\begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 11 \end{bmatrix} \quad\Rightarrow\quad \bx = \begin{bmatrix} 2/3 \\ 1/2 \end{bmatrix}.
-$$
+Spalten.
 
 Die Matrix $\bA^{T}\bA$ ist
 :k[symmetrisch]{#symmetric-matrix} und
@@ -45,18 +36,20 @@ sobald die Spalten von $\bA$
 :k[linear unabhängig]{#linear-independence}
 sind; die
 :k[Cholesky-Zerlegung]{#cholesky-factorization}
-löst das System dann effizient. Einschränkung: Die
+löst das System dann effizient. Allerdings ist die
 :k[Konditionszahl]{#condition-number} von
-$\bA^{T}\bA$ ist das *Quadrat* von
-$\operatorname{cond}(\bA)$. Das Aufstellen von
+$\bA^{T}\bA$ das *Quadrat* von
+$\operatorname{cond}(\bA)$: Das Aufstellen von
 $\bA^{T}\bA$ kann
-:k[Rundungsfehler]{#rounding-error} also
-kräftig verstärken. Eine
+:k[Rundungsfehler]{#rounding-error} kräftig
+verstärken, eine
 :k[QR-Zerlegung]{#qr-factorization} von
-$\bA$ umgeht dieses Problem.
+$\bA$ vermeidet das.
 
-Wann wird das Residuum zur Spaltenrichtung senkrecht?
+Im Widget hat $\bA$ nur eine Spalte $\ba$. Wann steht das Residuum
+$\bb - x\ba$ senkrecht auf ihr?
 
 <ProjectionWidget />
 
-Die Orthogonalität charakterisiert den Lotfußpunkt und damit die Kleinste-Quadrate-Lösung.
+Bei $x = 4/5$. Dort ist das Residuum am kürzesten, und
+$\ba^T(\bb - x\ba) = 0$ ist die Normalengleichung dieser einen Spalte.

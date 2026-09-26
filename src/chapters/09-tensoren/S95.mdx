@@ -1,46 +1,31 @@
 import { VektorisierungMatrixgleichung } from "./widgets/S95Vektorisierung";
 
-Begonnen haben wir mit Abbildungen, die mehrere Vektoren gleichzeitig
-verarbeiten, geendet sind wir bei Vektorräumen, die aus zwei anderen
-zusammengesetzt werden. Dazwischen stand der Tensor als das Objekt, das beides
-verbindet.
-
 ### Die Kernkonzepte
 
 :::bemerkung[#sechs-begriffe-die-bleiben (Sechs Begriffe)]
-1. **:k[Tensoren]{#tensor}** verallgemeinern Vektoren und Matrizen auf mehr als
-   zwei Indexpositionen. Ein Tensor der Stufe $k$ ist eine durch $k$ Indizes
-   indizierte Familie reeller Zahlen, also ein Element von
-   $\R^{n_1 \times \cdots \times n_k}$ (@definition:tensor,
-   @sec:tensoren); Stufe $1$ ist ein Vektor, Stufe $2$ eine Matrix.
-   Gebraucht werden höhere Stufen im Deep Learning, in der Bild- und
-   Videobearbeitung und in der modernen Statistik; ausführliche Bild- und
-   Feature-Map-Beispiele stehen als Vertiefung in @sec:tensoren/tensoren.
+1. **:k[Tensoren]{#tensor}** verallgemeinern Vektoren und Matrizen auf beliebig
+   viele Indexpositionen: Ein Tensor der Stufe $k$ ist eine durch $k$ Indizes
+   indizierte Familie reeller Zahlen, ein Element von
+   $\R^{n_1 \times \cdots \times n_k}$ (@definition:tensor). Höhere Stufen
+   braucht das Deep Learning, die Bild- und Videobearbeitung und die moderne
+   Statistik.
 
-2. **Multilinearität** ist etwas anderes als Linearität. Linear heißt
-   $f(c\bv + c'\bw) = c\,f(\bv) + c'\,f(\bw)$, multilinear dagegen
-
-   $$
-   f(\bv_1, \dots, \cblue{c\bv_i + c'\bv_i'}, \dots, \bv_n)
-   = c\,f(\bv_1, \dots, \cblue{\bv_i}, \dots, \bv_n)
-   + c'\,f(\bv_1, \dots, \cblue{\bv_i'}, \dots, \bv_n) ,
-   $$
-
-   also Linearität in jedem einzelnen Argument bei festgehaltenen übrigen
-   (@definition:multilineare-abbildung, @sec:multilinear). Die
-   :k[Matrizenmultiplikation]{#matrix-multiplication} ist bilinear, aber nicht
-   linear (@beispiel:matrizenmultiplikation-als-bilineare). Der Grund gilt allgemein: Skalieren wir alle $n$
-   Argumente mit demselben $c$, so tritt $\cred{c^n}$ heraus statt $\cred{c}$
-   (@bemerkung:bilinear-und-eine-warnung).
+2. **Multilinearität** heißt Linearität in jedem einzelnen Argument bei
+   festgehaltenen übrigen (@definition:multilineare-abbildung). Linear im Ganzen
+   ist eine multilineare Abbildung in der Regel nicht: Skalieren wir alle $n$
+   Argumente mit demselben $c$, tritt $\cred{c^n}$ heraus statt $\cred{c}$
+   (@bemerkung:bilinear-und-eine-warnung). So ist die
+   :k[Matrizenmultiplikation]{#matrix-multiplication} bilinear, aber nicht
+   linear.
 
 3. **Das :k[äußere Produkt]{#outer-product}**
    $\cblue{\bv} \otimes \cgreen{\bw} = \cblue{\bv}\,\cgreen{\bw}^\top$ macht aus
-   zwei Vektoren $\neq \bnull$ eine Matrix vom Rang $1$ (@satz:eigenschaften-des-aeusseren-produkts,
-   @sec:produkte). Die
+   zwei Vektoren $\neq \bnull$ eine Matrix vom Rang $1$
+   (@satz:eigenschaften-des-aeusseren-produkts). Die
    :k[Singulärwertzerlegung]{#singular-value-decomposition} zerlegt umgekehrt
-   jede Matrix in genau solche Bausteine,
+   jede Matrix in solche Bausteine,
    $\bA = \sum_{i=1}^{r} \corange{\sigma_i}\,\cblue{\bu_i} \otimes \cgreen{\bv_i}$
-   (@sec:svd/anwendungen, @bemerkung:die-svd-als-summe-aeusserer-produkte).
+   (@bemerkung:die-svd-als-summe-aeusserer-produkte).
 
 4. **Das Tensorprodukt** überträgt diese Vorschrift auf beliebige Stufen: Die
    Stufen addieren sich, die Einträge multiplizieren sich
@@ -48,32 +33,31 @@ verbindet.
 
 5. **Das Kroneckerprodukt** ist die flach angeordnete Fassung für zwei Matrizen,
    dieselben Zahlen als Blockmatrix statt als Tensor der Stufe $4$
-   (@definition:kroneckerprodukt, @bemerkung:zwei-bedeutungen-zwei-zeichen). Es trägt die Vektorisierung von
-   Matrixgleichungen,
+   (@bemerkung:zwei-bedeutungen-zwei-zeichen). Es liefert den vec-Trick
    $\vec(\cblue{\bA}\bX\cgreen{\bB}) = (\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX)$
-   (@satz:vektorisierung-eines-matrixprodukts), und in der Statistik die Kronecker-strukturierten
-   :k[Kovarianzmatrizen]{#covariance-matrix} multivariater Verteilungen, von
-   Zeitreihen und von raumzeitlichen Daten (@definition:separierbare-kovarianz).
+   (@satz:vektorisierung-eines-matrixprodukts), der Matrixgleichungen in
+   lineare Gleichungssysteme übersetzt, und in der Statistik separierbare und
+   blockdiagonale :k[Kovarianzmatrizen]{#covariance-matrix}
+   (@definition:separierbare-kovarianz, @beispiel:i-n-k-s-ist-blockdiagonal).
 
 6. **Tensorprodukte bauen größere Räume aus kleineren.** Der Raum
    $V \otimes W$ ist die :k[lineare Hülle]{#span} aller Produkte
-   $\cblue{\bv} \otimes \cgreen{\bw}$ (@definition:tensorprodukt-von-vektorraeumen,
-   @sec:tensorprodukt), und aus Basen der Faktoren entsteht durch
-   Ausmultiplizieren eine :k[Basis]{#basis} des Produktraums mit
-   $\dim(V \otimes W) = \dim(V)\dim(W)$ (@satz:tensorproduktbasis). Mit Funktionenräumen als
-   Faktoren liefert das multivariate Basen aus univariaten, die Grundlage der
-   Funktionsapproximation und höherdimensionaler Splines.
+   $\cblue{\bv} \otimes \cgreen{\bw}$ (@definition:tensorprodukt-von-vektorraeumen),
+   und aus Basen der Faktoren entsteht durch Ausmultiplizieren eine
+   :k[Basis]{#basis} des Produktraums mit
+   $\dim(V \otimes W) = \dim(V)\dim(W)$ (@satz:tensorproduktbasis). Mit
+   Funktionenräumen als Faktoren liefert das multivariate Basen aus univariaten,
+   etwa für höherdimensionale Splines; auf Gittern ist ihre Designmatrix ein
+   Kroneckerprodukt (@bemerkung:kronecker-designmatrix-tensorprodukt-splines).
 :::
 
 ### Vektorisierung von Matrixgleichungen
 
-Ein Punkt dieser Liste verbindet Kapitel 9 mit Kapitel 5 und wird deshalb hier
-ausgeführt. Eine Gleichung der Bauart
-$\cblue{\bA}\bX\cgreen{\bB} = \bC$ ist linear in der Unbekannten $\bX$, aber
-diese Unbekannte ist eine Matrix. Die Verfahren aus
-@sec:lgs/lgs erwarten dagegen ein System $\bA\bx = \bb$
-mit einem Vektor als Unbekannter. Also stapeln wir die Matrix zu einem Vektor
-um.
+Punkt 5 verbindet dieses Kapitel mit @kap:lgs, deshalb führen wir ihn aus. Eine
+Gleichung der Bauart $\cblue{\bA}\bX\cgreen{\bB} = \bC$ ist linear in der
+Unbekannten $\bX$, aber diese Unbekannte ist eine Matrix. Die Verfahren aus
+@sec:lgs/lgs erwarten ein System $\bA\bx = \bb$ mit einem Vektor als
+Unbekannter. Also stapeln wir die Matrix zu einem Vektor um.
 
 :::definition[#zusammenfassung-vektorisierung (Vektorisierung)]
 Für $\bX \in \R^{p \times q}$ mit den Spalten $\bx_1, \dots, \bx_q \in \R^p$ ist
@@ -96,10 +80,10 @@ $$ {#eq-vektorisierung-eines-matrixprodukts}
 = \bigl(\cgreen{\bB^\top} \kron \cblue{\bA}\bigr)\,\vec(\bX) .
 $$
 
-Im Kroneckerprodukt steht $\cgreen{\bB^\top}$ als erster und $\cblue{\bA}$ als
-zweiter Faktor; die Matrix $\cgreen{\bB^\top} \kron \cblue{\bA}$ hat das
-Format $nm \times qp$, passend zu $\vec(\bX) \in \R^{pq}$ und
-$\vec(\cblue{\bA}\bX\cgreen{\bB}) \in \R^{mn}$.
+Insbesondere ist $\vec(\cblue{\bA}\bX) = (\bI_q \kron \cblue{\bA})\vec(\bX)$ und
+$\vec(\bX\cgreen{\bB}) = (\cgreen{\bB^\top} \kron \bI_p)\vec(\bX)$. Die Matrix
+$\cgreen{\bB^\top} \kron \cblue{\bA}$ hat das Format $nm \times qp$, passend zu
+$\vec(\bX) \in \R^{pq}$ und $\vec(\cblue{\bA}\bX\cgreen{\bB}) \in \R^{mn}$.
 :::
 
 :::::vertiefung[Der vec-Trick, blockweise nachgerechnet]
@@ -137,12 +121,14 @@ die Spalte aus Schritt 1, und da $j$ beliebig war, stimmen beide Seiten
 :::::
 
 :::interaktiv[Die Matrixgleichung als lineares System]
-Welche der beiden Rechnungen liefert denselben Vektor, wenn wir die Einträge von $\bX$ verändern?
+Welche Anordnung der Kroneckerfaktoren liefert denselben Vektor wie $\vec(\bA\bX\bB)$, auch wenn wir die Einträge verändern?
 
 <VektorisierungMatrixgleichung />
 
-Die Vektorisierung bewahrt die lineare Wirkung von links und rechts und macht
-damit Standardverfahren für lineare Gleichungssysteme anwendbar.
+Nur $\bB^\top \kron \bA$ stimmt für jede Wahl von $\bA$, $\bX$ und $\bB$;
+$\bA \kron \bB^\top$ trifft höchstens bei speziellen Faktoren zufällig. Aus
+$\bA\bX\bB = \bC$ wird so ein gewöhnliches lineares Gleichungssystem in
+$\vec(\bX)$.
 :::
 
 :::beispiel[#die-identitaet-an-2-2-matrizen (Die Identität an 2×2-Matrizen)]
@@ -185,14 +171,29 @@ $$
 
 und das Produkt der beiden ist
 $(\corange{5}, \corange{2}, \corange{17}, \corange{8})^\top$, wie es sein muss.
-Auf die Reihenfolge kommt es dabei an: $\cblue{\bA} \kron \cgreen{\bB^\top}$
-liefert $(1, 17, 0, 6)^\top$ und damit etwas ganz anderes. Die Formatprobe
-schützt uns davor grundsätzlich nicht: Zeilen- und
-Spaltenzahl eines Kroneckerprodukts entstehen als Produkte der Zeilen- bzw.
-Spaltenzahlen beider Faktoren, und Produkte hängen nicht von der Reihenfolge ab.
-$\cgreen{\bB^\top} \kron \cblue{\bA}$ und $\cblue{\bA} \kron \cgreen{\bB^\top}$
-haben deshalb stets dasselbe Format, hier $4 \times 4$, und beide lassen sich
-mit $\vec(\bX)$ multiplizieren.
+Auf die Reihenfolge kommt es an: $\cblue{\bA} \kron \cgreen{\bB^\top}$ liefert
+$(1, 17, 0, 6)^\top$. Die Formatprobe bemerkt den Tausch nicht, denn Zeilen- und
+Spaltenzahl eines Kroneckerprodukts sind Produkte der Zeilen- bzw.
+Spaltenzahlen beider Faktoren. $\cgreen{\bB^\top} \kron \cblue{\bA}$ und
+$\cblue{\bA} \kron \cgreen{\bB^\top}$ haben deshalb stets dasselbe Format, hier
+$4 \times 4$.
+:::
+
+:::vertiefung[Große Systeme: Struktur statt Ausmultiplizieren]
+Das zu $\cblue{\bA}\bX\cgreen{\bB} = \bC$ gehörende
+:k[lineare Gleichungssystem]{#linear-system}
+$(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ hat $mn$
+Gleichungen und $pq$ Unbekannte, seine Systemmatrix ausgeschrieben $mnpq$
+Einträge. Bei großen Faktoren nutzen wir deshalb die Struktur, statt sie
+auszumultiplizieren. Sind $\cblue{\bA}$ und $\cgreen{\bB}$ quadratisch und
+invertierbar, so liefert
+$\bX = \cblue{\bA^{-1}}\bC\,\cgreen{\bB^{-1}}$ die Lösung allein aus den beiden
+kleinen Faktoren. Das ist eine symbolische Identität; numerisch bilden wir die
+Inversen nicht explizit, sondern lösen nacheinander lineare Systeme mit
+$\cblue{\bA}$ und $\cgreen{\bB^\top}$. Nach demselben Muster arbeiten die
+separierbaren Kovarianzmatrizen aus @sec:produkte: Ihre Eigenwerte ergeben sich
+als Produkte der Eigenwerte beider Faktoren, ohne dass wir $\bSigma$ je
+aufstellen müssen.
 :::
 
 :::beispiel[#sylvester-gleichung-per-vec-trick (Sylvester-Gleichung mit dem vec-Trick)]
@@ -202,25 +203,25 @@ $$
 \bA\bX + \bX\bB = \bC .
 $$
 
-Mit den beiden Spezialfällen von @eq:vektorisierung-eines-matrixprodukts wird
-daraus
+Mit den beiden Spezialfällen aus @satz:vektorisierung-eines-matrixprodukts
+wird daraus für $2 \times 2$-Matrizen
 
 $$
 \bigl(\bI_2 \kron \bA + \bB^\top \kron \bI_2\bigr)\vec(\bX)
 = \vec(\bC) .
 $$
 
-Betrachten wir
+Für
 
 $$
 \bA = \begin{pmatrix}3&0\\1&2\end{pmatrix},\qquad
 \bB = \begin{pmatrix}0&1\\1&1\end{pmatrix},\qquad
-\bC = \begin{pmatrix}1&3\\2&4\end{pmatrix}.
+\bC = \begin{pmatrix}1&3\\2&4\end{pmatrix}
 $$
 
-Das zugehörige lineare Gleichungssystem hat die Systemmatrix
-$\bigl(\begin{smallmatrix}3&0&1&0\\1&2&0&1\\1&0&4&0\\0&1&1&3\end{smallmatrix}\bigr)$.
-Seine Lösung ist
+hat das lineare Gleichungssystem die Systemmatrix
+$\bigl(\begin{smallmatrix}3&0&1&0\\1&2&0&1\\1&0&4&0\\0&1&1&3\end{smallmatrix}\bigr)$
+und die Lösung
 
 $$
 \vec(\bX) =
@@ -229,7 +230,7 @@ $$
 \bX = \begin{pmatrix}1/11&8/11\\27/55&51/55\end{pmatrix}.
 $$
 
-In R folgt die Rechnung direkt der Formel:
+In R folgt die Rechnung der Formel:
 
 ```r
 A <- matrix(c(3, 1, 0, 2), 2, 2)
@@ -241,52 +242,36 @@ A %*% X + X %*% B
 all.equal(A %*% X + X %*% B, C)
 ```
 
-Die letzte Zeile ergibt `TRUE`. Lyapunov-Gleichungen, etwa für stationäre
-Kovarianzmatrizen von Zeitreihenmodellen, sind wichtige Spezialfälle. Für
-große Matrizen verwenden wir spezialisierte Löser, die die Struktur ausnutzen.
+Die letzte Zeile ergibt `TRUE`. Wichtige Spezialfälle sind Lyapunov-Gleichungen,
+etwa für stationäre Kovarianzmatrizen von Zeitreihenmodellen; für große
+Matrizen gibt es spezialisierte Löser, die die Struktur ausnutzen.
 :::
-
-Aus $\cblue{\bA}\bX\cgreen{\bB} = \bC$ wird mit @eq:vektorisierung-eines-matrixprodukts ein gewöhnliches
-:k[lineares Gleichungssystem]{#linear-system}
-$(\cgreen{\bB^\top} \kron \cblue{\bA})\vec(\bX) = \vec(\bC)$ mit $mn$
-Gleichungen und $pq$ Unbekannten. Das kostet Speicher und Rechenzeit:
-Ausgeschrieben hat die Systemmatrix $mnpq$ Einträge.
-Praktisch nutzen wir deshalb die Struktur, statt sie auszumultiplizieren. Sind
-$\cblue{\bA}$ und $\cgreen{\bB}$ quadratisch und invertierbar, so liefert
-$\bX = \cblue{\bA^{-1}}\bC\,\cgreen{\bB^{-1}}$ die Lösung allein aus den beiden
-kleinen Faktoren. Das ist eine symbolische Identität; numerisch bilden wir die
-Inversen nicht explizit, sondern lösen nacheinander lineare Systeme mit
-$\cblue{\bA}$ und $\cgreen{\bB^\top}$. Nach demselben Muster arbeiten die separierbaren
-Kovarianzmatrizen aus @sec:produkte: Dort lesen wir die Eigenwerte
-von $\bSigma$ als Produkte der Eigenwerte beider Faktoren ab, ohne $\bSigma$ je
-aufzustellen.
 
 ### Wie es weitergeht
 
-Offen geblieben ist die Verbindung zur Approximation. Eine gute Basis für univariate
-Funktionen, etwa Legendre-Polynome, eine Fourierbasis oder Wavelets, liefert
-über das Tensorprodukt sofort eine Basis für multivariate Funktionen. Wie wir
-damit tatsächlich approximieren und wie wir dem exponentiellen Wachstum
-$(d+1)^k$ aus @bemerkung:allgemeine-dimension-und-was-sie-kostet entkommen, ist das Thema von
-@kap:funktionsapproximation.
+Eine gute Basis für univariate Funktionen, etwa Legendre-Polynome, eine
+Fourierbasis oder Wavelets, liefert über das Tensorprodukt eine Basis für
+multivariate Funktionen. Wie wir damit approximieren und dem exponentiellen
+Wachstum $(d+1)^k$ aus @bemerkung:allgemeine-dimension-und-was-sie-kostet
+entkommen, behandelt @kap:funktionsapproximation.
 
-Das nächste Kapitel, @kap:differentialrechnung, wendet
-sich der fortgeschrittenen Differentialrechnung zu. Tensoren begegnen uns dort
-gleich wieder: Leiten wir
-einen matrixwertigen Ausdruck nach einer Matrix ab
-(@sec:differentialrechnung/matrixableitungen), so ist das Ergebnis von Haus
-aus ein mehrdimensionales Zahlenfeld, und die Vektorisierung aus @satz:vektorisierung-eines-matrixprodukts ist
-eines der Werkzeuge, mit denen sich das ordnen lässt.
+Zunächst folgt in @kap:differentialrechnung die fortgeschrittene
+Differentialrechnung. Dort begegnen uns Tensoren wieder: Die Ableitung eines
+matrixwertigen Ausdrucks nach einer Matrix
+(@sec:differentialrechnung/matrixableitungen) ist ein mehrdimensionales
+Zahlenfeld, und die Vektorisierung aus
+@satz:vektorisierung-eines-matrixprodukts hilft, es zu ordnen.
 
 ### Selbsttest
 
 ::::quiz
 
-:::frage{wahr}
-Die Schätzung aus dem Kronecker-Widget zeigt: Vertauschen der Faktoren kann die
-Blockstruktur ändern, obwohl das Ergebnisformat gleich bleibt.
+:::frage{falsch}
+Für eine bilineare Abbildung $f$ gilt $f(2\bv, 3\bw) = 5\,f(\bv, \bw)$.
 
-Das ist die Nicht-Kommutativität aus @bemerkung:transponieren-und-reihenfolge.
+Die Homogenität gilt in jedem Argument einzeln, die Faktoren multiplizieren
+sich: $f(2\bv, 3\bw) = 2 \cdot 3\, f(\bv, \bw) = 6\,f(\bv, \bw)$
+(@bemerkung:bilinear-und-eine-warnung).
 :::
 
 :::frage{falsch}
@@ -294,47 +279,33 @@ Mit spaltenweiser Vektorisierung gilt
 $\vec(\bA\bX\bB) = (\bA \kron \bB^\top)\vec(\bX)$.
 
 Die Faktoren stehen vertauscht. Richtig ist
-$\vec(\bA\bX\bB) = (\bB^\top \kron \bA)\vec(\bX)$ nach @eq:vektorisierung-eines-matrixprodukts: Der
-transponierte *rechte* Faktor steht im Kroneckerprodukt *links*. Die
-Formatprobe merkt den Tausch nie, denn beide Anordnungen führen auf dasselbe
-Format. In @beispiel:die-identitaet-an-2-2-matrizen ist das $4 \times 4$, und die vertauschte Fassung
-liefert dort
-$(1, 17, 0, 6)^\top$ statt des korrekten
-$\vec(\bA\bX\bB) = (5, 2, 17, 8)^\top$.
+$\vec(\bA\bX\bB) = (\bB^\top \kron \bA)\vec(\bX)$ nach
+@eq:vektorisierung-eines-matrixprodukts: Der transponierte *rechte* Faktor steht
+im Kroneckerprodukt *links*. Am Format ist der Tausch nicht zu erkennen; in
+@beispiel:die-identitaet-an-2-2-matrizen liefert die vertauschte Fassung
+$(1, 17, 0, 6)^\top$ statt $(5, 2, 17, 8)^\top$.
 :::
 
 :::frage{falsch}
 Für $\bv \in \R^m$ und $\bw \in \R^n$ hat das äußere Produkt
 $\bv \otimes \bw$ stets den Rang $1$.
 
-@satz:eigenschaften-des-aeusseren-produkts setzt $\bv \neq \bnull$ und $\bw \neq \bnull$ voraus, und diese
-Voraussetzung ist nötig: Ist einer der beiden Vektoren der Nullvektor, so sind
-nach @eq:aeusseres-produkt alle Einträge $v_i w_j$ gleich null, das Produkt ist die
-Nullmatrix und hat den Rang $0$. Andernfalls stimmt die Aussage, denn dann
+@satz:eigenschaften-des-aeusseren-produkts setzt $\bv \neq \bnull$ und
+$\bw \neq \bnull$ voraus, und diese Voraussetzung ist nötig: Ist einer der
+beiden Vektoren der Nullvektor, so sind nach @eq:aeusseres-produkt alle Einträge
+$v_i w_j$ gleich null, das Produkt ist die Nullmatrix und hat den Rang $0$. Andernfalls stimmt die Aussage, denn dann
 spannt $\bv$ allein den Spaltenraum auf.
-:::
-
-:::frage{wahr}
-Für $\bA \in \R^{m \times n}$ und $\bB \in \R^{p \times q}$ enthalten das
-Tensorprodukt und das Kroneckerprodukt dieselben $mnpq$ Zahlen, nur anders
-angeordnet.
-
-Beide Male entsteht jede Zahl als ein Produkt $a_{i_1 i_2} b_{j_1 j_2}$
-(@bemerkung:zwei-bedeutungen-zwei-zeichen). Das Tensorprodukt legt sie in einen Tensor der Stufe $4$ mit
-Format $m \times n \times p \times q$, das Kroneckerprodukt flacht dieselben
-Werte zu einer Matrix aus $\R^{mp \times nq}$ ab. Welche Lesart gemeint ist,
-verrät in der Praxis das Format des Ergebnisses.
 :::
 
 :::frage{wahr}
 Kombinieren wir $k$ univariate Basen mit je $d+1$ Funktionen zu einer
 Tensorproduktbasis, so hat diese $(d+1)^k$ Elemente.
 
-@satz:tensorproduktbasis multipliziert die Dimensionen, und bei $k$ Faktoren entsteht so das
-$k$-fache Produkt (@bemerkung:allgemeine-dimension-und-was-sie-kostet). Für $d = 3$ und $k = 10$ sind das
-$4^{10} = 1\,048\,576$ Basisfunktionen, während der Raum der Polynome mit
-Gesamtgrad höchstens $3$ in $10$ Variablen nur
-$\binom{13}{10} = 286$ Dimensionen hat. Bequem gebaut, aber teuer bezahlt.
+@satz:tensorproduktbasis multipliziert die Dimensionen, bei $k$ Faktoren also
+$k$-mal (@bemerkung:allgemeine-dimension-und-was-sie-kostet). Für $d = 3$ und
+$k = 10$ sind das $4^{10} = 1\,048\,576$ Basisfunktionen, während der Raum der
+Polynome mit Gesamtgrad höchstens $3$ in $10$ Variablen nur
+$\binom{13}{10} = 286$ Dimensionen hat.
 :::
 
 ::::

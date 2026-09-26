@@ -8,9 +8,9 @@ Eine *Spiegelung* (reflection) ist die
 :k[Hyperebene]{#hyperplane}). Spiegeln
 ändert weder Längen noch Winkel, ihre
 :k[Matrix]{#matrix} ist also eine
-:k[orthogonale Matrix]{#orthogonal-matrix};
-anders als eine :k[Drehung]{#rotation-matrix}
-kehrt sie aber die Orientierung um; das zeigt sich an der
+:k[orthogonale Matrix]{#orthogonal-matrix}.
+Anders als eine :k[Drehung]{#rotation-matrix}
+kehrt sie aber die Orientierung um, erkennbar an der
 :k[Determinante]{#determinant} $-1$.
 
 In der Ebene hat die Spiegelung an der Geraden mit Winkel
@@ -25,17 +25,17 @@ die beiden Koordinaten vertauscht: $(2,1)^T \mapsto (1,2)^T$.
 Dieselbe Spiegelung zweimal ausgeführt hebt sich auf, also
 $\bH^{-1} = \bH$.
 
-Diese Geometrie ist der Kern der Householder-Transformationen (vgl.
-Heath §3.5.1): Eine geschickt gewählte Spiegelung wirft einen beliebig
-vorgegebenen Vektor auf eine Koordinatenachse und löscht dabei alle
-seine übrigen Einträge auf einen Schlag.
+Darauf beruhen die Householder-Transformationen (vgl.
+Heath §3.5.1): Eine passend gewählte Spiegelung bildet einen
+vorgegebenen Vektor auf eine Koordinatenachse ab und setzt damit alle
+seine übrigen Einträge null.
 
 Gibt es Richtungen, an denen die Spiegelung gar nichts ändert? Und was
 passiert, wenn wir zweimal hintereinander spiegeln?
 
 <ReflectionWidget />
 
-Zwei Richtungen bleiben besonders: die Achse selbst (dort ist
-$\bH\ba = \ba$) und die Senkrechte dazu (dort ist $\bH\ba = -\ba$). Aus dem
-Produkt dieser beiden Faktoren $+1$ und $-1$ entsteht die Determinante $-1$,
-und der zweite Durchgang klappt alles zurück.
+Zwei Richtungen sind besonders: die Achse selbst (dort ist
+$\bH\ba = \ba$) und die Senkrechte dazu (dort ist $\bH\ba = -\ba$). Das
+Produkt dieser Eigenwerte $+1$ und $-1$ ist die Determinante $-1$, und nach
+der zweiten Spiegelung liegt alles wieder am alten Platz.

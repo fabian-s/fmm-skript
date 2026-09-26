@@ -14,29 +14,27 @@ $$
 $$
 
 Die :k[Inverse]{#matrix-inverse} erhalten
-wir also ohne Rechnung: nichts zu lösen, wir vertauschen einfach Zeilen
-und Spalten von $\bQ$. Geometrisch sind orthogonale
+wir also ohne Rechnung, durch Transponieren. Geometrisch sind orthogonale
 Matrizen genau die längentreuen linearen Abbildungen, in der Ebene also
-:k[Drehungen]{#rotation-matrix} und
-:k[Spiegelungen]{#reflection} um den Ursprung. Insbesondere bleibt die
-:k[2-Norm]{#euclidean-norm} unangetastet:
+:k[Drehungen]{#rotation-matrix} um den Ursprung und
+:k[Spiegelungen]{#reflection} an Ursprungsgeraden. Insbesondere ändert sich die
+:k[2-Norm]{#euclidean-norm} nicht:
 
 $$
 \|\bQ\bv\|_2^2 = (\bQ\bv)^T (\bQ\bv) = \bv^T \bQ^T \bQ \bv = \bv^T \bv = \|\bv\|_2^2 .
 $$
 
-Diese Invarianz ist der Motor hinter den QR-basierten
-Kleinste-Quadrate-Algorithmen (vgl. Heath §3.5): Multiplizieren wir
-das Residuum mit orthogonalen Matrizen, formen wir das Problem in
-ein leichtes Dreieckssystem um, *ohne die minimierte Größe zu
-verändern*.
+Darauf beruhen die QR-basierten
+Kleinste-Quadrate-Verfahren (vgl. Heath §3.5): Multiplizieren wir
+das Residuum mit orthogonalen Matrizen, wird aus dem Problem
+ein Dreieckssystem, *ohne dass sich die minimierte Größe ändert*.
 
-Drehung und Spiegelung sehen im Bild recht verschieden aus. Woran merken wir
-überhaupt, dass beide dasselbe leisten?
+Drehung und Spiegelung sehen im Bild verschieden aus. Woran erkennen wir,
+dass beide orthogonal sind?
 
 <OrthogonalMatrixWidget />
 
-Am Kreis und an den Längen ist der Unterschied nicht zu erkennen; in der Ebene
-trennt erst das Vorzeichen der Determinante die beiden Fälle (in höheren
-Dimensionen genügt $\det \bQ$ dafür nicht mehr). Für die Numerik ist das die
-gute Nachricht: Was wir mit $\bQ$ multiplizieren, ändert seine Länge nie.
+An den Längen: In beiden Fällen ist $\|\bQ\bv\|_2 = \|\bv\|_2$, und der
+Einheitskreis liegt auf seinem Bild. Unterscheiden lassen sich die beiden in
+der Ebene nur am Vorzeichen der Determinante: $\det \bQ = 1$ bei der Drehung,
+$\det \bQ = -1$ bei der Spiegelung.

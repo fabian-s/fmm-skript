@@ -3,7 +3,8 @@ export const title = "Norm";
 import { NormWidget } from "./widgets/NormWidget";
 
 Die *Norm* $\|\bx\|$ misst die Länge eines :k[Vektors]{#vector}. Die
-Standard-Variante (die euklidische Norm) zieht die Wurzel aus dem
+Standard-Variante, die :k[euklidische Norm]{#euclidean-norm} (auch
+$\|\bx\|_2$), zieht die Wurzel aus dem
 :k[Skalarprodukt]{#dot-product} des Vektors mit sich selbst, also Pythagoras in
 beliebig vielen Dimensionen:
 
@@ -11,17 +12,19 @@ $$
 \|\bx\| = \sqrt{\bx^{\top}\bx} = \sqrt{x_1^2 + \cdots + x_n^2}, \qquad \left\| \begin{bmatrix} 3 \\ 4 \end{bmatrix} \right\| = \sqrt{9 + 16} = 5.
 $$
 
-Drei Regeln charakterisieren eine Norm: Sie ist positiv, außer wenn $\bx$ der
-Nullvektor ist; Skalierung gehorcht $\|\alpha\bx\| = |\alpha| \|\bx\|$; und
-Umwege lohnen sich nie ($\|\bx+\by\| \leq \|\bx\| + \|\by\|$). Teilen wir einen
-Vektor (ungleich Null) durch seine Norm, *normieren* wir ihn auf Länge $1$. So
-lässt sich der PageRank-Eigenvektor auf $\|\bx^*\| = 1$ festlegen (vgl. MML
-§4.2) – eindeutig erst mit $\bx^* \geq \bnull$, denn auch $-\bx^*$ hat
-Länge $1$.
+Drei Regeln charakterisieren eine Norm: Sie ist positiv, außer für den
+Nullvektor; Skalierung gehorcht $\|\alpha\bx\| = |\alpha| \|\bx\|$; und es gilt
+die :k[Dreiecksungleichung]{#triangle-inequality}
+$\|\bx+\by\| \leq \|\bx\| + \|\by\|$. Andere Normen erfüllen dieselben
+Regeln, etwa die 1-Norm $\|\bx\|_1 = |x_1| + \cdots + |x_n|$ und die
+Maximumsnorm $\|\bx\|_\infty = \max_i |x_i|$. Teilen wir einen Vektor
+(ungleich null) durch seine Norm, *normieren* wir ihn auf Länge $1$.
 
 Wie unterscheiden sich die Längen desselben Vektors unter 1-Norm, euklidischer
 Norm und Maximumsnorm?
 
 <NormWidget />
 
-Die Form der Einheitskugel zeigt, welchen Längenbegriff eine Norm verwendet.
+Stets gilt $\|\bx\|_\infty \le \|\bx\|_2 \le \|\bx\|_1$. Deshalb liegt die
+Raute im Kreis und der Kreis im Quadrat, und ein Punkt wie der Startpunkt kann
+außerhalb der 1- und der 2-Kugel, aber innerhalb der ∞-Kugel liegen.

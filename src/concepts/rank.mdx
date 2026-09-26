@@ -6,11 +6,10 @@ import { RankWidget } from "./widgets/RankWidget";
 
 Der *Rang* (rank) einer :k[Matrix]{#matrix} zählt, wie viele ihrer Zeilen
 (gleichwertig: Spalten) :k[linear unabhängig]{#linear-independence} voneinander
-sind. Bemerkenswerterweise liefern Zeilen-Zählung und Spalten-Zählung immer
-dieselbe Zahl. Wir können den Rang lesen als „wie viele wirklich verschiedene
-Richtungen die Spalten beisteuern".
+sind. Zeilen- und Spaltenzählung liefern immer dieselbe Zahl. Wir können den
+Rang lesen als „wie viele verschiedene Richtungen die Spalten beisteuern“.
 
-Kleines Beispiel: In $\begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}$ ist die
+Beispiel: In $\begin{pmatrix} 1 & 2 \\ 2 & 4 \end{pmatrix}$ ist die
 zweite Spalte das Doppelte der ersten, es gibt also nur eine unabhängige
 Richtung und der Rang ist $1$. Ändern wir die $4$ in eine $5$, werden die
 Spalten unabhängig: Rang $2$.
@@ -19,9 +18,10 @@ Eine $n \times n$-Matrix mit dem größtmöglichen Rang $n$ hat *vollen Rang*;
 das ist eine der gleichwertigen Arten zu sagen, dass die Matrix *regulär*
 (nichtsingulär) ist.
 
-Sehen wir uns an, was die Spalten erreichen können:
+Was erreichen die Spalten, wenn die zweite auf der ersten liegt?
 
 <RankWidget />
 
-Der Rang ist die Dimension dieses erreichbaren Raums; die Determinante meldet
-nur, ob sie unter das Maximum gefallen ist.
+Nur eine Gerade, also Rang $1$; zwei unabhängige Spalten erreichen die ganze
+Ebene. Die Determinante zeigt nur, ob der Rang unter $2$ fällt, nicht, um wie
+viel.

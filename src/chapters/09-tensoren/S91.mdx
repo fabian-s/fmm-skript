@@ -4,29 +4,24 @@ Eine lineare Abbildung nimmt einen Vektor und liefert einen Vektor. Für viele
 Rechenvorschriften ist das zu eng. Ein Skalarprodukt braucht zwei Vektoren, die
 Matrizenmultiplikation verarbeitet zwei Matrizen zu einer dritten, und hinter
 einer quadratischen Form $\bx^\top\bA\bx$ steckt die Abbildung
-$(\bx, \by) \mapsto \bx^\top\bA\by$, die ebenfalls zwei Vektoren aufnimmt.
-Betrachten wir das ganze Tupel auf einmal, ist keine dieser Abbildungen linear.
-In jedem einzelnen Argument sind sie es aber, und auf dieser Beobachtung baut
-das Kapitel auf.
+$(\bx, \by) \mapsto \bx^\top\bA\by$ mit zwei Argumenten. Als Abbildung des
+ganzen Tupels ist keine davon linear, wohl aber in jedem einzelnen Argument. Auf
+dieser Beobachtung baut das Kapitel auf.
 
 ### Was wir brauchen
-
-Dieser Abschnitt setzt voraus:
 
 - :k[Vektorräume]{#vector-space} und ihre Unterräume, dazu :k[Basis]{#basis}
   und :k[Dimension]{#dimension}. In einem Raum der Dimension $n$ ist jeder
   Vektor durch seine $n$ Koordinaten bezüglich einer festen Basis bestimmt.
 - :k[Lineare Abbildungen]{#linear-map}, also $f(c\bv + c'\bv') = c f(\bv) + c' f(\bv')$.
-  Das ist die Eigenschaft, die wir gleich verallgemeinern.
+  Diese Eigenschaft verallgemeinern wir gleich.
 - Die :k[lineare Hülle]{#span}
   $\spann\bigl(\{\bv_1, \dots, \bv_n\}\bigr) = \bigl\{\bw : \bw = \sum_i c_i \bv_i,\ c_i \in \R\bigr\}$.
-- Als Vorschau: Das *äußere Produkt* $\bv \otimes \bw = \bv\bw^\top$, das wir
-  in @sec:produkte einführen. Das Zeichen $\otimes$ begegnet uns in
-  diesem Kapitel noch in allgemeinerer Rolle; für das Kroneckerprodukt, die dritte
-  Konstruktion aus @sec:produkte, verwenden wir das eigene Zeichen
-  $\kron$.
+- Als Vorschau das *äußere Produkt* $\bv \otimes \bw = \bv\bw^\top$ aus
+  @sec:produkte.
 - Aus der Analysis: Funktionen mehrerer Veränderlicher,
   $f(\bx) = f(x_1, x_2, \dots, x_n)$.
+- Aus @kap:lgs: lineare Gleichungssysteme $\bM\bz = \bc$ lösen (LU, Cholesky).
 
 ### Von einem Vektor zu einem Tupel
 
@@ -50,22 +45,16 @@ $$
 \end{aligned}
 $$
 
-für alle $i = 1, \dots, n$, alle $c, c' \in \R$ und alle
-$\bv_i, \bv_i' \in V_i$ gilt.
+für alle $i = 1, \dots, n$, alle $c, c' \in \R$, alle $\bv_i, \bv_i' \in V_i$
+und alle $\bv_\ell \in V_\ell$ ($\ell \neq i$) gilt.
 :::
 
-Die Bedingung ist $n$ Bedingungen auf einmal, eine je Argument. Für festes $i$
-sagt sie: Frieren wir die übrigen $n - 1$ Argumente ein, so ist die verbleibende
-Abbildung $V_i \to W$ linear im gewohnten Sinn.
-
 :::bemerkung[#bilinear-und-eine-warnung (Bilinear, und eine Warnung)]
-Im Spezialfall $n = 2$ nennen wir $f$ *bilinear*. Dieser Fall begegnet uns in
-den Beispielen unten immer wieder.
+Im Spezialfall $n = 2$ nennen wir $f$ *bilinear*.
 
-**Achtung:** Multilineare Abbildungen sind in der Regel *nicht* linear. Der
-Grund steckt schon in der Definition. Skalieren wir alle $n$ Argumente
-gleichzeitig mit demselben $c$, so zieht die Homogenität den Faktor $n$-mal
-heraus, einmal je Argument:
+Multilineare Abbildungen sind in der Regel *nicht* linear. Skalieren wir alle
+$n$ Argumente gleichzeitig mit demselben $c$, so zieht die Homogenität den
+Faktor $n$-mal heraus, einmal je Argument:
 
 $$
 f(c\bv_1, c\bv_2, \dots, c\bv_n) = \cred{c^n}\, f(\bv_1, \bv_2, \dots, \bv_n) .
@@ -73,11 +62,11 @@ $$
 
 Für eine lineare Abbildung müsste dort $\cred{c}$ stehen. Ab $n \geq 2$ ist das
 ein Unterschied, sobald $f$ überhaupt einen Wert ungleich $\bnull$ annimmt.
+Verschiedene Faktoren in verschiedenen Argumenten multiplizieren sich ebenso,
+für bilineares $f$ etwa $f(2\bv, 3\bw) = 6\,f(\bv, \bw)$.
 :::
 
 ### Die Fläche eines Rechtecks
-
-Das einfachste Beispiel kommt aus der Schulgeometrie.
 
 :::beispiel[#flaeche-eines-rechtecks (Fläche eines Rechtecks)]
 Wir betrachten die Fläche eines Rechtecks als Funktion seiner beiden
@@ -138,21 +127,14 @@ $\R$.
 :::
 
 :::interaktiv[Verdoppeln, einmal beide Seiten und einmal nur eine]
-Welche der beiden Skalierungen besteht den Linearitätstest, wenn wir die Fläche
-zuerst nur aus dem Rechteck vorhersagen?
+Welche der beiden Skalierungen verhält sich wie bei einer linearen Abbildung?
 
 <BilinearitaetsDemo />
 
-Das Rechteckbild zeigt damit, warum die getrennte Linearität die Regel
-ist, die das Tensorprodukt später in eine lineare Abbildung übersetzt.
-:::
-
-:::bemerkung[#das-vierfache-geometrisch-gelesen (Das Vierfache, geometrisch gelesen)]
-Der Faktor $\cred{4}$ ist auch ohne Rechnung klar. Verdoppeln wir beide Seiten, passt
-das alte Rechteck viermal in das neue; verdoppeln wir nur eine Seite, genau
-zweimal, und das ist die Linearität im einzelnen Argument. Der Faktor
-$\cred{4} = 2^2$ ist der Fall $n = 2$ der allgemeinen Regel $\cred{c^n}$ aus
-@bemerkung:bilinear-und-eine-warnung.
+Verdoppeln wir beide Seiten, passt das alte Rechteck viermal in das neue,
+verdoppeln wir nur eine, zweimal. Das Zweifache ist die Linearität im einzelnen
+Argument, das Vierfache $\cred{4} = 2^2$ der Fall $n = 2$ der Regel $\cred{c^n}$
+aus @bemerkung:bilinear-und-eine-warnung.
 :::
 
 ### Weitere Beispiele
@@ -168,13 +150,11 @@ $$
 = c\,\inner{\cblue{\bv}, \cgreen{\bw}} + c'\,\inner{\cblue{\bv'}, \cgreen{\bw}} .
 $$
 
-Der erste Schritt ist die Additivität, der zweite die Homogenität. Bei einer
-axiomatischen Einführung stehen beide schon in der Definition des
-Skalarprodukts. Für das Standardskalarprodukt $\bx^\top\by = \sum_i x_i y_i$
-rechnen wir sie in einer Zeile nach: Das Distributivgesetz der reellen Zahlen
-gibt die Additivität, das Herausziehen des Skalars die Homogenität. Für das
-zweite Argument brauchen wir dann keine neue Rechnung: Die Symmetrie
-$\inner{\bv, \bw} = \inner{\bw, \bv}$ dreht die Rollen um.
+Der erste Schritt ist die Additivität, der zweite die Homogenität. Beide stehen
+in der Definition des Skalarprodukts; für $\bx^\top\by = \sum_i x_i y_i$ folgen
+sie aus dem Distributivgesetz in $\R$. Das zweite Argument braucht keine neue
+Rechnung, denn die Symmetrie $\inner{\bv, \bw} = \inner{\bw, \bv}$ vertauscht die
+Rollen.
 :::
 
 :::beispiel[#matrizenmultiplikation-als-bilineare (Matrizenmultiplikation als bilineare Abbildung)]
@@ -185,8 +165,8 @@ $$
 (\cblue{\bA}, \cgreen{\bB}) \mapsto \corange{\bA\bB} ,
 $$
 
-ist bilinear. In beiden Argumenten ist das nichts anderes als das
-Distributivgesetz für Matrizen, zusammen mit der Verträglichkeit mit Skalaren:
+ist bilinear. In beiden Argumenten folgt das aus dem Distributivgesetz für
+Matrizen und der Verträglichkeit mit Skalaren:
 
 $$
 (c\,\cblue{\bA} + c'\,\cblue{\bA'})\,\cgreen{\bB}
@@ -198,16 +178,13 @@ $$
 
 Linear ist auch sie nicht. Skalieren wir beide Faktoren mit $c$, so erhalten wir
 $(c\cblue{\bA})(c\cgreen{\bB}) = \cred{c^2}\,\corange{\bA\bB}$, wie es
-@bemerkung:bilinear-und-eine-warnung für $n = 2$ vorhersagt. Die Matrizenmultiplikation ist damit
-unser erstes Beispiel, in dem die drei beteiligten Räume im Allgemeinen
-verschieden sind.
+@bemerkung:bilinear-und-eine-warnung für $n = 2$ vorhersagt.
 :::
 
 ### Darstellung durch Koeffizienten
 
 Sind die beteiligten Räume Koordinatenräume, lässt sich jede multilineare
-Abbildung durch
-eine endliche Liste von Zahlen vollständig beschreiben.
+Abbildung durch eine endliche Liste von Zahlen vollständig beschreiben.
 
 :::satz[#darstellung-multilinearer-abbildungen (Darstellung multilinearer Abbildungen)]
 Eine Abbildung $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ ist
@@ -231,14 +208,12 @@ gilt, wobei $\be_j$ der $j$-te Einheitsvektor des $\R^m$ ist. Die Koeffizienten
 $\corange{a_{i_1, \dots, i_k, j}}$ sind eindeutig bestimmt.
 :::
 
-Einen vollständigen Beweis führen wir nicht. Die Koeffizienten kommen so
-zustande: $\corange{a_{i_1, \dots, i_k, j}}$ ist die
-$j$-te Komponente des Vektors $T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Damit
-ist auch die Eindeutigkeit klar, denn diese Werte legt $T$ selbst fest. Eine
-multilineare Abbildung ist also bereits dadurch bestimmt, was sie mit Tupeln von
-Einheitsvektoren macht.
+Die Koeffizienten lassen sich ablesen: $\corange{a_{i_1, \dots, i_k, j}}$ ist
+die $j$-te Komponente von $T(\be_{i_1}, \dots, \be_{i_k}) \in \R^m$. Diese Werte
+legt $T$ selbst fest, daher die Eindeutigkeit. Eine multilineare Abbildung ist
+also dadurch bestimmt, was sie mit Tupeln von Einheitsvektoren macht.
 
-:::vertiefung[Warum die Koeffizientendarstellung stimmt]
+:::vertiefung[Beweisskizze zum Darstellungssatz]
 Dass eine Abbildung der Gestalt @eq:darstellung-multilinearer-abbildungen multilinear ist, ist Nachrechnen. In
 jedem Summanden steht aus jedem Argument genau eine Koordinate als Faktor.
 Ersetzen wir $\bx^{(l)}$ durch $c\bx^{(l)} + c'\by^{(l)}$, so spaltet sich jeder
@@ -262,13 +237,11 @@ Koeffizienten: Dort steht $\corange{a_{i_1, \dots, i_k, j}}$ genau an der Stelle
 an der hier die $j$-te Komponente von $T(\be_{i_1}, \dots, \be_{i_k})$ auftaucht.
 :::
 
-Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Unsere
-Flächenfunktion aus @beispiel:flaeche-eines-rechtecks hat $k = 2$ Argumente mit
-$n_1 = n_2 = 1$ und $m = 1$, kommt also mit einer einzigen Zahl aus, nämlich
-$a_{1,1,1} = 1$. Ein bilineares $T\colon \R^2 \times \R^2 \to \R$ braucht
-dagegen schon $2 \cdot 2 \cdot 1 = 4$ Koeffizienten. Wie wir diese Zahlen
-anordnen und warum daraus ein Objekt mit $k + 1$ Indexpositionen wird, bei
-$m = 1$ also mit $k$, ist das Thema von @sec:tensoren.
+Es sind $n_1 n_2 \cdots n_k \cdot m$ Koeffizienten. Die Flächenfunktion aus
+@beispiel:flaeche-eines-rechtecks ($k = 2$, $n_1 = n_2 = m = 1$) kommt mit der
+einzigen Zahl $a_{1,1,1} = 1$ aus, ein bilineares
+$T\colon \R^2 \times \R^2 \to \R$ braucht schon $2 \cdot 2 \cdot 1 = 4$. Wie wir
+diese Zahlen anordnen, ist das Thema von @sec:tensoren.
 
 ### Selbsttest
 
@@ -286,10 +259,8 @@ darum entscheidet dieser Randfall nicht zwischen Linearität und Bilinearität.
 Für jede multilineare Abbildung $f$ gilt
 $f(\bv_1, \dots, \bv_n) = \bnull$, sobald $\bv_i = \bnull$ für ein $i$ ist.
 
-Setzen wir in @definition:multilineare-abbildung den zweiten Skalar auf $c' = 0$, so bleibt im
-$i$-ten Argument die reine Homogenität
-$f(\bv_1, \dots, c\bv_i, \dots, \bv_n) = c\,f(\bv_1, \dots, \bv_i, \dots, \bv_n)$
-übrig. Darin wählen wir $c = 0$ und nutzen $\bnull = 0 \cdot \bv_i$:
+Wir nutzen die Homogenität im $i$-ten Argument
+(@definition:multilineare-abbildung mit $c' = 0$) mit $c = 0$:
 
 $$
 f(\bv_1, \dots, \bnull, \dots, \bv_n)
@@ -297,38 +268,35 @@ f(\bv_1, \dots, \bnull, \dots, \bv_n)
 = 0 \cdot f(\bv_1, \dots, \bv_i, \dots, \bv_n) = \bnull .
 $$
 
-Welchen Wert die übrigen Argumente haben, spielt dabei keine Rolle. Ein einziges
-Nullargument genügt.
+Die Werte der übrigen Argumente spielen dabei keine Rolle.
 :::
 
 :::frage{falsch}
 Jede bilineare Abbildung ist insbesondere linear.
 
-@bemerkung:bilinear-und-eine-warnung sagt das Gegenteil. Skalieren wir bei $n = 2$ beide Argumente
-mit $c$, so wird der Wert mit $c^2$ multipliziert und nicht mit $c$. Ein
-konkreter Fall aus @beispiel:flaeche-eines-rechtecks: Für $x = y = 1$ ist $f(2, 2) = 4$, während
-eine lineare Abbildung $2\,f(1, 1) = 2$ liefern müsste. Beides zugleich, bilinear
-und linear, ist einzig die Nullabbildung: Aus
-$c^2 f(\bv, \bw) = c\,f(\bv, \bw)$ für alle $c$ folgt $f(\bv, \bw) = \bnull$ für
-jedes Paar.
+Skalieren wir beide Argumente mit $c$, so wird der Wert mit $c^2$ multipliziert,
+nicht mit $c$ (@bemerkung:bilinear-und-eine-warnung). In
+@beispiel:flaeche-eines-rechtecks ist etwa $f(2, 2) = 4$, eine lineare Abbildung
+müsste $2\,f(1, 1) = 2$ liefern. Bilinear und linear zugleich ist nur die
+Nullabbildung, denn aus $c^2 f(\bv, \bw) = c\,f(\bv, \bw)$ für alle $c$ folgt
+$f(\bv, \bw) = \bnull$.
 :::
 
 :::frage{wahr}
 Halten wir in einer multilinearen Abbildung alle Argumente bis auf das $i$-te
 fest, so ist die verbleibende Abbildung $V_i \to W$ linear.
 
-Das ist @definition:multilineare-abbildung, in Worte gefasst. Sie fordert diese eine
-Bedingung, und zwar für jedes $i$ einzeln.
+Das ist @definition:multilineare-abbildung in Worten, und zwar für jedes $i$.
 :::
 
 :::frage{falsch}
 Zwei verschiedene Koeffizienten-Arrays können dieselbe multilineare Abbildung
 $T\colon \R^{n_1} \times \cdots \times \R^{n_k} \to \R^m$ darstellen.
 
-@satz:darstellung-multilinearer-abbildungen sichert die Eindeutigkeit zu, und der
-Grund steht im Anschluss an ihn: $a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente
-von $T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ selbst festgelegt. Wer die
-Koeffizienten ändert, ändert die Abbildung.
+@satz:darstellung-multilinearer-abbildungen sichert die Eindeutigkeit zu:
+$a_{i_1, \dots, i_k, j}$ ist die $j$-te Komponente von
+$T(\be_{i_1}, \dots, \be_{i_k})$, also durch $T$ festgelegt. Andere Koeffizienten
+ergeben eine andere Abbildung.
 :::
 
 ::::

@@ -13,31 +13,30 @@ $$
 \operatorname{null}(\bA) = \{\, \bz : \bA\bz = \bzero \,\}.
 $$
 
-Er ist immer ein
+Im Skript schreiben wir meist $\operatorname{Kern}(\bA)$. Er ist immer ein
 :k[Unterraum]{#subspace}: Der Nullvektor
 liegt darin, und Summen und Vielfache von Lösungen von
-$\bA\bz = \bzero$ lösen die Gleichung ebenfalls. Ein
-Mini-Beispiel: Für
+$\bA\bz = \bzero$ lösen die Gleichung ebenfalls. Beispiel: Für
 $\bA = \begin{pmatrix}1 & 1\\ 1 & 1\end{pmatrix}$
-erfüllt der Vektor $\bz = (1,-1)^T$ die Gleichung
-$\bA\bz = \bzero$, und der Nullraum ist genau der
-:k[Spann]{#span} dieses einen Vektors. Ganz
-allgemein addieren sich die
-:k[Dimensionen]{#dimension} auf:
-:k[Rang]{#rank}$(\bA)$ + dim null$(\bA) = n$, die Anzahl der Spalten.
+erfüllt $\bz = (1,-1)^T$ die Gleichung
+$\bA\bz = \bzero$, und der Nullraum ist der
+:k[Spann]{#span} dieses einen Vektors. Allgemein ergänzen sich die
+:k[Dimensionen]{#dimension}: Hat $\bA$ $n$ Spalten, so ist
+:k[Rang]{#rank} plus Dimension des Nullraums gleich $n$.
 
-Eine zentrale Tatsache (vgl. Heath §3.4.5): Das
+Außerdem ist das
 :k[orthogonale Komplement]{#orthogonal-complement}
-von span$(\bA)$ ist der Nullraum von
-$\bA^T$. Warum? Ein Vektor steht genau dann senkrecht auf
+von $\operatorname{span}(\bA)$ der Nullraum von
+$\bA^T$ (vgl. Heath §3.4.5): Ein Vektor steht genau dann senkrecht auf
 allen Spalten von $\bA$, wenn
-$\bA^T$ ihn auf Null abbildet.
+$\bA^T$ ihn auf null abbildet.
 
-Suchen wir diese Richtung einmal selbst: Wo verschwindet das Bild, und warum
-ist der Kern eine ganze Gerade?
+Für welche Richtung von $\bv$ verschwindet $\bA\bv$, und warum ist der Kern
+eine ganze Gerade?
 
 <NullSpaceWidget />
 
-Beide Unterräume werden im Bild sichtbar: Jedes Bild landet auf einer Geraden,
-dem Spann der Spalten, und die eine ausgelöschte Richtung spannt den Kern auf.
-Eins plus eins ergibt die zwei Spalten von $\bA$.
+Jedes Bild $\bA\bv$ landet auf der Geraden durch $(1, 1)^T$, dem Spann der
+Spalten. Nur in Richtung $(1, -1)^T$ und ihrer Gegenrichtung schrumpft es auf
+den Ursprung, und mit $\bv$ liegt jedes Vielfache im Kern. Rang $1$ plus
+Kerndimension $1$ ergibt die zwei Spalten von $\bA$.

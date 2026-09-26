@@ -17,20 +17,20 @@ $$
 f(b) - f(a) = f'(\xi)\,(b - a).
 $$
 
-Blitzer-Intuition: Wenn eine 100&nbsp;km lange Fahrt genau eine Stunde gedauert
-hat, dann zeigte der Tacho in irgendeinem Moment genau 100&nbsp;km/h; die
-:k[Tangente]{#tangent-line} ist an einem inneren Punkt parallel zur Sekante.
-Einschränkung: Der Satz garantiert nur, dass so ein $\xi$ existiert, er verrät aber
-nicht, wo es liegt.
+Dauert eine 100&nbsp;km lange Fahrt genau eine Stunde, dann zeigte der Tacho
+in irgendeinem Moment genau 100&nbsp;km/h. Geometrisch: An einem inneren Punkt
+ist die :k[Tangente]{#tangent-line} parallel zur Sekante durch
+$(a, f(a))$ und $(b, f(b))$.
 
-So nutzt ihn das Konvergenzargument für Fixpunkt-Iterationen: Schreiben wir
-$g(x_k) - g(x^*) = g'(\theta_k)(x_k - x^*)$ für ein unbekanntes $\theta_k$
-zwischen $x_k$ und $x^*$, dann wird ein Iterationsschritt zu einer exakten
-Aussage darüber, wie der Fehler schrumpft, ohne $\theta_k$ je zu lokalisieren.
+Die *Cauchysche Fassung* nimmt eine zweite solche Funktion $g$ mit
+$g' \neq 0$ auf $(a, b)$ hinzu und liefert ein $\xi \in (a, b)$ mit
+$\frac{f(b) - f(a)}{g(b) - g(a)} = \frac{f'(\xi)}{g'(\xi)}$; für $g(x) = x$
+ist das wieder der gewöhnliche Satz.
 
 Gibt es eine Lage der Endpunkte, zu der keine parallele Tangente existiert?
 
 <MvtWidget />
 
-Zu jeder Wahl von $a < b$ liegt mindestens ein $\xi$ bereit. Zugesichert ist
-seine Existenz, nicht sein Ort.
+Nein: Zu jeder Wahl von $a < b$ gibt es mindestens ein $\xi$, bei manchen
+Lagen zwei. Wo $\xi$ liegt, sagt der Satz nicht; für Beweise genügt meist,
+dass es existiert.

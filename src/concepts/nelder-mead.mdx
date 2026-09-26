@@ -6,17 +6,17 @@ Das *Nelder-Mead-Verfahren* (auch Downhill-Simplex) minimiert eine Funktion
 $f\colon \R^n \to \R$, ohne je eine Ableitung zu berechnen. Es hält dazu
 einen *Simplex* aus $n + 1$ Punkten, im $\R^2$ also ein Dreieck, und
 verformt ihn Schritt für Schritt: Der schlechteste Eckpunkt wird am
-Schwerpunkt der übrigen gespiegelt (*Reflection*), bei Erfolg weiter
+Schwerpunkt der übrigen gespiegelt (*Reflexion*), bei Erfolg weiter
 hinausgeschoben (*Expansion*), bei Misserfolg näher herangezogen
-(*Contraction*), und wenn nichts hilft, schrumpft der ganze Simplex zum
-besten Punkt hin (*Shrink*).
+(*Kontraktion*), und wenn nichts hilft, schrumpft der ganze Simplex zum
+besten Punkt hin (*Schrumpfen*).
 
-Der Simplex tastet sich so bergab und zieht sich am Ende um ein Minimum
+So wandert der Simplex bergab und zieht sich am Ende um ein Minimum
 zusammen. Weil nur Funktionswerte verglichen werden, funktioniert das auch
 für verrauschte oder nicht glatte Zielfunktionen, bei denen
-:k[Gradientenverfahren]{#gradient-descent} ausfallen.
+:k[Gradientenverfahren]{#gradient-descent} versagen.
 
-Der Preis: keine allgemeinen Konvergenzgarantien und schlechtes Verhalten in
-hohen Dimensionen; als Faustregel bleibt es bei $n \lesssim 10$ nützlich. In
-R ist Nelder-Mead die Voreinstellung von `optim()`, wenn kein Gradient
-übergeben wird.
+Dafür gibt es keine allgemeinen Konvergenzgarantien, und in hohen Dimensionen
+wird das Verfahren langsam; als Faustregel ist es bei $n \lesssim 10$ nützlich.
+In R ist Nelder-Mead die Voreinstellung von `optim()`. Ein übergebener
+Gradient ändert daran nichts, nur das Argument `method`.
