@@ -3,18 +3,14 @@ import { BSplineBasis } from "./widgets/S134BSplineBasis";
 import { CoxDeBoorSchritt } from "./widgets/S134CoxDeBoor";
 import { StoerungVergleich } from "./widgets/S134Stoerung";
 
-@sec:polynominterpolation endet mit einer Beobachtung: Ein
-einzelnes Polynom durch viele Datenpunkte oszilliert
-zwischen ihnen, und der Ausschlag wächst mit der Zahl der Punkte. Der
-Grund liegt im Ansatzraum selbst. Ein Polynom vom Grad $n-1$ ist ein
-$\cred{\text{globales}}$ Objekt: Jeder Koeffizient wirkt überall, jede
-Messung beeinflusst die ganze Kurve.
-
-Der Ausweg dieses Abschnitts kehrt das um. Wir zerlegen das Intervall in
-kleine Stücke und legen auf jedes ein Polynom von *festem, niedrigem* Grad.
-Der Grad wächst dann nicht mehr mit der Datenmenge, es wächst nur die Anzahl
-der Stücke. Damit daraus keine unstetige Funktion wird, verlangen wir an den
-Nahtstellen so viel Glattheit, wie der Grad zulässt.
+@sec:polynominterpolation endet mit einer Beobachtung: Ein einzelnes
+Polynom durch viele Datenpunkte oszilliert zwischen ihnen. Es ist ein
+$\cred{\text{globales}}$ Objekt, jeder Koeffizient wirkt überall und jede
+Messung auf die ganze Kurve. Wir zerlegen deshalb das Intervall in kleine
+Stücke und legen auf jedes ein Polynom von *festem, niedrigem* Grad; mit der
+Datenmenge wächst dann nur die Zahl der Stücke. Damit daraus keine unstetige
+Funktion wird, verlangen wir an den Nahtstellen so viel Glattheit, wie der
+Grad zulässt.
 
 ### Stückweise Polynome mit vorgeschriebener Glattheit
 
@@ -41,25 +37,21 @@ Die Menge aller solchen Funktionen bezeichnen wir mit $\Scal_q$.
 :::
 
 :::bemerkung[#was-in-dieser-definition-steckt (Was in dieser Definition steckt)]
-Drei Punkte zur Definition.
-
-*Grad höchstens $q$.* Die kurze Sprechweise „Polynome $q$-ten Grades" meint
-stets „vom Grad höchstens $q$". Sonst wäre nicht einmal die Nullfunktion
-ein Spline, und $\Scal_q$ wäre kein Vektorraum.
+*Grad höchstens $q$.* „Polynome $q$-ten Grades" meint stets „vom Grad
+höchstens $q$", sonst wäre nicht einmal die Nullfunktion ein Spline und
+$\Scal_q$ kein Vektorraum.
 
 *Die Glattheit ist eine Forderung.* Eine stückweise durch
 Polynome vom Grad höchstens $q$ definierte Funktion darf an jedem Knoten
 springen. Erst Bedingung 2 macht sie zum
-Spline. $\Ccal^{q-1}$ ist dabei die *größtmögliche* Glattheit, die man
-verlangen kann, ohne den Spline zu einem einzigen globalen Polynom zu
-zwingen. Fordern wir nämlich zusätzlich, dass auch die $q$-te Ableitung
-stetig ist, so stimmen benachbarte Polynome in allen Ableitungen überein und
-sind damit gleich.
+Spline. $\Ccal^{q-1}$ ist dabei die *größtmögliche* Glattheit, die wir
+verlangen können, ohne den Spline zu einem einzigen globalen Polynom zu
+zwingen: Ist auch die $q$-te Ableitung stetig, so stimmen benachbarte
+Polynome in allen Ableitungen überein und sind damit gleich.
 
-*Der Fall $q = 0$.* Dann bedeutet $\Ccal^{-1}$: keine
-Stetigkeitsforderung. Ein Spline vom Grad $0$ ist eine Treppenfunktion, die an
-jedem Knoten springen darf. Ab $q = 1$ ist $s$ stetig, ab $q = 2$ auch
-knickfrei.
+*Der Fall $q = 0$.* $\Ccal^{-1}$ bedeutet: keine Stetigkeitsforderung; ein
+Spline vom Grad $0$ ist eine Treppenfunktion. Ab $q = 1$ ist $s$ stetig, ab
+$q = 2$ auch knickfrei.
 :::
 
 :::beispiel[#die-grade-0-1-und-3 (Die Grade 0, 1 und 3)]
@@ -73,15 +65,12 @@ die drei gebräuchlichsten Grade so aus.
 - $q = 3$: kubische Stücke, an den Knoten stimmen Funktionswert, Steigung und
   Krümmung überein. Ein Knick ist nicht mehr zu sehen, und darum ist
   $q = 3$ der Standardfall.
-
-Höhere Grade sind möglich, bringen aber wenig: Die Kurve wirkt kaum glatter,
-und die Stücke beginnen wieder zu oszillieren.
 :::
 
 ### Wie viele Parameter hat ein Spline?
 
-Bevor wir interpolieren, bestimmen wir die Größe des Ansatzraums. Nach @sec:basisdarstellung entscheidet diese Zahl
-darüber, wie viele Bedingungen wir stellen dürfen.
+Nach @sec:basisdarstellung entscheidet die Größe des Ansatzraums darüber,
+wie viele Bedingungen wir stellen dürfen.
 
 :::satz[#dimension-des-spline-raums (Dimension des Spline-Raums)]
 Sei $q \ge 1$ und sei $\Scal_q$ der Raum der Polynom-Splines vom Grad $q$ zum
@@ -187,21 +176,19 @@ m(q+1) - (m-1)\,q = mq + m - mq + q = \corange{m + q} .
 $$
 
 Für $q = 3$ und $m = 5$ sind das $5 \cdot 4 - 4 \cdot 3 = 20 - 12 = 8 = m + q$
-$\checkmark$. Diese Rechnung setzt allerdings voraus, dass die $(m-1)q$
-Bedingungen linear unabhängig sind, sonst dürften wir sie nicht
-abziehen. @satz:dimension-des-spline-raums liefert das nach.
+$\checkmark$. Die Rechnung setzt voraus, dass die $(m-1)q$ Bedingungen
+linear unabhängig sind; das liefert @satz:dimension-des-spline-raums nach.
 
-Beide Wege stützen sich auf zwei Annahmen, die wir nicht weglassen dürfen:
-*einfache innere Knoten* (kein $\corange{\xi_i}$ tritt doppelt auf) und
-*maximale Glattheit*
-$\Ccal^{q-1}$. Erlauben wir an einem Knoten weniger Glattheit, so fällt dort
-eine Bedingung weg und die Dimension steigt um eins.
+Beide Wege stützen sich auf *einfache innere Knoten* (kein
+$\corange{\xi_i}$ tritt doppelt auf) und *maximale Glattheit* $\Ccal^{q-1}$.
+Erlauben wir an einem Knoten weniger Glattheit, so fällt dort eine Bedingung
+weg und die Dimension steigt um eins.
 :::
 
 ### Interpolation mit kubischen Splines
 
-Jetzt können wir prüfen, ob ein Interpolationsproblem aufgeht. Wir haben
-$n = m+1$ Datenpunkte an den Knoten selbst und wählen $q = 3$.
+Wir interpolieren $n = m+1$ Datenpunkte, die an den Knoten selbst liegen,
+mit $q = 3$.
 
 :::bemerkung[#zwei-bedingungen-fehlen-randbedingungen (Zwei Bedingungen fehlen: Randbedingungen)]
 Nach @eq:dimension-des-spline-raums hat der Ansatzraum die Dimension $m + 3$, die Daten liefern
@@ -216,18 +203,11 @@ sind drei Sorten von *Randbedingungen* (boundary conditions):
 | periodisch | $s'(a) = s'(b)$ und $s''(a) = s''(b)$ |
 
 Liegt keine Information über den Rand vor, ist der *natürliche Spline* der
-Standard. Dafür gibt es einen Grund: Unter allen Interpolanten mit
-zwei stetigen Ableitungen hat er die kleinste Gesamtkrümmung
-$\int_a^b |g''(x)|^2\,\mathrm{d}x$ (@sec:minimale-kruemmung).
-
-Im periodischen Fall ist die Wahl der beiden Bedingungen zu beachten:
-$s(a) = s(b)$ taugt nicht als eine davon. Sind die Daten periodisch,
-gilt also $y_0 = y_m$, so folgt $s(a) = s(b)$ schon aus den
-Interpolationsbedingungen und ist keine neue Gleichung; sind sie es nicht, so
-widerspricht die Forderung ihnen. Für $q = 3$ und $m = 4$ nachgerechnet: Mit
-$\{s(a) = s(b),\, s'(a) = s'(b)\}$ hat die $16 \times 16$-Matrix nur den Rang
-$15$, ein Freiheitsgrad bleibt offen. Erst
-$\{s'(a) = s'(b),\, s''(a) = s''(b)\}$ macht sie regulär.
+Standard, denn unter allen Interpolanten mit zwei stetigen Ableitungen hat er
+die kleinste Gesamtkrümmung $\int_a^b |g''(x)|^2\,\mathrm{d}x$
+(@sec:minimale-kruemmung). Im periodischen Fall zählt $s(a) = s(b)$ nicht als
+eine der beiden Bedingungen: Bei periodischen Daten ($y_0 = y_m$) folgt es
+schon aus der Interpolation, sonst widerspricht es ihr.
 :::
 
 :::beispiel[#kubischer-spline-durch-vier-punkte (Kubischer Spline durch vier Punkte)]
@@ -246,9 +226,9 @@ $3 \cdot 4 = 12$ Unbekannte. Die Bedingungen:
 | natürlicher Rand | 2 | $s''(0) = s''(3) = 0$ |
 
 Zusammen $4 + 2 + 2 + 2 + 2 = 12$ Bedingungen für $12$ Unbekannte, und das
-lineare Gleichungssystem ist eindeutig lösbar. Beachten wir, dass jeder
-Datenpunkt nur *einmal* gezählt wird: Dass etwa auch $p_2(1) = 1$ gilt,
-erzwingt schon die Stetigkeitszeile.
+lineare Gleichungssystem ist eindeutig lösbar. Jeder Datenpunkt wird dabei
+nur *einmal* gezählt: Dass etwa auch $p_2(1) = 1$ gilt, erzwingt schon die
+Stetigkeitszeile.
 
 Die Lösung lautet
 
@@ -258,11 +238,10 @@ $$
 \cgreen{p_3(x)} = \tfrac{1}{15}\left(78 - 67x + 18x^2 - 2x^3\right) .
 $$
 
-Die Probe: $\cgreen{p_1(1)} = \tfrac{15}{15} = 1 = \cgreen{p_2(1)}$,
-und an der Nahtstelle $x = 1$ ist $\cgreen{p_1'(1)} = \cgreen{p_2'(1)} = -\tfrac{1}{15}$
-sowie $\cgreen{p_1''(1)} = \cgreen{p_2''(1)} = -\tfrac{48}{15}$. Am linken Rand
-ist $\cgreen{p_1''(0)} = 0$, am rechten $\cgreen{p_3''(3)} = \tfrac{36 - 36}{15} = 0$,
-wie die natürliche Randbedingung verlangt.
+Zur Probe an der Naht $x = 1$: $\cgreen{p_1(1)} = \cgreen{p_2(1)} = 1$,
+$\cgreen{p_1'(1)} = \cgreen{p_2'(1)} = -\tfrac{1}{15}$ und
+$\cgreen{p_1''(1)} = \cgreen{p_2''(1)} = -\tfrac{48}{15}$; an den Rändern ist
+$\cgreen{p_1''(0)} = 0$ und $\cgreen{p_3''(3)} = \tfrac{36 - 36}{15} = 0$.
 :::
 
 :::interaktiv[Das Zwölf-mal-zwölf-System]
@@ -271,34 +250,24 @@ Messwert verschieben?
 
 <SplineKonstruktion />
 
-Zwei Beobachtungen. Die Naht ist unsichtbar, obwohl links
-und rechts davon verschiedene Polynome stehen; das Readout zeigt, dass Wert,
-Steigung und Krümmung bis auf Rundung übereinstimmen. Und beim Verschieben eines
-einzigen Messwerts ändern sich *alle* zwölf Koeffizienten: Es gibt
-keine Zeile der Tabelle, die stehen bliebe. Weiter unten in diesem Abschnitt
-zeigt @bemerkung:bandstruktur-und-aufwand, dass eine andere Darstellung
-desselben Ansatzraums genau darin anders ausgeht.
+Die Naht ist unsichtbar, obwohl links und rechts davon verschiedene Polynome
+stehen; das Readout zeigt, dass Wert, Steigung und Krümmung bis auf Rundung
+übereinstimmen. Beim Verschieben eines einzigen Messwerts ändern sich dagegen
+*alle* zwölf Koeffizienten. Dass eine andere Darstellung desselben
+Ansatzraums darin anders ausgeht, zeigt @bemerkung:bandstruktur-und-aufwand.
 :::
 
 ### B-Splines
 
-Die stückweise Monomdarstellung aus @beispiel:kubischer-spline-durch-vier-punkte ist zum Rechnen schlecht
-geeignet. Sie erbt die schlechte Kondition der Monombasis
-(@sec:polynominterpolation), ihre Matrix hat keine erkennbare Struktur, und
-jeder Koeffizient hängt an allen Daten: Verschieben wir einen einzigen
-Messwert, so ändern sich alle zwölf Koeffizienten, in dieser Darstellung ist
-Spline-Interpolation also global. Wir suchen deshalb eine
-:k[*Basis*]{#basis} des
-Raums $\Scal_q$ im Sinn von @sec:basisdarstellung, aus der sich die
-Systemmatrix $\bB$ mit den Einträgen $B_{ik} = \corange{\phi_k(x_i)}$ besser
-verhält. Nach @satz:dimension-des-spline-raums muss eine solche Basis genau $m + q$ Funktionen
-haben.
-
-Die abgeschnittenen Potenzen aus dem Beweis wären eine, sind aber ungeeignet: Sie
-sind fast alle auf dem halben Intervall von null verschieden, und für großes
-$x$ werden sie sehr groß. Die B-Splines sind die Basis, die stattdessen
-gebraucht wird. Ihr Name kommt von *Basis*, ihre Gestalt von der Rekursion,
-die sie erzeugt.
+Die stückweise Monomdarstellung aus
+@beispiel:kubischer-spline-durch-vier-punkte erbt die schlechte Kondition der
+Monombasis (@sec:polynominterpolation), ihre Matrix hat keine erkennbare
+Struktur, und jeder Koeffizient hängt an allen Daten. Wir suchen deshalb eine
+bessere :k[*Basis*]{#basis} von $\Scal_q$ im Sinn von @sec:basisdarstellung;
+nach @satz:dimension-des-spline-raums hat sie genau $m + q$ Funktionen. Die
+abgeschnittenen Potenzen aus demselben Satz taugen dafür nicht, denn jede ist
+auf dem ganzen Stück rechts ihres Knotens von null verschieden und wird für
+großes $x$ sehr groß. Stattdessen nehmen wir die B-Splines.
 
 :::definition[#erweiterte-knotenfolge-und-b-splines (Erweiterte Knotenfolge und B-Splines)]
 Zum Gitter $a = \corange{\xi_0} < \dots < \corange{\xi_m} = b$ und zum Grad
@@ -337,6 +306,50 @@ nichtleere Knotenintervall als abgeschlossen, damit die Basisfunktionen auch
 in $b$ definiert sind.
 :::
 
+:::satz[#die-b-splines-sind-eine-basis (Die B-Splines sind eine Basis)]
+Mit den Bezeichnungen aus @definition:erweiterte-knotenfolge-und-b-splines gilt für $q \ge 1$:
+
+1. *Lokaler Träger:* $\corange{B_k^{(q)}(x)} = 0$ für
+   $x \notin [\corange{\tau_k}, \corange{\tau_{k+q+1}}]$, und
+   $\corange{B_k^{(q)}(x)} > 0$ für
+   $\corange{\tau_k} < x < \corange{\tau_{k+q+1}}$.
+2. *Zerlegung der Eins:*
+   $\sum_{k=1}^{m+q} \corange{B_k^{(q)}(x)} = 1$ für alle $x \in [a,b]$.
+3. *Glattheit:* $\corange{B_k^{(q)}} \in \Ccal^{q-1}$, jedes
+   $\corange{B_k^{(q)}}$ liegt also selbst in $\Scal_q$.
+4. *Basis:* $\corange{B_1^{(q)}}, \dots, \corange{B_{m+q}^{(q)}}$ sind linear
+   unabhängig und :k[spannen]{#span} $\Scal_q$ auf. Jeder Spline $\cgreen{s}$ vom Grad
+   $q$ besitzt daher genau eine Darstellung
+
+$$ {#eq-die-b-splines-sind-eine-basis}
+\cgreen{s(x)} = \sum_{k=1}^{m+q} a_k\, \corange{B_k^{(q)}(x)} .
+$$
+:::
+
+Einen Beweis führen wir nicht, und die Rekursion dient im Weiteren nur als
+Referenz. Aussage 1 und 3 lesen sich an einem Rekursionsschritt ab
+(Vertiefung unten), und weil $m+q$ die Dimension aus
+@satz:dimension-des-spline-raums ist, ist ein aufspannendes System
+automatisch eine Basis.
+
+Damit ist der Anschluss an @sec:basisdarstellung hergestellt: Wir
+wählen $\corange{\phi_k} = \corange{B_k^{(q)}}$ als Basisfunktionen, stellen
+das System $\bB\ba = \cblue{\by}$ auf und lösen es. Neu ist nur, wie gut
+dieses System konditioniert ist.
+
+:::interaktiv[Die B-Spline-Basis erkunden]
+Wie viele Basisfunktionen sind an einer Stelle aktiv, und wie entsteht ihre Form aus der Rekursion?
+
+<BSplineBasis />
+
+Die gestrichelte Summe liegt über dem ganzen Gitter konstant bei eins, obwohl
+die einzelnen Kurven ganz verschieden aussehen. Und an jeder Stelle sind
+höchstens $q+1$ Basisfunktionen von null verschieden: Das ist die Zahl, die
+gleich die Rechenzeit bestimmt.
+:::
+
+:::::vertiefung[Die Cox-de-Boor-Rekursion von Hand]
+
 :::bemerkung[#warum-die-knotenfolge-so-lang-sein-muss (Warum die Knotenfolge so lang sein muss)]
 Zu $m + q$ Basisfunktionen nur $m + q$ Knoten anzusetzen, liegt nahe, reicht
 aber nicht: Die Rekursion @eq:erweiterte-knotenfolge-und-b-splines-2 greift für
@@ -374,65 +387,24 @@ $$
 An der Stelle $x = 0{,}25$ etwa stehen dort die Werte $0{,}75$, $0{,}25$ und
 $0$, bei $x = 1{,}5$ die Werte $0$, $0{,}5$ und $0{,}5$. In beiden Fällen ist
 die Summe $1$, und das gilt an jeder Stelle. Jede dieser drei Hutfunktionen ist
-selbst ein Spline vom Grad $1$, jedes ist nichtnegativ, und jedes ist nur auf
-höchstens $q + 1 = 2$ Gitterintervallen von null verschieden. An den Rändern
+selbst ein Spline vom Grad $1$, nichtnegativ und nur auf höchstens
+$q + 1 = 2$ Gitterintervallen von null verschieden. An den Rändern
 sorgen die doppelten Knoten dafür, dass der Träger kürzer ausfällt.
 :::
 
-:::satz[#die-b-splines-sind-eine-basis (Die B-Splines sind eine Basis)]
-Mit den Bezeichnungen aus @definition:erweiterte-knotenfolge-und-b-splines gilt für $q \ge 1$:
-
-1. *Lokaler Träger:* $\corange{B_k^{(q)}(x)} = 0$ für
-   $x \notin [\corange{\tau_k}, \corange{\tau_{k+q+1}}]$, und
-   $\corange{B_k^{(q)}(x)} > 0$ für
-   $\corange{\tau_k} < x < \corange{\tau_{k+q+1}}$.
-2. *Zerlegung der Eins:*
-   $\sum_{k=1}^{m+q} \corange{B_k^{(q)}(x)} = 1$ für alle $x \in [a,b]$.
-3. *Glattheit:* $\corange{B_k^{(q)}} \in \Ccal^{q-1}$, jedes
-   $\corange{B_k^{(q)}}$ liegt also selbst in $\Scal_q$.
-4. *Basis:* $\corange{B_1^{(q)}}, \dots, \corange{B_{m+q}^{(q)}}$ sind linear
-   unabhängig und :k[spannen]{#span} $\Scal_q$ auf. Jeder Spline $\cgreen{s}$ vom Grad
-   $q$ besitzt daher genau eine Darstellung
-
-$$ {#eq-die-b-splines-sind-eine-basis}
-\cgreen{s(x)} = \sum_{k=1}^{m+q} a_k\, \corange{B_k^{(q)}(x)} .
-$$
-:::
-
-Einen Beweis führen wir nicht; die Rekursion selbst brauchen wir im Weiteren
-nur zur Referenz. Plausibel ist die Aussage aber: Aussage 1 und 3 lesen
-sich an einem Rekursionsschritt ab (siehe die Vertiefungen), und die
-Anzahl $m+q$ ist genau die Dimension aus @satz:dimension-des-spline-raums, sodass ein
-aufspannendes System automatisch eine Basis ist.
-
-Damit ist der Anschluss an @sec:basisdarstellung hergestellt: Wir
-wählen $\corange{\phi_k} = \corange{B_k^{(q)}}$ als Basisfunktionen, stellen
-das System $\bB\ba = \cblue{\by}$ auf und lösen es. Neu ist nur, wie gut
-dieses System konditioniert ist.
-
-:::interaktiv[Die B-Spline-Basis erkunden]
-Wie viele Basisfunktionen sind an einer Stelle aktiv, und wie entsteht ihre Form aus der Rekursion?
-
-<BSplineBasis />
-
-Die gestrichelte Summe liegt über dem ganzen Gitter konstant bei eins, obwohl
-die einzelnen Kurven ganz verschieden aussehen. Und an jeder Stelle sind
-höchstens $q+1$ Basisfunktionen von null verschieden: Das ist die Zahl, die
-gleich die Rechenzeit bestimmt.
-:::
-
-:::::vertiefung[Ein Rekursionsschritt Stück für Stück]
+::::interaktiv[Ein Rekursionsschritt Stück für Stück]
 Die Rekursion aus @eq:erweiterte-knotenfolge-und-b-splines-2 baut
 $\corange{B_3^{(q)}}$ aus zwei Nachbarn vom Grad $q-1$ auf, jeder mit einer
 eigenen Gewichtsrampe. Wo beide Rampen tragen, entsteht die zusätzliche
 Glattheit; wo nur eine trägt, wächst der Träger um ein Intervall.
 
 <CoxDeBoorSchritt />
+::::
+
 :::::
 
 :::bemerkung[#b-splines-in-r (B-Splines in R)]
-In `R` liefert `splines::bs()` die Auswertungsmatrix $\bB$ direkt. Ein
-typischer Aufruf sieht so aus:
+In `R` liefert `splines::bs()` die Auswertungsmatrix $\bB$ direkt:
 
 ```r
 y <- f(x)
@@ -447,63 +419,58 @@ Bnew <- splines::bs(xnew, knots = attr(B, "knots"),
 fhat <- Bnew %*% a
 ```
 
-Die erste Hälfte ist der Algorithmus aus @sec:basisdarstellung in
-drei Zeilen: Basis auswerten,
-System lösen. Die zweite Hälfte wertet den Interpolanten an neuen
-Stellen aus, und dabei liegt die Fehlerquelle: Die neue Basismatrix
-muss zu *derselben* Basis gehören wie die alte. Deshalb werden innere Knoten,
-Randknoten und Grad weitergereicht, statt `bs()` Teile davon aus `xnew` neu
-bestimmen zu lassen. Wird das vergessen, gibt es keine bemerkbare Fehlermeldung:
-Die Spaltenzahl stimmt weiterhin, und
-heraus kommt eine glatte Kurve, nur nicht die geschätzte. Am sichersten
-erledigt das bei einem angepassten Modell die zugehörige `predict()`-Methode.
+Die erste Hälfte ist der Algorithmus aus @sec:basisdarstellung: Basis
+auswerten, System lösen. Die zweite wertet den Interpolanten an neuen Stellen
+aus, und dafür muss die neue Basismatrix zu *derselben* Basis gehören; deshalb
+reichen wir innere Knoten, Randknoten und Grad weiter, statt `bs()` sie aus
+`xnew` neu bestimmen zu lassen. Vergessen wir das, gibt es keine
+Fehlermeldung: Die Spaltenzahl stimmt, und heraus kommt eine glatte Kurve, nur
+nicht die geschätzte. Am sichersten erledigt das bei einem angepassten Modell
+die zugehörige `predict()`-Methode.
 :::
 
 ### Warum B-Splines? Kondition und Aufwand
 
 :::bemerkung[#konditionszahlen-eine-groessenordnung (Konditionszahlen: eine Größenordnung, kein Messwert)]
-Für $n = 20$ Punkte in $[0,1]$ stellen wir zwei Basissysteme
-gegenüber. Die :k[Konditionszahlen]{#condition-number} sind *illustrativ*: Sie
-hängen von der verwendeten :k[Norm]{#matrix-norm},
-von der Lage der Auswertungsstellen und von der Knotenwahl ab.
+Für $n = 20$ Punkte in $[0,1]$ stellen wir zwei Basissysteme gegenüber. Die
+:k[Konditionszahlen]{#condition-number} sind Größenordnungen; sie hängen von
+der :k[Norm]{#matrix-norm}, der Lage der Auswertungsstellen und der
+Knotenwahl ab.
 
 | Basis | Grad | Konditionszahl |
 |:------|:----:|:--------------:|
 | Monombasis | 19 | $\cred{\kappa(\bB_{\text{mono}}) \approx 10^{16}}$ |
 | kubische B-Splines | 3 | $\cgreen{\kappa(\bB_{\text{spline}}) \approx 10^{1} \text{ bis } 10^{2}}$ |
 
-Die obere Zeile setzt die Tabelle aus
-@sec:polynominterpolation; wir haben sie in exakter rationaler Arithmetik
-nachgerechnet und erhalten $\cred{\kappa_1 = 4{,}4 \cdot 10^{16}}$. Die
-kubische B-Spline-Kollokationsmatrix mit ebenfalls $20$ Basisfunktionen
-kommt in derselben Norm auf $\cgreen{\kappa_1 = 37}$. Zwischen beiden liegen
-gut fünfzehn Größenordnungen; runden wir den B-Spline-Wert auf $10^2$
-auf, werden es vierzehn. Die genaue Zahl ist unwichtig, ihre Deutung nicht: Bei $\cred{\kappa \approx 10^{16}}$ ist von
-den etwa sechzehn signifikanten Stellen eines `double`
-(@sec:fehler/kondition) im Ergebnis nichts mehr sicher,
-während $\cgreen{\kappa \approx 40}$ nicht einmal zwei Stellen kostet.
+Die obere Zeile setzt die Tabelle aus @sec:polynominterpolation fort; in
+exakter rationaler Arithmetik nachgerechnet ist
+$\cred{\kappa_1 = 4{,}4 \cdot 10^{16}}$, während die kubische
+B-Spline-Kollokationsmatrix mit ebenfalls $20$ Basisfunktionen in derselben
+Norm auf $\cgreen{\kappa_1 = 37}$ kommt, gut fünfzehn Größenordnungen
+weniger (mit dem aufgerundeten Tabellenwert $10^2$ vierzehn). Bei $\cred{\kappa \approx 10^{16}}$ ist von den etwa sechzehn
+signifikanten Stellen eines `double` (@sec:fehler/kondition) im Ergebnis
+nichts mehr sicher, während $\cgreen{\kappa \approx 40}$ nicht einmal zwei
+Stellen kostet.
 :::
 
 :::bemerkung[#bandstruktur-und-aufwand (Bandstruktur und Aufwand)]
-Der zweite Vorteil ist die Struktur der Matrix. Nach @satz:die-b-splines-sind-eine-basis ist an jeder
-Stelle $x_i$ höchstens $q+1$ der Basisfunktionen von null verschieden, in der
+Der zweite Vorteil ist die Struktur der Matrix. Nach @satz:die-b-splines-sind-eine-basis sind an jeder
+Stelle $x_i$ höchstens $q+1$ Basisfunktionen von null verschieden, in der
 $i$-ten Zeile von $\bB$ stehen also höchstens $q+1$ Einträge ungleich null,
 und sie stehen nebeneinander. $\bB$ ist eine
 :k[dünn besetzte]{#sparse-matrix} *Bandmatrix* mit Bandbreite ungefähr $q$.
 
-Für die Elimination heißt das: Wo bei einer vollbesetzten Matrix in jedem
-Schritt alle verbleibenden Zeilen bearbeitet werden, sind es hier nur die
-höchstens $q$ Zeilen, die unterhalb des Pivots noch im Band liegen, und in
-jeder davon nur die höchstens $q$ Einträge des Bandes
-(@sec:lgs/lu). Bei einer Systemgröße $N$ kostet das
+Die Elimination bearbeitet deshalb in jedem Schritt nur die höchstens $q$
+Zeilen unterhalb des Pivots, die noch im Band liegen, und in jeder nur die
+höchstens $q$ Einträge des Bandes (@sec:lgs/lu). Bei einer Systemgröße $N$
+kostet das
 
 $$
 O(N q^2) \quad \text{statt} \quad O(N^3)
 $$
 
-(@sec:algos/landau). Hier bezeichnet $N$ die Größe des
-Systems, also die Zahl der Basisfunktionen $m+q$; bei Interpolation an $n$
-Punkten fällt sie mit $n$ zusammen, sonst nicht.
+(@sec:algos/landau). Dabei ist $N = m+q$ die Zahl der Basisfunktionen; bei
+Interpolation an $n$ Punkten ist $N = n$.
 
 Für $N = 1000$ und $q = 3$ ist das Verhältnis
 $N^3 / (N q^2) = N^2/q^2 = 10^6/9 \approx 111\,000$, also ein
@@ -513,9 +480,8 @@ Operationszahlen, keine gemessenen Laufzeiten.
 
 ### Eigenschaften
 
-Splines sind heute das gebräuchlichste Basissystem zur Funktionsapproximation,
-und in aller Regel wird mit $q = 3$ gearbeitet. Zum Abschluss sammeln wir
-die Eigenschaften, die diese Wahl erklären.
+Splines, meist mit $q = 3$, sind heute das gebräuchlichste Basissystem zur
+Funktionsapproximation.
 
 :::satz[#eigenschaften-von-splines-und-b-splines (Eigenschaften von Splines und B-Splines)]
 Sei $q \ge 1$.
@@ -533,46 +499,34 @@ Sei $q \ge 1$.
    $q+1$ Gitterintervallen.
 :::
 
-Aussage 2 folgt direkt: Leiten wir stückweise ab, so sinkt der Grad
-jedes Stücks um eins, und aus $\cgreen{s} \in \Ccal^{q-1}$ wird
-$\cgreen{s'} \in \Ccal^{q-2}$. Das ist wieder die maximale Glattheit
-zum Grad $q-1$. Für $q = 3$ heißt das: Die Ableitung eines kubischen Splines
-ist ein quadratischer Spline, die Krümmung eine stückweise lineare Funktion.
-Aussage 1 ist im Fall $q = 1$ die gleichmäßige Stetigkeit
+Aussage 2 folgt durch stückweises Ableiten: Der Grad jedes Stücks sinkt um
+eins, und aus $\cgreen{s} \in \Ccal^{q-1}$ wird
+$\cgreen{s'} \in \Ccal^{q-2}$, wieder die maximale Glattheit zum Grad $q-1$.
+Die Ableitung eines kubischen Splines ist also ein quadratischer Spline, die
+Krümmung eine stückweise lineare Funktion. Aussage 1 ist im Fall $q = 1$ die gleichmäßige Stetigkeit
 von $f$, für höhere Grade ein klassisches Resultat der
 Approximationstheorie; wie schnell der Fehler mit der Knotenweite fällt,
 klärt @sec:approximationsfehler.
 
-:::bemerkung[#vorsicht-bei-den-ableitungen (Vorsicht bei den Ableitungen)]
-Aus Aussage 1 wird oft gefolgert, dass auch die Ableitungen und das Integral
-des Splines die entsprechenden Größen von $f$ approximieren. Für das Integral
-stimmt das ohne Weiteres, denn aus $\left\| f - \cgreen{s} \right\|_\infty < \varepsilon$
-folgt sofort eine Schranke $(b-a)\varepsilon$ für die Differenz der Integrale.
-Bei den Ableitungen gilt das nur eingeschränkt: Sie brauchen, dass $f$
-selbst genügend oft differenzierbar ist, und sie konvergieren
-langsamer. Jede abgeleitete Ordnung kostet eine Potenz der Knotenweite. Eine
-kleine Abweichung in den Funktionswerten sagt für sich genommen noch nichts
-über die Steigungen aus.
+:::bemerkung[#vorsicht-bei-den-ableitungen (Ableitungen und Integral des Splines)]
+Das Integral des Splines approximiert das Integral von $f$, denn aus
+$\left\| f - \cgreen{s} \right\|_\infty < \varepsilon$ folgt sofort die
+Schranke $(b-a)\varepsilon$ für die Differenz der Integrale. Für die
+Ableitungen gilt das nur eingeschränkt: $f$ muss selbst genügend oft
+differenzierbar sein, und jede Ableitungsordnung kostet eine Potenz der
+Knotenweite. Eine kleine Abweichung in den Funktionswerten sagt für sich
+genommen nichts über die Steigungen.
 :::
 
 :::bemerkung[#was-die-lokalitaet-praktisch-bedeutet (Was die Lokalität praktisch bedeutet)]
-Der lokale Träger ist ein Hauptgrund, warum B-Splines in der Praxis benutzt
-werden. Verschieben wir einen einzigen Messwert, so ändert sich zunächst nur
-die entsprechende rechte Seite; die zugehörige Zeile der Basismatrix enthält
-nur die wenigen Basisfunktionen in seiner Umgebung. Die Lösung des
-Gleichungssystems koppelt diese Koeffizienten allerdings weiter: Die Inverse
-einer Bandmatrix ist im Allgemeinen dicht. Für gut konditionierte, reguläre
-Bandsysteme fällt ihr Einfluss typischerweise schnell und häufig geometrisch
-mit dem Abstand ab, aber der kompakte Träger allein garantiert weder einen
-universellen Faktor noch exakte Abschottung. Ein globales Polynom verhält sich
-im Vergleich deutlich weniger lokal.
-@sec:polynominterpolation hat den Verstärkungsfaktor dort schon beziffert:
-Die Störung eines einzigen Werts wirkt über das ganze Intervall und ist
-am größten weit entfernt von der gestörten Stelle.
-
-Wie stark die Kopplung mit dem Abstand abfällt, rechnen wir im
-gleichmäßigen Beispiel unten nach; die Zahlen dort sind Messwerte dieses
-Systems, keine allgemeine B-Spline-Konstante.
+Verschieben wir einen einzigen Messwert, so ändert sich nur eine rechte
+Seite, und die zugehörige Zeile von $\bB$ enthält nur die wenigen
+Basisfunktionen in seiner Umgebung. Die Lösung des Gleichungssystems koppelt
+die Koeffizienten allerdings weiter, denn die Inverse einer Bandmatrix ist im
+Allgemeinen dicht; bei gut konditionierten Bandsystemen fällt der Einfluss
+aber typischerweise schnell mit dem Abstand ab. Ein globales Polynom wirkt
+dagegen über das ganze Intervall, am stärksten oft weit weg von der gestörten
+Stelle (@sec:polynominterpolation).
 :::
 
 :::interaktiv[Ein Datenpunkt wandert]
@@ -657,14 +611,6 @@ $\Ccal^2$ wird $\Ccal^1$ (@satz:eigenschaften-von-splines-und-b-splines). Das is
 zum Grad $2$. Entsprechend ist die zweite Ableitung eines kubischen Splines
 stückweise linear und stetig, während die dritte stückweise konstant ist
 und an den Knoten springen darf.
-:::
-
-:::frage{falsch}
-Für $m+q$ B-Splines vom Grad $q$ genügt eine Knotenfolge mit $m+q$ Gliedern.
-
-Die Rekursion @eq:erweiterte-knotenfolge-und-b-splines-2 greift für $k = m+q$ auf $\corange{\tau_{k+q+1}}$
-zu, es braucht also $m + 2q + 1$ Knoten. Für $q = 3$ und $m = 17$ sind das
-$24$ statt $20$ (@bemerkung:warum-die-knotenfolge-so-lang-sein-muss).
 :::
 
 :::frage{falsch}

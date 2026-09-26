@@ -1,20 +1,18 @@
 import { SkalierungTensorGam } from "./widgets/S139Skalierung";
 import { Schaetzfrage } from "../../lib";
 
-Alles, was wir bisher gerechnet haben, spielte auf einem Intervall: eine
-Variable, Knoten darauf, eine Kurve. Reale Datensätze bringen mehr als eine
-Kovariable mit. Dieser Abschnitt überträgt den Basisansatz auf
-$f\colon \R^p \to \R$. Die Übertragung selbst ist einfach, sie ist eine
-Anwendung des Tensorprodukts aus
-@sec:tensoren/tensorprodukt. Sie kostet allerdings einen
-Aufwand, der in $p$ exponentiell wächst. Danach fassen wir zusammen, für das
-Kapitel und für das ganze Skript.
+Bisher spielte alles auf einem Intervall: eine Variable, Knoten darauf, eine
+Kurve. Reale Datensätze bringen mehrere Kovariablen mit, und die Übertragung
+des Basisansatzes auf $f\colon \R^p \to \R$ ist eine Anwendung des
+Tensorprodukts aus @sec:tensoren/tensorprodukt, deren Aufwand allerdings
+exponentiell in $p$ wächst. Danach fassen wir das Kapitel und das Skript
+zusammen.
 
 ### Tensor-Produkt-Basen
 
-Eine Basis für Funktionen mehrerer Variablen bauen wir aus
-den univariaten Bausteinen zusammen, die wir schon haben. Aus $K$
-Basisfunktionen pro Variable entstehen alle möglichen Produkte.
+Eine Basis für Funktionen mehrerer Variablen bauen wir aus den univariaten
+Bausteinen: Aus $K$ Basisfunktionen pro Variable bilden wir alle möglichen
+Produkte.
 
 :::definition[#tensor-produkt-basis (Tensor-Produkt-Basis)]
 Für jede Variable $x_r$ sei ein $K$-dimensionaler Funktionenraum auf einem
@@ -46,29 +44,20 @@ $$
 $$
 :::
 
-:::bemerkung[#was-kapitel-9-dazu-schon-gesagt-hat (Was Kapitel 9 dazu schon gesagt hat)]
+:::bemerkung[#was-kapitel-9-dazu-schon-gesagt-hat (Was das Tensorkapitel dazu schon gesagt hat)]
 Die Konstruktion ist das Tensorprodukt von Funktionenräumen aus
-@sec:tensoren/tensorprodukt. Dort haben wir gesehen, dass die
-Produkte von Basiselementen wieder eine Basis bilden und dass sich die
-:k[Dimensionen]{#dimension} dabei multiplizieren, für $p$ Faktoren also
-$K \cdot K \cdots K = K^p$. Für Polynome vom Grad höchstens $d$ in jeder
-Variablen stand dort die Zahl $(d+1)^k$, und der Name für das, was daraus
-folgt, fiel ebenfalls schon: *Fluch der Dimensionalität* (curse of
-dimensionality).
-
-Anschaulich legen wir ein Gitter über den $p$-dimensionalen Raum. In jeder
-Variablen sitzen $K$ Basisfunktionen mit ihren Knoten, und jede
-Basisfunktion des Produkts gehört zu einer Zelle dieses Gitters. Der Ansatz
-ist einfach, weil wir für jede Variable dieselben eindimensionalen Bausteine
-verwenden können, und teuer, weil das Gitter mit jeder Variablen um einen
-Faktor $K$ wächst.
+@sec:tensoren/tensorprodukt: Produkte von Basiselementen bilden wieder eine
+Basis, und die :k[Dimensionen]{#dimension} multiplizieren sich, für $p$
+Faktoren also zu $K^p$. Dort fiel auch schon der Name für die Folgen, *Fluch
+der Dimensionalität* (curse of dimensionality). Anschaulich legen wir ein
+Gitter über den $p$-dimensionalen Raum, das mit jeder Variablen um den Faktor
+$K$ wächst.
 :::
 
 :::bemerkung[#es-bleibt-ein-lineares-kleinste-quadrate (Es bleibt ein lineares Kleinste-Quadrate-Problem)]
-Der Ansatz @eq:tensor-produkt-basis ist linear in den Koeffizienten, und daran ändert die
-Tensorschreibweise nichts. Nummerieren wir die $K^p$ Indexkombinationen
-$(j_1, \dots, j_p)$ durch, so wird aus $\bA$ ein Vektor
-$\cgreen{\ba} \in \R^{K^p}$, und mit der Designmatrix
+Der Ansatz @eq:tensor-produkt-basis ist linear in den Koeffizienten.
+Nummerieren wir die $K^p$ Indexkombinationen $(j_1, \dots, j_p)$ durch, so wird
+aus $\bA$ ein Vektor $\cgreen{\ba} \in \R^{K^p}$, und mit der Designmatrix
 $\corange{\bB} \in \R^{n \times K^p}$, deren Zeilen die $K^p$ Produkte an der
 Beobachtungsstelle $\cblue{\bx_i}$ enthalten, steht wieder
 
@@ -76,24 +65,19 @@ $$
 \min_{\cgreen{\ba}} \left\| \cblue{\by} - \corange{\bB}\,\cgreen{\ba} \right\|_2^2
 $$
 
-da: dasselbe Problem wie in @satz:glaettung-ist-ein-lineares-kleinste, nur mit mehr Spalten. Gelöst wird es
-mit denselben Mitteln, über die
-:k[Normalengleichungen]{#normal-equations} oder besser über eine
-QR-Zerlegung (@sec:kq/qr).
-
-Die Spaltenzahl ist das Problem. Vollen Spaltenrang kann
-$\corange{\bB}$ nur haben, wenn $n \ge K^p$ ist, und das ist eine feste
-Schranke: Mit $K = 10$ Basisfunktionen je Variable und $p = 5$ Kovariablen
-brauchen wir mindestens $100\,000$ Beobachtungen, bevor die Anpassung
-überhaupt eindeutig ist.
+da, das Problem aus @satz:glaettung-ist-ein-lineares-kleinste mit mehr
+Spalten, lösbar über die :k[Normalengleichungen]{#normal-equations} oder
+besser über eine QR-Zerlegung (@sec:kq/qr). Vollen Spaltenrang kann
+$\corange{\bB}$ aber nur haben, wenn $n \ge K^p$ ist: Mit $K = 10$
+Basisfunktionen je Variable und $p = 5$ Kovariablen brauchen wir mindestens
+$100\,000$ Beobachtungen, bevor die Anpassung überhaupt eindeutig ist.
 :::
 
 ### Der Fluch der Dimensionalität
 
-Drei Größen wachsen exponentiell in $p$, und jede für sich reicht aus, um den
-vollen Tensoransatz jenseits weniger Variablen unbrauchbar zu machen: der
-Speicher für $\bA$, der Aufwand einer Auswertung und die Datenmenge, die für
-eine feste Genauigkeit nötig ist.
+Drei Größen wachsen exponentiell in $p$: der Speicher für $\bA$, der Aufwand
+einer Auswertung und die Datenmenge für eine feste Genauigkeit. Jede für sich
+macht den vollen Tensoransatz jenseits weniger Variablen unbrauchbar.
 
 :::beispiel[#zehn-basisfunktionen-je-variable (Zehn Basisfunktionen je Variable)]
 Wir rechnen mit $K = 10$ und speichern jeden Koeffizienten als
@@ -108,16 +92,14 @@ Wir rechnen mit $K = 10$ und speichern jeden Koeffizienten als
 | $5$ | $100\,000$ | $800$ kB |
 | $10$ | $10^{10}$ | $\cred{80}$ GB |
 
-Bis $p = 3$ ist der Koeffizienten-Tensor sehr klein, bei $p = 5$ noch
-handlich, bei $p = 10$ passt er in keinen üblichen Arbeitsspeicher. Die
-Speicherangaben verwenden dezimale Präfixe, $1$ kB sind also $1000$ Bytes;
-binär gerechnet sind die $8 \cdot 10^{10}$ Bytes der letzten Zeile
-$74{,}5$ GiB. Der Sprung von $p = 5$ auf $p = 10$ ist ein Faktor $10^5$,
-und der kommt allein daher, dass fünf weitere Variablen dazukommen.
+Bis $p = 5$ ist der Koeffizienten-Tensor handlich, bei $p = 10$ passt er in
+keinen üblichen Arbeitsspeicher (dezimale Präfixe, $1$ kB $= 1000$ Bytes). Der
+Sprung von $p = 5$ auf $p = 10$ ist ein Faktor $10^5$, allein durch fünf
+weitere Variablen.
 :::
 
-Der statistische Preis ist derselbe. Er lässt sich mit dem, was wir in
-@sec:bias-varianz gerechnet haben, direkt hinschreiben.
+Der Datenbedarf wächst genauso; mit der Rechnung aus @sec:bias-varianz lässt
+er sich direkt hinschreiben.
 
 :::satz[#eine-mse-obergrenze-im-multivariaten (Eine MSE-Obergrenze im Multivariaten)]
 Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\epsilon_i}$ an $n$
@@ -152,7 +134,7 @@ minimieren, einsetzen.
 ::::beweis
 
 :::schritt
-Der Varianzterm ist @satz:gemittelte-varianz-eines-linearen, wörtlich. Dessen Beweis benutzt vom
+Der Varianzterm ist @satz:gemittelte-varianz-eines-linearen. Dessen Beweis benutzt vom
 Schätzer nur, dass er die Kleinste-Quadrate-Anpassung an eine Designmatrix
 mit vollem Spaltenrang ist; wie viele Spalten sie hat und wie ihre Einträge
 zustande kommen, geht nicht ein. Hier sind es $K^p$ Spalten, also ist die
@@ -204,16 +186,12 @@ und damit @eq:eine-mse-obergrenze-im-multivariaten-2.
 :::::
 
 :::bemerkung[#was-die-rate-ueber-datenmengen-sagt (Was die Rate über Datenmengen sagt)]
-Gleichung @eq:eine-mse-obergrenze-im-multivariaten-2 ist eine Obergrenze bei einer Wahl
-$K\asymp n^{1/(8+p)}$, nicht der Fehler für jedes $K$. Sie beschreibt eine
-garantierte Balance der beiden Schranken; dass diese Wahl den tatsächlichen
-MSE minimiert, würde zusätzliche untere Schranken verlangen.
-
-Als grobe Planungsheuristik setzen wir die in der $\mathcal O$-Notation
-verborgene Konstante gleich eins. Welches $n$ legt diese Proxy-Rechnung nahe,
-damit der MSE unter eine Schranke $\varepsilon$ fällt? Aus
-$n^{-8/(8+p)} \le \varepsilon$ folgt $n \ge \varepsilon^{-(8+p)/8}$, für
-$\varepsilon = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
+@eq:eine-mse-obergrenze-im-multivariaten-2 ist eine Obergrenze bei der Wahl
+$K\asymp n^{1/(8+p)}$, nicht der Fehler für jedes $K$. Als grobe
+Planungsheuristik setzen wir die in der $\mathcal O$-Notation verborgene
+Konstante gleich eins. Aus $n^{-8/(8+p)} \le \varepsilon$ folgt dann
+$n \ge \varepsilon^{-(8+p)/8}$, für $\varepsilon = 0{,}01$ also
+$n \ge 10^{(8+p)/4}$.
 
 | Dimension $p$ | Rate | Proxy-$n$ bei Konstante $1$ |
 |:---|---:|---:|
@@ -222,33 +200,23 @@ $\varepsilon = 0{,}01$ also $n \ge 10^{(8+p)/4}$.
 | $5$ | $n^{-8/13}$ | $10^{3{,}25} \approx 1778$ |
 | $10$ | $n^{-8/18}$ | $10^{4{,}5} \approx 31\,623$ |
 
-Die dritte Spalte ist eine reine Orientierung und keine garantierte
-Stichprobenplanung, denn die entscheidenden Konstanten hängen am Problem und
-nicht an der Rate; in @bemerkung:heuristisches-balance-modell-fuer-die haben wir für $p = 1$ gesehen, wie weit
-die versteckte Konstante eine solche Zahl verschieben kann.
-
-Die Botschaft der Spalte bleibt davon unberührt, und sie steckt im Exponenten
-$(8+p)/4$. Jede weitere Variable multipliziert die nötige Datenmenge mit
-$10^{1/4} \approx 1{,}78$, bei schärferer Genauigkeitsforderung mit noch mehr:
-für $\varepsilon = 10^{-4}$ mit $\varepsilon^{-1/8} \approx 3{,}16$ je
-Dimension. Der Datenbedarf wächst also exponentiell in $p$, wie der
-Speicherbedarf.
+Die dritte Spalte ist eine Orientierung, keine Stichprobenplanung, denn die
+entscheidenden Konstanten hängen am Problem. Ihre Botschaft steckt im
+Exponenten $(8+p)/4$: Jede weitere Variable multipliziert die nötige
+Datenmenge mit $10^{1/4} \approx 1{,}78$, bei $\varepsilon = 10^{-4}$ sogar
+mit $\varepsilon^{-1/8} \approx 3{,}16$. Der Datenbedarf wächst also
+exponentiell in $p$, wie der Speicherbedarf.
 :::
 
 :::bemerkung[#auch-die-auswertung-kostet (Auch die Auswertung kostet)]
-Für eine einzelne Auswertung von $\cgreen{\wh{f}}$ steht zunächst der
-Aufwand $O(K^p)$, und das ist die korrekte Zahl für eine Basis ohne besondere
-Struktur: Die Summe in @eq:tensor-produkt-basis hat $K^p$ Summanden.
-
-Mit B-Splines wird es besser, denn die haben kompakten Träger
-(@sec:splines). An einer festen
-Stelle $x$ sind von den $K$ Basisfunktionen einer Variablen höchstens $q+1$
-von null verschieden, bei kubischen also vier. Im Produkt bleiben damit
-höchstens $(q+1)^p$ Summanden übrig, für $p = 10$ und $q = 3$ noch
-$4^{10} = 1\,048\,576$ statt $10^{10}$. Das ist eine Ersparnis um fünf
-Größenordnungen und ändert nichts am Grundproblem: $4^p$ wächst exponentiell
-wie $10^p$, nur mit kleinerer Basis. Gespeichert werden müssen die $K^p$
-Koeffizienten ohnehin alle.
+Eine Auswertung von $\cgreen{\wh{f}}$ kostet für eine Basis ohne besondere
+Struktur $O(K^p)$, denn die Summe in @eq:tensor-produkt-basis hat $K^p$
+Summanden. Bei B-Splines sind an einer festen Stelle je Variable höchstens
+$q+1$ Basisfunktionen von null verschieden (@sec:splines), im Produkt also
+höchstens $(q+1)^p$ Summanden, für $p = 10$ und $q = 3$ noch
+$4^{10} = 1\,048\,576$ statt $10^{10}$. Das spart fünf Größenordnungen, aber
+$4^p$ wächst ebenfalls exponentiell, und gespeichert werden müssen die $K^p$
+Koeffizienten ohnehin.
 :::
 
 ### Additive Modelle statt voller Produkte
@@ -278,63 +246,54 @@ g\!\left(\E[Y\mid X=\bx]\right)
 = \beta_0 + \sum_{i=1}^p f_i(x_i).
 $$
 
-Für Gaußfehler und die Identitätslink ist das genau das additive Modell oben.
+Für Gaußfehler und den Identitätslink ergibt sich das additive Modell oben.
 :::
 
-:::bemerkung[#der-gewinn-und-was-er-kostet (Der Gewinn, und was er kostet)]
-*Skalierbar.* In der rohen Darstellung stehen $pK+1$ Koeffizienten statt
-$K^p$. Nach den nötigen Zentrierungsbedingungen sind davon
-$p(K-1)+1=O(pK)$ frei wählbar. Für $p=10$ und $K=10$ sind das $91$ freie
-Parameter gegen $10^{10}$, ein Faktor von gut $10^8$. Aus dem Wachstum in
-$p$ wird ein lineares.
-
-Die geläufige Kurzformel lautet $pK$; um diese Zahl genau zu bekommen,
-zählen wir nach: Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
-$\beta_0$, dafür ist jede Komponente nur bis auf eine additive Konstante
-bestimmt, denn eine Konstante ließe sich von $\cgreen{f_1}$ nach
-$\cgreen{f_2}$ verschieben, ohne @eq:additives-modell zu ändern. Üblich ist deshalb eine
-Zentrierungsbedingung an jede Komponente, etwa dass sich ihre Werte an den
-Beobachtungsstellen zu null summieren; dann bleiben $p(K-1) + 1$ frei wählbare
-Koeffizienten. Die Größenordnung $pK$ stimmt, die genaue Zählung ist etwas
-feiner.
+:::bemerkung[#der-gewinn-und-was-er-kostet (Vorteile und Grenzen additiver Modelle)]
+*Skalierbar.* Zu den $pK$ Komponenten-Koeffizienten kommt der Achsenabschnitt
+$\beta_0$, zusammen $pK+1$ statt $K^p$. Jede Komponente ist aber nur bis auf
+eine additive Konstante bestimmt, denn eine Konstante ließe sich von
+$\cgreen{f_1}$ nach $\cgreen{f_2}$ verschieben, ohne @eq:additives-modell zu
+ändern; mit einer Zentrierungsbedingung je Komponente (etwa: ihre Werte an den
+Beobachtungsstellen summieren sich zu null) bleiben $p(K-1)+1 = O(pK)$ frei
+wählbare Koeffizienten. Für $p = K = 10$ sind das $91$ statt $10^{10}$, ein
+Faktor von gut $10^8$: Aus dem exponentiellen Wachstum in $p$ wird ein
+lineares.
 
 *Interpretierbar.* Jede Komponente ist eine Funktion einer einzigen Variablen
-und lässt sich als Kurve zeichnen. Den Effekt einer Kovariablen können wir
-also ansehen; beim vollen Tensorprodukt ist er nur gemeinsam mit allen
-anderen Variablen definiert.
+und lässt sich als Kurve zeichnen; beim vollen Tensorprodukt ist der Effekt
+einer Kovariablen nur gemeinsam mit allen anderen definiert.
 
-*Der Preis.* Wechselwirkungen fallen weg. Ein GAM kann nicht darstellen, dass
-die Wirkung von $x_1$ vom Wert von $x_2$ abhängt. Wo einzelne solche
+*Die Einschränkung.* Wechselwirkungen fallen weg: Ein GAM kann nicht
+darstellen, dass die Wirkung von $x_1$ vom Wert von $x_2$ abhängt. Wo einzelne
 Wechselwirkungen gebraucht werden, nehmen wir sie gezielt als
-Tensorprodukt-Term für zwei oder drei Variablen dazu und behalten für den Rest
-die additive Struktur. In R ist `mgcv::gam()` die Standardimplementierung, mit
-automatischer Wahl der Glättungsparameter über die Kriterien aus
-@sec:bias-varianz.
+Tensorprodukt-Term für zwei oder drei Variablen dazu.
+
+In R ist `mgcv::gam()` die Standardimplementierung, mit automatischer Wahl
+der Glättungsparameter über die Kriterien aus @sec:bias-varianz.
 :::
 
-:::interaktiv[Zwei Kurven auf logarithmischer Achse]
+:::interaktiv[Koeffizientenzahl von Tensorprodukt und additivem Modell]
 Die Tabelle oben rechnet mit $K = 10$. Wie groß wird der Koeffizienten-Tensor,
-wenn wir eine Variable weglassen, dafür aber doppelt so fein auflösen?
+wenn wir zwei Variablen weglassen, dafür aber doppelt so fein auflösen?
 
 <Schaetzfrage
   frage="Schätzen wir den Speicherbedarf in GB für K = 20 und p = 8."
   loesung={205}
   toleranz={25}
   einheit="GB"
-  verdeckt={<p>20⁸ = 2,56 · 10¹⁰ Koeffizienten zu je 8 Byte sind rund 205 GB – mehr als die 80 GB der Tabellenzeile für K = 10 und p = 10. Eine Variable weniger spart hier weniger, als die feinere Auflösung kostet: K steht im Exponenten der Basis, p im Exponenten selbst.</p>}
+  verdeckt={<p>20⁸ = 2,56 · 10¹⁰ Koeffizienten zu je 8 Byte sind rund 205 GB – mehr als die 80 GB der Tabellenzeile für K = 10 und p = 10. Zwei Variablen weniger sparen hier weniger, als die feinere Auflösung kostet: Die Verdopplung von K verdoppelt alle acht Faktoren von K⁸, das Weglassen spart nur zwei Faktoren 10.</p>}
 >
 <SkalierungTensorGam />
 </Schaetzfrage>
 
-Das Widget stellt die beiden Zählungen nebeneinander. Orange die $K^p$
-Koeffizienten des vollen Tensorprodukts, grün die $p(K-1)+1$ freien Parameter
-des zentrierten additiven Modells, beides über der Dimension $p$ und mit
-logarithmischer senkrechter Achse. Der Tensoransatz ist dort eine Gerade, das
-additive Modell eine flach liegende Kurve. Der zweite Regler ändert $K$: Er
-verschiebt die grüne Kurve kaum und kippt die orange Gerade steiler oder
-flacher, denn bei einer Geraden im logarithmischen Bild sitzt $K$ in der
-Steigung. Die Werttafel rechnet Speicherbedarf, Mindestzahl an Beobachtungen
-und die Konvergenzrate zum eingestellten Zustand mit.
+Über der Dimension $p$ mit logarithmischer senkrechter Achse sind die $K^p$
+Koeffizienten des vollen Tensorprodukts (orange) eine Gerade, die $p(K-1)+1$
+freien Parameter des zentrierten additiven Modells (grün) eine flach liegende
+Kurve. Der $K$-Regler kippt die orange Gerade, weil $K$ in ihrer Steigung
+sitzt, und verschiebt die grüne Kurve kaum. Die Werttafel rechnet
+Speicherbedarf, Mindestzahl an Beobachtungen und Konvergenzrate zum
+eingestellten Zustand mit.
 :::
 
 ::::vertiefung[Additivität ist mehr als ein Verzicht]
@@ -352,18 +311,15 @@ Statistik so verbreitet sind.
 :::
 ::::
 
-### Verstreute Punkte ohne Gitter
+::::vertiefung[Radiale Basisfunktionen und Splines im maschinellen Lernen]
+Tensor-Produkt-Basis und additives Modell behandeln die Variablen getrennt
+und setzen die Bausteine anschließend zusammen. Für Stellen, die als
+verstreute Punkte im $\R^p$ anfallen, passt das schlecht: Messstationen auf
+einer Landkarte liegen nicht auf einem Gitter, und ein Gitter, das sie alle
+abdeckt, wäre in weiten Teilen leer. Die übliche Antwort sind *radiale
+Basisfunktionen* (radial basis functions), die statt eines Gitters nur Zentren
+brauchen und den Ansatz linear in den Koeffizienten lassen.
 
-Tensor-Produkt-Basis und additives Modell haben eines gemeinsam: Beide
-behandeln die Variablen getrennt und setzen die Bausteine anschließend
-zusammen. Für Stellen, die als verstreute Punkte im $\R^p$ anfallen, passt
-das schlecht: Messstationen auf einer Landkarte liegen nicht auf einem Gitter,
-und ein Gitter, das sie alle abdeckt, wäre in weiten Teilen leer. Die übliche
-Antwort sind *radiale Basisfunktionen* (radial basis functions), die statt
-eines Gitters nur Zentren brauchen und den Ansatz linear in den Koeffizienten
-lassen.
-
-::::vertiefung[Basisfunktionen, die nur vom Abstand abhängen]
 :::bemerkung[#radiale-basisfunktionen (Radiale Basisfunktionen)]
 Eine radiale Basisfunktion hängt nur vom Abstand zu einem Zentrum $\bc_k$ ab,
 
@@ -372,26 +328,21 @@ $$
 \qquad \text{etwa mit } \rho(r) = \exp\left(-r^2 / (2h^2)\right),
 $$
 
-oft nimmt man als Zentren die Datenpunkte selbst. Es ist wieder das
+oft dienen die Datenpunkte selbst als Zentren. Es ist wieder das
 Kleinste-Quadrate-Problem aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate,
 nur mit anderen Spalten.
 
-Die Freiheit kostet die Struktur. Die Basismatrix ist im
-Allgemeinen voll besetzt, denn eine Gaußglocke wird nirgends exakt null, und
-damit fehlt die Lokalität der B-Splines aus @sec:splines,
-solange wir nicht eigens Kerne mit beschränktem Träger wählen. Der
+Diese Freiheit hat eine Kehrseite: Die Basismatrix ist im Allgemeinen voll
+besetzt, denn eine Gaußglocke wird nirgends exakt null, und die Lokalität der
+B-Splines aus @sec:splines geht verloren, solange wir nicht eigens Kerne mit
+beschränktem Träger wählen. Der
 Bandbreitenparameter $h$ spielt dabei die Rolle des Knotenabstands: klein
 heißt flexibel und unruhig, groß heißt glatt und träge.
 :::
-::::
-
-::::vertiefung[Splines im maschinellen Lernen]
 
 Zwei aktuelle Verwendungen benutzen Splines als Modellbaustein, nicht als
 Interpolationsverfahren. *Kolmogorow-Arnold-Netze* ersetzen die feste
-Aktivierungsfunktion eines neuronalen Netzes durch eine lernbare, stückweise
-polynomiale; die Netzgewichte sind dann B-Spline-Koeffizienten, bestimmt
-durch Training statt durch Interpolationsbedingungen
+Aktivierungsfunktion eines neuronalen Netzes durch lernbare B-Splines
 (@bemerkung:interpolation-im-maschinellen-lernen-und).
 
 *Normalizing Flows* bauen eine komplizierte Wahrscheinlichkeitsverteilung aus
@@ -399,7 +350,7 @@ einer einfachen auf, indem sie eine invertierbare Abbildung dazwischenschalten.
 Die Dichte der transformierten Größe enthält den Betrag der
 :k[Determinante]{#determinant} ihrer Jacobimatrix
 (@sec:differentialrechnung/jacobi), und deshalb muss die
-Abbildung zweierlei können: sich invertieren und ihre Determinante billig
+Abbildung zweierlei können: sich invertieren und ihre Determinante effizient
 ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten
 beides: Strikte Monotonie macht die eindimensionale Abbildung bijektiv, und
 ihre Ableitung steht stückweise sofort da. Häufig verwendet werden dafür
@@ -410,101 +361,62 @@ monotone rationale quadratische Splines.
 ### Was vom Kapitel bleibt
 
 Am Anfang stand die Aufgabe, eine Funktion zu finden, die zu gegebenen Daten
-passt. Am Ende steht ein lineares
-Gleichungssystem, dessen Matrix wir selbst wählen dürfen. Das
-Wesentliche entscheidet sich bei dieser Wahl, und deshalb war dieses Kapitel
-eine Reihe von Entscheidungen samt ihren
-Folgen.
+passt; am Ende steht ein lineares Gleichungssystem, dessen Matrix wir selbst
+wählen. Das Kapitel war eine Reihe von Entscheidungen über diese Matrix und
+ihre Folgen.
 
 :::bemerkung[#multivariat-kernkonzepte-des-kapitels (Kernkonzepte des Kapitels)]
 1. **Drei Aufgaben, ein Rechenweg.** Approximation misst global in einer
-   :k[Norm]{#norm},
-   Interpolation verlangt punktweise exakte Treffer, Glättung lässt Residuen
-   zu, weil die Daten Rauschen tragen. Einen wichtigen Zugang zur ersten
-   Aufgabe erhalten wir über die zweite, indem wir $f$ an endlich vielen
-   Stellen auswerten und interpolieren; andere Verfahren minimieren den
-   Approximationsfehler direkt
-   (@sec:approximation). Die Interpolationsbedingung allein legt
-   dabei nichts fest: Zu jedem Interpolanten $\cgreen{p}$ und jeder Funktion
-   $g$ mit $g(x_i) = 0$ ist auch $\cgreen{p} + g$ einer, und solche $g$ gibt
-   es unendlich viele (@satz:gestalt-aller-interpolanten).
-2. **Die Basisdarstellung macht daraus ein Gleichungssystem.** Wir wählen
-   $K$ Basisfunktionen $\corange{\phi_1}, \dots, \corange{\phi_K}$, setzen
-   $\cgreen{\wh{f}} = \sum_k a_k \corange{\phi_k}$ an und erhalten
-   $\bB\ba = \cblue{\by}$ mit $B_{ik} = \corange{\phi_k(x_i)}$: eine Zeile je
-   Datenpunkt, eine Spalte je Basisfunktion
-   (@sec:basisdarstellung). Die Matrix hängt nur von den Stellen und
-   der Basis ab, nicht von den Messwerten.
-3. **Polynome sind theoretisch einfach und numerisch problematisch.** Durch $n$ Punkte
-   läuft genau ein Polynom vom Grad höchstens $n-1$
-   (@sec:polynominterpolation). Die Monombasis erkauft das mit einer
-   :k[Kondition]{#condition-number}, die exponentiell wächst, mit einer
-   Störung, die im ganzen Intervall wirkt, und mit dem
-   <span style={{ color: "#D55E00" }}>Runge-Phänomen</span>: Selbst bei
-   beliebig oft differenzierbarem $f$ muss die Folge der Interpolanten an
-   gleichmäßig verteilten Knoten nicht konvergieren.
-4. **Splines halten den Grad klein und die Wirkung lokal.** Statt eines
-   Polynoms hohen Grades nehmen wir viele Polynome vom festen Grad $q$ und
-   setzen sie $\Ccal^{q-1}$-glatt zusammen; der Raum $\Scal_q$ hat die
-   Dimension $m + q$ (@sec:splines). Die B-Spline-Basis dazu
-   hat lokale Träger, macht $\bB$ zu einer
-   :k[dünn besetzten]{#sparse-matrix} Bandmatrix und senkt den Aufwand von
-   $O(N^3)$ auf $O(N q^2)$.
-5. **Minimale Krümmung.** Unter allen $\Ccal^2$-Funktionen, die die Daten
-   interpolieren, minimiert der *natürliche* kubische Spline
-   $J(f) = \int (f'')^2 \dx$. Getragen wird der Beweis von den
-   natürlichen Randbedingungen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$; die
-   dritte Ableitung darf an den Knoten springen
+   :k[Norm]{#norm}, Interpolation verlangt exakte Treffer an den Daten,
+   Glättung lässt Residuen zu, weil die Daten Rauschen tragen
+   (@sec:approximation). Die Interpolationsbedingung allein legt nichts fest:
+   Mit $\cgreen{p}$ ist auch $\cgreen{p} + g$ ein Interpolant, sobald
+   $g(x_i) = 0$ gilt (@satz:gestalt-aller-interpolanten).
+2. **Die Basisdarstellung macht daraus ein Gleichungssystem.** Mit
+   $\cgreen{\wh{f}} = \sum_k a_k \corange{\phi_k}$ wird die Interpolation zu
+   $\bB\ba = \cblue{\by}$ mit $B_{ik} = \corange{\phi_k(x_i)}$
+   (@sec:basisdarstellung). Der Ansatzraum bestimmt die Kurve, das
+   Basissystem nur Koeffizienten, Kondition und Rechenweg, die Knotenlage die
+   Güte zwischen den Daten (@beispiel:dieselbe-funktion-andere-koeffizienten,
+   @bemerkung:der-ausweg-orthogonalisierte-basen,
+   @bemerkung:ein-ausweg-die-knoten-anders-legen).
+3. **Polynome sind theoretisch einfach und numerisch problematisch.** Durch
+   $n$ Punkte läuft genau ein Polynom vom Grad höchstens $n-1$
+   (@sec:polynominterpolation). Die Monombasis hat eine exponentiell
+   wachsende :k[Kondition]{#condition-number}, und selbst für beliebig oft
+   differenzierbares $f$ muss die Folge der Interpolanten an gleichmäßig
+   verteilten Knoten nicht konvergieren (Runge-Phänomen).
+4. **Splines halten den Grad klein und die Wirkung lokal.** Polynome vom
+   festen Grad $q$, $\Ccal^{q-1}$-glatt zusammengesetzt, bilden den Raum
+   $\Scal_q$ der Dimension $m + q$ (@sec:splines). Die B-Spline-Basis hat
+   lokale Träger und macht $\bB$ zu einer :k[dünn besetzten]{#sparse-matrix}
+   Bandmatrix, lösbar in $O(N q^2)$ statt $O(N^3)$.
+5. **Minimale Krümmung.** Unter allen $\Ccal^2$-Interpolanten minimiert der
+   *natürliche* kubische Spline $J(f) = \int (f'')^2 \dx$; der Beweis stützt
+   sich auf die Randbedingungen $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$
    (@sec:minimale-kruemmung).
 6. **Approximationsordnung.** Für $f \in \Ccal^4$ ist der Fehler des
    interpolierenden kubischen Splines durch
    $C \corange{h}^4 \max_x \left| f^{(4)}(x) \right|$ beschränkt, mit
-   passenden Randbedingungen sogar mit $C = 5/384$: Halbierte Gitterweite
-   heißt Schranke durch $16$. Die Ordnung hängt am Grad und an der
-   Glattheit, stückweise linear liefert nur $\corange{h}^2$
-   (@sec:approximationsfehler).
+   passenden Randbedingungen mit $C = 5/384$; stückweise linear liefert nur
+   $\corange{h}^2$ (@sec:approximationsfehler).
 7. **Glättung statt Interpolation.** Mit einem vollrangigen kleinen
-   Ansatzraum, typischerweise $K<n$, wird die Anpassung zu einem
-   Kleinste-Quadrate-Problem
-   $\min_{\ba} \left\| \cblue{\by} - \corange{\bB}\ba \right\|_2^2$. Der
-   zweite Weg benutzt einen großen, bis zu datengroßen Raum mit einem
-   Strafterm $\lambda \int (g'')^2 \dx$, also einen Glättungsspline
-   (@sec:glaettung). Nicht $K$ allein, sondern Residuen und
-   Strafterm entscheiden zwischen Interpolation und Glättung.
-8. **Bias-Varianz.** Der gemittelte quadrierte Bias besitzt unter den
-   genannten Glattheitsannahmen eine obere Schranke $C_1K^{-8}$, die
-   gemittelte Varianz ist exakt $\sigma^2 K/n$. Unter der stärkeren
+   Ansatzraum ($K<n$) wird die Anpassung zum Kleinste-Quadrate-Problem
+   $\min_{\ba} \left\| \cblue{\by} - \corange{\bB}\ba \right\|_2^2$; der
+   zweite Weg bestraft in einem großen Raum die Krümmung mit
+   $\lambda \int (g'')^2 \dx$ (@sec:glaettung).
+8. **Bias-Varianz.** Der gemittelte quadrierte Bias ist durch $C_1K^{-8}$
+   beschränkt, die gemittelte Varianz ist exakt $\sigma^2 K/n$, und unter der
    Proxy-Annahme $\mathrm{Bias}^2\asymp c_1K^{-8}$ balanciert
-   $K\asymp n^{1/9}$ beide Terme und liefert die Rate $n^{-8/9}$. In der
-   Praxis wird $K$ über Kreuzvalidierung, AIC, BIC oder GCV gewählt
-   (@sec:bias-varianz).
+   $K\asymp n^{1/9}$ beide Terme. In der Praxis wird $K$ über
+   Kreuzvalidierung, AIC, BIC oder GCV gewählt (@sec:bias-varianz).
 9. **Fluch der Dimensionalität.** Die Tensor-Produkt-Basis braucht $K^p$
-   Koeffizienten. Das Ausbalancieren der gezeigten MSE-Obergrenze liefert
-   $O(n^{-8/(8+p)})$. Additive Modelle ersetzen das Produkt durch eine Summe,
-   kommen mit $O(pK)$ Koeffizienten aus und sind zusätzlich interpretierbar.
-:::
-
-:::bemerkung[#drei-stellschrauben-drei-wirkungen (Drei Stellschrauben, drei Wirkungen)]
-Drei Entscheidungen der ersten Kapitelhälfte haben getrennte Folgen.
-
-- Der *Ansatzraum* bestimmt den Interpolanten. Polynome vom Grad höchstens
-  $n-1$ und kubische Splines liefern verschiedene Kurven durch dieselben
-  Punkte.
-- Das *Basissystem* bestimmt Koeffizienten, Kondition und Rechenweg, aber
-  nicht die Kurve. Monombasis und Newton-Basis spannen denselben Raum auf und
-  ergeben dieselbe Funktion (@beispiel:dieselbe-funktion-andere-koeffizienten); orthogonalisierte Basen
-  ändern an ihr nichts und an der Kondition alles (@bemerkung:der-ausweg-orthogonalisierte-basen).
-- Die *Knotenwahl* bestimmt, wie gut der Interpolant zwischen den Daten
-  liegt. Bei frei wählbaren Stellen vermeiden Chebyshev-Knoten das
-  Runge-Phänomen (in der Vertiefung
-  @bemerkung:ein-ausweg-die-knoten-anders-legen erklärt); bei gemessenen Daten
-  liegen die Stellen fest, und dann bleibt nur der Wechsel des Ansatzraums.
+   Koeffizienten und garantiert nur die Rate $O(n^{-8/(8+p)})$. Additive
+   Modelle kommen mit $O(pK)$ Koeffizienten aus und sind interpretierbar,
+   verzichten aber auf Wechselwirkungen.
 :::
 
 ### Selbsttest zum Kapitel
-
-Der Selbsttest geht quer durch das Kapitel, von den drei Aufgaben aus
-@sec:approximation bis zum Fluch der Dimensionalität.
 
 ::::quiz
 
@@ -565,13 +477,12 @@ Der Übergang von der Monombasis zu den kubischen B-Splines ist ein
 Basiswechsel im Sinn der vorigen Aussage, der Interpolant bleibt also
 derselbe.
 
-Hier wechselt nicht die Basis, sondern der Ansatzraum. Die $n$ Monome
+Hier wechselt nicht die Basis, sondern der Ansatzraum: Die $n$ Monome
 spannen die Polynome vom Grad höchstens $n-1$ auf, die $m+q$ kubischen
-B-Splines den Spline-Raum $\Scal_3$, und für $n > 4$ ist das eine ganz andere
-Menge von Funktionen. Entsprechend verschieden sehen die Kurven aus: Im
-Störungs-Widget von @sec:splines liegen links ein Polynom vom
-Grad $8$ und rechts ein stückweise kubischer Spline durch dieselben neun
-Punkte.
+B-Splines den Spline-Raum $\Scal_3$, für $n > 4$ eine ganz andere Menge von
+Funktionen. Im Störungs-Widget von @sec:splines liegen deshalb links ein
+Polynom vom Grad $8$ und rechts ein stückweise kubischer Spline durch dieselben
+neun Punkte.
 :::
 
 :::frage{wahr}
@@ -580,23 +491,24 @@ $\varepsilon > 0$ gibt es ein Gitter, auf dem bereits ein stückweise linearer
 Spline $\cgreen{s}$ mit
 $\left\| f - \cgreen{s} \right\|_\infty < \varepsilon$ existiert.
 
-Das ist @satz:eigenschaften-von-splines-und-b-splines, Punkt 1, im Fall $q = 1$; dort ist er nichts anderes
-als die gleichmäßige Stetigkeit von $f$ auf einem abgeschlossenen Intervall.
-Zu beachten ist der Gegensatz zum Runge-Phänomen: Der Weg über wachsenden
-Polynomgrad kann scheitern, der Weg über feinere Gitter bei festem Grad nicht.
+Das ist @satz:eigenschaften-von-splines-und-b-splines, Punkt 1, im Fall
+$q = 1$; dort folgt er direkt aus der gleichmäßigen Stetigkeit von $f$ auf
+einem abgeschlossenen Intervall. Der Weg über wachsenden Polynomgrad kann
+scheitern (Runge-Phänomen), der Weg über feinere Gitter bei festem Grad nicht.
 :::
 
 :::frage{falsch}
 Bei der Spline-Interpolation wächst mit jedem zusätzlichen Datenpunkt der
 Grad des Interpolanten.
 
-Der Grad $q$ ist fest gewählt, meist $q = 3$. Was mit den Daten wächst, ist
-die Zahl der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
-(@satz:dimension-des-spline-raums). Darin liegt der Unterschied zur Polynominterpolation,
-bei der der Ansatzraum für $n$ Punkte Polynome bis zum Grad $n-1$ zulässt
-(@satz:existenz-und-eindeutigkeit-der). Das tatsächliche Interpolationspolynom darf kleineren Grad
-haben. Am wachsenden maximalen Grad hängt, dass die Oszillationen aus
-@sec:polynominterpolation ausbleiben.
+Der Grad $q$ ist fest gewählt, meist $q = 3$; mit den Daten wächst die Zahl
+der Teilintervalle und damit die Dimension $m + q$ des Ansatzraums
+(@satz:dimension-des-spline-raums). Bei der Polynominterpolation lässt der
+Ansatzraum für $n$ Punkte dagegen Polynome bis zum Grad $n-1$ zu
+(@satz:existenz-und-eindeutigkeit-der), auch wenn das tatsächliche
+Interpolationspolynom kleineren Grad haben darf. Weil der Grad bei Splines
+nicht mitwächst, treten die Oszillationen aus @sec:polynominterpolation nicht
+auf.
 :::
 
 :::frage{falsch}
@@ -604,12 +516,13 @@ Unter allen Funktionen, die die Punkte $(\cblue{x_i}, \cblue{y_i})$
 interpolieren, minimiert der natürliche kubische Spline
 $J(f) = \int_a^b (f'')^2 \dx$.
 
-Ohne Glattheitsforderung ist die Aussage falsch. Der Polygonzug durch die
-Punkte ist zwischen den Knoten linear, hat dort also $f'' = 0$ und käme damit
-auf $J = 0$; in @beispiel:drei-punkte-zwei-interpolanten stünde das gegen $J(\cgreen{s}) = 6$. An den
-Knoten selbst existiert seine zweite Ableitung nicht, $J$ ist für ihn streng
-genommen undefiniert. @satz:kubische-splines-haben-minimale vergleicht deshalb nur
-$\Ccal^2$-Interpolanten, und unter denen gewinnt der natürliche Spline.
+Ohne Glattheitsforderung ist die Aussage falsch: Der Polygonzug durch die
+Punkte ist zwischen den Knoten linear und käme auf $J = 0$, in
+@beispiel:drei-punkte-zwei-interpolanten gegen $J(\cgreen{s}) = 6$. An den
+Knoten selbst existiert seine zweite Ableitung allerdings nicht, $J$ ist für
+ihn streng genommen undefiniert. @satz:kubische-splines-haben-minimale
+vergleicht deshalb nur $\Ccal^2$-Interpolanten, und unter denen gewinnt der
+natürliche Spline.
 :::
 
 :::frage{wahr}
@@ -617,13 +530,13 @@ Verdoppeln wir die Zahl der Teilintervalle eines gleichmäßigen Gitters, so fä
 Fehlerschranke für kubische Spline-Interpolation auf ein Sechzehntel, die für
 stückweise lineare Interpolation dagegen nur auf ein Viertel.
 
-In @eq:approximationsfehler-kubischer-splines steht $\corange{h}^4$, in @satz:fehler-der-stueckweise-linearen steht $\corange{h}^2$, und
-die verdoppelte Teilintervallzahl halbiert $\corange h$. Bei $N$ Knoten gehen
-wir dafür auf $2N-1$ Knoten, wie in der Folge $5,9,17,33$. Halbiertes
-$\corange h$ gibt die Faktoren $2^4=16$ beziehungsweise $2^2=4$. Gemessen
-bestätigen unsere Rechnungen beides: Auf hinreichend feinen Gittern laufen die
-gemessenen Faktoren im kubischen Fall gegen $16$, im linearen gegen $4$
-(@beispiel:buckel-auf-dem-einheitsintervall).
+In @eq:approximationsfehler-kubischer-splines steht $\corange{h}^4$, in
+@satz:fehler-der-stueckweise-linearen $\corange{h}^2$, und die verdoppelte
+Teilintervallzahl (von $N$ auf $2N-1$ Knoten, wie in der Folge
+$5,9,17,33$) halbiert $\corange h$; das gibt die Faktoren $2^4=16$
+beziehungsweise $2^2=4$. Auf hinreichend feinen Gittern laufen auch die
+gemessenen Faktoren im kubischen Fall gegen $16$
+(@beispiel:buckel-auf-dem-einheitsintervall), im linearen gegen $4$.
 :::
 
 :::frage{falsch}
@@ -631,25 +544,13 @@ Interpolation und Glättung sind zwei verschiedene Verfahren; die Interpolation
 fällt nicht unter den Kleinste-Quadrate-Ansatz dieses Kapitels.
 
 Interpolation ist der Spezialfall des KQ-Ansatzes mit verschwindenden
-Residuen. Mit $K = n$ Basisfunktionen und invertierbarer Designmatrix ist die Kleinste-Quadrate-Lösung
-$\cgreen{\wh\ba} = \corange{\bB}^{-1}\cblue{\by}$, die Residuenquadratsumme
-null und jeder Punkt exakt getroffen. Ein kleiner vollrangiger Raum mit
-$K<n$ lässt für generische Daten Residuen stehen; ein großer Raum kann durch
-einen Strafterm ebenfalls glätten (@definition:interpolation-und-glaettung-im). Ein interpolierender
-Schätzer übernimmt die Fehler $\cred{\epsilon_i}$ an den Datenstellen
-punktweise.
-:::
-
-:::frage{falsch}
-Mit wachsendem $K$ fällt der quadrierte Bias monoton und die Varianz wächst
-monoton.
-
-Die zweite Hälfte stimmt exakt: Die gemittelte Varianz ist $\sigma^2 K/n$
-(@satz:gemittelte-varianz-eines-linearen), sie wächst also linear. Für den Bias gibt @satz:der-bias-ist-der-approximationsfehler nur die
-obere Schranke $O(K^{-8})$, und die verlangt keine Monotonie. In unserer
-Simulation steigt der quadrierte Bias von $K = 8$ auf $K = 9$ sogar an, weil
-die inneren Knoten dort gerade auf die Nullstellen von $\sin(3x)$ fallen
-(@bemerkung:der-bias-faellt-nicht-monoton).
+Residuen: Mit $K = n$ Basisfunktionen und invertierbarer Designmatrix ist die
+Kleinste-Quadrate-Lösung $\cgreen{\wh\ba} = \corange{\bB}^{-1}\cblue{\by}$, die
+Residuenquadratsumme null und jeder Punkt exakt getroffen. Ein kleiner
+vollrangiger Raum mit $K<n$ lässt für generische Daten Residuen stehen, ein
+großer Raum kann durch einen Strafterm ebenfalls glätten
+(@definition:interpolation-und-glaettung-im). Ein interpolierender Schätzer
+übernimmt dafür die Fehler $\cred{\epsilon_i}$ an den Datenstellen punktweise.
 :::
 
 :::frage{falsch}
@@ -657,12 +558,12 @@ Allein aus der Bias-Obergrenze folgt, dass die tatsächlich MSE-optimale
 Knotenzahl von der Ordnung $n^{1/9}$ ist.
 
 Bewiesen ist nur $\mathrm{Bias}^2\le C_1K^{-8}$. Minimieren wir die daraus
-entstehende Obergrenze oder nehmen stärker
-$\mathrm{Bias}^2\asymp c_1K^{-8}$ an, erhalten wir
-$K\asymp n^{1/9}$ und die Garantie beziehungsweise Proxy-Rate $n^{-8/9}$
-(@bemerkung:heuristisches-balance-modell-fuer-die). Für eine Aussage über das tatsächliche oder minimax-
-optimale $K$ braucht es zusätzlich eine passende untere Schranke und genaue
-Annahmen an Funktionsklasse und Design.
+entstehende Obergrenze oder nehmen zusätzlich
+$\mathrm{Bias}^2\asymp c_1K^{-8}$ an, erhalten wir $K\asymp n^{1/9}$ und die
+Garantie beziehungsweise Proxy-Rate $n^{-8/9}$
+(@bemerkung:heuristisches-balance-modell-fuer-die). Für eine Aussage über das
+tatsächliche oder minimax-optimale $K$ braucht es zusätzlich eine passende
+untere Schranke und genaue Annahmen an Funktionsklasse und Design.
 :::
 
 :::frage{falsch}
@@ -682,8 +583,8 @@ hat eine Koeffizientenzahl der Ordnung $pK$, wächst also nur linear in $p$.
 
 Das ist @eq:additives-modell: $pK$ Komponenten-Koeffizienten plus Achsenabschnitt, nach
 Zentrierung $p(K-1)+1$ frei wählbare. Für $p = 10$ und $K = 10$ sind das
-$91$ freie Parameter statt $10^{10}$. Der Gewinn kostet die Wechselwirkungen, die
-der Ansatz nicht darstellen kann (@bemerkung:der-gewinn-und-was-er-kostet).
+$91$ freie Parameter statt $10^{10}$. Dafür fallen die Wechselwirkungen weg
+(@bemerkung:der-gewinn-und-was-er-kostet).
 :::
 
 :::frage{falsch}
@@ -701,13 +602,13 @@ groß.
 
 ### Wie es weitergeht
 
-Drei Fragen hat dieses Kapitel nur angeschnitten, und jede füllt eine eigene
-Vorlesung: die theoretische Analyse statistischer Verfahren, die Eigenschaften
-von Parameterschätzern und die Funktionsapproximation über das hier Gezeigte
-hinaus. Dafür bieten sich die Vorlesungen von Thomas Nagler an,
-*Statistical Learning Theory* im Master und *Mathematical Statistics* für
-Bachelor und Master. Additive Modelle und ihre Verwandten behandelt die
-Vorlesung *Statistik V: Konzepte statistischer Modellierung* im Bachelor.
+Drei Themen hat dieses Kapitel nur angeschnitten: die theoretische Analyse
+statistischer Verfahren, die Eigenschaften von Parameterschätzern und die
+Funktionsapproximation über das hier Gezeigte hinaus. Dazu bieten sich die
+Vorlesungen von Thomas Nagler an, *Statistical Learning Theory* im Master und
+*Mathematical Statistics* für Bachelor und Master. Additive Modelle und ihre
+Verwandten behandelt *Statistik V: Konzepte statistischer Modellierung* im
+Bachelor.
 
 ### Schluss
 
@@ -715,7 +616,7 @@ Damit endet das Skript. Begonnen haben wir mit der Frage, warum Rechnen mit
 endlicher Genauigkeit schiefgehen kann, und mit den Werkzeugen
 dagegen: Kondition, Stabilität, Aufwandsanalyse. Darauf baute die numerische
 lineare Algebra auf, von der Elimination über die Zerlegungen bis zur
-Singulärwertzerlegung, und darauf wiederum die Analysis mehrerer
+Singulärwertzerlegung, und darauf die Analysis mehrerer
 Veränderlicher mit Ableitungen, Konvexität und Optimierung. Dieses letzte
 Kapitel hat alles zusammengeführt: Eine Spline-Anpassung ist ein
 Kleinste-Quadrate-Problem, ihre Lösung ein Zerlegungsverfahren, ihre Güte
