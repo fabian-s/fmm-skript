@@ -5,7 +5,7 @@ import { QuadFormWidget } from "./widgets/QuadraticFormWidget";
 {/* Konzept-Tooltip: quadratische Form: x^T B x als skalare Funktion von x. */}
 
 Eine *quadratische Form* macht aus einem :k[Vektor]{#vector} $\bx$ die Zahl
-$\bx^\top \bB \bx$: Zuerst :k[multiplizieren]{#matrix-multiplication} wir die
+$q(\bx) = \bx^\top \bB \bx$: Zuerst :k[multiplizieren]{#matrix-multiplication} wir die
 quadratische :k[Matrix]{#matrix} $\bB$ mit $\bx$, dann bilden wir das
 :k[Skalarprodukt]{#dot-product} des Ergebnisses mit $\bx$. Als
 :k[Funktion]{#function} von $\bx$ ist das, für zwei Einträge
@@ -20,9 +20,8 @@ Weil ein $1 \times 1$-Ergebnis gleich seiner eigenen
 :k[Transponierten]{#transpose} ist, gilt
 $\bx^\top \bB \bx = \bx^\top \bB^\top \bx$. Es zählt also nur der
 :k[symmetrische]{#symmetric-matrix} Anteil
-$\tfrac{1}{2}(\bB + \bB^\top)$ von $\bB$. Dieselbe Kombination taucht
-beim Differenzieren auf: Der :k[Gradient]{#gradient} von $\bx^\top \bB \bx$
-nach $\bx$, bei uns eine Zeile, ist
+$\tfrac{1}{2}(\bB + \bB^\top)$ von $\bB$. Dieselbe Kombination steckt im
+:k[Gradienten]{#gradient} von $q$: Als Zeile geschrieben ist er
 $\bx^\top (\bB + \bB^\top)$, für symmetrisches $\bB$ also
 $2\bx^\top \bB$, analog zu
 $\tfrac{\mathrm{d}}{\mathrm{d}x} (b x^2) = 2bx$.
@@ -31,6 +30,6 @@ Welche Richtung auf dem Einheitskreis erzeugt welche Parabel der quadratischen F
 
 <QuadFormWidget />
 
-Entlang einer Richtung $\bu$ ist $q(t\bu) = q(\bu)\,t^2$, eine Parabel mit
+Für einen Einheitsvektor $\bu$ ist $q(t\bu) = q(\bu)\,t^2$, eine Parabel mit
 Vorfaktor $q(\bu)$. Für das $\bB$ oben liegt er zwischen $0{,}79$ und $2{,}21$;
 die Parabel öffnet sich also in jeder Richtung nach oben.

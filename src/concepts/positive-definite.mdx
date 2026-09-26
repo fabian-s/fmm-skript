@@ -16,14 +16,13 @@ In einer Dimension lautet die Bedingung $a x^2 > 0$, also $a > 0$. Gleichwertig:
 Alle :k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA$ sind positiv. Gilt nur
 $\bx^T \bA \bx \geq 0$ für alle $\bx$, heißt $\bA$ *positiv semidefinit* (alle Eigenwerte
 $\geq 0$). Symmetrische positiv definite (SPD) Matrizen haben stets eine
-:k[Cholesky-Zerlegung]{#cholesky-factorization}, ganz ohne Pivotsuche.
+:k[Cholesky-Zerlegung]{#cholesky-factorization}; sie braucht keine Pivotierung.
 
 Das wichtigste Beispiel ist $\bA^T \bA$ für $\bA \in \R^{m \times n}$: Wegen
 $\bx^T \bA^T \bA \bx = \left\| \bA\bx \right\|_2^2 \geq 0$, einer quadrierten
 :k[Länge]{#euclidean-norm}, ist es stets positiv semidefinit, und positiv definit genau dann, wenn kein
 $\bx \neq \bnull$ die Gleichung $\bA\bx = \bnull$ erfüllt, also bei
-:k[$\rang(\bA) = n$]{#rank}. Dann hat das Kleinste-Quadrate-Problem zu $\bA$
-genau eine Lösung.
+:k[$\rang(\bA) = n$]{#rank}.
 
 Im Widget ist $\bA = \begin{pmatrix} 2 & c \\ c & 2 \end{pmatrix}$. Wie weit
 dürfen wir die Nebendiagonale $c$ treiben, bevor eine Richtung negativ wird?
@@ -31,5 +30,4 @@ dürfen wir die Nebendiagonale $c$ treiben, bevor eine Richtung negativ wird?
 <PositiveDefiniteWidget />
 
 Bis $|c| = 2$, denn die Eigenwerte sind $2 \pm c$. Der kleinste ist das
-Minimum der quadratischen Form auf dem Einheitskreis; Richtungen
-durchprobieren müssen wir nicht.
+Minimum der quadratischen Form auf dem Einheitskreis.

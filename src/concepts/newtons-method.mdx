@@ -8,8 +8,8 @@ Das *Newton-Verfahren* (auch Newton-Raphson-Verfahren) ist ein
 :k[Optimierungs]{#optimization}-Algorithmus, der die Krümmung ausnutzt: Statt wie das
 :k[Gradientenverfahren]{#gradient-descent} nur bergab zu gehen, ersetzt es die
 Zielfunktion nahe dem aktuellen Punkt durch die Parabel mit demselben Wert,
-derselben Steigung und derselben Krümmung (Taylor-Polynom zweiter Ordnung,
-vgl. MML §5.1) und geht zu deren Scheitel. In einer
+derselben Steigung und derselben Krümmung
+(:k[Taylor-Polynom]{#taylor-series} zweiter Ordnung) und geht zu deren Scheitel. In einer
 Variablen lautet der Schritt
 
 $$
@@ -23,8 +23,8 @@ Bei vielen Parametern wird aus der ersten Ableitung der
 $\btheta_{t+1} = \btheta_t - \bH^{-1} \nabla f(\btheta_t)^\top$
 (transponiert, weil der Gradient bei uns ein Zeilenvektor ist).
 
-Der Schritt zielt also nur auf einen *kritischen* Punkt des Modells und geht
-nur bei :k[positiv definiter]{#positive-definite} $\bH$ bergab. Sonst, oder von
+Der Schritt zielt also nur auf einen *kritischen* Punkt des Modells; sicher
+bergab zeigt er nur bei :k[positiv definiter]{#positive-definite} $\bH$. Sonst, oder von
 einem schlechten Startpunkt aus, kann er den Funktionswert erhöhen oder
 divergieren; praktische Varianten dämpfen ihn deshalb.
 
