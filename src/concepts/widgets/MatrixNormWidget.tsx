@@ -74,7 +74,7 @@ export function NormWidget() {
   return (
     <div className="mt-2 rounded p-2 [background:var(--w-bg)]">
       <Aufgabe>
-        Ziehen wir an den Spalten und beobachten die orange Halbachse.
+        Ziehen wir an den Spalten und beobachten die violette Halbachse.
       </Aufgabe>
       <LabeledTransformCanvas
         matrix={A}

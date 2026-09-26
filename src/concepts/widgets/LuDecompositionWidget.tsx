@@ -23,7 +23,7 @@
  *     wirklich 0): kein Multiplikator; entweder ist nichts zu tun (a₂₁ = 0)
  *     oder es braucht einen Zeilentausch (a₂₁ ≠ 0).
  *   a₁₁ ≠ 0, aber |l₂₁| = |a₂₁/a₁₁| ≥ 20: rechnerisch geht es weiter, doch der
- *     Multiplikator ist riesig – genau der Fall, für den es Teilpivotisierung
+ *     Multiplikator ist riesig – genau der Fall, für den es Pivotierung
  *     gibt. Das Verdikt sagt das ausdrücklich und nennt A nicht singulär.
  *   sonst: gewöhnlicher Schritt.
  *
@@ -141,7 +141,7 @@ export function LuWidget() {
               ? "Nur ist u₂₂ jetzt null: die Zerlegung existiert, aber A ist singulär (det A = u₁₁·u₂₂ = 0)."
               : `Nebenbei fällt die Determinante ab: det A = u₁₁·u₂₂ = ${fmtDe(U[0][0] * u22, 2)}.`}{" "}
             {grosserMultiplikator &&
-              `Achtung: Der Multiplikator ${fmtDe(l21, 2)} ist groß und verstärkt jeden Rundungsfehler der ersten Zeile – genau dafür tauscht die Teilpivotisierung auch bei nicht verschwindendem Pivot.`}
+              `Achtung: Der Multiplikator ${fmtDe(l21, 2)} ist groß und verstärkt jeden Rundungsfehler der ersten Zeile – genau dafür tauscht die Pivotierung auch bei nicht verschwindendem Pivot.`}
           </>
         )}
       </Verdikt>
