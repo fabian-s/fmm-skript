@@ -1,16 +1,12 @@
 import { SplineGlaettung } from "./widgets/S137Glaettung";
 import { Schaetzfrage } from "../../lib";
 
-Bisher waren die Daten exakt. Ein Interpolant läuft durch jeden vorgegebenen
-Punkt, und @satz:approximationsfehler-kubischer-splines sagt, wie weit er dazwischen danebenliegen kann. Messwerte
-sind aber selten exakt. Ein Sensor rauscht, eine Stichprobe streut, eine
-Befragung trifft nur zufällig ausgewählte Personen. Werden solche Werte
-interpoliert, läuft die Kurve durch jeden Messfehler.
-
-@sec:approximation hat die beiden Aufgaben schon
-nebeneinandergestellt: Interpolation trifft die Daten exakt, Glättung nur
-ungefähr. In diesem Abschnitt rechnen wir die
-zweite Aufgabe aus, und sie führt auf ein bekanntes Problem.
+Bisher waren die Daten exakt: Ein Interpolant läuft durch jeden Punkt, und
+@satz:approximationsfehler-kubischer-splines sagt, wie weit er dazwischen
+danebenliegen kann. Messwerte sind aber selten exakt (ein Sensor rauscht, eine
+Stichprobe streut), und ein Interpolant liefe durch jeden Messfehler. Wir
+verlangen deshalb nur noch, dass die Kurve die Daten ungefähr trifft; das ist
+die Glättung aus @sec:approximation.
 
 ### Das Modell
 
@@ -36,25 +32,20 @@ die $\cblue{y_i}$ Funktionswerte, und wir wären wieder in
 @sec:approximationsfehler.
 
 :::bemerkung[#was-in-der-fehlerannahme-steckt (Was in der Fehlerannahme steckt)]
-Die Bedingung $\E[\cred{\eps_i} \mid x_i] = 0$ ist wesentlich.
-
-1. Sie sagt, dass die Beobachtungen an jeder Stelle *um* $f(x_i)$ herum streuen
-   und nicht systematisch daneben. Anders gesagt ist $f(x)$ der
-   bedingte :k[Erwartungswert]{#expected-value} $\E[\cblue{y} \mid x]$, und
-   $\cred{\eps_i}$ ist reine Streuung.
-2. Ohne sie wäre $f$ überhaupt nicht bestimmt. Zu jeder Funktion $g$ und jeder
-   Konstanten $c$ liefert das Paar $(g + c,\ \cred{\eps} - c)$ dieselben
-   Beobachtungen wie $(g, \cred{\eps})$. Erst die Forderung, dass der Fehler im
-   Mittel verschwindet, macht aus @eq:regressionsmodell-mit-additivem-fehler eine Aussage über $f$.
-3. Über Abhängigkeit und Streuung der $\cred{\eps_i}$ sagt die Annahme noch
-   nichts. Für die algebraische KQ-Herleitung dieses Abschnitts brauchen wir
-   beides nicht; Unkorreliertheit und die gemeinsame Varianz $\sigma^2$ kommen
-   erst ins Spiel, wenn wir den Fehler der Schätzung zerlegen
-   (@sec:bias-varianz).
+1. Die Beobachtungen streuen an jeder Stelle *um* $f(x_i)$ herum, nicht
+   systematisch daneben: $f(x)$ ist der bedingte
+   :k[Erwartungswert]{#expected-value} $\E[\cblue{y} \mid x]$, und
+   $\cred{\eps_i}$ ist reine Streuung. Ohne diese Forderung wäre $f$ nicht
+   einmal bestimmt, denn $(g + c,\ \cred{\eps} - c)$ liefert für jede Konstante
+   $c$ dieselben Beobachtungen wie $(g, \cred{\eps})$.
+2. Über Abhängigkeit und Streuung der $\cred{\eps_i}$ sagt die Annahme nichts,
+   und die KQ-Herleitung dieses Abschnitts braucht beides nicht.
+   Unkorreliertheit und die gemeinsame Varianz $\sigma^2$ kommen erst in
+   @sec:bias-varianz ins Spiel.
 :::
 
 Wie messen wir, ob ein Kandidat $\cgreen{\wh f}$ zu den Daten passt? Mit
-derselben Größe wie in Kapitel 7, der Summe der quadrierten Abweichungen:
+derselben Größe wie in @kap:kq, der Summe der quadrierten Abweichungen:
 
 $$ {#eq-eq-13-7-2}
 \operatorname{RSS}(\cgreen{\wh f})
@@ -66,21 +57,17 @@ einzelnen Differenzen $\cred{r_i} = \cblue{y_i} - \cgreen{\wh f(x_i)}$ heißen
 *Residuen*.
 
 :::bemerkung[#die-aufgabe-ist-so-noch-entartet (Die Aufgabe ist so noch entartet)]
-Suchten wir das Minimum von @eq:eq-13-7-2 unter *allen* Funktionen, wäre die
-Antwort nutzlos: Das Minimum ist null, und angenommen wird es von
-jedem Interpolanten der Daten. Davon gibt es unendlich viele
-(@sec:approximation). Alle übernehmen an
-den Datenstellen jedes $\cred{\eps_i}$; die Trainings-RSS kann dabei zwischen
-einem brauchbaren und einem beliebig schlechten Verlauf zwischen den Punkten
-nicht unterscheiden.
+Über *alle* Funktionen ist das Minimum von @eq:eq-13-7-2 null, und
+angenommen wird es von jedem der unendlich vielen Interpolanten der Daten
+(@sec:approximation). Alle übernehmen an den Datenstellen jedes
+$\cred{\eps_i}$, und die RSS kann zwischen einem brauchbaren und einem beliebig
+schlechten Verlauf zwischen den Punkten nicht unterscheiden. Die Zielfunktion
+allein legt also nichts fest; es gibt zwei Auswege:
 
-Die Zielfunktion allein legt also nichts fest. Zwei Auswege gibt es, und beide
-kommen in diesem Abschnitt vor:
-
-- Wir minimieren nur über einen *kleinen* Funktionenraum. Das ist der Weg der
+- Wir minimieren nur über einen *kleinen* Funktionenraum; das ist der Weg der
   nächsten Seiten.
-- Wir minimieren über einen großen Raum, bestrafen aber unruhige Kandidaten.
-  Darauf kommen wir weiter unten zurück.
+- Wir minimieren über einen großen Raum und bestrafen unruhige Kandidaten;
+  darauf kommen wir am Ende des Abschnitts zurück.
 :::
 
 ### Der Basisansatz macht daraus ein KQ-Problem
@@ -110,9 +97,7 @@ $$
 \qquad b_{ik} = \corange{\phi_k(x_i)} .
 $$
 
-Ihre $i$-te Zeile sammelt die Werte aller Basisfunktionen an der $i$-ten
-Beobachtungsstelle, ihre $k$-te Spalte die Werte der $k$-ten Basisfunktion an
-allen Stellen.
+Das ist die Matrix aus @satz:das-interpolationsproblem-ist-ein.
 :::
 
 Für Splines sind die $\corange{\phi_k}$ die B-Splines zu einem gewählten
@@ -147,6 +132,7 @@ Element kleinster Norm. Der Vektor der angepassten Werte $\bB\wh\ba$ ist in
 beiden Fällen eindeutig.
 :::
 
+:::::vertiefung[Beweis der Kleinste-Quadrate-Darstellung]
 ::::beweis
 
 :::schritt
@@ -211,34 +197,28 @@ gewählten Darstellung. Sie ist deshalb auch bei Rangdefekt eindeutig.
 :::
 
 ::::
+:::::
 
-:::bemerkung[#wie-wir-das-system-wirklich-loesen (Wie wir das System wirklich lösen)]
-Die Normalengleichungen sind die kürzeste Herleitung, aber nicht der beste
-Rechenweg. Sie quadrieren die Konditionszahl,
-$\kappa_2(\bB^\top\bB) = \kappa_2(\bB)^2$, weshalb Kapitel 7 die QR-Zerlegung
-vorzieht (@sec:kq/qr, Vergleich der Verfahren in
-@sec:kq/pseudoinverse). Der R-Code am Ende dieses Abschnitts nutzt
-darum `qr.solve`.
-
-Für B-Splines ist der Schaden allerdings begrenzt, denn sie sind gut
-konditioniert. Für den Datensatz unseres Widgets messen wir
-$\kappa_2(\bB) \approx 5{,}6$ bei $K = 10$ und $\kappa_2(\bB) \approx 65$ bei
-$K = 40$. Die Monombasis derselben Größenordnung liegt viele Zehnerpotenzen
-darüber (@sec:polynominterpolation). Dazu kommt
-die Bandstruktur: Jede Basisfunktion lebt nur über wenigen Teilintervallen, also
-ist $\bB^\top\bB$ dünn besetzt und die Zerlegung billig
-(@sec:lgs/lu).
+:::bemerkung[#wie-wir-das-system-wirklich-loesen (Wie wir das System numerisch lösen)]
+Die Normalengleichungen quadrieren die Konditionszahl,
+$\kappa_2(\bB^\top\bB) = \kappa_2(\bB)^2$; deshalb zieht @kap:kq die
+QR-Zerlegung vor (@sec:kq/qr, Vergleich der Verfahren in
+@sec:kq/pseudoinverse), und der R-Code am Ende dieses Abschnitts nutzt
+`qr.solve`. Für B-Splines ist der Schaden klein: Für den Datensatz unseres
+Widgets messen wir $\kappa_2(\bB) \approx 5{,}6$ bei $K = 10$ und
+$\kappa_2(\bB) \approx 65$ bei $K = 40$, die Monombasis derselben Größe liegt
+viele Zehnerpotenzen darüber (@sec:polynominterpolation). Dazu kommt die
+Bandstruktur: Jede Basisfunktion lebt nur über wenigen Teilintervallen, also
+ist $\bB^\top\bB$ dünn besetzt und die Zerlegung günstig (@sec:lgs/lu).
 :::
 
 :::bemerkung[#wann-die-designmatrix-vollen-spaltenrang (Wann die Designmatrix vollen Spaltenrang hat)]
-Voller Spaltenrang ist nicht selbstverständlich. Notwendig ist $K \le n$, aber
-das reicht nicht: Die Basisfunktionen müssen auch *auf den Daten* linear
-unabhängig sein, und dafür müssen die Knoten zu den Messstellen passen.
-Anschaulich muss jede Basisfunktion einen eigenen, passend geordneten
-Datenpunkt belegen können; der zuständige Satz von Schoenberg und Whitney
-macht daraus eine Indexbedingung. Mit Knoten auf den Quantilen der $x_i$ hält
-sie bis $K = n$, und deshalb legt das Widget seine Knoten auf Quantile, wie es
-auch `splines::bs()` tut.
+Notwendig ist $K \le n$, aber das reicht nicht: Die Basisfunktionen müssen
+auch *auf den Daten* linear unabhängig sein, und dafür müssen die Knoten zu den
+Messstellen passen. Nach dem Satz von Schoenberg und Whitney muss jede
+Basisfunktion einen eigenen, passend geordneten Datenpunkt belegen können. Mit
+Knoten auf den Quantilen der $x_i$ gelingt das bis $K = n$; das Widget legt
+seine Knoten daher auf Quantile, wie es auch `splines::bs()` tut.
 :::
 
 ::::vertiefung[Die Schoenberg-Whitney-Bedingung im Detail]
@@ -254,9 +234,7 @@ $$
 Im Inneren des Knotengebiets ist das gleichbedeutend mit
 $\corange{\tau_k} < x_{i_k} < \corange{\tau_{k+q+1}}$. Bei einem offenen,
 an den Rändern geklemmten Knotenvektor gehören die positiven Randwerte der
-ersten und letzten Basisfunktion ausdrücklich dazu. Anschaulich muss jede
-Basisfunktion also einen eigenen, passend geordneten Datenpunkt belegen
-können.
+ersten und letzten Basisfunktion ausdrücklich dazu.
 
 Die naheliegende Abschwächung „jede Basisfunktion sieht mindestens einen
 Datenpunkt" genügt dafür nicht. Unsere eigene Rechnung mit den $50$ Punkten des
@@ -268,8 +246,8 @@ $32$ Knotenintervalle leer bleiben und die Bedingung damit verletzt ist.
 
 ### Interpolation und Glättung sind derselbe Rahmen
 
-Der Rahmen aus @satz:glaettung-ist-ein-lineares-kleinste deckt beide Aufgaben ab. Unterschieden werden sie
-allein durch die Größe des Ansatzraums.
+Der Rahmen aus @satz:glaettung-ist-ein-lineares-kleinste deckt beide
+Aufgaben ab.
 
 :::definition[#interpolation-und-glaettung-im (Interpolation und Glättung im Basisansatz)]
 Eine Anpassung *interpoliert* die Daten, wenn ihre Residuen verschwinden,
@@ -284,19 +262,12 @@ $$
 gilt. Bei einer *Glättung* dürfen Residuen verbleiben, damit die Schätzung
 nicht jede beobachtete Schwankung übernehmen muss.
 
-Für eine unbestrafte Anpassung sind $K=n$ und invertierbares $\bB$ der
-klassische Interpolationsfall. Ein vollrangiger Ansatz mit $K<n$ ist das
-klassische Regressions- oder Glättungsregime: Er kann nicht jeden beliebigen
-Datenvektor interpolieren. Die Zahlen $K$ und $n$ allein definieren die beiden
-Begriffe jedoch nicht; entscheidend sind Rang, konkrete rechte Seite und ein
+Ohne Strafterm ist $K=n$ mit invertierbarem $\bB$ der Interpolationsfall
+und $K<n$ mit vollem Spaltenrang der Glättungsfall, denn dann lässt sich nicht
+mehr jeder Datenvektor interpolieren. Die Zahlen $K$ und $n$ allein legen die
+Begriffe aber nicht fest; entscheidend sind Rang, rechte Seite und ein
 möglicher Strafterm.
 :::
-
-Bei $K = n$ ist $\bB$ quadratisch. Ist sie zusätzlich invertierbar, so hat
-@eq:glaettung-ist-ein-lineares-kleinste-2 die Lösung $\wh\ba = \bB^{-1}\cblue{\by}$, das Residuum ist der
-Nullvektor, und $\cgreen{\wh f}$ trifft jeden Datenpunkt exakt. Bei $K < n$ ist
-das System überbestimmt; genau dann bleibt ein Rest, wenn
-$\cblue{\by}\notin\operatorname{Bild}(\bB)$ gilt.
 
 :::bemerkung[#warum-interpolation-das-rauschen-erbt (Warum Interpolation das Rauschen erbt)]
 Warum ist das exakte Treffen schlecht? Setzen wir @eq:regressionsmodell-mit-additivem-fehler in die
@@ -316,13 +287,10 @@ ihre Fehler in verschiedene Richtungen, muss die Kurve dazwischen steil werden.
 Modelliert eine Schätzung auf diese Weise den Zufallsanteil der Daten mit,
 spricht die Statistik von :k[Überanpassung]{#overfitting}.
 
-Bei vollem Spaltenrang und $K < n$ ist ein exakter Fit nicht mehr für jeden
-Datenvektor möglich; bei generischen verrauschten Daten bleibt ein Rest. Jeder
-Koeffizient wird dann aus mehreren Beobachtungen bestimmt, und in dieser
-Mittelung hebt sich ein Teil der Fehler auf. Ausnahmsweise kann auch ein
-kleiner Raum exakt interpolieren, nämlich wenn $\cblue{\by}$ zufällig in
-$\operatorname{Bild}(\bB)$ liegt. Der Nachteil des kleinen Ansatzraums: Er enthält $f$ vielleicht nicht. Wie sich beides
-gegeneinander verrechnet, ist das Thema von @sec:bias-varianz.
+Bei $K < n$ und vollem Spaltenrang wird dagegen jeder Koeffizient aus
+mehreren Beobachtungen bestimmt, und in dieser Mittelung hebt sich ein Teil der
+Fehler auf. Der Nachteil: Der kleine Ansatzraum enthält $f$ vielleicht nicht;
+wie sich beides gegeneinander verrechnet, ist das Thema von @sec:bias-varianz.
 :::
 
 :::beispiel[#fuenfzig-verrauschte-punkte (Fünfzig verrauschte Punkte)]
@@ -332,12 +300,10 @@ $$
 f(x) = \sin(x) + \tfrac12 \sin(2x)
 $$
 
-aus und addieren normalverteilte Fehler mit $\sigma = 0{,}3$. Die Ziehung hat
-einen festen Startwert; die empirische Streuung der gezogenen Fehler beträgt
-$0{,}266$. Auf diese Daten passen wir
-kubische B-Splines mit $K$ Basisfunktionen an, Knoten auf den Quantilen der
-$x_i$. Vier Werte von $K$ im Vergleich, alle Zahlen von unserem Widget selbst
-gerechnet:
+aus und addieren normalverteilte Fehler mit $\sigma = 0{,}3$ (fester
+Startwert; die gezogenen Fehler haben die empirische Streuung $0{,}266$).
+Darauf passen wir kubische B-Splines mit $K$ Basisfunktionen an, Knoten auf
+den Quantilen der $x_i$. Für vier Werte von $K$ rechnet unser Widget:
 
 | $K$ | $\operatorname{RSS}$ | $\wh\sigma$ | Abstand zu $f$ | größte Abweichung |
 |:---|:---|:---|:---|:---|
@@ -347,46 +313,41 @@ gerechnet:
 | $40$ | $0{,}557$ | $0{,}236$ | $1{,}908$ | $8{,}574$ |
 
 Dabei ist $\wh\sigma = \sqrt{\operatorname{RSS}/(n-K)}$ der übliche
-Residualstandardfehler. Als Schätzung von $\sigma$ ist er bei vollem Rang,
-unkorrelierten homoskedastischen Fehlern und korrekt spezifiziertem
-Mittelwertmodell gerechtfertigt; fehlt $f$ im Ansatzraum, enthält er
-zusätzlich Lack-of-fit.
-„Abstand zu $f$" ist die Wurzel aus dem mittleren quadrierten Abstand
+Residualstandardfehler, eine Schätzung von $\sigma$; fehlt $f$ im
+Ansatzraum, enthält er zusätzlich den Anpassungsfehler (lack of fit), wie bei
+$K = 4$. „Abstand zu $f$" ist die
+Wurzel aus dem mittleren quadrierten Abstand
 
 $$
 \frac{1}{2\pi}\int_0^{2\pi} \left( \cgreen{\wh f(x)} - f(x) \right)^2 \dx .
 $$
 
-Die beiden mittleren Spalten sind aus Daten ausrechenbar, die beiden rechten
-nicht, denn sie brauchen $f$. Und sie laufen auseinander: Von $K = 10$ auf
-$K = 40$ fällt die Residuenquadratsumme auf weniger als ein Fünftel, während der
-Abstand zur wahren Funktion auf das Zweiundzwanzigfache steigt. Am besten trifft
-in unserem Lauf $K = 11$ mit einem Abstand von $0{,}072$.
+Die beiden mittleren Spalten lassen sich aus den Daten berechnen, die beiden
+rechten nur mit Kenntnis von $f$. Und sie laufen auseinander: Von $K = 10$ auf
+$K = 40$ fällt die Residuenquadratsumme auf weniger als ein Fünftel, während
+der Abstand zur wahren Funktion auf das Zweiundzwanzigfache steigt. Am besten
+trifft in unserem Lauf $K = 11$ mit einem Abstand von $0{,}072$.
 :::
 
-Die Tabelle zeigt drei Regime. Bei $K = 4$ ist der Ansatzraum gerade der
-Raum der kubischen Polynome, und die Kurve ist zu starr, um beide Wellen
-von $f$ mitzunehmen; zwischen $K = 6$ und $K = 15$ liegt sie im
-Rauschband, und $\wh\sigma$ bewegt sich dort zwischen $0{,}278$ und
-$0{,}306$, also dicht an der wahren Streuung $0{,}3$; ab $K = 16$ beginnen die
-Ausschläge, und der Abstand zu $f$ wächst wieder, während die Residuen weiter
-fallen.
+Die Tabelle zeigt drei Regime. Bei $K = 4$ ist der Ansatzraum der Raum der
+kubischen Polynome, und die Kurve ist zu starr für beide Wellen von $f$;
+zwischen $K = 6$ und $K = 15$ liegt sie im Rauschband, mit $\wh\sigma$ zwischen
+$0{,}278$ und $0{,}306$ nahe der wahren Streuung $0{,}3$. Ab $K = 16$ beginnen
+die Ausschläge, und der Abstand zu $f$ wächst wieder, während die Residuen
+weiter fallen.
 
 :::bemerkung[#die-residuen-fallen-nicht-immer (Die Residuen fallen nicht immer)]
-Beim Blick auf die Tabelle liegt die Vermutung nahe, die Residuenquadratsumme
-falle mit wachsendem $K$ immer. Für *geschachtelte* Räume stimmt das: Kommt eine
-Basisfunktion hinzu und bleiben die alten erhalten, so ist der alte Minimierer
-weiterhin zulässig, das Minimum kann also nur sinken. Legen wir die Knoten aber
-auf Quantile, so wandern sie mit $K$, und die Räume sind nicht geschachtelt.
-In unserem Lauf steigt die Residuenquadratsumme bei elf der $36$ Schritte
-von $K$ auf $K+1$ wieder an, etwa von $K = 6$ auf $K = 7$.
+Für *geschachtelte* Räume kann die Residuenquadratsumme mit wachsendem $K$
+nicht steigen, denn der alte Minimierer bleibt zulässig. Knoten auf Quantilen
+wandern aber mit $K$, und dann sind die Räume nicht geschachtelt. In unserem
+Lauf steigt die Residuenquadratsumme bei elf der $36$ Schritte von $K$ auf
+$K+1$ wieder an, etwa von $K = 6$ auf $K = 7$.
 :::
 
 :::interaktiv[Ein Regler für die Flexibilität]
-Welche der drei Knotenzahlen dürfte die unbekannte wahre Funktion am besten
-treffen? Das Widget rechnet den Fit für jedes $K$ zwischen $4$ und $40$ neu:
-Cox-de-Boor für die Basis, Normalengleichungen mit Cholesky-Zerlegung für die
-Koeffizienten.
+Welcher der drei Werte von $K$ dürfte die unbekannte wahre Funktion am
+besten treffen? Das Widget rechnet den Fit für jedes $K$ zwischen $4$ und $40$
+neu.
 
 <Schaetzfrage
   variante="auswahl"
@@ -398,21 +359,25 @@ Koeffizienten.
 <SplineGlaettung />
 </Schaetzfrage>
 
-Die drei Regime lassen sich am Regler durchlaufen. Ab $K = 16$ beginnen die
-Ausschläge, und von $K = 30$ an verlässt die Kurve bei den meisten
-Reglerstellungen das Bildfenster, ohne dass die Residuen davon noch viel besser
-würden. Die rot gezeichneten Residuen zeigen dasselbe von der anderen Seite:
-Sie werden im Mittel kürzer, während die grüne Kurve immer weniger mit der
-violetten zu tun hat. Im unteren Bild stehen die $K$ Basisfunktionen selbst,
-sie werden mit wachsendem $K$ schmaler und zahlreicher.
+Am Regler durchlaufen wir die drei Regime: Die rot gezeichneten Residuen
+werden im Mittel kürzer, während die grüne Kurve immer weniger mit der violett
+gezeichneten wahren Funktion zu tun hat und von $K = 30$ an meist das
+Bildfenster verlässt. Die untere Tafel zeigt die $K$ Basisfunktionen, die mit
+wachsendem $K$ schmaler und zahlreicher werden.
 :::
 
 ### Der zweite Weg: strafen statt weglassen
 
 Bei der Glättung über einen kleinen Ansatzraum steuert $K$ die Glattheit in
-groben Stufen, und wir müssen uns vorab auf Zahl und Lage der Knoten festlegen.
-Der zweite Weg aus @bemerkung:die-aufgabe-ist-so-noch-entartet geht anders vor: Wir lassen viele Knoten zu und
-bestrafen dafür unruhige Lösungen.
+groben Stufen, und Zahl und Lage der Knoten müssen vorab feststehen. Der zweite
+Weg aus @bemerkung:die-aufgabe-ist-so-noch-entartet lässt viele Knoten zu und
+bestraft unruhige Lösungen: Wir minimieren
+$\sum_i (\cblue{y_i} - g(x_i))^2 + \lambda \int_a^b |g''(x)|^2 \dx$ entweder
+über allen $\Ccal^2$-Funktionen (*Glättungsspline*, Knoten in allen
+Datenpunkten) oder über einer großen B-Spline-Basis mit $K < n$ (*Penalized
+Splines*, die Grundlage der additiven Modelle). Der Strafterm ist das
+Krümmungsfunktional aus @sec:minimale-kruemmung, und gesteuert wird mit
+$\lambda$ statt mit $K$.
 
 ::::vertiefung[Glättungssplines und Penalized Splines im Detail]
 
@@ -429,13 +394,10 @@ $\Ccal^2[a, b]$ heißt *Glättungsspline* (smoothing spline). Der Parameter
 $\lambda$ heißt *Glättungsparameter*.
 :::
 
-Der Strafterm ist keine neue Größe. Er ist das Krümmungsfunktional
-$J(g) = \int_a^b |g''|^2 \dx$ aus @sec:minimale-kruemmung, also dasselbe
-Maß für Welligkeit, das dort den natürlichen kubischen Spline ausgezeichnet hat.
+Wir schreiben $J(g) = \int_a^b |g''|^2 \dx$ für das Krümmungsfunktional, das
+in @sec:minimale-kruemmung den natürlichen kubischen Spline ausgezeichnet hat.
 
 :::bemerkung[#was-der-strafterm-bewirkt (Was der Strafterm bewirkt)]
-Drei Beobachtungen ordnen das Kriterium ein.
-
 1. *Der Minimierer ist wieder ein Spline.* Für $\lambda > 0$ und mindestens zwei
    verschiedene Beobachtungsstellen ist der Minimierer von @eq:penalisiertes-kleinste-quadrate über
    $\Ccal^2[a, b]$ ein natürlicher kubischer Spline mit Knoten in *allen*
@@ -454,9 +416,9 @@ Drei Beobachtungen ordnen das Kriterium ein.
    :k[Kleinste-Quadrate-Gerade]{#linear-regression}. Der Glättungsparameter
    bewegt die Schätzung stufenlos zwischen Interpolation und einfacher linearer
    Regression.
-3. *Gesteuert wird jetzt mit $\lambda$, nicht mit $K$.* Statt einer ganzen Zahl
-   wählen wir eine stetige Größe, und die Knotenwahl fällt als Frage weg.
-   Dafür ist das Gleichungssystem von der Größe $n$ statt $K$.
+3. *Stetige Steuerung.* Statt einer ganzen Zahl $K$ wählen wir die stetige
+   Größe $\lambda$, und die Knotenwahl fällt als Frage weg. Dafür ist das
+   Gleichungssystem von der Größe $n$ statt $K$.
 :::
 
 :::bemerkung[#penalized-splines-und-die-naehe-zu-ridge (Penalized Splines und die Nähe zu Ridge)]
@@ -501,17 +463,16 @@ Wie $\lambda$ gewählt wird, ist dieselbe Frage wie die nach dem richtigen $K$;
 | verrauschte Messungen | Glättung |
 | Vorhersage auf neuen Daten | Glättung |
 
-Die dritte Zeile ist die wichtigste und die am wenigsten offensichtliche. Wer
-nur die vorliegenden $n$ Punkte beschreiben will, kommt mit der Interpolation
-aus: Sie hat auf den Daten die kleinste Residuenquadratsumme, nämlich
-null. Sobald wir aber an einer *neuen* Stelle vorhersagen wollen, zählt der
-Abstand zu $f$, und der ist bei einer glatten Schätzung kleiner.
-@beispiel:fuenfzig-verrauschte-punkte zeigt beide Größen nebeneinander.
+Die dritte Zeile ist die am wenigsten offensichtliche: Auf den vorliegenden
+Daten hat die Interpolation die kleinste Residuenquadratsumme, nämlich null.
+Bei der Vorhersage an einer *neuen* Stelle zählt aber der Abstand zu $f$, und
+der ist bei einer glatten Schätzung kleiner
+(@beispiel:fuenfzig-verrauschte-punkte).
 
 ### Beispiel: Glättung in R
 
-Der Abschnitt passt in acht Zeilen R, hier für den Datensatz aus
-@beispiel:fuenfzig-verrauschte-punkte:
+Für den Datensatz aus @beispiel:fuenfzig-verrauschte-punkte sieht das in R
+so aus:
 
 ```r
 B <- splines::bs(x, df = 10, intercept = TRUE)   # n x 10 Designmatrix
@@ -525,25 +486,16 @@ B_new <- splines::bs(x_new,
 f_hat <- B_new %*% a_hat
 ```
 
-Drei Details.
-
-- `bs()` baut die B-Spline-Designmatrix $\bB$. Das Argument `df = 10` zusammen
-  mit `intercept = TRUE` fordert $K = 10$ Spalten; bei Grad $3$ bleiben dafür
-  $10 - 3 - 1 = 6$ innere Knoten, die die Funktion auf die Quantile der $x_i$
-  legt. Wir wählen also nicht die Knoten, sondern ihre Anzahl.
+- `bs()` baut die Designmatrix $\bB$; `df = 10` mit `intercept = TRUE` fordert
+  $K = 10$ Spalten, bei Grad $3$ also $10 - 3 - 1 = 6$ innere Knoten auf den
+  Quantilen der $x_i$. Wir wählen nicht die Knoten, sondern ihre Anzahl.
 - `qr.solve(B, y)` löst das überbestimmte System über die QR-Zerlegung
-  (@sec:kq/qr) und nicht über die Normalengleichungen.
-  Das ist der stabilere der beiden Wege (@bemerkung:wie-wir-das-system-wirklich-loesen).
-- Für die Vorhersage an neuen Stellen braucht `B_new` *dieselbe* Basis. Deshalb
-  werden Knoten und Randknoten von `B` übernommen. Lässt man `Boundary.knots`
-  weg, so setzt `bs()` sie auf den Wertebereich des *neuen* Gitters: `B_new`
-  gehört dann zu einer anderen Basis als `a_hat`, ohne Fehlermeldung
-  (@bemerkung:b-splines-in-r). Beide Argumente, `knots` *und*
-  `Boundary.knots`, gehören zusammen übergeben.
-
-Ausgaben drucken wir hier keine ab. Wie die Kurve auf einen
-konkreten Datensatz reagiert, zeigt das Widget oben an einer eigenen Realisierung,
-deren Zahlen wir selbst nachgerechnet haben.
+  (@sec:kq/qr), den stabileren Weg
+  (@bemerkung:wie-wir-das-system-wirklich-loesen).
+- Für die Vorhersage braucht `B_new` *dieselbe* Basis; deshalb übernehmen wir
+  `knots` und `Boundary.knots` von `B`, sonst gehört `B_new` ohne
+  Fehlermeldung zu einer anderen Basis als `a_hat`
+  (@bemerkung:b-splines-in-r).
 
 ### Selbsttest
 
@@ -552,7 +504,9 @@ deren Zahlen wir selbst nachgerechnet haben.
 :::frage{wahr}
 Im Glättungs-Widget kann $K=40$ eine kleinere RSS und zugleich eine schlechtere Annäherung an die wahre Funktion liefern.
 
-Die RSS misst nur die Anpassung an die verrauschten Daten. Bei großem $K$ folgt der Fit einzelnen Störungen und überanpasst.
+Die RSS misst nur die Anpassung an die verrauschten Daten; bei großem $K$
+folgt der Fit einzelnen Störungen. In @beispiel:fuenfzig-verrauschte-punkte
+hat $K = 40$ die kleinste RSS und den größten Abstand zu $f$.
 :::
 
 :::frage{falsch}
@@ -593,8 +547,8 @@ Auch bei Rangdefekt von $\bB$ sind die angepassten Werte $\bB\wh\ba$ eindeutig
 bestimmt.
 
 Sie sind die orthogonale Projektion von $\cblue{\by}$ auf den Spaltenraum von
-$\bB$, und die hängt nur vom Unterraum ab (letzter Beweisschritt zu
-@satz:glaettung-ist-ein-lineares-kleinste). Nicht eindeutig sind dagegen die
+$\bB$, und die hängt nur vom Unterraum ab
+(@satz:glaettung-ist-ein-lineares-kleinste). Nicht eindeutig sind dagegen die
 Koeffizienten und mit ihnen die Funktion $\cgreen{\wh f}$ selbst: Zwei Lösungen unterscheiden sich um ein
 Element des Kerns von $\bB$, und die zugehörige Funktion verschwindet nur an den
 Datenstellen, nicht überall.
@@ -608,15 +562,6 @@ zulässig. Wandern die Knoten mit $K$, etwa weil sie auf Quantilen liegen, so
 sind die Räume nicht geschachtelt: In unserem Lauf steigt die
 Residuenquadratsumme bei elf von $36$ Schritten wieder an, von $K = 6$ auf
 $K = 7$ etwa von $3{,}435$ auf $4{,}016$ (@bemerkung:die-residuen-fallen-nicht-immer).
-:::
-
-:::frage{wahr}
-Für $\lambda \to \infty$ nähert sich der Glättungsspline der
-Kleinste-Quadrate-Geraden.
-
-Der Strafterm $\lambda \int |g''|^2 \dx$ zwingt im Grenzwert $g'' \equiv 0$,
-also affines $g$. Unter den affinen Funktionen minimiert das Kriterium nur noch
-die Residuenquadratsumme, und das ist die einfache lineare Regression.
 :::
 
 ::::

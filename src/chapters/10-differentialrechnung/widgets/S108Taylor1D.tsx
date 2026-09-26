@@ -221,7 +221,7 @@ export function TaylorOrdnungSchaetzung() {
       verdeckt={
         <p className="max-w-prose text-sm">
           Gemessen sind es 8,2: Der Fehler fällt von 0,023721 auf 0,002888. Der Faustwert dahinter
-          ist |x|/(k+1) = 0,5/3 = 0,167, also ein Sechstel, und dass es etwas besser läuft, liegt
+          ist |x|/(k+1) = 0,5/4 = 0,125 für den Schritt auf k = 3, also ein Achtel, und dass es etwas besser läuft, liegt
           am Restglied aus {ref("satz:taylorentwicklung-i")}, in dem zusätzlich e^ξ mit ξ zwischen 0 und x steht.
         </p>
       }

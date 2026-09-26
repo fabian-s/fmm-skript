@@ -1,12 +1,12 @@
 import { EinheitskreisEllipse } from "./widgets/S61EllipseWidget";
 
-In [Kapitel 5](?k=05-lgs#sec-5.2) haben wir Matrizen zerlegt, um Gleichungssysteme
-zu lösen. Die LU-Zerlegung braucht dafür eine quadratische Matrix, die
-Cholesky-Zerlegung sogar eine symmetrische und positiv definite. Die Matrizen,
-mit denen wir in der Statistik tatsächlich rechnen, sehen selten so aus: Eine
-Designmatrix hat $n$ Zeilen für die Beobachtungen und $p$ Spalten für die
-Merkmale, und $n = p$ ist der Ausnahmefall. Dieses Kapitel baut eine Zerlegung,
-die für jede Matrix funktioniert, ganz gleich welches Format sie hat.
+In @kap:lgs haben wir Matrizen zerlegt, um Gleichungssysteme zu lösen. Die
+LU-Zerlegung braucht dafür eine quadratische Matrix, die Cholesky-Zerlegung
+sogar eine symmetrische und positiv definite. Die Matrizen, mit denen wir in der
+Statistik rechnen, sehen selten so aus: Eine Designmatrix hat $n$ Zeilen für die
+Beobachtungen und $p$ Spalten für die Merkmale, und $n = p$ ist der
+Ausnahmefall. Dieses Kapitel baut eine Zerlegung, die für jede Matrix
+funktioniert.
 
 ### Was wir brauchen
 
@@ -30,9 +30,8 @@ Das Kapitel setzt voraus:
 
 ### Diagonalisierung ist limitiert
 
-Warum brauchen wir überhaupt etwas Neues? Die Eigenwertzerlegung
-$\bA = \bP\bD\bP^{-1}$ ist das Standardwerkzeug, um eine Matrix in ihre
-Wirkungsrichtungen zu zerlegen. Sie ist aber in zwei Punkten eingeschränkt.
+Die Eigenwertzerlegung $\bA = \bP\bD\bP^{-1}$ ist das Standardwerkzeug, um eine
+Matrix in ihre Wirkungsrichtungen zu zerlegen. Sie ist aber in zwei Punkten eingeschränkt.
 
 Zum einen verlangt schon die Gleichung $\bA\bv = \lambda\bv$, dass $\bA\bv$ und
 $\bv$ im selben Raum liegen. Die Matrix muss also quadratisch sein; für
@@ -45,17 +44,10 @@ aus Eigenvektoren kommt so nicht zustande.
 Zum anderen nützt uns die Zerlegung vor allem dann etwas, wenn $\bP$ orthogonal
 gewählt werden kann, denn nur dann verzerrt der Basiswechsel nichts. Das gelingt
 genau für :k[symmetrische]{#symmetric-matrix} Matrizen (Spektralsatz,
-@sec:matrix-spur-norm/operatornormen). Ein Blick auf die Rechenregel
-$(\bP\bD\bP^\top)^\top = \bP\bD^\top\bP^\top = \bP\bD\bP^\top$ zeigt auch, warum:
-Was so zerlegbar ist, ist automatisch symmetrisch.
-
-:::bemerkung[#wo-die-diagonalisierung-aufhoert (Wo die Diagonalisierung aufhört)]
-- Die Eigenwertzerlegung setzt eine **quadratische** Matrix voraus, und auch
-  dann gibt es sie nicht immer.
-- Orthogonal diagonalisierbar, also $\bA = \bP\bD\bP^\top$ mit orthogonalem
-  $\bP$, sind nur die **symmetrischen** Matrizen.
-- Die meisten Matrizen, die uns begegnen, sind weder das eine noch das andere.
-:::
+@sec:matrix-spur-norm/operatornormen). Mehr können es nicht sein, denn wegen
+$(\bP\bD\bP^\top)^\top = \bP\bD^\top\bP^\top = \bP\bD\bP^\top$ ist alles,
+was sich so zerlegen lässt, automatisch symmetrisch. Die meisten Matrizen, die
+uns begegnen, sind weder quadratisch noch symmetrisch.
 
 ### Was wir wollen
 
@@ -70,30 +62,29 @@ Drei Dinge wünschen wir uns dabei:
 
 1. Sie existiert für *beliebige* Matrizen $\bA \in \R^{m \times n}$.
 2. $\corange{\bD}$ ist „diagonal", trägt also außerhalb der Diagonalen nur
-   Nullen. Bei einer rechteckigen Matrix müssen wir dafür genauer sagen, was
-   Diagonale heißen soll; das holen wir nach, sobald wir die Bausteine haben.
+   Nullen. Was Diagonale bei einer rechteckigen Matrix heißt, klären wir in
+   @sec:singulaerwerte.
 3. $\cgreen{\bP}$ und $\cblue{\bQ}$ sind :k[Orthogonalmatrizen]{#orthogonal-matrix}.
 
-Punkt 3 ist die entscheidende Forderung. Orthogonalmatrizen drehen und spiegeln,
-mehr nicht. Steckt die ganze Verzerrung in $\corange{\bD}$, dann lesen wir an
-den Diagonaleinträgen direkt ab, was die Abbildung mit dem Raum anstellt.
-Nebenbei wird die Zerlegung dadurch bequem: Für orthogonales $\bQ$ ist
-$\bQ^{-1} = \bQ^\top$, aus @eq:eq-6-1-1 wird also
-$\bA = \cgreen{\bP}\corange{\bD}\cblue{\bQ}^\top$, ganz ohne Inverse.
+Auf Punkt 3 kommt es an. Orthogonalmatrizen drehen und spiegeln, mehr nicht.
+Steckt die ganze Verzerrung in $\corange{\bD}$, dann lesen wir an den
+Diagonaleinträgen ab, was die Abbildung mit dem Raum anstellt. Außerdem entfällt
+die Inverse: Für orthogonales $\bQ$ ist $\bQ^{-1} = \bQ^\top$, aus
+@eq:eq-6-1-1 wird also $\bA = \cgreen{\bP}\corange{\bD}\cblue{\bQ}^\top$.
 
-Die Namen der Faktoren wechseln später noch. Sobald wir wissen, woraus sie
-bestehen, heißt die Zerlegung $\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV}^\top$
-und trägt den Namen :k[Singulärwertzerlegung]{#singular-value-decomposition}.
-Die Farben bleiben uns im ganzen Kapitel erhalten: orange die Streckfaktoren,
-blau die rechte Seite $\cblue{\bV}$, grün die linke Seite $\cgreen{\bU}$.
+Später heißen die Faktoren $\cgreen{\bU}$, $\corange{\bSigma}$ und
+$\cblue{\bV}$, und die Zerlegung
+$\bA = \cgreen{\bU}\corange{\bSigma}\cblue{\bV}^\top$ trägt den Namen
+:k[Singulärwertzerlegung]{#singular-value-decomposition}. Die Farben gelten im
+ganzen Kapitel: orange die Streckfaktoren, blau die rechte Seite
+$\cblue{\bV}$, grün die linke Seite $\cgreen{\bU}$.
 
 ### Geometrische Intuition
 
 Woher kommt so eine Zerlegung? Statt einen einzelnen Vektor durch die Abbildung
-zu schicken, schicken wir alle Einheitsvektoren auf einmal.
-
-Betrachten wir also die Einheitssphäre, alle $\bx$ mit $\left\| \bx \right\| = 1$.
-Ihre Bilder $\bA\bx$ haben ganz verschiedene Längen: Manche Richtungen streckt
+zu schicken, schicken wir alle Einheitsvektoren auf einmal, also die
+Einheitssphäre aller $\bx$ mit $\left\| \bx \right\| = 1$. Ihre Bilder
+$\bA\bx$ haben verschiedene Längen: Manche Richtungen streckt
 $\bA$, andere staucht sie. Die Leitfrage dieses Kapitels: Welche Richtung wird am
 stärksten gestreckt, welche am zweitstärksten, und so
 weiter?
@@ -103,9 +94,10 @@ singulär, so entartet sie zu einer Strecke. Der längste Bildvektor liegt auf
 ihrer Hauptachse, der kürzeste auf der Nebenachse, und
 diese Halbachsenlängen sind uns als Singulärwerte in
 @sec:matrix-spur-norm/schattennormen schon begegnet. Bildet $\bA$
-dagegen von $\R^3$ in die Ebene ab, so wird eine ganze Richtung platt gedrückt,
-und aus der Einheitssphäre wird eine ausgefüllte Ellipse. An den Hauptachsen
-ändert das nichts.
+dagegen von $\R^3$ in die Ebene ab, so drückt sie die Richtungen in
+$\operatorname{Kern}(\bA)$ auf $\bnull$, und aus der Einheitssphäre wird eine
+ausgefüllte Ellipse. Haupt- und Nebenachse zeigen weiterhin die stärkste und die
+zweitstärkste Streckung.
 
 Nehmen wir die Matrix aus @beispiel:visualisierung,
 
@@ -116,16 +108,14 @@ $$
 ::::interaktiv[Welche Richtung streckt die Matrix am stärksten?]
 Welche Richtung streckt sie am stärksten, und um welchen Faktor? Das Widget
 schickt den ganzen Einheitskreis durch $\bA$ und trägt rechts die Länge des
-Bildvektors über dem Winkel auf. Wir bleiben dabei beim $2 \times 2$-Fall, in
-dem Urbild und Bild in derselben Ebene liegen; bildet $\bA$ zwischen Räumen
-verschiedener Dimension ab, ändert das an der Aussage nichts.
+Bildvektors über dem Winkel auf.
 
 <EinheitskreisEllipse />
 ::::
 
 :::beispiel[#der-einheitskreis-wird-zur-ellipse (Der Einheitskreis wird zur Ellipse)]
-Aus [Kapitel 3](?k=03-matrix-spur-norm#sec-3.3) kennen wir die beiden
-Streckfaktoren von $\bA$ bereits: $\corange{2{,}288} = \sqrt{3 + \sqrt{5}}$ ist die längste
+Die beiden Streckfaktoren von $\bA$ kennen wir bereits aus
+@kap:matrix-spur-norm: $\corange{2{,}288} = \sqrt{3 + \sqrt{5}}$ ist die längste
 Halbachse der Bildellipse, $\corange{0{,}874}$ die kürzeste. Am stärksten
 gestreckt wird die Richtung
 
@@ -142,8 +132,7 @@ senkrechte Richtung $\cblue{\bx^\perp} \approx (-0{,}526,\; 0{,}851)^\top$ hat d
 Bild $\cgreen{\bA\bx^\perp} \approx (-0{,}201,\; 0{,}851)^\top$ der Länge
 $\corange{0{,}874}$, wird also am schwächsten gestreckt.
 
-Die entscheidende Beobachtung: Die beiden Bilder stehen wieder senkrecht
-aufeinander,
+Die beiden Bilder stehen wieder senkrecht aufeinander,
 
 $$
 \cgreen{\bA\bx^*}^\top \cgreen{\bA\bx^\perp}
@@ -152,9 +141,9 @@ $$
 $$
 
 (bis auf Rundung). Zwei senkrechte Richtungen im Urbild, zwei senkrechte
-Richtungen im Bild, dazwischen nur zwei Streckfaktoren: Dieses Muster schreiben
-wir in @sec:singulaerwerte als Zerlegung auf. Woher $\cblue{\bx^*}$ kommt
-und warum die Bilder senkrecht bleiben, klärt sich dort ebenfalls.
+Richtungen im Bild, dazwischen zwei Streckfaktoren: Dieses Muster schreiben wir
+in @sec:singulaerwerte als Zerlegung auf. Dort klärt sich auch, woher
+$\cblue{\bx^*}$ kommt und warum die Bilder senkrecht bleiben.
 :::
 
 ### Die Grundidee
@@ -166,14 +155,11 @@ $$ {#eq-eq-6-1-2}
 \max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\| .
 $$
 
-Ein Maximum gibt es tatsächlich, denn die Einheitssphäre ist
+Ein Maximum existiert, denn die Einheitssphäre ist
 :k[abgeschlossen und beschränkt]{#closed-bounded-set} und
-$\bx \mapsto \left\| \bA\bx \right\|$ ist stetig. Der Maximalwert steht sogar
-schon in unserer Vorwissensliste: Er ist die Spektralnorm
-$\left\| \bA \right\|_2$, die
-@sec:matrix-spur-norm/operatornormen als größten Streckfaktor
-einführt. Dort haben wir nach dem Wert gefragt, hier fragen wir nach der
-Maximalstelle, und gleich danach nach dem, was in den übrigen Richtungen
+$\bx \mapsto \left\| \bA\bx \right\|$ ist stetig. Der Maximalwert ist die
+Spektralnorm $\left\| \bA \right\|_2$ aus der Vorwissensliste. Neu ist die
+Frage nach der Maximalstelle und danach, was in den übrigen Richtungen
 passiert.
 
 Unhandlich an @eq:eq-6-1-2 ist die Zielfunktion: In der Norm steckt eine Wurzel
@@ -225,17 +211,16 @@ wenn es $\left\| \bA\bx \right\|^2$ maximiert.
 
 Die rechte Seite von @eq:streckung-als-quadratische-form ist eine
 :k[quadratische Form]{#quadratic-form}, und zwar die zur Matrix $\bA^\top\bA$.
-Das ändert die Lage. Ist $\bA$ vom Format
-$m \times n$, so ist $\bA^\top\bA$ vom Format $n \times n$, also quadratisch,
-unabhängig davon, ob $\bA$ mehr Zeilen oder mehr Spalten hat. Symmetrisch ist
-$\bA^\top\bA$ außerdem, das rechnet @sec:singulaerwerte nach. Der Umweg über
-$\bA^\top\bA$ führt uns damit zurück in die Klasse, für die die orthogonale
-Diagonalisierung funktioniert. Aus ihren Eigenwerten und Eigenvektoren werden
-dort die Singulärwerte und die Singulärvektoren.
+Ist $\bA$ vom Format $m \times n$, so ist $\bA^\top\bA$ quadratisch vom Format
+$n \times n$, ganz gleich, ob $\bA$ mehr Zeilen oder mehr Spalten hat.
+Symmetrisch ist $\bA^\top\bA$ außerdem (@sec:singulaerwerte). Der Umweg über
+$\bA^\top\bA$ führt uns also zu einer Matrix zurück, die sich orthogonal
+diagonalisieren lässt. Aus ihren Eigenwerten und Eigenvektoren werden in
+@sec:singulaerwerte die Singulärwerte und die Singulärvektoren.
 
 :::bemerkung[#notation (Notation)]
-Ab hier ist $\left\| \cdot \right\|$ ohne Index immer die euklidische Norm
-$\left\| \cdot \right\|_2$, bei Matrizen entsprechend die davon induzierte
+Ab hier ist $\left\| \cdot \right\|$ ohne Index immer die
+:k[euklidische Norm]{#euclidean-norm} $\left\| \cdot \right\|_2$, bei Matrizen entsprechend die davon induzierte
 Operatornorm, also die Spektralnorm
 (@sec:matrix-spur-norm/operatornormen). Ist eine andere Norm gemeint,
 schreiben wir den Index dazu.
@@ -254,9 +239,9 @@ $\left\| \bA\bx \right\|$?
 Rund $1{,}458$. Der Einheitsvektor ist
 $\bx = (0{,}7071,\; 0{,}7071)^\top$, sein Bild $(1{,}4142,\; 0{,}3536)^\top$, und
 dessen Länge ist $\sqrt{2 + 0{,}125} = \sqrt{2{,}125} \approx 1{,}458$. Der Wert
-liegt zwischen $\corange{0{,}5}$ und $\corange{2}$, den beiden Streckfaktoren:
-Auf dem Einheitskreis liegt $\left\| \bA\bx \right\|$
-immer zwischen kleinstem und größtem Singulärwert.
+liegt zwischen den beiden Streckfaktoren $\corange{0{,}5}$ und $\corange{2}$;
+auf dem Einheitskreis liegt $\left\| \bA\bx \right\|$ immer zwischen
+kleinstem und größtem Singulärwert.
 :::
 
 :::frage{wahr}
@@ -266,8 +251,19 @@ $\bA^\top\bA$ dagegen ist ein $2 \times 2$-Objekt.
 $\bA$ bildet von $\R^2$ nach $\R^3$ ab; in $\bA\bv = \lambda\bv$ stünde links ein
 Vektor aus $\R^3$ und rechts einer aus $\R^2$. Das Produkt $\bA^\top\bA$ ist
 dagegen $(2 \times 3) \cdot (3 \times 2)$, also eine quadratische
-$2 \times 2$-Matrix. Diese Beobachtung ist der Grund für den Umweg aus
+$2 \times 2$-Matrix. Deshalb machen wir den Umweg aus
 @satz:streckung-als-quadratische-form.
+:::
+
+:::frage{wahr}
+Jede symmetrische Matrix $\bA \in \R^{n \times n}$ lässt sich als
+$\bA = \bQ\bD\bQ^\top$ mit orthogonalem $\bQ$ und reeller Diagonalmatrix $\bD$
+schreiben.
+
+Das ist der :k[Spektralsatz]{#spectral-theorem}. Mehr sichert
+die Symmetrie nicht: Die Eigenwerte dürfen negativ oder null sein, und
+verschieden müssen sie auch nicht sein, wie $\bI$ mit dem $n$-fachen Eigenwert
+$1$ zeigt.
 :::
 
 :::frage{falsch}
@@ -288,9 +284,8 @@ Die Determinante misst nur die Flächenänderung insgesamt, nicht ihre Verteilun
 auf die Richtungen. Für
 $\bA = \bigl(\begin{smallmatrix} 2 & 0 \\ 0 & 0{,}5 \end{smallmatrix}\bigr)$ ist
 $\det \bA = 1$, trotzdem wird die $x_1$-Richtung um den Faktor $2$ gestreckt und
-die $x_2$-Richtung auf die Hälfte gestaucht. Gleich behandelt werden alle
-Richtungen nur von einem Vielfachen einer Orthogonalmatrix, also von
-$\bA = c\bQ$ mit $\bQ^\top\bQ = \bI$; dann ist
+die $x_2$-Richtung auf die Hälfte gestaucht. Alle Richtungen gleich stark
+streckt nur ein Vielfaches $\bA = c\bQ$ einer Orthogonalmatrix $\bQ$; dann ist
 $\left\| \bA\bx \right\| = |c|$ für jeden Einheitsvektor $\bx$.
 :::
 
@@ -301,8 +296,8 @@ weder die Maximalstelle noch den Maximalwert.
 Die Maximalstelle bleibt, der Wert nicht: Er wird quadriert. Für die Matrix aus
 @beispiel:der-einheitskreis-wird-zur-ellipse ist $\max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\| \approx 2{,}288$,
 während $\max_{\left\| \bx \right\| = 1} \left\| \bA\bx \right\|^2 = 3 + \sqrt{5} \approx 5{,}236$
-herauskommt. Für die Suche nach der Richtung spielt das keine Rolle, und
-deshalb dürfen wir quadrieren.
+herauskommt. Für die Suche nach der Richtung spielt das keine Rolle, deshalb
+dürfen wir quadrieren.
 :::
 
 ::::

@@ -2,55 +2,36 @@ import { KruemmungsVergleich } from "./widgets/S135Kruemmung";
 import { Schaetzfrage } from "../../lib";
 
 Bis hierher war Interpolation ein lineares Problem: Basis wählen, System
-lösen (@sec:basisdarstellung). Das führte zu stückweisen
-:k[Polynomen]{#polynomial}, weil globale Polynome hohen Grades am Rand
-oszillieren. Eine Frage ist dabei offen geblieben: Warum sind
-*kubische* Splines der Standard? Grad $2$ wäre billiger, Grad $5$
-glatter.
+lösen (@sec:basisdarstellung). Offen ist, warum gerade *kubische* Splines der
+Standard sind; Grad $2$ wäre billiger, Grad $5$ glatter. Die Antwort ist ein
+Optimalitätssatz: Unter allen zweimal stetig differenzierbaren Funktionen
+durch dieselben Punkte hat der natürliche kubische Spline die geringste
+Gesamtkrümmung, er löst also ein :k[Optimierungsproblem]{#optimization}. Im
+Englischen heißt diese Eigenschaft *minimal wiggliness*.
 
-Die Antwort dieses Abschnitts ist ein Optimalitätssatz. Der kubische Spline
-ist nicht irgendein Interpolant, sondern die Lösung eines
-:k[Optimierungsproblems]{#optimization}: Unter allen zweimal stetig
-differenzierbaren Funktionen durch dieselben Punkte ist er derjenige mit der
-geringsten Gesamtkrümmung. Die Eigenschaft trägt den englischen Namen
-*minimal wiggliness*.
-
-:::bemerkung[#was-die-zweite-kapitelhaelfte (Was die zweite Kapitelhälfte voraussetzt)]
-Von hier an greift das Kapitel auf Ergebnisse aus mehreren Teilen des Skripts zurück.
-Wir sammeln sie mit den zugehörigen Abschnitten:
-
-- **Lineare Algebra:** :k[Kleinste Quadrate]{#linear-least-squares}
-  (@sec:kq/problem) und die
-  :k[Pseudoinverse]{#pseudoinverse}
-  (@sec:kq/pseudoinverse). Beide brauchen wir ab
-  @sec:glaettung, wenn aus dem Interpolationsproblem eine
-  Regression wird. Die Pseudoinverse liefert dabei eine einheitliche
-  Schreibweise auch bei Rangdefekt; unter vollem Spaltenrang lässt sie sich
-  durch $(\bB^\top\bB)^{-1}\bB^\top$ ersetzen, wie die Varianzrechnung in
-  @sec:bias-varianz zeigt.
-- **Analysis:** :k[Glattheitsklassen]{#differentiability} $\Ccal^k$, also
-  $k$-mal stetig differenzierbare Funktionen. In diesem Abschnitt zählt
-  $\Ccal^2$, in @sec:approximationsfehler dann $\Ccal^4$. Dazu Integrale
-  der Bauart $\int |f''(x)|^2 \dx$ und die partielle Integration.
-- **Statistik:** Designmatrix eines
-  :k[linearen Modells]{#linear-regression} und die Zerlegung des mittleren
-  quadratischen Fehlers in Bias und :k[Varianz]{#variance}
-  (@sec:bias-varianz).
+:::bemerkung[#was-die-zweite-kapitelhaelfte (Was von hier an gebraucht wird)]
+Ab @sec:glaettung brauchen wir aus der linearen Algebra
+:k[Kleinste Quadrate]{#linear-least-squares} (@sec:kq/problem) und die
+:k[Pseudoinverse]{#pseudoinverse} (@sec:kq/pseudoinverse), aus der Statistik
+die Designmatrix eines :k[linearen Modells]{#linear-regression} und die
+Zerlegung des mittleren quadratischen Fehlers in Bias und
+:k[Varianz]{#variance} (@sec:bias-varianz). Aus der Analysis kommen die
+:k[Glattheitsklassen]{#differentiability} $\Ccal^k$ der $k$-mal stetig
+differenzierbaren Funktionen hinzu, hier $\Ccal^2$ und in
+@sec:approximationsfehler $\Ccal^4$, dazu Integrale wie
+$\int |f''(x)|^2 \dx$ und die partielle Integration.
 :::
 
 ### Splines, kurz erinnert
 
 :::bemerkung[#spline (Spline)]
-Ein *Spline* setzt Polynome vom Grad höchstens $q$ an vorgegebenen Stellen
-$\corange{\xi_1 < \dots < \xi_{m-1}}$ zusammen, den *Knoten* (knots), und
-zwar so glatt wie möglich: An jedem Knoten passen die Stücke bis zur
-$(q-1)$-ten Ableitung zusammen (@sec:splines). Ein kubischer Spline ($q = 3$) ist demnach eine
-$\Ccal^2$-Funktion: Wert, erste und zweite Ableitung gehen ohne Sprung über
-die Knoten. Dieser Fall ist der Standard, und dieser Abschnitt sagt,
-warum.
+Ein kubischer Spline setzt kubische Polynome an den Knoten
+$\corange{\xi_1 < \dots < \xi_{m-1}}$ zu einer $\Ccal^2$-Funktion zusammen
+(@sec:splines): Wert, erste und zweite Ableitung gehen ohne Sprung über die
+Knoten.
 
 Zur Benennung, weil im Satz weiter unten andere Buchstaben stehen:
-$\corange{\xi_1}, \dots, \corange{\xi_{m-1}}$ sind hier nur die *inneren*
+$\corange{\xi_1}, \dots, \corange{\xi_{m-1}}$ sind dabei nur die *inneren*
 Trennstellen. Im Krümmungssatz fallen die Knoten mit den Stützstellen
 zusammen und heißen deshalb $\corange{x_1}, \dots, \corange{x_n}$, die beiden
 Intervallenden mitgezählt. Bei $n$ Datenpunkten ist also $m = n - 1$ und
@@ -59,12 +40,11 @@ $\corange{\xi_k} = \corange{x_{k+1}}$.
 
 ### Krümmung als Zielgröße
 
-Wollen wir „möglichst glatt" zu einer rechenbaren Forderung machen, brauchen
-wir eine Zahl, die die Welligkeit einer Funktion misst. Die
-:k[zweite Ableitung]{#derivative} $f''$ ist der natürliche Kandidat: Sie ist
-genau dort groß, wo sich die Steigung schnell ändert, und sie verschwindet
-genau für Geraden. Weil uns nur die Stärke der Biegung interessiert und nicht
-ihre Richtung, quadrieren wir und integrieren über das ganze Intervall.
+Um „möglichst glatt" rechenbar zu machen, brauchen wir eine Zahl für die
+Welligkeit einer Funktion. Die :k[zweite Ableitung]{#derivative} $f''$ ist
+groß, wo sich die Steigung schnell ändert, und verschwindet genau für
+Geraden; weil nur die Stärke der Biegung zählt und nicht ihre Richtung,
+quadrieren wir sie und integrieren über das Intervall.
 
 :::definition[#kruemmungsfunktional (Krümmungsfunktional)]
 Für $g \in \Ccal^2[a, b]$ heißt
@@ -80,21 +60,17 @@ $J$ ist eine :k[Zielfunktion]{#objective-function} auf einem Funktionenraum,
 und $J(g) = 0$ gilt genau für die affinen Funktionen
 $g(x) = \alpha x + \beta$. Je größer $J(g)$, desto stärker ist die Kurve gekrümmt.
 
-Streng genommen misst $J$ nicht die geometrische Krümmung. Die ist
-$\kappa(x) = |g''(x)| / (1 + g'(x)^2)^{3/2}$, und das Integral darüber wäre
-nicht quadratisch. Für flache Kurven mit $|g'| \ll 1$ ist
-$\kappa \approx |g''|$, und $J$ ist die dazu passende quadratische Größe. Der
-Name „minimale Krümmung" ist in der Spline-Literatur eingebürgert, gemeint
-ist immer @eq:kruemmungsfunktional. Dass $J$ quadratisch ist,
-ist der Grund für das Folgende: Quadratische Ziele führen auf lineare
-Gleichungen, genau wie bei den Kleinsten Quadraten in
-@kap:kq.
+Streng genommen misst $J$ nicht die geometrische Krümmung
+$\kappa(x) = |g''(x)| / (1 + g'(x)^2)^{3/2}$; nur für flache Kurven mit
+$|g'| \ll 1$ ist $\kappa \approx |g''|$. Der Name „minimale Krümmung" ist
+trotzdem eingebürgert, gemeint ist immer @eq:kruemmungsfunktional. Dass $J$
+quadratisch ist, macht das Folgende möglich: Quadratische Ziele führen auf
+lineare Gleichungen, wie bei den Kleinsten Quadraten in @kap:kq.
 
-Damit lässt sich die Ausgangsfrage präzise stellen. Gegeben sind Punkte, gesucht
-ist unter allen $\Ccal^2$-Funktionen, die durch diese Punkte laufen, die mit
-dem kleinsten $J$. Interpolanten gibt es unendlich viele
-(@sec:approximation), das Minimum
-dagegen ist eindeutig, und es hat einen Namen.
+Gesucht ist also unter allen $\Ccal^2$-Funktionen durch die gegebenen Punkte
+die mit dem kleinsten $J$. Interpolanten gibt es unendlich viele
+(@sec:approximation), das Minimum dagegen ist eindeutig, und es hat einen
+Namen.
 
 :::satz[#kubische-splines-haben-minimale (Kubische Splines haben minimale Krümmung)]
 Seien $n \ge 2$ und
@@ -120,10 +96,9 @@ $$
 also $J(\cgreen{s}) \le J(\cred{g})$.
 :::
 
-Im Kern besteht der Beweis aus zwei partiellen Integrationen, die wir über
-die Knoten hinweg zusammensetzen. Die beiden Randbedingungen des
-natürlichen Splines sind darin der Grund, warum
-ein störender Term verschwindet.
+Der Beweis besteht im Kern aus zwei partiellen Integrationen über die
+Knotenintervalle; die natürlichen Randbedingungen lassen dabei einen
+störenden Randterm verschwinden.
 
 ::::beweis
 
@@ -228,8 +203,9 @@ $\cred{h} \equiv 0$ und $\cred{g} = \cgreen{s}$.
 
 ::::
 
+::::vertiefung[Was der Beweis von den Randbedingungen braucht]
 :::bemerkung[#was-die-randterme-wirklich-brauchen (Was die Randterme wirklich brauchen)]
-Der Beweis braucht drei Voraussetzungen, die wir getrennt benennen.
+Der Beweis braucht drei Voraussetzungen.
 
 1. Das Teleskopieren von $\cgreen{s''}\,\cred{h'}$ braucht die Stetigkeit von
    $\cgreen{s''}$ *und* von $\cred{h'}$ über die Knoten hinweg. Beides ist
@@ -251,10 +227,11 @@ Der Beweis braucht drei Voraussetzungen, die wir getrennt benennen.
 
 Eine Voraussetzung im Satzkopf ist dabei leicht zu übersehen:
 $a = \corange{x_1}$ und $\corange{x_n} = b$, die äußersten Knoten sind also
-die Intervallenden. Liegen die Daten echt im Inneren, setzt man den Spline
+die Intervallenden. Liegen die Daten echt im Inneren, setzen wir den Spline
 außerhalb linear fort; dort ist $\cgreen{s''} = 0$, $J(\cgreen{s})$ bleibt
 unverändert, und die Ungleichung überträgt sich auf das größere Intervall.
 :::
+::::
 
 :::korollar[#der-natuerliche-kubische-spline-ist-der (Der natürliche kubische Spline ist der einzige Minimierer)]
 Unter den Voraussetzungen von @satz:kubische-splines-haben-minimale ist $\cgreen{s}$ der *eindeutige*
@@ -269,9 +246,8 @@ demselben Krümmungswert ist $\cgreen{s}$ selbst.
 :::
 
 @satz:kubische-splines-haben-minimale setzt voraus, dass ein natürlicher
-kubischer Spline durch die Punkte überhaupt existiert. Er tut es, und zwar
-genau einer: Die Abzählung von Unbekannten und Bedingungen geht auf, und das
-zugehörige tridiagonale Gleichungssystem für die zweiten Ableitungen ist
+kubischer Spline durch die Punkte existiert. Das tut er, und er ist eindeutig:
+Das zugehörige tridiagonale Gleichungssystem für die zweiten Ableitungen ist
 strikt diagonaldominant und damit regulär.
 
 ::::vertiefung[Die Abzählung und das tridiagonale System dahinter]
@@ -317,9 +293,8 @@ Ansatz für vier Punkte durch.
 
 ### Beispiel: Spline gegen Parabel
 
-Der Satz verspricht, dass der natürliche kubische Spline gegen jeden anderen
-$\Ccal^2$-Interpolanten gewinnt. An drei Punkten lässt sich das von
-Hand nachrechnen.
+An drei Punkten lässt sich @satz:kubische-splines-haben-minimale von Hand
+nachrechnen.
 
 :::beispiel[#drei-punkte-zwei-interpolanten (Drei Punkte, zwei Interpolanten)]
 **Gegeben:** die Punkte $\cblue{(0,0)}$, $\cblue{(1,1)}$, $\cblue{(2,0)}$,
@@ -334,8 +309,6 @@ $$
 1{,}5\,(2-x) - 0{,}5\,(2-x)^3 & x \in [1, 2].
 \end{cases}
 $$
-
-Die drei Eigenschaften prüfen wir der Reihe nach.
 
 *Interpolation:* $\cgreen{s(0)} = 0$, $\cgreen{s(1)} = 1{,}5 - 0{,}5 = 1$ und
 $\cgreen{s(2)} = 0$, jeweils aus dem passenden Ast.
@@ -361,9 +334,8 @@ J(\cgreen{s})
 \end{aligned}
 $$
 
-Im zweiten Integral haben wir $u = 2 - x$ substituiert, also
-$\mathrm{d}u = -\dx$ und die Grenzen $x = 1, 2$ zu $u = 1, 0$ gedreht; das
-Minuszeichen der Substitution und die gedrehten Grenzen heben sich auf.
+Im zweiten Integral haben wir $u = 2 - x$ substituiert; das Minuszeichen aus
+$\mathrm{d}u = -\dx$ und die gedrehten Grenzen heben sich auf.
 
 **Zum Vergleich die Parabel** $\cred{p(x)} = -x^2 + 2x$. Auch sie
 interpoliert, denn $\cred{p(0)} = 0$, $\cred{p(1)} = 1$ und
@@ -393,16 +365,11 @@ $\int_0^2 (\cred{h''})^2 \dx = 2$, und tatsächlich ist $6 + 2 = 8$.
 :::
 
 :::interaktiv[Eine ganze Schar von Interpolanten]
-Spline und Parabel sind nur zwei Punkte in einer unendlichen Menge. Weil
-$\cred{h} = \cred{p} - \cgreen{s}$ an allen drei Stützstellen verschwindet,
-interpoliert auch jede Mischung
-$g_t = \cgreen{s} + t\,\cred{h}$ dieselben Daten, für jedes $t \in \R$. Der
-Regler fährt diese Schar ab: $t = 0$ ist der Spline, $t = 1$ die Parabel des
-Beispiels. Die Farben tragen dieselben Rollen wie im Text: blau die Daten,
-orange die Knoten, grün der Spline, rot die Abweichung $\cred{h}$ und mit ihr
-jeder Konkurrent $g_t$.
-
-Welche Mischung hat nach unserer Vermutung die kleinste Krümmungsenergie?
+Weil $\cred{h} = \cred{p} - \cgreen{s}$ an allen drei Stützstellen
+verschwindet, interpoliert jede Mischung $g_t = \cgreen{s} + t\,\cred{h}$
+dieselben Daten, für jedes $t \in \R$. Der Regler fährt diese Schar ab:
+$t = 0$ ist der Spline, $t = 1$ die Parabel des Beispiels. Die Farben tragen
+dieselben Rollen wie im Text.
 
 <Schaetzfrage
   frage="Bei welchem t wird die Krümmungsenergie minimal?"
@@ -417,14 +384,13 @@ Welche Mischung hat nach unserer Vermutung die kleinste Krümmungsenergie?
 Die zweite Ansicht zeigt, woher der Unterschied kommt: zwei Geradenstücke von
 $\cgreen{s''}$ gegen die Konstante $-2$ von $\cred{p''}$. Wegen
 $\int_0^2 \cgreen{s''}\cred{h''}\dx = 0$ fällt der gemischte Term aus dem
-Integral heraus, und übrig bleibt genau der quadratische Zuschlag in $t$.
+Integral heraus, und übrig bleibt der quadratische Zuschlag in $t$.
 :::
 
-Zu beachten ist, was @satz:kubische-splines-haben-minimale *nicht* sagt. Über die
-Approximationsgüte sagt er nichts: Alle Konkurrenten treffen die Daten exakt, sie
-unterscheiden sich nur in der Krümmung dazwischen. Wie weit ein Spline
-von einer zugrunde liegenden Funktion abweicht, ist eine ganz andere Frage.
-Sie ist der Gegenstand von @sec:approximationsfehler.
+Über die Approximationsgüte sagt @satz:kubische-splines-haben-minimale
+nichts: Alle Konkurrenten treffen die Daten exakt und unterscheiden sich nur
+in der Krümmung dazwischen. Wie weit ein Spline von einer zugrunde liegenden
+Funktion abweicht, klärt @sec:approximationsfehler.
 
 ### Selbsttest
 
@@ -434,13 +400,12 @@ Sie ist der Gegenstand von @sec:approximationsfehler.
 Jeder kubische Spline, der die Punkte interpoliert, minimiert das
 Krümmungsfunktional $J$.
 
-Nur der *natürliche*. Ohne $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ bleibt im
+Nur der *natürliche*: Ohne $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$ bleibt im
 Beweis der Randterm $[\cgreen{s''}\,\cred{h'}]_a^b$ stehen, und der kann
 jedes Vorzeichen haben. Kubische Spline-Interpolanten zu denselben Daten gibt
-es unendlich viele, weil zwei Randbedingungen frei sind; nur eine Wahl davon
-löst das Minimierungsproblem. Die Parabel aus @beispiel:drei-punkte-zwei-interpolanten ist selbst so
-ein Fall: Sie ist stückweise ein Polynom vom Grad höchstens $3$ und beliebig
-oft differenzierbar, also ein kubischer Spline-Interpolant, aber wegen
+es unendlich viele, weil zwei Randbedingungen frei sind. Die Parabel aus
+@beispiel:drei-punkte-zwei-interpolanten ist selbst einer (ein Polynom vom
+Grad $2$ ist auch ein kubischer Spline), aber wegen
 $\cred{p''(0)} = -2 \neq 0$ nicht der natürliche, und ihr $J$ ist um $2$
 größer.
 :::
@@ -482,10 +447,9 @@ Aus $J(\cred{g}) = J(\cgreen{s})$ folgt stets $\cred{g} = \cgreen{s}$, auch
 bei nur einer Stützstelle.
 
 Bei $n = 1$ ist jede affine Funktion durch den einen Punkt ein Interpolant
-mit $J = 0$, und Minimierer gibt es unendlich viele. Der Schluss von
+mit $J = 0$, Minimierer gibt es also unendlich viele. Der Schluss von
 $\cred{h''} \equiv 0$ auf $\cred{h} \equiv 0$ braucht zwei verschiedene
-Nullstellen von $\cred{h}$, also $n \ge 2$. Die Kurzfassung „Gleichheit nur
-für $\cred{h} \equiv 0$" unterschlägt das.
+Nullstellen von $\cred{h}$, also $n \ge 2$.
 :::
 
 ::::
@@ -493,6 +457,6 @@ für $\cred{h} \equiv 0$" unterschlägt das.
 *Vertiefung: Heath führt natürliche kubische Splines in Kapitel 7
 (Interpolation), Abschnitt 7.4.2 ein und rechnet dort denselben
 Drei-Punkte-Fall mit acht Bedingungen vor. Die Minimaleigenschaft selbst
-steht als Satz 7.57 bei Deuflhard und Hohmann, Numerische Mathematik 1,
-@sec:kq/qr; dort findet sich auch die Rechtfertigung, warum man statt der
-geometrischen Krümmung deren Näherung $f''$ integriert.*
+steht als Satz 7.57 bei Deuflhard und Hohmann, Numerische Mathematik 1;
+dort findet sich auch die Rechtfertigung, warum statt der geometrischen
+Krümmung deren Näherung $f''$ integriert wird.*

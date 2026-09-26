@@ -4,7 +4,7 @@ import { LogPlot } from "./widgets/LogarithmWidget";
 
 {/* Concept-Tooltip: Logarithmus (Umkehrung des Potenzierens, Basen, Basiswechsel). */}
 
-Der Logarithmus macht das Potenzieren rückgängig:
+Der *Logarithmus* macht das Potenzieren rückgängig:
 $\log_b(x)$ beantwortet die Frage „$b$ hoch was
 ergibt $x$?“ Also $\log_2(8) = 3$, weil
 $2^3 = 8$. Die gebräuchlichsten Basen sind $2$
@@ -18,16 +18,16 @@ $$
 \log_2(x) = \frac{\ln x}{\ln 2} \qquad \Longrightarrow \qquad \frac{\mathrm{d}}{\mathrm{d}x} \log_2(x) = \frac{1}{x \ln 2} .
 $$
 
-Seine wichtigste algebraische Eigenschaft: er verwandelt Produkte in
-Summen, $\log(ab) = \log(a) + \log(b)$ – der Grund, warum
-Log-Likelihoods und Entropien (etwa Ausdrücke der Form
-$x \log_2 x$) so angenehm zu differenzieren sind. Vorsicht:
-$\log_b(x)$ ist nur für $x > 0$ definiert, und er
-wächst sehr langsam: eine Verdopplung von $x$ erhöht
+Er verwandelt Produkte in Summen, $\log(ab) = \log(a) + \log(b)$; deshalb
+rechnen wir etwa mit Log-Likelihoods statt mit Produkten von
+Wahrscheinlichkeiten. $\log_b(x)$ ist nur für $x > 0$ definiert, für $b > 1$
+streng monoton wachsend, aber sehr langsam: Eine Verdopplung von $x$ erhöht
 $\log_2(x)$ nur um eine Einheit.
 
 Was haben die drei gebräuchlichen Logarithmusbasen im Graphen gemeinsam?
 
 <LogPlot />
 
-Die Kurven bestätigen, dass sich die Basen nur durch eine konstante Skalierung unterscheiden.
+Alle drei Kurven gehen durch $(1; 0)$, sind für $x < 1$ negativ und
+unterscheiden sich nur um einen konstanten Faktor: Die Basis streckt die
+senkrechte Achse.

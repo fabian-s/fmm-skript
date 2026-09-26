@@ -1,10 +1,9 @@
 import { Gradientenfeld, RichtungsWidget, AbstiegStepper } from "./widgets/S102Gradient";
 
-In @sec:linearisierung haben wir das Ableiten so weit gefasst, dass es in jedem
-normierten Raum funktioniert. Dafür ist der Begriff abstrakt: Die Ableitung ist dort eine
-lineare Abbildung, kein Objekt, mit dem wir rechnen könnten. Für jede Kombination von Ein-
-und Ausgabeformat brauchen wir deshalb eine konkrete Gestalt, in der diese lineare Abbildung
-steckt, also eine Zahl, einen Vektor oder eine Matrix.
+Die Fréchet-Ableitung aus @sec:linearisierung funktioniert in jedem normierten Raum, ist
+dafür aber abstrakt: eine lineare Abbildung, kein Objekt, mit dem wir rechnen könnten. Für
+jede Kombination von Ein- und Ausgabeformat suchen wir deshalb eine konkrete Gestalt dieser
+Abbildung, also eine Zahl, einen Vektor oder eine Matrix.
 
 ### Fahrplan durch die Spezialfälle
 
@@ -26,19 +25,18 @@ Die Einträge lesen sich so:
 - Vektor zu Vektor führt auf die Jacobimatrix in @sec:jacobi; der Fall Skalar
   zu Vektor steckt dort als Sonderfall mit einer einzigen Eingabevariablen drin.
 - Skalar zu Matrix und Matrix zu Skalar behandelt @sec:matrixableitungen.
-- Die drei leeren Zellen lassen wir aus. Ob wir eine Matrix nach einem Vektor ableiten,
-  einen Vektor nach einer Matrix oder eine Matrix nach einer Matrix: In allen drei Fällen
-  bräuchten wir ein Objekt mit mindestens drei Indexpositionen, also einen
-  :k[Tensor]{#tensor} ([Kapitel 9](?k=09-tensoren#sec-9.2)). Wir kommen in
-  @sec:zusammenfassung kurz darauf zurück.
+- Die drei leeren Zellen lassen wir aus: Matrix nach Vektor, Vektor nach Matrix und
+  Matrix nach Matrix bräuchten ein Objekt mit mindestens drei Indexpositionen, also einen
+  :k[Tensor]{#tensor} (@sec:tensoren/tensoren). @sec:zusammenfassung kommt kurz darauf
+  zurück.
 
 ### Der Gradient
 
 Der wichtigste Fall in der Statistik ist der zweite: Eine Verlust- oder
 :k[Zielfunktion]{#objective-function} bewertet ein ganzes Bündel von Parametern und gibt
 dafür eine einzige Zahl zurück. Wie leiten wir nach einem ganzen Bündel ab? Die Analysis
-geht es Koordinate für Koordinate durch: Sie friert alle bis auf eine ein und leitet die
-übrig bleibende Funktion einer Variablen ganz gewöhnlich ab. Jede solche
+geht Koordinate für Koordinate vor: Sie friert alle bis auf eine ein und leitet die
+übrig bleibende Funktion einer Variablen gewöhnlich ab. Jede solche
 :k[partielle Ableitung]{#partial-derivative} misst die Steigung von $f$ entlang einer
 Koordinatenachse, und der Gradient ist die Liste dieser $n$ Steigungen.
 
@@ -54,18 +52,12 @@ $$
 $$
 :::
 
-Dass dieser Zeilenvektor wirklich die Ableitung im Sinne von
-@sec:linearisierung ist, zeigt ein kurzes Argument. Die Formate passen:
-Das Produkt einer $1 \times n$-Zeile mit einer $n \times 1$-Spalte ist eine Zahl, und
-$\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist in $\bh$ linear. Dass es diese lineare
-Abbildung sein muss, sehen wir, indem wir $\bh = t\,\be_j$ mit dem $j$-ten Einheitsvektor
-$\be_j$ einsetzen und durch $t$ teilen: Links steht dann der Differenzenquotient von $f$ in
-Richtung der $j$-ten Koordinate, rechts $\cgreen{D_{\bx} f(\be_j)}$ plus ein Term, der mit
-$t \to 0$ verschwindet. Der Grenzwert links ist $\partial f(\bx)/\partial x_j$, also ist
-$\cgreen{D_{\bx} f(\be_j)}$ die $j$-te partielle Ableitung. Eine lineare Abbildung ist
-durch ihre Werte auf den $n$ Koordinatenrichtungen schon festgelegt, es bleibt also keine
-andere Wahl. (@lemma:die-matrix-der-linearen-naeherung in @sec:jacobi führt dasselbe Argument für
-beliebige Ausgabeformate aus.) Die lineare Approximation lautet damit
+Dieser Zeilenvektor ist die Ableitung im Sinne von @sec:linearisierung. Die Formate
+passen, denn eine $1 \times n$-Zeile mal eine $n \times 1$-Spalte ergibt eine Zahl, und
+$\bh \mapsto \corange{\nabla f(\bx)}\bh$ ist linear in $\bh$. Dass keine andere lineare
+Abbildung in Frage kommt, zeigt @lemma:die-matrix-der-linearen-naeherung in @sec:jacobi für
+beliebige Ausgabeformate: Mit $\bh = t\,\be_j$ und $t \to 0$ liefert die Definition gerade
+die $j$-te partielle Ableitung. Die lineare Approximation lautet damit
 
 $$ {#eq-eq-10-2-1}
 \cblue{f(\bx + \bh)} = \cblue{f(\bx)} + \cgreen{D_{\bx} f(\bh)} + \cred{o(\left\|\bh\right\|)}
@@ -73,17 +65,15 @@ $$ {#eq-eq-10-2-1}
 \cgreen{D_{\bx} f(\bh)} = \corange{\nabla f(\bx)}\,\bh .
 $$
 
-Der Restterm $\cred{o(\left\|\bh\right\|)}$ ist dabei wie immer in der
-:k[Landau-Notation]{#big-o-notation} zu lesen: Er schrumpft schneller als $\left\|\bh\right\|$
-selbst, wenn $\bh$ gegen null geht. Anschaulich ist
+Der Restterm schrumpft wie in @sec:linearisierung schneller als $\left\|\bh\right\|$
+(:k[Landau-Notation]{#big-o-notation}). Anschaulich ist
 $\cgreen{\bh \mapsto f(\bx) + \nabla f(\bx)\bh}$ für $n = 2$ eine Ebene, die den Graphen von
-$f$ im Punkt $(\bx, f(\bx))$ berührt, also die Tangentialebene. Sie übernimmt die Rolle, die
-für $n = 1$ die Tangente an den Funktionsgraphen spielt.
+$f$ im Punkt $(\bx, f(\bx))$ berührt, die Tangentialebene. Sie übernimmt die Rolle der
+Tangente aus dem Fall $n = 1$.
 
 :::bemerkung[#zeilenvektor-nicht-spaltenvektor (Zeilenvektor, nicht Spaltenvektor)]
-Vielerorts wird $\nabla f$ als *Spalten*vektor definiert, während
-für uns die Zeilenform die praktischere ist. Wofür genau, zeigt sich
-erst in den nächsten Abschnitten, deshalb hier vorab die zwei Stellen.
+Vielerorts wird $\nabla f$ als *Spalten*vektor definiert. Für uns ist die Zeilenform
+praktischer, und zwar an zwei Stellen der nächsten Abschnitte.
 
 Die Jacobimatrix aus @sec:jacobi hat für $f\colon \R^n \to \R^m$ das Format
 $m \times n$, im Fall $m = 1$ also $\R^{1 \times n}$. In der Zeilenkonvention sind Gradient
@@ -92,17 +82,14 @@ noch ineinander umrechnen. In der Kettenregel dürfen wir die Faktoren außerdem
 Reihenfolge hinschreiben, in der die Funktionen hintereinander ausgeführt werden; in der
 Spaltenkonvention kehrt sich diese Reihenfolge um und die Faktoren tragen Transponierte.
 
-Bezahlen müssen wir dafür an einer anderen Stelle. Wo der Gradient als Punkt oder als
-Schritt im $\R^n$ auftritt, etwa in einem Optimierungsverfahren, steht der
-:k[transponierte]{#transpose} Gradient. Das passiert weiter unten im
-Gradientenabstieg.
+Im Gegenzug steht dort, wo der Gradient als Schritt im $\R^n$ auftritt, der
+:k[transponierte]{#transpose} Gradient, etwa im Gradientenabstieg weiter unten.
 :::
 
 ### Was der Gradient über $f$ verrät
 
-Die Definition zählt nur die Steigungen entlang der $n$ Koordinatenachsen auf. Über
-schräge Richtungen sagt sie scheinbar nichts. Die vollständige Information steckt aber
-schon darin, und @eq:eq-10-2-1 liefert sie.
+Die Definition zählt nur die Steigungen entlang der $n$ Koordinatenachsen auf. Die
+Steigung in jede schräge Richtung steckt trotzdem schon darin, @eq:eq-10-2-1 liefert sie.
 
 :::definition[#richtungsableitung (Richtungsableitung)]
 Sei $\bd \in \R^n$ mit $\left\|\bd\right\|_2 = 1$. Die *Richtungsableitung* von $f$ in $\bx$
@@ -184,14 +171,13 @@ $\corange{\nabla f(\bx)}\bd = 0$ verschwindet in @eq:richtungsableitung der line
 sich in erster Ordnung überhaupt nicht. Solche Richtungen stehen senkrecht auf
 $\corange{\nabla f(\bx)^\top}$. Ist $f$ in einer Umgebung von $\bx$ stetig differenzierbar
 und $\corange{\nabla f(\bx)} \neq \bnull$, so sind sie genau die Tangentialrichtungen der
-:k[Niveaumenge]{#level-sets} $\{\by \in \R^n : f(\by) = f(\bx)\}$ durch $\bx$; diese ist
-dort nach dem Satz über implizite Funktionen eine glatte Kurve oder Fläche, für $n = 2$ also
-die Höhenlinie durch $\bx$. Verschwindet der Gradient dagegen, kann die Niveaumenge eine
-Ecke haben, und ein Beispiel dafür folgt gleich.
+:k[Niveaumenge]{#level-sets} $\{\by \in \R^n : f(\by) = f(\bx)\}$ durch $\bx$, für $n = 2$
+also der Höhenlinie durch $\bx$. Verschwindet der Gradient dagegen, kann die Niveaumenge eine
+Ecke haben; ein Beispiel folgt gleich.
 
-Beide Beobachtungen zusammen ergeben das Bild einer Landkarte: Der Gradient steht
-senkrecht auf der Höhenlinie und zeigt bergauf, und je enger die Höhenlinien beieinander
-liegen, desto größer ist $\left\|\corange{\nabla f(\bx)}\right\|_2$.
+Beide Beobachtungen zusammen: Der Gradient steht senkrecht auf der Höhenlinie und zeigt
+bergauf, und je enger die Höhenlinien beieinander liegen, desto größer ist
+$\left\|\corange{\nabla f(\bx)}\right\|_2$.
 :::
 
 ### Eine quadratische Funktion als Beispiel
@@ -230,46 +216,29 @@ $$
 \cblue{f(1{,}1;\, 1{,}1)} = 7{,}26 .
 $$
 
-Der Restterm ist $\cred{0{,}06}$. Weil $f$ quadratisch ist, können wir ihn sogar exakt
-angeben: Ausmultiplizieren von $f(\bx + \bh)$ liefert
-$\cred{h_1^2 + 3h_1h_2 + 2h_2^2}$, also einen Ausdruck, der quadratisch in $\bh$ ist.
-Halbieren wir $\bh$, so viertelt er sich, während $\left\|\bh\right\|$ nur halb so groß
-wird:
-
-| $\bh$ | Länge von $\bh$ | Restterm | Restterm geteilt durch die Länge |
-| --- | --- | --- | --- |
-| $(0{,}1;\, 0{,}1)$ | $0{,}1414$ | $0{,}06$ | $0{,}424$ |
-| $(0{,}05;\, 0{,}05)$ | $0{,}0707$ | $0{,}015$ | $0{,}212$ |
-| $(0{,}01;\, 0{,}01)$ | $0{,}0141$ | $0{,}0006$ | $0{,}042$ |
-
-Die letzte Spalte geht gegen null, und das ist die Aussage
+Der Restterm ist $\cred{0{,}06}$. Ausmultiplizieren von $f(\bx + \bh)$ gibt ihn exakt als
+$\cred{h_1^2 + 3h_1h_2 + 2h_2^2}$; er ist quadratisch in $\bh$ und damit
 $\cred{o(\left\|\bh\right\|)}$.
 :::
 
-:::interaktiv[Gradient und Höhenlinie zum Verschieben]
-@bemerkung:der-gradient-steht-senkrecht-auf-der behauptet etwas Geometrisches über einen Vektor aus lauter partiellen
-Ableitungen: Er steht senkrecht auf der Höhenlinie. Das lässt sich nachprüfen.
+:::interaktiv[Gradient und Höhenlinie]
+Das Widget prüft @bemerkung:der-gradient-steht-senkrecht-auf-der nach: Links stehen die
+Höhenlinien mit dem orangen Gradientpfeil am gewählten Punkt, rechts dieselbe Funktion als
+Fläche mit der grünen Tangentialebene aus @eq:richtungsableitung.
 
 <Gradientenfeld />
 
-Zwei Tafeln zeigen denselben Zustand: links die Höhenlinien mit dem orangen Gradientpfeil am
-gewählten Punkt, rechts dieselbe Funktion als Fläche über der Ebene, mit der grünen
-Tangentialebene aus @eq:richtungsableitung und demselben Gradientpfeil auf dem Boden.
-
-Im Widget steht der orange Pfeil an jeder Stelle senkrecht auf der blau gestrichelten
-Tangente an die Höhenlinie, und er wird lang, wo die Höhenlinien dicht liegen.
-Der zweite Knopf schaltet auf eine nicht quadratische Funktion um, deren Höhenlinien sich
-krümmen; die Aussage gilt dort unverändert, weil sie punktweise formuliert ist. Im Nullpunkt
-der quadratischen Funktion verschwindet der Gradient ganz, und dann zeichnet sich gar keine
-Richtung mehr aus: Das ist die Stelle, an der die Höhenlinie zum Niveau $0$ aus zwei sich
-kreuzenden Geraden besteht.
+Der orange Pfeil steht an jeder Stelle senkrecht auf der blau gestrichelten Tangente an die
+Höhenlinie und wird lang, wo die Höhenlinien dicht liegen. Das gilt auch für die nicht
+quadratische Funktion hinter dem zweiten Knopf, deren Höhenlinien sich krümmen, denn die
+Aussage ist punktweise. Im Nullpunkt der quadratischen Funktion verschwindet der Gradient,
+und die Höhenlinie zum Niveau $0$ besteht dort aus zwei sich kreuzenden Geraden.
 :::
 
-Damit bleibt die zweite Behauptung, die von @satz:richtung-des-staerksten-anstiegs: Keine Richtung steigt steiler an
-als der Gradient. Wie viel vom maximalen Anstieg bleibt übrig, wenn wir schräg dazu
-laufen?
+Nach @satz:richtung-des-staerksten-anstiegs steigt keine Richtung steiler an als der
+Gradient. Wie viel vom maximalen Anstieg bleibt, wenn wir schräg dazu laufen?
 
-:::interaktiv[Der Kompass der Richtungen]
+:::interaktiv[Richtungsableitung im Kompass]
 Der Kompass zeigt für jede Richtung $\bd$, wie stark $f$ in diese Richtung ansteigt: Der
 Abstand der blauen Kurve vom Mittelpunkt ist $\corange{\nabla f(\bx)}\bd$, gemessen am
 Maximum. Rechts steht der Schnitt von $f$ entlang des Strahls $\bx + t\bd$ samt der linearen
@@ -279,10 +248,10 @@ Näherung aus @eq:richtungsableitung.
 
 Die blaue Kurve ist ein Kreis, der den Mittelpunkt berührt, also der Graph von
 $\theta \mapsto \left\|\corange{\nabla f(\bx)}\right\|_2\cos\theta$ in Polarkoordinaten. Ihr
-weitester Punkt liegt in Gradientenrichtung, dort erreicht die Richtungsableitung ihr
-Maximum $\left\|\corange{\nabla f(\bx)}\right\|_2$ (@satz:richtung-des-staerksten-anstiegs);
-senkrecht dazu, also längs der Höhenlinie, ist sie null. Dazwischen zählt allein der Kosinus
-des eingeschlossenen Winkels; wie viel davon übrig bleibt, zeigt der Knopf „d 60° daneben“.
+weitester Punkt liegt in Gradientenrichtung, wo die Richtungsableitung ihr Maximum
+$\left\|\corange{\nabla f(\bx)}\right\|_2$ erreicht (@satz:richtung-des-staerksten-anstiegs);
+senkrecht dazu, längs der Höhenlinie, ist sie null. Dazwischen zählt allein der Kosinus
+des eingeschlossenen Winkels.
 :::
 
 ### Zwei Gradienten zum Auswendiglernen
@@ -371,7 +340,7 @@ $$
 
 ::::
 
-:::bemerkung[#drei-nachtraege-zu-satz-10-2-8 (Drei Nachträge zu Satz 10.2.8)]
+:::bemerkung[#drei-nachtraege-zu-satz-10-2-8 (Drei Nachträge zur quadratischen Form)]
 **Der Spezialfall $\bA = \bI$.** Dann ist $f(\bx) = \bx^\top\bx = \left\|\bx\right\|_2^2$ und
 @eq:gradient-der-quadratischen-form wird zu $\corange{\nabla f(\bx)} = 2\bx^\top$. Das ist die mehrdimensionale
 Fassung von $(x^2)' = 2x$.
@@ -397,23 +366,21 @@ $$
 2\bx^\top\bA = \begin{pmatrix} 2x_1 + 3x_2 & 3x_1 + 4x_2 \end{pmatrix} ,
 $$
 
-also den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist
-allerdings *nicht* :k[positiv definit]{#positive-definite}, denn ihre Determinante ist
-$1 \cdot 2 - (3/2)^2 = -1/4 < 0$. Die Matrix der zweiten partiellen Ableitungen, die
-:k[Hesse-Matrix]{#hessian-matrix} $2\bA = \bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4
-\end{smallmatrix}\bigr)$, hat entsprechend die Determinante $-1$ und die Eigenwerte
-$3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$. Im Nullpunkt hat $f$ deshalb kein Minimum,
-sondern einen Sattel: In der einen Eigenrichtung steigt $f$, in der anderen fällt es. Im
-Widget oben kreuzen sich dort die beiden Geraden zum Niveau $0$.
+also den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist allerdings
+*nicht* :k[positiv definit]{#positive-definite}: Ihre Determinante ist $-1/4 < 0$, ihre
+beiden Eigenwerte haben also verschiedene Vorzeichen. Im Nullpunkt hat $f$ deshalb kein
+Minimum, sondern einen Sattel; im Widget oben kreuzen sich dort die beiden Geraden zum
+Niveau $0$. Wie die :k[Hesse-Matrix]{#hessian-matrix} solche Punkte
+unterscheidet, klärt @sec:hoehere-ableitungen.
 :::
 
 ### Anwendung: Gradientenabstieg
 
-Die Richtung des stärksten Anstiegs interessiert uns, weil das Standardwerkzeug der
-:k[Optimierung]{#optimization} in hohen Dimensionen darauf beruht. Gesucht sind Parameter
+Auf der Richtung des stärksten Anstiegs beruht das Standardwerkzeug der
+:k[Optimierung]{#optimization} in hohen Dimensionen. Gesucht sind Parameter
 $\btheta \in \R^p$, die eine Verlustfunktion $L(\btheta)$ klein machen, etwa den
-mittleren quadratischen Fehler eines Modells. Für $p$ in der Größenordnung von Millionen
-gibt es keine geschlossene Lösung, wohl aber kleine Schritte bergab.
+mittleren quadratischen Fehler eines Modells; für $p$ in der Größenordnung von Millionen
+gibt es dafür meist keine geschlossene Lösung, wohl aber kleine Schritte bergab.
 
 :::algorithmus[#gradient-gradientenabstieg (Gradientenabstieg)]
 Gegeben eine differenzierbare Verlustfunktion $L\colon \R^p \to \R$, ein Startwert
@@ -426,14 +393,13 @@ $$
 Abgebrochen wird, wenn sich $\btheta$ kaum noch ändert oder der Gradient klein genug ist.
 :::
 
-Nach @satz:richtung-des-staerksten-anstiegs zeigt $-\corange{\nabla L(\btheta)^\top}$ in die Richtung des stärksten
-Abstiegs. Der Algorithmus läuft also in jedem Schritt in die aktuell steilste Richtung
-bergab, und zwar um die Länge $\alpha\left\|\corange{\nabla L(\btheta^{(t)})}\right\|$.
-Dass er damit tatsächlich am Ziel ankommt, hängt an $\alpha$ und an der Gestalt von $L$; das
+Nach @satz:richtung-des-staerksten-anstiegs läuft der Algorithmus in jedem Schritt in die
+aktuell steilste Richtung bergab, um die Länge $\alpha\left\|\corange{\nabla L(\btheta^{(t)})}\right\|$.
+Ob er damit am Ziel ankommt, hängt an $\alpha$ und an der Gestalt von $L$. Das
 :k[Gradientenverfahren]{#gradient-descent} und seine Varianten sind die Grundlage für das
 Training :k[neuronaler Netze]{#neural-network} und für komplexe Regressionsmodelle.
 
-:::bemerkung[#warum-in-gleichung-10-2-4-ein (Warum in Gleichung 10.2.4 ein Transponiertes steht)]
+:::bemerkung[#warum-in-gleichung-10-2-4-ein (Warum im Update ein Transponiertes steht)]
 Das $^\top$ in @eq:gradient-gradientenabstieg ist eine Formatfrage. Die Parameter
 $\btheta^{(t)}$ bilden einen Spaltenvektor in $\R^p$, der Gradient
 $\corange{\nabla L(\btheta^{(t)})}$ nach @definition:gradient dagegen eine Zeile in
@@ -444,7 +410,7 @@ dafür in der Kettenregel (@bemerkung:zeilenvektor-nicht-spaltenvektor).
 :::
 
 Die Lernrate $\alpha$ ist der einzige freie Parameter des Verfahrens. Gibt es eine beste
-Wahl, und woran erkennt man sie?
+Wahl, und woran erkennen wir sie?
 
 :::interaktiv[Gradientenabstieg auf einer konvexen quadratischen Funktion]
 Zum Ausprobieren nehmen wir nicht die Funktion aus @beispiel:gradient-einer-quadratischen-funktion, denn an deren Sattel
@@ -458,16 +424,11 @@ ist $\corange{\nabla L(\btheta)} = \btheta^\top\bA$, der Schritt also $-\alpha\b
 <AbstiegStepper />
 
 Über den Erfolg entscheidet allein die Rate
-$\rho(\alpha) = \max_i \left|1 - \alpha\lambda_i\right|$: Die Lernrate ist durch das
-Verhältnis der Eigenwerte begrenzt, und die beste Wahl ist die, bei der beide
-Eigenrichtungen gleich schnell schrumpfen. Zu kleine Lernraten
-kriechen, zu große lassen die Iterierten davonlaufen; der Knopf „Grenzfall $\alpha =
-2/\lambda_{\max}$“ stellt genau die Schwelle dazwischen ein. Wie eng dieser Spielraum ist, hängt an
-der Hesse-Matrix; @sec:hoehere-ableitungen führt das aus, und @kap:optim nimmt die
-Konvergenzanalyse als eigenes Thema auf. Für die Funktion aus
-@beispiel:gradient-einer-quadratischen-funktion gäbe es dagegen gar kein brauchbares
-$\alpha$: Ihre Hesse-Matrix hat den negativen Eigenwert $-0{,}162$, und entlang dieser
-Eigenrichtung wächst der Abstand zum Sattel bei jeder Lernrate.
+$\rho(\alpha) = \max_i \left|1 - \alpha\lambda_i\right|$; am besten ist die Lernrate, bei der
+beide Eigenrichtungen gleich schnell schrumpfen. Bei zu kleinem $\alpha$ kommen die
+Iterierten kaum voran, oberhalb des Grenzfalls $\alpha = 2/\lambda_{\max}$ (eigener Knopf)
+divergieren sie. Wie eng dieser Spielraum ist, hängt an der Hesse-Matrix
+(@sec:hoehere-ableitungen); @kap:optim nimmt die Konvergenzanalyse als eigenes Thema auf.
 :::
 
 ### Selbsttest
@@ -526,9 +487,9 @@ Verschwindet der Gradient in einem Punkt, so liegt dort ein Minimum von $f$.
 
 Ein verschwindender Gradient sagt nur, dass die lineare Näherung flach ist. Für
 $f(\bx) = x_1^2 + 3x_1x_2 + 2x_2^2$ aus @beispiel:gradient-einer-quadratischen-funktion ist $\nabla f(\bnull) = (0,0)$,
-und der Nullpunkt ist ein Sattel: Die Hesse-Matrix hat die Eigenwerte $6{,}162$ und
-$-0{,}162$, also einen positiven und einen negativen (@bemerkung:drei-nachtraege-zu-satz-10-2-8). Entlang der einen
-Eigenrichtung steigt $f$, entlang der anderen fällt es.
+und der Nullpunkt ist ein Sattel (@bemerkung:drei-nachtraege-zu-satz-10-2-8): Die
+Hesse-Matrix $\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4 \end{smallmatrix}\bigr)$ hat die
+Eigenwerte $6{,}162$ und $-0{,}162$, also einen positiven und einen negativen. Entlang der einen Eigenrichtung steigt $f$, entlang der anderen fällt es.
 :::
 
 :::zahlfrage{loesung=50 toleranz=2 einheit="Prozent"}

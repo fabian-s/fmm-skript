@@ -9,24 +9,20 @@ import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Aus @sec:problem wissen wir, dass das
-:k[Kleinste-Quadrate-Problem]{#linear-least-squares} für
-$\bA \in \R^{m \times n}$ mit $\rang(\bA) = n$ die eindeutige
-Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ besitzt, charakterisiert durch die
+Für $\rang(\bA) = n$ hat das
+:k[Kleinste-Quadrate-Problem]{#linear-least-squares} die eindeutige
+Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$, charakterisiert durch die
 :k[Normalengleichungen]{#normal-equations}
 $\bA^\top\bA\,\wh{\bx} = \bA^\top\bb$ (@satz:problem-normalengleichungen). Das ist
-eine Formel, aber noch kein Rechenverfahren. In diesem Abschnitt entwickeln wir das erste
-und einfachste Lösungsverfahren: Wir lösen die Normalengleichungen mit der
-:k[Cholesky-Zerlegung]{#cholesky-factorization} und sehen dann,
-warum dieser bequeme Weg numerisch problematisch ist. Das motiviert am Ende des Abschnitts
-die orthogonalen Transformationen, die uns im Rest des Kapitels beschäftigen werden.
+eine Formel, aber noch kein Rechenverfahren. Das erste und einfachste Verfahren löst
+die Normalengleichungen mit der :k[Cholesky-Zerlegung]{#cholesky-factorization}.
+Es ist schnell, aber numerisch problematisch, und das führt uns auf orthogonale
+Transformationen.
 
 ### Warum wir niemals invertieren :id[warum-wir-niemals-invertieren]
 
-Wie berechnen wir $\wh{\bx}$ konkret? Gegeben ist eine R-Funktion, die die Lösungsformel
-$\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ wörtlich umsetzt: Sie
-bildet also erst die :k[Inverse]{#matrix-inverse} von
-$\bA^\top\bA$ und multipliziert dann:
+Die folgende R-Funktion setzt die Lösungsformel wörtlich um: Sie bildet erst die
+:k[Inverse]{#matrix-inverse} von $\bA^\top\bA$ und multipliziert dann.
 
 ```r
 kq_solve <- function(A, b) {
@@ -34,7 +30,7 @@ kq_solve <- function(A, b) {
 }
 ```
 
-*Aufgabe: Finde den Fehler in der Funktion.* Der Fehler ist kein Tippfehler,
+*Aufgabe: Wo steckt der Fehler in dieser Funktion?* Der Fehler ist kein Tippfehler,
 sondern der Ansatz selbst:
 
 :::bemerkung[#merkregel (Merkregel)]
@@ -43,41 +39,37 @@ sondern der Ansatz selbst:
 Die Formel $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$ ist ein
 *mathematisches* Objekt, keine Rechenvorschrift. Numerisch lösen wir stattdessen
 das lineare Gleichungssystem
-$(\bA^\top\bA)\,\wh{\bx} = \bA^\top\bb$, mit einer geeigneten
-Zerlegung der Matrix.
+$(\bA^\top\bA)\,\wh{\bx} = \bA^\top\bb$ mit einer geeigneten
+Zerlegung der Matrix. In R heißt das `solve(M, c)` statt `solve(M)`, mit
+$\bM = \bA^\top\bA$ und $\bc = \bA^\top\bb$.
 :::
 
-Warum ist das explizite Invertieren so schlecht? Erstens ist es teurer: Die Inverse zu
-berechnen heißt, $n$ lineare Gleichungssysteme zu lösen (eines pro Spalte von
-$\bI$), obwohl wir nur die Lösung zu *einer* rechten Seite brauchen.
-Zweitens bringt die anschließende Multiplikation zusätzliche
-:k[Rundungsfehler]{#rounding-error}, ohne für eine einzelne rechte Seite einen
-Genauigkeitsvorteil zu bieten; eine stabile Zerlegung mit Substitution löst dasselbe
-System direkter. Das heißt nicht, dass das Berechnen einer Inversen grundsätzlich
-instabil wäre, nur, dass sie hier das falsche Zwischenprodukt ist. Drittens kann die
-Inverse Struktur zerstören:
-Die Inverse einer
-:k[dünnbesetzten]{#sparse-matrix} Matrix ist typischerweise
-voll besetzt. Wie beim
-:k[Gauß-Verfahren]{#gaussian-elimination} mit seiner
-:k[LR-Zerlegung]{#lu-decomposition} gilt also: Zerlegen und
-substituieren statt invertieren.
+Explizites Invertieren ist teurer: Die Inverse zu berechnen heißt, $n$ lineare
+Gleichungssysteme zu lösen (eines pro Spalte von $\bI$), obwohl wir nur die Lösung zu
+*einer* rechten Seite brauchen. Die anschließende Multiplikation bringt zusätzliche
+:k[Rundungsfehler]{#rounding-error} ohne Genauigkeitsvorteil; eine stabile Zerlegung
+mit Substitution löst dasselbe System direkter. Grundsätzlich instabil ist das
+Invertieren nicht, die Inverse ist hier nur das falsche Zwischenprodukt. Außerdem
+zerstört sie Struktur: Die Inverse einer :k[dünnbesetzten]{#sparse-matrix} Matrix ist
+typischerweise voll besetzt. Wie beim :k[Gauß-Verfahren]{#gaussian-elimination} mit
+seiner :k[LR-Zerlegung]{#lu-decomposition} gilt also: zerlegen und substituieren statt
+invertieren.
 
 ### Das Cholesky-Verfahren :id[das-cholesky-verfahren]
 
-Welche Zerlegung passt zu $\bA^\top\bA$? Die entscheidende Struktur haben wir im
-Beweis von @satz:eindeutige-loesung-bei-vollem schon gesehen: Für $\rang(\bA) = n$ ist
+Welche Zerlegung passt zu $\bA^\top\bA$? Für $\rang(\bA) = n$ ist
 $\bA^\top\bA$ :k[symmetrisch]{#symmetric-matrix}, denn
 $(\bA^\top\bA)^\top = \bA^\top\bA$, und :k[positiv definit]{#positive-definite}, denn
 $\bx^\top(\bA^\top\bA)\bx = \left\| \bA\bx \right\|_2^2 > 0$ für jedes
-$\bx \neq \bnull$.
+$\bx \neq \bnull$ (die Spalten von $\bA$ sind linear unabhängig, also ist
+$\bA\bx \neq \bnull$).
 
 Symmetrisch positiv definit, kurz *SPD* (engl. *symmetric positive
 definite*): das ist die Klasse von Matrizen, für die die
 :k[Cholesky-Zerlegung]{#cholesky-factorization}
 $\bM = \bL\bL^\top$ mit einer unteren
 :k[Dreiecksmatrix]{#triangular-matrix} $\bL$
-existiert. Damit zerfällt das KQ-Problem in eine Kette einfacher Teilschritte:
+existiert. Damit zerfällt das KQ-Problem in einfache Teilschritte:
 
 :::algorithmus[#cholesky-verfahren-fuer-das-kq-problem (Cholesky-Verfahren für das KQ-Problem)]
 1. Berechne $\cbred{\bM} = \bA^\top\bA$ und
@@ -90,25 +82,20 @@ existiert. Damit zerfällt das KQ-Problem in eine Kette einfacher Teilschritte:
 :::
 
 Schritt 1 ersetzt das $m \times n$-Ausgangsproblem durch ein quadratisches
-$n \times n$-Gleichungssystem. Die Schritte 2–4 lösen dieses System dann so,
-wie wir es von der LR-Zerlegung kennen: zerlegen, dann zweimal substituieren, denn
-Dreieckssysteme können wir direkt auflösen.
+$n \times n$-System, die Schritte 2 bis 4 lösen es wie bei der LR-Zerlegung: zerlegen,
+dann zweimal substituieren.
 
 :::beispiel[#beispiel-7-3-6]
-Wie im Wohnungspreis-@beispiel:rechenbeispiel-regressionsgerade-durch aus
-@sec:problem fitten wir eine
-:k[Regressionsgerade]{#linear-regression}
-$y = \beta_0 + \beta_1 x$, diesmal mit bewusst kleinen Zahlen, durch die
+Wir legen eine :k[Regressionsgerade]{#linear-regression}
+$y = \beta_0 + \beta_1 x$ wie in @beispiel:lineare-regression durch die
 drei Punkte $(1, 2),\ (2, 3),\ (3, 5)$:
 
 $$
 \bA = \begin{pmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{pmatrix}, \qquad \bb = \begin{pmatrix} 2 \\ 3 \\ 5 \end{pmatrix}.
 $$
 
-Dabei landen die $x$-Werte $1, 2, 3$ der Datenpunkte in der
-*zweiten* Spalte von $\bA$ (die Einser-Spalte davor gehört zum
-Achsenabschnitt $\beta_0$), und die $y$-Werte
-$2, 3, 5$ bilden den Vektor $\bb$.
+Die $x$-Werte stehen in der *zweiten* Spalte von $\bA$, die Einser-Spalte gehört zum
+Achsenabschnitt $\beta_0$.
 
 **Schritt 1:** $\cbred{\bM}$ und $\cbgreen{\bc}$
 aufstellen.
@@ -175,34 +162,32 @@ liegt im ersten Schritt.
 :::bemerkung[#stabilitaet-des-cholesky-verfahrens (Stabilität des Cholesky-Verfahrens)]
 - Fehler, die beim Aufstellen von $\bA^\top\bA$ passieren, beeinflussen
   alle folgenden Schritte; kein späterer Schritt kann sie reparieren.
-- Man kann zeigen: Der relative algorithmische Fehler ist bestenfalls
-  $O\!\left(\kappa_2(\bA)^2\right)$.
+- Man kann zeigen: Der relative algorithmische Fehler ist typischerweise von der
+  Größenordnung $\kappa_2(\bA)^2\,\eps_{\text{mach}}$
+  (:k[Maschinengenauigkeit]{#machine-epsilon} $\eps_{\text{mach}} \approx 2{,}2 \cdot 10^{-16}$).
 - Zum Vergleich: Die Best-Case-:k[Kondition]{#condition-number}
   des KQ-Problems selbst ist $O\!\left(\kappa_2(\bA)\right)$
   (@sec:kondition).
 :::
 
-Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit $\bA^\top\bA$, und
-deren Konditionszahl ist
-$\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$, denn die Singulärwerte von
-$\bA^\top\bA$ sind die Quadrate der Singulärwerte von $\bA$. Diese
-quadrierte Kondition erben alle weiteren Schritte, ganz gleich, wie empfindlich das
-eigentliche KQ-Problem ist. Am deutlichsten ist das im günstigsten Fall: Bei kleinem
-Residuum gilt $\kappa \approx \kappa_2(\bA)$, der Algorithmus verstärkt
-Fehler aber trotzdem mit $\kappa_2(\bA)^2$. Er ist also deutlich
-fehleranfälliger, als die Kondition des Problems erzwingt. Solche Verfahren nennen
-wir *instabil*. Es gibt noch einen zweiten Effekt, den die Konditionszahl allein
-gar nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
-:k[Gleitkommaarithmetik]{#floating-point} kann Information
-über die Spalten von $\bA$ verloren gehen. Im Extremfall macht ein einziger
-Rundungsschritt aus einer Matrix mit vollem Spaltenrang eine numerisch singuläre.
+Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit $\bA^\top\bA$, deren
+Singulärwerte die Quadrate der Singulärwerte von $\bA$ sind; also ist
+$\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$. Diese quadrierte Kondition erben alle
+weiteren Schritte, gleich wie empfindlich das KQ-Problem selbst ist. Bei kleinem
+Residuum gilt $\kappa \approx \kappa_2(\bA)$, der Algorithmus verstärkt Fehler aber
+trotzdem mit $\kappa_2(\bA)^2$: Er ist deutlich fehleranfälliger, als die Kondition des
+Problems erzwingt, also *instabil*. Dazu kommt ein zweiter Effekt, den die
+Konditionszahl nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
+:k[Gleitkommaarithmetik]{#floating-point} kann Information über die Spalten von $\bA$
+verloren gehen. Im Extremfall macht ein einziger Rundungsschritt aus einer Matrix mit
+vollem Spaltenrang eine numerisch singuläre.
 
 :::interaktiv[Wann verliert die Kreuzproduktmatrix ihren Rang?]
-<p className="mb-2 text-sm">Sehen wir uns eine Matrix an, bei der der ganze Unterschied zwischen den Spalten in einem einzigen kleinen Summanden steckt. Das Widget führt die kritische Addition in der Gleitkommaarithmetik des Browsers aus.</p>
+<p className="mb-2 text-sm">Bei der folgenden Matrix steckt der ganze Unterschied zwischen den Spalten in einem einzigen kleinen Summanden. Das Widget führt die kritische Addition in der Gleitkommaarithmetik des Browsers aus.</p>
 
 <S73KreuzproduktWidget />
 
-<p className="mt-2 text-sm">Sobald $\eps^2$ unter die Maschinengenauigkeit rutscht, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert: Ein Verfahren, das direkt mit $\bA$ arbeitet, merkt von dem Problem nichts. Diesen Effekt erfasst die Konditionszahl allein nicht: Es geht Information verloren, bevor überhaupt gerechnet wird.</p>
+<p className="mt-2 text-sm">Sobald $\eps^2$ höchstens die halbe Maschinengenauigkeit beträgt, hat $\operatorname{fl}(\bA^\top\bA)$ zwei identische Spalten und damit Rang 1. An $\bA$ selbst ist bei diesem $\eps$ nichts passiert; ein Verfahren, das direkt mit $\bA$ arbeitet, merkt davon nichts. Die Information geht verloren, bevor der Löser überhaupt rechnet.</p>
 :::
 
 ### Alternative Lösungswege: orthogonale Transformationen :id[alternative-loesungswege-orthogonale]
@@ -215,7 +200,7 @@ $$
 $$
 
 Die Idee: Wir transformieren das Problem mit einer Matrix $\bQ$ zu einem
-„einfacheren" Problem $\bQ\bA\bx \approx \bQ\bb$, ohne die Lösung zu
+„einfacheren“ Problem $\bQ\bA\bx \approx \bQ\bb$, ohne die Lösung zu
 ändern. Wann ändert sich die Lösung nicht? Wenn die Zielfunktion für *jedes*
 $\bx$ denselben Wert behält, das Transformieren also alle Normen unangetastet
 lässt. Das leisten
@@ -227,27 +212,26 @@ $$
 \left\| \bQ\bA\bx - \bQ\bb \right\|_2 = \left\| \bQ(\bA\bx - \bb) \right\|_2 = \left\| \bA\bx - \bb \right\|_2.
 $$
 
-Die erste Gleichheit ist nur Ausklammern, die zweite die Norminvarianz orthogonaler
-Matrizen, die wir dort nachrechnen. Jedes $\bx$ liefert im transformierten Problem
-also exakt denselben Zielfunktionswert wie im ursprünglichen; insbesondere stimmen die
-Minimierer überein.
+Die erste Gleichheit ist Ausklammern, die zweite die Norminvarianz orthogonaler
+Matrizen:
+$\left\| \bQ\bz \right\|_2 = \sqrt{\bz^\top\bQ^\top\bQ\bz} = \sqrt{\bz^\top\bz} = \left\| \bz \right\|_2$.
+Jedes $\bx$ liefert im transformierten Problem also denselben Zielfunktionswert wie im
+ursprünglichen; insbesondere stimmen die Minimierer überein.
 
-Vorsicht: Nicht jede Transformation, die ein System „einfacher" macht, ist hier erlaubt.
-Das :k[Gauß-Verfahren]{#gaussian-elimination} etwa bringt
-$\bA$ zwar auf Dreiecksform, aber seine Eliminationsschritte sind Scherungen:
-Sie verzerren Längen und würden den Minimierer verschieben. Für KQ-Probleme brauchen wir
-die norm-erhaltenden Transformationen:
-:k[Drehungen]{#rotation-matrix} und
-:k[Spiegelungen]{#reflection}. Wie wir mit ihnen
-$\bQ\bA$ gezielt auf Dreiecksform bringen (die
-*QR-Zerlegung*), ist das Thema von @sec:qr und @sec:givens-householder.
+Nicht jede Transformation, die ein System „einfacher“ macht, ist hier erlaubt. Das
+:k[Gauß-Verfahren]{#gaussian-elimination} bringt $\bA$ zwar auf Dreiecksform, seine
+Eliminationsschritte sind aber Scherungen: Sie verzerren Längen und würden den
+Minimierer verschieben. Zulässig sind nur normerhaltende Transformationen, also
+:k[Drehungen]{#rotation-matrix} und :k[Spiegelungen]{#reflection}. Wie wir mit ihnen
+$\bQ\bA$ gezielt auf Dreiecksform bringen (die *QR-Zerlegung*), zeigen @sec:qr und
+@sec:givens-householder.
 
 :::interaktiv[Welche Abbildungen erhalten Längen, und welche nicht?]
-<p className="mb-2 text-sm">Wir probieren drei Kandidaten durch: eine Drehung, eine Spiegelung und einen Eliminationsschritt des Gauß-Verfahrens. Zwei davon dürfen wir auf ein KQ-Problem anwenden, einen nicht.</p>
+<p className="mb-2 text-sm">Drei Kandidaten stehen zur Wahl: eine Drehung, eine Spiegelung und ein Eliminationsschritt des Gauß-Verfahrens. Welche davon dürfen wir auf ein KQ-Problem anwenden?</p>
 
 <S73NormerhaltungWidget />
 
-<p className="mt-2 text-sm">Drehung und Spiegelung bilden den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse; einzelne Vektoren behalten dabei zufällig ihre Länge, alle zusammen aber nicht. Dass $\det \bM = 1$ bleibt, hilft nichts, denn Flächentreue ist nicht Längentreue. Deshalb sind für KQ-Probleme nur die orthogonalen Transformationen zugelassen.</p>
+<p className="mt-2 text-sm">Drehung und Spiegelung bilden den Einheitskreis auf sich selbst ab, die Scherung dagegen auf eine Ellipse; einzelne Vektoren behalten dabei zufällig ihre Länge, alle zusammen aber nicht. Dass $\det \bM = 1$ bleibt, hilft nichts, denn Flächentreue ist nicht Längentreue.</p>
 :::
 
 ### Selbsttest
@@ -258,8 +242,8 @@ $\bQ\bA$ gezielt auf Dreiecksform bringen (die
 Im Widget oben lässt sich $\eps = 10^{-k}$ einstellen. Ab welchem $k$ speichert der Rechner
 $\operatorname{fl}(1 + \eps^2)$ als glatte 1?
 
-Sobald $\eps^2$ unter $\eps_{\text{mach}} = 2^{-52}$ rutscht, verschwindet es in der
-Addition. Das passiert ab $\eps \le 2^{-26{,}5} \approx 1{,}05\cdot 10^{-8}$, also ab
+Sobald $\eps^2$ höchstens $2^{-53}$ ist, die Hälfte von $\eps_{\text{mach}} = 2^{-52}$,
+verschwindet es in der Addition. Das passiert ab $\eps \le 2^{-26{,}5} \approx 1{,}05\cdot 10^{-8}$, also ab
 $k \approx 8$. Ab dort sind die beiden Spalten der gespeicherten Matrix identisch, ihr Rang
 ist 1, und die Cholesky-Zerlegung aus @algorithmus:cholesky-verfahren-fuer-das-kq-problem bricht ab.
 :::
@@ -287,8 +271,8 @@ der Minimierer. Orthogonalmatrizen lassen beides unangetastet.
 Weil $\bA^\top\bA$ nur $n \times n$ groß ist, ist der Weg über die Normalengleichungen bei
 großem $m$ auch numerisch der beste.
 
-Klein ist er, schnell auch, aber die Verkleinerung ist der Schritt, der die
-Konditionszahl quadriert. Effizienz und Stabilität stehen hier gegeneinander; den
+Das System ist klein und schnell gelöst, aber gerade der Übergang zu $\bA^\top\bA$
+quadriert die Konditionszahl. Effizienz und Stabilität stehen hier gegeneinander; den
 Vergleich rechnen wir in @sec:pseudoinverse aus.
 :::
 

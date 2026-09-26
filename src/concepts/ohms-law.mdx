@@ -4,27 +4,25 @@ import { OhmWidget } from "./widgets/OhmsLawWidget";
 
 {/* Konzept-Tooltip: Ohmsches Gesetz, V = iR, mit Mini-Plot zur Linearität. */}
 
-Das Ohmsche Gesetz beschreibt, wie elektrischer Strom durch einen
-Widerstand fließt (stellen wir uns eine enge Stelle in einem Rohr
-vor, durch die sich der Strom quetschen muss). Schicken wir einen
-Strom $i$ durch einen *ohmschen* Widerstand – einen mit über den
-Betriebsbereich konstantem $R$, etwa bei fester Temperatur –, wächst der
-Spannungsabfall $V$ darüber in strenger Proportion:
+Das *Ohmsche Gesetz* beschreibt, wie elektrischer Strom durch einen
+Widerstand fließt. Schicken wir einen
+Strom $i$ durch einen *ohmschen* Widerstand (einen mit über den
+Betriebsbereich konstantem $R$, etwa bei fester Temperatur), so ist der
+Spannungsabfall $V$ darüber proportional zu $i$:
 
 $$
 V = i\,R,
 $$
 
-wobei $R$ die Proportionalitätskonstante ist. Ein
+mit $R$ als Proportionalitätskonstante. Ein
 Strom von $3\,\mathrm{A}$ durch $2\,\Omega$ lässt die Spannung um
 $6\,\mathrm{V}$ fallen; verdoppeln wir den Strom, verdoppelt sich der
-Abfall auf $12\,\mathrm{V}$. Diese strenge Proportionalität macht das
+Abfall auf $12\,\mathrm{V}$. Diese Proportionalität macht das
 Gesetz *linear*. Bauteile mit gekrümmter Kennlinie, etwa Dioden, gehorchen
 ihr nicht.
 
-Das Ohmsche Gesetz ist auch der Motor hinter einem klassischen
-Beispiel für lineare Gleichungssysteme (vgl. Heath Kap. 2, Beispiel
-2.1): Laufen wir einmal um jede Masche eines Stromkreises herum,
+Daraus entsteht ein Standardbeispiel für lineare Gleichungssysteme
+(vgl. Heath Kap. 2, Beispiel 2.1): Laufen wir einmal um jede Masche eines Stromkreises herum,
 trägt jeder Widerstand einen Spannungsabfall der Form
 (Widerstand)&nbsp;&times;&nbsp;(Strom) bei. Jede Masche liefert also
 eine lineare Gleichung in den unbekannten Strömen, und der
@@ -34,5 +32,6 @@ Wie zeigt sich der Widerstandswert im Bild? Vergleichen wir zwei Widerstände:
 
 <OhmWidget />
 
-Er ist nichts als die Steigung: der doppelte Widerstand ergibt die doppelt so
-steile Ursprungsgerade.
+Der Widerstand ist die Steigung der Ursprungsgeraden: Bei
+$i = 1{,}5\,\mathrm{A}$ fallen an $2\,\Omega$ $3\,\mathrm{V}$ ab, an
+$4\,\Omega$ doppelt so viel.

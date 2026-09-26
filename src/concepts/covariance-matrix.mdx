@@ -7,14 +7,13 @@ $\bx = (x_1, \dotsc, x_n)^\top$ ist die Kovarianzmatrix
 $\bSigma$ die $n \times n$
 :k[Matrix]{#matrix} mit Eintrag
 $\operatorname{Cov}(x_i, x_j)$ an Position
-$(i, j)$. Reine Buchhaltung für die Varianzen und
+$(i, j)$. Sie sammelt die Varianzen und
 Kovarianzen aus Statistik I: Auf der Diagonalen stehen die Varianzen
 der einzelnen Koordinaten, und jeder Nebendiagonal-Eintrag hält fest,
-wie stark sich ein Koordinatenpaar gemeinsam bewegt. Ein winziges
-Beispiel:
+wie stark sich ein Koordinatenpaar gemeinsam bewegt. Beispiel:
 
 $$
-\bSigma = \begin{pmatrix} 1 & 0.8 \\ 0.8 & 1 \end{pmatrix}
+\bSigma = \begin{pmatrix} 1 & 0{,}8 \\ 0{,}8 & 1 \end{pmatrix}
 $$
 
 besagt: Beide Koordinaten haben Varianz $1$ und sind stark
@@ -26,17 +25,16 @@ $\ba^\top \bSigma\, \ba = \operatorname{Var}(\ba^\top \bx) \geq 0$
 für jedes $\ba$ gilt, ist sie außerdem
 :k[positiv semidefinit]{#positive-definite}
 (positiv definit, außer die Verteilung ist in eine
-niedrigerdimensionale Ebene plattgedrückt). Das ist genau, was die
-Cholesky-Zerlegung braucht (vgl. MML §4.3): Wir faktorisieren
-$\bSigma = \bL\bL^\top$, schicken billiges unabhängiges
-standardnormalverteiltes Rauschen $\bz$ durch
-$\bL$, und $\bL\bz$ hat exakt die Kovarianz
-$\bSigma$, der Standardweg, um aus einer multivariaten
-Normalverteilung zu ziehen; für rangdefizites $\bSigma$ allerdings erst mit
-einer semidefiniten Cholesky-Variante.
+niedrigerdimensionale Ebene plattgedrückt). Im positiv definiten Fall lässt
+sich $\bSigma = \bL\bL^\top$ per Cholesky zerlegen, und $\bL\bz$ mit
+unabhängigem standardnormalverteiltem $\bz$ hat exakt die Kovarianz
+$\bSigma$: So ziehen wir aus einer multivariaten Normalverteilung
+(vgl. MML §4.3).
 
-Wie verändert die Korrelation zugleich die Richtung und die schmale Achse der Punktwolke?
+Wie verändert die Korrelation $\rho$ Richtung und Form der Punktwolke?
 
 <CovScatterWidget />
 
-Die Kovarianzmatrix bestimmt damit neben den Streuungen auch die geometrische Ausrichtung gemeinsamer Variation.
+Das Vorzeichen von $\rho$ legt die Richtung der Hauptachse fest, sein Betrag
+staucht die Wolke quer dazu; bei $\rho \to \pm 1$ fällt sie auf eine Gerade
+zusammen, und $\bSigma$ wird singulär.

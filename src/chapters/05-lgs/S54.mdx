@@ -2,13 +2,11 @@ import { CholeskyStepper } from "./widgets/CholeskyStepper";
 import { CholeskySampler } from "./widgets/CholeskySampler";
 import { SpdRichtung } from "./widgets/SpdRichtung";
 
-Die [LU-Zerlegung](#sec-5.3) funktioniert, notfalls mit Pivotierung, für
-jede invertierbare Matrix. Viele Matrizen, die uns in der Statistik
-begegnen, haben aber deutlich mehr Struktur: Sie sind
-:k[symmetrisch]{#symmetric-matrix}, und ihre
-:k[quadratische Form]{#quadratic-form} ist strikt positiv. Es lohnt sich,
-diese Struktur auszunutzen. Für solche Matrizen gibt es eine
-maßgeschneiderte Zerlegung, die mit halbem Aufwand auskommt und ganz ohne
+Die LU-Zerlegung (@sec:lu) funktioniert, notfalls mit Pivotierung, für
+jede invertierbare Matrix. Viele Matrizen der Statistik haben aber mehr
+Struktur: Sie sind :k[symmetrisch]{#symmetric-matrix}, und ihre
+:k[quadratische Form]{#quadratic-form} ist strikt positiv. Für sie gibt es
+eine maßgeschneiderte Zerlegung, die mit halbem Aufwand auskommt und ohne
 Pivotierung stabil bleibt: die Cholesky-Zerlegung.
 
 ### SPD-Matrizen
@@ -24,52 +22,50 @@ Eine Matrix $\bA \in \R^{n \times n}$ heißt *SPD*, wenn
 :::
 
 Verlangen wir statt der strikten Ungleichung nur
-$\bx^\top \bA \bx \geq 0$, und zwar für alle $\bx \in \R^n$, heißt $\bA$
-*positiv semidefinit*. Den Nullvektor müssen wir dabei nicht mehr
-ausnehmen, denn $\bnull^\top \bA \bnull = 0$ erfüllt die Bedingung
-ohnehin. Der Unterschied zur Definitheit wirkt klein, entscheidet aber
-später darüber, ob die Cholesky-Zerlegung ohne Zusatztricks durchläuft.
+$\bx^\top \bA \bx \geq 0$ für alle $\bx \in \R^n$, heißt ein symmetrisches
+$\bA$ *positiv semidefinit* (PSD); den Nullvektor müssen wir dann nicht mehr
+ausnehmen. Der Unterschied wirkt klein, entscheidet aber später darüber, ob
+die Cholesky-Zerlegung ohne Zusatztricks durchläuft.
 
 :::interaktiv[Welche Richtung widerlegt positive Definitheit?]
-Eine Richtung kann positive Definitheit widerlegen, aber niemals beweisen.
-Finden wir die Richtung, die den Gegenbeweis liefert.
+Eine einzelne Richtung kann positive Definitheit widerlegen, aber nie
+beweisen. Suchen wir eine Richtung, die den Gegenbeweis liefert.
 
 <SpdRichtung />
 
-Wie das Widget zeigt, genügt ein Vektor mit $\bx^\top\bA\bx \leq 0$; für SPD
-muss die strikte Ungleichung dagegen in jeder Richtung gelten.
+Bei $\operatorname{diag}(1, -1)$ ist $\bx^\top\bA\bx$ strikt zwischen
+$45^\circ$ und $135^\circ$ sowie zwischen $225^\circ$ und $315^\circ$
+negativ und bei $45^\circ$, $135^\circ$, $225^\circ$ und $315^\circ$ genau
+null; jede dieser Richtungen widerlegt positive Definitheit. Bei
+$\operatorname{diag}(2, 1)$ bleibt der Wert in jeder Richtung positiv.
 :::
 
-Das wichtigste Beispiel aus der Statistik: Jede
-:k[Kovarianzmatrix]{#covariance-matrix} $\bSigma = \var(\bx)$ ist
-symmetrisch und positiv semidefinit, denn für jeden festen Vektor
-$\ba \neq \bnull$ ist $\ba^\top \bSigma \ba = \var(\ba^\top \bx) \geq 0$,
-eine Varianz. SPD ist $\bSigma$ genau dann, wenn keine nichttriviale
-Linearkombination $\ba^\top \bx$ mit $\ba \neq \bnull$ fast sicher
-konstant ist, die Verteilung also nicht auf einer Hyperebene
-zusammenfällt.
+### SPD- und PSD-Matrizen in Statistik und ML
 
-### SPD-Matrizen in Statistik und ML
+In Statistik und maschinellem Lernen treten SPD- und PSD-Matrizen vor allem
+in drei Familien auf:
 
-In Statistik und maschinellem Lernen treten SPD-Matrizen vor allem in drei
-Familien auf:
-
-1. **Kovarianzmatrizen** $\bSigma = \E[(\bx - \bmu)(\bx - \bmu)^\top]$:
-   Sie parametrisieren multivariate Normalverteilungen
-   $\Ncal_p(\bmu, \bSigma)$ und stehen im Zentrum der
-   Hauptkomponentenanalyse (PCA).
+1. **:k[Kovarianzmatrizen]{#covariance-matrix}**
+   $\bSigma = \E[(\bx - \bmu)(\bx - \bmu)^\top]$ sind stets positiv
+   semidefinit, denn für jeden festen Vektor $\ba$ ist
+   $\ba^\top \bSigma \ba = \var(\ba^\top \bx) \geq 0$ eine Varianz. SPD ist
+   $\bSigma$ genau dann, wenn keine Linearkombination $\ba^\top \bx$ mit
+   $\ba \neq \bnull$ fast sicher konstant ist, die Verteilung also nicht
+   auf einer Hyperebene liegt. Kovarianzmatrizen parametrisieren
+   multivariate Normalverteilungen $\Ncal_p(\bmu, \bSigma)$ und stehen im
+   Zentrum der Hauptkomponentenanalyse (PCA).
 2. **Gram-Matrizen** $\bK = \bX^\top \bX$, etwa für eine Designmatrix
    $\bX$ in der Regression: Sie bilden die linke Seite der
    :k[Normalgleichungen]{#normal-equations}
    $\bX^\top \bX \bbeta = \bX^\top \by$ für
-   *Kleinste-Quadrate*-Probleme ([Kapitel 7](?k=07-kq#sec-7.3)). SPD ist
+   *Kleinste-Quadrate*-Probleme (@sec:kq/normalengleichungen). SPD ist
    $\bK$ genau dann, wenn $\bX$ vollen Spaltenrang hat; sonst bleibt nur
    positive Semidefinitheit. Auch Kernel-Matrizen in Support Vector
    Machines, Gauß-Prozessen und der nichtparametrischen Glättung gehören
    in diese Familie.
-3. **Hesse-Matrizen**
-   $\bH = \bigl[\tfrac{\partial^2}{\partial x_i \partial x_j} f(\bx)\bigr]_{i,j}$
-   (:k[Hesse-Matrix]{#hessian-matrix}): In der Optimierung
+3. **:k[Hesse-Matrizen]{#hessian-matrix}**
+   $\bH = \bigl[\tfrac{\partial^2}{\partial x_i \partial x_j} f(\bx)\bigr]_{i,j}$:
+   In der Optimierung
    charakterisieren sie :k[Konvexität]{#convexity} und bilden die Grundlage
    des :k[Newton-Verfahrens]{#newtons-method} und anderer Optimierer zweiter
    Ordnung. Ihr statistisches Gegenstück ist die Fisher-Information
@@ -78,20 +74,19 @@ Familien auf:
 
 Warum lohnt sich diese Klasse für die Numerik? SPD-Matrizen garantieren:
 
-- Existenz der Cholesky-Zerlegung (@satz:cholesky-zerlegung unten); legen wir die
-  Diagonale von $\bL$ auf positive Werte fest, ist die Zerlegung sogar
-  eindeutig.
-- [Numerische Stabilität](?k=04-fehler#sec-4.3) ganz ohne Pivotierung.
-- Alle :k[Eigenwerte]{#eigenvalue-eigenvector} sind positiv, insbesondere
-  hat $\bA$ vollen :k[Rang]{#rank} und ist invertierbar.
+- Existenz und, bei positiver Diagonale von $\bL$, Eindeutigkeit der
+  Cholesky-Zerlegung (@satz:cholesky-zerlegung),
+- ihre numerische Stabilität (im Sinne von @sec:fehler/stabilitaet) auch ohne
+  Pivotierung,
+- lauter positive :k[Eigenwerte]{#eigenvalue-eigenvector}, also vollen
+  :k[Rang]{#rank} und Invertierbarkeit.
 
 ### Der Zerlegungssatz
 
 Bei einer symmetrischen Matrix steckt die gesamte Information schon in
-einer Dreieckshälfte, und die Zerlegung sollte das ausnutzen. Für
-SPD-Matrizen können wir die Faktoren
-$\bL$ und $\bU$ der LU-Zerlegung so wählen, dass $\bU = \bL^\top$ gilt:
-Die Symmetrie von $\bA$ vererbt sich an die Zerlegung.
+einer Dreieckshälfte. Für SPD-Matrizen können wir die Faktoren $\bL$ und
+$\bU$ der LU-Zerlegung so wählen, dass $\bU = \bL^\top$ gilt: Die Symmetrie
+von $\bA$ vererbt sich an die Zerlegung.
 
 :::satz[#cholesky-zerlegung (Cholesky-Zerlegung)]
 Jede SPD-Matrix $\bA \in \R^{n \times n}$ lässt sich zerlegen als
@@ -100,20 +95,21 @@ $$ {#eq-cholesky-zerlegung}
 \bA = \bL \bL^\top ,
 $$
 
-wobei $\bL$ eine untere :k[Dreiecksmatrix]{#triangular-matrix} ist.
+wobei $\bL$ eine untere :k[Dreiecksmatrix]{#triangular-matrix} mit
+positiven Diagonaleinträgen $l_{ii} > 0$ ist. Diese Zerlegung ist eindeutig.
 :::
 
-Statt zweier verschiedener Faktoren speichern wir nur noch $\bL$, und auch
-die Rechnung halbiert sich: Die Cholesky-Zerlegung kommt mit rund $n^3/6$
-Multiplikationen aus, die volle LU-Zerlegung derselben Matrix braucht rund
-$n^3/3$ (@sec:lu). An der Größenordnung $O(n^3)$ ändert
-das nichts (@sec:algos/landau), an der Rechenzeit sehr
-wohl.
+Statt zweier Faktoren speichern wir nur noch $\bL$, und auch die Rechnung
+halbiert sich: Die Cholesky-Zerlegung kommt mit rund $n^3/6$
+Multiplikationen aus, die LU-Zerlegung derselben Matrix braucht rund
+$n^3/3$ (@sec:lu). An der Größenordnung $O(n^3)$ ändert das nichts, an der
+Rechenzeit sehr wohl. Die Normierung $l_{ii} > 0$ braucht es für die
+Eindeutigkeit: Ohne sie dürften wir in einer beliebigen Spalte von $\bL$
+alle Vorzeichen umdrehen, ohne $\bL\bL^\top$ zu verändern.
 
-:::::vertiefung[Warum die Zerlegung immer existiert: der Induktionsbeweis]
-Der Beweis ist eine Induktion über die Dimension $n$ und liefert
-nebenbei gleich ein Rezept, wie sich $\bL$ Spalte für Spalte berechnen
-lässt.
+:::::vertiefung[Induktionsbeweis der Cholesky-Zerlegung]
+Der Beweis ist eine Induktion über die Dimension $n$ und liefert nebenbei
+ein Rezept, wie sich $\bL$ Spalte für Spalte berechnen lässt.
 
 ::::beweis
 
@@ -206,22 +202,17 @@ $$
 
 ::::
 
-Zum Quantor: Die strikte Ungleichung
-$\bx^\top (\bB - \bl\bl^\top) \bx > 0$ gilt natürlich nur für
-$\bx \neq \bnull$; deshalb haben wir ihn überall mitgeführt.
+Auf der Diagonalen von $\bL$ steht in jedem Schritt eine Wurzel, also eine
+positive Zahl. Eindeutig ist die Zerlegung ebenfalls: Der Vergleich der
+ersten Spalte von $\bL\bL^\top = \bA$ erzwingt $l_{11} = \sqrt{a}$ (wegen
+$l_{11} > 0$) und $\bl = \bc/\sqrt{a}$, und $\wt{\bL}$ ist nach
+Induktionsvoraussetzung eindeutig.
 :::::
-
-Die Konstruktion liefert ein $\bL$ mit lauter positiven Diagonaleinträgen,
-denn auf der Diagonalen steht in jedem Schritt eine Wurzel. Mit dieser
-Normierung ist die Zerlegung dann auch eindeutig: Ohne sie dürften wir in
-einer beliebigen Spalte von $\bL$ alle Vorzeichen umdrehen, ohne
-$\bL\bL^\top$ zu verändern.
 
 ### Cholesky von Hand: Koeffizientenvergleich
 
 Wie kommen wir konkret an $\bL$? Für kleine Matrizen genügt ein
-Koeffizientenvergleich: Wir multiplizieren den Ansatz $\bL\bL^\top$ aus
-und vergleichen Eintrag für Eintrag mit $\bA$.
+Koeffizientenvergleich.
 
 :::beispiel[#cholesky-zerlegung-einer-2-2-matrix (Cholesky-Zerlegung einer 2×2-Matrix)]
 Wir berechnen die Cholesky-Zerlegung von
@@ -262,12 +253,13 @@ $\bL\bL^\top = \begin{pmatrix} 4 & 2 \\ 2 & 3 \end{pmatrix} = \bA$.
 :::
 
 Jede Gleichung enthielt genau eine neue Unbekannte; in dieser Reihenfolge
-löst sich das System also von selbst auf. Dass unter der Wurzel mit
-$3 - 1 = 2 > 0$ etwas Positives stand, war kein Zufall: Der Beweis von
-@satz:cholesky-zerlegung zeigt, dass das für SPD-Matrizen immer so ausgeht.
+löst sich das System Schritt für Schritt auf. Dass unter der Wurzel
+mit $3 - 1 = 2 > 0$ etwas Positives stand, garantiert
+@satz:cholesky-zerlegung für jede SPD-Matrix: Die Radikanden sind die
+Quadrate der positiven Diagonaleinträge von $\bL$.
 
-Für allgemeines $n$ liefert derselbe Vergleich das Rezept, das der Beweis
-schon angedeutet hat. Der Eintrag $(i,j)$ von $\bL\bL^\top$ ist
+Für allgemeines $n$ funktioniert derselbe Vergleich. Der Eintrag
+$(i,j)$ von $\bL\bL^\top$ ist
 $\sum_{k=1}^{n} l_{ik} l_{jk}$, und weil $\bL$ untere Dreiecksmatrix ist,
 brechen die Summen früh ab. Wir lösen Spalte für Spalte auf, jeweils nach
 dem einzigen noch unbekannten Eintrag:
@@ -279,29 +271,26 @@ l_{ij} = \frac{1}{l_{jj}} \Bigl( a_{ij} - \sum_{k=1}^{j-1} l_{ik} l_{jk} \Bigr)
 \quad (i > j) .
 $$
 
-Auf der Diagonalen steht also eine Wurzel, darunter eine Division durch
-den zuletzt berechneten Diagonaleintrag.
-
 :::interaktiv[Cholesky-Zerlegung Schritt für Schritt]
 Ab $3 \times 3$ entsteht pro Eintrag ein Rechenschritt. In welcher Reihenfolge
 füllt sich $\bL$?
 
 <CholeskyStepper />
 
-Der Stepper macht die spaltenweise Reihenfolge sichtbar: Auf einen
-Diagonaleintrag folgen die Einträge darunter.
+Auf jeden Diagonaleintrag (Wurzel) folgen die Einträge darunter (Division
+durch ihn), Spalte für Spalte. Bei einer nicht positiv definiten Matrix
+steht irgendwann eine Zahl $\leq 0$ unter der Wurzel, und die Rechnung
+bricht ab.
 :::
 
 ### Anwendung: korrelierte Zufallsvektoren simulieren
 
-Zufallszahlengeneratoren liefern uns unabhängige Standardnormalvariablen,
-also Vektoren $\bx$ mit $\E[\bx] = \bnull$ und $\var(\bx) = \bI_d$.
-Gebraucht werden in der Statistik aber meist *korrelierte* Ziehungen mit
-vorgegebener Kovarianzmatrix $\bSigma$. Der Cholesky-Faktor liefert sie: Als
-lineare Abbildung verformt er unkorreliertes Rauschen in die gewünschte
-Abhängigkeitsstruktur. Nachrechnen lässt sich das mit zwei
-Eigenschaften des :k[Erwartungswerts]{#expected-value}: Er ist linear, und
-konstante Matrizen dürfen wir aus ihm herausziehen.
+Zufallszahlengeneratoren liefern unabhängige Standardnormalvariablen, also
+Vektoren $\bx$ mit $\E[\bx] = \bnull$ und $\var(\bx) = \bI_d$. Gebraucht
+werden in der Statistik aber meist *korrelierte* Ziehungen mit vorgegebener
+Kovarianzmatrix $\bSigma$. Der Cholesky-Faktor liefert sie: Als lineare
+Abbildung verformt er unkorreliertes Rauschen in die gewünschte
+Abhängigkeitsstruktur.
 
 :::satz[#kovarianz-unter-dem-cholesky-faktor (Kovarianz unter dem Cholesky-Faktor)]
 Sei $\bx \in \R^d$ ein Zufallsvektor mit $\E[\bx] = \bnull$ und
@@ -328,7 +317,7 @@ $$
 = \bSigma .
 $$
 
-::why[der Erwartungswert ist linear und $\bL$ eine feste, nicht zufällige Matrix, darf also aus ihm herausgezogen werden; für zentrierte Vektoren ist $\var(\by) = \E[\by\by^\top]$, insbesondere $\E[\bx\bx^\top] = \var(\bx) = \bI_d$; zuletzt die Zerlegung @eq:cholesky-zerlegung]
+::why[der :k[Erwartungswert]{#expected-value} ist linear und $\bL$ eine feste, nicht zufällige Matrix, darf also aus ihm herausgezogen werden; für zentrierte Vektoren ist $\var(\by) = \E[\by\by^\top]$, insbesondere $\E[\bx\bx^\top] = \var(\bx) = \bI_d$; zuletzt die Zerlegung @eq:cholesky-zerlegung]
 :::
 
 ::::
@@ -336,12 +325,25 @@ $$
 :::bemerkung[#ziehen-aus-der-multivariaten (Ziehen aus der multivariaten Normalverteilung)]
 So simulieren wir aus $\Ncal(\bmu, \bSigma)$: Wir erzeugen
 $\bz \sim \Ncal(\bnull, \bI_d)$ aus $d$ unabhängigen
-Standardnormalvariablen, berechnen einmal den Cholesky-Faktor $\bL$ von
+Standardnormalvariablen, berechnen den Cholesky-Faktor $\bL$ von
 $\bSigma$ und geben $\bmu + \bL\bz$ zurück. Als lineare Transformation
 eines normalverteilten Vektors ist $\bmu + \bL\bz$ wieder normalverteilt,
-nach @satz:kovarianz-unter-dem-cholesky-faktor mit Erwartungswert $\bmu$ und Kovarianz $\bSigma$. Die
-Zerlegung bezahlen wir dabei nur einmal; jede weitere Ziehung kostet nur
-noch ein Matrix-Vektor-Produkt.
+nach @satz:kovarianz-unter-dem-cholesky-faktor mit Erwartungswert $\bmu$ und
+Kovarianz $\bSigma$. Die Zerlegung rechnen wir nur einmal; jede weitere
+Ziehung kostet ein Matrix-Vektor-Produkt.
+
+In R liefert `chol()` den *oberen* Faktor $\bR = \bL^\top$ mit
+$\bSigma = \bR^\top\bR$; den unteren erhalten wir mit `t(chol(Sigma))`:
+
+```r
+set.seed(7)
+Sigma <- matrix(c(1,   0.9,
+                  0.9, 1), 2, 2)
+L <- t(chol(Sigma))  # chol() liefert die obere Dreiecksmatrix
+x <- matrix(rnorm(2 * 1000), nrow = 2)
+y <- L %*% x
+round(cov(t(y)), 2)  # empirische Kovarianz, nahe bei Sigma
+```
 :::
 
 :::interaktiv[Wie L eine runde Punktwolke verformt]
@@ -374,7 +376,7 @@ Gerade zusammen und $\bSigma$ wird singulär.
 Was passiert, wenn $\bA$ nur positiv *semi*definit ist (also
 $\bx^\top \bA \bx \geq 0$ statt $> 0$), etwa weil $\bA$ singulär ist? Oder
 wenn $\bA$ zwar SPD, aber so
-[schlecht konditioniert](?k=04-fehler#sec-4.2) ist, dass Rundungsfehler
+schlecht konditioniert (@sec:fehler/kondition) ist, dass Rundungsfehler
 den Unterschied verwischen? Dann läuft der Koeffizientenvergleich
 irgendwann auf eine Wurzel aus null oder sogar aus einer negativen Zahl,
 und die gewohnte Rechnung bricht ab. Abhilfe schafft wie bei der LU-Zerlegung die
@@ -389,7 +391,7 @@ mit einer :k[Permutationsmatrix]{#permutation-matrix} $\bP$. Diese
 Variante hat drei nützliche Eigenschaften:
 
 - **Rang-aufdeckend:** Nullspalten in $\bL$ zeigen direkt den Rangabfall
-  von $\bA$ an; die Zerlegung bestimmt also nebenbei den Rang der Matrix.
+  von $\bA$ an; die Zerlegung bestimmt nebenbei den Rang der Matrix.
 - **Stabil:** Auch für semidefinite Matrizen bleibt die pivotierte
   Cholesky-Zerlegung numerisch stabil
   ([Higham, 1990](https://eprints.maths.manchester.ac.uk/1193/1/high90c.pdf)).
@@ -417,6 +419,18 @@ $\bA$ trotzdem positiv semidefinit sein.
 
 Semidefinit verlangt nur $\bx^\top\bA\bx \geq 0$; dieser Randfall liefert
 $l_{jj} = 0$, und erst die nächste Spalte scheitert an der Division.
+:::
+
+:::frage{falsch}
+Eine symmetrische Matrix ist positiv definit, sobald alle ihre Einträge
+positiv sind oder ihre Determinante positiv ist.
+
+Beides reicht nicht. $\begin{pmatrix} 1 & 2 \\ 2 & 1 \end{pmatrix}$ hat nur
+positive Einträge, aber $\bx = (1, -1)^\top$ liefert $\bx^\top\bA\bx = -2$;
+$-\bI_2$ hat Determinante $1$ und $\bx^\top(-\bI_2)\bx < 0$ für jedes
+$\bx \neq \bnull$. Für symmetrisches $\bA$ ist positive Definitheit
+gleichwertig dazu, dass alle Eigenwerte positiv sind; $\det \bA > 0$ ist
+dafür nur notwendig.
 :::
 
 ::::

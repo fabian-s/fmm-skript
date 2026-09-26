@@ -9,8 +9,8 @@ import { PowerSpiralWidget } from "./widgets/SpectralRadiusWidget";
  */}
 
 Der *Spektralradius* (spectral radius) einer quadratischen
-:k[Matrix]{#matrix} $\bA$ ist die
-Größe ihres betragsgrößten
+:k[Matrix]{#matrix} $\bA$ ist der
+Betrag ihres betragsgrößten
 :k[Eigenwerts]{#eigenvalue-eigenvector}:
 
 $$
@@ -19,28 +19,26 @@ $$
 
 Da reelle Matrizen auch
 :k[komplexe]{#complex-numbers} Eigenwerte
-haben können, meint $|\lambda|$ hier den Betrag einer
+haben können, meint $|\lambda|$ den Betrag einer
 komplexen Zahl. Beispiel: Für
 $\bA = \begin{bmatrix} 0{,}5 & 0{,}3 \\ 0 & 0{,}8 \end{bmatrix}$
 sind die Eigenwerte $0{,}5$ und $0{,}8$, also
 $\rho(\bA) = 0{,}8$.
 
-Warum das wichtig ist: Wiederholtes Multiplizieren mit $\bA$
-streckt jede Eigenrichtung pro Schritt um ihren Eigenwert. Die
-Potenzen $\bA^k$ schrumpfen also genau dann gegen Null, wenn
-$\rho(\bA) < 1$ gilt, und $\rho$ gibt die Rate vor – allerdings nur asymptotisch,
-$\left\|\bA^k\right\|^{1/k} \to \rho(\bA)$: Ist $\bA$ nicht diagonalisierbar,
-kommt zu $\rho^k$ noch ein in $k$ polynomiell wachsender Faktor hinzu. Das macht
-$\rho(\bG(\bx^*)) < 1$ zum natürlichen mehrdimensionalen
-Ersatz für die skalare Bedingung $|g'(x^*)| < 1$ bei der
-Fixpunkt-Iteration für Gleichungssysteme.
+Weil $\bA$ jede Eigenrichtung pro Schritt mit ihrem Eigenwert multipliziert,
+gehen die Potenzen $\bA^k$ genau dann gegen null, wenn
+$\rho(\bA) < 1$ ist. Eine Iteration $\bx_{k+1} = \bG\bx_k + \bc$
+konvergiert deshalb genau dann für jeden Startwert und jedes $\bc$, wenn für ihre
+Iterationsmatrix $\rho(\bG) < 1$ gilt. Als Rate gilt $\rho$ allgemein nur auf lange Sicht,
+$\left\|\bA^k\right\|^{1/k} \to \rho(\bA)$. Jede
+submultiplikative Norm schätzt $\rho$ nach oben ab: $\rho(\bA) \le \|\bA\|$.
 
-Das Widget zeigt den einfachsten Fall, die um $\theta$ gedrehte Streckung
-$\bG = s\,\bR(\theta)$ mit $\rho(\bG) = s$: Weil Drehungen Längen nicht ändern,
-gilt hier exakt $\left\|\bx_k\right\| = s^k\left\|\bx_0\right\|$.
-
-Wie verändert sich die Länge der Iterierten, wenn der Spektralradius die Eins passiert?
+Im einfachsten Fall, der um $\theta$ gedrehten Streckung
+$\bG = s\,\bR(\theta)$, ist $\rho(\bG) = s$ und
+$\left\|\bx_k\right\| = s^k\left\|\bx_0\right\|$ exakt. Was passiert mit der
+Länge der Iterierten, wenn $s$ die Eins passiert?
 
 <PowerSpiralWidget />
 
-Der Spektralradius trennt schrumpfende, konstante und wachsende Matrixiterationen.
+Für $s < 1$ fallen die Normen geometrisch, für $s > 1$ wachsen sie; der
+Winkel $\theta$ formt nur die Spirale.

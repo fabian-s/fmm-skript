@@ -18,18 +18,19 @@ $$
 Stimmen $a$ und $b$ in $k$ führenden Ziffern überein, verlieren wir etwa $k$
 der rund 16 signifikanten Dezimalstellen, die uns die
 :k[Maschinengenauigkeit]{#machine-epsilon} lässt. Klassisches Beispiel: Die
-Varianz-„Formel" $\tfrac{1}{n}\sum_i x_i^2 - \bar{x}^2$ subtrahiert
+Varianz-„Formel“ $\tfrac{1}{n}\sum_i x_i^2 - \bar{x}^2$ subtrahiert
 für Daten um $10^9$ zwei Zahlen der Größe $10^{18}$; das Ergebnis kann sogar
 negativ werden.
 
-Die Kur ist nie „genauer rechnen", sondern *umformen*, sodass keine fast
-gleichen Zahlen subtrahiert werden. In diesem Kapitel: Beim
+Abhilfe schafft nicht genaueres Rechnen, sondern *Umformen*, sodass keine fast
+gleichen Zahlen subtrahiert werden. Ein Beispiel aus der QR-Zerlegung: Beim
 Householder-Vektor $v_1 = a_1 - \alpha$ wählen wir das Vorzeichen
-$\alpha = -\sign(a_1)\,\|\ba\|_2$, damit aus der gefährlichen Subtraktion eine
-harmlose Addition gleicher Vorzeichen wird.
+$\alpha = -\sign(a_1)\,\|\ba\|_2$, damit aus der Subtraktion eine Addition
+gleicher Vorzeichen wird.
 
-Wie verändert sich die empfindliche Differenz, wenn mehr führende Ziffern übereinstimmen?
+Wie viele Stellen bleiben verlässlich, wenn mehr führende Ziffern übereinstimmen?
 
 <DigitWidget />
 
-Die Subtraktion legt damit offen, warum eine algebraische Umformung numerisch entscheidend sein kann.
+Jede gemeinsame führende Ziffer verzehnfacht den Verstärkungsfaktor
+$|a|/|a - b|$ und kostet damit eine signifikante Stelle.

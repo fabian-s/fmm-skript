@@ -15,18 +15,19 @@ steht deshalb das :k[Transponierte]{#transpose} $\nabla \phi(\bx)^T$.
 
 Zum Beispiel hat $\phi(\bx) = x_1^2 + 2x_2^2$ den
 Gradienten $\nabla \phi(\bx) = (2x_1,\, 4x_2)$.
-Geometrisch zeigt $\nabla \phi(\bx)^T$ in die Richtung des steilsten Anstiegs –
-gemessen unter allen Richtungen der Länge 1 –, und seine Länge sagt, wie steil
-es dort bergauf geht. So wie $f'(x) = 0$ am Boden eines eindimensionalen Tals gilt, kann ein
+Geometrisch zeigt $\nabla \phi(\bx)^T$ in die Richtung des steilsten Anstiegs
+(unter allen Richtungen der Länge 1), und seine Länge sagt, wie steil es dort bergauf geht.
+So wie $f'(x) = 0$ am Boden eines eindimensionalen Tals gilt, kann ein
 glattes $\phi$ im Inneren ein Minimum nur dort haben, wo
-$\nabla \phi(\bx) = \bzero^T$ ist: jede Aufwärtsrichtung ist erloschen. Notwendig ist das nur, nicht hinreichend – Sattelpunkte und Maxima
-erfüllen es auch; welcher Fall vorliegt, sagt erst die
-:k[Hesse-Matrix]{#hessian-matrix}. Den Gradienten der
-Quadratsumme null zu setzen ist genau die Herleitung der Normalengleichungen.
+$\nabla \phi(\bx) = \bzero^T$ ist; sonst ginge es entgegen dem Gradienten noch
+bergab. Die Bedingung ist nur notwendig: Auch Sattelpunkte und Maxima erfüllen
+sie. Welcher Fall vorliegt, zeigt oft die
+:k[Hesse-Matrix]{#hessian-matrix}. Für die Quadratsumme
+$\|\bA\bx - \bb\|_2^2$ liefert die Bedingung die Normalengleichungen.
 
 Welche Richtung lässt $\phi$ am gewählten Punkt am stärksten wachsen?
 
 <GradientWidget />
 
-Damit wird $\nabla \phi(\bx)^T$ als Richtung des stärksten Anstiegs und als Normale
-zur Höhenlinie greifbar.
+$\nabla \phi(\bx)^T$ steht senkrecht auf der Höhenlinie durch den Punkt; jede andere
+Richtung der Länge 1 steigt flacher, die tangentiale gar nicht.

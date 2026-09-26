@@ -5,7 +5,7 @@ import { CompositionWidget } from "./widgets/MatrixProductWidget";
 Das Produkt $\bC = \bA\bB$ zweier :k[Matrizen]{#matrix} ist definiert, wenn
 $\bA$ genauso viele Spalten hat wie $\bB$ Zeilen; der Eintrag $c_{ij}$ ist das
 :k[Skalarprodukt]{#dot-product} der $i$-ten Zeile von $\bA$ mit der $j$-ten
-Spalte von $\bB$. Ein kleines Beispiel:
+Spalte von $\bB$. Beispiel:
 
 $$
 \begin{aligned}
@@ -15,18 +15,18 @@ $$
 \end{aligned}
 $$
 
-Die tiefere Bedeutung: Matrizen stellen :k[lineare Abbildungen]{#linear-map}
+Matrizen stellen :k[lineare Abbildungen]{#linear-map}
 dar, und das Produkt steht für das Hintereinanderausführen: $\bA\bB$ heißt
 „erst $\bB$ anwenden, dann $\bA$“. Weil die Reihenfolge von Transformationen
 eine Rolle spielt, ist die Matrixmultiplikation *nicht* kommutativ: Im
-Allgemeinen gilt $\bA\bB \neq \bB\bA$. Für die Determinante verhält sich das
-Produkt dagegen wunderbar: $\det(\bA\bB) = \det(\bA)\det(\bB)$.
+Allgemeinen gilt $\bA\bB \neq \bB\bA$. Für die Determinante gilt dagegen
+$\det(\bA\bB) = \det(\bA)\det(\bB)$.
 
-Sehen wir uns die beiden Schritte einzeln an, bevor das Produkt sie
-zusammenfasst:
+Was macht das Produkt aus einer Scherung $\bB$ und einer Streckung $\bA$ mit
+einem Vektor, und kommt bei umgekehrter Reihenfolge dasselbe heraus?
 
 <CompositionWidget />
 
-Dass die Reihenfolge zählt, ist keine Schrulle der Rechenregel, sondern der
-Grund für sie: erst scheren und dann strecken ergibt eine andere Lage als
+$(\bA\bB)\bx = \bA(\bB\bx)$: Das Produkt erledigt beide Schritte auf einmal.
+Erst scheren und dann strecken ergibt im Allgemeinen eine andere Endlage als
 umgekehrt.

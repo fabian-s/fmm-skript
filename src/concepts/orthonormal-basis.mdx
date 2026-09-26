@@ -13,22 +13,20 @@ $$
 \bq_i^T \bq_j = \begin{cases} 1 & i = j \\ 0 & i \neq j \end{cases}
 $$
 
-Die Standardachsen des $\R^2$ sind das vertraute Beispiel,
-aber jede gedrehte Kopie davon funktioniert genauso gut. So eine
-Basis ist das einfachste Koordinatensystem: Um einen Vektor
-$\bw$ aus dem aufgespannten Raum darin auszudrücken, müssen wir nie ein
-Gleichungssystem lösen, denn der Koeffizient von jedem
+Im $\R^2$ sind das die Standardbasis und jede gedrehte Kopie davon.
+Um einen Vektor $\bw$ aus dem aufgespannten Raum in einer solchen Basis
+auszudrücken, müssen wir kein Gleichungssystem lösen: Der Koeffizient von
 $\bq_i$ ist das
 :k[Skalarprodukt]{#dot-product}
-$\bq_i^T \bw$; für ein $\bw$ von außerhalb liefern dieselben Skalarprodukte
-die orthogonale Projektion darauf. Stapeln wir orthonormale Vektoren als
-Spalten in eine Matrix $\bQ$, packt das alle Bedingungen in
-$\bQ^T \bQ = \bI$; ist $\bQ$ außerdem
+$\bq_i^T \bw$. Für ein $\bw$ von außerhalb liefern dieselben Skalarprodukte
+die Koeffizienten seiner orthogonalen Projektion auf den Unterraum. Stellen
+wir orthonormale Vektoren als Spalten in eine Matrix $\bQ$, fasst
+$\bQ^T \bQ = \bI$ alle Bedingungen zusammen; ist $\bQ$ außerdem
 quadratisch, ist sie eine
 :k[orthogonale Matrix]{#orthogonal-matrix}.
-Für die Kleinste-Quadrate-Methode macht eine Orthonormalbasis von
+Mit einer Orthonormalbasis von
 :k[$\operatorname{span}(\bA)$]{#span}
-den orthogonalen Projektor so einfach wie
+ist der orthogonale Projektor der Kleinste-Quadrate-Methode
 $\bP = \bQ\bQ^T$.
 
 Wie kommen wir an diese Koeffizienten heran, wenn die Basis nicht die
@@ -36,7 +34,6 @@ Standardbasis ist?
 
 <OrthonormalBasisWidget />
 
-Zwei Skalarprodukte genügen, und zwar in jeder gedrehten Kopie der Basis. Die
-Summe der quadrierten Koordinaten bleibt dabei $\|\bw\|_2^2$: Eine
-Orthonormalbasis verteilt die Länge nur neu, sie erzeugt und vernichtet
-nichts.
+Zwei Skalarprodukte genügen, in jeder gedrehten Basis. Die Summe der
+quadrierten Koordinaten bleibt dabei $\|\bw\|_2^2$; zeigt $\bw$ in Richtung $\bq_1$,
+ist die zweite Koordinate null und die erste gleich $\|\bw\|_2$.

@@ -1,15 +1,11 @@
 import { JacobiFormWidget, LinearisierungsWidget } from "./widgets/S103Jacobi";
 import { BackpropWidget } from "./widgets/S103Backprop";
 
-Der Gradient aus @sec:gradient setzt voraus, dass am Ende genau
-eine Zahl herauskommt. Viele Abbildungen, mit denen wir rechnen, liefern aber
-wieder ein ganzes Bündel. Das Residuum
-$\bx \mapsto \bA\bx - \bb$ der kleinsten Quadrate
-(@sec:kq/problem) hat so viele Komponenten wie es
-Beobachtungen gibt. Eine Schicht eines :k[neuronalen Netzes]{#neural-network}
-macht aus einem Vektor von Eingaben einen Vektor von Aktivierungen. Und eine
-Koordinatentransformation der Ebene ordnet jedem Punkt wieder einen Punkt zu.
-
+Der Gradient aus @sec:gradient setzt voraus, dass am Ende eine Zahl herauskommt.
+Viele Abbildungen liefern aber wieder ein ganzes Bündel: das Residuum
+$\bx \mapsto \bA\bx - \bb$ der kleinsten Quadrate (@sec:kq/problem) mit einer
+Komponente je Beobachtung, eine Schicht eines :k[neuronalen Netzes]{#neural-network},
+die aus Eingaben Aktivierungen macht, oder eine Koordinatentransformation der Ebene.
 Solche Funktionen $f\colon \R^n \to \R^m$ sind $m$ gestapelte skalarwertige
 Funktionen,
 
@@ -18,9 +14,8 @@ $$
 \qquad f_i\colon \R^n \to \R .
 $$
 
-Jede einzelne Komponente $f_i$ hat nach @sec:gradient einen
-Gradienten, also eine Zeile mit $n$ Einträgen. Stapeln wir diese $m$ Zeilen
-übereinander, steht eine :k[Matrix]{#matrix} da. Sie trägt einen eigenen Namen.
+Jede Komponente $f_i$ hat nach @sec:gradient einen Gradienten, eine Zeile mit $n$
+Einträgen. Stapeln wir diese $m$ Zeilen übereinander, steht eine :k[Matrix]{#matrix} da.
 
 ### Die Jacobimatrix
 
@@ -59,7 +54,7 @@ in der :k[euklidischen Norm]{#euclidean-norm} des $\R^m$ gemessen, das $\bh$ im
 Nenner der :k[Landau-Bedingung]{#big-o-notation} dagegen in der des $\R^n$.
 
 :::bemerkung[#die-zeilen-sind-gradienten (Die Zeilen sind Gradienten)]
-Lesen wir @definition:jacobimatrix zeilenweise, so steht in Zeile $i$ genau der
+Lesen wir @definition:jacobimatrix zeilenweise, so steht in Zeile $i$ der
 Gradient der $i$-ten Komponentenfunktion:
 
 $$
@@ -96,6 +91,8 @@ $$
 Dann ist $f$ in $\bx$ differenzierbar und $\bM = \corange{\bJ_f(\bx)}$.
 :::
 
+:::::vertiefung[Warum die Matrix der linearen Näherung die Jacobimatrix ist]
+
 ::::beweis
 
 :::schritt
@@ -114,7 +111,7 @@ $$
 :::
 
 :::schritt
-Für $t \to 0$ verschwindet der zweite Summand rechts, denn genau das besagt
+Für $t \to 0$ verschwindet der zweite Summand rechts, denn das besagt
 $\cred{o(|t|)}$. Links steht der Differenzenquotient in Richtung der $j$-ten
 Koordinate, sein Grenzwert ist die Spalte der partiellen Ableitungen
 $\bigl(\partial f_1/\partial x_j, \dots, \partial f_m/\partial x_j\bigr)^\top$.
@@ -126,9 +123,10 @@ $j = 1, \dots, n$.
 
 ::::
 
-Welche Gestalt hat die Ableitung eigentlich, wenn wir Ein- und Ausgabedimension frei
-wählen? Die Übersichtstabelle aus @sec:gradient listet vier Fälle auf;
-@definition:jacobimatrix sagt, dass es immer derselbe Bauplan ist.
+:::::
+
+Die Übersichtstabelle aus @sec:gradient listet vier Fälle mit Skalaren und Vektoren auf;
+nach @definition:jacobimatrix folgen alle demselben Bauplan.
 
 :::interaktiv[Welche Gestalt hat die Ableitung?]
 Für jede Ausgabekomponente entsteht eine Zeile, für jede Eingabevariable eine Spalte.
@@ -142,9 +140,8 @@ Objekts, und welche wir sehen, entscheiden nur $n$ und $m$.
 
 ### Die Bausteine und ihre Jacobimatrizen
 
-Vier Funktionen tauchen so oft als Bausteine auf, dass man ihre Jacobimatrizen
-kennen sollte. Alle vier sind konstant oder linear, und entsprechend einfach fallen die
-Jacobimatrizen aus.
+Vier Bausteine tauchen so oft auf, dass wir ihre Jacobimatrizen kennen sollten. Alle
+vier sind konstant oder linear.
 
 :::satz[#jacobimatrizen-der-grundbausteine (Jacobimatrizen der Grundbausteine)]
 Für $\bx \in \R^n$ gilt:
@@ -160,11 +157,10 @@ Keine dieser vier Jacobimatrizen hängt von $\bx$ ab.
 ::::beweis
 
 :::schritt
-Zu (1): Jede Komponente $f_i(\bx) = c_i$ ist konstant, also verschwinden alle
-partiellen Ableitungen $\partial f_i/\partial x_j = 0$. Die Jacobimatrix ist
-die Nullmatrix im Format $m \times n$.
+Zu (1): Jede Komponente $f_i(\bx) = c_i$ ist konstant, alle partiellen Ableitungen
+verschwinden, und die Jacobimatrix ist die $m \times n$-Nullmatrix.
 
-::why[eine konstante Funktion ändert sich nicht, wenn wir an einer Koordinate wackeln]
+::why[eine konstante Funktion ändert sich nicht, wenn wir eine Koordinate verändern]
 :::
 
 :::schritt
@@ -196,17 +192,14 @@ $$
 
 :::schritt
 Zu (2): Das ist der Sonderfall $\bA = \bI_n$ von (3), denn $\bx = \bI_n\bx$.
-Direkt gesehen: $f_i(\bx) = x_i$ hat die partiellen Ableitungen
-$\partial f_i/\partial x_j = 1$ für $i = j$ und $0$ sonst.
 
-::why[das ist gerade die :k[Einheitsmatrix]{#identity-matrix}]
+::why[direkt: $\partial x_i/\partial x_j$ ist $1$ für $i = j$ und $0$ sonst, also die :k[Einheitsmatrix]{#identity-matrix}]
 :::
 
 :::schritt
-Zu (4): Der Ausdruck $\bx^\top\bA$ ist eine Zeile mit $m$ Einträgen. Lesen wir
-sie als Spalte, so ist $\bigl(\bx^\top\bA\bigr)^\top = \bA^\top\bx$, und
-Teil (3) mit der Matrix $\bA^\top \in \R^{m \times n}$ liefert
-$\corange{\bJ_f(\bx)} = \bA^\top$.
+Zu (4): Lesen wir die Zeile $\bx^\top\bA$ als Spalte
+$\bigl(\bx^\top\bA\bigr)^\top = \bA^\top\bx$, so liefert Teil (3) mit
+$\bA^\top \in \R^{m \times n}$ die Jacobimatrix $\corange{\bJ_f(\bx)} = \bA^\top$.
 
 ::why[:k[Transponieren]{#transpose} dreht ein Produkt um: $(\bx^\top\bA)^\top = \bA^\top(\bx^\top)^\top = \bA^\top\bx$]
 :::
@@ -214,14 +207,10 @@ $\corange{\bJ_f(\bx)} = \bA^\top$.
 ::::
 
 :::bemerkung[#zur-identitaet-fuer-x-a (Zur Identität für xᵀA)]
-Streng genommen bildet $f(\bx) = \bx^\top\bA$ nicht in den $\R^m$ ab, sondern in
-den Raum der Zeilenvektoren $\R^{1 \times m}$. @definition:jacobimatrix verlangt aber
-eine Spalte. Wir lesen die Zeile deshalb stillschweigend als Spalte, rechnen
-also mit $\bA^\top\bx$, und erhalten so die im Satz genannte $m \times n$-Matrix
-$\bA^\top$. Wer stattdessen im Zeilenformat bleibt, bekommt dieselben Zahlen in
-transponierter Anordnung. Solche Formatverabredungen sind kein Selbstzweck: Sie
-entscheiden, ob die Kettenregel weiter unten ohne zusätzliche Transponierte
-auskommt.
+Streng genommen bildet $f(\bx) = \bx^\top\bA$ in die Zeilenvektoren $\R^{1 \times m}$
+ab, @definition:jacobimatrix verlangt aber eine Spalte; wir lesen die Zeile deshalb als
+Spalte, rechnen also mit $\bA^\top\bx$. Wer im Zeilenformat bleibt, bekommt dieselben
+Zahlen in transponierter Anordnung.
 :::
 
 :::korollar[#lineare-abbildungen-sind-ihre-eigene (Lineare Abbildungen sind ihre eigene Näherung)]
@@ -235,20 +224,19 @@ und zwar exakt für jedes $\bh$, ohne Restterm. Die lineare Näherung @eq:eq-10-
 ist hier keine Näherung, sondern eine Identität.
 :::
 
-Deshalb sind die vier Bausteine so nützlich: Zusammen mit der Kettenregel lassen
-sich aus ihnen fast alle Ableitungen dieses Kapitels zusammensetzen, und bei ihnen
-selbst fällt kein Fehler an.
+Zusammen mit der Kettenregel lassen sich aus den vier Bausteinen fast alle Ableitungen
+dieses Kapitels zusammensetzen.
 
 ### Was die Jacobimatrix geometrisch anstellt
 
-Eine nichtlineare Abbildung $f\colon \R^2 \to \R^2$ verbiegt die Ebene, obwohl Urbild und Bild dieselbe Dimension
-haben. Legen wir ein feines Gitter um einen Punkt $\bx_0$, so wird daraus ein
-krummes Netz um $\cblue{f(\bx_0)}$. Die Jacobimatrix beschreibt dieses krumme
-Netz näherungsweise durch ein Parallelogrammgitter: Die beiden Spalten
-$\corange{\bJ_f(\bx_0)}\be_1$ und $\corange{\bJ_f(\bx_0)}\be_2$ sind die Bilder
-der beiden Koordinatenrichtungen unter der Linearisierung, sie spannen die
-Maschen dieses Gitters auf, und je kleiner das Gitter, desto besser passt es auf
-das krumme Netz.
+Eine nichtlineare Abbildung $f\colon \R^2 \to \R^2$ verbiegt die Ebene: Ein feines
+Gitter um einen Punkt $\bx_0$ wird zu einem krummen Netz um $\cblue{f(\bx_0)}$. Die
+Jacobimatrix beschreibt dieses Netz näherungsweise durch ein Parallelogrammgitter, dessen
+Maschen die Spalten $\corange{\bJ_f(\bx_0)}\be_1$ und $\corange{\bJ_f(\bx_0)}\be_2$
+aufspannen, die Bilder der Koordinatenrichtungen unter der Linearisierung. Je kleiner das
+Gitter, desto besser passt es. Unter der Linearisierung geht ein Quadrat der Fläche $a^2$
+in ein Parallelogramm der Fläche $\left|\det \corange{\bJ_f(\bx_0)}\right| a^2$ über;
+dieser *Flächenfaktor* gilt im Grenzwert kleiner Quadrate auch für $f$ selbst.
 
 :::beispiel[#quadrieren-in-der-ebene (Quadrieren in der Ebene)]
 Wir nehmen
@@ -268,7 +256,13 @@ $$
 \corange{\bJ_f(\bx_0)} = \begin{pmatrix} 2 & -1 \\ 1 & 2 \end{pmatrix} .
 $$
 
-Der Restterm lässt sich hier vollständig ausrechnen. Setzen wir
+Der Restterm ist hier $\cred{r(\bh)} = \cblue{f(\bh)}$, seine Länge also exakt
+$\left\|\bh\right\|^2$: Ein Zehntel Schrittweite kostet ein Hundertstel Fehler.
+:::
+
+::::vertiefung[Der exakte Restterm und die Jacobi-Determinante als Flächenfaktor]
+
+Den Restterm aus @beispiel:quadrieren-in-der-ebene können wir vollständig ausrechnen. Setzen wir
 $\bx_0 + \bh$ ein und sortieren nach Potenzen von $\bh$, so bleibt
 
 $$
@@ -289,70 +283,57 @@ $$
 $$
 
 Der relative Fehler ist demnach
-$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\| = \left\|\bh\right\|$, und
-das geht für $\bh \to \bnull$ gegen null. Damit ist die
-$\cred{o(\left\|\bh\right\|)}$-Bedingung nicht nur erfüllt, wir sehen auch, wie
-schnell: Bei $\bh = (0{,}1;\ 0{,}1)^\top$ mit
+$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\| = \left\|\bh\right\|$ und geht für
+$\bh \to \bnull$ gegen null: Bei $\bh = (0{,}1;\ 0{,}1)^\top$ mit
 $\left\|\bh\right\| \approx 0{,}1414$ ist der Fehler $0{,}02$ lang, bei
-$\bh = (0{,}01;\ 0{,}01)^\top$ nur noch $0{,}0002$. Ein Zehntel Schrittweite
-kostet ein Hundertstel Fehler.
-:::
-
-::::vertiefung[Die Jacobi-Determinante als Flächenfaktor]
+$\bh = (0{,}01;\ 0{,}01)^\top$ nur noch $0{,}0002$.
 
 :::bemerkung[#wie-stark-die-flaeche-verzerrt-wird (Wie stark die Fläche verzerrt wird)]
-Das Bild dazu: ein kleines Quadrat links, sein verbogenes Bild rechts, dazu das
-Parallelogramm der linearen Näherung. Wie stark $f$ die
-Fläche dehnt oder staucht, steht in der
+Wie stark $f$ die Fläche dehnt oder staucht, steht in der
 :k[Determinante]{#determinant} der Jacobimatrix. Ein achsenparalleles Quadrat
 mit Kantenlänge $a$ um $\bx_0$ geht unter der Linearisierung in das
 Parallelogramm über, das von $a\,\corange{\bJ_f(\bx_0)}\be_1$ und
 $a\,\corange{\bJ_f(\bx_0)}\be_2$ aufgespannt wird; dessen Flächeninhalt ist das
-$\left|\det \corange{\bJ_f(\bx_0)}\right|$-fache von $a^2$. Weil sich das krumme
+$\left|\det \corange{\bJ_f(\bx_0)}\right|$-fache von $a^2$. Weil das krumme
 Bild für kleine Quadrate immer besser mit diesem Parallelogramm übereinstimmt, gilt
 derselbe Faktor im Grenzwert auch für $f$ selbst. In @beispiel:quadrieren-in-der-ebene ist
 $\det \corange{\bJ_f(\bx)} = 4x_1^2 + 4x_2^2$, an der Stelle $\bx_0$ also $5$:
-Ein kleines Quadrat um $\bx_0$ wird auf annähernd die fünffache Fläche
-aufgeblasen, und je kleiner es ist, desto genauer stimmt der Faktor. In der
+Ein kleines Quadrat um $\bx_0$ bekommt annähernd die fünffache Fläche, und je kleiner es
+ist, desto genauer stimmt der Faktor. In der
 Wahrscheinlichkeitsrechnung ist dieser Faktor der Korrekturterm im
 Transformationssatz für Dichten.
 :::
 
 ::::
 
-:::interaktiv[Linearisierung zum Verkleinern]
-Wie schnell verschwindet der Unterschied zwischen dem krummen Bild und dem Parallelogramm,
-wenn wir die Umgebung schrumpfen lassen? Und trifft der Flächenfaktor
-$\left|\det \bJ_f(\bx_0)\right|$ wirklich zu, oder gilt er nur im Grenzwert?
+:::interaktiv[Linearisierung bei schrumpfendem Fenster]
+Wie schnell verschwindet der Unterschied zwischen krummem Bild und Parallelogramm, wenn das
+Fenster schrumpft, und stimmt der Flächenfaktor $\left|\det \bJ_f(\bx_0)\right|$ schon
+vorher oder erst im Grenzwert?
 
 <LinearisierungsWidget />
 
-Links liegt ein regelmäßiges Gitter über dem ganzen Definitionsbereich, dazu das violette
-Fenster der halben Kantenlänge $h$ um $\bx_0$. In der Mitte steht das Bild desselben
-Gitters unter $f$, in der Lupe rechts das krumme Bild des Fensters (blau) gegen das
-Parallelogramm $\cblue{f(\bx_0)} + \corange{\bJ_f(\bx_0)}\bh$ (grün). Die roten Strecken
-in den vier Ecken sind der Restterm, die orangen Pfeile sind $h$ mal die Spalten von
+Links liegt ein Gitter mit dem violetten Fenster der halben Kantenlänge $h$ um $\bx_0$, in
+der Mitte sein Bild unter $f$, rechts in der Lupe das krumme Bild des Fensters (blau) gegen
+das Parallelogramm $\cblue{f(\bx_0)} + \corange{\bJ_f(\bx_0)}\bh$ (grün). Die roten
+Strecken in den Ecken sind der Restterm, die orangen Pfeile $h$ mal die Spalten von
 $\corange{\bJ_f(\bx_0)}$.
 
-Wie das Widget zeigt, schrumpft der rote Abstand beim Halbieren von $h$ schneller als das
-Fenster selbst. Der Quotient
-$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\|$ fällt also mit, und mehr
-verlangt @eq:eq-10-3-1 auch nicht. Bei der Voreinstellung „linear" bleibt der Restterm exakt
-null, so wie es @korollar:lineare-abbildungen-sind-ihre-eigene verlangt, und das Flächenverhältnis stimmt dort für jedes $h$
-exakt mit $\left|\det \corange{\bJ_f(\bx_0)}\right|$ überein. Bei den krummen Abbildungen
-nähert es sich dem Flächenfaktor erst für kleines $h$: Beim Quadrieren an der Stelle
-$\bx_0 = (1;\ 0{,}5)^\top$ liegt es bei $h = 0{,}3$ noch merklich daneben und bei
-$h = 0{,}075$ schon auf drei Stellen richtig. Die Voreinstellung
-„Wirbel" ist der Sonderfall dazu: Dort ist $\det \corange{\bJ_f(\bx)} = 1$ an jeder
-Stelle, die Abbildung verschiebt Fläche also, ohne sie zu verändern, und trotzdem verbiegt
-sie das Gitter kräftig.
+Beim Halbieren von $h$ schrumpft der rote Abstand schneller als das Fenster, der Quotient
+$\left\|\cred{r(\bh)}\right\| / \left\|\bh\right\|$ fällt also mit, wie @eq:eq-10-3-1 es
+verlangt. Bei der Voreinstellung „linear" ist der Restterm exakt null
+(@korollar:lineare-abbildungen-sind-ihre-eigene), und das Flächenverhältnis stimmt für
+jedes $h$ mit $\left|\det \corange{\bJ_f(\bx_0)}\right|$ überein. Beim „Quadrieren" an der
+Stelle $\bx_0 = (1;\ 0{,}5)^\top$ nähert es sich dem Flächenfaktor erst für kleines $h$ und
+ist bei $h = 0{,}075$ auf drei Stellen richtig. Beim „Wirbel" ist
+$\det \corange{\bJ_f(\bx)} = 1$ an jeder Stelle: Die Fläche bleibt erhalten, und trotzdem
+verbiegt sich das Gitter kräftig.
 :::
 
 ### Verkettung
 
 Bisher haben wir einzelne Abbildungen abgeleitet. Jetzt schalten wir mehrere
-hintereinander, wenn also die Ausgabe der einen die
-Eingabe der nächsten ist. Für die
+hintereinander: Die Ausgabe der einen ist die Eingabe der nächsten. Für die
 :k[Verkettung]{#function-composition} gilt dieselbe Regel wie in der Analysis,
 nur dass jetzt Matrizen multipliziert werden.
 
@@ -367,81 +348,10 @@ $$
 :::
 
 Die Formate passen: Rechts steht eine $p \times m$-Matrix
-mal einer $m \times n$-Matrix, das Produkt ist $p \times n$, und das
-verlangt @definition:jacobimatrix für eine Abbildung von $\R^n$ nach $\R^p$.
-
-Der Beweis führt dieselbe Rechnung wie später @satz:kettenregel, dort ohne Koordinaten und
-für beliebige normierte Räume: den Zuwachs abkürzen, ihn gegen $\left\|\bh\right\|$
-abschätzen, die Linearität zum Aufspalten nutzen und beide Restterme auf denselben
-Bezugspunkt bringen. Wer die allgemeine Fassung liest, kann die folgende Vertiefung
-überspringen.
-
-:::::vertiefung[Der Beweis in Koordinaten]
-
-::::beweis
-
-:::schritt
-Wir kürzen $\by := g(\bx)$ ab und bezeichnen mit
-$\bk := g(\bx + \bh) - g(\bx)$ den Zuwachs, den $g$ weiterreicht. Die
-Differenzierbarkeit von $g$ heißt
-
-$$
-\bk = \corange{\bJ_g(\bx)}\,\bh + \cred{r_g(\bh)} ,
-\qquad
-\left\|\cred{r_g(\bh)}\right\| / \left\|\bh\right\| \to 0 .
-$$
-
-::why[@eq:eq-10-3-1, angewandt auf $g$ an der Stelle $\bx$]
-:::
-
-:::schritt
-Die Differenzierbarkeit von $f$ an der Stelle $\by$ liefert
-$f(\by + \bk) = f(\by) + \corange{\bJ_f(\by)}\,\bk + \cred{r_f(\bk)}$. Setzen
-wir den ersten Schritt ein und sortieren, so entsteht
-
-$$
-\cblue{f\bigl(g(\bx + \bh)\bigr)}
-= \cblue{f\bigl(g(\bx)\bigr)}
-+ \cgreen{\corange{\bJ_f(\by)}\,\corange{\bJ_g(\bx)}\,\bh}
-+ \underbrace{\corange{\bJ_f(\by)}\,\cred{r_g(\bh)} + \cred{r_f(\bk)}}_{=: \cred{r(\bh)}} .
-$$
-
-::why[$g(\bx+\bh) = \by + \bk$; die Matrixmultiplikation ist assoziativ, deshalb dürfen wir $\corange{\bJ_f(\by)}(\corange{\bJ_g(\bx)}\bh)$ als $(\corange{\bJ_f(\by)}\corange{\bJ_g(\bx)})\bh$ lesen]
-:::
-
-:::schritt
-Bleibt zu zeigen, dass $\cred{r(\bh)}$ wirklich $\cred{o(\left\|\bh\right\|)}$
-ist. Für den ersten Summanden schätzen wir mit der
-:k[Matrixnorm]{#matrix-norm} ab,
-
-$$
-\left\|\corange{\bJ_f(\by)}\,\cred{r_g(\bh)}\right\|
-\leq \left\|\corange{\bJ_f(\by)}\right\| \left\|\cred{r_g(\bh)}\right\| ,
-$$
-
-und die rechte Seite ist ein festes Vielfaches von
-$\left\|\cred{r_g(\bh)}\right\| = \cred{o(\left\|\bh\right\|)}$.
-
-::why[$\left\|\bA\bv\right\| \leq \left\|\bA\right\|\left\|\bv\right\|$ für die induzierte Operatornorm, @sec:matrix-spur-norm/operatornormen; $\left\|\corange{\bJ_f(\by)}\right\|$ hängt nicht von $\bh$ ab]
-:::
-
-:::schritt
-Für den zweiten Summanden brauchen wir, dass $\bk$ mit $\bh$ klein wird. Aus dem
-ersten Schritt folgt für hinreichend kleine $\bh$ die Abschätzung
-$\left\|\bk\right\| \leq \bigl(\left\|\corange{\bJ_g(\bx)}\right\| + 1\bigr)\left\|\bh\right\|$.
-Also ist
-$\left\|\cred{r_f(\bk)}\right\| / \left\|\bh\right\|
-\leq \bigl(\left\|\corange{\bJ_g(\bx)}\right\| + 1\bigr) \cdot \left\|\cred{r_f(\bk)}\right\| / \left\|\bk\right\|$,
-und das geht gegen null. Damit erfüllt die lineare Abbildung
-$\bh \mapsto \corange{\bJ_f(\by)}\corange{\bJ_g(\bx)}\,\bh$ die Bedingung aus
-@lemma:die-matrix-der-linearen-naeherung, und dieses Lemma liefert @eq:kettenregel-fuer-jacobimatrizen.
-
-::why[der Bruch $\left\|\cred{r_f(\bk)}\right\| / \left\|\bk\right\|$ geht gegen null, weil mit $\bh$ auch $\bk$ gegen $\bnull$ geht; für $\bk = \bnull$ ist $\cred{r_f(\bk)} = \bnull$, der Quotient also gar nicht gebildet]
-:::
-
-::::
-
-:::::
+mal eine $m \times n$-Matrix, das Produkt ist $p \times n$, und das
+verlangt @definition:jacobimatrix für eine Abbildung von $\R^n$ nach $\R^p$. Der Satz
+ist die Koordinatenfassung der allgemeinen Kettenregel, @satz:kettenregel in
+@sec:produkt-kettenregel; dort steht auch der Beweis.
 
 ### Anwendung: Backpropagation
 
@@ -463,7 +373,7 @@ Aktivierungsfunktion $\sigma_k$. Eine
 Zielwerts $\by$, wie gut die Vorhersagen sind; in der folgenden Formel hängt sie
 bei festem $\wh{\by}$ nicht noch einmal direkt von den Parametern ab. Zum
 Trainieren brauchen wir für jede Schicht die
-Ableitung $\partial L / \partial \btheta_k$, denn genau die verlangt der
+Ableitung $\partial L / \partial \btheta_k$, denn die verlangt der
 :k[Gradientenabstieg]{#gradient-descent} aus @algorithmus:gradient-gradientenabstieg.
 
 :::bemerkung[#die-gradientenkette-eines-netzes (Die Gradientenkette eines Netzes)]
@@ -488,23 +398,18 @@ Faktor leitet die Schicht $k$ nach ihren *eigenen* Parametern ab, nicht nach
 ihrer Eingabe. Am Ende steht eine Zeile mit so vielen Einträgen, wie $\btheta_k$
 Parameter hat.
 
-Enthält der Gesamtverlust zusätzlich einen direkten Parameterterm, etwa eine
-Regularisierung $R(\btheta)$, kommt dessen Gradient additiv hinzu:
-$\partial(L+R)/\partial\btheta_k$ ist die Kette aus @eq:die-gradientenkette-eines-netzes plus
-$\partial R/\partial\btheta_k$.
+*Backpropagation* ist die effiziente Auswertung dieser Kette: von links, also von der
+Ausgabe rückwärts Schicht für Schicht; was das spart, rechnet die Vertiefung unten vor.
 :::
 
 :::bemerkung[#wo-die-kette-aufhoert (Wo die Kette aufhört)]
-Ein leicht zu übersehender Punkt in @eq:die-gradientenkette-eines-netzes: Das Produkt der
-Jacobimatrizen läuft nur bis $\corange{\bJ_{f_{k+1}}(\bz_k)}$, also bis zur Schicht
-*über* der gesuchten. Naheliegend wäre, die Kette bis $\corange{\bJ_{f_k}(\bz_{k-1})}$
-weiterzuziehen
-und erst dann nach $\btheta_k$ abzuleiten. Das zählt $\bW_k$ jedoch doppelt:
-$\corange{\bJ_{f_k}(\bz_{k-1})}$ ist die Ableitung der Schicht $k$ nach ihrer
-Eingabe $\bz_{k-1}$ und enthält $\bW_k$ bereits als Faktor. Für die Parameter
-brauchen wir stattdessen die Ableitung derselben Schicht nach $\btheta_k$, bei
-festgehaltener Eingabe. Merkregel: Jede Schicht liefert genau einen Faktor, und
-für die Schicht $k$ ist das der nach $\btheta_k$ abgeleitete.
+In @eq:die-gradientenkette-eines-netzes läuft das Produkt der Jacobimatrizen nur bis
+$\corange{\bJ_{f_{k+1}}(\bz_k)}$, bis zur Schicht *über* der gesuchten. Ziehen wir die
+Kette bis $\corange{\bJ_{f_k}(\bz_{k-1})}$ weiter und leiten erst dann nach $\btheta_k$
+ab, so zählt $\bW_k$ doppelt: $\corange{\bJ_{f_k}(\bz_{k-1})}$ ist die Ableitung der
+Schicht $k$ nach ihrer Eingabe und enthält $\bW_k$ schon als Faktor. Merkregel: Jede
+Schicht liefert genau einen Faktor, und für die Schicht $k$ ist das der nach $\btheta_k$
+abgeleitete.
 :::
 
 :::beispiel[#jacobimatrix-eines-relu-layers (Jacobimatrix eines ReLU-Layers)]
@@ -544,19 +449,15 @@ $$
 = \begin{pmatrix} 0 & 0 \\ 2 & 1 \end{pmatrix} .
 $$
 
-Vorsicht an den Schaltstellen: Ist $(\bW_k\bz_{k-1})_i = 0$ und die $i$-te Zeile
-von $\bW_k$ nicht der Nullvektor, etwa für $\bz = (1;\ 1)^\top$ mit
-$\bW\bz = (0;\ 3)^\top$, dann hat diese Ausgabekomponente dort einen Knick und
-der Layer ist nicht differenzierbar (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt). Eine Nullzeile ist die
-Ausnahme: Dann ist die betreffende Komponente konstant null und damit
-differenzierbar. In der Praxis wird an einem echten Knick meist per Verabredung
-die Ableitung null verwendet. Bei festen von null verschiedenen Zeilen und
-kontinuierlich verteilten Eingaben bilden die Schalthyperebenen eine Nullmenge;
-bei diskreten Daten oder Nullgewichten können sie dagegen durchaus exakt
-getroffen werden.
+An einer Schaltstelle mit $(\bW_k\bz_{k-1})_i = 0$ hat die $i$-te Ausgabekomponente
+einen Knick, sofern die $i$-te Zeile von $\bW_k$ nicht der Nullvektor ist (etwa für
+$\bz = (1;\ 1)^\top$ mit $\bW\bz = (0;\ 3)^\top$); dort ist der Layer nicht
+differenzierbar (@bemerkung:wenn-es-keine-eindeutige-tangente-gibt). Bei einer Nullzeile
+ist die Komponente dagegen konstant null und damit differenzierbar. In der Praxis wird an
+einem echten Knick meist per Verabredung die Ableitung null verwendet.
 :::
 
-:::::vertiefung[Wie teuer die Kette ist, und warum sie von links ausgewertet wird]
+:::::vertiefung[Aufwand der Jacobi-Kette und Backpropagation]
 
 :::bemerkung[#wie-die-kette-ausgewertet-wird (Wie die Kette ausgewertet wird)]
 Gleichung @eq:die-gradientenkette-eines-netzes ist ein Produkt aus vielen Matrizen, und
@@ -577,12 +478,12 @@ Multiplikationen und danach noch einmal $500$, zusammen $10\,500$, also fast das
 Neunfache.
 
 Der Grund: Weil $L$ skalar ist, ist der äußerste linke Faktor
-eine Zeile, und eine Zeile mal einer Matrix bleibt eine Zeile. Wer bei
+eine Zeile, und eine Zeile mal eine Matrix bleibt eine Zeile. Wer bei
 $\partial L / \partial \wh{\by}$ anfängt, hält also stets nur einen Vektor im
 Speicher; wer am anderen Ende beginnt, baut große Zwischenmatrizen auf. In der
 Sprache des Netzes heißt „links anfangen" gerade: von der Ausgabe rückwärts
 Schicht für Schicht zur Schicht $k$ laufen. Das ist
-*Backpropagation*, und dazu kommt eine zweite Ersparnis: Das Teilprodukt für die
+Backpropagation, und dazu kommt eine zweite Ersparnis: Das Teilprodukt für die
 Schicht $k$ entsteht aus dem für die Schicht $k+1$ durch einen einzigen weiteren
 Faktor, nämlich $\corange{\bJ_{f_{k+1}}(\bz_k)}$. Ein Rückwärtslauf liefert
 deshalb die Gradienten *aller* Schichten, nicht nur den einer einzelnen.
@@ -590,9 +491,8 @@ deshalb die Gradienten *aller* Schichten, nicht nur den einer einzelnen.
 Millionen von Parametern trainieren.
 :::
 
-Wo genau endet die Kette, wenn wir sie bis zu $\bW_1$ zurückverfolgen? Und was steht
-unterwegs eigentlich in den Zwischengrößen, Matrizen oder Zeilen? Am kleinsten möglichen
-Netz lässt sich das Schritt für Schritt nachzählen.
+Wo die Kette für $\bW_1$ endet und was unterwegs in den Zwischengrößen steht, Matrizen
+oder Zeilen, zählen wir am kleinsten möglichen Netz nach.
 
 :::interaktiv[Vorwärts und rückwärts durch ein winziges Netz]
 Das Netz hat zwei Schichten: $\ba_1 = \bW_1\bx$, dann

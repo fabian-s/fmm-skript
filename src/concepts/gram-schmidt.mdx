@@ -2,12 +2,12 @@ export const title = "Gram–Schmidt-Orthogonalisierung";
 
 import { GramSchmidtWidget } from "./widgets/QrFactorizationWidget";
 
-Das Gram–Schmidt-Verfahren (vgl. MML §3.8.3) ist ein Rezept, das jede
+Das Gram–Schmidt-Verfahren (vgl. MML §3.8.3) verwandelt jede
 :k[linear unabhängige]{#linear-independence}
 Menge von :k[Vektoren]{#vector} in eine
 paarweise :k[orthogonale]{#orthogonality}
 Menge mit demselben
-:k[Spann]{#span} verwandelt. Wir behalten den
+:k[Spann]{#span}. Wir behalten den
 ersten Vektor; von jedem weiteren ziehen wir seine
 :k[Projektion]{#projection} auf alles bisher
 Behaltene ab, sodass nur der senkrechte Anteil übrig bleibt:
@@ -16,7 +16,7 @@ $$
 \bu_1 = \bv_1, \qquad \bu_2 = \bv_2 - \frac{\bv_2^{\top}\bu_1}{\bu_1^{\top}\bu_1}\, \bu_1, \quad \dots
 $$
 
-Kleines Beispiel: Für $\bv_1 = (2, 0)^{\top}$ und
+Beispiel: Für $\bv_1 = (2, 0)^{\top}$ und
 $\bv_2 = (1, 1)^{\top}$ ist der Koeffizient
 $2/4 = 1/2$, also
 $\bu_2 = (1,1)^{\top} - (1, 0)^{\top} = (0, 1)^{\top}$,
@@ -24,12 +24,13 @@ orthogonal zu $\bv_1$. Teilen wir jedes
 $\bu_i$ noch durch seine
 :k[Norm]{#norm}, wird aus dem Ergebnis eine
 :k[Orthonormalbasis]{#orthonormal-basis} des von den $\bv_i$
-aufgespannten Raums. So entstehen etwa orthogonale
-Eigenvektoren innerhalb eines Eigenraums (vgl. MML §4.2).
+aufgespannten Raums.
 
-Wie viel bleibt vom zweiten Vektor übrig, wenn wir seinen Schatten abziehen?
+Wie viel bleibt vom zweiten Vektor übrig, wenn wir seine Projektion auf den
+ersten abziehen?
 
 <GramSchmidtWidget zeigeR={false} />
 
-Der Rest steht immer senkrecht auf $\bv_1$; seine Länge hängt davon ab, wie
-schief die beiden zueinander stehen.
+Der Rest steht immer senkrecht auf dem ersten Vektor. Seine Länge ist
+$\|\bv_2\|_2\,\lvert\sin\alpha\rvert$ für den Winkel $\alpha$ zwischen beiden; werden
+die Vektoren fast parallel, bleibt fast nichts übrig.

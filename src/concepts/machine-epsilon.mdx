@@ -4,12 +4,13 @@ import { ToyFloatLine } from "./widgets/FloatingPointWidget";
 
 Computer speichern reelle Zahlen als
 :k[Gleitkommazahlen]{#floating-point} mit
-einer festen Anzahl signifikanter Stellen. Zwischen zwei benachbarten
-darstellbaren Zahlen klafft also immer eine Lücke. Die
+einer festen Anzahl signifikanter Stellen. Zwischen benachbarten
+darstellbaren Zahlen bleibt deshalb eine Lücke. Die
 *Maschinengenauigkeit* (engl. *machine epsilon*)
 $\varepsilon_{\text{mach}}$ ist die Größe dieser Lücke
 direkt neben der 1: der Abstand von $1$ zur nächstgrößeren
-darstellbaren Zahl. Im üblichen Format mit doppelter Genauigkeit gilt
+darstellbaren Zahl, im Skript kurz $\eps$. Im üblichen Format mit doppelter
+Genauigkeit gilt
 
 $$
 \varepsilon_{\text{mach}} = 2^{-52} \approx 2{,}2 \times 10^{-16},
@@ -18,29 +19,21 @@ $$
 also etwa 16 signifikante Dezimalstellen. Eine beliebige reelle Zahl
 $x$ zu speichern heißt, sie auf den nächsten darstellbaren
 Wert zu runden (IEEE-Voreinstellung); für normalisiertes $x$ ist das höchstens
-eine halbe Lücke daneben, der *relative* Fehler also höchstens etwa
-$\varepsilon_{\text{mach}}/2$: die
-grundlegende Auflösungsgrenze hinter jedem
+eine halbe Lücke daneben, der *relative* Fehler also höchstens
+$\varepsilon_{\text{mach}}/2$. Diese Schranke steckt hinter jedem
 :k[Rundungsfehler]{#rounding-error}.
-Konkrete Konsequenz: In doppelter Genauigkeit ergibt die Summe
-$1 + 10^{-17}$ exakt $1$, denn das wahre Ergebnis
-liegt innerhalb der Lücke und wird wieder heruntergerundet.
+So ergibt $1 + 10^{-17}$ in doppelter Genauigkeit exakt $1$: Das wahre
+Ergebnis liegt näher an $1$ als an der nächsten darstellbaren Zahl.
 
-Die Größe
-$\sqrt{\varepsilon_{\text{mach}}} \approx 10^{-8}$ taucht
-immer dann auf, wenn für eine frei wählbare Größe $\delta$ ein Effekt der Größe
-$\delta^2$ gegen einen der Größe $\delta$
-abgewogen wird: Wählen wir $\delta$ nahe
-$\sqrt{\varepsilon_{\text{mach}}}$, fällt
-$\delta^2$ gerade unter die Auflösung der Arithmetik.
-Genau nach diesem Prinzip wählt man z.&nbsp;B. Störungs- und
-Schrittweiten in numerischen Verfahren.
+Eine wichtige Schwelle ist
+$\sqrt{\varepsilon_{\text{mach}}} \approx 10^{-8}$: Für $\delta$ in dieser
+Größenordnung fällt $\delta^2$ neben $1$ unter die Auflösung der Arithmetik.
+Das spielt eine Rolle, wenn wir Stör- oder Schrittweiten wählen.
 
 Wie groß ist diese Lücke in einem Spielzeugsystem mit nur wenigen
-Mantissenbits, und was kostet uns das Runden dort relativ?
+Mantissenbits, und wie groß wird dort der relative Rundungsfehler?
 
 <ToyFloatLine variante="epsilon" />
 
-Die orange Zone rechts von der 1 ist $\varepsilon$; links davon stehen die
-Striche halb so weit auseinander. Der relative Preis des Rundens bleibt dabei
-derselbe: er übersteigt nie die halbe Lücke.
+Rechts von der $1$ ist die Lücke $\varepsilon$, links davon nur $\varepsilon/2$.
+Der relative Rundungsfehler bleibt trotzdem überall unter $\varepsilon/2$.

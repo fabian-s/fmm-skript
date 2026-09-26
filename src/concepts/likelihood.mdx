@@ -4,9 +4,9 @@ import { LikelihoodWidget } from "./widgets/LikelihoodWidget";
 
 {/* Concept tooltip: Likelihood (wie wahrscheinlich sind die Daten unter den Parametern). */}
 
-Die Likelihood misst, wie wahrscheinlich die beobachteten Daten wären,
-wenn die Parameter einen bestimmten Wert hätten. Die Daten stehen fest
-(sie wurden ja gemessen), und wir lesen die Likelihood als
+Die *Likelihood* misst, wie wahrscheinlich die beobachteten Daten wären,
+wenn die Parameter einen bestimmten Wert hätten. Die Daten stehen fest,
+und wir lesen die Likelihood als
 :k[Funktion]{#function} der Parameter
 $\btheta$: Parameter, unter denen die Daten wahrscheinlich
 sind, bekommen eine hohe Likelihood. Beispiel: Eine Münze mit
@@ -15,13 +15,16 @@ unabhängigen Würfen 7-mal Kopf; eine bestimmte solche Wurffolge hat die
 Wahrscheinlichkeit
 
 $$
-L(p) = p^{7} (1 - p)^{3} ,
+L(p) = p^{7} (1 - p)^{3} .
 $$
 
-und die ist am größten bei $p = 0.7$. Wählen wir die
-Parameter, die die Likelihood
-:k[maximieren]{#optimization}, heißt das
-Maximum-Likelihood-Schätzung. Sie ist die
+Die Parameter, die die Likelihood
+:k[maximieren]{#optimization}, bilden die
+*Maximum-Likelihood-Schätzung* (ML-Schätzung). Meist arbeiten wir mit der
+*Log-Likelihood* $\log L$ oder minimieren ihr Negatives: Der
+:k[Logarithmus]{#logarithm} ist streng monoton, das Maximum bleibt also an
+derselben Stelle, und aus Produkten über unabhängige Beobachtungen werden
+Summen. Die Likelihood ist die
 :k[Zielfunktion]{#objective-function} hinter
 vielen Standardverfahren, auch hinter der
 :k[linearen Regression]{#linear-regression}
@@ -31,4 +34,5 @@ Wo würden wir das Likelihood-Maximum vor dem Blick auf die Kurve vermuten?
 
 <LikelihoodWidget />
 
-Die Kurve zeigt, wie die beobachtete Häufigkeit die günstigste Parameterwahl festlegt.
+Das Maximum liegt bei der beobachteten Häufigkeit $\hat p = 7/10$; allgemein
+maximiert $\hat p = h/10$ die Likelihood bei $h$ Köpfen in 10 Würfen.

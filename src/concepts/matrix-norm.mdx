@@ -2,7 +2,7 @@ export const title = "Matrixnorm (natürliche/induzierte Norm)";
 
 import { NormWidget } from "./widgets/MatrixNormWidget";
 
-Wie „groß" ist eine Matrix? Für Fehlerabschätzungen wollen wir nicht die
+Wie „groß“ ist eine Matrix? Für Fehlerabschätzungen wollen wir nicht die
 Einträge messen, sondern die *Wirkung* von $\bA$ als lineare Abbildung. Die von
 einer :k[Vektornorm]{#norm} *induzierte* (oder *natürliche*, auch *Operator-*)
 Norm misst die maximale Streckung eines Vektors:
@@ -11,7 +11,7 @@ $$
 \|\bA\| := \max_{\bx \neq \bnull} \frac{\|\bA\bx\|}{\|\bx\|} = \max_{\|\bx\| = 1} \|\bA\bx\|.
 $$
 
-Direkt aus der Definition folgt die Abschätzung, die wir in Beweisen ständig
+Aus der Definition folgt die Abschätzung, die wir in Beweisen ständig
 benutzen: $\|\bA\bv\| \le \|\bA\| \, \|\bv\|$ für alle $\bv$ (Verträglichkeit
 mit der Vektornorm), und daraus die *Submultiplikativität*
 $\|\bA\bB\| \le \|\bA\| \, \|\bB\|$. Beide kontrollieren, wie stark sich Fehler
@@ -24,13 +24,15 @@ $\|\bA\|_2 = \sigma_{\max}(\bA)$, der größte Singulärwert aus der
 :k[orthogonale Matrix]{#orthogonal-matrix} streckt nichts: $\|\bQ\|_2 = 1$. Aus
 $\|\bA\|$ und $\|\bA^{-1}\|$ zusammengesetzt entsteht die
 :k[Konditionszahl]{#condition-number}
-$\kappa(\bA) = \|\bA\| \, \|\bA^{-1}\|$.
+$\kappa(\bA) = \|\bA\| \, \|\bA^{-1}\|$. Nicht jede Matrixnorm ist induziert:
+Die *Frobenius-Norm* $\|\bA\|_F$, die Wurzel aus der Quadratsumme aller
+Einträge, misst $\bA$ wie einen langen Vektor.
 
-Wo genau sitzt dieses Maximum, und wie stark unterscheidet es sich von der
-schwächsten Richtung?
+In welche Richtung streckt $\bA$ den Einheitskreis am stärksten, und wie stark
+im Vergleich zur schwächsten Richtung?
 
 <NormWidget />
 
-Die Ellipse liefert die Antwort ab: Ihre längste Halbachse ist $\|\bA\|_2$,
-und weil sie ein Maximum über alle Einheitsvektoren ist, gilt die Abschätzung
-$\|\bA\bv\| \le \|\bA\| \, \|\bv\|$ für jedes $\bv$ ohne Ausnahme.
+Die längste Halbachse der Bildellipse ist $\|\bA\|_2$. Die kürzeste, also die
+schwächste Streckung, geht in die Norm nicht ein, auch wenn die Ellipse fast
+zur Strecke entartet.

@@ -256,8 +256,10 @@ export default function App() {
                   wieder solche Begriffe, man kann sich also weiterhangeln. Ein <em>Klick</em> auf
                   den Begriff (oder auf 📌 im Fenster) heftet das Fenster fest: es bleibt offen,
                   lässt sich an der Titelleiste verschieben und stört das Scrollen nicht.
-                  Geschlossen wird mit ×, mit <kbd>Esc</kbd>, oder indem man daneben klickt. Gelbe
-                  &bdquo;Vertiefung&ldquo;-Boxen enthalten interaktive Widgets.
+                  Geschlossen wird mit ×, mit <kbd>Esc</kbd>, oder indem man daneben klickt. Blaue
+                  &bdquo;Interaktiv&ldquo;-Kästen gehören zum Kernstoff. Gelbe
+                  &bdquo;Vertiefung&ldquo;-Boxen sind optionaler Zusatzstoff: Der Haupttext ist
+                  auch ohne sie vollständig.
                 </p>
               </details>
             </header>

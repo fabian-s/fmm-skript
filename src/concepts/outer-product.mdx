@@ -2,37 +2,35 @@ export const title = "Äußeres Produkt (outer product)";
 
 import { OuterWidget } from "./widgets/OuterProductWidget";
 
-Das *äußere Produkt* (engl. *outer product*) zweier
+Das *äußere Produkt* (auch *dyadisches Produkt*, engl. *outer product*) zweier
 :k[Vektoren]{#vector}
 $\bu \in \R^m$ und
 $\bv \in \R^n$ ist das
 :k[Matrixprodukt]{#matrix-multiplication}
-$\bu\bv^T$, Spalte mal Zeile. Das ergibt eine volle
+$\bu\bv^T$, Spalte mal Zeile, auch $\bu \otimes \bv$ geschrieben. Das ergibt eine volle
 $m \times n$-:k[Matrix]{#matrix}, deren
 $(i,j)$-Eintrag $u_i v_j$ ist. Vergleichen wir das
 mit dem
 :k[Skalarprodukt]{#dot-product}
-$\bu^T\bv$: Dort steht Zeile mal Spalte, und alles
-kollabiert zu einer einzigen Zahl.
-
-Ein Mini-Beispiel:
+$\bu^T\bv$: Dort steht Zeile mal Spalte, und es entsteht
+eine einzige Zahl. Beispiel:
 
 $$
 \begin{pmatrix}1\\2\\3\end{pmatrix} \begin{pmatrix}4 & 5\end{pmatrix} = \begin{pmatrix}4 & 5\\ 8 & 10\\ 12 & 15\end{pmatrix}.
 $$
 
 Jede Spalte von $\bu\bv^T$ ist ein Vielfaches des einen
-Vektors $\bu$; ein äußeres Produkt (ungleich Null) hat
-also immer :k[Rang]{#rank} eins und ist
-damit die einfachste nichttriviale Matrix. Deshalb
-schreibt die abgeschnittene Singulärwertzerlegung (truncated SVD)
-$\bA = \sum_i \sigma_i \bu_i \bv_i^T$: Sie zerlegt eine
-beliebige Matrix in eine Summe solcher Rang-1-Bausteine, geordnet
-nach Wichtigkeit.
+Vektors $\bu$; ein äußeres Produkt ungleich der Nullmatrix hat
+also immer :k[Rang]{#rank} eins. Die
+:k[Singulärwertzerlegung]{#singular-value-decomposition} schreibt jede
+Matrix als Summe solcher Rang-1-Bausteine,
+$\bA = \sum_i \sigma_i \bu_i \bv_i^T$, geordnet nach der Größe der
+Singulärwerte $\sigma_i$; die abgeschnittene SVD behält nur die ersten
+Summanden.
 
 Lässt sich mit dem äußeren Produkt überhaupt eine Matrix mit zwei unabhängigen Zeilen bauen?
 
 <OuterWidget />
 
-Ganz gleich, welche Zahlen wir wählen: mehr als eine unabhängige Richtung
-kommt dabei nie heraus.
+Nein: Zeile $i$ von $\bu\bv^T$ ist $u_i \bv^T$, also ein Vielfaches derselben
+Zeile $\bv^T$. Mehr als eine unabhängige Richtung kommt deshalb nie heraus.

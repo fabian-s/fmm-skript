@@ -82,3 +82,36 @@ Say what pattern classes were removed, which files got no line-by-line read (gre
 edits), and any judgement calls that changed meaning even slightly (a claim you
 weakened, a title you renamed, a sentence you cut for contradicting another section).
 Those are the places the author should look.
+
+## 7. Shortening pass: main text vs. optional material
+
+When the goal is also to make a long teaching document *shorter* (students find it
+overwhelming), deslop alone removes only a few percent. What worked on a 205k-word
+lecture script (Sept 2026, main text −15 %, total −10 %, no lost content):
+
+- **Define "main text" by an external ground truth, not by taste.** Here: everything on
+  a counted lecture slide (plus past exam topics) stays in the main text; the main text
+  must read completely with every optional box collapsed. Everything else is EXTRA:
+  proofs the slides only cite, appendix slides, second and third examples,
+  generalisations, historical notes. Give the agents the slide sources.
+- **Four operations in priority order:** write better (deslop, broken sentences, clear
+  errors) → tighten (say each thing once; one summary per chapter) → move EXTRA into
+  collapsed optional boxes (few, coherent boxes; "theorem in main text, proof in box")
+  → delete only what is redundant. Good extra material is moved, not deleted.
+- **Targets as ranges per chapter, not quotas.** Folio-close chapters shrank ~10 %,
+  sprawling ones 20–26 %. Several reviewers *restored* slide content that an earlier
+  pass had hidden in optional boxes, so a chapter's main text can even grow; that is
+  the principle working, not a failure.
+- **Per chapter: editor, then an independent reviewer who reads the diff against the
+  base commit** and checks: main text complete with boxes collapsed (no term, symbol or
+  quiz answer that lives only in a box), meaning preserved, over-eager cuts restored into
+  a box, residual tells. Reviewers found real damage in every large chapter (reversed
+  quiz answers, lost preconditions, dangling "wie oben").
+- **Afterwards, check cross-chapter references semantically**, not just syntactically:
+  after material moves, "(see §x)" often points at a section that no longer (or never
+  did) contain the claim. 18 of 273 cross-chapter references were wrong here.
+- **Popups/tooltips:** cap them (~180 words of prose), cut side topics and "vgl."
+  chains, but grep every link site first; reviewers restored material that link sites
+  depended on.
+- Make the "optional" status visible in the UI and the print version, not only in
+  content (badge "Vertiefung · optional", reading-guide sentence).

@@ -2,9 +2,8 @@ export const title = "Lineares Gleichungssystem";
 
 import { ZweiGeradenFigur } from "./widgets/LinearSystemWidget";
 
-Ein lineares Gleichungssystem ist eine Sammlung von Gleichungen, in
-denen jede Unbekannte nur mit einer Zahl multipliziert und aufsummiert
-vorkommt: keine Quadrate, keine Produkte von Unbekannten, keine
+In einem *linearen Gleichungssystem* kommen die Unbekannten nur mit Zahlen
+multipliziert und aufsummiert vor: keine Quadrate, keine Produkte von Unbekannten, keine
 anderen nichtlinearen Terme. Zum Beispiel bilden
 $2x + 3y = 5$ und $x - y = 1$ zusammen ein System in
 den zwei Unbekannten $x, y$; eine Lösung ist jede Belegung der
@@ -12,24 +11,25 @@ Unbekannten, die *alle* Gleichungen gleichzeitig erfüllt.
 Stapeln wir die Koeffizienten in eine
 :k[Matrix]{#matrix} $\bA$ und die
 Unbekannten in einen :k[Vektor]{#vector}
-$\bx$, schrumpft das ganze System auf eine Gleichung:
+$\bx$, wird das System zu einer einzigen Gleichung:
 
 $$
 \begin{pmatrix} 2 & 3 \\ 1 & -1 \end{pmatrix} \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} 5 \\ 1 \end{pmatrix}, \quad \text{d.h.} \quad \bA\bx = \bb.
 $$
 
-Solche Systeme entstehen in Anwendungen von selbst: In einem Stromkreis
-etwa liefert das :k[Ohmsche Gesetz]{#ohms-law} für jede Masche eine
-lineare Gleichung in den unbekannten Strömen.
+In einem Stromkreis liefert etwa das :k[Ohmsche Gesetz]{#ohms-law} für jede
+Masche eine lineare Gleichung in den unbekannten Strömen.
 
-Systeme lassen sich mechanisch mit dem
-:k[Gauß-Verfahren]{#gaussian-elimination}
-lösen. Für quadratisches $\bA$ (hier der $2 \times 2$-Fall) entscheidet die
-:k[Determinante]{#determinant}: genau eine Lösung, wenn sie ungleich null ist.
-Bei rechteckigem $\bA$ entscheiden stattdessen Rangbedingungen.
+Lösen lassen sich solche Systeme mit dem
+:k[Gauß-Verfahren]{#gaussian-elimination}. Für quadratisches $\bA$ (hier der
+$2 \times 2$-Fall) entscheidet die
+:k[Determinante]{#determinant}: Ist sie ungleich null, gibt es genau eine
+Lösung, sonst keine oder unendlich viele. Bei rechteckigem $\bA$
+entscheiden stattdessen Rangbedingungen.
 
 Welche Lage der beiden Geraden führt zu welchem Lösungstyp?
 
 <ZweiGeradenFigur />
 
-Die geometrische Lage der Geraden entspricht unmittelbar der Anzahl der Lösungen.
+Schneiden sich die Geraden, gibt es genau eine Lösung; sind sie parallel und
+verschieden, keine; fallen sie zusammen, unendlich viele.

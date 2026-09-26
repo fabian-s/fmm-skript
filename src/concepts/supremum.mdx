@@ -4,40 +4,29 @@ import { SupWidget } from "./widgets/SupremumWidget";
 
 {/* Konzept-Tooltip: Supremum (und Infimum): kleinste obere Schranke, wird evtl. nie angenommen. */}
 
-Das Supremum einer Menge von Zahlen ist ihre *kleinste obere
-Schranke* (least upper bound): die kleinste Zahl, die immer noch
+Das *Supremum* einer Menge von Zahlen ist ihre *kleinste obere
+Schranke* (least upper bound): die kleinste Zahl, die
 $\geq$ jedem Element der Menge ist. Hat die Menge ein
-größtes Element, dann *ist* das Supremum einfach dieses
-Maximum. Der Witz des neuen Begriffs ist, dass ein Supremum
-auch dann existieren kann, wenn ein Maximum fehlt. Die
-:k[Folge]{#sequence} der Werte
-$1 - \tfrac{1}{n}$, also
-$0, \tfrac{1}{2}, \tfrac{2}{3}, \tfrac{3}{4}, \dots$, hat
-kein größtes Element (jedes wird vom nächsten übertroffen), aber
-$1$ beschränkt sie alle und nichts Kleineres tut das:
+größtes Element, dann *ist* das Supremum dieses
+Maximum. Ein Supremum kann aber
+auch existieren, wenn ein Maximum fehlt: Die
+:k[Folge]{#sequence}
+$0, \tfrac{1}{2}, \tfrac{2}{3}, \tfrac{3}{4}, \dots$ der Werte
+$1 - \tfrac{1}{n}$ hat kein größtes Element, aber
+$1$ beschränkt sie alle, und nichts Kleineres tut das. Also ist
+$\sup_{n \in \N} \left( 1 - \tfrac{1}{n} \right) = 1$.
 
-$$
-\sup_{n \in \N} \left( 1 - \tfrac{1}{n} \right) = 1, \qquad \text{aber } \max_n \left( 1 - \tfrac{1}{n} \right) \text{ existiert nicht.}
-$$
-
-Für eine :k[Funktion]{#function} meint
-$\sup_x f(x)$ das Supremum aller Werte $f(x)$,
-die Höhe, der sich der Graph nähert, selbst wenn kein
-einzelnes $x$ sie je annimmt (dafür brauchen wir keinen
-:k[Grenzwert]{#limit}-Apparat, nur
-Schranken). Das Spiegelbild ist das *Infimum*, die größte
+Jede nichtleere, nach oben beschränkte Menge reeller Zahlen hat ein
+Supremum; für eine unbeschränkte setzen wir $\sup = +\infty$. Für eine
+:k[Funktion]{#function} meint $\sup_x f(x)$ das Supremum aller Werte $f(x)$,
+also die niedrigste Höhe, über die der Graph nirgends hinausreicht. Das Spiegelbild ist das *Infimum*, die größte
 untere Schranke, mit
-$\inf_x f(x) = -\sup_x \left( -f(x) \right)$. Diese
-Robustheit ist der Grund, warum etwa die konvexe Konjugierte
-(vgl. MML §7.3.3) mit einem Supremum definiert wird: Für die geknickte
-Funktion $f(x) = |x|$ existiert zu manchen Steigungen gar keine
-Maximalstelle; das Supremum ist für jede nichtleere Menge trotzdem
-erklärt, als reelle Zahl, wenn sie nach oben beschränkt ist, sonst als
-$+\infty$.
+$\inf_x f(x) = -\sup_x \left( -f(x) \right)$.
 
 Für $f(x) = \tfrac{x}{1+x}$ mit $x \geq 0$ bleiben alle Werte unter $1$: Können
 wir die Höhe 0,99 überschreiten, ohne diese obere Schranke zu erreichen?
 
 <SupWidget />
 
-Eine kleinste obere Schranke muss also nicht angenommen werden.
+Ja: Für $x > 99$ ist $f(x) > 0{,}99$ und doch $f(x) < 1$. Das gelingt mit
+jeder Höhe unter $1$; also ist $\sup_{x \ge 0} f(x) = 1$, ohne Maximum.

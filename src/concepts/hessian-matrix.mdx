@@ -19,18 +19,16 @@ Test mit der zweiten Ableitung aus der Schule: Dort, wo der
 :k[Gradient]{#gradient} verschwindet, hat
 $\phi$ ein lokales Minimum, wenn die Hesse-Matrix
 :k[positiv definit]{#positive-definite} ist;
-die Fläche krümmt sich dann überall nach oben, wie eine Schüssel. Für die
-Kleinste-Quadrate-Zielfunktion ist die Hesse-Matrix konstant $2\bA^T\bA$; ihre
-positive Definitheit macht die Lösung der Normalengleichungen zum Minimum
-statt zum Sattelpunkt.
+die Fläche krümmt sich dann in jeder Richtung nach oben, wie eine Schüssel. Für
+die Kleinste-Quadrate-Zielfunktion ist die Hesse-Matrix konstant $2\bA^T\bA$, bei
+vollem Spaltenrang von $\bA$ also positiv definit.
 
-Was sagt der Test, wenn sich eine Richtung überhaupt nicht krümmt?
+Das Widget zeigt $q(x, y) = a x^2 + b y^2$. Was sagt der Test, wenn sich eine
+Richtung gar nicht krümmt?
 
 <HessianWidget />
 
-Für die quadratische Form $q(x, y) = a x^2 + b y^2$ des Widgets bleibt mit
-$a > 0$ und $b = 0$ eine flache Rinne übrig: ein Minimum, aber kein
-isoliertes. Für beliebige $\phi$ entscheidet Semidefinitheit dagegen gar
-nichts: $x^2 + y^4$ und $x^2 - y^4$ haben in $(0,0)$ dieselbe Hesse-Matrix
+Mit $a > 0$ und $b = 0$ bleibt eine flache Rinne: ein Minimum, aber kein
+isoliertes. Für allgemeine $\phi$ entscheidet eine semidefinite Hesse-Matrix
+gar nichts: $x^2 + y^4$ und $x^2 - y^4$ haben in $(0,0)$ dieselbe Hesse-Matrix
 $\diag(2, 0)$, aber nur die erste ein Minimum.
-Erst positive Definitheit macht den kritischen Punkt zum isolierten Minimum.

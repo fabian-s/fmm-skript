@@ -8,30 +8,29 @@ Der *Kern* (engl. kernel, auch *Nullraum*, null space) einer
 :k[Matrix]{#matrix} $\bA$ ist die
 Menge aller :k[Vektoren]{#vector}, die die
 :k[Abbildung]{#linear-map}
-$\bx \mapsto \bA\bx$ auf null zusammendrückt:
+$\bx \mapsto \bA\bx$ auf den Nullvektor schickt:
 
 $$
 \ker(\bA) = \{ \bx : \bA\bx = \mathbf{0} \},
 $$
 
-also die Lösungsmenge des homogenen
+im Skript auch $\operatorname{Kern}(\bA)$; das ist die Lösungsmenge des homogenen
 :k[linearen Gleichungssystems]{#linear-system}
 $\bA\bx = \mathbf{0}$. Der Kern ist immer ein
-:k[Unterraum]{#subspace}, und seine Größe
-steht im Tausch mit dem :k[Bild]{#image}:
-nach dem
-:k[Rangsatz]{#rank-nullity-theorem} gilt
+:k[Unterraum]{#subspace}. Je größer er ist, desto kleiner ist das
+:k[Bild]{#image}: Für $\bA$ mit $n$ Spalten gilt nach dem
+:k[Rangsatz]{#rank-nullity-theorem}
 $\dim\ker(\bA) = n - \operatorname{rk}(\bA)$. Eine
 invertierbare Matrix hat also nur den Kern $\{\mathbf{0}\}$.
-Kerne sind auch der Motor hinter Eigenräumen:
+Auch Eigenräume sind Kerne:
 $\bA\bx = \lambda\bx$ lässt sich umstellen zu
 $(\bA - \lambda\bI)\bx = \mathbf{0}$, der Eigenraum ist
-also genau
-$E_\lambda = \ker(\bA - \lambda\bI)$. Unten hat
-$\bA = \begin{pmatrix} 1 & 2 \\ 0.5 & 1 \end{pmatrix}$
-Rang 1. Finden wir die Richtung, die $\bA$ auslöscht:
+also $E_\lambda = \ker(\bA - \lambda\bI)$.
+
+Die Matrix $\bA = \begin{pmatrix} 1 & 2 \\ 0{,}5 & 1 \end{pmatrix}$
+hat Rang 1. Welche Richtung bildet sie auf null ab?
 
 <KernelWidget />
 
-Die gesuchte Richtung ist nicht eine, sondern eine ganze Gerade: mit v wird
-auch jedes Vielfache von v ausgelöscht.
+Der Kern ist die ganze Gerade durch $(2; -1)^\top$: Mit $\bv$ wird auch jedes
+Vielfache von $\bv$ auf null abgebildet, passend zu $\dim\ker(\bA) = 2 - 1 = 1$.

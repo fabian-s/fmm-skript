@@ -7,20 +7,19 @@ import { SecantWidget } from "./widgets/SecantLineWidget";
 Eine Sekante (secant line) ist eine Gerade durch
 *zwei* Punkte auf dem Graphen einer
 :k[Funktion]{#function}. Sind die Punkte
-$(x_0, f(x_0))$ und $(x_0 + h, f(x_0 + h))$, so ist
+$(x_0, f(x_0))$ und $(x_0 + h, f(x_0 + h))$ mit $h \neq 0$, so ist
 die :k[Steigung]{#slope} der Sekante
-„Höhenzuwachs durch Schrittweite“:
-$\frac{f(x_0+h) - f(x_0)}{h}$ für $h \neq 0$, genau der
-Differenzenquotient (vgl. MML Def. 5.1). Zum Beispiel hat auf
-$f(x) = x^2$ die Sekante durch die Punkte bei
+„Höhenzuwachs durch Schrittweite“, der *Differenzenquotient*
+$\frac{f(x_0+h) - f(x_0)}{h}$ (vgl. MML Def. 5.1). Auf
+$f(x) = x^2$ hat die Sekante durch die Punkte bei
 $x=1$ und $x=2$ die Steigung
 $(4-1)/(2-1) = 3$. Rücken die beiden Punkte zusammen ($h \to 0$), wird aus der Sekante die
 :k[Tangente]{#tangent-line} bei
-$x_0$. Das ist die ganze Idee hinter der Ableitung.
+$x_0$; deren Steigung ist die Ableitung.
 
-Probieren wir aus, wie sich die Steigung ändert, wenn der zweite Punkt wandert:
+Wie ändert sich die Sekantensteigung auf $f(x) = x^2$ bei $x_0 = 1$, wenn $h$ schrumpft?
 
 <SecantWidget />
 
-Für jedes $h$ ist die Steigung hier $2 + h$; das Beispiel oben mit
-$h = 1$ ist also nur einer von unendlich vielen Werten auf dieser Geraden.
+Sie ist exakt $2 + h$, also um genau $h$ größer als die Tangentensteigung $2$;
+das Beispiel oben ist der Fall $h = 1$.

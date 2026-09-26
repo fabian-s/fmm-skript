@@ -4,12 +4,12 @@ import { GradientDescentWidget } from "./widgets/GradientDescentWidget";
 
 {/* Konzept-Tooltip: Gradientenverfahren, iterative Abstiegsschritte auf einer Zielfunktion. */}
 
-Das *Gradientenverfahren* (gradient descent) ist das
+Das *Gradientenverfahren* oder der *Gradientenabstieg* (gradient descent) ist das
 Standardverfahren hinter dem „Trainieren“ eines Modells: Es löst das
 :k[Optimierungsproblem]{#optimization}, eine
 :k[Zielfunktion]{#objective-function}
 $L(\btheta)$ zu minimieren, wenn wir die besten Parameter
-nicht direkt ausrechnen können. Das Rezept: Wir berechnen am aktuellen
+nicht direkt ausrechnen können. Wir berechnen am aktuellen
 Parameter-:k[Vektor]{#vector} den
 :k[Gradienten]{#gradient} von $L$
 (Richtung des steilsten *Anstiegs*) und machen einen kleinen
@@ -21,16 +21,15 @@ $$
 
 wobei die Schrittweite $\gamma > 0$ („Lernrate“)
 steuert, wie weit jeder Schritt geht; transponiert wird, weil der Gradient
-hier ein Zeilenvektor ist. Für
-$L(\theta) = \theta^2$ lautet der Schritt
+hier ein Zeilenvektor ist. Jeder Schritt braucht den Gradienten; bei
+:k[neuronalen Netzen]{#neural-network} liefert ihn Backpropagation (vgl. MML §5.6).
+Für $L(\theta) = \theta^2$ lautet der Schritt
 $\theta_{t+1} = \theta_t - \gamma \cdot 2\theta_t = (1 - 2\gamma)\,\theta_t$.
-Deshalb steckt Backpropagation so viel Aufwand in die Gradienten der
-Verlustfunktion eines :k[neuronalen Netzes]{#neural-network} (vgl. MML §5.6).
 
 Wie verändert die Schrittweite den Weg zum Minimum?
 
 <GradientDescentWidget />
 
-Alles hängt am Update-Faktor $1 - 2\gamma$: Wird er negativ, oszilliert die
+Entscheidend ist der Faktor $1 - 2\gamma$: Wird er negativ, oszilliert die
 Folge um das Minimum; konvergent ist sie genau für
 $\left|1 - 2\gamma\right| < 1$, hier also für $0 < \gamma < 1$.

@@ -3,8 +3,8 @@ import { HesseSchaetzung } from "./widgets/S107Hesse";
 ### Wo die erste Ableitung aufhört
 
 Die Fréchet-Ableitung ersetzt $f$ in der Nähe von $\bx$ durch eine lineare Abbildung. Für
-vieles reicht das. In kritischen Punkten sagt sie aber nichts mehr aus. Sei $f\colon S \subseteq \R^n \to \R$ und $\bx^*$ ein *kritischer Punkt*, also eine
-Stelle mit $\corange{\nabla f(\bx^*)} = \bnull$. Die lineare Näherung lautet dort
+vieles reicht das, in kritischen Punkten aber nicht. Sei $f\colon S \subseteq \R^n \to \R$
+und $\bx^*$ ein *kritischer Punkt*, also eine Stelle mit $\corange{\nabla f(\bx^*)} = \bnull$. Die lineare Näherung lautet dort
 
 $$
 \cblue{f(\bx^* + \bh)} \approx \cblue{f(\bx^*)} + \corange{\nabla f(\bx^*)}\,\bh
@@ -15,16 +15,13 @@ sie ist konstant. Ob $\bx^*$ ein Minimum, ein Maximum oder keines von beidem ist
 darin nicht. Davon hängt aber ab, ob ein Optimierungsverfahren angekommen ist, und in der
 Statistik, wie genau ein Schätzer den Parameter trifft.
 
-Der Ausweg ist derselbe wie in der Schule: Wir leiten noch einmal ab. Was das für
-Funktionen mehrerer Variabler heißt, klärt dieser Abschnitt. Die Antwort heißt
-:k[Hesse-Matrix]{#hessian-matrix}, sie ist wegen des Satzes von Schwarz symmetrisch, ihre
-:k[Eigenwerte]{#eigenvalue-eigenvector} entscheiden über die Art des kritischen Punktes,
-und in der Statistik führt sie direkt zur Fisher-Information.
+Der Ausweg ist derselbe wie in der Schule: Wir leiten noch einmal ab und erhalten die
+:k[Hesse-Matrix]{#hessian-matrix}, deren :k[Eigenwerte]{#eigenvalue-eigenvector} über die
+Art des kritischen Punktes entscheiden.
 
 ### Ableitungen höheren Grades
 
-Wir definieren höhere Ableitungen in einem Zug für normierte Vektorräume. Die Definition
-ist technisch; was sie besagt, erläutert die Bemerkung danach.
+Die folgende Definition ist technisch; die Bemerkung danach erklärt, wie sie zu lesen ist.
 
 :::definition[#k-mal-frechet-differenzierbar (k-mal (Fréchet-)differenzierbar)]
 Seien $\D$ und $\E$ normierte Vektorräume, $U \subseteq \D$ offen und
@@ -64,8 +61,6 @@ Voraussetzungen in einer offenen Umgebung von $\bx$ erfüllt sind.
 :::
 
 :::bemerkung[#hoehere-ableitungen-wie-die-definition-zu-lesen-ist (Wie die Definition zu lesen ist)]
-Sechs Beobachtungen zur Definition.
-
 *Für $j = 1$ steht dort die alte Definition.* Dann ist
 $\mathcal L^0(\D,\E)=\E$ und $D^0f=f$, also lautet die Restbedingung
 
@@ -76,11 +71,7 @@ $$
 $$
 
 und das ist die Fréchet-Ableitung aus @definition:frechet-ableitung. Die höheren
-Stufen sind also keine neue Idee, sondern dieselbe Idee, mehrfach angewandt.
-
-*Warum eine Umgebung vorkommt.* Um $D^j_{\bx}f$ zu bilden, müssen die Werte
-$D^{j-1}_{\bx+\bh}f$ für kleine $\bh$ bereits existieren. Ableitungen nur an der
-einzelnen Stelle $\bx$ reichen dafür nicht.
+Stufen sind dieselbe Idee, mehrfach angewandt.
 
 *Was hier wonach abgeleitet wird.* Halten wir $\bh_1, \dots, \bh_{j-1}$ fest. Dann ist
 
@@ -88,20 +79,31 @@ $$
 \bx \longmapsto \cblue{D^{j-1}_{\bx} f(\bh_1, \dots, \bh_{j-1})}
 $$
 
-eine Abbildung von $\D$ nach $\E$. Aus @eq:k-mal-frechet-differenzierbar folgt insbesondere: Ihre
-Fréchet-Ableitung an der Stelle $\bx$, angewandt auf $\bh$, ist
-$\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. In einem Satz: *Die $j$-te Ableitung
-ist die lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere
-Ableitungen wie gewohnt iterativ aus, Stufe für Stufe.
+eine Abbildung von $\D$ nach $\E$. Nach @eq:k-mal-frechet-differenzierbar ist ihre
+Fréchet-Ableitung an der Stelle $\bx$, angewandt auf $\bh$, gleich
+$\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_{j-1}, \bh)}$. *Die $j$-te Ableitung ist also die
+lineare Näherung an die Änderung der $(j-1)$-ten.* Deshalb rechnen wir höhere Ableitungen
+wie gewohnt iterativ aus, Stufe für Stufe.
+
+*Die Objekte werden größer.* $\cgreen{D^j_{\bx} f}$ ist multilinear, also linear in jedem
+Argument, wenn die übrigen festgehalten werden (@sec:tensoren/multilinear). Für
+$f\colon \R^n \to \R$ braucht $\cgreen{D^1_{\bx} f}$ einen Zeilenvektor mit $n$ Zahlen,
+$\cgreen{D^2_{\bx} f}$ eine Matrix mit $n^2$ Zahlen, $\cgreen{D^3_{\bx} f}$ einen
+:k[Tensor]{#tensor} dritter Stufe mit $n^3$ Zahlen. Die Stufe wächst mit $j$, und ab
+$j = 3$ verlassen wir die Matrixsprache (@sec:tensoren/tensoren).
+:::
+
+:::vertiefung[Feinheiten der Definition: Umgebung, Operatornorm und Beschränktheit]
+*Warum eine Umgebung vorkommt.* Um $D^j_{\bx}f$ zu bilden, müssen die Werte
+$D^{j-1}_{\bx+\bh}f$ für kleine $\bh$ bereits existieren. Ableitungen nur an der
+einzelnen Stelle $\bx$ reichen dafür nicht.
 
 *Warum die Operatornorm.* Sie verlangt mehr als eine Restabschätzung für
 feste Richtungen: Der Rest muss gleichmäßig für alle Richtungen mit Norm höchstens eins
 klein werden. Diese Gleichmäßigkeit braucht der allgemeine Taylor-Satz.
 
-*Multilinear und beschränkt.* Multilinear heißt: linear in jedem Argument, wenn die
-übrigen festgehalten werden. Solche Abbildungen kennen wir aus
-@sec:tensoren/multilinear und aus der Produktregel in
-@sec:produkt-kettenregel. Beschränkt heißt hier
+*Was beschränkt heißt.* Für die multilinearen Abbildungen $\cgreen{D^j_{\bx} f}$, wie wir
+sie auch aus der Produktregel in @sec:produkt-kettenregel kennen, verlangen wir
 
 $$
 \left\|\cgreen{D^j_{\bx} f(\bh_1, \dots, \bh_j)}\right\|
@@ -110,14 +112,6 @@ $$
 
 für ein $M < \infty$, das von $\bx$ abhängen darf. In endlicher Dimension ist das
 automatisch erfüllt.
-
-*Die Objekte werden größer.* Für $f\colon \R^n \to \R$ braucht $\cgreen{D^1_{\bx} f}$ einen
-Zeilenvektor mit $n$ Zahlen, $\cgreen{D^2_{\bx} f}$ eine Matrix mit $n^2$ Zahlen,
-$\cgreen{D^3_{\bx} f}$ einen :k[Tensor]{#tensor} dritter Stufe mit $n^3$ Zahlen. Die Stufe
-wächst mit $j$, und ab $j = 3$ verlassen wir die Matrixsprache
-(@sec:tensoren/tensoren). Die Definition sagt noch nichts darüber, wie wir
-$\cgreen{D^j_{\bx} f}$ ausrechnen. Das tun die nächsten Seiten für den wichtigsten Fall,
-$f\colon \R^n \to \R$, und danach für $f\colon \R^n \to \R^m$.
 :::
 
 ### Vektor zu Skalar: die Hesse-Matrix
@@ -135,13 +129,10 @@ $$
 $$
 :::
 
-Bloße Differenzierbarkeit reicht hier nicht. Damit die Einträge überhaupt
-existieren, brauchen wir zweite partielle Ableitungen, und für alles Weitere sogar deren
-Stetigkeit. Wir schreiben dafür kurz $f \in \Ccal^2$, gemeint ist: alle zweiten
-partiellen Ableitungen existieren und sind stetig.
-
-Unter dieser Bedingung ist die Hesse-Matrix symmetrisch, was etwa den halben Rechenaufwand spart. Wir
-stellen sie den Formeln für $\cgreen{D^2_{\bx} f}$ voran, weil diese sie schon brauchen.
+Für alles Weitere verlangen wir mehr als die Existenz dieser Einträge, nämlich
+$f \in \Ccal^2$: Alle zweiten partiellen Ableitungen existieren und sind stetig. Dann ist
+die Hesse-Matrix symmetrisch, und die Formeln für $\cgreen{D^2_{\bx} f}$ weiter unten
+brauchen das bereits.
 
 :::satz[#satz-von-schwarz (Satz von Schwarz)]
 Seien $S \subseteq \R^n$ offen und $f\colon S \to \R$ zweimal stetig differenzierbar
@@ -153,7 +144,7 @@ $$
 $$
 :::
 
-:::::vertiefung[Der Beweis: zweimal Mittelwertsatz an derselben doppelten Differenz]
+:::::vertiefung[Beweis des Satzes von Schwarz]
 
 ::::beweis
 
@@ -237,17 +228,12 @@ Das ist etwas *mehr* als die Hälfte, nicht
 weniger, denn $n(n+1)/2 = n^2/2 + n/2$. Der Quotient fällt mit wachsendem $n$ von $0{,}75$
 bei $n = 2$ auf $0{,}5005$ bei $n = 1000$.
 
-Die Symmetrie zahlt sich zweimal aus: bei der Berechnung, und beim Lösen von Systemen mit
-$\corange{\bH_f}$. Ist $\corange{\bH_f}$ zusätzlich positiv definit, also gerade in der
-Nähe eines Minimums, so bietet sich das Cholesky-Verfahren aus
-@sec:lgs/cholesky an; Symmetrie allein reicht dafür nicht, denn @satz:cholesky-zerlegung
-verlangt positive Definitheit. Für symmetrische Matrizen gilt außerdem der
-:k[Spektralsatz]{#spectral-theorem}: Es gibt eine Orthonormalbasis aus Eigenvektoren, und
-alle Eigenwerte sind reell. Darauf beruht alles Weitere in diesem Abschnitt.
+Die Symmetrie zahlt sich auch beim Lösen von Systemen mit $\corange{\bH_f}$ aus: Ist
+$\corange{\bH_f}$ zusätzlich positiv definit, wie oft in der Nähe eines Minimums, so
+bietet sich das Cholesky-Verfahren aus @sec:lgs/cholesky an. Für symmetrische Matrizen
+gilt außerdem der :k[Spektralsatz]{#spectral-theorem} (Orthonormalbasis aus
+Eigenvektoren, reelle Eigenwerte); darauf beruht alles Weitere in diesem Abschnitt.
 :::
-
-Jetzt können wir die Ableitungen erster und zweiter Stufe für $f\colon \R^n \to \R$
-ausrechnen.
 
 :::satz[#erste-und-zweite-ableitung-in (Erste und zweite Ableitung in Koordinaten)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx \in S$. Dann gilt für alle
@@ -260,7 +246,15 @@ $$
 $$
 :::
 
-:::::vertiefung[Warum Gradient und Hesse-Matrix die ersten beiden Ableitungen darstellen]
+Die erste Formel kennen wir aus @sec:gradient. Für die zweite fragt die Definition, wie
+sich $\cgreen{D_{\bx} f(\bh_1)} = \corange{\nabla f(\bx)}\bh_1$ ändert, wenn wir $\bx$ um
+$\bh$ verschieben. Weil jede Komponente des Gradienten differenzierbar ist, gilt
+$\corange{\nabla f(\bx + \bh)} - \corange{\nabla f(\bx)} = \bh^\top\corange{\bH_f(\bx)} + \cred{o(\left\|\bh\right\|)}$,
+und eingesetzt in @eq:k-mal-frechet-differenzierbar mit $j = 2$ ergibt das
+$\cgreen{D^2_{\bx} f(\bh_1, \bh)} = \bh^\top\corange{\bH_f(\bx)}\bh_1$, nach
+@satz:satz-von-schwarz gleich $\bh_1^\top\corange{\bH_f(\bx)}\bh$.
+
+:::::vertiefung[Beweis der Koordinatenformeln für die ersten beiden Ableitungen]
 
 ::::beweis
 
@@ -352,12 +346,10 @@ $$
 \corange{\bH_f(\bx)} = \begin{pmatrix} 2x_1 & 0 \\ 0 & 2 \end{pmatrix} .
 $$
 
-Die Hesse-Matrix ist symmetrisch, wie @satz:satz-von-schwarz es verlangt, und sie hängt hier von
-$\bx$ ab. Kritische Punkte gibt es zwei, nämlich $(1, 0)$ und $(-1, 0)$.
-
-Im Punkt $(1,0)$ ist $\corange{\bH_f} = \diag(2, 2)$ mit den Eigenwerten $2$ und $2$, beide
-positiv. Im Punkt $(-1,0)$ ist $\corange{\bH_f} = \diag(-2, 2)$, ein Eigenwert positiv, der
-andere negativ. Rechnen wir nach, was das bedeutet:
+Die Hesse-Matrix hängt hier von $\bx$ ab. Kritische Punkte gibt es zwei, $(1, 0)$ und
+$(-1, 0)$. In $(1,0)$ ist $\corange{\bH_f} = \diag(2, 2)$ mit zwei positiven Eigenwerten,
+in $(-1,0)$ ist $\corange{\bH_f} = \diag(-2, 2)$ mit einem negativen und einem positiven.
+Von $(-1,0)$ aus gilt etwa
 
 $$
 \begin{aligned}
@@ -366,10 +358,9 @@ $$
 \end{aligned}
 $$
 
-Von $(-1,0)$ aus fällt $f$ also entlang der ersten Koordinate und steigt entlang der
-zweiten. Ein Minimum ist das nicht, ein Maximum auch nicht. Im Punkt $(1,0)$ dagegen
-steigt $f$ in jede Richtung, dort liegt ein lokales Minimum mit Wert
-$\cblue{f(1,0)} = -2/3$. Der nächste Satz macht daraus eine Regel.
+$f$ fällt dort also entlang der ersten Koordinate und steigt entlang der zweiten;
+$(-1,0)$ ist weder Minimum noch Maximum. In $(1,0)$ steigt $f$ in jede Richtung, dort
+liegt ein lokales Minimum mit Wert $\cblue{f(1,0)} = -2/3$.
 :::
 
 :::bemerkung[#die-dritte-ableitung-ist-ein-tensor (Die dritte Ableitung ist ein Tensor)]
@@ -384,25 +375,14 @@ $$
 = \sum_{i,j,k} \left(\cgreen{D^3_{\bx} f}\right)_{i,j,k} h_{1i}\, h_{2j}\, h_{3k} .
 $$
 
-Das ist ein :k[Tensor]{#tensor} dritter Stufe, wie wir ihn in
-@sec:tensoren/tensoren kennengelernt haben, mit $n^3$ Einträgen. Für
-$f \in \Ccal^3$ ist er in allen drei Indizes symmetrisch, sodass wieder nur ein Bruchteil
-davon wirklich zu berechnen ist.
-
-Zur Notation: Der Index an Position $r$ gehört zum $r$-ten
-Argument, und in welcher Reihenfolge die partiellen Ableitungen ausgeführt werden, spielt
-unter den hier durchgehend vorausgesetzten Stetigkeitsannahmen keine Rolle
-(@satz:satz-von-schwarz für $\Ccal^2$, die entsprechende Symmetrie für $\Ccal^3$). Der
-Speicherbedarf ist dagegen der eigentliche Grund, warum in der Praxis fast nie über die
-zweite Stufe hinausgegangen wird: Ein solcher Tensor verlangt für $n = 1000$ schon eine
-Milliarde Zahlen.
+Das ist ein :k[Tensor]{#tensor} dritter Stufe (@sec:tensoren/tensoren) mit $n^3$
+Einträgen. Für $f \in \Ccal^3$ ist er in allen drei Indizes symmetrisch.
 :::
 
 ### Krümmung, Definitheit und kritische Punkte
 
-Die Hesse-Matrix beschreibt die lokale Krümmung von $f$. Weil sie symmetrisch ist, hat sie
-nach dem Spektralsatz reelle Eigenwerte und eine Orthonormalbasis aus Eigenvektoren. Das
-Vorzeichenmuster dieser Eigenwerte entscheidet über die Art des kritischen Punktes.
+Die Hesse-Matrix beschreibt die lokale Krümmung von $f$. Das Vorzeichenmuster ihrer
+reellen Eigenwerte entscheidet über die Art des kritischen Punktes.
 
 :::satz[#hesse-kriterium-fuer-kritische-punkte (Hesse-Kriterium für kritische Punkte)]
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^* \in S$ ein kritischer Punkt,
@@ -420,9 +400,8 @@ also $\corange{\nabla f(\bx^*)} = \bnull$. Dann gilt:
    kleinerem Funktionswert.
 :::
 
-Den Beweis liefert die Taylorentwicklung zweiter Ordnung aus
-@sec:taylor. Die Idee lässt sich schon hier angeben. In
-einem kritischen Punkt fällt der lineare Term weg, und es bleibt
+Den Beweis liefert die Taylorentwicklung zweiter Ordnung aus @sec:taylor: In einem
+kritischen Punkt fällt der lineare Term weg, und es bleibt
 
 $$
 \cblue{f(\bx^* + \bh)} = \cblue{f(\bx^*)}
@@ -441,10 +420,7 @@ einem positiven und einem negativen Eigenwert getrennt durch.
 :::bemerkung[#wenn-die-hesse-matrix-nichts-entscheidet (Wenn die Hesse-Matrix nichts entscheidet)]
 Die drei Fälle in @satz:hesse-kriterium-fuer-kritische-punkte decken nicht alles ab. Offen bleibt der Grenzfall, in
 dem $\corange{\bH_f(\bx^*)}$ semidefinit, aber nicht definit ist: Mindestens ein Eigenwert
-ist null, und die übrigen tragen alle dasselbe Vorzeichen. Ein Eigenwert null allein reicht
-dafür übrigens nicht; kommt ein gemischtes Vorzeichenmuster hinzu, etwa bei
-$\corange{\bH_f(\bx^*)} = \diag(1, -1, 0)$, so ist die Matrix indefinit und Fall 3 greift
-nach wie vor. Im semidefiniten Grenzfall dagegen entscheidet die zweite Ableitung gar
+ist null, und die übrigen haben dasselbe Vorzeichen. Dann entscheidet die zweite Ableitung
 nichts. Schon in einer Variablen sehen wir das an drei Funktionen mit
 $f'(0) = f''(0) = 0$:
 
@@ -457,52 +433,37 @@ $$
 In allen drei Fällen ist $\corange{\bH_f(0)} = (0)$, also zugleich positiv und negativ
 semidefinit. Erst die dritte beziehungsweise vierte Ableitung trennt die Fälle.
 
-Und in der Gegenrichtung wird die Aussage schwächer: Liegt in $\bx^*$ ein lokales Minimum,
-so folgt daraus nur, dass $\corange{\bH_f(\bx^*)}$ positiv *semi*definit ist. Die strikte
-Ungleichung darf verloren gehen, wie $f(x) = x^4$ zeigt.
+Umgekehrt folgt aus einem lokalen Minimum in $\bx^*$ nur, dass $\corange{\bH_f(\bx^*)}$
+positiv *semi*definit ist; die strikte Ungleichung darf verloren gehen, wie $f(x) = x^4$
+zeigt.
 :::
 
-Als Beispiel dient die Funktion
-$\cblue{f(\bx)} = x_1^2 + 4x_2^2$ mit ihren Höhenlinien. Wir zeichnen sie und machen die
-Eigenwerte verstellbar. Der Aufbau nutzt aus, dass sich jede symmetrische Matrix
-nach dem Spektralsatz als
+Das folgende Widget zeichnet die Höhenlinien von
+$\cblue{f(\bx)} = \tfrac{1}{2}\bx^\top\corange{\bH}\bx$. Diese Funktion hat an jeder Stelle
+dieselbe Hesse-Matrix $\corange{\bH}$, und $\bnull$ ist ein kritischer Punkt, für
+invertierbares $\corange{\bH}$ der einzige. Eingestellt werden nicht die Einträge von
+$\corange{\bH}$, sondern nach dem Spektralsatz die Eigenwerte und die Lage der Eigenbasis:
 $\corange{\bH} = \bR(\varphi)\diag(\corange{\lambda_1}, \corange{\lambda_2})\bR(\varphi)^\top$
-schreiben lässt, mit einer Drehung $\bR(\varphi)$. Wir stellen also nicht die Einträge von
-$\corange{\bH}$ ein, sondern gleich die Eigenwerte und die Lage der Eigenbasis. Zur
-Funktion $\cblue{f(\bx)} = \tfrac{1}{2}\bx^\top\corange{\bH}\bx$ gehört dann an jeder
-Stelle dieselbe Hesse-Matrix $\corange{\bH}$, und $\bnull$ ist ein kritischer Punkt von ihr,
-solange $\corange{\bH}$ invertierbar ist sogar der einzige.
+mit einer Drehung $\bR(\varphi)$.
 
-:::interaktiv[Hesse-Kriterium zum Schieben]
-Damit lassen sich alle Fälle von @satz:hesse-kriterium-fuer-kritische-punkte durchspielen. Was passiert mit den Höhenlinien,
-wenn ein Eigenwert das Vorzeichen wechselt? Welche Achse gehört zur langen Halbachse einer
-Ellipse? Und was bleibt an der Grenze übrig, wenn ein Eigenwert genau auf null steht?
+:::interaktiv[Hesse-Kriterium und Höhenlinien]
+Was passiert mit den Höhenlinien, wenn ein Eigenwert das Vorzeichen wechselt oder genau
+auf null steht?
 
 <HesseSchaetzung />
 
-Die Fallunterscheidung hängt an den Vorzeichen der beiden
-Eigenwerte. Das Beispiel von eben liegt auf dem ersten Knopf: $\corange{\lambda} = (2, 8)$ und
-$\varphi = 0$ ergibt $\corange{\bH} = \diag(2,8)$ und damit
-$\cblue{f(\bx)} = x_1^2 + 4x_2^2$. Die Höhenlinien sind Ellipsen um das Minimum in
-$\bnull$; das hängt an der Definitheit und geht bei jedem Vorzeichenwechsel verloren. Ihre
-Hauptachsen liegen in Richtung der Eigenvektoren, hier also auf den Koordinatenachsen, und
-die Krümmung entlang einer Hauptachse ist der zugehörige Eigenwert, denn
-$\cblue{f(t\bv_i)} = \tfrac{1}{2}\corange{\lambda_i}t^2$. Die letzten beiden Beobachtungen
-gelten für jede symmetrische Hesse-Matrix, die erste nur im definiten Fall. Die lange
-Halbachse gehört dabei zum *kleinen* Eigenwert: Die Niveaumenge zum Wert $4$ hat die
-Halbachsen $2$ und $1$, und $2/1 = \sqrt{8/2}$. Der Regler $\varphi$ dreht Höhenlinien und
-Hauptachsen gemeinsam, lässt Spur und Determinante aber unverändert. Die Eigenwerte hängen
-nicht davon ab, wie wir das Koordinatensystem legen.
-
-Schieben wir einen Eigenwert unter null, so zerfallen die Ellipsen in Hyperbeln, und das
-dick gezeichnete Niveau $0$ wird zu einem Geradenkreuz. Das ist der Sattel aus
-@satz:hesse-kriterium-fuer-kritische-punkte(3), und in der Raumtafel daneben ist es die Sattelfläche. Dieselbe Situation
-kennen wir schon: Das Gradientenfeld-Widget in
-@sec:gradient zeigt
-$\cblue{f(\bx)} = x_1^2 + 3x_1x_2 + 2x_2^2$ mit der Hesse-Matrix
-$\corange{\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4\end{smallmatrix}\bigr)}$, deren
-Eigenwerte $3 \pm \sqrt{10}$, also $6{,}162$ und $-0{,}162$, dieses Vorzeichenmuster
-haben.
+Der erste Knopf setzt $\corange{\lambda} = (2, 8)$ und $\varphi = 0$, also
+$\corange{\bH} = \diag(2,8)$ und $\cblue{f(\bx)} = x_1^2 + 4x_2^2$; die Höhenlinien sind
+Ellipsen um das Minimum in $\bnull$, und das bleiben sie, solange $\corange{\bH}$ definit
+ist. Ihre Hauptachsen liegen in Richtung der Eigenvektoren, und die Krümmung längs einer
+Hauptachse ist der zugehörige Eigenwert, denn
+$\cblue{f(t\bv_i)} = \tfrac{1}{2}\corange{\lambda_i}t^2$. Die lange Halbachse gehört
+deshalb zum *kleinen* Eigenwert (Niveau $4$: Halbachsen $2$ und $1$). Der Regler
+$\varphi$ dreht Höhenlinien und Hauptachsen gemeinsam und lässt die Eigenwerte
+unverändert. Schieben wir einen Eigenwert unter null, so werden aus den Ellipsen
+Hyperbeln und aus dem Niveau $0$ ein Geradenkreuz: der Sattel aus
+@satz:hesse-kriterium-fuer-kritische-punkte(3), wie im Gradientenfeld-Widget von
+@sec:gradient mit den Eigenwerten $6{,}162$ und $-0{,}162$.
 :::
 
 ### Konvexität
@@ -522,10 +483,9 @@ $$
 
 Für eine :k[konvexe Funktion]{#convexity} liegt die Verbindungsstrecke zwischen zwei
 Punkten des Graphen nie unter dem Graphen. @satz:konvexitaet-und-positive-semidefinitheit übersetzt das in eine punktweise
-Bedingung an die zweite Ableitung, und das ist der Grund, warum konvexe
-:k[Optimierungsprobleme]{#optimization} handhabbar sind: Jeder kritische Punkt ist dort
-schon ein globales Minimum, und es gibt keine Sattelpunkte, an denen ein Verfahren
-hängenbleiben könnte.
+Bedingung an die zweite Ableitung. Konvexe :k[Optimierungsprobleme]{#optimization} sind
+handhabbar, weil dort jeder kritische Punkt schon ein globales Minimum ist; Sattelpunkte,
+an denen ein Verfahren hängenbleiben könnte, gibt es nicht.
 
 :::::vertiefung[Zwei Gegenbeispiele zu den Voraussetzungen offen und konvex]
 
@@ -565,53 +525,36 @@ konvexe Fortsetzung auf $\R$ gibt es nicht. @satz:konvexitaet-und-positive-semid
 ::::
 :::::
 
-Die :k[Konvexität]{#convexity} und was sie für Optimierungsverfahren bedeutet, ist ein
-Thema für sich; @kap:konvexitaet behandelt es.
+:k[Konvexität]{#convexity} und ihre Folgen für Optimierungsverfahren behandelt
+@kap:konvexitaet.
 
 ### Warum das in der Praxis zählt
 
 :::bemerkung[#praxisrelevanz-der-hesse-matrix (Praxisrelevanz der Hesse-Matrix)]
-Vier Gründe, warum die Hesse-Matrix in der Praxis häufig
-auftaucht.
-
-*Warum Sattelpunkte in hoher Dimension plausibel sind.* Ein kritischer Punkt mit
-invertierbarer Hesse-Matrix ist nur dann ein Extremum, wenn *alle* $n$ Eigenwerte
-dasselbe Vorzeichen haben; im ausgearteten Fall entscheidet die Hesse-Matrix nichts
-(@bemerkung:wenn-die-hesse-matrix-nichts-entscheidet). Eine grobe Zählung
-zeigt, wie selten das ist: Wären die $n$ Vorzeichen wie Münzwürfe, so hätte ein
-Minimum (alle Vorzeichen positiv) die Wahrscheinlichkeit $2^{-n}$ und irgendein Extremum,
-Maximum eingeschlossen, die Wahrscheinlichkeit $2^{1-n}$. Für $n = 100$ sind das
-$7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Die Eigenwerte
-sind nicht unabhängig, die Zählung ist deshalb nur eine Faustregel. Sie motiviert aber,
-warum indefinite kritische Punkte in hochdimensionalen Verlustlandschaften eine wichtige
-Rolle spielen können. Auch das Rauschen des
-:k[stochastischen Gradientenabstiegs]{#gradient-descent} *kann* helfen, instabile
-Sattelregionen zu verlassen; eine Garantie gegen schlechte lokale Minima oder jeden
-Sattelpunkt folgt aus der Münzwurfrechnung nicht.
+*Sattelpunkte in hoher Dimension.* Ein kritischer Punkt mit invertierbarer Hesse-Matrix
+ist nur dann ein Extremum, wenn *alle* $n$ Eigenwerte dasselbe Vorzeichen haben. Wären die
+$n$ Vorzeichen unabhängige Münzwürfe, so hätte ein Minimum die Wahrscheinlichkeit $2^{-n}$
+und irgendein Extremum die Wahrscheinlichkeit $2^{1-n}$, für $n = 100$ also
+$7{,}9 \cdot 10^{-31}$ beziehungsweise $1{,}6 \cdot 10^{-30}$. Die Eigenwerte sind nicht
+unabhängig, die Zählung ist nur eine Faustregel. Sie macht aber plausibel, warum in
+hochdimensionalen Verlustlandschaften Sattelpunkte häufig sind; das Rauschen des
+:k[stochastischen Gradientenabstiegs]{#gradient-descent} kann helfen, sie zu verlassen.
 
 *Statistik.* Der wichtigste Spezialfall einer Funktion $\R^p \to \R$ ist die
 :k[Log-Likelihood]{#likelihood} $\ell(\btheta)$. Die Hesse-Matrix der negativen
 Log-Likelihood heißt *beobachtete Fisher-Information* und bestimmt, wie genau ein Schätzer
-den Parameter trifft. Der nächste Unterabschnitt führt das aus.
+den Parameter trifft (nächster Unterabschnitt).
 
-*Maschinelles Lernen.* Im streng konvexen quadratischen Modell bestimmt die Hesse-Matrix
-die :k[Kondition]{#condition-number} exakt. Für den Gradientenabstieg aus
-@sec:gradient hängt die Konvergenzrate dann am Verhältnis
+*Maschinelles Lernen.* Die Hesse-Matrix der Verlustfunktion bestimmt die
+:k[Kondition]{#condition-number} des Optimierungsproblems. Im streng konvexen quadratischen
+Fall hängt die Konvergenzrate des Gradientenabstiegs aus @sec:gradient am Verhältnis
 $\kappa = \corange{\lambda_{\max}}/\corange{\lambda_{\min}}$ der extremen Eigenwerte: Bei
 optimal gewählter Lernrate schrumpft der Abstand zum Minimum je Schritt auf das
-$(\kappa - 1)/(\kappa + 1)$-fache. Dort wird
-$L(\btheta) = \tfrac{1}{2}\btheta^\top\bA\btheta$ mit
-$\bA = \bigl(\begin{smallmatrix} 2 & 1 \\ 1 & 3\end{smallmatrix}\bigr)$ minimiert, und weil
-$\corange{\bH_L(\btheta)} = \bA$ an jeder Stelle gilt, sind die Eigenwerte von $\bA$ genau
-die gesuchten Krümmungen: $\corange{\lambda_{\max}} = 3{,}618$,
-$\corange{\lambda_{\min}} = 1{,}382$ und $\kappa = 2{,}618$, der Faktor also $0{,}447$.
-Bei $\kappa = 1000$ stünde dort $0{,}998$, und das Verfahren käme kaum voran.
-Für eine allgemeine Verlustfunktion ist die Hesse-Matrix ortsabhängig. Dieselbe Aussage
-gilt dort nur lokal beziehungsweise unter zusätzlichen Annahmen wie einer gleichmäßigen
-Schranke $\mu\bI\preceq\bH_L(\btheta)\preceq L\bI$.
+$(\kappa - 1)/(\kappa + 1)$-fache, bei $\kappa = 1000$ also auf das $0{,}998$-fache, und
+das Verfahren kommt kaum voran.
 
 *Optimierung.* Verfahren, die $\corange{\bH_f}$ in der Iteration benutzen,
-konvergieren erheblich schneller. Das Newton-Verfahren in
+konvergieren lokal deutlich schneller. Das Newton-Verfahren in
 @sec:taylor ist der Prototyp.
 :::
 
@@ -630,21 +573,27 @@ $$
 $$
 :::
 
-Das $\E$ ist hier wieder der :k[Erwartungswert]{#expected-value} und nicht der Zielraum aus
-@definition:k-mal-frechet-differenzierbar; erwartet wird über die Daten, bei festem wahrem $\btheta$. Lassen wir
+Das $\E$ ist hier der :k[Erwartungswert]{#expected-value} über die Daten bei festem wahrem
+$\btheta$, nicht der Zielraum aus @definition:k-mal-frechet-differenzierbar. Lassen wir
 den Erwartungswert weg, so erhalten wir die *beobachtete* Fisher-Information
 $-\corange{\bH_\ell(\btheta)}$ am jeweiligen Parameterwert; häufig wird sie am
-ML-Schätzer $\wh{\btheta}$ ausgewertet. Unter denselben Regularitätsbedingungen ist
-die erwartete Score-Funktion null und es gilt außerdem
-$\bI(\btheta)=\E[\nabla\ell(\btheta)^\top\nabla\ell(\btheta)]$.
+ML-Schätzer $\wh{\btheta}$ ausgewertet.
 
 Die Interpretation folgt aus der Krümmung. Eine stark gekrümmte Log-Likelihood fällt
 neben ihrem Maximum steil ab: Benachbarte Parameterwerte erklären die Daten deutlich
 schlechter, die Daten sind also *informativ* über $\btheta$. Eine flache Log-Likelihood
 lässt einen weiten Bereich von Parametern fast gleich gut aussehen, und der Parameter ist
-schwer zu schätzen. Beides misst dieselbe zweite Ableitung.
+schwer zu schätzen. Für den ML-Schätzer gilt unter Regularitätsbedingungen bei großem
+Stichprobenumfang näherungsweise $\var(\wh{\btheta}) \approx \corange{\bI(\btheta)}^{-1}$,
+wobei $\ell$ die Log-Likelihood der ganzen Stichprobe ist. Er erreicht damit asymptotisch
+die *Cramér-Rao-Schranke*, die untere Schranke für die Varianz erwartungstreuer Schätzer:
+mehr Information, kleinere Varianz, präzisere Schätzung.
 
-::::vertiefung[Die Fisher-Information im Bernoulli-Modell]
+:::::vertiefung[Fisher-Information im Bernoulli-Modell und Cramér-Rao-Schranke]
+
+Unter den Regularitätsbedingungen aus @definition:fisher-informationsmatrix ist die
+erwartete Score-Funktion null, und es gilt außerdem
+$\corange{\bI(\btheta)}=\E[\corange{\nabla\ell(\btheta)}^\top\corange{\nabla\ell(\btheta)}]$.
 
 :::beispiel[#fisher-information-im-bernoulli-modell (Fisher-Information im Bernoulli-Modell)]
 Seien $y_1, \dots, y_n$ unabhängige, identisch verteilte Bernoulli-Variablen mit
@@ -682,11 +631,7 @@ $\var(\wh{p}) = 0{,}000475$: Nahe am Rand des Parameterbereichs sind die Daten d
 informativer.
 :::
 
-::::
-
-:::::vertiefung[Was die Merkregel zur Varianz des ML-Schätzers wirklich sagt]
-
-:::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao, sauber formuliert)]
+:::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao-Schranke und Asymptotik)]
 Als Merkregel kursiert
 $\var(\wh{\btheta}) \to \corange{\bI(\btheta)}^{-1}$ für $n \to \infty$. Gemeint ist das
 Richtige, aber so verkürzt vermischt sie drei Dinge.
@@ -744,15 +689,12 @@ endliches $n$ gilt.
 
 ### Vektor zu Vektor
 
-Zum Schluss der allgemeine Fall $f\colon \R^n \to \R^m$. Er kommt in der Statistik
-regelmäßig vor. Die *Score-Funktion* $\corange{\nabla \ell(\btheta)}^\top$ ist genau von dieser
-Bauart, sie bildet $\R^p$ nach $\R^p$ ab, und ihre Jacobimatrix ist die Hesse-Matrix
-$\corange{\bH_\ell(\btheta)}$, wie Schritt 3 im Beweis zu @satz:erste-und-zweite-ableitung-in zeigt; aus ihr
-entsteht die Fisher-Information von @definition:fisher-informationsmatrix.
-Momentengleichungen sind ein zweites Beispiel. Das Transponierte ist dabei nötig:
-In der Zeilenkonvention aus
-@sec:gradient ist $\corange{\nabla\ell(\btheta)}$
-eine Zeile, und erst die transponierte Fassung ist eine Abbildung von $\R^p$ nach $\R^p$.
+Zum Schluss der allgemeine Fall $f\colon \R^n \to \R^m$. Die *Score-Funktion*
+$\corange{\nabla \ell(\btheta)}^\top\colon \R^p \to \R^p$ ist von dieser Bauart;
+transponiert wird, weil $\corange{\nabla\ell(\btheta)}$ in der Zeilenkonvention aus
+@sec:gradient eine Zeile ist. Ihre Jacobimatrix ist die Hesse-Matrix
+$\corange{\bH_\ell(\btheta)}$, aus der die Fisher-Information entsteht.
+Momentengleichungen sind ein zweites Beispiel.
 
 Nach @definition:k-mal-frechet-differenzierbar ist die $j$-te Ableitung eine multilineare Abbildung
 $\cgreen{D^j_{\bx} f}\colon \left(\R^n\right)^j \to \R^m$. Als Zahlenschema ist das ein
@@ -772,9 +714,8 @@ h_{1,i_1} \cdots h_{j,i_j} .
 $$
 
 Die Ausgabe ist also eine Summe von Vektoren aus $\R^m$, gewichtet mit Produkten von
-Komponenten der $\bh_i$. Für die ersten drei Stufen schreiben wir das aus. Auf den
-rechten Seiten steht jeweils dieselbe Rechnung, ausgedrückt
-über die Jacobimatrix.
+Komponenten der $\bh_i$. Für die ersten drei Stufen ausgeschrieben, rechts jeweils über die
+Jacobimatrix ausgedrückt:
 
 :::satz[#die-ersten-drei-stufen-fuer-vektor-zu (Die ersten drei Stufen für Vektor-zu-Vektor)]
 Sei $f\colon \R^n \to \R^m$ hinreichend oft stetig differenzierbar. Dann gilt
@@ -798,7 +739,7 @@ $$ {#eq-die-ersten-drei-stufen-fuer-vektor-zu}
 $$
 :::
 
-:::::vertiefung[Warum die höheren Ableitungen dieselbe Indexrechnung ausdrücken]
+:::::vertiefung[Herleitung der drei Stufen]
 
 ::::beweis
 
@@ -839,12 +780,8 @@ also @satz:erste-und-zweite-ableitung-in.
 
 :::::
 
-Wie groß werden diese Objekte? Für $f\colon \R^{10} \to \R^5$ hat
-$\cgreen{D^1_{\bx} f}$ $50$ Einträge, $\cgreen{D^2_{\bx} f}$ $500$ und
-$\cgreen{D^3_{\bx} f}$ $5000$. Der Satz von Schwarz drückt die zweite Stufe auf
-$5 \cdot 10 \cdot 11/2 = 275$. Das erklärt, warum in der Praxis zweite Ableitungen fast nur
-für skalarwertige Funktionen wirklich aufgestellt werden, und auch dort oft nur als
-Näherung.
+Weil die $j$-te Stufe schon $m\,n^j$ Einträge hat, werden zweite Ableitungen in der Praxis
+fast nur für skalarwertige Funktionen aufgestellt, und auch dort oft nur näherungsweise.
 
 ### Selbsttest
 
@@ -854,9 +791,8 @@ Näherung.
 Ist $f\colon S \to \R$ auf der offenen Menge $S$ zweimal stetig differenzierbar, so ist die
 Hesse-Matrix in jedem Punkt symmetrisch.
 
-Das ist der Satz von Schwarz (@satz:satz-von-schwarz). Der Beweis vergleicht zwei Mittelwertsätze an
-derselben doppelten Differenz $\Delta(s,t)$, und die Stetigkeit der zweiten Ableitungen
-sorgt dafür, dass beide Grenzwerte für $s, t \to 0$ zusammenfallen.
+Das ist der Satz von Schwarz (@satz:satz-von-schwarz); die Stetigkeit der zweiten
+Ableitungen ist dabei wesentlich.
 :::
 
 :::frage{falsch}
@@ -892,16 +828,11 @@ $D^2_{\bx} f$ eine bilineare Abbildung im Sinne von @definition:beschraenkte-bil
 Nach der Münzwurf-Heuristik aus @bemerkung:praxisrelevanz-der-hesse-matrix sind in sehr hohen Dimensionen die
 meisten kritischen Punkte lokale Minima oder Maxima.
 
-Im Münzwurfmodell aus @bemerkung:praxisrelevanz-der-hesse-matrix ist es umgekehrt. Sobald die Hesse-Matrix
-Eigenwerte beider Vorzeichen trägt, liegt ein Sattelpunkt vor; ein Extremum verlangt
-bei invertierbarer Hesse-Matrix, dass alle $n$ Eigenwerte dasselbe Vorzeichen haben.
-Eine grobe
-Zählung mit unabhängigen Vorzeichen gibt $2^{-n}$ für ein Minimum und $2^{1-n}$ für ein
-Extremum irgendeiner Sorte, für $n = 100$ also $7{,}9 \cdot 10^{-31}$ beziehungsweise
-$1{,}6 \cdot 10^{-30}$. Das ist eine qualitative Motivation, keine Verteilungsaussage
-über reale Verlustlandschaften. Bei indefiniter Hesse-Matrix existiert eine Richtung
-negativer Krümmung, und Rauschen kann einem stochastischen Verfahren helfen, eine solche
-instabile Region zu verlassen; automatisch gelingt das nicht.
+Umgekehrt. Ein Extremum verlangt bei invertierbarer Hesse-Matrix, dass alle $n$
+Eigenwerte dasselbe Vorzeichen haben; bei gemischten Vorzeichen liegt ein Sattelpunkt vor.
+Mit unabhängigen Vorzeichen hat ein Extremum irgendeiner Sorte die Wahrscheinlichkeit
+$2^{1-n}$, für $n = 100$ also $1{,}6 \cdot 10^{-30}$. Das ist eine qualitative Motivation,
+keine Verteilungsaussage über reale Verlustlandschaften.
 :::
 
 :::zahlfrage{loesung=0 toleranz=0.001}

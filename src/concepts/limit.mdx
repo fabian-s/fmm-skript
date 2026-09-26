@@ -4,32 +4,28 @@ import { LimitWidget } from "./widgets/LimitWidget";
 
 {/* Concept tooltip: Grenzwert (die Notation h -> 0 beim Differenzenquotienten). */}
 
-Die Grenzwert-Notation (limit) $\lim_{h \to 0} g(h) = L$
-fragt: Auf welchen Wert steuert $g(h)$ zu, wenn wir
+Der *Grenzwert* (limit) $\lim_{h \to 0} g(h) = L$
+beantwortet die Frage: Auf welchen Wert steuert $g(h)$ zu, wenn wir
 $h$ beliebig klein machen (ohne jemals genau 0 zu erreichen)?
-Entscheidend: $g$ muss *an* der Stelle
+Dabei muss $g$ *an* der Stelle
 $h = 0$ gar nicht definiert sein; nur das Verhalten in der
-Nähe zählt. Das rettet den Differenzenquotienten (vgl. MML
-Definition 5.2): Direktes Einsetzen von $h = 0$ ergäbe das
-sinnlose $0/0$, aber der Grenzwert der Werte für schrumpfendes
-$h$ kann trotzdem existieren. Konkret für
-$f(x) = x^2$ an der Stelle $x_0 = 1$:
+Nähe zählt. Darauf beruht die Ableitung als Grenzwert des Differenzenquotienten
+(vgl. MML Definition 5.2): Einsetzen von $h = 0$ ergäbe $0/0$, der Grenzwert kann
+trotzdem existieren. Für $f(x) = x^2$ an der Stelle $x_0 = 1$:
 
 $$
 \frac{(1+h)^2 - 1}{h} = \frac{2h + h^2}{h} = 2 + h \;\xrightarrow{\;h \to 0\;}\; 2.
 $$
 
-Formal ist das dieselbe Idee wie die
-:k[Konvergenz]{#convergence} einer
-:k[Folge]{#sequence}: Auf *jedem* Weg,
-auf dem wir $h$ gegen 0 schrumpfen lassen (etwa
-$h = 0.1, 0.01, 0.001, \dots$ oder von der negativen Seite),
-müssen sich die Werte $g(h)$ derselben Zahl $L$
-annähern; liefern verschiedene Wege verschiedene Werte, existiert der
-Grenzwert nicht.
+Wie bei der :k[Konvergenz]{#convergence} einer :k[Folge]{#sequence} müssen
+sich die Werte $g(h)$ auf *jedem* Weg $h \to 0$ derselben Zahl $L$ nähern,
+etwa für $h = 0{,}1;\ 0{,}01;\ 0{,}001; \dots$ und ebenso von der negativen
+Seite. Unterscheiden sich die *einseitigen* Grenzwerte von rechts und von
+links, existiert der Grenzwert nicht.
 
-Was passiert mit dem Differenzenquotienten, wenn wir h von beiden Seiten gegen null führen?
+Was passiert mit dem Differenzenquotienten, wenn wir $h$ von beiden Seiten gegen null führen?
 
 <LimitWidget />
 
-So trennt das Widget den fehlenden Funktionswert bei null vom existierenden Grenzwert.
+Von beiden Seiten nähert sich $g(h)$ der $2$, obwohl bei $h = 0$ kein
+Funktionswert existiert.

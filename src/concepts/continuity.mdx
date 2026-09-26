@@ -13,9 +13,9 @@ $f(x) = x^2$, $|x|$ und $\sin x$ sind überall stetig, während eine
 Treppenfunktion wie eine Porto-Preistabelle an bestimmten Stellen springt und
 dort unstetig ist.
 
-Stetigkeit ist auch das, was einem numerischen Ergebnis überhaupt Vertrauen
-verschafft. Könnte die Ausgabe springen, dann dürfte ein beliebig winziger
-Eingabefehler das Resultat stark verändern. Für Vektornormen liefert die
+Für die Numerik ist das die Mindestanforderung an ein Problem: Springt die
+Ausgabe, kann ein beliebig kleiner Eingabefehler das Ergebnis stark verändern.
+Für Vektornormen liefert die
 umgekehrte :k[Dreiecksungleichung]{#triangle-inequality}
 
 $$
@@ -23,20 +23,13 @@ $$
 $$
 
 sogar eine quantitative Fassung: Die Norm ändert sich höchstens um so viel wie
-die Störung selbst, ist also eine stetige Funktion ihres Vektorarguments.
+ihr Argument, ist also stetig.
 
-Warum das hier zählt: eine stetige Funktion trägt unendlich viel
-Information (einen Wert für jeden Punkt eines Intervalls), und doch
-will die Interpolation sie durch endlich viele Zahlen festnageln
-(vgl. Heath §7.1). Stetigkeit ist die Eigenschaft, die diese Hoffnung
-begründet: benachbarte Eingaben haben benachbarte Ausgaben,
-also schränkt schon eine Tabelle von Stützwerten die Funktion
-dazwischen ein.
-
-Sehen wir uns an, was der Sprung mit der Umgebung eines Punktes macht:
+Wie klein wird die Spanne der Ausgaben, wenn wir das Fenster um die
+Sprungstelle verengen?
 
 <JumpWidget />
 
-Nur im sprungfreien Fall lässt sich die Funktion zwischen zwei Stützwerten
-einsperren: Interpolieren lässt sich jede Funktion, sinnvoll ist es nur bei
-stetigen.
+Ohne Sprung schrumpft die Ausgabespanne mit dem Fenster gegen null; mit Sprung
+bleibt sie mindestens so groß wie die Sprunghöhe, so schmal das Fenster auch
+wird.

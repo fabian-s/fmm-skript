@@ -14,34 +14,23 @@ $$
 
 Die Funktion ist *strikt* konvex, wenn die Ungleichung für
 verschiedene Punkte und $0 < \alpha < 1$ strikt ist: keine
-geraden Flachstücke in der Schüssel. Strikte Konvexität ist eine
-Garantie gegen Mehrdeutigkeit: Die Funktion kann höchstens einen
-Minimierer haben, also ist jeder Punkt, an dem der
-:k[Gradient]{#gradient} verschwindet,
-*das* globale Minimum. Diese Situation liegt bei
-Kleinsten Quadraten vor: Die quadrierte 2-Norm
-$\|\bb - \bA\bx\|_2^2$ als Zielfunktion ist glatt und
-(für $\bA$ mit vollem Rang) strikt konvex, also legt das
-Nullsetzen ihres Gradienten eine eindeutige Lösung fest (vgl. Heath
-§3.2). Vergleichen wir $f(x) = x^2$ (strikt konvex, glatt)
-mit $f(x) = |x|$ (konvex, aber mit einem Knick am Minimum,
-wo keine :k[Ableitung]{#derivative}
-existiert).
+geraden Flachstücke in der Schüssel. Beispiele: $x^2$ ist strikt konvex,
+$|x|$ nur konvex und hat am Minimum einen Knick ohne :k[Ableitung]{#derivative}.
 
-Warum höchstens ein Minimierer? Gäbe es zwei verschiedene, so läge der Wert im
-Mittelpunkt ihrer Verbindungsstrecke wegen der strikten Ungleichung echt unter
-dem Minimalwert, ein Widerspruch. Dasselbe Argument trägt auch über konvexen
-Mengen. Eine Menge heißt *konvex*, wenn sie mit je zwei Punkten die ganze
-Strecke dazwischen enthält, und :k[$\spann(\bA)$]{#span} ist eine solche Menge;
-deshalb liegt in $\spann(\bA)$ genau ein Punkt, der $\bb$ am nächsten kommt
-(vgl. Heath §3.1). Funktionen und Mengen hängen dabei direkt zusammen: $f$ ist
-genau dann konvex, wenn ihr *Epigraph*
-$\{(\bx, t) : t \ge f(\bx)\}$, also die Fläche über dem Graphen, eine konvexe
-Menge ist.
+Eine strikt konvexe Funktion hat höchstens einen Minimierer, und ein Punkt, an
+dem der :k[Gradient]{#gradient} verschwindet, ist *das* globale Minimum. Warum?
+Gäbe es zwei verschiedene Minimierer, so läge der Wert im Mittelpunkt ihrer
+Verbindungsstrecke wegen der strikten Ungleichung echt unter dem Minimalwert,
+ein Widerspruch.
 
-Prüfen wir die Bedingung an vier Kurven nach:
+Eine *Menge* heißt konvex, wenn sie mit je zwei Punkten die ganze
+Strecke dazwischen enthält; $f$ ist genau dann konvex, wenn ihr *Epigraph*
+$\{(\bx, t) : t \ge f(\bx)\}$, die Fläche über dem Graphen, eine konvexe Menge ist.
+
+Welche der vier Kurven verletzen die Sehnenbedingung, und wo?
 
 <ChordWidget />
 
-Widerlegen lässt sich Konvexität mit einem einzigen Paar, bestätigen dagegen
-nie: dafür müssten wir alle Paare durchgehen.
+Widerlegen lässt sich Konvexität mit einem einzigen Paar, bestätigen aber nicht
+durch Ausprobieren endlich vieler Paare: Dafür braucht es ein Argument für alle
+Paare zugleich.

@@ -1,17 +1,15 @@
 import { PagerankDemo } from "./widgets/S82Pagerank";
 import { PcaDirectionDemo } from "./widgets/S82Pca";
 
-Der Aufwand aus @sec:eigenwerte lohnt sich, weil einige der größten
-Rechenprobleme der Praxis Eigenwertprobleme sind, und zwar solche, für die
+Einige der größten Rechenprobleme der Praxis sind Eigenwertprobleme, für die
 direkte Verfahren zu teuer sind. Drei Beispiele aus Suche, Statistik und
 Bildverarbeitung.
 
 ### Google PageRank
 
 Das Problem: eine Rangordnung für $n \approx 10^{10}$ Webseiten. Das Modell:
-Jede Seite $i$ bekommt einen
-Wichtigkeits-Score $x_i$, und wichtig ist, wer von wichtigen Seiten
-verlinkt wird:
+Jede Seite $i$ bekommt einen Wichtigkeits-Score $x_i$, und wichtig ist, wer
+von wichtigen Seiten verlinkt wird:
 
 $$
 x_i = \sum_{j\colon j \to i} \frac{x_j}{d_j} ,
@@ -31,71 +29,69 @@ ein :k[Eigenwertproblem]{#eigenvalue-eigenvector} zum Eigenwert $1$.
 :::bemerkung[#warum-ausgerechnet-der-eigenwert-1 (Warum ausgerechnet der Eigenwert 1?)]
 Hat jede Seite mindestens einen ausgehenden Link, so summiert sich jede
 Spalte von $\bA$ zu $1$: Eine Seite verteilt ihren ganzen Score und behält
-nichts zurück. Solche Matrizen heißen *spaltenstochastisch*, und für sie ist $1$ der
-betragsgrößte Eigenwert; der zugehörige Eigenvektor lässt sich nichtnegativ
-wählen und taugt damit überhaupt erst als Score-Verteilung.
+nichts zurück. Solche Matrizen heißen *spaltenstochastisch*, und für sie ist
+$1$ der betragsgrößte Eigenwert; der zugehörige Eigenvektor lässt sich
+nichtnegativ wählen und taugt damit erst als Score-Verteilung.
 
-Für die [Potenzmethode](#sec-8.1) reicht das noch nicht ganz: @satz:konvergenz-der-potenzmethode
+Für die Potenzmethode reicht das noch nicht: @satz:konvergenz-der-potenzmethode
 verlangt einen *einfachen* betragsgrößten Eigenwert, und das ist beim rohen
-Web-Graphen aus zwei Gründen nicht gegeben. Seiten ohne ausgehende Links liefern gar keine
-Spaltensumme $1$, und zerfällt das Netz in mehrere Teile, so gehören zu
-jedem Teil eigene Eigenvektoren zum Eigenwert $1$. Beides lässt sich
-reparieren. Leere Spalten füllen wir gleichverteilt auf: Wer nirgendwohin
-verlinkt, gibt seinen Score eben an alle weiter. Und gegen die restlichen
-Eigenwerte vom Betrag $1$ hilft ein *Dämpfungsfaktor* $\alpha$ mit
-$0 < \alpha < 1$, mit dem wir zu
+Web-Graphen aus zwei Gründen nicht gegeben. Seiten ohne ausgehende Links
+liefern gar keine Spaltensumme $1$, und zerfällt das Netz in mehrere Teile, so
+gehören zu jedem Teil eigene Eigenvektoren zum Eigenwert $1$. Leere Spalten
+füllen wir deshalb gleichverteilt auf: Wer nirgendwohin verlinkt, gibt seinen
+Score an alle weiter. Gegen die restlichen Eigenwerte vom Betrag $1$ hilft ein
+*Dämpfungsfaktor* $\alpha$ mit $0 < \alpha < 1$, mit dem wir zu
 $\alpha\bA + \tfrac{1-\alpha}{n}\bE$ übergehen, wobei $\bE$ nur Einsen
-enthält. Der Surfer springt damit mit Wahrscheinlichkeit $1-\alpha$ auf eine
-zufällige Seite statt einem Link zu folgen. Die neue Matrix ist strikt
+enthält. Anschaulich springt ein zufälliger Surfer mit Wahrscheinlichkeit
+$1-\alpha$ auf eine beliebige Seite, statt einem Link zu folgen. Die neue Matrix ist strikt
 positiv, ihr Eigenwert $1$ ist einfach, und alle übrigen Eigenwerte liegen
 betragsmäßig bei höchstens $\alpha$. Erst damit ist der PageRank-Vektor der
-dominante Eigenvektor, nach dem die Potenzmethode sucht, und die Rate aus
-@satz:konvergenz-der-potenzmethode ist durch $\corange{\alpha}$ gedeckelt.
+dominante Eigenvektor, und die Rate aus @satz:konvergenz-der-potenzmethode ist
+durch $\corange{\alpha}$ beschränkt.
 :::
 
 :::vertiefung[Woher der Eigenwert 1 kommt]
-Beide Aussagen folgen aus zwei Beobachtungen, die wir schon kennen.
-Erstens hat $\bA^\top$ lauter Zeilensummen $1$ und hält damit den Vektor aus
-lauter Einsen fest; Transponieren ändert das charakteristische Polynom
-nicht, also ist $1$ auch Eigenwert von $\bA$. Zweitens liegt kein Eigenwert
-betragsmäßig darüber, denn die
-[Spaltensummennorm](?k=03-matrix-spur-norm#sec-3.3) ist
-$\left\|\bA\right\|_1 = 1$, und der :k[Spektralradius]{#spectral-radius}
-bleibt unter jeder submultiplikativen Norm
-(@sec:matrix-spur-norm/eigenschaften). Dass sich der zugehörige
+Dass $1$ der betragsgrößte Eigenwert einer spaltenstochastischen Matrix
+ist, folgt aus zwei bekannten Tatsachen. $\bA^\top$ hat lauter Zeilensummen
+$1$ und hält damit den Vektor aus lauter Einsen fest; Transponieren ändert das
+charakteristische Polynom nicht, also ist $1$ auch Eigenwert von $\bA$. Kein
+Eigenwert liegt betragsmäßig darüber, denn die Spaltensummennorm
+(@sec:matrix-spur-norm/operatornormen) ist $\left\|\bA\right\|_1 = 1$, und der
+:k[Spektralradius]{#spectral-radius} bleibt unter jeder submultiplikativen
+Norm (@sec:matrix-spur-norm/eigenschaften). Dass sich der zugehörige
 Eigenvektor nichtnegativ wählen lässt, liefert die Perron-Frobenius-Theorie
 für nichtnegative Matrizen.
 :::
 
-Und warum iterativ? Direkte Verfahren sind an einer Matrix mit $10^{10}$ Zeilen
-nicht durchführbar. Aber $\bA$ ist extrem
+Warum iterativ? Dicht gespeichert hätte die Matrix $10^{20}$ Einträge, und eine
+Zerlegung würde $O(n^3) = 10^{30}$ Operationen kosten. Aber $\bA$ ist extrem
 :k[dünn besetzt]{#sparse-matrix}: Eine typische Seite hat nur etwa $10$
 ausgehende Links, der Speicherbedarf ist also $O(n)$ statt $O(n^2)$. Die
-Potenz-Iteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
+Potenziteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
 pro Schritt nur ein Matrix-Vektor-Produkt mit dieser dünnen Matrix, also
-$O(n)$ Operationen, und der Web-Graph ist so strukturiert, dass rund $50$
-Iterationen reichen. Zum klassischen Dämpfungsfaktor $\alpha = 0{,}85$ aus
-@bemerkung:warum-ausgerechnet-der-eigenwert-1 passt diese Zahl gut, denn
+$O(n)$ Operationen, und rund $50$ Iterationen reichen. Das passt zum
+klassischen Dämpfungsfaktor $\alpha = 0{,}85$ aus
+@bemerkung:warum-ausgerechnet-der-eigenwert-1, denn
 $\corange{0{,}85}^{50} \approx 3 \cdot 10^{-4}$. Insgesamt $O(n)$ statt
-$O(n^3)$: Dieser Unterschied macht eine Websuche überhaupt erst möglich.
+$O(n^3)$: Erst das macht die Websuche in dieser Größe möglich.
 
 :::interaktiv[PageRank auf einem Vier-Seiten-Netz]
-Welche Seite erhält langfristig den größten Score? Verfolgen wir dafür die
+Welche Seite erhält langfristig den größten Score? Verfolgen wir die
 Potenziteration auf dem kleinen Netz.
 
 <PagerankDemo />
 
-Auf $a$ und $c$ zeigen je zwei Links, auf $b$ und $d$ nur einer – genau dieses
-Verhältnis findet die Iteration wieder. Der Score ist trotzdem keine Zählung von
-Links, sondern ein Fixpunkt: Er hängt daran, wie viel die verweisenden Seiten
-selbst wert sind.
+Auf $a$ und $c$ zeigen je zwei Links, auf $b$ und $d$ nur einer, und dieses
+Verhältnis findet die Iteration wieder. Der Score ist trotzdem keine Zählung
+von Links, sondern ein Fixpunkt: Er hängt davon ab, wie viel die verweisenden
+Seiten selbst wert sind.
 :::
 
 ::::quiz
 :::frage{wahr}
 Im PageRank-Widget bleibt die Summe der vier Scores bei jedem Schritt gleich.
 
-Die Linkmatrix ist spaltenstochastisch. Daher erhält die Iteration die Summe.
+Die Linkmatrix ist spaltenstochastisch, daher erhält die Iteration die Summe.
 :::
 ::::
 
@@ -114,21 +110,21 @@ $$
 Ihre Eigenvektoren sind die *Hauptrichtungen* oder *Loading-Vektoren* in
 $\R^p$; die zugehörigen Eigenwerte geben an, wie viel Varianz jede Richtung
 erklärt. Die eigentlichen Hauptkomponenten-*Scores* der Beobachtungen sind
-$\bX\bv_j$. In der Praxis rechnen wir noch schneller
-direkt mit der [Singulärwertzerlegung](?k=06-svd#sec-6.2) von $\bX$, ohne
-$\bX^\top\bX$ je zu bilden (warum das auch numerisch klüger ist, haben wir
-in [Kapitel 6](?k=06-svd#sec-6.5) gesehen).
+$\bX\bv_j$. In der Praxis rechnen wir schneller direkt mit der
+Singulärwertzerlegung von $\bX$ (@sec:svd/singulaerwerte), ohne
+$\bX^\top\bX$ je zu bilden; warum das auch numerisch klüger ist, steht in
+@sec:svd/anwendungen.
 
 :::interaktiv[PCA: Welche Richtung erklärt am meisten?]
-Die Kovarianzmatrix gibt eine Formel vor. Aber wie sieht die dazugehörige
-Richtung in einer Punktwolke aus? Drehen wir eine Projektion durch die Daten.
+Wie sieht die Richtung maximaler Varianz in einer Punktwolke aus? Drehen wir
+eine Projektionsrichtung durch die Daten.
 
 <PcaDirectionDemo />
 
-Die gesuchte Richtung ist keine Koordinatenachse und nicht ablesbar, sondern die
-Lösung eines Maximierungsproblems – und die liefert der erste Eigenvektor von
-$\bSigma$. Sein Eigenwert $\lambda_1$ ist die dort erreichte Varianz, $\lambda_2$
-der Rest senkrecht dazu.
+Die gesuchte Richtung ist keine Koordinatenachse, sondern die Lösung eines
+Maximierungsproblems, und die liefert der erste Eigenvektor von $\bSigma$. Sein
+Eigenwert $\lambda_1$ ist die dort erreichte Varianz, $\lambda_2$ die Varianz
+senkrecht dazu.
 :::
 
 ::::quiz
@@ -141,32 +137,26 @@ $4{,}43$. In jeder anderen Richtung ist $\bv^\top\bSigma\bv$ kleiner.
 :::
 ::::
 
-::::vertiefung[Lanczos für sehr große PCA-Probleme]
-
-:::bemerkung[#warum-iterativ-die-lanczos-abkuerzung (Warum iterativ? Die Lanczos-Abkürzung)]
-Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen
-(Gen-Expression, Bildanalyse), gebraucht werden aber fast immer nur die
-$k$ größten Eigenwerte mit $k \ll p$. Die
-[Lanczos-Iteration](#sec-8.1) kann genau diese approximieren. Arbeitet sie
-direkt mit $\bX$, kostet ein Matrix-Vektor-Paar
-$O(\operatorname{nnz}(\bX))$; hinzu kommen Orthogonalisierung und eine von
-Spektrallücken und Toleranz abhängige Iterationszahl. Ein pauschaler Faktor
-$p/k$ folgt daraus nicht. Warum wir $\bSigma$ besser gar nicht erst aufstellen,
-zeigt dennoch ihre Größe:
-$100\,000^2 = 10^{10}$ Einträge sind in doppelter Genauigkeit rund
-$80$ Gigabyte. In R übernimmt das zum Beispiel `irlba::irlba()` (iterativ)
-oder `irlba::svdr()` (iterativ und probabilistisch, ein Vorgeschmack auf
-@sec:sketching).
+:::bemerkung[#warum-iterativ-die-lanczos-abkuerzung (Warum iterativ? Lanczos für große p)]
+Moderne Anwendungen haben $p = 10^4$ bis $10^6$ Variablen (Gen-Expression,
+Bildanalyse), gebraucht werden aber meist nur die $k \ll p$ größten
+Eigenwerte. Gezielt diese approximiert die Lanczos-Iteration
+(@bemerkung:welche-zielgestalt-welches-verfahren). Arbeitet sie direkt mit
+$\bX$, kostet ein Matrix-Vektor-Paar $O(\operatorname{nnz}(\bX))$; hinzu kommen
+Orthogonalisierung und eine Iterationszahl, die von Spektrallücken und
+Toleranz abhängt, sodass sich kein pauschaler Beschleunigungsfaktor wie $p/k$
+angeben lässt. $\bSigma$ selbst stellen wir dabei gar nicht erst auf: Bei
+$p = 100\,000$ hätte sie $10^{10}$ Einträge, in doppelter Genauigkeit rund
+$80$ Gigabyte. In R übernehmen das zum Beispiel `irlba::irlba()` (iterativ)
+oder `irlba::svdr()` (iterativ und probabilistisch, siehe @sec:sketching).
 :::
-
-::::
 
 ### Approximative SVD in der Praxis
 
-Wie groß der Unterschied ist, zeigt ein Experiment:
-eine :k[Rang-k-Approximation]{#low-rank-approximation} an einem
-Graustufen-Foto (2500 × 3300 Pixel), einmal mit der vollen SVD und
-zweimal iterativ mit `irlba`:
+Wie groß der Unterschied ist, zeigt ein Experiment: eine
+:k[Rang-k-Approximation]{#low-rank-approximation} an einem Graustufen-Foto
+(2500 × 3300 Pixel), einmal mit der vollen SVD und zweimal iterativ mit
+`irlba`:
 
 ```r
 library(irlba); suppressMessages(library(magick))
@@ -186,10 +176,17 @@ microbenchmark::microbenchmark(
 ```
 
 Die vollständige SVD berechnet alle $2500$ Singulärwerte, obwohl nur $50$
-gebraucht werden. `irlba` und `svdr` tasten die Matrix stattdessen nur über
+gebraucht werden. `irlba` und `svdr` tasten die Matrix nur über
 Matrix-Vektor-Produkte ab und arbeiten in einem Unterraum der Dimension
-$50$; wie viel Rechenzeit das spart, misst der Vergleich oben. Und die
-Qualität? Dafür stellen wir die drei Rang-50-Rekonstruktionen gegenüber:
+$50$; wie viel Rechenzeit das spart, misst der Vergleich oben. An Qualität
+kostet das kaum etwas: `irlba` rechnet dieselbe Rang-50-Zerlegung bis auf eine
+einstellbare Toleranz aus, während `svdr` bewusst etwas Genauigkeit gegen
+Tempo tauscht. Zum Selbst-Ausprobieren: das Rang-k-Widget in
+@sec:svd/anwendungen und die
+[Shiny-App zur Bildkompression](https://fabian-s.shinyapps.io/truncatedSVD-shiny/).
+
+:::vertiefung[Die Qualität der Rekonstruktionen messen]
+Die drei Rang-50-Rekonstruktionen lassen sich direkt gegenüberstellen:
 
 ```r
 r <- 50
@@ -200,17 +197,13 @@ norm(X - X_r, "F") / norm(X, "F")
 c(norm(X_r - X_irlba, "F"), norm(X_r - X_svdr, "F")) / norm(X_r, "F")
 ```
 
-Die beiden Zeilen messen Verschiedenes. Die erste ist der relative
-Frobenius-Fehler der exakten Rang-50-Approximation, also die Größe,
-die der [Satz von Eckart und Young](?k=06-svd#sec-6.4) minimiert. Die
-zweite hält die beiden iterativen Rekonstruktionen gegen eben diese exakte
-Lösung. Fällt sie deutlich kleiner aus als die erste, kostet die Abkürzung
-nichts, was neben dem Approximationsfehler ins Gewicht fiele. Das ist
-zu erwarten: `irlba` rechnet dieselbe Rang-50-Zerlegung bis auf eine
-einstellbare Toleranz aus, während `svdr` bewusst etwas Genauigkeit gegen
-Tempo tauscht. Zum Selbst-Ausprobieren: das
-[Rang-k-Widget in Kapitel 6](?k=06-svd#sec-6.4) und die
-[Shiny-App zur Bildkompression](https://fabian-s.shinyapps.io/truncatedSVD-shiny/).
+Die beiden letzten Zeilen messen Verschiedenes. Die erste ist der relative
+Frobenius-Fehler der exakten Rang-50-Approximation, also das Minimum aus
+@satz:eckart-und-young-beste-approximation-von. Die zweite misst den Abstand
+der beiden iterativen Rekonstruktionen zu dieser exakten Lösung. Ist sie
+deutlich kleiner als die erste, spielt der Zusatzfehler der Abkürzung neben
+dem Approximationsfehler keine Rolle.
+:::
 
 ### Die Verfahren im Vergleich
 
@@ -220,13 +213,13 @@ Tempo tauscht. Zum Selbst-Ausprobieren: das
 | (shifted) QR | einmalig $O(n^3)$; danach $O(n^2)$ je Hessenberg-Sweep | alle Eigenwerte | $n$ Eigenwerte |
 | Lanczos | $O(m\operatorname{nnz}(\bA)+nm^2)$ für $m$ Schritte mit voller Reorthogonalisierung | wenige Extremal-Eigenwerte, *sparse* $\bA$ | bis zu $m \ll n$ Eigenpaare |
 
-Dabei zählt $\operatorname{nnz}(\cdot)$ die Nicht-Null-Einträge. Zur
-Einordnung: Die [Potenzmethode](#sec-8.1) konvergiert mit der Rate
-$\corange{|\lambda_2/\lambda_1|}$, die QR-Iteration (mit Shifts) oft
-quadratisch und am stabilsten. Als Faustregeln: Für *sparse* Matrizen ist
-Lanczos deutlich überlegen; wer alle Eigenwerte braucht und Speicher übrig
-hat, nimmt die (shifted) QR-Iteration; für wenige Eigenpaare reichen
-Potenzmethode (eines) oder Lanczos ($m \ll n$).
+Dabei zählt $\operatorname{nnz}(\cdot)$ die Nicht-Null-Einträge. Die
+Potenzmethode konvergiert mit der Rate $\corange{|\lambda_2/\lambda_1|}$, die
+QR-Iteration mit Shifts oft quadratisch und am stabilsten, ohne Shifts nur
+linear (@bemerkung:wogegen-die-qr-iteration-konvergiert). Als Faustregeln:
+Für *sparse* Matrizen ist Lanczos deutlich überlegen; wer alle Eigenwerte
+braucht und Speicher übrig hat, nimmt die (shifted) QR-Iteration; für wenige
+Eigenpaare reichen Potenzmethode (eines) oder Lanczos ($m \ll n$).
 
 *Vertiefung: Heath §4.5 (iterative Eigenwertverfahren: Potenzmethode,
 QR-Iteration, Lanczos); zur PCA-über-SVD-Verbindung noch einmal

@@ -14,36 +14,26 @@ $$
 $$
 
 Zum Beispiel liefern $[1, 2]^T$ und $[3, 1]^T$ den
-Wert $1 \cdot 3 + 2 \cdot 1 = 5$. Das Ergebnis ist eine
-einzelne Zahl, die misst, wie stark zwei Vektoren in dieselbe Richtung
-zeigen: Geometrisch gilt
-$\bx^T \by = \|\bx\|_2 \|\by\|_2 \cos\theta$, wobei
-$\theta$ der Winkel zwischen den beiden (von $\bnull$ verschiedenen) Vektoren
-ist: positiv, wenn
-sie grob in dieselbe Richtung zeigen, null, wenn sie senkrecht
-aufeinander stehen (:k[Orthogonalität]{#orthogonality}), negativ,
-wenn sie einander entgegengesetzt sind. Außerdem erzeugt es die
-:k[euklidische Norm]{#euclidean-norm} über
-$\|\bx\|_2^2 = \bx^T \bx$. Diese enge Verbindung von
-Länge, Winkel und einer einfachen algebraischen Formel ist ein
-Hauptgrund, warum die Kleinste-Quadrate-Methode die 2-Norm ihren
-Konkurrentinnen vorzieht. In der Statistik begegnet uns dieselbe Formel
-ständig: Die Stichprobenkovarianz zweier zentrierter Datenvektoren ist ihr
-Skalarprodukt geteilt durch $n-1$.
+Wert $1 \cdot 3 + 2 \cdot 1 = 5$. Diese Zahl misst, wie stark zwei Vektoren in
+dieselbe Richtung zeigen: Geometrisch gilt
+$\bx^T \by = \|\bx\|_2 \|\by\|_2 \cos\theta$ mit dem Winkel $\theta$
+zwischen den beiden (von $\bnull$ verschiedenen) Vektoren. Das Vorzeichen
+zeigt also, ob der Winkel spitz (positiv), ein rechter (null,
+:k[Orthogonalität]{#orthogonality}) oder stumpf (negativ) ist. Außerdem erzeugt das Skalarprodukt die
+:k[euklidische Norm]{#euclidean-norm} über $\|\bx\|_2^2 = \bx^T \bx$.
 
 Allgemeiner heißt eine Abbildung $\inner{\cdot, \cdot} \colon V \times V \to \R$
 auf einem :k[Vektorraum]{#vector-space} $V$ ein Skalarprodukt, wenn sie in beiden
 Argumenten linear und symmetrisch ist und $\inner{\bv, \bv} > 0$ für
-$\bv \neq \bnull$ erfüllt; $V$ heißt dann *Skalarproduktraum*. Das
-Standardbeispiel im :k[$\R^n$]{#real-coordinate-space} ist $\bx^T \by$, und
-jedes Skalarprodukt erzeugt über $\|\bv\| = \sqrt{\inner{\bv, \bv}}$ wieder
-eine Norm. Das wichtigste Beispiel jenseits des $\R^n$ ist das
-:k[Skalarprodukt von Funktionen]{#inner-product-functions}, bei dem die Summe
-über die Komponenten zum Integral wird.
+$\bv \neq \bnull$ erfüllt; $V$ heißt dann *Skalarproduktraum*. Jedes
+Skalarprodukt erzeugt über $\|\bv\| = \sqrt{\inner{\bv, \bv}}$ eine Norm. Beim
+:k[Skalarprodukt von Funktionen]{#inner-product-functions} wird die Summe zum
+Integral.
 
-Sehen wir nach, was passiert, wenn wir den zweiten Vektor herumschwenken:
+Wann wechselt das Skalarprodukt sein Vorzeichen, wenn wir $\by$ um $\bx$
+herumschwenken?
 
 <DotProductWidget />
 
-Das Vorzeichen kippt genau in dem Moment, in dem der Schatten die Seite
-wechselt; dazwischen liegt der rechte Winkel.
+Das Vorzeichen wechselt, wenn der Schatten von $\by$ auf $\bx$ die Seite
+wechselt, also beim rechten Winkel.

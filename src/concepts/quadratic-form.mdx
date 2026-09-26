@@ -4,14 +4,13 @@ import { QuadFormWidget } from "./widgets/QuadraticFormWidget";
 
 {/* Konzept-Tooltip: quadratische Form: x^T B x als skalare Funktion von x. */}
 
-Eine *quadratische Form* schickt einen :k[Vektor]{#vector} $\bx$ durch ein
-„Matrix-Sandwich": Zuerst :k[multiplizieren]{#matrix-multiplication} wir die
+Eine *quadratische Form* macht aus einem :k[Vektor]{#vector} $\bx$ die Zahl
+$q(\bx) = \bx^\top \bB \bx$: Zuerst :k[multiplizieren]{#matrix-multiplication} wir die
 quadratische :k[Matrix]{#matrix} $\bB$ mit $\bx$, dann bilden wir das
-:k[Skalarprodukt]{#dot-product} des Ergebnisses noch einmal mit $\bx$. Also
-ist $\bx^\top \bB \bx$ eine einzelne Zahl, und wenn $\bx$ variiert, definiert
-das eine skalarwertige :k[Funktion]{#function}. Für zwei Einträge
-ausgeschrieben ist sie ein :k[Polynom]{#polynomial}, in dem jeder Term genau
-Grad zwei hat, der mehrdimensionale Vetter der Schulparabel $b x^2$:
+:k[Skalarprodukt]{#dot-product} des Ergebnisses mit $\bx$. Als
+:k[Funktion]{#function} von $\bx$ ist das, für zwei Einträge
+ausgeschrieben, ein :k[Polynom]{#polynomial}, in dem jeder Term genau
+Grad zwei hat, die mehrdimensionale Fassung von $b x^2$:
 
 $$
 \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}^\top \begin{bmatrix} 2 & 1 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = 2x_1^2 + x_1 x_2 + x_2^2 .
@@ -19,18 +18,18 @@ $$
 
 Weil ein $1 \times 1$-Ergebnis gleich seiner eigenen
 :k[Transponierten]{#transpose} ist, gilt
-$\bx^\top \bB \bx = \bx^\top \bB^\top \bx$. Nur der
+$\bx^\top \bB \bx = \bx^\top \bB^\top \bx$. Es zählt also nur der
 :k[symmetrische]{#symmetric-matrix} Anteil
-$\tfrac{1}{2}(\bB + \bB^\top)$ von $\bB$ zählt. Dieselbe Kombination taucht
-beim Differenzieren auf: Eine Standard-Identität des Matrix-Kalküls (vgl. MML
-Gl. (5.107)) besagt, dass der :k[Gradient]{#gradient} von $\bx^\top \bB \bx$
-nach $\bx$, hier wie immer als Zeile notiert, gerade
-$\bx^\top (\bB + \bB^\top)$ ist, für symmetrisches $\bB$ also
-$2\bx^\top \bB$, ganz analog zu
+$\tfrac{1}{2}(\bB + \bB^\top)$ von $\bB$. Dieselbe Kombination steckt im
+:k[Gradienten]{#gradient} von $q$: Als Zeile geschrieben ist er
+$\bx^\top (\bB + \bB^\top)$, für symmetrisches $\bB$ also
+$2\bx^\top \bB$, analog zu
 $\tfrac{\mathrm{d}}{\mathrm{d}x} (b x^2) = 2bx$.
 
 Welche Richtung auf dem Einheitskreis erzeugt welche Parabel der quadratischen Form?
 
 <QuadFormWidget />
 
-Die beiden verlinkten Bilder verbinden die Richtung des Vektors mit ihrer Krümmung.
+Für einen Einheitsvektor $\bu$ ist $q(t\bu) = q(\bu)\,t^2$, eine Parabel mit
+Vorfaktor $q(\bu)$. Für das $\bB$ oben liegt er zwischen $0{,}79$ und $2{,}21$;
+die Parabel öffnet sich also in jeder Richtung nach oben.

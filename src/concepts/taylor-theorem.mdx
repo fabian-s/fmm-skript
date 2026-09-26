@@ -6,31 +6,29 @@ import { TaylorRestgliedWidget } from "./widgets/TaylorTheoremWidget";
 
 Der Satz von Taylor (Taylor&rsquo;s theorem) ersetzt eine Funktion in der Nähe
 eines Punktes durch ein Polynom aus ihren :k[Ableitungen]{#derivative} dort und
-beziffert den Fehler. Ist $x$ auf einem Intervall um $0$ $(n+1)$-mal
+beziffert den Fehler. Ist $f$ auf einem Intervall um $0$ $(n+1)$-mal
 differenzierbar, gibt es zu jedem $t$ darin ein $\xi$ zwischen $0$ und $t$ mit
 
 $$
-x(t) = p_n(t) + R_n(t), \qquad
-p_n(t) = \sum_{k=0}^{n} \frac{t^k}{k!}\, x^{(k)}(0), \qquad
-R_n(t) = \frac{t^{n+1}}{(n+1)!}\, x^{(n+1)}(\xi).
+f(t) = p_n(t) + R_n(t), \qquad
+p_n(t) = \sum_{k=0}^{n} \frac{t^k}{k!}\, f^{(k)}(0), \qquad
+R_n(t) = \frac{t^{n+1}}{(n+1)!}\, f^{(n+1)}(\xi).
 $$
 
-Die Aussage ist *lokal*: Endlich viele Ableitungen legen eine Funktion nicht
-global fest.
-
-Der wichtigste Fall in der Numerik ist $n = 1$: $x(t) = x(0) + t\,x'(0) + O(t^2)$
+Der wichtigste Fall in der Numerik ist $n = 1$: $f(t) = f(0) + t\,f'(0) + O(t^2)$
 für $t \to 0$, die Funktion ist also ihre :k[Tangente]{#tangent-line} plus ein
-Restglied der Größenordnung :k[$O(t^2)$]{#big-o-notation}. Dass es wirklich
-wie $t^2$ schrumpft, garantiert das Symbol allerdings nicht; es folgt aus
-der Restgliedformel, sobald $|x''| \le M$ nahe $0$ gilt, und heißt dann
+Restglied der Größenordnung :k[$O(t^2)$]{#big-o-notation}. Die Konstante
+dahinter liefert die Restgliedformel: Gilt $|f''| \le M$ nahe $0$, so ist
 $|R_1(t)| \le M\,t^2/2$.
-Beim Sinus sind alle Ableitungen durch $1$ beschränkt, für $n = 2$ also
-$|\sin t - t| \le |t|^3/6$: Bei $t = 0{,}1$ erlaubt das
-$1{,}667 \cdot 10^{-4}$, tatsächlich fehlen $1{,}666 \cdot 10^{-4}$.
+Beim Sinus sind alle Ableitungen durch $1$ beschränkt, also gilt
+$|R_n(t)| \le |t|^{n+1}/(n+1)!$.
 
-Wie viel gibt die Schranke für das Restglied wirklich her?
+Wie nah kommt der Fehler des Sinus an diese Schranke heran?
 
 <TaylorRestgliedWidget />
 
-Bei größeren $t$ ist sie großzügig: Sie ersetzt $x^{(n+1)}(\xi)$ an der
-unbekannten Zwischenstelle durch das Maximum.
+Die Sinuskurve bleibt stets im Band um $p_n$, das sich mit höherer Ordnung und
+kleinerem $|t|$ zuschnürt. Bei kleinem $t$ ist die Schranke großzügig: Für die
+ungeraden $n$ im Widget ist die $(n+1)$-te Ableitung $\pm\sin$, und
+$|\sin\xi|$ liegt dort weit unter $1$. Bei $n = 3$, $t = 0{,}5$ schöpft der
+Fehler die Schranke nur zu rund 10 % aus.

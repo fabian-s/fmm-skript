@@ -9,19 +9,14 @@ import { S32VecNormWidget } from "./widgets/S32VecNormWidget";
   MDX-Migration 2026-08-11 (Format gewechselt, Prosa wörtlich übernommen).
 */}
 
-In @sec:spur haben wir mit der
-Frobenius-Norm bereits eine erste Möglichkeit kennengelernt, die „Größe" einer Matrix in
-einer einzigen Zahl zusammenzufassen. In diesem Abschnitt gehen wir das Thema
-grundsätzlicher an: Wir legen axiomatisch fest, was eine Matrixnorm ist,
-konstruieren eine Familie von Beispielen und sehen dann, was diesen naheliegenden
-Normen fehlt. Das motiviert die Operatornormen in @sec:operatornormen.
+Die Frobenius-Norm aus @sec:spur ist ein erstes Größenmaß für Matrizen. Jetzt fragen
+wir allgemein, was eine Matrixnorm ist und was sie leisten soll.
 
 ### Warum Matrixnormen? :id[warum-matrixnormen]
 
-Für Vektoren sind :k[Normen]{#norm} unser wichtigstes
-Messinstrument: Sie machen aus einem Fehler*vektor* eine Fehler*größe*,
-mit der wir rechnen und argumentieren können. Dasselbe brauchen wir für Matrizen, und
-zwar aus vier konkreten Anlässen:
+Für Vektoren sind :k[Normen]{#norm} unser wichtigstes Messinstrument: Sie machen aus
+einem Fehler*vektor* eine Fehler*größe*. Für Matrizen brauchen wir dasselbe, und zwar
+aus vier Anlässen:
 
 - die „Größe" einer Matrix messen, analog zur Länge eines Vektors;
 - *Fehler* quantifizieren: Wie weit liegt eine mit
@@ -34,24 +29,20 @@ zwar aus vier konkreten Anlässen:
   :k[Konditionszahl]{#condition-number} einer Matrix wird
   über Matrixnormen definiert.
 
-Frischen wir zunächst das Vorwissen auf. Für Vektoren kennen wir neben der
-:k[euklidischen Norm]{#euclidean-norm} $\|\bx\|_2$ die ganze Familie der $p$-Normen, und ihr
-„Aussehen" lässt sich am besten über ihre Einheitskugeln
-$\{\bx : \|\bx\|_p = 1\}$ vergleichen: Raute, Kreis, Quadrat.
+Zur Auffrischung: Für Vektoren kennen wir neben der
+:k[euklidischen Norm]{#euclidean-norm} $\|\bx\|_2$ die ganze Familie der $p$-Normen.
+Vergleichen lassen sie sich am besten über ihre Einheitskugeln
+$\{\bx : \|\bx\|_p = 1\}$: Raute, Kreis, Quadrat.
 
 :::interaktiv[Auffrischung: Was misst die Norm an der Einheitskugel?]
 Was haben diese Formen mit der *Zahl* $\|\bx\|_p$ zu tun?
 
 <S32NormBallWidget />
 
-Die Norm eines Vektors ist damit ablesbar geworden: Sie ist der Faktor, mit dem wir die
-Einheitskugel aufblasen müssen, damit ihr Rand durch die Spitze von $\bx$ läuft. Für
-$p \ge 1$ ist diese Kugel konvex, und die Konvexität ist nichts anderes als die
-Dreiecksungleichung in geometrischer Gestalt.
+Die Norm eines Vektors ist der Faktor, mit dem wir die Einheitskugel aufblasen müssen,
+damit ihr Rand durch die Spitze von $\bx$ läuft. Für $p \ge 1$ ist die Kugel konvex;
+das ist die Dreiecksungleichung in geometrischer Gestalt.
 :::
-
-Auch bei Matrixnormen werden wir gleich fragen, welche Menge eine Norm zur
-„Einheitskugel" erklärt.
 
 ### Die Axiome :id[die-axiome]
 
@@ -69,15 +60,10 @@ $c \in \R$ gilt:
 :::
 
 :::bemerkung[#bemerkung-3-2-2]
-Das sind exakt die Axiome einer Vektornorm: Die Menge
-$\R^{m \times n}$ ist ein
-:k[Vektorraum]{#vector-space} (der Dimension
-$mn$), und eine Matrixnorm ist schlicht eine Norm auf diesem Raum.
-Umgekehrt ist jede Vektornorm eine Matrixnorm auf dem Raum
-$\R^{n \times 1}$ der einspaltigen Matrizen. Was eine Matrixnorm über
-diese Grundaxiome hinaus leisten *sollte* (etwa gut mit dem Matrixprodukt
-zusammenzuspielen), untersuchen wir in
-@sec:eigenschaften.
+Das sind dieselben Axiome wie bei einer Vektornorm: $\R^{m \times n}$ ist ein
+:k[Vektorraum]{#vector-space} der Dimension $mn$, und eine Matrixnorm ist eine Norm auf
+diesem Raum. Umgekehrt ist jede Vektornorm eine Matrixnorm auf dem Raum
+$\R^{n \times 1}$ der einspaltigen Matrizen.
 :::
 
 ### Matrixnormen durch Vektorisierung :id[matrixnormen-durch-vektorisierung]
@@ -94,9 +80,9 @@ $$
 $$
 :::
 
-Dass dieses Rezept wirklich immer eine Matrixnorm liefert, ist einfach zu sehen: Die
-Vektorisierung sortiert die Einträge ja nur um, und damit erbt
-$\bA \mapsto \left\| \vec(\bA) \right\|$ alle drei Axiome von der Vektornorm.
+Weil $\vec$ die Einträge nur umsortiert, erbt
+$\bA \mapsto \left\| \vec(\bA) \right\|$ alle drei Axiome von der Vektornorm und ist
+eine Matrixnorm.
 
 :::::vertiefung[Warum jede Vektornorm auf diesem Weg eine Matrixnorm liefert]
 
@@ -161,10 +147,9 @@ Vektornormen:
   \cblue{\left\| \bA \right\|_F} = \left\| \vec(\bA) \right\|_2 = \sqrt{\sum_{i,j} a_{ij}^2}
   $$
 
-  Das stimmt mit der Definition aus
-  @sec:spur überein, wo wir außerdem
+  Das ist @definition:frobenius-norm, also gilt auch
   $\cblue{\left\| \bA \right\|_F} = \sqrt{\tr(\bA^\top\bA)}$
-  gezeigt haben.
+  (@satz:frobenius-norm-ueber-die-spur).
 
 - *Summennorm* (aus der $1$-Norm):
 
@@ -180,26 +165,31 @@ Vektornormen:
 :::
 
 :::interaktiv[Frobenius-, Summen- und Maximumsnorm: was sehen sie, was nicht?]
-Leisten diese drei Normen, was wir von einem Größenmaß erwarten? Können zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei Normen
-denselben Wert haben?
+Können zwei Matrizen, die als Abbildung nichts miteinander zu tun haben, in allen drei
+Normen denselben Wert haben?
 
 <S32VecNormWidget />
 
-Der Tauschknopf beantwortet die Frage. Deshalb brauchen wir Normen, die nicht die
-Einträge, sondern die *Abbildung* messen.
+Ja. „Einträge durchtauschen" verteilt dieselben vier Zahlen auf andere Plätze: Alle drei
+Normen bleiben gleich, obwohl die Abbildung eine andere ist (aus der Identität wird etwa
+eine singuläre Matrix). Wir brauchen also Normen, die die *Abbildung* messen.
 :::
 
 ### Was elementweise Normen nicht sehen :id[was-elementweise-normen-nicht-sehen]
 
-Diese Vektorisierungsnormen sind billig zu berechnen und erfüllen alle Axiome. Sie
-behandeln die Matrix aber wie einen langen Vektor; jede Umordnung der Einträge lässt die
-Norm unverändert. Eine Matrix ist aber
-mehr als eine Tabelle von Zahlen: Sie repräsentiert die
-:k[lineare Abbildung]{#linear-transformation}
-$\bx \mapsto \bA\bx$, und von dieser Abbildung wissen die elementweisen
-Normen nichts. Ihnen fehlt damit auch eine direkte geometrische Interpretation: Was
-genau $\left\| \bA \right\|_F = 5$ über die Wirkung von $\bA$
-auf Vektoren aussagt, bleibt unklar. Das folgende Beispiel zeigt, wie weit das geht.
+Die Vektorisierungsnormen sind leicht zu berechnen und erfüllen alle Axiome. Sie
+behandeln die Matrix aber wie einen langen Vektor, und jede Umordnung der Einträge lässt
+die Norm unverändert. Eine Matrix repräsentiert jedoch die
+:k[lineare Abbildung]{#linear-transformation} $\bx \mapsto \bA\bx$, und von dieser
+Abbildung wissen die elementweisen Normen nichts. Die Frobenius-Norm etwa misst nur die
+Summe der quadrierten Bildlängen der Einheitsvektoren ($\bA\be_j$ ist die $j$-te Spalte
+von $\bA$),
+
+$$
+\left\| \bA \right\|_F^2 = \sum_{j=1}^n \left\| \bA\be_j \right\|_2^2,
+$$
+
+nicht, wie stark $\bA$ einen Vektor höchstens strecken kann.
 
 :::beispiel[#gleiche-frobenius-norm-voellig (Gleiche Frobenius-Norm, völlig verschiedene Abbildungen)]
 Betrachten wir die drei Matrizen
@@ -234,21 +224,20 @@ $\bx = (1, 0)^\top$:
   :k[Determinante]{#determinant}).
 - $\cgreen{\bA_3}\bx = \begin{pmatrix} \sqrt{2} \\ 0 \end{pmatrix}$:
   $\cgreen{\bA_3}$ streckt die erste Koordinate um den Faktor
-  $\sqrt{2}$ und löscht die zweite komplett:
-  $\cgreen{\bA_3}(0,1)^\top = \bnull$. Diese Matrix ist singulär (nicht
-  :k[invertierbar]{#matrix-inverse}); sie kollabiert die
-  ganze Ebene auf die $x_1$-Achse.
+  $\sqrt{2}$ und löscht die zweite:
+  $\cgreen{\bA_3}(0,1)^\top = \bnull$. Die Matrix ist singulär (nicht
+  :k[invertierbar]{#matrix-inverse}) und bildet die ganze Ebene auf die $x_1$-Achse
+  ab.
 
 Zwei längentreue Abbildungen und eine, die eine ganze Dimension auslöscht: Die
 Frobenius-Norm kann sie nicht auseinanderhalten.
 :::
 
-Dasselbe Problem zeigt sich aus einer zweiten Richtung, wenn wir die Dimension wachsen
-lassen:
+Dasselbe Problem zeigt sich, wenn wir die Dimension wachsen lassen:
 
 :::beispiel[#identitaet-in-wachsender-dimension (Identität in wachsender Dimension)]
-Für die Identitätsmatrix $\bI_n \in \R^{n \times n}$ (mit $n$
-Einsen auf der Diagonale und sonst Nullen) liefern die drei Vektorisierungsnormen
+Für die Identitätsmatrix $\bI_n \in \R^{n \times n}$ liefern die drei
+Vektorisierungsnormen
 
 $$
 \cblue{\left\| \bI_n \right\|_F} = \sqrt{\underbrace{1 + \cdots + 1}_{n}} = \cblue{\sqrt{n}}, \qquad \corange{\left\| \bI_n \right\|_S} = \corange{n}, \qquad \cpurp{\left\| \bI_n \right\|_M} = \cpurp{1}.
@@ -259,14 +248,11 @@ trotzdem wachsen Frobenius- und Summennorm mit $n$ über alle Grenzen.
 :::
 
 Eine Norm, die die Matrix als *Abbildung* misst, sollte der Identität den Wert
-$1$ geben, unabhängig von der Dimension. Die Maximumsnorm trifft diesen Wert
-hier zwar zufällig, bleibt aber genauso blind für das, was
-$\bA$ mit Vektoren *tut* (im
-:k[Matrix-Vektor-Produkt]{#matrix-vector-product}
-$\bA\bx$). Die Lösung sind *Operatornormen*, die die Transformation
-$\bx \mapsto \bA\bx$ direkt vermessen: Wie stark kann $\bA$
-einen Vektor höchstens verlängern? Ihnen widmen wir den
-@sec:operatornormen.
+$1$ geben, unabhängig von der Dimension. Die Maximumsnorm trifft diesen Wert zufällig,
+bleibt aber ebenso blind für das, was $\bA$ im
+:k[Matrix-Vektor-Produkt]{#matrix-vector-product} $\bA\bx$ mit Vektoren *tut*. Die
+Lösung sind *Operatornormen* (@sec:operatornormen), die direkt messen, wie stark
+$\bA$ einen Vektor höchstens verlängert.
 
 ### Selbsttest
 
@@ -279,8 +265,7 @@ Vertauschen wir zwei Einträge einer Matrix, so ändert sich keine der drei
 Vektorisierungsnormen.
 
 Alle drei entstehen als Vektornorm von $\vec(\bA)$, und die $1$-, $2$- und
-$\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab. Diese
-Schwäche führt in @sec:operatornormen zu den Operatornormen.
+$\infty$-Norm eines Vektors hängen nicht von der Reihenfolge seiner Einträge ab.
 :::
 
 :::frage{falsch}

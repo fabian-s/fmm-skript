@@ -4,29 +4,28 @@ import { SpyWidget } from "./widgets/SparseMatrixWidget";
 
 Eine :k[Matrix]{#matrix} heißt
 *dünnbesetzt* (sparse), wenn die allermeisten ihrer Einträge
-Null sind, so viele, dass es sich lohnt, nur die
+null sind, so viele, dass es sich lohnt, nur die
 Nichtnull-Einträge zu speichern und mit ihnen zu rechnen. Eine
 tridiagonale $n \times n$-Matrix etwa hat höchstens
 $3n - 2$ Nichtnull-Einträge von $n^2$ insgesamt: Für
 $n = 1000$ sind das rund 3&thinsp;000 Zahlen statt einer
 Million.
 
-Die Nullen nützen uns aber nur, wenn ein Algorithmus sie auch Null
-*lässt*. Wenden wir eine Transformation unbedacht an, können
-aus Nullen Nichtnullen werden (sogenanntes *Fill-in*, bekannt
-aus der
-:k[LR-Zerlegung]{#lu-decomposition}), und
+Die Nullen nützen aber nur, wenn ein Algorithmus sie null
+*lässt*. Unbedacht angewandte Transformationen machen aus Nullen
+Nichtnullen (*Fill-in*, etwa bei der
+:k[LU-Zerlegung]{#lu-decomposition}), und
 die Ersparnis ist dahin. Für dünnbesetzte
-Kleinste-Quadrate-Probleme greifen wir deshalb gern zu
-Givens-Rotationen: Eine Rotation löscht gezielt einen Eintrag
-und rührt nur zwei Zeilen an, ihr Fill-in bleibt also lokal und lässt sich
-über die Reihenfolge klein halten. Householder-Spiegelungen räumen eine ganze
-Spalte auf einmal frei – auf dichten Blöcken günstiger, dafür mischen sie
-viele Zeilen und kosten ohne fill-in-reduzierende Spaltenanordnung mehr
-Nullen.
+Kleinste-Quadrate-Probleme greifen wir deshalb zu
+Givens-Rotationen: Jede fasst nur zwei Zeilen an, ihr Fill-in bleibt lokal.
+Householder-Spiegelungen mischen viele Zeilen und sind eher für voll besetzte
+Matrizen die Wahl.
 
-Wie verändert die Bandbreite das Nullmuster und den Speicherbedarf?
+Eine Bandmatrix mit Bandbreite $b$ hat Nichtnull-Einträge nur für
+$|i - j| \le b$. Wie verändert $b$ das Nullmuster und den Speicherbedarf?
 
 <SpyWidget />
 
-Bei fester Bandbreite wächst die Zahl gespeicherter Einträge linear statt quadratisch mit der Matrixgröße.
+Für $n = 12$ speichert die Tridiagonalmatrix ($b = 1$) 34 statt 144 Zahlen.
+Bei fester Bandbreite wächst die Zahl der gespeicherten Einträge linear in
+$n$, bei dichter Ablage quadratisch.

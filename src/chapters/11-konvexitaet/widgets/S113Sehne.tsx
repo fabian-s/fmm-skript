@@ -75,7 +75,7 @@ const KURVEN: Kurve[] = [
   },
   {
     id: "betrag",
-    name: "konvex, nicht streng",
+    name: "konvex, nicht strikt",
     formel: "f(x) = |x|",
     f: (x) => Math.abs(x),
     yBereich: [-0.3, 2.3],
@@ -500,7 +500,7 @@ export function SehnenTest() {
         <Verdikt kind="warn" titel="Sehne und Graph fallen zusammen.">
           Zwischen x und y verläuft f geradlinig, deshalb deckt die Sehne den Graphen genau ab
           und in ({num("eq:konvexitaet-als-ungleichung")}) steht Gleichheit. Die Ungleichung ist erfüllt, die strikte Fassung
-          nicht: Der Betrag ist konvex, aber nicht streng konvex
+          nicht: Der Betrag ist konvex, aber nicht strikt konvex
           ({ref("bemerkung:wie-wir-die-ungleichung-lesen")}; die formale Fassung folgt in {ref("definition:strikte-konvexitaet")}).
         </Verdikt>
       ) : kurve.id === "doppelmulde" ? (
@@ -533,7 +533,7 @@ export function KonvexKonkavPanels() {
   const tafeln: { id: string; a: number; b: number; titel: string }[] = [
     { id: "parabel", a: -1.4, b: 1.5, titel: "konvex" },
     { id: "konkav", a: -1.4, b: 1.5, titel: "konkav" },
-    { id: "betrag", a: 0.2, b: 1.7, titel: "konvex, nicht streng" },
+    { id: "betrag", a: 0.2, b: 1.7, titel: "konvex, nicht strikt" },
     { id: "doppelmulde", a: -1.6, b: 1.3, titel: "weder noch" },
   ];
   return (

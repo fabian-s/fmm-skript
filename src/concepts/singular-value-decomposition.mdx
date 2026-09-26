@@ -3,7 +3,7 @@ export const title = "Singulärwertzerlegung (SVD)";
 import { SvdWidget } from "./widgets/SingularValueDecompositionWidget";
 
 Die *Singulärwertzerlegung* (singular value decomposition, SVD) zerlegt eine
-beliebige :k[Matrix]{#matrix} in „Drehen–Strecken–Drehen": Für jedes
+beliebige :k[Matrix]{#matrix} in „Drehen–Strecken–Drehen“: Für jedes
 $\bA \in \R^{m \times n}$ existieren
 :k[orthogonale Matrizen]{#orthogonal-matrix}
 $\bU \in \R^{m \times m}$, $\bV \in \R^{n \times n}$ und eine *rechteckige*
@@ -15,9 +15,9 @@ $$
 \bA = \bU\bSigma\bV^\top.
 $$
 
-Die *Singulärwerte* $\sigma_i$ sind die Wurzeln der
-:k[Eigenwerte]{#eigenvalue-eigenvector} von
-$\bA^\top\bA$; die Anzahl der Singulärwerte ungleich Null ist genau der
+Die *Singulärwerte* $\sigma_i$ sind Wurzeln von
+:k[Eigenwerten]{#eigenvalue-eigenvector} von
+$\bA^\top\bA$; die Anzahl der Singulärwerte ungleich null ist der
 :k[Rang]{#rank} $r$ von $\bA$. Lassen wir
 die Nullanteile weg, bleibt die *reduzierte SVD*
 $\bA = \bU_r\bSigma_r\bV_r^\top$ mit $\bSigma_r \in \R^{r \times r}$
@@ -30,11 +30,11 @@ $\corange{\kappa_2(\bA)} = \sigma_{\max}/\sigma_{\min}$ die
 :k[Konditionszahl]{#condition-number}: Eine fast singuläre
 Matrix hat ein winziges $\sigma_{\min}$ und ein nadelförmiges Ellipsoid.
 
-Drei Faktoren, drei Schritte: Welcher davon verformt den Einheitskreis
-eigentlich, und was tun die beiden anderen?
+Welcher der drei Faktoren verformt den Einheitskreis, und was tun die
+beiden anderen?
 
 <SvdWidget />
 
-Nur $\bSigma$ verformt. Die beiden Drehungen sortieren lediglich, welche
-Richtung gestreckt wird und wohin das Ergebnis zeigt; deshalb stecken alle
-Längenverhältnisse einer Matrix in ihren Singulärwerten.
+Nur $\bSigma$ verformt den Kreis zur Ellipse. $\bV^\top$ dreht vorher die
+Richtungen stärkster und schwächster Streckung auf die Achsen, $\bU$ dreht
+die Ellipse danach in ihre Endlage.

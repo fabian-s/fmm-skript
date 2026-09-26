@@ -1,12 +1,11 @@
 import { SekanteTangenteWidget } from "./widgets/S101Sekante";
 import { TeilZweiKarte } from "./widgets/S101Konzeptkarte";
 
-:::interaktiv[Landkarte für Analysis und Optimierung]
+:::interaktiv[Konzeptkarte zu Analysis und Optimierung]
 Mit diesem Kapitel beginnt der zweite Teil des Skripts, *Analysis &
 Optimierung*. Die Karte zeigt, wie seine Konzepte zusammenhängen, von der
-Fréchet-Ableitung, die wir gleich einführen, bis zu den Optimierungsverfahren
-in @kap:optim. Beim ersten Lesen genügt der Gesamteindruck;
-am Ende von Kapitel 12 lohnt sich ein zweiter Blick.
+Fréchet-Ableitung bis zu den Optimierungsverfahren in @kap:optim; beim ersten
+Lesen genügt der Gesamteindruck.
 
 <TeilZweiKarte />
 
@@ -40,8 +39,8 @@ g(h) = o(h)
 \lim_{h \to 0} \frac{g(h)}{h} = 0 .
 $$
 
-Ein $o(h)$-Term verschwindet also nicht einfach nur, er verschwindet *schneller
-als $h$ selbst*: Sein Verhältnis zu $h$ geht gegen null. Für $g(h) = h^2$ etwa
+Ein $o(h)$-Term verschwindet also *schneller als $h$ selbst*: Sein Verhältnis
+zu $h$ geht gegen null. Für $g(h) = h^2$ etwa
 viertelt sich der Term, wenn wir $h$ halbieren. Genauso schreiben wir
 $g(h) = o(\left|h\right|)$ und später $o(\left\|h\right\|)$, wenn der Quotient
 mit $\left|h\right|$ beziehungsweise $\left\|h\right\|$ gegen null geht; für
@@ -53,16 +52,13 @@ Rechenaufwand messen; hier läuft das Argument gegen null statt gegen unendlich,
 die Rechenregeln bleiben dieselben (:k[O-Notation]{#big-o-notation}).
 
 Ableitungen und :k[Differenzierbarkeit]{#differentiability}
-kennen wir aus der Analysis für Funktionen einer reellen Variablen. Neu ist in
-diesem Kapitel ein allgemeinerer Ableitungsbegriff, die *Fréchet-Ableitung*. Mit
-ihm können wir Funktionen ableiten, die Vektoren oder Matrizen als Eingabe oder
-als Ausgabe haben, und wir bleiben dabei nicht auf den $\R^n$ beschränkt. Die
-Spezialfälle mit Vektor- und Matrixargumenten füllen die
-Abschnitte @num:differentialrechnung/gradient bis @num:differentialrechnung/matrixableitungen. Ab
-@sec:stetigkeit geht es dann ums Rechnen mit dem neuen Begriff:
-Eigenschaften, Produkt- und Kettenregel, höhere Ableitungen und die
-Taylorapproximation. Der Leitgedanke steht schon in der Überschrift dieses
-Abschnitts: *Ableitung = lineare Approximation*.
+kennen wir aus der Analysis für Funktionen einer reellen Variablen. Neu ist die
+*Fréchet-Ableitung*: Mit ihr leiten wir Funktionen ab, die Vektoren oder Matrizen
+als Ein- oder Ausgabe haben, und zwar in beliebigen normierten Räumen. Die
+Abschnitte @num:differentialrechnung/gradient bis @num:differentialrechnung/matrixableitungen
+behandeln diese Spezialfälle, ab @sec:stetigkeit rechnen wir mit dem neuen
+Begriff. Der Leitgedanke steht in der Überschrift dieses Abschnitts:
+*Ableitung = lineare Approximation*.
 
 ### Die Ableitung im Eindimensionalen
 
@@ -84,8 +80,8 @@ existiert.
 
 Geometrisch ist der Quotient in @eq:differenzierbarkeit die Steigung der
 :k[Sekante]{#secant-line} durch die beiden Punkte $(x, f(x))$ und
-$(x+h, f(x+h))$. Lassen wir $h$ gegen null laufen, so rutscht der zweite Punkt
-auf den ersten zu, und die Sekante dreht sich in die
+$(x+h, f(x+h))$. Lassen wir $h$ gegen null laufen, so wandert der zweite Punkt
+zum ersten, und die Sekante dreht sich in die
 :k[Tangente]{#tangent-line}. Die Ableitung $\cgreen{f'(x)}$ ist deren
 :k[Steigung]{#slope}.
 
@@ -104,23 +100,17 @@ $$
 für $h < 0$ dagegen $-h/h = -1$. Von rechts kommend messen wir also die
 Steigung $1$, von links die Steigung $-1$, und zwar für *jedes* $h$, nicht erst
 im Grenzwert. Der Grenzwert in @eq:differenzierbarkeit existiert damit nicht, $f$ ist in
-$x = 0$ nicht differenzierbar. Anschaulich lässt sich an einen Knick keine
-eindeutige Tangente anlegen. Die verschiedenen einseitigen Sekantensteigungen
-zeigen bereits, warum. Daneben gibt es für jedes $-1 \le m \le 1$ eine Gerade
-$y = m x$, die den Graphen von unten stützt, denn $m x \le \left|x\right|$ für
-alle $x$. Das sind *Stützgeraden*, keine Tangenten im Sinn der Ableitung; ihre
-Steigungen werden in der konvexen Optimierung später als Subgradienten
-bezeichnet. Stetig ist die Betragsfunktion trotzdem,
+$x = 0$ nicht differenzierbar: An einen Knick lässt sich keine eindeutige
+Tangente anlegen. Stetig ist die Betragsfunktion trotzdem,
 Knicke sind also kein Widerspruch zur :k[Stetigkeit]{#continuity}.
 :::
 
 ### Ableitung als lineare Approximation
 
-@definition:differenzierbarkeit beschreibt die Ableitung als Grenzwert. Für alles, was
-danach kommt, ist eine zweite Lesart nützlicher. Stellen wir @eq:differenzierbarkeit um und
+@definition:differenzierbarkeit beschreibt die Ableitung als Grenzwert. Für alles
+Weitere ist eine zweite Lesart nützlicher. Stellen wir @eq:differenzierbarkeit um und
 lösen nach $\cblue{f(x+h)}$ auf, so steht dort: In der Nähe von $x$ verhält sich
-$f$ wie eine Gerade, und $\cgreen{f'(x)}$ ist deren Steigung. Der Fehler dieser
-Näherung ist klein, und das lässt sich präzise sagen.
+$f$ wie eine Gerade, und $\cgreen{f'(x)}$ ist deren Steigung.
 
 :::satz[#ableitung-als-lineare-approximation (Ableitung als lineare Approximation)]
 Seien $S \subseteq \R$ offen, $f\colon S \to \R$, $x \in S$ und $a \in \R$.
@@ -208,7 +198,7 @@ Funktion, ihre lineare Näherung, und ein Rest, der schneller verschwindet als
 $h$.* Farblich halten wir das durch: blau die Funktion und ihre Werte, grün die
 lineare Approximation, rot der Restterm.
 
-:::bemerkung[#was-hier-eigentlich-linear-ist (Was hier eigentlich linear ist)]
+:::bemerkung[#was-hier-eigentlich-linear-ist (Was hier linear ist)]
 Bevor wir verallgemeinern, eine mögliche Verwechslung: Die
 Ableitung $f'$ selbst ist im Allgemeinen keine
 :k[lineare Funktion]{#linear-function}: für $f(x) = \sin(x)$ etwa ist
@@ -229,9 +219,9 @@ wollen, ist nicht die Zahl $f'(x)$, sondern die lineare Abbildung
 $\cgreen{D_x f}$.
 :::
 
-Zwei Fragen bleiben. Wie schnell verschwindet der Restterm, wenn wir $h$
-verkleinern? Und was geht schief, wenn die Funktion an der betrachteten Stelle
-einen Knick hat? Beides lässt sich an drei Beispielkurven ausprobieren.
+Zwei Fragen bleiben: Wie schnell verschwindet der Restterm, wenn wir $h$
+verkleinern, und was geht schief, wenn die Funktion an der betrachteten Stelle
+einen Knick hat?
 
 :::interaktiv[Sekante, Tangente und der Restterm]
 Zur Wahl stehen zwei glatte Funktionen und die Betragsfunktion aus
@@ -242,28 +232,25 @@ $\left|\cred{r(h)}\right|/\left|h\right|$.
 <SekanteTangenteWidget />
 
 Dieser relative Fehler ist der Abstand zwischen Sekanten- und Tangentensteigung, und
-nach @satz:ableitung-als-lineare-approximation(2) geht er gegen null. Bei $f(x) = x^2$ steht
-dort sogar exakt $\left|h\right|$, denn der Restterm ist $h^2$
-(@beispiel:frechet-ableitung-von-f-x-x). Die Betragsfunktion zeigt
-die Kehrseite: Schieben wir $x$ auf $0$, so trennen sich die beiden Sekanten und bleiben
-getrennt, wie klein $h$ auch wird. Lehrreich ist eine Stelle knapp neben dem Knick: Solange
-$\left|x\right| < h$ ist, liegt er noch im Fenster, und eine der beiden Sekanten läuft
-über ihn hinweg und misst etwas anderes als die Ableitung. Lineare Approximation ist eine
-lokale Aussage.
+nach @satz:ableitung-als-lineare-approximation(2) geht er gegen null. Bei $f(x) = x^2$ ist er
+exakt $\left|h\right|$, denn der Restterm ist $h^2$
+(@beispiel:frechet-ableitung-von-f-x-x). Bei der Betragsfunktion mit $x = 0$ dagegen trennen
+sich die beiden Sekanten und bleiben getrennt, wie klein $h$ auch wird. Knapp neben dem Knick,
+solange $\left|x\right| < h$ ist, läuft eine der Sekanten noch über ihn hinweg: Lineare
+Approximation ist eine lokale Aussage.
 :::
 
 ### Der allgemeine Ableitungsbegriff
 
-Sobald wir Ableitung als lineare Approximation lesen, brauchen wir vom
-Definitionsbereich fast nichts mehr. Wir müssen Punkte verschieben können,
-$x + h$ muss also Sinn ergeben, wir müssen Länge messen können, um „der Fehler
-wird klein" zu präzisieren, und wir brauchen einen Begriff von linearer
-Abbildung. Ein normierter Vektorraum liefert alle drei Zutaten. Auf metrischen
-Räumen ohne Vektorraumstruktur funktioniert es dagegen nicht, dort fehlt der
-lineare Teil.
+Lesen wir die Ableitung als lineare Approximation, so brauchen wir vom
+Definitionsbereich nur drei Dinge: Punkte verschieben ($x + h$), Längen messen
+(um „der Fehler wird klein" zu präzisieren) und lineare Abbildungen. Ein
+normierter Vektorraum liefert alle drei Zutaten; einem metrischen Raum ohne
+Vektorraumstruktur fehlt der lineare Teil.
 
 Die folgende Definition geht auf Maurice Fréchet zurück. Sie reicht für alle
-endlich-dimensionalen Räume und für einige unendlich-dimensionale.
+endlich-dimensionalen Räume und für einige unendlich-dimensionale; schwächere
+Varianten (Gateaux- und Hadamard-Ableitung) brauchen wir in diesem Kapitel nicht.
 
 :::definition[#frechet-ableitung (Fréchet-Ableitung)]
 Seien $\D$ und $\E$ zwei normierte Vektorräume und $f\colon \D \to \E$. Wir
@@ -282,29 +269,20 @@ Die Abbildung $\cgreen{D_x f}$ heißt dann *Fréchet-Ableitung* von $f$ an der
 Stelle $x$.
 :::
 
-Wir schreiben $\D$ und $\E$ für die beiden Räume;
-mit dem Erwartungswert hat das $\E$ hier nichts zu tun. Auch die beiden
-Normstriche in @eq:frechet-ableitung meinen zwei verschiedene Dinge: $\left\|h\right\|$ ist
-die Norm auf $\D$, der Restterm wird dagegen in der Norm auf $\E$ gemessen.
-Die häufige Kurzschreibweise $\cred{r(h)}=\cred{o(\left\|h\right\|)}$ meint genau
-die Grenzwertbedingung in @eq:frechet-ableitung: Das $o$ ist kein Skalar, den wir zu $f(x)$
-addieren, sondern beschreibt die Größe des $\E$-wertigen Restes.
+Das $\E$ hat hier nichts mit dem Erwartungswert zu tun. Die beiden
+Normstriche in @eq:frechet-ableitung meinen verschiedene Normen: $\left\|h\right\|$ ist
+die Norm auf $\D$, der Restterm wird in der Norm auf $\E$ gemessen.
 
 :::bemerkung[#linearisierung-wie-die-definition-zu-lesen-ist (Wie die Definition zu lesen ist)]
-Vier Punkte zur Definition:
-
 *Der Restterm.* Setzen wir wie im Beweis von @satz:ableitung-als-lineare-approximation
 
 $$
 \cred{r(h)} := \cblue{f(x+h)} - \cblue{f(x)} - \cgreen{D_x f(h)} ,
 $$
 
-so verlangt @eq:frechet-ableitung genau
-$\left\|\cred{r(h)}\right\| / \left\|h\right\| \to 0$ für $h \to 0$. Die
-Gleichung selbst gilt für jedes zulässige $h$, sie definiert ja bloß
-$\cred{r(h)}$; die Aussage steckt in der Kleinheit des Restes. Der Zusatz
-„für $h \to 0$" gehört deshalb nicht zur Gleichung, sondern zum Restterm: Er
-ist $\cred{o(\left\|h\right\|)}$ für $h \to 0$.
+so gilt die Gleichung in @eq:frechet-ableitung für jedes $h$, sie definiert ja nur
+$\cred{r(h)}$. Die Aussage steckt in der Grenzwertbedingung, kurz
+$\cred{r(h)} = \cred{o(\left\|h\right\|)}$ für $h \to 0$.
 
 *Beschränktheit.* Dass $\cgreen{D_x f}$ beschränkt ist, heißt: es gibt ein
 $M < \infty$ mit
@@ -314,8 +292,8 @@ $$
 $$
 
 Das $M$ darf von $x$ abhängen, aber nicht von $h$. In endlich-dimensionalen
-Räumen ist jede lineare Abbildung automatisch beschränkt, dort kostet die
-Forderung also nichts; im Unendlichdimensionalen ist sie eine echte
+Räumen ist jede lineare Abbildung beschränkt, die Forderung ist dort also
+automatisch erfüllt; im Unendlichdimensionalen ist sie eine echte
 Zusatzbedingung und gleichbedeutend mit Stetigkeit.
 
 *Linear in $h$, beliebig in $x$.* Die Abbildung $h \mapsto \cgreen{D_x f(h)}$
@@ -323,7 +301,7 @@ ist linear, so wie in @bemerkung:was-hier-eigentlich-linear-ist. Wie $\cgreen{D_
 schreibt die Definition in keiner Weise vor.
 
 *Der eindimensionale Fall.* Für $f\colon \R \to \R$ ist
-$\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und @eq:frechet-ableitung ist wörtlich
+$\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und @eq:frechet-ableitung wird zu
 Aussage (3) aus @satz:ableitung-als-lineare-approximation. Beschränkt ist diese Abbildung, sobald
 $\left|\cgreen{f'(x)}\right| < \infty$ ist, mit $M = \left|\cgreen{f'(x)}\right|$.
 Die alte Ableitung ist also ein Spezialfall der neuen.
@@ -335,7 +313,7 @@ Wir prüfen die Definition am einfachsten nichttrivialen Beispiel.
 Sei $f\colon \R \to \R$ mit $\cblue{f(x)} = x^2$. Behauptung: $f$ ist
 Fréchet-differenzierbar mit $\cgreen{D_x f(h)} = \cgreen{2xh}$.
 
-Wir gehen die Definition Punkt für Punkt durch. Zuerst multiplizieren wir aus:
+Zuerst multiplizieren wir aus:
 
 $$
 \begin{aligned}
@@ -345,9 +323,8 @@ $$
 \end{aligned}
 $$
 
-Die Zerlegung liegt damit vor: Der Kandidat für die Ableitung ist
-$\cgreen{D_x f(h)} = \cgreen{2xh}$, und er ist linear in $h$. Übrig bleibt der
-Restterm $\cred{h^2}$.
+Der Kandidat für die Ableitung ist $\cgreen{D_x f(h)} = \cgreen{2xh}$, linear
+in $h$; übrig bleibt der Restterm $\cred{h^2}$.
 
 *Ist der Rest klein genug?* Wir rechnen den Quotienten aus @eq:frechet-ableitung nach:
 
@@ -358,8 +335,8 @@ $$
 \cred{h^2} = \cred{o(\left|h\right|)} . \quad\checkmark
 $$
 
-Der relative Fehler ist hier nicht nur klein, sondern exakt $\left|h\right|$. Bei $h = 0{,}1$ beträgt er $0{,}1$, bei $h = 0{,}01$
-schon $0{,}01$. Das Widget oben zeigt diese Zahlen an.
+Der relative Fehler ist hier exakt $\left|h\right|$: bei $h = 0{,}1$ also $0{,}1$,
+bei $h = 0{,}01$ nur noch $0{,}01$. Das Widget oben zeigt diese Zahlen an.
 
 *Ist $\cgreen{D_x f}$ beschränkt?* Bei festem $x$ ist
 
@@ -374,20 +351,9 @@ $\cgreen{D_x f(h)} = \cgreen{2xh}$. Das passt zur Schulableitung: Nach
 @bemerkung:linearisierung-wie-die-definition-zu-lesen-ist ist $\cgreen{D_x f(h)} = \cgreen{f'(x) h}$, und aus
 $\cgreen{f'(x) h} = \cgreen{2x \cdot h}$ lesen wir $\cgreen{f'(x)} = \cgreen{2x}$ ab.
 
-Zum Quantor in der Beschränktheit: Das $\forall$ in der Schranke
-gehört zum $h$, nicht zum $x$: Die Schranke $M$ hängt ja gerade von $x$ ab, und
-ein einziges $M$ für alle $x$ kann es nicht geben, weil $2\left|x\right|$ über
-jede Grenze wächst. Beschränktheit ist punktweise in $x$ zu verstehen, und bei
-festem $x$ gilt sie dann für alle $h$.
-:::
-
-:::bemerkung[#ausblick-andere-ableitungsbegriffe (Ausblick: andere Ableitungsbegriffe)]
-Die Fréchet-Ableitung ist nicht die einzige Möglichkeit, den Ableitungsbegriff
-auf normierte Räume zu heben. Schwächere Varianten verlangen die Approximation
-nur richtungsweise oder nur gleichmäßig auf kompakten Richtungsmengen; sie
-heißen *Gateaux-* und *Hadamard-Ableitung* und spielen vor allem in der
-asymptotischen Statistik eine Rolle. Für dieses Kapitel reicht Fréchet
-vollständig aus, denn wir arbeiten durchweg in endlich-dimensionalen Räumen.
+Das $\forall$ in der Schranke gehört zum $h$, nicht zum $x$: $M = 2\left|x\right|$
+hängt von $x$ ab und wächst über jede Grenze, ein gemeinsames $M$ für alle $x$
+gibt es nicht. Beschränktheit gilt also bei festem $x$ für alle $h$.
 :::
 
 ### Selbsttest
@@ -418,8 +384,8 @@ Abbildung heißt in @definition:frechet-ableitung $D_x f$.
 Es gilt $\displaystyle\lim_{h \to 0} \frac{\left|f(x+h) - f(x) - f'(x)h\right|}{\left|h\right|} = 0$.
 
 Das ist Aussage (2) aus @satz:ableitung-als-lineare-approximation. Der Zähler ist der Restterm $r(h)$, und
-Schritt 1 und 2 des Beweises zeigen, dass die Grenzwertdefinition der Ableitung
-genau dieses Verschwinden des relativen Fehlers bedeutet.
+nach dem Satz ist die Grenzwertdefinition der Ableitung gleichwertig dazu, dass
+dieser relative Fehler verschwindet.
 :::
 
 :::frage{wahr}

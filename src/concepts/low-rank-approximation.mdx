@@ -14,24 +14,23 @@ $$
 \rang(\bA_k) = \min(k,\, r).
 $$
 
-Das ist nicht irgendeine Näherung, sondern die bestmögliche: Unter allen Matrizen vom
+Sie ist die bestmögliche Näherung: Unter allen Matrizen vom
 :k[Rang]{#rank} höchstens $k$ minimiert
 $\bA_k$ den Abstand zu $\bA$ in der Spektral- und der
 Frobenius-:k[Norm]{#matrix-norm}, mit Fehler
-$\|\bA - \bA_k\|_2 = \sigma_{k+1}$ für $k < r$ (Eckart-Young-Theorem, Kapitel 6).
-Fällt das Spektrum schnell ab, komprimiert das enorm: Statt $m \cdot n$
+$\|\bA - \bA_k\|_2 = \sigma_{k+1}$ für $k < r$ (Satz von Eckart–Young).
+Fallen die Singulärwerte schnell ab, spart das viel Speicher: Statt $m \cdot n$
 Einträgen speichern wir nur $k(m + n + 1)$ Zahlen für die dicht gespeicherten
-Faktoren; so funktioniert SVD-Bildkompression.
+Faktoren; so funktioniert SVD-Bildkompression. Bei fast singulärem $\bA$
+(große :k[Konditionszahl]{#condition-number}) dient das Abschneiden der
+kleinsten Singulärwerte als *Regularisierung*: Wir nehmen einen kleinen
+Approximationsfehler in Kauf und werden dafür die Richtungen los, in denen die
+Kleinste-Quadrate-Lösung vor allem verstärktes Rauschen enthielte.
 
-In Kapitel 7 nutzen wir das als *Regularisierung*: Ist $\bA$ fast
-singulär ($\sigma_{\min} \approx 0$, riesige
-:k[Konditionszahl]{#condition-number}), setzen wir die
-kleinsten Singulärwerte auf Null, bevor wir die Pseudoinverse bilden. Wir opfern also
-bewusst einen winzigen Approximationsfehler und werden dafür die Richtungen los, in
-denen die Kleinste-Quadrate-Lösung nur verstärktes Rauschen enthielte.
-
-Wie viel der quadrierten Singulärwerte bleibt bei einem kleinen Rang erhalten?
+Welcher Anteil der quadrierten Singulärwerte, der *Energie*, bleibt bei
+kleinem Rang erhalten?
 
 <TruncateWidget />
 
-Das Spektrum macht den Tausch zwischen Rang, Energie und Approximationsfehler sichtbar.
+Im Beispiel tragen schon die zwei größten Singulärwerte 95 % der Energie; der
+Fehler in der Spektralnorm ist dann nur $\sigma_3 = 2{,}5$.

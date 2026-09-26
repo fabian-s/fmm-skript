@@ -12,25 +12,22 @@ $$
 \bx^T \bA \bx > 0 \quad \text{für alle } \bx \neq \bnull.
 $$
 
-Stellen wir uns das als Matrix-Version von „eine positive Zahl“ vor: In einer
-Dimension lautet die Bedingung $a x^2 > 0$, also $a > 0$. Gleichwertig: Alle
-:k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA$ sind positiv. Symmetrische
-positiv definite (SPD) Systeme lassen sich deshalb billig per
-:k[Cholesky-Zerlegung]{#cholesky-factorization} lösen, die immer existiert und
-ohne Pivotsuche auskommt – wie genau die Lösung wird, hängt trotzdem weiter an
-der :k[Konditionszahl]{#condition-number}. Das zentrale Beispiel
-für uns ist $\bA^T \bA$: Wegen
-$\bx^T \bA^T \bA \bx = \left\| \bA\bx \right\|_2^2 \geq 0$ ist die
-quadratische Form eine quadrierte :k[Länge]{#euclidean-norm}, und sie ist
-genau dann strikt positiv für alle $\bx \neq \bnull$, wenn kein
-$\bx \neq \bnull$ die Gleichung $\bA\bx = \bnull$ erfüllt, d.h. wenn
-:k[$\rang(\bA) = n$]{#rank} gilt. Das ist genau die Bedingung, unter der die
-:k[Hesse-Matrix]{#hessian-matrix} $2\bA^T\bA$ ein eindeutiges
-Kleinste-Quadrate-Minimum garantiert.
+In einer Dimension lautet die Bedingung $a x^2 > 0$, also $a > 0$. Gleichwertig:
+Alle :k[Eigenwerte]{#eigenvalue-eigenvector} von $\bA$ sind positiv. Gilt nur
+$\bx^T \bA \bx \geq 0$ für alle $\bx$, heißt $\bA$ *positiv semidefinit* (alle Eigenwerte
+$\geq 0$). Symmetrische positiv definite (SPD) Matrizen haben stets eine
+:k[Cholesky-Zerlegung]{#cholesky-factorization}; sie braucht keine Pivotierung.
 
-Wie weit dürfen wir die Nebendiagonale treiben, bevor eine Richtung negativ wird?
+Das wichtigste Beispiel ist $\bA^T \bA$ für $\bA \in \R^{m \times n}$: Wegen
+$\bx^T \bA^T \bA \bx = \left\| \bA\bx \right\|_2^2 \geq 0$, einer quadrierten
+:k[Länge]{#euclidean-norm}, ist es stets positiv semidefinit, und positiv definit genau dann, wenn kein
+$\bx \neq \bnull$ die Gleichung $\bA\bx = \bnull$ erfüllt, also bei
+:k[$\rang(\bA) = n$]{#rank}.
+
+Im Widget ist $\bA = \begin{pmatrix} 2 & c \\ c & 2 \end{pmatrix}$. Wie weit
+dürfen wir die Nebendiagonale $c$ treiben, bevor eine Richtung negativ wird?
 
 <PositiveDefiniteWidget />
 
-Die Grenze liegt dort, wo der kleinste Eigenwert null wird. Er liest die
-kritischste Richtung ab, ohne dass wir eine einzige durchprobieren müssen.
+Bis $|c| = 2$, denn die Eigenwerte sind $2 \pm c$. Der kleinste ist das
+Minimum der quadratischen Form auf dem Einheitskreis.

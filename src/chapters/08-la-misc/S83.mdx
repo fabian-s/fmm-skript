@@ -4,25 +4,23 @@ Für :k[lineare Gleichungssysteme]{#linear-system} $\bA\bx = \bb$ und für
 Kleinste-Quadrate-Probleme kennen wir bisher nur *direkte* Verfahren. Die
 LU-Zerlegung aus @sec:lgs/lu und die QR-Zerlegung aus
 @sec:kq/qr zerlegen die Matrix einmal vollständig und
-liefern danach die Lösung bis auf Rundungsfehler exakt. Der Preis steht dabei
-von vornherein fest, nämlich eine Operationszahl der Größenordnung $n^3$, ganz
-unabhängig davon, wie genau wir die Lösung überhaupt brauchen.
+liefern danach die Lösung bis auf Rundungsfehler exakt. Das kostet eine feste
+Operationszahl der Größenordnung $n^3$, unabhängig davon, wie genau wir die
+Lösung brauchen.
 
-*Iterative Verfahren* drehen dieses Verhältnis um. Sie erzeugen eine Folge von
-Näherungen $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die
-gegen die Lösung $\cgreen{\bx}$ strebt, und wir hören auf, sobald uns die
-erreichte Genauigkeit genügt. Fast alle folgen dabei demselben Bauplan, einer
-:k[*Fixpunktiteration*]{#fixed-point-iteration} (fixed point iteration): Eine
-Vorschrift wird immer wieder auf ihr eigenes Ergebnis angewendet, und die
-gesuchte Lösung ist gerade der Punkt, den diese Vorschrift nicht mehr bewegt.
-Bei großen oder :k[dünnbesetzten]{#sparse-matrix} Matrizen lohnt sich dieser
-Tausch fast immer: etwas Genauigkeit gegen viel Rechenzeit.
+*Iterative Verfahren* erzeugen dagegen eine Folge von Näherungen
+$\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die gegen die
+Lösung $\cgreen{\bx}$ strebt, und hören auf, sobald die erreichte Genauigkeit
+genügt. Meist sind es
+:k[*Fixpunktiterationen*]{#fixed-point-iteration} (fixed point iterations):
+Eine Vorschrift wird immer wieder auf ihr eigenes Ergebnis angewendet, und die
+gesuchte Lösung ist der Punkt, den sie nicht mehr bewegt.
 
 ### Residuum und Korrekturschritt
 
-Wie nähern wir uns der Lösung überhaupt schrittweise an? Dazu brauchen wir
-zuerst ein Maß dafür, wie gut eine Näherung ist. Die Lösung $\cgreen{\bx}$
-kennen wir ja nicht, sonst wären wir fertig; einsetzen können wir aber immer.
+Um uns der Lösung schrittweise zu nähern, brauchen wir ein Maß dafür, wie gut
+eine Näherung ist. Die Lösung $\cgreen{\bx}$ kennen wir nicht, einsetzen
+können wir die Näherung aber immer.
 
 :::definition[#residuum (Residuum)]
 Sei $\bA \in \R^{n \times n}$, $\bb \in \R^n$ und $\cblue{\bx^{(k)}} \in \R^n$
@@ -44,39 +42,41 @@ $$
 \cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \underbrace{\bC\,\cred{\br^{(k)}}}_{\text{Korrekturschritt}} .
 $$
 
-Die Matrix $\bC \in \R^{n \times n}$ entscheidet, wie stark und in welche
-Richtung wir korrigieren. Sie ist der einzige Entwurfsspielraum des Verfahrens,
-und wir werden ihn weiter unten ausnutzen.
+Die Matrix $\bC \in \R^{n \times n}$ legt fest, wie stark und in welche
+Richtung wir korrigieren; sie ist der einzige Entwurfsspielraum des
+Verfahrens.
 
+Im einfachsten Fall $\bC = \gamma\bI_n$ lautet der Schritt
+$\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \gamma\,\cred{\br^{(k)}}$: Wir gehen
+ein Stück in Richtung des Residuums, wie bei einem
+:k[Gradientenabstieg]{#gradient-descent} mit Schrittweite $\gamma$. Mit zu
+kleinen Schritten kommen wir kaum voran, zu große schießen über das Ziel
+hinaus.
+
+::::vertiefung[Das Residuum als negativer Gradient]
 :::bemerkung[#verwandtschaft-mit-dem-gradientenabstieg (Verwandtschaft mit dem Gradientenabstieg)]
-Für den einfachsten Fall $\bC = \gamma\bI_n$ lautet der Schritt
-$\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \gamma\,\cred{\br^{(k)}}$, wir gehen
-also ein Stück in Richtung des Residuums. Das ist wörtlich ein
-:k[Gradientenabstieg]{#gradient-descent} mit Schrittweite $\gamma$: Ist $\bA$
-:k[symmetrisch]{#symmetric-matrix} und :k[positiv definit]{#positive-definite},
-so hat die :k[quadratische Form]{#quadratic-form}
+Die Analogie ist exakt, wenn $\bA$ :k[symmetrisch]{#symmetric-matrix} und
+:k[positiv definit]{#positive-definite} ist. Dann hat die
+:k[quadratische Form]{#quadratic-form}
 
 $$
 f(\bx) = \tfrac{1}{2}\bx^\top\bA\bx - \bb^\top\bx
 $$
 
 den :k[Gradienten]{#gradient} $\nabla f(\bx) = \bA\bx - \bb = -\cred{\br}$, und
-ihr Minimum liegt genau bei $\bA\bx = \bb$. Das Residuum zeigt also in Richtung
-des steilsten Abstiegs, und $\gamma$ ist die Schrittweite. Wie beim
-Gradientenabstieg gilt: zu kleine Schritte kriechen, zu große schießen über das
-Ziel hinaus.
+ihr Minimum liegt bei $\bA\bx = \bb$. Das Residuum zeigt also in Richtung
+des steilsten Abstiegs, und $\gamma$ ist die Schrittweite.
 :::
+::::
 
-Warum sollten wir uns überhaupt mit Näherungen zufriedengeben, wo doch
-[Kapitel 5](?k=05-lgs#sec-5.2) ein exaktes Verfahren bereithält? Weil ein
-Iterationsschritt viel billiger ist als eine ganze Zerlegung. Für sehr große und
-für dünnbesetzte Systeme, wie sie in der Statistik etwa bei Netzwerkdaten oder
+Warum geben wir uns mit Näherungen zufrieden, wo doch @kap:lgs exakte
+Verfahren bereithält? Weil ein Iterationsschritt viel billiger ist als eine
+ganze Zerlegung. Für sehr große und für :k[dünnbesetzte]{#sparse-matrix}
+Systeme, wie sie in der Statistik etwa bei Netzwerkdaten oder
 Glättungsproblemen auftreten, sind iterative Verfahren deshalb oft um
 Größenordnungen schneller.
 
 ### Die Iteration und ihr Konvergenzsatz
-
-Die Vorschrift mit Laufindex:
 
 :::definition[#korrekturiteration (Korrekturiteration)]
 Sei $\bA \in \R^{n \times n}$, $\bb \in \R^n$ und $\bx$ die Lösung von
@@ -131,18 +131,14 @@ Zur Notation: Das $\corange{\rho}$ hier ist die *Konvergenzrate* der
 Iteration; mit dem Rayleigh-Quotienten $\cblue{\rho^{(k)}}$ aus
 @sec:eigenwerte hat es nur den Buchstaben gemeinsam.
 
-:::::vertiefung[Beweis des Konvergenzsatzes]
+:::::vertiefung[Beweis des Konvergenzsatzes und eine Folgerung]
 
 ::::beweis
 
 :::schritt
-Wir schreiben $\bB = \bI_n - \bC\bA$, also
-$\left\|\bB\right\|_2 = \corange{\rho}$, und bringen die Iteration nach
-@eq:fixpunktform in die Form
-
-$$
-\cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb , \qquad k = 1, 2, \dots
-$$
+Mit $\bB = \bI_n - \bC\bA$ ist $\left\|\bB\right\|_2 = \corange{\rho}$, und
+nach @eq:fixpunktform lautet die Iteration
+$\cblue{\bx^{(k)}} = \bB\,\cblue{\bx^{(k-1)}} + \bC\bb$.
 
 ::why[Ausmultiplizieren von @eq:korrekturiteration: $\bx + \bC(\bb - \bA\bx) = (\bI_n - \bC\bA)\bx + \bC\bb$]
 :::
@@ -196,6 +192,12 @@ und wegen $\corange{\rho} < 1$ geht die rechte Seite gegen null.
 
 ::::
 
+Die Voraussetzung des Satzes ist stärker, als sie aussieht. Wäre $\bA$
+singulär, so gäbe es ein $\bv \neq \bnull$ mit $\bA\bv = \bnull$, also
+$(\bI_n - \bC\bA)\bv = \bv$ und damit $\corange{\rho} \ge 1$. Aus
+$\corange{\rho} < 1$ folgt somit von selbst, dass $\bA$ invertierbar ist und die
+Lösung eindeutig.
+
 :::::
 
 Die Schranke @eq:konvergenz-der-korrekturiteration beschreibt :k[lineare Konvergenz]{#rate-of-convergence}:
@@ -203,17 +205,10 @@ Der Fehler schrumpft pro Schritt auf einen festen Bruchteil, nicht um eine feste
 Differenz. Auf logarithmischer Skala aufgetragen bleibt er damit unterhalb einer
 Geraden mit Steigung $\log \corange{\rho}$.
 
-Die Voraussetzung des Satzes ist stärker, als sie aussieht. Wäre $\bA$
-singulär, so gäbe es ein $\bv \neq \bnull$ mit $\bA\bv = \bnull$, also
-$(\bI_n - \bC\bA)\bv = \bv$ und damit $\corange{\rho} \ge 1$. Aus
-$\corange{\rho} < 1$ folgt somit von selbst, dass $\bA$ invertierbar ist und die
-Lösung eindeutig.
-
 ### Selbsttest: Was kostet ein Schritt?
 
-Bevor wir über die Wahl von $\bC$ nachdenken, zwei Fragen zum Aufwand. Zur
-Erinnerung an die :k[Landau-Notation]{#big-o-notation} siehe
-@sec:algos/landau.
+Wie teuer ist ein Schritt mit $\bC = \gamma\bI_n$? Zur
+:k[Landau-Notation]{#big-o-notation} siehe @sec:algos/landau.
 
 ::::quiz
 
@@ -238,28 +233,26 @@ Mit $\bC = \gamma\bI_n$ kostet ein Iterationsschritt $O(n^2)$ Operationen.
 
 Der teuerste Posten ist das Matrix-Vektor-Produkt $\bA\bx^{(k-1)}$: $n$
 Komponenten mit je $n$ Multiplikationen und $n-1$ Additionen, zusammen
-$O(n^2)$. Alles Übrige ist $O(n)$. Ist $\bA$ dünnbesetzt, sinkt der Aufwand
-sogar auf $O(\operatorname{nnz}(\bA))$, wobei $\operatorname{nnz}$ die Zahl der
-Einträge ungleich null zählt.
+$O(n^2)$; alles Übrige ist $O(n)$. Ist $\bA$ dünnbesetzt, sinkt der Aufwand
+auf $O(\operatorname{nnz}(\bA))$, die Zahl der Einträge ungleich null.
 :::
 
 :::frage{falsch}
 Mit $\bC = \gamma\bI_n$ kostet ein Iterationsschritt $O(n^3)$ Operationen.
 
-So teuer würde es nur, wenn wir die Iterationsmatrix
-$\bB = \bI_n - \gamma\bA$ in jedem Schritt neu als Matrixprodukt aufbauten.
-$\bB$ wird aber gar nicht gebildet, wir wenden $\bA$ direkt auf den
-aktuellen Vektor an. Wäre ein Schritt so teuer wie eine LU-Zerlegung, hätte das
-ganze Verfahren keinen Zweck.
+So teuer wäre es nur, wenn wir in jedem Schritt ein Produkt zweier voller
+$n \times n$-Matrizen bilden würden, etwa $\bC\bA$ für ein allgemeines $\bC$.
+Das ist nicht nötig: Wir wenden $\bA$ direkt auf den aktuellen Vektor an. Wäre ein Schritt so teuer wie eine LU-Zerlegung, hätte
+das Verfahren keinen Zweck.
 :::
 
 ::::
 
 ### Wie viele Schritte bis zur Genauigkeit ε?
 
-@satz:konvergenz-der-korrekturiteration verspricht einen Fehler, der geometrisch fällt. Für die
-Praxis heißt das: Wie oft müssen wir
-iterieren, bis eine vorgegebene Toleranz $\eps$ unterschritten ist?
+@satz:konvergenz-der-korrekturiteration verspricht einen geometrisch
+fallenden Fehler. Wie oft müssen wir iterieren, bis eine vorgegebene Toleranz
+$\eps$ unterschritten ist?
 
 ::::quiz
 
@@ -294,14 +287,15 @@ System aus @beispiel:richardson-iteration genügen.
 Für $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\| \le \eps$ brauchen wir
 $k = O(1/\eps^k)$ Schritte.
 
-Diese Antwort kann schon formal nicht stimmen, denn das gesuchte $k$ steht auf
-beiden Seiten. Eine Schranke für $k$ darf nur von $\eps$, von
-$\corange{\rho}$ und vom Startfehler abhängen.
+Das kann schon formal nicht stimmen, denn $k$ steht auf beiden Seiten. Eine
+Schranke für $k$ darf nur von $\eps$, $\corange{\rho}$ und dem Startfehler
+abhängen.
 :::
 
 ::::
 
-Rechnen wir die Antwort nach. Sie folgt allein aus der Schranke @eq:konvergenz-der-korrekturiteration.
+Die Antwort folgt allein aus der Schranke
+@eq:konvergenz-der-korrekturiteration.
 
 :::korollar[#zahl-der-iterationen (Zahl der Iterationen)]
 Es gelte @eq:konvergenz-der-korrekturiteration mit $\corange{\rho} \in (0, 1)$, und sei
@@ -318,25 +312,15 @@ $$
 Insbesondere ist $k = O(\log(1/\eps))$.
 :::
 
-:::::vertiefung[Herleitung der exakten Iterationszahl]
-
 ::::beweis
 
 :::schritt
-Nach @eq:konvergenz-der-korrekturiteration genügt es, $\corange{\rho}^{\,k}\,\cred{e_0} \le \eps$ zu
-erzwingen, also
-
-$$
-\corange{\rho}^{\,k} \le \frac{\eps}{\cred{e_0}} .
-$$
-
-::why[@eq:konvergenz-der-korrekturiteration schätzt den Fehler nach oben ab; wer die obere Schranke unter $\eps$ drückt, drückt den Fehler mit]
-:::
-
-:::schritt
-Beide Seiten sind positiv, wir dürfen also :k[logarithmieren]{#logarithm}. Wegen
-$0 < \corange{\rho} < 1$ ist $\log \corange{\rho} < 0$, und beim Teilen durch
-diese negative Zahl dreht sich das Ungleichheitszeichen um:
+Nach @eq:konvergenz-der-korrekturiteration genügt es,
+$\corange{\rho}^{\,k}\,\cred{e_0} \le \eps$ zu erzwingen, also
+$\corange{\rho}^{\,k} \le \eps/\cred{e_0}$. Beide Seiten sind positiv, wir
+dürfen also :k[logarithmieren]{#logarithm}. Wegen $0 < \corange{\rho} < 1$ ist
+$\log \corange{\rho} < 0$, und beim Teilen durch diese negative Zahl dreht sich
+das Ungleichheitszeichen um:
 
 $$
 k \log \corange{\rho} \le \log\frac{\eps}{\cred{e_0}}
@@ -345,7 +329,7 @@ k \ge \frac{\log(\eps/\cred{e_0})}{\log \corange{\rho}}
 = \frac{\log(\cred{e_0}/\eps)}{-\log \corange{\rho}} .
 $$
 
-::why[$\log$ ist streng monoton wachsend, und $\log(\eps/\cred{e_0}) = -\log(\cred{e_0}/\eps)$]
+::why[@eq:konvergenz-der-korrekturiteration schätzt den Fehler nach oben ab: Wer die Schranke unter $\eps$ drückt, drückt den Fehler mit; $\log$ ist streng monoton wachsend, und $\log(\eps/\cred{e_0}) = -\log(\cred{e_0}/\eps)$]
 :::
 
 :::schritt
@@ -361,14 +345,12 @@ $k = O(\log(1/\eps))$.
 
 ::::
 
-:::::
-
-Ein paar Zahlen zu dieser Schranke: Für das Beispiel
-weiter unten ist $\corange{\rho} \approx \corange{0{,}405}$ und
-$\cred{e_0} \approx \cred{0{,}643}$; @eq:zahl-der-iterationen verlangt dann $8$ Schritte für
-$\eps = 10^{-3}$, $15$ Schritte für $\eps = 10^{-6}$ und $23$ Schritte für
+Für @beispiel:richardson-iteration weiter unten ist
+$\corange{\rho} \approx \corange{0{,}405}$ und
+$\cred{e_0} \approx \cred{0{,}643}$; @eq:zahl-der-iterationen verlangt dann
+$8$ Schritte für $\eps = 10^{-3}$, $15$ für $\eps = 10^{-6}$ und $23$ für
 $\eps = 10^{-9}$. Drei zusätzliche Dezimalstellen kosten also jedes Mal rund
-sieben bis acht weitere Schritte, und jeder davon kostet $O(n^2)$.
+sieben bis acht weitere Schritte zu je $O(n^2)$.
 
 ### Die Wahl von C
 
@@ -388,9 +370,8 @@ grobe, billige Näherungen der Inversen.
 :::
 
 :::algorithmus[#drei-klassische-wahlen-von-c (Drei klassische Wahlen von C)]
-Für eine dichte Matrix kosten alle drei pro Schritt $O(n^2)$. Die folgenden
-Angaben definieren zunächst nur die Iterationen; Konvergenz braucht jeweils
-zusätzliche Voraussetzungen:
+Für eine dichte Matrix kosten alle drei pro Schritt $O(n^2)$; Konvergenz
+braucht jeweils zusätzliche Voraussetzungen.
 
 1. *Richardson-Iteration:* $\bC = \gamma\bI_n$. Ist $\bA$ SPD, so garantiert
    $0<\gamma<2/\lambda_{\max}(\bA)$ Konvergenz. Für eine beliebige Matrix
@@ -400,8 +381,9 @@ zusätzliche Voraussetzungen:
    :k[Diagonalen]{#diagonal-matrix} von $\bA$. Dafür müssen alle
    Diagonaleinträge von null verschieden sein. Die Korrektur teilt jede
    Residuumskomponente durch das zugehörige Diagonalelement, zusätzlicher
-   Aufwand $n$ Divisionen. Konvergenz gilt, wenn der Spektralradius der
-   Iterationsmatrix kleiner als $1$ ist; strikte Diagonaldominanz ist eine
+   Aufwand $n$ Divisionen. Konvergenz gilt, wenn der
+   :k[Spektralradius]{#spectral-radius} der Iterationsmatrix kleiner als $1$
+   ist; strikte Diagonaldominanz ist eine
    verbreitete hinreichende Bedingung.
 3. *Gauss-Seidel-Iteration:* $\bC^{-1}$ ist das untere
    :k[Dreieck]{#triangular-matrix} von $\bA$, also die Diagonale samt allem
@@ -413,9 +395,12 @@ zusätzliche Voraussetzungen:
    eine zusätzliche Eigenschaft; für SPD-Matrizen ist sie garantiert.
 :::
 
-Alle drei nehmen einen leicht zugänglichen Teil von $\bA$ und tun so, als wäre
-er die ganze Matrix. Wie gut das gelingt, hängt von $\bA$ ab.
+Alle drei ersetzen $\bA$ durch eine Matrix, mit der sich Gleichungssysteme
+leicht lösen lassen (ein Vielfaches der Einheitsmatrix, die Diagonale, das
+untere Dreieck), und nehmen deren Inverse als $\bC$. Wie gut das gelingt,
+hängt von $\bA$ ab.
 
+::::vertiefung[Richardson, Jacobi und Gauss-Seidel im Vergleich]
 :::beispiel[#die-drei-wahlen-an-einem-2-2-system (Die drei Wahlen an einem 2×2-System)]
 Für
 
@@ -451,26 +436,19 @@ die :k[Eigenwerte]{#eigenvalue-eigenvector} $0$ und $\tfrac{1}{12}$, ihr
 schrumpft der Fehler auf lange Sicht. Die Norm $0{,}264$ ist die Garantie, die
 schon ab dem ersten Schritt gilt.
 :::
+::::
 
 :::bemerkung[#gesamtaufwand (Gesamtaufwand)]
-Sei $c_{Schritt}$ der Aufwand einer Iteration und
-$\corange{\rho}=\|\bI-\bC\bA\|_2<1$. Dann liefert @korollar:zahl-der-iterationen den Aufwand
-
-$$
-O\!\left(
-c_{Schritt}\,
-\max\left\{1,\frac{\log(\cred{e_0}/\eps)}{-\log\corange{\rho}}\right\}
-\right).
-$$
-
-Nur wenn $\corange{\rho}\le\rho_0<1$ unabhängig von der Problemgröße bleibt,
-vereinfacht sich das bei dichter $\bA$ zu
-$O(n^2\log(\cred{e_0}/\eps))$. In Problemfolgen nähert sich $\rho$ häufig der
-$1$; dann wächst die Iterationszahl mit $n$ und der Kondition. Deshalb spart ein
-iteratives Verfahren nicht automatisch einen Faktor $n$. Präconditionierung soll
-gerade $\rho$ von $1$ fernhalten. Bei dünnbesetztem $\bA$ kann ein Schritt
-$O(\operatorname{nnz}(\bA))$ kosten, während direkte Löser bei Band- oder anderer
-Struktur ebenfalls deutlich billiger als $O(n^3)$ sein können.
+Bei dichter Matrix kostet ein Schritt $O(n^2)$, und nach
+@korollar:zahl-der-iterationen reichen $O(\log(\cred{e_0}/\eps))$ Schritte.
+Zusammen sind das $O(n^2\log(\cred{e_0}/\eps))$ Operationen für einen Fehler
+unter $\eps$, gegenüber $O(n^3)$ für eine LU- oder QR-Zerlegung. Das gilt
+allerdings nur, solange $\corange{\rho}\le\rho_0<1$ unabhängig von der
+Problemgröße bleibt. Nähert sich $\corange{\rho}$ mit wachsendem $n$ der $1$,
+so wächst auch die Iterationszahl; Präkonditionierung soll das
+verhindern. Bei dünnbesetztem $\bA$ kostet ein Schritt nur
+$O(\operatorname{nnz}(\bA))$; umgekehrt können auch direkte Löser bei Band-
+oder anderer Struktur deutlich billiger als $O(n^3)$ sein.
 :::
 
 ### Ein Beispiel Schritt für Schritt
@@ -544,14 +522,14 @@ bestätigen das und nähern sich von unten der Vorhersage an.
 :::
 
 :::interaktiv[Richardson Schritt für Schritt, mit einstellbarem γ]
-Bei welcher Schrittweite kippt diese Iteration? Schätzen wir die Grenze, bevor
-wir den Verlauf untersuchen.
+Ab welcher Schrittweite divergiert diese Iteration? Schätzen wir die Grenze,
+bevor wir den Verlauf ansehen.
 
 <RichardsonSchaetzfrage />
 
-Die Auflösung markiert die Grenze der Konvergenz. @satz:konvergenz-der-korrekturiteration erklärt den
-Wechsel: Auf der einen Seite fällt der Fehler geometrisch, auf der anderen
-verfehlt die Iterationsmatrix die Kontraktionsbedingung.
+Die Auflösung markiert die Grenze der Konvergenz: Darunter fällt der Fehler
+nach @satz:konvergenz-der-korrekturiteration geometrisch, darüber verfehlt die
+Iterationsmatrix die Kontraktionsbedingung $\corange{\rho} < 1$.
 :::
 
 ::::quiz
@@ -565,21 +543,21 @@ Die Kontraktionsschranke verlangt $\rho<1$.
 ### Einordnung
 
 :::bemerkung[#was-iterative-verfahren-leisten (Was iterative Verfahren leisten)]
-- Iterative Verfahren gibt es nicht nur für lineare Gleichungssysteme und für
-  Eigenwertprobleme (@sec:eigenwerte), sondern ebenso für
+- Iterative Verfahren gibt es für lineare Gleichungssysteme, für
+  Eigenwertprobleme (@sec:eigenwerte) und ebenso für
   Kleinste-Quadrate-Probleme (@kap:kq).
 - In Sonderfällen sind sie *exakt*. Mit $\bC = \bA^{-1}$ etwa ist
   $\corange{\rho} = 0$, und ein Schritt genügt; auch Verfahren vom Krylov-Typ
   wie das der konjugierten Gradienten erreichen die Lösung in exakter
   Arithmetik nach höchstens $n$ Schritten.
-- Meistens ergibt sich ein Handel zwischen Laufzeit und Genauigkeit, und die
-  Iterationszahl ist der Regler dafür. Wo die Laufzeit wichtiger ist als die
+- Meistens ergibt sich ein Kompromiss zwischen Laufzeit und Genauigkeit, und
+  die Iterationszahl ist der Regler dafür. Wo die Laufzeit wichtiger ist als die
   letzte Stelle, sind Iterationen die Methode der Wahl.
 :::
 
-Ein praktischer Punkt: Den Fehler
-$\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|$ können wir nicht messen, denn
-dazu müssten wir $\cgreen{\bx}$ kennen. Abgebrochen wird deshalb nach dem
+:::vertiefung[Abbruch nach dem Residuum]
+Den Fehler $\left\|\cblue{\bx^{(k)}} - \cgreen{\bx}\right\|$ können wir nicht
+messen, denn dazu müssten wir $\cgreen{\bx}$ kennen. Abgebrochen wird deshalb nach dem
 Residuum, das jederzeit verfügbar ist. Wegen
 $\cblue{\bx^{(k)}} - \cgreen{\bx} = -\bA^{-1}\cred{\br^{(k)}}$ gilt
 
@@ -592,6 +570,7 @@ ein kleines Residuum garantiert also nur bei gut konditionierter Matrix einen
 kleinen Fehler. Das ist dieselbe Warnung wie bei der
 :k[Konditionszahl]{#condition-number} in
 @sec:fehler/kondition, diesmal als Abbruchkriterium.
+:::
 
 *Vertiefung: Heath §10.9 (iterative Verfahren für lineare Gleichungssysteme,
 inklusive Jacobi, Gauss-Seidel und konjugierten Gradienten); für die

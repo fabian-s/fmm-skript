@@ -3,79 +3,53 @@ import { HilbertInverseVergleich } from "./widgets/S52Hilbert";
 
 ### Problemstellung
 
-In @sec:grundlagen haben wir gezählt, was Matrixaddition und
-Matrixmultiplikation kosten. Jetzt setzen wir diese Bausteine zu der Aufgabe
-zusammen, die in der Statistik ständig auftritt: Wir beschäftigen uns mit der
-Lösung eines :k[linearen Gleichungssystems]{#linear-system} (LGS). Gesucht
-ist also der Vektor $\bx$ mit
+Gesucht ist die Lösung $\bx$ eines
+:k[linearen Gleichungssystems]{#linear-system} (LGS)
 
 $$
 \bA \bx = \bb .
 $$
 
-Ob Kleinste-Quadrate-Schätzer (@sec:kq/problem) oder
-gemischtes Modell: am Ende steht fast immer ein solches System.
+Ob Kleinste-Quadrate-Schätzer (@sec:kq/problem) oder gemischtes Modell: In
+der Statistik steht am Ende fast immer ein solches System.
 
-Die Aufgabe ist nur dann sinnvoll gestellt, wenn es genau eine Lösung gibt.
-Wir nehmen deshalb in diesem Kapitel an, dass $\bA \in \R^{n \times n}$
+Sinnvoll gestellt ist die Aufgabe nur, wenn es genau eine Lösung gibt. Wir
+nehmen deshalb in diesem Kapitel an, dass $\bA \in \R^{n \times n}$
 quadratisch und :k[invertierbar]{#matrix-inverse} ist. Die Lösung lässt sich
-dann als $\bx = \bA^{-1}\bb$ schreiben. Vorsicht: Diese Formel ist eine
+dann als $\bx = \bA^{-1}\bb$ schreiben. Diese Formel ist allerdings eine
 Schreibweise, kein Rechenweg.
 
 :::bemerkung[#fuer-ein-lgs-keine-explizite-inverse (Für ein LGS keine explizite Inverse bilden)]
-Wer nur $\bA\bx=\bb$ lösen will, sollte die Inverse nicht explizit bilden:
-
-**Löse das System direkt.**
-
-Warum ist die Formel $\bx = \bA^{-1}\bb$ als Algorithmus so schlecht?
+Wer nur $\bA\bx=\bb$ lösen will, bildet die Inverse nicht explizit, sondern
+**löst das System direkt**. Wo immer in einer Formel $\bA^{-1}\bb$ steht,
+lösen wir in der Implementierung das LGS $\bA\bx = \bb$. Zwei Gründe
+sprechen gegen den Umweg über $\bA^{-1}$:
 
 - *Aufwand:* $\bA^{-1}$ explizit auszurechnen heißt, die $n$ Systeme
-  $\bA \bz_j = \be_j$ für alle Einheitsvektoren $\be_j$ zu lösen und
-  anschließend noch das Produkt $\bA^{-1}\bb$ zu bilden. Wer nur $\bx$
-  braucht, erledigt also $n$ Lösungen statt einer. In der
-  [Größenordnung](?k=02-algos#sec-2.4) bleibt das zwar beim Aufwand einer
-  einzigen Elimination, weil sich deren teure Vorarbeit für alle $n$ rechten
-  Seiten wiederverwenden lässt; in der versteckten Konstanten kostet der
-  Umweg aber ein Mehrfaches.
-- *Genauigkeit:* Das explizite Invertieren muss nicht in jedem Fall scheitern.
-  Bei einer schlecht konditionierten Matrix können die zusätzlichen Rundungen
-  der Inversenbildung und des anschließenden Matrix-Vektor-Produkts den Fehler
-  aber deutlich vergrößern. Für eine einzelne rechte Seite gibt es keinen
-  Genauigkeitsvorteil.
+  $\bA \bz_j = \be_j$ für alle Einheitsvektoren $\be_j$ zu lösen und danach
+  noch das Produkt $\bA^{-1}\bb$ zu bilden: $n$ Lösungen statt einer. Die
+  Größenordnung (@sec:algos/landau) bleibt dabei die einer einzigen
+  Elimination, weil sich deren teure Vorarbeit für alle $n$ rechten Seiten
+  wiederverwenden lässt; in der versteckten Konstanten kostet der Umweg aber
+  ein Mehrfaches.
+- *Genauigkeit:* Bei einer schlecht konditionierten Matrix können die
+  zusätzlichen Rundungen der Inversenbildung und des anschließenden
+  Matrix-Vektor-Produkts den Fehler deutlich vergrößern. Einen
+  Genauigkeitsvorteil bringt der Umweg für eine einzelne rechte Seite nicht.
   Gauß-Elimination *mit partieller Pivotierung* ist in der Praxis meist
-  rückwärtsstabil und vermeidet diesen Umweg. Wie genau die Lösung sein kann,
-  begrenzt in beiden Fällen die Konditionszahl $\corange{\kappa(\bA)}$
-  (@sec:matrix-spur-norm/eigenschaften und
-  @sec:fehler/kondition).
+  rückwärtsstabil. Wie genau die Lösung überhaupt sein kann, begrenzt in
+  beiden Fällen die Konditionszahl $\corange{\kappa(\bA)}$
+  (@sec:matrix-spur-norm/eigenschaften und @sec:fehler/kondition).
 
-Explizite Inversen haben legitime Anwendungen, wenn die Inverse selbst das gesuchte
-Objekt ist. Die Warnung bezieht sich auf das unnötige Bilden von $\bA^{-1}$ zum Lösen
-eines Systems.
-
-Wo immer in einer Formel $\bA^{-1}\bb$ steht, lösen wir in der
-Implementierung stattdessen das LGS $\bA\bx = \bb$.
+Legitim ist eine explizite Inverse, wenn sie selbst das gesuchte Objekt ist.
 :::
 
-:::::vertiefung[Ein empfindliches Zahlenbeispiel zur expliziten Inversen]
-
-::::beispiel[#hilbert-matrix-inverse-vs-loesen (Hilbert-Matrix: Inverse gegen direktes Lösen)]
-Betrachten wir die Hilbert-Matrix $\bH_n$ mit Einträgen
-$h_{ij} = 1/(i+j-1)$ und wählen die exakte Lösung
-$\bx = (1,\ldots,1)^\top$. Dann ist $\bb = \bH_n\bx$ bekannt.
-
-Für $n=11$ haben wir beide Wege in JavaScript mit derselben einfachen
-Gauß-Elimination mit partieller Pivotierung nachgerechnet. Beim direkten
-Lösen erhalten wir den relativen Fehler
-$\|\widehat{\bx}-\bx\|_\infty/\|\bx\|_\infty
-\approx 9{,}66\cdot 10^{-3}$. Bilden wir zuerst die explizite Inverse, steigt
-er auf etwa $3{,}73\cdot 10^{-1}$. Der Umweg ist in dieser Rechnung also
-rund $38{,}6$-mal ungenauer. Die konkreten Werte hängen von Algorithmus,
-Reihenfolge der Operationen und Gleitkommaarithmetik ab. Sie sind keine
-allgemeinen Fehlerschranken. In dieser Rechnung fügt das explizite
-Invertieren einen empfindlichen Rechenweg hinzu.
-
-Der R-Code des Beispiels verwendet `solve(A, b)` zum direkten Lösen und
-`solve(A) %*% b` für den Umweg über die Inverse:
+:::beispiel[#hilbert-matrix-inverse-vs-loesen (Hilbert-Matrix: Inverse gegen direktes Lösen)]
+Die Hilbert-Matrix $\bH_n$ mit Einträgen $h_{ij} = 1/(i+j-1)$ ist schon für
+kleine $n$ sehr schlecht konditioniert; für $n = 11$ ist
+$\corange{\kappa_2(\bH_{11})} \approx 5 \cdot 10^{14}$. Wir wählen die exakte Lösung
+$\bx = (1,\ldots,1)^\top$, berechnen $\bb = \bH_n\bx$ und lösen in R direkt
+mit `solve(A, b)` und über die Inverse mit `solve(A) %*% b`:
 
 ```r
 n <- 11 # Hilbert-Matrix
@@ -88,24 +62,31 @@ range((solve(A) %*% b) - x) # Fehler über Inverse
 range(solve(A, b) - x)      # Fehler direkte Lösung
 ```
 
+Für $n=11$ haben wir beide Wege mit derselben einfachen Gauß-Elimination
+mit partieller Pivotierung in JavaScript nachgerechnet. Beim direkten Lösen
+ist der relative Fehler
+$\|\widehat{\bx}-\bx\|_\infty/\|\bx\|_\infty \approx 9{,}66\cdot 10^{-3}$,
+über die explizite Inverse etwa $3{,}73\cdot 10^{-1}$: rund $38{,}6$-mal
+ungenauer. Die genauen Werte hängen von Algorithmus, Reihenfolge der
+Operationen und Gleitkommaarithmetik ab (R rechnet mit LAPACK und kann andere
+Zahlen liefern); allgemeine Fehlerschranken sind sie nicht.
+:::
+
 :::interaktiv[Kondition und Rechenweg]
 Ab welcher Ordnung trennen die Rundungsfehler die beiden Rechenwege sichtbar?
 
 <HilbertInverseVergleich />
 
-Der Regler zeigt dieselbe Rechnung für mehrere Ordnungen. Die
-Konditionszahl erklärt die grundsätzliche Empfindlichkeit; der Vergleich der
-beiden Fehler isoliert den zusätzlichen Preis des Inversenwegs in der hier
-verwendeten Arithmetik.
+Ab $n = 9$ übersteigt $\kappa_\infty(\bH_n) \cdot \eps$ den Wert $10^{-4}$:
+Von den rund 16 Dezimalstellen doppelter Genauigkeit bleiben dann höchstens
+vier. Die Kondition bestimmt, wie empfindlich beide Rechenwege sind; genauer
+als das direkte Lösen ist der Inversenweg bei keiner Ordnung.
 :::
-::::
-
-:::::
 
 ### Gauß-Elimination und Rückwärtssubstitution
 
-Wie lösen wir stattdessen? Wir erinnern uns an das
-:k[Gauß'sche Eliminationsverfahren]{#gaussian-elimination} aus der linearen
+Direkt lösen wir mit dem
+:k[Gauß'schen Eliminationsverfahren]{#gaussian-elimination} aus der linearen
 Algebra. Es besteht aus zwei Phasen:
 
 :::algorithmus[#gauss-elimination-mit-partieller (Gauß-Elimination mit partieller Pivotierung)]
@@ -143,21 +124,21 @@ $$
 \cblue{x_i} = \Bigl(c_i - \sum_{j = i + 1}^n u_{ij} \, \cgreen{x_j}\Bigr) \Big/ \cred{u_{ii}} .
 $$
 
-Mit partieller Pivotierung garantiert die Invertierbarkeit in jedem Schritt ein
-von null verschiedenes Pivot; *ohne* Zeilentausch reicht sie nicht, denn ein
-Nullpivot kann trotzdem auftreten (@beispiel:invertierbar-aber-keine-lu-zerlegung).
-Auch ein sehr kleines Pivot ist in Gleitkommaarithmetik gefährlich; deshalb wählen
-wir den größten verfügbaren Betrag.
+Mit partieller Pivotierung garantiert die Invertierbarkeit in jedem Schritt
+ein von null verschiedenes Pivot. *Ohne* Zeilentausch reicht sie nicht, ein
+Nullpivot kann trotzdem auftreten
+(@beispiel:invertierbar-aber-keine-lu-zerlegung). Auch ein sehr kleines
+Pivot ist in Gleitkommaarithmetik gefährlich; deshalb wählen wir den
+betragsgrößten Eintrag (mehr dazu in @sec:lu).
 
 :::::interaktiv[Rückwärtseinsetzen Schritt für Schritt]
-Die Formel @eq:gauss-elimination-mit-partieller bestimmt die Komponenten von unten nach oben. Wie viele
-Divisionen braucht das voreingestellte 3×3-System?
+Die Formel @eq:gauss-elimination-mit-partieller bestimmt die Komponenten von
+unten nach oben. Zählen wir dabei die Divisionen.
 
 <RueckSubStepper />
 
-Wie teuer ist die zweite Phase? Prüfen wir die vier Antwortmöglichkeiten
-einzeln (:k[Landau-Notation]{#big-o-notation} zur Erinnerung in
-@sec:algos/landau).
+Und was kostet die zweite Phase für ein $n \times n$-System
+(:k[Landau-Notation]{#big-o-notation}: @sec:algos/landau)?
 
 ::::quiz
 
@@ -185,21 +166,20 @@ ungünstigsten Fall also $n - 1$ Stück.
 :::frage{wahr}
 Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^2)$.
 
-Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel @eq:gauss-elimination-mit-partieller je
-$n - i$ Multiplikationen und ebenso viele Subtraktionen, dazu eine Division;
-im ungünstigsten Fall sind das $n - 1$ Multiplikationen pro Schritt.
-Aufsummiert ergibt das $n(n-1)/2 \approx n^2/2$ Multiplikationen und
-insgesamt genau $n^2$ Rechenoperationen: die Größenordnung ist $O(n^2)$.
+Es sind $n$ Schritte, und Schritt $i$ kostet nach Formel
+@eq:gauss-elimination-mit-partieller je $n - i$ Multiplikationen und ebenso
+viele Subtraktionen, dazu eine Division. Aufsummiert sind das
+$n(n-1)/2 \approx n^2/2$ Multiplikationen und insgesamt genau $n^2$
+Rechenoperationen, also $O(n^2)$.
 :::
 
 :::frage{falsch}
 Die Rückwärtssubstitution für ein $n \times n$-System hat die Komplexität $O(n^3)$.
 
 Das überschätzt den Aufwand um einen Faktor $n$. (Formal enthält $O(n^3)$
-zwar auch alle $O(n^2)$-Algorithmen, gemeint ist hier aber die
-Größenordnung des tatsächlichen Aufwands, und die ist $n^2$.) Bei $O(n^3)$
-liegt erst die Eliminationsphase selbst, wie wir in
-@sec:lu sehen werden.
+auch alle $O(n^2)$-Algorithmen, gemeint ist hier aber die Größenordnung des
+tatsächlichen Aufwands.) Bei $O(n^3)$ liegt erst die Eliminationsphase, wie
+wir in @sec:lu sehen werden.
 :::
 
 ::::
@@ -208,58 +188,54 @@ liegt erst die Eliminationsphase selbst, wie wir in
 ### Warum Matrixzerlegungen?
 
 Die Gauß-Elimination löst unser LGS. In den nächsten Abschnitten
-organisieren wir sie neu, nämlich als *Matrixzerlegung* (matrix
-decomposition). Die Grundidee ist „Teile und herrsche" für Matrizen:
+organisieren wir sie als *Matrixzerlegung* (matrix decomposition) neu. Die
+Grundidee ist „Teile und herrsche" für Matrizen:
 Statt direkt mit $\bA$ zu arbeiten, schreiben wir $\bA = \bB\bC$ mit
 „einfachen" Faktoren $\bB$ und $\bC$.
 
 Eine Analogie ist die Primfaktorzerlegung. Es gilt
-$84 = 2^2 \cdot 3 \cdot 7$, und wer diese Zerlegung einmal kennt, rechnet
-bequemer weiter:
+$84 = 2^2 \cdot 3 \cdot 7$, und wer diese Zerlegung kennt, rechnet
+leichter weiter:
 
 $$
 84 \cdot 126 = (2^2 \cdot 3 \cdot 7) \cdot (2 \cdot 3^2 \cdot 7) = 2^3 \cdot 3^3 \cdot 7^2 .
 $$
 
-Die Faktoren machen die Struktur der Zahl sichtbar, und Multiplizieren
-schrumpft zum Addieren von Exponenten. Dasselbe wollen wir für Matrizen:
-Faktoren finden, an denen sich billig rechnen lässt. Drei Familien haben
-sich als „einfach" bewährt:
+Multiplizieren wird zum Addieren von Exponenten. Für Matrizen suchen wir
+entsprechend Faktoren, mit denen sich leicht rechnen lässt. Drei Familien
+haben sich als „einfach" bewährt:
 
 - :k[Dreiecksmatrizen]{#triangular-matrix}: Ein Dreieckssystem lösen wir
   per Vorwärts- bzw. Rückwärtssubstitution in $O(n^2)$ statt $O(n^3)$,
   wie eben gesehen.
-- :k[Orthogonale Matrizen]{#orthogonal-matrix}: Sie verstärken Störungen in der
-  $2$-Norm nicht und sind trivial zu invertieren wegen
-  $\bQ^{-1} = \bQ^\top$.
+- :k[Orthogonale Matrizen]{#orthogonal-matrix}: Sie verstärken Störungen in
+  der $2$-Norm nicht und sind wegen $\bQ^{-1} = \bQ^\top$ trivial zu
+  invertieren.
 - :k[Diagonalmatrizen]{#diagonal-matrix}: Invertieren, Multiplizieren und
-  Potenzieren laufen elementweise auf der Diagonalen, alle Operationen
-  sind trivial.
+  Potenzieren laufen elementweise auf der Diagonalen.
 
 Was bringt uns eine Zerlegung?
 
 1. **Mehrere LGS mit derselben Matrix effizient lösen.** Die Zerlegung
-   bezahlen wir einmal; danach kostet jedes weitere System
-   $\bA\bx = \bb_i$ mit neuer rechter Seite nur noch die billigen
-   Dreiecks- oder Diagonallösungen. In der Statistik ist das der
-   Normalfall, etwa wenn dieselbe Modellmatrix auf viele Zielvariablen
-   trifft.
+   rechnen wir einmal; danach braucht jedes weitere System
+   $\bA\bx = \bb_i$ nur noch die schnellen Dreiecks- oder
+   Diagonallösungen. In der Statistik ist das der Normalfall, etwa wenn
+   dieselbe Modellmatrix auf viele Zielvariablen trifft.
 2. **Numerische Stabilität verbessern.** Wer die Arbeit in gut
    konditionierte Teilschritte zerlegt, etwa über orthogonale Faktoren,
-   vermeidet unnötige Fehlerverstärkung
-   (@sec:fehler/stabilitaet).
+   vermeidet unnötige Fehlerverstärkung (@sec:fehler/stabilitaet).
 3. **Struktur und Eigenschaften von $\bA$ erkennen.** An den Faktoren
    lässt sich ablesen, ob $\bA$ (fast) singulär oder
    :k[positiv definit]{#positive-definite} ist; solche Diagnosen fallen
-   bei der Zerlegung gratis mit ab.
+   bei der Zerlegung nebenbei ab.
 4. **Grundlage für weitere Algorithmen.** Auf Zerlegungen bauen viele
    Verfahren auf, von der QR-Zerlegung für das KQ-Problem
    (@sec:kq/qr) bis zur Spektralzerlegung und der
-   :k[Singulärwertzerlegung]{#singular-value-decomposition} (*SVD*), die
-   uns in einem späteren Kapitel begegnet.
+   :k[Singulärwertzerlegung]{#singular-value-decomposition} (*SVD*,
+   @kap:svd).
 
-Den Anfang macht im nächsten Abschnitt die
-[LU-Zerlegung](#sec-5.3): Sie ist die Gauß-Elimination in Matrixform.
+Den Anfang macht in @sec:lu die LU-Zerlegung, die Gauß-Elimination in
+Matrixform.
 
 *Vertiefung: Heath §2.1–2.2 (Problemstellung und Lösbarkeit) sowie §2.4.2
 (Dreieckssysteme und Rückwärtssubstitution).*

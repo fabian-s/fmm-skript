@@ -3,7 +3,9 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 /**
  * Expandable "Deep dive" accordion, rendered after key paragraphs /
  * original graphics (spec: "expanded readings"). Collapsed by default so the
- * happy-path reading flow is not interrupted.
+ * happy-path reading flow is not interrupted. Inhalt ist optionaler
+ * Zusatzstoff: Der Haupttext muss bei zugeklappten Boxen vollständig sein,
+ * deshalb sagt die Marke „optional" das auch.
  */
 export function ExpandedReading({ title, children }: { title: string; children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -33,9 +35,9 @@ export function ExpandedReading({ title, children }: { title: string; children: 
         </span>
         <span
           data-deep-label
-          className="rounded-full bg-amber-600/10 px-2.5 py-0.5 text-[11.5px] font-semibold uppercase tracking-wider text-amber-800 dark:bg-amber-400/15 dark:text-amber-200"
+          className="shrink-0 whitespace-nowrap rounded-full bg-amber-600/10 px-2.5 py-0.5 text-[11.5px] font-semibold uppercase tracking-wider text-amber-800 dark:bg-amber-400/15 dark:text-amber-200"
         >
-          Vertiefung
+          Vertiefung · optional
         </span>{" "}
         {title}
       </button>

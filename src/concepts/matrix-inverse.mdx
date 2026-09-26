@@ -20,20 +20,18 @@ $\bA\bx = \bb$ mit $\bA^{-1}$ die Unbekannte:
 $\bx = \bA^{-1}\bb$. Und so wie $a = 0$ keinen
 Kehrwert hat, besitzt nicht jede Matrix eine Inverse; sie existiert
 genau dann, wenn die
-:k[Determinante]{#determinant} ungleich Null
-ist, die Matrix also *regulär* ist.
+:k[Determinante]{#determinant} ungleich null
+ist. Die Matrix heißt dann *invertierbar* (oder *regulär*).
 
 Probe:
 $\begin{pmatrix} 2 & 1 \\ 1 & 1 \end{pmatrix} \begin{pmatrix} 1 & -1 \\ -1 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, die beiden Matrizen sind also zueinander invers.
 
-Woran scheitert die Umkehrung? Sehen wir, was passiert, wenn eine Abbildung
-eine ganze Richtung zusammendrückt.
+Woran scheitert die Umkehrung, wenn eine Abbildung eine Richtung
+zusammendrückt?
 
 <InvertierbarkeitWidget />
 
-Umkehrbar ist eine Abbildung also genau dann, wenn sie verschiedene Eingaben
-auch auf verschiedene Ausgaben schickt. Fällt eine Richtung in sich zusammen,
-teilen sich unendlich viele Urbilder ein Bild, das keine Matrix mehr
-auseinanderhalten kann. Schon davor kündigt sich der Verlust an: Die im Widget
-angezeigte :k[Konditionszahl]{#condition-number} $\kappa$ wächst, und um genau
-diesen Faktor kann der Rückweg einen Fehler vergrößern.
+Wird eine Richtung auf null gedrückt, landen verschiedene Eingaben auf demselben
+Bild, und keine Matrix kann sie mehr auseinanderhalten. Schon vorher wächst die
+:k[Konditionszahl]{#condition-number} $\kappa$; um bis zu diesen Faktor kann
+der Rückweg einen relativen Fehler vergrößern.

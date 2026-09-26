@@ -6,11 +6,9 @@ import { LsFitWidget } from "./widgets/LinearLeastSquaresWidget";
  * Concept tooltip: lineares Kleinste-Quadrate-Problem (vgl. Heath Kap. 3).
  */}
 
-Nehmen wir ein Gleichungssystem mit mehr Gleichungen als
-Unbekannten: $\bA\bx \cong \bb$ mit einer
-$m \times n$-:k[Matrix]{#matrix},
-$m > n$. Typischerweise erfüllt kein $\bx$ alle
-Gleichungen exakt; wir wählen $\bx$ deshalb so, dass das *Residuum*
+Hat ein Gleichungssystem $\bA\bx \cong \bb$ mit einer
+$m \times n$-:k[Matrix]{#matrix} mehr Gleichungen als Unbekannte ($m > n$),
+erfüllt typischerweise kein $\bx$ alle exakt. Wir wählen $\bx$ deshalb so, dass das *Residuum*
 $\br = \bb - \bA\bx$ in der
 :k[euklidischen Norm]{#euclidean-norm} möglichst kurz wird:
 
@@ -19,19 +17,19 @@ $$
 $$
 
 Das ist die Methode der *kleinsten Quadrate* (least squares);
-*linear* heißt sie, weil die Parameter als
+*linear* heißt sie, weil $\bA\bx$ eine
 :k[Linearkombination]{#linear-combination}
-der Spalten von $\bA$ eingehen – die Daten dürfen beliebig transformiert
-sein. Eine Gerade
+der Spalten von $\bA$ mit den Parametern als Gewichten ist; die Spalten selbst
+dürfen beliebig transformierte Daten enthalten. Eine Gerade
 $y \approx x_1 + x_2 t$ an die Punkte
 $(1,1), (2,2), (3,2)$ anzupassen heißt
 
 $$
-\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \cong \begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}, \qquad \text{Lösung } \; \bx = \begin{bmatrix} 2/3 \\ 1/2 \end{bmatrix}.
+\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} \cong \begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}.
 $$
 
-Weil die Zielfunktion eine glatte, :k[konvexe]{#convexity} Schüssel ist,
-lässt sich ein Minimierer direkt berechnen: über die
+Die Zielfunktion ist quadratisch und :k[konvex]{#convexity}; ein Minimierer
+lässt sich deshalb direkt berechnen, über die
 :k[Normalengleichungen]{#normal-equations}
 oder, numerisch stabiler, über eine
 :k[QR-Zerlegung]{#qr-factorization}. Eindeutig ist er nur bei vollem
@@ -42,5 +40,5 @@ Wie nah kommt eine von Hand gelegte Gerade an das Minimum?
 
 <LsFitWidget />
 
-Meist knapp daneben, und das ist der Punkt: Bei vollem Spaltenrang liefern die
-Normalengleichungen das Minimum in einem Schritt, statt es zu suchen.
+Von Hand landen wir meist knapp daneben; die Normalengleichungen liefern das
+Minimum $\bx = (2/3; 1/2)^\top$ in einem Schritt.
