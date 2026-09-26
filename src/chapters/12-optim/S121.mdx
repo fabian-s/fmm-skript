@@ -100,8 +100,8 @@ Punkte, und deshalb steht die Nullstellensuche am Anfang.
 Alle drei Probleme lösen wir *iterativ*: Wir starten irgendwo und bauen eine
 Folge $\cblue{\bx^{(0)}}, \cblue{\bx^{(1)}}, \cblue{\bx^{(2)}}, \dots$, die
 hoffentlich gegen $\cgreen{\bx^\star}$ läuft. Dieselbe Bauform kennen wir schon
-von der Potenzmethode (@sec:la-misc/eigenwerte) und den Splitting-Verfahren
-(@sec:la-misc/iterative-loeser).
+von der Potenzmethode (@sec:la-misc/eigenwerte) und den Korrekturiterationen
+für lineare Gleichungssysteme (@sec:la-misc/iterative-loeser).
 :::
 
 ### Warum Optimierung?
@@ -706,7 +706,7 @@ $\corange{\gamma}\left\|r(\bh)\right\| \le (\rho' - \corange{\rho})\left\|\bh\ri
 für alle $\left\|\bh\right\| \le \delta$, und für $\left\|\be_{k-1}\right\| \le \delta$
 folgt daraus $\left\|\be_k\right\| \le \rho' \left\|\be_{k-1}\right\|$.
 
-::why[die Zerlegung von $f$ ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Abschätzung benutzt danach die Dreiecksungleichung und die Verträglichkeit der induzierten Norm, $\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ (@sec:matrix-spur-norm/operatornormen). Hier wird die Aussage lokal: Sie gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt]
+::why[die Zerlegung von $f$ ist @definition:frechet-ableitung, die Fréchet-Differenzierbarkeit: Funktionswert gleich lineare Näherung plus Restterm, der schneller als linear verschwindet. Die Abschätzung benutzt danach die Dreiecksungleichung und die Verträglichkeit der induzierten Norm, $\left\|\bM\bv\right\| \le \left\|\bM\right\|\left\|\bv\right\|$ (@satz:wichtige-vertraeglichkeiten). Hier wird die Aussage lokal: Sie gilt nur in einer Kugel um $\bx^\star$, deren Radius von $\rho'$ abhängt]
 :::
 
 :::schritt
