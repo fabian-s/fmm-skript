@@ -548,9 +548,9 @@ brauchte die Bisektion auf demselben Intervall $20$ Schritte für sechs Stellen.
 
 :::bemerkung[#quadratische-konvergenz (Quadratische Konvergenz)]
 Nahe einer einfachen Nullstelle konvergiert Newton-Raphson *quadratisch*
-(:k[Konvergenzordnung]{#rate-of-convergence}): Der Fehler
-$e_k := \left|\cblue{x^{(k)}} - \cgreen{x^\star}\right|$ des nächsten Schrittes
-verhält sich wie das Quadrat des aktuellen,
+(:k[Konvergenzordnung]{#rate-of-convergence}): Mit
+$e_k := \left|\cblue{x^{(k)}} - \cgreen{x^\star}\right|$ verhält sich der Fehler
+des nächsten Schrittes wie das Quadrat des aktuellen,
 
 $$
 e_{k+1} \approx C \cdot e_k^2 ,
@@ -776,7 +776,9 @@ den Gradientenabstieg in @satz:gradientenabstieg-auf-einer-quadrik, mit der
 Jacobi- an Stelle der Hesse-Matrix.
 
 In der Praxis wählen wir $\corange{\gamma_k}$ adaptiv, etwa durch eine
-Liniensuche (@sec:nelder-mead-gradient).
+Liniensuche (@sec:nelder-mead-gradient); die akzeptierten Schrittweiten müssen
+dabei nicht gegen null gehen. Folgen mit $\corange{\gamma_k} \to 0$ spielen erst
+beim stochastischen Gradientenabstieg eine Rolle (@sec:newton-sgd).
 :::
 
 Ab welcher Schrittweite divergiert die Iteration? Drei kleine Systeme zeigen
