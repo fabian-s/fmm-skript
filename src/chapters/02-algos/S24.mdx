@@ -5,23 +5,15 @@ import { S24WachstumWidget } from "./widgets/S24WachstumWidget";
     Quelle: Folien 02-algos.Rmd, Block „Landausymbole" bis „Quiz" (Z. 371–482).
     Prosa eigenständig aus den Folien formuliert; MDX-Migration 2026-08-11. */}
 
-In @sec:aufwand haben wir den Aufwand von
-Algorithmen gemessen, indem wir elementare Operationen gezählt haben. Das Ergebnis sind
-Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber unhandlich. Für den Vergleich
-von Algorithmen interessiert uns fast immer nur eine Frage: Wie schnell wächst der
-Aufwand, wenn die Problemgröße $n$ groß wird? Die konkreten Vorfaktoren hängen
-ohnehin von Maschine, Programmiersprache und Zählweise ab. Wir brauchen also eine
-Notation, die nur das Wachstumsverhalten festhält.
-Das leisten die *Landau-Symbole* (engl. *big-O notation*).
+Das Zählen in @sec:aufwand liefert Ausdrücke wie $4n^3 + 16n^2 + 239$: exakt, aber
+unhandlich, und die Vorfaktoren hängen ohnehin von Maschine, Programmiersprache und
+Zählweise ab. Wir brauchen eine Notation, die nur das Wachstumsverhalten für große $n$
+festhält: die *Landau-Symbole* (engl. *big-O notation*).
 
 ### Klein-o und Groß-O :id[klein-o-und-gross-o]
 
-Die Idee: Wir vergleichen den Aufwand $a_n$ mit einer möglichst einfachen
-Vergleichsfolge $b_n$ (etwa $n^2$ oder $2^n$), indem wir den
-:k[Grenzwert]{#limit} des Quotienten
-$a_n / b_n$ betrachten. Bleibt der Quotient beschränkt, wächst $a_n$
-höchstens so schnell wie $b_n$; verschwindet er sogar, wächst $a_n$
-echt langsamer.
+Wir vergleichen den Aufwand $a_n$ mit einer einfachen Vergleichsfolge $b_n$ (etwa
+$n^2$ oder $2^n$) über den :k[Grenzwert]{#limit} des Quotienten $a_n / b_n$:
 
 :::definition[#landau-symbole (Landau-Symbole)]
 Seien $a_n, b_n$ :k[Folgen]{#sequence}, wobei $b_n$ ab einem Index
@@ -43,41 +35,21 @@ ungleich null ist.
 
 :::
 
-Die Interpretation der Symbole:
+Anschaulich heißt das:
 
 - $a_n = o(b_n)$: $a_n$ wächst *langsamer* als $b_n$;
   gegenüber $b_n$ wird $a_n$ vernachlässigbar klein.
 - $a_n = O(b_n)$: $a_n$ wächst *höchstens so schnell* wie
   $b_n$; die Vergleichsfolge $b_n$ ist gegenüber $a_n$ nicht
   vernachlässigbar.
-
-::::vertiefung[Technische Feinheiten der Landau-Definition]
-
-:::bemerkung[#zwei-feinheiten-der-definition (Zwei Feinheiten der Definition)]
-*Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
-nicht :k[konvergieren]{#convergence}; er darf zum Beispiel
-oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der
-:k[Suprema]{#supremum} der Restfolgen) existiert dagegen
-immer, notfalls als $\infty$. Die Bedingung
-$\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$
-bedeutet schlicht: Ab irgendeinem Index gilt
-$\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$
-für eine Konstante $C$.
-
-*Das Gleichheitszeichen ist ein Notationsmissbrauch:*
-$a_n = O(b_n)$ liest man besser als „$a_n$ gehört zur Klasse
-$O(b_n)$". Insbesondere ist die Beziehung nicht symmetrisch: Aus
-$5n = O(n^2)$ folgt nicht $n^2 = O(5n)$.
-:::
-
-::::
+- Zusätzlich schreiben wir $a_n = \Theta(b_n)$, falls $a_n = O(b_n)$ und
+  $b_n = O(a_n)$ gilt: $a_n$ wächst *genauso schnell* wie $b_n$.
 
 ### Rechenbeispiele :id[rechenbeispiele]
 
-Wie weist man eine Landau-Beziehung konkret nach? Wir bilden den Quotienten und rechnen
-seinen Grenzwert aus. In den folgenden drei Beispielen verfolgt
-$\cred{\text{Rot}}$ die untersuchte Folge $\cred{a_n}$ und
-$\cblue{\text{Blau}}$ die Vergleichsfolge $\cblue{b_n}$.
+Eine Landau-Beziehung weisen wir nach, indem wir den Grenzwert des Quotienten
+ausrechnen. In den drei Beispielen verfolgt $\cred{\text{Rot}}$ die untersuchte Folge
+$\cred{a_n}$ und $\cblue{\text{Blau}}$ die Vergleichsfolge $\cblue{b_n}$.
 
 :::beispiel[#beispiel-2-4-3]
 **(a)** Wir zeigen $\cred{3n^2 + 5n} = O(\cblue{n^2})$:
@@ -105,22 +77,39 @@ Der Quotient wächst über jede Schranke hinaus; $\cred{n^2}$ wächst echt
 schneller als $\cblue{n}$.
 :::
 
-:::vertiefung[Warum manchmal Theta?]
-Groß-O ist absichtlich nur eine obere Schranke. Daher heißt „ein
-$O(n^2)$-Algorithmus" nicht, dass seine Laufzeit tatsächlich quadratisch ist.
-Ein Sortierverfahren mit Laufzeit $O(n \log n)$ ist nämlich automatisch auch
-$O(n^2)$, weil $n \log n$ für große $n$ höchstens so groß wie $n^2$ ist. Die
-zweite Aussage ist richtig, unterscheidet das Verfahren aber nicht von einem
-tatsächlich quadratischen Verfahren.
+::::vertiefung[Limes superior, Schreibweise und Theta]
 
-Wollen wir die Ordnung von beiden Seiten festlegen, verwenden wir
-$a_n = \Theta(b_n)$. Das bedeutet zugleich $a_n = O(b_n)$ und
-$b_n = O(a_n)$: Bis auf konstante Faktoren wachsen beide Folgen gleich schnell.
-Für $3n^2 + 5n$ gilt also $\Theta(n^2)$; $O(n^3)$ wäre zwar ebenfalls wahr,
-aber als Beschreibung zu grob. Im Hauptstrang genügt uns meist die obere
-Schranke $O$, weil sie für Laufzeit- und Fehlerabschätzungen bereits die
-entscheidende Garantie liefert.
+:::bemerkung[#zwei-feinheiten-der-definition (Feinheiten der Definition)]
+*Warum Limes superior statt Grenzwert?* Der Quotient $a_n/b_n$ muss
+nicht :k[konvergieren]{#convergence}; er darf zum Beispiel
+oszillieren. Der Limes superior (der größte Häufungswert, gebildet als Grenzwert der
+:k[Suprema]{#supremum} der Restfolgen) existiert dagegen
+immer, notfalls als $\infty$. Die Bedingung
+$\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$
+bedeutet: Ab irgendeinem Index gilt
+$\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$
+für eine Konstante $C$.
+
+*Das Gleichheitszeichen ist ein Notationsmissbrauch:*
+$a_n = O(b_n)$ liest man besser als „$a_n$ gehört zur Klasse
+$O(b_n)$". Insbesondere ist die Beziehung nicht symmetrisch: Aus
+$5n = O(n^2)$ folgt nicht $n^2 = O(5n)$.
+
+*Wozu Theta?* Groß-O ist nur eine obere Schranke. „Ein $O(n^2)$-Algorithmus" heißt
+deshalb nicht, dass seine Laufzeit tatsächlich quadratisch wächst: Ein Sortierverfahren
+mit Laufzeit $O(n \log n)$ ist automatisch auch $O(n^2)$, weil $n \log n$ für große $n$
+höchstens so groß wie $n^2$ ist. Die zweite Aussage ist richtig, unterscheidet das
+Verfahren aber nicht von einem tatsächlich quadratischen. $\Theta$ legt die Ordnung
+von beiden Seiten fest. Im Skript genügt uns meist die obere Schranke $O$, weil sie für
+Laufzeit- und Fehlerabschätzungen die entscheidende Garantie liefert.
 :::
+
+::::
+
+Meist suchen wir eine möglichst einfache Folge $b_n$ mit $a_n = O(b_n)$, aber *nicht*
+$a_n = o(b_n)$, also eine obere Schranke, die nicht unnötig grob ist. Für $3n^2 + 5n$
+ist das $b_n = n^2$; auch $b_n = n^3$ wäre eine obere Schranke, aber wegen
+$3n^2 + 5n = o(n^3)$ eine zu grobe.
 
 ### Rechenregeln :id[rechenregeln]
 
@@ -153,8 +142,7 @@ Seien $a_n, b_n > 0$ Vergleichsfolgen.
 
 Die Positivität der Vergleichsfolgen setzen wir voraus, damit sich in
 $a_n + b_n$ nichts wegheben kann. Für Aufwandsvergleiche ist das keine
-Einschränkung, denn Operationenzahlen sind positiv. Die Beweise sind kurze
-Grenzwertargumente.
+Einschränkung, denn Operationenzahlen sind positiv.
 
 :::::vertiefung[Warum die Rechenregeln gelten]
 
@@ -260,34 +248,31 @@ also $c \cdot b_n = O(b_n)$.
 :::
 
 **Wir können komplexe Aufwandsausdrücke also auf ihren dominanten Term reduzieren.**
-Deshalb sprechen wir von einem „$O(n^3)$-Algorithmus", ohne Vorfaktoren
-oder niedrigere Terme zu nennen: Für großes $n$ bestimmt allein der dominante
-Term, wie sich die Laufzeit verhält. Und die üblichen Komplexitätsklassen bilden eine
-strikte Hierarchie, in der jede klein-o-mäßig langsamer wächst als die nächste:
+Deshalb sprechen wir kurz von einem „$O(n^3)$-Algorithmus". Die üblichen
+Komplexitätsklassen bilden dabei eine strikte Hierarchie, jede ist klein-o der
+nächsten:
 
 $$
 \log n \,,\quad n \,,\quad n \log n \,,\quad n^2 \,,\quad n^3 \,,\quad 2^n.
 $$
 
-Wie stark unterscheiden sich diese Klassen, und ab welchem $n$ überholt ein schneller
-wachsender Term jeden noch so großen Vorfaktor? Der Explorer unten lässt beides
-ausprobieren; auf der :k[logarithmischen]{#logarithm} Skala wird $2^n$ dabei zu einer
-Geraden.
+Ab welchem $n$ überholt ein schneller wachsender Term einen noch so großen
+Vorfaktor? Das zeigt der Explorer, wahlweise auf linearer oder
+:k[logarithmischer]{#logarithm} Skala.
 
-:::interaktiv[Wachstumsraten-Explorer: wer dominiert wen, und ab wann?]
+:::interaktiv[Wachstumsraten-Explorer: Klassen und Vorfaktoren]
 <S24WachstumWidget />
 
-Ohne Vorfaktor überholt $2^n$ die Kurve $n^2$ endgültig ab $n = 5$; mit dem
-Vorfaktor $c = 1000$ erst ab $n = 19$. Mehr als vierzehn Schritte kauft der Faktor
-$1000$ also nicht. Bei den polynomialen Klassen gilt $n^3 > c\,n^2$ ab $n > c$. Das ist
+Ohne Vorfaktor überholt $2^n$ die Kurve $n^2$ endgültig ab $n = 5$, mit dem
+Vorfaktor $c = 1000$ erst ab $n = 19$: Der Faktor $1000$ verschiebt die Schwelle nur um
+vierzehn Schritte. Bei den polynomialen Klassen gilt $n^3 > c\,n^2$ ab $n > c$. Das ist
 die praktische Bedeutung von $c\,n^2 = O(n^2)$ und $n^2 = o(n^3)$: Vorfaktoren
 verschieben die Schwelle, die Reihenfolge drehen sie nie um.
 :::
 
 ### Selbsttest :id[landau-selbsttest]
 
-Welche der folgenden Aussagen sind wahr? Erst selbst entscheiden (Quotient bilden!),
-dann die Lösung aufklappen.
+Welche Aussagen sind wahr? Den Quotienten bilden, dann aufklappen.
 
 <SelfTest nr={1} frage={<M>{"2n = O(n^2)"}</M>}>
 **Wahr.**
@@ -298,9 +283,9 @@ Schranke ist $2n = O(n)$.
 
 <SelfTest nr={2} frage={<M>{"7/n = o(1)"}</M>}>
 **Wahr.** Mit $b_n = 1$ ist
-$\lim_{n \to \infty} \frac{7/n}{1} = 0$. Landau-Symbole beschreiben also
-nicht nur Wachstum, sondern auch das Abklingen von Nullfolgen. So werden wir später
-Approximations- und Rundungsfehler klassifizieren.
+$\lim_{n \to \infty} \frac{7/n}{1} = 0$. Landau-Symbole beschreiben also auch, wie
+schnell Nullfolgen abklingen; so klassifizieren wir später Approximations- und
+Rundungsfehler.
 </SelfTest>
 
 <SelfTest nr={3} frage={<M>{"8n^3 + 7n^2 + n = O(n)"}</M>}>
@@ -314,8 +299,8 @@ entscheidet (@beispiel:vereinfachung-eines-aufwandsausdrucks).
 **Wahr.**
 $\lim_{n \to \infty} \frac{n^{-3} + n^{-2}}{n^{-2}} = \lim_{n \to \infty} \left(\frac{1}{n} + 1\right) = 1 < \infty. \quad \checkmark$
 Auch $n^{-3} + n^{-2} = o(1)$ wäre richtig (die Folge ist eine Nullfolge),
-aber $O(n^{-2})$ ist die schärfere Aussage: Sie sagt nicht nur *dass*,
-sondern *wie schnell* die Folge verschwindet.
+aber $O(n^{-2})$ ist schärfer: Die Aussage sagt auch, *wie schnell* die Folge
+verschwindet.
 </SelfTest>
 
 ::::quiz
@@ -324,8 +309,7 @@ sondern *wie schnell* die Folge verschwindet.
 Setzen wir im Explorer oben den Vorfaktor auf $c = 100$ und schalten $c \cdot n^2$ und
 $2^n$ an: Ab welchem $n$ gilt endgültig $2^n > c \cdot n^2$?
 
-Das Widget nennt die Schwelle; nachrechnen lässt sie sich auch von Hand:
-$2^{14} = 16\,384$ liegt noch unter $100 \cdot 14^2 = 19\,600$, aber
+Von Hand nachgerechnet: $2^{14} = 16\,384$ liegt noch unter $100 \cdot 14^2 = 19\,600$, aber
 $2^{15} = 32\,768$ liegt über $100 \cdot 15^2 = 22\,500$, und danach bleibt die
 Exponentialfunktion vorn.
 :::
@@ -340,15 +324,11 @@ Beziehung: $5n = O(n^2)$ gilt, $n^2 = O(5n)$ nicht.
 :::frage{wahr}
 Gilt $a_n = o(b_n)$, so gilt auch $a_n = O(b_n)$.
 
-Konvergiert der Quotient gegen $0$, so ist er insbesondere beschränkt. Klein-o ist die
-stärkere Aussage; eine informative obere Schranke kann aber eine andere
-Vergleichsfolge verwenden.
+Konvergiert der Quotient gegen $0$, so ist er insbesondere beschränkt: Klein-o ist die
+stärkere Aussage.
 :::
 
 ::::
-
-Im [nächsten Abschnitt](#sec-2.5) setzen wir diese Werkzeuge ein, um die Komplexität
-unserer Fibonacci-Algorithmen aus @sec:fibonacci zu bestimmen.
 
 *Vertiefung: Heath §1.1 (Aufwand und Genauigkeit numerischer Verfahren); Cormen,
 Leiserson, Rivest & Stein, _Introduction to Algorithms_, Kap. 3

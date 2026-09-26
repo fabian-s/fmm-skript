@@ -11,13 +11,12 @@ vergleichen Rechenaufwand mit den Landau-Symbolen.
 
 ### Verwendete Vorkenntnisse
 
-Wir brauchen in diesem Kapitel nur Grundbegriffe aus dem ersten Semester: aus der
-Analysis :k[Folgen]{#sequence} und ihre :k[Grenzwerte]{#limit} sowie die Grundidee der
-:k[Konvergenz]{#convergence}; aus der linearen Algebra
-:k[Matrizen]{#matrix} und ihre Grundoperationen,
-insbesondere :k[Matrix-Vektor-]{#matrix-vector-product}
-und :k[Matrixmultiplikation]{#matrix-multiplication};
-dazu ein erstes Gespür dafür, wie viele Einzelrechnungen darin stecken.
+Aus der Analysis brauchen wir :k[Folgen]{#sequence}, ihre :k[Grenzwerte]{#limit} und
+die Grundidee der :k[Konvergenz]{#convergence}, aus der linearen Algebra
+:k[Matrizen]{#matrix} und ihre Grundoperationen, insbesondere
+:k[Matrix-Vektor-]{#matrix-vector-product} und
+:k[Matrixmultiplikation]{#matrix-multiplication}, samt einem ersten Gespür dafür, wie
+viele Einzelrechnungen darin stecken.
 
 <h3 id="sec-2.1-numerische-probleme">Numerische Probleme</h3>
 
@@ -249,12 +248,10 @@ $-10^{16} + 1$ wird auf $-10^{16}$ zurückgerundet (@beispiel:verletzte-assoziat
 Auch die zweistufige Varianzformel $\frac{1}{n}\sumin (x_i - \bar{x})^2$ versagt,
 wenn wir die Verschiebung im Widget weit genug treiben.
 
-Sie hält viel länger durch als die Verschiebungsformel, weil sie die großen
-Zahlen subtrahiert, *bevor* quadriert wird, und danach nur mit den kleinen
-Abweichungen $-6, -3, 3, 6$ rechnet: Bis $k = 15$ liefert sie exakt $22{,}5$. Ab
-$k = 16$ sind aber schon diese Abweichungen nicht mehr darstellbar, und das Widget
-zeigt $20$, bei $k = 17$ sogar $128$ und ab $k = 18$ nur noch $0$. Robuster heißt
-nicht immun.
+Sie hält viel länger durch als die Verschiebungsformel und liefert bis $k = 15$
+exakt $22{,}5$. Ab $k = 16$ sind aber schon die Abweichungen $-6, -3, 3, 6$ nicht mehr
+darstellbar: Das Widget zeigt $20$, bei $k = 17$ sogar $128$ und ab $k = 18$ nur noch
+$0$. Robuster heißt nicht immun.
 :::
 
 :::frage{wahr}
