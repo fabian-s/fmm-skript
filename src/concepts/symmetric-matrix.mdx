@@ -13,26 +13,23 @@ $$
 $$
 
 Symmetrische Matrizen begegnen uns ständig:
-$\bA^T \bA$ ist *immer* symmetrisch, egal wie
-$\bA$ aussieht, denn
-$(\bA^T\bA)^T = \bA^T(\bA^T)^T = \bA^T\bA$, und
-Symmetrie ($\bP^T = \bP$) ist die halbe Definition einer
-orthogonalen Projektionsmatrix (orthogonal projector). Geometrisch
-sind sie die „gutartigsten&ldquo; linearen Abbildungen: Eine
+$\bA^T \bA$ ist für *jede* Matrix $\bA$ symmetrisch, denn
+$(\bA^T\bA)^T = \bA^T(\bA^T)^T = \bA^T\bA$. Eine
 symmetrische Matrix hat nur reelle
 :k[Eigenwerte]{#eigenvalue-eigenvector}, und ihre Eigenvektoren
 *lassen sich* stets als
 :k[Orthonormalbasis]{#orthonormal-basis} wählen, also paarweise
-:k[senkrecht]{#orthogonality}. In dieser Eigenbasis wirkt $\bA$ als
-reine Streckung entlang orthogonaler Achsen, ohne Scherung.
+:k[senkrecht]{#orthogonality} (:k[Spektralsatz]{#spectral-theorem}). In
+dieser Eigenbasis streckt oder spiegelt $\bA$ nur entlang senkrechter
+Achsen, ohne Scherung.
 
-Finden lassen sich diese Achsen von Hand: Für welche Richtungen von $\bx$
-zeigt $\bA\bx$ wieder genau dorthin, wo $\bx$ schon hinzeigt?
+Für welche Richtungen von $\bx$ zeigt $\bA\bx$ mit
+$\bA = \begin{bmatrix} 2 & c \\ c & 1 \end{bmatrix}$ wieder in Richtung $\bx$?
 
 <SymmetricWidget />
 
-Hier sind die beiden Eigenwerte für jedes $c$ verschieden, es gibt also
-genau zwei solche Richtungen, und sie stehen senkrecht aufeinander (für
-$\bA = 2\bI$ wäre dagegen *jede* Richtung eine Eigenrichtung). Ob $\bA$
-entlang einer davon streckt oder umklappt, verrät das Vorzeichen des
-Eigenwerts.
+Die Eigenwerte $(3 \pm \sqrt{1 + 4c^2})/2$ sind für jedes $c$ verschieden,
+es gibt also genau zwei solche Richtungen, und sie stehen senkrecht
+aufeinander (für $\bA = 2\bI$ wäre dagegen *jede* Richtung eine
+Eigenrichtung). Für $|c| > \sqrt{2}$ wird ein Eigenwert negativ, und $\bA$
+klappt entlang dieser Richtung um.

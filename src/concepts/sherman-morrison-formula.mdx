@@ -8,25 +8,25 @@ export const title = "Sherman-Morrison-Formel";
 
 Angenommen, wir kennen die
 :k[Inverse]{#matrix-inverse} von
-$\bA$ bereits, und dann ändert sich $\bA$ um einen
+$\bA$ bereits, und $\bA$ ändert sich um einen
 Rang-1-Anteil, ein
 :k[äußeres Produkt]{#outer-product}
-$\bu\bv^T$. Die Inverse komplett neu zu berechnen würde
-$\mathcal{O}(n^3)$ Arbeit kosten, aber die
-Sherman-Morrison-Formel flickt stattdessen die alte Inverse:
+$\bu\bv^T$. Statt die Inverse für
+$\mathcal{O}(n^3)$ Operationen neu zu berechnen, aktualisiert die
+Sherman-Morrison-Formel die alte:
 
 $$
 (\bA + \bu\bv^T)^{-1} = \bA^{-1} - \frac{\bA^{-1}\bu\,\bv^T\bA^{-1}}{1 + \bv^T\bA^{-1}\bu},
 $$
 
 gültig für invertierbares $\bA$, solange der Nenner
-$1 + \bv^T\bA^{-1}\bu$ nicht Null ist. Alles auf der
-rechten Seite besteht aus Matrix-Vektor-Produkten; die Formel
+$1 + \bv^T\bA^{-1}\bu$ nicht null ist. Die rechte Seite braucht nur
+Matrix-Vektor-Produkte und ein äußeres Produkt; die Formel
 anzuwenden (oder analog eine vorhandene
 :k[Zerlegung]{#lu-decomposition} zu
 aktualisieren) kostet darum nur $\mathcal{O}(n^2)$.
 
-Kleine Probe mit $\bA = \bI$ (der
+Probe mit $\bA = \bI$ (der
 :k[Einheitsmatrix]{#identity-matrix}) und
 $\bu = \bv = (1, 0)^T$: Die Formel liefert
 
@@ -34,8 +34,8 @@ $$
 (\bI + \bu\bu^T)^{-1} = \bI - \frac{\bu\bu^T}{2} = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & 1 \end{bmatrix}, \quad \text{und tatsächlich } \begin{bmatrix} 2 & 0 \\ 0 & 1 \end{bmatrix}^{-1} = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & 1 \end{bmatrix}.
 $$
 
-Das macht Broydens Verfahren billig: Jeder Schritt ändert die
-approximierte Jacobi-Matrix nur um einen Rang-1-Term, sodass die
-Zerlegung für den nächsten Schritt in
-$\mathcal{O}(n^2)$ aktualisiert werden kann, statt für
-$\mathcal{O}(n^3)$ neu berechnet zu werden.
+Rang-1-Änderungen entstehen etwa, wenn ein Datenpunkt wegfällt (ist
+$\bx_i^T$ seine Zeile in $\bX$, verliert $\bX^T\bX$ den Summanden
+$\bx_i\bx_i^T$), oder im
+Broyden-Verfahren, das seine Näherung der Jacobi-Matrix in jedem Schritt
+um einen Rang-1-Term korrigiert.

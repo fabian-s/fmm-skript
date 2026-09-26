@@ -4,37 +4,34 @@ import { BackSubWidget } from "./widgets/TriangularSolveWidget";
 
 Ein lineares Gleichungssystem, dessen Matrix
 :k[Dreiecksform]{#triangular-matrix} hat,
-lässt sich direkt lösen, ganz ohne Eliminationsarbeit – sofern alle
+lässt sich ohne Elimination direkt lösen, sofern alle
 Diagonaleinträge ungleich null sind, denn durch sie wird geteilt; genau dann
 ist die Matrix regulär. Für ein oberes
 Dreieckssystem $\bU\bx = \bb$ enthält die unterste
 Gleichung nur eine einzige Unbekannte; lösen wir sie und arbeiten uns
 nach oben, steuert jede Gleichung genau eine neue Unbekannte bei.
 Dieser Durchlauf von unten nach oben heißt
-*Rückwärtseinsetzen* (engl. *back-substitution*); der
+*Rückwärtseinsetzen* oder *Rücksubstitution* (back substitution); der
 spiegelbildliche Durchlauf von oben nach unten für ein unteres
 Dreieckssystem $\bL\by = \bb$ heißt
-*Vorwärtseinsetzen* (forward substitution).
+*Vorwärtseinsetzen* oder *Vorwärtssubstitution* (forward substitution).
 
-Die Kosten liegen bei nur etwa $n^2$ Operationen für
-$n$ Unbekannte, eine Größenordnung billiger als die
+Das kostet etwa $n^2$ Operationen für
+$n$ Unbekannte, eine Potenz von $n$ weniger als die
 $\sim n^3/3$, die das
 :k[Gaußsche Eliminationsverfahren]{#gaussian-elimination}
-zum Faktorisieren einer vollen Matrix braucht. Dieses Ungleichgewicht
-treibt die Standardstrategie der numerischen linearen Algebra an:
-Einmal zahlen, um die Matrix in Dreiecksfaktoren zu zerlegen (z.&nbsp;B.
+zum Faktorisieren einer vollen Matrix braucht. Darauf beruht die
+Standardstrategie der numerischen linearen Algebra: die Matrix einmal in
+Dreiecksfaktoren zerlegen (etwa
 :k[LU]{#lu-decomposition} oder
 :k[Cholesky]{#cholesky-factorization}), dann
-jedes Lösen mit billigen Einsetz-Durchläufen abschließen. Bei den
-Kleinste-Quadrate-Verfahren taucht dieses Muster gleich zweimal auf
-(vgl. Heath §3.4): Die Normalengleichungs-Methode löst
-$\bL\by = \bA^T \bb$ vorwärts und dann
-$\bL^T \bx = \by$ rückwärts, und das QR-Verfahren endet
-mit Rückwärtseinsetzen in
-$\bR\bx = \bc_1$.
+jedes Lösen mit Einsetz-Durchläufen abschließen. Bei Kleinste-Quadrate-Problemen
+endet etwa das QR-Verfahren mit Rückwärtseinsetzen in
+$\bR\bx = \bc_1$ (vgl. Heath §3.4).
 
 Welche Gleichung liefert beim Rückwärtseinsetzen als Nächstes eine neue Unbekannte?
 
 <BackSubWidget />
 
-Die Dreiecksstruktur reduziert jedes Lösen auf einen quadratischen statt kubischen Rechenaufwand.
+Von unten nach oben ergeben sich $x_3 = 3$, $x_2 = 2$, $x_1 = 1$, jeweils
+aus schon bekannten Werten; für $n = 3$ sind das $n(n-1) + n = 9$ Operationen.

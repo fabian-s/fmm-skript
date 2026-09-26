@@ -4,12 +4,10 @@ import { TriangleWidget } from "./widgets/TriangleInequalityWidget";
 
 {/* Konzept-Tooltip: Dreiecksungleichung (normale und umgekehrte Form). */}
 
-Anschaulich: der direkte Weg ist nie länger als der Umweg. Laufen wir
-vom Ursprung erst entlang des
+Laufen wir vom Ursprung erst entlang des
 :k[Vektors]{#vector} $\ba$ und von
 dessen Spitze aus weiter entlang $\bb$, landen wir bei
-$\ba + \bb$. Die drei Wege bilden ein Dreieck, und die
-„Luftlinie" ist höchstens so lang wie der Umweg über die Ecke:
+$\ba + \bb$. Die Luftlinie ist höchstens so lang wie der Umweg über die Ecke:
 
 $$
 \lVert \ba + \bb \rVert \;\leq\; \lVert \ba \rVert + \lVert \bb \rVert.
@@ -17,42 +15,26 @@ $$
 
 Diese *Dreiecksungleichung* (triangle inequality) ist eine der
 drei definierenden Eigenschaften jeder
-:k[Norm]{#norm}. Sie gilt also nicht nur für
-die :k[euklidische Norm]{#euclidean-norm},
-sondern etwa auch für Summen- und Maximumsnorm. Für reelle Zahlen ist
-sie die aus der Analysis vertraute Betragsungleichung
-$|a + b| \leq |a| + |b|$. Kurzer Check mit
-$\ba = (3, 0)^\top$ und $\bb = (0, 4)^\top$:
-euklidisch ist
-$\lVert \ba + \bb \rVert = 5 \leq 3 + 4 = 7$. Gleichheit
-gilt in der euklidischen Norm genau dann, wenn einer der Vektoren ein
-nichtnegatives Vielfaches des anderen ist.
+:k[Norm]{#norm}, etwa der :k[euklidischen]{#euclidean-norm}. Für reelle Zahlen ist
+sie die Betragsungleichung
+$|a + b| \leq |a| + |b|$.
 
-**Umgekehrte Dreiecksungleichung.** Oft brauchen wir eine
-Schranke „von unten": Wie verschieden können die Normen zweier Vektoren
-höchstens sein? Wenden wir die Dreiecksungleichung auf den Umweg
-$\ba = (\ba - \bb) + \bb$ an, folgt
-$\lVert \ba \rVert \leq \lVert \ba - \bb \rVert + \lVert \bb \rVert$,
-also
-$\lVert \ba \rVert - \lVert \bb \rVert \leq \lVert \ba - \bb \rVert$.
-Vertauschen wir die Rollen von $\ba$ und $\bb$,
-gilt dieselbe Schranke auch für
-$\lVert \bb \rVert - \lVert \ba \rVert$. Zusammen:
+Die *umgekehrte Dreiecksungleichung* (reverse triangle
+inequality) schätzt von unten ab; sie folgt aus der gewöhnlichen, angewandt auf
+$\ba = (\ba - \bb) + \bb$ und ebenso auf $\bb = (\bb - \ba) + \ba$:
 
 $$
 \bigl|\, \lVert \ba \rVert - \lVert \bb \rVert \,\bigr| \;\leq\; \lVert \ba - \bb \rVert.
 $$
 
-Diese *umgekehrte Dreiecksungleichung* (reverse triangle
-inequality) sagt: liegen zwei Vektoren nahe beieinander, dann sind auch
-ihre Normen nahe beieinander, die Norm ist also eine stetige Funktion.
-So wird sie in Fehlerabschätzungen benutzt: der Abstand
-$\lVert \ba - \bb \rVert$ zweier Größen kontrolliert die
-Differenz ihrer Längen. Im Beispiel oben:
-$|3 - 4| = 1 \leq \lVert \ba - \bb \rVert = 5$.
+Liegen zwei Vektoren nahe beieinander, sind also auch ihre Normen nahe
+beieinander: Die Norm ist stetig. Mit $-\bb$ statt $\bb$ folgt außerdem
+$\bigl|\, \lVert \ba \rVert - \lVert \bb \rVert \,\bigr| \leq \lVert \ba + \bb \rVert$.
 
-Wie bewegt sich die direkte Strecke zwischen den beiden Schranken, wenn wir den Winkel ändern?
+Wie bewegt sich $\lVert \ba + \bb \rVert$ zwischen den beiden Schranken, wenn
+wir den Winkel zwischen $\ba$ und $\bb$ ändern?
 
 <TriangleWidget />
 
-Die Dreiecksungleichung vergleicht den direkten Weg mit dem Umweg über die Vektorspitze.
+Bei gleicher Richtung wird die obere Schranke erreicht, bei entgegengesetzter
+die untere. Beide Ungleichungen lassen sich also nicht verbessern.

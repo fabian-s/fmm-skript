@@ -6,8 +6,8 @@ import { DartboardWidget } from "./widgets/UnbiasedEstimatorWidget";
 
 Ein Schätzer $\hat{\theta}$ ist ein Rezept, das aus einer
 zufälligen Stichprobe eine Schätzung für eine unbekannte Größe
-$\theta$ macht – und ist damit selbst zufällig. Er heißt
-*erwartungstreu* (engl. *unbiased*), wenn sein
+$\theta$ macht; er ist damit selbst zufällig. Er heißt
+*erwartungstreu* oder *unverzerrt* (engl. *unbiased*), wenn sein
 :k[Erwartungswert]{#expected-value} über
 wiederholte Stichproben die Wahrheit exakt trifft:
 
@@ -15,15 +15,15 @@ $$
 \E\big[\hat{\theta}\big] = \theta .
 $$
 
-Kleines Beispiel: Das Stichprobenmittel
+Beispiel: Das Stichprobenmittel
 $\bar{X} = \tfrac{1}{n}(X_1 + \dots + X_n)$ ist
 erwartungstreu für den Populationsmittelwert $\mu$, sofern jedes
 $X_i$ den endlichen Erwartungswert $\mu$ hat:
-$\E[\bar{X}] = \frac{1}{n}\sum_i \E[X_i] = \mu$. Jedes
-einzelne $\bar{X}$ liegt daneben, aber ohne systematische Drift
+$\E[\bar{X}] = \frac{1}{n}\sum_i \E[X_i] = \mu$. Ein
+einzelnes $\bar{X}$ liegt meist daneben, aber ohne systematische Abweichung
 in eine Richtung. Erwartungstreu heißt *nicht* präzise: Ein
-erwartungstreuer Schätzer kann sehr verrauscht sein. Genau darauf
-beruht das stochastische Gradientenverfahren (stochastic gradient descent, vgl. MML §7.1.3):
+erwartungstreuer Schätzer kann sehr verrauscht sein. Darauf
+beruht der stochastische Gradientenabstieg (stochastic gradient descent, vgl. MML §7.1.3):
 Der mittlere Gradient über ein gleichverteilt gezogenes Mini-Batch
 schätzt den Gradienten über alle Daten erwartungstreu, jeder
 verrauschte Schritt zeigt also im Mittel in die richtige Richtung.
@@ -32,4 +32,6 @@ Woran erkennen wir im Bild den Unterschied zwischen Streuung und systematischer 
 
 <DartboardWidget />
 
-Erwartungstreue betrifft den Mittelpunkt vieler Wiederholungen, nicht die Genauigkeit einer einzelnen Schätzung.
+Links streuen die Schätzungen stark, ihr Mittel liegt aber fast auf
+$\theta$ (erwartungstreu). Rechts liegen sie dicht beisammen, ihr Mittel
+klar daneben (präzise, doch verzerrt).

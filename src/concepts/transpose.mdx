@@ -2,7 +2,7 @@ export const title = "Transponierte";
 
 Die *Transponierte* (engl. *transpose*) einer
 :k[Matrix]{#matrix} $\bA$,
-geschrieben $\bA^T$, entsteht durch Spiegeln an der
+geschrieben $\bA^T$ oder $\bA^\top$, entsteht durch Spiegeln an der
 Hauptdiagonale: Zeilen werden zu Spalten und Spalten zu Zeilen, der
 Eintrag an Position $(i,j)$ wandert also nach
 $(j,i)$.
@@ -11,7 +11,7 @@ $$
 \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix}^{T} = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix}
 $$
 
-Das hochgestellte $T$ ist außerdem eine gängige Platzsparerei
+Außerdem spart das hochgestellte $T$ Platz
 beim Aufschreiben von
 :k[Vektoren]{#vector}: Ein Vektor ist per
 Konvention eine *Spalte*, aber Spalten lassen sich im Fließtext
@@ -23,5 +23,6 @@ $$
 \bb = \begin{pmatrix} 8 & 13 \end{pmatrix}^{T} = \begin{pmatrix} 8 \\ 13 \end{pmatrix}.
 $$
 
-Zweimal Transponieren liefert wieder das Original:
-$(\bA^T)^T = \bA$.
+Zweimal Transponieren liefert wieder das Original,
+$(\bA^T)^T = \bA$, und bei Produkten kehrt sich die Reihenfolge um:
+$(\bA\bB)^T = \bB^T\bA^T$.

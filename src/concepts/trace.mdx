@@ -13,8 +13,7 @@ $$
 Für
 $\bA = \begin{pmatrix} 3 & 1 \\ 1 & 3 \end{pmatrix}$
 ist sie $3 + 3 = 6$; Einträge abseits der Diagonale
-ignorieren wir. Obwohl sie so billig ist, steckt
-in der Spur etwas Tiefes: Sie ist die Summe aller
+zählen nicht. Die Spur ist die Summe aller
 :k[Eigenwerte]{#eigenvalue-eigenvector}
 (mit Vielfachheit), so wie die
 :k[Determinante]{#determinant} ihr
@@ -25,13 +24,15 @@ Beide Tatsachen folgen aus dem
 :k[charakteristischen Polynom]{#characteristic-polynomial}, das für $n = 2$
 gerade $\lambda^2 - \tr(\bA)\,\lambda + \det(\bA)$ lautet; für größeres $n$
 stehen Spur und Determinante ebenso als Koeffizienten darin. Weil eine
-Ähnlichkeitstransformation die Eigenwerte erhält, erhält sie auch Spur und
-Determinante. Das macht die beiden zu praktischen Invarianten: Hat eine
-angeblich ähnliche Matrix eine andere Spur, ist etwas schiefgelaufen.
+:k[Ähnlichkeitstransformation]{#similar-matrices} die Eigenwerte erhält,
+erhält sie auch Spur und Determinante. Außerdem ist die Spur linear, und in
+Produkten dürfen wir zyklisch vertauschen, etwa $\tr(\bA\bB) = \tr(\bB\bA)$.
 
-Was machen die Eigenwerte, während Spur und Determinante gleich bleiben?
+Ändern wir die Nebendiagonale: Die Spur bleibt $6$, die Determinante nicht.
+Was geschieht mit den Eigenwerten?
 
 <TraceWidget />
 
-Die beiden Invarianten überstehen sogar den Übergang zu einem komplexen
-Eigenwertpaar; deshalb sind sie als Probe so verlässlich.
+Sie liegen stets symmetrisch um $\tr(\bA)/2 = 3$. Für $\det(\bA) > 9$
+verlassen sie die reelle Achse als komplex konjugiertes Paar, dessen Summe
+und Produkt weiter Spur und Determinante sind.

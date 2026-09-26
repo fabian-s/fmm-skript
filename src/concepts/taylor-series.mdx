@@ -4,11 +4,10 @@ import { TaylorWidget } from "./widgets/TaylorSeriesWidget";
 
 {/* Konzept-Tooltip: Taylor-Reihe: lokale Polynom-Näherung um einen Punkt. */}
 
-Eine Taylor-Reihe (Taylor series) nähert eine glatte Funktion in der
-Nähe eines einzelnen Punktes $a$ durch ein Polynom an, das
-ausschließlich aus dem Verhalten der Funktion *an* diesem
-Punkt gebaut ist: ihrem Wert, ihrer Steigung, ihrer Krümmung und so
-weiter. Die abgeschnittene Reihe vom Grad $n$ ist das
+Eine *Taylor-Reihe* (Taylor series) nähert eine glatte Funktion $f$ in der
+Nähe eines Punktes $a$ durch Polynome an, die nur aus dem Verhalten von $f$
+*an* diesem Punkt gebaut sind: Wert, Steigung, Krümmung und so
+weiter. Das *Taylor-Polynom* vom Grad $n$ ist das
 eindeutige Polynom, dessen Wert und erste $n$
 :k[Ableitungen]{#derivative} an der Stelle
 $a$ alle mit denen von $f$ übereinstimmen:
@@ -20,24 +19,20 @@ f(x) \approx {} & f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 \\
 \end{aligned}
 $$
 
-Schneiden wir schon nach dem linearen Term ab, erhalten wir die
+Lassen wir $n \to \infty$ gehen, entsteht die Taylor-Reihe. Nach dem
+linearen Term abgeschnitten, ist sie die
 :k[Tangente]{#tangent-line}; jeder weitere
-Term (der mehr
-:k[Glattheit]{#differentiability} von
-$f$ verlangt) biegt das Polynom so zurecht, dass es sich, beim Sinus unten,
-über einen breiteren Bereich an die Kurve schmiegt. Kleines Beispiel:
-Für $f(x) = \sin(x)$ um $a = 0$ lautet das
-Polynom vom Grad 3 $x - x^3/6$; an der Stelle
-$x = 0.5$ liefert es $0.47917$ gegenüber dem wahren
-Wert $\sin(0.5) = 0.47943$. Weil alle Information aus einem
-einzigen Punkt stammt, können wir die abgeschnittene Taylor-Reihe als
-Extremfall der Interpolation auffassen: als ihren
-Ein-Punkt-Grenzfall (vgl. Heath §7.3.5).
+Term verlangt, dass $f$ einmal mehr
+:k[differenzierbar]{#differentiability} ist. Für $f(x) = \sin(x)$ um $a = 0$ lautet das
+Taylor-Polynom vom Grad 3 $x - x^3/6$; bei
+$x = 0{,}5$ liefert es $0{,}47917$, der wahre
+Wert ist $\sin(0{,}5) = 0{,}47943$.
 
 Wie weit trägt diese Näherung, wenn wir den Grad erhöhen?
 
 <TaylorWidget />
 
-Für $\sin$ um $a = 0$ verbreitert jeder Term das Fenster, in dem das Polynom auf
-$0{,}01$ genau mitläuft. Weit draußen bleibt es aber ein Polynom und läuft der
-Kurve davon.
+Jeder weitere Grad verbreitert das Fenster, in dem das Polynom um weniger als
+$0{,}01$ von $\sin$ abweicht; bei $x = \pi$ fällt der Fehler von $3{,}14$
+(Grad 1) auf $2 \cdot 10^{-5}$ (Grad 13). Außerhalb des Fensters weicht es
+dagegen stark ab; bei $x = 2\pi$ wächst der Fehler bis Grad 5 sogar an.

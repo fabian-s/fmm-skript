@@ -2,40 +2,35 @@ export const title = "Rundungsfehler";
 
 import { CancellationWidget } from "./widgets/RoundingErrorWidget";
 
-Weil ein Computer pro
+Ein Computer speichert pro
 :k[Gleitkommazahl]{#floating-point} nur etwa
-16 signifikante Ziffern speichert, ist das exakte Ergebnis einer
-Rechenoperation meistens nicht darstellbar und muss auf die nächste
-darstellbare Zahl gerundet werden. Jede Operation begeht darum einen
-*Rundungsfehler* (rounding error): Für eine korrekt gerundete Operation
+16 signifikante Ziffern. Schon beim Speichern und nach jeder
+Rechenoperation wird darum auf die nächste darstellbare Zahl gerundet; die
+Abweichung ist der *Rundungsfehler* (rounding error). Für eine korrekt gerundete Operation
 $\circ \in \{+, -, \cdot, /\}$ mit exaktem Ergebnis $x \circ y \neq 0$ im
 normalen Zahlenbereich garantiert der IEEE-Standard pro Schritt einen
-*relativen* Fehler von höchstens etwa
+*relativen* Fehler von höchstens der
 :k[Maschinengenauigkeit]{#machine-epsilon},
 
 $$
 \frac{|\operatorname{fl}(x \circ y) - (x \circ y)|}{|x \circ y|} \;\le\; \varepsilon_{\text{mach}} \approx 2{,}2 \times 10^{-16}.
 $$
 
-Einzeln sind diese Fehler mikroskopisch, und in einer langen Rechnung
-bleiben sie meist harmlos. Sichtbar werden sie klassischerweise durch
-*katastrophale Auslöschung* (catastrophic cancellation): Ziehen
-wir zwei fast gleich große Zahlen voneinander ab, heben sich ihre
-gemeinsamen führenden Ziffern weg, und was übrig bleibt, wird von den
-vorher begangenen Rundungsfehlern dominiert. In 6-stelliger Arithmetik
-ist $1{,}23457 - 1{,}23456 = 0{,}00001$: von sechs
-gespeicherten Ziffern überlebt nur eine einzige (ohnehin unsichere)
-Ziffer.
+Einzeln sind diese Fehler winzig. Wie stark eine Störung dieser Größe in der
+Eingabe das Ergebnis verändert, misst die
+:k[Konditionszahl]{#condition-number}. Sichtbar werden Rundungsfehler vor allem durch
+:k[katastrophale Auslöschung]{#cancellation}:
+Ziehen wir zwei fast gleich große Zahlen voneinander ab, heben sich die
+gemeinsamen führenden Ziffern weg, und den Rest bestimmen die vorher
+begangenen Rundungsfehler. In 6-stelliger Arithmetik bleibt von
+$1{,}23457 - 1{,}23456 = 0{,}00001$ eine einzige, unsichere Ziffer.
 
-Rundungsfehler ziehen eine harte Untergrenze für alle
-Genauigkeitsfragen ein: Jede Eingabematrix ist ohnehin nur bis auf
-relative Störungen der Größenordnung $\varepsilon_{\text{mach}}$
-bekannt, kein künstlicher Extremfall, sondern der Normalfall. Wie viel
-Schaden so eine Störung anrichten kann, misst die
-:k[Konditionszahl]{#condition-number}.
-
-Ab wann weichen die zwei algebraisch gleichen Formeln in Double-Precision sichtbar auseinander?
+Die Formeln $(1 - \cos x)/x^2$ und $2\sin^2(x/2)/x^2$ sind algebraisch
+gleich. Ab welchem $x = 10^{-k}$ weichen sie in Double-Precision sichtbar
+ab?
 
 <CancellationWidget />
 
-Eine geeignete Umformung verhindert, dass die Subtraktion fast gleicher Zahlen die Information auslöscht.
+Die erste Formel löscht in $1 - \cos x$ aus: Bei $x = 10^{-4}$ stimmen
+noch gut 8 Stellen, ab $x = 10^{-8}$ ist $\cos x$ auf $1$ gerundet und das
+Ergebnis $0$ statt $0{,}5$. Die umgeformte Fassung subtrahiert nicht.

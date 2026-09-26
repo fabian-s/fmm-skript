@@ -15,17 +15,17 @@ y = f(a) + f'(a)\,(x - a).
 $$
 
 Für $f(x) = x^2$ an der Stelle $a = 1$ ist das
-$y = 1 + 2(x-1) = 2x - 1$. Was die Tangente so nützlich
-macht: Nahe $x = a$ ist sie ein hervorragender Ersatz für
-die Kurve selbst: sie ist die *lokale lineare
-Näherung* (local linear approximation). Das ist der handfeste
-geometrische Grund, warum Methoden für lineare Probleme so weit
-tragen: Nahe genug an jedem interessanten Punkt verhält sich eine
-glatte nichtlineare Funktion wie ihre Tangente.
+$y = 1 + 2(x-1) = 2x - 1$. Nahe $x = a$ ersetzt die Tangente
+die Kurve gut: Sie ist die *lokale lineare
+Näherung* (local linear approximation). Deshalb tragen Methoden für lineare
+Probleme so weit: Nahe genug an einem Punkt verhält sich eine
+differenzierbare Funktion wie ihre Tangente.
 
-Wie schnell wird die Kurve von ihrer Tangente ununterscheidbar?
+Wie schnell wird $f(x) = x^2$ beim Hineinzoomen in $a = 1$ von ihrer Tangente
+ununterscheidbar?
 
 <ZoomWidget />
 
-Der größte Abstand im Fenster ist $(x-1)^2$: Er viertelt sich bei jeder
-Halbierung der Fensterbreite, während das Fenster nur halb so hoch wird.
+Kurve und Tangente liegen genau $(x-1)^2$ auseinander, im Fenster der halben
+Breite $w$ also höchstens $w^2$. Der Abstand schrumpft quadratisch, das
+Fenster nur linear: Bei 32-fachem Zoom sind es noch 1,1 % der Fensterhöhe.

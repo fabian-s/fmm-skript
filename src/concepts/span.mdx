@@ -4,13 +4,13 @@ import { SpanWidget } from "./widgets/SpanWidget";
 
 Die *lineare Hülle* (span) einer Sammlung von
 :k[Vektoren]{#vector} ist die Menge
-*alles dessen, was wir aus ihnen bauen können*: durch
+*alles dessen, was wir aus ihnen bauen können*: aller
 :k[Linearkombinationen]{#linear-combination},
-also jedes mögliche Skalieren und Addieren. Für eine
-:k[Matrix]{#matrix} $\bA$ lässt
-sich die lineare Hülle ihrer Spalten in
+also jedes möglichen Skalierens und Addierens. Für eine
+:k[Matrix]{#matrix} $\bA$ heißt
+die lineare Hülle ihrer Spalten auch *Spaltenraum* $\col(\bA)$; in
 :k[Mengenschreibweise]{#set-builder-notation}
-schreiben als
+ist sie
 
 $$
 \operatorname{span}(\bA) = \{ \bA\bx : \bx \in \R^n \},
@@ -20,12 +20,9 @@ die Menge aller
 :k[Produkte]{#matrix-vector-product}
 $\bA\bx$, wenn $\bx$ ganz
 :k[$\R^n$]{#real-coordinate-space}
-durchläuft. Geometrisch ist eine lineare Hülle immer „flach&ldquo; und
-enthält immer den Ursprung: Ein Vektor ungleich Null spannt eine
-Gerade durch den Ursprung auf, zwei
-:k[unabhängige]{#linear-independence}
-Vektoren eine zweidimensionale Ebene durch den Ursprung, und so weiter. „$\bb$ liegt in
-$\operatorname{span}(\bA)$&ldquo; heißt genau: Das
+durchläuft. Geometrisch ist eine lineare Hülle „flach&ldquo; und
+enthält immer den Ursprung. „$\bb$ liegt in
+$\operatorname{span}(\bA)$&ldquo; heißt dasselbe wie: Das
 Gleichungssystem $\bA\bx = \bb$ hat eine Lösung (vgl.
 Heath §2.1).
 
@@ -33,5 +30,6 @@ Wie weit reicht das, was wir aus einem oder zwei Vektoren bauen können?
 
 <SpanWidget />
 
-Ob die Hülle eine Gerade bleibt oder die Ebene füllt, entscheidet allein die
-Unabhängigkeit der aufspannenden Vektoren.
+Ein Vektor ungleich null spannt eine Gerade durch den Ursprung auf; ein
+Punkt daneben bleibt unerreichbar. Zwei
+:k[unabhängige]{#linear-independence} Vektoren des $\R^2$ spannen die ganze Ebene auf.
