@@ -82,7 +82,7 @@ noch ineinander umrechnen. In der Kettenregel dürfen wir die Faktoren außerdem
 Reihenfolge hinschreiben, in der die Funktionen hintereinander ausgeführt werden; in der
 Spaltenkonvention kehrt sich diese Reihenfolge um und die Faktoren tragen Transponierte.
 
-Dafür steht dort, wo der Gradient als Schritt im $\R^n$ auftritt, der
+Im Gegenzug steht dort, wo der Gradient als Schritt im $\R^n$ auftritt, der
 :k[transponierte]{#transpose} Gradient, etwa im Gradientenabstieg weiter unten.
 :::
 
@@ -367,9 +367,10 @@ $$
 $$
 
 also den Gradienten, den wir dort partiell ausgerechnet haben. Diese Matrix ist allerdings
-*nicht* :k[positiv definit]{#positive-definite} (ihre Determinante ist $-1/4$), und im
-Nullpunkt hat $f$ kein Minimum, sondern einen Sattel; im Widget oben kreuzen sich dort die
-beiden Geraden zum Niveau $0$. Wie die :k[Hesse-Matrix]{#hessian-matrix} solche Punkte
+*nicht* :k[positiv definit]{#positive-definite}: Ihre Determinante ist $-1/4 < 0$, ihre
+beiden Eigenwerte haben also verschiedene Vorzeichen. Im Nullpunkt hat $f$ deshalb kein
+Minimum, sondern einen Sattel; im Widget oben kreuzen sich dort die beiden Geraden zum
+Niveau $0$. Wie die :k[Hesse-Matrix]{#hessian-matrix} solche Punkte
 unterscheidet, klärt @sec:hoehere-ableitungen.
 :::
 
@@ -486,9 +487,9 @@ Verschwindet der Gradient in einem Punkt, so liegt dort ein Minimum von $f$.
 
 Ein verschwindender Gradient sagt nur, dass die lineare Näherung flach ist. Für
 $f(\bx) = x_1^2 + 3x_1x_2 + 2x_2^2$ aus @beispiel:gradient-einer-quadratischen-funktion ist $\nabla f(\bnull) = (0,0)$,
-und der Nullpunkt ist ein Sattel: Die Hesse-Matrix hat die Eigenwerte $6{,}162$ und
-$-0{,}162$, also einen positiven und einen negativen (@bemerkung:drei-nachtraege-zu-satz-10-2-8). Entlang der einen
-Eigenrichtung steigt $f$, entlang der anderen fällt es.
+und der Nullpunkt ist ein Sattel (@bemerkung:drei-nachtraege-zu-satz-10-2-8): Die
+Hesse-Matrix $\bigl(\begin{smallmatrix} 2 & 3 \\ 3 & 4 \end{smallmatrix}\bigr)$ hat die
+Eigenwerte $6{,}162$ und $-0{,}162$, also einen positiven und einen negativen. Entlang der einen Eigenrichtung steigt $f$, entlang der anderen fällt es.
 :::
 
 :::zahlfrage{loesung=50 toleranz=2 einheit="Prozent"}

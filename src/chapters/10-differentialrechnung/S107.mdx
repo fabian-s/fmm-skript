@@ -589,7 +589,11 @@ wobei $\ell$ die Log-Likelihood der ganzen Stichprobe ist. Er erreicht damit asy
 die *Cramér-Rao-Schranke*, die untere Schranke für die Varianz erwartungstreuer Schätzer:
 mehr Information, kleinere Varianz, präzisere Schätzung.
 
-::::vertiefung[Die Fisher-Information im Bernoulli-Modell]
+:::::vertiefung[Fisher-Information im Bernoulli-Modell und Cramér-Rao-Schranke]
+
+Unter den Regularitätsbedingungen aus @definition:fisher-informationsmatrix ist die
+erwartete Score-Funktion null, und es gilt außerdem
+$\corange{\bI(\btheta)}=\E[\corange{\nabla\ell(\btheta)}^\top\corange{\nabla\ell(\btheta)}]$.
 
 :::beispiel[#fisher-information-im-bernoulli-modell (Fisher-Information im Bernoulli-Modell)]
 Seien $y_1, \dots, y_n$ unabhängige, identisch verteilte Bernoulli-Variablen mit
@@ -626,10 +630,6 @@ Bei $p = 0{,}05$ ist $\corange{\bI_1} = 21{,}05$, also gut das Fünffache, und
 $\var(\wh{p}) = 0{,}000475$: Nahe am Rand des Parameterbereichs sind die Daten deutlich
 informativer.
 :::
-
-::::
-
-:::::vertiefung[Die Varianz des ML-Schätzers und die Cramér-Rao-Schranke]
 
 :::bemerkung[#cramer-rao-sauber-formuliert (Cramér-Rao-Schranke und Asymptotik)]
 Als Merkregel kursiert
