@@ -159,7 +159,8 @@ Länge $q$ wird die Liste mit Nullen ergänzt.
   $\lambda_1$.
 - Falls $m\ge n$, ist $\corange{\sigma_n} = \min_{\left\|\bx\right\| = 1} \left\|\bA\bx\right\|$
   die minimale Streckung. Für $m<n$ ist dieses Minimum null, weil $\bA$ dann
-  einen nichttrivialen Kern hat.
+  einen nichttrivialen Kern hat; in der erweiterten Liste (letzter Punkt)
+  ist das $\sigma_n = 0$.
 - $\sigma_i = 0$ gilt genau dann, wenn $\lambda_i = 0$ ist.
 - *Konvention bei breiten Matrizen.* Für $m < n$ hat $\bA^\top\bA$ insgesamt $n$
   Eigenwerte, darunter mindestens $n-m$ strukturell erzwungene Nullen. Als
@@ -369,7 +370,7 @@ zusammen. Bei mehrfachen Singulärwerten ist die Freiheit noch größer: Im
 zugehörigen Eigenraum lässt sich die Orthonormalbasis beliebig drehen.
 :::
 
-In R lässt sich die Handrechnung prüfen:
+Stimmt die Handrechnung? Was liefert `svd(A)` in R?
 
 ```r
 A <- matrix(c(1, 2,
@@ -665,8 +666,9 @@ $$
 $$
 
 Hier hat $\cgreen{\bU}$ drei Spalten, wir kennen aber erst zwei. Die dritte
-ergänzen wir wie in @beispiel:alle-unterraeume-einer-rang-1-matrix zu einer
-Orthonormalbasis; sie spannt den linken Kern auf und ist bis aufs Vorzeichen
+ergänzt $\cgreen{\bu_1}, \cgreen{\bu_2}$ wie in
+@beispiel:alle-unterraeume-einer-rang-1-matrix zu einer Orthonormalbasis des
+$\R^3$; sie spannt den linken Kern auf und ist bis aufs Vorzeichen
 
 $$
 \cgreen{\bu_3} = \tfrac{1}{\sqrt{14}} \begin{pmatrix} 1 \\ -2 \\ 3 \end{pmatrix}
@@ -695,8 +697,8 @@ geschieht die Abbildung in drei Etappen:
 Die SVD zerlegt also *jede* lineare Abbildung von $\R^n$ nach $\R^m$ in Drehen,
 Strecken, Drehen. Aus der Einheitssphäre des $\R^n$ wird dabei ein Ellipsoid mit
 den Hauptachsenrichtungen $\cgreen{\bu_i}$ und den Halbachsenlängen
-$\corange{\sigma_i}$. Ist $r < n$, drückt $\bA$ also Richtungen auf null,
-so wird daraus ein ausgefülltes Ellipsoid im $r$-dimensionalen Spaltenraum
+$\corange{\sigma_i}$. Drückt $\bA$ Richtungen auf null, ist also $r < n$, so
+wird daraus ein ausgefülltes Ellipsoid im $r$-dimensionalen Spaltenraum
 (@sec:motivation).
 :::
 
