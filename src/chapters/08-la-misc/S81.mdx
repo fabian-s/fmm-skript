@@ -103,12 +103,13 @@ kostet das $O(n^2)$, für eine dünnbesetzte nur so viel, wie sie Einträge
 ungleich null hat. $\bA$ selbst wird weder zerlegt noch umgeformt.
 
 :::bemerkung[#zwei-schaetzungen-fuer-den-eigenwert (Zwei Schätzungen für den Eigenwert)]
-Ohne Normierung wüchse die Länge der Iterierten in jedem Schritt um ungefähr
-den Faktor $|\lambda_1|$. Diesen Streckfaktor misst in
-@algorithmus:potenzmethode die Größe
-$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$, denn
-$\cblue{\bx^{(k-1)}}$ hat die Länge $1$. Weil eine Länge kein Vorzeichen hat,
-konvergiert sie gegen $|\cgreen{\lambda_1}|$.
+Ohne Normierung, also für die rohe Iteration $\bz^{(k)} = \bA\bz^{(k-1)}$,
+wächst die Länge in jedem Schritt um ungefähr den Faktor $|\lambda_1|$, und
+der Quotient $\left\|\bz^{(k)}\right\|/\left\|\bz^{(k-1)}\right\|$ strebt
+gegen $|\lambda_1|$. In @algorithmus:potenzmethode ist der Nenner gleich $1$,
+weil $\cblue{\bx^{(k-1)}}$ normiert ist; derselbe Streckfaktor heißt dort
+$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$. Weil eine
+Länge kein Vorzeichen hat, konvergiert er gegen $|\cgreen{\lambda_1}|$.
 
 Das Vorzeichen bringt der *Rayleigh-Quotient* mit,
 
@@ -327,9 +328,10 @@ $c_1 \neq 0$ mit Wahrscheinlichkeit $1$, und Rundungsfehler bringen beim
 Rechnen ohnehin einen kleinen $\cgreen{\bv_1}$-Anteil hinein, den die Iteration
 dann verstärkt.
 
-**Kein separierter größter Eigenwert.** Gilt $|\lambda_1| = |\lambda_2|$, etwa
-bei $\lambda_2 = -\lambda_1$ oder bei einem komplexen Eigenwertpaar, so ist die
-Rate $\corange{|\lambda_2/\lambda_1|} = 1$ und nichts konvergiert mehr. Und
+**Kein separierter größter Eigenwert.** Gilt $|\lambda_1| = |\lambda_2|$ mit
+$\lambda_2 \neq \lambda_1$, etwa bei $\lambda_2 = -\lambda_1$ oder bei einem
+komplexen Eigenwertpaar, so ist die Rate $\corange{|\lambda_2/\lambda_1|} = 1$,
+und die Iterierten laufen gegen keine feste Richtung mehr. Und
 selbst wenn die beiden nur *nahe* beieinanderliegen, wird die Methode sehr
 langsam. In beiden Fällen brauchen wir andere Verfahren.
 :::
@@ -734,8 +736,8 @@ noch, denn die Rate beschreibt nur das asymptotische Verhalten. Das
 aufgesammelte Produkt $\bQ_9$ hat die Spalten $(0{,}448;\ -0{,}894)^\top$ und
 $(0{,}894;\ 0{,}448)^\top$, also bis auf Rundung $-\cgreen{\bv_1}$ und
 $\bv_2$. In @beispiel:diagonalisierung-durch-eine haben wir dieselbe
-Diagonalisierung aus den bekannten Eigenvektoren gebaut; die QR-Iteration
-findet sie selbst.
+Diagonalisierung, dort mit vertauschter Reihenfolge, aus den bekannten
+Eigenvektoren gebaut; die QR-Iteration findet sie selbst.
 :::
 
 :::interaktiv[Die QR-Iteration zum Durchklicken]
