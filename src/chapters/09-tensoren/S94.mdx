@@ -458,9 +458,9 @@ Verwendet wird die Konstruktion trotzdem vielfach:
 Seien $\bB_x \in \R^{n_x \times K_x}$ und
 $\bB_y \in \R^{n_y \times K_y}$ die Auswertungsmatrizen zweier univariater
 B-Spline-Basen auf Gitterpunkten $x_1, \dots, x_{n_x}$ bzw. $y_1, \dots, y_{n_y}$,
-also $(\bB_x)_{ij} = B_j(x_i)$ mit der $j$-ten Basisfunktion $B_j$, analog für
-$\bB_y$. Die Tensorprodukt-Spline-Fläche
-$f(x,y) = \sum_{j,k} c_{jk}\,B_j(x)\,B_k(y)$ mit der Koeffizientenmatrix
+also $(\bB_x)_{ij} = B_j(x_i)$ mit der $j$-ten Basisfunktion $B_j$, analog
+$(\bB_y)_{lk} = \wt{B}_k(y_l)$. Die Tensorprodukt-Spline-Fläche
+$f(x,y) = \sum_{j,k} c_{jk}\,B_j(x)\,\wt{B}_k(y)$ mit der Koeffizientenmatrix
 $\bC = (c_{jk}) \in \R^{K_x \times K_y}$ hat auf dem $n_x \times n_y$-Gitter die
 Werte $\bF = \bB_x\bC\bB_y^\top$. Der vec-Trick aus
 @satz:vektorisierung-eines-matrixprodukts liefert

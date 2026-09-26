@@ -496,9 +496,9 @@ symmetrischen Fall wird daraus die Spektralzerlegung mit orthogonalem $\bP$ aus
 <td className="py-1">stabil</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
-<td className="py-1 pr-6">singuläre Matrizen</td>
-<td className="py-1 pr-6">Eigenwert $0$; ohne Basis aus Eigenvektoren gibt es die Zerlegung gar nicht</td>
-<td className="py-1">unkritisch, $\corange{\sigma_i} = 0$ zeigt den Rangabfall an</td>
+<td className="py-1 pr-6">Existenz</td>
+<td className="py-1 pr-6">nur für diagonalisierbare Matrizen</td>
+<td className="py-1">immer, auch für singuläre; $\corange{\sigma_i} = 0$ zeigt den Rangabfall an</td>
 </tr>
 <tr className="border-b border-slate-200 dark:border-slate-700">
 <td className="py-1 pr-6">geometrische Deutung</td>
@@ -565,7 +565,7 @@ Für $\bA = \bigl(\begin{smallmatrix} 3 & 0 \\ 0 & 2 \end{smallmatrix}\bigr)$
 ist $\bigl(\begin{smallmatrix} 2{,}5 & 0 \\ 0 & 2{,}5 \end{smallmatrix}\bigr)$
 die beste Rang-1-Approximation.
 
-Diese Matrix hat Rang $2$, ist also gar nicht zugelassen. Die Singulärwerte
+Diese Matrix hat Rang $2$, ist also nicht zugelassen. Die Singulärwerte
 von $\bA$ sind $\corange{\sigma_1} = 3$ und $\corange{\sigma_2} = 2$, die beste
 Rang-1-Approximation ist
 $\bA_1 = \bigl(\begin{smallmatrix} 3 & 0 \\ 0 & 0 \end{smallmatrix}\bigr)$, und
@@ -586,7 +586,7 @@ Ist $\corange{\sigma_{k+1}} = 0$, so ist die Rang-k-Approximation exakt.
 
 Weil die Singulärwerte absteigend sortiert sind, folgt aus
 $\corange{\sigma_{k+1}} = 0$ sofort $\rang(\bA) \leq k$. Die Summenform
-@eq:summenform-der-svd hat dann gar nicht mehr als $k$ Summanden, also ist $\bA_k = \bA$.
+@eq:summenform-der-svd hat dann höchstens $k$ Summanden, also ist $\bA_k = \bA$.
 @satz:eckart-und-young-beste-approximation-von selbst setzt $k < r$ voraus und greift hier nicht mehr. Setzen wir
 $\corange{\sigma_i} = 0$ für $i > r$, sagt @eq:eckart-und-young-beste-approximation-von aber dasselbe: Der Fehler ist null.
 :::

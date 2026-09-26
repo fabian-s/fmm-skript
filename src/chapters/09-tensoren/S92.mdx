@@ -143,7 +143,7 @@ $\{1, \dots, n_1\} \times \cdots \times \{1, \dots, n_k\}$ genau eine reelle Zah
 $a_{i_1, \dots, i_k}$ zuordnet.
 :::
 
-:::bemerkung[#stufe-und-warum-eine-menge-es-nicht-tut (Stufe; Familie statt Menge)]
+:::bemerkung[#stufe-und-warum-eine-menge-es-nicht-tut (Stufe und Anordnung der Einträge)]
 Die Stufe zählt Indexpositionen, nicht Einträge. Die ersten Fälle kennen wir:
 
 | Stufe $k$ | Objekt | Format | Einträge |
@@ -248,7 +248,8 @@ $\bB \in \R^{32 \times 224 \times 224 \times 3}$ ist ein Tensor der Stufe $4$
 mit rund $4{,}8 \cdot 10^6$ Zahlen; bei einem Video zählt dieselbe vierte
 Indexposition die Einzelbilder. Eine Faltungsschicht (convolutional layer) bildet
 Tensoren auf Tensoren ab, etwa
-$c\colon \R^{32 \times 224 \times 224 \times 3} \to \R^{32 \times 56 \times 56 \times 64}$.
+$c\colon \R^{32 \times 224 \times 224 \times 3} \to \R^{32 \times 56 \times 56 \times 64}$,
+mit $64$ Merkmalskanälen (*Feature-Maps*) statt der drei Farbkanäle.
 
 Solche Rechnungen bestehen aus sehr vielen gleichartigen Multiplikationen und
 Additionen auf regelmäßig angeordneten Zahlen. Spezialisierte Rechenwerke wie

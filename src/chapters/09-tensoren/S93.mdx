@@ -213,7 +213,11 @@ $$
 = \softmax\!\left(\frac{\bQ\bK^\top}{\sqrt{d_k}}\right)\bV ,
 $$
 
-und der Faktor $\bQ\bK^\top$ ist eine Summe äußerer Produkte.
+wobei die Zeilen von $\bQ$, $\bK$ und $\bV$ Anfragen (queries), Schlüssel (keys)
+und Werte (values) sind und $d_k$ die Spaltenzahl von $\bQ$ und $\bK$ ist. Wie
+$\bU_r\bSigma_r\bV_r^\top$ in @bemerkung:die-svd-als-summe-aeusserer-produkte
+ist der Faktor $\bQ\bK^\top$ eine Summe äußerer Produkte, eines je Spalte von
+$\bQ$ und $\bK$.
 
 :::vertiefung[Empirische Kovarianz und Attention]
 Für jede einzelne Realisierung ist $(\bx - \bmu) \otimes (\bx - \bmu)$ nach
@@ -225,13 +229,13 @@ Beobachtungen, $\wh{\bSigma} = \tfrac{1}{N-1}\sum_{i=1}^{N} (\bx_i - \bar{\bx})
 summieren, ist $\rang(\wh{\bSigma}) \le N - 1$: Bei weniger Beobachtungen als
 Dimensionen ist die Schätzung stets singulär.
 
-In der Attention-Formel enthält $\bQ \in \R^{n_q \times d_k}$ die Anfragen
-(queries) $\bq_i^\top$ als Zeilen, $\bK \in \R^{n_k \times d_k}$ die Schlüssel
-(keys) $\bk_j^\top$ und $\bV \in \R^{n_k \times d_v}$ die Werte (values);
-$\softmax$ wirkt zeilenweise, und das Ergebnis liegt in $\R^{n_q \times d_v}$.
-Der Eintrag $(i,j)$ von $\bQ\bK^\top$ ist das innere Produkt $\inner{\bq_i, \bk_j}$, das Modell
-vergleicht also jede Anfrage mit jedem Schlüssel. Als ganze Matrix ist derselbe
-Ausdruck eine Summe äußerer Produkte, diesmal über die $d_k$ Spalten,
+In der Attention-Formel ist $\bQ \in \R^{n_q \times d_k}$ mit den Zeilen
+$\bq_i^\top$, $\bK \in \R^{n_k \times d_k}$ mit den Zeilen $\bk_j^\top$ und
+$\bV \in \R^{n_k \times d_v}$; $\softmax$ wirkt zeilenweise, und das Ergebnis
+liegt in $\R^{n_q \times d_v}$. Der Eintrag $(i,j)$ von $\bQ\bK^\top$ ist das
+innere Produkt $\inner{\bq_i, \bk_j}$, das Modell vergleicht also jede Anfrage
+mit jedem Schlüssel. Als ganze Matrix ist derselbe Ausdruck eine Summe äußerer
+Produkte über die $d_k$ Spalten,
 
 $$
 \bQ\bK^\top = \sum_{l=1}^{d_k} \bq^{(l)} \otimes \bk^{(l)} ,
@@ -756,7 +760,9 @@ $\bB \in \R^{p \times q}$ ist ein Tensor der Stufe $4$.
 Der Stufe-4-Tensor ist das *Tensorprodukt* nach @definition:tensorprodukt. Das
 Kroneckerprodukt ordnet dieselben $mnpq$ Zahlen nach der Indexformel @eq:zwei-bedeutungen-zwei-zeichen
 in einer Matrix aus $\R^{mp \times nq}$ an, ist also die abgeflachte Fassung
-davon (@bemerkung:zwei-bedeutungen-zwei-zeichen).
+davon (@bemerkung:zwei-bedeutungen-zwei-zeichen). Für $\bA \in \R^{3 \times 2}$
+und $\bB \in \R^{2 \times 4}$ etwa liegt $\bA \kron \bB$ in $\R^{6 \times 8}$,
+das Tensorprodukt dagegen in $\R^{3 \times 2 \times 2 \times 4}$.
 :::
 
 :::frage{falsch}
@@ -788,14 +794,17 @@ entsteht dagegen $\bS \kron \bI_n$, dessen Einträge über die ganze Matrix
 verteilt sind (@beispiel:s-k-i-n-verteilt-die-eintraege).
 :::
 
-:::frage{wahr}
-Für $m = 2$ Orte und $n = 2$ Zeitpunkte hat eine separierbare Kovarianzmatrix
-$6$ Parameter statt der $10$ einer beliebigen symmetrischen $4 \times 4$-Matrix.
+:::zahlfrage{loesung=265 toleranz=0}
+Daten liegen an $m = 10$ Orten zu $n = 20$ Zeitpunkten vor. Eine unstrukturierte
+Kovarianzmatrix des $200$-dimensionalen Datenvektors hat
+$\tfrac{200 \cdot 201}{2} = 20\,100$ freie Parameter. Wie viele Parameter haben
+die beiden Faktoren $\bSigma_T$ und $\bSigma_S$ des separierbaren Modells
+zusammen?
 
-Es ist $\tfrac{mn(mn+1)}{2} = \tfrac{4 \cdot 5}{2} = 10$ gegen
-$\tfrac{m(m+1)}{2} + \tfrac{n(n+1)}{2} = 3 + 3 = 6$ (@bemerkung:was-die-annahme-spart-und-was-sie-kostet).
-Identifizierbar sind davon $5$, weil sich ein Skalenfaktor zwischen den beiden
-Faktoren verschieben lässt.
+$265$, denn $\tfrac{m(m+1)}{2} + \tfrac{n(n+1)}{2} = 55 + 210$
+(@bemerkung:was-die-annahme-spart-und-was-sie-kostet). Identifizierbar sind
+davon $264$, weil sich ein Skalenfaktor zwischen den beiden Faktoren verschieben
+lässt.
 :::
 
 ::::

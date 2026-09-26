@@ -34,7 +34,8 @@ Aus der linearen Algebra kommen
 :k[Eigenwerte und Eigenvektoren]{#eigenvalue-eigenvector} und
 :k[Ähnlichkeitstransformationen]{#similar-matrices} $\bB = \bQ\bA\bQ^{-1}$
 dazu, aus der Analysis die :k[Konvergenz von Folgen]{#convergence} und die
-:k[geometrische Reihe]{#geometric-series} $\sum_k p^k$ für $|p| < 1$, in
+:k[geometrische Reihe]{#geometric-series} $\sum_{k \geq 0} p^k = 1/(1-p)$
+für $|p| < 1$, in
 @sec:sketching außerdem Zufallsvektoren.
 
 ### Eigenwerte ohne charakteristisches Polynom
@@ -102,15 +103,12 @@ kostet das $O(n^2)$, für eine dünnbesetzte nur so viel, wie sie Einträge
 ungleich null hat. $\bA$ selbst wird weder zerlegt noch umgeformt.
 
 :::bemerkung[#zwei-schaetzungen-fuer-den-eigenwert (Zwei Schätzungen für den Eigenwert)]
-Wie wir den Eigenwert ablesen, hängt daran, ob unterwegs normiert wird. Ohne
-Normierung, also für die rohe Iteration $\bz^{(k)} = \bA\bz^{(k-1)}$, wächst
-die Länge in jedem Schritt um ungefähr den Faktor $|\lambda_1|$, und der
-Quotient $\left\|\bz^{(k)}\right\|/\left\|\bz^{(k-1)}\right\|$ strebt gegen
-$|\lambda_1|$. Nach der Normierung in @algorithmus:potenzmethode taugt dieser
-Quotient nichts mehr, denn Zähler und Nenner sind dann beide $1$. Seine Rolle
-übernimmt $\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$;
-weil eine Länge kein Vorzeichen hat, konvergiert sie gegen
-$|\cgreen{\lambda_1}|$.
+Ohne Normierung wüchse die Länge der Iterierten in jedem Schritt um ungefähr
+den Faktor $|\lambda_1|$. Diesen Streckfaktor misst in
+@algorithmus:potenzmethode die Größe
+$\cblue{\lambda^{(k)}} = \left\|\bA\,\cblue{\bx^{(k-1)}}\right\|$, denn
+$\cblue{\bx^{(k-1)}}$ hat die Länge $1$. Weil eine Länge kein Vorzeichen hat,
+konvergiert sie gegen $|\cgreen{\lambda_1}|$.
 
 Das Vorzeichen bringt der *Rayleigh-Quotient* mit,
 
@@ -120,27 +118,6 @@ $$
 $$
 
 wobei der Nenner wegen der Normierung gleich $1$ ist.
-:::
-
-:::vertiefung[Genauigkeit der beiden Schätzungen]
-Für :k[symmetrische]{#symmetric-matrix} $\bA$ ist der Rayleigh-Quotient die
-bessere Wahl. Beide Schätzungen sind dort quadratische Ausdrücke im Winkel
-zwischen $\cblue{\bx^{(k)}}$ und $\cgreen{\bv_1}$, ihr Fehler fällt also mit
-$\corange{(\lambda_2/\lambda_1)}^{2k}$ und damit doppelt so schnell wie der
-Winkel selbst; der Rayleigh-Quotient liegt dabei um einen konstanten Faktor
-näher dran. In @beispiel:potenzmethode-an-einer-2-2-matrix geht sein Fehler von
-$k = 8$ auf $k = 10$ von $-9{,}0 \cdot 10^{-4}$ auf $-3{,}5 \cdot 10^{-5}$
-zurück, der Fehler der Normschätzung von $-3{,}3 \cdot 10^{-3}$ auf
-$-1{,}3 \cdot 10^{-4}$: gleich schnell, aber asymptotisch um den Faktor
-$3{,}7$ genauer. Ist $\bA$ nicht symmetrisch, stehen die Eigenvektoren nicht
-mehr senkrecht aufeinander, und beide Schätzungen sind nur noch linear genau.
-
-Auch ins Abbruchkriterium von @algorithmus:potenzmethode gehört
-$\cblue{\rho^{(k)}}$, sobald $\cgreen{\lambda_1}$ negativ sein kann. Für
-$\cgreen{\lambda_1} < 0$ wechselt $\cblue{\bx^{(k)}}$ nämlich in jedem Schritt
-das Vorzeichen, und das Residuum mit
-$\cblue{\lambda^{(k)}} = |\cgreen{\lambda_1}|$ bliebe bei ungefähr
-$2|\cgreen{\lambda_1}|$ hängen, statt gegen null zu gehen.
 :::
 
 Warum funktioniert das? Sei $\bA$ diagonalisierbar mit Eigenvektoren
@@ -228,7 +205,7 @@ $$
 denn $\bw_k \to c_1\cgreen{\bv_1}$ und $c_1 \neq 0$. Das verbleibende
 Vorzeichen ist das von $c_1$, multipliziert mit
 $\sign(\cgreen{\lambda_1})^k$. Weil der Fehler in $\bw_k$ nach dem
-ersten Schritt wie $\corange{|\lambda_2/\lambda_1|}^k$ fällt, tut es der Fehler des
+ersten Beweisschritt wie $\corange{|\lambda_2/\lambda_1|}^k$ fällt, tut es der Fehler des
 normierten Vektors ebenso. Für die Eigenwertschätzung folgt schließlich
 
 $$
@@ -312,6 +289,27 @@ schneller als die Richtung. Ihr Fehler fällt pro Schritt auf ungefähr das
 $\corange{(\lambda_2/\lambda_1)^2} \approx 0{,}198$-Fache, also mit dem
 Quadrat der Rate.
 ::::
+
+:::vertiefung[Genauigkeit der beiden Schätzungen]
+Für :k[symmetrische]{#symmetric-matrix} $\bA$ ist der Rayleigh-Quotient die
+bessere Wahl. Beide Schätzungen sind dort quadratische Ausdrücke im Winkel
+zwischen $\cblue{\bx^{(k)}}$ und $\cgreen{\bv_1}$, ihr Fehler fällt also mit
+$\corange{(\lambda_2/\lambda_1)}^{2k}$ und damit doppelt so schnell wie der
+Winkel selbst; der Rayleigh-Quotient liegt dabei um einen konstanten Faktor
+näher dran. In @beispiel:potenzmethode-an-einer-2-2-matrix geht sein Fehler von
+$k = 8$ auf $k = 10$ von $-9{,}0 \cdot 10^{-4}$ auf $-3{,}5 \cdot 10^{-5}$
+zurück, der Fehler der Normschätzung von $-3{,}3 \cdot 10^{-3}$ auf
+$-1{,}3 \cdot 10^{-4}$: gleich schnell, aber asymptotisch um den Faktor
+$3{,}7$ genauer. Ist $\bA$ nicht symmetrisch, stehen die Eigenvektoren nicht
+mehr senkrecht aufeinander, und beide Schätzungen sind nur noch linear genau.
+
+Auch ins Abbruchkriterium von @algorithmus:potenzmethode gehört
+$\cblue{\rho^{(k)}}$, sobald $\cgreen{\lambda_1}$ negativ sein kann. Für
+$\cgreen{\lambda_1} < 0$ wechselt $\cblue{\bx^{(k)}}$ nämlich in jedem Schritt
+das Vorzeichen, und das Residuum mit
+$\cblue{\lambda^{(k)}} = |\cgreen{\lambda_1}|$ bliebe bei ungefähr
+$2|\cgreen{\lambda_1}|$ hängen, statt gegen null zu gehen.
+:::
 
 :::bemerkung[#wann-die-potenzmethode-versagt (Wann die Potenzmethode versagt)]
 Zwei Voraussetzungen von @satz:konvergenz-der-potenzmethode können verletzt
@@ -530,8 +528,8 @@ Insbesondere ist jedes $\cblue{\bA^{(k)}}$ ähnlich zu $\bA$ und hat nach
 @satz:aehnliche-matrizen-haben-dieselben dieselben Eigenwerte.
 :::
 
-Die Iteration verändert die Eigenwerte also nicht. Warum sie konvergiert,
-zeigt der folgende Satz.
+Die Iteration verändert die Eigenwerte also nicht. Den Schlüssel zu ihrer
+Konvergenz liefert der folgende Satz.
 
 :::satz[#die-qr-iteration-zerlegt-die-potenzen (Die QR-Iteration zerlegt die Potenzen von A)]
 Mit $\bQ_k := \bQ^{(1)}\bQ^{(2)}\cdots\bQ^{(k)}$ und
@@ -670,13 +668,12 @@ $$
 = \cgreen{\bV}^\top\cgreen{\bV}\bLambda\cgreen{\bV}^\top\cgreen{\bV} = \bLambda .
 $$
 
-Diese Rechnung braucht den :k[Spektralsatz]{#spectral-theorem}: Nur für
-symmetrisches $\bA$ gibt es die Zerlegung
-$\bA = \cgreen{\bV}\bLambda\cgreen{\bV}^\top$ mit *orthogonalem*
-$\cgreen{\bV}$, sodass sich $\cgreen{\bV}^\top\cgreen{\bV}$ zweimal zur
-Einheitsmatrix kürzt. Im allgemeinen Fall ist der Grenzwert von $\bQ_k$ der
-Orthogonalfaktor der Schur-Zerlegung, und nur dessen erste Spalte ist ein
-Eigenvektor; die übrigen rechnen wir aus der Dreiecksmatrix zurück.
+Dass sich $\cgreen{\bV}^\top\cgreen{\bV}$ zweimal zur Einheitsmatrix kürzt,
+braucht ein *orthogonales* $\cgreen{\bV}$, und das liefert der
+:k[Spektralsatz]{#spectral-theorem} nur für symmetrisches $\bA$. Im
+allgemeinen Fall konvergiert $\bQ_k$ gegen den Orthogonalfaktor der
+Schur-Zerlegung; nur dessen erste Spalte ist ein Eigenvektor, die übrigen
+rechnen wir aus der Dreiecksmatrix zurück.
 :::
 
 :::beispiel[#qr-iteration-an-der-beispielmatrix (QR-Iteration an der Beispielmatrix)]

@@ -240,9 +240,9 @@ auf $O(\operatorname{nnz}(\bA))$, die Zahl der Einträge ungleich null.
 :::frage{falsch}
 Mit $\bC = \gamma\bI_n$ kostet ein Iterationsschritt $O(n^3)$ Operationen.
 
-So teuer wäre es nur, wenn wir in jedem Schritt ein Matrixprodukt wie
-$\bC\bA$ bilden würden. Das ist nicht nötig: Wir wenden $\bA$ direkt auf den
-aktuellen Vektor an. Wäre ein Schritt so teuer wie eine LU-Zerlegung, hätte
+So teuer wäre es nur, wenn wir in jedem Schritt ein Produkt zweier voller
+$n \times n$-Matrizen bilden würden, etwa $\bC\bA$ für ein allgemeines $\bC$.
+Das ist nicht nötig: Wir wenden $\bA$ direkt auf den aktuellen Vektor an. Wäre ein Schritt so teuer wie eine LU-Zerlegung, hätte
 das Verfahren keinen Zweck.
 :::
 
@@ -395,9 +395,10 @@ braucht jeweils zusätzliche Voraussetzungen.
    eine zusätzliche Eigenschaft; für SPD-Matrizen ist sie garantiert.
 :::
 
-Alle drei ersetzen $\bA$ durch einen leicht invertierbaren Teil (ein
-Vielfaches der Einheitsmatrix, die Diagonale, das untere Dreieck) und
-invertieren nur diesen. Wie gut das gelingt, hängt von $\bA$ ab.
+Alle drei ersetzen $\bA$ durch eine Matrix, mit der sich Gleichungssysteme
+leicht lösen lassen (ein Vielfaches der Einheitsmatrix, die Diagonale, das
+untere Dreieck), und nehmen deren Inverse als $\bC$. Wie gut das gelingt,
+hängt von $\bA$ ab.
 
 ::::vertiefung[Richardson, Jacobi und Gauss-Seidel im Vergleich]
 :::beispiel[#die-drei-wahlen-an-einem-2-2-system (Die drei Wahlen an einem 2×2-System)]
