@@ -6,12 +6,10 @@ import { OrthoWidget, GramSchmidtWidget, CgsVsMgsWidget } from "./widgets/S74Loc
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Am Ende von @sec:normalengleichungen stand der Plan: Wir transformieren das
-Kleinste-Quadrate-Problem mit Matrizen, die die
-:k[euklidische Norm]{#euclidean-norm} unverändert lassen, bis eine
-:k[Dreiecksgestalt]{#triangular-matrix} erreicht ist, in der es trivial lösbar wird. Das
-vermeidet $\bA^\top\bA$ und damit die quadrierte
-:k[Konditionszahl]{#condition-number}. Diesen Plan führen wir jetzt aus.
+Wir führen jetzt den Plan aus @sec:normalengleichungen aus und bringen das
+Kleinste-Quadrate-Problem mit Matrizen, die die :k[euklidische Norm]{#euclidean-norm}
+erhalten, auf :k[Dreiecksgestalt]{#triangular-matrix}, ohne $\bA^\top\bA$ und damit
+ohne die quadrierte :k[Konditionszahl]{#condition-number}.
 
 ### Recap: Orthogonalmatrizen
 
@@ -29,14 +27,13 @@ $$
 
 Geometrisch beschreibt $\bQ$ eine :k[Rotation]{#rotation-matrix} und/oder
 :k[Spiegelung]{#reflection} des $\R^n$, also eine Abbildung, die Längen und
-Winkel unverändert lässt. Die für uns wichtigen
-Eigenschaften fassen wir zusammen:
+Winkel unverändert lässt. Die für uns wichtigen Eigenschaften:
 
 :::lemma[#qr-eigenschaften-von-orthogonalmatrizen (Eigenschaften von Orthogonalmatrizen)]
 Sei $\bQ \in \R^{n \times n}$ orthogonal. Dann gilt:
 
 <ol className="list-[lower-roman] space-y-1 pl-6">
-  <li>$\bQ^{-1} = \bQ^\top$, die :k[Inverse]{#matrix-inverse} ist also gratis.</li>
+  <li>$\bQ^{-1} = \bQ^\top$, die :k[Inverse]{#matrix-inverse} erfordert also keine Rechnung.</li>
   <li>$\|\bQ\bx\|_2 = \|\bx\|_2$ für alle $\bx \in \R^n$.</li>
   <li>Alle :k[Eigenwerte]{#eigenvalue-eigenvector} haben Betrag $1$: $|\lambda_1(\bQ)| = \cdots = |\lambda_n(\bQ)| = 1$, und es gilt $\kappa_2(\bQ) = 1$.</li>
   <li>Für Orthogonalmatrizen $\bQ_1, \dots, \bQ_n$ ist auch das Produkt $\bQ = \bQ_1 \cdots \bQ_n$ orthogonal.</li>
@@ -84,14 +81,13 @@ $$
 :::::
 
 :::bemerkung[#bemerkung-7-4-3]
-Eigenschaft (iii) ist für die Numerik entscheidend: wegen
-$\kappa_2(\bQ) = 1$ ist die Multiplikation mit $\bQ$ oder $\bQ^{-1}$ *immer* gut
-konditioniert und verschlechtert die Stabilität eines Algorithmus nicht. Anders als die
-Normalengleichungen (@sec:normalengleichungen) können orthogonale Transformationen die
-Kondition unseres Problems also nicht verschlimmern (vgl. die Konditionsanalyse in
-@sec:kondition). Eigenschaft (iv) erlaubt uns außerdem, $\bQ$ aus vielen
-einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
-@sec:givens-householder aus.
+Eigenschaft (iii) ist für die Numerik entscheidend: Alle Singulärwerte von $\bQ$
+sind $1$ (denn $\bQ^\top\bQ = \bI$), also ist $\kappa_2(\bQ) = 1$, und die
+Multiplikation mit $\bQ$ oder $\bQ^{-1}$ ist *immer* gut konditioniert. Anders als der
+Übergang zu den Normalengleichungen (@sec:normalengleichungen) verschlechtern
+orthogonale Transformationen die Kondition unseres Problems also nicht. Eigenschaft (iv)
+erlaubt, $\bQ$ aus vielen einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen
+wir in @sec:givens-householder.
 :::
 
 :::interaktiv[Woran erkennt man Drehung und Spiegelung?]
@@ -104,8 +100,8 @@ einfachen orthogonalen Bausteinen zusammenzusetzen; das nutzen wir in
 
 ### Die QR-Zerlegung
 
-Welche „einfache Gestalt" streben wir mit unseren orthogonalen Transformationen an?
-Wie beim :k[Gauß-Verfahren]{#gaussian-elimination}: eine obere
+Welche „einfache Gestalt“ streben wir an? Wie beim
+:k[Gauß-Verfahren]{#gaussian-elimination} eine obere
 :k[Dreiecksmatrix]{#triangular-matrix}, denn Dreieckssysteme lösen wir direkt durch
 :k[Rückwärtseinsetzen]{#triangular-solve}. Das führt auf die zentrale Zerlegung dieses
 Kapitels:
@@ -130,9 +126,7 @@ eine *QR-Zerlegung* von $\bA$.
 
 :::bemerkung[#bemerkung-7-4-5]
 Eine QR-Zerlegung in der hier dargestellten Blockform existiert für jede Matrix
-$\bA \in \R^{m \times n}$ mit $m\ge n$. Für breite Matrizen $m<n$ verwendet man
-eine entsprechend transponierte oder trapezförmige Form. Eindeutig ist
-sie aber nicht: schon ein Vorzeichenwechsel in einer Spalte von $\bQ$ (mit passendem
+$\bA \in \R^{m \times n}$ mit $m\ge n$. Eindeutig ist sie aber nicht: schon ein Vorzeichenwechsel in einer Spalte von $\bQ$ (mit passendem
 Vorzeichenwechsel in der zugehörigen Zeile von $\bR$) liefert eine andere gültige
 Zerlegung.
 :::
@@ -143,11 +137,10 @@ Woher bekommen wir $\bQ$ und $\bR$? Ein Verfahren kennen wir bereits aus der lin
 Algebra: die :k[Gram-Schmidt-Orthonormalisierung]{#gram-schmidt} der Spalten von $\bA$.
 Sie liefert orthonormale Vektoren $\bq_1, \bq_2, \dots$, die denselben Raum
 :k[aufspannen]{#span} wie die Spalten $\ba_1, \ba_2, \dots$, und die Koeffizienten, die
-dabei anfallen (Normen und :k[Projektions]{#projection}-Koeffizienten), sind genau die
-Einträge von $\bR$. Im folgenden Beispiel verfolgt $\cbred{\bq_1}$ den ersten Orthonormalvektor, $\cblue{\ba_2}$ die
-zweite Spalte, $\cgreen{R_{12}}$ den Projektionskoeffizienten,
-$\cborange{\wt{\bq}_2}$ den orthogonalisierten (noch unnormierten) und
-$\cbpurp{\bq_2}$ den fertigen zweiten Orthonormalvektor.
+dabei anfallen (Normen und :k[Projektions]{#projection}-Koeffizienten), sind die
+Einträge von $\bR$. Die Farben im Beispiel: $\cbred{\bq_1}$, $\cblue{\ba_2}$, der
+Projektionskoeffizient $\cgreen{R_{12}}$, der noch unnormierte Rest $\cborange{\wt{\bq}_2}$
+und der fertige Vektor $\cbpurp{\bq_2}$.
 
 :::beispiel[#qr-zerlegung-via-gram-schmidt (QR-Zerlegung via Gram-Schmidt)]
 **Gegeben:** $\bA = \begin{pmatrix} 1 & 2 \\ 0 & 0 \\ 0 & 2 \end{pmatrix}$.
@@ -213,17 +206,17 @@ $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
 
 <GramSchmidtWidget />
 
-<p className="mt-2 text-sm">Der Rest ist $\left\|\ba_2\right\|_2 \sin \angle(\ba_1, \ba_2)$: Je kleiner der Winkel, desto weniger bleibt übrig – und desto stärker vergrößert das Normieren die Rundungsfehler darin.</p>
+<p className="mt-2 text-sm">Der Rest ist $\left\|\ba_2\right\|_2 \sin \angle(\ba_1, \ba_2)$: Je kleiner der Winkel, desto weniger bleibt übrig und desto stärker vergrößert das Normieren die Rundungsfehler darin.</p>
 :::
 
-Vorsicht: In Gleitkommaarithmetik ist das klassische Gram-Schmidt-Verfahren instabil.
-Sind zwei Spalten fast :k[linear abhängig]{#linear-independence}, ist das Residuum nach
-der Projektion winzig, und beim Normieren werden :k[Rundungsfehler]{#rounding-error}
-stark verstärkt: Die berechneten $\bq_k$ verlieren ihre Orthogonalität. Ein einfacher Umbau hilft: Das
-*modifizierte Gram-Schmidt-Verfahren* (MGS) zieht die Projektionen nacheinander von der
-jeweils schon aktualisierten Spalte ab statt alle auf einmal von der Originalspalte. In
-exakter Arithmetik ändert das nichts, in Gleitkommaarithmetik sehr viel. Wie groß der
-Unterschied wird, messen wir selbst.
+In Gleitkommaarithmetik ist das klassische Gram-Schmidt-Verfahren instabil. Sind zwei
+Spalten fast :k[linear abhängig]{#linear-independence}, ist der Rest nach der Projektion
+winzig, und das Normieren verstärkt die :k[Rundungsfehler]{#rounding-error} darin: Die
+berechneten $\bq_k$ verlieren ihre Orthogonalität, und dieser Verlust wächst mit
+$\corange{\kappa_2(\bA)}^2$. Das *modifizierte Gram-Schmidt-Verfahren* (MGS) zieht die
+Projektionen nacheinander von der jeweils schon aktualisierten Spalte ab statt alle auf
+einmal von der Originalspalte. In exakter Arithmetik ändert das nichts, in
+Gleitkommaarithmetik wächst der Verlust dann nur noch mit $\corange{\kappa_2(\bA)}$.
 
 ::::vertiefung[Numerische Stabilität der Gram-Schmidt-Varianten]
 
@@ -232,7 +225,7 @@ Unterschied wird, messen wir selbst.
 
 <CgsVsMgsWidget />
 
-<p className="mt-2 text-sm">Klassisch wächst der Orthogonalitätsverlust mit $\corange{\kappa_2(\bA)}^2$, modifiziert nur mit $\corange{\kappa_2(\bA)}$; ein zweiter Durchlauf drückt ihn auf Maschinengenauigkeit.</p>
+<p className="mt-2 text-sm">Die Messung zeigt beide Wachstumsraten, klassisch $\corange{\kappa_2(\bA)}^2$ und modifiziert $\corange{\kappa_2(\bA)}$; ein zweiter Durchlauf drückt den Verlust auf Maschinengenauigkeit.</p>
 
 <p className="mt-2 text-sm">Ein Detail kann in die Irre führen: Für $p \gtrsim 8$ *sinkt* der gemessene MGS-Fehler wieder. Das ist kein Fortschritt, sondern derselbe Effekt wie in @sec:normalengleichungen: Der Rechner rundet $1 + \varepsilon^2$ bereits zu $1$, und das Experiment bildet die Theorie dort nicht mehr ab.</p>
 :::
@@ -306,18 +299,17 @@ $$
 
 ::::
 
-In der Praxis :k[invertieren]{#matrix-inverse} wir $\bR$ natürlich nicht explizit,
+In der Praxis :k[invertieren]{#matrix-inverse} wir $\bR$ nicht explizit,
 sondern lösen das Dreieckssystem $\bR\wh{\bx} = \bc_1$ durch
 :k[Rückwärtseinsetzen]{#triangular-solve} in $\mathcal{O}(n^2)$ Operationen. Die
 Residuumsnorm bekommen wir dabei ohne Zusatzaufwand: Aus dem Beweis lesen wir
 $\min_{\bx}\|\bA\bx - \bb\|_2 = \left\|\cblue{\bc_2}\right\|_2$ ab, ohne $\wh{\bx}$
-überhaupt einsetzen zu müssen.
+einzusetzen.
 
-Was noch fehlt, ist ein stabiler Weg zu $\bQ$: Gram-Schmidt hat uns die Zerlegung im
-Beispiel geliefert, ist aber, wie oben gesehen, numerisch instabil. In
-@sec:givens-householder konstruieren wir $\bQ$ deshalb wie beim Gauß-Verfahren
-spaltenweise aus einfachen orthogonalen Bausteinen: Givens-Rotationen und
-Householder-Spiegelungen.
+Was noch fehlt, ist ein stabiler Weg zu $\bQ$, denn das klassische Gram-Schmidt-Verfahren
+ist numerisch instabil. In @sec:givens-householder bauen wir $\bQ$ deshalb wie beim
+Gauß-Verfahren spaltenweise aus einfachen orthogonalen Bausteinen auf:
+Givens-Rotationen und Householder-Spiegelungen.
 
 ### Selbsttest
 

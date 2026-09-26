@@ -9,40 +9,23 @@ import {
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Bevor wir in den folgenden Abschnitten Algorithmen zur Lösung des
-KQ-Problems entwickeln, stellen wir dieselbe Frage wie bei den linearen
+Bevor wir Algorithmen entwickeln, fragen wir wie bei den linearen
 Gleichungssystemen: Wie empfindlich reagiert die Lösung
 $\wh{\bx}$ auf kleine Störungen der Eingaben? Die Antwort
-gibt die :k[Kondition]{#condition-number} des
-Problems, und sie legt fest, welche Genauigkeit wir von
-*jedem* Algorithmus bestenfalls erwarten dürfen. Denn die
-Kondition ist eine Eigenschaft des Problems selbst, nicht des
-Lösungswegs. Beim KQ-Problem gibt es zwei Eingaben, die gestört sein
-können: den Datenvektor $\bb$ und die Matrix
-$\bA$. Wir behandeln beide Fälle getrennt.
+gibt die :k[Kondition]{#condition-number} des Problems. Sie ist eine Eigenschaft
+des Problems, nicht des Lösungswegs, und legt fest, welche Genauigkeit wir von
+*jedem* Algorithmus bestenfalls erwarten dürfen. Gestört sein können zwei Eingaben,
+der Datenvektor $\bb$ und die Matrix $\bA$; wir behandeln beide Fälle getrennt.
 
 ### Vorbemerkungen
 
-Wir untersuchen nun die Kondition von KQ-Problemen
-$\bA\bx \approx \bb$ mit $\bA \in \R^{m \times n}$
-und $\bb \in \R^m$. Dabei beschränken wir uns auf den Fall
-$m \ge n$ und $\rang(\bA) = n$. Dann existiert,
-wie in @sec:problem gesehen, eine eindeutige
-Lösung $\wh{\bx}$. Als Norm verwenden wir im Folgenden stets
-$\left\|\cdot\right\| = \left\|\cdot\right\|_2$: Das
-KQ-Problem minimiert gerade einen Abstand in der
-:k[euklidischen Norm]{#euclidean-norm}, sie
-ist also die natürliche Wahl.
-
-Die Abbildung von den Daten zur Lösung schreiben wir als
-$\wh{\bx} = \bA\pinv\bb$. Hier bezeichnet
-$\bA\pinv$ die *Pseudoinverse* von $\bA$,
-die wir in @sec:pseudoinverse genauer kennenlernen.
-Für den Moment genügt: $\bA\pinv$ ist die Matrix, die jedem
-$\bb$ seine eindeutige KQ-Lösung zuordnet, und für
-quadratisches, reguläres $\bA$ gilt schlicht
-$\bA\pinv = \bA^{-1}$. Damit können wir die vertraute
-Definition der Konditionszahl auf rechteckige Matrizen übertragen:
+Wir betrachten KQ-Probleme $\bA\bx \approx \bb$ mit
+$\bA \in \R^{m \times n}$, $\bb \in \R^m$ und beschränken uns auf den Fall
+$m \ge n$ und $\rang(\bA) = n$. Dann ist die Lösung nach @sec:problem eindeutig,
+$\wh{\bx} = \bA\pinv\bb$ mit der *Pseudoinversen* $\bA\pinv$. Als Norm verwenden
+wir stets $\left\|\cdot\right\| = \left\|\cdot\right\|_2$, denn das KQ-Problem
+minimiert einen Abstand in der :k[euklidischen Norm]{#euclidean-norm}. Damit
+übertragen wir die vertraute Definition der Konditionszahl auf rechteckige Matrizen:
 
 :::definition[#definition-7-2-1]
 Für eine nicht notwendigerweise quadratische Matrix
@@ -68,7 +51,7 @@ $$
 
 denn $\left\|\bA\right\|_2 = \sigma_{\max}$ und
 $\left\|\bA\pinv\right\|_2 = 1/\sigma_{\min}$. Die
-Fallunterscheidung in @definition:definition-7-2-1 ist dabei konsistent: Nähert
+Fallunterscheidung in @definition:definition-7-2-1 ist konsistent: Nähert
 sich $\bA$ dem :k[Rang]{#rank}defekt,
 geht $\sigma_{\min} \to 0$ und damit
 $\kappa_2(\bA) \to \infty$.
@@ -85,9 +68,7 @@ $\kappa_2(\bA) \to \infty$.
 ### Kondition bezüglich $\bb$
 
 Der statistisch wichtigste Fall: $\bA$ ist fix, aber der Datenvektor $\bb$ ist gestört, etwa durch
-Messfehler oder schlicht durch
-:k[Rundungsfehler]{#rounding-error} beim
-Einlesen. Das Problem ist dann die Abbildung
+Messfehler oder durch :k[Rundungsfehler]{#rounding-error} beim Einlesen. Das Problem ist dann die Abbildung
 $f(\bb) = \bA\pinv\bb$, und wir fragen: Wie stark ändert
 sich $f(\bb)$ relativ, wenn wir $\bb$ durch ein
 gestörtes $\tilde{\bb}$ ersetzen?
@@ -112,14 +93,14 @@ $$
 $$
 :::
 
-Die exakte Formel folgt unmittelbar daraus, dass die Ableitung der linearen
-Abbildung $f$ die Matrix $\bA\pinv$ ist. Die obere Schranke zeigt zusätzlich,
-wie viel von $\bb$ im Spaltenraum (:k[Bild]{#image}) $\col(\bA)$ liegt.
-Sie muss für ein festes $\bb$ nicht scharf sein. Wir verfolgen die Störung
-$\cblue{\tilde{\bb} - \bb}$ in Blau und die Projektion
-$\cgreen{\proj_{\col(\bA)} \bb}$ in Grün.
+Die exakte Formel folgt daraus, dass die Ableitung der linearen Abbildung $f$ die
+Matrix $\bA\pinv$ ist. Die obere Schranke muss für ein festes $\bb$ nicht scharf sein,
+zeigt aber, worauf es ankommt: wie viel von $\bb$ im Spaltenraum
+(:k[Bild]{#image}) $\col(\bA)$ liegt.
 
 :::::vertiefung[Beweis der Konditionsschranke bezüglich b]
+Wir verfolgen die Störung $\cblue{\tilde{\bb} - \bb}$ in Blau und die Projektion
+$\cgreen{\proj_{\col(\bA)} \bb}$ in Grün.
 
 ::::beweis
 
@@ -167,14 +148,9 @@ $$
 
 :::::
 
-::::vertiefung[Geometrische Extremfälle der Konditionsschranke]
+#### Geometrische Interpretation
 
-#### Geometrische Interpretation der oberen Schranke
-
-Der Faktor
-$\left\|\bb\right\| / \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|$
-hat eine anschauliche Bedeutung. Erinnern wir uns an den Satz des
-Pythagoras: $\bb$ zerlegt sich orthogonal in seinen Anteil
+Nach dem Satz des Pythagoras zerlegt sich $\bb$ orthogonal in seinen Anteil
 im Spaltenraum und seinen Anteil im
 :k[orthogonalen Komplement]{#orthogonal-complement},
 
@@ -182,8 +158,8 @@ $$
 \left\|\bb\right\|^2 = \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2 + \left\|\proj_{\col(\bA)^\perp} \bb\right\|^2 \ge \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|^2,
 $$
 
-also ist der Faktor stets $\ge 1$. Das macht die *obere Schranke* mindestens
-so groß wie $\corange{\kappa_2(\bA)}$, nicht notwendig die exakte Kondition.
+also ist der Faktor $\left\|\bb\right\| / \left\|\cgreen{\proj_{\col(\bA)} \bb}\right\|$
+stets $\ge 1$ und die obere Schranke mindestens $\corange{\kappa_2(\bA)}$.
 Bezeichnet
 $\theta$ den Winkel zwischen $\bb$ und
 $\col(\bA)$ (siehe die Abbildung in @sec:problem), dann ist
@@ -195,25 +171,19 @@ $$
 \frac{\corange{\kappa_2(\bA)}}{\cos(\theta)}.
 $$
 
-Die geometrischen Extremfälle dieser Schranke:
-
 - **Best case:** $\bb = \cgreen{\proj_{\col(\bA)} \bb}$, d.&thinsp;h.
-  $\bb \in \col(\bA)$ und $\theta = 0$. Dann ist $\cos(\theta) = 1$, und die
-  Schranke reduziert sich auf $\corange{\kappa_2(\bA)}$; die exakte
-  Kondition am konkreten $\bb$ kann kleiner sein.
+  $\bb \in \col(\bA)$ und $\theta = 0$. Die Schranke reduziert sich auf
+  $\corange{\kappa_2(\bA)}$; die exakte Kondition am konkreten $\bb$ kann kleiner sein.
 - **Worst case:** $\cgreen{\proj_{\col(\bA)} \bb} = \bnull$, d.&thinsp;h.
   $\bb \perp \col(\bA)$ und $\theta = 90^\circ$. Dann ist
-  $\wh{\bx} = \bA\pinv\bb = \bnull$, der relative Outputfehler also gar nicht
-  definiert. Setzt man die relative Kondition in diesem Fall konventionsgemäß auf
-  $\infty$, passt das zum Grenzverhalten: Schon eine winzige Störung mit Anteil in
-  $\col(\bA)$ erzeugt einen beliebig großen *relativen* Fehler in der Lösung.
+  $\wh{\bx} = \bA\pinv\bb = \bnull$ und der relative Fehler der Lösung nicht
+  definiert. Die Kondition gilt hier als $\infty$, passend zum Grenzverhalten: Schon eine
+  winzige Störung mit Anteil in $\col(\bA)$ erzeugt einen beliebig großen *relativen*
+  Fehler.
 
-Für die Regression heißt das vorsichtiger: Ein kleiner Projektionsanteil kann die
-Bestimmung der Koeffizienten relativ empfindlich machen. Die exakte Empfindlichkeit
-hängt aber zusätzlich von der Richtung von $\bb$ innerhalb des Spaltenraums und von
-den Singulärrichtungen von $\bA$ ab.
-
-::::
+Für die Regression heißt das: Ein kleiner Projektionsanteil kann die Koeffizienten
+relativ empfindlich machen. Wie empfindlich genau, hängt zusätzlich von der Richtung von
+$\bb$ innerhalb des Spaltenraums und von den Singulärrichtungen von $\bA$ ab.
 
 :::interaktiv[Wann ist die obere Schranke scharf?]
 <p className="mb-3 text-sm">Nehmen wir das einfachste nichttriviale KQ-Problem: $m = 2$, $n = 1$, $\bA = (1, 0)^\top$, also $\corange{\kappa_2(\bA)} = 1$ und $\col(\bA)$ gleich der horizontalen Achse. Die ganze Empfindlichkeit steckt dann im Winkel θ. Bei welcher Richtung der Störung $\cblue{\Delta\bb}$ wird die Schranke angenommen, und bei welcher ändert sich die Lösung gar nicht?</p>
@@ -225,14 +195,10 @@ den Singulärrichtungen von $\bA$ ab.
 
 ### Kondition bezüglich $\bA$
 
-Nun der umgekehrte Fall: $\bb$ ist fix, aber die Matrix
-$\bA$ selbst ist gestört. Auch das ist praktisch relevant:
-etwa durch Messfehler in den Kovariablen oder durch Rundungsfehler,
-die beim Speichern von $\bA$ und in den Zwischenschritten
-der Algorithmen zwangsläufig entstehen. Das Problem ist jetzt die
-Abbildung $f(\bA) = \bA\pinv\bb$. Das Ergebnis sieht auf
-den ersten Blick ähnlich aus wie @satz:satz-7-2-3, hat aber eine
-andere Struktur:
+Nun ist $\bb$ fix und die Matrix $\bA$ gestört, etwa durch Messfehler in den
+Kovariablen oder durch Rundungsfehler beim Speichern von $\bA$ und in den
+Zwischenschritten der Algorithmen. Das Problem ist jetzt die Abbildung
+$f(\bA) = \bA\pinv\bb$:
 
 :::satz[#stoerung-der-designmatrix-erste-ordnung (Störung der Designmatrix, erste Ordnung)]
 Sei $\bb \in \R^m$ fix, $\bA$ habe vollen Spaltenrang und
@@ -253,17 +219,13 @@ wobei $\cpurp{\br} = \bb - \bA\wh{\bx}$ das Residuum
 des ungestörten Problems bezeichnet.
 :::
 
-:::bemerkung[#bemerkung-7-2-5]
-Der Beweis ist (anders als der von @satz:satz-7-2-3) eine sehr
-aufwändige und, offen gesagt, langweilige Rechnung. Wir verzichten
-darauf und verweisen auf die Literatur (vgl. Heath §3.3).
-:::
+Der Beweis ist, anders als der von @satz:satz-7-2-3, eine sehr aufwändige
+Rechnung; wir verzichten darauf (vgl. Heath §3.3).
 
 #### Interpretation
 
-Der Koeffizient der lokalen oberen Schranke enthält zunächst
-$\corange{\kappa_2(\bA)}$. Der zweite Term koppelt das *Quadrat* der Konditionszahl
-an das Verhältnis von Residuum zu Projektion. Mit dem Winkel
+Der erste Term der Schranke ist $\corange{\kappa_2(\bA)}$, der zweite koppelt das
+*Quadrat* der Konditionszahl an das Verhältnis von Residuum zu Projektion. Mit dem Winkel
 $\theta$ von oben ist
 $\left\|\cpurp{\br}\right\| = \sin(\theta) \left\|\bb\right\|$
 (das Residuum ist gerade die zu $\col(\bA)$
@@ -285,17 +247,13 @@ $$
   $\wh{\bx} = \bnull$, und die relative Kondition wird konventionsgemäß als
   $\infty$ behandelt.
 - **Normalfall:** $\cpurp{\br} \ne \bnull$
-  und $\cgreen{\proj_{\col(\bA)} \bb} \ne \bnull$. Dann
-  kann die obere Schranke einen Term der Ordnung
-  $\corange{\kappa_2(\bA)}^2$ enthalten.
+  und $\cgreen{\proj_{\col(\bA)} \bb} \ne \bnull$, in der Statistik praktisch immer.
+  Dann kann eine Störung von $\bA$ mit dem Quadrat $\corange{\kappa_2(\bA)}^2$
+  verstärkt werden.
 
-Vorsicht also: Sobald das Residuum nicht verschwindet (und in der
-Statistik verschwindet es praktisch nie), kann eine Störung von
-$\bA$ mit dem Quadrat der Konditionszahl verstärkt werden.
-Dieses Quadrat wird uns in @sec:normalengleichungen gleich
-wieder begegnen: Beim Lösungsweg über die Normalengleichungen tritt es
-*immer* auf, also auch im günstigen Fall kleiner Residuen, in dem das Problem selbst nur mit
-$\corange{\kappa_2(\bA)}$ reagiert.
+Dieses Quadrat begegnet uns in @sec:normalengleichungen wieder: Beim Weg über die
+Normalengleichungen tritt es *immer* auf, auch bei kleinem Residuum, wo das Problem
+selbst nur mit $\corange{\kappa_2(\bA)}$ reagiert.
 
 :::interaktiv[Die quadrierte Kondition im Experiment]
 <p className="mb-2 text-sm">Wir stören eine konkrete Problemfamilie mit einstellbarem $\eps$:</p>
@@ -328,7 +286,7 @@ verlorenen Dezimalstelle: $\log_{10}(9{,}51) \approx 0{,}98$.
 Eine Störung von $\bb$ senkrecht zu $\col(\bA)$ verändert $\wh{\bx}$ genauso stark wie
 eine gleich große Störung längs $\col(\bA)$.
 
-Sie verändert $\wh{\bx}$ gar nicht. Das Winkel-Widget zeigt es unmittelbar: bei
+Sie verändert $\wh{\bx}$ gar nicht. Das Winkel-Widget zeigt es: Bei
 $\varphi = 90^\circ$ bleibt $\Delta\wh{x} = 0$, die ganze Störung landet im Residuum.
 Ausgeschöpft wird von der Schranke aus @satz:satz-7-2-3 der Anteil $\left|\cos(\varphi)\right|$.
 :::

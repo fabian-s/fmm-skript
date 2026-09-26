@@ -7,19 +7,15 @@ import { GivensWidget, HouseholderWidget, AusloeschungWidget } from "./widgets/S
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-In @sec:qr haben wir gesehen: Sobald eine QR-Zerlegung von $\bA$
-vorliegt, schrumpft das Kleinste-Quadrate-Problem auf ein Dreieckssystem
-$\bR\,\wh{\bx} = \bc_1$ zusammen. Offen blieb, wie wir die
-:k[Orthogonalmatrix]{#orthogonal-matrix} $\bQ$ finden.
-
-Die Strategie kennen wir im Kern schon vom
-:k[Gauß-Verfahren]{#gaussian-elimination}: Wir gehen von links nach rechts durch die
-Spalten von $\bA$ und entfernen die Einträge unter der Diagonalen, diesmal aber durch
-Multiplikation mit Orthogonalmatrizen $\bQ_k$. Warum ausgerechnet orthogonal? Weil solche
-Matrizen die :k[euklidische Norm]{#euclidean-norm} jedes Vektors erhalten; das
-Kleinste-Quadrate-Kriterium bleibt unter ihnen also unverändert, wie wir in @sec:qr
-ausgenutzt haben. Die beiden gängigsten Bausteine für die $\bQ_k$ sind die
-*Givens-Rotation* und die *Householder-Spiegelung* (engl. *Householder reflection*).
+Sobald eine QR-Zerlegung von $\bA$ vorliegt, schrumpft das
+Kleinste-Quadrate-Problem auf das Dreieckssystem $\bR\,\wh{\bx} = \bc_1$ (@sec:qr).
+Offen blieb, wie wir die :k[Orthogonalmatrix]{#orthogonal-matrix} $\bQ$ finden. Die
+Strategie kennen wir vom :k[Gauß-Verfahren]{#gaussian-elimination}: Wir gehen von links
+nach rechts durch die Spalten von $\bA$ und erzeugen Nullen unter der Diagonalen, diesmal
+durch Multiplikation von links mit Orthogonalmatrizen $\bQ_k$. Sie erhalten die
+:k[euklidische Norm]{#euclidean-norm} und damit das KQ-Kriterium; ihr Produkt ist
+$\bQ^\top$. Die beiden gängigsten Bausteine sind die *Givens-Rotation* und die
+*Householder-Spiegelung* (engl. *Householder reflection*).
 
 <h3 id="sec-7.5-aufgabe">Die Eliminationsaufgabe</h3>
 
@@ -34,19 +30,19 @@ $$
 $$
 
 Der Wert $\alpha$ ist dabei nicht frei wählbar: Orthogonale Abbildungen erhalten Normen,
-also muss die gesamte „Länge" des hinteren Teilvektors $(a_k, \ldots, a_n)^\top$ in der
+also muss die gesamte „Länge“ des hinteren Teilvektors $(a_k, \ldots, a_n)^\top$ in der
 $k$-ten Komponente landen. Es genügt deshalb, das Problem für diesen Teilvektor zu lösen:
-Gegeben $\ba$, finde ein orthogonales $\bQ$ mit
+Gesucht ist zu gegebenem $\ba$ ein orthogonales $\bQ$ mit
 
 $$
 \bQ\ba = \alpha\,\be_1 = \alpha \begin{pmatrix} 1 \\ 0 \\ \vdots \\ 0 \end{pmatrix}, \qquad \alpha = \pm\left\|\ba\right\|_2.
 $$
 
 Für $n = 2$ und $k = 1$ heißt das: Wir müssen $\ba$ längentreu auf die erste
-Koordinatenachse bringen. Dafür gibt es zwei natürliche Bewegungen:
+Koordinatenachse bringen. Dafür gibt es zwei naheliegende Bewegungen:
 
 - **Givens:** wir *drehen* $\ba$ auf $\alpha\,\be_1$ (eine :k[Rotation]{#rotation-matrix}),
-- **Householder:** wir *spiegeln* $\ba$ auf $\alpha\,\be_1$ (eine :k[Spiegelung]{#reflection}; mehr dazu auch in der Übung).
+- **Householder:** wir *spiegeln* $\ba$ auf $\alpha\,\be_1$ (eine :k[Spiegelung]{#reflection}; mehr dazu in der Übung).
 
 <h3 id="sec-7.5-givens">Givens-Rotationen</h3>
 
@@ -65,7 +61,7 @@ orthogonal; $c$ und $s$ spielen die Rolle von Kosinus und Sinus des Drehwinkels.
 :::
 
 Wie müssen wir $c$ und $s$ wählen, damit die Drehung $\ba$ auf die erste Koordinatenachse
-bringt? Das folgende Resultat gibt die Antwort.
+bringt?
 
 :::satz[#wahl-von-c-und-s (Wahl von c und s)]
 Sei $\ba = (a_1, a_2)^\top \neq \bnull$. Mit
@@ -76,8 +72,6 @@ $$
 
 gilt $\bG\ba = \begin{pmatrix} \alpha \\ 0 \end{pmatrix} \text{ mit } \alpha = \left\|\ba\right\|_2.$
 :::
-
-:::::vertiefung[Herleitung der Givens-Parameter]
 
 ::::beweis
 
@@ -115,12 +109,10 @@ $$
 
 ::::
 
-:::::
-
-Dass $\alpha = \left\|\ba\right\|_2$ herauskommt, muss so sein: Eine Orthogonalmatrix
-kann die Norm nicht ändern. Um $\bG$ aufzustellen, mussten wir außerdem den Drehwinkel
-nie ausrechnen; $c$ und $s$ ergeben sich unmittelbar aus $a_1$ und
-$a_2$, ganz ohne Trigonometrie.
+Dass $\alpha = \left\|\ba\right\|_2$ herauskommt, muss so sein, denn eine
+Orthogonalmatrix erhält die Norm. Den Drehwinkel brauchen wir nicht, $c$ und $s$ ergeben
+sich direkt aus $a_1$ und $a_2$. (Gedreht wird um $-\operatorname{atan2}(a_2, a_1)$,
+also um den Polarwinkel von $\ba$ zurück auf die Achse.)
 
 :::beispiel[#givens-rotation-beispiel (Givens-Rotation)]
 Wir eliminieren die zweite Komponente von $\ba = (\cblue{4}, \cred{3})^\top$. Zuerst die
@@ -142,9 +134,8 @@ $$
 \bG\ba = \begin{pmatrix} 0{,}8 & 0{,}6 \\ -0{,}6 & 0{,}8 \end{pmatrix} \begin{pmatrix} \cblue{4} \\ \cred{3} \end{pmatrix} = \begin{pmatrix} 0{,}8 \cdot \cblue{4} + 0{,}6 \cdot \cred{3} \\ -0{,}6 \cdot \cblue{4} + 0{,}8 \cdot \cred{3} \end{pmatrix} = \begin{pmatrix} 3{,}2 + 1{,}8 \\ -2{,}4 + 2{,}4 \end{pmatrix} = \begin{pmatrix} \corange{5} \\ 0 \end{pmatrix}.
 $$
 
-In der zweiten Komponente steht die gewünschte Null, und wegen
-$\left\|\bG\ba\right\|_2 = \corange{5} = \left\|\ba\right\|_2$ hat die Rotation die Länge
-nicht verändert, wie es für eine Orthogonalmatrix sein muss.
+In der zweiten Komponente steht die gewünschte Null, und die Länge
+$\left\|\bG\ba\right\|_2 = \corange{5} = \left\|\ba\right\|_2$ bleibt erhalten.
 :::
 
 :::interaktiv[Wo landet Ga, wenn wir a im Bild herumziehen?]
@@ -152,41 +143,38 @@ nicht verändert, wie es für eine Orthogonalmatrix sein muss.
 
 <GivensWidget />
 
-<p className="mt-2 text-sm">Die Drehung schiebt $\ba$ längentreu auf die $x_1$-Achse: $\bG\ba = (r, 0)^\top$ mit $r = \left\|\ba\right\|_2$. Genau ein Eintrag wird null, die übrigen bleiben unberührt – deshalb passt Givens zu dünn besetzten Problemen.</p>
+<p className="mt-2 text-sm">Die Drehung schiebt $\ba$ längentreu auf die $x_1$-Achse: $\bG\ba = (r, 0)^\top$ mit $r = \left\|\ba\right\|_2$. Das Koordinatengitter dreht sich als Ganzes mit, und der Einheitskreis geht in sich über.</p>
 :::
 
-Dasselbe funktioniert in $\R^n$: Auch dort können wir damit jede einzelne
-Komponente eines Vektors zu Null machen. Dazu suchen wir uns neben der zu eliminierenden
-Komponente $j$ eine Partnerkomponente $i$ aus und bestimmen $c$ und $s$ nach @satz:wahl-von-c-und-s aus
-den beiden Einträgen $a_i$ und $a_j$. Anschließend setzen wir die $2 \times 2$-Rotation in
-die Zeilen und Spalten $i$ und $j$ einer :k[Einheitsmatrix]{#identity-matrix} ein. Für
+In $\R^n$ machen wir so jede einzelne Komponente eines Vektors zu Null. Neben der zu
+eliminierenden Komponente $j$ wählen wir eine Partnerkomponente $i$, bestimmen $c$ und $s$
+nach @satz:wahl-von-c-und-s aus $a_i$ und $a_j$ und setzen die $2 \times 2$-Rotation in die
+Zeilen und Spalten $i$ und $j$ einer :k[Einheitsmatrix]{#identity-matrix} ein. Für
 $n = 5$, $i = 3$ und $j = 5$ entsteht so
 
 $$
 \begin{pmatrix} 1 & 0 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 & 0 \\ 0 & 0 & c & 0 & s \\ 0 & 0 & 0 & 1 & 0 \\ 0 & 0 & -s & 0 & c \end{pmatrix} \begin{pmatrix} a_1 \\ a_2 \\ a_3 \\ a_4 \\ a_5 \end{pmatrix} = \begin{pmatrix} a_1 \\ a_2 \\ \alpha \\ a_4 \\ 0 \end{pmatrix}.
 $$
 
-Alle übrigen Komponenten bleiben unberührt, wie es die Eliminationsaufgabe verlangt. Pro Rotation gewinnen wir allerdings nur eine einzige Null. Eine ganze Spalte
-räumen wir deshalb mit einer Folge solcher Rotationen leer. Dabei ist nur auf die
-Reihenfolge zu achten: Schon erzeugte Nullen dürfen von den nachfolgenden Rotationen nicht
-wieder mit Werten gefüllt werden.
+Alle übrigen Komponenten bleiben unberührt. Pro Rotation gewinnen wir aber nur eine
+Null; eine ganze Spalte räumen wir mit einer Folge von Rotationen leer. Dabei ist auf die
+Reihenfolge zu achten: Schon erzeugte Nullen dürfen die nachfolgenden Rotationen nicht
+wieder auffüllen.
 
 :::bemerkung[#wann-givens (Wann Givens?)]
-Eine Givens-Rotation fasst genau zwei Zeilen an; alle anderen Einträge der Matrix bleiben
-exakt so, wie sie sind. Deshalb greifen wir zu Givens, wenn wir gezielt einzelne Nullen
-erzeugen wollen: bei :k[dünnbesetzten]{#sparse-matrix} Matrizen, deren viele Nullen wir
-nicht zerstören möchten, oder wenn eine bestehende QR-Zerlegung nur um eine neue Datenzeile
-ergänzt werden soll. Der Preis: Eliminieren wir so eine voll besetzte Matrix komplett,
-fällt etwa das Anderthalbfache der Rechenoperationen des Householder-Zugangs an, den wir
-uns als Nächstes ansehen.
+Eine Givens-Rotation ändert nur zwei Zeilen; alle anderen Einträge der Matrix bleiben,
+wie sie sind. Deshalb greifen wir zu Givens, wenn wir gezielt einzelne Nullen erzeugen
+wollen: bei :k[dünnbesetzten]{#sparse-matrix} Matrizen, deren Nullen erhalten bleiben
+sollen, oder wenn eine bestehende QR-Zerlegung um eine neue Datenzeile ergänzt wird. Eine
+voll besetzte Matrix vollständig zu eliminieren, kostet mit Givens dagegen etwa das
+Anderthalbfache der Rechenoperationen des Householder-Zugangs.
 :::
 
 <h3 id="sec-7.5-householder">Householder-Spiegelungen</h3>
 
-Eine Rotation erzeugt eine Null pro Schritt. Wollen wir *alle* Einträge unter der
-Diagonalen einer Spalte in einem einzigen Schritt eliminieren, brauchen wir ein anderes
-Werkzeug: Statt $\ba$ auf $\alpha\,\be_1$ zu drehen, :k[spiegeln]{#reflection} wir es an
-einer geschickt gewählten :k[Hyperebene]{#hyperplane}.
+Um *alle* Einträge unter der Diagonalen einer Spalte in einem Schritt zu eliminieren,
+:k[spiegeln]{#reflection} wir $\ba$ an einer geschickt gewählten
+:k[Hyperebene]{#hyperplane}, statt es auf $\alpha\,\be_1$ zu drehen.
 
 :::definition[#householder-spiegelung-definition (Householder-Spiegelung)]
 Sei $\bv \in \R^n$, $\bv \neq \bnull$. Die Matrix
@@ -199,12 +187,12 @@ heißt *Householder-Spiegelung* (engl. *Householder reflection*, *elementary ref
 Spiegelvektor $\bv$.
 :::
 
-Warum „Spiegelung"? Der Baustein $\bP = \bv\bv^\top / (\bv^\top\bv)$, ein skaliertes
+Warum „Spiegelung“? Der Baustein $\bP = \bv\bv^\top / (\bv^\top\bv)$, ein skaliertes
 :k[dyadisches Produkt]{#outer-product}, ist die orthogonale
 :k[Projektion]{#projection} auf die Gerade $\spann(\bv)$ (:k[lineare Hülle]{#span} von
 $\bv$). Entsprechend projiziert $\bI - \bP$ auf die Hyperebene $\spann(\bv)^\perp$, das
 :k[orthogonale Komplement]{#orthogonal-complement}. $\bH = \bI - 2\bP$ geht doppelt so
-weit: Es zieht von $\ba$ den $\bv$-Anteil gleich *zweimal* ab und landet damit auf der
+weit: Es zieht von $\ba$ den $\bv$-Anteil *zweimal* ab und landet damit auf der
 anderen Seite der Hyperebene; $\spann(\bv)^\perp$ ist der Spiegel.
 
 :::::vertiefung[Warum eine Householder-Spiegelung symmetrisch und orthogonal ist]
@@ -254,11 +242,10 @@ $$
 :::::
 
 $\bH$ ist damit symmetrisch, orthogonal und selbstinvers: Eine Spiegelung, zweimal
-ausgeführt, ist die Identität. Bleibt die Frage, *welchen* Spiegelvektor $\bv$ wir wählen müssen, damit $\ba$
-auf $\alpha\,\be_1$ landet. Die Antwort kann man aus dem geometrischen Bild ablesen: Der
-Spiegel muss den Winkel zwischen $\ba$ und dem Ziel halbieren, also muss $\bv$ in Richtung
-der Differenz $\ba - \alpha\,\be_1$ zeigen. Rechnen wir nach, dass diese Wahl tatsächlich
-funktioniert.
+ausgeführt, ist die Identität. *Welchen* Spiegelvektor $\bv$ brauchen wir, damit $\ba$
+auf $\alpha\,\be_1$ landet? Das geometrische Bild zeigt es: Der Spiegel muss den Winkel
+zwischen $\ba$ und dem Ziel halbieren, also muss $\bv$ in Richtung der Differenz
+$\ba - \alpha\,\be_1$ zeigen.
 
 :::satz[#wahl-des-spiegelvektors (Wahl des Spiegelvektors)]
 Sei $\ba \in \R^n$ und $\alpha = \pm\left\|\ba\right\|_2$ so, dass
@@ -310,7 +297,11 @@ $$
 
 :::::
 
-Der Bruch wird zu $1$, und übrig bleibt $\ba - \bv$.
+Beide Vorzeichen von $\alpha$ erfüllen den Satz. Numerisch wählen wir
+$\alpha = -\sign(a_1)\left\|\ba\right\|_2$: Dann ist
+$v_1 = a_1 - \alpha = a_1 + \sign(a_1)\left\|\ba\right\|_2$ eine Summe zweier Zahlen
+gleichen Vorzeichens, und es droht keine :k[Auslöschung]{#cancellation}
+(@bemerkung:vorzeichenwahl).
 
 :::beispiel[#householder-spiegelung-beispiel (Householder-Spiegelung)]
 Wir suchen die Householder-Spiegelung, die in $\ba = (1, 2, 2)^\top$ alle Komponenten außer
@@ -320,28 +311,27 @@ $$
 \left\|\ba\right\|_2 = \sqrt{1^2 + 2^2 + 2^2} = \sqrt{9} = 3.
 $$
 
-Da $a_1 = 1 > 0$, wählen wir $\alpha = -3$ (warum das negative Vorzeichen die richtige Wahl
-ist, klärt @bemerkung:vorzeichenwahl). Der Spiegelvektor ist dann
+Da $a_1 = 1 > 0$, wählen wir $\alpha = -3$. Der Spiegelvektor ist dann
 
 $$
 \cbred{\bv} = \ba - \alpha\,\be_1 = \begin{pmatrix} 1 \\ 2 \\ 2 \end{pmatrix} + 3\begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix} = \begin{pmatrix} \cred{4} \\ \cred{2} \\ \cred{2} \end{pmatrix}.
 $$
 
-Die beiden Skalarprodukte aus dem Beweis von @satz:wahl-des-spiegelvektors:
+Für $\bH\ba = \ba - 2\,\frac{\bv^\top\ba}{\bv^\top\bv}\,\bv$ brauchen wir zwei
+Skalarprodukte:
 
 $$
 \cbred{\bv}^\top\ba = \cred{4} \cdot 1 + \cred{2} \cdot 2 + \cred{2} \cdot 2 = 12, \qquad \cbred{\bv}^\top\cbred{\bv} = \cred{4}^2 + \cred{2}^2 + \cred{2}^2 = 24.
 $$
 
-Wie im Satz ist $2 \cdot \tfrac{12}{24} = 1$, also
+Es ist $2 \cdot \tfrac{12}{24} = 1$, also
 
 $$
 \bH\ba = \ba - \cbred{\bv} = \begin{pmatrix} 1 - \cred{4} \\ 2 - \cred{2} \\ 2 - \cred{2} \end{pmatrix} = \begin{pmatrix} -3 \\ 0 \\ 0 \end{pmatrix} = \alpha\,\be_1.
 $$
 
-Die Länge stimmt, $\left\|\bH\ba\right\|_2 = 3 = \left\|\ba\right\|_2$, wie es für
-eine Spiegelung sein muss. Und beide Komponenten unterhalb der ersten sind mit *einer
-einzigen* Spiegelung verschwunden.
+Die Länge bleibt erhalten, $\left\|\bH\ba\right\|_2 = 3 = \left\|\ba\right\|_2$, und
+beide Komponenten unterhalb der ersten sind mit *einer* Spiegelung verschwunden.
 :::
 
 :::interaktiv[Warum wird der v-Anteil zweimal abgezogen?]
@@ -349,33 +339,32 @@ einzigen* Spiegelung verschwunden.
 
 <HouseholderWidget />
 
-<p className="mt-2 text-sm">Der halbe Schritt landet auf der Spiegelgeraden und verkürzt; erst der doppelte bringt die Länge zurück. Genau dafür steht die Zwei in $\bH = \bI - 2\bv\bv^\top/(\bv^\top\bv)$.</p>
+<p className="mt-2 text-sm">Der halbe Schritt landet auf der Spiegelgeraden und verkürzt; erst der doppelte bringt die Länge zurück. Dafür steht die Zwei in $\bH = \bI - 2\bv\bv^\top/(\bv^\top\bv)$.</p>
 :::
 
+::::vertiefung[Householder in der Praxis: Vorzeichen und Aufwand]
 :::bemerkung[#vorzeichenwahl (Vorzeichenwahl)]
 In exakter Arithmetik funktionieren beide Vorzeichen von
-$\alpha = \pm\left\|\ba\right\|_2$, es gibt schließlich zwei Spiegelebenen, die $\ba$ auf
-die Achse bringen. Numerisch sind sie *nicht* gleichwertig: Die erste Komponente des
-Spiegelvektors ist $v_1 = a_1 - \alpha$. Hat $\alpha$ dasselbe Vorzeichen wie $a_1$ und
-dominiert $a_1$ die Norm, subtrahieren wir zwei fast gleiche Zahlen; es droht
-:k[Auslöschung]{#cancellation} der führenden Ziffern, und der winzige Rest besteht fast nur
-noch aus Rundungsfehlern. Deshalb wählt man
+$\alpha = \pm\left\|\ba\right\|_2$, denn es gibt zwei Spiegelebenen, die $\ba$ auf
+die Achse bringen. Numerisch sind sie *nicht* gleichwertig: Hat $\alpha$ dasselbe
+Vorzeichen wie $a_1$ und dominiert $a_1$ die Norm, subtrahieren wir in
+$v_1 = a_1 - \alpha$ zwei fast gleiche Zahlen. Die führenden Ziffern löschen sich aus,
+und der winzige Rest besteht fast nur noch aus Rundungsfehlern. Mit
 
 $$
-\alpha = -\sign(a_1)\left\|\ba\right\|_2,
+\alpha = -\sign(a_1)\left\|\ba\right\|_2
 $$
 
-denn dann ist $v_1 = a_1 + \sign(a_1)\left\|\ba\right\|_2$ eine Addition von Zahlen
-gleichen Vorzeichens und damit immer gutartig. Geometrisch heißt das: Wir spiegeln stets
-auf das Ziel, das *weiter* von $\ba$ entfernt liegt.
+kann das nicht passieren. Geometrisch spiegeln wir damit stets auf das Ziel, das
+*weiter* von $\ba$ entfernt liegt.
 :::
 
 :::interaktiv[Zwei Vorzeichen für α im Vergleich]
-<p className="mb-2 text-sm">In exakter Arithmetik sind die beiden Vorzeichen gleichwertig. Testen wir das an $\ba = (1, \delta)^\top$ mit kleinem $\delta$, gerechnet in einer nachgestellten Gleitkommaarithmetik, die nach jeder Operation auf $t$ signifikante Stellen rundet. Wie viele Ziffern von $v_1 = a_1 - \alpha$ überleben in den beiden Fällen?</p>
+<p className="mb-2 text-sm">Testen wir die beiden Vorzeichen an $\ba = (1, \delta)^\top$ mit kleinem $\delta$, gerechnet in einer nachgestellten Gleitkommaarithmetik, die nach jeder Operation auf $t$ signifikante Stellen rundet. Wie viele Ziffern von $v_1 = a_1 - \alpha$ überleben in den beiden Fällen?</p>
 
 <AusloeschungWidget />
 
-<p className="mt-2 text-sm">Zeigt $\ba$ fast in Richtung $\be_1$, löschen sich in $v_1 = a_1 - \alpha$ bei gleichem Vorzeichen die führenden Ziffern aus. Die Wahl $\alpha = -\sign(a_1)\left\|\ba\right\|_2$ vermeidet das und kostet nichts.</p>
+<p className="mt-2 text-sm">Zeigt $\ba$ fast in Richtung $\be_1$, löschen sich in $v_1 = a_1 - \alpha$ bei gleichem Vorzeichen die führenden Ziffern aus. Die Wahl $\alpha = -\sign(a_1)\left\|\ba\right\|_2$ vermeidet das ohne Mehraufwand.</p>
 :::
 
 :::bemerkung[#givens-householder-aufwand (Aufwand)]
@@ -391,12 +380,13 @@ statt $\Ocal(n^2)$ für das explizite Matrix-Vektor-Produkt
 Man speichert nur die Spiegelvektoren $\bv_k$ (bzw. bei Givens die Paare $(c, s)$) und
 wendet sie bei Bedarf nacheinander an.
 :::
+::::
 
 <h3 id="sec-7.5-aufbau">Von den Bausteinen zur QR-Zerlegung</h3>
 
 Im $k$-ten Eliminationsschritt betrachten wir vom aktuellen
 Zwischenprodukt die $k$-te Spalte ab der Diagonalen, also den Teilvektor
-$\ba = (a_{kk}, \ldots, a_{mk})^\top$. Dazu konstruieren wir nach @satz:wahl-des-spiegelvektors eine
+$\ba = (a_{kk}, \ldots, a_{mk})^\top$. Zu ihm konstruieren wir nach @satz:wahl-des-spiegelvektors eine
 Spiegelung $\wt{\bH}_k$ mit $\wt{\bH}_k\ba = \alpha\,\be_1$ (oder eine Kette von
 Givens-Rotationen mit derselben Wirkung) und betten sie ein:
 
@@ -416,31 +406,21 @@ $$
 $$
 
 Das Produkt von Orthogonalmatrizen ist wieder orthogonal, also ist
-$\bQ = \bQ_1^\top \cdots \bQ_p^\top$ tatsächlich die gesuchte Orthogonalmatrix, und wir
+$\bQ = \bQ_1^\top \cdots \bQ_p^\top$ die gesuchte Orthogonalmatrix, und wir
 haben eine QR-Zerlegung im Sinne von @sec:qr konstruiert. Für das
 Kleinste-Quadrate-Problem wenden wir dieselben $\bQ_k$ parallel auf $\bb$ an und lösen
 anschließend $\bR\,\wh{\bx} = \bc_1$ per :k[Rücksubstitution]{#triangular-solve}.
 
-Als Faustregel: Für voll besetzte Matrizen ist **Householder** die
-Standardwahl: weniger Operationen pro Spalte, sehr gute numerische Stabilität; so
-arbeiten die QR-Löser der gängigen Software (etwa hinter `lm()` in R). **Givens** ist
-vorzuziehen, wenn :k[Dünnbesetztheit]{#sparse-matrix} (sparsity) erhalten bleiben soll
-oder nur einzelne Einträge zu eliminieren sind. Im Vergleich zum Weg über die
-Normalengleichungen (@sec:normalengleichungen) vermeiden beide Zugänge das Quadrieren
-der :k[Konditionszahl]{#condition-number}. Dazu mehr im Methodenvergleich in
-@sec:pseudoinverse.
+Für voll besetzte Matrizen ist **Householder** die Standardwahl: weniger Operationen,
+sehr gute numerische Stabilität; so arbeiten die QR-Löser gängiger Software (etwa hinter
+`lm()` in R). **Givens** lohnt sich, wenn :k[Dünnbesetztheit]{#sparse-matrix}
+(sparsity) erhalten bleiben soll oder nur einzelne Einträge zu eliminieren sind. Beide
+vermeiden das Quadrieren der :k[Konditionszahl]{#condition-number}, das den Weg über die
+Normalengleichungen belastet; den Methodenvergleich zieht @sec:pseudoinverse.
 
 <h3 id="sec-7.5-quiz">Selbsttest</h3>
 
 ::::quiz
-
-:::zahlfrage{loesung=0.6 toleranz=0.02}
-Stellen wir im Givens-Widget $\ba = (4, 3)^\top$ ein. Welchen Wert zeigt es für $s$?
-
-Nach @satz:wahl-von-c-und-s ist $r = \sqrt{16 + 9} = 5$, also $c = 4/5 = 0{,}8$ und
-$s = 3/5 = 0{,}6$. Das Ergebnis ist $\bG\ba = (5, 0)^\top$: die Länge bleibt, die zweite
-Komponente wird null.
-:::
 
 :::frage{falsch}
 Bei $t = 1$ ist im Householder-Widget schon die halbe Arbeit getan, denn $\bw(1)$ hat
