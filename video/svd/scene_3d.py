@@ -51,7 +51,7 @@ class S3Raum(Voiced, ThreeDScene):
         semi = VGroup(*[arrow3(SC * S3[i] * U3[:, i], U_GREEN) for i in range(3)])
         self.play(FadeIn(semi), Write(sv), run_time=1.5)
         self.wait(max(self.remaining() - 2.6, 0.2))
-        self.play(FadeOut(semi), matrix_anim(ball, lin_path(A3, np.eye(3)),
+        self.play(FadeOut(semi), matrix_anim(ball, lambda t: lin_path(A3, np.eye(3))(t) @ np.linalg.inv(A3),
                                              run_time=2.2))
         self.done()
 
