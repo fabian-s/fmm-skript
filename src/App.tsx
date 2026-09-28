@@ -119,20 +119,35 @@ export default function App() {
         if (cancelled || thisNavigation !== navigation) return;
       }
 
-      target.scrollIntoView({ block: "center" });
-      highlightFragment(target);
-      // MathJax und Widgets verschieben das Layout noch sekundenlang nach
-      // dem ersten Scroll — so lange nachjustieren, bis die Zielposition steht.
+      // Kleine Ziele (Formel, Kasten) mittig; ganze Abschnitte und andere
+      // hohe Ziele an den Anfang, sonst landet man mitten im Abschnitt.
       const el = target;
-      let lastTop = el.getBoundingClientRect().top;
-      for (const delay of [250, 600, 1200, 2000, 3000]) {
-        await new Promise<void>((resolve) => setTimeout(resolve, delay));
-        if (cancelled || thisNavigation !== navigation) return;
-        const top = el.getBoundingClientRect().top;
-        if (Math.abs(top - lastTop) > 2 || top < 0 || top > window.innerHeight) {
-          el.scrollIntoView({ block: "center" });
+      const align = () =>
+        el.scrollIntoView({
+          block: el.getBoundingClientRect().height > window.innerHeight * 0.6 ? "start" : "center",
+        });
+      align();
+      highlightFragment(el);
+
+      // MathJax, content-visibility und Widgets verschieben das Layout noch
+      // sekundenlang nach dem ersten Scroll — so lange nachjustieren, bis die
+      // Zielposition steht. Sobald selbst gescrollt wird, ist Schluss.
+      let userScrolled = false;
+      const stop = () => {
+        userScrolled = true;
+      };
+      const userInput = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
+      for (const type of userInput) window.addEventListener(type, stop, { passive: true });
+      try {
+        let settledTop = el.getBoundingClientRect().top;
+        for (const delay of [250, 600, 1200, 2000, 3000]) {
+          await new Promise<void>((resolve) => setTimeout(resolve, delay));
+          if (cancelled || thisNavigation !== navigation || userScrolled) return;
+          if (Math.abs(el.getBoundingClientRect().top - settledTop) > 2) align();
+          settledTop = el.getBoundingClientRect().top;
         }
-        lastTop = el.getBoundingClientRect().top;
+      } finally {
+        for (const type of userInput) window.removeEventListener(type, stop);
       }
     };
 
