@@ -85,7 +85,7 @@ $$
 \;:\; a_1, \dots, a_K \in \R \right\}
 $$
 
-der von ihnen aufgespannte Ansatzraum. Die *Designmatrix* zu den Stellen
+der von ihnen aufgespannte :d[Ansatzraum]{#ansatzraum-basisdarstellung}. Die *Designmatrix* zu den Stellen
 $x_1, \dots, x_n$ ist
 
 $$
@@ -100,7 +100,7 @@ $$
 Das ist die Matrix aus @satz:das-interpolationsproblem-ist-ein.
 :::
 
-Für Splines sind die $\corange{\phi_k}$ die B-Splines zu einem gewählten
+Für Splines sind die $\corange{\phi_k}$ die :d[B-Splines]{#erweiterte-knotenfolge-und-b-splines} zu einem gewählten
 Knotenvektor $\corange{\xi_1 < \dots < \xi_{m-1}}$
 (@sec:splines). Wir halten die beiden
 Rollen auseinander: $x_i$ sind die Stellen, an denen *gemessen* wurde,
@@ -200,13 +200,13 @@ gewählten Darstellung. Sie ist deshalb auch bei Rangdefekt eindeutig.
 :::::
 
 :::bemerkung[#wie-wir-das-system-wirklich-loesen (Wie wir das System numerisch lösen)]
-Die Normalengleichungen quadrieren die Konditionszahl,
+Die Normalengleichungen quadrieren die :d[Konditionszahl]{#definition-7-2-1},
 $\kappa_2(\bB^\top\bB) = \kappa_2(\bB)^2$; deshalb zieht @kap:kq die
-QR-Zerlegung vor (@sec:kq/qr, Vergleich der Verfahren in
+:d[QR-Zerlegung]{#qr-zerlegung} vor (@sec:kq/qr, Vergleich der Verfahren in
 @sec:kq/pseudoinverse), und der R-Code am Ende dieses Abschnitts nutzt
 `qr.solve`. Für B-Splines ist der Schaden klein: Für den Datensatz unseres
 Widgets messen wir $\kappa_2(\bB) \approx 5{,}6$ bei $K = 10$ und
-$\kappa_2(\bB) \approx 65$ bei $K = 40$, die Monombasis derselben Größe liegt
+$\kappa_2(\bB) \approx 65$ bei $K = 40$, die :d[Monombasis]{#monombasis-und-vandermonde-matrix} derselben Größe liegt
 viele Zehnerpotenzen darüber (@sec:polynominterpolation). Dazu kommt die
 Bandstruktur: Jede Basisfunktion lebt nur über wenigen Teilintervallen, also
 ist $\bB^\top\bB$ dünn besetzt und die Zerlegung günstig (@sec:lgs/lu).
@@ -376,7 +376,7 @@ $\sum_i (\cblue{y_i} - g(x_i))^2 + \lambda \int_a^b |g''(x)|^2 \dx$ entweder
 über allen $\Ccal^2$-Funktionen (*Glättungsspline*, Knoten in allen
 Datenpunkten) oder über einer großen B-Spline-Basis mit $K < n$ (*Penalized
 Splines*, die Grundlage der additiven Modelle). Der Strafterm ist das
-Krümmungsfunktional aus @sec:minimale-kruemmung, und gesteuert wird mit
+:d[Krümmungsfunktional]{#kruemmungsfunktional} aus @sec:minimale-kruemmung, und gesteuert wird mit
 $\lambda$ statt mit $K$.
 
 ::::vertiefung[Glättungssplines und Penalized Splines im Detail]

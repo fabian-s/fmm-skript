@@ -4,7 +4,7 @@ import { Schaetzfrage } from "../../lib";
 Bisher spielte alles auf einem Intervall: eine Variable, Knoten darauf, eine
 Kurve. Reale Datensätze bringen mehrere Kovariablen mit, und die Übertragung
 des Basisansatzes auf $f\colon \R^p \to \R$ ist eine Anwendung des
-Tensorprodukts aus @sec:tensoren/tensorprodukt, deren Aufwand allerdings
+:d[Tensorprodukts]{#tensorprodukt} aus @sec:tensoren/tensorprodukt, deren Aufwand allerdings
 exponentiell in $p$ wächst. Danach fassen wir das Kapitel und das Skript
 zusammen.
 
@@ -67,7 +67,7 @@ $$
 
 da, das Problem aus @satz:glaettung-ist-ein-lineares-kleinste mit mehr
 Spalten, lösbar über die :k[Normalengleichungen]{#normal-equations} oder
-besser über eine QR-Zerlegung (@sec:kq/qr). Vollen Spaltenrang kann
+besser über eine :d[QR-Zerlegung]{#qr-zerlegung} (@sec:kq/qr). Vollen Spaltenrang kann
 $\corange{\bB}$ aber nur haben, wenn $n \ge K^p$ ist: Mit $K = 10$
 Basisfunktionen je Variable und $p = 5$ Kovariablen brauchen wir mindestens
 $100\,000$ Beobachtungen, bevor die Anpassung überhaupt eindeutig ist.
@@ -210,7 +210,7 @@ exponentiell in $p$, wie der Speicherbedarf.
 :::bemerkung[#auch-die-auswertung-kostet (Auch die Auswertung kostet)]
 Eine Auswertung von $\cgreen{\wh{f}}$ kostet für eine Basis ohne besondere
 Struktur $O(K^p)$, denn die Summe in @eq:tensor-produkt-basis hat $K^p$
-Summanden. Bei B-Splines sind an einer festen Stelle je Variable höchstens
+Summanden. Bei :d[B-Splines]{#erweiterte-knotenfolge-und-b-splines} sind an einer festen Stelle je Variable höchstens
 $q+1$ Basisfunktionen von null verschieden (@sec:splines), im Produkt also
 höchstens $(q+1)^p$ Summanden, für $p = 10$ und $q = 3$ noch
 $4^{10} = 1\,048\,576$ statt $10^{10}$. Das spart fünf Größenordnungen, aber
@@ -222,7 +222,7 @@ Koeffizienten ohnehin.
 
 Der Ausweg ist keine bessere Numerik, sondern eine Annahme über $f$. Wenn wir
 darauf verzichten, beliebige Wechselwirkungen zwischen den Variablen
-darzustellen, schrumpft der Ansatzraum stark.
+darzustellen, schrumpft der :d[Ansatzraum]{#ansatzraum-basisdarstellung} stark.
 
 :::definition[#additives-modell (Additives Modell)]
 Ein *additives Regressionsmodell* setzt statt des vollen Tensorprodukts eine
@@ -328,7 +328,7 @@ $$
 $$
 
 oft dienen die Datenpunkte selbst als Zentren. Es ist wieder das
-Kleinste-Quadrate-Problem aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate,
+:d[Kleinste-Quadrate-Problem]{#kleinste-quadrate-problem-kq-problem} aus @bemerkung:es-bleibt-ein-lineares-kleinste-quadrate,
 nur mit anderen Spalten.
 
 Diese Freiheit hat eine Kehrseite: Die Basismatrix ist im Allgemeinen voll
@@ -347,7 +347,7 @@ Aktivierungsfunktion eines neuronalen Netzes durch lernbare B-Splines
 *Normalizing Flows* bauen eine komplizierte Wahrscheinlichkeitsverteilung aus
 einer einfachen auf, indem sie eine invertierbare Abbildung dazwischenschalten.
 Die Dichte der transformierten Größe enthält den Betrag der
-:k[Determinante]{#determinant} ihrer Jacobimatrix
+:k[Determinante]{#determinant} ihrer :d[Jacobimatrix]{#jacobimatrix}
 (@sec:differentialrechnung/jacobi), und deshalb muss die
 Abbildung zweierlei können: sich invertieren und ihre Determinante effizient
 ausrechnen lassen. Geeignet parametrisierte *streng monotone* Splines leisten

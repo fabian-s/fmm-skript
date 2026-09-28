@@ -5,7 +5,7 @@ import { Landschaften, AbstiegsBeckenSchaetzung } from "./widgets/S115Landschaft
 Was bringt Konvexität für die :k[Optimierung]{#optimization}? Bleibt ein Verfahren stehen,
 weil es keine Abstiegsrichtung mehr findet, so fragt sich, ob wir das Beste gefunden haben oder
 nur ein Zwischenergebnis. Für allgemeine Funktionen ist die Antwort unbefriedigend: Ein
-verschwindender Gradient kann zu einem Minimum, einem Maximum oder einem Sattelpunkt gehören
+verschwindender :d[Gradient]{#gradient} kann zu einem Minimum, einem Maximum oder einem Sattelpunkt gehören
 (@satz:hesse-kriterium-fuer-kritische-punkte in @sec:differentialrechnung/hoehere-ableitungen),
 und selbst ein echtes lokales Minimum kann weit über dem globalen liegen. Für konvexe
 Funktionen entfällt diese Unterscheidung.
@@ -164,7 +164,7 @@ Dieselbe Rechnung zeigt mehr, als der Satz behauptet. Für jedes $c \in \R$ ist 
 *Subniveaumenge* $\{\bx \in \cblue{\Xcal}\colon f(\bx) \le c\}$ konvex, denn aus
 $f(\bu) \le c$ und $f(\bw) \le c$ folgt $f(\cgreen{\bz}) \le \lambda c + (1-\lambda)c = c$.
 Die Minimalstellen sind davon der Sonderfall $c = \min f$, sofern dieses Minimum angenommen
-wird. Konvexe Funktionen haben also konvexe *Subniveaumengen*, und daran hängt in
+wird. :d[Konvexe Funktionen]{#konvexe-funktion} haben also konvexe *Subniveaumengen*, und daran hängt in
 @sec:optim/beschraenkt die Beschreibung zulässiger Bereiche. Für exakte
 :k[Niveaumengen]{#level-sets} $\{\bx:f(\bx)=c\}$ gilt das nicht: Das Niveau $1$ von
 $f(x)=x^2$ besteht aus $\{-1,1\}$ und ist nicht konvex.
@@ -241,7 +241,7 @@ Strecke konstant ist, kann also nicht strikt konvex sein.
 Drei Aussagen werden leicht verwechselt:
 
 1. *Lokal ist global.* Das leistet schon gewöhnliche Konvexität, ohne jede
-   Differenzierbarkeit (@satz:kritischer-punkt-und-globales-minimum, @bemerkung:was-daraus-folgt-und-was-nicht).
+   :d[Differenzierbarkeit]{#differenzierbarkeit} (@satz:kritischer-punkt-und-globales-minimum, @bemerkung:was-daraus-folgt-und-was-nicht).
 2. *Höchstens eine Lösung.* Dafür braucht es strikte Konvexität (@satz:hoechstens-eine-minimalstelle).
 3. *Mindestens eine Lösung.* Das folgt aus keinem von beiden.
 
@@ -341,7 +341,7 @@ auch wenn Rechenweg, Laufzeit und Abbruchstatus vom Startwert abhängen.
   (@beispiel:kleinste-quadrate-und-ridge).
 - Allgemeiner die Maximum-Likelihood-Schätzung in :k[verallgemeinerten linearen
   Modellen]{#linear-regression} mit kanonischem Link: Die negative Log-Likelihood hat die
-  Hesse-Matrix $\bX^\top\bW\bX$ mit einer nichtnegativen Diagonalmatrix $\bW$, ist also stets
+  :d[Hesse-Matrix]{#hesse-matrix} $\bX^\top\bW\bX$ mit einer nichtnegativen Diagonalmatrix $\bW$, ist also stets
   konvex und bei vollem Spaltenrang und positiven Gewichten strikt konvex
   (@beispiel:logistische-regression-ist-ein-konvexes). Bei nicht-kanonischem Link ist
   Konvexität nicht mehr automatisch; im Probit-Modell besteht sie trotzdem, weil die
@@ -422,7 +422,7 @@ kommen, mit Abstiegs- und Newton-Verfahren und unter Nebenbedingungen, zeigt @ka
 ::::quiz
 
 :::frage{falsch}
-Die konvexe Hülle der Einheitssphäre $\{\bx \in \R^n\colon \left\|\bx\right\|_2 = 1\}$ ist
+Die :d[konvexe Hülle]{#konvexe-huelle} der Einheitssphäre $\{\bx \in \R^n\colon \left\|\bx\right\|_2 = 1\}$ ist
 wieder die Einheitssphäre.
 
 Sie ist die abgeschlossene Einheitskugel. Der Mittelpunkt von $\be_1$ und $\be_2$ liegt in der

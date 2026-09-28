@@ -7,7 +7,7 @@ import { ArmijoWidget } from "./widgets/S123Armijo";
 ### Wie viel Ableitung darf es sein?
 
 In einem inneren Minimum verschwindet der Gradient (@sec:optimalitaet), und
-$\corange{\nabla f(\bx)} = \bnull^\top$ ist ein nichtlineares Gleichungssystem,
+$\corange{\nabla f(\bx)} = \bnull^\top$ ist ein :d[nichtlineares Gleichungssystem]{#nichtlineares-gleichungssystem},
 das wir iterativ lösen. Die Verfahren dafür unterscheiden sich vor allem darin,
 wie viel Ableitungsinformation sie benutzen.
 
@@ -24,7 +24,7 @@ sie kostet in jedem Schritt Rechenzeit. Verfahren nullter Ordnung sind robust
 und laufen auf allem, was sich auswerten lässt; dafür brauchen sie viele
 Iterationen. Höhere
 Ordnung bringt schnellere Konvergenz, macht aber jeden Schritt teurer, und die
-Hesse-Matrix hat $n^2$ Einträge. In der Praxis greifen wir oft zu einem
+:d[Hesse-Matrix]{#hesse-matrix} hat $n^2$ Einträge. In der Praxis greifen wir oft zu einem
 Kompromiss, den superlinearen Quasi-Newton-Verfahren wie BFGS, die eine
 Näherung der inversen Hesse-Matrix aus den bereits berechneten Gradienten
 aufbauen (@sec:newton-sgd).
@@ -83,7 +83,7 @@ sind sehr viele Iterationen nötig. In hoher Dimension wird beides zum Problem.
 
 *Garantien.* Einen allgemeinen Konvergenzsatz gibt es nicht; auf manchen
 strikt konvexen Funktionen läuft das Verfahren sogar gegen einen Punkt, der kein
-stationärer Punkt ist (McKinnon 1998). In der Praxis dient Nelder-Mead deshalb
+:d[stationärer Punkt]{#stationaerer-punkt} ist (McKinnon 1998). In der Praxis dient Nelder-Mead deshalb
 oft als robuste Startpunktsuche vor einem gradientenbasierten Verfahren.
 
 *In R.* Nelder-Mead ist die Voreinstellung von `optim()` (@sec:optim-in-r).
@@ -151,7 +151,7 @@ maschinellen Lernen heißt $\gamma$ *Lernrate* (learning rate) und der
 *Steilster Abstieg.* Für $\corange{\nabla f(\bx)} \neq \bnull^\top$ macht unter
 allen Richtungen $\bd$ mit $\left\|\bd\right\| = 1$ die Richtung
 $\bd = -\corange{\nabla f(\bx)^\top}/\left\|\corange{\nabla f(\bx)}\right\|$
-die Richtungsableitung $\corange{\nabla f(\bx)}\bd$ am kleinsten
+die :d[Richtungsableitung]{#richtungsableitung} $\corange{\nabla f(\bx)}\bd$ am kleinsten
 (@satz:richtung-des-staerksten-anstiegs, Gleichheitsfall der
 :k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}). Lokal gibt es also
 keine bessere Richtung als die des negativen Gradienten.
@@ -166,7 +166,7 @@ vermeiden. Abstiegsrichtung ist $-\corange{\nabla f(\bx)^\top}$ auch ohne
 Konvexität, solange der Gradient nicht verschwindet. Und *hin zum* Minimum zeigt
 sie im Allgemeinen nicht, wie das Zickzack weiter unten zeigt. Die
 :k[Konvexität]{#convexity} sorgt für etwas anderes: Jeder stationäre Punkt ist
-dann schon ein globales Minimum (@sec:optimalitaet), das Verfahren kann also
+dann schon ein :d[globales Minimum]{#lokales-und-globales-minimum} (@sec:optimalitaet), das Verfahren kann also
 nirgends sonst hängen bleiben.
 
 *Fixpunktiteration.* @eq:nelder-mead-gradient-gradientenabstieg ist die
@@ -366,7 +366,7 @@ $\lambda_{\max}(\corange{\bH_f}) = -2$ nicht einmal positiv ist.
 
 :::vertiefung[Lipschitz-Stetigkeit, Differenzierbarkeit und die Spektralnorm]
 *Lipschitz-stetig und differenzierbar.* Lipschitz-Stetigkeit ist deutlich
-stärker als :k[Stetigkeit]{#continuity}, mit Differenzierbarkeit aber ohne
+stärker als :k[Stetigkeit]{#continuity}, mit :d[Differenzierbarkeit]{#differenzierbarkeit} aber ohne
 Zusatzannahmen nicht vergleichbar: $f(x)=\left|x\right|$ ist mit $L=1$
 Lipschitz-stetig und im Nullpunkt trotzdem nicht differenzierbar; $f(x)=x^2$ ist
 auf $\R$ differenzierbar, aber nicht global Lipschitz-stetig. Auf einem

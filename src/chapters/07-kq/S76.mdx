@@ -6,9 +6,9 @@ import { AccuracyWidget, CostWidget, MethodChooser } from "./widgets/S76Compare"
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Zwei Lösungswege für das Kleinste-Quadrate-Problem kennen wir schon: die
+Zwei Lösungswege für das :d[Kleinste-Quadrate-Problem]{#kleinste-quadrate-problem-kq-problem} kennen wir schon: die
 Normalengleichungen mit :k[Cholesky-Zerlegung]{#cholesky-factorization}
-(@sec:normalengleichungen) und die QR-Zerlegung (@sec:qr und
+(@sec:normalengleichungen) und die :d[QR-Zerlegung]{#qr-zerlegung} (@sec:qr und
 @sec:givens-householder). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
 Ist $\bA$ rangdefizient, so ist $\bA^\top\bA$ singulär, die Cholesky-Zerlegung bricht
 ab, und auch $\bR$ in der QR-Zerlegung ist singulär. Hier hilft die
@@ -17,7 +17,7 @@ liefert das dritte und robusteste Lösungsverfahren.
 
 <h3 id="sec-7.6-svd-loesung">Die SVD-Lösung über die Pseudoinverse</h3>
 
-Für $\bA \in \R^{m \times n}$ mit :k[Rang]{#rank} $r$ und reduzierter SVD
+Für $\bA \in \R^{m \times n}$ mit :k[Rang]{#rank} $r$ und :d[reduzierter SVD]{#reduzierte-svd}
 $\bA = \bU_r \bSigma_r \bV_r^\top$ ist die
 :k[Moore-Penrose-Pseudoinverse]{#pseudoinverse} aus @kap:svd
 definiert als $\bA\pinv = \bV_r \bSigma_r^{-1} \bU_r^\top \in \R^{n \times m}$,
@@ -167,7 +167,7 @@ $\bA^\top\bA$, quadriert die :k[Konditionszahl]{#condition-number} also nicht, u
 behandelt rangdefiziente Probleme automatisch (@beispiel:rangdefizientes-kq-problem).
 Außerdem *konstruiert* @eq:svd-loesung-des-kq-problems die Lösung explizit: Liegt die SVD
 vor, bleiben nur Matrix-Vektor-Produkte. Ein Vorbehalt: Die Pseudoinverse regularisiert
-exakt unidentifizierte Nullraumanteile, aber *keine* kleinen positiven Singulärwerte:
+exakt unidentifizierte Nullraumanteile, aber *keine* kleinen positiven :d[Singulärwerte]{#singulaerwerte}:
 Die Anteile längs der zugehörigen Singulärrichtungen verstärkt sie sogar um den Faktor
 $1/\sigma_i$. Gegen einen Fast-Rangdefekt helfen erst die
 abgeschnittene SVD oder die Tikhonov-Regularisierung.

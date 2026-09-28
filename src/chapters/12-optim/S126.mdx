@@ -26,7 +26,7 @@ nicht enthalten kann, und weil ein Testpunkt wiederverwendet wird, genügt ein
 neuer Funktionswert. So schrumpft das Intervall ohne Ableitungen pro Schritt auf
 das $0{,}618$-fache. Verlässlich ist das für *unimodale* Funktionen, die bis zu
 einer Minimalstelle nicht ansteigen und danach nicht mehr fallen; ein eindeutiges
-globales Minimum allein genügt nicht.
+:d[globales Minimum]{#lokales-und-globales-minimum} allein genügt nicht.
 
 Dazu kommt eine parabolische Interpolation (zusammen heißt das *Brent-Verfahren*):
 Solange es die drei zuletzt berechneten Punkte erlauben, springt der nächste
@@ -59,7 +59,7 @@ optim(c(-1, -0.5), f, method = "BFGS")
 Ohne `method`-Argument verwendet `optim()` das ableitungsfreie
 :k[Nelder-Mead-Verfahren]{#nelder-mead} aus
 @sec:nelder-mead-gradient, mit `method = "BFGS"` das Quasi-Newton-Verfahren aus
-@sec:newton-sgd; den Gradienten schätzt es dann mangels `gr`-Argument durch finite
+@sec:newton-sgd; den :d[Gradienten]{#gradient} schätzt es dann mangels `gr`-Argument durch finite
 Differenzen. Ein über `gr` übergebener Gradient wechselt die Methode nicht, das
 tut nur `method`. Von diesem
 Startpunkt aus landen beide Verfahren im globalen Minimum.
@@ -110,7 +110,7 @@ Startpunkten aus in einer anderen Mulde enden als die blaue Spur.
 
 Von den drei voreingestellten Startpunkten führt $(-1;\ -0{,}5)$ ins globale
 Minimum, $(-1;\ 1)$ in die obere und $(-0{,}5;\ -1)$ in die untere Mulde. Alle drei
-Läufe enden regulär, mit Gradient null, positiv definiter Hesse-Matrix und ohne
+Läufe enden regulär, mit Gradient null, positiv definiter :d[Hesse-Matrix]{#hesse-matrix} und ohne
 Warnung, und doch landen zwei im falschen Minimum. Dagegen hilft keine bessere
 Schrittweite, nur weitere Startpunkte.
 :::

@@ -12,7 +12,7 @@ Schrittweite $\corange{\gamma}$ und der Zickzack in engen Tälern.
 
 Die nächstbessere Näherung liefert die :k[Taylorentwicklung]{#taylor-theorem}
 zweiter Ordnung. Für zweimal stetig differenzierbares $f$ gilt sie mit einem
-Restterm $o(\left\|\bh\right\|^2)$ (@satz:taylorentwicklung-ii), in Gradient und
+Restterm $o(\left\|\bh\right\|^2)$ (@satz:taylorentwicklung-ii), in :d[Gradient]{#gradient} und
 Hesse-Matrix ausgeschrieben:
 
 $$ {#eq-eq-12-4-1}
@@ -68,7 +68,7 @@ Startpunkt $\cblue{\bx^{(0)}}$. Für $k = 0, 1, 2, \dots$ wiederhole:
 keinen kritischen Punkt oder einen ganzen affinen Unterraum davon, und
 @eq:newton-verfahren-fuer-die-optimierung ist nicht definiert. Konvexität sichert das
 nicht: Sie liefert nur positive *Semi*definitheit (@sec:konvexitaet/eigenschaften),
-und selbst strikte Konvexität reicht nicht, wie $f(x) = x^4$ im Nullpunkt zeigt.
+und selbst :d[strikte Konvexität]{#strikte-konvexitaet} reicht nicht, wie $f(x) = x^4$ im Nullpunkt zeigt.
 Invertierbarkeit, bei konvexem $f$ also eine :k[positiv definite]{#positive-definite}
 Hesse-Matrix, ist eine eigene Annahme.
 
@@ -101,7 +101,7 @@ Newton-Raphson für Nullstellen und das Newton-Verfahren für Minima, nebeneinan
 
 Setzen wir $\corange{\bg(\bx)} := \corange{\nabla f(\bx)^\top}$, so ist die
 Optimierung die Nullstellensuche für $\corange{\bg}\colon \R^n \to \R^n$. Deren
-Jacobimatrix ist nach @definition:hesse-matrix die Hesse-Matrix,
+:d[Jacobimatrix]{#jacobimatrix} ist nach @definition:hesse-matrix die Hesse-Matrix,
 $\bJ_{\corange{\bg}} = \corange{\bH_f}$, und der mehrdimensionale
 Newton-Raphson-Schritt
 $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} - \bJ_{\corange{\bg}}^{-1}\corange{\bg}$
@@ -179,7 +179,7 @@ nicht erklärt ist.
 :::interaktiv[Die Parabel am Startpunkt]
 Orange liegt das quadratische Modell @eq:eq-12-4-1 am aktuellen Punkt, sein
 Scheitel ist die nächste Iterierte, und die blauen Punkte zeigen den Verlauf der
-Iteration. Voreingestellt ist die strikt konvexe Funktion
+Iteration. Voreingestellt ist die strikt :d[konvexe Funktion]{#konvexe-funktion}
 $\cblue{f(x)} = x - 2\ln x$ auf $x > 0$ mit Minimum bei $2$, gestartet bei
 $\cblue{x^{(0)}} = 1$ (Zahlentabelle in
 @beispiel:newton-auf-einer-nicht-quadratischen); der zweite Menüpunkt ist die
@@ -213,12 +213,12 @@ Minima. Bei konvexem $f$ fällt beides zusammen (@sec:optimalitaet), sonst nicht
 
 *Ein lokales statt des globalen Minimums.* Die nicht-konvexe Funktion im Widget,
 $\cblue{f(x)} = x^4/4 - x^3/3 - x^2 + 2$, hat die kritischen Punkte $-1$, $0$ und
-$2$: bei $-1$ ein lokales Minimum mit $\cblue{f(-1)} \approx 1{,}583$, bei $2$
+$2$: bei $-1$ ein :d[lokales Minimum]{#lokales-und-globales-minimum} mit $\cblue{f(-1)} \approx 1{,}583$, bei $2$
 das globale mit $\cblue{f(2)} \approx -0{,}667$. Welches der beiden Täler die
 Iteration findet, entscheidet allein der Startpunkt. Das gilt für alle Verfahren
 dieses Kapitels, denn sie benutzen nur lokale Information.
 
-*Ein Sattelpunkt oder ein Maximum.* Ist $\corange{\bH_f(\bx^{(k)})}$ indefinit, so
+*Ein :d[Sattelpunkt]{#sattelpunkt} oder ein Maximum.* Ist $\corange{\bH_f(\bx^{(k)})}$ indefinit, so
 ist der Scheitel der Näherung ein Sattel, ist sie negativ definit, ein Maximum, und
 der Schritt läuft genauso dorthin wie sonst ins Minimum (@sec:optimalitaet). Im
 Widget zeigt das der Startpunkt $\cred{0{,}5}$.

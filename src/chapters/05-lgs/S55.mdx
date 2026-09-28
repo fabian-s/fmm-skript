@@ -13,20 +13,20 @@ sich in Voraussetzungen, Aufwand und Stabilität (@sec:fehler/stabilitaet).
 | Aufwand | rund $n^3/3$ Multiplikationen | rund $n^3/6$, also halb so viel |
 | scheitert | ohne Pivotierung an Nullpivots; kleine Pivots machen sie instabil | in exakter Arithmetik bei nicht-SPD-Matrizen; numerisch eventuell nahe der Semidefinitheitsgrenze |
 
-Die Stabilität der LU-Zerlegung entscheidet sich am Pivot (@sec:lu).
+Die Stabilität der :d[LU-Zerlegung]{#lu-zerlegung} entscheidet sich am Pivot (@sec:lu).
 Partielle Pivotierung hält alle Multiplikatoren im Betrag bei höchstens 1;
 ein Stabilitätsbeweis ist das nicht, aber in der Praxis gilt die pivotierte
 LU-Zerlegung als stabil
 ([Higham, 2020](https://nhigham.com/2020/07/14/what-is-the-growth-factor-for-gaussian-elimination/)).
 Auch ein stabiler Algorithmus liefert nur eine Näherung, deren relativer
 Fehler in der Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann,
-mit der Konditionszahl $\corange{\kappa(\bA)}$
+mit der :d[Konditionszahl]{#eigenschaften-konditionszahl-einer-matrix} $\corange{\kappa(\bA)}$
 (@sec:matrix-spur-norm/eigenschaften, @sec:fehler/kondition) und der
 :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
 konditioniert, liegt das am Problem, nicht am Algorithmus.
 
 Die Cholesky-Zerlegung braucht für eine SPD-Matrix keine Pivotierung und ist
-rückwärtsstabil. In exakter Arithmetik läuft sie für jede SPD-Matrix durch
+:d[rückwärtsstabil]{#vorwaerts-und-rueckwaertsstabilitaet}. In exakter Arithmetik läuft sie für jede SPD-Matrix durch
 und bricht für jede symmetrische, nicht positiv definite Matrix ab. In
 Gleitkommaarithmetik kann eine Matrix nahe der Grenze zur Semidefinitheit
 wegen Daten- oder Rundungsfehlern als nicht positiv definit erscheinen. Ein
