@@ -122,9 +122,7 @@ export function TraceWidget() {
         </span>{" "}
         ·{" "}
         <span style={{ color: FMM_COLORS.violett }}>det(A) = {fmtDe(det, 2)}</span> ·{" "}
-        <span>
-          (tr/2)² = {fmtDe(re * re, 2)} {reell ? "≥" : "<"} det(A)
-        </span>
+        <span>(tr/2)² {reell ? "≥" : "<"} det(A)</span>
       </div>
       <Verdikt kind={reell ? "ok" : "warn"}>
         {reell ? (
