@@ -1,3 +1,4 @@
+import path from "node:path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -13,8 +14,9 @@ import type { Plugin } from "vite";
  * Nummer (Textedit), läuft das normale HMR; verschiebt sich ein Zähler
  * (neuer Satz eingefügt), sind die Nummern in allen MDX-Modulen veraltet —
  * dann werden alle invalidiert und die Seite komplett neu geladen.
- * Danach werden die Vorschau-Kopien (src/definitions/) nachgezogen; die
- * geänderten Dateien laufen über das normale HMR.
+ * Danach werden die Vorschau-Kopien (src/definitions/) nachgezogen, bei
+ * unveränderten Nummern nur die der gespeicherten Datei. Eine geänderte
+ * Kopie lädt die Seite neu (definitions-mdx.tsx registriert beim Import).
  */
 function numbersPlugin(root: string): Plugin {
   const report = (r: ReturnType<typeof generateNumbers>) => {
@@ -35,7 +37,8 @@ function numbersPlugin(root: string): Plugin {
       if (/src[\/]definitions[\/]/.test(file)) return; // eigene Ausgabe
       const r = generateNumbers(root);
       report(r);
-      reportDefs(generateDefinitions(root));
+      const onlyFile = r.changed ? null : path.relative(root, file).split(path.sep).join("/");
+      reportDefs(generateDefinitions(root, { onlyFile }));
       if (!r.changed) return; // nur Text geändert: normales HMR
       for (const m of server.moduleGraph.fileToModulesMap.values())
         for (const mod of m) if (mod.file?.endsWith(".mdx")) server.moduleGraph.invalidateModule(mod);

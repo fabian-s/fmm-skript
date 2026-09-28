@@ -36,8 +36,11 @@ const OUT_REL = join("src", "definitions");
 
 const processor = unified().use(remarkParse).use(remarkMath).use(remarkGfm).use(remarkDirective).use(remarkMdx);
 
-/** Rumpf (ohne Label-Absatz) der Container-Direktive, die in Zeile `line` beginnt. */
-function bodyAt(src, tree, line) {
+/**
+ * Rumpf (ohne Label-Absatz) der Container-Direktive `directive`, die in Zeile
+ * `line` beginnt und deren Label mit „#id" anfängt; sonst null (Tabelle veraltet).
+ */
+function bodyAt(src, tree, line, directive, id) {
   let hit = null;
   visit(tree, "containerDirective", (n) => {
     if (n.position?.start.line === line) {
@@ -45,32 +48,54 @@ function bodyAt(src, tree, line) {
       return false;
     }
   });
-  if (!hit) return null;
+  if (!hit || hit.name !== directive) return null;
+  const label = hit.children.find((c) => c.data?.directiveLabel);
+  const labelSrc = label ? src.slice(label.position.start.offset, label.position.end.offset) : "";
+  // die Label-Position schließt die öffnende Klammer ein: „[#id (Name)]"
+  if (!new RegExp(`^\\[?#${id}(?![a-z0-9-])`).test(labelSrc)) return null;
   const kids = hit.children.filter((c) => !c.data?.directiveLabel);
   if (!kids.length) return "";
   return src.slice(kids[0].position.start.offset, kids.at(-1).position.end.offset);
 }
 
-/** Soll-Inhalt aller Kopien: Map relPath → Inhalt, dazu Fehler. */
-export function buildDefinitions(root = DEFAULT_ROOT) {
+/**
+ * Was im Fenster nicht funktioniert: Überschriften (doppelte Anker-IDs),
+ * relative Bild-/Linkpfade (die Kopie liegt in einem anderen Verzeichnis),
+ * verschachtelte Umgebungen (doppelte env-Anker), import/export.
+ */
+const UNCOPYABLE = [
+  [/^\s*(import|export)\s/m, "import/export"],
+  [/^#{1,6}\s/m, "eine Überschrift"],
+  [/^\s*:{3,}[a-z]/m, "eine verschachtelte Umgebung"],
+  [/\]\(\.{0,2}\//, "einen relativen Pfad"],
+];
+
+/**
+ * Soll-Inhalt der Kopien: Map relPath → Inhalt, dazu Fehler. Mit `onlyFile`
+ * (relativer Pfad einer Kapiteldatei) nur deren Umgebungen: das Parsen aller
+ * Kapitel kostet Sekunden, der Dev-Server braucht nach einem Textedit nur die
+ * Kopien der gespeicherten Datei neu.
+ */
+export function buildDefinitions(root = DEFAULT_ROOT, onlyFile = null) {
   const table = loadNumbers(root);
   const files = new Map();
   const errors = [];
   const trees = new Map();
   for (const [id, env] of Object.entries(table.envs ?? {})) {
-    if (!hasPreview(env)) continue;
+    if (!hasPreview(env) || (onlyFile && env.file !== onlyFile)) continue;
     if (!trees.has(env.file)) {
       const src = readFileSync(join(root, env.file), "utf8");
       trees.set(env.file, { src, tree: processor.parse(src) });
     }
     const { src, tree } = trees.get(env.file);
-    const body = bodyAt(src, tree, env.line);
+    const body = bodyAt(src, tree, env.line, env.directive, id);
     if (body == null) {
       errors.push(`${env.file}:${env.line}: keine Umgebung „${id}" gefunden — Nummerntabelle veraltet? npm run gen:numbers`);
       continue;
     }
-    if (/^\s*(import|export)\s/m.test(body)) {
-      errors.push(`${env.file}:${env.line}: Umgebung „${id}" enthält import/export — im Vorschaufenster nicht kopierbar`);
+    const bad = UNCOPYABLE.find(([re]) => re.test(body));
+    if (bad) {
+      errors.push(`${env.file}:${env.line}: Umgebung „${id}" enthält ${bad[1]} — im Vorschaufenster nicht kopierbar`);
       continue;
     }
     const meta = {
@@ -102,8 +127,8 @@ function listMdx(dir) {
  * Kopien erzeugen. Rückgabe { changed, written, removed, errors, count }.
  * Mit write=false wird nur verglichen.
  */
-export function generateDefinitions(root = DEFAULT_ROOT, { write = true } = {}) {
-  const { files, errors } = buildDefinitions(root);
+export function generateDefinitions(root = DEFAULT_ROOT, { write = true, onlyFile = null } = {}) {
+  const { files, errors } = buildDefinitions(root, onlyFile);
   const outDir = join(root, OUT_REL);
   const written = [];
   const removed = [];
@@ -117,7 +142,8 @@ export function generateDefinitions(root = DEFAULT_ROOT, { write = true } = {}) 
       writeFileSync(abs, content);
     }
   }
-  for (const abs of listMdx(outDir)) {
+  // Aufräumen nur beim Vollauf: ein Teillauf kennt nicht alle Soll-Dateien
+  for (const abs of onlyFile ? [] : listMdx(outDir)) {
     const rel = relative(root, abs);
     if (files.has(rel)) continue;
     removed.push(rel);

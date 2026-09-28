@@ -120,7 +120,7 @@ for (const s of sections) {
   const src = readFileSync(join(ROOT, s.file), "utf8");
   const lines = scanSection(src);
   for (const d of defs) {
-    if (order.get(d.section) >= order.get(s.num)) continue; // nur NACH der Definition
+    if ((order.get(d.section) ?? Infinity) >= order.get(s.num)) continue; // nur NACH der Definition
     // schon verlinkt in diesem Abschnitt?
     if (src.includes(`{#${d.id}}`) || new RegExp(`@(definition|ref|num):${esc(d.id)}(?![a-z0-9-])`).test(src)) continue;
     for (const l of lines) {

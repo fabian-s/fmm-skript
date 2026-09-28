@@ -234,6 +234,10 @@ Zwei Arten von Erklärfenstern, zwei Auszeichnungen:
   Fließtext (nicht in Überschriften, Env-Labels, Vertiefungstiteln, Formeln).
   Nicht jede Erwähnung, nicht im definierenden Abschnitt selbst. Steht der
   Begriff schon als `@definition:`-Verweis oder als `:k` im Abschnitt, genügt das.
+- Nur verlinken, wo das Wort GENAU den definierten Begriff meint. Wird es
+  weiter gebraucht als definiert (z. B. „Residuum" für das KQ-Residuum oder die
+  Sekantenbedingung, Def. 8.3.1 meint das eines quadratischen LGS), kein `:d`:
+  ein irreführender Verweis ist schlimmer als keiner (Dozentenentscheid 2026-09-28).
 - Handgeschriebene Vorwissens-Konzepte zu Kursbegriffen (`matrix-norm`,
   `condition-number`, …) BLEIBEN (Dozentenentscheid 2026-09-28: didaktisch
   besser als die nackte Definition). Vor dem definierenden Kapitel immer `:k`.

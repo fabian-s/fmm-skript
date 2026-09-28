@@ -704,9 +704,22 @@ export function ConceptLink({
         href={href}
         data-concept-link={id}
         {...hoverHandlers}
+        // keyboard: focusing the link shows the same preview as hovering
+        onFocus={() => {
+          if (isOpen()) {
+            api!.setHover(mine.current!, true);
+            return;
+          }
+          const r = ref.current?.getBoundingClientRect();
+          openWindow(false, r ? { x: r.left + r.width / 2, y: r.bottom } : lastPos.current);
+        }}
+        onBlur={() => {
+          cancel();
+          if (mine.current !== null) api?.setHover(mine.current, false);
+        }}
         onClick={() => {
           cancel();
-          if (isOpen() && !api!.entries.find((e) => e.key === mine.current)?.pinned)
+          if (api && isOpen() && !api!.entries.find((e) => e.key === mine.current)?.pinned)
             api!.close(mine.current!);
         }}
       >
