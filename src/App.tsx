@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TooltipProvider } from "./lib";
+import { TooltipProvider, useFragmentNavigation } from "./lib";
 import { chapterAliases, chapterLabel, chapters, sectionAlias, type ChapterModule } from "./chapters";
 import { tocSections } from "./chapters/toc.generated";
 import { Sidebar } from "./ui/Sidebar";
@@ -15,37 +15,13 @@ function currentChapterId(): string {
   return chapterAliases[k] ?? k;
 }
 
-const fragmentHighlights = new WeakMap<
-  HTMLElement,
-  { timer: number; outline: string; outlineOffset: string }
->();
-
-function highlightFragment(target: HTMLElement) {
-  const previous = fragmentHighlights.get(target);
-  if (previous) window.clearTimeout(previous.timer);
-
-  const original = previous ?? {
-    timer: 0,
-    outline: target.style.outline,
-    outlineOffset: target.style.outlineOffset,
-  };
-  target.style.outline = "3px solid rgb(245 158 11)";
-  target.style.outlineOffset = "4px";
-
-  const timer = window.setTimeout(() => {
-    target.style.outline = original.outline;
-    target.style.outlineOffset = original.outlineOffset;
-    fragmentHighlights.delete(target);
-  }, 1500);
-  fragmentHighlights.set(target, { ...original, timer });
-}
-
-function fragmentId(hash: string): string {
-  try {
-    return decodeURIComponent(hash.replace(/^#/, ""));
-  } catch {
-    return hash.replace(/^#/, "");
-  }
+// Alte Deep-Links (?k=<alte ID>#sec-K.k) auf die neuen Anker umbiegen.
+function resolveFragmentId(id: string): string {
+  const rawK = new URLSearchParams(window.location.search).get("k");
+  if (!rawK || !chapterAliases[rawK] || !id.startsWith("sec-")) return id;
+  const resolved = `sec-${sectionAlias(rawK, id.slice(4))}`;
+  history.replaceState(null, "", `?k=${chapterAliases[rawK]}#${resolved}`);
+  return resolved;
 }
 
 export default function App() {
@@ -78,99 +54,9 @@ export default function App() {
     document.title = `${chapterLabel(entry)} · FMM-Skript`;
   }, [entry]);
 
-  // Fragment-Navigation: Ziele können erst nach dem lazy geladenen Kapitel
-  // erscheinen oder in einer (auch verschachtelten) Vertiefung verborgen sein.
-  useEffect(() => {
-    if (!mod) return;
-    let cancelled = false;
-    let navigation = 0;
-    const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-
-    const revealFragment = async (hash: string, retries = 0) => {
-      const thisNavigation = ++navigation;
-      let id = fragmentId(hash);
-      if (!id) return;
-
-      // Alte Deep-Links (?k=<alte ID>#sec-K.k) auf die neuen Anker umbiegen.
-      const rawK = new URLSearchParams(window.location.search).get("k");
-      if (rawK && chapterAliases[rawK] && id.startsWith("sec-")) {
-        id = `sec-${sectionAlias(rawK, id.slice(4))}`;
-        history.replaceState(null, "", `?k=${chapterAliases[rawK]}#${id}`);
-      }
-
-      let target = document.getElementById(id);
-      for (let attempt = 0; !target && attempt < retries; attempt += 1) {
-        await nextFrame();
-        if (cancelled || thisNavigation !== navigation) return;
-        target = document.getElementById(id);
-      }
-      if (!target || cancelled || thisNavigation !== navigation) return;
-
-      const containers: HTMLElement[] = [];
-      let container = target.closest<HTMLElement>("[data-deep]");
-      while (container) {
-        containers.push(container);
-        container = container.parentElement?.closest<HTMLElement>("[data-deep]") ?? null;
-      }
-
-      for (const deep of containers.reverse()) {
-        deep.dispatchEvent(new Event("fmm-open"));
-        await nextFrame();
-        if (cancelled || thisNavigation !== navigation) return;
-      }
-
-      // Kleine Ziele (Formel, Kasten) mittig; ganze Abschnitte und andere
-      // hohe Ziele an den Anfang, sonst landet man mitten im Abschnitt.
-      const el = target;
-      const align = () =>
-        el.scrollIntoView({
-          block: el.getBoundingClientRect().height > window.innerHeight * 0.6 ? "start" : "center",
-        });
-      align();
-      highlightFragment(el);
-
-      // MathJax, content-visibility und Widgets verschieben das Layout noch
-      // sekundenlang nach dem ersten Scroll — so lange nachjustieren, bis die
-      // Zielposition steht. Sobald selbst gescrollt wird, ist Schluss.
-      let userScrolled = false;
-      const stop = () => {
-        userScrolled = true;
-      };
-      const userInput = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
-      for (const type of userInput) window.addEventListener(type, stop, { passive: true });
-      try {
-        let settledTop = el.getBoundingClientRect().top;
-        for (const delay of [250, 600, 1200, 2000, 3000]) {
-          await new Promise<void>((resolve) => setTimeout(resolve, delay));
-          if (cancelled || thisNavigation !== navigation || userScrolled) return;
-          if (Math.abs(el.getBoundingClientRect().top - settledTop) > 2) align();
-          settledTop = el.getBoundingClientRect().top;
-        }
-      } finally {
-        for (const type of userInput) window.removeEventListener(type, stop);
-      }
-    };
-
-    const onHashChange = () => void revealFragment(window.location.hash, 5);
-    const onFragmentClick = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const origin = event.target instanceof Element ? event.target : null;
-      const link = origin?.closest<HTMLAnchorElement>('a[href^="#"]');
-      const href = link?.getAttribute("href");
-      if (href) void revealFragment(href, 5);
-    };
-
-    window.addEventListener("hashchange", onHashChange);
-    document.addEventListener("click", onFragmentClick, true);
-    void revealFragment(window.location.hash, 8);
-
-    return () => {
-      cancelled = true;
-      navigation += 1;
-      window.removeEventListener("hashchange", onHashChange);
-      document.removeEventListener("click", onFragmentClick, true);
-    };
-  }, [mod]);
+  // Fragment-Navigation (Vertiefungen öffnen, ausrichten, nachjustieren):
+  // siehe src/lib/useFragmentNavigation.ts
+  useFragmentNavigation(mod, resolveFragmentId);
 
   // Schublade: Esc schließt, offene Schublade friert die Seite dahinter ein.
   useEffect(() => {
