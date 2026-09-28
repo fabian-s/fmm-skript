@@ -121,7 +121,8 @@ export function TraceWidget() {
           tr(A) = {fmtDe(a, 2)} + {fmtDe(d, 2)} = {fmtDe(tr, 2)}
         </span>{" "}
         ·{" "}
-        <span style={{ color: FMM_COLORS.violett }}>det(A) = {fmtDe(det, 2)}</span>
+        <span style={{ color: FMM_COLORS.violett }}>det(A) = {fmtDe(det, 2)}</span> ·{" "}
+        <span>(tr(A)/2)² {reell ? "≥" : "<"} det(A)</span>
       </div>
       <Verdikt kind={reell ? "ok" : "warn"}>
         {reell ? (
