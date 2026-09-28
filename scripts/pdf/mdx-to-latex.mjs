@@ -402,6 +402,8 @@ function link(n) {
 function textDirective(n) {
   const name = ALIAS[n.name] ?? n.name;
   if (name === "k") return inlineAll(n.children); // Tooltip-Begriff: im Druck normaler Text
+  // Begriff des Skripts: im Druck ein stiller Link auf die Definition
+  if (name === "d") return n.attributes?.id ? `\\hyperref[env-${n.attributes.id}]{${inlineAll(n.children)}}` : inlineAll(n.children);
   warn(`unbekannte Inline-Direktive: :${n.name}`);
   return inlineAll(n.children);
 }

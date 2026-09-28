@@ -9,6 +9,8 @@ import { useActiveSection } from "./ui/useActiveSection";
 import.meta.glob("./concepts/*.tsx", { eager: true });
 // MDX-Konzepte können sich nicht selbst registrieren — das erledigt dieses Modul
 import "./mdx/concepts-mdx";
+// Vorschaufenster für Definitionen/Sätze des Skripts (scripts/gen-definitions.mjs)
+import "./mdx/definitions-mdx";
 
 function currentChapterId(): string {
   const k = new URLSearchParams(window.location.search).get("k") ?? chapters[0].id;

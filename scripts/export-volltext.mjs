@@ -171,7 +171,7 @@ function clean(txt) {
   txt = txt.replace(/^:{3,}[^\S\n]*\n?/gm, "");
   txt = txt.replace(/::why\[(.*)\][^\S\n]*$/gm, "(Warum? $1)");
 
-  txt = txt.replace(/:k\[([\s\S]*?)\]\{#[\w-]+\}/g, (_m, t) => t.replace(/\s+/g, " "));
+  txt = txt.replace(/:[kd]\[([\s\S]*?)\]\{#[\w-]+\}/g, (_m, t) => t.replace(/\s+/g, " "));
 
   // rohe HTML-Tabellen -> Textzeilen
   txt = txt.replace(/<\/t[dh]>\s*/g, " | ");

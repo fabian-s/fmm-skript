@@ -336,6 +336,7 @@ const NUMBERS = {
   envs: {
     kkt: { num: "12.5.7", kind: "Satz", directive: "satz", name: "KKT-Bedingungen", label: "12.5.7 (KKT-Bedingungen)", chapter: "12-optim", section: "12.5", anchor: "env-kkt", legacy: false },
     "bsp-a": { num: "6.1.2", kind: "Beispiel", directive: "beispiel", name: null, label: "6.1.2", chapter: "06-svd", section: "6.1", anchor: "env-bsp-a", legacy: false },
+    "op-norm": { num: "3.3.1", kind: "Definition", directive: "definition", name: "Operatornorm", label: "3.3.1 (Operatornorm)", chapter: "03-matrix-spur-norm", section: "3.3", anchor: "env-op-norm", legacy: false },
     "12.5.1": { num: "12.5.1", kind: "Definition", directive: "definition", name: "Alt", label: "12.5.1 (Alt)", chapter: "12-optim", section: "12.5", anchor: null, legacy: true },
   },
   eqs: { "kkt-stat": { num: "12.5.3", chapter: "12-optim", section: "12.5", anchor: "eq-kkt-stat", legacy: false } },
@@ -365,7 +366,18 @@ const NUM_ACCEPT = {
   "legacy equation unchanged": [`$$ {#eq-12.5.9}\nx\n$$`, `<Eq tag="12.5.9">`],
   "heading with :id gets number and anchor": [`### Die Idee :id[lagrange-idee]\n`, `id="sec-lagrange-idee"`],
   "heading with :id renders number text": [`### Die Idee :id[lagrange-idee]\n`, `12.5.1 `],
-  "@satz same chapter": [`Nach @satz:kkt gilt.`, `<_components.a href="#env-kkt">{"Satz 12.5.7"}</_components.a>`],
+  "@satz same chapter (link with preview)": [`Nach @satz:kkt gilt.`, `<ConceptLink id="env:kkt" href="#env-kkt">{"Satz 12.5.7"}</ConceptLink>`],
+  "@beispiel stays a plain link (no preview)": [`Siehe @beispiel:bsp-a.`, `<_components.a href="?k=06-svd#env-bsp-a">`],
+  "@definition cross-chapter with preview": [`Siehe @definition:op-norm.`, `<ConceptLink id="env:op-norm" href="?k=03-matrix-spur-norm#env-op-norm">{"Definition 3.3.1"}`],
+  ":d course term": [`Die :d[Operatornorm]{#op-norm} misst.`, `<ConceptLink id="env:op-norm">{"Operatornorm"}</ConceptLink>`],
+  ":d on a Satz": [`Nach den :d[KKT-Bedingungen]{#kkt} gilt.`, `<ConceptLink id="env:kkt">`],
+  ":d inside ::why": [`::::beweis\n\n:::schritt\nEins.\n\n::why[per :d[Operatornorm]{#op-norm}]\n:::\n\n::::`, `<ConceptLink id={"env:op-norm"}>{"Operatornorm"}</ConceptLink>`],
+  "preview copy: short refs resolve in the source chapter, links absolute": [
+    `Nach @eq:kkt-stat und @sec:beschraenkt.`,
+    `href="?k=12-optim#sec-12.5"`,
+    "/x/src/definitions/12-optim/kkt.mdx",
+  ],
+  "preview copy: equation keeps its number but no anchor id": [`$$ {#eq-kkt-stat}\nx\n$$`, `<Eq tag="12.5.3">`, "/x/src/definitions/12-optim/kkt.mdx"],
   "@theorem (english) on a Satz": [`See @theorem:kkt.`, `{"Satz 12.5.7"}`],
   "@beispiel cross-chapter": [`Siehe @beispiel:bsp-a.`, `href="?k=06-svd#env-bsp-a">{"Beispiel 6.1.2"}`],
   "@eq": [`Aus @eq:kkt-stat folgt.`, `href="#eq-kkt-stat">{"(12.5.3)"}`],
@@ -381,7 +393,7 @@ const NUM_ACCEPT = {
   "@sec on subheading": [`In @sec:lagrange-idee steht.`, `href="#sec-lagrange-idee">{"Abschnitt 12.5.1"}`],
   "@kap": [`In @kap:svd steht.`, `href="?k=06-svd">{"Kapitel 6"}`],
   "@sec from concept (no chapter) uses ?k=": [`In @sec:optim/beschraenkt.`, `href="?k=12-optim#sec-12.5"`, "/x/src/concepts/kkt.mdx"],
-  "ref at sentence end keeps the period": [`Siehe @satz:kkt.`, `{"Satz 12.5.7"}</_components.a>{"."}`],
+  "ref at sentence end keeps the period": [`Siehe @satz:kkt.`, `{"Satz 12.5.7"}</ConceptLink>{"."}`],
   "ref inside ::why label": [
     `::::beweis\n\n:::schritt\nEins.\n\n::why[nach @satz:kkt und @eq:kkt-stat]\n:::\n\n::::`,
     `href={"#env-kkt"}>{"Satz 12.5.7"}`,
@@ -408,6 +420,10 @@ const NUM_REJECT = {
   "ref inside env label": [`:::satz[#kkt (nach @eq:kkt-stat)]\nInhalt.\n:::`, `@-Verweise`],
   "@num on bare section key is unknown": [`Siehe @num:beschraenkt.`, `unbekannter Verweis @num:beschraenkt`],
   "@sec unknown in chapter": [`In @sec:motivation steht.`, `unbekannter Verweis @sec:motivation`],
+  ":d without id": [`Die :d[Operatornorm] misst.`, `braucht die ID einer Definition`],
+  ":d on unknown id": [`Die :d[Norm]{#nope} misst.`, `steht nicht in der Nummerntabelle`],
+  ":d on a Beispiel": [`Das :d[Beispiel]{#bsp-a} zeigt.`, `:d geht nur auf Definitionen`],
+  ":d with extra attribute": [`Die :d[Norm]{#op-norm x=1} misst.`, `x`],
   "@sec bare key from concept": [`In @sec:beschraenkt.`, `unbekannter Verweis @sec:beschraenkt`, "/x/src/concepts/kkt.mdx"],
 };
 

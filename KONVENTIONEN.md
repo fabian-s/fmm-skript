@@ -212,6 +212,41 @@ Bei einer Unterüberschrift ändert die Umstellung den Anker
   „(vgl. MML §5.2)" / „(vgl. Heath §3.5)".
 - Verschachtelte `<ConceptLink>`s beibehalten (ids unverändert).
 
+## Begriffe des Skripts: `:d[…]{#id}` (Definitions-Vorschau)
+
+Zwei Arten von Erklärfenstern, zwei Auszeichnungen:
+
+| | Vorwissen | Begriff des Skripts |
+|---|---|---|
+| Syntax | `:k[Spur]{#trace}` | `:d[Operatornorm]{#operatornorm}` |
+| Ziel | Konzept-Modul `src/concepts/<id>.mdx` (eigener Text) | ID-Label einer `:::definition` (auch `:::satz`, `:::lemma`, `:::korollar`) |
+| Fensterinhalt | handgeschriebene Erklärung | der WORTLAUT des Env-Rumpfs, dazu „→ Definition 3.3.1 in Abschnitt 3.3" |
+| Aussehen | blau, gepunktet | Textfarbe, graue durchgezogene Linie |
+
+- Die Fensterinhalte erzeugt `npm run gen:definitions`
+  (`scripts/gen-definitions.mjs`) als Kopien nach `src/definitions/<kap>/<id>.mdx`
+  (generiert, nicht eingecheckt; läuft vor dev/build und im Vite-Plugin).
+  Nie von Hand dort editieren: Quelle ist immer die Umgebung im Kapitel.
+- `@definition:`/`@satz:`/`@lemma:`/`@korollar:`-Verweise (auch `@ref:`/`@num:`
+  auf solche Envs) zeigen dieselbe Vorschau beim Überfahren; Klick folgt wie
+  bisher dem Link. Beispiele, Bemerkungen, Algorithmen bleiben reine Links.
+- Wann `:d`: in einem SPÄTEREN Abschnitt, bei der ersten echten Erwähnung im
+  Fließtext (nicht in Überschriften, Env-Labels, Vertiefungstiteln, Formeln).
+  Nicht jede Erwähnung, nicht im definierenden Abschnitt selbst. Steht der
+  Begriff schon als `@definition:`-Verweis oder als `:k` im Abschnitt, genügt das.
+- Handgeschriebene Vorwissens-Konzepte zu Kursbegriffen (`matrix-norm`,
+  `condition-number`, …) BLEIBEN (Dozentenentscheid 2026-09-28: didaktisch
+  besser als die nackte Definition). Vor dem definierenden Kapitel immer `:k`.
+- Kandidaten finden: `node scripts/report-definition-links.mjs [--kapitel <id>]`
+  (Heuristik, Bericht, kein Gate; Sonderfälle der Suchbegriffe in `TERMS`).
+- Mehrdeutige Begriffe bewusst zuordnen: Konditionszahl eines Problems
+  (`konditionszahl`, 4.2.2) vs. einer Matrix (`eigenschaften-konditionszahl-einer-matrix`,
+  3.5.11) vs. nicht quadratisch (`definition-7-2-1`); Orthogonalmatrix 3.3.5 vs. 7.4.1;
+  Extrempunkt 11.1.7 vs. 11.2.5; Vektorisierung 3.2.3 vs. 9.5.2.
+- Ein `[` in einem `::why[…]`-/Env-Label bricht die Direktive still (sie steht
+  dann wörtlich im Text): halboffene Intervalle dort als `\lbrack 0, 1)` schreiben.
+- Druckfassung: `:d` wird zu `\hyperref[env-<id>]{…}`; Volltext-Export: nur der Text.
+
 ## Kapitel (für spätere Kapitel-Workflows)
 
 - Quelle: der jeweilige Foliensatz (`.Rmd` direkt lesen); Abschnitt =
@@ -220,8 +255,9 @@ Bei einer Unterüberschrift ändert die Umstellung den Anker
 - Alle Rechenbeispiele der Folien vollständig und farbcodiert nachrechnen;
   Zahlen aus den Folien übernehmen und VERIFIZIEREN (nachrechnen!).
 - Beweise aus den Folien als `<Proof>` mit Begründungs-Annotationen.
-- Konzepte, die das Skript-Kapitel selbst einführt: Abschnittsanker statt
-  Tooltip; Vorwissen: Tooltip (`ls src/concepts/`, kanonische ids nutzen).
+- Konzepte, die das Skript selbst einführt: `:d[…]{#definitions-id}` bzw.
+  `@definition:`-Verweis (siehe „Begriffe des Skripts"); Vorwissen: Tooltip
+  `:k` (`ls src/concepts/`, kanonische ids nutzen).
 - **Folienfehler-Register:** Jeder gefundene Folienfehler wird ZUSÄTZLICH
   zur Lesson-Zeile in `FOLIENFEHLER.md` eingetragen (Foliensatz, Zeile,
   Befund, Status im Skript) — Sammelstelle für die Folien-Überarbeitung.

@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@mdx-js/rollup";
 import { remarkChain } from "./mdx/plugins.mjs";
 import { generateNumbers } from "./scripts/gen-numbers.mjs";
+import { generateDefinitions } from "./scripts/gen-definitions.mjs";
 import type { Plugin } from "vite";
 
 /**
@@ -12,21 +13,29 @@ import type { Plugin } from "vite";
  * Nummer (Textedit), läuft das normale HMR; verschiebt sich ein Zähler
  * (neuer Satz eingefügt), sind die Nummern in allen MDX-Modulen veraltet —
  * dann werden alle invalidiert und die Seite komplett neu geladen.
+ * Danach werden die Vorschau-Kopien (src/definitions/) nachgezogen; die
+ * geänderten Dateien laufen über das normale HMR.
  */
 function numbersPlugin(root: string): Plugin {
   const report = (r: ReturnType<typeof generateNumbers>) => {
     for (const w of r.warnings) console.warn(`gen-numbers: WARNUNG ${w}`);
     for (const e of r.errors) console.error(`gen-numbers: FEHLER ${e}`);
   };
+  const reportDefs = (r: ReturnType<typeof generateDefinitions>) => {
+    for (const e of r.errors) console.error(`gen-definitions: FEHLER ${e}`);
+  };
   return {
     name: "fmm-numbers",
     buildStart() {
       report(generateNumbers(root));
+      reportDefs(generateDefinitions(root));
     },
     async handleHotUpdate({ file, server, modules }) {
       if (!file.endsWith(".mdx") && !/src[\/]chapters[\/][^\/]+[\/]index\.ts$/.test(file)) return;
+      if (/src[\/]definitions[\/]/.test(file)) return; // eigene Ausgabe
       const r = generateNumbers(root);
       report(r);
+      reportDefs(generateDefinitions(root));
       if (!r.changed) return; // nur Text geändert: normales HMR
       for (const m of server.moduleGraph.fileToModulesMap.values())
         for (const mod of m) if (mod.file?.endsWith(".mdx")) server.moduleGraph.invalidateModule(mod);

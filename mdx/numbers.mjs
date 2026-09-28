@@ -68,6 +68,17 @@ const FAMILY = {
 };
 export const envFamily = (kind) => FAMILY[kind] ?? kind;
 
+/**
+ * Familien, deren Umgebungen als Vorschaufenster zur Verfügung stehen
+ * (scripts/gen-definitions.mjs kopiert ihren Rumpf nach src/definitions/).
+ * `:d[Begriff]{#id}` und @-Verweise auf sie öffnen beim Überfahren den
+ * Wortlaut; Beispiele, Bemerkungen und Algorithmen bleiben reine Links.
+ */
+export const PREVIEW_FAMILIES = new Set(["definition", "satz", "lemma", "korollar"]);
+export const hasPreview = (env) => !!env && !env.legacy && PREVIEW_FAMILIES.has(envFamily(env.kind));
+/** Registry-ID des Vorschaufensters (eigener Namensraum neben den Konzept-IDs). */
+export const previewId = (envId) => `env:${envId}`;
+
 /* ------------------------------------------------------------------ */
 /* Label-Formen                                                        */
 /* ------------------------------------------------------------------ */
@@ -179,11 +190,17 @@ export function loadNumbers(root) {
   return table;
 }
 
-/** "…/src/chapters/12-optim/S125.mdx" → "12-optim"; Konzepte u. a. → null. */
+/**
+ * "…/src/chapters/12-optim/S125.mdx" → "12-optim"; ebenso die generierten
+ * Vorschau-Kopien "…/src/definitions/12-optim/kkt.mdx"; Konzepte u. a. → null.
+ */
 export function chapterOfFile(filePath) {
-  const m = /[\\/]src[\\/]chapters[\\/]([^\\/]+)[\\/]/.exec(String(filePath ?? ""));
+  const m = /[\\/]src[\\/](?:chapters|definitions)[\\/]([^\\/]+)[\\/]/.exec(String(filePath ?? ""));
   return m ? m[1] : null;
 }
+
+/** Generierte Vorschau-Kopie (src/definitions/…)? Dort gelten Sonderregeln. */
+export const isPreviewFile = (filePath) => /[\\/]src[\\/]definitions[\\/]/.test(String(filePath ?? ""));
 
 /* ------------------------------------------------------------------ */
 /* @-Verweise                                                          */
@@ -240,6 +257,9 @@ const href = (ctxChapter, chapterId, hash) =>
  */
 export function resolveRef(table, type, id, ctx = {}, numOnly = false) {
   const cur = ctx.chapterId ?? null;
+  // absolute: Links immer in der ?k=-Form (Vorschaufenster stehen in fremden
+  // Kapiteln); IDs werden trotzdem relativ zu `cur` aufgelöst
+  const hcur = ctx.absolute ? null : cur;
   const envKind = ENV_KIND[type];
 
   if (envKind || type === "ref" || type === "num") {
@@ -249,7 +269,7 @@ export function resolveRef(table, type, id, ctx = {}, numOnly = false) {
       if (envKind && envFamily(envKind) !== envFamily(env.kind))
         throw new Error(`@${type}:${id} — aber „${id}" ist ${env.kind === "Definition" ? "eine" : "ein"} ${env.kind} (${env.num}); schreibe @${env.directive}:${id}`);
       const text = type === "num" ? env.num : `${env.kind} ${env.num}`;
-      return { text, href: href(cur, env.chapter, env.anchor), anchor: env.anchor, chapterId: env.chapter, target: "env", num: env.num };
+      return { text, href: href(hcur, env.chapter, env.anchor), anchor: env.anchor, chapterId: env.chapter, target: "env", num: env.num };
     }
     if (envKind) throw new Error(`unbekannter Verweis @${type}:${id} — kein Env-Label mit dieser ID`);
     // @num / @ref auch auf Gleichungen und Unterüberschriften
@@ -276,7 +296,7 @@ export function resolveRef(table, type, id, ctx = {}, numOnly = false) {
     if (!eq) throw new Error(`unbekannter Verweis @eq:${id} — keine Gleichung $$ {#eq-${id}}`);
     if (eq.legacy) throw new Error(`@eq:${id} zeigt auf eine HANDNUMMER — Verweise gehen nur auf ID-Gleichungen`);
     const text = numOnly ? eq.num : `(${eq.num})`;
-    return { text, href: href(cur, eq.chapter, eq.anchor), anchor: eq.anchor, chapterId: eq.chapter, target: "eq", num: eq.num };
+    return { text, href: href(hcur, eq.chapter, eq.anchor), anchor: eq.anchor, chapterId: eq.chapter, target: "eq", num: eq.num };
   }
 
   if (type === "kap") {
@@ -296,12 +316,12 @@ export function resolveRef(table, type, id, ctx = {}, numOnly = false) {
     if (sec && sub) throw new Error(`@sec:${id} ist mehrdeutig: Abschnitt UND Unterüberschrift — schreibe @sec:<kap>/${id}`);
     if (sec) {
       const text = numOnly ? sec.num : `Abschnitt ${sec.num}`;
-      return { text, href: href(cur, sec.chapter, sec.anchor), anchor: sec.anchor, chapterId: sec.chapter, target: "sec", num: sec.num };
+      return { text, href: href(hcur, sec.chapter, sec.anchor), anchor: sec.anchor, chapterId: sec.chapter, target: "sec", num: sec.num };
     }
     if (sub) {
       if (sub.legacy) throw new Error(`@sec:${id} zeigt auf eine HANDNUMMER-Überschrift`);
       const text = numOnly ? sub.num : `Abschnitt ${sub.num}`;
-      return { text, href: href(cur, sub.chapter, sub.anchor), anchor: sub.anchor, chapterId: sub.chapter, target: "sub", num: sub.num };
+      return { text, href: href(hcur, sub.chapter, sub.anchor), anchor: sub.anchor, chapterId: sub.chapter, target: "sub", num: sub.num };
     }
     const hint = id.includes("/")
       ? ""
