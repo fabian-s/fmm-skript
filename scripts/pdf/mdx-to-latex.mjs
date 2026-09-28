@@ -1011,7 +1011,8 @@ const doc = `% GENERIERT von scripts/pdf/mdx-to-latex.mjs — nicht von Hand bea
 \\vspace{6pt}
 {\\color{fmmgray} Institut für Statistik, LMU München\\par}
 \\vfill
-{\\small\\color{fmmgray} Druckfassung ohne die interaktiven Elemente der Web-Ausgabe.\\par}
+{\\color{fmmgray} Version: \\today \\\\[4pt]}
+{\\small\\color{fmmgray} (Druckfassung ohne die interaktiven Elemente der Web-Ausgabe.) \\par}
 \\end{titlepage}
 
 \\frontmatter
