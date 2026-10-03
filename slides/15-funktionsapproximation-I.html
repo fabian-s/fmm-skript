@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a37c72dd2dbac68997fcdc15a3622e78.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="author" content="Vorlesung: Fabian Scheipl (fabian.scheipl@lmu.de) Material: Thomas Nagler LMU München">
+  <title>Funktionsapproximation:   Interpolation &amp; Splines*</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d0136d0452bb647bae96a262c75ef92a.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title"><em>Funktionsapproximation: <br> </em>Interpolation &amp; Splines*</h1>
+  <p class="subtitle"><strong>Fortgeschrittene mathematische Methoden in der Statistik</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vorlesung: Fabian Scheipl (<code>fabian.scheipl@lmu.de</code>)<br>Material: Thomas Nagler<br><strong>LMU München</strong> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="opener-quiz" class="slide level3 smaller">
+<h3>Opener-Quiz</h3>
+<div class="hidden">
+<p><span class="math display">\[
+\definecolor{fmmgreen}{RGB}{0,158,115}
+\definecolor{fmmblue}{RGB}{0,114,178}
+\definecolor{fmmred}{RGB}{213,94,0}
+\definecolor{fmmorange}{RGB}{230,159,0}
+\definecolor{fmmpurple}{RGB}{158,87,213}
+\newcommand{\ind}{\unicode{x1D7D9}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\K}{{\mathbb{K}}}
+\newcommand{\L}{\mathbb{L}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\S}{\mathbb{S}}
+\newcommand{\D}{{\mathbb{D}}}
+\newcommand{\bnull}{{\boldsymbol{0}}}
+\newcommand{\bzero}{{\boldsymbol{0}}}
+\newcommand{\ba}{{\boldsymbol{a}}}
+\newcommand{\bb}{{\boldsymbol{b}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bd}{{\boldsymbol{d}}}
+\newcommand{\be}{{\boldsymbol{e}}}
+\newcommand{\bg}{{\boldsymbol{g}}}
+\newcommand{\bh}{{\boldsymbol{h}}}
+\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bj}{{\boldsymbol{j}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bl}{{\boldsymbol{l}}}
+\newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\bo}{{\boldsymbol{o}}}
+\newcommand{\bp}{{\boldsymbol{p}}}
+\newcommand{\bq}{{\boldsymbol{q}}}
+\newcommand{\br}{{\boldsymbol{r}}}
+\newcommand{\bs}{{\boldsymbol{s}}}
+\newcommand{\bt}{{\boldsymbol{t}}}
+\newcommand{\bu}{{\boldsymbol{u}}}
+\newcommand{\bv}{{\boldsymbol{v}}}
+\newcommand{\bw}{{\boldsymbol{w}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\bB}{{\boldsymbol{B}}}
+\newcommand{\bC}{{\boldsymbol{C}}}
+\newcommand{\bD}{{\boldsymbol{D}}}
+\newcommand{\bE}{{\boldsymbol{E}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\bG}{{\boldsymbol{G}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bJ}{{\boldsymbol{J}}}
+\newcommand{\bK}{{\boldsymbol{K}}}
+\newcommand{\bL}{{\boldsymbol{L}}}
+\newcommand{\bM}{{\boldsymbol{M}}}
+\newcommand{\bN}{{\boldsymbol{N}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bQ}{{\boldsymbol{Q}}}
+\newcommand{\bR}{{\boldsymbol{R}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bT}{{\boldsymbol{T}}}
+\newcommand{\bU}{{\boldsymbol{U}}}
+\newcommand{\bV}{{\boldsymbol{V}}}
+\newcommand{\bW}{{\boldsymbol{W}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\bY}{{\boldsymbol{Y}}}
+\newcommand{\bZ}{{\boldsymbol{Z}}}
+\newcommand{\tagqed}{\tag*{$\blacksquare$}}
+\newcommand{\Acal}{{\mathcal{A}}}
+\newcommand{\Bcal}{{\mathcal{B}}}
+\newcommand{\Ccal}{{\mathcal{C}}}
+\newcommand{\Dcal}{{\mathcal{D}}}
+\newcommand{\Ecal}{{\mathcal{E}}}
+\newcommand{\Fcal}{{\mathcal{F}}}
+\newcommand{\Gcal}{{\mathcal{G}}}
+\newcommand{\Hcal}{{\mathcal{H}}}
+\newcommand{\Ical}{{\mathcal{I}}}
+\newcommand{\Jcal}{{\mathcal{J}}}
+\newcommand{\Kcal}{{\mathcal{K}}}
+\newcommand{\Lcal}{{\mathcal{L}}}
+\newcommand{\Mcal}{{\mathcal{M}}}
+\newcommand{\Ncal}{{\mathcal{N}}}
+\newcommand{\Ocal}{{\mathcal{O}}}
+\newcommand{\Pcal}{{\mathcal{P}}}
+\newcommand{\Qcal}{{\mathcal{Q}}}
+\newcommand{\Rcal}{{\mathcal{R}}}
+\newcommand{\Scal}{{\mathcal{S}}}
+\newcommand{\Tcal}{{\mathcal{T}}}
+\newcommand{\Ucal}{{\mathcal{U}}}
+\newcommand{\Vcal}{{\mathcal{V}}}
+\newcommand{\Wcal}{{\mathcal{W}}}
+\newcommand{\Xcal}{{\mathcal{X}}}
+\newcommand{\Ycal}{{\mathcal{Y}}}
+\newcommand{\Zcal}{{\mathcal{Z}}}
+\newcommand{\eps}{{\varepsilon}}
+\newcommand{\beps}{{\boldsymbol{\epsilon}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bbeta}{{\boldsymbol{\beta}}}
+\newcommand{\bchi}{{\boldsymbol{\chi}}}
+\newcommand{\bdelta}{{\boldsymbol{\delta}}}
+\newcommand{\bDelta}{{\boldsymbol{\Delta}}}
+\newcommand{\bepsilon}{{\boldsymbol{\epsilon}}}
+\newcommand{\bphi}{{\boldsymbol{\phi}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+\newcommand{\betah}{{\boldsymbol{\eta}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
+\newcommand{\biota}{{\boldsymbol{\iota}}}
+\newcommand{\bkappa}{{\boldsymbol{\kappa}}}
+\newcommand{\blambda}{{\boldsymbol{\lambda}}}
+\newcommand{\bLambda}{{\boldsymbol{\Lambda}}}
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+\newcommand{\bnu}{{\boldsymbol{\nu}}}
+\newcommand{\bomikron}{{\boldsymbol{\omicron}}}
+\newcommand{\bpi}{{\boldsymbol{\pi}}}
+\newcommand{\bSigma}{{\boldsymbol{\Sigma}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+\newcommand{\bzeta}{{\boldsymbol{\zeta}}}
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+\newcommand{\equivto}{{\Leftrightarrow}}
+\newcommand{\quequiv}{{\quad \equivto \quad}}
+\newcommand{\impl}{{\implies}}
+\newcommand{\quimpl}{{\quad \implies \quad}}
+\newcommand{\implby}{{\impliedby}}
+\newcommand{\notimplies}{\not\implies}
+\newcommand{\tr}{{\operatorname{tr}}}
+\newcommand{\spann}{{\operatorname{span}}}
+\newcommand{\col}{{\operatorname{col}}}
+\newcommand{\rang}{{\operatorname{rang}}}
+\newcommand{\diag}{{\operatorname{diag}}}
+\newcommand{\vec}{\operatorname{vec}}
+\newcommand{\pinv}{{^{+}}}
+\newcommand{\kron}{\mathbin{\otimes_{\mathrm{K}}}}
+\newcommand{\sign}{{\operatorname{sign}}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\inner}[1]{{\langle #1 \rangle}}
+\newcommand{\proj}{{\operatorname{proj}}}
+\newcommand{\bar}{\overline}
+\newcommand{\vol}{{\operatorname{vol}}}
+\newcommand{\dx}{{\, \mathrm{d}x}}
+\newcommand{\ol}{{\overline}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\conv}{\mathop{\mathrm{conv}}}
+\newcommand{\epi}{\mathop{\mathrm{epi}}}
+\newcommand{\interior}{\mathop{\mathrm{int}}}
+\newcommand{\Pr}{\mathbb{P}}
+\newcommand{\var}{{\mathbb{V}\mathrm{ar}}}
+\newcommand{\bias}{{\operatorname{bias}}}
+\newcommand{\abias}{{\mathrm{ABias}}}
+\newcommand{\AMSE}{{\mathrm{AMSE}}}
+\newcommand{\AMISE}{{\mathrm{AMISE}}}
+\newcommand{\cov}{{\mathbb{C}\mathrm{ov}}}
+\newcommand{\corr}{{\mathrm{Corr}}}
+\newcommand{\ov}{{\overline}}
+\newcommand{\wh}[1]{{\widehat{#1}}}
+\newcommand{\wt}[1]{{\widetilde{#1}}}
+\newcommand{\tod}{{\stackrel{d}{\to}}}
+\newcommand{\sumin}{{\sum_{i = 1}^n}}
+\newcommand{\sumjn}{{\sum_{j = 1}^n}}
+\newcommand{\KL}{{\operatorname{KL}}}
+\newcommand{\softmax}{{\operatorname{SoftMax}}}
+\newcommand{\layernorm}{{\operatorname{LayerNorm}}}
+\newcommand{\avg}{{\operatorname{avg}}}
+\newcommand{\relu}{{\operatorname{ReLu}}}
+\newcommand{\VC}{{\operatorname{VC}}}
+\newcommand{\indep}{{\perp \!\!\! \perp}}
+\newcommand{\unif}{{\operatorname{Unif}}}
+\newcommand{\bern}{{\operatorname{Bernoulli}}}
+\newcommand{\binomial}{{\operatorname{Binomial}}}
+\newcommand{\MSE}{{\operatorname{MSE}}}
+\newcommand{\iid}{\textit{iid}\;}
+\newcommand{\IF}{{\operatorname{IF} }}
+\newcommand{\BIC}{{\operatorname{BIC}}}
+\newcommand{\AIC}{{\operatorname{AIC}}}
+\newcommand{\IC}{{\operatorname{IC}}}
+\newcommand{\expl}[1]{{\tag*{[#1]}}}
+\newcommand{\cb}[1]{\textbf{#1}}
+\newcommand{\cbgreen}[1]{\textcolor{fmmgreen}{\textbf{#1}}}
+\newcommand{\cbred}[1]{\textcolor{fmmred}{\textbf{#1}}}
+\newcommand{\cbpurp}[1]{\textcolor{fmmpurple}{\textbf{#1}}}
+\newcommand{\cborange}[1]{\textcolor{fmmorange}{\textbf{#1}}}
+\newcommand{\corange}[1]{{\textcolor{fmmorange}{#1}}}
+\newcommand{\cblue}[1]{{\textcolor{fmmblue}{#1}}}
+\newcommand{\cgreen}[1]{{\textcolor{fmmgreen}{#1}}}
+\newcommand{\cred}[1]{{\textcolor{fmmred}{#1}}}
+\newcommand{\cpurp}[1]{{\textcolor{fmmpurple}{#1}}}
+\newcommand{\symbf}[1]{\boldsymbol{#1}}
+\]</span></p>
+</div>
+<div class="block">
+<p><span class="block-title"><strong>Opener-Quiz</strong></span></p>
+<p>Beim Reinkommen: QR-Code scannen und die 2 Einstiegsfragen beantworten.</p>
+<!-- TODO Particify: Opener-Fragen als quiz/15-funktionsapproximation-I/opener-*.Rmd
+     (R/exams, schoice/mchoice) autorieren und via exams2particify() exportieren;
+     QR-Code beim Reinkommen projizieren. -->
+</div>
+<p><strong>Frage 1:</strong></p>
+<p>Sei <span class="math inline">\(\bv_1, \dots, \bv_d\)</span> eine <em>Basis</em> eines Vektorraums <span class="math inline">\(V\)</span>. Welche Aussagen sind wahr?</p>
+<ol type="1">
+<li>Jedes <span class="math inline">\(\bv \in V\)</span> hat eine <strong>eindeutige</strong> Darstellung <span class="math inline">\(\bv = \sum_{j=1}^d \alpha_j \bv_j\)</span>.</li>
+<li>Basisvektoren dürfen linear abhängig sein, solange sie <span class="math inline">\(V\)</span> aufspannen.</li>
+<li>Die Anzahl <span class="math inline">\(d\)</span> der Basisvektoren ist die <em>Dimension</em> von <span class="math inline">\(V\)</span>.</li>
+</ol>
+<p><strong>Frage 2:</strong></p>
+<p>Die Menge <em>aller</em> Funktionen <span class="math inline">\(f\colon [a, b] \to \R\)</span> bildet mit punktweiser Addition und Skalarmultiplikation einen Vektorraum. Welche Dimension hat er?</p>
+<ol type="1">
+<li><span class="math inline">\(2\)</span> (Intervallgrenzen <span class="math inline">\(a\)</span> und <span class="math inline">\(b\)</span>)</li>
+<li><span class="math inline">\(n\)</span> (Anzahl der Datenpunkte)</li>
+<li>endlich, aber sehr groß</li>
+<li>Er ist unendlich-dimensional.</li>
+</ol>
+<!-- SOLUTION:
+Frage 1: 1 & 3 (2 falsch: Basis = linear unabhängig + aufspannend; vgl. VL 1, "Zur Erinnerung: Basis & Span")
+Frage 2: 4 (kommt heute in der Vorlesung) -->
+</section>
+<section id="verwendete-vorkenntnisse" class="slide level3">
+<h3>Verwendete Vorkenntnisse</h3>
+<ul>
+<li><strong>Lineare Algebra:</strong>
+<ul>
+<li><mark><em>Lineare Gleichungssysteme</em></mark> <span class="math inline">\(\bB \ba = \by\)</span> und deren Lösbarkeit</li>
+<li><mark><em>Konditionszahl</em></mark> einer Matrix als Maß für numerische Stabilität</li>
+<li><em>Basen</em> und <em>lineare Unabhängigkeit</em> (Basisdarstellung von Funktionen)</li>
+</ul></li>
+<li><strong>Analysis:</strong>
+<ul>
+<li>Polynome und ihre Ableitungen (Polynomgrad, Monomialbasis)</li>
+<li>Stetigkeit und Differenzierbarkeit</li>
+<li>Stückweise definierte Funktionen</li>
+<li><mark><em>Normen</em></mark> (z.B. <span class="math inline">\(\|\cdot\|_\infty\)</span> für Konvergenzaussagen)</li>
+</ul></li>
+</ul>
+</section>
+<section>
+<section id="einführung" class="title-slide slide level2 center">
+<h2>Einführung</h2>
+
+</section>
+<section id="einführung-1" class="slide level3">
+<h3>Einführung</h3>
+<p>Drei Varianten: Finde <span class="math inline">\(\wh{f}\)</span>, so dass …</p>
+<div class="columns">
+<div class="column" style="width:31%;">
+<p><img data-src="resources/problems-approx.png"></p>
+<p><span class="math display">\[\|f - \cblue{\wh{f}}\| \approx 0 \phantom{\quad \forall i}\]</span></p>
+</div><div class="column" style="width:31%;">
+<p><img data-src="resources/problems-interp.png"></p>
+<p><span class="math display">\[f(x_i) = \cblue{\wh{f}(x_i)} \quad \forall i\]</span></p>
+</div><div class="column" style="width:31%;">
+<p><img data-src="resources/problems-smooth.png"></p>
+<p><span class="math display">\[y_i = \cblue{\wh{f}(x_i)} + \eps_i \quad \forall i\]</span></p>
+</div></div>
+<div class="small">
+<p>Bei der Interpolation sind die Daten <em>rauschfrei</em>, d.h. <span class="math inline">\(y_i = f(x_i)\)</span> — deshalb steht dort später auch <span class="math inline">\(y_i = \wh{f}(x_i)\)</span>.</p>
+</div>
+<p><strong>Frage:</strong><br>
+Wie sind die drei Varianten miteinander verwandt?</p>
+</section>
+<section id="kommentare" class="slide level3">
+<h3>Kommentare</h3>
+<ul>
+<li><p>Das <mark><em>Approximationsproblem</em></mark> lösen wir meist, indem wir es in ein <mark><em>Interpolations</em></mark>- oder <mark><em>Glättungsproblem</em></mark> überführen.</p></li>
+<li><p>Glättung ist die “schwierigste” Variante, weil die Fehler <span class="math inline">\(\eps_i\)</span> meist stochastisch sind.</p></li>
+<li><p>Wir kümmern uns zunächst um <mark><strong>Interpolation</strong></mark>.</p></li>
+<li><p>Wichtige Anwendungen:</p>
+<ul>
+<li>Glatte Kurven zeichnen.</li>
+<li><span class="math inline">\(f\)</span> approximativ, aber schneller auswerten.
+<ul>
+<li><strong>Beispiel:</strong> <span class="math inline">\(f(x) =\int_0^x g(y) dy\)</span> oder <span class="math inline">\(f(x) = g^{-1}(x)\)</span> müssen numerisch bestimmt werden.</li>
+</ul></li>
+<li>Ableitungen oder Integrale von <span class="math inline">\(f\)</span> approximieren.</li>
+</ul></li>
+</ul>
+</section>
+<section id="anwendungen-in-ml-und-data-science" class="slide level3">
+<h3>Anwendungen in ML und Data Science</h3>
+<ul>
+<li><strong>Computergrafik:</strong><br>
+Interpolation von Pixelwerten bei Reformatierung/Rotation von Bildern.</li>
+<li><strong>Zeitreihen:</strong><br>
+Auffüllen fehlender Werte in Sensor- oder Finanzdaten.</li>
+<li><strong>Generative Modelle:</strong><br>
+<em>Latent Space</em>-Interpolation in VAEs/GANs</li>
+<li><strong>NLP:</strong><br>
+Positional Encodings in Transformern (“RoPE”) basieren auf Sinus-/Cosinus-Funktionen; <em>Long-Context</em>-Erweiterungen von RoPE interpolieren bzw. skalieren Positionsindizes.</li>
+</ul>
+<div class="small">
+<p>(teils Interpolation im engeren Sinn, teils verwandte Konzepte/Analogien)</p>
+</div>
+</section>
+<section id="quiz-interpolationsproblem" class="slide level3">
+<h3>Quiz: Interpolationsproblem</h3>
+<div class="columns">
+<div class="column" style="width:58%;">
+<p><strong>Problem:</strong><br>
+Finde <span class="math inline">\(\wh{f}\)</span>, so dass <span class="math display">\[y_i = \wh{f}(x_i), \quad i = 1, \dots, n.\]</span></p>
+</div><div class="column" style="width:42%;">
+<p><img data-src="resources/problems-interp.png"></p>
+</div></div>
+<p>Welche der folgenden Aussagen ist wahr?</p>
+<ol type="1">
+<li>Es gibt unendlich viele Funktionen <span class="math inline">\(\wh{f}\)</span>, die das Problem lösen.</li>
+<li>Aus <span class="math inline">\(y_i = \wh{f}(x_i), i = 1, \dots, n\)</span>, folgt <span class="math inline">\(\|f - \wh{f}\| \approx 0\)</span>.</li>
+<li>Das Problem hat eine eindeutige Lösung, wenn alle <span class="math inline">\(x_i\)</span> verschieden sind.</li>
+</ol>
+<!-- SOLUTION: 1.
+(Anm.: Die .Rmd-Quelle notierte "1, 3" — aber 3 ist ohne Einschränkung auf ein
+Basissystem falsch, wie die direkt folgende Folie mit 4 verschiedenen
+Interpolanten für paarweise verschiedene x_i selbst demonstriert. Eindeutigkeit
+gilt erst für Polynome vom Grad <= n-1, siehe Abschnitt Polynominterpolation.) -->
+</section>
+<section id="unendlich-viele-lösungen-beispiel" class="slide level3">
+<h3>Unendlich viele Lösungen: Beispiel</h3>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p>Betrachte <span class="math inline">\(n = 3\)</span> Punkte: <span class="math inline">\((0, 1), (1, 2), (2, 5)\)</span>.</p>
+<p><strong>Einige Interpolanten:</strong><br>
+</p>
+<ul>
+<li><strong>Parabel:</strong> <span class="math inline">\(\cred{\wh{f}_1(x)} = 1 + x^2\)</span></li>
+<li><strong>Stückweise linear:</strong> <span class="math inline">\(\cblue{\wh{f}_2(x)} = \begin{cases} x + 1 &amp; x &lt; 1 \\ 3x - 1 &amp; x \geq 1 \end{cases}\)</span></li>
+<li><strong>Kubisch:</strong> <span class="math inline">\(\cgreen{\wh{f}_3(x)} = x^3 - 2x^2 + 2x + 1\)</span></li>
+<li><strong>Vogelwild:</strong> <span class="math inline">\(\cpurp{\wh{f}_4(x)} = 1 + x^2 + 0.5\sin(2\pi x)\)</span></li>
+</ul>
+</div><div class="column" style="width:45%;">
+<p><img data-src="resources/interpolants-example.png"></p>
+</div></div>
+<p>Alle erfüllen <span class="math inline">\(\wh{f}(x_i) = y_i\)</span>, aber sehen völlig unterschiedlich aus!</p>
+<p><strong>Allgemein:</strong></p>
+<p>Jedes <span class="math inline">\(\wh{f} = \wh{f}_1 + g\)</span> mit <span class="math inline">\(g(x_i) = 0\)</span> für alle <span class="math inline">\(i\)</span> ist ebenfalls ein Interpolant.</p>
+<p><span class="math inline">\(\impl\)</span> Wir brauchen <mark><em>Basissysteme</em></mark> (Polynome, Splines), die die Lösungsmenge auf bestimmte Funktionenräume einschränken.</p>
+</section></section>
+<section>
+<section id="funktionenräume-und-ihre-basen" class="title-slide slide level2 center">
+<h2>Funktionenräume und ihre Basen</h2>
+
+</section>
+<section id="funktionenräume" class="slide level3">
+<h3>Funktionenräume</h3>
+<ul>
+<li>Menge aller Funktionen <span class="math inline">\(f\colon [a,b] \to \R\)</span> ist ein <strong>Vektorraum</strong>:
+<ul>
+<li>Addition: <span class="math inline">\((f + g)(x) = f(x) + g(x)\)</span></li>
+<li>Skalarmultiplikation: <span class="math inline">\((\alpha \cdot f)(x) = \alpha \cdot f(x)\)</span></li>
+</ul></li>
+<li>Dieser Raum ist <strong>unendlich-dimensional</strong> <span class="math inline">\(\implies \; \exists\)</span> unendlich viele Interpolanten für <span class="math inline">\(n\)</span> gegebene Punkte!</li>
+</ul>
+<p><strong>Lösung:</strong><br>
+Einschränkung auf endlichdimensionale Unterräume</p>
+<ul>
+<li>Wähle <strong>linear unabhängige</strong> <mark><em>Basisfunktionen</em></mark> <span class="math inline">\(\phi_1, \dots, \phi_K\)</span> und betrachte nur <span class="math display">\[\mathcal{F}_K = \left\{ f \;:\; f(x) = \sum_{k=1}^K a_k \phi_k(x), \; a_1, \dots, a_K \in \R \right\}\]</span></li>
+<li>Jedes <span class="math inline">\(f \in \mathcal{F}_K\)</span> ist durch <span class="math inline">\(K\)</span> Koeffizienten <span class="math inline">\((a_1, \dots, a_K)\)</span> eindeutig bestimmt —<br>
+dafür ist die lineare Unabhängigkeit wesentlich: für <span class="math inline">\(\phi_1 = 1, \phi_2 = x, \phi_3 = 1 + x\)</span> wäre <span class="math inline">\(K = 3\)</span>, aber <span class="math inline">\(\dim \mathcal{F}_K = 2\)</span>.</li>
+<li><strong>Beispiele:</strong>
+<ul>
+<li>Polynome vom Grad <span class="math inline">\(\le n-1\)</span>: <span class="math inline">\(\phi_k(x) = x^{k-1}\)</span>, <span class="math inline">\(K = n\)</span></li>
+<li><mark><em>Splines</em></mark> <span class="math inline">\(q\)</span>-ten Grades auf <span class="math inline">\(m+1\)</span> Knoten: <span class="math inline">\(K = m + q\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="basen-von-rn-zu-funktionenräumen" class="slide level3">
+<h3>Basen: von <span class="math inline">\(\R^n\)</span> zu Funktionenräumen</h3>
+<p><span class="math inline">\(\{\phi_1, \dots, \phi_K\}\)</span> ist eine <strong>Basis</strong> von <span class="math inline">\(\mathcal{F}_K\)</span> — <em>genauso</em> wie <span class="math inline">\(\{\bv_1, \dots, \bv_n\}\)</span> eine Basis des <span class="math inline">\(\R^n\)</span> ist:</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: center;">Vektorraum <span class="math inline">\(\R^n\)</span></th>
+<th style="text-align: center;">Funktionenraum <span class="math inline">\(\mathcal{F}_K\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">“Vektor”</td>
+<td style="text-align: center;"><span class="math inline">\(\bv \in \R^n\)</span></td>
+<td style="text-align: center;">Funktion <span class="math inline">\(f\colon [a,b] \to \R\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Basis</td>
+<td style="text-align: center;"><span class="math inline">\(\bv_1, \dots, \bv_n\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(\phi_1, \dots, \phi_K\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">eindeutige Darstellung</td>
+<td style="text-align: center;"><span class="math inline">\(\bv = \sum_{i=1}^n \alpha_i \bv_i\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(f = \sum_{k=1}^K a_k \phi_k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Koordinaten</td>
+<td style="text-align: center;"><span class="math inline">\((\alpha_1, \dots, \alpha_n)\)</span></td>
+<td style="text-align: center;">Koeffizienten <span class="math inline">\((a_1, \dots, a_K)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dimension</td>
+<td style="text-align: center;"><span class="math inline">\(n\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(K\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Alle Konzepte der linearen Algebra (lineare Unabhängigkeit, <mark><em>Span</em></mark>, Basiswechsel, …) übertragen sich direkt auf Funktionen — eine Funktion <em>ist</em> ein Vektor (in <span class="math inline">\(\R^\infty\)</span>…)</li>
+<li>Statt eine Funktion (in <span class="math inline">\(\R^\infty\)</span>) finden zu müssen, brauchen wir jetzt nur noch ihren <strong>Koordinatenvektor</strong> <span class="math inline">\(\ba = (a_1, \dots, a_K) \in \R^K\)</span><br>
+<span class="math inline">\(\to\)</span> ein Problem der (numerischen) linearen Algebra!</li>
+</ul>
+</section></section>
+<section>
+<section id="interpolation-durch-basisdarstellung" class="title-slide slide level2 center">
+<h2>Interpolation durch Basisdarstellung</h2>
+
+</section>
+<section id="interpolation-durch-basisdarstellung-1" class="slide level3">
+<h3>Interpolation durch Basisdarstellung</h3>
+<ul>
+<li><strong>Problem:</strong><br>
+Finde <span class="math inline">\(\wh{f}\)</span>, so dass <span class="math display">\[y_i = \wh{f}(x_i) \quad \forall i.\]</span></li>
+<li><strong>Lösung:</strong><br>
+
+<ol type="1">
+<li>Nehme an, dass <span class="math inline">\(\wh{f}(x) = \sum_{k = 1}^K a_k \phi_k(x)\)</span> für</li>
+</ol>
+<ul>
+<li><mark><em>Basisfunktionen</em></mark> <span class="math inline">\(\phi_1, \dots, \phi_K\)</span> (bekannt)</li>
+<li><mark><em>Basiskoeffizienten</em></mark> <span class="math inline">\(a_1, \dots, a_K\)</span> (unbekannt)</li>
+</ul>
+<ol start="2" type="1">
+<li>Löse das Gleichungssystem <span class="math display">\[\begin{align*}
+y_i &amp; = \sum_{k = 1}^K a_k \phi_k(x_i), \qquad i = 1, \dots, n.
+\end{align*}\]</span></li>
+</ol></li>
+</ul>
+<p><span class="math inline">\(\to\)</span> <mark><em>Interpolationsproblem</em></mark> zurückgeführt auf <mark><em>Lineares Gleichungssystem</em></mark>!</p>
+<div class="fragment">
+<ul>
+<li>Interpolationsmethoden unterscheiden sich im Wesentlichen durch die <strong>Wahl des Basissystems</strong> —<br>
+gute Systeme haben gute <em>Kondition</em>, <em>Stabilität</em>, <em>Lokalität</em>, <em>effiziente Lösbarkeit</em>.</li>
+</ul>
+</div>
+</section>
+<section id="quiz-vom-interpolationsproblem-zum-lgs" class="slide level3">
+<h3>Quiz: Vom Interpolationsproblem zum LGS</h3>
+<p>Das System <span class="math display">\[\begin{align*}
+y_i &amp; = \sum_{k = 1}^K a_k \phi_k(x_i), \qquad i = 1, \dots, n
+\end{align*}\]</span> lässt sich als LGS <span class="math inline">\(\bB \ba = \by\)</span> darstellen. Was sind <span class="math inline">\(\bB, \ba, \by\)</span>?</p>
+<!-- SOLUTION:
+
+a = (a_1, ..., a_K) in R^K;  y = (y_1, ..., y_n) in R^n
+
+B = [phi_k(x_i)]_{i,k} in R^{n x K}, d.h.
+B = (phi_1(x_1) ... phi_K(x_1); ...; phi_1(x_n) ... phi_K(x_n))
+-->
+</section>
+<section id="beispiel-basisdarstellung-konkret" class="slide level3">
+<h3>Beispiel: Basisdarstellung konkret</h3>
+<p><strong>Gegeben:</strong><br>
+<span class="math inline">\(n = 3\)</span> Datenpunkte <span class="math inline">\((0, 1), (1, 2), (2, 5)\)</span>, Monomialbasis <span class="math inline">\(\phi_k(x) = x^{k-1}\)</span>, <span class="math inline">\(K = 3\)</span></p>
+<p><span class="math display">\[\implies \bB = \begin{pmatrix}
+1 &amp; 0 &amp; 0 \\
+1 &amp; 1 &amp; 1 \\
+1 &amp; 2 &amp; 4
+\end{pmatrix}, \quad
+\by = \begin{pmatrix} 1 \\ 2 \\ 5 \end{pmatrix}\]</span></p>
+<p><strong>Lösung durch Einsetzen:</strong><br>
+<span class="math display">\[\begin{align*}
+\text{Zeile 1: }&amp;&amp; a_1 &amp;= 1 &amp;&amp;\\
+\text{Zeile 2: }&amp;&amp; \cblue{a_2} + \cgreen{a_3} &amp;= 1 &amp;&amp;\to \cblue{a_2} &amp;=&amp;\; 1 - \cgreen{a_3}\\
+\text{Zeile 3: }&amp;&amp; 2\cblue{a_2} + 4\cgreen{a_3} &amp;= 4 &amp;&amp;\to 2 + 2\cgreen{a_3} &amp;=&amp;\; 4\\
+\end{align*}\]</span> <span class="math inline">\(\impl a_3 = 1, a_2 = 0\)</span> <span class="math inline">\(\impl\)</span> <span class="math inline">\(\wh{f}(x) = 1 + x^2\)</span></p>
+<p><strong>Probe:</strong><br>
+<span class="math inline">\(\wh{f}(0) = 1\)</span>, <span class="math inline">\(\wh{f}(1) = 2\)</span>, <span class="math inline">\(\wh{f}(2) = 5  \qquad \checkmark\)</span></p>
+</section></section>
+<section>
+<section id="polynominterpolation" class="title-slide slide level2 center">
+<h2>Polynominterpolation</h2>
+
+</section>
+<section id="fundamentalsatz-der-algebra" class="slide level3">
+<h3>Fundamentalsatz der Algebra</h3>
+<div class="block">
+<p><span class="block-title">Satz: <strong>Fundamentalsatz der Algebra</strong></span></p>
+<p>Jedes Polynom <span class="math display">\[p(x) = a_n x^n + \ldots + a_1 x + a_0\]</span> mit <span class="math inline">\(a_n \neq 0\)</span> und <span class="math inline">\(n \geq 1\)</span> hat mindestens eine Nullstelle in <span class="math inline">\(\C\)</span>.</p>
+</div>
+<p><em>Äquivalent:</em><br>
+Jedes Polynom vom Grad <span class="math inline">\(n\)</span> hat genau <span class="math inline">\(n\)</span> Nullstellen in <span class="math inline">\(\C\)</span> (mit Vielfachheit gezählt).</p>
+<p><strong>Folgerung:</strong><br>
+Ein Polynom vom Grad <span class="math inline">\(\leq n-1\)</span> mit <span class="math inline">\(n\)</span> verschiedenen Nullstellen ist das Nullpolynom.</p>
+<p><strong>Beispiel:</strong><br>
+Ein quadratisches Polynom (Grad 2) kann höchstens 2 (verschiedene) Nullstellen haben. Finden wir eines mit 3 Nullstellen, muss es <span class="math inline">\(p(x) = 0\)</span> für alle <span class="math inline">\(x\)</span> sein.</p>
+</section>
+<section id="eindeutigkeit-der-polynominterpolation" class="slide level3">
+<h3>Eindeutigkeit der Polynominterpolation</h3>
+<div class="block">
+<p><span class="block-title">Satz: <strong>Polynominterpolation</strong></span></p>
+<p>Für <span class="math inline">\(n\)</span> Paare <span class="math inline">\((x_i, y_i)_{i = 1}^n\)</span> mit paarweise verschiedenen <span class="math inline">\(x_i\)</span> gibt es <em>genau</em> ein Polynom <span class="math inline">\(p\)</span> vom Grad <em>höchstens</em> <span class="math inline">\((n-1)\)</span> mit <span class="math inline">\(p(x_i) = y_i\)</span> für alle <span class="math inline">\(i\)</span>.</p>
+</div>
+<p><strong>Beweisskizze (Eindeutigkeit):</strong><br>
+</p>
+<ul>
+<li>Angenommen, <span class="math inline">\(p\)</span> und <span class="math inline">\(q\)</span> sind beides interpolierende Polynome vom Grad <span class="math inline">\(\leq n-1\)</span>.</li>
+<li>Dann gilt: <span class="math inline">\(\cgreen{(p - q)}(x_i) = p(x_i) - q(x_i) = y_i - y_i = 0\)</span> für alle <span class="math inline">\(i = 1, \ldots, n\)</span>.</li>
+<li>Also hat <span class="math inline">\(\cgreen{p - q}\)</span> mindestens <span class="math inline">\(n\)</span> Nullstellen, aber Grad <span class="math inline">\(\leq n-1\)</span>.</li>
+<li>Nach dem <mark><em>Fundamentalsatz</em></mark>: <span class="math inline">\(\cgreen{p - q}\)</span> muss das Nullpolynom sein.</li>
+<li>Daher <span class="math inline">\(p = q\)</span>. <span class="math inline">\(\blacksquare\)</span></li>
+</ul>
+</section>
+<section id="polynominterpolation-1" class="slide level3">
+<h3>Polynominterpolation</h3>
+<ul>
+<li>Alle Polynome vom Grad höchstens <span class="math inline">\((n-1)\)</span> können durch die <mark><em>Monomialbasis</em></mark> <span class="math display">\[\phi_1(x) = 1, \quad \phi_2(x) = x, \quad \dots, \quad \phi_{n}(x) = x^{n-1}\]</span> erzeugt werden.</li>
+</ul>
+
+<img data-src="resources/basis-monomial.png" class="quarto-figure quarto-figure-center r-stretch" style="width:62.0%"></section>
+<section id="achtung-häufiges-missverständnis" class="slide level3">
+<h3>Achtung: Häufiges Missverständnis</h3>
+<p>Es gibt <strong>genau ein</strong> Polynom von Grad <strong>höchstens</strong> <span class="math inline">\(n-1\)</span> durch <span class="math inline">\(n\)</span> Punkte.</p>
+<p><em>NICHT:</em> Grad <strong>genau</strong> <span class="math inline">\(n-1\)</span>!</p>
+<p><strong>Beispiel:</strong> <span class="math inline">\(n = 3\)</span> Punkte <span class="math inline">\((0,0), (1,1), (2,2)\)</span> liegen auf einer Geraden.</p>
+<ul>
+<li>Interpolierendes Polynom: <span class="math inline">\(p(x) = x\)</span> (Grad 1, nicht 2!)</li>
+<li>Das eindeutige Polynom <em>höchstens</em> 2. Grades ist: <span class="math inline">\(p(x) = \corange{0} \cdot x^2 + 1 \cdot x + 0\)</span></li>
+</ul>
+</section>
+<section id="polynominterpolation-in-r" class="slide level3 smaller">
+<h3>Polynominterpolation in R</h3>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">10</span>)</span>
+<span id="cb1-2"><a></a>y <span class="ot">&lt;-</span> <span class="fu">f</span>(x)</span>
+<span id="cb1-3"><a></a></span>
+<span id="cb1-4"><a></a><span class="co"># Vandermonde-Matrix: cbind(1, x, x^2, ...)</span></span>
+<span id="cb1-5"><a></a>B <span class="ot">&lt;-</span> <span class="fu">outer</span>(x, <span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, <span class="st">"^"</span>)</span>
+<span id="cb1-6"><a></a>a <span class="ot">&lt;-</span> <span class="fu">solve</span>(B, y)</span>
+<span id="cb1-7"><a></a></span>
+<span id="cb1-8"><a></a>xnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb1-9"><a></a>fhat <span class="ot">&lt;-</span> <span class="fu">outer</span>(xnew, <span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>, <span class="st">"^"</span>) <span class="sc">%*%</span> a</span>
+<span id="cb1-10"><a></a></span>
+<span id="cb1-11"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-12"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb1-13"><a></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(xnew, fhat))</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:48%;">
+<p><img data-src="resources/interp-poly-1.png"></p>
+</div></div>
+</section>
+<section id="problem-1-kondition" class="slide level3 smaller">
+<h3>Problem 1: Kondition</h3>
+<ul>
+<li><mark><em>Monomialbasis</em></mark> führt zu einer schlecht konditionierten Basismatrix <span class="math inline">\(\bB\)</span>: <span class="math display">\[\bx = (x_1,  \dots, x_n)^\top \to \bB = \begin{pmatrix} 1 &amp; \bx &amp; \bx^2 &amp; \dots &amp; \bx^{n-1}\end{pmatrix}\]</span>
+<ul>
+<li>Die Spalten sind die Vektoren <span class="math inline">\(\bb_k = (x_1^{k - 1}, \dots, x_n^{k - 1})^\top\)</span>.</li>
+<li>Für <span class="math inline">\(k\)</span> groß sind diese Vektoren nahezu linear abhängig (vgl. Abbildung der Monomialbasis!)<br>
+<span class="math inline">\(\implies\)</span> Matrix nahezu singulär / schlecht <mark><em>konditioniert</em></mark>.</li>
+</ul></li>
+</ul>
+<p><strong>Numerisches Beispiel:</strong><br>
+<span class="math inline">\(n\)</span> äquidistante Punkte in <span class="math inline">\([0, 1]\)</span>, Polynom vom Grad <span class="math inline">\(n-1\)</span>:</p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(n\)</span></th>
+<th style="text-align: center;">Polynomgrad</th>
+<th style="text-align: center;"><span class="math inline">\(\kappa(\bB)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><span class="math inline">\(\approx 10^{3}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;"><span class="math inline">\(\approx 10^{7}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;"><span class="math inline">\(\approx 10^{12}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;"><span class="math inline">\(\approx 10^{16}\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="small">
+<p>(Größenordnungen für <span class="math inline">\(\kappa_2\)</span>; andere Normen ergeben sehr ähnliche Werte.<br>
+Die Kondition hängt zudem von der Knotenlage ab: dieselben Punkte auf <span class="math inline">\([-1, 1]\)</span> ergeben für <span class="math inline">\(n = 20\)</span> nur <span class="math inline">\(\kappa_2 \approx 10^{8}\)</span>.)</p>
+</div>
+<p>Bei doppelter Präzision (<span class="math inline">\(\approx 16\)</span> Dezimalstellen) ist für <span class="math inline">\(n \ge 20\)</span> fast alle Genauigkeit verloren!</p>
+<p><span class="math inline">\(\to\)</span> verwende <strong>orthogonalisierte</strong> Basis (Legendre-, Chebyshev-, Hermite-Polynome) —<br>
+in <code>R</code>: <strong><code>cbind(1, poly(x, 3))</code></strong> statt <code>cbind(1, x, x^2, x^3)</code></p>
+</section>
+<section id="orthogonale-polynome-gram-schmidt-im-funktionenraum" class="slide level3 smaller">
+<h3>Orthogonale Polynome: Gram-Schmidt im Funktionenraum</h3>
+<ul>
+<li>Auf <span class="math inline">\(\mathcal{F}_K\)</span> gibt es auch ein <strong>Skalarprodukt</strong>: <span class="math inline">\(\displaystyle \langle f, g \rangle = \int f(x)\, g(x) \, dx \qquad\)</span> (analog zu <span class="math inline">\(\bx^\top \by\)</span> in <span class="math inline">\(\R^n\)</span>)</li>
+<li>Damit funktioniert <mark><em>Gram-Schmidt-Orthogonalisierung</em></mark> (<span class="math inline">\(\to\)</span> <mark><em>QR-Zerlegung</em></mark>!) angewendet auf die Monome <span class="math inline">\(\{1, x, x^2, \dots\}\)</span> über <span class="math inline">\([-1, 1]\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+p_2(x) = \cgreen{x^2} - \cblue{\frac{\langle x^2, 1 \rangle}{\langle 1, 1 \rangle} \cdot 1} - \cred{\underbrace{\frac{\langle x^2, x \rangle}{\langle x, x \rangle}}_{=\,0} \cdot\, x}
+       = \cgreen{x^2} - \cblue{\tfrac{1}{3}} \;\propto\; \underbrace{\tfrac{1}{2}\left(3x^2 - 1\right)}_{\text{Legendre-Polynom } P_2}
+\]</span></p>
+<ul>
+<li><strong>Legendre-, Chebyshev-, Hermite-Polynome</strong> = Gram-Schmidt bzgl. unterschiedlicher Skalarprodukte (Gewichtsfunktionen/Intervalle)</li>
+<li>orthogonale Basisfunktionen <span class="math inline">\(\impl\)</span> <span class="math inline">\(\bB\)</span> deutlich besser konditioniert.</li>
+<li><code>poly(x, k)</code> in <code>R</code> orthogonalisiert bzgl. des <em>diskreten</em> (vektoriellen) Skalarprodukts <span class="math inline">\(\sum_i f(x_i) g(x_i)\)</span>.</li>
+</ul>
+</section>
+<section id="problem-2-stabilität-und-lokalität" class="slide level3">
+<h3>Problem 2: Stabilität und Lokalität</h3>
+
+<img data-src="resources/interp-poly-2.png" class="quarto-figure quarto-figure-center r-stretch" style="width:60.0%"><ul>
+<li>Ändern wir nur ein <span class="math inline">\(y_i\)</span>, verändert sich (potentiell) die gesamte Funktion. <span class="math inline">\(\implies\)</span> Die Methode ist instabil.</li>
+<li>Dies ist ein grundsätzliches Problem von Polynombasen.</li>
+</ul>
+</section>
+<section id="das-runge-phänomen" class="slide level3">
+<h3>Das Runge-Phänomen</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><mark><em>Runge-Phänomen</em></mark> (1901):</p>
+<p>Interpoliere <span class="math inline">\(f(x) = \frac{1}{1 + 25x^2}\)</span> auf <span class="math inline">\([-1, 1]\)</span> mit <span class="math inline">\(n\)</span> äquidistanten Knoten durch <span class="math inline">\(p_{n-1}\)</span> (Grad <span class="math inline">\(n - 1\)</span>).</p>
+<ul>
+<li><span class="math inline">\(f\)</span> ist glatt (<span class="math inline">\(\in \mathcal C^\infty\)</span>!)</li>
+<li>Aber: <span class="math inline">\(\|f - p_{n-1}\|_\infty \to \infty\)</span> für <span class="math inline">\(n \to \infty\)</span>!</li>
+<li>Das Wachstum ist <strong>nicht monoton</strong> (von <span class="math inline">\(n = 5\)</span> auf <span class="math inline">\(n = 10\)</span> fällt der Fehler zunächst); die Fehlermaxima wandern an den Rand.</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><img data-src="resources/runge-phenomenon.png"></p>
+</div></div>
+<p><strong>Lösung:</strong><br>
+</p>
+<p><mark><strong>Stückweise Polynome</strong></mark> statt eines globalen Polynoms <span class="math inline">\(\to\)</span> <mark><strong>Splines</strong></mark></p>
+</section></section>
+<section>
+<section id="splines" class="title-slide slide level2 center">
+<h2>Splines</h2>
+
+</section>
+<section id="splines-1" class="slide level3">
+<h3>Splines</h3>
+<div class="block">
+<p><span class="block-title">Def.: <strong>Polynom-Spline</strong></span></p>
+<p>Sei <span class="math inline">\([a, b] \subset \R\)</span> ein Intervall.</p>
+<p>Ein <mark><strong>Polynom-Spline <span class="math inline">\(q\)</span>-ten Grades</strong></mark> ist eine Funktion <span class="math inline">\(s\colon [a, b] \to \R\)</span>,</p>
+<ul>
+<li>definiert auf einem <em>Gitter</em> von <mark><em>Knoten</em></mark> <span class="math display">\[a = \xi_0 &lt; \xi_1 &lt; \ldots &lt; \xi_{m} = b,\]</span></li>
+<li>so dass <span class="math display">\[s(x) = p_k(x) \quad \text{für } x \in [\xi_{k -1}, \xi_k) \quad (\text{bzw. } x \in [\xi_{m-1}, \xi_m] \text{ für } k = m)\]</span> mit <em>Polynomen</em> <span class="math inline">\(p_k\)</span> <em>vom Grad höchstens</em> <span class="math inline">\(q\)</span>, <span class="math inline">\(k = 1, \dots, m\)</span>,</li>
+<li>mit <span class="math inline">\((q - 1)\)</span> stetigen Ableitungen: <span class="math inline">\(s \in \mathcal C^{q-1}\)</span>.</li>
+</ul>
+</div>
+</section>
+<section id="splines-2" class="slide level3">
+<h3>Splines</h3>
+<p>Weniger formal:</p>
+<blockquote>
+<p>Ein Spline ist eine Funktion, die Polynome an den Punkten <span class="math inline">\(\xi_1, \dots, \xi_{m - 1}\)</span> zusammensetzt.</p>
+</blockquote>
+<div class="columns">
+<div class="column" style="width:33%;">
+<p><img data-src="resources/bspl0.png"></p>
+</div><div class="column" style="width:33%;">
+<p><img data-src="resources/bspl1.png"></p>
+</div><div class="column" style="width:33%;">
+<p><img data-src="resources/bspl3.png"></p>
+</div></div>
+</section>
+<section id="warum-m-q-parameter" class="slide level3 smaller">
+<h3>Warum <span class="math inline">\(m + q\)</span> Parameter?</h3>
+<p><em>Annahme: einfache innere Knoten, maximale Glattheit <span class="math inline">\(\mathcal C^{q-1}\)</span></em></p>
+<p><strong>Parameterzählung:</strong><br>
+</p>
+<ul>
+<li>Ohne Stetigkeitsbedingungen: <span class="math inline">\(m(q+1)\)</span> Parameter (<span class="math inline">\(m\)</span> Intervalle, je <span class="math inline">\(q+1\)</span> Koeffizienten)</li>
+<li>An jedem der <span class="math inline">\((m-1)\)</span> inneren Knoten: <span class="math inline">\(q\)</span> Bedingungen (Stetigkeit von <span class="math inline">\(s, s', \dots, s^{(q-1)}\)</span>)</li>
+<li><span class="math inline">\(\implies m(q+1) - (m-1) \cdot q = \corange{m + q}\)</span></li>
+</ul>
+<p><strong><mark><em>Interpolation</em></mark> an <span class="math inline">\(n = m + 1\)</span> Knoten</strong> mit kubischem Spline (<span class="math inline">\(q = 3\)</span>):</p>
+<p><span class="math inline">\(m + 3\)</span> Freiheitsgrade aber nur <span class="math inline">\(n = m + 1\)</span> Interpolationsbedingungen<br>
+<span class="math inline">\(\impl\)</span> Es fehlen <strong>2 Bedingungen</strong>!</p>
+<p><strong>Gängige <mark><em>Randbedingungen</em></mark>:</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Typ</th>
+<th style="text-align: left;">Bedingung</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Natürlich</td>
+<td style="text-align: left;"><span class="math inline">\(s''(a) = s''(b) = 0\)</span> (lineare Enden)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Eingespannt</td>
+<td style="text-align: left;"><span class="math inline">\(s'(a), s'(b)\)</span> vorgegeben</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Periodisch</td>
+<td style="text-align: left;"><span class="math inline">\(s'(a) = s'(b),\; s''(a) = s''(b)\)</span> (für <span class="math inline">\(y_0 = y_m\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p><mark><strong>Natürliche Splines</strong></mark> sind der Standard, wenn keine Randinformation vorliegt.</p>
+</section>
+<section id="kubischer-spline-konstruktion-schritt-für-schritt" class="slide level3 smaller">
+<h3>Kubischer Spline: Konstruktion Schritt für Schritt</h3>
+<p><strong>Gegeben:</strong><br>
+4 Punkte <span class="math inline">\((0, 0), (1, 1), (2, 0), (3, -1)\)</span> <span class="math inline">\(\impl\)</span> <span class="math inline">\(m = 3\)</span> Intervalle</p>
+<p><strong>Ansatz:</strong><br>
+Je Intervall ein kubisches Polynom <span class="math inline">\(p_k(x)\)</span> mit 4 Koeffizienten.</p>
+<p><strong>Bedingungen:</strong><br>
+</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 34%">
+<col style="width: 43%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Typ</th>
+<th style="text-align: center;">Anzahl</th>
+<th style="text-align: left;">Beispiel</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Interpolation</td>
+<td style="text-align: center;"><span class="math inline">\(\cgreen{4}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(p_1(\xi_0) = y_0,\; p_k(\xi_k) = y_k\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Stetigkeit</td>
+<td style="text-align: center;"><span class="math inline">\(\cgreen{2}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(p_1(1)=p_2(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(s'\)</span> stetig</td>
+<td style="text-align: center;"><span class="math inline">\(\cgreen{2}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(p_1'(1)=p_2'(1)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(s''\)</span> stetig</td>
+<td style="text-align: center;"><span class="math inline">\(\cgreen{2}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(p_1''(1)=p_2''(1)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Randbedingung (natürlich)</td>
+<td style="text-align: center;"><span class="math inline">\(\cgreen{2}\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(s''(0)=s''(3)=0\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Summe:</strong> <span class="math inline">\(\cgreen{4 + 2 + 2 + 2 + 2 = 12}\)</span> Bedingungen für <span class="math inline">\(\cblue{3 \times 4 = 12}\)</span> Unbekannte</p>
+<p><span class="math inline">\(\impl\)</span> LGS ist eindeutig lösbar!</p>
+</section>
+<section id="b-splines" class="slide level3">
+<h3>B-Splines</h3>
+<ul>
+<li>Jeder Spline von Grad <span class="math inline">\(q\)</span> kann auch durch eine Linearkombination von <span class="math inline">\(m + q\)</span> <mark><strong>B-Spline</strong></mark>-Basisfunktionen <span class="math inline">\(B_{k}\)</span> zum Grad <span class="math inline">\(q\)</span> repräsentiert werden: <span class="math display">\[\begin{align*}
+s(x) = \sum_{k = 1}^{m + q} a_k B_{k}(x)
+\end{align*}\]</span></li>
+</ul>
+
+<img data-src="resources/spline-bases.png" class="quarto-figure quarto-figure-center r-stretch" style="width:72.0%"></section>
+<section id="b-splines-rekursive-definition" class="slide level3">
+<h3>B-Splines: Rekursive Definition</h3>
+<ul>
+<li>B-Splines können auf verschiedene Arten definiert werden.</li>
+<li>Rekursive Definition (<mark><em>Cox-de-Boor-Rekursion</em></mark>; nur zur Referenz/Transparenz):
+<ul>
+<li>Erweitere die Knotenfolge zu <span class="math inline">\(\tau_1, \dots, \tau_{m + 2q + 1}\)</span>: <span class="math display">\[\tau_1 = \cdots = \tau_{q + 1} = \xi_0, \quad \tau_{q + 1 + i} = \xi_{i} \;\; (i = 1, \dots, m - 1), \quad \tau_{m + q + 1} = \cdots = \tau_{m + 2q + 1} = \xi_m.\]</span></li>
+<li><span class="math inline">\(q = 0\)</span>: <span class="math display">\[B_k^{(0)}(x) = \ind(\tau_k \le x &lt; \tau_{k + 1})\]</span></li>
+<li><span class="math inline">\(q &gt; 0\)</span>: <span class="math display">\[\displaystyle B_k^{(q)}(x) = \frac{x - \tau_{k}}{\tau_{k + q} - \tau_{k}} B_k^{(q - 1)}(x) + \frac{\tau_{k + q + 1} - x}{\tau_{k + q + 1} - \tau_{k + 1}} B_{k + 1}^{(q - 1)}(x)\]</span></li>
+</ul></li>
+<li>in <code>R</code>: <code>splines::bs()</code></li>
+</ul>
+</section>
+<section id="b-splines-in-r" class="slide level3">
+<h3>B-Splines in R</h3>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>y <span class="ot">&lt;-</span> <span class="fu">f</span>(x)</span>
+<span id="cb2-2"><a></a>B <span class="ot">&lt;-</span> splines<span class="sc">::</span><span class="fu">bs</span>(x, <span class="at">df =</span> <span class="dv">10</span>, <span class="at">degree =</span> <span class="dv">3</span>,</span>
+<span id="cb2-3"><a></a>                 <span class="at">intercept =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-4"><a></a>a <span class="ot">&lt;-</span> <span class="fu">solve</span>(B, y)</span>
+<span id="cb2-5"><a></a></span>
+<span id="cb2-6"><a></a>xnew <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb2-7"><a></a>Bnew <span class="ot">&lt;-</span> splines<span class="sc">::</span><span class="fu">bs</span>(xnew,</span>
+<span id="cb2-8"><a></a>                    <span class="at">knots =</span> <span class="fu">attr</span>(B, <span class="st">"knots"</span>),</span>
+<span id="cb2-9"><a></a>                    <span class="at">intercept =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-10"><a></a>fhat <span class="ot">&lt;-</span> Bnew <span class="sc">%*%</span> a</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:48%;">
+<p><img data-src="resources/interp-spline-1.png"></p>
+</div></div>
+</section>
+<section id="bsplines-stabilitaet" class="slide level3 smaller">
+<h3>B-Splines: Numerische Stabilität &amp; Effizienz</h3>
+<p><strong>Vergleich der Konditionszahlen</strong> für <span class="math inline">\(n = 20\)</span> Punkte in <span class="math inline">\([0,1]\)</span>:<br>
+</p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 36%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Basis</th>
+<th style="text-align: center;">Polynomgrad</th>
+<th style="text-align: center;">Konditionszahl</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Monomialbasis</td>
+<td style="text-align: center;">19</td>
+<td style="text-align: center;"><span class="math inline">\(\kappa\left(\bB_{\text{mono}}\right) \approx 10^{16}\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B-Splines (kubisch, <span class="math inline">\(K = 20\)</span> Basisfunktionen)</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><span class="math inline">\(\kappa\left(\bB_{\text{spline}}\right) \approx 10^{2}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>B-Splines sind <strong>rund 14 Größenordnungen</strong> besser konditioniert!</p>
+<div class="small">
+<p>(Größenordnungen, hier <span class="math inline">\(\kappa_2\)</span> mit den Standardknoten von <code>splines::bs()</code>: <span class="math inline">\(1{,}2 \cdot 10^{16}\)</span> vs.&nbsp;<span class="math inline">\(35\)</span>; die genauen Werte hängen von Norm und Knotenwahl ab.)</p>
+</div>
+<p><strong>Außerdem:</strong> Dünn besetzte <mark><em>Bandstruktur</em></mark> (nur <span class="math inline">\(q+1\)</span> Einträge pro Zeile) der B-Spline-Matrix ermöglicht</p>
+<ul>
+<li>LGS-Lösung in <span class="math inline">\(O(nq^2)\)</span> statt <span class="math inline">\(O(n^3)\)</span></li>
+<li>Für <span class="math inline">\(n = 1000\)</span>, <span class="math inline">\(q = 3\)</span>: Beschleunigungsfaktor <span class="math inline">\(\approx 100\,000\)</span></li>
+</ul>
+<p><span class="math inline">\(\impl\)</span> B-Splines sind der Standard in der Praxis, trotz komplizierter Definition.</p>
+<div class="small">
+<p><a href="#/bsplines-eigenschaften">↩︎ zurück: „(B-)Splines: Eigenschaften”</a></p>
+</div>
+</section>
+<section id="bsplines-eigenschaften" class="slide level3">
+<h3>(B-)Splines: Eigenschaften</h3>
+<ul>
+<li>Splines sind das gängigste Basissystem zur Funktionsapproximation, meist <strong>kubisch</strong> (<span class="math inline">\(q = 3\)</span>):</li>
+</ul>
+<ol type="1">
+<li>Wenn <span class="math inline">\(\max_k\left|\xi_k - \xi_{k - 1}\right|\)</span> hinreichend klein ist, kann jede stetige Funktion <span class="math inline">\(f\)</span> beliebig genau approximiert werden.</li>
+<li>Die Ableitung eines Grad-<span class="math inline">\(q\)</span>-Splines ist ein Grad-<span class="math inline">\((q - 1)\)</span>-Spline, das Integral ein Grad-<span class="math inline">\((q + 1)\)</span>-Spline.</li>
+<li>Ableitungen/Integrale eines Splines approximieren auch die Ableitungen/Integrale der Zielfunktion — für die Ableitungen allerdings nur, wenn <span class="math inline">\(f\)</span> selbst entsprechend oft differenzierbar ist, und mit je einer Ordnung langsamerer Konvergenz.</li>
+<li>B-Splines sind numerisch stabil (vgl. <a href="#/bsplines-stabilitaet">B-Splines: Numerische Stabilität &amp; Effizienz</a>);<br>
+haben <mark><em>lokale Träger</em></mark>: <span class="math inline">\(B_k(x) = 0\)</span> für <span class="math inline">\(x \notin [\tau_k, \tau_{k + q + 1}]\)</span> <span class="math inline">\(\impl\)</span> Approximation ist <strong>lokal</strong>, also stabiler;<br>
+<span class="math inline">\(\bB\)</span> hat <em>Band-Struktur</em> <span class="math inline">\(\impl\)</span> effizient lösbar.</li>
+</ol>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><img data-src="resources/interp-poly-2.png"></p>
+</div><div class="column" style="width:50%;">
+<p><img data-src="resources/interp-spline-2.png"></p>
+</div></div>
+<div class="small">
+<p>Polynominterpolation (links) vs.&nbsp;Spline-Interpolation (rechts): Änderung <em>eines</em> Datenpunkts.</p>
+</div>
+</section></section>
+<section>
+<section id="self-check-zusammenfassung" class="title-slide slide level2 center">
+<h2>Self-Check &amp; Zusammenfassung</h2>
+
+</section>
+<section id="wrap-up" class="slide level3">
+<h3>Wrap-up</h3>
+<p><strong>Heute gelernt</strong><br>
+</p>
+<ul>
+<li><mark><em>Approximation, Interpolation, Glättung</em></mark></li>
+<li><mark><em>Funktionenräume</em></mark>: Funktionen als Vektoren, <mark><em>Basisfunktionen</em></mark> wie Basisvektoren</li>
+<li>Lösungsansatz durch <mark><em>Basisdarstellung</em></mark>: Interpolation <span class="math inline">\(\to\)</span> LGS <span class="math inline">\(\bB\ba = \by\)</span></li>
+<li>Polynombasen und ihre Probleme (Kondition, <mark><em>Runge-Phänomen</em></mark>); Ausweg: orthogonale Polynome = Gram-Schmidt im Funktionenraum</li>
+<li><mark><em>Splines, B-Splines</em></mark> und ihre Vorteile (Lokalität, Stabilität, Effizienz)</li>
+</ul>
+<p><strong>Nächste Vorlesung:</strong> Funktionsapproximation II — Glättungsproblem, Bias-Varianz-Trade-off</p>
+</section>
+<section id="self-check" class="slide level3 smaller">
+<h3>Self-Check</h3>
+<!-- TODO Particify/Moodle: als quiz/15-funktionsapproximation-I/selfcheck-*.Rmd autorieren (R/exams). -->
+<p><strong>Frage 1:</strong> Zur Charakterisierung eines Splines <span class="math inline">\(q\)</span>-ten Grades auf <span class="math inline">\(m + 1\)</span> Knoten benötigen wir…</p>
+<ol type="1">
+<li><span class="math inline">\(q + 1\)</span> Parameter.</li>
+<li><span class="math inline">\(m(q + 1)\)</span> Parameter.</li>
+<li><span class="math inline">\(m + q\)</span> Parameter.</li>
+</ol>
+<p><strong>Frage 2:</strong> Ein kubischer Spline auf dem Knotengitter <span class="math inline">\(\xi_0 &lt; \xi_1 &lt; \dots &lt; \xi_5\)</span> (6 Knoten). Wie viele Basiskoeffizienten hat er?</p>
+<ol type="1">
+<li>6</li>
+<li>8</li>
+<li>9</li>
+<li>24</li>
+</ol>
+<p><strong>Frage 3:</strong> Warum verwendet man in der Praxis B-Splines statt der Monomialbasis? <em>(mehrere Antworten möglich)</em></p>
+<ol type="1">
+<li>Die B-Spline-Basismatrix ist deutlich besser konditioniert.</li>
+<li>Nur B-Splines können jede stetige Funktion beliebig genau approximieren.</li>
+<li>Lokale Träger <span class="math inline">\(\to\)</span> Bandstruktur <span class="math inline">\(\to\)</span> effiziente Lösung des LGS.</li>
+<li>Mit der Monomialbasis hat das Interpolationsproblem keine eindeutige Lösung.</li>
+</ol>
+<!-- SOLUTIONS:
+F1: 3 (einfache Knoten, maximale Glattheit C^{q-1}).
+F2: 2 (m = 5 Intervalle, also m + q = 5 + 3 = 8).
+F3: 1 & 3. (2 falsch: Polynome können das nach Weierstraß auch — nur numerisch instabil;
+4 falsch: Lösung ist eindeutig, aber schlecht konditioniert.) -->
+</section>
+<section id="ausblick-weiterführende-themen" class="slide level3" data-visibility="uncounted">
+<h3>Ausblick: Weiterführende Themen</h3>
+<p><strong>Weiterführende Themen &amp; Vorlesungen:</strong></p>
+<ul>
+<li><strong>Mehrdimensionale Interpolation:</strong> Tensor-Produkt-Splines, radiale Basisfunktionen</li>
+<li><strong>Glättung mit Regularisierung:</strong> P-Splines, Generalisierte Additive Modelle (<span class="math inline">\(\to\)</span> <em>Statistik V: Konzepte Statistischer Modellierung</em>)</li>
+<li><strong>Moderne ML-Anwendungen:</strong> Spline-basierte Aktivierungsfunktionen (<em>KANs</em>), <em>Normalizing Flows</em></li>
+</ul>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+    (() => {
+      "use strict";
+
+      const MIN_FONT_SIZE = 24;
+      const FIT_STEP = 0.25;
+      const OVERFLOW_TOLERANCE = 1;
+      const SKIP_SELECTOR = ".smaller, .scrollable, .no-autofit";
+      const pendingSlides = new Set();
+      let fitAllPending = false;
+      let fitFrame = null;
+
+      function overflows(slide) {
+        return slide.scrollHeight > slide.clientHeight + OVERFLOW_TOLERANCE ||
+          slide.scrollWidth > slide.clientWidth + OVERFLOW_TOLERANCE;
+      }
+
+      function fitSlide(slide) {
+        if (!slide || slide.querySelector(":scope > section")) {
+          return;
+        }
+
+        // Restore the author's inline value before measuring again.
+        if (slide.hasAttribute("data-autofit-font-size")) {
+          const originalSize = slide.dataset.autofitOriginalFontSize;
+          if (originalSize) {
+            slide.style.fontSize = originalSize;
+          } else {
+            slide.style.removeProperty("font-size");
+          }
+          slide.removeAttribute("data-autofit-font-size");
+          slide.removeAttribute("data-autofit-original-font-size");
+        }
+        slide.classList.remove("autofit-minimum");
+
+        if (slide.matches(SKIP_SELECTOR)) {
+          return;
+        }
+
+        if (!overflows(slide)) {
+          return;
+        }
+
+        const initialSize = parseFloat(getComputedStyle(slide).fontSize);
+        const originalInlineSize = slide.style.fontSize;
+        let low = MIN_FONT_SIZE;
+        let high = initialSize;
+
+        slide.style.fontSize = `${MIN_FONT_SIZE}px`;
+        if (overflows(slide)) {
+          slide.classList.add("autofit-minimum");
+          slide.dataset.autofitFontSize = MIN_FONT_SIZE;
+          slide.dataset.autofitOriginalFontSize = originalInlineSize;
+          console.warn(
+            `Autofit: slide ${slide.id || "(without id)"} still overflows at ` +
+            `${MIN_FONT_SIZE}px. Split it, use .scrollable, or use .no-autofit.`
+          );
+          return;
+        }
+
+        while (high - low > FIT_STEP) {
+          const candidate = (low + high) / 2;
+          slide.style.fontSize = `${candidate}px`;
+          if (overflows(slide)) {
+            high = candidate;
+          } else {
+            low = candidate;
+          }
+        }
+
+        const fittedSize = Math.floor(low / FIT_STEP) * FIT_STEP;
+        slide.style.fontSize = `${fittedSize}px`;
+        slide.dataset.autofitFontSize = fittedSize;
+        slide.dataset.autofitOriginalFontSize = originalInlineSize;
+      }
+
+      function fitAllSlides() {
+        document.querySelectorAll(".reveal .slides > section, .reveal .slides > section > section")
+          .forEach(fitSlide);
+      }
+
+      function scheduleFit(slide) {
+        if (slide) {
+          pendingSlides.add(slide.closest("section.slide") || slide);
+        } else {
+          fitAllPending = true;
+        }
+
+        if (fitFrame !== null) {
+          return;
+        }
+
+        fitFrame = requestAnimationFrame(() => {
+          fitFrame = null;
+          if (fitAllPending) {
+            fitAllPending = false;
+            pendingSlides.clear();
+            fitAllSlides();
+          } else {
+            const slides = [...pendingSlides];
+            pendingSlides.clear();
+            slides.forEach(fitSlide);
+          }
+        });
+      }
+
+      function initializeAutofit() {
+        fitAllSlides();
+
+        Reveal.on("slidechanged", event => scheduleFit(event.currentSlide));
+
+        document.querySelectorAll(".reveal .slides img")
+          .forEach(image => {
+            if (!image.complete) {
+              image.addEventListener("load", () => scheduleFit(image.closest("section")), {
+                once: true
+              });
+            }
+          });
+
+        const slides = document.querySelector(".reveal .slides");
+        if (slides) {
+          new MutationObserver(mutations => {
+            const target = mutations[0]?.target;
+            const element = target?.nodeType === Node.ELEMENT_NODE ?
+              target : target?.parentElement;
+            const slide = element?.closest("section.slide") || Reveal.getCurrentSlide();
+            scheduleFit(slide);
+          }).observe(slides, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        }
+
+        document.fonts?.ready.then(() => scheduleFit());
+        window.MathJax?.startup?.promise?.then(() => scheduleFit());
+        window.addEventListener("load", () => scheduleFit(), { once: true });
+      }
+
+      if (window.Reveal?.isReady()) {
+        initializeAutofit();
+      } else {
+        Reveal.on("ready", initializeAutofit);
+      }
+    })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Kopiert");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Kopiert");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

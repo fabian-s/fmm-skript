@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a37c72dd2dbac68997fcdc15a3622e78.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.24">
+
+  <meta name="author" content="Vorlesung: Fabian Scheipl (fabian.scheipl@lmu.de) Material: Thomas Nagler LMU München">
+  <title>Methode der Kleinsten Quadrate</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d0136d0452bb647bae96a262c75ef92a.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title"><em>Methode der Kleinsten Quadrate</em></h1>
+  <p class="subtitle"><strong>Fortgeschrittene mathematische Methoden in der Statistik</strong></p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vorlesung: Fabian Scheipl (<code>fabian.scheipl@lmu.de</code>)<br>Material: Thomas Nagler<br><strong>LMU München</strong> 
+</div>
+</div>
+</div>
+
+</section>
+<section id="verwendete-vorkenntnisse" class="slide level3 smaller">
+<h3>Verwendete Vorkenntnisse</h3>
+<div class="hidden">
+<p><span class="math display">\[
+\definecolor{fmmgreen}{RGB}{0,158,115}
+\definecolor{fmmblue}{RGB}{0,114,178}
+\definecolor{fmmred}{RGB}{213,94,0}
+\definecolor{fmmorange}{RGB}{230,159,0}
+\definecolor{fmmpurple}{RGB}{158,87,213}
+\newcommand{\ind}{\unicode{x1D7D9}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\P}{\mathbb{P}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\K}{{\mathbb{K}}}
+\newcommand{\L}{\mathbb{L}}
+\newcommand{\F}{{\mathbb{F}}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\S}{\mathbb{S}}
+\newcommand{\D}{{\mathbb{D}}}
+\newcommand{\bnull}{{\boldsymbol{0}}}
+\newcommand{\bzero}{{\boldsymbol{0}}}
+\newcommand{\ba}{{\boldsymbol{a}}}
+\newcommand{\bb}{{\boldsymbol{b}}}
+\newcommand{\bc}{{\boldsymbol{c}}}
+\newcommand{\bd}{{\boldsymbol{d}}}
+\newcommand{\be}{{\boldsymbol{e}}}
+\newcommand{\bg}{{\boldsymbol{g}}}
+\newcommand{\bh}{{\boldsymbol{h}}}
+\newcommand{\bi}{{\boldsymbol{i}}}
+\newcommand{\bj}{{\boldsymbol{j}}}
+\newcommand{\bk}{{\boldsymbol{k}}}
+\newcommand{\bl}{{\boldsymbol{l}}}
+\newcommand{\bn}{{\boldsymbol{n}}}
+\newcommand{\bo}{{\boldsymbol{o}}}
+\newcommand{\bp}{{\boldsymbol{p}}}
+\newcommand{\bq}{{\boldsymbol{q}}}
+\newcommand{\br}{{\boldsymbol{r}}}
+\newcommand{\bs}{{\boldsymbol{s}}}
+\newcommand{\bt}{{\boldsymbol{t}}}
+\newcommand{\bu}{{\boldsymbol{u}}}
+\newcommand{\bv}{{\boldsymbol{v}}}
+\newcommand{\bw}{{\boldsymbol{w}}}
+\newcommand{\bx}{{\boldsymbol{x}}}
+\newcommand{\by}{{\boldsymbol{y}}}
+\newcommand{\bz}{{\boldsymbol{z}}}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\bB}{{\boldsymbol{B}}}
+\newcommand{\bC}{{\boldsymbol{C}}}
+\newcommand{\bD}{{\boldsymbol{D}}}
+\newcommand{\bE}{{\boldsymbol{E}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\bG}{{\boldsymbol{G}}}
+\newcommand{\bH}{{\boldsymbol{H}}}
+\newcommand{\bI}{{\boldsymbol{I}}}
+\newcommand{\bJ}{{\boldsymbol{J}}}
+\newcommand{\bK}{{\boldsymbol{K}}}
+\newcommand{\bL}{{\boldsymbol{L}}}
+\newcommand{\bM}{{\boldsymbol{M}}}
+\newcommand{\bN}{{\boldsymbol{N}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bQ}{{\boldsymbol{Q}}}
+\newcommand{\bR}{{\boldsymbol{R}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bT}{{\boldsymbol{T}}}
+\newcommand{\bU}{{\boldsymbol{U}}}
+\newcommand{\bV}{{\boldsymbol{V}}}
+\newcommand{\bW}{{\boldsymbol{W}}}
+\newcommand{\bX}{{\boldsymbol{X}}}
+\newcommand{\bY}{{\boldsymbol{Y}}}
+\newcommand{\bZ}{{\boldsymbol{Z}}}
+\newcommand{\tagqed}{\tag*{$\blacksquare$}}
+\newcommand{\Acal}{{\mathcal{A}}}
+\newcommand{\Bcal}{{\mathcal{B}}}
+\newcommand{\Ccal}{{\mathcal{C}}}
+\newcommand{\Dcal}{{\mathcal{D}}}
+\newcommand{\Ecal}{{\mathcal{E}}}
+\newcommand{\Fcal}{{\mathcal{F}}}
+\newcommand{\Gcal}{{\mathcal{G}}}
+\newcommand{\Hcal}{{\mathcal{H}}}
+\newcommand{\Ical}{{\mathcal{I}}}
+\newcommand{\Jcal}{{\mathcal{J}}}
+\newcommand{\Kcal}{{\mathcal{K}}}
+\newcommand{\Lcal}{{\mathcal{L}}}
+\newcommand{\Mcal}{{\mathcal{M}}}
+\newcommand{\Ncal}{{\mathcal{N}}}
+\newcommand{\Ocal}{{\mathcal{O}}}
+\newcommand{\Pcal}{{\mathcal{P}}}
+\newcommand{\Qcal}{{\mathcal{Q}}}
+\newcommand{\Rcal}{{\mathcal{R}}}
+\newcommand{\Scal}{{\mathcal{S}}}
+\newcommand{\Tcal}{{\mathcal{T}}}
+\newcommand{\Ucal}{{\mathcal{U}}}
+\newcommand{\Vcal}{{\mathcal{V}}}
+\newcommand{\Wcal}{{\mathcal{W}}}
+\newcommand{\Xcal}{{\mathcal{X}}}
+\newcommand{\Ycal}{{\mathcal{Y}}}
+\newcommand{\Zcal}{{\mathcal{Z}}}
+\newcommand{\eps}{{\varepsilon}}
+\newcommand{\beps}{{\boldsymbol{\epsilon}}}
+\newcommand{\balpha}{{\boldsymbol{\alpha}}}
+\newcommand{\bbeta}{{\boldsymbol{\beta}}}
+\newcommand{\bchi}{{\boldsymbol{\chi}}}
+\newcommand{\bdelta}{{\boldsymbol{\delta}}}
+\newcommand{\bDelta}{{\boldsymbol{\Delta}}}
+\newcommand{\bepsilon}{{\boldsymbol{\epsilon}}}
+\newcommand{\bphi}{{\boldsymbol{\phi}}}
+\newcommand{\bgamma}{{\boldsymbol{\gamma}}}
+\newcommand{\betah}{{\boldsymbol{\eta}}}
+\newcommand{\btheta}{{\boldsymbol{\theta}}}
+\newcommand{\biota}{{\boldsymbol{\iota}}}
+\newcommand{\bkappa}{{\boldsymbol{\kappa}}}
+\newcommand{\blambda}{{\boldsymbol{\lambda}}}
+\newcommand{\bLambda}{{\boldsymbol{\Lambda}}}
+\newcommand{\bmu}{{\boldsymbol{\mu}}}
+\newcommand{\bnu}{{\boldsymbol{\nu}}}
+\newcommand{\bomikron}{{\boldsymbol{\omicron}}}
+\newcommand{\bpi}{{\boldsymbol{\pi}}}
+\newcommand{\bSigma}{{\boldsymbol{\Sigma}}}
+\newcommand{\bxi}{{\boldsymbol{\xi}}}
+\newcommand{\bzeta}{{\boldsymbol{\zeta}}}
+\newcommand{\bomega}{{\boldsymbol{\omega}}}
+\newcommand{\equivto}{{\Leftrightarrow}}
+\newcommand{\quequiv}{{\quad \equivto \quad}}
+\newcommand{\impl}{{\implies}}
+\newcommand{\quimpl}{{\quad \implies \quad}}
+\newcommand{\implby}{{\impliedby}}
+\newcommand{\notimplies}{\not\implies}
+\newcommand{\tr}{{\operatorname{tr}}}
+\newcommand{\spann}{{\operatorname{span}}}
+\newcommand{\col}{{\operatorname{col}}}
+\newcommand{\rang}{{\operatorname{rang}}}
+\newcommand{\diag}{{\operatorname{diag}}}
+\newcommand{\vec}{\operatorname{vec}}
+\newcommand{\pinv}{{^{+}}}
+\newcommand{\kron}{\mathbin{\otimes_{\mathrm{K}}}}
+\newcommand{\sign}{{\operatorname{sign}}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\inner}[1]{{\langle #1 \rangle}}
+\newcommand{\proj}{{\operatorname{proj}}}
+\newcommand{\bar}{\overline}
+\newcommand{\vol}{{\operatorname{vol}}}
+\newcommand{\dx}{{\, \mathrm{d}x}}
+\newcommand{\ol}{{\overline}}
+\newcommand{\argmax}{\mathop{\mathrm{arg\,max}}}
+\newcommand{\argmin}{\mathop{\mathrm{arg\,min}}}
+\newcommand{\conv}{\mathop{\mathrm{conv}}}
+\newcommand{\epi}{\mathop{\mathrm{epi}}}
+\newcommand{\interior}{\mathop{\mathrm{int}}}
+\newcommand{\Pr}{\mathbb{P}}
+\newcommand{\var}{{\mathbb{V}\mathrm{ar}}}
+\newcommand{\bias}{{\operatorname{bias}}}
+\newcommand{\abias}{{\mathrm{ABias}}}
+\newcommand{\AMSE}{{\mathrm{AMSE}}}
+\newcommand{\AMISE}{{\mathrm{AMISE}}}
+\newcommand{\cov}{{\mathbb{C}\mathrm{ov}}}
+\newcommand{\corr}{{\mathrm{Corr}}}
+\newcommand{\ov}{{\overline}}
+\newcommand{\wh}[1]{{\widehat{#1}}}
+\newcommand{\wt}[1]{{\widetilde{#1}}}
+\newcommand{\tod}{{\stackrel{d}{\to}}}
+\newcommand{\sumin}{{\sum_{i = 1}^n}}
+\newcommand{\sumjn}{{\sum_{j = 1}^n}}
+\newcommand{\KL}{{\operatorname{KL}}}
+\newcommand{\softmax}{{\operatorname{SoftMax}}}
+\newcommand{\layernorm}{{\operatorname{LayerNorm}}}
+\newcommand{\avg}{{\operatorname{avg}}}
+\newcommand{\relu}{{\operatorname{ReLu}}}
+\newcommand{\VC}{{\operatorname{VC}}}
+\newcommand{\indep}{{\perp \!\!\! \perp}}
+\newcommand{\unif}{{\operatorname{Unif}}}
+\newcommand{\bern}{{\operatorname{Bernoulli}}}
+\newcommand{\binomial}{{\operatorname{Binomial}}}
+\newcommand{\MSE}{{\operatorname{MSE}}}
+\newcommand{\iid}{\textit{iid}\;}
+\newcommand{\IF}{{\operatorname{IF} }}
+\newcommand{\BIC}{{\operatorname{BIC}}}
+\newcommand{\AIC}{{\operatorname{AIC}}}
+\newcommand{\IC}{{\operatorname{IC}}}
+\newcommand{\expl}[1]{{\tag*{[#1]}}}
+\newcommand{\cb}[1]{\textbf{#1}}
+\newcommand{\cbgreen}[1]{\textcolor{fmmgreen}{\textbf{#1}}}
+\newcommand{\cbred}[1]{\textcolor{fmmred}{\textbf{#1}}}
+\newcommand{\cbpurp}[1]{\textcolor{fmmpurple}{\textbf{#1}}}
+\newcommand{\cborange}[1]{\textcolor{fmmorange}{\textbf{#1}}}
+\newcommand{\corange}[1]{{\textcolor{fmmorange}{#1}}}
+\newcommand{\cblue}[1]{{\textcolor{fmmblue}{#1}}}
+\newcommand{\cgreen}[1]{{\textcolor{fmmgreen}{#1}}}
+\newcommand{\cred}[1]{{\textcolor{fmmred}{#1}}}
+\newcommand{\cpurp}[1]{{\textcolor{fmmpurple}{#1}}}
+\newcommand{\symbf}[1]{\boldsymbol{#1}}
+\]</span></p>
+</div>
+<ul>
+<li><p><mark><em>Kondition</em></mark> &amp; Konditionszahl <span class="math inline">\(\kappa(\bA)\)</span></p></li>
+<li><p><mark><em>Matrixnormen</em></mark> (besonders <span class="math inline">\(\|\cdot\|_2\)</span>) und <mark><em>Orthogonalmatrizen</em></mark></p></li>
+<li><p>Matrixzerlegungen: <mark><em>LU-</em></mark> und <mark><em>Cholesky-Zerlegung</em></mark></p></li>
+<li><p><mark><em>SVD</em></mark>: <span class="math inline">\(\bA = \bU\bSigma\bV^\top\)</span>, <mark><em>Pseudoinverse</em></mark> <span class="math inline">\(\bA^+\)</span>, Reduzierte SVD</p></li>
+<li><p><strong>Lineare Algebra</strong></p>
+<ul>
+<li><mark><em>Normalengleichungen</em></mark>: <span class="math inline">\(\bA^\top\bA\bx = \bA^\top \bb\)</span></li>
+<li>(Orthogonale) Projektionen auf Unterräume</li>
+</ul></li>
+<li><p><strong>Statistik</strong></p>
+<ul>
+<li>Lineares Regressionsmodell <span class="math inline">\(\by = \bX\bbeta + \bepsilon\)</span></li>
+<li>Methode der Kleinsten Quadrate (OLS)</li>
+</ul></li>
+</ul>
+</section>
+<section id="opener-quiz-was-wissen-sie-noch" class="slide level3 smaller">
+<h3>Opener-Quiz: Was wissen Sie noch?</h3>
+<!-- TODO Particify: Opener-Fragen als quiz/07-kq/opener-*.Rmd (R/exams, schoice)
+     autorieren und via exams2particify() exportieren;
+     QR-Code beim Reinkommen projizieren. -->
+<p><strong>Frage 1:</strong> Sei <span class="math inline">\(\bA \in \mathbb{R}^{m \times n}\)</span> mit <span class="math inline">\(\text{rang}(\bA) = n\)</span>. Die Kleinste-Quadrate-Lösung <span class="math inline">\(\hat{\bx}\)</span> von <span class="math inline">\(\min_{\bx} \|\bA\bx - \bb\|_2\)</span> erfüllt …</p>
+<ol type="1">
+<li><span class="math inline">\(\bA \hat{\bx} = \bb\)</span></li>
+<li><span class="math inline">\(\bA^\top \bA \hat{\bx} = \bA^\top \bb\)</span></li>
+<li><span class="math inline">\(\bA \bA^\top \hat{\bx} = \bA \bb\)</span></li>
+<li><span class="math inline">\(\hat{\bx} = \bA^\top \bb\)</span></li>
+</ol>
+<p><strong>Frage 2:</strong> Sei <span class="math inline">\(\hat{\bb} = \text{proj}_{\text{col}(\bA)}\, \bb\)</span> die orthogonale Projektion von <span class="math inline">\(\bb\)</span> auf den Spaltenraum von <span class="math inline">\(\bA\)</span>. Welche Aussage gilt <strong>immer</strong>?</p>
+<ol type="1">
+<li><span class="math inline">\(\hat{\bb} = \bb\)</span></li>
+<li><span class="math inline">\(\bb - \hat{\bb} \perp \text{col}(\bA)\)</span></li>
+<li><span class="math inline">\(\|\hat{\bb}\|_2 \ge \|\bb\|_2\)</span></li>
+<li><span class="math inline">\(\hat{\bb} = \boldsymbol{0}\)</span></li>
+</ol>
+<!-- SOLUTIONS: F1: 2 (Normalengleichungen -- heute zentral). F2: 2 (Residuum steht
+     senkrecht auf col(A); 1 gilt nur falls b in col(A), 3 ist falsch herum
+     (Projektion verkuerzt), 4 nur falls b senkrecht auf col(A)). -->
+</section>
+<section>
+<section id="recap-kleinste-quadrate" class="title-slide slide level2 center">
+<h2>Recap: Kleinste Quadrate</h2>
+
+</section>
+<section id="recap-kleinste-quadrate-1" class="slide level3">
+<h3>Recap: Kleinste Quadrate</h3>
+<div class="block">
+<p><span class="block-title"><mark><em>Kleinste-Quadrate-Problem (KQ-Problem)</em></mark></span></p>
+<ul>
+<li>Gegeben sei Matrix <span class="math inline">\(\bA \in \R^{m \times n}\)</span> und Vektor <span class="math inline">\(\bb \in \R^m\)</span>.</li>
+<li>Wir wollen einen Vektor <span class="math inline">\(\hat{\bx} \in \R^n\)</span> finden, sodass <span class="math inline">\(\left\|\bA\hat{\bx} - \bb\right\|\)</span> minimal ist.</li>
+</ul>
+</div>
+<p><strong>Anmerkung:</strong><br>
+</p>
+<ul>
+<li>Hat das LGS eine Lösung <span class="math inline">\(\bx^*\)</span>, dann gilt <span class="math inline">\(\left\|\bA\bx^* - \bb\right\| = 0\)</span> und <span class="math inline">\(\bx^*\)</span> ist automatisch auch eine Lösung des Kleinste-Quadrate-Problems.</li>
+<li>Interessant ist die Problemstellung insbesondere für “Gleichungssysteme” <span class="math inline">\(\bA\bx^* \approx \bb\)</span>, die keine <em>exakte</em> Lösung besitzen.</li>
+</ul>
+</section>
+<section id="motivation" class="slide level3 smaller">
+<h3>Motivation</h3>
+<p>KQ-Methode <em>fundamentalst</em> in Statistik und Machine Learning:</p>
+<ul>
+<li><strong>Beispiel: Lineare Regression</strong>
+<ul>
+<li><strong>Problem:</strong> Vorhersage von Immobilienpreisen basierend auf Wohnfläche</li>
+<li><strong>Daten:</strong> <span class="math inline">\(n\)</span> Beobachtungen <span class="math inline">\((x_i, y_i)\)</span> mit <span class="math inline">\(x_i\)</span> = Fläche in <span class="math inline">\(m^2\)</span>, <span class="math inline">\(y_i\)</span> = Preis in €</li>
+<li><strong>Modell:</strong> <span class="math inline">\(y_i = \beta_0 + \beta_1 x_i + \epsilon_i\)</span> mit Fehlerterm <span class="math inline">\(\epsilon_i\)</span></li>
+<li><strong>Matrix-Form:</strong> <span class="math inline">\(\bb = \bA \bbeta + \bepsilon\)</span> mit <span class="math display">\[\bA = \begin{pmatrix} 1 &amp; x_1 \\ 1 &amp; x_2 \\ \vdots &amp; \vdots \\ 1 &amp; x_n \end{pmatrix}, \quad \bb = \begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}, \quad \bbeta = \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix}\]</span></li>
+<li><strong>Lösung:</strong> <span class="math inline">\(\hat{\bbeta} = (\bA^\top \bA)^{-1} \bA^\top \bb\)</span> minimiert <span class="math inline">\(\sum_{i=1}^n \left(y_i - \beta_0 - \beta_1 x_i\right)^2\)</span></li>
+</ul></li>
+</ul>
+<div class="small">
+<ul>
+<li><strong>Weitere Anwendungen:</strong><br>
+
+<ul>
+<li><strong>Generalisierte Lineare Modelle, Additive Modelle:</strong> approximative Lösungen über iterative KQ-Probleme</li>
+<li><strong>Deep Learning:</strong> Training neuronaler Netze (minimiert oft KQ-Fehler)</li>
+<li><strong>Computer Vision:</strong> Kamerakalibration, 3D-Rekonstruktion aus 2D-Bildern</li>
+<li><strong>Signal Processing:</strong> Rauschreduktion/De-Noising, Signalschätzung</li>
+<li><strong>Geodäsie:</strong> GPS-Positionsbestimmung</li>
+<li>….</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="recap-kleinste-quadrate-2" class="slide level3">
+<h3>Recap: Kleinste Quadrate</h3>
+
+<img data-src="resources/kq-projection.png" class="quarto-figure quarto-figure-center r-stretch" style="width:55.0%"><div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Die Lösungsmenge des KQ-Problems gleicht der Lösungsmenge des LGS <span class="math display">\[\bA \hat{\bx} = \hat{\bb} \quad \text{mit } \hat{\bb}  = \proj_{\col(\bA)} \bb.\]</span></p>
+</div>
+<!--  Geom. Interpretation: Wir suchen den Vektor $\bA\hat{\bx}$ im Spaltenraum von $\bA$, der am nächsten an $\bb$ liegt.-->
+</section>
+<section id="recap-kleinste-quadrate-3" class="slide level3">
+<h3>Recap: Kleinste Quadrate</h3>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Die Lösungsmenge des KQ-Problems gleicht der Lösungsmenge der Normalengleichungen <span class="math display">\[\bA^\top \bA \hat{\bx} = \bA^\top \bb.\]</span></p>
+</div>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Falls <span class="math inline">\(\rang(\bA) = n\)</span>, ist <span class="math inline">\(\bA^\top \bA\)</span> invertierbar und das KQ-Problem hat die eindeutige Lösung <span class="math display">\[\hat{\bx} = (\bA^\top \bA)^{-1} \bA^\top \bb =: \bA^+ \bb.\]</span></p>
+</div>
+<!-- ((UDV')'(UDV'))^-1(UDV')' =  V'D^-2V' VDU  = V' D U-->
+</section>
+<section id="quiz" class="slide level3">
+<h3>Quiz</h3>
+<p>Welche der folgenden Aussagen sind wahr? <em>(mehrere Antworten möglich)</em></p>
+<ol type="1">
+<li><span class="math inline">\(\bA \bA^+ = \bI_m\)</span> <!-- No: AA^+ is the projector onto col(A); AA^+ = I_m iff rank(A) = m (full row rank). In our KQ setting m >= n, rank(A) = n this would force m = n, i.e. A invertible. --></li>
+<li><span class="math inline">\(\bA \bA^+ \bb = \proj_{\col(\bA)} \bb\)</span> <!-- SOLUTION: 2 is correct --></li>
+<li><span class="math inline">\(\br = \bb - \bA\hat{\bx} \perp \col(\bA)\)</span> <!-- SOLUTION: 3 is correct --></li>
+<li><span class="math inline">\(\bb = \proj_{V} \bb + \proj_{V^\perp} \bb\)</span> für jeden Untervektorraum <span class="math inline">\(V\)</span> <!-- SOLUTION: 4 is correct --></li>
+</ol>
+</section></section>
+<section>
+<section id="kondition-des-kq-problems" class="title-slide slide level2 center">
+<h2>Kondition des KQ-Problems</h2>
+
+</section>
+<section id="kondition" class="slide level3">
+<h3>Kondition</h3>
+<p><strong>Vorbemerkungen</strong></p>
+<ul>
+<li>Wir untersuchen nun die <mark><em>Kondition</em></mark> von KQ-Problemen <span class="math inline">\(\bA \bx \approx \bb\)</span> mit <span class="math inline">\(\bA \in \R^{m \times n}\)</span> und <span class="math inline">\(\bb \in \R^m\)</span>.</li>
+<li>Wir beschränken uns auf den Fall <span class="math inline">\(m \ge n\)</span> und <span class="math inline">\(\rang(\bA) = n\)</span><br>
+<span class="math inline">\(\implies\)</span> eindeutige Lösung existiert.</li>
+<li>Im folgenden <span class="math inline">\(\left\| \cdot \right\| = \left\| \cdot \right\|_2\)</span> (natürliche Norm für KQ-Probleme).</li>
+<li>Für nicht notwendigerweise quadratische Matrizen definieren wir <span class="math display">\[\kappa(\bA) = \begin{cases}
+\infty, &amp;  \rang(\bA) &lt; n, \\
+\left\|\bA\right\| \left\|\bA^+\right\|, &amp; \text{sonst}.
+\end{cases}\]</span></li>
+</ul>
+</section>
+<section id="kondition-bzgl-b-theorem" class="slide level3">
+<h3>Kondition bezüglich <span class="math inline">\(\bb\)</span></h3>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei <span class="math inline">\(\bA \in \R^{m \times n}\)</span> fix und <span class="math inline">\(f\)</span> das Problem mit Lösung <span class="math inline">\(f(\bb) = \bA^+ \bb\)</span>. Dann gilt <span class="math display">\[\begin{align*}
+\frac{\| f(\tilde{\bb}) - f(\bb)\| }{\| f(\bb)\|} \le  \kappa \frac{\| \tilde{\bb} - \bb\| }{\| \bb\| } \quad \text{ mit } \quad  \kappa = \kappa_2(\bA) \frac{\|\bb\|}{\left\| \proj_{\col(\bA)} \bb\right\|}.
+\end{align*}\]</span></p>
+</div>
+<p><em>Beweis:</em> siehe <a href="#/beweis-kondition-bzgl-b">Anhang</a></p>
+</section>
+<section id="kondition-bezüglich-bb" class="slide level3">
+<h3>Kondition bezüglich <span class="math inline">\(\bb\)</span></h3>
+<div class="columns">
+<div class="column" style="width:40%;">
+<p><br> <br> <span class="math display">\[\begin{align*}
+\kappa = \kappa_2(\bA) \frac{\|\bb\|}{\left\| \proj_{\col(\bA)} \bb \right\|}
+\end{align*}\]</span></p>
+</div><div class="column" style="width:60%;">
+<p><img data-src="resources/kq-projection.png" style="width:100.0%"></p>
+</div></div>
+<p><strong>Interpretation</strong><br>
+</p>
+<ul>
+<li>Erinnerung: <span class="math display">\[\|\bb\|^2 = \left \| \proj_{\col(\bA)} \bb \right\|^2 + \left\|\proj_{\col(\bA)^\perp} \bb \right\|^2 \ge \left\| \proj_{\col(\bA)} \bb \right \|^2.\]</span></li>
+<li><strong>Frage:</strong> Was sind best und worst case für <span class="math inline">\(\kappa\)</span>?</li>
+</ul>
+<div class="fragment">
+<ul>
+<li>Best Case: <span class="math inline">\(\bb = \proj_{\col(\bA)} \bb\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\bb \in \col(\bA)\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\kappa = \kappa_2(\bA)\)</span>.</li>
+<li>Worst Case: <span class="math inline">\(\proj_{\col(\bA)} \bb = \bnull\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\bb \perp \col(\bA)\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\kappa = \infty\)</span>.</li>
+</ul>
+</div>
+</section>
+<section id="kondition-bezüglich-ba" class="slide level3">
+<h3>Kondition bezüglich <span class="math inline">\(\bA\)</span></h3>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei <span class="math inline">\(\bb \in \R^m\)</span> fix und <span class="math inline">\(f\)</span> das Problem mit Lösung <span class="math inline">\(f(\bA) = \bA^+ \bb\)</span>. Dann gilt für kleine Störungen <span class="math inline">\(\tilde{\bA} \to \bA\)</span> (in erster Ordnung) <span class="math display">\[\begin{align*}
+\frac{\| f(\tilde{\bA}) - f(\bA)\| }{\| f(\bA)\|} &amp;\lesssim  \kappa \frac{\| \tilde{\bA} - \bA\| }{\| \bA\| } \\
+\text{mit } \quad  \kappa &amp;= \kappa_2(\bA)  + \kappa_2(\bA)^2 \frac{\|\br \|}{\left\|\proj_{\col(\bA)} \bb\right\|}.
+\end{align*}\]</span></p>
+</div>
+<p><em>Beweis:</em> Sehr aufwändige und langweilige Rechnung.</p>
+</section>
+<section id="kondition-bezüglich-ba-1" class="slide level3">
+<h3>Kondition bezüglich <span class="math inline">\(\bA\)</span></h3>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><br> <span class="math display">\[\begin{align*}
+\kappa  = \kappa_2(\bA)  + \kappa_2(\bA)^2 \frac{\|\br\|}{\left\|\proj_{\col(\bA)}\bb\right\|}
+\end{align*}\]</span></p>
+</div><div class="column" style="width:45%;">
+<p><img data-src="resources/kq-projection.png" style="width:100.0%"></p>
+</div></div>
+<p><strong>Interpretation</strong><br>
+</p>
+<ul>
+<li><p>Best case: <span class="math inline">\(\br = \bnull\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\bA \bx = \bb\)</span> ist lösbar <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\kappa = \kappa_2(\bA)\)</span>.</p></li>
+<li><p>Worst case: <span class="math inline">\(\proj_{\col(\bA)} \bb = \bnull\)</span>, aber <span class="math inline">\(\br \neq \bnull\)</span></p>
+<ul>
+<li><span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\bA \bx = \bb\)</span> ist nicht lösbar und <span class="math inline">\(\bb \perp \col(\bA)\)</span></li>
+<li><span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\kappa = \infty\)</span>.</li>
+</ul></li>
+<li><p>Normalerweise: <span class="math inline">\(\br \neq \bnull\)</span> und <span class="math inline">\(\proj_{\col(\bA)} \bb \neq \bnull\)</span> <span class="math inline">\(\Rightarrow\)</span> <span class="math inline">\(\kappa = O(\kappa_2(\bA)^2)\)</span>.</p></li>
+</ul>
+</section></section>
+<section>
+<section id="lösungsverfahren" class="title-slide slide level2 center">
+<h2>Lösungsverfahren</h2>
+
+</section>
+<section id="frage" class="slide level3">
+<h3>Frage</h3>
+<p>Um die Lösung <span class="math inline">\(\hat{\bx} = (\bA^\top \bA)^{-1} \bA^\top \bb\)</span> zu berechnen, sei folgende Funktion gegeben:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>kq_solve <span class="ot">&lt;-</span> <span class="cf">function</span>(A, b) {</span>
+<span id="cb1-2"><a></a>  <span class="fu">solve</span>(<span class="fu">t</span>(A) <span class="sc">%*%</span> A) <span class="sc">%*%</span> <span class="fu">t</span>(A) <span class="sc">%*%</span> b</span>
+<span id="cb1-3"><a></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Aufgabe:</strong> Finde den Fehler in der Funktion.</p>
+<div class="fragment">
+<p><br><br></p>
+<div style="text-align: center;">
+<p><span style="color: #b22222; font-size: 1.2em;"><strong>Invertiere niemals eine Matrix!</strong></span></p>
+</div>
+<p><code>solve(M)</code> berechnet die volle Inverse — teurer <em>und</em> instabiler, als das LGS <span class="math inline">\(\bM \bx = \bc\)</span> direkt zu lösen.<br>
+</p>
+<p>besser: <code>solve(M, c)</code>.</p>
+</div>
+</section>
+<section id="cholesky-zerlegung" class="slide level3">
+<h3>Cholesky-Zerlegung</h3>
+<ul>
+<li><p>Die Normalengleichung <span class="math inline">\(\bA^\top \bA \bx = \bA^\top \bb\)</span> gibt uns ein einfaches Lösungsverfahren:</p>
+<ol type="1">
+<li>Berechne <span class="math inline">\(\bM = \bA^\top \bA\)</span> und <span class="math inline">\(\bc = \bA^\top \bb\)</span>.</li>
+<li>Berechne Cholesky-Zerlegung <span class="math inline">\(\bM = \bL\bL^\top\)</span>.</li>
+<li>Löse <span class="math inline">\(\bL \by = \bc\)</span> durch Vorwärtssubstitution.</li>
+<li>Löse <span class="math inline">\(\bL^\top \bx = \by\)</span> durch Rückwärtssubstitution.</li>
+</ol></li>
+<li><p>Das Verfahren ist effizient, aber möglicherweise instabil:</p>
+<ul>
+<li>Fehler in <span class="math inline">\(\bA^\top \bA\)</span> beeinflussen alle folgenden Schritte.</li>
+<li>Man kann zeigen, dass der relative algorithmische Fehler typischerweise von der Größenordnung <span class="math inline">\(\kappa_2(\bA)^2 \, \epsilon_{mach}\)</span><sup>1</sup> ist.</li>
+<li>Vergleiche mit Best-Case-Kondition <span class="math inline">\(O(\kappa_2(\bA))\)</span>. <br><br><br></li>
+</ul></li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p><span class="math inline">\(\epsilon_{mach}\)</span>: Maschinengenauigkeit — Abstand von <span class="math inline">\(1\)</span> zur nächstgrößeren “Double”-Zahl; <span class="math inline">\(\approx 2.2 \cdot 10^{-16}\)</span>; in R: <code>.Machine$double.eps</code></p></li></ol></aside></section>
+<section id="alternative-lösungswege" class="slide level3 smaller">
+<h3>Alternative Lösungswege</h3>
+<ul>
+<li>Wir würden gerne <span class="math inline">\(\bA^\top \bA\)</span> vermeiden und direkt auf <span class="math inline">\(\bA\)</span> operieren.</li>
+<li>Erinnerung: KQ-Lösung zu <span class="math inline">\(\bA\bx = \bb\)</span> ist <span class="math display">\[\wh \bx = \arg\min_{\bx} \left\|\bA\bx - \bb\right\|_2\]</span></li>
+<li>Wir wollen das Problem mit einer Matrix <span class="math inline">\(\bQ\)</span> zu einem “einfacheren” Problem <span class="math inline">\(\bQ \bA \bx \approx \bQ \bb\)</span> transformieren ohne die Lösung zu ändern.</li>
+</ul>
+<p><span class="math inline">\(\implies \bQ\)</span> soll <mark><em>Orthogonalmatrix</em></mark> sein, denn für diese gilt <span class="math display">\[\|\bQ\bA\bx - \bQ\bb\| = \|\bQ(\bA\bx - \bb)\| = \|\bA\bx - \bb\|.\]</span></p>
+<p><br><br></p>
+<div class="small">
+<p><em>Erinnerung: <mark><strong>Orthogonalmatrix</strong></mark></em> <span class="math inline">\(\bQ\)</span></p>
+<ul>
+<li><span class="math inline">\(\bQ^\top \bQ = \bI\)</span>, <span class="math inline">\(\bQ^{-1} = \bQ^\top\)</span> (“Rotation/Spiegelung”);<br>
+</li>
+<li>Produkte von Orthogonalmatrizen sind orthogonal.<br>
+</li>
+<li>Normerhaltend für <span class="math inline">\(\|\cdot\|_2\)</span>: <span class="math inline">\(\|\bQ \bz\|_2 = \sqrt{\bz^\top\bQ^\top \bQ \bz} = \sqrt{\bz^\top \bz} = \|\bz\|_2\)</span> für alle <span class="math inline">\(\bz \in \R^m\)</span>.<br>
+</li>
+<li>Alle Singulärwerte <span class="math inline">\(\sigma_i(\bQ) = 1\)</span> (da <span class="math inline">\(\bQ^\top\bQ = \bI\)</span>) <span class="math inline">\(\Rightarrow \kappa_2(\bQ) = \tfrac{\sigma_{\max}}{\sigma_{\min}} = 1\)</span><br>
+<span class="math inline">\(\implies\)</span> Multiplikation mit <span class="math inline">\(\bQ\)</span> ist immer gut konditioniert.</li>
+</ul>
+</div>
+</section>
+<section id="qr-zerlegung" class="slide level3 smaller">
+<h3>QR-Zerlegung</h3>
+<div class="block">
+<p><span class="block-title">Def.: <strong>QR-Zerlegung</strong></span></p>
+<p>Sei <span class="math inline">\(\bA \in \R^{m \times n}\)</span> mit <span class="math inline">\(m \geq n\)</span> und <span class="math inline">\(\bQ \in \R^{m \times m}\)</span> eine <em>Orthogonalmatrix</em>, sodass <span class="math display">\[\begin{align*}
+\bQ^\top \bA = \begin{pmatrix}
+\bR \\ \bnull_{(m - n) \times n}
+\end{pmatrix},
+\end{align*}\]</span> wobei <span class="math inline">\(\bR \in \R^{n \times n}\)</span> eine <em>obere Dreiecksmatrix</em> ist. Dann nennen wir <span class="math display">\[\begin{align*}
+\bA = \bQ \begin{pmatrix}
+\bR \\ \bnull
+\end{pmatrix}
+\end{align*}\]</span> eine <strong>QR-Zerlegung</strong> von <span class="math inline">\(\bA\)</span>.</p>
+</div>
+<p><strong>Anmerkung:</strong><br>
+</p>
+<ul>
+<li>Es gibt immer eine QR-Zerlegung von <span class="math inline">\(\bA\)</span>.</li>
+<li>Die Zerlegung ist nicht eindeutig.</li>
+</ul>
+</section>
+<section id="beispiel-qr-zerlegung" class="slide level3 smaller">
+<h3>Beispiel: QR-Zerlegung</h3>
+<p><strong>Gegeben:</strong><br>
+<span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 2 \\ 0 &amp; 0 \\ 0 &amp; 2 \end{pmatrix}\)</span></p>
+<p><strong>Gesucht:</strong><br>
+<span class="math inline">\(\bQ^\top \bA = \begin{pmatrix} \bR \\ \bnull_{1 \times 2} \end{pmatrix}\)</span> mit <span class="math inline">\(\bQ \in \R^{3 \times 3}\)</span> und <span class="math inline">\(\bR \in \R^{2 \times 2}\)</span></p>
+<p><strong>Methode:</strong><br>
+Gram-Schmidt-Orthonormalisierung auf den Spalten von <span class="math inline">\(\bA\)</span></p>
+<p><strong>Schritt 1:</strong> Erste Spalte <span class="math inline">\(\ba_1 = \begin{pmatrix} 1 &amp; 0 &amp; 0 \end{pmatrix}^\top\)</span></p>
+<ul>
+<li>Normalisierung: <span class="math inline">\(\cblue{\bq_1} = \frac{\ba_1}{\|\ba_1\|} = \cblue{\begin{pmatrix} 1 &amp; 0 &amp; 0 \end{pmatrix}^\top} \implies \cred{R_{11}} = \|\ba_1\| = \cred{1}\)</span></li>
+</ul>
+<p><strong>Schritt 2:</strong> Zweite Spalte <span class="math inline">\(\ba_2 = \begin{pmatrix} 2 &amp; 0 &amp; 2 \end{pmatrix}^\top\)</span></p>
+<ul>
+<li>Projektion auf <span class="math inline">\(\cblue{\bq_1}\)</span>: <span class="math inline">\(\cred{R_{12}} = \cblue{\bq_1}^\top \ba_2 = \cred{2}\)</span></li>
+<li>Orthogonalisierung: <span class="math inline">\(\cgreen{\tilde{\bq}_2} = \ba_2 - \cred{R_{12}}\cblue{\bq_1} = \begin{pmatrix} 2 &amp; 0 &amp; 2 \end{pmatrix}^\top  - \begin{pmatrix} 2 &amp; 0 &amp; 0 \end{pmatrix}^\top = \cgreen{\begin{pmatrix} 0 &amp; 0 &amp; 2 \end{pmatrix}^\top}\)</span></li>
+<li>Normalisierung: <span class="math inline">\(\cgreen{\bq_2} = \frac{\cgreen{\tilde{\bq}_2}}{\left\|\cgreen{\tilde{\bq}_2}\right\|} = \cgreen{\begin{pmatrix} 0 &amp; 0 &amp; 1 \end{pmatrix}^\top}\)</span>, <span class="math inline">\(\cred{R_{22}} = \left\|\cgreen{\tilde{\bq}_2}\right\| = \cred{2}\)</span></li>
+</ul>
+<p><strong>Schritt 3:</strong> Vervollständige zu Orthonormalbasis von <span class="math inline">\(\R^3\)</span>: wähle <span class="math inline">\(\bq_3 \perp \bq_1, \bq_2\)</span>, z.B. <span class="math inline">\(\bq_3 = \begin{pmatrix} 0 &amp; 1 &amp; 0 \end{pmatrix}^\top\)</span></p>
+<p><strong>Ergebnis:</strong> <span class="math inline">\(\bQ = \begin{pmatrix} \bq_1 &amp; \bq_2 &amp; \bq_3 \end{pmatrix} = \begin{pmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 0 &amp; 1 &amp; 0 \end{pmatrix}, \quad \bR = \begin{pmatrix} 1 &amp; 2 \\ 0 &amp; 2 \end{pmatrix}\)</span> <em>(<a href="#/qr-zerlegung-verifikation">Verifikation</a> → Anhang)</em></p>
+</section>
+<section id="qr-zerlegung-idee" class="slide level3 smaller">
+<h3>QR-Zerlegung: Idee</h3>
+<div class="block">
+<p><span class="block-title">Theorem</span></p>
+<p>Sei <span class="math inline">\(\bA \in \R^{m \times n}\)</span> mit <span class="math inline">\(m \geq n\)</span>, <span class="math inline">\(\bb \in \R^m\)</span> und <span class="math inline">\(\bQ \in \R^{m \times m}\)</span> eine <em>Orthogonalmatrix</em>, sodass <span class="math display">\[\begin{align*}
+\bQ^\top \bA = \begin{pmatrix}
+\bR \\ \bnull_{(m - n) \times n}
+\end{pmatrix} \quad\text{und}\quad \bQ^\top \bb = \begin{pmatrix}
+\bc_1 \\ \bc_2
+\end{pmatrix}
+\end{align*}\]</span> mit <span class="math inline">\(\bR \in \R^{n \times n}\)</span> invertierbar. Dann gilt <span class="math display">\[\wh \bx = \bR^{-1} \bc_1 = \arg\min_{\bx} \left\|\bA\bx - \bb\right\|_2.\]</span></p>
+</div>
+<div class="small">
+<p>Numerisch bilden wir <span class="math inline">\(\bR^{-1}\)</span> <strong>nicht</strong> explizit, sondern lösen das Dreieckssystem <span class="math inline">\(\bR\wh\bx=\bc_1\)</span> durch Rückwärtssubstitution.</p>
+</div>
+<p><em>Beweis:</em></p>
+<ul>
+<li>Es gilt <span class="math inline">\(\|\bA \bx - \bb\|^2 = \left\|\bQ^\top \bA \bx - \bQ^\top \bb\right\|^2 = \left\| \bR \bx - \bc_1\right\|^2 + \left\| \bc_2 \right\|^2\)</span>.</li>
+<li>Weil der zweite Term nicht von <span class="math inline">\(\bx\)</span> abhängt, gilt <span class="math display">\[\arg\min_{\bx} \left\| \bA \bx - \bb\right\| = \arg \min_{\bx} \left\|\bR \bx - \bc_1 \right\|.\]</span></li>
+<li><span class="math inline">\(\wh \bx = \bR^{-1} \bc_1\)</span> ist Lösung, weil <span class="math inline">\(\left\|\bR \wh \bx - \bc_1\right\| = \left\| \bR \bR^{-1} \bc_1 - \bc_1 \right\| = 0\)</span>.</li>
+</ul>
+<!-- |(Rx-c1, c2)|^2 = |Rx-c1|^2 + |c2|^2 weil |(a,b,c)|^2 = a^2 + b^2 + c^2 = |(a,b)|^2 + |c|^2 -->
+</section>
+<section id="konstruktion-von-bq" class="slide level3 smaller">
+<h3>Konstruktion von <span class="math inline">\(\bQ\)</span></h3>
+<ul>
+<li>Wie beim Gauß-Verfahren erzeugen wir <span class="math inline">\(\bR\)</span> durch Nullen unter der Diagonalen. Dazu multiplizieren wir <span class="math inline">\(\bA\)</span> von links mit <strong>orthogonalen</strong> Transformationen; ihr Produkt ist <span class="math inline">\(\bQ^\top\)</span>.</li>
+<li>In Spalte <span class="math inline">\(k\)</span> sollen die <span class="math inline">\(m-k\)</span> Einträge unter <span class="math inline">\(a_{kk}\)</span> null werden:</li>
+</ul>
+<div class="columns">
+<div class="column" style="width:44%;">
+<ul>
+<li><mark><em>Givens-Rotation</em></mark>:</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/givens-rotation.svg" class="quarto-figure quarto-figure-center" style="width:72.0%"></p>
+</figure>
+</div>
+<p><span class="math inline">\(G_{ij}(\theta)\)</span> dreht die Projektion von <span class="math inline">\(\ba_k\)</span> auf <span class="math inline">\(\spann(\be_i,\be_j)\)</span> auf <span class="math inline">\(\be_i\)</span>.<br>
+So wird <strong>ein</strong> ausgewählter Eintrag <span class="math inline">\(a_{jk}\)</span> null.</p>
+<div class="small">
+<p>Bei üblicher Drehrichtung gilt <span class="math display">\[\theta=-\operatorname{atan2}(A_{jk}, A_{ik}).\]</span></p>
+</div>
+</div><div class="column" style="width:56%;">
+<ul>
+<li><mark><em>Householder-Reflexion</em></mark>:</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="resources/householder-reflection.svg" class="quarto-figure quarto-figure-center" style="width:56.0%"></p>
+</figure>
+</div>
+<p>Definiere den nach oben mit Nullen aufgefüllten Rest der <span class="math inline">\(k\)</span>-ten Spalte von <span class="math inline">\(\bA\)</span>: <span class="math inline">\(\;\bz_k:=\sum_{\ell=k}^m \bA_{\ell k}\be_\ell\)</span>.<br>
+Spiegelebene <span class="math inline">\(\bv_k^\perp\)</span> halbiert den Winkel zwischen <span class="math inline">\(\bz_k\)</span> und <span class="math inline">\(\be_k\)</span>.<br>
+Nach Reflexion gilt <span class="math inline">\(a_{\ell k}^{\mathrm{neu}}=0\)</span> <strong>für alle</strong> <span class="math inline">\(\ell&gt;k\)</span>, Einträge mit <span class="math inline">\(\ell&lt;k\)</span> bleiben unverändert.</p>
+<div class="small">
+<p><span class="math display">\[\begin{aligned}
+\text{Wähle } \alpha&amp;=\pm\|\bz_k\|_2,\quad \bz_k\neq\alpha \be_k, &amp;
+  \bv_k&amp;=\frac{\bz_k-\alpha \be_k}{\|\bz_k-\alpha \be_k\|_2},\\
+  \bH_k&amp;=\bI-2\bv_k\bv_k^\top, &amp;
+  \bH_k\bz_k&amp;=\alpha \be_k.
+  \end{aligned}\]</span></p>
+</div>
+</div></div>
+</section>
+<section id="pseudoinverse-und-kleinste-quadrate" class="slide level3">
+<h3>Pseudoinverse und Kleinste Quadrate</h3>
+<p><strong>SVD-Lösung:</strong><br>
+</p>
+<p><span class="math display">\[\bx = \bA^+\bb = \bV_r \bSigma_r^{-1} \bU_r^\top \bb\]</span></p>
+<p><strong>Warum funktioniert das?</strong><br>
+</p>
+<p><span class="math display">\[\bA\bx = \bA\bA^+\bb = \proj_{\col(\bA)}\bb\]</span></p>
+<p><strong>Vorteile gegenüber Normalengleichungen:</strong><br>
+</p>
+<ul>
+<li>Arbeitet direkt mit <span class="math inline">\(\bA\)</span>, nicht <span class="math inline">\(\bA^\top\bA\)</span> <span class="math inline">\(\to\)</span> numerisch stabiler</li>
+<li>Funktioniert auch für rangdefiziente Matrizen (<span class="math inline">\(\rang(\bA) &lt; n\)</span>) —<br>
+liefert dann die KQ-Lösung mit minimaler Norm: <span class="math display">\[\bA^+\bb = \arg\min_{\substack{\bx \in \R^{n} \\ \bA^\top\bA\bx = \bA^\top\bb}} \|\bx\|_2\]</span></li>
+<li>Explizite Konstruktion der Lösung, klare geometrische Interpretation</li>
+</ul>
+</section>
+<section id="demo-ein-kq-problem-drei-verfahren" class="slide level3 smaller">
+<h3>Demo: Ein KQ-Problem, drei Verfahren</h3>
+<p>Lineare Regression mit <strong>fast kollinearen</strong> Spalten — die wahre Lösung ist bekannt:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb2-2"><a></a>m <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-3"><a></a>x <span class="ot">&lt;-</span> <span class="fu">runif</span>(m)</span>
+<span id="cb2-4"><a></a>A <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="dv">1</span>, x, x <span class="sc">+</span> <span class="fl">1e-6</span> <span class="sc">*</span> <span class="fu">runif</span>(m)) <span class="co"># 3. Spalte fast identisch zur 2.!</span></span>
+<span id="cb2-5"><a></a>beta_wahr <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb2-6"><a></a>b <span class="ot">&lt;-</span> A <span class="sc">%*%</span> beta_wahr                  <span class="co"># exakte Daten: Loesung = beta_wahr</span></span>
+<span id="cb2-7"><a></a><span class="fu">kappa</span>(A, <span class="at">exact =</span> <span class="cn">TRUE</span>)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6592188</code></pre>
+</div>
+</div>
+<ul>
+<li><span class="math inline">\(\kappa_2(\bA) \approx 7 \cdot 10^6 \implies \kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2 \approx 4 \cdot 10^{13}\)</span></li>
+</ul>
+<div class="fragment">
+<p><strong>Vorhersage:</strong> Doppelte Gleitkommazahlen haben <span class="math inline">\(\approx 16\)</span> Dezimalstellen. Wie viele <em>korrekte</em> Stellen von <span class="math inline">\(\bbeta\)</span> erwarten Sie</p>
+<ul>
+<li>für die Normalengleichungen (Fehler <span class="math inline">\(\sim \kappa_2(\bA)^2 \, \epsilon_{mach}\)</span>)?</li>
+<li>für QR/SVD (Fehler <span class="math inline">\(\sim \kappa_2(\bA) \, \epsilon_{mach}\)</span>)?</li>
+</ul>
+</div>
+</section>
+<section id="demo-ergebnisse" class="slide level3 smaller">
+<h3>Demo: Ergebnisse</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>beta_ne  <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(A) <span class="sc">%*%</span> A, <span class="fu">t</span>(A) <span class="sc">%*%</span> b)  <span class="co"># Normalengleichungen (ohne Inverse!)</span></span>
+<span id="cb4-2"><a></a>beta_qr  <span class="ot">&lt;-</span> <span class="fu">qr.solve</span>(A, b)                 <span class="co"># QR-Zerlegung</span></span>
+<span id="cb4-3"><a></a>s        <span class="ot">&lt;-</span> <span class="fu">svd</span>(A)</span>
+<span id="cb4-4"><a></a>beta_svd <span class="ot">&lt;-</span> s<span class="sc">$</span>v <span class="sc">%*%</span> ((<span class="fu">t</span>(s<span class="sc">$</span>u) <span class="sc">%*%</span> b) <span class="sc">/</span> s<span class="sc">$</span>d) <span class="co"># SVD: A+ b</span></span>
+<span id="cb4-5"><a></a>fehler   <span class="ot">&lt;-</span> <span class="cf">function</span>(beta_hat) <span class="fu">max</span>(<span class="fu">abs</span>(beta_hat <span class="sc">-</span> beta_wahr))</span>
+<span id="cb4-6"><a></a><span class="fu">sapply</span>(<span class="fu">list</span>(<span class="st">"Normalengl."</span> <span class="ot">=</span> beta_ne, <span class="at">QR =</span> beta_qr, <span class="at">SVD =</span> beta_svd), fehler)</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell fragment" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>Normalengl.          QR         SVD 
+   8.77e-03    1.19e-11    1.55e-10 </code></pre>
+</div>
+</div>
+<div class="fragment">
+<ul>
+<li><mark><strong>Normalengleichungen</strong></mark>:<br>
+Fehler <span class="math inline">\(\approx 10^{-2}\)</span> —<br>
+passt zu <span class="math inline">\(\kappa_2(\bA)^2 \, \epsilon_{mach} \approx 4 \cdot 10^{13} \cdot 2 \cdot 10^{-16} \approx 10^{-2}\)</span><br>
+<span class="math inline">\(\implies\)</span> nur noch <strong>2–3 korrekte Stellen</strong>, obwohl wir die Matrixinversion vermieden haben:<br>
+die <em>Quadrierung der Konditionszahl</em> ist das Problem, nicht (nur) <code>solve(M)</code>.</li>
+<li><mark><strong>QR/SVD</strong></mark>:<br>
+Fehler <span class="math inline">\(\approx 10^{-10}\)</span> — passt zu <span class="math inline">\(\kappa_2(\bA) \, \epsilon_{mach} \approx 10^{-9}\)</span><br>
+<span class="math inline">\(\implies\)</span> <strong>ca. 10 korrekte Stellen</strong> statt nur 2–3 bei den Normalengleichungen.</li>
+</ul>
+</div>
+</section>
+<section id="vergleich-der-lösungsverfahren" class="slide level3 smaller">
+<h3>Vergleich der Lösungsverfahren</h3>
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Verfahren</th>
+<th style="text-align: left;">Ansatz</th>
+<th style="text-align: left;">Komplexität (<span class="math inline">\(m \gg n\)</span>)</th>
+<th style="text-align: left;">Stabilität</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cholesky</strong> auf <span class="math inline">\(\bA^\top\bA\)</span></td>
+<td style="text-align: left;">Normalengleichungen</td>
+<td style="text-align: left;"><span class="math inline">\(O(mn^2)\)</span>, kleinste Konstante (<span class="math inline">\(\approx mn^2\)</span>)</td>
+<td style="text-align: left;">Fehler <span class="math inline">\(O\left(\kappa_2(\bA)^2 \, \epsilon_{mach}\right)\)</span> — potenziell instabil</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>QR-Zerlegung</strong></td>
+<td style="text-align: left;">löse <span class="math inline">\(\bR\hat{\bx} = \bc_1\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(O(mn^2)\)</span> (<span class="math inline">\(\approx 2mn^2\)</span>, Householder)</td>
+<td style="text-align: left;">stabil — <strong>Standardwahl</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>SVD</strong></td>
+<td style="text-align: left;"><span class="math inline">\(\hat{\bx} = \bA^+\bb = \bV_r \bSigma_r^{-1} \bU_r^\top \bb\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(O(mn^2)\)</span>, größte Konstante</td>
+<td style="text-align: left;">am stabilsten, auch für <span class="math inline">\(\rang(\bA) &lt; n\)</span></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Für <span class="math inline">\(m \gg n\)</span> haben alle drei Verfahren dieselbe Komplexitäts<em>ordnung</em> <span class="math inline">\(O(mn^2)\)</span> — die Konstanten (und die Stabilität!) unterscheiden sich aber deutlich: Normalengleichungen + Cholesky brauchen etwa halb so viele Operationen wie Householder-QR, die SVD ein Mehrfaches davon.</li>
+<li>SVD besonders sinnvoll, wenn <span class="math inline">\(\bA\)</span> fast singulär ist (<span class="math inline">\(\sigma_{\min}(\bA) \approx 0 \Rightarrow \kappa(\bA) \gg 1\)</span>): die <span class="math inline">\(r - k\)</span> kleinsten Singulärwerte auf 0 setzen <span class="math inline">\(\to\)</span> <strong>Rang-k-Approximation</strong> als Regularisierung.</li>
+</ul>
+</section></section>
+<section>
+<section id="self-check-zusammenfassung" class="title-slide slide level2 center">
+<h2>Self-Check &amp; Zusammenfassung</h2>
+
+</section>
+<section id="wrap-up" class="slide level3">
+<h3>Wrap-up</h3>
+<p><strong>Heute gelernt</strong></p>
+<ul>
+<li><mark><em>Kondition des KQ-Problems</em></mark>:<br>
+bzgl. <span class="math inline">\(\bb\)</span> abhängig vom Winkel zwischen <span class="math inline">\(\bb\)</span> und <span class="math inline">\(\col(\bA)\)</span>,<br>
+bzgl. <span class="math inline">\(\bA\)</span> typischerweise <span class="math inline">\(O(\kappa_2(\bA)^2)\)</span>.</li>
+<li><span class="math inline">\(\kappa_2(\bA^\top \bA) = \kappa_2(\bA)^2 \implies\)</span> <mark><em>Normalengleichungen</em></mark> können instabil sein — und: <strong>Invertiere niemals eine Matrix!</strong></li>
+<li>Drei Lösungsverfahren:
+<ul>
+<li><mark><em>Cholesky</em></mark> (schnell, heikel),</li>
+<li><mark><em>QR-Zerlegung</em></mark> (Standardwahl),</li>
+<li><mark><em>SVD</em></mark> (am stabilsten, auch für rangdefiziente <span class="math inline">\(\bA\)</span>).</li>
+</ul></li>
+</ul>
+<p><strong>Nächste Vorlesung</strong></p>
+<ul>
+<li>Probabilistische Methoden</li>
+<li>Iterative Methoden</li>
+</ul>
+</section>
+<section id="self-check-12" class="slide level3 smaller">
+<h3>Self-Check (1/2)</h3>
+<!-- TODO Particify/Moodle: als quiz/07-kq/selfcheck-*.Rmd autorieren (R/exams). -->
+<p><strong>Frage 1:</strong> Welches Verfahren ist für KQ-Probleme mit <span class="math inline">\(\rang(\bA) = n\)</span> die übliche <strong>Standardwahl</strong> (guter Kompromiss aus Stabilität und Geschwindigkeit)?</p>
+<ol type="1">
+<li>Cholesky auf <span class="math inline">\(\bA^\top\bA\)</span></li>
+<li>QR-Zerlegung</li>
+<li>SVD</li>
+<li>Explizite Inversion: <code>solve(t(A) %*% A) %*% t(A) %*% b</code></li>
+</ol>
+<p><strong>Frage 2:</strong> Für <span class="math inline">\(m \gg n\)</span> gilt für die Komplexität von Cholesky, QR und SVD:</p>
+<ol type="1">
+<li>Alle drei haben dieselbe Ordnung <span class="math inline">\(O(mn^2 + n^3)\)</span>, aber deutlich verschiedene Konstanten.</li>
+<li>Cholesky ist <span class="math inline">\(O(mn)\)</span>, QR ist <span class="math inline">\(O(mn^2)\)</span>, SVD ist <span class="math inline">\(O(m^2n^2)\)</span>.</li>
+<li>Die SVD hat exponentielle Laufzeit.</li>
+<li>QR ist immer am langsamsten.</li>
+</ol>
+<!-- SOLUTIONS: F1: 2 (QR = Standardwahl: stabil, quadriert die Kondition nicht;
+     SVD ist stabiler aber langsamer, Cholesky schneller aber potenziell instabil).
+     F2: 1 (gleiche Ordnung, Konstanten und Stabilitaet unterscheiden sich). -->
+</section>
+<section id="self-check-22" class="slide level3 smaller">
+<h3>Self-Check (2/2)</h3>
+<p><strong>Frage 3:</strong> Die Kondition des KQ-Problems bezüglich <span class="math inline">\(\bb\)</span> explodiert (<span class="math inline">\(\kappa \to \infty\)</span>) genau dann, wenn …</p>
+<ol type="1">
+<li><span class="math inline">\(\bb \in \col(\bA)\)</span>.</li>
+<li><span class="math inline">\(\bb \perp \col(\bA)\)</span>, d.h. <span class="math inline">\(\proj_{\col(\bA)} \bb = \boldsymbol{0}\)</span>.</li>
+<li>das Residuum <span class="math inline">\(\br = \boldsymbol{0}\)</span> ist.</li>
+<li><span class="math inline">\(\bA\)</span> eine Orthogonalmatrix ist.</li>
+</ol>
+<p><strong>Frage 4:</strong> Warum sind die Normalengleichungen numerisch heikel, selbst wenn man die explizite Inversion vermeidet?</p>
+<ol type="1">
+<li><span class="math inline">\(\bA^\top\bA\)</span> ist nie invertierbar.</li>
+<li>Vorwärts-/Rückwärtssubstitution ist instabil.</li>
+<li>Der Übergang zu <span class="math inline">\(\bA^\top\bA\)</span> quadriert die Konditionszahl: <span class="math inline">\(\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2\)</span>.</li>
+<li>Die Cholesky-Zerlegung existiert für SPD-Matrizen nicht.</li>
+</ol>
+<!-- SOLUTIONS: F3: 2 (best case b in col(A): kappa = kappa_2(A); worst case
+     b senkrecht col(A): kappa = unendlich). F4: 3 (kappa-Quadrierung, siehe Demo;
+     1, 2, 4 sind falsch: A'A ist invertierbar falls rang(A) = n, Substitution ist
+     stabil, Cholesky existiert genau fuer SPD-Matrizen). -->
+</section></section>
+<section>
+<section id="anhang" class="title-slide slide level1 center" data-visibility="uncounted">
+<h1>Anhang</h1>
+
+</section>
+<section id="beweis-kondition-bzgl-b" class="slide level3" data-visibility="uncounted">
+<h3>Beweis: Kondition bezüglich <span class="math inline">\(\bb\)</span></h3>
+<p>Behauptung: <span class="math inline">\(\dfrac{\| f(\tilde{\bb}) - f(\bb)\| }{\| f(\bb)\|} \le  \kappa_2(\bA) \dfrac{\|\bb\|}{\left\| \proj_{\col(\bA)} \bb\right\|} \cdot \dfrac{\| \tilde{\bb} - \bb\| }{\| \bb\| }\)</span> für <span class="math inline">\(f(\bb) = \bA^+\bb\)</span>.</p>
+<div class="small">
+<p><span class="math display">\[\begin{align*}
+\frac{\left\|\cblue{\bA^+}\tilde{\bb} - \cblue{\bA^+}\bb\right\|}{\corange{\|\bA^+ \bb\|}}  &amp;= \frac{\left\| \cblue{\bA^+} \cgreen{(\tilde{\bb} -\bb)}\right\|}{\corange{\|\bA^+ \bb\|}}   \\
+&amp;\le \frac{\cblue{\| \bA^+  \|}  \left\| \cgreen{\tilde{\bb} -\bb}\right\| }{\corange{\|\bA^+ \bb\|}}   \expl{Submultiplikativität} \\
+&amp;= \frac{\cblue{\kappa_2(\bA)}}{\corange{\|\bA\| \cdot \|\bA^+ \bb\|} }  \left\| \cgreen{\tilde{\bb} - \bb}\right\| \expl{Def. von $\kappa_2(\bA)$} \\
+&amp;\le \frac{\cblue{\kappa_2(\bA)}}{\corange{\left\|\bA \bA^+ \bb\right\|} }  \left\| \cgreen{\tilde{\bb} - \bb}\right\|  \expl{Submultiplikativität}
+\end{align*}\]</span></p>
+<p>und mit <span class="math inline">\(\corange{\bA\bA^+\bb} = \corange{\proj_{\col(\bA)}\bb}\)</span> sowie Erweitern mit <span class="math inline">\(\|\bb\|/\|\bb\|\)</span> folgt die Behauptung. <span class="math inline">\(\blacksquare\)</span></p>
+</div>
+<div class="small">
+<p><a href="#/kondition-bzgl-b-theorem">↩︎ zurück: „Kondition bezüglich <span class="math inline">\(\bb\)</span>“</a></p>
+</div>
+</section>
+<section id="qr-zerlegung-verifikation" class="slide level3" data-visibility="uncounted">
+<h3>Beispiel: QR-Zerlegung — Verifikation</h3>
+<p>Aus dem Hauptteil: <span class="math inline">\(\bA = \begin{pmatrix} 1 &amp; 2 \\ 0 &amp; 0 \\ 0 &amp; 2 \end{pmatrix}\)</span>, berechnet via Gram-Schmidt:</p>
+<ul>
+<li><span class="math inline">\(\bq_1 = \begin{pmatrix} 1 &amp; 0 &amp; 0 \end{pmatrix}^\top\)</span>; <span class="math inline">\(\bq_2 = \begin{pmatrix} 0 &amp; 0 &amp; 1 \end{pmatrix}^\top\)</span>; <span class="math inline">\(\bq_3 = \begin{pmatrix} 0 &amp; 1 &amp; 0 \end{pmatrix}^\top\)</span></li>
+<li><span class="math inline">\(R_{11} = 1\)</span>; <span class="math inline">\(R_{12} = 2\)</span>; <span class="math inline">\(R_{22} = 2\)</span></li>
+</ul>
+<p><strong>Verifikation:</strong> <span class="math display">\[\bQ \begin{pmatrix} \bR \\ \bnull \end{pmatrix} = \begin{pmatrix} 1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1 \\ 0 &amp; 1 &amp; 0 \end{pmatrix} \begin{pmatrix} 1 &amp; 2 \\ 0 &amp; 2\\ 0 &amp; 0 \end{pmatrix} = \begin{pmatrix} 1 &amp; 2 \\ 0 &amp; 0 \\ 0 &amp; 2 \end{pmatrix} = \bA \checkmark\]</span></p>
+<p>und <span class="math inline">\(\bQ\)</span> ist orthogonal: <span class="math inline">\(\bQ^\top\bQ = \bI_3\)</span> (Spalten sind orthonormale Vektoren). <span class="math inline">\(\checkmark\)</span></p>
+<div class="small">
+<p><a href="#/beispiel-qr-zerlegung">↩︎ zurück: „Beispiel: QR-Zerlegung”</a></p>
+</div>
+
+
+</section></section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script>
+    (() => {
+      "use strict";
+
+      const MIN_FONT_SIZE = 24;
+      const FIT_STEP = 0.25;
+      const OVERFLOW_TOLERANCE = 1;
+      const SKIP_SELECTOR = ".smaller, .scrollable, .no-autofit";
+      const pendingSlides = new Set();
+      let fitAllPending = false;
+      let fitFrame = null;
+
+      function overflows(slide) {
+        return slide.scrollHeight > slide.clientHeight + OVERFLOW_TOLERANCE ||
+          slide.scrollWidth > slide.clientWidth + OVERFLOW_TOLERANCE;
+      }
+
+      function fitSlide(slide) {
+        if (!slide || slide.querySelector(":scope > section")) {
+          return;
+        }
+
+        // Restore the author's inline value before measuring again.
+        if (slide.hasAttribute("data-autofit-font-size")) {
+          const originalSize = slide.dataset.autofitOriginalFontSize;
+          if (originalSize) {
+            slide.style.fontSize = originalSize;
+          } else {
+            slide.style.removeProperty("font-size");
+          }
+          slide.removeAttribute("data-autofit-font-size");
+          slide.removeAttribute("data-autofit-original-font-size");
+        }
+        slide.classList.remove("autofit-minimum");
+
+        if (slide.matches(SKIP_SELECTOR)) {
+          return;
+        }
+
+        if (!overflows(slide)) {
+          return;
+        }
+
+        const initialSize = parseFloat(getComputedStyle(slide).fontSize);
+        const originalInlineSize = slide.style.fontSize;
+        let low = MIN_FONT_SIZE;
+        let high = initialSize;
+
+        slide.style.fontSize = `${MIN_FONT_SIZE}px`;
+        if (overflows(slide)) {
+          slide.classList.add("autofit-minimum");
+          slide.dataset.autofitFontSize = MIN_FONT_SIZE;
+          slide.dataset.autofitOriginalFontSize = originalInlineSize;
+          console.warn(
+            `Autofit: slide ${slide.id || "(without id)"} still overflows at ` +
+            `${MIN_FONT_SIZE}px. Split it, use .scrollable, or use .no-autofit.`
+          );
+          return;
+        }
+
+        while (high - low > FIT_STEP) {
+          const candidate = (low + high) / 2;
+          slide.style.fontSize = `${candidate}px`;
+          if (overflows(slide)) {
+            high = candidate;
+          } else {
+            low = candidate;
+          }
+        }
+
+        const fittedSize = Math.floor(low / FIT_STEP) * FIT_STEP;
+        slide.style.fontSize = `${fittedSize}px`;
+        slide.dataset.autofitFontSize = fittedSize;
+        slide.dataset.autofitOriginalFontSize = originalInlineSize;
+      }
+
+      function fitAllSlides() {
+        document.querySelectorAll(".reveal .slides > section, .reveal .slides > section > section")
+          .forEach(fitSlide);
+      }
+
+      function scheduleFit(slide) {
+        if (slide) {
+          pendingSlides.add(slide.closest("section.slide") || slide);
+        } else {
+          fitAllPending = true;
+        }
+
+        if (fitFrame !== null) {
+          return;
+        }
+
+        fitFrame = requestAnimationFrame(() => {
+          fitFrame = null;
+          if (fitAllPending) {
+            fitAllPending = false;
+            pendingSlides.clear();
+            fitAllSlides();
+          } else {
+            const slides = [...pendingSlides];
+            pendingSlides.clear();
+            slides.forEach(fitSlide);
+          }
+        });
+      }
+
+      function initializeAutofit() {
+        fitAllSlides();
+
+        Reveal.on("slidechanged", event => scheduleFit(event.currentSlide));
+
+        document.querySelectorAll(".reveal .slides img")
+          .forEach(image => {
+            if (!image.complete) {
+              image.addEventListener("load", () => scheduleFit(image.closest("section")), {
+                once: true
+              });
+            }
+          });
+
+        const slides = document.querySelector(".reveal .slides");
+        if (slides) {
+          new MutationObserver(mutations => {
+            const target = mutations[0]?.target;
+            const element = target?.nodeType === Node.ELEMENT_NODE ?
+              target : target?.parentElement;
+            const slide = element?.closest("section.slide") || Reveal.getCurrentSlide();
+            scheduleFit(slide);
+          }).observe(slides, {
+            childList: true,
+            characterData: true,
+            subtree: true
+          });
+        }
+
+        document.fonts?.ready.then(() => scheduleFit());
+        window.MathJax?.startup?.promise?.then(() => scheduleFit());
+        window.addEventListener("load", () => scheduleFit(), { once: true });
+      }
+
+      if (window.Reveal?.isReady()) {
+        initializeAutofit();
+      } else {
+        Reveal.on("ready", initializeAutofit);
+      }
+    })();
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Kopiert");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Kopiert");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
