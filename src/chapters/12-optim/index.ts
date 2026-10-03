@@ -6,6 +6,7 @@ import S123Body from "./S123.mdx";
 import S124Body from "./S124.mdx";
 import S125Body from "./S125.mdx";
 import S126Body from "./S126.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -15,6 +16,7 @@ const chapter: ChapterModule = {
     { id: "12.4", key: "newton-sgd", title: "Newton, Quasi-Newton und SGD", C: mdxSection(S124Body) },
     { id: "12.5", key: "beschraenkt", title: "Beschränkte Optimierung", C: mdxSection(S125Body) },
     { id: "12.6", key: "optim-in-r", title: "Optimierung in R und Zusammenfassung", C: mdxSection(S126Body) },
+    { id: "12.7", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

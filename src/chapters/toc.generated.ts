@@ -21,6 +21,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "2.3", key: "aufwand", title: "Aufwand und Komplexität" },
     { id: "2.4", key: "landau", title: "Landau-Symbole und Rechenregeln" },
     { id: "2.5", key: "fibonacci-komplexitaet", title: "Fibonacci: Komplexitätsanalyse" },
+    { id: "2.6", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "03-matrix-spur-norm": [
     { id: "3.1", key: "spur", title: "Die Spur einer Matrix" },
@@ -29,12 +30,14 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "3.4", key: "schattennormen", title: "Schattennormen" },
     { id: "3.5", key: "eigenschaften", title: "Eigenschaften von Matrixnormen" },
     { id: "3.6", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "3.7", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "04-fehler": [
     { id: "4.1", key: "fehlermasse", title: "Fehlermaße und Fehlerzerlegung" },
     { id: "4.2", key: "kondition", title: "Kondition" },
     { id: "4.3", key: "stabilitaet", title: "Stabilität von Algorithmen" },
     { id: "4.4", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "4.5", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "05-lgs": [
     { id: "5.1", key: "grundlagen", title: "Numerische lineare Algebra: Grundlagen" },
@@ -42,6 +45,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "5.3", key: "lu", title: "Die LU-Zerlegung" },
     { id: "5.4", key: "cholesky", title: "Die Cholesky-Zerlegung" },
     { id: "5.5", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "5.6", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "06-svd": [
     { id: "6.1", key: "motivation", title: "Motivation" },
@@ -49,6 +53,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "6.3", key: "reduzierte-svd", title: "Reduzierte SVD und Pseudoinverse" },
     { id: "6.4", key: "anwendungen", title: "Anwendungen" },
     { id: "6.5", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "6.6", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "07-kq": [
     { id: "7.1", key: "problem", title: "Kleinste Quadrate: Problem und Motivation" },
@@ -57,6 +62,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "7.4", key: "qr", title: "QR-Zerlegung und Gram-Schmidt-Verfahren" },
     { id: "7.5", key: "givens-householder", title: "Konstruktion von Q: Givens-Rotationen und Householder-Spiegelungen" },
     { id: "7.6", key: "pseudoinverse", title: "Pseudoinverse, SVD-Lösung und Methodenvergleich" },
+    { id: "7.7", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "08-la-misc": [
     { id: "8.1", key: "eigenwerte", title: "Eigenwertprobleme: Potenzmethode und QR-Iteration" },
@@ -64,6 +70,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "8.3", key: "iterative-loeser", title: "Iterative Löser für lineare Gleichungssysteme" },
     { id: "8.4", key: "sketching", title: "Probabilistische Methoden: Matrix-Sketching" },
     { id: "8.5", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "8.6", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "09-tensoren": [
     { id: "9.1", key: "multilinear", title: "Multilineare Abbildungen" },
@@ -82,6 +89,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "10.7", key: "hoehere-ableitungen", title: "Ableitungen höheren Grades" },
     { id: "10.8", key: "taylor", title: "Taylorapproximation" },
     { id: "10.9", key: "zusammenfassung", title: "Zusammenfassung" },
+    { id: "10.10", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "11-konvexitaet": [
     { id: "11.1", key: "konvexkombinationen", title: "Konvexkombinationen und konvexe Hülle" },
@@ -89,6 +97,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "11.3", key: "projektion-konvexe-funktionen", title: "Projektion und konvexe Funktionen" },
     { id: "11.4", key: "eigenschaften", title: "Eigenschaften konvexer Funktionen" },
     { id: "11.5", key: "konvexe-optimierung", title: "Konvexe Optimierung und Zusammenfassung" },
+    { id: "11.6", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "12-optim": [
     { id: "12.1", key: "nichtlineare-gleichungen", title: "Nichtlineare Gleichungen" },
@@ -97,6 +106,7 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "12.4", key: "newton-sgd", title: "Newton, Quasi-Newton und SGD" },
     { id: "12.5", key: "beschraenkt", title: "Beschränkte Optimierung" },
     { id: "12.6", key: "optim-in-r", title: "Optimierung in R und Zusammenfassung" },
+    { id: "12.7", key: "uebungen", title: "Übungsempfehlungen" },
   ],
   "13-funktionsapproximation": [
     { id: "13.1", key: "approximation", title: "Approximation, Interpolation, Glättung" },
@@ -108,5 +118,6 @@ export const tocSections: Record<string, TocSection[]> = {
     { id: "13.7", key: "glaettung", title: "Glättung und Regression" },
     { id: "13.8", key: "bias-varianz", title: "Bias-Varianz und Modellwahl" },
     { id: "13.9", key: "multivariat", title: "Multivariat und Zusammenfassung" },
+    { id: "13.10", key: "uebungen", title: "Übungsempfehlungen" },
   ],
 };

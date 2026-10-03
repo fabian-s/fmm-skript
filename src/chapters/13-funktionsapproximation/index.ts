@@ -9,6 +9,7 @@ import S136Body from "./S136.mdx";
 import S137Body from "./S137.mdx";
 import S138Body from "./S138.mdx";
 import S139Body from "./S139.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -21,6 +22,7 @@ const chapter: ChapterModule = {
     { id: "13.7", key: "glaettung", title: "Glättung und Regression", C: mdxSection(S137Body) },
     { id: "13.8", key: "bias-varianz", title: "Bias-Varianz und Modellwahl", C: mdxSection(S138Body) },
     { id: "13.9", key: "multivariat", title: "Multivariat und Zusammenfassung", C: mdxSection(S139Body) },
+    { id: "13.10", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

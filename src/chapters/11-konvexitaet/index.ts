@@ -5,6 +5,7 @@ import S112Body from "./S112.mdx";
 import S113Body from "./S113.mdx";
 import S114Body from "./S114.mdx";
 import S115Body from "./S115.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -13,6 +14,7 @@ const chapter: ChapterModule = {
     { id: "11.3", key: "projektion-konvexe-funktionen", title: "Projektion und konvexe Funktionen", C: mdxSection(S113Body) },
     { id: "11.4", key: "eigenschaften", title: "Eigenschaften konvexer Funktionen", C: mdxSection(S114Body) },
     { id: "11.5", key: "konvexe-optimierung", title: "Konvexe Optimierung und Zusammenfassung", C: mdxSection(S115Body) },
+    { id: "11.6", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

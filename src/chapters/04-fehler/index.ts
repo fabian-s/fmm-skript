@@ -4,6 +4,7 @@ import S41Body from "./S41.mdx";
 import S42Body from "./S42.mdx";
 import S43Body from "./S43.mdx";
 import S44Body from "./S44.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -15,6 +16,7 @@ const chapter: ChapterModule = {
     { id: "4.2", key: "kondition", title: "Kondition", C: mdxSection(S42Body) },
     { id: "4.3", key: "stabilitaet", title: "Stabilität von Algorithmen", C: mdxSection(S43Body) },
     { id: "4.4", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S44Body) },
+    { id: "4.5", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

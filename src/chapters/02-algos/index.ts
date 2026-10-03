@@ -5,6 +5,7 @@ import S22Body from "./S22.mdx";
 import S23Body from "./S23.mdx";
 import S24Body from "./S24.mdx";
 import S25Body from "./S25.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -29,6 +30,7 @@ const chapter: ChapterModule = {
       title: "Fibonacci: Komplexitätsanalyse",
       C: mdxSection(S25Body),
     },
+    { id: "2.6", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

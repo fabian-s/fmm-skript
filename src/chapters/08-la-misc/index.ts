@@ -5,6 +5,7 @@ import S82Body from "./S82.mdx";
 import S83Body from "./S83.mdx";
 import S84Body from "./S84.mdx";
 import S85Body from "./S85.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -29,6 +30,7 @@ const chapter: ChapterModule = {
       C: mdxSection(S84Body),
     },
     { id: "8.5", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S85Body) },
+    { id: "8.6", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

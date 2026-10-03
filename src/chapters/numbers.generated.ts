@@ -836,6 +836,7 @@ export type NumKey =
   | "sec:algos/fibonacci-komplexitaet"
   | "sec:algos/landau"
   | "sec:algos/probleme-algorithmen"
+  | "sec:algos/uebungen"
   | "sec:alternative-loesungswege-orthogonale"
   | "sec:anwendung-auf-den-dominanten-term"
   | "sec:aufgabe-die-kondition-einer-summe"
@@ -860,6 +861,7 @@ export type NumKey =
   | "sec:differentialrechnung/produkt-kettenregel"
   | "sec:differentialrechnung/stetigkeit"
   | "sec:differentialrechnung/taylor"
+  | "sec:differentialrechnung/uebungen"
   | "sec:differentialrechnung/zusammenfassung"
   | "sec:effizient-aber-moeglicherweise-instabil"
   | "sec:ein-warnbeispiel-der-kehrwert"
@@ -867,6 +869,7 @@ export type NumKey =
   | "sec:fehler/fehlermasse"
   | "sec:fehler/kondition"
   | "sec:fehler/stabilitaet"
+  | "sec:fehler/uebungen"
   | "sec:fehler/zusammenfassung"
   | "sec:fehlermasse-und-fehlerschranken"
   | "sec:fehlerzerlegung"
@@ -880,6 +883,7 @@ export type NumKey =
   | "sec:funktionsapproximation/multivariat"
   | "sec:funktionsapproximation/polynominterpolation"
   | "sec:funktionsapproximation/splines"
+  | "sec:funktionsapproximation/uebungen"
   | "sec:intro/landkarte"
   | "sec:intro/worum"
   | "sec:klein-o-und-gross-o"
@@ -892,28 +896,33 @@ export type NumKey =
   | "sec:konvexitaet/konvexe-optimierung"
   | "sec:konvexitaet/konvexkombinationen"
   | "sec:konvexitaet/projektion-konvexe-funktionen"
+  | "sec:konvexitaet/uebungen"
   | "sec:kq/givens-householder"
   | "sec:kq/kondition"
   | "sec:kq/normalengleichungen"
   | "sec:kq/problem"
   | "sec:kq/pseudoinverse"
   | "sec:kq/qr"
+  | "sec:kq/uebungen"
   | "sec:la-misc/anwendungen"
   | "sec:la-misc/eigenwerte"
   | "sec:la-misc/iterative-loeser"
   | "sec:la-misc/sketching"
+  | "sec:la-misc/uebungen"
   | "sec:la-misc/zusammenfassung"
   | "sec:landau-selbsttest"
   | "sec:lgs/cholesky"
   | "sec:lgs/grundlagen"
   | "sec:lgs/lgs"
   | "sec:lgs/lu"
+  | "sec:lgs/uebungen"
   | "sec:lgs/zusammenfassung"
   | "sec:matrix-spur-norm/eigenschaften"
   | "sec:matrix-spur-norm/matrixnormen"
   | "sec:matrix-spur-norm/operatornormen"
   | "sec:matrix-spur-norm/schattennormen"
   | "sec:matrix-spur-norm/spur"
+  | "sec:matrix-spur-norm/uebungen"
   | "sec:matrix-spur-norm/zusammenfassung"
   | "sec:matrixnormen-durch-vektorisierung"
   | "sec:matrixnormen-und-konditionierung"
@@ -925,6 +934,7 @@ export type NumKey =
   | "sec:optim/nichtlineare-gleichungen"
   | "sec:optim/optim-in-r"
   | "sec:optim/optimalitaet"
+  | "sec:optim/uebungen"
   | "sec:rechenbeispiele"
   | "sec:rechenregeln"
   | "sec:rechenregeln-und-zyklische-vertauschung"
@@ -935,6 +945,7 @@ export type NumKey =
   | "sec:svd/motivation"
   | "sec:svd/reduzierte-svd"
   | "sec:svd/singulaerwerte"
+  | "sec:svd/uebungen"
   | "sec:svd/zusammenfassung"
   | "sec:tensoren/multilinear"
   | "sec:tensoren/produkte"
@@ -1780,6 +1791,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:algos/fibonacci-komplexitaet": ["2.5", "Abschnitt 2.5"],
   "sec:algos/landau": ["2.4", "Abschnitt 2.4"],
   "sec:algos/probleme-algorithmen": ["2.1", "Abschnitt 2.1"],
+  "sec:algos/uebungen": ["2.6", "Abschnitt 2.6"],
   "sec:alternative-loesungswege-orthogonale": ["7.3.4", "Abschnitt 7.3.4"],
   "sec:anwendung-auf-den-dominanten-term": ["2.4.4", "Abschnitt 2.4.4"],
   "sec:aufgabe-die-kondition-einer-summe": ["4.2.4", "Abschnitt 4.2.4"],
@@ -1804,6 +1816,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:differentialrechnung/produkt-kettenregel": ["10.6", "Abschnitt 10.6"],
   "sec:differentialrechnung/stetigkeit": ["10.5", "Abschnitt 10.5"],
   "sec:differentialrechnung/taylor": ["10.8", "Abschnitt 10.8"],
+  "sec:differentialrechnung/uebungen": ["10.10", "Abschnitt 10.10"],
   "sec:differentialrechnung/zusammenfassung": ["10.9", "Abschnitt 10.9"],
   "sec:effizient-aber-moeglicherweise-instabil": ["7.3.3", "Abschnitt 7.3.3"],
   "sec:ein-warnbeispiel-der-kehrwert": ["4.2.1", "Abschnitt 4.2.1"],
@@ -1811,6 +1824,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:fehler/fehlermasse": ["4.1", "Abschnitt 4.1"],
   "sec:fehler/kondition": ["4.2", "Abschnitt 4.2"],
   "sec:fehler/stabilitaet": ["4.3", "Abschnitt 4.3"],
+  "sec:fehler/uebungen": ["4.5", "Abschnitt 4.5"],
   "sec:fehler/zusammenfassung": ["4.4", "Abschnitt 4.4"],
   "sec:fehlermasse-und-fehlerschranken": ["4.1.2", "Abschnitt 4.1.2"],
   "sec:fehlerzerlegung": ["4.1.3", "Abschnitt 4.1.3"],
@@ -1824,6 +1838,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:funktionsapproximation/multivariat": ["13.9", "Abschnitt 13.9"],
   "sec:funktionsapproximation/polynominterpolation": ["13.3", "Abschnitt 13.3"],
   "sec:funktionsapproximation/splines": ["13.4", "Abschnitt 13.4"],
+  "sec:funktionsapproximation/uebungen": ["13.10", "Abschnitt 13.10"],
   "sec:intro/landkarte": ["1.2", "Abschnitt 1.2"],
   "sec:intro/worum": ["1.1", "Abschnitt 1.1"],
   "sec:klein-o-und-gross-o": ["2.4.1", "Abschnitt 2.4.1"],
@@ -1836,28 +1851,33 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:konvexitaet/konvexe-optimierung": ["11.5", "Abschnitt 11.5"],
   "sec:konvexitaet/konvexkombinationen": ["11.1", "Abschnitt 11.1"],
   "sec:konvexitaet/projektion-konvexe-funktionen": ["11.3", "Abschnitt 11.3"],
+  "sec:konvexitaet/uebungen": ["11.6", "Abschnitt 11.6"],
   "sec:kq/givens-householder": ["7.5", "Abschnitt 7.5"],
   "sec:kq/kondition": ["7.2", "Abschnitt 7.2"],
   "sec:kq/normalengleichungen": ["7.3", "Abschnitt 7.3"],
   "sec:kq/problem": ["7.1", "Abschnitt 7.1"],
   "sec:kq/pseudoinverse": ["7.6", "Abschnitt 7.6"],
   "sec:kq/qr": ["7.4", "Abschnitt 7.4"],
+  "sec:kq/uebungen": ["7.7", "Abschnitt 7.7"],
   "sec:la-misc/anwendungen": ["8.2", "Abschnitt 8.2"],
   "sec:la-misc/eigenwerte": ["8.1", "Abschnitt 8.1"],
   "sec:la-misc/iterative-loeser": ["8.3", "Abschnitt 8.3"],
   "sec:la-misc/sketching": ["8.4", "Abschnitt 8.4"],
+  "sec:la-misc/uebungen": ["8.6", "Abschnitt 8.6"],
   "sec:la-misc/zusammenfassung": ["8.5", "Abschnitt 8.5"],
   "sec:landau-selbsttest": ["2.4.5", "Abschnitt 2.4.5"],
   "sec:lgs/cholesky": ["5.4", "Abschnitt 5.4"],
   "sec:lgs/grundlagen": ["5.1", "Abschnitt 5.1"],
   "sec:lgs/lgs": ["5.2", "Abschnitt 5.2"],
   "sec:lgs/lu": ["5.3", "Abschnitt 5.3"],
+  "sec:lgs/uebungen": ["5.6", "Abschnitt 5.6"],
   "sec:lgs/zusammenfassung": ["5.5", "Abschnitt 5.5"],
   "sec:matrix-spur-norm/eigenschaften": ["3.5", "Abschnitt 3.5"],
   "sec:matrix-spur-norm/matrixnormen": ["3.2", "Abschnitt 3.2"],
   "sec:matrix-spur-norm/operatornormen": ["3.3", "Abschnitt 3.3"],
   "sec:matrix-spur-norm/schattennormen": ["3.4", "Abschnitt 3.4"],
   "sec:matrix-spur-norm/spur": ["3.1", "Abschnitt 3.1"],
+  "sec:matrix-spur-norm/uebungen": ["3.7", "Abschnitt 3.7"],
   "sec:matrix-spur-norm/zusammenfassung": ["3.6", "Abschnitt 3.6"],
   "sec:matrixnormen-durch-vektorisierung": ["3.2.3", "Abschnitt 3.2.3"],
   "sec:matrixnormen-und-konditionierung": ["3.5.4", "Abschnitt 3.5.4"],
@@ -1869,6 +1889,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:optim/nichtlineare-gleichungen": ["12.1", "Abschnitt 12.1"],
   "sec:optim/optim-in-r": ["12.6", "Abschnitt 12.6"],
   "sec:optim/optimalitaet": ["12.2", "Abschnitt 12.2"],
+  "sec:optim/uebungen": ["12.7", "Abschnitt 12.7"],
   "sec:rechenbeispiele": ["2.4.2", "Abschnitt 2.4.2"],
   "sec:rechenregeln": ["2.4.3", "Abschnitt 2.4.3"],
   "sec:rechenregeln-und-zyklische-vertauschung": ["3.1.2", "Abschnitt 3.1.2"],
@@ -1879,6 +1900,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:svd/motivation": ["6.1", "Abschnitt 6.1"],
   "sec:svd/reduzierte-svd": ["6.3", "Abschnitt 6.3"],
   "sec:svd/singulaerwerte": ["6.2", "Abschnitt 6.2"],
+  "sec:svd/uebungen": ["6.6", "Abschnitt 6.6"],
   "sec:svd/zusammenfassung": ["6.5", "Abschnitt 6.5"],
   "sec:tensoren/multilinear": ["9.1", "Abschnitt 9.1"],
   "sec:tensoren/produkte": ["9.3", "Abschnitt 9.3"],

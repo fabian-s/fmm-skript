@@ -6,6 +6,7 @@ import S73Body from "./S73.mdx";
 import S74Body from "./S74.mdx";
 import S75Body from "./S75.mdx";
 import S76Body from "./S76.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -40,6 +41,7 @@ const chapter: ChapterModule = {
       title: "Pseudoinverse, SVD-Lösung und Methodenvergleich",
       C: mdxSection(S76Body),
     },
+    { id: "7.7", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

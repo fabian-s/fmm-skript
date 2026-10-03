@@ -961,6 +961,7 @@ Zwei Arten von Erklärfenstern, zwei Auszeichnungen:
   dann die Migration der Altkapitel.
 - Folienfehler 05-lgs (Z. 288-298): Das Theorem „Jede invertierbare Matrix hat A=LU" ist falsch (Gegenbeispiel Vertauschungsmatrix (0 1; 1 0): Pivot 0) — Skript Satz 5.3.5 sagt korrekt: PA=LU existiert stets, A=LU genau bei Nullpivot-freier Elimination; ausserdem indizieren die Folien Z. 232-249 bis L_n, obwohl nur n-1 Eliminationsschritte existieren (Skript §5.3: L_{n-1}).
 - Folienfehler 05-lgs Induktionsbeweis Cholesky (Z. 462-463): im Testvektor steht zweimal \bc\top statt \bc^\top (fehlendes Dach), und die strikte Ungleichung braucht den Quantor x ≠ 0 — Skript §5.4 setzt beides korrekt (Beweis zu Satz 5.4.2); ins FOLIENFEHLER-Register übertragen (Abschnitts-Agenten dürfen die Datei nicht anfassen).
+- 2026-10-03: Der jeweils letzte Abschnitt `SUe.mdx` („Übungsempfehlungen", key `uebungen`) ist GENERIERT von `fmm-lmu/exercises/additional-solutions/apply-ratings.R` aus `ratings.yaml` — nie von Hand bearbeiten, Änderungen dort machen. Er nennt nur Zitat, Thema, Sterne und Aufwand; übersetzte Aufgabenstellungen und Musterlösungen bleiben auf der Kurs-Webseite (keine Links).
 
 ## Als Nächstes (offen, aus Council-Runde 2 vom 2026-08-06)
 

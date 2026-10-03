@@ -5,6 +5,7 @@ import S52Body from "./S52.mdx";
 import S53Body from "./S53.mdx";
 import S54Body from "./S54.mdx";
 import S55Body from "./S55.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -17,6 +18,7 @@ const chapter: ChapterModule = {
     { id: "5.3", key: "lu", title: "Die LU-Zerlegung", C: mdxSection(S53Body) },
     { id: "5.4", key: "cholesky", title: "Die Cholesky-Zerlegung", C: mdxSection(S54Body) },
     { id: "5.5", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S55Body) },
+    { id: "5.6", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

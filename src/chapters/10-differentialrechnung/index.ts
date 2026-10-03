@@ -9,6 +9,7 @@ import S106Body from "./S106.mdx";
 import S107Body from "./S107.mdx";
 import S108Body from "./S108.mdx";
 import S109Body from "./S109.mdx";
+import SUeBody from "./SUe.mdx";
 
 const chapter: ChapterModule = {
   sections: [
@@ -21,6 +22,7 @@ const chapter: ChapterModule = {
     { id: "10.7", key: "hoehere-ableitungen", title: "Ableitungen höheren Grades", C: mdxSection(S107Body) },
     { id: "10.8", key: "taylor", title: "Taylorapproximation", C: mdxSection(S108Body) },
     { id: "10.9", key: "zusammenfassung", title: "Zusammenfassung", C: mdxSection(S109Body) },
+    { id: "10.10", key: "uebungen", title: "Übungsempfehlungen", C: mdxSection(SUeBody) },
   ],
 };
 export default chapter;

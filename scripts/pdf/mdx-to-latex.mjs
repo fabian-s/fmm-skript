@@ -596,6 +596,14 @@ function longestWord(s) {
 const TABLE_WIDTH_PT = 408; // \linewidth im Satzspiegel
 const CHAR_PT = 4.6; // grobe Mittelbreite bei \small
 
+// Breite ohne Umbruch: je Spalte die laengste Zelle, plus Spaltenabstand.
+// Viele kurze Spalten passen sonst einzeln, zusammen aber nicht.
+function naturalWidthPt(cells, ncol) {
+  let sum = 0;
+  for (let i = 0; i < ncol; i++) sum += Math.max(0, ...cells.map((r) => visualLen(r[i] ?? "")));
+  return sum * CHAR_PT + (ncol - 1) * 10;
+}
+
 function weightedSpec(cells, ncol) {
   const bulk = Array.from({ length: ncol }, (_, i) =>
     Math.max(1, ...cells.map((r) => visualLen(r[i] ?? "")))
@@ -627,7 +635,7 @@ function table(n) {
   const longest = Math.max(...rows.flat().map((c) => visualLen(c)));
   // Kurze Zellen: klassisches tabular (sonst zerrt tabularx die Spalten
   // auf Textbreite auseinander). Lange Zellen muessen umbrechen koennen.
-  const wide = longest > 45;
+  const wide = longest > 45 || naturalWidthPt(rows, ncol) > TABLE_WIDTH_PT;
   const spec = wide
     ? weightedSpec(rows, ncol)
     : Array.from({ length: ncol }, (_, i) => align[i] ?? "l").join(" ");
@@ -882,7 +890,7 @@ function htmlTable(n) {
   const cells = rows.map((r) => r.map((c) => inlineAll(c.children)));
   const ncol = Math.max(...cells.map((r) => r.length));
   const longest = Math.max(...cells.flat().map((c) => visualLen(c)));
-  const wide = longest > 45;
+  const wide = longest > 45 || naturalWidthPt(cells, ncol) > TABLE_WIDTH_PT;
   const spec = wide
     ? weightedSpec(cells, ncol)
     : Array.from({ length: ncol }, () => "l").join(" ");
