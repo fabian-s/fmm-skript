@@ -51,6 +51,12 @@ oszillieren. Die Bedingung bedeutet: Ab irgendeinem Index gilt
 $\left\vert a_n \right\vert \le C \cdot \left\vert b_n \right\vert$ für eine
 Konstante $C$.
 
+Streng genommen bezeichnen $O(b_n)$ und $o(b_n)$ *Mengen* von Folgen, nämlich alle
+Folgen, die die jeweilige Bedingung erfüllen; korrekt wäre also $a_n \in O(b_n)$.
+Üblich ist trotzdem das Gleichheitszeichen, und auch wir schreiben es. Gelesen wird es
+als „ist ein" und nur von links nach rechts: $n = O(n^2)$ und $n^2 = O(n^2)$ sind
+beide richtig, daraus folgt aber *nicht* $n = n^2$.
+
 ### Rechenbeispiele :id[rechenbeispiele]
 
 Eine Landau-Beziehung weisen wir meist nach, indem wir den Grenzwert des Quotienten
@@ -92,10 +98,26 @@ existiert er immer, notfalls als $\infty$; deshalb ist die Bedingung
 $\limsup_{n \to \infty} \left\vert a_n / b_n \right\vert < \infty$ auch für
 oszillierende Quotienten definiert.
 
-*Das Gleichheitszeichen ist ein Notationsmissbrauch:*
-$a_n = O(b_n)$ liest man besser als „$a_n$ gehört zur Klasse
-$O(b_n)$". Insbesondere ist die Beziehung nicht symmetrisch: Aus
-$5n = O(n^2)$ folgt nicht $n^2 = O(5n)$.
+*Warum ein Gleichheitszeichen statt $\in$?* Die Schreibweise geht auf Bachmann (1894)
+und Landau (1909) zurück und hat sich gehalten, weil sie sich bequem in Rechnungen
+einbauen lässt. In
+
+$$
+a_n = 3n^2 + O(n)
+$$
+
+steht $O(n)$ für *irgendeine* Folge dieser Klasse, deren genaue Gestalt uns nicht
+interessiert. Mit $\in$ müssten wir eine Menge hinschreiben,
+$a_n \in \left\{ 3n^2 + c_n : c_n = O(n) \right\}$. Außerdem lassen sich Abschätzungen
+von links nach rechts verketten, etwa $3n^2 + 5n = O(n^2 + n) = O(n^2)$ mit den Regeln 1
+und 3 aus @lemma:rechenregeln-fuer-landau-symbole.
+
+*Das Gleichheitszeichen ist nicht symmetrisch.* Aus $5n = O(n^2)$ folgt nicht
+$n^2 = O(5n)$. Stehen auf beiden Seiten Landau-Terme, heißt die Gleichung: Jede Folge,
+die die linke Seite beschreibt, wird auch von der rechten beschrieben. Das
+Gleichheitszeichen steht dann eigentlich für $\subseteq$. So ist $O(n) = O(n^2)$
+richtig, weil jede Folge der Ordnung $n$ auch die Ordnung $n^2$ hat, während
+$O(n^2) = O(n)$ falsch ist.
 
 *Wozu Theta?* Groß-O ist nur eine obere Schranke. „Ein $O(n^2)$-Algorithmus" heißt
 deshalb nicht, dass seine Laufzeit tatsächlich quadratisch wächst: Ein Sortierverfahren
