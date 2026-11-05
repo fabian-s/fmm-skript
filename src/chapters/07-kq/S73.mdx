@@ -12,10 +12,10 @@ import { S73NormerhaltungWidget } from "./widgets/S73NormerhaltungWidget";
 Für $\rang(\bA) = n$ hat das
 :k[Kleinste-Quadrate-Problem]{#linear-least-squares} die eindeutige
 Lösung $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$, charakterisiert durch die
-:k[Normalengleichungen]{#normal-equations}
+:k[Normalengleichungen]{#normal-equations .hilfreich}
 $\bA^\top\bA\,\wh{\bx} = \bA^\top\bb$ (@satz:problem-normalengleichungen). Das ist
 eine Formel, aber noch kein Rechenverfahren. Das erste und einfachste Verfahren löst
-die Normalengleichungen mit der :k[Cholesky-Zerlegung]{#cholesky-factorization}.
+die Normalengleichungen mit der :k[Cholesky-Zerlegung]{#cholesky-factorization .hilfreich}.
 Es ist schnell, aber numerisch problematisch, und das führt uns auf orthogonale
 Transformationen.
 
@@ -58,17 +58,17 @@ invertieren.
 ### Das Cholesky-Verfahren :id[das-cholesky-verfahren]
 
 Welche Zerlegung passt zu $\bA^\top\bA$? Für $\rang(\bA) = n$ ist
-$\bA^\top\bA$ :k[symmetrisch]{#symmetric-matrix}, denn
-$(\bA^\top\bA)^\top = \bA^\top\bA$, und :k[positiv definit]{#positive-definite}, denn
+$\bA^\top\bA$ :k[symmetrisch]{#symmetric-matrix .hilfreich}, denn
+$(\bA^\top\bA)^\top = \bA^\top\bA$, und :k[positiv definit]{#positive-definite .hilfreich}, denn
 $\bx^\top(\bA^\top\bA)\bx = \left\| \bA\bx \right\|_2^2 > 0$ für jedes
 $\bx \neq \bnull$ (die Spalten von $\bA$ sind linear unabhängig, also ist
 $\bA\bx \neq \bnull$).
 
 Symmetrisch positiv definit, kurz *SPD* (engl. *symmetric positive
 definite*): das ist die Klasse von Matrizen, für die die
-:k[Cholesky-Zerlegung]{#cholesky-factorization}
+:k[Cholesky-Zerlegung]{#cholesky-factorization .wichtig}
 $\bM = \bL\bL^\top$ mit einer unteren
-:k[Dreiecksmatrix]{#triangular-matrix} $\bL$
+:k[Dreiecksmatrix]{#triangular-matrix .hilfreich} $\bL$
 existiert. Damit zerfällt das :d[KQ-Problem]{#kleinste-quadrate-problem-kq-problem} in einfache Teilschritte:
 
 :::algorithmus[#cholesky-verfahren-fuer-das-kq-problem (Cholesky-Verfahren für das KQ-Problem)]
@@ -76,7 +76,7 @@ existiert. Damit zerfällt das :d[KQ-Problem]{#kleinste-quadrate-problem-kq-prob
    $\cbgreen{\bc} = \bA^\top\bb$.
 2. Berechne die Cholesky-Zerlegung $\cbred{\bM} = \cborange{\bL}\cborange{\bL}^\top$.
 3. Löse $\cborange{\bL}\,\cbpurp{\by} = \cbgreen{\bc}$ durch
-   :k[Vorwärtssubstitution]{#triangular-solve}.
+   :k[Vorwärtssubstitution]{#triangular-solve .hilfreich}.
 4. Löse $\cborange{\bL}^\top\cblue{\wh{\bx}} = \cbpurp{\by}$ durch
    Rückwärtssubstitution.
 :::
@@ -164,21 +164,21 @@ liegt im ersten Schritt.
   alle folgenden Schritte; kein späterer Schritt kann sie reparieren.
 - Man kann zeigen: Der relative algorithmische Fehler ist typischerweise von der
   Größenordnung $\kappa_2(\bA)^2\,\eps_{\text{mach}}$
-  (:k[Maschinengenauigkeit]{#machine-epsilon} $\eps_{\text{mach}} \approx 2{,}2 \cdot 10^{-16}$).
-- Zum Vergleich: Die Best-Case-:k[Kondition]{#condition-number}
+  (:k[Maschinengenauigkeit]{#machine-epsilon .hilfreich} $\eps_{\text{mach}} \approx 2{,}2 \cdot 10^{-16}$).
+- Zum Vergleich: Die Best-Case-:k[Kondition]{#condition-number .hilfreich}
   des KQ-Problems selbst ist $O\!\left(\kappa_2(\bA)\right)$
   (@sec:kondition).
 :::
 
 Woher kommt das Quadrat? Ab Schritt 2 rechnen wir mit $\bA^\top\bA$, deren
-:d[Singulärwerte]{#singulaerwerte} die Quadrate der Singulärwerte von $\bA$ sind; also ist
+:d[Singulärwerte]{#singulaerwerte .hilfreich} die Quadrate der Singulärwerte von $\bA$ sind; also ist
 $\kappa_2(\bA^\top\bA) = \kappa_2(\bA)^2$. Diese quadrierte Kondition erben alle
 weiteren Schritte, gleich wie empfindlich das KQ-Problem selbst ist. Bei kleinem
 Residuum gilt $\kappa \approx \kappa_2(\bA)$, der Algorithmus verstärkt Fehler aber
 trotzdem mit $\kappa_2(\bA)^2$: Er ist deutlich fehleranfälliger, als die Kondition des
 Problems erzwingt, also *instabil*. Dazu kommt ein zweiter Effekt, den die
 Konditionszahl nicht erfasst: Schon beim Ausrechnen von $\bA^\top\bA$ in
-:k[Gleitkommaarithmetik]{#floating-point} kann Information über die Spalten von $\bA$
+:k[Gleitkommaarithmetik]{#floating-point .hilfreich} kann Information über die Spalten von $\bA$
 verloren gehen. Im Extremfall macht ein einziger Rundungsschritt aus einer Matrix mit
 vollem Spaltenrang eine numerisch singuläre.
 
@@ -204,7 +204,7 @@ Die Idee: Wir transformieren das Problem mit einer Matrix $\bQ$ zu einem
 ändern. Wann ändert sich die Lösung nicht? Wenn die Zielfunktion für *jedes*
 $\bx$ denselben Wert behält, das Transformieren also alle Normen unangetastet
 lässt. Das leisten
-:k[Orthogonalmatrizen]{#orthogonal-matrix}
+:k[Orthogonalmatrizen]{#orthogonal-matrix .hilfreich}
 ($\bQ^\top\bQ = \bI$, ausführlich in
 @sec:qr), denn für diese gilt
 
@@ -219,7 +219,7 @@ Jedes $\bx$ liefert im transformierten Problem also denselben Zielfunktionswert 
 ursprünglichen; insbesondere stimmen die Minimierer überein.
 
 Nicht jede Transformation, die ein System „einfacher“ macht, ist hier erlaubt. Das
-:k[Gauß-Verfahren]{#gaussian-elimination} bringt $\bA$ zwar auf Dreiecksform, seine
+:k[Gauß-Verfahren]{#gaussian-elimination .hilfreich} bringt $\bA$ zwar auf Dreiecksform, seine
 Eliminationsschritte sind aber Scherungen: Sie verzerren Längen und würden den
 Minimierer verschieben. Zulässig sind nur normerhaltende Transformationen, also
 :k[Drehungen]{#rotation-matrix} und :k[Spiegelungen]{#reflection}. Wie wir mit ihnen

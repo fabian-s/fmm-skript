@@ -12,18 +12,18 @@ Normalengleichungen mit :k[Cholesky-Zerlegung]{#cholesky-factorization}
 @sec:givens-householder). Beide setzen stillschweigend $\rang(\bA) = n$ voraus.
 Ist $\bA$ rangdefizient, so ist $\bA^\top\bA$ singulär, die Cholesky-Zerlegung bricht
 ab, und auch $\bR$ in der QR-Zerlegung ist singulär. Hier hilft die
-:k[Singulärwertzerlegung]{#singular-value-decomposition} (SVD) aus @kap:svd; sie
+:k[Singulärwertzerlegung]{#singular-value-decomposition .hilfreich} (SVD) aus @kap:svd; sie
 liefert das dritte und robusteste Lösungsverfahren.
 
 <h3 id="sec-7.6-svd-loesung">Die SVD-Lösung über die Pseudoinverse</h3>
 
-Für $\bA \in \R^{m \times n}$ mit :k[Rang]{#rank} $r$ und :d[reduzierter SVD]{#reduzierte-svd}
+Für $\bA \in \R^{m \times n}$ mit :k[Rang]{#rank .hilfreich} $r$ und :d[reduzierter SVD]{#reduzierte-svd .wichtig}
 $\bA = \bU_r \bSigma_r \bV_r^\top$ ist die
-:k[Moore-Penrose-Pseudoinverse]{#pseudoinverse} aus @kap:svd
+:k[Moore-Penrose-Pseudoinverse]{#pseudoinverse .hilfreich} aus @kap:svd
 definiert als $\bA\pinv = \bV_r \bSigma_r^{-1} \bU_r^\top \in \R^{n \times m}$,
 wobei $\bSigma_r^{-1} = \diag(1/\sigma_1, \ldots, 1/\sigma_r)$ eine
 :k[Diagonalmatrix]{#diagonal-matrix} ist. Ihre zentrale Eigenschaft: $\bA\bA\pinv$ ist
-die :k[Projektion]{#projection} auf den Spaltenraum $\col(\bA)$. Das passt zu den
+die :k[Projektion]{#projection .wichtig} auf den Spaltenraum $\col(\bA)$. Das passt zu den
 Kleinsten Quadraten, denn nach @satz:kq-loesung-als-projektion löst $\wh{\bx}$ das
 KQ-Problem genau dann, wenn $\bA\wh{\bx} = \proj_{\col(\bA)}\bb$.
 
@@ -50,7 +50,7 @@ $$
 Zuerst zeigen wir, dass $\bA\wh{\bx}$ die Projektion von $\bb$ auf $\col(\bA)$ ist, dann
 die Minimalität der Norm. Die Farben verfolgen $\cbred{\bU_r}$, $\cgreen{\bSigma_r}$ und
 $\cblue{\bV_r}$ durch die Rechnung, $\cpurp{\bz}$ den Anteil einer beliebigen KQ-Lösung,
-der im :k[Kern]{#null-space} von $\bA$ liegt.
+der im :k[Kern]{#null-space .hilfreich} von $\bA$ liegt.
 
 ::::beweis
 
@@ -75,7 +75,7 @@ $$
 \bA\wh{\bx} = \bA\bA\pinv\bb = \cbred{\bU_r\bU_r^\top}\bb = \proj_{\col(\bA)}\bb
 $$
 
-::why[die Spalten von $\cbred{\bU_r}$ bilden eine :k[Orthonormalbasis]{#orthonormal-basis} von $\col(\bA)$, also ist $\cbred{\bU_r\bU_r^\top}$ die Projektionsmatrix auf $\col(\bA)$]
+::why[die Spalten von $\cbred{\bU_r}$ bilden eine :k[Orthonormalbasis]{#orthonormal-basis .hilfreich} von $\col(\bA)$, also ist $\cbred{\bU_r\bU_r^\top}$ die Projektionsmatrix auf $\col(\bA)$]
 :::
 
 :::schritt
@@ -101,7 +101,7 @@ $$
 \wh{\bx} = \cblue{\bV_r}\left(\bSigma_r^{-1}\bU_r^\top\bb\right) \in \spann(\cblue{\bV_r}) = \col(\bA^\top) \perp \operatorname{Kern}(\bA) \ni \cpurp{\bz}
 $$
 
-::why[$\wh{\bx}$ ist eine Linearkombination der Spalten von $\cblue{\bV_r}$; deren Spann ist der Zeilenraum $\col(\bA^\top)$, und der steht senkrecht auf dem Kern (:k[orthogonales Komplement]{#orthogonal-complement}, @kap:svd)]
+::why[$\wh{\bx}$ ist eine Linearkombination der Spalten von $\cblue{\bV_r}$; deren Spann ist der Zeilenraum $\col(\bA^\top)$, und der steht senkrecht auf dem Kern (:k[orthogonales Komplement]{#orthogonal-complement .hilfreich}, @kap:svd)]
 :::
 
 :::schritt
@@ -167,7 +167,7 @@ $\bA^\top\bA$, quadriert die :k[Konditionszahl]{#condition-number} also nicht, u
 behandelt rangdefiziente Probleme automatisch (@beispiel:rangdefizientes-kq-problem).
 Außerdem *konstruiert* @eq:svd-loesung-des-kq-problems die Lösung explizit: Liegt die SVD
 vor, bleiben nur Matrix-Vektor-Produkte. Ein Vorbehalt: Die Pseudoinverse regularisiert
-exakt unidentifizierte Nullraumanteile, aber *keine* kleinen positiven :d[Singulärwerte]{#singulaerwerte}:
+exakt unidentifizierte Nullraumanteile, aber *keine* kleinen positiven :d[Singulärwerte]{#singulaerwerte .hilfreich}:
 Die Anteile längs der zugehörigen Singulärrichtungen verstärkt sie sogar um den Faktor
 $1/\sigma_i$. Gegen einen Fast-Rangdefekt helfen erst die
 abgeschnittene SVD oder die Tikhonov-Regularisierung.
@@ -183,10 +183,10 @@ Warum dann nicht immer die SVD? Weil sie am teuersten ist.
   d.&thinsp;h. $\sigma_{\min}(\bA) \approx 0 \impl \kappa(\bA) \gg 1$.
 - Wir können dann $\bSigma_r$ verkleinern, indem wir die $r - k$
   kleinsten Singulärwerte auf $0$ setzen; das ist die
-  :k[Rang-k-Approximation]{#low-rank-approximation} aus
+  :k[Rang-k-Approximation]{#low-rank-approximation .hilfreich} aus
   @kap:svd, hier als gezielte Glättung eines fast singulären Problems.
 - Alle drei Methoden haben für $m \gg n$ eine
-  :k[Komplexität]{#big-o-notation} von
+  :k[Komplexität]{#big-o-notation .hilfreich} von
   $O(mn^2 + n^3)$, aber die Konstanten unterscheiden sich deutlich: Cholesky auf
   $\bA^\top\bA$ braucht etwa halb so viele Operationen wie Householder-QR, die SVD ein
   Mehrfaches davon.
@@ -238,7 +238,7 @@ also etwa zehn korrekte Stellen.
 :::
 
 :::interaktiv[Wie viele der 16 Stellen überleben?]
-<p className="mb-2 text-sm">Wie viele Stellen eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Im Beispiel war das Residuum null; was ändert sich, wenn es groß ist? Erst schätzen, dann im Widget nachsehen.</p>
+<p className="mb-2 text-sm">Wie viele Stellen eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon .hilfreich} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Im Beispiel war das Residuum null; was ändert sich, wenn es groß ist? Erst schätzen, dann im Widget nachsehen.</p>
 
 <AccuracyWidget />
 

@@ -8,7 +8,7 @@ import { OrthoWidget, GramSchmidtWidget, CgsVsMgsWidget } from "./widgets/S74Loc
 
 Wir führen jetzt den Plan aus @sec:normalengleichungen aus und bringen das
 :d[Kleinste-Quadrate-Problem]{#kleinste-quadrate-problem-kq-problem} mit Matrizen, die die :k[euklidische Norm]{#euclidean-norm}
-erhalten, auf :k[Dreiecksgestalt]{#triangular-matrix}, ohne $\bA^\top\bA$ und damit
+erhalten, auf :k[Dreiecksgestalt]{#triangular-matrix .hilfreich}, ohne $\bA^\top\bA$ und damit
 ohne die quadrierte :k[Konditionszahl]{#condition-number}.
 
 ### Recap: Orthogonalmatrizen
@@ -18,7 +18,7 @@ Die normerhaltenden Matrizen kennen wir schon aus der linearen Algebra.
 :::definition[#qr-orthogonalmatrix (Orthogonalmatrix)]
 Eine Matrix $\bQ \in \R^{n \times n}$ heißt
 :k[*Orthogonalmatrix*]{#orthogonal-matrix}, wenn ihre Spalten
-:k[orthonormale Vektoren]{#orthonormal-basis} sind, also
+:k[orthonormale Vektoren]{#orthonormal-basis .hilfreich} sind, also
 
 $$
 \bQ^\top \bQ = \bI\,.
@@ -81,7 +81,7 @@ $$
 :::::
 
 :::bemerkung[#bemerkung-7-4-3]
-Eigenschaft (iii) ist für die Numerik entscheidend: Alle :d[Singulärwerte]{#singulaerwerte} von $\bQ$
+Eigenschaft (iii) ist für die Numerik entscheidend: Alle :d[Singulärwerte]{#singulaerwerte .hilfreich} von $\bQ$
 sind $1$ (denn $\bQ^\top\bQ = \bI$), also ist $\kappa_2(\bQ) = 1$, und die
 Multiplikation mit $\bQ$ oder $\bQ^{-1}$ ist *immer* gut konditioniert. Anders als der
 Übergang zu den Normalengleichungen (@sec:normalengleichungen) verschlechtern
@@ -103,7 +103,7 @@ wir in @sec:givens-householder.
 Welche „einfache Gestalt“ streben wir an? Wie beim
 :k[Gauß-Verfahren]{#gaussian-elimination} eine obere
 :k[Dreiecksmatrix]{#triangular-matrix}, denn Dreieckssysteme lösen wir direkt durch
-:k[Rückwärtseinsetzen]{#triangular-solve}. Das führt auf die zentrale Zerlegung dieses
+:k[Rückwärtseinsetzen]{#triangular-solve .hilfreich}. Das führt auf die zentrale Zerlegung dieses
 Kapitels:
 
 :::definition[#qr-zerlegung (QR-Zerlegung)]
@@ -134,7 +134,7 @@ Zerlegung.
 ### Ein Beispiel: QR-Zerlegung über Gram-Schmidt
 
 Woher bekommen wir $\bQ$ und $\bR$? Ein Verfahren kennen wir bereits aus der linearen
-Algebra: die :k[Gram-Schmidt-Orthonormalisierung]{#gram-schmidt} der Spalten von $\bA$.
+Algebra: die :k[Gram-Schmidt-Orthonormalisierung]{#gram-schmidt .hilfreich} der Spalten von $\bA$.
 Sie liefert orthonormale Vektoren $\bq_1, \bq_2, \dots$, die denselben Raum
 :k[aufspannen]{#span} wie die Spalten $\ba_1, \ba_2, \dots$, und die Koeffizienten, die
 dabei anfallen (Normen und :k[Projektions]{#projection}-Koeffizienten), sind die
@@ -210,8 +210,8 @@ $k$-te Spalte von $\bA$ braucht nur die ersten $k$ Orthonormalvektoren.
 :::
 
 In Gleitkommaarithmetik ist das klassische Gram-Schmidt-Verfahren instabil. Sind zwei
-Spalten fast :k[linear abhängig]{#linear-independence}, ist der Rest nach der Projektion
-winzig, und das Normieren verstärkt die :k[Rundungsfehler]{#rounding-error} darin: Die
+Spalten fast :k[linear abhängig]{#linear-independence .hilfreich}, ist der Rest nach der Projektion
+winzig, und das Normieren verstärkt die :k[Rundungsfehler]{#rounding-error .hilfreich} darin: Die
 berechneten $\bq_k$ verlieren ihre Orthogonalität, und dieser Verlust wächst mit
 $\corange{\kappa_2(\bA)}^2$. Das *modifizierte Gram-Schmidt-Verfahren* (MGS) zieht die
 Projektionen nacheinander von der jeweils schon aktualisierten Spalte ab statt alle auf

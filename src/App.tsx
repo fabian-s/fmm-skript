@@ -26,6 +26,10 @@ function resolveFragmentId(id: string): string {
   return resolved;
 }
 
+/** Kapitel, deren Begriffe eine Lese-Priorität tragen (KONVENTIONEN.md). Nur dort
+ *  stimmt die Legende: Anderswo hieße „ohne Zeichen" fälschlich „nicht nötig". */
+const RATED_CHAPTERS = new Set(["07-kq"]);
+
 export default function App() {
   const chapterId = currentChapterId();
   const entry = chapters.find((c) => c.id === chapterId) ?? chapters[0];
@@ -83,6 +87,7 @@ export default function App() {
         pin: "anheften (Fenster bleibt offen, an der Titelleiste verschiebbar)",
         close: "schließen",
         pinned: "angeheftet – an der Titelleiste verschiebbar, schließen mit × oder Esc",
+        relevance: { essential: "hier wichtig", helpful: "hier hilfreich" },
       }}
     >
       <a
@@ -156,7 +161,7 @@ export default function App() {
                 <p className="mt-2 text-slate-600 dark:text-slate-400">
                   <span className="text-sky-600 dark:text-sky-400">Gepunktet unterstrichene</span>{" "}
                   Begriffe erklären sich beim Überfahren mit der Maus. Im Erklärfenster stehen
-                  wieder solche Begriffe, man kann sich also weiterhangeln. Ein <em>Klick</em> auf
+                  wieder solche Begriffe, man kann sich also weiterhangeln, muss es aber nicht. Ein <em>Klick</em> auf
                   den Begriff (oder auf 📌 im Fenster) heftet das Fenster fest: es bleibt offen,
                   lässt sich an der Titelleiste verschieben und stört das Scrollen nicht.
                   Geschlossen wird mit ×, mit <kbd>Esc</kbd>, oder indem man daneben klickt. Blaue
@@ -165,6 +170,29 @@ export default function App() {
                   auch ohne sie vollständig.
                 </p>
               </details>
+              {RATED_CHAPTERS.has(entry.id) && (
+                <div className="mt-3 rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-400">
+                  <p className="font-medium text-slate-700 dark:text-slate-200">
+                    Muss ich jedes Erklärfenster lesen?
+                  </p>
+                  <ul className="mt-1">
+                    <li>
+                      <b className="text-slate-900 dark:text-slate-100">!</b> hinter einem Begriff:
+                      Ohne ihn bricht der Gedankengang hier ab. Wer ihn nicht kennt, liest das Fenster
+                      jetzt.
+                    </li>
+                    <li>
+                      <b className="text-slate-500 dark:text-slate-400">?</b> hinter einem Begriff:
+                      Das Fenster erklärt das Warum. Beim ersten Lesen kann man es auslassen.
+                    </li>
+                    <li>Begriffe ohne Zeichen: Hier muss man das Fenster nicht öffnen.</li>
+                    <li>
+                      Nicht bewertet sind Verweise wie „Satz 7.1.3“ sowie Begriffe in den Fenstern und
+                      Widgets. Sobald die Textstelle klar ist: zurück zum Text.
+                    </li>
+                  </ul>
+                </div>
+              )}
             </header>
 
             {failed && (
