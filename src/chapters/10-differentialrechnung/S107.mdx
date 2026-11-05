@@ -177,7 +177,7 @@ $$
 Nach dem Mittelwertsatz gibt es ein $\sigma$ zwischen $0$ und $s$ mit
 $\Delta(s,t) = s\,\varphi'(\sigma)$.
 
-::why[:k[Mittelwertsatz]{#mean-value-theorem} für $\varphi$ auf dem Intervall zwischen $0$ und $s$; $\varphi$ ist differenzierbar, weil $f$ nach $x_i$ stetig partiell differenzierbar ist]
+::why[:k[Mittelwertsatz]{#mean-value-theorem .hilfreich} für $\varphi$ auf dem Intervall zwischen $0$ und $s$; $\varphi$ ist differenzierbar, weil $f$ nach $x_i$ stetig partiell differenzierbar ist]
 :::
 
 :::schritt
@@ -231,7 +231,7 @@ bei $n = 2$ auf $0{,}5005$ bei $n = 1000$.
 Die Symmetrie zahlt sich auch beim Lösen von Systemen mit $\corange{\bH_f}$ aus: Ist
 $\corange{\bH_f}$ zusätzlich positiv definit, wie oft in der Nähe eines Minimums, so
 bietet sich das Cholesky-Verfahren aus @sec:lgs/cholesky an. Für symmetrische Matrizen
-gilt außerdem der :k[Spektralsatz]{#spectral-theorem} (Orthonormalbasis aus
+gilt außerdem der :k[Spektralsatz]{#spectral-theorem .hilfreich} (Orthonormalbasis aus
 Eigenvektoren, reelle Eigenwerte); darauf beruht alles Weitere in diesem Abschnitt.
 :::
 
@@ -333,7 +333,7 @@ $\bh_1^\top \corange{\bH_f(\bx)}\bh$. Mit $\bh_2 := \bh$ steht die Behauptung da
 Die Formel $\cgreen{D^2_{\bx} f(\bh_1, \bh_2)} = \bh_1^\top \corange{\bH_f(\bx)}\bh_2$ ist
 in beiden Argumenten linear, also eine bilineare Abbildung im Sinne von
 @definition:beschraenkte-bilineare-abbildung. Für $\bh_1 = \bh_2 = \bh$ wird daraus die
-:k[quadratische Form]{#quadratic-form} $\bh^\top \corange{\bH_f(\bx)}\bh$, und die
+:k[quadratische Form]{#quadratic-form .hilfreich} $\bh^\top \corange{\bH_f(\bx)}\bh$, und die
 misst die Krümmung von $f$ in Richtung $\bh$.
 
 :::beispiel[#gradient-und-hesse-matrix-einer (Gradient und Hesse-Matrix einer kubischen Funktion)]
@@ -388,7 +388,7 @@ reellen Eigenwerte entscheidet über die Art des kritischen Punktes.
 Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^* \in S$ ein kritischer Punkt,
 also $\corange{\nabla f(\bx^*)} = \bnull$. Dann gilt:
 
-1. Ist $\corange{\bH_f(\bx^*)}$ :k[positiv definit]{#positive-definite}, gilt also
+1. Ist $\corange{\bH_f(\bx^*)}$ :k[positiv definit]{#positive-definite .hilfreich}, gilt also
    $\bh^\top \corange{\bH_f(\bx^*)}\bh > 0$ für alle $\bh \neq \bnull$, so ist $\bx^*$ ein
    striktes lokales Minimum.
 2. Ist $\corange{\bH_f(\bx^*)}$ negativ definit, gilt also
@@ -541,12 +541,12 @@ hochdimensionalen Verlustlandschaften Sattelpunkte häufig sind; das Rauschen de
 :k[stochastischen Gradientenabstiegs]{#gradient-descent} kann helfen, sie zu verlassen.
 
 *Statistik.* Der wichtigste Spezialfall einer Funktion $\R^p \to \R$ ist die
-:k[Log-Likelihood]{#likelihood} $\ell(\btheta)$. Die Hesse-Matrix der negativen
+:k[Log-Likelihood]{#likelihood .hilfreich} $\ell(\btheta)$. Die Hesse-Matrix der negativen
 Log-Likelihood heißt *beobachtete Fisher-Information* und bestimmt, wie genau ein Schätzer
 den Parameter trifft (nächster Unterabschnitt).
 
 *Maschinelles Lernen.* Die Hesse-Matrix der Verlustfunktion bestimmt die
-:k[Kondition]{#condition-number} des Optimierungsproblems. Im streng konvexen quadratischen
+:k[Kondition]{#condition-number .hilfreich} des Optimierungsproblems. Im streng konvexen quadratischen
 Fall hängt die Konvergenzrate des Gradientenabstiegs aus @sec:gradient am Verhältnis
 $\kappa = \corange{\lambda_{\max}}/\corange{\lambda_{\min}}$ der extremen Eigenwerte: Bei
 optimal gewählter Lernrate schrumpft der Abstand zum Minimum je Schritt auf das

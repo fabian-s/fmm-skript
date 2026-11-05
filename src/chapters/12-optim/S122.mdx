@@ -157,7 +157,7 @@ Zielfunktion; die beiden Antworten hat @sec:konvexitaet/konvexe-optimierung
 bewiesen.
 
 *Lokal ist global.* Sind $\Xcal \subseteq \R^n$ konvex und
-$f\colon \Xcal \to \R$ :k[konvex]{#convexity}, so ist jedes lokale Minimum von
+$f\colon \Xcal \to \R$ :k[konvex]{#convexity .wichtig}, so ist jedes lokale Minimum von
 $f$ auf $\Xcal$ auch ein globales, und zwar ohne jede :d[Differenzierbarkeit]{#differenzierbarkeit}
 (@bemerkung:was-daraus-folgt-und-was-nicht). Ist $f$ differenzierbar, so steht in
 @satz:kritischer-punkt-und-globales-minimum sogar die schärfere Fassung: Dann ist
@@ -178,7 +178,7 @@ der Zielfunktion. Die Beweise in @sec:konvexitaet/konvexe-optimierung zeigen,
 warum: Der Vergleichspunkt muss *zulässig* sein, dafür sorgt die Menge, und er
 muss *besser* sein, dafür sorgt die Funktion.
 
-*Ohne :d[konvexe Menge]{#konvexe-menge} keine Eindeutigkeit.* Wir nehmen
+*Ohne :d[konvexe Menge]{#konvexe-menge .hilfreich} keine Eindeutigkeit.* Wir nehmen
 $\cred{\Xcal = \{-1, +1\}}$ und $f(y) = y^2$. Die Zielfunktion ist strikt konvex,
 und trotzdem sind $y = -1$ und $y = +1$ beide optimal mit dem Wert $1$. Der
 Mittelpunkt $\bz = 0$ hätte den kleineren Wert $0$, er ist aber nicht zulässig,
@@ -248,7 +248,7 @@ $$
 
 Die Eigenwerte von $\corange{\bH_f}$ sind $2(\mu_i + \lambda)$, wenn $\mu_i \ge 0$
 die Eigenwerte von $\bX^\top\bX$ sind. Für $\lambda > 0$ sind sie alle positiv, und
-zwar unabhängig vom :k[Rang]{#rank} von $\bX$. Ridge macht so aus einem
+zwar unabhängig vom :k[Rang]{#rank .hilfreich} von $\bX$. Ridge macht so aus einem
 rangdefekten Problem mit unendlich vielen Lösungen eines mit genau einer; den
 Gradienten dazu haben wir in @sec:differentialrechnung/produkt-kettenregel
 gerechnet.
@@ -285,9 +285,9 @@ $$
 f(\bx_-) < f(\bx^\star) < f(\bx_+) .
 $$
 
-Ist die :k[Hesse-Matrix]{#hessian-matrix}
+Ist die :k[Hesse-Matrix]{#hessian-matrix .hilfreich}
 $\corange{\bH_f(\bx^\star)}$ *indefinit*, hat sie also sowohl positive als auch
-negative :k[Eigenwerte]{#eigenvalue-eigenvector}, so sprechen wir genauer von
+negative :k[Eigenwerte]{#eigenvalue-eigenvector .hilfreich}, so sprechen wir genauer von
 einem *Sattelpunkt mit indefiniter Hesse-Matrix*.
 :::
 
@@ -365,7 +365,7 @@ erste Komponente fällt gegen null, die zweite wächst.
 :::
 
 :::bemerkung[#was-sattelpunkte-fuer-die-verfahren (Was Sattelpunkte für die Verfahren bedeuten)]
-*Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method} aus
+*Newton läuft hinein.* Der :k[Newton-Schritt]{#newtons-method .hilfreich} aus
 @sec:differentialrechnung/taylor sucht eine Nullstelle des
 Gradienten, und ein Sattelpunkt ist eine. Für unser $f$ ist
 $\corange{\bH_f^{-1}} = \diag(\tfrac12, -\tfrac12)$, und der Schritt
@@ -422,7 +422,7 @@ Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
    $\corange{\bH_f(\bx^\star)} \succeq 0$, also positiv semidefinit.
 3. *Hinreichend, zweite Ordnung.* Gilt $\corange{\nabla f(\bx^\star)} = \bnull^\top$
    und ist $\corange{\bH_f(\bx^\star)} \succ 0$, also
-   :k[positiv definit]{#positive-definite}, so ist $\bx^\star$ ein striktes lokales
+   :k[positiv definit]{#positive-definite .hilfreich}, so ist $\bx^\star$ ein striktes lokales
    Minimum.
 :::
 
@@ -434,7 +434,7 @@ Seien $S \subseteq \R^n$ offen, $f \in \Ccal^2(S)$ und $\bx^\star \in S$.
 Teil 1 ist @satz:notwendige-bedingung-erster-ordnung, und Teil 3 ist @satz:hesse-kriterium-fuer-kritische-punkte(1) aus
 @sec:differentialrechnung/hoehere-ableitungen. Zu zeigen bleibt Teil 2. Sei
 $\bh \in \R^n$ beliebig und wieder $g(t) = f(\bx^\star + t\bh)$ wie im Beweis von
-@satz:notwendige-bedingung-erster-ordnung. Die :k[Taylorentwicklung]{#taylor-theorem} zweiter Ordnung aus
+@satz:notwendige-bedingung-erster-ordnung. Die :k[Taylorentwicklung]{#taylor-theorem .hilfreich} zweiter Ordnung aus
 @sec:differentialrechnung/taylor gibt mit
 $\corange{\nabla f(\bx^\star)} = \bnull^\top$ aus Teil 1
 

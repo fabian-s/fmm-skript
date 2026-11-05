@@ -14,9 +14,9 @@ import { SelfTest } from "./widgets/S42Local";
 Der zweite Teil der Fehlerzerlegung @eq:eq-4-1-1 ist der Folgefehler aus einem
 fehlerhaften Input. Inputfehler betrachten wir als *unvermeidbar*: Messwerte sind
 ungenau, Daten wurden gerundet gespeichert, und schon das Ablegen einer reellen Zahl als
-:k[Gleitkommazahl]{#floating-point} erzeugt einen relativen
+:k[Gleitkommazahl]{#floating-point .hilfreich} erzeugt einen relativen
 :k[Rundungsfehler]{#rounding-error} von der Größenordnung der
-:k[Maschinengenauigkeit]{#machine-epsilon}.
+:k[Maschinengenauigkeit]{#machine-epsilon .hilfreich}.
 
 Wie stark sich solche Inputfehler im Ergebnis niederschlagen, ist eine Eigenschaft des
 *Problems* $f$, noch bevor ein Algorithmus ins Spiel kommt. Stellen wir uns die Menge aller Inputs vor, die
@@ -120,7 +120,7 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
 
 - Für :k[differenzierbares]{#differentiability}
   $f \colon \R \to \R$ können wir die Konditionszahlen direkt ausrechnen:
-  Wegen $f(\wt{x}) - f(x) \approx f'(x)\,(\wt{x} - x)$ (:k[Taylor-Näherung]{#taylor-series} erster Ordnung) gilt
+  Wegen $f(\wt{x}) - f(x) \approx f'(x)\,(\wt{x} - x)$ (:k[Taylor-Näherung]{#taylor-series .hilfreich} erster Ordnung) gilt
 
   $$
   \kappa_{abs} = \left| f'(x) \right| \quad \text{und} \quad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|}.
@@ -319,7 +319,7 @@ $\left\| \cdot \right\|_2$.
 
 **1.** Für die Störung $\cbred{\bh} = \wt{\bx} - \bx$
 liefert die
-:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality .hilfreich}
 
 $$
 \left| f(\wt{\bx}) - f(\bx) \right| = \left| \symbf{1}^\top \cbred{\bh} \right| \le \left\| \symbf{1} \right\|_2 \left\| \cbred{\bh} \right\|_2 = \sqrt{2}\, \left\| \cbred{\bh} \right\|_2,

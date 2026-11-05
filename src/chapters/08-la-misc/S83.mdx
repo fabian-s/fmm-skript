@@ -110,7 +110,7 @@ Es braucht nur eine Bedingung an $\bB$.
 
 :::satz[#konvergenz-der-korrekturiteration (Konvergenz der Korrekturiteration)]
 Sei $\cgreen{\bx}$ die eindeutige Lösung von $\bA\bx = \bb$. Gilt für die
-:k[Spektralnorm]{#matrix-norm}
+:k[Spektralnorm]{#matrix-norm .wichtig}
 
 $$
 \corange{\rho} := \left\|\bI_n - \bC\bA\right\|_2 < 1 ,
@@ -170,7 +170,7 @@ $$
 \end{aligned}
 $$
 
-::why[in Zeile 2 ersetzen wir $\cgreen{\bx}$ durch $\bB\cgreen{\bx} + \bC\bb$ (Schritt 2), die Terme $\bC\bb$ heben sich weg; in der letzten Zeile nutzen wir die definierende Eigenschaft der :d[Operatornorm]{#operatornorm}, $\left\|\bB\bv\right\|_2 \le \left\|\bB\right\|_2\left\|\bv\right\|_2$]
+::why[in Zeile 2 ersetzen wir $\cgreen{\bx}$ durch $\bB\cgreen{\bx} + \bC\bb$ (Schritt 2), die Terme $\bC\bb$ heben sich weg; in der letzten Zeile nutzen wir die definierende Eigenschaft der :d[Operatornorm]{#operatornorm .hilfreich}, $\left\|\bB\bv\right\|_2 \le \left\|\bB\right\|_2\left\|\bv\right\|_2$]
 :::
 
 :::schritt
@@ -382,7 +382,7 @@ braucht jeweils zusätzliche Voraussetzungen.
    Diagonaleinträge von null verschieden sein. Die Korrektur teilt jede
    Residuumskomponente durch das zugehörige Diagonalelement, zusätzlicher
    Aufwand $n$ Divisionen. Konvergenz gilt, wenn der
-   :k[Spektralradius]{#spectral-radius} der Iterationsmatrix kleiner als $1$
+   :k[Spektralradius]{#spectral-radius .hilfreich} der Iterationsmatrix kleiner als $1$
    ist; strikte Diagonaldominanz ist eine
    verbreitete hinreichende Bedingung.
 3. *Gauss-Seidel-Iteration:* $\bC^{-1}$ ist das untere
@@ -432,7 +432,7 @@ für die Jacobi konvergiert und Gauss-Seidel nicht, und ebenso umgekehrt.
 Dabei ist $\corange{\rho}$ die *Norm* der Iterationsmatrix,
 und die ist nur ein hinreichendes Kriterium. Die Gauss-Seidel-Matrix hier hat
 die :k[Eigenwerte]{#eigenvalue-eigenvector} $0$ und $\tfrac{1}{12}$, ihr
-:k[Spektralradius]{#spectral-radius} ist also $0{,}083$, und mit diesem Faktor
+:k[Spektralradius]{#spectral-radius .hilfreich} ist also $0{,}083$, und mit diesem Faktor
 schrumpft der Fehler auf lange Sicht. Die Norm $0{,}264$ ist die Garantie, die
 schon ab dem ersten Schritt gilt.
 :::
@@ -568,7 +568,7 @@ $$
 
 ein kleines Residuum garantiert also nur bei gut konditionierter Matrix einen
 kleinen Fehler. Das ist dieselbe Warnung wie bei der
-:k[Konditionszahl]{#condition-number} in
+:k[Konditionszahl]{#condition-number .hilfreich} in
 @sec:fehler/kondition, diesmal als Abbruchkriterium.
 :::
 

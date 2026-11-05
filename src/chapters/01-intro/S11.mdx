@@ -25,7 +25,7 @@ Matrix $\bX^\top\bX$ kann so empfindlich sein, dass winzige
 :k[Rundungsfehler]{#rounding-error} das Ergebnis komplett
 verfälschen. Das zweite ist die *Komplexität*: Das
 :k[Invertieren]{#matrix-inverse} kostet
-:k[$O(p^3)$]{#big-o-notation} Rechenoperationen, für
+:k[$O(p^3)$]{#big-o-notation .hilfreich} Rechenoperationen, für
 $p = 10\,000$ rund $10^{12}$ Gleitkommaoperationen. Das dritte ist der
 *Speicher*: $\bX^\top\bX$ ist eine
 $p \times p$-Matrix und belegt allein schon etwa 800 MB. Wie es besser geht (mit der
@@ -58,7 +58,7 @@ Aus $\cblue{x_2 = 1}$ wird $\cred{\wt{x}_2 = 2}$, aus
 $\cblue{x_1 = 1}$ wird $\cred{\wt{x}_1 = 0}$. Ein Datenfehler von 0,005 % erzeugt
 einen Fehler von 100 % in der Lösung. Solche Probleme heißen
 *schlecht konditioniert*. Die
-:k[Konditionszahl]{#condition-number} misst das präzise.
+:k[Konditionszahl]{#condition-number .hilfreich} misst das präzise.
 :::
 
 Beim zweiten Problem, dem Rechenaufwand, kommt es auf den Algorithmus an:
@@ -99,7 +99,7 @@ $\bW$ Einträge hat, bei $1000 \times 10$ schon
 $10\,000$. Der Matrixkalkül liefert stattdessen eine einzige Zeile,
 $\partial L / \partial \bW = \bX^\top(\bX\bW - \bY)$, und die lässt sich auch
 effizient implementieren. Darauf baut die numerische Optimierung auf. Die
-Verlustfunktionen neuronaler Netze sind meist nicht :k[konvex]{#convexity}, hängen
+Verlustfunktionen neuronaler Netze sind meist nicht :k[konvex]{#convexity .hilfreich}, hängen
 von sehr vielen Parametern ab (GPT-3 hat $1{,}75 \cdot 10^{11}$) und werden pro
 Schritt nur auf einem kleinen Teil der Daten ausgewertet, einem Minibatch.
 Minima solcher Funktionen suchen wir mit
