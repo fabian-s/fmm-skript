@@ -107,10 +107,21 @@ const LIB = [
   "Zahlfrage",
 ];
 
+/* Lese-Priorität eines Begriffs an dieser Textstelle (KONVENTIONEN.md):
+ * :k[Spur]{#trace .wichtig}. Ohne Klasse: keine Markierung. */
+const RELEVANCE = new Map([
+  ["wichtig", "essential"],
+  ["hilfreich", "helpful"],
+]);
+const relevanceOf = (n) => RELEVANCE.get(n.attributes?.class);
+/** Text, mit dem ein Inline-Knoten beginnt; Mathe und Code zählen nicht als Wort */
+const leadingText = (n) =>
+  n?.type === "text" ? n.value : n?.type === "emphasis" || n?.type === "strong" ? leadingText(n.children[0]) : "";
+
 /** erlaubte Attribute je Direktive (alles andere ist ein Fehler) */
 const ALLOWED_ATTRS = {
-  k: ["id"],
-  d: ["id"],
+  k: ["id", "class"],
+  d: ["id", "class"],
   vertiefung: ["title"],
   interaktiv: ["title"],
   beweis: ["ohne-qed", "no-qed"],
@@ -212,10 +223,9 @@ function jsxOne(n, fail) {
     case "textDirective":
       if (n.name !== "k" && n.name !== "d") fail(n, `im ::why[…] sind nur :k[…]{#id} und :d[…]{#id} als Direktiven erlaubt`);
       if (!n.attributes?.id) fail(n, `:${n.name}[…] braucht eine ID`);
-      return `<ConceptLink id={${JSON.stringify(n.name === "d" ? previewId(n.attributes.id) : n.attributes.id)}}>${jsxAll(
-        n.children,
-        fail
-      )}</ConceptLink>`;
+      return `<ConceptLink id={${JSON.stringify(n.name === "d" ? previewId(n.attributes.id) : n.attributes.id)}}${
+        relevanceOf(n) ? ` relevance=${JSON.stringify(relevanceOf(n))}` : ""
+      }>${jsxAll(n.children, fail)}</ConceptLink>`;
     default:
       return "";
   }
@@ -401,6 +411,20 @@ export default function remarkFmm(options = {}) {
           );
       }
 
+      if (a.class !== undefined && !relevanceOf(node))
+        fail(
+          node,
+          `.${a.class} ist keine Lese-Priorität — erlaubt: ${[...RELEVANCE.keys()].map((c) => `.${c}`).join(", ")}, oder keine Klasse`,
+          "remark-fmm:relevance"
+        );
+      // Das Zeichen steht hinter dem Link: „Projektions?-Koeffizienten" zerreißt das Wort.
+      if (a.class !== undefined && /^[\p{L}\p{N}\p{Pd}]/u.test(leadingText(parent?.children?.[index + 1])))
+        fail(
+          node,
+          `Bewerteter Begriff mitten im Wort: Das Zeichen ${relevanceOf(node) === "essential" ? "!" : "?"} stünde vor dem folgenden Text. Klammere das ganze Wort ein oder lass die Bewertung weg.`,
+          "remark-fmm:relevance-word"
+        );
+
       // Container müssen explizit geschlossen sein. Ein fehlendes ::: frisst
       // sonst still den Rest der Datei.
       if (node.type === "containerDirective") {
@@ -545,7 +569,9 @@ export default function remarkFmm(options = {}) {
         if (!a.id)
           fail(node, `:k[…] braucht eine Concept-ID, z.B. :k[die Spur]{#trace}`, "remark-fmm:k-id");
         const id = name === "d" ? previewId(a.id) : a.id;
-        parent.children[index] = el("ConceptLink", [attr("id", id)], node.children, node, false);
+        const attrs = [attr("id", id)];
+        if (relevanceOf(node)) attrs.push(attr("relevance", relevanceOf(node)));
+        parent.children[index] = el("ConceptLink", attrs, node.children, node, false);
         return;
       }
 

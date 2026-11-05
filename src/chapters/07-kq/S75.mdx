@@ -7,10 +7,10 @@ import { GivensWidget, HouseholderWidget, AusloeschungWidget } from "./widgets/S
   MDX-Migration 2026-08-11: nur das Format gewechselt, Prosa wörtlich übernommen.
 */}
 
-Sobald eine :d[QR-Zerlegung]{#qr-zerlegung} von $\bA$ vorliegt, schrumpft das
+Sobald eine :d[QR-Zerlegung]{#qr-zerlegung .hilfreich} von $\bA$ vorliegt, schrumpft das
 :d[Kleinste-Quadrate-Problem]{#kleinste-quadrate-problem-kq-problem} auf das Dreieckssystem $\bR\,\wh{\bx} = \bc_1$ (@sec:qr).
-Offen blieb, wie wir die :k[Orthogonalmatrix]{#orthogonal-matrix} $\bQ$ finden. Die
-Strategie kennen wir vom :k[Gauß-Verfahren]{#gaussian-elimination}: Wir gehen von links
+Offen blieb, wie wir die :k[Orthogonalmatrix]{#orthogonal-matrix .wichtig} $\bQ$ finden. Die
+Strategie kennen wir vom :k[Gauß-Verfahren]{#gaussian-elimination .hilfreich}: Wir gehen von links
 nach rechts durch die Spalten von $\bA$ und erzeugen Nullen unter der Diagonalen, diesmal
 durch Multiplikation von links mit Orthogonalmatrizen $\bQ_k$. Sie erhalten die
 :k[euklidische Norm]{#euclidean-norm} und damit das KQ-Kriterium; ihr Produkt ist
@@ -164,7 +164,7 @@ wieder auffüllen.
 :::bemerkung[#wann-givens (Wann Givens?)]
 Eine Givens-Rotation ändert nur zwei Zeilen; alle anderen Einträge der Matrix bleiben,
 wie sie sind. Deshalb greifen wir zu Givens, wenn wir gezielt einzelne Nullen erzeugen
-wollen: bei :k[dünnbesetzten]{#sparse-matrix} Matrizen, deren Nullen erhalten bleiben
+wollen: bei :k[dünnbesetzten]{#sparse-matrix .hilfreich} Matrizen, deren Nullen erhalten bleiben
 sollen, oder wenn eine bestehende QR-Zerlegung um eine neue Datenzeile ergänzt wird. Eine
 voll besetzte Matrix vollständig zu eliminieren, kostet mit Givens dagegen etwa das
 Anderthalbfache der Rechenoperationen des Householder-Zugangs.
@@ -174,7 +174,7 @@ Anderthalbfache der Rechenoperationen des Householder-Zugangs.
 
 Um *alle* Einträge unter der Diagonalen einer Spalte in einem Schritt zu eliminieren,
 :k[spiegeln]{#reflection} wir $\ba$ an einer geschickt gewählten
-:k[Hyperebene]{#hyperplane}, statt es auf $\alpha\,\be_1$ zu drehen.
+:k[Hyperebene]{#hyperplane .hilfreich}, statt es auf $\alpha\,\be_1$ zu drehen.
 
 :::definition[#householder-spiegelung-definition (Householder-Spiegelung)]
 Sei $\bv \in \R^n$, $\bv \neq \bnull$. Die Matrix
@@ -189,9 +189,9 @@ Spiegelvektor $\bv$.
 
 Warum „Spiegelung“? Der Baustein $\bP = \bv\bv^\top / (\bv^\top\bv)$, ein skaliertes
 :k[dyadisches Produkt]{#outer-product}, ist die orthogonale
-:k[Projektion]{#projection} auf die Gerade $\spann(\bv)$ (:k[lineare Hülle]{#span} von
+:k[Projektion]{#projection .wichtig} auf die Gerade $\spann(\bv)$ (:k[lineare Hülle]{#span} von
 $\bv$). Entsprechend projiziert $\bI - \bP$ auf die Hyperebene $\spann(\bv)^\perp$, das
-:k[orthogonale Komplement]{#orthogonal-complement}. $\bH = \bI - 2\bP$ geht doppelt so
+:k[orthogonale Komplement]{#orthogonal-complement .hilfreich}. $\bH = \bI - 2\bP$ geht doppelt so
 weit: Es zieht von $\ba$ den $\bv$-Anteil *zweimal* ab und landet damit auf der
 anderen Seite der Hyperebene; $\spann(\bv)^\perp$ ist der Spiegel.
 
@@ -300,8 +300,10 @@ $$
 Beide Vorzeichen von $\alpha$ erfüllen den Satz. Numerisch wählen wir
 $\alpha = -\sign(a_1)\left\|\ba\right\|_2$: Dann ist
 $v_1 = a_1 - \alpha = a_1 + \sign(a_1)\left\|\ba\right\|_2$ eine Summe zweier Zahlen
-gleichen Vorzeichens, und es droht keine :k[Auslöschung]{#cancellation}
-(@bemerkung:vorzeichenwahl).
+gleichen Vorzeichens, und es droht keine :k[Auslöschung]{#cancellation .hilfreich}
+(@bemerkung:vorzeichenwahl). Dabei gilt $\sign(0) := 1$, sonst wäre für $a_1 = 0$ auch
+$\alpha = 0$ und die Spiegelung träfe nicht mehr die Achse. Für $\ba = \bnull$ ist nichts
+zu eliminieren.
 
 :::beispiel[#householder-spiegelung-beispiel (Householder-Spiegelung)]
 Wir suchen die Householder-Spiegelung, die in $\ba = (1, 2, 2)^\top$ alle Komponenten außer
@@ -355,7 +357,7 @@ $$
 \alpha = -\sign(a_1)\left\|\ba\right\|_2
 $$
 
-kann das nicht passieren. Geometrisch spiegeln wir damit stets auf das Ziel, das
+(mit $\sign(0) := 1$) kann das nicht passieren. Geometrisch spiegeln wir damit stets auf das Ziel, das
 *weiter* von $\ba$ entfernt liegt.
 :::
 
@@ -376,7 +378,7 @@ $$
 
 also genügen zwei Skalarprodukte und eine Vektor-Aktualisierung: $\Ocal(n)$ Operationen
 statt $\Ocal(n^2)$ für das explizite Matrix-Vektor-Produkt
-(:k[Landau-Notation]{#big-o-notation}). Genauso wird $\bQ$ selbst nie explizit gebildet:
+(:k[Landau-Notation]{#big-o-notation .hilfreich}). Genauso wird $\bQ$ selbst nie explizit gebildet:
 Man speichert nur die Spiegelvektoren $\bv_k$ (bzw. bei Givens die Paare $(c, s)$) und
 wendet sie bei Bedarf nacheinander an.
 :::

@@ -111,7 +111,7 @@ Ein großer Teil beider Fächer besteht daraus, ein Minimum zu suchen.
 
 *Maximum-Likelihood-Schätzung.* Für unabhängige, identisch verteilte
 Beobachtungen $y_1, \dots, y_n$ mit Dichte $f_Y(y \mid \btheta)$ ist der
-:k[ML-Schätzer]{#likelihood}
+:k[ML-Schätzer]{#likelihood .hilfreich}
 
 $$
 \wh{\btheta}_{\mathrm{ML}}
@@ -152,7 +152,7 @@ $$
 
 und daran lässt sich die Geometrie ablesen: Liegt der KQ-Schätzer außerhalb
 der $p$-Norm-Kugel vom Radius $\cred{c}$, so ist die Lösung der Punkt, an dem
-eine um ihn wachsende :k[Niveaumenge]{#level-sets} des
+eine um ihn wachsende :k[Niveaumenge]{#level-sets .hilfreich} des
 Kleinste-Quadrate-Verlusts die Kugel zuerst berührt. Bei $p = 1$ ist das oft
 eine Ecke auf einer Achse; deshalb setzt Lasso Koeffizienten exakt auf null
 (@sec:beschraenkt). Zu jeder penalisierten Lösung gehört ein Budget $\cred c$,
@@ -548,7 +548,7 @@ brauchte die Bisektion auf demselben Intervall $20$ Schritte für sechs Stellen.
 
 :::bemerkung[#quadratische-konvergenz (Quadratische Konvergenz)]
 Nahe einer einfachen Nullstelle konvergiert Newton-Raphson *quadratisch*
-(:k[Konvergenzordnung]{#rate-of-convergence}): Mit
+(:k[Konvergenzordnung]{#rate-of-convergence .hilfreich}): Mit
 $e_k := \left|\cblue{x^{(k)}} - \cgreen{x^\star}\right|$ verhält sich der Fehler
 des nächsten Schrittes wie das Quadrat des aktuellen,
 
@@ -628,7 +628,7 @@ steht da, weil der Gradient in unserer Konvention eine Zeile ist.
 Für $f\colon \R^n \to \R^n$ tritt in @eq:newton-raphson-verfahren-fuer an die Stelle der Division die
 Lösung des linearen Systems
 $\corange{\bJ_f(\bx^{(k)})}\,\bd = -\cblue{f(\bx^{(k)})}$ mit der
-:d[Jacobimatrix]{#jacobimatrix} aus @sec:differentialrechnung/jacobi; die nächste
+:d[Jacobimatrix]{#jacobimatrix .hilfreich} aus @sec:differentialrechnung/jacobi; die nächste
 Iterierte ist dann $\cblue{\bx^{(k+1)}} = \cblue{\bx^{(k)}} + \bd$. Das ist teuer:
 pro Schritt eine ganze Matrix von Ableitungen und eine Zerlegung.
 
@@ -665,7 +665,7 @@ $$ {#eq-konvergenzrate-der-fixpunktiteration}
 \corange{\rho} := \left\|\bI_n - \corange{\gamma\,\bJ_f(\cgreen{\bx^\star})}\right\| < 1
 $$
 
-für eine :k[induzierte Matrixnorm]{#matrix-norm}. Dann gibt es zu jedem
+für eine :k[induzierte Matrixnorm]{#matrix-norm .hilfreich}. Dann gibt es zu jedem
 $\rho' \in (\corange{\rho}, 1)$ ein $\delta > 0$, sodass für jeden Startpunkt mit
 $\left\|\cblue{\bx^{(0)}} - \cgreen{\bx^\star}\right\| \le \delta$ die Iteration
 @eq:fixpunktiteration-erster-ordnung gegen $\cgreen{\bx^\star}$ konvergiert, und zwar mit
@@ -768,7 +768,7 @@ $$
 = \frac{\kappa - 1}{\kappa + 1}
 $$
 
-die beste Wahl, mit der :k[Konditionszahl]{#condition-number}
+die beste Wahl, mit der :k[Konditionszahl]{#condition-number .hilfreich}
 $\kappa = \lambda_{\max}/\lambda_{\min}$. Für $\cred{\gamma > 2/\lambda_{\max}}$
 läuft die Iteration von jedem Startpunkt aus auseinander, dessen Fehler einen
 Anteil in der steilsten Eigenrichtung hat. Die Herleitung ist dieselbe wie für

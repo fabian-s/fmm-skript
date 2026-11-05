@@ -177,7 +177,7 @@ beiden Knoten und $\wt{x}$. Zwischen je zwei benachbarten Nullstellen liegt eine
 Nullstelle von $g'$, also hat $g'$ zwei Nullstellen, und dasselbe Argument
 liefert ein $\xi$ im Inneren mit $g''(\xi) = 0$.
 
-::why[Satz von Rolle, der Spezialfall des :k[Mittelwertsatzes]{#mean-value-theorem} mit gleichen Funktionswerten an beiden Enden; $g$ ist zweimal stetig differenzierbar, weil $f$ es ist und $\cgreen{p}$, $w$ Polynome sind]
+::why[Satz von Rolle, der Spezialfall des :k[Mittelwertsatzes]{#mean-value-theorem .hilfreich} mit gleichen Funktionswerten an beiden Enden; $g$ ist zweimal stetig differenzierbar, weil $f$ es ist und $\cgreen{p}$, $w$ Polynome sind]
 :::
 
 :::schritt
@@ -290,7 +290,7 @@ sich erst, wenn $\corange{h}$ klein gegen diese Breite ist.
 Die Schranke gilt für *jedes* $f \in \Ccal^4[a, b]$ und jede Partition, der
 gemessene Fehler gehört zu einer Funktion auf einem Gitter. Aus dem Faktor
 $16$ wird deshalb keine Gleichung, sondern eine Aussage über die
-Größenordnung, in :k[Landau-Notation]{#big-o-notation}
+Größenordnung, in :k[Landau-Notation]{#big-o-notation .hilfreich}
 $\cred{\left\| f - s \right\|_\infty} = O(\corange{h}^4)$. Wir sagen, der
 Fehler sei *von vierter Ordnung* in $\corange{h}$, wie bei der
 :k[Konvergenzordnung]{#rate-of-convergence} iterativer Verfahren; nur läuft
@@ -325,8 +325,10 @@ um die Spitze sammeln, wo $\left| f^{(4)} \right|$ groß ist.
    zweiten Ableitungen des kubischen Spline-Interpolanten an den Knoten lösen
    sogar ein *tridiagonales* System, das $O(n)$ statt $O(n^3)$ Operationen
    kostet.
-2. *Stabilität und Lokalität.* :d[B-Splines]{#erweiterte-knotenfolge-und-b-splines} haben kompakten Träger: Eine Änderung
-   an einem Datenpunkt wirkt nur lokal, und die Basis ist weit besser
+2. *Stabilität und Lokalität.* :d[B-Splines]{#erweiterte-knotenfolge-und-b-splines} haben kompakten Träger: Bei gut
+   konditionierten Bandsystemen klingt die Wirkung einer Änderung an einem
+   Datenpunkt mit dem Abstand typischerweise schnell ab
+   (@bemerkung:was-die-lokalitaet-praktisch-bedeutet), und die Basis ist weit besser
    konditioniert als die :d[Monombasis]{#monombasis-und-vandermonde-matrix} (@sec:polynominterpolation, Kondition in
    @sec:fehler/kondition).
 3. *Minimale Krümmung.* Unter allen Interpolanten aus $\Ccal^2$ macht der

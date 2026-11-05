@@ -133,13 +133,13 @@ Quadratsumme der KQ-Geraden aber nie.
 :::interaktiv[Die Projektion aus verschiedenen Blickrichtungen]
 Während $\bx$ alle
 Vektoren in $\R^n$ durchläuft, durchläuft $\cblue{\bA\bx}$ genau
-den :k[Spaltenraum]{#span}
+den :k[Spaltenraum]{#span .hilfreich}
 $\col(\bA) \subseteq \R^m$, also alle
 :k[Linearkombinationen]{#linear-combination} der Spalten von
 $\bA$. Das KQ-Problem fragt daher: Welcher Punkt des Unterraums
 $\col(\bA)$ liegt am nächsten an $\bb$? Aus der linearen Algebra
 wissen wir: der Fußpunkt des Lots, also die
-:k[orthogonale Projektion]{#projection} von $\bb$ auf
+:k[orthogonale Projektion]{#projection .wichtig} von $\bb$ auf
 $\col(\bA)$. Links steht die übliche Lehrbuchskizze, rechts dieselbe Konfiguration im
 Raum, drehbar. Die linke Skizze wirkt auch wegen der günstig gewählten Blickrichtung so
 plausibel.
@@ -170,7 +170,7 @@ $$
 \bb = \cgreen{\wh{\bb}} + \cpurp{\br}, \qquad \cgreen{\wh{\bb}} = \proj_{S} \bb \in S, \quad \cpurp{\br} \perp S\,.
 $$
 
-::why[$\R^m = \col(\bA) \oplus \col(\bA)^\perp$: Zerlegung in Unterraum und :k[orthogonales Komplement]{#orthogonal-complement} existiert und ist eindeutig]
+::why[$\R^m = \col(\bA) \oplus \col(\bA)^\perp$: Zerlegung in Unterraum und :k[orthogonales Komplement]{#orthogonal-complement .hilfreich} existiert und ist eindeutig]
 :::
 
 :::schritt
@@ -210,7 +210,7 @@ so ist das optimale Residuum $\bb - \bA\wh{\bx}$ genau der *senkrechte* Anteil
 $\cpurp{\br}$: der Teil der Daten, den das Modell prinzipiell nicht erklären kann. Das
 Gleichungssystem $\bA\wh{\bx} = \cgreen{\wh{\bb}}$ ist stets lösbar (denn
 $\cgreen{\wh{\bb}} \in \col(\bA)$), eindeutig aber nur, wenn die Spalten von $\bA$
-:k[linear unabhängig]{#linear-independence} sind.
+:k[linear unabhängig]{#linear-independence .hilfreich} sind.
 
 :::interaktiv[Wo genau steht das Residuum senkrecht?]
 <p className="my-2">Das kleinste mögliche KQ-Problem: $m = 2$, $n = 1$, die Matrix hat als einzige Spalte $\ba = (3, 1)^\top$, gesucht ist ein einzelner Skalar $x$, und $\col(\bA)$ ist die graue Ursprungsgerade. Für welches $x$ wird $\left\| \cpurp{\br} \right\|_2^2$ am kleinsten, und welchen Winkel bildet das Residuum dort?</p>
@@ -272,9 +272,9 @@ $$
 :::bemerkung[#analysis-perspektive (Analysis-Perspektive)]
 Dieselben Gleichungen liefert die Analysis ohne Geometrie: Die Zielfunktion
 $g(\bx) = \left\| \bA\bx - \bb \right\|_2^2 = \bx^\top\bA^\top\bA\bx - 2\,\bb^\top\bA\bx + \bb^\top\bb$
-ist eine :k[konvexe]{#convexity}
+ist eine :k[konvexe]{#convexity .hilfreich}
 :k[quadratische Funktion]{#quadratic-form} mit
-:k[Gradient]{#gradient}
+:k[Gradient]{#gradient .hilfreich}
 
 $$
 \nabla g(\bx) = 2\,\bA^\top\bA\,\bx - 2\,\bA^\top\bb\,.
@@ -286,7 +286,7 @@ hinreichend. Diese Sichtweise begegnet uns in
 :::
 ::::
 
-Ob die Lösung eindeutig ist, entscheidet der :k[Rang]{#rank} von $\bA$.
+Ob die Lösung eindeutig ist, entscheidet der :k[Rang]{#rank .wichtig} von $\bA$.
 
 :::satz[#eindeutige-loesung-bei-vollem (Eindeutige Lösung bei vollem Spaltenrang)]
 Falls $\rang(\bA) = n$, ist $\bA^\top\bA$
@@ -307,13 +307,13 @@ Sei $\bx \neq \bnull$ beliebig. Wegen $\rang(\bA) = n$ sind
 die Spalten von $\bA$ linear unabhängig, also
 $\bA\bx \neq \bnull$.
 
-::why[volle Spaltenzahl im Rang $\quimpl$ Spalten linear unabhängig $\quimpl$ :k[Kern]{#kernel} $= \{\bnull\}$]
+::why[volle Spaltenzahl im Rang $\quimpl$ Spalten linear unabhängig $\quimpl$ :k[Kern]{#kernel .hilfreich} $= \{\bnull\}$]
 :::
 
 :::schritt
 Damit ist $\bA^\top\bA$
-:k[symmetrisch]{#symmetric-matrix} und
-:k[positiv definit]{#positive-definite}:
+:k[symmetrisch]{#symmetric-matrix .hilfreich} und
+:k[positiv definit]{#positive-definite .hilfreich}:
 
 $$
 \bx^\top \bA^\top\bA\, \bx = \left\| \bA\bx \right\|_2^2 > 0 \quad \text{für alle } \bx \neq \bnull\,.
@@ -327,7 +327,7 @@ Eine positiv definite Matrix ist invertierbar. Die Normalengleichungen @eq:probl
 daher genau eine Lösung, und Auflösen liefert
 $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$.
 
-::why[positiv definit $\quimpl$ alle :k[Eigenwerte]{#eigenvalue-eigenvector} $> 0$ $\quimpl$ $\det(\bA^\top\bA) \neq 0$]
+::why[positiv definit $\quimpl$ alle :k[Eigenwerte]{#eigenvalue-eigenvector .hilfreich} $> 0$ $\quimpl$ $\det(\bA^\top\bA) \neq 0$]
 :::
 
 ::::
@@ -335,7 +335,7 @@ $\wh{\bx} = (\bA^\top\bA)^{-1}\bA^\top\bb$.
 :::::
 
 Die Matrix $\bA\pinv = (\bA^\top\bA)^{-1}\bA^\top$ ist die
-:k[Pseudoinverse]{#pseudoinverse} aus @kap:svd, hier für den Fall
+:k[Pseudoinverse]{#pseudoinverse .hilfreich} aus @kap:svd, hier für den Fall
 $\rang(\bA) = n$; für quadratisches, invertierbares $\bA$ ist
 $\bA\pinv = \bA^{-1}$. Wie wir $\wh{\bx}$ *numerisch* am besten berechnen (über die
 Normalengleichungen jedenfalls *nicht* immer), behandeln die Abschnitte

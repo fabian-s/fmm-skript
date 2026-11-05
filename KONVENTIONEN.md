@@ -212,6 +212,60 @@ Bei einer Unterüberschrift ändert die Umstellung den Anker
   „(vgl. MML §5.2)" / „(vgl. Heath §3.5)".
 - Verschachtelte `<ConceptLink>`s beibehalten (ids unverändert).
 
+## Lese-Priorität von Begriffen: `.wichtig` / `.hilfreich`
+
+Alle 13 Kapitel sind bewertet. Bewertete Kapitel stehen in `RATED_CHAPTERS` (`src/App.tsx`);
+nur dort erscheint die Legende, und nur dort bedeutet „ohne Klasse" auch „nicht nötig".
+Neue Kapitel erst nach der Bewertung eintragen.
+
+Werkzeug: `node scripts/lese-prioritaet.mjs liste|setze|pruefe|zeichen` (Aufruf im Dateikopf).
+`pruefe` zählt und prüft die mechanischen Regeln; ob eine Bewertung stimmt, entscheidet der Mensch.
+
+Jeder `:k`/`:d`-Link trägt seine Bewertung für DIESE Textstelle, nicht für das
+Konzept: dasselbe Konzept kann in 7.2 wichtig und in 7.4 eine Randnotiz sein.
+
+| Syntax | Anzeige | Test |
+|---|---|---|
+| `:k[Rang]{#rank .wichtig}` | `!` | Benenne den Schritt, der ohne den Begriff abbricht: Der Text baut direkt darauf auf, und ohne den Begriff versteht man nicht, was dort behauptet oder getan wird. Prüfe, dass das Fenster ihn liefert. Braucht der Text die Aussage danach nicht mehr (Seitenbemerkung, Ausblick), oder lässt sich die Folgerung mit dem Gesagten nachvollziehen: kein `!` |
+| `:k[SVD]{#singular-value-decomposition .hilfreich}` | `?` | Benenne das Warum, das ohne den Begriff fehlt, und prüfe, dass das geöffnete Fenster es liefert. Geht eines von beiden nicht: kein `?` |
+| `:k[SVD]{#singular-value-decomposition}` | nichts | Hier muss man das Fenster nicht öffnen |
+
+- Maßstab ist ein Leser, der Lineare Algebra I und Analysis I kennt und den Text bis
+  hierher gelesen hat. Grundbegriffe bekommen nur dann ein Zeichen, wenn der Schritt
+  an ihnen hängt.
+- Überblickssätze („Hier hilft die SVD") tragen kein `!`: Dort wird noch nichts
+  gefolgert. Das `!` steht dort, wo der Begriff im Argument gebraucht wird.
+- Reicht die Erklärung im selben Satz oder direkt danach zum Weiterlesen (in Worten oder
+  als gerechnetes Beispiel), höchstens `?`. Eine bloße Formel oder ein kurzer Einschub
+  reicht dafür nicht: `$\bM = \bL\bL^\top$` erklärt die Cholesky-Zerlegung nicht.
+  Steht auch das Warum schon im Satz, kein Zeichen.
+- Ein `:d`-Fenster zeigt nur den Wortlaut der Definition. Passt ein Fenster nicht zur
+  Stelle (quadratische Matrix statt KQ-Problem), das Ziel korrigieren oder kein Zeichen.
+- Rückblicke auf etwas, das der Text schon erklärt hat, auch in früheren Kapiteln, höchstens
+  `?`, und ohne Zeichen, wenn kein Warum fehlt („quadriert die Konditionszahl" nach 7.3).
+  Das gilt für Wiederholungen. Baut der nächste Schritt auf dem Begriff auf und erklärt der Text
+  ihn an dieser Stelle nicht (keine Worte, höchstens eine bloße Formel), trägt er `!` (Cholesky
+  S73:69, Normalengleichungen S137:122, Kern S133:165).
+- Pro S-Datei trägt ein Konzept nur einmal `!`; spätere Erwähnungen höchstens `?`.
+  Dasselbe Konzept unter zwei IDs zählt als eines (`condition-number` und
+  `eigenschaften-konditionszahl-einer-matrix`, `kernel` und `null-space`).
+- Gleiche Rolle im selben Satz oder in derselben Liste, gleiche Stufe.
+- In `:::vertiefung` höchstens `?`: Der Haupttext ist ohne die Box vollständig.
+- Vorkenntnis-Listen und der Selbsttest zum Vorwissen tragen keine Zeichen („Was wir
+  mitbringen", „Was wir brauchen", „Woran wir anknüpfen"; `pruefe` kennt diese Überschriften).
+- Prozentwerte sind ein Ergebnis, keine Quote. Ein `!` ist selten; viele Kapitel haben keines.
+- Das Zeichen steht hinter dem Link. Folgt direkt Text (`:k[Projektions]{#projection .hilfreich}-Koeffizienten`),
+  bricht der Build ab. Steht der Link selbst in einer Hervorhebung, greift die Prüfung nicht.
+- Nur `:k`/`:d` im Fließtext sind bewertbar. Verweise (`@satz:…`) und `ConceptLink`s in
+  Widgets bleiben ohne Zeichen; die Legende sagt das.
+- Im Erklärfenster werden Zeichen nicht angezeigt. Aus dem Fließtext geöffnet, nennt das
+  Fenster im Kopf „hier wichtig" bzw. „hier hilfreich". Generierte Definitionskopien
+  behalten die Klasse; sie wirkt dort nicht.
+- Bei anderen Klassen bricht `remark-fmm` ab. Der PDF-Export ignoriert die Bewertung.
+- Tragende Begriffe ohne Link lassen sich nicht bewerten: Beim Bewerten auch fehlende
+  Links notieren (Kap. 7: Pseudoinverse in S72:25, Projektion in 7.2, Rückwärtssubstitution
+  in S73:81).
+
 ## Begriffe des Skripts: `:d[…]{#id}` (Definitions-Vorschau)
 
 Zwei Arten von Erklärfenstern, zwei Auszeichnungen:

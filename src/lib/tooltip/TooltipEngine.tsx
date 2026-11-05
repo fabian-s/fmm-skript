@@ -62,6 +62,9 @@ const MAX_CHAIN = 5;
 /** how much of a dragged window must stay inside the viewport */
 const KEEP_VISIBLE = 48;
 
+/** how much a term matters at THIS place in the text; unset = skippable */
+export type Relevance = "essential" | "helpful";
+
 export interface TooltipLabels {
   /** title of the 📌 button in a preview */
   pin: string;
@@ -69,17 +72,21 @@ export interface TooltipLabels {
   close: string;
   /** title of the 📌 marker in a pinned window */
   pinned: string;
+  /** window header and screen-reader text for a rated link */
+  relevance: Record<Relevance, string>;
 }
 
 const DEFAULT_LABELS: TooltipLabels = {
   pin: "pin this window (stays open, drag it by its title bar)",
   close: "close",
   pinned: "pinned — drag by the title bar, close with × or Esc",
+  relevance: { essential: "essential here", helpful: "helpful here" },
 };
 
 interface Entry {
   key: number;
   conceptId: ConceptId;
+  relevance?: Relevance;
   /** key of the window this was spawned from; null = body text or pinned */
   parent: number | null;
   pinned: boolean;
@@ -103,7 +110,8 @@ interface WindowApi {
     parent: number | null,
     sourceRect: Rect,
     cursor: Pt,
-    pinned: boolean
+    pinned: boolean,
+    relevance?: Relevance
   ) => number;
   pin: (key: number) => void;
   close: (key: number) => void;
@@ -194,7 +202,7 @@ export function TooltipProvider({
   }, [clearGrace]);
 
   const open = useCallback<WindowApi["open"]>(
-    (conceptId, parent, sourceRect, cursor, pinned) => {
+    (conceptId, parent, sourceRect, cursor, pinned, relevance) => {
       clearGrace();
       // keys are minted OUTSIDE the updater: React may replay updaters
       // (StrictMode/concurrent) and an impure nextKey++ inside would skip keys
@@ -224,6 +232,7 @@ export function TooltipProvider({
           {
             key,
             conceptId,
+            relevance,
             parent: effectiveParent !== null && dropped.has(effectiveParent) ? null : effectiveParent,
             pinned,
             sourceRect,
@@ -540,6 +549,11 @@ function ConceptWindow({ entry, depth }: { entry: Entry; depth: number }) {
         onPointerCancel={endDrag}
       >
         <span className="grow">{def.title}</span>
+        {entry.relevance && (
+          <span className="shrink-0 text-xs font-normal text-slate-300">
+            {api.labels.relevance[entry.relevance]}
+          </span>
+        )}
         {def.badge && (
           <span className="shrink-0 text-xs font-normal text-slate-400">{def.badge}</span>
         )}
@@ -604,10 +618,13 @@ function ConceptWindow({ entry, depth }: { entry: Entry; depth: number }) {
 export function ConceptLink({
   id,
   href,
+  relevance,
   children,
 }: {
   id: ConceptId;
   href?: string;
+  /** rating of this occurrence; only shown in body text, not inside windows */
+  relevance?: Relevance;
   children: ReactNode;
 }) {
   const api = useContext(WinCtx);
@@ -623,6 +640,7 @@ export function ConceptLink({
   parentRef.current = parent;
 
   const def = getConcept(id);
+  const shownRelevance = parent === null ? relevance : undefined;
   const circular = api !== null && api.ancestorIds(parent).includes(id);
 
   const cancel = () => {
@@ -671,7 +689,7 @@ export function ConceptLink({
       api.pin(mine.current!);
       return;
     }
-    mine.current = api.open(id, parentRef.current, r, cursor, pinned);
+    mine.current = api.open(id, parentRef.current, r, cursor, pinned, shownRelevance);
     // the pointer is still on the LINK, not on the new window, so register
     // the hover here or the grace timer would close it right back
     if (!pinned) api.setHover(mine.current, true);
@@ -728,11 +746,12 @@ export function ConceptLink({
     );
   }
 
-  return (
+  const link = (
     <span
       ref={ref}
       tabIndex={0}
       role="button"
+      aria-description={shownRelevance && api ? api.labels.relevance[shownRelevance] : undefined}
       data-concept-link={id}
       className={
         def.variant === "course"
@@ -755,5 +774,31 @@ export function ConceptLink({
     >
       {children}
     </span>
+  );
+
+  if (!shownRelevance) return link;
+  // A plain inline sup OUTSIDE the link: inside, the underline would run under
+  // it, and as inline-block it could wrap onto a line of its own. "!" and "?"
+  // never start a line after a word, so no joiner is needed.
+  return (
+    <>
+      {link}
+      <sup
+        aria-hidden
+        data-relevance={shownRelevance}
+        title={api?.labels.relevance[shownRelevance]}
+        className={[
+          // static cancels the base stylesheet's extra sup offset
+          "static cursor-help select-none align-super text-[0.72em] font-bold leading-[0]",
+          // blue links carry horizontal padding, grey ones do not
+          def.variant === "course" ? "ml-px" : "-ml-px",
+          shownRelevance === "essential"
+            ? "text-slate-900 dark:text-slate-100"
+            : "text-slate-500 dark:text-slate-400",
+        ].join(" ")}
+      >
+        {shownRelevance === "essential" ? "!" : "?"}
+      </sup>
+    </>
   );
 }

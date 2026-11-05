@@ -122,7 +122,7 @@ for (const s of sections) {
   for (const d of defs) {
     if ((order.get(d.section) ?? Infinity) >= order.get(s.num)) continue; // nur NACH der Definition
     // schon verlinkt in diesem Abschnitt?
-    if (src.includes(`{#${d.id}}`) || new RegExp(`@(definition|ref|num):${esc(d.id)}(?![a-z0-9-])`).test(src)) continue;
+    if (new RegExp(`\\{#${esc(d.id)}(?:[\\s.][^}]*)?\\}`).test(src) || new RegExp(`@(definition|ref|num):${esc(d.id)}(?![a-z0-9-])`).test(src)) continue;
     for (const l of lines) {
       const term = d.terms.find(({ re }) => re.test(l.text));
       if (!term) continue;

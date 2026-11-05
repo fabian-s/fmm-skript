@@ -47,6 +47,7 @@ export function SectionBody({ children }: { children: ReactNode }) {
         "[&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&>ul]:max-w-prose " +
         "[&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-5 [&>ol]:max-w-prose " +
         "[&_table]:my-3 [&_table]:w-full [&_table]:text-sm [&_th]:border-b [&_th]:py-1 " +
+        "max-md:[&_table]:block max-md:[&_table]:overflow-x-auto " +
         "[&_th]:pr-4 [&_th]:text-left [&_td]:py-1 [&_td]:pr-4 " +
         "[&_pre]:max-w-prose [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-slate-200/70 " +
         "[&_pre]:p-3 [&_pre]:font-mono [&_pre]:text-sm dark:[&_pre]:bg-slate-900/60"

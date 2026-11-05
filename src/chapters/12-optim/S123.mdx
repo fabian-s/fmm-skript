@@ -151,9 +151,9 @@ maschinellen Lernen heißt $\gamma$ *Lernrate* (learning rate) und der
 *Steilster Abstieg.* Für $\corange{\nabla f(\bx)} \neq \bnull^\top$ macht unter
 allen Richtungen $\bd$ mit $\left\|\bd\right\| = 1$ die Richtung
 $\bd = -\corange{\nabla f(\bx)^\top}/\left\|\corange{\nabla f(\bx)}\right\|$
-die :d[Richtungsableitung]{#richtungsableitung} $\corange{\nabla f(\bx)}\bd$ am kleinsten
+die :d[Richtungsableitung]{#richtungsableitung .hilfreich} $\corange{\nabla f(\bx)}\bd$ am kleinsten
 (@satz:richtung-des-staerksten-anstiegs, Gleichheitsfall der
-:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality}). Lokal gibt es also
+:k[Cauchy-Schwarz-Ungleichung]{#cauchy-schwarz-inequality .hilfreich}). Lokal gibt es also
 keine bessere Richtung als die des negativen Gradienten.
 
 *Abstiegsrichtung.* Für $\corange{\nabla f(\bx)} \neq \bnull^\top$ ist
@@ -170,7 +170,7 @@ dann schon ein :d[globales Minimum]{#lokales-und-globales-minimum} (@sec:optimal
 nirgends sonst hängen bleiben.
 
 *Fixpunktiteration.* @eq:nelder-mead-gradient-gradientenabstieg ist die
-:k[Fixpunktiteration]{#fixed-point-iteration} zu
+:k[Fixpunktiteration]{#fixed-point-iteration .hilfreich} zu
 @eq:optimieren-heisst-gleichungen-loesen, deren Fixpunkte die stationären Punkte
 von $f$ sind. Wie bei jeder Fixpunktiteration entscheidet die Schrittweite über
 die Konvergenz (@satz:konvergenzrate-der-fixpunktiteration).
@@ -374,11 +374,11 @@ kompakten Intervall ist eine stetig differenzierbare Funktion wegen ihrer dort
 beschränkten Ableitung Lipschitz-stetig.
 
 *Spektralnorm und Eigenwerte.* Für :k[symmetrische]{#symmetric-matrix} Matrizen
-ist die :k[Spektralnorm]{#matrix-norm} der betragsgrößte
+ist die :k[Spektralnorm]{#matrix-norm .hilfreich} der betragsgrößte
 :k[Eigenwert]{#eigenvalue-eigenvector}. @satz:spektralnorm-und-spektralzerlegung
 berechnet $\left\|\bA\right\|_2 = \sqrt{\lambda_{\max}(\bA^\top\bA)}$; für
 symmetrisches $\bA$ ist $\bA^\top\bA = \bA^2$, und der
-:k[Spektralsatz]{#spectral-theorem} gibt dieser Matrix die Eigenwerte
+:k[Spektralsatz]{#spectral-theorem .hilfreich} gibt dieser Matrix die Eigenwerte
 $\lambda_i^2$, also $\left\|\bA\right\|_2 = \max_i \left|\lambda_i(\bA)\right|$.
 Dieselbe Umrechnung steckt hinter der Formel für $\kappa_2$ symmetrischer
 Matrizen in @sec:matrix-spur-norm/eigenschaften.
@@ -485,7 +485,7 @@ $$
 \kappa_f = \frac{\lambda_{\max}(\bA)}{\lambda_{\min}(\bA)} = \kappa_2(\bA) ,
 $$
 
-die :k[Konditionszahl]{#condition-number} der Matrix aus
+die :k[Konditionszahl]{#condition-number .hilfreich} der Matrix aus
 @sec:matrix-spur-norm/eigenschaften. Für allgemeines $f$ wandert die
 Hesse-Matrix mit $\bx$, und $\kappa_f$ misst das Verhältnis der extremen
 Krümmungen über den ganzen Definitionsbereich hinweg.
@@ -496,7 +496,7 @@ Wie teuer ein großes $\kappa_f$ ist, lässt sich beziffern. Aus $\rho^k \le
 Nach dieser Schranke kostet eine Dezimalstelle bei $\kappa_f = 10$ rund
 $21{,}9$ Schritte, bei $\kappa_f = 20$ schon $44{,}9$ und bei $\kappa_f = 100$
 $229{,}1$. Geometrisch
-heißt großes $\kappa_f$, dass die :k[Höhenlinien]{#level-sets} lange, schmale
+heißt großes $\kappa_f$, dass die :k[Höhenlinien]{#level-sets .hilfreich} lange, schmale
 Ellipsen sind; bei einer Quadrik gilt das überall, sonst in der Nähe eines
 Minimums, wo die Hesse-Matrix positiv definit ist. In solchen Tälern läuft der
 Gradientenabstieg im Zickzack: Er bewegt sich quer zum Tal, statt es entlangzulaufen.

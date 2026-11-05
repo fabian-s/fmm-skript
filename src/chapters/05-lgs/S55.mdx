@@ -20,13 +20,13 @@ LU-Zerlegung als stabil
 ([Higham, 2020](https://nhigham.com/2020/07/14/what-is-the-growth-factor-for-gaussian-elimination/)).
 Auch ein stabiler Algorithmus liefert nur eine Näherung, deren relativer
 Fehler in der Größenordnung $\corange{\kappa(\bA)} \cdot \eps$ liegen kann,
-mit der :d[Konditionszahl]{#eigenschaften-konditionszahl-einer-matrix} $\corange{\kappa(\bA)}$
+mit der :k[Konditionszahl]{#condition-number .hilfreich} $\corange{\kappa(\bA)}$
 (@sec:matrix-spur-norm/eigenschaften, @sec:fehler/kondition) und der
-:k[Maschinengenauigkeit]{#machine-epsilon} $\eps$. Ist $\bA$ schlecht
+:k[Maschinengenauigkeit]{#machine-epsilon .hilfreich} $\eps$. Ist $\bA$ schlecht
 konditioniert, liegt das am Problem, nicht am Algorithmus.
 
 Die Cholesky-Zerlegung braucht für eine SPD-Matrix keine Pivotierung und ist
-:d[rückwärtsstabil]{#vorwaerts-und-rueckwaertsstabilitaet}. In exakter Arithmetik läuft sie für jede SPD-Matrix durch
+:d[rückwärtsstabil]{#vorwaerts-und-rueckwaertsstabilitaet .hilfreich}. In exakter Arithmetik läuft sie für jede SPD-Matrix durch
 und bricht für jede symmetrische, nicht positiv definite Matrix ab. In
 Gleitkommaarithmetik kann eine Matrix nahe der Grenze zur Semidefinitheit
 wegen Daten- oder Rundungsfehlern als nicht positiv definit erscheinen. Ein

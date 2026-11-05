@@ -57,8 +57,9 @@ drei Probleme mit sich:
 2. Der Umweg über die Koeffizienten ist numerisch instabil: Winzige Störungen
    der Koeffizienten können die Nullstellen weit verschieben, das Problem ist
    also schlecht konditioniert (@sec:fehler/kondition).
-3. Er ist teuer. Schon das Aufstellen der Koeffizienten kostet $O(n^4)$ oder
-   mehr, während wir für eine ganze Matrixzerlegung mit $O(n^3)$ auskommen.
+3. Er spart nichts. Mit den üblichen Verfahren kostet schon das Aufstellen der
+   Koeffizienten $O(n^3)$, so viel wie eine ganze Matrixzerlegung, und die
+   Nullstellen sind dann noch nicht gefunden.
 :::
 
 Auch die numerische lineare Algebra kennt direkte Eigenwertverfahren. In drei
@@ -623,7 +624,7 @@ $$
 
 :::bemerkung[#die-qr-iteration-ist-eine-simultane (Die QR-Iteration ist eine simultane Potenzmethode)]
 Bei der üblichen Normierung mit positiven Diagonaleinträgen in $\bR$ ist die
-QR-Zerlegung gerade das :k[Gram-Schmidt-Verfahren]{#gram-schmidt} auf den
+QR-Zerlegung gerade das :k[Gram-Schmidt-Verfahren]{#gram-schmidt .wichtig} auf den
 Spalten. Nach @eq:die-qr-iteration-zerlegt-die-potenzen sind die Spalten von
 $\bQ_k$ deshalb die orthonormalisierten Versionen von
 
@@ -672,7 +673,7 @@ $$
 
 Dass sich $\cgreen{\bV}^\top\cgreen{\bV}$ zweimal zur Einheitsmatrix kürzt,
 braucht ein *orthogonales* $\cgreen{\bV}$, und das liefert der
-:k[Spektralsatz]{#spectral-theorem} nur für symmetrisches $\bA$. Im
+:k[Spektralsatz]{#spectral-theorem .hilfreich} nur für symmetrisches $\bA$. Im
 allgemeinen Fall konvergiert $\bQ_k$ gegen den Orthogonalfaktor der
 Schur-Zerlegung; nur dessen erste Spalte ist ein Eigenvektor, die übrigen
 rechnen wir aus der Dreiecksmatrix zurück.

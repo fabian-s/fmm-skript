@@ -14,7 +14,7 @@ nur einen; für abgeschlossene konvexe Mengen ist beides gesichert.
 
 :::satz[#projektionstheorem (Projektionstheorem)]
 Sei $V$ ein endlichdimensionaler :k[Skalarproduktraum]{#dot-product} und
-$\cblue{\Xcal} \subseteq V$ eine nichtleere, :k[abgeschlossene]{#closed-bounded-set} und
+$\cblue{\Xcal} \subseteq V$ eine nichtleere, :k[abgeschlossene]{#closed-bounded-set .hilfreich} und
 konvexe Teilmenge. Dann gibt es zu jedem $\bx \in V$ genau einen Punkt
 $\corange{\wh{\bx}} \in \cblue{\Xcal}$ mit
 
@@ -22,7 +22,7 @@ $$ {#eq-projektionstheorem}
 \left\|\bx - \corange{\wh{\bx}}\right\| = \min_{\by \in \cblue{\Xcal}} \left\|\bx - \by\right\| .
 $$
 
-Wir nennen $\corange{\wh{\bx}}$ die :k[*Projektion*]{#projection} von $\bx$ auf
+Wir nennen $\corange{\wh{\bx}}$ die :k[*Projektion*]{#projection .hilfreich} von $\bx$ auf
 $\cblue{\Xcal}$.
 :::
 
@@ -153,11 +153,11 @@ $$
 Geometrisch heißt @eq:kriterium-des-stumpfen-winkels für $\bx \notin \cblue{\Xcal}$: Die
 Vektoren $\bx - \corange{\wh{\bx}}$ und $\by - \corange{\wh{\bx}}$ schließen für jeden
 weiteren Punkt $\by$ der Menge einen Winkel von mindestens $90^\circ$ ein. Die ganze Menge
-liegt also auf einer Seite der :k[Hyperebene]{#hyperplane} durch $\corange{\wh{\bx}}$, die
+liegt also auf einer Seite der :k[Hyperebene]{#hyperplane .hilfreich} durch $\corange{\wh{\bx}}$, die
 senkrecht auf $\bx - \corange{\wh{\bx}}$ steht (für $\bx \in \cblue{\Xcal}$ ist
 $\corange{\wh{\bx}} = \bx$).
 
-:::::vertiefung[Winkelkriterium: Beweis, Normalgleichungen und Projektionsformeln]
+:::::vertiefung[Winkelkriterium: Beweis, Normalengleichungen und Projektionsformeln]
 Abgeschlossenheit und endliche Dimension braucht das Kriterium nicht. Es sagt allerdings
 auch nichts darüber, ob ein nächstgelegener Punkt existiert; es erkennt ihn nur, wenn es ihn
 gibt.
@@ -167,7 +167,7 @@ Ist $\cblue{\Xcal} = \Ucal$ sogar ein Untervektorraum, so wird aus
 beliebiges $\bu \in \Ucal$ liefert @eq:kriterium-des-stumpfen-winkels nämlich
 $\pm\langle \bx - \corange{\wh{\bx}}, \bu\rangle \le 0$, also
 $\langle \bx - \corange{\wh{\bx}}, \bu\rangle = 0$. Das Residuum steht dann senkrecht
-auf dem ganzen Unterraum, und aus dieser Bedingung entstehen die Normalgleichungen der
+auf dem ganzen Unterraum, und aus dieser Bedingung entstehen die Normalengleichungen der
 Kleinsten Quadrate aus @sec:kq/problem. Für eine konvexe Menge bleibt davon die Ungleichung
 übrig, und die reicht aus.
 
@@ -689,7 +689,7 @@ eindeutig, auch bei rangdefizientem $\bA$. Die Rechnung dazu, samt :d[Gradient]{
 @beispiel:ridge-regression.
 
 Der Strafterm hebt dabei alle Eigenwerte um $\lambda$ an und drückt so die
-:k[Konditionszahl]{#condition-number}: Das rangdefiziente $\bA^\top\bA$ von oben hat die
+:k[Konditionszahl]{#condition-number .hilfreich}: Das rangdefiziente $\bA^\top\bA$ von oben hat die
 Eigenwerte $28$ und $0$, $\kappa_2$ ist also unendlich; mit $\lambda = 1$ stehen dort $29$ und
 $1$, und $\kappa_2$ fällt auf $29$.
 :::

@@ -121,6 +121,12 @@ const ACCEPT = {
 
 /** abgelehnte Formen: MÜSSEN scheitern, Meldung muss `expect` enthalten */
 const REJECT = {
+  "unknown relevance class": [`Die :k[Spur]{#trace .falsch} hilft.`, `keine Lese-Priorität`],
+  "relevance class from the prototype": [`Die :k[Spur]{#trace .constructor} hilft.`, `keine Lese-Priorität`],
+  "unknown relevance class inside ::why": [`::::beweis\n\n:::schritt\nEins.\n\n::why[per :k[Spur]{#trace .falsch}]\n:::\n\n::::`, `keine Lese-Priorität`],
+  "rated term in the middle of a word": [`Die :k[Spur]{#trace .wichtig}-Formel gilt.`, `mitten im Wort`],
+  "rated term before a dash compound": [`Die :k[Spur]{#trace .wichtig}–Formel gilt.`, `mitten im Wort`],
+  "rated term before emphasised suffix": [`Die :k[Spur]{#trace .wichtig}*formel* gilt.`, `mitten im Wort`],
   "free expression eats text": [`Die Menge {1,2,3} im Text.`, `geschweifte Klammern`],
   "escaped dollar destroys math": [`Vor $a \\$ b$ nach.`, `maskiertes Dollarzeichen`],
   "flag with value": [`::::quiz\n\n:::frage{wahr=false}\nA.\n\nB.\n:::\n\n::::`, `Flag`],
@@ -369,6 +375,10 @@ const NUM_ACCEPT = {
   "@satz same chapter (link with preview)": [`Nach @satz:kkt gilt.`, `<ConceptLink id="env:kkt" href="#env-kkt">{"Satz 12.5.7"}</ConceptLink>`],
   "@beispiel stays a plain link (no preview)": [`Siehe @beispiel:bsp-a.`, `<_components.a href="?k=06-svd#env-bsp-a">`],
   "@definition cross-chapter with preview": [`Siehe @definition:op-norm.`, `<ConceptLink id="env:op-norm" href="?k=03-matrix-spur-norm#env-op-norm">{"Definition 3.3.1"}`],
+  ":k relevance before math": [`Die :k[Spur]{#trace .wichtig}$A$ gilt.`, `relevance="essential"`],
+  ":k relevance": [`Die :k[Spur]{#trace .wichtig} hilft.`, `<ConceptLink id="trace" relevance="essential">`],
+  ":d relevance": [`Die :d[Operatornorm]{#op-norm .hilfreich} misst.`, `<ConceptLink id="env:op-norm" relevance="helpful">`],
+  ":k relevance inside ::why": [`::::beweis\n\n:::schritt\nEins.\n\n::why[per :k[Spur]{#trace .wichtig}]\n:::\n\n::::`, `<ConceptLink id={"trace"} relevance="essential">`],
   ":d course term": [`Die :d[Operatornorm]{#op-norm} misst.`, `<ConceptLink id="env:op-norm">{"Operatornorm"}</ConceptLink>`],
   ":d on a Satz": [`Nach den :d[KKT-Bedingungen]{#kkt} gilt.`, `<ConceptLink id="env:kkt">`],
   ":d inside ::why": [`::::beweis\n\n:::schritt\nEins.\n\n::why[per :d[Operatornorm]{#op-norm}]\n:::\n\n::::`, `<ConceptLink id={"env:op-norm"}>{"Operatornorm"}</ConceptLink>`],

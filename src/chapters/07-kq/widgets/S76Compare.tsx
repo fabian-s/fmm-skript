@@ -199,32 +199,33 @@ function DigitBar({
 }
 
 /**
- * Genauigkeitsvergleich: err_NE ≈ κ²ε, err_QR ≈ (κ + ‖r‖κ²)ε, mit den
+ * Genauigkeitsvergleich: err_NE ≈ κ²ε, err_QR ≈ (κ + ρκ²)ε mit dem relativen
+ * Residuum ρ = ‖r‖₂/‖proj b‖₂ = tan θ (vgl. Satz zur Störung von A), mit den
  * Abbruchschwellen κ ≈ 1/sqrt(ε) (Cholesky) und κ ≈ 1/ε (Rückwärtseinsetzen).
  */
 function AccuracyTafel({ lc, setLc }: { lc: number; setLc: (v: number) => void }) {
-  const [lr, setLr] = useState(-6); // log10 ||r||_2
+  const [lr, setLr] = useState(-6); // log10 rho, rho = ||r||_2 / ||proj b||_2
   const cond = 10 ** lc;
-  const rnorm = 10 ** lr;
+  const rho = 10 ** lr;
   const errNE = Math.min(1, cond * cond * EPS);
-  const errQR = Math.min(1, (cond + rnorm * cond * cond) * EPS);
+  const errQR = Math.min(1, (cond + rho * cond * cond) * EPS);
   const digits = (e: number) => Math.min(16, Math.max(0, -Math.log10(e)));
   const neBroken = lc >= 8; // κ ≈ 1/sqrt(eps) ≈ 1e8
   const qrBroken = lc >= 15.65; // κ ≈ 1/eps ≈ 4.5e15
-  const squaringActive = rnorm * cond > 1;
+  const squaringActive = rho * cond > 1;
   return (
     <div className="rounded bg-slate-100 p-3 dark:bg-slate-800/60">
       <Aufgabe>
         Schieben wir <M>{"\\kappa_2(\\bA)"}</M> nach rechts und lesen ab, welcher Balken zuerst
-        verschwindet; danach dasselbe mit der Residuumsnorm.
+        verschwindet; danach dasselbe mit dem relativen Residuum.
       </Aufgabe>
       <Slider label="log₁₀ κ₂(A)" value={lc} onChange={setLc} min={0} max={16} step={0.25} fmt={(v) => fmtDe(v, 1)} />
-      <Slider label="log₁₀ ‖r‖₂" value={lr} onChange={setLr} min={-16} max={0} step={0.5} fmt={(v) => fmtDe(v, 1)} />
+      <Slider label="log₁₀ ρ" value={lr} onChange={setLr} min={-16} max={0} step={0.5} fmt={(v) => fmtDe(v, 1)} />
       <p className="my-2 text-xs text-slate-600 dark:text-slate-400">
         <M>{"\\kappa_2(\\bA) = "}</M>
         <span className="font-mono">{cond.toExponential(1)}</span>,{" "}
-        <M>{"\\left\\|\\br\\right\\|_2 = "}</M>
-        <span className="font-mono">{rnorm.toExponential(1)}</span>, double precision (
+        <M>{"\\rho = \\left\\|\\br\\right\\|_2 / \\left\\|\\proj_{\\col(\\bA)}\\bb\\right\\|_2 = "}</M>
+        <span className="font-mono">{rho.toExponential(1)}</span>, double precision (
         <M>{"\\eps \\approx 2{,}2 \\cdot 10^{-16}"}</M>, also höchstens ~16 korrekte Stellen).
       </p>
       <DigitBar
@@ -236,7 +237,7 @@ function AccuracyTafel({ lc, setLc }: { lc: number; setLc: (v: number) => void }
         brokenNote="κ₂(A) ≳ 1/√ε ≈ 10⁸, die Cholesky-Zerlegung von AᵀA bricht voraussichtlich ab"
       />
       <DigitBar
-        label="QR (Householder): Fehler ~ (κ + ‖r‖₂ κ²) · ε"
+        label="QR (Householder): Fehler ~ (κ + ρ κ²) · ε"
         digits={qrBroken ? 0 : digits(errQR)}
         err={qrBroken ? 1 : errQR}
         color={COL.qr}
@@ -245,12 +246,12 @@ function AccuracyTafel({ lc, setLc }: { lc: number; setLc: (v: number) => void }
       />
       {squaringActive ? (
         <Verdikt kind="warn" className="mt-2" titel="Das Problem selbst ist empfindlich:">
-          Wegen <M>{"\\left\\|\\br\\right\\|_2 \\kappa_2(\\bA) > 1"}</M> dominiert der quadrierte
-          Term auch bei QR: <em>beide</em> Methoden verlieren rund{" "}
-          <M>{"2\\log_{10}\\kappa_2(\\bA)"}</M> Stellen (hier{" "}
-          <span className="font-mono">{fmtDe(2 * lc, 0)}</span> von 16). Das ist die Kondition des
-          Problems nach {ref("satz:stoerung-der-designmatrix-erste-ordnung")}, kein Defekt des Algorithmus – hier hilft kein Verfahren mehr,
-          nur ein besser konditioniertes Modell.
+          Wegen <M>{"\\rho\\,\\kappa_2(\\bA) > 1"}</M> dominiert der quadrierte Term auch bei QR.
+          QR behält hier <span className="font-mono">{fmtDe(digits(errQR), 1)}</span> Stellen, die
+          Normalengleichungen <span className="font-mono">{fmtDe(neBroken ? 0 : digits(errNE), 1)}</span>;
+          erst bei <M>{"\\rho \\approx 1"}</M> liegen beide gleichauf. Das ist die Kondition des
+          Problems nach {ref("satz:stoerung-der-designmatrix-erste-ordnung")}, kein Defekt des
+          Algorithmus. Hier hilft nur ein besser konditioniertes Modell.
         </Verdikt>
       ) : neBroken ? (
         <Verdikt kind="fail" className="mt-2" titel="Die Normalengleichungen sind raus:">
