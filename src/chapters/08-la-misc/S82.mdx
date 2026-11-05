@@ -155,12 +155,12 @@ oder `irlba::svdr()` (iterativ und probabilistisch, siehe @sec:sketching).
 
 Wie groß der Unterschied ist, zeigt ein Experiment: eine
 :k[Rang-k-Approximation]{#low-rank-approximation} an einem Graustufen-Foto
-(2500 × 3300 Pixel), einmal mit der vollen SVD und zweimal iterativ mit
+(2468 × 3289 Pixel), einmal mit der vollen SVD und zweimal iterativ mit
 `irlba`:
 
 ```r
-library(irlba); suppressMessages(library(magick))
-# "img" ist 2500 × 3300 px (grayscale)
+suppressMessages({library(irlba); library(magick)})
+# "img" ist 2468 × 3289 px (grayscale)
 img <- paste0(
   "https://upload.wikimedia.org/wikipedia/commons/7/7e/",
   "Bolzano_City_Image_-_Photo_by_Giovanni_Ussi_-_In_Black_and_White_19.jpg")
@@ -173,15 +173,22 @@ microbenchmark::microbenchmark(
   svd_irlba  = irlba::irlba(X, nv = r, nu = r),
   svd_random = irlba::svdr(X, k = r),
   times = 5)
+#> Unit: seconds
+#>        expr   min    lq  mean median    uq   max neval cld
+#>    svd_full 14.94 15.01 15.36  15.24 15.79 15.83     5 a
+#>   svd_irlba  1.01  1.03  1.06   1.03  1.09  1.13     5  b
+#>  svd_random  2.21  2.22  2.39   2.41  2.46  2.68     5   c
 ```
 
-Die vollständige SVD berechnet alle $2500$ :d[Singulärwerte]{#singulaerwerte}, obwohl nur $50$
+Die vollständige SVD berechnet alle $2468$ :d[Singulärwerte]{#singulaerwerte}, obwohl nur $50$
 gebraucht werden. `irlba` und `svdr` tasten die Matrix nur über
-Matrix-Vektor-Produkte ab und arbeiten in einem Unterraum der Dimension
-$50$; wie viel Rechenzeit das spart, misst der Vergleich oben. An Qualität
+Matrix-Vektor-Produkte ab und arbeiten in einem Unterraum, dessen Dimension
+kaum über $50$ liegt; auf einem Rechenkern braucht die volle SVD im Mittel rund $15$ Sekunden,
+`irlba` rund eine und `svdr` etwa $2{,}4$ Sekunden. An Qualität
 kostet das kaum etwas: `irlba` rechnet dieselbe Rang-50-Zerlegung bis auf eine
-einstellbare Toleranz aus, während `svdr` bewusst etwas Genauigkeit gegen
-Tempo tauscht. Zum Selbst-Ausprobieren: das Rang-k-Widget in
+einstellbare Toleranz aus, und `svdr` rechnet zufallsbasiert und bleibt, wie die
+folgende Vertiefung misst, etwas ungenauer. In diesem Lauf ist `irlba` auch die
+schnellere der beiden. Zum Selbst-Ausprobieren: das Rang-k-Widget in
 @sec:svd/anwendungen und die
 [Shiny-App zur Bildkompression](https://fabian-s.shinyapps.io/truncatedSVD-shiny/).
 
@@ -194,7 +201,9 @@ X_r <- with(svd(X, nu = r, nv = r), u %*% diag(d[1:r]) %*% t(v))
 X_irlba <- with(irlba::irlba(X, nu = r, nv = r), u %*% diag(d) %*% t(v))
 X_svdr <- with(irlba::svdr(X, k = r), u %*% diag(d) %*% t(v))
 norm(X - X_r, "F") / norm(X, "F")
+#> [1] 0.129
 c(norm(X_r - X_irlba, "F"), norm(X_r - X_svdr, "F")) / norm(X_r, "F")
+#> [1] 0.000121 0.000186
 ```
 
 Die beiden letzten Zeilen messen Verschiedenes. Die erste ist der relative
@@ -202,7 +211,7 @@ Frobenius-Fehler der exakten Rang-50-Approximation, also das Minimum aus
 @satz:eckart-und-young-beste-approximation-von. Die zweite misst den Abstand
 der beiden iterativen Rekonstruktionen zu dieser exakten Lösung. Ist sie
 deutlich kleiner als die erste, spielt der Zusatzfehler der Abkürzung neben
-dem Approximationsfehler keine Rolle.
+dem Approximationsfehler keine Rolle. Hier steht rund $10^{-4}$ gegen $0{,}13$.
 :::
 
 ### Die Verfahren im Vergleich

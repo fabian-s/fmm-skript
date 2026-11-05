@@ -491,7 +491,7 @@ function block(n) {
     case "leafDirective":
       return leafDirective(n);
     case "mdxjsEsm":
-      return ""; // Importe der Widgets — im Druck gegenstandslos
+      return ""; // Importe sind im Druck gegenstandslos (Bilder: siehe imageImports)
     case "mdxFlowExpression":
       return mdxExpression(n, true);
     case "mdxJsxFlowElement":
@@ -750,6 +750,7 @@ function leafDirective(n) {
 /* JSX-Elemente im Fliesstext                                          */
 /* ------------------------------------------------------------------ */
 
+let imageImports = new Map(); // Bezeichner -> absoluter Pfad, je MDX-Datei
 const PASS_THROUGH = new Set(["div", "span", "section", "article", "figure", "p"]);
 const HTML_INLINE = {
   em: "\\emph",
@@ -808,6 +809,9 @@ function jsxElement(n, flow) {
   if (name === "SelbsttestFrage") return selbsttestFrage(n);
   if (name === "Schaetzfrage") return schaetzfrage(n);
 
+  if (name === "img") return includeImage(n);
+  if (name === "figcaption") return `\\fmmcaption{${inlineAll(n.children.flatMap((c) => c.type === "paragraph" ? c.children : [c]))}}`;
+
   if (PASS_THROUGH.has(name)) return flow ? blocks(n.children) : inlineAll(n.children);
 
   // Alles Uebrige ist ein interaktives Widget.
@@ -818,6 +822,17 @@ function jsxElement(n, flow) {
 
   warn(`unbekanntes HTML-Element: <${name}>`);
   return flow ? blocks(n.children) : inlineAll(n.children);
+}
+
+/** <img src={name}>: name kommt aus einem `import name from "./datei.png"` derselben Datei. */
+function includeImage(n) {
+  const src = attrOf(n, "src");
+  const file = src?.kind === "expr" ? imageImports.get(src.value.trim()) : null;
+  if (!file) {
+    warn("Bild ohne importierte Datei", src?.value);
+    return "";
+  }
+  return `\\fmmimage{${file}}`;
 }
 
 function jsxRawChild(n) {
@@ -958,6 +973,12 @@ function convertFile(path) {
   const tree = processor.parse(src);
   for (const e of mergeRefDirectives(tree, visit)) warn("@-Verweis", e.message);
   resetQuotes();
+  imageImports = new Map(
+    [...src.matchAll(/^import (\w+) from "(\.\/[^"]+\.(?:png|jpe?g))";$/gm)].map((m) => [
+      m[1],
+      join(dirname(path), m[2]),
+    ]),
+  );
   const out = blocks(tree.children);
   currentSource = null;
   return out;

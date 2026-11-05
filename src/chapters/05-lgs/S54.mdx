@@ -343,6 +343,9 @@ L <- t(chol(Sigma))  # chol() liefert die obere Dreiecksmatrix
 x <- matrix(rnorm(2 * 1000), nrow = 2)
 y <- L %*% x
 round(cov(t(y)), 2)  # empirische Kovarianz, nahe bei Sigma
+#>      [,1] [,2]
+#> [1,] 1.00 0.89
+#> [2,] 0.89 0.99
 ```
 :::
 

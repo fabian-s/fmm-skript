@@ -18,7 +18,7 @@
 \usepackage{unicode-math}
 \setmainfont{Libertinus Serif}
 \setsansfont{Libertinus Sans}
-\setmonofont{Libertinus Mono}[Scale=MatchLowercase]
+\setmonofont{Fira Mono}[Scale=MatchLowercase]
 \setmathfont{Libertinus Math}
 
 % shorthands=off ist NICHT optional: babel-german macht " zu einem aktiven
@@ -45,6 +45,9 @@
 \usepackage{titlesec}
 \usepackage{fancyhdr}
 \usepackage{listings}
+\usepackage{graphicx}
+\newcommand{\fmmimage}[1]{\par\medskip{\centering\includegraphics[width=0.85\linewidth]{#1}\par}\nopagebreak\medskip\nopagebreak}
+\newcommand{\fmmcaption}[1]{{\centering\small #1\par}\medskip}
 \usepackage[hidelinks,unicode]{hyperref}
 
 % -------------------------------------------------------------------
@@ -59,6 +62,10 @@
 
 % Libertinus Math deckt die AMS-Quadrate nicht ab, und amssymb darf neben
 % unicode-math nicht geladen werden. Aus Linien gebaut haengen sie an nichts.
+% Auch \checkmark fehlt in Libertinus Math (stiller Glyphenverlust, nur "Missing
+% character" im Log): als Linienzug gezeichnet, folgt Farbe und Schriftgrad.
+\AtBeginDocument{\renewcommand{\checkmark}{\mathord{\text{\tikz[baseline=0pt,x=1ex,y=1ex]
+  \draw[line width=0.14ex,line cap=round,line join=round] (0,0.5)--(0.35,0.05)--(1.05,1.15);}}}}
 \providecommand{\blacksquare}{\mathord{\rule[0.02ex]{0.62ex}{0.62ex}}}
 \providecommand{\square}{\mathord{\setlength{\fboxsep}{0pt}\setlength{\fboxrule}{0.4pt}%
   \fbox{\rule{0pt}{0.62ex}\rule{0.62ex}{0pt}}}}

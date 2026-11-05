@@ -59,17 +59,25 @@ x <- rep(1, n)
 b <- A %*% x
 
 range((solve(A) %*% b) - x) # Fehler über Inverse
+#> [1] -0.195  0.288
 range(solve(A, b) - x)      # Fehler direkte Lösung
+#> [1] -0.000260  0.000332
 ```
 
-Für $n=11$ haben wir beide Wege mit derselben einfachen Gauß-Elimination
-mit partieller Pivotierung in JavaScript nachgerechnet. Beim direkten Lösen
-ist der relative Fehler
-$\|\widehat{\bx}-\bx\|_\infty/\|\bx\|_\infty \approx 9{,}66\cdot 10^{-3}$,
-über die explizite Inverse etwa $3{,}73\cdot 10^{-1}$: rund $38{,}6$-mal
+Beim direkten Lösen ist der relative Fehler
+$\|\widehat{\bx}-\bx\|_\infty/\|\bx\|_\infty \approx 3{,}3\cdot 10^{-4}$,
+über die explizite Inverse etwa $2{,}9\cdot 10^{-1}$: rund $870$-mal
 ungenauer. Die genauen Werte hängen von Algorithmus, Reihenfolge der
-Operationen und Gleitkommaarithmetik ab (R rechnet mit LAPACK und kann andere
-Zahlen liefern); allgemeine Fehlerschranken sind sie nicht.
+Operationen und Gleitkommaarithmetik ab; allgemeine Fehlerschranken sind sie
+nicht. Selbst der Faktor ist nicht stabil: Diese Ausgabe stammt aus R mit
+OpenBLAS.
+
+Mit der Referenz-BLAS von R sind es $1{,}2\cdot 10^{-2}$ und
+$1{,}2\cdot 10^{-1}$, also nur ein Faktor von rund $10$.
+
+Das Widget unten rechnet mit einer einfachen Gauß-Elimination mit partieller
+Pivotierung in JavaScript und kommt auf $9{,}66\cdot 10^{-3}$ und
+$3{,}73\cdot 10^{-1}$, einen Faktor von $38{,}6$.
 :::
 
 :::interaktiv[Kondition und Rechenweg]

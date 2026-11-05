@@ -377,10 +377,23 @@ A <- matrix(c(1, 2,
               2, 1,
               1, 0), nrow = 3, byrow = TRUE)
 svd(A)
+#> $d
+#> [1] 3.09 1.21
+#>
+#> $u
+#>        [,1]   [,2]
+#> [1,] -0.672  0.691
+#> [2,] -0.700 -0.474
+#> [3,] -0.243 -0.546
+#>
+#> $v
+#>        [,1]   [,2]
+#> [1,] -0.750 -0.662
+#> [2,] -0.662  0.750
 ```
 
-Die Komponente `d` enthält die Singulärwerte $3{,}087$ und $1{,}212$ wie von Hand
-berechnet, die Spalten von `u` und `v` die Singulärvektoren, womöglich mit
+Die Komponente `d` enthält, auf drei Stellen gerundet, die von Hand berechneten
+Singulärwerte $3{,}087$ und $1{,}212$, die Spalten von `u` und `v` die Singulärvektoren, womöglich mit
 anderen Vorzeichen als bei uns. Numerische Bibliotheken wählen das Vorzeichen
 nach eigenen Konventionen; falsch ist deshalb keine der beiden Rechnungen.
 

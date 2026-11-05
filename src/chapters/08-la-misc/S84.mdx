@@ -179,9 +179,11 @@ Sx <- S %*% x
 Sy <- S %*% y
 ## Distanzen ||x - y|| und ||Sx - Sy||
 c(norm(x - y, "2"), norm(Sx - Sy, "2"))
+#> [1] 41.0 42.2
 ## Winkel: cos(angle) = (x'y) / (||x|| ||y||)
 angle <- function(x, y) (sum(x * y) / (norm(x, "2") * norm(y, "2"))) |> acos()
 c(angle(x, y), angle(Sx, Sy))
+#> [1] 0.728 0.735
 ```
 
 Die Einträge sind unabhängig $\Ncal(0, 1/m)$-verteilt, eine Zeile $\bs_i$ hat

@@ -1,3 +1,4 @@
+import interpolationMonombasis from "./interpolation-monombasis.png";
 import { MonombasisFigur, VandermondeKondition } from "./widgets/S133Monombasis";
 import { RungeExplorer } from "./widgets/S133Runge";
 import { Schaetzfrage } from "../../lib";
@@ -221,9 +222,11 @@ verschiedenen $x_i$.
 :::
 
 In `R` sind das wenige Zeilen, hier für $n = 10$ Stellen in $[0, 1]$ und
-eine Funktion `f`, deren Werte wir interpolieren.
+die Funktion $f(x) = \sin(2\pi x)$, deren Werte wir interpolieren.
 
 ```r
+library(ggplot2)
+f <- function(x) sin(2 * pi * x)
 x <- seq(0, 1, length = 10)
 y <- f(x)
 
@@ -235,6 +238,17 @@ fhat <- outer(xnew, 0:9, "^") %*% a
 
 ggplot() + geom_point(aes(x, y)) + geom_line(aes(xnew, fhat))
 ```
+
+<figure className="mx-auto my-4 max-w-2xl">
+  <img
+    src={interpolationMonombasis}
+    alt="Zehn Punkte auf der Sinuskurve über dem Intervall von null bis eins, durch die das Interpolationspolynom als glatte Kurve verläuft."
+    className="h-auto w-full rounded-md border border-slate-200 bg-white"
+  />
+  <figcaption className="mt-2 text-center text-sm text-slate-600 dark:text-slate-400">
+    Ausgabe des Codes: die zehn Datenpunkte und das Interpolationspolynom auf dem feinen Gitter.
+  </figcaption>
+</figure>
 
 `outer(x, 0:9, "^")` erzeugt die Matrix aus
 @definition:monombasis-und-vandermonde-matrix, `solve` ruft die Elimination

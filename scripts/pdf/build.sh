@@ -37,10 +37,13 @@ fi
 undef=$(grep -c "undefined on input line" "pass3.log" || true)
 overfull=$(grep -c "^Overfull \\\\hbox" "pass3.log" || true)
 shrunk=$(grep -c "FMM-WIDE-MATH" "pass3.log" || true)
+missing=$(grep -c "^Missing character" "pass3.log" || true)
 
 echo
 echo "fertig: $out/$job.pdf ($pages Seiten)"
 echo "  offene Querverweise:    $undef"
 echo "  ueberbreite Zeilen:     $overfull"
 echo "  geschrumpfte Formeln:   $shrunk"
+echo "  fehlende Zeichen:       $missing"
+[[ "$missing" -eq 0 ]] || { grep "^Missing character" pass3.log | sort | uniq -c >&2; }
 [[ "$undef" -eq 0 ]] || { echo "  -> siehe: grep 'undefined on input line' $out/pass3.log" ; }

@@ -28,22 +28,22 @@ $\wh{\by}=\wt{f}(\bx)$ sein Ergebnis für einen exakt dargestellten Input $\bx$.
 Für $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ heißen
 
 $$
-\eta_{vor}=\frac{\|\wh{\by}-f(\bx)\|}{\|f(\bx)\|}
+\eta_{\text{vor}}=\frac{\|\wh{\by}-f(\bx)\|}{\|f(\bx)\|}
 $$
 
 der *relative Vorwärtsfehler* und
 
 $$
-\eta_{rück}=\inf\left\{
+\eta_{\text{rück}}=\inf\left\{
 \frac{\|\bDelta\bx\|}{\|\bx\|}:\ \wh{\by}=f(\bx+\bDelta\bx)
 \right\}
 $$
 
 der *relative Rückwärtsfehler*. Der Algorithmus heißt *rückwärtsstabil*, wenn
-$\eta_{rück}=O(u)$ ist, wobei $u$ die Rundungseinheit bezeichnet. Er heißt
+$\eta_{\text{rück}}=O(u)$ ist, wobei $u$ die Rundungseinheit bezeichnet. Er heißt
 *vorwärtsstabil*, wenn sein Vorwärtsfehler bis auf moderate Faktoren nicht größer
 ist als der durch Kondition und Rundung erwartbare Fehler,
-$\eta_{vor}=O(\kappa_{rel}(f,\bx)u)$.
+$\eta_{\text{vor}}=O(\kappa_{rel}(f,\bx)u)$.
 :::
 
 Die Konstanten in den $O$-Aussagen dürfen von Dimension und Algorithmus abhängen,
@@ -299,12 +299,12 @@ Werte, um $c = 10^{10}$ verschoben. Die wahre Varianz ist $1$.
 set.seed(5)
 x <- rnorm(10^3, mean = 0, sd = 1) + 10^10
 mean((x - mean(x))^2)
-#> [1] 1.023151
+#> [1] 1.02
 mean(x^2) - mean(x)^2
 #> [1] 16384
 ```
 
-Die zweistufige Rechnung $\wt{f}_1$ liefert $1{,}023$, eine
+Die zweistufige Rechnung $\wt{f}_1$ liefert $1{,}02$, eine
 plausible Stichprobenvarianz. Die Verschiebungsformel $\wt{f}_2$
 liefert $16384$: um mehr als vier Größenordnungen daneben. Passt das zu
 unserer Analyse? Mit $c = 10^{10}$ ist

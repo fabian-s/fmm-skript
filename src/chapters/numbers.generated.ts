@@ -382,6 +382,7 @@ export type NumKey =
   | "bemerkung:was-der-schritt-voraussetzt-und-wie-wir"
   | "bemerkung:was-der-schwung-bewirkt"
   | "bemerkung:was-der-strafterm-bewirkt"
+  | "bemerkung:was-die-ableitung-ueber-die-kondition-sagt"
   | "bemerkung:was-die-annahme-spart-und-was-sie-kostet"
   | "bemerkung:was-die-armijo-bedingung-fordert"
   | "bemerkung:was-die-bedingung-verlangt"
@@ -770,6 +771,8 @@ export type NumKey =
   | "satz:komplexitaet-der-iterativen-variante"
   | "satz:komplexitaet-der-lu-zerlegung"
   | "satz:kondition-der-loesung-eines-lgs"
+  | "satz:kondition-differenzierbarer-funktionen"
+  | "satz:kondition-und-jacobimatrix"
   | "satz:konvergenz-der-korrekturiteration"
   | "satz:konvergenz-der-potenzmethode"
   | "satz:konvergenzrate-bei-konvexem-f"
@@ -890,6 +893,7 @@ export type NumKey =
   | "sec:komplexitaet-wie-skaliert-der-aufwand"
   | "sec:komplexitaetsklassen"
   | "sec:kondition-eines-linearen"
+  | "sec:kondition-und-ableitung"
   | "sec:konditionszahlen"
   | "sec:konvexitaet/eigenschaften"
   | "sec:konvexitaet/konvexe-mengen"
@@ -996,7 +1000,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:affine-funktionen": ["11.3.11", "Beispiel 11.3.11"],
   "beispiel:algorithmenarten-in-ml-und-statistik": ["2.2.4", "Beispiel 2.2.4"],
   "beispiel:alle-unterraeume-einer-rang-1-matrix": ["6.2.12", "Beispiel 6.2.12"],
-  "beispiel:aufgabe-kondition-der-summe": ["4.2.8", "Beispiel 4.2.8"],
+  "beispiel:aufgabe-kondition-der-summe": ["4.2.11", "Beispiel 4.2.11"],
   "beispiel:auswahl-unter-einer-budgetschranke": ["11.2.14", "Beispiel 11.2.14"],
   "beispiel:basisdarstellung-konkret": ["13.2.10", "Beispiel 13.2.10"],
   "beispiel:beispiel-2-3-6": ["2.3.6", "Beispiel 2.3.6"],
@@ -1014,7 +1018,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "beispiel:der-betrag-ist-konvex": ["11.3.10", "Beispiel 11.3.10"],
   "beispiel:der-einheitskreis-wird-zur-ellipse": ["6.1.1", "Beispiel 6.1.1"],
   "beispiel:der-erwartungswert-ist-eine": ["11.1.3", "Beispiel 11.1.3"],
-  "beispiel:der-kehrwert-aufgeloest": ["4.2.5", "Beispiel 4.2.5"],
+  "beispiel:der-kehrwert-aufgeloest": ["4.2.8", "Beispiel 4.2.8"],
   "beispiel:der-simplex": ["11.2.6", "Beispiel 11.2.6"],
   "beispiel:der-standardsattel": ["12.2.9", "Beispiel 12.2.9"],
   "beispiel:der-umweg-ueber-a-a": ["6.5.2", "Beispiel 6.5.2"],
@@ -1244,7 +1248,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:interpretation-der-konditionszahl": ["3.5.12", "Bemerkung 3.5.12"],
   "bemerkung:jede-voraussetzung-wird-gebraucht": ["11.3.2", "Bemerkung 11.3.2"],
   "bemerkung:komplementaritaet-bindet-oder": ["12.5.8", "Bemerkung 12.5.8"],
-  "bemerkung:kondition-konditionszahl-einer-matrix": ["4.2.7", "Bemerkung 4.2.7"],
+  "bemerkung:kondition-konditionszahl-einer-matrix": ["4.2.10", "Bemerkung 4.2.10"],
   "bemerkung:kondition-von-eigenwertproblemen": ["8.1.16", "Bemerkung 8.1.16"],
   "bemerkung:konditionszahlen-eine-groessenordnung": ["13.4.13", "Bemerkung 13.4.13"],
   "bemerkung:kovarianzmatrizen-sind-mittel-aeusserer": ["9.3.6", "Bemerkung 9.3.6"],
@@ -1337,6 +1341,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "bemerkung:was-der-schritt-voraussetzt-und-wie-wir": ["12.4.2", "Bemerkung 12.4.2"],
   "bemerkung:was-der-schwung-bewirkt": ["12.4.14", "Bemerkung 12.4.14"],
   "bemerkung:was-der-strafterm-bewirkt": ["13.7.13", "Bemerkung 13.7.13"],
+  "bemerkung:was-die-ableitung-ueber-die-kondition-sagt": ["4.2.6", "Bemerkung 4.2.6"],
   "bemerkung:was-die-annahme-spart-und-was-sie-kostet": ["9.3.19", "Bemerkung 9.3.19"],
   "bemerkung:was-die-armijo-bedingung-fordert": ["12.3.19", "Bemerkung 12.3.19"],
   "bemerkung:was-die-bedingung-verlangt": ["11.2.2", "Bemerkung 11.2.2"],
@@ -1724,7 +1729,9 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "satz:kkt-und-konvexitaet": ["12.5.12", "Satz 12.5.12"],
   "satz:komplexitaet-der-iterativen-variante": ["2.5.1", "Satz 2.5.1"],
   "satz:komplexitaet-der-lu-zerlegung": ["5.3.8", "Satz 5.3.8"],
-  "satz:kondition-der-loesung-eines-lgs": ["4.2.6", "Satz 4.2.6"],
+  "satz:kondition-der-loesung-eines-lgs": ["4.2.9", "Satz 4.2.9"],
+  "satz:kondition-differenzierbarer-funktionen": ["4.2.5", "Satz 4.2.5"],
+  "satz:kondition-und-jacobimatrix": ["4.2.7", "Satz 4.2.7"],
   "satz:konvergenz-der-korrekturiteration": ["8.3.5", "Satz 8.3.5"],
   "satz:konvergenz-der-potenzmethode": ["8.1.4", "Satz 8.1.4"],
   "satz:konvergenzrate-bei-konvexem-f": ["12.3.10", "Satz 12.3.10"],
@@ -1794,7 +1801,7 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:algos/uebungen": ["2.6", "Abschnitt 2.6"],
   "sec:alternative-loesungswege-orthogonale": ["7.3.4", "Abschnitt 7.3.4"],
   "sec:anwendung-auf-den-dominanten-term": ["2.4.4", "Abschnitt 2.4.4"],
-  "sec:aufgabe-die-kondition-einer-summe": ["4.2.4", "Abschnitt 4.2.4"],
+  "sec:aufgabe-die-kondition-einer-summe": ["4.2.5", "Abschnitt 4.2.5"],
   "sec:beispiel-fibonacci-zahlen": ["2.2.1", "Abschnitt 2.2.1"],
   "sec:beispiel-matrix-vektor-multiplikation": ["2.3.2", "Abschnitt 2.3.2"],
   "sec:beispiele": ["3.3.5", "Abschnitt 3.3.5"],
@@ -1844,7 +1851,8 @@ export const NUMBERS: Record<NumKey, readonly [string, string]> = {
   "sec:klein-o-und-gross-o": ["2.4.1", "Abschnitt 2.4.1"],
   "sec:komplexitaet-wie-skaliert-der-aufwand": ["2.3.3", "Abschnitt 2.3.3"],
   "sec:komplexitaetsklassen": ["2.3.4", "Abschnitt 2.3.4"],
-  "sec:kondition-eines-linearen": ["4.2.3", "Abschnitt 4.2.3"],
+  "sec:kondition-eines-linearen": ["4.2.4", "Abschnitt 4.2.4"],
+  "sec:kondition-und-ableitung": ["4.2.3", "Abschnitt 4.2.3"],
   "sec:konditionszahlen": ["4.2.2", "Abschnitt 4.2.2"],
   "sec:konvexitaet/eigenschaften": ["11.4", "Abschnitt 11.4"],
   "sec:konvexitaet/konvexe-mengen": ["11.2", "Abschnitt 11.2"],

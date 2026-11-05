@@ -3,18 +3,25 @@ import { OptimLandkarte } from "./widgets/S126Landkarte";
 
 Zum Abschluss übersetzen wir die Verfahren dieses Kapitels in R-Aufrufe:
 `optimize()` für univariate und `optim()` für multivariate Zielfunktionen. Die
-Ausgaben drucken wir nicht ab; die Beispielfunktion rechnet das Widget selbst nach.
+multivariate Beispielfunktion rechnet zusätzlich das Widget nach.
 
 ### Univariat: optimize
 
 ```r
 f <- function(x) (x - 3)^2
 optimize(f, interval = c(0, 10))
+#> $minimum
+#> [1] 3
+#>
+#> $objective
+#> [1] 0
 ```
 
 Der Aufruf sucht das Minimum von $f$ auf dem Intervall $[0, 10]$. Das
-analytische Minimum ist $\cgreen{x^\star = 3}$ mit $f(x^\star) = 0$; genauer als
-das voreingestellte `tol` trifft es der Aufruf nicht, und das steht auf
+analytische Minimum ist $\cgreen{x^\star = 3}$ mit $f(x^\star) = 0$. Der Aufruf
+trifft es hier exakt, weil $f$ selbst eine Parabel ist und die parabolische
+Interpolation aus der folgenden Bemerkung deren Scheitel direkt anspringt. Im
+Allgemeinen dürfen wir nur die Genauigkeit des voreingestellten `tol` erwarten, und das steht auf
 `.Machine$double.eps^0.25`, also auf rund $1{,}2\cdot 10^{-4}$.
 
 :::bemerkung[#golden-section-search (Golden Section Search)]
@@ -53,7 +60,37 @@ liegen daneben genau zwei lokale Mulden.
 f <- function(x) log1p((x[1]^2 + sin(3*x[2]))^2) +
   .1 * x[1]^2 + .1 * x[2]^2
 optim(c(-1, -0.5), f)                     # Default: Nelder-Mead
+#> $par
+#> [1] 5.54e-05 7.49e-06
+#>
+#> $value
+#> [1] 8.18e-10
+#>
+#> $counts
+#> function gradient
+#>      123       NA
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> NULL
 optim(c(-1, -0.5), f, method = "BFGS")
+#> $par
+#> [1] 6.88e-10 2.11e-10
+#>
+#> $value
+#> [1] 4.52e-19
+#>
+#> $counts
+#> function gradient
+#>       47       29
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> NULL
 ```
 
 Ohne `method`-Argument verwendet `optim()` das ableitungsfreie
@@ -69,8 +106,53 @@ Drei Aufrufe zeigen zwei Probleme:
 
 ```r
 optim(c(-1, 1), f)                                # Nelder-Mead
+#> $par
+#> [1] 8.81e-05 1.04e+00
+#>
+#> $value
+#> [1] 0.108
+#>
+#> $counts
+#> function gradient
+#>       77       NA
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> NULL
 optim(c(-0.5, -1), f, method = "BFGS")            # BFGS
+#> $par
+#> [1] -1.54e-05 -1.04e+00
+#>
+#> $value
+#> [1] 0.108
+#>
+#> $counts
+#> function gradient
+#>       34       20
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> NULL
 optim(c(-1, -0.5), f, control = list(maxit = 50)) # abgeschnitten
+#> $par
+#> [1] -0.584 -0.151
+#>
+#> $value
+#> [1] 0.0454
+#>
+#> $counts
+#> function gradient
+#>       51       NA
+#>
+#> $convergence
+#> [1] 1
+#>
+#> $message
+#> NULL
 ```
 
 *Lokale Minima.* Die beiden spiegelbildlichen Mulden liegen bei
@@ -143,9 +225,44 @@ grad_f <- function(x) {
     d * 3 * cos(3*x[2]) + .2 * x[2])
 }
 optim(c(-1, -0.5), f, gr = grad_f, method = "BFGS")
+#> $par
+#> [1] 6.88e-10 2.11e-10
+#>
+#> $value
+#> [1] 4.52e-19
+#>
+#> $counts
+#> function gradient
+#>       47       29
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> NULL
 optim(c(-1, 0.5), f, gr = grad_f, method = "L-BFGS-B",
       lower = c(-1, -1), upper = c(1, 1))
+#> $par
+#> [1] 8.71e-07 2.65e-08
+#>
+#> $value
+#> [1] 8.22e-14
+#>
+#> $counts
+#> function gradient
+#>       14       14
+#>
+#> $convergence
+#> [1] 0
+#>
+#> $message
+#> [1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
 ```
+
+Der BFGS-Lauf meldet dieselben `counts` wie der Lauf ohne `gr` oben, auch `par` und
+`value` unterscheiden sich erst ab der vierten Stelle. Der Gewinn steckt hier in den
+Auswertungen: `counts` zählt die Aufrufe von `f` für finite Differenzen nicht mit.
+Zählen wir sie in `f` selbst, sind es dort $163$ Aufrufe, hier nur $47$.
 
 `L-BFGS-B` ist die speicherschonende BFGS-Variante aus
 @sec:newton-sgd, erweitert um Box-Nebenbedingungen

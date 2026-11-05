@@ -28,6 +28,7 @@ Dateisystem.
 | `::::quiz` / `:::frage` / `:::zahlfrage` | Selbsttest mit ausgeschriebener Antwort |
 | `:k[Begriff]{#id}` | normaler Text (im Web ein Erklärfenster) |
 | `<details><summary>Lösung</summary>` | Zwischenüberschrift, Inhalt aufgeklappt |
+| `<img src={x}>` mit `import x from "./bild.png"` | `\includegraphics`, `<figcaption>` als Bildunterschrift |
 | `<SomeWidget />` | schmale Marke „Interaktives Element" |
 | `$$ {#eq-2.3}` | `equation` mit `\tag{2.3}` |
 
@@ -55,6 +56,12 @@ Die Abschnittsnummern stehen im Quelltext und werden wörtlich übernommen
 - **Tabellenspalten brauchen eine Mindestbreite.** Rein proportional gewichtet
   läuft ein langes Kompositum ohne Leerzeichen in die Nachbarspalte
   (`Operatornormemaximale Streckung`).
+
+## R-Ausgaben
+
+Die `#>`-Zeilen in den ` ```r `-Blöcken stehen in den MDX-Quellen und werden von
+`scripts/r-outputs.R` erzeugt, nicht von Hand getippt. Das Skript setzt
+`digits = 3` explizit, unabhängig von einer privaten `~/.Rprofile`.
 
 ## Prüfungen
 

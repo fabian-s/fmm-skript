@@ -239,7 +239,11 @@ C <- matrix(c(1, 2, 3, 4), 2, 2)
 M <- kronecker(diag(2), A) + kronecker(t(B), diag(2))
 X <- matrix(solve(M, as.vector(C)), 2, 2)
 A %*% X + X %*% B
+#>      [,1] [,2]
+#> [1,]    1    3
+#> [2,]    2    4
 all.equal(A %*% X + X %*% B, C)
+#> [1] TRUE
 ```
 
 Die letzte Zeile ergibt `TRUE`. Wichtige Spezialfälle sind Lyapunov-Gleichungen,

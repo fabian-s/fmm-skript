@@ -211,6 +211,7 @@ A <- cbind(1, x, x + 1e-6 * runif(m)) # 3. Spalte fast identisch zur 2.!
 beta_wahr <- c(1, 2, 3)
 b <- A %*% beta_wahr                  # exakte Daten: Lösung = beta_wahr
 kappa(A, exact = TRUE)
+#> [1] 6592188
 ```
 
 Hier ist $\kappa_2(\bA) \approx 7 \cdot 10^6$, also
@@ -227,14 +228,16 @@ s        <- svd(A)
 beta_svd <- s$v %*% ((t(s$u) %*% b) / s$d) # SVD: A+ b
 fehler   <- function(beta_hat) max(abs(beta_hat - beta_wahr))
 sapply(list("Normalengl." = beta_ne, QR = beta_qr, SVD = beta_svd), fehler)
+#> Normalengl.          QR         SVD
+#>    8.77e-03    1.19e-11    1.55e-10
 ```
 
 Die Normalengleichungen liefern einen Fehler von etwa $10^{-2}$, passend zu
 $\kappa_2(\bA)^2\,\eps_{\text{mach}} \approx 4 \cdot 10^{13} \cdot 2 \cdot 10^{-16} \approx 10^{-2}$.
 Es bleiben nur zwei bis drei korrekte Stellen, obwohl wir die Matrixinversion vermieden
 haben: Das Problem ist die quadrierte Konditionszahl, nicht (nur) `solve(M)`. QR und SVD
-liefern Fehler um $10^{-10}$, passend zu $\kappa_2(\bA)\,\eps_{\text{mach}} \approx 10^{-9}$,
-also etwa zehn korrekte Stellen.
+liefern Fehler von rund $10^{-11}$ und $10^{-10}$, im Rahmen von
+$\kappa_2(\bA)\,\eps_{\text{mach}} \approx 10^{-9}$, also rund zehn korrekte Stellen.
 :::
 
 :::interaktiv[Wie viele der 16 Stellen überleben?]

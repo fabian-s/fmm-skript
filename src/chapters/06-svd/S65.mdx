@@ -130,12 +130,18 @@ Bei sehr großen Matrizen berechnen wir nur die $k$ größten Singulärwerte sam
 stehen beide Wege bereit:
 
 ```r
+set.seed(1)
+A <- matrix(rnorm(200 * 50), nrow = 200)  # Beispielmatrix, 200 x 50
 s <- svd(A)                   # s$d: Singulärwerte, s$u und s$v: Singulärvektoren
 k <- 5
 A_k <- s$u[, 1:k] %*% diag(s$d[1:k], nrow = k) %*% t(s$v[, 1:k])
+s$d[1:k]
+#> [1] 21.3 20.4 20.1 19.8 19.4
 
-irlba::irlba(A, nv = k)       # nur die k größten, iterativ (Lanczos)
-irlba::svdr(A, k)             # dasselbe, randomisiert
+irlba::irlba(A, nv = k)$d     # nur die k größten, iterativ (Lanczos)
+#> [1] 21.3 20.4 20.1 19.8 19.4
+irlba::svdr(A, k)$d           # dasselbe, randomisiert
+#> [1] 21.3 20.4 20.1 19.8 19.4
 ```
 
 ### Selbsttest
