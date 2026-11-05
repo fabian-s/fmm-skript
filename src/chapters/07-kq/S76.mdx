@@ -238,7 +238,7 @@ also etwa zehn korrekte Stellen.
 :::
 
 :::interaktiv[Wie viele der 16 Stellen überleben?]
-<p className="mb-2 text-sm">Wie viele Stellen eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon .hilfreich} $\eps$, von $\kappa_2(\bA)$ und von der Größe des Residuums ab. Im Beispiel war das Residuum null; was ändert sich, wenn es groß ist? Erst schätzen, dann im Widget nachsehen.</p>
+<p className="mb-2 text-sm">Wie viele Stellen eine berechnete Lösung behält, hängt von der :k[Maschinengenauigkeit]{#machine-epsilon .hilfreich} $\eps$, von $\kappa_2(\bA)$ und vom relativen Residuum $\rho = \left\|\br\right\|_2 / \left\|\proj_{\col(\bA)}\bb\right\|_2 = \tan(\theta)$ ab. Im Beispiel war das Residuum null; was ändert sich, wenn es groß ist? Erst schätzen, dann im Widget nachsehen.</p>
 
 <AccuracyWidget />
 
@@ -313,12 +313,14 @@ Tikhonov-Regularisierung.
 :::
 
 :::frage{wahr}
-Bei großem Residuum verlieren QR und Normalengleichungen ähnlich viele Stellen.
+Ist das Residuum etwa so lang wie die Projektion von $\bb$ auf $\col(\bA)$, verlieren QR und
+Normalengleichungen ähnlich viele Stellen.
 
-Sobald $\left\|\br\right\|_2\kappa_2(\bA) > 1$ ist, dominiert der Term
-$\left\|\br\right\|_2\kappa_2(\bA)^2\eps$ auch den QR-Fehler. Das Genauigkeits-Widget
-zeigt es: Beide Balken schrumpfen dann gleichermaßen. Der Unterschied zwischen den
-Verfahren zeigt sich bei kleinem Residuum.
+Mit $\rho = \left\|\br\right\|_2 / \left\|\proj_{\col(\bA)}\bb\right\|_2$ ist der QR-Fehler
+etwa $(\kappa_2(\bA) + \rho\,\kappa_2(\bA)^2)\,\eps$, bei $\rho \approx 1$ also
+$\kappa_2(\bA)^2\eps$ wie bei den Normalengleichungen. Schon ab $\rho\,\kappa_2(\bA) > 1$
+wächst auch der QR-Fehler mit $\kappa_2(\bA)^2$, bleibt aber um $\log_{10}(1/\rho)$ Stellen
+kleiner. Das Genauigkeits-Widget zeigt es: Bei $\rho = 1$ sind beide Balken gleich lang.
 :::
 
 ::::

@@ -257,7 +257,8 @@ function TypesetDiv({ tex, className }: { tex: string; className?: string }) {
 
 /** Inline math: <M>{"\\lambda_1 \\geq \\lambda_2"}</M> */
 export function M({ children }: { children: string }) {
-  return <TypesetSpan tex={`\\(${children}\\)`} />;
+  // until MathJax reaches it, the raw TeX is one long token that must not widen the page
+  return <TypesetSpan tex={`\\(${children}\\)`} className="[overflow-wrap:anywhere]" />;
 }
 
 /** Display math: <MD>{"\\mathbf{A} = \\mathbf{P}\\mathbf{D}\\mathbf{P}^{-1}"}</MD> */

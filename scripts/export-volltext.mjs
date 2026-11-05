@@ -219,7 +219,9 @@ const blocks = new Map();
 for (const [cid, cnum, ctitle] of chaps) {
   const p = [`\n\n${bar}\nKAPITEL ${cnum}: ${ctitle}\n${bar}\n`];
   for (const [sid, , stitle] of sections[cid] ?? []) {
-    const f = join(CHAPTERS, cid, `S${sid.replace(".", "")}.mdx`);
+    const numbered = join(CHAPTERS, cid, `S${sid.replace(".", "")}.mdx`);
+    // Übungsempfehlungen tragen eine Nummer im Kapitel, liegen aber in SUe.mdx
+    const f = stitle === "Übungsempfehlungen" ? join(CHAPTERS, cid, "SUe.mdx") : numbered;
     if (!existsSync(f)) throw new Error(`Abschnitt ${sid} hat keine Datei ${f}`);
     p.push(`\n\n${rule}\n${sid} ${stitle}\n${rule}\n\n` + clean(readFileSync(f, "utf8")));
     nSections++;

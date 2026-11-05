@@ -301,7 +301,9 @@ Beide Vorzeichen von $\alpha$ erfüllen den Satz. Numerisch wählen wir
 $\alpha = -\sign(a_1)\left\|\ba\right\|_2$: Dann ist
 $v_1 = a_1 - \alpha = a_1 + \sign(a_1)\left\|\ba\right\|_2$ eine Summe zweier Zahlen
 gleichen Vorzeichens, und es droht keine :k[Auslöschung]{#cancellation .hilfreich}
-(@bemerkung:vorzeichenwahl).
+(@bemerkung:vorzeichenwahl). Dabei gilt $\sign(0) := 1$, sonst wäre für $a_1 = 0$ auch
+$\alpha = 0$ und die Spiegelung träfe nicht mehr die Achse. Für $\ba = \bnull$ ist nichts
+zu eliminieren.
 
 :::beispiel[#householder-spiegelung-beispiel (Householder-Spiegelung)]
 Wir suchen die Householder-Spiegelung, die in $\ba = (1, 2, 2)^\top$ alle Komponenten außer
@@ -355,7 +357,7 @@ $$
 \alpha = -\sign(a_1)\left\|\ba\right\|_2
 $$
 
-kann das nicht passieren. Geometrisch spiegeln wir damit stets auf das Ziel, das
+(mit $\sign(0) := 1$) kann das nicht passieren. Geometrisch spiegeln wir damit stets auf das Ziel, das
 *weiter* von $\ba$ entfernt liegt.
 :::
 

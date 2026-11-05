@@ -142,7 +142,7 @@ export default function App() {
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky-700 dark:text-sky-400">
                 Kapitel {entry.num}
               </p>
-              <h1 className="mt-1 text-[2.1rem] font-bold tracking-tight text-balance">
+              <h1 className="mt-1 text-[2.1rem] font-bold tracking-tight text-balance hyphens-auto [overflow-wrap:anywhere]">
                 {entry.title}
               </h1>
               <details
