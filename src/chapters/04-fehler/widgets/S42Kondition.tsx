@@ -170,7 +170,7 @@ function KehrwertTafel({ aufgeloest }: { aufgeloest: boolean }) {
       Aus {fmtPct(relIn)} Inputfehler werden {fmtPct(relOut)} Outputfehler, Verstärkung{" "}
       {Number.isFinite(amp) ? fmtDe(amp, 2) : "∞"}. Der Faktor ist <M>{"|x| / |x + \\eps|"}</M> aus {ref("beispiel:kehrwert-nahe-null")}, und er wächst
       über alle Grenzen, sobald <M>{"\\wt{x}"}</M> die Polstelle erreicht. Die Konditionszahl{" "}
-      <M>{"\\kappa_{rel} = 1"}</M> aus {ref("bemerkung:wie-lesen-wir-das")} widerspricht dem nicht: Sie beschreibt
+      <M>{"\\kappa_{rel} = 1"}</M> aus {ref("beispiel:der-kehrwert-aufgeloest")} widerspricht dem nicht: Sie beschreibt
       nur den Grenzfall <M>{"\\eps \\to 0"}</M>, und hier ist <M>{"\\eps"}</M> relativ zu{" "}
       <M>{"x"}</M> eben nicht klein.
     </Verdikt>

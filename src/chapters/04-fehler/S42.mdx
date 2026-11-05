@@ -118,14 +118,6 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
   verschwindender Störungen. Konditionszahlen sind also lokale Größen; sie
   hängen vom Problem $f$ und von der Stelle $\bx$ ab.
 
-- Für :k[differenzierbares]{#differentiability}
-  $f \colon \R \to \R$ können wir die Konditionszahlen direkt ausrechnen:
-  Wegen $f(\wt{x}) - f(x) \approx f'(x)\,(\wt{x} - x)$ (:k[Taylor-Näherung]{#taylor-series} erster Ordnung) gilt
-
-  $$
-  \kappa_{abs} = \left| f'(x) \right| \quad \text{und} \quad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|}.
-  $$
-
 - Meist ist $\kappa_{rel}$ die relevantere Größe: Gleitkommarechnung
   erzeugt *relative* Fehler (@sec:fehlermasse), und relative Fehler
   sind unabhängig von Maßeinheiten und Skalierung.
@@ -146,7 +138,109 @@ wir $\|\bx\|\ne0$ und $\|f(\bx)\|\ne0$ voraus.
   gemessen an ihrer eigenen Größe, beliebig stark verstärkt werden.
 :::
 
-Mit den Formeln aus @bemerkung:wie-lesen-wir-das können wir das Warnbeispiel auflösen:
+### Kondition und Ableitung :id[kondition-und-ableitung]
+
+Wie berechnen wir Konditionszahlen konkret? Für $f \colon \R \to \R$ ist der Quotient
+für $\kappa_{abs}$ in @definition:konditionszahl der Betrag eines
+Differenzenquotienten. Die absolute Konditionszahl einer
+:k[differenzierbaren]{#differentiability} Funktion ist also einfach der Betrag ihrer
+Ableitung: Er *ist* der lokale Verstärkungsfaktor für kleine Inputfehler.
+
+:::satz[#kondition-differenzierbarer-funktionen (Kondition differenzierbarer Funktionen)]
+Ist $f \colon \R \to \R$ an der Stelle $x$ differenzierbar, so gilt
+
+$$
+\kappa_{abs} = \left| f'(x) \right| \quad \text{und} \quad \kappa_{rel} = \frac{\left| f'(x) \right| \, |x|}{\left| f(x) \right|}.
+$$
+
+Die Formel für $\kappa_{rel}$ gilt wie in @definition:konditionszahl nur für
+$x \ne 0$ und $f(x) \ne 0$.
+:::
+
+::::beweis
+
+:::schritt
+Der Differenzenquotient konvergiert:
+$\left| f(x+h) - f(x) \right| / |h| \to \left| f'(x) \right|$. Der Limes superior
+ist dann dieser Grenzwert.
+:::
+
+:::schritt
+Der relative Quotient ist der absolute mal $|x| / \left| f(x) \right|$. Dieser Faktor
+hängt nicht von $h$ ab und bleibt vor dem Limes superior stehen.
+:::
+
+::::
+
+:::bemerkung[#was-die-ableitung-ueber-die-kondition-sagt (Was die Ableitung über die Kondition sagt)]
+
+- Im skalaren Fall ist $\kappa_{rel} = \left| x f'(x) / f(x) \right|$ der Betrag der
+  *Elastizität* von $f$, also die relative Änderung von $f$ pro relativer Änderung von $x$.
+
+- Für $\kappa_{rel}$ zählt nicht die Steigung allein, sondern ihr Verhältnis zu
+  $\left| f(x) \right| / |x|$. Für $f(x) = x^{100}$ ist $f'(10) = 10^{101}$ riesig, und doch ist
+  $\kappa_{rel} = 100$ an jeder Stelle $x \ne 0$. Für $f(x) = \log x$ ist $f'(1) = 1$ völlig
+  harmlos, trotzdem wächst $\kappa_{rel} = 1 / \left| \log x \right|$ für $x \to 1$ über alle
+  Grenzen, weil $f(x)$ dort gegen null geht.
+
+- Die Definition selbst verlangt keine Differenzierbarkeit. Für $f(x) = |x|$ ist an
+  der Stelle $0$ trotz des Knicks $\kappa_{abs} = 1$. Für $f(x) = \sqrt{x}$ ist dort, mit
+  den allein zulässigen Störungen $h > 0$, $\kappa_{abs} = \infty$: Das Problem ist an
+  dieser Stelle absolut schlecht gestellt.
+:::
+
+:::::vertiefung[Mehrere Dimensionen: die Jacobimatrix]
+In mehreren Dimensionen übernimmt die :d[Jacobimatrix]{#jacobimatrix}
+$\bJ_f(\bx)$ aus @sec:differentialrechnung/jacobi die Rolle der Ableitung.
+
+:::satz[#kondition-und-jacobimatrix (Kondition und Jacobimatrix)]
+Ist $f \colon \R^n \to \R^m$ in $\bx$ differenzierbar, so gilt
+
+$$
+\kappa_{abs} = \left\| \bJ_f(\bx) \right\| \quad \text{und} \quad \kappa_{rel} = \frac{\left\| \bJ_f(\bx) \right\| \left\| \bx \right\|}{\left\| f(\bx) \right\|},
+$$
+
+die zweite Formel für $\bx \ne \bnull$ und $f(\bx) \ne \bnull$.
+:::
+
+::::beweis
+
+:::schritt
+Differenzierbarkeit heißt: Die Jacobimatrix beschreibt die Änderung bis auf einen
+kleinen Rest, $f(\bx+\bh) - f(\bx) = \bJ_f(\bx)\bh + r(\bh)$ mit
+$\left\| r(\bh) \right\| / \left\| \bh \right\| \to 0$. Damit gilt
+
+$$
+\frac{\left\| f(\bx+\bh) - f(\bx) \right\|}{\left\| \bh \right\|} \le \left\| \bJ_f(\bx) \right\| + \frac{\left\| r(\bh) \right\|}{\left\| \bh \right\|},
+$$
+
+also $\kappa_{abs} \le \left\| \bJ_f(\bx) \right\|$.
+
+::why[Dreiecksungleichung und Definition der Operatornorm.]
+:::
+
+:::schritt
+Für die Gegenrichtung wählen wir $\bu$ mit $\left\| \bu \right\| = 1$ und
+$\left\| \bJ_f(\bx)\bu \right\| = \left\| \bJ_f(\bx) \right\|$ und setzen
+$\bh = t\bu$ mit $t \to 0^+$. Der Quotient konvergiert dann gegen
+$\left\| \bJ_f(\bx) \right\|$, also ist auch $\kappa_{abs} \ge \left\| \bJ_f(\bx) \right\|$.
+
+::why[Die Einheitskugel im $\R^n$ ist kompakt, das Maximum wird also angenommen.]
+:::
+
+:::schritt
+Der relative Quotient ist der absolute mal $\left\| \bx \right\| / \left\| f(\bx) \right\|$.
+Dieser Faktor hängt nicht von $\bh$ ab und bleibt vor dem Limes superior stehen.
+:::
+
+::::
+
+Die lineare Abbildung $f(\bx) = \bA^{-1}\bx$ hat die Jacobimatrix $\bA^{-1}$. Deshalb
+steht im nächsten Unterabschnitt, in @satz:kondition-der-loesung-eines-lgs, die
+Operatornorm $\left\| \bA^{-1} \right\|$.
+:::::
+
+Mit @satz:kondition-differenzierbarer-funktionen können wir das Warnbeispiel auflösen:
 
 :::beispiel[#der-kehrwert-aufgeloest (Der Kehrwert, aufgelöst)]
 Für $f(x) = x^{-1}$ ist $f'(x) = -x^{-2}$, also an der Stelle

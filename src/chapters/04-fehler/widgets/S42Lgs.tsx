@@ -19,7 +19,7 @@ import {
 import { ref } from "../../numbers.generated";
 
 /**
- * §4.2.3: Kondition des Gleichungslösens f(x) = A⁻¹x.
+ * §4.2.4: Kondition des Gleichungslösens f(x) = A⁻¹x.
  *
  * DIE EINE EINSICHT: Ein kleiner Kreis plausibler rechter Seiten um x wird von
  * A⁻¹ zu einer Ellipse verzogen; wie lang deren große Achse gemessen an ‖A⁻¹x‖
