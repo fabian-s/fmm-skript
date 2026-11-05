@@ -28,7 +28,21 @@ function resolveFragmentId(id: string): string {
 
 /** Kapitel, deren Begriffe eine Lese-Priorität tragen (KONVENTIONEN.md). Nur dort
  *  stimmt die Legende: Anderswo hieße „ohne Zeichen" fälschlich „nicht nötig". */
-const RATED_CHAPTERS = new Set(["07-kq"]);
+const RATED_CHAPTERS = new Set([
+  "01-intro",
+  "02-algos",
+  "03-matrix-spur-norm",
+  "04-fehler",
+  "05-lgs",
+  "06-svd",
+  "07-kq",
+  "08-la-misc",
+  "09-tensoren",
+  "10-differentialrechnung",
+  "11-konvexitaet",
+  "12-optim",
+  "13-funktionsapproximation",
+]);
 
 export default function App() {
   const chapterId = currentChapterId();
@@ -179,7 +193,7 @@ export default function App() {
                     <li>
                       <b className="text-slate-900 dark:text-slate-100">!</b> hinter einem Begriff:
                       Ohne ihn bricht der Gedankengang hier ab. Wer ihn nicht kennt, liest das Fenster
-                      jetzt.
+                      jetzt. Viele Kapitel kommen ganz ohne <b>!</b> aus.
                     </li>
                     <li>
                       <b className="text-slate-500 dark:text-slate-400">?</b> hinter einem Begriff:

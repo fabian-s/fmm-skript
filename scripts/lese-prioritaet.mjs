@@ -25,7 +25,7 @@ const SAME = {
 };
 
 /** Abschnitte, die Vorwissen auflisten oder abfragen: dort keine Zeichen. */
-const PREREQ = /Vorkenntnisse|Was wir mitbringen|Was wir brauchen|Woran wir anknüpfen|Was von hier an gebraucht|Selbsttest/;
+const PREREQ = /Vorkenntnisse|Was wir mitbringen|Was wir brauchen|Woran wir anknüpfen|Was von hier an gebraucht|Selbsttest: Reicht/;
 
 const lineAt = (text, offset) => text.slice(0, offset).split("\n").length;
 
