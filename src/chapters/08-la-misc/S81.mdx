@@ -57,8 +57,9 @@ drei Probleme mit sich:
 2. Der Umweg über die Koeffizienten ist numerisch instabil: Winzige Störungen
    der Koeffizienten können die Nullstellen weit verschieben, das Problem ist
    also schlecht konditioniert (@sec:fehler/kondition).
-3. Er ist teuer. Schon das Aufstellen der Koeffizienten kostet $O(n^4)$ oder
-   mehr, während wir für eine ganze Matrixzerlegung mit $O(n^3)$ auskommen.
+3. Er spart nichts. Mit den üblichen Verfahren kostet schon das Aufstellen der
+   Koeffizienten $O(n^3)$, so viel wie eine ganze Matrixzerlegung, und die
+   Nullstellen sind dann noch nicht gefunden.
 :::
 
 Auch die numerische lineare Algebra kennt direkte Eigenwertverfahren. In drei

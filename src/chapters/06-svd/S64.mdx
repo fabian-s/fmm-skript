@@ -237,12 +237,14 @@ Singulärwerte. Drei Muster begegnen uns immer wieder:
 1. *Schneller Abfall*, etwa $\corange{\sigma_i} \approx c \cdot e^{-\alpha i}$.
    Wenige Werte dominieren, der Rest ist vernachlässigbar. Solche Matrizen sind
    der ideale Fall für eine Rang-k-Approximation.
-2. *Linearer Abfall*, $\corange{\sigma_i} \approx c - \alpha i$. Die
-   Approximation gelingt noch ordentlich, der Kompressionsfaktor bleibt aber
-   mittelmäßig.
-3. *Langsamer Abfall*, $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$. Viele
-   Komponenten tragen ähnlich viel bei; ein kleines $k$ verliert dann
-   zwangsläufig viel Information.
+2. *Polynomialer Abfall*, $\corange{\sigma_i} \approx c \cdot i^{-\alpha}$. Hier
+   entscheidet der Exponent: Von $100$ Komponenten tragen die ersten $10$ für
+   $\alpha = 1$ schon rund $95\,\%$ der Energie, für $\alpha = 1/4$ nur rund
+   $27\,\%$.
+3. *Linearer Abfall*, $\corange{\sigma_i} \approx c - \alpha i$. Die Energie
+   verteilt sich auf viele Komponenten; für $\corange{\sigma_i} = 101 - i$ bringen
+   die ersten $10$ von $100$ ebenfalls nur rund $27\,\%$. Ein kleines
+   $k$ verliert dann zwangsläufig viel Information.
 
 In der Auftragung von $\log \corange{\sigma_i}$ gegen $i$ wird ein
 exponentieller Abfall zur Geraden. Der Ellenbogen trennt die Richtungen, in
@@ -254,14 +256,14 @@ keinen Ellenbogen.
 ::::quiz
 
 :::frage{falsch}
-Ein Spektrum mit langsam abfallenden Singulärwerten,
-$\corange{\sigma_i} \approx c \cdot i^{-\alpha}$, eignet sich besonders gut für
+Ein Spektrum mit linear abfallenden Singulärwerten,
+$\corange{\sigma_i} \approx c - \alpha i$, eignet sich besonders gut für
 eine Rang-k-Approximation.
 
-Es ist der ungünstigste Fall: Viele Komponenten
-tragen ähnlich viel bei, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
+Im Gegenteil: Die Energie verteilt sich auf viele
+Komponenten, der Fehler $\sqrt{\sum_{i>k} \corange{\sigma_i}^2}$
 sinkt entsprechend langsam, und ein kleines $k$ verliert echte Struktur. Gut
-komprimieren lässt sich der exponentielle Abfall.
+komprimieren lässt sich etwa der exponentielle Abfall.
 :::
 
 ::::
@@ -438,7 +440,7 @@ nichtnegative Matrixfaktorisierung (NMF).
    :k[Kovarianzmatrix]{#covariance-matrix}; ausgeführt wird die PCA in
    @sec:la-misc/anwendungen.
 5. *Numerische Robustheit:* als Alternative zu den
-   :k[Normalgleichungen]{#normal-equations}
+   :k[Normalengleichungen]{#normal-equations}
    (@sec:kq/normalengleichungen).
 :::
 
@@ -455,7 +457,7 @@ Für $\bA \in \R^{m \times n}$ gilt in der
 
 - *SVD:* $O(\min(m^2 n,\, m n^2))$; für $m \gg n$ sind das rund $4 m n^2$
   Operationen.
-- *Normalgleichungen:* $O(m n^2 + n^3)$; für $m \gg n$ dominiert der Aufbau von
+- *Normalengleichungen:* $O(m n^2 + n^3)$; für $m \gg n$ dominiert der Aufbau von
   $\bA^\top\bA$ mit rund $m n^2$ Operationen.
 
 Für $m \gg n$ ist die SVD also grob viermal so teuer. Das ist der übliche

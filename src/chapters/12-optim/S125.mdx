@@ -154,7 +154,7 @@ unbeschränkte Minimum $(0;\, 0)$ mit $\mu = 0$.
 
 Bei Ungleichungs-Nebenbedingungen $\cred{h_j(\bx)} \le 0$ kommt eine neue
 Unterscheidung dazu: Eine Ungleichung kann im Optimum *aktiv* sein (es gilt
-Gleichheit, sie blockiert die Bewegung) oder *inaktiv* (es gilt strikte
+Gleichheit, sie kann die Bewegung blockieren) oder *inaktiv* (es gilt strikte
 Ungleichheit, lokal schränkt sie nichts ein).
 
 :::satz[#karush-kuhn-tucker-bedingungen (Karush-Kuhn-Tucker-Bedingungen)]
@@ -172,13 +172,16 @@ $\lambda_i, \mu_j$ mit:
 :::
 
 :::bemerkung[#komplementaritaet-bindet-oder (Komplementarität: bindet oder abgeschaltet)]
-Bedingung 4 ist ein Entweder-oder je Ungleichung:
+Bedingung 4 verlangt je Ungleichung, dass mindestens einer der beiden Faktoren null ist:
 
 - $h_j(\bx^\star) < 0$ (inaktiv) $\implies \mu_j = 0$: Die Nebenbedingung
   trägt nichts zur Stationarität bei.
 - $\mu_j > 0 \implies h_j(\bx^\star) = 0$ (aktiv): Die Nebenbedingung bindet,
   und ihr Gradient gleicht in der Stationaritätsgleichung
   $\corange{\nabla f}$ aus.
+
+Auch beide zugleich können null sein: Die Nebenbedingung ist dann aktiv, trägt zur
+Stationarität aber nichts bei.
 
 Anders als bei Gleichungen ist das Vorzeichen hier festgelegt:
 $\mu_j \ge 0$, denn eine Ungleichung kann nur in eine Richtung drücken.

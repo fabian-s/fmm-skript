@@ -64,11 +64,15 @@ für nichtnegative Matrizen.
 :::
 
 Warum iterativ? Dicht gespeichert hätte die Matrix $10^{20}$ Einträge, und eine
-Zerlegung würde $O(n^3) = 10^{30}$ Operationen kosten. Aber $\bA$ ist extrem
+Zerlegung würde $O(n^3) = 10^{30}$ Operationen kosten. Aber die Link-Einträge von $\bA$ sind extrem
 :k[dünn besetzt]{#sparse-matrix}: Eine typische Seite hat nur etwa $10$
 ausgehende Links, der Speicherbedarf ist also $O(n)$ statt $O(n^2)$. Die
-Potenziteration $\bx^{(k+1)} = \bA\bx^{(k)} / \|\bA\bx^{(k)}\|$ braucht
-pro Schritt nur ein Matrix-Vektor-Produkt mit dieser dünnen Matrix, also
+gedämpfte Matrix $\alpha\bA + \tfrac{1-\alpha}{n}\bE$ ist zwar voll besetzt,
+aber wir stellen sie nie auf: Alle Einträge von $\bE\bx$ sind gleich der Summe
+der Einträge von $\bx$. Auch die aufgefüllten leeren Spalten liefern einen Vektor
+mit lauter gleichen Einträgen, hier aus der Summe über die Seiten ohne Links,
+geteilt durch $n$. Die Potenziteration braucht deshalb pro Schritt nur ein
+Matrix-Vektor-Produkt mit den dünnen Link-Einträgen und einige Vektoroperationen, also
 $O(n)$ Operationen, und rund $50$ Iterationen reichen. Das passt zum
 klassischen Dämpfungsfaktor $\alpha = 0{,}85$ aus
 @bemerkung:warum-ausgerechnet-der-eigenwert-1, denn
