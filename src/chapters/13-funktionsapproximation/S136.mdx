@@ -45,12 +45,12 @@ $$ {#eq-approximationsfehler-kubischer-splines}
 \;\le\; C \cdot \corange{h}^4 \cdot \max_{x \in [a, b]} \left| f^{(4)}(x) \right|
 $$
 
-erfüllt, mit einer kleinen Konstanten $C$. Für kubische Splines mit passenden
-Randbedingungen gilt sie mit $C = \tfrac{5}{384}$.
+erfüllt, mit einer kleinen Konstanten $C$. Für den eingespannten kubischen
+Spline gilt sie mit $C = \tfrac{5}{384}$.
 :::
 
-Die Konstante $\tfrac{5}{384}$ gilt für den *eingespannten* kubischen Spline
-(@sec:splines), der zusätzlich $s'(a) = f'(a)$ und $s'(b) = f'(b)$ erfüllt.
+*Eingespannt* (@sec:splines) heißt: Der Spline erfüllt zusätzlich
+$s'(a) = f'(a)$ und $s'(b) = f'(b)$.
 Der *natürliche* Spline erzwingt dagegen
 $\cgreen{s''(a)} = \cgreen{s''(b)} = 0$; ist $f''(a)$ oder $f''(b)$ ungleich
 null, erreicht er die Ordnung $\corange{h}^4$ global nicht. Das Beispiel
@@ -105,8 +105,13 @@ behauptete.
    drei steht rechts sogar null.
 3. Beide Faktoren sind Maxima über das *ganze* Intervall; lokal gerechnet steht
    für jedes Teilintervall dessen eigene Länge neben dem dortigen Maximum von
-   $\left| f^{(4)} \right|$ (für Geradenstücke im Beweis zu
-   @satz:fehler-der-stueckweise-linearen). Deshalb verdichten wir das Gitter
+   $\left| f^{(4)} \right|$. Sauber gilt diese lokale Form nur für
+   Geradenstücke (mit $f''$, im Beweis zu
+   @satz:fehler-der-stueckweise-linearen). Beim kubischen Spline koppelt das
+   Gleichungssystem die Stücke, ein Teilintervall spürt also auch seine
+   Nachbarn; auf gleichmäßigem Gitter klingt deren Einfluss aber im Inneren je
+   Knotenabstand um etwa den Faktor $2 - \sqrt{3} \approx 0{,}27$ ab
+   (@sec:splines). Deshalb verdichten wir das Gitter
    dort, wo $\left| f^{(4)} \right|$ groß ist, $f$ also stark von einem
    kubischen Polynom abweicht, und dünnen es aus, wo $f$ fast gerade verläuft.
 :::
@@ -292,9 +297,12 @@ gemessene Fehler gehört zu einer Funktion auf einem Gitter. Aus dem Faktor
 $16$ wird deshalb keine Gleichung, sondern eine Aussage über die
 Größenordnung, in :k[Landau-Notation]{#big-o-notation .hilfreich}
 $\cred{\left\| f - s \right\|_\infty} = O(\corange{h}^4)$. Wir sagen, der
-Fehler sei *von vierter Ordnung* in $\corange{h}$, wie bei der
-:k[Konvergenzordnung]{#rate-of-convergence} iterativer Verfahren; nur läuft
-hier statt eines Iterationszählers die Gitterweite gegen null.
+Fehler sei *von vierter Ordnung* in $\corange{h}$. Mit der
+:k[Konvergenzordnung]{#rate-of-convergence} iterativer Verfahren ist das nicht
+zu verwechseln: Dort vergleicht die Ordnung aufeinanderfolgende Fehler, und
+die Folge der Halbierungen mit festem Faktor $\tfrac{1}{16}$ hieße in dieser
+Sprache lineare Konvergenz mit Rate $\tfrac{1}{16}$. Die vierte Ordnung hier
+ist der Exponent der Gitterweite.
 :::
 
 :::interaktiv[Vom groben zum feinen Gitter]
@@ -328,7 +336,9 @@ um die Spitze sammeln, wo $\left| f^{(4)} \right|$ groß ist.
 2. *Stabilität und Lokalität.* :d[B-Splines]{#erweiterte-knotenfolge-und-b-splines} haben kompakten Träger: Bei gut
    konditionierten Bandsystemen klingt die Wirkung einer Änderung an einem
    Datenpunkt mit dem Abstand typischerweise schnell ab
-   (@bemerkung:was-die-lokalitaet-praktisch-bedeutet), und die Basis ist weit besser
+   (@bemerkung:was-die-lokalitaet-praktisch-bedeutet), bei kubischer
+   Interpolation auf gleichmäßigem Gitter im Inneren um etwa den Faktor
+   $2 - \sqrt{3} \approx 0{,}27$ je Knotenabstand. Die Basis ist zudem weit besser
    konditioniert als die :d[Monombasis]{#monombasis-und-vandermonde-matrix} (@sec:polynominterpolation, Kondition in
    @sec:fehler/kondition).
 3. *Minimale Krümmung.* Unter allen Interpolanten aus $\Ccal^2$ macht der
@@ -342,8 +352,9 @@ um die Spitze sammeln, wo $\left| f^{(4)} \right|$ groß ist.
    (@bemerkung:welcher-spline-die-konstante-traegt).
 :::
 
-Alle vier Punkte gelten für *Interpolation*, also für Daten ohne Rauschen.
-Tragen die $y_i$ eine Zufallskomponente, wollen wir sie nicht mehr exakt
+Die Punkte 3 und 4 gelten für *Interpolation*, also für Daten ohne Rauschen;
+die ersten beiden sind Eigenschaften der B-Spline-Basis und tragen auch in die
+Regression hinüber. Tragen die $y_i$ eine Zufallskomponente, wollen wir sie nicht mehr exakt
 treffen, und aus dem :d[Interpolationsproblem]{#interpolationsproblem} wird ein :d[Glättungsproblem]{#glaettungsproblem}
 (@sec:glaettung).
 

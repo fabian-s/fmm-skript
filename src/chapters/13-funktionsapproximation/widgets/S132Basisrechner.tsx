@@ -107,6 +107,14 @@ export function BasisRechner() {
   const gerade = y[0] - 2 * y[1] + y[2] === 0;
   // Probe an den drei Knoten; restMax ist reines Rundungsrauschen der Formeln.
   const probeGehtAuf = restMax < 1e-12;
+  // Welche der Gewichte a1, a2 verschwinden? (Reglerschritt 0,5: exakt null.)
+  const nullGewichte = [0, 1].filter((k) => Math.abs(a[k]) < 1e-12);
+  const beitrag =
+    nullGewichte.length === 0
+      ? `Alle drei Bausteine tragen bei, das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}.`
+      : nullGewichte.length === 1
+        ? `Hier ist a${nullGewichte[0] === 0 ? "₁" : "₂"} = 0, es tragen also nur zwei Bausteine bei; das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}.`
+        : `Hier sind a₁ = a₂ = 0, es trägt also nur der quadratische Baustein bei, mit Gewicht a₃ = ${fmt(a[2])}.`;
 
   return (
     <div className="my-2">
@@ -250,8 +258,8 @@ export function BasisRechner() {
         {gerade
           ? `Der quadratische Baustein hat Gewicht a₃ = 0, weil y₁ − 2y₂ + y₃ = 0 ist. Der Interpolant ist hier eine Gerade, obwohl wir im Raum der Polynome vom Grad höchstens 2 gesucht haben: Die drei Punkte liegen auf einer Geraden, und die Basis ist trotzdem dieselbe geblieben.`
           : probeGehtAuf
-            ? `Alle drei Bausteine tragen bei, das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}. Die Probe trifft die drei Messwerte exakt: Die Koeffizienten hängen an der Basis, der Interpolant nicht.`
-            : `Alle drei Bausteine tragen bei, das Gewicht des quadratischen ist a₃ = ${fmt(a[2])}. Die Probe weicht um ${fmtExp(restMax)} ab; das ist Rundung, nicht ein anderer Interpolant.`}
+            ? `${beitrag} Die Probe trifft die drei Messwerte exakt: Die Koeffizienten hängen an der Basis, der Interpolant nicht.`
+            : `${beitrag} Die Probe weicht um ${fmtExp(restMax)} ab; das ist Rundung, nicht ein anderer Interpolant.`}
       </Verdikt>
     </div>
   );

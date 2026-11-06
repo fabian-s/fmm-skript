@@ -25,8 +25,8 @@ Nullstellen, wenn wir sie mit Vielfachheit zählen.
 :::
 
 :::korollar[#zu-viele-nullstellen-erzwingen-das (Zu viele Nullstellen erzwingen das Nullpolynom)]
-Sei $p$ ein Polynom vom Grad höchstens $n-1$ mit $n$ paarweise verschiedenen
-Nullstellen. Dann ist $p$ das Nullpolynom, es gilt also $p(x) = 0$ für
+Sei $n \ge 1$ und $p$ ein Polynom vom Grad höchstens $n-1$ mit $n$ paarweise
+verschiedenen Nullstellen. Dann ist $p$ das Nullpolynom, es gilt also $p(x) = 0$ für
 *alle* $x$.
 :::
 
@@ -72,7 +72,7 @@ Beide Fälle sind unmöglich, die Annahme fällt. Also ist $p$ das Nullpolynom.
 
 :::beispiel[#drei-nullstellen-bei-grad-hoechstens (Drei Nullstellen bei Grad höchstens zwei)]
 Ein Polynom vom Grad höchstens $2$ hat höchstens zwei verschiedene
-Nullstellen; das kennen wir von der Parabel. Finden wir also ein solches
+Nullstellen, außer es ist das Nullpolynom; das kennen wir von der Parabel. Finden wir also ein solches
 Polynom mit drei Nullstellen, etwa $p(-1) = p(0) = p(1) = 0$, so bleibt nur
 ein Schluss: $p$ ist das Nullpolynom, und dann ist auch $p(7) = 0$ und
 $p(10^6) = 0$.
@@ -270,7 +270,7 @@ Für wachsendes $k$ unterscheiden sich diese Vektoren immer weniger in ihrer
 *Richtung*: Auf $[0, 1]$ verkleinert jedes weitere Potenzieren alle Einträge
 außer dem letzten, der zu $x_n = 1$ gehört, und so konzentrieren sich die
 Vektoren immer mehr auf ihre letzten Komponenten. Bei $n = 10$ gleichmäßig verteilten Stellen in $[0, 1]$ schließen
-$\bb_1$ und $\bb_2$ noch einen Winkel von $32{,}6^\circ$ ein,
+$\bb_1$ und $\bb_2$ noch einen Winkel von $32{,}5^\circ$ ein,
 $\bb_5$ und $\bb_6$ nur noch $5{,}5^\circ$, und $\bb_9$ und $\bb_{10}$
 nur $2{,}7^\circ$.
 
@@ -315,11 +315,16 @@ Interpolanten nicht, nur die Koeffizienten und den Rechenweg. Wählen wir
 Basisfunktionen, die sich weniger ähneln, wird die Basismatrix besser
 konditioniert. Klassisch sind dafür die *orthogonalen Polynome*
 (Legendre, Chebyshev, Hermite), die bezüglich eines Skalarprodukts von
-Funktionen :k[orthogonal]{#orthogonality} sind. An denselben
-gleichmäßig verteilten Stellen wie oben liefern die Chebyshev-Polynome
-$\kappa_2 \approx 2{,}2$ statt $6{,}9 \cdot 10^2$ bei $n = 5$ und
-$\kappa_2 \approx 4{,}8 \cdot 10^3$ statt $1{,}1 \cdot 10^{16}$ bei
-$n = 20$, ein Gewinn von zwölf Zehnerpotenzen.
+Funktionen :k[orthogonal]{#orthogonality} sind. Die Chebyshev-Polynome $T_k$
+sind auf $[-1, 1]$ zu Hause. Bilden wir die gleichmäßig verteilten Stellen
+von oben mit $x \mapsto 2x - 1$ dorthin ab und nehmen dann die
+Chebyshev-Polynome als Basis, so sinkt $\kappa_2$ auf $2{,}2$ statt
+$6{,}9 \cdot 10^2$ bei $n = 5$ und auf $4{,}8 \cdot 10^3$ statt
+$1{,}1 \cdot 10^{16}$ bei $n = 20$, ein Gewinn von zwölf Zehnerpotenzen.
+Knapp acht davon bringt schon das Verschieben allein (Monome auf $[-1, 1]$:
+$2{,}7 \cdot 10^8$), den Rest der Wechsel zu Chebyshev. Ohne die Abbildung
+hilft er dagegen kaum: Werten wir $T_k(x)$ direkt an den Stellen in $[0, 1]$
+aus, steht bei $n = 20$ noch $\kappa_2 \approx 9{,}3 \cdot 10^{15}$.
 
 Das einfachste :k[Skalarprodukt]{#inner-product-functions} von Funktionen
 auf $[-1, 1]$ ist $\langle f, g \rangle = \int_{-1}^{1} f(x)\, g(x) \dx$, das Gegenstück zu
@@ -351,8 +356,11 @@ Warum sind die Spalten einer Vandermonde-Matrix auf $[0,1]$ fast parallel? Die e
 
 <MonombasisFigur />
 
-Der Regler erhöht die Zahl der Stellen, die Schalter wechseln zwischen drei
-Basissystemen desselben Ansatzraums.
+Der Regler erhöht die Zahl der Stellen, die Schalter wechseln zwischen den
+Monomen auf $[0, 1]$ und zwei Basen auf $[-1, 1]$. Für diese beiden bilden
+wir die Stellen zuerst mit $x \mapsto 2x - 1$ nach $[-1, 1]$ ab. Auf
+$[0, 1]$ zurückgerechnet sind das die Basen $(2x-1)^{k}$ und
+$T_k(2x-1)$, also wieder Basen desselben Ansatzraums.
 
 <VandermondeKondition />
 
@@ -411,8 +419,8 @@ Verstärkungsfaktor liegt bei diesen zehn Stellen bei $4{,}03$ und gehört zu
 den beiden mittleren, $x_5$ und $x_6$.
 
 Die Methode ist also *instabil*, weil sie kleine Datenänderungen verstärkt,
-und *nicht lokal*, weil jedes $\ell_j$ auf dem ganzen Intervall von null
-verschieden ist. Beides liegt am Ansatzraum, nicht an der Basis, denn $\ell_j$
+und *nicht lokal*, weil kein $\ell_j$ auf einem Teilintervall verschwindet:
+Als Polynom, das nicht das Nullpolynom ist, hat es nur endlich viele Nullstellen. Beides liegt am Ansatzraum, nicht an der Basis, denn $\ell_j$
 ist durch die Stellen und den Ansatzraum festgelegt. Abhilfe schafft erst ein
 Ansatzraum aus Basisfunktionen, die außerhalb eines kleinen Bereichs
 verschwinden (@sec:splines).
@@ -470,7 +478,11 @@ nicht so. Für gleichmäßig verteilte Knoten ergeben sich diese größten Fehle
 
 Von $n = 5$ auf $n = 10$ *fällt* der Fehler, erst danach wächst er, dann aber
 schnell (bei $n = 25$ auf $257$); unbeschränkt ist das Wachstum nur
-asymptotisch. Die letzte Spalte zeigt, wo das Problem liegt: Das
+asymptotisch. Dazwischen springt er im Zickzack: Ab $n = 7$ liegt jede
+ungerade Knotenzahl über ihren beiden geraden Nachbarn, von $n = 9$ auf
+$n = 10$ fällt der Fehler etwa von $1{,}05$ auf $0{,}30$. Auffällig ist, dass
+bei ungeradem $n$ ein Knoten genau auf der Spitze $x = 0$ liegt, bei geradem
+nicht. Die letzte Spalte zeigt, wo das Problem liegt: Das
 Fehlermaximum wandert mit wachsendem $n$ immer näher an die Ränder $\pm 1$.
 :::
 
@@ -510,7 +522,7 @@ Wann wird der Fehler zum ersten Mal größer als die Funktion selbst?
   loesung={9}
   toleranz={1}
   einheit="Knoten"
-  verdeckt={<p>Bei n = 9 steht dort 1,05. Ungerade Knotenzahlen liegen durchweg über den benachbarten geraden, weil nur sie einen Knoten auf die Spitze von f legen; bei n = 10 fällt der Fehler deshalb wieder auf 0,30.</p>}
+  verdeckt={<p>Bei n = 9 steht dort 1,05. Ab n = 7 liegt jede ungerade Knotenzahl über ihren beiden geraden Nachbarn (bei n = 3 und n = 5 noch nicht). Bei n = 10 fällt der Fehler wieder auf 0,30.</p>}
   children={({ aufgeloest }) => <RungeExplorer zeigeFehlerkurve={aufgeloest} />}
 />
 

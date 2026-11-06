@@ -101,7 +101,7 @@ Der Datenbedarf wächst genauso; mit der Rechnung aus @sec:bias-varianz lässt
 er sich direkt hinschreiben.
 
 :::satz[#eine-mse-obergrenze-im-multivariaten (Eine MSE-Obergrenze im Multivariaten)]
-Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\epsilon_i}$ an $n$
+Wir beobachten $\cblue{y_i} = f(\cblue{\bx_i}) + \cred{\eps_i}$ an $n$
 festen Stellen mit unkorrelierten, homoskedastischen Fehlern vom Mittelwert
 null und passen
 @eq:tensor-produkt-basis mit kubischen Spline-Bausteinen auf einem gleichmäßigen Gitter an.
@@ -188,8 +188,8 @@ und damit @eq:eine-mse-obergrenze-im-multivariaten-2.
 @eq:eine-mse-obergrenze-im-multivariaten-2 ist eine Obergrenze bei der Wahl
 $K\asymp n^{1/(8+p)}$, nicht der Fehler für jedes $K$. Als grobe
 Planungsheuristik setzen wir die in der $\mathcal O$-Notation verborgene
-Konstante gleich eins. Aus $n^{-8/(8+p)} \le \varepsilon$ folgt dann
-$n \ge \varepsilon^{-(8+p)/8}$, für $\varepsilon = 0{,}01$ also
+Konstante gleich eins. Aus $n^{-8/(8+p)} \le \delta$ folgt dann
+$n \ge \delta^{-(8+p)/8}$, für $\delta = 0{,}01$ also
 $n \ge 10^{(8+p)/4}$.
 
 | Dimension $p$ | Rate | Proxy-$n$ bei Konstante $1$ |
@@ -202,8 +202,8 @@ $n \ge 10^{(8+p)/4}$.
 Die dritte Spalte ist eine Orientierung, keine Stichprobenplanung, denn die
 entscheidenden Konstanten hängen am Problem. Ihre Botschaft steckt im
 Exponenten $(8+p)/4$: Jede weitere Variable multipliziert die nötige
-Datenmenge mit $10^{1/4} \approx 1{,}78$, bei $\varepsilon = 10^{-4}$ sogar
-mit $\varepsilon^{-1/8} \approx 3{,}16$. Der Datenbedarf wächst also
+Datenmenge mit $10^{1/4} \approx 1{,}78$, bei $\delta = 10^{-4}$ sogar
+mit $\delta^{-1/8} \approx 3{,}16$. Der Datenbedarf wächst also
 exponentiell in $p$, wie der Speicherbedarf.
 :::
 
@@ -289,8 +289,10 @@ wenn wir zwei Variablen weglassen, dafür aber doppelt so fein auflösen?
 Über der Dimension $p$ mit logarithmischer senkrechter Achse sind die $K^p$
 Koeffizienten des vollen Tensorprodukts (orange) eine Gerade, die $p(K-1)+1$
 freien Parameter des zentrierten additiven Modells (grün) eine flach liegende
-Kurve. Der $K$-Regler kippt die orange Gerade, weil $K$ in ihrer Steigung
-sitzt, und verschiebt die grüne Kurve kaum. Die Werttafel rechnet
+Kurve. Am Bild der orangen Geraden ändert der $K$-Regler nichts: Die
+senkrechte Achse reicht immer bis $K^{10}$, skaliert also mit, und nur ihre
+Beschriftung wächst. Es bewegt sich nur die grüne Kurve: Mit wachsendem $K$
+sinkt sie gegenüber der orangen Geraden weiter ab. Die Werttafel rechnet
 Speicherbedarf, Mindestzahl an Beobachtungen und Konvergenzrate zum
 eingestellten Zustand mit.
 :::
@@ -386,7 +388,7 @@ ihre Folgen.
    differenzierbares $f$ muss die Folge der Interpolanten an gleichmäßig
    verteilten Knoten nicht konvergieren (Runge-Phänomen).
 4. **Splines halten den Grad klein und die Wirkung lokal.** Polynome vom
-   festen Grad $q$, $\Ccal^{q-1}$-glatt zusammengesetzt, bilden den Raum
+   Grad höchstens $q$, $\Ccal^{q-1}$-glatt zusammengesetzt, bilden den Raum
    $\Scal_q$ der Dimension $m + q$ (@sec:splines). Die B-Spline-Basis hat
    lokale Träger und macht $\bB$ zu einer :k[dünn besetzten]{#sparse-matrix}
    Bandmatrix, lösbar in $O(N q^2)$ statt $O(N^3)$.
@@ -397,7 +399,7 @@ ihre Folgen.
 6. **Approximationsordnung.** Für $f \in \Ccal^4$ ist der Fehler des
    interpolierenden kubischen Splines durch
    $C \corange{h}^4 \max_x \left| f^{(4)}(x) \right|$ beschränkt, mit
-   passenden Randbedingungen mit $C = 5/384$; stückweise linear liefert nur
+   für den eingespannten Spline mit $C = 5/384$; stückweise linear liefert nur
    $\corange{h}^2$ (@sec:approximationsfehler).
 7. **Glättung statt Interpolation.** Mit einem vollrangigen kleinen
    Ansatzraum ($K<n$) wird die Anpassung zum Kleinste-Quadrate-Problem
@@ -405,12 +407,14 @@ ihre Folgen.
    zweite Weg bestraft in einem großen Raum die Krümmung mit
    $\lambda \int (g'')^2 \dx$ (@sec:glaettung).
 8. **Bias-Varianz.** Der gemittelte quadrierte Bias ist durch $C_1K^{-8}$
-   beschränkt, die gemittelte Varianz ist exakt $\sigma^2 K/n$, und unter der
+   beschränkt, die gemittelte Varianz ist bei vollem Spaltenrang exakt
+   $\sigma^2 K/n$, und unter der
    Proxy-Annahme $\mathrm{Bias}^2\asymp c_1K^{-8}$ balanciert
    $K\asymp n^{1/9}$ beide Terme. In der Praxis wird $K$ über
    Kreuzvalidierung, AIC, BIC oder GCV gewählt (@sec:bias-varianz).
 9. **Fluch der Dimensionalität.** Die Tensor-Produkt-Basis braucht $K^p$
-   Koeffizienten und garantiert nur die Rate $O(n^{-8/(8+p)})$. Additive
+   Koeffizienten und garantiert selbst bei optimal gewähltem
+   $K \asymp n^{1/(8+p)}$ nur die Rate $O(n^{-8/(8+p)})$. Additive
    Modelle kommen mit $O(pK)$ Koeffizienten aus und sind interpretierbar,
    verzichten aber auf Wechselwirkungen.
 :::
@@ -467,8 +471,12 @@ Der Ansatzraum bestimmt die Kurve, die Basis nur die Koeffizienten: Monom-
 und Newton-Basis geben beide $\cgreen{\wh{f}(x)} = 1 + x^2$, einmal mit
 $\cgreen{\ba = (1,0,1)^\top}$ und einmal mit
 $\cgreen{\ba = (1,1,1)^\top}$ (@beispiel:dieselbe-funktion-andere-koeffizienten). An der Kondition ändert
-ein solcher Wechsel dagegen sehr viel, bei $n = 20$ gleichmäßig verteilten
-Stellen um zwölf Zehnerpotenzen (@bemerkung:der-ausweg-orthogonalisierte-basen).
+ein solcher Wechsel dagegen viel. Bei $n = 20$ gleichmäßig verteilten
+Stellen in $[0, 1]$ hat die Monombasis $\kappa_2 \approx 1{,}1 \cdot 10^{16}$,
+die Newton-Basis $1{,}9 \cdot 10^{13}$, knapp drei Zehnerpotenzen weniger.
+Zwölf Zehnerpotenzen bringt erst die Chebyshev-Basis $T_k(2x-1)$, die das
+Intervall auf $[-1, 1]$ verschiebt
+(@bemerkung:der-ausweg-orthogonalisierte-basen).
 :::
 
 :::frage{falsch}
@@ -549,7 +557,7 @@ Residuenquadratsumme null und jeder Punkt exakt getroffen. Ein kleiner
 vollrangiger Raum mit $K<n$ lässt für generische Daten Residuen stehen, ein
 großer Raum kann durch einen Strafterm ebenfalls glätten
 (@definition:interpolation-und-glaettung-im). Ein interpolierender Schätzer
-übernimmt dafür die Fehler $\cred{\epsilon_i}$ an den Datenstellen punktweise.
+übernimmt dafür die Fehler $\cred{\eps_i}$ an den Datenstellen punktweise.
 :::
 
 :::frage{falsch}

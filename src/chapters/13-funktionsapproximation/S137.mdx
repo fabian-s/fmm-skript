@@ -240,8 +240,15 @@ Die naheliegende Abschwächung „jede Basisfunktion sieht mindestens einen
 Datenpunkt" genügt dafür nicht. Unsere eigene Rechnung mit den $50$ Punkten des
 Widgets, aber *gleichmäßigen* Knoten auf $[0, 2\pi]$, zeigt es: Bei $K = 35$ hat
 jede der $35$ Basisfunktionen mindestens einen Datenpunkt im Träger, und
-trotzdem bricht die Cholesky-Zerlegung von $\bB^\top\bB$ ab, weil sieben der
-$32$ Knotenintervalle leer bleiben und die Bedingung damit verletzt ist.
+trotzdem bricht die Cholesky-Zerlegung von $\bB^\top\bB$ ab. Schuld ist eine
+dünn besetzte Stelle der Daten: Zwischen $1{,}125$ und $1{,}541$ und wieder
+zwischen $2{,}031$ und $2{,}612$ liegt keine Messstelle. Die Träger der vier
+benachbarten Basisfunktionen $\corange{B_{10}^{(3)}}$ bis $\corange{B_{13}^{(3)}}$
+überdecken zusammen $[1{,}178;\, 2{,}553]$ und enthalten nur die drei Punkte
+$1{,}541$, $1{,}703$ und $2{,}031$. Vier Basisfunktionen finden dort keine vier
+eigenen Datenpunkte, die Bedingung ist verletzt. An der Zahl leerer
+Knotenintervalle liegt es nicht: Bei $K = 33$ und $K = 34$ bleiben ebenfalls
+sieben leer, und $\bB$ hat trotzdem vollen Spaltenrang.
 ::::
 
 ### Interpolation und Glättung sind derselbe Rahmen
@@ -305,11 +312,11 @@ Startwert; die gezogenen Fehler haben die empirische Streuung $0{,}266$).
 Darauf passen wir kubische B-Splines mit $K$ Basisfunktionen an, Knoten auf
 den Quantilen der $x_i$. Für vier Werte von $K$ rechnet unser Widget:
 
-| $K$ | $\operatorname{RSS}$ | $\wh\sigma$ | Abstand zu $f$ | größte Abweichung |
+| $K$ | $\operatorname{RSS}$ | $\wh\sigma$ | Abstand zu $f$ | größte Abweichung im Datenbereich |
 |:---|:---|:---|:---|:---|
-| $4$ | $6{,}421$ | $0{,}374$ | $0{,}247$ | $0{,}467$ |
-| $10$ | $3{,}084$ | $0{,}278$ | $0{,}086$ | $0{,}532$ |
-| $20$ | $2{,}460$ | $0{,}286$ | $0{,}269$ | $2{,}223$ |
+| $4$ | $6{,}421$ | $0{,}374$ | $0{,}247$ | $0{,}454$ |
+| $10$ | $3{,}084$ | $0{,}278$ | $0{,}086$ | $0{,}402$ |
+| $20$ | $2{,}460$ | $0{,}286$ | $0{,}269$ | $0{,}837$ |
 | $40$ | $0{,}557$ | $0{,}236$ | $1{,}908$ | $8{,}574$ |
 
 Dabei ist $\wh\sigma = \sqrt{\operatorname{RSS}/(n-K)}$ der übliche
@@ -321,6 +328,12 @@ Wurzel aus dem mittleren quadrierten Abstand
 $$
 \frac{1}{2\pi}\int_0^{2\pi} \left( \cgreen{\wh f(x)} - f(x) \right)^2 \dx .
 $$
+
+Die größte Abweichung messen wir nur zwischen der ersten und der letzten
+Messstelle, auf $[0{,}050;\, 6{,}257]$. Das Widget sucht sie auf ganz
+$[0, 2\pi]$ und findet sie für jedes $K \le 29$ am Rand, bei $x = 0$ oder
+$x = 2\pi$. Dort liegen keine Daten mehr, die Kurve extrapoliert nur noch, und
+das Widget zeigt deshalb größere Werte.
 
 Die beiden mittleren Spalten lassen sich aus den Daten berechnen, die beiden
 rechten nur mit Kenntnis von $f$. Und sie laufen auseinander: Von $K = 10$ auf

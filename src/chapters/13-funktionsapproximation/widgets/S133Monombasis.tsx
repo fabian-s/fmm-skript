@@ -457,7 +457,9 @@ export function VandermondeKondition() {
         Zu <M>{"n"}</M> gleichmäßig verteilten Stellen bauen wir die
         <M>{"\\,n \\times n"}</M>-Basismatrix <M>{"\\bB"}</M> und schätzen ihre
         Konditionszahl <M>{"\\kappa_2(\\bB)"}</M> über die explizit berechnete
-        Inverse. Drei Basissysteme desselben Ansatzraums stehen zur Wahl, die
+        Inverse. Zur Wahl stehen die Monome auf [0, 1] sowie Monome und
+        Chebyshev-Polynome auf [−1, 1]; für die beiden letzten bilden wir die
+        Stellen zuerst mit <M>{"x \\mapsto 2x-1"}</M> nach [−1, 1] ab. Die
         senkrechte Achse ist logarithmisch.
       </p>
 

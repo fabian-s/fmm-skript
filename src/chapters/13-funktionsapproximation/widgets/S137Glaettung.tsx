@@ -301,10 +301,19 @@ export function SplineGlaettung() {
       `übrig bleibt, ist kein Rauschen, sondern nicht erklärte Struktur.`;
   } else if (verlaesstFenster) {
     zweig = "fenster";
+    // Nur die Seite(n) nennen, auf denen die Kurve das Fenster wirklich verlässt.
+    const oben = fit.maxWert > Y_FENSTER;
+    const unten = fit.minWert < -Y_FENSTER;
+    const ausBild =
+      oben && unten
+        ? `bis ${fmt(fit.maxWert, 1)} nach oben und bis ${fmt(fit.minWert, 1)} nach unten`
+        : oben
+          ? `nach oben bis ${fmt(fit.maxWert, 1)}`
+          : `nach unten bis ${fmt(fit.minWert, 1)}`;
     status =
       `K = ${K} bei n = 50 Datenpunkten: Der Fit hat nur noch ${N - K} Freiheitsgrade übrig. ` +
       `Die Residuenquadratsumme ist mit ${fmt(fit.rss, 2)} klein, die geschätzte Kurve läuft aber ` +
-      `bis ${fmt(fit.maxWert, 1)} nach oben und ${fmt(fit.minWert, 1)} nach unten und verlässt damit ` +
+      `${ausBild} und verlässt damit ` +
       `das Bild; wo sie draußen ist, bricht der grüne Zug ab. Vom wahren f ist sie im quadratischen ` +
       `Mittel ${fmt(fit.rms)} entfernt, an der schlimmsten Stelle x = ${fmt(fit.argMax, 2)} um ` +
       `${fmt(fit.maxAbw, 2)}. Das ist Überanpassung in Reinform: Die Kurve jagt einzelne Punkte, ` +

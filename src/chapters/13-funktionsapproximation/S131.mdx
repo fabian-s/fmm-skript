@@ -74,6 +74,10 @@ Jede Funktion mit dieser Eigenschaft heißt *Interpolant* (interpolant) der
 Daten, die $x_i$ heißen *Stützstellen* (nodes). Die Bedingung ist punktweise
 und exakt: An den $n$ Stützstellen muss $\cgreen{\wh{f}}$ die Werte treffen, zwischen
 ihnen ist alles erlaubt.
+
+Bei der Polynominterpolation sagen wir für die Stützstellen auch *Knoten*.
+Ab den Splines in @sec:splines meint *Knoten* dagegen das Gitter, an dem
+die Polynomstücke aneinanderstoßen; das muss mit den Stützstellen nicht übereinstimmen.
 :::
 
 :::definition[#glaettungsproblem (Glättungsproblem)]
@@ -107,7 +111,7 @@ Wann wird aus Glättung wieder Interpolation? Wir variieren dafür nur das Rausc
 <DreiProbleme />
 
 Bei der Approximation darf $\cgreen{\wh{f}}$ überall ein wenig danebenliegen,
-bei der Interpolation nirgends an den Knoten und dazwischen beliebig. Nur bei
+bei der Interpolation nirgends an den Stützstellen und dazwischen beliebig. Nur bei
 $\sigma = 0$ fallen Glättung und Interpolation zusammen.
 :::
 
@@ -320,8 +324,8 @@ $\left\|f - \cgreen{\wh{f}}\right\| \approx 0$.
 Die Interpolationsbedingung sagt über die Stellen zwischen den Stützstellen
 nichts. In @beispiel:vier-interpolanten-durch-drei-punkte erfüllen alle vier
 Funktionen dieselben drei Bedingungen und liegen bei $x = 1{,}3$ trotzdem
-$0{,}75$ auseinander; höchstens eine von ihnen kann einem gegebenen $f$
-nahekommen.
+$0{,}75$ auseinander. Welchen Wert $f(1{,}3)$ auch hat, mindestens eine
+von ihnen liegt dort um mindestens $0{,}37$ daneben.
 :::
 
 :::frage{wahr}

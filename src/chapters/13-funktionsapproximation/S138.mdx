@@ -243,7 +243,7 @@ Größenordnungen über $\sigma^2 K/n$ liegen. Werten wir
 @eq:gemittelte-varianz-eines-linearen im Beispiel unten auf einem gleichmäßigen
 Gitter über $[0, 2\pi]$ statt an den $100$
 Entwurfsstellen aus, so ist die mittlere Varianz bei $K = 40$ nicht $0{,}036$,
-sondern $5{,}04$.
+sondern $3{,}91$; allein am rechten Rand $x = 2\pi$ sind es $135{,}7$.
 :::
 
 ### Der Kompromiss: mittlerer quadratischer Fehler
@@ -389,9 +389,11 @@ Simulation.
 />
 
 Die obere Tafel zeigt die Daten einer Ziehung in Blau, die wahre Funktion
-violett gestrichelt, die inneren Knoten als orange Marken und in Grün die
-Schätzer der ersten zwölf Wiederholungen samt Mittelwert; bei $K = 40$ liegt
-nur noch dieser Mittelwert auf $f$. Die Balkentafel zeigt die Anteile
+violett gestrichelt, die inneren Knoten als orange Marken und in dünnem Grün
+die Schätzer der ersten zwölf Wiederholungen. Die dicke grüne Kurve ist der
+Mittelwert über alle $200$ Wiederholungen. Er schätzt $\E[\wh{f}(x)]$ und
+streut viel weniger als die einzelnen Kurven, ganz ohne Rauschen ist er aber
+nicht: Bei $K = 40$ weicht auch er noch um bis zu $0{,}34$ von $f$ ab. Ab $K = 30$ verlassen einzelne der dünnen Kurven das Bild. Die Balkentafel zeigt die Anteile
 am MSE, die logarithmische Tafel den Verlauf aller drei Größen über $K$. Dort
 fällt der rote Bias steil, die grüne Varianz steigt langsam, und die graue
 Summe hat ihr Minimum dazwischen.
@@ -467,7 +469,7 @@ Für die erste der $200$ Ziehungen aus
 @eq:generalisierte-kreuzvalidierung für $K = 4, \dots, 40$ aus: Das Minimum
 liegt bei $K = 10$ mit $\mathrm{GCV} = 0{,}0895$, und AIC und BIC in den
 Formen aus @bemerkung:drei-auswege wählen dasselbe $K$. Der wahre MSE ist bei
-$K = 12$ am kleinsten; $K = 10$ liefert $0{,}0157$ statt $0{,}0120$, rund
+$K = 12$ am kleinsten; $K = 10$ liefert $0{,}0156$ statt $0{,}0120$, rund
 $30$ Prozent mehr. Für ein Kriterium, das $f$ nicht kennt und mit
 einer einzigen Ziehung auskommt, ist das gut. Die Kriterien schätzen den
 Fehler aber nur, und auf einer anderen Ziehung fällt die Wahl anders aus.
@@ -525,8 +527,9 @@ Dann ist auch die Varianz an jeder einzelnen Stelle $x$ gleich $\sigma^2 K/n$.
 
 Gemittelt wird über die $n$ Entwurfsstellen, und dort ist die Aussage exakt.
 Zwischen den Datenpunkten und an den Rändern kann die Varianz weit darüber
-liegen: Bei $K = 40$ misst unsere Simulation über ein feines Gitter auf
-$[0, 2\pi]$ eine mittlere Varianz von $5{,}04$ statt $0{,}036$. Punktweise
+liegen: Bei $K = 40$ ergibt @eq:gemittelte-varianz-eines-linearen, gemittelt
+über ein feines Gitter auf $[0, 2\pi]$, eine mittlere Varianz von $3{,}91$ statt
+$0{,}036$ (die $200$ Wiederholungen der Simulation messen rund $4{,}2$). Punktweise
 gilt nur @eq:gemittelte-varianz-eines-linearen, und dort steht $\corange{\bphi(x)}$ im Ausdruck.
 :::
 

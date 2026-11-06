@@ -622,7 +622,16 @@ Datenpunkt sind bei $q = 3$ nur drei Basisfunktionen von null verschieden,
 im Beispiel des Widgets reagieren jedoch neun von elf Koeffizienten messbar:
 $1{,}732$, dann $0{,}464$, $0{,}124$, $0{,}031$, $0{,}010$. Das
 Gleichungssystem koppelt die Koeffizienten über das Band, und die Kopplung
-fällt je Knotenabstand auf gut ein Viertel, statt abzubrechen.
+fällt im Inneren je Knotenabstand um etwa den Faktor $2 - \sqrt{3} \approx 0{,}268$,
+statt abzubrechen. Der Faktor kommt aus den inneren Zeilen
+$\tfrac16, \tfrac23, \tfrac16$ der Kollokationsmatrix: Abseits der
+gestörten Zeile gilt für die Änderungen $\Delta a_{k-1} + 4\Delta a_k + \Delta a_{k+1} = 0$,
+und der Ansatz $\Delta a_k = r^k$ führt auf $r^2 + 4r + 1 = 0$ mit der betragskleineren Wurzel
+$r = \sqrt{3} - 2$. Im Inneren wechseln die Vorzeichen der Änderungen deshalb
+von Koeffizient zu Koeffizient. Nahe den Rändern gelten andere Zeilen der
+Kollokationsmatrix, dort weicht das Muster ab: Im Beispiel des Widgets haben
+auf jeder Seite die beiden äußersten reagierenden Koeffizienten dieselbe
+Richtung der Änderung (das Widget zeigt nur Beträge).
 :::
 
 ::::

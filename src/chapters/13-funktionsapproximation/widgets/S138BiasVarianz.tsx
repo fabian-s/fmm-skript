@@ -335,7 +335,7 @@ export function BiasVarianzExplorer({ zeigeOptimum = true }: { zeigeOptimum?: bo
     status =
       `K = ${lauf.K}: Vom MSE ${fmt(lauf.mse)} trägt der Bias ${fmt(anteilBias * 100, 1)} %, die ` +
       `Varianz ${fmt(anteilVar * 100, 1)} %. ` +
-      `${anteilBias > 0.5 ? "Die zwölf Kurven der oberen Tafel liegen dicht beieinander und weichen alle in dieselbe Richtung ab: Der Spline ist noch zu starr für f(x) = sin(3x)." : "Die zwölf Kurven der oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt."} ` +
+      `${anteilBias > 0.5 ? "Die zwölf Kurven der oberen Tafel liegen dicht beieinander und weichen alle in dieselbe Richtung ab: Der Spline ist noch zu starr für f(x) = sin(3x)." : "Die zwölf dünnen Kurven der oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während der Mittelwert aller 200 Wiederholungen (dick) viel weniger streut."} ` +
       `${varAbgleich}`;
   } else if (!(vielfaches > 1.1)) {
     const kopf =
@@ -364,7 +364,7 @@ export function BiasVarianzExplorer({ zeigeOptimum = true }: { zeigeOptimum?: bo
   } else {
     status =
       `K = ${lauf.K}: Die Varianz trägt ${fmt(anteilVar * 100, 1)} % des MSE. Die zwölf Kurven der ` +
-      `oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während ihr Mittelwert weiter auf f liegt. ` +
+      `oberen Tafel fächern auf, jede folgt ihrem eigenen Rauschen, während der Mittelwert aller 200 Wiederholungen (dick) viel weniger streut. ` +
       `${vielfaches >= 2 ? "Das ist deutliche Überanpassung" : "Hier beginnt die Überanpassung"}: ` +
       `Der MSE ist das ${fmt(vielfaches, 1)}-fache des Minimums bei K = ${daten.besteK}. ` +
       `${varAbgleich}`;
